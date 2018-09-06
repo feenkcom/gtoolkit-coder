@@ -1,0 +1,2 @@
+sample methods
+returnSelf ^self
