@@ -1,12 +1,17 @@
 converting
 bodyElement
-	| styler completionStrategy completionController editorElement editor |
+	| styler completionStrategy completionController editorElement editor text |
 	styler := BrRBMethodBodyTextStyler new.
 	styler classOrMetaClass: class.
 	styler methodPatternSource: ast pattern source.
 	editor := BrTextEditor new.
 	editor styler: styler.
-	editor text: bodySource asRopedText.
+	text := bodySource asRopedText.
+	text
+		attributes:
+			{BrFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
+			(BrFontSizeAttribute size: 14) beNotOverwritableByStyler}.
+	editor text: text.
 	editorElement := BrEditorElement new.
 	editorElement
 		constraintsDo: [ :c | 
