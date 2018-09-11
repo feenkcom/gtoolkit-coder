@@ -1,3 +1,0 @@
-accessing
-patternSource
-	^ patternSource

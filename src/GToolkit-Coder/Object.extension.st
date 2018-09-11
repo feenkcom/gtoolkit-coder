@@ -1,5 +1,7 @@
-*GToolkit-Coder
-gtMetaFor: aView
+Extension { #name : #Object }
+
+{ #category : #'*GToolkit-Coder' }
+Object >> gtMetaFor: aView [
 	<gtView>
 	^ aView explicit
 		title: 'Meta';
@@ -15,3 +17,4 @@ gtMetaFor: aView
 			coders := self class selectors asSortedCollection collect: [ :each | GtMethodCoder forMethod: self class >> each ].
 			element addChildren: (coders collect: [ :each | each asElement ]).
 			element ]
+]

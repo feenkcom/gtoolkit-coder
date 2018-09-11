@@ -1,5 +1,11 @@
-baseline
-baseline: spec
+Class {
+	#name : #BaselineOfGToolkitCoder,
+	#superclass : #BaselineOf,
+	#category : 'BaselineOfGToolkitCoder'
+}
+
+{ #category : #baseline }
+BaselineOfGToolkitCoder >> baseline: spec [
 	<baseline>
 	spec
 		for: #common
@@ -11,3 +17,4 @@ baseline: spec
 					spec requires: #( 'Brick') ];
 				package: 'GToolkit-Coder-Examples' with: [ 
 					spec requires: #( 'GToolkit-Coder' ) ] ]
+]

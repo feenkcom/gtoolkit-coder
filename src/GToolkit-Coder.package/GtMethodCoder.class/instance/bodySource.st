@@ -1,3 +1,0 @@
-accessing
-bodySource
-	^ bodySource
