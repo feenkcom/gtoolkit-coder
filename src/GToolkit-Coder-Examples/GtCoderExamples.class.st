@@ -101,10 +101,6 @@ GtCoderExamples >> keywordSelectorCoder [
 	^ methodCoder
 ]
 
-{ #category : #'sample methods' }
-GtCoderExamples >> noSpaces|a|a:=3.^a*a [
-]
-
 { #category : #model }
 GtCoderExamples >> noSpacesCoder [
 	<gtExample>
