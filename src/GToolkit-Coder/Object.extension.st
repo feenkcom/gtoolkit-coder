@@ -14,7 +14,17 @@ Object >> gtMetaFor: aView [
 				constraintsDo: [ :c | 
 					c horizontal matchParent.
 					c vertical fitContent ].
-			coders := self class selectors asSortedCollection collect: [ :each | GtMethodCoder forMethod: self class >> each ].
+			coders := self class selectors asSortedCollection collect: [ :each | GtMethodCoder forObject: self andSelector: each ].
+			coders
+				do: [ :each | 
+					each
+						when: GtCoderEvaluationAnnouncement
+						do: [ :announcement | 
+							element
+								fireEvent:
+									(GtPhlowObjectToSelect new
+										object: announcement result;
+										sourceElement: element) ] ].
 			element addChildren: (coders collect: [ :each | each asElement ]).
 			element ]
 ]

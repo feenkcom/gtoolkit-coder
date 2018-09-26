@@ -15,19 +15,21 @@ GtMethodCoderRequester class >> on: aMethodCoder [
 ]
 
 { #category : #accessing }
-GtMethodCoderRequester >> coder: anObject [
-	coder := anObject
+GtMethodCoderRequester >> coder: aCoder [
+	coder := aCoder
 ]
 
 { #category : #requester }
 GtMethodCoderRequester >> correctFrom: fromIndex to: toIndex with: aString [
 	| start offset |
-	offset := coder patternSource size + 2.
+	offset := self offset.
 	start := fromIndex - offset.
-	coder textEditor deleter
-		from: start to: toIndex - offset + 1;
-		delete.
+	fromIndex > toIndex
+		ifFalse: [ coder textEditor deleter
+				from: start to: toIndex - offset + 1;
+				delete ].
 	coder textEditor inserter
+		withoutSelectionDelete;
 		at: start;
 		text: aString;
 		insert
@@ -43,12 +45,17 @@ GtMethodCoderRequester >> editor [
 { #category : #requester }
 GtMethodCoderRequester >> notify: message at: anIndex in: aString [
 	| index |
-	index := anIndex - coder patternSource size - 2.
+	index := anIndex - self offset.
 	(coder textEditor text from: index to: index) attributes: {(GtMethodCoderErrorAttribute for: message)}.
 	coder textEditor
 		invalidate: index to: index;
 		update: index to: index.
 	coder textEditor moveCursorTo: index
+]
+
+{ #category : #private }
+GtMethodCoderRequester >> offset [
+	^ coder patternSource size + 2
 ]
 
 { #category : #hack }

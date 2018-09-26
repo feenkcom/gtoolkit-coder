@@ -1,7 +1,8 @@
 Class {
 	#name : #GtMethodCoder,
-	#superclass : #Object,
+	#superclass : #Announcer,
 	#instVars : [
+		'object',
 		'class',
 		'selector',
 		'ast',
@@ -17,6 +18,13 @@ Class {
 GtMethodCoder class >> forMethod: aCompiledMethod [
 	^ self new
 		forMethod: aCompiledMethod;
+		yourself
+]
+
+{ #category : #'instance creation' }
+GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
+	^ (self forMethod: anObject class >> aSymbol)
+		object: anObject;
 		yourself
 ]
 
@@ -60,6 +68,15 @@ GtMethodCoder >> bodyElement [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical fitContent ].
+	editorElement
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						meta;
+						key: Key d;
+						build);
+				action: [ self doItSelection ]).
 	editorElement editor: textEditor.
 	completionStrategy := GtPharoCompletionStrategy new.
 	completionStrategy classOrMetaClass: class.
@@ -94,11 +111,6 @@ GtMethodCoder >> categoryElement [
 ]
 
 { #category : #actions }
-GtMethodCoder >> changeFactory [
-	^ RBRefactoryChangeFactory new
-]
-
-{ #category : #actions }
 GtMethodCoder >> changeManager [
 	^ RBRefactoryChangeManager instance
 ]
@@ -116,6 +128,21 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 { #category : #private }
 GtMethodCoder >> clearSyntaxErrors [
 	textEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+]
+
+{ #category : #actions }
+GtMethodCoder >> doItSelection [
+	| source value result |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self ].
+	value := class compiler
+		requestor: self evaluationRequester;
+		source: source;
+		receiver: object;
+		evaluate.
+	result := GtCoderEvaluationAnnouncement forCoder: self result: value.
+	self announce: result
 ]
 
 { #category : #elements }
@@ -201,6 +228,11 @@ GtMethodCoder >> dropDownList: items [
 				text: (each displayString asRopedText thin monospace fontSize: 12) ]
 ]
 
+{ #category : #actions }
+GtMethodCoder >> evaluationRequester [
+	^ GtMethodCoderEvaluationRequester on: self
+]
+
 { #category : #private }
 GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 	| startIndex char source |
@@ -267,6 +299,16 @@ GtMethodCoder >> newPopupElement [
 ]
 
 { #category : #accessing }
+GtMethodCoder >> object [
+	^ object
+]
+
+{ #category : #accessing }
+GtMethodCoder >> object: anObject [
+	object := anObject
+]
+
+{ #category : #accessing }
 GtMethodCoder >> patternSource [
 	^ patternSource
 ]
@@ -287,8 +329,8 @@ GtMethodCoder >> save [
 		ifTrue: [ ^ self ].
 	self changeManager
 		performChange:
-			(self changeFactory
-				addMethodSource: self methodSource
+			(RBAddMethodChange
+				compile: self methodSource
 				in: class
 				classified: category
 				for: self requester)
@@ -314,6 +356,12 @@ GtMethodCoder >> saveElement [
 			c ignored horizontal alignRight.
 			c ignored vertical alignCenter ].
 	^ button
+]
+
+{ #category : #private }
+GtMethodCoder >> selectedSource [
+	textEditor selection do: [ :each | ^ (textEditor text from: each from + 1 to: each to) asString ].
+	^ nil
 ]
 
 { #category : #accessing }
