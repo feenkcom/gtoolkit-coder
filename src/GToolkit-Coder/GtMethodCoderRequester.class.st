@@ -25,10 +25,10 @@ GtMethodCoderRequester >> correctFrom: fromIndex to: toIndex with: aString [
 	offset := self offset.
 	start := fromIndex - offset.
 	fromIndex > toIndex
-		ifFalse: [ coder textEditor deleter
+		ifFalse: [ coder sourceEditor deleter
 				from: start to: toIndex - offset + 1;
 				delete ].
-	coder textEditor inserter
+	coder sourceEditor inserter
 		withoutSelectionDelete;
 		at: start;
 		text: aString;
@@ -46,11 +46,11 @@ GtMethodCoderRequester >> editor [
 GtMethodCoderRequester >> notify: message at: anIndex in: aString [
 	| index |
 	index := anIndex - self offset.
-	(coder textEditor text from: index to: index) attributes: {(GtMethodCoderErrorAttribute for: message)}.
-	coder textEditor
+	(coder sourceEditor text from: index to: index) attributes: {(GtMethodCoderErrorAttribute for: message)}.
+	coder sourceEditor
 		invalidate: index to: index;
 		update: index to: index.
-	coder textEditor moveCursorTo: index
+	coder sourceEditor moveCursorTo: index
 ]
 
 { #category : #private }

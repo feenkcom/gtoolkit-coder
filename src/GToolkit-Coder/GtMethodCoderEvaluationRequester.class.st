@@ -10,14 +10,14 @@ Class {
 { #category : #accessing }
 GtMethodCoderEvaluationRequester >> coder: aCoder [
 	super coder: aCoder.
-	aCoder textEditor selection do: [ :each | selectionInterval := each from + 1 to: each to ]
+	aCoder sourceEditor selection do: [ :each | selectionInterval := each from + 1 to: each to ]
 ]
 
 { #category : #requester }
 GtMethodCoderEvaluationRequester >> correctFrom: fromIndex to: toIndex with: aString [
 	super correctFrom: fromIndex to: toIndex with: aString.
 	selectionInterval := selectionInterval first to: selectionInterval last + aString size - (toIndex - fromIndex + 1).
-	coder textEditor selecter
+	coder sourceEditor selecter
 		from: selectionInterval first to: selectionInterval last;
 		select
 ]
@@ -29,7 +29,7 @@ GtMethodCoderEvaluationRequester >> offset [
 
 { #category : #requester }
 GtMethodCoderEvaluationRequester >> selection [
-	^ (coder textEditor text from: selectionInterval first to: selectionInterval last) asString
+	^ (coder sourceEditor text from: selectionInterval first to: selectionInterval last) asString
 ]
 
 { #category : #requester }

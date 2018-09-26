@@ -6,10 +6,9 @@ Class {
 		'class',
 		'selector',
 		'ast',
-		'patternSource',
-		'originalBodySource',
-		'textEditor',
-		'category'
+		'category',
+		'sourceEditor',
+		'patternEditor'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -30,19 +29,13 @@ GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
 
 { #category : #elements }
 GtMethodCoder >> asElement [
-	| accordion styledPattern header |
+	| accordion header |
 	accordion := BrAccordion new.
 	accordion look: BrGlamorousAccordionLook new.
 	accordion margin: (BlInsets all: 5).
 	accordion stencil: [ self bodyElement ].
-	styledPattern := self styledPatternText.
-	header := BrButton new.
-	header look: BrGlamorousAccordionHeaderLook new.
-	header label: styledPattern.
+	header := self patternButtonElement.
 	header action: [ accordion toggle ].
-	header addChild: self categoryElement.
-	header addChild: self instClassElement.
-	header addChild: self saveElement.
 	accordion addChildFirst: header.
 	^ accordion
 ]
@@ -53,16 +46,10 @@ GtMethodCoder >> bodyElement [
 	styler := BrRBMethodBodyTextStyler new.
 	styler classOrMetaClass: class.
 	styler methodPatternSource: ast pattern source.
-	textEditor styler: styler.
-	textEditor
+	sourceEditor styler: styler.
+	sourceEditor
 		when: BrTextEditorInsertedEvent do: [ :event | self clearSyntaxErrors ];
 		when: BrTextEditorDeletedEvent do: [ :event | self clearSyntaxErrors ].
-	text := originalBodySource asRopedText.
-	text
-		attributes:
-			{BrFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
-			(BrFontSizeAttribute size: 14) beNotOverwritableByStyler}.
-	textEditor text: text.
 	editorElement := BrEditorElement new.
 	editorElement
 		constraintsDo: [ :c | 
@@ -77,7 +64,7 @@ GtMethodCoder >> bodyElement [
 						key: Key d;
 						build);
 				action: [ self doItSelection ]).
-	editorElement editor: textEditor.
+	editorElement editor: sourceEditor.
 	completionStrategy := GtPharoCompletionStrategy new.
 	completionStrategy classOrMetaClass: class.
 	completionStrategy methodPattern: ast pattern.
@@ -88,25 +75,14 @@ GtMethodCoder >> bodyElement [
 
 { #category : #accessing }
 GtMethodCoder >> bodySource [
-	^ textEditor text asString
+	^ sourceEditor text asString
 ]
 
 { #category : #elements }
 GtMethodCoder >> categoryElement [
 	| element |
 	element := self dropDownElementWithItems: class organization categories asSortedCollection label: category.
-	element
-		constraintsDo: [ :c | 
-			c ignoreByLayout.
-			c
-				margin:
-					(BlInsets
-						top: 0
-						left: 0
-						bottom: 0
-						right: 55).
-			c ignored horizontal alignRight.
-			c ignored vertical alignCenter ].
+	element constraintsDo: [ :c | c margin: (BlInsets all: 5) ].
 	^ element
 ]
 
@@ -127,7 +103,7 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 
 { #category : #private }
 GtMethodCoder >> clearSyntaxErrors [
-	textEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+	sourceEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
 ]
 
 { #category : #actions }
@@ -228,6 +204,25 @@ GtMethodCoder >> dropDownList: items [
 				text: (each displayString asRopedText thin monospace fontSize: 12) ]
 ]
 
+{ #category : #elements }
+GtMethodCoder >> editElement [
+	| button |
+	button := BrButton new.
+	button
+		look: BrGlamorousButtonWithIconLook;
+		icon: BrGlamorousIcons edit asElement;
+		action: [ self edit ];
+		constraintsDo: [ :c | 
+			c
+				margin:
+					(BlInsets
+						top: 5
+						left: 10
+						bottom: 5
+						right: 10) ].
+	^ button
+]
+
 { #category : #actions }
 GtMethodCoder >> evaluationRequester [
 	^ GtMethodCoderEvaluationRequester on: self
@@ -245,7 +240,7 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 
 { #category : #'initialize-release' }
 GtMethodCoder >> forMethod: aCompiledMethod [
-	| source index |
+	| source index patternSource originalBodySource text |
 	class := aCompiledMethod methodClass.
 	selector := aCompiledMethod selector.
 	category := class whichCategoryIncludesSelector: selector.
@@ -255,8 +250,15 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 	patternSource := source copyFrom: 1 to: index - 1.
 	index := self skipBlankLinesIn: source at: index.
 	originalBodySource := source allButFirst: index - 1.
-	textEditor := BrTextEditor new.
-	textEditor text: originalBodySource asRopedText
+	text := originalBodySource asRopedText.
+	text
+		attributes:
+			{BrFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
+			(BrFontSizeAttribute size: 14) beNotOverwritableByStyler}.
+	sourceEditor := BrTextEditor new.
+	sourceEditor text: text.
+	patternEditor := BrTextEditor new.
+	patternEditor text: patternSource asRopedText
 ]
 
 { #category : #elements }
@@ -268,24 +270,13 @@ GtMethodCoder >> instClassElement [
 			(self classOrMetaClass isMeta
 				ifTrue: [ 'class' ]
 				ifFalse: [ 'instance' ]).
-	element
-		constraintsDo: [ :c | 
-			c ignoreByLayout.
-			c
-				margin:
-					(BlInsets
-						top: 0
-						left: 0
-						bottom: 0
-						right: 181).
-			c ignored horizontal alignRight.
-			c ignored vertical alignCenter ].
+	element constraintsDo: [ :c | c margin: (BlInsets all: 5) ].
 	^ element
 ]
 
 { #category : #actions }
 GtMethodCoder >> methodSource [
-	^ patternSource , String cr , self bodySource
+	^ self patternSource , String cr , self bodySource
 ]
 
 { #category : #elements }
@@ -308,14 +299,85 @@ GtMethodCoder >> object: anObject [
 	object := anObject
 ]
 
+{ #category : #elements }
+GtMethodCoder >> patternButtonElement [
+	| header patternElement label editorElement styledPattern button |
+	styledPattern := self styledPatternText.
+	header := BrButton new.
+	header
+		layout: (BlGridLayout horizontal cellSpacing: 0);
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	patternElement := BlElement new.
+	patternElement
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c frame vertical alignCenter ].
+	label := BlTextElement new.
+	label text: styledPattern.
+	label
+		margin:
+			(BlInsets
+				top: 10
+				left: 0
+				bottom: 10
+				right: 5).
+	label
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	patternElement addChild: label.
+	editorElement := BrEditorElement new.
+	editorElement editor: patternEditor.
+	patternEditor text: styledPattern.
+	editorElement
+		margin:
+			(BlInsets
+				top: 10
+				left: 0
+				bottom: 10
+				right: 5).
+	editorElement
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	editorElement when: BlClickEvent do: [ :event | event consumed: true ].
+	editorElement visibility: BlVisibility hidden.
+	patternElement addChild: editorElement.
+	button := BrButton new.
+	button
+		look: BrGlamorousButtonWithIconLook;
+		icon: BrGlamorousIcons edit asElement;
+		action: [ editorElement isVisible
+				ifTrue: [ editorElement visibility: BlVisibility hidden.
+					label visibility: BlVisibility visible ]
+				ifFalse: [ editorElement visibility: BlVisibility visible.
+					label visibility: BlVisibility hidden ] ];
+		constraintsDo: [ :c1 | 
+			c1
+				margin:
+					(BlInsets
+						top: 5
+						left: 10
+						bottom: 5
+						right: 10) ].
+	header addChild: button.
+	header addChild: patternElement.
+	header addChild: self instClassElement.
+	header addChild: self categoryElement.
+	header addChild: self saveElement.
+	^ header
+]
+
 { #category : #accessing }
 GtMethodCoder >> patternSource [
-	^ patternSource
+	^ patternEditor text asString
 ]
 
 { #category : #accessing }
 GtMethodCoder >> patternSource: aString [
-	patternSource := aString
+	patternEditor text: aString asRopedText
 ]
 
 { #category : #actions }
@@ -325,8 +387,6 @@ GtMethodCoder >> requester [
 
 { #category : #actions }
 GtMethodCoder >> save [
-	originalBodySource = self bodySource
-		ifTrue: [ ^ self ].
 	self changeManager
 		performChange:
 			(RBAddMethodChange
@@ -344,23 +404,13 @@ GtMethodCoder >> saveElement [
 		look: BrGlamorousButtonWithIconLook;
 		icon: BrGlamorousIcons save asElement;
 		action: [ self save ];
-		constraintsDo: [ :c | 
-			c ignoreByLayout.
-			c
-				margin:
-					(BlInsets
-						top: 0
-						left: 0
-						bottom: 0
-						right: 10).
-			c ignored horizontal alignRight.
-			c ignored vertical alignCenter ].
+		constraintsDo: [ :c | c margin: (BlInsets all: 5) ].
 	^ button
 ]
 
 { #category : #private }
 GtMethodCoder >> selectedSource [
-	textEditor selection do: [ :each | ^ (textEditor text from: each from + 1 to: each to) asString ].
+	sourceEditor selection do: [ :each | ^ (sourceEditor text from: each from + 1 to: each to) asString ].
 	^ nil
 ]
 
@@ -384,15 +434,15 @@ GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 ]
 
 { #category : #private }
-GtMethodCoder >> styledPatternText [
-	| text |
-	text := patternSource asRopedText.
-	^ BrRBTextStyler new
-		classOrMetaClass: class;
-		style: text
+GtMethodCoder >> sourceEditor [
+	^ sourceEditor
 ]
 
 { #category : #private }
-GtMethodCoder >> textEditor [
-	^ textEditor
+GtMethodCoder >> styledPatternText [
+	| text |
+	text := self patternSource asRopedText.
+	^ BrRBTextStyler new
+		classOrMetaClass: class;
+		style: text
 ]
