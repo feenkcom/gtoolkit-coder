@@ -42,7 +42,7 @@ GtMethodCoder >> asElement [
 
 { #category : #elements }
 GtMethodCoder >> bodyElement [
-	| styler completionStrategy completionController editorElement text |
+	| styler completionStrategy completionController editorElement |
 	styler := BrRBMethodBodyTextStyler new.
 	styler classOrMetaClass: class.
 	styler methodPatternSource: ast pattern source.
@@ -99,6 +99,11 @@ GtMethodCoder >> classOrMetaClass [
 { #category : #accessing }
 GtMethodCoder >> classOrMetaClass: aBehavior [
 	class := aBehavior
+]
+
+{ #category : #private }
+GtMethodCoder >> clearPatternSyntaxErrors [
+	patternEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
 ]
 
 { #category : #private }
@@ -314,6 +319,9 @@ GtMethodCoder >> patternButtonElement [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c frame vertical alignCenter ].
+	patternEditor
+		when: BrTextEditorInsertedEvent do: [ :event | self clearPatternSyntaxErrors ];
+		when: BrTextEditorDeletedEvent do: [ :event | self clearPatternSyntaxErrors ].
 	label := BlTextElement new.
 	label text: styledPattern.
 	label
@@ -368,6 +376,11 @@ GtMethodCoder >> patternButtonElement [
 	header addChild: self categoryElement.
 	header addChild: self saveElement.
 	^ header
+]
+
+{ #category : #private }
+GtMethodCoder >> patternEditor [
+	^ patternEditor
 ]
 
 { #category : #accessing }

@@ -44,13 +44,18 @@ GtMethodCoderRequester >> editor [
 
 { #category : #requester }
 GtMethodCoderRequester >> notify: message at: anIndex in: aString [
-	| index |
-	index := anIndex - self offset.
-	(coder sourceEditor text from: index to: index) attributes: {(GtMethodCoderErrorAttribute for: message)}.
-	coder sourceEditor
+	| index editor |
+	anIndex <= coder patternSource size
+		ifTrue: [ index := anIndex - 1.
+			editor := coder patternEditor ]
+		ifFalse: [ index := anIndex - self offset.
+			editor := coder sourceEditor ].
+	index := index max: 1.
+	(editor text from: index to: index) attributes: {(GtMethodCoderErrorAttribute for: message)}.
+	editor
 		invalidate: index to: index;
 		update: index to: index.
-	coder sourceEditor moveCursorTo: index
+	editor moveCursorTo: index
 ]
 
 { #category : #private }
