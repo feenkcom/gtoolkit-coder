@@ -4,8 +4,6 @@ Class {
 	#instVars : [
 		'object',
 		'class',
-		'selector',
-		'ast',
 		'category',
 		'sourceEditor',
 		'patternEditor'
@@ -42,10 +40,10 @@ GtMethodCoder >> asElement [
 
 { #category : #elements }
 GtMethodCoder >> bodyElement [
-	| styler completionStrategy completionController editorElement |
+	| styler completionStrategy completionController editorElement ast |
 	styler := BrRBMethodBodyTextStyler new.
 	styler classOrMetaClass: class.
-	styler methodPatternSource: ast pattern source.
+	styler methodPatternSource: self patternSource.
 	sourceEditor styler: styler.
 	sourceEditor
 		when: BrTextEditorInsertedEvent do: [ :event | self clearSyntaxErrors ];
@@ -67,7 +65,10 @@ GtMethodCoder >> bodyElement [
 	editorElement editor: sourceEditor.
 	completionStrategy := GtPharoCompletionStrategy new.
 	completionStrategy classOrMetaClass: class.
-	completionStrategy methodPattern: ast pattern.
+	[ ast := GtPharoParser parseWithErrors: self patternSource.
+	completionStrategy methodPattern: ast pattern ]
+		on: Error
+		do: [ :ex | ex return ].
 	completionController := GtCompletionController on: editorElement strategy: completionStrategy.
 	completionController install.
 	^ editorElement
@@ -245,7 +246,7 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 
 { #category : #'initialize-release' }
 GtMethodCoder >> forMethod: aCompiledMethod [
-	| source index patternSource originalBodySource text |
+	| source index patternSource originalBodySource text ast selector |
 	class := aCompiledMethod methodClass.
 	selector := aCompiledMethod selector.
 	category := class whichCategoryIncludesSelector: selector.
@@ -260,10 +261,15 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 		attributes:
 			{BrFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
 			(BrFontSizeAttribute size: 14) beNotOverwritableByStyler}.
-	sourceEditor := BrTextEditor new.
 	sourceEditor text: text.
-	patternEditor := BrTextEditor new.
 	patternEditor text: patternSource asRopedText
+]
+
+{ #category : #'initialize-release' }
+GtMethodCoder >> initialize [
+	super initialize.
+	sourceEditor := BrTextEditor new.
+	patternEditor := BrTextEditor new.
 ]
 
 { #category : #elements }
@@ -400,13 +406,15 @@ GtMethodCoder >> requester [
 
 { #category : #actions }
 GtMethodCoder >> save [
-	self changeManager
-		performChange:
-			(RBAddMethodChange
+	| change |
+	change := category isNil
+		ifTrue: [ RBAddMethodChange compile: self methodSource in: class for: self requester ]
+		ifFalse: [ RBAddMethodChange
 				compile: self methodSource
 				in: class
 				classified: category
-				for: self requester)
+				for: self requester ].
+	self changeManager performChange: change
 ]
 
 { #category : #elements }
@@ -425,16 +433,6 @@ GtMethodCoder >> saveElement [
 GtMethodCoder >> selectedSource [
 	sourceEditor selection do: [ :each | ^ (sourceEditor text from: each from + 1 to: each to) asString ].
 	^ nil
-]
-
-{ #category : #accessing }
-GtMethodCoder >> selector [
-	^ selector
-]
-
-{ #category : #accessing }
-GtMethodCoder >> selector: aSymbol [
-	selector := aSymbol
 ]
 
 { #category : #private }
