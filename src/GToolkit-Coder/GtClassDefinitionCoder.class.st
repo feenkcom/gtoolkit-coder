@@ -17,7 +17,7 @@ GtClassDefinitionCoder class >> forClass: aBehavior [
 
 { #category : #'instance creation' }
 GtClassDefinitionCoder class >> forObject: anObject [
-	^ (self forClass: anObject)
+	^ (self forClass: anObject class)
 		object: anObject;
 		yourself
 ]
