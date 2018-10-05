@@ -1,6 +1,6 @@
 Class {
 	#name : #GtMethodsCoder,
-	#superclass : #Object,
+	#superclass : #Announcer,
 	#instVars : [
 		'class',
 		'object',
@@ -17,6 +17,17 @@ GtMethodsCoder class >> forClass: aBehavior [
 ]
 
 { #category : #'instance creation' }
+GtMethodsCoder class >> forImplementors: aSymbol [
+	| methods |
+	methods := OrderedCollection new.
+	Smalltalk
+		allClassesDo: [ :each | 
+			(each includesSelector: aSymbol)
+				ifTrue: [ methods add: each >> aSymbol ] ].
+	^ self forMethods: (self sortMethods: methods)
+]
+
+{ #category : #'instance creation' }
 GtMethodsCoder class >> forMethods: compiledMethods [
 	^ self new
 		forMethods: compiledMethods;
@@ -28,6 +39,23 @@ GtMethodsCoder class >> forObject: anObject [
 	^ self new
 		forObject: anObject;
 		yourself
+]
+
+{ #category : #'instance creation' }
+GtMethodsCoder class >> forReferences: aSymbol [
+	| methods |
+	methods := OrderedCollection new.
+	Smalltalk allClassesDo: [ :each | (each thoroughWhichSelectorsReferTo: aSymbol) do: [ :sel | methods add: each >> sel ] ].
+	^ self forMethods: (self sortMethods: methods)
+]
+
+{ #category : #private }
+GtMethodsCoder class >> sortMethods: aCollection [
+	^ aCollection
+		asSortedCollection: [ :a :b | 
+			a methodClass = b methodClass
+				ifTrue: [ a selector < b selector ]
+				ifFalse: [ a methodClass name < b methodClass name ] ]
 ]
 
 { #category : #actions }
@@ -68,12 +96,13 @@ GtMethodsCoder >> asElement [
 							(GtPhlowObjectToSelect new
 								object: announcement result;
 								sourceElement: element) ] ].
-	button := BrButton new.
-	button
-		look: BrGlamorousButtonWithIconLook;
-		icon: BrGlamorousIcons add asElement;
-		action: [ self addMethodCoderIn: element ].
-	element addChild: button.
+	class notNil
+		ifTrue: [ button := BrButton new.
+			button
+				look: BrGlamorousButtonWithIconLook;
+				icon: BrGlamorousIcons add asElement;
+				action: [ self addMethodCoderIn: element ].
+			element addChild: button ].
 	element addChildren: (methodCoders collect: [ :each | each asElement ]).
 	^ element
 ]
@@ -87,7 +116,10 @@ GtMethodsCoder >> forClass: aBehavior [
 { #category : #'initialize-release' }
 GtMethodsCoder >> forMethods: compiledMethods [
 	methodCoders := compiledMethods collect: [ :each | GtMethodCoder forMethod: each ].
-	methodCoders do: [ :each | each object: object ]
+	methodCoders
+		do: [ :each | 
+			each when: GtCoderDrillDownAnnouncement do: [ :event | self announce: event ].
+			each object: object ]
 ]
 
 { #category : #'initialize-release' }

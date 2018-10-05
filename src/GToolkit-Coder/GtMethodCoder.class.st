@@ -26,6 +26,43 @@ GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
 ]
 
 { #category : #elements }
+GtMethodCoder >> addBodyShortcutsTo: editorElement [
+	editorElement
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						meta;
+						key: Key d;
+						build);
+				action: [ self doItSelection ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						meta;
+						key: Key m;
+						build);
+				action: [ self browseImplementors ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						meta;
+						key: Key n;
+						build);
+				action: [ self browseReferences ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						meta;
+						key: Key b;
+						build);
+				action: [ self browseClass ])
+]
+
+{ #category : #elements }
 GtMethodCoder >> asElement [
 	| accordion header |
 	accordion := BrAccordion new.
@@ -40,11 +77,8 @@ GtMethodCoder >> asElement [
 
 { #category : #elements }
 GtMethodCoder >> bodyElement [
-	| styler completionStrategy completionController editorElement ast |
-	styler := BrRBMethodBodyTextStyler new.
-	styler classOrMetaClass: class.
-	styler methodPatternSource: self patternSource.
-	sourceEditor styler: styler.
+	| completionStrategy completionController editorElement ast |
+	sourceEditor styler: self bodyStyler.
 	sourceEditor
 		when: BrTextEditorInsertedEvent do: [ :event | self clearSyntaxErrors ];
 		when: BrTextEditorDeletedEvent do: [ :event | self clearSyntaxErrors ].
@@ -53,15 +87,7 @@ GtMethodCoder >> bodyElement [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical fitContent ].
-	editorElement
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						meta;
-						key: Key d;
-						build);
-				action: [ self doItSelection ]).
+	self addBodyShortcutsTo: editorElement.
 	editorElement editor: sourceEditor.
 	completionStrategy := GtPharoCompletionStrategy new.
 	completionStrategy classOrMetaClass: class.
@@ -77,6 +103,46 @@ GtMethodCoder >> bodyElement [
 { #category : #accessing }
 GtMethodCoder >> bodySource [
 	^ sourceEditor text asString
+]
+
+{ #category : #elements }
+GtMethodCoder >> bodyStyler [
+	| styler |
+	styler := BrRBMethodBodyTextStyler new.
+	styler classOrMetaClass: class.
+	styler methodPatternSource: self patternSource.
+	^ styler
+]
+
+{ #category : #actions }
+GtMethodCoder >> browseClass [
+	| variable varName behavior |
+	variable := self variableAtCursor.
+	variable isNil
+		ifTrue: [ ^ self ].
+	varName := variable name value asSymbol.
+	behavior := Smalltalk globals at: varName ifAbsent: [ ^ self ].
+	behavior isBehavior
+		ifFalse: [ ^ self ].
+	self announce: (GtCoderDrillDownAnnouncement forCoder: (GtClassCoder forClass: behavior))
+]
+
+{ #category : #actions }
+GtMethodCoder >> browseImplementors [
+	| symbol |
+	symbol := self selectorAtCursor.
+	symbol isNil
+		ifTrue: [ ^ self ].
+	self announce: (GtCoderDrillDownAnnouncement forCoder: (GtMethodsCoder forImplementors: symbol))
+]
+
+{ #category : #actions }
+GtMethodCoder >> browseReferences [
+	| coder |
+	coder := self referencesCoderAtCursor.
+	coder isNil
+		ifTrue: [ ^ self ].
+	self announce: (GtCoderDrillDownAnnouncement forCoder: coder)
 ]
 
 { #category : #elements }
@@ -110,6 +176,11 @@ GtMethodCoder >> clearPatternSyntaxErrors [
 { #category : #private }
 GtMethodCoder >> clearSyntaxErrors [
 	sourceEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+]
+
+{ #category : #private }
+GtMethodCoder >> cursorPositionDo: aBlock [
+	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
 ]
 
 { #category : #actions }
@@ -300,6 +371,22 @@ GtMethodCoder >> newPopupElement [
 			c horizontal exact: 100 ]
 ]
 
+{ #category : #private }
+GtMethodCoder >> nodeAtCursor [
+	self
+		cursorPositionDo: [ :position | 
+			[ | ast innerNode |
+			ast := self sourceAst.
+			ast
+				withAllNodesDo: [ :node | 
+					(position between: node startPosition and: node stopPosition)
+						ifTrue: [ innerNode := node ] ].
+			^ innerNode ]
+				on: Error
+				do: [ :ex | ex return ] ].
+	^ nil
+]
+
 { #category : #accessing }
 GtMethodCoder >> object [
 	^ object
@@ -399,6 +486,40 @@ GtMethodCoder >> patternSource: aString [
 	patternEditor text: aString asRopedText
 ]
 
+{ #category : #private }
+GtMethodCoder >> referencesCoderAtCursor [
+	| node |
+	node := self nodeAtCursor.
+	[ node isNil ]
+		whileFalse: [ (node isKindOf: GtPharoVariableNode)
+				ifTrue: [ ^ self referencesCoderForVariable: node name source ].
+			(node isKindOf: GtPharoSymbolLiteralNode)
+				ifTrue: [ ^ GtMethodsCoder forReferences: node asSymbol ].
+			(node isKindOf: GtPharoMessageSendNode)
+				ifTrue: [ node := node message ].
+			(node isKindOf: GtPharoMessageNode)
+				ifTrue: [ ^ GtMethodsCoder forReferences: node selector ].
+			node := node parent ].
+	^ nil
+]
+
+{ #category : #private }
+GtMethodCoder >> referencesCoderForVariable: aString [
+	| index binding methods |
+	index := self classOrMetaClass instVarIndexFor: aString.
+	index > 0
+		ifTrue: [ methods := (self classOrMetaClass whichClassDefinesInstVar: aString) withAllSubclasses
+				inject: OrderedCollection new
+				into: [ :sum :each | 
+					(each whichSelectorsAccess: aString) do: [ :sel | sum add: each >> sel ].
+					sum ].
+			^ GtMethodsCoder forMethods: (GtMethodsCoder sortMethods: methods) ].
+	binding := self classOrMetaClass bindingOf: aString.
+	binding notNil
+		ifTrue: [ ^ GtMethodsCoder forReferences: binding ].
+	^ nil
+]
+
 { #category : #actions }
 GtMethodCoder >> requester [
 	^ GtMethodCoderRequester on: self
@@ -436,12 +557,24 @@ GtMethodCoder >> selectedSource [
 ]
 
 { #category : #private }
+GtMethodCoder >> selectorAtCursor [
+	^ self symbolFor: self nodeAtCursor
+]
+
+{ #category : #private }
 GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 	| char index |
 	index := startIndex.
 	[ index <= source size and: [ (char := source at: index) = Character cr or: [ char = Character lf ] ] ]
 		whileTrue: [ index := index + 1 ].
 	^ index
+]
+
+{ #category : #private }
+GtMethodCoder >> sourceAst [
+	^ GtPharoParser
+		parseWithErrors: self sourceEditor text asString
+		startingAt: GtPharoParser startingStateForMethodSequence
 ]
 
 { #category : #private }
@@ -456,4 +589,37 @@ GtMethodCoder >> styledPatternText [
 	^ BrRBTextStyler new
 		classOrMetaClass: class;
 		style: text
+]
+
+{ #category : #private }
+GtMethodCoder >> symbolFor: aNode [
+	| current |
+	aNode isNil
+		ifTrue: [ ^ nil ].
+	(aNode isKindOf: GtPharoSymbolLiteralNode)
+		ifTrue: [ aNode asSymbol ].
+	current := aNode.
+	[ current notNil ]
+		whileTrue: [ (current isKindOf: GtPharoMessageSendNode)
+				ifTrue: [ current := current message ].
+			(current isKindOf: GtPharoMessageNode)
+				ifTrue: [ ^ current selector ].
+			current := current parent ].
+	^ nil
+]
+
+{ #category : #private }
+GtMethodCoder >> variableAtCursor [
+	self
+		cursorPositionDo: [ :position | 
+			[ | ast |
+			ast := self sourceAst.
+			ast
+				withAllNodesOfType: GtPharoVariableNode
+				do: [ :node | 
+					(position between: node startPosition and: node stopPosition)
+						ifTrue: [ ^ node ] ] ]
+				on: Error
+				do: [ :ex | ex return ] ].
+	^ nil
 ]

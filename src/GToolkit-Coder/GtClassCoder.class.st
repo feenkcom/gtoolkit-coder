@@ -1,6 +1,6 @@
 Class {
 	#name : #GtClassCoder,
-	#superclass : #Object,
+	#superclass : #Announcer,
 	#instVars : [
 		'classDefinitionCoder',
 		'methodsCoder'
@@ -40,11 +40,13 @@ GtClassCoder >> asElement [
 { #category : #'initialize-release' }
 GtClassCoder >> forClass: aBehavior [
 	classDefinitionCoder := GtClassDefinitionCoder forClass: aBehavior.
-	methodsCoder := GtMethodsCoder forClass: aBehavior
+	methodsCoder := GtMethodsCoder forClass: aBehavior.
+	methodsCoder when: GtCoderDrillDownAnnouncement do: [ :event | self announce: event ]
 ]
 
 { #category : #'initialize-release' }
 GtClassCoder >> forObject: anObject [
 	classDefinitionCoder := GtClassDefinitionCoder forObject: anObject.
-	methodsCoder := GtMethodsCoder forObject: anObject
+	methodsCoder := GtMethodsCoder forObject: anObject.
+	methodsCoder when: GtCoderDrillDownAnnouncement do: [ :event | self announce: event ]
 ]

@@ -9,8 +9,22 @@ Class {
 }
 
 { #category : #elements }
+GtCoder >> addNewCoderFor: event to: pager [
+	| coderElement |
+	coderElement := event coder asElement.
+	coderElement viewModel: (BrPagerPageModel new model: event coder).
+	event coder when: GtCoderDrillDownAnnouncement do: [ :evt | self addNewCoderFor: evt to: pager ].
+	^ pager addPage: coderElement
+]
+
+{ #category : #elements }
 GtCoder >> asElement [
-	| element |
+	| element pager |
+	pager := BrPager new.
+	pager
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
 	element := BlElement new.
 	element layout: BlLinearLayout vertical.
 	element
@@ -22,9 +36,12 @@ GtCoder >> asElement [
 		when: GtClassFilterAnnouncement
 		do: [ :ann | 
 			classCoder := GtClassCoder forClass: ann classOrMetaClass.
+			classCoder when: GtCoderDrillDownAnnouncement do: [ :event | self addNewCoderFor: event to: pager ].
 			[ element childrenCount > 1 ] whileTrue: [ element removeChildAt: 2 ].
 			element addChild: classCoder asElement ].
-	^ element
+	element viewModel: (BrPagerPageModel new model: self).
+	pager addPage: element.
+	^ pager
 ]
 
 { #category : #'initialize-release' }
