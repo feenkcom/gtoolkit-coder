@@ -19,12 +19,7 @@ GtCoder >> addNewCoderFor: event to: pager [
 
 { #category : #elements }
 GtCoder >> asElement [
-	| element pager |
-	pager := BrPager new.
-	pager
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
+	| element |
 	element := BlElement new.
 	element layout: BlLinearLayout vertical.
 	element
@@ -36,12 +31,9 @@ GtCoder >> asElement [
 		when: GtClassFilterAnnouncement
 		do: [ :ann | 
 			classCoder := GtClassCoder forClass: ann classOrMetaClass.
-			classCoder when: GtCoderDrillDownAnnouncement do: [ :event | self addNewCoderFor: event to: pager ].
 			[ element childrenCount > 1 ] whileTrue: [ element removeChildAt: 2 ].
 			element addChild: classCoder asElement ].
-	element viewModel: (BrPagerPageModel new model: self).
-	pager addPage: element.
-	^ pager
+	^ element
 ]
 
 { #category : #'initialize-release' }

@@ -89,8 +89,15 @@ GtMethodsCoder >> asElement [
 	methodCoders
 		do: [ :each | 
 			each
+				when: GtCoderDrillDownAnnouncement
+					do: [ :annoucement | 
+					element
+						fireEvent:
+							(GtPhlowObjectToSelect new
+								object: annoucement coder asElement;
+								sourceElement: element) ];
 				when: GtCoderEvaluationAnnouncement
-				do: [ :announcement | 
+					do: [ :announcement | 
 					element
 						fireEvent:
 							(GtPhlowObjectToSelect new
