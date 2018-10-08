@@ -6,7 +6,8 @@ Class {
 		'class',
 		'category',
 		'sourceEditor',
-		'patternEditor'
+		'patternEditor',
+		'highlighter'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -108,9 +109,10 @@ GtMethodCoder >> bodySource [
 { #category : #elements }
 GtMethodCoder >> bodyStyler [
 	| styler |
-	styler := BrRBMethodBodyTextStyler new.
+	styler := BrRBHighlightingMethodBodyTextStyler new.
 	styler classOrMetaClass: class.
 	styler methodPatternSource: self patternSource.
+	styler highlighter: highlighter.
 	^ styler
 ]
 
@@ -336,6 +338,16 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 	patternEditor text: patternSource asRopedText
 ]
 
+{ #category : #accessing }
+GtMethodCoder >> highlighter [
+	^ highlighter
+]
+
+{ #category : #accessing }
+GtMethodCoder >> highlighter: anObject [
+	highlighter := anObject
+]
+
 { #category : #'initialize-release' }
 GtMethodCoder >> initialize [
 	super initialize.
@@ -494,13 +506,20 @@ GtMethodCoder >> referencesCoderAtCursor [
 		whileFalse: [ (node isKindOf: GtPharoVariableNode)
 				ifTrue: [ ^ self referencesCoderForVariable: node name source ].
 			(node isKindOf: GtPharoSymbolLiteralNode)
-				ifTrue: [ ^ GtMethodsCoder forReferences: node asSymbol ].
+				ifTrue: [ ^ self referencesCoderForSymbol: node asSymbol ].
 			(node isKindOf: GtPharoMessageSendNode)
 				ifTrue: [ node := node message ].
 			(node isKindOf: GtPharoMessageNode)
-				ifTrue: [ ^ GtMethodsCoder forReferences: node selector ].
+				ifTrue: [ ^ self referencesCoderForSymbol: node selector ].
 			node := node parent ].
 	^ nil
+]
+
+{ #category : #private }
+GtMethodCoder >> referencesCoderForSymbol: aSymbol [
+	^ (GtMethodsCoder forReferences: aSymbol)
+		highlighter: (GtSelectorReferenceHighlighter forSelector: aSymbol);
+		yourself
 ]
 
 { #category : #private }
@@ -513,10 +532,14 @@ GtMethodCoder >> referencesCoderForVariable: aString [
 				into: [ :sum :each | 
 					(each whichSelectorsAccess: aString) do: [ :sel | sum add: each >> sel ].
 					sum ].
-			^ GtMethodsCoder forMethods: (GtMethodsCoder sortMethods: methods) ].
+			^ (GtMethodsCoder forMethods: (GtMethodsCoder sortMethods: methods))
+				highlighter: (GtVariableReferenceHighlighter forVariableName: aString);
+				yourself ].
 	binding := self classOrMetaClass bindingOf: aString.
 	binding notNil
-		ifTrue: [ ^ GtMethodsCoder forReferences: binding ].
+		ifTrue: [ ^ (GtMethodsCoder forReferences: binding)
+				highlighter: (GtVariableReferenceHighlighter forVariableName: aString);
+				yourself ].
 	^ nil
 ]
 

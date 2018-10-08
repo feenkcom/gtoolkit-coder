@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'class',
 		'object',
-		'methodCoders'
+		'methodCoders',
+		'highlighter'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -147,4 +148,21 @@ GtMethodsCoder >> forMethods: compiledMethods [
 GtMethodsCoder >> forObject: anObject [
 	object := anObject.
 	self forClass: anObject class
+]
+
+{ #category : #accessing }
+GtMethodsCoder >> highlighter [
+	^ highlighter
+]
+
+{ #category : #accessing }
+GtMethodsCoder >> highlighter: aReferenceHighlighter [
+	highlighter := aReferenceHighlighter.
+	methodCoders do: [ :each | each highlighter: aReferenceHighlighter ]
+]
+
+{ #category : #'initialize-release' }
+GtMethodsCoder >> initialize [
+	super initialize.
+	methodCoders := #()
 ]
