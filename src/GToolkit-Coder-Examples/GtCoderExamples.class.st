@@ -105,11 +105,11 @@ GtCoderExamples >> keywordSelectorCoder [
 GtCoderExamples >> noSpacesCoder [
 	<gtExample>
 	| method methodCoder source |
-	method := self class >> #noSpaces.
+	method := self class >> #noSpacesCoder.
 	methodCoder := GtMethodCoder forMethod: method.
 	source := method sourceCode.
-	self assert: methodCoder patternSource = 'noSpaces'.
-	self assert: methodCoder bodySource = '|a|a:=3.^a*a'.
+	self assert: methodCoder patternSource = 'noSpacesCoder'.
+	self assert: (methodCoder bodySource beginsWith: String tab, '<gtExample').
 	^ methodCoder
 ]
 
