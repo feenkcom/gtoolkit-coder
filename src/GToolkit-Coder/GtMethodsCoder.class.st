@@ -60,11 +60,10 @@ GtMethodsCoder class >> sortMethods: aCollection [
 
 { #category : #actions }
 GtMethodsCoder >> addMethodCoderIn: anElement [
-	| coder element |
+	| coder |
 	coder := GtMethodCoder new.
 	coder classOrMetaClass: class.
 	coder object: object.
-	element := coder asElement.
 	coder
 		when: GtCoderEvaluationAnnouncement
 		do: [ :announcement | 
@@ -73,19 +72,42 @@ GtMethodsCoder >> addMethodCoderIn: anElement [
 					(GtPhlowObjectToSelect new
 						object: announcement result;
 						sourceElement: anElement) ].
-	anElement addChild: element at: 2
+	anElement items: (Array with: coder) , anElement items
 ]
 
 { #category : #elements }
 GtMethodsCoder >> asElement [
-	| element button |
-	element := BlElement new.
-	element layout: BlLinearLayout vertical.
-	element padding: (BlInsets all: 10).
-	element
+	| element listElement button |
+	listElement := BrSimpleList new.
+	listElement stencil: [ :each | each asElement ].
+	listElement padding: (BlInsets all: 10).
+	listElement
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical fitContent ].
+			c vertical matchParent ].
+	listElement display: methodCoders.
+	class notNil
+		ifTrue: [ element := BlElement new.
+			element layout: BlLinearLayout vertical.
+			element
+				constraintsDo: [ :c | 
+					c horizontal matchParent.
+					c vertical matchParent ].
+			button := BrButton new.
+			button
+				margin:
+					(BlInsets
+						top: 10
+						left: 10
+						bottom: 0
+						right: 0).
+			button
+				look: BrGlamorousButtonWithIconLook;
+				icon: BrGlamorousIcons add asElement;
+				action: [ self addMethodCoderIn: listElement ].
+			element addChild: button.
+			element addChild: listElement ]
+		ifFalse: [ element := listElement ].
 	methodCoders
 		do: [ :each | 
 			each
@@ -103,14 +125,6 @@ GtMethodsCoder >> asElement [
 							(GtPhlowObjectToSelect new
 								object: announcement result;
 								sourceElement: element) ] ].
-	class notNil
-		ifTrue: [ button := BrButton new.
-			button
-				look: BrGlamorousButtonWithIconLook;
-				icon: BrGlamorousIcons add asElement;
-				action: [ self addMethodCoderIn: element ].
-			element addChild: button ].
-	element addChildren: (methodCoders collect: [ :each | each asElement ]).
 	^ element
 ]
 
