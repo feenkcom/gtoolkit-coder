@@ -33,7 +33,7 @@ GtCoder >> asElement [
 			classCoder := GtClassCoder forClass: ann classOrMetaClass.
 			[ element childrenCount > 1 ] whileTrue: [ element removeChildAt: 2 ].
 			element addChild: classCoder asElement ].
-	^ element
+	^ element asScrollableElement
 ]
 
 { #category : #'initialize-release' }
