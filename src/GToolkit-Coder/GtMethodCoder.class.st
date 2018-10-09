@@ -338,6 +338,15 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 	patternEditor text: patternSource asRopedText
 ]
 
+{ #category : #ui }
+GtMethodCoder >> gtLiveFor: aView [
+	<gtView>
+	^ aView explicit 
+		title: 'Live';
+		priority: 10;
+		stencil: [ self ]
+]
+
 { #category : #accessing }
 GtMethodCoder >> highlighter [
 	^ highlighter

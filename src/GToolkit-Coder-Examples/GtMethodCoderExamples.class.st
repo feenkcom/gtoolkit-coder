@@ -1,16 +1,16 @@
 Class {
-	#name : #GtCoderExamples,
+	#name : #GtMethodCoderExamples,
 	#superclass : #Object,
-	#category : 'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples'
 }
 
 { #category : #'sample methods' }
-GtCoderExamples >> ? anObject [
+GtMethodCoderExamples >> ? anObject [
 	"Test binary method"
 ]
 
 { #category : #model }
-GtCoderExamples >> binaryMethodCoder [
+GtMethodCoderExamples >> binaryMethodCoder [
 	<gtExample>
 	| method methodCoder source |
 	method := self class >> #?.
@@ -22,13 +22,13 @@ GtCoderExamples >> binaryMethodCoder [
 ]
 
 { #category : #ui }
-GtCoderExamples >> bodyElementForThisMethod [
+GtMethodCoderExamples >> bodyElementForThisMethod [
 	<gtExample>
 	^ self thisMethod bodyElement
 ]
 
 { #category : #ui }
-GtCoderExamples >> elementForOrderedCollectionMethods [
+GtMethodCoderExamples >> elementForOrderedCollectionMethods [
 	<gtExample>
 	| container |
 	container := BlElement new.
@@ -43,17 +43,17 @@ GtCoderExamples >> elementForOrderedCollectionMethods [
 ]
 
 { #category : #ui }
-GtCoderExamples >> elementForThisMethod [
+GtMethodCoderExamples >> elementForThisMethod [
 	<gtExample>
 	^ self thisMethod asElement
 ]
 
 { #category : #'sample methods' }
-GtCoderExamples >> emptyBody [
+GtMethodCoderExamples >> emptyBody [
 ]
 
 { #category : #model }
-GtCoderExamples >> emptyBodyCoder [
+GtMethodCoderExamples >> emptyBodyCoder [
 	<gtExample>
 	| method methodCoder source |
 	method := self class >> #emptyBody.
@@ -65,7 +65,7 @@ GtCoderExamples >> emptyBodyCoder [
 ]
 
 { #category : #'sample methods' }
-GtCoderExamples >> emptyLines [
+GtMethodCoderExamples >> emptyLines [
 
 
 
@@ -73,7 +73,7 @@ GtCoderExamples >> emptyLines [
 ]
 
 { #category : #model }
-GtCoderExamples >> emptyLinesCoder [
+GtMethodCoderExamples >> emptyLinesCoder [
 	<gtExample>
 	| method methodCoder source |
 	method := self class >> #emptyLines.
@@ -85,12 +85,12 @@ GtCoderExamples >> emptyLinesCoder [
 ]
 
 { #category : #'sample methods' }
-GtCoderExamples >> keyword: a selector: b [
+GtMethodCoderExamples >> keyword: a selector: b [
 	^ a + b
 ]
 
 { #category : #model }
-GtCoderExamples >> keywordSelectorCoder [
+GtMethodCoderExamples >> keywordSelectorCoder [
 	<gtExample>
 	| method methodCoder source |
 	method := self class >> #keyword:selector:.
@@ -102,7 +102,7 @@ GtCoderExamples >> keywordSelectorCoder [
 ]
 
 { #category : #model }
-GtCoderExamples >> noSpacesCoder [
+GtMethodCoderExamples >> noSpacesCoder [
 	<gtExample>
 	| method methodCoder source |
 	method := self class >> #noSpacesCoder.
@@ -114,7 +114,7 @@ GtCoderExamples >> noSpacesCoder [
 ]
 
 { #category : #model }
-GtCoderExamples >> orderedCollectionMethods [
+GtMethodCoderExamples >> orderedCollectionMethods [
 	<gtExample>
 	| class |
 	class := OrderedCollection.
@@ -122,11 +122,11 @@ GtCoderExamples >> orderedCollectionMethods [
 ]
 
 { #category : #'sample methods' }
-GtCoderExamples >> returnSelf [ ^self
+GtMethodCoderExamples >> returnSelf [ ^self
 ]
 
 { #category : #model }
-GtCoderExamples >> selfReturnCoder [
+GtMethodCoderExamples >> selfReturnCoder [
 	<gtExample>
 	| method methodCoder |
 	method := self class >> #returnSelf.
@@ -137,7 +137,7 @@ GtCoderExamples >> selfReturnCoder [
 ]
 
 { #category : #model }
-GtCoderExamples >> thisMethod [
+GtMethodCoderExamples >> thisMethod [
 	<gtExample>
 	| method methodCoder source |
 	method := self class >> #thisMethod.

@@ -150,6 +150,15 @@ GtMethodsCoder >> forObject: anObject [
 	self forClass: anObject class
 ]
 
+{ #category : #ui }
+GtMethodsCoder >> gtLiveFor: aView [
+	<gtView>
+	^ aView explicit 
+		title: 'Live';
+		priority: 10;
+		stencil: [ self ]
+]
+
 { #category : #accessing }
 GtMethodsCoder >> highlighter [
 	^ highlighter
