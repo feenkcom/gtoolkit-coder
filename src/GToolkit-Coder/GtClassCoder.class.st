@@ -50,3 +50,12 @@ GtClassCoder >> forObject: anObject [
 	methodsCoder := GtMethodsCoder forObject: anObject.
 	methodsCoder when: GtCoderDrillDownAnnouncement do: [ :event | self announce: event ]
 ]
+
+{ #category : #ui }
+GtClassCoder >> gtLiveFor: aView [
+	<gtView>
+	^ aView explicit 
+		title: 'Live';
+		priority: 10;
+		stencil: [ self ]
+]

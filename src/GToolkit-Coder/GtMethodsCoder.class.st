@@ -116,14 +116,14 @@ GtMethodsCoder >> asElement [
 					do: [ :annoucement | 
 					element
 						fireEvent:
-							(GtPhlowObjectToSelect new
-								object: annoucement coder asElement;
+							(GtPhlowObjectToSpawn new
+								object: annoucement coder;
 								sourceElement: element) ];
 				when: GtCoderEvaluationAnnouncement
 					do: [ :announcement | 
 					element
 						fireEvent:
-							(GtPhlowObjectToSelect new
+							(GtPhlowObjectToSpawn new
 								object: announcement result;
 								sourceElement: element) ] ].
 	^ element

@@ -7,6 +7,7 @@ Class {
 		'category',
 		'sourceEditor',
 		'patternEditor',
+		'expanded',
 		'highlighter'
 	],
 	#category : #'GToolkit-Coder'
@@ -42,6 +43,14 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 				combination:
 					(BlKeyCombination builder
 						meta;
+						key: Key g;
+						build);
+				action: [ self doItAndGoSelection ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						meta;
 						key: Key m;
 						build);
 				action: [ self browseImplementors ]);
@@ -71,8 +80,12 @@ GtMethodCoder >> asElement [
 	accordion margin: (BlInsets all: 5).
 	accordion stencil: [ self bodyElement ].
 	header := self patternButtonElement.
-	header action: [ accordion toggle ].
+	header
+		action: [ accordion toggle.
+			self expanded: accordion isExpanded ].
 	accordion addChildFirst: header.
+	expanded
+		ifTrue: [ accordion toggle ].
 	^ accordion
 ]
 
@@ -176,6 +189,14 @@ GtMethodCoder >> clearPatternSyntaxErrors [
 ]
 
 { #category : #private }
+GtMethodCoder >> clearPreviousEvaluations [
+	self sourceEditor text clearAttributes: [ :each | each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute ].
+	self sourceEditor
+		invalidateAll;
+		updateAll
+]
+
+{ #category : #private }
 GtMethodCoder >> clearSyntaxErrors [
 	sourceEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
 ]
@@ -186,18 +207,46 @@ GtMethodCoder >> cursorPositionDo: aBlock [
 ]
 
 { #category : #actions }
-GtMethodCoder >> doItSelection [
+GtMethodCoder >> doItAndGoSelection [
 	| source value result |
 	source := self selectedSource.
 	source isNil
 		ifTrue: [ ^ self ].
+	self clearPreviousEvaluations.
 	value := class compiler
 		requestor: self evaluationRequester;
 		source: source;
 		receiver: object;
 		evaluate.
 	result := GtCoderEvaluationAnnouncement forCoder: self result: value.
-	self announce: result
+	self announce: result.
+	self clearPreviousEvaluations
+]
+
+{ #category : #actions }
+GtMethodCoder >> doItSelection [
+	| source value interval |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self ].
+	self clearPreviousEvaluations.
+	value := class compiler
+		requestor: self evaluationRequester;
+		source: source;
+		receiver: object;
+		evaluate.
+	interval := self selectedSourceInterval.
+	self sourceEditor text
+		attributes:
+			{(GtPlaygroundEvaluatedCodeButtonAttribute new
+				beNotOverwritableByStyler;
+				result: value;
+				paint: (Color fromHexString: #'90CAF9'))}
+		from: interval last
+		to: interval last.
+	self sourceEditor
+		invalidateAll;
+		updateAll
 ]
 
 { #category : #elements }
@@ -307,6 +356,16 @@ GtMethodCoder >> evaluationRequester [
 	^ GtMethodCoderEvaluationRequester on: self
 ]
 
+{ #category : #accessing }
+GtMethodCoder >> expanded [
+	^ expanded
+]
+
+{ #category : #accessing }
+GtMethodCoder >> expanded: anObject [
+	expanded := anObject
+]
+
 { #category : #private }
 GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 	| startIndex char source |
@@ -362,6 +421,7 @@ GtMethodCoder >> initialize [
 	super initialize.
 	sourceEditor := BrTextEditor new.
 	patternEditor := BrTextEditor new.
+	expanded := false
 ]
 
 { #category : #elements }
@@ -584,7 +644,13 @@ GtMethodCoder >> saveElement [
 
 { #category : #private }
 GtMethodCoder >> selectedSource [
-	sourceEditor selection do: [ :each | ^ (sourceEditor text from: each from + 1 to: each to) asString ].
+	self selectedSourceInterval ifNotNil: [ :interval | ^ (sourceEditor text from: interval first to: interval last) asString ].
+	^ nil
+]
+
+{ #category : #private }
+GtMethodCoder >> selectedSourceInterval [
+	sourceEditor selection do: [ :each | ^ each from + 1 to: each to ].
 	^ nil
 ]
 
