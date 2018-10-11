@@ -5,6 +5,7 @@ Class {
 		'object',
 		'class',
 		'category',
+		'source',
 		'sourceEditor',
 		'patternEditor',
 		'expanded',
@@ -75,6 +76,8 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 { #category : #elements }
 GtMethodCoder >> asElement [
 	| accordion header |
+	(source notEmpty and: [ self patternSource isEmpty ])
+		ifTrue: [ self buildSource ].
 	accordion := BrAccordion new.
 	accordion look: BrGlamorousAccordionLook new.
 	accordion margin: (BlInsets all: 5).
@@ -92,8 +95,8 @@ GtMethodCoder >> asElement [
 { #category : #elements }
 GtMethodCoder >> bodyElement [
 	| completionStrategy completionController editorElement ast |
-	sourceEditor styler: self bodyStyler.
-	sourceEditor
+	self sourceEditor styler: self bodyStyler.
+	self sourceEditor
 		when: BrTextEditorInsertedEvent do: [ :event | self clearSyntaxErrors ];
 		when: BrTextEditorDeletedEvent do: [ :event | self clearSyntaxErrors ].
 	editorElement := BrEditorElement new.
@@ -102,7 +105,7 @@ GtMethodCoder >> bodyElement [
 			c horizontal matchParent.
 			c vertical fitContent ].
 	self addBodyShortcutsTo: editorElement.
-	editorElement editor: sourceEditor.
+	editorElement editor: self sourceEditor.
 	completionStrategy := GtPharoCompletionStrategy new.
 	completionStrategy classOrMetaClass: class.
 	[ ast := GtPharoParser parseWithErrors: self patternSource.
@@ -116,7 +119,7 @@ GtMethodCoder >> bodyElement [
 
 { #category : #accessing }
 GtMethodCoder >> bodySource [
-	^ sourceEditor text asString
+	^ self sourceEditor text asString
 ]
 
 { #category : #elements }
@@ -160,6 +163,23 @@ GtMethodCoder >> browseReferences [
 	self announce: (GtCoderDrillDownAnnouncement forCoder: coder)
 ]
 
+{ #category : #private }
+GtMethodCoder >> buildSource [
+	| patternSource ast originalBodySource index text |
+	ast := GtPharoParser parse: source.
+	index := self findSeparatorBetweenPatternAndBodyIn: ast.
+	patternSource := source copyFrom: 1 to: index - 1.
+	index := self skipBlankLinesIn: source at: index.
+	originalBodySource := source allButFirst: index - 1.
+	text := originalBodySource asRopedText.
+	text
+		attributes:
+			{BrFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
+			(BrFontSizeAttribute size: 14) beNotOverwritableByStyler}.
+	self sourceEditor text: text.
+	self patternEditor text: patternSource asRopedText
+]
+
 { #category : #elements }
 GtMethodCoder >> categoryElement [
 	| element |
@@ -185,7 +205,7 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 
 { #category : #private }
 GtMethodCoder >> clearPatternSyntaxErrors [
-	patternEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+	self patternEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
 ]
 
 { #category : #private }
@@ -198,7 +218,7 @@ GtMethodCoder >> clearPreviousEvaluations [
 
 { #category : #private }
 GtMethodCoder >> clearSyntaxErrors [
-	sourceEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+	self sourceEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
 ]
 
 { #category : #private }
@@ -378,23 +398,11 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 
 { #category : #'initialize-release' }
 GtMethodCoder >> forMethod: aCompiledMethod [
-	| source index patternSource originalBodySource text ast selector |
+	| selector |
 	class := aCompiledMethod methodClass.
 	selector := aCompiledMethod selector.
 	category := class whichCategoryIncludesSelector: selector.
-	source := aCompiledMethod sourceCode.
-	ast := GtPharoParser parse: source.
-	index := self findSeparatorBetweenPatternAndBodyIn: ast.
-	patternSource := source copyFrom: 1 to: index - 1.
-	index := self skipBlankLinesIn: source at: index.
-	originalBodySource := source allButFirst: index - 1.
-	text := originalBodySource asRopedText.
-	text
-		attributes:
-			{BrFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
-			(BrFontSizeAttribute size: 14) beNotOverwritableByStyler}.
-	sourceEditor text: text.
-	patternEditor text: patternSource asRopedText
+	source := aCompiledMethod sourceCode
 ]
 
 { #category : #ui }
@@ -419,8 +427,7 @@ GtMethodCoder >> highlighter: anObject [
 { #category : #'initialize-release' }
 GtMethodCoder >> initialize [
 	super initialize.
-	sourceEditor := BrTextEditor new.
-	patternEditor := BrTextEditor new.
+	source := ''.
 	expanded := false
 ]
 
@@ -493,7 +500,7 @@ GtMethodCoder >> patternButtonElement [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c frame vertical alignCenter ].
-	patternEditor
+	self patternEditor
 		when: BrTextEditorInsertedEvent do: [ :event | self clearPatternSyntaxErrors ];
 		when: BrTextEditorDeletedEvent do: [ :event | self clearPatternSyntaxErrors ].
 	label := BlTextElement new.
@@ -511,8 +518,8 @@ GtMethodCoder >> patternButtonElement [
 			c vertical matchParent ].
 	patternElement addChild: label.
 	editorElement := BrEditorElement new.
-	editorElement editor: patternEditor.
-	patternEditor text: styledPattern.
+	editorElement editor: self patternEditor.
+	self patternEditor text: styledPattern.
 	editorElement
 		margin:
 			(BlInsets
@@ -554,17 +561,17 @@ GtMethodCoder >> patternButtonElement [
 
 { #category : #private }
 GtMethodCoder >> patternEditor [
-	^ patternEditor
+	^ patternEditor ifNil: [ patternEditor := BrTextEditor new ]
 ]
 
 { #category : #accessing }
 GtMethodCoder >> patternSource [
-	^ patternEditor text asString
+	^ self patternEditor text asString
 ]
 
 { #category : #accessing }
 GtMethodCoder >> patternSource: aString [
-	patternEditor text: aString asRopedText
+	self patternEditor text: aString asRopedText
 ]
 
 { #category : #private }
@@ -644,13 +651,13 @@ GtMethodCoder >> saveElement [
 
 { #category : #private }
 GtMethodCoder >> selectedSource [
-	self selectedSourceInterval ifNotNil: [ :interval | ^ (sourceEditor text from: interval first to: interval last) asString ].
+	self selectedSourceInterval ifNotNil: [ :interval | ^ (self sourceEditor text from: interval first to: interval last) asString ].
 	^ nil
 ]
 
 { #category : #private }
 GtMethodCoder >> selectedSourceInterval [
-	sourceEditor selection do: [ :each | ^ each from + 1 to: each to ].
+	self sourceEditor selection do: [ :each | ^ each from + 1 to: each to ].
 	^ nil
 ]
 
@@ -677,7 +684,7 @@ GtMethodCoder >> sourceAst [
 
 { #category : #private }
 GtMethodCoder >> sourceEditor [
-	^ sourceEditor
+	^ sourceEditor ifNil: [ sourceEditor := BrTextEditor new ]
 ]
 
 { #category : #private }

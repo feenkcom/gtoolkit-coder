@@ -43,6 +43,13 @@ GtMethodsCoder class >> forObject: anObject [
 ]
 
 { #category : #'instance creation' }
+GtMethodsCoder class >> forProcess: aProcess [
+	^ self new
+		forProcess: aProcess;
+		yourself
+]
+
+{ #category : #'instance creation' }
 GtMethodsCoder class >> forReferences: aSymbol [
 	| methods |
 	methods := OrderedCollection new.
@@ -150,6 +157,18 @@ GtMethodsCoder >> forObject: anObject [
 	self forClass: anObject class
 ]
 
+{ #category : #'initialize-release' }
+GtMethodsCoder >> forProcess: aProcess [
+	| context |
+	aProcess isSuspended
+		ifFalse: [ ^ self ].
+	methodCoders := OrderedCollection new.
+	context := aProcess suspendedContext.
+	[ context notNil ]
+		whileTrue: [ methodCoders add: (GtMethodContextCoder forContext: context).
+			context := context sender ]
+]
+
 { #category : #ui }
 GtMethodsCoder >> gtLiveFor: aView [
 	<gtView>
@@ -174,4 +193,14 @@ GtMethodsCoder >> highlighter: aReferenceHighlighter [
 GtMethodsCoder >> initialize [
 	super initialize.
 	methodCoders := #()
+]
+
+{ #category : #accessing }
+GtMethodsCoder >> methodCoders [
+	^ methodCoders
+]
+
+{ #category : #accessing }
+GtMethodsCoder >> methodCoders: anObject [
+	methodCoders := anObject
 ]
