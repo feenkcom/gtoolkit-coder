@@ -11,7 +11,7 @@ Class {
 BrRBHighlightingMethodBodyTextStyler class >> initialTextAttributes [
 	| attributes |
 	attributes := super initialTextAttributes.
-	attributes at: #highlight put: {(BrTextBackgroundAttribute paint: Color yellow)}.
+	attributes at: #highlight put: {(BlTextBackgroundAttribute paint: Color yellow)}.
 	^ attributes
 ]
 
