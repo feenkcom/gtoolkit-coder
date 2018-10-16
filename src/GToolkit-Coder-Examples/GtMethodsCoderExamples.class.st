@@ -7,13 +7,7 @@ Class {
 { #category : #accessing }
 GtMethodsCoderExamples >> factorialExample [
 	<gtExample>
-	| process |
-	process := [ 100000 factorial printString ] newProcess.
-	process priority: Processor activePriority - 1.
-	process resume.
-	(Delay forMilliseconds: 2) wait.
-	process suspend.
-	^ GtMethodsCoder forProcess: process
+	^ GtProcessCoder forProcess: self suspendedFactorialProcess
 ]
 
 { #category : #accessing }
@@ -26,4 +20,16 @@ GtMethodsCoderExamples >> methodsCoderWithClass [
 GtMethodsCoderExamples >> methodsCoderWithExplicitMethods [
 	<gtExample>
 	^ GtMethodsCoder forMethods: { Object>>#printString . Object >>#printOn: }
+]
+
+{ #category : #accessing }
+GtMethodsCoderExamples >> suspendedFactorialProcess [
+	<gtExample>
+	| process |
+	process := [ 100000 factorial printString ] newProcess.
+	process priority: Processor activePriority - 1.
+	process resume.
+	(Delay forMilliseconds: 2) wait.
+	process suspend.
+	^ process
 ]

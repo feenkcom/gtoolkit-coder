@@ -43,13 +43,6 @@ GtMethodsCoder class >> forObject: anObject [
 ]
 
 { #category : #'instance creation' }
-GtMethodsCoder class >> forProcess: aProcess [
-	^ self new
-		forProcess: aProcess;
-		yourself
-]
-
-{ #category : #'instance creation' }
 GtMethodsCoder class >> forReferences: aSymbol [
 	| methods |
 	methods := OrderedCollection new.
@@ -155,18 +148,6 @@ GtMethodsCoder >> forMethods: compiledMethods [
 GtMethodsCoder >> forObject: anObject [
 	object := anObject.
 	self forClass: anObject class
-]
-
-{ #category : #'initialize-release' }
-GtMethodsCoder >> forProcess: aProcess [
-	| context |
-	aProcess isSuspended
-		ifFalse: [ ^ self ].
-	methodCoders := OrderedCollection new.
-	context := aProcess suspendedContext.
-	[ context notNil ]
-		whileTrue: [ methodCoders add: (GtMethodContextCoder forContext: context).
-			context := context sender ]
 ]
 
 { #category : #ui }

@@ -89,6 +89,7 @@ GtMethodCoder >> asElement [
 	accordion addChildFirst: header.
 	expanded
 		ifTrue: [ accordion toggle ].
+	accordion userData at: #coder put: self.
 	^ accordion
 ]
 
