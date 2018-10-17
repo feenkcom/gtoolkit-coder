@@ -23,6 +23,17 @@ GtProcessCoder >> asElement [
 	^ element
 ]
 
+{ #category : #updating }
+GtProcessCoder >> drillDown: anAnnouncement [
+	lists
+		do: [ :list | 
+			list
+				fireEvent:
+					(GtPhlowObjectToSpawn new
+						object: anAnnouncement value;
+						sourceElement: list) ]
+]
+
 { #category : #'initialize-release' }
 GtProcessCoder >> forProcess: aProcess [
 	session := DebugSession named: 'Debug ' , aProcess name on: aProcess startedAt: aProcess suspendedContext.
@@ -56,7 +67,9 @@ GtProcessCoder >> updateCoders [
 					coder when: GtCoderRefreshStackAnnouncement do: [ :event | self updateCoders ].
 					newCoders add: coder.
 					context := context sender ].
-			methodCoders addAllFirst: newCoders ]
+			methodCoders addAllFirst: newCoders.
+			methodCoders notEmpty
+				ifTrue: [ methodCoders first expanded: true ] ]
 		ifFalse: [ methodCoders := OrderedCollection new ].
 	self updateLists
 ]

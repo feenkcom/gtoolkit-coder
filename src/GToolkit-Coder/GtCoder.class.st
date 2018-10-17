@@ -9,15 +9,6 @@ Class {
 }
 
 { #category : #elements }
-GtCoder >> addNewCoderFor: event to: pager [
-	| coderElement |
-	coderElement := event coder asElement.
-	coderElement viewModel: (BrPagerPageModel new model: event coder).
-	event coder when: GtCoderDrillDownAnnouncement do: [ :evt | self addNewCoderFor: evt to: pager ].
-	^ pager addPage: coderElement
-]
-
-{ #category : #elements }
 GtCoder >> asElement [
 	| element |
 	element := BlElement new.

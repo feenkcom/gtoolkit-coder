@@ -65,14 +65,6 @@ GtMethodsCoder >> addMethodCoderIn: anElement [
 	coder := GtMethodCoder new.
 	coder classOrMetaClass: class.
 	coder object: object.
-	coder
-		when: GtCoderEvaluationAnnouncement
-		do: [ :announcement | 
-			anElement
-				fireEvent:
-					(GtPhlowObjectToSelect new
-						object: announcement result;
-						sourceElement: anElement) ].
 	anElement items: (Array with: coder) , anElement items
 ]
 
@@ -109,23 +101,6 @@ GtMethodsCoder >> asElement [
 			element addChild: button.
 			element addChild: listElement ]
 		ifFalse: [ element := listElement ].
-	methodCoders
-		do: [ :each | 
-			each
-				when: GtCoderDrillDownAnnouncement
-					do: [ :annoucement | 
-					element
-						fireEvent:
-							(GtPhlowObjectToSpawn new
-								object: annoucement coder;
-								sourceElement: element) ];
-				when: GtCoderEvaluationAnnouncement
-					do: [ :announcement | 
-					element
-						fireEvent:
-							(GtPhlowObjectToSpawn new
-								object: announcement result;
-								sourceElement: element) ] ].
 	^ element
 ]
 
@@ -138,10 +113,7 @@ GtMethodsCoder >> forClass: aBehavior [
 { #category : #'initialize-release' }
 GtMethodsCoder >> forMethods: compiledMethods [
 	methodCoders := compiledMethods collect: [ :each | GtMethodCoder forMethod: each ].
-	methodCoders
-		do: [ :each | 
-			each when: GtCoderDrillDownAnnouncement do: [ :event | self announce: event ].
-			each object: object ]
+	methodCoders do: [ :each | each object: object ]
 ]
 
 { #category : #'initialize-release' }

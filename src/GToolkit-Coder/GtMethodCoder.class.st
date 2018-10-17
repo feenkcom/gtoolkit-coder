@@ -5,11 +5,11 @@ Class {
 		'object',
 		'class',
 		'category',
-		'source',
 		'sourceEditor',
 		'patternEditor',
 		'expanded',
-		'highlighter'
+		'highlighter',
+		'methodSource'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -46,7 +46,7 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 						meta;
 						key: Key g;
 						build);
-				action: [ self doItAndGoSelection ]);
+				action: [ self doItAndGoSelection: editorElement ]);
 		addShortcut:
 			(BlShortcut new
 				combination:
@@ -54,7 +54,7 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 						meta;
 						key: Key m;
 						build);
-				action: [ self browseImplementors ]);
+				action: [ self browseImplementors: editorElement ]);
 		addShortcut:
 			(BlShortcut new
 				combination:
@@ -62,7 +62,7 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 						meta;
 						key: Key n;
 						build);
-				action: [ self browseReferences ]);
+				action: [ self browseReferences: editorElement ]);
 		addShortcut:
 			(BlShortcut new
 				combination:
@@ -70,13 +70,13 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 						meta;
 						key: Key b;
 						build);
-				action: [ self browseClass ])
+				action: [ self browseClass: editorElement ])
 ]
 
 { #category : #elements }
 GtMethodCoder >> asElement [
 	| accordion header |
-	(source notEmpty and: [ self patternSource isEmpty ])
+	(methodSource notEmpty and: [ self patternSource isEmpty ])
 		ifTrue: [ self buildSource ].
 	accordion := BrAccordion new.
 	accordion look: BrGlamorousAccordionLook new.
@@ -134,7 +134,7 @@ GtMethodCoder >> bodyStyler [
 ]
 
 { #category : #actions }
-GtMethodCoder >> browseClass [
+GtMethodCoder >> browseClass: editorElement [
 	| variable varName behavior |
 	variable := self variableAtCursor.
 	variable isNil
@@ -143,35 +143,47 @@ GtMethodCoder >> browseClass [
 	behavior := Smalltalk globals at: varName ifAbsent: [ ^ self ].
 	behavior isBehavior
 		ifFalse: [ ^ self ].
-	self announce: (GtCoderDrillDownAnnouncement forCoder: (GtClassCoder forClass: behavior))
+	editorElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: (GtClassCoder forClass: behavior);
+				sourceElement: editorElement)
 ]
 
 { #category : #actions }
-GtMethodCoder >> browseImplementors [
+GtMethodCoder >> browseImplementors: editorElement [
 	| symbol |
 	symbol := self selectorAtCursor.
 	symbol isNil
 		ifTrue: [ ^ self ].
-	self announce: (GtCoderDrillDownAnnouncement forCoder: (GtMethodsCoder forImplementors: symbol))
+	editorElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: (GtMethodsCoder forImplementors: symbol);
+				sourceElement: editorElement)
 ]
 
 { #category : #actions }
-GtMethodCoder >> browseReferences [
+GtMethodCoder >> browseReferences: editorElement [
 	| coder |
 	coder := self referencesCoderAtCursor.
 	coder isNil
 		ifTrue: [ ^ self ].
-	self announce: (GtCoderDrillDownAnnouncement forCoder: coder)
+	editorElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: coder;
+				sourceElement: editorElement)
 ]
 
 { #category : #private }
 GtMethodCoder >> buildSource [
 	| patternSource ast originalBodySource index text |
-	ast := GtPharoParser parse: source.
+	ast := GtPharoParser parse: methodSource.
 	index := self findSeparatorBetweenPatternAndBodyIn: ast.
-	patternSource := source copyFrom: 1 to: index - 1.
-	index := self skipBlankLinesIn: source at: index.
-	originalBodySource := source allButFirst: index - 1.
+	patternSource := methodSource copyFrom: 1 to: index - 1.
+	index := self skipBlankLinesIn: methodSource at: index.
+	originalBodySource := methodSource allButFirst: index - 1.
 	text := originalBodySource asRopedText.
 	text
 		attributes:
@@ -223,51 +235,38 @@ GtMethodCoder >> clearSyntaxErrors [
 ]
 
 { #category : #private }
+GtMethodCoder >> context [
+	^ nil
+]
+
+{ #category : #private }
 GtMethodCoder >> cursorPositionDo: aBlock [
 	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
 ]
 
 { #category : #actions }
-GtMethodCoder >> doItAndGoSelection [
-	| source value result |
+GtMethodCoder >> doItAndGoSelection: editorElement [
+	| source value |
 	source := self selectedSource.
 	source isNil
 		ifTrue: [ ^ self ].
-	self clearPreviousEvaluations.
-	value := class compiler
-		requestor: self evaluationRequester;
-		source: source;
-		receiver: object;
-		evaluate.
-	result := GtCoderEvaluationAnnouncement forCoder: self result: value.
-	self announce: result.
-	self clearPreviousEvaluations
+	value := self evaluateSource: source.
+	value == self
+		ifTrue: [ ^ self ].
+	editorElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: value;
+				sourceElement: editorElement)
 ]
 
 { #category : #actions }
 GtMethodCoder >> doItSelection [
-	| source value interval |
+	| source |
 	source := self selectedSource.
 	source isNil
 		ifTrue: [ ^ self ].
-	self clearPreviousEvaluations.
-	value := class compiler
-		requestor: self evaluationRequester;
-		source: source;
-		receiver: object;
-		evaluate.
-	interval := self selectedSourceInterval.
-	self sourceEditor text
-		attributes:
-			{(GtPlaygroundEvaluatedCodeButtonAttribute new
-				beNotOverwritableByStyler;
-				result: value;
-				paint: (Color fromHexString: #'90CAF9'))}
-		from: interval last
-		to: interval last.
-	self sourceEditor
-		invalidateAll;
-		updateAll
+	self evaluateSource: source
 ]
 
 { #category : #elements }
@@ -372,6 +371,32 @@ GtMethodCoder >> editElement [
 	^ button
 ]
 
+{ #category : #private }
+GtMethodCoder >> evaluateSource: aString [
+	| value interval |
+	self clearPreviousEvaluations.
+	value := class compiler
+		requestor: self evaluationRequester;
+		source: aString;
+		receiver: object;
+		context: self context;
+		failBlock: [ ^ self ];
+		evaluate.
+	interval := self selectedSourceInterval.
+	self sourceEditor text
+		attributes:
+			{(GtPlaygroundEvaluatedCodeButtonAttribute new
+				beNotOverwritableByStyler;
+				result: value;
+				paint: (Color fromHexString: #'90CAF9'))}
+		from: interval last
+		to: interval last.
+	self sourceEditor
+		invalidateAll;
+		updateAll.
+	^ value
+]
+
 { #category : #actions }
 GtMethodCoder >> evaluationRequester [
 	^ GtMethodCoderEvaluationRequester on: self
@@ -403,7 +428,7 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 	class := aCompiledMethod methodClass.
 	selector := aCompiledMethod selector.
 	category := class whichCategoryIncludesSelector: selector.
-	source := aCompiledMethod sourceCode
+	methodSource := aCompiledMethod sourceCode
 ]
 
 { #category : #ui }
@@ -428,7 +453,7 @@ GtMethodCoder >> highlighter: anObject [
 { #category : #'initialize-release' }
 GtMethodCoder >> initialize [
 	super initialize.
-	source := ''.
+	methodSource := ''.
 	expanded := false
 ]
 
