@@ -95,42 +95,13 @@ GtMethodCoder >> asElement [
 
 { #category : #elements }
 GtMethodCoder >> bodyElement [
-	| completionStrategy completionController editorElement ast |
-	self sourceEditor styler: self bodyStyler.
-	self sourceEditor
-		when: BrTextEditorInsertedEvent do: [ :event | self clearSyntaxErrors ];
-		when: BrTextEditorDeletedEvent do: [ :event | self clearSyntaxErrors ].
-	editorElement := BrEditorElement new.
-	editorElement
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	self addBodyShortcutsTo: editorElement.
-	editorElement editor: self sourceEditor.
-	completionStrategy := GtPharoCompletionStrategy new.
-	completionStrategy classOrMetaClass: class.
-	[ ast := GtPharoParser parseWithErrors: self patternSource.
-	completionStrategy methodPattern: ast pattern ]
-		on: Error
-		do: [ :ex | ex return ].
-	completionController := GtCompletionController on: editorElement strategy: completionStrategy.
-	completionController install.
-	^ editorElement
+	^ GtMethodBodyElement new
+		initializeWith: self
 ]
 
 { #category : #accessing }
 GtMethodCoder >> bodySource [
 	^ self sourceEditor text asString
-]
-
-{ #category : #elements }
-GtMethodCoder >> bodyStyler [
-	| styler |
-	styler := BrRBHighlightingMethodBodyTextStyler new.
-	styler classOrMetaClass: class.
-	styler methodPatternSource: self patternSource.
-	styler highlighter: highlighter.
-	^ styler
 ]
 
 { #category : #actions }
@@ -237,6 +208,19 @@ GtMethodCoder >> clearSyntaxErrors [
 { #category : #private }
 GtMethodCoder >> context [
 	^ nil
+]
+
+{ #category : #elements }
+GtMethodCoder >> createCompletionStrategy [
+	| completionStrategy ast |
+	completionStrategy := GtPharoCompletionStrategy new.
+	completionStrategy classOrMetaClass: class.
+	[ ast := GtPharoParser parseWithErrors: self patternSource.
+	completionStrategy methodPattern: ast pattern ]
+		on: Error
+		do: [ :ex | ex return ].
+
+	^ completionStrategy
 ]
 
 { #category : #private }
@@ -475,6 +459,20 @@ GtMethodCoder >> methodSource [
 	^ self patternSource , String cr , self bodySource
 ]
 
+{ #category : #'instance creation' }
+GtMethodCoder >> newBodyStyler [
+	"Create a text styler to be used by a method body editor"
+	<return: #BlTextStyler>
+	| aStyler |
+
+	aStyler := BrRBHighlightingMethodBodyTextStyler new.
+	aStyler classOrMetaClass: class.
+	aStyler methodPatternSource: self patternSource.
+	aStyler highlighter: highlighter.
+
+	^ aStyler
+]
+
 { #category : #elements }
 GtMethodCoder >> newPopupElement [
 	^ GtDropDownPopupElement new
@@ -483,6 +481,20 @@ GtMethodCoder >> newPopupElement [
 		constraintsDo: [ :c |
 			c vertical fitContent.
 			c horizontal exact: 100 ]
+]
+
+{ #category : #'instance creation' }
+GtMethodCoder >> newSourceEditor [
+	| aSourceEditor |
+	<return: #BrTextEditor>
+
+	aSourceEditor := BrTextEditor new.
+	aSourceEditor styler: self newBodyStyler.
+	aSourceEditor
+		when: BrTextEditorInsertedEvent do: [ :event | self clearSyntaxErrors ];
+		when: BrTextEditorDeletedEvent do: [ :event | self clearSyntaxErrors ].
+		
+	^ aSourceEditor
 ]
 
 { #category : #private }
@@ -710,7 +722,9 @@ GtMethodCoder >> sourceAst [
 
 { #category : #private }
 GtMethodCoder >> sourceEditor [
-	^ sourceEditor ifNil: [ sourceEditor := BrTextEditor new ]
+	<return: #BrTextEditor>
+
+	^ sourceEditor ifNil: [ sourceEditor := self newSourceEditor ]
 ]
 
 { #category : #private }

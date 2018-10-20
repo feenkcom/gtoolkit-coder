@@ -5,7 +5,7 @@ Class {
 		'overlayElement',
 		'attachmentsCount'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #'instance creation' }
