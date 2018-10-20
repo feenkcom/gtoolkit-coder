@@ -20,7 +20,7 @@ GtMethodBodyElement >> initializeWith: aMethodCoder [
 
 	methodCoder addBodyShortcutsTo: anEditorElemenet.
 
-	completionStrategy := methodCoder createCompletionStrategy.
+	completionStrategy := methodCoder newCompletionStrategy.
 
 	completionController := GtCompletionController on: anEditorElemenet strategy: completionStrategy.
 	completionController install.

@@ -210,19 +210,6 @@ GtMethodCoder >> context [
 	^ nil
 ]
 
-{ #category : #elements }
-GtMethodCoder >> createCompletionStrategy [
-	| completionStrategy ast |
-	completionStrategy := GtPharoCompletionStrategy new.
-	completionStrategy classOrMetaClass: class.
-	[ ast := GtPharoParser parseWithErrors: self patternSource.
-	completionStrategy methodPattern: ast pattern ]
-		on: Error
-		do: [ :ex | ex return ].
-
-	^ completionStrategy
-]
-
 { #category : #private }
 GtMethodCoder >> cursorPositionDo: aBlock [
 	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
@@ -255,85 +242,10 @@ GtMethodCoder >> doItSelection [
 
 { #category : #elements }
 GtMethodCoder >> dropDownElementWithItems: aCollection label: aString [
-	| element arrow size arrowHeight arrowWidth listElement overlay index |
-	overlay := self newPopupElement.
-	listElement := self dropDownList: aCollection.
-	index := aCollection indexOf: aString.
-	index > 0
-		ifTrue: [ listElement selectOne: index.
-			listElement children first scrollToPosition: index ].
-	listElement
-		when: BlFocusOutEvent
-		do: [ :event | 
-			overlay isAttachedToSceneGraph
-				ifTrue: [ overlay
-						detach;
-						removeFromParent ] ].
-	overlay addChild: listElement.
-	size := 100 @ 20.
-	arrowHeight := size y - 10.
-	arrowWidth := (arrowHeight * 2 sqrt) rounded.
-	(arrow := BlElement new)
-		size: arrowWidth @ arrowHeight;
-		geometry:
-			(BlPolygon
-				vertices:
-					{(0 @ 0).
-					(arrowWidth @ 0).
-					((arrowWidth / 2) rounded @ arrowHeight)});
-		background: (Color veryLightGray alpha: 0.5);
-		relocate: (size x - arrowWidth + 5) @ ((size y - arrowHeight) / 2 + 1) rounded;
-		yourself.
-	(element := BlTextElement new)
-		text: (aString ifNil: [ '' ]) asRopedText;
-		size: size;
-		border: (BlBorder paint: Color veryLightGray width: 2);
-		padding:
-			(BlInsets
-				top: 4
-				left: 10
-				bottom: 0
-				right: 6);
-		background: Color white;
-		geometry: (BlRectangle cornerRadius: 12);
-		when: BlClickEvent
-			do: [ :event | 
-			overlay isAttachedToSceneGraph
-				ifTrue: [ overlay
-						detach;
-						removeFromParent ]
-				ifFalse: [ element space root addChild: overlay.
-					listElement requestFocus ].
-			event consumed: true ];
-		when: BlMouseOutEvent do: [ :event | element background: Color white ];
-		when: BlMouseOverEvent do: [ :event | element background: Color veryLightGray ];
-		addChild: arrow.
-	overlay attachTo: element.
-	^ element
-]
-
-{ #category : #elements }
-GtMethodCoder >> dropDownList: items [
-	^ BrSimpleList new
-		lookDo: [ :aLook | 
-			aLook listElement
-				constraintsDo: [ :c | 
-					c vertical fitContent.
-					c horizontal matchParent.
-					c maxHeight: 200 ] ];
-		background: Color white;
-		border: (BlBorder paint: Color lightGray width: 1);
-		padding: (BlInsets all: 2);
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c | 
-			c vertical fitContent.
-			c horizontal matchParent ];
-		display: items;
-		stencil: [ :each :anIndex | 
-			BlTextElement new
-				constraintsDo: [ :c | c horizontal matchParent ];
-				padding: (BlInsets all: 5);
-				text: (each displayString asRopedText thin monospace fontSize: 12) ]
+	^ GtCoderDropdownStencil new
+		initialItem: aString;
+		allItems: aCollection;
+		asElement
 ]
 
 { #category : #elements }
@@ -473,14 +385,17 @@ GtMethodCoder >> newBodyStyler [
 	^ aStyler
 ]
 
-{ #category : #elements }
-GtMethodCoder >> newPopupElement [
-	^ GtDropDownPopupElement new
-		layout: BlLinearLayout vertical;
-		background: Color red;
-		constraintsDo: [ :c |
-			c vertical fitContent.
-			c horizontal exact: 100 ]
+{ #category : #'instance creation' }
+GtMethodCoder >> newCompletionStrategy [
+	| completionStrategy ast |
+	completionStrategy := GtPharoCompletionStrategy new.
+	completionStrategy classOrMetaClass: class.
+	[ ast := GtPharoParser parseWithErrors: self patternSource.
+	completionStrategy methodPattern: ast pattern ]
+		on: Error
+		do: [ :ex | ex return ].
+
+	^ completionStrategy
 ]
 
 { #category : #'instance creation' }
