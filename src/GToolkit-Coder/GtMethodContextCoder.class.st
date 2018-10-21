@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtMethodCoder,
 	#instVars : [
 		'context',
-		'session'
+		'session',
+		'announcer'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -20,6 +21,16 @@ GtMethodContextCoder class >> forContext: aContext session: aDebugSession [
 { #category : #private }
 GtMethodContextCoder >> actionsForPragmas: aSymbolsCollection [
 	^ self session class debuggingActionsForPragmas: aSymbolsCollection for: self
+]
+
+{ #category : #'debugger access' }
+GtMethodContextCoder >> announce: anAnnouncement [
+	announcer announce: anAnnouncement
+]
+
+{ #category : #accessing }
+GtMethodContextCoder >> announcer [
+	^ announcer
 ]
 
 { #category : #private }
@@ -61,6 +72,12 @@ GtMethodContextCoder >> contextButtons [
 { #category : #'debugger access' }
 GtMethodContextCoder >> currentContext [
 	^ self context
+]
+
+{ #category : #'initialize-release' }
+GtMethodContextCoder >> initialize [
+	super initialize.
+	announcer := Announcer new
 ]
 
 { #category : #'debugger access' }
@@ -144,7 +161,7 @@ GtMethodContextCoder >> stackDebuggingActionsPragmas [
 
 { #category : #private }
 GtMethodContextCoder >> updateDebugger [
-	self announce: GtCoderRefreshStackAnnouncement new.
+	announcer announce: GtCoderRefreshStackAnnouncement new.
 	self updateSelection
 ]
 

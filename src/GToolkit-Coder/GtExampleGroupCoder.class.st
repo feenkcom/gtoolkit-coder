@@ -17,6 +17,5 @@ GtExampleGroupCoder class >> forExampleGroup: anExampleGroup [
 
 { #category : #'instance creation' }
 GtExampleGroupCoder >> forExampleGroup: anExampleGroup [
-	methodCoders := anExampleGroup collect: [ :each | GtMethodExampleCoder forMethod: each ].
-	methodCoders do: [ :each | each object: object ]
+	methodCoders := anExampleGroup collect: [ :each | GtMethodExampleCoder forMethod: each ]
 ]

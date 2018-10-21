@@ -1,21 +1,12 @@
 Class {
 	#name : #GtMethodsCoder,
-	#superclass : #Announcer,
+	#superclass : #Object,
 	#instVars : [
-		'class',
-		'object',
 		'methodCoders',
 		'highlighter'
 	],
 	#category : #'GToolkit-Coder'
 }
-
-{ #category : #'instance creation' }
-GtMethodsCoder class >> forClass: aBehavior [
-	^ self new
-		forClass: aBehavior;
-		yourself
-]
 
 { #category : #'instance creation' }
 GtMethodsCoder class >> forImplementors: aSymbol [
@@ -36,13 +27,6 @@ GtMethodsCoder class >> forMethods: compiledMethods [
 ]
 
 { #category : #'instance creation' }
-GtMethodsCoder class >> forObject: anObject [
-	^ self new
-		forObject: anObject;
-		yourself
-]
-
-{ #category : #'instance creation' }
 GtMethodsCoder class >> forReferences: aSymbol [
 	| methods |
 	methods := OrderedCollection new.
@@ -59,18 +43,9 @@ GtMethodsCoder class >> sortMethods: aCollection [
 				ifFalse: [ a methodClass name < b methodClass name ] ]
 ]
 
-{ #category : #actions }
-GtMethodsCoder >> addMethodCoderIn: anElement [
-	| coder |
-	coder := GtMethodCoder new.
-	coder classOrMetaClass: class.
-	coder object: object.
-	anElement items: (Array with: coder) , anElement items
-]
-
 { #category : #elements }
 GtMethodsCoder >> asElement [
-	| element listElement button |
+	| listElement |
 	listElement := BrSimpleList new.
 	listElement stencil: [ :each | each asElement ].
 	listElement padding: (BlInsets all: 10).
@@ -79,47 +54,12 @@ GtMethodsCoder >> asElement [
 			c horizontal matchParent.
 			c vertical matchParent ].
 	listElement display: methodCoders.
-	class notNil
-		ifTrue: [ element := BlElement new.
-			element layout: BlLinearLayout vertical.
-			element
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical matchParent ].
-			button := BrButton new.
-			button
-				margin:
-					(BlInsets
-						top: 10
-						left: 10
-						bottom: 0
-						right: 0).
-			button
-				look: BrGlamorousButtonWithIconLook;
-				icon: BrGlamorousIcons add asElement;
-				action: [ self addMethodCoderIn: listElement ].
-			element addChild: button.
-			element addChild: listElement ]
-		ifFalse: [ element := listElement ].
-	^ element
-]
-
-{ #category : #'initialize-release' }
-GtMethodsCoder >> forClass: aBehavior [
-	class := aBehavior.
-	self forMethods: (class selectors asSortedCollection collect: [ :each | class >> each ])
+	^ listElement
 ]
 
 { #category : #'initialize-release' }
 GtMethodsCoder >> forMethods: compiledMethods [
-	methodCoders := compiledMethods collect: [ :each | GtMethodCoder forMethod: each ].
-	methodCoders do: [ :each | each object: object ]
-]
-
-{ #category : #'initialize-release' }
-GtMethodsCoder >> forObject: anObject [
-	object := anObject.
-	self forClass: anObject class
+	methodCoders := compiledMethods collect: [ :each | GtMethodCoder forMethod: each ]
 ]
 
 { #category : #ui }

@@ -40,13 +40,13 @@ GtClassCoder >> asElement [
 { #category : #'initialize-release' }
 GtClassCoder >> forClass: aBehavior [
 	classDefinitionCoder := GtClassDefinitionCoder forClass: aBehavior.
-	methodsCoder := GtMethodsCoder forClass: aBehavior
+	methodsCoder := GtClassMethodsCoder forClass: aBehavior
 ]
 
 { #category : #'initialize-release' }
 GtClassCoder >> forObject: anObject [
 	classDefinitionCoder := GtClassDefinitionCoder forObject: anObject.
-	methodsCoder := GtMethodsCoder forObject: anObject
+	methodsCoder := GtClassMethodsCoder forObject: anObject
 ]
 
 { #category : #ui }
