@@ -75,26 +75,26 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 
 { #category : #elements }
 GtMethodCoder >> asElement [
-	| accordion header |
+	| accordion |
 
 	(methodSource notEmpty and: [ self patternSource isEmpty ])
 		ifTrue: [ self buildSource ].
 
 	accordion := BrAccordion new.
 	accordion margin: (BlInsets all: 10).
-	accordion look: GtCoderMethodAccordionLook new.
-	accordion stencil: [ self bodyElement margin: (BlInsets left: 5)].
-
-	header := self patternButtonElement.
-	header
-		action: [ 
+	accordion look: BrGlamorousAccordionLook new.
+	
+	accordion header: [
+		self patternButtonElement action: [ 
 			accordion toggle.
-			self expanded: accordion isExpanded ].
+			self expanded: accordion isExpanded ] ].
+	accordion content: [ self bodyElement ].
 
-	accordion addChildFirst: header.
 	expanded
 		ifTrue: [ accordion toggle ].
+
 	accordion userData at: #coder put: self.
+	
 	^ accordion
 ]
 
@@ -105,8 +105,7 @@ GtMethodCoder >> bodyElement [
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c |
 			c vertical fitContent.
-			c horizontal matchParent
-		]
+			c horizontal matchParent ]
 ]
 
 { #category : #accessing }
@@ -435,19 +434,11 @@ GtMethodCoder >> patternButtonElement [
 	styledPattern := self styledPatternText.
 
 	header := BrButton new.
-	header background: Color white.
 	header
 		layout: BlLinearLayout horizontal;
 		constraintsDo: [ :c |
 			c horizontal matchParent.
-			c vertical matchParent ].
-
-	bar := BlElement new.
-	bar background: (Color gray alpha: 0.2).
-	bar constraintsDo: [ :c |
-		c horizontal exact: 10.
-		c vertical matchParent ].
-	header addChild: bar.
+			c vertical fitContent ].
 
 	patternElement := BlElement new.
 	patternElement margin: (BlInsets left: 5).
