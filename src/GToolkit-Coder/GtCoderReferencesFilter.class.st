@@ -15,6 +15,15 @@ GtCoderReferencesFilter class >> literal: anObject [
 		yourself
 ]
 
+{ #category : #accessing }
+GtCoderReferencesFilter >> highlighter [
+	^ object isSymbol
+		ifTrue: [ GtSelectorReferenceHighlighter forSelector: object ]
+		ifFalse: [ ((object isKindOf: Association) and: [ object key isSymbol ])
+				ifTrue: [ GtVariableReferenceHighlighter forVariableName: object key ]
+				ifFalse: [ nil ] ]
+]
+
 { #category : #testing }
 GtCoderReferencesFilter >> includeMethod: aCompiledMethod [
 	^ aCompiledMethod hasSelector: object specialSelectorIndex: specialSelectorIndex

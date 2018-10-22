@@ -116,7 +116,7 @@ GtMethodCoder >> browseImplementors: editorElement [
 	editorElement
 		fireEvent:
 			(GtPhlowObjectToSpawn new
-				object: (GtMethodsCoder forImplementors: symbol);
+				object: (GtCoderMethodsCollection forImplementors: symbol) asCoder;
 				sourceElement: editorElement)
 ]
 
@@ -418,9 +418,7 @@ GtMethodCoder >> referencesCoderAtCursor [
 
 { #category : #private }
 GtMethodCoder >> referencesCoderForSymbol: aSymbol [
-	^ (GtMethodsCoder forReferences: aSymbol)
-		highlighter: (GtSelectorReferenceHighlighter forSelector: aSymbol);
-		yourself
+	^ (GtCoderMethodsCollection forReferences: aSymbol) asCoder
 ]
 
 { #category : #private }
@@ -433,14 +431,10 @@ GtMethodCoder >> referencesCoderForVariable: aString [
 				into: [ :sum :each | 
 					(each whichSelectorsAccess: aString) do: [ :sel | sum add: each >> sel ].
 					sum ].
-			^ (GtMethodsCoder forMethods: (GtMethodsCoder sortMethods: methods))
-				highlighter: (GtVariableReferenceHighlighter forVariableName: aString);
-				yourself ].
+			^ (GtCoderMethodsCollection forClass: self classOrMetaClass andVariable: aString) asCoder ].
 	binding := self classOrMetaClass bindingOf: aString.
 	binding notNil
-		ifTrue: [ ^ (GtMethodsCoder forReferences: binding)
-				highlighter: (GtVariableReferenceHighlighter forVariableName: aString);
-				yourself ].
+		ifTrue: [ ^ (GtCoderMethodsCollection forReferences: binding) asCoder ].
 	^ nil
 ]
 

@@ -2,45 +2,16 @@ Class {
 	#name : #GtMethodsCoder,
 	#superclass : #Object,
 	#instVars : [
-		'methodCoders',
-		'highlighter'
+		'methodCoders'
 	],
 	#category : #'GToolkit-Coder'
 }
-
-{ #category : #'instance creation' }
-GtMethodsCoder class >> forImplementors: aSymbol [
-	| methods |
-	methods := OrderedCollection new.
-	Smalltalk
-		allClassesDo: [ :each | 
-			(each includesSelector: aSymbol)
-				ifTrue: [ methods add: each >> aSymbol ] ].
-	^ self forMethods: (self sortMethods: methods)
-]
 
 { #category : #'instance creation' }
 GtMethodsCoder class >> forMethods: compiledMethods [
 	^ self new
 		forMethods: compiledMethods;
 		yourself
-]
-
-{ #category : #'instance creation' }
-GtMethodsCoder class >> forReferences: aSymbol [
-	| methods |
-	methods := OrderedCollection new.
-	Smalltalk allClassesDo: [ :each | (each thoroughWhichSelectorsReferTo: aSymbol) do: [ :sel | methods add: each >> sel ] ].
-	^ self forMethods: (self sortMethods: methods)
-]
-
-{ #category : #private }
-GtMethodsCoder class >> sortMethods: aCollection [
-	^ aCollection
-		asSortedCollection: [ :a :b | 
-			a methodClass = b methodClass
-				ifTrue: [ a selector < b selector ]
-				ifFalse: [ a methodClass name < b methodClass name ] ]
 ]
 
 { #category : #elements }
@@ -59,7 +30,9 @@ GtMethodsCoder >> asElement [
 
 { #category : #'initialize-release' }
 GtMethodsCoder >> forMethods: compiledMethods [
-	methodCoders := compiledMethods collect: [ :each | GtMethodCoder forMethod: each ]
+	methodCoders := compiledMethods collect: [ :each | GtMethodCoder forMethod: each ].
+	(compiledMethods isKindOf: GtCoderMethodsCollection)
+		ifTrue: [ methodCoders do: [ :each | each highlighter: compiledMethods highlighter ] ]
 ]
 
 { #category : #ui }
@@ -69,17 +42,6 @@ GtMethodsCoder >> gtLiveFor: aView [
 		title: 'Live';
 		priority: 10;
 		stencil: [ self ]
-]
-
-{ #category : #accessing }
-GtMethodsCoder >> highlighter [
-	^ highlighter
-]
-
-{ #category : #accessing }
-GtMethodsCoder >> highlighter: aReferenceHighlighter [
-	highlighter := aReferenceHighlighter.
-	methodCoders do: [ :each | each highlighter: aReferenceHighlighter ]
 ]
 
 { #category : #'initialize-release' }
