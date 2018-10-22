@@ -7,8 +7,13 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #accessing }
+GtMethodBodyElement >> methodCoder [
+	^ methodCoder
+]
+
 { #category : #initialization }
-GtMethodBodyElement >> initializeWith: aMethodCoder [
+GtMethodBodyElement >> methodCoder: aMethodCoder [
 	| aSourceEditor anEditorElemenet completionStrategy completionController |
 
 	methodCoder := aMethodCoder.
@@ -26,11 +31,6 @@ GtMethodBodyElement >> initializeWith: aMethodCoder [
 	completionController install.
 
 	self addChild: anEditorElemenet
-]
-
-{ #category : #accessing }
-GtMethodBodyElement >> methodCoder [
-	^ methodCoder
 ]
 
 { #category : #'instance creation' }

@@ -75,37 +75,14 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 
 { #category : #elements }
 GtMethodCoder >> asElement [
-	| accordion |
 
 	(methodSource notEmpty and: [ self patternSource isEmpty ])
 		ifTrue: [ self buildSource ].
 
-	accordion := BrAccordion new.
-	accordion margin: (BlInsets all: 10).
-	accordion look: BrGlamorousAccordionLook new.
-	
-	accordion header: [
-		self patternButtonElement action: [ 
-			accordion toggle.
-			self expanded: accordion isExpanded ] ].
-	accordion content: [ self bodyElement ].
-
-	expanded
-		ifTrue: [ accordion toggle ].
-
-	accordion userData at: #coder put: self.
-	
-	^ accordion
-]
-
-{ #category : #elements }
-GtMethodCoder >> bodyElement [
-	^ GtMethodBodyElement new
-		initializeWith: self;
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c |
-			c vertical fitContent.
-			c horizontal matchParent ]
+	^ GtCoderMethodElement new
+		margin: (BlInsets all: 10);
+		methodCoder: self;
+		yourself
 ]
 
 { #category : #accessing }
@@ -429,7 +406,7 @@ GtMethodCoder >> object: anObject [
 
 { #category : #elements }
 GtMethodCoder >> patternButtonElement [
-	| header patternElement label editorElement styledPattern button bar |
+	| header patternElement label editorElement styledPattern button |
 
 	styledPattern := self styledPatternText.
 
@@ -441,7 +418,6 @@ GtMethodCoder >> patternButtonElement [
 			c vertical fitContent ].
 
 	patternElement := BlElement new.
-	patternElement margin: (BlInsets left: 5).
 	patternElement layout: (BlLinearLayout vertical).
 	patternElement
 		constraintsDo: [ :c | 
@@ -453,7 +429,6 @@ GtMethodCoder >> patternButtonElement [
 		when: BrTextEditorDeletedEvent do: [ :event | self clearPatternSyntaxErrors ].
 
 	label := BlTextElement new.
-	"label background: (Color red alpha: 0.2)."
 	label text: styledPattern monospace.
 	patternElement addChild: label.
 

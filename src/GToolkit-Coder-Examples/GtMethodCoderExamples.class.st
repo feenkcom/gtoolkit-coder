@@ -24,7 +24,10 @@ GtMethodCoderExamples >> binaryMethodCoder [
 { #category : #ui }
 GtMethodCoderExamples >> bodyElementForThisMethod [
 	<gtExample>
-	^ self thisMethod bodyElement
+
+	^ GtCoderMethodBodyStencil new
+		methodCoder: self thisMethod;
+		asElement
 ]
 
 { #category : #ui }
