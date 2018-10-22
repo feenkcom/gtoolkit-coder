@@ -5,7 +5,7 @@ Class {
 		'allItems',
 		'initialItem'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UI - Stencils'
 }
 
 { #category : #accessing }

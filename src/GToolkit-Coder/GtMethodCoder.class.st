@@ -150,15 +150,6 @@ GtMethodCoder >> buildSource [
 	self sourceEditor text: text
 ]
 
-{ #category : #elements }
-GtMethodCoder >> categoryElement [
-	^ (GtCoderDropdownStencil new
-		initialItem: category;
-		allItems: class organization categories asSortedCollection;
-		asElement)
-			constraintsDo: [ :c | c margin: (BlInsets all: 5) ]
-]
-
 { #category : #actions }
 GtMethodCoder >> changeManager [
 	^ RBRefactoryChangeManager instance
@@ -321,17 +312,6 @@ GtMethodCoder >> initialize [
 	expanded := false
 ]
 
-{ #category : #elements }
-GtMethodCoder >> instClassElement [
-	^ (GtCoderDropdownStencil new
-		initialItem: (self classOrMetaClass isMeta
-				ifTrue: [ 'class' ]
-				ifFalse: [ 'instance' ]);
-		allItems: #('instance' 'class');
-		asElement)
-			constraintsDo: [ :c | c margin: (BlInsets all: 5) ]
-]
-
 { #category : #actions }
 GtMethodCoder >> methodSource [
 	^ self patternSource , String cr , self bodySource
@@ -402,70 +382,6 @@ GtMethodCoder >> object [
 { #category : #accessing }
 GtMethodCoder >> object: anObject [
 	object := anObject
-]
-
-{ #category : #elements }
-GtMethodCoder >> patternButtonElement [
-	| header patternElement label editorElement styledPattern button |
-
-	styledPattern := self styledPatternText.
-
-	header := BrButton new.
-	header
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c vertical fitContent ].
-
-	patternElement := BlElement new.
-	patternElement layout: (BlLinearLayout vertical).
-	patternElement
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent.
-			c linear vertical alignCenter ].
-	self patternEditor
-		when: BrTextEditorInsertedEvent do: [ :event | self clearPatternSyntaxErrors ];
-		when: BrTextEditorDeletedEvent do: [ :event | self clearPatternSyntaxErrors ].
-
-	label := BlTextElement new.
-	label text: styledPattern monospace.
-	patternElement addChild: label.
-
-	editorElement := BrEditorElement new.
-	editorElement background: Color blue.
-	editorElement editor: self patternEditor.
-	self patternEditor text: styledPattern.
-	editorElement
-		margin:
-			(BlInsets
-				top: 10
-				left: 0
-				bottom: 10
-				right: 5).
-	editorElement
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	editorElement when: BlClickEvent do: [ :event | event consumed: true ].
-
-	button := BrButton new.
-	button
-		look: BrGlamorousButtonWithIconLook;
-		icon: BrGlamorousIcons edit asElement;
-		action: [ editorElement isVisible
-				ifTrue: [ editorElement visibility: BlVisibility hidden.
-					label visibility: BlVisibility visible ]
-				ifFalse: [ editorElement visibility: BlVisibility visible.
-					label visibility: BlVisibility hidden ] ];
-		margin: (BlInsets top: 5 left: 10 bottom: 5 right: 10).
-
-	"header addChild: button."
-	header addChild: patternElement.
-	"header addChild: self instClassElement.
-	header addChild: self categoryElement.
-	header addChild: self saveElement."
-	^ header
 ]
 
 { #category : #private }
@@ -544,18 +460,6 @@ GtMethodCoder >> save [
 				classified: category
 				for: self requester ].
 	self changeManager performChange: change
-]
-
-{ #category : #elements }
-GtMethodCoder >> saveElement [
-	| button |
-	button := BrButton new.
-	button
-		look: BrGlamorousButtonWithIconLook;
-		icon: BrGlamorousIcons save asElement;
-		action: [ self save ];
-		constraintsDo: [ :c | c margin: (BlInsets all: 5) ].
-	^ button
 ]
 
 { #category : #private }

@@ -22,12 +22,14 @@ GtCoderMethodElement >> methodCoder [
 { #category : #accessing }
 GtCoderMethodElement >> methodCoder: aGtMethodCoder [
 	methodCoder := aGtMethodCoder.
-	
-	self header: [
-		methodCoder patternButtonElement action: [ 
-			self toggle.
-			methodCoder expanded: self isExpanded ] ].
 
+	self header: [
+		(GtCoderMethodPatternStencil new methodCoder: self methodCoder) asElement
+			when: BlClickEvent do: [ :anEvent |
+				anEvent consumed: true.
+				self toggle.
+				methodCoder expanded: self isExpanded ];
+			yourself ].
 	self content: [ GtCoderMethodBodyStencil new methodCoder: self methodCoder ].
 
 	methodCoder expanded

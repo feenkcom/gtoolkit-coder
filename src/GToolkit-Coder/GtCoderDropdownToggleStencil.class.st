@@ -5,7 +5,7 @@ Class {
 		'item',
 		'dropdown'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UI - Stencils'
 }
 
 { #category : #'api - instantiation' }

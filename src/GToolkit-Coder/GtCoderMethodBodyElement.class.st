@@ -1,19 +1,38 @@
 Class {
-	#name : #GtMethodBodyElement,
+	#name : #GtCoderMethodBodyElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'methodCoder'
+		'methodCoder',
+		'toolbar'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #initialization }
+GtCoderMethodBodyElement >> initialize [
+	super initialize.
+	
+	toolbar := BrToolbar new.
+	toolbar look: BrToolbarLook new.
+	toolbar layout: BlLinearLayout horizontal.
+	toolbar constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical fitContent ].
+	toolbar addItem: (BrButton new
+		look: BrGlamorousButtonWithIconLook;
+		label: 'Accept';
+		icon: BrGlamorousIcons accept asElement).
+	
+	self addChild: toolbar
+]
+
 { #category : #accessing }
-GtMethodBodyElement >> methodCoder [
+GtCoderMethodBodyElement >> methodCoder [
 	^ methodCoder
 ]
 
 { #category : #initialization }
-GtMethodBodyElement >> methodCoder: aMethodCoder [
+GtCoderMethodBodyElement >> methodCoder: aMethodCoder [
 	| aSourceEditor anEditorElemenet completionStrategy completionController |
 
 	methodCoder := aMethodCoder.
@@ -30,11 +49,11 @@ GtMethodBodyElement >> methodCoder: aMethodCoder [
 	completionController := GtCompletionController on: anEditorElemenet strategy: completionStrategy.
 	completionController install.
 
-	self addChild: anEditorElemenet
+	self addChildFirst: anEditorElemenet
 ]
 
 { #category : #'instance creation' }
-GtMethodBodyElement >> newEditorElement [
+GtCoderMethodBodyElement >> newEditorElement [
 	| anEditorElemenet |
 	<return: #BrEditorElement>
 	

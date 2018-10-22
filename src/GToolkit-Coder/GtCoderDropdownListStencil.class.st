@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'items'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UI - Stencils'
 }
 
 { #category : #'api - instantiation' }

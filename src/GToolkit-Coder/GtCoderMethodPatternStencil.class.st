@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderMethodBodyStencil,
+	#name : #GtCoderMethodPatternStencil,
 	#superclass : #BrStencil,
 	#instVars : [
 		'methodCoder'
@@ -8,24 +8,23 @@ Class {
 }
 
 { #category : #'api - instantiation' }
-GtCoderMethodBodyStencil >> create [
+GtCoderMethodPatternStencil >> create [
 	<return: #Object>
 
-	^ GtCoderMethodBodyElement new
+	^ GtCoderMethodPatternElement new
 		methodCoder: self methodCoder;
-		layout: BlLinearLayout vertical;
-		margin: (BlInsets top: 3 right: 0 bottom: 0 left: 5);
+		margin: (BlInsets left: 5);
 		constraintsDo: [ :c |
 			c vertical fitContent.
 			c horizontal matchParent ]
 ]
 
 { #category : #accessing }
-GtCoderMethodBodyStencil >> methodCoder [
+GtCoderMethodPatternStencil >> methodCoder [
 	^ methodCoder
 ]
 
 { #category : #accessing }
-GtCoderMethodBodyStencil >> methodCoder: aMethodCoder [
+GtCoderMethodPatternStencil >> methodCoder: aMethodCoder [
 	methodCoder := aMethodCoder
 ]
