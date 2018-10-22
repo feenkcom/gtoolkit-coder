@@ -1,6 +1,6 @@
 Class {
 	#name : #GtMethodCoder,
-	#superclass : #Announcer,
+	#superclass : #Object,
 	#instVars : [
 		'object',
 		'class',

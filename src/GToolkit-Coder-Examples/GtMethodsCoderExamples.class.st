@@ -13,7 +13,7 @@ GtMethodsCoderExamples >> factorialExample [
 { #category : #accessing }
 GtMethodsCoderExamples >> methodsCoderWithClass [
 	<gtExample>
-	^ GtMethodsCoder forClass: Object
+	^ GtClassMethodsCoder forClass: Object
 ]
 
 { #category : #accessing }
