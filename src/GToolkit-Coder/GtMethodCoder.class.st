@@ -170,8 +170,8 @@ GtMethodCoder >> buildSource [
 		attributes:
 			{BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
 			(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}.
-	self sourceEditor text: text.
-	self patternEditor text: patternSource asRopedText
+	self patternEditor text: patternSource asRopedText.
+	self sourceEditor text: text
 ]
 
 { #category : #elements }
