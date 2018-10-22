@@ -76,16 +76,21 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 { #category : #elements }
 GtMethodCoder >> asElement [
 	| accordion header |
+
 	(methodSource notEmpty and: [ self patternSource isEmpty ])
 		ifTrue: [ self buildSource ].
+
 	accordion := BrAccordion new.
-	accordion look: BrGlamorousAccordionLook new.
-	accordion margin: (BlInsets all: 5).
-	accordion stencil: [ self bodyElement ].
+	accordion margin: (BlInsets all: 10).
+	accordion look: GtCoderMethodAccordionLook new.
+	accordion stencil: [ self bodyElement margin: (BlInsets left: 5)].
+
 	header := self patternButtonElement.
 	header
-		action: [ accordion toggle.
+		action: [ 
+			accordion toggle.
 			self expanded: accordion isExpanded ].
+
 	accordion addChildFirst: header.
 	expanded
 		ifTrue: [ accordion toggle ].
@@ -96,7 +101,12 @@ GtMethodCoder >> asElement [
 { #category : #elements }
 GtMethodCoder >> bodyElement [
 	^ GtMethodBodyElement new
-		initializeWith: self
+		initializeWith: self;
+		layout: BlLinearLayout vertical;
+		constraintsDo: [ :c |
+			c vertical fitContent.
+			c horizontal matchParent
+		]
 ]
 
 { #category : #accessing }
@@ -166,10 +176,11 @@ GtMethodCoder >> buildSource [
 
 { #category : #elements }
 GtMethodCoder >> categoryElement [
-	| element |
-	element := self dropDownElementWithItems: class organization categories asSortedCollection label: category.
-	element constraintsDo: [ :c | c margin: (BlInsets all: 5) ].
-	^ element
+	^ (GtCoderDropdownStencil new
+		initialItem: category;
+		allItems: class organization categories asSortedCollection;
+		asElement)
+			constraintsDo: [ :c | c margin: (BlInsets all: 5) ]
 ]
 
 { #category : #actions }
@@ -246,25 +257,6 @@ GtMethodCoder >> dropDownElementWithItems: aCollection label: aString [
 		initialItem: aString;
 		allItems: aCollection;
 		asElement
-]
-
-{ #category : #elements }
-GtMethodCoder >> editElement [
-	| button |
-	button := BrButton new.
-	button
-		look: BrGlamorousButtonWithIconLook;
-		icon: BrGlamorousIcons edit asElement;
-		action: [ self edit ];
-		constraintsDo: [ :c | 
-			c
-				margin:
-					(BlInsets
-						top: 5
-						left: 10
-						bottom: 5
-						right: 10) ].
-	^ button
 ]
 
 { #category : #private }
@@ -355,15 +347,13 @@ GtMethodCoder >> initialize [
 
 { #category : #elements }
 GtMethodCoder >> instClassElement [
-	| element |
-	element := self
-		dropDownElementWithItems: #('instance' 'class')
-		label:
-			(self classOrMetaClass isMeta
+	^ (GtCoderDropdownStencil new
+		initialItem: (self classOrMetaClass isMeta
 				ifTrue: [ 'class' ]
-				ifFalse: [ 'instance' ]).
-	element constraintsDo: [ :c | c margin: (BlInsets all: 5) ].
-	^ element
+				ifFalse: [ 'instance' ]);
+		allItems: #('instance' 'class');
+		asElement)
+			constraintsDo: [ :c | c margin: (BlInsets all: 5) ]
 ]
 
 { #category : #actions }
@@ -440,37 +430,44 @@ GtMethodCoder >> object: anObject [
 
 { #category : #elements }
 GtMethodCoder >> patternButtonElement [
-	| header patternElement label editorElement styledPattern button |
+	| header patternElement label editorElement styledPattern button bar |
+
 	styledPattern := self styledPatternText.
+
 	header := BrButton new.
+	header background: Color white.
 	header
-		layout: (BlGridLayout horizontal cellSpacing: 0);
-		constraintsDo: [ :c | 
+		layout: BlLinearLayout horizontal;
+		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent ].
+
+	bar := BlElement new.
+	bar background: (Color gray alpha: 0.2).
+	bar constraintsDo: [ :c |
+		c horizontal exact: 10.
+		c vertical matchParent ].
+	header addChild: bar.
+
 	patternElement := BlElement new.
+	patternElement margin: (BlInsets left: 5).
+	patternElement layout: (BlLinearLayout vertical).
 	patternElement
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c frame vertical alignCenter ].
+			c vertical fitContent.
+			c linear vertical alignCenter ].
 	self patternEditor
 		when: BrTextEditorInsertedEvent do: [ :event | self clearPatternSyntaxErrors ];
 		when: BrTextEditorDeletedEvent do: [ :event | self clearPatternSyntaxErrors ].
+
 	label := BlTextElement new.
-	label text: styledPattern.
-	label
-		margin:
-			(BlInsets
-				top: 10
-				left: 0
-				bottom: 10
-				right: 5).
-	label
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
+	"label background: (Color red alpha: 0.2)."
+	label text: styledPattern monospace.
 	patternElement addChild: label.
+
 	editorElement := BrEditorElement new.
+	editorElement background: Color blue.
 	editorElement editor: self patternEditor.
 	self patternEditor text: styledPattern.
 	editorElement
@@ -485,8 +482,7 @@ GtMethodCoder >> patternButtonElement [
 			c horizontal matchParent.
 			c vertical matchParent ].
 	editorElement when: BlClickEvent do: [ :event | event consumed: true ].
-	editorElement visibility: BlVisibility hidden.
-	patternElement addChild: editorElement.
+
 	button := BrButton new.
 	button
 		look: BrGlamorousButtonWithIconLook;
@@ -496,19 +492,13 @@ GtMethodCoder >> patternButtonElement [
 					label visibility: BlVisibility visible ]
 				ifFalse: [ editorElement visibility: BlVisibility visible.
 					label visibility: BlVisibility hidden ] ];
-		constraintsDo: [ :c1 | 
-			c1
-				margin:
-					(BlInsets
-						top: 5
-						left: 10
-						bottom: 5
-						right: 10) ].
-	header addChild: button.
+		margin: (BlInsets top: 5 left: 10 bottom: 5 right: 10).
+
+	"header addChild: button."
 	header addChild: patternElement.
-	header addChild: self instClassElement.
+	"header addChild: self instClassElement.
 	header addChild: self categoryElement.
-	header addChild: self saveElement.
+	header addChild: self saveElement."
 	^ header
 ]
 

@@ -2,7 +2,8 @@ Class {
 	#name : #BrMethodCoderElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'coder'
+		'coder',
+		'accordion'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -35,6 +36,11 @@ BrMethodCoderElement >> initialize [
 BrMethodCoderElement >> initializeWith: aGtMethodCoder [
 
 	coder := aGtMethodCoder.
+	
+	accordion := BrAccordion new.
+	accordion look: BrGlamorousAccordionLook new.
+	accordion margin: (BlInsets all: 5).
+	accordion stencil: [ GtMethodBodyElement new initializeWith: coder ].
 
 	"super initialize.
 	
