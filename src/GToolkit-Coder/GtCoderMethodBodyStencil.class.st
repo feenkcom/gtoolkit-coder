@@ -13,7 +13,6 @@ GtCoderMethodBodyStencil >> create [
 
 	^ GtCoderMethodBodyElement new
 		methodCoder: self methodCoder;
-		layout: BlLinearLayout vertical;
 		margin: (BlInsets top: 3 right: 0 bottom: 0 left: 5);
 		constraintsDo: [ :c |
 			c vertical fitContent.

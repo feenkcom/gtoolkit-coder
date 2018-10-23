@@ -95,9 +95,12 @@ GtClassDefinitionCoder >> variableElementNamed: aString type: aSymbol [
 			c vertical fitContent ];
 		margin: (BlInsets all: 10).
 	element addChild: nameElement.
-	dropDownElement := GtMethodCoder basicNew
-		dropDownElementWithItems: #(instance class 'class instance')
-		label: aSymbol.	"Hack to make the drop down"
+	
+	dropDownElement := GtCoderDropdownStencil new
+		allItems: #(instance class 'class instance');
+		initialItem: aSymbol;
+		asElement.
+	
 	dropDownElement constraintsDo: [ :c | c margin: (BlInsets all: 5) ].
 	element addChild: dropDownElement.
 	^ element

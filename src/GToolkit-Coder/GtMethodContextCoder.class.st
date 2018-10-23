@@ -54,19 +54,19 @@ GtMethodContextCoder >> context: aContext [
 	context := aContext
 ]
 
-{ #category : #elements }
-GtMethodContextCoder >> contextButtons [
+{ #category : #actions }
+GtMethodContextCoder >> contextActions [
+	<return: #Collection of: #GtCoderAction>
+
 	^ (self actionsForPragmas: self stackDebuggingActionsPragmas)
-		collect: [ :aDebuggingAction | 
-			| actionButton |
-			actionButton := BrButton new
-				look: BrGlamorousButtonWithIconLook;
-				label: aDebuggingAction label;
-				action: [ aDebuggingAction execute.
+		collect: [ :aDebuggingAction |
+			GtCoderAction new
+				title: aDebuggingAction label;
+				icon: (aDebuggingAction icon ifNil: [ BlElement new size: 0@0 ]);
+				action: [
+					aDebuggingAction execute.
 					aDebuggingAction needsUpdate
-						ifTrue: [ self updateDebugger ] ].
-			aDebuggingAction icon ifNotNil: [ :anIcon | actionButton icon: aDebuggingAction icon asElement ].
-			actionButton ]
+						ifTrue: [ self updateDebugger ] ] ]
 ]
 
 { #category : #'debugger access' }
@@ -88,60 +88,6 @@ GtMethodContextCoder >> interruptedContext [
 { #category : #testing }
 GtMethodContextCoder >> isDead [
 	^ context isDead
-]
-
-{ #category : #elements }
-GtMethodContextCoder >> patternButtonElement [
-	| header patternElement label editorElement styledPattern |
-	styledPattern := self styledPatternText.
-	header := BrButton new.
-	header
-		layout: (BlGridLayout horizontal cellSpacing: 0);
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	patternElement := BlElement new.
-	patternElement
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c frame vertical alignCenter ].
-	self patternEditor
-		when: BrTextEditorInsertedEvent do: [ :event | self clearPatternSyntaxErrors ];
-		when: BrTextEditorDeletedEvent do: [ :event | self clearPatternSyntaxErrors ].
-	label := BlTextElement new.
-	label text: styledPattern.
-	label
-		margin:
-			(BlInsets
-				top: 10
-				left: 0
-				bottom: 10
-				right: 5).
-	label
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	patternElement addChild: label.
-	editorElement := BrEditorElement new.
-	editorElement editor: self patternEditor.
-	self patternEditor text: styledPattern.
-	editorElement
-		margin:
-			(BlInsets
-				top: 10
-				left: 0
-				bottom: 10
-				right: 5).
-	editorElement
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	editorElement when: BlClickEvent do: [ :event | event consumed: true ].
-	editorElement visibility: BlVisibility hidden.
-	patternElement addChild: editorElement.
-	header addChild: patternElement.
-	self contextButtons do: [ :each | header addChild: each ].
-	^ header
 ]
 
 { #category : #'debugger access' }

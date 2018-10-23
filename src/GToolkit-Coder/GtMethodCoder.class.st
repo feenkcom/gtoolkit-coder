@@ -188,6 +188,14 @@ GtMethodCoder >> context [
 	^ nil
 ]
 
+{ #category : #'actions - toolbar' }
+GtMethodCoder >> contextActions [
+	"Return a collection of contextual actions in the method coder. They are renderred separately from mainActions"
+	<return: #Collection of: #GtCoderAction>
+	
+	^ #()
+]
+
 { #category : #private }
 GtMethodCoder >> cursorPositionDo: aBlock [
 	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
@@ -216,14 +224,6 @@ GtMethodCoder >> doItSelection [
 	source isNil
 		ifTrue: [ ^ self ].
 	self evaluateSource: source
-]
-
-{ #category : #elements }
-GtMethodCoder >> dropDownElementWithItems: aCollection label: aString [
-	^ GtCoderDropdownStencil new
-		initialItem: aString;
-		allItems: aCollection;
-		asElement
 ]
 
 { #category : #private }
@@ -310,6 +310,19 @@ GtMethodCoder >> initialize [
 	super initialize.
 	methodSource := ''.
 	expanded := false
+]
+
+{ #category : #'actions - toolbar' }
+GtMethodCoder >> mainActions [
+	"Return a collection of main actions in the method coder, for example save"
+	<return: #Collection of: #GtCoderAction>
+	
+	^ { 
+		GtCoderAction new
+			title: 'Save' translated;
+			icon: BrGlamorousIcons accept;
+			action: [ self save ]
+	}
 ]
 
 { #category : #actions }
