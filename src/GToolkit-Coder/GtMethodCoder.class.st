@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'object',
 		'class',
+		'selector',
 		'category',
 		'sourceEditor',
 		'patternEditor',
@@ -279,7 +280,6 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 
 { #category : #'initialize-release' }
 GtMethodCoder >> forMethod: aCompiledMethod [
-	| selector |
 	class := aCompiledMethod methodClass.
 	selector := aCompiledMethod selector.
 	category := class whichCategoryIncludesSelector: selector.
@@ -310,6 +310,11 @@ GtMethodCoder >> initialize [
 	super initialize.
 	methodSource := ''.
 	expanded := false
+]
+
+{ #category : #testing }
+GtMethodCoder >> isForMethod: aCompiledMethod [
+	^ class = aCompiledMethod methodClass and: [ selector = aCompiledMethod selector ]
 ]
 
 { #category : #'actions - toolbar' }
@@ -533,6 +538,12 @@ GtMethodCoder >> symbolFor: aNode [
 				ifTrue: [ ^ current selector ].
 			current := current parent ].
 	^ nil
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> updateMethod: aCompiledMethod [
+	self forMethod: aCompiledMethod.
+	self buildSource
 ]
 
 { #category : #private }

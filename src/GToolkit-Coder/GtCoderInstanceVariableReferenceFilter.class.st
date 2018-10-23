@@ -1,8 +1,7 @@
 Class {
 	#name : #GtCoderInstanceVariableReferenceFilter,
-	#superclass : #GtCoderMethodsFilter,
+	#superclass : #GtCoderBehaviorMethodFilter,
 	#instVars : [
-		'class',
 		'variableName'
 	],
 	#category : #'GToolkit-Coder'
@@ -17,7 +16,7 @@ GtCoderInstanceVariableReferenceFilter class >> forClass: aClass andVariable: aS
 
 { #category : #'initialize-release' }
 GtCoderInstanceVariableReferenceFilter >> forClass: aClass andVariable: aString [
-	class := aClass.
+	self forClass: aClass.
 	variableName := aString
 ]
 
@@ -29,7 +28,7 @@ GtCoderInstanceVariableReferenceFilter >> highlighter [
 { #category : #testing }
 GtCoderInstanceVariableReferenceFilter >> includeMethod: aCompiledMethod [
 	| index |
-	(aCompiledMethod methodClass includesBehavior: class)
+	(super includeMethod: aCompiledMethod)
 		ifFalse: [ ^ false ].
 	index := class instVarIndexFor: variableName ifAbsent: [ ^ false ].
 	^ (aCompiledMethod readsField: index) or: [ aCompiledMethod writesField: index ]

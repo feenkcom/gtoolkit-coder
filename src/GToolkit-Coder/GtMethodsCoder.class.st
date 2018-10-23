@@ -2,7 +2,8 @@ Class {
 	#name : #GtMethodsCoder,
 	#superclass : #Object,
 	#instVars : [
-		'methodCoders'
+		'methodCoders',
+		'methods'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -30,9 +31,14 @@ GtMethodsCoder >> asElement [
 
 { #category : #'initialize-release' }
 GtMethodsCoder >> forMethods: compiledMethods [
-	methodCoders := compiledMethods collect: [ :each | GtMethodCoder forMethod: each ].
-	(compiledMethods isKindOf: GtCoderMethodsCollection)
-		ifTrue: [ methodCoders do: [ :each | each highlighter: compiledMethods highlighter ] ]
+	methods := compiledMethods.
+	methodCoders := methods collect: [ :each | GtMethodCoder forMethod: each ].
+	(methods isKindOf: GtCoderMethodsCollection)
+		ifTrue: [ methods announcer weak
+				when: ValueAdded send: #methodAdded: to: self;
+				when: ValueChanged send: #methodChanged: to: self;
+				when: ValueRemoved send: #methodRemoved: to: self.
+			methodCoders do: [ :each | each highlighter: methods highlighter ] ]
 ]
 
 { #category : #ui }
@@ -50,6 +56,21 @@ GtMethodsCoder >> initialize [
 	methodCoders := #()
 ]
 
+{ #category : #'event handling' }
+GtMethodsCoder >> methodAdded: aValueAdded [
+	| coder |
+	coder := GtMethodCoder forMethod: aValueAdded newValue.
+	methodCoders add: coder
+]
+
+{ #category : #'event handling' }
+GtMethodsCoder >> methodChanged: aValueChanged [
+	methodCoders
+		do: [ :each | 
+			(each isForMethod: aValueChanged newValue)
+				ifTrue: [ each updateMethod: aValueChanged newValue ] ]
+]
+
 { #category : #accessing }
 GtMethodsCoder >> methodCoders [
 	^ methodCoders
@@ -58,4 +79,9 @@ GtMethodsCoder >> methodCoders [
 { #category : #accessing }
 GtMethodsCoder >> methodCoders: anObject [
 	methodCoders := anObject
+]
+
+{ #category : #'event handling' }
+GtMethodsCoder >> methodRemoved: aValueRemoved [
+	methodCoders removeAllSuchThat: [ :each | each isForMethod: aValueRemoved oldValue ]
 ]

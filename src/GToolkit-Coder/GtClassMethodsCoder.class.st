@@ -61,7 +61,7 @@ GtClassMethodsCoder >> asElement [
 { #category : #'initialize-release' }
 GtClassMethodsCoder >> forClass: aBehavior [
 	class := aBehavior.
-	self forMethods: (class selectors asSortedCollection collect: [ :each | class >> each ])
+	self forMethods: (GtCoderMethodsCollection forFilter: (GtCoderBehaviorMethodFilter forClass: class))
 ]
 
 { #category : #'initialize-release' }

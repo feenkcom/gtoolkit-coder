@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'methods',
 		'filter',
-		'filtered'
+		'filtered',
+		'announcer'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -59,6 +60,11 @@ GtCoderMethodsCollection >> allMethodsSelect: aBlock [
 	^ methods
 ]
 
+{ #category : #accessing }
+GtCoderMethodsCollection >> announcer [
+	^ announcer
+]
+
 { #category : #converting }
 GtCoderMethodsCollection >> asCoder [
 	^ GtMethodsCoder forMethods: self
@@ -85,8 +91,40 @@ GtCoderMethodsCollection >> highlighter [
 { #category : #'initialize-release' }
 GtCoderMethodsCollection >> initialize [
 	super initialize.
+	announcer := Announcer new.
 	filtered := false.
 	methods := OrderedCollection new
+]
+
+{ #category : #changes }
+GtCoderMethodsCollection >> methodAdded: aMethodAnnouncement [
+	(filtered and: [ filter notNil ])
+		ifFalse: [ ^ self ].
+	(filter includeMethod: aMethodAnnouncement methodAdded)
+		ifFalse: [ ^ self ].
+	methods add: aMethodAnnouncement methodAdded.
+	announcer announce: (ValueAdded newValue: aMethodAnnouncement methodAdded)
+]
+
+{ #category : #changes }
+GtCoderMethodsCollection >> methodChanged: aMethodAnnouncement [
+	| index |
+	(filtered and: [ filter notNil ])
+		ifFalse: [ ^ self ].
+	index := methods identityIndexOf: aMethodAnnouncement oldMethod ifAbsent: [ 0 ].
+	(filter includeMethod: aMethodAnnouncement newMethod)
+		ifTrue: [ index = 0
+				ifTrue: [ methods add: aMethodAnnouncement newMethod.
+					announcer announce: (ValueAdded newValue: aMethodAnnouncement newMethod) ] ].
+	index > 0
+		ifTrue: [ methods at: index put: aMethodAnnouncement newMethod.
+			announcer announce: (ValueChanged oldValue: aMethodAnnouncement oldMethod newValue: aMethodAnnouncement newMethod) ]
+]
+
+{ #category : #changes }
+GtCoderMethodsCollection >> methodRemoved: aMethodAnnouncement [
+	methods remove: aMethodAnnouncement methodRemoved ifAbsent: [ ^ self ].
+	announcer announce: (ValueRemoved oldValue: aMethodAnnouncement methodRemoved)
 ]
 
 { #category : #enumerating }
@@ -120,4 +158,17 @@ GtCoderMethodsCollection >> size [
 GtCoderMethodsCollection >> species [
 	self refreshMethods.
 	^ methods class
+]
+
+{ #category : #subscription }
+GtCoderMethodsCollection >> subscribe [
+	SystemAnnouncer uniqueInstance weak
+		when: MethodAdded send: #methodAdded: to: self;
+		when: MethodModified send: #methodChanged: to: self;
+		when: MethodRemoved send: #methodRemoved: to: self
+]
+
+{ #category : #subscription }
+GtCoderMethodsCollection >> unsubscribe [
+	SystemAnnouncer uniqueInstance unsubscribe: self
 ]
