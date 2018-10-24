@@ -93,7 +93,8 @@ GtCoderMethodsCollection >> initialize [
 	super initialize.
 	announcer := Announcer new.
 	filtered := false.
-	methods := OrderedCollection new
+	methods := OrderedCollection new.
+	self subscribe
 ]
 
 { #category : #changes }

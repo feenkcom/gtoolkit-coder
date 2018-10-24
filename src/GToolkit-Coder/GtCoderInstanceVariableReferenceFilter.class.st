@@ -33,3 +33,9 @@ GtCoderInstanceVariableReferenceFilter >> includeMethod: aCompiledMethod [
 	index := class instVarIndexFor: variableName ifAbsent: [ ^ false ].
 	^ (aCompiledMethod readsField: index) or: [ aCompiledMethod writesField: index ]
 ]
+
+{ #category : #'initialize-release' }
+GtCoderInstanceVariableReferenceFilter >> initialize [
+	super initialize.
+	includeSubclasses := true
+]
