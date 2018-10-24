@@ -35,6 +35,21 @@ GtMethodsCoderExamples >> factorialExample [
 ]
 
 { #category : #accessing }
+GtMethodsCoderExamples >> gtExamplesCoder [
+	<gtExample>
+	| methods |
+	methods := GtCoderMethodsCollection forFilter: self gtExamplesFilter.
+	self assert: (methods includes: thisContext method).
+	^ methods asCoder
+]
+
+{ #category : #accessing }
+GtMethodsCoderExamples >> gtExamplesFilter [
+	<gtExample>
+	^ GtCoderPragmasFilter forPragma: #gtExample
+]
+
+{ #category : #accessing }
 GtMethodsCoderExamples >> instanceVariableFilter [
 	<gtExample>
 	^ GtCoderInstanceVariableReferenceFilter forClass: HashedCollection andVariable: 'array'
@@ -86,4 +101,21 @@ GtMethodsCoderExamples >> suspendedFactorialProcess [
 GtMethodsCoderExamples >> unionCoder [
 	<gtExample>
 	^ (GtCoderMethodsCollection forFilter: self errorFilter | self printStringFilter) asCoder
+]
+
+{ #category : #accessing }
+GtMethodsCoderExamples >> validateNoMemoryLeaks [
+	<gtExample>
+	| subscriptionCount instanceCount diffSubscriptions diffInstances |
+	Smalltalk garbageCollect.
+	subscriptionCount := SystemAnnouncer uniqueInstance numberOfSubscriptions.
+	instanceCount := GtCoderMethodsCollection allInstances size.
+	10 timesRepeat: [ self doImplementorsCoder ].
+	3 timesRepeat: [ Smalltalk garbageCollect ].
+	diffSubscriptions := subscriptionCount - SystemAnnouncer uniqueInstance numberOfSubscriptions.
+	diffInstances := instanceCount - GtCoderMethodsCollection allInstances size.
+	self assert: diffSubscriptions >= 0.
+	self assert: diffInstances >= 0.
+	^ {diffSubscriptions.
+	diffInstances}
 ]

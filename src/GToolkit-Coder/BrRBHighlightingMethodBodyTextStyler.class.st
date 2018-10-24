@@ -47,6 +47,13 @@ BrRBHighlightingMethodBodyTextStyler >> visitMessageNode: aMessageNode [
 ]
 
 { #category : #'visiting rb nodes' }
+BrRBHighlightingMethodBodyTextStyler >> visitPragmaNode: aNode [
+	super visitPragmaNode: aNode.
+	(self shouldHighlight: aNode)
+		ifTrue: [ self addStyle: #highlight from: aNode start to: aNode stop ]
+]
+
+{ #category : #'visiting rb nodes' }
 BrRBHighlightingMethodBodyTextStyler >> visitVariableNode: aVariableNode [
 	super visitVariableNode: aVariableNode.
 	(self shouldHighlight: aVariableNode)
