@@ -120,8 +120,8 @@ GtMethodContextCoder >> updateSelection [
 	interval isEmpty
 		ifTrue: [ ^ self ].
 	offset := self patternSource size + 1.
-	self sourceEditor selecter
-		overwrite;
-		from: interval first - offset - 1 to: interval last - offset;
-		select
+	(self sourceEditor text from: interval first - offset to: interval last - offset) attributes: { 
+		BlTextUnderlineAttribute new 
+			paint: BrGlamorousColors errorBackgroundColor; 
+			beNotOverwritableByStyler }
 ]
