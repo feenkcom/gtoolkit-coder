@@ -28,7 +28,10 @@ GtCoderMethodPatternElement >> initialize [
 
 	"self addChild: toolbar."
 
-	label := BlTextElement new.
+	label := BrEditorElement new.
+	label constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical fitContent ].
 	self addChild: label.
 ]
 
@@ -43,5 +46,5 @@ GtCoderMethodPatternElement >> methodCoder [
 GtCoderMethodPatternElement >> methodCoder: aMethodCoder [
 	methodCoder := aMethodCoder.
 
-	label text: aMethodCoder styledPatternText monospace
+	label editor: (BrTextEditor new text: aMethodCoder styledPatternText monospace)
 ]
