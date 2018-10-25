@@ -56,7 +56,7 @@ GtCoderMethodPatternElement >> methodCoder [
 GtCoderMethodPatternElement >> methodCoder: aMethodCoder [
 	methodCoder := aMethodCoder.
 
-	label editor: (BrTextEditor new text: aMethodCoder styledPatternText monospace).
+	label editor: aMethodCoder patternEditor.
 	
 	{ aMethodCoder classOrMetaClass package name . aMethodCoder classOrMetaClass name }
 		do: [ :aLocationStepName |

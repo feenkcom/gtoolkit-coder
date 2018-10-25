@@ -140,6 +140,7 @@ GtMethodCoder >> buildSource [
 	ast := GtPharoParser parse: methodSource.
 	index := self findSeparatorBetweenPatternAndBodyIn: ast.
 	patternSource := methodSource copyFrom: 1 to: index - 1.
+	self patternEditor text: (self styledPatternTextFor: patternSource).
 	index := self skipBlankLinesIn: methodSource at: index.
 	originalBodySource := methodSource allButFirst: index - 1.
 	text := originalBodySource asRopedText.
@@ -147,7 +148,6 @@ GtMethodCoder >> buildSource [
 		attributes:
 			{BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
 			(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}.
-	self patternEditor text: patternSource asRopedText.
 	self sourceEditor text: text
 ]
 
@@ -515,9 +515,10 @@ GtMethodCoder >> sourceEditor [
 ]
 
 { #category : #private }
-GtMethodCoder >> styledPatternText [
+GtMethodCoder >> styledPatternTextFor: aString [
 	| text |
-	text := self patternSource asRopedText.
+	text := aString asRopedText.
+	text monospace.
 	^ BrRBTextStyler new
 		classOrMetaClass: class;
 		style: text
