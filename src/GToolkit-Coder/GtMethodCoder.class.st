@@ -362,6 +362,16 @@ GtMethodCoder >> newCompletionStrategy [
 	^ completionStrategy
 ]
 
+{ #category : #private }
+GtMethodCoder >> newPatternEditor [
+	| editor |
+	editor := BrTextEditor new.
+	editor
+		when: BrTextEditorInsertedEvent do: [ :event | self updateStylerPattern ];
+		when: BrTextEditorDeletedEvent do: [ :event | self updateStylerPattern ].
+	^ editor
+]
+
 { #category : #'instance creation' }
 GtMethodCoder >> newSourceEditor [
 	| aSourceEditor |
@@ -404,7 +414,7 @@ GtMethodCoder >> object: anObject [
 
 { #category : #private }
 GtMethodCoder >> patternEditor [
-	^ patternEditor ifNil: [ patternEditor := BrTextEditor new ]
+	^ patternEditor ifNil: [ patternEditor := self newPatternEditor ]
 ]
 
 { #category : #accessing }
@@ -545,6 +555,12 @@ GtMethodCoder >> symbolFor: aNode [
 GtMethodCoder >> updateMethod: aCompiledMethod [
 	self forMethod: aCompiledMethod.
 	self buildSource
+]
+
+{ #category : #private }
+GtMethodCoder >> updateStylerPattern [
+	self sourceEditor styler methodPatternSource: self patternEditor text asString.
+	self sourceEditor styleText
 ]
 
 { #category : #private }
