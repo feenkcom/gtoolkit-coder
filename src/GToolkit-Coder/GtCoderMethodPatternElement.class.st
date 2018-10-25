@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'methodCoder',
 		'toolbar',
-		'label'
+		'label',
+		'breadcrumb'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -13,7 +14,7 @@ Class {
 GtCoderMethodPatternElement >> initialize [
 	super initialize.
 	
-	self layout: BlLinearLayout horizontal.
+	self layout: BlLinearLayout vertical.
 
 	toolbar := BrToolbar new.
 	toolbar look: BrToolbarLook new.
@@ -28,10 +29,19 @@ GtCoderMethodPatternElement >> initialize [
 
 	"self addChild: toolbar."
 
+	breadcrumb := BrBreadcrumb new.
+	breadcrumb look: (BrGlamorousBreadcrumbLook new separator: [
+		BrLabel new
+			look: (BrGlamorousLabelLook new thin foreground: BrGlamorousColors defaultButtonTextColor);
+			text: '>';
+			margin: (BlInsets left: 5 right: 5) ]).
+
 	label := BrEditorElement new.
 	label constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical fitContent ].
+	
+	self addChild: breadcrumb.
 	self addChild: label.
 ]
 
@@ -46,5 +56,11 @@ GtCoderMethodPatternElement >> methodCoder [
 GtCoderMethodPatternElement >> methodCoder: aMethodCoder [
 	methodCoder := aMethodCoder.
 
-	label editor: (BrTextEditor new text: aMethodCoder styledPatternText monospace)
+	label editor: (BrTextEditor new text: aMethodCoder styledPatternText monospace).
+	
+	{ aMethodCoder classOrMetaClass package name . aMethodCoder classOrMetaClass name }
+		do: [ :aLocationStepName |
+			breadcrumb addItem: (BrLabel new
+				look: (BrGlamorousLabelLook new foreground: BrGlamorousColors defaultButtonTextColor; fontSize: 12);
+				text: aLocationStepName) ]
 ]
