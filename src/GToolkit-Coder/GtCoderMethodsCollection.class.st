@@ -81,6 +81,15 @@ GtCoderMethodsCollection >> filter: coderMethodsFilter [
 	filter := coderMethodsFilter
 ]
 
+{ #category : #ui }
+GtCoderMethodsCollection >> gtLiveFor: aView [
+	<gtView>
+	^ aView explicit 
+		title: 'Live';
+		priority: 10;
+		stencil: [ self asCoder ]
+]
+
 { #category : #accessing }
 GtCoderMethodsCollection >> highlighter [
 	^ filter notNil
