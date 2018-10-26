@@ -70,6 +70,11 @@ GtCoderMethodsCollection >> asCoder [
 	^ GtMethodsCoder forMethods: self
 ]
 
+{ #category : #converting }
+GtCoderMethodsCollection >> asElement [
+	^ self asCoder asElement 
+]
+
 { #category : #enumerating }
 GtCoderMethodsCollection >> do: aBlock [
 	self refreshMethods.

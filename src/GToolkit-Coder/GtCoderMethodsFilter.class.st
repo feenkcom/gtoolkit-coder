@@ -10,6 +10,15 @@ GtCoderMethodsFilter >> & aFilter [
 ]
 
 { #category : #accessing }
+GtCoderMethodsFilter >> gtLiveFor: aView [
+	<gtView>
+	^ aView explicit 
+		title: 'Live';
+		priority: 0;
+		stencil: [ GtCoderMethodsCollection forFilter: self]
+]
+
+{ #category : #accessing }
 GtCoderMethodsFilter >> highlighter [
 	^ nil
 ]
