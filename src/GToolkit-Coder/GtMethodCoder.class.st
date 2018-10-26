@@ -180,8 +180,8 @@ GtMethodCoder >> clearPreviousEvaluations [
 ]
 
 { #category : #private }
-GtMethodCoder >> clearSyntaxErrors [
-	self sourceEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+GtMethodCoder >> clearSyntaxErrors: textEditor [
+	textEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
 ]
 
 { #category : #private }
@@ -366,23 +366,36 @@ GtMethodCoder >> newCompletionStrategy [
 GtMethodCoder >> newPatternEditor [
 	| editor |
 	editor := BrTextEditor new.
+	editor styler: self newPatternStyler.
 	editor
-		when: BrTextEditorInsertedEvent do: [ :event | self updateStylerPattern ];
-		when: BrTextEditorDeletedEvent do: [ :event | self updateStylerPattern ].
+		when: BrTextEditorInsertedEvent
+			do: [ :event | 
+			self updateStylerPattern.
+			self clearSyntaxErrors: editor ];
+		when: BrTextEditorDeletedEvent
+			do: [ :event | 
+			self updateStylerPattern.
+			self clearSyntaxErrors: editor ].
 	^ editor
 ]
 
 { #category : #'instance creation' }
-GtMethodCoder >> newSourceEditor [
-	| aSourceEditor |
-	<return: #BrTextEditor>
+GtMethodCoder >> newPatternStyler [
+	| aStyler |
+	aStyler := BrRBTextStyler new.
+	aStyler classOrMetaClass: class.
+	^ aStyler
+]
 
+{ #category : #'instance creation' }
+GtMethodCoder >> newSourceEditor [
+	<return: #BrTextEditor>
+	| aSourceEditor |
 	aSourceEditor := BrTextEditor new.
 	aSourceEditor styler: self newBodyStyler.
 	aSourceEditor
-		when: BrTextEditorInsertedEvent do: [ :event | self clearSyntaxErrors ];
-		when: BrTextEditorDeletedEvent do: [ :event | self clearSyntaxErrors ].
-		
+		when: BrTextEditorDeletedEvent do: [ :event | self clearSyntaxErrors: aSourceEditor ];
+		when: BrTextEditorInsertedEvent do: [ :event | self clearSyntaxErrors: aSourceEditor ].
 	^ aSourceEditor
 ]
 
