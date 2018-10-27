@@ -479,6 +479,18 @@ GtMethodCoder >> referencesCoderForVariable: aString [
 	^ nil
 ]
 
+{ #category : #private }
+GtMethodCoder >> reportParseError: aString at: anInteger on: textEditor [
+	| text position |
+	text := textEditor text.
+	position := anInteger - 1 max: 1.
+	(text from: position to: position) attributes: {(GtMethodCoderErrorAttribute for: aString , ' ->')}.
+	textEditor
+		invalidate: position to: position;
+		update: position to: position.
+	textEditor moveCursorTo: position
+]
+
 { #category : #actions }
 GtMethodCoder >> requester [
 	^ GtMethodCoderRequester on: self
@@ -487,6 +499,8 @@ GtMethodCoder >> requester [
 { #category : #actions }
 GtMethodCoder >> save [
 	| change |
+	self validateSyntax
+		ifFalse: [ ^ self ].
 	change := category isNil
 		ifTrue: [ RBAddMethodChange compile: self methodSource in: class for: self requester ]
 		ifFalse: [ RBAddMethodChange
@@ -574,6 +588,21 @@ GtMethodCoder >> updateMethod: aCompiledMethod [
 GtMethodCoder >> updateStylerPattern [
 	self sourceEditor styler methodPatternSource: self patternEditor text asString.
 	self sourceEditor styleText
+]
+
+{ #category : #private }
+GtMethodCoder >> validateSyntax [
+	[ GtPharoParser parse: self patternSource startingAt: GtPharoParser startingStateForMethodPattern ]
+		on: SmaCCParserError
+		do: [ :ex | 
+			self reportParseError: ex messageText at: ex tag position on: self patternEditor.
+			^ false ].
+	[ GtPharoParser parse: self bodySource startingAt: GtPharoParser startingStateForMethodSequence ]
+		on: SmaCCParserError
+		do: [ :ex | 
+			self reportParseError: ex messageText at: ex tag position on: self sourceEditor.
+			^ false ].
+	^ true
 ]
 
 { #category : #private }
