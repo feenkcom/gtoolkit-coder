@@ -264,8 +264,8 @@ GtMethodCoder >> expanded [
 ]
 
 { #category : #accessing }
-GtMethodCoder >> expanded: anObject [
-	expanded := anObject
+GtMethodCoder >> expanded: aBoolean [
+	expanded := aBoolean
 ]
 
 { #category : #private }
