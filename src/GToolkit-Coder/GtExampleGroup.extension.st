@@ -9,6 +9,6 @@ GtExampleGroup >> gtExpandableExamplesFor: aView [
 		stencil: [ | theExamples aMethodsCoder |
 			theExamples := self examples.
 			aMethodsCoder := GtExampleGroupCoder new.
-			aMethodsCoder forExampleGroup: (theExamples collect: [ :each | each example method ]).
+			aMethodsCoder forExampleGroup: (theExamples collect: [ :each | each example ]).
 			aMethodsCoder ]
 ]

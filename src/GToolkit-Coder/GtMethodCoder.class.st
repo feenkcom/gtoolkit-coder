@@ -91,6 +91,11 @@ GtMethodCoder >> bodySource [
 	^ self sourceEditor text asString
 ]
 
+{ #category : #'instance creation' }
+GtMethodCoder >> bodyStylerClass [
+	^ BrRBHighlightingMethodBodyTextStyler
+]
+
 { #category : #actions }
 GtMethodCoder >> browseClass: editorElement [
 	| variable varName behavior |
@@ -338,14 +343,13 @@ GtMethodCoder >> methodSource [
 { #category : #'instance creation' }
 GtMethodCoder >> newBodyStyler [
 	"Create a text styler to be used by a method body editor"
+
 	<return: #BlTextStyler>
 	| aStyler |
-
-	aStyler := BrRBHighlightingMethodBodyTextStyler new.
+	aStyler := self bodyStylerClass new.
 	aStyler classOrMetaClass: class.
 	aStyler methodPatternSource: self patternSource.
 	aStyler highlighter: highlighter.
-
 	^ aStyler
 ]
 
