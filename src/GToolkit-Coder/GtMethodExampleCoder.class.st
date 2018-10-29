@@ -22,7 +22,7 @@ GtMethodExampleCoder >> contextActions [
 	^ {(GtCoderAction new
 		title: 'Run' translated;
 		icon: BrGlamorousIcons play;
-		action: [ self run ])}
+		action: [ :button | self runFrom: button ])}
 ]
 
 { #category : #accessing }
@@ -37,6 +37,14 @@ GtMethodExampleCoder >> example: anExample [
 ]
 
 { #category : #actions }
-GtMethodExampleCoder >> run [
-	example run
+GtMethodExampleCoder >> runFrom: anElement [
+	| result |
+	result := example run.
+	result isSuccess
+		ifFalse: [ ^ self ].
+	anElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: result returnValue;
+				sourceElement: anElement)
 ]
