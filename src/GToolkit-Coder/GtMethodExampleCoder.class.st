@@ -2,7 +2,8 @@ Class {
 	#name : #GtMethodExampleCoder,
 	#superclass : #GtMethodCoder,
 	#instVars : [
-		'example'
+		'example',
+		'result'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -10,6 +11,16 @@ Class {
 { #category : #'as yet unclassified' }
 GtMethodExampleCoder class >> forExample: anExample [
 	^ self new example: anExample 
+]
+
+{ #category : #private }
+GtMethodExampleCoder >> addExampleStatus [
+	self patternEditor text clearAttributes: [ :each | each isKindOf: GtExampleStatusAttribute ].
+	(self patternEditor text from: self patternSource size to: self patternSource size)
+		attributes: {(GtExampleStatusAttribute forResult: result) beNotOverwritableByStyler}.
+	self patternEditor
+		invalidateAll;
+		updateAll
 ]
 
 { #category : #'instance creation' }
@@ -36,10 +47,16 @@ GtMethodExampleCoder >> example: anExample [
 	self forMethod: anExample method
 ]
 
+{ #category : #private }
+GtMethodExampleCoder >> patternSource: aString [
+	super patternSource: aString.
+	self addExampleStatus
+]
+
 { #category : #actions }
 GtMethodExampleCoder >> runFrom: anElement [
-	| result |
 	result := example run.
+	self addExampleStatus.
 	result isSuccess
 		ifFalse: [ ^ self ].
 	anElement

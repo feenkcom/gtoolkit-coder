@@ -9,13 +9,18 @@ GtCoderMethodsFilter >> & aFilter [
 	^ GtCoderIntersectionFilter forFilter: self filter: aFilter
 ]
 
+{ #category : #converting }
+GtCoderMethodsFilter >> asCollection [
+	^ GtCoderMethodsCollection forFilter: self
+]
+
 { #category : #accessing }
 GtCoderMethodsFilter >> gtLiveFor: aView [
 	<gtView>
-	^ aView explicit 
+	^ aView explicit
 		title: 'Live';
 		priority: 0;
-		stencil: [ GtCoderMethodsCollection forFilter: self]
+		stencil: [ self asCollection ]
 ]
 
 { #category : #accessing }
@@ -26,6 +31,16 @@ GtCoderMethodsFilter >> highlighter [
 { #category : #testing }
 GtCoderMethodsFilter >> includeMethod: aCompiledMethod [
 	self subclassResponsibility
+]
+
+{ #category : #'logical operations' }
+GtCoderMethodsFilter >> select: aBlock [
+	^ self & (GtCoderBlockFilter forBlock: aBlock)
+]
+
+{ #category : #accessing }
+GtCoderMethodsFilter >> size [
+	^ self asCollection size
 ]
 
 { #category : #'logical operations' }

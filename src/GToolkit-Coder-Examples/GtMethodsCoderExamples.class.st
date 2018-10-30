@@ -86,6 +86,12 @@ GtMethodsCoderExamples >> printStringFilter [
 ]
 
 { #category : #accessing }
+GtMethodsCoderExamples >> selectFilter [
+	<gtExample>
+	^ self doFilter select: [ :each | (each methodClass includesBehavior: Collection) not ]
+]
+
+{ #category : #accessing }
 GtMethodsCoderExamples >> suspendedFactorialProcess [
 	<gtExample>
 	| process |

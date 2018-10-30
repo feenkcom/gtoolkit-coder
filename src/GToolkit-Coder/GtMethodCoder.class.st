@@ -145,7 +145,7 @@ GtMethodCoder >> buildSource [
 	ast := GtPharoParser parse: methodSource.
 	index := self findSeparatorBetweenPatternAndBodyIn: ast.
 	patternSource := methodSource copyFrom: 1 to: index - 1.
-	self patternEditor text: (self styledPatternTextFor: patternSource).
+	self patternSource: (self styledPatternTextFor: patternSource).
 	index := self skipBlankLinesIn: methodSource at: index.
 	originalBodySource := methodSource allButFirst: index - 1.
 	text := originalBodySource asRopedText.
