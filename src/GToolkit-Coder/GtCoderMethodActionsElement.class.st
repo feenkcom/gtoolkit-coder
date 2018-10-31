@@ -15,10 +15,11 @@ GtCoderMethodActionsElement >> initialize [
 	super initialize.
 	
 	self layout: BlLinearLayout horizontal.
+	self padding: (BlInsets bottom: 5).
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical fitContent ].
-	
+
 	mainToolbar := self newToolbar.
 	
 	separator := BlElement new

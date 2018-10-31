@@ -9,23 +9,36 @@ Class {
 
 { #category : #initialization }
 GtCoderMethodElement >> initialize [
-	| shadowLook |
+	| shadowLook resizer |
 	super initialize.
+
+	resizer := BrResizer new
+		beBottom;
+		look: BrGlamorousResizerLook new;
+		constraintsDo: [ :c | c ignoreByLayout ];
+		yourself.
 
 	shadowLook := BrShadowLook new.
 	
-	self look: (BrGlamorousAccordionLook  + (BrInteractiveLook new style: [ :aStyler |
+	self look: (BrGlamorousAccordionLook + (BrInteractiveLook new style: [ :aStyler |
 		aStyler default: [
+			resizer removeFromParent.
 			self background: Color transparent.
 			self look remove: shadowLook.
 			self assert: shadowLook isAttachedToWidget not  ].
 		aStyler expanded: [
+			self addChild: resizer.
+			self enqueueTask: (BlTaskAction new action: [
+				self
+					childNamed: #bodyEditor
+					ifFound: [ :anEditor | resizer target: anEditor ]
+					ifNone: [ resizer target: nil ] ]).
 			self background: Color white.
 			self look add: shadowLook ] ])).
 
 	self addShortcut: (BlShortcut new
 		combination: (BlKeyCombination builder primary; return; build);
-		action: [ self toggle ]).
+		action: [ self toggle ])
 ]
 
 { #category : #accessing }

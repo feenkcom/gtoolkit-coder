@@ -35,7 +35,7 @@ GtCoderMethodBodyElement >> methodCoder: aMethodCoder [
 		on: anEditorElemenet
 		strategy: methodCoder newCompletionStrategy) install.
 
-	self addChild: anEditorElemenet.
+	self addChild: anEditorElemenet as: #bodyEditor.
 	self addChild: (GtCoderMethodActionsElement new methodCoder: aMethodCoder)
 ]
 
