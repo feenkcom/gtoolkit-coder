@@ -16,6 +16,11 @@ GtCoderMethodElement >> initialize [
 		beBottom;
 		look: BrGlamorousResizerLook new;
 		constraintsDo: [ :c | c ignoreByLayout ];
+		when: BlDoubleClickEvent do: [
+			self
+				childNamed: #bodyEditor
+				ifFound: [ :anEditor | anEditor constraintsDo: [ :c | c vertical fitContent ] ]
+				ifNone: [ ] ];
 		yourself.
 
 	shadowLook := BrShadowLook new.
