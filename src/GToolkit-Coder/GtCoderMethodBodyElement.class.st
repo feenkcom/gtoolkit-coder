@@ -26,7 +26,6 @@ GtCoderMethodBodyElement >> methodCoder: aMethodCoder [
 	methodCoder := aMethodCoder.
 
 	anEditorElemenet := self newEditorElement.
-	anEditorElemenet constraintsDo: [ :c | c maxHeight: 200 ].
 	anEditorElemenet editor: methodCoder sourceEditor.
 
 	methodCoder addBodyShortcutsTo: anEditorElemenet.

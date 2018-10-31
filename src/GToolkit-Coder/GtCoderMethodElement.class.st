@@ -20,9 +20,7 @@ GtCoderMethodElement >> initialize [
 			self
 				childNamed: #bodyEditor
 				ifFound: [ :anEditor | anEditor
-					constraintsDo: [ :c |
-						c vertical fitContent.
-						c maxHeight: Float infinity ] ]
+					constraintsDo: [ :c | c vertical fitContent ] ]
 				ifNone: [ ] ];
 		yourself.
 
