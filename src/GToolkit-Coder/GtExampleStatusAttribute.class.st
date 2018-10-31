@@ -16,25 +16,26 @@ GtExampleStatusAttribute class >> forResult: anExampleResult [
 
 { #category : #accessing }
 GtExampleStatusAttribute >> affect: aBrText in: anEditorElement [
-	| text attributes element |
-	text := self resultLabel asRopedText.
-	attributes := (anEditorElement editor text attributesAt: aBrText end) reject: [ :each | each = self ].
-	text
-		attributes: attributes;
-		foreground: BrGlamorousColors defaultButtonTextColor;
-		thin.
-	element := BlTextElement text: text.
-	(result notNil and: [ result isError ])
-		ifTrue: [ element background: (BrGlamorousColors errorBackgroundColor alpha: 0.5) ].
-	element
-		margin: (BlInsets left: 5);
-		padding:
-			(BlInsets
-				top: 3
-				left: 0
-				bottom: 3
-				right: 0).
+	| element |
+	element := result isNil
+		ifTrue: [ BrGlamorousIcons graycircle asElement ]
+		ifFalse: [
+			result isSuccess
+				ifTrue: [ BrGlamorousIcons greencircle asElement ]
+				ifFalse: [ 
+					result isFailure
+						ifTrue: [ BrGlamorousIcons redcircle asElement ]
+						ifFalse: [ 
+							result isError
+								ifTrue: [ BrGlamorousIcons redcircle asElement ]
+								ifFalse: [ BrGlamorousIcons graycircle asElement ] ] ] ].
 	^ element
+		margin:
+			(BlInsets
+				top: 2
+				left: 0
+				bottom: 0
+				right: 0)
 ]
 
 { #category : #'initialize-release' }
@@ -51,17 +52,4 @@ GtExampleStatusAttribute >> result [
 { #category : #accessing }
 GtExampleStatusAttribute >> result: exampleResult [
 	result := exampleResult
-]
-
-{ #category : #accessing }
-GtExampleStatusAttribute >> resultLabel [
-	result isNil
-		ifTrue: [ ^ 'N/A' ].
-	result isSuccess
-		ifTrue: [ ^ 'Success' ].
-	result isFailure
-		ifTrue: [ ^ 'Failure' ].
-	^ result isError
-		ifTrue: [ 'Error' ]
-		ifFalse: [ 'N/A' ]
 ]
