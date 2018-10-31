@@ -19,7 +19,10 @@ GtCoderMethodElement >> initialize [
 		when: BlDoubleClickEvent do: [
 			self
 				childNamed: #bodyEditor
-				ifFound: [ :anEditor | anEditor constraintsDo: [ :c | c vertical fitContent ] ]
+				ifFound: [ :anEditor | anEditor
+					constraintsDo: [ :c |
+						c vertical fitContent.
+						c maxHeight: Float infinity ] ]
 				ifNone: [ ] ];
 		yourself.
 
