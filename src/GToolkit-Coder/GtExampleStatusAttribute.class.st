@@ -18,7 +18,7 @@ GtExampleStatusAttribute class >> forResult: anExampleResult [
 GtExampleStatusAttribute >> affect: aBrText in: anEditorElement [
 	| element |
 	element := BrLabel new
-		look: (BrGlamorousLabelLook new foreground: BrGlamorousColors defaultButtonTextColor; fontSize: 12);
+		look: (BrGlamorousLabelLook new fontSize: 12);
 		text: self resultLabel.
 	(result notNil and: [ result isError ])
 		ifTrue: [ element background: (BrGlamorousColors errorBackgroundColor alpha: 0.5) ].
@@ -51,12 +51,12 @@ GtExampleStatusAttribute >> result: exampleResult [
 { #category : #accessing }
 GtExampleStatusAttribute >> resultLabel [
 	result isNil
-		ifTrue: [ ^ 'N/A' asRopedText background: BrGlamorousColors lightBorderColor ].
+		ifTrue: [ ^ 'N/A' asRopedText foreground: BrGlamorousColors lightBorderColor ].
 	result isSuccess
-		ifTrue: [ ^ 'Success' asRopedText background: BrGlamorousColors successBackgroundColor ].
+		ifTrue: [ ^ 'Success' asRopedText foreground: BrGlamorousColors successBorderColor ].
 	result isFailure
-		ifTrue: [ ^ 'Failure' asRopedText background: BrGlamorousColors errorBackgroundColor ].
+		ifTrue: [ ^ 'Failure' asRopedText foreground: BrGlamorousColors errorBorderColor ].
 	^ result isError
-		ifTrue: [ 'Error' asRopedText background: BrGlamorousColors errorBackgroundColor ]
-		ifFalse: [ 'N/A' asRopedText background: BrGlamorousColors lightBorderColor ]
+		ifTrue: [ 'Error' asRopedText foreground: BrGlamorousColors errorBorderColor ]
+		ifFalse: [ 'N/A' asRopedText foreground: BrGlamorousColors lightBorderColor ]
 ]
