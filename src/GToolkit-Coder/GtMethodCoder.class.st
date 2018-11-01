@@ -36,7 +36,7 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 			(BlShortcut new
 				combination:
 					(BlKeyCombination builder
-						meta;
+						primary;
 						key: Key d;
 						build);
 				action: [ self doItSelection ]);
@@ -44,7 +44,7 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 			(BlShortcut new
 				combination:
 					(BlKeyCombination builder
-						meta;
+						primary;
 						key: Key g;
 						build);
 				action: [ self doItAndGoSelection: editorElement ]);
@@ -52,7 +52,7 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 			(BlShortcut new
 				combination:
 					(BlKeyCombination builder
-						meta;
+						primary;
 						key: Key m;
 						build);
 				action: [ self browseImplementors: editorElement ]);
@@ -60,7 +60,7 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 			(BlShortcut new
 				combination:
 					(BlKeyCombination builder
-						meta;
+						primary;
 						key: Key n;
 						build);
 				action: [ self browseReferences: editorElement ]);
@@ -68,7 +68,7 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 			(BlShortcut new
 				combination:
 					(BlKeyCombination builder
-						meta;
+						primary;
 						key: Key b;
 						build);
 				action: [ self browseClass: editorElement ]);
@@ -76,7 +76,7 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 			(BlShortcut new
 				combination:
 					(BlKeyCombination builder
-						meta;
+						primary;
 						key: Key r;
 						build);
 				action: [ self renameSourceVariable: editorElement ])
@@ -89,7 +89,7 @@ GtMethodCoder >> addPatternShortcutsTo: editorElement [
 			(BlShortcut new
 				combination:
 					(BlKeyCombination builder
-						meta;
+						primary;
 						key: Key r;
 						build);
 				action: [ self renamePatternVariable: editorElement ])
