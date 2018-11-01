@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'selector'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #'instance creation' }

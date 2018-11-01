@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderMethodsFilter,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #'logical operations' }

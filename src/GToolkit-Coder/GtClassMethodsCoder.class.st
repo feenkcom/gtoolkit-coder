@@ -5,7 +5,7 @@ Class {
 		'class',
 		'object'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'instance creation' }

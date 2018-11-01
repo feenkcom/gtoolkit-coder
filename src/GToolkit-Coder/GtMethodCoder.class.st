@@ -12,7 +12,7 @@ Class {
 		'highlighter',
 		'methodSource'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'instance creation' }

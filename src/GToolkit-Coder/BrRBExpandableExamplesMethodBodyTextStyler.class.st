@@ -1,7 +1,7 @@
 Class {
 	#name : #BrRBExpandableExamplesMethodBodyTextStyler,
 	#superclass : #BrRBHighlightingMethodBodyTextStyler,
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #testing }

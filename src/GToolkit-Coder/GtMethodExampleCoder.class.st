@@ -5,7 +5,7 @@ Class {
 		'example',
 		'result'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'as yet unclassified' }

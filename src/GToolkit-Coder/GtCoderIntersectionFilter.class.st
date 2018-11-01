@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderIntersectionFilter,
 	#superclass : #GtCoderBinaryFilter,
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #testing }

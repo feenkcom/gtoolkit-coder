@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'highlighter'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #initialization }

@@ -5,7 +5,7 @@ Class {
 		'session',
 		'lists'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'instance creation' }

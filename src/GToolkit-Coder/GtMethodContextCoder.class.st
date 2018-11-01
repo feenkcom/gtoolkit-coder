@@ -6,7 +6,7 @@ Class {
 		'session',
 		'announcer'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'instance creation' }

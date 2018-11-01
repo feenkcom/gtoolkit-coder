@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceReferenceHighlighter,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #testing }

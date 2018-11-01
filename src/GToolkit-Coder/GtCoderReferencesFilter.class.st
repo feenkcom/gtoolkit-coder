@@ -5,7 +5,7 @@ Class {
 		'object',
 		'specialSelectorIndex'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #'instance creation' }
