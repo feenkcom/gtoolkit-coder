@@ -71,7 +71,28 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 						meta;
 						key: Key b;
 						build);
-				action: [ self browseClass: editorElement ])
+				action: [ self browseClass: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						meta;
+						key: Key r;
+						build);
+				action: [ self renameSourceVariable: editorElement ])
+]
+
+{ #category : #elements }
+GtMethodCoder >> addPatternShortcutsTo: editorElement [
+	editorElement
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						meta;
+						key: Key r;
+						build);
+				action: [ self renamePatternVariable: editorElement ])
 ]
 
 { #category : #elements }
@@ -372,14 +393,9 @@ GtMethodCoder >> newPatternEditor [
 	editor := BrTextEditor new.
 	editor styler: self newPatternStyler.
 	editor
-		when: BrTextEditorInsertedEvent
-			do: [ :event | 
-			self updateStylerPattern.
-			self clearSyntaxErrors: editor ];
-		when: BrTextEditorDeletedEvent
-			do: [ :event | 
-			self updateStylerPattern.
-			self clearSyntaxErrors: editor ].
+		when: BrTextEditorInsertedEvent do: [ :event | self patternChanged ];
+		when: BrTextEditorDeletedEvent do: [ :event | self patternChanged ];
+		when: BlInfiniteDataSourceChanged do: [ :event | self patternChanged ].
 	^ editor
 ]
 
@@ -427,6 +443,12 @@ GtMethodCoder >> object [
 { #category : #accessing }
 GtMethodCoder >> object: anObject [
 	object := anObject
+]
+
+{ #category : #private }
+GtMethodCoder >> patternChanged [
+	self updateStylerPattern.
+	self clearSyntaxErrors: self patternEditor
 ]
 
 { #category : #private }
@@ -481,6 +503,16 @@ GtMethodCoder >> referencesCoderForVariable: aString [
 	binding notNil
 		ifTrue: [ ^ (GtCoderMethodsCollection forReferences: binding) asCoder ].
 	^ nil
+]
+
+{ #category : #actions }
+GtMethodCoder >> renamePatternVariable: editorElement [
+	GtCompositeRenameAction coderRenameLocalsOnPattern: editorElement source: self sourceEditor
+]
+
+{ #category : #actions }
+GtMethodCoder >> renameSourceVariable: editorElement [
+	GtCompositeRenameAction coderRenameLocalsOnSource: editorElement pattern: self patternEditor
 ]
 
 { #category : #private }

@@ -57,6 +57,7 @@ GtCoderMethodPatternElement >> methodCoder: aMethodCoder [
 	methodCoder := aMethodCoder.
 
 	label editor: aMethodCoder patternEditor.
+	methodCoder addPatternShortcutsTo: label.
 	
 	{ aMethodCoder classOrMetaClass package name . aMethodCoder classOrMetaClass name }
 		do: [ :aLocationStepName |
