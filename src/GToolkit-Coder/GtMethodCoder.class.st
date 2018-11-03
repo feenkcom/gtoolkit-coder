@@ -440,7 +440,7 @@ GtMethodCoder >> newBodyStyler [
 
 	<return: #BlTextStyler>
 	| stylerPragmas |
-	stylerPragmas := self pragmasNamed: #gtMethodCoderStyler: inHierarchy: BlTextStyler class.
+	stylerPragmas := self pragmasNamed: #gtMethodCoderBodyStyler: inHierarchy: BlTextStyler class.
 	stylerPragmas do: [ :each | (each methodClass soleInstance perform: each methodSelector with: self) ifNotNil: [ :styler | ^ styler ] ].
 	^ self bodyStylerForClass: BrRBHighlightingMethodBodyTextStyler
 ]
