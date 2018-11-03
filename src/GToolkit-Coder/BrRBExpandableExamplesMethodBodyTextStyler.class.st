@@ -4,6 +4,14 @@ Class {
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
+{ #category : #'method coder styler' }
+BrRBExpandableExamplesMethodBodyTextStyler class >> exampleBodyStylerFor: aMethodCoder [
+	<gtMethodCoderBodyStyler: 5>
+	aMethodCoder example isNil
+		ifTrue: [ ^ nil ].
+	^ aMethodCoder bodyStylerForClass: self
+]
+
 { #category : #testing }
 BrRBExpandableExamplesMethodBodyTextStyler >> extraStyle: aText ast: ast [
 	| selfSendsExamples |
@@ -23,7 +31,7 @@ BrRBExpandableExamplesMethodBodyTextStyler >> extraStyle: aText ast: ast [
 								beAppend;
 								stencil: [ | editorElement method coder |
 									method := ast methodNode methodClass lookupSelector: each selector.
-									coder := GtMethodExampleCoder forExample: (method methodClass gtExamplesFactory createExample: method).
+									coder := GtMethodCoder forExample: (method methodClass gtExamplesFactory createExample: method).
 									coder expanded: true.
 									editorElement := coder asElement.
 									editorElement border: (BlBorder paint: Color veryLightGray width: 1).

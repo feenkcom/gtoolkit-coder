@@ -7,6 +7,12 @@ Class {
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
+{ #category : #'method coder styler' }
+BrRBHighlightingMethodBodyTextStyler class >> bodyStylerFor: aMethodCoder [
+	<gtMethodCoderBodyStyler: 10>
+	^ aMethodCoder bodyStylerForClass: self
+]
+
 { #category : #initialization }
 BrRBHighlightingMethodBodyTextStyler class >> initialTextAttributes [
 	| attributes |
