@@ -8,7 +8,9 @@ Class {
 		'patternEditor',
 		'expanded',
 		'methodSource',
-		'attributes'
+		'attributes',
+		'bodyStylers',
+		'patternStylers'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -167,6 +169,16 @@ GtMethodCoder >> bodyStylerForClass: stylerClass [
 	aStyler methodPatternSource: self patternSource.
 	aStyler highlighter: self highlighter.
 	^ aStyler
+]
+
+{ #category : #accessing }
+GtMethodCoder >> bodyStylers [
+	^ bodyStylers
+]
+
+{ #category : #accessing }
+GtMethodCoder >> bodyStylers: anObject [
+	bodyStylers := anObject
 ]
 
 { #category : #actions }
@@ -353,6 +365,20 @@ GtMethodCoder >> example: anExample [
 	self forMethod: anExample method
 ]
 
+{ #category : #'add ons' }
+GtMethodCoder >> exampleAstFor: anAST [
+	<gtAstCoderAddOns: 5>
+	(anAST methodNode ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] ifNil: [ false ])
+		ifFalse: [ ^ self patternEditor styleText ].
+	bodyStylers add: GtCoderExpandableExampleStyler new.
+	patternStylers
+		add:
+			(GtCoderExamplePatternStyler new
+				coder: self;
+				classOrMetaClass: self classOrMetaClass).
+	self patternEditor styleText
+]
+
 { #category : #examples }
 GtMethodCoder >> exampleResult [
 	^ self attributeNamed: #exampleResult
@@ -396,7 +422,7 @@ GtMethodCoder >> gtLiveFor: aView [
 	^ aView explicit 
 		title: 'Live';
 		priority: 10;
-		stencil: [ self ]
+		stencil: [ self expanded: true ]
 ]
 
 { #category : #accessing }
@@ -413,7 +439,17 @@ GtMethodCoder >> highlighter: referenceHighlighter [
 GtMethodCoder >> initialize [
 	super initialize.
 	methodSource := ''.
-	expanded := false
+	expanded := false.
+	patternStylers := #().
+	bodyStylers := #()
+]
+
+{ #category : #updating }
+GtMethodCoder >> initializeAddOns [
+	bodyStylers := OrderedCollection
+		with: (BrRBMethodBodyTextStyler new methodPatternSource: self patternSource)
+		with: (GtCoderReferenceStyler new highlighter: self highlighter).
+	patternStylers := OrderedCollection with: BrRBTextStyler new
 ]
 
 { #category : #testing }
@@ -436,13 +472,7 @@ GtMethodCoder >> methodSource [
 
 { #category : #styling }
 GtMethodCoder >> newBodyStyler [
-	"Create a text styler to be used by a method body editor"
-
-	<return: #BlTextStyler>
-	| stylerPragmas |
-	stylerPragmas := self pragmasNamed: #gtMethodCoderBodyStyler: inHierarchy: BlTextStyler class.
-	stylerPragmas do: [ :each | (each methodClass soleInstance perform: each methodSelector with: self) ifNotNil: [ :styler | ^ styler ] ].
-	^ self bodyStylerForClass: BrRBHighlightingMethodBodyTextStyler
+	^ GtCoderBodyTextStyler forCoder: self
 ]
 
 { #category : #'instance creation' }
@@ -471,13 +501,9 @@ GtMethodCoder >> newPatternEditor [
 
 { #category : #styling }
 GtMethodCoder >> newPatternStyler [
-	"Create a text styler to be used by a method pattern editor"
-
-	<return: #BlTextStyler>
-	| stylerPragmas |
-	stylerPragmas := self pragmasNamed: #gtMethodCoderPatternStyler: inHierarchy: BlTextStyler class.
-	stylerPragmas do: [ :each | (each methodClass soleInstance perform: each methodSelector with: self) ifNotNil: [ :styler | ^ styler ] ].
-	^ self patternStylerForClass: BrRBTextStyler
+	^ GtCoderPatternTextStyler new
+		coder: self;
+		yourself
 ]
 
 { #category : #'instance creation' }
@@ -520,7 +546,6 @@ GtMethodCoder >> object: anObject [
 
 { #category : #private }
 GtMethodCoder >> patternChanged [
-	self updateStylerPattern.
 	self clearSyntaxErrors: self patternEditor
 ]
 
@@ -545,6 +570,16 @@ GtMethodCoder >> patternStylerForClass: stylerClass [
 	aStyler := stylerClass new.
 	aStyler classOrMetaClass: self classOrMetaClass.
 	^ aStyler
+]
+
+{ #category : #accessing }
+GtMethodCoder >> patternStylers [
+	^ patternStylers
+]
+
+{ #category : #accessing }
+GtMethodCoder >> patternStylers: anObject [
+	patternStylers := anObject
 ]
 
 { #category : #private }
@@ -726,6 +761,14 @@ GtMethodCoder >> symbolFor: aNode [
 				ifTrue: [ ^ current selector ].
 			current := current parent ].
 	^ nil
+]
+
+{ #category : #updating }
+GtMethodCoder >> updateAddOnsForAST: anAST [
+	| pragmas |
+	self initializeAddOns.
+	pragmas := self pragmasNamed: #gtAstCoderAddOns: inHierarchy: self class.
+	pragmas reverseDo: [ :each | self perform: each methodSelector with: anAST ]
 ]
 
 { #category : #'event handling' }

@@ -29,9 +29,7 @@ GtCoderExamplePatternStyler >> coder: aMethodCoder [
 ]
 
 { #category : #private }
-GtCoderExamplePatternStyler >> privateStyle: aText [
-	| result |
-	result := super privateStyle: aText.
-	(result from: result size to: result size) attributes: {(GtExampleStatusAttribute forResult: coder exampleResult)}.
-	^ result
+GtCoderExamplePatternStyler >> style: aText ast: ast [
+	super style: aText ast: ast.
+	(aText from: aText size to: aText size) attributes: {(GtExampleStatusAttribute forResult: coder exampleResult)}
 ]
