@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderExamplePatternStyler,
+	#name : #GtCoderExampleStatusStyler,
 	#superclass : #BrRBTextStyler,
 	#instVars : [
 		'coder'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'method coder styler' }
-GtCoderExamplePatternStyler class >> examplePatternStylerFor: aMethodCoder [
+GtCoderExampleStatusStyler class >> examplePatternStylerFor: aMethodCoder [
 	<gtMethodCoderPatternStyler: 5>
 	aMethodCoder example isNil
 		ifTrue: [ ^ nil ].
@@ -19,17 +19,17 @@ GtCoderExamplePatternStyler class >> examplePatternStylerFor: aMethodCoder [
 ]
 
 { #category : #accessing }
-GtCoderExamplePatternStyler >> coder [
+GtCoderExampleStatusStyler >> coder [
 	^ coder
 ]
 
 { #category : #accessing }
-GtCoderExamplePatternStyler >> coder: aMethodCoder [
+GtCoderExampleStatusStyler >> coder: aMethodCoder [
 	coder := aMethodCoder
 ]
 
 { #category : #private }
-GtCoderExamplePatternStyler >> style: aText ast: ast [
+GtCoderExampleStatusStyler >> style: aText ast: ast [
 	super style: aText ast: ast.
 	(aText from: aText size to: aText size) attributes: {(GtExampleStatusAttribute forResult: coder exampleResult)}
 ]

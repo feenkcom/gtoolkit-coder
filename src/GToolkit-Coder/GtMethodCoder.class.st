@@ -2,6 +2,7 @@ Class {
 	#name : #GtMethodCoder,
 	#superclass : #Object,
 	#instVars : [
+		'announcer',
 		'class',
 		'selector',
 		'sourceEditor',
@@ -9,8 +10,7 @@ Class {
 		'expanded',
 		'methodSource',
 		'attributes',
-		'bodyStylers',
-		'patternStylers'
+		'addOns'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -32,17 +32,6 @@ GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
 	^ (self forMethod: anObject class >> aSymbol)
 		object: anObject;
 		yourself
-]
-
-{ #category : #'actions - toolbar' }
-GtMethodCoder >> actionsFor: aSymbol [
-	| actions |
-	actions := self pragmasNamed: aSymbol inHierarchy: GtCoderAction class.
-	^ actions
-		inject: OrderedCollection new
-		into: [ :sum :each | 
-			(each methodClass soleInstance perform: each methodSelector with: self) ifNotNil: [ :action | sum add: action ].
-			sum ]
 ]
 
 { #category : #elements }
@@ -121,6 +110,16 @@ GtMethodCoder >> addPatternShortcutsTo: editorElement [
 				action: [ self renamePatternVariable: editorElement ])
 ]
 
+{ #category : #updating }
+GtMethodCoder >> announce: anAnnouncement [
+	announcer announce: anAnnouncement
+]
+
+{ #category : #accessing }
+GtMethodCoder >> announcer [
+	^ announcer
+]
+
 { #category : #elements }
 GtMethodCoder >> asElement [
 
@@ -156,6 +155,12 @@ GtMethodCoder >> attributes [
 	^ attributes ifNil: [ attributes := IdentityDictionary new ]
 ]
 
+{ #category : #'event handling' }
+GtMethodCoder >> bodyChanged [
+	self clearSyntaxErrors: self sourceEditor.
+	self updateAddOns
+]
+
 { #category : #accessing }
 GtMethodCoder >> bodySource [
 	^ self sourceEditor text asString
@@ -173,12 +178,7 @@ GtMethodCoder >> bodyStylerForClass: stylerClass [
 
 { #category : #accessing }
 GtMethodCoder >> bodyStylers [
-	^ bodyStylers
-]
-
-{ #category : #accessing }
-GtMethodCoder >> bodyStylers: anObject [
-	bodyStylers := anObject
+	^ addOns bodyStylers
 ]
 
 { #category : #actions }
@@ -280,6 +280,16 @@ GtMethodCoder >> clearSyntaxErrors: textEditor [
 	textEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
 ]
 
+{ #category : #accessing }
+GtMethodCoder >> compiledMethod [
+	^ self classOrMetaClass
+		ifNotNil: [ :cls | 
+			self selector
+				ifNotNil: [ :sel | 
+					(cls canUnderstand: sel)
+						ifTrue: [ cls >> sel ] ] ]
+]
+
 { #category : #private }
 GtMethodCoder >> context [
 	^ nil
@@ -290,7 +300,7 @@ GtMethodCoder >> contextActions [
 	"Return a collection of contextual actions in the method coder. They are renderred separately from mainActions"
 
 	<return: #Collection of: #GtCoderAction>
-	^ self actionsFor: #gtMethodCoderContextAction:
+	^ addOns contextActions
 ]
 
 { #category : #private }
@@ -356,7 +366,8 @@ GtMethodCoder >> evaluationRequester [
 
 { #category : #examples }
 GtMethodCoder >> example [
-	^ self attributeNamed: #example
+	^ (self attributeNamed: #example)
+		ifNil: [ self compiledMethod ifNotNil: [ :method | method methodClass gtExamplesFactory createExample: method ] ]
 ]
 
 { #category : #examples }
@@ -368,15 +379,19 @@ GtMethodCoder >> example: anExample [
 { #category : #'add ons' }
 GtMethodCoder >> exampleAstFor: anAST [
 	<gtAstCoderAddOns: 5>
-	(anAST methodNode ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] ifNil: [ false ])
-		ifFalse: [ ^ self patternEditor styleText ].
-	bodyStylers add: GtCoderExpandableExampleStyler new.
-	patternStylers
-		add:
-			(GtCoderExamplePatternStyler new
+	(anAST notNil
+		and: [ anAST methodNode ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] ifNil: [ false ] ])
+		ifFalse: [ addOns removeBodyStylerOfType: GtCoderExpandableExampleStyler.
+			addOns removePatternStylerOfType: GtCoderExampleStatusStyler.
+			addOns removeContextAction: 'Run' translated.
+			^ self ].
+	addOns addBodyStyler: GtCoderExpandableExampleStyler new.
+	addOns
+		addPatternStyler:
+			(GtCoderExampleStatusStyler new
 				coder: self;
 				classOrMetaClass: self classOrMetaClass).
-	self patternEditor styleText
+	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons play action: [ :button | self runFrom: button ]
 ]
 
 { #category : #examples }
@@ -435,21 +450,30 @@ GtMethodCoder >> highlighter: referenceHighlighter [
 	self attributeNamed: #highlighter put: referenceHighlighter
 ]
 
+{ #category : #'add ons' }
+GtMethodCoder >> highlighterFor: anAST [
+	<gtAstCoderAddOns: 10>
+	self highlighter isNil
+		ifTrue: [ addOns removeBodyStylerOfType: GtCoderReferenceStyler ]
+		ifFalse: [ addOns addBodyStyler: (GtCoderReferenceStyler new highlighter: self highlighter) ]
+]
+
 { #category : #'initialize-release' }
 GtMethodCoder >> initialize [
 	super initialize.
+	announcer := Announcer new.
 	methodSource := ''.
 	expanded := false.
-	patternStylers := #().
-	bodyStylers := #()
+	self initializeAddOns
 ]
 
-{ #category : #updating }
+{ #category : #'initialize-release' }
 GtMethodCoder >> initializeAddOns [
-	bodyStylers := OrderedCollection
-		with: (BrRBMethodBodyTextStyler new methodPatternSource: self patternSource)
-		with: (GtCoderReferenceStyler new highlighter: self highlighter).
-	patternStylers := OrderedCollection with: BrRBTextStyler new
+	addOns := GtMethodCoderAddOns new.
+	addOns addPatternStyler: BrRBTextStyler new.
+	addOns addBodyStyler: (BrRBMethodBodyTextStyler new methodPatternSource: self patternSource).
+	addOns addMainAction: 'Save' translated icon: BrGlamorousIcons accept action: [ self save ].
+	addOns clearChanges
 ]
 
 { #category : #testing }
@@ -457,17 +481,17 @@ GtMethodCoder >> isForMethod: aCompiledMethod [
 	^ self classOrMetaClass = aCompiledMethod methodClass and: [ self selector = aCompiledMethod selector ]
 ]
 
+{ #category : #testing }
+GtMethodCoder >> isModified [
+	^ methodSource ~= self newMethodSource
+]
+
 { #category : #'actions - toolbar' }
 GtMethodCoder >> mainActions [
 	"Return a collection of main actions in the method coder, for example save"
 
 	<return: #Collection of: #GtCoderAction>
-	^ self actionsFor: #gtMethodCoderMainAction:
-]
-
-{ #category : #actions }
-GtMethodCoder >> methodSource [
-	^ self patternSource , String cr , self bodySource
+	^ addOns mainActions
 ]
 
 { #category : #styling }
@@ -485,6 +509,11 @@ GtMethodCoder >> newCompletionStrategy [
 		on: Error
 		do: [ :ex | ex return ].
 	^ completionStrategy
+]
+
+{ #category : #actions }
+GtMethodCoder >> newMethodSource [
+	^ self patternSource , String cr , self bodySource
 ]
 
 { #category : #private }
@@ -513,8 +542,9 @@ GtMethodCoder >> newSourceEditor [
 	aSourceEditor := BrTextEditor new.
 	self newBodyStyler ifNotNil: [ :styler | aSourceEditor styler: styler ].
 	aSourceEditor
-		when: BrTextEditorDeletedEvent do: [ :event | self clearSyntaxErrors: aSourceEditor ];
-		when: BrTextEditorInsertedEvent do: [ :event | self clearSyntaxErrors: aSourceEditor ].
+		when: BrTextEditorDeletedEvent do: [ :event | self bodyChanged ];
+		when: BrTextEditorInsertedEvent do: [ :event | self bodyChanged ];
+		when: BlInfiniteDataSourceChanged do: [ :event | self bodyChanged ].
 	^ aSourceEditor
 ]
 
@@ -544,9 +574,10 @@ GtMethodCoder >> object: anObject [
 	self attributeNamed: #object put: anObject
 ]
 
-{ #category : #private }
+{ #category : #'event handling' }
 GtMethodCoder >> patternChanged [
-	self clearSyntaxErrors: self patternEditor
+	self clearSyntaxErrors: self patternEditor.
+	self updateAddOns
 ]
 
 { #category : #private }
@@ -574,12 +605,7 @@ GtMethodCoder >> patternStylerForClass: stylerClass [
 
 { #category : #accessing }
 GtMethodCoder >> patternStylers [
-	^ patternStylers
-]
-
-{ #category : #accessing }
-GtMethodCoder >> patternStylers: anObject [
-	patternStylers := anObject
+	^ addOns patternStylers
 ]
 
 { #category : #private }
@@ -589,6 +615,24 @@ GtMethodCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 	aClass withAllSubclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
 	actions sort: [ :a :b | a arguments first < b arguments first ].
 	^ actions
+]
+
+{ #category : #updating }
+GtMethodCoder >> rbAST [
+	^ [ | ast source |
+	source := self newMethodSource.
+	ast := RBParser parseFaultyMethod: source.
+	ast methodNode
+		compilationContext:
+			(CompilationContext new
+				class: (self classOrMetaClass ifNil: [ UndefinedObject ]);
+				forSyntaxHighlighting: true;
+				bindings: Dictionary new;
+				requestor: nil).
+	ast doSemanticAnalysis.
+	ast ]
+		on: Error
+		do: [ :ex | ex return: nil ]
 ]
 
 { #category : #private }
@@ -630,6 +674,21 @@ GtMethodCoder >> referencesCoderForVariable: aString [
 	^ nil
 ]
 
+{ #category : #updating }
+GtMethodCoder >> refreshForChanges [
+	addOns
+		changesDo: [ :each | 
+			each = #bodyStylers
+				ifTrue: [ self sourceEditor styleText ].
+			each = #patternStylers
+				ifTrue: [ self patternEditor styleText ].
+			each = #mainActions
+				ifTrue: [ self announce: (GtCoderMethodMainActionsChanged new coder: self) ].
+			each = #contextActions
+				ifTrue: [ self announce: (GtCoderMethodContextActionsChanged new coder: self) ] ].
+	addOns clearChanges
+]
+
 { #category : #actions }
 GtMethodCoder >> renamePatternVariable: editorElement [
 	GtCompositeRenameAction coderRenameLocalsOnPattern: editorElement source: self sourceEditor
@@ -659,6 +718,9 @@ GtMethodCoder >> requester [
 
 { #category : #examples }
 GtMethodCoder >> runFrom: anElement [
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
 	self exampleResult: self example run.
 	self patternEditor styleText.
 	self exampleResult isSuccess
@@ -674,16 +736,24 @@ GtMethodCoder >> runFrom: anElement [
 GtMethodCoder >> save [
 	| change |
 	self validateSyntax
-		ifFalse: [ ^ self ].
+		ifFalse: [ ^ false ].
 	change := self category
-		ifNil: [ RBAddMethodChange compile: self methodSource in: self classOrMetaClass for: self requester ]
+		ifNil: [ RBAddMethodChange compile: self newMethodSource in: self classOrMetaClass for: self requester ]
 		ifNotNil: [ :category | 
 			RBAddMethodChange
-				compile: self methodSource
+				compile: self newMethodSource
 				in: self classOrMetaClass
 				classified: category
 				for: self requester ].
-	self changeManager performChange: change
+	self changeManager performChange: change.
+	change definedSelector
+		ifNotNil: [ :sel | 
+			selector := sel.
+			self compiledMethod
+				ifNotNil: [ :method | 
+					methodSource := method sourceCode.
+					^ true ] ].
+	^ false
 ]
 
 { #category : #private }
@@ -764,11 +834,12 @@ GtMethodCoder >> symbolFor: aNode [
 ]
 
 { #category : #updating }
-GtMethodCoder >> updateAddOnsForAST: anAST [
-	| pragmas |
-	self initializeAddOns.
+GtMethodCoder >> updateAddOns [
+	| pragmas ast |
+	ast := self rbAST.
 	pragmas := self pragmasNamed: #gtAstCoderAddOns: inHierarchy: self class.
-	pragmas reverseDo: [ :each | self perform: each methodSelector with: anAST ]
+	pragmas reverseDo: [ :each | self perform: each methodSelector with: ast ].
+	self refreshForChanges
 ]
 
 { #category : #'event handling' }

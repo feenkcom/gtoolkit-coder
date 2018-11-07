@@ -10,6 +10,21 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #private }
+GtCoderMethodActionsElement >> addContextToolbarActions [
+	contextToolbar addItems: (methodCoder contextActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
+	separator
+		visibility:
+			(contextToolbar hasItems
+				ifTrue: [ BlVisibility visible ]
+				ifFalse: [ BlVisibility gone ])
+]
+
+{ #category : #private }
+GtCoderMethodActionsElement >> addMainToolbarActions [
+	mainToolbar addItems: (methodCoder mainActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ])
+]
+
 { #category : #initialization }
 GtCoderMethodActionsElement >> initialize [
 	super initialize.
@@ -44,16 +59,11 @@ GtCoderMethodActionsElement >> methodCoder [
 { #category : #accessing }
 GtCoderMethodActionsElement >> methodCoder: aGtMethodCoder [
 	methodCoder := aGtMethodCoder.
-	
-	mainToolbar addItems: (aGtMethodCoder mainActions
-		collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
-
-	contextToolbar addItems: (aGtMethodCoder contextActions
-		collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
-		
-	separator visibility: (contextToolbar hasItems
-		ifTrue: [ BlVisibility visible ]
-		ifFalse: [ BlVisibility gone ])
+	methodCoder announcer weak
+		when: GtCoderMethodMainActionsChanged send: #updateMainToolbar to: self;
+		when: GtCoderMethodContextActionsChanged send: #updateContextToolbar to: self.
+	self addMainToolbarActions.
+	self addContextToolbarActions
 ]
 
 { #category : #'instance creation' }
@@ -78,4 +88,26 @@ GtCoderMethodActionsElement >> newToolbar [
 		constraintsDo: [ :c |
 			c horizontal fitContent.
 			c vertical fitContent ]
+]
+
+{ #category : #private }
+GtCoderMethodActionsElement >> removeContextToolbarActions [
+	contextToolbar numberOfItems timesRepeat: [ contextToolbar removeItemAt: 1 ]
+]
+
+{ #category : #private }
+GtCoderMethodActionsElement >> removeMainToolbarActions [
+	mainToolbar numberOfItems timesRepeat: [ mainToolbar removeItemAt: 1 ]
+]
+
+{ #category : #private }
+GtCoderMethodActionsElement >> updateContextToolbar [
+	self removeContextToolbarActions.
+	self addContextToolbarActions
+]
+
+{ #category : #private }
+GtCoderMethodActionsElement >> updateMainToolbar [
+	self removeMainToolbarActions.
+	self addMainToolbarActions
 ]

@@ -3,8 +3,7 @@ Class {
 	#superclass : #GtMethodCoder,
 	#instVars : [
 		'context',
-		'session',
-		'announcer'
+		'session'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -21,16 +20,6 @@ GtMethodContextCoder class >> forContext: aContext session: aDebugSession [
 { #category : #private }
 GtMethodContextCoder >> actionsForPragmas: aSymbolsCollection [
 	^ self session class debuggingActionsForPragmas: aSymbolsCollection for: self
-]
-
-{ #category : #'debugger access' }
-GtMethodContextCoder >> announce: anAnnouncement [
-	announcer announce: anAnnouncement
-]
-
-{ #category : #accessing }
-GtMethodContextCoder >> announcer [
-	^ announcer
 ]
 
 { #category : #private }
@@ -72,12 +61,6 @@ GtMethodContextCoder >> contextActions [
 { #category : #'debugger access' }
 GtMethodContextCoder >> currentContext [
 	^ self context
-]
-
-{ #category : #'initialize-release' }
-GtMethodContextCoder >> initialize [
-	super initialize.
-	announcer := Announcer new
 ]
 
 { #category : #'debugger access' }

@@ -72,7 +72,7 @@ GtMethodCoderRequester >> paragraph [
 
 { #category : #requester }
 GtMethodCoderRequester >> text [
-	^ coder methodSource
+	^ coder newMethodSource
 ]
 
 { #category : #hack }

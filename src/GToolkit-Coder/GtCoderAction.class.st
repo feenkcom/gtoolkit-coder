@@ -9,26 +9,6 @@ Class {
 	#category : #'GToolkit-Coder'
 }
 
-{ #category : #'method coder actions' }
-GtCoderAction class >> runExampleOn: aMethodCoder [
-	<gtMethodCoderContextAction: 1>
-	aMethodCoder example isNil
-		ifTrue: [ ^ nil ].
-	^ self new
-		title: 'Run' translated;
-		icon: BrGlamorousIcons play;
-		action: [ :button | aMethodCoder runFrom: button ]
-]
-
-{ #category : #'method coder actions' }
-GtCoderAction class >> saveActionOn: aMethodCoder [
-	<gtMethodCoderMainAction: 1>
-	^ self new
-		title: 'Save' translated;
-		icon: BrGlamorousIcons accept;
-		action: [ aMethodCoder save ]
-]
-
 { #category : #accessing }
 GtCoderAction >> action [
 	^ action

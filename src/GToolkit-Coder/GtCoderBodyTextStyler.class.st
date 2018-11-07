@@ -36,7 +36,7 @@ GtCoderBodyTextStyler >> patternSource [
 
 { #category : #private }
 GtCoderBodyTextStyler >> privateStyle: aText [
-	| ast source |
+	[ | ast source |
 	source := self patternSource , ' ' , aText asString.
 	ast := RBParser parseFaultyMethod: source.
 	ast methodNode
@@ -47,9 +47,10 @@ GtCoderBodyTextStyler >> privateStyle: aText [
 				bindings: Dictionary new;
 				requestor: nil).
 	ast doSemanticAnalysis.
-	coder updateAddOnsForAST: ast.
 	self style: aText ast: ast.
-	self extraStyle: aText ast: ast.
+	self extraStyle: aText ast: ast ]
+		on: Error
+		do: [ :ex | ex return ].
 	^ aText
 ]
 
