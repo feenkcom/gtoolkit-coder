@@ -10,7 +10,8 @@ Class {
 		'expanded',
 		'methodSource',
 		'attributes',
-		'addOns'
+		'addOns',
+		'subCoders'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -123,6 +124,11 @@ GtMethodCoder >> addPatternShortcutsTo: editorElement [
 						key: Key r;
 						build);
 				action: [ self renamePatternVariable: editorElement ])
+]
+
+{ #category : #accessing }
+GtMethodCoder >> addSubCoder: aMethodCoder [
+	self subCoders addFirst: aMethodCoder
 ]
 
 { #category : #updating }
@@ -296,6 +302,33 @@ GtMethodCoder >> clearPreviousEvaluations [
 { #category : #private }
 GtMethodCoder >> clearSyntaxErrors: textEditor [
 	textEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+]
+
+{ #category : #private }
+GtMethodCoder >> compile [
+	| change |
+	subCoders notNil
+		ifTrue: [ subCoders
+				do: [ :each | 
+					each compile
+						ifFalse: [ ^ false ] ] ].
+	change := self category
+		ifNil: [ RBAddMethodChange compile: self newMethodSource in: self classOrMetaClass for: self requester ]
+		ifNotNil: [ :category | 
+			RBAddMethodChange
+				compile: self newMethodSource
+				in: self classOrMetaClass
+				classified: category
+				for: self requester ].
+	self changeManager performChange: change.
+	change definedSelector
+		ifNotNil: [ :sel | 
+			self selector: sel.
+			self compiledMethod
+				ifNotNil: [ :method | 
+					methodSource := method sourceCode.
+					^ true ] ].
+	^ false
 ]
 
 { #category : #accessing }
@@ -771,26 +804,7 @@ GtMethodCoder >> runFrom: anElement [
 
 { #category : #actions }
 GtMethodCoder >> save [
-	| change |
-	self validateSyntax
-		ifFalse: [ ^ false ].
-	change := self category
-		ifNil: [ RBAddMethodChange compile: self newMethodSource in: self classOrMetaClass for: self requester ]
-		ifNotNil: [ :category | 
-			RBAddMethodChange
-				compile: self newMethodSource
-				in: self classOrMetaClass
-				classified: category
-				for: self requester ].
-	self changeManager performChange: change.
-	change definedSelector
-		ifNotNil: [ :sel | 
-			self selector: sel.
-			self compiledMethod
-				ifNotNil: [ :method | 
-					methodSource := method sourceCode.
-					^ true ] ].
-	^ false
+	^ self validateSyntax and: [ self compile ]
 ]
 
 { #category : #private }
@@ -853,6 +867,11 @@ GtMethodCoder >> styledPatternTextFor: aString [
 		style: text
 ]
 
+{ #category : #accessing }
+GtMethodCoder >> subCoders [
+	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
+]
+
 { #category : #private }
 GtMethodCoder >> symbolFor: aNode [
 	| current |
@@ -893,6 +912,11 @@ GtMethodCoder >> updateStylerPattern [
 
 { #category : #private }
 GtMethodCoder >> validateSyntax [
+	subCoders notNil
+		ifTrue: [ subCoders
+				do: [ :each | 
+					each validateSyntax
+						ifFalse: [ ^ false ] ] ].
 	[ GtPharoParser parse: self patternSource startingAt: GtPharoParser startingStateForMethodPattern ]
 		on: SmaCCParserError
 		do: [ :ex | 

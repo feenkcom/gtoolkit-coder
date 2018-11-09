@@ -67,7 +67,8 @@ GtExtractMethodController >> createExtractedCoder: aString [
 					lastIndex := each stopPosition + 1 ].
 			stream nextPutAll: (aString copyFrom: lastIndex to: aString size) ].
 	extractedCoder := GtMethodCoder forClass: coder classOrMetaClass source: extractedSource.
-	extractedCoder buildSource
+	extractedCoder buildSource.
+	coder addSubCoder: extractedCoder
 ]
 
 { #category : #executing }
