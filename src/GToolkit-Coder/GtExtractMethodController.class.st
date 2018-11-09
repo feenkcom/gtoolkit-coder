@@ -16,6 +16,28 @@ Class {
 	#category : #'GToolkit-Coder-Refactorings'
 }
 
+{ #category : #private }
+GtExtractMethodController >> addExtractedMethodAttributeTo: bodyText from: startInteger to: endInteger [
+	(bodyText from: startInteger to: endInteger)
+		attributes:
+			{(BrTextExpandButtonAttribute new
+				beNotOverwritableByStyler;
+				isExpanded: true;
+				attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
+						beAppend;
+						stencil: [ | editorElement |
+							extractedCoder expanded: true.
+							editorElement := extractedCoder asElement.
+							editorElement border: (BlBorder paint: Color veryLightGray width: 1).
+							editorElement
+								margin:
+									(BlInsets
+										top: 0
+										right: 10
+										bottom: 10
+										left: 10) ] ])}
+]
+
 { #category : #accessing }
 GtExtractMethodController >> coder [
 	^ coder
@@ -144,37 +166,19 @@ GtExtractMethodController >> modelClass [
 ]
 
 { #category : #private }
-GtExtractMethodController >> setBodyText: bodySource andAttributesAt: positions for: message [
-	| bodyText |
+GtExtractMethodController >> setBodyText: bodySource andAttributesAt: positions from: startInteger to: endInteger [
+	| bodyText start |
 	bodyText := bodySource asRopedText.
 	bodyText attributes: coder defaultTextAttributes.
-	(bodyText
-		from: message parent receiver stopPosition
-		to: message parent receiver stopPosition)
-		attributes:
-			{(BrTextExpandButtonAttribute new
-				beNotOverwritableByStyler;
-				isExpanded: true;
-				attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
-						beAppend;
-						stencil: [ | editorElement |
-							extractedCoder expanded: true.
-							editorElement := extractedCoder asElement.
-							editorElement
-								border: (BlBorder paint: Color veryLightGray width: 1).
-							editorElement
-								margin:
-									(BlInsets
-										top: 0
-										right: 10
-										bottom: 10
-										left: 10) ] ])}.
+	start := endInteger - 1.
+	[ start >= startInteger and: [ (bodyText at: start) ~= Character cr ] ] whileTrue: [ start := start - 1 ].
 	positions
 		keysAndValuesDo: [ :i :each | 
 			(bodyText from: each to: each)
 				attributes:
 					{GtCompletionPartAttribute new.
 					(GtSelectorKeywordAttribute keywordIndex: i)} ].
+	self addExtractedMethodAttributeTo: bodyText from: start + 1 to: endInteger.
 	coder sourceEditor text: bodyText
 ]
 
@@ -221,7 +225,7 @@ GtExtractMethodController >> uninstallHandlers [
 
 { #category : #private }
 GtExtractMethodController >> updateBodySource: aString [
-	| ast bodySource message positions |
+	| ast bodySource message positions offset |
 	ast := GtPharoParser parse: aString startingAt: GtPharoParser startingStateForMethodSequence.
 	ast
 		withAllNodesOfType: GtPharoMessageNode
@@ -241,10 +245,16 @@ GtExtractMethodController >> updateBodySource: aString [
 								nextPut: $_.
 							positions add: stream position.
 							lastIndex := each stopPosition ].
-					stream nextPutAll: (aString allButFirst: lastIndex - 1) ] ]
+					stream nextPutAll: (aString allButFirst: lastIndex - 1) ].
+			offset := message selectorParts last stopPosition - positions last - 1 ]
 		ifFalse: [ positions := {message selectorPart startPosition}.
-			bodySource := (aString first: positions first - 1) , '_' , (aString allButFirst: message selectorPart stopPosition) ].
-	self setBodyText: bodySource andAttributesAt: positions for: message.
+			bodySource := (aString first: positions first - 1) , '_' , (aString allButFirst: message selectorPart stopPosition).
+			offset := message selectorPart value size - 1 ].
+	self
+		setBodyText: bodySource
+		andAttributesAt: positions
+		from: message parent receiver startPosition
+		to: message stopPosition - offset.
 	self installHandlers.
 	coder sourceEditor selecter
 		overwrite;
