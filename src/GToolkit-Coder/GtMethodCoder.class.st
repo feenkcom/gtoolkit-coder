@@ -16,6 +16,13 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtMethodCoder class >> forClass: aBehavior source: aString [
+	^ self new
+		forClass: aBehavior source: aString;
+		yourself
+]
+
+{ #category : #'instance creation' }
 GtMethodCoder class >> forExample: anExample [
 	^ self new example: anExample 
 ]
@@ -84,7 +91,15 @@ GtMethodCoder >> addBodyShortcutsTo: editorElement [
 						primary;
 						key: Key r;
 						build);
-				action: [ self renameSourceVariable: editorElement ])
+				action: [ self renameSourceVariable: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key e;
+						build);
+				action: [ self extractMethod: editorElement ])
 ]
 
 { #category : #examples }
@@ -234,17 +249,20 @@ GtMethodCoder >> buildSource [
 	index := self skipBlankLinesIn: methodSource at: index.
 	originalBodySource := methodSource allButFirst: index - 1.
 	text := originalBodySource asRopedText.
-	text
-		attributes:
-			{BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
-			(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}.
+	text attributes: self defaultTextAttributes.
 	self sourceEditor text: text
 ]
 
 { #category : #accessing }
 GtMethodCoder >> category [
-	^ ((self classOrMetaClass notNil and: [ self selector notNil ])
-		ifTrue: [ self classOrMetaClass whichCategoryIncludesSelector: self selector ]) ifNil: [ self attributeNamed: #category ]
+	^ (self attributeNamed: #category)
+		ifNil: [ (self classOrMetaClass notNil and: [ self selector notNil ])
+				ifTrue: [ self classOrMetaClass whichCategoryIncludesSelector: self selector ] ]
+]
+
+{ #category : #accessing }
+GtMethodCoder >> category: aSymbol [
+	^ self attributeNamed: #category put: aSymbol
 ]
 
 { #category : #actions }
@@ -306,6 +324,12 @@ GtMethodCoder >> contextActions [
 { #category : #private }
 GtMethodCoder >> cursorPositionDo: aBlock [
 	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
+]
+
+{ #category : #private }
+GtMethodCoder >> defaultTextAttributes [
+	^ {BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
+	(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}
 ]
 
 { #category : #actions }
@@ -414,6 +438,13 @@ GtMethodCoder >> expanded: aBoolean [
 	expanded := aBoolean
 ]
 
+{ #category : #actions }
+GtMethodCoder >> extractMethod: editorElement [
+	(GtExtractMethodController new
+		coder: self;
+		sourceElement: editorElement) execute
+]
+
 { #category : #private }
 GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 	| startIndex char source |
@@ -422,6 +453,12 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 	[ startIndex <= source size and: [ (char := source at: startIndex) isSeparator and: [ char ~= Character cr ] ] ]
 		whileTrue: [ startIndex := startIndex + 1 ].
 	^ startIndex
+]
+
+{ #category : #'initialize-release' }
+GtMethodCoder >> forClass: aBehavior source: aString [
+	self classOrMetaClass: aBehavior.
+	methodSource := aString
 ]
 
 { #category : #'initialize-release' }
@@ -748,7 +785,7 @@ GtMethodCoder >> save [
 	self changeManager performChange: change.
 	change definedSelector
 		ifNotNil: [ :sel | 
-			selector := sel.
+			self selector: sel.
 			self compiledMethod
 				ifNotNil: [ :method | 
 					methodSource := method sourceCode.
