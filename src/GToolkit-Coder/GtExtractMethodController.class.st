@@ -22,20 +22,9 @@ GtExtractMethodController >> addExtractedMethodAttributeTo: bodyText from: start
 		attributes:
 			{(BrTextExpandButtonAttribute new
 				beNotOverwritableByStyler;
-				isExpanded: true;
-				attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
-						beAppend;
-						stencil: [ | editorElement |
-							extractedCoder expanded: true.
-							editorElement := extractedCoder asElement.
-							editorElement border: (BlBorder paint: Color veryLightGray width: 1).
-							editorElement
-								margin:
-									(BlInsets
-										top: 0
-										right: 10
-										bottom: 10
-										left: 10) ] ])}
+				attributesCreatingBlock: [ self extractedCoderAttribute ];
+				isExpanded: true).
+			self extractedCoderAttribute}
 ]
 
 { #category : #accessing }
@@ -124,6 +113,25 @@ GtExtractMethodController >> executeRefactoring [
 		in: self modelClass.
 	self setRefactoringOptions.
 	refactoring primitiveExecute
+]
+
+{ #category : #private }
+GtExtractMethodController >> extractedCoderAttribute [
+	^ BrTextAdornmentDynamicAttribute new
+		beNotOverwritableByStyler;
+		beAppend;
+		stencil: [ | editorElement |
+			extractedCoder expanded: true.
+			editorElement := extractedCoder asElement.
+			editorElement
+				border: (BlBorder paint: Color veryLightGray width: 1).
+			editorElement
+				margin:
+					(BlInsets
+						top: 0
+						right: 10
+						bottom: 10
+						left: 10) ]
 ]
 
 { #category : #'event handling' }
