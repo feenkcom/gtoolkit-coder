@@ -14,6 +14,17 @@ GtBlockCoderExamples >> compileBlock [
 ]
 
 { #category : #examples }
+GtBlockCoderExamples >> syntaxError [
+	<gtExample>
+	^ GtBlockCoder new
+		addParameter: 'a' ofType: Integer;
+		addParameter: 'b' ofType: Integer;
+		source: '2 * (+a sqrt + b)';
+		block;
+		yourself
+]
+
+{ #category : #examples }
 GtBlockCoderExamples >> twoArgumentBlock [
 	<gtExample>
 	^ GtBlockCoder new

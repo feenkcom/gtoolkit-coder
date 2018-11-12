@@ -60,28 +60,17 @@ GtBlockCoder >> blockSource [
 				nextPut: $] ]
 ]
 
-{ #category : #'event handling' }
-GtBlockCoder >> collapsedChanged [
-	| index newSource |
-	index := self sourceEditor text asString indexOf: Character cr.
-	newSource := self collapsedEditor text asString.
-	index > 0
-		ifTrue: [ newSource := newSource , (self sourceEditor text asString allButFirst: index - 1) ].
-	self sourceEditor text: newSource asRopedText
+{ #category : #private }
+GtBlockCoder >> clearSyntaxErrors [
+	self sourceEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ].
+	self collapsedEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
 ]
 
 { #category : #private }
 GtBlockCoder >> collapsedEditor [
-	| styler |
 	collapsedEditor notNil
 		ifTrue: [ ^ collapsedEditor ].
 	collapsedEditor := BrTextEditor new.
-	styler := BrRBTextStyler new.
-	styler workspace: bindingStrategy.
-	collapsedEditor styler: styler.
-	collapsedEditor
-		when: BrTextEditorInsertedEvent do: [ :event | self collapsedChanged ];
-		when: BrTextEditorDeletedEvent do: [ :event | self collapsedChanged ].
 	^ collapsedEditor
 ]
 
@@ -148,11 +137,10 @@ GtBlockCoder >> source: aString [
 { #category : #'event handling' }
 GtBlockCoder >> sourceChanged [
 	| index firstLine |
-	index := self sourceEditor text asString indexOf: Character cr.
-	firstLine := index > 0
-		ifTrue: [ self sourceEditor text copyFrom: 1 to: index - 1 ]
-		ifFalse: [ self sourceEditor text copyFrom: 1 to: self sourceEditor text size ].
-	self collapsedEditor text: firstLine
+	self clearSyntaxErrors.
+	index := self sourceEditor text asString indexOf: Character cr ifAbsent: [ self sourceEditor text size + 1 ].
+	firstLine := self sourceEditor text copyFrom: 1 to: index - 1.
+	self collapsedEditor text: firstLine readonly
 ]
 
 { #category : #private }
