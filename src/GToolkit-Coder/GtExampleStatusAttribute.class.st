@@ -18,7 +18,7 @@ GtExampleStatusAttribute class >> forResult: anExampleResult [
 GtExampleStatusAttribute >> affect: aBrText in: anEditorElement [
 	| element |
 	element := BrLabel new
-		look: (BrGlamorousLabelLook new fontSize: 12) + BrLayoutLook linearHorizontal fitContent;
+		look: (BrGlamorousLabelLook new fontSize: 12);
 		text: self resultLabel.
 	(result notNil and: [ result isError ])
 		ifTrue: [ element background: (BrGlamorousColors errorBackgroundColor alpha: 0.5) ].

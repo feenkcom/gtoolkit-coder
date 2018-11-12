@@ -32,7 +32,7 @@ GtCoderMethodPatternElement >> initialize [
 	breadcrumb := BrBreadcrumb new.
 	breadcrumb look: (BrGlamorousBreadcrumbLook new separator: [
 		BrLabel new
-			look: (BrGlamorousLabelLook new thin foreground: BrGlamorousColors defaultButtonTextColor) + BrLayoutLook linearHorizontal fitContent;
+			look: (BrGlamorousLabelLook new thin foreground: BrGlamorousColors defaultButtonTextColor);
 			text: '>';
 			margin: (BlInsets left: 5 right: 5) ]).
 
@@ -62,6 +62,6 @@ GtCoderMethodPatternElement >> methodCoder: aMethodCoder [
 	{ aMethodCoder classOrMetaClass package name . aMethodCoder classOrMetaClass name }
 		do: [ :aLocationStepName |
 			breadcrumb addItem: (BrLabel new
-				look: (BrGlamorousLabelLook new foreground: BrGlamorousColors defaultButtonTextColor; fontSize: 12) + BrLayoutLook linearHorizontal fitContent;
+				look: (BrGlamorousLabelLook new foreground: BrGlamorousColors defaultButtonTextColor; fontSize: 12);
 				text: aLocationStepName) ]
 ]
