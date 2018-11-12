@@ -151,7 +151,7 @@ GtBlockCoder >> sourceChanged [
 	index := self sourceEditor text asString indexOf: Character cr.
 	firstLine := index > 0
 		ifTrue: [ self sourceEditor text copyFrom: 1 to: index - 1 ]
-		ifFalse: [ self sourceEditor text copy ].
+		ifFalse: [ self sourceEditor text copyFrom: 1 to: self sourceEditor text size ].
 	self collapsedEditor text: firstLine
 ]
 
