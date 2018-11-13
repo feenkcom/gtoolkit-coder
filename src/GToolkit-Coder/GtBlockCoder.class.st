@@ -6,7 +6,8 @@ Class {
 		'sourceEditor',
 		'collapsedEditor',
 		'parameters',
-		'bindingStrategy'
+		'bindingStrategy',
+		'expanded'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -23,7 +24,9 @@ GtBlockCoder >> asElement [
 	expander := BrExpander new.
 	expander
 		vFitContent;
-		hExact: 300.
+		hMatchParent.
+	expanded
+		ifTrue: [ expander expand ].
 	expander look: BrGlamorousExpanderLook new.
 	expander header: [ self collapsedElement ].
 	expander content: [ self sourceElement ].
@@ -61,6 +64,23 @@ GtBlockCoder >> blockSource [
 ]
 
 { #category : #private }
+GtBlockCoder >> blockSource: aString [
+	| ast startIndex endIndex |
+	ast := GtPharoParser parse: aString startingAt: GtPharoParser startingStateForStatement.
+	(ast isKindOf: GtPharoBlockNode)
+		ifFalse: [ self error: 'Code is not a block' ].
+	parameters := OrderedDictionary new.
+	ast variables do: [ :each | self addParameter: each source ofType: nil ].
+	startIndex := (ast bar notNil
+		ifTrue: [ ast bar ]
+		ifFalse: [ ast leftBracket ]) stopPosition + 1.
+	endIndex := ast rightBracket startPosition - 1.
+	[ startIndex < endIndex and: [ (aString at: startIndex) isSeparator ] ] whileTrue: [ startIndex := startIndex + 1 ].
+	[ endIndex > startIndex and: [ (aString at: endIndex) isSeparator ] ] whileTrue: [ endIndex := endIndex - 1 ].
+	self source: (aString copyFrom: startIndex to: endIndex)
+]
+
+{ #category : #private }
 GtBlockCoder >> clearSyntaxErrors [
 	self sourceEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ].
 	self collapsedEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
@@ -83,6 +103,16 @@ GtBlockCoder >> collapsedElement [
 	^ element
 ]
 
+{ #category : #accessing }
+GtBlockCoder >> expanded [
+	^ expanded
+]
+
+{ #category : #accessing }
+GtBlockCoder >> expanded: aBoolean [
+	expanded := aBoolean
+]
+
 { #category : #ui }
 GtBlockCoder >> gtLiveFor: aView [
 	<gtView>
@@ -95,6 +125,7 @@ GtBlockCoder >> gtLiveFor: aView [
 { #category : #'initialize-release' }
 GtBlockCoder >> initialize [
 	super initialize.
+	expanded := true.
 	parameters := OrderedDictionary new.
 	bindingStrategy := GtHighlightingBindingStrategy new.
 	bindingStrategy bindings: Dictionary new
