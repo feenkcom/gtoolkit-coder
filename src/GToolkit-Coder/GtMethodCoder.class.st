@@ -501,6 +501,12 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 	methodSource := aCompiledMethod sourceCode
 ]
 
+{ #category : #updating }
+GtMethodCoder >> format [
+	methodSource := self patternSource , String cr , (RBParser parseExpression: self bodySource) formattedCode copyReplaceAll: String cr with: String cr , String tab.
+	self buildSource
+]
+
 { #category : #ui }
 GtMethodCoder >> gtLiveFor: aView [
 	<gtView>
@@ -615,6 +621,12 @@ GtMethodCoder >> newSourceEditor [
 		when: BrTextEditorDeletedEvent do: [ :event | self bodyChanged ];
 		when: BrTextEditorInsertedEvent do: [ :event | self bodyChanged ];
 		when: BlInfiniteDataSourceChanged do: [ :event | self bodyChanged ].
+	aSourceEditor interactions add: (BlShortcut new
+		combination: (BlKeyCombination builder primary; key: Key s; build);
+		action: [ self save ]).
+	aSourceEditor interactions add: (BlShortcut new
+		combination: (BlKeyCombination builder primary; shift; key: Key f; build);
+		action: [ self format ]).
 	^ aSourceEditor
 ]
 
