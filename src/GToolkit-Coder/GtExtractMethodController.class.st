@@ -11,7 +11,9 @@ Class {
 		'extractedSelector',
 		'extractedCoder',
 		'eventHandlers',
-		'renameAction'
+		'eventFilters',
+		'renameAction',
+		'originalSource'
 	],
 	#category : #'GToolkit-Coder-Refactorings'
 }
@@ -25,6 +27,14 @@ GtExtractMethodController >> addExtractedMethodAttributeTo: bodyText from: start
 				attributesCreatingBlock: [ self extractedCoderAttribute ];
 				isExpanded: true).
 			self extractedCoderAttribute}
+]
+
+{ #category : #executing }
+GtExtractMethodController >> cancelRefactoring [
+	self isRenaming
+		ifTrue: [ renameAction cancel ].
+	coder sourceEditor text: originalSource.
+	coder removeSubCoder: extractedCoder
 ]
 
 { #category : #accessing }
@@ -72,19 +82,23 @@ GtExtractMethodController >> createModel [
 { #category : #'event handling' }
 GtExtractMethodController >> cursorMoved: anEvent [
 	| attribute |
-	(renameAction notNil and: [ renameAction isInstalled ])
+	self isRenaming
 		ifTrue: [ ^ self ].
+	self editorUpdated.
 	attribute := (coder sourceEditor text attributesAt: anEvent newIndex) detect: [ :each | each isKindOf: GtSelectorKeywordAttribute ] ifNone: [ nil ].
 	attribute isNil
 		ifTrue: [ ^ self ].
 	renameAction := GtCompositeRenameAction locations: {(self intervalAt: anEvent newIndex)} element: sourceElement.
 	renameAction addLocations: {(self keywordStartPositionFor: attribute index)} to: extractedCoder patternEditor.
+	renameAction escapeCancels: false.
 	renameAction install
 ]
 
 { #category : #'event handling' }
 GtExtractMethodController >> editorUpdated [
 	| text |
+	self isRenaming
+		ifTrue: [ ^ self ].
 	text := coder sourceEditor text.
 	1 to: text size do: [ :i | 
 		((text attributesAt: i) anySatisfy: [ :each | each isKindOf: GtSelectorKeywordAttribute ])
@@ -94,7 +108,8 @@ GtExtractMethodController >> editorUpdated [
 
 { #category : #executing }
 GtExtractMethodController >> execute [
-	[ self createModel.
+	[ self saveSource.
+	self createModel.
 	self executeRefactoring.
 	self updateEditors ]
 		on: Error
@@ -145,7 +160,11 @@ GtExtractMethodController >> installHandlers [
 	(BlEventHandler
 		on: BrTextEditorInsertedEvent
 		do: [ :event | self editorUpdated ])}.
-	eventHandlers do: [ :each | coder sourceEditor addEventHandler: each ]
+	eventHandlers do: [ :each | coder sourceEditor addEventHandler: each ].
+	eventFilters := {(BlEventHandler
+		on: BlKeyDownEvent
+		do: [ :event | self processKeyDown: event ])}.
+	eventFilters do: [ :each | sourceElement addEventFilter: each ]
 ]
 
 { #category : #'event handling' }
@@ -162,6 +181,11 @@ GtExtractMethodController >> intervalAt: anInteger [
 	^ first to: last
 ]
 
+{ #category : #testing }
+GtExtractMethodController >> isRenaming [
+	^ renameAction notNil and: [ renameAction isInstalled ]
+]
+
 { #category : #'event handling' }
 GtExtractMethodController >> keywordStartPositionFor: anInteger [
 	| ast |
@@ -172,6 +196,18 @@ GtExtractMethodController >> keywordStartPositionFor: anInteger [
 { #category : #private }
 GtExtractMethodController >> modelClass [
 	^ model classFor: coder classOrMetaClass
+]
+
+{ #category : #'event handling' }
+GtExtractMethodController >> processKeyDown: anEvent [
+	anEvent key = Key escape
+		ifTrue: [ self cancelRefactoring.
+			anEvent consumed: true ]
+]
+
+{ #category : #executing }
+GtExtractMethodController >> saveSource [
+	originalSource := coder sourceEditor text copy
 ]
 
 { #category : #private }
@@ -229,7 +265,8 @@ GtExtractMethodController >> splitBodyFrom: aString [
 
 { #category : #'event handling' }
 GtExtractMethodController >> uninstallHandlers [
-	eventHandlers do: [ :each | coder sourceEditor removeEventHandler: each ]
+	eventHandlers do: [ :each | coder sourceEditor removeEventHandler: each ].
+	eventFilters do: [ :each | sourceElement removeEventFilter: each ]
 ]
 
 { #category : #private }

@@ -771,6 +771,11 @@ GtMethodCoder >> refreshForChanges [
 	addOns clearChanges
 ]
 
+{ #category : #accessing }
+GtMethodCoder >> removeSubCoder: aMethodCoder [
+	self subCoders remove: aMethodCoder ifAbsent: [  ]
+]
+
 { #category : #actions }
 GtMethodCoder >> renamePatternVariable: editorElement [
 	GtCompositeRenameAction coderRenameLocalsOnPattern: editorElement source: self sourceEditor
