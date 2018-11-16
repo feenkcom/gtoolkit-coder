@@ -878,7 +878,7 @@ GtMethodCoder >> sourceEditor [
 GtMethodCoder >> styledPatternTextFor: aString [
 	| text |
 	text := aString asRopedText.
-	text monospace.
+	text attributes: self defaultTextAttributes.
 	^ BrRBTextStyler new
 		classOrMetaClass: self classOrMetaClass;
 		style: text
