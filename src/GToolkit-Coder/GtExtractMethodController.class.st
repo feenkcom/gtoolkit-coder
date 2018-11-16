@@ -29,12 +29,41 @@ GtExtractMethodController >> addExtractedMethodAttributeTo: bodyText from: start
 			self extractedCoderAttribute}
 ]
 
+{ #category : #private }
+GtExtractMethodController >> addReorderParametersAttributes [
+	| patternAst message text |
+	patternAst := self patternAst.
+	self sourceAst
+		withAllNodesOfType: GtPharoKeywordMessageNode
+		do: [ :each | 
+			(each selectorParts = patternAst selectorParts and: [ each values = patternAst variables and: [ (each parent receiver isKindOf: GtPharoVariableNode) and: [ each parent receiver name value = 'self' ] ] ])
+				ifTrue: [ message := each ] ].
+	message isNil
+		ifTrue: [ ^ self ].
+	text := coder sourceEditor text.
+	message values
+		keysAndValuesDo: [ :i :each | 
+			i > 1
+				ifTrue: [ (text from: each startPosition - 1 to: each startPosition - 1) attributes: {(GtReorderParametersAttribute action: [ self swapParameterWithNext: i - 1 ] icon: BrGlamorousIcons left)} ].
+			i < message values size
+				ifTrue: [ (text from: each stopPosition to: each stopPosition) attributes: {(GtReorderParametersAttribute action: [ self swapParameterWithNext: i ] icon: BrGlamorousIcons right)} ] ].
+	coder sourceEditor
+		updateAll;
+		invalidateAll
+]
+
 { #category : #executing }
 GtExtractMethodController >> cancelRefactoring [
-	self isRenaming
-		ifTrue: [ renameAction cancel ].
+	self cancelRenaming.
 	coder sourceEditor text: originalSource.
 	coder removeSubCoder: extractedCoder
+]
+
+{ #category : #executing }
+GtExtractMethodController >> cancelRenaming [
+	self isRenaming
+		ifFalse: [ ^ self ].
+	renameAction cancel
 ]
 
 { #category : #accessing }
@@ -189,7 +218,7 @@ GtExtractMethodController >> isRenaming [
 { #category : #'event handling' }
 GtExtractMethodController >> keywordStartPositionFor: anInteger [
 	| ast |
-	ast := GtPharoParser parse: extractedCoder patternSource startingAt: GtPharoParser startingStateForMethodPattern.
+	ast := self patternAst.
 	^ (ast selectorParts at: anInteger) startPosition
 ]
 
@@ -199,10 +228,21 @@ GtExtractMethodController >> modelClass [
 ]
 
 { #category : #'event handling' }
+GtExtractMethodController >> patternAst [
+	^ GtPharoParser parse: extractedCoder patternSource startingAt: GtPharoParser startingStateForMethodPattern
+]
+
+{ #category : #'event handling' }
 GtExtractMethodController >> processKeyDown: anEvent [
 	anEvent key = Key escape
 		ifTrue: [ self cancelRefactoring.
 			anEvent consumed: true ]
+]
+
+{ #category : #private }
+GtExtractMethodController >> removeReorderParametersAttributes [
+	coder sourceEditor text
+		clearAttributes: [ :each | each isKindOf: GtReorderParametersAttribute ]
 ]
 
 { #category : #executing }
@@ -223,7 +263,13 @@ GtExtractMethodController >> setBodyText: bodySource andAttributesAt: positions 
 				attributes:
 					{GtCompletionPartAttribute new.
 					(GtSelectorKeywordAttribute keywordIndex: i)} ].
-	self addExtractedMethodAttributeTo: bodyText from: start + 1 to: endInteger.
+	self
+		addExtractedMethodAttributeTo: bodyText
+		from:
+			(positions size > 1
+				ifTrue: [ endInteger ]
+				ifFalse: [ start + 1 ])
+		to: endInteger.
 	coder sourceEditor text: bodyText
 ]
 
@@ -244,6 +290,11 @@ GtExtractMethodController >> setRefactoringOptions [
 		setOption: #extractAssignment toUse: [ :ref :varName | self modelClass definesVariable: varName ]
 ]
 
+{ #category : #private }
+GtExtractMethodController >> sourceAst [
+	^ GtPharoParser parse: coder sourceEditor text asString startingAt: GtPharoParser startingStateForMethodSequence
+]
+
 { #category : #accessing }
 GtExtractMethodController >> sourceElement [
 	^ sourceElement
@@ -261,6 +312,48 @@ GtExtractMethodController >> splitBodyFrom: aString [
 	index := coder findSeparatorBetweenPatternAndBodyIn: ast.
 	index := coder skipBlankLinesIn: aString at: index.
 	^ aString allButFirst: index - 1
+]
+
+{ #category : #private }
+GtExtractMethodController >> swap: firstNode with: secondNode in: textEditor [
+	textEditor deleter
+		from: secondNode startPosition - 1 to: secondNode stopPosition;
+		delete.
+	textEditor inserter
+		at: secondNode startPosition - 1;
+		string: firstNode source;
+		insert.
+	textEditor deleter
+		from: firstNode startPosition - 1 to: firstNode stopPosition;
+		delete.
+	textEditor inserter
+		at: firstNode startPosition - 1;
+		string: secondNode source;
+		insert
+]
+
+{ #category : #private }
+GtExtractMethodController >> swapParameterWithNext: anInteger [
+	| sourceAst patternAst message |
+	self removeReorderParametersAttributes.
+	self isRenaming
+		ifTrue: [ renameAction uninstall ].
+	patternAst := self patternAst.
+	sourceAst := self sourceAst.
+	sourceAst
+		withAllNodesOfType: GtPharoKeywordMessageNode
+		do: [ :each | 
+			(each selectorParts = patternAst selectorParts
+				and: [ each values = patternAst variables
+						and: [ (each parent receiver isKindOf: GtPharoVariableNode) and: [ each parent receiver name value = 'self' ] ] ])
+				ifTrue: [ message := each ] ].
+	message isNil
+		ifTrue: [ ^ self ].
+	self swap: (patternAst variables at: anInteger) with: (patternAst variables at: anInteger + 1) in: extractedCoder patternEditor.
+	self swap: (message values at: anInteger) with: (message values at: anInteger + 1) in: coder sourceEditor.
+	self addReorderParametersAttributes.
+	anInteger + 1 = message values size
+		ifTrue: [ self addExtractedMethodAttributeTo: coder sourceEditor text from: message stopPosition to: message stopPosition ]
 ]
 
 { #category : #'event handling' }
@@ -305,7 +398,9 @@ GtExtractMethodController >> updateBodySource: aString [
 	coder sourceEditor selecter
 		overwrite;
 		from: positions first - 1 to: positions first;
-		select
+		select.
+	extractedSelector numArgs > 1
+		ifTrue: [ self addReorderParametersAttributes ]
 ]
 
 { #category : #executing }
