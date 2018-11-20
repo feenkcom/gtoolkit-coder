@@ -1,13 +1,11 @@
 Class {
 	#name : #GtBlockCoder,
-	#superclass : #Object,
+	#superclass : #GtSourceCoder,
 	#instVars : [
 		'class',
-		'sourceEditor',
 		'collapsedEditor',
 		'parameters',
-		'bindingStrategy',
-		'expanded'
+		'bindingStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -81,12 +79,6 @@ GtBlockCoder >> blockSource: aString [
 ]
 
 { #category : #private }
-GtBlockCoder >> clearSyntaxErrors [
-	self sourceEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ].
-	self collapsedEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
-]
-
-{ #category : #private }
 GtBlockCoder >> collapsedEditor [
 	collapsedEditor notNil
 		ifTrue: [ ^ collapsedEditor ].
@@ -103,25 +95,6 @@ GtBlockCoder >> collapsedElement [
 	^ element
 ]
 
-{ #category : #accessing }
-GtBlockCoder >> expanded [
-	^ expanded
-]
-
-{ #category : #accessing }
-GtBlockCoder >> expanded: aBoolean [
-	expanded := aBoolean
-]
-
-{ #category : #ui }
-GtBlockCoder >> gtLiveFor: aView [
-	<gtView>
-	^ aView explicit
-		title: 'Live';
-		priority: 10;
-		stencil: [ self ]
-]
-
 { #category : #'initialize-release' }
 GtBlockCoder >> initialize [
 	super initialize.
@@ -132,26 +105,20 @@ GtBlockCoder >> initialize [
 ]
 
 { #category : #private }
+GtBlockCoder >> newBodyStyler [
+	| styler |
+	styler := BrRBTextStyler new.
+	styler workspace: bindingStrategy.
+	^ styler
+]
+
+{ #category : #private }
 GtBlockCoder >> newCompletionStrategy [
 	| completionStrategy |
 	completionStrategy := GtPharoCompletionStrategy new.
 	completionStrategy classOrMetaClass: class.
 	completionStrategy blockVariables: parameters.
 	^ completionStrategy
-]
-
-{ #category : #private }
-GtBlockCoder >> reportParseError: aString at: anInteger on: textEditor [
-	| text position |
-	text := textEditor text.
-	position := anInteger - 1 max: 1.
-	text size < position
-		ifTrue: [ ^ self ].
-	(text from: position to: position) attributes: {(GtMethodCoderErrorAttribute for: aString , ' ->')}.
-	textEditor
-		invalidate: position to: position;
-		update: position to: position.
-	textEditor moveCursorTo: position
 ]
 
 { #category : #accessing }
@@ -167,26 +134,11 @@ GtBlockCoder >> source: aString [
 
 { #category : #'event handling' }
 GtBlockCoder >> sourceChanged [
-	| index firstLine |
-	self clearSyntaxErrors.
-	index := self sourceEditor text asString indexOf: Character cr ifAbsent: [ self sourceEditor text size + 1 ].
-	firstLine := self sourceEditor text copyFrom: 1 to: index - 1.
+	| firstLine |
+	super sourceChanged.
+	firstLine := (self sourceEditor text asString lines detect: [ :each | each notEmpty ] ifNone: [ '' ]) asRopedText.
+	firstLine attributes: {(BlTextForegroundAttribute paint: Color gray)}.
 	self collapsedEditor text: firstLine readonly
-]
-
-{ #category : #private }
-GtBlockCoder >> sourceEditor [
-	| styler |
-	sourceEditor notNil
-		ifTrue: [ ^ sourceEditor ].
-	sourceEditor := BrTextEditor new.
-	styler := BrRBTextStyler new.
-	styler workspace: bindingStrategy.
-	sourceEditor styler: styler.
-	sourceEditor
-		when: BrTextEditorInsertedEvent do: [ :event | self sourceChanged ];
-		when: BrTextEditorDeletedEvent do: [ :event | self sourceChanged ].
-	^ sourceEditor
 ]
 
 { #category : #elements }
@@ -196,15 +148,4 @@ GtBlockCoder >> sourceElement [
 	element editor: self sourceEditor.
 	(GtCompletionController on: element strategy: self newCompletionStrategy) install.
 	^ element
-]
-
-{ #category : #private }
-GtBlockCoder >> validateSyntax [
-	[ GtPharoParser parse: self sourceEditor text asString startingAt: GtPharoParser startingStateForMethodSequence ]
-		on: SmaCCParserError
-		do: [ :ex | 
-			self reportParseError: ex messageText at: ex tag position on: self sourceEditor.
-			self reportParseError: ex messageText at: ex tag position on: self collapsedEditor.
-			^ false ].
-	^ true
 ]

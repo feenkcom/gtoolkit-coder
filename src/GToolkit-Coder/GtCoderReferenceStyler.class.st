@@ -61,5 +61,5 @@ GtCoderReferenceStyler >> visitPragmaNode: aNode [
 GtCoderReferenceStyler >> visitVariableNode: aVariableNode [
 	super visitVariableNode: aVariableNode.
 	(self shouldHighlight: aVariableNode)
-		ifTrue: [ self addStyle: #highlight from: aVariableNode start to: aVariableNode stop ]
+		ifTrue: [ self styleFrom: aVariableNode start to: aVariableNode stop with: HighlightAttributes ]
 ]

@@ -1,26 +1,12 @@
 Class {
 	#name : #GtPharoSnippetCoder,
-	#superclass : #Object,
+	#superclass : #GtSourceCoder,
 	#instVars : [
-		'sourceEditor',
 		'collapsedEditor',
-		'bindingStrategy',
-		'expanded',
-		'announcer',
-		'addOns'
+		'bindingStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
-
-{ #category : #accessing }
-GtPharoSnippetCoder >> announcer [
-	^ announcer
-]
-
-{ #category : #accessing }
-GtPharoSnippetCoder >> announcer: anObject [
-	announcer := anObject
-]
 
 { #category : #ui }
 GtPharoSnippetCoder >> asElement [
@@ -51,21 +37,14 @@ GtPharoSnippetCoder >> collapsedElement [
 	| element |
 	element := BrEditorElement new.
 	element editor: self collapsedEditor.
-	(GtCompletionController on: element strategy: self newCompletionStrategy) install.
 	^ element
-]
-
-{ #category : #initialization }
-GtPharoSnippetCoder >> contextActions [
-	^ addOns contextActions
 ]
 
 { #category : #initialization }
 GtPharoSnippetCoder >> evaluateSource: aString [
 	| value |
-"	self clearPreviousEvaluations."
 	value := self class compiler
-		requestor: self evaluationRequester;
+		requestor: self requester;
 		source: aString;
 		receiver: nil;
 		context: nil;
@@ -84,50 +63,27 @@ GtPharoSnippetCoder >> evaluateSource: aString [
 ]
 
 { #category : #initialization }
-GtPharoSnippetCoder >> evaluationRequester [
-	^ GtMethodCoderEvaluationRequester on: self
-]
-
-{ #category : #accessing }
-GtPharoSnippetCoder >> expanded [
-	^ expanded
-]
-
-{ #category : #accessing }
-GtPharoSnippetCoder >> expanded: anObject [
-	expanded := anObject
-]
-
-{ #category : #ui }
-GtPharoSnippetCoder >> gtLiveFor: aView [
-	<gtView>
-	^ aView explicit
-		title: 'Live';
-		priority: 10;
-		stencil: [ self ]
-]
-
-{ #category : #initialization }
 GtPharoSnippetCoder >> initialize [
 	super initialize.
 	expanded := true.
 	bindingStrategy := GtHighlightingBindingStrategy new.
-	bindingStrategy bindings: Dictionary new.
-	announcer := Announcer new.
-	self initializeAddOns
+	bindingStrategy bindings: Dictionary new
 ]
 
 { #category : #initialization }
 GtPharoSnippetCoder >> initializeAddOns [
-	addOns := GtMethodCoderAddOns new.
+	super initializeAddOns.
 	addOns addPatternStyler: BrRBTextStyler new.
 	addOns addMainAction: 'Run' translated icon: BrGlamorousIcons play action: [ :aButton | self runFrom: aButton ].
 	addOns clearChanges
 ]
 
-{ #category : #initialization }
-GtPharoSnippetCoder >> mainActions [
-	^ addOns mainActions
+{ #category : #ui }
+GtPharoSnippetCoder >> newBodyStyler [
+	| styler |
+	styler := BrRBTextStyler new.
+	styler workspace: bindingStrategy.
+	^ styler
 ]
 
 { #category : #private }
@@ -138,23 +94,10 @@ GtPharoSnippetCoder >> newCompletionStrategy [
 	^ completionStrategy
 ]
 
-{ #category : #private }
-GtPharoSnippetCoder >> reportParseError: aString at: anInteger on: textEditor [
-	| text position |
-	text := textEditor text.
-	position := anInteger - 1 max: 1.
-	text size < position
-		ifTrue: [ ^ self ].
-	(text from: position to: position) attributes: {(GtMethodCoderErrorAttribute for: aString , ' ->')}.
-	textEditor
-		invalidate: position to: position;
-		update: position to: position.
-	textEditor moveCursorTo: position
-]
-
-{ #category : #initialization }
+{ #category : #actions }
 GtPharoSnippetCoder >> runFrom: aButton [
 	| aValue |
+	self clearPreviousEvaluations.
 	self validateSyntax ifFalse: [ ^ self ].
 	aValue := self evaluateSource: self sourceEditor text asString.
 	aButton fireEvent: (GtPhlowObjectToSpawn new object: aValue; sourceElement: aButton)
@@ -168,26 +111,11 @@ GtPharoSnippetCoder >> source: aString [
 
 { #category : #'event handling' }
 GtPharoSnippetCoder >> sourceChanged [
-	| index firstLine |
-"	self clearSyntaxErrors."
-	index := self sourceEditor text asString indexOf: Character cr ifAbsent: [ self sourceEditor text size + 1 ].
-	firstLine := self sourceEditor text copyFrom: 1 to: index - 1.
+	| firstLine |
+	super sourceChanged.
+	firstLine := (self sourceEditor text asString lines detect: [ :each | each notEmpty ] ifNone: [ '' ]) asRopedText.
+	firstLine attributes: {(BlTextForegroundAttribute paint: Color gray)}.
 	self collapsedEditor text: firstLine readonly
-]
-
-{ #category : #ui }
-GtPharoSnippetCoder >> sourceEditor [
-	| styler |
-	sourceEditor notNil
-		ifTrue: [ ^ sourceEditor ].
-	sourceEditor := BrTextEditor new.
-	styler := BrRBTextStyler new.
-	styler workspace: bindingStrategy.
-	sourceEditor styler: styler.
-	sourceEditor
-		when: BrTextEditorInsertedEvent do: [ :event | self sourceChanged ];
-		when: BrTextEditorDeletedEvent do: [ :event | self sourceChanged ].
-	^ sourceEditor
 ]
 
 { #category : #ui }
@@ -208,15 +136,4 @@ GtPharoSnippetCoder >> sourceElement [
 	container addChild: element.
 	container addChild: toolbar.
 	^ container
-]
-
-{ #category : #private }
-GtPharoSnippetCoder >> validateSyntax [
-	[ GtPharoParser parse: self sourceEditor text asString startingAt: GtPharoParser startingStateForMethodSequence ]
-		on: SmaCCParserError
-		do: [ :ex | 
-			self reportParseError: ex messageText at: ex tag position on: self sourceEditor.
-			self reportParseError: ex messageText at: ex tag position on: self collapsedEditor.
-			^ false ].
-	^ true
 ]

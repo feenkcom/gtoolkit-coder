@@ -12,10 +12,9 @@ GtMethodCoderExamples >> ? anObject [
 { #category : #model }
 GtMethodCoderExamples >> binaryMethodCoder [
 	<gtExample>
-	| method methodCoder source |
+	| method methodCoder |
 	method := self class >> #?.
 	methodCoder := GtMethodCoder forMethod: method.
-	source := method sourceCode.
 	self assert: methodCoder patternSource = '? anObject'.
 	self assert: methodCoder bodySource = '	"Test binary method"'.
 	^ methodCoder
@@ -58,10 +57,9 @@ GtMethodCoderExamples >> emptyBody [
 { #category : #model }
 GtMethodCoderExamples >> emptyBodyCoder [
 	<gtExample>
-	| method methodCoder source |
+	| method methodCoder |
 	method := self class >> #emptyBody.
 	methodCoder := GtMethodCoder forMethod: method.
-	source := method sourceCode.
 	self assert: methodCoder patternSource = 'emptyBody'.
 	self assert: methodCoder bodySource = ''.
 	^ methodCoder
@@ -78,10 +76,9 @@ GtMethodCoderExamples >> emptyLines [
 { #category : #model }
 GtMethodCoderExamples >> emptyLinesCoder [
 	<gtExample>
-	| method methodCoder source |
+	| method methodCoder |
 	method := self class >> #emptyLines.
 	methodCoder := GtMethodCoder forMethod: method.
-	source := method sourceCode.
 	self assert: methodCoder patternSource = 'emptyLines'.
 	self assert: methodCoder bodySource = '"Some empty lines"'.
 	^ methodCoder
@@ -95,10 +92,9 @@ GtMethodCoderExamples >> keyword: a selector: b [
 { #category : #model }
 GtMethodCoderExamples >> keywordSelectorCoder [
 	<gtExample>
-	| method methodCoder source |
+	| method methodCoder |
 	method := self class >> #keyword:selector:.
 	methodCoder := GtMethodCoder forMethod: method.
-	source := method sourceCode.
 	self assert: methodCoder patternSource = 'keyword: a selector: b'.
 	self assert: methodCoder bodySource = '	^ a + b'.
 	^ methodCoder
@@ -107,12 +103,11 @@ GtMethodCoderExamples >> keywordSelectorCoder [
 { #category : #model }
 GtMethodCoderExamples >> noSpacesCoder [
 	<gtExample>
-	| method methodCoder source |
+	| method methodCoder |
 	method := self class >> #noSpacesCoder.
 	methodCoder := GtMethodCoder forMethod: method.
-	source := method sourceCode.
 	self assert: methodCoder patternSource = 'noSpacesCoder'.
-	self assert: (methodCoder bodySource beginsWith: String tab, '<gtExample').
+	self assert: (methodCoder bodySource beginsWith: String tab , '<gtExample').
 	^ methodCoder
 ]
 

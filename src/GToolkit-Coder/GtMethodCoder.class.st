@@ -1,17 +1,13 @@
 Class {
 	#name : #GtMethodCoder,
-	#superclass : #Object,
+	#superclass : #GtSourceCoder,
 	#instVars : [
-		'announcer',
 		'class',
 		'selector',
-		'sourceEditor',
 		'patternEditor',
-		'expanded',
 		'methodSource',
-		'attributes',
-		'addOns',
-		'subCoders'
+		'subCoders',
+		'isBuilt'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -131,59 +127,18 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 	self subCoders addFirst: aMethodCoder
 ]
 
-{ #category : #updating }
-GtMethodCoder >> announce: anAnnouncement [
-	announcer announce: anAnnouncement
-]
-
-{ #category : #accessing }
-GtMethodCoder >> announcer [
-	^ announcer
-]
-
 { #category : #elements }
 GtMethodCoder >> asElement [
-
-	(methodSource notEmpty and: [ self patternSource isEmpty ])
-		ifTrue: [ self buildSource ].
-
+	self ensureBuilt.
 	^ GtCoderMethodElement new
 		margin: (BlInsets all: 10);
 		methodCoder: self;
 		yourself
 ]
 
-{ #category : #'accessing-attributes' }
-GtMethodCoder >> attributeNamed: aSymbol [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifAbsent: [  ] ]
-]
-
-{ #category : #'accessing-attributes' }
-GtMethodCoder >> attributeNamed: aSymbol ifAbsent: aBlock [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifAbsent: aBlock ]
-		ifFalse: [ aBlock value ]
-]
-
-{ #category : #'accessing-attributes' }
-GtMethodCoder >> attributeNamed: aSymbol put: anObject [
-	^ self attributes at: aSymbol put: anObject
-]
-
-{ #category : #'accessing-attributes' }
-GtMethodCoder >> attributes [
-	^ attributes ifNil: [ attributes := IdentityDictionary new ]
-]
-
-{ #category : #'event handling' }
-GtMethodCoder >> bodyChanged [
-	self clearSyntaxErrors: self sourceEditor.
-	self updateAddOns
-]
-
 { #category : #accessing }
 GtMethodCoder >> bodySource [
+	self ensureBuilt.
 	^ self sourceEditor text asString
 ]
 
@@ -202,52 +157,10 @@ GtMethodCoder >> bodyStylers [
 	^ addOns bodyStylers
 ]
 
-{ #category : #actions }
-GtMethodCoder >> browseClass: editorElement [
-	| variable varName behavior |
-	variable := self variableAtCursor.
-	variable isNil
-		ifTrue: [ ^ self ].
-	varName := variable name value asSymbol.
-	behavior := Smalltalk globals at: varName ifAbsent: [ ^ self ].
-	behavior isBehavior
-		ifFalse: [ ^ self ].
-	editorElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: (GtClassCoder forClass: behavior);
-				sourceElement: editorElement)
-]
-
-{ #category : #actions }
-GtMethodCoder >> browseImplementors: editorElement [
-	| symbol |
-	symbol := self selectorAtCursor.
-	symbol isNil
-		ifTrue: [ ^ self ].
-	editorElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: (GtCoderMethodsCollection forImplementors: symbol) asCoder;
-				sourceElement: editorElement)
-]
-
-{ #category : #actions }
-GtMethodCoder >> browseReferences: editorElement [
-	| coder |
-	coder := self referencesCoderAtCursor.
-	coder isNil
-		ifTrue: [ ^ self ].
-	editorElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: coder;
-				sourceElement: editorElement)
-]
-
 { #category : #private }
 GtMethodCoder >> buildSource [
 	| patternSource ast originalBodySource index text |
+	isBuilt := true.
 	ast := GtPharoParser parse: methodSource.
 	index := self findSeparatorBetweenPatternAndBodyIn: ast.
 	patternSource := methodSource copyFrom: 1 to: index - 1.
@@ -292,19 +205,6 @@ GtMethodCoder >> clearPatternSyntaxErrors [
 ]
 
 { #category : #private }
-GtMethodCoder >> clearPreviousEvaluations [
-	self sourceEditor text clearAttributes: [ :each | each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute ].
-	self sourceEditor
-		invalidateAll;
-		updateAll
-]
-
-{ #category : #private }
-GtMethodCoder >> clearSyntaxErrors: textEditor [
-	textEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
-]
-
-{ #category : #private }
 GtMethodCoder >> compile [
 	| change |
 	subCoders notNil
@@ -346,14 +246,6 @@ GtMethodCoder >> context [
 	^ nil
 ]
 
-{ #category : #'actions - toolbar' }
-GtMethodCoder >> contextActions [
-	"Return a collection of contextual actions in the method coder. They are renderred separately from mainActions"
-
-	<return: #Collection of: #GtCoderAction>
-	^ addOns contextActions
-]
-
 { #category : #private }
 GtMethodCoder >> cursorPositionDo: aBlock [
 	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
@@ -391,6 +283,13 @@ GtMethodCoder >> doItSelection [
 ]
 
 { #category : #private }
+GtMethodCoder >> ensureBuilt [
+	isBuilt
+		ifTrue: [ ^ self ].
+	self buildSource
+]
+
+{ #category : #private }
 GtMethodCoder >> evaluateSource: aString [
 	| value interval |
 	self clearPreviousEvaluations.
@@ -414,11 +313,6 @@ GtMethodCoder >> evaluateSource: aString [
 		invalidateAll;
 		updateAll.
 	^ value
-]
-
-{ #category : #actions }
-GtMethodCoder >> evaluationRequester [
-	^ GtMethodCoderEvaluationRequester on: self
 ]
 
 { #category : #examples }
@@ -461,16 +355,6 @@ GtMethodCoder >> exampleResult: anExampleResult [
 	self attributeNamed: #exampleResult put: anExampleResult
 ]
 
-{ #category : #accessing }
-GtMethodCoder >> expanded [
-	^ expanded
-]
-
-{ #category : #accessing }
-GtMethodCoder >> expanded: aBoolean [
-	expanded := aBoolean
-]
-
 { #category : #actions }
 GtMethodCoder >> extractMethod: editorElement [
 	(GtExtractMethodController new
@@ -491,14 +375,18 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 { #category : #'initialize-release' }
 GtMethodCoder >> forClass: aBehavior source: aString [
 	self classOrMetaClass: aBehavior.
-	methodSource := aString
+	methodSource := aString.
+	isBuilt
+		ifTrue: [ self buildSource ]
 ]
 
 { #category : #'initialize-release' }
 GtMethodCoder >> forMethod: aCompiledMethod [
 	self classOrMetaClass: aCompiledMethod methodClass.
 	self selector: aCompiledMethod selector.
-	methodSource := aCompiledMethod sourceCode
+	methodSource := aCompiledMethod sourceCode.
+	isBuilt
+		ifTrue: [ self buildSource ]
 ]
 
 { #category : #updating }
@@ -536,18 +424,22 @@ GtMethodCoder >> highlighterFor: anAST [
 
 { #category : #'initialize-release' }
 GtMethodCoder >> initialize [
+	isBuilt := false.
 	super initialize.
-	announcer := Announcer new.
-	methodSource := ''.
-	expanded := false.
-	self initializeAddOns
+	methodSource := ''
 ]
 
 { #category : #'initialize-release' }
 GtMethodCoder >> initializeAddOns [
-	addOns := GtMethodCoderAddOns new.
+	super initializeAddOns.
 	addOns addPatternStyler: BrRBTextStyler new.
-	addOns addBodyStyler: (BrRBMethodBodyTextStyler new methodPatternSource: self patternSource).
+	addOns
+		addBodyStyler:
+			(BrRBMethodBodyTextStyler new
+				methodPatternSource:
+					(isBuilt
+						ifTrue: [ self patternSource ]
+						ifFalse: [ '' ])).
 	addOns addMainAction: 'Save' translated icon: BrGlamorousIcons accept action: [ self save ].
 	addOns clearChanges
 ]
@@ -560,14 +452,6 @@ GtMethodCoder >> isForMethod: aCompiledMethod [
 { #category : #testing }
 GtMethodCoder >> isModified [
 	^ methodSource ~= self newMethodSource
-]
-
-{ #category : #'actions - toolbar' }
-GtMethodCoder >> mainActions [
-	"Return a collection of main actions in the method coder, for example save"
-
-	<return: #Collection of: #GtCoderAction>
-	^ addOns mainActions
 ]
 
 { #category : #styling }
@@ -615,18 +499,27 @@ GtMethodCoder >> newPatternStyler [
 GtMethodCoder >> newSourceEditor [
 	<return: #BrTextEditor>
 	| aSourceEditor |
-	aSourceEditor := BrTextEditor new.
-	self newBodyStyler ifNotNil: [ :styler | aSourceEditor styler: styler ].
-	aSourceEditor
-		when: BrTextEditorDeletedEvent do: [ :event | self bodyChanged ];
-		when: BrTextEditorInsertedEvent do: [ :event | self bodyChanged ];
-		when: BlInfiniteDataSourceChanged do: [ :event | self bodyChanged ].
-	aSourceEditor interactions add: (BlShortcut new
-		combination: (BlKeyCombination builder primary; key: Key s; build);
-		action: [ self save ]).
-	aSourceEditor interactions add: (BlShortcut new
-		combination: (BlKeyCombination builder primary; shift; key: Key f; build);
-		action: [ self format ]).
+	aSourceEditor := super newSourceEditor.
+	aSourceEditor when: BlInfiniteDataSourceChanged do: [ :event | self sourceChanged ].
+	aSourceEditor interactions
+		add:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key s;
+						build);
+				action: [ self save ]).
+	aSourceEditor interactions
+		add:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						shift;
+						key: Key f;
+						build);
+				action: [ self format ]).
 	^ aSourceEditor
 ]
 
@@ -669,6 +562,7 @@ GtMethodCoder >> patternEditor [
 
 { #category : #accessing }
 GtMethodCoder >> patternSource [
+	self ensureBuilt.
 	^ self patternEditor text asString
 ]
 
@@ -786,23 +680,6 @@ GtMethodCoder >> renameSourceVariable: editorElement [
 	GtCompositeRenameAction coderRenameLocalsOnSource: editorElement pattern: self patternEditor
 ]
 
-{ #category : #private }
-GtMethodCoder >> reportParseError: aString at: anInteger on: textEditor [
-	| text position |
-	text := textEditor text.
-	position := anInteger - 1 max: 1.
-	(text from: position to: position) attributes: {(GtMethodCoderErrorAttribute for: aString , ' ->')}.
-	textEditor
-		invalidate: position to: position;
-		update: position to: position.
-	textEditor moveCursorTo: position
-]
-
-{ #category : #actions }
-GtMethodCoder >> requester [
-	^ GtMethodCoderRequester on: self
-]
-
 { #category : #examples }
 GtMethodCoder >> runFrom: anElement [
 	self isModified
@@ -865,13 +742,6 @@ GtMethodCoder >> sourceAst [
 	^ GtPharoParser
 		parseWithErrors: self sourceEditor text asString
 		startingAt: GtPharoParser startingStateForMethodSequence
-]
-
-{ #category : #private }
-GtMethodCoder >> sourceEditor [
-	<return: #BrTextEditor>
-
-	^ sourceEditor ifNil: [ sourceEditor := self newSourceEditor ]
 ]
 
 { #category : #private }
@@ -939,12 +809,7 @@ GtMethodCoder >> validateSyntax [
 		do: [ :ex | 
 			self reportParseError: ex messageText at: ex tag position on: self patternEditor.
 			^ false ].
-	[ GtPharoParser parse: self bodySource startingAt: GtPharoParser startingStateForMethodSequence ]
-		on: SmaCCParserError
-		do: [ :ex | 
-			self reportParseError: ex messageText at: ex tag position on: self sourceEditor.
-			^ false ].
-	^ true
+	^ super validateSyntax
 ]
 
 { #category : #private }
