@@ -65,6 +65,16 @@ GtMethodCoderExamples >> emptyBodyCoder [
 	^ methodCoder
 ]
 
+{ #category : #model }
+GtMethodCoderExamples >> emptyCoder [
+	<gtExample>
+	| coder |
+	coder := GtMethodCoder new.
+	coder classOrMetaClass: Object.
+	coder object: nil.
+	^ coder asElement
+]
+
 { #category : #'sample methods' }
 GtMethodCoderExamples >> emptyLines [
 

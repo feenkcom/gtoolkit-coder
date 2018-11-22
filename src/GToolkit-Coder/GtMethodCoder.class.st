@@ -159,7 +159,7 @@ GtMethodCoder >> bodyStylers [
 
 { #category : #private }
 GtMethodCoder >> buildSource [
-	| patternSource ast originalBodySource index text |
+	[ | patternSource ast originalBodySource index text |
 	isBuilt := true.
 	ast := GtPharoParser parse: methodSource.
 	index := self findSeparatorBetweenPatternAndBodyIn: ast.
@@ -169,7 +169,9 @@ GtMethodCoder >> buildSource [
 	originalBodySource := methodSource allButFirst: index - 1.
 	text := originalBodySource asRopedText.
 	text attributes: self defaultTextAttributes.
-	self sourceEditor text: text
+	self sourceEditor text: text ]
+		on: Error
+		do: [ :ex | ex return ]
 ]
 
 { #category : #accessing }
