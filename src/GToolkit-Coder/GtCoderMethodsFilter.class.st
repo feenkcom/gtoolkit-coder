@@ -34,6 +34,11 @@ GtCoderMethodsFilter >> includeMethod: aCompiledMethod [
 ]
 
 { #category : #'logical operations' }
+GtCoderMethodsFilter >> not [
+	^ GtCoderNegationFilter new originalFilter: self
+]
+
+{ #category : #'logical operations' }
 GtCoderMethodsFilter >> select: aBlock [
 	^ self & (GtCoderBlockFilter forBlock: aBlock)
 ]

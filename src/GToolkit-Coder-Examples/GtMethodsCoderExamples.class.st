@@ -80,6 +80,12 @@ GtMethodsCoderExamples >> methodsCoderWithExplicitMethods [
 ]
 
 { #category : #accessing }
+GtMethodsCoderExamples >> negationCoder [
+	<gtExample>
+	^ (GtCoderMethodsCollection forFilter: self errorFilter | self printStringFilter) asCoder
+]
+
+{ #category : #accessing }
 GtMethodsCoderExamples >> printStringFilter [
 	<gtExample>
 	^ GtCoderReferencesFilter literal: #printString
