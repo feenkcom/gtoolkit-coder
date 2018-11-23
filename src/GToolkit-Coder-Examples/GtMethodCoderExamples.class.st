@@ -47,7 +47,13 @@ GtMethodCoderExamples >> elementForOrderedCollectionMethods [
 { #category : #ui }
 GtMethodCoderExamples >> elementForThisMethod [
 	<gtExample>
-	^ self thisMethod asElement
+	| element |
+	element := self thisMethod asElement.
+	self assert: (element isKindOf: GtCoderMethodElement).
+	self assert: element isExpanded not.
+	element expand.
+	self assert: element isExpanded.
+	^ element
 ]
 
 { #category : #'sample methods' }

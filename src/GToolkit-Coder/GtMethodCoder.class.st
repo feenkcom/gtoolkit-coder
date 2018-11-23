@@ -399,7 +399,6 @@ GtMethodCoder >> format [
 
 { #category : #ui }
 GtMethodCoder >> gtLiveFor: aView [
-	<gtView>
 	^ aView explicit 
 		title: 'Live';
 		priority: 10;

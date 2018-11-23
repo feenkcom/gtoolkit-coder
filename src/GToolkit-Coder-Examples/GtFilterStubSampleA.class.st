@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #samples }
-GtFilterStubSampleA >> anotherMethodReferencingSampleB [
-	^ GtFilterStubSampleB
+GtFilterStubSampleA >> anotherMethodReferencingSampleBAndSendingNew [
+	^ GtFilterStubSampleB new
 ]
 
 { #category : #samples }
