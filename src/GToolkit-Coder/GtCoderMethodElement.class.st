@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #converting }
+GtCoderMethodElement >> asVerticallyResizableCardDo: aBlock [
+	^ self
+]
+
 { #category : #initialization }
 GtCoderMethodElement >> initialize [
 	| shadowLook resizer |
