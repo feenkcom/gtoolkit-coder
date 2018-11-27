@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtSourceCoder,
 	#instVars : [
 		'collapsedEditor',
-		'bindingStrategy'
+		'bindingStrategy',
+		'completionStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -24,6 +25,10 @@ GtPharoSnippetCoder >> asElement [
 	^ expander
 ]
 
+{ #category : #'playground support' }
+GtPharoSnippetCoder >> bind: aSnippet to: aSnippetElement [
+]
+
 { #category : #ui }
 GtPharoSnippetCoder >> collapsedEditor [
 	collapsedEditor notNil
@@ -40,6 +45,14 @@ GtPharoSnippetCoder >> collapsedElement [
 	^ element
 ]
 
+{ #category : #private }
+GtPharoSnippetCoder >> completionStrategy [
+	^ completionStrategy
+		ifNil: [ completionStrategy := GtPharoCompletionStrategy new isMethod: false.
+			completionStrategy bindings: bindingStrategy bindings.
+			completionStrategy ]
+]
+
 { #category : #initialization }
 GtPharoSnippetCoder >> evaluateSource: aString [
 	| value |
@@ -50,15 +63,6 @@ GtPharoSnippetCoder >> evaluateSource: aString [
 		context: nil;
 		failBlock: [ ^ self flag: 'insert error adornment' ];
 		evaluate.
-	self sourceEditor text
-		attributes:
-			{(GtPlaygroundEvaluatedCodeButtonAttribute new
-				beNotOverwritableByStyler;
-				result: value;
-				paint: (Color fromHexString: #'90CAF9'))}.
-	self sourceEditor
-		invalidateAll;
-		updateAll.
 	^ value
 ]
 
@@ -67,7 +71,8 @@ GtPharoSnippetCoder >> initialize [
 	super initialize.
 	expanded := true.
 	bindingStrategy := GtHighlightingBindingStrategy new.
-	bindingStrategy bindings: Dictionary new
+	bindingStrategy bindings: Dictionary new.
+	self source: ''
 ]
 
 { #category : #initialization }
@@ -86,26 +91,38 @@ GtPharoSnippetCoder >> newBodyStyler [
 	^ styler
 ]
 
-{ #category : #private }
-GtPharoSnippetCoder >> newCompletionStrategy [
-	| completionStrategy |
-	completionStrategy := GtPharoCompletionStrategy new.
-	self flag: 'bindings'.
-	^ completionStrategy
+{ #category : #ui }
+GtPharoSnippetCoder >> requester [
+	^ super requester
+		bindingStrategy: (GtPlaygroundBindingStrategy new bindings: bindingStrategy bindings);
+		yourself
 ]
 
 { #category : #actions }
 GtPharoSnippetCoder >> runFrom: aButton [
 	| aValue |
 	self clearPreviousEvaluations.
-	self validateSyntax ifFalse: [ ^ self ].
+	self validateSyntax
+		ifFalse: [ ^ self ].
 	aValue := self evaluateSource: self sourceEditor text asString.
-	aButton fireEvent: (GtPhlowObjectToSpawn new object: aValue; sourceElement: aButton)
+	self sourceEditor
+		styleTextAndAfterDo: [ self sourceEditor text
+				attributes:
+					{(GtPlaygroundEvaluatedCodeButtonAttribute new
+						result: aValue;
+						paint: (Color fromHexString: #'90CAF9')).
+					(GtPlaygroundEvaluatedCodeHighlightedAttribute new paint: (Color fromHexString: #'90CAF9'))} ].
+	aButton
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: aValue;
+				sourceElement: aButton)
 ]
 
 { #category : #accessing }
 GtPharoSnippetCoder >> source: aString [
 	self sourceEditor text: aString asRopedText.
+	self sourceEditor text attributes: self defaultTextAttributes.
 	self sourceChanged
 ]
 
@@ -114,7 +131,8 @@ GtPharoSnippetCoder >> sourceChanged [
 	| firstLine |
 	super sourceChanged.
 	firstLine := (self sourceEditor text asString lines detect: [ :each | each notEmpty ] ifNone: [ '' ]) asRopedText.
-	firstLine attributes: {(BlTextForegroundAttribute paint: Color gray)}.
+	firstLine
+		attributes: {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)} , self defaultTextAttributes.
 	self collapsedEditor text: firstLine readonly
 ]
 
@@ -131,9 +149,16 @@ GtPharoSnippetCoder >> sourceElement [
 			c vertical matchParent.
 			c horizontal matchParent ].
 	element editor: self sourceEditor.
-	(GtCompletionController on: element strategy: self newCompletionStrategy) install.
+	(GtCompletionController on: element strategy: self completionStrategy) install.
 	toolbar := GtCoderMethodActionsElement new methodCoder: self.	
 	container addChild: element.
 	container addChild: toolbar.
 	^ container
+]
+
+{ #category : #accessing }
+GtPharoSnippetCoder >> variableBindings: aGtPlaygroundBindings [
+	bindingStrategy bindings: aGtPlaygroundBindings.
+	completionStrategy notNil
+		ifTrue: [ completionStrategy bindings: aGtPlaygroundBindings ]
 ]

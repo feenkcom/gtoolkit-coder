@@ -253,12 +253,6 @@ GtMethodCoder >> cursorPositionDo: aBlock [
 	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
 ]
 
-{ #category : #private }
-GtMethodCoder >> defaultTextAttributes [
-	^ {BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
-	(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}
-]
-
 { #category : #actions }
 GtMethodCoder >> doItAndGoSelection: editorElement [
 	| source value |

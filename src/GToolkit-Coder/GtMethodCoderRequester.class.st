@@ -2,7 +2,8 @@ Class {
 	#name : #GtMethodCoderRequester,
 	#superclass : #Object,
 	#instVars : [
-		'coder'
+		'coder',
+		'bindingStrategy'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -12,6 +13,23 @@ GtMethodCoderRequester class >> on: aMethodCoder [
 	^ self new
 		coder: aMethodCoder;
 		yourself
+]
+
+{ #category : #requester }
+GtMethodCoderRequester >> bindingOf: aSymbol [
+	^ bindingStrategy isNil
+		ifTrue: [ super bindingOf: aSymbol ]
+		ifFalse: [ bindingStrategy bindingOf: aSymbol ]
+]
+
+{ #category : #accessing }
+GtMethodCoderRequester >> bindingStrategy [
+	^ bindingStrategy
+]
+
+{ #category : #accessing }
+GtMethodCoderRequester >> bindingStrategy: anObject [
+	bindingStrategy := anObject
 ]
 
 { #category : #accessing }

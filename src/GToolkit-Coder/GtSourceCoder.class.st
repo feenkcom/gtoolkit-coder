@@ -115,6 +115,12 @@ GtSourceCoder >> contextActions [
 	^ addOns contextActions
 ]
 
+{ #category : #private }
+GtSourceCoder >> defaultTextAttributes [
+	^ {BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
+	(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}
+]
+
 { #category : #actions }
 GtSourceCoder >> evaluationRequester [
 	^ GtMethodCoderEvaluationRequester on: self
