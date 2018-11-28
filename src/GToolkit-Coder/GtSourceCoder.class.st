@@ -11,6 +11,11 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #accessing }
+GtSourceCoder >> addOns [
+	^ addOns
+]
+
 { #category : #updating }
 GtSourceCoder >> announce: anAnnouncement [
 	announcer announce: anAnnouncement
@@ -155,7 +160,13 @@ GtSourceCoder >> initialize [
 
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeAddOns [
-	addOns := GtMethodCoderAddOns new
+	addOns := GtMethodCoderAddOns new.
+	self initializeShortcuts.
+]
+
+{ #category : #'initialize-release' }
+GtSourceCoder >> initializeShortcuts [
+	
 ]
 
 { #category : #'actions - toolbar' }

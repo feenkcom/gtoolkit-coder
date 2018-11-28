@@ -40,63 +40,8 @@ GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
 
 { #category : #elements }
 GtMethodCoder >> addBodyShortcutsTo: editorElement [
-	editorElement
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key d;
-						build);
-				action: [ self doItSelection ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key g;
-						build);
-				action: [ self doItAndGoSelection: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key m;
-						build);
-				action: [ self browseImplementors: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key n;
-						build);
-				action: [ self browseReferences: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key b;
-						build);
-				action: [ self browseClass: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key r;
-						build);
-				action: [ self renameSourceVariable: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key e;
-						build);
-				action: [ self extractMethod: editorElement ])
+	addOns shortcuts
+		do: [ :each | editorElement addShortcut: (each copy action: [ each action cull: editorElement ]) ]
 ]
 
 { #category : #examples }
@@ -439,6 +384,84 @@ GtMethodCoder >> initializeAddOns [
 	addOns clearChanges
 ]
 
+{ #category : #'initialize-release' }
+GtMethodCoder >> initializeShortcuts [
+	addOns
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key d;
+						build);
+				action: [ self doItSelection ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key g;
+						build);
+				action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key m;
+						build);
+				action: [ :editorElement | self browseImplementors: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key n;
+						build);
+				action: [ :editorElement | self browseReferences: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key b;
+						build);
+				action: [ :editorElement | self browseClass: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key r;
+						build);
+				action: [ :editorElement | self renameSourceVariable: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key e;
+						build);
+				action: [ :editorElement | self extractMethod: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key s;
+						build);
+				action: [ self save ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						shift;
+						key: Key f;
+						build);
+				action: [ self format ])
+]
+
 { #category : #testing }
 GtMethodCoder >> isForMethod: aCompiledMethod [
 	^ self classOrMetaClass = aCompiledMethod methodClass and: [ self selector = aCompiledMethod selector ]
@@ -496,25 +519,6 @@ GtMethodCoder >> newSourceEditor [
 	| aSourceEditor |
 	aSourceEditor := super newSourceEditor.
 	aSourceEditor when: BlInfiniteDataSourceChanged do: [ :event | self sourceChanged ].
-	aSourceEditor interactions
-		add:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key s;
-						build);
-				action: [ self save ]).
-	aSourceEditor interactions
-		add:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						shift;
-						key: Key f;
-						build);
-				action: [ self format ]).
 	^ aSourceEditor
 ]
 

@@ -6,7 +6,8 @@ Class {
 		'patternStylers',
 		'contextActions',
 		'mainActions',
-		'modified'
+		'modified',
+		'shortcuts'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -55,6 +56,15 @@ GtMethodCoderAddOns >> addPatternStyler: aStyler [
 	modified add: #patternStylers
 ]
 
+{ #category : #shortcuts }
+GtMethodCoderAddOns >> addShortcut: aBlShortcut [
+	modified add: #shortcuts.
+	1 to: shortcuts size do: [ :i | 
+		(shortcuts at: i) combination = aBlShortcut combination
+			ifTrue: [ ^ shortcuts at: i put: aBlShortcut ] ].
+	shortcuts add: aBlShortcut
+]
+
 { #category : #accessing }
 GtMethodCoderAddOns >> bodyStylers [
 	^ bodyStylers
@@ -82,6 +92,7 @@ GtMethodCoderAddOns >> initialize [
 	mainActions := OrderedCollection new.
 	patternStylers := OrderedCollection new.
 	bodyStylers := OrderedCollection new.
+	shortcuts := OrderedCollection new.
 	modified := Set new
 ]
 
@@ -133,4 +144,22 @@ GtMethodCoderAddOns >> removePatternStylerOfType: aClass [
 		ifTrue: [ ^ self ].
 	patternStylers remove: styler.
 	modified add: #patternStylers
+]
+
+{ #category : #shortcuts }
+GtMethodCoderAddOns >> removeShortcut: aBlShortcut [
+	1 to: shortcuts size do: [ :i | 
+		(shortcuts at: i) combination = aBlShortcut combination
+			ifTrue: [ shortcuts removeAt: i.
+				modified add: #shortcuts ] ]
+]
+
+{ #category : #shortcuts }
+GtMethodCoderAddOns >> removeShortcutsMatching: aBlock [
+	shortcuts removeAllSuchThat: aBlock
+]
+
+{ #category : #shortcuts }
+GtMethodCoderAddOns >> shortcuts [
+	^ shortcuts
 ]

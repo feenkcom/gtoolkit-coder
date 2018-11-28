@@ -141,19 +141,26 @@ GtPharoSnippetCoder >> sourceElement [
 	| container element toolbar |
 	container := BlElement new
 		layout: BlLinearLayout vertical;
-		constraintsDo: [:c | 
+		constraintsDo: [ :c | 
 			c vertical matchParent.
 			c horizontal matchParent ].
 	element := BrEditorElement new.
-	element constraintsDo: [:c | 
+	addOns shortcuts do: [ :each | element addShortcut: (each copy action: [ each action cull: element ]) ].
+	element
+		constraintsDo: [ :c | 
 			c vertical matchParent.
 			c horizontal matchParent ].
 	element editor: self sourceEditor.
 	(GtCompletionController on: element strategy: self completionStrategy) install.
-	toolbar := GtCoderMethodActionsElement new methodCoder: self.	
+	toolbar := GtCoderMethodActionsElement new methodCoder: self.
 	container addChild: element.
 	container addChild: toolbar.
 	^ container
+]
+
+{ #category : #accessing }
+GtPharoSnippetCoder >> variableBindings [
+	^ bindingStrategy bindings
 ]
 
 { #category : #accessing }
