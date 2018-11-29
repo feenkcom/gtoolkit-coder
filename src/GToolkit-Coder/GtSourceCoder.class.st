@@ -93,6 +93,11 @@ GtSourceCoder >> browseReferences: editorElement [
 ]
 
 { #category : #private }
+GtSourceCoder >> classOrMetaClass [
+	^ Object
+]
+
+{ #category : #private }
 GtSourceCoder >> clearPreviousEvaluations [
 	self sourceEditor text clearAttributes: [ :each | each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute ].
 	self sourceEditor
@@ -118,6 +123,11 @@ GtSourceCoder >> contextActions [
 
 	<return: #Collection of: #GtCoderAction>
 	^ addOns contextActions
+]
+
+{ #category : #private }
+GtSourceCoder >> cursorPositionDo: aBlock [
+	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
 ]
 
 { #category : #private }
@@ -166,7 +176,31 @@ GtSourceCoder >> initializeAddOns [
 
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeShortcuts [
-	
+	addOns
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key m;
+						build);
+				action: [ :editorElement | self browseImplementors: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key n;
+						build);
+				action: [ :editorElement | self browseReferences: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key b;
+						build);
+				action: [ :editorElement | self browseClass: editorElement ])
 ]
 
 { #category : #'actions - toolbar' }
@@ -193,6 +227,65 @@ GtSourceCoder >> newSourceEditor [
 ]
 
 { #category : #private }
+GtSourceCoder >> nodeAtCursor [
+	self
+		cursorPositionDo: [ :position | 
+			[ | ast innerNode |
+			ast := self sourceAst.
+			ast
+				withAllNodesDo: [ :node | 
+					(position between: node startPosition and: node stopPosition)
+						ifTrue: [ innerNode := node ] ].
+			^ innerNode ]
+				on: Error
+				do: [ :ex | ex return ] ].
+	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
+	| actions |
+	actions := OrderedCollection new.
+	aClass withAllSubclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
+	actions sort: [ :a :b | a arguments first < b arguments first ].
+	^ actions
+]
+
+{ #category : #private }
+GtSourceCoder >> referencesCoderAtCursor [
+	| node |
+	node := self nodeAtCursor.
+	[ node isNil ]
+		whileFalse: [ (node isKindOf: GtPharoVariableNode)
+				ifTrue: [ ^ self referencesCoderForVariable: node name source ].
+			(node isKindOf: GtPharoSymbolLiteralNode)
+				ifTrue: [ ^ self referencesCoderForSymbol: node asSymbol ].
+			(node isKindOf: GtPharoMessageSendNode)
+				ifTrue: [ node := node message ].
+			(node isKindOf: GtPharoMessageNode)
+				ifTrue: [ ^ self referencesCoderForSymbol: node selector ].
+			node := node parent ].
+	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> referencesCoderForSymbol: aSymbol [
+	^ (GtCoderMethodsCollection forReferences: aSymbol) asCoder
+]
+
+{ #category : #private }
+GtSourceCoder >> referencesCoderForVariable: aString [
+	| index binding |
+	index := self classOrMetaClass instVarIndexFor: aString.
+	index > 0
+		ifTrue: [ ^ (GtCoderMethodsCollection forClass: self classOrMetaClass andVariable: aString) asCoder ].
+	binding := self classOrMetaClass bindingOf: aString.
+	binding notNil
+		ifTrue: [ ^ (GtCoderMethodsCollection forReferences: binding) asCoder ].
+	^ nil
+]
+
+{ #category : #private }
 GtSourceCoder >> reportParseError: aString at: anInteger on: textEditor [
 	| text position |
 	textEditor isNil
@@ -213,6 +306,24 @@ GtSourceCoder >> requester [
 	^ GtMethodCoderRequester on: self
 ]
 
+{ #category : #private }
+GtSourceCoder >> selectedSourceInterval [
+	self sourceEditor selection do: [ :each | ^ each from + 1 to: each to ].
+	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> selectorAtCursor [
+	^ self symbolFor: self nodeAtCursor
+]
+
+{ #category : #private }
+GtSourceCoder >> sourceAst [
+	^ GtPharoParser
+		parseWithErrors: self sourceEditor text asString
+		startingAt: GtPharoParser startingStateForMethodSequence
+]
+
 { #category : #'event handling' }
 GtSourceCoder >> sourceChanged [
 	self clearSyntaxErrors: self sourceEditor.
@@ -225,6 +336,23 @@ GtSourceCoder >> sourceEditor [
 	<return: #BrTextEditor>
 
 	^ sourceEditor ifNil: [ sourceEditor := self newSourceEditor ]
+]
+
+{ #category : #private }
+GtSourceCoder >> symbolFor: aNode [
+	| current |
+	aNode isNil
+		ifTrue: [ ^ nil ].
+	(aNode isKindOf: GtPharoSymbolLiteralNode)
+		ifTrue: [ aNode asSymbol ].
+	current := aNode.
+	[ current notNil ]
+		whileTrue: [ (current isKindOf: GtPharoMessageSendNode)
+				ifTrue: [ current := current message ].
+			(current isKindOf: GtPharoMessageNode)
+				ifTrue: [ ^ current selector ].
+			current := current parent ].
+	^ nil
 ]
 
 { #category : #updating }
@@ -241,4 +369,20 @@ GtSourceCoder >> validateSyntax [
 			self reportParseError: ex messageText at: ex tag position on: self collapsedEditor.
 			^ false ].
 	^ true
+]
+
+{ #category : #private }
+GtSourceCoder >> variableAtCursor [
+	self
+		cursorPositionDo: [ :position | 
+			[ | ast |
+			ast := self sourceAst.
+			ast
+				withAllNodesOfType: GtPharoVariableNode
+				do: [ :node | 
+					(position between: node startPosition and: node stopPosition)
+						ifTrue: [ ^ node ] ] ]
+				on: Error
+				do: [ :ex | ex return ] ].
+	^ nil
 ]

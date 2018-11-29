@@ -1,10 +1,6 @@
 Class {
 	#name : #GtExampleGroupCoder,
 	#superclass : #GtMethodsCoder,
-	#instVars : [
-		'session',
-		'lists'
-	],
 	#category : #'GToolkit-Coder-Coders'
 }
 

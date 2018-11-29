@@ -25,10 +25,6 @@ GtPharoSnippetCoder >> asElement [
 	^ expander
 ]
 
-{ #category : #'playground support' }
-GtPharoSnippetCoder >> bind: aSnippet to: aSnippetElement [
-]
-
 { #category : #ui }
 GtPharoSnippetCoder >> collapsedEditor [
 	collapsedEditor notNil

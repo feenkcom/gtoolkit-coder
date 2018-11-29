@@ -193,11 +193,6 @@ GtMethodCoder >> context [
 	^ nil
 ]
 
-{ #category : #private }
-GtMethodCoder >> cursorPositionDo: aBlock [
-	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
-]
-
 { #category : #actions }
 GtMethodCoder >> doItAndGoSelection: editorElement [
 	| source value |
@@ -386,6 +381,7 @@ GtMethodCoder >> initializeAddOns [
 
 { #category : #'initialize-release' }
 GtMethodCoder >> initializeShortcuts [
+	super initializeShortcuts.
 	addOns
 		addShortcut:
 			(BlShortcut new
@@ -403,30 +399,6 @@ GtMethodCoder >> initializeShortcuts [
 						key: Key g;
 						build);
 				action: [ :editorElement | self doItAndGoSelection: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key m;
-						build);
-				action: [ :editorElement | self browseImplementors: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key n;
-						build);
-				action: [ :editorElement | self browseReferences: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key b;
-						build);
-				action: [ :editorElement | self browseClass: editorElement ]);
 		addShortcut:
 			(BlShortcut new
 				combination:
@@ -522,22 +494,6 @@ GtMethodCoder >> newSourceEditor [
 	^ aSourceEditor
 ]
 
-{ #category : #private }
-GtMethodCoder >> nodeAtCursor [
-	self
-		cursorPositionDo: [ :position | 
-			[ | ast innerNode |
-			ast := self sourceAst.
-			ast
-				withAllNodesDo: [ :node | 
-					(position between: node startPosition and: node stopPosition)
-						ifTrue: [ innerNode := node ] ].
-			^ innerNode ]
-				on: Error
-				do: [ :ex | ex return ] ].
-	^ nil
-]
-
 { #category : #accessing }
 GtMethodCoder >> object [
 	^ self attributeNamed: #object
@@ -583,15 +539,6 @@ GtMethodCoder >> patternStylers [
 	^ addOns patternStylers
 ]
 
-{ #category : #private }
-GtMethodCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
-	| actions |
-	actions := OrderedCollection new.
-	aClass withAllSubclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
-	actions sort: [ :a :b | a arguments first < b arguments first ].
-	^ actions
-]
-
 { #category : #updating }
 GtMethodCoder >> rbAST [
 	^ [ | ast source |
@@ -608,45 +555,6 @@ GtMethodCoder >> rbAST [
 	ast ]
 		on: Error
 		do: [ :ex | ex return: nil ]
-]
-
-{ #category : #private }
-GtMethodCoder >> referencesCoderAtCursor [
-	| node |
-	node := self nodeAtCursor.
-	[ node isNil ]
-		whileFalse: [ (node isKindOf: GtPharoVariableNode)
-				ifTrue: [ ^ self referencesCoderForVariable: node name source ].
-			(node isKindOf: GtPharoSymbolLiteralNode)
-				ifTrue: [ ^ self referencesCoderForSymbol: node asSymbol ].
-			(node isKindOf: GtPharoMessageSendNode)
-				ifTrue: [ node := node message ].
-			(node isKindOf: GtPharoMessageNode)
-				ifTrue: [ ^ self referencesCoderForSymbol: node selector ].
-			node := node parent ].
-	^ nil
-]
-
-{ #category : #private }
-GtMethodCoder >> referencesCoderForSymbol: aSymbol [
-	^ (GtCoderMethodsCollection forReferences: aSymbol) asCoder
-]
-
-{ #category : #private }
-GtMethodCoder >> referencesCoderForVariable: aString [
-	| index binding methods |
-	index := self classOrMetaClass instVarIndexFor: aString.
-	index > 0
-		ifTrue: [ methods := (self classOrMetaClass whichClassDefinesInstVar: aString) withAllSubclasses
-				inject: OrderedCollection new
-				into: [ :sum :each | 
-					(each whichSelectorsAccess: aString) do: [ :sel | sum add: each >> sel ].
-					sum ].
-			^ (GtCoderMethodsCollection forClass: self classOrMetaClass andVariable: aString) asCoder ].
-	binding := self classOrMetaClass bindingOf: aString.
-	binding notNil
-		ifTrue: [ ^ (GtCoderMethodsCollection forReferences: binding) asCoder ].
-	^ nil
 ]
 
 { #category : #updating }
@@ -706,12 +614,6 @@ GtMethodCoder >> selectedSource [
 	^ nil
 ]
 
-{ #category : #private }
-GtMethodCoder >> selectedSourceInterval [
-	self sourceEditor selection do: [ :each | ^ each from + 1 to: each to ].
-	^ nil
-]
-
 { #category : #accessing }
 GtMethodCoder >> selector [
 	^ selector
@@ -723,24 +625,12 @@ GtMethodCoder >> selector: aSymbol [
 ]
 
 { #category : #private }
-GtMethodCoder >> selectorAtCursor [
-	^ self symbolFor: self nodeAtCursor
-]
-
-{ #category : #private }
 GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 	| char index |
 	index := startIndex.
 	[ index <= source size and: [ (char := source at: index) = Character cr or: [ char = Character lf ] ] ]
 		whileTrue: [ index := index + 1 ].
 	^ index
-]
-
-{ #category : #private }
-GtMethodCoder >> sourceAst [
-	^ GtPharoParser
-		parseWithErrors: self sourceEditor text asString
-		startingAt: GtPharoParser startingStateForMethodSequence
 ]
 
 { #category : #private }
@@ -756,23 +646,6 @@ GtMethodCoder >> styledPatternTextFor: aString [
 { #category : #accessing }
 GtMethodCoder >> subCoders [
 	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
-]
-
-{ #category : #private }
-GtMethodCoder >> symbolFor: aNode [
-	| current |
-	aNode isNil
-		ifTrue: [ ^ nil ].
-	(aNode isKindOf: GtPharoSymbolLiteralNode)
-		ifTrue: [ aNode asSymbol ].
-	current := aNode.
-	[ current notNil ]
-		whileTrue: [ (current isKindOf: GtPharoMessageSendNode)
-				ifTrue: [ current := current message ].
-			(current isKindOf: GtPharoMessageNode)
-				ifTrue: [ ^ current selector ].
-			current := current parent ].
-	^ nil
 ]
 
 { #category : #updating }
@@ -809,20 +682,4 @@ GtMethodCoder >> validateSyntax [
 			self reportParseError: ex messageText at: ex tag position on: self patternEditor.
 			^ false ].
 	^ super validateSyntax
-]
-
-{ #category : #private }
-GtMethodCoder >> variableAtCursor [
-	self
-		cursorPositionDo: [ :position | 
-			[ | ast |
-			ast := self sourceAst.
-			ast
-				withAllNodesOfType: GtPharoVariableNode
-				do: [ :node | 
-					(position between: node startPosition and: node stopPosition)
-						ifTrue: [ ^ node ] ] ]
-				on: Error
-				do: [ :ex | ex return ] ].
-	^ nil
 ]

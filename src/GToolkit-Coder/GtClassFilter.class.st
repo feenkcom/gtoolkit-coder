@@ -54,7 +54,6 @@ GtClassFilter >> changedClassName [
 
 { #category : #'initialize-release' }
 GtClassFilter >> initialize [
-	| packageCompleter |
 	super initialize.
 	packageEditor := BrTextEditor new.
 	classNameEditor := BrTextEditor new
