@@ -75,20 +75,20 @@ GtSourceCoder >> browseImplementors: editorElement [
 	editorElement
 		fireEvent:
 			(GtPhlowObjectToSpawn new
-				object: (GtCoderMethodsCollection forImplementors: symbol) asCoder;
+				object: (GtCoderImplementorsFilter selector: symbol);
 				sourceElement: editorElement)
 ]
 
 { #category : #actions }
 GtSourceCoder >> browseReferences: editorElement [
-	| coder |
-	coder := self referencesCoderAtCursor.
-	coder isNil
+	| filter |
+	filter := self referencesFilterAtCursor.
+	filter isNil
 		ifTrue: [ ^ self ].
 	editorElement
 		fireEvent:
 			(GtPhlowObjectToSpawn new
-				object: coder;
+				object: filter;
 				sourceElement: editorElement)
 ]
 
@@ -252,36 +252,36 @@ GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 ]
 
 { #category : #private }
-GtSourceCoder >> referencesCoderAtCursor [
+GtSourceCoder >> referencesFilterAtCursor [
 	| node |
 	node := self nodeAtCursor.
 	[ node isNil ]
 		whileFalse: [ (node isKindOf: GtPharoVariableNode)
-				ifTrue: [ ^ self referencesCoderForVariable: node name source ].
+				ifTrue: [ ^ self referencesFilterForVariable: node name source ].
 			(node isKindOf: GtPharoSymbolLiteralNode)
-				ifTrue: [ ^ self referencesCoderForSymbol: node asSymbol ].
+				ifTrue: [ ^ self referencesFilterForSymbol: node asSymbol ].
 			(node isKindOf: GtPharoMessageSendNode)
 				ifTrue: [ node := node message ].
 			(node isKindOf: GtPharoMessageNode)
-				ifTrue: [ ^ self referencesCoderForSymbol: node selector ].
+				ifTrue: [ ^ self referencesFilterForSymbol: node selector ].
 			node := node parent ].
 	^ nil
 ]
 
 { #category : #private }
-GtSourceCoder >> referencesCoderForSymbol: aSymbol [
-	^ (GtCoderMethodsCollection forReferences: aSymbol) asCoder
+GtSourceCoder >> referencesFilterForSymbol: aSymbol [
+	^ GtCoderReferencesFilter literal: aSymbol
 ]
 
 { #category : #private }
-GtSourceCoder >> referencesCoderForVariable: aString [
+GtSourceCoder >> referencesFilterForVariable: aString [
 	| index binding |
 	index := self classOrMetaClass instVarIndexFor: aString.
 	index > 0
-		ifTrue: [ ^ (GtCoderMethodsCollection forClass: self classOrMetaClass andVariable: aString) asCoder ].
+		ifTrue: [ ^ GtCoderInstanceVariableReferenceFilter forClass: self classOrMetaClass andVariable: aString ].
 	binding := self classOrMetaClass bindingOf: aString.
 	binding notNil
-		ifTrue: [ ^ (GtCoderMethodsCollection forReferences: binding) asCoder ].
+		ifTrue: [ ^ GtCoderReferencesFilter literal: binding ].
 	^ nil
 ]
 
@@ -344,7 +344,7 @@ GtSourceCoder >> symbolFor: aNode [
 	aNode isNil
 		ifTrue: [ ^ nil ].
 	(aNode isKindOf: GtPharoSymbolLiteralNode)
-		ifTrue: [ aNode asSymbol ].
+		ifTrue: [ ^ aNode asSymbol ].
 	current := aNode.
 	[ current notNil ]
 		whileTrue: [ (current isKindOf: GtPharoMessageSendNode)
