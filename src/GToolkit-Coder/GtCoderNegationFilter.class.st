@@ -7,6 +7,13 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #printing }
+GtCoderNegationFilter >> gtDisplayOn: stream [
+	<gtExample>
+	stream nextPutAll: 'Not '.
+	self originalFilter gtDisplayOn: stream
+]
+
 { #category : #testing }
 GtCoderNegationFilter >> includeMethod: aCompiledMethod [
 	^ (self originalFilter includeMethod: aCompiledMethod) not

@@ -14,6 +14,14 @@ GtCoderPragmasFilter class >> forPragma: aSymbol [
 		yourself
 ]
 
+{ #category : #printing }
+GtCoderPragmasFilter >> gtDisplayOn: stream [
+	<gtExample>
+	stream 
+		nextPutAll: 'Pragmas named ';
+		nextPutAll: self symbol printString
+]
+
 { #category : #accessing }
 GtCoderPragmasFilter >> highlighter [
 	^ GtPragmaHighlighter forPragma: symbol

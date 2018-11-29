@@ -14,6 +14,12 @@ GtCoderImplementorsFilter class >> selector: aSymbol [
 		yourself
 ]
 
+{ #category : #ui }
+GtCoderImplementorsFilter >> gtDisplayOn: stream [
+	<gtExample>
+	stream nextPutAll: 'Implementors of '; nextPutAll: self selector printString
+]
+
 { #category : #testing }
 GtCoderImplementorsFilter >> includeMethod: aCompiledMethod [
 	^ aCompiledMethod selector = selector

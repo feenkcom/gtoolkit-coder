@@ -15,6 +15,13 @@ GtCoderReferencesFilter class >> literal: anObject [
 		yourself
 ]
 
+{ #category : #ui }
+GtCoderReferencesFilter >> gtDisplayOn: stream [
+	<gtExample>
+	stream nextPutAll: 'References to '.
+	self object gtDisplayOn: stream
+]
+
 { #category : #accessing }
 GtCoderReferencesFilter >> highlighter [
 	^ object isSymbol

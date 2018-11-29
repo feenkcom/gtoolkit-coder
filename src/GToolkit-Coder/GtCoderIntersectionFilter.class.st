@@ -4,6 +4,14 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #printing }
+GtCoderIntersectionFilter >> gtDisplayOn: stream [
+	<gtExample>
+	left gtDisplayOn: stream.
+	stream nextPutAll: ' and '.
+	right gtDisplayOn: stream.
+]
+
 { #category : #testing }
 GtCoderIntersectionFilter >> includeMethod: aCompiledMethod [
 	^ (left includeMethod: aCompiledMethod) and: [ right includeMethod: aCompiledMethod ]
