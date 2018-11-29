@@ -10,8 +10,8 @@ Class {
 { #category : #printing }
 GtCoderNegationFilter >> gtDisplayOn: stream [
 	<gtExample>
-	stream nextPutAll: 'Not '.
-	self originalFilter gtDisplayOn: stream
+	self originalFilter gtDisplayOn: stream.
+	stream nextPutAll: ' not'
 ]
 
 { #category : #testing }

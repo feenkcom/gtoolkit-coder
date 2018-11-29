@@ -8,7 +8,7 @@ Class {
 GtCoderIntersectionFilter >> gtDisplayOn: stream [
 	<gtExample>
 	left gtDisplayOn: stream.
-	stream nextPutAll: ' and '.
+	stream nextPutAll: ' & '.
 	right gtDisplayOn: stream.
 ]
 

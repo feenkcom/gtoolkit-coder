@@ -17,7 +17,7 @@ GtCoderImplementorsFilter class >> selector: aSymbol [
 { #category : #ui }
 GtCoderImplementorsFilter >> gtDisplayOn: stream [
 	<gtExample>
-	stream nextPutAll: 'Implementors of '; nextPutAll: self selector printString
+	stream nextPutAll: self selector printString; nextPutAll: ' implementors'
 ]
 
 { #category : #testing }

@@ -18,8 +18,8 @@ GtCoderReferencesFilter class >> literal: anObject [
 { #category : #ui }
 GtCoderReferencesFilter >> gtDisplayOn: stream [
 	<gtExample>
-	stream nextPutAll: 'References to '.
-	self object gtDisplayOn: stream
+	self object gtDisplayOn: stream.
+	stream nextPutAll: ' references'.
 ]
 
 { #category : #accessing }

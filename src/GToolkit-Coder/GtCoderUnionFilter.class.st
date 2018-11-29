@@ -8,7 +8,7 @@ Class {
 GtCoderUnionFilter >> gtDisplayOn: stream [
 	<gtExample>
 	left gtDisplayOn: stream.
-	stream nextPutAll: ' or '.
+	stream nextPutAll: ' | '.
 	right gtDisplayOn: stream.
 
 ]

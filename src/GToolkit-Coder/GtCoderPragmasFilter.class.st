@@ -18,8 +18,8 @@ GtCoderPragmasFilter class >> forPragma: aSymbol [
 GtCoderPragmasFilter >> gtDisplayOn: stream [
 	<gtExample>
 	stream 
-		nextPutAll: 'Pragmas named ';
-		nextPutAll: self symbol printString
+		nextPutAll: self symbol printString;
+		nextPutAll: ' pragmas'
 ]
 
 { #category : #accessing }
