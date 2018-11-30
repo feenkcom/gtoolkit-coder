@@ -32,6 +32,14 @@ GtCoderPragmasFilter >> includeMethod: aCompiledMethod [
 	^ aCompiledMethod hasPragmaNamed: symbol
 ]
 
+{ #category : #printing }
+GtCoderPragmasFilter >> printOn: aStream [
+	<gtExample>
+	aStream 
+		nextPutAll: self symbol printString;
+		nextPutAll: ' gtPragmas'
+]
+
 { #category : #accessing }
 GtCoderPragmasFilter >> symbol [
 	^ symbol

@@ -28,3 +28,10 @@ GtCoderNegationFilter >> originalFilter [
 GtCoderNegationFilter >> originalFilter: anObject [
 	originalFilter := anObject
 ]
+
+{ #category : #printing }
+GtCoderNegationFilter >> printOn: stream [
+	<gtExample>
+	self originalFilter printOn: stream.
+	stream nextPutAll: ' not'
+]

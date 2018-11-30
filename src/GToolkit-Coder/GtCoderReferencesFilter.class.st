@@ -46,3 +46,10 @@ GtCoderReferencesFilter >> object: anObject [
 	object := anObject.
 	specialSelectorIndex := Smalltalk specialSelectorIndexOrNil: anObject
 ]
+
+{ #category : #ui }
+GtCoderReferencesFilter >> printOn: stream [
+	<gtExample>
+	self object gtDisplayOn: stream.
+	stream nextPutAll: ' gtReferences'.
+]

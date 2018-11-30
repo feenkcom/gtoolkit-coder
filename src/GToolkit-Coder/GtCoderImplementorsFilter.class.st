@@ -25,6 +25,14 @@ GtCoderImplementorsFilter >> includeMethod: aCompiledMethod [
 	^ aCompiledMethod selector = selector
 ]
 
+{ #category : #ui }
+GtCoderImplementorsFilter >> printOn: stream [
+	<gtExample>
+	stream 
+		nextPutAll: self selector printString; 
+		nextPutAll: ' gtImplementors'
+]
+
 { #category : #accessing }
 GtCoderImplementorsFilter >> selector [
 	^ selector

@@ -17,3 +17,12 @@ GtCoderUnionFilter >> gtDisplayOn: stream [
 GtCoderUnionFilter >> includeMethod: aCompiledMethod [
 	^ (left includeMethod: aCompiledMethod) or: [ right includeMethod: aCompiledMethod ]
 ]
+
+{ #category : #printing }
+GtCoderUnionFilter >> printOn: stream [
+	<gtExample>
+	left printOn: stream.
+	stream nextPutAll: ' | '.
+	right printOn: stream.
+
+]

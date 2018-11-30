@@ -16,3 +16,11 @@ GtCoderIntersectionFilter >> gtDisplayOn: stream [
 GtCoderIntersectionFilter >> includeMethod: aCompiledMethod [
 	^ (left includeMethod: aCompiledMethod) and: [ right includeMethod: aCompiledMethod ]
 ]
+
+{ #category : #printing }
+GtCoderIntersectionFilter >> printOn: stream [
+	<gtExample>
+	left printOn: stream.
+	stream nextPutAll: ' & '.
+	right printOn: stream.
+]
