@@ -118,7 +118,7 @@ GtExtractMethodController >> cursorMoved: anEvent [
 	attribute isNil
 		ifTrue: [ ^ self ].
 	renameAction := GtCompositeRenameAction locations: {(self intervalAt: anEvent newIndex)} element: sourceElement.
-	renameAction addLocations: {(self keywordStartPositionFor: attribute index)} to: extractedCoder patternEditor.
+	renameAction addLocations: {(self keywordStartPositionFor: attribute index)} to: extractedCoder sourceEditor.
 	renameAction escapeCancels: false.
 	renameAction install
 ]
@@ -147,12 +147,9 @@ GtExtractMethodController >> execute [
 
 { #category : #executing }
 GtExtractMethodController >> executeRefactoring [
-	| offset interval |
-	interval := coder selectedSourceInterval.
-	offset := coder patternSource size + 1.
 	refactoring := RBExtractMethodRefactoring
 		model: model
-		extract: (interval first + offset to: interval last + offset)
+		extract: coder selectedSourceInterval
 		from: methodSelector
 		in: self modelClass.
 	self setRefactoringOptions.
@@ -229,7 +226,7 @@ GtExtractMethodController >> modelClass [
 
 { #category : #'event handling' }
 GtExtractMethodController >> patternAst [
-	^ GtPharoParser parse: extractedCoder patternSource startingAt: GtPharoParser startingStateForMethodPattern
+	^ (GtPharoParser parse: extractedCoder source startingAt: GtPharoParser startingStateForMethod) pattern
 ]
 
 { #category : #'event handling' }
@@ -292,7 +289,7 @@ GtExtractMethodController >> setRefactoringOptions [
 
 { #category : #private }
 GtExtractMethodController >> sourceAst [
-	^ GtPharoParser parse: coder sourceEditor text asString startingAt: GtPharoParser startingStateForMethodSequence
+	^ GtPharoParser parse: coder source startingAt: GtPharoParser startingStateForMethod
 ]
 
 { #category : #accessing }
@@ -349,7 +346,7 @@ GtExtractMethodController >> swapParameterWithNext: anInteger [
 				ifTrue: [ message := each ] ].
 	message isNil
 		ifTrue: [ ^ self ].
-	self swap: (patternAst variables at: anInteger) with: (patternAst variables at: anInteger + 1) in: extractedCoder patternEditor.
+	self swap: (patternAst variables at: anInteger) with: (patternAst variables at: anInteger + 1) in: extractedCoder sourceEditor.
 	self swap: (message values at: anInteger) with: (message values at: anInteger + 1) in: coder sourceEditor.
 	self addReorderParametersAttributes.
 	anInteger + 1 = message values size
@@ -365,7 +362,7 @@ GtExtractMethodController >> uninstallHandlers [
 { #category : #private }
 GtExtractMethodController >> updateBodySource: aString [
 	| ast bodySource message positions offset |
-	ast := GtPharoParser parse: aString startingAt: GtPharoParser startingStateForMethodSequence.
+	ast := GtPharoParser parse: aString startingAt: GtPharoParser startingStateForMethod.
 	ast
 		withAllNodesOfType: GtPharoMessageNode
 		do: [ :node | 
@@ -413,12 +410,10 @@ GtExtractMethodController >> updateEditors [
 
 { #category : #private }
 GtExtractMethodController >> updateMethod: newSource extracted: extractedSource [
-	| bodySource |
 	coder sourceEditor selectNone.
-	bodySource := self splitBodyFrom: newSource.
 	isExisting
-		ifTrue: [ coder sourceEditor text: (bodySource asRopedText attributes: coder defaultTextAttributes).
+		ifTrue: [ coder sourceEditor text: (newSource asRopedText attributes: coder defaultTextAttributes).
 			^ self ].
 	self createExtractedCoder: extractedSource.
-	self updateBodySource: bodySource
+	self updateBodySource: newSource
 ]

@@ -10,7 +10,7 @@ GtMethodCoderActionExamples >> addExampleTag [
 	| coder |
 	coder := self noExampleTag.
 	coder sourceEditor inserter
-		at: 0;
+		at: 16;
 		string: '<gtExample>' , String cr;
 		insert.
 	self assert: (self hasRunExampleActionIn: coder).
@@ -43,7 +43,7 @@ GtMethodCoderActionExamples >> removeExampleTag [
 	| coder |
 	coder := self addExampleTag.
 	coder sourceEditor deleter
-		from: 2 to: 3;
+		from: 17 to: 18;
 		delete.
 	self assert: (self hasRunExampleActionIn: coder) not.
 	^ coder

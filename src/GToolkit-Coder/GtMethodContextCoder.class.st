@@ -96,15 +96,14 @@ GtMethodContextCoder >> updateDebugger [
 
 { #category : #private }
 GtMethodContextCoder >> updateSelection [
-	| interval offset |
+	| interval |
 	(self session process isNil or: [ context isDead ])
 		ifTrue: [ ^ self ].
 	interval := self session pcRangeForContext: context.
 	interval isEmpty
 		ifTrue: [ ^ self ].
-	offset := self patternSource size + 1.
 	self sourceEditor text clearAttributes: [ :each | each class = BlTextUnderlineAttribute ].
-	(self sourceEditor text from: interval first - offset to: interval last - offset)
+	(self sourceEditor text from: interval first to: interval last)
 		attributes:
 			{(BlTextUnderlineAttribute new
 				paint: BrGlamorousColors errorBackgroundColor;

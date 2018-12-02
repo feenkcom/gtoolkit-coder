@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'class',
 		'selector',
-		'patternEditor',
 		'methodSource',
 		'subCoders',
 		'isBuilt'
@@ -39,32 +38,9 @@ GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
 ]
 
 { #category : #elements }
-GtMethodCoder >> addBodyShortcutsTo: editorElement [
+GtMethodCoder >> addShortcutsTo: editorElement [
 	addOns shortcuts
 		do: [ :each | editorElement addShortcut: (each copy action: [ each action cull: editorElement ]) ]
-]
-
-{ #category : #examples }
-GtMethodCoder >> addExampleStatus [
-	self patternEditor text clearAttributes: [ :each | each isKindOf: GtExampleStatusAttribute ].
-	(self patternEditor text from: self patternSource size to: self patternSource size)
-		attributes: {(GtExampleStatusAttribute forResult: self exampleResult) beNotOverwritableByStyler}.
-	self patternEditor
-		invalidateAll;
-		updateAll
-]
-
-{ #category : #elements }
-GtMethodCoder >> addPatternShortcutsTo: editorElement [
-	editorElement
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key r;
-						build);
-				action: [ self renamePatternVariable: editorElement ])
 ]
 
 { #category : #accessing }
@@ -75,44 +51,15 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 { #category : #elements }
 GtMethodCoder >> asElement [
 	self ensureBuilt.
-	^ GtCoderMethodElement new
-		margin: (BlInsets all: 10);
-		methodCoder: self;
-		yourself
-]
-
-{ #category : #accessing }
-GtMethodCoder >> bodySource [
-	self ensureBuilt.
-	^ self sourceEditor text asString
-]
-
-{ #category : #styling }
-GtMethodCoder >> bodyStylerForClass: stylerClass [
-	| aStyler |
-	aStyler := stylerClass new.
-	aStyler classOrMetaClass: self classOrMetaClass.
-	aStyler methodPatternSource: self patternSource.
-	aStyler highlighter: self highlighter.
-	^ aStyler
-]
-
-{ #category : #accessing }
-GtMethodCoder >> bodyStylers [
-	^ addOns bodyStylers
+	^ GtCoderMethodElement new methodCoder: self
 ]
 
 { #category : #private }
 GtMethodCoder >> buildSource [
-	[ | patternSource ast originalBodySource index text |
 	isBuilt := true.
+	[ | ast text |
 	ast := GtPharoParser parse: methodSource.
-	index := self findSeparatorBetweenPatternAndBodyIn: ast.
-	patternSource := methodSource copyFrom: 1 to: index - 1.
-	self patternSource: (self styledPatternTextFor: patternSource).
-	index := self skipBlankLinesIn: methodSource at: index.
-	originalBodySource := methodSource allButFirst: index - 1.
-	text := originalBodySource asRopedText.
+	text := methodSource asRopedText.
 	text attributes: self defaultTextAttributes.
 	self sourceEditor text: text ]
 		on: Error
@@ -148,7 +95,18 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 
 { #category : #private }
 GtMethodCoder >> clearPatternSyntaxErrors [
-	self patternEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+	self collapsedText clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+]
+
+{ #category : #private }
+GtMethodCoder >> collapsedStyler [
+	^ self newSourceStyler
+]
+
+{ #category : #accessing }
+GtMethodCoder >> collapsedText [
+	self ensureBuilt.
+	^ super collapsedText
 ]
 
 { #category : #private }
@@ -268,13 +226,13 @@ GtMethodCoder >> exampleAstFor: anAST [
 	<gtAstCoderAddOns: 5>
 	(anAST notNil
 		and: [ anAST methodNode ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] ifNil: [ false ] ])
-		ifFalse: [ addOns removeBodyStylerOfType: GtCoderExpandableExampleStyler.
-			addOns removePatternStylerOfType: GtCoderExampleStatusStyler.
+		ifFalse: [ addOns removeStylerOfType: GtCoderExpandableExampleStyler.
+			addOns removeStylerOfType: GtCoderExampleStatusStyler.
 			addOns removeContextAction: 'Run' translated.
 			^ self ].
-	addOns addBodyStyler: GtCoderExpandableExampleStyler new.
+	addOns addStyler: GtCoderExpandableExampleStyler new.
 	addOns
-		addPatternStyler:
+		addStyler:
 			(GtCoderExampleStatusStyler new
 				coder: self;
 				classOrMetaClass: self classOrMetaClass).
@@ -327,7 +285,7 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 
 { #category : #updating }
 GtMethodCoder >> format [
-	methodSource := self patternSource , String cr , (RBParser parseExpression: self bodySource) formattedCode copyReplaceAll: String cr with: String cr , String tab.
+	methodSource := (RBParser parseMethod: self source) formattedCode.
 	self buildSource
 ]
 
@@ -353,8 +311,8 @@ GtMethodCoder >> highlighter: referenceHighlighter [
 GtMethodCoder >> highlighterFor: anAST [
 	<gtAstCoderAddOns: 10>
 	self highlighter isNil
-		ifTrue: [ addOns removeBodyStylerOfType: GtCoderReferenceStyler ]
-		ifFalse: [ addOns addBodyStyler: (GtCoderReferenceStyler new highlighter: self highlighter) ]
+		ifTrue: [ addOns removeStylerOfType: GtCoderReferenceStyler ]
+		ifFalse: [ addOns addStyler: (GtCoderReferenceStyler new highlighter: self highlighter) ]
 ]
 
 { #category : #'initialize-release' }
@@ -367,14 +325,7 @@ GtMethodCoder >> initialize [
 { #category : #'initialize-release' }
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addPatternStyler: BrRBTextStyler new.
-	addOns
-		addBodyStyler:
-			(BrRBMethodBodyTextStyler new
-				methodPatternSource:
-					(isBuilt
-						ifTrue: [ self patternSource ]
-						ifFalse: [ '' ])).
+	addOns addStyler: BrRBTextStyler new.
 	addOns addMainAction: 'Save' translated icon: BrGlamorousIcons accept action: [ self save ].
 	addOns clearChanges
 ]
@@ -406,7 +357,7 @@ GtMethodCoder >> initializeShortcuts [
 						primary;
 						key: Key r;
 						build);
-				action: [ :editorElement | self renameSourceVariable: editorElement ]);
+				action: [ :editorElement | self renameVariableIn: editorElement ]);
 		addShortcut:
 			(BlShortcut new
 				combination:
@@ -444,45 +395,10 @@ GtMethodCoder >> isModified [
 	^ methodSource ~= self newMethodSource
 ]
 
-{ #category : #styling }
-GtMethodCoder >> newBodyStyler [
-	^ GtCoderBodyTextStyler forCoder: self
-]
-
-{ #category : #'instance creation' }
-GtMethodCoder >> newCompletionStrategy [
-	| completionStrategy ast |
-	completionStrategy := GtPharoCompletionStrategy new.
-	completionStrategy classOrMetaClass: self classOrMetaClass.
-	[ ast := GtPharoParser parseWithErrors: self patternSource.
-	completionStrategy methodPattern: ast pattern ]
-		on: Error
-		do: [ :ex | ex return ].
-	^ completionStrategy
-]
-
 { #category : #actions }
 GtMethodCoder >> newMethodSource [
-	^ self patternSource , String cr , self bodySource
-]
-
-{ #category : #private }
-GtMethodCoder >> newPatternEditor [
-	| editor |
-	editor := BrTextEditor new.
-	editor styler: self newPatternStyler.
-	editor
-		when: BrTextEditorInsertedEvent do: [ :event | self patternChanged ];
-		when: BrTextEditorDeletedEvent do: [ :event | self patternChanged ];
-		when: BlInfiniteDataSourceChanged do: [ :event | self patternChanged ].
-	^ editor
-]
-
-{ #category : #styling }
-GtMethodCoder >> newPatternStyler [
-	^ GtCoderPatternTextStyler new
-		coder: self;
-		yourself
+	self ensureBuilt.
+	^ self source
 ]
 
 { #category : #'instance creation' }
@@ -492,6 +408,11 @@ GtMethodCoder >> newSourceEditor [
 	aSourceEditor := super newSourceEditor.
 	aSourceEditor when: BlInfiniteDataSourceChanged do: [ :event | self sourceChanged ].
 	^ aSourceEditor
+]
+
+{ #category : #styling }
+GtMethodCoder >> newSourceStyler [
+	^ GtCoderTextStyler forCoder: self
 ]
 
 { #category : #accessing }
@@ -504,39 +425,28 @@ GtMethodCoder >> object: anObject [
 	self attributeNamed: #object put: anObject
 ]
 
-{ #category : #'event handling' }
-GtMethodCoder >> patternChanged [
-	self clearSyntaxErrors: self patternEditor.
-	self updateAddOns
+{ #category : #private }
+GtMethodCoder >> parserStartingState [
+	^ GtPharoParser startingStateForMethod
 ]
 
 { #category : #private }
-GtMethodCoder >> patternEditor [
-	^ patternEditor ifNil: [ patternEditor := self newPatternEditor ]
-]
-
-{ #category : #accessing }
 GtMethodCoder >> patternSource [
-	self ensureBuilt.
-	^ self patternEditor text asString
-]
-
-{ #category : #accessing }
-GtMethodCoder >> patternSource: aString [
-	self patternEditor text: aString asRopedText
-]
-
-{ #category : #styling }
-GtMethodCoder >> patternStylerForClass: stylerClass [
-	| aStyler |
-	aStyler := stylerClass new.
-	aStyler classOrMetaClass: self classOrMetaClass.
-	^ aStyler
-]
-
-{ #category : #accessing }
-GtMethodCoder >> patternStylers [
-	^ addOns patternStylers
+	| ast |
+	ast := GtPharoParser parseWithErrors: self source.
+	^ String
+		streamContents: [ :stream | 
+			| pattern |
+			pattern := ast pattern.
+			(pattern selectorParts size = 1 and: [ pattern variables isEmpty ])
+				ifTrue: [ stream nextPutAll: pattern selectorParts first source ]
+				ifFalse: [ 1 to: pattern selectorParts size do: [ :i | 
+						i = 1
+							ifFalse: [ stream space ].
+						stream
+							nextPutAll: (pattern selectorParts at: i) source;
+							space;
+							nextPutAll: (pattern variables at: i) source ] ] ]
 ]
 
 { #category : #updating }
@@ -561,10 +471,8 @@ GtMethodCoder >> rbAST [
 GtMethodCoder >> refreshForChanges [
 	addOns
 		changesDo: [ :each | 
-			each = #bodyStylers
-				ifTrue: [ self sourceEditor styleText ].
-			each = #patternStylers
-				ifTrue: [ self patternEditor styleText ].
+			each = #stylers
+				ifTrue: [ self styleText ].
 			each = #mainActions
 				ifTrue: [ self announce: (GtCoderMethodMainActionsChanged new coder: self) ].
 			each = #contextActions
@@ -578,13 +486,8 @@ GtMethodCoder >> removeSubCoder: aMethodCoder [
 ]
 
 { #category : #actions }
-GtMethodCoder >> renamePatternVariable: editorElement [
-	GtCompositeRenameAction coderRenameLocalsOnPattern: editorElement source: self sourceEditor
-]
-
-{ #category : #actions }
-GtMethodCoder >> renameSourceVariable: editorElement [
-	GtCompositeRenameAction coderRenameLocalsOnSource: editorElement pattern: self patternEditor
+GtMethodCoder >> renameVariableIn: editorElement [
+	GtRenameAction pharoRenameLocalsOn: editorElement
 ]
 
 { #category : #examples }
@@ -593,7 +496,8 @@ GtMethodCoder >> runFrom: anElement [
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
 	self exampleResult: self example run.
-	self patternEditor styleText.
+	self styleCollapsedText.
+	self styleSourceText.
 	self exampleResult isSuccess
 		ifFalse: [ ^ self ].
 	anElement
@@ -638,9 +542,16 @@ GtMethodCoder >> styledPatternTextFor: aString [
 	| text |
 	text := aString asRopedText.
 	text attributes: self defaultTextAttributes.
-	^ BrRBTextStyler new
+	text := BrRBTextStyler new
 		classOrMetaClass: self classOrMetaClass;
-		style: text
+		style: text.
+	text attributes: self disabledTextAttributes.
+	^ text
+]
+
+{ #category : #accessing }
+GtMethodCoder >> stylers [
+	^ addOns stylers
 ]
 
 { #category : #accessing }
@@ -657,6 +568,18 @@ GtMethodCoder >> updateAddOns [
 	self refreshForChanges
 ]
 
+{ #category : #private }
+GtMethodCoder >> updateCollapsedSource [
+	[ | patternText styler |
+	patternText := self patternSource asRopedText.
+	patternText attributes: self defaultTextAttributes.
+	styler := self newSourceStyler.
+	styler style: patternText.
+	self collapsedSource: patternText ]
+		on: Error
+		do: [ :ex | super updateCollapsedSource ]
+]
+
 { #category : #'event handling' }
 GtMethodCoder >> updateMethod: aCompiledMethod [
 	self forMethod: aCompiledMethod.
@@ -665,7 +588,7 @@ GtMethodCoder >> updateMethod: aCompiledMethod [
 
 { #category : #private }
 GtMethodCoder >> updateStylerPattern [
-	self sourceEditor styler methodPatternSource: self patternEditor text asString.
+	self sourceEditor styler methodPatternSource: self collapsedSource.
 	self sourceEditor styleText
 ]
 
@@ -676,10 +599,5 @@ GtMethodCoder >> validateSyntax [
 				do: [ :each | 
 					each validateSyntax
 						ifFalse: [ ^ false ] ] ].
-	[ GtPharoParser parse: self patternSource startingAt: GtPharoParser startingStateForMethodPattern ]
-		on: SmaCCParserError
-		do: [ :ex | 
-			self reportParseError: ex messageText at: ex tag position on: self patternEditor.
-			^ false ].
 	^ super validateSyntax
 ]

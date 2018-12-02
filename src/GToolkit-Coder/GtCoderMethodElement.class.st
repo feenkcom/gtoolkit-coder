@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderMethodElement,
-	#superclass : #BrAccordion,
+	#superclass : #BrExpander,
 	#instVars : [
 		'methodCoder'
 	],
@@ -16,40 +16,46 @@ GtCoderMethodElement >> asVerticallyResizableCardDo: aBlock [
 GtCoderMethodElement >> initialize [
 	| shadowLook resizer |
 	super initialize.
-
+	self
+		vFitContent;
+		hMatchParent.
 	resizer := BrResizer new
 		beBottom;
 		look: BrGlamorousResizerLook new;
 		constraintsDo: [ :c | c ignoreByLayout ];
-		when: BlDoubleClickEvent do: [
-			self
-				childNamed: #bodyEditor
-				ifFound: [ :anEditor | anEditor
-					constraintsDo: [ :c | c vertical fitContent ] ]
-				ifNone: [ ] ];
+		when: BlDoubleClickEvent do: [ self childNamed: #bodyEditor ifFound: [ :anEditor | anEditor constraintsDo: [ :c | c vertical fitContent ] ] ifNone: [  ] ];
 		yourself.
-
 	shadowLook := BrShadowLook new.
-	
-	self look: (BrGlamorousAccordionLook + (BrInteractiveLook new style: [ :aStyler |
-		aStyler default: [
-			resizer removeFromParent.
-			self background: Color transparent.
-			self look remove: shadowLook.
-			self assert: shadowLook isAttachedToWidget not  ].
-		aStyler expanded: [
-			self addChild: resizer.
-			self enqueueTask: (BlTaskAction new action: [
-				self
-					childNamed: #bodyEditor
-					ifFound: [ :anEditor | resizer target: anEditor ]
-					ifNone: [ resizer target: nil ] ]).
-			self background: Color white.
-			self look add: shadowLook ] ])).
+	self
+		look:
+			BrGlamorousExpanderLook
+				+
+					(BrInteractiveLook new
+						style: [ :aStyler | 
+							aStyler
+								default: [ resizer removeFromParent.
+									self background: Color transparent.
+									self look remove: shadowLook.
+									"self assert: shadowLook isAttachedToWidget not" ].
+							aStyler
+								expanded: [ self addChild: resizer.
+									self enqueueTask: (BlTaskAction new action: [ self childNamed: #bodyEditor ifFound: [ :anEditor | resizer target: anEditor ] ifNone: [ resizer target: nil ] ]).
+									self background: Color white.
+									self look add: shadowLook ] ]).
+	self
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						return;
+						build);
+				action: [ self toggle ])
+]
 
-	self addShortcut: (BlShortcut new
-		combination: (BlKeyCombination builder primary; return; build);
-		action: [ self toggle ])
+{ #category : #testing }
+GtCoderMethodElement >> isExpanded [
+	^ expandableModel isExpanded
 ]
 
 { #category : #accessing }
@@ -60,17 +66,15 @@ GtCoderMethodElement >> methodCoder [
 { #category : #accessing }
 GtCoderMethodElement >> methodCoder: aGtMethodCoder [
 	methodCoder := aGtMethodCoder.
-
 	self header: [ GtCoderMethodPatternStencil new methodCoder: self methodCoder ].
 	self content: [ GtCoderMethodBodyStencil new methodCoder: self methodCoder ].
-
-	self lookDo: [ :aLook | aLook headerBar
-		when: BlClickEvent
-		do: [ :anEvent |
-			anEvent consumed: true.
-			self toggle.
-			methodCoder expanded: self isExpanded ] ].
-
+	self margin: (BlInsets all: 8).
+	expandableModel when: BrExpansionChanged do: [ :event | methodCoder expanded: self isExpanded ].
 	methodCoder expanded
 		ifTrue: [ self expand ]
+]
+
+{ #category : #private }
+GtCoderMethodElement >> updateExpanded [
+	self methodCoder expanded: expandableModel isExpanded
 ]

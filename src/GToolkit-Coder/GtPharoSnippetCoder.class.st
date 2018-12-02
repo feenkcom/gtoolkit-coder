@@ -2,7 +2,6 @@ Class {
 	#name : #GtPharoSnippetCoder,
 	#superclass : #GtSourceCoder,
 	#instVars : [
-		'collapsedEditor',
 		'bindingStrategy',
 		'completionStrategy'
 	],
@@ -23,22 +22,6 @@ GtPharoSnippetCoder >> asElement [
 	expander content: [ self sourceElement ].
 	expander margin: (BlInsets all: 10).
 	^ expander
-]
-
-{ #category : #ui }
-GtPharoSnippetCoder >> collapsedEditor [
-	collapsedEditor notNil
-		ifTrue: [ ^ collapsedEditor ].
-	collapsedEditor := BrTextEditor new.
-	^ collapsedEditor
-]
-
-{ #category : #ui }
-GtPharoSnippetCoder >> collapsedElement [
-	| element |
-	element := BrEditorElement new.
-	element editor: self collapsedEditor.
-	^ element
 ]
 
 { #category : #private }
@@ -74,13 +57,12 @@ GtPharoSnippetCoder >> initialize [
 { #category : #initialization }
 GtPharoSnippetCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addPatternStyler: BrRBTextStyler new.
 	addOns addMainAction: 'Run' translated icon: BrGlamorousIcons play action: [ :aButton | self runFrom: aButton ].
 	addOns clearChanges
 ]
 
 { #category : #ui }
-GtPharoSnippetCoder >> newBodyStyler [
+GtPharoSnippetCoder >> newSourceStyler [
 	| styler |
 	styler := BrRBTextStyler new.
 	styler workspace: bindingStrategy.
@@ -120,38 +102,6 @@ GtPharoSnippetCoder >> source: aString [
 	self sourceEditor text: aString asRopedText.
 	self sourceEditor text attributes: self defaultTextAttributes.
 	self sourceChanged
-]
-
-{ #category : #'event handling' }
-GtPharoSnippetCoder >> sourceChanged [
-	| firstLine |
-	super sourceChanged.
-	firstLine := (self sourceEditor text asString lines detect: [ :each | each notEmpty ] ifNone: [ '' ]) asRopedText.
-	firstLine
-		attributes: {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)} , self defaultTextAttributes.
-	self collapsedEditor text: firstLine readonly
-]
-
-{ #category : #ui }
-GtPharoSnippetCoder >> sourceElement [
-	| container element toolbar |
-	container := BlElement new
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c | 
-			c vertical matchParent.
-			c horizontal matchParent ].
-	element := BrEditorElement new.
-	addOns shortcuts do: [ :each | element addShortcut: (each copy action: [ each action cull: element ]) ].
-	element
-		constraintsDo: [ :c | 
-			c vertical matchParent.
-			c horizontal matchParent ].
-	element editor: self sourceEditor.
-	(GtCompletionController on: element strategy: self completionStrategy) install.
-	toolbar := GtCoderMethodActionsElement new methodCoder: self.
-	container addChild: element.
-	container addChild: toolbar.
-	^ container
 ]
 
 { #category : #accessing }

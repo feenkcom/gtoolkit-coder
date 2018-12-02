@@ -4,8 +4,7 @@ Class {
 	#traits : 'TRBProgramNodeVisitor',
 	#classTraits : 'TRBProgramNodeVisitor classTrait',
 	#instVars : [
-		'text',
-		'patternSource'
+		'text'
 	],
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
@@ -13,11 +12,6 @@ Class {
 { #category : #styling }
 GtCoderBodyStyler >> extraStyle: aText ast: ast [
 	
-]
-
-{ #category : #accessing }
-GtCoderBodyStyler >> methodPatternSource: aString [
-	patternSource := aString
 ]
 
 { #category : #styling }
@@ -28,5 +22,5 @@ GtCoderBodyStyler >> style: aText ast: ast [
 
 { #category : #private }
 GtCoderBodyStyler >> styleFrom: from to: to with: attributes [
-	(text from: from - patternSource size - 1 to: to - patternSource size - 1) attributes: attributes
+	(text from: from to: to) attributes: attributes
 ]

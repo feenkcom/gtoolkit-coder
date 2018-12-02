@@ -16,7 +16,7 @@ GtMethodCoderStylerExamples >> addPragmaMethodStyling [
 	| coder |
 	coder := self renamePragmaMethodStyling.
 	coder sourceEditor inserter
-		at: 5;
+		at: 7;
 		string: 'x';
 		insert.
 	coder sourceEditor styleText.
@@ -48,11 +48,11 @@ GtMethodCoderStylerExamples >> hasAttributeOfType: aClass in: aTextEditor [
 	| text found iterator |
 	text := aTextEditor text.
 	iterator := text iterator.
-	found := false.
-	[ found not and: [ iterator hasNext ] ]
-		whileTrue: [ iterator next.
-			found := iterator attributes anySatisfy: [ :each | each isKindOf: aClass ] ].
-	^ found
+	[ iterator hasNext ]
+		whileTrue: [ (iterator attributes anySatisfy: [ :each | each isKindOf: aClass ])
+				ifTrue: [ ^ true ].
+			iterator next ].
+	^ false
 ]
 
 { #category : #accessing }
@@ -67,7 +67,11 @@ GtMethodCoderStylerExamples >> hasExampleExpandAttributeIn: coder [
 
 { #category : #accessing }
 GtMethodCoderStylerExamples >> hasExampleStatusIn: coder [
-	^ self hasAttributeOfType: GtExampleStatusAttribute in: coder patternEditor
+	| collapsedAttribute sourceAttribute |
+	sourceAttribute := self hasAttributeOfType: GtExampleStatusAttribute in: coder sourceEditor.
+	collapsedAttribute := self hasAttributeOfType: GtExampleStatusAttribute in: coder collapsedEditor.
+	self assert: sourceAttribute = collapsedAttribute.
+	^ sourceAttribute
 ]
 
 { #category : #dummies }
@@ -98,9 +102,9 @@ GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
 	| coder |
 	coder := self exampleMethodStyling.
 	coder sourceEditor deleter
-		from: 5 to: 6;
+		from: 7 to: 8;
 		delete.
-	coder sourceEditor styleText.
+	coder styleText.
 	self assert: (self hasExampleExpandAttributeIn: coder) not.
 	self assert: (self hasExampleStatusIn: coder) not.
 	^ coder

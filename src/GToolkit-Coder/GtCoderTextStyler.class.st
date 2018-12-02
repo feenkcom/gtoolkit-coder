@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderPatternTextStyler,
+	#name : #GtCoderTextStyler,
 	#superclass : #BlTextStyler,
 	#instVars : [
 		'coder'
@@ -7,23 +7,30 @@ Class {
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
+{ #category : #'instance creation' }
+GtCoderTextStyler class >> forCoder: aMethodCoder [
+	^ self new
+		coder: aMethodCoder;
+		yourself
+]
+
 { #category : #accessing }
-GtCoderPatternTextStyler >> coder [
+GtCoderTextStyler >> coder [
 	^ coder
 ]
 
 { #category : #accessing }
-GtCoderPatternTextStyler >> coder: aMethodCoder [
+GtCoderTextStyler >> coder: aMethodCoder [
 	coder := aMethodCoder
 ]
 
 { #category : #private }
-GtCoderPatternTextStyler >> extraStyle: aText ast: ast [
-	coder patternStylers do: [ :each | each extraStyle: aText ast: ast ]
+GtCoderTextStyler >> extraStyle: aText ast: ast [
+	coder stylers do: [ :each | each extraStyle: aText ast: ast ]
 ]
 
 { #category : #private }
-GtCoderPatternTextStyler >> privateStyle: aText [
+GtCoderTextStyler >> privateStyle: aText [
 	[ | ast source |
 	source := aText asString.
 	ast := RBParser parseFaultyMethod: source.
@@ -35,7 +42,6 @@ GtCoderPatternTextStyler >> privateStyle: aText [
 				bindings: Dictionary new;
 				requestor: nil).
 	ast doSemanticAnalysis.
-	"coder updateAddOnsForAST: ast."
 	self style: aText ast: ast.
 	self extraStyle: aText ast: ast ]
 		on: Error
@@ -44,6 +50,6 @@ GtCoderPatternTextStyler >> privateStyle: aText [
 ]
 
 { #category : #private }
-GtCoderPatternTextStyler >> style: aText ast: ast [
-	coder patternStylers do: [ :each | each style: aText ast: ast ]
+GtCoderTextStyler >> style: aText ast: ast [
+	coder stylers do: [ :each | each style: aText ast: ast ]
 ]

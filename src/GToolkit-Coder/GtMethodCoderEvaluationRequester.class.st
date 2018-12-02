@@ -15,16 +15,11 @@ GtMethodCoderEvaluationRequester >> coder: aCoder [
 
 { #category : #requester }
 GtMethodCoderEvaluationRequester >> correctFrom: fromIndex to: toIndex with: aString [
-	super correctFrom: fromIndex to: toIndex with: aString.
+	super correctFrom: selectionInterval first + fromIndex - 1 to: selectionInterval first + toIndex - 1 with: aString.
 	selectionInterval := selectionInterval first to: selectionInterval last + aString size - (toIndex - fromIndex + 1).
 	coder sourceEditor selecter
 		from: selectionInterval first to: selectionInterval last;
 		select
-]
-
-{ #category : #private }
-GtMethodCoderEvaluationRequester >> offset [
-	^ selectionInterval first negated + 2
 ]
 
 { #category : #requester }

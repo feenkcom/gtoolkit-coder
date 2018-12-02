@@ -2,23 +2,14 @@ Class {
 	#name : #GtMethodCoderAddOns,
 	#superclass : #Object,
 	#instVars : [
-		'bodyStylers',
-		'patternStylers',
 		'contextActions',
 		'mainActions',
 		'modified',
-		'shortcuts'
+		'shortcuts',
+		'stylers'
 	],
 	#category : #'GToolkit-Coder'
 }
-
-{ #category : #stylers }
-GtMethodCoderAddOns >> addBodyStyler: aStyler [
-	(bodyStylers anySatisfy: [ :each | each class = aStyler class ])
-		ifTrue: [ ^ self ].
-	bodyStylers add: aStyler.
-	modified add: #bodyStylers
-]
 
 { #category : #actions }
 GtMethodCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
@@ -48,14 +39,6 @@ GtMethodCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
 	modified add: #mainActions
 ]
 
-{ #category : #stylers }
-GtMethodCoderAddOns >> addPatternStyler: aStyler [
-	(patternStylers anySatisfy: [ :each | each class = aStyler class ])
-		ifTrue: [ ^ self ].
-	patternStylers add: aStyler.
-	modified add: #patternStylers
-]
-
 { #category : #shortcuts }
 GtMethodCoderAddOns >> addShortcut: aBlShortcut [
 	modified add: #shortcuts.
@@ -65,9 +48,12 @@ GtMethodCoderAddOns >> addShortcut: aBlShortcut [
 	shortcuts add: aBlShortcut
 ]
 
-{ #category : #accessing }
-GtMethodCoderAddOns >> bodyStylers [
-	^ bodyStylers
+{ #category : #stylers }
+GtMethodCoderAddOns >> addStyler: aStyler [
+	(stylers anySatisfy: [ :each | each class = aStyler class ])
+		ifTrue: [ ^ self ].
+	stylers add: aStyler.
+	modified add: #stylers
 ]
 
 { #category : #changes }
@@ -90,8 +76,7 @@ GtMethodCoderAddOns >> initialize [
 	super initialize.
 	contextActions := OrderedCollection new.
 	mainActions := OrderedCollection new.
-	patternStylers := OrderedCollection new.
-	bodyStylers := OrderedCollection new.
+	stylers := OrderedCollection new.
 	shortcuts := OrderedCollection new.
 	modified := Set new
 ]
@@ -99,21 +84,6 @@ GtMethodCoderAddOns >> initialize [
 { #category : #accessing }
 GtMethodCoderAddOns >> mainActions [
 	^ mainActions
-]
-
-{ #category : #accessing }
-GtMethodCoderAddOns >> patternStylers [
-	^ patternStylers
-]
-
-{ #category : #stylers }
-GtMethodCoderAddOns >> removeBodyStylerOfType: aClass [
-	| styler |
-	styler := bodyStylers detect: [ :each | each class = aClass ] ifNone: [  ].
-	styler isNil
-		ifTrue: [ ^ self ].
-	bodyStylers remove: styler.
-	modified add: #bodyStylers
 ]
 
 { #category : #actions }
@@ -136,16 +106,6 @@ GtMethodCoderAddOns >> removeMainAction: aString [
 	modified add: #mainActions
 ]
 
-{ #category : #stylers }
-GtMethodCoderAddOns >> removePatternStylerOfType: aClass [
-	| styler |
-	styler := patternStylers detect: [ :each | each class = aClass ] ifNone: [  ].
-	styler isNil
-		ifTrue: [ ^ self ].
-	patternStylers remove: styler.
-	modified add: #patternStylers
-]
-
 { #category : #shortcuts }
 GtMethodCoderAddOns >> removeShortcut: aBlShortcut [
 	1 to: shortcuts size do: [ :i | 
@@ -159,7 +119,22 @@ GtMethodCoderAddOns >> removeShortcutsMatching: aBlock [
 	shortcuts removeAllSuchThat: aBlock
 ]
 
+{ #category : #stylers }
+GtMethodCoderAddOns >> removeStylerOfType: aClass [
+	| styler |
+	styler := stylers detect: [ :each | each class = aClass ] ifNone: [  ].
+	styler isNil
+		ifTrue: [ ^ self ].
+	stylers remove: styler.
+	modified add: #stylers
+]
+
 { #category : #shortcuts }
 GtMethodCoderAddOns >> shortcuts [
 	^ shortcuts
+]
+
+{ #category : #accessing }
+GtMethodCoderAddOns >> stylers [
+	^ stylers
 ]

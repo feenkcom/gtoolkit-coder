@@ -30,6 +30,8 @@ GtCoderExampleStatusStyler >> coder: aMethodCoder [
 
 { #category : #private }
 GtCoderExampleStatusStyler >> style: aText ast: ast [
+	| keywordIntervals |
 	super style: aText ast: ast.
-	(aText from: aText size to: aText size) attributes: {(GtExampleStatusAttribute forResult: coder exampleResult)}
+	keywordIntervals := ast keywordsIntervals.
+	(aText from: keywordIntervals first last to: keywordIntervals first last) attributes: {(GtExampleStatusAttribute forResult: coder exampleResult)}
 ]

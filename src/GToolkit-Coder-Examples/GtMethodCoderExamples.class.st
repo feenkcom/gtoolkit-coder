@@ -15,8 +15,8 @@ GtMethodCoderExamples >> binaryMethodCoder [
 	| method methodCoder |
 	method := self class >> #?.
 	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder patternSource = '? anObject'.
-	self assert: methodCoder bodySource = '	"Test binary method"'.
+	self assert: methodCoder collapsedSource = '? anObject'.
+	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
 ]
 
@@ -66,8 +66,8 @@ GtMethodCoderExamples >> emptyBodyCoder [
 	| method methodCoder |
 	method := self class >> #emptyBody.
 	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder patternSource = 'emptyBody'.
-	self assert: methodCoder bodySource = ''.
+	self assert: methodCoder collapsedSource = 'emptyBody'.
+	self assert: methodCoder source = 'emptyBody'.
 	^ methodCoder
 ]
 
@@ -95,8 +95,8 @@ GtMethodCoderExamples >> emptyLinesCoder [
 	| method methodCoder |
 	method := self class >> #emptyLines.
 	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder patternSource = 'emptyLines'.
-	self assert: methodCoder bodySource = '"Some empty lines"'.
+	self assert: methodCoder collapsedSource = 'emptyLines'.
+	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
 ]
 
@@ -111,8 +111,8 @@ GtMethodCoderExamples >> keywordSelectorCoder [
 	| method methodCoder |
 	method := self class >> #keyword:selector:.
 	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder patternSource = 'keyword: a selector: b'.
-	self assert: methodCoder bodySource = '	^ a + b'.
+	self assert: methodCoder collapsedSource = 'keyword: a selector: b'.
+	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
 ]
 
@@ -122,8 +122,8 @@ GtMethodCoderExamples >> noSpacesCoder [
 	| method methodCoder |
 	method := self class >> #noSpacesCoder.
 	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder patternSource = 'noSpacesCoder'.
-	self assert: (methodCoder bodySource beginsWith: String tab , '<gtExample').
+	self assert: methodCoder collapsedSource = 'noSpacesCoder'.
+	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
 ]
 
@@ -145,8 +145,8 @@ GtMethodCoderExamples >> selfReturnCoder [
 	| method methodCoder |
 	method := self class >> #returnSelf.
 	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder patternSource = 'returnSelf '.
-	self assert: methodCoder bodySource = '^self'.
+	self assert: methodCoder collapsedSource = 'returnSelf'.
+	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
 ]
 
@@ -157,7 +157,7 @@ GtMethodCoderExamples >> thisMethod [
 	method := self class >> #thisMethod.
 	methodCoder := GtMethodCoder forMethod: method.
 	source := method sourceCode.
-	self assert: methodCoder patternSource = (source first: (source indexOf: Character cr) - 1).
-	self assert: methodCoder bodySource = (source allButFirst: (source indexOf: Character cr)).
+	self assert: methodCoder collapsedSource = (source first: (source indexOf: Character cr) - 1).
+	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
 ]

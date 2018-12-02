@@ -3,7 +3,6 @@ Class {
 	#superclass : #GtSourceCoder,
 	#instVars : [
 		'class',
-		'collapsedEditor',
 		'parameters',
 		'bindingStrategy'
 	],
@@ -14,22 +13,6 @@ Class {
 GtBlockCoder >> addParameter: aString ofType: aBehavior [
 	parameters at: aString put: aBehavior.
 	bindingStrategy bindings at: aString asSymbol put: nil
-]
-
-{ #category : #elements }
-GtBlockCoder >> asElement [
-	| expander |
-	expander := BrExpander new.
-	expander
-		vFitContent;
-		hMatchParent.
-	expanded
-		ifTrue: [ expander expand ].
-	expander look: BrGlamorousExpanderLook new.
-	expander header: [ self collapsedElement ].
-	expander content: [ self sourceElement ].
-	expander margin: (BlInsets all: 10).
-	^ expander
 ]
 
 { #category : #accessing }
@@ -78,23 +61,6 @@ GtBlockCoder >> blockSource: aString [
 	self source: (aString copyFrom: startIndex to: endIndex)
 ]
 
-{ #category : #private }
-GtBlockCoder >> collapsedEditor [
-	collapsedEditor notNil
-		ifTrue: [ ^ collapsedEditor ].
-	collapsedEditor := BrTextEditor new.
-	^ collapsedEditor
-]
-
-{ #category : #elements }
-GtBlockCoder >> collapsedElement [
-	| element |
-	element := BrEditorElement new.
-	element editor: self collapsedEditor.
-	(GtCompletionController on: element strategy: self newCompletionStrategy) install.
-	^ element
-]
-
 { #category : #'initialize-release' }
 GtBlockCoder >> initialize [
 	super initialize.
@@ -105,20 +71,19 @@ GtBlockCoder >> initialize [
 ]
 
 { #category : #private }
-GtBlockCoder >> newBodyStyler [
+GtBlockCoder >> newCompletionStrategy [
+	| completionStrategy |
+	completionStrategy := super newCompletionStrategy.
+	completionStrategy blockVariables: parameters.
+	^ completionStrategy
+]
+
+{ #category : #private }
+GtBlockCoder >> newSourceStyler [
 	| styler |
 	styler := BrRBTextStyler new.
 	styler workspace: bindingStrategy.
 	^ styler
-]
-
-{ #category : #private }
-GtBlockCoder >> newCompletionStrategy [
-	| completionStrategy |
-	completionStrategy := GtPharoCompletionStrategy new.
-	completionStrategy classOrMetaClass: class.
-	completionStrategy blockVariables: parameters.
-	^ completionStrategy
 ]
 
 { #category : #accessing }
@@ -130,15 +95,6 @@ GtBlockCoder >> source [
 GtBlockCoder >> source: aString [
 	self sourceEditor text: aString asRopedText.
 	self sourceChanged
-]
-
-{ #category : #'event handling' }
-GtBlockCoder >> sourceChanged [
-	| firstLine |
-	super sourceChanged.
-	firstLine := (self sourceEditor text asString lines detect: [ :each | each notEmpty ] ifNone: [ '' ]) asRopedText.
-	firstLine attributes: {(BlTextForegroundAttribute paint: Color gray)}.
-	self collapsedEditor text: firstLine readonly
 ]
 
 { #category : #elements }

@@ -6,7 +6,8 @@ Class {
 		'sourceEditor',
 		'expanded',
 		'attributes',
-		'addOns'
+		'addOns',
+		'collapsedEditor'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -24,6 +25,22 @@ GtSourceCoder >> announce: anAnnouncement [
 { #category : #accessing }
 GtSourceCoder >> announcer [
 	^ announcer
+]
+
+{ #category : #elements }
+GtSourceCoder >> asElement [
+	| expander |
+	expander := BrExpander new.
+	expander
+		vFitContent;
+		hMatchParent.
+	expanded
+		ifTrue: [ expander expand ].
+	expander look: BrGlamorousExpanderLook new.
+	expander header: [ self collapsedElement ].
+	expander content: [ self sourceElement ].
+	expander margin: (BlInsets all: 8).
+	^ expander
 ]
 
 { #category : #'accessing-attributes' }
@@ -99,7 +116,7 @@ GtSourceCoder >> classOrMetaClass [
 
 { #category : #private }
 GtSourceCoder >> clearPreviousEvaluations [
-	self sourceEditor text clearAttributes: [ :each | each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute ].
+	self sourceText clearAttributes: [ :each | each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute ].
 	self sourceEditor
 		invalidateAll;
 		updateAll
@@ -112,9 +129,45 @@ GtSourceCoder >> clearSyntaxErrors: textEditor [
 	textEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
 ]
 
-{ #category : #private }
+{ #category : #ui }
 GtSourceCoder >> collapsedEditor [
+	^ collapsedEditor ifNil: [ collapsedEditor := self newCollapsedEditor ]
+]
+
+{ #category : #ui }
+GtSourceCoder >> collapsedElement [
+	| element |
+	element := BrEditorElement new.
+	element editor: self collapsedEditor.
+	^ element
+]
+
+{ #category : #accessing }
+GtSourceCoder >> collapsedSource [
+	^ self collapsedText asString
+]
+
+{ #category : #accessing }
+GtSourceCoder >> collapsedSource: aString [
+	| text |
+	text := aString asRopedText.
+	self collapsedEditor text: text readonly.
+	self styleCollapsedText.
+]
+
+{ #category : #ui }
+GtSourceCoder >> collapsedStyler [
 	^ nil
+]
+
+{ #category : #accessing }
+GtSourceCoder >> collapsedText [
+	^ self collapsedEditor text
+]
+
+{ #category : #private }
+GtSourceCoder >> completionStrategy [
+	^ self newCompletionStrategy
 ]
 
 { #category : #'actions - toolbar' }
@@ -134,6 +187,11 @@ GtSourceCoder >> cursorPositionDo: aBlock [
 GtSourceCoder >> defaultTextAttributes [
 	^ {BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
 	(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}
+]
+
+{ #category : #private }
+GtSourceCoder >> disabledTextAttributes [
+	^ {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)}
 ]
 
 { #category : #actions }
@@ -212,18 +270,32 @@ GtSourceCoder >> mainActions [
 ]
 
 { #category : #private }
-GtSourceCoder >> newBodyStyler [
-	^ nil
+GtSourceCoder >> newCollapsedEditor [
+	^ BrTextEditor new
+]
+
+{ #category : #private }
+GtSourceCoder >> newCompletionStrategy [
+	| completionStrategy |
+	completionStrategy := GtPharoCompletionStrategy new.
+	completionStrategy classOrMetaClass: self classOrMetaClass.
+	^ completionStrategy
 ]
 
 { #category : #ui }
 GtSourceCoder >> newSourceEditor [
-	sourceEditor := BrTextEditor new.
-	self newBodyStyler ifNotNil: [ :styler | sourceEditor styler: styler ].
-	sourceEditor
+	| editor |
+	editor := BrTextEditor new.
+	self newSourceStyler ifNotNil: [ :styler | editor styler: styler ].
+	editor
 		when: BrTextEditorInsertedEvent do: [ :event | self sourceChanged ];
 		when: BrTextEditorDeletedEvent do: [ :event | self sourceChanged ].
-	^ sourceEditor
+	^ editor
+]
+
+{ #category : #private }
+GtSourceCoder >> newSourceStyler [
+	^ nil
 ]
 
 { #category : #private }
@@ -240,6 +312,11 @@ GtSourceCoder >> nodeAtCursor [
 				on: Error
 				do: [ :ex | ex return ] ].
 	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> parserStartingState [
+	^ GtPharoParser startingStateForMethodSequence
 ]
 
 { #category : #private }
@@ -317,17 +394,21 @@ GtSourceCoder >> selectorAtCursor [
 	^ self symbolFor: self nodeAtCursor
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> source [
+	^ self sourceText asString
+]
+
 { #category : #private }
 GtSourceCoder >> sourceAst [
-	^ GtPharoParser
-		parseWithErrors: self sourceEditor text asString
-		startingAt: GtPharoParser startingStateForMethodSequence
+	^ GtPharoParser parseWithErrors: self source startingAt: self parserStartingState
 ]
 
 { #category : #'event handling' }
 GtSourceCoder >> sourceChanged [
 	self clearSyntaxErrors: self sourceEditor.
 	self clearSyntaxErrors: self collapsedEditor.
+	self updateCollapsedSource.
 	self updateAddOns
 ]
 
@@ -336,6 +417,52 @@ GtSourceCoder >> sourceEditor [
 	<return: #BrTextEditor>
 
 	^ sourceEditor ifNil: [ sourceEditor := self newSourceEditor ]
+]
+
+{ #category : #ui }
+GtSourceCoder >> sourceElement [
+	| container element toolbar |
+	container := BlElement new
+		layout: BlLinearLayout vertical;
+		constraintsDo: [ :c | 
+			c vertical matchParent.
+			c horizontal matchParent ].
+	element := BrEditorElement new.
+	addOns shortcuts do: [ :each | element addShortcut: (each copy action: [ each action cull: element ]) ].
+	element
+		constraintsDo: [ :c | 
+			c vertical matchParent.
+			c horizontal matchParent ].
+	element editor: self sourceEditor.
+	(GtCompletionController on: element strategy: self completionStrategy) install.
+	toolbar := GtCoderMethodActionsElement new methodCoder: self.
+	container addChild: element.
+	container addChild: toolbar.
+	^ container
+]
+
+{ #category : #accessing }
+GtSourceCoder >> sourceText [
+	^ self sourceEditor text
+]
+
+{ #category : #private }
+GtSourceCoder >> styleCollapsedText [
+	| text |
+	text := self collapsedEditor text text.
+	self collapsedStyler ifNotNil: [ :styler | styler style: text ].
+	self collapsedEditor text: text readonly
+]
+
+{ #category : #private }
+GtSourceCoder >> styleSourceText [
+	self sourceEditor styleText
+]
+
+{ #category : #updating }
+GtSourceCoder >> styleText [
+	self styleSourceText.
+	self styleCollapsedText
 ]
 
 { #category : #private }
@@ -360,9 +487,17 @@ GtSourceCoder >> updateAddOns [
 	
 ]
 
+{ #category : #'event handling' }
+GtSourceCoder >> updateCollapsedSource [
+	| firstLine |
+	firstLine := (self sourceEditor text asString lines detect: [ :each | each notEmpty ] ifNone: [ '' ]) asRopedText.
+	firstLine attributes: self disabledTextAttributes , self defaultTextAttributes.
+	self collapsedSource: firstLine
+]
+
 { #category : #private }
 GtSourceCoder >> validateSyntax [
-	[ GtPharoParser parse: self sourceEditor text asString startingAt: GtPharoParser startingStateForMethodSequence ]
+	[ GtPharoParser parse: self source startingAt: self parserStartingState ]
 		on: SmaCCParserError
 		do: [ :ex | 
 			self reportParseError: ex messageText at: ex tag position on: self sourceEditor.
