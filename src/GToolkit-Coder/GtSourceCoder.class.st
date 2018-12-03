@@ -435,7 +435,15 @@ GtSourceCoder >> sourceElement [
 			c horizontal matchParent ].
 	element editor: self sourceEditor.
 	(GtCompletionController on: element strategy: self completionStrategy) install.
-	toolbar := GtCoderMethodActionsElement new methodCoder: self.
+	toolbar := GtCoderMethodActionsElement new
+		methodCoder: self;
+		padding:
+			(BlInsets
+				top: 0
+				left: -3
+				bottom: -3
+				right: 0);
+		margin: (BlInsets top: 5).
 	container addChild: element.
 	container addChild: toolbar.
 	^ container

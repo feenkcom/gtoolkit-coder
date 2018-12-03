@@ -8,22 +8,6 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #ui }
-GtPharoSnippetCoder >> asElement [
-	| expander |
-	expander := BrExpander new.
-	expander
-		vFitContent;
-		hMatchParent.
-	expanded
-		ifTrue: [ expander expand ].
-	expander look: BrGlamorousExpanderLook new.
-	expander header: [ self collapsedElement ].
-	expander content: [ self sourceElement ].
-	expander margin: (BlInsets all: 10).
-	^ expander
-]
-
 { #category : #private }
 GtPharoSnippetCoder >> completionStrategy [
 	^ completionStrategy
