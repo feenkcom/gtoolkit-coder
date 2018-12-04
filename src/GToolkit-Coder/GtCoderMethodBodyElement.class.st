@@ -6,7 +6,14 @@ Class {
 
 { #category : #initialization }
 GtCoderMethodBodyElement >> actionsElement [
-	^ GtCoderMethodActionsElement new methodCoder: methodCoder
+	^ GtCoderMethodActionsElement new 
+		methodCoder: methodCoder;
+		padding:
+			(BlInsets
+				top: 0
+				left: -3
+				bottom: -3
+				right: 0)
 ]
 
 { #category : #initialization }
