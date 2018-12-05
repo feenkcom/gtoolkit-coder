@@ -38,7 +38,7 @@ GtClassMethodsCoder >> addMethodsForClass: aClass [
 GtClassMethodsCoder >> addNewCoder [
 	| coder |
 	coder := GtMethodCoder newMethod.
-	coder classOrMetaClass: self classOrMetaClass.
+	coder classOrMetaClass: self newMethodClass.
 	coder object: self object.
 	methodCoders addFirst: coder.
 	self announce: (GtMethodCoderAdded new coder: self; methodCoder: coder)
@@ -67,6 +67,11 @@ GtClassMethodsCoder >> forObject: anObject [
 	self forClass: anObject class
 ]
 
+{ #category : #testing }
+GtClassMethodsCoder >> hasFilter [
+	^ filteredClasses notEmpty
+]
+
 { #category : #'initialize-release' }
 GtClassMethodsCoder >> initialize [
 	super initialize.
@@ -76,6 +81,17 @@ GtClassMethodsCoder >> initialize [
 { #category : #elements }
 GtClassMethodsCoder >> look [
 	^ GtMetaMethodsCoderLook new methodsCoder: self
+]
+
+{ #category : #private }
+GtClassMethodsCoder >> newMethodClass [
+	| methodClass |
+	methodClass := filteredClasses anyOne.
+	filteredClasses
+		do: [ :each | 
+			(methodClass includesBehavior: each)
+				ifFalse: [ methodClass := each ] ].
+	^ methodClass
 ]
 
 { #category : #private }
@@ -95,9 +111,7 @@ GtClassMethodsCoder >> removeMethodsForClass: aClass [
 	filteredClasses remove: aClass.
 	self updateMethods.
 	methodCoders removeAllSuchThat: [ :each | each classOrMetaClass = aClass and: [ each isModified not ] ].
-	self announce: (GtCoderMethodsListChanged new coder: self).
-	filteredClasses isEmpty
-		ifTrue: [ self addMethodsForClass: self classOrMetaClass ]
+	self announce: (GtCoderMethodsListChanged new coder: self)
 ]
 
 { #category : #private }

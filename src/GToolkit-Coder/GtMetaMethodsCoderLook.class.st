@@ -7,14 +7,14 @@ Class {
 	#category : #'GToolkit-Coder-Looks'
 }
 
-{ #category : #initialization }
+{ #category : #ui }
 GtMetaMethodsCoderLook >> addButtonElement [
 	| button |
 	button := BrButton new.
 	button
 		look: BrGlamorousButtonWithIconLook;
 		icon: BrGlamorousIcons add asElement;
-		margin: (BlInsets all: 10);
+		margin: (BlInsets all: 12);
 		constraintsDo: [ :c | 
 			c ignoreByLayout.
 			c ignored horizontal alignRight.
@@ -23,9 +23,14 @@ GtMetaMethodsCoderLook >> addButtonElement [
 	^ button
 ]
 
-{ #category : #initialization }
+{ #category : #private }
+GtMetaMethodsCoderLook >> addClassToFilter: aBehavior [
+	methodsCoder addMethodsForClass: aBehavior
+]
+
+{ #category : #ui }
 GtMetaMethodsCoderLook >> classBreadcrumb [
-	| breadcrumb |
+	| breadcrumb scrollable |
 	breadcrumb := BrBreadcrumb new.
 	breadcrumb
 		look:
@@ -35,7 +40,7 @@ GtMetaMethodsCoderLook >> classBreadcrumb [
 						text: '>';
 						margin:
 							(BlInsets
-								top: 5
+								top: 7
 								left: 3
 								bottom: 0
 								right: 3) ]).
@@ -43,16 +48,25 @@ GtMetaMethodsCoderLook >> classBreadcrumb [
 		withAllSuperclassesDo: [ :each | 
 			| toggle |
 			toggle := BrToggle new
+				margin: (BlInsets all: 2);
 				activated: (methodsCoder filteredClass: each);
 				label: (each name asRopedText attributes: {(BlFontSizeAttribute size: 12)});
 				look: BrMaterialToggleWithLabelLook;
-				when: BrToggleActivatedEvent do: [ :anEvent | methodsCoder addMethodsForClass: each ];
-				when: BrToggleDeactivatedEvent do: [ :anEvent | methodsCoder removeMethodsForClass: each ].
+				when: BrToggleActivatedEvent do: [ :anEvent | self addClassToFilter: each ];
+				when: BrToggleDeactivatedEvent
+					do: [ :anEvent | 
+					self
+						removeClassFromFilter: each
+						ifEmpty: [ each == methodsCoder classOrMetaClass
+								ifTrue: [ anEvent consumed: true ].
+							(breadcrumb itemAt: 1) activate ] ].
 			breadcrumb addItem: toggle ].
-	^ breadcrumb
+	scrollable := breadcrumb asScrollableElement.
+	scrollable margin: (BlInsets right: 40).
+	^ scrollable
 ]
 
-{ #category : #initialization }
+{ #category : #ui }
 GtMetaMethodsCoderLook >> headerElement [
 	| element |
 	element := BlElement new.
@@ -81,4 +95,11 @@ GtMetaMethodsCoderLook >> methodsCoder [
 { #category : #accessing }
 GtMetaMethodsCoderLook >> methodsCoder: aMethodsCoder [
 	methodsCoder := aMethodsCoder
+]
+
+{ #category : #private }
+GtMetaMethodsCoderLook >> removeClassFromFilter: aBehavior ifEmpty: aBlock [
+	methodsCoder removeMethodsForClass: aBehavior.
+	methodsCoder hasFilter
+		ifFalse: aBlock
 ]
