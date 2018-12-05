@@ -14,7 +14,7 @@ GtMetaMethodsCoderLook >> addButtonElement [
 	button
 		look: BrGlamorousButtonWithIconLook;
 		icon: BrGlamorousIcons add asElement;
-		margin: (BlInsets all: 12);
+		margin: (BlInsets all: 8);
 		constraintsDo: [ :c | 
 			c ignoreByLayout.
 			c ignored horizontal alignRight.
@@ -40,7 +40,7 @@ GtMetaMethodsCoderLook >> classBreadcrumb [
 						text: '>';
 						margin:
 							(BlInsets
-								top: 7
+								top: 6
 								left: 3
 								bottom: 0
 								right: 3) ]).
@@ -51,7 +51,7 @@ GtMetaMethodsCoderLook >> classBreadcrumb [
 				margin: (BlInsets all: 2);
 				activated: (methodsCoder filteredClass: each);
 				label: (each name asRopedText attributes: {(BlFontSizeAttribute size: 12)});
-				look: BrMaterialToggleWithLabelLook;
+				look: GtClassBreadcrumbToggleLook;
 				when: BrToggleActivatedEvent do: [ :anEvent | self addClassToFilter: each ];
 				when: BrToggleDeactivatedEvent
 					do: [ :anEvent | 
