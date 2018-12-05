@@ -16,6 +16,23 @@ GtPharoSnippetCoder >> completionStrategy [
 			completionStrategy ]
 ]
 
+{ #category : #actions }
+GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
+	| aValue |
+	self clearPreviousEvaluations.
+	self validateSyntax
+		ifFalse: [ ^ self ].
+	aValue := self evaluateSource: self sourceEditor text asString.
+	self sourceEditor
+		styleTextAndAfterDo: [ self sourceEditor text
+				attributes:
+					{(GtPlaygroundEvaluatedCodeButtonAttribute new
+						result: aValue;
+						paint: (Color fromHexString: #'90CAF9')).
+					(GtPlaygroundEvaluatedCodeHighlightedAttribute new paint: (Color fromHexString: #'90CAF9'))} ].
+	^ aValue
+]
+
 { #category : #initialization }
 GtPharoSnippetCoder >> evaluateSource: aString [
 	| value |
@@ -41,7 +58,8 @@ GtPharoSnippetCoder >> initialize [
 { #category : #initialization }
 GtPharoSnippetCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addMainAction: 'Run' translated icon: BrGlamorousIcons play action: [ :aButton | self runFrom: aButton ].
+	addOns addMainAction: 'Inspect' translated icon: BrGlamorousIcons inspect action: [ :aButton | self runFrom: aButton ].
+	addOns addMainAction: 'Evaluate' translated icon: BrGlamorousIcons play action: [ :aButton | self evaluateAndHighlightAllSource ].
 	addOns clearChanges
 ]
 
@@ -66,14 +84,7 @@ GtPharoSnippetCoder >> runFrom: aButton [
 	self clearPreviousEvaluations.
 	self validateSyntax
 		ifFalse: [ ^ self ].
-	aValue := self evaluateSource: self sourceEditor text asString.
-	self sourceEditor
-		styleTextAndAfterDo: [ self sourceEditor text
-				attributes:
-					{(GtPlaygroundEvaluatedCodeButtonAttribute new
-						result: aValue;
-						paint: (Color fromHexString: #'90CAF9')).
-					(GtPlaygroundEvaluatedCodeHighlightedAttribute new paint: (Color fromHexString: #'90CAF9'))} ].
+	aValue := self evaluateAndHighlightAllSource.
 	aButton
 		fireEvent:
 			(GtPhlowObjectToSpawn new
