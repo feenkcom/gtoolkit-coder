@@ -399,6 +399,14 @@ GtSourceCoder >> source [
 	^ self sourceText asString
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> source: aString [
+	| text |
+	text := aString asRopedText.
+	text attributes: self defaultTextAttributes.
+	^ self sourceEditor text: text
+]
+
 { #category : #private }
 GtSourceCoder >> sourceAst [
 	^ GtPharoParser parseWithErrors: self source startingAt: self parserStartingState

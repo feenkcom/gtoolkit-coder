@@ -25,7 +25,7 @@ GtClassMethodsCoder class >> forObject: anObject [
 { #category : #actions }
 GtClassMethodsCoder >> addMethodCoderIn: anElement [
 	| coder |
-	coder := GtMethodCoder new.
+	coder := GtMethodCoder newMethod.
 	coder classOrMetaClass: class.
 	coder object: object.
 	anElement items: (Array with: coder) , anElement items
