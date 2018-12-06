@@ -83,6 +83,8 @@ GtCoderMethodsCollection >> do: aBlock [
 
 { #category : #'initialize-release' }
 GtCoderMethodsCollection >> filter: coderMethodsFilter [
+	filtered := false.
+	methods := OrderedCollection new.
 	filter := coderMethodsFilter
 ]
 

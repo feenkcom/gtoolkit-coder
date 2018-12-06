@@ -1,7 +1,10 @@
 Class {
 	#name : #GtMethodsCoder,
 	#superclass : #Object,
+	#traits : 'TGtAnnouncer',
+	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
+		'announcer',
 		'methodCoders',
 		'methods'
 	],
@@ -15,24 +18,27 @@ GtMethodsCoder class >> forMethods: compiledMethods [
 		yourself
 ]
 
+{ #category : #announcer }
+GtMethodsCoder >> announcer [
+	^ announcer ifNil: [ announcer := Announcer new ]
+]
+
 { #category : #elements }
 GtMethodsCoder >> asElement [
-	| listElement |
-	listElement := BrSimpleList new.
-	listElement stencil: [ :each | each asElement ].
-	listElement padding: (BlInsets all: 10).
-	listElement
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	listElement display: methodCoders.
-	^ listElement
+	^ GtMethodsCoderElement new
+		methodsCoder: self;
+		yourself
+]
+
+{ #category : #accessing }
+GtMethodsCoder >> coders [
+	^ methodCoders
 ]
 
 { #category : #'initialize-release' }
 GtMethodsCoder >> forMethods: compiledMethods [
 	methods := compiledMethods.
-	methodCoders := methods collect: [ :each | GtMethodCoder forMethod: each ].
+	methodCoders := methods collect: [ :each | self newMethodCoderFor: each ].
 	(methods isKindOf: GtCoderMethodsCollection)
 		ifTrue: [ methods announcer weak
 				when: ValueAdded send: #methodAdded: to: self;
@@ -56,11 +62,17 @@ GtMethodsCoder >> initialize [
 	methodCoders := #()
 ]
 
+{ #category : #elements }
+GtMethodsCoder >> look [
+	^ nil
+]
+
 { #category : #'event handling' }
 GtMethodsCoder >> methodAdded: aValueAdded [
 	| coder |
 	coder := GtMethodCoder forMethod: aValueAdded newValue.
-	methodCoders add: coder
+	methodCoders add: coder.
+	self announce: (GtMethodCoderAdded new coder: self; methodCoder: coder)
 ]
 
 { #category : #'event handling' }
@@ -71,17 +83,17 @@ GtMethodsCoder >> methodChanged: aValueChanged [
 				ifTrue: [ each updateMethod: aValueChanged newValue ] ]
 ]
 
-{ #category : #accessing }
-GtMethodsCoder >> methodCoders [
-	^ methodCoders
-]
-
-{ #category : #accessing }
-GtMethodsCoder >> methodCoders: anObject [
-	methodCoders := anObject
-]
-
 { #category : #'event handling' }
 GtMethodsCoder >> methodRemoved: aValueRemoved [
-	methodCoders removeAllSuchThat: [ :each | each isForMethod: aValueRemoved oldValue ]
+	| toRemove |
+	toRemove := methodCoders select: [ :each | each isForMethod: aValueRemoved oldValue ].
+	toRemove
+		do: [ :each | 
+			methodCoders remove: each.
+			self announce: (GtMethodCoderRemoved new coder: self; methodCoder: each) ]
+]
+
+{ #category : #private }
+GtMethodsCoder >> newMethodCoderFor: aMethod [
+	^ GtMethodCoder forMethod: aMethod
 ]

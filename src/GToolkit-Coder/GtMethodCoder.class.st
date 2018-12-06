@@ -37,6 +37,14 @@ GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
 		yourself
 ]
 
+{ #category : #'instance creation' }
+GtMethodCoder class >> newMethod [
+	^ self new
+		expanded: true;
+		source: '';
+		yourself
+]
+
 { #category : #elements }
 GtMethodCoder >> addShortcutsTo: editorElement [
 	addOns shortcuts

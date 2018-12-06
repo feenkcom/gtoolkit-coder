@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtMethodsCoder,
 	#instVars : [
 		'class',
-		'object'
+		'object',
+		'filteredClasses'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -23,55 +24,119 @@ GtClassMethodsCoder class >> forObject: anObject [
 ]
 
 { #category : #actions }
-GtClassMethodsCoder >> addMethodCoderIn: anElement [
-	| coder |
-	coder := GtMethodCoder new.
-	coder classOrMetaClass: class.
-	coder object: object.
-	anElement items: (Array with: coder) , anElement items
+GtClassMethodsCoder >> addMethodsForClass: aClass [
+	(filteredClasses includes: aClass)
+		ifTrue: [ ^ self ].
+	filteredClasses add: aClass.
+	self updateMethods.
+	aClass selectors do: [ :each | methodCoders add: (self newMethodCoderFor: aClass >> each) ].
+	methodCoders sort: [ :a :b | self shouldSort: a before: b ].
+	self announce: (GtCoderMethodsListChanged new coder: self)
 ]
 
-{ #category : #elements }
-GtClassMethodsCoder >> asElement [
-	| listElement element button |
-	listElement := super asElement.
-	element := BlElement new.
-	element layout: BlLinearLayout vertical.
-	element
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	button := BrButton new.
-	button
-		margin:
-			(BlInsets
-				top: 10
-				left: 10
-				bottom: 0
-				right: 0).
-	button
-		look: BrGlamorousButtonWithIconLook;
-		icon: BrGlamorousIcons add asElement;
-		action: [ self addMethodCoderIn: listElement ].
-	element addChild: button.
-	element addChild: listElement.
-	^ element
+{ #category : #actions }
+GtClassMethodsCoder >> addNewCoder [
+	| coder |
+	coder := GtMethodCoder newMethod.
+	coder classOrMetaClass: self newMethodClass.
+	coder object: self object.
+	methodCoders addFirst: coder.
+	self announce: (GtMethodCoderAdded new coder: self; methodCoder: coder)
+]
+
+{ #category : #accessing }
+GtClassMethodsCoder >> classOrMetaClass [
+	^ class
+]
+
+{ #category : #testing }
+GtClassMethodsCoder >> filteredClass: aBehavior [
+	^ filteredClasses includes: aBehavior
 ]
 
 { #category : #'initialize-release' }
 GtClassMethodsCoder >> forClass: aBehavior [
 	class := aBehavior.
+	filteredClasses := Set with: aBehavior.
 	self forMethods: (GtCoderMethodsCollection forFilter: (GtCoderBehaviorMethodFilter forClass: class))
-]
-
-{ #category : #'initialize-release' }
-GtClassMethodsCoder >> forMethods: compiledMethods [
-	super forMethods: compiledMethods.
-	methodCoders do: [ :each | each object: object ]
 ]
 
 { #category : #'initialize-release' }
 GtClassMethodsCoder >> forObject: anObject [
 	object := anObject.
 	self forClass: anObject class
+]
+
+{ #category : #testing }
+GtClassMethodsCoder >> hasFilter [
+	^ filteredClasses notEmpty
+]
+
+{ #category : #'initialize-release' }
+GtClassMethodsCoder >> initialize [
+	super initialize.
+	filteredClasses := Set new
+]
+
+{ #category : #elements }
+GtClassMethodsCoder >> look [
+	^ GtMetaMethodsCoderLook new methodsCoder: self
+]
+
+{ #category : #private }
+GtClassMethodsCoder >> newMethodClass [
+	| methodClass |
+	methodClass := filteredClasses anyOne.
+	filteredClasses
+		do: [ :each | 
+			(methodClass includesBehavior: each)
+				ifFalse: [ methodClass := each ] ].
+	^ methodClass
+]
+
+{ #category : #private }
+GtClassMethodsCoder >> newMethodCoderFor: aMethod [
+	^ (super newMethodCoderFor: aMethod) object: object
+]
+
+{ #category : #accessing }
+GtClassMethodsCoder >> object [
+	^ object
+]
+
+{ #category : #actions }
+GtClassMethodsCoder >> removeMethodsForClass: aClass [
+	(filteredClasses includes: aClass)
+		ifFalse: [ ^ self ].
+	filteredClasses remove: aClass.
+	self updateMethods.
+	methodCoders removeAllSuchThat: [ :each | each classOrMetaClass = aClass and: [ each isModified not ] ].
+	self announce: (GtCoderMethodsListChanged new coder: self)
+]
+
+{ #category : #private }
+GtClassMethodsCoder >> shouldSort: a before: b [
+	a selector isNil
+		ifTrue: [ ^ b selector notNil or: [ a classOrMetaClass allSuperclasses size >= b classOrMetaClass allSuperclasses size ] ].
+	b selector isNil
+		ifTrue: [ ^ false ].
+	a selector < b selector
+		ifTrue: [ ^ true ].
+	a selector > b selector
+		ifTrue: [ ^ false ].
+	^ a classOrMetaClass allSuperclasses size >= b classOrMetaClass allSuperclasses size
+]
+
+{ #category : #private }
+GtClassMethodsCoder >> updateMethods [
+	| filter |
+	filter := nil.
+	filteredClasses
+		do: [ :each | 
+			| classFilter |
+			classFilter := GtCoderBehaviorMethodFilter forClass: each.
+			filter := filter isNil
+				ifTrue: [ classFilter ]
+				ifFalse: [ filter | classFilter ] ].
+	methods filter: filter
 ]

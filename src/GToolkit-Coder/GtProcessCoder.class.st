@@ -2,8 +2,7 @@ Class {
 	#name : #GtProcessCoder,
 	#superclass : #GtMethodsCoder,
 	#instVars : [
-		'session',
-		'lists'
+		'session'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -15,25 +14,6 @@ GtProcessCoder class >> forProcess: aProcess [
 		yourself
 ]
 
-{ #category : #elements }
-GtProcessCoder >> asElement [
-	| element |
-	element := super asElement.
-	lists add: element.
-	^ element
-]
-
-{ #category : #updating }
-GtProcessCoder >> drillDown: anAnnouncement [
-	lists
-		do: [ :list | 
-			list
-				fireEvent:
-					(GtPhlowObjectToSpawn new
-						object: anAnnouncement value;
-						sourceElement: list) ]
-]
-
 { #category : #'initialize-release' }
 GtProcessCoder >> forProcess: aProcess [
 	session := DebugSession named: 'Debug ' , aProcess name on: aProcess startedAt: aProcess suspendedContext.
@@ -43,8 +23,7 @@ GtProcessCoder >> forProcess: aProcess [
 { #category : #'initialize-release' }
 GtProcessCoder >> initialize [
 	super initialize.
-	methodCoders := OrderedCollection new.
-	lists := OrderedCollection new
+	methodCoders := OrderedCollection new
 ]
 
 { #category : #testing }
@@ -71,10 +50,5 @@ GtProcessCoder >> updateCoders [
 			methodCoders notEmpty
 				ifTrue: [ methodCoders first expanded: true ] ]
 		ifFalse: [ methodCoders := OrderedCollection new ].
-	self updateLists
-]
-
-{ #category : #elements }
-GtProcessCoder >> updateLists [
-	lists do: [ :each | each display: methodCoders ]
+	self announce: (GtCoderMethodsListChanged new coder: self)
 ]
