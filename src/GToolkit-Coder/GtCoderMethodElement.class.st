@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #converting }
-GtCoderMethodElement >> asVerticallyResizableCardDo: aBlock [
+GtCoderMethodElement >> asVerticallyResizableDo: aBlock [
 	^ self
 ]
 
