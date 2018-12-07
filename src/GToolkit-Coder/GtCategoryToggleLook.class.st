@@ -1,11 +1,11 @@
 Class {
-	#name : #GtClassBreadcrumbToggleLook,
+	#name : #GtCategoryToggleLook,
 	#superclass : #GtCoderToggleLook,
 	#category : #'GToolkit-Coder-Looks'
 }
 
 { #category : #initialization }
-GtClassBreadcrumbToggleLook >> initializeLook [
+GtCategoryToggleLook >> initializeLook [
 	super initializeLook.
 	
 	widget layout: BlLinearLayout horizontal alignCenter.

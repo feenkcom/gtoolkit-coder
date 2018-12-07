@@ -12,6 +12,34 @@ GtCoderMethodElement >> asVerticallyResizableDo: aBlock [
 	^ self
 ]
 
+{ #category : #accessing }
+GtCoderMethodElement >> collapsedElement [
+	| element |
+	element := GtCoderMethodPatternElement new.
+	element methodCoder: self methodCoder.
+	element margin: (BlInsets left: 5).
+	element
+		constraintsDo: [ :c | 
+			c vertical fitContent.
+			c horizontal matchParent ].
+	methodCoder methodsCoder ifNotNil: [ :coder | coder methodCoderLook ifNotNil: [ :look | element look: look ] ].
+	^ element
+]
+
+{ #category : #accessing }
+GtCoderMethodElement >> contentElement [
+	| element |
+	element := GtCoderMethodBodyElement new.
+	element methodCoder: self methodCoder.
+	element margin: (BlInsets left: 5).
+	element
+		constraintsDo: [ :c | 
+			c vertical fitContent.
+			c horizontal matchParent ].
+	methodCoder methodsCoder ifNotNil: [ :coder | coder methodCoderLook ifNotNil: [ :look | element look: look ] ].
+	^ element
+]
+
 { #category : #initialization }
 GtCoderMethodElement >> initialize [
 	| shadowLook resizer |
@@ -66,8 +94,8 @@ GtCoderMethodElement >> methodCoder [
 { #category : #accessing }
 GtCoderMethodElement >> methodCoder: aGtMethodCoder [
 	methodCoder := aGtMethodCoder.
-	self header: [ GtCoderMethodPatternStencil new methodCoder: self methodCoder ].
-	self content: [ GtCoderMethodBodyStencil new methodCoder: self methodCoder ].
+	self header: [ self collapsedElement ].
+	self content: [ self contentElement ].
 	self margin: (BlInsets all: 8).
 	expandableModel when: BrExpansionChanged do: [ :event | methodCoder expanded: self isExpanded ].
 	methodCoder expanded

@@ -269,6 +269,16 @@ GtSourceCoder >> mainActions [
 	^ addOns mainActions
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> methodsCoder [
+	^ self attributeNamed: #methodsCoder
+]
+
+{ #category : #accessing }
+GtSourceCoder >> methodsCoder: aCoder [
+	^ self attributeNamed: #methodsCoder put: aCoder
+]
+
 { #category : #private }
 GtSourceCoder >> newCollapsedEditor [
 	^ BrTextEditor new

@@ -83,6 +83,11 @@ GtMethodsCoder >> methodChanged: aValueChanged [
 				ifTrue: [ each updateMethod: aValueChanged newValue ] ]
 ]
 
+{ #category : #elements }
+GtMethodsCoder >> methodCoderLook [
+	^ nil
+]
+
 { #category : #'event handling' }
 GtMethodsCoder >> methodRemoved: aValueRemoved [
 	| toRemove |
@@ -95,5 +100,8 @@ GtMethodsCoder >> methodRemoved: aValueRemoved [
 
 { #category : #private }
 GtMethodsCoder >> newMethodCoderFor: aMethod [
-	^ GtMethodCoder forMethod: aMethod
+	| coder |
+	coder := GtMethodCoder forMethod: aMethod.
+	coder methodsCoder: self.
+	^ coder
 ]

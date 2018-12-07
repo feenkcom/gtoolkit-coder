@@ -23,7 +23,7 @@ GtCoderMethodSourceElement >> breadcrumb [
 						look: (BrGlamorousLabelLook new thin foreground: BrGlamorousColors defaultButtonTextColor);
 						text: '>';
 						margin: (BlInsets left: 5 right: 5) ]).
-	{methodCoder classOrMetaClass package name.
+	{(methodCoder compiledMethod ifNil: [ methodCoder classOrMetaClass ]) package name.
 	methodCoder classOrMetaClass name}
 		do: [ :aLocationStepName | 
 			breadcrumb
@@ -42,6 +42,21 @@ GtCoderMethodSourceElement >> editorElement [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+GtCoderMethodSourceElement >> headerElement [
+	| element |
+	element := BlElement new.
+	element clipChildren: false.
+	element layout: BlLinearLayout horizontal.
+	element
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
+	element padding: (BlInsets all: 0).
+	element addChild: self breadcrumb as: #breadcrumb.
+	^ element
+]
+
 { #category : #'initialize-release' }
 GtCoderMethodSourceElement >> initialize [
 	super initialize.
@@ -58,7 +73,7 @@ GtCoderMethodSourceElement >> methodCoder [
 { #category : #accessing }
 GtCoderMethodSourceElement >> methodCoder: aMethodCoder [
 	methodCoder := aMethodCoder.
-	self addChild: self breadcrumb.
+	self addChild: self headerElement as: #header.
 	self addChild: self editorElement as: #bodyElement.
 	self actionsElement ifNotNil: [ :el | self addChild: el ]
 ]

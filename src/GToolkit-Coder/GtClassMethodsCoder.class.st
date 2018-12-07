@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'class',
 		'object',
-		'filteredClasses'
+		'filteredClasses',
+		'categoryFilter'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -29,9 +30,7 @@ GtClassMethodsCoder >> addMethodsForClass: aClass [
 		ifTrue: [ ^ self ].
 	filteredClasses add: aClass.
 	self updateMethods.
-	aClass selectors do: [ :each | methodCoders add: (self newMethodCoderFor: aClass >> each) ].
-	methodCoders sort: [ :a :b | self shouldSort: a before: b ].
-	self announce: (GtCoderMethodsListChanged new coder: self)
+	self updateCoders
 ]
 
 { #category : #actions }
@@ -45,8 +44,34 @@ GtClassMethodsCoder >> addNewCoder [
 ]
 
 { #category : #accessing }
+GtClassMethodsCoder >> categoryFilter [
+	^ categoryFilter
+]
+
+{ #category : #accessing }
+GtClassMethodsCoder >> categoryFilter: aSymbol [
+	categoryFilter := aSymbol.
+	self updateMethods.
+	self updateCoders
+]
+
+{ #category : #accessing }
 GtClassMethodsCoder >> classOrMetaClass [
 	^ class
+]
+
+{ #category : #private }
+GtClassMethodsCoder >> classesFilter [
+	| filter |
+	filter := nil.
+	filteredClasses
+		do: [ :each | 
+			| classFilter |
+			classFilter := GtCoderBehaviorMethodFilter forClass: each.
+			filter := filter isNil
+				ifTrue: [ classFilter ]
+				ifFalse: [ filter | classFilter ] ].
+	^ filter
 ]
 
 { #category : #testing }
@@ -81,6 +106,13 @@ GtClassMethodsCoder >> initialize [
 { #category : #elements }
 GtClassMethodsCoder >> look [
 	^ GtMetaMethodsCoderLook new methodsCoder: self
+]
+
+{ #category : #elements }
+GtClassMethodsCoder >> methodCoderLook [
+	^ GtMethodCoderCategoryLook new
+		methodsCoder: self;
+		yourself
 ]
 
 { #category : #private }
@@ -128,15 +160,24 @@ GtClassMethodsCoder >> shouldSort: a before: b [
 ]
 
 { #category : #private }
-GtClassMethodsCoder >> updateMethods [
-	| filter |
-	filter := nil.
-	filteredClasses
+GtClassMethodsCoder >> updateCoders [
+	| newCoders |
+	newCoders := methodCoders select: [ :each | each isModified ].
+	methods
 		do: [ :each | 
-			| classFilter |
-			classFilter := GtCoderBehaviorMethodFilter forClass: each.
-			filter := filter isNil
-				ifTrue: [ classFilter ]
-				ifFalse: [ filter | classFilter ] ].
-	methods filter: filter
+			(newCoders anySatisfy: [ :coder | coder isForMethod: each ])
+				ifFalse:
+					[ newCoders add: (methodCoders detect: [ :coder | coder isForMethod: each ] ifNone: [ self newMethodCoderFor: each ]) ] ].
+	methodCoders := newCoders.
+	methodCoders sort: [ :a :b | self shouldSort: a before: b ].
+	self announce: (GtCoderMethodsListChanged new coder: self)
+]
+
+{ #category : #private }
+GtClassMethodsCoder >> updateMethods [
+	methods
+		filter:
+			(self classesFilter
+				ifNotNil:
+					[ :filter | categoryFilter ifNil: [ filter ] ifNotNil: [ :category | filter & (GtCoderMethodCategoryFilter forCategory: category) ] ])
 ]
