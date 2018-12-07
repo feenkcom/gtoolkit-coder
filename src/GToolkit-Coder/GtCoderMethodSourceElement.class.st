@@ -17,6 +17,11 @@ GtCoderMethodSourceElement >> breadcrumb [
 	| breadcrumb |
 	breadcrumb := BrBreadcrumb new.
 	breadcrumb
+		constraintsDo: [ :c | 
+			c frame horizontal alignLeft.
+			c frame vertical alignCenter ].
+	breadcrumb
+		margin: (BlInsets top: 2);
 		look:
 			(BrGlamorousBreadcrumbLook new
 				separator: [ BrLabel new
@@ -47,7 +52,7 @@ GtCoderMethodSourceElement >> headerElement [
 	| element |
 	element := BlElement new.
 	element clipChildren: false.
-	element layout: BlLinearLayout horizontal.
+	element layout: BlFrameLayout new.
 	element
 		constraintsDo: [ :c | 
 			c horizontal matchParent.

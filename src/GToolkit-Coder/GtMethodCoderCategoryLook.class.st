@@ -21,6 +21,9 @@ GtMethodCoderCategoryLook >> initializeLook [
 			| categoryToggle |
 			categoryToggle := BrToggle new
 				margin: (BlInsets all: 0);
+				constraintsDo: [ :c | 
+					c frame horizontal alignRight.
+					c frame vertical alignTop ];
 				activated: methodsCoder categoryFilter = self category;
 				label: ((self category ifNil: [ '' ]) asRopedText attributes: {(BlFontSizeAttribute size: 12)});
 				look: GtCategoryToggleLook;
