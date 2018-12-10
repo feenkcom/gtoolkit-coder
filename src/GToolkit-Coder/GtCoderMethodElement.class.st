@@ -53,10 +53,10 @@ GtCoderMethodElement >> initialize [
 		constraintsDo: [ :c | c ignoreByLayout ];
 		when: BlDoubleClickEvent do: [ self childNamed: #bodyEditor ifFound: [ :anEditor | anEditor constraintsDo: [ :c | c vertical fitContent ] ] ifNone: [  ] ];
 		yourself.
-	shadowLook := BrShadowLook new.
+	shadowLook := BrShadowLook new color: (BrGlamorousColors primaryBorderColor alpha: 0.4).
 	self
 		look:
-			BrGlamorousExpanderLook
+			GtCoderExpanderLook
 				+
 					(BrInteractiveLook new
 						style: [ :aStyler | 

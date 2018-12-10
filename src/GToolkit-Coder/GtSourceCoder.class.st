@@ -36,7 +36,7 @@ GtSourceCoder >> asElement [
 		hMatchParent.
 	expanded
 		ifTrue: [ expander expand ].
-	expander look: BrGlamorousExpanderLook new.
+	expander look: GtCoderExpanderLook new.
 	expander header: [ self collapsedElement ].
 	expander content: [ self sourceElement ].
 	expander margin: (BlInsets all: 8).
