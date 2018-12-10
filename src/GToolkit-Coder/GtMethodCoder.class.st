@@ -6,7 +6,8 @@ Class {
 		'selector',
 		'methodSource',
 		'subCoders',
-		'isBuilt'
+		'isBuilt',
+		'astCache'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -65,8 +66,7 @@ GtMethodCoder >> asElement [
 { #category : #private }
 GtMethodCoder >> buildSource [
 	isBuilt := true.
-	[ | ast text |
-	ast := GtPharoParser parse: methodSource.
+	[ | text |
 	text := methodSource asRopedText.
 	text attributes: self defaultTextAttributes.
 	self sourceEditor text: text ]
@@ -327,7 +327,8 @@ GtMethodCoder >> highlighterFor: anAST [
 GtMethodCoder >> initialize [
 	isBuilt := false.
 	super initialize.
-	methodSource := ''
+	methodSource := ''.
+	astCache := nil -> nil
 ]
 
 { #category : #'initialize-release' }
@@ -440,27 +441,30 @@ GtMethodCoder >> parserStartingState [
 
 { #category : #private }
 GtMethodCoder >> patternSource [
-	| ast |
-	ast := GtPharoParser parseWithErrors: self source.
 	^ String
 		streamContents: [ :stream | 
-			| pattern |
-			pattern := ast pattern.
-			(pattern selectorParts size = 1 and: [ pattern variables isEmpty ])
-				ifTrue: [ stream nextPutAll: pattern selectorParts first source ]
-				ifFalse: [ 1 to: pattern selectorParts size do: [ :i | 
+			| ast selectorParts arguments |
+			ast := self rbAST.
+			selectorParts := ast selectorParts.
+			arguments := ast arguments.
+			(selectorParts size = 1 and: [ arguments isEmpty ])
+				ifTrue: [ stream nextPutAll: selectorParts first ]
+				ifFalse: [ 1 to: selectorParts size do: [ :i | 
 						i = 1
 							ifFalse: [ stream space ].
 						stream
-							nextPutAll: (pattern selectorParts at: i) source;
+							nextPutAll: (selectorParts at: i);
 							space;
-							nextPutAll: (pattern variables at: i) source ] ] ]
+							nextPutAll: (arguments at: i) name ] ] ]
 ]
 
 { #category : #updating }
 GtMethodCoder >> rbAST [
-	^ [ | ast source |
+	| source |
 	source := self newMethodSource.
+	astCache key = source
+		ifTrue: [ ^ astCache value ].
+	^ [ | ast |
 	ast := RBParser parseFaultyMethod: source.
 	ast methodNode
 		compilationContext:
@@ -470,6 +474,7 @@ GtMethodCoder >> rbAST [
 				bindings: Dictionary new;
 				requestor: nil).
 	ast doSemanticAnalysis.
+	astCache := source -> ast.
 	ast ]
 		on: Error
 		do: [ :ex | ex return: nil ]
@@ -578,11 +583,9 @@ GtMethodCoder >> updateAddOns [
 
 { #category : #private }
 GtMethodCoder >> updateCollapsedSource [
-	[ | patternText styler |
+	[ | patternText |
 	patternText := self patternSource asRopedText.
 	patternText attributes: self defaultTextAttributes.
-	styler := self newSourceStyler.
-	styler style: patternText.
 	self collapsedSource: patternText ]
 		on: Error
 		do: [ :ex | super updateCollapsedSource ]
