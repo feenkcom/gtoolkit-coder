@@ -58,8 +58,8 @@ GtPharoSnippetCoder >> initialize [
 { #category : #initialization }
 GtPharoSnippetCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addMainAction: 'Inspect' translated icon: BrGlamorousIcons inspect action: [ :aButton | self runFrom: aButton ].
 	addOns addMainAction: 'Evaluate' translated icon: BrGlamorousIcons play action: [ :aButton | self evaluateAndHighlightAllSource ].
+	addOns addMainAction: 'Inspect' translated icon: BrGlamorousIcons inspect action: [ :aButton | self runFrom: aButton ].
 	addOns clearChanges
 ]
 
