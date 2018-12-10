@@ -66,6 +66,25 @@ GtMetaMethodsCoderLook >> classBreadcrumb [
 	^ scrollable
 ]
 
+{ #category : #initialization }
+GtMetaMethodsCoderLook >> filterElement [
+	| element editor |
+	editor := BrTextEditor new.
+	editor
+		when: BrTextEditorInsertedEvent do: [ :event | self updateFilter: editor text asString ];
+		when: BrTextEditorDeletedEvent do: [ :event | self updateFilter: editor text asString ].
+	element := BrEditorElement new.
+	element editor: editor.
+	element border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1).
+	element
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
+	element margin: (BlInsets left: 10 right: 10).
+	element padding: (BlInsets all: 3).
+	^ element
+]
+
 { #category : #ui }
 GtMetaMethodsCoderLook >> headerElement [
 	| element |
@@ -84,7 +103,8 @@ GtMetaMethodsCoderLook >> headerElement [
 { #category : #initialization }
 GtMetaMethodsCoderLook >> initializeLook [
 	super initializeLook.
-	self widget addChild: self headerElement at: 1
+	self widget addChild: self headerElement at: 1.
+	self widget addChild: self filterElement at: 2
 ]
 
 { #category : #accessing }
@@ -102,4 +122,9 @@ GtMetaMethodsCoderLook >> removeClassFromFilter: aBehavior ifEmpty: aBlock [
 	methodsCoder removeMethodsForClass: aBehavior.
 	methodsCoder hasFilter
 		ifFalse: aBlock
+]
+
+{ #category : #private }
+GtMetaMethodsCoderLook >> updateFilter: aString [
+	methodsCoder implementorsFilter: aString
 ]

@@ -5,7 +5,8 @@ Class {
 		'class',
 		'object',
 		'filteredClasses',
-		'categoryFilter'
+		'categoryFilter',
+		'implementorsFilter'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -97,10 +98,23 @@ GtClassMethodsCoder >> hasFilter [
 	^ filteredClasses notEmpty
 ]
 
+{ #category : #accessing }
+GtClassMethodsCoder >> implementorsFilter [
+	^ implementorsFilter
+]
+
+{ #category : #accessing }
+GtClassMethodsCoder >> implementorsFilter: aString [
+	implementorsFilter := aString.
+	self updateMethods.
+	self updateCoders
+]
+
 { #category : #'initialize-release' }
 GtClassMethodsCoder >> initialize [
 	super initialize.
-	filteredClasses := Set new
+	filteredClasses := Set new.
+	implementorsFilter := ''
 ]
 
 { #category : #elements }
@@ -177,7 +191,6 @@ GtClassMethodsCoder >> updateCoders [
 GtClassMethodsCoder >> updateMethods [
 	methods
 		filter:
-			(self classesFilter
-				ifNotNil:
-					[ :filter | categoryFilter ifNil: [ filter ] ifNotNil: [ :category | filter & (GtCoderMethodCategoryFilter forCategory: category) ] ])
+			(self classesFilter ifNotNil: [ :filter | categoryFilter ifNil: [ filter ] ifNotNil: [ :category | filter & (GtCoderMethodCategoryFilter forCategory: category) ] ])
+				& (GtCoderImplementorPatternFilter pattern: implementorsFilter)
 ]
