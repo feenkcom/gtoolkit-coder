@@ -1,10 +1,15 @@
 Class {
 	#name : #GtSourceReferenceHighlighter,
-	#superclass : #Object,
+	#superclass : #GtCoderBodyStyler,
+	#classVars : [
+		'HighlightAttributes'
+	],
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
-{ #category : #testing }
-GtSourceReferenceHighlighter >> shouldHighlight: aNode [
-	^ self subclassResponsibility
+{ #category : #'class initialization' }
+GtSourceReferenceHighlighter class >> initialize [
+	HighlightAttributes := {(BlTextUnderlineAttribute new
+		paint: BrGlamorousColors textHighlightColor;
+		width: 3)}
 ]

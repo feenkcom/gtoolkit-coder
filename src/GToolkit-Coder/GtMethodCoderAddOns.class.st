@@ -122,7 +122,7 @@ GtMethodCoderAddOns >> removeShortcutsMatching: aBlock [
 { #category : #stylers }
 GtMethodCoderAddOns >> removeStylerOfType: aClass [
 	| styler |
-	styler := stylers detect: [ :each | each class = aClass ] ifNone: [  ].
+	styler := stylers detect: [ :each | each isKindOf: aClass ] ifNone: [  ].
 	styler isNil
 		ifTrue: [ ^ self ].
 	stylers remove: styler.

@@ -11,6 +11,24 @@ GtMethodCoderStylerExamples >> a [
 ]
 
 { #category : #accessing }
+GtMethodCoderStylerExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
+	"test method for highlighting implementors"
+]
+
+{ #category : #accessing }
+GtMethodCoderStylerExamples >> acrossKeywordImplementorPatternHighlighting [
+	<gtExample>
+	| coder element |
+	coder := GtMethodCoder forMethod: self class >> #a:a:a:a:.
+	coder highlighter: (GtImplementorPatternHighlighter forPattern: ':a:').
+	element := coder asElement.
+	coder styleText.
+	self assert: (self hasUnderlineAttributeIn: coder).
+	self assert: (self attributeCountOfType: self unlineAttributeClass in: coder sourceEditor) = 6.
+	^ coder
+]
+
+{ #category : #accessing }
 GtMethodCoderStylerExamples >> addPragmaMethodStyling [
 	<gtExample>
 	| coder |
@@ -23,6 +41,19 @@ GtMethodCoderStylerExamples >> addPragmaMethodStyling [
 	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder).
 	^ coder
+]
+
+{ #category : #accessing }
+GtMethodCoderStylerExamples >> attributeCountOfType: aClass in: aTextEditor [
+	| text iterator count |
+	count := 0.
+	text := aTextEditor text.
+	iterator := text iterator.
+	[ iterator hasNext ]
+		whileTrue: [ (iterator attributes anySatisfy: [ :each | each isKindOf: aClass ])
+				ifTrue: [ count := count + 1 ].
+			iterator next ].
+	^ count
 ]
 
 { #category : #dummies }
@@ -45,19 +76,7 @@ GtMethodCoderStylerExamples >> exampleMethodStyling [
 
 { #category : #accessing }
 GtMethodCoderStylerExamples >> hasAttributeOfType: aClass in: aTextEditor [
-	| text found iterator |
-	text := aTextEditor text.
-	iterator := text iterator.
-	[ iterator hasNext ]
-		whileTrue: [ (iterator attributes anySatisfy: [ :each | each isKindOf: aClass ])
-				ifTrue: [ ^ true ].
-			iterator next ].
-	^ false
-]
-
-{ #category : #accessing }
-GtMethodCoderStylerExamples >> hasCodeReferenceAttributeIn: coder [
-	^ self hasAttributeOfType: BlTextUnderlineAttribute in: coder sourceEditor
+	^ (self attributeCountOfType: aClass in: aTextEditor) > 0
 ]
 
 { #category : #accessing }
@@ -74,9 +93,40 @@ GtMethodCoderStylerExamples >> hasExampleStatusIn: coder [
 	^ sourceAttribute
 ]
 
+{ #category : #accessing }
+GtMethodCoderStylerExamples >> hasUnderlineAttributeIn: coder [
+	^ self hasAttributeOfType: self unlineAttributeClass in: coder sourceEditor
+]
+
+{ #category : #accessing }
+GtMethodCoderStylerExamples >> insideMultipleKeywordImplementorPatternHighlighting [
+	<gtExample>
+	| coder element |
+	coder := GtMethodCoder forMethod: self class >> #a:a:a:a:.
+	coder highlighter: (GtImplementorPatternHighlighter forPattern: 'a:').
+	element := coder asElement.
+	coder styleText.
+	self assert: (self hasUnderlineAttributeIn: coder).
+	self assert: (self attributeCountOfType: self unlineAttributeClass in: coder sourceEditor) = 8.
+	^ coder
+]
+
 { #category : #dummies }
 GtMethodCoderStylerExamples >> notAnExample [
 	^ 42
+]
+
+{ #category : #accessing }
+GtMethodCoderStylerExamples >> printStringImplementorPatternHighlighting [
+	<gtExample>
+	| coder element |
+	coder := GtMethodCoder forMethod: self class >> #printStringReference.
+	coder highlighter: (GtImplementorPatternHighlighter forPattern: 'print').
+	element := coder asElement.
+	coder sourceEditor styleText.
+	self assert: (self hasUnderlineAttributeIn: coder).
+	self assert: (self attributeCountOfType: self unlineAttributeClass in: coder sourceEditor) = 5.
+	^ coder
 ]
 
 { #category : #dummies }
@@ -92,7 +142,7 @@ GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
 	coder highlighter: (GtSelectorReferenceHighlighter forSelector: #printString).
 	element := coder asElement.
 	coder sourceEditor styleText.
-	self assert: (self hasCodeReferenceAttributeIn: coder).
+	self assert: (self hasUnderlineAttributeIn: coder).
 	^ coder
 ]
 
@@ -108,4 +158,9 @@ GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
 	self assert: (self hasExampleExpandAttributeIn: coder) not.
 	self assert: (self hasExampleStatusIn: coder) not.
 	^ coder
+]
+
+{ #category : #accessing }
+GtMethodCoderStylerExamples >> unlineAttributeClass [
+	^ BlTextUnderlineAttribute
 ]

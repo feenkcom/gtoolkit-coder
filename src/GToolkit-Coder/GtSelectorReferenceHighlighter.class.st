@@ -24,11 +24,18 @@ GtSelectorReferenceHighlighter >> selector: aSymbol [
 	selector := aSymbol
 ]
 
-{ #category : #testing }
-GtSelectorReferenceHighlighter >> shouldHighlight: aNode [
-	(aNode isKindOf: RBMessageNode)
-		ifTrue: [ ^ aNode selector = selector ].
-	(aNode isKindOf: RBLiteralValueNode)
-		ifTrue: [ ^ aNode value = selector ].
-	^ false
+{ #category : #visiting }
+GtSelectorReferenceHighlighter >> visitLiteralNode: aNode [
+	super visitLiteralNode: aNode.
+	aNode value = selector
+		ifTrue: [ self styleFrom: aNode start to: aNode stop with: HighlightAttributes ]
+]
+
+{ #category : #visiting }
+GtSelectorReferenceHighlighter >> visitMessageNode: aMessageNode [
+	super visitMessageNode: aMessageNode.
+	aMessageNode selector = selector
+		ifTrue: [ aMessageNode selectorParts
+				with: aMessageNode keywordsPositions
+				do: [ :keyword :position | self styleFrom: position to: position + keyword size - 1 with: HighlightAttributes ] ]
 ]

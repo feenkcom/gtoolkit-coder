@@ -19,7 +19,7 @@ GtCompositeHighlighter >> forHighlighters: aCollection [
 	highlighters := aCollection
 ]
 
-{ #category : #testing }
-GtCompositeHighlighter >> shouldHighlight: aNode [
-	^ highlighters anySatisfy: [ :each | each shouldHighlight: aNode ]
+{ #category : #styling }
+GtCompositeHighlighter >> style: aText ast: ast [
+	highlighters do: [ :each | each style: aText ast: ast ]
 ]

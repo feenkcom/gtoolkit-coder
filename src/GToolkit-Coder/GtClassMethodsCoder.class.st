@@ -175,15 +175,17 @@ GtClassMethodsCoder >> shouldSort: a before: b [
 
 { #category : #private }
 GtClassMethodsCoder >> updateCoders [
-	| newCoders |
+	| newCoders highlighter |
 	newCoders := methodCoders select: [ :each | each isModified ].
 	methods
 		do: [ :each | 
 			(newCoders anySatisfy: [ :coder | coder isForMethod: each ])
-				ifFalse:
-					[ newCoders add: (methodCoders detect: [ :coder | coder isForMethod: each ] ifNone: [ self newMethodCoderFor: each ]) ] ].
+				ifFalse: [ newCoders
+						add: (methodCoders detect: [ :coder | coder isForMethod: each ] ifNone: [ self newMethodCoderFor: each ]) ] ].
 	methodCoders := newCoders.
 	methodCoders sort: [ :a :b | self shouldSort: a before: b ].
+	highlighter := methods highlighter.
+	methodCoders do: [ :each | each highlighter: highlighter ].
 	self announce: (GtCoderMethodsListChanged new coder: self)
 ]
 

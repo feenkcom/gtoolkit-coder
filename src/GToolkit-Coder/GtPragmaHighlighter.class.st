@@ -14,11 +14,6 @@ GtPragmaHighlighter class >> forPragma: aSymbol [
 		yourself
 ]
 
-{ #category : #testing }
-GtPragmaHighlighter >> shouldHighlight: aNode [
-	^ (aNode isKindOf: RBPragmaNode) and: [ aNode selector = symbol ]
-]
-
 { #category : #accessing }
 GtPragmaHighlighter >> symbol [
 	^ symbol
@@ -27,4 +22,11 @@ GtPragmaHighlighter >> symbol [
 { #category : #accessing }
 GtPragmaHighlighter >> symbol: aSymbol [
 	symbol := aSymbol
+]
+
+{ #category : #visiting }
+GtPragmaHighlighter >> visitPragmaNode: aNode [
+	super visitPragmaNode: aNode.
+	aNode selector = symbol
+		ifTrue: [ self styleFrom: aNode start to: aNode stop with: HighlightAttributes ]
 ]

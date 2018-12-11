@@ -20,6 +20,11 @@ GtCoderImplementorsFilter >> gtDisplayOn: stream [
 	stream nextPutAll: self selector printString; nextPutAll: ' implementors'
 ]
 
+{ #category : #accessing }
+GtCoderImplementorsFilter >> highlighter [
+	^ GtImplementorHighlighter forSelector: selector
+]
+
 { #category : #testing }
 GtCoderImplementorsFilter >> includeMethod: aCompiledMethod [
 	^ aCompiledMethod selector = selector

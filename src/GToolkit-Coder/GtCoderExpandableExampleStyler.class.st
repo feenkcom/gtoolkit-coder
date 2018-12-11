@@ -1,8 +1,6 @@
 Class {
 	#name : #GtCoderExpandableExampleStyler,
 	#superclass : #GtCoderBodyStyler,
-	#traits : 'TRBProgramNodeVisitor',
-	#classTraits : 'TRBProgramNodeVisitor classTrait',
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 

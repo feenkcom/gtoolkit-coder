@@ -261,6 +261,11 @@ GtSourceCoder >> initializeShortcuts [
 				action: [ :editorElement | self browseClass: editorElement ])
 ]
 
+{ #category : #testing }
+GtSourceCoder >> isBuilt [
+	^ true
+]
+
 { #category : #'actions - toolbar' }
 GtSourceCoder >> mainActions [
 	"Return a collection of main actions in the method coder, for example save"
@@ -487,6 +492,8 @@ GtSourceCoder >> styleSourceText [
 
 { #category : #updating }
 GtSourceCoder >> styleText [
+	self isBuilt
+		ifFalse: [ ^ self ].
 	self styleSourceText.
 	self styleCollapsedText
 ]

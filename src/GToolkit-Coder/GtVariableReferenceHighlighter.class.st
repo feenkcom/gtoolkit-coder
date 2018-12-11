@@ -14,11 +14,6 @@ GtVariableReferenceHighlighter class >> forVariableName: aString [
 		yourself
 ]
 
-{ #category : #testing }
-GtVariableReferenceHighlighter >> shouldHighlight: aNode [
-	^ (aNode isKindOf: RBVariableNode) and: [ aNode name asString = variableName ]
-]
-
 { #category : #accessing }
 GtVariableReferenceHighlighter >> variableName [
 	^ variableName
@@ -27,4 +22,11 @@ GtVariableReferenceHighlighter >> variableName [
 { #category : #accessing }
 GtVariableReferenceHighlighter >> variableName: anObject [
 	variableName := anObject
+]
+
+{ #category : #visiting }
+GtVariableReferenceHighlighter >> visitVariableNode: aVariableNode [
+	super visitVariableNode: aVariableNode.
+	aVariableNode name asString = variableName
+		ifTrue: [ self styleFrom: aVariableNode start to: aVariableNode stop with: HighlightAttributes ]
 ]

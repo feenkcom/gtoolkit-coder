@@ -311,16 +311,20 @@ GtMethodCoder >> highlighter [
 ]
 
 { #category : #accessing }
-GtMethodCoder >> highlighter: referenceHighlighter [
-	self attributeNamed: #highlighter put: referenceHighlighter
+GtMethodCoder >> highlighter: aHighlighter [
+	self highlighter ~~ aHighlighter
+		ifTrue: [ self attributeNamed: #highlighter put: aHighlighter.
+			isBuilt
+				ifTrue: [ self updateAddOns.
+					self styleText ] ]
 ]
 
 { #category : #'add ons' }
 GtMethodCoder >> highlighterFor: anAST [
 	<gtAstCoderAddOns: 10>
-	self highlighter isNil
-		ifTrue: [ addOns removeStylerOfType: GtCoderReferenceStyler ]
-		ifFalse: [ addOns addStyler: (GtCoderReferenceStyler new highlighter: self highlighter) ]
+	addOns removeStylerOfType: GtSourceReferenceHighlighter.
+	self highlighter notNil
+		ifTrue: [ addOns addStyler: self highlighter ]
 ]
 
 { #category : #'initialize-release' }
@@ -392,6 +396,11 @@ GtMethodCoder >> initializeShortcuts [
 						key: Key f;
 						build);
 				action: [ self format ])
+]
+
+{ #category : #testing }
+GtMethodCoder >> isBuilt [
+	^ isBuilt
 ]
 
 { #category : #testing }

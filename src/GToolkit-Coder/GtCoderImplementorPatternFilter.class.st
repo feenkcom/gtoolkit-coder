@@ -14,6 +14,13 @@ GtCoderImplementorPatternFilter class >> pattern: aString [
 		yourself
 ]
 
+{ #category : #accessing }
+GtCoderImplementorPatternFilter >> highlighter [
+	pattern isEmpty
+		ifTrue: [ ^ super highlighter ].
+	^ GtImplementorPatternHighlighter forPattern: pattern
+]
+
 { #category : #testing }
 GtCoderImplementorPatternFilter >> includeMethod: aCompiledMethod [
 	^ pattern isEmpty or: [ (aCompiledMethod selector asLowercase indexOfSubCollection: pattern asLowercase) > 0 ]
