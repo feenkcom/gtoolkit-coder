@@ -42,7 +42,7 @@ GtCoderMethodElement >> contentElement [
 
 { #category : #initialization }
 GtCoderMethodElement >> initialize [
-	| shadowLook resizer |
+	| resizer |
 	super initialize.
 	self
 		vFitContent;
@@ -53,7 +53,6 @@ GtCoderMethodElement >> initialize [
 		constraintsDo: [ :c | c ignoreByLayout ];
 		when: BlDoubleClickEvent do: [ self childNamed: #bodyEditor ifFound: [ :anEditor | anEditor constraintsDo: [ :c | c vertical fitContent ] ] ifNone: [  ] ];
 		yourself.
-	shadowLook := BrShadowLook new color: (BrGlamorousColors primaryBorderColor alpha: 0.4).
 	self
 		look:
 			GtCoderExpanderLook
@@ -62,14 +61,11 @@ GtCoderMethodElement >> initialize [
 						style: [ :aStyler | 
 							aStyler
 								default: [ resizer removeFromParent.
-									self background: Color transparent.
-									self look remove: shadowLook.
-									"self assert: shadowLook isAttachedToWidget not" ].
+									self background: Color transparent ].
 							aStyler
 								expanded: [ self addChild: resizer.
 									self enqueueTask: (BlTaskAction new action: [ self childNamed: #bodyEditor ifFound: [ :anEditor | resizer target: anEditor ] ifNone: [ resizer target: nil ] ]).
-									self background: Color white.
-									self look add: shadowLook ] ]).
+									self background: Color white ] ]).
 	self
 		addShortcut:
 			(BlShortcut new
