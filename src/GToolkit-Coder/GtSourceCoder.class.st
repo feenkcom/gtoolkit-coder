@@ -116,7 +116,10 @@ GtSourceCoder >> classOrMetaClass [
 
 { #category : #private }
 GtSourceCoder >> clearPreviousEvaluations [
-	self sourceText clearAttributes: [ :each | each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute ].
+	self sourceText
+		clearAttributes: [ :each | 
+			(each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute)
+				or: [ each isKindOf: GtMethodCoderErrorAttribute ] ].
 	self sourceEditor
 		invalidateAll;
 		updateAll

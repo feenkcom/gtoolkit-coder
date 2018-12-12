@@ -23,6 +23,13 @@ GtMethodCoderEvaluationRequester >> correctFrom: fromIndex to: toIndex with: aSt
 ]
 
 { #category : #requester }
+GtMethodCoderEvaluationRequester >> notify: message at: anIndex in: aString [
+	| location |
+	location := anIndex + selectionInterval first - 2.
+	^ super notify: message at: (location max: 1) in: aString
+]
+
+{ #category : #requester }
 GtMethodCoderEvaluationRequester >> selection [
 	^ (coder sourceEditor text from: selectionInterval first to: selectionInterval last) asString
 ]
