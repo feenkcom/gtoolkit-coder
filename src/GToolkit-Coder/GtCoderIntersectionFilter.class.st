@@ -6,7 +6,6 @@ Class {
 
 { #category : #printing }
 GtCoderIntersectionFilter >> gtDisplayOn: stream [
-	<gtExample>
 	left gtDisplayOn: stream.
 	stream nextPutAll: ' & '.
 	right gtDisplayOn: stream.
@@ -19,7 +18,6 @@ GtCoderIntersectionFilter >> includeMethod: aCompiledMethod [
 
 { #category : #printing }
 GtCoderIntersectionFilter >> printOn: stream [
-	<gtExample>
 	left printOn: stream.
 	stream nextPutAll: ' & '.
 	right printOn: stream.

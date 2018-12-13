@@ -16,8 +16,9 @@ GtCoderImplementorsFilter class >> selector: aSymbol [
 
 { #category : #ui }
 GtCoderImplementorsFilter >> gtDisplayOn: stream [
-	<gtExample>
-	stream nextPutAll: self selector printString; nextPutAll: ' implementors'
+	stream
+		nextPutAll: self selector printString;
+		nextPutAll: ' implementors'
 ]
 
 { #category : #accessing }
@@ -32,7 +33,6 @@ GtCoderImplementorsFilter >> includeMethod: aCompiledMethod [
 
 { #category : #ui }
 GtCoderImplementorsFilter >> printOn: stream [
-	<gtExample>
 	stream 
 		nextPutAll: self selector printString; 
 		nextPutAll: ' gtImplementors'

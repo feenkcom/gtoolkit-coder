@@ -9,7 +9,6 @@ Class {
 
 { #category : #printing }
 GtCoderNegationFilter >> gtDisplayOn: stream [
-	<gtExample>
 	self originalFilter gtDisplayOn: stream.
 	stream nextPutAll: ' not'
 ]
@@ -31,7 +30,6 @@ GtCoderNegationFilter >> originalFilter: anObject [
 
 { #category : #printing }
 GtCoderNegationFilter >> printOn: stream [
-	<gtExample>
 	self originalFilter printOn: stream.
 	stream nextPutAll: ' not'
 ]

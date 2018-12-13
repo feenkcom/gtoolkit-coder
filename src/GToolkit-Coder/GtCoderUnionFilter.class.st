@@ -6,7 +6,6 @@ Class {
 
 { #category : #printing }
 GtCoderUnionFilter >> gtDisplayOn: stream [
-	<gtExample>
 	left gtDisplayOn: stream.
 	stream nextPutAll: ' | '.
 	right gtDisplayOn: stream.
@@ -20,7 +19,6 @@ GtCoderUnionFilter >> includeMethod: aCompiledMethod [
 
 { #category : #printing }
 GtCoderUnionFilter >> printOn: stream [
-	<gtExample>
 	left printOn: stream.
 	stream nextPutAll: ' | '.
 	right printOn: stream.

@@ -191,8 +191,15 @@ GtClassMethodsCoder >> updateCoders [
 
 { #category : #private }
 GtClassMethodsCoder >> updateMethods [
+	| searchFilter |
+	searchFilter := GtCoderImplementorPatternFilter pattern: implementorsFilter.
 	methods
 		filter:
-			(self classesFilter ifNotNil: [ :filter | categoryFilter ifNil: [ filter ] ifNotNil: [ :category | filter & (GtCoderMethodCategoryFilter forCategory: category) ] ])
-				& (GtCoderImplementorPatternFilter pattern: implementorsFilter)
+			((self classesFilter
+				ifNotNil: [ :filter | 
+					categoryFilter
+						ifNil: [ filter ]
+						ifNotNil: [ :category | filter & (GtCoderMethodCategoryFilter forCategory: category) ] ])
+				ifNil: [ searchFilter ]
+				ifNotNil: [ :filter | filter & searchFilter ])
 ]

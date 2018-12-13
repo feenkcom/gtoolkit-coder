@@ -16,7 +16,6 @@ GtCoderPragmasFilter class >> forPragma: aSymbol [
 
 { #category : #printing }
 GtCoderPragmasFilter >> gtDisplayOn: stream [
-	<gtExample>
 	stream 
 		nextPutAll: self symbol printString;
 		nextPutAll: ' pragmas'
@@ -34,7 +33,6 @@ GtCoderPragmasFilter >> includeMethod: aCompiledMethod [
 
 { #category : #printing }
 GtCoderPragmasFilter >> printOn: aStream [
-	<gtExample>
 	aStream 
 		nextPutAll: self symbol printString;
 		nextPutAll: ' gtPragmas'
