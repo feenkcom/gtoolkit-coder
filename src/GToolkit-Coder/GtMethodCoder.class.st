@@ -236,7 +236,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 		and: [ anAST methodNode ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] ifNil: [ false ] ])
 		ifFalse: [ addOns removeStylerOfType: GtCoderExpandableExampleStyler.
 			addOns removeStylerOfType: GtCoderExampleStatusStyler.
-			addOns removeContextAction: 'Run' translated.
+			addOns removeContextAction: 'Example' translated.
 			^ self ].
 	addOns addStyler: GtCoderExpandableExampleStyler new.
 	addOns
@@ -244,7 +244,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 			(GtCoderExampleStatusStyler new
 				coder: self;
 				classOrMetaClass: self classOrMetaClass).
-	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons play action: [ :button | self runFrom: button ]
+	addOns addContextAction: 'Example' translated icon: BrGlamorousIcons play action: [ :button | self runExampleFrom: button ]
 ]
 
 { #category : #examples }
@@ -303,6 +303,17 @@ GtMethodCoder >> gtLiveFor: aView [
 		title: 'Live';
 		priority: 10;
 		stencil: [ self expanded: true ]
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> gtViewAddOnFor: anAST [
+	<gtAstCoderAddOns: 6>
+	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
+		and: [ anAST notNil
+				and: [ anAST methodNode ifNotNil: [ :node | node arguments size = 1 and: [ node pragmas anySatisfy: [ :each | each selector = #gtView ] ] ] ifNil: [ false ] ] ])
+		ifFalse: [ addOns removeContextAction: 'gtView' translated.
+			^ self ].
+	addOns addContextAction: 'gtView' translated icon: BrGlamorousIcons play action: [ :button | self runGtViewFrom: button ]
 ]
 
 { #category : #accessing }
@@ -413,6 +424,32 @@ GtMethodCoder >> isModified [
 	^ methodSource ~= self newMethodSource
 ]
 
+{ #category : #'add ons' }
+GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
+	| variable |
+	aMethodNode arguments size ~= 1
+		ifTrue: [ ^ false ].
+	('paint*With:' match: aMethodNode selector)
+		ifFalse: [ ^ false ].
+	variable := aMethodNode arguments first.
+	aMethodNode
+		nodesDo: [ :each | 
+			(each isMessage and: [ each receiver = variable ])
+				ifTrue: [ (GtMondrian canUnderstand: each selector)
+						ifFalse: [ ^ false ] ] ].
+	^ true
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> mondrianPaintAddOnFor: anAST [
+	<gtAstCoderAddOns: 7>
+	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
+		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | self isMondrianPaintMethod: node ] ifNil: [ false ] ] ])
+		ifFalse: [ addOns removeContextAction: 'Mondrian' translated.
+			^ self ].
+	addOns addContextAction: 'Mondrian' translated icon: BrGlamorousIcons play action: [ :button | self runMondrianPaintFrom: button ]
+]
+
 { #category : #actions }
 GtMethodCoder >> newMethodSource [
 	self ensureBuilt.
@@ -513,7 +550,7 @@ GtMethodCoder >> renameVariableIn: editorElement [
 ]
 
 { #category : #examples }
-GtMethodCoder >> runFrom: anElement [
+GtMethodCoder >> runExampleFrom: anElement [
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
@@ -526,6 +563,49 @@ GtMethodCoder >> runFrom: anElement [
 		fireEvent:
 			(GtPhlowObjectToSpawn new
 				object: self exampleResult returnValue;
+				sourceElement: anElement)
+]
+
+{ #category : #actions }
+GtMethodCoder >> runFrom: anElement [
+	| object |
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	object := self object perform: self selector.
+	anElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: object;
+				sourceElement: anElement)
+]
+
+{ #category : #actions }
+GtMethodCoder >> runGtViewFrom: anElement [
+	| view |
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	view := self object perform: self selector with: GtPhlowEmptyView new.
+	anElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: view;
+				sourceElement: anElement)
+]
+
+{ #category : #actions }
+GtMethodCoder >> runMondrianPaintFrom: anElement [
+	| mondrian |
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	mondrian := GtMondrian new.
+	self object perform: self selector with: mondrian.
+	anElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: mondrian;
 				sourceElement: anElement)
 ]
 
@@ -579,6 +659,16 @@ GtMethodCoder >> stylers [
 { #category : #accessing }
 GtMethodCoder >> subCoders [
 	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> unaryMessageAddOnFor: anAST [
+	<gtAstCoderAddOns: 4>
+	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
+		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
+		ifFalse: [ addOns removeContextAction: 'Run' translated.
+			^ self ].
+	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons play action: [ :button | self runFrom: button ]
 ]
 
 { #category : #updating }
