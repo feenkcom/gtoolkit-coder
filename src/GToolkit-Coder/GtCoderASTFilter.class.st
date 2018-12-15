@@ -41,6 +41,11 @@ GtCoderASTFilter >> computeMessagesFilter [
 	sentMessagesFilter := filters reduce: [ :a :b | a & b ]
 ]
 
+{ #category : #ui }
+GtCoderASTFilter >> gtDisplayOn: stream [
+	self ast gtDisplayOn: stream
+]
+
 { #category : #accessing }
 GtCoderASTFilter >> highlighter [
 	^ GtASTPatternHighlighter ast: ast
