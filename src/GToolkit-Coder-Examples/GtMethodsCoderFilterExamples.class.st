@@ -5,6 +5,15 @@ Class {
 }
 
 { #category : #accessing }
+GtMethodsCoderFilterExamples >> astPatternFilter [
+	<gtExample>
+	| filter |
+	filter := 'filter includeMethod: ``@a' gtASTMatches.
+	self assert: (filter includeMethod: thisContext method).
+	^ filter
+]
+
+{ #category : #accessing }
 GtMethodsCoderFilterExamples >> gtExamplePragmas [
 	<gtExample>
 	| filter |
