@@ -1,12 +1,10 @@
 Class {
 	#name : #GtClassMethodsCoder,
-	#superclass : #GtMethodsCoder,
+	#superclass : #GtFilteredMethodsCoder,
 	#instVars : [
 		'class',
 		'object',
-		'filteredClasses',
-		'categoryFilter',
-		'implementorsFilter'
+		'filteredClasses'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -45,18 +43,6 @@ GtClassMethodsCoder >> addNewCoder [
 ]
 
 { #category : #accessing }
-GtClassMethodsCoder >> categoryFilter [
-	^ categoryFilter
-]
-
-{ #category : #accessing }
-GtClassMethodsCoder >> categoryFilter: aSymbol [
-	categoryFilter := aSymbol.
-	self updateMethods.
-	self updateCoders
-]
-
-{ #category : #accessing }
 GtClassMethodsCoder >> classOrMetaClass [
 	^ class
 ]
@@ -75,9 +61,25 @@ GtClassMethodsCoder >> classesFilter [
 	^ filter
 ]
 
+{ #category : #private }
+GtClassMethodsCoder >> combinedFilter [
+	| combined |
+	combined := super combinedFilter.
+	^ combined isNil
+		ifTrue: [ self classesFilter ]
+		ifFalse: [ self classesFilter ifNil: [ nil ] ifNotNil: [ :filter | filter & combined ] ]
+]
+
 { #category : #testing }
 GtClassMethodsCoder >> filteredClass: aBehavior [
 	^ filteredClasses includes: aBehavior
+]
+
+{ #category : #private }
+GtClassMethodsCoder >> filters [
+	^ {self classesFilter.
+	self categoryFilter.
+	self implementorsFilter}
 ]
 
 { #category : #'initialize-release' }
@@ -98,35 +100,15 @@ GtClassMethodsCoder >> hasFilter [
 	^ filteredClasses notEmpty
 ]
 
-{ #category : #accessing }
-GtClassMethodsCoder >> implementorsFilter [
-	^ implementorsFilter
-]
-
-{ #category : #accessing }
-GtClassMethodsCoder >> implementorsFilter: aString [
-	implementorsFilter := aString.
-	self updateMethods.
-	self updateCoders
-]
-
 { #category : #'initialize-release' }
 GtClassMethodsCoder >> initialize [
 	super initialize.
-	filteredClasses := Set new.
-	implementorsFilter := ''
+	filteredClasses := Set new
 ]
 
 { #category : #elements }
 GtClassMethodsCoder >> look [
-	^ GtMetaMethodsCoderLook new methodsCoder: self
-]
-
-{ #category : #elements }
-GtClassMethodsCoder >> methodCoderLook [
-	^ GtMethodCoderCategoryLook new
-		methodsCoder: self;
-		yourself
+	^ (GtMetaMethodsCoderLook new methodsCoder: self) + super look
 ]
 
 { #category : #private }
@@ -171,35 +153,4 @@ GtClassMethodsCoder >> shouldSort: a before: b [
 	a selector > b selector
 		ifTrue: [ ^ false ].
 	^ a classOrMetaClass allSuperclasses size >= b classOrMetaClass allSuperclasses size
-]
-
-{ #category : #private }
-GtClassMethodsCoder >> updateCoders [
-	| newCoders highlighter |
-	newCoders := methodCoders select: [ :each | each isModified ].
-	methods
-		do: [ :each | 
-			(newCoders anySatisfy: [ :coder | coder isForMethod: each ])
-				ifFalse: [ newCoders
-						add: (methodCoders detect: [ :coder | coder isForMethod: each ] ifNone: [ self newMethodCoderFor: each ]) ] ].
-	methodCoders := newCoders.
-	methodCoders sort: [ :a :b | self shouldSort: a before: b ].
-	highlighter := methods highlighter.
-	methodCoders do: [ :each | each highlighter: highlighter ].
-	self announce: (GtCoderMethodsListChanged new coder: self)
-]
-
-{ #category : #private }
-GtClassMethodsCoder >> updateMethods [
-	| searchFilter |
-	searchFilter := GtCoderImplementorPatternFilter pattern: implementorsFilter.
-	methods
-		filter:
-			((self classesFilter
-				ifNotNil: [ :filter | 
-					categoryFilter
-						ifNil: [ filter ]
-						ifNotNil: [ :category | filter & (GtCoderMethodCategoryFilter forCategory: category) ] ])
-				ifNil: [ searchFilter ]
-				ifNotNil: [ :filter | filter & searchFilter ])
 ]

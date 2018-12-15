@@ -24,11 +24,11 @@ GtMethodCoderCategoryLook >> initializeLook [
 				constraintsDo: [ :c | 
 					c frame horizontal alignRight.
 					c frame vertical alignTop ];
-				activated: methodsCoder categoryFilter = self category;
+				activated: methodsCoder categoryFilterString = self category;
 				label: ((self category ifNil: [ '' ]) asRopedText attributes: {(BlFontSizeAttribute size: 12)});
 				look: GtCategoryToggleLook;
-				when: BrToggleActivatedEvent do: [ :anEvent | methodsCoder categoryFilter: self category ];
-				when: BrToggleDeactivatedEvent do: [ :anEvent | methodsCoder categoryFilter: nil ].
+				when: BrToggleActivatedEvent do: [ :anEvent | methodsCoder categoryFilterString: self category ];
+				when: BrToggleDeactivatedEvent do: [ :anEvent | methodsCoder categoryFilterString: nil ].
 			header addChild: categoryToggle ]
 		ifNone: [  ]
 ]
