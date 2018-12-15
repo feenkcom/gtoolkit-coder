@@ -50,6 +50,15 @@ GtMethodsCoderFilterExamples >> negatedReferencesToSampleB [
 ]
 
 { #category : #accessing }
+GtMethodsCoderFilterExamples >> packagePatternFilter [
+	<gtExample>
+	| filter |
+	filter := 'coder-examples' gtPackageMatches.
+	self assert: (filter includeMethod: thisContext method).
+	^ filter
+]
+
+{ #category : #accessing }
 GtMethodsCoderFilterExamples >> referencesToSampleB [
 	<gtExample>
 	| filter |

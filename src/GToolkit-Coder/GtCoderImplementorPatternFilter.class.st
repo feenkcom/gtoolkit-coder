@@ -14,6 +14,13 @@ GtCoderImplementorPatternFilter class >> pattern: aString [
 		yourself
 ]
 
+{ #category : #printing }
+GtCoderImplementorPatternFilter >> gtDisplayOn: stream [
+	stream
+		nextPutAll: self pattern printString;
+		nextPutAll: ' implementors matching'
+]
+
 { #category : #accessing }
 GtCoderImplementorPatternFilter >> highlighter [
 	pattern isEmpty
