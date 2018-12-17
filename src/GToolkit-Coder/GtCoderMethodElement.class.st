@@ -55,7 +55,14 @@ GtCoderMethodElement >> initialize [
 		yourself.
 	self
 		look:
-			GtCoderExpanderLook
+			(GtCoderExpanderLook new
+				borderWidth: 0;
+				padding:
+					(BlInsets
+						top: 1
+						left: 10
+						bottom: 3
+						right: 10))
 				+
 					(BrInteractiveLook new
 						style: [ :aStyler | 
