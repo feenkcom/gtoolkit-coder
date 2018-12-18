@@ -63,6 +63,18 @@ GtMethodContextCoder >> currentContext [
 	^ self context
 ]
 
+{ #category : #elements }
+GtMethodContextCoder >> elementClass [
+	^ GtCoderContextElement
+]
+
+{ #category : #accessing }
+GtMethodContextCoder >> instanceVariableNamesAndValuesDo: aBlock [
+	| receiver |
+	receiver := self receiver.
+	receiver class allInstVarNames doWithIndex: [ :each :i | aBlock value: each value: (receiver instVarAt: i) ]
+]
+
 { #category : #'debugger access' }
 GtMethodContextCoder >> interruptedContext [
 	^ self session context
@@ -71,6 +83,11 @@ GtMethodContextCoder >> interruptedContext [
 { #category : #testing }
 GtMethodContextCoder >> isDead [
 	^ context isDead
+]
+
+{ #category : #accessing }
+GtMethodContextCoder >> receiver [
+	^ self context receiver
 ]
 
 { #category : #'debugger access' }
@@ -86,6 +103,29 @@ GtMethodContextCoder >> session: anObject [
 { #category : #private }
 GtMethodContextCoder >> stackDebuggingActionsPragmas [
 	^ #(gt2StackDebuggingAction)
+]
+
+{ #category : #accessing }
+GtMethodContextCoder >> stackVariableNamesAndValuesDo: aBlock [
+	| stackPosition |
+	self context stackPtr isNil
+		ifTrue: [ ^ self ].
+	stackPosition := 0.
+	self context stackPtr to: self context numTemps + 1 by: -1 do: [ :i | 
+		aBlock
+			value:
+				'stack top'
+					,
+						(stackPosition > 0
+							ifTrue: [ ' - ' , stackPosition printString ]
+							ifFalse: [ '' ])
+			value: (self context at: i).
+		stackPosition := stackPosition + 1 ]
+]
+
+{ #category : #accessing }
+GtMethodContextCoder >> tempNamesAndValuesDo: aBlock [
+	self context tempNames doWithIndex: [ :each :i | aBlock value: each value: (self context namedTempAt: i) ]
 ]
 
 { #category : #private }

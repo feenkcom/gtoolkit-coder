@@ -29,6 +29,12 @@ GtMethodsCoderExamples >> errorReferencesCoder [
 ]
 
 { #category : #accessing }
+GtMethodsCoderExamples >> exceptionProcessCoderExample [
+	<gtExample>
+	^ GtProcessCoder forProcess: self suspendedErrorProcess
+]
+
+{ #category : #accessing }
 GtMethodsCoderExamples >> factorialExample [
 	<gtExample>
 	^ GtProcessCoder forProcess: self suspendedFactorialProcess
@@ -89,6 +95,24 @@ GtMethodsCoderExamples >> printStringFilter [
 GtMethodsCoderExamples >> selectFilter [
 	<gtExample>
 	^ self doFilter select: [ :each | (each methodClass includesBehavior: Collection) not ]
+]
+
+{ #category : #accessing }
+GtMethodsCoderExamples >> suspendedErrorProcess [
+	<gtExample>
+	| process exception |
+	process := [ [ (RBParser parseRewriteExpression: '`{:node | 42 error: 7 error: node + 1}')
+		match: thisContext method ast
+		inContext: Dictionary new ]
+		on: Error
+		do: [ :ex | 
+			exception := ex.
+			ex freeze.
+			process suspend ] ] newProcess.
+	process priority: Processor activePriority - 1.
+	process resume.
+	[ exception isNil ] whileTrue: [ (Delay forMilliseconds: 1) wait ].
+	^ process
 ]
 
 { #category : #accessing }

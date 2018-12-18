@@ -60,7 +60,7 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 { #category : #elements }
 GtMethodCoder >> asElement [
 	self ensureBuilt.
-	^ GtCoderMethodElement new methodCoder: self
+	^ self elementClass new methodCoder: self
 ]
 
 { #category : #private }
@@ -182,6 +182,11 @@ GtMethodCoder >> doItSelection [
 	source isNil
 		ifTrue: [ ^ self ].
 	self evaluateSource: source
+]
+
+{ #category : #elements }
+GtMethodCoder >> elementClass [
+	^ GtCoderMethodElement
 ]
 
 { #category : #private }
