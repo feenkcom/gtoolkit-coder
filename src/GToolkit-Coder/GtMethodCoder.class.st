@@ -60,7 +60,7 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 { #category : #elements }
 GtMethodCoder >> asElement [
 	self ensureBuilt.
-	^ self elementClass new methodCoder: self
+	^ GtCoderMethodElement new methodCoder: self
 ]
 
 { #category : #private }
@@ -104,6 +104,11 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 { #category : #private }
 GtMethodCoder >> clearPatternSyntaxErrors [
 	self collapsedText clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+]
+
+{ #category : #elements }
+GtMethodCoder >> coderLook [
+	^ nil
 ]
 
 { #category : #private }
@@ -182,11 +187,6 @@ GtMethodCoder >> doItSelection [
 	source isNil
 		ifTrue: [ ^ self ].
 	self evaluateSource: source
-]
-
-{ #category : #elements }
-GtMethodCoder >> elementClass [
-	^ GtCoderMethodElement
 ]
 
 { #category : #private }
@@ -426,7 +426,7 @@ GtMethodCoder >> isForMethod: aCompiledMethod [
 
 { #category : #testing }
 GtMethodCoder >> isModified [
-	^ methodSource ~= self newMethodSource
+	^ isBuilt and: [ methodSource ~= self newMethodSource ]
 ]
 
 { #category : #'add ons' }

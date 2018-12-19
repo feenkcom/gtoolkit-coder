@@ -33,6 +33,11 @@ GtMethodContextCoder >> close [
 	self updateDebugger
 ]
 
+{ #category : #elements }
+GtMethodContextCoder >> coderLook [
+	^ GtContextCoderVariableLook new methodCoder: self
+]
+
 { #category : #accessing }
 GtMethodContextCoder >> context [
 	^ context
@@ -61,11 +66,6 @@ GtMethodContextCoder >> contextActions [
 { #category : #'debugger access' }
 GtMethodContextCoder >> currentContext [
 	^ self context
-]
-
-{ #category : #elements }
-GtMethodContextCoder >> elementClass [
-	^ GtCoderContextElement
 ]
 
 { #category : #accessing }

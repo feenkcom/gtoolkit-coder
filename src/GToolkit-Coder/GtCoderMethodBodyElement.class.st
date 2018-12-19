@@ -18,7 +18,13 @@ GtCoderMethodBodyElement >> actionsElement [
 
 { #category : #initialization }
 GtCoderMethodBodyElement >> editorElement [
-	| anEditorElement |
+	| element anEditorElement |
+	element := BlElement new.
+	element layout: BlLinearLayout horizontal.
+	element
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
 	anEditorElement := BrEditorElement new.
 	anEditorElement
 		constraintsDo: [ :c | 
@@ -27,5 +33,6 @@ GtCoderMethodBodyElement >> editorElement [
 	anEditorElement editor: methodCoder sourceEditor.
 	methodCoder addShortcutsTo: anEditorElement.
 	(GtCompletionController on: anEditorElement strategy: methodCoder newCompletionStrategy) install.
-	^ anEditorElement
+	element addChild: anEditorElement.
+	^ element
 ]
