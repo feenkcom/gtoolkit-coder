@@ -35,7 +35,9 @@ GtMethodContextCoder >> close [
 
 { #category : #elements }
 GtMethodContextCoder >> coderLook [
-	^ GtContextCoderVariableLook new methodCoder: self
+	^ super coderLook
+	"^ GtContextCoderDropDownVariableLook new methodCoder: self"
+	"^ GtContextCoderVariableLook new methodCoder: self"
 ]
 
 { #category : #accessing }
@@ -66,6 +68,12 @@ GtMethodContextCoder >> contextActions [
 { #category : #'debugger access' }
 GtMethodContextCoder >> currentContext [
 	^ self context
+]
+
+{ #category : #'initialize-release' }
+GtMethodContextCoder >> initializeAddOns [
+	super initializeAddOns.
+	addOns addStyler: (GtCoderContextVariableStyler new methodCoder: self)
 ]
 
 { #category : #accessing }
