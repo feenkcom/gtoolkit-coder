@@ -43,7 +43,7 @@ GtProcessCoder >> updateCoders [
 			newCoders := OrderedCollection new.
 			[ context notNil and: [ context ~~ firstContext ] ]
 				whileTrue: [ coder := GtMethodContextCoder forContext: context session: session.
-					coder announcer when: GtCoderRefreshStackAnnouncement do: [ :event | self updateCoders ].
+					coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateCoders to: self.
 					newCoders add: coder.
 					context := context sender ].
 			methodCoders addAllFirst: newCoders.
