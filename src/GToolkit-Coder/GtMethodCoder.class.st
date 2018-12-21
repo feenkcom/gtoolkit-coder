@@ -93,7 +93,7 @@ GtMethodCoder >> changeManager [
 
 { #category : #accessing }
 GtMethodCoder >> classOrMetaClass [
-	^ class
+	^ class ifNil: [ super classOrMetaClass ]
 ]
 
 { #category : #accessing }
@@ -160,66 +160,10 @@ GtMethodCoder >> compiledMethod [
 ]
 
 { #category : #private }
-GtMethodCoder >> context [
-	^ nil
-]
-
-{ #category : #actions }
-GtMethodCoder >> doItAndGoSelection: editorElement [
-	| source value |
-	source := self selectedSource.
-	source isNil
-		ifTrue: [ ^ self ].
-	value := self evaluateSource: source.
-	value == self
-		ifTrue: [ ^ self ].
-	editorElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: value;
-				sourceElement: editorElement)
-]
-
-{ #category : #actions }
-GtMethodCoder >> doItSelection [
-	| source |
-	source := self selectedSource.
-	source isNil
-		ifTrue: [ ^ self ].
-	self evaluateSource: source
-]
-
-{ #category : #private }
 GtMethodCoder >> ensureBuilt [
 	isBuilt
 		ifTrue: [ ^ self ].
 	self buildSource
-]
-
-{ #category : #private }
-GtMethodCoder >> evaluateSource: aString [
-	| value interval |
-	self clearPreviousEvaluations.
-	value := self classOrMetaClass compiler
-		requestor: self evaluationRequester;
-		source: aString;
-		receiver: self object;
-		context: self context;
-		failBlock: [ ^ self ];
-		evaluate.
-	interval := self selectedSourceInterval.
-	self sourceEditor text
-		attributes:
-			{(GtPlaygroundEvaluatedCodeButtonAttribute new
-				beNotOverwritableByStyler;
-				result: value;
-				paint: (Color fromHexString: #'90CAF9'))}
-		from: interval last
-		to: interval last.
-	self sourceEditor
-		invalidateAll;
-		updateAll.
-	^ value
 ]
 
 { #category : #examples }
@@ -475,16 +419,6 @@ GtMethodCoder >> newSourceStyler [
 	^ GtCoderTextStyler forCoder: self
 ]
 
-{ #category : #accessing }
-GtMethodCoder >> object [
-	^ self attributeNamed: #object
-]
-
-{ #category : #accessing }
-GtMethodCoder >> object: anObject [
-	self attributeNamed: #object put: anObject
-]
-
 { #category : #private }
 GtMethodCoder >> parserStartingState [
 	^ GtPharoParser startingStateForMethod
@@ -617,12 +551,6 @@ GtMethodCoder >> runMondrianPaintFrom: anElement [
 { #category : #actions }
 GtMethodCoder >> save [
 	^ self validateSyntax and: [ self compile ]
-]
-
-{ #category : #private }
-GtMethodCoder >> selectedSource [
-	self selectedSourceInterval ifNotNil: [ :interval | ^ (self sourceEditor text from: interval first to: interval last) asString ].
-	^ nil
 ]
 
 { #category : #accessing }

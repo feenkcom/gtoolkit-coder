@@ -10,7 +10,7 @@ Class {
 { #category : #accessing }
 GtMethodCoderEvaluationRequester >> coder: aCoder [
 	super coder: aCoder.
-	aCoder sourceEditor selection do: [ :each | selectionInterval := each from + 1 to: each to ]
+	selectionInterval := aCoder selectedSourceInterval
 ]
 
 { #category : #requester }
@@ -31,7 +31,7 @@ GtMethodCoderEvaluationRequester >> notify: message at: anIndex in: aString [
 
 { #category : #requester }
 GtMethodCoderEvaluationRequester >> selection [
-	^ (coder sourceEditor text from: selectionInterval first to: selectionInterval last) asString
+	^ coder source copyFrom: selectionInterval first to: selectionInterval last
 ]
 
 { #category : #requester }
