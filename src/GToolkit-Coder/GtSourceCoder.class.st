@@ -227,7 +227,7 @@ GtSourceCoder >> doItSelection [
 	source := self selectedSource.
 	source isNil
 		ifTrue: [ ^ self ].
-	self evaluateSource: source
+	^ self evaluateSource: source
 ]
 
 { #category : #private }
