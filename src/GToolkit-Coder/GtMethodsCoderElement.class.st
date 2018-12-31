@@ -8,7 +8,7 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
-{ #category : #private }
+{ #category : #ui }
 GtMethodsCoderElement >> buildElement [
 	self layout: BlLinearLayout vertical.
 	self
@@ -17,6 +17,11 @@ GtMethodsCoderElement >> buildElement [
 			c vertical matchParent ].
 	self addChild: self methodsListElement as: #methodsList.
 	methodsCoder look ifNotNil: [ :look | self look: look ]
+]
+
+{ #category : #ui }
+GtMethodsCoderElement >> buildElementForCoder: aMethodCoder [
+	^ aMethodCoder asElement
 ]
 
 { #category : #accessing }
@@ -37,7 +42,7 @@ GtMethodsCoderElement >> methodsCoder: aMethodsCoder [
 { #category : #ui }
 GtMethodsCoderElement >> methodsListElement [
 	listElement := BrSimpleList new.
-	listElement stencil: [ :each | each asElement ].
+	listElement stencil: [ :each | self buildElementForCoder: each ].
 	listElement padding: (BlInsets all: 10).
 	listElement
 		constraintsDo: [ :c | 

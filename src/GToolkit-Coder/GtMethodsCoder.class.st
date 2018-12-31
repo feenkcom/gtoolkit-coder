@@ -25,7 +25,7 @@ GtMethodsCoder >> announcer [
 
 { #category : #elements }
 GtMethodsCoder >> asElement [
-	^ GtMethodsCoderElement new
+	^ self elementClass new
 		methodsCoder: self;
 		yourself
 ]
@@ -33,6 +33,11 @@ GtMethodsCoder >> asElement [
 { #category : #accessing }
 GtMethodsCoder >> coders [
 	^ methodCoders
+]
+
+{ #category : #elements }
+GtMethodsCoder >> elementClass [
+	^ GtMethodsCoderElement
 ]
 
 { #category : #'initialize-release' }

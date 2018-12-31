@@ -14,6 +14,11 @@ GtProcessCoder class >> forProcess: aProcess [
 		yourself
 ]
 
+{ #category : #elements }
+GtProcessCoder >> elementClass [
+	^ GtProcessCoderElement
+]
+
 { #category : #'initialize-release' }
 GtProcessCoder >> forProcess: aProcess [
 	session := DebugSession named: 'Debug ' , aProcess name on: aProcess startedAt: aProcess suspendedContext.
@@ -29,6 +34,13 @@ GtProcessCoder >> initialize [
 { #category : #testing }
 GtProcessCoder >> isSuspended [
 	^ session process notNil and: [ session process isSuspended and: [ session process isTerminating not and: [ session process isTerminated not ] ] ]
+]
+
+{ #category : #elements }
+GtProcessCoder >> look [
+	^ GtProcessCoderLook new
+		methodsCoder: self;
+		yourself
 ]
 
 { #category : #updating }
