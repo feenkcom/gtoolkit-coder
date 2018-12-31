@@ -41,6 +41,11 @@ GtMethodContextCoder >> coderLook [
 ]
 
 { #category : #accessing }
+GtMethodContextCoder >> compiledMethod [
+	^ super compiledMethod ifNil: [ self context method ]
+]
+
+{ #category : #accessing }
 GtMethodContextCoder >> context [
 	^ context
 ]

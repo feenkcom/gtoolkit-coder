@@ -5,10 +5,23 @@ Class {
 		'activeCoder',
 		'contextVariablesElement',
 		'watchVariablesElement',
-		'watchList'
+		'watchExpressions'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
+
+{ #category : #private }
+GtProcessCoderElement >> addMethodWatchExpressionFrom: aMethodCoder [
+	GtWatchExpression addExpression: aMethodCoder selectedSource for: aMethodCoder compiledMethod.
+	self updateWatchExpressions
+]
+
+{ #category : #private }
+GtProcessCoderElement >> addWatchExpressionFrom: aMethodCoder [
+	(watchExpressions at: aMethodCoder ifAbsentPut: [ OrderedCollection new ])
+		add: (GtWatchExpression new expression: aMethodCoder selectedSource).
+	self updateWatchExpressions
+]
 
 { #category : #ui }
 GtProcessCoderElement >> buildElement [
@@ -20,6 +33,24 @@ GtProcessCoderElement >> buildElement [
 { #category : #ui }
 GtProcessCoderElement >> buildElementForCoder: aMethodCoder [
 	| element |
+	aMethodCoder addOns
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key w;
+						build);
+				action: [ self addWatchExpressionFrom: aMethodCoder ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						shift;
+						key: Key w;
+						build);
+				action: [ self addMethodWatchExpressionFrom: aMethodCoder ]).
 	element := super buildElementForCoder: aMethodCoder.
 	element when: BlFocusInEvent do: [ :event | self focusedCoder: aMethodCoder in: element ].
 	^ element
@@ -43,15 +74,6 @@ GtProcessCoderElement >> contextVariables [
 GtProcessCoderElement >> contextVariablesElement [
 	contextVariablesElement := self variablesListElement.
 	contextVariablesElement display: self contextVariables.
-	contextVariablesElement
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key w;
-						build);
-				action: [ :aShortcut | self halt ]).
 	^ contextVariablesElement
 ]
 
@@ -59,6 +81,12 @@ GtProcessCoderElement >> contextVariablesElement [
 GtProcessCoderElement >> focusedCoder: aCoder in: anElement [
 	activeCoder := aCoder.
 	self updateVariables
+]
+
+{ #category : #'initialize-release' }
+GtProcessCoderElement >> initialize [
+	super initialize.
+	watchExpressions := WeakKeyDictionary new
 ]
 
 { #category : #private }
@@ -71,6 +99,11 @@ GtProcessCoderElement >> updateList [
 GtProcessCoderElement >> updateVariables [
 	contextVariablesElement notNil
 		ifTrue: [ contextVariablesElement display: self contextVariables ].
+	self updateWatchExpressions
+]
+
+{ #category : #private }
+GtProcessCoderElement >> updateWatchExpressions [
 	watchVariablesElement notNil
 		ifTrue: [ watchVariablesElement display: self watchVariables ]
 ]
@@ -150,8 +183,16 @@ GtProcessCoderElement >> variablesListElement [
 ]
 
 { #category : #private }
+GtProcessCoderElement >> watchExpressionsFor: aMethodCoder [
+	^ (watchExpressions at: aMethodCoder ifAbsent: [ #() ]) , (GtWatchExpression expressionsFor: aMethodCoder compiledMethod) asArray
+]
+
+{ #category : #private }
 GtProcessCoderElement >> watchVariables [
-	^ #()
+	| variables |
+	variables := OrderedCollection new.
+	methodsCoder coders do: [ :each | variables addAll: (self watchVariablesFor: each) ].
+	^ variables
 ]
 
 { #category : #ui }
@@ -159,4 +200,13 @@ GtProcessCoderElement >> watchVariablesElement [
 	watchVariablesElement := self variablesListElement.
 	watchVariablesElement display: self watchVariables.
 	^ watchVariablesElement
+]
+
+{ #category : #private }
+GtProcessCoderElement >> watchVariablesFor: aMethodCoder [
+	^ (self watchExpressionsFor: aMethodCoder)
+		collect: [ :each | 
+			{each expression.
+			'Watch Expression'.
+			(each valueIn: aMethodCoder context)} ]
 ]
