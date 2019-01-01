@@ -299,6 +299,7 @@ GtMethodCoder >> initialize [
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	addOns addStyler: BrRBTextStyler new.
+	addOns addStyler: GtCoderCommentStyler new.
 	addOns addMainAction: 'Save' translated icon: BrGlamorousIcons accept action: [ self save ].
 	addOns clearChanges
 ]
