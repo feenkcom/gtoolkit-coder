@@ -8,11 +8,10 @@ Class {
 
 { #category : #visiting }
 GtCoderCommentStyler >> visitNode: aNode [
-	| source comments |
+	| comments |
 	comments := aNode comments.
 	comments notEmpty
-		ifTrue: [ source := aNode source.
-			comments
+		ifTrue: [ comments
 				do: [ :each | 
 					| comment document |
 					"Hack to make sure we have the same indices for the part we are formatting"
@@ -22,6 +21,6 @@ GtCoderCommentStyler >> visitNode: aNode [
 					document := Gt2Document new.
 					document text: comment.
 					comment := document defaultStyler styledTextFor: comment unstyle.
-					each start + 1 to: each start + comment size do: [ :i | (text from: i to: i) attributes: (comment attributesAt: i) ] ] ].
+					each start + 1 to: comment size do: [ :i | (text from: i to: i) attributes: (comment attributesAt: i) ] ] ].
 	^ super visitNode: aNode
 ]
