@@ -5,6 +5,15 @@ Class {
 }
 
 { #category : #accessing }
+GtMethodsCoderFilterExamples >> astPatternFilter [
+	<gtExample>
+	| filter |
+	filter := 'filter includeMethod: ``@a' gtASTMatches.
+	self assert: (filter includeMethod: thisContext method).
+	^ filter
+]
+
+{ #category : #accessing }
 GtMethodsCoderFilterExamples >> gtExamplePragmas [
 	<gtExample>
 	| filter |
@@ -38,6 +47,15 @@ GtMethodsCoderFilterExamples >> negatedReferencesToSampleB [
 	filter := self referencesToSampleB not.
 	self assert: (filter includeMethod: GtFilterStubSampleA >> #methodReferencingSampleB) not.
 	self assert: (filter includeMethod: GtFilterStubSampleA >> #anotherMethodReferencingSampleBAndSendingNew) not.
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> packagePatternFilter [
+	<gtExample>
+	| filter |
+	filter := 'coder-examples' gtPackageMatches.
+	self assert: (filter includeMethod: thisContext method).
+	^ filter
 ]
 
 { #category : #accessing }

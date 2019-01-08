@@ -24,6 +24,13 @@ GtCoderMethodCategoryFilter >> category: aSymbol [
 	category := aSymbol
 ]
 
+{ #category : #printing }
+GtCoderMethodCategoryFilter >> gtDisplayOn: stream [
+	stream
+		nextPutAll: self category printString;
+		nextPutAll: ' method category'
+]
+
 { #category : #testing }
 GtCoderMethodCategoryFilter >> includeMethod: aCompiledMethod [
 	^ (aCompiledMethod methodClass whichCategoryIncludesSelector: aCompiledMethod selector) = category

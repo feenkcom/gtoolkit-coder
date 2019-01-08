@@ -33,6 +33,11 @@ GtCoderMethodsFilter >> includeMethod: aCompiledMethod [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+GtCoderMethodsFilter >> isEmpty [
+	^ self asCollection isEmpty
+]
+
 { #category : #'logical operations' }
 GtCoderMethodsFilter >> not [
 	^ GtCoderNegationFilter new originalFilter: self

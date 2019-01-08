@@ -93,7 +93,7 @@ GtMethodCoder >> changeManager [
 
 { #category : #accessing }
 GtMethodCoder >> classOrMetaClass [
-	^ class
+	^ class ifNil: [ super classOrMetaClass ]
 ]
 
 { #category : #accessing }
@@ -104,6 +104,11 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 { #category : #private }
 GtMethodCoder >> clearPatternSyntaxErrors [
 	self collapsedText clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+]
+
+{ #category : #elements }
+GtMethodCoder >> coderLook [
+	^ nil
 ]
 
 { #category : #private }
@@ -155,66 +160,10 @@ GtMethodCoder >> compiledMethod [
 ]
 
 { #category : #private }
-GtMethodCoder >> context [
-	^ nil
-]
-
-{ #category : #actions }
-GtMethodCoder >> doItAndGoSelection: editorElement [
-	| source value |
-	source := self selectedSource.
-	source isNil
-		ifTrue: [ ^ self ].
-	value := self evaluateSource: source.
-	value == self
-		ifTrue: [ ^ self ].
-	editorElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: value;
-				sourceElement: editorElement)
-]
-
-{ #category : #actions }
-GtMethodCoder >> doItSelection [
-	| source |
-	source := self selectedSource.
-	source isNil
-		ifTrue: [ ^ self ].
-	self evaluateSource: source
-]
-
-{ #category : #private }
 GtMethodCoder >> ensureBuilt [
 	isBuilt
 		ifTrue: [ ^ self ].
 	self buildSource
-]
-
-{ #category : #private }
-GtMethodCoder >> evaluateSource: aString [
-	| value interval |
-	self clearPreviousEvaluations.
-	value := self classOrMetaClass compiler
-		requestor: self evaluationRequester;
-		source: aString;
-		receiver: self object;
-		context: self context;
-		failBlock: [ ^ self ];
-		evaluate.
-	interval := self selectedSourceInterval.
-	self sourceEditor text
-		attributes:
-			{(GtPlaygroundEvaluatedCodeButtonAttribute new
-				beNotOverwritableByStyler;
-				result: value;
-				paint: (Color fromHexString: #'90CAF9'))}
-		from: interval last
-		to: interval last.
-	self sourceEditor
-		invalidateAll;
-		updateAll.
-	^ value
 ]
 
 { #category : #examples }
@@ -236,7 +185,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 		and: [ anAST methodNode ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] ifNil: [ false ] ])
 		ifFalse: [ addOns removeStylerOfType: GtCoderExpandableExampleStyler.
 			addOns removeStylerOfType: GtCoderExampleStatusStyler.
-			addOns removeContextAction: 'Run' translated.
+			addOns removeContextAction: 'Example' translated.
 			^ self ].
 	addOns addStyler: GtCoderExpandableExampleStyler new.
 	addOns
@@ -244,7 +193,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 			(GtCoderExampleStatusStyler new
 				coder: self;
 				classOrMetaClass: self classOrMetaClass).
-	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons play action: [ :button | self runFrom: button ]
+	addOns addContextAction: 'Example' translated icon: BrGlamorousIcons play action: [ :button | self runExampleFrom: button ]
 ]
 
 { #category : #examples }
@@ -305,6 +254,17 @@ GtMethodCoder >> gtLiveFor: aView [
 		stencil: [ self expanded: true ]
 ]
 
+{ #category : #'add ons' }
+GtMethodCoder >> gtViewAddOnFor: anAST [
+	<gtAstCoderAddOns: 6>
+	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
+		and: [ anAST notNil
+				and: [ anAST methodNode ifNotNil: [ :node | node arguments size = 1 and: [ node pragmas anySatisfy: [ :each | each selector = #gtView ] ] ] ifNil: [ false ] ] ])
+		ifFalse: [ addOns removeContextAction: 'gtView' translated.
+			^ self ].
+	addOns addContextAction: 'gtView' translated icon: BrGlamorousIcons play action: [ :button | self runGtViewFrom: button ]
+]
+
 { #category : #accessing }
 GtMethodCoder >> highlighter [
 	^ self attributeNamed: #highlighter
@@ -339,6 +299,7 @@ GtMethodCoder >> initialize [
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	addOns addStyler: BrRBTextStyler new.
+	addOns addStyler: GtCoderCommentStyler new.
 	addOns addMainAction: 'Save' translated icon: BrGlamorousIcons accept action: [ self save ].
 	addOns clearChanges
 ]
@@ -410,7 +371,33 @@ GtMethodCoder >> isForMethod: aCompiledMethod [
 
 { #category : #testing }
 GtMethodCoder >> isModified [
-	^ methodSource ~= self newMethodSource
+	^ isBuilt and: [ methodSource ~= self newMethodSource ]
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
+	| variable |
+	aMethodNode arguments size ~= 1
+		ifTrue: [ ^ false ].
+	('paint*With:' match: aMethodNode selector)
+		ifFalse: [ ^ false ].
+	variable := aMethodNode arguments first.
+	aMethodNode
+		nodesDo: [ :each | 
+			(each isMessage and: [ each receiver = variable ])
+				ifTrue: [ (GtMondrian canUnderstand: each selector)
+						ifFalse: [ ^ false ] ] ].
+	^ true
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> mondrianPaintAddOnFor: anAST [
+	<gtAstCoderAddOns: 7>
+	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
+		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | self isMondrianPaintMethod: node ] ifNil: [ false ] ] ])
+		ifFalse: [ addOns removeContextAction: 'Mondrian' translated.
+			^ self ].
+	addOns addContextAction: 'Mondrian' translated icon: BrGlamorousIcons play action: [ :button | self runMondrianPaintFrom: button ]
 ]
 
 { #category : #actions }
@@ -431,16 +418,6 @@ GtMethodCoder >> newSourceEditor [
 { #category : #styling }
 GtMethodCoder >> newSourceStyler [
 	^ GtCoderTextStyler forCoder: self
-]
-
-{ #category : #accessing }
-GtMethodCoder >> object [
-	^ self attributeNamed: #object
-]
-
-{ #category : #accessing }
-GtMethodCoder >> object: anObject [
-	self attributeNamed: #object put: anObject
 ]
 
 { #category : #private }
@@ -513,7 +490,7 @@ GtMethodCoder >> renameVariableIn: editorElement [
 ]
 
 { #category : #examples }
-GtMethodCoder >> runFrom: anElement [
+GtMethodCoder >> runExampleFrom: anElement [
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
@@ -530,14 +507,51 @@ GtMethodCoder >> runFrom: anElement [
 ]
 
 { #category : #actions }
-GtMethodCoder >> save [
-	^ self validateSyntax and: [ self compile ]
+GtMethodCoder >> runFrom: anElement [
+	| object |
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	object := self object perform: self selector.
+	anElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: object;
+				sourceElement: anElement)
 ]
 
-{ #category : #private }
-GtMethodCoder >> selectedSource [
-	self selectedSourceInterval ifNotNil: [ :interval | ^ (self sourceEditor text from: interval first to: interval last) asString ].
-	^ nil
+{ #category : #actions }
+GtMethodCoder >> runGtViewFrom: anElement [
+	| view |
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	view := self object perform: self selector with: GtPhlowEmptyView new.
+	anElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: view;
+				sourceElement: anElement)
+]
+
+{ #category : #actions }
+GtMethodCoder >> runMondrianPaintFrom: anElement [
+	| mondrian |
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	mondrian := GtMondrian new.
+	self object perform: self selector with: mondrian.
+	anElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: mondrian;
+				sourceElement: anElement)
+]
+
+{ #category : #actions }
+GtMethodCoder >> save [
+	^ self validateSyntax and: [ self compile ]
 ]
 
 { #category : #accessing }
@@ -579,6 +593,16 @@ GtMethodCoder >> stylers [
 { #category : #accessing }
 GtMethodCoder >> subCoders [
 	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> unaryMessageAddOnFor: anAST [
+	<gtAstCoderAddOns: 4>
+	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
+		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
+		ifFalse: [ addOns removeContextAction: 'Run' translated.
+			^ self ].
+	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons play action: [ :button | self runFrom: button ]
 ]
 
 { #category : #updating }

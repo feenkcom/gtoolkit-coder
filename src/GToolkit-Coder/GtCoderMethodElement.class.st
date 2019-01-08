@@ -28,7 +28,7 @@ GtCoderMethodElement >> collapsedElement [
 
 { #category : #accessing }
 GtCoderMethodElement >> contentElement [
-	| element |
+	| element look |
 	element := GtCoderMethodBodyElement new.
 	element methodCoder: self methodCoder.
 	element margin: (BlInsets left: 5).
@@ -36,7 +36,16 @@ GtCoderMethodElement >> contentElement [
 		constraintsDo: [ :c | 
 			c vertical fitContent.
 			c horizontal matchParent ].
-	methodCoder methodsCoder ifNotNil: [ :coder | coder methodCoderLook ifNotNil: [ :look | element look: look ] ].
+	look := methodCoder coderLook.
+	methodCoder methodsCoder
+		ifNotNil: [ :coder | 
+			coder methodCoderLook
+				ifNotNil: [ :methodsLook | 
+					look := look notNil
+						ifTrue: [ look + methodsLook ]
+						ifFalse: [ methodsLook ] ] ].
+	look notNil
+		ifTrue: [ element look: look ].
 	^ element
 ]
 
@@ -55,7 +64,14 @@ GtCoderMethodElement >> initialize [
 		yourself.
 	self
 		look:
-			GtCoderExpanderLook
+			(GtCoderExpanderLook new
+				borderWidth: 0;
+				padding:
+					(BlInsets
+						top: 1
+						left: 10
+						bottom: 3
+						right: 10))
 				+
 					(BrInteractiveLook new
 						style: [ :aStyler | 

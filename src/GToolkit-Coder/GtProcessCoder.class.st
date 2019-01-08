@@ -14,6 +14,11 @@ GtProcessCoder class >> forProcess: aProcess [
 		yourself
 ]
 
+{ #category : #elements }
+GtProcessCoder >> elementClass [
+	^ GtProcessCoderElement
+]
+
 { #category : #'initialize-release' }
 GtProcessCoder >> forProcess: aProcess [
 	session := DebugSession named: 'Debug ' , aProcess name on: aProcess startedAt: aProcess suspendedContext.
@@ -31,6 +36,13 @@ GtProcessCoder >> isSuspended [
 	^ session process notNil and: [ session process isSuspended and: [ session process isTerminating not and: [ session process isTerminated not ] ] ]
 ]
 
+{ #category : #elements }
+GtProcessCoder >> look [
+	^ GtProcessCoderLook new
+		methodsCoder: self;
+		yourself
+]
+
 { #category : #updating }
 GtProcessCoder >> updateCoders [
 	| context firstContext coder newCoders |
@@ -43,7 +55,7 @@ GtProcessCoder >> updateCoders [
 			newCoders := OrderedCollection new.
 			[ context notNil and: [ context ~~ firstContext ] ]
 				whileTrue: [ coder := GtMethodContextCoder forContext: context session: session.
-					coder announcer when: GtCoderRefreshStackAnnouncement do: [ :event | self updateCoders ].
+					coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateCoders to: self.
 					newCoders add: coder.
 					context := context sender ].
 			methodCoders addAllFirst: newCoders.

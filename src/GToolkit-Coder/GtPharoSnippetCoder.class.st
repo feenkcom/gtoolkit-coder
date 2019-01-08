@@ -18,32 +18,17 @@ GtPharoSnippetCoder >> completionStrategy [
 
 { #category : #actions }
 GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
-	| aValue |
 	self clearPreviousEvaluations.
 	self validateSyntax
 		ifFalse: [ ^ self ].
-	aValue := self evaluateSource: self sourceEditor text asString.
-	self sourceEditor
-		styleTextAndAfterDo: [ self sourceEditor text
-				attributes:
-					{(GtPlaygroundEvaluatedCodeButtonAttribute new
-						result: aValue;
-						paint: (Color fromHexString: #'90CAF9')).
-					(GtPlaygroundEvaluatedCodeHighlightedAttribute new paint: (Color fromHexString: #'90CAF9'))} ].
-	^ aValue
+	^ self evaluateSource: self sourceEditor text asString
 ]
 
-{ #category : #initialization }
-GtPharoSnippetCoder >> evaluateSource: aString [
-	| value |
-	value := self class compiler
-		requestor: self requester;
-		source: aString;
-		receiver: nil;
-		context: nil;
-		failBlock: [ ^ self flag: 'insert error adornment' ];
-		evaluate.
-	^ value
+{ #category : #actions }
+GtPharoSnippetCoder >> evaluationRequester [
+	^ super evaluationRequester
+		bindingStrategy: (GtPlaygroundBindingStrategy new bindings: bindingStrategy bindings);
+		yourself
 ]
 
 { #category : #initialization }
@@ -59,8 +44,38 @@ GtPharoSnippetCoder >> initialize [
 GtPharoSnippetCoder >> initializeAddOns [
 	super initializeAddOns.
 	addOns addMainAction: 'Evaluate' translated icon: BrGlamorousIcons play action: [ :aButton | self evaluateAndHighlightAllSource ].
-	addOns addMainAction: 'Inspect' translated icon: BrGlamorousIcons inspect action: [ :aButton | self runFrom: aButton ].
+	addOns addMainAction: 'Inspect' translated icon: BrGlamorousIcons playinspect action: [ :aButton | self runFrom: aButton ].
 	addOns clearChanges
+]
+
+{ #category : #'initialize-release' }
+GtPharoSnippetCoder >> initializeShortcuts [
+	super initializeShortcuts.
+	addOns
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key d;
+						build);
+				action: [ self doItSelection ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key g;
+						build);
+				action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+		addShortcut:
+			(BlShortcut new
+				combination:
+					(BlKeyCombination builder
+						primary;
+						key: Key p;
+						build);
+				action: [ self printItSelection ])
 ]
 
 { #category : #ui }
@@ -69,6 +84,11 @@ GtPharoSnippetCoder >> newSourceStyler [
 	styler := BrRBTextStyler new.
 	styler workspace: bindingStrategy.
 	^ styler
+]
+
+{ #category : #accessing }
+GtPharoSnippetCoder >> object [
+	^ bindingStrategy bindings receiver
 ]
 
 { #category : #ui }
@@ -90,6 +110,11 @@ GtPharoSnippetCoder >> runFrom: aButton [
 			(GtPhlowObjectToSpawn new
 				object: aValue;
 				sourceElement: aButton)
+]
+
+{ #category : #private }
+GtPharoSnippetCoder >> selectedSourceInterval [
+	^ super selectedSourceInterval ifNil: [ 1 to: self source size ]
 ]
 
 { #category : #accessing }

@@ -28,7 +28,7 @@ GtCoderMethodSourceElement >> breadcrumb [
 						look: (BrGlamorousLabelLook new thin foreground: BrGlamorousColors defaultButtonTextColor);
 						text: '>';
 						margin: (BlInsets left: 5 right: 5) ]).
-	{(methodCoder compiledMethod ifNil: [ methodCoder classOrMetaClass ]) package name.
+	{((methodCoder compiledMethod ifNil: [ methodCoder classOrMetaClass ]) package ifNil: [ '' ] ifNotNil: [ :package | package name ]).
 	methodCoder classOrMetaClass name}
 		do: [ :aLocationStepName | 
 			breadcrumb

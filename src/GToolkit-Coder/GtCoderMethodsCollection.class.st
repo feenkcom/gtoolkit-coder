@@ -67,7 +67,7 @@ GtCoderMethodsCollection >> announcer [
 
 { #category : #converting }
 GtCoderMethodsCollection >> asCoder [
-	^ GtMethodsCoder forMethods: self
+	^ GtFilteredMethodsCoder forMethods: self
 ]
 
 { #category : #converting }
@@ -81,7 +81,12 @@ GtCoderMethodsCollection >> do: aBlock [
 	^ methods do: aBlock
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #accessing }
+GtCoderMethodsCollection >> filter [
+	^ filter
+]
+
+{ #category : #accessing }
 GtCoderMethodsCollection >> filter: coderMethodsFilter [
 	filtered := false.
 	methods := OrderedCollection new.

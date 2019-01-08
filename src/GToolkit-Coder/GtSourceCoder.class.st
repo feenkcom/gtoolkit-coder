@@ -111,15 +111,18 @@ GtSourceCoder >> browseReferences: editorElement [
 
 { #category : #private }
 GtSourceCoder >> classOrMetaClass [
-	^ Object
+	^ self object class
 ]
 
 { #category : #private }
 GtSourceCoder >> clearPreviousEvaluations [
 	self sourceText
 		clearAttributes: [ :each | 
-			(each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute)
-				or: [ each isKindOf: GtMethodCoderErrorAttribute ] ].
+			{GtPlaygroundEvaluatedCodeHighlightedAttribute.
+			GtPlaygroundEvaluatedCodeButtonAttribute.
+			GtCoderPrintStringAttribute.
+			GtPlaygroundDebugExceptionButtonAttribute.
+			GtMethodCoderErrorAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
 	self sourceEditor
 		invalidateAll;
 		updateAll
@@ -173,6 +176,11 @@ GtSourceCoder >> completionStrategy [
 	^ self newCompletionStrategy
 ]
 
+{ #category : #private }
+GtSourceCoder >> context [
+	^ nil
+]
+
 { #category : #'actions - toolbar' }
 GtSourceCoder >> contextActions [
 	"Return a collection of contextual actions in the method coder. They are renderred separately from mainActions"
@@ -195,6 +203,58 @@ GtSourceCoder >> defaultTextAttributes [
 { #category : #private }
 GtSourceCoder >> disabledTextAttributes [
 	^ {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)}
+]
+
+{ #category : #actions }
+GtSourceCoder >> doItAndGoSelection: editorElement [
+	| source value |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self ].
+	value := self evaluateSource: source.
+	value == self
+		ifTrue: [ ^ self ].
+	editorElement
+		fireEvent:
+			(GtPhlowObjectToSpawn new
+				object: value;
+				sourceElement: editorElement)
+]
+
+{ #category : #actions }
+GtSourceCoder >> doItSelection [
+	| source |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self ].
+	^ self evaluateSource: source
+]
+
+{ #category : #private }
+GtSourceCoder >> evaluateSource: aString [
+	^ self evaluateSource: aString showPrintString: false
+]
+
+{ #category : #private }
+GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
+	| value isException |
+	self clearPreviousEvaluations.
+	isException := false.
+	[ value := self classOrMetaClass compiler
+		requestor: self evaluationRequester;
+		source: aString;
+		receiver: self object;
+		context: self context;
+		failBlock: [ ^ self flag: 'insert error adornment' ];
+		evaluate ]
+		on: Error
+		do: [ :ex | 
+			ex freeze.
+			value := ex.
+			isException := true ].
+	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: isException).
+	self styleResult: value isException: isException showPrintString: aBoolean.
+	^ value
 ]
 
 { #category : #actions }
@@ -332,6 +392,16 @@ GtSourceCoder >> nodeAtCursor [
 	^ nil
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> object [
+	^ self attributeNamed: #object
+]
+
+{ #category : #accessing }
+GtSourceCoder >> object: anObject [
+	self attributeNamed: #object put: anObject
+]
+
 { #category : #private }
 GtSourceCoder >> parserStartingState [
 	^ GtPharoParser startingStateForMethodSequence
@@ -344,6 +414,15 @@ GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 	aClass withAllSubclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
 	actions sort: [ :a :b | a arguments first < b arguments first ].
 	^ actions
+]
+
+{ #category : #actions }
+GtSourceCoder >> printItSelection [
+	| source |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self ].
+	^ self evaluateSource: source showPrintString: true
 ]
 
 { #category : #private }
@@ -399,6 +478,12 @@ GtSourceCoder >> reportParseError: aString at: anInteger on: textEditor [
 { #category : #actions }
 GtSourceCoder >> requester [
 	^ GtMethodCoderRequester on: self
+]
+
+{ #category : #private }
+GtSourceCoder >> selectedSource [
+	self selectedSourceInterval ifNotNil: [ :interval | ^ (self sourceEditor text from: interval first to: interval last) asString ].
+	^ nil
 ]
 
 { #category : #private }
@@ -486,6 +571,53 @@ GtSourceCoder >> styleCollapsedText [
 	text := self collapsedEditor text text.
 	self collapsedStyler ifNotNil: [ :styler | styler style: text ].
 	self collapsedEditor text: text readonly
+]
+
+{ #category : #private }
+GtSourceCoder >> styleError: anException at: interval [
+	self sourceEditor text
+		attributes: {(GtPlaygroundEvaluatedCodeHighlightedAttribute new paint: Color red)}
+		from: interval first
+		to: interval last.
+	self sourceEditor text
+		attributes: {(GtPlaygroundDebugExceptionButtonAttribute new result: anException)}
+		from: interval last
+		to: interval last
+]
+
+{ #category : #private }
+GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
+	self sourceEditor text
+		attributes:
+			{(GtPlaygroundEvaluatedCodeButtonAttribute new
+				beNotOverwritableByStyler;
+				result: value;
+				paint: (Color fromHexString: #'90CAF9'))}
+		from: interval last
+		to: interval last.
+	aBoolean
+		ifTrue: [ self sourceEditor text
+				attributes: {(GtCoderPrintStringAttribute forString: value printString)}
+				from: interval last
+				to: interval last ].
+	self sourceEditor text
+		attributes:
+			{(GtPlaygroundEvaluatedCodeHighlightedAttribute new
+				paint: (Color fromHexString: #'90CAF9'))}
+		from: interval first
+		to: interval last
+]
+
+{ #category : #private }
+GtSourceCoder >> styleResult: value isException: isException showPrintString: aBoolean [
+	| interval |
+	interval := self selectedSourceInterval.
+	isException
+		ifTrue: [ self styleError: value at: interval ]
+		ifFalse: [ self styleResult: value at: interval showPrintString: aBoolean ].
+	self sourceEditor
+		invalidateAll;
+		updateAll
 ]
 
 { #category : #private }

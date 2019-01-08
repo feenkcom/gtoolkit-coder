@@ -19,3 +19,8 @@ Symbol >> gtPragmas [
 Symbol >> gtReferences [
 	^ GtCoderReferencesFilter literal: self
 ]
+
+{ #category : #'*GToolkit-Coder' }
+Symbol >> gtSenders [
+	^ self gtReferences
+]
