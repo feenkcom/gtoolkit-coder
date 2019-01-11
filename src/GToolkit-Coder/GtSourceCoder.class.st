@@ -253,7 +253,8 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 			value := ex.
 			isException := true ].
 	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: isException).
-	self styleResult: value isException: isException showPrintString: aBoolean.
+	self sourceEditor styleTextAndAfterDo: [
+		self styleResult: value isException: isException showPrintString: aBoolean ].
 	^ value
 ]
 
