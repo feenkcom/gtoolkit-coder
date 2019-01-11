@@ -590,7 +590,6 @@ GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 	self sourceEditor text
 		attributes:
 			{(GtPlaygroundEvaluatedCodeButtonAttribute new
-				beNotOverwritableByStyler;
 				result: value;
 				paint: (Color fromHexString: #'90CAF9'))}
 		from: interval last
