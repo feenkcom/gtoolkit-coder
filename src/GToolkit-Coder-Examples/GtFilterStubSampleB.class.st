@@ -10,6 +10,16 @@ GtFilterStubSampleB >> methodReferencing42 [
 ]
 
 { #category : #'as yet unclassified' }
+GtFilterStubSampleB >> methodReferencingArray [
+	^ #(4 2)
+]
+
+{ #category : #'as yet unclassified' }
+GtFilterStubSampleB >> methodReferencingByteArray [
+	^ #[4 2]
+]
+
+{ #category : #'as yet unclassified' }
 GtFilterStubSampleB >> methodReferencingCharacter [
 	^ $c
 ]
@@ -17,6 +27,11 @@ GtFilterStubSampleB >> methodReferencingCharacter [
 { #category : #'as yet unclassified' }
 GtFilterStubSampleB >> methodReferencingFalse [
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+GtFilterStubSampleB >> methodReferencingNil [
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }

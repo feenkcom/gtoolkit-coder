@@ -71,6 +71,26 @@ GtMethodsCoderFilterExamples >> referencesTo42 [
 ]
 
 { #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToArray [
+	<gtExample>
+	| filter |
+	filter := #(4 2) gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingArray).
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToByteArray [
+	<gtExample>
+	| filter |
+	filter := #[ 4 2 ] gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingByteArray).
+	^ filter
+]
+
+{ #category : #accessing }
 GtMethodsCoderFilterExamples >> referencesToCharacter [
 	<gtExample>
 	| filter |
@@ -88,6 +108,17 @@ GtMethodsCoderFilterExamples >> referencesToFalse [
 	filter := true gtReferences.
 	self assert: filter isEmpty not.
 	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingTrue).
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToNil [
+	<gtExample>
+	<noTest>
+	| filter |
+	filter := nil gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingNil).
 	^ filter
 ]
 
