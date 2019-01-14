@@ -1,5 +1,5 @@
 Class {
-	#name : #GtSelectorReferenceHighlighter,
+	#name : #GtSelectorReferenceAndLiteralHighlighter,
 	#superclass : #GtSourceReferenceHighlighter,
 	#instVars : [
 		'selector'
@@ -8,31 +8,31 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtSelectorReferenceHighlighter class >> forSelector: aSymbol [
+GtSelectorReferenceAndLiteralHighlighter class >> forSelector: aSymbol [
 	^ self new
 		selector: aSymbol;
 		yourself
 ]
 
 { #category : #accessing }
-GtSelectorReferenceHighlighter >> selector [
+GtSelectorReferenceAndLiteralHighlighter >> selector [
 	^ selector
 ]
 
 { #category : #accessing }
-GtSelectorReferenceHighlighter >> selector: aSymbol [
+GtSelectorReferenceAndLiteralHighlighter >> selector: aSymbol [
 	selector := aSymbol
 ]
 
 { #category : #visiting }
-GtSelectorReferenceHighlighter >> visitLiteralNode: aNode [
+GtSelectorReferenceAndLiteralHighlighter >> visitLiteralNode: aNode [
 	super visitLiteralNode: aNode.
 	aNode value = selector
 		ifTrue: [ self styleFrom: aNode start to: aNode stop with: HighlightAttributes ]
 ]
 
 { #category : #visiting }
-GtSelectorReferenceHighlighter >> visitMessageNode: aMessageNode [
+GtSelectorReferenceAndLiteralHighlighter >> visitMessageNode: aMessageNode [
 	super visitMessageNode: aMessageNode.
 	aMessageNode selector = selector
 		ifTrue: [ aMessageNode selectorParts

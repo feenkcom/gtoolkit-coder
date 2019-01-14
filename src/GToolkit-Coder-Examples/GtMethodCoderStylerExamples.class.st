@@ -139,7 +139,7 @@ GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
 	<gtExample>
 	| coder element |
 	coder := GtMethodCoder forMethod: self class >> #printStringReference.
-	coder highlighter: (GtSelectorReferenceHighlighter forSelector: #printString).
+	coder highlighter: (GtSelectorReferenceAndLiteralHighlighter forSelector: #printString).
 	element := coder asElement.
 	coder sourceEditor styleText.
 	self assert: (self hasUnderlineAttributeIn: coder).

@@ -44,6 +44,11 @@ GtCoderMethodsFilter >> not [
 	^ GtCoderNegationFilter new originalFilter: self
 ]
 
+{ #category : #testing }
+GtCoderMethodsFilter >> notEmpty [
+	^ self isEmpty not
+]
+
 { #category : #'logical operations' }
 GtCoderMethodsFilter >> select: aBlock [
 	^ self & (GtCoderBlockFilter forBlock: aBlock)
