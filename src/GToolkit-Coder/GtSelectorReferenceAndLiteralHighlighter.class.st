@@ -25,6 +25,20 @@ GtSelectorReferenceAndLiteralHighlighter >> selector: aSymbol [
 ]
 
 { #category : #visiting }
+GtSelectorReferenceAndLiteralHighlighter >> visitArrayNode: aNode [
+	super visitArrayNode: aNode.
+	aNode value = selector
+		ifTrue: [ self styleFrom: aNode start to: aNode stop with: HighlightAttributes ]
+]
+
+{ #category : #visiting }
+GtSelectorReferenceAndLiteralHighlighter >> visitLiteralArrayNode: aNode [
+	super visitLiteralArrayNode: aNode.
+	aNode value = selector
+		ifTrue: [ self styleFrom: aNode start to: aNode stop with: HighlightAttributes ]
+]
+
+{ #category : #visiting }
 GtSelectorReferenceAndLiteralHighlighter >> visitLiteralNode: aNode [
 	super visitLiteralNode: aNode.
 	aNode value = selector
