@@ -9,3 +9,8 @@ String >> gtASTMatches [
 String >> gtPackageMatches [
 	^ GtCoderPackagePatternFilter pattern: self
 ]
+
+{ #category : #'*GToolkit-Coder' }
+String >> gtReferences [
+	^ GtCoderReferencesFilter literal: self
+]

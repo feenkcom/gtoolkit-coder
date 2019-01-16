@@ -15,10 +15,11 @@ GtCoderMethodsFilter >> asCollection [
 ]
 
 { #category : #accessing }
-GtCoderMethodsFilter >> gtLiveFor: aView [
+GtCoderMethodsFilter >> gtItemsFor: aView [
+	"this is a view that is polymorphic with the one defined in ${method:Collection>>#gtItemsFor:}$"
 	<gtView>
 	^ aView explicit
-		title: 'Live';
+		title: 'Items';
 		priority: 0;
 		stencil: [ self asCollection ]
 ]
@@ -41,6 +42,11 @@ GtCoderMethodsFilter >> isEmpty [
 { #category : #'logical operations' }
 GtCoderMethodsFilter >> not [
 	^ GtCoderNegationFilter new originalFilter: self
+]
+
+{ #category : #testing }
+GtCoderMethodsFilter >> notEmpty [
+	^ self isEmpty not
 ]
 
 { #category : #'logical operations' }

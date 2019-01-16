@@ -8,6 +8,13 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtProcessCoder class >> forDebugSession: aDebugSession [
+	^ self new
+		forDebugSession: aDebugSession;
+		yourself
+]
+
+{ #category : #'instance creation' }
 GtProcessCoder class >> forProcess: aProcess [
 	^ self new
 		forProcess: aProcess;
@@ -20,9 +27,17 @@ GtProcessCoder >> elementClass [
 ]
 
 { #category : #'initialize-release' }
-GtProcessCoder >> forProcess: aProcess [
-	session := DebugSession named: 'Debug ' , aProcess name on: aProcess startedAt: aProcess suspendedContext.
+GtProcessCoder >> forDebugSession: aDebugSession [
+	session := aDebugSession.
 	self updateCoders
+]
+
+{ #category : #'initialize-release' }
+GtProcessCoder >> forProcess: aProcess [
+	self forDebugSession: (DebugSession 
+		named: 'Debug ' , aProcess name 
+		on: aProcess 
+		startedAt: aProcess suspendedContext)
 ]
 
 { #category : #'initialize-release' }

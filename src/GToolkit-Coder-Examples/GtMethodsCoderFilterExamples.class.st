@@ -9,6 +9,7 @@ GtMethodsCoderFilterExamples >> astPatternFilter [
 	<gtExample>
 	| filter |
 	filter := 'filter includeMethod: ``@a' gtASTMatches.
+	self assert: filter notEmpty.
 	self assert: (filter includeMethod: thisContext method).
 	^ filter
 ]
@@ -18,6 +19,7 @@ GtMethodsCoderFilterExamples >> gtExamplePragmas [
 	<gtExample>
 	| filter |
 	filter := #gtExample gtPragmas.
+	self assert: filter notEmpty.
 	self assert: (filter includeMethod: thisContext method).
 	^ filter
 ]
@@ -36,7 +38,7 @@ GtMethodsCoderFilterExamples >> gtExamplePragmasAndReferencesToSampleB [
 	<gtExample>
 	| filter |
 	filter := self gtExamplePragmas & self referencesToSampleB.
-	self assert: filter size = 1.
+	self assert: filter notEmpty.
 	^ filter
 ]
 
@@ -59,12 +61,95 @@ GtMethodsCoderFilterExamples >> packagePatternFilter [
 ]
 
 { #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesTo42 [
+	<gtExample>
+	| filter |
+	filter := 42 gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencing42).
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToArray [
+	<gtExample>
+	| filter |
+	filter := #(4 2) gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingArray).
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToByteArray [
+	<gtExample>
+	| filter |
+	filter := #[ 4 2 ] gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingByteArray).
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToCharacter [
+	<gtExample>
+	| filter |
+	filter := $c gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingCharacter).
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToFalse [
+	<gtExample>
+	<noTest>
+	| filter |
+	filter := true gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingTrue).
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToNil [
+	<gtExample>
+	<noTest>
+	| filter |
+	filter := nil gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingNil).
+	^ filter
+]
+
+{ #category : #accessing }
 GtMethodsCoderFilterExamples >> referencesToSampleB [
 	<gtExample>
 	| filter |
 	filter := GtFilterStubSampleB gtReferences.
-	self assert: filter size = 3.
+	self assert: filter notEmpty.
 	self assert: (filter includeMethod: GtFilterStubSampleA >> #methodReferencingSampleB).
 	self assert: (filter includeMethod: GtFilterStubSampleA >> #anotherMethodReferencingSampleBAndSendingNew).
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToString [
+	<gtExample>
+	| filter |
+	filter := 'string' gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingString).
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToTrue [
+	<gtExample>
+	<noTest>
+	| filter |
+	filter := true gtReferences.
+	self assert: filter isEmpty not.
+	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingTrue).
 	^ filter
 ]

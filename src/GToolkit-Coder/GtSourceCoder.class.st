@@ -253,7 +253,8 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 			value := ex.
 			isException := true ].
 	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: isException).
-	self styleResult: value isException: isException showPrintString: aBoolean.
+	self sourceEditor styleTextAndAfterDo: [
+		self styleResult: value isException: isException showPrintString: aBoolean ].
 	^ value
 ]
 
@@ -590,7 +591,6 @@ GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 	self sourceEditor text
 		attributes:
 			{(GtPlaygroundEvaluatedCodeButtonAttribute new
-				beNotOverwritableByStyler;
 				result: value;
 				paint: (Color fromHexString: #'90CAF9'))}
 		from: interval last

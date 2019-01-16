@@ -55,5 +55,12 @@ GtClassCoder >> gtLiveFor: aView [
 	^ aView explicit 
 		title: 'Live';
 		priority: 10;
-		stencil: [ self ]
+		stencil: [ self ];
+		actionButtonIcon: BrGlamorousIcons browse
+			action: [ :aButton | self theClass browse ] 
+]
+
+{ #category : #'initialize-release' }
+GtClassCoder >> theClass [
+	^ classDefinitionCoder theClass
 ]

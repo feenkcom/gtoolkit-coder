@@ -23,11 +23,10 @@ GtCoderReferencesFilter >> gtDisplayOn: stream [
 
 { #category : #accessing }
 GtCoderReferencesFilter >> highlighter [
-	^ object isSymbol
-		ifTrue: [ GtSelectorReferenceHighlighter forSelector: object ]
-		ifFalse: [ ((object isKindOf: Association) and: [ object key isSymbol ])
-				ifTrue: [ GtVariableReferenceHighlighter forVariableName: object key ]
-				ifFalse: [ nil ] ]
+	((object isKindOf: Association) and: [ object key isSymbol ])
+				ifTrue: [ ^ GtVariableReferenceHighlighter forVariableName: object key ].
+	object isLiteral ifTrue: [ ^ GtSelectorReferenceAndLiteralHighlighter forSelector: object ].
+	^ nil
 ]
 
 { #category : #testing }
