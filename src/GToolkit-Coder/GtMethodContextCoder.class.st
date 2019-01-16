@@ -85,7 +85,8 @@ GtMethodContextCoder >> initializeAddOns [
 GtMethodContextCoder >> instanceVariableNamesAndValuesDo: aBlock [
 	| receiver |
 	receiver := self receiver.
-	receiver class allInstVarNames doWithIndex: [ :each :i | aBlock value: each value: (receiver instVarAt: i) ]
+	receiver class allInstVarNames doWithIndex: [ :each :i | 
+		aBlock value: each value: (receiver instVarAt: i) ]
 ]
 
 { #category : #'debugger access' }
