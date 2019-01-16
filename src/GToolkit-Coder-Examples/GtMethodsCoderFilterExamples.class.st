@@ -1,3 +1,43 @@
+"
+!Filter examples
+
+!!Implementors
+
+${example:GtMethodsCoderFilterExamples>>#implementorsOfThisMessage}$
+
+!!Package pattern
+
+${example:GtMethodsCoderFilterExamples>>#packagePatternFilter}$
+
+!!Pragmas
+
+${example:GtMethodsCoderExamples>>#gtExamplesFilter}$
+
+
+!!References
+
+==gtReferences== can be applied to several objects. 
+
+Class references:
+${example:GtMethodsCoderFilterExamples>>#referencesToSampleB|previewShow=gtItemsFor:}$
+
+Selector references:
+${example:GtMethodsCoderFilterExamples>>#referencesToThisSelector}$
+
+Number references
+${example:GtMethodsCoderFilterExamples>>#referencesTo42}$
+
+!!Intersection
+
+${example:GtMethodsCoderFilterExamples>>#gtExamplePragmasAndReferencesToMethodCoder}$
+
+!!Union
+
+@@todo
+
+
+
+"
 Class {
 	#name : #GtMethodsCoderFilterExamples,
 	#superclass : #Object,
@@ -39,6 +79,15 @@ GtMethodsCoderFilterExamples >> gtExamplePragmasAndReferencesToSampleB [
 	| filter |
 	filter := self gtExamplePragmas & self referencesToSampleB.
 	self assert: filter notEmpty.
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> implementorsOfThisMessage [
+	<gtExample>
+	| filter |
+	filter := #implementorsOfThisMessage gtImplementors.
+	self assert: (filter includeMethod: thisContext method).
 	^ filter
 ]
 
@@ -140,6 +189,16 @@ GtMethodsCoderFilterExamples >> referencesToString [
 	filter := 'string' gtReferences.
 	self assert: filter isEmpty not.
 	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingString).
+	^ filter
+]
+
+{ #category : #accessing }
+GtMethodsCoderFilterExamples >> referencesToThisSelector [
+	<gtExample>
+	| filter |
+	filter := #referencesToThisSelector gtReferences.
+	self assert: filter notEmpty.
+	self assert: (filter includeMethod: thisContext method).
 	^ filter
 ]
 

@@ -193,7 +193,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 			(GtCoderExampleStatusStyler new
 				coder: self;
 				classOrMetaClass: self classOrMetaClass).
-	addOns addContextAction: 'Example' translated icon: BrGlamorousIcons play action: [ :button | self runExampleFrom: button ]
+	addOns addContextAction: 'Example' translated icon: BrGlamorousIcons playinspect action: [ :button | self runExampleFrom: button ]
 ]
 
 { #category : #examples }
@@ -262,7 +262,7 @@ GtMethodCoder >> gtViewAddOnFor: anAST [
 				and: [ anAST methodNode ifNotNil: [ :node | node arguments size = 1 and: [ node pragmas anySatisfy: [ :each | each selector = #gtView ] ] ] ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'gtView' translated.
 			^ self ].
-	addOns addContextAction: 'gtView' translated icon: BrGlamorousIcons play action: [ :button | self runGtViewFrom: button ]
+	addOns addContextAction: 'gtView' translated icon: BrGlamorousIcons playinspect action: [ :button | self runGtViewFrom: button ]
 ]
 
 { #category : #accessing }
@@ -397,7 +397,7 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST [
 		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | self isMondrianPaintMethod: node ] ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'Mondrian' translated.
 			^ self ].
-	addOns addContextAction: 'Mondrian' translated icon: BrGlamorousIcons play action: [ :button | self runMondrianPaintFrom: button ]
+	addOns addContextAction: 'Mondrian' translated icon: BrGlamorousIcons playinspect action: [ :button | self runMondrianPaintFrom: button ]
 ]
 
 { #category : #actions }
@@ -602,7 +602,7 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST [
 		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'Run' translated.
 			^ self ].
-	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons play action: [ :button | self runFrom: button ]
+	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons playinspect action: [ :button | self runFrom: button ]
 ]
 
 { #category : #updating }
