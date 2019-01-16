@@ -21,7 +21,7 @@ GtCoderReferencesFilter >> checkForArrayReference: anObject [
 		ifFalse: [ ^ false ].
 	^ anObject
 		anySatisfy:
-			[ :each | each == anObject or: [ self checkForArrayReference: each ] ]
+			[ :each | each == object or: [ self checkForArrayReference: each ] ]
 ]
 
 { #category : #testing }
