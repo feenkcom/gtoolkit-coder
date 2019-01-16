@@ -73,7 +73,7 @@ GtCoderReferencesFilter >> highlighter [
 
 { #category : #testing }
 GtCoderReferencesFilter >> includeMethod: aCompiledMethod [
-	(#(true false nil) includes: object)
+	(aCompiledMethod encoderClass specialLiterals includes: object)
 		ifTrue: [ ^ self doesMethodIncludeBytecodeLiteral: aCompiledMethod ].
 	^ aCompiledMethod
 		hasSelector: object
