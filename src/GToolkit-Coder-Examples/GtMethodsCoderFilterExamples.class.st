@@ -152,7 +152,6 @@ GtMethodsCoderFilterExamples >> referencesToCharacter [
 { #category : #accessing }
 GtMethodsCoderFilterExamples >> referencesToFalse [
 	<gtExample>
-	<noTest>
 	| filter |
 	filter := true gtReferences.
 	self assert: filter isEmpty not.
@@ -163,7 +162,6 @@ GtMethodsCoderFilterExamples >> referencesToFalse [
 { #category : #accessing }
 GtMethodsCoderFilterExamples >> referencesToNil [
 	<gtExample>
-	<noTest>
 	| filter |
 	filter := nil gtReferences.
 	self assert: filter isEmpty not.
@@ -205,7 +203,6 @@ GtMethodsCoderFilterExamples >> referencesToThisSelector [
 { #category : #accessing }
 GtMethodsCoderFilterExamples >> referencesToTrue [
 	<gtExample>
-	<noTest>
 	| filter |
 	filter := true gtReferences.
 	self assert: filter isEmpty not.
