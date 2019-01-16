@@ -20,7 +20,7 @@ Method coders can be combined in different ways for different purposes. One of t
 
 For example, below you see the result of a code query. Expanding the resulting method coders highlights the specific nodes that matched the query.
 
-${example:GtMethodsCoderFilterExamples>>#gtExamplePragmasAndReferencesToMethodCoder|previewExpanded=|previewShow=#gtLiveFor:|codeExpanded=false}$
+${example:GtMethodsCoderFilterExamples>>#gtExamplePragmasAndReferencesToMethodCoder|previewExpanded=|previewShow=#gtItemsFor:|codeExpanded=false}$
 
 
 "
