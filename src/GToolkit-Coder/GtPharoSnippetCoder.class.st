@@ -2,19 +2,10 @@ Class {
 	#name : #GtPharoSnippetCoder,
 	#superclass : #GtSourceCoder,
 	#instVars : [
-		'bindingStrategy',
-		'completionStrategy'
+		'bindingStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
-
-{ #category : #private }
-GtPharoSnippetCoder >> completionStrategy [
-	^ completionStrategy
-		ifNil: [ completionStrategy := GtPharoCompletionStrategy new isMethod: false.
-			completionStrategy bindings: bindingStrategy bindings.
-			completionStrategy ]
-]
 
 { #category : #actions }
 GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
@@ -33,10 +24,10 @@ GtPharoSnippetCoder >> evaluationRequester [
 
 { #category : #initialization }
 GtPharoSnippetCoder >> initialize [
-	super initialize.
-	expanded := true.
 	bindingStrategy := GtHighlightingBindingStrategy new.
 	bindingStrategy bindings: Dictionary new.
+	super initialize.
+	expanded := true.
 	self source: ''
 ]
 
@@ -76,6 +67,14 @@ GtPharoSnippetCoder >> initializeShortcuts [
 						key: Key p;
 						build);
 				action: [ self printItSelection ])
+]
+
+{ #category : #private }
+GtPharoSnippetCoder >> newCompletionStrategy [
+	^ super newCompletionStrategy
+		isMethod: false;
+		bindings: bindingStrategy bindings;
+		yourself
 ]
 
 { #category : #ui }

@@ -32,7 +32,7 @@ GtCoderMethodBodyElement >> editorElement [
 			c vertical fitContent ].
 	anEditorElement editor: methodCoder sourceEditor.
 	methodCoder addShortcutsTo: anEditorElement.
-	(GtCompletionController on: anEditorElement strategy: methodCoder newCompletionStrategy) install.
+	(GtCompletionController on: anEditorElement strategy: methodCoder completionStrategy) install.
 	element addChild: anEditorElement.
 	^ element
 ]

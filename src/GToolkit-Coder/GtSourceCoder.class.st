@@ -7,7 +7,9 @@ Class {
 		'expanded',
 		'attributes',
 		'addOns',
-		'collapsedEditor'
+		'collapsedEditor',
+		'astCache',
+		'completionStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -15,6 +17,12 @@ Class {
 { #category : #accessing }
 GtSourceCoder >> addOns [
 	^ addOns
+]
+
+{ #category : #elements }
+GtSourceCoder >> addShortcutsTo: editorElement [
+	addOns shortcuts
+		do: [ :each | editorElement addShortcut: (each copy action: [ each action cull: editorElement ]) ]
 ]
 
 { #category : #updating }
@@ -173,7 +181,8 @@ GtSourceCoder >> collapsedText [
 
 { #category : #private }
 GtSourceCoder >> completionStrategy [
-	^ self newCompletionStrategy
+	^ completionStrategy
+		ifNil: [ completionStrategy := self newCompletionStrategy ]
 ]
 
 { #category : #private }
@@ -287,13 +296,14 @@ GtSourceCoder >> initialize [
 	super initialize.
 	announcer := Announcer new.
 	expanded := false.
+	astCache := nil -> nil.
 	self initializeAddOns
 ]
 
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeAddOns [
 	addOns := GtMethodCoderAddOns new.
-	self initializeShortcuts.
+	self initializeShortcuts
 ]
 
 { #category : #'initialize-release' }
@@ -355,10 +365,19 @@ GtSourceCoder >> newCollapsedEditor [
 
 { #category : #private }
 GtSourceCoder >> newCompletionStrategy [
-	| completionStrategy |
-	completionStrategy := GtPharoCompletionStrategy new.
-	completionStrategy classOrMetaClass: self classOrMetaClass.
-	^ completionStrategy
+	^ GtPharoCompletionStrategy new
+		classOrMetaClass: self classOrMetaClass;
+		yourself
+]
+
+{ #category : #updating }
+GtSourceCoder >> newRbAST: aString [
+	^ RBParser parseFaultyExpression: aString
+]
+
+{ #category : #updating }
+GtSourceCoder >> newSource [
+	^ self source
 ]
 
 { #category : #ui }
@@ -426,6 +445,18 @@ GtSourceCoder >> printItSelection [
 	^ self evaluateSource: source showPrintString: true
 ]
 
+{ #category : #updating }
+GtSourceCoder >> rbAST [
+	| source |
+	source := self newSource.
+	astCache key = source
+		ifTrue: [ ^ astCache value ].
+	^ [ astCache := source -> (self newRbAST: source).
+	astCache value ]
+		on: Error
+		do: [ :ex | ex return: nil ]
+]
+
 { #category : #private }
 GtSourceCoder >> referencesFilterAtCursor [
 	| node |
@@ -458,6 +489,19 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	binding notNil
 		ifTrue: [ ^ GtCoderReferencesFilter literal: binding ].
 	^ nil
+]
+
+{ #category : #updating }
+GtSourceCoder >> refreshForChanges [
+	addOns
+		changesDo: [ :each | 
+			each = #stylers
+				ifTrue: [ self styleText ].
+			each = #mainActions
+				ifTrue: [ self announce: (GtCoderMethodMainActionsChanged new coder: self) ].
+			each = #contextActions
+				ifTrue: [ self announce: (GtCoderMethodContextActionsChanged new coder: self) ] ].
+	addOns clearChanges
 ]
 
 { #category : #private }
@@ -631,6 +675,11 @@ GtSourceCoder >> styleText [
 		ifFalse: [ ^ self ].
 	self styleSourceText.
 	self styleCollapsedText
+]
+
+{ #category : #accessing }
+GtSourceCoder >> stylers [
+	^ addOns stylers
 ]
 
 { #category : #private }

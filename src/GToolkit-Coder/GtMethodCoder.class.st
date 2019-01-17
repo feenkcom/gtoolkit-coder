@@ -6,8 +6,7 @@ Class {
 		'selector',
 		'methodSource',
 		'subCoders',
-		'isBuilt',
-		'astCache'
+		'isBuilt'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -44,12 +43,6 @@ GtMethodCoder class >> newMethod [
 		expanded: true;
 		source: '';
 		yourself
-]
-
-{ #category : #elements }
-GtMethodCoder >> addShortcutsTo: editorElement [
-	addOns shortcuts
-		do: [ :each | editorElement addShortcut: (each copy action: [ each action cull: editorElement ]) ]
 ]
 
 { #category : #accessing }
@@ -290,9 +283,8 @@ GtMethodCoder >> highlighterFor: anAST [
 { #category : #'initialize-release' }
 GtMethodCoder >> initialize [
 	isBuilt := false.
-	super initialize.
 	methodSource := ''.
-	astCache := nil -> nil
+	super initialize
 ]
 
 { #category : #'initialize-release' }
@@ -406,6 +398,21 @@ GtMethodCoder >> newMethodSource [
 	^ self source
 ]
 
+{ #category : #updating }
+GtMethodCoder >> newRbAST: aString [
+	| ast |
+	ast := RBParser parseFaultyMethod: aString.
+	ast methodNode
+		compilationContext:
+			(CompilationContext new
+				class: (self classOrMetaClass ifNil: [ UndefinedObject ]);
+				forSyntaxHighlighting: true;
+				bindings: Dictionary new;
+				requestor: nil).
+	ast doSemanticAnalysis.
+	^ ast
+]
+
 { #category : #'instance creation' }
 GtMethodCoder >> newSourceEditor [
 	<return: #BrTextEditor>
@@ -445,38 +452,15 @@ GtMethodCoder >> patternSource [
 ]
 
 { #category : #updating }
-GtMethodCoder >> rbAST [
-	| source |
-	source := self newMethodSource.
-	astCache key = source
-		ifTrue: [ ^ astCache value ].
-	^ [ | ast |
-	ast := RBParser parseFaultyMethod: source.
-	ast methodNode
-		compilationContext:
-			(CompilationContext new
-				class: (self classOrMetaClass ifNil: [ UndefinedObject ]);
-				forSyntaxHighlighting: true;
-				bindings: Dictionary new;
-				requestor: nil).
-	ast doSemanticAnalysis.
-	astCache := source -> ast.
-	ast ]
-		on: Error
-		do: [ :ex | ex return: nil ]
-]
-
-{ #category : #updating }
 GtMethodCoder >> refreshForChanges [
+	self flag: 'source coder may have main actions and contextActions as well, why restrict to method coder?'.
 	addOns
 		changesDo: [ :each | 
-			each = #stylers
-				ifTrue: [ self styleText ].
 			each = #mainActions
 				ifTrue: [ self announce: (GtCoderMethodMainActionsChanged new coder: self) ].
 			each = #contextActions
 				ifTrue: [ self announce: (GtCoderMethodContextActionsChanged new coder: self) ] ].
-	addOns clearChanges
+	super refreshForChanges
 ]
 
 { #category : #accessing }
@@ -551,7 +535,10 @@ GtMethodCoder >> runMondrianPaintFrom: anElement [
 
 { #category : #actions }
 GtMethodCoder >> save [
-	^ self validateSyntax and: [ self compile ]
+	^ self validateSyntax
+		and: [ self compile
+				and: [ self buildSource.
+					true ] ]
 ]
 
 { #category : #accessing }
@@ -583,11 +570,6 @@ GtMethodCoder >> styledPatternTextFor: aString [
 		style: text.
 	text attributes: self disabledTextAttributes.
 	^ text
-]
-
-{ #category : #accessing }
-GtMethodCoder >> stylers [
-	^ addOns stylers
 ]
 
 { #category : #accessing }
