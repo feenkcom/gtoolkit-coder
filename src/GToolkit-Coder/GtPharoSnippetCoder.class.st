@@ -34,8 +34,19 @@ GtPharoSnippetCoder >> initialize [
 { #category : #initialization }
 GtPharoSnippetCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addMainAction: 'Evaluate' translated icon: BrGlamorousIcons play action: [ :aButton | self evaluateAndHighlightAllSource ].
-	addOns addMainAction: 'Inspect' translated icon: BrGlamorousIcons playinspect action: [ :aButton | self runFrom: aButton ].
+	addOns
+		addMainAction: 'Evaluate' translated
+		icon: BrGlamorousIcons play
+		action: [ :aButton | self evaluateAndHighlightAllSource ].
+	addOns
+		addMainAction: 'Inspect' translated
+		icon: BrGlamorousIcons playinspect
+		action: [ :aButton | self runFrom: aButton ].
+	addOns
+		addStyler:
+			(BrRBTextStyler new
+				workspace: bindingStrategy;
+				yourself).
 	addOns clearChanges
 ]
 
@@ -71,23 +82,19 @@ GtPharoSnippetCoder >> initializeShortcuts [
 
 { #category : #private }
 GtPharoSnippetCoder >> newCompletionStrategy [
-	^ super newCompletionStrategy
+	| strategy |
+	strategy := super newCompletionStrategy
 		isMethod: false;
-		bindings: bindingStrategy bindings;
-		yourself
-]
-
-{ #category : #ui }
-GtPharoSnippetCoder >> newSourceStyler [
-	| styler |
-	styler := BrRBTextStyler new.
-	styler workspace: bindingStrategy.
-	^ styler
+		yourself.
+	strategy bindings: bindingStrategy bindings.
+	^ strategy
 ]
 
 { #category : #accessing }
 GtPharoSnippetCoder >> object [
-	^ bindingStrategy bindings receiver
+	^ (bindingStrategy bindings respondsTo: #receiver)
+		ifTrue: [ bindingStrategy bindings receiver ]
+		ifFalse: [ nil ]
 ]
 
 { #category : #ui }

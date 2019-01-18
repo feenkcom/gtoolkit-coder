@@ -372,7 +372,10 @@ GtSourceCoder >> newCompletionStrategy [
 
 { #category : #updating }
 GtSourceCoder >> newRbAST: aString [
-	^ RBParser parseFaultyExpression: aString
+	| ast |
+	ast := RBParser parseFaultyExpression: aString.
+	ast doSemanticAnalysis.
+	^ ast
 ]
 
 { #category : #updating }
@@ -393,7 +396,7 @@ GtSourceCoder >> newSourceEditor [
 
 { #category : #private }
 GtSourceCoder >> newSourceStyler [
-	^ nil
+	^ GtCoderTextStyler forCoder: self
 ]
 
 { #category : #private }
@@ -431,7 +434,7 @@ GtSourceCoder >> parserStartingState [
 GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 	| actions |
 	actions := OrderedCollection new.
-	aClass withAllSubclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
+	aClass withAllSuperclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
 	actions sort: [ :a :b | a arguments first < b arguments first ].
 	^ actions
 ]
@@ -701,7 +704,11 @@ GtSourceCoder >> symbolFor: aNode [
 
 { #category : #updating }
 GtSourceCoder >> updateAddOns [
-	
+	| pragmas ast |
+	ast := self rbAST.
+	pragmas := self pragmasNamed: #gtAstCoderAddOns: inHierarchy: self class.
+	pragmas reverseDo: [ :each | self perform: each methodSelector with: ast ].
+	self refreshForChanges
 ]
 
 { #category : #'event handling' }

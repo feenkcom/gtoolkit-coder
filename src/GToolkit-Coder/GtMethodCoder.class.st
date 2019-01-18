@@ -422,11 +422,6 @@ GtMethodCoder >> newSourceEditor [
 	^ aSourceEditor
 ]
 
-{ #category : #styling }
-GtMethodCoder >> newSourceStyler [
-	^ GtCoderTextStyler forCoder: self
-]
-
 { #category : #private }
 GtMethodCoder >> parserStartingState [
 	^ GtPharoParser startingStateForMethod
@@ -585,15 +580,6 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST [
 		ifFalse: [ addOns removeContextAction: 'Run' translated.
 			^ self ].
 	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons playinspect action: [ :button | self runFrom: button ]
-]
-
-{ #category : #updating }
-GtMethodCoder >> updateAddOns [
-	| pragmas ast |
-	ast := self rbAST.
-	pragmas := self pragmasNamed: #gtAstCoderAddOns: inHierarchy: self class.
-	pragmas reverseDo: [ :each | self perform: each methodSelector with: ast ].
-	self refreshForChanges
 ]
 
 { #category : #private }

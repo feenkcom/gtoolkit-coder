@@ -70,6 +70,17 @@ GtBlockCoder >> initialize [
 	expanded := true
 ]
 
+{ #category : #'initialize-release' }
+GtBlockCoder >> initializeAddOns [
+	super initializeAddOns.
+	addOns
+		addStyler:
+			(BrRBTextStyler new
+				workspace: bindingStrategy;
+				yourself).
+	addOns clearChanges
+]
+
 { #category : #private }
 GtBlockCoder >> newCompletionStrategy [
 	^ super newCompletionStrategy
@@ -86,14 +97,6 @@ GtBlockCoder >> newRbAST: aString [
 { #category : #updating }
 GtBlockCoder >> newSource [
 	^ self blockSource
-]
-
-{ #category : #private }
-GtBlockCoder >> newSourceStyler [
-	| styler |
-	styler := BrRBTextStyler new.
-	styler workspace: bindingStrategy.
-	^ styler
 ]
 
 { #category : #accessing }
