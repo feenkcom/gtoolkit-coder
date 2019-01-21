@@ -116,7 +116,7 @@ GtMethodContextCoder >> session: anObject [
 
 { #category : #private }
 GtMethodContextCoder >> stackDebuggingActionsPragmas [
-	^ #(gt2StackDebuggingAction)
+	^ #(gt2ContextDebuggingAction)
 ]
 
 { #category : #accessing }

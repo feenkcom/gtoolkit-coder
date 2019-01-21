@@ -48,7 +48,10 @@ GtProcessCoder >> initialize [
 
 { #category : #testing }
 GtProcessCoder >> isSuspended [
-	^ session process notNil and: [ session process isSuspended and: [ session process isTerminating not and: [ session process isTerminated not ] ] ]
+	^ session process notNil and: [ 
+		session process isSuspended and: [ 
+			session process isTerminating not and: [ 
+				session process isTerminated not ] ] ]
 ]
 
 { #category : #elements }
