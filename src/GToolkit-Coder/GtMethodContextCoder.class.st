@@ -78,7 +78,8 @@ GtMethodContextCoder >> currentContext [
 { #category : #'initialize-release' }
 GtMethodContextCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addStyler: (GtCoderContextVariableStyler new methodCoder: self)
+	addOns addStyler: (GtCoderContextVariableStyler new methodCoder: self).
+	"addOns addStyler: (GtCoderContextVariableValuesStyler new methodCoder: self)"
 ]
 
 { #category : #accessing }
