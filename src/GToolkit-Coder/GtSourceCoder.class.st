@@ -7,7 +7,9 @@ Class {
 		'expanded',
 		'attributes',
 		'addOns',
-		'collapsedEditor'
+		'collapsedEditor',
+		'astCache',
+		'completionStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -15,6 +17,12 @@ Class {
 { #category : #accessing }
 GtSourceCoder >> addOns [
 	^ addOns
+]
+
+{ #category : #elements }
+GtSourceCoder >> addShortcutsTo: editorElement [
+	addOns shortcuts
+		do: [ :each | editorElement addShortcut: (each copy action: [ each action cull: editorElement ]) ]
 ]
 
 { #category : #updating }
@@ -173,7 +181,8 @@ GtSourceCoder >> collapsedText [
 
 { #category : #private }
 GtSourceCoder >> completionStrategy [
-	^ self newCompletionStrategy
+	^ completionStrategy
+		ifNil: [ completionStrategy := self newCompletionStrategy ]
 ]
 
 { #category : #private }
@@ -287,13 +296,14 @@ GtSourceCoder >> initialize [
 	super initialize.
 	announcer := Announcer new.
 	expanded := false.
+	astCache := nil -> nil.
 	self initializeAddOns
 ]
 
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeAddOns [
 	addOns := GtMethodCoderAddOns new.
-	self initializeShortcuts.
+	self initializeShortcuts
 ]
 
 { #category : #'initialize-release' }
@@ -355,10 +365,22 @@ GtSourceCoder >> newCollapsedEditor [
 
 { #category : #private }
 GtSourceCoder >> newCompletionStrategy [
-	| completionStrategy |
-	completionStrategy := GtPharoCompletionStrategy new.
-	completionStrategy classOrMetaClass: self classOrMetaClass.
-	^ completionStrategy
+	^ GtPharoCompletionStrategy new
+		classOrMetaClass: self classOrMetaClass;
+		yourself
+]
+
+{ #category : #updating }
+GtSourceCoder >> newRbAST: aString [
+	| ast |
+	ast := RBParser parseFaultyExpression: aString.
+	ast doSemanticAnalysis.
+	^ ast
+]
+
+{ #category : #updating }
+GtSourceCoder >> newSource [
+	^ self source
 ]
 
 { #category : #ui }
@@ -374,7 +396,7 @@ GtSourceCoder >> newSourceEditor [
 
 { #category : #private }
 GtSourceCoder >> newSourceStyler [
-	^ nil
+	^ GtCoderTextStyler forCoder: self
 ]
 
 { #category : #private }
@@ -412,7 +434,7 @@ GtSourceCoder >> parserStartingState [
 GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 	| actions |
 	actions := OrderedCollection new.
-	aClass withAllSubclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
+	aClass withAllSuperclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
 	actions sort: [ :a :b | a arguments first < b arguments first ].
 	^ actions
 ]
@@ -424,6 +446,18 @@ GtSourceCoder >> printItSelection [
 	source isNil
 		ifTrue: [ ^ self ].
 	^ self evaluateSource: source showPrintString: true
+]
+
+{ #category : #updating }
+GtSourceCoder >> rbAST [
+	| source |
+	source := self newSource.
+	astCache key = source
+		ifTrue: [ ^ astCache value ].
+	^ [ astCache := source -> (self newRbAST: source).
+	astCache value ]
+		on: Error
+		do: [ :ex | ex return: nil ]
 ]
 
 { #category : #private }
@@ -458,6 +492,19 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	binding notNil
 		ifTrue: [ ^ GtCoderReferencesFilter literal: binding ].
 	^ nil
+]
+
+{ #category : #updating }
+GtSourceCoder >> refreshForChanges [
+	addOns
+		changesDo: [ :each | 
+			each = #stylers
+				ifTrue: [ self styleText ].
+			each = #mainActions
+				ifTrue: [ self announce: (GtCoderMethodMainActionsChanged new coder: self) ].
+			each = #contextActions
+				ifTrue: [ self announce: (GtCoderMethodContextActionsChanged new coder: self) ] ].
+	addOns clearChanges
 ]
 
 { #category : #private }
@@ -633,6 +680,11 @@ GtSourceCoder >> styleText [
 	self styleCollapsedText
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> stylers [
+	^ addOns stylers
+]
+
 { #category : #private }
 GtSourceCoder >> symbolFor: aNode [
 	| current |
@@ -652,7 +704,11 @@ GtSourceCoder >> symbolFor: aNode [
 
 { #category : #updating }
 GtSourceCoder >> updateAddOns [
-	
+	| pragmas ast |
+	ast := self rbAST.
+	pragmas := self pragmasNamed: #gtAstCoderAddOns: inHierarchy: self class.
+	pragmas reverseDo: [ :each | self perform: each methodSelector with: ast ].
+	self refreshForChanges
 ]
 
 { #category : #'event handling' }
