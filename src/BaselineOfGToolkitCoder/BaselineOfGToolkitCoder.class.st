@@ -22,7 +22,7 @@ For example, below you see the result of a code query. Expanding the resulting m
 
 ${example:GtMethodsCoderFilterExamples>>#gtExamplePragmasAndReferencesToMethodCoder|previewExpanded=|previewShow=#gtItemsFor:|codeExpanded=false}$
 
-
+See ${class:GtMethodsCoderFilterExamples}$ for more details.
 "
 Class {
 	#name : #BaselineOfGToolkitCoder,

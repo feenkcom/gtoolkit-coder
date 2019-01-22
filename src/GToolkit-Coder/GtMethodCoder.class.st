@@ -6,8 +6,7 @@ Class {
 		'selector',
 		'methodSource',
 		'subCoders',
-		'isBuilt',
-		'astCache'
+		'isBuilt'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -44,12 +43,6 @@ GtMethodCoder class >> newMethod [
 		expanded: true;
 		source: '';
 		yourself
-]
-
-{ #category : #elements }
-GtMethodCoder >> addShortcutsTo: editorElement [
-	addOns shortcuts
-		do: [ :each | editorElement addShortcut: (each copy action: [ each action cull: editorElement ]) ]
 ]
 
 { #category : #accessing }
@@ -193,7 +186,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 			(GtCoderExampleStatusStyler new
 				coder: self;
 				classOrMetaClass: self classOrMetaClass).
-	addOns addContextAction: 'Example' translated icon: BrGlamorousIcons play action: [ :button | self runExampleFrom: button ]
+	addOns addContextAction: 'Example' translated icon: BrGlamorousIcons playinspect action: [ :button | self runExampleFrom: button ]
 ]
 
 { #category : #examples }
@@ -262,7 +255,7 @@ GtMethodCoder >> gtViewAddOnFor: anAST [
 				and: [ anAST methodNode ifNotNil: [ :node | node arguments size = 1 and: [ node pragmas anySatisfy: [ :each | each selector = #gtView ] ] ] ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'gtView' translated.
 			^ self ].
-	addOns addContextAction: 'gtView' translated icon: BrGlamorousIcons play action: [ :button | self runGtViewFrom: button ]
+	addOns addContextAction: 'gtView' translated icon: BrGlamorousIcons playinspect action: [ :button | self runGtViewFrom: button ]
 ]
 
 { #category : #accessing }
@@ -290,9 +283,8 @@ GtMethodCoder >> highlighterFor: anAST [
 { #category : #'initialize-release' }
 GtMethodCoder >> initialize [
 	isBuilt := false.
-	super initialize.
 	methodSource := ''.
-	astCache := nil -> nil
+	super initialize
 ]
 
 { #category : #'initialize-release' }
@@ -397,13 +389,28 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST [
 		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | self isMondrianPaintMethod: node ] ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'Mondrian' translated.
 			^ self ].
-	addOns addContextAction: 'Mondrian' translated icon: BrGlamorousIcons play action: [ :button | self runMondrianPaintFrom: button ]
+	addOns addContextAction: 'Mondrian' translated icon: BrGlamorousIcons playinspect action: [ :button | self runMondrianPaintFrom: button ]
 ]
 
 { #category : #actions }
 GtMethodCoder >> newMethodSource [
 	self ensureBuilt.
 	^ self source
+]
+
+{ #category : #updating }
+GtMethodCoder >> newRbAST: aString [
+	| ast |
+	ast := RBParser parseFaultyMethod: aString.
+	ast methodNode
+		compilationContext:
+			(CompilationContext new
+				class: (self classOrMetaClass ifNil: [ UndefinedObject ]);
+				forSyntaxHighlighting: true;
+				bindings: Dictionary new;
+				requestor: nil).
+	ast doSemanticAnalysis.
+	^ ast
 ]
 
 { #category : #'instance creation' }
@@ -413,11 +420,6 @@ GtMethodCoder >> newSourceEditor [
 	aSourceEditor := super newSourceEditor.
 	aSourceEditor when: BlInfiniteDataSourceChanged do: [ :event | self sourceChanged ].
 	^ aSourceEditor
-]
-
-{ #category : #styling }
-GtMethodCoder >> newSourceStyler [
-	^ GtCoderTextStyler forCoder: self
 ]
 
 { #category : #private }
@@ -445,38 +447,15 @@ GtMethodCoder >> patternSource [
 ]
 
 { #category : #updating }
-GtMethodCoder >> rbAST [
-	| source |
-	source := self newMethodSource.
-	astCache key = source
-		ifTrue: [ ^ astCache value ].
-	^ [ | ast |
-	ast := RBParser parseFaultyMethod: source.
-	ast methodNode
-		compilationContext:
-			(CompilationContext new
-				class: (self classOrMetaClass ifNil: [ UndefinedObject ]);
-				forSyntaxHighlighting: true;
-				bindings: Dictionary new;
-				requestor: nil).
-	ast doSemanticAnalysis.
-	astCache := source -> ast.
-	ast ]
-		on: Error
-		do: [ :ex | ex return: nil ]
-]
-
-{ #category : #updating }
 GtMethodCoder >> refreshForChanges [
+	self flag: 'source coder may have main actions and contextActions as well, why restrict to method coder?'.
 	addOns
 		changesDo: [ :each | 
-			each = #stylers
-				ifTrue: [ self styleText ].
 			each = #mainActions
 				ifTrue: [ self announce: (GtCoderMethodMainActionsChanged new coder: self) ].
 			each = #contextActions
 				ifTrue: [ self announce: (GtCoderMethodContextActionsChanged new coder: self) ] ].
-	addOns clearChanges
+	super refreshForChanges
 ]
 
 { #category : #accessing }
@@ -551,7 +530,10 @@ GtMethodCoder >> runMondrianPaintFrom: anElement [
 
 { #category : #actions }
 GtMethodCoder >> save [
-	^ self validateSyntax and: [ self compile ]
+	^ self validateSyntax
+		and: [ self compile
+				and: [ self buildSource.
+					true ] ]
 ]
 
 { #category : #accessing }
@@ -586,11 +568,6 @@ GtMethodCoder >> styledPatternTextFor: aString [
 ]
 
 { #category : #accessing }
-GtMethodCoder >> stylers [
-	^ addOns stylers
-]
-
-{ #category : #accessing }
 GtMethodCoder >> subCoders [
 	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
 ]
@@ -602,16 +579,7 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST [
 		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'Run' translated.
 			^ self ].
-	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons play action: [ :button | self runFrom: button ]
-]
-
-{ #category : #updating }
-GtMethodCoder >> updateAddOns [
-	| pragmas ast |
-	ast := self rbAST.
-	pragmas := self pragmasNamed: #gtAstCoderAddOns: inHierarchy: self class.
-	pragmas reverseDo: [ :each | self perform: each methodSelector with: ast ].
-	self refreshForChanges
+	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons playinspect action: [ :button | self runFrom: button ]
 ]
 
 { #category : #private }

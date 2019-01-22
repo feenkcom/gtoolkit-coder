@@ -52,7 +52,7 @@ GtMethodsCoderExamples >> gtExamplesCoder [
 { #category : #accessing }
 GtMethodsCoderExamples >> gtExamplesFilter [
 	<gtExample>
-	^ GtCoderPragmasFilter forPragma: #gtExample
+	^ #gtExample gtPragmas
 ]
 
 { #category : #accessing }

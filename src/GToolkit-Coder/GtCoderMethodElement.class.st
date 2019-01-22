@@ -60,7 +60,11 @@ GtCoderMethodElement >> initialize [
 		beBottom;
 		look: BrGlamorousResizerLook new;
 		constraintsDo: [ :c | c ignoreByLayout ];
-		when: BlDoubleClickEvent do: [ self childNamed: #bodyEditor ifFound: [ :anEditor | anEditor constraintsDo: [ :c | c vertical fitContent ] ] ifNone: [  ] ];
+		when: BlDoubleClickEvent do: [ self 
+			childNamed: #bodyEditor 
+			ifFound: [ :anEditor | anEditor 
+				constraintsDo: [ :c | c vertical fitContent ] ] 
+			ifNone: [  ] ];
 		yourself.
 	self
 		look:
@@ -80,7 +84,10 @@ GtCoderMethodElement >> initialize [
 									self background: Color transparent ].
 							aStyler
 								expanded: [ self addChild: resizer.
-									self enqueueTask: (BlTaskAction new action: [ self childNamed: #bodyEditor ifFound: [ :anEditor | resizer target: anEditor ] ifNone: [ resizer target: nil ] ]).
+									self enqueueTask: (BlTaskAction new action: [ self 
+										childNamed: #bodyEditor 
+										ifFound: [ :anEditor | resizer target: anEditor ] 
+										ifNone: [ resizer target: nil ] ]).
 									self background: Color white ] ]).
 	self
 		addShortcut:
