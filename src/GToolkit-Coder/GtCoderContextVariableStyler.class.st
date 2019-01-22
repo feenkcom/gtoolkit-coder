@@ -38,19 +38,3 @@ GtCoderContextVariableStyler >> style: aText ast: ast [
 	self initializeVariables.
 	super style: aText ast: ast
 ]
-
-{ #category : #visiting }
-GtCoderContextVariableStyler >> visitVariableNode: aVariableNode [
-	variables
-		at: aVariableNode name
-		ifPresent: [ :value | 
-			self
-				styleFrom: aVariableNode start
-				to: aVariableNode stop
-				with:
-					{(GtPlaygroundEvaluatedCodeButtonAttribute new
-						beNotOverwritableByStyler;
-						result: value;
-						paint: (Color fromHexString: #'90CAF9'))} ].
-	super visitVariableNode: aVariableNode
-]
