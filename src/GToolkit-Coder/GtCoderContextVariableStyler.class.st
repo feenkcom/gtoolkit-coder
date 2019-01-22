@@ -11,7 +11,15 @@ Class {
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
-{ #category : #accessing }
+{ #category : #testing }
+GtCoderContextVariableStyler >> hasValueForVariableNamed: aVariableName [
+	^ self 
+		valueForVariableNamed: aVariableName 
+		ifPresent: [ :value | true ] 
+		ifAbsent: [ false ]
+]
+
+{ #category : #initialization }
 GtCoderContextVariableStyler >> initializeVariables [
 	variables notNil
 		ifTrue: [ ^ self ].
@@ -33,14 +41,19 @@ GtCoderContextVariableStyler >> methodCoder: aMethodCoder [
 	methodCoder := aMethodCoder
 ]
 
-{ #category : #accessing }
+{ #category : #styling }
 GtCoderContextVariableStyler >> style: aText ast: ast [
-	aText clearAttributes: [ :each | each isKindOf: self class ].
+	aText clearAttributes: [ :each | each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute ].
 	self initializeVariables.
 	super style: aText ast: ast
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #styling }
+GtCoderContextVariableStyler >> styleVariableNode: aVariableNode [
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
 GtCoderContextVariableStyler >> valueForVariableNamed: aVariableName ifPresent: presentBlock [
 	^ self 
 		valueForVariableNamed: aVariableName 
@@ -48,7 +61,7 @@ GtCoderContextVariableStyler >> valueForVariableNamed: aVariableName ifPresent: 
 		ifAbsent: [ ^ self ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtCoderContextVariableStyler >> valueForVariableNamed: aVariableName ifPresent: presentBlock ifAbsent: absentBloc [
 	^ variables 
 		at: aVariableName 
@@ -57,4 +70,19 @@ GtCoderContextVariableStyler >> valueForVariableNamed: aVariableName ifPresent: 
 			variableValue := self methodCoder perform: selector  withEnoughArguments: {aVariableName}.
 			presentBlock value: variableValue ]
 		ifAbsent: absentBloc
+]
+
+{ #category : #visiting }
+GtCoderContextVariableStyler >> visitArgumentNode: anArgumentNode [
+	self styleVariableNode: anArgumentNode
+]
+
+{ #category : #visiting }
+GtCoderContextVariableStyler >> visitInstanceVariableNode: aSelfNode [
+	self styleVariableNode: aSelfNode
+]
+
+{ #category : #visiting }
+GtCoderContextVariableStyler >> visitTemporaryNode: aNode [ 
+	self styleVariableNode: aNode
 ]
