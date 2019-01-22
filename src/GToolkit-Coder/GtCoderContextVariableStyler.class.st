@@ -16,9 +16,10 @@ GtCoderContextVariableStyler >> initializeVariables [
 	variables notNil
 		ifTrue: [ ^ self ].
 	variables := Dictionary new.
-	variables at: 'self' put: methodCoder receiver.
-	methodCoder instanceVariableNamesAndValuesDo: [ :name :value | variables at: name put: value ].
-	methodCoder tempNamesAndValuesDo: [ :name :value | variables at: name put: value ].
+	methodCoder instanceVariableNames do: [ :name | 
+		variables at: name put: #instanceVariableValueFor: ].
+	methodCoder tempNames do: [ :name | 
+		variables at: name put: #tempNameValueFor: ].
 	interval := methodCoder session pcRangeForContext: methodCoder context
 ]
 
@@ -37,4 +38,23 @@ GtCoderContextVariableStyler >> style: aText ast: ast [
 	aText clearAttributes: [ :each | each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute ].
 	self initializeVariables.
 	super style: aText ast: ast
+]
+
+{ #category : #'as yet unclassified' }
+GtCoderContextVariableStyler >> valueForVariableNamed: aVariableName ifPresent: presentBlock [
+	^ self 
+		valueForVariableNamed: aVariableName 
+		ifPresent: presentBlock 
+		ifAbsent: [ ^ self ]
+]
+
+{ #category : #'as yet unclassified' }
+GtCoderContextVariableStyler >> valueForVariableNamed: aVariableName ifPresent: presentBlock ifAbsent: absentBloc [
+	^ variables 
+		at: aVariableName 
+		ifPresent: [ :selector |
+			| variableValue |
+			variableValue := self methodCoder perform: selector  withEnoughArguments: {aVariableName}.
+			presentBlock value: variableValue ]
+		ifAbsent: absentBloc
 ]
