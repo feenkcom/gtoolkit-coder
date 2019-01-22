@@ -35,7 +35,7 @@ GtCoderContextVariableStyler >> methodCoder: aMethodCoder [
 
 { #category : #accessing }
 GtCoderContextVariableStyler >> style: aText ast: ast [
-	aText clearAttributes: [ :each | each isKindOf: GtPlaygroundEvaluatedCodeButtonAttribute ].
+	aText clearAttributes: [ :each | each isKindOf: self class ].
 	self initializeVariables.
 	super style: aText ast: ast
 ]
