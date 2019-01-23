@@ -261,6 +261,7 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 			ex freeze.
 			value := ex.
 			isException := true ].
+	self resetASTCache.
 	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: isException).
 	self sourceEditor styleTextAndAfterDo: [
 		self styleResult: value isException: isException showPrintString: aBoolean ].
@@ -296,7 +297,7 @@ GtSourceCoder >> initialize [
 	super initialize.
 	announcer := Announcer new.
 	expanded := false.
-	astCache := nil -> nil.
+	self resetASTCache.
 	self initializeAddOns
 ]
 
@@ -526,6 +527,11 @@ GtSourceCoder >> reportParseError: aString at: anInteger on: textEditor [
 { #category : #actions }
 GtSourceCoder >> requester [
 	^ GtMethodCoderRequester on: self
+]
+
+{ #category : #actions }
+GtSourceCoder >> resetASTCache [
+	astCache := nil -> nil
 ]
 
 { #category : #private }
