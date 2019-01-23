@@ -30,7 +30,8 @@ GtMethodContextCoder >> buildSource [
 
 { #category : #'debugger access' }
 GtMethodContextCoder >> close [
-	self updateDebugger
+	self notifyDebugger.
+	self updateSelection
 ]
 
 { #category : #elements }
@@ -38,6 +39,24 @@ GtMethodContextCoder >> coderLook [
 	^ super coderLook
 	"^ GtContextCoderDropDownVariableLook new methodCoder: self"
 	"^ GtContextCoderVariableLook new methodCoder: self"
+]
+
+{ #category : #actions }
+GtMethodContextCoder >> compile [
+	self halt.
+	"The current compiler wants to notify a text morph object in case of errors. 
+	The compilation is delagated to the renderer, as the renderer has access
+	to the text morph object."
+	^ (self session 
+		recompileMethodTo: self newMethodSource 
+		inContext: self context 
+		notifying: nil "textMorph") 
+			ifTrue: [ 
+				self compiledMethod ifNotNil: [ :method | 
+					methodSource := method sourceCode.
+				true ] ] 
+			ifFalse: [ ^ false ]
+	
 ]
 
 { #category : #accessing }
@@ -67,7 +86,9 @@ GtMethodContextCoder >> contextActions [
 				action: [
 					aDebuggingAction execute.
 					aDebuggingAction needsUpdate
-						ifTrue: [ self updateDebugger ] ] ]
+						ifTrue: [ 
+							self notifyDebugger.
+							self updateSelection ] ] ]
 ]
 
 { #category : #'debugger access' }
@@ -112,9 +133,23 @@ GtMethodContextCoder >> isDead [
 	^ context isDead
 ]
 
+{ #category : #private }
+GtMethodContextCoder >> notifyDebugger [
+	announcer announce: GtCoderRefreshStackAnnouncement new.
+]
+
 { #category : #accessing }
 GtMethodContextCoder >> receiver [
 	^ self context receiver
+]
+
+{ #category : #actions }
+GtMethodContextCoder >> save [ 	
+	^ self validateSyntax and: [ 
+		self compile and: [ 
+			self buildSource. 
+			self notifyDebugger.
+			true ] ]
 ]
 
 { #category : #'debugger access' }
@@ -163,12 +198,6 @@ GtMethodContextCoder >> tempNames [
 { #category : #'accessing variables' }
 GtMethodContextCoder >> tempNamesAndValuesDo: aBlock [
 	self context tempNames doWithIndex: [ :each :i | aBlock value: each value: (self context namedTempAt: i) ]
-]
-
-{ #category : #private }
-GtMethodContextCoder >> updateDebugger [
-	announcer announce: GtCoderRefreshStackAnnouncement new.
-	self updateSelection
 ]
 
 { #category : #private }
