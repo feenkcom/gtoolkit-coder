@@ -292,6 +292,38 @@ GtSourceCoder >> gtLiveFor: aView [
 		stencil: [ self ]
 ]
 
+{ #category : #ui }
+GtSourceCoder >> gtViewContextActionsFor: aView [
+	<gtView>
+	^ self addOns 
+		ifNil: [ aView ]
+		ifNotNil: [ :currentAddOns | currentAddOns gtViewContextActionsFor: aView ]
+]
+
+{ #category : #ui }
+GtSourceCoder >> gtViewKeybindingsFor: aView [
+	<gtView>
+	^ self addOns 
+		ifNil: [ aView ]
+		ifNotNil: [ :currentAddOns | currentAddOns gtViewKeybindingsFor: aView ]
+]
+
+{ #category : #ui }
+GtSourceCoder >> gtViewMainActionsFor: aView [
+	<gtView>
+	^ self addOns 
+		ifNil: [ aView ]
+		ifNotNil: [ :currentAddOns | currentAddOns gtViewMainActionsFor: aView ]
+]
+
+{ #category : #ui }
+GtSourceCoder >> gtViewStylersFor: aView [
+	<gtView>
+	^ self addOns 
+		ifNil: [ aView ]
+		ifNotNil: [ :currentAddOns | currentAddOns gtViewStylersFor: aView ]
+]
+
 { #category : #'initialize-release' }
 GtSourceCoder >> initialize [
 	super initialize.
