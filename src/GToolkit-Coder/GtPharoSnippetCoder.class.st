@@ -90,6 +90,20 @@ GtPharoSnippetCoder >> newCompletionStrategy [
 	^ strategy
 ]
 
+{ #category : #updating }
+GtPharoSnippetCoder >> newRbAST: aString [
+	| ast |
+	ast := RBParser parseFaultyExpression: aString.
+	ast methodNode 
+		compilationContext: (CompilationContext new
+			class: (self classOrMetaClass ifNil: [UndefinedObject]);
+			forSyntaxHighlighting: true;
+			bindings: (bindingStrategy ifNil: [ Dictionary new ]);
+         requestor: nil).
+	ast doSemanticAnalysis.
+	^ ast
+]
+
 { #category : #accessing }
 GtPharoSnippetCoder >> object [
 	^ (bindingStrategy bindings respondsTo: #receiver)
