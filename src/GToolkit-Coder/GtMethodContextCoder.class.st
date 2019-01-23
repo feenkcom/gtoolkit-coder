@@ -43,7 +43,6 @@ GtMethodContextCoder >> coderLook [
 
 { #category : #actions }
 GtMethodContextCoder >> compile [
-	self halt.
 	"The current compiler wants to notify a text morph object in case of errors. 
 	The compilation is delagated to the renderer, as the renderer has access
 	to the text morph object."
