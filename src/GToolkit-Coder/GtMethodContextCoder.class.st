@@ -142,6 +142,15 @@ GtMethodContextCoder >> notifyDebugger [
 	announcer announce: GtCoderRefreshStackAnnouncement new.
 ]
 
+{ #category : #printing }
+GtMethodContextCoder >> printOn: aStream [
+	super printOn: aStream.
+	self context ifNotNil: [ 
+		aStream nextPut: $(.
+		self context printOn: aStream. 
+		aStream nextPut: $) ]
+]
+
 { #category : #accessing }
 GtMethodContextCoder >> receiver [
 	^ self context receiver
