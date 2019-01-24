@@ -77,7 +77,11 @@ GtMethodContextCoder >> context: aContext [
 GtMethodContextCoder >> contextActions [
 	<return: #Collection of: #GtCoderAction>
 
-	^ (self actionsForPragmas: self stackDebuggingActionsPragmas)
+	^ ((self actionsForPragmas: self stackDebuggingActionsPragmas)
+		select: [ :aDebuggingAction | 
+			"Quite hacky solutions for only showing StepInto for the top context."
+			aDebuggingAction class ~= StepIntoDebugAction or: [ 
+				self context = self session interruptedContext ] ])
 		collect: [ :aDebuggingAction |
 			GtCoderAction new
 				title: aDebuggingAction label;
