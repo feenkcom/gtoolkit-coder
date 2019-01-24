@@ -216,7 +216,12 @@ GtMethodContextCoder >> tempNames [
 
 { #category : #'accessing variables' }
 GtMethodContextCoder >> tempNamesAndValuesDo: aBlock [
-	self context tempNames doWithIndex: [ :each :i | aBlock value: each value: (self context namedTempAt: i) ]
+	self context tempNames doWithIndex: [ :each :i | 
+		| value |
+		value := nil.
+		[ value := self context namedTempAt: i ] on: Error do: [
+			value := 'error obtaining field value' asRopedText foreground: Color red ].
+		aBlock value: each value: value ]
 ]
 
 { #category : #updating }
