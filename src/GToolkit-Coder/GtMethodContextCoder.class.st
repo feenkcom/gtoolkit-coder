@@ -31,6 +31,8 @@ GtMethodContextCoder >> buildSource [
 { #category : #'debugger access' }
 GtMethodContextCoder >> close [
 	self notifyDebugger.
+	
+	self flag: 'check why this is needed'.
 	self updateSelection
 ]
 
@@ -60,7 +62,10 @@ GtMethodContextCoder >> compile [
 
 { #category : #accessing }
 GtMethodContextCoder >> compiledMethod [
-	^ super compiledMethod ifNil: [ self context method ]
+	"The context coder should allways return the compiled method from the context 
+	as the method from the class can be changed. In that case the context will 
+	use its own method."
+	^ self context method
 ]
 
 { #category : #accessing }
@@ -87,6 +92,11 @@ GtMethodContextCoder >> contextActions [
 					aDebuggingAction needsUpdate
 						ifTrue: [ 
 							self notifyDebugger.
+							
+							"If after a debugging action this context becomes the second on the stack 
+							the selected PC range could change. The debugger also updates the selection
+							of the top context. This will be called twice if the context remains on the
+							top, but its the easiest solution to avoid warking the stack to find what changed."
 							self updateSelection ] ] ]
 ]
 
@@ -199,7 +209,16 @@ GtMethodContextCoder >> tempNamesAndValuesDo: aBlock [
 	self context tempNames doWithIndex: [ :each :i | aBlock value: each value: (self context namedTempAt: i) ]
 ]
 
-{ #category : #private }
+{ #category : #updating }
+GtMethodContextCoder >> updateContent [ 
+	"Update the source code and the selection. The save action in the debugger 
+	can change the compiled method stored  in the context. "
+	self
+		updateSourceFromContext;
+		updateSelection
+]
+
+{ #category : #updating }
 GtMethodContextCoder >> updateSelection [
 	| interval |
 	(self session process isNil or: [ context isDead ])
@@ -213,4 +232,15 @@ GtMethodContextCoder >> updateSelection [
 			{(BlTextUnderlineAttribute new
 				paint: BrGlamorousColors errorBackgroundColor;
 				beNotOverwritableByStyler)}
+]
+
+{ #category : #updating }
+GtMethodContextCoder >> updateSourceFromContext [
+	| contextSourceCode |
+	contextSourceCode := self context method sourceCode.
+	contextSourceCode = methodSource ifTrue: [ 
+		^ self ].
+	
+	methodSource := contextSourceCode.
+	self buildSource.
 ]
