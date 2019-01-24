@@ -30,7 +30,10 @@ GtMethodContextCoder >> buildSource [
 
 { #category : #'debugger access' }
 GtMethodContextCoder >> close [
-	self updateDebugger
+	self notifyDebugger.
+	
+	self flag: 'check why this is needed'.
+	self updateSelection
 ]
 
 { #category : #elements }
@@ -40,9 +43,24 @@ GtMethodContextCoder >> coderLook [
 	"^ GtContextCoderVariableLook new methodCoder: self"
 ]
 
+{ #category : #actions }
+GtMethodContextCoder >> compile [
+	"The current compiler wants to notify a text morph object in case of errors. 
+	The compilation is delagated to the renderer, as the renderer has access
+	to the text morph object."
+	^ (self session 
+		recompileMethodTo: self newMethodSource 
+		inContext: self context 
+		notifying: nil "textMorph") 
+	
+]
+
 { #category : #accessing }
 GtMethodContextCoder >> compiledMethod [
-	^ super compiledMethod ifNil: [ self context method ]
+	"The context coder should allways return the compiled method from the context 
+	as the method from the class can be changed. In that case the context will 
+	use its own method."
+	^ self context method
 ]
 
 { #category : #accessing }
@@ -67,7 +85,14 @@ GtMethodContextCoder >> contextActions [
 				action: [
 					aDebuggingAction execute.
 					aDebuggingAction needsUpdate
-						ifTrue: [ self updateDebugger ] ] ]
+						ifTrue: [ 
+							self notifyDebugger.
+							
+							"If after a debugging action this context becomes the second on the stack 
+							the selected PC range could change. The debugger also updates the selection
+							of the top context. This will be called twice if the context remains on the
+							top, but its the easiest solution to avoid warking the stack to find what changed."
+							self updateSelection ] ] ]
 ]
 
 { #category : #'debugger access' }
@@ -112,9 +137,29 @@ GtMethodContextCoder >> isDead [
 	^ context isDead
 ]
 
+{ #category : #private }
+GtMethodContextCoder >> notifyDebugger [
+	announcer announce: GtCoderRefreshStackAnnouncement new.
+]
+
 { #category : #accessing }
 GtMethodContextCoder >> receiver [
 	^ self context receiver
+]
+
+{ #category : #actions }
+GtMethodContextCoder >> save [ 	
+	"Compiling creates a new method objects, so avoid the action if there are no changes"
+	self isModified ifFalse: [ ^ false ]. 
+	self validateSyntax ifFalse: [ ^ false ].
+	self compile ifFalse: [ ^ false ].
+	
+	"If compilation succedded notify the debugger. The current context is now in an 
+	invalid state, as it contains the code of the old compiled method object; the context 
+	has a new compiled method objects. The debugger should properly update this context if
+	the context still need to be displayed on the stack."
+	self notifyDebugger.
+	^ true
 ]
 
 { #category : #'debugger access' }
@@ -165,13 +210,16 @@ GtMethodContextCoder >> tempNamesAndValuesDo: aBlock [
 	self context tempNames doWithIndex: [ :each :i | aBlock value: each value: (self context namedTempAt: i) ]
 ]
 
-{ #category : #private }
-GtMethodContextCoder >> updateDebugger [
-	announcer announce: GtCoderRefreshStackAnnouncement new.
-	self updateSelection
+{ #category : #updating }
+GtMethodContextCoder >> updateContent [ 
+	"Update the source code and the selection. The save action in the debugger 
+	can change the compiled method stored  in the context. "
+	self
+		updateSourceFromContext;
+		updateSelection
 ]
 
-{ #category : #private }
+{ #category : #updating }
 GtMethodContextCoder >> updateSelection [
 	| interval |
 	(self session process isNil or: [ context isDead ])
@@ -185,4 +233,15 @@ GtMethodContextCoder >> updateSelection [
 			{(BlTextUnderlineAttribute new
 				paint: BrGlamorousColors errorBackgroundColor;
 				beNotOverwritableByStyler)}
+]
+
+{ #category : #updating }
+GtMethodContextCoder >> updateSourceFromContext [
+	| contextSourceCode |
+	contextSourceCode := self context method sourceCode.
+	contextSourceCode = methodSource ifTrue: [ 
+		^ self ].
+	
+	methodSource := contextSourceCode.
+	self buildSource.
 ]

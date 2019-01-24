@@ -240,6 +240,20 @@ GtMethodCoder >> format [
 ]
 
 { #category : #ui }
+GtMethodCoder >> gtDiffViewFor: aView [
+	<gtView>
+	(methodSource = self newMethodSource) ifTrue: [ ^ aView ].
+	^ aView textEditor
+		title: 'Diff' translated;
+		priority: 11;
+		text: [ :anEditor | 
+			Gt2EpiceaDiffStencil new
+				from: methodSource;
+				to: self newMethodSource;
+				create ]
+]
+
+{ #category : #ui }
 GtMethodCoder >> gtLiveFor: aView [
 	^ aView explicit 
 		title: 'Live';
