@@ -30,7 +30,8 @@ GtMethodContextCoder >> buildSource [
 
 { #category : #'debugger access' }
 GtMethodContextCoder >> close [
-	self updateDebugger
+	self notifyDebugger.
+	self updateSelection
 ]
 
 { #category : #elements }
@@ -38,6 +39,23 @@ GtMethodContextCoder >> coderLook [
 	^ super coderLook
 	"^ GtContextCoderDropDownVariableLook new methodCoder: self"
 	"^ GtContextCoderVariableLook new methodCoder: self"
+]
+
+{ #category : #actions }
+GtMethodContextCoder >> compile [
+	"The current compiler wants to notify a text morph object in case of errors. 
+	The compilation is delagated to the renderer, as the renderer has access
+	to the text morph object."
+	^ (self session 
+		recompileMethodTo: self newMethodSource 
+		inContext: self context 
+		notifying: nil "textMorph") 
+			ifTrue: [ 
+				self compiledMethod ifNotNil: [ :method | 
+					methodSource := method sourceCode.
+				true ] ] 
+			ifFalse: [ ^ false ]
+	
 ]
 
 { #category : #accessing }
@@ -67,7 +85,9 @@ GtMethodContextCoder >> contextActions [
 				action: [
 					aDebuggingAction execute.
 					aDebuggingAction needsUpdate
-						ifTrue: [ self updateDebugger ] ] ]
+						ifTrue: [ 
+							self notifyDebugger.
+							self updateSelection ] ] ]
 ]
 
 { #category : #'debugger access' }
@@ -78,14 +98,28 @@ GtMethodContextCoder >> currentContext [
 { #category : #'initialize-release' }
 GtMethodContextCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addStyler: (GtCoderContextVariableStyler new methodCoder: self)
+"	addOns addStyler: (GtCoderContextVariableButtonStyler new methodCoder: self)."
+"	addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: self)"
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing variables' }
+GtMethodContextCoder >> instanceVariableNames [
+	| receiver |
+	receiver := self receiver.
+	^ receiver class allInstVarNames
+]
+
+{ #category : #'accessing variables' }
 GtMethodContextCoder >> instanceVariableNamesAndValuesDo: aBlock [
 	| receiver |
 	receiver := self receiver.
-	receiver class allInstVarNames doWithIndex: [ :each :i | aBlock value: each value: (receiver instVarAt: i) ]
+	receiver class allInstVarNames doWithIndex: [ :each :i | 
+		aBlock value: each value: (receiver instVarAt: i) ]
+]
+
+{ #category : #'accessing variables' }
+GtMethodContextCoder >> instanceVariableValueFor: anInstanceVariableName [
+	^ self receiver instVarNamed: anInstanceVariableName
 ]
 
 { #category : #'debugger access' }
@@ -98,9 +132,23 @@ GtMethodContextCoder >> isDead [
 	^ context isDead
 ]
 
+{ #category : #private }
+GtMethodContextCoder >> notifyDebugger [
+	announcer announce: GtCoderRefreshStackAnnouncement new.
+]
+
 { #category : #accessing }
 GtMethodContextCoder >> receiver [
 	^ self context receiver
+]
+
+{ #category : #actions }
+GtMethodContextCoder >> save [ 	
+	^ self validateSyntax and: [ 
+		self compile and: [ 
+			self buildSource. 
+			self notifyDebugger.
+			true ] ]
 ]
 
 { #category : #'debugger access' }
@@ -115,10 +163,10 @@ GtMethodContextCoder >> session: anObject [
 
 { #category : #private }
 GtMethodContextCoder >> stackDebuggingActionsPragmas [
-	^ #(gt2StackDebuggingAction)
+	^ #(gt2ContextDebuggingAction)
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing variables' }
 GtMethodContextCoder >> stackVariableNamesAndValuesDo: aBlock [
 	| stackPosition |
 	self context stackPtr isNil
@@ -136,15 +184,19 @@ GtMethodContextCoder >> stackVariableNamesAndValuesDo: aBlock [
 		stackPosition := stackPosition + 1 ]
 ]
 
-{ #category : #accessing }
-GtMethodContextCoder >> tempNamesAndValuesDo: aBlock [
-	self context tempNames doWithIndex: [ :each :i | aBlock value: each value: (self context namedTempAt: i) ]
+{ #category : #'accessing variables' }
+GtMethodContextCoder >> tempNameValueFor: aTempName [
+	^ self context tempNamed: aTempName
 ]
 
-{ #category : #private }
-GtMethodContextCoder >> updateDebugger [
-	announcer announce: GtCoderRefreshStackAnnouncement new.
-	self updateSelection
+{ #category : #'accessing variables' }
+GtMethodContextCoder >> tempNames [
+	^ self context tempNames
+]
+
+{ #category : #'accessing variables' }
+GtMethodContextCoder >> tempNamesAndValuesDo: aBlock [
+	self context tempNames doWithIndex: [ :each :i | aBlock value: each value: (self context namedTempAt: i) ]
 ]
 
 { #category : #private }

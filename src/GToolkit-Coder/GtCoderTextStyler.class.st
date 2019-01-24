@@ -31,21 +31,17 @@ GtCoderTextStyler >> extraStyle: aText ast: ast [
 
 { #category : #private }
 GtCoderTextStyler >> privateStyle: aText [
-	[ | ast source |
-	source := aText asString.
-	ast := RBParser parseFaultyMethod: source.
-	ast methodNode
-		compilationContext:
-			(CompilationContext new
-				class: (coder classOrMetaClass ifNil: [ UndefinedObject ]);
-				forSyntaxHighlighting: true;
-				bindings: Dictionary new;
-				requestor: nil).
-	ast doSemanticAnalysis.
-	self style: aText ast: ast.
+	| ast |
+	self
+		assert: [ aText asString = coder source
+				or: [ aText asString = coder collapsedEditor text asString ] ].
+	ast := aText asString = coder source
+		ifTrue: [ coder rbAST ]
+		ifFalse: [ coder newRbAST: aText asString ].
+	[ self style: aText ast: ast.
 	self extraStyle: aText ast: ast ]
 		on: Error
-		do: [ :ex | ex return ].
+		do: [ :e | e return ].
 	^ aText
 ]
 

@@ -79,6 +79,11 @@ GtClassDefinitionCoder >> object: anObject [
 	object := anObject
 ]
 
+{ #category : #accessing }
+GtClassDefinitionCoder >> theClass [
+	^ class
+]
+
 { #category : #elements }
 GtClassDefinitionCoder >> variableElementNamed: aString type: aSymbol [
 	| element nameElement dropDownElement |

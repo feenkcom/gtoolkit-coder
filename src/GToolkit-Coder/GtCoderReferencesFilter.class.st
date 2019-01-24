@@ -15,6 +15,48 @@ GtCoderReferencesFilter class >> literal: anObject [
 		yourself
 ]
 
+{ #category : #testing }
+GtCoderReferencesFilter >> checkForArrayReference: anObject [
+	anObject isArray
+		ifFalse: [ ^ false ].
+	^ anObject
+		anySatisfy:
+			[ :each | each == object or: [ self checkForArrayReference: each ] ]
+]
+
+{ #category : #testing }
+GtCoderReferencesFilter >> checkMethodSource: aCompiledMethod [
+	| ast |
+	ast := aCompiledMethod ast.
+	ast
+		nodesDo: [ :each | 
+			(each isLiteralNode and: [ each value == object ])
+				ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : #testing }
+GtCoderReferencesFilter >> doesMethodIncludeBytecodeLiteral: aCompiledMethod [
+	| stream |
+	stream := InstructionStream on: aCompiledMethod.
+	[ stream atEnd ]
+		whileFalse: [ | instruction |
+			instruction := stream nextInstruction.
+			(#methodReturnConstant: = instruction selector
+				and: [ instruction arguments first == object ])
+				ifTrue: [ ^ true ].
+			(#pushConstant: = instruction selector
+				and: [ instruction arguments first == object ])
+				ifTrue: [ ^ self checkMethodSource: aCompiledMethod ] ].
+	aCompiledMethod
+		literalsDo: [ :each | 
+			each == object
+				ifTrue: [ ^ self checkMethodSource: aCompiledMethod ].
+			(self checkForArrayReference: each)
+				ifTrue: [ ^ true ] ].
+	^ false
+]
+
 { #category : #ui }
 GtCoderReferencesFilter >> gtDisplayOn: stream [
 	self object gtDisplayOn: stream.
@@ -23,16 +65,19 @@ GtCoderReferencesFilter >> gtDisplayOn: stream [
 
 { #category : #accessing }
 GtCoderReferencesFilter >> highlighter [
-	^ object isSymbol
-		ifTrue: [ GtSelectorReferenceHighlighter forSelector: object ]
-		ifFalse: [ ((object isKindOf: Association) and: [ object key isSymbol ])
-				ifTrue: [ GtVariableReferenceHighlighter forVariableName: object key ]
-				ifFalse: [ nil ] ]
+	((object isKindOf: Association) and: [ object key isSymbol ])
+				ifTrue: [ ^ GtVariableReferenceHighlighter forVariableName: object key ].
+	object isLiteral ifTrue: [ ^ GtSelectorReferenceAndLiteralHighlighter forSelector: object ].
+	^ nil
 ]
 
 { #category : #testing }
 GtCoderReferencesFilter >> includeMethod: aCompiledMethod [
-	^ aCompiledMethod hasSelector: object specialSelectorIndex: specialSelectorIndex
+	(aCompiledMethod encoderClass specialLiterals includes: object)
+		ifTrue: [ ^ self doesMethodIncludeBytecodeLiteral: aCompiledMethod ].
+	^ aCompiledMethod
+		hasSelector: object
+		specialSelectorIndex: specialSelectorIndex
 ]
 
 { #category : #accessing }

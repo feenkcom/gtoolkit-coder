@@ -49,6 +49,20 @@ GtCoderMethodElement >> contentElement [
 	^ element
 ]
 
+{ #category : #accessing }
+GtCoderMethodElement >> gtAllShortcutsFor: aView [
+	<gtView>
+	self shortcuts ifEmpty: [ ^ aView empty ].
+	^ aView columnedList 
+		title: 'All shortcuts' translated;
+		priority: 10;
+		items: [ self shortcuts, self methodCoder addOns shortcuts ];
+		column: 'Key' do: [:aColumn | 
+			aColumn item: [ :each | each combination gtDisplayString ]; matchParent ];
+		column: 'Action' do: [:aColumn |
+			aColumn item: [ :each | each action asString ]; matchParent ]
+]
+
 { #category : #initialization }
 GtCoderMethodElement >> initialize [
 	| resizer |
@@ -60,7 +74,11 @@ GtCoderMethodElement >> initialize [
 		beBottom;
 		look: BrGlamorousResizerLook new;
 		constraintsDo: [ :c | c ignoreByLayout ];
-		when: BlDoubleClickEvent do: [ self childNamed: #bodyEditor ifFound: [ :anEditor | anEditor constraintsDo: [ :c | c vertical fitContent ] ] ifNone: [  ] ];
+		when: BlDoubleClickEvent do: [ self 
+			childNamed: #bodyEditor 
+			ifFound: [ :anEditor | anEditor 
+				constraintsDo: [ :c | c vertical fitContent ] ] 
+			ifNone: [  ] ];
 		yourself.
 	self
 		look:
@@ -80,7 +98,10 @@ GtCoderMethodElement >> initialize [
 									self background: Color transparent ].
 							aStyler
 								expanded: [ self addChild: resizer.
-									self enqueueTask: (BlTaskAction new action: [ self childNamed: #bodyEditor ifFound: [ :anEditor | resizer target: anEditor ] ifNone: [ resizer target: nil ] ]).
+									self enqueueTask: (BlTaskAction new action: [ self 
+										childNamed: #bodyEditor 
+										ifFound: [ :anEditor | resizer target: anEditor ] 
+										ifNone: [ resizer target: nil ] ]).
 									self background: Color white ] ]).
 	self
 		addShortcut:
