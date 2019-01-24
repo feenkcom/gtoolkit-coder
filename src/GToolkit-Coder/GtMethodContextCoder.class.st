@@ -52,11 +52,6 @@ GtMethodContextCoder >> compile [
 		recompileMethodTo: self newMethodSource 
 		inContext: self context 
 		notifying: nil "textMorph") 
-			ifTrue: [ 
-				self compiledMethod ifNotNil: [ :method | 
-					methodSource := method sourceCode.
-				true ] ] 
-			ifFalse: [ ^ false ]
 	
 ]
 
@@ -154,11 +149,17 @@ GtMethodContextCoder >> receiver [
 
 { #category : #actions }
 GtMethodContextCoder >> save [ 	
-	^ self validateSyntax and: [ 
-		self compile and: [ 
-			self buildSource. 
-			self notifyDebugger.
-			true ] ]
+	"Compiling creates a new method objects, so avoid the action if there are no changes"
+	self isModified ifFalse: [ ^ false ]. 
+	self validateSyntax ifFalse: [ ^ false ].
+	self compile ifFalse: [ ^ false ].
+	
+	"If compilation succedded notify the debugger. The current context is now in an 
+	invalid state, as it contains the code of the old compiled method object; the context 
+	has a new compiled method objects. The debugger should properly update this context if
+	the context still need to be displayed on the stack."
+	self notifyDebugger.
+	^ true
 ]
 
 { #category : #'debugger access' }
