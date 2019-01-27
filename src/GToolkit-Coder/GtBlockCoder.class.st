@@ -63,27 +63,40 @@ GtBlockCoder >> blockSource: aString [
 
 { #category : #'initialize-release' }
 GtBlockCoder >> initialize [
-	super initialize.
-	expanded := true.
 	parameters := OrderedDictionary new.
 	bindingStrategy := GtHighlightingBindingStrategy new.
-	bindingStrategy bindings: Dictionary new
+	bindingStrategy bindings: Dictionary new.
+	super initialize.
+	expanded := true
+]
+
+{ #category : #'initialize-release' }
+GtBlockCoder >> initializeAddOns [
+	super initializeAddOns.
+	addOns
+		addStyler:
+			(BrRBTextStyler new
+				workspace: bindingStrategy;
+				yourself).
+	addOns clearChanges
 ]
 
 { #category : #private }
 GtBlockCoder >> newCompletionStrategy [
-	| completionStrategy |
-	completionStrategy := super newCompletionStrategy.
-	completionStrategy blockVariables: parameters.
-	^ completionStrategy
+	^ super newCompletionStrategy
+		blockVariables: parameters;
+		yourself
 ]
 
-{ #category : #private }
-GtBlockCoder >> newSourceStyler [
-	| styler |
-	styler := BrRBTextStyler new.
-	styler workspace: bindingStrategy.
-	^ styler
+{ #category : #updating }
+GtBlockCoder >> newRbAST: aString [
+	self flag: 'probably generates wrong text indexes for nodes'.
+	^ (super newRbAST: aString) body
+]
+
+{ #category : #updating }
+GtBlockCoder >> newSource [
+	^ self blockSource
 ]
 
 { #category : #accessing }
@@ -102,6 +115,6 @@ GtBlockCoder >> sourceElement [
 	| element |
 	element := BrEditorElement new.
 	element editor: self sourceEditor.
-	(GtCompletionController on: element strategy: self newCompletionStrategy) install.
+	(GtCompletionController on: element strategy: self completionStrategy) install.
 	^ element
 ]

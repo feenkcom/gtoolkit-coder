@@ -71,6 +71,50 @@ GtMethodCoderAddOns >> contextActions [
 	^ contextActions
 ]
 
+{ #category : #ui }
+GtMethodCoderAddOns >> gtViewContextActionsFor: aView [
+	<gtView>
+	^ aView columnedList
+		title: 'Context actions' translated;
+		priority: 25;
+		items: [ self contextActions ];
+		column: 'Title' item: [ :anAction | anAction title ] format: [ :title | title ifNil: [''] ];
+		column: 'Action' item: [ :anAction | anAction action ]
+]
+
+{ #category : #ui }
+GtMethodCoderAddOns >> gtViewKeybindingsFor: aView [
+	<gtView>
+	^ aView columnedList
+		title: 'Key bindings' translated;
+		priority: 15;
+		items: [ self shortcuts ];
+		column: 'Shortcut' item: [ :aShortcut | aShortcut combination ] width: 200;
+		column: 'Name' item: [ :aShortcut | aShortcut name ifNil: [ '' ] ];
+		column: 'Action' item: [ :aShortcut | aShortcut action ];
+		column: 'Description' item: [ :aShortcut | aShortcut description ifNil: [ '' ] ]
+]
+
+{ #category : #ui }
+GtMethodCoderAddOns >> gtViewMainActionsFor: aView [
+	<gtView>
+	^ aView columnedList
+		title: 'Main actions' translated;
+		priority: 20;
+		items: [ self mainActions ];
+		column: 'Title' item: [ :anAction | anAction title ] format: [ :title | title ifNil: [''] ];
+		column: 'Action' item: [ :anAction | anAction action ]
+]
+
+{ #category : #ui }
+GtMethodCoderAddOns >> gtViewStylersFor: aView [
+	<gtView>
+	^ aView list
+		title: 'Stylers' translated;
+		priority: 30;
+		items: [ self stylers ]
+]
+
 { #category : #'initialize-release' }
 GtMethodCoderAddOns >> initialize [
 	super initialize.

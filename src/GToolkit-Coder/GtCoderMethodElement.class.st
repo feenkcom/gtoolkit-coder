@@ -49,6 +49,20 @@ GtCoderMethodElement >> contentElement [
 	^ element
 ]
 
+{ #category : #accessing }
+GtCoderMethodElement >> gtAllShortcutsFor: aView [
+	<gtView>
+	self shortcuts ifEmpty: [ ^ aView empty ].
+	^ aView columnedList 
+		title: 'All shortcuts' translated;
+		priority: 10;
+		items: [ self shortcuts, self methodCoder addOns shortcuts ];
+		column: 'Key' do: [:aColumn | 
+			aColumn item: [ :each | each combination gtDisplayString ]; matchParent ];
+		column: 'Action' do: [:aColumn |
+			aColumn item: [ :each | each action asString ]; matchParent ]
+]
+
 { #category : #initialization }
 GtCoderMethodElement >> initialize [
 	| resizer |

@@ -2,19 +2,10 @@ Class {
 	#name : #GtPharoSnippetCoder,
 	#superclass : #GtSourceCoder,
 	#instVars : [
-		'bindingStrategy',
-		'completionStrategy'
+		'bindingStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
-
-{ #category : #private }
-GtPharoSnippetCoder >> completionStrategy [
-	^ completionStrategy
-		ifNil: [ completionStrategy := GtPharoCompletionStrategy new isMethod: false.
-			completionStrategy bindings: bindingStrategy bindings.
-			completionStrategy ]
-]
 
 { #category : #actions }
 GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
@@ -33,18 +24,29 @@ GtPharoSnippetCoder >> evaluationRequester [
 
 { #category : #initialization }
 GtPharoSnippetCoder >> initialize [
-	super initialize.
-	expanded := true.
 	bindingStrategy := GtHighlightingBindingStrategy new.
 	bindingStrategy bindings: Dictionary new.
+	super initialize.
+	expanded := true.
 	self source: ''
 ]
 
 { #category : #initialization }
 GtPharoSnippetCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addMainAction: 'Evaluate' translated icon: BrGlamorousIcons play action: [ :aButton | self evaluateAndHighlightAllSource ].
-	addOns addMainAction: 'Inspect' translated icon: BrGlamorousIcons playinspect action: [ :aButton | self runFrom: aButton ].
+	addOns
+		addMainAction: 'Evaluate' translated
+		icon: BrGlamorousIcons play
+		action: [ :aButton | self evaluateAndHighlightAllSource ].
+	addOns
+		addMainAction: 'Inspect' translated
+		icon: BrGlamorousIcons playinspect
+		action: [ :aButton | self runFrom: aButton ].
+	addOns
+		addStyler:
+			(BrRBTextStyler new
+				workspace: bindingStrategy;
+				yourself).
 	addOns clearChanges
 ]
 
@@ -78,17 +80,35 @@ GtPharoSnippetCoder >> initializeShortcuts [
 				action: [ self printItSelection ])
 ]
 
-{ #category : #ui }
-GtPharoSnippetCoder >> newSourceStyler [
-	| styler |
-	styler := BrRBTextStyler new.
-	styler workspace: bindingStrategy.
-	^ styler
+{ #category : #private }
+GtPharoSnippetCoder >> newCompletionStrategy [
+	| strategy |
+	strategy := super newCompletionStrategy
+		isMethod: false;
+		yourself.
+	strategy bindings: bindingStrategy bindings.
+	^ strategy
+]
+
+{ #category : #updating }
+GtPharoSnippetCoder >> newRbAST: aString [
+	| ast |
+	ast := RBParser parseFaultyExpression: aString.
+	ast methodNode 
+		compilationContext: (CompilationContext new
+			class: (self classOrMetaClass ifNil: [UndefinedObject]);
+			forSyntaxHighlighting: true;
+			bindings: (bindingStrategy ifNil: [ Dictionary new ]);
+         requestor: nil).
+	ast doSemanticAnalysis.
+	^ ast
 ]
 
 { #category : #accessing }
 GtPharoSnippetCoder >> object [
-	^ bindingStrategy bindings receiver
+	^ (bindingStrategy bindings respondsTo: #receiver)
+		ifTrue: [ bindingStrategy bindings receiver ]
+		ifFalse: [ nil ]
 ]
 
 { #category : #ui }
