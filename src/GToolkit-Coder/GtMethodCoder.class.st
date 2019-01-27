@@ -313,56 +313,26 @@ GtMethodCoder >> initializeAddOns [
 { #category : #'initialize-release' }
 GtMethodCoder >> initializeShortcuts [
 	super initializeShortcuts.
+
 	addOns
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						d;
-						build);
-				action: [ self doItSelection ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						g;
-						build);
-				action: [ :editorElement | self doItAndGoSelection: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						r;
-						build);
-				action: [ :editorElement | self renameVariableIn: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						e;
-						build);
-				action: [ :editorElement | self extractMethod: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						s;
-						build);
-				action: [ self save ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						shift;
-						f;
-						build);
-				action: [ self format ])
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryD;
+			action: [ self doItSelection ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryG;
+			action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryR;
+			action: [ :editorElement | self renameVariableIn: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryE;
+			action: [ :editorElement | self extractMethod: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryS;
+			action: [ self save ]);
+		addShortcut: (BlShortcut new
+			combination: (BlKeyCombination primaryShiftF);
+			action: [ self format ])
 ]
 
 { #category : #testing }

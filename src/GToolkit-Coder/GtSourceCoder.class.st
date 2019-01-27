@@ -341,31 +341,17 @@ GtSourceCoder >> initializeAddOns [
 
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeShortcuts [
+
 	addOns
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						m;
-						build);
-				action: [ :editorElement | self browseImplementors: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						n;
-						build);
-				action: [ :editorElement | self browseReferences: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						b;
-						build);
-				action: [ :editorElement | self browseClass: editorElement ])
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryM;
+			action: [ :editorElement | self browseImplementors: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryN;
+			action: [ :editorElement | self browseReferences: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryB;
+			action: [ :editorElement | self browseClass: editorElement ])
 ]
 
 { #category : #testing }

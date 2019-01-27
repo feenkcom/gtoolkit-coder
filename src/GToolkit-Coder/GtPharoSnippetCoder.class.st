@@ -53,31 +53,17 @@ GtPharoSnippetCoder >> initializeAddOns [
 { #category : #'initialize-release' }
 GtPharoSnippetCoder >> initializeShortcuts [
 	super initializeShortcuts.
+
 	addOns
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						d;
-						build);
-				action: [ self doItSelection ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						g;
-						build);
-				action: [ :editorElement | self doItAndGoSelection: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						p;
-						build);
-				action: [ self printItSelection ])
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryD;
+			action: [ self doItSelection ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryG;
+			action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryP;
+			action: [ self printItSelection ])
 ]
 
 { #category : #private }
