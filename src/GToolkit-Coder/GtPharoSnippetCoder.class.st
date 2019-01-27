@@ -57,7 +57,7 @@ GtPharoSnippetCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key d;
+						d;
 						build);
 				action: [ self doItSelection ]);
 		addShortcut:
@@ -65,7 +65,7 @@ GtPharoSnippetCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key g;
+						g;
 						build);
 				action: [ :editorElement | self doItAndGoSelection: editorElement ]);
 		addShortcut:
@@ -73,7 +73,7 @@ GtPharoSnippetCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key p;
+						p;
 						build);
 				action: [ self printItSelection ])
 ]

@@ -313,7 +313,7 @@ GtMethodCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key d;
+						d;
 						build);
 				action: [ self doItSelection ]);
 		addShortcut:
@@ -321,7 +321,7 @@ GtMethodCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key g;
+						g;
 						build);
 				action: [ :editorElement | self doItAndGoSelection: editorElement ]);
 		addShortcut:
@@ -329,7 +329,7 @@ GtMethodCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key r;
+						r;
 						build);
 				action: [ :editorElement | self renameVariableIn: editorElement ]);
 		addShortcut:
@@ -337,7 +337,7 @@ GtMethodCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key e;
+						e;
 						build);
 				action: [ :editorElement | self extractMethod: editorElement ]);
 		addShortcut:
@@ -345,7 +345,7 @@ GtMethodCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key s;
+						s;
 						build);
 				action: [ self save ]);
 		addShortcut:
@@ -354,7 +354,7 @@ GtMethodCoder >> initializeShortcuts [
 					(BlKeyCombination builder
 						primary;
 						shift;
-						key: Key f;
+						f;
 						build);
 				action: [ self format ])
 ]

@@ -304,7 +304,7 @@ GtSourceCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key m;
+						m;
 						build);
 				action: [ :editorElement | self browseImplementors: editorElement ]);
 		addShortcut:
@@ -312,7 +312,7 @@ GtSourceCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key n;
+						n;
 						build);
 				action: [ :editorElement | self browseReferences: editorElement ]);
 		addShortcut:
@@ -320,7 +320,7 @@ GtSourceCoder >> initializeShortcuts [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key b;
+						b;
 						build);
 				action: [ :editorElement | self browseClass: editorElement ])
 ]
