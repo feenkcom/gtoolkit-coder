@@ -64,7 +64,7 @@ GtBlockCoder >> blockSource: aString [
 { #category : #'initialize-release' }
 GtBlockCoder >> initialize [
 	parameters := OrderedDictionary new.
-	bindingStrategy := GtHighlightingBindingStrategy new.
+	bindingStrategy := GtBindingStrategy new.
 	bindingStrategy bindings: Dictionary new.
 	super initialize.
 	expanded := true

@@ -18,13 +18,13 @@ GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
 { #category : #actions }
 GtPharoSnippetCoder >> evaluationRequester [
 	^ super evaluationRequester
-		bindingStrategy: (GtSnippetBindingStrategy new bindings: bindingStrategy bindings);
+		bindingStrategy: bindingStrategy;
 		yourself
 ]
 
 { #category : #initialization }
 GtPharoSnippetCoder >> initialize [
-	bindingStrategy := GtHighlightingBindingStrategy new.
+	bindingStrategy := GtSnippetBindingStrategy new.
 	bindingStrategy bindings: Dictionary new.
 	super initialize.
 	expanded := true.
