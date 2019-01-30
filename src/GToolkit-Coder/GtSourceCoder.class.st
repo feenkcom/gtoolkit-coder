@@ -249,18 +249,28 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 	| value isException |
 	self clearPreviousEvaluations.
 	isException := false.
-	[ value := self classOrMetaClass compiler
-		requestor: self evaluationRequester;
-		source: aString;
-		receiver: self object;
-		context: self context;
-		failBlock: [ ^ self flag: 'insert error adornment' ];
-		evaluate ]
-		on: Error
-		do: [ :ex | 
-			ex freeze.
-			value := ex.
-			isException := true ].
+	[ 
+		value := self classOrMetaClass compiler
+			requestor: self evaluationRequester;
+			source: aString;
+			receiver: self object;
+			context: self context;
+			failBlock: [ ^ self flag: 'insert error adornment' ];
+			evaluate 
+	] on: Error do: [ :anError |
+		anError freeze.
+		value := anError.
+		isException := true
+		
+		"self resetASTCache. 
+		GtTextEditorUnhandledError new
+			exception: anError;
+			sourceCoder: self;
+			signal."
+		"The process will be terminated. Return nil in case there is some error whil opening the debugger
+		that prevents the debugger from opening and does not kill the process."
+		"^ nil" ].
+		
 	self resetASTCache.
 	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: isException).
 	self sourceEditor styleTextAndAfterDo: [
