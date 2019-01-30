@@ -2,10 +2,21 @@ Class {
 	#name : #GtPharoSnippetCoder,
 	#superclass : #GtSourceCoder,
 	#instVars : [
-		'bindingStrategy'
+		'bindingStrategy',
+		'context'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #accessing }
+GtPharoSnippetCoder >> context [
+	^ context
+]
+
+{ #category : #accessing }
+GtPharoSnippetCoder >> context: doItContext [
+	context := doItContext
+]
 
 { #category : #actions }
 GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
@@ -20,6 +31,16 @@ GtPharoSnippetCoder >> evaluationRequester [
 	^ super evaluationRequester
 		bindingStrategy: bindingStrategy;
 		yourself
+]
+
+{ #category : #private }
+GtPharoSnippetCoder >> highlightBindingsStrategy [
+	^ self context 
+		ifNil:  [ GtHighlightingBindingStrategy new 
+			bindings: bindingStrategy bindings]
+		ifNotNil: [ GtContextHighlightingBindingStrategy new
+			bindings: bindingStrategy bindings;
+			context: self context ] 
 ]
 
 { #category : #initialization }
@@ -45,12 +66,12 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addStyler:
 			(BrRBTextStyler new
-				workspace: bindingStrategy;
+				isForWorkspace: true;
 				yourself).
 	addOns clearChanges
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtPharoSnippetCoder >> initializeShortcuts [
 	super initializeShortcuts.
 
@@ -83,9 +104,8 @@ GtPharoSnippetCoder >> newRbAST: aString [
 	ast methodNode 
 		compilationContext: (CompilationContext new
 			class: (self classOrMetaClass ifNil: [UndefinedObject]);
-			forSyntaxHighlighting: true;
-			bindings: (bindingStrategy ifNil: [ Dictionary new ]);
-         requestor: nil).
+			forSyntaxHighlighting: true; 
+         requestor: self highlightBindingsStrategy).
 	ast doSemanticAnalysis.
 	^ ast
 ]
