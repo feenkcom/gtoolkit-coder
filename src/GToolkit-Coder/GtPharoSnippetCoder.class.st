@@ -100,7 +100,7 @@ GtPharoSnippetCoder >> object [
 { #category : #ui }
 GtPharoSnippetCoder >> requester [
 	^ super requester
-		bindingStrategy: (GtSnippetBindingStrategy new bindings: bindingStrategy bindings);
+		bindingStrategy: bindingStrategy;
 		yourself
 ]
 
