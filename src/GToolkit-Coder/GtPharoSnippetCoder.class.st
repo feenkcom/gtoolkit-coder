@@ -18,7 +18,7 @@ GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
 { #category : #actions }
 GtPharoSnippetCoder >> evaluationRequester [
 	^ super evaluationRequester
-		bindingStrategy: (GtPlaygroundBindingStrategy new bindings: bindingStrategy bindings);
+		bindingStrategy: (GtSnippetBindingStrategy new bindings: bindingStrategy bindings);
 		yourself
 ]
 
@@ -100,7 +100,7 @@ GtPharoSnippetCoder >> object [
 { #category : #ui }
 GtPharoSnippetCoder >> requester [
 	^ super requester
-		bindingStrategy: (GtPlaygroundBindingStrategy new bindings: bindingStrategy bindings);
+		bindingStrategy: (GtSnippetBindingStrategy new bindings: bindingStrategy bindings);
 		yourself
 ]
 

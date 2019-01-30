@@ -57,6 +57,14 @@ GtMethodCoderRequester >> editor [
 	^ self
 ]
 
+{ #category : #binding }
+GtMethodCoderRequester >> hasBindingOf: aSymbol [
+	^ self bindingStrategy isNil
+		ifTrue: [ super hasBindingOf: aSymbol ]
+		ifFalse: [ bindingStrategy hasBindingOf: aSymbol ]
+
+]
+
 { #category : #requester }
 GtMethodCoderRequester >> notify: message at: anIndex in: aString [
 	| index |
