@@ -1,5 +1,5 @@
 Class {
-	#name : #GtTextEditorUnhandledError,
+	#name : #GtCoderEvaluationUnhandledError,
 	#superclass : #UnhandledError,
 	#instVars : [
 		'sourceCoder'
@@ -8,8 +8,13 @@ Class {
 }
 
 { #category : #handling }
-GtTextEditorUnhandledError >> debug [
-	"open a debugger on myself embedded in the given text editor"
+GtCoderEvaluationUnhandledError >> debug [
+	"Open a debugger on myself embedded in the given text editor if the embedded debugger is present in the image.
+	If not open the standard debugger."
+	
+	(Smalltalk tools hasToolNamed: #gtEmbeddableDebugger)
+		ifFalse: [ ^ super debug ].
+	
 	UIManager default
 		gtDebugProcess: Processor activeProcess  
 		context: self exception signalerContext
@@ -18,12 +23,12 @@ GtTextEditorUnhandledError >> debug [
 ]
 
 { #category : #'priv handling' }
-GtTextEditorUnhandledError >> defaultAction [
+GtCoderEvaluationUnhandledError >> defaultAction [
 	<reflective: #unhandledErrorDefaultAction:message:>
  	^ UIManager default unhandledErrorDefaultAction: self
 ]
 
 { #category : #accessing }
-GtTextEditorUnhandledError >> sourceCoder: aSourceCoder [
+GtCoderEvaluationUnhandledError >> sourceCoder: aSourceCoder [
 	sourceCoder := aSourceCoder
 ]

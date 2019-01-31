@@ -246,9 +246,8 @@ GtSourceCoder >> evaluateSource: aString [
 
 { #category : #private }
 GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
-	| value isException |
+	| value |
 	self clearPreviousEvaluations.
-	isException := false.
 	[ 
 		value := self classOrMetaClass compiler
 			requestor: self evaluationRequester;
@@ -256,25 +255,21 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 			receiver: self object;
 			context: self context;
 			failBlock: [ ^ self flag: 'insert error adornment' ];
-			evaluate 
+			evaluate
 	] on: Error do: [ :anError |
-		anError freeze.
-		value := anError.
-		isException := true
-		
-		"self resetASTCache. 
-		GtTextEditorUnhandledError new
+		self resetASTCache.
+		GtCoderEvaluationUnhandledError new
 			exception: anError;
 			sourceCoder: self;
-			signal."
+			signal.
 		"The process will be terminated. Return nil in case there is some error whil opening the debugger
 		that prevents the debugger from opening and does not kill the process."
-		"^ nil" ].
+		^ nil ].
 		
 	self resetASTCache.
-	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: isException).
+	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: false).
 	self sourceEditor styleTextAndAfterDo: [
-		self styleResult: value isException: isException showPrintString: aBoolean ].
+		self styleResult: value showPrintString: aBoolean ].
 	^ value
 ]
 
@@ -656,18 +651,6 @@ GtSourceCoder >> styleCollapsedText [
 ]
 
 { #category : #private }
-GtSourceCoder >> styleError: anException at: interval [
-	self sourceEditor text
-		attributes: {(GtPlaygroundEvaluatedCodeHighlightedAttribute new paint: Color red)}
-		from: interval first
-		to: interval last.
-	self sourceEditor text
-		attributes: {(GtPlaygroundDebugExceptionButtonAttribute new result: anException)}
-		from: interval last
-		to: interval last
-]
-
-{ #category : #private }
 GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 	self sourceEditor text
 		attributes:
@@ -690,12 +673,10 @@ GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 ]
 
 { #category : #private }
-GtSourceCoder >> styleResult: value isException: isException showPrintString: aBoolean [
+GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 	| interval |
 	interval := self selectedSourceInterval.
-	isException
-		ifTrue: [ self styleError: value at: interval ]
-		ifFalse: [ self styleResult: value at: interval showPrintString: aBoolean ].
+	self styleResult: value at: interval showPrintString: aBoolean.
 	self sourceEditor
 		invalidateAll;
 		updateAll
