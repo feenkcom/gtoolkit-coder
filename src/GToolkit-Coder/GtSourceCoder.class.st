@@ -246,9 +246,11 @@ GtSourceCoder >> evaluateSource: aString [
 
 { #category : #private }
 GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
-	| value |
+	| value errorAlreadySignaled |
+	
 	self clearPreviousEvaluations.
 	[ 
+		errorAlreadySignaled := false.
 		value := self classOrMetaClass compiler
 			requestor: self evaluationRequester;
 			source: aString;
@@ -258,10 +260,16 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 			evaluate
 	] on: Error do: [ :anError |
 		self resetASTCache.
-		anError resignalAs:
-			(GtCoderEvaluationUnhandledError new
-				exception: anError;
-				sourceCoder: self).
+		errorAlreadySignaled 
+			ifTrue: [ 
+				self flag: 'This sets the wrong signaler context. Should be fixed'.
+				anError signal ]
+			ifFalse: [
+				errorAlreadySignaled := true.
+				anError resignalAs:
+					(GtCoderEvaluationUnhandledError new
+						exception: anError;
+						sourceCoder: self) ].
 		"The process will be terminated. Return nil in case there is some error whil opening the debugger
 		that prevents the debugger from opening and does not kill the process."
 		^ nil ].
