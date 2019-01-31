@@ -258,10 +258,10 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 			evaluate
 	] on: Error do: [ :anError |
 		self resetASTCache.
-		GtCoderEvaluationUnhandledError new
-			exception: anError;
-			sourceCoder: self;
-			signal.
+		anError resignalAs:
+			(GtCoderEvaluationUnhandledError new
+				exception: anError;
+				sourceCoder: self).
 		"The process will be terminated. Return nil in case there is some error whil opening the debugger
 		that prevents the debugger from opening and does not kill the process."
 		^ nil ].
