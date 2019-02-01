@@ -263,7 +263,7 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 		errorAlreadySignaled 
 			ifTrue: [ 
 				self flag: 'This sets the wrong signaler context. Should be fixed'.
-				anError signal ]
+				anError pass ]
 			ifFalse: [
 				errorAlreadySignaled := true.
 				anError resignalAs:
