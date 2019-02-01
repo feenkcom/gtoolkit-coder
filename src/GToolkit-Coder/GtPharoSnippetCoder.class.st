@@ -64,6 +64,10 @@ GtPharoSnippetCoder >> initializeAddOns [
 		icon: BrGlamorousIcons playinspect
 		action: [ :aButton | self runFrom: aButton ].
 	addOns
+		addMainAction: 'Debug' translated
+		icon: BrGlamorousIcons debug
+		action: [ :aButton | self debugSelection ].
+	addOns
 		addStyler:
 			(BrRBTextStyler new
 				isForWorkspace: true;

@@ -180,6 +180,22 @@ GtSourceCoder >> collapsedText [
 ]
 
 { #category : #private }
+GtSourceCoder >> compile: aStream for: anObject in: evalContext withRequestor: requestor [
+	| methodClass |
+	methodClass := evalContext
+		ifNil: [ anObject class ]
+		ifNotNil: [ evalContext methodClass ].
+	^self class compiler
+		source: aStream;
+		class: methodClass;
+		context: evalContext;
+		requestor: requestor;
+		noPattern: true;
+		failBlock: [ ^ nil ];
+		compile
+]
+
+{ #category : #private }
 GtSourceCoder >> completionStrategy [
 	^ completionStrategy
 		ifNil: [ completionStrategy := self newCompletionStrategy ]
@@ -201,6 +217,48 @@ GtSourceCoder >> contextActions [
 { #category : #private }
 GtSourceCoder >> cursorPositionDo: aBlock [
 	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
+]
+
+{ #category : #private }
+GtSourceCoder >> debug: aCompiledMethod receiver: anObject in: evalContext [
+	| guineaPig context debugSession |
+	guineaPig := [ aCompiledMethod
+		valueWithReceiver: anObject
+		arguments: (evalContext ifNil: [ #() ] ifNotNil: [ {evalContext} ]) ]
+		newProcess.
+	context := guineaPig suspendedContext.
+	
+	debugSession := guineaPig newDebugSessionNamed: 'debug it' startedAt: context.
+	debugSession stepIntoUntil: [:currentContext | 
+		currentContext method == aCompiledMethod ].
+	
+	self flag: 'Use the registered debugger later on'.
+	GtExpandableDebuggerElement openInspectorOn: debugSession.
+	"Smalltalk tools debugger openOn: debugSession withFullView: true."
+]
+
+{ #category : #actions }
+GtSourceCoder >> debugSelection [
+	| source |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self ].
+	^ self debugSource: source
+]
+
+{ #category : #private }
+GtSourceCoder >> debugSource: aString [ 
+	| currentReceiver currentContext method |
+	self clearPreviousEvaluations.
+	currentReceiver := self object.
+	currentContext := self context.
+	method := self 
+		compile: aString 
+		for: currentReceiver 
+		in: currentContext
+		withRequestor: self requester.
+	method notNil ifTrue:
+		[ self debug: method receiver: currentReceiver in: currentContext ].
 ]
 
 { #category : #private }
@@ -252,10 +310,10 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 	[ 
 		errorAlreadySignaled := false.
 		value := self classOrMetaClass compiler
-			requestor: self evaluationRequester;
 			source: aString;
 			receiver: self object;
 			context: self context;
+			requestor: self evaluationRequester;
 			failBlock: [ ^ self flag: 'insert error adornment' ];
 			evaluate
 	] on: Error do: [ :anError |
