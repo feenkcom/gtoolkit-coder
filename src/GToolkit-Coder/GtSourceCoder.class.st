@@ -262,7 +262,8 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 		self resetASTCache.
 		errorAlreadySignaled 
 			ifTrue: [ 
-				self flag: 'This sets the wrong signaler context. Should be fixed'.
+				"Continue the handling of this exception. This will open a debugger 
+				if the error is not caught elsewhere."
 				anError pass ]
 			ifFalse: [
 				errorAlreadySignaled := true.
