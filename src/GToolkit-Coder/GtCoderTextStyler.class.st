@@ -34,14 +34,17 @@ GtCoderTextStyler >> privateStyle: aText [
 	| ast |
 	self
 		assert: [ aText asString = coder source
-				or: [ aText asString = coder collapsedEditor text asString ] ].
+				or: [ aText asString = coder collapsedSource ] ].
 	ast := aText asString = coder source
 		ifTrue: [ coder rbAST ]
-		ifFalse: [ coder newRbAST: aText asString ].
+		ifFalse: [ coder rbAST copy
+				body: (RBSequenceNode statements: #());
+				pragmas: #();
+				yourself ].
 	[ self style: aText ast: ast.
 	self extraStyle: aText ast: ast ]
 		on: Error
-		do: [ :e | e return ].
+		do: [ :e | e debug ].
 	^ aText
 ]
 
