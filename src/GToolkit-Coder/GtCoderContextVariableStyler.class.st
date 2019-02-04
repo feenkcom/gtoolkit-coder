@@ -24,10 +24,10 @@ GtCoderContextVariableStyler >> initializeVariables [
 	variables notNil
 		ifTrue: [ ^ self ].
 	variables := Dictionary new.
-	methodCoder instanceVariableNames do: [ :name | 
-		variables at: name put: #instanceVariableValueFor: ].
-	methodCoder tempNames do: [ :name | 
-		variables at: name put: #tempNameValueFor: ].
+	methodCoder instanceVariableNodesDo: [ :aVariableNode | 
+		variables at: aVariableNode key put: aVariableNode ].
+	methodCoder temporaryVariableNodesDo: [ :aVariableNode | 
+		variables at: aVariableNode key put: aVariableNode ].
 	interval := methodCoder session pcRangeForContext: methodCoder context
 ]
 
@@ -65,10 +65,8 @@ GtCoderContextVariableStyler >> valueForVariableNamed: aVariableName ifPresent: 
 GtCoderContextVariableStyler >> valueForVariableNamed: aVariableName ifPresent: presentBlock ifAbsent: absentBloc [
 	^ variables 
 		at: aVariableName 
-		ifPresent: [ :selector |
-			| variableValue |
-			variableValue := self methodCoder perform: selector  withEnoughArguments: {aVariableName}.
-			presentBlock value: variableValue ]
+		ifPresent: [ :variableNode |
+			presentBlock value: variableNode value ]
 		ifAbsent: absentBloc
 ]
 

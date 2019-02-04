@@ -77,7 +77,11 @@ GtMethodContextCoder >> context: aContext [
 GtMethodContextCoder >> contextActions [
 	<return: #Collection of: #GtCoderAction>
 
-	^ (self actionsForPragmas: self stackDebuggingActionsPragmas)
+	^ ((self actionsForPragmas: self stackDebuggingActionsPragmas)
+		select: [ :aDebuggingAction | 
+			"Quite hacky solutions for only showing StepInto for the top context."
+			aDebuggingAction class ~= StepIntoDebugAction or: [ 
+				self context = self session interruptedContext ] ])
 		collect: [ :aDebuggingAction |
 			GtCoderAction new
 				title: aDebuggingAction label;
@@ -100,18 +104,30 @@ GtMethodContextCoder >> currentContext [
 	^ self context
 ]
 
+{ #category : #'accessing variables' }
+GtMethodContextCoder >> debuggerVariableNodes [
+	| variablesList |
+
+	variablesList := OrderedCollection new.
+	self instanceVariableNodesDo: [ :aNode | variablesList add: aNode ].
+	self temporaryVariableNodesDo: [ :aNode | variablesList add: aNode ].
+	self workspaceDoItNodesDo: [ :aNode | variablesList add: aNode ].
+	
+	variablesList sort: [:node1 :node2 | node1 key < node2 key].
+	variablesList 
+		addFirst: (GTInspectorSelfNode hostObject: self receiver);
+		addLast: (GTInspectorDynamicNode hostObject: self context label: 'thisContext' value: self context).
+	self stackVariableNodesDo: [ :aNode | variablesList add: aNode ].
+	^ variablesList
+	
+	
+]
+
 { #category : #'initialize-release' }
 GtMethodContextCoder >> initializeAddOns [
 	super initializeAddOns.
 "	addOns addStyler: (GtCoderContextVariableButtonStyler new methodCoder: self)."
 "	addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: self)"
-]
-
-{ #category : #'accessing variables' }
-GtMethodContextCoder >> instanceVariableNames [
-	| receiver |
-	receiver := self receiver.
-	^ receiver class allInstVarNames
 ]
 
 { #category : #'accessing variables' }
@@ -123,8 +139,11 @@ GtMethodContextCoder >> instanceVariableNamesAndValuesDo: aBlock [
 ]
 
 { #category : #'accessing variables' }
-GtMethodContextCoder >> instanceVariableValueFor: anInstanceVariableName [
-	^ self receiver instVarNamed: anInstanceVariableName
+GtMethodContextCoder >> instanceVariableNodesDo: aBloc [
+	self receiver class allSlots collect: [ :aSlot | 
+		aBloc value: (GTInspectorSlotNode 
+			hostObject: self receiver 
+			slot: aSlot) ]
 ]
 
 { #category : #'debugger access' }
@@ -140,6 +159,15 @@ GtMethodContextCoder >> isDead [
 { #category : #private }
 GtMethodContextCoder >> notifyDebugger [
 	announcer announce: GtCoderRefreshStackAnnouncement new.
+]
+
+{ #category : #printing }
+GtMethodContextCoder >> printOn: aStream [
+	super printOn: aStream.
+	self context ifNotNil: [ 
+		aStream nextPut: $(.
+		self context printOn: aStream. 
+		aStream nextPut: $) ]
 ]
 
 { #category : #accessing }
@@ -196,18 +224,39 @@ GtMethodContextCoder >> stackVariableNamesAndValuesDo: aBlock [
 ]
 
 { #category : #'accessing variables' }
-GtMethodContextCoder >> tempNameValueFor: aTempName [
-	^ self context tempNamed: aTempName
-]
-
-{ #category : #'accessing variables' }
-GtMethodContextCoder >> tempNames [
-	^ self context tempNames
+GtMethodContextCoder >> stackVariableNodesDo: aBlock [
+	| stackPosition |
+	self context stackPtr isNil
+		ifTrue: [ ^ self ].
+	stackPosition := 0.
+	self context stackPtr to: self context numTemps + 1 by: -1 do: [ :i | 
+		aBlock value: (GTInspectorDynamicNode 
+			hostObject: self context
+			label: ('stack top' ,
+				(stackPosition > 0
+					ifTrue: [ ' - ' , stackPosition printString ]
+					ifFalse: [ '' ])) 
+			value: (self context at: i)).
+		stackPosition := stackPosition + 1 ]
 ]
 
 { #category : #'accessing variables' }
 GtMethodContextCoder >> tempNamesAndValuesDo: aBlock [
-	self context tempNames doWithIndex: [ :each :i | aBlock value: each value: (self context namedTempAt: i) ]
+	self context tempNames doWithIndex: [ :each :i | 
+		| value |
+		value := nil.
+		[ value := self context namedTempAt: i ] on: Error do: [
+			value := 'error obtaining field value' asRopedText foreground: Color red ].
+		aBlock value: each value: value ]
+]
+
+{ #category : #'accessing variables' }
+GtMethodContextCoder >> temporaryVariableNodesDo: aBloc [
+	self context tempNames withIndexCollect: [ :tempName :tempIndex |
+		aBloc value: (GTInspectorContextNamedTempNode 
+			hostObject: self context 
+			tempName: tempName 
+			tempIndex: tempIndex) ]
 ]
 
 { #category : #updating }
@@ -244,4 +293,15 @@ GtMethodContextCoder >> updateSourceFromContext [
 	
 	methodSource := contextSourceCode.
 	self buildSource.
+]
+
+{ #category : #'accessing variables' }
+GtMethodContextCoder >> workspaceDoItNodesDo: aBloc [
+	self context gtDebuggerDoItBindings do: [:aBinding |
+		aBloc value: ((GTInspectorDynamicNode 
+			hostObject: self context 
+			label: aBinding key 
+			value: aBinding value)
+				variableTag: 'temp';
+				yourself) ]
 ]

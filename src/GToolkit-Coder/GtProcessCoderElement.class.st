@@ -39,7 +39,7 @@ GtProcessCoderElement >> buildElementForCoder: aMethodCoder [
 				combination:
 					(BlKeyCombination builder
 						primary;
-						key: Key w;
+						w;
 						build);
 				action: [ self addWatchExpressionFrom: aMethodCoder ]);
 		addShortcut:
@@ -48,7 +48,7 @@ GtProcessCoderElement >> buildElementForCoder: aMethodCoder [
 					(BlKeyCombination builder
 						primary;
 						shift;
-						key: Key w;
+						w;
 						build);
 				action: [ self addMethodWatchExpressionFrom: aMethodCoder ]).
 	element := super buildElementForCoder: aMethodCoder.

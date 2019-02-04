@@ -180,6 +180,22 @@ GtSourceCoder >> collapsedText [
 ]
 
 { #category : #private }
+GtSourceCoder >> compile: aStream for: anObject in: evalContext withRequestor: requestor [
+	| methodClass |
+	methodClass := evalContext
+		ifNil: [ anObject class ]
+		ifNotNil: [ evalContext methodClass ].
+	^self class compiler
+		source: aStream;
+		class: methodClass;
+		context: evalContext;
+		requestor: requestor;
+		noPattern: true;
+		failBlock: [ ^ nil ];
+		compile
+]
+
+{ #category : #private }
 GtSourceCoder >> completionStrategy [
 	^ completionStrategy
 		ifNil: [ completionStrategy := self newCompletionStrategy ]
@@ -201,6 +217,48 @@ GtSourceCoder >> contextActions [
 { #category : #private }
 GtSourceCoder >> cursorPositionDo: aBlock [
 	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
+]
+
+{ #category : #private }
+GtSourceCoder >> debug: aCompiledMethod receiver: anObject in: evalContext [
+	| guineaPig context debugSession |
+	guineaPig := [ aCompiledMethod
+		valueWithReceiver: anObject
+		arguments: (evalContext ifNil: [ #() ] ifNotNil: [ {evalContext} ]) ]
+		newProcess.
+	context := guineaPig suspendedContext.
+	
+	debugSession := guineaPig newDebugSessionNamed: 'debug it' startedAt: context.
+	debugSession stepIntoUntil: [:currentContext | 
+		currentContext method == aCompiledMethod ].
+	
+	self flag: 'Use the registered debugger later on'.
+	GtExpandableDebuggerElement openInspectorOn: debugSession.
+	"Smalltalk tools debugger openOn: debugSession withFullView: true."
+]
+
+{ #category : #actions }
+GtSourceCoder >> debugSelection [
+	| source |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self ].
+	^ self debugSource: source
+]
+
+{ #category : #private }
+GtSourceCoder >> debugSource: aString [ 
+	| currentReceiver currentContext method |
+	self clearPreviousEvaluations.
+	currentReceiver := self object.
+	currentContext := self context.
+	method := self 
+		compile: aString 
+		for: currentReceiver 
+		in: currentContext
+		withRequestor: self requester.
+	method notNil ifTrue:
+		[ self debug: method receiver: currentReceiver in: currentContext ].
 ]
 
 { #category : #private }
@@ -246,25 +304,39 @@ GtSourceCoder >> evaluateSource: aString [
 
 { #category : #private }
 GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
-	| value isException |
+	| value errorAlreadySignaled |
+	
 	self clearPreviousEvaluations.
-	isException := false.
-	[ value := self classOrMetaClass compiler
-		requestor: self evaluationRequester;
-		source: aString;
-		receiver: self object;
-		context: self context;
-		failBlock: [ ^ self flag: 'insert error adornment' ];
-		evaluate ]
-		on: Error
-		do: [ :ex | 
-			ex freeze.
-			value := ex.
-			isException := true ].
+	[ 
+		errorAlreadySignaled := false.
+		value := self classOrMetaClass compiler
+			source: aString;
+			receiver: self object;
+			context: self context;
+			requestor: self evaluationRequester;
+			failBlock: [ ^ self flag: 'insert error adornment' ];
+			evaluate
+	] on: Error do: [ :anError |
+		self resetASTCache.
+		errorAlreadySignaled 
+			ifTrue: [ 
+				"Continue the handling of this exception. This will open a debugger 
+				if the error is not caught elsewhere."
+				anError pass ]
+			ifFalse: [
+				errorAlreadySignaled := true.
+				anError resignalAs:
+					(GtCoderEvaluationUnhandledError new
+						exception: anError;
+						sourceCoder: self) ].
+		"The process will be terminated. Return nil in case there is some error whil opening the debugger
+		that prevents the debugger from opening and does not kill the process."
+		^ nil ].
+		
 	self resetASTCache.
-	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: isException).
+	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: false).
 	self sourceEditor styleTextAndAfterDo: [
-		self styleResult: value isException: isException showPrintString: aBoolean ].
+		self styleResult: value showPrintString: aBoolean ].
 	^ value
 ]
 
@@ -341,31 +413,17 @@ GtSourceCoder >> initializeAddOns [
 
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeShortcuts [
+
 	addOns
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key m;
-						build);
-				action: [ :editorElement | self browseImplementors: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key n;
-						build);
-				action: [ :editorElement | self browseReferences: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key b;
-						build);
-				action: [ :editorElement | self browseClass: editorElement ])
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryM;
+			action: [ :editorElement | self browseImplementors: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryN;
+			action: [ :editorElement | self browseReferences: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryB;
+			action: [ :editorElement | self browseClass: editorElement ])
 ]
 
 { #category : #testing }
@@ -660,18 +718,6 @@ GtSourceCoder >> styleCollapsedText [
 ]
 
 { #category : #private }
-GtSourceCoder >> styleError: anException at: interval [
-	self sourceEditor text
-		attributes: {(GtPlaygroundEvaluatedCodeHighlightedAttribute new paint: Color red)}
-		from: interval first
-		to: interval last.
-	self sourceEditor text
-		attributes: {(GtPlaygroundDebugExceptionButtonAttribute new result: anException)}
-		from: interval last
-		to: interval last
-]
-
-{ #category : #private }
 GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 	self sourceEditor text
 		attributes:
@@ -694,12 +740,10 @@ GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 ]
 
 { #category : #private }
-GtSourceCoder >> styleResult: value isException: isException showPrintString: aBoolean [
+GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 	| interval |
 	interval := self selectedSourceInterval.
-	isException
-		ifTrue: [ self styleError: value at: interval ]
-		ifFalse: [ self styleResult: value at: interval showPrintString: aBoolean ].
+	self styleResult: value at: interval showPrintString: aBoolean.
 	self sourceEditor
 		invalidateAll;
 		updateAll

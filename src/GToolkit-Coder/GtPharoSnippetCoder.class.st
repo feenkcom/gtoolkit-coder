@@ -2,10 +2,21 @@ Class {
 	#name : #GtPharoSnippetCoder,
 	#superclass : #GtSourceCoder,
 	#instVars : [
-		'bindingStrategy'
+		'bindingStrategy',
+		'context'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #accessing }
+GtPharoSnippetCoder >> context [
+	^ context
+]
+
+{ #category : #accessing }
+GtPharoSnippetCoder >> context: doItContext [
+	context := doItContext
+]
 
 { #category : #actions }
 GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
@@ -18,13 +29,23 @@ GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
 { #category : #actions }
 GtPharoSnippetCoder >> evaluationRequester [
 	^ super evaluationRequester
-		bindingStrategy: (GtPlaygroundBindingStrategy new bindings: bindingStrategy bindings);
+		bindingStrategy: bindingStrategy;
 		yourself
+]
+
+{ #category : #private }
+GtPharoSnippetCoder >> highlightBindingsStrategy [
+	^ self context 
+		ifNil:  [ GtHighlightingBindingStrategy new 
+			bindings: bindingStrategy bindings]
+		ifNotNil: [ GtContextHighlightingBindingStrategy new
+			bindings: bindingStrategy bindings;
+			context: self context ] 
 ]
 
 { #category : #initialization }
 GtPharoSnippetCoder >> initialize [
-	bindingStrategy := GtHighlightingBindingStrategy new.
+	bindingStrategy := GtSnippetBindingStrategy new.
 	bindingStrategy bindings: Dictionary new.
 	super initialize.
 	expanded := true.
@@ -43,41 +64,31 @@ GtPharoSnippetCoder >> initializeAddOns [
 		icon: BrGlamorousIcons playinspect
 		action: [ :aButton | self runFrom: aButton ].
 	addOns
+		addMainAction: 'Debug' translated
+		icon: BrGlamorousIcons debug
+		action: [ :aButton | self debugSelection ].
+	addOns
 		addStyler:
 			(BrRBTextStyler new
-				workspace: bindingStrategy;
+				isForWorkspace: true;
 				yourself).
 	addOns clearChanges
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtPharoSnippetCoder >> initializeShortcuts [
 	super initializeShortcuts.
+
 	addOns
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key d;
-						build);
-				action: [ self doItSelection ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key g;
-						build);
-				action: [ :editorElement | self doItAndGoSelection: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key p;
-						build);
-				action: [ self printItSelection ])
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryD;
+			action: [ self doItSelection ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryG;
+			action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryP;
+			action: [ self printItSelection ])
 ]
 
 { #category : #private }
@@ -97,9 +108,8 @@ GtPharoSnippetCoder >> newRbAST: aString [
 	ast methodNode 
 		compilationContext: (CompilationContext new
 			class: (self classOrMetaClass ifNil: [UndefinedObject]);
-			forSyntaxHighlighting: true;
-			bindings: (bindingStrategy ifNil: [ Dictionary new ]);
-         requestor: nil).
+			forSyntaxHighlighting: true; 
+         requestor: self highlightBindingsStrategy).
 	ast doSemanticAnalysis.
 	^ ast
 ]
@@ -114,7 +124,7 @@ GtPharoSnippetCoder >> object [
 { #category : #ui }
 GtPharoSnippetCoder >> requester [
 	^ super requester
-		bindingStrategy: (GtPlaygroundBindingStrategy new bindings: bindingStrategy bindings);
+		bindingStrategy: bindingStrategy;
 		yourself
 ]
 

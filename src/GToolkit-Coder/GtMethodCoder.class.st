@@ -305,7 +305,7 @@ GtMethodCoder >> initialize [
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	addOns addStyler: BrRBTextStyler new.
-	addOns addStyler: GtCoderCommentStyler new.
+	"addOns addStyler: GtCoderCommentStyler new."
 	addOns addMainAction: 'Save' translated icon: BrGlamorousIcons accept action: [ self save ].
 	addOns clearChanges
 ]
@@ -313,56 +313,26 @@ GtMethodCoder >> initializeAddOns [
 { #category : #'initialize-release' }
 GtMethodCoder >> initializeShortcuts [
 	super initializeShortcuts.
+
 	addOns
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key d;
-						build);
-				action: [ self doItSelection ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key g;
-						build);
-				action: [ :editorElement | self doItAndGoSelection: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key r;
-						build);
-				action: [ :editorElement | self renameVariableIn: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key e;
-						build);
-				action: [ :editorElement | self extractMethod: editorElement ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						key: Key s;
-						build);
-				action: [ self save ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						shift;
-						key: Key f;
-						build);
-				action: [ self format ])
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryD;
+			action: [ self doItSelection ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryG;
+			action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryR;
+			action: [ :editorElement | self renameVariableIn: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryE;
+			action: [ :editorElement | self extractMethod: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryS;
+			action: [ self save ]);
+		addShortcut: (BlShortcut new
+			combination: (BlKeyCombination primaryShiftF);
+			action: [ self format ])
 ]
 
 { #category : #testing }

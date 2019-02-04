@@ -231,7 +231,7 @@ GtExtractMethodController >> patternAst [
 
 { #category : #'event handling' }
 GtExtractMethodController >> processKeyDown: anEvent [
-	anEvent key = Key escape
+	anEvent key isEscape
 		ifTrue: [ self cancelRefactoring.
 			anEvent consumed: true ]
 ]
