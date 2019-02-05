@@ -11,6 +11,7 @@ Class {
 GtImplementorsFilterMethodsCoderLook >> filterElement [
 	| element editor |
 	editor := BrTextEditor new.
+	methodsCoder implementorsFilterString ifNotNil: [ :e | editor text: e asRopedText ].
 	editor
 		when: BrTextEditorInsertedEvent do: [ :event | self updateFilter: editor text asString ];
 		when: BrTextEditorDeletedEvent do: [ :event | self updateFilter: editor text asString ].
