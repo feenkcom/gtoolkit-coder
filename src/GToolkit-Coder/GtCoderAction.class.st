@@ -24,6 +24,14 @@ GtCoderAction >> glamourValueWithArgs: aSequenceOfArguments [
 	^ self action glamourValueWithArgs: aSequenceOfArguments
 ]
 
+{ #category : #ui }
+GtCoderAction >> gtViewActionSourceCodeFor: aView [
+	<gtView>
+	^ self action 
+		ifNil: [ aView ]
+		ifNotNil: [ self action gtSourceCodeFor: aView ]
+]
+
 { #category : #accessing }
 GtCoderAction >> icon [
 	^ icon
@@ -32,6 +40,15 @@ GtCoderAction >> icon [
 { #category : #accessing }
 GtCoderAction >> icon: anObject [
 	icon := anObject
+]
+
+{ #category : #printing }
+GtCoderAction >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: (self title ifNil: ['']);
+		nextPut: $)
 ]
 
 { #category : #accessing }

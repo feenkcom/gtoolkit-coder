@@ -57,10 +57,18 @@ GtMethodCoderRequester >> editor [
 	^ self
 ]
 
+{ #category : #binding }
+GtMethodCoderRequester >> hasBindingOf: aSymbol [
+	^ self bindingStrategy isNil
+		ifTrue: [ super hasBindingOf: aSymbol ]
+		ifFalse: [ bindingStrategy hasBindingOf: aSymbol ]
+
+]
+
 { #category : #requester }
 GtMethodCoderRequester >> notify: message at: anIndex in: aString [
 	| index |
-	index := anIndex max: 1.
+	index := (anIndex max: 1) min: coder sourceEditor text size.
 	(coder sourceEditor text from: index to: index) attributes: {(GtMethodCoderErrorAttribute for: message)}.
 	coder sourceEditor
 		invalidate: index to: index;
