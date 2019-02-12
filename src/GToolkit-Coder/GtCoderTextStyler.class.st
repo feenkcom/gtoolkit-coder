@@ -50,7 +50,7 @@ GtCoderTextStyler >> privateStyle: aText [
 	[ self style: aText ast: ast.
 	self extraStyle: aText ast: ast ]
 		on: Error
-		do: [ :e | e debug ].
+		do: [ :e | e return ].
 	^ aText
 ]
 
