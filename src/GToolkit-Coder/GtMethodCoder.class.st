@@ -413,6 +413,12 @@ GtMethodCoder >> newRbAST: aString [
 	^ ast
 ]
 
+{ #category : #updating }
+GtMethodCoder >> newSource [
+	self ensureBuilt.
+	^ super newSource
+]
+
 { #category : #'instance creation' }
 GtMethodCoder >> newSourceEditor [
 	<return: #BrTextEditor>
