@@ -24,7 +24,7 @@ GtClassCoder class >> forObject: anObject [
 
 { #category : #elements }
 GtClassCoder >> asElement [
-	| element |
+	| element classDefinitionElement methodsElement |
 	element := BlElement new.
 	element layout: BlLinearLayout vertical.
 	element padding: (BlInsets all: 10).
@@ -32,8 +32,14 @@ GtClassCoder >> asElement [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-	element addChild: classDefinitionCoder asElement.
-	element addChild: methodsCoder asElement.
+	classDefinitionElement := classDefinitionCoder asElement.
+	methodsElement := methodsCoder asElement.
+	classDefinitionElement constraintsDo: [ :c | 
+		c linear weight: 0.3 ].
+	methodsElement constraintsDo: [ :c | 
+		c linear weight: 0.7 ].
+	element addChild: classDefinitionElement.
+	element addChild: methodsElement.
 	^ element
 ]
 
