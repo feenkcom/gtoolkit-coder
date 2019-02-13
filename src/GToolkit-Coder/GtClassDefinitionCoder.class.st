@@ -30,7 +30,7 @@ GtClassDefinitionCoder >> asElement [
 	element
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical fitContent ].
+			c vertical matchParent ].
 	text := (String
 		streamContents: [ :stream | 
 			stream nextPutAll: class name.
@@ -119,7 +119,7 @@ GtClassDefinitionCoder >> variablesAndCommentElement [
 	element
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical fitContent ].
+			c vertical matchParent ].
 	element addChild: self variablesElement.
 	element addChild: self commentElement.
 	^ element
@@ -134,7 +134,7 @@ GtClassDefinitionCoder >> variablesElement [
 	element
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical fitContent ].
+			c vertical matchParent ].
 	class instVarNames do: [ :each | element addChild: (self variableElementNamed: each type: #instance) ].
 	class classVarNames do: [ :each | element addChild: (self variableElementNamed: each type: #class) ].
 	class isMeta
