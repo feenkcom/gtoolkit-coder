@@ -4,25 +4,25 @@ Class {
 	#category : #'GToolkit-Coder-Examples'
 }
 
-{ #category : #accessing }
+{ #category : #'examples - filters' }
 GtMethodsCoderExamples >> doFilter [
 	<gtExample>
 	^ GtCoderImplementorsFilter selector: #do:
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - coder' }
 GtMethodsCoderExamples >> doImplementorsCoder [
 	<gtExample>
 	^ (GtCoderMethodsCollection forFilter: self doFilter) asCoder
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - filters' }
 GtMethodsCoderExamples >> errorFilter [
 	<gtExample>
 	^ GtCoderReferencesFilter literal: #error:
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - coder' }
 GtMethodsCoderExamples >> errorReferencesCoder [
 	<gtExample>
 	^ (GtCoderMethodsCollection forFilter: self errorFilter) asCoder
@@ -40,7 +40,7 @@ GtMethodsCoderExamples >> factorialExample [
 	^ GtProcessCoder forProcess: self suspendedFactorialProcess
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - coder' }
 GtMethodsCoderExamples >> gtExamplesCoder [
 	<gtExample>
 	| methods |
@@ -49,49 +49,55 @@ GtMethodsCoderExamples >> gtExamplesCoder [
 	^ methods asCoder
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - filters' }
 GtMethodsCoderExamples >> gtExamplesFilter [
 	<gtExample>
 	^ #gtExample gtPragmas
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - filters' }
 GtMethodsCoderExamples >> instanceVariableFilter [
 	<gtExample>
 	^ GtCoderInstanceVariableReferenceFilter forClass: HashedCollection andVariable: 'array'
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - coder' }
 GtMethodsCoderExamples >> instanceVariableReferenceCoder [
 	<gtExample>
 	^ (GtCoderMethodsCollection forFilter: self instanceVariableFilter) asCoder
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - coder' }
 GtMethodsCoderExamples >> intersectionCoder [
 	<gtExample>
 	^ (GtCoderMethodsCollection forFilter: self instanceVariableFilter & self doFilter) asCoder
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - class coder' }
 GtMethodsCoderExamples >> methodsCoderWithClass [
 	<gtExample>
-	^ GtClassMethodsCoder forClass: Object
+	| classCoder |
+	classCoder :=  GtClassMethodsCoder forClass: Object.
+	
+	self assert: classCoder classOrMetaClass equals: Object.
+	self assert: classCoder object equals: nil.
+	
+	^ classCoder
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - coder' }
 GtMethodsCoderExamples >> methodsCoderWithExplicitMethods [
 	<gtExample>
 	^ GtMethodsCoder forMethods: { Object>>#printString . Object >>#printOn: }
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - filters' }
 GtMethodsCoderExamples >> printStringFilter [
 	<gtExample>
 	^ GtCoderReferencesFilter literal: #printString
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - filters' }
 GtMethodsCoderExamples >> selectFilter [
 	<gtExample>
 	^ self doFilter select: [ :each | (each methodClass includesBehavior: Collection) not ]
@@ -127,7 +133,7 @@ GtMethodsCoderExamples >> suspendedFactorialProcess [
 	^ process
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - coder' }
 GtMethodsCoderExamples >> unionCoder [
 	<gtExample>
 	^ (GtCoderMethodsCollection forFilter: self errorFilter | self printStringFilter) asCoder
