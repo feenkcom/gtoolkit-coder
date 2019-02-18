@@ -14,12 +14,12 @@ GtCoderMethodsFilter >> asCollection [
 	^ GtCoderMethodsCollection forFilter: self
 ]
 
-{ #category : #accessing }
+{ #category : #ui }
 GtCoderMethodsFilter >> gtItemsFor: aView [
 	"this is a view that is polymorphic with the one defined in ${method:Collection>>#gtItemsFor:}$"
 	<gtView>
 	^ aView explicit
-		title: 'Items';
+		title: 'Items' translated;
 		priority: 0;
 		stencil: [ self asCollection ]
 ]

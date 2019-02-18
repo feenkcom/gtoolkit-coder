@@ -30,7 +30,7 @@ GtClassDefinitionCoder >> asElement [
 	element
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical matchParent ].
+			c vertical fitContent ].
 	text := (String
 		streamContents: [ :stream | 
 			stream nextPutAll: class name.
@@ -57,7 +57,7 @@ GtClassDefinitionCoder >> asElement [
 			c horizontal matchParent.
 			c vertical fitContent ].
 	element addChild: classLabelElement.
-	element addChild: self variablesAndCommentElement.
+	"element addChild: self variablesAndCommentElement."
 	^ element
 ]
 
