@@ -41,11 +41,6 @@ GtSearchBinaryFilter >> isMethodFilter [
 ]
 
 { #category : #accessing }
-GtSearchBinaryFilter >> queryType [
-	^ left queryType 
-]
-
-{ #category : #accessing }
 GtSearchBinaryFilter >> resultType [
 	^ left resultType 
 ]
