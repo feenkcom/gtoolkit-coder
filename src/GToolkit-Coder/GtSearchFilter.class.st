@@ -11,11 +11,9 @@ GtSearchFilter >> & aFilter [
 
 { #category : #evaluating }
 GtSearchFilter >> applyInScope: aSearchScope [
-	^ (self resultType new
+	^ self resultType new
 		scope: aSearchScope;
-		filter: self)
-			refreshMethods
-			yourself
+		filter: self
 ]
 
 { #category : #converting }
@@ -45,11 +43,6 @@ GtSearchFilter >> isMethodFilter [
 
 { #category : #testing }
 GtSearchFilter >> matches: anObject [
-	self subclassResponsibility
-]
-
-{ #category : #accessing }
-GtSearchFilter >> queryType [
 	self subclassResponsibility
 ]
 

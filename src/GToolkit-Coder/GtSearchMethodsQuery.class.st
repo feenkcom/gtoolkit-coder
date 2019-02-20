@@ -6,5 +6,5 @@ Class {
 
 { #category : #accessing }
 GtSearchMethodsQuery class >> resultType [
-	^ GtSearchMethodsGroupResult
+	^ GtSearchMethodGroupResult
 ]

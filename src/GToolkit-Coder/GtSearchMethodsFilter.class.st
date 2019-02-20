@@ -11,7 +11,7 @@ GtSearchMethodsFilter class >> queryType [
 
 { #category : #accessing }
 GtSearchMethodsFilter class >> resultType [
-	^ GtSearchMethodsGroupResult 
+	^ GtSearchMethodGroupResult 
 ]
 
 { #category : #'logical operations' }
@@ -52,11 +52,6 @@ GtSearchMethodsFilter >> not [
 { #category : #testing }
 GtSearchMethodsFilter >> notEmpty [
 	^ self isEmpty not
-]
-
-{ #category : #accessing }
-GtSearchMethodsFilter >> queryType [
-	^ self class queryType
 ]
 
 { #category : #accessing }
