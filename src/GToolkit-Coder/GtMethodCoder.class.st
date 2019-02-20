@@ -247,7 +247,7 @@ GtMethodCoder >> gtDiffViewFor: aView [
 		title: 'Diff' translated;
 		priority: 11;
 		text: [ :anEditor | 
-			Gt2EpiceaDiffStencil new
+			GtEpiceaDiffStencil new
 				from: methodSource;
 				to: self newMethodSource;
 				create ]
