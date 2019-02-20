@@ -32,3 +32,8 @@ GtSearchCodeScope >> methodsDo: aBlock [
 		self metaLevelsOf: eachClass do: [ :concreteMetaLevelClass |
 			concreteMetaLevelClass methods do: aBlock ] ]
 ]
+
+{ #category : #enumerating }
+GtSearchCodeScope >> packagesDo: aBlock [
+	RPackageOrganizer default packages do: aBlock
+]

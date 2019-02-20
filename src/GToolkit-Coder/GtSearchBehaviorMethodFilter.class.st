@@ -16,6 +16,16 @@ GtSearchBehaviorMethodFilter class >> forClass: aClass [
 		yourself
 ]
 
+{ #category : #accessing }
+GtSearchBehaviorMethodFilter >> defaultFilterScope [
+	^ self
+]
+
+{ #category : #accessing }
+GtSearchBehaviorMethodFilter >> filterScope [
+	^ self
+]
+
 { #category : #'initialize-release' }
 GtSearchBehaviorMethodFilter >> forClass: aClass [
 	class := aClass

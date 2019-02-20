@@ -18,7 +18,12 @@ GtSearchFilter >> applyInScope: aSearchScope [
 
 { #category : #converting }
 GtSearchFilter >> asCollection [
-	^ self applyInScope: GtSearchImageScope new
+	^ self applyInScope: self defaultFilterScope
+]
+
+{ #category : #accessing }
+GtSearchFilter >> defaultFilterScope [
+	^ GtSearchImageScope new
 ]
 
 { #category : #ui }

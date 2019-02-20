@@ -15,6 +15,11 @@ GtSearchMethodsFilter class >> resultType [
 ]
 
 { #category : #accessing }
+GtSearchMethodsFilter >> filterScope [
+	^ GtSearchImageScope new
+]
+
+{ #category : #accessing }
 GtSearchMethodsFilter >> highlighter [
 	^ nil
 ]

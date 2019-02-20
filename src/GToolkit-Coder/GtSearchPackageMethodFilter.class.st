@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Coder-Filters2'
 }
 
+{ #category : #accessing }
+GtSearchPackageMethodFilter >> defaultFilterScope [
+	^ self
+]
+
 { #category : #testing }
 GtSearchPackageMethodFilter >> includeMethod: aCompiledMethod [
 	aCompiledMethod package = package

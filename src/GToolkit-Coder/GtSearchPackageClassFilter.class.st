@@ -12,6 +12,11 @@ GtSearchPackageClassFilter >> classesDo: aBlock [
 	package definedClasses do: aBlock
 ]
 
+{ #category : #accessing }
+GtSearchPackageClassFilter >> defaultFilterScope [
+	^ self
+]
+
 { #category : #testing }
 GtSearchPackageClassFilter >> includesClass: aClass [
 	^ aClass package = package
