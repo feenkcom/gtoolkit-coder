@@ -64,7 +64,7 @@ GtClassDefinitionCoder >> asElement [
 { #category : #elements }
 GtClassDefinitionCoder >> commentElement [
 	| element |
-	element := (Gt2Document forClass: class) asElement.
+	element := (GtDocument forClass: class) asElement.
 	element border: (BlBorder paint: Color lightGray width: 1).
 	^ element
 ]
