@@ -15,11 +15,6 @@ GtSearchBinaryFilter class >> forFilter: leftFilter filter: rightFilter [
 		yourself
 ]
 
-{ #category : #accessing }
-GtSearchBinaryFilter >> defaultFilterScope [
-	^ left defaultFilterScope
-]
-
 { #category : #'initialize-release' }
 GtSearchBinaryFilter >> filter: leftFilter filter: rightFilter [
 	left := leftFilter.

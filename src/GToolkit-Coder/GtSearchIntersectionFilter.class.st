@@ -4,6 +4,11 @@ Class {
 	#category : #'GToolkit-Coder-Filters2'
 }
 
+{ #category : #accessing }
+GtSearchIntersectionFilter >> defaultFilterScope [
+	^ left defaultFilterScope
+]
+
 { #category : #printing }
 GtSearchIntersectionFilter >> gtDisplayOn: stream [
 	left gtDisplayOn: stream.
