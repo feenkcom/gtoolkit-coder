@@ -17,9 +17,6 @@ GtSearchBinaryFilter class >> forFilter: leftFilter filter: rightFilter [
 
 { #category : #'initialize-release' }
 GtSearchBinaryFilter >> filter: leftFilter filter: rightFilter [
-	self 
-		assert: [ leftFilter resultType = rightFilter resultType ]
-		description: 'Only filters that have the same result type can be combined.'.
 	left := leftFilter.
 	right := rightFilter
 ]

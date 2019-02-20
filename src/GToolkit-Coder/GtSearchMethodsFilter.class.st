@@ -14,11 +14,6 @@ GtSearchMethodsFilter class >> resultType [
 	^ GtSearchMethodGroupResult 
 ]
 
-{ #category : #'logical operations' }
-GtSearchMethodsFilter >> & aFilter [
-	^ GtSearchMethodIntersectionFilter forFilter: self filter: aFilter
-]
-
 { #category : #accessing }
 GtSearchMethodsFilter >> highlighter [
 	^ nil
@@ -67,9 +62,4 @@ GtSearchMethodsFilter >> select: aBlock [
 { #category : #accessing }
 GtSearchMethodsFilter >> size [
 	^ self asCollection size
-]
-
-{ #category : #'logical operations' }
-GtSearchMethodsFilter >> | aFilter [
-	^ GtSearchMethodUnionFilter forFilter: self filter: aFilter
 ]
