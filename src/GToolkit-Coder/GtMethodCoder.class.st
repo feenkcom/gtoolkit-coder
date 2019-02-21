@@ -152,6 +152,20 @@ GtMethodCoder >> compiledMethod [
 						ifTrue: [ cls >> sel ] ] ]
 ]
 
+{ #category : #actions }
+GtMethodCoder >> debugMethod [
+	self debug: self compiledMethod receiver: self object in: self context.
+]
+
+{ #category : #actions }
+GtMethodCoder >> debugSelectionOrMethod [
+	| source |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self debugMethod ].
+	^ self debugSource: source
+]
+
 { #category : #private }
 GtMethodCoder >> ensureBuilt [
 	isBuilt
@@ -561,9 +575,12 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST [
 	<gtAstCoderAddOns: 4>
 	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
 		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
-		ifFalse: [ addOns removeContextAction: 'Run' translated.
+		ifFalse: [ 
+			addOns removeContextAction: 'Run' translated.
+			addOns removeContextAction: 'Debug' translated.
 			^ self ].
-	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons playinspect action: [ :button | self runFrom: button ]
+	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons playinspect action: [ :button | self runFrom: button ].
+	addOns addContextAction: 'Debug' translated icon: BrGlamorousIcons debug action: [ :button | self debugSelectionOrMethod ].
 ]
 
 { #category : #private }
