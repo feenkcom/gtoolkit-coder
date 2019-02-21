@@ -1,6 +1,6 @@
 Class {
 	#name : #GtSearchGroupResult,
-	#superclass : #GtSearchResult,
+	#superclass : #Object,
 	#instVars : [
 		'items',
 		'filter',
@@ -9,6 +9,34 @@ Class {
 	],
 	#category : #'GToolkit-Coder-Filters2'
 }
+
+{ #category : #'as yet unclassified' }
+GtSearchGroupResult class >> mergeTypeWith: aGroupResultClass [
+	^ aGroupResultClass mergeTypeWithDefaultGroup
+]
+
+{ #category : #'as yet unclassified' }
+GtSearchGroupResult class >> mergeTypeWithDefaultGroup [
+	"The common type between the default group and any other group is the other group."
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
+GtSearchGroupResult class >> mergeTypeWithGenericGroup [
+	"The common type between a generic group and any other group is the other group."
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
+GtSearchGroupResult class >> mergeTypeWithTypedGroup: aGroupType [
+	^ self
+]
+
+{ #category : #adding }
+GtSearchGroupResult >> add: anObject [
+	self refreshItems.
+	^ items add: anObject
+]
 
 { #category : #enumerating }
 GtSearchGroupResult >> collect: aBlock [
@@ -34,6 +62,16 @@ GtSearchGroupResult >> filter: methodsFilter [
 	filter := methodsFilter
 ]
 
+{ #category : #ui }
+GtSearchGroupResult >> gtItemsFor: aView [
+	<gtView>
+	self refreshItems.
+	^ aView list 
+		title: 'Items' translated;
+		priority: 10;
+		items: [ items ifNil: [ #() ] ]
+]
+
 { #category : #accessing }
 GtSearchGroupResult >> highlighter [
 	^ filter notNil
@@ -50,7 +88,16 @@ GtSearchGroupResult >> initialize [
 
 { #category : #enumerating }
 GtSearchGroupResult >> refreshItems [
-	self subclassResponsibility
+	| filteredItems |
+	filtered
+		ifTrue: [ ^ self ].
+	filteredItems := OrderedCollection new.
+	filter ifNotNil: [ 
+		scope itemsDo: [ :anObject | 
+			(filter matches: anObject) ifTrue: [
+				filteredItems add: anObject ] ] ].
+	items := filteredItems.
+	filtered := true.
 ]
 
 { #category : #removing }

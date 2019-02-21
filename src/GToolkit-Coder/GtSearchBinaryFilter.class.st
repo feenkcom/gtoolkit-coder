@@ -17,9 +17,6 @@ GtSearchBinaryFilter class >> forFilter: leftFilter filter: rightFilter [
 
 { #category : #'initialize-release' }
 GtSearchBinaryFilter >> filter: leftFilter filter: rightFilter [
-	self 
-		assert: [ leftFilter resultType = rightFilter resultType ]
-		description: 'Only filters that have the same result type can be combined.'.
 	left := leftFilter.
 	right := rightFilter
 ]
@@ -35,12 +32,7 @@ GtSearchBinaryFilter >> highlighter [
 					[ :rh | GtCompositeHighlighter forHighlighters: (Array with: lh with: rh) ] ]
 ]
 
-{ #category : #testing }
-GtSearchBinaryFilter >> isMethodFilter [
-	^ left isMethodFilter and: [ right isMethodFilter ]
-]
-
 { #category : #accessing }
 GtSearchBinaryFilter >> resultType [
-	^ left resultType 
+	^ left resultType mergeTypeWith: right resultType
 ]

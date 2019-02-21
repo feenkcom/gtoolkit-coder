@@ -152,6 +152,42 @@ GtMethodCoder >> compiledMethod [
 						ifTrue: [ cls >> sel ] ] ]
 ]
 
+{ #category : #actions }
+GtMethodCoder >> debugExample [
+	self isModified
+		ifTrue: [ self save
+			ifFalse: [ ^ self ] ].
+	self exampleResult: self example debug.
+	self styleCollapsedText.
+	self styleSourceText.
+]
+
+{ #category : #actions }
+GtMethodCoder >> debugMethod [
+	self isModified
+		ifTrue: [ self save
+			ifFalse: [ ^ self ] ].
+	self debug: self compiledMethod receiver: self object in: self context.
+]
+
+{ #category : #actions }
+GtMethodCoder >> debugSelectionOrExample [
+	| source |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self debugExample ].
+	^ self debugSource: source
+]
+
+{ #category : #actions }
+GtMethodCoder >> debugSelectionOrMethod [
+	| source |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self debugMethod ].
+	^ self debugSource: source
+]
+
 { #category : #private }
 GtMethodCoder >> ensureBuilt [
 	isBuilt
@@ -247,7 +283,7 @@ GtMethodCoder >> gtDiffViewFor: aView [
 		title: 'Diff' translated;
 		priority: 11;
 		text: [ :anEditor | 
-			Gt2EpiceaDiffStencil new
+			GtEpiceaDiffStencil new
 				from: methodSource;
 				to: self newMethodSource;
 				create ]
@@ -461,7 +497,14 @@ GtMethodCoder >> runExampleFrom: anElement [
 	self styleCollapsedText.
 	self styleSourceText.
 	self exampleResult isSuccess
-		ifFalse: [ ^ self ].
+		ifFalse: [
+			addOns addContextAction: 'Debug Example' translated 
+				icon: BrGlamorousIcons debug 
+				action: [ :button | self debugSelectionOrExample ].
+			self refreshForChanges.
+			 ^ self ].
+	addOns removeContextAction: 'Debug Example' translated.
+	self refreshForChanges.
 	anElement
 		fireEvent:
 			(GtPhlowObjectToSpawn new
@@ -561,9 +604,12 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST [
 	<gtAstCoderAddOns: 4>
 	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
 		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
-		ifFalse: [ addOns removeContextAction: 'Run' translated.
+		ifFalse: [ 
+			addOns removeContextAction: 'Run' translated.
+			addOns removeContextAction: 'Debug Unary Msg' translated.
 			^ self ].
-	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons playinspect action: [ :button | self runFrom: button ]
+	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons playinspect action: [ :button | self runFrom: button ].
+	addOns addContextAction: 'Debug Unary Msg' translated icon: BrGlamorousIcons debug action: [ :button | self debugSelectionOrMethod ].
 ]
 
 { #category : #private }

@@ -16,29 +16,21 @@ GtSearchFilter >> applyInScope: aSearchScope [
 		filter: self
 ]
 
-{ #category : #converting }
-GtSearchFilter >> asCollection [
-	^ self applyInScope: GtSearchImageScope new
+{ #category : #accessing }
+GtSearchFilter >> defaultFilterScope [
+	^ GtSearchNullFilter new
 ]
 
 { #category : #ui }
 GtSearchFilter >> gtItemsFor: aView [
 	"this is a view that is polymorphic with the one defined in ${method:Collection>>#gtItemsFor:}$"
 	<gtView>
-	^ aView explicit
-		title: 'Items' translated;
-		priority: 0;
-		stencil: [ self asCollection ]
+	^ self result gtItemsFor: aView
 ]
 
 { #category : #accessing }
 GtSearchFilter >> highlighter [
-	self subclassResponsibility
-]
-
-{ #category : #testing }
-GtSearchFilter >> isMethodFilter [
-	^ false
+	^ nil
 ]
 
 { #category : #testing }
@@ -46,9 +38,24 @@ GtSearchFilter >> matches: anObject [
 	self subclassResponsibility
 ]
 
+{ #category : #'logical operations' }
+GtSearchFilter >> not [
+	^ GtSearchNegationFilter new originalFilter: self
+]
+
+{ #category : #converting }
+GtSearchFilter >> result [
+	^ self applyInScope: self defaultFilterScope
+]
+
 { #category : #accessing }
 GtSearchFilter >> resultType [
-	self subclassResponsibility
+	^ GtSearchNullGroupResult
+]
+
+{ #category : #'logical operations' }
+GtSearchFilter >> select: aBlock [
+	^ self & (GtSearchBlockFilter forBlock: aBlock)
 ]
 
 { #category : #'logical operations' }

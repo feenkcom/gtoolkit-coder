@@ -273,6 +273,15 @@ GtSourceCoder >> disabledTextAttributes [
 ]
 
 { #category : #actions }
+GtSourceCoder >> doItAll [
+	| source |
+	source := self source.
+	source isNil
+		ifTrue: [ ^ self ].
+	^ self evaluateSource: source
+]
+
+{ #category : #actions }
 GtSourceCoder >> doItAndGoSelection: editorElement [
 	| source value |
 	source := self selectedSource.

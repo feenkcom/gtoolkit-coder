@@ -72,7 +72,7 @@ GtSearchReferencesFilter >> highlighter [
 ]
 
 { #category : #testing }
-GtSearchReferencesFilter >> includeMethod: aCompiledMethod [
+GtSearchReferencesFilter >> includesMethod: aCompiledMethod [
 	(aCompiledMethod encoderClass specialLiterals includes: object)
 		ifTrue: [ ^ self doesMethodIncludeBytecodeLiteral: aCompiledMethod ].
 	^ aCompiledMethod

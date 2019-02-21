@@ -1,18 +1,8 @@
 Class {
 	#name : #GtSearchClassGroupResult,
-	#superclass : #GtSearchGroupResult,
+	#superclass : #GtSearchTypedGroupResult,
 	#category : #'GToolkit-Coder-Filters2'
 }
-
-{ #category : #ui }
-GtSearchClassGroupResult >> gtLiveFor: aView [
-	<gtView>
-	self refreshClasses.
-	^ aView list 
-		title: 'Classes';
-		priority: 10;
-		items: [ items ifNil: [ #() ] ]
-]
 
 { #category : #enumerating }
 GtSearchClassGroupResult >> refreshClasses [
