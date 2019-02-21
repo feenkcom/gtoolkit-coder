@@ -1,12 +1,17 @@
 Class {
 	#name : #GtSearchClassesFilter,
-	#superclass : #GtSearchFilter,
+	#superclass : #GtSearchTypedEntitiesFilter,
 	#category : #'GToolkit-Coder-Filters2'
 }
 
 { #category : #accessing }
-GtSearchClassesFilter >> highlighter [
-	^ nil
+GtSearchClassesFilter class >> resultType [
+	^ GtSearchClassGroupResult
+]
+
+{ #category : #accessing }
+GtSearchClassesFilter >> defaultFilterScope [
+	^ GtSearchImageClassesFilter new
 ]
 
 { #category : #testing }
@@ -16,10 +21,6 @@ GtSearchClassesFilter >> includesClass: aClass [
 
 { #category : #testing }
 GtSearchClassesFilter >> matches: anObject [
-	^ self includesClass: anObject
-]
-
-{ #category : #accessing }
-GtSearchClassesFilter >> resultType [
-	^ GtSearchClassGroupResult
+	^ anObject isClass and: [ 
+		self includesClass: anObject ]
 ]

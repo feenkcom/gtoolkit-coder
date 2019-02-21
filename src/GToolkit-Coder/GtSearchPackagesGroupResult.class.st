@@ -1,18 +1,8 @@
 Class {
 	#name : #GtSearchPackagesGroupResult,
-	#superclass : #GtSearchGroupResult,
+	#superclass : #GtSearchTypedGroupResult,
 	#category : #'GToolkit-Coder-Filters2'
 }
-
-{ #category : #ui }
-GtSearchPackagesGroupResult >> gtLiveFor: aView [
-	<gtView>
-	self refreshPackages.
-	^ aView list 
-		title: 'Packages';
-		priority: 10;
-		items: [ items ifNil: [ #() ] ]
-]
 
 { #category : #enumerating }
 GtSearchPackagesGroupResult >> refreshItems [

@@ -27,7 +27,7 @@ GtSearchPragmasFilter >> highlighter [
 ]
 
 { #category : #testing }
-GtSearchPragmasFilter >> includeMethod: aCompiledMethod [
+GtSearchPragmasFilter >> includesMethod: aCompiledMethod [
 	^ aCompiledMethod hasPragmaNamed: symbol
 ]
 

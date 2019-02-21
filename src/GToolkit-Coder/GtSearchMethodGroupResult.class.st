@@ -1,6 +1,6 @@
 Class {
 	#name : #GtSearchMethodGroupResult,
-	#superclass : #GtSearchGroupResult,
+	#superclass : #GtSearchTypedGroupResult,
 	#category : #'GToolkit-Coder-Filters2'
 }
 
@@ -15,8 +15,7 @@ GtSearchMethodGroupResult >> asElement [
 ]
 
 { #category : #ui }
-GtSearchMethodGroupResult >> gtLiveFor: aView [
-	<gtView>
+GtSearchMethodGroupResult >> gtItemsFor: aView [
 	^ aView explicit 
 		title: 'Live' translated;
 		priority: 10;
@@ -36,7 +35,7 @@ GtSearchMethodGroupResult >> refreshMethods [
 	methods := OrderedCollection new.
 	filter ifNotNil: [ 
 		"The actual filtering should be dipatched through the filter"
-		scope methodsDo: [ :aCompiledMethod | 
+		scope itemsDo: [ :aCompiledMethod | 
 			(filter matches: aCompiledMethod) ifTrue: [
 				methods add: aCompiledMethod ] ] ].
 	methods
