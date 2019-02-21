@@ -32,6 +32,12 @@ GtSearchGroupResult class >> mergeTypeWithTypedGroup: aGroupType [
 	^ self
 ]
 
+{ #category : #adding }
+GtSearchGroupResult >> add: anObject [
+	self refreshItems.
+	^ items add: anObject
+]
+
 { #category : #enumerating }
 GtSearchGroupResult >> collect: aBlock [
 	self refreshItems.
