@@ -32,12 +32,7 @@ GtSearchBinaryFilter >> highlighter [
 					[ :rh | GtCompositeHighlighter forHighlighters: (Array with: lh with: rh) ] ]
 ]
 
-{ #category : #testing }
-GtSearchBinaryFilter >> isMethodFilter [
-	^ left isMethodFilter and: [ right isMethodFilter ]
-]
-
 { #category : #accessing }
 GtSearchBinaryFilter >> resultType [
-	^ left resultType 
+	^ left resultType mergeTypeWith: right resultType
 ]

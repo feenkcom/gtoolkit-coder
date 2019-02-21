@@ -4,12 +4,25 @@ Class {
 	#category : #'GToolkit-Coder-Filters2'
 }
 
+{ #category : #accessing }
+GtSearchUnionFilter >> defaultFilterScope [
+	^ left defaultFilterScope = right defaultFilterScope
+		ifTrue: [ left defaultFilterScope ]
+		ifFalse: [ self ]
+]
+
 { #category : #printing }
 GtSearchUnionFilter >> gtDisplayOn: stream [
 	left gtDisplayOn: stream.
 	stream nextPutAll: ' | '.
 	right gtDisplayOn: stream.
 
+]
+
+{ #category : #enumerating }
+GtSearchUnionFilter >> itemsDo: aBloc [
+	left defaultFilterScope itemsDo: aBloc.
+	right defaultFilterScope itemsDo: aBloc.
 ]
 
 { #category : #testing }

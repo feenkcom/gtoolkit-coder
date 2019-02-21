@@ -1,13 +1,8 @@
 Class {
 	#name : #GtSearchMethodsFilter,
-	#superclass : #GtSearchFilter,
+	#superclass : #GtSearchTypedEntitiesFilter,
 	#category : #'GToolkit-Coder-Filters2'
 }
-
-{ #category : #accessing }
-GtSearchMethodsFilter class >> queryType [
-	^ GtSearchMethodsFilterQuery
-]
 
 { #category : #accessing }
 GtSearchMethodsFilter class >> resultType [
@@ -15,38 +10,24 @@ GtSearchMethodsFilter class >> resultType [
 ]
 
 { #category : #accessing }
-GtSearchMethodsFilter >> filterScope [
-	^ GtSearchImageScope new
-]
-
-{ #category : #accessing }
-GtSearchMethodsFilter >> highlighter [
-	^ nil
+GtSearchMethodsFilter >> defaultFilterScope [
+	^ GtSearchImageMethodsFilter new
 ]
 
 { #category : #testing }
-GtSearchMethodsFilter >> includeMethod: aCompiledMethod [
+GtSearchMethodsFilter >> includesMethod: aCompiledMethod [
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
 GtSearchMethodsFilter >> isEmpty [
-	^ self asCollection isEmpty
-]
-
-{ #category : #testing }
-GtSearchMethodsFilter >> isMethodFilter [
-	^ true
+	^ self result isEmpty
 ]
 
 { #category : #testing }
 GtSearchMethodsFilter >> matches: anObject [
-	^ self includeMethod: anObject
-]
-
-{ #category : #'logical operations' }
-GtSearchMethodsFilter >> not [
-	^ GtCoderNegationFilter new originalFilter: self
+	^ anObject isCompiledMethod and: [ 
+		self includesMethod: anObject ]
 ]
 
 { #category : #testing }
@@ -55,16 +36,6 @@ GtSearchMethodsFilter >> notEmpty [
 ]
 
 { #category : #accessing }
-GtSearchMethodsFilter >> resultType [
-	^ self class resultType
-]
-
-{ #category : #'logical operations' }
-GtSearchMethodsFilter >> select: aBlock [
-	^ self & (GtCoderBlockFilter forBlock: aBlock)
-]
-
-{ #category : #accessing }
 GtSearchMethodsFilter >> size [
-	^ self asCollection size
+	^ self result size
 ]
