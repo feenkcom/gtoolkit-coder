@@ -157,19 +157,12 @@ GtMethodCoder >> debugExample [
 	self isModified
 		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
-	self debug: self example method receiver: self example provider in: self context.
-	self styleCollapsedText.
-	self styleSourceText.
-]
-
-{ #category : #examples }
-GtMethodCoder >> debugExampleError [
-	self isModified
-		ifTrue: [ self save
-			ifFalse: [ ^ self ] ].
-	self exampleResult: self example debug.
-	self styleCollapsedText.
-	self styleSourceText.
+	self example openingDebugger
+		callback: [ :anExampleResult |
+			self exampleResult: anExampleResult.
+			self styleCollapsedText.
+			self styleSourceText ];
+		result.
 ]
 
 { #category : #actions }
