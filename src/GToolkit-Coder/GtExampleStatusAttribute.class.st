@@ -16,20 +16,22 @@ GtExampleStatusAttribute class >> forResult: anExampleResult [
 
 { #category : #accessing }
 GtExampleStatusAttribute >> affect: aBrText in: anEditorElement [
-	| element |
-	element := BrLabel new
+	| aLabelElement |
+	aLabelElement := BrLabel new
 		look: (BrGlamorousLabelLook new fontSize: 12);
 		text: self resultLabel.
 	(result notNil and: [ result isError ])
-		ifTrue: [ element background: (BrGlamorousColors errorBackgroundColor alpha: 0.5) ].
-	element margin: (BlInsets left: 5);
-		padding:
-			(BlInsets
-				top: 4
-				left: 0
-				bottom: 0
-				right: 0).
-	^ element
+		ifTrue: [ aLabelElement background: (BrGlamorousColors errorBackgroundColor alpha: 0.5) ].
+	aLabelElement padding: (BlInsets top: 4 left: 0 bottom: 0 right: 0).
+	aLabelElement margin: (BlInsets left: 5).
+	result ifNil: [ ^ aLabelElement ].
+	result isSuccess ifTrue: [ 
+		aLabelElement addViewModel: (BrButtonModel new 
+				action: [ :aButton | aButton phlow spawnObject: self result returnValue ]) ].
+	(result isFailure or: [ result isError ]) ifTrue: [ 
+		aLabelElement addViewModel: (BrButtonModel new 
+				action: [ :aButton | self result exampleException debug ]) ].
+	^ aLabelElement
 ]
 
 { #category : #'initialize-release' }
