@@ -152,8 +152,18 @@ GtMethodCoder >> compiledMethod [
 						ifTrue: [ cls >> sel ] ] ]
 ]
 
-{ #category : #actions }
+{ #category : #examples }
 GtMethodCoder >> debugExample [
+	self isModified
+		ifTrue: [ self save
+			ifFalse: [ ^ self ] ].
+	self debug: self example method receiver: self example provider in: self context.
+	self styleCollapsedText.
+	self styleSourceText.
+]
+
+{ #category : #examples }
+GtMethodCoder >> debugExampleError [
 	self isModified
 		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
@@ -170,7 +180,7 @@ GtMethodCoder >> debugMethod [
 	self debug: self compiledMethod receiver: self object in: self context.
 ]
 
-{ #category : #actions }
+{ #category : #examples }
 GtMethodCoder >> debugSelectionOrExample [
 	| source |
 	source := self selectedSource.
@@ -214,9 +224,6 @@ GtMethodCoder >> exampleAstFor: anAST [
 		and: [ anAST methodNode ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] ifNil: [ false ] ])
 		ifFalse: [ addOns removeStylerOfType: GtCoderExpandableExampleStyler.
 			addOns removeStylerOfType: GtCoderExampleStatusStyler.
-			"addOns removeContextAction: 'Play' translated.
-			addOns removeContextAction: 'Play and Inspect' translated.
-			addOns removeContextAction: 'Debug' translated."
 			^ self ].
 	addOns addStyler: GtCoderExpandableExampleStyler new.
 	addOns
@@ -542,7 +549,7 @@ GtMethodCoder >> runExample [
 		ifFalse: [
 			addOns addContextAction: 'Debug Example Error' translated 
 				icon: BrGlamorousIcons debug 
-				action: [ :button | self debugSelectionOrExample ].
+				action: [ :button | self debugExampleError ].
 			self refreshForChanges.
 			 ^ self ].
 	addOns removeContextAction: 'Debug Example Error' translated.
