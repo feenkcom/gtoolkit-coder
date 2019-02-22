@@ -232,10 +232,10 @@ GtMethodCoder >> exampleAstFor: anAST [
 				coder: self;
 				classOrMetaClass: self classOrMetaClass).
 	addOns addContextAction: 'Play' translated 
-		icon: BrGlamorousIcons playall 
+		icon: BrGlamorousIcons play
 		action: [ :button | self playExampleFrom: button ].
 	addOns addContextAction: 'Play and Inspect' translated 
-		icon: BrGlamorousIcons playallinspect 
+		icon: BrGlamorousIcons playinspect 
 		action: [ :button | self playAndInspectExampleFrom: button ].
 	addOns addContextAction: 'Debug' translated 
 				icon: BrGlamorousIcons debug
@@ -545,14 +545,6 @@ GtMethodCoder >> runExample [
 	self exampleResult: self example run.
 	self styleCollapsedText.
 	self styleSourceText.
-	self exampleResult isSuccess
-		ifFalse: [
-			addOns addContextAction: 'Debug Example Error' translated 
-				icon: BrGlamorousIcons debug 
-				action: [ :button | self debugExampleError ].
-			self refreshForChanges.
-			 ^ self ].
-	addOns removeContextAction: 'Debug Example Error' translated.
 	self refreshForChanges.
 ]
 
