@@ -232,10 +232,10 @@ GtMethodCoder >> exampleAstFor: anAST [
 				coder: self;
 				classOrMetaClass: self classOrMetaClass).
 	addOns addContextAction: 'Play' translated 
-		icon: BrGlamorousIcons playall 
+		icon: BrGlamorousIcons play 
 		action: [ :button | self playExampleFrom: button ].
 	addOns addContextAction: 'Play and Inspect' translated 
-		icon: BrGlamorousIcons playallinspect 
+		icon: BrGlamorousIcons playinspect 
 		action: [ :button | self playAndInspectExampleFrom: button ].
 	addOns addContextAction: 'Debug' translated 
 				icon: BrGlamorousIcons debug
