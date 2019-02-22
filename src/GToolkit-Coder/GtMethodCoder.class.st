@@ -209,12 +209,14 @@ GtMethodCoder >> example: anExample [
 
 { #category : #'add ons' }
 GtMethodCoder >> exampleAstFor: anAST [
-	<gtAstCoderAddOns: 5>
+	<gtAstCoderAddOns: 10>
 	(anAST notNil
 		and: [ anAST methodNode ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] ifNil: [ false ] ])
 		ifFalse: [ addOns removeStylerOfType: GtCoderExpandableExampleStyler.
 			addOns removeStylerOfType: GtCoderExampleStatusStyler.
-			addOns removeContextAction: 'Example' translated.
+			"addOns removeContextAction: 'Play' translated.
+			addOns removeContextAction: 'Play and Inspect' translated.
+			addOns removeContextAction: 'Debug' translated."
 			^ self ].
 	addOns addStyler: GtCoderExpandableExampleStyler new.
 	addOns
@@ -222,7 +224,15 @@ GtMethodCoder >> exampleAstFor: anAST [
 			(GtCoderExampleStatusStyler new
 				coder: self;
 				classOrMetaClass: self classOrMetaClass).
-	addOns addContextAction: 'Example' translated icon: BrGlamorousIcons playinspect action: [ :button | self runExampleFrom: button ]
+	addOns addContextAction: 'Play' translated 
+		icon: BrGlamorousIcons playall 
+		action: [ :button | self playExampleFrom: button ].
+	addOns addContextAction: 'Play and Inspect' translated 
+		icon: BrGlamorousIcons playallinspect 
+		action: [ :button | self playAndInspectExampleFrom: button ].
+	addOns addContextAction: 'Debug' translated 
+				icon: BrGlamorousIcons debug
+				action: [ :button | self debugSelectionOrExample ].
 ]
 
 { #category : #examples }
@@ -466,6 +476,12 @@ GtMethodCoder >> patternSource [
 							nextPutAll: (arguments at: i) name ] ] ]
 ]
 
+{ #category : #examples }
+GtMethodCoder >> playAndInspectExampleFrom: anElement [
+	self runExample.
+	anElement phlow spawnObject: self exampleResult returnValue.
+]
+
 { #category : #actions }
 GtMethodCoder >> playAndInspectFrom: anElement [
 	| object |
@@ -474,6 +490,12 @@ GtMethodCoder >> playAndInspectFrom: anElement [
 				ifFalse: [ ^ self ] ].
 	object := self object perform: self selector.
 	anElement phlow spawnObject: object.
+]
+
+{ #category : #examples }
+GtMethodCoder >> playExampleFrom: anElement [
+	self runExample.
+	anElement phlow selectObject: self exampleResult returnValue.
 ]
 
 { #category : #actions }
@@ -509,7 +531,7 @@ GtMethodCoder >> renameVariableIn: editorElement [
 ]
 
 { #category : #examples }
-GtMethodCoder >> runExampleFrom: anElement [
+GtMethodCoder >> runExample [
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
@@ -518,18 +540,13 @@ GtMethodCoder >> runExampleFrom: anElement [
 	self styleSourceText.
 	self exampleResult isSuccess
 		ifFalse: [
-			addOns addContextAction: 'Debug Example' translated 
+			addOns addContextAction: 'Debug Example Error' translated 
 				icon: BrGlamorousIcons debug 
 				action: [ :button | self debugSelectionOrExample ].
 			self refreshForChanges.
 			 ^ self ].
-	addOns removeContextAction: 'Debug Example' translated.
+	addOns removeContextAction: 'Debug Example Error' translated.
 	self refreshForChanges.
-	anElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: self exampleResult returnValue;
-				sourceElement: anElement)
 ]
 
 { #category : #actions }
@@ -607,17 +624,17 @@ GtMethodCoder >> subCoders [
 
 { #category : #'add ons' }
 GtMethodCoder >> unaryMessageAddOnFor: anAST [
-	<gtAstCoderAddOns: 4>
+	<gtAstCoderAddOns: 20>
 	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
 		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
 		ifFalse: [ 
-			addOns removeContextAction: 'Play Unary Msg' translated.
-			addOns removeContextAction: 'Play and Inspect Unary Msg' translated.
-			addOns removeContextAction: 'Debug Unary Msg' translated.
+			addOns removeContextAction: 'Play' translated.
+			addOns removeContextAction: 'Play and Inspect' translated.
+			addOns removeContextAction: 'Debug' translated.
 			^ self ].
-	addOns addContextAction: 'Play Unary Msg' translated icon: BrGlamorousIcons play action: [ :button | self playFrom: button ].
-	addOns addContextAction: 'Play and Inspect Unary Msg' translated icon: BrGlamorousIcons playinspect action: [ :button | self playAndInspectFrom: button ].
-	addOns addContextAction: 'Debug Unary Msg' translated icon: BrGlamorousIcons debug action: [ :button | self debugSelectionOrMethod ].
+	addOns addContextAction: 'Play' translated icon: BrGlamorousIcons play action: [ :button | self playFrom: button ].
+	addOns addContextAction: 'Play and Inspect' translated icon: BrGlamorousIcons playinspect action: [ :button | self playAndInspectFrom: button ].
+	addOns addContextAction: 'Debug' translated icon: BrGlamorousIcons debug action: [ :button | self debugSelectionOrMethod ].
 ]
 
 { #category : #private }
