@@ -466,6 +466,26 @@ GtMethodCoder >> patternSource [
 							nextPutAll: (arguments at: i) name ] ] ]
 ]
 
+{ #category : #actions }
+GtMethodCoder >> playAndInspectFrom: anElement [
+	| object |
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	object := self object perform: self selector.
+	anElement phlow spawnObject: object.
+]
+
+{ #category : #actions }
+GtMethodCoder >> playFrom: anElement [
+	| object |
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	object := self object perform: self selector.
+	anElement phlow selectObject: object.
+]
+
 { #category : #updating }
 GtMethodCoder >> refreshForChanges [
 	self flag: 'source coder may have main actions and contextActions as well, why restrict to method coder?'.
@@ -509,20 +529,6 @@ GtMethodCoder >> runExampleFrom: anElement [
 		fireEvent:
 			(GtPhlowObjectToSpawn new
 				object: self exampleResult returnValue;
-				sourceElement: anElement)
-]
-
-{ #category : #actions }
-GtMethodCoder >> runFrom: anElement [
-	| object |
-	self isModified
-		ifTrue: [ self save
-				ifFalse: [ ^ self ] ].
-	object := self object perform: self selector.
-	anElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: object;
 				sourceElement: anElement)
 ]
 
@@ -605,10 +611,12 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST [
 	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
 		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
 		ifFalse: [ 
-			addOns removeContextAction: 'Run' translated.
+			addOns removeContextAction: 'Play Unary Msg' translated.
+			addOns removeContextAction: 'Play and Inspect Unary Msg' translated.
 			addOns removeContextAction: 'Debug Unary Msg' translated.
 			^ self ].
-	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons playinspect action: [ :button | self runFrom: button ].
+	addOns addContextAction: 'Play Unary Msg' translated icon: BrGlamorousIcons play action: [ :button | self playFrom: button ].
+	addOns addContextAction: 'Play and Inspect Unary Msg' translated icon: BrGlamorousIcons playinspect action: [ :button | self playAndInspectFrom: button ].
 	addOns addContextAction: 'Debug Unary Msg' translated icon: BrGlamorousIcons debug action: [ :button | self debugSelectionOrMethod ].
 ]
 
