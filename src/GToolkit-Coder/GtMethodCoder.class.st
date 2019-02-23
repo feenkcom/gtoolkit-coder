@@ -153,23 +153,17 @@ GtMethodCoder >> compiledMethod [
 ]
 
 { #category : #examples }
-GtMethodCoder >> debugExample [
+GtMethodCoder >> debugExampleFrom: anElement [
 	self isModified
 		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
-	self debug: self example method receiver: self example provider in: self context.
-	self styleCollapsedText.
-	self styleSourceText.
-]
-
-{ #category : #examples }
-GtMethodCoder >> debugExampleError [
-	self isModified
-		ifTrue: [ self save
-			ifFalse: [ ^ self ] ].
-	self exampleResult: self example debug.
-	self styleCollapsedText.
-	self styleSourceText.
+	self example openingDebugger
+		callback: [ :anExampleResult |
+			anElement enqueueTask: (BlTaskAction new action: [ 
+				self exampleResult: anExampleResult.
+				self styleCollapsedText.
+				self styleSourceText ]) ];
+		result.
 ]
 
 { #category : #actions }
@@ -181,11 +175,11 @@ GtMethodCoder >> debugMethod [
 ]
 
 { #category : #examples }
-GtMethodCoder >> debugSelectionOrExample [
+GtMethodCoder >> debugSelectionOrExampleFrom: anElement [
 	| source |
 	source := self selectedSource.
 	source isNil
-		ifTrue: [ ^ self debugExample ].
+		ifTrue: [ ^ self debugExampleFrom: anElement ].
 	^ self debugSource: source
 ]
 
@@ -239,7 +233,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 		action: [ :button | self playAndInspectExampleFrom: button ].
 	addOns addContextAction: 'Debug' translated 
 				icon: BrGlamorousIcons debug
-				action: [ :button | self debugSelectionOrExample ].
+				action: [ :button | self debugSelectionOrExampleFrom: button ].
 ]
 
 { #category : #examples }
