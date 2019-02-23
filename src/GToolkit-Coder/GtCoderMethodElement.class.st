@@ -88,7 +88,7 @@ GtCoderMethodElement >> initialize [
 					(BlInsets
 						top: 1
 						left: 10
-						bottom: 3
+						bottom: 1
 						right: 10))
 				+
 					(BrInteractiveLook new
@@ -129,7 +129,7 @@ GtCoderMethodElement >> methodCoder: aGtMethodCoder [
 	methodCoder := aGtMethodCoder.
 	self header: [ self collapsedElement ].
 	self content: [ self contentElement ].
-	self margin: (BlInsets all: 8).
+	self margin: (BlInsets all: 4).
 	expandableModel when: BrExpansionChanged do: [ :event | methodCoder expanded: self isExpanded ].
 	methodCoder expanded
 		ifTrue: [ self expand ]
