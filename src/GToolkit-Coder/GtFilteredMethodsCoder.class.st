@@ -117,5 +117,5 @@ GtFilteredMethodsCoder >> updateCoders [
 
 { #category : #private }
 GtFilteredMethodsCoder >> updateMethods [
-	methods filter: self combinedFilter
+	methods updateForFilter: self combinedFilter
 ]

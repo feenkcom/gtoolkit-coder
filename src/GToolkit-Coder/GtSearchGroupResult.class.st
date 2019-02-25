@@ -139,3 +139,9 @@ GtSearchGroupResult >> species [
 	self refreshItems.
 	^ items class
 ]
+
+{ #category : #initialization }
+GtSearchGroupResult >> updateForFilter: aFilter [
+	self filter: aFilter.
+	self scope: aFilter defaultFilterScope.
+]
