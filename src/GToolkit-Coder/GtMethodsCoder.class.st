@@ -44,7 +44,7 @@ GtMethodsCoder >> elementClass [
 GtMethodsCoder >> forMethods: compiledMethods [
 	methods := compiledMethods.
 	methodCoders := methods collect: [ :each | self newMethodCoderFor: each ].
-	(methods isKindOf: GtCoderMethodsCollection)
+	(methods isKindOf: GtSearchMethodGroupResult)
 		ifTrue: [ methods announcer weak
 				when: ValueAdded send: #methodAdded: to: self;
 				when: ValueChanged send: #methodChanged: to: self;

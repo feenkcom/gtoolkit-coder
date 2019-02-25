@@ -100,7 +100,7 @@ GtSourceCoder >> browseImplementors: editorElement [
 	editorElement
 		fireEvent:
 			(GtPhlowObjectToSpawn new
-				object: (GtCoderImplementorsFilter selector: symbol);
+				object: (GtSearchImplementorsFilter selector: symbol);
 				sourceElement: editorElement)
 ]
 
@@ -579,7 +579,7 @@ GtSourceCoder >> referencesFilterAtCursor [
 
 { #category : #private }
 GtSourceCoder >> referencesFilterForSymbol: aSymbol [
-	^ GtCoderReferencesFilter literal: aSymbol
+	^ GtSearchReferencesFilter literal: aSymbol
 ]
 
 { #category : #private }
@@ -587,10 +587,10 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	| index binding |
 	index := self classOrMetaClass instVarIndexFor: aString.
 	index > 0
-		ifTrue: [ ^ GtCoderInstanceVariableReferenceFilter forClass: self classOrMetaClass andVariable: aString ].
+		ifTrue: [ ^ GtSearchInstanceVariableReferenceFilter forClass: self classOrMetaClass andVariable: aString ].
 	binding := self classOrMetaClass bindingOf: aString.
 	binding notNil
-		ifTrue: [ ^ GtCoderReferencesFilter literal: binding ].
+		ifTrue: [ ^ GtSearchReferencesFilter literal: binding ].
 	^ nil
 ]
 

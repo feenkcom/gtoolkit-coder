@@ -79,11 +79,23 @@ GtSearchGroupResult >> highlighter [
 		ifFalse: [ nil ]
 ]
 
+{ #category : #'as yet unclassified' }
+GtSearchGroupResult >> includes: aCollection [ 
+	self refreshItems.
+	^ items includes: aCollection
+]
+
 { #category : #initialization }
 GtSearchGroupResult >> initialize [
 	super initialize.
 	filtered := false.
 	items := OrderedCollection new.
+]
+
+{ #category : #testing }
+GtSearchGroupResult >> isEmpty [
+	"Answer whether the receiver contains any elements."
+	^ self size = 0
 ]
 
 { #category : #enumerating }

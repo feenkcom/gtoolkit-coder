@@ -7,6 +7,12 @@ Class {
 	#category : #'GToolkit-Coder-Filters2'
 }
 
+{ #category : #'instance creation' }
+GtSearchClassesInPackageFilter class >> forPackageNamed: aPackageName [
+	^ self new
+		package: aPackageName asPackage
+]
+
 { #category : #comparing }
 GtSearchClassesInPackageFilter >> = anObject [
 	self == anObject ifTrue: [ ^ true ].

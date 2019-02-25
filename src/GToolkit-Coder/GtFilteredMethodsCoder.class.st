@@ -12,7 +12,7 @@ Class {
 { #category : #private }
 GtFilteredMethodsCoder >> categoryFilter [
 	^ categoryFilterString notNil
-		ifTrue: [ GtCoderMethodCategoryFilter forCategory: categoryFilterString ]
+		ifTrue: [ GtSearchMethodCategoryFilter forCategory: categoryFilterString ]
 ]
 
 { #category : #accessing }
@@ -61,7 +61,7 @@ GtFilteredMethodsCoder >> forMethods: compiledMethods [
 { #category : #private }
 GtFilteredMethodsCoder >> implementorsFilter [
 	^ (implementorsFilterString notNil and: [ implementorsFilterString notEmpty ])
-		ifTrue: [ GtCoderImplementorPatternFilter pattern: implementorsFilterString ]
+		ifTrue: [ GtSearchImplementorPatternFilter pattern: implementorsFilterString ]
 ]
 
 { #category : #accessing }

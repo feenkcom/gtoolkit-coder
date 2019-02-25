@@ -39,42 +39,42 @@ ${example:GtMethodsCoderFilterExamples>>#gtExamplePragmasAndReferencesToMethodCo
 
 "
 Class {
-	#name : #GtMethodsCoderFilterExamples,
+	#name : #GtSearchMethodFilterExamples,
 	#superclass : #Object,
 	#category : #'GToolkit-Coder-Examples'
 }
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> astPatternFilter [
+GtSearchMethodFilterExamples >> astPatternFilter [
 	<gtExample>
 	| filter |
-	filter := 'filter includeMethod: ``@a' gtASTMatches.
+	filter := 'filter matches: ``@a' gtASTMatches.
 	self assert: filter notEmpty.
-	self assert: (filter includeMethod: thisContext method).
+	self assert: (filter matches: thisContext method).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> gtExamplePragmas [
+GtSearchMethodFilterExamples >> gtExamplePragmas [
 	<gtExample>
 	| filter |
 	filter := #gtExample gtPragmas.
 	self assert: filter notEmpty.
-	self assert: (filter includeMethod: thisContext method).
+	self assert: (filter matches: thisContext method).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> gtExamplePragmasAndReferencesToMethodCoder [
+GtSearchMethodFilterExamples >> gtExamplePragmasAndReferencesToMethodCoder [
 	<gtExample>
 	| filter |
 	filter := #gtExample gtPragmas & GtMethodCoder gtReferences.
-	self assert: (filter includeMethod: thisContext method).
+	self assert: (filter matches: thisContext method).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> gtExamplePragmasAndReferencesToSampleB [
+GtSearchMethodFilterExamples >> gtExamplePragmasAndReferencesToSampleB [
 	<gtExample>
 	| filter |
 	filter := self gtExamplePragmas & self referencesToSampleB.
@@ -83,129 +83,129 @@ GtMethodsCoderFilterExamples >> gtExamplePragmasAndReferencesToSampleB [
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> implementorsOfThisMessage [
+GtSearchMethodFilterExamples >> implementorsOfThisMessage [
 	<gtExample>
 	| filter |
 	filter := #implementorsOfThisMessage gtImplementors.
-	self assert: (filter includeMethod: thisContext method).
+	self assert: (filter matches: thisContext method).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> negatedReferencesToSampleB [
+GtSearchMethodFilterExamples >> negatedReferencesToSampleB [
 	<gtExample>
 	| filter |
 	filter := self referencesToSampleB not.
-	self assert: (filter includeMethod: GtFilterStubSampleA >> #methodReferencingSampleB) not.
-	self assert: (filter includeMethod: GtFilterStubSampleA >> #anotherMethodReferencingSampleBAndSendingNew) not.
+	self assert: (filter matches: GtFilterStubSampleA >> #methodReferencingSampleB) not.
+	self assert: (filter matches: GtFilterStubSampleA >> #anotherMethodReferencingSampleBAndSendingNew) not.
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> packagePatternFilter [
+GtSearchMethodFilterExamples >> packagePatternFilter [
 	<gtExample>
 	| filter |
 	filter := 'coder-examples' gtPackageMatches.
-	self assert: (filter includeMethod: thisContext method).
+	self assert: (filter matches: thisContext method).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> referencesTo42 [
+GtSearchMethodFilterExamples >> referencesTo42 [
 	<gtExample>
 	| filter |
 	filter := 42 gtReferences.
 	self assert: filter isEmpty not.
-	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencing42).
+	self assert: (filter matches: GtFilterStubSampleB >> #methodReferencing42).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> referencesToArray [
+GtSearchMethodFilterExamples >> referencesToArray [
 	<gtExample>
 	| filter |
 	filter := #(4 2) gtReferences.
 	self assert: filter isEmpty not.
-	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingArray).
+	self assert: (filter matches: GtFilterStubSampleB >> #methodReferencingArray).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> referencesToByteArray [
+GtSearchMethodFilterExamples >> referencesToByteArray [
 	<gtExample>
 	| filter |
 	filter := #[ 4 2 ] gtReferences.
 	self assert: filter isEmpty not.
-	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingByteArray).
+	self assert: (filter matches: GtFilterStubSampleB >> #methodReferencingByteArray).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> referencesToCharacter [
+GtSearchMethodFilterExamples >> referencesToCharacter [
 	<gtExample>
 	| filter |
 	filter := $c gtReferences.
 	self assert: filter isEmpty not.
-	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingCharacter).
+	self assert: (filter matches: GtFilterStubSampleB >> #methodReferencingCharacter).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> referencesToFalse [
+GtSearchMethodFilterExamples >> referencesToFalse [
 	<gtExample>
 	| filter |
 	filter := true gtReferences.
 	self assert: filter isEmpty not.
-	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingTrue).
+	self assert: (filter matches: GtFilterStubSampleB >> #methodReferencingTrue).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> referencesToNil [
+GtSearchMethodFilterExamples >> referencesToNil [
 	<gtExample>
 	| filter |
 	filter := nil gtReferences.
 	self assert: filter isEmpty not.
-	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingNil).
+	self assert: (filter matches: GtFilterStubSampleB >> #methodReferencingNil).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> referencesToSampleB [
+GtSearchMethodFilterExamples >> referencesToSampleB [
 	<gtExample>
 	| filter |
 	filter := GtFilterStubSampleB gtReferences.
 	self assert: filter notEmpty.
-	self assert: (filter includeMethod: GtFilterStubSampleA >> #methodReferencingSampleB).
-	self assert: (filter includeMethod: GtFilterStubSampleA >> #anotherMethodReferencingSampleBAndSendingNew).
+	self assert: (filter matches: GtFilterStubSampleA >> #methodReferencingSampleB).
+	self assert: (filter matches: GtFilterStubSampleA >> #anotherMethodReferencingSampleBAndSendingNew).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> referencesToString [
+GtSearchMethodFilterExamples >> referencesToString [
 	<gtExample>
 	| filter |
 	filter := 'string' gtReferences.
 	self assert: filter isEmpty not.
-	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingString).
+	self assert: (filter matches: GtFilterStubSampleB >> #methodReferencingString).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> referencesToThisSelector [
+GtSearchMethodFilterExamples >> referencesToThisSelector [
 	<gtExample>
 	| filter |
 	filter := #referencesToThisSelector gtReferences.
 	self assert: filter notEmpty.
-	self assert: (filter includeMethod: thisContext method).
+	self assert: (filter matches: thisContext method).
 	^ filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderFilterExamples >> referencesToTrue [
+GtSearchMethodFilterExamples >> referencesToTrue [
 	<gtExample>
 	| filter |
 	filter := true gtReferences.
 	self assert: filter isEmpty not.
-	self assert: (filter includeMethod: GtFilterStubSampleB >> #methodReferencingTrue).
+	self assert: (filter matches: GtFilterStubSampleB >> #methodReferencingTrue).
 	^ filter
 ]
