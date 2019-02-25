@@ -42,7 +42,8 @@ BaselineOfGToolkitCoder >> baseline: spec [
 		spec 
 			package: 'GToolkit-Coder' with: [
 				spec requires: #('Brick' 'GToolkitUtility' ). ];
+			package: 'GToolkit-Coder-Examples-SystemS1';
 			package: 'GToolkit-Coder-Examples' with: [
-				spec requires: #('GToolkit-Coder' ). ]. ].
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Examples-SystemS1'). ]. ].
 
 ]
