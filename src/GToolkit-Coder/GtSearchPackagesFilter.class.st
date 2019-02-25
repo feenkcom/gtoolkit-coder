@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 GtSearchPackagesFilter class >> resultType [
-	^ GtSearchPackagesGroupResult 
+	^ GtSearchPackageGroupResult 
 ]
 
 { #category : #accessing }

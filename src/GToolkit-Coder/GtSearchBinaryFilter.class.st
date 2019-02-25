@@ -33,6 +33,16 @@ GtSearchBinaryFilter >> highlighter [
 ]
 
 { #category : #accessing }
+GtSearchBinaryFilter >> leftFilter [
+	^ left
+]
+
+{ #category : #accessing }
 GtSearchBinaryFilter >> resultType [
 	^ left resultType mergeTypeWith: right resultType
+]
+
+{ #category : #accessing }
+GtSearchBinaryFilter >> rightFilter [
+	^ right
 ]

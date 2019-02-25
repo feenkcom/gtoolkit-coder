@@ -1,13 +1,13 @@
 "
-!Filter examples
+!Method filter examples
 
 !!Implementors
 
-${example:GtMethodsCoderFilterExamples>>#implementorsOfThisMessage}$
+${example:GtSearchMethodFilterExamples>>#implementorsOfThisMessage}$
 
 !!Package pattern
 
-${example:GtMethodsCoderFilterExamples>>#packagePatternFilter}$
+${example:GtSearchMethodFilterExamples>>#packagePatternFilter}$
 
 !!Pragmas
 
@@ -19,17 +19,17 @@ ${example:GtMethodsCoderExamples>>#gtExamplesFilter}$
 ==gtReferences== can be applied to several objects. 
 
 Class references:
-${example:GtMethodsCoderFilterExamples>>#referencesToSampleB|previewShow=gtItemsFor:}$
+${example:GtSearchMethodFilterExamples>>#referencesToSampleB|previewShow=gtItemsFor:}$
 
 Selector references:
-${example:GtMethodsCoderFilterExamples>>#referencesToThisSelector}$
+${example:GtSearchMethodFilterExamples>>#referencesToThisSelector}$
 
 Number references
-${example:GtMethodsCoderFilterExamples>>#referencesTo42}$
+${example:GtSearchMethodFilterExamples>>#referencesTo42}$
 
 !!Intersection
 
-${example:GtMethodsCoderFilterExamples>>#gtExamplePragmasAndReferencesToMethodCoder}$
+${example:GtSearchMethodFilterExamples>>#gtExamplePragmasAndReferencesToMethodCoder}$
 
 !!Union
 
@@ -44,7 +44,7 @@ Class {
 	#category : #'GToolkit-Coder-Examples'
 }
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> astPatternFilter [
 	<gtExample>
 	| filter |
@@ -54,7 +54,7 @@ GtSearchMethodFilterExamples >> astPatternFilter [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> gtExamplePragmas [
 	<gtExample>
 	| filter |
@@ -64,7 +64,7 @@ GtSearchMethodFilterExamples >> gtExamplePragmas [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> gtExamplePragmasAndReferencesToMethodCoder [
 	<gtExample>
 	| filter |
@@ -73,7 +73,7 @@ GtSearchMethodFilterExamples >> gtExamplePragmasAndReferencesToMethodCoder [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> gtExamplePragmasAndReferencesToSampleB [
 	<gtExample>
 	| filter |
@@ -82,7 +82,7 @@ GtSearchMethodFilterExamples >> gtExamplePragmasAndReferencesToSampleB [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> implementorsOfThisMessage [
 	<gtExample>
 	| filter |
@@ -91,7 +91,7 @@ GtSearchMethodFilterExamples >> implementorsOfThisMessage [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> negatedReferencesToSampleB [
 	<gtExample>
 	| filter |
@@ -100,7 +100,7 @@ GtSearchMethodFilterExamples >> negatedReferencesToSampleB [
 	self assert: (filter matches: GtFilterStubSampleA >> #anotherMethodReferencingSampleBAndSendingNew) not.
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> packagePatternFilter [
 	<gtExample>
 	| filter |
@@ -109,7 +109,7 @@ GtSearchMethodFilterExamples >> packagePatternFilter [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> referencesTo42 [
 	<gtExample>
 	| filter |
@@ -119,7 +119,7 @@ GtSearchMethodFilterExamples >> referencesTo42 [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> referencesToArray [
 	<gtExample>
 	| filter |
@@ -129,7 +129,7 @@ GtSearchMethodFilterExamples >> referencesToArray [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> referencesToByteArray [
 	<gtExample>
 	| filter |
@@ -139,7 +139,7 @@ GtSearchMethodFilterExamples >> referencesToByteArray [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> referencesToCharacter [
 	<gtExample>
 	| filter |
@@ -149,7 +149,7 @@ GtSearchMethodFilterExamples >> referencesToCharacter [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> referencesToFalse [
 	<gtExample>
 	| filter |
@@ -159,7 +159,7 @@ GtSearchMethodFilterExamples >> referencesToFalse [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> referencesToNil [
 	<gtExample>
 	| filter |
@@ -169,7 +169,7 @@ GtSearchMethodFilterExamples >> referencesToNil [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> referencesToSampleB [
 	<gtExample>
 	| filter |
@@ -180,7 +180,7 @@ GtSearchMethodFilterExamples >> referencesToSampleB [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> referencesToString [
 	<gtExample>
 	| filter |
@@ -190,7 +190,7 @@ GtSearchMethodFilterExamples >> referencesToString [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> referencesToThisSelector [
 	<gtExample>
 	| filter |
@@ -200,7 +200,7 @@ GtSearchMethodFilterExamples >> referencesToThisSelector [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtSearchMethodFilterExamples >> referencesToTrue [
 	<gtExample>
 	| filter |
