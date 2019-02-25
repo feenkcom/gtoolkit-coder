@@ -143,5 +143,7 @@ GtSearchGroupResult >> species [
 { #category : #initialization }
 GtSearchGroupResult >> updateForFilter: aFilter [
 	self filter: aFilter.
-	self scope: aFilter defaultFilterScope.
+	self scope: (aFilter 
+		ifNil: [ GtSearchNullFilter new ]
+		ifNotNil: [  aFilter defaultFilterScope ])
 ]
