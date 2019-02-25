@@ -5,6 +5,33 @@ Class {
 }
 
 { #category : #examples }
+GtSearchMethodReferencesFilterExamples >> gtExamplePragmasAndReferencesToMethodCoder [
+	<gtExample>
+	| filter |
+	filter := #gtExample gtPragmas & GtMethodCoder gtReferences.
+	self assert: (filter matches: thisContext method).
+	^ filter
+]
+
+{ #category : #examples }
+GtSearchMethodReferencesFilterExamples >> gtExamplePragmasAndReferencesToSampleB [
+	<gtExample>
+	| filter |
+	filter := self gtExamplePragmas & self referencesToSampleB.
+	self assert: filter notEmpty.
+	^ filter
+]
+
+{ #category : #examples }
+GtSearchMethodReferencesFilterExamples >> negatedReferencesToSampleB [
+	<gtExample>
+	| filter |
+	filter := self referencesToSampleB not.
+	self assert: (filter matches: GtFilterStubSampleA >> #methodReferencingSampleB) not.
+	self assert: (filter matches: GtFilterStubSampleA >> #anotherMethodReferencingSampleBAndSendingNew) not.
+]
+
+{ #category : #examples }
 GtSearchMethodReferencesFilterExamples >> referencesTo42 [
 	<gtExample>
 	| filter |

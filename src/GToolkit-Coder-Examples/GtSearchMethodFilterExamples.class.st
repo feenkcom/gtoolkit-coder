@@ -44,6 +44,11 @@ Class {
 	#category : #'GToolkit-Coder-Examples'
 }
 
+{ #category : #asserting }
+GtSearchMethodFilterExamples >> assertMethodResultTypeForFilter: aFilter [
+	self assert: aFilter resultType equals: GtSearchMethodGroupResult.
+]
+
 { #category : #examples }
 GtSearchMethodFilterExamples >> astPatternFilter [
 	<gtExample>
@@ -65,39 +70,12 @@ GtSearchMethodFilterExamples >> gtExamplePragmas [
 ]
 
 { #category : #examples }
-GtSearchMethodFilterExamples >> gtExamplePragmasAndReferencesToMethodCoder [
-	<gtExample>
-	| filter |
-	filter := #gtExample gtPragmas & GtMethodCoder gtReferences.
-	self assert: (filter matches: thisContext method).
-	^ filter
-]
-
-{ #category : #examples }
-GtSearchMethodFilterExamples >> gtExamplePragmasAndReferencesToSampleB [
-	<gtExample>
-	| filter |
-	filter := self gtExamplePragmas & self referencesToSampleB.
-	self assert: filter notEmpty.
-	^ filter
-]
-
-{ #category : #examples }
 GtSearchMethodFilterExamples >> implementorsOfThisMessage [
 	<gtExample>
 	| filter |
 	filter := #implementorsOfThisMessage gtImplementors.
 	self assert: (filter matches: thisContext method).
 	^ filter
-]
-
-{ #category : #examples }
-GtSearchMethodFilterExamples >> negatedReferencesToSampleB [
-	<gtExample>
-	| filter |
-	filter := self referencesToSampleB not.
-	self assert: (filter matches: GtFilterStubSampleA >> #methodReferencingSampleB) not.
-	self assert: (filter matches: GtFilterStubSampleA >> #anotherMethodReferencingSampleBAndSendingNew) not.
 ]
 
 { #category : #examples }

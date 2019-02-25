@@ -25,10 +25,11 @@ GtSearchClassFilterExamples >> classesInCurrentPackageFilter [
 ]
 
 { #category : #'examples - equality' }
-GtSearchClassFilterExamples >> classesInCurrentPackageFilterEqualityExample [
+GtSearchClassFilterExamples >> classesInCurrentPackageFilterEquality [
 	<gtExample>
 	| filter |
 	filter := self classesInCurrentPackageFilter.
+	self assert: filter equals: filter.
 	self 
 		assert: filter
 		equals: (GtSearchClassesInPackageFilter forPackageNamed: 'GToolkit-Coder-Examples-SystemS1').
@@ -53,10 +54,11 @@ GtSearchClassFilterExamples >> classesInImageFilter [
 ]
 
 { #category : #'examples - equality' }
-GtSearchClassFilterExamples >> classesInImageFilterEqualityExamples [
+GtSearchClassFilterExamples >> classesInImageFilterEquality [
 	<gtExample>
 	| filter |
 	filter := self classesInImageFilter.
+	self assert: filter equals: filter.
 	self assert: filter equals: GtSearchImageClassesFilter new.
 	^ filter
 	
@@ -124,7 +126,7 @@ GtSearchClassFilterExamples >> groupResultForClassesInImageFilter [
 	filter := self classesInImageFilter.
 	result := filter result.
 	
-	self assert: (result isKindOf: GtSearchClassGroupResult).
+	self assert: result class equals: GtSearchClassGroupResult.
 	self assert: result filter equals: filter.
 	self assert: result scope == filter.
 	self assert: result size equals: Smalltalk allClassesAndTraits size.
@@ -141,7 +143,7 @@ GtSearchClassFilterExamples >> groupResultForClassesInPackageFilter [
 	filter := self classesInCurrentPackageFilter.
 	result := filter result.
 	
-	self assert: (result isKindOf: GtSearchClassGroupResult).
+	self assert: result class equals: GtSearchClassGroupResult.
 	self assert: result filter equals: filter.
 	self assert: result scope == filter.
 	self assert: result size equals: 5.
@@ -158,7 +160,7 @@ GtSearchClassFilterExamples >> groupResultForDeprecatedClassesInPackageScopeFilt
 	filter := self deprecatedClassesInPackageScopeFilter.
 	result := filter result.
 	
-	self assert: (result isKindOf: GtSearchClassGroupResult).
+	self assert: result class equals: GtSearchClassGroupResult.
 	self assert: result filter equals: filter.
 	self assert: result scope == filter leftFilter.
 	self assert: result size equals: 1.
