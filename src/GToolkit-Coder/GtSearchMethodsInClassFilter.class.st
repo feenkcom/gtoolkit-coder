@@ -6,7 +6,7 @@ Class {
 		'includeSubclasses',
 		'includeSuperclass'
 	],
-	#category : #'GToolkit-Coder-Filters2'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #'instance creation' }

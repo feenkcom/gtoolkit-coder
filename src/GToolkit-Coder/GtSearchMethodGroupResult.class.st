@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchMethodGroupResult,
 	#superclass : #GtSearchTypedGroupResult,
-	#category : #'GToolkit-Coder-Filters2'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #'instance creation' }
