@@ -17,8 +17,6 @@ GtSearchClassFilterExamples >> classesInCurrentPackageFilter [
 	
 	self assert: (filter matches: GtSystemS1SubclassC2).
 	self assert: (filter matches: Object) not.
-	self assert: filter defaultFilterScope == filter.
-	self assertClassResultTypeForFilter: filter.
 	
 	^ filter
 	
@@ -37,6 +35,17 @@ GtSearchClassFilterExamples >> classesInCurrentPackageFilterEquality [
 	
 ]
 
+{ #category : #'examples - result type' }
+GtSearchClassFilterExamples >> classesInCurrentPackageFilterResultType [
+	<gtExample>
+	| filter |
+	filter := self classesInCurrentPackageFilter.
+	self assert: filter defaultFilterScope == filter.
+	self assertClassResultTypeForFilter: filter.
+	^ filter
+	
+]
+
 { #category : #examples }
 GtSearchClassFilterExamples >> classesInImageFilter [
 	<gtExample>
@@ -45,9 +54,6 @@ GtSearchClassFilterExamples >> classesInImageFilter [
 	
 	self assert: (filter matches: GtSystemS1SubclassC2).
 	self assert: (filter matches: Object).
-	
-	self assert: filter defaultFilterScope == filter.
-	self assertClassResultTypeForFilter: filter.
 	
 	^ filter
 	
@@ -64,18 +70,35 @@ GtSearchClassFilterExamples >> classesInImageFilterEquality [
 	
 ]
 
+{ #category : #'examples - result type' }
+GtSearchClassFilterExamples >> classesInImageFilterResultType [
+	<gtExample>
+	| filter |
+	filter := self classesInImageFilter.
+	self assert: filter defaultFilterScope == filter.
+	self assertClassResultTypeForFilter: filter.
+	^ filter
+	
+]
+
 { #category : #examples }
 GtSearchClassFilterExamples >> deprecatedClassesFilter [
 	<gtExample>
 	| filter |
 	filter := GtSearchDeprecatedClassesFilter new.
-	
 	self assert: (filter matches: GtSystemS1AnotherClassC3).
 	self assert: (filter matches: GtSystemS1RootClassC1) not.
+	^ filter
 	
+]
+
+{ #category : #'examples - result type' }
+GtSearchClassFilterExamples >> deprecatedClassesFilterResultType [
+	<gtExample>
+	| filter |
+	filter := self deprecatedClassesFilter.
 	self assert: filter defaultFilterScope equals: GtSearchImageClassesFilter new.
 	self assertClassResultTypeForFilter: filter.
-	
 	^ filter
 	
 ]
