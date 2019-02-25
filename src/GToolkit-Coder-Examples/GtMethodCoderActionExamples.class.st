@@ -19,7 +19,9 @@ GtMethodCoderActionExamples >> addExampleTag [
 
 { #category : #testing }
 GtMethodCoderActionExamples >> hasRunExampleActionIn: aCoder [
-	^ aCoder contextActions anySatisfy: [ :each | each title = 'Example' translated ]
+	^ aCoder contextActions anySatisfy: [ :each | 
+			each title = 'Play' translated and: [ 
+				each action method = (GtMethodCoder>>#exampleAstFor:) ] ]
 ]
 
 { #category : #examples }

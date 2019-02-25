@@ -25,7 +25,7 @@ GtMethodCoderCategoryLook >> initializeLook [
 					c frame horizontal alignRight.
 					c frame vertical alignTop ];
 				activated: methodsCoder categoryFilterString = self category;
-				label: ((self category ifNil: [ '' ]) asRopedText attributes: {(BlFontSizeAttribute size: 12)});
+				label: ((self category ifNil: [ '' ]) asRopedText attributes: {(BlFontSizeAttribute size: 12) . BlFontFamilyAttribute named: 'Source Sans Pro' });
 				look: GtCategoryToggleLook;
 				when: BrToggleActivatedEvent do: [ :anEvent | methodsCoder categoryFilterString: self category ];
 				when: BrToggleDeactivatedEvent do: [ :anEvent | methodsCoder categoryFilterString: nil ].

@@ -62,7 +62,7 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Inspect' translated
 		icon: BrGlamorousIcons playinspect
-		action: [ :aButton | self runFrom: aButton ].
+		action: [ :aButton | self playAndInspectFrom: aButton ].
 	addOns
 		addMainAction: 'Debug' translated
 		icon: BrGlamorousIcons debug
@@ -121,25 +121,31 @@ GtPharoSnippetCoder >> object [
 		ifFalse: [ nil ]
 ]
 
-{ #category : #ui }
-GtPharoSnippetCoder >> requester [
-	^ super requester
-		bindingStrategy: bindingStrategy;
-		yourself
-]
-
 { #category : #actions }
-GtPharoSnippetCoder >> runFrom: aButton [
+GtPharoSnippetCoder >> playAndInspectFrom: aButton [
 	| aValue |
 	self clearPreviousEvaluations.
 	self validateSyntax
 		ifFalse: [ ^ self ].
 	aValue := self evaluateAndHighlightAllSource.
-	aButton
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: aValue;
-				sourceElement: aButton)
+	aButton phlow spawnObject: aValue.
+]
+
+{ #category : #actions }
+GtPharoSnippetCoder >> playFrom: aButton [
+	| aValue |
+	self clearPreviousEvaluations.
+	self validateSyntax
+		ifFalse: [ ^ self ].
+	aValue := self evaluateAndHighlightAllSource.
+	aButton phlow selectObject: aValue.
+]
+
+{ #category : #ui }
+GtPharoSnippetCoder >> requester [
+	^ super requester
+		bindingStrategy: bindingStrategy;
+		yourself
 ]
 
 { #category : #private }
