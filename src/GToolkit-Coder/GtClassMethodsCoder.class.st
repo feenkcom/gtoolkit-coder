@@ -54,7 +54,7 @@ GtClassMethodsCoder >> classesFilter [
 	filteredClasses
 		do: [ :each | 
 			| classFilter |
-			classFilter := GtSearchMethodsInClassFilter forClass: each.
+			classFilter := GtSearchMethodsInInstanceAndClassSideFilter forClass: each.
 			filter := filter isNil
 				ifTrue: [ classFilter ]
 				ifFalse: [ filter | classFilter ] ].
@@ -79,16 +79,18 @@ GtClassMethodsCoder >> filteredClass: aBehavior [
 
 { #category : #private }
 GtClassMethodsCoder >> filters [
-	^ {self classesFilter.
-	self categoryFilter.
-	self implementorsFilter}
+	^ {
+		self classesFilter.
+		self categoryFilter.
+		self implementorsFilter}
 ]
 
 { #category : #'initialize-release' }
 GtClassMethodsCoder >> forClass: aBehavior [
 	class := aBehavior.
 	filteredClasses := Set with: aBehavior.
-	self forMethods: (GtSearchMethodGroupResult forFilter: (GtSearchMethodsInClassFilter forClass: class))
+	self forMethods: (GtSearchMethodGroupResult 
+		forFilter: (GtSearchMethodsInInstanceAndClassSideFilter forClass: class))
 ]
 
 { #category : #'initialize-release' }
@@ -140,7 +142,10 @@ GtClassMethodsCoder >> removeMethodsForClass: aClass [
 		ifFalse: [ ^ self ].
 	filteredClasses remove: aClass.
 	self updateMethods.
-	methodCoders removeAllSuchThat: [ :each | each classOrMetaClass = aClass and: [ each isModified not ] ].
+	methodCoders removeAllSuchThat: [ :each | 
+		(each classOrMetaClass = aClass or: [
+			each classOrMetaClass = aClass classSide]) and: [ 
+				each isModified not ] ].
 	self announce: (GtCoderMethodsListChanged new coder: self)
 ]
 

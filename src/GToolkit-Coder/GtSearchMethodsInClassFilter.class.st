@@ -1,42 +1,12 @@
 Class {
 	#name : #GtSearchMethodsInClassFilter,
-	#superclass : #GtSearchMethodsFilter,
+	#superclass : #GtSearchMethodsContainedInClassFilter,
 	#instVars : [
-		'class',
 		'includeSubclasses',
 		'includeSuperclass'
 	],
 	#category : #'GToolkit-Coder-Filters'
 }
-
-{ #category : #'instance creation' }
-GtSearchMethodsInClassFilter class >> forClass: aClass [
-	^ self new
-		forClass: aClass;
-		yourself
-]
-
-{ #category : #comparing }
-GtSearchMethodsInClassFilter >> = anObject [
-	self == anObject ifTrue: [ ^ true ].
-	self class = anObject class ifFalse: [ ^ false ].
-	^ class = anObject filterClass
-]
-
-{ #category : #accessing }
-GtSearchMethodsInClassFilter >> defaultFilterScope [
-	^ self
-]
-
-{ #category : #accessing }
-GtSearchMethodsInClassFilter >> filterClass [
-	^ class
-]
-
-{ #category : #'initialize-release' }
-GtSearchMethodsInClassFilter >> forClass: aClass [
-	class := aClass
-]
 
 { #category : #testing }
 GtSearchMethodsInClassFilter >> includeSubclasses [
@@ -76,12 +46,6 @@ GtSearchMethodsInClassFilter >> initialize [
 ]
 
 { #category : #enumerating }
-GtSearchMethodsInClassFilter >> itemsDo: aBlock [
-	^ self methodsDo: aBlock
-]
-
-{ #category : #enumerating }
 GtSearchMethodsInClassFilter >> methodsDo: aBlock [
-	class instanceSide methods do: aBlock.
-	class classSide methods do: aBlock.
+	class methods do: aBlock.
 ]
