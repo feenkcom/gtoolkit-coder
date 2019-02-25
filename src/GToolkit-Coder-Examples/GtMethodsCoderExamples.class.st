@@ -7,25 +7,25 @@ Class {
 { #category : #'examples - filters' }
 GtMethodsCoderExamples >> doFilter [
 	<gtExample>
-	^ GtCoderImplementorsFilter selector: #do:
+	^ GtSearchImplementorsFilter selector: #do:
 ]
 
 { #category : #'examples - coder' }
 GtMethodsCoderExamples >> doImplementorsCoder [
 	<gtExample>
-	^ (GtCoderMethodsCollection forFilter: self doFilter) asCoder
+	^ (GtSearchMethodGroupResult forFilter: self doFilter) asCoder
 ]
 
 { #category : #'examples - filters' }
 GtMethodsCoderExamples >> errorFilter [
 	<gtExample>
-	^ GtCoderReferencesFilter literal: #error:
+	^ GtSearchReferencesFilter literal: #error:
 ]
 
 { #category : #'examples - coder' }
 GtMethodsCoderExamples >> errorReferencesCoder [
 	<gtExample>
-	^ (GtCoderMethodsCollection forFilter: self errorFilter) asCoder
+	^ (GtSearchMethodGroupResult forFilter: self errorFilter) asCoder
 ]
 
 { #category : #accessing }
@@ -44,7 +44,7 @@ GtMethodsCoderExamples >> factorialExample [
 GtMethodsCoderExamples >> gtExamplesCoder [
 	<gtExample>
 	| methods |
-	methods := GtCoderMethodsCollection forFilter: self gtExamplesFilter.
+	methods := GtSearchMethodGroupResult forFilter: self gtExamplesFilter.
 	self assert: (methods includes: thisContext method).
 	^ methods asCoder
 ]
@@ -58,19 +58,19 @@ GtMethodsCoderExamples >> gtExamplesFilter [
 { #category : #'examples - filters' }
 GtMethodsCoderExamples >> instanceVariableFilter [
 	<gtExample>
-	^ GtCoderInstanceVariableReferenceFilter forClass: HashedCollection andVariable: 'array'
+	^ GtSearchInstanceVariableReferenceFilter forClass: HashedCollection andVariable: 'array'
 ]
 
 { #category : #'examples - coder' }
 GtMethodsCoderExamples >> instanceVariableReferenceCoder [
 	<gtExample>
-	^ (GtCoderMethodsCollection forFilter: self instanceVariableFilter) asCoder
+	^ (GtSearchMethodGroupResult forFilter: self instanceVariableFilter) asCoder
 ]
 
 { #category : #'examples - coder' }
 GtMethodsCoderExamples >> intersectionCoder [
 	<gtExample>
-	^ (GtCoderMethodsCollection forFilter: self instanceVariableFilter & self doFilter) asCoder
+	^ (GtSearchMethodGroupResult forFilter: self instanceVariableFilter & self doFilter) asCoder
 ]
 
 { #category : #'examples - class coder' }
@@ -94,7 +94,7 @@ GtMethodsCoderExamples >> methodsCoderWithExplicitMethods [
 { #category : #'examples - filters' }
 GtMethodsCoderExamples >> printStringFilter [
 	<gtExample>
-	^ GtCoderReferencesFilter literal: #printString
+	^ GtSearchReferencesFilter literal: #printString
 ]
 
 { #category : #'examples - filters' }
@@ -136,7 +136,7 @@ GtMethodsCoderExamples >> suspendedFactorialProcess [
 { #category : #'examples - coder' }
 GtMethodsCoderExamples >> unionCoder [
 	<gtExample>
-	^ (GtCoderMethodsCollection forFilter: self errorFilter | self printStringFilter) asCoder
+	^ (GtSearchMethodGroupResult forFilter: self errorFilter | self printStringFilter) asCoder
 ]
 
 { #category : #accessing }
@@ -145,11 +145,11 @@ GtMethodsCoderExamples >> validateNoMemoryLeaks [
 	| subscriptionCount instanceCount diffSubscriptions diffInstances |
 	Smalltalk garbageCollect.
 	subscriptionCount := SystemAnnouncer uniqueInstance numberOfSubscriptions.
-	instanceCount := GtCoderMethodsCollection allInstances size.
+	instanceCount := GtSearchMethodGroupResult allInstances size.
 	10 timesRepeat: [ self doImplementorsCoder ].
 	3 timesRepeat: [ Smalltalk garbageCollect ].
 	diffSubscriptions := subscriptionCount - SystemAnnouncer uniqueInstance numberOfSubscriptions.
-	diffInstances := instanceCount - GtCoderMethodsCollection allInstances size.
+	diffInstances := instanceCount - GtSearchMethodGroupResult allInstances size.
 	self assert: diffSubscriptions >= 0.
 	self assert: diffInstances >= 0.
 	^ {diffSubscriptions.

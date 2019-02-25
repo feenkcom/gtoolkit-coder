@@ -1,16 +1,16 @@
 Class {
-	#name : #GtSearchPackagesGroupResult,
+	#name : #GtSearchPackageGroupResult,
 	#superclass : #GtSearchTypedGroupResult,
-	#category : #'GToolkit-Coder-Filters2'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #enumerating }
-GtSearchPackagesGroupResult >> refreshItems [
+GtSearchPackageGroupResult >> refreshItems [
 	self refreshPackages
 ]
 
 { #category : #enumerating }
-GtSearchPackagesGroupResult >> refreshPackages [
+GtSearchPackageGroupResult >> refreshPackages [
 	| packages |
 	filtered
 		ifTrue: [ ^ self ].

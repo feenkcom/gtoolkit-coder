@@ -54,7 +54,7 @@ GtClassMethodsCoder >> classesFilter [
 	filteredClasses
 		do: [ :each | 
 			| classFilter |
-			classFilter := GtCoderBehaviorMethodFilter forClass: each.
+			classFilter := GtSearchMethodsInClassFilter forClass: each.
 			filter := filter isNil
 				ifTrue: [ classFilter ]
 				ifFalse: [ filter | classFilter ] ].
@@ -86,7 +86,7 @@ GtClassMethodsCoder >> filters [
 GtClassMethodsCoder >> forClass: aBehavior [
 	class := aBehavior.
 	filteredClasses := Set with: aBehavior.
-	self forMethods: (GtCoderMethodsCollection forFilter: (GtCoderBehaviorMethodFilter forClass: class))
+	self forMethods: (GtSearchMethodGroupResult forFilter: (GtSearchMethodsInClassFilter forClass: class))
 ]
 
 { #category : #'initialize-release' }

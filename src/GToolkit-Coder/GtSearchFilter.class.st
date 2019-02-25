@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchFilter,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Filters2'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #'logical operations' }
@@ -33,6 +33,11 @@ GtSearchFilter >> highlighter [
 	^ nil
 ]
 
+{ #category : #accessing }
+GtSearchFilter >> isEmpty [
+	^ self result isEmpty
+]
+
 { #category : #testing }
 GtSearchFilter >> matches: anObject [
 	self subclassResponsibility
@@ -41,6 +46,11 @@ GtSearchFilter >> matches: anObject [
 { #category : #'logical operations' }
 GtSearchFilter >> not [
 	^ GtSearchNegationFilter new originalFilter: self
+]
+
+{ #category : #testing }
+GtSearchFilter >> notEmpty [
+	^ self isEmpty not
 ]
 
 { #category : #converting }
@@ -56,6 +66,11 @@ GtSearchFilter >> resultType [
 { #category : #'logical operations' }
 GtSearchFilter >> select: aBlock [
 	^ self & (GtSearchBlockFilter forBlock: aBlock)
+]
+
+{ #category : #accessing }
+GtSearchFilter >> size [
+	^ self result size
 ]
 
 { #category : #'logical operations' }

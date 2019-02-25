@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchClassesFilter,
 	#superclass : #GtSearchTypedEntitiesFilter,
-	#category : #'GToolkit-Coder-Filters2'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #accessing }

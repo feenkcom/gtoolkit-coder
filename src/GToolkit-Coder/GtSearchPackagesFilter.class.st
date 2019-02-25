@@ -1,12 +1,12 @@
 Class {
 	#name : #GtSearchPackagesFilter,
 	#superclass : #GtSearchTypedEntitiesFilter,
-	#category : #'GToolkit-Coder-Filters2'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #accessing }
 GtSearchPackagesFilter class >> resultType [
-	^ GtSearchPackagesGroupResult 
+	^ GtSearchPackageGroupResult 
 ]
 
 { #category : #accessing }

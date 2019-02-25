@@ -5,7 +5,7 @@ Class {
 		'ast',
 		'sentMessagesFilter'
 	],
-	#category : #'GToolkit-Coder-Filters2'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #'instance creation' }
@@ -37,7 +37,7 @@ GtSearchASTFilter >> computeMessagesFilter [
 	messages := ast sentMessages.
 	messages isEmpty
 		ifTrue: [ ^ sentMessagesFilter := nil ].
-	filters := messages collect: [ :each | GtCoderReferencesFilter literal: each ].
+	filters := messages collect: [ :each | GtSearchReferencesFilter literal: each ].
 	sentMessagesFilter := filters reduce: [ :a :b | a & b ]
 ]
 
@@ -54,7 +54,7 @@ GtSearchASTFilter >> highlighter [
 { #category : #testing }
 GtSearchASTFilter >> includesMethod: aCompiledMethod [
 	| methodAst |
-	(sentMessagesFilter isNil or: [ sentMessagesFilter includeMethod: aCompiledMethod ])
+	(sentMessagesFilter isNil or: [ sentMessagesFilter includesMethod: aCompiledMethod ])
 		ifFalse: [ ^ false ].
 	methodAst := aCompiledMethod ast.
 	methodAst

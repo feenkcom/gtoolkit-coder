@@ -4,8 +4,14 @@ Class {
 	#instVars : [
 		'package'
 	],
-	#category : #'GToolkit-Coder-Filters2'
+	#category : #'GToolkit-Coder-Filters'
 }
+
+{ #category : #'instance creation' }
+GtSearchClassesInPackageFilter class >> forPackageNamed: aPackageName [
+	^ self new
+		package: aPackageName asPackage
+]
 
 { #category : #comparing }
 GtSearchClassesInPackageFilter >> = anObject [

@@ -5,7 +5,7 @@ Class {
 		'left',
 		'right'
 	],
-	#category : #'GToolkit-Coder-Filters2'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #'instance creation' }
@@ -33,6 +33,16 @@ GtSearchBinaryFilter >> highlighter [
 ]
 
 { #category : #accessing }
+GtSearchBinaryFilter >> leftFilter [
+	^ left
+]
+
+{ #category : #accessing }
 GtSearchBinaryFilter >> resultType [
 	^ left resultType mergeTypeWith: right resultType
+]
+
+{ #category : #accessing }
+GtSearchBinaryFilter >> rightFilter [
+	^ right
 ]

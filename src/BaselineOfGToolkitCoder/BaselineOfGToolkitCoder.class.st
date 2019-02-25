@@ -36,13 +36,14 @@ BaselineOfGToolkitCoder >> baseline: spec [
 	spec for: #'common' do: [
 		spec 
 			baseline: 'Brick' with: [
-				spec repository: 'github://feenkcom/Brick:v0.5.19/src' ];
+				spec repository: 'github://feenkcom/Brick/src' ];
 			baseline: 'GToolkitUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.5.1/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility/src' ].
 		spec 
 			package: 'GToolkit-Coder' with: [
 				spec requires: #('Brick' 'GToolkitUtility' ). ];
+			package: 'GToolkit-Coder-Examples-SystemS1';
 			package: 'GToolkit-Coder-Examples' with: [
-				spec requires: #('GToolkit-Coder' ). ]. ].
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Examples-SystemS1'). ]. ].
 
 ]
