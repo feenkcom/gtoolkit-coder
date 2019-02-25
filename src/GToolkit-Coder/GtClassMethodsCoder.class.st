@@ -67,7 +67,9 @@ GtClassMethodsCoder >> combinedFilter [
 	combined := super combinedFilter.
 	^ combined isNil
 		ifTrue: [ self classesFilter ]
-		ifFalse: [ self classesFilter ifNil: [ nil ] ifNotNil: [ :filter | filter & combined ] ]
+		ifFalse: [ self classesFilter 
+			ifNil: [ nil ] 
+			ifNotNil: [ :filter | filter & combined ] ]
 ]
 
 { #category : #testing }

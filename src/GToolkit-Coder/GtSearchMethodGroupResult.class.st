@@ -12,8 +12,7 @@ GtSearchMethodGroupResult class >> forClass: aClass andVariable: aString [
 { #category : #'instance creation' }
 GtSearchMethodGroupResult class >> forFilter: aCoderMethodsFilter [
 	^ self new
-		filter: aCoderMethodsFilter;
-		scope: aCoderMethodsFilter defaultFilterScope;
+		updateForFilter: aCoderMethodsFilter;
 		yourself
 ]
 
