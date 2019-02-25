@@ -28,7 +28,7 @@ GtSearchMethodsContainedInClassFilterExamples >> methodsInClassFilterEquality [
 	^ filter
 ]
 
-{ #category : #examples }
+{ #category : #'examples - result type' }
 GtSearchMethodsContainedInClassFilterExamples >> methodsInClassFilterResultType [
 	<gtExample>
 	| filter |
@@ -94,13 +94,15 @@ GtSearchMethodsContainedInClassFilterExamples >> methodsInTwoClassesUnionFilter 
 	^ filter
 ]
 
-{ #category : #examples }
+{ #category : #'examples - result type' }
 GtSearchMethodsContainedInClassFilterExamples >> methodsInTwoClassesUnionFilterResultType [
 	<gtExample>
 	| filter |
 	filter := self methodsInTwoClassesUnionFilter.
+		
 	self assertMethodResultTypeForFilter: filter.
 	self assert: filter defaultFilterScope == filter.
+		
 	^ filter
 ]
 
