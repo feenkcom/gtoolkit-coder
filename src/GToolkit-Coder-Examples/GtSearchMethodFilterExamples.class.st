@@ -19,17 +19,17 @@ ${example:GtMethodsCoderExamples>>#gtExamplesFilter}$
 ==gtReferences== can be applied to several objects. 
 
 Class references:
-${example:GtSearchMethodFilterExamples>>#referencesToSampleB|previewShow=gtItemsFor:}$
+${example:GtSearchMethodReferencesFilterExamples>>#referencesToSampleB|previewShow=gtItemsFor:}$
 
 Selector references:
-${example:GtSearchMethodFilterExamples>>#referencesToThisSelector}$
+${example:GtSearchMethodReferencesFilterExamples>>#referencesToThisSelector}$
 
 Number references
-${example:GtSearchMethodFilterExamples>>#referencesTo42}$
+${example:GtSearchMethodReferencesFilterExamples>>#referencesTo42}$
 
 !!Intersection
 
-${example:GtSearchMethodFilterExamples>>#gtExamplePragmasAndReferencesToMethodCoder}$
+${example:GtSearchMethodReferencesFilterExamples>>#gtExamplePragmasAndReferencesToMethodCoder}$
 
 !!Union
 
