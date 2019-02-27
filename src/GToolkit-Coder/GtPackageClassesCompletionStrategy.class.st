@@ -9,20 +9,23 @@ Class {
 
 { #category : #accessing }
 GtPackageClassesCompletionStrategy >> classesMatching: aString [
-	| pattern classes |
-	classes := Set new.
-	pattern := '*' , aString , '*'.
-	(GtPackagesCompletionStrategy findPackagesMatching: packageSearchString) do: [ :each | classes addAll: each classes ].
-	(GtPackagesCompletionStrategy findPackageTagsMatching: packageSearchString) do: [ :each | classes addAll: each classes ].
-	^ classes select: [ :each | pattern match: each name ]
+	| classNamePattern matchedClasses |
+	matchedClasses := Set new.
+	classNamePattern := '*' , aString , '*'.
+	(GtPackagesCompletionStrategy findPackagesMatching: packageSearchString) do: [ :each | 
+		matchedClasses addAll: each classes ].
+	(GtPackagesCompletionStrategy findPackageTagsMatching: packageSearchString) do: [ :each | 
+		matchedClasses addAll: each classes ].
+	^ matchedClasses select: [ :each | classNamePattern match: each name ]
 ]
 
 { #category : #accessing }
 GtPackageClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
 	| string |
 	string := aText asString.
-	^ ((self classesMatching: string) collect: [ :each | GtReplaceTextCompletionAction forText: each name ])
-		asSortedCollection: [ :a :b | a text < b text ]
+	^ ((self classesMatching: string) collect: [ :each | 
+		GtReplaceTextCompletionAction forText: each name ])
+			asSortedCollection: [ :a :b | a text < b text ]
 ]
 
 { #category : #testing }
