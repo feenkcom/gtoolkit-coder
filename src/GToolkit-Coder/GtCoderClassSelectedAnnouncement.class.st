@@ -1,5 +1,5 @@
 Class {
-	#name : #GtClassFilterAnnouncement,
+	#name : #GtCoderClassSelectedAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
 		'class'
@@ -8,18 +8,18 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtClassFilterAnnouncement class >> forClass: aClass [
+GtCoderClassSelectedAnnouncement class >> forClass: aClass [
 	^ self new
 		classOrMetaClass: aClass;
 		yourself
 ]
 
 { #category : #accessing }
-GtClassFilterAnnouncement >> classOrMetaClass [
+GtCoderClassSelectedAnnouncement >> classOrMetaClass [
 	^ class
 ]
 
 { #category : #accessing }
-GtClassFilterAnnouncement >> classOrMetaClass: aClass [
+GtCoderClassSelectedAnnouncement >> classOrMetaClass: aClass [
 	class := aClass
 ]
