@@ -28,10 +28,8 @@ GtCoderClassSelector >> asElement [
 	inputElement border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1).
 	self coder theClass ifNotNil: [ :aClass |
 		inputEditor text: (aClass package name, '>', aClass name) asRopedText ].
-	"inputElement
-		when: BlKeyDownEvent do: [ :event | 
-			self halt.
-			event key = Character enter ifTrue: [ self changedClassName ] ]."
+	inputEditor when: BrTextEditorInsertedEvent do: [ :event | 
+		self changedClassName ].
 	packageCompleter := GtCompletionController 
 		on: inputElement 
 		strategy: GtCoderClassWithPackageCompletionStrategy new.
@@ -42,20 +40,22 @@ GtCoderClassSelector >> asElement [
 
 { #category : #private }
 GtCoderClassSelector >> changedClassName [
-	| class |
-	class := Smalltalk at: self className asSymbol ifAbsent: [ nil ].
+	| className class |
+	className := self className.
+	className ifNil: [ ^ nil ].
+	class := Smalltalk at: className asSymbol ifAbsent: [ nil ].
 	class isBehavior
 		ifTrue: [ self coder selectClass: class ]
 ]
 
 { #category : #accessing }
 GtCoderClassSelector >> className [ 
-	| content packageAndClassName |
+	| content contentParts |
 	content := self inputEditor text asString.
-	packageAndClassName := content splitOn: '>'.
-	^ packageAndClassName size = 2 
-		ifTrue: [ packageAndClassName second ]
-		ifFalse: [ nil ]
+	contentParts := content splitOn: '>'.
+	^ contentParts size = 1 
+		ifTrue: [ contentParts first ]
+		ifFalse: [ contentParts second ]
 ]
 
 { #category : #accessing }
