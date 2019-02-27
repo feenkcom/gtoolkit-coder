@@ -1,15 +1,42 @@
 Class {
-	#name : #GtClassFilter,
+	#name : #GtCoderClassSelector,
 	#superclass : #Announcer,
 	#instVars : [
+		'coder',
 		'packageEditor',
-		'classNameEditor'
+		'classNameEditor',
+		'inputEditor'
 	],
 	#category : #'GToolkit-Coder'
 }
 
 { #category : #elements }
-GtClassFilter >> asElement [
+GtCoderClassSelector >> asElement [
+	| element inputElement |
+	element := BlElement new.
+	element layout: BlLinearLayout horizontal.
+	element
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
+	inputElement := BrEditorElement new.
+	inputElement padding: (BlInsets all: 10).
+	inputElement editor: inputEditor.
+	inputElement constraintsDo: [ :c | 
+		c horizontal matchParent.
+		c vertical fitContent ].
+	inputElement border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1).
+	self coder theClass ifNotNil: [ :aClass |
+		inputEditor text: (aClass package name, '>>', aClass name) asRopedText ].
+	inputEditor
+		when: BlKeyDownEvent do: [ :event | 
+			event key = Character enter ifTrue: [ self changedClassName ] ].
+	element addChild: inputElement.
+	^ element
+]
+
+{ #category : #elements }
+GtCoderClassSelector >> asElement2 [
 	| element packageElement packageCompleter classElement classStrategy classCompleter |
 	element := BlElement new.
 	element layout: BlLinearLayout horizontal.
@@ -45,22 +72,47 @@ GtClassFilter >> asElement [
 ]
 
 { #category : #private }
-GtClassFilter >> changedClassName [
+GtCoderClassSelector >> changedClassName [
 	| class |
-	class := Smalltalk at: classNameEditor text asString asSymbol ifAbsent: [ nil ].
+	class := Smalltalk at: self className asSymbol ifAbsent: [ nil ].
 	class isBehavior
-		ifTrue: [ self announce: (GtClassFilterAnnouncement forClass: class) ]
+		ifTrue: [ self coder selectClass: class ]
+]
+
+{ #category : #accessing }
+GtCoderClassSelector >> className [ 
+	| content packageAndClassName |
+	content := self inputEditor text asString.
+	packageAndClassName := content splitOn: '>>'.
+	^ packageAndClassName size = 2 
+		ifTrue: [ packageAndClassName second ]
+		ifFalse: [ nil ]
+		
+]
+
+{ #category : #accessing }
+GtCoderClassSelector >> coder [
+	^ coder
+]
+
+{ #category : #accessing }
+GtCoderClassSelector >> coder: aCoder [
+	coder := aCoder
 ]
 
 { #category : #'initialize-release' }
-GtClassFilter >> initialize [
+GtCoderClassSelector >> initialize [
 	super initialize.
-	packageEditor := BrTextEditor new.
-	classNameEditor := BrTextEditor new
+	inputEditor := BrTextEditor new
+]
+
+{ #category : #accessing }
+GtCoderClassSelector >> inputEditor [
+	^ inputEditor
 ]
 
 { #category : #elements }
-GtClassFilter >> updateClassStrategy: classStrategy [
+GtCoderClassSelector >> updateClassStrategy: classStrategy [
 	classStrategy packageSearchString: packageEditor text asString.
 	classNameEditor deleter
 		from: 0 to: classNameEditor text size;

@@ -32,7 +32,7 @@ GtClassCoder >> asElement [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-	element addChild: classDefinitionCoder asElement.
+	"element addChild: classDefinitionCoder asElement."
 	element addChild: methodsCoder asElement.
 	^ element
 ]

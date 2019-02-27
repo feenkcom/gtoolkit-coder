@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoder,
-	#superclass : #Object,
+	#superclass : #Announcer,
 	#instVars : [
 		'searchFilter',
 		'classCoder'
@@ -10,25 +10,42 @@ Class {
 
 { #category : #elements }
 GtCoder >> asElement [
-	| element |
-	element := BlElement new.
-	element layout: BlLinearLayout vertical.
-	element
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	element addChild: searchFilter asElement.
-	searchFilter
-		when: GtClassFilterAnnouncement
-		do: [ :ann | 
-			classCoder := GtClassCoder forClass: ann classOrMetaClass.
-			[ element childrenCount > 1 ] whileTrue: [ element removeChildAt: 2 ].
-			element addChild: classCoder asElement ].
-	^ element asScrollableElement
+	| coderElement |
+	coderElement := GtCoderElement new coderModel: self.
+	^ coderElement asScrollableElement
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
+GtCoder >> class: aClass [
+	classCoder := GtClassCoder forClass: aClass
+]
+
+{ #category : #accessing }
+GtCoder >> classCoder [
+	^ classCoder
+]
+
+{ #category : #initialize }
 GtCoder >> initialize [
 	super initialize.
-	searchFilter := GtClassFilter new
+	searchFilter := GtCoderClassSelector new
+		coder: self.
+]
+
+{ #category : #accessing }
+GtCoder >> searchFilter [
+	^ searchFilter
+]
+
+{ #category : #updating }
+GtCoder >> selectClass: aClass [
+	classCoder := GtClassCoder forClass: aClass.
+	self announce: (GtCoderClassSelectedAnnouncement forClass: aClass)
+]
+
+{ #category : #accessing }
+GtCoder >> theClass [
+	^ self classCoder 
+		ifNil: [ nil ] 
+		ifNotNil: [ :aClassCoder | aClassCoder theClass ]
 ]
