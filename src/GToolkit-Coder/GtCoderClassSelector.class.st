@@ -12,7 +12,7 @@ Class {
 
 { #category : #elements }
 GtCoderClassSelector >> asElement [
-	| element inputElement |
+	| element inputElement packageCompleter |
 	element := BlElement new.
 	element layout: BlLinearLayout horizontal.
 	element
@@ -27,47 +27,16 @@ GtCoderClassSelector >> asElement [
 		c vertical fitContent ].
 	inputElement border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1).
 	self coder theClass ifNotNil: [ :aClass |
-		inputEditor text: (aClass package name, '>>', aClass name) asRopedText ].
-	inputEditor
+		inputEditor text: (aClass package name, '>', aClass name) asRopedText ].
+	"inputElement
 		when: BlKeyDownEvent do: [ :event | 
-			event key = Character enter ifTrue: [ self changedClassName ] ].
-	element addChild: inputElement.
-	^ element
-]
-
-{ #category : #elements }
-GtCoderClassSelector >> asElement2 [
-	| element packageElement packageCompleter classElement classStrategy classCompleter |
-	element := BlElement new.
-	element layout: BlLinearLayout horizontal.
-	element
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	element background: (Color veryLightGray alpha: 0.5).
-	packageElement := BrEditorElement new.
-	packageElement padding: (BlInsets all: 10).
-	packageElement width: 200.
-	packageElement editor: packageEditor.
-	packageCompleter := GtCompletionController on: packageElement strategy: GtPackagesCompletionStrategy new.
+			self halt.
+			event key = Character enter ifTrue: [ self changedClassName ] ]."
+	packageCompleter := GtCompletionController 
+		on: inputElement 
+		strategy: GtCoderClassWithPackageCompletionStrategy new.
 	packageCompleter install.
-	classElement := BrEditorElement new.
-	classElement padding: (BlInsets all: 10).
-	classElement width: 200.
-	classElement editor: classNameEditor.
-	classStrategy := GtPackageClassesCompletionStrategy new.
-	packageEditor
-		when: BrTextEditorInsertedEvent do: [ :event | self updateClassStrategy: classStrategy ];
-		when: BrTextEditorDeletedEvent do: [ :event | self updateClassStrategy: classStrategy ].
-	classCompleter := GtCompletionController on: classElement strategy: classStrategy.
-	classCompleter install.
-	classNameEditor
-		when: BrTextEditorInsertedEvent do: [ :event | self changedClassName ];
-		when: BrTextEditorDeletedEvent do: [ :event | self changedClassName ].
-	element addChild: ((BlTextElement text: 'Package:' asRopedText) padding: (BlInsets top: 13 left: 10 bottom: 10 right: 0)).
-	element addChild: packageElement.
-	element addChild: ((BlTextElement text: 'Class:' asRopedText) padding: (BlInsets top: 13 left: 10 bottom: 10 right: 0)).
-	element addChild: classElement.
+	element addChild: inputElement.
 	^ element
 ]
 
@@ -83,11 +52,10 @@ GtCoderClassSelector >> changedClassName [
 GtCoderClassSelector >> className [ 
 	| content packageAndClassName |
 	content := self inputEditor text asString.
-	packageAndClassName := content splitOn: '>>'.
+	packageAndClassName := content splitOn: '>'.
 	^ packageAndClassName size = 2 
 		ifTrue: [ packageAndClassName second ]
 		ifFalse: [ nil ]
-		
 ]
 
 { #category : #accessing }
