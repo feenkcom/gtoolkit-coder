@@ -2,10 +2,17 @@ Class {
 	#name : #GtCoderClassWithPackageCompletionStrategy,
 	#superclass : #GtCompletionStrategy,
 	#instVars : [
-		'allPackages'
+		'allPackages',
+		'allClasses'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #accessing }
+GtCoderClassWithPackageCompletionStrategy >> allClasses [
+	^  allClasses ifNil: [ 
+			allClasses := GtPrefixTree withAll: Smalltalk globals classNames ]
+]
 
 { #category : #accessing }
 GtCoderClassWithPackageCompletionStrategy >> allPackages [
@@ -36,12 +43,19 @@ GtCoderClassWithPackageCompletionStrategy >> completionActionsFor: aText at: pos
 					completion: (className allButFirst: partialClassName size) 
 					position: positionInteger
 					from: positionInteger - partialClassName size + 1 ] ].
-	completionActions := (self allPackages first: maxInteger startingWith: currentInput) collect: [ :packageName | 
+	completionActions := (self allClasses first: (maxInteger/2) asInteger  startingWith: currentInput) collect: [ :className | 
+		GtInsertTextCompletionAction
+			labeled: className
+			completion: (className allButFirst: currentInput size)
+			position: positionInteger
+			from: positionInteger - currentInput size + 1 ].
+	completionActions addAll: ((self allPackages first: (maxInteger/2) asInteger startingWith: currentInput) collect: [ :packageName | 
 		GtInsertTextCompletionAction
 			labeled: packageName
 			completion: (packageName allButFirst: currentInput size) , '>'
 			position: positionInteger
-			from: positionInteger - currentInput size + 1 ].
+			from: positionInteger - currentInput size + 1 ]).
+
 	^ completionActions
 	"(self class findPackageTagsMatching: completionString) do: [ :each | 
 		completionActions add: (GtReplaceTextCompletionAction forText: each categoryName) ]."
