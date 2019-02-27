@@ -30,7 +30,7 @@ GtCoderClassWithPackageCompletionStrategy >> completionActionsFor: aText at: pos
 	| currentInput completionActions delimitedIndex |
 	currentInput := aText asString.
 	delimitedIndex := currentInput indexOf: $>.
-	delimitedIndex > 0 ifTrue: [  
+	delimitedIndex > 0 ifTrue: [
 		| extractedPackageName partialClassName package |
 		extractedPackageName := currentInput copyFrom: 1 to: delimitedIndex - 1.
 		partialClassName := currentInput copyFrom: delimitedIndex + 1 to: currentInput size.

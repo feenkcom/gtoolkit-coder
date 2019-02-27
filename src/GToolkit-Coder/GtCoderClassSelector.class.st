@@ -28,12 +28,12 @@ GtCoderClassSelector >> asElement [
 	inputElement border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1).
 	self coder theClass ifNotNil: [ :aClass |
 		inputEditor text: (aClass package name, '>', aClass name) asRopedText ].
-	inputEditor when: BrTextEditorInsertedEvent do: [ :event | 
-		self changedClassName ].
 	packageCompleter := GtCompletionController 
 		on: inputElement 
 		strategy: GtCoderClassWithPackageCompletionStrategy new.
 	packageCompleter install.
+	packageCompleter announcer when: GtCompleterCompletionAccepted do: [ :event | 
+		self changedClassName ].
 	element addChild: inputElement.
 	^ element
 ]
