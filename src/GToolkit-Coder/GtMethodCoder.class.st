@@ -214,17 +214,16 @@ GtMethodCoder >> example: anExample [
 { #category : #'add ons' }
 GtMethodCoder >> exampleAstFor: anAST [
 	<gtAstCoderAddOns: 10>
-	(anAST notNil
-		and: [ anAST methodNode ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] ifNil: [ false ] ])
-		ifFalse: [ addOns removeStylerOfType: GtCoderExpandableExampleStyler.
+	(anAST notNil and: [ 
+		anAST methodNode 
+			ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] 
+			ifNil: [ false ] ])
+		ifFalse: [
 			addOns removeStylerOfType: GtCoderExampleStatusStyler.
 			^ self ].
-	addOns addStyler: GtCoderExpandableExampleStyler new.
-	addOns
-		addStyler:
-			(GtCoderExampleStatusStyler new
-				coder: self;
-				classOrMetaClass: self classOrMetaClass).
+	addOns addStyler: (GtCoderExampleStatusStyler new
+		coder: self;
+		classOrMetaClass: self classOrMetaClass).
 	addOns addContextAction: 'Play' translated 
 		icon: BrGlamorousIcons play
 		action: [ :button | self playExampleFrom: button ].
@@ -232,8 +231,8 @@ GtMethodCoder >> exampleAstFor: anAST [
 		icon: BrGlamorousIcons playinspect 
 		action: [ :button | self playAndInspectExampleFrom: button ].
 	addOns addContextAction: 'Debug' translated 
-				icon: BrGlamorousIcons debug
-				action: [ :button | self debugSelectionOrExampleFrom: button ].
+		icon: BrGlamorousIcons debug
+		action: [ :button | self debugSelectionOrExampleFrom: button ].
 ]
 
 { #category : #examples }
@@ -411,6 +410,16 @@ GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
 				ifTrue: [ (GtMondrian canUnderstand: each selector)
 						ifFalse: [ ^ false ] ] ].
 	^ true
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> methodExpanderFor: anAST [
+	<gtAstCoderAddOns: 10>
+	(anAST notNil and: [ anAST methodNode notNil ])
+		ifFalse: [ 
+			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
+			^ self ].
+	addOns addStyler: GtCoderExpandableMethodStyler new
 ]
 
 { #category : #'add ons' }

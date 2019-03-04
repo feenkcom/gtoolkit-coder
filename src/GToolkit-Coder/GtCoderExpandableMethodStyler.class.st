@@ -1,11 +1,11 @@
 Class {
-	#name : #GtCoderExpandableExampleStyler,
+	#name : #GtCoderExpandableMethodStyler,
 	#superclass : #GtCoderBodyStyler,
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #visiting }
-GtCoderExpandableExampleStyler >> visitMessageNode: aMessageNode [
+GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 	super visitMessageNode: aMessageNode.
 	aMessageNode isUnary
 		ifFalse: [ ^ self ].
@@ -13,8 +13,8 @@ GtCoderExpandableExampleStyler >> visitMessageNode: aMessageNode [
 		ifFalse: [ ^ self ].
 	(aMessageNode methodNode methodClass canPerform: aMessageNode selector)
 		ifFalse: [ ^ self ].
-	(aMessageNode methodNode methodClass lookupSelector: aMessageNode selector) isGTExampleMethod
-		ifFalse: [ ^ self ].
+	"(aMessageNode methodNode methodClass lookupSelector: aMessageNode selector) isGTExampleMethod
+		ifFalse: [ ^ self ]."
 	self
 		styleFrom: aMessageNode stop
 		to: aMessageNode stop
@@ -28,11 +28,5 @@ GtCoderExpandableExampleStyler >> visitMessageNode: aMessageNode [
 							coder expanded: true.
 							editorElement := coder asElement.
 							editorElement border: (BlBorder paint: Color veryLightGray width: 1).
-							editorElement
-								margin:
-									(BlInsets
-										top: 0
-										right: 10
-										bottom: 10
-										left: 10) ] ])}
+							editorElement margin: (BlInsets top: 3 right: 10 bottom: 10 left: 10) ] ])}
 ]
