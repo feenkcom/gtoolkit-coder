@@ -414,6 +414,16 @@ GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
 ]
 
 { #category : #'add ons' }
+GtMethodCoder >> methodExpanderFor: anAST [
+	<gtAstCoderAddOns: 10>
+	(anAST notNil and: [ anAST methodNode notNil ])
+		ifFalse: [ 
+			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
+			^ self ].
+	addOns addStyler: GtCoderExpandableMethodStyler new
+]
+
+{ #category : #'add ons' }
 GtMethodCoder >> mondrianPaintAddOnFor: anAST [
 	<gtAstCoderAddOns: 7>
 	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
