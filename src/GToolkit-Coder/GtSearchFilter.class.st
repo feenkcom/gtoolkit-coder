@@ -41,7 +41,7 @@ GtSearchFilter class >> gtHierarchyFor: aView [
 							ifFalse: [ eachClass methods select: [:method | 
 								method gtIsOverridingUpTo: GtSearchFilter ] ].
 						methods do: [:aMethod | 
-							container addChild: (GtMethodCoder forMethod: aMethod) asElement].
+							container addChild: ((GtMethodCoder forMethod: aMethod) asElement)].
 						container ].
 					anExpander margin: (BlInsets all: 10).
 						 ];
