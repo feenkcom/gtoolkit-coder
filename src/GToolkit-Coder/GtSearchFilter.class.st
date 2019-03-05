@@ -12,28 +12,51 @@ GtSearchFilter class >> gtHierarchyFor: aView [
 		priority: 0;
 		painting: [ :m | 
 			m nodes 
-				stencil: [ :each | 
-					BlTextElement new 
-						padding: (BlInsets left: 5 right: 5);
-						text: (
-							each = GtSearchFilter 
+				stencil: [ :eachClass | 
+					| anExpander text |
+					text := (eachClass = GtSearchFilter 
 								ifTrue: ['Filter']
 								ifFalse: [ 
-									(each name gtRemovePrefix: 'GtSearch') 
+									(eachClass name gtRemovePrefix: 'GtSearch') 
 										gtRemoveSuffix: 'Filter' ])
 									asRopedText 
-									glamorousRegularFontAndSize ];
+									glamorousRegularFont;
+									fontSize: 18.
+					anExpander := BrExpander new.
+					anExpander vFitContent; hExact: 300.
+					anExpander look: BrGlamorousExpanderLook new.
+					anExpander header: [ BlTextElement new 
+						padding: (BlInsets left: 5 right: 5);
+						text: text ].
+					anExpander content: [ 
+						| container methods |
+						container := BlElement new
+							layout: BlLinearLayout vertical;
+							constraintsDo: [ :c | c vertical fitContent. c horizontal fitContent].
+						container addChild: (BlTextElement new 
+							padding: (BlInsets left: 5 right: 5);
+							text: text).
+						methods := eachClass = GtSearchFilter 
+							ifTrue: [ (GtSearchFilter methods select: #isOverridden) ]
+							ifFalse: [ eachClass methods select: [:method | 
+								method gtIsOverridingUpTo: GtSearchFilter ] ].
+						methods do: [:aMethod | 
+							container addChild: (GtMethodCoder forMethod: aMethod) asElement].
+						container ].
+					anExpander margin: (BlInsets all: 10).
+						 ];
 				with: self withAllSubclasses.
 			m edges 
 				stencil: [ :each |
 					BlLineElement new 
+						zIndex: -1;
 						border: (BlBorder paint: (Color gray alpha: 0.5) width: 1);
 						fromHead: (BlArrowheadTriangle new scale: 4; background: Color white;
 						border: (BlBorder paint: (Color gray alpha: 0.5) width: 1))];
-				fromNearestTightCircle;
+				fromRightCenter;
 				toLeftCenter;
 				connectFrom: #superclass.
-			m layout custom: (GtGraphHorizontalTreeLayout new layered horizontalGap: 50; verticalGap: 10).
+			m layout explicit: (GtGraphHorizontalTreeLayout new layered horizontalGap: 50; verticalGap: 10).
 			]
 ]
 
