@@ -39,7 +39,7 @@ GtCoderElement >> initialize [
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical fitContent ].
+			c vertical matchParent ].
 ]
 
 { #category : #updating }
