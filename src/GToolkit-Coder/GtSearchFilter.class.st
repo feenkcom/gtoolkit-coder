@@ -4,6 +4,39 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #accessing }
+GtSearchFilter class >> gtHierarchyFor: aView [
+	<gtView>
+	^ aView mondrian
+		title: 'Hierarchy';
+		priority: 0;
+		painting: [ :m | 
+			m nodes 
+				stencil: [ :each | 
+					BlTextElement new 
+						padding: (BlInsets left: 5 right: 5);
+						text: (
+							each = GtSearchFilter 
+								ifTrue: ['Filter']
+								ifFalse: [ 
+									(each name gtRemovePrefix: 'GtSearch') 
+										gtRemoveSuffix: 'Filter' ])
+									asRopedText 
+									glamorousRegularFontAndSize ];
+				with: self withAllSubclasses.
+			m edges 
+				stencil: [ :each |
+					BlLineElement new 
+						border: (BlBorder paint: (Color gray alpha: 0.5) width: 1);
+						fromHead: (BlArrowheadTriangle new scale: 4; background: Color white;
+						border: (BlBorder paint: (Color gray alpha: 0.5) width: 1))];
+				fromNearestTightCircle;
+				toLeftCenter;
+				connectFrom: #superclass.
+			m layout custom: (GtGraphHorizontalTreeLayout new layered horizontalGap: 50; verticalGap: 10).
+			]
+]
+
 { #category : #'logical operations' }
 GtSearchFilter >> & aFilter [
 	^ GtSearchIntersectionFilter forFilter: self filter: aFilter
