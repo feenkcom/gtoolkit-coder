@@ -7,8 +7,8 @@ Class {
 { #category : #visiting }
 GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 	super visitMessageNode: aMessageNode.
-	aMessageNode isUnary
-		ifFalse: [ ^ self ].
+	"aMessageNode isUnary
+		ifFalse: [ ^ self ]."
 	aMessageNode isSelfSend
 		ifFalse: [ ^ self ].
 	(aMessageNode methodNode methodClass canPerform: aMessageNode selector)
@@ -16,8 +16,8 @@ GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 	"(aMessageNode methodNode methodClass lookupSelector: aMessageNode selector) isGTExampleMethod
 		ifFalse: [ ^ self ]."
 	self
-		styleFrom: aMessageNode stop
-		to: aMessageNode stop
+		styleFrom: aMessageNode keywordsIntervals last last
+		to: aMessageNode keywordsIntervals last last
 		with:
 			{(BrTextExpandButtonAttribute new
 				attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
