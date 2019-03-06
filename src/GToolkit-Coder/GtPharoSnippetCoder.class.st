@@ -58,7 +58,7 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Evaluate' translated
 		icon: BrGlamorousIcons play
-		action: [ :aButton | self evaluateAndHighlightAllSource ].
+		action: [ :aButton | self playFrom: aButton ].
 	addOns
 		addMainAction: 'Inspect' translated
 		icon: BrGlamorousIcons playinspect
