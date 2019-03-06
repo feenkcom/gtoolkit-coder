@@ -291,11 +291,7 @@ GtSourceCoder >> doItAndGoSelection: editorElement [
 	value := self evaluateSource: source.
 	value == self
 		ifTrue: [ ^ self ].
-	editorElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: value;
-				sourceElement: editorElement)
+	editorElement phlow spawnObject: value
 ]
 
 { #category : #actions }
