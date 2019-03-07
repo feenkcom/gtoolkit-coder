@@ -518,6 +518,17 @@ GtMethodCoder >> playFrom: anElement [
 	anElement phlow selectObject: object.
 ]
 
+{ #category : #printing }
+GtMethodCoder >> printOn: aStream [
+	super printOn: aStream.
+	aStream 
+		nextPut: $(;
+		nextPutAll: self classOrMetaClass asString; 
+		nextPutAll: '>>#';
+		nextPutAll: self selector asString;  
+		nextPut: $)
+]
+
 { #category : #updating }
 GtMethodCoder >> refreshForChanges [
 	self flag: 'source coder may have main actions and contextActions as well, why restrict to method coder?'.
