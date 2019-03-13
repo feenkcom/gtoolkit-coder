@@ -319,7 +319,7 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 			source: aString;
 			receiver: self object;
 			context: self context;
-			requestor: self evaluationRequester;
+			requestor: (self evaluationRequester source: aString);
 			failBlock: [ ^ self flag: 'insert error adornment' ];
 			evaluate
 	] on: Error do: [ :anError |
