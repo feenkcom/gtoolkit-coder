@@ -504,8 +504,7 @@ GtMethodCoder >> playAndInspectFrom: anElement [
 
 { #category : #examples }
 GtMethodCoder >> playExampleFrom: anElement [
-	self runExample.
-	anElement phlow selectObject: self exampleResult returnValue.
+	self runExample
 ]
 
 { #category : #actions }
@@ -515,7 +514,6 @@ GtMethodCoder >> playFrom: anElement [
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
 	object := self object perform: self selector.
-	anElement phlow selectObject: object.
 ]
 
 { #category : #printing }
