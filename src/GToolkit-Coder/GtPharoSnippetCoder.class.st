@@ -138,7 +138,6 @@ GtPharoSnippetCoder >> playFrom: aButton [
 	self validateSyntax
 		ifFalse: [ ^ self ].
 	aValue := self evaluateAndHighlightAllSource.
-	aButton phlow selectObject: aValue.
 ]
 
 { #category : #ui }
