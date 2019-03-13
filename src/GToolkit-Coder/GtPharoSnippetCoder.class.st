@@ -68,6 +68,10 @@ GtPharoSnippetCoder >> initializeAddOns [
 		icon: BrGlamorousIcons debug
 		action: [ :aButton | self debugSelection ].
 	addOns
+		addMainAction: 'Profile' translated
+		icon: BrGlamorousIcons performance
+		action: [ :aButton | self profileWithMessageTallyFrom: aButton ].
+	addOns
 		addStyler:
 			(BrRBTextStyler new
 				isForWorkspace: true;
@@ -138,6 +142,16 @@ GtPharoSnippetCoder >> playFrom: aButton [
 	self validateSyntax
 		ifFalse: [ ^ self ].
 	aValue := self evaluateAndHighlightAllSource.
+]
+
+{ #category : #actions }
+GtPharoSnippetCoder >> profileWithMessageTallyFrom: aButton [
+	| aValue |
+	self clearPreviousEvaluations.
+	self validateSyntax
+		ifFalse: [ ^ self ].
+	aValue := self evaluateSource: 'MessageTally on: [ ', self sourceEditor text asString, ']'.
+	aButton phlow spawnObject: aValue.
 ]
 
 { #category : #ui }

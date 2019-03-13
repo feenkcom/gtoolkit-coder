@@ -2,7 +2,8 @@ Class {
 	#name : #GtMethodCoderEvaluationRequester,
 	#superclass : #GtMethodCoderRequester,
 	#instVars : [
-		'selectionInterval'
+		'selectionInterval',
+		'source'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -31,7 +32,12 @@ GtMethodCoderEvaluationRequester >> notify: message at: anIndex in: aString [
 
 { #category : #requester }
 GtMethodCoderEvaluationRequester >> selection [
-	^ coder source copyFrom: selectionInterval first to: selectionInterval last
+	^ source
+]
+
+{ #category : #accessing }
+GtMethodCoderEvaluationRequester >> source: aString [
+	source := aString
 ]
 
 { #category : #requester }
