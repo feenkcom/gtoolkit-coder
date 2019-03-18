@@ -54,13 +54,6 @@ GtProcessCoder >> isSuspended [
 				session process isTerminated not ] ] ]
 ]
 
-{ #category : #elements }
-GtProcessCoder >> look [
-	^ GtProcessCoderLook new
-		methodsCoder: self;
-		yourself
-]
-
 { #category : #updating }
 GtProcessCoder >> updateCoders [
 	| context firstContext coder newCoders |

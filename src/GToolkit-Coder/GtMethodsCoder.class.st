@@ -67,11 +67,6 @@ GtMethodsCoder >> initialize [
 	methodCoders := #()
 ]
 
-{ #category : #elements }
-GtMethodsCoder >> look [
-	^ nil
-]
-
 { #category : #'event handling' }
 GtMethodsCoder >> methodAdded: aValueAdded [
 	| coder |

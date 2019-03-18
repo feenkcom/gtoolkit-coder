@@ -16,7 +16,6 @@ GtMethodsCoderElement >> buildElement [
 			c horizontal matchParent.
 			c vertical matchParent ].
 	self addChild: self methodsInfiniteListElement as: #methodsList.
-	methodsCoder look ifNotNil: [ :look | self look: look ]
 ]
 
 { #category : #ui }
