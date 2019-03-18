@@ -62,7 +62,7 @@ GtClassMethodsCoderElement >> classBreadcrumbElementForClass: aClass [
 ]
 
 { #category : #ui }
-GtClassMethodsCoderElement >> classBreadcrumbLook. [
+GtClassMethodsCoderElement >> classBreadcrumbLook [
 	^ (BrGlamorousBreadcrumbLook new
 			separator: [ BrLabel new
 				look: (BrGlamorousLabelLook new thin foreground: BrGlamorousColors defaultButtonTextColor);
