@@ -45,6 +45,11 @@ GtFilteredMethodsCoder >> combinedFilter [
 	^ self combineFilters: self filters
 ]
 
+{ #category : #elements }
+GtFilteredMethodsCoder >> elementClass [
+	^ GtFilteredMethodsCoderElement
+]
+
 { #category : #private }
 GtFilteredMethodsCoder >> filters [
 	^ {originalFilter.
@@ -74,11 +79,6 @@ GtFilteredMethodsCoder >> implementorsFilterString: aString [
 	implementorsFilterString := aString.
 	self updateMethods.
 	self updateCoders
-]
-
-{ #category : #elements }
-GtFilteredMethodsCoder >> look [
-	^ GtImplementorsFilterMethodsCoderLook new methodsCoder: self
 ]
 
 { #category : #elements }

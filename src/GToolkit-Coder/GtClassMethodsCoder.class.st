@@ -72,6 +72,11 @@ GtClassMethodsCoder >> combinedFilter [
 			ifNotNil: [ :filter | filter & combined ] ]
 ]
 
+{ #category : #elements }
+GtClassMethodsCoder >> elementClass [
+	^ GtClassMethodsCoderElement
+]
+
 { #category : #testing }
 GtClassMethodsCoder >> filteredClass: aBehavior [
 	^ filteredClasses includes: aBehavior
@@ -108,11 +113,6 @@ GtClassMethodsCoder >> hasFilter [
 GtClassMethodsCoder >> initialize [
 	super initialize.
 	filteredClasses := Set new
-]
-
-{ #category : #elements }
-GtClassMethodsCoder >> look [
-	^ (GtMetaMethodsCoderLook new methodsCoder: self) + super look
 ]
 
 { #category : #private }
