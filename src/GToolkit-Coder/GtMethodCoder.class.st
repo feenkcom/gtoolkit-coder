@@ -310,12 +310,16 @@ GtMethodCoder >> gtLiveFor: aView [
 { #category : #'add ons' }
 GtMethodCoder >> gtViewAddOnFor: anAST [
 	<gtAstCoderAddOns: 6>
-	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
-		and: [ anAST notNil
-				and: [ anAST methodNode ifNotNil: [ :node | node arguments size = 1 and: [ node pragmas anySatisfy: [ :each | each selector = #gtView ] ] ] ifNil: [ false ] ] ])
+	(self hasObjectAttribute and: [ 
+		anAST notNil and: [ 
+			anAST methodNode ifNotNil: [ :node | node arguments size = 1 and: [ 
+					node pragmas anySatisfy: [ :each | each selector = #gtView ] ] ] ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'gtView' translated.
 			^ self ].
-	addOns addContextAction: 'gtView' translated icon: BrGlamorousIcons playinspect action: [ :button | self runGtViewFrom: button ]
+	addOns 
+		addContextAction: 'gtView' translated 
+		icon: BrGlamorousIcons playinspect 
+		action: [ :button | self runGtViewFrom: button ]
 ]
 
 { #category : #accessing }
@@ -415,8 +419,8 @@ GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
 { #category : #'add ons' }
 GtMethodCoder >> methodExpanderFor: anAST [
 	<gtAstCoderAddOns: 10>
-	(anAST notNil and: [ anAST methodNode notNil ])
-		ifFalse: [ 
+	(anAST isNil or: [ anAST methodNode isNil ])
+		ifTrue: [ 
 			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
 			^ self ].
 	addOns addStyler: GtCoderExpandableMethodStyler new
@@ -425,11 +429,15 @@ GtMethodCoder >> methodExpanderFor: anAST [
 { #category : #'add ons' }
 GtMethodCoder >> mondrianPaintAddOnFor: anAST [
 	<gtAstCoderAddOns: 7>
-	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
-		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | self isMondrianPaintMethod: node ] ifNil: [ false ] ] ])
+	(self hasObjectAttribute and: [ 
+		anAST notNil and: [ 
+			anAST methodNode ifNotNil: [ :node | self isMondrianPaintMethod: node ] ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'Mondrian' translated.
 			^ self ].
-	addOns addContextAction: 'Mondrian' translated icon: BrGlamorousIcons playinspect action: [ :button | self runMondrianPaintFrom: button ]
+	addOns 
+		addContextAction: 'Mondrian' translated 
+		icon: BrGlamorousIcons playinspect 
+		action: [ :button | self runMondrianPaintFrom: button ]
 ]
 
 { #category : #actions }
@@ -636,8 +644,9 @@ GtMethodCoder >> subCoders [
 { #category : #'add ons' }
 GtMethodCoder >> unaryMessageAddOnFor: anAST [
 	<gtAstCoderAddOns: 20>
-	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
-		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
+	(self hasObjectAttribute and: [ 
+		anAST notNil and: [ 
+			anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
 		ifFalse: [ 
 			addOns removeContextAction: 'Play' translated.
 			addOns removeContextAction: 'Play and Inspect' translated.

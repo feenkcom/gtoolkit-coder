@@ -402,6 +402,14 @@ GtSourceCoder >> gtViewStylersFor: aView [
 		ifNotNil: [ :currentAddOns | currentAddOns gtViewStylersFor: aView ]
 ]
 
+{ #category : #testing }
+GtSourceCoder >> hasObjectAttribute [
+	self 
+		attributeNamed: #object 
+		ifAbsent: [ ^ false ].
+	^ true
+]
+
 { #category : #'initialize-release' }
 GtSourceCoder >> initialize [
 	super initialize.
