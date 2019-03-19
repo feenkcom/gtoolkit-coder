@@ -77,7 +77,9 @@ GtSourceCoder >> attributes [
 { #category : #actions }
 GtSourceCoder >> browseClass: editorElement [
 	| variable varName behavior |
-	variable := self variableAtCursor.
+	variable := self selectedSource 
+		ifNil: [ self variableNodeAtCursor ]
+		ifNotNil: [:currentSelection | self extractVariableNodeFromString: currentSelection ].
 	variable isNil
 		ifTrue: [ ^ self ].
 	varName := variable name value asSymbol.
@@ -94,7 +96,9 @@ GtSourceCoder >> browseClass: editorElement [
 { #category : #actions }
 GtSourceCoder >> browseImplementors: editorElement [
 	| symbol |
-	symbol := self selectorAtCursor.
+	symbol := self selectedSource 
+		ifNil: [ self selectorAtCursor ] 
+		ifNotNil: [ :currentSelection | self extractSelectorFromString: currentSelection ].
 	symbol isNil
 		ifTrue: [ ^ self ].
 	editorElement
@@ -109,7 +113,7 @@ GtSourceCoder >> browseReferences: editorElement [
 	| filter |
 	filter := self selectedSource
 		ifNil: [ self referencesFilterAtCursor ]
-		ifNotNil: [ :currentSelection | self referencesForString: currentSelection ].
+		ifNotNil: [ :currentSelection | self extractReferencesFilterFromString: currentSelection ].
 	filter isNil
 		ifTrue: [ ^ self ].
 	editorElement
@@ -363,6 +367,65 @@ GtSourceCoder >> expanded: aBoolean [
 	expanded := aBoolean
 ]
 
+{ #category : #private }
+GtSourceCoder >> extractReferencesFilterFromString: selectedString [
+	| node |
+	node := GtPharoParser 
+		parseWithErrors: selectedString
+		startingAt: GtPharoParser startingStateForStatement.
+	[ node isNil ]
+		whileFalse: [ 
+			(node isKindOf: GtPharoVariableNode)
+				ifTrue: [ 
+					| binding |
+					binding := self classOrMetaClass bindingOf: node name source.
+					^ binding 
+						ifNil: [ self referencesFilterForSymbol: node name source asSymbol ] 
+						ifNotNil: [ self referencesFilterForSymbol: binding ] ].
+			(node isKindOf: GtPharoSymbolLiteralNode)
+				ifTrue: [ ^ self referencesFilterForSymbol: node asSymbol ].
+			(node isKindOf: GtPharoMessageSendNode)
+				ifTrue: [ node := node message ].
+			(node isKindOf: GtPharoMessageNode)
+				ifTrue: [ ^ self referencesFilterForSymbol: node selector ].
+			node := node parent ].
+	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> extractSelectorFromString: aString [
+	| node |
+	node := GtPharoParser 
+		parseWithErrors: aString
+		startingAt: GtPharoParser startingStateForStatement.
+	[ node isNil ]
+		whileFalse: [ 
+			(node isKindOf: GtPharoVariableNode)
+				ifTrue: [ ^ node name source asSymbol ].
+			(node isKindOf: GtPharoSymbolLiteralNode)
+				ifTrue: [ ^ node asSymbol ].
+			(node isKindOf: GtPharoMessageSendNode)
+				ifTrue: [ node := node message ].
+			(node isKindOf: GtPharoMessageNode)
+				ifTrue: [ ^ node selector ].
+			node := node parent ].
+	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> extractVariableNodeFromString: aString [
+	| node |
+	node := GtPharoParser 
+		parseWithErrors: aString
+		startingAt: GtPharoParser startingStateForStatement.
+	[ node isNil ]
+		whileFalse: [ 
+			(node isKindOf: GtPharoVariableNode)
+				ifTrue: [ ^ node ].
+			node := node parent ].
+	^ nil
+]
+
 { #category : #ui }
 GtSourceCoder >> gtLiveFor: aView [
 	<gtView>
@@ -572,7 +635,8 @@ GtSourceCoder >> referencesFilterAtCursor [
 	| node |
 	node := self nodeAtCursor.
 	[ node isNil ]
-		whileFalse: [ (node isKindOf: GtPharoVariableNode)
+		whileFalse: [ 
+			(node isKindOf: GtPharoVariableNode)
 				ifTrue: [ ^ self referencesFilterForVariable: node name source ].
 			(node isKindOf: GtPharoSymbolLiteralNode)
 				ifTrue: [ ^ self referencesFilterForSymbol: node asSymbol ].
@@ -594,35 +658,12 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	| index binding |
 	index := self classOrMetaClass instVarIndexFor: aString.
 	index > 0
-		ifTrue: [ ^ GtSearchInstanceVariableReferenceFilter forClass: self classOrMetaClass andVariable: aString ].
+		ifTrue: [ ^ GtSearchInstanceVariableReferenceFilter 
+			forClass: self classOrMetaClass 
+			andVariable: aString ].
 	binding := self classOrMetaClass bindingOf: aString.
 	binding notNil
 		ifTrue: [ ^ GtSearchReferencesFilter literal: binding ].
-	^ nil
-]
-
-{ #category : #private }
-GtSourceCoder >> referencesForString: selectedString [
-	| node |
-	node := GtPharoParser 
-		parseWithErrors: selectedString
-		startingAt: GtPharoParser startingStateForStatement.
-	[ node isNil ]
-		whileFalse: [ 
-			(node isKindOf: GtPharoVariableNode)
-				ifTrue: [ 
-					| binding |
-					binding := self classOrMetaClass bindingOf: node name source.
-					^ binding 
-						ifNil: [ self referencesFilterForSymbol: node name source asSymbol ] 
-						ifNotNil: [ self referencesFilterForSymbol: binding ] ].
-			(node isKindOf: GtPharoSymbolLiteralNode)
-				ifTrue: [ ^ self referencesFilterForSymbol: node asSymbol ].
-			(node isKindOf: GtPharoMessageSendNode)
-				ifTrue: [ node := node message ].
-			(node isKindOf: GtPharoMessageNode)
-				ifTrue: [ ^ self referencesFilterForSymbol: node selector ].
-			node := node parent ].
 	^ nil
 ]
 
@@ -814,13 +855,12 @@ GtSourceCoder >> stylers [
 { #category : #private }
 GtSourceCoder >> symbolFor: aNode [
 	| current |
-	aNode isNil
-		ifTrue: [ ^ nil ].
-	(aNode isKindOf: GtPharoSymbolLiteralNode)
-		ifTrue: [ ^ aNode asSymbol ].
 	current := aNode.
 	[ current notNil ]
-		whileTrue: [ (current isKindOf: GtPharoMessageSendNode)
+		whileTrue: [ 
+			(current isKindOf: GtPharoSymbolLiteralNode)
+				ifTrue: [ ^ aNode asSymbol ].
+			(current isKindOf: GtPharoMessageSendNode)
 				ifTrue: [ current := current message ].
 			(current isKindOf: GtPharoMessageNode)
 				ifTrue: [ ^ current selector ].
@@ -857,7 +897,7 @@ GtSourceCoder >> validateSyntax [
 ]
 
 { #category : #private }
-GtSourceCoder >> variableAtCursor [
+GtSourceCoder >> variableNodeAtCursor [
 	self
 		cursorPositionDo: [ :position | 
 			[ | ast |
