@@ -8,6 +8,11 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #converting }
+GtMethodsCoderElement >> asVerticallyResizableDo: aBlock [
+	^ self
+]
+
 { #category : #ui }
 GtMethodsCoderElement >> buildElement [
 	self layout: BlLinearLayout vertical.
