@@ -107,7 +107,9 @@ GtSourceCoder >> browseImplementors: editorElement [
 { #category : #actions }
 GtSourceCoder >> browseReferences: editorElement [
 	| filter |
-	filter := self referencesFilterAtCursor.
+	filter := self selectedSource
+		ifNil: [ self referencesFilterAtCursor ]
+		ifNotNil: [ :currentSelection | self referencesForString: currentSelection ].
 	filter isNil
 		ifTrue: [ ^ self ].
 	editorElement
@@ -599,6 +601,31 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	^ nil
 ]
 
+{ #category : #private }
+GtSourceCoder >> referencesForString: selectedString [
+	| node |
+	node := GtPharoParser 
+		parseWithErrors: selectedString
+		startingAt: GtPharoParser startingStateForStatement.
+	[ node isNil ]
+		whileFalse: [ 
+			(node isKindOf: GtPharoVariableNode)
+				ifTrue: [ 
+					| binding |
+					binding := self classOrMetaClass bindingOf: node name source.
+					^ binding 
+						ifNil: [ self referencesFilterForSymbol: node name source asSymbol ] 
+						ifNotNil: [ self referencesFilterForSymbol: binding ] ].
+			(node isKindOf: GtPharoSymbolLiteralNode)
+				ifTrue: [ ^ self referencesFilterForSymbol: node asSymbol ].
+			(node isKindOf: GtPharoMessageSendNode)
+				ifTrue: [ node := node message ].
+			(node isKindOf: GtPharoMessageNode)
+				ifTrue: [ ^ self referencesFilterForSymbol: node selector ].
+			node := node parent ].
+	^ nil
+]
+
 { #category : #updating }
 GtSourceCoder >> refreshForChanges [
 	addOns
@@ -640,7 +667,10 @@ GtSourceCoder >> resetASTCache [
 
 { #category : #private }
 GtSourceCoder >> selectedSource [
-	self selectedSourceInterval ifNotNil: [ :interval | ^ (self sourceEditor text from: interval first to: interval last) asString ].
+	self selectedSourceInterval ifNotNil: [ :interval | 
+		^ (self sourceEditor text 
+				from: interval first 
+				to: interval last) asString ].
 	^ nil
 ]
 
