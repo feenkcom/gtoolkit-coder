@@ -22,7 +22,11 @@ GtCoderMethodActionsElement >> addContextToolbarActions [
 
 { #category : #private }
 GtCoderMethodActionsElement >> addMainToolbarActions [
-	mainToolbar addItems: (methodCoder mainActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ])
+	mainToolbar addItems: (methodCoder mainActions collect: [ :aGtCoderAction | 
+		self flag: 'Temporary hack. Coder should to Phlow actions'.
+		aGtCoderAction class = GtCoderDropDownAction 
+			ifTrue: [ self newDropButtonForAction: aGtCoderAction ] 
+			ifFalse: [ self newButtonForAction: aGtCoderAction  ] ])
 ]
 
 { #category : #initialization }
@@ -76,6 +80,41 @@ GtCoderMethodActionsElement >> newButtonForAction: aGtCoderAction [
 		label: aGtCoderAction title;
 		icon: aGtCoderAction icon asElement;
 		action: aGtCoderAction
+]
+
+{ #category : #'instance creation' }
+GtCoderMethodActionsElement >> newDropButtonForAction: aGtCoderAction [
+	<return: #BrDropdown>
+	
+	^ ((GtPhlowDropdownAction new
+		label: aGtCoderAction title;
+		icon: aGtCoderAction icon asElement;
+		popup: [
+			| classCompleter containerElement titleElement |
+			containerElement := BlElement new
+				layout: BlLinearLayout vertical;
+				constraintsDo: [ :c | 
+					c horizontal exact: 200 .
+					c vertical matchParent ].
+			titleElement := BrEditorElement new
+				look: BrGlamorousInputFieldSpacingLook;
+				editor: (BrTextEditor new text: '' asRopedText);
+				requestFocus;
+				constraintsDo: [ :c | 
+					c margin: (BlInsets top: 5 left: 0 bottom: 5 right: 0).
+					c horizontal matchParent.
+					c vertical fitContent ].
+			classCompleter := GtCompletionController 
+				on: titleElement 
+				strategy: GtCoderClassWithPackageCompletionStrategy new.
+			classCompleter install.
+			classCompleter announcer when: GtCompleterCompletionAccepted do: [ :event | 
+				aGtCoderAction action value: titleElement editor text asString asClass ].
+			containerElement addChild: titleElement.
+			containerElement ])
+				asElement: [ :anActionElement | anActionElement ] withHostElement: self)
+					"look: BrGlamorousButtonWithIconLook"
+			
 ]
 
 { #category : #'instance creation' }
