@@ -214,13 +214,14 @@ GtMethodCoder >> example: anExample [
 { #category : #'add ons' }
 GtMethodCoder >> exampleAstFor: anAST [
 	<gtAstCoderAddOns: 10>
-	(anAST notNil and: [ 
-		anAST methodNode 
-			ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] 
-			ifNil: [ false ] ])
-		ifFalse: [
-			addOns removeStylerOfType: GtCoderExampleStatusStyler.
-			^ self ].
+	(self compiledMethod notNil and: [ 
+		anAST notNil and: [ 
+			anAST methodNode 
+				ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] 
+				ifNil: [ false ] ] ])
+			ifFalse: [
+				addOns removeStylerOfType: GtCoderExampleStatusStyler.
+				^ self ].
 	addOns addStyler: (GtCoderExampleStatusStyler new
 		coder: self;
 		classOrMetaClass: self classOrMetaClass).
