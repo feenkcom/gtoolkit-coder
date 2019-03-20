@@ -26,6 +26,17 @@ GtMethodCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
 ]
 
 { #category : #actions }
+GtMethodCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
+	| newAction |
+	newAction := GtCoderDropDownAction new
+		title: aString;
+		icon: anIcon;
+		action: aBlock.
+	mainActions add: newAction.
+	modified add: #mainActions
+]
+
+{ #category : #actions }
 GtMethodCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
 	| newAction index |
 	newAction := GtCoderAction new
