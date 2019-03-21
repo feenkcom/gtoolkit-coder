@@ -85,10 +85,30 @@ GtCoderMethodActionsElement >> newButtonForAction: aGtCoderAction [
 { #category : #'instance creation' }
 GtCoderMethodActionsElement >> newDropButtonForAction: aGtCoderAction [
 	<return: #BrDropdown>
-	
-	^ ((GtPhlowDropdownAction new
-		label: aGtCoderAction title;
-		icon: aGtCoderAction icon asElement;
+	| dropDown |
+	dropDown := BrDropdown new.
+	dropDown 
+		layout: BlLinearLayout horizontal;
+		constraintsDo: [ :c | 
+				c horizontal fitContent.
+				c vertical fitContent ];
+	 	look: (BrDropdownLook new 
+			outskirtsEmbellisher: [ :e | e 
+				padding: BlInsets empty;
+				margin: BlInsets empty. ]);
+		padding: BlInsets empty;
+		margin: BlInsets empty;
+		toggle: [ 
+			| aButton |
+				aButton := BrButton new.
+				aGtCoderAction title ifNotNil: [ aButton label: aGtCoderAction title asRopedText ].
+				aGtCoderAction icon ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
+				aButton 
+					beSmall;
+					action: [ dropDown toggle ];
+					look: BrGlamorousButtonWithIconLook;
+					padding: BlInsets empty;
+					margin: BlInsets empty ];
 		popup: [
 			| classCompleter containerElement titleElement |
 			containerElement := BlElement new
@@ -101,7 +121,7 @@ GtCoderMethodActionsElement >> newDropButtonForAction: aGtCoderAction [
 				editor: (BrTextEditor new text: '' asRopedText);
 				requestFocus;
 				constraintsDo: [ :c | 
-					c margin: (BlInsets top: 5 left: 0 bottom: 5 right: 0).
+					c margin: (BlInsets top: 1 left: 0 bottom: 0 right: 0).
 					c horizontal matchParent.
 					c vertical fitContent ].
 			classCompleter := GtCompletionController 
@@ -109,11 +129,19 @@ GtCoderMethodActionsElement >> newDropButtonForAction: aGtCoderAction [
 				strategy: GtCoderClassWithPackageCompletionStrategy new.
 			classCompleter install.
 			classCompleter announcer when: GtCompleterCompletionAccepted do: [ :event | 
-				aGtCoderAction action value: titleElement editor text asString asClass ].
+				aGtCoderAction action value: titleElement editor text asString asClass.
+				dropDown toggle ].
 			containerElement addChild: titleElement.
-			containerElement ])
-				asElement: [ :anActionElement | anActionElement ] withHostElement: self)
-					"look: BrGlamorousButtonWithIconLook"
+			containerElement ]. 
+	^ dropDown.
+	
+	"^ ((GtPhlowDropdownAction new
+		label: aGtCoderAction title;
+		icon: aGtCoderAction icon asElement;
+		popup: [
+			 ])
+				asElement: [ :anActionElement | 
+					anActionElement ] withHostElement: self)"
 			
 ]
 
