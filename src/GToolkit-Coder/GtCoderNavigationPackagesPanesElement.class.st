@@ -30,7 +30,7 @@ GtCoderNavigationPackagesPanesElement >> buildContent [
 		display: (RPackageOrganizer default packages sort: [ :a :b | a name < b name ]);
 		stencil: [ :aPackage :index |
 			BlTextElement new
-				text: aPackage name asRopedText;
+				text: aPackage name asRopedText glamorousRegularFontAndSize;
 				constraintsDo: [ :c | c horizontal matchParent ];
 				padding: (BlInsets all: 5);
 				when: BlClickEvent do: [ :anEvent  |
@@ -115,7 +115,7 @@ GtCoderNavigationPackagesPanesElement >> updateCategoriesPaneForClass: aClass [
 		display: (self protocolNamesForClass: aClass);
 		stencil: [ :protocolName :index |
 			BlTextElement new
-				text: protocolName asRopedText;
+				text: protocolName asRopedText glamorousRegularFontAndSize;
 				constraintsDo: [ :c | c horizontal matchParent ];
 				padding: (BlInsets all: 5);
 				when: BlClickEvent do: [ :anEvent  |
@@ -139,7 +139,7 @@ GtCoderNavigationPackagesPanesElement >> updateClassesPaneForPackage: aPackage [
 		display: (aPackage definedClasses sorted: [ :a :b | a name < b name ]);
 		stencil: [ :aClass :index |
 			BlTextElement new
-				text: aClass name asRopedText;
+				text: aClass name asRopedText glamorousRegularFontAndSize;
 				constraintsDo: [ :c | c horizontal matchParent ];
 				padding: (BlInsets all: 5);
 				when: BlClickEvent do: [ :anEvent  |
