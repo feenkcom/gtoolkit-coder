@@ -28,9 +28,9 @@ GtCoderNavigationPackagesPanesElement >> buildContent [
 	packagesList := BrSimpleList new.
 	packagesList
 		display: (RPackageOrganizer default packages sort: [ :a :b | a name < b name ]);
-		stencil: [ :each :index |
+		stencil: [ :aPackage :index |
 			BlTextElement new
-				text: each name asRopedText;
+				text: aPackage name asRopedText;
 				constraintsDo: [ :c | c horizontal matchParent ];
 				padding: (BlInsets all: 5);
 				when: BlClickEvent do: [ :anEvent  |
@@ -124,9 +124,9 @@ GtCoderNavigationPackagesPanesElement >> updateCategoriesPaneForClass: aClass [
 	
 	protocolsList when: BrSelectionChanged do: [ :anEvent |
 		anEvent selectedDo: [ :anInterval | 
-			| selectedProtocol |
-			selectedProtocol := protocolsList viewModel itemAt: anInterval first.
-			self inform: selectedProtocol asString ] ].
+			| protocolName |
+			protocolName := protocolsList viewModel itemAt: anInterval first.
+			navigationModel selectInCoderCategory: protocolName ] ].
 	protocolsContainer addChild: protocolsList.
 ]
 
@@ -137,9 +137,9 @@ GtCoderNavigationPackagesPanesElement >> updateClassesPaneForPackage: aPackage [
 	classesList := BrSimpleList new.
 	classesList
 		display: (aPackage definedClasses sorted: [ :a :b | a name < b name ]);
-		stencil: [ :each :index |
+		stencil: [ :aClass :index |
 			BlTextElement new
-				text: each name asRopedText;
+				text: aClass name asRopedText;
 				constraintsDo: [ :c | c horizontal matchParent ];
 				padding: (BlInsets all: 5);
 				when: BlClickEvent do: [ :anEvent  |
