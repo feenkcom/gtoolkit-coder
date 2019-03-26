@@ -41,7 +41,9 @@ GtCoder >> navigationModel [
 { #category : #accessing }
 GtCoder >> navigationModel: aNavigationModel [
 	navigationModel := aNavigationModel.
-	navigationModel coderModel: self
+	navigationModel ifNotNil: [ 
+		navigationModel coderModel: self ].
+	self announce: GtCoderNavigationModelChangedAnnouncement
 ]
 
 { #category : #accessing }
