@@ -3,6 +3,7 @@ Class {
 	#superclass : #Announcer,
 	#instVars : [
 		'searchFilter',
+		'navigationModel',
 		'classCoder'
 	],
 	#category : #'GToolkit-Coder'
@@ -30,6 +31,19 @@ GtCoder >> initialize [
 	super initialize.
 	searchFilter := GtCoderClassSelector new
 		coder: self.
+]
+
+{ #category : #accessing }
+GtCoder >> navigationModel [
+	^ navigationModel
+]
+
+{ #category : #accessing }
+GtCoder >> navigationModel: aNavigationModel [
+	navigationModel := aNavigationModel.
+	navigationModel ifNotNil: [ 
+		navigationModel coderModel: self ].
+	self announce: GtCoderNavigationModelChangedAnnouncement
 ]
 
 { #category : #accessing }
