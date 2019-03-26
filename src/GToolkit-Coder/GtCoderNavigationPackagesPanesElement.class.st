@@ -80,6 +80,14 @@ GtCoderNavigationPackagesPanesElement >> packagesList [
 	^ packagesContainer children first
 ]
 
+{ #category : #accessing }
+GtCoderNavigationPackagesPanesElement >> protocolNamesForClass: aClass [
+	| protocolNames |
+	protocolNames := aClass instanceSide organization protocols collect: #name.
+	protocolNames := protocolNames, (aClass classSide organization protocols collect: #name).
+	^ protocolNames asSet sorted: [ :a :b | a < b ]
+]
+
 { #category : #actions }
 GtCoderNavigationPackagesPanesElement >> selectClass: aClass [
 	| selectionIndex |
@@ -104,10 +112,10 @@ GtCoderNavigationPackagesPanesElement >> updateCategoriesPaneForClass: aClass [
 	protocolsContainer removeChildren.
 	protocolsList := BrSimpleList new.
 	protocolsList
-		display: (aClass organization allProtocols sort: [ :a :b | a name < b name ]);
-		stencil: [ :each :index |
+		display: (self protocolNamesForClass: aClass);
+		stencil: [ :protocolName :index |
 			BlTextElement new
-				text: each name asRopedText;
+				text: protocolName asRopedText;
 				constraintsDo: [ :c | c horizontal matchParent ];
 				padding: (BlInsets all: 5);
 				when: BlClickEvent do: [ :anEvent  |
@@ -118,7 +126,7 @@ GtCoderNavigationPackagesPanesElement >> updateCategoriesPaneForClass: aClass [
 		anEvent selectedDo: [ :anInterval | 
 			| selectedProtocol |
 			selectedProtocol := protocolsList viewModel itemAt: anInterval first.
-			self inform: selectedProtocol asString. ] ].
+			self inform: selectedProtocol asString ] ].
 	protocolsContainer addChild: protocolsList.
 ]
 
