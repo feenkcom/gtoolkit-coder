@@ -5,35 +5,24 @@ Class {
 		'coder',
 		'innerContainer'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #accessing }
 GtCoderElement >> buildContent [
-	| selectorElement packagesTree |
+	| selectorElement |
 	selectorElement := self coderModel searchFilter asElement.
 	self addChild: selectorElement.
 	
 	innerContainer := BlElement new
-		layout: BlLinearLayout horizontal;
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
 	self addChild: innerContainer.
 	
-	packagesTree := self buildPackagesTree.
-	packagesTree padding: (BlInsets all: 10).
-	packagesTree constraintsDo: [ :c |
-		c linear weight: 1 ].
-	innerContainer addChild: packagesTree.
-	
+	self buildNavigation.
 	self coderModel classCoder ifNotNil: [ :aClassCoder |
-		| classPackage classCoderElement | 
-		classPackage := aClassCoder theClass package.
-		packagesTree viewModel root childrenNodes
-			detect: [ :each | each value = classPackage ]
-			ifFound: [ :aTreeNode |
-				aTreeNode isExpanded ifFalse: [ aTreeNode expand ] ].
+		| classCoderElement | 
 		
 		classCoderElement := aClassCoder asElement.
 		classCoderElement constraintsDo: [ :c |
@@ -42,22 +31,21 @@ GtCoderElement >> buildContent [
 ]
 
 { #category : #accessing }
-GtCoderElement >> buildPackagesTree [
-	| tree |
-	tree := BrColumnedTree new.
-	tree 
-		items: (RPackageOrganizer default packages sort: [ :a :b | a name < b name ])
-		children: [ :anObject | (anObject isKindOf: RPackage) 
-			ifTrue: [ anObject definedClasses ] 
-			ifFalse: [ #() ] ].
-	tree column
-		stencil: [ :anObject | BrColumnCellLabelStencil new text: anObject value name ].
-	tree when: BrSelectionChanged do: [ :anEvent |
-		anEvent selectedDo: [ :anInterval | 
-			tree selectedNodeDo: [  :aNode | 
-				aNode value isClass ifTrue: [ 
-					self coderModel selectClass: aNode value ] ] ] ].
-	^ tree
+GtCoderElement >> buildNavigation [
+	| navigationModel navigationElement |
+	navigationModel := self coderModel navigationModel.
+	navigationModel ifNil: [ ^ self ].
+	
+	self coderModel navigationModel displayPosition = #top
+		ifTrue: [ innerContainer layout: BlLinearLayout vertical ].
+	self coderModel navigationModel displayPosition = #left
+		ifTrue: [ innerContainer layout: BlLinearLayout horizontal ].
+	
+	navigationElement := self coderModel navigationModel asElement.
+	navigationElement padding: (BlInsets all: 10).
+	navigationElement constraintsDo: [ :c |
+		c linear weight: 1 ].
+	innerContainer addChild: navigationElement.
 ]
 
 { #category : #accessing }
