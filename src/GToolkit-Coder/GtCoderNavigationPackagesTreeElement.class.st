@@ -17,7 +17,8 @@ GtCoderNavigationPackagesTreeElement >> buildContent [
 			ifTrue: [ anObject definedClasses ] 
 			ifFalse: [ #() ] ].
 	tree column
-		stencil: [ :anObject | BrColumnCellLabelStencil new text: anObject value name ].
+		stencil: [ :anObject | BrColumnCellLabelStencil new 
+			text: anObject value name asRopedText glamorousRegularFontAndSize ].
 	tree when: BrSelectionChanged do: [ :anEvent |
 		anEvent selectedDo: [ :anInterval | 
 			tree selectedNodeDo: [  :aNode | 

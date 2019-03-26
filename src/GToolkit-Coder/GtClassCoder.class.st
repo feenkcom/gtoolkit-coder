@@ -60,6 +60,11 @@ GtClassCoder >> gtLiveFor: aView [
 			action: [ :aButton | self theClass browse ] 
 ]
 
+{ #category : #accessing }
+GtClassCoder >> methodsCoder [
+	^ methodsCoder
+]
+
 { #category : #'initialize-release' }
 GtClassCoder >> theClass [
 	^ classDefinitionCoder theClass

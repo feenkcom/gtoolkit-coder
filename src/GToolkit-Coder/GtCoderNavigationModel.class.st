@@ -23,6 +23,12 @@ GtCoderNavigationModel >> displayPosition [
 ]
 
 { #category : #actions }
+GtCoderNavigationModel >> selectInCoderCategory: categoryToSelect [
+	self flag: 'Remove combine the two class coders into one'.
+	self coderModel classCoder methodsCoder categoryFilterString: categoryToSelect
+]
+
+{ #category : #actions }
 GtCoderNavigationModel >> selectInCoderClass: classToSelect [
 	classToSelect ~= self theClass ifTrue: [ 
 		self coderModel selectClass: classToSelect ]
