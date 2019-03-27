@@ -71,6 +71,16 @@ GtBlockCoder >> format [
 	self source: (self newRbAST: self newSource) formattedCode
 ]
 
+{ #category : #private }
+GtBlockCoder >> highlightBindingsStrategy [
+	^ self context 
+		ifNil:  [ GtHighlightingBindingStrategy new 
+			bindings: bindingStrategy bindings]
+		ifNotNil: [ GtContextHighlightingBindingStrategy new
+			bindings: bindingStrategy bindings;
+			context: self context ] 
+]
+
 { #category : #'initialize-release' }
 GtBlockCoder >> initialize [
 	parameters := OrderedDictionary new.
@@ -111,7 +121,13 @@ GtBlockCoder >> newCompletionStrategy [
 { #category : #updating }
 GtBlockCoder >> newRbAST: aString [
 	| ast |
-	ast := super newRbAST: aString.
+	ast := RBParser parseFaultyExpression: aString.
+	ast methodNode 
+		compilationContext: (CompilationContext new
+			class: (self classOrMetaClass ifNil: [UndefinedObject]);
+			forSyntaxHighlighting: true; 
+         requestor: self highlightBindingsStrategy).
+	ast doSemanticAnalysis.
 	ast gtMoveAllBy: 1 - ast body start.
 	^ ast body
 ]
@@ -129,6 +145,7 @@ GtBlockCoder >> source [
 { #category : #accessing }
 GtBlockCoder >> source: aString [
 	self sourceEditor text: aString asRopedText.
+	self sourceEditor text attributes: self defaultTextAttributes.
 	self sourceChanged
 ]
 

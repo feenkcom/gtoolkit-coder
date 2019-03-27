@@ -4,5 +4,6 @@ Extension { #name : #RBMessageNode }
 RBMessageNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	keywordsPositions
-		ifNotNil: [ keywordsPositions collect: [ :f | f + anInteger ] ]
+		ifNotNil: [ keywordsPositions := keywordsPositions
+				collect: [ :f | f + anInteger ] ]
 ]
