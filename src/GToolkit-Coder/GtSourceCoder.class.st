@@ -273,6 +273,11 @@ GtSourceCoder >> disabledTextAttributes [
 ]
 
 { #category : #actions }
+GtSourceCoder >> doIt [
+	^ self evaluateSource: self newSource showPrintString: false
+]
+
+{ #category : #actions }
 GtSourceCoder >> doItAndGoSelection: editorElement [
 	| source value |
 	source := self selectedSource.
@@ -743,7 +748,7 @@ GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 	| interval |
 	interval := self selectedSourceInterval.
-	self styleResult: value at: interval showPrintString: aBoolean.
+	interval ifNotNil: [ self styleResult: value at: interval showPrintString: aBoolean ].
 	self sourceEditor
 		invalidateAll;
 		updateAll

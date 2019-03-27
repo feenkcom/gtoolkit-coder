@@ -61,6 +61,11 @@ GtBlockCoder >> blockSource: aString [
 	self source: (aString copyFrom: startIndex to: endIndex)
 ]
 
+{ #category : #actions }
+GtBlockCoder >> evaluationRequester [
+	^ GtBlockCoderEvaluationRequester on: self
+]
+
 { #category : #formatting }
 GtBlockCoder >> format [
 	self source: (self newRbAST: self newSource) formattedCode
@@ -105,21 +110,9 @@ GtBlockCoder >> newCompletionStrategy [
 
 { #category : #updating }
 GtBlockCoder >> newRbAST: aString [
-	| ast offset |
+	| ast |
 	ast := super newRbAST: aString.
-	offset := ast body start - 1.
-	ast
-		nodesDo: [ :e | 
-			(e respondsTo: #start:)
-				ifTrue: [ e start: e start - offset ].
-			(e respondsTo: #stop:)
-				ifTrue: [ e stop: e stop - offset ].
-			(e respondsTo: #parentheses)
-				ifTrue: [ e parentheses
-						do: [ :f | f setFrom: f first - offset to: f last - offset by: 1 ] ].
-			(e respondsTo: #keywordsPositions)
-				ifTrue: [ e
-						keywordsPositions: (e keywordsPositions collect: [ :f | f - offset ]) ] ].
+	ast gtMoveAllBy: 1 - ast body start.
 	^ ast body
 ]
 
