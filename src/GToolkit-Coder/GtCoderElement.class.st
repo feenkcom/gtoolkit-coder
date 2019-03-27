@@ -14,23 +14,7 @@ Class {
 
 { #category : #'building ui' }
 GtCoderElement >> buildContent [
-	| selectorElement toolbarElement |
-	headerPane := BlElement new
-		layout: BlLinearLayout new;
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	selectorElement := self coderModel searchFilter asElement.
-	toolbarElement := self buildToolbar.
-	toolbarElement 
-		constraintsDo: [ :c | 
-			c linear horizontal alignRight.
-			c horizontal fitContent.
-			c vertical matchParent ].
-	headerPane addChild: selectorElement.
-	headerPane addChild: toolbarElement.	
-	self addChild: headerPane.
-	
+	self buildHeaderPane.
 	contentPane := BlElement new
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
@@ -48,10 +32,30 @@ GtCoderElement >> buildContent [
 ]
 
 { #category : #'building ui' }
+GtCoderElement >> buildHeaderPane [
+	| selectorElement toolbarElement |
+	headerPane := BlElement new
+		layout: BlLinearLayout new;
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
+	selectorElement := self coderModel searchFilter asElement.
+	toolbarElement := self buildToolbar.
+	toolbarElement 
+		constraintsDo: [ :c | 
+			c linear horizontal alignRight.
+			c horizontal fitContent.
+			c vertical matchParent ].
+	headerPane addChild: selectorElement.
+	headerPane addChild: toolbarElement.	
+	self addChild: headerPane.
+]
+
+{ #category : #'building ui' }
 GtCoderElement >> buildNavigationElement [
 	| element |
 	element := self coderModel navigationModel asElement.
-	element padding: (BlInsets all: 10).
+	"element padding: (BlInsets all: 10)."
 	element constraintsDo: [ :c |
 		c linear weight: 1 ].
 	^ element
