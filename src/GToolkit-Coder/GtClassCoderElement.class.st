@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderElement,
+	#name : #GtClassCoderElement,
 	#superclass : #BlElement,
 	#instVars : [
 		'coder',
@@ -13,7 +13,26 @@ Class {
 }
 
 { #category : #'building ui' }
-GtCoderElement >> buildContent [
+GtClassCoderElement >> buildContent [
+	self buildHeaderPane.
+	contentPane := BlElement new
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	self addChild: contentPane.
+	
+	self updateNavigationElement.
+	self coderModel methodsCoder ifNotNil: [ :aMethodsCoder |
+		| methodsCoderElement | 
+		
+		methodsCoderElement := aMethodsCoder asElement.
+		methodsCoderElement constraintsDo: [ :c |
+			c linear weight: 2 ].
+		contentPane addChild: methodsCoderElement ]
+]
+
+{ #category : #'building ui' }
+GtClassCoderElement >> buildHeaderPane [
 	| selectorElement toolbarElement |
 	headerPane := BlElement new
 		layout: BlLinearLayout new;
@@ -30,35 +49,20 @@ GtCoderElement >> buildContent [
 	headerPane addChild: selectorElement.
 	headerPane addChild: toolbarElement.	
 	self addChild: headerPane.
-	
-	contentPane := BlElement new
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	self addChild: contentPane.
-	
-	self updateNavigationElement.
-	self coderModel classCoder ifNotNil: [ :aClassCoder |
-		| classCoderElement | 
-		
-		classCoderElement := aClassCoder asElement.
-		classCoderElement constraintsDo: [ :c |
-			c linear weight: 2 ].
-		contentPane addChild: classCoderElement ]
 ]
 
 { #category : #'building ui' }
-GtCoderElement >> buildNavigationElement [
+GtClassCoderElement >> buildNavigationElement [
 	| element |
 	element := self coderModel navigationModel asElement.
-	element padding: (BlInsets all: 10).
+	"element padding: (BlInsets all: 10)."
 	element constraintsDo: [ :c |
 		c linear weight: 1 ].
 	^ element
 ]
 
 { #category : #'building ui' }
-GtCoderElement >> buildPanesNavigationToolbarButton [	
+GtClassCoderElement >> buildPanesNavigationToolbarButton [	
 	| toggle |
 	toggle := BrToggle new 
 		look: BrMaterialToggleBackgroundLook + BrGlamorousButtonWithIconLook;
@@ -73,7 +77,7 @@ GtCoderElement >> buildPanesNavigationToolbarButton [
 ]
 
 { #category : #'building ui' }
-GtCoderElement >> buildToolbar [ 	
+GtClassCoderElement >> buildToolbar [ 	
 	| toolbar |
 	toolbar := BrToolbar new.
 	toolbar look: BrGlamorousToolbarLook new.
@@ -85,7 +89,7 @@ GtCoderElement >> buildToolbar [
 ]
 
 { #category : #'building ui' }
-GtCoderElement >> buildTreeNavigationToolbarButton [	
+GtClassCoderElement >> buildTreeNavigationToolbarButton [	
 	| toggle |
 	toggle := BrToggle new 
 		look: BrMaterialToggleBackgroundLook + BrGlamorousButtonWithIconLook;
@@ -100,16 +104,16 @@ GtCoderElement >> buildTreeNavigationToolbarButton [
 ]
 
 { #category : #accessing }
-GtCoderElement >> coderModel [
+GtClassCoderElement >> coderModel [
 	^ coder
 ]
 
 { #category : #accessing }
-GtCoderElement >> coderModel: aCoder [
+GtClassCoderElement >> coderModel: aCoder [
 	coder := aCoder.
 	coder
 		when: GtCoderClassSelectedAnnouncement
-		do: [ :ann | self updateClassCoderElement ].
+		do: [ :ann | self updateMethodsCoderElement ].
 	coder
 		when: GtCoderNavigationModelChangedAnnouncement
 		do: [ :ann | self updateNavigationElement ].
@@ -117,12 +121,12 @@ GtCoderElement >> coderModel: aCoder [
 ]
 
 { #category : #accessing }
-GtCoderElement >> contentPane [
+GtClassCoderElement >> contentPane [
 	^ contentPane
 ]
 
 { #category : #initialization }
-GtCoderElement >> initialize [ 
+GtClassCoderElement >> initialize [ 
 	super initialize.
 	self 
 		layout: BlLinearLayout vertical;
@@ -132,22 +136,22 @@ GtCoderElement >> initialize [
 ]
 
 { #category : #'updating ui' }
-GtCoderElement >> removeNavigationElement [
+GtClassCoderElement >> removeNavigationElement [
 	navigationElement ifNotNil: [
 		contentPane removeChild: navigationElement.
 		navigationElement := nil ].
 ]
 
 { #category : #'updating ui' }
-GtCoderElement >> updateClassCoderElement [
-	| classCoder |
-	classCoder := self coderModel classCoder.
+GtClassCoderElement >> updateMethodsCoderElement [
+	| methodsCoder |
+	methodsCoder := self coderModel methodsCoder.
 	[ self contentPane childrenCount > 1 ] whileTrue: [ self contentPane removeChildAt: 2 ].
-	self contentPane addChild: classCoder asElement
+	self contentPane addChild: methodsCoder asElement
 ]
 
 { #category : #'updating ui' }
-GtCoderElement >> updateNavigationElement [
+GtClassCoderElement >> updateNavigationElement [
 	| navigationModel |
 	
 	self removeNavigationElement.

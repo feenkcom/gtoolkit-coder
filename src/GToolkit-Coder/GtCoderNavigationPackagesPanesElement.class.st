@@ -3,9 +3,11 @@ Class {
 	#superclass : #BlElement,
 	#instVars : [
 		'navigationModel',
-		'packagesContainer',
-		'classesContainer',
-		'protocolsContainer'
+		'packagesPane',
+		'classesPane',
+		'protocolsPane',
+		'packagesList',
+		'classesList'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -14,7 +16,6 @@ Class {
 GtCoderNavigationPackagesPanesElement >> buildContainerElement [
 	^ BlElement new
 		layout: BlFrameLayout new;
-		border: (BlBorder paint: Color gray);
 		margin: (BlInsets all: 5);
 		constraintsDo: [ :c |
 			c horizontal matchParent.
@@ -24,7 +25,6 @@ GtCoderNavigationPackagesPanesElement >> buildContainerElement [
 
 { #category : #'ui building' }
 GtCoderNavigationPackagesPanesElement >> buildContent [ 
-	| packagesList |
 	packagesList := BrSimpleList new.
 	packagesList
 		display: (RPackageOrganizer default packages sort: [ :a :b | a name < b name ]);
@@ -42,12 +42,12 @@ GtCoderNavigationPackagesPanesElement >> buildContent [
 			| package |
 			package := packagesList viewModel itemAt: anInterval first.
 			self updateClassesPaneForPackage: package ] ].
-	packagesContainer addChild: packagesList.
+	packagesPane addChild: packagesList.
 ]
 
 { #category : #accessing }
 GtCoderNavigationPackagesPanesElement >> classesList [
-	^ classesContainer children first
+	^ classesList
 ]
 
 { #category : #initialization }
@@ -58,11 +58,16 @@ GtCoderNavigationPackagesPanesElement >> initialize [
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent ].
-	packagesContainer := self buildContainerElement.
-	classesContainer := self buildContainerElement.
-	protocolsContainer := self buildContainerElement.
+	self look: BrGlamorousWithVerticalResizerLook.
+	
+	packagesPane := self buildContainerElement.
+	classesPane := self buildContainerElement.
+	protocolsPane := self buildContainerElement.
+	
+	packagesPane look: BrGlamorousWithHorizontalResizerLook.
+	classesPane look: BrGlamorousWithHorizontalResizerLook.
 
-	self addChildren: {packagesContainer . classesContainer . protocolsContainer}
+	self addChildren: {packagesPane . classesPane . protocolsPane}
 ]
 
 { #category : #accessing }
@@ -77,7 +82,7 @@ GtCoderNavigationPackagesPanesElement >> navigationModel: aNavigationModel [
 
 { #category : #accessing }
 GtCoderNavigationPackagesPanesElement >> packagesList [
-	^ packagesContainer children first
+	^ packagesList
 ]
 
 { #category : #accessing }
@@ -109,7 +114,7 @@ GtCoderNavigationPackagesPanesElement >> selectPackage: aPackage [
 { #category : #'ui building' }
 GtCoderNavigationPackagesPanesElement >> updateCategoriesPaneForClass: aClass [
 	| protocolsList |
-	protocolsContainer removeChildren.
+	protocolsPane removeChildren.
 	protocolsList := BrSimpleList new.
 	protocolsList
 		display: (self protocolNamesForClass: aClass);
@@ -127,13 +132,14 @@ GtCoderNavigationPackagesPanesElement >> updateCategoriesPaneForClass: aClass [
 			| protocolName |
 			protocolName := protocolsList viewModel itemAt: anInterval first.
 			navigationModel selectInCoderCategory: protocolName ] ].
-	protocolsContainer addChild: protocolsList.
+	protocolsPane addChild: protocolsList.
 ]
 
 { #category : #'ui building' }
 GtCoderNavigationPackagesPanesElement >> updateClassesPaneForPackage: aPackage [
-	| classesList |
-	classesContainer removeChildren.
+	classesList ifNotNil: [ 
+		classesPane removeChild: classesList ].
+	
 	classesList := BrSimpleList new.
 	classesList
 		display: (aPackage definedClasses sorted: [ :a :b | a name < b name ]);
@@ -152,5 +158,5 @@ GtCoderNavigationPackagesPanesElement >> updateClassesPaneForPackage: aPackage [
 			selectedClass := classesList viewModel itemAt: anInterval first.
 			self updateCategoriesPaneForClass: selectedClass.
 			navigationModel selectInCoderClass: selectedClass ] ].
-	classesContainer addChild: classesList.
+	classesPane addChild: classesList.
 ]
