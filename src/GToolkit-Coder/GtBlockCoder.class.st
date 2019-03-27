@@ -40,7 +40,7 @@ GtBlockCoder >> blockSource [
 			parameters notEmpty
 				ifTrue: [ stream nextPutAll: '| ' ].
 			stream
-				nextPutAll: self sourceEditor text asString;
+				nextPutAll: self source;
 				nextPut: $] ]
 ]
 
@@ -59,6 +59,11 @@ GtBlockCoder >> blockSource: aString [
 	[ startIndex < endIndex and: [ (aString at: startIndex) isSeparator ] ] whileTrue: [ startIndex := startIndex + 1 ].
 	[ endIndex > startIndex and: [ (aString at: endIndex) isSeparator ] ] whileTrue: [ endIndex := endIndex - 1 ].
 	self source: (aString copyFrom: startIndex to: endIndex)
+]
+
+{ #category : #formatting }
+GtBlockCoder >> format [
+	self source: (self newRbAST: self newSource) formattedCode
 ]
 
 { #category : #'initialize-release' }
@@ -81,6 +86,16 @@ GtBlockCoder >> initializeAddOns [
 	addOns clearChanges
 ]
 
+{ #category : #'initialize-release' }
+GtBlockCoder >> initializeShortcuts [
+	super initializeShortcuts.
+	addOns
+		addShortcut:
+			(BlShortcut new
+				combination: BlKeyCombination primaryShiftF;
+				action: [ self format ])
+]
+
 { #category : #private }
 GtBlockCoder >> newCompletionStrategy [
 	^ super newCompletionStrategy
@@ -90,8 +105,22 @@ GtBlockCoder >> newCompletionStrategy [
 
 { #category : #updating }
 GtBlockCoder >> newRbAST: aString [
-	self flag: 'probably generates wrong text indexes for nodes'.
-	^ (super newRbAST: aString) body
+	| ast offset |
+	ast := super newRbAST: aString.
+	offset := ast body start - 1.
+	ast
+		nodesDo: [ :e | 
+			(e respondsTo: #start:)
+				ifTrue: [ e start: e start - offset ].
+			(e respondsTo: #stop:)
+				ifTrue: [ e stop: e stop - offset ].
+			(e respondsTo: #parentheses)
+				ifTrue: [ e parentheses
+						do: [ :f | f setFrom: f first - offset to: f last - offset by: 1 ] ].
+			(e respondsTo: #keywordsPositions)
+				ifTrue: [ e
+						keywordsPositions: (e keywordsPositions collect: [ :f | f - offset ]) ] ].
+	^ ast body
 ]
 
 { #category : #updating }
@@ -115,6 +144,8 @@ GtBlockCoder >> sourceElement [
 	| element |
 	element := BrEditorElement new.
 	element editor: self sourceEditor.
-	(GtCompletionController on: element strategy: self completionStrategy) install.
+	(GtCompletionController on: element strategy: self completionStrategy)
+		install.
+	self addShortcutsTo: element.
 	^ element
 ]
