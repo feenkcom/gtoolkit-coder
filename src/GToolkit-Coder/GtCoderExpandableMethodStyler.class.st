@@ -25,6 +25,7 @@ GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 						stencil: [ | editorElement method coder |
 							method := aMessageNode methodNode methodClass lookupSelector: aMessageNode selector.
 							coder := GtMethodCoder forExample: (method methodClass gtExamplesFactory createExample: method).
+							coder subscribeToSystem.
 							coder expanded: true.
 							editorElement := coder asElement.
 							editorElement border: (BlBorder paint: Color veryLightGray width: 1).

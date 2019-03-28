@@ -144,6 +144,7 @@ GtMethodCoder >> compile [
 
 { #category : #accessing }
 GtMethodCoder >> compiledMethod [
+	<return: #CompiledMethod or: nil>
 	^ self classOrMetaClass
 		ifNotNil: [ :cls | 
 			self selector
@@ -417,6 +418,17 @@ GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
 	^ true
 ]
 
+{ #category : #'event handling' }
+GtMethodCoder >> methodChanged: aMethodModified [
+	| aCompiledMethod |
+	aCompiledMethod := self compiledMethod.
+	(aCompiledMethod notNil and: [ 
+		aMethodModified classAffected = aCompiledMethod methodClass
+			and: [ aMethodModified selector = aCompiledMethod selector ]])
+				ifFalse: [ ^ self ].
+	self updateMethod: aMethodModified newMethod
+]
+
 { #category : #'add ons' }
 GtMethodCoder >> methodExpanderFor: anAST [
 	<gtAstCoderAddOns: 10>
@@ -642,6 +654,12 @@ GtMethodCoder >> subCoders [
 	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
 ]
 
+{ #category : #subscriptions }
+GtMethodCoder >> subscribeToSystem [
+	SystemAnnouncer uniqueInstance weak
+		when: MethodModified send: #methodChanged: to: self
+]
+
 { #category : #'add ons' }
 GtMethodCoder >> unaryMessageAddOnFor: anAST [
 	<gtAstCoderAddOns: 20>
@@ -668,13 +686,13 @@ GtMethodCoder >> updateCollapsedSource [
 		do: [ :ex | super updateCollapsedSource ]
 ]
 
-{ #category : #'event handling' }
+{ #category : #updating }
 GtMethodCoder >> updateMethod: aCompiledMethod [
 	self forMethod: aCompiledMethod.
 	self buildSource
 ]
 
-{ #category : #private }
+{ #category : #updating }
 GtMethodCoder >> updateStylerPattern [
 	self sourceEditor styler methodPatternSource: self collapsedSource.
 	self sourceEditor styleText
