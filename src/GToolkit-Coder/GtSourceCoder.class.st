@@ -852,6 +852,11 @@ GtSourceCoder >> stylers [
 	^ addOns stylers
 ]
 
+{ #category : #subscriptions }
+GtSourceCoder >> subscribeToSystem [
+	"do nothing"
+]
+
 { #category : #private }
 GtSourceCoder >> symbolFor: aNode [
 	| current |
@@ -866,6 +871,11 @@ GtSourceCoder >> symbolFor: aNode [
 				ifTrue: [ ^ current selector ].
 			current := current parent ].
 	^ nil
+]
+
+{ #category : #subscriptions }
+GtSourceCoder >> unsubscribeFromSystem [
+	SystemAnnouncer uniqueInstance unsubscribe: self
 ]
 
 { #category : #updating }
