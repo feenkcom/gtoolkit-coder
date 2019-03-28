@@ -148,14 +148,3 @@ GtBlockCoder >> source: aString [
 	self sourceEditor text attributes: self defaultTextAttributes.
 	self sourceChanged
 ]
-
-{ #category : #elements }
-GtBlockCoder >> sourceElement [
-	| element |
-	element := BrEditorElement new.
-	element editor: self sourceEditor.
-	(GtCompletionController on: element strategy: self completionStrategy)
-		install.
-	self addShortcutsTo: element.
-	^ element
-]
