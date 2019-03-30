@@ -54,7 +54,7 @@ GtSearchASTFilter >> highlighter [
 { #category : #testing }
 GtSearchASTFilter >> includesMethod: aCompiledMethod [
 	| methodAst |
-	(sentMessagesFilter isNil or: [ sentMessagesFilter includesMethod: aCompiledMethod ])
+	(sentMessagesFilter isNil or: [ sentMessagesFilter matches: aCompiledMethod ])
 		ifFalse: [ ^ false ].
 	methodAst := aCompiledMethod ast.
 	methodAst
