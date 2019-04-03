@@ -246,7 +246,9 @@ GtSourceCoder >> debug: aCompiledMethod receiver: anObject in: evalContext [
 { #category : #actions }
 GtSourceCoder >> debugSelection [
 	| source |
-	source := self selectedSource.
+	source :=  self hasSelection
+		ifTrue: [ self selectedSource ]
+		ifFalse: [ self sourceEditor text asString ].
 	source isNil
 		ifTrue: [ ^ self ].
 	^ self debugSource: source
