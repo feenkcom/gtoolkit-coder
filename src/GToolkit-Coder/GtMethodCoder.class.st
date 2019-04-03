@@ -200,6 +200,13 @@ GtMethodCoder >> ensureBuilt [
 	self buildSource
 ]
 
+{ #category : #private }
+GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean [
+	^ self 
+		evaluateBlock: [ anObject perform: aSymbol ] 
+		showPrintString: aBoolean
+]
+
 { #category : #examples }
 GtMethodCoder >> example [
 	^ (self attributeNamed: #example)
@@ -369,10 +376,10 @@ GtMethodCoder >> initializeShortcuts [
 	addOns
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryD;
-			action: [ self doItSelection ]);
+			action: [ :editorElement | self playSelectionOrMethodFrom: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryG;
-			action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+			action: [ :editorElement | self playAndInspectSelectionOrMethodFrom: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryR;
 			action: [ :editorElement | self renameVariableIn: editorElement ]);
@@ -385,6 +392,14 @@ GtMethodCoder >> initializeShortcuts [
 		addShortcut: (BlShortcut new
 			combination: (BlKeyCombination primaryShiftF);
 			action: [ self format ])
+]
+
+{ #category : #private }
+GtMethodCoder >> intervalToStyleResult [
+	"If method was executed, it displays result next to the method selector."
+	^ self hasSelection 
+		ifTrue: [ self selectedSourceIntervalOrAll ]
+		ifFalse: [ 1 to: self selector size ]
 ]
 
 { #category : #testing }
@@ -515,12 +530,21 @@ GtMethodCoder >> playAndInspectExampleFrom: anElement [
 
 { #category : #actions }
 GtMethodCoder >> playAndInspectFrom: anElement [
-	| object |
+	"Save and execute method"
+	| anObject |
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
-	object := self object perform: self selector.
-	anElement phlow spawnObject: object.
+	anObject := self evaluateSelector: self selector object: self object showPrintString: false.
+	anElement phlow spawnObject: anObject.
+]
+
+{ #category : #actions }
+GtMethodCoder >> playAndInspectSelectionOrMethodFrom: anElement [
+	"If there is no selection, it saves and exexute method"
+	self hasSelection 
+		ifTrue: [ self doItAndGoSelection: anElement ]
+		ifFalse: [ self playAndInspectFrom: anElement ]
 ]
 
 { #category : #examples }
@@ -530,11 +554,19 @@ GtMethodCoder >> playExampleFrom: anElement [
 
 { #category : #actions }
 GtMethodCoder >> playFrom: anElement [
-	| object |
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
-	object := self object perform: self selector.
+	self evaluateSelector: self selector object: self object showPrintString: false.
+	
+]
+
+{ #category : #actions }
+GtMethodCoder >> playSelectionOrMethodFrom: anElement [
+	"If there is no selection, it saves and exexute method"
+	self hasSelection 
+		ifTrue: [ self doItSelection ]
+		ifFalse: [ self playFrom: anElement ]
 ]
 
 { #category : #printing }
@@ -671,8 +703,8 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST [
 			addOns removeContextAction: 'Play and Inspect' translated.
 			addOns removeContextAction: 'Debug' translated.
 			^ self ].
-	addOns addContextAction: 'Play' translated icon: BrGlamorousIcons play action: [ :button | self playFrom: button ].
-	addOns addContextAction: 'Play and Inspect' translated icon: BrGlamorousIcons playinspect action: [ :button | self playAndInspectFrom: button ].
+	addOns addContextAction: 'Play' translated icon: BrGlamorousIcons play action: [ :button | self playSelectionOrMethodFrom: button ].
+	addOns addContextAction: 'Play and Inspect' translated icon: BrGlamorousIcons playinspect action: [ :button | self playAndInspectSelectionOrMethodFrom: button ].
 	addOns addContextAction: 'Debug' translated icon: BrGlamorousIcons debug action: [ :button | self debugSelectionOrMethod ].
 ]
 

@@ -246,7 +246,9 @@ GtSourceCoder >> debug: aCompiledMethod receiver: anObject in: evalContext [
 { #category : #actions }
 GtSourceCoder >> debugSelection [
 	| source |
-	source := self selectedSource.
+	source :=  self hasSelection
+		ifTrue: [ self selectedSource ]
+		ifFalse: [ self source ].
 	source isNil
 		ifTrue: [ ^ self ].
 	^ self debugSource: source
@@ -289,7 +291,17 @@ GtSourceCoder >> doItAll [
 ]
 
 { #category : #actions }
-GtSourceCoder >> doItAndGoSelection: editorElement [
+GtSourceCoder >> doItAndGoAll: anElement [
+	| aSource aValue |
+	aSource := self source.
+	aSource isNil ifTrue: [ ^ self ].
+	aValue := self evaluateSource: aSource.
+	aValue == self ifTrue: [ ^ self ].
+	anElement phlow spawnObject: aValue
+]
+
+{ #category : #actions }
+GtSourceCoder >> doItAndGoSelection: anElement [
 	| source value |
 	source := self selectedSource.
 	source isNil
@@ -297,7 +309,14 @@ GtSourceCoder >> doItAndGoSelection: editorElement [
 	value := self evaluateSource: source.
 	value == self
 		ifTrue: [ ^ self ].
-	editorElement phlow spawnObject: value
+	anElement phlow spawnObject: value
+]
+
+{ #category : #actions }
+GtSourceCoder >> doItAndGoSelectionOrAll: anElement [
+	self hasSelection
+		ifTrue: [ self doItAndGoSelection: anElement ] 
+		ifFalse: [ self doItAndGoAll: anElement ]
 ]
 
 { #category : #actions }
@@ -309,34 +328,28 @@ GtSourceCoder >> doItSelection [
 	^ self evaluateSource: source
 ]
 
-{ #category : #private }
-GtSourceCoder >> evaluateSource: aString [
-	^ self evaluateSource: aString showPrintString: false
+{ #category : #actions }
+GtSourceCoder >> doItSelectionOrAll [
+	^ self hasSelection 
+		ifTrue: [ self doItSelection ] 
+		ifFalse: [ self doItAll ]
 ]
 
 { #category : #private }
-GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
-	| value errorAlreadySignaled |
+GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean [
+	| aResult wasErrorAlreadySignaled |
 	
 	self clearPreviousEvaluations.
-	[ 
-		errorAlreadySignaled := false.
-		value := self classOrMetaClass compiler
-			source: aString;
-			receiver: self object;
-			context: self context;
-			requestor: (self evaluationRequester source: aString);
-			failBlock: [ ^ self flag: 'insert error adornment' ];
-			evaluate
-	] on: Error do: [ :anError |
+	wasErrorAlreadySignaled := false.
+	aResult := aBlock on: Error do: [ :anError |
 		self resetASTCache.
-		errorAlreadySignaled 
+		wasErrorAlreadySignaled 
 			ifTrue: [ 
 				"Continue the handling of this exception. This will open a debugger 
 				if the error is not caught elsewhere."
 				anError pass ]
 			ifFalse: [
-				errorAlreadySignaled := true.
+				wasErrorAlreadySignaled := true.
 				anError resignalAs:
 					(GtCoderEvaluationUnhandledError new
 						exception: anError;
@@ -346,10 +359,29 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 		^ nil ].
 		
 	self resetASTCache.
-	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: false).
+	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: aResult isException: false).
 	self sourceEditor styleTextAndAfterDo: [
-		self styleResult: value showPrintString: aBoolean ].
-	^ value
+		self styleResult: aResult showPrintString: aBoolean ].
+	^ aResult
+]
+
+{ #category : #private }
+GtSourceCoder >> evaluateSource: aString [
+	^ self evaluateSource: aString showPrintString: false
+]
+
+{ #category : #private }
+GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
+	^ self 
+		evaluateBlock: [ 
+			self classOrMetaClass compiler
+				source: aString;
+				receiver: self object;
+				context: self context;
+				requestor: (self evaluationRequester source: aString);
+				failBlock: [ ^ self flag: 'insert error adornment' ];
+				evaluate ] 
+		showPrintString: aBoolean
 ]
 
 { #category : #actions }
@@ -475,6 +507,12 @@ GtSourceCoder >> hasObjectAttribute [
 	^ true
 ]
 
+{ #category : #testing }
+GtSourceCoder >> hasSelection [
+	<return: #Boolean>
+	^ self selectedSourceInterval isNotNil
+]
+
 { #category : #'initialize-release' }
 GtSourceCoder >> initialize [
 	super initialize.
@@ -503,6 +541,12 @@ GtSourceCoder >> initializeShortcuts [
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryB;
 			action: [ :editorElement | self browseClass: editorElement ])
+]
+
+{ #category : #private }
+GtSourceCoder >> intervalToStyleResult [
+	"Return interval that should be styled to display result."
+	^ self selectedSourceIntervalOrAll
 ]
 
 { #category : #testing }
@@ -722,6 +766,11 @@ GtSourceCoder >> selectedSourceInterval [
 ]
 
 { #category : #private }
+GtSourceCoder >> selectedSourceIntervalOrAll [
+	^ self selectedSourceInterval ifNil: [ self sourceInterval ]
+]
+
+{ #category : #private }
 GtSourceCoder >> selectorAtCursor [
 	^ self symbolFor: self nodeAtCursor
 ]
@@ -789,6 +838,11 @@ GtSourceCoder >> sourceElement [
 	^ container
 ]
 
+{ #category : #private }
+GtSourceCoder >> sourceInterval [
+	^ 1 to: self source size
+]
+
 { #category : #accessing }
 GtSourceCoder >> sourceText [
 	^ self sourceEditor text
@@ -827,7 +881,7 @@ GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 { #category : #private }
 GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 	| interval |
-	interval := self selectedSourceInterval.
+	interval := self intervalToStyleResult.
 	self styleResult: value at: interval showPrintString: aBoolean.
 	self sourceEditor
 		invalidateAll;

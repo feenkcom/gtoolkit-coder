@@ -19,14 +19,6 @@ GtPharoSnippetCoder >> context: doItContext [
 ]
 
 { #category : #actions }
-GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
-	self clearPreviousEvaluations.
-	self validateSyntax
-		ifFalse: [ ^ self ].
-	^ self evaluateSource: self sourceEditor text asString
-]
-
-{ #category : #actions }
 GtPharoSnippetCoder >> evaluationRequester [
 	^ super evaluationRequester
 		bindingStrategy: bindingStrategy;
@@ -58,11 +50,11 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Evaluate' translated
 		icon: BrGlamorousIcons play
-		action: [ :aButton | self playFrom: aButton ].
+		action: [ :aButton | self doItSelectionOrAll ].
 	addOns
 		addMainAction: 'Inspect' translated
 		icon: BrGlamorousIcons playinspect
-		action: [ :aButton | self playAndInspectFrom: aButton ].
+		action: [ :aButton | self doItAndGoSelectionOrAll: aButton ].
 	addOns
 		addMainAction: 'Debug' translated
 		icon: BrGlamorousIcons debug
@@ -86,10 +78,10 @@ GtPharoSnippetCoder >> initializeShortcuts [
 	addOns
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryD;
-			action: [ self doItSelection ]);
+			action: [ self doItSelectionOrAll ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryG;
-			action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+			action: [ :editorElement | self doItAndGoSelectionOrAll: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryP;
 			action: [ self printItSelection ])
@@ -126,25 +118,6 @@ GtPharoSnippetCoder >> object [
 ]
 
 { #category : #actions }
-GtPharoSnippetCoder >> playAndInspectFrom: aButton [
-	| aValue |
-	self clearPreviousEvaluations.
-	self validateSyntax
-		ifFalse: [ ^ self ].
-	aValue := self evaluateAndHighlightAllSource.
-	aButton phlow spawnObject: aValue.
-]
-
-{ #category : #actions }
-GtPharoSnippetCoder >> playFrom: aButton [
-	| aValue |
-	self clearPreviousEvaluations.
-	self validateSyntax
-		ifFalse: [ ^ self ].
-	aValue := self evaluateAndHighlightAllSource.
-]
-
-{ #category : #actions }
 GtPharoSnippetCoder >> profileWithMessageTallyFrom: aButton [
 	| aValue |
 	self clearPreviousEvaluations.
@@ -159,11 +132,6 @@ GtPharoSnippetCoder >> requester [
 	^ super requester
 		bindingStrategy: bindingStrategy;
 		yourself
-]
-
-{ #category : #private }
-GtPharoSnippetCoder >> selectedSourceInterval [
-	^ super selectedSourceInterval ifNil: [ 1 to: self source size ]
 ]
 
 { #category : #accessing }
