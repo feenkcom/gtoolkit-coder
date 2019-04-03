@@ -50,11 +50,11 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Evaluate' translated
 		icon: BrGlamorousIcons play
-		action: [ :aButton | self doItSelection ].
+		action: [ :aButton | self doItSelectionOrAll ].
 	addOns
 		addMainAction: 'Inspect' translated
 		icon: BrGlamorousIcons playinspect
-		action: [ :aButton | self doItAndGoSelection: aButton ].
+		action: [ :aButton | self doItAndGoSelectionOrAll: aButton ].
 	addOns
 		addMainAction: 'Debug' translated
 		icon: BrGlamorousIcons debug
@@ -78,10 +78,10 @@ GtPharoSnippetCoder >> initializeShortcuts [
 	addOns
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryD;
-			action: [ self doItSelection ]);
+			action: [ self doItSelectionOrAll ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryG;
-			action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+			action: [ :editorElement | self doItAndGoSelectionOrAll: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryP;
 			action: [ self printItSelection ])
@@ -132,11 +132,6 @@ GtPharoSnippetCoder >> requester [
 	^ super requester
 		bindingStrategy: bindingStrategy;
 		yourself
-]
-
-{ #category : #private }
-GtPharoSnippetCoder >> selectedSourceInterval [
-	^ super selectedSourceInterval ifNil: [ 1 to: self source size ]
 ]
 
 { #category : #accessing }

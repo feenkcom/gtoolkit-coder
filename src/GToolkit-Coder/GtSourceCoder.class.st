@@ -289,6 +289,16 @@ GtSourceCoder >> doItAll [
 ]
 
 { #category : #actions }
+GtSourceCoder >> doItAndGoAll: anElement [
+	| aSource aValue |
+	aSource := self source.
+	aSource isNil ifTrue: [ ^ self ].
+	aValue := self evaluateSource: aSource.
+	aValue == self ifTrue: [ ^ self ].
+	anElement phlow spawnObject: aValue
+]
+
+{ #category : #actions }
 GtSourceCoder >> doItAndGoSelection: anElement [
 	| source value |
 	source := self selectedSource.
@@ -301,12 +311,26 @@ GtSourceCoder >> doItAndGoSelection: anElement [
 ]
 
 { #category : #actions }
+GtSourceCoder >> doItAndGoSelectionOrAll: anElement [
+	self hasSelection
+		ifTrue: [ self doItAndGoSelection: anElement ] 
+		ifFalse: [ self doItAndGoAll: anElement ]
+]
+
+{ #category : #actions }
 GtSourceCoder >> doItSelection [
 	| source |
 	source := self selectedSource.
 	source isNil
 		ifTrue: [ ^ self ].
 	^ self evaluateSource: source
+]
+
+{ #category : #actions }
+GtSourceCoder >> doItSelectionOrAll [
+	self hasSelection 
+		ifTrue: [ self doItSelection ] 
+		ifFalse: [ self doItAll ]
 ]
 
 { #category : #private }
@@ -473,6 +497,12 @@ GtSourceCoder >> hasObjectAttribute [
 		attributeNamed: #object 
 		ifAbsent: [ ^ false ].
 	^ true
+]
+
+{ #category : #testing }
+GtSourceCoder >> hasSelection [
+	<return: #Boolean>
+	^ self selectedSourceInterval isNotNil
 ]
 
 { #category : #'initialize-release' }
@@ -722,6 +752,11 @@ GtSourceCoder >> selectedSourceInterval [
 ]
 
 { #category : #private }
+GtSourceCoder >> selectedSourceIntervalOrAll [
+	^ self selectedSourceInterval ifNil: [ self sourceInterval ]
+]
+
+{ #category : #private }
 GtSourceCoder >> selectorAtCursor [
 	^ self symbolFor: self nodeAtCursor
 ]
@@ -789,6 +824,11 @@ GtSourceCoder >> sourceElement [
 	^ container
 ]
 
+{ #category : #private }
+GtSourceCoder >> sourceInterval [
+	^ 1 to: self source size
+]
+
 { #category : #accessing }
 GtSourceCoder >> sourceText [
 	^ self sourceEditor text
@@ -827,7 +867,7 @@ GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 { #category : #private }
 GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 	| interval |
-	interval := self selectedSourceInterval.
+	interval := self selectedSourceIntervalOrAll.
 	self styleResult: value at: interval showPrintString: aBoolean.
 	self sourceEditor
 		invalidateAll;
