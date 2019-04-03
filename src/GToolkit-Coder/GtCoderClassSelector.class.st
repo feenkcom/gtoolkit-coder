@@ -20,14 +20,15 @@ GtCoderClassSelector >> asElement [
 			c horizontal matchParent.
 			c vertical fitContent ].
 	inputElement := BrEditorElement new.
-	inputElement padding: (BlInsets all: 10).
+	inputElement padding: (BlInsets all: 5).
+	inputElement margin: (BlInsets all: 1).
 	inputElement editor: inputEditor.
 	inputElement constraintsDo: [ :c | 
 		c horizontal matchParent.
 		c vertical fitContent ].
 	inputElement border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1).
 	self coder theClass ifNotNil: [ :aClass |
-		inputEditor text: (aClass package name, '>', aClass name) asRopedText ].
+		inputEditor text: (aClass package name, '>', aClass name) asRopedText glamorousRegularFont ].
 	packageCompleter := GtCompletionController 
 		on: inputElement 
 		strategy: GtCoderClassWithPackageCompletionStrategy new.
@@ -71,7 +72,7 @@ GtCoderClassSelector >> coder: aCoder [
 { #category : #'initialize-release' }
 GtCoderClassSelector >> initialize [
 	super initialize.
-	inputEditor := BrTextEditor new
+	inputEditor := BrTextEditor new text: '' asRopedText glamorousRegularFont
 ]
 
 { #category : #accessing }
