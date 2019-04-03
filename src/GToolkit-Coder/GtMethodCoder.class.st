@@ -200,6 +200,21 @@ GtMethodCoder >> ensureBuilt [
 	self buildSource
 ]
 
+{ #category : #private }
+GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean [
+	| aResult |
+	self clearPreviousEvaluations.
+	aResult := [ 
+		anObject perform: aSymbol
+	] on: Error do: self evaluationErrorHandler.
+
+	self resetASTCache.
+	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: aResult isException: false).
+	self sourceEditor styleTextAndAfterDo: [
+		self styleResult: aResult showPrintString: aBoolean ].
+	^ aResult
+]
+
 { #category : #examples }
 GtMethodCoder >> example [
 	^ (self attributeNamed: #example)
@@ -387,6 +402,14 @@ GtMethodCoder >> initializeShortcuts [
 			action: [ self format ])
 ]
 
+{ #category : #private }
+GtMethodCoder >> intervalToStyleResult [
+	"If method was executed, it displays result next to the method selector."
+	^ self hasSelection 
+		ifTrue: [ self selectedSourceIntervalOrAll ]
+		ifFalse: [ 1 to: self selector size ]
+]
+
 { #category : #testing }
 GtMethodCoder >> isBuilt [
 	^ isBuilt
@@ -520,7 +543,7 @@ GtMethodCoder >> playAndInspectFrom: anElement [
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
-	anObject := self object perform: self selector.
+	anObject := self evaluateSelector: self selector object: self object showPrintString: false.
 	anElement phlow spawnObject: anObject.
 ]
 
@@ -542,14 +565,15 @@ GtMethodCoder >> playFrom: anElement [
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
-	self object perform: self selector.
+	self evaluateSelector: self selector object: self object showPrintString: false.
+	
 ]
 
 { #category : #actions }
 GtMethodCoder >> playSelectionOrMethodFrom: anElement [
 	"If there is no selection, it saves and exexute method"
 	self hasSelection 
-		ifTrue: [ self doItAndGoSelection: anElement ]
+		ifTrue: [ self doItSelection ]
 		ifFalse: [ self playFrom: anElement ]
 ]
 

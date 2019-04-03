@@ -376,6 +376,27 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 	^ value
 ]
 
+{ #category : #private }
+GtSourceCoder >> evaluationErrorHandler [
+	| wasErrorAlreadySignaled |
+	^ [ :anError |
+		self resetASTCache.
+		wasErrorAlreadySignaled 
+			ifTrue: [ 
+				"Continue the handling of this exception. This will open a debugger 
+				if the error is not caught elsewhere."
+				anError pass ]
+			ifFalse: [
+				wasErrorAlreadySignaled := true.
+				anError resignalAs:
+					(GtCoderEvaluationUnhandledError new
+						exception: anError;
+						sourceCoder: self) ].
+		"The process will be terminated. Return nil in case there is some error whil opening the debugger
+		that prevents the debugger from opening and does not kill the process."
+		^ nil ].
+]
+
 { #category : #actions }
 GtSourceCoder >> evaluationRequester [
 	^ GtMethodCoderEvaluationRequester on: self
@@ -533,6 +554,12 @@ GtSourceCoder >> initializeShortcuts [
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryB;
 			action: [ :editorElement | self browseClass: editorElement ])
+]
+
+{ #category : #private }
+GtSourceCoder >> intervalToStyleResult [
+	"Return interval that should be styled to display result."
+	^ self selectedSourceIntervalOrAll
 ]
 
 { #category : #testing }
@@ -867,7 +894,7 @@ GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 { #category : #private }
 GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 	| interval |
-	interval := self selectedSourceIntervalOrAll.
+	interval := self intervalToStyleResult.
 	self styleResult: value at: interval showPrintString: aBoolean.
 	self sourceEditor
 		invalidateAll;
