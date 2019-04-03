@@ -25,8 +25,9 @@ GtMethodCoderEvaluationRequester >> correctFrom: fromIndex to: toIndex with: aSt
 
 { #category : #requester }
 GtMethodCoderEvaluationRequester >> notify: message at: anIndex in: aString [
-	| location |
-	location := anIndex + selectionInterval first - 2.
+	| location selectionStart |
+	selectionStart := selectionInterval ifNil: [ 1 ].
+	location := anIndex + selectionStart - 2.
 	^ super notify: message at: (location max: 1) in: aString
 ]
 

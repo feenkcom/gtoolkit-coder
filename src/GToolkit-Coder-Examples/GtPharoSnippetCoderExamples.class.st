@@ -19,6 +19,6 @@ GtPharoSnippetCoderExamples >> syntaxError [
 	<gtExample>
 	^ GtPharoSnippetCoder new
 		source: '3 + - 4';
-		playAndInspectFrom: nil;
+		doItAndGoSelectionOrAll: nil;
 		yourself
 ]
