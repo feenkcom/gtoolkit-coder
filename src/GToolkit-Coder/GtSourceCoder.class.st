@@ -328,7 +328,7 @@ GtSourceCoder >> doItSelection [
 
 { #category : #actions }
 GtSourceCoder >> doItSelectionOrAll [
-	self hasSelection 
+	^ self hasSelection 
 		ifTrue: [ self doItSelection ] 
 		ifFalse: [ self doItAll ]
 ]
