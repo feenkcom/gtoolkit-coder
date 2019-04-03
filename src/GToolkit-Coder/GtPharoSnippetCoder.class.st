@@ -19,14 +19,6 @@ GtPharoSnippetCoder >> context: doItContext [
 ]
 
 { #category : #actions }
-GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
-	self clearPreviousEvaluations.
-	self validateSyntax
-		ifFalse: [ ^ self ].
-	^ self evaluateSource: self sourceEditor text asString
-]
-
-{ #category : #actions }
 GtPharoSnippetCoder >> evaluationRequester [
 	^ super evaluationRequester
 		bindingStrategy: bindingStrategy;
@@ -123,25 +115,6 @@ GtPharoSnippetCoder >> object [
 	^ (bindingStrategy bindings respondsTo: #receiver)
 		ifTrue: [ bindingStrategy bindings receiver ]
 		ifFalse: [ nil ]
-]
-
-{ #category : #actions }
-GtPharoSnippetCoder >> playAndInspectFrom: aButton [
-	| aValue |
-	self clearPreviousEvaluations.
-	self validateSyntax
-		ifFalse: [ ^ self ].
-	aValue := self evaluateAndHighlightAllSource.
-	aButton phlow spawnObject: aValue.
-]
-
-{ #category : #actions }
-GtPharoSnippetCoder >> playFrom: aButton [
-	| aValue |
-	self clearPreviousEvaluations.
-	self validateSyntax
-		ifFalse: [ ^ self ].
-	aValue := self evaluateAndHighlightAllSource.
 ]
 
 { #category : #actions }
