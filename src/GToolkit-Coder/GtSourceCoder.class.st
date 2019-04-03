@@ -248,7 +248,7 @@ GtSourceCoder >> debugSelection [
 	| source |
 	source :=  self hasSelection
 		ifTrue: [ self selectedSource ]
-		ifFalse: [ self sourceEditor text asString ].
+		ifFalse: [ self source ].
 	source isNil
 		ifTrue: [ ^ self ].
 	^ self debugSource: source
