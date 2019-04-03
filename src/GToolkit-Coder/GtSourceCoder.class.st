@@ -289,7 +289,7 @@ GtSourceCoder >> doItAll [
 ]
 
 { #category : #actions }
-GtSourceCoder >> doItAndGoSelection: editorElement [
+GtSourceCoder >> doItAndGoSelection: anElement [
 	| source value |
 	source := self selectedSource.
 	source isNil
@@ -297,7 +297,7 @@ GtSourceCoder >> doItAndGoSelection: editorElement [
 	value := self evaluateSource: source.
 	value == self
 		ifTrue: [ ^ self ].
-	editorElement phlow spawnObject: value
+	anElement phlow spawnObject: value
 ]
 
 { #category : #actions }
