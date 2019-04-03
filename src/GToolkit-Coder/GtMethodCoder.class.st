@@ -202,17 +202,9 @@ GtMethodCoder >> ensureBuilt [
 
 { #category : #private }
 GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean [
-	| aResult |
-	self clearPreviousEvaluations.
-	aResult := [ 
-		anObject perform: aSymbol
-	] on: Error do: self evaluationErrorHandler.
-
-	self resetASTCache.
-	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: aResult isException: false).
-	self sourceEditor styleTextAndAfterDo: [
-		self styleResult: aResult showPrintString: aBoolean ].
-	^ aResult
+	^ self 
+		evaluateBlock: [ anObject perform: aSymbol ] 
+		showPrintString: aBoolean
 ]
 
 { #category : #examples }

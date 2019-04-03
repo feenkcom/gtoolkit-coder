@@ -334,52 +334,12 @@ GtSourceCoder >> doItSelectionOrAll [
 ]
 
 { #category : #private }
-GtSourceCoder >> evaluateSource: aString [
-	^ self evaluateSource: aString showPrintString: false
-]
-
-{ #category : #private }
-GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
-	| value errorAlreadySignaled |
+GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean [
+	| aResult wasErrorAlreadySignaled |
 	
 	self clearPreviousEvaluations.
-	[ 
-		errorAlreadySignaled := false.
-		value := self classOrMetaClass compiler
-			source: aString;
-			receiver: self object;
-			context: self context;
-			requestor: (self evaluationRequester source: aString);
-			failBlock: [ ^ self flag: 'insert error adornment' ];
-			evaluate
-	] on: Error do: [ :anError |
-		self resetASTCache.
-		errorAlreadySignaled 
-			ifTrue: [ 
-				"Continue the handling of this exception. This will open a debugger 
-				if the error is not caught elsewhere."
-				anError pass ]
-			ifFalse: [
-				errorAlreadySignaled := true.
-				anError resignalAs:
-					(GtCoderEvaluationUnhandledError new
-						exception: anError;
-						sourceCoder: self) ].
-		"The process will be terminated. Return nil in case there is some error whil opening the debugger
-		that prevents the debugger from opening and does not kill the process."
-		^ nil ].
-		
-	self resetASTCache.
-	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: false).
-	self sourceEditor styleTextAndAfterDo: [
-		self styleResult: value showPrintString: aBoolean ].
-	^ value
-]
-
-{ #category : #private }
-GtSourceCoder >> evaluationErrorHandler [
-	| wasErrorAlreadySignaled |
-	^ [ :anError |
+	wasErrorAlreadySignaled := false.
+	aResult := aBlock on: Error do: [ :anError |
 		self resetASTCache.
 		wasErrorAlreadySignaled 
 			ifTrue: [ 
@@ -395,6 +355,31 @@ GtSourceCoder >> evaluationErrorHandler [
 		"The process will be terminated. Return nil in case there is some error whil opening the debugger
 		that prevents the debugger from opening and does not kill the process."
 		^ nil ].
+		
+	self resetASTCache.
+	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: aResult isException: false).
+	self sourceEditor styleTextAndAfterDo: [
+		self styleResult: aResult showPrintString: aBoolean ].
+	^ aResult
+]
+
+{ #category : #private }
+GtSourceCoder >> evaluateSource: aString [
+	^ self evaluateSource: aString showPrintString: false
+]
+
+{ #category : #private }
+GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
+	^ self 
+		evaluateBlock: [ 
+			self classOrMetaClass compiler
+				source: aString;
+				receiver: self object;
+				context: self context;
+				requestor: (self evaluationRequester source: aString);
+				failBlock: [ ^ self flag: 'insert error adornment' ];
+				evaluate ] 
+		showPrintString: aBoolean
 ]
 
 { #category : #actions }
