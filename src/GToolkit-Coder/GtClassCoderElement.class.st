@@ -57,7 +57,7 @@ GtClassCoderElement >> buildNavigationElement [
 	element := self coderModel navigationModel asElement.
 	"element padding: (BlInsets all: 10)."
 	element constraintsDo: [ :c |
-		c linear weight: 1 ].
+		c linear weight: 0.5 ].
 	^ element
 ]
 
