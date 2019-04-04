@@ -38,7 +38,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			baseline: 'Brick' with: [
 				spec repository: 'github://feenkcom/Brick:v0.6.0/src' ];
 			baseline: 'GToolkitUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.6.0/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.6.1/src' ].
 		spec 
 			package: 'GToolkit-Coder' with: [
 				spec requires: #('Brick' 'GToolkitUtility' ). ];
