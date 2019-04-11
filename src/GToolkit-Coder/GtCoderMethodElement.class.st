@@ -94,14 +94,14 @@ GtCoderMethodElement >> initialize [
 					(BrInteractiveLook new
 						style: [ :aStyler | 
 							aStyler
-								default: [ resizer removeFromParent.
+								default: [ "resizer removeFromParent."
 									self background: Color transparent ].
 							aStyler
-								expanded: [ self addChild: resizer.
+								expanded: [ "self addChild: resizer.
 									self enqueueTask: (BlTaskAction new action: [ self 
 										childNamed: #bodyEditor 
 										ifFound: [ :anEditor | resizer target: anEditor ] 
-										ifNone: [ resizer target: nil ] ]).
+										ifNone: [ resizer target: nil ] ])."
 									self background: Color white ] ]).
 	self
 		addShortcut:
