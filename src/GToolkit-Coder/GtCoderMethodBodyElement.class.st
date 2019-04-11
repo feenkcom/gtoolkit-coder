@@ -26,6 +26,7 @@ GtCoderMethodBodyElement >> editorElement [
 			c horizontal matchParent.
 			c vertical fitContent ].
 	anEditorElement := BrEditorElement new.
+	anEditorElement padding: (BlInsets top: 0 left: 0 bottom: 2 right: 0).
 	anEditorElement
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
