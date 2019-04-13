@@ -133,6 +133,7 @@ GtClassCoderElement >> initialize [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
+	self padding: (BlInsets left: 10 right: 10).
 ]
 
 { #category : #'updating ui' }
