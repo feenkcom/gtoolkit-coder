@@ -34,6 +34,11 @@ GtSearchImplementorPatternFilter >> includesMethod: aCompiledMethod [
 ]
 
 { #category : #accessing }
+GtSearchImplementorPatternFilter >> pattern [
+	^ pattern
+]
+
+{ #category : #accessing }
 GtSearchImplementorPatternFilter >> pattern: aString [
 	pattern := aString
 ]
