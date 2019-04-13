@@ -146,7 +146,7 @@ GtClassCoderElement >> removeNavigationElement [
 GtClassCoderElement >> updateMethodsCoderElement [
 	| methodsCoder |
 	methodsCoder := self coderModel methodsCoder.
-	[ self contentPane childrenCount > 1 ] whileTrue: [ self contentPane removeChildAt: 2 ].
+	self contentPane removeChildAt: self contentPane childrenCount.
 	self contentPane addChild: methodsCoder asElement
 ]
 
