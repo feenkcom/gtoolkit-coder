@@ -26,14 +26,8 @@ GtFilteredMethodsCoderElement >> filterElement [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical fitContent ].
-	element
-		margin:
-			(BlInsets
-				top: 10
-				left: 10
-				bottom: 0
-				right: 10).
-	element padding: (BlInsets all: 3).
+	element margin: (BlInsets top: 10).
+	element padding: (BlInsets top: 3 bottom: 3).
 	^ element
 ]
 

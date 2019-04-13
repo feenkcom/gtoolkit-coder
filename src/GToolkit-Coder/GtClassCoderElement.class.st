@@ -133,6 +133,7 @@ GtClassCoderElement >> initialize [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
+	self padding: (BlInsets left: 10 right: 10).
 ]
 
 { #category : #'updating ui' }
@@ -146,7 +147,7 @@ GtClassCoderElement >> removeNavigationElement [
 GtClassCoderElement >> updateMethodsCoderElement [
 	| methodsCoder |
 	methodsCoder := self coderModel methodsCoder.
-	[ self contentPane childrenCount > 1 ] whileTrue: [ self contentPane removeChildAt: 2 ].
+	self contentPane removeChildAt: self contentPane childrenCount.
 	self contentPane addChild: methodsCoder asElement
 ]
 

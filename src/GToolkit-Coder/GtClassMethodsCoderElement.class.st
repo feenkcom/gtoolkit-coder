@@ -80,7 +80,7 @@ GtClassMethodsCoderElement >> headerElement [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical fitContent ];
-		padding: (BlInsets top: 10 left: 10 bottom: 0 right: 10);
+		padding: (BlInsets top: 10);
 		addChildren: {
 			self classBreadcrumb. 
 			self addButtonElement }.
