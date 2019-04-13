@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #accessing }
+GtSearchNegationFilter >> defaultFilterScope [
+	^ originalFilter defaultFilterScope
+]
+
 { #category : #printing }
 GtSearchNegationFilter >> gtDisplayOn: stream [
 	self originalFilter gtDisplayOn: stream.
@@ -32,4 +37,9 @@ GtSearchNegationFilter >> originalFilter: anObject [
 GtSearchNegationFilter >> printOn: stream [
 	self originalFilter printOn: stream.
 	stream nextPutAll: ' not'
+]
+
+{ #category : #accessing }
+GtSearchNegationFilter >> resultType [
+	^ originalFilter resultType
 ]
