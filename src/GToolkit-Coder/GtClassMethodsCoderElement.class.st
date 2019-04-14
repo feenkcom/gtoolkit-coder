@@ -11,7 +11,7 @@ GtClassMethodsCoderElement >> addButtonElement [
 	button
 		look: BrGlamorousButtonWithIconLook;
 		icon: BrGlamorousIcons add asElement;
-		margin: (BlInsets all: 8);
+		margin: (BlInsets top: 7 left: 10 bottom: 0 right: 0);
 		constraintsDo: [ :c | 
 			c ignoreByLayout.
 			c ignored horizontal alignRight.

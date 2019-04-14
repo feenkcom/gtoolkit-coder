@@ -83,6 +83,7 @@ GtClassCoderElement >> buildToolbar [
 	toolbar look: BrGlamorousToolbarLook new.
 	panesNavigationButton := self buildPanesNavigationToolbarButton.
 	treeNavigationButton := self buildTreeNavigationToolbarButton.
+	toolbar margin: (BlInsets right: -2).
 	toolbar addItem: treeNavigationButton.
 	toolbar addItem: panesNavigationButton.
 	^ toolbar
@@ -147,7 +148,8 @@ GtClassCoderElement >> removeNavigationElement [
 GtClassCoderElement >> updateMethodsCoderElement [
 	| methodsCoder |
 	methodsCoder := self coderModel methodsCoder.
-	self contentPane removeChildAt: self contentPane childrenCount.
+	self contentPane hasChildren ifTrue: [
+		self contentPane removeChildAt: self contentPane childrenCount ].
 	self contentPane addChild: methodsCoder asElement
 ]
 
