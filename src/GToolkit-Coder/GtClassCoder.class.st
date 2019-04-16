@@ -72,6 +72,12 @@ GtClassCoder >> gtLiveFor: aView [
 		
 ]
 
+{ #category : #accessing }
+GtClassCoder >> implementorsFilterString: aString [
+	"Set implementors filter"
+	self methodsCoder implementorsFilterString: aString
+]
+
 { #category : #initialize }
 GtClassCoder >> initialize [
 	super initialize.
