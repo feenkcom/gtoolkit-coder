@@ -46,11 +46,22 @@ GtClassCoder >> forObject: anObject [
 	methodsCoder := GtClassMethodsCoder forObject: anObject
 ]
 
+{ #category : #accessing }
+GtClassCoder >> gtDocumentFor: aView [
+	<gtView>
+	self theClass ifNil: [ ^ aView empty ].
+	^ (self theClass gtDocumentFor: aView)
+			priority: 1;
+			actionButtonIcon: BrGlamorousIcons inspect
+				action: [ :aButton | 
+					aButton phlow spawnObject: self theClass ]
+]
+
 { #category : #ui }
 GtClassCoder >> gtLiveFor: aView [
 	<gtView>
 	^ aView explicit 
-		title: 'Live';
+		title: 'Class';
 		priority: 10;
 		stencil: [ self ];
 		actionButtonIcon: BrGlamorousIcons browse
