@@ -54,7 +54,11 @@ GtClassCoder >> gtLiveFor: aView [
 		priority: 10;
 		stencil: [ self ];
 		actionButtonIcon: BrGlamorousIcons browse
-			action: [ :aButton | self theClass browse ] 
+			action: [ :aButton | self theClass browse ];
+		actionButtonIcon: BrGlamorousIcons inspect
+			action: [ :aButton | 
+				aButton phlow spawnObject: self theClass ]
+		
 ]
 
 { #category : #initialize }
