@@ -14,8 +14,10 @@ GtFilteredMethodsCoderElement >> buildElement [
 
 { #category : #ui }
 GtFilteredMethodsCoderElement >> filterElement [
-	| element editor |
+	| element editor aFilterString |
 	editor := BrTextEditor new.
+	aFilterString := methodsCoder ifNotNil: #implementorsFilterString.
+	aFilterString ifNotNil: [ editor text: aFilterString asString asRopedText ].
 	editor
 		when: BrTextEditorInsertedEvent do: [ :event | self updateFilter: editor text asString ];
 		when: BrTextEditorDeletedEvent do: [ :event | self updateFilter: editor text asString ].
