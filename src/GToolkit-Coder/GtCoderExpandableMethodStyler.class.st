@@ -6,15 +6,15 @@ Class {
 
 { #category : #visiting }
 GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
+	| aMethodClass |
 	super visitMessageNode: aMessageNode.
-	"aMessageNode isUnary
-		ifFalse: [ ^ self ]."
-	aMessageNode isSelfSend
+	(aMessageNode isSelfSend or: [ aMessageNode isSuperSend ])
 		ifFalse: [ ^ self ].
-	(aMessageNode methodNode methodClass canPerform: aMessageNode selector)
+	aMethodClass := aMessageNode isSuperSend
+			ifTrue: [ aMessageNode methodNode methodClass superclass ]
+			ifFalse: [ aMessageNode methodNode methodClass ].
+	(aMethodClass canPerform: aMessageNode selector)
 		ifFalse: [ ^ self ].
-	"(aMessageNode methodNode methodClass lookupSelector: aMessageNode selector) isGTExampleMethod
-		ifFalse: [ ^ self ]."
 	self
 		styleFrom: aMessageNode keywordsIntervals last last
 		to: aMessageNode keywordsIntervals last last
@@ -23,8 +23,8 @@ GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 				attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
 						beAppend;
 						stencil: [ | editorElement method coder |
-							method := aMessageNode methodNode methodClass lookupSelector: aMessageNode selector.
-							coder := GtMethodCoder forExample: (method methodClass gtExamplesFactory createExample: method).
+							method := aMethodClass lookupSelector: aMessageNode selector.
+							coder := GtMethodCoder forExample: (aMethodClass gtExamplesFactory createExample: method).
 							coder subscribeToSystem.
 							coder expanded: true.
 							editorElement := coder asElement.
