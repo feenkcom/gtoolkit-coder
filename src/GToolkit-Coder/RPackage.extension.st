@@ -1,6 +1,14 @@
 Extension { #name : #RPackage }
 
 { #category : #'*GToolkit-Coder' }
+RPackage >> gtUsedPackagesFor: aView [
+	<gtView>
+	^ (self usedPackages gtItemsFor: aView)
+		title: 'Used Packages';
+		priority: 1
+]
+
+{ #category : #'*GToolkit-Coder' }
 RPackage >> usedPackages [
 	^ (self usedPackagesByExtending addAll: ((self usedPackagesBySubclassing))) asSet
 	
