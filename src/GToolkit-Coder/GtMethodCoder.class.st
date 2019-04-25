@@ -478,6 +478,7 @@ GtMethodCoder >> newMethodSource [
 GtMethodCoder >> newRbAST: aString [
 	| ast |
 	ast := RBParser parseFaultyMethod: aString.
+	ast isParseError ifTrue: [ ^ ast ].
 	ast methodNode
 		compilationContext:
 			(CompilationContext new
