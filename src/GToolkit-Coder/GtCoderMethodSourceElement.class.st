@@ -12,34 +12,17 @@ GtCoderMethodSourceElement >> actionsElement [
 	^ nil
 ]
 
-{ #category : #accessing }
-GtCoderMethodSourceElement >> breadcrumb [
-	| breadcrumb |
-	breadcrumb := BrBreadcrumb new.
-	breadcrumb
-		constraintsDo: [ :c | 
-			c frame horizontal alignLeft.
-			c frame vertical alignCenter ].
-	breadcrumb
-		margin: (BlInsets top: 2);
-		look:
-			(BrGlamorousBreadcrumbLook new
-				separator: [ BrLabel new
-						look: (BrGlamorousLabelLook new thin foreground: BrGlamorousColors defaultButtonTextColor);
-						text: '>';
-						margin: (BlInsets left: 5 right: 5) ]).
-	{((methodCoder compiledMethod ifNil: [ methodCoder classOrMetaClass ]) package ifNil: [ '' ] ifNotNil: [ :package | package name ]).
-	methodCoder classOrMetaClass name}
-		do: [ :aLocationStepName | 
-			breadcrumb
-				addItem:
-					(BrLabel new
-						look:
-							(BrGlamorousLabelLook new
-								foreground: BrGlamorousColors defaultButtonTextColor;
-								fontSize: 12);
-						text: aLocationStepName) ].
-	^ breadcrumb
+{ #category : #private }
+GtCoderMethodSourceElement >> addLocationStepName: aLocationStepName action: aBlock to: aBrBreadcrumb [
+	^ aBrBreadcrumb
+		addItem:
+			(BrButton new
+				look:
+					(BrGlamorousLabelLook new
+						foreground: BrGlamorousColors defaultButtonTextColor;
+						fontSize: 12);
+				label: aLocationStepName asRopedText;
+				action: (aBlock ifNil: [ [ "do nothing" ] ]) )
 ]
 
 { #category : #accessing }
@@ -58,7 +41,7 @@ GtCoderMethodSourceElement >> headerElement [
 			c horizontal matchParent.
 			c vertical fitContent ].
 	element padding: (BlInsets all: 0).
-	element addChild: self breadcrumb as: #breadcrumb.
+	element addChild: self newBreadcrumb as: #breadcrumb.
 	^ element
 ]
 
@@ -81,4 +64,43 @@ GtCoderMethodSourceElement >> methodCoder: aMethodCoder [
 	self addChild: self headerElement as: #header.
 	self addChild: self editorElement as: #bodyElement.
 	self actionsElement ifNotNil: [ :el | self addChild: el ]
+]
+
+{ #category : #'instance creation' }
+GtCoderMethodSourceElement >> newBreadcrumb [
+	| aBrBreadcrumb aPackageName aClassName aPackage |
+	aBrBreadcrumb := BrBreadcrumb new.
+	aBrBreadcrumb
+		look: self newBreadcrumbLook;
+		constraintsDo: [ :c | 
+			c margin: (BlInsets top: 2).
+			c frame horizontal alignLeft.
+			c frame vertical alignCenter ].
+	aPackage := (methodCoder compiledMethod
+		ifNil: [ methodCoder classOrMetaClass ]) package.
+	aPackageName := aPackage
+		ifNil: [ '' ]
+		ifNotNil: [ :package | package name ].
+	self addLocationStepName: aPackageName 
+		action: [ :aButton | aButton phlow spawnObject: aPackage ] 
+		to: aBrBreadcrumb.
+	aClassName := methodCoder classOrMetaClass name.
+	self
+		addLocationStepName: aClassName
+		action: [ :aButton | 
+			aButton phlow
+				spawnObject: (GtClassCoder forClass: methodCoder classOrMetaClass) ]
+		to: aBrBreadcrumb.
+	^ aBrBreadcrumb
+]
+
+{ #category : #'instance creation' }
+GtCoderMethodSourceElement >> newBreadcrumbLook [
+	^ BrGlamorousBreadcrumbLook new
+		separator: [ BrLabel new
+				look:
+					(BrGlamorousLabelLook new thin
+						foreground: BrGlamorousColors defaultButtonTextColor);
+				text: '>';
+				margin: (BlInsets left: 5 right: 5) ]
 ]
