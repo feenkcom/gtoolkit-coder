@@ -62,6 +62,25 @@ GtBlockCoder >> blockSource: aString [
 ]
 
 { #category : #actions }
+GtBlockCoder >> doItAll [
+	| source |
+	source := self blockSource.
+	source isNil
+		ifTrue: [ ^ self ].
+	^ self evaluateSource: source
+]
+
+{ #category : #actions }
+GtBlockCoder >> doItAndGoAll: anElement [
+	| aSource aValue |
+	aSource := self blockSource.
+	aSource isNil ifTrue: [ ^ self ].
+	aValue := self evaluateSource: aSource.
+	aValue == self ifTrue: [ ^ self ].
+	anElement phlow spawnObject: aValue
+]
+
+{ #category : #actions }
 GtBlockCoder >> evaluationRequester [
 	^ GtBlockCoderEvaluationRequester on: self
 ]
@@ -135,11 +154,6 @@ GtBlockCoder >> newRbAST: aString [
 { #category : #updating }
 GtBlockCoder >> newSource [
 	^ self blockSource
-]
-
-{ #category : #accessing }
-GtBlockCoder >> source [
-	^ self sourceEditor text asString
 ]
 
 { #category : #accessing }

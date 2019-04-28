@@ -282,11 +282,6 @@ GtSourceCoder >> disabledTextAttributes [
 ]
 
 { #category : #actions }
-GtSourceCoder >> doIt [
-	^ self evaluateSource: self newSource showPrintString: false
-]
-
-{ #category : #actions }
 GtSourceCoder >> doItAll [
 	| source |
 	source := self source.
