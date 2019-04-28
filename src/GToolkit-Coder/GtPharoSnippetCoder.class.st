@@ -19,14 +19,6 @@ GtPharoSnippetCoder >> context: doItContext [
 ]
 
 { #category : #actions }
-GtPharoSnippetCoder >> evaluateAndHighlightAllSource [
-	self clearPreviousEvaluations.
-	self validateSyntax
-		ifFalse: [ ^ self ].
-	^ self evaluateSource: self sourceEditor text asString
-]
-
-{ #category : #actions }
 GtPharoSnippetCoder >> evaluationRequester [
 	^ super evaluationRequester
 		bindingStrategy: bindingStrategy;
@@ -58,15 +50,19 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Evaluate' translated
 		icon: BrGlamorousIcons play
-		action: [ :aButton | self evaluateAndHighlightAllSource ].
+		action: [ :aButton | self doItSelectionOrAll ].
 	addOns
 		addMainAction: 'Inspect' translated
 		icon: BrGlamorousIcons playinspect
-		action: [ :aButton | self runFrom: aButton ].
+		action: [ :aButton | self doItAndGoSelectionOrAll: aButton ].
 	addOns
 		addMainAction: 'Debug' translated
 		icon: BrGlamorousIcons debug
 		action: [ :aButton | self debugSelection ].
+	addOns
+		addMainAction: 'Profile' translated
+		icon: BrGlamorousIcons performance
+		action: [ :aButton | self profileWithMessageTallyFrom: aButton ].
 	addOns
 		addStyler:
 			(BrRBTextStyler new
@@ -82,10 +78,10 @@ GtPharoSnippetCoder >> initializeShortcuts [
 	addOns
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryD;
-			action: [ self doItSelection ]);
+			action: [ self doItSelectionOrAll ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryG;
-			action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+			action: [ :editorElement | self doItAndGoSelectionOrAll: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryP;
 			action: [ self printItSelection ])
@@ -121,30 +117,21 @@ GtPharoSnippetCoder >> object [
 		ifFalse: [ nil ]
 ]
 
+{ #category : #actions }
+GtPharoSnippetCoder >> profileWithMessageTallyFrom: aButton [
+	| aValue |
+	self clearPreviousEvaluations.
+	self validateSyntax
+		ifFalse: [ ^ self ].
+	aValue := self evaluateSource: 'MessageTally on: [ ', self sourceEditor text asString, ']'.
+	aButton phlow spawnObject: aValue.
+]
+
 { #category : #ui }
 GtPharoSnippetCoder >> requester [
 	^ super requester
 		bindingStrategy: bindingStrategy;
 		yourself
-]
-
-{ #category : #actions }
-GtPharoSnippetCoder >> runFrom: aButton [
-	| aValue |
-	self clearPreviousEvaluations.
-	self validateSyntax
-		ifFalse: [ ^ self ].
-	aValue := self evaluateAndHighlightAllSource.
-	aButton
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: aValue;
-				sourceElement: aButton)
-]
-
-{ #category : #private }
-GtPharoSnippetCoder >> selectedSourceInterval [
-	^ super selectedSourceInterval ifNil: [ 1 to: self source size ]
 ]
 
 { #category : #accessing }

@@ -8,6 +8,11 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #converting }
+GtMethodsCoderElement >> asVerticallyResizableDo: aBlock [
+	^ self
+]
+
 { #category : #ui }
 GtMethodsCoderElement >> buildElement [
 	self layout: BlLinearLayout vertical.
@@ -15,13 +20,17 @@ GtMethodsCoderElement >> buildElement [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-	self addChild: self methodsListElement as: #methodsList.
-	methodsCoder look ifNotNil: [ :look | self look: look ]
+	self addChild: self methodsInfiniteListElement as: #methodsList.
 ]
 
 { #category : #ui }
 GtMethodsCoderElement >> buildElementForCoder: aMethodCoder [
 	^ aMethodCoder asElement
+]
+
+{ #category : #accessing }
+GtMethodsCoderElement >> listElement [
+	^ listElement
 ]
 
 { #category : #accessing }
@@ -40,19 +49,19 @@ GtMethodsCoderElement >> methodsCoder: aMethodsCoder [
 ]
 
 { #category : #ui }
-GtMethodsCoderElement >> methodsListElement [
-	listElement := BrSimpleList new.
-	listElement stencil: [ :each | self buildElementForCoder: each ].
-	listElement padding: (BlInsets all: 10).
-	listElement
+GtMethodsCoderElement >> methodsInfiniteListElement [
+	| dataSource |
+	dataSource := GtMethodsCoderDataSource new
+		methodsCoder: methodsCoder.
+	listElement := GtMethodsCoderInfiniteElement new
+		dataSource: dataSource;
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-	listElement display: methodsCoder coders.
 	^ listElement
 ]
 
 { #category : #private }
 GtMethodsCoderElement >> updateList [
-	listElement display: methodsCoder coders
+	listElement dataSource updateCoders
 ]

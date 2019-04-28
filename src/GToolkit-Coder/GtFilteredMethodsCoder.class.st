@@ -12,7 +12,7 @@ Class {
 { #category : #private }
 GtFilteredMethodsCoder >> categoryFilter [
 	^ categoryFilterString notNil
-		ifTrue: [ GtCoderMethodCategoryFilter forCategory: categoryFilterString ]
+		ifTrue: [ GtSearchMethodCategoryFilter forCategory: categoryFilterString ]
 ]
 
 { #category : #accessing }
@@ -45,6 +45,11 @@ GtFilteredMethodsCoder >> combinedFilter [
 	^ self combineFilters: self filters
 ]
 
+{ #category : #elements }
+GtFilteredMethodsCoder >> elementClass [
+	^ GtFilteredMethodsCoderElement
+]
+
 { #category : #private }
 GtFilteredMethodsCoder >> filters [
 	^ {originalFilter.
@@ -61,7 +66,7 @@ GtFilteredMethodsCoder >> forMethods: compiledMethods [
 { #category : #private }
 GtFilteredMethodsCoder >> implementorsFilter [
 	^ (implementorsFilterString notNil and: [ implementorsFilterString notEmpty ])
-		ifTrue: [ GtCoderImplementorPatternFilter pattern: implementorsFilterString ]
+		ifTrue: [ GtSearchImplementorPatternFilter pattern: implementorsFilterString ]
 ]
 
 { #category : #accessing }
@@ -74,11 +79,6 @@ GtFilteredMethodsCoder >> implementorsFilterString: aString [
 	implementorsFilterString := aString.
 	self updateMethods.
 	self updateCoders
-]
-
-{ #category : #elements }
-GtFilteredMethodsCoder >> look [
-	^ GtImplementorsFilterMethodsCoderLook new methodsCoder: self
 ]
 
 { #category : #elements }
@@ -103,11 +103,11 @@ GtFilteredMethodsCoder >> shouldSort: a before: b [
 GtFilteredMethodsCoder >> updateCoders [
 	| newCoders highlighter |
 	newCoders := methodCoders select: [ :each | each isModified ].
-	methods
-		do: [ :each | 
-			(newCoders anySatisfy: [ :coder | coder isForMethod: each ])
-				ifFalse: [ newCoders
-						add: (methodCoders detect: [ :coder | coder isForMethod: each ] ifNone: [ self newMethodCoderFor: each ]) ] ].
+	methods do: [ :each | 
+		(newCoders anySatisfy: [ :coder | coder isForMethod: each ])
+			ifFalse: [ newCoders add: (methodCoders 
+				detect: [ :coder | coder isForMethod: each ] 
+				ifNone: [ self newMethodCoderFor: each ]) ] ].
 	methodCoders := newCoders.
 	methodCoders sort: [ :a :b | self shouldSort: a before: b ].
 	highlighter := methods highlighter.
@@ -117,5 +117,5 @@ GtFilteredMethodsCoder >> updateCoders [
 
 { #category : #private }
 GtFilteredMethodsCoder >> updateMethods [
-	methods filter: self combinedFilter
+	methods updateForFilter: self combinedFilter
 ]

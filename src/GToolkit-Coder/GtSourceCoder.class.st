@@ -77,7 +77,9 @@ GtSourceCoder >> attributes [
 { #category : #actions }
 GtSourceCoder >> browseClass: editorElement [
 	| variable varName behavior |
-	variable := self variableAtCursor.
+	variable := self selectedSource 
+		ifNil: [ self variableNodeAtCursor ]
+		ifNotNil: [:currentSelection | self extractVariableNodeFromString: currentSelection ].
 	variable isNil
 		ifTrue: [ ^ self ].
 	varName := variable name value asSymbol.
@@ -94,20 +96,24 @@ GtSourceCoder >> browseClass: editorElement [
 { #category : #actions }
 GtSourceCoder >> browseImplementors: editorElement [
 	| symbol |
-	symbol := self selectorAtCursor.
+	symbol := self selectedSource 
+		ifNil: [ self selectorAtCursor ] 
+		ifNotNil: [ :currentSelection | self extractSelectorFromString: currentSelection ].
 	symbol isNil
 		ifTrue: [ ^ self ].
 	editorElement
 		fireEvent:
 			(GtPhlowObjectToSpawn new
-				object: (GtCoderImplementorsFilter selector: symbol);
+				object: (GtSearchImplementorsFilter selector: symbol);
 				sourceElement: editorElement)
 ]
 
 { #category : #actions }
 GtSourceCoder >> browseReferences: editorElement [
 	| filter |
-	filter := self referencesFilterAtCursor.
+	filter := self selectedSource
+		ifNil: [ self referencesFilterAtCursor ]
+		ifNotNil: [ :currentSelection | self extractReferencesFilterFromString: currentSelection ].
 	filter isNil
 		ifTrue: [ ^ self ].
 	editorElement
@@ -240,7 +246,9 @@ GtSourceCoder >> debug: aCompiledMethod receiver: anObject in: evalContext [
 { #category : #actions }
 GtSourceCoder >> debugSelection [
 	| source |
-	source := self selectedSource.
+	source :=  self hasSelection
+		ifTrue: [ self selectedSource ]
+		ifFalse: [ self source ].
 	source isNil
 		ifTrue: [ ^ self ].
 	^ self debugSource: source
@@ -263,8 +271,9 @@ GtSourceCoder >> debugSource: aString [
 
 { #category : #private }
 GtSourceCoder >> defaultTextAttributes [
-	^ {BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
-	(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}
+	^ {(BlFontFamilyAttribute named: 'Source Code Pro') beNotOverwritableByStyler.
+	(BlFontGenericFamilyAttribute monospace) beNotOverwritableByStyler.
+	(BlFontSizeAttribute size: 12) beNotOverwritableByStyler}
 ]
 
 { #category : #private }
@@ -278,7 +287,26 @@ GtSourceCoder >> doIt [
 ]
 
 { #category : #actions }
-GtSourceCoder >> doItAndGoSelection: editorElement [
+GtSourceCoder >> doItAll [
+	| source |
+	source := self source.
+	source isNil
+		ifTrue: [ ^ self ].
+	^ self evaluateSource: source
+]
+
+{ #category : #actions }
+GtSourceCoder >> doItAndGoAll: anElement [
+	| aSource aValue |
+	aSource := self source.
+	aSource isNil ifTrue: [ ^ self ].
+	aValue := self evaluateSource: aSource.
+	aValue == self ifTrue: [ ^ self ].
+	anElement phlow spawnObject: aValue
+]
+
+{ #category : #actions }
+GtSourceCoder >> doItAndGoSelection: anElement [
 	| source value |
 	source := self selectedSource.
 	source isNil
@@ -286,11 +314,14 @@ GtSourceCoder >> doItAndGoSelection: editorElement [
 	value := self evaluateSource: source.
 	value == self
 		ifTrue: [ ^ self ].
-	editorElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: value;
-				sourceElement: editorElement)
+	anElement phlow spawnObject: value
+]
+
+{ #category : #actions }
+GtSourceCoder >> doItAndGoSelectionOrAll: anElement [
+	self hasSelection
+		ifTrue: [ self doItAndGoSelection: anElement ] 
+		ifFalse: [ self doItAndGoAll: anElement ]
 ]
 
 { #category : #actions }
@@ -302,34 +333,28 @@ GtSourceCoder >> doItSelection [
 	^ self evaluateSource: source
 ]
 
-{ #category : #private }
-GtSourceCoder >> evaluateSource: aString [
-	^ self evaluateSource: aString showPrintString: false
+{ #category : #actions }
+GtSourceCoder >> doItSelectionOrAll [
+	^ self hasSelection 
+		ifTrue: [ self doItSelection ] 
+		ifFalse: [ self doItAll ]
 ]
 
 { #category : #private }
-GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
-	| value errorAlreadySignaled |
+GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean [
+	| aResult wasErrorAlreadySignaled |
 	
 	self clearPreviousEvaluations.
-	[ 
-		errorAlreadySignaled := false.
-		value := self classOrMetaClass compiler
-			source: aString;
-			receiver: self object;
-			context: self context;
-			requestor: self evaluationRequester;
-			failBlock: [ ^ self flag: 'insert error adornment' ];
-			evaluate
-	] on: Error do: [ :anError |
+	wasErrorAlreadySignaled := false.
+	aResult := aBlock on: Error do: [ :anError |
 		self resetASTCache.
-		errorAlreadySignaled 
+		wasErrorAlreadySignaled 
 			ifTrue: [ 
 				"Continue the handling of this exception. This will open a debugger 
 				if the error is not caught elsewhere."
 				anError pass ]
 			ifFalse: [
-				errorAlreadySignaled := true.
+				wasErrorAlreadySignaled := true.
 				anError resignalAs:
 					(GtCoderEvaluationUnhandledError new
 						exception: anError;
@@ -339,10 +364,29 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 		^ nil ].
 		
 	self resetASTCache.
-	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: value isException: false).
+	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: aResult isException: false).
 	self sourceEditor styleTextAndAfterDo: [
-		self styleResult: value showPrintString: aBoolean ].
-	^ value
+		self styleResult: aResult showPrintString: aBoolean ].
+	^ aResult
+]
+
+{ #category : #private }
+GtSourceCoder >> evaluateSource: aString [
+	^ self evaluateSource: aString showPrintString: false
+]
+
+{ #category : #private }
+GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
+	^ self 
+		evaluateBlock: [ 
+			self classOrMetaClass compiler
+				source: aString;
+				receiver: self object;
+				context: self context;
+				requestor: (self evaluationRequester source: aString);
+				failBlock: [ ^ self flag: 'insert error adornment' ];
+				evaluate ] 
+		showPrintString: aBoolean
 ]
 
 { #category : #actions }
@@ -358,6 +402,65 @@ GtSourceCoder >> expanded [
 { #category : #accessing }
 GtSourceCoder >> expanded: aBoolean [
 	expanded := aBoolean
+]
+
+{ #category : #private }
+GtSourceCoder >> extractReferencesFilterFromString: selectedString [
+	| node |
+	node := GtPharoParser 
+		parseWithErrors: selectedString
+		startingAt: GtPharoParser startingStateForStatement.
+	[ node isNil ]
+		whileFalse: [ 
+			(node isKindOf: GtPharoVariableNode)
+				ifTrue: [ 
+					| binding |
+					binding := self classOrMetaClass bindingOf: node name source.
+					^ binding 
+						ifNil: [ self referencesFilterForSymbol: node name source asSymbol ] 
+						ifNotNil: [ self referencesFilterForSymbol: binding ] ].
+			(node isKindOf: GtPharoSymbolLiteralNode)
+				ifTrue: [ ^ self referencesFilterForSymbol: node asSymbol ].
+			(node isKindOf: GtPharoMessageSendNode)
+				ifTrue: [ node := node message ].
+			(node isKindOf: GtPharoMessageNode)
+				ifTrue: [ ^ self referencesFilterForSymbol: node selector ].
+			node := node parent ].
+	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> extractSelectorFromString: aString [
+	| node |
+	node := GtPharoParser 
+		parseWithErrors: aString
+		startingAt: GtPharoParser startingStateForStatement.
+	[ node isNil ]
+		whileFalse: [ 
+			(node isKindOf: GtPharoVariableNode)
+				ifTrue: [ ^ node name source asSymbol ].
+			(node isKindOf: GtPharoSymbolLiteralNode)
+				ifTrue: [ ^ node asSymbol ].
+			(node isKindOf: GtPharoMessageSendNode)
+				ifTrue: [ node := node message ].
+			(node isKindOf: GtPharoMessageNode)
+				ifTrue: [ ^ node selector ].
+			node := node parent ].
+	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> extractVariableNodeFromString: aString [
+	| node |
+	node := GtPharoParser 
+		parseWithErrors: aString
+		startingAt: GtPharoParser startingStateForStatement.
+	[ node isNil ]
+		whileFalse: [ 
+			(node isKindOf: GtPharoVariableNode)
+				ifTrue: [ ^ node ].
+			node := node parent ].
+	^ nil
 ]
 
 { #category : #ui }
@@ -401,6 +504,20 @@ GtSourceCoder >> gtViewStylersFor: aView [
 		ifNotNil: [ :currentAddOns | currentAddOns gtViewStylersFor: aView ]
 ]
 
+{ #category : #testing }
+GtSourceCoder >> hasObjectAttribute [
+	self 
+		attributeNamed: #object 
+		ifAbsent: [ ^ false ].
+	^ true
+]
+
+{ #category : #testing }
+GtSourceCoder >> hasSelection [
+	<return: #Boolean>
+	^ self selectedSourceInterval isNotNil
+]
+
 { #category : #'initialize-release' }
 GtSourceCoder >> initialize [
 	super initialize.
@@ -429,6 +546,12 @@ GtSourceCoder >> initializeShortcuts [
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryB;
 			action: [ :editorElement | self browseClass: editorElement ])
+]
+
+{ #category : #private }
+GtSourceCoder >> intervalToStyleResult [
+	"Return interval that should be styled to display result."
+	^ self selectedSourceIntervalOrAll
 ]
 
 { #category : #testing }
@@ -561,7 +684,8 @@ GtSourceCoder >> referencesFilterAtCursor [
 	| node |
 	node := self nodeAtCursor.
 	[ node isNil ]
-		whileFalse: [ (node isKindOf: GtPharoVariableNode)
+		whileFalse: [ 
+			(node isKindOf: GtPharoVariableNode)
 				ifTrue: [ ^ self referencesFilterForVariable: node name source ].
 			(node isKindOf: GtPharoSymbolLiteralNode)
 				ifTrue: [ ^ self referencesFilterForSymbol: node asSymbol ].
@@ -575,7 +699,7 @@ GtSourceCoder >> referencesFilterAtCursor [
 
 { #category : #private }
 GtSourceCoder >> referencesFilterForSymbol: aSymbol [
-	^ GtCoderReferencesFilter literal: aSymbol
+	^ GtSearchReferencesFilter literal: aSymbol
 ]
 
 { #category : #private }
@@ -583,10 +707,12 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	| index binding |
 	index := self classOrMetaClass instVarIndexFor: aString.
 	index > 0
-		ifTrue: [ ^ GtCoderInstanceVariableReferenceFilter forClass: self classOrMetaClass andVariable: aString ].
+		ifTrue: [ ^ GtSearchInstanceVariableReferenceFilter 
+			forClass: self classOrMetaClass 
+			andVariable: aString ].
 	binding := self classOrMetaClass bindingOf: aString.
 	binding notNil
-		ifTrue: [ ^ GtCoderReferencesFilter literal: binding ].
+		ifTrue: [ ^ GtSearchReferencesFilter literal: binding ].
 	^ nil
 ]
 
@@ -631,7 +757,10 @@ GtSourceCoder >> resetASTCache [
 
 { #category : #private }
 GtSourceCoder >> selectedSource [
-	self selectedSourceInterval ifNotNil: [ :interval | ^ (self sourceEditor text from: interval first to: interval last) asString ].
+	self selectedSourceInterval ifNotNil: [ :interval | 
+		^ (self sourceEditor text 
+				from: interval first 
+				to: interval last) asString ].
 	^ nil
 ]
 
@@ -639,6 +768,11 @@ GtSourceCoder >> selectedSource [
 GtSourceCoder >> selectedSourceInterval [
 	self sourceEditor selection do: [ :each | ^ each from + 1 to: each to ].
 	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> selectedSourceIntervalOrAll [
+	^ self selectedSourceInterval ifNil: [ self sourceInterval ]
 ]
 
 { #category : #private }
@@ -709,6 +843,11 @@ GtSourceCoder >> sourceElement [
 	^ container
 ]
 
+{ #category : #private }
+GtSourceCoder >> sourceInterval [
+	^ 1 to: self source size
+]
+
 { #category : #accessing }
 GtSourceCoder >> sourceText [
 	^ self sourceEditor text
@@ -772,21 +911,30 @@ GtSourceCoder >> stylers [
 	^ addOns stylers
 ]
 
+{ #category : #subscriptions }
+GtSourceCoder >> subscribeToSystem [
+	"do nothing"
+]
+
 { #category : #private }
 GtSourceCoder >> symbolFor: aNode [
 	| current |
-	aNode isNil
-		ifTrue: [ ^ nil ].
-	(aNode isKindOf: GtPharoSymbolLiteralNode)
-		ifTrue: [ ^ aNode asSymbol ].
 	current := aNode.
 	[ current notNil ]
-		whileTrue: [ (current isKindOf: GtPharoMessageSendNode)
+		whileTrue: [ 
+			(current isKindOf: GtPharoSymbolLiteralNode)
+				ifTrue: [ ^ aNode asSymbol ].
+			(current isKindOf: GtPharoMessageSendNode)
 				ifTrue: [ current := current message ].
 			(current isKindOf: GtPharoMessageNode)
 				ifTrue: [ ^ current selector ].
 			current := current parent ].
 	^ nil
+]
+
+{ #category : #subscriptions }
+GtSourceCoder >> unsubscribeFromSystem [
+	SystemAnnouncer uniqueInstance unsubscribe: self
 ]
 
 { #category : #updating }
@@ -818,7 +966,7 @@ GtSourceCoder >> validateSyntax [
 ]
 
 { #category : #private }
-GtSourceCoder >> variableAtCursor [
+GtSourceCoder >> variableNodeAtCursor [
 	self
 		cursorPositionDo: [ :position | 
 			[ | ast |

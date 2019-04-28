@@ -54,7 +54,7 @@ GtClassMethodsCoder >> classesFilter [
 	filteredClasses
 		do: [ :each | 
 			| classFilter |
-			classFilter := GtCoderBehaviorMethodFilter forClass: each.
+			classFilter := GtSearchMethodsInInstanceAndClassSideFilter forClass: each.
 			filter := filter isNil
 				ifTrue: [ classFilter ]
 				ifFalse: [ filter | classFilter ] ].
@@ -67,7 +67,14 @@ GtClassMethodsCoder >> combinedFilter [
 	combined := super combinedFilter.
 	^ combined isNil
 		ifTrue: [ self classesFilter ]
-		ifFalse: [ self classesFilter ifNil: [ nil ] ifNotNil: [ :filter | filter & combined ] ]
+		ifFalse: [ self classesFilter 
+			ifNil: [ nil ] 
+			ifNotNil: [ :filter | filter & combined ] ]
+]
+
+{ #category : #elements }
+GtClassMethodsCoder >> elementClass [
+	^ GtClassMethodsCoderElement
 ]
 
 { #category : #testing }
@@ -77,16 +84,18 @@ GtClassMethodsCoder >> filteredClass: aBehavior [
 
 { #category : #private }
 GtClassMethodsCoder >> filters [
-	^ {self classesFilter.
-	self categoryFilter.
-	self implementorsFilter}
+	^ {
+		self classesFilter.
+		self categoryFilter.
+		self implementorsFilter}
 ]
 
 { #category : #'initialize-release' }
 GtClassMethodsCoder >> forClass: aBehavior [
 	class := aBehavior.
 	filteredClasses := Set with: aBehavior.
-	self forMethods: (GtCoderMethodsCollection forFilter: (GtCoderBehaviorMethodFilter forClass: class))
+	self forMethods: (GtSearchMethodGroupResult 
+		forFilter: (GtSearchMethodsInInstanceAndClassSideFilter forClass: class))
 ]
 
 { #category : #'initialize-release' }
@@ -104,11 +113,6 @@ GtClassMethodsCoder >> hasFilter [
 GtClassMethodsCoder >> initialize [
 	super initialize.
 	filteredClasses := Set new
-]
-
-{ #category : #elements }
-GtClassMethodsCoder >> look [
-	^ (GtMetaMethodsCoderLook new methodsCoder: self) + super look
 ]
 
 { #category : #private }
@@ -138,7 +142,10 @@ GtClassMethodsCoder >> removeMethodsForClass: aClass [
 		ifFalse: [ ^ self ].
 	filteredClasses remove: aClass.
 	self updateMethods.
-	methodCoders removeAllSuchThat: [ :each | each classOrMetaClass = aClass and: [ each isModified not ] ].
+	methodCoders removeAllSuchThat: [ :each | 
+		(each classOrMetaClass = aClass or: [
+			each classOrMetaClass = aClass classSide]) and: [ 
+				each isModified not ] ].
 	self announce: (GtCoderMethodsListChanged new coder: self)
 ]
 

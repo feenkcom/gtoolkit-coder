@@ -155,7 +155,7 @@ GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
 		from: 7 to: 8;
 		delete.
 	coder styleText.
-	self assert: (self hasExampleExpandAttributeIn: coder) not.
+	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder) not.
 	^ coder
 ]

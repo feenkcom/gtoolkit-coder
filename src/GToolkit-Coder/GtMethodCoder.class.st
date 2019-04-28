@@ -144,6 +144,7 @@ GtMethodCoder >> compile [
 
 { #category : #accessing }
 GtMethodCoder >> compiledMethod [
+	<return: #CompiledMethod or: nil>
 	^ self classOrMetaClass
 		ifNotNil: [ :cls | 
 			self selector
@@ -152,11 +153,58 @@ GtMethodCoder >> compiledMethod [
 						ifTrue: [ cls >> sel ] ] ]
 ]
 
+{ #category : #examples }
+GtMethodCoder >> debugExampleFrom: anElement [
+	self isModified
+		ifTrue: [ self save
+			ifFalse: [ ^ self ] ].
+	self example openingDebugger
+		callback: [ :anExampleResult |
+			anElement enqueueTask: (BlTaskAction new action: [ 
+				self exampleResult: anExampleResult.
+				self styleCollapsedText.
+				self styleSourceText ]) ];
+		result.
+]
+
+{ #category : #actions }
+GtMethodCoder >> debugMethod [
+	self isModified
+		ifTrue: [ self save
+			ifFalse: [ ^ self ] ].
+	self debug: self compiledMethod receiver: self object in: self context.
+]
+
+{ #category : #examples }
+GtMethodCoder >> debugSelectionOrExampleFrom: anElement [
+	| source |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self debugExampleFrom: anElement ].
+	^ self debugSource: source
+]
+
+{ #category : #actions }
+GtMethodCoder >> debugSelectionOrMethod [
+	| source |
+	source := self selectedSource.
+	source isNil
+		ifTrue: [ ^ self debugMethod ].
+	^ self debugSource: source
+]
+
 { #category : #private }
 GtMethodCoder >> ensureBuilt [
 	isBuilt
 		ifTrue: [ ^ self ].
 	self buildSource
+]
+
+{ #category : #private }
+GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean [
+	^ self 
+		evaluateBlock: [ anObject perform: aSymbol ] 
+		showPrintString: aBoolean
 ]
 
 { #category : #examples }
@@ -173,20 +221,27 @@ GtMethodCoder >> example: anExample [
 
 { #category : #'add ons' }
 GtMethodCoder >> exampleAstFor: anAST [
-	<gtAstCoderAddOns: 5>
-	(anAST notNil
-		and: [ anAST methodNode ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] ifNil: [ false ] ])
-		ifFalse: [ addOns removeStylerOfType: GtCoderExpandableExampleStyler.
-			addOns removeStylerOfType: GtCoderExampleStatusStyler.
-			addOns removeContextAction: 'Example' translated.
-			^ self ].
-	addOns addStyler: GtCoderExpandableExampleStyler new.
-	addOns
-		addStyler:
-			(GtCoderExampleStatusStyler new
-				coder: self;
-				classOrMetaClass: self classOrMetaClass).
-	addOns addContextAction: 'Example' translated icon: BrGlamorousIcons playinspect action: [ :button | self runExampleFrom: button ]
+	<gtAstCoderAddOns: 10>
+	(self compiledMethod notNil and: [ 
+		anAST notNil and: [ 
+			anAST methodNode 
+				ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] 
+				ifNil: [ false ] ] ])
+			ifFalse: [
+				addOns removeStylerOfType: GtCoderExampleStatusStyler.
+				^ self ].
+	addOns addStyler: (GtCoderExampleStatusStyler new
+		coder: self;
+		classOrMetaClass: self classOrMetaClass).
+	addOns addContextAction: 'Play' translated 
+		icon: BrGlamorousIcons play
+		action: [ :button | self playExampleFrom: button ].
+	addOns addContextAction: 'Play and Inspect' translated 
+		icon: BrGlamorousIcons playinspect 
+		action: [ :button | self playAndInspectExampleFrom: button ].
+	addOns addContextAction: 'Debug' translated 
+		icon: BrGlamorousIcons debug
+		action: [ :button | self debugSelectionOrExampleFrom: button ].
 ]
 
 { #category : #examples }
@@ -247,7 +302,7 @@ GtMethodCoder >> gtDiffViewFor: aView [
 		title: 'Diff' translated;
 		priority: 11;
 		text: [ :anEditor | 
-			Gt2EpiceaDiffStencil new
+			GtEpiceaDiffStencil new
 				from: methodSource;
 				to: self newMethodSource;
 				create ]
@@ -264,12 +319,16 @@ GtMethodCoder >> gtLiveFor: aView [
 { #category : #'add ons' }
 GtMethodCoder >> gtViewAddOnFor: anAST [
 	<gtAstCoderAddOns: 6>
-	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
-		and: [ anAST notNil
-				and: [ anAST methodNode ifNotNil: [ :node | node arguments size = 1 and: [ node pragmas anySatisfy: [ :each | each selector = #gtView ] ] ] ifNil: [ false ] ] ])
+	(self hasObjectAttribute and: [ 
+		anAST notNil and: [ 
+			anAST methodNode ifNotNil: [ :node | node arguments size = 1 and: [ 
+					node pragmas anySatisfy: [ :each | each selector = #gtView ] ] ] ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'gtView' translated.
 			^ self ].
-	addOns addContextAction: 'gtView' translated icon: BrGlamorousIcons playinspect action: [ :button | self runGtViewFrom: button ]
+	addOns 
+		addContextAction: 'gtView' translated 
+		icon: BrGlamorousIcons playinspect 
+		action: [ :button | self runGtViewFrom: button ]
 ]
 
 { #category : #accessing }
@@ -317,10 +376,10 @@ GtMethodCoder >> initializeShortcuts [
 	addOns
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryD;
-			action: [ self doItSelection ]);
+			action: [ :editorElement | self playSelectionOrMethodFrom: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryG;
-			action: [ :editorElement | self doItAndGoSelection: editorElement ]);
+			action: [ :editorElement | self playAndInspectSelectionOrMethodFrom: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryR;
 			action: [ :editorElement | self renameVariableIn: editorElement ]);
@@ -333,6 +392,14 @@ GtMethodCoder >> initializeShortcuts [
 		addShortcut: (BlShortcut new
 			combination: (BlKeyCombination primaryShiftF);
 			action: [ self format ])
+]
+
+{ #category : #private }
+GtMethodCoder >> intervalToStyleResult [
+	"If method was executed, it displays result next to the method selector."
+	^ self hasSelection 
+		ifTrue: [ self selectedSourceIntervalOrAll ]
+		ifFalse: [ 1 to: self selector size ]
 ]
 
 { #category : #testing }
@@ -366,14 +433,39 @@ GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
 	^ true
 ]
 
+{ #category : #'event handling' }
+GtMethodCoder >> methodChanged: aMethodModified [
+	| aCompiledMethod |
+	aCompiledMethod := self compiledMethod.
+	(aCompiledMethod notNil and: [ 
+		aMethodModified classAffected = aCompiledMethod methodClass
+			and: [ aMethodModified selector = aCompiledMethod selector ]])
+				ifFalse: [ ^ self ].
+	self updateMethod: aMethodModified newMethod
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> methodExpanderFor: anAST [
+	<gtAstCoderAddOns: 10>
+	(anAST isNil or: [ anAST methodNode isNil ])
+		ifTrue: [ 
+			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
+			^ self ].
+	addOns addStyler: GtCoderExpandableMethodStyler new
+]
+
 { #category : #'add ons' }
 GtMethodCoder >> mondrianPaintAddOnFor: anAST [
 	<gtAstCoderAddOns: 7>
-	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
-		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | self isMondrianPaintMethod: node ] ifNil: [ false ] ] ])
+	(self hasObjectAttribute and: [ 
+		anAST notNil and: [ 
+			anAST methodNode ifNotNil: [ :node | self isMondrianPaintMethod: node ] ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'Mondrian' translated.
 			^ self ].
-	addOns addContextAction: 'Mondrian' translated icon: BrGlamorousIcons playinspect action: [ :button | self runMondrianPaintFrom: button ]
+	addOns 
+		addContextAction: 'Mondrian' translated 
+		icon: BrGlamorousIcons playinspect 
+		action: [ :button | self runMondrianPaintFrom: button ]
 ]
 
 { #category : #actions }
@@ -386,6 +478,7 @@ GtMethodCoder >> newMethodSource [
 GtMethodCoder >> newRbAST: aString [
 	| ast |
 	ast := RBParser parseFaultyMethod: aString.
+	ast isParseError ifTrue: [ ^ ast ].
 	ast methodNode
 		compilationContext:
 			(CompilationContext new
@@ -436,6 +529,64 @@ GtMethodCoder >> patternSource [
 							nextPutAll: (arguments at: i) name ] ] ]
 ]
 
+{ #category : #examples }
+GtMethodCoder >> playAndInspectExampleFrom: anElement [
+	self runExample.
+	anElement phlow spawnObject: self exampleResult returnValue.
+]
+
+{ #category : #actions }
+GtMethodCoder >> playAndInspectFrom: anElement [
+	"Save and execute method"
+	| anObject |
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	anObject := self evaluateSelector: self selector object: self object showPrintString: false.
+	anElement phlow spawnObject: anObject.
+]
+
+{ #category : #actions }
+GtMethodCoder >> playAndInspectSelectionOrMethodFrom: anElement [
+	"If there is no selection, it saves and exexute method"
+	self hasSelection 
+		ifTrue: [ self doItAndGoSelection: anElement ]
+		ifFalse: [ self playAndInspectFrom: anElement ]
+]
+
+{ #category : #examples }
+GtMethodCoder >> playExampleFrom: anElement [
+	self runExample
+]
+
+{ #category : #actions }
+GtMethodCoder >> playFrom: anElement [
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	self evaluateSelector: self selector object: self object showPrintString: false.
+	
+]
+
+{ #category : #actions }
+GtMethodCoder >> playSelectionOrMethodFrom: anElement [
+	"If there is no selection, it saves and exexute method"
+	self hasSelection 
+		ifTrue: [ self doItSelection ]
+		ifFalse: [ self playFrom: anElement ]
+]
+
+{ #category : #printing }
+GtMethodCoder >> printOn: aStream [
+	super printOn: aStream.
+	aStream 
+		nextPut: $(;
+		nextPutAll: self classOrMetaClass asString; 
+		nextPutAll: '>>#';
+		nextPutAll: self selector asString;  
+		nextPut: $)
+]
+
 { #category : #updating }
 GtMethodCoder >> refreshForChanges [
 	self flag: 'source coder may have main actions and contextActions as well, why restrict to method coder?'.
@@ -459,34 +610,14 @@ GtMethodCoder >> renameVariableIn: editorElement [
 ]
 
 { #category : #examples }
-GtMethodCoder >> runExampleFrom: anElement [
+GtMethodCoder >> runExample [
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
 	self exampleResult: self example run.
 	self styleCollapsedText.
 	self styleSourceText.
-	self exampleResult isSuccess
-		ifFalse: [ ^ self ].
-	anElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: self exampleResult returnValue;
-				sourceElement: anElement)
-]
-
-{ #category : #actions }
-GtMethodCoder >> runFrom: anElement [
-	| object |
-	self isModified
-		ifTrue: [ self save
-				ifFalse: [ ^ self ] ].
-	object := self object perform: self selector.
-	anElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: object;
-				sourceElement: anElement)
+	self refreshForChanges.
 ]
 
 { #category : #actions }
@@ -562,14 +693,26 @@ GtMethodCoder >> subCoders [
 	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
 ]
 
+{ #category : #subscriptions }
+GtMethodCoder >> subscribeToSystem [
+	SystemAnnouncer uniqueInstance weak
+		when: MethodModified send: #methodChanged: to: self
+]
+
 { #category : #'add ons' }
 GtMethodCoder >> unaryMessageAddOnFor: anAST [
-	<gtAstCoderAddOns: 4>
-	((self attributeNamed: #object ifAbsent: [ self ]) ~~ self
-		and: [ anAST notNil and: [ anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
-		ifFalse: [ addOns removeContextAction: 'Run' translated.
+	<gtAstCoderAddOns: 20>
+	(self hasObjectAttribute and: [ 
+		anAST notNil and: [ 
+			anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
+		ifFalse: [ 
+			addOns removeContextAction: 'Play' translated.
+			addOns removeContextAction: 'Play and Inspect' translated.
+			addOns removeContextAction: 'Debug' translated.
 			^ self ].
-	addOns addContextAction: 'Run' translated icon: BrGlamorousIcons playinspect action: [ :button | self runFrom: button ]
+	addOns addContextAction: 'Play' translated icon: BrGlamorousIcons play action: [ :button | self playSelectionOrMethodFrom: button ].
+	addOns addContextAction: 'Play and Inspect' translated icon: BrGlamorousIcons playinspect action: [ :button | self playAndInspectSelectionOrMethodFrom: button ].
+	addOns addContextAction: 'Debug' translated icon: BrGlamorousIcons debug action: [ :button | self debugSelectionOrMethod ].
 ]
 
 { #category : #private }
@@ -582,13 +725,13 @@ GtMethodCoder >> updateCollapsedSource [
 		do: [ :ex | super updateCollapsedSource ]
 ]
 
-{ #category : #'event handling' }
+{ #category : #updating }
 GtMethodCoder >> updateMethod: aCompiledMethod [
 	self forMethod: aCompiledMethod.
 	self buildSource
 ]
 
-{ #category : #private }
+{ #category : #updating }
 GtMethodCoder >> updateStylerPattern [
 	self sourceEditor styler methodPatternSource: self collapsedSource.
 	self sourceEditor styleText

@@ -2,7 +2,8 @@ Class {
 	#name : #GtClassCoder,
 	#superclass : #Announcer,
 	#instVars : [
-		'classDefinitionCoder',
+		'searchFilter',
+		'navigationModel',
 		'methodsCoder'
 	],
 	#category : #'GToolkit-Coder'
@@ -24,43 +25,92 @@ GtClassCoder class >> forObject: anObject [
 
 { #category : #elements }
 GtClassCoder >> asElement [
-	| element |
-	element := BlElement new.
-	element layout: BlLinearLayout vertical.
-	element padding: (BlInsets all: 10).
-	element
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	element addChild: classDefinitionCoder asElement.
-	element addChild: methodsCoder asElement.
-	^ element
+	| coderElement |
+	coderElement := GtClassCoderElement new coderModel: self.
+	^ coderElement asScrollableElement
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #updating }
+GtClassCoder >> displayClass: aClass [
+	methodsCoder := GtClassMethodsCoder forClass: aClass.
+	self announce: (GtCoderClassSelectedAnnouncement forClass: aClass)
+]
+
+{ #category : #initialize }
 GtClassCoder >> forClass: aBehavior [
-	classDefinitionCoder := GtClassDefinitionCoder forClass: aBehavior.
 	methodsCoder := GtClassMethodsCoder forClass: aBehavior
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtClassCoder >> forObject: anObject [
-	classDefinitionCoder := GtClassDefinitionCoder forObject: anObject.
 	methodsCoder := GtClassMethodsCoder forObject: anObject
+]
+
+{ #category : #accessing }
+GtClassCoder >> gtDocumentFor: aView [
+	<gtView>
+	self theClass ifNil: [ ^ aView empty ].
+	^ (self theClass gtDocumentFor: aView)
+			priority: 1;
+			actionButtonIcon: BrGlamorousIcons inspect
+				action: [ :aButton | 
+					aButton phlow spawnObject: self theClass ]
 ]
 
 { #category : #ui }
 GtClassCoder >> gtLiveFor: aView [
 	<gtView>
 	^ aView explicit 
-		title: 'Live';
+		title: 'Class';
 		priority: 10;
 		stencil: [ self ];
 		actionButtonIcon: BrGlamorousIcons browse
-			action: [ :aButton | self theClass browse ] 
+			action: [ :aButton | self theClass browse ];
+		actionButtonIcon: BrGlamorousIcons inspect
+			action: [ :aButton | 
+				aButton phlow spawnObject: self theClass ]
+		
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #accessing }
+GtClassCoder >> implementorsFilterString: aString [
+	"Set implementors filter"
+	self methodsCoder implementorsFilterString: aString
+]
+
+{ #category : #initialize }
+GtClassCoder >> initialize [
+	super initialize.
+	searchFilter := GtCoderClassSelector new
+		coder: self.
+]
+
+{ #category : #accessing }
+GtClassCoder >> methodsCoder [ 
+	^ methodsCoder
+]
+
+{ #category : #accessing }
+GtClassCoder >> navigationModel [
+	^ navigationModel
+]
+
+{ #category : #accessing }
+GtClassCoder >> navigationModel: aNavigationModel [
+	navigationModel := aNavigationModel.
+	navigationModel ifNotNil: [ 
+		navigationModel coderModel: self ].
+	self announce: GtCoderNavigationModelChangedAnnouncement
+]
+
+{ #category : #accessing }
+GtClassCoder >> searchFilter [
+	^ searchFilter
+]
+
+{ #category : #accessing }
 GtClassCoder >> theClass [
-	^ classDefinitionCoder theClass
+	^ methodsCoder 
+		ifNil: [ nil ] 
+		ifNotNil: [ :aMethodsCoder | aMethodsCoder classOrMetaClass ]
 ]

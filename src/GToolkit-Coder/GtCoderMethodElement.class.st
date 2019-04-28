@@ -88,20 +88,20 @@ GtCoderMethodElement >> initialize [
 					(BlInsets
 						top: 1
 						left: 10
-						bottom: 3
+						bottom: 1
 						right: 10))
 				+
 					(BrInteractiveLook new
 						style: [ :aStyler | 
 							aStyler
-								default: [ resizer removeFromParent.
+								default: [ "resizer removeFromParent."
 									self background: Color transparent ].
 							aStyler
-								expanded: [ self addChild: resizer.
+								expanded: [ "self addChild: resizer.
 									self enqueueTask: (BlTaskAction new action: [ self 
 										childNamed: #bodyEditor 
 										ifFound: [ :anEditor | resizer target: anEditor ] 
-										ifNone: [ resizer target: nil ] ]).
+										ifNone: [ resizer target: nil ] ])."
 									self background: Color white ] ]).
 	self
 		addShortcut:
@@ -129,7 +129,7 @@ GtCoderMethodElement >> methodCoder: aGtMethodCoder [
 	methodCoder := aGtMethodCoder.
 	self header: [ self collapsedElement ].
 	self content: [ self contentElement ].
-	self margin: (BlInsets all: 8).
+	self margin: (BlInsets all: 4).
 	expandableModel when: BrExpansionChanged do: [ :event | methodCoder expanded: self isExpanded ].
 	methodCoder expanded
 		ifTrue: [ self expand ]

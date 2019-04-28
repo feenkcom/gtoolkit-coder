@@ -7,17 +7,17 @@ Symbol >> asGlobalVariable [
 
 { #category : #'*GToolkit-Coder' }
 Symbol >> gtImplementors [
-	^ GtCoderImplementorsFilter selector: self
+	^ GtSearchImplementorsFilter selector: self
 ]
 
 { #category : #'*GToolkit-Coder' }
 Symbol >> gtPragmas [
-	^ GtCoderPragmasFilter forPragma: self
+	^ GtSearchPragmasFilter forPragma: self
 ]
 
 { #category : #'*GToolkit-Coder' }
 Symbol >> gtReferences [
-	^ GtCoderReferencesFilter literal: self
+	^ GtSearchReferencesFilter literal: self
 ]
 
 { #category : #'*GToolkit-Coder' }

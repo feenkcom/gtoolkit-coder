@@ -240,6 +240,11 @@ GtMethodContextCoder >> stackVariableNodesDo: aBlock [
 		stackPosition := stackPosition + 1 ]
 ]
 
+{ #category : #subscriptions }
+GtMethodContextCoder >> subscribeToSystem [
+	"do nothing"
+]
+
 { #category : #'accessing variables' }
 GtMethodContextCoder >> tempNamesAndValuesDo: aBlock [
 	self context tempNames doWithIndex: [ :each :i | 

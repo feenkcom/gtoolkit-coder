@@ -10,5 +10,7 @@ GtExampleGroup >> gtExpandableExamplesFor: aView [
 			theExamples := self examples.
 			aMethodsCoder := GtExampleGroupCoder new.
 			aMethodsCoder forExampleGroup: (theExamples collect: [ :each | each example ]).
-			aMethodsCoder ]
+			aMethodsCoder ];
+		actionButtonIcon: BrGlamorousIcons playall 
+			action: [ :aButton | self runAll ]
 ]

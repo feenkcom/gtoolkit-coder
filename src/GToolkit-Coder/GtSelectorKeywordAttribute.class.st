@@ -16,12 +16,14 @@ GtSelectorKeywordAttribute class >> keywordIndex: anInteger [
 
 { #category : #comparing }
 GtSelectorKeywordAttribute >> equals: aTextAttribute [
-	^ self class = aTextAttribute class and: [ self index = aTextAttribute index ]
+	^ self index = aTextAttribute index
 ]
 
 { #category : #comparing }
 GtSelectorKeywordAttribute >> hash [
-	^ self class hash bitXor: self index hash
+	"Answer an integer value that is related to the identity of the receiver."
+
+	^ super hash bitXor: self index hash
 ]
 
 { #category : #accessing }
@@ -34,7 +36,7 @@ GtSelectorKeywordAttribute >> index: anInteger [
 	index := anInteger
 ]
 
-{ #category : #comparing }
+{ #category : #initialization }
 GtSelectorKeywordAttribute >> initialize [
 	super initialize.
 	self beNotOverwritableByStyler

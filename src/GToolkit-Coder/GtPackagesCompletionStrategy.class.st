@@ -9,17 +9,21 @@ GtPackagesCompletionStrategy class >> allPackages [
 	^ RPackageOrganizer default packages
 ]
 
+{ #category : #private }
+GtPackagesCompletionStrategy class >> allPackagesDo: aBlock [
+	^ RPackageOrganizer default packagesDo: aBlock
+]
+
 { #category : #querying }
 GtPackagesCompletionStrategy class >> findPackageTagsMatching: aString [
 	| searchString results |
 	searchString := '*' , aString , '*'.
 	results := OrderedCollection new.
-	self allPackages
-		do: [ :each | 
-			each classTags
-				do: [ :tag | 
-					(searchString match: tag categoryName)
-						ifTrue: [ results add: tag ] ] ].
+	self allPackagesDo: [ :each | 
+		each classTags
+			do: [ :tag | 
+				(searchString match: tag categoryName)
+					ifTrue: [ results add: tag ] ] ].
 	^ results
 ]
 
@@ -28,26 +32,23 @@ GtPackagesCompletionStrategy class >> findPackagesMatching: aString [
 	| searchString results |
 	searchString := '*' , aString , '*'.
 	results := OrderedCollection new.
-	self allPackages
-		do: [ :each | 
-			(searchString match: each name)
-				ifTrue: [ results add: each ].
-			each classTags
-				do: [ :tag | 
-					(searchString match: tag name)
-						ifTrue: [ results add: tag ] ] ].
+	self allPackagesDo: [ :each | 
+		(searchString match: each name)
+			ifTrue: [ results add: each ] ].
 	^ results
 ]
 
 { #category : #accessing }
 GtPackagesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
-	| string actions |
+	| string completionActions |
 	string := aText asString.
-	actions := Set new.
-	(self class findPackagesMatching: string) do: [ :each | actions add: (GtReplaceTextCompletionAction forText: each name) ].
-	(self class findPackageTagsMatching: string)
-		do: [ :each | actions add: (GtReplaceTextCompletionAction forText: each categoryName) ].
-	^ actions asSortedCollection: [ :a :b | a text < b text ]
+	completionActions := Set new.
+	(self class findPackagesMatching: string) do: [ :each | 
+		completionActions add: (GtReplaceTextCompletionAction forText: each name) ].
+	(self class findPackageTagsMatching: string) do: [ :each | 
+		completionActions add: (GtReplaceTextCompletionAction forText: each categoryName) ].
+	^ completionActions asSortedCollection: [ :a :b | 
+		a text < b text ]
 ]
 
 { #category : #testing }
