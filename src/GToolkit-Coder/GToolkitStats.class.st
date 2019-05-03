@@ -5,24 +5,22 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-GToolkitStats >> allExternalSuperclasses [
-	
+GToolkitStats >> allGToolkitPackages [
 	"comment stating purpose of message"
-	
-	| allClasses|
-	allClasses := self allGToolkitClasses.
-	^ ((allClasses flatCollect: [ :aClass | aClass withDeep: #superclass collect: [:each | (allClasses includes: each) ifFalse: [each]]]) select: #isNotNil) removeDuplicates.
+
+	^ (((GtRlReleaserExportWorkflow buildGToolkitRelease rootProjectRelease project withDeep: #childProjects collect:#yourself) flatCollect: #packages) collect: #asRPackage) select: #isNotNil
 ]
 
 { #category : #'as yet unclassified' }
-GToolkitStats >> allGToolkitClasses [
-	"comment stating purpose of message"
-
-	^ ((((GtRlReleaserExportWorkflow buildGToolkitRelease rootProjectRelease project withDeep: #childProjects collect:#yourself) flatCollect: #packages) collect: #asRPackage) select: #isNotNil) flatCollect: #classes
-]
-
-{ #category : #'as yet unclassified' }
-GToolkitStats >> allMethods [
+GToolkitStats >> allUsedPackages [
 	
-	^ self allGToolkitClasses flatCollect: #methods
+	| gtPackages result usedPackages |
+	result := Set new.
+	gtPackages := self allGToolkitPackages.
+	
+	gtPackages do: [ :each | 
+		usedPackages := each withDeepCollect: #usedPackages.
+		usedPackages removeAllFoundIn: gtPackages.
+		result addAll: usedPackages].
+	^ result
 ]
