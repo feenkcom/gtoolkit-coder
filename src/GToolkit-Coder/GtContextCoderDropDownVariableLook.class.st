@@ -61,10 +61,13 @@ GtContextCoderDropDownVariableLook >> dropDownElement [
 	^ dropdown
 ]
 
-{ #category : #initialization }
-GtContextCoderDropDownVariableLook >> initializeLook [
-	super initializeLook.
-	self widget addChild: self dropDownElement
+{ #category : #'as yet unclassified' }
+GtContextCoderDropDownVariableLook >> initialize [
+	super initialize.
+	changes
+		add:
+			(#(content dropdown)
+				asBrLookChildAddAsChangeWithValue: [ self dropDownElement ])
 ]
 
 { #category : #accessing }

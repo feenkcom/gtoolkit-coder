@@ -1,6 +1,46 @@
 Extension { #name : #RPackage }
 
 { #category : #'*GToolkit-Coder' }
+RPackage >> gtDependenciesMapFor: aView [
+	<gtView>
+	^ aView mondrian
+	title: 'Dependencies Map';
+	priority: 10;
+	painting: [ :mondrian |
+		mondrian nodes 
+			shape: [ :each |
+				| textElement |
+				textElement := BlTextElement new.
+				textElement text: each name asRopedText.
+				textElement
+			];
+		  with: (self withDeepCollect: #usedPackages).
+		mondrian edges 
+			shape: [ 
+				BlParabollaArcElement new 
+					zIndex: 0;
+					curvatureFraction: 0.2;
+					border: (BlBorder paint: (Color gray alpha: 0.2) width:2 );
+					toHead: (BlArrowheadSimpleArrow new
+						border: (BlBorder builder paint: (Color gray alpha: 0.2); width:2; build)) ];
+			fromRightCenter;
+			toLeftCenter;
+			connectFrom: #yourself
+			toAll: [ :each | |usedPackages | 
+				usedPackages := each usedPackages].
+		mondrian layout custom: (GtGradHorizontalTreeLayout new).
+	]
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtUsedPackagesFor: aView [
+	<gtView>
+	^ (self usedPackages gtItemsFor: aView)
+		title: 'Used Packages';
+		priority: 1
+]
+
+{ #category : #'*GToolkit-Coder' }
 RPackage >> usedPackages [
 	^ (self usedPackagesByExtending addAll: ((self usedPackagesBySubclassing))) asSet
 	

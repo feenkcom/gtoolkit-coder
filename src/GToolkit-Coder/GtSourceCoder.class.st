@@ -881,8 +881,8 @@ GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 { #category : #private }
 GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 	| interval |
-	interval := self intervalToStyleResult.
-	self styleResult: value at: interval showPrintString: aBoolean.
+	interval := self selectedSourceInterval.
+	interval ifNotNil: [ self styleResult: value at: interval showPrintString: aBoolean ].
 	self sourceEditor
 		invalidateAll;
 		updateAll

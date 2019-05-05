@@ -478,6 +478,7 @@ GtMethodCoder >> newMethodSource [
 GtMethodCoder >> newRbAST: aString [
 	| ast |
 	ast := RBParser parseFaultyMethod: aString.
+	ast isParseError ifTrue: [ ^ ast ].
 	ast methodNode
 		compilationContext:
 			(CompilationContext new
@@ -487,6 +488,12 @@ GtMethodCoder >> newRbAST: aString [
 				requestor: nil).
 	ast doSemanticAnalysis.
 	^ ast
+]
+
+{ #category : #updating }
+GtMethodCoder >> newSource [
+	self ensureBuilt.
+	^ super newSource
 ]
 
 { #category : #'instance creation' }

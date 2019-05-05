@@ -37,7 +37,8 @@ GtCoderExpanderLook >> initialize [
 			c vertical fitContent ];
 		background: Color veryVeryLightGray;
 		addChild: aTriangle;
-		when: BlClickEvent do: [ self dispatchEvent: BrExpansionToggleWish new ].
+		when: BlClickEvent
+			do: [ self dispatchEvent: BrExpansionToggleWish new ].
 	sidebar := BlElement new
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c | 
@@ -49,7 +50,8 @@ GtCoderExpanderLook >> initialize [
 		padding: (BlInsets all: 10);
 		layout: BlLinearLayout vertical.
 	shadowLook := BrShadowLook new.
-	focusedShadowLook := BrShadowLook new color: (BrGlamorousColors primaryBorderColor alpha: 0.4).
+	focusedShadowLook := BrShadowLook new
+		color: (BrGlamorousColors primaryBorderColor alpha: 0.4).
 	expanded := false.
 	self
 		add:
@@ -66,7 +68,8 @@ GtCoderExpanderLook >> initialize [
 											(8 @ 4).
 											(0 @ 8)}).
 							aWidget background: Color transparent.
-							aWidget border: (BlBorder paint: Color veryVeryLightGray width: self borderWidth).
+							aWidget
+								border: (BlBorder paint: Color veryVeryLightGray width: self borderWidth).
 							shadowLook isAttachedToWidget
 								ifTrue: [ self remove: shadowLook ].
 							focusedShadowLook isAttachedToWidget
@@ -100,7 +103,8 @@ GtCoderExpanderLook >> initialize [
 							expanded
 								ifTrue: [ self add: shadowLook ] ].
 					aStyler
-						focused: [ sidebar background: (BrGlamorousColors primaryBorderColor alpha: 0.4).
+						focused: [ sidebar
+								background: (BrGlamorousColors primaryBorderColor alpha: 0.4).
 							shadowLook isAttachedToWidget
 								ifTrue: [ self remove: shadowLook ].
 							focusedShadowLook isAttachedToWidget
@@ -110,17 +114,19 @@ GtCoderExpanderLook >> initialize [
 	toggle
 		background: Color transparent;
 		constraintsDo: [ :c | c vertical matchParent ].
-	toggle children first constraintsDo: [ :c | c linear vertical alignTop ]
-]
-
-{ #category : #initialization }
-GtCoderExpanderLook >> initializeLook [
-	super initializeLook.
-	self widget
-		layout: BlLinearLayout horizontal;
-		geometry: (BlRectangle cornerRadius: 3);
-		addChild: sidebar;
-		addChild: container as: #content
+	toggle children first
+		constraintsDo: [ :c | c linear vertical alignTop ].
+	changes
+		add: (#(sidebar) asBrLookChildAddAsChangeWithValue: [ sidebar ]);
+		add: (#(content) asBrLookChildAddAsChangeWithValue: [ container ]).
+	changes
+		add:
+			(#(widget layout)
+				asBrLookPropertyChangeWithValue: [ BlLinearLayout horizontal ]).
+	changes
+		add:
+			(#(widget geometry)
+				asBrLookPropertyChangeWithValue: [ BlRectangle cornerRadius: 3 ])
 ]
 
 { #category : #accessing }

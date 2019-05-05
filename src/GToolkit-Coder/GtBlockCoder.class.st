@@ -40,7 +40,7 @@ GtBlockCoder >> blockSource [
 			parameters notEmpty
 				ifTrue: [ stream nextPutAll: '| ' ].
 			stream
-				nextPutAll: self sourceEditor text asString;
+				nextPutAll: self source;
 				nextPut: $] ]
 ]
 
@@ -59,6 +59,45 @@ GtBlockCoder >> blockSource: aString [
 	[ startIndex < endIndex and: [ (aString at: startIndex) isSeparator ] ] whileTrue: [ startIndex := startIndex + 1 ].
 	[ endIndex > startIndex and: [ (aString at: endIndex) isSeparator ] ] whileTrue: [ endIndex := endIndex - 1 ].
 	self source: (aString copyFrom: startIndex to: endIndex)
+]
+
+{ #category : #actions }
+GtBlockCoder >> doItAll [
+	| source |
+	source := self blockSource.
+	source isNil
+		ifTrue: [ ^ self ].
+	^ self evaluateSource: source
+]
+
+{ #category : #actions }
+GtBlockCoder >> doItAndGoAll: anElement [
+	| aSource aValue |
+	aSource := self blockSource.
+	aSource isNil ifTrue: [ ^ self ].
+	aValue := self evaluateSource: aSource.
+	aValue == self ifTrue: [ ^ self ].
+	anElement phlow spawnObject: aValue
+]
+
+{ #category : #actions }
+GtBlockCoder >> evaluationRequester [
+	^ GtBlockCoderEvaluationRequester on: self
+]
+
+{ #category : #formatting }
+GtBlockCoder >> format [
+	self source: (self newRbAST: self newSource) formattedCode
+]
+
+{ #category : #private }
+GtBlockCoder >> highlightBindingsStrategy [
+	^ self context 
+		ifNil:  [ GtHighlightingBindingStrategy new 
+			bindings: bindingStrategy bindings]
+		ifNotNil: [ GtContextHighlightingBindingStrategy new
+			bindings: bindingStrategy bindings;
+			context: self context ] 
 ]
 
 { #category : #'initialize-release' }
@@ -81,6 +120,16 @@ GtBlockCoder >> initializeAddOns [
 	addOns clearChanges
 ]
 
+{ #category : #'initialize-release' }
+GtBlockCoder >> initializeShortcuts [
+	super initializeShortcuts.
+	addOns
+		addShortcut:
+			(BlShortcut new
+				combination: BlKeyCombination primaryShiftF;
+				action: [ self format ])
+]
+
 { #category : #private }
 GtBlockCoder >> newCompletionStrategy [
 	^ super newCompletionStrategy
@@ -90,8 +139,16 @@ GtBlockCoder >> newCompletionStrategy [
 
 { #category : #updating }
 GtBlockCoder >> newRbAST: aString [
-	self flag: 'probably generates wrong text indexes for nodes'.
-	^ (super newRbAST: aString) body
+	| ast |
+	ast := RBParser parseFaultyExpression: aString.
+	ast methodNode 
+		compilationContext: (CompilationContext new
+			class: (self classOrMetaClass ifNil: [UndefinedObject]);
+			forSyntaxHighlighting: true; 
+         requestor: self highlightBindingsStrategy).
+	ast doSemanticAnalysis.
+	ast gtMoveAllBy: 1 - ast body start.
+	^ ast body
 ]
 
 { #category : #updating }
@@ -100,21 +157,8 @@ GtBlockCoder >> newSource [
 ]
 
 { #category : #accessing }
-GtBlockCoder >> source [
-	^ self sourceEditor text asString
-]
-
-{ #category : #accessing }
 GtBlockCoder >> source: aString [
 	self sourceEditor text: aString asRopedText.
+	self sourceEditor text attributes: self defaultTextAttributes.
 	self sourceChanged
-]
-
-{ #category : #elements }
-GtBlockCoder >> sourceElement [
-	| element |
-	element := BrEditorElement new.
-	element editor: self sourceEditor.
-	(GtCompletionController on: element strategy: self completionStrategy) install.
-	^ element
 ]
