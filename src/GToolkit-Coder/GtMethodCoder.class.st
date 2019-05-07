@@ -209,14 +209,15 @@ GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBo
 
 { #category : #examples }
 GtMethodCoder >> example [
+	<return: #GtExampleWithResult>
 	^ (self attributeNamed: #example)
-		ifNil: [ self compiledMethod ifNotNil: [ :method | method methodClass gtExamplesFactory createExample: method ] ]
+		ifNil: [ self compiledMethod gtExample asExampleWithResult "ifNotNil: [ :method | method methodClass gtExamplesFactory createExample: method ]" ]
 ]
 
 { #category : #examples }
-GtMethodCoder >> example: anExample [
-	self attributeNamed: #example put: anExample.
-	self forMethod: anExample method
+GtMethodCoder >> example: anExampleWithResult [
+	self attributeNamed: #example put: anExampleWithResult asExampleWithResult.
+	self forMethod: anExampleWithResult method
 ]
 
 { #category : #'add ons' }
@@ -246,12 +247,13 @@ GtMethodCoder >> exampleAstFor: anAST [
 
 { #category : #examples }
 GtMethodCoder >> exampleResult [
-	^ self attributeNamed: #exampleResult
+	<return: #GtExampleWithResult>
+	^ self example result
 ]
 
 { #category : #examples }
 GtMethodCoder >> exampleResult: anExampleResult [
-	self attributeNamed: #exampleResult put: anExampleResult
+	self example result: anExampleResult
 ]
 
 { #category : #actions }
@@ -614,7 +616,7 @@ GtMethodCoder >> runExample [
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
-	self exampleResult: self example run.
+	self example run.
 	self styleCollapsedText.
 	self styleSourceText.
 	self refreshForChanges.
