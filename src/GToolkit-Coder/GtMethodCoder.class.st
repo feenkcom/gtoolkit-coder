@@ -67,6 +67,11 @@ GtMethodCoder >> buildSource [
 		do: [ :ex | ex return ]
 ]
 
+{ #category : #examples }
+GtMethodCoder >> canExecuteExample [
+	^ self example ifNil: [ false ] ifNotNil: [ :anExample | anExample canBeExecuted ]
+]
+
 { #category : #accessing }
 GtMethodCoder >> category [
 	^ (self attributeNamed: #category)
@@ -203,9 +208,10 @@ GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBo
 
 { #category : #examples }
 GtMethodCoder >> example [
-	<return: #GtExampleWithResult>
+	<return: #GtExampleWithResult or: nil>
 	^ (self attributeNamed: #example)
-		ifNil: [ self compiledMethod gtExample asExampleWithResult "ifNotNil: [ :method | method methodClass gtExamplesFactory createExample: method ]" ]
+		ifNil: [ self compiledMethod ifNotNil: [ :aCompiledMethod | 
+				aCompiledMethod gtExample ifNotNil: #asExampleWithResult ] ]
 ]
 
 { #category : #examples }
@@ -217,9 +223,12 @@ GtMethodCoder >> example: anExampleWithResult [
 	self attributeNamed: #example put: anExampleWithResult asExampleWithResult.
 	self forMethod: anExampleWithResult method.
 	self example announcer weak 
-		subscribe: GtExampleExecuted 
+		subscribe: GtExampleExecuted
 		send: #handleExampleExecuted: 
-		to: self
+		to: self;
+		subscribe: GtExampleArgumentsChanged
+		send: #handleExampleArgumentsChanged:
+		to: self.
 ]
 
 { #category : #'add ons' }
@@ -236,6 +245,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 	addOns addStyler: (GtCoderExampleStatusStyler new
 		coder: self;
 		classOrMetaClass: self classOrMetaClass).
+	self canExecuteExample ifFalse: [ ^ self ].
 	addOns addContextAction: 'Play' translated 
 		icon: BrGlamorousIcons play
 		action: [ :button | self playExampleFrom: button ].
@@ -328,6 +338,12 @@ GtMethodCoder >> gtViewAddOnFor: anAST [
 		addContextAction: 'gtView' translated 
 		icon: BrGlamorousIcons playinspect 
 		action: [ :button | self runGtViewFrom: button ]
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> handleExampleArgumentsChanged: aGtExampleArgumentsChanged [
+	self haltOnce.
+	self updateAddOns.
 ]
 
 { #category : #'event handling' }
