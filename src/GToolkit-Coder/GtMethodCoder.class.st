@@ -342,7 +342,6 @@ GtMethodCoder >> gtViewAddOnFor: anAST [
 
 { #category : #'event handling' }
 GtMethodCoder >> handleExampleArgumentsChanged: aGtExampleArgumentsChanged [
-	self haltOnce.
 	self updateAddOns.
 ]
 
