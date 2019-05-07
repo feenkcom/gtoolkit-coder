@@ -158,7 +158,7 @@ GtMethodCoder >> debugExampleFrom: anElement [
 	self isModified
 		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
-	self example openingDebugger
+	self example openingDebugger result
 ]
 
 { #category : #actions }
