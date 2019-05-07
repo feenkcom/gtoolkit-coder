@@ -50,11 +50,11 @@ GtClassCoder >> forObject: anObject [
 GtClassCoder >> gtDocumentFor: aView [
 	<gtView>
 	self theClass ifNil: [ ^ aView empty ].
-	^ (self theClass gtDocumentFor: aView)
+	^ (self theClass instanceSide gtDocumentFor: aView)
 			priority: 1;
 			actionButtonIcon: BrGlamorousIcons inspect
 				action: [ :aButton | 
-					aButton phlow spawnObject: self theClass ]
+					aButton phlow spawnObject: self theClass instanceSide ]
 ]
 
 { #category : #ui }
