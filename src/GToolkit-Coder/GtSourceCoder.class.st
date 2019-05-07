@@ -65,6 +65,13 @@ GtSourceCoder >> attributeNamed: aSymbol ifAbsent: aBlock [
 ]
 
 { #category : #'accessing-attributes' }
+GtSourceCoder >> attributeNamed: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock [
+	^ attributes notNil
+		ifTrue: [ attributes at: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock ]
+		ifFalse: [ anAbsentBlock value ]
+]
+
+{ #category : #'accessing-attributes' }
 GtSourceCoder >> attributeNamed: aSymbol put: anObject [
 	^ self attributes at: aSymbol put: anObject
 ]

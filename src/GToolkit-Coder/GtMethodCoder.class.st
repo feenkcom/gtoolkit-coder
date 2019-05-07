@@ -159,12 +159,6 @@ GtMethodCoder >> debugExampleFrom: anElement [
 		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
 	self example openingDebugger
-		callback: [ :anExampleResult |
-			anElement enqueueTask: (BlTaskAction new action: [ 
-				self exampleResult: anExampleResult.
-				self styleCollapsedText.
-				self styleSourceText ]) ];
-		result.
 ]
 
 { #category : #actions }
@@ -216,8 +210,16 @@ GtMethodCoder >> example [
 
 { #category : #examples }
 GtMethodCoder >> example: anExampleWithResult [
+	self 
+		attributeNamed: #example 
+		ifPresent: [ :anOldExampleWithResult | anOldExampleWithResult announcer unsubscribe: self ]
+		ifAbsent: [ "do nothing" ].
 	self attributeNamed: #example put: anExampleWithResult asExampleWithResult.
-	self forMethod: anExampleWithResult method
+	self forMethod: anExampleWithResult method.
+	self example announcer weak 
+		subscribe: GtExampleExecuted 
+		send: #handleExampleExecuted: 
+		to: self
 ]
 
 { #category : #'add ons' }
@@ -247,13 +249,8 @@ GtMethodCoder >> exampleAstFor: anAST [
 
 { #category : #examples }
 GtMethodCoder >> exampleResult [
-	<return: #GtExampleWithResult>
+	<return: #GtExampleResult>
 	^ self example result
-]
-
-{ #category : #examples }
-GtMethodCoder >> exampleResult: anExampleResult [
-	self example result: anExampleResult
 ]
 
 { #category : #actions }
@@ -331,6 +328,12 @@ GtMethodCoder >> gtViewAddOnFor: anAST [
 		addContextAction: 'gtView' translated 
 		icon: BrGlamorousIcons playinspect 
 		action: [ :button | self runGtViewFrom: button ]
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
+	self styleCollapsedText.
+	self styleSourceText.
 ]
 
 { #category : #accessing }
@@ -587,18 +590,6 @@ GtMethodCoder >> printOn: aStream [
 		nextPutAll: '>>#';
 		nextPutAll: self selector asString;  
 		nextPut: $)
-]
-
-{ #category : #updating }
-GtMethodCoder >> refreshForChanges [
-	self flag: 'source coder may have main actions and contextActions as well, why restrict to method coder?'.
-	addOns
-		changesDo: [ :each | 
-			each = #mainActions
-				ifTrue: [ self announce: (GtCoderMethodMainActionsChanged new coder: self) ].
-			each = #contextActions
-				ifTrue: [ self announce: (GtCoderMethodContextActionsChanged new coder: self) ] ].
-	super refreshForChanges
 ]
 
 { #category : #accessing }
