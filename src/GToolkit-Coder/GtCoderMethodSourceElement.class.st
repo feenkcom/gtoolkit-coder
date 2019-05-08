@@ -45,7 +45,7 @@ GtCoderMethodSourceElement >> editorElement [
 GtCoderMethodSourceElement >> initialize [
 	super initialize.
 	self layout: BlLinearLayout vertical.
-	
+
 	self addChild: self newHeaderElement as: #header
 ]
 
@@ -74,11 +74,14 @@ GtCoderMethodSourceElement >> methodCoderDo: aBlock [
 { #category : #'instance creation' }
 GtCoderMethodSourceElement >> newBreadcrumb [
 	<return: #BrBreadcrumb>
-
 	| aBreadcrumb |
+
 	aBreadcrumb := BrBreadcrumb new.
 	aBreadcrumb
 		look: self newBreadcrumbLook;
+		vExact: 10;
+		hExact: (80 + 50 atRandom);
+		background: (Color gray alpha: 0.1);
 		constraintsDo: [ :c |
 			c margin: (BlInsets top: 2).
 			c frame horizontal alignLeft.
@@ -120,5 +123,10 @@ GtCoderMethodSourceElement >> setBreadcrumbItems: aBreadcrumb coder: aMethodCode
 	"Initialize breadcrumb items for a given coder"
 
 	aBreadcrumb removeAllItems.
-	aBreadcrumb addItems: (self createBreadcrumbItemsFor: aMethodCoder)
+	aBreadcrumb addItems: (self createBreadcrumbItemsFor: aMethodCoder).
+	
+	aBreadcrumb
+		vFitContent;
+		hFitContent;
+		background: Color transparent
 ]
