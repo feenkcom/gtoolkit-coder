@@ -67,6 +67,11 @@ GtMethodCoder >> buildSource [
 		do: [ :ex | ex return ]
 ]
 
+{ #category : #examples }
+GtMethodCoder >> canExecuteExample [
+	^ self example ifNil: [ false ] ifNotNil: [ :anExample | anExample canBeExecuted ]
+]
+
 { #category : #accessing }
 GtMethodCoder >> category [
 	^ (self attributeNamed: #category)
@@ -158,13 +163,7 @@ GtMethodCoder >> debugExampleFrom: anElement [
 	self isModified
 		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
-	self example openingDebugger
-		callback: [ :anExampleResult |
-			anElement enqueueTask: (BlTaskAction new action: [ 
-				self exampleResult: anExampleResult.
-				self styleCollapsedText.
-				self styleSourceText ]) ];
-		result.
+	self example openingDebugger result
 ]
 
 { #category : #actions }
@@ -209,14 +208,27 @@ GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBo
 
 { #category : #examples }
 GtMethodCoder >> example [
+	<return: #GtExampleWithResult or: nil>
 	^ (self attributeNamed: #example)
-		ifNil: [ self compiledMethod ifNotNil: [ :method | method methodClass gtExamplesFactory createExample: method ] ]
+		ifNil: [ self compiledMethod ifNotNil: [ :aCompiledMethod | 
+				aCompiledMethod gtExample ifNotNil: #asExampleWithResult ] ]
 ]
 
 { #category : #examples }
-GtMethodCoder >> example: anExample [
-	self attributeNamed: #example put: anExample.
-	self forMethod: anExample method
+GtMethodCoder >> example: anExampleWithResult [
+	self 
+		attributeNamed: #example 
+		ifPresent: [ :anOldExampleWithResult | anOldExampleWithResult announcer unsubscribe: self ]
+		ifAbsent: [ "do nothing" ].
+	self attributeNamed: #example put: anExampleWithResult asExampleWithResult.
+	self forMethod: anExampleWithResult method.
+	self example announcer weak 
+		subscribe: GtExampleExecuted
+		send: #handleExampleExecuted: 
+		to: self;
+		subscribe: GtExampleArgumentsChanged
+		send: #handleExampleArgumentsChanged:
+		to: self.
 ]
 
 { #category : #'add ons' }
@@ -233,6 +245,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 	addOns addStyler: (GtCoderExampleStatusStyler new
 		coder: self;
 		classOrMetaClass: self classOrMetaClass).
+	self canExecuteExample ifFalse: [ ^ self ].
 	addOns addContextAction: 'Play' translated 
 		icon: BrGlamorousIcons play
 		action: [ :button | self playExampleFrom: button ].
@@ -246,12 +259,8 @@ GtMethodCoder >> exampleAstFor: anAST [
 
 { #category : #examples }
 GtMethodCoder >> exampleResult [
-	^ self attributeNamed: #exampleResult
-]
-
-{ #category : #examples }
-GtMethodCoder >> exampleResult: anExampleResult [
-	self attributeNamed: #exampleResult put: anExampleResult
+	<return: #GtExampleResult>
+	^ self example result
 ]
 
 { #category : #actions }
@@ -329,6 +338,17 @@ GtMethodCoder >> gtViewAddOnFor: anAST [
 		addContextAction: 'gtView' translated 
 		icon: BrGlamorousIcons playinspect 
 		action: [ :button | self runGtViewFrom: button ]
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> handleExampleArgumentsChanged: aGtExampleArgumentsChanged [
+	self updateAddOns.
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
+	self styleCollapsedText.
+	self styleSourceText.
 ]
 
 { #category : #accessing }
@@ -587,18 +607,6 @@ GtMethodCoder >> printOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #updating }
-GtMethodCoder >> refreshForChanges [
-	self flag: 'source coder may have main actions and contextActions as well, why restrict to method coder?'.
-	addOns
-		changesDo: [ :each | 
-			each = #mainActions
-				ifTrue: [ self announce: (GtCoderMethodMainActionsChanged new coder: self) ].
-			each = #contextActions
-				ifTrue: [ self announce: (GtCoderMethodContextActionsChanged new coder: self) ] ].
-	super refreshForChanges
-]
-
 { #category : #accessing }
 GtMethodCoder >> removeSubCoder: aMethodCoder [
 	self subCoders remove: aMethodCoder ifAbsent: [  ]
@@ -614,7 +622,7 @@ GtMethodCoder >> runExample [
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
-	self exampleResult: self example run.
+	self example run.
 	self styleCollapsedText.
 	self styleSourceText.
 	self refreshForChanges.
