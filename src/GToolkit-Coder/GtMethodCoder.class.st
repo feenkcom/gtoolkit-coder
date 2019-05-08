@@ -192,6 +192,13 @@ GtMethodCoder >> debugSelectionOrMethod [
 	^ self debugSource: source
 ]
 
+{ #category : #actions }
+GtMethodCoder >> discardChanges [
+	"Discard not-accepted changes."
+	self isModified ifFalse: [ ^ self ].
+	self buildSource.
+]
+
 { #category : #private }
 GtMethodCoder >> ensureBuilt [
 	isBuilt
@@ -245,6 +252,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 	addOns addStyler: (GtCoderExampleStatusStyler new
 		coder: self;
 		classOrMetaClass: self classOrMetaClass).
+	"self haltIf: [ anAST methodNode selector = #nonTaggedMethod ]."
 	self canExecuteExample ifFalse: [ ^ self ].
 	addOns addContextAction: 'Play' translated 
 		icon: BrGlamorousIcons play
@@ -325,7 +333,7 @@ GtMethodCoder >> gtLiveFor: aView [
 		stencil: [ self expanded: true ]
 ]
 
-{ #category : #'add ons' }
+{ #category : #ui }
 GtMethodCoder >> gtViewAddOnFor: anAST [
 	<gtAstCoderAddOns: 6>
 	(self hasObjectAttribute and: [ 
@@ -472,6 +480,16 @@ GtMethodCoder >> methodExpanderFor: anAST [
 			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
 			^ self ].
 	addOns addStyler: GtCoderExpandableMethodStyler new
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> modifiedMessageAstFor: anAST [
+	<gtAstCoderAddOns: 1>
+	addOns removeMainAction: 'Discard Changes' translated.
+	self isModified ifFalse: [ ^ self ].
+	addOns addMainAction: 'Discard Changes' translated 
+		icon: BrGlamorousIcons cancel
+		action: [ :button | self discardChanges ].
 ]
 
 { #category : #'add ons' }

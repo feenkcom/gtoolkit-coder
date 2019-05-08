@@ -289,6 +289,11 @@ GtSourceCoder >> disabledTextAttributes [
 ]
 
 { #category : #actions }
+GtSourceCoder >> discardChanges [
+	"Discard not-accepted changes."
+]
+
+{ #category : #actions }
 GtSourceCoder >> doItAll [
 	| source |
 	source := self source.
@@ -547,7 +552,10 @@ GtSourceCoder >> initializeShortcuts [
 			action: [ :editorElement | self browseReferences: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryB;
-			action: [ :editorElement | self browseClass: editorElement ])
+			action: [ :editorElement | self browseClass: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: (BlKeyCombination primaryL);
+			action: [ self discardChanges ])
 ]
 
 { #category : #private }
