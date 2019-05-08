@@ -79,11 +79,21 @@ GtCoderMethodElement >> isExpanded [
 
 { #category : #accessing }
 GtCoderMethodElement >> methodCoder [
+	<return: #GtMethodCoder>
+
+	self
+		assert: [ methodCoder isNotNil ]
+		description: [ 'Coder is not set!' ].
+
 	^ methodCoder
 ]
 
 { #category : #accessing }
 GtCoderMethodElement >> methodCoder: aGtMethodCoder [
+	self
+		assert: [ aGtMethodCoder isNotNil ]
+		description: [ 'Coder must not be nil' ].
+
 	methodCoder := aGtMethodCoder.
 
 	self collapsedElementDo: [ :aCollapsedElement | self setCollapsedElement: aCollapsedElement coder: aGtMethodCoder ].
@@ -155,9 +165,4 @@ GtCoderMethodElement >> setContentElement: aCollapsedElement coder: aMethodCoder
 						ifFalse: [ methodsLook ] ] ].
 	aLook notNil
 		ifTrue: [ aCollapsedElement look: aLook ]
-]
-
-{ #category : #private }
-GtCoderMethodElement >> updateExpanded [
-	self methodCoder expanded: expandableModel isExpanded
 ]
