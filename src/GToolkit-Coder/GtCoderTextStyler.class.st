@@ -35,18 +35,19 @@ GtCoderTextStyler >> privateStyle: aText [
 	self
 		assert: [ aText asString = coder source
 				or: [ aText asString = coder collapsedSource ] ].
-	ast := aText asString = coder source
-		ifTrue: [ coder rbAST ]
-		ifFalse: [ ast := coder rbAST copy
-				body: (RBSequenceNode statements: #());
-				pragmas: #();
-				yourself.
-			ast
-				instVarNamed: #properties
-				put: (ast instVarNamed: #properties) copy.
-			ast comments: #().
-			ast arguments do: [ :e | e parent: ast ].
-			ast ].
+	aText asString = coder source
+		ifTrue: [ ast := coder rbAST ]
+		ifFalse: [ ast := coder rbAST copy.
+			ast isParseError
+				ifFalse: [ ast
+						body: (RBSequenceNode statements: #());
+						pragmas: #();
+						yourself.
+					ast
+						instVarNamed: #properties
+						put: (ast instVarNamed: #properties) copy.
+					ast comments: #().
+					ast arguments do: [ :e | e parent: ast ] ] ].
 	[ self style: aText ast: ast.
 	self extraStyle: aText ast: ast ]
 		on: Error
