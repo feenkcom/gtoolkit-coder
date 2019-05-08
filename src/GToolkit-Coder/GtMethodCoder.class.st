@@ -216,9 +216,13 @@ GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBo
 { #category : #examples }
 GtMethodCoder >> example [
 	<return: #GtExampleWithResult or: nil>
-	^ (self attributeNamed: #example)
-		ifNil: [ self compiledMethod ifNotNil: [ :aCompiledMethod | 
-				aCompiledMethod gtExample ifNotNil: #asExampleWithResult ] ]
+	| anExample |
+	anExample := self attributeNamed: #example.
+	anExample ifNil: [ 
+		anExample := self compiledMethod ifNotNil: [ :aCompiledMethod | 
+			aCompiledMethod gtExample ifNotNil: #asExampleWithResult ].
+		anExample ifNotNil: [ self example: anExample ] ].
+	^ anExample
 ]
 
 { #category : #examples }
@@ -241,7 +245,7 @@ GtMethodCoder >> example: anExampleWithResult [
 { #category : #'add ons' }
 GtMethodCoder >> exampleAstFor: anAST [
 	<gtAstCoderAddOns: 10>
-	(self compiledMethod notNil and: [ 
+	( self compiledMethod notNil and: [ 
 		anAST notNil and: [ 
 			anAST methodNode 
 				ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] 
@@ -252,8 +256,8 @@ GtMethodCoder >> exampleAstFor: anAST [
 	addOns addStyler: (GtCoderExampleStatusStyler new
 		coder: self;
 		classOrMetaClass: self classOrMetaClass).
-	"self haltIf: [ anAST methodNode selector = #nonTaggedMethod ]."
-	self canExecuteExample ifFalse: [ ^ self ].
+	(self canExecuteExample or: [ 
+		anAST methodNode numArgs isZero ]) ifFalse: [ ^ self ].
 	addOns addContextAction: 'Play' translated 
 		icon: BrGlamorousIcons play
 		action: [ :button | self playExampleFrom: button ].
