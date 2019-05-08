@@ -6,11 +6,8 @@ GtExampleGroup >> gtExpandableExamplesFor: aView [
 	^ aView explicit
 		title: 'Examples';
 		priority: 1;
-		stencil: [ | theExamples aMethodsCoder |
-			theExamples := self examples.
-			aMethodsCoder := GtExampleGroupCoder new.
-			aMethodsCoder forExampleGroup: (theExamples collect: [ :each | each example ]).
-			aMethodsCoder ];
+		stencil: [
+			GtExampleGroupCoder new forExampleGroup: self examples ];
 		actionButtonIcon: BrGlamorousIcons playall 
 			action: [ :aButton | self runAll ]
 ]
