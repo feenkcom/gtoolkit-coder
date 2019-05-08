@@ -67,6 +67,11 @@ GtMethodCoder >> buildSource [
 		do: [ :ex | ex return ]
 ]
 
+{ #category : #examples }
+GtMethodCoder >> canExecuteExample [
+	^ self example ifNil: [ false ] ifNotNil: [ :anExample | anExample canBeExecuted ]
+]
+
 { #category : #accessing }
 GtMethodCoder >> category [
 	^ (self attributeNamed: #category)
@@ -158,13 +163,7 @@ GtMethodCoder >> debugExampleFrom: anElement [
 	self isModified
 		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
-	self example openingDebugger
-		callback: [ :anExampleResult |
-			anElement enqueueTask: (BlTaskAction new action: [ 
-				self exampleResult: anExampleResult.
-				self styleCollapsedText.
-				self styleSourceText ]) ];
-		result.
+	self example openingDebugger result
 ]
 
 { #category : #actions }
@@ -193,6 +192,13 @@ GtMethodCoder >> debugSelectionOrMethod [
 	^ self debugSource: source
 ]
 
+{ #category : #actions }
+GtMethodCoder >> discardChanges [
+	"Discard not-accepted changes."
+	self isModified ifFalse: [ ^ self ].
+	self buildSource.
+]
+
 { #category : #private }
 GtMethodCoder >> ensureBuilt [
 	isBuilt
@@ -209,20 +215,37 @@ GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBo
 
 { #category : #examples }
 GtMethodCoder >> example [
-	^ (self attributeNamed: #example)
-		ifNil: [ self compiledMethod ifNotNil: [ :method | method methodClass gtExamplesFactory createExample: method ] ]
+	<return: #GtExampleWithResult or: nil>
+	| anExample |
+	anExample := self attributeNamed: #example.
+	anExample ifNil: [ 
+		anExample := self compiledMethod ifNotNil: [ :aCompiledMethod | 
+			aCompiledMethod gtExample ifNotNil: #asExampleWithResult ].
+		anExample ifNotNil: [ self example: anExample ] ].
+	^ anExample
 ]
 
 { #category : #examples }
-GtMethodCoder >> example: anExample [
-	self attributeNamed: #example put: anExample.
-	self forMethod: anExample method
+GtMethodCoder >> example: anExampleWithResult [
+	self 
+		attributeNamed: #example 
+		ifPresent: [ :anOldExampleWithResult | anOldExampleWithResult announcer unsubscribe: self ]
+		ifAbsent: [ "do nothing" ].
+	self attributeNamed: #example put: anExampleWithResult asExampleWithResult.
+	self forMethod: anExampleWithResult method.
+	self example announcer weak 
+		subscribe: GtExampleExecuted
+		send: #handleExampleExecuted: 
+		to: self;
+		subscribe: GtExampleArgumentsChanged
+		send: #handleExampleArgumentsChanged:
+		to: self.
 ]
 
 { #category : #'add ons' }
 GtMethodCoder >> exampleAstFor: anAST [
 	<gtAstCoderAddOns: 10>
-	(self compiledMethod notNil and: [ 
+	( self compiledMethod notNil and: [ 
 		anAST notNil and: [ 
 			anAST methodNode 
 				ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] 
@@ -233,6 +256,8 @@ GtMethodCoder >> exampleAstFor: anAST [
 	addOns addStyler: (GtCoderExampleStatusStyler new
 		coder: self;
 		classOrMetaClass: self classOrMetaClass).
+	(self canExecuteExample or: [ 
+		anAST methodNode numArgs isZero ]) ifFalse: [ ^ self ].
 	addOns addContextAction: 'Play' translated 
 		icon: BrGlamorousIcons play
 		action: [ :button | self playExampleFrom: button ].
@@ -246,12 +271,8 @@ GtMethodCoder >> exampleAstFor: anAST [
 
 { #category : #examples }
 GtMethodCoder >> exampleResult [
-	^ self attributeNamed: #exampleResult
-]
-
-{ #category : #examples }
-GtMethodCoder >> exampleResult: anExampleResult [
-	self attributeNamed: #exampleResult put: anExampleResult
+	<return: #GtExampleResult>
+	^ self example result
 ]
 
 { #category : #actions }
@@ -316,7 +337,7 @@ GtMethodCoder >> gtLiveFor: aView [
 		stencil: [ self expanded: true ]
 ]
 
-{ #category : #'add ons' }
+{ #category : #ui }
 GtMethodCoder >> gtViewAddOnFor: anAST [
 	<gtAstCoderAddOns: 6>
 	(self hasObjectAttribute and: [ 
@@ -329,6 +350,17 @@ GtMethodCoder >> gtViewAddOnFor: anAST [
 		addContextAction: 'gtView' translated 
 		icon: BrGlamorousIcons playinspect 
 		action: [ :button | self runGtViewFrom: button ]
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> handleExampleArgumentsChanged: aGtExampleArgumentsChanged [
+	self updateAddOns.
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
+	self styleCollapsedText.
+	self styleSourceText.
 ]
 
 { #category : #accessing }
@@ -452,6 +484,16 @@ GtMethodCoder >> methodExpanderFor: anAST [
 			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
 			^ self ].
 	addOns addStyler: GtCoderExpandableMethodStyler new
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> modifiedMessageAstFor: anAST [
+	<gtAstCoderAddOns: 1>
+	addOns removeMainAction: 'Discard Changes' translated.
+	self isModified ifFalse: [ ^ self ].
+	addOns addMainAction: 'Discard Changes' translated 
+		icon: BrGlamorousIcons cancel
+		action: [ :button | self discardChanges ].
 ]
 
 { #category : #'add ons' }
@@ -587,18 +629,6 @@ GtMethodCoder >> printOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #updating }
-GtMethodCoder >> refreshForChanges [
-	self flag: 'source coder may have main actions and contextActions as well, why restrict to method coder?'.
-	addOns
-		changesDo: [ :each | 
-			each = #mainActions
-				ifTrue: [ self announce: (GtCoderMethodMainActionsChanged new coder: self) ].
-			each = #contextActions
-				ifTrue: [ self announce: (GtCoderMethodContextActionsChanged new coder: self) ] ].
-	super refreshForChanges
-]
-
 { #category : #accessing }
 GtMethodCoder >> removeSubCoder: aMethodCoder [
 	self subCoders remove: aMethodCoder ifAbsent: [  ]
@@ -614,7 +644,7 @@ GtMethodCoder >> runExample [
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
-	self exampleResult: self example run.
+	self example run.
 	self styleCollapsedText.
 	self styleSourceText.
 	self refreshForChanges.

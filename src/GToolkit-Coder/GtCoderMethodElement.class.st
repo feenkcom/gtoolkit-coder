@@ -1,8 +1,14 @@
 Class {
 	#name : #GtCoderMethodElement,
 	#superclass : #BrExpander,
+	#traits : 'TBlDrawingCache',
+	#classTraits : 'TBlDrawingCache classTrait',
 	#instVars : [
-		'methodCoder'
+		'methodCoder',
+		'collapsedElement',
+		'contentElement',
+		'damageReported',
+		'session'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -13,40 +19,13 @@ GtCoderMethodElement >> asVerticallyResizableDo: aBlock [
 ]
 
 { #category : #accessing }
-GtCoderMethodElement >> collapsedElement [
-	| element |
-	element := GtCoderMethodPatternElement new.
-	element methodCoder: self methodCoder.
-	element margin: (BlInsets left: 5).
-	element
-		constraintsDo: [ :c | 
-			c vertical fitContent.
-			c horizontal matchParent ].
-	methodCoder methodsCoder ifNotNil: [ :coder | coder methodCoderLook ifNotNil: [ :look | element look: look ] ].
-	^ element
+GtCoderMethodElement >> collapsedElementDo: aBlock [
+	collapsedElement ifNotNil: aBlock
 ]
 
 { #category : #accessing }
-GtCoderMethodElement >> contentElement [
-	| element look |
-	element := GtCoderMethodBodyElement new.
-	element methodCoder: self methodCoder.
-	element margin: (BlInsets left: 5).
-	element
-		constraintsDo: [ :c | 
-			c vertical fitContent.
-			c horizontal matchParent ].
-	look := methodCoder coderLook.
-	methodCoder methodsCoder
-		ifNotNil: [ :coder | 
-			coder methodCoderLook
-				ifNotNil: [ :methodsLook | 
-					look := look notNil
-						ifTrue: [ look + methodsLook ]
-						ifFalse: [ methodsLook ] ] ].
-	look notNil
-		ifTrue: [ element look: look ].
-	^ element
+GtCoderMethodElement >> contentElementDo: aBlock [
+	contentElement ifNotNil: aBlock
 ]
 
 { #category : #accessing }
@@ -65,53 +44,32 @@ GtCoderMethodElement >> gtAllShortcutsFor: aView [
 
 { #category : #initialization }
 GtCoderMethodElement >> initialize [
-	| resizer |
 	super initialize.
 	self
 		vFitContent;
-		hMatchParent.
-	resizer := BrResizer new
-		beBottom;
-		look: BrGlamorousResizerLook new;
-		constraintsDo: [ :c | c ignoreByLayout ];
-		when: BlDoubleClickEvent do: [ self 
-			childNamed: #bodyEditor 
-			ifFound: [ :anEditor | anEditor 
-				constraintsDo: [ :c | c vertical fitContent ] ] 
-			ifNone: [  ] ];
-		yourself.
-	self
-		look:
+		hMatchParent;
+		margin: (BlInsets all: 4).
+
+	self header: [ collapsedElement := self newCollapsedElement ].
+	self content: [ contentElement := self newContentElement ].
+
+	self look:
 			(GtCoderExpanderLook new
 				borderWidth: 0;
-				padding:
-					(BlInsets
-						top: 1
-						left: 10
-						bottom: 1
-						right: 10))
-				+
-					(BrInteractiveLook new
-						style: [ :aStyler | 
-							aStyler
-								default: [ "resizer removeFromParent."
-									self background: Color transparent ].
-							aStyler
-								expanded: [ "self addChild: resizer.
-									self enqueueTask: (BlTaskAction new action: [ self 
-										childNamed: #bodyEditor 
-										ifFound: [ :anEditor | resizer target: anEditor ] 
-										ifNone: [ resizer target: nil ] ])."
-									self background: Color white ] ]).
-	self
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						return;
-						build);
-				action: [ self toggle ])
+				padding: (BlInsets top: 1 left: 10 bottom: 1 right: 10))
+			+
+			(BrInteractiveLook new
+				style: [ :aStyler |
+					aStyler default: [ self background: Color transparent ].
+					aStyler expanded: [ self background: Color white ] ]).
+	
+	self addShortcut: (BlShortcut new
+		combination: BlKeyCombination primaryReturn;
+		action: [ self toggle ]).
+
+	expandableModel
+		when: BrExpansionChanged
+		do: [ :event | self methodCoderDo: [ :aCoder | aCoder expanded: self isExpanded ] ].
 ]
 
 { #category : #testing }
@@ -121,21 +79,90 @@ GtCoderMethodElement >> isExpanded [
 
 { #category : #accessing }
 GtCoderMethodElement >> methodCoder [
+	<return: #GtMethodCoder>
+
+	self
+		assert: [ methodCoder isNotNil ]
+		description: [ 'Coder is not set!' ].
+
 	^ methodCoder
 ]
 
 { #category : #accessing }
 GtCoderMethodElement >> methodCoder: aGtMethodCoder [
+	self
+		assert: [ aGtMethodCoder isNotNil ]
+		description: [ 'Coder must not be nil' ].
+
 	methodCoder := aGtMethodCoder.
-	self header: [ self collapsedElement ].
-	self content: [ self contentElement ].
-	self margin: (BlInsets all: 4).
-	expandableModel when: BrExpansionChanged do: [ :event | methodCoder expanded: self isExpanded ].
+
+	self collapsedElementDo: [ :aCollapsedElement | self setCollapsedElement: aCollapsedElement coder: aGtMethodCoder ].
+	self contentElementDo: [ :aContentElement | self setContentElement: aContentElement coder: aGtMethodCoder ].
+
 	methodCoder expanded
 		ifTrue: [ self expand ]
 ]
 
+{ #category : #accessing }
+GtCoderMethodElement >> methodCoderDo: aBlock [
+	methodCoder ifNotNil: aBlock
+]
+
 { #category : #private }
-GtCoderMethodElement >> updateExpanded [
-	self methodCoder expanded: expandableModel isExpanded
+GtCoderMethodElement >> newCollapsedElement [
+	| aCollapsedElement |
+
+	aCollapsedElement := GtCoderMethodPatternElement new.
+	aCollapsedElement constraintsDo: [ :c | 
+		c vertical fitContent.
+		c horizontal matchParent.
+		c margin: (BlInsets left: 5) ].
+	
+	self methodCoderDo: [ :aMethodCoder | self setCollapsedElement: aCollapsedElement coder: aMethodCoder ].
+
+	^ aCollapsedElement
+]
+
+{ #category : #private }
+GtCoderMethodElement >> newContentElement [
+	| aContentElement |
+
+	aContentElement := GtCoderMethodBodyElement new.
+	aContentElement
+		constraintsDo: [ :c | 
+			c margin: (BlInsets left: 5).
+			c vertical fitContent.
+			c horizontal matchParent ].
+
+	self methodCoderDo: [ :aMethodCoder | self setContentElement: aContentElement coder: aMethodCoder ].
+
+	^ aContentElement
+]
+
+{ #category : #private }
+GtCoderMethodElement >> setCollapsedElement: aCollapsedElement coder: aMethodCoder [
+	"Configure a collapsed element with a new given coder"
+
+	aCollapsedElement methodCoder: aMethodCoder.	
+	aMethodCoder methodsCoder
+		ifNotNil: [ :coder | coder methodCoderLook ifNotNil: [ :look | aCollapsedElement look: look ] ].
+]
+
+{ #category : #private }
+GtCoderMethodElement >> setContentElement: aCollapsedElement coder: aMethodCoder [
+	"Configure a content element with a new given coder"
+	| aLook |
+
+	aCollapsedElement methodCoder: aMethodCoder.
+	aLook := methodCoder coderLook.
+
+	methodCoder methodsCoder
+		ifNotNil: [ :coder | 
+			coder methodCoderLook
+				ifNotNil: [ :methodsLook | 
+					aLook := aLook notNil
+						ifTrue: [ aLook + methodsLook ]
+						ifFalse: [ methodsLook ] ] ].
+	aLook notNil
+		ifTrue: [ aCollapsedElement look: aLook ]
 ]
