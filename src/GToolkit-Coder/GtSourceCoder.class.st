@@ -65,6 +65,13 @@ GtSourceCoder >> attributeNamed: aSymbol ifAbsent: aBlock [
 ]
 
 { #category : #'accessing-attributes' }
+GtSourceCoder >> attributeNamed: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock [
+	^ attributes notNil
+		ifTrue: [ attributes at: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock ]
+		ifFalse: [ anAbsentBlock value ]
+]
+
+{ #category : #'accessing-attributes' }
 GtSourceCoder >> attributeNamed: aSymbol put: anObject [
 	^ self attributes at: aSymbol put: anObject
 ]
@@ -279,6 +286,11 @@ GtSourceCoder >> defaultTextAttributes [
 { #category : #private }
 GtSourceCoder >> disabledTextAttributes [
 	^ {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)}
+]
+
+{ #category : #actions }
+GtSourceCoder >> discardChanges [
+	"Discard not-accepted changes."
 ]
 
 { #category : #actions }
@@ -540,7 +552,10 @@ GtSourceCoder >> initializeShortcuts [
 			action: [ :editorElement | self browseReferences: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryB;
-			action: [ :editorElement | self browseClass: editorElement ])
+			action: [ :editorElement | self browseClass: editorElement ]);
+		addShortcut: (BlShortcut new
+			combination: (BlKeyCombination primaryL);
+			action: [ self discardChanges ])
 ]
 
 { #category : #private }
