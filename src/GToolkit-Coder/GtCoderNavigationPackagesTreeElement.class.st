@@ -10,15 +10,14 @@ Class {
 { #category : #'ui building' }
 GtCoderNavigationPackagesTreeElement >> buildContent [ 
 	| tree |
-	tree := BrColumnedTree new.
+	tree := BrSimpleTree new.
 	tree 
 		items: (RPackageOrganizer default packages sort: [ :a :b | a name < b name ])
 		children: [ :anObject | (anObject isKindOf: RPackage) 
 			ifTrue: [ anObject definedClasses ] 
 			ifFalse: [ #() ] ].
-	tree column
-		stencil: [ :anObject | BrColumnCellLabelStencil new 
-			text: anObject value name asRopedText glamorousRegularFontAndSize ].
+	tree stencil: (BrSimpleTreeRowStencilBuilder new
+		text: [ :anObject | anObject value name asRopedText glamorousRegularFontAndSize ]).
 	tree when: BrSelectionChanged do: [ :anEvent |
 		anEvent selectedDo: [ :anInterval | 
 			tree selectedNodeDo: [  :aNode | 
