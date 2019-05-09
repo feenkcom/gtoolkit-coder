@@ -14,17 +14,18 @@ GtCoderMethodSourceElement >> actionsElement [
 
 { #category : #private }
 GtCoderMethodSourceElement >> createBreadcrumbItemsFor: aMethodCoder [
-	<return: #Collection of: #BrBUtton>
+	<return: #Collection of: #BrButton>
 	| theNamedActions |
 
 	"Array (name -> action)"
 	theNamedActions := Array streamContents: [ :aStream | 
-		| aPackage aClass |
+		| aPackage aPackageName aClass |
 		aPackage := (methodCoder compiledMethod ifNil: [ methodCoder classOrMetaClass ]) package.
+		aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
 		aClass := methodCoder classOrMetaClass.
 
 		aStream
-			nextPut: (aPackage name -> [ :aButton | aButton phlow spawnObject: aPackage ]);
+			nextPut: (aPackageName -> [ :aButton | aButton phlow spawnObject: aPackage ]);
 			nextPut: (aClass name -> [ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ]) ].
 		
 	^ theNamedActions collect: [ :eachNamedAction |
