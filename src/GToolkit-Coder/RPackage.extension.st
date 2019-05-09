@@ -42,7 +42,11 @@ RPackage >> gtUsedPackagesFor: aView [
 
 { #category : #'*GToolkit-Coder' }
 RPackage >> usedPackages [
-	^ (self usedPackagesByExtending addAll: ((self usedPackagesBySubclassing))) asSet
+	| result |
+	result := Set new.
+	result addAll: (self usedPackagesByExtending).
+	result addAll: (self usedPackagesBySubclassing).
+	^ result
 	
 ]
 
