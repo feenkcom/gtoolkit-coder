@@ -8,6 +8,6 @@ GtExampleGroup >> gtExpandableExamplesFor: aView [
 		priority: 1;
 		stencil: [
 			GtExampleGroupCoder new forExampleGroup: self examples ];
-		actionButtonIcon: BrGlamorousIcons playall 
+		actionButtonIcon: BrGlamorousIcons play 
 			action: [ :aButton | self runAll ]
 ]
