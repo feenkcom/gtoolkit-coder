@@ -866,7 +866,7 @@ GtSourceCoder >> sourceText [
 { #category : #private }
 GtSourceCoder >> styleCollapsedText [
 	| text |
-	text := self collapsedEditor text text.
+	text := self collapsedEditor text.
 	self collapsedStyler ifNotNil: [ :styler | styler style: text ].
 	self collapsedEditor text: text readonly
 ]
