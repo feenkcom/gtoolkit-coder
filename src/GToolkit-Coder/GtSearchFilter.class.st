@@ -72,6 +72,16 @@ GtSearchFilter >> applyInScope: aSearchScope [
 		filter: self
 ]
 
+{ #category : #converting }
+GtSearchFilter >> asCoder [
+	^ self result asCoder
+]
+
+{ #category : #converting }
+GtSearchFilter >> asElement [
+	^ self asCoder asElement
+]
+
 { #category : #accessing }
 GtSearchFilter >> defaultFilterScope [
 	^ GtSearchNullFilter new
