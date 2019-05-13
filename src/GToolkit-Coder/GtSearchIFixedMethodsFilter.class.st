@@ -27,6 +27,11 @@ GtSearchIFixedMethodsFilter >> methods [
 	^ methods ifNil: [ methods := OrderedCollection new ]
 ]
 
+{ #category : #accessing }
+GtSearchIFixedMethodsFilter >> methods: anOrderedCollection [
+	methods := anOrderedCollection
+]
+
 { #category : #enumerating }
 GtSearchIFixedMethodsFilter >> methodsDo: aBlock [
 	self methods do: aBlock.
