@@ -10,8 +10,8 @@ Class {
 { #category : #initialization }
 GtContextCoderVariableLook >> initialize [
 	super initialize.
-	changes
-		add:
+	self
+		addChange:
 			(BrLookChange new
 				up: [ :e | 
 					self widget

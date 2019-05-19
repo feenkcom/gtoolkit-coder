@@ -116,17 +116,14 @@ GtCoderExpanderLook >> initialize [
 		constraintsDo: [ :c | c vertical matchParent ].
 	toggle children first
 		constraintsDo: [ :c | c linear vertical alignTop ].
-	changes
-		add: (#(sidebar) asBrLookChildAddAsChangeWithValue: [ sidebar ]);
-		add: (#(content) asBrLookChildAddAsChangeWithValue: [ container ]).
-	changes
-		add:
-			(#(widget layout)
-				asBrLookPropertyChangeWithValue: [ BlLinearLayout horizontal ]).
-	changes
-		add:
-			(#(widget geometry)
-				asBrLookPropertyChangeWithValue: [ BlRectangle cornerRadius: 3 ])
+	self addChangeAddChildAs: #(sidebar) with: [ sidebar ].
+	self addChangeAddChildAs: #(content) with: [ container ].
+	self
+		addChangeProperty: #(widget layout)
+		with: [ BlLinearLayout horizontal ].
+	self
+		addChangeProperty: #(widget geometry)
+		with: [ BlRectangle cornerRadius: 3 ]
 ]
 
 { #category : #accessing }
