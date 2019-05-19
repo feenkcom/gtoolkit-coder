@@ -27,8 +27,8 @@ GtCoderToggleLook >> initialize [
 	self
 		add: BrMaterialRoundedLook new;
 		add: BrTextLabelLook new.
-	changes
-		add:
+	self
+		addChange:
 			(BrLookChange new
 				up: [ :e | 
 					self flag: 'Working around a toggled display issue'.

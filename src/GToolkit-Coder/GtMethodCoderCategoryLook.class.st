@@ -15,8 +15,8 @@ GtMethodCoderCategoryLook >> category [
 { #category : #initialization }
 GtMethodCoderCategoryLook >> initialize [
 	super initialize.
-	changes
-		add:
+	self
+		addChange:
 			(BrLookChange new
 				up: [ :e | 
 					self widget
