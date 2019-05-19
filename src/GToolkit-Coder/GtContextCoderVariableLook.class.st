@@ -8,12 +8,18 @@ Class {
 }
 
 { #category : #initialization }
-GtContextCoderVariableLook >> initializeLook [
-	super initializeLook.
-	self widget
-		childNamed: #bodyElement
-		ifFound: [ :element | element addChild: self variablesElement ]
-		ifNone: [  ]
+GtContextCoderVariableLook >> initialize [
+	super initialize.
+	changes
+		add:
+			(BrLookChange new
+				up: [ :e | 
+					self widget
+						childNamed: #bodyElement
+						ifFound: [ :element | element addChild: self variablesElement ]
+						ifNone: [  ] ];
+				down: [ :e |  ];
+				yourself)
 ]
 
 { #category : #accessing }
