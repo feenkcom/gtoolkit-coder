@@ -4,21 +4,17 @@ Class {
 	#category : #'GToolkit-Coder-Looks'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtClassBreadcrumbToggleLook >> initialize [
 	super initialize.
-	changes
-		add:
-			(#(widget layout)
-				asBrLookPropertyChangeWithValue: [ BlLinearLayout horizontal alignCenter ])
-]
-
-{ #category : #initialization }
-GtClassBreadcrumbToggleLook >> initializeLook [
-	super initializeLook.
-	self widget
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical exact: 16.
-			c padding: (BlInsets all: 6) ]
+	self
+		addChangeProperty: #(widget layout)
+		with: [ BlLinearLayout horizontal alignCenter ].
+	self
+		addChangeProperty: #(widget constraints horizontal resizer)
+		with: BlLayoutResizer fitContent.
+	self
+		addChangeProperty: #(widget constraints vertical resizer)
+		with: [ BlLayoutResizer exact: 16 ].
+	self addChangeProperty: #(widget padding) with: [ BlInsets all: 6 ]
 ]
