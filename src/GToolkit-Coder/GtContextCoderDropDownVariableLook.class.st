@@ -37,7 +37,7 @@ GtContextCoderDropDownVariableLook >> dropDownElement [
 	dropdown popup: [ self variablesElement ].
 	dropdown
 		look:
-			(BrDropdownLook new
+			(BrGlamorousDropdownLook new
 				popupEmbellisher: [ :aPopupElement :aToggleStencil | 
 					| aContainer aPopupWrapper |
 					aPopupWrapper := BlElement new
@@ -55,9 +55,11 @@ GtContextCoderDropDownVariableLook >> dropDownElement [
 						constraintsDo: [ :c | 
 							c horizontal fitContent.
 							c vertical fitContent ].
-					aContainer addChild: (aToggleStencil asElement elevation: (BlRelativeElevation elevation: 2)).
-					aContainer addChild: aPopupWrapper ];
-				outskirtsEmbellisher: [ :anElement | anElement ]).
+					aContainer
+						addChild:
+							(aToggleStencil asElement
+								elevation: (BlRelativeElevation elevation: 2)).
+					aContainer addChild: aPopupWrapper ]).
 	^ dropdown
 ]
 

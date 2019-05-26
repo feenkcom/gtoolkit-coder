@@ -87,54 +87,59 @@ GtCoderMethodActionsElement >> newDropButtonForAction: aGtCoderAction [
 	<return: #BrDropdown>
 	| dropDown |
 	dropDown := BrDropdown new.
-	dropDown 
+	dropDown
 		layout: BlLinearLayout horizontal;
 		constraintsDo: [ :c | 
-				c horizontal fitContent.
-				c vertical fitContent ];
-	 	look: (BrDropdownLook new 
-			outskirtsEmbellisher: [ :e | e 
-				padding: BlInsets empty;
-				margin: BlInsets empty. ]);
+			c horizontal fitContent.
+			c vertical fitContent ];
+		look: BrGlamorousDropdownLook new;
 		padding: BlInsets empty;
 		margin: BlInsets empty;
-		toggle: [ 
-			| aButton |
-				aButton := BrButton new.
-				aGtCoderAction title ifNotNil: [ aButton label: aGtCoderAction title asRopedText ].
-				aGtCoderAction icon ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
-				aButton 
-					beSmall;
-					action: [ dropDown toggle ];
-					look: BrGlamorousButtonWithIconLook;
-					padding: BlInsets empty;
-					margin: BlInsets empty ];
-		popup: [
-			| classCompleter containerElement titleElement |
+		toggle: [ | aButton |
+			aButton := BrButton new.
+			aGtCoderAction title
+				ifNotNil: [ aButton label: aGtCoderAction title asRopedText ].
+			aGtCoderAction icon
+				ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
+			aButton
+				beSmall;
+				action: [ dropDown toggle ];
+				look: BrGlamorousButtonWithIconLook;
+				padding: BlInsets empty;
+				margin: BlInsets empty ];
+		popup: [ | classCompleter containerElement titleElement |
 			containerElement := BlElement new
 				layout: BlLinearLayout vertical;
 				constraintsDo: [ :c | 
-					c horizontal exact: 200 .
+					c horizontal exact: 200.
 					c vertical matchParent ].
 			titleElement := BrEditorElement new
 				look: BrGlamorousInputFieldSpacingLook;
 				editor: (BrTextEditor new text: '' asRopedText);
 				requestFocus;
 				constraintsDo: [ :c | 
-					c margin: (BlInsets top: 1 left: 0 bottom: 0 right: 0).
+					c
+						margin:
+							(BlInsets
+								top: 1
+								left: 0
+								bottom: 0
+								right: 0).
 					c horizontal matchParent.
 					c vertical fitContent ].
-			classCompleter := GtCompletionController 
-				on: titleElement 
+			classCompleter := GtCompletionController
+				on: titleElement
 				strategy: GtCoderClassWithPackageCompletionStrategy new.
 			classCompleter install.
-			classCompleter announcer when: GtCompleterCompletionAccepted do: [ :event | 
-				aGtCoderAction action value: titleElement editor text asString asClass.
-				dropDown toggle ].
+			classCompleter announcer
+				when: GtCompleterCompletionAccepted
+				do: [ :event | 
+					aGtCoderAction action value: titleElement editor text asString asClass.
+					dropDown toggle ].
 			containerElement addChild: titleElement.
-			containerElement ]. 
-	^ dropDown.
-	
+			containerElement ].
+	^ dropDown
+
 	"^ ((GtPhlowDropdownAction new
 		label: aGtCoderAction title;
 		icon: aGtCoderAction icon asElement;
@@ -142,7 +147,6 @@ GtCoderMethodActionsElement >> newDropButtonForAction: aGtCoderAction [
 			 ])
 				asElement: [ :anActionElement | 
 					anActionElement ] withHostElement: self)"
-			
 ]
 
 { #category : #'instance creation' }
