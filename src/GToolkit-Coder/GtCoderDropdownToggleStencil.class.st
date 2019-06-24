@@ -16,7 +16,6 @@ GtCoderDropdownToggleStencil >> create [
 		look: BrGlamorousButtonWithLabelAndIconLook;
 		padding: (BlInsets top: 6 right: 8 bottom: 6 left: 15);
 		label: self item asString;
-		action: [ self dropdown toggle ];
 		icon: (BlElement new
 			size: 8@8;
 			geometry:

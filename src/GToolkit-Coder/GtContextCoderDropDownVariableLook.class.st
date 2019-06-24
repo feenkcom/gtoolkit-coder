@@ -33,13 +33,14 @@ GtContextCoderDropDownVariableLook >> dropDownElement [
 			c ignoreByLayout.
 			c ignored horizontal alignRight.
 			c ignored vertical alignTop ].
-	dropdown toggle: [ self badgeButton action: [ dropdown toggle ] ].
+	dropdown toggle: [ self badgeButton ].
 	dropdown popup: [ self variablesElement ].
 	dropdown
 		look:
 			(BrGlamorousDropdownLook new
 				popupEmbellisher: [ :aPopupElement :aToggleStencil | 
 					| aContainer aPopupWrapper |
+					self flag: 'FIXME is this still used? this should rather not override the popupEmbellisher, instead use the popup or outskirtsEmbellisher'.
 					aPopupWrapper := BlElement new
 						layout: BlLinearLayout vertical;
 						constraintsDo: [ :c | 

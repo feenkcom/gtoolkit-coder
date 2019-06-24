@@ -103,7 +103,6 @@ GtCoderMethodActionsElement >> newDropButtonForAction: aGtCoderAction [
 				ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
 			aButton
 				beSmall;
-				action: [ dropDown toggle ];
 				look: BrGlamorousButtonWithIconLook;
 				padding: BlInsets empty;
 				margin: BlInsets empty ];
