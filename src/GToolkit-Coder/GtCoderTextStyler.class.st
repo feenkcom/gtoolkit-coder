@@ -38,8 +38,8 @@ GtCoderTextStyler >> privateStyle: aText [
 	aText asString = coder source
 		ifTrue: [ ast := coder rbAST ]
 		ifFalse: [ ast := coder rbAST copy.
-			(ast isNil or: [ ast isParseError ])
-				ifFalse: [ ast
+			(ast isMethod and: [ ast isParseError not ])
+				ifTrue: [ ast
 						body: (RBSequenceNode statements: #());
 						pragmas: #();
 						yourself.

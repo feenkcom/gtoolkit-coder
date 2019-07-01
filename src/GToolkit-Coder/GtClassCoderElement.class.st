@@ -64,8 +64,7 @@ GtClassCoderElement >> buildContent [
 	self addChild: contentPane.
 	self updateNavigationElement.
 	self coderModel methodsCoder
-		ifNotNil: [ :aMethodsCoder | 
-			contentPane
+		ifNotNil: [ contentPane
 				addChild:
 					(BlElement new
 						layout: BlLinearLayout vertical;
@@ -75,8 +74,39 @@ GtClassCoderElement >> buildContent [
 							c linear weight: 2 ];
 						addChildren:
 							{self buildBreadcrumb.
-							aMethodsCoder asElement};
+							self buildContentTabs};
 						yourself) ]
+]
+
+{ #category : #'building ui' }
+GtClassCoderElement >> buildContentTabs [
+	^ BrTabGroup new
+		look: BrGlamorousTabGroupLook new;
+		addTab:
+			(BrTab new
+				look: BrGlamorousTabLook new;
+				label: 'Methods';
+				stencil: [ self coderModel methodsCoder asElement ]);
+		addTab:
+			(BrTab new
+				look: BrGlamorousTabLook new;
+				label: 'Definition';
+				stencil: [ BlElement new
+						margin: (BlInsets all: 10);
+						constraintsDo: [ :c | 
+							c horizontal matchParent.
+							c vertical matchParent ];
+						background: (Color blue alpha: 0.2) ]);
+		addTab:
+			(BrTab new
+				look: BrGlamorousTabLook new;
+				label: 'Comment';
+				stencil: [ BlElement new
+						constraintsDo: [ :c | 
+							c horizontal matchParent.
+							c vertical exact: 300 ];
+						margin: (BlInsets all: 10);
+						background: (Color orange alpha: 0.2) ])
 ]
 
 { #category : #'building ui' }
