@@ -12,6 +12,48 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #'as yet unclassified' }
+GtClassCoderElement >> buildBreadcrumb [
+	| breadcrumb |
+	breadcrumb := BrBreadcrumb new.
+	breadcrumb
+		look:
+			(BrGlamorousBreadcrumbLook new
+				separator: [ BrLabel new
+						look:
+							(BrGlamorousLabelLook new thin
+								foreground: BrGlamorousColors defaultButtonTextColor);
+						text: '>';
+						margin:
+							(BlInsets
+								top: 6
+								left: 3
+								bottom: 0
+								right: 3) ]).
+	self coderModel methodsCoder classOrMetaClass
+		withAllSuperclassesDo: [ :each | 
+			| toggle |
+			toggle := BrToggle new
+				margin: (BlInsets all: 2);
+				activated: (self coderModel methodsCoder filteredClass: each);
+				label: (each name asRopedText attributes: {(BlFontSizeAttribute size: 12)});
+				look: GtClassBreadcrumbToggleLook;
+				when: BrToggleActivatedEvent
+					do: [ :anEvent | self coderModel methodsCoder addMethodsForClass: each ];
+				when: BrToggleDeactivatedEvent
+					do: [ :anEvent | 
+					self coderModel methodsCoder removeMethodsForClass: each.
+					self coderModel methodsCoder hasFilter
+						ifFalse: [ each == self coderModel methodsCoder classOrMetaClass
+								ifTrue: [ anEvent consumed: true ].
+							(breadcrumb itemAt: 1) activate ] ].
+			breadcrumb addItem: toggle ].
+	^ breadcrumb asScrollableElement
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ]
+]
+
 { #category : #'building ui' }
 GtClassCoderElement >> buildContent [
 	self buildHeaderPane.
@@ -20,15 +62,21 @@ GtClassCoderElement >> buildContent [
 			c horizontal matchParent.
 			c vertical matchParent ].
 	self addChild: contentPane.
-	
 	self updateNavigationElement.
-	self coderModel methodsCoder ifNotNil: [ :aMethodsCoder |
-		| methodsCoderElement | 
-		
-		methodsCoderElement := aMethodsCoder asElement.
-		methodsCoderElement constraintsDo: [ :c |
-			c linear weight: 2 ].
-		contentPane addChild: methodsCoderElement ]
+	self coderModel methodsCoder
+		ifNotNil: [ :aMethodsCoder | 
+			contentPane
+				addChild:
+					(BlElement new
+						layout: BlLinearLayout vertical;
+						constraintsDo: [ :c | 
+							c horizontal matchParent.
+							c vertical matchParent.
+							c linear weight: 2 ];
+						addChildren:
+							{self buildBreadcrumb.
+							aMethodsCoder asElement};
+						yourself) ]
 ]
 
 { #category : #'building ui' }
