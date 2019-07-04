@@ -52,7 +52,7 @@ GtProcessCoder >> isSuspended [
 GtProcessCoder >> updateCoders [
 	| context firstContext coder newCoders |
 	self isSuspended
-		ifTrue: [ coders := coders reject: [ :each | each isDead ].
+		ifTrue: [ coders := coders asOrderedCollection reject: [ :each | each isDead ].
 			firstContext := coders isEmpty
 				ifTrue: [ nil ]
 				ifFalse: [ coders first context ].
