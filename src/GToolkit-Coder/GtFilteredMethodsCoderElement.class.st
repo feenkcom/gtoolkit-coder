@@ -16,7 +16,7 @@ GtFilteredMethodsCoderElement >> buildElement [
 GtFilteredMethodsCoderElement >> filterElement [
 	| element editor aFilterString |
 	editor := BrTextEditor new.
-	aFilterString := methodsCoder ifNotNil: #implementorsFilterString.
+	aFilterString := coders ifNotNil: #implementorsFilterString.
 	aFilterString ifNotNil: [ editor text: aFilterString asString asRopedText ].
 	editor
 		when: BrTextEditorInsertedEvent do: [ :event | self updateFilter: editor text asString ];
@@ -35,5 +35,5 @@ GtFilteredMethodsCoderElement >> filterElement [
 
 { #category : #'private - callbacks' }
 GtFilteredMethodsCoderElement >> updateFilter: aString [
-	methodsCoder implementorsFilterString: aString
+	coders implementorsFilterString: aString
 ]

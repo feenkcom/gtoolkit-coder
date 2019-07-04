@@ -17,13 +17,13 @@ GtClassMethodsCoderElement >> addButtonElement [
 				left: 10
 				bottom: 0
 				right: 0);
-		action: [ methodsCoder addNewCoder ].
+		action: [ coders addNewCoder ].
 	^ button
 ]
 
 { #category : #'private - callbacks' }
 GtClassMethodsCoderElement >> addClassToFilter: aBehavior [
-	methodsCoder addMethodsForClass: aBehavior
+	coders addMethodsForClass: aBehavior
 ]
 
 { #category : #ui }
@@ -49,7 +49,7 @@ GtClassMethodsCoderElement >> headerElement [
 
 { #category : #'private - callbacks' }
 GtClassMethodsCoderElement >> removeClassFromFilter: aBehavior ifEmpty: aBlock [
-	methodsCoder removeMethodsForClass: aBehavior.
-	methodsCoder hasFilter
+	coders removeMethodsForClass: aBehavior.
+	coders hasFilter
 		ifFalse: aBlock
 ]

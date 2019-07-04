@@ -2,12 +2,12 @@ Class {
 	#name : #GtClassCoderElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'coder',
 		'contentPane',
 		'headerPane',
 		'navigationElement',
 		'panesNavigationButton',
-		'treeNavigationButton'
+		'treeNavigationButton',
+		'classCoder'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -30,21 +30,21 @@ GtClassCoderElement >> buildBreadcrumb [
 								left: 3
 								bottom: 0
 								right: 3) ]).
-	self coderModel methodsCoder classOrMetaClass
+	self classCoder theClass
 		withAllSuperclassesDo: [ :each | 
 			| toggle |
 			toggle := BrToggle new
 				margin: (BlInsets all: 2);
-				activated: (self coderModel methodsCoder filteredClass: each);
+				activated: (self classCoder methodsCoder filteredClass: each);
 				label: (each name asRopedText attributes: {(BlFontSizeAttribute size: 12)});
 				look: GtClassBreadcrumbToggleLook;
 				when: BrToggleActivatedEvent
-					do: [ :anEvent | self coderModel methodsCoder addMethodsForClass: each ];
+					do: [ :anEvent | self classCoder methodsCoder addMethodsForClass: each ];
 				when: BrToggleDeactivatedEvent
 					do: [ :anEvent | 
-					self coderModel methodsCoder removeMethodsForClass: each.
-					self coderModel methodsCoder hasFilter
-						ifFalse: [ each == self coderModel methodsCoder classOrMetaClass
+					self classCoder methodsCoder removeMethodsForClass: each.
+					self classCoder methodsCoder hasFilter
+						ifFalse: [ each == self classCoder theClass
 								ifTrue: [ anEvent consumed: true ].
 							(breadcrumb itemAt: 1) activate ] ].
 			breadcrumb addItem: toggle ].
@@ -63,7 +63,7 @@ GtClassCoderElement >> buildContent [
 			c vertical matchParent ].
 	self addChild: contentPane.
 	self updateNavigationElement.
-	self coderModel methodsCoder
+	self classCoder methodsCoder
 		ifNotNil: [ contentPane
 				addChild:
 					(BlElement new
@@ -86,7 +86,7 @@ GtClassCoderElement >> buildContentTabs [
 			(BrTab new
 				look: BrGlamorousTabLook new;
 				label: 'Methods';
-				stencil: [ self coderModel methodsCoder asElement ]);
+				stencil: [ self classCoder methodsCoder asElement ]);
 		addTab:
 			(BrTab new
 				look: BrGlamorousTabLook new;
@@ -117,7 +117,7 @@ GtClassCoderElement >> buildHeaderPane [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical fitContent ].
-	selectorElement := self coderModel searchFilter asElement.
+	selectorElement := self classCoder searchFilter asElement.
 	toolbarElement := self buildToolbar.
 	toolbarElement 
 		constraintsDo: [ :c | 
@@ -132,7 +132,7 @@ GtClassCoderElement >> buildHeaderPane [
 { #category : #'building ui' }
 GtClassCoderElement >> buildNavigationElement [
 	| element |
-	element := self coderModel navigationModel asElement.
+	element := self classCoder navigationModel asElement.
 	"element padding: (BlInsets all: 10)."
 	element constraintsDo: [ :c |
 		c linear weight: 0.5 ].
@@ -147,10 +147,10 @@ GtClassCoderElement >> buildPanesNavigationToolbarButton [
 		icon: BrGlamorousIcons threepanes asElement;
 		when: BrToggleActivatedEvent do: [ :anEvent | 
 			treeNavigationButton deactivate.
-			self coderModel 
-				navigationModel: GtCoderPackagesPanesNavigation new ];
+			self classCoder 
+				navigationModel: GtClassCoderPackagesPanesNavigation new ];
 		when: BrToggleDeactivatedEvent do: [ :anEvent | 
-			self coderModel navigationModel: nil ].
+			self classCoder navigationModel: nil ].
 	^ toggle
 ]
 
@@ -175,25 +175,25 @@ GtClassCoderElement >> buildTreeNavigationToolbarButton [
 		icon: BrGlamorousIcons tree asElement;
 		when: BrToggleActivatedEvent do: [ :anEvent | 
 			panesNavigationButton deactivate.
-			self coderModel 
-				navigationModel: GtCoderPackagesTreeNavigation new ];
+			self classCoder 
+				navigationModel: GtClassCoderPackagesTreeNavigation new ];
 		when: BrToggleDeactivatedEvent do: [ :anEvent |
-			self coderModel navigationModel: nil ].
+			self classCoder navigationModel: nil ].
 	^ toggle
 ]
 
 { #category : #accessing }
-GtClassCoderElement >> coderModel [
-	^ coder
+GtClassCoderElement >> classCoder [
+	^ classCoder
 ]
 
 { #category : #accessing }
-GtClassCoderElement >> coderModel: aCoder [
-	coder := aCoder.
-	coder
+GtClassCoderElement >> classCoder: aCoder [
+	classCoder := aCoder.
+	classCoder
 		when: GtCoderClassSelectedAnnouncement
 		do: [ :ann | self updateMethodsCoderElement ].
-	coder
+	classCoder
 		when: GtCoderNavigationModelChangedAnnouncement
 		do: [ :ann | self updateNavigationElement ].
 	self buildContent.
@@ -225,7 +225,7 @@ GtClassCoderElement >> removeNavigationElement [
 { #category : #'updating ui' }
 GtClassCoderElement >> updateMethodsCoderElement [
 	| methodsCoder |
-	methodsCoder := self coderModel methodsCoder.
+	methodsCoder := self classCoder methodsCoder.
 	self contentPane hasChildren ifTrue: [
 		self contentPane removeChildAt: self contentPane childrenCount ].
 	self contentPane addChild: methodsCoder asElement
@@ -236,7 +236,7 @@ GtClassCoderElement >> updateNavigationElement [
 	| navigationModel |
 	
 	self removeNavigationElement.
-	navigationModel := self coderModel navigationModel.
+	navigationModel := self classCoder navigationModel.
 	navigationModel ifNil: [ ^ self ].
 	
 	navigationModel displayPosition = #top

@@ -486,6 +486,16 @@ GtMethodCoder >> methodExpanderFor: anAST [
 	addOns addStyler: GtCoderExpandableMethodStyler new
 ]
 
+{ #category : #accessing }
+GtMethodCoder >> methodsCoder [
+	^ self attributeNamed: #methodsCoder
+]
+
+{ #category : #accessing }
+GtMethodCoder >> methodsCoder: aCoder [
+	^ self attributeNamed: #methodsCoder put: aCoder
+]
+
 { #category : #'add ons' }
 GtMethodCoder >> modifiedMessageAstFor: anAST [
 	<gtAstCoderAddOns: 1>

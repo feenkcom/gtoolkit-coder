@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderMethodAnnouncement,
+	#name : #GtCoderAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
 		'coder'
@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #accessing }
-GtCoderMethodAnnouncement >> coder [
+GtCoderAnnouncement >> coder [
 	^ coder
 ]
 
 { #category : #accessing }
-GtCoderMethodAnnouncement >> coder: methodCoder [
+GtCoderAnnouncement >> coder: methodCoder [
 	coder := methodCoder
 ]

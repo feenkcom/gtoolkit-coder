@@ -58,8 +58,8 @@ GtFilteredMethodsCoder >> filters [
 ]
 
 { #category : #'initialize-release' }
-GtFilteredMethodsCoder >> forMethods: compiledMethods [
-	super forMethods: compiledMethods.
+GtFilteredMethodsCoder >> forItems: compiledMethods [
+	super forItems: compiledMethods.
 	originalFilter := compiledMethods filter
 ]
 
@@ -102,20 +102,27 @@ GtFilteredMethodsCoder >> shouldSort: a before: b [
 { #category : #private }
 GtFilteredMethodsCoder >> updateCoders [
 	| newCoders highlighter |
-	newCoders := methodCoders select: [ :each | each isModified ].
-	methods do: [ :each | 
-		(newCoders anySatisfy: [ :coder | coder isForMethod: each ])
-			ifFalse: [ newCoders add: (methodCoders 
-				detect: [ :coder | coder isForMethod: each ] 
-				ifNone: [ self newMethodCoderFor: each ]) ] ].
-	methodCoders := newCoders.
-	methodCoders sort: [ :a :b | self shouldSort: a before: b ].
-	highlighter := methods highlighter.
-	methodCoders do: [ :each | each highlighter: highlighter ].
-	self announce: (GtCoderMethodsListChanged new coder: self)
+	newCoders := coders select: [ :each | each isModified ].
+	coders
+		do: [ :each | 
+			(newCoders anySatisfy: [ :coder | coder isForMethod: each ])
+				ifFalse: [ newCoders
+						add:
+							(coders
+								detect: [ :coder | coder isForMethod: each ]
+								ifNone: [ self newCoderFor: each ]) ] ].
+	coders := newCoders.
+	coders sort: [ :a :b | self shouldSort: a before: b ].
+	highlighter := coders highlighter.
+	coders do: [ :each | each highlighter: highlighter ].
+	self
+		announce:
+			(GtCodersCodersChanged new
+				coders: self;
+				yourself)
 ]
 
 { #category : #private }
 GtFilteredMethodsCoder >> updateMethods [
-	methods updateForFilter: self combinedFilter
+	items updateForFilter: self combinedFilter
 ]

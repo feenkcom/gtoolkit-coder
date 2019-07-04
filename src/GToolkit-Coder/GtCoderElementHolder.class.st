@@ -1,11 +1,11 @@
 Class {
-	#name : #GtMethodCoderElementHolder,
+	#name : #GtCoderElementHolder,
 	#superclass : #BlInfiniteHolder,
 	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #accessing }
-GtMethodCoderElementHolder >> methodCoderElement: anElement [
+GtCoderElementHolder >> coderElement: anElement [
 	anElement removeFromParent.
 	self initializeWith: anElement
 ]

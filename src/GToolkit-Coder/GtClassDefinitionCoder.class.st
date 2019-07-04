@@ -8,9 +8,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-GtClassDefinitionCoder class >> forClassOrMetaClass: aClassOrMetaClass [
+GtClassDefinitionCoder class >> forClass: aBehavior [
 	^ self new
-		classOrMetaClass: aClassOrMetaClass;
+		classOrMetaClass: aBehavior;
 		yourself
 ]
 

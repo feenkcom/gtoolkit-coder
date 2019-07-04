@@ -40,12 +40,6 @@ GtProcessCoder >> forProcess: aProcess [
 		startedAt: aProcess suspendedContext)
 ]
 
-{ #category : #'initialize-release' }
-GtProcessCoder >> initialize [
-	super initialize.
-	methodCoders := OrderedCollection new
-]
-
 { #category : #testing }
 GtProcessCoder >> isSuspended [
 	^ session process notNil and: [ 
@@ -58,20 +52,27 @@ GtProcessCoder >> isSuspended [
 GtProcessCoder >> updateCoders [
 	| context firstContext coder newCoders |
 	self isSuspended
-		ifTrue: [ methodCoders := methodCoders reject: [ :each | each isDead ].
-			firstContext := methodCoders isEmpty
+		ifTrue: [ coders := coders reject: [ :each | each isDead ].
+			firstContext := coders isEmpty
 				ifTrue: [ nil ]
-				ifFalse: [ methodCoders first context ].
+				ifFalse: [ coders first context ].
 			context := session process suspendedContext.
 			newCoders := OrderedCollection new.
 			[ context notNil and: [ context ~~ firstContext ] ]
 				whileTrue: [ coder := GtMethodContextCoder forContext: context session: session.
-					coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateCoders to: self.
+					coder announcer weak
+						when: GtCoderRefreshStackAnnouncement
+						send: #updateCoders
+						to: self.
 					newCoders add: coder.
 					context := context sender ].
-			methodCoders addAllFirst: newCoders.
-			methodCoders notEmpty
-				ifTrue: [ methodCoders first expanded: true ] ]
-		ifFalse: [ methodCoders := OrderedCollection new ].
-	self announce: (GtCoderMethodsListChanged new coder: self)
+			coders addAllFirst: newCoders.
+			coders notEmpty
+				ifTrue: [ coders first expanded: true ] ]
+		ifFalse: [ coders := OrderedCollection new ].
+	self
+		announce:
+			(GtCodersCodersChanged new
+				coders: self;
+				yourself)
 ]

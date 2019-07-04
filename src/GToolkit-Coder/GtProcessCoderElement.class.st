@@ -191,7 +191,7 @@ GtProcessCoderElement >> watchExpressionsFor: aMethodCoder [
 GtProcessCoderElement >> watchVariables [
 	| variables |
 	variables := OrderedCollection new.
-	methodsCoder coders do: [ :each | variables addAll: (self watchVariablesFor: each) ].
+	coders coders do: [ :each | variables addAll: (self watchVariablesFor: each) ].
 	^ variables
 ]
 

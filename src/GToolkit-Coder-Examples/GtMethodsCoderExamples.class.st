@@ -88,7 +88,7 @@ GtMethodsCoderExamples >> methodsCoderWithClass [
 { #category : #'examples - coder' }
 GtMethodsCoderExamples >> methodsCoderWithExplicitMethods [
 	<gtExample>
-	^ GtMethodsCoder forMethods: { Object>>#printString . Object >>#printOn: }
+	^ GtMethodsCoder forItems: { Object>>#printString . Object >>#printOn: }
 ]
 
 { #category : #'examples - filters' }

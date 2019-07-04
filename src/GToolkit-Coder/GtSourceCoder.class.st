@@ -577,16 +577,6 @@ GtSourceCoder >> mainActions [
 	^ addOns mainActions
 ]
 
-{ #category : #accessing }
-GtSourceCoder >> methodsCoder [
-	^ self attributeNamed: #methodsCoder
-]
-
-{ #category : #accessing }
-GtSourceCoder >> methodsCoder: aCoder [
-	^ self attributeNamed: #methodsCoder put: aCoder
-]
-
 { #category : #private }
 GtSourceCoder >> newCollapsedEditor [
 	^ BrTextEditor new
@@ -733,9 +723,9 @@ GtSourceCoder >> refreshForChanges [
 			each = #stylers
 				ifTrue: [ self styleText ].
 			each = #mainActions
-				ifTrue: [ self announce: (GtCoderMethodMainActionsChanged new coder: self) ].
+				ifTrue: [ self announce: (GtCoderMainActionsChanged new coder: self) ].
 			each = #contextActions
-				ifTrue: [ self announce: (GtCoderMethodContextActionsChanged new coder: self) ] ].
+				ifTrue: [ self announce: (GtCoderContextActionsChanged new coder: self) ] ].
 	addOns clearChanges
 ]
 

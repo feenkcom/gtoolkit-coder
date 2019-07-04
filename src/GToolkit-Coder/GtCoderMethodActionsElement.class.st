@@ -64,8 +64,8 @@ GtCoderMethodActionsElement >> methodCoder [
 GtCoderMethodActionsElement >> methodCoder: aGtMethodCoder [
 	methodCoder := aGtMethodCoder.
 	methodCoder announcer weak
-		when: GtCoderMethodMainActionsChanged send: #updateMainToolbar to: self;
-		when: GtCoderMethodContextActionsChanged send: #updateContextToolbar to: self.
+		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
+		when: GtCoderContextActionsChanged send: #updateContextToolbar to: self.
 	self addMainToolbarActions.
 	self addContextToolbarActions
 ]
