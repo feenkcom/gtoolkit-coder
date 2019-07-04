@@ -1,3 +1,6 @@
+"
+FIXME this pretends to be a methodcoder to reuse its element
+"
 Class {
 	#name : #GtClassDefinitionCoder,
 	#superclass : #GtSourceCoder,
@@ -49,6 +52,11 @@ GtClassDefinitionCoder >> initializeAddOns [
 		icon: BrGlamorousIcons accept
 		action: [ self doItAll ].
 	addOns clearChanges
+]
+
+{ #category : #accessing }
+GtClassDefinitionCoder >> methodsCoder [
+	^ nil
 ]
 
 { #category : #updating }

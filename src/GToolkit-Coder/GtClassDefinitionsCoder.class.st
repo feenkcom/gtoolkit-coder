@@ -14,15 +14,19 @@ GtClassDefinitionsCoder class >> forClass: aClass [
 		yourself
 ]
 
+{ #category : #elements }
+GtClassDefinitionsCoder >> elementClass [
+	^ GtMethodsCoderElement
+]
+
 { #category : #'instance creation' }
 GtClassDefinitionsCoder >> forClass: aBehavior [
 	self flag: 'FIXME should listen class definition change'.
 	class := aBehavior.
-	items ifEmpty: [ items := {class} ].
-	items := items
-		flatCollect: [ :e | 
-			{(self newCoderFor: e instanceSide).
-			(self newCoderFor: e classSide)} ]
+	self
+		forItems:
+			{class instanceSide.
+			class classSide}
 ]
 
 { #category : #'instance creation' }

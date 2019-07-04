@@ -91,22 +91,12 @@ GtClassCoderElement >> buildContentTabs [
 			(BrTab new
 				look: BrGlamorousTabLook new;
 				label: 'Definition';
-				stencil: [ BlElement new
-						margin: (BlInsets all: 10);
-						constraintsDo: [ :c | 
-							c horizontal matchParent.
-							c vertical matchParent ];
-						background: (Color blue alpha: 0.2) ]);
+				stencil: [ self classCoder definitionsCoder asElement ]);
 		addTab:
 			(BrTab new
 				look: BrGlamorousTabLook new;
 				label: 'Comment';
-				stencil: [ BlElement new
-						constraintsDo: [ :c | 
-							c horizontal matchParent.
-							c vertical exact: 300 ];
-						margin: (BlInsets all: 10);
-						background: (Color orange alpha: 0.2) ])
+				stencil: [ self classCoder commentsCoder asElement ])
 ]
 
 { #category : #'building ui' }

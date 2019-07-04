@@ -55,9 +55,9 @@ GtClassCoder >> displayClass: aClass [
 { #category : #initialize }
 GtClassCoder >> forClass: aClass [
 	class := aClass.
-	methodsCoder := GtClassMethodsCoder forClass: class
-	"definitionsCoder := GtClassDefinitionsCoder forClass: class.
-	commentsCoder := GtClassCommentsCoder forClass: class."
+	methodsCoder := GtClassMethodsCoder forClass: class.
+	definitionsCoder := GtClassDefinitionsCoder forClass: class.
+	commentsCoder := GtClassCommentsCoder forClass: class
 ]
 
 { #category : #initialize }

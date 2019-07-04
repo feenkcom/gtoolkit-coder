@@ -14,9 +14,20 @@ GtClassCommentsCoder class >> forClass: aClass [
 		yourself
 ]
 
+{ #category : #elements }
+GtClassCommentsCoder >> elementClass [
+	^ GtMethodsCoderElement
+]
+
+{ #category : #'instance creation' }
+GtClassCommentsCoder >> forClass: aBehavior [
+	self flag: 'FIXME should listen class definition change'.
+	class := aBehavior.
+	self forItems: {class}
+]
+
 { #category : #'instance creation' }
 GtClassCommentsCoder >> newCoderFor: aBehavior [
 	self flag: 'FIXME use other element'.
-	^ GtMethodCoder
-		forMethod: (aBehavior instanceSide lookupSelector: #initialize)
+	^ GtMethodCoder forMethod: ProtoObject >> #initialize
 ]
