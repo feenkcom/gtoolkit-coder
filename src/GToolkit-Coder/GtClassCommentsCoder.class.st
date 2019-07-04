@@ -26,16 +26,15 @@ GtClassCommentsCoder >> elementClass [
 ]
 
 { #category : #'instance creation' }
-GtClassCommentsCoder >> forClass: aBehavior [
+GtClassCommentsCoder >> forClass: aClass [
 	self flag: 'FIXME should listen class definition change'.
-	class := aBehavior.
+	class := aClass.
 	self forItems: {class}
 ]
 
 { #category : #'instance creation' }
-GtClassCommentsCoder >> newCoderFor: aBehavior [
-	self flag: 'FIXME use other element'.
-	^ GtMethodCoder forMethod: ProtoObject >> #initialize
+GtClassCommentsCoder >> newCoderFor: aClass [
+	^ GtClassCommentCoder forClass: aClass
 ]
 
 { #category : #removing }
@@ -51,7 +50,7 @@ GtClassCommentsCoder >> updateCoders [
 		select: [ :each | each isModified ].
 	items
 		do: [ :each | 
-			(newCoders anySatisfy: [ :coder | coder classOrMetaClass = each ])
+			(newCoders anySatisfy: [ :coder | coder theClass = each ])
 				ifFalse: [ newCoders add: (self newCoderFor: each) ] ].
 	coders := newCoders.
 	self
