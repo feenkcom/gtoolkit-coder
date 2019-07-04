@@ -1,5 +1,5 @@
 Class {
-	#name : #GtMethodCoderAddOns,
+	#name : #GtSourceCoderAddOns,
 	#superclass : #Object,
 	#instVars : [
 		'contextActions',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #actions }
-GtMethodCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
+GtSourceCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
 	| newAction index |
 	newAction := GtCoderAction new
 		title: aString;
@@ -26,7 +26,7 @@ GtMethodCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
 ]
 
 { #category : #actions }
-GtMethodCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
+GtSourceCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
 	| newAction |
 	newAction := GtCoderDropDownAction new
 		title: aString;
@@ -37,7 +37,7 @@ GtMethodCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
 ]
 
 { #category : #actions }
-GtMethodCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
+GtSourceCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
 	| newAction index |
 	newAction := GtCoderAction new
 		title: aString;
@@ -51,7 +51,7 @@ GtMethodCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
 ]
 
 { #category : #shortcuts }
-GtMethodCoderAddOns >> addShortcut: aBlShortcut [
+GtSourceCoderAddOns >> addShortcut: aBlShortcut [
 	modified add: #shortcuts.
 	1 to: shortcuts size do: [ :i | 
 		(shortcuts at: i) combination = aBlShortcut combination
@@ -60,7 +60,7 @@ GtMethodCoderAddOns >> addShortcut: aBlShortcut [
 ]
 
 { #category : #stylers }
-GtMethodCoderAddOns >> addStyler: aStyler [
+GtSourceCoderAddOns >> addStyler: aStyler [
 	(stylers anySatisfy: [ :each | each class = aStyler class ])
 		ifTrue: [ ^ self ].
 	stylers add: aStyler.
@@ -68,22 +68,22 @@ GtMethodCoderAddOns >> addStyler: aStyler [
 ]
 
 { #category : #changes }
-GtMethodCoderAddOns >> changesDo: aBlock [
+GtSourceCoderAddOns >> changesDo: aBlock [
 	modified do: aBlock
 ]
 
 { #category : #changes }
-GtMethodCoderAddOns >> clearChanges [
+GtSourceCoderAddOns >> clearChanges [
 	modified := Set new
 ]
 
 { #category : #accessing }
-GtMethodCoderAddOns >> contextActions [
+GtSourceCoderAddOns >> contextActions [
 	^ contextActions
 ]
 
 { #category : #ui }
-GtMethodCoderAddOns >> gtViewContextActionsFor: aView [
+GtSourceCoderAddOns >> gtViewContextActionsFor: aView [
 	<gtView>
 	^ aView columnedList
 		title: 'Context actions' translated;
@@ -94,7 +94,7 @@ GtMethodCoderAddOns >> gtViewContextActionsFor: aView [
 ]
 
 { #category : #ui }
-GtMethodCoderAddOns >> gtViewKeybindingsFor: aView [
+GtSourceCoderAddOns >> gtViewKeybindingsFor: aView [
 	<gtView>
 	^ aView columnedList
 		title: 'Key bindings' translated;
@@ -107,7 +107,7 @@ GtMethodCoderAddOns >> gtViewKeybindingsFor: aView [
 ]
 
 { #category : #ui }
-GtMethodCoderAddOns >> gtViewMainActionsFor: aView [
+GtSourceCoderAddOns >> gtViewMainActionsFor: aView [
 	<gtView>
 	^ aView columnedList
 		title: 'Main actions' translated;
@@ -118,7 +118,7 @@ GtMethodCoderAddOns >> gtViewMainActionsFor: aView [
 ]
 
 { #category : #ui }
-GtMethodCoderAddOns >> gtViewStylersFor: aView [
+GtSourceCoderAddOns >> gtViewStylersFor: aView [
 	<gtView>
 	^ aView list
 		title: 'Stylers' translated;
@@ -127,7 +127,7 @@ GtMethodCoderAddOns >> gtViewStylersFor: aView [
 ]
 
 { #category : #'initialize-release' }
-GtMethodCoderAddOns >> initialize [
+GtSourceCoderAddOns >> initialize [
 	super initialize.
 	contextActions := OrderedCollection new.
 	mainActions := OrderedCollection new.
@@ -137,12 +137,12 @@ GtMethodCoderAddOns >> initialize [
 ]
 
 { #category : #accessing }
-GtMethodCoderAddOns >> mainActions [
+GtSourceCoderAddOns >> mainActions [
 	^ mainActions
 ]
 
 { #category : #actions }
-GtMethodCoderAddOns >> removeContextAction: aString [
+GtSourceCoderAddOns >> removeContextAction: aString [
 	| index |
 	index := (1 to: contextActions size) detect: [ :i | (contextActions at: i) title = aString ] ifNone: [ 0 ].
 	index = 0
@@ -152,7 +152,7 @@ GtMethodCoderAddOns >> removeContextAction: aString [
 ]
 
 { #category : #actions }
-GtMethodCoderAddOns >> removeMainAction: aString [
+GtSourceCoderAddOns >> removeMainAction: aString [
 	| index |
 	index := (1 to: mainActions size) detect: [ :i | (mainActions at: i) title = aString ] ifNone: [ 0 ].
 	index = 0
@@ -162,7 +162,7 @@ GtMethodCoderAddOns >> removeMainAction: aString [
 ]
 
 { #category : #shortcuts }
-GtMethodCoderAddOns >> removeShortcut: aBlShortcut [
+GtSourceCoderAddOns >> removeShortcut: aBlShortcut [
 	1 to: shortcuts size do: [ :i | 
 		(shortcuts at: i) combination = aBlShortcut combination
 			ifTrue: [ shortcuts removeAt: i.
@@ -170,12 +170,12 @@ GtMethodCoderAddOns >> removeShortcut: aBlShortcut [
 ]
 
 { #category : #shortcuts }
-GtMethodCoderAddOns >> removeShortcutsMatching: aBlock [
+GtSourceCoderAddOns >> removeShortcutsMatching: aBlock [
 	shortcuts removeAllSuchThat: aBlock
 ]
 
 { #category : #stylers }
-GtMethodCoderAddOns >> removeStylerOfType: aClass [
+GtSourceCoderAddOns >> removeStylerOfType: aClass [
 	| styler |
 	styler := stylers detect: [ :each | each isKindOf: aClass ] ifNone: [  ].
 	styler isNil
@@ -185,11 +185,11 @@ GtMethodCoderAddOns >> removeStylerOfType: aClass [
 ]
 
 { #category : #shortcuts }
-GtMethodCoderAddOns >> shortcuts [
+GtSourceCoderAddOns >> shortcuts [
 	^ shortcuts
 ]
 
 { #category : #accessing }
-GtMethodCoderAddOns >> stylers [
+GtSourceCoderAddOns >> stylers [
 	^ stylers
 ]

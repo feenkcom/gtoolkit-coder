@@ -1,6 +1,6 @@
 Class {
 	#name : #GtFilteredMethodsCoderElement,
-	#superclass : #GtMethodsCoderElement,
+	#superclass : #GtCodersElement,
 	#category : #'GToolkit-Coder-UI'
 }
 

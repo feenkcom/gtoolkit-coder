@@ -536,7 +536,7 @@ GtSourceCoder >> initialize [
 
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeAddOns [
-	addOns := GtMethodCoderAddOns new.
+	addOns := GtSourceCoderAddOns new.
 	self initializeShortcuts
 ]
 
@@ -829,8 +829,8 @@ GtSourceCoder >> sourceElement [
 			c horizontal matchParent ].
 	element editor: self sourceEditor.
 	(GtCompletionController on: element strategy: self completionStrategy) install.
-	toolbar := GtCoderMethodActionsElement new
-		methodCoder: self;
+	toolbar := GtCoderActionsElement new
+		coder: self;
 		padding:
 			(BlInsets
 				top: 0

@@ -1,6 +1,3 @@
-"
-FIXME this pretends to be a methodcoder to reuse its element
-"
 Class {
 	#name : #GtClassDefinitionCoder,
 	#superclass : #GtSourceCoder,
@@ -17,11 +14,6 @@ GtClassDefinitionCoder class >> forClass: aBehavior [
 		yourself
 ]
 
-{ #category : #elements }
-GtClassDefinitionCoder >> asElement [
-	^ GtCoderMethodElement new methodCoder: self
-]
-
 { #category : #accessing }
 GtClassDefinitionCoder >> classOrMetaClass [
 	^ classOrMetaClass
@@ -31,16 +23,6 @@ GtClassDefinitionCoder >> classOrMetaClass [
 GtClassDefinitionCoder >> classOrMetaClass: anObject [
 	classOrMetaClass := anObject.
 	self source: classOrMetaClass definition
-]
-
-{ #category : #elements }
-GtClassDefinitionCoder >> coderLook [
-	^ nil
-]
-
-{ #category : #accessing }
-GtClassDefinitionCoder >> compiledMethod [
-	^ nil
 ]
 
 { #category : #'initialize-release' }
@@ -54,9 +36,9 @@ GtClassDefinitionCoder >> initializeAddOns [
 	addOns clearChanges
 ]
 
-{ #category : #accessing }
-GtClassDefinitionCoder >> methodsCoder [
-	^ nil
+{ #category : #testing }
+GtClassDefinitionCoder >> isModified [
+	^ classOrMetaClass definition ~= self source
 ]
 
 { #category : #updating }

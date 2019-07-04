@@ -103,17 +103,16 @@ GtFilteredMethodsCoder >> shouldSort: a before: b [
 GtFilteredMethodsCoder >> updateCoders [
 	| newCoders highlighter |
 	newCoders := coders select: [ :each | each isModified ].
-	coders
+	items
 		do: [ :each | 
-			(newCoders anySatisfy: [ :coder | coder isForMethod: each ])
-				ifFalse: [ newCoders
-						add:
-							(coders
-								detect: [ :coder | coder isForMethod: each ]
-								ifNone: [ self newCoderFor: each ]) ] ].
+			(newCoders
+				anySatisfy: [ :coder | coder isForMethod: each compiledMethod ])
+				ifFalse: [ newCoders add: (self newCoderFor: each) ] ].
 	coders := newCoders.
 	coders sort: [ :a :b | self shouldSort: a before: b ].
-	highlighter := coders highlighter.
+	highlighter := coders
+		ifEmpty: [ nil ]
+		ifNotEmpty: [ coders first highlighter ].
 	coders do: [ :each | each highlighter: highlighter ].
 	self
 		announce:

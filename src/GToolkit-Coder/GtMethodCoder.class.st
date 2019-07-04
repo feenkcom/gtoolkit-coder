@@ -53,7 +53,7 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 { #category : #elements }
 GtMethodCoder >> asElement [
 	self ensureBuilt.
-	^ GtCoderMethodElement new methodCoder: self
+	^ GtMethodCoderElement new methodCoder: self
 ]
 
 { #category : #private }
@@ -64,7 +64,11 @@ GtMethodCoder >> buildSource [
 	text attributes: self defaultTextAttributes.
 	self sourceEditor text: text ]
 		on: Error
-		do: [ :ex | ex return ]
+		do: [ :ex | 
+			self
+				flag:
+					'FIXME this is exception catching pokemon style. use better error or fail'.
+			ex return ]
 ]
 
 { #category : #examples }

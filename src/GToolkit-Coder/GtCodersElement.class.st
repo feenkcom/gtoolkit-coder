@@ -48,6 +48,9 @@ GtCodersElement >> listElement [
 	| dataSource |
 	dataSource := GtCodersDataSource new
 		coders: coders;
+		when: BlInfiniteDataSourceChanged
+			do: [ listElement ifNotNil: #removeFromParent.
+			self addChild: self listElement as: #codersList ];
 		yourself.
 	listElement := BlInfiniteElement new
 		in: [ :e | 
@@ -59,7 +62,8 @@ GtCodersElement >> listElement [
 		dataSource: dataSource;
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical matchParent ].
+			c vertical matchParent ];
+		yourself.
 	^ listElement
 ]
 

@@ -6,7 +6,7 @@ Class {
 
 { #category : #elements }
 GtMethodsCoder >> elementClass [
-	^ GtMethodsCoderElement
+	^ GtCodersElement
 ]
 
 { #category : #'as yet unclassified' }

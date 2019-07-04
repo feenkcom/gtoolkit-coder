@@ -66,3 +66,13 @@ GtCoders >> initialize [
 GtCoders >> newCoderFor: anObject [
 	self subclassResponsibility
 ]
+
+{ #category : #updating }
+GtCoders >> updateCoders [
+	coders := items collect: [ :each | self newCoderFor: each ].
+	self
+		announce:
+			(GtCodersCodersChanged new
+				coders: self;
+				yourself)
+]

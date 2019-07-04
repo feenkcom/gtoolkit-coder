@@ -1,6 +1,6 @@
 Class {
 	#name : #GtProcessCoderElement,
-	#superclass : #GtMethodsCoderElement,
+	#superclass : #GtCodersElement,
 	#instVars : [
 		'activeCoder',
 		'contextVariablesElement',
