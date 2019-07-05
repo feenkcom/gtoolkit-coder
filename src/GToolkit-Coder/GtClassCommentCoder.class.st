@@ -1,8 +1,9 @@
 Class {
 	#name : #GtClassCommentCoder,
-	#superclass : #GtSourceCoder,
+	#superclass : #GtCoder,
 	#instVars : [
-		'class'
+		'class',
+		'document'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -14,27 +15,47 @@ GtClassCommentCoder class >> forClass: aClass [
 		yourself
 ]
 
-{ #category : #'initialize-release' }
-GtClassCommentCoder >> initializeAddOns [
-	super initializeAddOns.
-	addOns
-		addMainAction: 'Save' translated
-		icon: BrGlamorousIcons accept
-		action: [ class comment: self source  ].
-	addOns clearChanges
+{ #category : #ui }
+GtClassCommentCoder >> collapsedElement [
+	| element |
+	element := BrEditorElement new.
+	element editor: BrTextEditor new.
+	^ element
+]
+
+{ #category : #ui }
+GtClassCommentCoder >> expandedElement [
+	| container element toolbar |
+	container := BlElement new
+		layout: BlLinearLayout vertical;
+		constraintsDo: [ :c | 
+			c vertical matchParent.
+			c horizontal matchParent ].
+	element := document asElementWithoutSaveAction.
+	addOns shortcuts
+		do:
+			[ :each | element addShortcut: (each copy action: [ each action cull: element ]) ].
+	element
+		constraintsDo: [ :c | 
+			c vertical matchParent.
+			c horizontal matchParent ].
+	toolbar := GtCoderActionsElement new
+		coder: self;
+		padding:
+			(BlInsets
+				top: 0
+				left: -3
+				bottom: -3
+				right: 0);
+		margin: (BlInsets top: 5).
+	container addChild: element.
+	container addChild: toolbar.
+	^ container
 ]
 
 { #category : #testing }
 GtClassCommentCoder >> isModified [
-	^ class comment ~= self source
-]
-
-{ #category : #updating }
-GtClassCommentCoder >> newRbAST: aString [
-	self
-		flag:
-			'FIXME well, a comment is not source code, should just be expander with coder look'.
-	^ nil
+	^ class comment ~= document string
 ]
 
 { #category : #accessing }
@@ -45,5 +66,5 @@ GtClassCommentCoder >> theClass [
 { #category : #accessing }
 GtClassCommentCoder >> theClass: anObject [
 	class := anObject.
-	self source: class comment
+	document := (GtDocument forClass: class)
 ]

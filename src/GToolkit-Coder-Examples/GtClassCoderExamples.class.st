@@ -9,9 +9,3 @@ GtClassCoderExamples >> onBlElement [
 	<gtExample>
 	^ GtClassCoder forClass: BlElement
 ]
-
-{ #category : #'as yet unclassified' }
-GtClassCoderExamples >> onSourceCoderClass [
-	<gtExample>
-	^ GtClassCoder forClass: GtSourceCoder
-]
