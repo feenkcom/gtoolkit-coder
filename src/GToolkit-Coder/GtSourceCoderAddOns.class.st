@@ -1,6 +1,6 @@
 Class {
 	#name : #GtSourceCoderAddOns,
-	#superclass : #Object,
+	#superclass : #GtCoderAddOns,
 	#instVars : [
 		'contextActions',
 		'mainActions',
@@ -8,7 +8,7 @@ Class {
 		'shortcuts',
 		'stylers'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #actions }

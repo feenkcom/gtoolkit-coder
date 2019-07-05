@@ -105,7 +105,7 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 
 { #category : #private }
 GtMethodCoder >> clearPatternSyntaxErrors [
-	self collapsedText clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+	self collapsedText clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
 ]
 
 { #category : #elements }

@@ -1,6 +1,6 @@
 Class {
-	#name : #GtMethodCoderEvaluationRequester,
-	#superclass : #GtMethodCoderRequester,
+	#name : #GtSourceCoderEvaluationRequester,
+	#superclass : #GtSourceCoderRequester,
 	#instVars : [
 		'selectionInterval',
 		'source'
@@ -9,13 +9,13 @@ Class {
 }
 
 { #category : #accessing }
-GtMethodCoderEvaluationRequester >> coder: aCoder [
+GtSourceCoderEvaluationRequester >> coder: aCoder [
 	super coder: aCoder.
 	selectionInterval := aCoder selectedSourceInterval
 ]
 
 { #category : #requester }
-GtMethodCoderEvaluationRequester >> correctFrom: fromIndex to: toIndex with: aString [
+GtSourceCoderEvaluationRequester >> correctFrom: fromIndex to: toIndex with: aString [
 	super correctFrom: selectionInterval first + fromIndex - 1 to: selectionInterval first + toIndex - 1 with: aString.
 	selectionInterval := selectionInterval first to: selectionInterval last + aString size - (toIndex - fromIndex + 1).
 	coder sourceEditor selecter
@@ -24,7 +24,7 @@ GtMethodCoderEvaluationRequester >> correctFrom: fromIndex to: toIndex with: aSt
 ]
 
 { #category : #requester }
-GtMethodCoderEvaluationRequester >> notify: message at: anIndex in: aString [
+GtSourceCoderEvaluationRequester >> notify: message at: anIndex in: aString [
 	| location selectionStart |
 	selectionStart := selectionInterval ifNil: [ 1 ].
 	location := anIndex + selectionStart - 2.
@@ -32,16 +32,16 @@ GtMethodCoderEvaluationRequester >> notify: message at: anIndex in: aString [
 ]
 
 { #category : #requester }
-GtMethodCoderEvaluationRequester >> selection [
+GtSourceCoderEvaluationRequester >> selection [
 	^ source
 ]
 
 { #category : #accessing }
-GtMethodCoderEvaluationRequester >> source: aString [
+GtSourceCoderEvaluationRequester >> source: aString [
 	source := aString
 ]
 
 { #category : #requester }
-GtMethodCoderEvaluationRequester >> text [
+GtSourceCoderEvaluationRequester >> text [
 	^ self selection
 ]

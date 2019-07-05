@@ -1,85 +1,14 @@
 Class {
 	#name : #GtSourceCoder,
-	#superclass : #Object,
+	#superclass : #GtCoder,
 	#instVars : [
-		'announcer',
 		'sourceEditor',
-		'expanded',
-		'attributes',
-		'addOns',
 		'collapsedEditor',
 		'astCache',
 		'completionStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
-
-{ #category : #accessing }
-GtSourceCoder >> addOns [
-	^ addOns
-]
-
-{ #category : #elements }
-GtSourceCoder >> addShortcutsTo: editorElement [
-	addOns shortcuts
-		do: [ :each | editorElement addShortcut: (each copy action: [ each action cull: editorElement ]) ]
-]
-
-{ #category : #updating }
-GtSourceCoder >> announce: anAnnouncement [
-	announcer announce: anAnnouncement
-]
-
-{ #category : #accessing }
-GtSourceCoder >> announcer [
-	^ announcer
-]
-
-{ #category : #elements }
-GtSourceCoder >> asElement [
-	| expander |
-	expander := BrExpander new.
-	expander
-		vFitContent;
-		hMatchParent.
-	expanded
-		ifTrue: [ expander expand ].
-	expander look: GtCoderExpanderLook new.
-	expander header: [ self collapsedElement ].
-	expander content: [ self sourceElement ].
-	expander margin: (BlInsets all: 8).
-	^ expander
-]
-
-{ #category : #'accessing-attributes' }
-GtSourceCoder >> attributeNamed: aSymbol [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifAbsent: [  ] ]
-]
-
-{ #category : #'accessing-attributes' }
-GtSourceCoder >> attributeNamed: aSymbol ifAbsent: aBlock [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifAbsent: aBlock ]
-		ifFalse: [ aBlock value ]
-]
-
-{ #category : #'accessing-attributes' }
-GtSourceCoder >> attributeNamed: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock ]
-		ifFalse: [ anAbsentBlock value ]
-]
-
-{ #category : #'accessing-attributes' }
-GtSourceCoder >> attributeNamed: aSymbol put: anObject [
-	^ self attributes at: aSymbol put: anObject
-]
-
-{ #category : #'accessing-attributes' }
-GtSourceCoder >> attributes [
-	^ attributes ifNil: [ attributes := IdentityDictionary new ]
-]
 
 { #category : #actions }
 GtSourceCoder >> browseClass: editorElement [
@@ -143,7 +72,7 @@ GtSourceCoder >> clearPreviousEvaluations [
 			GtPlaygroundEvaluatedCodeButtonAttribute.
 			GtCoderPrintStringAttribute.
 			GtPlaygroundDebugExceptionButtonAttribute.
-			GtMethodCoderErrorAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
+			GtSourceCoderErrorAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
 	self sourceEditor
 		invalidateAll;
 		updateAll
@@ -153,7 +82,7 @@ GtSourceCoder >> clearPreviousEvaluations [
 GtSourceCoder >> clearSyntaxErrors: textEditor [
 	textEditor isNil
 		ifTrue: [ ^ self ].
-	textEditor text clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+	textEditor text clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
 ]
 
 { #category : #ui }
@@ -212,19 +141,6 @@ GtSourceCoder >> compile: aStream for: anObject in: evalContext withRequestor: r
 GtSourceCoder >> completionStrategy [
 	^ completionStrategy
 		ifNil: [ completionStrategy := self newCompletionStrategy ]
-]
-
-{ #category : #private }
-GtSourceCoder >> context [
-	^ nil
-]
-
-{ #category : #'actions - toolbar' }
-GtSourceCoder >> contextActions [
-	"Return a collection of contextual actions in the method coder. They are renderred separately from mainActions"
-
-	<return: #Collection of: #GtCoderAction>
-	^ addOns contextActions
 ]
 
 { #category : #private }
@@ -398,17 +314,37 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
 
 { #category : #actions }
 GtSourceCoder >> evaluationRequester [
-	^ GtMethodCoderEvaluationRequester on: self
+	^ GtSourceCoderEvaluationRequester on: self
 ]
 
-{ #category : #accessing }
-GtSourceCoder >> expanded [
-	^ expanded
-]
-
-{ #category : #accessing }
-GtSourceCoder >> expanded: aBoolean [
-	expanded := aBoolean
+{ #category : #ui }
+GtSourceCoder >> expandedElement [
+	| container element toolbar |
+	container := BlElement new
+		layout: BlLinearLayout vertical;
+		constraintsDo: [ :c | 
+			c vertical matchParent.
+			c horizontal matchParent ].
+	element := BrEditorElement new.
+	addOns shortcuts do: [ :each | element addShortcut: (each copy action: [ each action cull: element ]) ].
+	element
+		constraintsDo: [ :c | 
+			c vertical matchParent.
+			c horizontal matchParent ].
+	element editor: self sourceEditor.
+	(GtCompletionController on: element strategy: self completionStrategy) install.
+	toolbar := GtCoderActionsElement new
+		coder: self;
+		padding:
+			(BlInsets
+				top: 0
+				left: -3
+				bottom: -3
+				right: 0);
+		margin: (BlInsets top: 5).
+	container addChild: element.
+	container addChild: toolbar.
+	^ container
 ]
 
 { #category : #private }
@@ -471,52 +407,11 @@ GtSourceCoder >> extractVariableNodeFromString: aString [
 ]
 
 { #category : #ui }
-GtSourceCoder >> gtLiveFor: aView [
-	<gtView>
-	^ aView explicit
-		title: 'Live';
-		priority: 10;
-		stencil: [ self ]
-]
-
-{ #category : #ui }
-GtSourceCoder >> gtViewContextActionsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewContextActionsFor: aView ]
-]
-
-{ #category : #ui }
-GtSourceCoder >> gtViewKeybindingsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewKeybindingsFor: aView ]
-]
-
-{ #category : #ui }
-GtSourceCoder >> gtViewMainActionsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewMainActionsFor: aView ]
-]
-
-{ #category : #ui }
 GtSourceCoder >> gtViewStylersFor: aView [
 	<gtView>
 	^ self addOns 
 		ifNil: [ aView ]
 		ifNotNil: [ :currentAddOns | currentAddOns gtViewStylersFor: aView ]
-]
-
-{ #category : #testing }
-GtSourceCoder >> hasObjectAttribute [
-	self 
-		attributeNamed: #object 
-		ifAbsent: [ ^ false ].
-	^ true
 ]
 
 { #category : #testing }
@@ -528,10 +423,7 @@ GtSourceCoder >> hasSelection [
 { #category : #'initialize-release' }
 GtSourceCoder >> initialize [
 	super initialize.
-	announcer := Announcer new.
-	expanded := false.
-	self resetASTCache.
-	self initializeAddOns
+	self resetASTCache
 ]
 
 { #category : #'initialize-release' }
@@ -567,14 +459,6 @@ GtSourceCoder >> intervalToStyleResult [
 { #category : #testing }
 GtSourceCoder >> isBuilt [
 	^ true
-]
-
-{ #category : #'actions - toolbar' }
-GtSourceCoder >> mainActions [
-	"Return a collection of main actions in the method coder, for example save"
-
-	<return: #Collection of: #GtCoderAction>
-	^ addOns mainActions
 ]
 
 { #category : #private }
@@ -615,7 +499,7 @@ GtSourceCoder >> newSourceEditor [
 
 { #category : #private }
 GtSourceCoder >> newSourceStyler [
-	^ GtCoderTextStyler forCoder: self
+	^ GtSourceCoderTextStyler forCoder: self
 ]
 
 { #category : #private }
@@ -721,12 +605,8 @@ GtSourceCoder >> refreshForChanges [
 	addOns
 		changesDo: [ :each | 
 			each = #stylers
-				ifTrue: [ self styleText ].
-			each = #mainActions
-				ifTrue: [ self announce: (GtCoderMainActionsChanged new coder: self) ].
-			each = #contextActions
-				ifTrue: [ self announce: (GtCoderContextActionsChanged new coder: self) ] ].
-	addOns clearChanges
+				ifTrue: [ self styleText ] ].
+	super refreshForChanges
 ]
 
 { #category : #private }
@@ -738,7 +618,7 @@ GtSourceCoder >> reportParseError: aString at: anInteger on: textEditor [
 	position := anInteger - 1 max: 1.
 	text size < position
 		ifTrue: [ ^ self ].
-	(text from: position to: position) attributes: {(GtMethodCoderErrorAttribute for: aString , ' ->')}.
+	(text from: position to: position) attributes: {(GtSourceCoderErrorAttribute for: aString , ' ->')}.
 	textEditor
 		invalidate: position to: position;
 		update: position to: position.
@@ -747,7 +627,7 @@ GtSourceCoder >> reportParseError: aString at: anInteger on: textEditor [
 
 { #category : #actions }
 GtSourceCoder >> requester [
-	^ GtMethodCoderRequester on: self
+	^ GtSourceCoderRequester on: self
 ]
 
 { #category : #actions }
@@ -811,36 +691,6 @@ GtSourceCoder >> sourceEditor [
 	<return: #BrTextEditor>
 
 	^ sourceEditor ifNil: [ sourceEditor := self newSourceEditor ]
-]
-
-{ #category : #ui }
-GtSourceCoder >> sourceElement [
-	| container element toolbar |
-	container := BlElement new
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c | 
-			c vertical matchParent.
-			c horizontal matchParent ].
-	element := BrEditorElement new.
-	addOns shortcuts do: [ :each | element addShortcut: (each copy action: [ each action cull: element ]) ].
-	element
-		constraintsDo: [ :c | 
-			c vertical matchParent.
-			c horizontal matchParent ].
-	element editor: self sourceEditor.
-	(GtCompletionController on: element strategy: self completionStrategy) install.
-	toolbar := GtCoderActionsElement new
-		coder: self;
-		padding:
-			(BlInsets
-				top: 0
-				left: -3
-				bottom: -3
-				right: 0);
-		margin: (BlInsets top: 5).
-	container addChild: element.
-	container addChild: toolbar.
-	^ container
 ]
 
 { #category : #private }
@@ -913,11 +763,6 @@ GtSourceCoder >> stylers [
 	^ addOns stylers
 ]
 
-{ #category : #subscriptions }
-GtSourceCoder >> subscribeToSystem [
-	"do nothing"
-]
-
 { #category : #private }
 GtSourceCoder >> symbolFor: aNode [
 	| current |
@@ -932,11 +777,6 @@ GtSourceCoder >> symbolFor: aNode [
 				ifTrue: [ ^ current selector ].
 			current := current parent ].
 	^ nil
-]
-
-{ #category : #subscriptions }
-GtSourceCoder >> unsubscribeFromSystem [
-	SystemAnnouncer uniqueInstance unsubscribe: self
 ]
 
 { #category : #updating }

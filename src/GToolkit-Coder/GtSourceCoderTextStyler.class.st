@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderTextStyler,
+	#name : #GtSourceCoderTextStyler,
 	#superclass : #BlTextStyler,
 	#instVars : [
 		'coder'
@@ -8,29 +8,29 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtCoderTextStyler class >> forCoder: aMethodCoder [
+GtSourceCoderTextStyler class >> forCoder: aMethodCoder [
 	^ self new
 		coder: aMethodCoder;
 		yourself
 ]
 
 { #category : #accessing }
-GtCoderTextStyler >> coder [
+GtSourceCoderTextStyler >> coder [
 	^ coder
 ]
 
 { #category : #accessing }
-GtCoderTextStyler >> coder: aMethodCoder [
+GtSourceCoderTextStyler >> coder: aMethodCoder [
 	coder := aMethodCoder
 ]
 
 { #category : #private }
-GtCoderTextStyler >> extraStyle: aText ast: ast [
+GtSourceCoderTextStyler >> extraStyle: aText ast: ast [
 	coder stylers do: [ :each | each extraStyle: aText ast: ast ]
 ]
 
 { #category : #private }
-GtCoderTextStyler >> privateStyle: aText [
+GtSourceCoderTextStyler >> privateStyle: aText [
 	| ast |
 	self
 		assert: [ aText asString = coder source
@@ -56,6 +56,6 @@ GtCoderTextStyler >> privateStyle: aText [
 ]
 
 { #category : #private }
-GtCoderTextStyler >> style: aText ast: ast [
+GtSourceCoderTextStyler >> style: aText ast: ast [
 	coder stylers do: [ :each | each style: aText ast: ast ]
 ]
