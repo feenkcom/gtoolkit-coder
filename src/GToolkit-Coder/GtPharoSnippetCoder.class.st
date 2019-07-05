@@ -84,7 +84,10 @@ GtPharoSnippetCoder >> initializeShortcuts [
 			action: [ :editorElement | self doItAndGoSelectionOrAll: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryP;
-			action: [ self printItSelection ])
+			action: [ self printItSelection ]);
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryR;
+			action: [ :editorElement | self renameVariableIn: editorElement ])
 ]
 
 { #category : #private }
@@ -125,6 +128,11 @@ GtPharoSnippetCoder >> profileWithMessageTallyFrom: aButton [
 		ifFalse: [ ^ self ].
 	aValue := self evaluateSource: 'MessageTally on: [ ', self sourceEditor text asString, ']'.
 	aButton phlow spawnObject: aValue.
+]
+
+{ #category : #actions }
+GtPharoSnippetCoder >> renameVariableIn: editorElement [
+	GtRenameAction pharoRenameSnippetLocalsOn: editorElement
 ]
 
 { #category : #ui }
