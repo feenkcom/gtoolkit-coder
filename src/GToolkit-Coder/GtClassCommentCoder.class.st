@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtCoder,
 	#instVars : [
 		'class',
-		'document'
+		'document',
+		'collapsedEditor'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -15,11 +16,16 @@ GtClassCommentCoder class >> forClass: aClass [
 		yourself
 ]
 
+{ #category : #accessing }
+GtClassCommentCoder >> collapsedEditor [
+	^ collapsedEditor ifNil: [ collapsedEditor := BrTextEditor new ]
+]
+
 { #category : #ui }
 GtClassCommentCoder >> collapsedElement [
 	| element |
 	element := BrEditorElement new.
-	element editor: BrTextEditor new.
+	element editor: self collapsedEditor.
 	^ element
 ]
 
@@ -31,7 +37,7 @@ GtClassCommentCoder >> expandedElement [
 		constraintsDo: [ :c | 
 			c vertical matchParent.
 			c horizontal matchParent ].
-	element := document asElementWithoutSaveAction.
+	element := document asElement.
 	addOns shortcuts
 		do:
 			[ :each | element addShortcut: (each copy action: [ each action cull: element ]) ].
@@ -66,5 +72,22 @@ GtClassCommentCoder >> theClass [
 { #category : #accessing }
 GtClassCommentCoder >> theClass: anObject [
 	class := anObject.
-	document := (GtDocument forClass: class)
+	document := GtDocument forClass: class.
+	self updateCollapsedText
+]
+
+{ #category : #private }
+GtClassCommentCoder >> updateCollapsedText [
+	| firstLine |
+	firstLine := (document string lines detect: #notEmpty ifNone: [ '' ])
+		asRopedText.
+	firstLine
+		attributes:
+			{(BlTextForegroundAttribute
+				paint: BrGlamorousColors disabledButtonTextColor).
+			(BlFontFamilyAttribute named: 'Source Sans Pro')
+				beNotOverwritableByStyler.
+			BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
+			(BlFontSizeAttribute size: 12) beNotOverwritableByStyler}.
+	self collapsedEditor text: firstLine
 ]
