@@ -14,6 +14,34 @@ GtClassDefinitionCoder class >> forClass: aBehavior [
 		yourself
 ]
 
+{ #category : #elements }
+GtClassDefinitionCoder >> breadcrumbItemElements [
+	<return: #Collection of: #BrButton>
+	| theNamedActions |
+	"Array (name -> action)"
+	theNamedActions := Array
+		streamContents: [ :aStream | 
+			| aPackage aPackageName aClass |
+			aPackage := self classOrMetaClass package.
+			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
+			aClass := self classOrMetaClass.
+			aStream
+				nextPut: aPackageName -> [ :aButton | aButton phlow spawnObject: aPackage ];
+				nextPut:
+					aClass name
+						->
+							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ].
+	^ theNamedActions
+		collect: [ :eachNamedAction | 
+			BrButton new
+				look:
+					(BrGlamorousLabelLook new
+						foreground: BrGlamorousColors defaultButtonTextColor;
+						fontSize: 12);
+				label: eachNamedAction key;
+				action: eachNamedAction value ]
+]
+
 { #category : #accessing }
 GtClassDefinitionCoder >> classOrMetaClass [
 	^ classOrMetaClass

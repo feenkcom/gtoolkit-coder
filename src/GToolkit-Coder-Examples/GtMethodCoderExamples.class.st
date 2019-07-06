@@ -21,15 +21,6 @@ GtMethodCoderExamples >> binaryMethodCoder [
 ]
 
 { #category : #ui }
-GtMethodCoderExamples >> bodyElementForThisMethod [
-	<gtExample>
-
-	^ GtCoderMethodBodyStencil new
-		methodCoder: self thisMethod;
-		asElement
-]
-
-{ #category : #ui }
 GtMethodCoderExamples >> elementForOrderedCollectionMethods [
 	<gtExample>
 	| container |
@@ -49,7 +40,7 @@ GtMethodCoderExamples >> elementForThisMethod [
 	<gtExample>
 	| element |
 	element := self thisMethod asElement.
-	self assert: (element isKindOf: GtMethodCoderElement).
+	self assert: (element isKindOf: GtCoderElement).
 	self assert: element isExpanded not.
 	element expand.
 	self assert: element isExpanded.

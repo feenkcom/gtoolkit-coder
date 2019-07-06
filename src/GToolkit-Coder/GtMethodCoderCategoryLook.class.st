@@ -9,7 +9,7 @@ Class {
 
 { #category : #accessing }
 GtMethodCoderCategoryLook >> category [
-	^ self widget methodCoder category
+	^ self widget coder category
 ]
 
 { #category : #initialization }

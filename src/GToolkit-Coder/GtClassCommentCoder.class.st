@@ -16,47 +16,57 @@ GtClassCommentCoder class >> forClass: aClass [
 		yourself
 ]
 
+{ #category : #elements }
+GtClassCommentCoder >> breadcrumbItemElements [
+	<return: #Collection of: #BrButton>
+	| theNamedActions |
+	"Array (name -> action)"
+	theNamedActions := Array
+		streamContents: [ :aStream | 
+			| aPackage aPackageName aClass |
+			aPackage := class package.
+			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
+			aClass := class.
+			aStream
+				nextPut: aPackageName -> [ :aButton | aButton phlow spawnObject: aPackage ];
+				nextPut:
+					aClass name
+						->
+							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ].
+	^ theNamedActions
+		collect: [ :eachNamedAction | 
+			BrButton new
+				look:
+					(BrGlamorousLabelLook new
+						foreground: BrGlamorousColors defaultButtonTextColor;
+						fontSize: 12);
+				label: eachNamedAction key;
+				action: eachNamedAction value ]
+]
+
 { #category : #accessing }
 GtClassCommentCoder >> collapsedEditor [
 	^ collapsedEditor ifNil: [ collapsedEditor := BrTextEditor new ]
 ]
 
 { #category : #ui }
-GtClassCommentCoder >> collapsedElement [
-	| element |
-	element := BrEditorElement new.
-	element editor: self collapsedEditor.
-	^ element
+GtClassCommentCoder >> collapsedEditorElement [
+	^ BrEditorElement new
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ];
+		editor: self collapsedEditor;
+		yourself
 ]
 
 { #category : #ui }
-GtClassCommentCoder >> expandedElement [
-	| container element toolbar |
-	container := BlElement new
-		layout: BlLinearLayout vertical;
+GtClassCommentCoder >> expandedEditorElement [
+	^ document asElement
 		constraintsDo: [ :c | 
 			c vertical matchParent.
-			c horizontal matchParent ].
-	element := document asElement.
-	addOns shortcuts
-		do:
-			[ :each | element addShortcut: (each copy action: [ each action cull: element ]) ].
-	element
-		constraintsDo: [ :c | 
-			c vertical matchParent.
-			c horizontal matchParent ].
-	toolbar := GtCoderActionsElement new
-		coder: self;
-		padding:
-			(BlInsets
-				top: 0
-				left: -3
-				bottom: -3
-				right: 0);
-		margin: (BlInsets top: 5).
-	container addChild: element.
-	container addChild: toolbar.
-	^ container
+			c horizontal matchParent ];
+		in: [ :e | self addShortcutsTo: e ];
+		yourself
 ]
 
 { #category : #testing }

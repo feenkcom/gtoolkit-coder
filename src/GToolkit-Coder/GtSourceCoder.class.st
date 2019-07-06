@@ -91,11 +91,13 @@ GtSourceCoder >> collapsedEditor [
 ]
 
 { #category : #ui }
-GtSourceCoder >> collapsedElement [
-	| element |
-	element := BrEditorElement new.
-	element editor: self collapsedEditor.
-	^ element
+GtSourceCoder >> collapsedEditorElement [
+	^ BrEditorElement new
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ];
+		editor: self collapsedEditor;
+		yourself
 ]
 
 { #category : #accessing }
@@ -318,33 +320,23 @@ GtSourceCoder >> evaluationRequester [
 ]
 
 { #category : #ui }
-GtSourceCoder >> expandedElement [
-	| container element toolbar |
-	container := BlElement new
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c | 
-			c vertical matchParent.
-			c horizontal matchParent ].
-	element := BrEditorElement new.
-	addOns shortcuts do: [ :each | element addShortcut: (each copy action: [ each action cull: element ]) ].
-	element
-		constraintsDo: [ :c | 
-			c vertical matchParent.
-			c horizontal matchParent ].
-	element editor: self sourceEditor.
-	(GtCompletionController on: element strategy: self completionStrategy) install.
-	toolbar := GtCoderActionsElement new
-		coder: self;
+GtSourceCoder >> expandedEditorElement [
+	^ BrEditorElement new
 		padding:
 			(BlInsets
 				top: 0
-				left: -3
-				bottom: -3
+				left: 0
+				bottom: 2
 				right: 0);
-		margin: (BlInsets top: 5).
-	container addChild: element.
-	container addChild: toolbar.
-	^ container
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ];
+		editor: self sourceEditor;
+		in: [ :e | 
+			(GtCompletionController on: e strategy: self completionStrategy)
+				install.
+			self addShortcutsTo: e ];
+		yourself
 ]
 
 { #category : #private }

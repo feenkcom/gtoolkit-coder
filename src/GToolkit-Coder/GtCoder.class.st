@@ -10,6 +10,20 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #elements }
+GtCoder >> actionsElement [
+	^ GtCoderActionsElement new
+		coder: self;
+		padding:
+			(BlInsets
+				top: 0
+				left: -3
+				bottom: -3
+				right: 0);
+		margin: (BlInsets top: 5);
+		yourself
+]
+
 { #category : #accessing }
 GtCoder >> addOns [
 	^ addOns
@@ -79,9 +93,21 @@ GtCoder >> attributes [
 	^ attributes ifNil: [ attributes := IdentityDictionary new ]
 ]
 
-{ #category : #ui }
-GtCoder >> collapsedElement [
+{ #category : #elements }
+GtCoder >> breadcrumbItemElements [
+	^ #()
+]
+
+{ #category : #elements }
+GtCoder >> collapsedEditorElement [
 	self subclassResponsibility
+]
+
+{ #category : #elements }
+GtCoder >> collapsedElement [
+	^ GtCoderElement new
+		coder: self editorElement: self collapsedEditorElement;
+		yourself
 ]
 
 { #category : #private }
@@ -107,9 +133,17 @@ GtCoder >> expanded: aBoolean [
 	expanded := aBoolean
 ]
 
-{ #category : #ui }
-GtCoder >> expandedElement [
+{ #category : #elements }
+GtCoder >> expandedEditorElement [
 	self subclassResponsibility
+]
+
+{ #category : #elements }
+GtCoder >> expandedElement [
+	^ GtCoderElement new
+		coder: self editorElement: self expandedEditorElement;
+		addChild: self actionsElement as: #actions;
+		yourself
 ]
 
 { #category : #ui }

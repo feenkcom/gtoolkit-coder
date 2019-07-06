@@ -53,7 +53,36 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 { #category : #elements }
 GtMethodCoder >> asElement [
 	self ensureBuilt.
-	^ GtMethodCoderElement new methodCoder: self
+	^ super asElement
+]
+
+{ #category : #elements }
+GtMethodCoder >> breadcrumbItemElements [
+	<return: #Collection of: #BrButton>
+	| theNamedActions |
+	"Array (name -> action)"
+	theNamedActions := Array
+		streamContents: [ :aStream | 
+			| aPackage aPackageName aClass |
+			aPackage := (self compiledMethod ifNil: [ self classOrMetaClass ])
+				package.
+			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
+			aClass := self classOrMetaClass.
+			aStream
+				nextPut: aPackageName -> [ :aButton | aButton phlow spawnObject: aPackage ];
+				nextPut:
+					aClass name
+						->
+							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ].
+	^ theNamedActions
+		collect: [ :eachNamedAction | 
+			BrButton new
+				look:
+					(BrGlamorousLabelLook new
+						foreground: BrGlamorousColors defaultButtonTextColor;
+						fontSize: 12);
+				label: eachNamedAction key;
+				action: eachNamedAction value ]
 ]
 
 { #category : #private }
