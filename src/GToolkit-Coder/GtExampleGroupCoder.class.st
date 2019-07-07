@@ -5,13 +5,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtExampleGroupCoder class >> forExampleGroup: anExampleGroup [
-
-	^ self new forExampleGroup: anExampleGroup
-
-]
-
-{ #category : #'instance creation' }
-GtExampleGroupCoder >> forExampleGroup: anExampleGroup [
-	methodCoders := anExampleGroup collect: [ :each | GtMethodCoder forExample: each ]
+GtExampleGroupCoder >> newCoderFor: aMethod [
+	| coder |
+	coder := GtMethodCoder forExample: aMethod.
+	coder methodsCoder: self.
+	^ coder
 ]

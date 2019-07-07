@@ -6,8 +6,8 @@ Class {
 
 { #category : #initialization }
 GtCoderMethodBodyElement >> actionsElement [
-	^ GtCoderMethodActionsElement new 
-		methodCoder: methodCoder;
+	^ GtCoderActionsElement new 
+		coder: methodCoder;
 		padding:
 			(BlInsets
 				top: 0

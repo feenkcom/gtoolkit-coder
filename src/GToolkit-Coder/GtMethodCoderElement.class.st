@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderMethodElement,
+	#name : #GtMethodCoderElement,
 	#superclass : #BrExpander,
 	#traits : 'TBlDrawingCache',
 	#classTraits : 'TBlDrawingCache classTrait',
@@ -14,22 +14,22 @@ Class {
 }
 
 { #category : #converting }
-GtCoderMethodElement >> asVerticallyResizableDo: aBlock [
+GtMethodCoderElement >> asVerticallyResizableDo: aBlock [
 	^ self
 ]
 
 { #category : #accessing }
-GtCoderMethodElement >> collapsedElementDo: aBlock [
+GtMethodCoderElement >> collapsedElementDo: aBlock [
 	collapsedElement ifNotNil: aBlock
 ]
 
 { #category : #accessing }
-GtCoderMethodElement >> contentElementDo: aBlock [
+GtMethodCoderElement >> contentElementDo: aBlock [
 	contentElement ifNotNil: aBlock
 ]
 
 { #category : #accessing }
-GtCoderMethodElement >> gtAllShortcutsFor: aView [
+GtMethodCoderElement >> gtAllShortcutsFor: aView [
 	<gtView>
 	self shortcuts ifEmpty: [ ^ aView empty ].
 	^ aView columnedList 
@@ -43,7 +43,7 @@ GtCoderMethodElement >> gtAllShortcutsFor: aView [
 ]
 
 { #category : #initialization }
-GtCoderMethodElement >> initialize [
+GtMethodCoderElement >> initialize [
 	super initialize.
 	self
 		vFitContent;
@@ -73,12 +73,12 @@ GtCoderMethodElement >> initialize [
 ]
 
 { #category : #testing }
-GtCoderMethodElement >> isExpanded [
+GtMethodCoderElement >> isExpanded [
 	^ expandableModel isExpanded
 ]
 
 { #category : #accessing }
-GtCoderMethodElement >> methodCoder [
+GtMethodCoderElement >> methodCoder [
 	<return: #GtMethodCoder>
 
 	self
@@ -89,7 +89,7 @@ GtCoderMethodElement >> methodCoder [
 ]
 
 { #category : #accessing }
-GtCoderMethodElement >> methodCoder: aGtMethodCoder [
+GtMethodCoderElement >> methodCoder: aGtMethodCoder [
 	self
 		assert: [ aGtMethodCoder isNotNil ]
 		description: [ 'Coder must not be nil' ].
@@ -104,12 +104,12 @@ GtCoderMethodElement >> methodCoder: aGtMethodCoder [
 ]
 
 { #category : #accessing }
-GtCoderMethodElement >> methodCoderDo: aBlock [
+GtMethodCoderElement >> methodCoderDo: aBlock [
 	methodCoder ifNotNil: aBlock
 ]
 
 { #category : #private }
-GtCoderMethodElement >> newCollapsedElement [
+GtMethodCoderElement >> newCollapsedElement [
 	| aCollapsedElement |
 
 	aCollapsedElement := GtCoderMethodPatternElement new.
@@ -124,7 +124,7 @@ GtCoderMethodElement >> newCollapsedElement [
 ]
 
 { #category : #private }
-GtCoderMethodElement >> newContentElement [
+GtMethodCoderElement >> newContentElement [
 	| aContentElement |
 
 	aContentElement := GtCoderMethodBodyElement new.
@@ -140,7 +140,7 @@ GtCoderMethodElement >> newContentElement [
 ]
 
 { #category : #private }
-GtCoderMethodElement >> setCollapsedElement: aCollapsedElement coder: aMethodCoder [
+GtMethodCoderElement >> setCollapsedElement: aCollapsedElement coder: aMethodCoder [
 	"Configure a collapsed element with a new given coder"
 
 	aCollapsedElement methodCoder: aMethodCoder.	
@@ -149,7 +149,7 @@ GtCoderMethodElement >> setCollapsedElement: aCollapsedElement coder: aMethodCod
 ]
 
 { #category : #private }
-GtCoderMethodElement >> setContentElement: aCollapsedElement coder: aMethodCoder [
+GtMethodCoderElement >> setContentElement: aCollapsedElement coder: aMethodCoder [
 	"Configure a content element with a new given coder"
 	| aLook |
 

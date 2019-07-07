@@ -4,7 +4,10 @@ Class {
 	#instVars : [
 		'searchFilter',
 		'navigationModel',
-		'methodsCoder'
+		'methodsCoder',
+		'definitionsCoder',
+		'commentsCoder',
+		'class'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -26,24 +29,43 @@ GtClassCoder class >> forObject: anObject [
 { #category : #elements }
 GtClassCoder >> asElement [
 	| coderElement |
-	coderElement := GtClassCoderElement new coderModel: self.
+	coderElement := GtClassCoderElement new classCoder: self.
 	^ coderElement asScrollableElement
+]
+
+{ #category : #accessing }
+GtClassCoder >> commentsCoder [
+	^ commentsCoder
+]
+
+{ #category : #accessing }
+GtClassCoder >> definitionsCoder [
+	^ definitionsCoder
 ]
 
 { #category : #updating }
 GtClassCoder >> displayClass: aClass [
-	methodsCoder := GtClassMethodsCoder forClass: aClass.
-	self announce: (GtCoderClassSelectedAnnouncement forClass: aClass)
+	class := aClass.
+	methodsCoder := GtClassMethodsCoder forClass: class.
+	definitionsCoder := GtClassDefinitionsCoder forClass: class.
+	commentsCoder := GtClassCommentsCoder forClass: class.
+	self announce: (GtCoderClassSelectedAnnouncement forClass: class)
 ]
 
 { #category : #initialize }
-GtClassCoder >> forClass: aBehavior [
-	methodsCoder := GtClassMethodsCoder forClass: aBehavior
+GtClassCoder >> forClass: aClass [
+	class := aClass.
+	methodsCoder := GtClassMethodsCoder forClass: class.
+	definitionsCoder := GtClassDefinitionsCoder forClass: class.
+	commentsCoder := GtClassCommentsCoder forClass: class
 ]
 
 { #category : #initialize }
 GtClassCoder >> forObject: anObject [
-	methodsCoder := GtClassMethodsCoder forObject: anObject
+	class := anObject class.
+	methodsCoder := GtClassMethodsCoder forObject: anObject.
+	definitionsCoder := GtClassDefinitionsCoder forClass: class.
+	commentsCoder := GtClassCommentsCoder forClass: class
 ]
 
 { #category : #accessing }
@@ -99,7 +121,7 @@ GtClassCoder >> navigationModel [
 GtClassCoder >> navigationModel: aNavigationModel [
 	navigationModel := aNavigationModel.
 	navigationModel ifNotNil: [ 
-		navigationModel coderModel: self ].
+		navigationModel classCoder: self ].
 	self announce: GtCoderNavigationModelChangedAnnouncement
 ]
 
@@ -110,7 +132,5 @@ GtClassCoder >> searchFilter [
 
 { #category : #accessing }
 GtClassCoder >> theClass [
-	^ methodsCoder 
-		ifNil: [ nil ] 
-		ifNotNil: [ :aMethodsCoder | aMethodsCoder classOrMetaClass ]
+	^ class
 ]

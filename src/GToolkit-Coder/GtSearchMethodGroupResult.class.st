@@ -28,7 +28,7 @@ GtSearchMethodGroupResult class >> forReferences: aSymbol [
 
 { #category : #converting }
 GtSearchMethodGroupResult >> asCoder [
-	^ GtFilteredMethodsCoder forMethods: self
+	^ GtFilteredMethodsCoder forItems: self
 ]
 
 { #category : #converting }

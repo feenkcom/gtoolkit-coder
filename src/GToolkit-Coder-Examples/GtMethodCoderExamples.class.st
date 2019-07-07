@@ -49,7 +49,7 @@ GtMethodCoderExamples >> elementForThisMethod [
 	<gtExample>
 	| element |
 	element := self thisMethod asElement.
-	self assert: (element isKindOf: GtCoderMethodElement).
+	self assert: (element isKindOf: GtMethodCoderElement).
 	self assert: element isExpanded not.
 	element expand.
 	self assert: element isExpanded.

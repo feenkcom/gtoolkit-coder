@@ -1,5 +1,5 @@
 Class {
-	#name : #GtMethodCoderErrorAttribute,
+	#name : #GtSourceCoderErrorAttribute,
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
 		'string'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtMethodCoderErrorAttribute class >> for: aString [
+GtSourceCoderErrorAttribute class >> for: aString [
 	^ self new
 		for: aString;
 		beAppend;
@@ -17,7 +17,7 @@ GtMethodCoderErrorAttribute class >> for: aString [
 ]
 
 { #category : #accessing }
-GtMethodCoderErrorAttribute >> affect: aBrText in: anEditorElement [
+GtSourceCoderErrorAttribute >> affect: aBrText in: anEditorElement [
 	| text attributes |
 	text := string asRopedText.
 	attributes := (anEditorElement editor text attributesAt: aBrText end) reject: [ :each | each = self ].
@@ -37,6 +37,6 @@ GtMethodCoderErrorAttribute >> affect: aBrText in: anEditorElement [
 ]
 
 { #category : #'initialize-release' }
-GtMethodCoderErrorAttribute >> for: aString [
+GtSourceCoderErrorAttribute >> for: aString [
 	string := aString
 ]

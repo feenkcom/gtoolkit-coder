@@ -1,5 +1,5 @@
 Class {
-	#name : #GtMethodCoderRequester,
+	#name : #GtSourceCoderRequester,
 	#superclass : #Object,
 	#instVars : [
 		'coder',
@@ -9,36 +9,36 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtMethodCoderRequester class >> on: aMethodCoder [
+GtSourceCoderRequester class >> on: aCoder [
 	^ self new
-		coder: aMethodCoder;
+		coder: aCoder;
 		yourself
 ]
 
 { #category : #requester }
-GtMethodCoderRequester >> bindingOf: aSymbol [
+GtSourceCoderRequester >> bindingOf: aSymbol [
 	^ bindingStrategy isNil
 		ifTrue: [ super bindingOf: aSymbol ]
 		ifFalse: [ bindingStrategy bindingOf: aSymbol ]
 ]
 
 { #category : #accessing }
-GtMethodCoderRequester >> bindingStrategy [
+GtSourceCoderRequester >> bindingStrategy [
 	^ bindingStrategy
 ]
 
 { #category : #accessing }
-GtMethodCoderRequester >> bindingStrategy: anObject [
+GtSourceCoderRequester >> bindingStrategy: anObject [
 	bindingStrategy := anObject
 ]
 
 { #category : #accessing }
-GtMethodCoderRequester >> coder: aCoder [
+GtSourceCoderRequester >> coder: aCoder [
 	coder := aCoder
 ]
 
 { #category : #requester }
-GtMethodCoderRequester >> correctFrom: fromIndex to: toIndex with: aString [
+GtSourceCoderRequester >> correctFrom: fromIndex to: toIndex with: aString [
 	fromIndex > toIndex
 		ifFalse: [ coder sourceEditor deleter
 				from: fromIndex - 1 to: toIndex;
@@ -51,14 +51,14 @@ GtMethodCoderRequester >> correctFrom: fromIndex to: toIndex with: aString [
 ]
 
 { #category : #hack }
-GtMethodCoderRequester >> editor [
+GtSourceCoderRequester >> editor [
 	"Hack to handle inserting local variables"
 
 	^ self
 ]
 
 { #category : #binding }
-GtMethodCoderRequester >> hasBindingOf: aSymbol [
+GtSourceCoderRequester >> hasBindingOf: aSymbol [
 	^ self bindingStrategy isNil
 		ifTrue: [ super hasBindingOf: aSymbol ]
 		ifFalse: [ bindingStrategy hasBindingOf: aSymbol ]
@@ -66,10 +66,10 @@ GtMethodCoderRequester >> hasBindingOf: aSymbol [
 ]
 
 { #category : #requester }
-GtMethodCoderRequester >> notify: message at: anIndex in: aString [
+GtSourceCoderRequester >> notify: message at: anIndex in: aString [
 	| index |
 	index := (anIndex max: 1) min: coder sourceEditor text size.
-	(coder sourceEditor text from: index to: index) attributes: {(GtMethodCoderErrorAttribute for: message)}.
+	(coder sourceEditor text from: index to: index) attributes: {(GtSourceCoderErrorAttribute for: message)}.
 	coder sourceEditor
 		invalidate: index to: index;
 		update: index to: index.
@@ -77,19 +77,19 @@ GtMethodCoderRequester >> notify: message at: anIndex in: aString [
 ]
 
 { #category : #hack }
-GtMethodCoderRequester >> paragraph [
+GtSourceCoderRequester >> paragraph [
 	"Hack to handle inserting local variables"
 
 	^ self
 ]
 
 { #category : #requester }
-GtMethodCoderRequester >> text [
+GtSourceCoderRequester >> text [
 	^ coder newMethodSource
 ]
 
 { #category : #hack }
-GtMethodCoderRequester >> textMorph [
+GtSourceCoderRequester >> textMorph [
 	"Hack to handle inserting local variables"
 
 	^ self

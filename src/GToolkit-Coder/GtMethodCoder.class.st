@@ -53,7 +53,7 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 { #category : #elements }
 GtMethodCoder >> asElement [
 	self ensureBuilt.
-	^ GtCoderMethodElement new methodCoder: self
+	^ GtMethodCoderElement new methodCoder: self
 ]
 
 { #category : #private }
@@ -64,7 +64,11 @@ GtMethodCoder >> buildSource [
 	text attributes: self defaultTextAttributes.
 	self sourceEditor text: text ]
 		on: Error
-		do: [ :ex | ex return ]
+		do: [ :ex | 
+			self
+				flag:
+					'FIXME this is exception catching pokemon style. use better error or fail'.
+			ex return ]
 ]
 
 { #category : #examples }
@@ -101,7 +105,7 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 
 { #category : #private }
 GtMethodCoder >> clearPatternSyntaxErrors [
-	self collapsedText clearAttributes: [ :each | each isKindOf: GtMethodCoderErrorAttribute ]
+	self collapsedText clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
 ]
 
 { #category : #elements }
@@ -484,6 +488,16 @@ GtMethodCoder >> methodExpanderFor: anAST [
 			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
 			^ self ].
 	addOns addStyler: GtCoderExpandableMethodStyler new
+]
+
+{ #category : #accessing }
+GtMethodCoder >> methodsCoder [
+	^ self attributeNamed: #methodsCoder
+]
+
+{ #category : #accessing }
+GtMethodCoder >> methodsCoder: aCoder [
+	^ self attributeNamed: #methodsCoder put: aCoder
 ]
 
 { #category : #'add ons' }

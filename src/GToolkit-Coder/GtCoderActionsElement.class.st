@@ -1,18 +1,18 @@
 Class {
-	#name : #GtCoderMethodActionsElement,
+	#name : #GtCoderActionsElement,
 	#superclass : #BlElement,
 	#instVars : [
 		'mainToolbar',
 		'contextToolbar',
 		'separator',
-		'methodCoder'
+		'coder'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #private }
-GtCoderMethodActionsElement >> addContextToolbarActions [
-	contextToolbar addItems: (methodCoder contextActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
+GtCoderActionsElement >> addContextToolbarActions [
+	contextToolbar addItems: (coder contextActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
 	separator
 		visibility:
 			(contextToolbar hasItems
@@ -21,16 +21,33 @@ GtCoderMethodActionsElement >> addContextToolbarActions [
 ]
 
 { #category : #private }
-GtCoderMethodActionsElement >> addMainToolbarActions [
-	mainToolbar addItems: (methodCoder mainActions collect: [ :aGtCoderAction | 
+GtCoderActionsElement >> addMainToolbarActions [
+	mainToolbar addItems: (coder mainActions collect: [ :aGtCoderAction | 
 		self flag: 'Temporary hack. Coder should to Phlow actions'.
 		aGtCoderAction class = GtCoderDropDownAction 
 			ifTrue: [ self newDropButtonForAction: aGtCoderAction ] 
 			ifFalse: [ self newButtonForAction: aGtCoderAction  ] ])
 ]
 
+{ #category : #accessing }
+GtCoderActionsElement >> coder [
+	^ coder
+]
+
+{ #category : #accessing }
+GtCoderActionsElement >> coder: aCoder [
+	coder := aCoder.
+	coder announcer weak
+		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
+		when: GtCoderContextActionsChanged
+			send: #updateContextToolbar
+			to: self.
+	self addMainToolbarActions.
+	self addContextToolbarActions
+]
+
 { #category : #initialization }
-GtCoderMethodActionsElement >> initialize [
+GtCoderActionsElement >> initialize [
 	super initialize.
 	
 	self layout: BlLinearLayout horizontal.
@@ -53,25 +70,8 @@ GtCoderMethodActionsElement >> initialize [
 	self addChildren: { mainToolbar . separator . contextToolbar }
 ]
 
-{ #category : #accessing }
-GtCoderMethodActionsElement >> methodCoder [
-	<return: #GtMethodCoder>
-
-	^ methodCoder
-]
-
-{ #category : #accessing }
-GtCoderMethodActionsElement >> methodCoder: aGtMethodCoder [
-	methodCoder := aGtMethodCoder.
-	methodCoder announcer weak
-		when: GtCoderMethodMainActionsChanged send: #updateMainToolbar to: self;
-		when: GtCoderMethodContextActionsChanged send: #updateContextToolbar to: self.
-	self addMainToolbarActions.
-	self addContextToolbarActions
-]
-
 { #category : #'instance creation' }
-GtCoderMethodActionsElement >> newButtonForAction: aGtCoderAction [
+GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 	<return: #BrButton>
 	
 	^ BrButton new
@@ -83,7 +83,7 @@ GtCoderMethodActionsElement >> newButtonForAction: aGtCoderAction [
 ]
 
 { #category : #'instance creation' }
-GtCoderMethodActionsElement >> newDropButtonForAction: aGtCoderAction [
+GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 	<return: #BrDropdown>
 	| dropDown |
 	dropDown := BrDropdown new.
@@ -149,7 +149,7 @@ GtCoderMethodActionsElement >> newDropButtonForAction: aGtCoderAction [
 ]
 
 { #category : #'instance creation' }
-GtCoderMethodActionsElement >> newToolbar [
+GtCoderActionsElement >> newToolbar [
 	<return: #BrToolbar>
 
 	^ BrToolbar new
@@ -161,23 +161,23 @@ GtCoderMethodActionsElement >> newToolbar [
 ]
 
 { #category : #private }
-GtCoderMethodActionsElement >> removeContextToolbarActions [
+GtCoderActionsElement >> removeContextToolbarActions [
 	contextToolbar numberOfItems timesRepeat: [ contextToolbar removeItemAt: 1 ]
 ]
 
 { #category : #private }
-GtCoderMethodActionsElement >> removeMainToolbarActions [
+GtCoderActionsElement >> removeMainToolbarActions [
 	mainToolbar numberOfItems timesRepeat: [ mainToolbar removeItemAt: 1 ]
 ]
 
 { #category : #private }
-GtCoderMethodActionsElement >> updateContextToolbar [
+GtCoderActionsElement >> updateContextToolbar [
 	self removeContextToolbarActions.
 	self addContextToolbarActions
 ]
 
 { #category : #private }
-GtCoderMethodActionsElement >> updateMainToolbar [
+GtCoderActionsElement >> updateMainToolbar [
 	self removeMainToolbarActions.
 	self addMainToolbarActions
 ]

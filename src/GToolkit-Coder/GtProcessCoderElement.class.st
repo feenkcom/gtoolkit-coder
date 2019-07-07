@@ -1,6 +1,6 @@
 Class {
 	#name : #GtProcessCoderElement,
-	#superclass : #GtMethodsCoderElement,
+	#superclass : #GtCodersElement,
 	#instVars : [
 		'activeCoder',
 		'contextVariablesElement',
@@ -191,7 +191,7 @@ GtProcessCoderElement >> watchExpressionsFor: aMethodCoder [
 GtProcessCoderElement >> watchVariables [
 	| variables |
 	variables := OrderedCollection new.
-	methodsCoder coders do: [ :each | variables addAll: (self watchVariablesFor: each) ].
+	coders coders do: [ :each | variables addAll: (self watchVariablesFor: each) ].
 	^ variables
 ]
 

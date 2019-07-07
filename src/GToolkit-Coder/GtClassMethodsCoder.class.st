@@ -38,8 +38,13 @@ GtClassMethodsCoder >> addNewCoder [
 	coder := GtMethodCoder newMethod.
 	coder classOrMetaClass: self newMethodClass.
 	coder object: self object.
-	methodCoders addFirst: coder.
-	self announce: (GtMethodCoderAdded new coder: self; methodCoder: coder)
+	coders addFirst: coder.
+	self
+		announce:
+			(GtCodersCoderAdded new
+				coders: self;
+				coder: coder;
+				yourself)
 ]
 
 { #category : #accessing }
@@ -94,7 +99,7 @@ GtClassMethodsCoder >> filters [
 GtClassMethodsCoder >> forClass: aBehavior [
 	class := aBehavior.
 	filteredClasses := Set with: aBehavior.
-	self forMethods: (GtSearchMethodGroupResult 
+	self forItems: (GtSearchMethodGroupResult 
 		forFilter: (GtSearchMethodsInInstanceAndClassSideFilter forClass: class))
 ]
 
@@ -116,6 +121,11 @@ GtClassMethodsCoder >> initialize [
 ]
 
 { #category : #private }
+GtClassMethodsCoder >> newCoderFor: aMethod [
+	^ (super newCoderFor: aMethod) object: object
+]
+
+{ #category : #private }
 GtClassMethodsCoder >> newMethodClass [
 	| methodClass |
 	methodClass := filteredClasses anyOne.
@@ -124,11 +134,6 @@ GtClassMethodsCoder >> newMethodClass [
 			(methodClass includesBehavior: each)
 				ifFalse: [ methodClass := each ] ].
 	^ methodClass
-]
-
-{ #category : #private }
-GtClassMethodsCoder >> newMethodCoderFor: aMethod [
-	^ (super newMethodCoderFor: aMethod) object: object
 ]
 
 { #category : #accessing }
@@ -142,11 +147,16 @@ GtClassMethodsCoder >> removeMethodsForClass: aClass [
 		ifFalse: [ ^ self ].
 	filteredClasses remove: aClass.
 	self updateMethods.
-	methodCoders removeAllSuchThat: [ :each | 
-		(each classOrMetaClass = aClass or: [
-			each classOrMetaClass = aClass classSide]) and: [ 
-				each isModified not ] ].
-	self announce: (GtCoderMethodsListChanged new coder: self)
+	coders
+		removeAllSuchThat: [ :each | 
+			(each classOrMetaClass = aClass
+				or: [ each classOrMetaClass = aClass classSide ])
+				and: [ each isModified not ] ].
+	self
+		announce:
+			(GtCodersCodersChanged new
+				coders: self;
+				yourself)
 ]
 
 { #category : #private }
