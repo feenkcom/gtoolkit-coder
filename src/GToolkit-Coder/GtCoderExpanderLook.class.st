@@ -24,7 +24,7 @@ GtCoderExpanderLook >> borderWidth: anInteger [
 GtCoderExpanderLook >> initialize [
 	| shadowLook focusedShadowLook expanded aTriangle |
 	super initialize.
-	borderWidth := 1.
+	borderWidth := 0.
 	aTriangle := BlElement new
 		size: 8 @ 8;
 		background: (Color white alpha: 0.9);
@@ -57,7 +57,11 @@ GtCoderExpanderLook >> initialize [
 		add:
 			(BrInteractiveLook new
 				style: [ :aStyler | 
-					aStyler default: [ sidebar background: Color veryVeryLightGray ].
+					aStyler
+						default: [ :aWidget | 
+							sidebar background: Color veryVeryLightGray.
+							aWidget
+								border: (BlBorder paint: Color veryVeryLightGray width: self borderWidth) ].
 					aStyler
 						collapsed: [ :aWidget | 
 							aTriangle
@@ -68,8 +72,6 @@ GtCoderExpanderLook >> initialize [
 											(8 @ 4).
 											(0 @ 8)}).
 							aWidget background: Color transparent.
-							aWidget
-								border: (BlBorder paint: Color veryVeryLightGray width: self borderWidth).
 							shadowLook isAttachedToWidget
 								ifTrue: [ self remove: shadowLook ].
 							focusedShadowLook isAttachedToWidget
@@ -85,7 +87,6 @@ GtCoderExpanderLook >> initialize [
 											(8 @ 0).
 											(4 @ 8)}).
 							aWidget background: Color white.
-							aWidget border: BlBorder empty.
 							shadowLook isAttachedToWidget
 								ifTrue: [ self remove: shadowLook ].
 							focusedShadowLook isAttachedToWidget

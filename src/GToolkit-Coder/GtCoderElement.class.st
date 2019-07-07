@@ -1,23 +1,49 @@
 Class {
 	#name : #GtCoderElement,
-	#superclass : #BlElement,
+	#superclass : #BrExpander,
+	#traits : 'TBlDrawingCache',
+	#classTraits : 'TBlDrawingCache classTrait',
 	#instVars : [
-		'coder'
+		'coder',
+		'collapsedElement',
+		'expandedElement'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #private }
+GtCoderElement >> addCodersCoderLookTo: anElement [
+	| aLook |
+	aLook := anElement look.
+	(coder coders ifNotNil: #coderLook)
+		ifNotNil: [ :f | aLook := aLook ifNil: [ f ] ifNotNil: [ aLook + f ] ].
+	aLook notNil
+		ifTrue: [ anElement look: aLook ]
+]
+
+{ #category : #converting }
+GtCoderElement >> asVerticallyResizableDo: aBlock [
+	^ self
+]
+
 { #category : #accessing }
 GtCoderElement >> coder [
-	<return: #GtCoder>
+	<return: #GtMethodCoder>
+	self assert: [ coder isNotNil ] description: [ 'Coder is not set!' ].
 	^ coder
 ]
 
-{ #category : #'initialize-release' }
-GtCoderElement >> coder: aCoder editorElement: anElement [
+{ #category : #accessing }
+GtCoderElement >> coder: aCoder [
+	self
+		assert: [ aCoder isNotNil ]
+		description: [ 'Coder must not be nil' ].
 	coder := aCoder.
-	self addChild: self newHeaderElement as: #header.
-	self addChild: anElement as: #editor
+	self
+		header: [ collapsedElement := self newCollapsedElement ];
+		content: [ expandedElement := self newExpandedElement ].
+	coder expanded
+		ifTrue: [ self expand ]
 ]
 
 { #category : #accessing }
@@ -40,46 +66,61 @@ GtCoderElement >> gtAllShortcutsFor: aView [
 				matchParent ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtCoderElement >> initialize [
 	super initialize.
-	self layout: BlLinearLayout vertical
+	self
+		vFitContent;
+		hMatchParent;
+		margin: (BlInsets all: 4);
+		look:
+			GtCoderExpanderLook new
+				+
+					(BrInteractiveLook new
+						style: [ :aStyler | 
+							aStyler default: [ self background: Color transparent ].
+							aStyler expanded: [ self background: Color white ] ]);
+		addShortcut:
+			(BlShortcut new
+				combination: BlKeyCombination primaryReturn;
+				action: [ self toggle ]).
+	expandableModel
+		when: BrExpansionChanged
+		do: [ :event | coder ifNotNil: [ :e | e expanded: self isExpanded ] ]
+]
+
+{ #category : #testing }
+GtCoderElement >> isExpanded [
+	^ expandableModel isExpanded
 ]
 
 { #category : #'instance creation' }
-GtCoderElement >> newBreadcrumb [
-	<return: #BrBreadcrumb>
-	^ BrBreadcrumb new
-		look: self newBreadcrumbLook;
-		addItems: coder breadcrumbItemElements;
-		vFitContent;
-		hFitContent;
-		background: Color transparent;
-		constraintsDo: [ :c | 
-			c margin: (BlInsets top: 2).
-			c frame horizontal alignLeft.
-			c frame vertical alignCenter ];
+GtCoderElement >> newActionsElement [
+	^ GtCoderActionsElement new
+		coder: coder;
+		padding:
+			(BlInsets
+				top: 0
+				left: -3
+				bottom: -3
+				right: 0);
+		margin: (BlInsets top: 5);
 		yourself
 ]
 
-{ #category : #'instance creation' }
-GtCoderElement >> newBreadcrumbLook [
-	^ BrGlamorousBreadcrumbLook new
-		separator: [ BrLabel new
-			look: (BrGlamorousLabelLook new thin foreground: BrGlamorousColors defaultButtonTextColor);
-			text: '>';
-			margin: (BlInsets left: 5 right: 5) ]
+{ #category : #private }
+GtCoderElement >> newCollapsedElement [
+	^ GtCoderContentElement new
+		coder: coder editorElement: coder collapsedEditorElement;
+		in: [ :e | self addCodersCoderLookTo: e ];
+		yourself
 ]
 
-{ #category : #'instance creation' }
-GtCoderElement >> newHeaderElement [
-	^ BlElement new
-		clipChildren: false;
-		layout: BlFrameLayout new;
-		constraintsDo: [ :c | 
-			c padding: BlInsets empty.
-			c horizontal matchParent.
-			c vertical fitContent ];
-		addChild: self newBreadcrumb as: #breadcrumb;
+{ #category : #private }
+GtCoderElement >> newExpandedElement [
+	^ GtCoderContentElement new
+		coder: coder editorElement: coder expandedEditorElement;
+		addChild: self newActionsElement as: #actions;
+		in: [ :e | self addCodersCoderLookTo: e ];
 		yourself
 ]

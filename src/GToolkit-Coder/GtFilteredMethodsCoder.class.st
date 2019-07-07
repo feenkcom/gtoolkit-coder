@@ -27,6 +27,13 @@ GtFilteredMethodsCoder >> categoryFilterString: aSymbol [
 	self updateCoders
 ]
 
+{ #category : #elements }
+GtFilteredMethodsCoder >> coderLook [
+	^ GtMethodCoderCategoryLook new
+		methodsCoder: self;
+		yourself
+]
+
 { #category : #private }
 GtFilteredMethodsCoder >> combineFilters: anArray [
 	| result |
@@ -79,13 +86,6 @@ GtFilteredMethodsCoder >> implementorsFilterString: aString [
 	implementorsFilterString := aString.
 	self updateMethods.
 	self updateCoders
-]
-
-{ #category : #elements }
-GtFilteredMethodsCoder >> methodCoderLook [
-	^ GtMethodCoderCategoryLook new
-		methodsCoder: self;
-		yourself
 ]
 
 { #category : #private }

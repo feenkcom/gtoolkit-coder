@@ -30,6 +30,11 @@ GtCoders >> asElement [
 		yourself
 ]
 
+{ #category : #elements }
+GtCoders >> coderLook [
+	^ nil
+]
+
 { #category : #accessing }
 GtCoders >> coders [
 	^ coders

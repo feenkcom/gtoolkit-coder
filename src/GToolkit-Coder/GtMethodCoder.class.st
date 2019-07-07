@@ -57,11 +57,8 @@ GtMethodCoder >> asElement [
 ]
 
 { #category : #elements }
-GtMethodCoder >> breadcrumbItemElements [
-	<return: #Collection of: #BrButton>
-	| theNamedActions |
-	"Array (name -> action)"
-	theNamedActions := Array
+GtMethodCoder >> breadcrumbNamedActions [
+	^ Array
 		streamContents: [ :aStream | 
 			| aPackage aPackageName aClass |
 			aPackage := (self compiledMethod ifNil: [ self classOrMetaClass ])
@@ -73,16 +70,7 @@ GtMethodCoder >> breadcrumbItemElements [
 				nextPut:
 					aClass name
 						->
-							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ].
-	^ theNamedActions
-		collect: [ :eachNamedAction | 
-			BrButton new
-				look:
-					(BrGlamorousLabelLook new
-						foreground: BrGlamorousColors defaultButtonTextColor;
-						fontSize: 12);
-				label: eachNamedAction key;
-				action: eachNamedAction value ]
+							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ]
 ]
 
 { #category : #private }
@@ -135,11 +123,6 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 { #category : #private }
 GtMethodCoder >> clearPatternSyntaxErrors [
 	self collapsedText clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
-]
-
-{ #category : #elements }
-GtMethodCoder >> coderLook [
-	^ nil
 ]
 
 { #category : #private }
@@ -517,16 +500,6 @@ GtMethodCoder >> methodExpanderFor: anAST [
 			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
 			^ self ].
 	addOns addStyler: GtCoderExpandableMethodStyler new
-]
-
-{ #category : #accessing }
-GtMethodCoder >> methodsCoder [
-	^ self attributeNamed: #methodsCoder
-]
-
-{ #category : #accessing }
-GtMethodCoder >> methodsCoder: aCoder [
-	^ self attributeNamed: #methodsCoder put: aCoder
 ]
 
 { #category : #'add ons' }

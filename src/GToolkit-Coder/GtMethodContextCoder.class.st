@@ -36,13 +36,6 @@ GtMethodContextCoder >> close [
 	self updateSelection
 ]
 
-{ #category : #elements }
-GtMethodContextCoder >> coderLook [
-	^ super coderLook
-	"^ GtContextCoderDropDownVariableLook new methodCoder: self"
-	"^ GtContextCoderVariableLook new methodCoder: self"
-]
-
 { #category : #actions }
 GtMethodContextCoder >> compile [
 	"The current compiler wants to notify a text morph object in case of errors. 

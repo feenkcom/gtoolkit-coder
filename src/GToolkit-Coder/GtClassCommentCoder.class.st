@@ -17,11 +17,8 @@ GtClassCommentCoder class >> forClass: aClass [
 ]
 
 { #category : #elements }
-GtClassCommentCoder >> breadcrumbItemElements [
-	<return: #Collection of: #BrButton>
-	| theNamedActions |
-	"Array (name -> action)"
-	theNamedActions := Array
+GtClassCommentCoder >> breadcrumbNamedActions [
+	^ Array
 		streamContents: [ :aStream | 
 			| aPackage aPackageName aClass |
 			aPackage := class package.
@@ -32,16 +29,7 @@ GtClassCommentCoder >> breadcrumbItemElements [
 				nextPut:
 					aClass name
 						->
-							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ].
-	^ theNamedActions
-		collect: [ :eachNamedAction | 
-			BrButton new
-				look:
-					(BrGlamorousLabelLook new
-						foreground: BrGlamorousColors defaultButtonTextColor;
-						fontSize: 12);
-				label: eachNamedAction key;
-				action: eachNamedAction value ]
+							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ]
 ]
 
 { #category : #accessing }

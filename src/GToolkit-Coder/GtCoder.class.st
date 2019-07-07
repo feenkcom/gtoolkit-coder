@@ -10,20 +10,6 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #elements }
-GtCoder >> actionsElement [
-	^ GtCoderActionsElement new
-		coder: self;
-		padding:
-			(BlInsets
-				top: 0
-				left: -3
-				bottom: -3
-				right: 0);
-		margin: (BlInsets top: 5);
-		yourself
-]
-
 { #category : #accessing }
 GtCoder >> addOns [
 	^ addOns
@@ -49,18 +35,9 @@ GtCoder >> announcer [
 
 { #category : #elements }
 GtCoder >> asElement [
-	| expander |
-	expander := BrExpander new.
-	expander
-		vFitContent;
-		hMatchParent.
-	expanded
-		ifTrue: [ expander expand ].
-	expander look: GtCoderExpanderLook new.
-	expander header: [ self collapsedElement ].
-	expander content: [ self expandedElement ].
-	expander margin: (BlInsets all: 8).
-	^ expander
+	^ GtCoderElement new
+		coder: self;
+		yourself
 ]
 
 { #category : #'accessing-attributes' }
@@ -94,20 +71,23 @@ GtCoder >> attributes [
 ]
 
 { #category : #elements }
-GtCoder >> breadcrumbItemElements [
+GtCoder >> breadcrumbNamedActions [
 	^ #()
+]
+
+{ #category : #accessing }
+GtCoder >> coders [
+	^ self attributeNamed: #coders
+]
+
+{ #category : #accessing }
+GtCoder >> coders: aCoders [
+	^ self attributeNamed: #coders put: aCoders
 ]
 
 { #category : #elements }
 GtCoder >> collapsedEditorElement [
 	self subclassResponsibility
-]
-
-{ #category : #elements }
-GtCoder >> collapsedElement [
-	^ GtCoderElement new
-		coder: self editorElement: self collapsedEditorElement;
-		yourself
 ]
 
 { #category : #private }
@@ -136,14 +116,6 @@ GtCoder >> expanded: aBoolean [
 { #category : #elements }
 GtCoder >> expandedEditorElement [
 	self subclassResponsibility
-]
-
-{ #category : #elements }
-GtCoder >> expandedElement [
-	^ GtCoderElement new
-		coder: self editorElement: self expandedEditorElement;
-		addChild: self actionsElement as: #actions;
-		yourself
 ]
 
 { #category : #ui }
