@@ -87,5 +87,5 @@ GtClassCommentCoder >> updateCollapsedText [
 				beNotOverwritableByStyler.
 			BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
 			(BlFontSizeAttribute size: 12) beNotOverwritableByStyler}.
-	self collapsedEditor text: firstLine
+	self collapsedEditor text: firstLine readonly
 ]

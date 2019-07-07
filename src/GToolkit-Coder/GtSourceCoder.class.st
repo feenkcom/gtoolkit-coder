@@ -115,7 +115,7 @@ GtSourceCoder >> collapsedSource: aString [
 
 { #category : #ui }
 GtSourceCoder >> collapsedStyler [
-	^ nil
+	^ self newSourceStyler
 ]
 
 { #category : #accessing }
@@ -421,6 +421,7 @@ GtSourceCoder >> initialize [
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeAddOns [
 	addOns := GtSourceCoderAddOns new.
+	addOns addStyler: BrRBTextStyler new.
 	self initializeShortcuts
 ]
 
@@ -455,7 +456,9 @@ GtSourceCoder >> isBuilt [
 
 { #category : #private }
 GtSourceCoder >> newCollapsedEditor [
-	^ BrTextEditor new
+	| editor |
+	editor := BrTextEditor new.
+	^ editor
 ]
 
 { #category : #private }
@@ -783,8 +786,11 @@ GtSourceCoder >> updateAddOns [
 { #category : #'event handling' }
 GtSourceCoder >> updateCollapsedSource [
 	| firstLine |
-	firstLine := (self sourceEditor text asString lines detect: [ :each | each notEmpty ] ifNone: [ '' ]) asRopedText.
-	firstLine attributes: self disabledTextAttributes , self defaultTextAttributes.
+	firstLine := (self sourceEditor text asString lines
+		detect: [ :each | each notEmpty ]
+		ifNone: [ '' ]) asRopedText.
+	firstLine
+		attributes: self defaultTextAttributes, self disabledTextAttributes.
 	self collapsedSource: firstLine
 ]
 

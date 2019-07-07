@@ -38,17 +38,19 @@ GtClassDefinitionCoder >> classOrMetaClass [
 { #category : #accessing }
 GtClassDefinitionCoder >> classOrMetaClass: anObject [
 	classOrMetaClass := anObject.
-	self source: classOrMetaClass definition
+	self
+		source: classOrMetaClass definition;
+		updateCollapsedSource
 ]
 
 { #category : #'initialize-release' }
 GtClassDefinitionCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addStyler: BrRBTextStyler new.
 	addOns
+		addStyler: BrRBTextStyler new;
 		addMainAction: 'Save' translated
-		icon: BrGlamorousIcons accept
-		action: [ self doItAll ].
+			icon: BrGlamorousIcons accept
+			action: [ self doItAll ].
 	addOns clearChanges
 ]
 

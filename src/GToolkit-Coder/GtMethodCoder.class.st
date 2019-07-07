@@ -125,11 +125,6 @@ GtMethodCoder >> clearPatternSyntaxErrors [
 	self collapsedText clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
 ]
 
-{ #category : #private }
-GtMethodCoder >> collapsedStyler [
-	^ self newSourceStyler
-]
-
 { #category : #accessing }
 GtMethodCoder >> collapsedText [
 	self ensureBuilt.
@@ -388,9 +383,9 @@ GtMethodCoder >> highlighter [
 GtMethodCoder >> highlighter: aHighlighter [
 	self highlighter ~~ aHighlighter
 		ifTrue: [ self attributeNamed: #highlighter put: aHighlighter.
-			isBuilt
-				ifTrue: [ self updateAddOns.
-					self styleText ] ]
+			self ensureBuilt.
+			self updateAddOns.
+			self styleText ]
 ]
 
 { #category : #'add ons' }
@@ -411,7 +406,6 @@ GtMethodCoder >> initialize [
 { #category : #'initialize-release' }
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addStyler: BrRBTextStyler new.
 	"addOns addStyler: GtCoderCommentStyler new."
 	addOns addMainAction: 'Save' translated icon: BrGlamorousIcons accept action: [ self save ].
 	addOns clearChanges
@@ -722,18 +716,6 @@ GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 	^ index
 ]
 
-{ #category : #private }
-GtMethodCoder >> styledPatternTextFor: aString [
-	| text |
-	text := aString asRopedText.
-	text attributes: self defaultTextAttributes.
-	text := BrRBTextStyler new
-		classOrMetaClass: self classOrMetaClass;
-		style: text.
-	text attributes: self disabledTextAttributes.
-	^ text
-]
-
 { #category : #accessing }
 GtMethodCoder >> subCoders [
 	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
@@ -761,26 +743,22 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST [
 	addOns addContextAction: 'Debug' translated icon: BrGlamorousIcons debug action: [ :button | self debugSelectionOrMethod ].
 ]
 
-{ #category : #private }
+{ #category : #'event handling' }
 GtMethodCoder >> updateCollapsedSource [
 	[ | patternText |
 	patternText := self patternSource asRopedText.
 	patternText attributes: self defaultTextAttributes.
 	self collapsedSource: patternText ]
 		on: Error
-		do: [ :ex | super updateCollapsedSource ]
+		do: [ :ex | 
+			self flag: 'FIXME do not do pokemon exception catching'.
+			super updateCollapsedSource ]
 ]
 
 { #category : #updating }
 GtMethodCoder >> updateMethod: aCompiledMethod [
 	self forMethod: aCompiledMethod.
 	self buildSource
-]
-
-{ #category : #updating }
-GtMethodCoder >> updateStylerPattern [
-	self sourceEditor styler methodPatternSource: self collapsedSource.
-	self sourceEditor styleText
 ]
 
 { #category : #private }

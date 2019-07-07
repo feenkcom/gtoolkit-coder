@@ -110,9 +110,7 @@ GtFilteredMethodsCoder >> updateCoders [
 				ifFalse: [ newCoders add: (self newCoderFor: each) ] ].
 	coders := newCoders.
 	coders sort: [ :a :b | self shouldSort: a before: b ].
-	highlighter := coders
-		ifEmpty: [ nil ]
-		ifNotEmpty: [ coders first highlighter ].
+	highlighter := items highlighter.
 	coders do: [ :each | each highlighter: highlighter ].
 	self
 		announce:
