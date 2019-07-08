@@ -197,15 +197,31 @@ GtClassCoderElement >> classCoder: aCoder [
 	self buildContentPane.
 ]
 
+{ #category : #subscriptions }
+GtClassCoderElement >> definitionChanged: anAnnouncement [
+	anAnnouncement classAffected == classCoder theClass
+		ifFalse: [ ^ self ].
+	classCoder methodsCoder forClass: classCoder theClass.
+	classCoder definitionsCoder forClass: classCoder theClass.
+	classCoder commentsCoder forClass: classCoder theClass.
+	self updateContentElement
+]
+
 { #category : #initialization }
-GtClassCoderElement >> initialize [ 
+GtClassCoderElement >> initialize [
 	super initialize.
-	self 
+	self
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
 	self padding: (BlInsets left: 10 right: 10).
+	SystemAnnouncer uniqueInstance weak
+		when:
+			ClassModificationApplied , ClassModifiedClassDefinition
+				, ClassParentRenamed , ClassRenamed
+		send: #definitionChanged:
+		to: self
 ]
 
 { #category : #'updating ui' }

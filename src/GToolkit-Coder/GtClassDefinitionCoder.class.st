@@ -81,7 +81,7 @@ GtClassDefinitionCoder >> subscribeToSystem [
 	SystemAnnouncer uniqueInstance weak
 		when:
 			ClassModificationApplied , ClassModifiedClassDefinition
-				, ClassParentRenamed
+				, ClassParentRenamed , ClassRenamed
 		send: #definitionChanged:
 		to: self
 ]
