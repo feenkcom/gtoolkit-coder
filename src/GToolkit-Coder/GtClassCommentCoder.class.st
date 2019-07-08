@@ -47,6 +47,14 @@ GtClassCommentCoder >> collapsedEditorElement [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+GtClassCommentCoder >> commentChanged: anAnnouncement [
+	anAnnouncement classAffected == class
+		ifFalse: [ ^ self ].
+	document text: class comment.
+	self updateCollapsedText
+]
+
 { #category : #ui }
 GtClassCommentCoder >> expandedEditorElement [
 	^ document asElement
@@ -60,6 +68,14 @@ GtClassCommentCoder >> expandedEditorElement [
 { #category : #testing }
 GtClassCommentCoder >> isModified [
 	^ class comment ~= document string
+]
+
+{ #category : #subscriptions }
+GtClassCommentCoder >> subscribeToSystem [
+	SystemAnnouncer uniqueInstance weak
+		when: ClassCommented
+		send: #commentChanged:
+		to: self
 ]
 
 { #category : #accessing }

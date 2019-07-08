@@ -43,6 +43,15 @@ GtClassDefinitionCoder >> classOrMetaClass: anObject [
 		updateCollapsedSource
 ]
 
+{ #category : #subscriptions }
+GtClassDefinitionCoder >> definitionChanged: anAnnouncement [
+	anAnnouncement classAffected == classOrMetaClass
+		ifFalse: [ ^ self ].
+	self
+		source: classOrMetaClass definition;
+		updateCollapsedSource
+]
+
 { #category : #'initialize-release' }
 GtClassDefinitionCoder >> initializeAddOns [
 	super initializeAddOns.
@@ -65,4 +74,14 @@ GtClassDefinitionCoder >> newRbAST: aString [
 	ast := RBParser parseFaultyExpression: aString.
 	ast doSemanticAnalysis.
 	^ ast
+]
+
+{ #category : #subscriptions }
+GtClassDefinitionCoder >> subscribeToSystem [
+	SystemAnnouncer uniqueInstance weak
+		when:
+			ClassModificationApplied , ClassModifiedClassDefinition
+				, ClassParentRenamed
+		send: #definitionChanged:
+		to: self
 ]
