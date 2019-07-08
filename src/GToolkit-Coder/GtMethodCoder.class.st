@@ -408,6 +408,7 @@ GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
 	addOns addMainAction: 'Save' translated icon: BrGlamorousIcons accept action: [ self save ].
+	addOns addMainAction: 'Remove' translated icon: BrGlamorousIcons remove action: [ self remove ].
 	addOns clearChanges
 ]
 
@@ -637,6 +638,11 @@ GtMethodCoder >> printOn: aStream [
 		nextPutAll: '>>#';
 		nextPutAll: self selector asString;  
 		nextPut: $)
+]
+
+{ #category : #actions }
+GtMethodCoder >> remove [
+	^ class removeSelector: selector
 ]
 
 { #category : #accessing }

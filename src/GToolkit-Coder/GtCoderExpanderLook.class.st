@@ -47,7 +47,7 @@ GtCoderExpanderLook >> initialize [
 		background: Color veryVeryLightGray;
 		addChild: toggle.
 	container := BlElement new
-		padding: (BlInsets all: 10);
+		padding: (BlInsets all: 4);
 		layout: BlLinearLayout vertical.
 	shadowLook := BrShadowLook new.
 	focusedShadowLook := BrShadowLook new
