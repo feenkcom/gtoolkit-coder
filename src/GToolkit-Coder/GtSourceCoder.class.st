@@ -146,6 +146,11 @@ GtSourceCoder >> completionStrategy [
 ]
 
 { #category : #private }
+GtSourceCoder >> completionStrategy: aCompletionStrategy [
+	completionStrategy := aCompletionStrategy
+]
+
+{ #category : #private }
 GtSourceCoder >> cursorPositionDo: aBlock [
 	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
 ]

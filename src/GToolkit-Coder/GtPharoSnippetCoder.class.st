@@ -95,6 +95,7 @@ GtPharoSnippetCoder >> newCompletionStrategy [
 	| strategy |
 	strategy := super newCompletionStrategy
 		isMethod: false;
+		hasImplicitVariables: true;
 		yourself.
 	strategy bindings: bindingStrategy bindings.
 	^ strategy
