@@ -83,6 +83,70 @@ GtClassCoder >> gtLiveFor: aView [
 		
 ]
 
+{ #category : #ui }
+GtClassCoder >> gtSpotterFor: anAction [
+	<gtAction>
+	^ anAction explicit
+		stencil: [ | dropdown model |
+			dropdown := BrDropdown new.
+			model := GtSpotter new.
+			model announcer
+				when: GtSpotterActOn
+				do: [ :e | 
+					| item |
+					item := e element.
+					[ (item isKindOf: GtSpotterCandidate) and: [ item item ~~ item ] ]
+						whileTrue: [ item := item item ].
+					((#(singleClick doubleClick keyPressed) includes: e eventType)
+						and: [ {RPackage.
+							RPackageTag.
+							CompiledMethod.
+							Behavior} anySatisfy: [ :f | item isKindOf: f ] ])
+						ifTrue: [ dropdown collapse.
+							self
+								flag: 'FIXME triggered while pressing return loses key up, hence delay'.
+							[ self displayClass: item ] fork ] ].
+			dropdown
+				look:
+					(BrGlamorousDropdownLook new
+						outskirtsEmbellisher: [ :e | 
+							e
+								background: BrGlamorousColors lightBorderColor;
+								yourself ];
+						yourself);
+				layout: BlLinearLayout horizontal;
+				constraintsDo: [ :c | 
+					c horizontal fitContent.
+					c vertical fitContent ];
+				toggle: [ BrButton new
+						look: BrGlamorousButtonWithIconLook;
+						icon: BrGlamorousIcons search asElement;
+						when: BlElementBackgroundChangedEvent
+							do: [ :e | 
+							(dropdown isExpanded
+								and: [ e target background paint color
+										~= BrGlamorousColors lightBorderColor ])
+								ifTrue: [ e target background: BrGlamorousColors lightBorderColor ] ];
+						yourself ];
+				popup: [ GtSpotterElement new
+						spotterModel: model;
+						constraintsDo: [ :c | 
+							c horizontal exact: 600.
+							c vertical exact: 400 ];
+						margin: (BlInsets all: 1);
+						geometry: (BlRectangle cornerRadius: 4);
+						in: [ :e | 
+							model announcer subscriptions subscriptions
+								detect: [ :g | 
+									g announcementClass == GtSpotterSelectedCandidateChanged
+										and: [ g action isMessageSend
+												and: [ g action selector = #onCandidateSelected:
+														and: [ g action receiver == e ] ] ] ]
+								ifFound: [ :g | g announcer subscriptions remove: g ] ];
+						yourself ];
+				yourself ]
+]
+
 { #category : #accessing }
 GtClassCoder >> implementorsFilterString: aString [
 	"Set implementors filter"
