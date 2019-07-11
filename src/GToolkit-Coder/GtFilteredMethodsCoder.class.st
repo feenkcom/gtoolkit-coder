@@ -52,11 +52,6 @@ GtFilteredMethodsCoder >> combinedFilter [
 	^ self combineFilters: self filters
 ]
 
-{ #category : #elements }
-GtFilteredMethodsCoder >> elementClass [
-	^ GtFilteredMethodsCoderElement
-]
-
 { #category : #private }
 GtFilteredMethodsCoder >> filters [
 	^ {originalFilter.

@@ -119,6 +119,8 @@ GtClassCoder >> gtSpotterFor: anAction [
 						do: [ :e | 
 							| item |
 							item := e element.
+							[ (item isKindOf: GtSpotterCandidate)
+								and: [ item item ~~ item ] ] whileTrue: [ item := item item ].
 							((#(singleClick doubleClick keyPressed) includes: e eventType)
 								and: [ item isKindOf: Behavior ])
 								ifTrue: [ dropdown collapse.
@@ -133,7 +135,7 @@ GtClassCoder >> gtSpotterFor: anAction [
 						in: [ :e | 
 							self
 								flag: 'FIXME need to remove original listener to avoid phlow inspect'.
-							model announcer subscriptions subscriptions
+							model announcer weak subscriptions subscriptions
 								detect: [ :g | 
 									g announcementClass == GtSpotterSelectedCandidateChanged
 										and: [ g action isMessageSend

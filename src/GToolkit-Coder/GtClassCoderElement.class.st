@@ -96,19 +96,31 @@ GtClassCoderElement >> buildContentTabs [
 				look: BrGlamorousTabLook new;
 				label: 'Methods';
 				stencil: [ classCoder methodsCoder asElement ];
-				actionsStencil: [ | button |
-					button := BrButton new.
-					button
-						look: BrGlamorousButtonWithIconLook;
-						icon: BrGlamorousIcons add asElement;
-						margin:
-							(BlInsets
-								top: 7
-								left: 10
-								bottom: 0
-								right: 0);
-						action: [ classCoder methodsCoder addNewCoder ].
-					button ]);
+				actionsStencil: [ BrToolbar new
+						look: BrGlamorousToolbarLook new;
+						addItem:
+							(BrEditor new
+								look: BrGlamorousCodeEditorLook new;
+								border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
+								hExact: 100;
+								vMatchParent;
+								padding: (BlInsets all: 3);
+								in: [ :e | 
+									e editor
+										when: BrTextEditorInsertedEvent
+											do: [ classCoder methodsCoder implementorsFilterString: e text asString ];
+										when: BrTextEditorDeletedEvent
+											do: [ classCoder methodsCoder implementorsFilterString: e text asString ].
+									classCoder methodsCoder implementorsFilterString
+										ifNotNil: [ :g | e text: g asString asRopedText ] ];
+								yourself);
+						addItem:
+							(BrButton new
+								look: BrGlamorousButtonWithIconLook;
+								icon: BrGlamorousIcons add asElement;
+								action: [ classCoder methodsCoder addNewCoder ];
+								yourself);
+						yourself ]);
 		addTab:
 			(BrTab new
 				look: BrGlamorousTabLook new;

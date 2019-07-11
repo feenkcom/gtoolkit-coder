@@ -77,11 +77,6 @@ GtClassMethodsCoder >> combinedFilter [
 			ifNotNil: [ :filter | filter & combined ] ]
 ]
 
-{ #category : #elements }
-GtClassMethodsCoder >> elementClass [
-	^ GtFilteredMethodsCoderElement
-]
-
 { #category : #testing }
 GtClassMethodsCoder >> filteredClass: aBehavior [
 	^ filteredClasses includes: aBehavior
