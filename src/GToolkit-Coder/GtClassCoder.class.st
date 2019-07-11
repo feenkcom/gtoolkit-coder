@@ -135,7 +135,7 @@ GtClassCoder >> gtSpotterFor: anAction [
 						in: [ :e | 
 							self
 								flag: 'FIXME need to remove original listener to avoid phlow inspect'.
-							model announcer weak subscriptions subscriptions
+							model announcer weak gtSubscriptions subscriptions
 								detect: [ :g | 
 									g announcementClass == GtSpotterSelectedCandidateChanged
 										and: [ g action isMessageSend
