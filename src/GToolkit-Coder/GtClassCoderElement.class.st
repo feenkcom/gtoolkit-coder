@@ -101,6 +101,7 @@ GtClassCoderElement >> buildContentTabs [
 						addItem:
 							(BrEditor new
 								look: BrGlamorousCodeEditorLook new;
+								geometry: (BlRectangle cornerRadius: 4);
 								border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
 								hExact: 100;
 								vMatchParent;
