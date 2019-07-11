@@ -79,7 +79,7 @@ GtClassMethodsCoder >> combinedFilter [
 
 { #category : #elements }
 GtClassMethodsCoder >> elementClass [
-	^ GtClassMethodsCoderElement
+	^ GtFilteredMethodsCoderElement
 ]
 
 { #category : #testing }

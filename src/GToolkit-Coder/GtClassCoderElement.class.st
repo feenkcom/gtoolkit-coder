@@ -95,7 +95,20 @@ GtClassCoderElement >> buildContentTabs [
 			(BrTab new
 				look: BrGlamorousTabLook new;
 				label: 'Methods';
-				stencil: [ classCoder methodsCoder asElement ]);
+				stencil: [ classCoder methodsCoder asElement ];
+				actionsStencil: [ | button |
+					button := BrButton new.
+					button
+						look: BrGlamorousButtonWithIconLook;
+						icon: BrGlamorousIcons add asElement;
+						margin:
+							(BlInsets
+								top: 7
+								left: 10
+								bottom: 0
+								right: 0);
+						action: [ classCoder methodsCoder addNewCoder ].
+					button ]);
 		addTab:
 			(BrTab new
 				look: BrGlamorousTabLook new;
