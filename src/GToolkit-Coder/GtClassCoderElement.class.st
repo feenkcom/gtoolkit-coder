@@ -8,7 +8,8 @@ Class {
 		'panesNavigationButton',
 		'treeNavigationButton',
 		'classCoder',
-		'contentElement'
+		'contentElement',
+		'spotterButton'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -179,15 +180,75 @@ GtClassCoderElement >> buildPanesNavigationToolbarButton [
 ]
 
 { #category : #'building ui' }
+GtClassCoderElement >> buildSpotterButton [
+	 | dropdown |
+	dropdown := BrDropdown new.
+	^ dropdown
+				look:
+					(BrGlamorousDropdownLook new
+						outskirtsEmbellisher: [ :e | 
+							e
+								background: BrGlamorousColors lightBorderColor;
+								yourself ];
+						yourself);
+				layout: BlLinearLayout horizontal;
+				constraintsDo: [ :c | 
+					c horizontal fitContent.
+					c vertical fitContent ];
+				toggle: [ BrButton new
+						look: BrGlamorousButtonWithIconLook;
+						icon: BrGlamorousIcons search asElement;
+						when: BlElementBackgroundChangedEvent
+							do: [ :e | 
+							(dropdown isExpanded
+								and: [ e target background paint color
+										~= BrGlamorousColors lightBorderColor ])
+								ifTrue: [ e target background: BrGlamorousColors lightBorderColor ] ];
+						yourself ];
+				popup: [ | model |
+					model := GtSpotter new.
+					model announcer
+						when: GtSpotterActOn
+						do: [ :e | 
+							| item |
+							item := e element.
+							[ (item isKindOf: GtSpotterCandidate)
+								and: [ item item ~~ item ] ] whileTrue: [ item := item item ].
+							((#(singleClick doubleClick keyPressed) includes: e eventType)
+								and: [ item isKindOf: Behavior ])
+								ifTrue: [ dropdown collapse.
+									self classCoder displayClass: item ] ].
+					GtSpotterElement new
+						spotterModel: model;
+						constraintsDo: [ :c | 
+							c horizontal exact: 600.
+							c vertical exact: 400 ];
+						margin: (BlInsets all: 1);
+						geometry: (BlRectangle cornerRadius: 4);
+						in: [ :e | 
+							self
+								flag: 'FIXME need to remove original listener to avoid phlow inspect'.
+							model announcer weak gtSubscriptions subscriptions
+								detect: [ :g | 
+									g announcementClass == GtSpotterSelectedCandidateChanged
+										and: [ g action isMessageSend
+												and: [ g action selector = #onCandidateSelected:
+														and: [ g action receiver == e ] ] ] ]
+								ifFound: [ :g | g announcer subscriptions remove: g ] ];
+						yourself ];
+				yourself 
+]
+
+{ #category : #'building ui' }
 GtClassCoderElement >> buildToolbar [ 	
 	| toolbar |
 	toolbar := BrToolbar new.
 	toolbar look: BrGlamorousToolbarLook new.
-	panesNavigationButton := self buildPanesNavigationToolbarButton.
+	spotterButton := self buildSpotterButton.
 	treeNavigationButton := self buildTreeNavigationToolbarButton.
 	toolbar margin: (BlInsets right: -2).
 	toolbar addItem: treeNavigationButton.
-	toolbar addItem: panesNavigationButton.
+	toolbar addItem: spotterButton.
 	^ toolbar
 ]
 
