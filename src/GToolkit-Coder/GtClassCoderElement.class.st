@@ -150,7 +150,7 @@ GtClassCoderElement >> buildHeaderPane [
 			c linear horizontal alignRight.
 			c horizontal fitContent.
 			c vertical matchParent ].
-	headerPane addChild: selectorElement.
+"	headerPane addChild: selectorElement."
 	headerPane addChild: toolbarElement.
 	self addChild: headerPane
 ]
@@ -260,7 +260,7 @@ GtClassCoderElement >> buildTreeNavigationToolbarButton [
 		icon: BrGlamorousIcons tree asElement;
 		when: BrToggleActivatedEvent
 			do: [ :anEvent | 
-			panesNavigationButton deactivate.
+			"panesNavigationButton deactivate."
 			classCoder navigationModel: GtClassCoderPackagesTreeNavigation new ];
 		when: BrToggleDeactivatedEvent
 			do: [ :anEvent | classCoder navigationModel: nil ].
