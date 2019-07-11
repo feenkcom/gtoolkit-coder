@@ -87,25 +87,9 @@ GtClassCoder >> gtLiveFor: aView [
 GtClassCoder >> gtSpotterFor: anAction [
 	<gtAction>
 	^ anAction explicit
-		stencil: [ | dropdown model |
+		priority: -1;
+		stencil: [ | dropdown |
 			dropdown := BrDropdown new.
-			model := GtSpotter new.
-			model announcer
-				when: GtSpotterActOn
-				do: [ :e | 
-					| item |
-					item := e element.
-					[ (item isKindOf: GtSpotterCandidate) and: [ item item ~~ item ] ]
-						whileTrue: [ item := item item ].
-					((#(singleClick doubleClick keyPressed) includes: e eventType)
-						and: [ {RPackage.
-							RPackageTag.
-							CompiledMethod.
-							Behavior} anySatisfy: [ :f | item isKindOf: f ] ])
-						ifTrue: [ dropdown collapse.
-							self
-								flag: 'FIXME triggered while pressing return loses key up, hence delay'.
-							[ self displayClass: item ] fork ] ].
 			dropdown
 				look:
 					(BrGlamorousDropdownLook new
@@ -128,7 +112,18 @@ GtClassCoder >> gtSpotterFor: anAction [
 										~= BrGlamorousColors lightBorderColor ])
 								ifTrue: [ e target background: BrGlamorousColors lightBorderColor ] ];
 						yourself ];
-				popup: [ GtSpotterElement new
+				popup: [ | model |
+					model := GtSpotter new.
+					model announcer
+						when: GtSpotterActOn
+						do: [ :e | 
+							| item |
+							item := e element.
+							((#(singleClick doubleClick keyPressed) includes: e eventType)
+								and: [ item isKindOf: Behavior ])
+								ifTrue: [ dropdown collapse.
+									self displayClass: item ] ].
+					GtSpotterElement new
 						spotterModel: model;
 						constraintsDo: [ :c | 
 							c horizontal exact: 600.
@@ -136,6 +131,8 @@ GtClassCoder >> gtSpotterFor: anAction [
 						margin: (BlInsets all: 1);
 						geometry: (BlRectangle cornerRadius: 4);
 						in: [ :e | 
+							self
+								flag: 'FIXME need to remove original listener to avoid phlow inspect'.
 							model announcer subscriptions subscriptions
 								detect: [ :g | 
 									g announcementClass == GtSpotterSelectedCandidateChanged
