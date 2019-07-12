@@ -46,7 +46,7 @@ GtCoderClassSelector >> changedClassName [
 	className ifNil: [ ^ nil ].
 	class := Smalltalk at: className asSymbol ifAbsent: [ nil ].
 	class isBehavior
-		ifTrue: [ self coder displayClass: class ]
+		ifTrue: [ self coder forClass: class ]
 ]
 
 { #category : #accessing }

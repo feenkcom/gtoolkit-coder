@@ -105,8 +105,9 @@ GtFilteredMethodsCoder >> updateCoders [
 				ifFalse: [ newCoders add: (self newCoderFor: each) ] ].
 	coders := newCoders.
 	coders sort: [ :a :b | self shouldSort: a before: b ].
-	highlighter := items highlighter.
-	coders do: [ :each | each highlighter: highlighter ].
+	(items isKindOf: GtSearchMethodGroupResult)
+		ifTrue: [ highlighter := items highlighter.
+			coders do: [ :each | each highlighter: highlighter ] ].
 	self
 		announce:
 			(GtCodersCodersChanged new
@@ -116,5 +117,6 @@ GtFilteredMethodsCoder >> updateCoders [
 
 { #category : #private }
 GtFilteredMethodsCoder >> updateMethods [
-	items updateForFilter: self combinedFilter
+	(items isKindOf: GtSearchMethodGroupResult)
+		ifTrue: [ items updateForFilter: self combinedFilter ]
 ]
