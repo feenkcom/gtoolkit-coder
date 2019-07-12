@@ -19,6 +19,7 @@ GtClassCoderElement >> buildBreadcrumb [
 	| breadcrumb |
 	breadcrumb := BrBreadcrumb new.
 	breadcrumb
+		alignCenterLeft;
 		look:
 			(BrGlamorousBreadcrumbLook new
 				separator: [ BrLabel new
@@ -28,9 +29,7 @@ GtClassCoderElement >> buildBreadcrumb [
 						text: '>';
 						margin:
 							(BlInsets
-								top: 6
 								left: 3
-								bottom: 0
 								right: 3) ]).
 	classCoder theClass
 		withAllSuperclassesDo: [ :each | 
