@@ -14,6 +14,22 @@ GtClassDefinitionCoder class >> forClass: aBehavior [
 		yourself
 ]
 
+{ #category : #elements }
+GtClassDefinitionCoder >> breadcrumbNamedActions [
+	^ Array
+		streamContents: [ :aStream | 
+			| aPackage aPackageName aClass |
+			aPackage := self classOrMetaClass package.
+			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
+			aClass := self classOrMetaClass.
+			aStream
+				nextPut: aPackageName -> [ :aButton | aButton phlow spawnObject: aPackage ];
+				nextPut:
+					aClass name
+						->
+							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ]
+]
+
 { #category : #accessing }
 GtClassDefinitionCoder >> classOrMetaClass [
 	^ classOrMetaClass
@@ -22,17 +38,28 @@ GtClassDefinitionCoder >> classOrMetaClass [
 { #category : #accessing }
 GtClassDefinitionCoder >> classOrMetaClass: anObject [
 	classOrMetaClass := anObject.
-	self source: classOrMetaClass definition
+	self
+		source: classOrMetaClass definition;
+		updateCollapsedSource
+]
+
+{ #category : #subscriptions }
+GtClassDefinitionCoder >> definitionChanged: anAnnouncement [
+	anAnnouncement classAffected == classOrMetaClass
+		ifFalse: [ ^ self ].
+	self
+		source: classOrMetaClass definition;
+		updateCollapsedSource
 ]
 
 { #category : #'initialize-release' }
 GtClassDefinitionCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addStyler: BrRBTextStyler new.
 	addOns
+		addStyler: BrRBTextStyler new;
 		addMainAction: 'Save' translated
-		icon: BrGlamorousIcons accept
-		action: [ self doItAll ].
+			icon: BrGlamorousIcons accept
+			action: [ self doItAll ].
 	addOns clearChanges
 ]
 
@@ -47,4 +74,14 @@ GtClassDefinitionCoder >> newRbAST: aString [
 	ast := RBParser parseFaultyExpression: aString.
 	ast doSemanticAnalysis.
 	^ ast
+]
+
+{ #category : #subscriptions }
+GtClassDefinitionCoder >> subscribeToSystem [
+	SystemAnnouncer uniqueInstance weak
+		when:
+			ClassModificationApplied , ClassModifiedClassDefinition
+				, ClassParentRenamed , ClassRenamed
+		send: #definitionChanged:
+		to: self
 ]

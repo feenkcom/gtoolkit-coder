@@ -9,7 +9,7 @@ Class {
 		'commentsCoder',
 		'class'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'instance creation' }
@@ -68,23 +68,12 @@ GtClassCoder >> forObject: anObject [
 	commentsCoder := GtClassCommentsCoder forClass: class
 ]
 
-{ #category : #accessing }
-GtClassCoder >> gtDocumentFor: aView [
-	<gtView>
-	self theClass ifNil: [ ^ aView empty ].
-	^ (self theClass instanceSide gtDocumentFor: aView)
-			priority: 1;
-			actionButtonIcon: BrGlamorousIcons inspect
-				action: [ :aButton | 
-					aButton phlow spawnObject: self theClass instanceSide ]
-]
-
 { #category : #ui }
 GtClassCoder >> gtLiveFor: aView [
 	<gtView>
 	^ aView explicit 
 		title: 'Class';
-		priority: 10;
+		priority: 1;
 		stencil: [ self ];
 		actionButtonIcon: BrGlamorousIcons browse
 			action: [ :aButton | self theClass browse ];
@@ -92,6 +81,69 @@ GtClassCoder >> gtLiveFor: aView [
 			action: [ :aButton | 
 				aButton phlow spawnObject: self theClass ]
 		
+]
+
+{ #category : #ui }
+GtClassCoder >> gtSpotterFor: anAction [
+	<gtAction>
+	^ anAction explicit
+		priority: -1;
+		stencil: [ | dropdown |
+			dropdown := BrDropdown new.
+			dropdown
+				look:
+					(BrGlamorousDropdownLook new
+						outskirtsEmbellisher: [ :e | 
+							e
+								background: BrGlamorousColors lightBorderColor;
+								yourself ];
+						yourself);
+				layout: BlLinearLayout horizontal;
+				constraintsDo: [ :c | 
+					c horizontal fitContent.
+					c vertical fitContent ];
+				toggle: [ BrButton new
+						look: BrGlamorousButtonWithIconLook;
+						icon: BrGlamorousIcons search asElement;
+						when: BlElementBackgroundChangedEvent
+							do: [ :e | 
+							(dropdown isExpanded
+								and: [ e target background paint color
+										~= BrGlamorousColors lightBorderColor ])
+								ifTrue: [ e target background: BrGlamorousColors lightBorderColor ] ];
+						yourself ];
+				popup: [ | model |
+					model := GtSpotter new.
+					model announcer
+						when: GtSpotterActOn
+						do: [ :e | 
+							| item |
+							item := e element.
+							[ (item isKindOf: GtSpotterCandidate)
+								and: [ item item ~~ item ] ] whileTrue: [ item := item item ].
+							((#(singleClick doubleClick keyPressed) includes: e eventType)
+								and: [ item isKindOf: Behavior ])
+								ifTrue: [ dropdown collapse.
+									self displayClass: item ] ].
+					GtSpotterElement new
+						spotterModel: model;
+						constraintsDo: [ :c | 
+							c horizontal exact: 600.
+							c vertical exact: 400 ];
+						margin: (BlInsets all: 1);
+						geometry: (BlRectangle cornerRadius: 4);
+						in: [ :e | 
+							self
+								flag: 'FIXME need to remove original listener to avoid phlow inspect'.
+							model announcer weak gtSubscriptions subscriptions
+								detect: [ :g | 
+									g announcementClass == GtSpotterSelectedCandidateChanged
+										and: [ g action isMessageSend
+												and: [ g action selector = #onCandidateSelected:
+														and: [ g action receiver == e ] ] ] ]
+								ifFound: [ :g | g announcer subscriptions remove: g ] ];
+						yourself ];
+				yourself ]
 ]
 
 { #category : #accessing }

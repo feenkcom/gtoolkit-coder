@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'class'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'instance creation' }
@@ -32,7 +32,6 @@ GtClassDefinitionsCoder >> elementClass [
 
 { #category : #'instance creation' }
 GtClassDefinitionsCoder >> forClass: aBehavior [
-	self flag: 'FIXME should listen class definition change'.
 	class := aBehavior.
 	self
 		forItems:
@@ -42,7 +41,9 @@ GtClassDefinitionsCoder >> forClass: aBehavior [
 
 { #category : #'instance creation' }
 GtClassDefinitionsCoder >> newCoderFor: aBehavior [
-	^ GtClassDefinitionCoder forClass: aBehavior
+	^ (GtClassDefinitionCoder forClass: aBehavior)
+		subscribeToSystem;
+		yourself
 ]
 
 { #category : #adding }

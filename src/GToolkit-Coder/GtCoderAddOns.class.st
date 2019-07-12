@@ -113,7 +113,6 @@ GtCoderAddOns >> initialize [
 	super initialize.
 	contextActions := OrderedCollection new.
 	mainActions := OrderedCollection new.
-	stylers := OrderedCollection new.
 	shortcuts := OrderedCollection new.
 	modified := Set new
 ]

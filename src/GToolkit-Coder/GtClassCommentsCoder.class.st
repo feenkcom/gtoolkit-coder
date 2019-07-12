@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'class'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'instance creation' }
@@ -27,14 +27,15 @@ GtClassCommentsCoder >> elementClass [
 
 { #category : #'instance creation' }
 GtClassCommentsCoder >> forClass: aClass [
-	self flag: 'FIXME should listen class definition change'.
 	class := aClass.
 	self forItems: {class}
 ]
 
 { #category : #'instance creation' }
 GtClassCommentsCoder >> newCoderFor: aClass [
-	^ GtClassCommentCoder forClass: aClass
+	^ (GtClassCommentCoder forClass: aClass)
+		subscribeToSystem;
+		yourself
 ]
 
 { #category : #removing }

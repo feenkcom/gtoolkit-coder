@@ -35,18 +35,9 @@ GtCoder >> announcer [
 
 { #category : #elements }
 GtCoder >> asElement [
-	| expander |
-	expander := BrExpander new.
-	expander
-		vFitContent;
-		hMatchParent.
-	expanded
-		ifTrue: [ expander expand ].
-	expander look: GtCoderExpanderLook new.
-	expander header: [ self collapsedElement ].
-	expander content: [ self expandedElement ].
-	expander margin: (BlInsets all: 8).
-	^ expander
+	^ GtCoderElement new
+		coder: self;
+		yourself
 ]
 
 { #category : #'accessing-attributes' }
@@ -79,8 +70,23 @@ GtCoder >> attributes [
 	^ attributes ifNil: [ attributes := IdentityDictionary new ]
 ]
 
-{ #category : #ui }
-GtCoder >> collapsedElement [
+{ #category : #elements }
+GtCoder >> breadcrumbNamedActions [
+	^ #()
+]
+
+{ #category : #accessing }
+GtCoder >> coders [
+	^ self attributeNamed: #coders
+]
+
+{ #category : #accessing }
+GtCoder >> coders: aCoders [
+	^ self attributeNamed: #coders put: aCoders
+]
+
+{ #category : #elements }
+GtCoder >> collapsedEditorElement [
 	self subclassResponsibility
 ]
 
@@ -107,8 +113,8 @@ GtCoder >> expanded: aBoolean [
 	expanded := aBoolean
 ]
 
-{ #category : #ui }
-GtCoder >> expandedElement [
+{ #category : #elements }
+GtCoder >> expandedEditorElement [
 	self subclassResponsibility
 ]
 

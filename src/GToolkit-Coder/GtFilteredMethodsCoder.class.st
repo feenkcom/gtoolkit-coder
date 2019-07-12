@@ -27,6 +27,13 @@ GtFilteredMethodsCoder >> categoryFilterString: aSymbol [
 	self updateCoders
 ]
 
+{ #category : #elements }
+GtFilteredMethodsCoder >> coderLook [
+	^ GtMethodCoderCategoryLook new
+		methodsCoder: self;
+		yourself
+]
+
 { #category : #private }
 GtFilteredMethodsCoder >> combineFilters: anArray [
 	| result |
@@ -43,11 +50,6 @@ GtFilteredMethodsCoder >> combineFilters: anArray [
 { #category : #private }
 GtFilteredMethodsCoder >> combinedFilter [
 	^ self combineFilters: self filters
-]
-
-{ #category : #elements }
-GtFilteredMethodsCoder >> elementClass [
-	^ GtFilteredMethodsCoderElement
 ]
 
 { #category : #private }
@@ -81,13 +83,6 @@ GtFilteredMethodsCoder >> implementorsFilterString: aString [
 	self updateCoders
 ]
 
-{ #category : #elements }
-GtFilteredMethodsCoder >> methodCoderLook [
-	^ GtMethodCoderCategoryLook new
-		methodsCoder: self;
-		yourself
-]
-
 { #category : #private }
 GtFilteredMethodsCoder >> shouldSort: a before: b [
 	a selector isNil
@@ -110,9 +105,7 @@ GtFilteredMethodsCoder >> updateCoders [
 				ifFalse: [ newCoders add: (self newCoderFor: each) ] ].
 	coders := newCoders.
 	coders sort: [ :a :b | self shouldSort: a before: b ].
-	highlighter := coders
-		ifEmpty: [ nil ]
-		ifNotEmpty: [ coders first highlighter ].
+	highlighter := items highlighter.
 	coders do: [ :each | each highlighter: highlighter ].
 	self
 		announce:

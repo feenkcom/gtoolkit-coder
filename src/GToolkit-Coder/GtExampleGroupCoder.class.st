@@ -8,6 +8,6 @@ Class {
 GtExampleGroupCoder >> newCoderFor: aMethod [
 	| coder |
 	coder := GtMethodCoder forExample: aMethod.
-	coder methodsCoder: self.
+	coder coders: self.
 	^ coder
 ]

@@ -53,7 +53,24 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 { #category : #elements }
 GtMethodCoder >> asElement [
 	self ensureBuilt.
-	^ GtMethodCoderElement new methodCoder: self
+	^ super asElement
+]
+
+{ #category : #elements }
+GtMethodCoder >> breadcrumbNamedActions [
+	^ Array
+		streamContents: [ :aStream | 
+			| aPackage aPackageName aClass |
+			aPackage := (self compiledMethod ifNil: [ self classOrMetaClass ])
+				package.
+			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
+			aClass := self classOrMetaClass.
+			aStream
+				nextPut: aPackageName -> [ :aButton | aButton phlow spawnObject: aPackage ];
+				nextPut:
+					aClass name
+						->
+							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ]
 ]
 
 { #category : #private }
@@ -106,16 +123,6 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 { #category : #private }
 GtMethodCoder >> clearPatternSyntaxErrors [
 	self collapsedText clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
-]
-
-{ #category : #elements }
-GtMethodCoder >> coderLook [
-	^ nil
-]
-
-{ #category : #private }
-GtMethodCoder >> collapsedStyler [
-	^ self newSourceStyler
 ]
 
 { #category : #accessing }
@@ -376,9 +383,9 @@ GtMethodCoder >> highlighter [
 GtMethodCoder >> highlighter: aHighlighter [
 	self highlighter ~~ aHighlighter
 		ifTrue: [ self attributeNamed: #highlighter put: aHighlighter.
-			isBuilt
-				ifTrue: [ self updateAddOns.
-					self styleText ] ]
+			self ensureBuilt.
+			self updateAddOns.
+			self styleText ]
 ]
 
 { #category : #'add ons' }
@@ -399,9 +406,9 @@ GtMethodCoder >> initialize [
 { #category : #'initialize-release' }
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns addStyler: BrRBTextStyler new.
 	"addOns addStyler: GtCoderCommentStyler new."
 	addOns addMainAction: 'Save' translated icon: BrGlamorousIcons accept action: [ self save ].
+	addOns addMainAction: 'Remove' translated icon: BrGlamorousIcons remove action: [ self remove ].
 	addOns clearChanges
 ]
 
@@ -488,16 +495,6 @@ GtMethodCoder >> methodExpanderFor: anAST [
 			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
 			^ self ].
 	addOns addStyler: GtCoderExpandableMethodStyler new
-]
-
-{ #category : #accessing }
-GtMethodCoder >> methodsCoder [
-	^ self attributeNamed: #methodsCoder
-]
-
-{ #category : #accessing }
-GtMethodCoder >> methodsCoder: aCoder [
-	^ self attributeNamed: #methodsCoder put: aCoder
 ]
 
 { #category : #'add ons' }
@@ -643,6 +640,11 @@ GtMethodCoder >> printOn: aStream [
 		nextPut: $)
 ]
 
+{ #category : #actions }
+GtMethodCoder >> remove [
+	^ class removeSelector: selector
+]
+
 { #category : #accessing }
 GtMethodCoder >> removeSubCoder: aMethodCoder [
 	self subCoders remove: aMethodCoder ifAbsent: [  ]
@@ -720,18 +722,6 @@ GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 	^ index
 ]
 
-{ #category : #private }
-GtMethodCoder >> styledPatternTextFor: aString [
-	| text |
-	text := aString asRopedText.
-	text attributes: self defaultTextAttributes.
-	text := BrRBTextStyler new
-		classOrMetaClass: self classOrMetaClass;
-		style: text.
-	text attributes: self disabledTextAttributes.
-	^ text
-]
-
 { #category : #accessing }
 GtMethodCoder >> subCoders [
 	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
@@ -759,26 +749,22 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST [
 	addOns addContextAction: 'Debug' translated icon: BrGlamorousIcons debug action: [ :button | self debugSelectionOrMethod ].
 ]
 
-{ #category : #private }
+{ #category : #'event handling' }
 GtMethodCoder >> updateCollapsedSource [
 	[ | patternText |
 	patternText := self patternSource asRopedText.
 	patternText attributes: self defaultTextAttributes.
 	self collapsedSource: patternText ]
 		on: Error
-		do: [ :ex | super updateCollapsedSource ]
+		do: [ :ex | 
+			self flag: 'FIXME do not do pokemon exception catching'.
+			super updateCollapsedSource ]
 ]
 
 { #category : #updating }
 GtMethodCoder >> updateMethod: aCompiledMethod [
 	self forMethod: aCompiledMethod.
 	self buildSource
-]
-
-{ #category : #updating }
-GtMethodCoder >> updateStylerPattern [
-	self sourceEditor styler methodPatternSource: self collapsedSource.
-	self sourceEditor styleText
 ]
 
 { #category : #private }

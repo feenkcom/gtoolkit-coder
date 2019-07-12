@@ -142,6 +142,7 @@ GtMethodsCoderExamples >> unionCoder [
 { #category : #accessing }
 GtMethodsCoderExamples >> validateNoMemoryLeaks [
 	<gtExample>
+	<noTest>
 	| subscriptionCount instanceCount diffSubscriptions diffInstances |
 	Smalltalk garbageCollect.
 	subscriptionCount := SystemAnnouncer uniqueInstance numberOfSubscriptions.
