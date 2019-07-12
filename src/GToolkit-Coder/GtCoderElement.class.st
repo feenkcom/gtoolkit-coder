@@ -124,3 +124,11 @@ GtCoderElement >> newExpandedElement [
 		in: [ :e | self addCodersCoderLookTo: e ];
 		yourself
 ]
+
+{ #category : #'focus requesting' }
+GtCoderElement >> requestFocus [
+	^ self
+		childNamed: #editor
+		ifFound: [ :element | element requestFocus ]
+		ifNone: [ super requestFocus ]
+]
