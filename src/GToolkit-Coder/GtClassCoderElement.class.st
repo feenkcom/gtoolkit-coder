@@ -3,13 +3,13 @@ Class {
 	#superclass : #BlElement,
 	#instVars : [
 		'contentPane',
-		'headerPane',
 		'navigationElement',
 		'panesNavigationButton',
 		'treeNavigationButton',
 		'classCoder',
-		'contentElement',
-		'spotterButton'
+		'spotterButton',
+		'container',
+		'contentTabs'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -62,36 +62,55 @@ GtClassCoderElement >> buildBreadcrumb [
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildContentElement [
-	^ contentElement := BlElement new
-		layout: BlLinearLayout vertical;
+GtClassCoderElement >> buildContainer [
+	| tab tabGroup |
+	tab := BrTab new
+		look: BrGlamorousTabLook new invisibleBar;
+		label: 'Class Coder';
+		stencil: [ contentPane := self buildContentPane ];
+		actionsStencil: [ BrToolbar new
+				look: BrGlamorousToolbarLook new;
+				addItem: (spotterButton := self buildSpotterButton);
+				addItem: (treeNavigationButton := self buildTreeNavigationToolbarButton);
+				yourself ];
+		padding:
+			(BlInsets
+				top: 15
+				right: 0
+				bottom: 15
+				left: 10);
+		addChild: self buildBreadcrumb;
+		yourself.
+	tabGroup := BrTabGroup new
+		look:
+			(BrMaterialTabGroupLook new
+				headerBackground: BrGlamorousColors successBackgroundColor);
+		addTab: tab;
 		constraintsDo: [ :c | 
-			c horizontal matchParent.
 			c vertical matchParent.
-			c linear weight: 2 ];
-		addChildren:
-			{self buildBreadcrumb.
-			self buildContentTabs};
-		yourself
+			c horizontal matchParent ];
+		yourself.
+	^ tabGroup
 ]
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildContentPane [
-	self buildHeaderPane.
-	contentPane := BlElement new
+	^ BlElement new
+		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical matchParent ].
-	self addChild: contentPane.
-	self updateNavigationElement.
-	classCoder methodsCoder
-		ifNotNil: [ contentPane addChild: self buildContentElement ]
+			c vertical matchParent ];
+		in: [ :e | 
+			classCoder methodsCoder
+				ifNotNil: [ e addChild: self buildContentTabs ] ];
+		yourself
 ]
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildContentTabs [
 	^ BrTabGroup new
 		look: BrGlamorousTabGroupLook new;
+		constraintsDo: [ :c | c linear weight: 2 ];
 		addTab:
 			(BrTab new
 				look: BrGlamorousTabLook new;
@@ -136,38 +155,15 @@ GtClassCoderElement >> buildContentTabs [
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildHeaderPane [
-	| selectorElement toolbarElement |
-	headerPane := BlElement new
-		layout: BlLinearLayout new;
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	selectorElement := classCoder searchFilter asElement.
-	toolbarElement := self buildToolbar.
-	toolbarElement
-		constraintsDo: [ :c | 
-			c linear horizontal alignRight.
-			c horizontal fitContent.
-			c vertical matchParent ].
-"	headerPane addChild: selectorElement."
-	headerPane addChild: toolbarElement.
-	self addChild: headerPane
-]
-
-{ #category : #'building ui' }
 GtClassCoderElement >> buildNavigationElement [
-	| element |
-	element := classCoder navigationModel asElement.
-	"element padding: (BlInsets all: 10)."
-	element constraintsDo: [ :c | c linear weight: 0.5 ].
-	^ element
+	^ classCoder navigationModel asElement
+		constraintsDo: [ :c | c linear weight: 0.5 ];
+		yourself
 ]
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildPanesNavigationToolbarButton [
-	| toggle |
-	toggle := BrToggle new
+	^ BrToggle new
 		look: BrMaterialToggleBackgroundLook + BrGlamorousButtonWithIconLook;
 		icon: BrGlamorousIcons threepanes asElement;
 		when: BrToggleActivatedEvent
@@ -175,8 +171,8 @@ GtClassCoderElement >> buildPanesNavigationToolbarButton [
 			treeNavigationButton deactivate.
 			classCoder navigationModel: GtClassCoderPackagesPanesNavigation new ];
 		when: BrToggleDeactivatedEvent
-			do: [ :anEvent | classCoder navigationModel: nil ].
-	^ toggle
+			do: [ :anEvent | classCoder navigationModel: nil ];
+		yourself
 ]
 
 { #category : #'building ui' }
@@ -229,7 +225,7 @@ GtClassCoderElement >> buildSpotterButton [
 						in: [ :e | 
 							self
 								flag: 'FIXME need to remove original listener to avoid phlow inspect'.
-							model announcer weak gtSubscriptions subscriptions
+							model announcer subscriptions subscriptions
 								detect: [ :g | 
 									g announcementClass == GtSpotterSelectedCandidateChanged
 										and: [ g action isMessageSend
@@ -241,31 +237,16 @@ GtClassCoderElement >> buildSpotterButton [
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildToolbar [ 	
-	| toolbar |
-	toolbar := BrToolbar new.
-	toolbar look: BrGlamorousToolbarLook new.
-	spotterButton := self buildSpotterButton.
-	treeNavigationButton := self buildTreeNavigationToolbarButton.
-	toolbar margin: (BlInsets right: -2).
-	toolbar addItem: treeNavigationButton.
-	toolbar addItem: spotterButton.
-	^ toolbar
-]
-
-{ #category : #'building ui' }
 GtClassCoderElement >> buildTreeNavigationToolbarButton [
-	| toggle |
-	toggle := BrToggle new
+	^ BrToggle new
 		look: BrMaterialToggleBackgroundLook + BrGlamorousButtonWithIconLook;
 		icon: BrGlamorousIcons tree asElement;
 		when: BrToggleActivatedEvent
-			do: [ :anEvent | 
-			"panesNavigationButton deactivate."
-			classCoder navigationModel: GtClassCoderPackagesTreeNavigation new ];
+			do:
+				[ :anEvent | "panesNavigationButton deactivate." classCoder navigationModel: GtClassCoderPackagesTreeNavigation new ];
 		when: BrToggleDeactivatedEvent
-			do: [ :anEvent | classCoder navigationModel: nil ].
-	^ toggle
+			do: [ :anEvent | classCoder navigationModel: nil ];
+		yourself
 ]
 
 { #category : #accessing }
@@ -278,11 +259,14 @@ GtClassCoderElement >> classCoder: aCoder [
 	classCoder := aCoder.
 	classCoder
 		when: GtCoderClassSelectedAnnouncement
-		do: [ :ann | self updateContentElement ].
-	classCoder
+			do: [ :ann | self updateContentTabs ];
 		when: GtCoderNavigationModelChangedAnnouncement
-		do: [ :ann | self updateNavigationElement ].
-	self buildContentPane.
+			do: [ :ann | self updateNavigationElement ].
+	container := self buildContainer.
+	self
+		removeChildren;
+		addChild: container;
+		updateNavigationElement
 ]
 
 { #category : #subscriptions }
@@ -292,7 +276,7 @@ GtClassCoderElement >> definitionChanged: anAnnouncement [
 	classCoder methodsCoder forClass: classCoder theClass.
 	classCoder definitionsCoder forClass: classCoder theClass.
 	classCoder commentsCoder forClass: classCoder theClass.
-	self updateContentElement
+	self updateContentTabs
 ]
 
 { #category : #initialization }
@@ -303,7 +287,6 @@ GtClassCoderElement >> initialize [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-	self padding: (BlInsets left: 10 right: 10).
 	SystemAnnouncer uniqueInstance weak
 		when:
 			ClassModificationApplied , ClassModifiedClassDefinition
@@ -313,28 +296,28 @@ GtClassCoderElement >> initialize [
 ]
 
 { #category : #'updating ui' }
-GtClassCoderElement >> removeContentElement [
-	contentElement
-		ifNotNil: [ contentPane removeChild: contentElement.
-			contentElement := nil ]
+GtClassCoderElement >> removeContentTabs [
+	contentTabs
+		ifNotNil: [ contentPane removeChild: contentTabs.
+			contentTabs := nil ]
 ]
 
 { #category : #'updating ui' }
 GtClassCoderElement >> removeNavigationElement [
-	navigationElement ifNotNil: [
-		contentPane removeChild: navigationElement.
-		navigationElement := nil ].
+	navigationElement
+		ifNotNil: [ contentPane removeChild: navigationElement.
+			navigationElement := nil ]
 ]
 
 { #category : #'updating ui' }
-GtClassCoderElement >> updateContentElement [
+GtClassCoderElement >> updateContentTabs [
 	| childIndex |
-	contentElement
-		ifNil: [ childIndex := 1 ]
-		ifNotNil: [ childIndex := contentPane childIndexOf: contentElement ].
-	self removeContentElement.
-	self buildContentElement.
-	contentPane addChild: contentElement asElement at: childIndex
+	contentTabs
+		ifNil: [ childIndex := contentPane children size + 1 ]
+		ifNotNil: [ childIndex := contentPane childIndexOf: contentTabs ].
+	self removeContentTabs.
+	contentTabs := self buildContentTabs.
+	contentPane addChild: contentTabs asElement at: childIndex
 ]
 
 { #category : #'updating ui' }
