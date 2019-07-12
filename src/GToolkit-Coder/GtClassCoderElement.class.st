@@ -9,17 +9,15 @@ Class {
 		'classCoder',
 		'spotterButton',
 		'container',
-		'contentTabs'
+		'contentTabs',
+		'breadcrumb'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #'as yet unclassified' }
 GtClassCoderElement >> buildBreadcrumb [
-	| breadcrumb |
-	breadcrumb := BrBreadcrumb new.
-	breadcrumb
-		alignCenterLeft;
+	^ BrBreadcrumb new
 		look:
 			(BrGlamorousBreadcrumbLook new
 				separator: [ BrLabel new
@@ -27,37 +25,32 @@ GtClassCoderElement >> buildBreadcrumb [
 							(BrGlamorousLabelLook new thin
 								foreground: BrGlamorousColors defaultButtonTextColor);
 						text: '>';
-						margin:
-							(BlInsets
-								left: 3
-								right: 3) ]).
-	classCoder theClass
-		withAllSuperclassesDo: [ :each | 
-			| toggle |
-			toggle := BrToggle new
-				margin: (BlInsets all: 2);
-				activated: (classCoder methodsCoder filteredClass: each);
-				label: (each name asRopedText attributes: {(BlFontSizeAttribute size: 12)});
-				look: GtClassBreadcrumbToggleLook;
-				when: BrToggleActivatedEvent
-					do: [ :anEvent | 
-					classCoder methodsCoder addMethodsForClass: each.
-					classCoder definitionsCoder addDefinitionsForClass: each.
-					classCoder commentsCoder addCommentForClass: each ];
-				when: BrToggleDeactivatedEvent
-					do: [ :anEvent | 
-					classCoder methodsCoder removeMethodsForClass: each.
-					classCoder methodsCoder hasFilter
-						ifFalse: [ each == classCoder theClass
-								ifTrue: [ anEvent consumed: true ].
-							(breadcrumb itemAt: 1) activate ].
-					classCoder definitionsCoder removeDefinitionsForClass: each.
-					classCoder commentsCoder removeCommentForClass: each ].
-			breadcrumb addItem: toggle ].
-	^ breadcrumb asScrollableElement
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ]
+						margin: (BlInsets left: 3 right: 3) ]);
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+GtClassCoderElement >> buildBreadcrumbToggleForClass: aClass [
+	^ BrToggle new
+		margin: (BlInsets all: 2);
+		activated: (classCoder methodsCoder filteredClass: aClass);
+		label: (aClass name asRopedText attributes: {(BlFontSizeAttribute size: 12)});
+		look: GtClassBreadcrumbToggleLook;
+		when: BrToggleActivatedEvent
+			do: [ :anEvent | 
+			classCoder methodsCoder addMethodsForClass: aClass.
+			classCoder definitionsCoder addDefinitionsForClass: aClass.
+			classCoder commentsCoder addCommentForClass: aClass ];
+		when: BrToggleDeactivatedEvent
+			do: [ :anEvent | 
+			classCoder methodsCoder removeMethodsForClass: aClass.
+			classCoder definitionsCoder removeDefinitionsForClass: aClass.
+			classCoder commentsCoder removeCommentForClass: aClass.
+			classCoder methodsCoder hasFilter
+				ifFalse: [ aClass == classCoder theClass
+						ifTrue: [ anEvent consumed: true ].
+					(breadcrumb itemAt: 1) activate ] ];
+		yourself
 ]
 
 { #category : #'building ui' }
@@ -65,7 +58,7 @@ GtClassCoderElement >> buildContainer [
 	| tab tabGroup |
 	tab := BrTab new
 		look: BrGlamorousTabLook new invisibleBar;
-		label: 'Class Coder';
+		label: '';
 		stencil: [ contentPane := self buildContentPane ];
 		actionsStencil: [ BrToolbar new
 				look: BrGlamorousToolbarLook new;
@@ -78,7 +71,12 @@ GtClassCoderElement >> buildContainer [
 				right: 0
 				bottom: 15
 				left: 10);
-		addChild: self buildBreadcrumb;
+		addChild:
+			((breadcrumb := self buildBreadcrumb) asScrollableElement
+				constraintsDo: [ :c | 
+					c horizontal matchParent.
+					c vertical fitContent ];
+				yourself);
 		yourself.
 	tabGroup := BrTabGroup new
 		look:
@@ -101,7 +99,7 @@ GtClassCoderElement >> buildContentPane [
 			c vertical matchParent ];
 		in: [ :e | 
 			classCoder methodsCoder
-				ifNotNil: [ e addChild: self buildContentTabs ] ];
+				ifNotNil: [ e addChild: (contentTabs := self buildContentTabs) ] ];
 		yourself
 ]
 
@@ -144,12 +142,12 @@ GtClassCoderElement >> buildContentTabs [
 		addTab:
 			(BrTab new
 				look: BrGlamorousTabLook new;
-				label: 'Definition';
+				label: 'Definitions';
 				stencil: [ classCoder definitionsCoder asElement ]);
 		addTab:
 			(BrTab new
 				look: BrGlamorousTabLook new;
-				label: 'Comment';
+				label: 'Comments';
 				stencil: [ classCoder commentsCoder asElement ])
 ]
 
@@ -258,14 +256,18 @@ GtClassCoderElement >> classCoder: aCoder [
 	classCoder := aCoder.
 	classCoder
 		when: GtCoderClassSelectedAnnouncement
-			do: [ :ann | self updateContentTabs ];
+			do: [ :ann | 
+			self
+				updateContentTabs;
+				updateBreadcrumb ];
 		when: GtCoderNavigationModelChangedAnnouncement
 			do: [ :ann | self updateNavigationElement ].
 	container := self buildContainer.
 	self
 		removeChildren;
 		addChild: container;
-		updateNavigationElement
+		updateNavigationElement;
+		updateBreadcrumb
 ]
 
 { #category : #subscriptions }
@@ -275,7 +277,9 @@ GtClassCoderElement >> definitionChanged: anAnnouncement [
 	classCoder methodsCoder forClass: classCoder theClass.
 	classCoder definitionsCoder forClass: classCoder theClass.
 	classCoder commentsCoder forClass: classCoder theClass.
-	self updateContentTabs
+	self
+		updateContentTabs;
+		updateBreadcrumb
 ]
 
 { #category : #initialization }
@@ -306,6 +310,16 @@ GtClassCoderElement >> removeNavigationElement [
 	navigationElement
 		ifNotNil: [ contentPane removeChild: navigationElement.
 			navigationElement := nil ]
+]
+
+{ #category : #'as yet unclassified' }
+GtClassCoderElement >> updateBreadcrumb [
+	breadcrumb removeAllItems.
+	classCoder theClass
+		ifNotNil: [ :c | 
+			c
+				withAllSuperclassesDo:
+					[ :each | breadcrumb addItem: (self buildBreadcrumbToggleForClass: each) ] ]
 ]
 
 { #category : #'updating ui' }
