@@ -83,69 +83,6 @@ GtClassCoder >> gtLiveFor: aView [
 		
 ]
 
-{ #category : #ui }
-GtClassCoder >> gtSpotterFor: anAction [
-	<gtAction>
-	^ anAction explicit
-		priority: -1;
-		stencil: [ | dropdown |
-			dropdown := BrDropdown new.
-			dropdown
-				look:
-					(BrGlamorousDropdownLook new
-						outskirtsEmbellisher: [ :e | 
-							e
-								background: BrGlamorousColors lightBorderColor;
-								yourself ];
-						yourself);
-				layout: BlLinearLayout horizontal;
-				constraintsDo: [ :c | 
-					c horizontal fitContent.
-					c vertical fitContent ];
-				toggle: [ BrButton new
-						look: BrGlamorousButtonWithIconLook;
-						icon: BrGlamorousIcons search asElement;
-						when: BlElementBackgroundChangedEvent
-							do: [ :e | 
-							(dropdown isExpanded
-								and: [ e target background paint color
-										~= BrGlamorousColors lightBorderColor ])
-								ifTrue: [ e target background: BrGlamorousColors lightBorderColor ] ];
-						yourself ];
-				popup: [ | model |
-					model := GtSpotter new.
-					model announcer
-						when: GtSpotterActOn
-						do: [ :e | 
-							| item |
-							item := e element.
-							[ (item isKindOf: GtSpotterCandidate)
-								and: [ item item ~~ item ] ] whileTrue: [ item := item item ].
-							((#(singleClick doubleClick keyPressed) includes: e eventType)
-								and: [ item isKindOf: Behavior ])
-								ifTrue: [ dropdown collapse.
-									self displayClass: item ] ].
-					GtSpotterElement new
-						spotterModel: model;
-						constraintsDo: [ :c | 
-							c horizontal exact: 600.
-							c vertical exact: 400 ];
-						margin: (BlInsets all: 1);
-						geometry: (BlRectangle cornerRadius: 4);
-						in: [ :e | 
-							self
-								flag: 'FIXME need to remove original listener to avoid phlow inspect'.
-							model announcer weak gtSubscriptions subscriptions
-								detect: [ :g | 
-									g announcementClass == GtSpotterSelectedCandidateChanged
-										and: [ g action isMessageSend
-												and: [ g action selector = #onCandidateSelected:
-														and: [ g action receiver == e ] ] ] ]
-								ifFound: [ :g | g announcer subscriptions remove: g ] ];
-						yourself ];
-				yourself ]
-]
-
 { #category : #accessing }
 GtClassCoder >> implementorsFilterString: aString [
 	"Set implementors filter"
@@ -175,6 +112,23 @@ GtClassCoder >> navigationModel: aNavigationModel [
 	navigationModel ifNotNil: [ 
 		navigationModel classCoder: self ].
 	self announce: GtCoderNavigationModelChangedAnnouncement
+]
+
+{ #category : #opening }
+GtClassCoder >> openInInspector [
+	| anInspector aSpace |
+	anInspector := GtInspector new.
+	anInspector
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	anInspector addPageWithContent: self asElement for: self.
+	aSpace := BlSpace new.
+	aSpace withHalos.
+	aSpace title: 'Class Coder'.
+	aSpace extent: 1200 @ 600.
+	aSpace addChild: anInspector.
+	aSpace show
 ]
 
 { #category : #accessing }

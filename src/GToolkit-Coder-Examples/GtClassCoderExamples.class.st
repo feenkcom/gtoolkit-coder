@@ -7,5 +7,8 @@ Class {
 { #category : #'as yet unclassified' }
 GtClassCoderExamples >> onBlElement [
 	<gtExample>
-	^ GtClassCoder forClass: BlElement
+	| aCoder |
+	aCoder := GtClassCoder forClass: BlElement.
+	aCoder openInInspector.
+	^ aCoder
 ]
