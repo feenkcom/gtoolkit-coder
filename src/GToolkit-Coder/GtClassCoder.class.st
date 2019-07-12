@@ -44,28 +44,23 @@ GtClassCoder >> definitionsCoder [
 ]
 
 { #category : #updating }
-GtClassCoder >> displayClass: aClass [
+GtClassCoder >> forClass: aClass [
 	class := aClass.
-	methodsCoder := GtClassMethodsCoder forClass: class.
-	definitionsCoder := GtClassDefinitionsCoder forClass: class.
-	commentsCoder := GtClassCommentsCoder forClass: class.
+	methodsCoder
+		ifNil: [ methodsCoder := GtClassMethodsCoder forClass: class ]
+		ifNotNil: [ methodsCoder forClass: class ].
+	definitionsCoder
+		ifNil: [ definitionsCoder := GtClassDefinitionsCoder forClass: class ]
+		ifNotNil: [ definitionsCoder forClass: class ].
+	commentsCoder
+		ifNil: [ commentsCoder := GtClassCommentsCoder forClass: class ]
+		ifNotNil: [ commentsCoder forClass: class ].
 	self announce: (GtCoderClassSelectedAnnouncement forClass: class)
 ]
 
 { #category : #initialize }
-GtClassCoder >> forClass: aClass [
-	class := aClass.
-	methodsCoder := GtClassMethodsCoder forClass: class.
-	definitionsCoder := GtClassDefinitionsCoder forClass: class.
-	commentsCoder := GtClassCommentsCoder forClass: class
-]
-
-{ #category : #initialize }
 GtClassCoder >> forObject: anObject [
-	class := anObject class.
-	methodsCoder := GtClassMethodsCoder forObject: anObject.
-	definitionsCoder := GtClassDefinitionsCoder forClass: class.
-	commentsCoder := GtClassCommentsCoder forClass: class
+	self forClass: anObject class
 ]
 
 { #category : #ui }

@@ -31,7 +31,7 @@ GtClassCoderNavigationModel >> selectInCoderCategory: categoryToSelect [
 { #category : #actions }
 GtClassCoderNavigationModel >> selectInCoderClass: classToSelect [
 	classToSelect ~= self theClass
-		ifTrue: [ classCoder displayClass: classToSelect ]
+		ifTrue: [ classCoder forClass: classToSelect ]
 ]
 
 { #category : #accessing }

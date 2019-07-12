@@ -57,7 +57,7 @@ GtClassDefinitionCoder >> definitionChanged: anAnnouncement [
 { #category : #private }
 GtClassDefinitionCoder >> evaluateSource: aString showPrintString: aBoolean [
 	^ self
-		evaluateBlock: [ (classOrMetaClass ifNil: [ Object ]) compiler
+		evaluateBlock: [ (classOrMetaClass ifNil: [ Smalltalk ]) compiler
 				source: aString;
 				receiver: self object;
 				context: self context;

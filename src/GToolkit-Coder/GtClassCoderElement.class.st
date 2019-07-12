@@ -43,10 +43,54 @@ GtClassCoderElement >> buildAddClassButton [
 				when: GtCoderEvaluationAnnouncement
 				do: [ :e | 
 					dropdown collapse.
-					classCoder displayClass: e value ].
+					classCoder forClass: e value ].
 			coder asElement
 				hFitContent;
 				vFitContent;
+				yourself ];
+		yourself
+]
+
+{ #category : #'building ui' }
+GtClassCoderElement >> buildAddPackageButton [
+	| dropdown |
+	dropdown := BrDropdown new.
+	^ dropdown
+		look: BrGlamorousDropdownLook;
+		layout: BlLinearLayout horizontal;
+		constraintsDo: [ :c | 
+			c horizontal fitContent.
+			c vertical fitContent ];
+		toggle: [ BrButton new
+				look: BrGlamorousButtonWithIconLook;
+				icon: BrGlamorousIcons add asElement;
+				yourself ];
+		popup: [ | editor button |
+			editor := BrEditor new
+				look: BrGlamorousRegularEditorLook new;
+				geometry: (BlRectangle cornerRadius: 4);
+				border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
+				hExact: 100;
+				vMatchParent;
+				padding: (BlInsets all: 3);
+				constraintsDo: [ :c | 
+					c horizontal matchParent.
+					c vertical fitContent ];
+				yourself.
+			button := BrButton new
+				look: BrGlamorousButtonWithIconLook;
+				margin: (BlInsets left: 10);
+				icon: BrGlamorousIcons accept asElement;
+				action: [ RPackageOrganizer default createPackageNamed: editor text asString ];
+				yourself.
+			BlElement new
+				layout: BlLinearLayout horizontal;
+				padding: (BlInsets all: 10);
+				constraintsDo: [ :c | 
+					c horizontal fitContent.
+					c vertical fitContent ];
+				addChild: editor;
+				addChild: button;
 				yourself ];
 		yourself
 ]
@@ -99,7 +143,7 @@ GtClassCoderElement >> buildContainer [
 		actionsStencil: [ BrToolbar new
 				look: BrGlamorousToolbarLook new;
 				addItem: (spotterButton := self buildSpotterButton);
-				addItem: (treeNavigationButton := self buildTreeNavigationToolbarButton);
+				"addItem: (treeNavigationButton := self buildTreeNavigationToolbarButton);"
 				addItem: (addClassButton := self buildAddClassButton);
 				yourself ];
 		padding:
@@ -142,6 +186,7 @@ GtClassCoderElement >> buildContentPane [
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildContentTabs [
+	| tree |
 	^ BrTabGroup new
 		look: BrGlamorousTabGroupLook new;
 		constraintsDo: [ :c | c linear weight: 2 ];
@@ -185,13 +230,87 @@ GtClassCoderElement >> buildContentTabs [
 			(BrTab new
 				look: BrGlamorousTabLook new;
 				label: 'Comments';
-				stencil: [ classCoder commentsCoder asElement ])
+				stencil: [ classCoder commentsCoder asElement ]);
+		addTab:
+			(BrTab new
+				look: BrGlamorousTabLook new;
+				label: 'Packages';
+				stencil: [ tree := self buildPackageTree: RPackageOrganizer default packages ];
+				actionsStencil: [ BrToolbar new
+						look: BrGlamorousToolbarLook new;
+						addItem:
+							(BrEditor new
+								look: BrGlamorousCodeEditorLook new;
+								geometry: (BlRectangle cornerRadius: 4);
+								border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
+								hExact: 100;
+								vMatchParent;
+								padding: (BlInsets all: 3);
+								in: [ :e | 
+									e editor
+										when: BrTextEditorInsertedEvent
+											do: [ | treeParent |
+											treeParent := tree parent.
+											treeParent
+												ifNotNil: [ tree removeFromParent.
+													tree := self
+														buildPackageTree:
+															(RPackageOrganizer default packages
+																select: [ :f | f name asLowercase includesSubstring: e text asString ]).
+													treeParent addChild: tree ] ];
+										when: BrTextEditorDeletedEvent
+											do: [ | treeParent |
+											treeParent := tree parent.
+											treeParent
+												ifNotNil: [ tree removeFromParent.
+													tree := self
+														buildPackageTree:
+															(RPackageOrganizer default packages
+																select: [ :f | f name asLowercase includesSubstring: e text asString ]).
+													treeParent addChild: tree ] ] ];
+								yourself);
+						addItem: self buildAddPackageButton ]);
+		yourself
 ]
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildNavigationElement [
 	^ classCoder navigationModel asElement
 		constraintsDo: [ :c | c linear weight: 0.5 ];
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+GtClassCoderElement >> buildPackageTree: somePackages [
+	| tree |
+	tree := BrSimpleTree new.
+	^ tree
+		items: (somePackages sort: [ :a :b | a name < b name ])
+			children: [ :anObject | 
+			(anObject isKindOf: RPackage)
+				ifTrue: [ (anObject classTags asOrderedCollection
+						sort: [ :a :b | a name < b name ])
+						, {(RPackageTag package: anObject name: '*Extensions')} ]
+				ifFalse: [ (anObject isKindOf: RPackageTag)
+						ifTrue: [ anObject name = '*Extensions'
+								ifTrue: [ (anObject package extensionMethods
+										collect: [ :e | e methodClass instanceSide ]) asSet
+										asOrderedCollection sort: [ :a :b | a name < b name ] ]
+								ifFalse: [ anObject classes asOrderedCollection
+										sort: [ :a :b | a name < b name ] ] ]
+						ifFalse: [ #() ] ] ];
+		stencil:
+			(BrSimpleTreeRowStencilBuilder new
+				text:
+					[ :anObject | anObject value name asRopedText glamorousRegularFontAndSize ]);
+		when: BrSelectionChanged
+			do: [ :anEvent | 
+			anEvent
+				selectedDo: [ :anInterval | 
+					tree
+						selectedNodeDo: [ :aNode | 
+							aNode value isClass
+								ifTrue: [ classCoder forClass: aNode value ] ] ] ];
 		yourself
 ]
 
@@ -248,7 +367,7 @@ GtClassCoderElement >> buildSpotterButton [
 							((#(singleClick doubleClick keyPressed) includes: e eventType)
 								and: [ item isKindOf: Behavior ])
 								ifTrue: [ dropdown collapse.
-									self classCoder displayClass: item ] ].
+									self classCoder forClass: item ] ].
 					GtSpotterElement new
 						spotterModel: model;
 						constraintsDo: [ :c | 
