@@ -81,7 +81,7 @@ GtClassCoderElement >> buildContainer [
 	tabGroup := BrTabGroup new
 		look:
 			(BrMaterialTabGroupLook new
-				headerBackground: BrGlamorousColors successBackgroundColor);
+				headerBackground: (Color fromHexString: 'd9f7be'));
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.
