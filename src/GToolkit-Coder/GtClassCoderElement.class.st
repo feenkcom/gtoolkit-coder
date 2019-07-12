@@ -212,6 +212,7 @@ GtClassCoderElement >> buildSpotterButton [
 						do: [ :e | 
 							| item |
 							item := e element.
+							e actedUpon: true.
 							[ (item isKindOf: GtSpotterCandidate)
 								and: [ item item ~~ item ] ] whileTrue: [ item := item item ].
 							((#(singleClick doubleClick keyPressed) includes: e eventType)
