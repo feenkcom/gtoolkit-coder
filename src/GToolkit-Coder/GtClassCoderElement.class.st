@@ -10,10 +10,46 @@ Class {
 		'spotterButton',
 		'container',
 		'contentTabs',
-		'breadcrumb'
+		'breadcrumb',
+		'addClassButton'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
+
+{ #category : #'building ui' }
+GtClassCoderElement >> buildAddClassButton [
+	| dropdown |
+	dropdown := BrDropdown new.
+	^ dropdown
+		look: BrGlamorousDropdownLook;
+		layout: BlLinearLayout horizontal;
+		constraintsDo: [ :c | 
+			c horizontal fitContent.
+			c vertical fitContent ];
+		toggle: [ BrButton new
+				look: BrGlamorousButtonWithIconLook;
+				icon: BrGlamorousIcons add asElement;
+				yourself ];
+		popup: [ | coder |
+			coder := GtClassDefinitionCoder new
+				expanded: true;
+				source:
+					'Object subclass: #NameOfSubclass
+	instanceVariableNames: ''''
+	classVariableNames: ''''
+	package: ''''';
+				yourself.
+			coder announcer
+				when: GtCoderEvaluationAnnouncement
+				do: [ :e | 
+					dropdown collapse.
+					classCoder displayClass: e value ].
+			coder asElement
+				hFitContent;
+				vFitContent;
+				yourself ];
+		yourself
+]
 
 { #category : #'as yet unclassified' }
 GtClassCoderElement >> buildBreadcrumb [
@@ -64,6 +100,7 @@ GtClassCoderElement >> buildContainer [
 				look: BrGlamorousToolbarLook new;
 				addItem: (spotterButton := self buildSpotterButton);
 				addItem: (treeNavigationButton := self buildTreeNavigationToolbarButton);
+				addItem: (addClassButton := self buildAddClassButton);
 				yourself ];
 		padding:
 			(BlInsets
