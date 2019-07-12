@@ -16,18 +16,20 @@ GtClassDefinitionCoder class >> forClass: aBehavior [
 
 { #category : #elements }
 GtClassDefinitionCoder >> breadcrumbNamedActions [
-	^ Array
-		streamContents: [ :aStream | 
-			| aPackage aPackageName aClass |
-			aPackage := self classOrMetaClass package.
-			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
-			aClass := self classOrMetaClass.
-			aStream
-				nextPut: aPackageName -> [ :aButton | aButton phlow spawnObject: aPackage ];
-				nextPut:
-					aClass name
-						->
-							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ]
+	^ classOrMetaClass
+		ifNil: [ #() ]
+		ifNotNil: [ Array
+				streamContents: [ :aStream | 
+					| aPackage aPackageName aClass |
+					aPackage := classOrMetaClass package.
+					aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
+					aClass := classOrMetaClass.
+					aStream
+						nextPut: aPackageName -> [ :aButton | aButton phlow spawnObject: aPackage ];
+						nextPut:
+							aClass name
+								->
+									[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ] ]
 ]
 
 { #category : #accessing }
@@ -50,6 +52,19 @@ GtClassDefinitionCoder >> definitionChanged: anAnnouncement [
 	self
 		source: classOrMetaClass definition;
 		updateCollapsedSource
+]
+
+{ #category : #private }
+GtClassDefinitionCoder >> evaluateSource: aString showPrintString: aBoolean [
+	^ self
+		evaluateBlock: [ (classOrMetaClass ifNil: [ Object ]) compiler
+				source: aString;
+				receiver: self object;
+				context: self context;
+				requestor: (self evaluationRequester source: aString);
+				failBlock: [ ^ self flag: 'insert error adornment' ];
+				evaluate ]
+		showPrintString: aBoolean
 ]
 
 { #category : #'initialize-release' }
