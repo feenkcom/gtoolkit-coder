@@ -46,15 +46,9 @@ GtClassCoder >> definitionsCoder [
 { #category : #updating }
 GtClassCoder >> forClass: aClass [
 	class := aClass.
-	methodsCoder
-		ifNil: [ methodsCoder := GtClassMethodsCoder forClass: class ]
-		ifNotNil: [ methodsCoder forClass: class ].
-	definitionsCoder
-		ifNil: [ definitionsCoder := GtClassDefinitionsCoder forClass: class ]
-		ifNotNil: [ definitionsCoder forClass: class ].
-	commentsCoder
-		ifNil: [ commentsCoder := GtClassCommentsCoder forClass: class ]
-		ifNotNil: [ commentsCoder forClass: class ].
+	methodsCoder forClass: class.
+	definitionsCoder forClass: class.
+	commentsCoder forClass: class.
 	self announce: (GtCoderClassSelectedAnnouncement forClass: class)
 ]
 
@@ -87,8 +81,10 @@ GtClassCoder >> implementorsFilterString: aString [
 { #category : #initialize }
 GtClassCoder >> initialize [
 	super initialize.
-	searchFilter := GtCoderClassSelector new
-		coder: self.
+	searchFilter := GtCoderClassSelector new coder: self.
+	methodsCoder := GtClassMethodsCoder new.
+	definitionsCoder := GtClassDefinitionsCoder new.
+	commentsCoder := GtClassCommentsCoder new
 ]
 
 { #category : #accessing }
