@@ -236,7 +236,7 @@ GtClassCoderElement >> buildSpotterButton [
 								ifTrue: [ e target background: BrGlamorousColors lightBorderColor ] ];
 						yourself ];
 				popup: [ | model |
-					model := GtSpotter new.
+					model := GtSpotter new initializeWith: GtCoderSpotterStart new.
 					model announcer
 						when: GtSpotterActOn
 						do: [ :e | 
