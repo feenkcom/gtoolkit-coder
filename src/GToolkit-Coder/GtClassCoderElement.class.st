@@ -43,6 +43,7 @@ GtClassCoderElement >> buildAddClassButton [
 			coder asElement
 				hFitContent;
 				vFitContent;
+				margin: (BlInsets all: 10);
 				yourself ];
 		yourself
 ]
