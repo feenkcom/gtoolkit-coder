@@ -1,6 +1,9 @@
 Class {
 	#name : #GtClassCoderPackagesTreeNavigation,
 	#superclass : #GtClassCoderNavigationModel,
+	#instVars : [
+		'packagesFilterString'
+	],
 	#category : #'GToolkit-Coder'
 }
 
@@ -13,4 +16,14 @@ GtClassCoderPackagesTreeNavigation >> asElement [
 { #category : #accessing }
 GtClassCoderPackagesTreeNavigation >> displayPosition [
 	^ #left
+]
+
+{ #category : #accessing }
+GtClassCoderPackagesTreeNavigation >> packagesFilterString [
+	^ packagesFilterString
+]
+
+{ #category : #accessing }
+GtClassCoderPackagesTreeNavigation >> packagesFilterString: aString [
+	packagesFilterString := aString
 ]
