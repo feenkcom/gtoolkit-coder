@@ -11,6 +11,7 @@ Object >> gtMetaFor: aView [
 				flag:
 					'TODO this reuses class coder, but depends on its implementation to hide the header, which is not very elegant'.
 			element := (GtClassCoder forObject: self) asElement.
-			element children first children first children first visibility: BlVisibility gone.
+			element children first children first children first background: Color transparent.
+			element children first children first children first children second visibility: BlVisibility gone.
 			element ]
 ]
