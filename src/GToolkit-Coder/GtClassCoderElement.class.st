@@ -324,9 +324,6 @@ GtClassCoderElement >> classCoder: aCoder [
 GtClassCoderElement >> definitionChanged: anAnnouncement [
 	anAnnouncement classAffected == classCoder theClass
 		ifFalse: [ ^ self ].
-	classCoder methodsCoder forClass: classCoder theClass.
-	classCoder definitionsCoder forClass: classCoder theClass.
-	classCoder commentsCoder forClass: classCoder theClass.
 	self
 		updateNavigationElement;
 		updateContentTabs;
