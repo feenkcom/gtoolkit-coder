@@ -17,10 +17,6 @@ GtClassBreadcrumbToggleLook >> initialize [
 		addChangeProperty: #(widget constraints horizontal resizer)
 		with: BlLayoutResizer fitContent.
 	self
-		addChangeProperty: #(widget constraints vertical resizer)
-		with: [ BlLayoutResizer exact: 16 ].
-	self addChangeProperty: #(widget padding) with: [ BlInsets all: 6 ].
-	self
 		add:
 			(label := BrGlamorousLabelLook new
 				foreground: Color black;

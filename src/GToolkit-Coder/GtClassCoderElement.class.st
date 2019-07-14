@@ -123,7 +123,7 @@ GtClassCoderElement >> buildContainer [
 	tabGroup := BrTabGroup new
 		look:
 			(BrMaterialTabGroupLook new
-				headerBackground: BrGlamorousColors successBackgroundColor);
+				headerBackground: BrGlamorousColors defaultButtonBorderColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.
@@ -312,10 +312,10 @@ GtClassCoderElement >> classCoder: aCoder [
 				updateBreadcrumb ];
 		when: GtCoderNavigationModelChangedAnnouncement
 			do: [ :ann | self updateNavigationElement ].
+	container ifNotNil: #removeFromParent.
 	container := self buildContainer.
 	self
-		removeChildren;
-		addChild: container;
+		addChildFirst: container;
 		updateNavigationElement;
 		updateBreadcrumb
 ]
@@ -337,7 +337,15 @@ GtClassCoderElement >> initialize [
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical matchParent ].
+			c vertical matchParent ];
+		addChild:
+			(BlElement new
+				constraintsDo: [ :c | 
+					c ignoreByLayout.
+					c horizontal matchParent.
+					c vertical exact: 5 ];
+				background: BrGlamorousColors successBackgroundColor;
+				yourself).
 	SystemAnnouncer uniqueInstance weak
 		when:
 			ClassModificationApplied , ClassModifiedClassDefinition
