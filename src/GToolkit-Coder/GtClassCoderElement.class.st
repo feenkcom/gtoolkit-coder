@@ -128,6 +128,14 @@ GtClassCoderElement >> buildContainer [
 		constraintsDo: [ :c | 
 			c vertical matchParent.
 			c horizontal matchParent ];
+		addChild:
+			(BlElement new
+				constraintsDo: [ :c | 
+					c ignoreByLayout.
+					c horizontal matchParent.
+					c vertical exact: 5 ];
+				background: (Color fromHexString: 'a0d911')"BrGlamorousColors successBorderColor";
+				yourself);
 		yourself.
 	^ tabGroup
 ]
@@ -337,15 +345,7 @@ GtClassCoderElement >> initialize [
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical matchParent ];
-		addChild:
-			(BlElement new
-				constraintsDo: [ :c | 
-					c ignoreByLayout.
-					c horizontal matchParent.
-					c vertical exact: 5 ];
-				background: BrGlamorousColors successBackgroundColor;
-				yourself).
+			c vertical matchParent ].
 	SystemAnnouncer uniqueInstance weak
 		when:
 			ClassModificationApplied , ClassModifiedClassDefinition
