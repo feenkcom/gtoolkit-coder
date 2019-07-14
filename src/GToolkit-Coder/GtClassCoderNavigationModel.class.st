@@ -35,6 +35,6 @@ GtClassCoderNavigationModel >> selectInCoderClass: classToSelect [
 ]
 
 { #category : #accessing }
-GtClassCoderNavigationModel >> theClass [ 
+GtClassCoderNavigationModel >> theClass [
 	^ classCoder theClass
 ]

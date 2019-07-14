@@ -59,3 +59,8 @@ GtCoderSpotterStart >> gtSpotterImplementorsFor: aStep [
 		keyBinding: $m meta;
 		wantsToDisplayOnEmptyQuery: false
 ]
+
+{ #category : #printing }
+GtCoderSpotterStart >> printOn: aStream [
+	aStream nextPutAll: 'Spotter'
+]

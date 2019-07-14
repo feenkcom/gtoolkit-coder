@@ -7,7 +7,7 @@ Class {
 		'contentPane',
 		'contentTabs',
 		'breadcrumb',
-		'packagesFilter'
+		'navigationElement'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -44,50 +44,6 @@ GtClassCoderElement >> buildAddClassButton [
 				hFitContent;
 				vFitContent;
 				margin: (BlInsets all: 10);
-				yourself ];
-		yourself
-]
-
-{ #category : #'building ui' }
-GtClassCoderElement >> buildAddPackageButton [
-	| dropdown |
-	dropdown := BrDropdown new.
-	^ dropdown
-		look: BrGlamorousDropdownLook;
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical fitContent ];
-		toggle: [ BrButton new
-				look: BrGlamorousButtonWithIconLook;
-				icon: BrGlamorousIcons add asElement;
-				yourself ];
-		popup: [ | editor button |
-			editor := BrEditor new
-				look: BrGlamorousRegularEditorLook new;
-				geometry: (BlRectangle cornerRadius: 4);
-				border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
-				hExact: 100;
-				vMatchParent;
-				padding: (BlInsets all: 3);
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical fitContent ];
-				yourself.
-			button := BrButton new
-				look: BrGlamorousButtonWithIconLook;
-				margin: (BlInsets left: 10);
-				icon: BrGlamorousIcons accept asElement;
-				action: [ RPackageOrganizer default createPackageNamed: editor text asString ];
-				yourself.
-			BlElement new
-				layout: BlLinearLayout horizontal;
-				padding: (BlInsets all: 10);
-				constraintsDo: [ :c | 
-					c horizontal fitContent.
-					c vertical fitContent ];
-				addChild: editor;
-				addChild: button;
 				yourself ];
 		yourself
 ]
@@ -148,6 +104,7 @@ GtClassCoderElement >> buildContainer [
 		actionsStencil: [ BrToolbar new
 				look: BrGlamorousToolbarLook new;
 				addItem: self buildSpotterButton;
+				addItem: self buildPackagesTreeButton;
 				addItem: self buildAddClassButton;
 				yourself ];
 		padding:
@@ -166,7 +123,7 @@ GtClassCoderElement >> buildContainer [
 	tabGroup := BrTabGroup new
 		look:
 			(BrMaterialTabGroupLook new
-				headerBackground: (Color fromHexString: 'd9f7be'));
+				headerBackground: BrGlamorousColors successBackgroundColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.
@@ -182,7 +139,10 @@ GtClassCoderElement >> buildContentPane [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ];
-		addChild: (contentTabs := self buildContentTabs);
+		in: [ :e | 
+			classCoder theClass
+				ifNil: [ contentTabs := nil ]
+				ifNotNil: [ e addChild: (contentTabs := self buildContentTabs) ] ];
 		yourself
 ]
 
@@ -194,7 +154,6 @@ GtClassCoderElement >> buildContentTabs [
 		addTab: self buildMethodsTab;
 		addTab: self buildDefinitionsTab;
 		addTab: self buildCommentsTab;
-		addTab: self buildPackagesTab;
 		yourself
 ]
 
@@ -240,83 +199,24 @@ GtClassCoderElement >> buildMethodsTab [
 				yourself ]
 ]
 
-{ #category : #'as yet unclassified' }
-GtClassCoderElement >> buildPackageTree: somePackages [
-	| tree |
-	tree := BrSimpleTree new.
-	^ tree
-		items: (somePackages sort: [ :a :b | a name < b name ])
-			children: [ :anObject | 
-			(anObject isKindOf: RPackage)
-				ifTrue: [ (anObject classTags asOrderedCollection
-						sort: [ :a :b | a name < b name ])
-						, {(RPackageTag package: anObject name: '*Extensions')} ]
-				ifFalse: [ (anObject isKindOf: RPackageTag)
-						ifTrue: [ anObject name = '*Extensions'
-								ifTrue: [ (anObject package extensionMethods
-										collect: [ :e | e methodClass instanceSide ]) asSet
-										asOrderedCollection sort: [ :a :b | a name < b name ] ]
-								ifFalse: [ anObject classes asOrderedCollection
-										sort: [ :a :b | a name < b name ] ] ]
-						ifFalse: [ #() ] ] ];
-		stencil:
-			(BrSimpleTreeRowStencilBuilder new
-				text:
-					[ :anObject | anObject value name asRopedText glamorousRegularFontAndSize ]);
-		when: BrSelectionChanged
-			do: [ :anEvent | 
-			anEvent
-				selectedDo: [ :anInterval | 
-					tree
-						selectedNodeDo: [ :aNode | 
-							aNode value isClass
-								ifTrue: [ classCoder forClass: aNode value ] ] ] ];
+{ #category : #'building ui' }
+GtClassCoderElement >> buildNavigationElement [
+	^ classCoder navigationModel asElement
+		constraintsDo: [ :c | c linear weight: 0.7 ];
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
-GtClassCoderElement >> buildPackagesTab [
-	| tab tree |
-	tab := BrTab new.
-	^ tab
-		look: BrGlamorousTabLook new;
-		label: 'Packages';
-		stencil: [ tree := self buildPackageTree: RPackageOrganizer default packages ];
-		actionsStencil: [ BrToolbar new
-				look: BrGlamorousToolbarLook new;
-				addItem:
-					(BrEditor new
-						look: BrGlamorousCodeEditorLook new;
-						geometry: (BlRectangle cornerRadius: 4);
-						border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
-						hExact: 100;
-						vMatchParent;
-						padding: (BlInsets all: 3);
-						in: [ :e | 
-							e editor
-								when: BrTextEditorInsertedEvent
-									do: [ (tree ifNotNil: #parent)
-										ifNotNil: [ :f | 
-											tree removeFromParent.
-											tree := self
-												buildPackageTree:
-													(RPackageOrganizer default packages
-														select:
-															[ :g | g name asLowercase includesSubstring: e text asString asLowercase ]).
-											f addChild: tree ] ];
-								when: BrTextEditorDeletedEvent
-									do: [ (tree ifNotNil: #parent)
-										ifNotNil: [ :f | 
-											tree removeFromParent.
-											tree := self
-												buildPackageTree:
-													(RPackageOrganizer default packages
-														select:
-															[ :g | g name asLowercase includesSubstring: e text asString asLowercase ]).
-											f addChild: tree ] ].
-							packagesFilter ifNotNil: [ e text: packagesFilter ] ];
-						yourself);
-				addItem: self buildAddPackageButton ]
+{ #category : #'building ui' }
+GtClassCoderElement >> buildPackagesTreeButton [
+	^ BrToggle new
+		look: BrMaterialToggleBackgroundLook + BrGlamorousButtonWithIconLook;
+		icon: BrGlamorousIcons tree asElement;
+		when: BrToggleActivatedEvent
+			do:
+				[ :anEvent | classCoder navigationModel: GtClassCoderPackagesTreeNavigation new ];
+		when: BrToggleDeactivatedEvent
+			do: [ :anEvent | classCoder navigationModel: nil ];
+		yourself
 ]
 
 { #category : #'building ui' }
@@ -346,7 +246,7 @@ GtClassCoderElement >> buildSpotterButton [
 						ifTrue: [ e target background: BrGlamorousColors lightBorderColor ] ];
 				yourself ];
 		popup: [ | model |
-			model := GtSpotter new.
+			model := GtSpotter new initializeWith: GtCoderSpotterStart new.
 			model announcer
 				when: GtSpotterActOn
 				do: [ :e | 
@@ -362,22 +262,18 @@ GtClassCoderElement >> buildSpotterButton [
 							CompiledMethod} anySatisfy: [ :f | item isKindOf: f ] ])
 						ifTrue: [ dropdown collapse.
 							(item isKindOf: RPackage)
-								ifTrue: [ packagesFilter := item name.
-									self classCoder methodsCoder implementorsFilterString: ''.
-									self flag: 'FIXME how to reset a class'.
-									"self classCoder forClass: nil."
-									(contentTabs viewModel tabs at: 4) select ].
+								ifTrue: [ self classCoder navigationModel
+										ifNotNil: [ :f | f packagesFilterString: item name ] ].
 							(item isKindOf: ClassDescription)
-								ifTrue: [ packagesFilter := item package name.
-									self classCoder methodsCoder implementorsFilterString: ''.
-									self classCoder forClass: item.
-									(contentTabs viewModel tabs at: 1) select ].
+								ifTrue: [ self classCoder navigationModel
+										ifNotNil: [ :f | f packagesFilterString: item package name ].
+									self classCoder forClass: item ].
 							(item isKindOf: CompiledMethod)
-								ifTrue: [ packagesFilter := item methodClass package name.
+								ifTrue: [ self classCoder navigationModel
+										ifNotNil: [ :f | f packagesFilterString: item methodClass package name ].
 									self classCoder forClass: item methodClass.
 									self classCoder methodsCoder
-										implementorsFilterString: item selector.
-									(contentTabs viewModel tabs at: 1) select ] ] ].
+										implementorsFilterString: item selector ] ] ].
 			GtSpotterElement new
 				spotterModel: model;
 				constraintsDo: [ :c | 
@@ -409,14 +305,18 @@ GtClassCoderElement >> classCoder: aCoder [
 	classCoder := aCoder.
 	classCoder
 		when: GtCoderClassSelectedAnnouncement
-		do: [ :ann | 
+			do: [ :ann | 
 			self
+				updateNavigationElement;
 				updateContentTabs;
-				updateBreadcrumb ].
+				updateBreadcrumb ];
+		when: GtCoderNavigationModelChangedAnnouncement
+			do: [ :ann | self updateNavigationElement ].
 	container := self buildContainer.
 	self
 		removeChildren;
 		addChild: container;
+		updateNavigationElement;
 		updateBreadcrumb
 ]
 
@@ -428,6 +328,7 @@ GtClassCoderElement >> definitionChanged: anAnnouncement [
 	classCoder definitionsCoder forClass: classCoder theClass.
 	classCoder commentsCoder forClass: classCoder theClass.
 	self
+		updateNavigationElement;
 		updateContentTabs;
 		updateBreadcrumb
 ]
@@ -455,6 +356,13 @@ GtClassCoderElement >> removeContentTabs [
 			contentTabs := nil ]
 ]
 
+{ #category : #'updating ui' }
+GtClassCoderElement >> removeNavigationElement [
+	navigationElement
+		ifNotNil: [ contentPane removeChild: navigationElement.
+			navigationElement := nil ]
+]
+
 { #category : #'as yet unclassified' }
 GtClassCoderElement >> updateBreadcrumb [
 	breadcrumb removeAllItems.
@@ -474,4 +382,18 @@ GtClassCoderElement >> updateContentTabs [
 	self removeContentTabs.
 	contentTabs := self buildContentTabs.
 	contentPane addChild: contentTabs asElement at: childIndex
+]
+
+{ #category : #'updating ui' }
+GtClassCoderElement >> updateNavigationElement [
+	| navigationModel |
+	self removeNavigationElement.
+	navigationModel := classCoder navigationModel.
+	navigationModel ifNil: [ ^ self ].
+	navigationModel displayPosition = #top
+		ifTrue: [ contentPane layout: BlLinearLayout vertical ].
+	navigationModel displayPosition = #left
+		ifTrue: [ contentPane layout: BlLinearLayout horizontal ].
+	navigationElement := self buildNavigationElement.
+	contentPane addChildFirst: navigationElement
 ]
