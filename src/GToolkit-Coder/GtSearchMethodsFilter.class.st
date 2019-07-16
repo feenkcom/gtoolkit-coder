@@ -19,6 +19,11 @@ GtSearchMethodsFilter >> includesMethod: aCompiledMethod [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+GtSearchMethodsFilter >> linesOfCode [
+	^ self result sumNumbers: [:method | method linesOfCode]
+]
+
 { #category : #testing }
 GtSearchMethodsFilter >> matches: anObject [
 	^ anObject isCompiledMethod and: [ 
