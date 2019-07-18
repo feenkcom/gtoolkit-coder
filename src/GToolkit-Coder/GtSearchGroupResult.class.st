@@ -140,6 +140,12 @@ GtSearchGroupResult >> species [
 	^ items class
 ]
 
+{ #category : #enumerating }
+GtSearchGroupResult >> sumNumbers: aBlock [
+	self refreshItems.
+	^ items sumNumbers: aBlock
+]
+
 { #category : #initialization }
 GtSearchGroupResult >> updateForFilter: aFilter [
 	self filter: aFilter.
