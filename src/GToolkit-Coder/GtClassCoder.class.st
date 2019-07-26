@@ -54,7 +54,11 @@ GtClassCoder >> forClass: aClass [
 
 { #category : #initialize }
 GtClassCoder >> forObject: anObject [
-	self forClass: anObject class
+	class := anObject class.
+	methodsCoder forObject: anObject.
+	definitionsCoder forClass: class.
+	commentsCoder forClass: class.
+	self announce: (GtCoderClassSelectedAnnouncement forClass: class)
 ]
 
 { #category : #ui }
