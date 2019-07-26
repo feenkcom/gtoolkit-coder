@@ -81,7 +81,12 @@ GtClassCoder >> implementorsFilterString: aString [
 { #category : #initialize }
 GtClassCoder >> initialize [
 	super initialize.
-	searchFilter := GtCoderClassSelector new coder: self.
+	searchFilter := GtCoderClassSelector new
+		coder: self;
+		yourself.
+	navigationModel := GtClassCoderPackagesTreeNavigation new
+		classCoder: self;
+		yourself.
 	methodsCoder := GtClassMethodsCoder new.
 	definitionsCoder := GtClassDefinitionsCoder new.
 	commentsCoder := GtClassCommentsCoder new
@@ -100,8 +105,7 @@ GtClassCoder >> navigationModel [
 { #category : #accessing }
 GtClassCoder >> navigationModel: aNavigationModel [
 	navigationModel := aNavigationModel.
-	navigationModel ifNotNil: [ 
-		navigationModel classCoder: self ].
+	navigationModel classCoder: self.
 	self announce: GtCoderNavigationModelChangedAnnouncement
 ]
 
