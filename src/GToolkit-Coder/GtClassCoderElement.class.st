@@ -216,14 +216,12 @@ GtClassCoderElement >> buildNavigationElement [
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildPackagesTreeButton [
-	^ BrToggle new
-		look: BrMaterialToggleBackgroundLook + BrGlamorousButtonWithIconLook;
+	^ BrButton new
+		look: BrGlamorousButtonWithIconLook;
 		icon: BrGlamorousIcons tree asElement;
-		when: BrToggleActivatedEvent
-			do:
-				[ :anEvent | classCoder navigationModel: GtClassCoderPackagesTreeNavigation new ];
-		when: BrToggleDeactivatedEvent
-			do: [ :anEvent | classCoder navigationModel: nil ];
+		action: [ (navigationElement isNotNil and: [ navigationElement isAttachedToSceneGraph ])
+				ifTrue: [ navigationElement removeFromParent ]
+				ifFalse: [ self updateNavigationElement ] ];
 		yourself
 ]
 
@@ -324,7 +322,6 @@ GtClassCoderElement >> classCoder: aCoder [
 	container := self buildContainer.
 	self
 		addChildFirst: container;
-		updateNavigationElement;
 		updateBreadcrumb
 ]
 
@@ -361,13 +358,6 @@ GtClassCoderElement >> removeContentTabs [
 			contentTabs := nil ]
 ]
 
-{ #category : #'updating ui' }
-GtClassCoderElement >> removeNavigationElement [
-	navigationElement
-		ifNotNil: [ contentPane removeChild: navigationElement.
-			navigationElement := nil ]
-]
-
 { #category : #'as yet unclassified' }
 GtClassCoderElement >> updateBreadcrumb [
 	breadcrumb removeAllItems.
@@ -392,9 +382,8 @@ GtClassCoderElement >> updateContentTabs [
 { #category : #'updating ui' }
 GtClassCoderElement >> updateNavigationElement [
 	| navigationModel |
-	self removeNavigationElement.
+	navigationElement ifNotNil: #removeFromParent.
 	navigationModel := classCoder navigationModel.
-	navigationModel ifNil: [ ^ self ].
 	navigationModel displayPosition = #top
 		ifTrue: [ contentPane layout: BlLinearLayout vertical ].
 	navigationModel displayPosition = #left

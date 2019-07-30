@@ -71,7 +71,7 @@ GtCoderNavigationPackagesTreeElement >> buildPackageTree: somePackages [
 		stencil:
 			(BrSimpleTreeRowStencilBuilder new
 				text:
-					[ :anObject | anObject value name asRopedText glamorousRegularFontAndSize ]);
+					[ :anObject | anObject name asRopedText glamorousRegularFontAndSize ]);
 		in: [ :e | 
 			e
 				when: BrSelectionChanged
