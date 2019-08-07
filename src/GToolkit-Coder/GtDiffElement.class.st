@@ -66,42 +66,40 @@ GtDiffElement >> buildInterface [
 	| left right |
 	syncScrollRanges := GtSyncScrollRanges createFromDiff: diff.
 	self
+		padding: (BlInsets all: 10);
 		layout: BlLinearLayout horizontal;
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-	left := BrTextEditor new.
-	left text: self previousRopedText.
-	diff newStyler ifNotNil: [ :style | left styler: style ].
-	self
-		addChild:
-			(leftElement := BrEditor new
+	leftElement := BrEditor new
+				background: Color white;
 				padding: (BlInsets all: 10);
 				constraintsDo: [ :c | 
-					c horizontal fitContent.
+					c horizontal matchParent.
 					c vertical fitContent ];
-				look: BrGlamorousCodeEditorLook new;
+				look: BrGlamorousCodeEditorLook new + BrShadowLook new;
 				when: BlInfiniteScrollChangedEvent do: [ :e | self leftScrolled ];
-				editor: left).
+				text: self previousRopedText.
+	diff newStyler ifNotNil: [ :style | leftElement styler: style ].
+	self addChild: leftElement.
 	self
 		addChild:
 			(BlElement new
 				width: 75;
 				yourself).
-	right := BrTextEditor new.
-	right text: self newRopedText.
-	diff newStyler ifNotNil: [ :style | right styler: style ].
 	self
 		addChild:
 			(rightElement := BrEditor new
+				background: Color white;
 				padding: (BlInsets all: 10);
 				constraintsDo: [ :c | 
-					c horizontal fitContent.
+					c horizontal matchParent.
 					c vertical fitContent ];
-				look: BrGlamorousCodeEditorLook new;
+				look: BrGlamorousCodeEditorLook new + BrShadowLook new;
 				when: BlInfiniteScrollChangedEvent
 					do: [ :e | self rightScrolled ];
-				editor: right).
+				text: self newRopedText).
+	diff newStyler ifNotNil: [ :style | rightElement styler: style ].
 	self updateOutlines
 ]
 
@@ -116,11 +114,11 @@ GtDiffElement >> drawMeAndChildrenOnSpartaCanvas: aCanvas [
 	| stroke fill |
 	super drawMeAndChildrenOnSpartaCanvas: aCanvas.
 	stroke := aCanvas stroke
-		alpha: 1.0;
+		alpha: 0.2;
 		paint: Color black;
 		width: 1.
 	fill := aCanvas fill
-		alpha: 0.1;
+		alpha: 0.2;
 		paint: Color yellow.
 	outlines
 		do: [ :each | 
@@ -143,13 +141,14 @@ GtDiffElement >> initialize [
 
 { #category : #'event handling' }
 GtDiffElement >> leftBottomFor: anInteger [
-	| range |
+	| range element |
 	range := self leftRange.
 	anInteger < range first
 		ifTrue: [ ^ 0 ].
 	anInteger > range last
 		ifTrue: [ ^ self height ].
-	^ (leftElement children at: anInteger - range first + 1) bounds bottom
+	element := (leftElement children at: anInteger - range first + 1).
+	^ (element bounds bottom + leftElement padding top)
 		max: 0
 ]
 
@@ -177,13 +176,14 @@ GtDiffElement >> leftScrolled [
 
 { #category : #'event handling' }
 GtDiffElement >> leftTopFor: anInteger [
-	| range |
+	| range element |
 	range := self leftRange.
 	anInteger < range first
 		ifTrue: [ ^ 0 ].
 	anInteger > range last
 		ifTrue: [ ^ self height ].
-	^ (leftElement children at: anInteger - range first + 1) bounds top
+	element := (leftElement children at: anInteger - range first + 1).
+	^ (element bounds top + leftElement padding top)
 		max: 0
 ]
 
@@ -253,13 +253,14 @@ GtDiffElement >> previousRopedText [
 
 { #category : #'event handling' }
 GtDiffElement >> rightBottomFor: anInteger [
-	| range |
+	| range element |
 	range := self rightRange.
 	anInteger < range first
 		ifTrue: [ ^ 0 ].
 	anInteger > range last
 		ifTrue: [ ^ self height ].
-	^ (rightElement children at: anInteger - range first + 1) bounds bottom
+	element := (rightElement children at: anInteger - range first + 1).
+	^ (element bounds bottom + rightElement padding top)
 		max: 0
 ]
 
@@ -287,13 +288,14 @@ GtDiffElement >> rightScrolled [
 
 { #category : #'event handling' }
 GtDiffElement >> rightTopFor: anInteger [
-	| range |
+	| range element |
 	range := self rightRange.
 	anInteger < range first
 		ifTrue: [ ^ 0 ].
 	anInteger > range last
 		ifTrue: [ ^ self height ].
-	^ (rightElement children at: anInteger - range first + 1) bounds top
+	element := (rightElement children at: anInteger - range first + 1).
+	^ (element bounds top + rightElement padding top)
 		max: 0
 ]
 
