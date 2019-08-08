@@ -174,6 +174,11 @@ GtDiffElement >> leftScrolled [
 	self updateOutlines
 ]
 
+{ #category : #accessing }
+GtDiffElement >> leftStyler: aStyler [
+	leftElement editor styler: aStyler
+]
+
 { #category : #'event handling' }
 GtDiffElement >> leftTopFor: anInteger [
 	| range element |
@@ -284,6 +289,11 @@ GtDiffElement >> rightScrolled [
 			leftElement scrollVerticallyBy: offset ]
 		ifFalse: [ leftElement scrollToPosition: newPosition ].
 	self updateOutlines
+]
+
+{ #category : #accessing }
+GtDiffElement >> rightStyler: aStyler [
+	rightElement editor styler: aStyler
 ]
 
 { #category : #'event handling' }
