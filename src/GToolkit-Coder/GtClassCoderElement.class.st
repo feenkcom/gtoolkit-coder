@@ -171,12 +171,12 @@ GtClassCoderElement >> buildNavigationElement [
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildPackagesTreeButton [
-	^ BrButton new
-		look: BrGlamorousButtonWithIconLook;
+	^ BrToggle new
+		look: BrGlamorousButtonWithIconLook + BrGlamorousToggleBackgroundLook;
 		icon: BrGlamorousIcons tree asElement;
-		action: [ (navigationElement isNotNil and: [ navigationElement isAttachedToSceneGraph ])
-				ifTrue: [ navigationElement removeFromParent ]
-				ifFalse: [ self updateNavigationElement ] ];
+		when: BrToggleActivatedEvent do: [ self updateNavigationElement ];
+		when: BrToggleDeactivatedEvent
+			do: [ navigationElement removeFromParent ];
 		yourself
 ]
 
