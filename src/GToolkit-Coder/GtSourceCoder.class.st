@@ -168,9 +168,7 @@ GtSourceCoder >> debug: aCompiledMethod receiver: anObject in: evalContext [
 	debugSession stepIntoUntil: [:currentContext | 
 		currentContext method == aCompiledMethod ].
 	
-	self flag: 'Use the registered debugger later on'.
-	GtExpandableDebuggerElement openInspectorOn: debugSession.
-	"Smalltalk tools debugger openOn: debugSession withFullView: true."
+	Smalltalk tools debugger openOn: debugSession withFullView: true.
 ]
 
 { #category : #actions }
