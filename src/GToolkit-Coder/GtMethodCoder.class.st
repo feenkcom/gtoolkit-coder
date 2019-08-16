@@ -381,11 +381,12 @@ GtMethodCoder >> highlighter [
 
 { #category : #accessing }
 GtMethodCoder >> highlighter: aHighlighter [
-	self highlighter ~~ aHighlighter
-		ifTrue: [ self attributeNamed: #highlighter put: aHighlighter.
-			self ensureBuilt.
-			self updateAddOns.
-			self styleText ]
+	self highlighter == aHighlighter ifTrue: [ ^ self ].
+	self attributeNamed: #highlighter put: aHighlighter.
+	isBuilt ifFalse: [ ^ self ].
+	self ensureBuilt.
+	self updateAddOns.
+	self styleText
 ]
 
 { #category : #'add ons' }
