@@ -123,6 +123,15 @@ GtMethodContextCoder >> initializeAddOns [
 "	addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: self)"
 ]
 
+{ #category : #'initialize-release' }
+GtMethodContextCoder >> initializeShortcuts [ 
+	super initializeShortcuts.
+	addOns 
+		addShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryP;
+			action: [ self printItSelection ])
+]
+
 { #category : #'accessing variables' }
 GtMethodContextCoder >> instanceVariableNamesAndValuesDo: aBlock [
 	| receiver |
