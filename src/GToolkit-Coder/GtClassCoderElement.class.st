@@ -90,7 +90,7 @@ GtClassCoderElement >> buildBreadcrumbToggleForClass: aClass [
 GtClassCoderElement >> buildContainer [
 	| tab tabGroup |
 	tab := BrTab new
-		look: BrGlamorousTabLook new invisibleBar;
+		look: BrGlamorousTabWithoutBarLook;
 		label: '';
 		stencil: [ contentPane := self buildContentPane ];
 		actionsStencil: [ BrToolbar new
