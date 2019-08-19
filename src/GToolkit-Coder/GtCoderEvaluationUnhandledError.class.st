@@ -9,11 +9,7 @@ Class {
 
 { #category : #handling }
 GtCoderEvaluationUnhandledError >> debug [
-	"Open a debugger on myself embedded in the given text editor if the embedded debugger is present in the image.
-	If not open the standard debugger."
-	
-	(Smalltalk tools hasToolNamed: #gtEmbeddableDebugger)
-		ifFalse: [ ^ super debug ].
+	"Request a debugger on myself embedded in the given text editor"
 	
 	UIManager default
 		gtDebugProcess: Processor activeProcess  
