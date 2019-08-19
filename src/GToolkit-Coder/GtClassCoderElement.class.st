@@ -82,7 +82,7 @@ GtClassCoderElement >> buildBreadcrumbToggleForClass: aClass [
 			classCoder methodsCoder hasFilter
 				ifFalse: [ aClass == classCoder theClass
 						ifTrue: [ anEvent consumed: true ].
-					(breadcrumb itemAt: 1) activate ] ];
+					(breadcrumb itemAt: 1) widgetDo: #activate ] ];
 		yourself
 ]
 
