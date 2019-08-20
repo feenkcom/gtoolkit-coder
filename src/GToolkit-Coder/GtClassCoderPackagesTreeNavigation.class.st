@@ -18,6 +18,12 @@ GtClassCoderPackagesTreeNavigation >> displayPosition [
 	^ #left
 ]
 
+{ #category : #initialization }
+GtClassCoderPackagesTreeNavigation >> initialize [
+	super initialize.
+	packagesFilterString := ''
+]
+
 { #category : #accessing }
 GtClassCoderPackagesTreeNavigation >> packagesFilterString [
 	^ packagesFilterString
@@ -25,5 +31,12 @@ GtClassCoderPackagesTreeNavigation >> packagesFilterString [
 
 { #category : #accessing }
 GtClassCoderPackagesTreeNavigation >> packagesFilterString: aString [
-	packagesFilterString := aString
+	self assert: [ aString isNotNil ].
+	packagesFilterString := aString.
+	self
+		announce:
+			(GtClassCoderPackagesFilterStringChanged new
+				navigationModel: self;
+				packagesFilterString: packagesFilterString;
+				yourself)
 ]

@@ -174,7 +174,8 @@ GtClassCoderElement >> buildPackagesTreeButton [
 	^ BrToggle new
 		look: BrGlamorousButtonWithIconLook + BrGlamorousToggleBackgroundLook;
 		icon: BrGlamorousIcons tree asElement;
-		when: BrToggleActivatedEvent do: [ self updateNavigationElement ];
+		when: BrToggleActivatedEvent
+			do: [ contentPane addChildFirst: navigationElement ];
 		when: BrToggleDeactivatedEvent
 			do: [ navigationElement removeFromParent ];
 		yourself
@@ -275,6 +276,7 @@ GtClassCoderElement >> classCoder: aCoder [
 			do: [ :ann | self updateNavigationElement ].
 	container ifNotNil: #removeFromParent.
 	container := self buildContainer.
+	navigationElement := self buildNavigationElement.
 	self
 		addChildFirst: container;
 		updateBreadcrumb
@@ -347,13 +349,15 @@ GtClassCoderElement >> updateContentTabs [
 
 { #category : #'updating ui' }
 GtClassCoderElement >> updateNavigationElement [
-	| navigationModel |
-	navigationElement ifNotNil: #removeFromParent.
+	| navigationModel visible |
+	visible := navigationElement isAttachedToSceneGraph.
+	navigationElement removeFromParent.
 	navigationModel := classCoder navigationModel.
 	navigationModel displayPosition = #top
 		ifTrue: [ contentPane layout: BlLinearLayout vertical ].
 	navigationModel displayPosition = #left
 		ifTrue: [ contentPane layout: BlLinearLayout horizontal ].
 	navigationElement := self buildNavigationElement.
-	contentPane addChildFirst: navigationElement
+	visible
+		ifTrue: [ contentPane addChildFirst: navigationElement ]
 ]
