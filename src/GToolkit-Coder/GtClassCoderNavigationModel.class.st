@@ -1,11 +1,19 @@
 Class {
 	#name : #GtClassCoderNavigationModel,
 	#superclass : #Object,
+	#traits : 'TGtAnnouncer',
+	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
-		'classCoder'
+		'classCoder',
+		'announcer'
 	],
 	#category : #'GToolkit-Coder'
 }
+
+{ #category : #accessing }
+GtClassCoderNavigationModel >> announcer [
+	^ announcer ifNil: [ announcer := Announcer new ]
+]
 
 { #category : #accessing }
 GtClassCoderNavigationModel >> classCoder [
