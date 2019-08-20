@@ -93,7 +93,7 @@ GtClassCoderElement >> buildContainer [
 		look: BrGlamorousTabWithoutBarLook;
 		label: '';
 		stencil: [ contentPane := self buildContentPane ];
-		actionsStencil: [ BrToolbar new
+		toolbarStencil: [ BrToolbar new
 				look: BrGlamorousToolbarLook new;
 				addItem: self buildSpotterButton;
 				addItem: self buildPackagesTreeButton;
