@@ -82,7 +82,9 @@ GtCoderNavigationPackagesTreeElement >> buildPackageTree: somePackages [
 							e
 								selectedNodeDo: [ :aNode | 
 									aNode value isClass
-										ifTrue: [ navigationModel selectInCoderClass: aNode value ] ] ] ] ];
+										ifTrue: [ navigationModel selectInCoderClass: aNode value ].
+									(aNode value isKindOf: RPackage)  
+										ifTrue: [ navigationModel selectInCoderPackage: aNode value ] ] ] ] ];
 		yourself
 ]
 
@@ -134,6 +136,10 @@ GtCoderNavigationPackagesTreeElement >> navigationModel: aNavigationModel [
 		subscribe: GtClassCoderPackagesFilterStringChanged
 		send: #updatePackageFilterEditorAndPackageTree
 		to: self.
+	navigationModel
+		subscribe: GtClassCoderNavigationSelectionChanged
+		send: #updateSelection
+		to: self.
 	self
 		removeChildren;
 		addChild: self buildToolbar;
@@ -168,4 +174,19 @@ GtCoderNavigationPackagesTreeElement >> updatePackageFilterEditorAndPackageTree 
 					g name asLowercase
 						includesSubstring: navigationModel packagesFilterString asLowercase ]).
 	self addChild: tree
+]
+
+{ #category : #callbacks }
+GtCoderNavigationPackagesTreeElement >> updateSelection [
+	tree selectedNodeDo: [ :selectionNode |
+		selectionNode value = navigationModel selectedObject ifTrue: [ 
+			"If the object selected in the model is the same as the one selected
+			in the tree do not select it again."
+			^ self ] ].
+	
+	tree viewModel root allChildrenNodesBreadthFirstDo: [ :treeNode |
+		treeNode ensureChildNodesComputed.
+		navigationModel selectedObject = treeNode value ifTrue: [ 
+			treeNode withAllParentNodesDo: [ :node | node expand ].
+			tree selectOne: treeNode globalIndexInTree ] ]
 ]

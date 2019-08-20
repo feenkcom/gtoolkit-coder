@@ -12,6 +12,23 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #callbacks }
+GtClassCoderElement >> actOnClassUpdated [
+	self classCoder navigationModel 
+		updateSelectionWith: self classCoder theClass.
+	self
+		updateContentTabs;
+		updateBreadcrumb
+]
+
+{ #category : #callbacks }
+GtClassCoderElement >> actOnPackageUpdated: ann [
+	self classCoder navigationModel 
+		updateSelectionWith: ann package.
+	self removeContentTabs.
+	breadcrumb removeAllItems.
+]
+
 { #category : #'building ui' }
 GtClassCoderElement >> buildAddClassButton [
 	| dropdown |
@@ -94,11 +111,11 @@ GtClassCoderElement >> buildContainer [
 		label: '';
 		stencil: [ contentPane := self buildContentPane ];
 		toolbarStencil: [ BrToolbar new
-				look: BrGlamorousToolbarLook new;
-				addItem: self buildSpotterButton;
-				addItem: self buildPackagesTreeButton;
-				addItem: self buildAddClassButton;
-				yourself ];
+			look: BrGlamorousToolbarLook new;
+			addItem: self buildSpotterButton;
+			addItem: self buildPackagesTreeButton;
+			addItem: self buildAddClassButton;
+			yourself ];
 		padding:
 			(BlInsets
 				top: 15
@@ -224,12 +241,9 @@ GtClassCoderElement >> buildSpotterButton [
 							CompiledMethod} anySatisfy: [ :f | item isKindOf: f ] ])
 						ifTrue: [ dropdown collapse.
 							(item isKindOf: RPackage)
-								ifTrue: [ self classCoder navigationModel
-										ifNotNil: [ :f | f packagesFilterString: item name ] ].
+								ifTrue: [ self classCoder updateForPackage: item ].
 							(item isKindOf: ClassDescription)
-								ifTrue: [ self classCoder navigationModel
-										ifNotNil: [ :f | f packagesFilterString: item package name ].
-									self classCoder forClass: item ].
+								ifTrue: [ self classCoder forClass: item ].
 							(item isKindOf: CompiledMethod)
 								ifTrue: [ self classCoder navigationModel
 										ifNotNil: [ :f | f packagesFilterString: item methodClass package name ].
@@ -266,17 +280,15 @@ GtClassCoderElement >> classCoder [
 GtClassCoderElement >> classCoder: aCoder [
 	classCoder := aCoder.
 	classCoder
-		when: GtCoderClassSelectedAnnouncement
-			do: [ :ann | 
-			self
-				updateNavigationElement;
-				updateContentTabs;
-				updateBreadcrumb ];
+		when: GtCoderClassUpdatedAnnouncement
+			do: [ self actOnClassUpdated ];
+		when: GtCoderPackageUpdatedAnnouncement
+			do: [ :ann  | self actOnPackageUpdated: ann ];
 		when: GtCoderNavigationModelChangedAnnouncement
 			do: [ :ann | self updateNavigationElement ].
 	container ifNotNil: #removeFromParent.
 	container := self buildContainer.
-	navigationElement := self buildNavigationElement.
+	self updateNavigationElement.
 	self
 		addChildFirst: container;
 		updateBreadcrumb
@@ -350,8 +362,12 @@ GtClassCoderElement >> updateContentTabs [
 { #category : #'updating ui' }
 GtClassCoderElement >> updateNavigationElement [
 	| navigationModel visible |
-	visible := navigationElement isAttachedToSceneGraph.
-	navigationElement removeFromParent.
+	
+	visible := false.
+	navigationElement ifNotNil: [
+		visible := navigationElement isAttachedToSceneGraph.
+		navigationElement removeFromParent ].
+	
 	navigationModel := classCoder navigationModel.
 	navigationModel displayPosition = #top
 		ifTrue: [ contentPane layout: BlLinearLayout vertical ].
