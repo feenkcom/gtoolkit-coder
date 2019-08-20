@@ -110,25 +110,16 @@ GtProcessCoderElement >> updateWatchExpressions [
 
 { #category : #ui }
 GtProcessCoderElement >> variablesElement [
-	| tab1 tab2 tabGroup |
-	tab1 := BrTabModel new
-		add: (BrLabelModel text: 'Variables');
-		stencil: [ self contextVariablesElement ].
-	tab2 := BrTabModel new
-		add: (BrLabelModel text: 'Watches');
-		stencil: [ self watchVariablesElement ].
-	tabGroup := BrTabGroupModel
-		with:
-			{tab1.
-			tab2}.
-	tabGroup tabs
-		do: [ :aTab | 
-			BlElement new
-				look: BrMaterialTabLabelledLook;
-				viewModel: aTab ].
-	^ BlElement new
-		look: BrMaterialTabGroupLook;
-		viewModel: tabGroup
+	^ BrTabGroup new
+		look: BrGlamorousTabGroupLook new;
+		addTab: (BrTab new
+			look: BrGlamorousTabLook new;
+			label: 'Variables';
+			stencil: [ self contextVariablesElement ]);
+		addTab: (BrTab new
+			look: BrGlamorousTabLook new;
+			label: 'Watches';
+			stencil: [ self watchVariablesElement ])
 ]
 
 { #category : #ui }

@@ -31,7 +31,7 @@ Behavior >> buildMethodsTabIn: tabGroup for: classCoder [
 				look: BrGlamorousTabLook new;
 				label: 'Methods';
 				stencil: [ classCoder methodsCoder asElement ];
-				actionsStencil: [ BrToolbar new
+				toolbarStencil: [ BrToolbar new
 						look: BrGlamorousToolbarLook new;
 						addItem:
 							(BrEditor new

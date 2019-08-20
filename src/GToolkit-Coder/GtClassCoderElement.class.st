@@ -82,7 +82,7 @@ GtClassCoderElement >> buildBreadcrumbToggleForClass: aClass [
 			classCoder methodsCoder hasFilter
 				ifFalse: [ aClass == classCoder theClass
 						ifTrue: [ anEvent consumed: true ].
-					(breadcrumb itemAt: 1) activate ] ];
+					(breadcrumb itemAt: 1) widgetDo: #activate ] ];
 		yourself
 ]
 
@@ -90,10 +90,10 @@ GtClassCoderElement >> buildBreadcrumbToggleForClass: aClass [
 GtClassCoderElement >> buildContainer [
 	| tab tabGroup |
 	tab := BrTab new
-		look: BrGlamorousTabLook new invisibleBar;
+		look: BrGlamorousTabWithoutBarLook;
 		label: '';
 		stencil: [ contentPane := self buildContentPane ];
-		actionsStencil: [ BrToolbar new
+		toolbarStencil: [ BrToolbar new
 				look: BrGlamorousToolbarLook new;
 				addItem: self buildSpotterButton;
 				addItem: self buildPackagesTreeButton;
