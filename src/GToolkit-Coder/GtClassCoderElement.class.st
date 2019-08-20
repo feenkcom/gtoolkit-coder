@@ -111,11 +111,11 @@ GtClassCoderElement >> buildContainer [
 		label: '';
 		stencil: [ contentPane := self buildContentPane ];
 		toolbarStencil: [ BrToolbar new
-			look: BrGlamorousToolbarLook new;
-			addItem: self buildSpotterButton;
-			addItem: self buildPackagesTreeButton;
-			addItem: self buildAddClassButton;
-			yourself ];
+				look: BrGlamorousToolbarLook new;
+				addItem: self buildSpotterButton;
+				addItem: self buildPackagesTreeButton;
+				addItem: self buildAddClassButton;
+				yourself ];
 		padding:
 			(BlInsets
 				top: 15
@@ -131,7 +131,7 @@ GtClassCoderElement >> buildContainer [
 		yourself.
 	tabGroup := BrTabGroup new
 		look:
-			(BrMaterialTabGroupLook new
+			(BrGlamorousTabGroupLook new
 				headerBackground: BrGlamorousColors defaultButtonBorderColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
