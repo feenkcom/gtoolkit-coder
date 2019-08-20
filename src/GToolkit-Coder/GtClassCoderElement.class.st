@@ -114,7 +114,7 @@ GtClassCoderElement >> buildContainer [
 		yourself.
 	tabGroup := BrTabGroup new
 		look:
-			(BrMaterialTabGroupLook new
+			(BrGlamorousTabGroupLook new
 				headerBackground: BrGlamorousColors defaultButtonBorderColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
