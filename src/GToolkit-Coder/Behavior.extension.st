@@ -72,3 +72,18 @@ Behavior >> gtBrowse [
 	aSpace withSpotter.
 	aSpace show
 ]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> gtBrowseFrom: anElement [
+	| aCoder aSpace |
+
+	aCoder := GtInspector createOnPlayBook: (GtClassCoder forClass: self).
+	aSpace := BlSpace new.
+	aSpace title: 'Coder'.
+	aSpace extent: 1200@600.
+	aSpace addChild: aCoder.
+	aSpace withHalos.
+	aSpace withSpotter.
+	
+	anElement showSpace: aSpace
+]
