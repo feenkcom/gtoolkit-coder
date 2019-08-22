@@ -131,8 +131,7 @@ GtClassCoderElement >> buildContainer [
 		yourself.
 	tabGroup := BrTabGroup new
 		look:
-			(BrGlamorousTabGroupLook new
-				headerBackground: BrGlamorousColors defaultButtonBorderColor);
+			(BrGlamorousTabGroupLook new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.
@@ -143,7 +142,7 @@ GtClassCoderElement >> buildContainer [
 					c ignoreByLayout.
 					c horizontal matchParent.
 					c vertical exact: 5 ];
-				background: (Color fromHexString: 'a0d911')"BrGlamorousColors successBorderColor";
+				background: (Color fromHexString: 'a0d911');
 				yourself);
 		yourself.
 	^ tabGroup
