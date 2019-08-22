@@ -69,7 +69,6 @@ Behavior >> gtBrowse [
 	aSpace extent: 1200@600.
 	aSpace addChild: aCoder.
 	aSpace withHalos.
-	aSpace withSpotter.
 	aSpace show
 ]
 
@@ -83,7 +82,6 @@ Behavior >> gtBrowseFrom: anElement [
 	aSpace extent: 1200@600.
 	aSpace addChild: aCoder.
 	aSpace withHalos.
-	aSpace withSpotter.
 	
 	anElement showSpace: aSpace
 ]

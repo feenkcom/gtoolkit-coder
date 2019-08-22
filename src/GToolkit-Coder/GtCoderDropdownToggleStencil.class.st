@@ -13,7 +13,7 @@ GtCoderDropdownToggleStencil >> create [
 	<return: #Object>
 
 	^ BrButton new
-		look: BrGlamorousButtonWithLabelAndIconLook;
+		look: BrGlamorousButtonWithLabelAndIconLook + BrGlamorousDropdownToggleLook;
 		padding: (BlInsets top: 6 right: 8 bottom: 6 left: 15);
 		label: self item asString;
 		icon: (BlElement new

@@ -15,12 +15,8 @@ GtCoderNavigationPackagesTreeElement >> buildAddPackageButton [
 	dropdown := BrDropdown new.
 	^ dropdown
 		look: BrGlamorousDropdownLook;
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical fitContent ];
 		toggle: [ BrButton new
-				look: BrGlamorousButtonWithIconLook;
+				look: BrGlamorousButtonWithIconLook + BrGlamorousDropdownToggleLook;
 				icon: BrGlamorousIcons add asElement;
 				yourself ];
 		popup: [ | editor button |

@@ -88,10 +88,6 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 	| dropDown |
 	dropDown := BrDropdown new.
 	dropDown
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical fitContent ];
 		look: BrGlamorousDropdownLook new;
 		padding: BlInsets empty;
 		margin: BlInsets empty;
@@ -103,7 +99,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 				ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
 			aButton
 				beSmall;
-				look: BrGlamorousButtonWithIconLook;
+				look: BrGlamorousButtonWithIconLook + BrGlamorousDropdownToggleLook;
 				padding: BlInsets empty;
 				margin: BlInsets empty ];
 		popup: [ | classCompleter containerElement titleElement |

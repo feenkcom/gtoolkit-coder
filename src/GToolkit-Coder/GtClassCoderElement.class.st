@@ -35,15 +35,13 @@ GtClassCoderElement >> buildAddClassButton [
 	dropdown := BrDropdown new.
 	^ dropdown
 		look: BrGlamorousDropdownLook;
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical fitContent ];
-		toggle: [ BrButton new
-				look: BrGlamorousButtonWithIconLook;
+		toggle: [
+			BrButton new
+				look: BrGlamorousButtonWithIconLook + BrGlamorousDropdownToggleLook;
 				icon: BrGlamorousIcons add asElement;
 				yourself ];
-		popup: [ | coder |
+		popup: [
+			| coder |
 			coder := GtClassDefinitionCoder new
 				expanded: true;
 				source:
@@ -202,26 +200,11 @@ GtClassCoderElement >> buildSpotterButton [
 	| dropdown |
 	dropdown := BrDropdown new.
 	^ dropdown
-		look:
-			(BrGlamorousDropdownLook new
-				outskirtsEmbellisher: [ :e | 
-					e
-						background: BrGlamorousColors lightBorderColor;
-						yourself ];
-				yourself);
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical fitContent ];
-		toggle: [ BrButton new
-				look: BrGlamorousButtonWithIconLook;
+		look: (BrGlamorousDropdownLook new backgroundPaint: BrGlamorousColors secondaryHeaderBackgroundColor);
+		toggle: [
+			BrButton new
+				look: BrGlamorousButtonWithIconLook + BrGlamorousDropdownToggleLook;
 				icon: BrGlamorousIcons search asElement;
-				when: BlElementBackgroundChangedEvent
-					do: [ :e | 
-					(dropdown isExpanded
-						and: [ e target background paint color
-								~= BrGlamorousColors lightBorderColor ])
-						ifTrue: [ e target background: BrGlamorousColors lightBorderColor ] ];
 				yourself ];
 		popup: [ | model |
 			model := GtSpotter new initializeWith: GtCoderSpotterStart new.

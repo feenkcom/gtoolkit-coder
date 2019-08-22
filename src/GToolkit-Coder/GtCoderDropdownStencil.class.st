@@ -24,16 +24,12 @@ GtCoderDropdownStencil >> create [
 	| aDropdown |
 	aDropdown := BrDropdown new.
 	aDropdown
-		layout: BlLinearLayout horizontal;
 		relocate: 200 @ 100;
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical fitContent ];
+		look: BrGlamorousDropdownLook new;
 		toggle: [ GtCoderDropdownToggleStencil new
 				dropdown: aDropdown;
 				item: self initialItem ];
-		popup: [ GtCoderDropdownListStencil new items: self allItems ];
-		look: BrGlamorousDropdownLook new.
+		popup: [ GtCoderDropdownListStencil new items: self allItems ].
 	^ aDropdown
 ]
 
