@@ -56,7 +56,7 @@ GtSearchFilter class >> gtHierarchyFor: aView [
 				fromRightCenter;
 				toLeftCenter;
 				connectFrom: #superclass.
-			m layout explicit: (GtGraphHorizontalTreeLayout new layered horizontalGap: 50; verticalGap: 10).
+			m layout explicit: (GtGraphHorizontalTreeLayout new layered horizontalGap: 20; verticalGap: 10).
 			]
 ]
 
