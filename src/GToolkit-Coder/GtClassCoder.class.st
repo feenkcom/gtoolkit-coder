@@ -49,7 +49,7 @@ GtClassCoder >> forClass: aClass [
 	methodsCoder forClass: class.
 	definitionsCoder forClass: class.
 	commentsCoder forClass: class.
-	self announce: (GtCoderClassSelectedAnnouncement forClass: class)
+	self announce: (GtCoderClassUpdatedAnnouncement forClass: class)
 ]
 
 { #category : #initialize }
@@ -58,7 +58,7 @@ GtClassCoder >> forObject: anObject [
 	methodsCoder forObject: anObject.
 	definitionsCoder forClass: class.
 	commentsCoder forClass: class.
-	self announce: (GtCoderClassSelectedAnnouncement forClass: class)
+	self announce: (GtCoderClassUpdatedAnnouncement forClass: class)
 ]
 
 { #category : #ui }
@@ -138,4 +138,10 @@ GtClassCoder >> searchFilter [
 { #category : #accessing }
 GtClassCoder >> theClass [
 	^ class
+]
+
+{ #category : #updating }
+GtClassCoder >> updateForPackage: aPackage [
+	class := nil.
+	self announce: (GtCoderPackageUpdatedAnnouncement new package: aPackage)
 ]

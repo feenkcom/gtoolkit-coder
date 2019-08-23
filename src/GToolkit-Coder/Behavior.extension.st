@@ -31,7 +31,7 @@ Behavior >> buildMethodsTabIn: tabGroup for: classCoder [
 				look: BrGlamorousTabLook new;
 				label: 'Methods';
 				stencil: [ classCoder methodsCoder asElement ];
-				actionsStencil: [ BrToolbar new
+				toolbarStencil: [ BrToolbar new
 						look: BrGlamorousToolbarLook new;
 						addItem:
 							(BrEditor new
@@ -69,6 +69,19 @@ Behavior >> gtBrowse [
 	aSpace extent: 1200@600.
 	aSpace addChild: aCoder.
 	aSpace withHalos.
-	aSpace withSpotter.
 	aSpace show
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> gtBrowseFrom: anElement [
+	| aCoder aSpace |
+
+	aCoder := GtInspector createOnPlayBook: (GtClassCoder forClass: self).
+	aSpace := BlSpace new.
+	aSpace title: 'Coder'.
+	aSpace extent: 1200@600.
+	aSpace addChild: aCoder.
+	aSpace withHalos.
+	
+	anElement showSpace: aSpace
 ]

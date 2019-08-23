@@ -12,21 +12,36 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #callbacks }
+GtClassCoderElement >> actOnClassUpdated [
+	self classCoder navigationModel 
+		updateSelectionWith: self classCoder theClass.
+	self
+		updateContentTabs;
+		updateBreadcrumb
+]
+
+{ #category : #callbacks }
+GtClassCoderElement >> actOnPackageUpdated: ann [
+	self classCoder navigationModel 
+		updateSelectionWith: ann package.
+	self removeContentTabs.
+	breadcrumb removeAllItems.
+]
+
 { #category : #'building ui' }
 GtClassCoderElement >> buildAddClassButton [
 	| dropdown |
 	dropdown := BrDropdown new.
 	^ dropdown
 		look: BrGlamorousDropdownLook;
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical fitContent ];
-		toggle: [ BrButton new
-				look: BrGlamorousButtonWithIconLook;
+		toggle: [
+			BrButton new
+				look: BrGlamorousButtonWithIconLook + BrGlamorousDropdownToggleLook;
 				icon: BrGlamorousIcons add asElement;
 				yourself ];
-		popup: [ | coder |
+		popup: [
+			| coder |
 			coder := GtClassDefinitionCoder new
 				expanded: true;
 				source:
@@ -93,7 +108,7 @@ GtClassCoderElement >> buildContainer [
 		look: BrGlamorousTabWithoutBarLook;
 		label: '';
 		stencil: [ contentPane := self buildContentPane ];
-		actionsStencil: [ BrToolbar new
+		toolbarStencil: [ BrToolbar new
 				look: BrGlamorousToolbarLook new;
 				addItem: self buildSpotterButton;
 				addItem: self buildPackagesTreeButton;
@@ -114,8 +129,7 @@ GtClassCoderElement >> buildContainer [
 		yourself.
 	tabGroup := BrTabGroup new
 		look:
-			(BrMaterialTabGroupLook new
-				headerBackground: BrGlamorousColors defaultButtonBorderColor);
+			(BrGlamorousTabGroupLook new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.
@@ -126,7 +140,7 @@ GtClassCoderElement >> buildContainer [
 					c ignoreByLayout.
 					c horizontal matchParent.
 					c vertical exact: 5 ];
-				background: (Color fromHexString: 'a0d911')"BrGlamorousColors successBorderColor";
+				background: (Color fromHexString: 'a0d911');
 				yourself);
 		yourself.
 	^ tabGroup
@@ -174,7 +188,8 @@ GtClassCoderElement >> buildPackagesTreeButton [
 	^ BrToggle new
 		look: BrGlamorousButtonWithIconLook + BrGlamorousToggleBackgroundLook;
 		icon: BrGlamorousIcons tree asElement;
-		when: BrToggleActivatedEvent do: [ self updateNavigationElement ];
+		when: BrToggleActivatedEvent
+			do: [ contentPane addChildFirst: navigationElement ];
 		when: BrToggleDeactivatedEvent
 			do: [ navigationElement removeFromParent ];
 		yourself
@@ -185,26 +200,11 @@ GtClassCoderElement >> buildSpotterButton [
 	| dropdown |
 	dropdown := BrDropdown new.
 	^ dropdown
-		look:
-			(BrGlamorousDropdownLook new
-				outskirtsEmbellisher: [ :e | 
-					e
-						background: BrGlamorousColors lightBorderColor;
-						yourself ];
-				yourself);
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical fitContent ];
-		toggle: [ BrButton new
-				look: BrGlamorousButtonWithIconLook;
+		look: (BrGlamorousDropdownLook new backgroundPaint: BrGlamorousColors secondaryHeaderBackgroundColor);
+		toggle: [
+			BrButton new
+				look: BrGlamorousButtonWithIconLook + BrGlamorousDropdownToggleLook;
 				icon: BrGlamorousIcons search asElement;
-				when: BlElementBackgroundChangedEvent
-					do: [ :e | 
-					(dropdown isExpanded
-						and: [ e target background paint color
-								~= BrGlamorousColors lightBorderColor ])
-						ifTrue: [ e target background: BrGlamorousColors lightBorderColor ] ];
 				yourself ];
 		popup: [ | model |
 			model := GtSpotter new initializeWith: GtCoderSpotterStart new.
@@ -223,12 +223,9 @@ GtClassCoderElement >> buildSpotterButton [
 							CompiledMethod} anySatisfy: [ :f | item isKindOf: f ] ])
 						ifTrue: [ dropdown collapse.
 							(item isKindOf: RPackage)
-								ifTrue: [ self classCoder navigationModel
-										ifNotNil: [ :f | f packagesFilterString: item name ] ].
+								ifTrue: [ self classCoder updateForPackage: item ].
 							(item isKindOf: ClassDescription)
-								ifTrue: [ self classCoder navigationModel
-										ifNotNil: [ :f | f packagesFilterString: item package name ].
-									self classCoder forClass: item ].
+								ifTrue: [ self classCoder forClass: item ].
 							(item isKindOf: CompiledMethod)
 								ifTrue: [ self classCoder navigationModel
 										ifNotNil: [ :f | f packagesFilterString: item methodClass package name ].
@@ -265,16 +262,15 @@ GtClassCoderElement >> classCoder [
 GtClassCoderElement >> classCoder: aCoder [
 	classCoder := aCoder.
 	classCoder
-		when: GtCoderClassSelectedAnnouncement
-			do: [ :ann | 
-			self
-				updateNavigationElement;
-				updateContentTabs;
-				updateBreadcrumb ];
+		when: GtCoderClassUpdatedAnnouncement
+			do: [ self actOnClassUpdated ];
+		when: GtCoderPackageUpdatedAnnouncement
+			do: [ :ann  | self actOnPackageUpdated: ann ];
 		when: GtCoderNavigationModelChangedAnnouncement
 			do: [ :ann | self updateNavigationElement ].
 	container ifNotNil: #removeFromParent.
 	container := self buildContainer.
+	self updateNavigationElement.
 	self
 		addChildFirst: container;
 		updateBreadcrumb
@@ -347,13 +343,19 @@ GtClassCoderElement >> updateContentTabs [
 
 { #category : #'updating ui' }
 GtClassCoderElement >> updateNavigationElement [
-	| navigationModel |
-	navigationElement ifNotNil: #removeFromParent.
+	| navigationModel visible |
+	
+	visible := false.
+	navigationElement ifNotNil: [
+		visible := navigationElement isAttachedToSceneGraph.
+		navigationElement removeFromParent ].
+	
 	navigationModel := classCoder navigationModel.
 	navigationModel displayPosition = #top
 		ifTrue: [ contentPane layout: BlLinearLayout vertical ].
 	navigationModel displayPosition = #left
 		ifTrue: [ contentPane layout: BlLinearLayout horizontal ].
 	navigationElement := self buildNavigationElement.
-	contentPane addChildFirst: navigationElement
+	visible
+		ifTrue: [ contentPane addChildFirst: navigationElement ]
 ]
