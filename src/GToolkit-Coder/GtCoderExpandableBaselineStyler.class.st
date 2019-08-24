@@ -18,7 +18,7 @@ GtCoderExpandableBaselineStyler >> visitMessageNode: aMessageNode [
 				attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
 						beAppend;
 						stencil: [ | editorElement method coder |
-							method := Smalltalk  globals includesKey: ('BaselineOf', aMessageNode arguments first value) asSymbol>>#baseline:.
+							method := Smalltalk globals at: ('BaselineOf', aMessageNode arguments first value) asSymbol>>#baseline:.
 							coder := GtMethodCoder forMethod: method.
 							coder subscribeToSystem.
 							coder expanded: true.
