@@ -6,9 +6,10 @@ Class {
 
 { #category : #visiting }
 GtCoderExpandableBaselineStyler >> visitMessageNode: aMessageNode [
-	| aMethodClass |
 	super visitMessageNode: aMessageNode.
-	(#(baseline: baseline:with:) includes: aMessageNode selector) ifFalse: [ ^ self ].
+	((#(baseline: baseline:with:) includes: aMessageNode selector) and: [ 
+		aMessageNode arguments first isLiteralNode and: [
+			Smalltalk  globals includesKey: ('BaselineOf', aMessageNode arguments first value) asSymbol]]) ifFalse: [ ^ self ].
 	self
 		styleFrom: aMessageNode arguments first startWithoutParentheses 
 		to: aMessageNode arguments first stopWithoutParentheses
@@ -17,8 +18,8 @@ GtCoderExpandableBaselineStyler >> visitMessageNode: aMessageNode [
 				attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
 						beAppend;
 						stencil: [ | editorElement method coder |
-							method := aMessageNode arguments first inspect lookupSelector: aMessageNode selector.
-							coder := GtMethodCoder forExample: (aMethodClass gtExamplesFactory createExample: method).
+							method := Smalltalk  globals includesKey: ('BaselineOf', aMessageNode arguments first value) asSymbol>>#baseline:.
+							coder := GtMethodCoder forMethod: method.
 							coder subscribeToSystem.
 							coder expanded: true.
 							editorElement := coder asElement.
