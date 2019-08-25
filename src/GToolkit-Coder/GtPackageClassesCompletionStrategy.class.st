@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'packageSearchString'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Completion'
 }
 
 { #category : #accessing }

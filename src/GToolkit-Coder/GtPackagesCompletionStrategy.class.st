@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPackagesCompletionStrategy,
 	#superclass : #GtCompletionStrategy,
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Completion'
 }
 
 { #category : #private }
