@@ -1,26 +1,21 @@
 Class {
 	#name : #GtBaselineCompletionStrategy,
 	#superclass : #GtCompletionStrategy,
-	#instVars : [
-		'baselines'
-	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Completion'
 }
 
 { #category : #accessing }
 GtBaselineCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
-	| string completionActions first name classes last ch deleteAction |
+	| string completionActions first partialName names last ch deleteAction |
 	string := aText asString.
 	first := positionInteger.
 	[ first > 0 and: [ (string at: first) ~= $' ] ]
 		whileTrue: [ first := first - 1 ].
 	first = 0
 		ifTrue: [ ^ #() ].
-	name := 'BaselineOf'
-		, (string copyFrom: first + 1 to: positionInteger).
-	classes := BaselineOf withAllSubclasses
-		select: [ :each | each name beginsWith: name ].
-	classes isEmpty
+	partialName := string copyFrom: first + 1 to: positionInteger.
+	names := self namesMatching: partialName.
+	names isEmpty
 		ifTrue: [ ^ #() ].
 	last := positionInteger.
 	[ last <= string size
@@ -31,15 +26,14 @@ GtBaselineCompletionStrategy >> completionActionsFor: aText at: positionInteger 
 				labeled: ''
 				from: positionInteger + 1
 				to: last - 1 ].
-	completionActions := (classes
-		asSortedCollection: [ :a :b | a name < b name ])
+	completionActions := names asSortedCollection
 		collect: [ :each | 
 			| insert |
 			insert := GtInsertTextCompletionAction
-				labeled: (each name allButFirst: 10)
-				completion: (each name allButFirst: name size)
+				labeled: each
+				completion: (each allButFirst: partialName size)
 				position: positionInteger
-				from: positionInteger - name size + 1.
+				from: positionInteger - partialName size + 1.
 			deleteAction isNil
 				ifTrue: [ insert ]
 				ifFalse: [ (GtCompositeCompletionAction labeled: insert label)
@@ -52,4 +46,9 @@ GtBaselineCompletionStrategy >> completionActionsFor: aText at: positionInteger 
 { #category : #testing }
 GtBaselineCompletionStrategy >> hasCompletionsAt: anInteger in: aText [
 	^ true
+]
+
+{ #category : #private }
+GtBaselineCompletionStrategy >> namesMatching: aString [
+	^ self subclassResponsibility
 ]
