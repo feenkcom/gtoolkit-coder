@@ -38,7 +38,9 @@ GtCoderExpanderLook >> initialize [
 		background: Color veryVeryLightGray;
 		addChild: aTriangle;
 		when: BlClickEvent
-			do: [ self dispatchEvent: BrExpansionToggleWish new ].
+			do: [ :anEvent |
+				anEvent consumed: true.
+				self dispatchEvent: BrExpansionToggleWish new ].
 	sidebar := BlElement new
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c | 
