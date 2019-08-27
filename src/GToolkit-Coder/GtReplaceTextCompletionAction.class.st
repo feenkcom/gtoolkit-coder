@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'text'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Completion'
 }
 
 { #category : #'instance creation' }

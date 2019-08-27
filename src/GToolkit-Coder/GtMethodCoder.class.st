@@ -56,6 +56,17 @@ GtMethodCoder >> asElement [
 	^ super asElement
 ]
 
+{ #category : #'add ons' }
+GtMethodCoder >> baselineAddOnFor: anAST [
+	<gtAstCoderAddOns: 10>
+	(anAST isNil or: [ anAST methodNode isNil ])
+		ifTrue: [ 
+			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
+			^ self ].
+	(class isNil or: [ (class inheritsFrom: BaselineOf) not ]) ifTrue: [ ^ self ].
+	addOns addStyler: GtCoderExpandableBaselineStyler new
+]
+
 { #category : #elements }
 GtMethodCoder >> breadcrumbNamedActions [
 	^ Array
