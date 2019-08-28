@@ -26,7 +26,9 @@ GtSourceCoderEvaluationRequester >> correctFrom: fromIndex to: toIndex with: aSt
 { #category : #requester }
 GtSourceCoderEvaluationRequester >> notify: message at: anIndex in: aString [
 	| location selectionStart |
-	selectionStart := selectionInterval ifNil: [ 1 ].
+	selectionStart := selectionInterval isNil
+		ifTrue: [ 1 ]
+		ifFalse: [ selectionInterval first ].
 	location := anIndex + selectionStart - 2.
 	^ super notify: message at: (location max: 1) in: aString
 ]
