@@ -201,7 +201,7 @@ GtSourceCoder >> debugSource: aString [
 GtSourceCoder >> defaultTextAttributes [
 	^ {(BlFontFamilyAttribute named: 'Source Code Pro') beNotOverwritableByStyler.
 	(BlFontGenericFamilyAttribute monospace) beNotOverwritableByStyler.
-	(BlFontSizeAttribute size: 12) beNotOverwritableByStyler}
+	(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}
 ]
 
 { #category : #private }
