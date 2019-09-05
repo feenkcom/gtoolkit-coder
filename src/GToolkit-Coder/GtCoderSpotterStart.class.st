@@ -4,7 +4,7 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #searching }
 GtCoderSpotterStart >> gtSpotterForClassesFor: aStep [
 	<gtSearch>
 	aStep listProcessor
@@ -17,7 +17,7 @@ GtCoderSpotterStart >> gtSpotterForClassesFor: aStep [
 		wantsToDisplayOnEmptyQuery: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #searching }
 GtCoderSpotterStart >> gtSpotterForMessagesFor: aStep [
 	<gtSearch>
 	aStep listProcessor
@@ -32,7 +32,7 @@ GtCoderSpotterStart >> gtSpotterForMessagesFor: aStep [
 		wantsToDisplayOnEmptyQuery: false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #searching }
 GtCoderSpotterStart >> gtSpotterForPackagesFor: aStep [
 	<gtSearch>
 	aStep listProcessor
@@ -45,7 +45,7 @@ GtCoderSpotterStart >> gtSpotterForPackagesFor: aStep [
 		wantsToDisplayOnEmptyQuery: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #searching }
 GtCoderSpotterStart >> gtSpotterImplementorsFor: aStep [
 	<gtSearch>
 	self flag: #specialFilter.
