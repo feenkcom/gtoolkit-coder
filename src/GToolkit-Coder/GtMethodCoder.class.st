@@ -52,7 +52,7 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 
 { #category : #elements }
 GtMethodCoder >> asElement [
-	self ensureBuilt.
+	false ifTrue: [ self ensureBuilt ].
 	^ super asElement
 ]
 
@@ -138,7 +138,7 @@ GtMethodCoder >> clearPatternSyntaxErrors [
 
 { #category : #accessing }
 GtMethodCoder >> collapsedText [
-	self ensureBuilt.
+	false ifTrue: [ self ensureBuilt ].
 	^ super collapsedText
 ]
 
@@ -535,7 +535,7 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST [
 
 { #category : #actions }
 GtMethodCoder >> newMethodSource [
-	self ensureBuilt.
+	false ifTrue: [ self ensureBuilt ].
 	^ self source
 ]
 
@@ -557,7 +557,7 @@ GtMethodCoder >> newRbAST: aString [
 
 { #category : #updating }
 GtMethodCoder >> newSource [
-	self ensureBuilt.
+	false ifTrue: [ self ensureBuilt ].
 	^ super newSource
 ]
 
@@ -732,6 +732,12 @@ GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 	[ index <= source size and: [ (char := source at: index) = Character cr or: [ char = Character lf ] ] ]
 		whileTrue: [ index := index + 1 ].
 	^ index
+]
+
+{ #category : #elements }
+GtMethodCoder >> stylerView: anElement [
+	super stylerView: anElement.
+	self ensureBuilt.
 ]
 
 { #category : #accessing }

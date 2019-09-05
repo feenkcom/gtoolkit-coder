@@ -197,6 +197,11 @@ GtCoder >> refreshForChanges [
 	addOns clearChanges
 ]
 
+{ #category : #elements }
+GtCoder >> stylerView: anElement [
+
+]
+
 { #category : #subscriptions }
 GtCoder >> subscribeToSystem [
 	"do nothing"
