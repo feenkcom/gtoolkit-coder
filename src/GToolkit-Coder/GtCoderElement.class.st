@@ -42,6 +42,7 @@ GtCoderElement >> coder: aCoder [
 	self
 		header: [ collapsedElement := self newCollapsedElement ];
 		content: [ expandedElement := self newExpandedElement ].
+	coder stylerView: self.
 	coder expanded
 		ifTrue: [ self expand ]
 ]

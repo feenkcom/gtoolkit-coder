@@ -756,6 +756,12 @@ GtSourceCoder >> styleText [
 	self styleCollapsedText
 ]
 
+{ #category : #elements }
+GtSourceCoder >> stylerView: anElement [
+	self sourceEditor styler view: anElement.
+	self collapsedEditor styler view: anElement.
+]
+
 { #category : #accessing }
 GtSourceCoder >> stylers [
 	^ addOns stylers
