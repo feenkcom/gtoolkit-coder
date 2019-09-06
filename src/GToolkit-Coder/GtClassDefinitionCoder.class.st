@@ -91,6 +91,12 @@ GtClassDefinitionCoder >> newRbAST: aString [
 	^ ast
 ]
 
+{ #category : #elements }
+GtClassDefinitionCoder >> stylerView: anElement [
+	super stylerView: anElement.
+	self styleText.
+]
+
 { #category : #subscriptions }
 GtClassDefinitionCoder >> subscribeToSystem [
 	SystemAnnouncer uniqueInstance weak
