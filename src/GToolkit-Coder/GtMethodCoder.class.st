@@ -429,6 +429,16 @@ GtMethodCoder >> initializeShortcuts [
 	super initializeShortcuts.
 
 	addOns
+		addCollapsedShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryM;
+			action: [ :editorElement | self browseImplementors: editorElement ]);
+		addCollapsedShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryN;
+			action: [ :editorElement | self browseReferences: editorElement ]);
+		addCollapsedShortcut: (BlShortcut new
+			combination: BlKeyCombination primaryB;
+			action: [ :editorElement | self browseClass: editorElement ]);
+			
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryD;
 			action: [ :editorElement | self playSelectionOrMethodFrom: editorElement ]);
@@ -652,6 +662,13 @@ GtMethodCoder >> printOn: aStream [
 		nextPut: $)
 ]
 
+{ #category : #private }
+GtMethodCoder >> referencesFilterForCollapsed [
+	^ self selectorForCollapsed
+		ifNil: [ super referencesFilterForCollapsed ]
+		ifNotNil: [ :sym | self referencesFilterForSymbol: sym ]
+]
+
 { #category : #actions }
 GtMethodCoder >> remove [
 	^ class removeSelector: selector
@@ -723,6 +740,14 @@ GtMethodCoder >> selector [
 { #category : #accessing }
 GtMethodCoder >> selector: aSymbol [
 	selector := aSymbol
+]
+
+{ #category : #private }
+GtMethodCoder >> selectorForCollapsed [
+	self sourceAst
+		withAllNodesOfType: GtPharoMethodPatternNode
+		do: [ :node | ^ node selector ].
+	^ super selectorForCollapsed
 ]
 
 { #category : #private }

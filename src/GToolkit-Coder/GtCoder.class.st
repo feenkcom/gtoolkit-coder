@@ -10,6 +10,14 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #elements }
+GtCoder >> addCollapsedShortcutsTo: anElement [
+	addOns collapsedShortcuts
+		do: [ :each | 
+			anElement
+				addShortcut: (each copy action: [ each action cull: anElement ]) ]
+]
+
 { #category : #accessing }
 GtCoder >> addOns [
 	^ addOns

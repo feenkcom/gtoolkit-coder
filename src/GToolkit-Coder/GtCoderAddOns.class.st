@@ -5,10 +5,17 @@ Class {
 		'contextActions',
 		'mainActions',
 		'modified',
-		'shortcuts'
+		'shortcuts',
+		'collapsedShortcuts'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #shortcuts }
+GtCoderAddOns >> addCollapsedShortcut: aBlShortcut [
+	modified add: #collapsedShortcuts.
+	self addOrUpdateShortcut: aBlShortcut to: collapsedShortcuts
+]
 
 { #category : #actions }
 GtCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
@@ -49,13 +56,18 @@ GtCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
 	modified add: #mainActions
 ]
 
+{ #category : #private }
+GtCoderAddOns >> addOrUpdateShortcut: aBlShortcut to: aCollection [
+	1 to: aCollection size do: [ :i | 
+		(aCollection at: i) combination = aBlShortcut combination
+			ifTrue: [ ^ aCollection at: i put: aBlShortcut ] ].
+	aCollection add: aBlShortcut
+]
+
 { #category : #shortcuts }
 GtCoderAddOns >> addShortcut: aBlShortcut [
 	modified add: #shortcuts.
-	1 to: shortcuts size do: [ :i | 
-		(shortcuts at: i) combination = aBlShortcut combination
-			ifTrue: [ ^ shortcuts at: i put: aBlShortcut ] ].
-	shortcuts add: aBlShortcut
+	self addOrUpdateShortcut: aBlShortcut to: shortcuts
 ]
 
 { #category : #changes }
@@ -66,6 +78,11 @@ GtCoderAddOns >> changesDo: aBlock [
 { #category : #changes }
 GtCoderAddOns >> clearChanges [
 	modified := Set new
+]
+
+{ #category : #shortcuts }
+GtCoderAddOns >> collapsedShortcuts [
+	^ collapsedShortcuts
 ]
 
 { #category : #accessing }
@@ -114,12 +131,28 @@ GtCoderAddOns >> initialize [
 	contextActions := OrderedCollection new.
 	mainActions := OrderedCollection new.
 	shortcuts := OrderedCollection new.
+	collapsedShortcuts := OrderedCollection new.
 	modified := Set new
 ]
 
 { #category : #accessing }
 GtCoderAddOns >> mainActions [
 	^ mainActions
+]
+
+{ #category : #shortcuts }
+GtCoderAddOns >> removeCollapsedShortcut: aBlShortcut [
+	(self removeShortcut: aBlShortcut from: collapsedShortcuts)
+		ifTrue: [ modified add: #collapsedShortcuts ]
+]
+
+{ #category : #shortcuts }
+GtCoderAddOns >> removeCollapsedShortcutsMatching: aBlock [
+	| originalSize |
+	originalSize := collapsedShortcuts size.
+	collapsedShortcuts removeAllSuchThat: aBlock.
+	originalSize > collapsedShortcuts size
+		ifTrue: [ modified add: #collapsedShortcuts ]
 ]
 
 { #category : #actions }
@@ -144,15 +177,28 @@ GtCoderAddOns >> removeMainAction: aString [
 
 { #category : #shortcuts }
 GtCoderAddOns >> removeShortcut: aBlShortcut [
-	1 to: shortcuts size do: [ :i | 
+	(self removeShortcut: aBlShortcut from: shortcuts)
+		ifTrue: [ modified add: #shortcuts ]
+]
+
+{ #category : #private }
+GtCoderAddOns >> removeShortcut: aBlShortcut from: aCollection [
+	| changed |
+	changed := false.
+	shortcuts size to: 1 by: -1 do: [ :i | 
 		(shortcuts at: i) combination = aBlShortcut combination
 			ifTrue: [ shortcuts removeAt: i.
-				modified add: #shortcuts ] ]
+				changed := true ] ].
+	^ changed
 ]
 
 { #category : #shortcuts }
 GtCoderAddOns >> removeShortcutsMatching: aBlock [
-	shortcuts removeAllSuchThat: aBlock
+	| originalSize |
+	originalSize := shortcuts size.
+	shortcuts removeAllSuchThat: aBlock.
+	originalSize > shortcuts size
+		ifTrue: [ modified add: #shortcuts ]
 ]
 
 { #category : #shortcuts }
