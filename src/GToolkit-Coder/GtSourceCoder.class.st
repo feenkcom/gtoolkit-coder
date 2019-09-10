@@ -10,12 +10,37 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #private }
+GtSourceCoder >> activeSelectedSource [
+	self activeSelectedSourceInterval
+		ifNotNil: [ :interval | 
+			^ (self activeSourceEditor text from: interval first to: interval last)
+				asString ].
+	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> activeSelectedSourceInterval [
+	self activeSourceEditor selection
+		do: [ :each | ^ each from + 1 to: each to ].
+	^ nil
+]
+
+{ #category : #private }
+GtSourceCoder >> activeSourceEditor [
+	^ self expanded
+		ifTrue: [ self sourceEditor ]
+		ifFalse: [ self collapsedEditor ]
+]
+
 { #category : #actions }
 GtSourceCoder >> browseClass: editorElement [
 	| variable varName behavior |
-	variable := self selectedSource 
-		ifNil: [ self variableNodeAtCursor ]
-		ifNotNil: [:currentSelection | self extractVariableNodeFromString: currentSelection ].
+	variable := self activeSelectedSource
+		ifNil: [ self expanded
+				ifTrue: [ self variableNodeAtCursor ] ]
+		ifNotNil:
+			[ :currentSelection | self extractVariableNodeFromString: currentSelection ].
 	variable isNil
 		ifTrue: [ ^ self ].
 	varName := variable name value asSymbol.
@@ -32,9 +57,12 @@ GtSourceCoder >> browseClass: editorElement [
 { #category : #actions }
 GtSourceCoder >> browseImplementors: editorElement [
 	| symbol |
-	symbol := self selectedSource 
-		ifNil: [ self selectorAtCursor ] 
-		ifNotNil: [ :currentSelection | self extractSelectorFromString: currentSelection ].
+	symbol := self activeSelectedSource
+		ifNil: [ self expanded
+				ifTrue: [ self selectorAtCursor ]
+				ifFalse: [ self selectorForCollapsed ] ]
+		ifNotNil:
+			[ :currentSelection | self extractSelectorFromString: currentSelection ].
 	symbol isNil
 		ifTrue: [ ^ self ].
 	editorElement
@@ -47,9 +75,12 @@ GtSourceCoder >> browseImplementors: editorElement [
 { #category : #actions }
 GtSourceCoder >> browseReferences: editorElement [
 	| filter |
-	filter := self selectedSource
-		ifNil: [ self referencesFilterAtCursor ]
-		ifNotNil: [ :currentSelection | self extractReferencesFilterFromString: currentSelection ].
+	filter := self activeSelectedSource
+		ifNil: [ self expanded
+				ifTrue: [ self referencesFilterAtCursor ]
+				ifFalse: [ self referencesFilterForCollapsed ] ]
+		ifNotNil:
+			[ :currentSelection | self extractReferencesFilterFromString: currentSelection ].
 	filter isNil
 		ifTrue: [ ^ self ].
 	editorElement
@@ -97,6 +128,7 @@ GtSourceCoder >> collapsedEditorElement [
 			c horizontal matchParent.
 			c vertical fitContent ];
 		editor: self collapsedEditor;
+		in: [ :e | self addShortcutsTo: e ];
 		yourself
 ]
 
@@ -580,6 +612,11 @@ GtSourceCoder >> referencesFilterAtCursor [
 ]
 
 { #category : #private }
+GtSourceCoder >> referencesFilterForCollapsed [
+	^ nil
+]
+
+{ #category : #private }
 GtSourceCoder >> referencesFilterForSymbol: aSymbol [
 	^ GtSearchReferencesFilter literal: aSymbol
 ]
@@ -656,6 +693,11 @@ GtSourceCoder >> selectedSourceIntervalOrAll [
 { #category : #private }
 GtSourceCoder >> selectorAtCursor [
 	^ self symbolFor: self nodeAtCursor
+]
+
+{ #category : #private }
+GtSourceCoder >> selectorForCollapsed [
+	^ nil
 ]
 
 { #category : #accessing }
