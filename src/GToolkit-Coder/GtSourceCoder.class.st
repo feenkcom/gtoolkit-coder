@@ -566,14 +566,14 @@ GtSourceCoder >> referencesFilterAtCursor [
 	| node |
 	node := self nodeAtCursor.
 	[ node isNil ]
-		whileFalse: [ 
-			(node isKindOf: GtPharoVariableNode)
+		whileFalse: [ (node isKindOf: GtPharoVariableNode)
 				ifTrue: [ ^ self referencesFilterForVariable: node name source ].
 			(node isKindOf: GtPharoSymbolLiteralNode)
 				ifTrue: [ ^ self referencesFilterForSymbol: node asSymbol ].
 			(node isKindOf: GtPharoMessageSendNode)
 				ifTrue: [ node := node message ].
-			(node isKindOf: GtPharoMessageNode)
+			((node isKindOf: GtPharoMessageNode)
+				or: [ node isKindOf: GtPharoMethodPatternNode ])
 				ifTrue: [ ^ self referencesFilterForSymbol: node selector ].
 			node := node parent ].
 	^ nil
@@ -772,12 +772,12 @@ GtSourceCoder >> symbolFor: aNode [
 	| current |
 	current := aNode.
 	[ current notNil ]
-		whileTrue: [ 
-			(current isKindOf: GtPharoSymbolLiteralNode)
+		whileTrue: [ (current isKindOf: GtPharoSymbolLiteralNode)
 				ifTrue: [ ^ aNode asSymbol ].
 			(current isKindOf: GtPharoMessageSendNode)
 				ifTrue: [ current := current message ].
-			(current isKindOf: GtPharoMessageNode)
+			((current isKindOf: GtPharoMessageNode)
+				or: [ current isKindOf: GtPharoMethodPatternNode ])
 				ifTrue: [ ^ current selector ].
 			current := current parent ].
 	^ nil
