@@ -38,7 +38,8 @@ GtSourceCoder >> browseClass: editorElement [
 	| variable varName behavior |
 	variable := self activeSelectedSource
 		ifNil: [ self expanded
-				ifTrue: [ self variableNodeAtCursor ] ]
+				ifTrue: [ self variableNodeAtCursor ]
+				ifFalse: [ self collapsedVariableNode ] ]
 		ifNotNil:
 			[ :currentSelection | self extractVariableNodeFromString: currentSelection ].
 	variable isNil
@@ -153,6 +154,11 @@ GtSourceCoder >> collapsedStyler [
 { #category : #accessing }
 GtSourceCoder >> collapsedText [
 	^ self collapsedEditor text
+]
+
+{ #category : #private }
+GtSourceCoder >> collapsedVariableNode [
+	^ nil
 ]
 
 { #category : #private }
