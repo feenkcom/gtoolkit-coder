@@ -50,12 +50,6 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 	self subCoders addFirst: aMethodCoder
 ]
 
-{ #category : #elements }
-GtMethodCoder >> asElement [
-	false ifTrue: [ self ensureBuilt ].
-	^ super asElement
-]
-
 { #category : #'add ons' }
 GtMethodCoder >> baselineAddOnFor: anAST [
 	<gtAstCoderAddOns: 10>
@@ -134,12 +128,6 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 { #category : #private }
 GtMethodCoder >> clearPatternSyntaxErrors [
 	self collapsedText clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
-]
-
-{ #category : #accessing }
-GtMethodCoder >> collapsedText [
-	false ifTrue: [ self ensureBuilt ].
-	^ super collapsedText
 ]
 
 { #category : #private }
@@ -554,7 +542,6 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST [
 
 { #category : #actions }
 GtMethodCoder >> newMethodSource [
-	false ifTrue: [ self ensureBuilt ].
 	^ self source
 ]
 
@@ -572,12 +559,6 @@ GtMethodCoder >> newRbAST: aString [
 				requestor: nil).
 	ast doSemanticAnalysis.
 	^ ast
-]
-
-{ #category : #updating }
-GtMethodCoder >> newSource [
-	false ifTrue: [ self ensureBuilt ].
-	^ super newSource
 ]
 
 { #category : #'instance creation' }
