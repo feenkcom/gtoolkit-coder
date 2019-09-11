@@ -131,6 +131,15 @@ GtMethodCoder >> clearPatternSyntaxErrors [
 ]
 
 { #category : #private }
+GtMethodCoder >> collapsedVariableNode [
+	^ self classOrMetaClass
+		ifNotNil: [ :cls | 
+			GtPharoParser
+				parse: cls instanceSide name
+				startingAt: GtPharoParser startingStateForStatement ]
+]
+
+{ #category : #private }
 GtMethodCoder >> compile [
 	| change |
 	subCoders notNil
