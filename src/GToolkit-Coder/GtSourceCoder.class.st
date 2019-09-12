@@ -753,7 +753,7 @@ GtSourceCoder >> sourceText [
 GtSourceCoder >> styleCollapsedText [
 	| text |
 	text := self collapsedEditor text.
-	self collapsedStyler ifNotNil: [ :styler | styler onlyStyle: text ].
+	self collapsedStyler ifNotNil: [ :styler | styler style: text ].
 	self collapsedEditor text: text readonly
 ]
 
