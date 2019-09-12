@@ -18,13 +18,16 @@ GtMethodCoderStylerExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> acrossKeywordImplementorPatternHighlighting [
 	<gtExample>
-	| coder element |
-	coder := GtMethodCoder forMethod: self class >> #a:a:a:a:.
+	| coder |
+	coder := GtMethodCoder new.
+	coder forMethod: self class >> #a:a:a:a:.
 	coder highlighter: (GtImplementorPatternHighlighter forPattern: ':a:').
-	element := coder asElement.
+	coder sourceEditor useSyncStylerStrategy.
+	coder asElement.
 	coder styleText.
 	self assert: (self hasUnderlineAttributeIn: coder).
 	self assert: (self attributeCountOfType: self unlineAttributeClass in: coder sourceEditor) = 6.
+	coder sourceEditor useDefaultStylerStrategy.
 	^ coder
 ]
 
@@ -33,13 +36,15 @@ GtMethodCoderStylerExamples >> addPragmaMethodStyling [
 	<gtExample>
 	| coder |
 	coder := self renamePragmaMethodStyling.
+	coder sourceEditor useSyncStylerStrategy.
 	coder sourceEditor inserter
 		at: 7;
 		string: 'x';
 		insert.
-	coder sourceEditor styleText.
+	coder styleText.
 	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder).
+	coder sourceEditor useDefaultStylerStrategy.
 	^ coder
 ]
 
@@ -65,12 +70,14 @@ GtMethodCoderStylerExamples >> b [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> exampleMethodStyling [
 	<gtExample>
-	| coder element |
+	| coder |
 	coder := GtMethodCoder forMethod: self class >> #b.
-	element := coder asElement.
-	coder sourceEditor styleText.
+	coder sourceEditor useSyncStylerStrategy.
+	coder asElement.
+	coder styleText.
 	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder).
+	coder sourceEditor useDefaultStylerStrategy.
 	^ coder
 ]
 
@@ -101,13 +108,15 @@ GtMethodCoderStylerExamples >> hasUnderlineAttributeIn: coder [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> insideMultipleKeywordImplementorPatternHighlighting [
 	<gtExample>
-	| coder element |
+	| coder |
 	coder := GtMethodCoder forMethod: self class >> #a:a:a:a:.
 	coder highlighter: (GtImplementorPatternHighlighter forPattern: 'a:').
-	element := coder asElement.
+	coder asElement.
+	coder sourceEditor useSyncStylerStrategy.
 	coder styleText.
 	self assert: (self hasUnderlineAttributeIn: coder).
 	self assert: (self attributeCountOfType: self unlineAttributeClass in: coder sourceEditor) = 8.
+	coder sourceEditor useDefaultStylerStrategy.
 	^ coder
 ]
 
@@ -119,13 +128,15 @@ GtMethodCoderStylerExamples >> notAnExample [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> printStringImplementorPatternHighlighting [
 	<gtExample>
-	| coder element |
+	| coder |
 	coder := GtMethodCoder forMethod: self class >> #printStringReference.
 	coder highlighter: (GtImplementorPatternHighlighter forPattern: 'print').
-	element := coder asElement.
-	coder sourceEditor styleText.
+	coder sourceEditor useSyncStylerStrategy.
+	coder asElement.
+	coder styleText.
 	self assert: (self hasUnderlineAttributeIn: coder).
 	self assert: (self attributeCountOfType: self unlineAttributeClass in: coder sourceEditor) = 5.
+	coder sourceEditor useDefaultStylerStrategy.
 	^ coder
 ]
 
@@ -140,9 +151,11 @@ GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
 	| coder element |
 	coder := GtMethodCoder forMethod: self class >> #printStringReference.
 	coder highlighter: (GtSelectorReferenceAndLiteralHighlighter forSelector: #printString).
-	element := coder asElement.
-	coder sourceEditor styleText.
+	coder sourceEditor useSyncStylerStrategy.
+	coder asElement.
+	coder styleText.
 	self assert: (self hasUnderlineAttributeIn: coder).
+	coder sourceEditor useDefaultStylerStrategy.
 	^ coder
 ]
 
@@ -151,12 +164,14 @@ GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
 	<gtExample>
 	| coder |
 	coder := self exampleMethodStyling.
+	coder sourceEditor useSyncStylerStrategy.
 	coder sourceEditor deleter
 		from: 7 to: 8;
 		delete.
 	coder styleText.
 	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder) not.
+	coder sourceEditor useDefaultStylerStrategy.
 	^ coder
 ]
 
