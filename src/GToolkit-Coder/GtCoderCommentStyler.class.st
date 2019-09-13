@@ -19,8 +19,9 @@ GtCoderCommentStyler >> visitNode: aNode [
 					(text from: each start + 1 to: comment size)
 						attributes: {(GtCompletionStrategyAttribute new strategy: GtDocumentCompletionStrategy new)}.
 					document := GtDocument new.
+					document editor useSyncStylerStrategy.
 					document text: comment.
-					comment := document defaultStyler styledTextFor: comment unstyle.
+					comment := document text.
 					each start + 1 to: comment size do: [ :i | (text from: i to: i) attributes: (comment attributesAt: i) ] ] ].
 	^ super visitNode: aNode
 ]

@@ -806,8 +806,8 @@ GtSourceCoder >> styleText [
 
 { #category : #elements }
 GtSourceCoder >> stylerView: anElement [
-	self sourceEditor styler view: anElement.
-	self collapsedEditor styler view: anElement.
+	self sourceEditor view: anElement.
+	self collapsedEditor view: anElement.
 ]
 
 { #category : #accessing }
