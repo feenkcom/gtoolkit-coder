@@ -751,8 +751,9 @@ GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 
 { #category : #elements }
 GtMethodCoder >> stylerView: anElement [
-	super stylerView: anElement.
 	self ensureBuilt.
+	super stylerView: anElement.
+
 ]
 
 { #category : #accessing }
