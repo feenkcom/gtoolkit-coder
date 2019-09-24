@@ -246,19 +246,20 @@ GtMethodCoder >> example [
 
 { #category : #examples }
 GtMethodCoder >> example: anExampleWithResult [
-	self 
-		attributeNamed: #example 
-		ifPresent: [ :anOldExampleWithResult | anOldExampleWithResult announcer unsubscribe: self ]
+	self
+		attributeNamed: #example
+		ifPresent:
+			[ :anOldExampleWithResult | anOldExampleWithResult announcer unsubscribe: self ]
 		ifAbsent: [ "do nothing" ].
-	self attributeNamed: #example put: anExampleWithResult asExampleWithResult.
+	self
+		attributeNamed: #example
+		put: anExampleWithResult asExampleWithResult.
 	self forMethod: anExampleWithResult method.
-	self example announcer weak 
-		subscribe: GtExampleExecuted
-		send: #handleExampleExecuted: 
-		to: self;
-		subscribe: GtExampleArgumentsChanged
-		send: #handleExampleArgumentsChanged:
-		to: self.
+	self example announcer weak
+		when: GtExampleExecuted send: #handleExampleExecuted: to: self;
+		when: GtExampleArgumentsChanged
+			send: #handleExampleArgumentsChanged:
+			to: self
 ]
 
 { #category : #'add ons' }
