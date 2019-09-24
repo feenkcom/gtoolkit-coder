@@ -129,11 +129,11 @@ GtCoderNavigationPackagesTreeElement >> navigationModel: aNavigationModel [
 	navigationModel ifNotNil: [ navigationModel unsubscribe: self ].
 	navigationModel := aNavigationModel.
 	navigationModel
-		subscribe: GtClassCoderPackagesFilterStringChanged
+		when: GtClassCoderPackagesFilterStringChanged
 		send: #updatePackageFilterEditorAndPackageTree
 		to: self.
 	navigationModel
-		subscribe: GtClassCoderNavigationSelectionChanged
+		when: GtClassCoderNavigationSelectionChanged
 		send: #updateSelection
 		to: self.
 	self
