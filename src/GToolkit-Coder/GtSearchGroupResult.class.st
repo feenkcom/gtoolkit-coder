@@ -62,6 +62,14 @@ GtSearchGroupResult >> filter: methodsFilter [
 	filter := methodsFilter
 ]
 
+{ #category : #enumerating }
+GtSearchGroupResult >> groupedBy: aBlockClosureOrSymbol [
+	"Group the filteres items using the given block. The returned groups are just a copy based on 
+	the current items at the time of the call. They are not updated if the filtered items change."
+	self refreshItems.
+	^ items groupedBy: aBlockClosureOrSymbol
+]
+
 { #category : #ui }
 GtSearchGroupResult >> gtItemsFor: aView [
 	<gtView>
