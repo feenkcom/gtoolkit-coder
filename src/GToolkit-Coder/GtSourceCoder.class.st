@@ -311,7 +311,7 @@ GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean [
 	| aResult wasErrorAlreadySignaled |
 	
 	self clearPreviousEvaluations.
-	wasErrorAlreadySignaled := false.
+	wasErrorAlreadySignaled := true. "Follow the normal way of opening the debugger for now."
 	aResult := aBlock on: Error do: [ :anError |
 		self resetASTCache.
 		wasErrorAlreadySignaled 
