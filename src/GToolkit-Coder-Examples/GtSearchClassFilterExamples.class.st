@@ -145,6 +145,7 @@ GtSearchClassFilterExamples >> deprecatedClassesInPackageUsingImageScopeFilter [
 { #category : #'examples - result' }
 GtSearchClassFilterExamples >> groupResultForClassesInImageFilter [
 	<gtExample>
+	<noTest>
 	| filter result |
 	filter := self classesInImageFilter.
 	result := filter result.
