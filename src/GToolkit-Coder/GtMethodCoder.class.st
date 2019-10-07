@@ -268,7 +268,7 @@ GtMethodCoder >> exampleAstFor: anAST [
 	( self compiledMethod notNil and: [ 
 		anAST notNil and: [ 
 			anAST methodNode 
-				ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each selector = #gtExample ] ] 
+				ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
 				ifNil: [ false ] ] ])
 			ifFalse: [
 				addOns removeStylerOfType: GtCoderExampleStatusStyler.
@@ -362,8 +362,12 @@ GtMethodCoder >> gtViewAddOnFor: anAST [
 	<gtAstCoderAddOns: 6>
 	(self hasObjectAttribute and: [ 
 		anAST notNil and: [ 
-			anAST methodNode ifNotNil: [ :node | node arguments size = 1 and: [ 
-					node pragmas anySatisfy: [ :each | each selector = #gtView ] ] ] ifNil: [ false ] ] ])
+			anAST methodNode 
+				ifNotNil: [ :node | 
+					node arguments size = 1 and: [ 
+						node pragmas anySatisfy: [ :each | 
+							each isParseError not and: [ each selector = #gtView ] ] ] ] 
+				ifNil: [ false ] ] ])
 		ifFalse: [ addOns removeContextAction: 'gtView' translated.
 			^ self ].
 	addOns 
