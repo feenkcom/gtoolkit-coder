@@ -19,16 +19,12 @@ GtCoderAddOns >> addCollapsedShortcut: aBlShortcut [
 
 { #category : #actions }
 GtCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
-	| newAction index |
-	newAction := GtCoderAction new
-		title: aString;
-		icon: anIcon;
-		action: aBlock.
-	index := (1 to: contextActions size) detect: [ :i | (contextActions at: i) title = aString ] ifNone: [ 0 ].
-	index = 0
-		ifTrue: [ contextActions add: newAction ]
-		ifFalse: [ contextActions at: index put: newAction ].
-	modified add: #contextActions
+	self
+		updateActionList: #contextActions
+		title: aString
+		icon: anIcon
+		action: aBlock
+		onlyNew: true
 ]
 
 { #category : #actions }
@@ -44,16 +40,32 @@ GtCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
 
 { #category : #actions }
 GtCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
-	| newAction index |
-	newAction := GtCoderAction new
-		title: aString;
-		icon: anIcon;
-		action: aBlock.
-	index := (1 to: mainActions size) detect: [ :i | (mainActions at: i) title = aString ] ifNone: [ 0 ].
-	index = 0
-		ifTrue: [ mainActions add: newAction ]
-		ifFalse: [ mainActions at: index put: newAction ].
-	modified add: #mainActions
+	self
+		updateActionList: #mainActions
+		title: aString
+		icon: anIcon
+		action: aBlock
+		onlyNew: true
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addOrUpdateContextAction: aString icon: anIcon action: aBlock [
+	self
+		updateActionList: #contextActions
+		title: aString
+		icon: anIcon
+		action: aBlock
+		onlyNew: false
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addOrUpdateMainAction: aString icon: anIcon action: aBlock [
+	self
+		updateActionList: #mainActions
+		title: aString
+		icon: anIcon
+		action: aBlock
+		onlyNew: false
 ]
 
 { #category : #private }
@@ -204,4 +216,23 @@ GtCoderAddOns >> removeShortcutsMatching: aBlock [
 { #category : #shortcuts }
 GtCoderAddOns >> shortcuts [
 	^ shortcuts
+]
+
+{ #category : #private }
+GtCoderAddOns >> updateActionList: listSymbol title: aString icon: anIcon action: aBlock onlyNew: aBoolean [
+	| newAction index actions |
+	actions := self perform: listSymbol.
+	index := (1 to: actions size)
+		detect: [ :i | (actions at: i) title = aString ]
+		ifNone: [ 0 ].
+	(aBoolean and: [ index > 0 ])
+		ifTrue: [ ^ self ].
+	newAction := GtCoderAction new
+		title: aString;
+		icon: anIcon;
+		action: aBlock.
+	index = 0
+		ifTrue: [ actions add: newAction ]
+		ifFalse: [ actions at: index put: newAction ].
+	modified add: listSymbol
 ]

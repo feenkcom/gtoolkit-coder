@@ -524,11 +524,12 @@ GtMethodCoder >> methodExpanderFor: anAST [
 { #category : #'add ons' }
 GtMethodCoder >> modifiedMessageAstFor: anAST [
 	<gtAstCoderAddOns: 1>
-	addOns removeMainAction: 'Discard Changes' translated.
-	self isModified ifFalse: [ ^ self ].
-	addOns addMainAction: 'Discard Changes' translated 
-		icon: BrGlamorousIcons cancel
-		action: [ :button | self discardChanges ].
+	self isModified
+		ifTrue: [ addOns
+				addMainAction: 'Discard Changes' translated
+				icon: BrGlamorousIcons cancel
+				action: [ :button | self discardChanges ] ]
+		ifFalse: [ addOns removeMainAction: 'Discard Changes' translated ]
 ]
 
 { #category : #'add ons' }
