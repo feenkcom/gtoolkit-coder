@@ -791,6 +791,8 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST [
 
 { #category : #'event handling' }
 GtMethodCoder >> updateCollapsedSource [
+	self expanded
+		ifTrue: [ ^ self ].
 	[ | patternText |
 	patternText := self patternSource asRopedText.
 	patternText attributes: self defaultTextAttributes.

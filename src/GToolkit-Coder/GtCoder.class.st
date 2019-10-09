@@ -118,12 +118,17 @@ GtCoder >> expanded [
 
 { #category : #accessing }
 GtCoder >> expanded: aBoolean [
-	expanded := aBoolean
+	expanded := aBoolean.
+	self expandedUpdated
 ]
 
 { #category : #elements }
 GtCoder >> expandedEditorElement [
 	self subclassResponsibility
+]
+
+{ #category : #private }
+GtCoder >> expandedUpdated [
 ]
 
 { #category : #ui }
