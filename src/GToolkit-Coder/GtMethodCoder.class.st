@@ -555,14 +555,13 @@ GtMethodCoder >> newMethodSource [
 GtMethodCoder >> newRbAST: aString [
 	| ast |
 	ast := RBParser parseFaultyMethod: aString.
-	ast isParseError ifTrue: [ ^ ast ].
+	ast isParseError
+		ifTrue: [ ^ ast ].
 	ast methodNode
 		compilationContext:
 			(CompilationContext new
 				class: (self classOrMetaClass ifNil: [ UndefinedObject ]);
-				forSyntaxHighlighting: true;
-				bindings: Dictionary new;
-				requestor: nil).
+				forSyntaxHighlighting: true).
 	ast doSemanticAnalysis.
 	^ ast
 ]
