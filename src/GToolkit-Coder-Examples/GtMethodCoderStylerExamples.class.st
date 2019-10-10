@@ -110,6 +110,7 @@ GtMethodCoderStylerExamples >> insideMultipleKeywordImplementorPatternHighlighti
 	<gtExample>
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #a:a:a:a:.
+	coder expanded: true.
 	coder highlighter: (GtImplementorPatternHighlighter forPattern: 'a:').
 	coder asElement.
 	coder sourceEditor useSyncStylerStrategy.
@@ -148,7 +149,7 @@ GtMethodCoderStylerExamples >> printStringReference [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
 	<gtExample>
-	| coder element |
+	| coder |
 	coder := GtMethodCoder forMethod: self class >> #printStringReference.
 	coder highlighter: (GtSelectorReferenceAndLiteralHighlighter forSelector: #printString).
 	coder sourceEditor useSyncStylerStrategy.
