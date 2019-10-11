@@ -381,6 +381,14 @@ GtSourceCoder >> expandedEditorElement [
 ]
 
 { #category : #private }
+GtSourceCoder >> expandedUpdated [
+	super expandedUpdated.
+	self styleText.
+	self expanded
+		ifFalse: [ self updateCollapsedSource ]
+]
+
+{ #category : #private }
 GtSourceCoder >> extractReferencesFilterFromString: selectedString [
 	| node |
 	node := GtPharoParser 
@@ -752,6 +760,8 @@ GtSourceCoder >> sourceText [
 { #category : #private }
 GtSourceCoder >> styleCollapsedText [
 	| text |
+	self expanded
+		ifTrue: [ ^ self ].
 	text := self collapsedEditor text.
 	self collapsedStyler ifNotNil: [ :styler | styler style: text ].
 	self collapsedEditor text: text readonly
@@ -793,6 +803,8 @@ GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 
 { #category : #private }
 GtSourceCoder >> styleSourceText [
+	self expanded
+		ifFalse: [ ^ self ].
 	self sourceEditor styleText
 ]
 
@@ -844,6 +856,8 @@ GtSourceCoder >> updateAddOns [
 { #category : #'event handling' }
 GtSourceCoder >> updateCollapsedSource [
 	| firstLine |
+	self expanded
+		ifTrue: [ ^ self ].
 	firstLine := (self sourceEditor text asString lines
 		detect: [ :each | each notEmpty ]
 		ifNone: [ '' ]) asRopedText.
