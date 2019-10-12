@@ -246,6 +246,7 @@ GtMethodCoder >> example [
 
 { #category : #examples }
 GtMethodCoder >> example: anExampleWithResult [
+	| method |
 	self
 		attributeNamed: #example
 		ifPresent:
@@ -254,7 +255,11 @@ GtMethodCoder >> example: anExampleWithResult [
 	self
 		attributeNamed: #example
 		put: anExampleWithResult asExampleWithResult.
-	self forMethod: anExampleWithResult method.
+	method := anExampleWithResult method.
+	(method selector = self selector
+		and: [ method methodClass = self classOrMetaClass
+				and: [ method sourceCode = methodSource ] ])
+		ifFalse: [ self forMethod: method ].
 	self example announcer weak
 		when: GtExampleExecuted send: #handleExampleExecuted: to: self;
 		when: GtExampleArgumentsChanged

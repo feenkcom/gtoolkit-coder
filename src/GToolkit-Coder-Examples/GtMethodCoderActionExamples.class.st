@@ -1,6 +1,6 @@
 Class {
 	#name : #GtMethodCoderActionExamples,
-	#superclass : #Object,
+	#superclass : #GtMethodCoderTaskExamples,
 	#category : #'GToolkit-Coder-Examples'
 }
 
@@ -13,6 +13,7 @@ GtMethodCoderActionExamples >> addExampleTag [
 		at: 16;
 		string: '<gtExample>' , String cr;
 		insert.
+	self waitForTasks.
 	self assert: (self hasRunExampleActionIn: coder).
 	^ coder
 ]
@@ -21,7 +22,7 @@ GtMethodCoderActionExamples >> addExampleTag [
 GtMethodCoderActionExamples >> hasRunExampleActionIn: aCoder [
 	^ aCoder contextActions anySatisfy: [ :each | 
 			each title = 'Play' translated and: [ 
-				each action method = (GtMethodCoder>>#exampleAstFor:) ] ]
+				each action method = (GtMethodCoder>>#exampleAstFor:into:) ] ]
 ]
 
 { #category : #examples }
@@ -30,6 +31,7 @@ GtMethodCoderActionExamples >> noExampleTag [
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #nonTaggedMethod.
 	coder asElement.
+	self waitForTasks.
 	self assert: (self hasRunExampleActionIn: coder) not.
 	^ coder
 ]
@@ -47,6 +49,7 @@ GtMethodCoderActionExamples >> removeExampleTag [
 	coder sourceEditor deleter
 		from: 17 to: 18;
 		delete.
+	self waitForTasks.
 	self assert: (self hasRunExampleActionIn: coder) not.
 	^ coder
 ]
