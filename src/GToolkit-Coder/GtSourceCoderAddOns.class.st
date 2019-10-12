@@ -30,6 +30,12 @@ GtSourceCoderAddOns >> initialize [
 	stylers := OrderedCollection new
 ]
 
+{ #category : #copying }
+GtSourceCoderAddOns >> postCopy [
+	super postCopy.
+	stylers := stylers copy
+]
+
 { #category : #stylers }
 GtSourceCoderAddOns >> removeStylerOfType: aClass [
 	| styler |

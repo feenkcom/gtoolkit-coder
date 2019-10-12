@@ -168,12 +168,18 @@ GtCoderActionsElement >> removeMainToolbarActions [
 
 { #category : #private }
 GtCoderActionsElement >> updateContextToolbar [
-	self removeContextToolbarActions.
-	self addContextToolbarActions
+	self
+		enqueueTask:
+			(BlTaskAction new
+				action: [ self removeContextToolbarActions.
+					self addContextToolbarActions ])
 ]
 
 { #category : #private }
 GtCoderActionsElement >> updateMainToolbar [
-	self removeMainToolbarActions.
-	self addMainToolbarActions
+	self
+		enqueueTask:
+			(BlTaskAction new
+				action: [ self removeMainToolbarActions.
+					self addMainToolbarActions ])
 ]

@@ -5,7 +5,9 @@ Class {
 		'announcer',
 		'expanded',
 		'attributes',
-		'addOns'
+		'addOns',
+		'addOnCommand',
+		'addOnMonitor'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -18,9 +20,22 @@ GtCoder >> addCollapsedShortcutsTo: anElement [
 				addShortcut: (each copy action: [ each action cull: anElement ]) ]
 ]
 
+{ #category : #updating }
+GtCoder >> addOnChanged: aSymbol [
+	aSymbol = #mainActions
+		ifTrue: [ self announce: (GtCoderMainActionsChanged new coder: self) ].
+	aSymbol = #contextActions
+		ifTrue: [ self announce: (GtCoderContextActionsChanged new coder: self) ]
+]
+
 { #category : #accessing }
 GtCoder >> addOns [
 	^ addOns
+]
+
+{ #category : #'initialize-release' }
+GtCoder >> addOnsClass [
+	^ GtCoderAddOns
 ]
 
 { #category : #elements }
@@ -177,12 +192,13 @@ GtCoder >> initialize [
 	super initialize.
 	announcer := Announcer new.
 	expanded := false.
+	addOnMonitor := Monitor new.
 	self initializeAddOns
 ]
 
 { #category : #'initialize-release' }
 GtCoder >> initializeAddOns [
-	addOns := GtCoderAddOns new.
+	addOns := self addOnsClass new.
 	self initializeShortcuts
 ]
 
@@ -199,17 +215,6 @@ GtCoder >> mainActions [
 	^ addOns mainActions
 ]
 
-{ #category : #updating }
-GtCoder >> refreshForChanges [
-	addOns
-		changesDo: [ :each | 
-			each = #mainActions
-				ifTrue: [ self announce: (GtCoderMainActionsChanged new coder: self) ].
-			each = #contextActions
-				ifTrue: [ self announce: (GtCoderContextActionsChanged new coder: self) ] ].
-	addOns clearChanges
-]
-
 { #category : #elements }
 GtCoder >> stylerView: anElement [
 
@@ -218,6 +223,14 @@ GtCoder >> stylerView: anElement [
 { #category : #subscriptions }
 GtCoder >> subscribeToSystem [
 	"do nothing"
+]
+
+{ #category : #private }
+GtCoder >> terminateAddOnsCommand [
+	addOnCommand isNil
+		ifTrue: [ ^ self ].
+	addOnCommand terminate.
+	addOnCommand := nil
 ]
 
 { #category : #subscriptions }
