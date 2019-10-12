@@ -33,6 +33,18 @@ GtSourceCoder >> activeSourceEditor [
 		ifFalse: [ self collapsedEditor ]
 ]
 
+{ #category : #updating }
+GtSourceCoder >> addOnChanged: aSymbol [
+	aSymbol = #stylers
+		ifTrue: [ self styleText ].
+	super addOnChanged: aSymbol
+]
+
+{ #category : #'initialize-release' }
+GtSourceCoder >> addOnsClass [
+	^ GtSourceCoderAddOns
+]
+
 { #category : #actions }
 GtSourceCoder >> browseClass: editorElement [
 	| variable varName behavior |
@@ -469,9 +481,9 @@ GtSourceCoder >> initialize [
 
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeAddOns [
-	addOns := GtSourceCoderAddOns new.
+	super initializeAddOns.
 	addOns addStyler: BrRBTextStyler new.
-	self initializeShortcuts
+	addOns clearChanges
 ]
 
 { #category : #'initialize-release' }
@@ -647,15 +659,6 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	binding notNil
 		ifTrue: [ ^ GtSearchReferencesFilter literal: binding ].
 	^ nil
-]
-
-{ #category : #updating }
-GtSourceCoder >> refreshForChanges [
-	addOns
-		changesDo: [ :each | 
-			each = #stylers
-				ifTrue: [ self styleText ] ].
-	super refreshForChanges
 ]
 
 { #category : #private }
@@ -846,11 +849,27 @@ GtSourceCoder >> symbolFor: aNode [
 
 { #category : #updating }
 GtSourceCoder >> updateAddOns [
-	| pragmas ast |
+	addOnMonitor
+		critical: [ self terminateAddOnsCommand.
+			addOnCommand := self updateAddOnsCommand.
+			addOnCommand name: 'AddOns: ' , self identityHash printString.
+			BlTktWorkerProvider highUICPUBoundPool schedule: addOnCommand ]
+]
+
+{ #category : #updating }
+GtSourceCoder >> updateAddOnsCommand [
+	^ [ | updatedAddOns pragmas ast |
 	ast := self rbAST.
-	pragmas := self pragmasNamed: #gtAstCoderAddOns: inHierarchy: self class.
-	pragmas reverseDo: [ :each | self perform: each methodSelector with: ast ].
-	self refreshForChanges
+	pragmas := self
+		pragmasNamed: #gtAstCoderAddOns:
+		inHierarchy: self class.
+	updatedAddOns := addOns copy.
+	pragmas
+		reverseDo:
+			[ :each | self perform: each methodSelector with: ast with: updatedAddOns ].
+	addOns := updatedAddOns.
+	updatedAddOns changesDo: [ :each | self addOnChanged: each ].
+	updatedAddOns clearChanges ] asBlTktTerminableCommand
 ]
 
 { #category : #'event handling' }

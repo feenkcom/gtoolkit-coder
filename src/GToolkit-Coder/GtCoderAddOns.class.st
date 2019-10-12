@@ -152,6 +152,16 @@ GtCoderAddOns >> mainActions [
 	^ mainActions
 ]
 
+{ #category : #copying }
+GtCoderAddOns >> postCopy [
+	super postCopy.
+	contextActions := contextActions copy.
+	mainActions := mainActions copy.
+	modified := modified copy.
+	shortcuts := shortcuts copy.
+	collapsedShortcuts := collapsedShortcuts copy
+]
+
 { #category : #shortcuts }
 GtCoderAddOns >> removeCollapsedShortcut: aBlShortcut [
 	(self removeShortcut: aBlShortcut from: collapsedShortcuts)
