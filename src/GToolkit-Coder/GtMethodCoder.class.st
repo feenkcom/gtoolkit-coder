@@ -51,14 +51,14 @@ GtMethodCoder >> addSubCoder: aMethodCoder [
 ]
 
 { #category : #'add ons' }
-GtMethodCoder >> baselineAddOnFor: anAST [
+GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	(anAST isNil or: [ anAST methodNode isNil ])
-		ifTrue: [ 
-			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
+		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
 			^ self ].
-	(class isNil or: [ (class inheritsFrom: BaselineOf) not ]) ifTrue: [ ^ self ].
-	addOns addStyler: GtCoderExpandableBaselineStyler new
+	(class isNil or: [ (class inheritsFrom: BaselineOf) not ])
+		ifTrue: [ ^ self ].
+	coderAddOns addStyler: GtCoderExpandableBaselineStyler new
 ]
 
 { #category : #elements }
@@ -246,6 +246,7 @@ GtMethodCoder >> example [
 
 { #category : #examples }
 GtMethodCoder >> example: anExampleWithResult [
+	| method |
 	self
 		attributeNamed: #example
 		ifPresent:
@@ -254,7 +255,11 @@ GtMethodCoder >> example: anExampleWithResult [
 	self
 		attributeNamed: #example
 		put: anExampleWithResult asExampleWithResult.
-	self forMethod: anExampleWithResult method.
+	method := anExampleWithResult method.
+	(method selector = self selector
+		and: [ method methodClass = self classOrMetaClass
+				and: [ method sourceCode = methodSource ] ])
+		ifFalse: [ self forMethod: method ].
 	self example announcer weak
 		when: GtExampleExecuted send: #handleExampleExecuted: to: self;
 		when: GtExampleArgumentsChanged
@@ -263,30 +268,36 @@ GtMethodCoder >> example: anExampleWithResult [
 ]
 
 { #category : #'add ons' }
-GtMethodCoder >> exampleAstFor: anAST [
+GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	( self compiledMethod notNil and: [ 
-		anAST notNil and: [ 
-			anAST methodNode 
-				ifNotNil: [ :node | node pragmas anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
-				ifNil: [ false ] ] ])
-			ifFalse: [
-				addOns removeStylerOfType: GtCoderExampleStatusStyler.
-				^ self ].
-	addOns addStyler: (GtCoderExampleStatusStyler new
-		coder: self;
-		classOrMetaClass: self classOrMetaClass).
-	(self canExecuteExample or: [ 
-		anAST methodNode numArgs isZero ]) ifFalse: [ ^ self ].
-	addOns addContextAction: 'Play' translated 
+	(self compiledMethod notNil
+		and: [ anAST notNil
+				and: [ anAST methodNode
+						ifNotNil: [ :node | 
+							node pragmas
+								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
+						ifNil: [ false ] ] ])
+		ifFalse: [ coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
+			^ self ].
+	coderAddOns
+		addStyler:
+			(GtCoderExampleStatusStyler new
+				coder: self;
+				classOrMetaClass: self classOrMetaClass).
+	(self canExecuteExample or: [ anAST methodNode numArgs isZero ])
+		ifFalse: [ ^ self ].
+	coderAddOns
+		addContextAction: 'Play' translated
 		icon: BrGlamorousIcons play
 		action: [ :button | self playExampleFrom: button ].
-	addOns addContextAction: 'Play and Inspect' translated 
-		icon: BrGlamorousIcons playinspect 
+	coderAddOns
+		addContextAction: 'Play and Inspect' translated
+		icon: BrGlamorousIcons playinspect
 		action: [ :button | self playAndInspectExampleFrom: button ].
-	addOns addContextAction: 'Debug' translated 
+	coderAddOns
+		addContextAction: 'Debug' translated
 		icon: BrGlamorousIcons debug
-		action: [ :button | self debugSelectionOrExampleFrom: button ].
+		action: [ :button | self debugSelectionOrExampleFrom: button ]
 ]
 
 { #category : #examples }
@@ -358,21 +369,22 @@ GtMethodCoder >> gtLiveFor: aView [
 ]
 
 { #category : #ui }
-GtMethodCoder >> gtViewAddOnFor: anAST [
+GtMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 6>
-	(self hasObjectAttribute and: [ 
-		anAST notNil and: [ 
-			anAST methodNode 
-				ifNotNil: [ :node | 
-					node arguments size = 1 and: [ 
-						node pragmas anySatisfy: [ :each | 
-							each isParseError not and: [ each selector = #gtView ] ] ] ] 
-				ifNil: [ false ] ] ])
-		ifFalse: [ addOns removeContextAction: 'gtView' translated.
+	(self hasObjectAttribute
+		and: [ anAST notNil
+				and: [ anAST methodNode
+						ifNotNil: [ :node | 
+							node arguments size = 1
+								and: [ node pragmas
+										anySatisfy:
+											[ :each | each isParseError not and: [ each selector = #gtView ] ] ] ]
+						ifNil: [ false ] ] ])
+		ifFalse: [ coderAddOns removeContextAction: 'gtView' translated.
 			^ self ].
-	addOns 
-		addContextAction: 'gtView' translated 
-		icon: BrGlamorousIcons playinspect 
+	coderAddOns
+		addContextAction: 'gtView' translated
+		icon: BrGlamorousIcons playinspect
 		action: [ :button | self runGtViewFrom: button ]
 ]
 
@@ -397,17 +409,16 @@ GtMethodCoder >> highlighter: aHighlighter [
 	self highlighter == aHighlighter ifTrue: [ ^ self ].
 	self attributeNamed: #highlighter put: aHighlighter.
 	isBuilt ifFalse: [ ^ self ].
-	self ensureBuilt.
 	self updateAddOns.
 	self styleText
 ]
 
 { #category : #'add ons' }
-GtMethodCoder >> highlighterFor: anAST [
+GtMethodCoder >> highlighterFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	addOns removeStylerOfType: GtSourceReferenceHighlighter.
+	coderAddOns removeStylerOfType: GtSourceReferenceHighlighter.
 	self highlighter notNil
-		ifTrue: [ addOns addStyler: self highlighter ]
+		ifTrue: [ coderAddOns addStyler: self highlighter ]
 ]
 
 { #category : #'initialize-release' }
@@ -512,37 +523,38 @@ GtMethodCoder >> methodChanged: aMethodModified [
 ]
 
 { #category : #'add ons' }
-GtMethodCoder >> methodExpanderFor: anAST [
+GtMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	(anAST isNil or: [ anAST methodNode isNil ])
-		ifTrue: [ 
-			addOns removeStylerOfType: GtCoderExpandableMethodStyler.
+		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
 			^ self ].
-	addOns addStyler: GtCoderExpandableMethodStyler new
+	coderAddOns addStyler: GtCoderExpandableMethodStyler new
 ]
 
 { #category : #'add ons' }
-GtMethodCoder >> modifiedMessageAstFor: anAST [
+GtMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 1>
 	self isModified
-		ifTrue: [ addOns
+		ifTrue: [ coderAddOns
 				addMainAction: 'Discard Changes' translated
 				icon: BrGlamorousIcons cancel
 				action: [ :button | self discardChanges ] ]
-		ifFalse: [ addOns removeMainAction: 'Discard Changes' translated ]
+		ifFalse: [ coderAddOns removeMainAction: 'Discard Changes' translated ]
 ]
 
 { #category : #'add ons' }
-GtMethodCoder >> mondrianPaintAddOnFor: anAST [
+GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 7>
-	(self hasObjectAttribute and: [ 
-		anAST notNil and: [ 
-			anAST methodNode ifNotNil: [ :node | self isMondrianPaintMethod: node ] ifNil: [ false ] ] ])
-		ifFalse: [ addOns removeContextAction: 'Mondrian' translated.
+	(self hasObjectAttribute
+		and: [ anAST notNil
+				and: [ anAST methodNode
+						ifNotNil: [ :node | self isMondrianPaintMethod: node ]
+						ifNil: [ false ] ] ])
+		ifFalse: [ coderAddOns removeContextAction: 'Mondrian' translated.
 			^ self ].
-	addOns 
-		addContextAction: 'Mondrian' translated 
-		icon: BrGlamorousIcons playinspect 
+	coderAddOns
+		addContextAction: 'Mondrian' translated
+		icon: BrGlamorousIcons playinspect
 		action: [ :button | self runMondrianPaintFrom: button ]
 ]
 
@@ -686,8 +698,7 @@ GtMethodCoder >> runExample [
 				ifFalse: [ ^ self ] ].
 	self example run.
 	self styleCollapsedText.
-	self styleSourceText.
-	self refreshForChanges.
+	self styleSourceText
 ]
 
 { #category : #actions }
@@ -773,19 +784,29 @@ GtMethodCoder >> subscribeToSystem [
 ]
 
 { #category : #'add ons' }
-GtMethodCoder >> unaryMessageAddOnFor: anAST [
+GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 20>
-	(self hasObjectAttribute and: [ 
-		anAST notNil and: [ 
-			anAST methodNode ifNotNil: [ :node | node arguments isEmpty ] ifNil: [ false ] ] ])
-		ifFalse: [ 
-			addOns removeContextAction: 'Play' translated.
-			addOns removeContextAction: 'Play and Inspect' translated.
-			addOns removeContextAction: 'Debug' translated.
+	(self hasObjectAttribute
+		and: [ anAST notNil
+				and: [ anAST methodNode
+						ifNotNil: [ :node | node arguments isEmpty ]
+						ifNil: [ false ] ] ])
+		ifFalse: [ coderAddOns removeContextAction: 'Play' translated.
+			coderAddOns removeContextAction: 'Play and Inspect' translated.
+			coderAddOns removeContextAction: 'Debug' translated.
 			^ self ].
-	addOns addContextAction: 'Play' translated icon: BrGlamorousIcons play action: [ :button | self playSelectionOrMethodFrom: button ].
-	addOns addContextAction: 'Play and Inspect' translated icon: BrGlamorousIcons playinspect action: [ :button | self playAndInspectSelectionOrMethodFrom: button ].
-	addOns addContextAction: 'Debug' translated icon: BrGlamorousIcons debug action: [ :button | self debugSelectionOrMethod ].
+	coderAddOns
+		addContextAction: 'Play' translated
+		icon: BrGlamorousIcons play
+		action: [ :button | self playSelectionOrMethodFrom: button ].
+	coderAddOns
+		addContextAction: 'Play and Inspect' translated
+		icon: BrGlamorousIcons playinspect
+		action: [ :button | self playAndInspectSelectionOrMethodFrom: button ].
+	coderAddOns
+		addContextAction: 'Debug' translated
+		icon: BrGlamorousIcons debug
+		action: [ :button | self debugSelectionOrMethod ]
 ]
 
 { #category : #'event handling' }

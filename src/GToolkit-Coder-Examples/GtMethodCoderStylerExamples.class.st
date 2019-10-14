@@ -1,6 +1,6 @@
 Class {
 	#name : #GtMethodCoderStylerExamples,
-	#superclass : #Object,
+	#superclass : #GtMethodCoderTaskExamples,
 	#category : #'GToolkit-Coder-Examples'
 }
 
@@ -23,10 +23,16 @@ GtMethodCoderStylerExamples >> acrossKeywordImplementorPatternHighlighting [
 	coder forMethod: self class >> #a:a:a:a:.
 	coder highlighter: (GtImplementorPatternHighlighter forPattern: ':a:').
 	coder sourceEditor useSyncStylerStrategy.
+	coder expanded: true.
 	coder asElement.
+	self waitForTasks.
 	coder styleText.
 	self assert: (self hasUnderlineAttributeIn: coder).
-	self assert: (self attributeCountOfType: self unlineAttributeClass in: coder sourceEditor) = 6.
+	self
+		assert:
+			(self
+				attributeCountOfType: self unlineAttributeClass
+				in: coder sourceEditor) = 6.
 	coder sourceEditor useDefaultStylerStrategy.
 	^ coder
 ]
@@ -41,6 +47,7 @@ GtMethodCoderStylerExamples >> addPragmaMethodStyling [
 		at: 7;
 		string: 'x';
 		insert.
+	self waitForTasks.
 	coder styleText.
 	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder).
@@ -73,7 +80,9 @@ GtMethodCoderStylerExamples >> exampleMethodStyling [
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #b.
 	coder sourceEditor useSyncStylerStrategy.
+	coder expanded: true.
 	coder asElement.
+	self waitForTasks.
 	coder styleText.
 	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder).
@@ -94,8 +103,15 @@ GtMethodCoderStylerExamples >> hasExampleExpandAttributeIn: coder [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> hasExampleStatusIn: coder [
 	| collapsedAttribute sourceAttribute |
-	sourceAttribute := self hasAttributeOfType: GtExampleStatusAttribute in: coder sourceEditor.
-	collapsedAttribute := self hasAttributeOfType: GtExampleStatusAttribute in: coder collapsedEditor.
+	sourceAttribute := self
+		hasAttributeOfType: GtExampleStatusAttribute
+		in: coder sourceEditor.
+	coder
+		expanded: false;
+		expanded: true.	"need to collapse to compute collapsed text style"
+	collapsedAttribute := self
+		hasAttributeOfType: GtExampleStatusAttribute
+		in: coder collapsedEditor.
 	self assert: sourceAttribute = collapsedAttribute.
 	^ sourceAttribute
 ]
@@ -113,10 +129,15 @@ GtMethodCoderStylerExamples >> insideMultipleKeywordImplementorPatternHighlighti
 	coder expanded: true.
 	coder highlighter: (GtImplementorPatternHighlighter forPattern: 'a:').
 	coder asElement.
+	self waitForTasks.
 	coder sourceEditor useSyncStylerStrategy.
 	coder styleText.
 	self assert: (self hasUnderlineAttributeIn: coder).
-	self assert: (self attributeCountOfType: self unlineAttributeClass in: coder sourceEditor) = 8.
+	self
+		assert:
+			(self
+				attributeCountOfType: self unlineAttributeClass
+				in: coder sourceEditor) = 8.
 	coder sourceEditor useDefaultStylerStrategy.
 	^ coder
 ]
@@ -131,12 +152,19 @@ GtMethodCoderStylerExamples >> printStringImplementorPatternHighlighting [
 	<gtExample>
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #printStringReference.
-	coder highlighter: (GtImplementorPatternHighlighter forPattern: 'print').
+	coder
+		highlighter: (GtImplementorPatternHighlighter forPattern: 'print').
 	coder sourceEditor useSyncStylerStrategy.
+	coder expanded: true.
 	coder asElement.
+	self waitForTasks.
 	coder styleText.
 	self assert: (self hasUnderlineAttributeIn: coder).
-	self assert: (self attributeCountOfType: self unlineAttributeClass in: coder sourceEditor) = 5.
+	self
+		assert:
+			(self
+				attributeCountOfType: self unlineAttributeClass
+				in: coder sourceEditor) = 5.
 	coder sourceEditor useDefaultStylerStrategy.
 	^ coder
 ]
@@ -151,9 +179,12 @@ GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
 	<gtExample>
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #printStringReference.
-	coder highlighter: (GtSelectorReferenceAndLiteralHighlighter forSelector: #printString).
+	coder
+		highlighter: (GtSelectorReferenceAndLiteralHighlighter forSelector: #printString).
 	coder sourceEditor useSyncStylerStrategy.
+	coder expanded: true.
 	coder asElement.
+	self waitForTasks.
 	coder styleText.
 	self assert: (self hasUnderlineAttributeIn: coder).
 	coder sourceEditor useDefaultStylerStrategy.
@@ -170,6 +201,7 @@ GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
 		from: 7 to: 8;
 		delete.
 	coder styleText.
+	self waitForTasks.
 	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder) not.
 	coder sourceEditor useDefaultStylerStrategy.
