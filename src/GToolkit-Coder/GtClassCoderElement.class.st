@@ -31,35 +31,38 @@ GtClassCoderElement >> actOnPackageUpdated: ann [
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildAddClassButton [
-	| dropdown |
-	dropdown := BrDropdown new.
-	^ dropdown
-		look: BrGlamorousDropdownLook;
-		toggle: [
-			BrButton new
-				look: BrGlamorousButtonWithIconLook + BrGlamorousDropdownToggleLook;
-				icon: BrGlamorousIcons add asElement;
-				yourself ];
-		popup: [
-			| coder |
-			coder := GtClassDefinitionCoder new
-				expanded: true;
-				source:
-					'Object subclass: #NameOfSubclass
+	| look |
+	^ BrButton new
+		look:
+			BrGlamorousButtonWithIconLook
+				+
+					(look := BrGlamorousWithDropdownLook
+						handle: [ BrButton new
+								look:
+									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
+										- BrGlamorousButtonExteriorLook;
+								icon: BrGlamorousIcons add asElement;
+								yourself ]
+						content: [ | coder |
+							coder := GtClassDefinitionCoder new
+								expanded: true;
+								source:
+									'Object subclass: #NameOfSubclass
 	instanceVariableNames: ''''
 	classVariableNames: ''''
 	package: ''''';
-				yourself.
-			coder announcer
-				when: GtCoderEvaluationAnnouncement
-				do: [ :e | 
-					dropdown collapse.
-					classCoder forClass: e value ].
-			coder asElement
-				hFitContent;
-				vFitContent;
-				margin: (BlInsets all: 10);
-				yourself ];
+								yourself.
+							coder announcer
+								when: GtCoderEvaluationAnnouncement
+								do: [ :e | 
+									look hide.
+									classCoder forClass: e value ].
+							coder asElement
+								hFitContent;
+								vFitContent;
+								margin: (BlInsets all: 10);
+								yourself ]);
+		icon: BrGlamorousIcons add asElement;
 		yourself
 ]
 
@@ -197,59 +200,72 @@ GtClassCoderElement >> buildPackagesTreeButton [
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildSpotterButton [
-	| dropdown |
-	dropdown := BrDropdown new.
-	^ dropdown
-		look: (BrGlamorousDropdownLook new backgroundPaint: BrGlamorousColors secondaryHeaderBackgroundColor);
-		toggle: [
-			BrButton new
-				look: BrGlamorousButtonWithIconLook + BrGlamorousDropdownToggleLook;
-				icon: BrGlamorousIcons search asElement;
-				yourself ];
-		popup: [ | model |
-			model := GtSpotter new initializeWith: GtCoderSpotterStart new.
-			model announcer
-				when: GtSpotterActOn
-				do: [ :e | 
-					| item |
-					item := e element.
-					e actedUpon: true.
-					self flag: 'FIXME candidates may be wrapped for some reason'.
-					[ (item isKindOf: GtSpotterCandidate) and: [ item item ~~ item ] ]
-						whileTrue: [ item := item item ].
-					((#(singleClick doubleClick keyPressed) includes: e eventType)
-						and: [ {RPackage.
-							ClassDescription.
-							CompiledMethod} anySatisfy: [ :f | item isKindOf: f ] ])
-						ifTrue: [ dropdown collapse.
-							(item isKindOf: RPackage)
-								ifTrue: [ self classCoder updateForPackage: item ].
-							(item isKindOf: ClassDescription)
-								ifTrue: [ self classCoder forClass: item ].
-							(item isKindOf: CompiledMethod)
-								ifTrue: [ self classCoder navigationModel
-										ifNotNil: [ :f | f packagesFilterString: item methodClass package name ].
-									self classCoder forClass: item methodClass.
-									self classCoder methodsCoder
-										implementorsFilterString: item selector ] ] ].
-			GtSpotterElement new
-				spotterModel: model;
-				constraintsDo: [ :c | 
-					c horizontal exact: 600.
-					c vertical exact: 400 ];
-				margin: (BlInsets all: 1);
-				geometry: (BlRectangle cornerRadius: 4);
-				in: [ :e | 
-					self
-						flag: 'FIXME need to remove original listener to avoid phlow inspect'.
-					model announcer subscriptions subscriptions
-						detect: [ :g | 
-							g announcementClass == GtSpotterSelectedCandidateChanged
-								and: [ g action isMessageSend
-										and: [ g action selector = #onCandidateSelected:
-												and: [ g action receiver == e ] ] ] ]
-						ifFound: [ :g | g announcer subscriptions remove: g ] ];
-				yourself ];
+	| look |
+	^ BrButton new
+		look:
+			BrGlamorousButtonWithIconLook
+				+
+					(look := BrGlamorousWithDropdownLook
+						stencil: [ | model |
+							model := GtSpotter new initializeWith: GtCoderSpotterStart new.
+							model announcer
+								when: GtSpotterActOn
+								do: [ :e | 
+									| item |
+									item := e element.
+									e actedUpon: true.
+									self flag: 'FIXME candidates may be wrapped for some reason'.
+									[ (item isKindOf: GtSpotterCandidate)
+										and: [ item item ~~ item ] ]
+										whileTrue: [ item := item item ].
+									((#(singleClick doubleClick keyPressed) includes: e eventType)
+										and: [ {RPackage.
+											ClassDescription.
+											CompiledMethod} anySatisfy: [ :f | item isKindOf: f ] ])
+										ifTrue: [ look hide.
+											(item isKindOf: RPackage)
+												ifTrue: [ self classCoder updateForPackage: item ].
+											(item isKindOf: ClassDescription)
+												ifTrue: [ self classCoder forClass: item ].
+											(item isKindOf: CompiledMethod)
+												ifTrue: [ self classCoder navigationModel
+														ifNotNil: [ :f | f packagesFilterString: item methodClass package name ].
+													self classCoder forClass: item methodClass.
+													self classCoder methodsCoder
+														implementorsFilterString: item selector ] ] ].
+							BlElement new
+								look:
+									(BrGlamorousDropdownLook new
+										handle:
+											(BrButton new
+												look:
+													BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
+														- BrGlamorousButtonExteriorLook;
+												icon: BrGlamorousIcons search asElement;
+												yourself);
+										content:
+											(GtSpotterElement new
+												spotterModel: model;
+												constraintsDo: [ :c | 
+													c horizontal exact: 600.
+													c vertical exact: 400 ];
+												margin: (BlInsets all: 1);
+												geometry: (BlRectangle cornerRadius: 4);
+												in: [ :e | 
+													self
+														flag: 'FIXME need to remove original listener to avoid phlow inspect'.
+													model announcer subscriptions subscriptions
+														detect: [ :g | 
+															g announcementClass == GtSpotterSelectedCandidateChanged
+																and: [ g action isMessageSend
+																		and: [ g action selector = #onCandidateSelected:
+																				and: [ g action receiver == e ] ] ] ]
+														ifFound: [ :g | g announcer subscriptions remove: g ] ];
+												yourself);
+										yourself);
+								background: BrGlamorousColors secondaryHeaderBackgroundColor;
+								yourself ]);
+		icon: BrGlamorousIcons search asElement;
 		yourself
 ]
 
