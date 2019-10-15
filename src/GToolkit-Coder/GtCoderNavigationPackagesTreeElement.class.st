@@ -11,43 +11,49 @@ Class {
 
 { #category : #'building ui' }
 GtCoderNavigationPackagesTreeElement >> buildAddPackageButton [
-	| dropdown |
-	dropdown := BrDropdown new.
-	^ dropdown
-		look: BrGlamorousDropdownLook;
-		toggle: [ BrButton new
-				look: BrGlamorousButtonWithIconLook + BrGlamorousDropdownToggleLook;
-				icon: BrGlamorousIcons add asElement;
-				yourself ];
-		popup: [ | editor button |
-			editor := BrEditor new
-				look: BrGlamorousRegularEditorLook new;
-				geometry: (BlRectangle cornerRadius: 4);
-				border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
-				hExact: 100;
-				vMatchParent;
-				padding: (BlInsets all: 3);
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical fitContent ];
-				yourself.
-			button := BrButton new
-				look: BrGlamorousButtonWithIconLook;
-				margin: (BlInsets left: 10);
-				icon: BrGlamorousIcons accept asElement;
-				action: [ dropdown collapse.
-					navigationModel
-						packagesFilterString: (RPackageOrganizer default createPackageNamed: editor text asString) name ];
-				yourself.
-			BlElement new
-				layout: BlLinearLayout horizontal;
-				padding: (BlInsets all: 10);
-				constraintsDo: [ :c | 
-					c horizontal fitContent.
-					c vertical fitContent ];
-				addChild: editor;
-				addChild: button;
-				yourself ];
+	| look |
+	^ BrButton new
+		look:
+			BrGlamorousButtonWithIconLook
+				+
+					(look := BrGlamorousWithDropdownLook
+						handle: [ BrButton new
+								look:
+									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
+										- BrGlamorousButtonExteriorLook;
+								icon: BrGlamorousIcons add asElement;
+								yourself ]
+						content: [ | editor button |
+							editor := BrEditor new
+								look: BrGlamorousRegularEditorLook new;
+								geometry: (BlRectangle cornerRadius: 4);
+								border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
+								hExact: 100;
+								vMatchParent;
+								padding: (BlInsets all: 3);
+								constraintsDo: [ :c | 
+									c horizontal matchParent.
+									c vertical fitContent ];
+								yourself.
+							button := BrButton new
+								look: BrGlamorousButtonWithIconLook;
+								margin: (BlInsets left: 10);
+								icon: BrGlamorousIcons accept asElement;
+								action: [ look hide.
+									navigationModel
+										packagesFilterString:
+											(RPackageOrganizer default createPackageNamed: editor text asString)
+												name ];
+								yourself.
+							BlElement new
+								layout: BlLinearLayout horizontal;
+								padding: (BlInsets all: 10);
+								constraintsDo: [ :c | 
+									c horizontal fitContent.
+									c vertical fitContent ];
+								addChild: editor;
+								addChild: button;
+								yourself ]);
 		yourself
 ]
 
