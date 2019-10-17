@@ -31,11 +31,21 @@ GtSourceCoderTextStyler >> extraStyle: aText ast: ast [
 
 { #category : #private }
 GtSourceCoderTextStyler >> privateStyle: aText [
-	| ast |
-	self
-		assert: [ aText asString = coder source
-				or: [ aText asString = coder collapsedSource ] ].
-	aText asString = coder source
+	| ast aString aCoderSource aHeaderSource isCoderSourceSame isHeaderSourceSame |
+	
+	"see https://github.com/feenkcom/gtoolkit/issues/593"
+	aString := aText asString.
+	aCoderSource := coder sourceText characters asString.
+	aHeaderSource := coder collapsedText characters asString.
+	
+	isCoderSourceSame := aString = aCoderSource.
+	isHeaderSourceSame := aString = aHeaderSource.
+	
+	"a given text is neither coder source nor header, let's ignore it"
+	(isCoderSourceSame or: [ isHeaderSourceSame ])
+		ifFalse: [ ^ aText ].
+
+	isCoderSourceSame
 		ifTrue: [ ast := coder rbAST ]
 		ifFalse: [ ast := coder rbAST copy.
 			(ast isNotNil and: [ ast isMethod and: [ ast isParseError not ] ])

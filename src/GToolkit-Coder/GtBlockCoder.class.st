@@ -87,7 +87,7 @@ GtBlockCoder >> evaluationRequester [
 
 { #category : #formatting }
 GtBlockCoder >> format [
-	self source: (self newRbAST: self newSource) formattedCode
+	self source: (self newRbAST: self newSourceText asString) formattedCode
 ]
 
 { #category : #private }
@@ -154,6 +154,13 @@ GtBlockCoder >> newRbAST: aString [
 { #category : #updating }
 GtBlockCoder >> newSource [
 	^ self blockSource
+]
+
+{ #category : #updating }
+GtBlockCoder >> newSourceText [
+	<retrun: #BlText>
+
+	^ self blockSource asRopedText
 ]
 
 { #category : #accessing }
