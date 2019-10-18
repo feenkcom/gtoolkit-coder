@@ -31,17 +31,23 @@ GtSourceCoderTextStyler >> extraStyle: aText ast: ast [
 
 { #category : #private }
 GtSourceCoderTextStyler >> privateStyle: aText [
-	| ast |
-	(aText asString = coder source
-		or: [ aText asString = coder collapsedSource ])
-		ifFalse: [ self
-				flag:
-					'TODO how can it be something else? there is some synchronization missing'.
-			^ aText ].
-	aText asString = coder source
+	| ast aString aCoderSource aHeaderSource isCoderSourceSame isHeaderSourceSame |
+	
+	"see https://github.com/feenkcom/gtoolkit/issues/593"
+	aString := aText asString.
+	aCoderSource := coder sourceText characters asString.
+	aHeaderSource := coder collapsedText characters asString.
+	
+	isCoderSourceSame := aString = aCoderSource.
+	isHeaderSourceSame := aString = aHeaderSource.
+	
+	"a given text is neither coder source nor header, let's ignore it"
+	(isCoderSourceSame or: [ isHeaderSourceSame ])
+		ifFalse: [ ^ aText ].
+
+	isCoderSourceSame
 		ifTrue: [ ast := coder rbAST ]
-		ifFalse: [ self flag: 'FIXME maybe use explicit collapsed AST?'.
-			ast := coder rbAST copy.
+		ifFalse: [ ast := coder rbAST copy.
 			(ast isNotNil and: [ ast isMethod and: [ ast isParseError not ] ])
 				ifTrue: [ ast
 						body: (RBSequenceNode statements: #());

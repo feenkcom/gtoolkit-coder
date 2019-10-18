@@ -553,7 +553,12 @@ GtSourceCoder >> newRbAST: aString [
 
 { #category : #updating }
 GtSourceCoder >> newSource [
-	^ self source
+	<return: #String>
+	self
+		deprecated: 'Use `newSourceText asString` or `newSourceText characters asString` instead'
+		transformWith: '`@receiver newSource' -> '`@receiver newSourceText asString'.
+
+	^ self newSourceText asString
 ]
 
 { #category : #ui }
@@ -570,6 +575,13 @@ GtSourceCoder >> newSourceEditor [
 { #category : #private }
 GtSourceCoder >> newSourceStyler [
 	^ GtSourceCoderTextStyler forCoder: self
+]
+
+{ #category : #updating }
+GtSourceCoder >> newSourceText [
+	<retrun: #BlText>
+
+	^ self sourceText
 ]
 
 { #category : #private }
@@ -624,13 +636,18 @@ GtSourceCoder >> printItSelection [
 { #category : #updating }
 GtSourceCoder >> rbAST [
 	| source |
-	source := self newSource.
+
+	"The AST should be built out of the `characters` of the source text.
+	This is needed to support `crlf` and logical items
+	see https://github.com/feenkcom/gtoolkit/issues/593"
+	source := self newSourceText characters asString.
 	astCache key = source
 		ifTrue: [ ^ astCache value ].
-	^ [ astCache := source -> (self newRbAST: source).
-	astCache value ]
-		on: Error
-		do: [ :ex | ex return: nil ]
+	^ [ 
+		astCache := source -> (self newRbAST: source).
+		astCache value ]
+	on: Error
+	do: [ :ex | ex return: nil ]
 ]
 
 { #category : #private }
