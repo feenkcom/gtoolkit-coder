@@ -32,12 +32,16 @@ GtSourceCoderTextStyler >> extraStyle: aText ast: ast [
 { #category : #private }
 GtSourceCoderTextStyler >> privateStyle: aText [
 	| ast |
-	self
-		assert: [ aText asString = coder source
-				or: [ aText asString = coder collapsedSource ] ].
+	(aText asString = coder source
+		or: [ aText asString = coder collapsedSource ])
+		ifFalse: [ self
+				flag:
+					'TODO how can it be something else? there is some synchronization missing'.
+			^ aText ].
 	aText asString = coder source
 		ifTrue: [ ast := coder rbAST ]
-		ifFalse: [ ast := coder rbAST copy.
+		ifFalse: [ self flag: 'FIXME maybe use explicit collapsed AST?'.
+			ast := coder rbAST copy.
 			(ast isNotNil and: [ ast isMethod and: [ ast isParseError not ] ])
 				ifTrue: [ ast
 						body: (RBSequenceNode statements: #());
