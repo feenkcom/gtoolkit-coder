@@ -374,7 +374,21 @@ GtSourceCoder >> evaluationRequester [
 
 { #category : #ui }
 GtSourceCoder >> expandedEditorElement [
+	self
+		flag:
+			'TODO make coder actions aware of potential use in context menu, i.e. the actions actually expect the button of the action, but in the context menu they get the editor element as an argument. this only works as long they only do phlow stuff. also, actions should have preconditions, e.g. cut and copy without selection do not make sense'.
 	^ BrEditorElement new
+		look:
+			(BrGlamorousWithContextMenuLook
+				content: [ BrGlamorousSimpleContextMenuContent new
+						display:
+							{('Cut' -> [ self sourceEditor cutSelected ]).
+							('Copy' -> [ self sourceEditor copySelected ]).
+							('Paste' -> [ self sourceEditor paste ])}
+								,
+									((self mainActions reject: [ :e | e title isNil ])
+										collect: [ :e | e title -> e action ]);
+						yourself ]);
 		padding:
 			(BlInsets
 				top: 0
