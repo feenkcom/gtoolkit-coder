@@ -35,8 +35,8 @@ GtSourceCoderTextStyler >> privateStyle: aText [
 	
 	"see https://github.com/feenkcom/gtoolkit/issues/593"
 	aString := aText asString.
-	aCoderSource := coder sourceText characters asString.
-	aHeaderSource := coder collapsedText characters asString.
+	aCoderSource := coder newSourceText characters asString.
+	aHeaderSource := coder newCollapsedText characters asString.
 	
 	isCoderSourceSame := aString = aCoderSource.
 	isHeaderSourceSame := aString = aHeaderSource.

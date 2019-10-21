@@ -304,11 +304,12 @@ GtSourceCoder >> doItAndGoSelectionOrAll: anElement [
 
 { #category : #actions }
 GtSourceCoder >> doItSelection [
-	| source |
-	source := self selectedSource.
-	source isNil
-		ifTrue: [ ^ self ].
-	^ self evaluateSource: source
+	"Evaluate a selected piece of source code and return a result.
+	I am also able to evaluate an empty or only consisting of whitespace
+	source code in which case the result is nil"
+	<return: #Object>
+
+	^ self evaluateSource: self selectedSource
 ]
 
 { #category : #actions }
@@ -484,7 +485,8 @@ GtSourceCoder >> gtViewStylersFor: aView [
 { #category : #testing }
 GtSourceCoder >> hasSelection [
 	<return: #Boolean>
-	^ self selectedSourceInterval isNotNil
+
+	^ self sourceEditor hasSelection
 ]
 
 { #category : #'initialize-release' }
@@ -536,6 +538,13 @@ GtSourceCoder >> newCollapsedEditor [
 	^ editor
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> newCollapsedText [
+	<retrun: #BlText>
+
+	^ self collapsedEditor textSnapshot
+]
+
 { #category : #private }
 GtSourceCoder >> newCompletionStrategy [
 	^ GtPharoCompletionStrategy new
@@ -581,7 +590,7 @@ GtSourceCoder >> newSourceStyler [
 GtSourceCoder >> newSourceText [
 	<retrun: #BlText>
 
-	^ self sourceText
+	^ self sourceEditor textSnapshot
 ]
 
 { #category : #private }
@@ -626,11 +635,7 @@ GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 
 { #category : #actions }
 GtSourceCoder >> printItSelection [
-	| source |
-	source := self selectedSource.
-	source isNil
-		ifTrue: [ ^ self ].
-	^ self evaluateSource: source showPrintString: true
+	^ self evaluateSource: self selectedSource showPrintString: true
 ]
 
 { #category : #updating }
@@ -720,11 +725,9 @@ GtSourceCoder >> resetASTCache [
 
 { #category : #private }
 GtSourceCoder >> selectedSource [
-	self selectedSourceInterval ifNotNil: [ :interval | 
-		^ (self sourceEditor text 
-				from: interval first 
-				to: interval last) asString ].
-	^ nil
+	<return: #BlText>
+
+	^ self sourceEditor selectedText characters asString
 ]
 
 { #category : #private }
