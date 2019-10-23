@@ -40,6 +40,7 @@ GtMethodCoderStylerExamples >> acrossKeywordImplementorPatternHighlighting [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> addPragmaMethodStyling [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := self renamePragmaMethodStyling.
 	coder sourceEditor useSyncStylerStrategy.
@@ -77,6 +78,7 @@ GtMethodCoderStylerExamples >> b [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> exampleMethodStyling [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #b.
 	coder sourceEditor useSyncStylerStrategy.
@@ -194,6 +196,7 @@ GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := self exampleMethodStyling.
 	coder sourceEditor useSyncStylerStrategy.
