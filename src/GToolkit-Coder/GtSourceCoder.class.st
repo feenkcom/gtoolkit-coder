@@ -535,6 +535,7 @@ GtSourceCoder >> isBuilt [
 GtSourceCoder >> newCollapsedEditor [
 	| editor |
 	editor := BrTextEditor new.
+	self collapsedStyler ifNotNil: [ :styler | editor styler: styler ].
 	^ editor
 ]
 
@@ -796,12 +797,9 @@ GtSourceCoder >> sourceText [
 
 { #category : #private }
 GtSourceCoder >> styleCollapsedText [
-	| text |
 	self expanded
-		ifTrue: [ ^ self ].
-	text := self collapsedEditor text.
-	self collapsedStyler ifNotNil: [ :styler | styler style: text ].
-	self collapsedEditor text: text readonly
+		ifFalse: [ ^ self ].
+	self collapsedEditor styleText
 ]
 
 { #category : #private }
