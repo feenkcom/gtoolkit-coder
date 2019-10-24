@@ -410,7 +410,6 @@ GtSourceCoder >> expandedEditorElement [
 { #category : #private }
 GtSourceCoder >> expandedUpdated [
 	super expandedUpdated.
-	self styleText.
 	self expanded
 		ifFalse: [ self updateCollapsedSource ]
 ]
@@ -798,7 +797,7 @@ GtSourceCoder >> sourceText [
 { #category : #private }
 GtSourceCoder >> styleCollapsedText [
 	self expanded
-		ifFalse: [ ^ self ].
+		ifTrue: [ ^ self ].
 	self collapsedEditor styleText
 ]
 
