@@ -154,7 +154,7 @@ GtSourceCoder >> collapsedSource [
 GtSourceCoder >> collapsedSource: aString [
 	| text |
 	text := aString asRopedText.
-	self collapsedEditor text: text readonly.
+	self collapsedEditor text: text "readonly".
 	self styleCollapsedText.
 ]
 
