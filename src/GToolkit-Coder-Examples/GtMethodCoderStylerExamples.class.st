@@ -40,10 +40,10 @@ GtMethodCoderStylerExamples >> acrossKeywordImplementorPatternHighlighting [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> addPragmaMethodStyling [
 	<gtExample>
-	<noTest>
 	| coder |
 	coder := self renamePragmaMethodStyling.
 	coder sourceEditor useSyncStylerStrategy.
+	coder collapsedEditor useSyncStylerStrategy.
 	coder sourceEditor inserter
 		at: 7;
 		string: 'x';
@@ -53,6 +53,7 @@ GtMethodCoderStylerExamples >> addPragmaMethodStyling [
 	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder).
 	coder sourceEditor useDefaultStylerStrategy.
+	coder collapsedEditor useDefaultStylerStrategy.
 	^ coder
 ]
 
@@ -78,10 +79,10 @@ GtMethodCoderStylerExamples >> b [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> exampleMethodStyling [
 	<gtExample>
-	<noTest>
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #b.
 	coder sourceEditor useSyncStylerStrategy.
+	coder collapsedEditor useSyncStylerStrategy.
 	coder expanded: true.
 	coder asElement.
 	self waitForTasks.
@@ -89,6 +90,7 @@ GtMethodCoderStylerExamples >> exampleMethodStyling [
 	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder).
 	coder sourceEditor useDefaultStylerStrategy.
+	coder collapsedEditor useDefaultStylerStrategy.
 	^ coder
 ]
 
@@ -196,10 +198,10 @@ GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
 	<gtExample>
-	<noTest>
 	| coder |
 	coder := self exampleMethodStyling.
 	coder sourceEditor useSyncStylerStrategy.
+	coder collapsedEditor useSyncStylerStrategy.
 	coder sourceEditor deleter
 		from: 7 to: 8;
 		delete.
@@ -208,6 +210,7 @@ GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
 	self assert: (self hasExampleExpandAttributeIn: coder).
 	self assert: (self hasExampleStatusIn: coder) not.
 	coder sourceEditor useDefaultStylerStrategy.
+	coder collapsedEditor useDefaultStylerStrategy.
 	^ coder
 ]
 
