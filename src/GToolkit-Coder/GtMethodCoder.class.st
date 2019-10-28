@@ -560,7 +560,7 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 
 { #category : #actions }
 GtMethodCoder >> newMethodSource [
-	^ self source
+	^ self newSourceText asString
 ]
 
 { #category : #updating }

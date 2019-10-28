@@ -797,9 +797,14 @@ GtSourceCoder >> sourceText [
 
 { #category : #private }
 GtSourceCoder >> styleCollapsedText [
+	| styleBlock |
 	self expanded
 		ifTrue: [ ^ self ].
-	self collapsedEditor styleText
+	styleBlock := [ self collapsedEditor styleText ].
+	self collapsedEditor stylerStrategy view
+		ifNotNil:
+			[ :view | view enqueueTask: (BlTaskAction new action: styleBlock) ]
+		ifNil: [ styleBlock value ]
 ]
 
 { #category : #private }
@@ -838,9 +843,13 @@ GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 
 { #category : #private }
 GtSourceCoder >> styleSourceText [
+	| styleBlock |
 	self expanded
 		ifFalse: [ ^ self ].
-	self sourceEditor styleText
+	styleBlock := [ self sourceEditor styleText ].
+	self sourceEditor stylerStrategy view
+		ifNotNil: [ :view | view enqueueTask: (BlTaskAction new action: styleBlock) ]
+		ifNil: [ styleBlock value ]
 ]
 
 { #category : #updating }
