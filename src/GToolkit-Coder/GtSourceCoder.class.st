@@ -787,7 +787,7 @@ GtSourceCoder >> sourceEditor [
 
 { #category : #private }
 GtSourceCoder >> sourceInterval [
-	^ 1 to: self source size
+	^ 1 to: self sourceText size
 ]
 
 { #category : #accessing }
