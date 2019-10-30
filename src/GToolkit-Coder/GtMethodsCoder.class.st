@@ -64,3 +64,17 @@ GtMethodsCoder >> newCoderFor: aMethod [
 	coder coders: self.
 	^ coder
 ]
+
+{ #category : #scripting }
+GtMethodsCoder >> selectAndScrollTo: aMethodCoder [
+	aMethodCoder expanded: true.
+	self
+		announce:
+			(GtCodersScrollToCoder new
+				coders: self;
+				sourceCoder: aMethodCoder).
+	BlTktWorkerProvider highUICPUBoundPool
+		schedule:
+			[ (Delay forMilliseconds: 100) wait.	"Wait for scrolling to create the element"
+			aMethodCoder requestFocus ] asBlTktTerminableCommand
+]

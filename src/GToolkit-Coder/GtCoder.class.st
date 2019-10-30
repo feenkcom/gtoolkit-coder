@@ -133,8 +133,11 @@ GtCoder >> expanded [
 
 { #category : #accessing }
 GtCoder >> expanded: aBoolean [
+	aBoolean = expanded
+		ifTrue: [ ^ self ].
 	expanded := aBoolean.
-	self expandedUpdated
+	self expandedUpdated.
+	self announce: (GtCoderExpandedChanged new coder: self)
 ]
 
 { #category : #elements }
@@ -213,6 +216,16 @@ GtCoder >> mainActions [
 
 	<return: #Collection of: #GtCoderAction>
 	^ addOns mainActions
+]
+
+{ #category : #elements }
+GtCoder >> previewElement [
+	^ self asElement
+]
+
+{ #category : #scripting }
+GtCoder >> requestFocus [
+	self announce: (GtCoderRequestFocus new coder: self)
 ]
 
 { #category : #elements }
