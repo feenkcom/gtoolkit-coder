@@ -39,8 +39,9 @@ GtCodersElement >> coders: aCoders [
 	self buildElement.
 	coders announcer weak
 		when: GtCodersCoderAdded , GtCodersCoderRemoved , GtCodersCodersChanged
-		send: #updateList
-		to: self
+			send: #updateList
+			to: self;
+		when: GtCodersScrollToCoder send: #scrollToEvent: to: self
 ]
 
 { #category : #ui }
@@ -65,6 +66,15 @@ GtCodersElement >> listElement [
 			c vertical matchParent ];
 		yourself.
 	^ listElement
+]
+
+{ #category : #private }
+GtCodersElement >> scrollToEvent: anEvent [
+	| coder index |
+	coder := anEvent sourceCoder.
+	index := coders coders identityIndexOf: coder.
+	index > 0
+		ifTrue: [ (self childNamed: #codersList) scrollToPosition: index ]
 ]
 
 { #category : #private }

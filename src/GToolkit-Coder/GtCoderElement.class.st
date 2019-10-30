@@ -44,7 +44,10 @@ GtCoderElement >> coder: aCoder [
 		content: [ expandedElement := self newExpandedElement ].
 	coder stylerView: self.
 	coder expanded
-		ifTrue: [ self expand ]
+		ifTrue: [ self expand ].
+	coder announcer weak
+		when: GtCoderExpandedChanged send: #updateExpanded to: self;
+		when: GtCoderRequestFocus send: #requestFocus to: self
 ]
 
 { #category : #accessing }
@@ -132,4 +135,13 @@ GtCoderElement >> requestFocus [
 		childNamed: #editor
 		ifFound: [ :element | element requestFocus ]
 		ifNone: [ super requestFocus ]
+]
+
+{ #category : #events }
+GtCoderElement >> updateExpanded [
+	coder expanded
+		ifTrue: [ self isExpanded
+				ifFalse: [ self expand ] ]
+		ifFalse: [ self isExpanded
+				ifTrue: [ self collapse ] ]
 ]

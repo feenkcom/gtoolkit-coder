@@ -33,23 +33,7 @@ Behavior >> buildMethodsTabIn: tabGroup for: classCoder [
 				stencil: [ classCoder methodsCoder asElement ];
 				toolbarStencil: [ BrToolbar new
 						look: BrGlamorousToolbarLook new;
-						addItem:
-							(BrEditor new
-								look: BrGlamorousCodeEditorLook new;
-								geometry: (BlRectangle cornerRadius: 4);
-								border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
-								hExact: 100;
-								vMatchParent;
-								padding: (BlInsets all: 3);
-								in: [ :e | 
-									classCoder methodsCoder implementorsFilterString
-										ifNotNil: [ :g | e text: g asString asRopedText ].
-									e editor
-										when: BrTextEditorInsertedEvent
-											do: [ classCoder methodsCoder implementorsFilterString: e text asString ];
-										when: BrTextEditorDeletedEvent
-											do: [ classCoder methodsCoder implementorsFilterString: e text asString ] ];
-								yourself);
+						addItem: (self buildSpotterButtonFor: classCoder);
 						addItem:
 							(BrButton new
 								look: BrGlamorousButtonWithIconLook;
@@ -57,6 +41,49 @@ Behavior >> buildMethodsTabIn: tabGroup for: classCoder [
 								action: [ classCoder methodsCoder addNewCoder ];
 								yourself);
 						yourself ])
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> buildSpotterButtonFor: classCoder [
+	| look |
+	^ BrButton new
+		look:
+			BrGlamorousButtonWithIconLook
+				+
+					(look := BrGlamorousWithDropdownLook
+						stencil: [ | model |
+							model := GtSpotter new initializeWith: classCoder methodsCoder.
+							model announcer
+								when: GtSpotterActOn
+								do: [ :anEvent | 
+									classCoder methodsCoder selectAndScrollTo: anEvent element.
+									anEvent actedUpon: true.
+									look hide ].
+							model announcer
+								when: GtSpotterExitAnnouncement
+								do: [ :e | look hide ].
+							BlElement new
+								look:
+									(BrGlamorousDropdownLook new
+										handle:
+											(BrButton new
+												look:
+													BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
+														- BrGlamorousButtonExteriorLook;
+												icon: BrGlamorousIcons search asElement;
+												label: 'Playground History';
+												yourself);
+										content:
+											(GtSpotterElement new
+												spotterModel: model;
+												size: 600 @ 400;
+												yourself);
+										yourself);
+								background: BrGlamorousColors secondaryHeaderBackgroundColor;
+								yourself ]);
+		icon: BrGlamorousIcons search asElement;
+		label: 'Search';
+		yourself
 ]
 
 { #category : #'*GToolkit-Coder' }

@@ -658,6 +658,13 @@ GtMethodCoder >> playSelectionOrMethodFrom: anElement [
 		ifFalse: [ self playFrom: anElement ]
 ]
 
+{ #category : #elements }
+GtMethodCoder >> previewElement [
+	^ (self class forClass: class source: methodSource)
+		expanded: true;
+		asElement
+]
+
 { #category : #printing }
 GtMethodCoder >> printOn: aStream [
 	super printOn: aStream.
