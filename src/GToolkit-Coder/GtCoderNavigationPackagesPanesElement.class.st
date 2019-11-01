@@ -9,7 +9,7 @@ Class {
 		'packagesList',
 		'classesList'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #'ui building' }
