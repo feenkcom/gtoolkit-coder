@@ -88,7 +88,7 @@ GtClassCoder >> initialize [
 	searchFilter := GtCoderClassSelector new
 		coder: self;
 		yourself.
-	navigationModel := GtClassCoderPackagesTreeNavigation new
+	navigationModel := GtClassCoderPackagesAndHierarchyNavigation new
 		classCoder: self;
 		yourself.
 	methodsCoder := GtClassMethodsCoder new.
