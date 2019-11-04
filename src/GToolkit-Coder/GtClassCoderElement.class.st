@@ -66,7 +66,7 @@ GtClassCoderElement >> buildAddClassButton [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'building ui' }
 GtClassCoderElement >> buildBreadcrumb [
 	^ BrBreadcrumb new
 		look:
@@ -80,7 +80,7 @@ GtClassCoderElement >> buildBreadcrumb [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'building ui' }
 GtClassCoderElement >> buildBreadcrumbToggleForClass: aClass [
 	^ BrToggle new
 		margin: (BlInsets all: 2);
@@ -281,9 +281,11 @@ GtClassCoderElement >> classCoder: aCoder [
 		when: GtCoderClassUpdatedAnnouncement
 			do: [ self actOnClassUpdated ];
 		when: GtCoderPackageUpdatedAnnouncement
-			do: [ :ann  | self actOnPackageUpdated: ann ];
+			do: [ :ann | self actOnPackageUpdated: ann ];
 		when: GtCoderNavigationModelChangedAnnouncement
-			do: [ :ann | self updateNavigationElement ].
+			do: [ :ann | self updateNavigationElement ];
+		when: GtClassCoderNavigationAnnouncement
+			do: [ :ann | self showNavigation: ann navigationTab ].
 	container ifNotNil: #removeFromParent.
 	container := self buildContainer.
 	self updateNavigationElement.
@@ -336,7 +338,14 @@ GtClassCoderElement >> removeContentTabs [
 			contentTabs := nil ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'updating ui' }
+GtClassCoderElement >> showNavigation: aSymbol [
+	navigationElement isAttachedToSceneGraph
+		ifFalse: [ contentPane addChildFirst: navigationElement ].
+	navigationElement selectTab: aSymbol
+]
+
+{ #category : #private }
 GtClassCoderElement >> updateBreadcrumb [
 	breadcrumb removeAllItems.
 	classCoder theClass

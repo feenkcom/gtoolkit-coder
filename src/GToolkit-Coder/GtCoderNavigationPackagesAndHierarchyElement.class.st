@@ -151,6 +151,17 @@ GtCoderNavigationPackagesAndHierarchyElement >> selectPackage: aPackage [
 				ifFound: [ :e | e withAllParentNodesDo: #expand ] ]
 ]
 
+{ #category : #'updating ui' }
+GtCoderNavigationPackagesAndHierarchyElement >> selectTab: aSymbol [
+	| tab |
+	aSymbol = #hierarchy
+		ifTrue: [ tab := hierarchyTab ].
+	aSymbol = #packages
+		ifTrue: [ tab := packagesTab ].
+	tab notNil
+		ifTrue: [ self enqueueTask: (BlTaskAction new action: [ tab select ]) ]
+]
+
 { #category : #callbacks }
 GtCoderNavigationPackagesAndHierarchyElement >> updateHierarchyTree: hierarchyTree [
 	| items class superclasses |
