@@ -145,3 +145,29 @@ GtClassCoder >> updateForPackage: aPackage [
 	class := nil.
 	self announce: (GtCoderPackageUpdatedAnnouncement new package: aPackage)
 ]
+
+{ #category : #scripting }
+GtClassCoder >> withClass: aClass [
+	self forClass: aClass
+]
+
+{ #category : #scripting }
+GtClassCoder >> withHierarchy [
+	self
+		announce: (GtClassCoderNavigationAnnouncement new navigationTab: #hierarchy)
+]
+
+{ #category : #scripting }
+GtClassCoder >> withPackages [
+	self
+		announce: (GtClassCoderNavigationAnnouncement new navigationTab: #packages)
+]
+
+{ #category : #scripting }
+GtClassCoder >> withSelectedMethod: aMethod [
+	self forClass: aMethod methodClass.
+	(methodsCoder coders
+		detect: [ :each | each compiledMethod == aMethod ]
+		ifNone: [  ])
+		ifNotNil: [ :coder | methodsCoder selectAndScrollTo: coder ]
+]
