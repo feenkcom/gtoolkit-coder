@@ -27,6 +27,13 @@ GtClassCoder class >> forObject: anObject [
 ]
 
 { #category : #elements }
+GtClassCoder >> asCardElement [
+	| coderElement |
+	coderElement := GtClassCardElement new classCoder: self.
+	^ coderElement
+]
+
+{ #category : #elements }
 GtClassCoder >> asElement [
 	| coderElement |
 	coderElement := GtClassCoderElement new classCoder: self.
@@ -36,28 +43,42 @@ GtClassCoder >> asElement [
 { #category : #accessing }
 GtClassCoder >> commentsCoder [
 	^ commentsCoder
+		ifNil: [ commentsCoder := GtClassCommentsCoder new.
+			class notNil
+				ifTrue: [ commentsCoder forClass: class ].
+			commentsCoder ]
 ]
 
 { #category : #accessing }
 GtClassCoder >> definitionsCoder [
 	^ definitionsCoder
+		ifNil: [ definitionsCoder := GtClassDefinitionsCoder new.
+			class notNil
+				ifTrue: [ definitionsCoder forClass: class ].
+			definitionsCoder ]
 ]
 
 { #category : #updating }
 GtClassCoder >> forClass: aClass [
 	class := aClass.
-	methodsCoder forClass: class.
-	definitionsCoder forClass: class.
-	commentsCoder forClass: class.
+	methodsCoder notNil
+		ifTrue: [ methodsCoder forClass: class ].
+	definitionsCoder notNil
+		ifTrue: [ definitionsCoder forClass: class ].
+	commentsCoder notNil
+		ifTrue: [ commentsCoder forClass: class ].
 	self announce: (GtCoderClassUpdatedAnnouncement forClass: class)
 ]
 
 { #category : #initialize }
 GtClassCoder >> forObject: anObject [
 	class := anObject class.
-	methodsCoder forObject: anObject.
-	definitionsCoder forClass: class.
-	commentsCoder forClass: class.
+	methodsCoder notNil
+		ifTrue: [ methodsCoder forObject: anObject ].
+	definitionsCoder notNil
+		ifTrue: [ definitionsCoder forClass: class ].
+	commentsCoder notNil
+		ifTrue: [ commentsCoder forClass: class ].
 	self announce: (GtCoderClassUpdatedAnnouncement forClass: class)
 ]
 
@@ -90,15 +111,16 @@ GtClassCoder >> initialize [
 		yourself.
 	navigationModel := GtClassCoderPackagesAndHierarchyNavigation new
 		classCoder: self;
-		yourself.
-	methodsCoder := GtClassMethodsCoder new.
-	definitionsCoder := GtClassDefinitionsCoder new.
-	commentsCoder := GtClassCommentsCoder new
+		yourself
 ]
 
 { #category : #accessing }
-GtClassCoder >> methodsCoder [ 
+GtClassCoder >> methodsCoder [
 	^ methodsCoder
+		ifNil: [ methodsCoder := GtClassMethodsCoder new.
+			class notNil
+				ifTrue: [ methodsCoder forClass: class ].
+			methodsCoder ]
 ]
 
 { #category : #accessing }
@@ -166,8 +188,8 @@ GtClassCoder >> withPackages [
 { #category : #scripting }
 GtClassCoder >> withSelectedMethod: aMethod [
 	self forClass: aMethod methodClass.
-	(methodsCoder coders
+	(self methodsCoder coders
 		detect: [ :each | each compiledMethod == aMethod ]
 		ifNone: [  ])
-		ifNotNil: [ :coder | methodsCoder selectAndScrollTo: coder ]
+		ifNotNil: [ :coder | self methodsCoder selectAndScrollTo: coder ]
 ]
