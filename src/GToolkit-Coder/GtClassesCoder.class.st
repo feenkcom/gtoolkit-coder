@@ -4,6 +4,17 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #accessing }
+GtClassesCoder >> coderForClass: aClass [
+	^ self coders
+		detect: [ :each | each theClass = aClass ]
+		ifNone: [ | coder |
+			items add: aClass.
+			coder := self newCoderFor: aClass.
+			coders add: coder.
+			coder ]
+]
+
 { #category : #elements }
 GtClassesCoder >> elementClass [
 	^ GtClassesElement
