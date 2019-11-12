@@ -20,11 +20,11 @@ GtClassCardElement >> buildHeaderForClass: class [
 	element margin: (BlInsets bottom: 3).
 	element
 		addChild:
-			(BrLabel new
-				look: BrGlamorousLabelLook new glamorousCodeFontAndSize;
+			(BlShrinkingTextElement new
 				text: class name asRopedText bold;
-				hFitContent;
-				vFitContent).
+				constraintsDo: [ :c | 
+					c vertical fitContent.
+					c horizontal matchParent ]).
 	element addChild: self buildHierarchyBreadcrumb.
 	^ element
 ]
@@ -68,7 +68,7 @@ GtClassCardElement >> classCoder: coder [
 		title:
 			((class methods size + class class methods size) printString
 				, ' Methods') asRopedText.
-	self description: class comment asRopedText.
+	self description: class organization classComment asRopedText.
 	self picture: (self buildHeaderForClass: class)
 ]
 

@@ -106,9 +106,6 @@ GtClassCoder >> implementorsFilterString: aString [
 { #category : #initialize }
 GtClassCoder >> initialize [
 	super initialize.
-	searchFilter := GtCoderClassSelector new
-		coder: self;
-		yourself.
 	navigationModel := GtClassCoderPackagesAndHierarchyNavigation new
 		classCoder: self;
 		yourself
@@ -121,6 +118,11 @@ GtClassCoder >> methodsCoder [
 			class notNil
 				ifTrue: [ methodsCoder forClass: class ].
 			methodsCoder ]
+]
+
+{ #category : #accessing }
+GtClassCoder >> name [
+	^ self theClass name
 ]
 
 { #category : #accessing }
@@ -153,8 +155,16 @@ GtClassCoder >> openInInspector [
 ]
 
 { #category : #accessing }
+GtClassCoder >> packageTreeCoders [
+	^ #()
+]
+
+{ #category : #accessing }
 GtClassCoder >> searchFilter [
 	^ searchFilter
+		ifNil: [ searchFilter := GtCoderClassSelector new
+				coder: self;
+				yourself ]
 ]
 
 { #category : #accessing }
