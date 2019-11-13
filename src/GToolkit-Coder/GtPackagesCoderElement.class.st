@@ -69,17 +69,17 @@ GtPackagesCoderElement >> buildPackageCards [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical fitContent ].
-	(packagesCoder coders asSortedCollection: [ :a :b | a name < b name ])
-		do: [ :each | 
-			element
-				addChild:
-					(BlLazyElement new
+	element
+		addChildren:
+			((packagesCoder coders asSortedCollection: [ :a :b | a name < b name ])
+				collect: [ :each | 
+					BlLazyElement new
 						elementBuilder: [ each asCardElement ];
 						margin: (BlInsets all: 10);
 						background: Color white;
 						look: BrShadowLook;
 						width: 200;
-						height: 65) ].
+						height: 65 ]).
 	^ element asScrollableElement
 ]
 
