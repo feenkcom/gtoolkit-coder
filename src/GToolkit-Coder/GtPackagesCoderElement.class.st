@@ -98,7 +98,7 @@ GtPackagesCoderElement >> buildPackagesElement [
 			(BrLabel new
 				margin: (BlInsets left: 10);
 				look: (BrGlamorousLabelLook new bold glamorousCodeFontAndSize fontSize: 20);
-				text: 'Pharo').
+				text: packagesCoder name).
 	element
 		addChild:
 			(BrLabel new
@@ -217,7 +217,7 @@ GtPackagesCoderElement >> buildToolbar [
 { #category : #'initialize-release' }
 GtPackagesCoderElement >> coders: aPackagesCoder [
 	packagesCoder := aPackagesCoder.
-	self updateSelection: nil
+	self updateSelection: packagesCoder
 ]
 
 { #category : #'initialize-release' }
@@ -237,7 +237,7 @@ GtPackagesCoderElement >> navigationElement [
 		ifNil: [ navigationElement := BrSimpleTree new.
 			navigationElement constraintsDo: [ :c | c linear weight: 0.7 ].
 			navigationElement
-				items: (packagesCoder coders sort: [ :a :b | a name < b name ])
+				items: {packagesCoder}
 				children: [ :anObject | 
 					anObject packageTreeCoders
 						asSortedCollection: [ :a :b | a name < b name ] ].
@@ -258,7 +258,7 @@ GtPackagesCoderElement >> navigationElement [
 
 { #category : #private }
 GtPackagesCoderElement >> selectAndScrollTree [
-	(navigationElement isNil or: [ selectedCoder isNil ])
+	navigationElement isNil
 		ifTrue: [ ^ self ].
 	navigationElement viewModel root
 		allChildrenNodesBreadthFirstDo: [ :treeNode | 
@@ -279,7 +279,7 @@ GtPackagesCoderElement >> updateCoder [
 		childNamed: #coder
 		ifFound: [ :element | element removeFromParent ]
 		ifNone: [  ].
-	coderElement := selectedCoder isNil
+	coderElement := selectedCoder == packagesCoder
 		ifTrue: [ self buildPackagesElement ]
 		ifFalse: [ selectedCoder asElement ].
 	contentPane addChild: coderElement as: #coder
