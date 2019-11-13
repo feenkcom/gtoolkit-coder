@@ -35,6 +35,11 @@ GtPackagesCoder >> initialize [
 				asSortedCollection: [ :a :b | a name < b name ])
 ]
 
+{ #category : #accessing }
+GtPackagesCoder >> name [
+	^ 'Pharo'
+]
+
 { #category : #private }
 GtPackagesCoder >> newCoderFor: anObject [
 	^ GtPackageCoder new package: anObject
