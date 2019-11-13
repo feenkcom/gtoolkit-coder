@@ -30,43 +30,6 @@ GtClassCoderElement >> actOnPackageUpdated: ann [
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildAddClassButton [
-	| look |
-	^ BrButton new
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(look := BrGlamorousWithDropdownLook
-						handle: [ BrButton new
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousIcons add asElement;
-								yourself ]
-						content: [ | coder |
-							coder := GtClassDefinitionCoder new
-								expanded: true;
-								source:
-									'Object subclass: #NameOfSubclass
-	instanceVariableNames: ''''
-	classVariableNames: ''''
-	package: ''''';
-								yourself.
-							coder announcer
-								when: GtCoderEvaluationAnnouncement
-								do: [ :e | 
-									look hide.
-									classCoder forClass: e value ].
-							coder asElement
-								hFitContent;
-								vFitContent;
-								margin: (BlInsets all: 10);
-								yourself ]);
-		icon: BrGlamorousIcons add asElement;
-		yourself
-]
-
-{ #category : #'building ui' }
 GtClassCoderElement >> buildBreadcrumb [
 	^ BrBreadcrumb new
 		look:
@@ -111,12 +74,6 @@ GtClassCoderElement >> buildContainer [
 		look: BrGlamorousTabWithoutBarLook;
 		label: '';
 		stencil: [ contentPane := self buildContentPane ];
-		toolbarStencil: [ BrToolbar new
-				look: BrGlamorousToolbarLook new;
-				addItem: self buildSpotterButton;
-				addItem: self buildPackagesTreeButton;
-				addItem: self buildAddClassButton;
-				yourself ];
 		padding:
 			(BlInsets
 				top: 15
@@ -198,77 +155,6 @@ GtClassCoderElement >> buildPackagesTreeButton [
 		yourself
 ]
 
-{ #category : #'building ui' }
-GtClassCoderElement >> buildSpotterButton [
-	| look |
-	^ BrButton new
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(look := BrGlamorousWithDropdownLook
-						stencil: [ | model |
-							model := GtSpotter new initializeWith: GtCoderSpotterStart new.
-							model announcer
-								when: GtSpotterActOn
-								do: [ :e | 
-									| item |
-									item := e element.
-									e actedUpon: true.
-									self flag: 'FIXME candidates may be wrapped for some reason'.
-									[ (item isKindOf: GtSpotterCandidate)
-										and: [ item item ~~ item ] ]
-										whileTrue: [ item := item item ].
-									((#(singleClick doubleClick keyPressed) includes: e eventType)
-										and: [ {RPackage.
-											ClassDescription.
-											CompiledMethod} anySatisfy: [ :f | item isKindOf: f ] ])
-										ifTrue: [ look hide.
-											(item isKindOf: RPackage)
-												ifTrue: [ self classCoder updateForPackage: item ].
-											(item isKindOf: ClassDescription)
-												ifTrue: [ self classCoder forClass: item ].
-											(item isKindOf: CompiledMethod)
-												ifTrue: [ self classCoder navigationModel
-														ifNotNil: [ :f | f packagesFilterString: item methodClass package name ].
-													self classCoder forClass: item methodClass.
-													self classCoder methodsCoder
-														implementorsFilterString: item selector ] ] ].
-							BlElement new
-								look:
-									(BrGlamorousDropdownLook new
-										handle:
-											(BrButton new
-												look:
-													BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
-														- BrGlamorousButtonExteriorLook;
-												icon: BrGlamorousIcons search asElement;
-												yourself);
-										content:
-											(GtSpotterElement new
-												spotterModel: model;
-												constraintsDo: [ :c | 
-													c horizontal exact: 600.
-													c vertical exact: 400 ];
-												margin: (BlInsets all: 1);
-												geometry: (BlRectangle cornerRadius: 4);
-												in: [ :e | 
-													self
-														flag: 'FIXME need to remove original listener to avoid phlow inspect'.
-													model announcer subscriptions subscriptions
-														detect: [ :g | 
-															g announcementClass == GtSpotterSelectedCandidateChanged
-																and: [ g action isMessageSend
-																		and: [ g action selector = #onCandidateSelected:
-																				and: [ g action receiver == e ] ] ] ]
-														ifFound: [ :g | g announcer subscriptions remove: g ] ];
-												yourself);
-										yourself);
-								background: BrGlamorousColors secondaryHeaderBackgroundColor;
-								yourself ]);
-		icon: BrGlamorousIcons search asElement;
-		yourself
-]
-
 { #category : #accessing }
 GtClassCoderElement >> classCoder [
 	^ classCoder
@@ -281,14 +167,9 @@ GtClassCoderElement >> classCoder: aCoder [
 		when: GtCoderClassUpdatedAnnouncement
 			do: [ self actOnClassUpdated ];
 		when: GtCoderPackageUpdatedAnnouncement
-			do: [ :ann | self actOnPackageUpdated: ann ];
-		when: GtCoderNavigationModelChangedAnnouncement
-			do: [ :ann | self updateNavigationElement ];
-		when: GtClassCoderNavigationAnnouncement
-			do: [ :ann | self showNavigation: ann navigationTab ].
+			do: [ :ann | self actOnPackageUpdated: ann ].
 	container ifNotNil: #removeFromParent.
 	container := self buildContainer.
-	self updateNavigationElement.
 	self
 		addChildFirst: container;
 		updateBreadcrumb
@@ -310,7 +191,6 @@ GtClassCoderElement >> definitionChanged: anAnnouncement [
 	anAnnouncement classAffected == classCoder theClass
 		ifFalse: [ ^ self ].
 	self
-		updateNavigationElement;
 		updateContentTabs;
 		updateBreadcrumb
 ]
@@ -364,23 +244,4 @@ GtClassCoderElement >> updateContentTabs [
 	self removeContentTabs.
 	contentTabs := self buildContentTabs.
 	contentPane addChild: contentTabs asElement at: childIndex
-]
-
-{ #category : #'updating ui' }
-GtClassCoderElement >> updateNavigationElement [
-	| navigationModel visible |
-	
-	visible := false.
-	navigationElement ifNotNil: [
-		visible := navigationElement isAttachedToSceneGraph.
-		navigationElement removeFromParent ].
-	
-	navigationModel := classCoder navigationModel.
-	navigationModel displayPosition = #top
-		ifTrue: [ contentPane layout: BlLinearLayout vertical ].
-	navigationModel displayPosition = #left
-		ifTrue: [ contentPane layout: BlLinearLayout horizontal ].
-	navigationElement := self buildNavigationElement.
-	visible
-		ifTrue: [ contentPane addChildFirst: navigationElement ]
 ]

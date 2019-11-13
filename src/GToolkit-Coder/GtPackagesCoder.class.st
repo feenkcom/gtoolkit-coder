@@ -29,7 +29,10 @@ GtPackagesCoder >> elementClass [
 { #category : #'initialize-release' }
 GtPackagesCoder >> initialize [
 	super initialize.
-	self forItems: RPackageOrganizer default packages
+	self
+		forItems:
+			(RPackageOrganizer default packages
+				asSortedCollection: [ :a :b | a name < b name ])
 ]
 
 { #category : #private }
