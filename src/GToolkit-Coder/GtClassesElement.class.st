@@ -18,12 +18,12 @@ GtClassesElement >> buildContainer [
 			c horizontal matchParent.
 			c vertical fitContent ].
 	element padding: (BlInsets all: 0).
-	(coder coders
-		asSortedCollection: [ :a :b | a theClass name < b theClass name ])
-		do: [ :each | 
-			element
-				addChild:
-					(BlLazyElement new
+	element
+		addChildren:
+			((coder coders
+				asSortedCollection: [ :a :b | a theClass name < b theClass name ])
+				collect: [ :each | 
+					BlLazyElement new
 						elementBuilder: [ each asCardElement ];
 						margin: (BlInsets all: 10);
 						background: Color white;
@@ -31,7 +31,7 @@ GtClassesElement >> buildContainer [
 							BrShadowLook + BrGlamorousWithVerticalResizerLook
 								+ BrGlamorousWithHorizontalResizerLook;
 						width: 200;
-						height: 150) ].
+						height: 150 ]).
 	self addChild: element asScrollableElement
 ]
 
