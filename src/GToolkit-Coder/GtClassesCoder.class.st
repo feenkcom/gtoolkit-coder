@@ -22,7 +22,8 @@ GtClassesCoder >> elementClass [
 
 { #category : #updating }
 GtClassesCoder >> forPackage: aPackage [
-	items := aPackage definedClasses.
+	items := aPackage definedClasses
+		asSortedCollection: [ :a :b | a name < b name ].
 	self updateCoders
 ]
 

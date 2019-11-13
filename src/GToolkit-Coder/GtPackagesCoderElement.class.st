@@ -14,6 +14,7 @@ Class {
 GtPackagesCoderElement >> buildAddClassButton [
 	| look |
 	^ BrButton new
+		label: 'Add class';
 		look:
 			BrGlamorousButtonWithIconLook
 				+
@@ -60,8 +61,58 @@ GtPackagesCoderElement >> buildContentPane [
 ]
 
 { #category : #'building ui' }
+GtPackagesCoderElement >> buildPackageCards [
+	| element |
+	element := BlElement new.
+	element layout: BlFlowLayout new.
+	element
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
+	(packagesCoder coders asSortedCollection: [ :a :b | a name < b name ])
+		do: [ :each | 
+			element
+				addChild:
+					(BlLazyElement new
+						elementBuilder: [ each asCardElement ];
+						margin: (BlInsets all: 10);
+						background: Color white;
+						look: BrShadowLook;
+						width: 200;
+						height: 65) ].
+	^ element asScrollableElement
+]
+
+{ #category : #'building ui' }
+GtPackagesCoderElement >> buildPackagesElement [
+	| element |
+	element := BlElement new.
+	element layout: BlLinearLayout vertical.
+	element padding: (BlInsets all: 5).
+	element
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	element
+		addChild:
+			(BrLabel new
+				margin: (BlInsets left: 10);
+				look: (BrGlamorousLabelLook new bold glamorousCodeFontAndSize fontSize: 20);
+				text: 'Pharo').
+	element
+		addChild:
+			(BrLabel new
+				margin: (BlInsets left: 10);
+				look: BrGlamorousLabelLook new glamorousCodeFontAndSize;
+				text: packagesCoder coders size printString , ' Packages').
+	element addChild: self buildPackageCards.
+	^ element
+]
+
+{ #category : #'building ui' }
 GtPackagesCoderElement >> buildPackagesTreeButton [
 	^ BrToggle new
+		label: 'Show Package Tree';
 		look: BrGlamorousButtonWithIconLook + BrGlamorousToggleBackgroundLook;
 		icon: BrGlamorousIcons tree asElement;
 		when: BrToggleActivatedEvent
@@ -75,6 +126,7 @@ GtPackagesCoderElement >> buildPackagesTreeButton [
 GtPackagesCoderElement >> buildSpotterButton [
 	| look |
 	^ BrButton new
+		label: 'Search';
 		look:
 			BrGlamorousButtonWithIconLook
 				+
@@ -164,7 +216,8 @@ GtPackagesCoderElement >> buildToolbar [
 
 { #category : #'initialize-release' }
 GtPackagesCoderElement >> coders: aPackagesCoder [
-	packagesCoder := aPackagesCoder
+	packagesCoder := aPackagesCoder.
+	self updateSelection: nil
 ]
 
 { #category : #'initialize-release' }
@@ -205,7 +258,7 @@ GtPackagesCoderElement >> navigationElement [
 
 { #category : #private }
 GtPackagesCoderElement >> selectAndScrollTree [
-	navigationElement isNil
+	(navigationElement isNil or: [ selectedCoder isNil ])
 		ifTrue: [ ^ self ].
 	navigationElement viewModel root
 		allChildrenNodesBreadthFirstDo: [ :treeNode | 
@@ -221,11 +274,15 @@ GtPackagesCoderElement >> selectAndScrollTree [
 
 { #category : #events }
 GtPackagesCoderElement >> updateCoder [
+	| coderElement |
 	contentPane
 		childNamed: #coder
 		ifFound: [ :element | element removeFromParent ]
 		ifNone: [  ].
-	contentPane addChild: selectedCoder asElement as: #coder
+	coderElement := selectedCoder isNil
+		ifTrue: [ self buildPackagesElement ]
+		ifFalse: [ selectedCoder asElement ].
+	contentPane addChild: coderElement as: #coder
 ]
 
 { #category : #events }

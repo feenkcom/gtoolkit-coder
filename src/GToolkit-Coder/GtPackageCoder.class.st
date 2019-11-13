@@ -9,6 +9,11 @@ Class {
 }
 
 { #category : #elements }
+GtPackageCoder >> asCardElement [
+	^ GtPackageCardElement new packageCoder: self
+]
+
+{ #category : #elements }
 GtPackageCoder >> asElement [
 	^ GtPackageCoderElement new packageCoder: self
 ]
@@ -30,6 +35,17 @@ GtPackageCoder >> coderForClass: aClass [
 { #category : #accessing }
 GtPackageCoder >> coders [
 	^ self classesCoder coders
+]
+
+{ #category : #ui }
+GtPackageCoder >> gtLiveFor: aView [
+	<gtView>
+	^ aView explicit
+		title: 'Package';
+		priority: 1;
+		stencil: [ self ];
+		actionButtonIcon: BrGlamorousIcons inspect
+			action: [ :aButton | aButton phlow spawnObject: self package ]
 ]
 
 { #category : #accessing }
