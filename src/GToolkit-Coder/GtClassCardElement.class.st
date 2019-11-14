@@ -89,5 +89,13 @@ GtClassCardElement >> initialize [
 	self background: Color white.
 	self padding: (BlInsets all: 10).
 	self layout: BlLinearLayout vertical.
-	self action: [ self phlow spawnObject: classCoder ]
+	self action: [ self selectCoder ]
+]
+
+{ #category : #private }
+GtClassCardElement >> selectCoder [
+	self
+		allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
+		ifFound: [ :element | element updateSelection: classCoder ]
+		ifNone: [ self phlow spawnObject: classCoder ]
 ]

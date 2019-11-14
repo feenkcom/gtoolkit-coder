@@ -56,9 +56,7 @@ GtPackageCardElement >> initialize [
 			c horizontal matchParent.
 			c vertical matchParent ].
 	self padding: (BlInsets all: 10).
-	self
-		when: BlClickEvent
-		do: [ :event | self phlow spawnObject: packageCoder ]
+	self when: BlClickEvent do: [ :event | self selectCoder ]
 ]
 
 { #category : #accessing }
@@ -70,4 +68,12 @@ GtPackageCardElement >> packageCoder [
 GtPackageCardElement >> packageCoder: anObject [
 	packageCoder := anObject.
 	self buildContainer
+]
+
+{ #category : #private }
+GtPackageCardElement >> selectCoder [
+	self
+		allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
+		ifFound: [ :element | element updateSelection: packageCoder ]
+		ifNone: [ self phlow spawnObject: packageCoder ]
 ]
