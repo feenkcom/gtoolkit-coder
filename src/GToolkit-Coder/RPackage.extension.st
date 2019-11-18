@@ -1,6 +1,18 @@
 Extension { #name : #RPackage }
 
 { #category : #'*GToolkit-Coder' }
+RPackage >> gtBrowseFrom: anElement [
+	| aSpace aCoder |
+	aCoder := GtInspector withToolOn: (GtPackageCoder new package: self).
+	aSpace := BlSpace new.
+	aSpace title: 'Coder'.
+	aSpace extent: 1200 @ 600.
+	aSpace addChild: aCoder.
+	aSpace withHalos.
+	anElement showSpace: aSpace
+]
+
+{ #category : #'*GToolkit-Coder' }
 RPackage >> gtDependenciesMapFor: aView [
 	<gtView>
 	^ aView mondrian
