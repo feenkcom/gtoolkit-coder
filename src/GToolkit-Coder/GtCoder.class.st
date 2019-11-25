@@ -223,6 +223,13 @@ GtCoder >> previewElement [
 	^ self asElement
 ]
 
+{ #category : #'accessing-attributes' }
+GtCoder >> removeAttributeNamed: aSymbol [
+	attributes isNil
+		ifTrue: [ ^ self ].
+	attributes removeKey: aSymbol ifAbsent: [  ]
+]
+
 { #category : #scripting }
 GtCoder >> requestFocus [
 	self announce: (GtCoderRequestFocus new coder: self)

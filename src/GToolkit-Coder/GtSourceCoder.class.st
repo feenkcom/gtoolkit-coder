@@ -617,7 +617,9 @@ GtSourceCoder >> object [
 
 { #category : #accessing }
 GtSourceCoder >> object: anObject [
-	self attributeNamed: #object put: anObject
+	anObject isNil
+		ifTrue: [ self removeAttributeNamed: #object ]
+		ifFalse: [ self attributeNamed: #object put: anObject ]
 ]
 
 { #category : #private }
