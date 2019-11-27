@@ -88,25 +88,28 @@ Behavior >> buildSpotterButtonFor: classCoder [
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowse [
-	| aCoder aSpace |
-
-	aCoder := GtInspector createOnPlayBook: (GtClassCoder forClass: self).
-	aSpace := BlSpace new.
-	aSpace title: 'Coder'.
-	aSpace extent: 1200@600.
-	aSpace addChild: aCoder.
-	aSpace withHalos.
-	aSpace show
-]
-
-{ #category : #'*GToolkit-Coder' }
-Behavior >> gtBrowseFrom: anElement [
-	| aCoder aSpace |
-	aCoder := GtInspector withToolOn: (GtClassCoder forClass: self).
+	| aCoder aSpace coder |
+	coder := GtPackagesCoder new.
+	aCoder := GtInspector withToolOn: coder.
 	aSpace := BlSpace new.
 	aSpace title: 'Coder'.
 	aSpace extent: 1200 @ 600.
 	aSpace addChild: aCoder.
 	aSpace withHalos.
-	anElement showSpace: aSpace
+	aSpace show.
+	coder withClass: self
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> gtBrowseFrom: anElement [
+	| aCoder aSpace coder |
+	coder := GtPackagesCoder new.
+	aCoder := GtInspector withToolOn: coder.
+	aSpace := BlSpace new.
+	aSpace title: 'Coder'.
+	aSpace extent: 1200 @ 600.
+	aSpace addChild: aCoder.
+	aSpace withHalos.
+	anElement showSpace: aSpace.
+	coder withClass: self
 ]

@@ -49,3 +49,21 @@ GtPackagesCoder >> newCoderFor: anObject [
 GtPackagesCoder >> packageTreeCoders [
 	^ self coders
 ]
+
+{ #category : #scripting }
+GtPackagesCoder >> withClass: aClass [
+  self announce: (GtPackagesCoderNavigationAnnouncement new coder: (self coderForClass: aClass))
+]
+
+{ #category : #scripting }
+GtPackagesCoder >> withPackage: aPackage [
+  self announce: (GtPackagesCoderNavigationAnnouncement new coder: (self coderForPackage: aPackage))
+]
+
+{ #category : #scripting }
+GtPackagesCoder >> withSelectedMethod: aCompiledMethod [
+	| coder |
+	coder := self coderForClass: aCompiledMethod methodClass.
+	self withClass: aCompiledMethod methodClass.
+	coder withSelectedMethod: aCompiledMethod
+]
