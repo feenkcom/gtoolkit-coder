@@ -2,14 +2,16 @@ Extension { #name : #RPackage }
 
 { #category : #'*GToolkit-Coder' }
 RPackage >> gtBrowseFrom: anElement [
-	| aSpace aCoder |
-	aCoder := GtInspector withToolOn: (GtPackageCoder new package: self).
+	| aSpace aCoder coder |
+	coder := GtPackagesCoder new.
+	aCoder := GtInspector withToolOn: coder.
 	aSpace := BlSpace new.
 	aSpace title: 'Coder'.
 	aSpace extent: 1200 @ 600.
 	aSpace addChild: aCoder.
 	aSpace withHalos.
-	anElement showSpace: aSpace
+	anElement showSpace: aSpace.
+	coder withPackage: self
 ]
 
 { #category : #'*GToolkit-Coder' }

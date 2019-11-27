@@ -216,8 +216,9 @@ GtPackagesCoderElement >> buildToolbar [
 
 { #category : #'initialize-release' }
 GtPackagesCoderElement >> coders: aPackagesCoder [
-	packagesCoder := aPackagesCoder.
-	self updateSelection: packagesCoder
+  packagesCoder := aPackagesCoder.
+  self updateSelection: packagesCoder.
+  packagesCoder when: GtPackagesCoderNavigationAnnouncement do: [:evt |  self updateSelection: evt coder ]
 ]
 
 { #category : #'initialize-release' }
