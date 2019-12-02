@@ -11,29 +11,22 @@ Class {
 GtPackageCardElement >> buildContainer [
 	| extensionMethodsCount |
 	self removeChildren.
-	self
-		addChild:
-			(BlShrinkingTextElement new
-				text: packageCoder name asRopedText bold;
-				constraintsDo: [ :c | 
-					c vertical fitContent.
-					c horizontal matchParent ]).
-	self
-		addChild:
-			(BrLabel new
-				look:
-					(BrGlamorousLabelLook new
-						foreground: BrGlamorousColors defaultButtonTextColor);
-				text: packageCoder package definedClasses size printString , ' Classes').
+	self addChild: (BlShrinkingTextElement new
+			 text: packageCoder name asRopedText bold;
+			 constraintsDo: [ :c | 
+				 c vertical fitContent.
+				 c horizontal matchParent ]).
 	extensionMethodsCount := self extensionMethodsCount.
-	extensionMethodsCount > 0
-		ifTrue: [ self
-				addChild:
-					(BrLabel new
-						look:
-							(BrGlamorousLabelLook new
-								foreground: BrGlamorousColors defaultButtonTextColor);
-						text: extensionMethodsCount printString , ' Extension methods') ]
+	self addChild: (BrLabel new
+			 look: (BrGlamorousLabelLook new foreground:
+						  BrGlamorousColors defaultButtonTextColor);
+			 text:
+				 packageCoder package definedClasses size printString , ' Classes'
+				 , (extensionMethodsCount > 0
+						  ifTrue: [ 
+							  ', ' , extensionMethodsCount printString
+							  , ' Extension methods' ]
+						  ifFalse: [ '' ]))
 ]
 
 { #category : #private }
@@ -50,13 +43,11 @@ GtPackageCardElement >> extensionMethodsCount [
 { #category : #'initialize-release' }
 GtPackageCardElement >> initialize [
 	super initialize.
-	self layout: (BlLinearLayout vertical cellSpacing: 3).
-	self
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	self padding: (BlInsets all: 10).
-	self when: BlClickEvent do: [ :event | self selectCoder ]
+	self layout: (BlLinearLayout vertical cellSpacing: 2).
+	self constraintsDo: [:c | c horizontal matchParent.
+				c vertical matchParent ].
+	self padding: (BlInsets top: 5 left: 10 bottom: 5 right: 10).
+	self when: BlClickEvent do: [:event | self selectCoder ]
 ]
 
 { #category : #accessing }
