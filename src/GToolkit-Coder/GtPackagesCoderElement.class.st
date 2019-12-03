@@ -61,26 +61,15 @@ GtPackagesCoderElement >> buildContentPane [
 ]
 
 { #category : #'building ui' }
-GtPackagesCoderElement >> buildPackageCards [
+GtPackagesCoderElement >> buildPackageList [
 	| element |
-	element := BlElement new.
-	element layout: BlFlowLayout new.
-	element
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	element
-		addChildren:
-			((packagesCoder coders asSortedCollection: [ :a :b | a name < b name ])
-				collect: [ :each | 
-					BlLazyElement new
-						elementBuilder: [ each asCardElement ];
-						margin: (BlInsets all: 10);
-						background: Color white;
-						look: BrShadowLook;
-						width: 200;
-						height: 65 ]).
-	^ element asScrollableElement
+	element := BrSimpleList new.
+	element stencil: [:each | each asCardElement
+					 constraintsDo: [:c | c horizontal matchParent.
+							c vertical fitContent ];
+					 yourself ].
+	element display: (packagesCoder coders asSortedCollection: [:a :b | a name < b name ]).
+	^element
 ]
 
 { #category : #'building ui' }
@@ -105,7 +94,7 @@ GtPackagesCoderElement >> buildPackagesElement [
 				margin: (BlInsets left: 10);
 				look: BrGlamorousLabelLook new glamorousCodeFontAndSize;
 				text: packagesCoder coders size printString , ' Packages').
-	element addChild: self buildPackageCards.
+	element addChild: self buildPackageList.
 	^ element
 ]
 

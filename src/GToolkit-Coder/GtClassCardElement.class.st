@@ -1,57 +1,41 @@
 Class {
 	#name : #GtClassCardElement,
-	#superclass : #BrCard,
+	#superclass : #BlElement,
 	#instVars : [
-		'classCoder',
-		'breadcrumb'
+		'classCoder'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #'building ui' }
-GtClassCardElement >> buildHeaderForClass: class [
-	| element |
-	element := BlElement new.
-	element
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	element margin: (BlInsets bottom: 3).
-	element
-		addChild:
-			(BlShrinkingTextElement new
-				text: class name asRopedText bold;
-				constraintsDo: [ :c | 
-					c vertical fitContent.
-					c horizontal matchParent ]).
-	element addChild: self buildHierarchyBreadcrumb.
-	^ element
-]
-
-{ #category : #'building ui' }
-GtClassCardElement >> buildHierarchyBreadcrumb [
-	| element |
-	element := BrBreadcrumb new.
-	element
-		look:
-			(BrGlamorousBreadcrumbLook new
-				separator: [ BrLabel new
-						look:
-							(BrGlamorousLabelLook new thin
-								foreground: BrGlamorousColors defaultButtonTextColor);
-						text: '>';
-						margin: (BlInsets left: 3 right: 3) ]).
-	classCoder theClass
-		allSuperclassesDo: [ :each | 
-			element
-				addItem:
-					(BrLabel new
-						look:
-							(BrGlamorousLabelLook new thin
-								foreground: BrGlamorousColors defaultButtonTextColor);
-						text: each name) ].
-	^ element asScrollableElement
+GtClassCardElement >> buildContainer [
+	| class comment commentElement |
+	self removeChildren.
+	self addChild: (BlShrinkingTextElement new
+			 text: classCoder name asRopedText bold;
+			 constraintsDo: [ :c | 
+				 c vertical fitContent.
+				 c horizontal matchParent ]).
+	class := classCoder theClass.
+	self addChild: (BrLabel new
+			 look: (BrGlamorousLabelLook new foreground:
+						  BrGlamorousColors defaultButtonTextColor);
+			 text: 'Super: '
+				 , (class superclass ifNil: [ '' ] ifNotNil: [ :spr | spr name ])).
+	comment := self commentText.
+	comment attributes:
+		{ (BlTextForegroundAttribute paint: Color lightGray) }.
+	comment isEmpty ifTrue: [ ^ self ].
+	commentElement := BrEditorElement new.
+	commentElement editor: (BrTextEditor new text: comment readonly).
+	commentElement padding: (BlInsets all: 0).
+	commentElement constraintsDo: [ :c | 
+		c horizontal matchParent.
+		c vertical fitContent ].
+	commentElement when: BlClickEvent do: [ :event | 
+		self selectCoder.
+		event consumed: true ].
+	self addChild: commentElement
 ]
 
 { #category : #accessing }
@@ -61,35 +45,31 @@ GtClassCardElement >> classCoder [
 
 { #category : #accessing }
 GtClassCardElement >> classCoder: coder [
-	| class |
 	classCoder := coder.
-	class := classCoder theClass.
-	self
-		title:
-			((class methods size + class class methods size) printString
-				, ' Methods') asRopedText.
-	self description: class organization classComment asRopedText.
-	self picture: (self buildHeaderForClass: class)
+	self buildContainer
+]
+
+{ #category : #'building ui' }
+GtClassCardElement >> commentText [
+	| comment |
+	comment := classCoder theClass organization classComment.
+	comment size > 100 ifTrue: [ comment := (comment first: 100) , '...' ].
+	^ comment asRopedText
 ]
 
 { #category : #'initialize-release' }
 GtClassCardElement >> initialize [
 	super initialize.
-	self
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	self
-		look:
-			BrIconLook
-				+
-					(BrDescriptionLook new
-						foreground: Color gray;
-						readonly) + (BrTextLabelLook new foreground: Color gray).
-	self background: Color white.
-	self padding: (BlInsets all: 10).
-	self layout: BlLinearLayout vertical.
-	self action: [ self selectCoder ]
+	self layout: (BlLinearLayout vertical cellSpacing: 2).
+	self constraintsDo: [ :c | 
+		c horizontal matchParent.
+		c vertical matchParent ].
+	self padding: (BlInsets
+			 top: 5
+			 left: 10
+			 bottom: 5
+			 right: 10).
+	self when: BlClickEvent do: [ :event | self selectCoder ]
 ]
 
 { #category : #private }
