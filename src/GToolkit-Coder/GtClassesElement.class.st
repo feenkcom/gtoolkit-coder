@@ -11,31 +11,16 @@ Class {
 GtClassesElement >> buildContainer [
 	| element |
 	self removeChildren.
-	element := BlElement new.
-	element layout: BlFlowLayout new.
-	element
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	element padding: (BlInsets all: 0).
-	element
-		addChildren:
-			((coder coders
-				asSortedCollection: [ :a :b | a theClass name < b theClass name ])
-				collect: [ :each | 
-					BlLazyElement 
-						ifEnabledInstanceDo: [ :theLazyElement |
-							theLazyElement
-								elementBuilder: [ each asCardElement ];
-								margin: (BlInsets all: 10);
-								background: Color white;
-								look:
-									BrShadowLook + BrGlamorousWithVerticalResizerLook
-										+ BrGlamorousWithHorizontalResizerLook;
-								width: 200;
-								height: 150 ]
-						elementBuilder: [ each asCardElement ] ]).
-	self addChild: element asScrollableElement
+	element := BrSimpleList new.
+	element stencil: [ :each | 
+		each asCardElement
+			constraintsDo: [ :c | 
+				c horizontal matchParent.
+				c vertical fitContent ];
+			yourself ].
+	element display: (coder coders asSortedCollection: [ :a :b | 
+			 a theClass name < b theClass name ]).
+	self addChild: element
 ]
 
 { #category : #accessing }
