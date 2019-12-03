@@ -7,6 +7,7 @@ Class {
 { #category : #examples }
 GtMethodCoderActionExamples >> addExampleTag [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := self noExampleTag.
 	coder sourceEditor inserter
