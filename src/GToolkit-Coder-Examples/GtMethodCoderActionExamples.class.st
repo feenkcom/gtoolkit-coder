@@ -45,6 +45,7 @@ GtMethodCoderActionExamples >> nonTaggedMethod [
 { #category : #examples }
 GtMethodCoderActionExamples >> removeExampleTag [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := self addExampleTag.
 	coder sourceEditor deleter
