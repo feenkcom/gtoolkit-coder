@@ -23,15 +23,18 @@ GtClassesElement >> buildContainer [
 			((coder coders
 				asSortedCollection: [ :a :b | a theClass name < b theClass name ])
 				collect: [ :each | 
-					BlLazyElement new
-						elementBuilder: [ each asCardElement ];
-						margin: (BlInsets all: 10);
-						background: Color white;
-						look:
-							BrShadowLook + BrGlamorousWithVerticalResizerLook
-								+ BrGlamorousWithHorizontalResizerLook;
-						width: 200;
-						height: 150 ]).
+					BlLazyElement 
+						ifEnabledInstanceDo: [ :theLazyElement |
+							theLazyElement
+								elementBuilder: [ each asCardElement ];
+								margin: (BlInsets all: 10);
+								background: Color white;
+								look:
+									BrShadowLook + BrGlamorousWithVerticalResizerLook
+										+ BrGlamorousWithHorizontalResizerLook;
+								width: 200;
+								height: 150 ]
+						elementBuilder: [ each asCardElement ] ]).
 	self addChild: element asScrollableElement
 ]
 

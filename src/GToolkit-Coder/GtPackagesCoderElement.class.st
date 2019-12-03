@@ -73,13 +73,15 @@ GtPackagesCoderElement >> buildPackageCards [
 		addChildren:
 			((packagesCoder coders asSortedCollection: [ :a :b | a name < b name ])
 				collect: [ :each | 
-					BlLazyElement new
-						elementBuilder: [ each asCardElement ];
-						margin: (BlInsets all: 10);
-						background: Color white;
-						look: BrShadowLook;
-						width: 200;
-						height: 65 ]).
+					BlLazyElement 
+						ifEnabledInstanceDo: [ :theElement |
+							theElement  
+								margin: (BlInsets all: 10);
+								background: Color white;
+								look: BrShadowLook;
+								width: 200;
+								height: 65 ]
+						elementBuilder: [ each asCardElement ] ]).
 	^ element asScrollableElement
 ]
 
