@@ -43,10 +43,18 @@ GtPackageCardElement >> extensionMethodsCount [
 { #category : #'initialize-release' }
 GtPackageCardElement >> initialize [
 	super initialize.
+	self viewModel: (BrInteractiveModel new
+			addStates: {
+				BrActivationModel new.
+				BrPressModel new.
+				BrHoverModel new.
+			}).
+	self look: BrGlamorousButtonExteriorLook.
 	self layout: (BlLinearLayout vertical cellSpacing: 2).
 	self constraintsDo: [:c | c horizontal matchParent.
 				c vertical matchParent ].
-	self padding: (BlInsets top: 5 left: 10 bottom: 5 right: 10).
+	self margin: (BlInsets top: 5 left: 10 bottom: 5 right: 10).
+	self padding: (BlInsets all: 5).
 	self when: BlClickEvent do: [:event | self selectCoder ]
 ]
 
