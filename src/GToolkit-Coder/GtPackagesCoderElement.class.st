@@ -61,7 +61,7 @@ GtPackagesCoderElement >> buildContentPane [
 ]
 
 { #category : #'building ui' }
-GtPackagesCoderElement >> buildPackageCards [
+GtPackagesCoderElement >> buildPackageList [
 	| element |
 	element := BrSimpleList new.
 	element stencil: [:each | each asCardElement
@@ -94,7 +94,7 @@ GtPackagesCoderElement >> buildPackagesElement [
 				margin: (BlInsets left: 10);
 				look: BrGlamorousLabelLook new glamorousCodeFontAndSize;
 				text: packagesCoder coders size printString , ' Packages').
-	element addChild: self buildPackageCards.
+	element addChild: self buildPackageList.
 	^ element
 ]
 
