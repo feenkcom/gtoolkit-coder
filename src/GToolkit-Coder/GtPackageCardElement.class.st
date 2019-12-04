@@ -9,24 +9,19 @@ Class {
 
 { #category : #'building ui' }
 GtPackageCardElement >> buildContainer [
-	| extensionMethodsCount |
 	self removeChildren.
 	self addChild: (BlShrinkingTextElement new
 			 text: packageCoder name asRopedText bold;
 			 constraintsDo: [ :c | 
 				 c vertical fitContent.
 				 c horizontal matchParent ]).
-	extensionMethodsCount := self extensionMethodsCount.
-	self addChild: (BrLabel new
-			 look: (BrGlamorousLabelLook new foreground:
-						  BrGlamorousColors defaultButtonTextColor);
+	self addChild: (BlShrinkingTextElement new
 			 text:
-				 packageCoder package definedClasses size printString , ' Classes'
-				 , (extensionMethodsCount > 0
-						  ifTrue: [ 
-							  ', ' , extensionMethodsCount printString
-							  , ' Extension methods' ]
-						  ifFalse: [ '' ]))
+				 (self packageDetailsString asRopedText glamorousRegularFont thin 
+					  foreground: BrGlamorousColors defaultButtonTextColor);
+			 constraintsDo: [ :c | 
+				 c vertical fitContent.
+				 c horizontal matchParent ])
 ]
 
 { #category : #private }
@@ -49,7 +44,7 @@ GtPackageCardElement >> initialize [
 				BrPressModel new.
 				BrHoverModel new.
 			}).
-	self look: BrGlamorousButtonExteriorLook.
+	self look: (BrGlamorousButtonExteriorLook new borderPaint: Color transparent).
 	self layout: (BlLinearLayout vertical cellSpacing: 2).
 	self constraintsDo: [:c | c horizontal matchParent.
 				c vertical matchParent ].
@@ -67,6 +62,17 @@ GtPackageCardElement >> packageCoder [
 GtPackageCardElement >> packageCoder: anObject [
 	packageCoder := anObject.
 	self buildContainer
+]
+
+{ #category : #'building ui' }
+GtPackageCardElement >> packageDetailsString [
+	| extensionMethodsCount |
+	extensionMethodsCount := self extensionMethodsCount.
+	^ packageCoder package definedClasses size printString , ' Classes'
+	  , (extensionMethodsCount > 0
+			   ifTrue: [ 
+			   ', ' , extensionMethodsCount printString , ' Extension methods' ]
+			   ifFalse: [ '' ])
 ]
 
 { #category : #private }
