@@ -17,18 +17,22 @@ GtClassCardElement >> buildContainer [
 				 c vertical fitContent.
 				 c horizontal matchParent ]).
 	class := classCoder theClass.
-	self addChild: (BrLabel new
-			 look: (BrGlamorousLabelLook new foreground:
+	self addChild: (BlShrinkingTextElement new
+			 text: (('Super: '
+				   ,
+					   (class superclass ifNil: [ '' ] ifNotNil: [ :spr | spr name ]))
+					  asRopedText glamorousRegularFont thin foreground:
 						  BrGlamorousColors defaultButtonTextColor);
-			 text: 'Super: '
-				 , (class superclass ifNil: [ '' ] ifNotNil: [ :spr | spr name ])).
+			 constraintsDo: [ :c | 
+				 c vertical fitContent.
+				 c horizontal matchParent ]).
 	comment := self commentText.
-	comment attributes:
-		{ (BlTextForegroundAttribute paint: Color lightGray) }.
+	comment glamorousRegularFont thin foreground:
+		BrGlamorousColors defaultButtonTextColor.
 	comment isEmpty ifTrue: [ ^ self ].
 	commentElement := BrEditorElement new.
 	commentElement editor: (BrTextEditor new text: comment readonly).
-	commentElement padding: (BlInsets all: 0).
+	commentElement padding: (BlInsets left: 1).
 	commentElement constraintsDo: [ :c | 
 		c horizontal matchParent.
 		c vertical fitContent ].
@@ -66,7 +70,7 @@ GtClassCardElement >> initialize [
 				BrPressModel new.
 				BrHoverModel new.
 			}).
-	self look: BrGlamorousButtonExteriorLook.
+	self look: (BrGlamorousButtonExteriorLook new borderPaint: Color transparent).
 	self layout: (BlLinearLayout vertical cellSpacing: 2).
 	self constraintsDo: [ :c | 
 		c horizontal matchParent.
