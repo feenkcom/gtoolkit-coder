@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'packagesCoder',
 		'contentPane',
-		'navigationElement',
 		'selectedCoder'
 	],
 	#category : #'GToolkit-Coder-UI'
@@ -86,13 +85,13 @@ GtPackagesCoderElement >> buildPackagesElement [
 		addChild:
 			(BrLabel new
 				margin: (BlInsets left: 10);
-				look: (BrGlamorousLabelLook new bold glamorousCodeFontAndSize fontSize: 20);
+				look: (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 20);
 				text: packagesCoder name).
 	element
 		addChild:
 			(BrLabel new
 				margin: (BlInsets left: 10);
-				look: BrGlamorousLabelLook new glamorousCodeFontAndSize;
+				look: BrGlamorousLabelLook new glamorousRegularFont;
 				text: packagesCoder coders size printString , ' Packages').
 	element addChild: self buildPackageList.
 	^ element
@@ -100,14 +99,21 @@ GtPackagesCoderElement >> buildPackagesElement [
 
 { #category : #'building ui' }
 GtPackagesCoderElement >> buildPackagesTreeButton [
+	| look |
 	^ BrToggle new
 		label: 'Show Package Tree';
-		look: BrGlamorousButtonWithIconLook + BrGlamorousToggleBackgroundLook;
+		look:
+			BrGlamorousButtonWithIconLook
+				+
+					(look := BrGlamorousWithDropdownLook
+						handle: [ BrButton new
+								look:
+									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
+										- BrGlamorousButtonExteriorLook;
+								icon: BrGlamorousIcons tree asElement;
+								yourself ]
+						content: [ self navigationElement ]);
 		icon: BrGlamorousIcons tree asElement;
-		when: BrToggleActivatedEvent
-			do: [ contentPane addChildFirst: self navigationElement ];
-		when: BrToggleDeactivatedEvent
-			do: [ self navigationElement removeFromParent ];
 		yourself
 ]
 
@@ -223,33 +229,42 @@ GtPackagesCoderElement >> initialize [
 
 { #category : #'building ui' }
 GtPackagesCoderElement >> navigationElement [
-	^ navigationElement
-		ifNil: [ navigationElement := BrSimpleTree new.
-			navigationElement constraintsDo: [ :c | c linear weight: 0.7 ].
+	| navigationElement element |
+	element := BlElement new.
+	element margin: (BlInsets all: 10).
+	element
+		constraintsDo: [ :c | 
+			c horizontal exact: 400.
+			c vertical exact: 400 ].
+	navigationElement := BrSimpleTree new.
+	navigationElement
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	navigationElement
+		items: {packagesCoder}
+		children: [ :anObject | 
+			anObject packageTreeCoders
+				asSortedCollection: [ :a :b | a name < b name ] ].
+	navigationElement
+		stencil:
+			(BrSimpleTreeRowStencilBuilder new
+				text:
+					[ :anObject | anObject name asRopedText glamorousRegularFontAndSize ]).
+	navigationElement
+		when: BrSelectionChanged
+		do: [ :anEvent | 
 			navigationElement
-				items: {packagesCoder}
-				children: [ :anObject | 
-					anObject packageTreeCoders
-						asSortedCollection: [ :a :b | a name < b name ] ].
-			navigationElement
-				stencil:
-					(BrSimpleTreeRowStencilBuilder new
-						text: [ :anObject | anObject name asRopedText glamorousRegularFontAndSize ]).
-			navigationElement
-				when: BrSelectionChanged
-				do: [ :anEvent | 
-					navigationElement
-						selectedNodeDo: [ :aNode | 
-							selectedCoder := aNode value.
-							self updateCoder ] ].
-			self selectAndScrollTree.
-			navigationElement ]
+				selectedNodeDo: [ :aNode | 
+					selectedCoder := aNode value.
+					self updateCoder ] ].
+	self selectAndScrollTreeIn: navigationElement.
+	element addChild: navigationElement as: #tree.
+	^ element
 ]
 
 { #category : #private }
-GtPackagesCoderElement >> selectAndScrollTree [
-	navigationElement isNil
-		ifTrue: [ ^ self ].
+GtPackagesCoderElement >> selectAndScrollTreeIn: navigationElement [
 	navigationElement viewModel root
 		allChildrenNodesBreadthFirstDo: [ :treeNode | 
 			| selectedNode |
@@ -278,6 +293,5 @@ GtPackagesCoderElement >> updateCoder [
 { #category : #events }
 GtPackagesCoderElement >> updateSelection: aCoder [
 	selectedCoder := aCoder.
-	self updateCoder.
-	self selectAndScrollTree
+	self updateCoder
 ]

@@ -11,7 +11,7 @@ Class {
 GtPackageCardElement >> buildContainer [
 	self removeChildren.
 	self addChild: (BlShrinkingTextElement new
-			 text: packageCoder name asRopedText bold;
+			 text: packageCoder name asRopedText glamorousRegularFont bold;
 			 constraintsDo: [ :c | 
 				 c vertical fitContent.
 				 c horizontal matchParent ]).
