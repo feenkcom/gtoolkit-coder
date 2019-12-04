@@ -7,6 +7,7 @@ Class {
 { #category : #examples }
 GtMethodCoderActionExamples >> addExampleTag [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := self noExampleTag.
 	coder sourceEditor inserter
@@ -44,6 +45,7 @@ GtMethodCoderActionExamples >> nonTaggedMethod [
 { #category : #examples }
 GtMethodCoderActionExamples >> removeExampleTag [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := self addExampleTag.
 	coder sourceEditor deleter
