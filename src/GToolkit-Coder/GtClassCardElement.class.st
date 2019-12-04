@@ -12,7 +12,7 @@ GtClassCardElement >> buildContainer [
 	| class comment commentElement |
 	self removeChildren.
 	self addChild: (BlShrinkingTextElement new
-			 text: classCoder name asRopedText bold;
+			 text: classCoder name asRopedText glamorousRegularFont bold;
 			 constraintsDo: [ :c | 
 				 c vertical fitContent.
 				 c horizontal matchParent ]).

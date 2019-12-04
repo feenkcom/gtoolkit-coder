@@ -21,7 +21,7 @@ GtPackageCoderElement >> buildContentPane [
 GtPackageCoderElement >> buildPackageInformationLabel [
 	^ BrLabel new
 		margin: (BlInsets left: 10);
-		look: BrGlamorousLabelLook new glamorousCodeFontAndSize;
+		look: BrGlamorousLabelLook new glamorousRegularFont;
 		text: packageCoder package definedClasses size printString , ' Classes'
 ]
 
@@ -29,7 +29,7 @@ GtPackageCoderElement >> buildPackageInformationLabel [
 GtPackageCoderElement >> buildPackageLabel [
 	^ BrLabel new
 		margin: (BlInsets left: 10);
-		look: (BrGlamorousLabelLook new bold glamorousCodeFontAndSize fontSize: 20);
+		look: (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 20);
 		text: packageCoder package name
 ]
 
