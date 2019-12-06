@@ -474,6 +474,10 @@ GtSourceCoder >> extractVariableNodeFromString: aString [
 	^ nil
 ]
 
+{ #category : #private }
+GtSourceCoder >> finishedStylingCollapsedText [
+]
+
 { #category : #ui }
 GtSourceCoder >> gtViewStylersFor: aView [
 	<gtView>
@@ -802,7 +806,7 @@ GtSourceCoder >> styleCollapsedText [
 	| styleBlock |
 	self expanded
 		ifTrue: [ ^ self ].
-	styleBlock := [ self collapsedEditor styleText ].
+	styleBlock := [ self collapsedEditor styleTextAndAfterDo: [ self finishedStylingCollapsedText ] ].
 	self collapsedEditor stylerStrategy view
 		ifNotNil:
 			[ :view | view enqueueTask: (BlTaskAction new action: styleBlock) ]
