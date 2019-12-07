@@ -284,7 +284,7 @@ GtPackagesCoderElement >> updateCoder [
 		childNamed: #coder
 		ifFound: [ :element | element removeFromParent ]
 		ifNone: [  ].
-	coderElement := selectedCoder == packagesCoder
+	coderElement := selectedCoder = packagesCoder
 		ifTrue: [ self buildPackagesElement ]
 		ifFalse: [ selectedCoder asElement ].
 	contentPane addChild: coderElement as: #coder

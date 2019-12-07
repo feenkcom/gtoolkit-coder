@@ -3,14 +3,22 @@ Class {
 	#superclass : #Announcer,
 	#instVars : [
 		'package',
+		'packageTagCoders',
 		'classesCoder'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #'instance creation' }
+GtPackageCoder class >> forPackage: aPackage [
+	^ self new
+		package: aPackage;
+		yourself
+]
+
 { #category : #elements }
 GtPackageCoder >> asCardElement [
-	^ GtPackageCardElement new packageCoder: self
+	^ GtPackageCardElement new coder: self
 ]
 
 { #category : #elements }
@@ -63,6 +71,26 @@ GtPackageCoder >> package: aRPackage [
 	package := aRPackage.
 	classesCoder notNil
 		ifTrue: [ classesCoder forPackage: aRPackage ]
+]
+
+{ #category : #accessing }
+GtPackageCoder >> packageTagCoders [
+	^ packageTagCoders
+		ifNil: [ packageTagCoders := (package classTags
+				collect: [ :each | 
+					GtPackageTagCoder new
+						packageTag: each;
+						packageCoder: self;
+						yourself ]) asSortedCollection: [ :a :b | a name < b name ] ]
+]
+
+{ #category : #accessing }
+GtPackageCoder >> packageTagForClass: aClass [
+	^ (package classTagForClass: aClass)
+		ifNotNil: [ :tag | 
+			self packageTagCoders
+				detect: [ :each | each packageTag = tag ]
+				ifNone: [  ] ]
 ]
 
 { #category : #accessing }

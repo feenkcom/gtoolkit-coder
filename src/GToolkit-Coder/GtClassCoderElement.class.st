@@ -5,119 +5,45 @@ Class {
 		'classCoder',
 		'container',
 		'contentPane',
-		'contentTabs',
-		'breadcrumb',
-		'navigationElement'
+		'contentTabs'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #callbacks }
 GtClassCoderElement >> actOnClassUpdated [
-	self classCoder navigationModel 
+	self classCoder navigationModel
 		updateSelectionWith: self classCoder theClass.
-	self
-		updateContentTabs;
-		updateBreadcrumb
+	self updateContentTabs
 ]
 
 { #category : #callbacks }
 GtClassCoderElement >> actOnPackageUpdated: ann [
 	self classCoder navigationModel 
 		updateSelectionWith: ann package.
-	self removeContentTabs.
-	breadcrumb removeAllItems.
+	self removeContentTabs
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildBreadcrumb [
-	^ BrBreadcrumb new
-		look:
-			(BrGlamorousBreadcrumbLook new
-				separator: [ BrLabel new
-						look:
-							(BrGlamorousLabelLook new thin
-								foreground: BrGlamorousColors defaultButtonTextColor);
-						text: '>';
-						margin: (BlInsets left: 3 right: 3) ]);
-		yourself
-]
-
-{ #category : #'building ui' }
-GtClassCoderElement >> buildBreadcrumbToggleForClass: aClass [
-	^ BrToggle new
-		margin: (BlInsets all: 2);
-		activated: (classCoder methodsCoder filteredClass: aClass);
-		label: aClass name asRopedText glamorousRegularFontAndSize;
-		look: GtClassBreadcrumbToggleLook;
-		when: BrToggleActivatedEvent
-			do: [ :anEvent | 
-			classCoder methodsCoder addMethodsForClass: aClass.
-			classCoder definitionsCoder addDefinitionsForClass: aClass.
-			classCoder commentsCoder addCommentForClass: aClass ];
-		when: BrToggleDeactivatedEvent
-			do: [ :anEvent | 
-			classCoder methodsCoder removeMethodsForClass: aClass.
-			classCoder definitionsCoder removeDefinitionsForClass: aClass.
-			classCoder commentsCoder removeCommentForClass: aClass.
-			classCoder methodsCoder hasFilter
-				ifFalse: [ aClass == classCoder theClass
-						ifTrue: [ anEvent consumed: true ].
-					(breadcrumb itemAt: 1) widgetDo: #activate ] ];
-		yourself
-]
-
-{ #category : #'building ui' }
-GtClassCoderElement >> buildContainer [
-	| tab tabGroup |
-	tab := BrTab new
-		look: BrGlamorousTabWithoutBarLook;
-		label: '';
-		stencil: [ contentPane := self buildContentPane ];
-		padding:
-			(BlInsets
-				top: 15
-				right: 0
-				bottom: 15
-				left: 10);
-		addChild:
-			((breadcrumb := self buildBreadcrumb) asScrollableElement
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical fitContent ];
-				yourself);
-		yourself.
-	tabGroup := BrTabGroup new
-		look:
-			(BrGlamorousTabGroupLook new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
-		addTab: tab;
-		constraintsDo: [ :c | 
-			c vertical matchParent.
-			c horizontal matchParent ];
-		addChild:
-			(BlElement new
-				constraintsDo: [ :c | 
-					c ignoreByLayout.
-					c horizontal matchParent.
-					c vertical exact: 5 ];
-				background: (Color fromHexString: 'a0d911');
-				yourself);
-		yourself.
-	^ tabGroup
+GtClassCoderElement >> buildClassLabel [
+	^ BrLabel new
+		margin: (BlInsets left: 10);
+		look: (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 20);
+		text: classCoder name
 ]
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildContentPane [
-	^ BlElement new
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ];
-		in: [ :e | 
-			classCoder theClass
-				ifNil: [ contentTabs := nil ]
-				ifNotNil: [ e addChild: (contentTabs := self buildContentTabs) ] ];
-		yourself
+	| element |
+	element := BlElement new.
+	element layout: BlLinearLayout vertical.
+	element constraintsDo: [ :c | 
+		c horizontal matchParent.
+		c vertical matchParent ].
+	element addChild: self buildClassLabel.
+	element addChild: self buildParentLink.
+	element addChild: self buildContentTabs.
+	^ element
 ]
 
 { #category : #'building ui' }
@@ -137,22 +63,87 @@ GtClassCoderElement >> buildContentTabs [
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildNavigationElement [
-	^ classCoder navigationModel asElement
-		constraintsDo: [ :c | c linear weight: 0.7 ];
-		yourself
-]
-
-{ #category : #'building ui' }
-GtClassCoderElement >> buildPackagesTreeButton [
-	^ BrToggle new
-		look: BrGlamorousButtonWithIconLook + BrGlamorousToggleBackgroundLook;
-		icon: BrGlamorousIcons tree asElement;
-		when: BrToggleActivatedEvent
-			do: [ contentPane addChildFirst: navigationElement ];
-		when: BrToggleDeactivatedEvent
-			do: [ navigationElement removeFromParent ];
-		yourself
+GtClassCoderElement >> buildParentLink [
+	| element superclassElement packageElement packageCoder |
+	element := BlElement new.
+	element layout: BlLinearLayout new beVertical.
+	element
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
+	classCoder theClass superclass notNil
+		ifTrue: [ superclassElement := BlElement new.
+			superclassElement layout: BlLinearLayout new beHorizontal.
+			superclassElement
+				constraintsDo: [ :c | 
+					c horizontal matchParent.
+					c vertical fitContent ].
+			superclassElement
+				addChild:
+					(BrLabel new
+						margin: (BlInsets left: 10);
+						look: BrGlamorousLabelLook new glamorousRegularFont;
+						text: 'Super: ').
+			superclassElement
+				addChild:
+					(BrButton new
+						look:
+							(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
+								+ BrGlamorousLabelLook new glamorousRegularFont;
+						label: classCoder theClass superclass name;
+						action: [ | coder |
+							coder := GtClassCoder forClass: classCoder theClass superclass.
+							self
+								allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
+								ifFound: [ :p | p updateSelection: coder ]
+								ifNone: [ self phlow spawnObject: coder ] ]).
+			element addChild: superclassElement ].
+	packageElement := BlElement new.
+	packageCoder := GtPackageCoder
+		forPackage: classCoder theClass package.
+	packageElement layout: BlLinearLayout new beHorizontal.
+	packageElement
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
+	packageElement
+		addChild:
+			(BrLabel new
+				margin: (BlInsets left: 10);
+				look: BrGlamorousLabelLook new glamorousRegularFont;
+				text: 'In: ').
+	packageElement
+		addChild:
+			(BrButton new
+				look:
+					(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
+						+ BrGlamorousLabelLook new glamorousRegularFont;
+				label: packageCoder name;
+				action: [ self
+						allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
+						ifFound: [ :p | p updateSelection: packageCoder ]
+						ifNone: [ self phlow spawnObject: packageCoder ] ]).
+	(packageCoder packageTagForClass: classCoder theClass)
+		ifNotNil: [ :tagCoder | 
+			packageElement
+				addChild:
+					(BrLabel new
+						margin: (BlInsets left: 5);
+						look: BrGlamorousLabelLook new glamorousRegularFont;
+						text: 'Tag: ').
+			packageElement
+				addChild:
+					(BrButton new
+						look:
+							(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
+								+ BrGlamorousLabelLook new glamorousRegularFont;
+						label: tagCoder name;
+						action: [ self
+								allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
+								ifFound: [ :p | p updateSelection: tagCoder ]
+								ifNone: [ self phlow spawnObject: tagCoder ] ]) ].
+	element addChild: packageElement.
+	^ element
 ]
 
 { #category : #accessing }
@@ -169,10 +160,8 @@ GtClassCoderElement >> classCoder: aCoder [
 		when: GtCoderPackageUpdatedAnnouncement
 			do: [ :ann | self actOnPackageUpdated: ann ].
 	container ifNotNil: #removeFromParent.
-	container := self buildContainer.
-	self
-		addChildFirst: container;
-		updateBreadcrumb
+	container := self buildContentPane.
+	self addChildFirst: container
 ]
 
 { #category : #private }
@@ -190,9 +179,7 @@ GtClassCoderElement >> classViewPragmas [
 GtClassCoderElement >> definitionChanged: anAnnouncement [
 	anAnnouncement classAffected == classCoder theClass
 		ifFalse: [ ^ self ].
-	self
-		updateContentTabs;
-		updateBreadcrumb
+	self updateContentTabs
 ]
 
 { #category : #initialization }
@@ -216,23 +203,6 @@ GtClassCoderElement >> removeContentTabs [
 	contentTabs
 		ifNotNil: [ contentPane removeChild: contentTabs.
 			contentTabs := nil ]
-]
-
-{ #category : #'updating ui' }
-GtClassCoderElement >> showNavigation: aSymbol [
-	navigationElement isAttachedToSceneGraph
-		ifFalse: [ contentPane addChildFirst: navigationElement ].
-	navigationElement selectTab: aSymbol
-]
-
-{ #category : #private }
-GtClassCoderElement >> updateBreadcrumb [
-	breadcrumb removeAllItems.
-	classCoder theClass
-		ifNotNil: [ :c | 
-			c
-				withAllSuperclassesDo:
-					[ :each | breadcrumb addItem: (self buildBreadcrumbToggleForClass: each) ] ]
 ]
 
 { #category : #'updating ui' }
