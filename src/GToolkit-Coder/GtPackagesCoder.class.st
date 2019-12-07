@@ -4,6 +4,11 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #comparing }
+GtPackagesCoder >> = anObject [
+	^ self class = anObject class
+]
+
 { #category : #accessing }
 GtPackagesCoder >> coderForClass: aClass [
 	^ (self coderForPackage: aClass package)
@@ -26,6 +31,11 @@ GtPackagesCoder >> elementClass [
 	^ GtPackagesCoderElement
 ]
 
+{ #category : #comparing }
+GtPackagesCoder >> hash [
+	^ self class hash
+]
+
 { #category : #'initialize-release' }
 GtPackagesCoder >> initialize [
 	super initialize.
@@ -41,8 +51,8 @@ GtPackagesCoder >> name [
 ]
 
 { #category : #private }
-GtPackagesCoder >> newCoderFor: anObject [
-	^ GtPackageCoder new package: anObject
+GtPackagesCoder >> newCoderFor: aPackage [
+	^ GtPackageCoder forPackage: aPackage
 ]
 
 { #category : #accessing }

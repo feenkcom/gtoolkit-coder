@@ -27,6 +27,13 @@ GtClassesCoder >> forPackage: aPackage [
 	self updateCoders
 ]
 
+{ #category : #updating }
+GtClassesCoder >> forPackageTag: aPackageTag [
+	items := aPackageTag classes
+		asSortedCollection: [ :a :b | a name < b name ].
+	self updateCoders
+]
+
 { #category : #private }
 GtClassesCoder >> newCoderFor: aClass [
 	| coder |
