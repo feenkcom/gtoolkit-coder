@@ -6,12 +6,5 @@ Object >> gtMetaFor: aView [
 	^ aView explicit
 		title: 'Meta';
 		priority: 200;
-		stencil: [ | element |
-			self
-				flag:
-					'TODO this reuses class coder, but depends on its implementation to hide the header, which is not very elegant'.
-			element := (GtClassCoder forObject: self) asElement.
-			element children first children first children first background: Color transparent.
-			element children first children first children first children second visibility: BlVisibility gone.
-			element ]
+		stencil: [ (GtClassCoder forObject: self) asElement ]
 ]
