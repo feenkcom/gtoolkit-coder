@@ -45,6 +45,17 @@ GtPackageTagCoder >> coders [
 	^ self classesCoder coders
 ]
 
+{ #category : #ui }
+GtPackageTagCoder >> gtLiveFor: aView [
+	<gtView>
+	^ aView explicit
+		title: 'Package Tag';
+		priority: 1;
+		stencil: [ self ];
+		actionButtonIcon: BrGlamorousIcons inspect
+			action: [ :aButton | aButton phlow spawnObject: self packageTag ]
+]
+
 { #category : #accessing }
 GtPackageTagCoder >> name [
 	^ packageTag name
