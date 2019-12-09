@@ -73,22 +73,20 @@ GtCoderElement >> gtAllShortcutsFor: aView [
 { #category : #initialization }
 GtCoderElement >> initialize [
 	super initialize.
+
 	self
 		vFitContent;
 		hMatchParent;
 		margin: (BlInsets all: 4);
 		look:
-			GtCoderExpanderLook new
-				+
-					(BrInteractiveLook new
-						style: [ :aStyler | 
-							aStyler default: [ self background: Color transparent ].
-							aStyler expanded: [ self background: Color white ] ]);
+			GtCoderExpanderLook new + (BrInteractiveCommonLook new
+				default: [ self background: Color transparent ];
+				expanded: [ self background: Color white ]);
 		addShortcut:
 			(BlShortcut new
 				combination: BlKeyCombination primaryReturn;
 				action: [ self toggle ]).
-	expandableModel
+	self
 		when: BrExpansionChanged
 		do: [ :event | coder ifNotNil: [ :e | e expanded: self isExpanded ] ]
 ]
