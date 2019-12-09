@@ -45,10 +45,17 @@ GtCoderContentElement >> initialize [
 	super initialize.
 	self
 		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c | 
-			c vertical fitContent.
-			c horizontal matchParent.
-			c margin: (BlInsets left: 5) ]
+		constraintsDo: [ :c | c margin: (BlInsets left: 5) ].
+
+	self viewModel: (BrInteractiveModel new addStates: {
+		BrLayoutHorizontalResizerModel matchParent.
+		BrLayoutVerticalResizerModel fitContent }).
+		
+	self look: (BrLayoutResizerLook inherit
+		inheritIn: [ :aBlock | self
+			childNamed: #editor
+			ifFound: aBlock
+			ifNone: [  ] ])
 ]
 
 { #category : #'instance creation' }
