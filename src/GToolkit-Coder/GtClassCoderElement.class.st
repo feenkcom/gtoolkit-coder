@@ -34,32 +34,31 @@ GtClassCoderElement >> buildClassLabel [
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildContentPane [
-	| element |
-	element := BlElement new.
-	element layout: BlLinearLayout vertical.
-	element constraintsDo: [ :c | 
+	contentPane := BlElement new.
+	contentPane layout: BlLinearLayout vertical.
+	contentPane constraintsDo: [ :c | 
 		c horizontal matchParent.
 		c vertical matchParent ].
-	element addChild: self buildClassLabel.
-	element addChild: self buildParentLink.
-	element addChild: self buildContentTabs.
-	^ element
+	contentPane addChild: self buildClassLabel.
+	contentPane addChild: self buildParentLink.
+	contentPane addChild: self buildContentTabs.
+	^ contentPane
 ]
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildContentTabs [
-	| tabPragmas tabGroup |
+	| tabPragmas  |
 	tabPragmas := self classViewPragmas.
-	tabGroup := BrTabGroup new.
-	tabGroup look: BrGlamorousTabGroupLook new.
-	tabGroup constraintsDo: [ :c | c linear weight: 2 ].
+	contentTabs := BrTabGroup new.
+	contentTabs look: BrGlamorousTabGroupLook new.
+	contentTabs constraintsDo: [ :c | c linear weight: 2 ].
 	tabPragmas
 		do: [ :each | 
 			classCoder theClass
 				perform: each method selector
-				with: tabGroup
+				with: contentTabs
 				with: classCoder ].
-	^ tabGroup
+	^ contentTabs
 ]
 
 { #category : #'building ui' }
