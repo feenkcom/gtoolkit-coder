@@ -7,11 +7,19 @@ Class {
 { #category : #examples }
 GtPharoSnippetCoderExamples >> snippetCoder [
 	<gtExample>
-	^ GtPharoSnippetCoder new
+	| aSnippetCoder |
+	aSnippetCoder := GtPharoSnippetCoder new
 		source:
 			'3 +
 	4';
-		yourself
+		yourself.
+
+	self assert: aSnippetCoder expanded.
+	self
+		assert: aSnippetCoder variableBindings
+		equals: GtSnippetBindings new.
+	
+	^ aSnippetCoder
 ]
 
 { #category : #examples }
