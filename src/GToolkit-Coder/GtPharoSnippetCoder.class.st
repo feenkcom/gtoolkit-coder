@@ -43,7 +43,7 @@ GtPharoSnippetCoder >> highlightBindingsStrategy [
 { #category : #initialization }
 GtPharoSnippetCoder >> initialize [
 	bindingStrategy := GtSnippetBindingStrategy new.
-	bindingStrategy bindings: Dictionary new.
+	bindingStrategy bindings: GtSnippetBindings new.
 	super initialize.
 	expanded := true.
 	self source: ''
