@@ -287,7 +287,7 @@ GtSourceCoder >> doItAndGoAll: anElement [
 GtSourceCoder >> doItAndGoSelection: anElement [
 	| source value |
 	source := self selectedSource.
-	source isNil
+	source isEmpty
 		ifTrue: [ ^ self ].
 	value := self evaluateSource: source.
 	value == self
