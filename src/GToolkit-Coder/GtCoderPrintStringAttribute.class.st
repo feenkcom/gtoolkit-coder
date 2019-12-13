@@ -15,7 +15,7 @@ GtCoderPrintStringAttribute class >> forString: aString [
 ]
 
 { #category : #accessing }
-GtCoderPrintStringAttribute >> affect: aBrText in: anEditorElement [
+GtCoderPrintStringAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| element |
 	element := BrLabel new
 		look: (BrGlamorousLabelLook new fontSize: 12);

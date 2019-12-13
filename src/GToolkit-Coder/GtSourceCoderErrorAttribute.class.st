@@ -17,10 +17,10 @@ GtSourceCoderErrorAttribute class >> for: aString [
 ]
 
 { #category : #accessing }
-GtSourceCoderErrorAttribute >> affect: aBrText in: anEditorElement [
+GtSourceCoderErrorAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| text attributes |
 	text := string asRopedText.
-	attributes := (anEditorElement editor text attributesAt: aBrText end) reject: [ :each | each = self ].
+	attributes := (anEditorElement editor text attributesAt: aTBrTextEditorTextualPiece textEnd) reject: [ :each | each = self ].
 	text
 		attributes: attributes;
 		foreground: BrGlamorousColors defaultButtonTextColor;

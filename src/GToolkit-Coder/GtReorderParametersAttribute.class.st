@@ -27,7 +27,7 @@ GtReorderParametersAttribute >> actionBlock: aBlock [
 ]
 
 { #category : #accessing }
-GtReorderParametersAttribute >> affect: aBrText in: anEditorElement [
+GtReorderParametersAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 	^ BlElement new
 		size: icon extent;
 		background: icon;
