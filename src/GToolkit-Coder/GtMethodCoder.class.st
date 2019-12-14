@@ -197,7 +197,7 @@ GtMethodCoder >> debugMethod [
 GtMethodCoder >> debugSelectionOrExampleFrom: anElement [
 	| source |
 	source := self selectedSource.
-	source isNil
+	source isEmpty
 		ifTrue: [ ^ self debugExampleFrom: anElement ].
 	^ self debugSource: source
 ]
@@ -206,7 +206,7 @@ GtMethodCoder >> debugSelectionOrExampleFrom: anElement [
 GtMethodCoder >> debugSelectionOrMethod [
 	| source |
 	source := self selectedSource.
-	source isNil
+	source isEmpty
 		ifTrue: [ ^ self debugMethod ].
 	^ self debugSource: source
 ]
