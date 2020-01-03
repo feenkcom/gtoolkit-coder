@@ -81,7 +81,30 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault [
 		aStep check
 			label: 'Check Coder Editor Text';
 			satisfies: [ :anEditorElement | anEditorElement editor text asString = '? anObject' ];
-			onChildNamed: #editor ].
+			onChildNamed: #editor.
+		aStep check 
+			label: 'Check Coder UI is Collapsed';
+			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
+	aScripter substep: 'Collapse and Check Coder' do: [ :aStep |
+		aStep click
+			label: 'Click on Expander';
+			onChildAt: 1.
+		aStep check
+			label: 'Check Coder Editor Text';
+			satisfies: [ :anEditorElement | anEditorElement editor text asString = '? anObject' ];
+			onChildNamed: #editor.
+		aStep check 
+			label: 'Check Coder UI Is Collapsed';
+			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
 	aScripter syncContinue.
 	^ aScripter
 ]
@@ -91,14 +114,37 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromModel [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI.
-	aScripter do
-		label: 'Expand Coder';
-		action: [ :aCoder | aCoder expanded: true ];
-		onModel.
-	aScripter check
-		label: 'Check Coder Editor Text';
-		satisfies: [ :anEditorElement | anEditorElement editor text asString = self binaryMethod sourceCode ];
-		onChildNamed: #editor.
+	aScripter substep: 'Expand and Check Coder' do: [ :aStep |
+		aStep do
+			label: 'Expand Coder';
+			action: [ :aCoder | aCoder expanded: true ];
+			onModel.
+		aStep check
+			label: 'Check Coder Editor Text';
+			satisfies: [ :anEditorElement | anEditorElement editor text asString = self binaryMethod sourceCode ];
+			onChildNamed: #editor.
+		aStep wait forEmptySpaceTaskQueue ].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI.
+	aScripter substep: 'Expand and Check Coder' do: [ :aStep |
+		aStep click
+			label: 'Click on Expander';
+			onChildAt: 1.
+		aStep check 
+			label: 'Check Coder UI is Expanded';
+			satisfies: [ :aCoderElement | aCoderElement isExpanded ].
+		aStep check
+			label: 'Check Coder Editor Text';
+			satisfies: [ :anEditorElement | anEditorElement editor text asString = self binaryMethod sourceCode ];
+			onChildNamed: #editor.
+		aStep wait forEmptySpaceTaskQueue ].
 	aScripter syncContinue.
 	^ aScripter
 ]
