@@ -324,6 +324,26 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 	^ aScripter
 ]
 
+{ #category : #'examples - examle method' }
+GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePragma [
+	<gtExample>
+	| aScripter |
+	aScripter := self exampleMethodCoderUI_ExpandedFromUI.
+
+	aScripter substeps: 'Remove Pragma' do: [ :aStep |
+		aStep do
+			label: 'Delete > character';
+			action: [ :anEditor | anEditor deleter from: 20 to: 21; delete ];
+			onChildNamed: #editor;
+			onBrTextEditor.
+	self 
+		checkFor: aScripter 
+		numberOfMainActions: 3
+		addonsAction: 0 ].
+	aScripter syncContinue.
+	^ aScripter
+]
+
 { #category : #utilities }
 GtMethodCoderByScripterExamples >> expandFromUI: aScripter method: aMethod [
 	<gtExample>
