@@ -337,7 +337,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePra
 			onChildNamed: #editor;
 			onBrTextEditor.
 	self 
-		checkFor: aScripter 
+		checkFor: aStep
 		numberOfMainActions: 3
 		addonsAction: 0 ].
 	aScripter syncContinue.
