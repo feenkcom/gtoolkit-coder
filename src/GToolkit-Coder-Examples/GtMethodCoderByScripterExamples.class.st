@@ -332,7 +332,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePra
 
 	aScripter substeps: 'Remove Pragma' do: [ :aStep |
 		aStep do
-			label: 'Delete > character';
+			label: 'Delete e character from <gtExample>';
 			action: [ :anEditor | anEditor deleter from: 20 to: 21; delete ];
 			onChildNamed: #editor;
 			onBrTextEditor.
