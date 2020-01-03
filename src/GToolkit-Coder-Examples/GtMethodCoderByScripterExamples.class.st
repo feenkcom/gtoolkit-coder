@@ -149,6 +149,31 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI [
 	^ aScripter
 ]
 
+{ #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CodeStyle [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
+	aScripter checks: 'Check Expanded Source Code Style' do: [ :aStep |
+		aStep check
+			label: 'Check Method Name Attributes';
+			anySatisfies: [ :aTextAttribute | aTextAttribute = BlFontGenericFamilyAttribute monospace ];
+			onChildNamed: #editor;
+			onBrTextEditor;
+			onBrTextEditorText;
+			onTextAttributesAt: 1.
+		aStep check
+			label: 'Check Comment Attributes';
+			anySatisfies: [ :aTextAttribute | aTextAttribute = (BlTextForegroundAttribute new paint: Color gray darker) ];
+			onChildNamed: #editor;
+			onBrTextEditor;
+			onBrTextEditorText;
+			onTextAttributesAt: 13.
+	].
+	aScripter syncContinue.
+	^ aScripter
+]
+
 { #category : #'examples - basic' }
 GtMethodCoderByScripterExamples >> methodCoder [
 	<gtExample>
