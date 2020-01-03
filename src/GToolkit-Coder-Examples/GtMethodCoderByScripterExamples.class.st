@@ -84,7 +84,85 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault [
 			onChildNamed: #editor.
 		aStep check 
 			label: 'Check Coder UI is Collapsed';
-			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
+			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] 
+		].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_BreadcrumbContent [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI.
+	aScripter checks: 'Check Breadcrumb' do: [ :aStep | 
+		aStep  check 
+			label: 'Check Breadcrumb Package Name';
+			satisfies: [ :aButton | aButton label asString = self class package name ];
+			onChildAt: 2;
+			onChildOfClass: GtCoderContentElement;
+			onChildAt: 1;
+			onChildOfClass: BrBreadcrumb;
+			onChildAt: 1.
+		aStep  check 
+			label: 'Check Breadcrumb Class Name';
+			satisfies: [ :aButton | aButton label asString = self className ];
+			onChildAt: 2;
+			onChildOfClass: GtCoderContentElement;
+			onChildAt: 1;
+			onChildOfClass: BrBreadcrumb;
+			onChildAt: 3.
+		].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_BreadcrumbOnClassNameClick [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI.
+	aScripter substeps: 'Click On Breadcrumb' do: [ :aStep |
+		aStep click
+			label: 'Click On Class Name';
+			onChildAt: 2;
+			onChildOfClass: GtCoderContentElement;
+			onChildAt: 1;
+			onChildOfClass: BrBreadcrumb;
+			onChildAt: 3.
+		aStep  check 
+			label: 'Check Triggered Spawn Object Event';
+			satisfies: [ :theScripter | theScripter events reversed 
+				detectEventOfClass: GtPhlowObjectToSpawn
+				ifFound: [ :theEvent | theEvent object class = GtClassCoder and: [ theEvent object theClass = self class ] ]
+				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
+			onScripter.
+		].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_BreadcrumbOnPackageClick [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI.
+	aScripter substeps: 'Click On Breadcrumb' do: [ :aStep |
+		aStep click
+			label: 'Click On Package Name';
+			onChildAt: 2;
+			onChildOfClass: GtCoderContentElement;
+			onChildAt: 1;
+			onChildOfClass: BrBreadcrumb;
+			onChildAt: 1.
+		aStep  check 
+			label: 'Check Triggered Spawn Object Event';
+			satisfies: [ :theScripter | theScripter events reversed 
+				detectEventOfClass: GtPhlowObjectToSpawn
+				ifFound: [ :theEvent | theEvent object class = RPackage and: [ theEvent object name = self class package name ] ]
+				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
+			onScripter.
+		].
 	aScripter syncContinue.
 	^ aScripter
 ]
