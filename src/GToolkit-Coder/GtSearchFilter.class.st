@@ -91,7 +91,11 @@ GtSearchFilter >> defaultFilterScope [
 GtSearchFilter >> gtItemsFor: aView [
 	"this is a view that is polymorphic with the one defined in ${method:Collection>>#gtItemsFor:}$"
 	<gtView>
-	^ self result gtItemsFor: aView
+	^ aView forward
+		title: 'Live';
+		priority: 10;
+		object: [ self result ];
+		view: #gtItemsFor:
 ]
 
 { #category : #accessing }
