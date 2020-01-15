@@ -69,10 +69,8 @@ GtSourceCoderRequester >> hasBindingOf: aSymbol [
 GtSourceCoderRequester >> notify: message at: anIndex in: aString [
 	| index |
 	index := (anIndex max: 1) min: coder sourceEditor text size.
-	(coder sourceEditor text from: index to: index) attributes: {(GtSourceCoderErrorAttribute for: message)}.
-	coder sourceEditor
-		invalidate: index to: index;
-		update: index to: index.
+	(coder sourceEditor text from: index to: index)
+		attributes: {(GtSourceCoderErrorAttribute for: message)}.
 	coder sourceEditor moveCursorTo: index
 ]
 

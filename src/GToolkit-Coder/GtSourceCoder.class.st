@@ -117,9 +117,7 @@ GtSourceCoder >> clearPreviousEvaluations [
 			GtCoderPrintStringAttribute.
 			GtPlaygroundDebugExceptionButtonAttribute.
 			GtSourceCoderErrorAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
-	self sourceEditor
-		invalidateAll;
-		updateAll
+	self sourceEditor updater all update
 ]
 
 { #category : #private }
@@ -713,10 +711,8 @@ GtSourceCoder >> reportParseError: aString at: anInteger on: textEditor [
 	position := anInteger - 1 max: 1.
 	text size < position
 		ifTrue: [ ^ self ].
-	(text from: position to: position) attributes: {(GtSourceCoderErrorAttribute for: aString , ' ->')}.
-	textEditor
-		invalidate: position to: position;
-		update: position to: position.
+	(text from: position to: position)
+		attributes: {(GtSourceCoderErrorAttribute for: aString , ' ->')}.
 	textEditor moveCursorTo: position
 ]
 
@@ -837,9 +833,7 @@ GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 			styleResult: value 
 			at: interval 
 			showPrintString: aBoolean ].
-	self sourceEditor
-		invalidateAll;
-		updateAll
+	self sourceEditor updater all update
 ]
 
 { #category : #private }
