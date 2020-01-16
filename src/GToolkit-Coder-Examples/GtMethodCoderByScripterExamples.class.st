@@ -327,6 +327,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 { #category : #'examples - examle method' }
 GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePragma [
 	<gtExample>
+	<noTest>
 	| aScripter |
 	aScripter := self exampleMethodCoderUI_ExpandedFromUI.
 
