@@ -9,6 +9,11 @@ GtMethodCoderByScripterExamples >> ? anObject [
 	"Test binary method"
 ]
 
+{ #category : #'sample methods' }
+GtMethodCoderByScripterExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
+	"test method for highlighting implementors"
+]
+
 { #category : #'examples - basic' }
 GtMethodCoderByScripterExamples >> basicMethodCoder [
 	<gtExample>
@@ -206,7 +211,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CheckActio
 	self 
 		checkFor: aScripter 
 		numberOfMainActions: 2 
-		addonsAction: 0.
+		contextAction: 0.
 	aScripter syncContinue.
 	^ aScripter
 ]
@@ -236,8 +241,46 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CodeStyle 
 	^ aScripter
 ]
 
+{ #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_WithoutExampleActions [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI_ExpandedFromModel.
+	self 
+		checkFor: aScripter 
+		numberOfMainActions: 2
+		contextAction: 0.
+	self checkFor: aScripter absenceOfContextActionNamed: 'Play'.
+	aScripter syncContinue.
+	^ aScripter
+]
+
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMainActionsCount addonsAction: anAddonsActionsCount [
+GtMethodCoderByScripterExamples >> checkFor: aScripter absenceOfContextActionNamed: anActionName [
+	<gtExample>
+	aScripter check 
+			label: 'Check Context Action Existence Named ', anActionName asString;
+			nonSatisfies: [ :aContextActions | aContextActions title = anActionName translated
+				and: [ aContextActions action method = (GtMethodCoder>>#exampleAstFor:into:) ] ];
+			onModel;
+			onChildFromMessage: #contextActions.
+	^ aScripter
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripter existenceOfContextActionNamed: anActionName [
+	<gtExample>
+	aScripter check 
+			label: 'Check Context Action Existence Named ', anActionName asString;
+			anySatisfies: [ :aContextActions | aContextActions title = anActionName translated
+				and: [ aContextActions action method = (GtMethodCoder>>#exampleAstFor:into:) ] ];
+			onModel;
+			onChildFromMessage: #contextActions.
+	^ aScripter
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMainActionsCount contextAction: anAddonsActionsCount [
 	<gtExample>
 	aScripter substeps: 'Check Available Action Buttons' do: [ :aStep |
 		aStep wait forEmptySpaceTaskQueue.
@@ -257,6 +300,38 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMai
 			onChildAt: 3.
 		].
 	^ aScripter
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep numberfOfTextAttributes: aNumber OfType: aClass [
+	<gtExample>
+	aScripterOrStep check
+		label: 'Check Editor Text Attributes';
+		satisfies: [ :aText | 
+			| anIterator aCounter |
+			aCounter := 0.
+			anIterator := aText iterator.
+			[ anIterator hasNext ] whileTrue: [ (anIterator attributes 
+				anySatisfy: [ :eachAttribute | eachAttribute class = aClass ]) ifTrue: [ aCounter := aCounter + 1 ].
+				anIterator next ].
+			aCounter = aNumber ];
+		onChildNamed: #editor;
+		onBrTextEditor;
+		onBrTextEditorText.
+	^ aScripterOrStep
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributes: anIndex anySatisfies: aBlock [
+	<gtExample>
+	aScripterOrStep check
+		label: 'Check Editor Text Attributes';
+		anySatisfies: aBlock;
+		onChildNamed: #editor;
+		onBrTextEditor;
+		onBrTextEditorText;
+		onTextAttributesAt: anIndex.
+	^ aScripterOrStep
 ]
 
 { #category : #utilities }
@@ -319,7 +394,8 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 	self 
 		checkFor: aScripter 
 		numberOfMainActions: 2 
-		addonsAction: 3.
+		contextAction: 3.
+	self checkFor: aScripter existenceOfContextActionNamed: 'Play'.
 	aScripter syncContinue.
 	^ aScripter
 ]
@@ -337,10 +413,11 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePra
 			action: [ :anEditor | anEditor deleter from: 20 to: 21; delete ];
 			onChildNamed: #editor;
 			onBrTextEditor.
-	self 
-		checkFor: aStep
-		numberOfMainActions: 3
-		addonsAction: 0 ].
+		self 
+			checkFor: aStep
+			numberOfMainActions: 3
+			contextAction: 0.
+		self checkFor: aStep absenceOfContextActionNamed: 'Play' ].
 	aScripter syncContinue.
 	^ aScripter
 ]
@@ -352,6 +429,7 @@ GtMethodCoderByScripterExamples >> expandFromUI: aScripter method: aMethod [
 		aStep click
 			label: 'Click on Expander';
 			onChildAt: 1.
+		aStep wait forEmptySpaceTaskQueue.
 		aStep check 
 			label: 'Check Coder UI is Expanded';
 			satisfies: [ :aCoderElement | aCoderElement isExpanded ].
@@ -369,6 +447,54 @@ GtMethodCoderByScripterExamples >> methodCoder [
 	| aScripter |
 	aScripter := self scripter.
 	aScripter set model: [ self basicMethodCoder ].
+	^ aScripter
+]
+
+{ #category : #'examples - pattern highlighter' }
+GtMethodCoderByScripterExamples >> patternHighlighterMethod [
+	<gtExample>
+	^ self class >> #a:a:a:a:
+]
+
+{ #category : #'examples - pattern highlighter' }
+GtMethodCoderByScripterExamples >> patternHighlighterMethodCoder [
+	<gtExample>
+	| aMethod aCoder |
+	aMethod := self patternHighlighterMethod.
+	aCoder := self coderOnMethod: aMethod.
+	aCoder highlighter: (GtImplementorPatternHighlighter forPattern: ':a:').
+	^ aCoder
+]
+
+{ #category : #'examples - pattern highlighter' }
+GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI [
+	<gtExample>
+	| aScripter |
+	aScripter := self scripterForBlock: [ self patternHighlighterMethodCoder ].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - pattern highlighter' }
+GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded [
+	<gtExample>
+	| aScripter |
+	aScripter := self patternHighlighterMethodCoderUI.
+	self expandFromUI: aScripter method: self patternHighlighterMethod.
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - pattern highlighter' }
+GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded_CheckUndelineAttributes [
+	<gtExample>
+	| aScripter |
+	aScripter := self patternHighlighterMethodCoderUI_Expanded.
+	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
+		self checkFor: aStep textAttributes: 2 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
+		self checkFor: aStep numberfOfTextAttributes: 6 OfType: BlTextUnderlineAttribute.
+	].
+	aScripter syncContinue.
 	^ aScripter
 ]
 
