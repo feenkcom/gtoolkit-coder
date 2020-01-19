@@ -16,28 +16,6 @@ GtMethodCoderStylerExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> acrossKeywordImplementorPatternHighlighting [
-	<gtExample>
-	| coder |
-	coder := GtMethodCoder new.
-	coder forMethod: self class >> #a:a:a:a:.
-	coder highlighter: (GtImplementorPatternHighlighter forPattern: ':a:').
-	coder sourceEditor useSyncStylerStrategy.
-	coder expanded: true.
-	coder asElement.
-	self waitForTasks.
-	coder styleText.
-	self assert: (self hasUnderlineAttributeIn: coder).
-	self
-		assert:
-			(self
-				attributeCountOfType: self unlineAttributeClass
-				in: coder sourceEditor) = 6.
-	coder sourceEditor useDefaultStylerStrategy.
-	^ coder
-]
-
-{ #category : #accessing }
 GtMethodCoderStylerExamples >> addPragmaMethodStyling [
 	<gtExample>
 	| coder |
