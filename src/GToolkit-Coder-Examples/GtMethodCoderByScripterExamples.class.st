@@ -389,6 +389,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI [
 { #category : #'examples - examle method' }
 GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActionButtons [
 	<gtExample>
+	<noTest>
 	| aScripter |
 	aScripter := self exampleMethodCoderUI_ExpandedFromUI.
 	self 
@@ -403,6 +404,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 { #category : #'examples - examle method' }
 GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePragma [
 	<gtExample>
+	<noTest>
 	| aScripter |
 	aScripter := self exampleMethodCoderUI_ExpandedFromUI.
 
@@ -487,6 +489,7 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded [
 { #category : #'examples - pattern highlighter' }
 GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded_CheckUndelineAttributes [
 	<gtExample>
+	<noTest>
 	| aScripter |
 	aScripter := self patternHighlighterMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
