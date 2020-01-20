@@ -73,8 +73,14 @@ GtMethodsCoder >> selectAndScrollTo: aMethodCoder [
 			(GtCodersScrollToCoder new
 				coders: self;
 				sourceCoder: aMethodCoder).
-	BlTktWorkerProvider highUICPUBoundPool
-		schedule:
-			[ (Delay forMilliseconds: 100) wait.	"Wait for scrolling to create the element"
-			aMethodCoder requestFocus ] asBlTktTerminableCommand
+	BlUseAsyncFeatures 
+		ifEnabledDo: [ 
+			| aCommand |
+			"Wait for scrolling to create the element"
+			aCommand := BlTaskAtPostponedTerminableTask new
+				command: [ aMethodCoder requestFocus ];
+				pool: BlTktWorkerProvider highUICPUBoundPool;
+				scheduledTime: BlTime real now + 100 milliSeconds.
+			BlTaskAtQueue default schedule: aCommand ]
+		otherwise: [ aMethodCoder requestFocus ]
 ]
