@@ -882,10 +882,15 @@ GtSourceCoder >> symbolFor: aNode [
 { #category : #updating }
 GtSourceCoder >> updateAddOns [
 	addOnMonitor
-		critical: [ self terminateAddOnsCommand.
+		critical: [ 
+			self terminateAddOnsCommand.
 			addOnCommand := self updateAddOnsCommand.
-			addOnCommand name: 'AddOns: ' , self identityHash printString.
-			BlTktWorkerProvider highUICPUBoundPool schedule: addOnCommand ]
+			BlUseAsyncFeatures 
+				ifEnabledDo: [ 
+					addOnCommand name: 'AddOns: ' , self identityHash printString.
+					BlTktWorkerProvider highUICPUBoundPool schedule: addOnCommand ]
+				otherwise: [ 
+					addOnCommand execute ] ]
 ]
 
 { #category : #updating }
