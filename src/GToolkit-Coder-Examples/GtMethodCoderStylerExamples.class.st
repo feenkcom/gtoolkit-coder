@@ -18,6 +18,7 @@ GtMethodCoderStylerExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> addPragmaMethodStyling [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := self renamePragmaMethodStyling.
 	coder sourceEditor useSyncStylerStrategy.
@@ -57,6 +58,7 @@ GtMethodCoderStylerExamples >> b [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> exampleMethodStyling [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #b.
 	coder sourceEditor useSyncStylerStrategy.
@@ -106,6 +108,7 @@ GtMethodCoderStylerExamples >> hasUnderlineAttributeIn: coder [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> insideMultipleKeywordImplementorPatternHighlighting [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #a:a:a:a:.
 	coder expanded: true.
@@ -132,6 +135,7 @@ GtMethodCoderStylerExamples >> notAnExample [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> printStringImplementorPatternHighlighting [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #printStringReference.
 	coder
@@ -159,6 +163,7 @@ GtMethodCoderStylerExamples >> printStringReference [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := GtMethodCoder forMethod: self class >> #printStringReference.
 	coder
@@ -176,6 +181,7 @@ GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
 	<gtExample>
+	<noTest>
 	| coder |
 	coder := self exampleMethodStyling.
 	coder sourceEditor useSyncStylerStrategy.
