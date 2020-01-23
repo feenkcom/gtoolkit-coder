@@ -5,8 +5,7 @@ Class {
 	#name : #GtSelectorExplanationLinkStyler,
 	#superclass : #GtSourceExplanationLinkStyler,
 	#instVars : [
-		'selectorsDictionary',
-		'attributesPosition'
+		'selectorsDictionary'
 	],
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
@@ -26,22 +25,10 @@ GtSelectorExplanationLinkStyler >> addSelectors: aCollection [
 	aCollection do: [ :selector | self addSelector: selector ].
 ]
 
-{ #category : #testing }
-GtSelectorExplanationLinkStyler >> hasExplanationLinkAttributeAt: aPosition [
-	^ self positions anySatisfy: [ :position | 
-		aPosition = position ].
-]
-
 { #category : #initialization }
 GtSelectorExplanationLinkStyler >> initialize [
 	super initialize.
 	selectorsDictionary := IdentityDictionary new.
-	attributesPosition := OrderedCollection new.
-]
-
-{ #category : #accessing }
-GtSelectorExplanationLinkStyler >> positions [
-	^ attributesPosition.
 ]
 
 { #category : #accessing }
@@ -51,19 +38,18 @@ GtSelectorExplanationLinkStyler >> selectorsAssociations [
 
 { #category : #visiting }
 GtSelectorExplanationLinkStyler >> visitLiteralNode: aNode [
+	super visitLiteralNode: aNode.
 	self selectorsAssociations do: [:association |
-		super visitLiteralNode: aNode.
 		(aNode value = association key) ifTrue:
 			[ self styleFrom: (aNode start - 1) to: (aNode start - 1) with: 
-				{ GtYellowCircleExplanationTextAdornment forIdentifier: (association value) }.
-			  selectorsDictionary removeKey: (association key) ]].
+				{ GtYellowCircleExplanationTextAdornment forIdentifier: (association value) } ]]
 ]
 
 { #category : #visiting }
 GtSelectorExplanationLinkStyler >> visitMessageNode: aMessageNode [
 	| attribute |
+	super visitMessageNode: aMessageNode.
 	self selectorsAssociations do: [ :association | 
-		super visitMessageNode: aMessageNode.
 		aMessageNode selector = association key ifTrue: [ 
 			aMessageNode selectorParts
 				with: aMessageNode keywordsPositions
@@ -75,18 +61,14 @@ GtSelectorExplanationLinkStyler >> visitMessageNode: aMessageNode [
 						             ifFalse: [ 
 							             GtYellowCircleExplanationTextAdornment 
 								             forIdentifier: association value ].
-					(self hasExplanationLinkAttributeAt: position - 1)
-						ifFalse: [
-							self styleFrom: position - 1 to: position - 1 with: { attribute }.
-							attributesPosition add: position-1 ] ] ] ]
+							self styleFrom: position - 1 to: position - 1 with: { attribute } ] ] ]
 ]
 
 { #category : #visiting }
 GtSelectorExplanationLinkStyler >> visitPragmaNode: aNode [
+	super visitPragmaNode: aNode.
 	self selectorsAssociations do: [:association |
-		super visitPragmaNode: aNode.
 		(aNode selector = association key) ifTrue: 
 			[ self styleFrom: (aNode start - 1) to: (aNode start - 1) 
-				with: { GtYellowCircleExplanationTextAdornment forIdentifier: (association value) }.
-			  selectorsDictionary removeKey: (association key) ]].
+				with: { GtYellowCircleExplanationTextAdornment forIdentifier: (association value) } ]].
 ]
