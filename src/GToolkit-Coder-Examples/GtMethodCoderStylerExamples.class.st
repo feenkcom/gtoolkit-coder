@@ -74,6 +74,87 @@ GtMethodCoderStylerExamples >> exampleMethodStyling [
 	^ coder
 ]
 
+{ #category : #'as yet unclassified' }
+GtMethodCoderStylerExamples >> explanationLinkExample [
+	<gtExample>
+	| container inspectorContainer editor coder coderElement selectors variables |
+	
+	inspectorContainer := BlElement new
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ];
+		layout: BlLinearLayout horizontal;
+		background: Color white;
+		margin: (BlInsets all: 10);
+		look: BrShadowLook.
+	container := BlElement new
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ];
+		layout: BlLinearLayout horizontal.
+	container explainer isExplanationHolder: true.
+	
+	selectors := GtSelectorExplanationLinkStyler new.
+	selectors addSelectors: {#syntaxOn:. #not. #+. #size. #<. #do:. #show: }.
+
+	variables := GtVariableExplanationLinkStyler new.
+	variables addVariables: {'self'. 'y' }.
+	
+	coder := GtMethodCoder forMethod: (GtPharoMethodExample>>#exampleWithNumber:).
+	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { variables. selectors }).
+	coderElement := (coder expanded: true) asElement.
+	coderElement forceLayout.
+	inspectorContainer addChild: coderElement.
+	
+	editor := BrEditor new
+		look: BrGlamorousRegularEditorLook;
+		text: self explanationLinkExampleText;
+		margin: (BlInsets all: 10);
+		constraintsDo: [ :c | 
+			c vertical matchParent.
+			c horizontal matchParent.
+			c linear weight: 0.3 ].
+	
+	container addChild: editor.
+	container addChild: inspectorContainer.
+	^ container.
+]
+
+{ #category : #'as yet unclassified' }
+GtMethodCoderStylerExamples >> explanationLinkExampleText [
+	| text |
+	
+	text := ('pragma' asRopedText glamorousExplanationFor: #syntaxOn:),
+	'
+' asRopedText,
+	('not' asRopedText glamorousExplanationFor: #not),
+	'
+' asRopedText,
+	('addition' asRopedText glamorousExplanationFor: #+),
+	'
+' asRopedText,
+	('size' asRopedText glamorousExplanationFor: #size),
+	'
+' asRopedText,
+	('comparison' asRopedText glamorousExplanationFor: #<),
+	'
+' asRopedText,
+	('do' asRopedText glamorousExplanationFor: #do:),
+	'
+' asRopedText,
+	('show' asRopedText glamorousExplanationFor: #show:),
+	'
+' asRopedText,
+	('self' asRopedText glamorousExplanationFor: #self),
+	'
+' asRopedText,
+	('variable y' asRopedText glamorousExplanationFor: #y).
+	
+	^text
+		glamorousRegularFont;
+		foreground: Color black.
+]
+
 { #category : #accessing }
 GtMethodCoderStylerExamples >> hasAttributeOfType: aClass in: aTextEditor [
 	^ (self attributeCountOfType: aClass in: aTextEditor) > 0
@@ -201,4 +282,70 @@ GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> unlineAttributeClass [
 	^ BlTextUnderlineAttribute
+]
+
+{ #category : #'as yet unclassified' }
+GtMethodCoderStylerExamples >> viewsExplanationWithLinks [
+	<gtExample>
+	| container inspectorContainer editor coder coderElement selectors variables |
+	inspectorContainer := BlElement new
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ];
+		layout: BlLinearLayout horizontal;
+		background: Color white;
+		margin: (BlInsets all: 10);
+		look: BrShadowLook.
+	container := BlElement new
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ];
+		layout: BlLinearLayout horizontal.
+	container explainer isExplanationHolder: true.
+	
+	selectors := GtSelectorExplanationLinkStyler new.
+	selectors addSelectors: {#gtView. #list. #title: }.
+	
+	variables := GtVariableExplanationLinkStyler new.
+	variables addVariableName: 'aView'.
+	
+	coder := GtMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsCardsListOn:).
+	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { selectors. variables }).
+	coderElement := (coder expanded: true) asElement.
+	coderElement forceLayout.
+	
+	inspectorContainer addChild: coderElement.
+	
+	editor := BrEditor new
+		look: BrGlamorousRegularEditorLook;
+		text: self viewsExplanationWithLinksText;
+		margin: (BlInsets all: 10);
+		constraintsDo: [ :c | 
+			c vertical matchParent.
+			c horizontal matchParent.
+			c linear weight: 0.3 ].
+	container addChild: editor.
+	container addChild: inspectorContainer.
+	^ container
+]
+
+{ #category : #'as yet unclassified' }
+GtMethodCoderStylerExamples >> viewsExplanationWithLinksText [
+	| text |
+	
+	text := '
+To create a custom view, first you have to specify the ' asRopedText,
+('gtView' asRopedText glamorousExplanationFor: #gtView),
+' pragma.
+Then, for the ' asRopedText,
+('view' asRopedText glamorousExplanationFor: #aView),
+' object you sent as argument, you have to specify the ' asRopedText,
+('layout' asRopedText glamorousExplanationFor: #list),
+' it will take and the ' asRopedText,
+('title' asRopedText glamorousExplanationFor: #title:),
+' it will have.' asRopedText.
+	
+	^ text
+		glamorousRegularFont;
+		foreground: Color black.
 ]

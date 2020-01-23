@@ -5,7 +5,8 @@ Class {
 	#name : #GtSelectorExplanationLinkStyler,
 	#superclass : #GtSourceExplanationLinkStyler,
 	#instVars : [
-		'selectorsDictionary'
+		'selectorsDictionary',
+		'attributesPosition'
 	],
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
@@ -20,10 +21,27 @@ GtSelectorExplanationLinkStyler >> addSelector: aSymbol withIdentifier: anIdenti
 	selectorsDictionary at: aSymbol put: anIdentifier.
 ]
 
+{ #category : #adding }
+GtSelectorExplanationLinkStyler >> addSelectors: aCollection [
+	aCollection do: [ :selector | self addSelector: selector ].
+]
+
+{ #category : #testing }
+GtSelectorExplanationLinkStyler >> hasExplanationLinkAttributeAt: aPosition [
+	^ self positions anySatisfy: [ :position | 
+		aPosition = position ].
+]
+
 { #category : #initialization }
 GtSelectorExplanationLinkStyler >> initialize [
 	super initialize.
 	selectorsDictionary := IdentityDictionary new.
+	attributesPosition := OrderedCollection new.
+]
+
+{ #category : #accessing }
+GtSelectorExplanationLinkStyler >> positions [
+	^ attributesPosition.
 ]
 
 { #category : #accessing }
@@ -57,8 +75,10 @@ GtSelectorExplanationLinkStyler >> visitMessageNode: aMessageNode [
 						             ifFalse: [ 
 							             GtYellowCircleExplanationTextAdornment 
 								             forIdentifier: association value ].
-					self styleFrom: position - 1 to: position - 1 with: { attribute } ].
-			selectorsDictionary removeKey: association key ] ]
+					(self hasExplanationLinkAttributeAt: position - 1)
+						ifFalse: [
+							self styleFrom: position - 1 to: position - 1 with: { attribute }.
+							attributesPosition add: position-1 ] ] ] ]
 ]
 
 { #category : #visiting }
