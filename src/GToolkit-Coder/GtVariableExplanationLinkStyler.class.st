@@ -38,8 +38,8 @@ GtVariableExplanationLinkStyler >> variablesAssociations [
 
 { #category : #visiting }
 GtVariableExplanationLinkStyler >> visitVariableNode: aVariableNode [
+	super visitVariableNode: aVariableNode.
 	self variablesAssociations do: [:association |
-		super visitVariableNode: aVariableNode.
 		(aVariableNode name asString = association key) ifTrue:
 			[ self styleFrom: (aVariableNode start - 1) to: (aVariableNode start - 1) 
 				with: { GtYellowCircleExplanationTextAdornment forIdentifier: (association value) } ]].
