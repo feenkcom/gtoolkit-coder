@@ -13,7 +13,7 @@ GtYellowCircleExplanationTextAdornment class >> forIdentifier: anIdentifier [
 	
 	circleElement := BlElement new
 				geometry: BlEllipse new;
-				size: 10@10;
+				size: 5@5;
 				background: Color red;
 				look: (GtExplainerTargetLook new explanationModel: anIdentifier).
 	^ BrTextAdornmentDynamicAttribute new

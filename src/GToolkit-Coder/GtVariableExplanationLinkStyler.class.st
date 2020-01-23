@@ -20,6 +20,11 @@ GtVariableExplanationLinkStyler >> addVariableName: aVariableName withIdentifier
 	variablesDictionary at: aVariableName put: anIdentifier.
 ]
 
+{ #category : #adding }
+GtVariableExplanationLinkStyler >> addVariables: aCollection [
+	aCollection do: [ :variable | self addVariableName: variable ].
+]
+
 { #category : #initialization }
 GtVariableExplanationLinkStyler >> initialize [
 	super initialize.
