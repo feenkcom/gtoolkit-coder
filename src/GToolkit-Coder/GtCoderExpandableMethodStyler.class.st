@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderExpandableMethodStyler,
-	#superclass : #GtCoderBodyStyler,
+	#superclass : #GtASTStyler,
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
