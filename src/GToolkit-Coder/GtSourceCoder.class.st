@@ -639,8 +639,23 @@ GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 ]
 
 { #category : #actions }
+GtSourceCoder >> printItAll [
+	| aSource |
+	aSource := self source.
+	aSource ifNil: [ ^ self ].
+	^ self evaluateSource: aSource showPrintString: true.
+]
+
+{ #category : #actions }
 GtSourceCoder >> printItSelection [
 	^ self evaluateSource: self selectedSource showPrintString: true
+]
+
+{ #category : #actions }
+GtSourceCoder >> printItSelectionOrAll [
+	^ self hasSelection 
+		ifTrue: [ self printItSelection ] 
+		ifFalse: [ self printItAll ]
 ]
 
 { #category : #updating }
