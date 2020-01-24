@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderExpandableBaselineStyler,
-	#superclass : #GtCoderBodyStyler,
+	#superclass : #GtASTStyler,
 	#instVars : [
 		'completionAttributes'
 	],

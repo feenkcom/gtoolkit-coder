@@ -36,7 +36,7 @@ GtSourceCoder >> activeSourceEditor [
 { #category : #updating }
 GtSourceCoder >> addOnChanged: aSymbol [
 	aSymbol = #stylers
-		ifTrue: [ self styleText ].
+		ifTrue: [ self stylersUpdated ].
 	super addOnChanged: aSymbol
 ]
 
@@ -586,7 +586,9 @@ GtSourceCoder >> newSourceEditor [
 
 { #category : #private }
 GtSourceCoder >> newSourceStyler [
-	^ GtSourceCoderTextStyler forCoder: self
+	^ (GtSourceCoderTextStyler forCoder: self)
+		stylers: addOns stylers copy;
+		yourself
 ]
 
 { #category : #updating }
@@ -861,6 +863,15 @@ GtSourceCoder >> stylerView: anElement [
 { #category : #accessing }
 GtSourceCoder >> stylers [
 	^ addOns stylers
+]
+
+{ #category : #updating }
+GtSourceCoder >> stylersUpdated [
+	| stylers |
+	stylers := addOns stylers copy.
+	self sourceEditor styler stylers: stylers.
+	self collapsedEditor styler stylers: stylers.
+	self styleText
 ]
 
 { #category : #private }

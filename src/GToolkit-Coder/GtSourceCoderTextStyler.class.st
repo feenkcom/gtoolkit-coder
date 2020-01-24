@@ -1,6 +1,6 @@
 Class {
 	#name : #GtSourceCoderTextStyler,
-	#superclass : #BlTextStyler,
+	#superclass : #GtASTCompositeStyler,
 	#instVars : [
 		'coder'
 	],
@@ -25,12 +25,7 @@ GtSourceCoderTextStyler >> coder: aMethodCoder [
 ]
 
 { #category : #private }
-GtSourceCoderTextStyler >> extraStyle: aText ast: ast [
-	coder stylers do: [ :each | each extraStyle: aText ast: ast ]
-]
-
-{ #category : #private }
-GtSourceCoderTextStyler >> privateStyle: aText [
+GtSourceCoderTextStyler >> parse: aText [
 	| ast aString aCoderSource aHeaderSource isCoderSourceSame isHeaderSourceSame |
 	
 	"see https://github.com/feenkcom/gtoolkit/issues/593"
@@ -43,7 +38,7 @@ GtSourceCoderTextStyler >> privateStyle: aText [
 	
 	"a given text is neither coder source nor header, let's ignore it"
 	(isCoderSourceSame or: [ isHeaderSourceSame ])
-		ifFalse: [ ^ aText ].
+		ifFalse: [ ^ nil ].
 
 	isCoderSourceSame
 		ifTrue: [ ast := coder rbAST ]
@@ -58,14 +53,5 @@ GtSourceCoderTextStyler >> privateStyle: aText [
 						put: (ast instVarNamed: #properties) copy.
 					ast comments: #().
 					ast arguments do: [ :e | e parent: ast ] ] ].
-	[ self style: aText ast: ast.
-	self extraStyle: aText ast: ast ]
-		on: Error
-		do: [ :e | e return ].
-	^ aText
-]
-
-{ #category : #private }
-GtSourceCoderTextStyler >> style: aText ast: ast [
-	coder stylers do: [ :each | each style: aText ast: ast ]
+	^ ast
 ]
