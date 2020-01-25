@@ -292,38 +292,35 @@ GtMethodCoderStylerExamples >> viewsExplanationWithLinks [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ];
-		layout: BlLinearLayout horizontal;
-		background: Color white;
-		margin: (BlInsets all: 10);
-		look: BrShadowLook.
+		layout: BlLinearLayout horizontal.
 	container := BlElement new
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical matchParent ];
-		layout: BlLinearLayout horizontal.
+			c vertical fitContent];
+		layout: BlLinearLayout horizontal alignCenter.
 	container explainer isExplanationHolder: true.
 	
 	selectors := GtSelectorExplanationLinkStyler new.
-	selectors addSelectors: {#gtView. #list. #title: }.
+	selectors addSelectors: {#gtView. #list. #title:. #items: }.
 	
 	variables := GtVariableExplanationLinkStyler new.
 	variables addVariableName: 'aView'.
 	
 	coder := GtMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsCardsListOn:).
 	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { selectors. variables }).
-	coderElement := (coder expanded: true) asElement.
+	coderElement := (coder expanded: true) asElement margin: (BlInsets all: 10).
 	coderElement forceLayout.
 	
 	inspectorContainer addChild: coderElement.
 	
 	editor := BrEditor new
-		look: BrGlamorousRegularEditorLook;
+		look: (BrGlamorousRegularEditorLook new fontSize: 16);
 		text: self viewsExplanationWithLinksText;
 		margin: (BlInsets all: 10);
 		constraintsDo: [ :c | 
-			c vertical matchParent.
+			c vertical fitContent.
 			c horizontal matchParent.
-			c linear weight: 0.3 ].
+			c linear weight: 0.5 ].
 	container addChild: editor.
 	container addChild: inspectorContainer.
 	^ container
@@ -333,19 +330,24 @@ GtMethodCoderStylerExamples >> viewsExplanationWithLinks [
 GtMethodCoderStylerExamples >> viewsExplanationWithLinksText [
 	| text |
 	
-	text := '
-To create a custom view, first you have to specify the ' asRopedText,
+	text := 'A custom view is defined by a method in the class of the object we want to view.
+	
+To identify the method, use the ' asRopedText,
 ('gtView' asRopedText glamorousExplanationFor: #gtView),
 ' pragma.
-Then, for the ' asRopedText,
+Then, make it so that it gets an empty ' asRopedText,
 ('view' asRopedText glamorousExplanationFor: #aView),
-' object you sent as argument, you have to specify the ' asRopedText,
-('layout' asRopedText glamorousExplanationFor: #list),
-' it will take and the ' asRopedText,
+' parameter that you can customize.
+
+In our case the view has a ' asRopedText,
 ('title' asRopedText glamorousExplanationFor: #title:),
-' it will have.' asRopedText.
+'. The view consists of a ' asRopedText,
+('list' asRopedText glamorousExplanationFor: #list),
+' that shows ' asRopedText,
+('items' asRopedText glamorousExplanationFor: #items:).
 	
 	^ text
 		glamorousRegularFont;
+		fontSize: 20;
 		foreground: Color black.
 ]
