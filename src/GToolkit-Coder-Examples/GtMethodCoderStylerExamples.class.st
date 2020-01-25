@@ -301,12 +301,12 @@ GtMethodCoderStylerExamples >> viewsExplanationWithLinks [
 	container explainer isExplanationHolder: true.
 	
 	selectors := GtSelectorExplanationLinkStyler new.
-	selectors addSelectors: {#gtView. #list. #title:. #items: }.
+	selectors addSelectors: {#gtView . #columnedList . #title: . #items: . #column:format: .#contacts . #fullName . #telephone }.
 	
 	variables := GtVariableExplanationLinkStyler new.
-	variables addVariableName: 'aView'.
+	variables addVariables: {'aView' . 'aContact' . 'contacts'}.
 	
-	coder := GtMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsCardsListOn:).
+	coder := GtMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsOn:).
 	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { selectors. variables }).
 	coderElement := (coder expanded: true) asElement margin: (BlInsets all: 10).
 	coderElement forceLayout.
@@ -342,10 +342,23 @@ Then, make it so that it gets an empty ' asRopedText,
 In our case the view has a ' asRopedText,
 ('title' asRopedText glamorousExplanationFor: #title:),
 '. The view consists of a ' asRopedText,
-('list' asRopedText glamorousExplanationFor: #list),
-' that shows ' asRopedText,
-('items' asRopedText glamorousExplanationFor: #items:).
-	
+('columned list' asRopedText glamorousExplanationFor: #columnedList),
+' with ' asRopedText,
+('two columns' asRopedText glamorousExplanationFor: #column:format:),
+'
+
+The columned list has as many rows as the collection returned by the ' asRopedText,
+('items: block' asRopedText glamorousExplanationFor: #items:),
+'. In this case, this means it shows all the ' asRopedText,
+('contacts list' asRopedText glamorousExplanationFor: #contacts),
+
+'For each ' asRopedText, 
+('contact' asRopedText glamorousExplanationFor: #aContact),
+' we show the ' asRopedText,
+('full name' asRopedText glamorousExplanationFor: #fullName),
+' in the first column, and the ' asRopedText,
+('telephone' asRopedText glamorousExplanationFor: #telephone),
+' in the second column' asRopedText.
 	^ text
 		glamorousRegularFont;
 		fontSize: 20;
