@@ -89,7 +89,7 @@ GtPharoSnippetCoder >> initializeShortcuts [
 			action: [ :editorElement | self doItAndGoSelectionOrAll: editorElement ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryP;
-			action: [ self printItSelection ]);
+			action: [ self printItSelectionOrAll ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryR;
 			action: [ :editorElement | self renameVariableIn: editorElement ])

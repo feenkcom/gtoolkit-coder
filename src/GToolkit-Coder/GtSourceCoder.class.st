@@ -36,7 +36,7 @@ GtSourceCoder >> activeSourceEditor [
 { #category : #updating }
 GtSourceCoder >> addOnChanged: aSymbol [
 	aSymbol = #stylers
-		ifTrue: [ self styleText ].
+		ifTrue: [ self stylersUpdated ].
 	super addOnChanged: aSymbol
 ]
 
@@ -586,7 +586,9 @@ GtSourceCoder >> newSourceEditor [
 
 { #category : #private }
 GtSourceCoder >> newSourceStyler [
-	^ GtSourceCoderTextStyler forCoder: self
+	^ (GtSourceCoderTextStyler forCoder: self)
+		stylers: addOns stylers copy;
+		yourself
 ]
 
 { #category : #updating }
@@ -639,8 +641,23 @@ GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 ]
 
 { #category : #actions }
+GtSourceCoder >> printItAll [
+	| aSource |
+	aSource := self source.
+	aSource ifNil: [ ^ self ].
+	^ self evaluateSource: aSource showPrintString: true.
+]
+
+{ #category : #actions }
 GtSourceCoder >> printItSelection [
 	^ self evaluateSource: self selectedSource showPrintString: true
+]
+
+{ #category : #actions }
+GtSourceCoder >> printItSelectionOrAll [
+	^ self hasSelection 
+		ifTrue: [ self printItSelection ] 
+		ifFalse: [ self printItAll ]
 ]
 
 { #category : #updating }
@@ -861,6 +878,15 @@ GtSourceCoder >> stylerView: anElement [
 { #category : #accessing }
 GtSourceCoder >> stylers [
 	^ addOns stylers
+]
+
+{ #category : #updating }
+GtSourceCoder >> stylersUpdated [
+	| stylers |
+	stylers := addOns stylers copy.
+	self sourceEditor styler stylers: stylers.
+	self collapsedEditor styler stylers: stylers.
+	self styleText
 ]
 
 { #category : #private }
