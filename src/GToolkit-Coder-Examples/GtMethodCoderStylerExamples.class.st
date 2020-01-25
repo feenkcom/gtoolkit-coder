@@ -330,9 +330,9 @@ GtMethodCoderStylerExamples >> viewsExplanationWithLinks [
 GtMethodCoderStylerExamples >> viewsExplanationWithLinksText [
 	| text |
 	
-	text := 'A custom view is defined by a method in the class of the object we want to view.
-	
-To identify the method, use the ' asRopedText,
+	text := 'A custom view is defined by a method in the class of the object we want to view. You can think of it as a print string method only that instead of returning a string, it returns an element.
+
+As we can have many such representations for every single object, we have to identify the method. To this end, use the ' asRopedText,
 ('gtView' asRopedText glamorousExplanationFor: #gtView),
 ' pragma.
 Then, make it so that it gets an empty ' asRopedText,
