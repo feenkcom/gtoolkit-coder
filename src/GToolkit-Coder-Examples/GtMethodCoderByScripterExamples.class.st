@@ -347,6 +347,19 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributesAt: a
 ]
 
 { #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributesAt: anIndex nonSatisfies: aBlock [
+	<gtExample>
+	aScripterOrStep check
+		label: 'Check Editor Text Attributes';
+		nonSatisfies: aBlock;
+		onChildNamed: #editor;
+		onBrTextEditor;
+		onBrTextEditorText;
+		onTextAttributesAt: anIndex.
+	^ aScripterOrStep
+]
+
+{ #category : #utilities }
 GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExampleStatusAttributeAt: anIndex [
 	<gtExample>
 	self 
@@ -587,6 +600,32 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI
 	aScripter checks: 'Check Example Status and Expand Attribute' do: [ :aStep | 
 		self checkFor: aStep textExpandAttributeAt: 24.
 		self checkFor: aStep textExampleStatusAttributeAt: 1 ].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - referenced example' }
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI_NoExampleStatusAfterPragmaDeletion [
+	<gtExample>
+	| aScripter |
+	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI.
+	aScripter substeps: 'Remove Pragma' do: [ :aStep |
+		aStep do
+			label: 'Delete e character from <gtExample>';
+			action: [ :anEditor | anEditor deleter from: 12 to: 13; delete ];
+			onChildNamed: #editor;
+			onBrTextEditor.
+		self 
+			checkFor: aStep
+			numberOfMainActions: 3
+			contextAction: 0.
+		self checkFor: aStep absenceOfContextActionNamed: 'Play' ].
+	aScripter checks: 'Check Example Status Is Not Present' do: [ :aStep | 
+		self checkFor: aStep textExpandAttributeAt: 23.
+		self 
+			checkFor: aStep 
+			textAttributesAt: 1 
+			nonSatisfies: [ :aTextAttribute | aTextAttribute class = GtExampleStatusAttribute ] ].
 	aScripter syncContinue.
 	^ aScripter
 ]
