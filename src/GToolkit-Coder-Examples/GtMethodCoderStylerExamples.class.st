@@ -146,77 +146,14 @@ GtMethodCoderStylerExamples >> hasUnderlineAttributeIn: coder [
 	^ self hasAttributeOfType: self unlineAttributeClass in: coder sourceEditor
 ]
 
-{ #category : #accessing }
-GtMethodCoderStylerExamples >> insideMultipleKeywordImplementorPatternHighlighting [
-	<gtExample>
-	<noTest>
-	| coder |
-	coder := GtMethodCoder forMethod: self class >> #a:a:a:a:.
-	coder expanded: true.
-	coder highlighter: (GtImplementorPatternHighlighter forPattern: 'a:').
-	coder asElement.
-	self waitForTasks.
-	coder sourceEditor useSyncStylerStrategy.
-	coder styleText.
-	self assert: (self hasUnderlineAttributeIn: coder).
-	self
-		assert:
-			(self
-				attributeCountOfType: self unlineAttributeClass
-				in: coder sourceEditor) = 8.
-	coder sourceEditor useDefaultStylerStrategy.
-	^ coder
-]
-
 { #category : #dummies }
 GtMethodCoderStylerExamples >> notAnExample [
 	^ 42
 ]
 
-{ #category : #accessing }
-GtMethodCoderStylerExamples >> printStringImplementorPatternHighlighting [
-	<gtExample>
-	<noTest>
-	| coder |
-	coder := GtMethodCoder forMethod: self class >> #printStringReference.
-	coder
-		highlighter: (GtImplementorPatternHighlighter forPattern: 'print').
-	coder sourceEditor useSyncStylerStrategy.
-	coder expanded: true.
-	coder asElement.
-	self waitForTasks.
-	coder styleText.
-	self assert: (self hasUnderlineAttributeIn: coder).
-	self
-		assert:
-			(self
-				attributeCountOfType: self unlineAttributeClass
-				in: coder sourceEditor) = 5.
-	coder sourceEditor useDefaultStylerStrategy.
-	^ coder
-]
-
 { #category : #dummies }
 GtMethodCoderStylerExamples >> printStringReference [
 	^ self printString
-]
-
-{ #category : #accessing }
-GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
-	<gtExample>
-	<noTest>
-	| coder |
-	coder := GtMethodCoder forMethod: self class >> #printStringReference.
-	coder
-		highlighter: (GtSelectorReferenceAndLiteralHighlighter forSelector: #printString).
-	coder sourceEditor useSyncStylerStrategy.
-	coder expanded: true.
-	coder asElement.
-	self waitForTasks.
-	coder styleText.
-	self assert: (self hasUnderlineAttributeIn: coder).
-	coder sourceEditor useDefaultStylerStrategy.
-	^ coder
 ]
 
 { #category : #accessing }

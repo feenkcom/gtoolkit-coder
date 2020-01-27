@@ -547,6 +547,103 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded_Chec
 	^ aScripter
 ]
 
+{ #category : #'examples - pattern highlither - print' }
+GtMethodCoderByScripterExamples >> patternHighlighterPrintMethod [
+	<gtExample>
+	^ self class >> #printStringReference
+]
+
+{ #category : #'examples - pattern highlither - print' }
+GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoder [
+	<gtExample>
+	| aMethod aCoder |
+	aMethod := self patternHighlighterPrintMethod.
+	aCoder := self coderOnMethod: aMethod.
+	aCoder highlighter: (GtImplementorPatternHighlighter forPattern: 'print').
+	^ aCoder
+]
+
+{ #category : #'examples - pattern highlither - print' }
+GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI [
+	<gtExample>
+	| aScripter |
+	aScripter := self scripterForBlock: [ self patternHighlighterPrintMethodCoder ].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - pattern highlither - print' }
+GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_Expanded [
+	<gtExample>
+	| aScripter |
+	aScripter := self patternHighlighterPrintMethodCoderUI.
+	self expandFromUI: aScripter method: self patternHighlighterPrintMethod.
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - pattern highlither - print' }
+GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_Expanded_CheckUndelineAttributes [
+	<gtExample>
+	| aScripter |
+	aScripter := self patternHighlighterPrintMethodCoderUI_Expanded.
+	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
+		self checkFor: aStep textAttributesAt: 1 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
+		self checkFor: aStep numberfOfTextAttributes: 5 OfType: BlTextUnderlineAttribute.
+		self checkFor: aStep textAttributesAt: 30 nonSatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
+	].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - reference highlighter' }
+GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoder [
+	<gtExample>
+	| aMethod aCoder |
+	aMethod := self patternHighlighterPrintMethod.
+	aCoder := self coderOnMethod: aMethod.
+	aCoder highlighter: (GtSelectorReferenceAndLiteralHighlighter forSelector: #printString).
+	^ aCoder
+]
+
+{ #category : #'examples - reference highlighter' }
+GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI [
+	<gtExample>
+	| aScripter |
+	aScripter := self scripterForBlock: [ self patternHighlighterPrintStringMethodCoder ].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - reference highlighter' }
+GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Expanded [
+	<gtExample>
+	| aScripter |
+	aScripter := self patternHighlighterPrintStringMethodCoderUI.
+	self expandFromUI: aScripter method: self patternHighlighterPrintMethod.
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - reference highlighter' }
+GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Expanded_CheckUndelineAttributes [
+	<gtExample>
+	| aScripter |
+	aScripter := self patternHighlighterPrintStringMethodCoderUI_Expanded.
+	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
+		self checkFor: aStep textAttributesAt: 1 nonSatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
+		self checkFor: aStep textAttributesAt: 30 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
+		self checkFor: aStep numberfOfTextAttributes: 11 OfType: BlTextUnderlineAttribute.
+	].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderByScripterExamples >> printStringReference [
+	^ self printString
+]
+
 { #category : #'examples - referenced example' }
 GtMethodCoderByScripterExamples >> referencedExampleMethod [
 	<gtExample>
