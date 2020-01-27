@@ -630,6 +630,30 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI
 	^ aScripter
 ]
 
+{ #category : #'examples - referenced example' }
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI_NoExampleStatusAfterPragmaDeletion_WriteExamplePragma [
+	<gtExample>
+	| aScripter |
+	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI_NoExampleStatusAfterPragmaDeletion.
+	aScripter substeps: 'Insert Pragma' do: [ :aStep |
+		aStep do
+			label: 'Insert e character in <gtExample>';
+			action: [ :anEditor | anEditor inserter at: 12; string: 'e'; insert ];
+			onChildNamed: #editor;
+			onBrTextEditor.
+		aStep wait forEmptySpaceTaskQueue.
+		self 
+			checkFor: aStep
+			numberOfMainActions: 2
+			contextAction: 3.
+		self checkFor: aStep existenceOfContextActionNamed: 'Play' ].
+	aScripter checks: 'Check Example Status Is Present' do: [ :aStep | 
+		self checkFor: aStep textExpandAttributeAt: 24.
+		self checkFor: aStep textExampleStatusAttributeAt: 1. ].
+	aScripter syncContinue.
+	^ aScripter
+]
+
 { #category : #utilities }
 GtMethodCoderByScripterExamples >> scripterForBlock: aBlock [
 	<gtExample>
