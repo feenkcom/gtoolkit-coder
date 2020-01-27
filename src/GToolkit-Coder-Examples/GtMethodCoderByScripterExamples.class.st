@@ -10,8 +10,20 @@ GtMethodCoderByScripterExamples >> ? anObject [
 ]
 
 { #category : #'sample methods' }
+GtMethodCoderByScripterExamples >> a [
+	<gtExample>
+	^ 42
+]
+
+{ #category : #'sample methods' }
 GtMethodCoderByScripterExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
 	"test method for highlighting implementors"
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderByScripterExamples >> b [
+	<gtExample>
+	^ self a * self notAnExample
 ]
 
 { #category : #'examples - basic' }
@@ -322,7 +334,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep numberfOfTextAttrib
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributes: anIndex anySatisfies: aBlock [
+GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributesAt: anIndex anySatisfies: aBlock [
 	<gtExample>
 	aScripterOrStep check
 		label: 'Check Editor Text Attributes';
@@ -331,6 +343,26 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributes: anI
 		onBrTextEditor;
 		onBrTextEditorText;
 		onTextAttributesAt: anIndex.
+	^ aScripterOrStep
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExampleStatusAttributeAt: anIndex [
+	<gtExample>
+	self 
+		checkFor: aScripterOrStep 
+		textAttributesAt: anIndex 
+		anySatisfies: [ :aTextAttribute | aTextAttribute class = GtExampleStatusAttribute ].
+	^ aScripterOrStep
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExpandAttributeAt: anIndex [
+	<gtExample>
+	self 
+		checkFor: aScripterOrStep 
+		textAttributesAt: anIndex 
+		anySatisfies: [ :aTextAttribute | aTextAttribute class = BrTextExpandButtonAttribute ].
 	^ aScripterOrStep
 ]
 
@@ -352,13 +384,13 @@ GtMethodCoderByScripterExamples >> coderOnMethod: aMethod [
 	^ aCoder
 ]
 
-{ #category : #'examples - examle method' }
+{ #category : #'examples - example method' }
 GtMethodCoderByScripterExamples >> exampleMethod [
 	<gtExample>
 	^ self class >> #sumMethod
 ]
 
-{ #category : #'examples - examle method' }
+{ #category : #'examples - example method' }
 GtMethodCoderByScripterExamples >> exampleMethodCoder [
 	<gtExample>
 	| aMethod aCoder |
@@ -367,7 +399,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoder [
 	^ aCoder
 ]
 
-{ #category : #'examples - examle method' }
+{ #category : #'examples - example method' }
 GtMethodCoderByScripterExamples >> exampleMethodCoderUI [
 	<gtExample>
 	| aScripter |
@@ -376,7 +408,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI [
 	^ aScripter
 ]
 
-{ #category : #'examples - examle method' }
+{ #category : #'examples - example method' }
 GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI [
 	<gtExample>
 	| aScripter |
@@ -386,7 +418,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI [
 	^ aScripter
 ]
 
-{ #category : #'examples - examle method' }
+{ #category : #'examples - example method' }
 GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActionButtons [
 	<gtExample>
 	| aScripter |
@@ -400,7 +432,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 	^ aScripter
 ]
 
-{ #category : #'examples - examle method' }
+{ #category : #'examples - example method' }
 GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePragma [
 	<gtExample>
 	| aScripter |
@@ -449,6 +481,11 @@ GtMethodCoderByScripterExamples >> methodCoder [
 	^ aScripter
 ]
 
+{ #category : #'sample methods' }
+GtMethodCoderByScripterExamples >> notAnExample [
+	^ 42
+]
+
 { #category : #'examples - pattern highlighter' }
 GtMethodCoderByScripterExamples >> patternHighlighterMethod [
 	<gtExample>
@@ -490,9 +527,66 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded_Chec
 	| aScripter |
 	aScripter := self patternHighlighterMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
-		self checkFor: aStep textAttributes: 2 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
+		self checkFor: aStep textAttributesAt: 2 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
 		self checkFor: aStep numberfOfTextAttributes: 6 OfType: BlTextUnderlineAttribute.
 	].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - referenced example' }
+GtMethodCoderByScripterExamples >> referencedExampleMethod [
+	<gtExample>
+	^ self class >> #b
+]
+
+{ #category : #'examples - referenced example' }
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoder [
+	<gtExample>
+	| aMethod aCoder |
+	aMethod := self referencedExampleMethod.
+	aCoder := self coderOnMethod: aMethod.
+	^ aCoder
+]
+
+{ #category : #'examples - referenced example' }
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI [
+	<gtExample>
+	| aScripter |
+	aScripter := self scripterForBlock: [ self referencedExampleMethodCoder ].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - referenced example' }
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleAttribute [
+	<gtExample>
+	| aScripter |
+	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI.
+	aScripter checks: 'Check Example Status' do: [ :aStep | 
+		self checkFor: aStep textExampleStatusAttributeAt: 1 ].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - referenced example' }
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI [
+	<gtExample>
+	| aScripter |
+	aScripter := self referencedExampleMethodCoderUI.
+	self expandFromUI: aScripter method: self referencedExampleMethod.
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - referenced example' }
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI_CheckExampleExpandAttribute [
+	<gtExample>
+	| aScripter |
+	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI.
+	aScripter checks: 'Check Example Status and Expand Attribute' do: [ :aStep | 
+		self checkFor: aStep textExpandAttributeAt: 24.
+		self checkFor: aStep textExampleStatusAttributeAt: 1 ].
 	aScripter syncContinue.
 	^ aScripter
 ]
