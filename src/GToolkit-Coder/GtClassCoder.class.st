@@ -73,8 +73,8 @@ GtClassCoder >> forClass: aClass [
 { #category : #initialize }
 GtClassCoder >> forObject: anObject [
 	class := anObject class.
-	methodsCoder notNil
-		ifTrue: [ methodsCoder forObject: anObject ].
+	anObject notNil
+		ifTrue: [ self methodsCoder forObject: anObject ].
 	definitionsCoder notNil
 		ifTrue: [ definitionsCoder forClass: class ].
 	commentsCoder notNil
