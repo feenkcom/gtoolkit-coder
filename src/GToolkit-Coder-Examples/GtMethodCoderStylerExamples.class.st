@@ -16,27 +16,6 @@ GtMethodCoderStylerExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> addPragmaMethodStyling [
-	<gtExample>
-	<noTest>
-	| coder |
-	coder := self renamePragmaMethodStyling.
-	coder sourceEditor useSyncStylerStrategy.
-	coder collapsedEditor useSyncStylerStrategy.
-	coder sourceEditor inserter
-		at: 7;
-		string: 'x';
-		insert.
-	self waitForTasks.
-	coder styleText.
-	self assert: (self hasExampleExpandAttributeIn: coder).
-	self assert: (self hasExampleStatusIn: coder).
-	coder sourceEditor useDefaultStylerStrategy.
-	coder collapsedEditor useDefaultStylerStrategy.
-	^ coder
-]
-
-{ #category : #accessing }
 GtMethodCoderStylerExamples >> attributeCountOfType: aClass in: aTextEditor [
 	| text iterator count |
 	count := 0.
@@ -53,25 +32,6 @@ GtMethodCoderStylerExamples >> attributeCountOfType: aClass in: aTextEditor [
 GtMethodCoderStylerExamples >> b [
 	<gtExample>
 	^ self a * self notAnExample
-]
-
-{ #category : #accessing }
-GtMethodCoderStylerExamples >> exampleMethodStyling [
-	<gtExample>
-	<noTest>
-	| coder |
-	coder := GtMethodCoder forMethod: self class >> #b.
-	coder sourceEditor useSyncStylerStrategy.
-	coder collapsedEditor useSyncStylerStrategy.
-	coder expanded: true.
-	coder asElement.
-	self waitForTasks.
-	coder styleText.
-	self assert: (self hasExampleExpandAttributeIn: coder).
-	self assert: (self hasExampleStatusIn: coder).
-	coder sourceEditor useDefaultStylerStrategy.
-	coder collapsedEditor useDefaultStylerStrategy.
-	^ coder
 ]
 
 { #category : #'as yet unclassified' }
@@ -186,97 +146,14 @@ GtMethodCoderStylerExamples >> hasUnderlineAttributeIn: coder [
 	^ self hasAttributeOfType: self unlineAttributeClass in: coder sourceEditor
 ]
 
-{ #category : #accessing }
-GtMethodCoderStylerExamples >> insideMultipleKeywordImplementorPatternHighlighting [
-	<gtExample>
-	<noTest>
-	| coder |
-	coder := GtMethodCoder forMethod: self class >> #a:a:a:a:.
-	coder expanded: true.
-	coder highlighter: (GtImplementorPatternHighlighter forPattern: 'a:').
-	coder asElement.
-	self waitForTasks.
-	coder sourceEditor useSyncStylerStrategy.
-	coder styleText.
-	self assert: (self hasUnderlineAttributeIn: coder).
-	self
-		assert:
-			(self
-				attributeCountOfType: self unlineAttributeClass
-				in: coder sourceEditor) = 8.
-	coder sourceEditor useDefaultStylerStrategy.
-	^ coder
-]
-
 { #category : #dummies }
 GtMethodCoderStylerExamples >> notAnExample [
 	^ 42
 ]
 
-{ #category : #accessing }
-GtMethodCoderStylerExamples >> printStringImplementorPatternHighlighting [
-	<gtExample>
-	<noTest>
-	| coder |
-	coder := GtMethodCoder forMethod: self class >> #printStringReference.
-	coder
-		highlighter: (GtImplementorPatternHighlighter forPattern: 'print').
-	coder sourceEditor useSyncStylerStrategy.
-	coder expanded: true.
-	coder asElement.
-	self waitForTasks.
-	coder styleText.
-	self assert: (self hasUnderlineAttributeIn: coder).
-	self
-		assert:
-			(self
-				attributeCountOfType: self unlineAttributeClass
-				in: coder sourceEditor) = 5.
-	coder sourceEditor useDefaultStylerStrategy.
-	^ coder
-]
-
 { #category : #dummies }
 GtMethodCoderStylerExamples >> printStringReference [
 	^ self printString
-]
-
-{ #category : #accessing }
-GtMethodCoderStylerExamples >> printStringReferenceHighlighting [
-	<gtExample>
-	<noTest>
-	| coder |
-	coder := GtMethodCoder forMethod: self class >> #printStringReference.
-	coder
-		highlighter: (GtSelectorReferenceAndLiteralHighlighter forSelector: #printString).
-	coder sourceEditor useSyncStylerStrategy.
-	coder expanded: true.
-	coder asElement.
-	self waitForTasks.
-	coder styleText.
-	self assert: (self hasUnderlineAttributeIn: coder).
-	coder sourceEditor useDefaultStylerStrategy.
-	^ coder
-]
-
-{ #category : #accessing }
-GtMethodCoderStylerExamples >> renamePragmaMethodStyling [
-	<gtExample>
-	<noTest>
-	| coder |
-	coder := self exampleMethodStyling.
-	coder sourceEditor useSyncStylerStrategy.
-	coder collapsedEditor useSyncStylerStrategy.
-	coder sourceEditor deleter
-		from: 7 to: 8;
-		delete.
-	coder styleText.
-	self waitForTasks.
-	self assert: (self hasExampleExpandAttributeIn: coder).
-	self assert: (self hasExampleStatusIn: coder) not.
-	coder sourceEditor useDefaultStylerStrategy.
-	coder collapsedEditor useDefaultStylerStrategy.
-	^ coder
 ]
 
 { #category : #accessing }
