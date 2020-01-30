@@ -44,6 +44,11 @@ GtCodersElement >> coders: aCoders [
 		when: GtCodersScrollToCoder send: #scrollToEvent: to: self
 ]
 
+{ #category : #testing }
+GtCodersElement >> isVerticallyResizeableElement [
+	^ true
+]
+
 { #category : #ui }
 GtCodersElement >> listElement [
 	| dataSource |
