@@ -608,6 +608,11 @@ GtMethodCoder >> newSourceEditor [
 	^ aSourceEditor
 ]
 
+{ #category : #accessing }
+GtMethodCoder >> object [
+	^ self attributeNamed: #object ifAbsent: [ class ]
+]
+
 { #category : #private }
 GtMethodCoder >> parserStartingState [
 	^ GtPharoParser startingStateForMethod
