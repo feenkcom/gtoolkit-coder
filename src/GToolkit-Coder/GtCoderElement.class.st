@@ -96,6 +96,11 @@ GtCoderElement >> isExpanded [
 	^ expandableModel isExpanded
 ]
 
+{ #category : #testing }
+GtCoderElement >> isVerticallyResizeableElement [
+	^ true
+]
+
 { #category : #'instance creation' }
 GtCoderElement >> newActionsElement [
 	^ GtCoderActionsElement new
