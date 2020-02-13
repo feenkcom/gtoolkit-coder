@@ -47,6 +47,40 @@ GtPackagesCoderElement >> buildAddClassButton [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+GtPackagesCoderElement >> buildClassHierarchyTree [
+	| classes tree |
+	classes := (selectedCoder theClass withAllSuperclasses
+		, selectedCoder theClass allSubclasses) asIdentitySet.
+	tree := BrSimpleTree new
+		constraintsDo: [ :c | 
+			c horizontal fitContent.
+			c vertical matchParent ];
+		items: {(packagesCoder coderForClass: ProtoObject)}
+			children: [ :anObject | 
+			((anObject theClass subclasses select: [ :c | classes includes: c ])
+				sorted: [ :a :b | a name < b name ])
+				collect: [ :c | packagesCoder coderForClass: c ] ];
+		stencil:
+			(BrSimpleTreeRowStencilBuilder new
+				text: [ :anObject | anObject name asRopedText glamorousRegularFontAndSize ]);
+		yourself.
+	tree
+		when: BrSelectionChanged
+		do: [ :anEvent | 
+			tree
+				selectedNodeDo: [ :aNode | 
+					selectedCoder := aNode value.
+					self updateCoder.
+					tree hasParent
+						ifTrue: [ tree parent removeChildNamed: #package.
+							tree parent
+								addChildFirst: self buildPackageHierarchyTree
+								as: #package ] ] ].
+	self selectAndScrollTo: selectedCoder in: tree.
+	^ tree
+]
+
 { #category : #'building ui' }
 GtPackagesCoderElement >> buildContentPane [
 	contentPane := BlElement new.
@@ -57,6 +91,36 @@ GtPackagesCoderElement >> buildContentPane [
 			c horizontal matchParent.
 			c vertical matchParent ].
 	^ contentPane
+]
+
+{ #category : #'building ui' }
+GtPackagesCoderElement >> buildPackageHierarchyTree [
+	| tree |
+	tree := BrSimpleTree new
+		constraintsDo: [ :c | 
+			c horizontal fitContent.
+			c vertical matchParent ];
+		items: {packagesCoder}
+			children: [ :anObject | 
+			anObject packageTreeCoders
+				asSortedCollection: [ :a :b | a name < b name ] ];
+		stencil:
+			(BrSimpleTreeRowStencilBuilder new
+				text: [ :anObject | anObject name asRopedText glamorousRegularFontAndSize ]);
+		yourself.
+	tree
+		when: BrSelectionChanged
+		do: [ :anEvent | 
+			tree
+				selectedNodeDo: [ :aNode | 
+					selectedCoder := aNode value.
+					self updateCoder.
+					tree hasParent
+						ifTrue: [ tree parent removeChildNamed: #class.
+							(selectedCoder isKindOf: GtClassCoder)
+								ifTrue: [ tree parent addChild: self buildClassHierarchyTree as: #class ] ] ] ].
+	self selectAndScrollTo: selectedCoder in: tree.
+	^ tree
 ]
 
 { #category : #'building ui' }
@@ -112,7 +176,18 @@ GtPackagesCoderElement >> buildPackagesTreeButton [
 										- BrGlamorousButtonExteriorLook;
 								icon: BrGlamorousIcons tree asElement;
 								yourself ]
-						content: [ self navigationElement ]);
+						content: [ | content |
+							content := BlElement new
+								layout: BlLinearLayout horizontal;
+								margin: (BlInsets all: 10);
+								constraintsDo: [ :c | 
+									c horizontal fitContent.
+									c vertical exact: 400 ];
+								addChild: self buildPackageHierarchyTree as: #package;
+								yourself.
+							(selectedCoder isKindOf: GtClassCoder)
+								ifTrue: [ content addChild: self buildClassHierarchyTree as: #class ].
+							content ]);
 		icon: BrGlamorousIcons tree asElement;
 		yourself
 ]
@@ -227,53 +302,15 @@ GtPackagesCoderElement >> initialize [
 	self addChild: self buildToolbar
 ]
 
-{ #category : #'building ui' }
-GtPackagesCoderElement >> navigationElement [
-	| navigationElement element |
-	element := BlElement new.
-	element margin: (BlInsets all: 10).
-	element
-		constraintsDo: [ :c | 
-			c horizontal exact: 400.
-			c vertical exact: 400 ].
-	navigationElement := BrSimpleTree new.
-	navigationElement
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	navigationElement
-		items: {packagesCoder}
-		children: [ :anObject | 
-			anObject packageTreeCoders
-				asSortedCollection: [ :a :b | a name < b name ] ].
-	navigationElement
-		stencil:
-			(BrSimpleTreeRowStencilBuilder new
-				text:
-					[ :anObject | anObject name asRopedText glamorousRegularFontAndSize ]).
-	navigationElement
-		when: BrSelectionChanged
-		do: [ :anEvent | 
-			navigationElement
-				selectedNodeDo: [ :aNode | 
-					selectedCoder := aNode value.
-					self updateCoder ] ].
-	self selectAndScrollTreeIn: navigationElement.
-	element addChild: navigationElement as: #tree.
-	^ element
-]
-
 { #category : #private }
-GtPackagesCoderElement >> selectAndScrollTreeIn: navigationElement [
-	navigationElement viewModel root
+GtPackagesCoderElement >> selectAndScrollTo: anObject in: aTree [
+	aTree viewModel root
 		allChildrenNodesBreadthFirstDo: [ :treeNode | 
-			| selectedNode |
 			treeNode ensureChildNodesComputed.
-			selectedCoder = treeNode value
-				ifTrue: [ selectedNode := treeNode.
-					treeNode withAllParentNodesDo: [ :node | node expand ].
-					navigationElement selectOne: treeNode globalIndexInTree.
-					(navigationElement childNamed: #tree)
+			anObject = treeNode value
+				ifTrue: [ treeNode withAllParentNodesDo: [ :node | node expand ].
+					aTree selectOne: treeNode globalIndexInTree.
+					(aTree childNamed: #tree)
 						scrollToPosition: treeNode globalIndexInTree ] ]
 ]
 
