@@ -16,13 +16,13 @@ ${example:GtMethodCoderExamples>>#thisMethod|noCode=|previewShow=#gtLiveFor:|pre
 
 !!Filters
 
-Method coders can be combined in different ways for different purposes. One of these purposes is searching. This is achieved by means of ${class:GtCoderMethodsFilter}$.
+Method coders can be combined in different ways for different purposes. One of these purposes is searching. This is achieved by means of ${class:GtSearchMethodsFilter}$.
 
 For example, below you see the result of a code query. Expanding the resulting method coders highlights the specific nodes that matched the query.
 
-${example:GtMethodsCoderFilterExamples>>#gtExamplePragmasAndReferencesToMethodCoder|previewExpanded=|previewShow=#gtItemsFor:|codeExpanded=false}$
+${example:GtSearchMethodFilterExamples>>#gtExamplePragmas|previewExpanded=|previewShow=#gtItemsFor:|codeExpanded=false}$
 
-See ${class:GtMethodsCoderFilterExamples}$ for more details.
+See ${class:GtSearchMethodFilterExamples}$ for more details.
 "
 Class {
 	#name : #BaselineOfGToolkitCoder,
