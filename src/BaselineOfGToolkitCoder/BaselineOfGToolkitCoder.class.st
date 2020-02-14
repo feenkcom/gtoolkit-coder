@@ -5,7 +5,7 @@ Coder is a set of components for creating and manipulating code.
 
 !!Method coder
 
-The smallest unit is the ${class:GtMethodCoder}$ which, as the name says, focuses on edtiring one single method.
+The smallest unit is the ${class:GtMethodCoder}$ which, as the name says, focuses on editing one single method.
 
 ${example:GtMethodCoderExamples>>#keywordSelectorCoder|noCode=|previewShow=#gtLiveFor:|previewHeight=150}$
 
