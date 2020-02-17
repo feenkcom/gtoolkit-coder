@@ -57,6 +57,11 @@ GtPackageTagCoder >> gtLiveFor: aView [
 ]
 
 { #category : #accessing }
+GtPackageTagCoder >> icon [
+	^ BrGlamorousIcons packageicon asElement
+]
+
+{ #category : #accessing }
 GtPackageTagCoder >> name [
 	^ packageTag name
 ]

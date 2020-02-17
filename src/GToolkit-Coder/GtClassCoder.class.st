@@ -98,6 +98,11 @@ GtClassCoder >> gtLiveFor: aView [
 ]
 
 { #category : #accessing }
+GtClassCoder >> icon [
+	^ BrGlamorousIcons classicon asElement
+]
+
+{ #category : #accessing }
 GtClassCoder >> implementorsFilterString: aString [
 	"Set implementors filter"
 	self methodsCoder implementorsFilterString: aString

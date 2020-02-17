@@ -52,7 +52,7 @@ GtPackagesCoderElement >> buildClassHierarchyTree [
 	| classes tree |
 	classes := (selectedCoder theClass withAllSuperclasses
 		, selectedCoder theClass allSubclasses) asIdentitySet.
-	tree := BrSimpleTree new
+	tree := BrColumnedTree new
 		constraintsDo: [ :c | 
 			c horizontal fitContent.
 			c vertical matchParent ];
@@ -61,24 +61,27 @@ GtPackagesCoderElement >> buildClassHierarchyTree [
 			((anObject theClass subclasses select: [ :c | classes includes: c ])
 				sorted: [ :a :b | a name < b name ])
 				collect: [ :c | packagesCoder coderForClass: c ] ];
-		stencil:
-			(BrSimpleTreeRowStencilBuilder new
-				text: [ :anObject | anObject name asRopedText glamorousRegularFontAndSize ]);
 		yourself.
-	tree
-		when: BrSelectionChanged
-		do: [ :anEvent | 
-			tree
-				selectedNodeDo: [ :aNode | 
-					selectedCoder := aNode value.
-					self updateCoder.
-					tree hasParent
-						ifTrue: [ tree parent removeChildNamed: #package.
-							tree parent
-								addChildFirst: self buildPackageHierarchyTree
-								as: #package ] ] ].
-	self selectAndScrollTo: selectedCoder in: tree.
+	tree column
+		title: 'Name';
+		stencil: [ :aNode | 
+			BlElement new
+				layout: BlLinearLayout horizontal;
+				addChild: aNode value icon;
+				addChild:
+					(BlTextElement new
+						margin: (BlInsets all: 3);
+						text: aNode value name asRopedText glamorousRegularFontAndSize;
+						constraintsDo: [ :c | 
+							c horizontal matchParent.
+							c vertical fitContent ]);
+				constraintsDo: [ :c | 
+					c horizontal matchParent.
+					c vertical fitContent ];
+				yourself ].
 	^ tree
+		selectAndScrollTo: selectedCoder;
+		yourself
 ]
 
 { #category : #'building ui' }
@@ -94,9 +97,71 @@ GtPackagesCoderElement >> buildContentPane [
 ]
 
 { #category : #'building ui' }
+GtPackagesCoderElement >> buildHierarchyButton [
+	^ BrButton new
+		label: 'Show Package and Class Hierarchies';
+		look:
+			BrGlamorousButtonWithIconLook
+				+
+					(BrGlamorousWithDropdownLook
+						handle: [ BrButton new
+								look:
+									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
+										- BrGlamorousButtonExteriorLook;
+								icon: BrGlamorousIcons tree asElement;
+								yourself ]
+						content: [ self buildHierarchyTabs ]);
+		icon: BrGlamorousIcons tree asElement;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+GtPackagesCoderElement >> buildHierarchyTabs [
+	| packageTab classTab packageTree classTree tabGroup |
+	packageTab := BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Package Hierarchy';
+		stencil: [ packageTree := self buildPackageHierarchyTree
+				when: BrSelectionChanged
+					do: [ :anEvent | 
+					anEvent target
+						selectedNodeDo: [ :aNode | 
+							self updateSelection: aNode value.
+							self isSelectedCoderClassCoder
+								ifTrue: [ (tabGroup hasTab: classTab)
+										ifFalse: [ tabGroup addTab: classTab ].
+									classTree
+										ifNotNil: [ classTree selectAndScrollTo: selectedCoder ] ] ] ];
+				yourself ];
+		yourself.
+	classTab := BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Class Hierarchy';
+		stencil: [ classTree := self buildClassHierarchyTree
+				when: BrSelectionChanged
+					do: [ :anEvent | 
+					anEvent target
+						selectedNodeDo: [ :aNode | 
+							self updateSelection: aNode value.
+							packageTree
+								ifNotNil: [ packageTree selectAndScrollTo: selectedCoder ] ] ];
+				yourself ];
+		yourself.
+	tabGroup := BrTabGroup new
+		look: BrGlamorousTabGroupLook new;
+		addTab: packageTab;
+		vExact: 400;
+		hExact: 400;
+		yourself.
+	self isSelectedCoderClassCoder
+		ifTrue: [ tabGroup addTab: classTab ].
+	^ tabGroup
+]
+
+{ #category : #'building ui' }
 GtPackagesCoderElement >> buildPackageHierarchyTree [
 	| tree |
-	tree := BrSimpleTree new
+	tree := BrColumnedTree new
 		constraintsDo: [ :c | 
 			c horizontal fitContent.
 			c vertical matchParent ];
@@ -104,23 +169,27 @@ GtPackagesCoderElement >> buildPackageHierarchyTree [
 			children: [ :anObject | 
 			anObject packageTreeCoders
 				asSortedCollection: [ :a :b | a name < b name ] ];
-		stencil:
-			(BrSimpleTreeRowStencilBuilder new
-				text: [ :anObject | anObject name asRopedText glamorousRegularFontAndSize ]);
 		yourself.
-	tree
-		when: BrSelectionChanged
-		do: [ :anEvent | 
-			tree
-				selectedNodeDo: [ :aNode | 
-					selectedCoder := aNode value.
-					self updateCoder.
-					tree hasParent
-						ifTrue: [ tree parent removeChildNamed: #class.
-							(selectedCoder isKindOf: GtClassCoder)
-								ifTrue: [ tree parent addChild: self buildClassHierarchyTree as: #class ] ] ] ].
-	self selectAndScrollTo: selectedCoder in: tree.
+	tree column
+		title: 'Name';
+		stencil: [ :aNode | 
+			BlElement new
+				layout: BlLinearLayout horizontal;
+				addChild: aNode value icon;
+				addChild:
+					(BlTextElement new
+						margin: (BlInsets all: 3);
+						text: aNode value name asRopedText glamorousRegularFontAndSize;
+						constraintsDo: [ :c | 
+							c horizontal matchParent.
+							c vertical fitContent ]);
+				constraintsDo: [ :c | 
+					c horizontal matchParent.
+					c vertical fitContent ];
+				yourself ].
 	^ tree
+		selectAndScrollTo: selectedCoder;
+		yourself
 ]
 
 { #category : #'building ui' }
@@ -159,37 +228,6 @@ GtPackagesCoderElement >> buildPackagesElement [
 				text: packagesCoder coders size printString , ' Packages').
 	element addChild: self buildPackageList.
 	^ element
-]
-
-{ #category : #'building ui' }
-GtPackagesCoderElement >> buildPackagesTreeButton [
-	| look |
-	^ BrToggle new
-		label: 'Show Package Tree';
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(look := BrGlamorousWithDropdownLook
-						handle: [ BrButton new
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousIcons tree asElement;
-								yourself ]
-						content: [ | content |
-							content := BlElement new
-								layout: BlLinearLayout horizontal;
-								margin: (BlInsets all: 10);
-								constraintsDo: [ :c | 
-									c horizontal fitContent.
-									c vertical exact: 400 ];
-								addChild: self buildPackageHierarchyTree as: #package;
-								yourself.
-							(selectedCoder isKindOf: GtClassCoder)
-								ifTrue: [ content addChild: self buildClassHierarchyTree as: #class ].
-							content ]);
-		icon: BrGlamorousIcons tree asElement;
-		yourself
 ]
 
 { #category : #'building ui' }
@@ -279,7 +317,7 @@ GtPackagesCoderElement >> buildToolbar [
 			c ignored horizontal alignRight.
 			c ignored vertical alignTop ];
 		addItem: self buildSpotterButton;
-		addItem: self buildPackagesTreeButton;
+		addItem: self buildHierarchyButton;
 		addItem: self buildAddClassButton;
 		yourself
 ]
@@ -302,33 +340,19 @@ GtPackagesCoderElement >> initialize [
 	self addChild: self buildToolbar
 ]
 
-{ #category : #private }
-GtPackagesCoderElement >> selectAndScrollTo: anObject in: aTree [
-	aTree viewModel root
-		allChildrenNodesBreadthFirstDo: [ :treeNode | 
-			treeNode ensureChildNodesComputed.
-			anObject = treeNode value
-				ifTrue: [ treeNode withAllParentNodesDo: [ :node | node expand ].
-					aTree selectOne: treeNode globalIndexInTree.
-					(aTree childNamed: #tree)
-						scrollToPosition: treeNode globalIndexInTree ] ]
-]
-
-{ #category : #events }
-GtPackagesCoderElement >> updateCoder [
-	| coderElement |
-	contentPane
-		childNamed: #coder
-		ifFound: [ :element | element removeFromParent ]
-		ifNone: [  ].
-	coderElement := selectedCoder = packagesCoder
-		ifTrue: [ self buildPackagesElement ]
-		ifFalse: [ selectedCoder asElement ].
-	contentPane addChild: coderElement as: #coder
+{ #category : #testing }
+GtPackagesCoderElement >> isSelectedCoderClassCoder [
+	^ selectedCoder isKindOf: GtClassCoder
 ]
 
 { #category : #events }
 GtPackagesCoderElement >> updateSelection: aCoder [
+	| coderElement |
 	selectedCoder := aCoder.
-	self updateCoder
+	coderElement := selectedCoder = packagesCoder
+		ifTrue: [ self buildPackagesElement ]
+		ifFalse: [ selectedCoder asElement ].
+	contentPane
+		removeChildNamed: #coder;
+		addChild: coderElement as: #coder
 ]
