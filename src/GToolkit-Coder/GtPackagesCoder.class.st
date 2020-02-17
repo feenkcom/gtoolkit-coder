@@ -36,6 +36,11 @@ GtPackagesCoder >> hash [
 	^ self class hash
 ]
 
+{ #category : #accessing }
+GtPackagesCoder >> icon [
+	^ BrGlamorousIcons packageicon asElement
+]
+
 { #category : #'initialize-release' }
 GtPackagesCoder >> initialize [
 	super initialize.
