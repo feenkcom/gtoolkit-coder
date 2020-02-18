@@ -67,10 +67,14 @@ GtPackagesCoderElement >> buildClassHierarchyTree [
 		stencil: [ :aNode | 
 			BlElement new
 				layout: BlLinearLayout horizontal;
-				addChild: aNode value icon;
+				addChild:
+					(aNode value icon
+						transformDo: [ :t | t scaleBy: 0.5 ];
+						size: 8 @ 8;
+						margin: (BlInsets right: 5);
+						yourself);
 				addChild:
 					(BlTextElement new
-						margin: (BlInsets all: 3);
 						text: aNode value name asRopedText glamorousRegularFontAndSize;
 						constraintsDo: [ :c | 
 							c horizontal matchParent.
@@ -175,10 +179,14 @@ GtPackagesCoderElement >> buildPackageHierarchyTree [
 		stencil: [ :aNode | 
 			BlElement new
 				layout: BlLinearLayout horizontal;
-				addChild: aNode value icon;
+				addChild:
+					(aNode value icon
+						transformDo: [ :t | t scaleBy: 0.5 ];
+						size: 8 @ 8;
+						margin: (BlInsets right: 5);
+						yourself);
 				addChild:
 					(BlTextElement new
-						margin: (BlInsets all: 3);
 						text: aNode value name asRopedText glamorousRegularFontAndSize;
 						constraintsDo: [ :c | 
 							c horizontal matchParent.
