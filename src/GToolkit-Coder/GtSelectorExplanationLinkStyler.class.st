@@ -37,15 +37,6 @@ GtSelectorExplanationLinkStyler >> selectorsAssociations [
 ]
 
 { #category : #visiting }
-GtSelectorExplanationLinkStyler >> visitLiteralNode: aNode [
-	super visitLiteralNode: aNode.
-	self selectorsAssociations do: [:association |
-		(aNode value = association key) ifTrue:
-			[ self styleFrom: (aNode start - 1) to: (aNode start - 1) with: 
-				{ GtYellowCircleExplanationTextAdornment forIdentifier: (association value) } ]]
-]
-
-{ #category : #visiting }
 GtSelectorExplanationLinkStyler >> visitMessageNode: aMessageNode [
 	super visitMessageNode: aMessageNode.
 	self selectorsAssociations do: [ :association | 
