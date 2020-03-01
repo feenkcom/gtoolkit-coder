@@ -15,6 +15,11 @@ RPackage >> gtBrowseFrom: anElement [
 ]
 
 { #category : #'*GToolkit-Coder' }
+RPackage >> gtClassExtensions [
+	^ self extensionMethods collect: [ :each | GtPharoClassExtension new extendingMethod: each ]
+]
+
+{ #category : #'*GToolkit-Coder' }
 RPackage >> gtDependenciesMapFor: aView [
 	<gtView>
 	^ aView mondrian
@@ -47,11 +52,18 @@ RPackage >> gtDependenciesMapFor: aView [
 ]
 
 { #category : #'*GToolkit-Coder' }
-RPackage >> gtUsedPackagesFor: aView [
-	<gtView>
-	^ (self usedPackages gtItemsFor: aView)
-		title: 'Used Packages';
-		priority: 1
+RPackage >> gtInheritances [
+	^ self definedClasses collect: [ :each | each gtInheritance ]
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtPackageScope [
+	^ self
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtTraitUsages [
+	^ self definedClasses flatCollect: [ :each | each gtTraitUsages ]
 ]
 
 { #category : #'*GToolkit-Coder' }

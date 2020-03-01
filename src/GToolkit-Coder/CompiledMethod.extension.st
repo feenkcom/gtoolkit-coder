@@ -13,3 +13,8 @@ CompiledMethod >> gtBrowseFrom: anElement [
 	anElement showSpace: aSpace.
 	packagesCoder withSelectedMethod: self
 ]
+
+{ #category : #'*GToolkit-Coder' }
+CompiledMethod >> gtPackageScope [
+	^ self package
+]
