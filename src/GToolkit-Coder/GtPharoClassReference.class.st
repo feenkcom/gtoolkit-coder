@@ -14,6 +14,15 @@ GtPharoClassReference >> from [
 ]
 
 { #category : #accessing }
+GtPharoClassReference >> gtSourceFor: aView [
+	<gtView>
+	^ aView forward
+		title: 'Source';
+		object: [self referencingMethod];
+		view: #gtSourceFor:
+]
+
+{ #category : #accessing }
 GtPharoClassReference >> referencedClass [
 	^ referencedClass
 ]
