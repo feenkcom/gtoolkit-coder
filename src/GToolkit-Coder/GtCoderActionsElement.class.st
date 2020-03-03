@@ -107,9 +107,9 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 								ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
 							aButton
 								beSmall;
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
+								look: BrGlamorousButtonWithIconLook 
+									- BrGlamorousWithLabelTooltipLook
+									- BrGlamorousButtonExteriorLook;
 								padding: BlInsets empty;
 								margin: BlInsets empty;
 								yourself ]
@@ -118,19 +118,13 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 								layout: BlLinearLayout vertical;
 								constraintsDo: [ :c | 
 									c horizontal exact: 200.
-									c vertical matchParent ].
+									c vertical fitContent ].
 							titleElement := BrEditorElement new
 								look: BrGlamorousInputFieldSpacingLook;
 								editor: (BrTextEditor new text: '' asRopedText);
 								requestFocus;
 								constraintsDo: [ :c | 
-									c
-										margin:
-											(BlInsets
-												top: 1
-												left: 0
-												bottom: 0
-												right: 0).
+									c margin: (BlInsets top: 1 left: 0 bottom: 0 right: 0).
 									c horizontal matchParent.
 									c vertical fitContent ].
 							classCompleter := GtCompletionController

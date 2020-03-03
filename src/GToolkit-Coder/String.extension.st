@@ -6,6 +6,11 @@ String >> gtASTMatches [
 ]
 
 { #category : #'*GToolkit-Coder' }
+String >> gtASTMethodMatches [
+	^ GtSearchASTFilter sourceMethod: self
+]
+
+{ #category : #'*GToolkit-Coder' }
 String >> gtClassMatches [
 	^ GtSearchMethodsWithClassPatternFilter pattern: self
 ]

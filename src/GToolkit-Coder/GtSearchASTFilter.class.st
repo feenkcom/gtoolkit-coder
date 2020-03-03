@@ -20,6 +20,11 @@ GtSearchASTFilter class >> sourceExpression: aString [
 	^ self ast: (RBParser parseRewriteExpression: aString)
 ]
 
+{ #category : #'instance creation' }
+GtSearchASTFilter class >> sourceMethod: aString [
+	^ self ast: (RBParser parseRewriteMethod: aString)
+]
+
 { #category : #accessing }
 GtSearchASTFilter >> ast [
 	^ ast

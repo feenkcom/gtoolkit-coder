@@ -71,7 +71,6 @@ Behavior >> buildSpotterButtonFor: classCoder [
 													BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
 														- BrGlamorousButtonExteriorLook;
 												icon: BrGlamorousIcons search asElement;
-												label: 'Playground History';
 												yourself);
 										content:
 											(GtSpotterElement new
