@@ -75,10 +75,10 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 	<return: #BrButton>
 	
 	^ BrButton new
-		beSmall;
-		look: BrGlamorousButtonWithIconLook;
-		label: aGtCoderAction title;
 		icon: aGtCoderAction icon asElement;
+		beSmall;
+		label: aGtCoderAction title;
+		look: BrGlamorousButtonWithIconLook;
 		action: aGtCoderAction
 ]
 
