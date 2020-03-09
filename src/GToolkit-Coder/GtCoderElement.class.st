@@ -105,12 +105,6 @@ GtCoderElement >> isVerticallyResizeableElement [
 GtCoderElement >> newActionsElement [
 	^ GtCoderActionsElement new
 		coder: coder;
-		padding:
-			(BlInsets
-				top: 0
-				left: -3
-				bottom: -3
-				right: 0);
 		margin: (BlInsets top: 5);
 		yourself
 ]

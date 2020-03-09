@@ -56,7 +56,7 @@ GtCoderActionsElement >> initialize [
 		c horizontal matchParent.
 		c vertical fitContent ].
 
-	mainToolbar := self newToolbar.
+	mainToolbar := self newToolbar labeled: 'Main toolbar'.
 	
 	separator := BlElement new
 		background: (Color gray alpha: 0.2);
@@ -65,7 +65,7 @@ GtCoderActionsElement >> initialize [
 			c horizontal exact: 1.
 			c vertical matchParent ].
 
-	contextToolbar := self newToolbar.
+	contextToolbar := self newToolbar labeled: 'Context toolbar'.
 
 	self addChildren: { mainToolbar . separator . contextToolbar }
 ]
@@ -145,12 +145,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 GtCoderActionsElement >> newToolbar [
 	<return: #BrToolbar>
 
-	^ BrToolbar new
-		look: BrToolbarLook new;
-		layout: (BlGridLayout horizontal rowCount: 1; cellSpacing: 3);
-		constraintsDo: [ :c |
-			c horizontal fitContent.
-			c vertical fitContent ]
+	^ BrToolbar new look: BrGlamorousToolbarLook new
 ]
 
 { #category : #private }
