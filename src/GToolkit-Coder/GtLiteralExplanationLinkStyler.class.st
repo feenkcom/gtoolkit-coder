@@ -1,3 +1,6 @@
+"
+I style literal nodes in a text with yellow circle adornments.
+"
 Class {
 	#name : #GtLiteralExplanationLinkStyler,
 	#superclass : #GtSourceExplanationLinkStyler,

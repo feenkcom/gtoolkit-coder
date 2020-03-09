@@ -58,9 +58,8 @@ GtClassCommentCoder >> commentChanged: anAnnouncement [
 { #category : #ui }
 GtClassCommentCoder >> expandedEditorElement [
 	^ document asElement
-		constraintsDo: [ :c | 
-			c vertical matchParent.
-			c horizontal matchParent ];
+		hMatchParent;
+		vFitContent;
 		in: [ :e | self addShortcutsTo: e ];
 		yourself
 ]
