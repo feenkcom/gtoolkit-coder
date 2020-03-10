@@ -60,7 +60,7 @@ GtCoderActionsElement >> initialize [
 	
 	separator := BlElement new
 		background: (Color gray alpha: 0.2);
-		margin: (BlInsets top: 5 left: 5 bottom: 5 right: 5);
+		margin: (BlInsets all: 5);
 		constraintsDo: [ :c |
 			c horizontal exact: 1.
 			c vertical matchParent ].
@@ -145,7 +145,9 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 GtCoderActionsElement >> newToolbar [
 	<return: #BrToolbar>
 
-	^ BrToolbar new look: BrGlamorousToolbarLook new
+	^ BrToolbar new
+		look: (BrGlamorousToolbarLook new spacing: 4);
+		padding: (BlInsets left: -4)
 ]
 
 { #category : #private }
