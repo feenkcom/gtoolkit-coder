@@ -825,9 +825,7 @@ GtSourceCoder >> styleCollapsedText [
 GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 	self sourceEditor text
 		attributes:
-			{(GtPlaygroundEvaluatedCodeButtonAttribute new
-				result: value;
-				paint: (Color fromHexString: #'90CAF9'))}
+			{(GtPlaygroundEvaluatedCodeButtonAttribute new result: value)}
 		from: interval last
 		to: interval last.
 	aBoolean
