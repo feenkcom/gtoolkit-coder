@@ -1,14 +1,15 @@
 Class {
 	#name : #GtClassCoderExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Class'
 }
 
-{ #category : #'as yet unclassified' }
-GtClassCoderExamples >> onBlElement [
+{ #category : #'instance creation' }
+GtClassCoderExamples >> coderForClass [
 	<gtExample>
 	| aCoder |
-	aCoder := GtClassCoder forClass: BlElement.
-	aCoder openInInspector.
+
+	aCoder := GtClassCoder forClass: GtClassCoderExampleClass.
+
 	^ aCoder
 ]

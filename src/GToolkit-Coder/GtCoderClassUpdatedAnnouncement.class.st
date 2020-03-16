@@ -1,10 +1,13 @@
+"
+I am sent by the ${class:GtClassCoder}$ when the class changes, e.g. we edit a different class
+"
 Class {
 	#name : #GtCoderClassUpdatedAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
 		'class'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Announcements'
 }
 
 { #category : #'instance creation' }

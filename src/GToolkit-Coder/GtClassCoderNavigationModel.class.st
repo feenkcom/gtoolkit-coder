@@ -62,7 +62,7 @@ GtClassCoderNavigationModel >> theClass [
 
 { #category : #'as yet unclassified' }
 GtClassCoderNavigationModel >> updateSelectionWith: aClassOrPackage [
-	"Notify yhe navigation model to visually update the selected class, 
+	"Notify the navigation model to visually update the selected class, 
 	when the selected class changed in coder, for example as a result of a search".
 	selectedObject := aClassOrPackage.
 	self announcer announce: (GtClassCoderNavigationSelectionChanged new

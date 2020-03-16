@@ -1,10 +1,13 @@
+"
+I am sent by the ${class:GtClassCoder}$ when the current package changes (means class is not selected and we have to remove the content from the class coder)
+"
 Class {
 	#name : #GtCoderPackageUpdatedAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
 		'package'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Announcements'
 }
 
 { #category : #accessing }
