@@ -45,7 +45,7 @@ GtCoderInstanceVariablesStyler >> styleInstanceVariable: aBlText [
 	isValid := self isValidVariableName: aBlText.
 	
 	isValid
-		ifTrue: [ aBlText foreground: Color darkGray ]
+		ifTrue: [ aBlText foreground: Color veryDarkGray ]
 		ifFalse: [ aBlText foreground: Color white ].
 
 	aBlText replacingAdornment: [ :aTBrTextEditorTextualPiece :anEditorElement |

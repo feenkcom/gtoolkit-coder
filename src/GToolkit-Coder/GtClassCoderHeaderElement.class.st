@@ -29,7 +29,7 @@ GtClassCoderHeaderElement >> buildButtonForSlot: aSlot [
 		look: (BrGlamorousRegularEditorLook new foreground: Color veryDarkGray);
 		text: aSlot name asRopedText;
 		fitContent;
-		background: (Color veryVeryLightGray);
+		background: (BrGlamorousColors neutralBackgroundColor);
 		geometry: (BlRectangle cornerRadius: 4).
 		
 	anEditor editor
@@ -40,7 +40,7 @@ GtClassCoderHeaderElement >> buildButtonForSlot: aSlot [
 					anEditor background: BrGlamorousColors errorBackgroundColor.
 					anEditor look foreground: Color white ]
 				ifTrue: [
-					anEditor background: Color veryVeryLightGray.
+					anEditor background: BrGlamorousColors neutralBackgroundColor.
 					anEditor look foreground: Color veryDarkGray ] ].
 	
 	anEditor addLook: ((BrGlamorousWithTooltipLook2 content: [
@@ -109,20 +109,6 @@ GtClassCoderHeaderElement >> buildInstVarNames [
 			self classCoder theClass instVarNames
 				do: [ :eachInstVar | aStream nextPutAll: eachInstVar ]
 				separatedBy: [ aStream space ] ])
-
-	"| aContainer |
-	
-	aContainer := BlElement new.
-	aContainer layout: BlFlowLayout new.
-	aContainer constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical fitContent ].
-	
-	aContainer addChildren: (self classCoder theClass slots collect: [ :eachSlot |
-		(self buildButtonForSlot: eachSlot) margin: (BlInsets right: 5)
-	]).
-	
-	^ aContainer"
 ]
 
 { #category : #'private - ui blocks' }

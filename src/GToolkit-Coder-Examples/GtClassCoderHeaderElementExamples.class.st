@@ -4,7 +4,7 @@ Class {
 	#category : #'GToolkit-Coder-Examples-Class'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'examples - header' }
 GtClassCoderHeaderElementExamples >> coderHeaderElementForClass [
 	<gtExample>
 	| aCoder aCoderHeaderElement |
