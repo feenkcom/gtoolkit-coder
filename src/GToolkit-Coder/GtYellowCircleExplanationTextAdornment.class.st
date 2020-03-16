@@ -7,17 +7,21 @@ Class {
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtYellowCircleExplanationTextAdornment class >> forIdentifier: anIdentifier [
+	self forIdentifier: anIdentifier withSize: 5.
+		
+]
+
+{ #category : #'as yet unclassified' }
+GtYellowCircleExplanationTextAdornment class >> forIdentifier: anIdentifier withSize: aSize [
 	| circleElement |
 	
 	circleElement := BlElement new
 				geometry: BlEllipse new;
-				size: 3@3;
-				margin: (BlInsets top: 7);
+				size: aSize@aSize;
 				look: (GtExplainerTargetLook new explanationModel: anIdentifier).
 	^ BrTextAdornmentDynamicAttribute new
 				beAppend;
 				stencil: circleElement.
-		
 ]
