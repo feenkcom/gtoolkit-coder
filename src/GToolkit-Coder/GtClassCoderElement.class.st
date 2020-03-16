@@ -47,17 +47,23 @@ GtClassCoderElement >> buildContentPane [
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildContentTabs [
-	| tabPragmas  |
-	tabPragmas := self classViewPragmas.
+	| tabPragmas |
+	tabPragmas := self classViewItems.
 	contentTabs := BrTabGroup new.
 	contentTabs look: BrGlamorousTabGroupLook new.
 	contentTabs constraintsDo: [ :c | c linear weight: 2 ].
 	tabPragmas
 		do: [ :each | 
-			classCoder theClass
-				perform: each method selector
-				with: contentTabs
-				with: classCoder ].
+			each
+				ifItHasContent: [ | tab |
+					tab := BrTab new
+						look: BrGlamorousTabLook new;
+						label: each title;
+						stencil: [ each asElementDo: [ :el | el ] ].
+					each actions notEmpty
+						ifTrue:
+							[ tab toolbarStencil: [ each actionsToolbarForElement: tab ] ].
+					contentTabs addTab: tab ] ].
 	^ contentTabs
 ]
 
@@ -164,14 +170,15 @@ GtClassCoderElement >> classCoder: aCoder [
 ]
 
 { #category : #private }
-GtClassCoderElement >> classViewPragmas [
-	| pragmas |
-	pragmas := Pragma
-		allNamed: #gtClassView:
-		from: classCoder theClass class
-		to: Behavior.
-	^ pragmas
-		asSortedCollection: [ :a :b | a arguments first < b arguments first ]
+GtClassCoderElement >> classViewItems [
+	| collector |
+	collector := GtPhlowViewsCollector new.
+	collector fromObject: classCoder theClass.
+	collector from: classCoder theClass class.
+	collector to: Behavior.
+	collector pragmaNames: #(gtClassView).
+	collector context: Dictionary new.
+	^ collector collect
 ]
 
 { #category : #subscriptions }

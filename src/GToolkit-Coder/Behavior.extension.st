@@ -1,50 +1,7 @@
 Extension { #name : #Behavior }
 
 { #category : #'*GToolkit-Coder' }
-Behavior >> buildCommentsTabIn: tabGroup for: classCoder [
-	<gtClassView: 30>
-	tabGroup
-		addTab:
-			(BrTab new
-				look: BrGlamorousTabLook new;
-				label: 'Comments';
-				stencil: [ classCoder commentsCoder asElement ])
-]
-
-{ #category : #'*GToolkit-Coder' }
-Behavior >> buildDefinitionsTabIn: tabGroup for: classCoder [
-	<gtClassView: 20>
-	tabGroup
-		addTab:
-			(BrTab new
-				look: BrGlamorousTabLook new;
-				label: 'Definitions';
-				stencil: [ classCoder definitionsCoder asElement ])
-]
-
-{ #category : #'*GToolkit-Coder' }
-Behavior >> buildMethodsTabIn: tabGroup for: classCoder [
-	<gtClassView: 10>
-	tabGroup
-		addTab:
-			(BrTab new
-				look: BrGlamorousTabLook new;
-				label: 'Methods';
-				stencil: [ classCoder methodsCoder asElement ];
-				toolbarStencil: [ BrToolbar new
-						look: BrGlamorousToolbarLook new;
-						addItem: (self buildSpotterButtonFor: classCoder);
-						addItem:
-							(BrButton new
-								look: BrGlamorousButtonWithIconLook;
-								icon: BrGlamorousIcons add asElement;
-								action: [ classCoder methodsCoder addNewCoder ];
-								yourself);
-						yourself ])
-]
-
-{ #category : #'*GToolkit-Coder' }
-Behavior >> buildSpotterButtonFor: classCoder [
+Behavior >> buildSpotterButtonFor: methodsCoder [
 	| look |
 	^ BrButton new
 		look:
@@ -52,11 +9,11 @@ Behavior >> buildSpotterButtonFor: classCoder [
 				+
 					(look := BrGlamorousWithDropdownLook
 						stencil: [ | model |
-							model := GtSpotter new initializeWith: classCoder methodsCoder.
+							model := GtSpotter new initializeWith: methodsCoder.
 							model announcer
 								when: GtSpotterActOn
 								do: [ :anEvent | 
-									classCoder methodsCoder selectAndScrollTo: anEvent element.
+									methodsCoder selectAndScrollTo: anEvent element.
 									anEvent actedUpon: true.
 									look hide ].
 							model announcer
@@ -111,4 +68,37 @@ Behavior >> gtBrowseFrom: anElement [
 	aSpace withHalos.
 	anElement showSpace: aSpace.
 	coder withClass: self
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> gtCoderCommentsFor: aView [
+	<gtClassView>
+	^ aView explicit
+		title: 'Comments';
+		priority: 30;
+		stencil: [ (GtClassCommentsCoder forClass: self) asElement ]
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> gtCoderDefinitionsFor: aView [
+	<gtClassView>
+	^ aView explicit
+		title: 'Definitions';
+		priority: 30;
+		stencil: [ (GtClassDefinitionsCoder forClass: self) asElement ]
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> gtCoderMethodsFor: aView [
+	<gtClassView>
+	| methodsCoder |
+	methodsCoder := GtClassMethodsCoder forClass: self.
+	^ aView explicit
+		title: 'Comments';
+		priority: 10;
+		title: 'Methods';
+		actionButtonIcon: BrGlamorousIcons add asElement
+			action: [ methodsCoder addNewCoder ];
+		actionStencil: [ self buildSpotterButtonFor: methodsCoder ];
+		stencil: [ methodsCoder asElement ]
 ]
