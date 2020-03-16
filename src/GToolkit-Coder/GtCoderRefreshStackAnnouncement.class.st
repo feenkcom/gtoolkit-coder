@@ -1,5 +1,5 @@
 Class {
 	#name : #GtCoderRefreshStackAnnouncement,
 	#superclass : #Announcement,
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Announcements'
 }

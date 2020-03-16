@@ -37,7 +37,7 @@ GtClassCoder >> asCardElement [
 GtClassCoder >> asElement [
 	| coderElement |
 	coderElement := GtClassCoderElement new classCoder: self.
-	^ coderElement asScrollableElement
+	^ coderElement
 ]
 
 { #category : #accessing }
