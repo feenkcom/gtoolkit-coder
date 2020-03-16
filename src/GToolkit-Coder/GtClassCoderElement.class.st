@@ -7,7 +7,7 @@ Class {
 		'contentPane',
 		'contentTabs'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UI - Class'
 }
 
 { #category : #callbacks }
