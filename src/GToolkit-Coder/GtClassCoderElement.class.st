@@ -24,6 +24,23 @@ GtClassCoderElement >> actOnPackageUpdated: ann [
 	self removeContentTabs
 ]
 
+{ #category : #callbacks }
+GtClassCoderElement >> actOnSelectMethod: aMethod [
+	| tab selectTabBlock selectMethodBlock |
+	tab := contentTabs viewModel tabs
+		detect: [ :each | each widget label asString = 'Methods' ]
+		ifNone: [ ^ self ].
+	tab isSelected
+		ifFalse: [ selectTabBlock := [ tab select ].
+			BlUseAsyncFeatures
+				ifEnabledDo: [ self enqueueTask: (BlTaskAction new action: selectTabBlock) ]
+				otherwise: selectTabBlock ].
+	selectMethodBlock := [ self selectAndScrollToMethod: aMethod ].
+	BlUseAsyncFeatures
+		ifEnabledDo: [ self enqueueTask: (BlTaskAction new action: selectMethodBlock) ]
+		otherwise: selectMethodBlock
+]
+
 { #category : #'building ui' }
 GtClassCoderElement >> buildClassLabel [
 	^ BrLabel new
@@ -163,7 +180,9 @@ GtClassCoderElement >> classCoder: aCoder [
 		when: GtCoderClassUpdatedAnnouncement
 			do: [ self actOnClassUpdated ];
 		when: GtCoderPackageUpdatedAnnouncement
-			do: [ :ann | self actOnPackageUpdated: ann ].
+			do: [ :ann | self actOnPackageUpdated: ann ];
+		when: GtClassCoderNavigationAnnouncement
+			do: [ :ann | self actOnSelectMethod: ann method ].
 	container ifNotNil: #removeFromParent.
 	container := self buildContentPane.
 	self addChildFirst: container
@@ -209,6 +228,12 @@ GtClassCoderElement >> removeContentTabs [
 	contentTabs
 		ifNotNil: [ contentPane removeChild: contentTabs.
 			contentTabs := nil ]
+]
+
+{ #category : #'updating ui' }
+GtClassCoderElement >> selectAndScrollToMethod: aMethod [
+	(contentTabs content childAt: 1) coders
+		selectAndScrollToMethod: aMethod
 ]
 
 { #category : #'updating ui' }
