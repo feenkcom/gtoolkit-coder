@@ -84,3 +84,12 @@ GtMethodsCoder >> selectAndScrollTo: aMethodCoder [
 			BlTaskAtQueue default schedule: aCommand ]
 		otherwise: [ aMethodCoder requestFocus ]
 ]
+
+{ #category : #scripting }
+GtMethodsCoder >> selectAndScrollToMethod: aCompiledMethod [
+	| methodCoder |
+	methodCoder := self coders
+		detect: [ :each | each isForMethod: aCompiledMethod ]
+		ifNone: [ ^ self ].
+	self selectAndScrollTo: methodCoder
+]

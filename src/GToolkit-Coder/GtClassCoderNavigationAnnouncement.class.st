@@ -2,17 +2,17 @@ Class {
 	#name : #GtClassCoderNavigationAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
-		'navigationTab'
+		'method'
 	],
 	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }
-GtClassCoderNavigationAnnouncement >> navigationTab [
-	^ navigationTab
+GtClassCoderNavigationAnnouncement >> method [
+	^ method
 ]
 
 { #category : #accessing }
-GtClassCoderNavigationAnnouncement >> navigationTab: aSymbol [
-	navigationTab := aSymbol
+GtClassCoderNavigationAnnouncement >> method: aMethod [
+	method := aMethod
 ]

@@ -2,11 +2,7 @@ Class {
 	#name : #GtClassCoder,
 	#superclass : #Announcer,
 	#instVars : [
-		'searchFilter',
 		'navigationModel',
-		'methodsCoder',
-		'definitionsCoder',
-		'commentsCoder',
 		'class'
 	],
 	#category : #'GToolkit-Coder-Coders'
@@ -40,45 +36,15 @@ GtClassCoder >> asElement [
 	^ coderElement
 ]
 
-{ #category : #accessing }
-GtClassCoder >> commentsCoder [
-	^ commentsCoder
-		ifNil: [ commentsCoder := GtClassCommentsCoder new.
-			class notNil
-				ifTrue: [ commentsCoder forClass: class ].
-			commentsCoder ]
-]
-
-{ #category : #accessing }
-GtClassCoder >> definitionsCoder [
-	^ definitionsCoder
-		ifNil: [ definitionsCoder := GtClassDefinitionsCoder new.
-			class notNil
-				ifTrue: [ definitionsCoder forClass: class ].
-			definitionsCoder ]
-]
-
 { #category : #updating }
 GtClassCoder >> forClass: aClass [
 	class := aClass.
-	methodsCoder notNil
-		ifTrue: [ methodsCoder forClass: class ].
-	definitionsCoder notNil
-		ifTrue: [ definitionsCoder forClass: class ].
-	commentsCoder notNil
-		ifTrue: [ commentsCoder forClass: class ].
 	self announce: (GtCoderClassUpdatedAnnouncement forClass: class)
 ]
 
 { #category : #initialize }
 GtClassCoder >> forObject: anObject [
 	class := anObject class.
-	anObject notNil
-		ifTrue: [ self methodsCoder forObject: anObject ].
-	definitionsCoder notNil
-		ifTrue: [ definitionsCoder forClass: class ].
-	commentsCoder notNil
-		ifTrue: [ commentsCoder forClass: class ].
 	self announce: (GtCoderClassUpdatedAnnouncement forClass: class)
 ]
 
@@ -102,27 +68,12 @@ GtClassCoder >> icon [
 	^ BrGlamorousIcons classicon asElement
 ]
 
-{ #category : #accessing }
-GtClassCoder >> implementorsFilterString: aString [
-	"Set implementors filter"
-	self methodsCoder implementorsFilterString: aString
-]
-
 { #category : #initialize }
 GtClassCoder >> initialize [
 	super initialize.
 	navigationModel := GtClassCoderPackagesAndHierarchyNavigation new
 		classCoder: self;
 		yourself
-]
-
-{ #category : #accessing }
-GtClassCoder >> methodsCoder [
-	^ methodsCoder
-		ifNil: [ methodsCoder := GtClassMethodsCoder new.
-			class notNil
-				ifTrue: [ methodsCoder forClass: class ].
-			methodsCoder ]
 ]
 
 { #category : #accessing }
@@ -165,14 +116,6 @@ GtClassCoder >> packageTreeCoders [
 ]
 
 { #category : #accessing }
-GtClassCoder >> searchFilter [
-	^ searchFilter
-		ifNil: [ searchFilter := GtCoderClassSelector new
-				coder: self;
-				yourself ]
-]
-
-{ #category : #accessing }
 GtClassCoder >> theClass [
 	^ class
 ]
@@ -189,22 +132,8 @@ GtClassCoder >> withClass: aClass [
 ]
 
 { #category : #scripting }
-GtClassCoder >> withHierarchy [
-	self
-		announce: (GtClassCoderNavigationAnnouncement new navigationTab: #hierarchy)
-]
-
-{ #category : #scripting }
-GtClassCoder >> withPackages [
-	self
-		announce: (GtClassCoderNavigationAnnouncement new navigationTab: #packages)
-]
-
-{ #category : #scripting }
 GtClassCoder >> withSelectedMethod: aMethod [
-	self forClass: aMethod methodClass.
-	(self methodsCoder coders
-		detect: [ :each | each compiledMethod == aMethod ]
-		ifNone: [  ])
-		ifNotNil: [ :coder | self methodsCoder selectAndScrollTo: coder ]
+	self withClass: aMethod methodClass.
+	self
+		announce: (GtClassCoderNavigationAnnouncement new method: aMethod)
 ]
