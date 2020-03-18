@@ -3,7 +3,8 @@ Class {
 	#superclass : #Announcer,
 	#instVars : [
 		'navigationModel',
-		'class'
+		'class',
+		'object'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -44,8 +45,8 @@ GtClassCoder >> forClass: aClass [
 
 { #category : #initialize }
 GtClassCoder >> forObject: anObject [
-	class := anObject class.
-	self announce: (GtCoderClassUpdatedAnnouncement forClass: class)
+	object := anObject.
+	self forClass: anObject class
 ]
 
 { #category : #ui }
@@ -91,6 +92,11 @@ GtClassCoder >> navigationModel: aNavigationModel [
 	navigationModel := aNavigationModel.
 	navigationModel classCoder: self.
 	self announce: GtCoderNavigationModelChangedAnnouncement
+]
+
+{ #category : #accessing }
+GtClassCoder >> object [
+	^ object
 ]
 
 { #category : #opening }

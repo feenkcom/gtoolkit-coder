@@ -190,13 +190,15 @@ GtClassCoderElement >> classCoder: aCoder [
 
 { #category : #private }
 GtClassCoderElement >> classViewItems [
-	| collector |
+	| collector context |
 	collector := GtPhlowViewsCollector new.
 	collector fromObject: classCoder theClass.
 	collector from: classCoder theClass class.
 	collector to: Behavior.
 	collector pragmaNames: #(gtClassView).
-	collector context: Dictionary new.
+	context := Dictionary new.
+	context at: #classCoder put: classCoder.
+	collector context: context.
 	^ collector collect
 ]
 
