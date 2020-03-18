@@ -9,8 +9,7 @@ Class {
 
 { #category : #accessing }
 GtYellowCircleExplanationTextAdornment class >> forIdentifier: anIdentifier [
-	self forIdentifier: anIdentifier withSize: 5.
-		
+	^ self forIdentifier: anIdentifier withSize: 5.
 ]
 
 { #category : #'as yet unclassified' }
