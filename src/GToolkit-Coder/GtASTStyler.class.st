@@ -51,3 +51,18 @@ GtASTStyler >> style: aText ast: ast [
 GtASTStyler >> styleFrom: from to: to with: attributes [
 	(text from: from to: to) attributes: attributes
 ]
+
+{ #category : #visiting }
+GtASTStyler >> visitArgumentNodes: aNodeCollection [ 
+	"Sent *once* when visiting method and block nodes"
+	^aNodeCollection do: [ :each | self visitNode: each ]
+]
+
+{ #category : #visiting }
+GtASTStyler >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
+	"| temp |
+	temp is a temporary node as we can find in the body of methods, but it can't be visited the same way.
+	IT redirects the message on argumentNodeVisitor as a way to keep retrocompatibility"
+
+	^ self visitNode: aTemporaryDeclarationNode
+]
