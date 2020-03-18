@@ -1,26 +1,59 @@
 Class {
 	#name : #GtYellowCircleExplanationTextAdornment,
-	#superclass : #Object,
+	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
-		'identifier'
+		'identifier',
+		'size'
 	],
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #accessing }
 GtYellowCircleExplanationTextAdornment class >> forIdentifier: anIdentifier [
-	^ self forIdentifier: anIdentifier withSize: 5.
+	^ self forIdentifier: anIdentifier withSize: 3.
 ]
 
 { #category : #'as yet unclassified' }
 GtYellowCircleExplanationTextAdornment class >> forIdentifier: anIdentifier withSize: aSize [
+	^ self new
+		size: aSize;
+		identifier: anIdentifier;
+		yourself.
+]
+
+{ #category : #accessing }
+GtYellowCircleExplanationTextAdornment >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| circleElement |
 	
-	circleElement := BlElement new
-				geometry: BlEllipse new;
-				size: aSize@aSize;
-				look: (GtExplainerTargetLook new explanationModel: anIdentifier).
-	^ BrTextAdornmentDynamicAttribute new
-				beAppend;
-				stencil: circleElement.
+	circleElement := BrButton new
+		geometry: BlEllipse new;
+		size: size@size;
+		look: (GtExplainerTargetLook new explanationModel: identifier).
+	
+	^ circleElement .
+]
+
+{ #category : #accessing }
+GtYellowCircleExplanationTextAdornment >> identifier [
+	^ identifier.
+]
+
+{ #category : #accessing }
+GtYellowCircleExplanationTextAdornment >> identifier: anIdentifier [
+	identifier := anIdentifier.
+]
+
+{ #category : #initialization }
+GtYellowCircleExplanationTextAdornment >> initialize [
+	self beAppend.
+]
+
+{ #category : #accessing }
+GtYellowCircleExplanationTextAdornment >> size [
+	^ size.
+]
+
+{ #category : #accessing }
+GtYellowCircleExplanationTextAdornment >> size: aSize [
+	size := aSize.
 ]
