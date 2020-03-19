@@ -45,6 +45,7 @@ GtYellowCircleExplanationTextAdornment >> identifier: anIdentifier [
 
 { #category : #initialization }
 GtYellowCircleExplanationTextAdornment >> initialize [
+	super initialize.
 	self beAppend.
 ]
 
