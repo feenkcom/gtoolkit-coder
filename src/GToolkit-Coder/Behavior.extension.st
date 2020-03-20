@@ -89,10 +89,15 @@ Behavior >> gtCoderDefinitionsFor: aView [
 ]
 
 { #category : #'*GToolkit-Coder' }
-Behavior >> gtCoderMethodsFor: aView [
+Behavior >> gtCoderMethodsFor: aView context: aDictionary [
 	<gtClassView>
-	| methodsCoder |
-	methodsCoder := GtClassMethodsCoder forClass: self.
+	| methodsCoder object |
+	aDictionary
+		at: #classCoder
+		ifPresent: [ :coder | object := coder object ].
+	methodsCoder := object notNil
+		ifTrue: [ GtClassMethodsCoder forObject: object ]
+		ifFalse: [ GtClassMethodsCoder forClass: self ].
 	^ aView explicit
 		title: 'Comments';
 		priority: 10;
