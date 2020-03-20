@@ -23,36 +23,44 @@ GtClassCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
 
 { #category : #'private - ui' }
 GtClassCoderHeaderElement >> buildButtonForSlot: aSlot [
-	| anEditor |
+	| anEditor anEditorLook |
 	
+	anEditorLook := BrGlamorousRegularEditorLook new.
+
 	anEditor := BrEditor new
-		look: (BrGlamorousRegularEditorLook new foreground: Color veryDarkGray);
+		look: anEditorLook + (BrInteractiveCommonLook new
+			default: [ :aWidget |
+				aWidget background: BrGlamorousColors neutralBackgroundColor.
+				aWidget border: BlBorder empty.
+				anEditorLook foreground: Color veryDarkGray ];
+			when: (BrInteractionState focused and: BrEditorModeState editable)
+				style: [ :aWidget |
+					aWidget background: Color white.
+					aWidget border: (BlBorder paint: BrGlamorousColors focusedEditorBorderColor width: 1)
+				];
+			when: (BrInteractionState focused and: BrEditorModeState readOnly)
+				style: [ :aWidget |
+					aWidget background: BrGlamorousColors focusedEditorBorderColor.
+					anEditorLook foreground: Color white ]);
 		text: aSlot name asRopedText;
 		fitContent;
-		background: (BrGlamorousColors neutralBackgroundColor);
+		beReadOnlyWithoutSelection;
 		geometry: (BlRectangle cornerRadius: 4).
-		
-	anEditor editor
-		when: BrTextEditorModifiedEvent
+
+	anEditor styler: GtCoderInstanceVariableStyler new.
+	anEditor inputFilter: BrTextEditorAlphaNumericInputFilter new.
+
+	anEditor when: BlClickEvent do: [ :anEvent |
+		anEvent currentTarget dispatchEvent: (BrSelectedWish selected: true) ].
+
+	anEditor when: BlDoubleClickEvent
 		do: [ :anEvent |
-			(self isValidSlotName: anEvent text asString slot: aSlot )
-				ifFalse: [
-					anEditor background: BrGlamorousColors errorBackgroundColor.
-					anEditor look foreground: Color white ]
-				ifTrue: [
-					anEditor background: BrGlamorousColors neutralBackgroundColor.
-					anEditor look foreground: Color veryDarkGray ] ].
-	
-	anEditor addLook: ((BrGlamorousWithTooltipLook2 content: [
-		| aPopupContainer |
-		aPopupContainer := BrFrame new
-			fitContent;
-			when: GtPhlowObjectToSpawn do: [ :anEvent | anEditor fireEvent: (GtPhlowObjectToSpawn new
-				object: anEvent object;
-				sourceElement: anEvent target) ].
-		(aSlot gtViewsFor: GtPhlowEmptyView new) asElementDo: [ :anInspectorElement |
-			aPopupContainer addChild: ((anInspectorElement exact: 400@400) asScalableElement size: 200@200)
-		] ])).
+			anEvent currentTarget beEditable.
+			anEvent currentTarget selecter all select ].
+	anEditor when: BlBlurEvent
+		do: [ :anEvent |
+			anEvent currentTarget deselecter all deselect.
+			anEvent currentTarget beReadOnlyWithoutSelection ].
 	
 	^ anEditor
 ]
@@ -67,17 +75,7 @@ GtClassCoderHeaderElement >> buildClassName [
 
 { #category : #'private - ui' }
 GtClassCoderHeaderElement >> buildClassVarNames [
-	^ BrEditor new
-		hMatchParent;
-		vFitContent;
-		look: BrGlamorousRegularEditorLook new;
-		styler: GtCoderInstanceVariablesStyler new;
-		text: (String streamContents: [ :aStream | 
-			self classCoder theClass classVarNames
-				do: [ :eachInstVar | aStream nextPutAll: eachInstVar ]
-				separatedBy: [ aStream space ] ])
-
-	"| aContainer |
+	| aContainer |
 	
 	aContainer := BlElement new.
 	aContainer layout: BlFlowLayout new.
@@ -89,26 +87,13 @@ GtClassCoderHeaderElement >> buildClassVarNames [
 		(self buildButtonForSlot: eachSlot) margin: (BlInsets right: 5)
 	]).
 	
-	^ aContainer"
+	^ aContainer
 ]
 
 { #category : #'private - ui blocks' }
 GtClassCoderHeaderElement >> buildEditableButton [
 	^ BrButton new
 		look: BrGlamorousButtonWithLabelLook new
-]
-
-{ #category : #'private - ui' }
-GtClassCoderHeaderElement >> buildInstVarNames [
-	^ BrEditor new
-		hMatchParent;
-		vFitContent;
-		look: BrGlamorousRegularEditorLook new;
-		styler: GtCoderInstanceVariablesStyler new;
-		text: (String streamContents: [ :aStream | 
-			self classCoder theClass instVarNames
-				do: [ :eachInstVar | aStream nextPutAll: eachInstVar ]
-				separatedBy: [ aStream space ] ])
 ]
 
 { #category : #'private - ui blocks' }
@@ -201,15 +186,4 @@ GtClassCoderHeaderElement >> initializeElements [
 	}.
 	
 	self addChild: theClassProperties
-]
-
-{ #category : #'private - testing' }
-GtClassCoderHeaderElement >> isValidSlotName: aString slot: aSlot [
-	<return: #Boolean>
-
-	^ [
-		aSlot class checkValidName: aString asSymbol.
-		true ]
-			on: InvalidSlotName
-			do: [ :anError | false ]
 ]
