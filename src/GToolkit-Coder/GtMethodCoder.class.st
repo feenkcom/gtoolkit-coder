@@ -173,8 +173,9 @@ GtMethodCoder >> compiledMethod [
 		ifNotNil: [ :cls | 
 			self selector
 				ifNotNil: [ :sel | 
-					(cls canUnderstand: sel)
-						ifTrue: [ cls >> sel ] ] ]
+					(cls includesSelector: sel)
+						ifTrue: [ 
+							cls >> sel ] ] ]
 ]
 
 { #category : #examples }
