@@ -7,9 +7,9 @@ Class {
 	#name : #GtClassCoderExampleClass,
 	#superclass : #Object,
 	#instVars : [
-		'instVarA',
-		'instVarB',
-		'instVarC'
+		'instVarC',
+		'haba',
+		'hello'
 	],
 	#classVars : [
 		'classVarA',
