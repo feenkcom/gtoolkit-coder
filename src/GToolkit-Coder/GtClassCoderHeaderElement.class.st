@@ -23,38 +23,14 @@ GtClassCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
 
 { #category : #'private - ui' }
 GtClassCoderHeaderElement >> buildButtonForSlot: aSlot [
-	| anEditor |
-	
-	anEditor := BrEditor new
-		look: (BrGlamorousRegularEditorLook new foreground: Color veryDarkGray);
+
+	^ GtClassCoderEditableLabel new
 		text: aSlot name asRopedText;
-		fitContent;
-		background: (BrGlamorousColors neutralBackgroundColor);
-		geometry: (BlRectangle cornerRadius: 4).
-		
-	anEditor editor
-		when: BrTextEditorModifiedEvent
-		do: [ :anEvent |
-			(self isValidSlotName: anEvent text asString slot: aSlot )
-				ifFalse: [
-					anEditor background: BrGlamorousColors errorBackgroundColor.
-					anEditor look foreground: Color white ]
-				ifTrue: [
-					anEditor background: BrGlamorousColors neutralBackgroundColor.
-					anEditor look foreground: Color veryDarkGray ] ].
-	
-	anEditor addLook: ((BrGlamorousWithTooltipLook2 content: [
-		| aPopupContainer |
-		aPopupContainer := BrFrame new
-			fitContent;
-			when: GtPhlowObjectToSpawn do: [ :anEvent | anEditor fireEvent: (GtPhlowObjectToSpawn new
-				object: anEvent object;
-				sourceElement: anEvent target) ].
-		(aSlot gtViewsFor: GtPhlowEmptyView new) asElementDo: [ :anInspectorElement |
-			aPopupContainer addChild: ((anInspectorElement exact: 400@400) asScalableElement size: 200@200)
-		] ])).
-	
-	^ anEditor
+		whenAccepted: [ :aText |
+			(RBRenameInstanceVariableRefactoring
+				rename: aSlot name
+				to: aText characters asString asSymbol
+				in: aSlot definingClass) execute ]
 ]
 
 { #category : #'private - ui' }
@@ -67,17 +43,7 @@ GtClassCoderHeaderElement >> buildClassName [
 
 { #category : #'private - ui' }
 GtClassCoderHeaderElement >> buildClassVarNames [
-	^ BrEditor new
-		hMatchParent;
-		vFitContent;
-		look: BrGlamorousRegularEditorLook new;
-		styler: GtCoderInstanceVariablesStyler new;
-		text: (String streamContents: [ :aStream | 
-			self classCoder theClass classVarNames
-				do: [ :eachInstVar | aStream nextPutAll: eachInstVar ]
-				separatedBy: [ aStream space ] ])
-
-	"| aContainer |
+	| aContainer |
 	
 	aContainer := BlElement new.
 	aContainer layout: BlFlowLayout new.
@@ -89,26 +55,13 @@ GtClassCoderHeaderElement >> buildClassVarNames [
 		(self buildButtonForSlot: eachSlot) margin: (BlInsets right: 5)
 	]).
 	
-	^ aContainer"
+	^ aContainer
 ]
 
 { #category : #'private - ui blocks' }
 GtClassCoderHeaderElement >> buildEditableButton [
 	^ BrButton new
 		look: BrGlamorousButtonWithLabelLook new
-]
-
-{ #category : #'private - ui' }
-GtClassCoderHeaderElement >> buildInstVarNames [
-	^ BrEditor new
-		hMatchParent;
-		vFitContent;
-		look: BrGlamorousRegularEditorLook new;
-		styler: GtCoderInstanceVariablesStyler new;
-		text: (String streamContents: [ :aStream | 
-			self classCoder theClass instVarNames
-				do: [ :eachInstVar | aStream nextPutAll: eachInstVar ]
-				separatedBy: [ aStream space ] ])
 ]
 
 { #category : #'private - ui blocks' }
@@ -201,15 +154,4 @@ GtClassCoderHeaderElement >> initializeElements [
 	}.
 	
 	self addChild: theClassProperties
-]
-
-{ #category : #'private - testing' }
-GtClassCoderHeaderElement >> isValidSlotName: aString slot: aSlot [
-	<return: #Boolean>
-
-	^ [
-		aSlot class checkValidName: aString asSymbol.
-		true ]
-			on: InvalidSlotName
-			do: [ :anError | false ]
 ]
