@@ -148,14 +148,28 @@ GtMethodCoder >> compile [
 					each compile
 						ifFalse: [ ^ false ] ] ].
 	change := self category
-		ifNil: [ RBAddMethodChange compile: self newMethodSource in: self classOrMetaClass for: self requester ]
+		ifNil: [ RBAddMethodChange
+				compile: self newMethodSource
+				in: self classOrMetaClass
+				for: self requester ]
 		ifNotNil: [ :category | 
 			RBAddMethodChange
 				compile: self newMethodSource
 				in: self classOrMetaClass
 				classified: category
 				for: self requester ].
-	self changeManager performChange: change.
+	[ self changeManager performChange: change ]
+		on: OCUndeclaredVariableWarning
+		do: [ :ex | 
+			self
+				reportParseError: 'Undeclared' translated
+				at: ex location
+				on: self sourceEditor.
+			self
+				reportParseError: 'Undeclared' translated
+				at: ex location
+				on: self collapsedEditor.
+			^ false ].
 	change definedSelector
 		ifNotNil: [ :sel | 
 			self selector: sel.
