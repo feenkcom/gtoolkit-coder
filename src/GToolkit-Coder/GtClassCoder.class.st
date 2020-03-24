@@ -23,6 +23,23 @@ GtClassCoder class >> forObject: anObject [
 		yourself
 ]
 
+{ #category : #'api - refactoring' }
+GtClassCoder >> addSlotNamed: aSymbol ifFailed: anErrorBlock [
+	<return: #Boolean>
+	| isSuccess |
+	
+	isSuccess := false.
+	
+	[ (RBAddInstanceVariableRefactoring
+			variable: aSymbol
+			class: self theClass) execute.
+		isSuccess := true ]
+		on: Error
+		do: anErrorBlock.
+
+	^ isSuccess
+]
+
 { #category : #elements }
 GtClassCoder >> asCardElement [
 	| coderElement |
@@ -118,13 +135,43 @@ GtClassCoder >> navigationModel: aNavigationModel [
 
 { #category : #'private - changes' }
 GtClassCoder >> notifySlotChangesBetween: anOldClassDefinition and: aNewClassDefinition [
-	| theOldSlots theNewSlots |
+	| theOldSlots theNewSlots theAddedSlots theRemovedSlots theUpdatedSlots theOldSlotsMap theNewSlotsMap |
 	
-	theOldSlots := anOldClassDefinition slots asSet.
-	theNewSlots := aNewClassDefinition slots asSet.
+	theOldSlots := anOldClassDefinition slots.
+	theNewSlots := aNewClassDefinition slots.
+		
+	theOldSlotsMap := (theOldSlots collect: [ :eachSlot | eachSlot name -> eachSlot ]) asOrderedDictionary.
+	theNewSlotsMap := (theNewSlots collect: [ :eachSlot | eachSlot name -> eachSlot ]) asOrderedDictionary.
+
+	theRemovedSlots := OrderedCollection new.
+	theOldSlotsMap do: [ :eachSlot |
+		theNewSlotsMap
+			at: eachSlot name
+			ifAbsent: [ theRemovedSlots add: eachSlot ] ].
 	
-	theOldSlots = theNewSlots
-		ifTrue: [ ^ self ].
+	theAddedSlots := OrderedCollection new.
+	theNewSlotsMap do: [ :eachSlot |
+		theOldSlotsMap
+			at: eachSlot name
+			ifAbsent: [ theAddedSlots add: eachSlot ] ].
+		
+	theUpdatedSlots := OrderedCollection new.
+	theOldSlotsMap do: [ :eachOldSlot |
+		theNewSlotsMap
+			at: eachOldSlot name
+			ifPresent: [ :eachNewSlot |
+				eachNewSlot = eachOldSlot
+					ifFalse: [ theUpdatedSlots add: (eachOldSlot -> eachNewSlot) ] ] ].
+	
+	theRemovedSlots
+		ifNotEmpty: [ self announce: (GtClassCoderSlotsRemoved new slots: theRemovedSlots) ].
+		
+	theAddedSlots
+		ifNotEmpty: [ self announce: (GtClassCoderSlotsAdded new slots: theAddedSlots) ].
+		
+	theUpdatedSlots
+		ifNotEmpty: [ theUpdatedSlots do: [ :eachChange |
+				self announce: (GtClassCoderSlotChanged new oldSlot: eachChange key; newSlot: eachChange value) ] ].
 
 	self announce: (GtClassCoderSlotsChanged new
 		oldSlots: theOldSlots;
