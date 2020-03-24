@@ -158,18 +158,9 @@ GtMethodCoder >> compile [
 				in: self classOrMetaClass
 				classified: category
 				for: self requester ].
-	[ self changeManager performChange: change ]
-		on: OCUndeclaredVariableWarning
-		do: [ :ex | 
-			self
-				reportParseError: 'Undeclared' translated
-				at: ex location
-				on: self sourceEditor.
-			self
-				reportParseError: 'Undeclared' translated
-				at: ex location
-				on: self collapsedEditor.
-			^ false ].
+	(self
+		handleCompilerErrorsDuring: [ self changeManager performChange: change ])
+		ifFalse: [ ^ false ].
 	change definedSelector
 		ifNotNil: [ :sel | 
 			self selector: sel.
@@ -423,6 +414,23 @@ GtMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 		addContextAction: 'gtView' translated
 		icon: BrGlamorousIcons playinspect
 		action: [ :button | self runGtViewFrom: button ]
+]
+
+{ #category : #private }
+GtMethodCoder >> handleCompilerErrorsDuring: aBlock [
+	^ [ aBlock value.
+	true ]
+		on: OCUndeclaredVariableWarning
+		do: [ :ex | 
+			self
+				reportParseError: 'Undeclared' translated
+				at: ex location
+				on: self sourceEditor.
+			self
+				reportParseError: 'Undeclared' translated
+				at: ex location
+				on: self collapsedEditor.
+			ex return: false ]
 ]
 
 { #category : #'event handling' }

@@ -38,14 +38,11 @@ GtMethodContextCoder >> close [
 
 { #category : #actions }
 GtMethodContextCoder >> compile [
-	"The current compiler wants to notify a text morph object in case of errors. 
-	The compilation is delagated to the renderer, as the renderer has access
-	to the text morph object."
-	^ (self session 
-		recompileMethodTo: self newMethodSource 
-		inContext: self context 
-		notifying: nil "textMorph") 
-	
+	^ self
+		handleCompilerErrorsDuring: [ self session
+				gtRecompileMethodTo: self newMethodSource
+				inContext: self context
+				notifying: self requester ]
 ]
 
 { #category : #accessing }
