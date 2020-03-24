@@ -2,20 +2,67 @@ Class {
 	#name : #GtClassCoderEditableLabel,
 	#superclass : #BrEditor,
 	#instVars : [
-		'acceptedAction'
+		'acceptedAction',
+		'cancelledAction',
+		'deletedAction'
 	],
 	#category : #'GToolkit-Coder-UI - Class'
 }
 
 { #category : #'api - editor' }
 GtClassCoderEditableLabel >> acceptEdition [
-	self deselecter
-		all;
-		deselect.
 
-	self beReadOnlyWithoutSelection.
+	self isEditable
+		ifTrue: [ self onEditionAccepted: self text ].
+
+	self switchToLabel
+]
+
+{ #category : #'api - editor' }
+GtClassCoderEditableLabel >> cancelEdition [
+
+	self isEditable
+		ifTrue: [ self onEditionCancelled ].
+
+	self switchToLabel
+]
+
+{ #category : #'api - label' }
+GtClassCoderEditableLabel >> deleteLabel [
+	self isReadOnly
+		ifFalse: [ ^ self ].
 		
-	self onEditionAccepted: self text
+	self isAttachedToSceneGraph
+		ifFalse: [ ^ self ].
+
+	self onLabelDeleted
+]
+
+{ #category : #'api - label' }
+GtClassCoderEditableLabel >> focusNext [
+	| myIndex aNextLabel |
+	
+	self hasParent
+		ifFalse: [ ^ self ].
+		
+	myIndex := self parent childIndexOf: self.
+	
+	aNextLabel := self parent childAt: ((myIndex + 1) min: self parent childrenCount).
+	(aNextLabel isKindOf: self class)
+		ifFalse: [ ^ self ].
+
+	aNextLabel requestFocus
+]
+
+{ #category : #'api - label' }
+GtClassCoderEditableLabel >> focusPrevious [
+	| myIndex |
+	
+	self hasParent
+		ifFalse: [ ^ self ].
+		
+	myIndex := self parent childIndexOf: self.
+	(self parent childAt: ((myIndex - 1) max: 1)) requestFocus
 ]
 
 { #category : #initialization }
@@ -24,6 +71,8 @@ GtClassCoderEditableLabel >> initialize [
 	super initialize.
 	
 	acceptedAction := [ :aText |  ].
+	cancelledAction := [  ].
+	deletedAction := [  ].
 	
 	anEditorLook := BrGlamorousRegularEditorLook new.
 
@@ -43,7 +92,6 @@ GtClassCoderEditableLabel >> initialize [
 					aWidget background: BrGlamorousColors focusedEditorBorderColor.
 					anEditorLook foreground: Color white ]);
 		fitContent;
-		beReadOnlyWithoutSelection;
 		geometry: (BlRectangle cornerRadius: 4).
 
 	self styler: GtCoderInstanceVariableStyler new.
@@ -53,19 +101,65 @@ GtClassCoderEditableLabel >> initialize [
 		anEvent currentTarget dispatchEvent: (BrSelectedWish selected: true) ].
 
 	self when: BlDoubleClickEvent
-		do: [ :anEvent |
-			anEvent currentTarget beEditable.
-			anEvent currentTarget selecter all select ].
+		do: [ :anEvent | anEvent currentTarget switchToEditor ].
+
 	self when: BlBlurEvent
-		do: [ :anEvent | anEvent currentTarget acceptEdition ]
+		do: [ :anEvent | anEvent currentTarget acceptEdition ].
+	
+	self switchToLabel
 ]
 
 { #category : #hooks }
 GtClassCoderEditableLabel >> onEditionAccepted: aText [
-	acceptedAction value: aText
+	acceptedAction cull: aText cull: self
+]
+
+{ #category : #hooks }
+GtClassCoderEditableLabel >> onEditionCancelled [
+	cancelledAction cull: self
+]
+
+{ #category : #hooks }
+GtClassCoderEditableLabel >> onLabelDeleted [
+	deletedAction cull: self
+]
+
+{ #category : #'private - mode' }
+GtClassCoderEditableLabel >> switchToEditor [
+	self selecter all select.
+	
+	self beMode: (BrTextEditorEditableMode new withInteractions: {
+		BlKeyCombination return -> [ :anEditor :anEvent | anEvent currentTarget acceptEdition ].
+		BlKeyCombination escape -> [ :anEditor :anEvent | anEvent currentTarget cancelEdition ]
+	})
+]
+
+{ #category : #'private - mode' }
+GtClassCoderEditableLabel >> switchToLabel [
+	self deselecter
+		all;
+		deselect.
+
+	self beMode: (BrTextEditorReadonlyWithoutSelectionMode new withInteractions: {
+		BlKeyCombination backspace -> [ :anEditor :anEvent | anEvent currentTarget deleteLabel ].
+		BlKeyCombination escape -> [ :anEditor :anEvent | anEvent currentTarget looseFocus ].
+		BlKeyCombination arrowLeft -> [ :anEditor :anEvent | anEvent currentTarget focusPrevious ].
+		BlKeyCombination arrowRight -> [ :anEditor :anEvent | anEvent currentTarget focusNext ].
+		BlKeyCombination return -> [ :anEditor :anEvent | anEvent currentTarget switchToEditor ]
+	}).
 ]
 
 { #category : #'api - editor' }
 GtClassCoderEditableLabel >> whenAccepted: aBlock [
 	acceptedAction := aBlock
+]
+
+{ #category : #'api - editor' }
+GtClassCoderEditableLabel >> whenCancelled: aBlock [
+	cancelledAction := aBlock
+]
+
+{ #category : #'api - label' }
+GtClassCoderEditableLabel >> whenDeleted: aBlock [
+	deletedAction := aBlock
 ]

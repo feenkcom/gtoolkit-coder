@@ -64,6 +64,25 @@ GtClassCoder >> gtLiveFor: aView [
 		
 ]
 
+{ #category : #'system annoucements' }
+GtClassCoder >> handleClassDefinitionModified: anAnnouncement [
+
+	self theClass
+		ifNil: [ ^ self ].
+
+	(anAnnouncement affectsClass: self theClass)
+		ifFalse: [ ^ self ].
+
+	self
+		notifySlotChangesBetween: anAnnouncement oldClassDefinition
+		and: anAnnouncement newClassDefinition
+]
+
+{ #category : #'system annoucements' }
+GtClassCoder >> handleClassModified: anAnnouncement [
+	"anAnnouncement class traceCr"
+]
+
 { #category : #accessing }
 GtClassCoder >> icon [
 	^ BrGlamorousIcons classicon asElement
@@ -72,9 +91,12 @@ GtClassCoder >> icon [
 { #category : #initialize }
 GtClassCoder >> initialize [
 	super initialize.
+
 	navigationModel := GtClassCoderPackagesAndHierarchyNavigation new
 		classCoder: self;
-		yourself
+		yourself.
+		
+	self subscribeToSystem
 ]
 
 { #category : #accessing }
@@ -92,6 +114,21 @@ GtClassCoder >> navigationModel: aNavigationModel [
 	navigationModel := aNavigationModel.
 	navigationModel classCoder: self.
 	self announce: GtCoderNavigationModelChangedAnnouncement
+]
+
+{ #category : #'private - changes' }
+GtClassCoder >> notifySlotChangesBetween: anOldClassDefinition and: aNewClassDefinition [
+	| theOldSlots theNewSlots |
+	
+	theOldSlots := anOldClassDefinition slots asSet.
+	theNewSlots := aNewClassDefinition slots asSet.
+	
+	theOldSlots = theNewSlots
+		ifTrue: [ ^ self ].
+
+	self announce: (GtClassCoderSlotsChanged new
+		oldSlots: theOldSlots;
+		newSlots: theNewSlots)
 ]
 
 { #category : #accessing }
@@ -119,6 +156,19 @@ GtClassCoder >> openInInspector [
 { #category : #accessing }
 GtClassCoder >> packageTreeCoders [
 	^ #()
+]
+
+{ #category : #subscriptions }
+GtClassCoder >> subscribeToSystem [
+	SystemAnnouncer uniqueInstance weak
+		when: ClassAnnouncement
+		send: #handleClassModified:
+		to: self.
+		
+	SystemAnnouncer uniqueInstance weak
+		when: ClassModifiedClassDefinition
+		send: #handleClassDefinitionModified:
+		to: self.
 ]
 
 { #category : #accessing }

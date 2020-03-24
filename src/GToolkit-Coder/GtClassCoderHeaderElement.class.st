@@ -2,7 +2,8 @@ Class {
 	#name : #GtClassCoderHeaderElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'classCoder'
+		'classCoder',
+		'slotsElement'
 	],
 	#category : #'GToolkit-Coder-UI - Class'
 }
@@ -16,21 +17,14 @@ GtClassCoderHeaderElement >> actOnClassChanged: anAnnouncement [
 ]
 
 { #category : #'event handling' }
+GtClassCoderHeaderElement >> actOnClassUpdated [
+	self initializeElements
+]
+
+{ #category : #'event handling' }
 GtClassCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
 	self classCoder navigationModel updateSelectionWith: anAnnouncement package.
 	self removeChildren
-]
-
-{ #category : #'private - ui' }
-GtClassCoderHeaderElement >> buildButtonForSlot: aSlot [
-
-	^ GtClassCoderEditableLabel new
-		text: aSlot name asRopedText;
-		whenAccepted: [ :aText |
-			(RBRenameInstanceVariableRefactoring
-				rename: aSlot name
-				to: aText characters asString asSymbol
-				in: aSlot definingClass) execute ]
 ]
 
 { #category : #'private - ui' }
@@ -51,9 +45,7 @@ GtClassCoderHeaderElement >> buildClassVarNames [
 		c horizontal matchParent.
 		c vertical fitContent ].
 	
-	aContainer addChildren: (self classCoder theClass slots collect: [ :eachSlot |
-		(self buildButtonForSlot: eachSlot) margin: (BlInsets right: 5)
-	]).
+	
 	
 	^ aContainer
 ]
@@ -74,23 +66,6 @@ GtClassCoderHeaderElement >> buildSectionLabel: aSectionName [
 ]
 
 { #category : #'private - ui' }
-GtClassCoderHeaderElement >> buildSlots [
-	| aContainer |
-	
-	aContainer := BlElement new.
-	aContainer layout: BlFlowLayout new.
-	aContainer constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical fitContent ].
-	
-	aContainer addChildren: (self classCoder theClass slots collect: [ :eachSlot |
-		(self buildButtonForSlot: eachSlot) margin: (BlInsets right: 5)
-	]).
-	
-	^ aContainer
-]
-
-{ #category : #'private - ui' }
 GtClassCoderHeaderElement >> buildSuperClassButton [
 	^ self buildEditableButton
 		label: self classCoder theClass superclass asString
@@ -106,13 +81,14 @@ GtClassCoderHeaderElement >> classCoder [
 { #category : #accessing }
 GtClassCoderHeaderElement >> classCoder: aGtClassCoder [
 	classCoder := aGtClassCoder.
+	
+	self initializeElements.
+
 	classCoder
 		when: GtCoderClassUpdatedAnnouncement
 			do: [ :anAnnouncement | self actOnClassChanged: anAnnouncement ];
 		when: GtCoderPackageUpdatedAnnouncement
-			do: [ :anAnnouncement | self actOnPackageChanged: anAnnouncement ].
-			
-	self initializeElements
+			do: [ :anAnnouncement | self actOnPackageChanged: anAnnouncement ]
 ]
 
 { #category : #'private - ui' }
@@ -146,7 +122,7 @@ GtClassCoderHeaderElement >> initializeElements [
 		self buildSectionLabel: 'Package:'.
 		self buildSuperClassButton.
 		self buildSectionLabel: 'Instance vars:'.
-		self buildSlots.
+		(GtClassCoderSlotsElement new classCoder: self classCoder).
 		self buildSectionLabel: 'Class vars:'.
 		self buildClassVarNames.
 		self buildSectionLabel: 'Class instance vars:'.
