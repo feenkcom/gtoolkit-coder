@@ -38,6 +38,33 @@ GtClassCoderEditableLabel >> deleteLabel [
 	self onLabelDeleted
 ]
 
+{ #category : #'api - label' }
+GtClassCoderEditableLabel >> focusNext [
+	| myIndex aNextLabel |
+	
+	self hasParent
+		ifFalse: [ ^ self ].
+		
+	myIndex := self parent childIndexOf: self.
+	
+	aNextLabel := self parent childAt: ((myIndex + 1) min: self parent childrenCount).
+	(aNextLabel isKindOf: self class)
+		ifFalse: [ ^ self ].
+
+	aNextLabel requestFocus
+]
+
+{ #category : #'api - label' }
+GtClassCoderEditableLabel >> focusPrevious [
+	| myIndex |
+	
+	self hasParent
+		ifFalse: [ ^ self ].
+		
+	myIndex := self parent childIndexOf: self.
+	(self parent childAt: ((myIndex - 1) max: 1)) requestFocus
+]
+
 { #category : #initialization }
 GtClassCoderEditableLabel >> initialize [
 	| anEditorLook |
@@ -115,7 +142,10 @@ GtClassCoderEditableLabel >> switchToLabel [
 
 	self beMode: (BrTextEditorReadonlyWithoutSelectionMode new withInteractions: {
 		BlKeyCombination backspace -> [ :anEditor :anEvent | anEvent currentTarget deleteLabel ].
-		BlKeyCombination escape -> [ :anEditor :anEvent | anEvent currentTarget looseFocus ]
+		BlKeyCombination escape -> [ :anEditor :anEvent | anEvent currentTarget looseFocus ].
+		BlKeyCombination arrowLeft -> [ :anEditor :anEvent | anEvent currentTarget focusPrevious ].
+		BlKeyCombination arrowRight -> [ :anEditor :anEvent | anEvent currentTarget focusNext ].
+		BlKeyCombination return -> [ :anEditor :anEvent | anEvent currentTarget switchToEditor ]
 	}).
 ]
 

@@ -23,6 +23,7 @@ GtClassCoderSlotsElement >> addNewSlotEditorBefore: aButton [
 		switchToEditor;
 		margin: self buttonMargin;
 		padding: (BlInsets top: 5 left: 10 bottom: 5 right: 10);
+		constraintsDo: [ :c | c flow vertical alignCenter ];
 		whenAccepted: [ :aText |
 			aNewSlotCreator isAttachedToSceneGraph
 				ifTrue: [
@@ -35,7 +36,9 @@ GtClassCoderSlotsElement >> addNewSlotEditorBefore: aButton [
 								variable: aNewSlotName
 								class: self classCoder theClass) execute ].
 			aNewSlotCreator removeFromParent ] ];
-		whenCancelled: [ :anEditableLabel | anEditableLabel removeFromParent ].
+		whenCancelled: [ :anEditableLabel |.
+			anEditableLabel focusPrevious.
+			anEditableLabel removeFromParent ].
 		
 	aNewSlotCreator navigator
 		moveTo: 0;
@@ -49,6 +52,7 @@ GtClassCoderSlotsElement >> buildButtonForSlot: aSlot [
 	^ GtClassCoderEditableLabel new
 		text: aSlot name asRopedText;
 		margin: self buttonMargin;
+		constraintsDo: [ :c | c flow vertical alignCenter ];
 		whenAccepted: [ :aText |
 			| aCurrentSlotName aNewSlotName |
 			
@@ -73,7 +77,7 @@ GtClassCoderSlotsElement >> buildButtonForSlot: aSlot [
 
 { #category : #'as yet unclassified' }
 GtClassCoderSlotsElement >> buttonMargin [
-	^ BlInsets top: 0 right: 5 bottom: 3 left: 0
+	^ BlInsets top: 2 right: 5 bottom: 2 left: 0
 ]
 
 { #category : #accessing }
@@ -114,5 +118,7 @@ GtClassCoderSlotsElement >> initializeElements [
 		look: BrGlamorousButtonWithIconLook new;
 		icon: BrGlamorousIcons add;
 		label: 'Add slot';
+		beSmall;
+		constraintsDo: [ :c | c flow vertical alignCenter ];
 		action: [ :aButton | self addNewSlotEditorBefore: aButton ])
 ]
