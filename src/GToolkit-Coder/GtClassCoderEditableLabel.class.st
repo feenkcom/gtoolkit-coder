@@ -39,30 +39,13 @@ GtClassCoderEditableLabel >> deleteLabel [
 ]
 
 { #category : #'api - label' }
-GtClassCoderEditableLabel >> focusNext [
-	| myIndex aNextLabel |
-	
-	self hasParent
-		ifFalse: [ ^ self ].
-		
-	myIndex := self parent childIndexOf: self.
-	
-	aNextLabel := self parent childAt: ((myIndex + 1) min: self parent childrenCount).
-	(aNextLabel isKindOf: self class)
-		ifFalse: [ ^ self ].
-
-	aNextLabel requestFocus
+GtClassCoderEditableLabel >> focusNext [	
+	self nextSiblingDo: [ :anElement | anElement requestFocus ]
 ]
 
 { #category : #'api - label' }
 GtClassCoderEditableLabel >> focusPrevious [
-	| myIndex |
-	
-	self hasParent
-		ifFalse: [ ^ self ].
-		
-	myIndex := self parent childIndexOf: self.
-	(self parent childAt: ((myIndex - 1) max: 1)) requestFocus
+	self previousSiblingDo: [ :anElement | anElement requestFocus ]
 ]
 
 { #category : #initialization }
@@ -146,7 +129,7 @@ GtClassCoderEditableLabel >> switchToLabel [
 		BlKeyCombination arrowLeft -> [ :anEditor :anEvent | anEvent currentTarget focusPrevious ].
 		BlKeyCombination arrowRight -> [ :anEditor :anEvent | anEvent currentTarget focusNext ].
 		BlKeyCombination return -> [ :anEditor :anEvent | anEvent currentTarget switchToEditor ]
-	}).
+	})
 ]
 
 { #category : #'api - editor' }
