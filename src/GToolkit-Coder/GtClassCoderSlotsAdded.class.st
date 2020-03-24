@@ -1,18 +1,18 @@
 Class {
-	#name : #GtClassCoderSlotRemoved,
+	#name : #GtClassCoderSlotsAdded,
 	#superclass : #GtClassCoderAnnouncement,
 	#instVars : [
-		'slot'
+		'slots'
 	],
 	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }
-GtClassCoderSlotRemoved >> slot [
-	^ slot
+GtClassCoderSlotsAdded >> slots [
+	^ slots
 ]
 
 { #category : #accessing }
-GtClassCoderSlotRemoved >> slot: anObject [
-	slot := anObject
+GtClassCoderSlotsAdded >> slots: anObject [
+	slots := anObject
 ]
