@@ -41,9 +41,7 @@ GtCoder >> addOnsClass [
 { #category : #elements }
 GtCoder >> addShortcutsTo: anElement [
 	addOns shortcuts
-		do: [ :each | 
-			anElement
-				addShortcut: (each copy action: [ each action cull: anElement ]) ]
+		do: [ :each | anElement addShortcut: each ]
 ]
 
 { #category : #updating }
