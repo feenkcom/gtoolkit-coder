@@ -489,26 +489,26 @@ GtMethodCoder >> initializeShortcuts [
 	addOns
 		addCollapsedShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryM;
-			action: [ :editorElement | self browseImplementors: editorElement ]);
+			action: [ :anEvent | self browseImplementors: anEvent currentTarget ]);
 		addCollapsedShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryN;
-			action: [ :editorElement | self browseReferences: editorElement ]);
+			action: [ :anEvent | self browseReferences: anEvent currentTarget ]);
 		addCollapsedShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryB;
-			action: [ :editorElement | self browseClass: editorElement ]);
+			action: [ :anEvent | self browseClass: anEvent currentTarget ]);
 			
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryD;
-			action: [ :editorElement | self playSelectionOrMethodFrom: editorElement ]);
+			action: [ :anEvent | self playSelectionOrMethodFrom: anEvent currentTarget ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryG;
-			action: [ :editorElement | self playAndInspectSelectionOrMethodFrom: editorElement ]);
+			action: [ :anEvent | self playAndInspectSelectionOrMethodFrom: anEvent currentTarget ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryR;
-			action: [ :editorElement | self renameVariableIn: editorElement ]);
+			action: [ :anEvent | self renameVariableIn: anEvent currentTarget ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryE;
-			action: [ :editorElement | self extractMethod: editorElement ]);
+			action: [ :anEvent | self extractMethod: anEvent currentTarget ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryS;
 			action: [ self save ]);

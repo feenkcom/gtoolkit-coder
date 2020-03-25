@@ -510,13 +510,13 @@ GtSourceCoder >> initializeShortcuts [
 	addOns
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryM;
-			action: [ :editorElement | self browseImplementors: editorElement ]);
+			action: [ :anEvent | self browseImplementors: anEvent currentTarget ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryN;
-			action: [ :editorElement | self browseReferences: editorElement ]);
+			action: [ :anEvent | self browseReferences: anEvent currentTarget ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryB;
-			action: [ :editorElement | self browseClass: editorElement ]);
+			action: [ :anEvent | self browseClass: anEvent currentTarget ]);
 		addShortcut: (BlShortcut new
 			combination: (BlKeyCombination primaryL);
 			action: [ self discardChanges ])
