@@ -7,7 +7,7 @@ Class {
 		'contentPane',
 		'contentTabs'
 	],
-	#category : #'GToolkit-Coder-UI - Class'
+	#category : #'GToolkit-Coder-Class - UI'
 }
 
 { #category : #callbacks }
@@ -212,6 +212,7 @@ GtClassCoderElement >> definitionChanged: anAnnouncement [
 { #category : #initialization }
 GtClassCoderElement >> initialize [
 	super initialize.
+
 	self
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c | 

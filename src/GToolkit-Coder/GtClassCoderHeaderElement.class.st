@@ -1,11 +1,11 @@
 Class {
 	#name : #GtClassCoderHeaderElement,
-	#superclass : #BlElement,
+	#superclass : #BrExpander,
 	#instVars : [
 		'classCoder',
-		'slotsElement'
+		'expanderElement'
 	],
-	#category : #'GToolkit-Coder-UI - Class'
+	#category : #'GToolkit-Coder-Class - UI'
 }
 
 { #category : #'event handling' }
@@ -24,7 +24,9 @@ GtClassCoderHeaderElement >> actOnClassUpdated [
 { #category : #'event handling' }
 GtClassCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
 	self classCoder navigationModel updateSelectionWith: anAnnouncement package.
-	self removeChildren
+	
+	self header: [ BlElement new ].
+	self content: [ BlElement new ]
 ]
 
 { #category : #'private - ui' }
@@ -50,63 +52,15 @@ GtClassCoderHeaderElement >> buildClassVarNames [
 	^ aContainer
 ]
 
-{ #category : #'private - ui blocks' }
-GtClassCoderHeaderElement >> buildEditableButton [
-	^ BrButton new
-		look: BrGlamorousButtonWithLabelLook new
-]
-
-{ #category : #'private - ui blocks' }
-GtClassCoderHeaderElement >> buildSectionLabel: aSectionName [
+{ #category : #'private - instance creation' }
+GtClassCoderHeaderElement >> buildDefinitionEditor [
+	| aContainer theClassProperties |
 	
-	^ BrLabel new
-		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray);
-		text: aSectionName;
-		constraintsDo: [ :c | c grid horizontal alignRight ]
-]
-
-{ #category : #'private - ui' }
-GtClassCoderHeaderElement >> buildSuperClassButton [
-	^ self buildEditableButton
-		label: self classCoder theClass superclass asString
-]
-
-{ #category : #accessing }
-GtClassCoderHeaderElement >> classCoder [
-	<return: #GtClassCoder>
-
-	^ classCoder
-]
-
-{ #category : #accessing }
-GtClassCoderHeaderElement >> classCoder: aGtClassCoder [
-	classCoder := aGtClassCoder.
+	aContainer := BrVerticalPane new
+		hMatchParent;
+		vFitContent.
 	
-	self initializeElements.
-
-	classCoder
-		when: GtCoderClassUpdatedAnnouncement
-			do: [ :anAnnouncement | self actOnClassChanged: anAnnouncement ];
-		when: GtCoderPackageUpdatedAnnouncement
-			do: [ :anAnnouncement | self actOnPackageChanged: anAnnouncement ]
-]
-
-{ #category : #'private - ui' }
-GtClassCoderHeaderElement >> initialize [
-	super initialize.
-	
-	self layout: BlLinearLayout vertical.
-	self constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical fitContent ]
-]
-
-{ #category : #'private - ui' }
-GtClassCoderHeaderElement >> initializeElements [
-	| theClassProperties |
-	self removeChildren.
-	
-	self addChild: (self buildClassName).
+	aContainer addChild: (self buildClassName).
 	
 	theClassProperties := BlElement new
 		layout: (BlGridLayout new columnCount: 2; cellSpacing: 5);
@@ -129,5 +83,91 @@ GtClassCoderHeaderElement >> initializeElements [
 		self buildSuperClassButton.
 	}.
 	
-	self addChild: theClassProperties
+	aContainer addChild: theClassProperties.
+	
+	^ aContainer
+]
+
+{ #category : #'private - instance creation' }
+GtClassCoderHeaderElement >> buildDefinitionViewer [
+	| aContainer theClassProperties |
+	
+	aContainer := BrVerticalPane new
+		hMatchParent;
+		vFitContent.
+	
+	aContainer addChild: (self buildClassName).
+	
+	theClassProperties := BlElement new
+		layout: (BlGridLayout new columnCount: 2; cellSpacing: 5);
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical fitContent ].
+
+	theClassProperties addChildren: { 
+		self buildSectionLabel: 'Super:'.
+		self buildSuperClassButton.
+		self buildSectionLabel: 'Package:'.
+		self buildSuperClassButton.
+	}.
+	
+	aContainer addChild: theClassProperties.
+	
+	^ aContainer
+]
+
+{ #category : #'private - ui blocks' }
+GtClassCoderHeaderElement >> buildEditableButton [
+	^ BrButton new
+		look: BrGlamorousButtonWithLabelLook new
+]
+
+{ #category : #'private - ui blocks' }
+GtClassCoderHeaderElement >> buildSectionLabel: aSectionName [
+	
+	^ BrLabel new
+		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray);
+		text: aSectionName;
+		constraintsDo: [ :c | c grid horizontal alignLeft ]
+]
+
+{ #category : #'private - ui' }
+GtClassCoderHeaderElement >> buildSuperClassButton [
+	^ self buildEditableButton
+		label: self classCoder theClass superclass asString
+]
+
+{ #category : #accessing }
+GtClassCoderHeaderElement >> classCoder [
+	<return: #GtClassCoder>
+
+	^ classCoder
+]
+
+{ #category : #accessing }
+GtClassCoderHeaderElement >> classCoder: aGtClassCoder [
+	classCoder := aGtClassCoder.
+	classCoder
+		when: GtCoderClassUpdatedAnnouncement
+			do: [ :anAnnouncement | self actOnClassChanged: anAnnouncement ];
+		when: GtCoderPackageUpdatedAnnouncement
+			do: [ :anAnnouncement | self actOnPackageChanged: anAnnouncement ].
+			
+	self initializeElements
+]
+
+{ #category : #'private - ui' }
+GtClassCoderHeaderElement >> initialize [
+	super initialize.
+
+	self
+		look: GtCoderExpanderLook new;
+		hMatchParent;
+		vFitContent
+]
+
+{ #category : #'private - ui' }
+GtClassCoderHeaderElement >> initializeElements [
+	self header: [ self buildDefinitionViewer ].
+	self content: [ self buildDefinitionEditor ]
 ]

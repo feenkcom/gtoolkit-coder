@@ -120,10 +120,10 @@ GtCoderAddOns >> gtViewKeybindingsFor: aView [
 		title: 'Key bindings' translated;
 		priority: 15;
 		items: [ self shortcuts ];
-		column: 'Shortcut' item: [ :aShortcut | aShortcut combination ] width: 200;
-		column: 'Name' item: [ :aShortcut | aShortcut name ifNil: [ '' ] ];
-		column: 'Action' item: [ :aShortcut | aShortcut action ];
-		column: 'Description' item: [ :aShortcut | aShortcut description ifNil: [ '' ] ]
+		column: 'Shortcut' item: [ :eachShortcut | eachShortcut combination ] width: 200;
+		column: 'Name' item: [ :eachShortcut | eachShortcut name ifNil: [ '' ] ];
+		column: 'Action' item: [ :eachShortcut | eachShortcut action ];
+		column: 'Description' item: [ :eachShortcut | eachShortcut description ifNil: [ '' ] ]
 ]
 
 { #category : #ui }
