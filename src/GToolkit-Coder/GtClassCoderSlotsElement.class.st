@@ -6,12 +6,11 @@ Class {
 		'slotElements',
 		'shouldGiveFocusToAdded'
 	],
-	#category : #'GToolkit-Coder-UI - Class'
+	#category : #'GToolkit-Coder-Class - UI'
 }
 
 { #category : #'event handling' }
 GtClassCoderSlotsElement >> actOnSlotChanged: anAnnouncement [
-	"All slots changed (raw announcement)"
 	
 	slotElements
 		at: anAnnouncement oldSlot name
@@ -60,16 +59,19 @@ GtClassCoderSlotsElement >> addNewSlotEditorBefore: aButton [
 	| aNewSlotCreator |
 
 	aNewSlotCreator := nil.
-	aNewSlotCreator := GtClassCoderEditableLabel new
+	aNewSlotCreator := BrEditableLabel new
+		look: BrGlamorousEditableLabelLook new;
 		text: '';
 		requestFocus;
 		switchToEditor;
+		inputFilter: BrTextEditorAlphaNumericInputFilter new;
+		styler: GtCoderInstanceVariableStyler new;
 		margin: self buttonMargin;
 		padding: (BlInsets top: 5 left: 10 bottom: 5 right: 10);
 		constraintsDo: [ :c | c flow vertical alignCenter ];
-		whenAccepted: [ :aText |
+		when: BrEditorAcceptWish do: [ :aWish |
 			| aNewSlotName |
-			aNewSlotName := aText characters asString trimmed asSymbol.
+			aNewSlotName := aWish text characters asString trimmed asSymbol.
 			
 			self giveFocusDuring: [
 				self classCoder
@@ -77,9 +79,9 @@ GtClassCoderSlotsElement >> addNewSlotEditorBefore: aButton [
 					ifFailed: [  ] ].
 			
 			aNewSlotCreator removeFromParent ];
-		whenCancelled: [ :anEditableLabel |.
-			anEditableLabel focusPrevious.
-			anEditableLabel removeFromParent ].
+		when: BrEditorCancelWish do: [ :anEvent |
+			anEvent currentTarget focusPrevious.
+			anEvent currentTarget removeFromParent ].
 
 	aNewSlotCreator navigator
 		moveTo: 0;
@@ -90,15 +92,18 @@ GtClassCoderSlotsElement >> addNewSlotEditorBefore: aButton [
 
 { #category : #'private - instance creation' }
 GtClassCoderSlotsElement >> buildButtonForSlot: aSlot [
-	^ GtClassCoderEditableLabel new
+	^ BrEditableLabel new
+		look: BrGlamorousEditableLabelLook new;
 		text: aSlot name asRopedText;
+		inputFilter: BrTextEditorAlphaNumericInputFilter new;
+		styler: GtCoderInstanceVariableStyler new;
 		margin: self buttonMargin;
 		constraintsDo: [ :c | c flow vertical alignCenter ];
-		whenAccepted: [ :aText |
+		when: BrEditorAcceptWish do: [ :aWish |
 			| aCurrentSlotName aNewSlotName |
 			
 			aCurrentSlotName := aSlot name asSymbol.
-			aNewSlotName := aText characters asString trimmed asSymbol.
+			aNewSlotName := aWish text characters asString trimmed asSymbol.
 			
 			aCurrentSlotName ~= aNewSlotName
 				ifTrue: [
@@ -106,8 +111,7 @@ GtClassCoderSlotsElement >> buildButtonForSlot: aSlot [
 						rename: aCurrentSlotName
 						to: aNewSlotName
 						in: aSlot definingClass) execute ] ];
-		whenCancelled: [ :anEditableLabel | anEditableLabel text: aSlot name asRopedText ];
-		whenDeleted: [ :anEditableLabel |
+		whenKey: BlKeyCombination backspace labelDo: [ :anEvent |
 			(RBRemoveInstanceVariableRefactoring
 				remove: aSlot name
 				from: aSlot definingClass) execute ]
@@ -135,10 +139,10 @@ GtClassCoderSlotsElement >> buildNewSlotButton [
 		action: [ :aButton | self addNewSlotEditorBefore: aButton ];
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination arrowLeft;
-			action: [ :aShortcut :anEvent | anEvent currentTarget previousSiblingDo: [ :anElement | anElement requestFocus ] ]);
+			action: [ :anEvent | anEvent currentTarget previousSiblingDo: [ :anElement | anElement requestFocus ] ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination return;
-			action: [ :aShortcut :anEvent | self addNewSlotEditorBefore: anEvent currentTarget ])
+			action: [ :anEvent | self addNewSlotEditorBefore: anEvent currentTarget ])
 ]
 
 { #category : #initialization }
