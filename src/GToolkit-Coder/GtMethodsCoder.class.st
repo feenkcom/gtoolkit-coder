@@ -23,6 +23,9 @@ GtMethodsCoder >> forItems: aCollection [
 { #category : #'event handling' }
 GtMethodsCoder >> methodAdded: aValueAdded [
 	| coder |
+	(self coders
+		anySatisfy: [ :each | each isForMethod: aValueAdded newValue ])
+		ifTrue: [ ^ self ].
 	coder := GtMethodCoder forMethod: aValueAdded newValue.
 	coders add: coder.
 	self
