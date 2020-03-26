@@ -111,7 +111,7 @@ GtClassCoderSlotsElement >> buildButtonForSlot: aSlot [
 						rename: aCurrentSlotName
 						to: aNewSlotName
 						in: aSlot definingClass) execute ] ];
-		whenKey: BlKeyCombination backspace labelDo: [ :anEvent |
+		whenKey: BlKeyCombination backspace labelDo: [
 			(RBRemoveInstanceVariableRefactoring
 				remove: aSlot name
 				from: aSlot definingClass) execute ]

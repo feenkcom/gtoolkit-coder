@@ -8,12 +8,32 @@ Class {
 	#category : #'GToolkit-Coder-Class - Model'
 }
 
-{ #category : #'api - modification' }
+{ #category : #'api - class vars' }
+GtClassCoderHeaderModel >> addClassVarNamed: aString [
+	| aNewClassVariable |
+	
+	aNewClassVariable := definition addClassVarNamed: aString.
+	self notifyClassVarAdded: aNewClassVariable
+]
+
+{ #category : #'api - inst vars' }
 GtClassCoderHeaderModel >> addInstVarNamed: aString [
 	| aNewInstanceVariable |
 	
 	aNewInstanceVariable := definition addInstVarNamed: aString.
 	self notifyInstVarAdded: aNewInstanceVariable
+]
+
+{ #category : #'api - class vars' }
+GtClassCoderHeaderModel >> classVarNames [
+	<return: #Collection of: #String>
+
+	^ definition classVarNames
+]
+
+{ #category : #'api - class vars' }
+GtClassCoderHeaderModel >> classVariables [
+	^ definition classVariables
 ]
 
 { #category : #'gt-extension' }
@@ -44,9 +64,39 @@ GtClassCoderHeaderModel >> initializeListeners [
 	self when: GtClassCoderHeaderRenameInstVarWish do: [ :aWish | self renameInstVarNamed: aWish oldName to: aWish newName ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - inst vars' }
+GtClassCoderHeaderModel >> instVarNames [
+	<return: #Collection of: #String>
+
+	^ definition instVarNames
+]
+
+{ #category : #'api - inst vars' }
 GtClassCoderHeaderModel >> instanceVariables [
 	^ definition instanceVariables
+]
+
+{ #category : #'private - notifying' }
+GtClassCoderHeaderModel >> notifyClassChanged: aClass [
+	self dispatchEvent: (GtClassCoderHeaderClassChanged new theClass: aClass)
+]
+
+{ #category : #'private - notifying' }
+GtClassCoderHeaderModel >> notifyClassVarAdded: aClassVariable [
+	self dispatchEvent: (GtClassCoderHeaderClassVarAdded new classVariable: aClassVariable)
+]
+
+{ #category : #'private - notifying' }
+GtClassCoderHeaderModel >> notifyClassVarRemoved: aClassVariable [
+	self dispatchEvent: (GtClassCoderHeaderClassVarRemoved new classVariable: aClassVariable)
+]
+
+{ #category : #'private - notifying' }
+GtClassCoderHeaderModel >> notifyClassVarRenamed: aClassVariable from: anOldName to: aNewName [
+	self dispatchEvent: (GtClassCoderHeaderClassVarRenamed new
+		classVariable: aClassVariable;
+		oldName: anOldName;
+		newName: aNewName)
 ]
 
 { #category : #'private - notifying' }
@@ -63,11 +113,27 @@ GtClassCoderHeaderModel >> notifyInstVarRemoved: anInstanceVariable [
 GtClassCoderHeaderModel >> notifyInstVarRenamed: anInstanceVariable from: anOldName to: aNewName [
 	self dispatchEvent: (GtClassCoderHeaderInstVarRenamed new
 		instanceVariable: anInstanceVariable;
-		oldName: anInstanceVariable;
+		oldName: anOldName;
 		newName: aNewName)
 ]
 
-{ #category : #'api - modification' }
+{ #category : #'api - package / tag' }
+GtClassCoderHeaderModel >> packageName [
+	<return: #String>
+	
+	
+]
+
+{ #category : #'api - class vars' }
+GtClassCoderHeaderModel >> removeClassVarNamed: aString [
+	| aRemovedClassVariable |
+
+	aRemovedClassVariable := definition classVariableNamed: aString.
+	definition removeClassVariable: aRemovedClassVariable.
+	self notifyClassVarRemoved: aRemovedClassVariable
+]
+
+{ #category : #'api - inst vars' }
 GtClassCoderHeaderModel >> removeInstVarNamed: aString [
 	| aRemovedInstanceVariable |
 
@@ -76,7 +142,20 @@ GtClassCoderHeaderModel >> removeInstVarNamed: aString [
 	self notifyInstVarRemoved: aRemovedInstanceVariable
 ]
 
-{ #category : #'api - modification' }
+{ #category : #'api - class vars' }
+GtClassCoderHeaderModel >> renameClassVarNamed: aCurrentName to: aNewName [
+	| aRenamedClassVariable |
+
+	aRenamedClassVariable := definition classVariableNamed: aCurrentName.
+	aRenamedClassVariable name: aNewName.
+	
+	self
+		notifyClassVarRenamed: aRenamedClassVariable
+		from: aCurrentName
+		to: aNewName
+]
+
+{ #category : #'api - inst vars' }
 GtClassCoderHeaderModel >> renameInstVarNamed: aCurrentName to: aNewName [
 	| aRenamedInstanceVariable |
 
@@ -97,5 +176,15 @@ GtClassCoderHeaderModel >> theClass [
 { #category : #accessing }
 GtClassCoderHeaderModel >> theClass: aClass [
 	theClass := aClass.
-	definition := aClass asRingDefinition
+	definition := aClass asRingDefinition.
+	definition superclass: aClass superclass.
+	
+	self notifyClassChanged: aClass
+]
+
+{ #category : #'api - superclass' }
+GtClassCoderHeaderModel >> theSuperclassName [
+	<return: #String>
+
+	^ definition superclass name
 ]
