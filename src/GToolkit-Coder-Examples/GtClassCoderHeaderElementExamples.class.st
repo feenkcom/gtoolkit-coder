@@ -11,6 +11,7 @@ GtClassCoderHeaderElementExamples >> coderHeaderElementForClass [
 
 	aCoder := GtClassCoderExamples new coderForClass.
 	aCoderHeaderElement := GtClassCoderHeaderElement new classCoder: aCoder.
+	aCoderHeaderElement expand.
 
 	^ aCoderHeaderElement
 ]

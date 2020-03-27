@@ -158,6 +158,7 @@ GtMethodCoder >> compile [
 				in: self classOrMetaClass
 				classified: category
 				for: self requester ].
+	selector := change selector.
 	(self
 		handleCompilerErrorsDuring: [ self changeManager performChange: change ])
 		ifFalse: [ ^ false ].

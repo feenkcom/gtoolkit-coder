@@ -5,7 +5,7 @@ Class {
 		'allPackages',
 		'allClasses'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Completion'
 }
 
 { #category : #accessing }
