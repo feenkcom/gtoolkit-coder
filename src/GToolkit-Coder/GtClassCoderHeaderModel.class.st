@@ -3,7 +3,8 @@ Class {
 	#superclass : #BrWidgetModel,
 	#instVars : [
 		'theClass',
-		'definition'
+		'definition',
+		'traits'
 	],
 	#category : #'GToolkit-Coder-Class - Model'
 }
@@ -118,10 +119,17 @@ GtClassCoderHeaderModel >> notifyInstVarRenamed: anInstanceVariable from: anOldN
 ]
 
 { #category : #'api - package / tag' }
+GtClassCoderHeaderModel >> package [
+	<return: #RGPackageDefinition>
+	
+	^ definition package
+]
+
+{ #category : #'api - package / tag' }
 GtClassCoderHeaderModel >> packageName [
 	<return: #String>
 	
-	
+	^ self package name
 ]
 
 { #category : #'api - class vars' }
@@ -168,6 +176,17 @@ GtClassCoderHeaderModel >> renameInstVarNamed: aCurrentName to: aNewName [
 		to: aNewName
 ]
 
+{ #category : #'api - package / tag' }
+GtClassCoderHeaderModel >> tagName [
+	<return: #String>
+	| aTagName |
+	
+	aTagName := definition category copyReplaceAll: self packageName with: ''.
+	aTagName := aTagName trimLeft: [ :aChar | aChar = $- ].
+	^ aTagName
+		ifEmpty: [ 'Uncategorized' ]
+]
+
 { #category : #accessing }
 GtClassCoderHeaderModel >> theClass [
 	^ theClass
@@ -177,9 +196,18 @@ GtClassCoderHeaderModel >> theClass [
 GtClassCoderHeaderModel >> theClass: aClass [
 	theClass := aClass.
 	definition := aClass asRingDefinition.
-	definition superclass: aClass superclass.
+	definition superclass: aClass superclass asRingDefinition.
+	
+	traits := definition traitComposition allTraits collect: #asRingDefinition.
 	
 	self notifyClassChanged: aClass
+]
+
+{ #category : #accessing }
+GtClassCoderHeaderModel >> theClassName [
+	<return: #String>
+	
+	^ self theClass name
 ]
 
 { #category : #'api - superclass' }
@@ -194,4 +222,18 @@ GtClassCoderHeaderModel >> theSuperclassName [
 	<return: #String>
 
 	^ definition superclass name
+]
+
+{ #category : #'api - traits' }
+GtClassCoderHeaderModel >> traitNames [
+	<return: #Collection of: #String>
+	
+	^ self traits collect: [ :eachTrait | eachTrait name ]
+]
+
+{ #category : #'api - traits' }
+GtClassCoderHeaderModel >> traits [
+	<return: #Collection of: #RGTraitDefinition>
+	
+	^ traits
 ]
