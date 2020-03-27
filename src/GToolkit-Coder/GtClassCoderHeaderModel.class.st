@@ -128,7 +128,7 @@ GtClassCoderHeaderModel >> packageName [
 GtClassCoderHeaderModel >> removeClassVarNamed: aString [
 	| aRemovedClassVariable |
 
-	aRemovedClassVariable := definition classVariableNamed: aString.
+	aRemovedClassVariable := definition classVarNamed: aString.
 	definition removeClassVariable: aRemovedClassVariable.
 	self notifyClassVarRemoved: aRemovedClassVariable
 ]
@@ -146,7 +146,7 @@ GtClassCoderHeaderModel >> removeInstVarNamed: aString [
 GtClassCoderHeaderModel >> renameClassVarNamed: aCurrentName to: aNewName [
 	| aRenamedClassVariable |
 
-	aRenamedClassVariable := definition classVariableNamed: aCurrentName.
+	aRenamedClassVariable := definition classVarNamed: aCurrentName.
 	aRenamedClassVariable name: aNewName.
 	
 	self
@@ -180,6 +180,13 @@ GtClassCoderHeaderModel >> theClass: aClass [
 	definition superclass: aClass superclass.
 	
 	self notifyClassChanged: aClass
+]
+
+{ #category : #'api - superclass' }
+GtClassCoderHeaderModel >> theSuperclass [
+	<return: #Class>
+
+	^ definition superclass
 ]
 
 { #category : #'api - superclass' }
