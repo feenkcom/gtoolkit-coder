@@ -7,7 +7,11 @@ Class {
 		'headerModel',
 		'instVars',
 		'classVars',
-		'theSuperclass'
+		'theSuperclass',
+		'thePackage',
+		'theTag',
+		'theClassName',
+		'traits'
 	],
 	#category : #'GToolkit-Coder-Class - UI'
 }
@@ -41,23 +45,27 @@ GtClassCoderHeaderElement >> buildClassName [
 		text: classCoder name
 ]
 
-{ #category : #'private - ui' }
-GtClassCoderHeaderElement >> buildClassVarNames [
-	| aContainer |
+{ #category : #'private - class name' }
+GtClassCoderHeaderElement >> buildClassNameEditor [
+	| aClassNameEditor |
 	
-	aContainer := BlElement new.
-	aContainer layout: BlFlowLayout new.
-	aContainer constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical fitContent ].
-	
-	^ aContainer
+	aClassNameEditor := BrEditableLabel new
+		look: (self editableLabelLook bold fontSize: 18);
+		inputFilter: BrTextEditorAlphaNumericInputFilter new;
+		text: (headerModel theClassName).
+
+	(GtCompletionController
+		on: aClassNameEditor
+		strategy: (GtClassesCompletionStrategy new)) install.
+
+	^ aClassNameEditor
 ]
 
 { #category : #'private - class vars' }
 GtClassCoderHeaderElement >> buildClassVarsEditor [
 	^ BrTagger new
-		look: BrGlamorousTaggerEditableLook new;
+		look: (BrGlamorousTaggerEditableLook new
+			editableLabel: [ BrEditableLabel new look: self editableLabelLook ]);
 		namedTags: headerModel classVarNames;
 		when: BrTaggerAddTagRequest do: [ :aRequest |
 			aRequest tag name
@@ -77,23 +85,23 @@ GtClassCoderHeaderElement >> buildDefinitionEditor [
 	aContainer := BrVerticalPane new
 		hMatchParent;
 		vFitContent.
-	
-	aContainer addChild: (self buildClassName).
-	
+		
 	theClassProperties := BlElement new
-		layout: (BlGridLayout new columnCount: 2; cellSpacing: 5);
+		layout: (BlGridLayout new columnCount: 2; cellSpacing: 7);
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical fitContent ].
+	
+	aContainer addChild: (theClassName := self buildClassNameEditor margin: (BlInsets top: 7 right: 0 bottom: 0 left: 7)).
 
 	theClassProperties addChildren: { 
 		self buildSectionLabel: 'Super:'.
 		theSuperclass := self buildSuperclassEditor.
-		"self buildSectionLabel: 'Traits:'.
-		self buildSuperClassButton.
 		self buildSectionLabel: 'Package:'.
-		self buildSuperClassButton."
-		self buildSectionLabel: 'Instance vars:'.
+		self buildPackageAndTagEditor.
+		self buildSectionLabel: 'Traits:'.
+		traits := self buildTraitsEditor.
+		self buildSectionLabel: 'Inst. vars:'.
 		instVars := self buildInstVarsEditor.
 		self buildSectionLabel: 'Class vars:'.
 		classVars := self buildClassVarsEditor.
@@ -134,16 +142,11 @@ GtClassCoderHeaderElement >> buildDefinitionViewer [
 	^ aContainer
 ]
 
-{ #category : #'private - ui blocks' }
-GtClassCoderHeaderElement >> buildEditableButton [
-	^ BrButton new
-		look: BrGlamorousButtonWithLabelLook new
-]
-
 { #category : #'private - inst vars' }
 GtClassCoderHeaderElement >> buildInstVarsEditor [
 	^ BrTagger new
-		look: BrGlamorousTaggerEditableLook new;
+		look: (BrGlamorousTaggerEditableLook new
+			editableLabel: [ BrEditableLabel new look: self editableLabelLook ]);
 		namedTags: headerModel instVarNames;
 		when: BrTaggerAddTagRequest do: [ :aRequest |
 			aRequest tag name
@@ -156,7 +159,39 @@ GtClassCoderHeaderElement >> buildInstVarsEditor [
 				ifNotEmpty: [ :aNewName | headerModel renameInstVarNamed: aRequest tag name to: aNewName ] ]
 ]
 
-{ #category : #'private - ui blocks' }
+{ #category : #'private - package / tag' }
+GtClassCoderHeaderElement >> buildPackageAndTagEditor [
+	^ BlElement new
+		layout: BlFlowLayout horizontal;
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical fitContent ];
+		addChildren: { 
+			self buildPackageEditor.
+			BrLabel new
+				look: (BrGlamorousLabelLook new glamorousCodeFontAndSize foreground: BrGlamorousColors darkBorderColor);
+				text: '/';
+				margin: (BlInsets left: 4 right: 4);
+				constraintsDo: [ :c | c flow vertical alignCenter ].
+				
+			self buildTagEditor
+		}
+]
+
+{ #category : #'private - package / tag' }
+GtClassCoderHeaderElement >> buildPackageEditor [
+	thePackage := BrEditableLabel new
+		look: self editableLabelLook;
+		text: headerModel packageName.
+
+	(GtCompletionController
+		on: thePackage
+		strategy: (GtPackagesCompletionStrategy new)) install.
+
+	^ thePackage
+]
+
+{ #category : #'private - ui' }
 GtClassCoderHeaderElement >> buildSectionLabel: aSectionName [
 	
 	^ BrLabel new
@@ -170,14 +205,45 @@ GtClassCoderHeaderElement >> buildSuperclassEditor [
 	| aSuperclassEditor |
 	
 	aSuperclassEditor := BrEditableLabel new
-		look: BrGlamorousEditableLabelLook new glamorousCodeFontAndSize;
+		look: self editableLabelLook;
+		inputFilter: BrTextEditorAlphaNumericInputFilter new;
 		text: (headerModel theSuperclassName).
-	
+
 	(GtCompletionController
 		on: aSuperclassEditor
-		strategy: (GtCoderClassCompletionStrategy forSuperclasses: headerModel theClass)) install.
+		strategy: (GtClassesCompletionStrategy forSuperclasses: headerModel theClass)) install.
 
 	^ aSuperclassEditor
+]
+
+{ #category : #'private - package / tag' }
+GtClassCoderHeaderElement >> buildTagEditor [
+	theTag := BrEditableLabel new
+		look: self editableLabelLook;
+		text: (headerModel tagName).
+
+	^ theTag
+]
+
+{ #category : #'private - traits' }
+GtClassCoderHeaderElement >> buildTraitsEditor [
+	^ BrTagger new
+		look: (BrGlamorousTaggerEditableLook new
+			separator: [
+				BrLabel new
+					look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
+					text: '+' ];
+			editableLabel: [ BrEditableLabel new look: self editableLabelLook ]);
+		namedTags: headerModel traitNames;
+		when: BrTaggerAddTagRequest do: [ :aRequest |
+			aRequest tag name
+				ifNotEmpty: [ headerModel addInstVarNamed: aRequest tag name ] ];
+		when: BrTaggerRemoveTagRequest do: [ :aRequest |
+			headerModel removeInstVarNamed: aRequest tag name ];
+		when: BrTaggerRenameTagRequest do: [ :aRequest |
+			aRequest newName trimmed
+				ifEmpty: [ headerModel removeInstVarNamed: aRequest tag name ]
+				ifNotEmpty: [ :aNewName | headerModel renameInstVarNamed: aRequest tag name to: aNewName ] ]
 ]
 
 { #category : #accessing }
@@ -197,6 +263,11 @@ GtClassCoderHeaderElement >> classCoder: aGtClassCoder [
 			do: [ :anAnnouncement | self actOnPackageChanged: anAnnouncement ].
 			
 	headerModel theClass: classCoder theClass
+]
+
+{ #category : #'private - instance creation' }
+GtClassCoderHeaderElement >> editableLabelLook [
+	^ BrGlamorousEditableLabelLook new glamorousCodeFont fontSize: 12
 ]
 
 { #category : #initialization }
