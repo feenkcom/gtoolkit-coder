@@ -26,6 +26,11 @@ GtLiteralExplanationLinkStyler >> addLiterals: aCollection [
 	aCollection do: [ :literal | self addLiteral: literal ].
 ]
 
+{ #category : #accessing }
+GtLiteralExplanationLinkStyler >> coder: aMethodCoder [
+	coder := aMethodCoder.
+]
+
 { #category : #initialization }
 GtLiteralExplanationLinkStyler >> initialize [
 	super initialize.

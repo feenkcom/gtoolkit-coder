@@ -26,6 +26,11 @@ GtVariableExplanationLinkStyler >> addVariables: aCollection [
 	aCollection do: [ :variable | self addVariableName: variable ].
 ]
 
+{ #category : #accessing }
+GtVariableExplanationLinkStyler >> coder: aMethodCoder [
+	coder := aMethodCoder.
+]
+
 { #category : #initialization }
 GtVariableExplanationLinkStyler >> initialize [
 	super initialize.
