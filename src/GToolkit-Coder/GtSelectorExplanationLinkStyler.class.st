@@ -5,7 +5,8 @@ Class {
 	#name : #GtSelectorExplanationLinkStyler,
 	#superclass : #GtSourceExplanationLinkStyler,
 	#instVars : [
-		'selectorsDictionary'
+		'selectorsDictionary',
+		'coder'
 	],
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
@@ -25,10 +26,16 @@ GtSelectorExplanationLinkStyler >> addSelectors: aCollection [
 	aCollection do: [ :selector | self addSelector: selector ].
 ]
 
+{ #category : #accessing }
+GtSelectorExplanationLinkStyler >> coder: aMethodCoder [
+	coder := aMethodCoder.
+]
+
 { #category : #initialization }
 GtSelectorExplanationLinkStyler >> initialize [
 	super initialize.
 	selectorsDictionary := IdentityDictionary new.
+	coder := GtMethodCoder new.
 ]
 
 { #category : #accessing }
@@ -36,15 +43,29 @@ GtSelectorExplanationLinkStyler >> selectorsAssociations [
 	^ selectorsDictionary associations.
 ]
 
+{ #category : #asserting }
+GtSelectorExplanationLinkStyler >> shouldAddUnderline [
+	^ coder compiledMethod isNotNil.
+]
+
 { #category : #visiting }
 GtSelectorExplanationLinkStyler >> visitMessageNode: aMessageNode [
 	super visitMessageNode: aMessageNode.
 	self selectorsAssociations do: [ :association | 
-		aMessageNode selector = association key ifTrue: [ 
-			self 
-				styleFrom: aMessageNode keywordsPositions first - 1 
-				to: aMessageNode keywordsPositions first - 1
-				with: { GtYellowCircleExplanationTextAdornment forIdentifier: association value } ] ]
+		aMessageNode selector = association key ifTrue: [
+			aMessageNode keywordsIntervals do: [ :each |
+				self 
+					styleFrom: each first - 1 
+					to: each first - 1
+					with: ((self shouldAddUnderline)
+						ifTrue: [ {GtTargetCircleWithUnderlineAdornment new
+							identifier: (association value);
+							coder: coder;
+							node: aMessageNode;
+							start: each first;
+							stop: each last} ]
+						ifFalse: [ {GtYellowCircleExplanationTextAdornment 
+							forIdentifier: association value} ]) ] ] ].
 ]
 
 { #category : #visiting }
@@ -53,5 +74,13 @@ GtSelectorExplanationLinkStyler >> visitPragmaNode: aNode [
 	self selectorsAssociations do: [:association |
 		(aNode selector = association key) ifTrue: 
 			[ self styleFrom: (aNode start - 1) to: (aNode start - 1) 
-				with: { GtYellowCircleExplanationTextAdornment forIdentifier: (association value) } ]].
+				with: ((self shouldAddUnderline)
+					ifTrue: [ {GtTargetCircleWithUnderlineAdornment new
+						identifier: (association value);
+						coder: coder;
+						node: aNode;
+						start: aNode left;
+						stop: aNode right} ]
+					ifFalse: [ {GtYellowCircleExplanationTextAdornment 
+						forIdentifier: (association value)} ]) ]].
 ]
