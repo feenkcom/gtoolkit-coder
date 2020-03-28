@@ -5,7 +5,8 @@ Class {
 	#name : #GtVariableExplanationLinkStyler,
 	#superclass : #GtSourceExplanationLinkStyler,
 	#instVars : [
-		'variablesDictionary'
+		'variablesDictionary',
+		'coder'
 	],
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
@@ -29,6 +30,12 @@ GtVariableExplanationLinkStyler >> addVariables: aCollection [
 GtVariableExplanationLinkStyler >> initialize [
 	super initialize.
 	variablesDictionary := IdentityDictionary new.
+	coder := GtMethodCoder new.
+]
+
+{ #category : #asserting }
+GtVariableExplanationLinkStyler >> shouldAddUnderline [
+	^ coder compiledMethod isNotNil.
 ]
 
 { #category : #accessing }
@@ -40,7 +47,17 @@ GtVariableExplanationLinkStyler >> variablesAssociations [
 GtVariableExplanationLinkStyler >> visitVariableNode: aVariableNode [
 	super visitVariableNode: aVariableNode.
 	self variablesAssociations do: [:association |
-		(aVariableNode name asString = association key) ifTrue:
-			[ self styleFrom: (aVariableNode start - 1) to: (aVariableNode start - 1) 
-				with: { GtYellowCircleExplanationTextAdornment forIdentifier: (association value) } ]].
+		(aVariableNode name asString = association key) ifTrue: [ 
+			self 
+				styleFrom: (aVariableNode start - 1) 
+				to: (aVariableNode start - 1) 
+				with: ((self shouldAddUnderline)
+					ifTrue: [ {GtTargetCircleWithUnderlineAdornment new
+						identifier: (association value);
+						coder: coder;
+						node: aVariableNode;
+						start: aVariableNode start;
+						stop: (aVariableNode start + aVariableNode name byteSize - 1)} ]
+					ifFalse: [ {GtYellowCircleExplanationTextAdornment 
+						forIdentifier: (association value)} ]) ]].
 ]
