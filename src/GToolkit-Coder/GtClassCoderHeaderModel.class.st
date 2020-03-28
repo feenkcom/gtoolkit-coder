@@ -132,6 +132,13 @@ GtClassCoderHeaderModel >> packageName [
 	^ self package name
 ]
 
+{ #category : #'api - package / tag' }
+GtClassCoderHeaderModel >> packageWithTagName [
+	<return: #String>
+
+	^ definition category
+]
+
 { #category : #'api - class vars' }
 GtClassCoderHeaderModel >> removeClassVarNamed: aString [
 	| aRemovedClassVariable |

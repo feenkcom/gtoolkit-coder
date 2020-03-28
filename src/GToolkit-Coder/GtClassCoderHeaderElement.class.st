@@ -145,7 +145,10 @@ GtClassCoderHeaderElement >> buildPackageAndTagEditor [
 GtClassCoderHeaderElement >> buildPackageEditor [
 	thePackage := BrEditableLabel new
 		look: self editableLabelLook;
-		text: headerModel packageName.
+		text: headerModel packageName;
+		whenKey: BlKeyCombination primaryB
+			labelDo: [ :anEditor :anEvent | anEvent currentTarget phlow
+				spawnObject: headerModel packageName asPackage ].
 
 	(GtCompletionController
 		on: thePackage
@@ -172,7 +175,10 @@ GtClassCoderHeaderElement >> buildSuperclassEditor [
 		look: self editableLabelLook;
 		inputFilter: BrTextEditorAlphaNumericInputFilter new;
 		text: (headerModel theSuperclassName);
-		margin: self buttonMargin.
+		margin: self buttonMargin;
+		whenKey: BlKeyCombination primaryB
+			labelDo: [ :anEditor :anEvent | anEvent currentTarget phlow
+				spawnObject: (GtClassCoder forClass: headerModel theSuperclass realClass) ].
 
 	(GtCompletionController
 		on: aSuperclassEditor
@@ -185,7 +191,10 @@ GtClassCoderHeaderElement >> buildSuperclassEditor [
 GtClassCoderHeaderElement >> buildTagEditor [
 	theTag := BrEditableLabel new
 		look: self editableLabelLook;
-		text: (headerModel tagName).
+		text: (headerModel tagName);
+		whenKey: BlKeyCombination primaryB
+			labelDo: [ :anEditor :anEvent | anEvent currentTarget phlow
+				spawnObject: (headerModel packageName asPackage classTagNamed: headerModel tagName) ].
 
 	^ theTag
 ]
@@ -199,7 +208,9 @@ GtClassCoderHeaderElement >> buildTraitsEditor [
 				BrLabel new
 					look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
 					text: '+' ];
-			editableLabel: [ BrEditableLabel new look: self editableLabelLook ]);
+			editableLabel: [
+				BrEditableLabel new
+					look: self editableLabelLook ]);
 		namedTags: headerModel traitNames;
 		when: BrTaggerAddTagRequest do: [ :aRequest |
 			aRequest tag name
