@@ -97,7 +97,7 @@ GtClassCoderHeaderElement >> buildDefinitionViewer [
 		self buildSectionLabel: 'Super:'.
 		self buildSuperclassEditor.
 		self buildSectionLabel: 'Package:'.
-		self buildSuperclassEditor.
+		self buildPackageAndTagEditor.
 	}.
 	
 	^ theClassProperties
