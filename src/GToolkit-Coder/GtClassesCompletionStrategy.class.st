@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderClassCompletionStrategy,
+	#name : #GtClassesCompletionStrategy,
 	#superclass : #GtCompletionStrategy,
 	#instVars : [
 		'excludedClasses',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtCoderClassCompletionStrategy class >> forSuperclasses: aClass [
+GtClassesCompletionStrategy class >> forSuperclasses: aClass [
 	"When completing superclasses of a class we should exclude a class itself and all direct subclasses"
 	| theExcludedClasses |
 	
@@ -21,7 +21,7 @@ GtCoderClassCompletionStrategy class >> forSuperclasses: aClass [
 ]
 
 { #category : #accessing }
-GtCoderClassCompletionStrategy >> candidateClasses [
+GtClassesCompletionStrategy >> candidateClasses [
 	^  candidateClasses ifNil: [ 
 			| theInterestingClassNames |
 			theInterestingClassNames := Smalltalk globals classNames copyWithoutAll: (excludedClasses collect: [ :eachClass | eachClass name ]).
@@ -29,7 +29,7 @@ GtCoderClassCompletionStrategy >> candidateClasses [
 ]
 
 { #category : #accessing }
-GtCoderClassCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
+GtClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
 	| currentInput completionActions |
 
 	currentInput := aText asString.
@@ -44,22 +44,22 @@ GtCoderClassCompletionStrategy >> completionActionsFor: aText at: positionIntege
 ]
 
 { #category : #initialization }
-GtCoderClassCompletionStrategy >> excludeClasses: aCollectionOfClasses [
+GtClassesCompletionStrategy >> excludeClasses: aCollectionOfClasses [
 	excludedClasses := aCollectionOfClasses asSet
 ]
 
 { #category : #testing }
-GtCoderClassCompletionStrategy >> hasCompletionEntryFor: aString [
+GtClassesCompletionStrategy >> hasCompletionEntryFor: aString [
 	^ true
 ]
 
 { #category : #testing }
-GtCoderClassCompletionStrategy >> hasCompletionsAt: anInteger in: aText [
+GtClassesCompletionStrategy >> hasCompletionsAt: anInteger in: aText [
 	^ true
 ]
 
 { #category : #initialization }
-GtCoderClassCompletionStrategy >> initialize [
+GtClassesCompletionStrategy >> initialize [
 	super initialize.
 	
 	excludedClasses := Set new

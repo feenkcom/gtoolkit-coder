@@ -43,22 +43,38 @@ GtClassCoderElement >> actOnSelectMethod: aMethod [
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildClassLabel [
-	^ BrLabel new
-		margin: (BlInsets left: 10);
-		look: (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 20);
-		text: classCoder name
+	| aClassNameEditor |
+	
+	aClassNameEditor := BrEditableLabel new
+		look: (BrGlamorousEditableLabelLook new
+			defaultBackground: Color transparent;
+			glamorousCodeFont;
+			bold;
+			fontSize: 20);
+		inputFilter: BrTextEditorAlphaNumericInputFilter new;
+		text: (classCoder name);
+		margin: (BlInsets all: 0).
+
+	(GtCompletionController
+		on: aClassNameEditor
+		strategy: (GtClassesCompletionStrategy new)) install.
+
+	^ aClassNameEditor
 ]
 
 { #category : #'building ui' }
 GtClassCoderElement >> buildContentPane [
+
 	contentPane := BlElement new.
 	contentPane layout: BlLinearLayout vertical.
 	contentPane constraintsDo: [ :c | 
 		c horizontal matchParent.
 		c vertical matchParent ].
+	contentPane padding: (BlInsets top: 5 left: 6 bottom: 5 right: 6).
 	contentPane addChild: self buildClassLabel.
-	contentPane addChild: self buildParentLink.
+	contentPane addChild: self buildHeader.
 	contentPane addChild: self buildContentTabs.
+
 	^ contentPane
 ]
 
@@ -82,6 +98,13 @@ GtClassCoderElement >> buildContentTabs [
 							[ tab toolbarStencil: [ each actionsToolbarForElement: tab ] ].
 					contentTabs addTab: tab ] ].
 	^ contentTabs
+]
+
+{ #category : #'building ui' }
+GtClassCoderElement >> buildHeader [
+	^ GtClassCoderHeaderElement new
+		classCoder: classCoder;
+		margin: (BlInsets top: 5 left: 5)
 ]
 
 { #category : #'building ui' }

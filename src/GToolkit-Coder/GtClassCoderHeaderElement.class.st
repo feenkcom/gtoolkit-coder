@@ -7,7 +7,11 @@ Class {
 		'headerModel',
 		'instVars',
 		'classVars',
-		'theSuperclass'
+		'theSuperclass',
+		'thePackage',
+		'theTag',
+		'theClassName',
+		'traits'
 	],
 	#category : #'GToolkit-Coder-Class - UI'
 }
@@ -33,31 +37,12 @@ GtClassCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
 	self content: [ BlElement new ]
 ]
 
-{ #category : #'private - ui' }
-GtClassCoderHeaderElement >> buildClassName [
-	^ BrLabel new
-		margin: (BlInsets left: 10);
-		look: (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 20);
-		text: classCoder name
-]
-
-{ #category : #'private - ui' }
-GtClassCoderHeaderElement >> buildClassVarNames [
-	| aContainer |
-	
-	aContainer := BlElement new.
-	aContainer layout: BlFlowLayout new.
-	aContainer constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical fitContent ].
-	
-	^ aContainer
-]
-
 { #category : #'private - class vars' }
 GtClassCoderHeaderElement >> buildClassVarsEditor [
 	^ BrTagger new
-		look: BrGlamorousTaggerEditableLook new;
+		look: (BrGlamorousTaggerEditableLook new
+			margin: self buttonMargin;
+			editableLabel: [ BrEditableLabel new look: self editableLabelLook ]);
 		namedTags: headerModel classVarNames;
 		when: BrTaggerAddTagRequest do: [ :aRequest |
 			aRequest tag name
@@ -72,16 +57,10 @@ GtClassCoderHeaderElement >> buildClassVarsEditor [
 
 { #category : #'private - instance creation' }
 GtClassCoderHeaderElement >> buildDefinitionEditor [
-	| aContainer theClassProperties |
-	
-	aContainer := BrVerticalPane new
-		hMatchParent;
-		vFitContent.
-	
-	aContainer addChild: (self buildClassName).
-	
+	| theClassProperties |
+		
 	theClassProperties := BlElement new
-		layout: (BlGridLayout new columnCount: 2; cellSpacing: 5);
+		layout: (BlGridLayout new columnCount: 2; cellSpacing: 0);
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical fitContent ].
@@ -89,11 +68,11 @@ GtClassCoderHeaderElement >> buildDefinitionEditor [
 	theClassProperties addChildren: { 
 		self buildSectionLabel: 'Super:'.
 		theSuperclass := self buildSuperclassEditor.
-		"self buildSectionLabel: 'Traits:'.
-		self buildSuperClassButton.
 		self buildSectionLabel: 'Package:'.
-		self buildSuperClassButton."
-		self buildSectionLabel: 'Instance vars:'.
+		self buildPackageAndTagEditor.
+		self buildSectionLabel: 'Traits:'.
+		traits := self buildTraitsEditor.
+		self buildSectionLabel: 'Inst. vars:'.
 		instVars := self buildInstVarsEditor.
 		self buildSectionLabel: 'Class vars:'.
 		classVars := self buildClassVarsEditor.
@@ -101,21 +80,13 @@ GtClassCoderHeaderElement >> buildDefinitionEditor [
 		self buildSuperClassButton."
 	}.
 
-	aContainer addChild: theClassProperties.
-
-	^ aContainer
+	^ theClassProperties
 ]
 
 { #category : #'private - instance creation' }
 GtClassCoderHeaderElement >> buildDefinitionViewer [
-	| aContainer theClassProperties |
-	
-	aContainer := BrVerticalPane new
-		hMatchParent;
-		vFitContent.
-	
-	aContainer addChild: (self buildClassName).
-	
+	| theClassProperties |
+
 	theClassProperties := BlElement new
 		layout: (BlGridLayout new columnCount: 2; cellSpacing: 5);
 		constraintsDo: [ :c |
@@ -129,21 +100,15 @@ GtClassCoderHeaderElement >> buildDefinitionViewer [
 		self buildSuperclassEditor.
 	}.
 	
-	aContainer addChild: theClassProperties.
-	
-	^ aContainer
-]
-
-{ #category : #'private - ui blocks' }
-GtClassCoderHeaderElement >> buildEditableButton [
-	^ BrButton new
-		look: BrGlamorousButtonWithLabelLook new
+	^ theClassProperties
 ]
 
 { #category : #'private - inst vars' }
 GtClassCoderHeaderElement >> buildInstVarsEditor [
 	^ BrTagger new
-		look: BrGlamorousTaggerEditableLook new;
+		look: (BrGlamorousTaggerEditableLook new
+			margin: self buttonMargin;
+			editableLabel: [ BrEditableLabel new look: self editableLabelLook ]);
 		namedTags: headerModel instVarNames;
 		when: BrTaggerAddTagRequest do: [ :aRequest |
 			aRequest tag name
@@ -156,12 +121,46 @@ GtClassCoderHeaderElement >> buildInstVarsEditor [
 				ifNotEmpty: [ :aNewName | headerModel renameInstVarNamed: aRequest tag name to: aNewName ] ]
 ]
 
-{ #category : #'private - ui blocks' }
+{ #category : #'private - package / tag' }
+GtClassCoderHeaderElement >> buildPackageAndTagEditor [
+	^ BlElement new
+		layout: BlFlowLayout horizontal;
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical fitContent ];
+		margin: self buttonMargin;
+		addChildren: { 
+			self buildPackageEditor.
+			BrLabel new
+				look: (BrGlamorousLabelLook new glamorousCodeFontAndSize foreground: BrGlamorousColors darkBorderColor);
+				text: '/';
+				margin: (BlInsets left: 4 right: 4);
+				constraintsDo: [ :c | c flow vertical alignCenter ].
+				
+			self buildTagEditor
+		}
+]
+
+{ #category : #'private - package / tag' }
+GtClassCoderHeaderElement >> buildPackageEditor [
+	thePackage := BrEditableLabel new
+		look: self editableLabelLook;
+		text: headerModel packageName.
+
+	(GtCompletionController
+		on: thePackage
+		strategy: (GtPackagesCompletionStrategy new)) install.
+
+	^ thePackage
+]
+
+{ #category : #'private - ui' }
 GtClassCoderHeaderElement >> buildSectionLabel: aSectionName [
 	
 	^ BrLabel new
-		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray);
+		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
 		text: aSectionName;
+		margin: (BlInsets top: 5 right: 2);
 		constraintsDo: [ :c | c grid horizontal alignLeft ]
 ]
 
@@ -170,14 +169,52 @@ GtClassCoderHeaderElement >> buildSuperclassEditor [
 	| aSuperclassEditor |
 	
 	aSuperclassEditor := BrEditableLabel new
-		look: BrGlamorousEditableLabelLook new glamorousCodeFontAndSize;
-		text: (headerModel theSuperclassName).
-	
+		look: self editableLabelLook;
+		inputFilter: BrTextEditorAlphaNumericInputFilter new;
+		text: (headerModel theSuperclassName);
+		margin: self buttonMargin.
+
 	(GtCompletionController
 		on: aSuperclassEditor
-		strategy: (GtCoderClassCompletionStrategy forSuperclasses: headerModel theClass)) install.
+		strategy: (GtClassesCompletionStrategy forSuperclasses: headerModel theClass)) install.
 
 	^ aSuperclassEditor
+]
+
+{ #category : #'private - package / tag' }
+GtClassCoderHeaderElement >> buildTagEditor [
+	theTag := BrEditableLabel new
+		look: self editableLabelLook;
+		text: (headerModel tagName).
+
+	^ theTag
+]
+
+{ #category : #'private - traits' }
+GtClassCoderHeaderElement >> buildTraitsEditor [
+	^ BrTagger new
+		look: (BrGlamorousTaggerEditableLook new
+			margin: self buttonMargin;
+			separator: [
+				BrLabel new
+					look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
+					text: '+' ];
+			editableLabel: [ BrEditableLabel new look: self editableLabelLook ]);
+		namedTags: headerModel traitNames;
+		when: BrTaggerAddTagRequest do: [ :aRequest |
+			aRequest tag name
+				ifNotEmpty: [ headerModel addInstVarNamed: aRequest tag name ] ];
+		when: BrTaggerRemoveTagRequest do: [ :aRequest |
+			headerModel removeInstVarNamed: aRequest tag name ];
+		when: BrTaggerRenameTagRequest do: [ :aRequest |
+			aRequest newName trimmed
+				ifEmpty: [ headerModel removeInstVarNamed: aRequest tag name ]
+				ifNotEmpty: [ :aNewName | headerModel renameInstVarNamed: aRequest tag name to: aNewName ] ]
+]
+
+{ #category : #'private - ui' }
+GtClassCoderHeaderElement >> buttonMargin [
+	^ BlInsets top: 3 left: 0 bottom: 3 right: 5
 ]
 
 { #category : #accessing }
@@ -199,14 +236,22 @@ GtClassCoderHeaderElement >> classCoder: aGtClassCoder [
 	headerModel theClass: classCoder theClass
 ]
 
+{ #category : #'private - instance creation' }
+GtClassCoderHeaderElement >> editableLabelLook [
+	^ BrGlamorousEditableLabelLook new
+		glamorousCodeFont;
+		defaultForeground: Color black;
+		fontSize: 10
+]
+
 { #category : #initialization }
 GtClassCoderHeaderElement >> initialize [
-	super initialize.
+	super initialize.	
 	
 	self viewModel add: (headerModel := GtClassCoderHeaderModel new).
 
 	self
-		look: GtCoderExpanderLook new;
+		look: GtCoderExpanderWithoutShadowLook;
 		hMatchParent;
 		vFitContent.
 
