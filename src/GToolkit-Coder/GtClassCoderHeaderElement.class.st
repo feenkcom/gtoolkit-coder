@@ -108,7 +108,11 @@ GtClassCoderHeaderElement >> buildInstVarsEditor [
 	^ BrTagger new
 		look: (BrGlamorousTaggerEditableLook new
 			margin: self buttonMargin;
-			editableLabel: [ BrEditableLabel new look: self editableLabelLook ]);
+			editableLabel: [
+				BrEditableLabel new
+					styler: GtCoderInstanceVariableStyler new;
+					inputFilter: BrTextEditorAlphaNumericInputFilter new;
+					look: self editableLabelLook ]);
 		namedTags: headerModel instVarNames;
 		when: BrTaggerAddTagRequest do: [ :aRequest |
 			aRequest tag name
