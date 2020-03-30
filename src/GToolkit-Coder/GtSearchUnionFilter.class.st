@@ -20,9 +20,17 @@ GtSearchUnionFilter >> gtDisplayOn: stream [
 ]
 
 { #category : #enumerating }
-GtSearchUnionFilter >> itemsDo: aBloc [
-	left defaultFilterScope itemsDo: aBloc.
-	right defaultFilterScope itemsDo: aBloc.
+GtSearchUnionFilter >> itemsDo: aBlock [
+	| seen |
+	seen := IdentitySet new.
+	left defaultFilterScope
+		itemsDo: [ :each | 
+			seen add: each.
+			aBlock value: each ].
+	right defaultFilterScope
+		itemsDo: [ :each | 
+			(seen includes: each)
+				ifFalse: [ aBlock value: each ] ]
 ]
 
 { #category : #testing }
