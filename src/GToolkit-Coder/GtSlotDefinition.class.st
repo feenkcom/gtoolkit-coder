@@ -16,10 +16,7 @@ GtSlotDefinition class >> fromSlot: aSlot [
 
 { #category : #'instance creation' }
 GtSlotDefinition class >> named: aName [
-	^ self new
-		name: aName;
-		type: InstanceVariableSlot name;
-		yourself
+	^ self new named: aName
 ]
 
 { #category : #initialization }
@@ -49,6 +46,13 @@ GtSlotDefinition >> name [
 { #category : #accessing }
 GtSlotDefinition >> name: anObject [
 	name := anObject asSymbol
+]
+
+{ #category : #initialization }
+GtSlotDefinition >> named: aName [
+	name := aName.
+	originalName := aName.
+	type := InstanceVariableSlot name
 ]
 
 { #category : #accessing }

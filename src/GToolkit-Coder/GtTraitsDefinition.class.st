@@ -37,10 +37,33 @@ GtTraitsDefinition >> addTraitNamed: aSymbolOrString [
 ]
 
 { #category : #accessing }
+GtTraitsDefinition >> all [
+	^ traits
+]
+
+{ #category : #accessing }
 GtTraitsDefinition >> at: anIndex [
 	<return: #GtTraitsDefinition>
 
 	^ traits at: anIndex
+]
+
+{ #category : #'api - accepting' }
+GtTraitsDefinition >> differenceWith: aGtTraitsDefinition [
+	| theDifference |
+
+	theDifference := GtTraitsDefinitionDifference new.
+
+	GtCodeDefinitionDifference
+		difference: self all
+		with: aGtTraitsDefinition all
+		addedDo: [ :eachTrait | theDifference add: (GtTraitAddedToDefinitionDifference new traitName: eachTrait name) ]
+		renamedDo: [ :eachTrait |
+			theDifference add: (GtTraitRemovedFromDefinitionDifference new traitName: eachTrait originalName).
+			theDifference add: (GtTraitAddedToDefinitionDifference new traitName: eachTrait name) ]
+		removedDo: [ :eachTrait | theDifference add: (GtTraitRemovedFromDefinitionDifference new traitName: eachTrait name) ].
+		
+	^ theDifference
 ]
 
 { #category : #'api - traits' }

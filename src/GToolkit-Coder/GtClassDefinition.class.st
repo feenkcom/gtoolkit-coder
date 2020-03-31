@@ -96,6 +96,8 @@ GtClassDefinition >> fromClass: aClass [
 	
 	ringDefinition := aClass asRingDefinition.
 	ringDefinition superclass: aClass superclass asRingDefinition.
+	
+	originalName := aClass name.
 
 	category := GtCategoryDefinition fromBehavior: aClass.
 	traits := (GtTraitsDefinition fromClass: aClass) parent: self.
