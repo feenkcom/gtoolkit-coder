@@ -2,7 +2,8 @@ Class {
 	#name : #GtBehaviorDefinition,
 	#superclass : #GtCodeDefinition,
 	#instVars : [
-		'ringDefinition'
+		'ringDefinition',
+		'originalName'
 	],
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
@@ -12,6 +13,21 @@ GtBehaviorDefinition >> name [
 	<return: #Symbol>
 
 	^ ringDefinition name
+]
+
+{ #category : #accessing }
+GtBehaviorDefinition >> name: aSymbol [
+	ringDefinition name: aSymbol asSymbol
+]
+
+{ #category : #accessing }
+GtBehaviorDefinition >> originalName [
+	^ originalName
+]
+
+{ #category : #accessing }
+GtBehaviorDefinition >> originalName: anObject [
+	originalName := anObject
 ]
 
 { #category : #printing }

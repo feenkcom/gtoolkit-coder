@@ -35,6 +35,7 @@ GtTraitDefinition >> editors [
 { #category : #initialization }
 GtTraitDefinition >> fromTrait: aTrait [
 	ringDefinition := aTrait asRingDefinition.
+	originalName := aTrait name.
 	
 	category := GtCategoryDefinition fromBehavior: aTrait.
 	slots := (GtSlotsDefinition fromTrait: aTrait) parent: self.
