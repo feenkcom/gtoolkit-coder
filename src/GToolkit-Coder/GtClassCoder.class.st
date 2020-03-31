@@ -50,7 +50,7 @@ GtClassCoder >> asCardElement [
 { #category : #elements }
 GtClassCoder >> asElement [
 	| coderElement |
-	coderElement := GtClassCoderElement new classCoder: self.
+	coderElement := GtBehaviorCoderElement new classCoder: self.
 	^ coderElement
 ]
 

@@ -1,5 +1,5 @@
 Class {
-	#name : #GtClassCoderElement,
+	#name : #GtBehaviorCoderElement,
 	#superclass : #BlElement,
 	#instVars : [
 		'classCoder',
@@ -7,25 +7,25 @@ Class {
 		'contentPane',
 		'contentTabs'
 	],
-	#category : #'GToolkit-Coder-Class - UI'
+	#category : #'GToolkit-Coder-Behavior - UI'
 }
 
 { #category : #callbacks }
-GtClassCoderElement >> actOnClassUpdated [
+GtBehaviorCoderElement >> actOnClassUpdated [
 	self classCoder navigationModel
 		updateSelectionWith: self classCoder theClass.
 	self updateContentTabs
 ]
 
 { #category : #callbacks }
-GtClassCoderElement >> actOnPackageUpdated: ann [
+GtBehaviorCoderElement >> actOnPackageUpdated: ann [
 	self classCoder navigationModel 
 		updateSelectionWith: ann package.
 	self removeContentTabs
 ]
 
 { #category : #callbacks }
-GtClassCoderElement >> actOnSelectMethod: aMethod [
+GtBehaviorCoderElement >> actOnSelectMethod: aMethod [
 	| tab selectTabBlock selectMethodBlock |
 	tab := contentTabs viewModel tabs
 		detect: [ :each | each widget label asString = 'Methods' ]
@@ -42,7 +42,7 @@ GtClassCoderElement >> actOnSelectMethod: aMethod [
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildClassLabel [
+GtBehaviorCoderElement >> buildClassLabel [
 	| aClassNameEditor |
 	
 	aClassNameEditor := BrEditableLabel new
@@ -63,7 +63,7 @@ GtClassCoderElement >> buildClassLabel [
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildContentPane [
+GtBehaviorCoderElement >> buildContentPane [
 
 	contentPane := BlElement new.
 	contentPane layout: BlLinearLayout vertical.
@@ -79,7 +79,7 @@ GtClassCoderElement >> buildContentPane [
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildContentTabs [
+GtBehaviorCoderElement >> buildContentTabs [
 	| tabPragmas |
 	tabPragmas := self classViewItems.
 	contentTabs := BrTabGroup new.
@@ -101,14 +101,14 @@ GtClassCoderElement >> buildContentTabs [
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildHeader [
-	^ GtClassCoderHeaderElement new
+GtBehaviorCoderElement >> buildHeader [
+	^ GtBehaviorCoderHeaderElement new
 		classCoder: classCoder;
 		margin: (BlInsets top: 5 left: 5)
 ]
 
 { #category : #'building ui' }
-GtClassCoderElement >> buildParentLink [
+GtBehaviorCoderElement >> buildParentLink [
 	| element superclassElement packageElement packageCoder |
 	element := BlElement new.
 	element layout: BlLinearLayout new beVertical.
@@ -192,12 +192,12 @@ GtClassCoderElement >> buildParentLink [
 ]
 
 { #category : #accessing }
-GtClassCoderElement >> classCoder [
+GtBehaviorCoderElement >> classCoder [
 	^ classCoder
 ]
 
 { #category : #accessing }
-GtClassCoderElement >> classCoder: aCoder [
+GtBehaviorCoderElement >> classCoder: aCoder [
 	classCoder := aCoder.
 	classCoder
 		when: GtCoderClassUpdatedAnnouncement
@@ -212,7 +212,7 @@ GtClassCoderElement >> classCoder: aCoder [
 ]
 
 { #category : #private }
-GtClassCoderElement >> classViewItems [
+GtBehaviorCoderElement >> classViewItems [
 	| collector context |
 	collector := GtPhlowViewsCollector new.
 	collector fromObject: classCoder theClass.
@@ -226,14 +226,14 @@ GtClassCoderElement >> classViewItems [
 ]
 
 { #category : #subscriptions }
-GtClassCoderElement >> definitionChanged: anAnnouncement [
+GtBehaviorCoderElement >> definitionChanged: anAnnouncement [
 	anAnnouncement classAffected == classCoder theClass
 		ifFalse: [ ^ self ].
 	self updateContentTabs
 ]
 
 { #category : #initialization }
-GtClassCoderElement >> initialize [
+GtBehaviorCoderElement >> initialize [
 	super initialize.
 
 	self
@@ -250,20 +250,20 @@ GtClassCoderElement >> initialize [
 ]
 
 { #category : #'updating ui' }
-GtClassCoderElement >> removeContentTabs [
+GtBehaviorCoderElement >> removeContentTabs [
 	contentTabs
 		ifNotNil: [ contentPane removeChild: contentTabs.
 			contentTabs := nil ]
 ]
 
 { #category : #'updating ui' }
-GtClassCoderElement >> selectAndScrollToMethod: aMethod [
+GtBehaviorCoderElement >> selectAndScrollToMethod: aMethod [
 	(contentTabs content childAt: 1) coders
 		selectAndScrollToMethod: aMethod
 ]
 
 { #category : #'updating ui' }
-GtClassCoderElement >> updateContentTabs [
+GtBehaviorCoderElement >> updateContentTabs [
 	| childIndex |
 	contentTabs
 		ifNil: [ childIndex := contentPane children size + 1 ]
