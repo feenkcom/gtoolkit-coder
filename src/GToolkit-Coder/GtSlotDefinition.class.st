@@ -2,6 +2,7 @@ Class {
 	#name : #GtSlotDefinition,
 	#superclass : #GtCodeDefinition,
 	#instVars : [
+		'originalName',
 		'name',
 		'type'
 	],
@@ -15,12 +16,21 @@ GtSlotDefinition class >> fromSlot: aSlot [
 
 { #category : #'instance creation' }
 GtSlotDefinition class >> named: aName [
-	^ self new fromSlot: (InstanceVariableSlot named: aName asSymbol)
+	^ self new
+		name: aName;
+		type: InstanceVariableSlot name;
+		yourself
 ]
 
 { #category : #initialization }
 GtSlotDefinition >> fromSlot: aSlot [
+
+	self
+		assert: [ aSlot owningClass isNotNil ]
+		description: [ 'Slot must belong to a class' ].
+
 	name := aSlot name.
+	originalName := name.
 	type := aSlot class name
 ]
 
@@ -38,7 +48,17 @@ GtSlotDefinition >> name [
 
 { #category : #accessing }
 GtSlotDefinition >> name: anObject [
-	name := anObject
+	name := anObject asSymbol
+]
+
+{ #category : #accessing }
+GtSlotDefinition >> originalName [
+	^ originalName
+]
+
+{ #category : #accessing }
+GtSlotDefinition >> originalName: anObject [
+	originalName := anObject
 ]
 
 { #category : #printing }

@@ -34,10 +34,41 @@ GtSlotsDefinition >> addSlotNamed: aSymbol [
 ]
 
 { #category : #accessing }
+GtSlotsDefinition >> all [
+	^ slots
+]
+
+{ #category : #accessing }
 GtSlotsDefinition >> at: anIndex [
 	<return: #GtSlotDefinition>
 
 	^ slots at: anIndex
+]
+
+{ #category : #accessing }
+GtSlotsDefinition >> collect: aBlock [
+	^ slots collect: aBlock
+]
+
+{ #category : #'api - accepting' }
+GtSlotsDefinition >> differenceWith: aGtSlotsDefinition [
+	| theDifference |
+
+	theDifference := GtSlotsDefinitionDifference new.
+
+	GtCodeDefinitionDifference
+		difference: self all
+		with: aGtSlotsDefinition all
+		addedDo: [ :eachSlot | theDifference add: (GtSlotAddedDifference new slotName: eachSlot name) ]
+		renamedDo: [ :eachSlot | theDifference add: (GtSlotRenamedDifference new oldName: eachSlot originalName; newName: eachSlot name) ]
+		removedDo: [ :eachSlot | theDifference add: (GtSlotRemovedDifference new slotName: eachSlot name) ].
+		
+	^ theDifference
+]
+
+{ #category : #accessing }
+GtSlotsDefinition >> do: aBlock [
+	slots do: aBlock
 ]
 
 { #category : #'private - errors' }

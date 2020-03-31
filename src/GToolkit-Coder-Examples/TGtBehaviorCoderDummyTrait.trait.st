@@ -5,6 +5,5 @@ Trait {
 		'slotB',
 		'slotC'
 	],
-	#traits : 'TGtBehaviorCoderDummySubTrait',
 	#category : #'GToolkit-Coder-Examples-Dummies'
 }

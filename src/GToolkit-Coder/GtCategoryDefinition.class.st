@@ -30,7 +30,7 @@ GtCategoryDefinition >> differenceWith: aCategoryDefinition [
 	self
 		assert: [ aCategoryDefinition class = self class ]
 		description: [ 'Must be of the same type' ].
-	
+
 	aDifference := GtCategoryDefinitionDifference new.
 
 	aDifference add: (self package differenceWith: aCategoryDefinition package).

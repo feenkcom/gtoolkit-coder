@@ -54,7 +54,7 @@ GtCodeDefinitionPluralEditor >> create [
 		aNewName trimmed
 			ifEmpty: [ removeAction value: aTag name ]
 			ifNotEmpty: [ :aTrimmedName |
-				aDefinition perform: renameSelector withArguments: { aTag name . aTrimmedName . anOwner } ] ].
+				aDefinition perform: renameSelector withEnoughArguments: { aTag name . aTrimmedName . anOwner } ] ].
 
 	aTagger := BrTagger new
 		look: (BrGlamorousTaggerEditableLook new
