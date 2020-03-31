@@ -117,7 +117,6 @@ GtExtractMethodController >> cursorMoved: anEvent [
 		ifTrue: [ ^ self ].
 	renameAction := GtCompositeRenameAction locations: {(self intervalAt: anEvent newIndex)} element: sourceElement.
 	renameAction addLocations: {(self keywordStartPositionFor: attribute index)} to: extractedCoder sourceEditor.
-	renameAction escapeCancels: false.
 	renameAction install
 ]
 

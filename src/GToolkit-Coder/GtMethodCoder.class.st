@@ -506,7 +506,7 @@ GtMethodCoder >> initializeShortcuts [
 			action: [ :anEvent | self playAndInspectSelectionOrMethodFrom: anEvent currentTarget ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryR;
-			action: [ :anEvent | self renameVariableIn: anEvent currentTarget ]);
+			action: [ :anEvent | self renameIn: anEvent currentTarget ]);
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryE;
 			action: [ :anEvent | self extractMethod: anEvent currentTarget ]);
@@ -727,6 +727,23 @@ GtMethodCoder >> printOn: aStream [
 ]
 
 { #category : #private }
+GtMethodCoder >> rbNodeAtCursor: editorElement [
+	| editor ast position node |
+	editor := editorElement editor.
+	editor cursor cursorsCount = 1
+		ifFalse: [ ^ nil ].
+	ast := self rbAST.
+	ast isNil
+		ifTrue: [ ^ nil ].
+	position := editor cursor first position.
+	ast
+		nodesDo: [ :each | 
+			(position between: each start and: each stop)
+				ifTrue: [ node := each ] ].
+	^ node
+]
+
+{ #category : #private }
 GtMethodCoder >> referencesFilterForCollapsed [
 	^ self selectorForCollapsed
 		ifNil: [ super referencesFilterForCollapsed ]
@@ -741,6 +758,24 @@ GtMethodCoder >> remove [
 { #category : #accessing }
 GtMethodCoder >> removeSubCoder: aMethodCoder [
 	self subCoders remove: aMethodCoder ifAbsent: [  ]
+]
+
+{ #category : #actions }
+GtMethodCoder >> renameIn: editorElement [
+	| node |
+	node := self rbNodeAtCursor: editorElement.
+	node isNil
+		ifTrue: [ ^ self ].
+	(node isMessage or: [ node isMethod ])
+		ifTrue: [ self renameMethod: editorElement ]
+		ifFalse: [ self renameVariableIn: editorElement ]
+]
+
+{ #category : #actions }
+GtMethodCoder >> renameMethod: editorElement [
+	(GtRenameMethodController new
+		coder: self;
+		sourceElement: editorElement) execute
 ]
 
 { #category : #actions }
