@@ -1,7 +1,7 @@
 Class {
 	#name : #GtClassCoderElementExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples-Class'
+	#category : #'GToolkit-Coder-Examples-Behavior'
 }
 
 { #category : #'as yet unclassified' }
@@ -10,7 +10,7 @@ GtClassCoderElementExamples >> coderElementForClass [
 	| aCoder aCoderElement |
 	
 	aCoder := GtClassCoderExamples new coderForClass.
-	aCoderElement := GtClassCoderElement new classCoder: aCoder.
+	aCoderElement := GtBehaviorCoderElement new classCoder: aCoder.
 	
 	^ aCoderElement
 ]

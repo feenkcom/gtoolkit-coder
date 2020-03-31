@@ -78,7 +78,7 @@ GtDiffElement >> buildInterface [
 					c horizontal matchParent.
 					c vertical fitContent ];
 				look: BrGlamorousCodeEditorLook new + BrShadowLook new;
-				when: BlInfiniteScrollChangedEvent do: [ :e | self leftScrolled ];
+				when: BlElementScrolledEvent do: [ :e | self leftScrolled ];
 				text: self previousRopedText.
 	diff newStyler ifNotNil: [ :style | leftElement styler: style ].
 	self addChild: leftElement.
@@ -96,7 +96,7 @@ GtDiffElement >> buildInterface [
 					c horizontal matchParent.
 					c vertical fitContent ];
 				look: BrGlamorousCodeEditorLook new + BrShadowLook new;
-				when: BlInfiniteScrollChangedEvent
+				when: BlElementScrolledEvent
 					do: [ :e | self rightScrolled ];
 				text: self newRopedText).
 	diff newStyler ifNotNil: [ :style | rightElement styler: style ].
@@ -165,12 +165,14 @@ GtDiffElement >> leftRange [
 GtDiffElement >> leftScrolled [
 	| newPosition |
 	newPosition := syncScrollRanges rightLineFor: self leftRange first.
+
 	(self rightRange includes: newPosition)
 		ifTrue: [ | offset |
 			offset := rightElement children first bounds position y.
 			1 to: newPosition - self rightRange first do: [ :i | offset := offset + (rightElement children at: i) height ].
-			rightElement scrollVerticallyBy: offset ]
+			rightElement scrollBy: 0@offset ]
 		ifFalse: [ rightElement scrollToPosition: newPosition ].
+
 	self updateOutlines
 ]
 
@@ -282,12 +284,14 @@ GtDiffElement >> rightRange [
 GtDiffElement >> rightScrolled [
 	| newPosition |
 	newPosition := syncScrollRanges leftLineFor: self rightRange first.
+	
 	(self leftRange includes: newPosition)
 		ifTrue: [ | offset |
 			offset := leftElement children first bounds position y.
 			1 to: newPosition - self leftRange first do: [ :i | offset := offset + (leftElement children at: i) height ].
-			leftElement scrollVerticallyBy: offset ]
+			leftElement scrollBy: 0@ offset ]
 		ifFalse: [ leftElement scrollToPosition: newPosition ].
+
 	self updateOutlines
 ]
 
