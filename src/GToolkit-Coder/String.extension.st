@@ -24,3 +24,8 @@ String >> gtPackageMatches [
 String >> gtReferences [
 	^ GtSearchReferencesFilter literal: self
 ]
+
+{ #category : #'*GToolkit-Coder' }
+String >> gtSubstringMatch [
+	^ GtSubstringFilter substring: self
+]

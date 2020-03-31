@@ -87,6 +87,11 @@ GtSearchFilter >> defaultFilterScope [
 	^ GtSearchNullFilter new
 ]
 
+{ #category : #iterating }
+GtSearchFilter >> do: aBlock [
+	self result do: aBlock
+]
+
 { #category : #ui }
 GtSearchFilter >> gtItemsFor: aView [
 	"this is a view that is polymorphic with the one defined in ${method:Collection>>#gtItemsFor:}$"
