@@ -18,16 +18,18 @@ GtTraitsDefinition class >> fromTrait: aTrait [
 ]
 
 { #category : #'api - traits' }
-GtTraitsDefinition >> addTraitNamed: aSymbol [
-	| aTrait aTraitDefinition |
+GtTraitsDefinition >> addTraitNamed: aSymbolOrString [
+	| aTraitName aTrait aTraitDefinition |
 	
-	(self hasTraitNamed: aSymbol)
-		ifTrue: [ self errorTraitAlreadyAdded: aSymbol ].
+	aTraitName := aSymbolOrString asSymbol.
+	
+	(self hasTraitNamed: aTraitName)
+		ifTrue: [ self errorTraitAlreadyAdded: aTraitName ].
 		
-	(self doesTraitExist: aSymbol)
-		ifFalse: [ self errorTraitDoesNotExist: aSymbol ].
+	(self doesTraitExist: aTraitName)
+		ifFalse: [ self errorTraitDoesNotExist: aTraitName ].
 	
-	aTrait := self class environment at: aSymbol.
+	aTrait := self class environment at: aTraitName.
 	aTraitDefinition := GtTraitDefinition fromTrait: aTrait.
 	traits := traits copyWith: aTraitDefinition.
 

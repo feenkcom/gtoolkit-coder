@@ -17,6 +17,17 @@ GtPackageDefinition class >> fromPackage: anRPackage [
 	^ self new fromPackage: anRPackage
 ]
 
+{ #category : #'api - accepting' }
+GtPackageDefinition >> differenceWith: aPackageDefinition [
+	<return: #GtCodeDefinitionDifference>
+	
+	^ self name = aPackageDefinition name
+		ifTrue: [ GtNoDefinitionDifference new ]
+		ifFalse: [ GtPackageDefinitionDifference new
+			oldName: aPackageDefinition name;
+			newName: self name ]
+]
+
 { #category : #'gt - editors' }
 GtPackageDefinition >> editors [
 	^ { self packageEditor }
@@ -53,5 +64,6 @@ GtPackageDefinition >> packageEditor [
 		title: 'Package';
 		definition: self;
 		getSelector: #name;
+		setSelector: #name:;
 		completion: [ GtPackagesCompletionStrategy new ]
 ]

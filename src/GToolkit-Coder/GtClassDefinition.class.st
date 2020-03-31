@@ -57,6 +57,26 @@ GtClassDefinition >> classVariablesEditor [
 			renameEvent: GtBehaviorCoderHeaderClassVarRenamed
 ]
 
+{ #category : #'api - accepting' }
+GtClassDefinition >> differenceWith: aClassDefinition [
+	| aDifference |
+	
+	self
+		assert: [ aClassDefinition class = self class ]
+		description: [ 'Must be of the same type' ].
+	
+	aDifference := GtClassDefinitionDifference new.
+
+	self name = aClassDefinition name
+		ifFalse: [ aDifference nameFrom: aClassDefinition name to: self name ].
+
+	aDifference add: (self category differenceWith: aClassDefinition category).
+	aDifference add: (self slots differenceWith: aClassDefinition slots).
+	aDifference add: (self traits differenceWith: aClassDefinition traits).
+
+	^ aDifference
+]
+
 { #category : #'gt - editors' }
 GtClassDefinition >> editors [
 	<return: #Collection of: #GtCodeDefinitionEditor>

@@ -14,6 +14,13 @@ GtCodeDefinition >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
+{ #category : #'api - accepting' }
+GtCodeDefinition >> differenceWith: aGtCodeDefinition [
+	<return: #GtCodeDefinitionDifference>
+
+	^ GtNoDefinitionDifference new
+]
+
 { #category : #'announcer - subscription' }
 GtCodeDefinition >> dispatchEvent: anEvent [
 	self announcer announce: anEvent

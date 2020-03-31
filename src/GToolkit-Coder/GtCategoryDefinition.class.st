@@ -23,6 +23,22 @@ GtCategoryDefinition >> categoryEditor [
 	}) title: 'Category'
 ]
 
+{ #category : #'api - accepting' }
+GtCategoryDefinition >> differenceWith: aCategoryDefinition [
+	| aDifference |
+	
+	self
+		assert: [ aCategoryDefinition class = self class ]
+		description: [ 'Must be of the same type' ].
+	
+	aDifference := GtCategoryDefinitionDifference new.
+
+	aDifference add: (self package differenceWith: aCategoryDefinition package).
+	aDifference add: (self tag differenceWith: aCategoryDefinition tag).
+
+	^ aDifference
+]
+
 { #category : #'gt - editors' }
 GtCategoryDefinition >> editors [
 	^ { self categoryEditor }

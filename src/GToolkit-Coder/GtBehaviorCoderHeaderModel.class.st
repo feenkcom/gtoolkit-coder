@@ -9,6 +9,11 @@ Class {
 }
 
 { #category : #'api - behavior' }
+GtBehaviorCoderHeaderModel >> apply [
+	self definition applyOn: self behavior
+]
+
+{ #category : #'api - behavior' }
 GtBehaviorCoderHeaderModel >> behavior [
 	<return: #Behavior>
 
@@ -19,13 +24,7 @@ GtBehaviorCoderHeaderModel >> behavior [
 GtBehaviorCoderHeaderModel >> behavior: aBehavior [
 	behavior := aBehavior.
 	
-	definition := aBehavior isClass
-		ifTrue: [ aBehavior isMeta
-			ifTrue: [ GtMetaclassDefinition new ]
-			ifFalse: [ GtClassDefinition fromClass: aBehavior ] ]
-		ifFalse: [ aBehavior isTrait
-			ifTrue: [ GtTraitDefinition fromTrait: aBehavior ]
-			ifFalse: [ self error: 'Uknown entity' ] ].
+	definition := self definitionFrom: aBehavior.
 	
 	self notifyBehaviorChanged: aBehavior
 ]
@@ -42,6 +41,24 @@ GtBehaviorCoderHeaderModel >> definition [
 	<return: #GtCodeDefinition>
 
 	^ definition
+]
+
+{ #category : #initialization }
+GtBehaviorCoderHeaderModel >> definitionFrom: aBehavior [
+	^ aBehavior isClass
+		ifTrue: [ aBehavior isMeta
+			ifTrue: [ GtMetaclassDefinition new ]
+			ifFalse: [ GtClassDefinition fromClass: aBehavior ] ]
+		ifFalse: [ aBehavior isTrait
+			ifTrue: [ GtTraitDefinition fromTrait: aBehavior ]
+			ifFalse: [ self error: 'Uknown entity' ] ]
+]
+
+{ #category : #'api - behavior' }
+GtBehaviorCoderHeaderModel >> difference [
+	<return: #GtCodeDefinitionDifference>
+	
+	^ self definition differenceWith: (self definitionFrom: self behavior)
 ]
 
 { #category : #accessing }

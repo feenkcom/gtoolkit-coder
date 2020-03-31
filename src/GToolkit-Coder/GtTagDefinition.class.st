@@ -17,6 +17,17 @@ GtTagDefinition class >> named: aSymbol [
 	^ self new name: aSymbol
 ]
 
+{ #category : #'api - accepting' }
+GtTagDefinition >> differenceWith: aTagDefinition [
+	<return: #GtCodeDefinitionDifference>
+	
+	^ self name = aTagDefinition name
+		ifTrue: [ GtNoDefinitionDifference new ]
+		ifFalse: [ GtTagDefinitionDifference new
+			oldName: aTagDefinition name;
+			newName: self name ]
+]
+
 { #category : #'gt - editors' }
 GtTagDefinition >> editors [
 	^ { self tagEditor }
@@ -52,5 +63,6 @@ GtTagDefinition >> tagEditor [
 		title: 'Tag';
 		definition: self;
 		getSelector: #name;
+		setSelector: #name:;
 		completion: [ GtPackagesCompletionStrategy new ]
 ]

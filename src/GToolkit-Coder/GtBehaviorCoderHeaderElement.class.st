@@ -55,27 +55,36 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 					margin: self buttonMargin;
 					asElement) } ].
 
+	theProperties addChild: (BrButton new
+		beSmall;
+		look: BrGlamorousButtonWithIconLook new;
+		icon: BrGlamorousIcons accept;
+		label: 'Apply';
+		constraintsDo: [ :c | c grid horizontal span: 2 ];
+		action: [ headerModel difference inspect ]).
+
 	^ theProperties
 ]
 
 { #category : #'private - instance creation' }
 GtBehaviorCoderHeaderElement >> buildDefinitionViewer [
-	| theClassProperties |
+	| theProperties |
 
-	theClassProperties := BlElement new
-		layout: (BlGridLayout new columnCount: 2; cellSpacing: 5);
+	theProperties := BlElement new
+		layout: (BlGridLayout new columnCount: 2);
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical fitContent ].
 
-	"theClassProperties addChildren: { 
-		self buildSectionLabel: 'Super:'.
-		self buildSuperclassEditor.
-		self buildSectionLabel: 'Package:'.
-		self buildPackageAndTagEditor.
-	}."
+	(headerModel editors first: 2) do: [ :eachEditor |
+		theProperties addChildren: { 
+				(self buildSectionLabel: eachEditor title).
+				(eachEditor
+					look: [ self editableLabelLook ];
+					margin: self buttonMargin;
+					asElement) } ].
 	
-	^ theClassProperties
+	^ theProperties
 ]
 
 { #category : #'private - instance creation' }
