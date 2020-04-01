@@ -8,6 +8,16 @@ Class {
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
 
+{ #category : #'api - accepting' }
+GtBehaviorDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aBehavior [
+	^ self subclassResponsibility
+]
+
+{ #category : #'api - accepting' }
+GtBehaviorDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoryChangeOf: aBehavior [
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 GtBehaviorDefinition >> name [
 	<return: #Symbol>

@@ -8,6 +8,19 @@ Class {
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
 
+{ #category : #converting }
+GtSlotRenamedDifference >> asClassRefactorings: aClass [
+	^ RBRenameInstanceVariableRefactoring
+		rename: self oldName
+		to: self newName
+		in: aClass
+]
+
+{ #category : #converting }
+GtSlotRenamedDifference >> asClassRefactoryChange: aClass in: aCompositeRefactoryChange [
+	aCompositeRefactoryChange renameInstanceVariable: self oldName to: self newName in: aClass
+]
+
 { #category : #accessing }
 GtSlotRenamedDifference >> newName [
 	^ newName

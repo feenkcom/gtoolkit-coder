@@ -80,6 +80,16 @@ GtBehaviorCoderHeaderModel >> notifyBehaviorChanged: aBehavior [
 	self dispatchEvent: (GtBehaviorCoderHeaderClassChanged new theClass: aBehavior)
 ]
 
+{ #category : #'api - behavior' }
+GtBehaviorCoderHeaderModel >> refactorings [	
+	^  self definition difference: self difference toRefactoringsOf: self behavior
+]
+
+{ #category : #'api - behavior' }
+GtBehaviorCoderHeaderModel >> refactoryChange [	
+	^  self definition difference: self difference toRefactoryChangeOf: self behavior
+]
+
 { #category : #accessing }
 GtBehaviorCoderHeaderModel >> theClass [
 	self deprecated: 'Use #behavior instead'.

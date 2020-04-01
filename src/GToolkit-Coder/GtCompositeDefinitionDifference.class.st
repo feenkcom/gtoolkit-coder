@@ -28,6 +28,16 @@ GtCompositeDefinitionDifference >> addAll: aCollectionOfDifferences [
 	differences addAll: (aCollectionOfDifferences select: [ :eachDifference | eachDifference hasDifference ])
 ]
 
+{ #category : #converting }
+GtCompositeDefinitionDifference >> asClassRefactorings: aClass [
+	^ self differences flatCollect: [ :eachDifference | (eachDifference asClassRefactorings: aClass) asOrderedCollection ]
+]
+
+{ #category : #converting }
+GtCompositeDefinitionDifference >> asClassRefactoryChange: aClass in: aCompositeRefactoryChange [
+	self differences do: [ :eachDifference | eachDifference asClassRefactoryChange: aClass in: aCompositeRefactoryChange ]
+]
+
 { #category : #accessing }
 GtCompositeDefinitionDifference >> differences [
 	^ differences

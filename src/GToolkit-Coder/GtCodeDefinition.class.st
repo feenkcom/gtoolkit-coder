@@ -2,7 +2,6 @@ Class {
 	#name : #GtCodeDefinition,
 	#superclass : #Object,
 	#instVars : [
-		'headerModel',
 		'announcer',
 		'parent'
 	],

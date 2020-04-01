@@ -10,7 +10,7 @@ GtClassCoderHeaderElementExamples >> coderHeaderElementForClass [
 	| aCoder aCoderHeaderElement |
 
 	aCoder := GtClassCoderExamples new coderForClass.
-	aCoder forClass: BrButtonModel.
+	aCoder forClass: GtBehaviorCoderDummyClass.
 	aCoderHeaderElement := GtBehaviorCoderHeaderElement new classCoder: aCoder.
 	aCoderHeaderElement expand.
 

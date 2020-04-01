@@ -10,7 +10,7 @@ GtBehaviorDefinitionDifference >> applyOn: aBehavior [
 
 { #category : #'api - behavior difference' }
 GtBehaviorDefinitionDifference >> nameFrom: anOldName to: aNewName [
-	self add: (GtClassNameDifference new oldName: anOldName; newName: aNewName)
+	self add: (GtBehaviorNameDifference new oldName: anOldName; newName: aNewName)
 ]
 
 { #category : #'api - refactoring' }
