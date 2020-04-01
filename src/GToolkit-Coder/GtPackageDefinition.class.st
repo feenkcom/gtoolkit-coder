@@ -12,11 +12,6 @@ GtPackageDefinition class >> fromBehavior: aBehavior [
 	^ self new fromBehavior: aBehavior
 ]
 
-{ #category : #'instance creation' }
-GtPackageDefinition class >> fromPackage: anRPackage [
-	^ self new fromPackage: anRPackage
-]
-
 { #category : #'api - accepting' }
 GtPackageDefinition >> differenceWith: aPackageDefinition [
 	<return: #GtCodeDefinitionDifference>
@@ -36,11 +31,6 @@ GtPackageDefinition >> editors [
 { #category : #initialization }
 GtPackageDefinition >> fromBehavior: aBehavior [
 	name := aBehavior package name
-]
-
-{ #category : #initialization }
-GtPackageDefinition >> fromPackage: anRPackage [
-	name := anRPackage name
 ]
 
 { #category : #initialization }

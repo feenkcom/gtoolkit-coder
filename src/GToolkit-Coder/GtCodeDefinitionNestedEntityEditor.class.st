@@ -5,18 +5,8 @@ Class {
 		'editor',
 		'nestedEditors'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Editors'
 }
-
-{ #category : #'private - instance creation' }
-GtCodeDefinitionNestedEntityEditor >> buildSectionLabel: aSectionName [
-	
-	^ BrLabel new
-		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
-		text: aSectionName;
-		margin: (BlInsets top: 5 right: 2);
-		constraintsDo: [ :c | c grid horizontal alignLeft ]
-]
 
 { #category : #'api - instantiation' }
 GtCodeDefinitionNestedEntityEditor >> create [
@@ -38,7 +28,7 @@ GtCodeDefinitionNestedEntityEditor >> create [
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical fitContent ].
-		
+
 	self nestedEditors do: [ :eachEditor |
 		theNestedEditors addChildren: { 
 				(self buildSectionLabel: eachEditor title).
@@ -46,7 +36,7 @@ GtCodeDefinitionNestedEntityEditor >> create [
 					look: lookStencil;
 					margin: margin;
 					asElement) } ].
-				
+
 	aContainer addChild: theNestedEditors.
 
 	^ aContainer
@@ -59,7 +49,8 @@ GtCodeDefinitionNestedEntityEditor >> editor [
 
 { #category : #accessing }
 GtCodeDefinitionNestedEntityEditor >> editor: anObject [
-	editor := anObject
+	editor := anObject.
+	self title: editor title
 ]
 
 { #category : #accessing }

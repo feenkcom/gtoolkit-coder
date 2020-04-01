@@ -76,6 +76,11 @@ GtTraitsDefinition >> doesTraitExist: aTraitName [
 		ifAbsent: [ false ]
 ]
 
+{ #category : #'gt - editors' }
+GtTraitsDefinition >> editors [
+	^ { self traitsEditor }
+]
+
 { #category : #'private - errors' }
 GtTraitsDefinition >> errorTraitAlreadyAdded: aSymbol [ 
 	"Create an error notification that there is already a trait with a given name"
@@ -221,4 +226,24 @@ GtTraitsDefinition >> traitNamed: aSymbol ifFound: aBlock [
 	traits
 		detect: [ :eachTraitDefinition | eachTraitDefinition name = aSymbol ]
 		ifFound: aBlock
+]
+
+{ #category : #'gt - editors' }
+GtTraitsDefinition >> traitsEditor [
+	<return: #GtCodeDefinitionEditor>
+	
+	^ GtCodeDefinitionPluralEditor new
+		definition: self;
+		title: 'Traits';
+		addSelector: #addTraitNamed:;
+		removeSelector: #removeTraitNamed:;
+		renameSelector: #renameTraitNamed:to:;
+		getSelector: #names;
+		addEvent: GtBehaviorTraitAdded;
+		removeEvent: GtBehaviorTraitRemoved;
+		renameEvent: GtBehaviorTraitRenamed;
+		separator: [
+			BrLabel new
+				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
+				text: '+' ]
 ]

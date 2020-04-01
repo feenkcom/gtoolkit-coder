@@ -11,7 +11,7 @@ Class {
 		'removeAnnouncement',
 		'renameAnnouncement'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Editors'
 }
 
 { #category : #accessing }
@@ -65,7 +65,9 @@ GtCodeDefinitionPluralEditor >> create [
 					styler: styler;
 					inputFilter: inputFilter;
 					look: lookStencil create;
-					yourself ]);
+					yourself ];
+			in: [ :aLook | separatorStencil ifNotNil: [ aLook separator: separatorStencil ] ];
+			yourself);
 		namedTags: theInitialNames;
 		when: BrTaggerAddTagRequest do: [ :aRequest | addAction value: aRequest tag ];
 		when: BrTaggerRemoveTagRequest do: [ :aRequest | removeAction value: aRequest tag ];

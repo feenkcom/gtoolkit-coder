@@ -2,9 +2,11 @@ Class {
 	#name : #GtCodeDefinitionCompositeEntityEditor,
 	#superclass : #GtCodeDefinitionEditor,
 	#instVars : [
-		'editors'
+		'editors',
+		'separatorStencil',
+		'showSectionNames'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Editors'
 }
 
 { #category : #'instance creation' }
@@ -17,22 +19,31 @@ GtCodeDefinitionCompositeEntityEditor >> create [
 	<return: #Object>
 
 	^ BlElement new
-		layout: BlFlowLayout horizontal;
+		layout: BlLinearLayout horizontal;
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical fitContent ];
 		addChildren: (Array streamContents: [ :aStream |
+			| aCurrentIndex |
+			aCurrentIndex := 1.
 				editors
 					do: [ :eachEditor |
+						aCurrentIndex := aCurrentIndex + 1.
 						eachEditor
 							margin: margin;
 							look: lookStencil.
 						aStream nextPut: (eachEditor asElement) ]
-					separatedBy: [ aStream nextPut: (BrLabel new
-						look: (BrGlamorousLabelLook new glamorousCodeFontAndSize foreground: BrGlamorousColors darkBorderColor);
-						text: '/';
-						margin: (BlInsets left: ((4 - self margin right) max: 0) right: ((4 - self margin left) max: 0));
-						constraintsDo: [ :c | c flow vertical alignCenter ]) ]])
+					separatedBy: [
+						separatorStencil ifNotNil: [ :aStencil |
+							aStream nextPut: (aStencil asElement
+								margin: (BlInsets left: ((4 - self margin right) max: 0) right: ((4 - self margin left) max: 0));
+								constraintsDo: [ :c | c flow vertical alignCenter ]) ].
+						
+						showSectionNames ifTrue: [
+							aStream nextPut: (self buildSectionLabel: (editors at: aCurrentIndex) title)
+						].
+						
+						 ]])
 ]
 
 { #category : #accessing }
@@ -42,5 +53,29 @@ GtCodeDefinitionCompositeEntityEditor >> editors [
 
 { #category : #accessing }
 GtCodeDefinitionCompositeEntityEditor >> editors: anObject [
-	editors := anObject
+	editors := anObject.
+	self title: editors first title
+]
+
+{ #category : #initialization }
+GtCodeDefinitionCompositeEntityEditor >> initialize [
+	super initialize.
+	
+	separatorStencil := nil.
+	showSectionNames := true
+]
+
+{ #category : #accessing }
+GtCodeDefinitionCompositeEntityEditor >> separator: aStencil [
+	separatorStencil := aStencil asStencil
+]
+
+{ #category : #accessing }
+GtCodeDefinitionCompositeEntityEditor >> withSectionNames [
+	showSectionNames := true
+]
+
+{ #category : #accessing }
+GtCodeDefinitionCompositeEntityEditor >> withoutSectionNames [
+	showSectionNames := false
 ]

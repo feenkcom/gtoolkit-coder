@@ -6,8 +6,18 @@ Class {
 		'margin',
 		'lookStencil'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Editors'
 }
+
+{ #category : #'private - instance creation' }
+GtCodeDefinitionEditor >> buildSectionLabel: aSectionName [
+	
+	^ BrLabel new
+		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
+		text: aSectionName, ':';
+		margin: (BlInsets top: 5 right: 5);
+		constraintsDo: [ :c | c grid horizontal alignLeft ]
+]
 
 { #category : #initialization }
 GtCodeDefinitionEditor >> initialize [

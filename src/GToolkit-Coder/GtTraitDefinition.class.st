@@ -27,8 +27,8 @@ GtTraitDefinition >> editors [
 
 	^ { 
 		self category categoryEditor.
-		self traitsEditor.
-		self slotsEditor.
+		self traits traitsEditor.
+		self slots slotsEditor.
 	}
 ]
 
@@ -37,7 +37,8 @@ GtTraitDefinition >> fromTrait: aTrait [
 	ringDefinition := aTrait asRingDefinition.
 	originalName := aTrait name.
 	
-	category := GtCategoryDefinition fromBehavior: aTrait.
+	category := (GtCategoryDefinition fromBehavior: aTrait) parent: self.
+
 	slots := (GtSlotsDefinition fromTrait: aTrait) parent: self.
 	traits := (GtTraitsDefinition fromTrait: aTrait) parent: self
 ]
@@ -64,52 +65,16 @@ GtTraitDefinition >> gtTraitsFor: aView [
 		view: #gtTraitsFor:
 ]
 
-{ #category : #'api - slots' }
+{ #category : #accessing }
 GtTraitDefinition >> slots [
 	<return: #GtSlotsDefinition>
 
 	^ slots
 ]
 
-{ #category : #'gt - editors' }
-GtTraitDefinition >> slotsEditor [
-	<return: #GtCodeDefinitionEditor>
-	
-	^ GtCodeDefinitionPluralEditor new
-		title: 'Slots';
-		definition: self slots;
-		addSelector: #addSlotNamed:;
-		removeSelector: #removeSlotNamed:;
-		renameSelector: #renameSlotNamed:to:;
-		getSelector: #names;
-		addEvent: GtBehaviorSlotAdded;
-		removeEvent: GtBehaviorSlotRemoved;
-		renameEvent: GtBehaviorSlotRenamed
-]
-
-{ #category : #'api - traits' }
+{ #category : #accessing }
 GtTraitDefinition >> traits [
 	<return: #GtTraitsDefinition>
 	
 	^ traits
-]
-
-{ #category : #'gt - editors' }
-GtTraitDefinition >> traitsEditor [
-	<return: #GtCodeDefinitionEditor>
-	
-	^ GtCodeDefinitionPluralEditor new
-		definition: self traits;
-		title: 'Traits';
-		addSelector: #addTraitNamed:;
-		removeSelector: #removeTraitNamed:;
-		renameSelector: #renameTraitNamed:to:;
-		getSelector: #names;
-		addEvent: GtBehaviorTraitAdded;
-		removeEvent: GtBehaviorTraitRemoved;
-		renameEvent: GtBehaviorTraitRenamed;
-		separator: [
-			BrLabel new
-				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
-				text: '+' ]
 ]

@@ -17,10 +17,9 @@ GtCategoryDefinition class >> fromBehavior: aBehavior [
 GtCategoryDefinition >> categoryEditor [
 	<return: #GtCodeDefinitionEditor>
 	
-	^ (GtCodeDefinitionCompositeEntityEditor withAll: {
+	^ GtCodeDefinitionCompositeEntityEditor withAll: {
 		self package packageEditor.
-		self tag tagEditor
-	}) title: 'Category'
+		self tag tagEditor }
 ]
 
 { #category : #'api - accepting' }
@@ -33,8 +32,8 @@ GtCategoryDefinition >> differenceWith: aCategoryDefinition [
 
 	aDifference := GtCategoryDefinitionDifference new.
 
-	aDifference add: (self package differenceWith: aCategoryDefinition package).
-	aDifference add: (self tag differenceWith: aCategoryDefinition tag).
+	aDifference packageDifference: (self package differenceWith: aCategoryDefinition package).
+	aDifference tagDifference: (self tag differenceWith: aCategoryDefinition tag).
 
 	^ aDifference
 ]
@@ -46,7 +45,7 @@ GtCategoryDefinition >> editors [
 
 { #category : #initialization }
 GtCategoryDefinition >> fromBehavior: aBehavior [
-	package := GtPackageDefinition fromBehavior: aBehavior.
+	package := GtPackageDefinition fromBehavior: aBehavior.	
 	tag := GtTagDefinition fromBehavior: aBehavior
 ]
 

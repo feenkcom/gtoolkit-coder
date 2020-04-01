@@ -2,7 +2,8 @@ Class {
 	#name : #GtTagDefinition,
 	#superclass : #GtCodeDefinition,
 	#instVars : [
-		'name'
+		'name',
+		'originalName'
 	],
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
@@ -14,7 +15,9 @@ GtTagDefinition class >> fromBehavior: aBehavior [
 
 { #category : #'instance creation' }
 GtTagDefinition class >> named: aSymbol [
-	^ self new name: aSymbol
+	^ self new
+		name: aSymbol;
+		originalName: aSymbol
 ]
 
 { #category : #'api - accepting' }
@@ -33,18 +36,26 @@ GtTagDefinition >> editors [
 	^ { self tagEditor }
 ]
 
-{ #category : #'instance creation' }
+{ #category : #initialization }
 GtTagDefinition >> fromBehavior: aBehavior [
-	| aTagName |
-	aTagName := aBehavior category
-		copyReplaceAll: aBehavior package name
-		with: ''.
+	| aCategoryName aPackageName aTagString |
+
+	aCategoryName := aBehavior category.
+	aPackageName := aBehavior package name.
 	
-	aTagName := aTagName trimLeft: [ :aChar | aChar = $- ].
-	aTagName := aTagName
-		ifEmpty: [ 'Uncategorized' ].
+	aTagString := (aCategoryName beginsWith: aPackageName)
+		ifFalse: [ '' ]
+		ifTrue: [ aCategoryName allButFirst: aPackageName size ].
 		
-	name := aTagName asSymbol
+	aTagString := aTagString trimBoth: [ :aChar | (aChar = $-) or: [ aChar isSeparator ] ].
+
+	name := aTagString.
+	originalName := aTagString
+]
+
+{ #category : #initialization }
+GtTagDefinition >> initialize [
+	super initialize
 ]
 
 { #category : #accessing }
@@ -55,6 +66,21 @@ GtTagDefinition >> name [
 { #category : #accessing }
 GtTagDefinition >> name: aSymbol [
 	name := aSymbol asSymbol
+]
+
+{ #category : #accessing }
+GtTagDefinition >> originalName [
+	^ originalName
+]
+
+{ #category : #accessing }
+GtTagDefinition >> originalName: aSymbolOrString [
+	originalName := aSymbolOrString asSymbol
+]
+
+{ #category : #printing }
+GtTagDefinition >> printOn: aStream [
+	aStream print: self name
 ]
 
 { #category : #'gt - editors' }
