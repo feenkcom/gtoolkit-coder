@@ -71,6 +71,11 @@ GtSlotsDefinition >> do: aBlock [
 	slots do: aBlock
 ]
 
+{ #category : #'gt - editors' }
+GtSlotsDefinition >> editors [
+	^ { self slotsEditor }
+]
+
 { #category : #'private - errors' }
 GtSlotsDefinition >> errorSlotAlreadyExists: aSymbol [ 
 	"Create an error notification that there is already a slot with a given name"
@@ -199,4 +204,20 @@ GtSlotsDefinition >> slotNamed: aSymbol [
 	^ slots
 		detect: [ :eachSlotDefinition | eachSlotDefinition name = aSymbol ]
 		ifNone: [ self errorSlotNotFound: aSymbol ]
+]
+
+{ #category : #'gt - editors' }
+GtSlotsDefinition >> slotsEditor [
+	<return: #GtCodeDefinitionEditor>
+	
+	^ GtCodeDefinitionPluralEditor new
+		title: 'Slots';
+		definition: self;
+		addSelector: #addSlotNamed:;
+		removeSelector: #removeSlotNamed:;
+		renameSelector: #renameSlotNamed:to:;
+		getSelector: #names;
+		addEvent: GtBehaviorSlotAdded;
+		removeEvent: GtBehaviorSlotRemoved;
+		renameEvent: GtBehaviorSlotRenamed
 ]

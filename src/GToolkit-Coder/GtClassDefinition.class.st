@@ -84,8 +84,8 @@ GtClassDefinition >> editors [
 	^ { 
 		self superclassEditor.
 		self category categoryEditor.
-	 	self traitsEditor.
-		self slotsEditor.
+	 	self traits traitsEditor.
+		self slots slotsEditor.
 		self classVariablesEditor
 	}
 ]
@@ -99,7 +99,7 @@ GtClassDefinition >> fromClass: aClass [
 	
 	originalName := aClass name.
 
-	category := GtCategoryDefinition fromBehavior: aClass.
+	category := (GtCategoryDefinition fromBehavior: aClass) parent: self.
 	traits := (GtTraitsDefinition fromClass: aClass) parent: self.
 	slots := (GtSlotsDefinition fromClass: aClass) parent: self
 ]
@@ -174,22 +174,6 @@ GtClassDefinition >> slots [
 ]
 
 { #category : #'gt - editors' }
-GtClassDefinition >> slotsEditor [
-	<return: #GtCodeDefinitionEditor>
-	
-	^ GtCodeDefinitionPluralEditor new
-		title: 'Slots';
-		definition: self slots;
-		addSelector: #addSlotNamed:;
-		removeSelector: #removeSlotNamed:;
-		renameSelector: #renameSlotNamed:to:;
-		getSelector: #names;
-		addEvent: GtBehaviorSlotAdded;
-		removeEvent: GtBehaviorSlotRemoved;
-		renameEvent: GtBehaviorSlotRenamed
-]
-
-{ #category : #'gt - editors' }
 GtClassDefinition >> superclassEditor [
 	<return: #GtCodeDefinitionEditor>
 	
@@ -219,24 +203,4 @@ GtClassDefinition >> traits [
 	<return: #GtTraitsDefinition>
 	
 	^ traits
-]
-
-{ #category : #'gt - editors' }
-GtClassDefinition >> traitsEditor [
-	<return: #GtCodeDefinitionEditor>
-	
-	^ GtCodeDefinitionPluralEditor new
-		definition: self traits;
-		title: 'Traits';
-		addSelector: #addTraitNamed:;
-		removeSelector: #removeTraitNamed:;
-		renameSelector: #renameTraitNamed:to:;
-		getSelector: #names;
-		addEvent: GtBehaviorTraitAdded;
-		removeEvent: GtBehaviorTraitRemoved;
-		renameEvent: GtBehaviorTraitRenamed;
-		separator: [
-			BrLabel new
-				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
-				text: '+' ]
 ]

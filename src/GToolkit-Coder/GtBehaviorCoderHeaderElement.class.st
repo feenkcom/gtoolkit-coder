@@ -92,7 +92,7 @@ GtBehaviorCoderHeaderElement >> buildSectionLabel: aSectionName [
 	
 	^ BrLabel new
 		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
-		text: aSectionName;
+		text: aSectionName, ':';
 		margin: (BlInsets top: 5 right: 2);
 		constraintsDo: [ :c | c grid horizontal alignLeft ]
 ]

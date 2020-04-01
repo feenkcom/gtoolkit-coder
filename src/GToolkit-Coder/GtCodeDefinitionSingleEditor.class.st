@@ -5,7 +5,7 @@ Class {
 		'getSelector',
 		'setSelector'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Editors'
 }
 
 { #category : #private }
