@@ -57,11 +57,27 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 
 	theProperties addChild: (BrButton new
 		beSmall;
-		look: BrGlamorousButtonWithIconLook new;
+		look: BrGlamorousButtonWithIconLook new + (BrGlamorousWithDropdownLook
+			handle: [ BrButton new
+				beSmall;
+				icon: BrGlamorousIcons accept;
+				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
+			content: [ | aContainer |
+			aContainer := BlElement new
+				layout: BlFrameLayout new;
+				when: GtPhlowObjectToSpawn do: [ :anEvent | self fireEvent: (GtPhlowObjectToSpawn new
+					object: anEvent object;
+					sourceElement: anEvent target) ];
+				constraintsDo: [ :c |
+					c horizontal fitContent.
+					c vertical fitContent ].
+			(headerModel refactorings gtViewsFor: GtPhlowEmptyView new) asElementDo: [ :anInspectorElement |
+				aContainer addChild: ((anInspectorElement exact: 400@300))
+			] ]);
 		icon: BrGlamorousIcons accept;
 		label: 'Apply';
 		constraintsDo: [ :c | c grid horizontal span: 2 ];
-		action: [ headerModel difference inspect ]).
+		action: [  ]).
 
 	^ theProperties
 ]

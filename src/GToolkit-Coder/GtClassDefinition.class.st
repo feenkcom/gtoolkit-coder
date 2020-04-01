@@ -58,6 +58,18 @@ GtClassDefinition >> classVariablesEditor [
 ]
 
 { #category : #'api - accepting' }
+GtClassDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aClass [
+	^ aGtCodeDefinitionDiffrence asClassRefactorings: aClass
+]
+
+{ #category : #'api - accepting' }
+GtClassDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoryChangeOf: aClass [
+	<return: #RBRefactoryChange>
+
+	^ aGtCodeDefinitionDiffrence asClassRefactoryChange: aClass
+]
+
+{ #category : #'api - accepting' }
 GtClassDefinition >> differenceWith: aClassDefinition [
 	| aDifference |
 	

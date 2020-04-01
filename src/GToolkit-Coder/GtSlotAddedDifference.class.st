@@ -7,6 +7,18 @@ Class {
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
 
+{ #category : #converting }
+GtSlotAddedDifference >> asClassRefactorings: aClass [
+	^ RBAddInstanceVariableRefactoring
+		variable: self slotName
+		class: aClass
+]
+
+{ #category : #converting }
+GtSlotAddedDifference >> asClassRefactoryChange: aClass in: aCompositeRefactoryChange [
+	aCompositeRefactoryChange addInstanceVariable: self slotName to: aClass
+]
+
 { #category : #printing }
 GtSlotAddedDifference >> printOn: aStream [
 	aStream

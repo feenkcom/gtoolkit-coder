@@ -48,6 +48,25 @@ GtCodeDefinitionDifference class >> difference: aCollectionOfDefinitions with: a
 	removedDefs do: aRemovedBlock
 ]
 
+{ #category : #converting }
+GtCodeDefinitionDifference >> asClassRefactorings: aClass [
+	^ #()
+]
+
+{ #category : #converting }
+GtCodeDefinitionDifference >> asClassRefactoryChange: aClass [
+	| aCompositeRefactoryChange |
+	
+	aCompositeRefactoryChange := RBRefactoryChangeManager changeFactory compositeRefactoryChange.
+	self asClassRefactoryChange: aClass in: aCompositeRefactoryChange.
+	
+	^ aCompositeRefactoryChange
+]
+
+{ #category : #converting }
+GtCodeDefinitionDifference >> asClassRefactoryChange: aClass in: aCompositeRefactoryChange [
+]
+
 { #category : #testing }
 GtCodeDefinitionDifference >> hasDifference [
 	<return: #Boolean>
