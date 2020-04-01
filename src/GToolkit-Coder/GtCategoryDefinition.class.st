@@ -32,8 +32,8 @@ GtCategoryDefinition >> differenceWith: aCategoryDefinition [
 
 	aDifference := GtCategoryDefinitionDifference new.
 
-	aDifference add: (self package differenceWith: aCategoryDefinition package).
-	aDifference add: (self tag differenceWith: aCategoryDefinition tag).
+	aDifference packageDifference: (self package differenceWith: aCategoryDefinition package).
+	aDifference tagDifference: (self tag differenceWith: aCategoryDefinition tag).
 
 	^ aDifference
 ]
