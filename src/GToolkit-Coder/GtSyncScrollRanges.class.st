@@ -83,8 +83,10 @@ GtSyncScrollRanges >> leftLineFor: rightIndex [
 	range := ranges
 		detect: [ :each | rightIndex between: each rightFirst and: each rightLast ]
 		ifNone: [ ^ 0 ].
+	range rightSize = 0
+		ifTrue: [ ^ 0 ].
 	^ ((rightIndex asFloat - range rightFirst) / range rightSize
-		* range leftSize + range leftFirst) rounded
+		* range leftSize + range leftFirst) rounded 
 ]
 
 { #category : #'private-creation' }
@@ -113,6 +115,8 @@ GtSyncScrollRanges >> rightLineFor: leftIndex [
 	range := ranges
 		detect: [ :each | leftIndex between: each leftFirst and: each leftLast ]
 		ifNone: [ ^ 0 ].
+	range leftSize = 0
+		ifTrue: [ ^ 0 ].
 	^ ((leftIndex asFloat - range leftFirst) / range leftSize
-		* range rightSize + range rightFirst) rounded
+		* range rightSize + range rightFirst) rounded 
 ]
