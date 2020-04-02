@@ -9,8 +9,9 @@ Class {
 }
 
 { #category : #converting }
-GtSlotRenamedDifference >> asClassRefactorings: aClass [
+GtSlotRenamedDifference >> asClassRefactorings: aClass in: anRBModel [
 	^ RBRenameInstanceVariableRefactoring
+		model: anRBModel
 		rename: self oldName
 		to: self newName
 		in: aClass

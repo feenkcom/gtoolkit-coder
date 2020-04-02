@@ -19,6 +19,23 @@ GtSlotDefinition class >> named: aName [
 	^ self new named: aName
 ]
 
+{ #category : #converting }
+GtSlotDefinition >> asDefinitionString [
+	^ String streamContents: [ :aStream |
+		aStream
+			print: self name.
+		self isSpecial
+			ifTrue: [
+				aStream
+					nextPutAll: ' => ';
+					print: self type ] ]
+]
+
+{ #category : #initialization }
+GtSlotDefinition >> defaultSlotType [
+	^ InstanceVariableSlot name
+]
+
 { #category : #initialization }
 GtSlotDefinition >> fromSlot: aSlot [
 
@@ -28,7 +45,7 @@ GtSlotDefinition >> fromSlot: aSlot [
 
 	name := aSlot name.
 	originalName := name.
-	type := aSlot class name
+	type := (aSlot printString copyAfter: $>) trimBoth asSymbol
 ]
 
 { #category : #initialization }
@@ -36,6 +53,11 @@ GtSlotDefinition >> initialize [
 	super initialize.
 	
 	
+]
+
+{ #category : #testing }
+GtSlotDefinition >> isSpecial [
+	^ self type ~= self defaultSlotType
 ]
 
 { #category : #accessing }
@@ -52,7 +74,7 @@ GtSlotDefinition >> name: anObject [
 GtSlotDefinition >> named: aName [
 	name := aName.
 	originalName := aName.
-	type := InstanceVariableSlot name
+	type := self defaultSlotType
 ]
 
 { #category : #accessing }

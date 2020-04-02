@@ -13,6 +13,11 @@ GtCodeDefinition >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
+{ #category : #converting }
+GtCodeDefinition >> asDefinitionString [
+	^ ''
+]
+
 { #category : #'api - accepting' }
 GtCodeDefinition >> differenceWith: aGtCodeDefinition [
 	<return: #GtCodeDefinitionDifference>
@@ -30,6 +35,16 @@ GtCodeDefinition >> editors [
 	<return: #Collection of: #GtCodeDefinitionEditor>
 	
 	^ #()
+]
+
+{ #category : #'gt-extension' }
+GtCodeDefinition >> gtDefinitionFor: aView [
+	<gtView>
+
+	^ aView textEditor
+		title: 'Definition';
+		priority: 1;
+		text: [ self asDefinitionString ]
 ]
 
 { #category : #'gt-extension' }

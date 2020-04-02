@@ -20,3 +20,33 @@ Class {
 	],
 	#category : #'GToolkit-Coder-Examples-Dummies'
 }
+
+{ #category : #accessing }
+GtBehaviorCoderDummyClass >> instVarA [
+	^ instVarA
+]
+
+{ #category : #accessing }
+GtBehaviorCoderDummyClass >> instVarA: anObject [
+	instVarA := anObject
+]
+
+{ #category : #accessing }
+GtBehaviorCoderDummyClass >> instVarB [
+	^ instVarB
+]
+
+{ #category : #accessing }
+GtBehaviorCoderDummyClass >> instVarB: anObject [
+	instVarB := anObject
+]
+
+{ #category : #accessing }
+GtBehaviorCoderDummyClass >> instVarC [
+	^ instVarC
+]
+
+{ #category : #accessing }
+GtBehaviorCoderDummyClass >> instVarC: anObject [
+	instVarC := anObject
+]

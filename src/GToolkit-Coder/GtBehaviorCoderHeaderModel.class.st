@@ -36,6 +36,22 @@ GtBehaviorCoderHeaderModel >> behaviorName [
 	^ self behavior name
 ]
 
+{ #category : #'api - behavior' }
+GtBehaviorCoderHeaderModel >> changes [
+	| theRefactorings aModel |
+	
+	aModel := RBNamespace new.
+	theRefactorings := self refactoringsIn: aModel.
+
+	theRefactorings do: [ :eachRefactoring |
+		[
+		eachRefactoring transform  ]
+			on: RBRefactoringError
+			do: [:ex | ] ].
+		
+	^ aModel changes gtWhatToDisplay
+]
+
 { #category : #accessing }
 GtBehaviorCoderHeaderModel >> definition [
 	<return: #GtCodeDefinition>
@@ -45,13 +61,7 @@ GtBehaviorCoderHeaderModel >> definition [
 
 { #category : #initialization }
 GtBehaviorCoderHeaderModel >> definitionFrom: aBehavior [
-	^ aBehavior isClass
-		ifTrue: [ aBehavior isMeta
-			ifTrue: [ GtMetaclassDefinition new ]
-			ifFalse: [ GtClassDefinition fromClass: aBehavior ] ]
-		ifFalse: [ aBehavior isTrait
-			ifTrue: [ GtTraitDefinition fromTrait: aBehavior ]
-			ifFalse: [ self error: 'Uknown entity' ] ]
+	^ GtBehaviorDefinition fromBehavior: aBehavior
 ]
 
 { #category : #'api - behavior' }
@@ -83,6 +93,11 @@ GtBehaviorCoderHeaderModel >> notifyBehaviorChanged: aBehavior [
 { #category : #'api - behavior' }
 GtBehaviorCoderHeaderModel >> refactorings [	
 	^  self definition difference: self difference toRefactoringsOf: self behavior
+]
+
+{ #category : #'api - behavior' }
+GtBehaviorCoderHeaderModel >> refactoringsIn: anRBModel [
+	^  self definition difference: self difference toRefactoringsOf: self behavior in: anRBModel
 ]
 
 { #category : #'api - behavior' }
