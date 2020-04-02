@@ -12,6 +12,11 @@ GtPackageDefinition class >> fromBehavior: aBehavior [
 	^ self new fromBehavior: aBehavior
 ]
 
+{ #category : #converting }
+GtPackageDefinition >> asDefinitionString [
+	^ self name
+]
+
 { #category : #'api - accepting' }
 GtPackageDefinition >> differenceWith: aPackageDefinition [
 	<return: #GtCodeDefinitionDifference>

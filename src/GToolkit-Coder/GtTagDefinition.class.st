@@ -20,6 +20,11 @@ GtTagDefinition class >> named: aSymbol [
 		originalName: aSymbol
 ]
 
+{ #category : #converting }
+GtTagDefinition >> asDefinitionString [
+	^ self name
+]
+
 { #category : #'api - accepting' }
 GtTagDefinition >> differenceWith: aTagDefinition [
 	<return: #GtCodeDefinitionDifference>

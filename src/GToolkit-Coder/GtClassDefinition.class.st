@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'traits',
 		'slots',
-		'category'
+		'category',
+		'layout'
 	],
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
@@ -20,6 +21,53 @@ GtClassDefinition >> addClassVarNamed: aString [
 	
 	aNewClassVariable := ringDefinition addClassVarNamed: aString.
 	self notifyClassVarAdded: aNewClassVariable
+]
+
+{ #category : #converting }
+GtClassDefinition >> asDefinitionString [
+	<return: #String>
+	| aStream poolString|
+
+	poolString := ''.
+
+	aStream := (String new: 800) writeStream.
+	self theSuperclass 
+		ifNil: [ aStream nextPutAll: 'ProtoObject' ]
+		ifNotNil: [aStream nextPutAll: self theSuperclassName].
+
+	aStream nextPutAll: ' subclass: ';
+			store: self name.
+
+	(self traits isEmpty) ifFalse: [
+		aStream cr; tab; nextPutAll: 'uses: ';
+			nextPutAll: self traits asDefinitionString ].		
+			
+	(self layout layoutName = #FixedLayout) ifFalse: [
+		aStream cr; tab; nextPutAll: 'layout: ';
+			nextPutAll: self layout layoutName].
+	
+	"Slots"
+	aStream cr; tab; nextPutAll: 'slots: ';
+			nextPutAll: self slots asDefinitionString.
+	
+	"Class varsL"
+	"aStream cr; tab; nextPutAll: 'classVariables: ';
+			nextPutAll: self owner classVariableDefinitionString."
+	
+	"Pool Dictionaries"
+	"poolString = '' ifFalse: [
+		aStream cr; tab; nextPutAll: 'poolDictionaries: ';
+			store: poolString]."
+
+	aStream cr; tab; nextPutAll: 'package: ';
+			store: self category asDefinitionString.
+
+	self theSuperclass ifNil: [ 
+		aStream nextPutAll: '.'; cr.
+		aStream nextPutAll: self name.
+		aStream space; nextPutAll: 'superclass: nil'. ].
+
+	^ aStream contents
 ]
 
 { #category : #accessing }
@@ -60,6 +108,11 @@ GtClassDefinition >> classVariablesEditor [
 { #category : #'api - accepting' }
 GtClassDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aClass [
 	^ aGtCodeDefinitionDiffrence asClassRefactorings: aClass
+]
+
+{ #category : #'api - accepting' }
+GtClassDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aClass in: anRBModel [
+	^ aGtCodeDefinitionDiffrence asClassRefactorings: aClass in: anRBModel
 ]
 
 { #category : #'api - accepting' }
@@ -104,7 +157,11 @@ GtClassDefinition >> editors [
 
 { #category : #initialization }
 GtClassDefinition >> fromClass: aClass [
+	| anEnvironment |
 	"Initialize me from a given real Class"
+	
+	anEnvironment := RGEnvironment new.
+	anEnvironment backend: (RGReadOnlyImageBackend for: anEnvironment).
 	
 	ringDefinition := aClass asRingDefinition.
 	ringDefinition superclass: aClass superclass asRingDefinition.
@@ -113,7 +170,9 @@ GtClassDefinition >> fromClass: aClass [
 
 	category := (GtCategoryDefinition fromBehavior: aClass) parent: self.
 	traits := (GtTraitsDefinition fromClass: aClass) parent: self.
-	slots := (GtSlotsDefinition fromClass: aClass) parent: self
+	slots := (GtSlotsDefinition fromClass: aClass) parent: self.
+	
+	layout := aClass classLayout asRingMinimalDefinitionIn: anEnvironment
 ]
 
 { #category : #'gt-extension' }
@@ -136,6 +195,11 @@ GtClassDefinition >> gtTraitsFor: aView [
 		priority: 3;
 		object: [ traits ];
 		view: #gtTraitsFor:
+]
+
+{ #category : #accessing }
+GtClassDefinition >> layout [
+	^ layout
 ]
 
 { #category : #'private - notifying' }

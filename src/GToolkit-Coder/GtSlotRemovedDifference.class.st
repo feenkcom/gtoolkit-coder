@@ -8,8 +8,9 @@ Class {
 }
 
 { #category : #converting }
-GtSlotRemovedDifference >> asClassRefactorings: aClass [
+GtSlotRemovedDifference >> asClassRefactorings: aClass in: anRBModel [
 	^ RBRemoveInstanceVariableRefactoring
+		model: anRBModel
 		variable: self slotName
 		class: aClass
 ]

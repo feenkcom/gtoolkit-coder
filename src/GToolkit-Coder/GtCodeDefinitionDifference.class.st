@@ -50,6 +50,11 @@ GtCodeDefinitionDifference class >> difference: aCollectionOfDefinitions with: a
 
 { #category : #converting }
 GtCodeDefinitionDifference >> asClassRefactorings: aClass [
+	^ self asClassRefactorings: aClass in: RBNamespace new
+]
+
+{ #category : #converting }
+GtCodeDefinitionDifference >> asClassRefactorings: aClass in: anRBModel [
 	^ #()
 ]
 

@@ -22,12 +22,14 @@ GtSlotsDefinition class >> fromTrait: aTrait [
 
 { #category : #'api - slots' }
 GtSlotsDefinition >> addSlotNamed: aSymbol [
-	| aNewSlot |
+	| aSlotName aNewSlot |
 	
-	(self hasSlotNamed: aSymbol)
-		ifTrue: [ self errorSlotAlreadyExists: aSymbol ].
+	aSlotName := aSymbol asSymbol.
+	
+	(self hasSlotNamed: aSlotName)
+		ifTrue: [ self errorSlotAlreadyExists: aSlotName ].
 
-	aNewSlot := GtSlotDefinition named: aSymbol.
+	aNewSlot := GtSlotDefinition named: aSlotName.
 	slots := slots copyWith: aNewSlot.
 
 	self notifySlotAdded: aNewSlot
@@ -36,6 +38,24 @@ GtSlotsDefinition >> addSlotNamed: aSymbol [
 { #category : #accessing }
 GtSlotsDefinition >> all [
 	^ slots
+]
+
+{ #category : #converting }
+GtSlotsDefinition >> asDefinitionString [
+	^ String streamContents: [ :str | 
+		| isSpecial |
+		str nextPutAll: '{ '.
+	
+		slots do: [ :eachSlot |
+				str nextPutAll: eachSlot asDefinitionString.
+				isSpecial := eachSlot isSpecial ]
+			separatedBy: [ 
+				str nextPutAll: '. '.  
+				isSpecial ifTrue: [ str cr;tab;tab;tab;tab ] ].
+			
+		slots ifNotEmpty: [ str nextPutAll: '.'  ].
+
+		str nextPutAll: ' }'. ]
 ]
 
 { #category : #accessing }
@@ -118,9 +138,12 @@ GtSlotsDefinition >> gtSlotsFor: aView [
 { #category : #'api - slots' }
 GtSlotsDefinition >> hasSlotNamed: aSymbol [
 	<return: #Boolean>
+	| aSlotName |
+	
+	aSlotName := aSymbol asSymbol.
 
 	^ slots
-		detect: [ :eachSlotDefinition | eachSlotDefinition name = aSymbol ]
+		detect: [ :eachSlotDefinition | eachSlotDefinition name = aSlotName ]
 		ifFound: [ true ]
 		ifNone: [ false ]
 ]

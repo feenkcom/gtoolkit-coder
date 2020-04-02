@@ -37,9 +37,13 @@ GtBehaviorCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
 	self content: [ BlElement new ]
 ]
 
+{ #category : #'private - actions' }
+GtBehaviorCoderHeaderElement >> applyRefactoring [
+]
+
 { #category : #'private - instance creation' }
 GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
-	| theProperties |
+	| theProperties anAcceptButton |
 		
 	theProperties := BlElement new
 		layout: (BlGridLayout new columnCount: 2);
@@ -55,12 +59,13 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 					margin: self buttonMargin;
 					asElement) } ].
 
-	theProperties addChild: (BrButton new
+	theProperties addChild: (anAcceptButton := BrButton new
 		beSmall;
+		icon: BrGlamorousIcons accept;
 		look: BrGlamorousButtonWithIconLook new + (BrGlamorousWithDropdownLook
 			handle: [ BrButton new
 				beSmall;
-				icon: BrGlamorousIcons accept;
+				icon: BrGlamorousIcons empty asElement;
 				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
 			content: [ | aContainer |
 			aContainer := BlElement new
@@ -69,15 +74,11 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 					object: anEvent object;
 					sourceElement: anEvent target) ];
 				constraintsDo: [ :c |
-					c horizontal fitContent.
+					c horizontal exact: self previewWidth.
 					c vertical fitContent ].
-			(headerModel refactorings gtViewsFor: GtPhlowEmptyView new) asElementDo: [ :anInspectorElement |
-				aContainer addChild: ((anInspectorElement exact: 400@300))
-			] ]);
-		icon: BrGlamorousIcons accept;
+			aContainer addChild: (self buildRefactoringPreviewFrom: anAcceptButton) ]);
 		label: 'Apply';
-		constraintsDo: [ :c | c grid horizontal span: 2 ];
-		action: [  ]).
+		constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
 	^ theProperties
 ]
@@ -100,7 +101,60 @@ GtBehaviorCoderHeaderElement >> buildDefinitionViewer [
 					margin: self buttonMargin;
 					asElement) } ].
 	
+	
+	
 	^ theProperties
+]
+
+{ #category : #'private - instance creation' }
+GtBehaviorCoderHeaderElement >> buildHeaderRefactoringPreview [
+	^ GtBehaviorHeaderDifferencePreviewElement new
+		behavior: headerModel behavior
+		definition: headerModel definition
+		difference: headerModel difference
+]
+
+{ #category : #'private - instance creation' }
+GtBehaviorCoderHeaderElement >> buildRefactoringChangesPreview [
+	| theChanges |
+	
+	theChanges := headerModel changes.
+	
+	^ BrSimpleList new
+		hMatchParent;
+		vFitContent;
+		in: [ :l | l children first constraintsDo: [ :c | c maxHeight: 200 ] ];
+		items: theChanges;
+		stencil: [ :eachChange |
+			(eachChange respondsTo: #gtDiff)
+				ifTrue: [ eachChange gtDiff asElement vFitContent beMini ]
+				ifFalse: [ BrLabel new
+						look: BrGlamorousLabelLook new;
+						text: eachChange printString ] ]
+]
+
+{ #category : #'private - instance creation' }
+GtBehaviorCoderHeaderElement >> buildRefactoringPreviewFrom: aButtonElement [
+	| aContainer |
+
+	aContainer := BrVerticalPane new
+		hMatchParent;
+		vFitContent.
+
+	aContainer addChild: self buildHeaderRefactoringPreview.
+	aContainer addChild: self buildRefactoringChangesPreview.
+	aContainer addChild: (BrButton new
+		beSmall;
+		icon: BrGlamorousIcons accept asElement;
+		look: BrGlamorousButtonWithIconLook new;
+		label: 'Apply';
+		margin: (BlInsets top: 0 left: 5 bottom: 5 right: 0);
+		action: [
+			aButtonElement fireEvent: (BrDropdownHideWish new anchor: aButtonElement).
+			self applyRefactoring ];
+		yourself).
+
+	^ aContainer
 ]
 
 { #category : #'private - instance creation' }
@@ -165,4 +219,9 @@ GtBehaviorCoderHeaderElement >> initialize [
 GtBehaviorCoderHeaderElement >> initializeElements [
 	self header: [ self buildDefinitionViewer ].
 	self content: [ self buildDefinitionEditor ]
+]
+
+{ #category : #'private - instance creation' }
+GtBehaviorCoderHeaderElement >> previewWidth [
+	^ 500
 ]

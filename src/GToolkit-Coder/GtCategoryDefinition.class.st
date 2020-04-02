@@ -13,6 +13,19 @@ GtCategoryDefinition class >> fromBehavior: aBehavior [
 	^ self new fromBehavior: aBehavior
 ]
 
+{ #category : #converting }
+GtCategoryDefinition >> asDefinitionString [
+	
+	^ String streamContents: [ :aStream |
+		| aTag |
+		aTag := self tag asDefinitionString.
+	
+		aStream nextPutAll: self package asDefinitionString.
+		aTag ifNotEmpty: [
+			aStream nextPut: $-.
+			aStream nextPutAll: aTag ] ]
+]
+
 { #category : #'gt - editors' }
 GtCategoryDefinition >> categoryEditor [
 	<return: #GtCodeDefinitionEditor>

@@ -41,6 +41,17 @@ GtTraitsDefinition >> all [
 	^ traits
 ]
 
+{ #category : #converting }
+GtTraitsDefinition >> asDefinitionString [
+	self isEmpty
+		ifTrue: [ ^ '{}' ].
+
+	^ String streamContents: [ :stream | 
+		traits
+			do: [ :each | stream nextPutAll: each name ]
+			separatedBy: [ stream nextPutAll: ' + ' ] ]	
+]
+
 { #category : #accessing }
 GtTraitsDefinition >> at: anIndex [
 	<return: #GtTraitsDefinition>
@@ -140,6 +151,13 @@ GtTraitsDefinition >> initialize [
 	super initialize.
 	
 	traits := #()
+]
+
+{ #category : #accessing }
+GtTraitsDefinition >> isEmpty [
+	<return: #Boolean>
+
+	^ self size isZero
 ]
 
 { #category : #accessing }
