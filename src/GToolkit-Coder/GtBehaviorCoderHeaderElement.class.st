@@ -170,7 +170,7 @@ GtBehaviorCoderHeaderElement >> classCoder: aGtClassCoder [
 	classCoder := aGtClassCoder.	
 	classCoder
 		when: GtCoderClassUpdatedAnnouncement
-			do: [ :anAnnouncement | headerModel theClass: anAnnouncement classOrMetaClass ];
+			do: [ :anAnnouncement | headerModel behavior: anAnnouncement classOrMetaClass ];
 		when: GtCoderPackageUpdatedAnnouncement
 			do: [ :anAnnouncement | self actOnPackageChanged: anAnnouncement ].
 			
