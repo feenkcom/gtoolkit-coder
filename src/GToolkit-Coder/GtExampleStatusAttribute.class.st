@@ -22,7 +22,7 @@ GtExampleStatusAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorEleme
 		label: self resultLabel.
 	(result notNil and: [ result isError ])
 		ifTrue: [ aButtonElement background: (BrGlamorousColors errorBackgroundColor alpha: 0.5) ].
-	aButtonElement padding: (BlInsets top: 4 left: 0 bottom: 0 right: 0).
+	aButtonElement padding: (BlInsets top: 1 left: 0 bottom: 0 right: 0).
 	aButtonElement margin: (BlInsets left: 5).
 	result ifNil: [ ^ aButtonElement ].
 	result isSuccess ifTrue: [ 
