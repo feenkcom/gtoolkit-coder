@@ -61,23 +61,33 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 					asElement) } ].
 
 	theProperties addChild: (anAcceptButton := BrButton new
-		beSmall;
 		icon: BrGlamorousIcons accept;
+		beSmall;
 		look: BrGlamorousButtonWithIconLook new + (BrGlamorousWithDropdownLook
 			handle: [ BrButton new
-				beSmall;
 				icon: BrGlamorousIcons empty asElement;
+				beSmall;
 				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
 			content: [ | aContainer |
 			aContainer := BlElement new
-				layout: BlFrameLayout new;
+				layout: BlLinearLayout vertical;
 				when: GtPhlowObjectToSpawn do: [ :anEvent | self fireEvent: (GtPhlowObjectToSpawn new
 					object: anEvent object;
 					sourceElement: anEvent target) ];
 				constraintsDo: [ :c |
 					c horizontal exact: self previewWidth.
-					c vertical fitContent ].
-			aContainer addChild: (self buildRefactoringPreviewFrom: anAcceptButton) ]);
+					c vertical fitContentLimitedOffset: 20 ].
+			aContainer addChild: self buildRefactoringPreview.
+			aContainer addChild: (BrButton new
+				icon: BrGlamorousIcons accept asElement;
+				beSmall;
+				look: BrGlamorousButtonWithIconLook new;
+				label: 'Apply';
+				margin: (BlInsets top: 0 left: 5 bottom: 5 right: 0);
+				action: [
+					anAcceptButton fireEvent: (BrDropdownHideWish new anchor: anAcceptButton).
+					self applyRefactoring ];
+				yourself). ]);
 		label: 'Apply';
 		constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
@@ -116,29 +126,30 @@ GtBehaviorCoderHeaderElement >> buildHeaderRefactoringPreview [
 ]
 
 { #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> buildRefactoringPreviewFrom: aButtonElement [
-	| aContainer |
+GtBehaviorCoderHeaderElement >> buildRefactoringPreview [
+	| aHeaderPreview theRefactoringsPreview aContainer |
+	
+	aHeaderPreview := (self buildHeaderRefactoringPreview hExact: self previewWidth * 1.75)
+		asScalableElement
+			width: self previewWidth;
+			fitWidth;
+			constraintsDo: [ :c | c vertical fitContent ].
+			
+			
+	theRefactoringsPreview := (GtRefactoringsElement new
+		hExact: self previewWidth * 1.75;
+		vFitContent;
+		refactorings: headerModel refactorings) asScalableElement
+			width: self previewWidth;
+			fitWidth;
+			constraintsDo: [ :c | c vertical fitContent ].
 
 	aContainer := BrVerticalPane new
-		hMatchParent;
-		vFitContent.
+		hExact: self previewWidth;
+		vFitContentLimited.
 
-	aContainer addChild: self buildHeaderRefactoringPreview.
-	aContainer addChild: (GtRefactoringsElement new
-		vFitContent;
-		constraintsDo: [ :c | c maxHeight: 200 ];
-		in: [ :e | e children first constraintsDo: [ :c | c maxHeight: 200 ] ];
-		refactorings: headerModel refactorings).
-	aContainer addChild: (BrButton new
-		beSmall;
-		icon: BrGlamorousIcons accept asElement;
-		look: BrGlamorousButtonWithIconLook new;
-		label: 'Apply';
-		margin: (BlInsets top: 0 left: 5 bottom: 5 right: 0);
-		action: [
-			aButtonElement fireEvent: (BrDropdownHideWish new anchor: aButtonElement).
-			self applyRefactoring ];
-		yourself).
+	aContainer addChild: aHeaderPreview.
+	aContainer addChild: theRefactoringsPreview asScrollableElement.
 
 	^ aContainer
 ]
@@ -209,5 +220,7 @@ GtBehaviorCoderHeaderElement >> initializeElements [
 
 { #category : #'private - instance creation' }
 GtBehaviorCoderHeaderElement >> previewWidth [
-	^ 500
+	^ self isAttachedToSceneGraph
+		ifTrue: [ (self topMostParent extent / 2.0) x ]
+		ifFalse: [ 500 ]
 ]
