@@ -17,7 +17,7 @@ GtUserActivatableChangeElement >> fromActivatableChange: aGtUserActivatableChang
 	activatableChange := aGtUserActivatableChange.
 	
 	self addChild: ((aGtUserActivatableChange change respondsTo: #gtDiff)
-		ifTrue: [ aGtUserActivatableChange change gtDiff asElement vFitContent beMini ]
+		ifTrue: [ aGtUserActivatableChange change gtDiff asElement vFitContent beSmall ]
 		ifFalse: [ BrLabel new
 				look: BrGlamorousLabelLook new;
 				text: aGtUserActivatableChange change printString ])
