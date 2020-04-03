@@ -5,10 +5,36 @@ Class {
 		'sidebar',
 		'toggle',
 		'container',
-		'borderWidth'
+		'borderWidth',
+		'borderPaint',
+		'borderFocusedPaint',
+		'cornerRadius',
+		'styleLook'
 	],
 	#category : #'GToolkit-Coder-Looks'
 }
+
+{ #category : #accessing }
+GtCoderExpanderWithoutShadowLook >> borderFocusedPaint [
+	^ borderFocusedPaint
+]
+
+{ #category : #accessing }
+GtCoderExpanderWithoutShadowLook >> borderFocusedPaint: aPaintOrColor [
+	borderFocusedPaint := aPaintOrColor.
+	styleLook requestStates
+]
+
+{ #category : #accessing }
+GtCoderExpanderWithoutShadowLook >> borderPaint [
+	^ borderPaint
+]
+
+{ #category : #accessing }
+GtCoderExpanderWithoutShadowLook >> borderPaint: aPaintOrColor [
+	borderPaint := aPaintOrColor.
+	styleLook requestStates
+]
 
 { #category : #accessing }
 GtCoderExpanderWithoutShadowLook >> borderWidth [
@@ -17,7 +43,29 @@ GtCoderExpanderWithoutShadowLook >> borderWidth [
 
 { #category : #accessing }
 GtCoderExpanderWithoutShadowLook >> borderWidth: anInteger [
-	borderWidth := anInteger
+	borderWidth := anInteger.
+	styleLook requestStates
+]
+
+{ #category : #accessing }
+GtCoderExpanderWithoutShadowLook >> cornerRadius [
+	^ cornerRadius
+]
+
+{ #category : #accessing }
+GtCoderExpanderWithoutShadowLook >> cornerRadius: aNumber [
+	cornerRadius := aNumber.
+	styleLook requestStates
+]
+
+{ #category : #initialization }
+GtCoderExpanderWithoutShadowLook >> defaultBorderPaint [
+	^ BrGlamorousColors lightBorderColor
+]
+
+{ #category : #initialization }
+GtCoderExpanderWithoutShadowLook >> defaultFocusedBorderPaint [
+	^ (BrGlamorousColors primaryBorderColor alpha: 0.4) gtOpaqueColorOnWhite
 ]
 
 { #category : #initialization }
@@ -26,6 +74,10 @@ GtCoderExpanderWithoutShadowLook >> initialize [
 	super initialize.
 
 	borderWidth := 0.
+	cornerRadius := 3.
+
+	borderPaint := self defaultBorderPaint.
+	borderFocusedPaint := self defaultFocusedBorderPaint.
 
 	aTriangle := self newTriangle.
 	toggle := self newToggle.
@@ -38,18 +90,19 @@ GtCoderExpanderWithoutShadowLook >> initialize [
 		padding: (BlInsets all: 4);
 		layout: BlLinearLayout vertical.
 
-	self add: (BrInteractiveCommonLook new
+	self add: (styleLook := BrInteractiveCommonLook new
 			default: [ :aWidget | 
-				sidebar background: Color veryVeryLightGray.
-				aWidget border: (BlBorder paint: Color veryVeryLightGray width: self borderWidth) ];
+				sidebar background: self borderPaint.
+				aWidget border: (BlBorder paint: self borderPaint width: self borderWidth) ];
 			collapsed: [ :aWidget | 
 				aTriangle geometry: self newCollapsedTriangleGeometry.
 				aWidget background: Color transparent ];
 			expanded: [ :aWidget | 
 				aTriangle geometry: self newExpandedTriangleGeometry.
 				aWidget background: Color white ];
-			unfocused: [ :aWidget | sidebar background: Color veryVeryLightGray ];
-			focused: [ :aWidget | sidebar background: (BrGlamorousColors primaryBorderColor alpha: 0.4) ]).
+			focused: [ :aWidget |
+				sidebar background: self borderFocusedPaint.
+				aWidget border: (BlBorder paint: self borderFocusedPaint width: self borderWidth) ]).
 
 	self addChangeAddChildAs: #(sidebar) with: [ sidebar ].
 	self addChangeAddChildAs: #(content) with: [ container ].
@@ -58,7 +111,7 @@ GtCoderExpanderWithoutShadowLook >> initialize [
 		with: [ BlLinearLayout horizontal ].
 	self
 		addChangeProperty: #(widget geometry)
-		with: [ BlRectangle cornerRadius: 3 ]
+		with: [ BlRectangle cornerRadius: self cornerRadius ]
 ]
 
 { #category : #'private - instance creation' }

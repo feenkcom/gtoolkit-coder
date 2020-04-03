@@ -108,7 +108,6 @@ GtDiffElement >> initialize [
 	super initialize.
 	
 	self viewModel: (BrInteractiveModel new addStates: {
-		BrLayoutAlignmentModel new.
 		BrLayoutHorizontalResizerModel matchParent.
 		BrLayoutVerticalResizerModel matchParent.
 		BrSizeAdjustmentModel new.
@@ -121,12 +120,14 @@ GtDiffElement >> initialize [
 	outlines := #().
 	
 	leftElement := BrEditor new
+		beReadOnlyWithSelection;
 		matchParent;
 		background: Color white;
 		look: BrGlamorousCodeEditorLook new + BrShadowLook new;
 		when: BlElementScrolledEvent do: [ :e | self leftScrolled ].
 		
 	rightElement := BrEditor new
+		beReadOnlyWithSelection;
 		matchParent;
 		background: Color white;
 		look: BrGlamorousCodeEditorLook new + BrShadowLook new;

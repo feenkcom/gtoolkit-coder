@@ -50,7 +50,7 @@ GtBehaviorHeaderDifferencePreviewElement >> initializeElements [
 	
 	aLeftEditor := BrEditor new
 		beReadOnlyWithSelection;
-		look: (BrGlamorousCodeEditorLook new glamorousCodeMiniSize) + BrShadowLook new;
+		look: (BrGlamorousCodeEditorLook new glamorousCodeSmallSize) + BrShadowLook new;
 		text: aDiff previousRopedText;
 		margin: (BlInsets all: 5);
 		background: Color white;
@@ -58,7 +58,7 @@ GtBehaviorHeaderDifferencePreviewElement >> initializeElements [
 		
 	aRightEditor := BrEditor new
 		beReadOnlyWithSelection;
-		look: (BrGlamorousCodeEditorLook new glamorousCodeMiniSize) + BrShadowLook new;
+		look: (BrGlamorousCodeEditorLook new glamorousCodeSmallSize) + BrShadowLook new;
 		text: aDiff newRopedText;
 		margin: (BlInsets all: 5);
 		background: Color white;
