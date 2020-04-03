@@ -60,12 +60,20 @@ GtCodeDefinitionPluralEditor >> create [
 		look: (BrGlamorousTaggerEditableLook new
 			margin: self margin;
 			editableLabel: [ :aTaggerTag |
-				BrEditableLabel new
+				| anEditableLabel |
+				anEditableLabel := BrEditableLabel new
 					text: aTaggerTag name;
 					styler: styler;
 					inputFilter: inputFilter;
 					look: lookStencil create;
-					yourself ];
+					yourself.
+				
+				completionStencil ifNotNil: [ :aStencil |
+					(GtCompletionController
+						on: anEditableLabel
+						strategy: aStencil create) install ].
+				
+				anEditableLabel ];
 			in: [ :aLook | separatorStencil ifNotNil: [ aLook separator: separatorStencil ] ];
 			yourself);
 		namedTags: theInitialNames;

@@ -39,6 +39,7 @@ GtBehaviorCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
 
 { #category : #'private - actions' }
 GtBehaviorCoderHeaderElement >> applyRefactoring [
+	headerModel refactorings do: [ :eachRefactoring | eachRefactoring execute ]
 ]
 
 { #category : #'private - instance creation' }
@@ -115,25 +116,6 @@ GtBehaviorCoderHeaderElement >> buildHeaderRefactoringPreview [
 ]
 
 { #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> buildRefactoringChangesPreview [
-	| theChanges |
-	
-	theChanges := headerModel changes.
-	
-	^ BrSimpleList new
-		hMatchParent;
-		vFitContent;
-		in: [ :l | l children first constraintsDo: [ :c | c maxHeight: 200 ] ];
-		items: theChanges;
-		stencil: [ :eachChange |
-			(eachChange respondsTo: #gtDiff)
-				ifTrue: [ eachChange gtDiff asElement vFitContent beMini ]
-				ifFalse: [ BrLabel new
-						look: BrGlamorousLabelLook new;
-						text: eachChange printString ] ]
-]
-
-{ #category : #'private - instance creation' }
 GtBehaviorCoderHeaderElement >> buildRefactoringPreviewFrom: aButtonElement [
 	| aContainer |
 
@@ -142,7 +124,11 @@ GtBehaviorCoderHeaderElement >> buildRefactoringPreviewFrom: aButtonElement [
 		vFitContent.
 
 	aContainer addChild: self buildHeaderRefactoringPreview.
-	aContainer addChild: self buildRefactoringChangesPreview.
+	aContainer addChild: (GtRefactoringsElement new
+		vFitContent;
+		constraintsDo: [ :c | c maxHeight: 200 ];
+		in: [ :e | e children first constraintsDo: [ :c | c maxHeight: 200 ] ];
+		refactorings: headerModel refactorings).
 	aContainer addChild: (BrButton new
 		beSmall;
 		icon: BrGlamorousIcons accept asElement;

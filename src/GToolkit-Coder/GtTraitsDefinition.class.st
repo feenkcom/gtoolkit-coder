@@ -49,7 +49,8 @@ GtTraitsDefinition >> asDefinitionString [
 	^ String streamContents: [ :stream | 
 		traits
 			do: [ :each | stream nextPutAll: each name ]
-			separatedBy: [ stream nextPutAll: ' + ' ] ]	
+			separatedBy: [ stream nextPutAll: ' + ' ].
+		stream space ]	
 ]
 
 { #category : #accessing }
@@ -263,5 +264,6 @@ GtTraitsDefinition >> traitsEditor [
 		separator: [
 			BrLabel new
 				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
-				text: '+' ]
+				text: '+' ];
+		completion: [ GtTraitsCompletionStrategy new ]
 ]

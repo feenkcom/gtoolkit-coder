@@ -11,7 +11,8 @@ Class {
 	#instVars : [
 		'instVarA',
 		'instVarB',
-		'instVarC'
+		'instVarC',
+		'newSlot'
 	],
 	#classVars : [
 		'classVarA',
