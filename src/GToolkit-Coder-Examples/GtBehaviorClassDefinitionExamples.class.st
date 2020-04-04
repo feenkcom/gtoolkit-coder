@@ -20,7 +20,7 @@ GtBehaviorClassDefinitionExamples >> fromClass [
 	self assert: (aDefinition traits at: 1) parent == aDefinition.
 	
 	self assert: aDefinition slots parent == aDefinition.
-	self assert: aDefinition slots size equals: 3.
+	self assert: aDefinition slots size equals: 4.
 	
 	self assert: (aDefinition slots at: 1) name equals: #instVarA.
 	self assert: (aDefinition slots at: 1) type equals: #InstanceVariableSlot.
