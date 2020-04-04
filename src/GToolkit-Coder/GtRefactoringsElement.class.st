@@ -19,7 +19,7 @@ GtRefactoringsElement >> initialize [
 		BrLayoutVerticalResizerModel matchParent.
 	}).
 	
-	self layout: BlLinearLayout horizontal.
+	self layout: BlLinearLayout vertical.
 	self matchParent.
 	
 	refactoringsList := BrSimpleList new matchParent.

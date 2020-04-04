@@ -149,13 +149,13 @@ GtDiffElement >> initialize [
 			aWidget padding: (BlInsets all: 10).
 			leftElement look glamorousCodeSize.
 			leftElement padding: (BlInsets all: 10).
-			separatorElement width: 75.
+			separatorElement width: 40.
 			rightElement look glamorousCodeSize ];
 		small: [ :aWidget |
 			aWidget padding: (BlInsets all: 8).
 			leftElement look glamorousCodeSmallSize.
 			leftElement padding: (BlInsets all: 6).
-			separatorElement width: 50.
+			separatorElement width: 25.
 			rightElement look glamorousCodeSmallSize ];
 		tiny: [ :aWidget |
 			aWidget padding: (BlInsets all: 6).

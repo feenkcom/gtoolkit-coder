@@ -29,6 +29,11 @@ GtCompositeDefinitionDifference >> addAll: aCollectionOfDifferences [
 ]
 
 { #category : #converting }
+GtCompositeDefinitionDifference >> asClassRefactorings: aClass [
+	^ self differences flatCollect: [ :eachDifference | (eachDifference asClassRefactorings: aClass) asOrderedCollection ]
+]
+
+{ #category : #converting }
 GtCompositeDefinitionDifference >> asClassRefactorings: aClass in: anRBModel [
 	^ self differences flatCollect: [ :eachDifference | (eachDifference asClassRefactorings: aClass in: anRBModel) asOrderedCollection ]
 ]
