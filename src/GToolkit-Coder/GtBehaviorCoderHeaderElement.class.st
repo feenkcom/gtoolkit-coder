@@ -118,40 +118,18 @@ GtBehaviorCoderHeaderElement >> buildDefinitionViewer [
 ]
 
 { #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> buildHeaderRefactoringPreview [
-	^ GtBehaviorHeaderDifferencePreviewElement new
-		behavior: headerModel behavior
-		definition: headerModel definition
-		difference: headerModel difference
-]
-
-{ #category : #'private - instance creation' }
 GtBehaviorCoderHeaderElement >> buildRefactoringPreview [
-	| aHeaderPreview theRefactoringsPreview aContainer |
-	
-	aHeaderPreview := (self buildHeaderRefactoringPreview hExact: self previewWidth * 1.75)
-		asScalableElement
-			width: self previewWidth;
-			fitWidth;
-			constraintsDo: [ :c | c vertical fitContent ].
-			
+	| theRefactoringsPreview |
 			
 	theRefactoringsPreview := (GtRefactoringsElement new
-		hExact: self previewWidth * 1.75;
+		hExact: self previewWidth * 1.25;
 		vFitContent;
 		refactorings: headerModel refactorings) asScalableElement
 			width: self previewWidth;
 			fitWidth;
 			constraintsDo: [ :c | c vertical fitContent ].
 
-	aContainer := BrVerticalPane new
-		hExact: self previewWidth;
-		vFitContentLimited.
-
-	aContainer addChild: aHeaderPreview.
-	aContainer addChild: theRefactoringsPreview asScrollableElement.
-
-	^ aContainer
+	^ theRefactoringsPreview asScrollableElement
 ]
 
 { #category : #'private - instance creation' }
