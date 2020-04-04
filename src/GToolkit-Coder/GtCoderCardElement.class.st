@@ -44,7 +44,7 @@ GtCoderCardElement >> detailsLabel [
 GtCoderCardElement >> initialize [
 	super initialize.
 	self viewModel: (BrInteractiveModel new addStates: { 
-				 BrActivationModel new.
+				 BrEnablementModel new.
 				 BrPressModel new.
 				 BrHoverModel new }).
 	self look:
