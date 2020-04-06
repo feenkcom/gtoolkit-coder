@@ -27,10 +27,12 @@ GtUserActivatableRefactoringElement >> fromActivatableRefactoring: aGtUserActiva
 
 	activatableRefactoring := aGtUserActivatableRefactoring.
 
-	checkbox activated: activatableRefactoring isEnabled.
-	
+	activatableRefactoring isEnabled
+		ifTrue: [ checkbox check ]
+		ifFalse: [ checkbox uncheck ].
+
 	description text: aGtUserActivatableRefactoring description. 
-	
+
 	activatableRefactoring isDangerous
 		ifTrue: [ expander look 
 			borderPaint: BrGlamorousColors errorBackgroundColor;
@@ -41,42 +43,42 @@ GtUserActivatableRefactoringElement >> fromActivatableRefactoring: aGtUserActiva
 			hMatchParent;
 			vFitContent;
 			addChildren: (activatableRefactoring allChanges collect: [ :eachChange | eachChange asElement ])].
-	
+
 	header addChildren: (activatableRefactoring dangers collect: [ :eachDanger |
 		BrEditor new
 			beReadOnlyWithSelection;
 			look: (BrGlamorousRegularEditorLook new foreground: BrGlamorousColors linkWithErrorColor);
 			text: eachDanger description;
 			hMatchParent;
-			vFitContent
-	])
+			vFitContent ])
 ]
 
 { #category : #initialization }
 GtUserActivatableRefactoringElement >> initialize [
 	super initialize.
-	
+
 	expander := BrExpander new.
 	expander
 		look: (GtCoderExpanderLook new
-			borderWidth: 1;
 			cornerRadius: 3;
+			padding: (BlInsets empty);
 			doNotReplaceHeader);
 		hMatchParent;
+		margin: (BlInsets all: 5);
 		vFitContent.
-	
+
 	self layout: (BlLinearLayout horizontal).
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical fitContent ].
-	self margin: (BlInsets top: 5 bottom: 5).
-	
+
 	header := BrVerticalPane new
 		hMatchParent;
 		vFitContent;
 		alignCenterLeft.
 
 	description := BrEditor new
+		padding: (BlInsets left: 5 right: 5);
 		beReadOnlyWithSelection;
 		hMatchParent;
 		vFitContent;
@@ -85,12 +87,15 @@ GtUserActivatableRefactoringElement >> initialize [
 	header addChildren: { 
 		description
 	}.
-	
-	checkbox := BrToggle new
-		look: BrHydraSwitchWithoutTrackLook new.
-	
+
+	checkbox := BrCheckbox new
+		look: BrGlamorousCheckboxLook new - BrSizeAdjustmentLook;
+		hExact: 16;
+		vExact: 28;
+		margin: (BlInsets top: 5 left: 5 bottom: 0 right: 0).
+
 	expander header: [ header ].
-	
+
 	self addChildren: { 
 		checkbox.
 		expander }

@@ -21,6 +21,7 @@ GtRefactoringsElement >> initialize [
 	
 	self layout: BlLinearLayout vertical.
 	self matchParent.
+	self padding: (BlInsets all: 10).
 	
 	refactoringsList := BrSimpleList new matchParent.
 	refactoringsList stencil: [ :eachRefactoring | eachRefactoring asElement ].

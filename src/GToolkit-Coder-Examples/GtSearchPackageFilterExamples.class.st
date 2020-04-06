@@ -9,6 +9,19 @@ GtSearchPackageFilterExamples >> assertPackageResultTypeForFilter: aFilter [
 	self assert: aFilter resultType equals: GtSearchPackageGroupResult.
 ]
 
+{ #category : #'as yet unclassified' }
+GtSearchPackageFilterExamples >> deprecatedPackagesFilter [
+	<gtExample>
+	| filter |
+	
+	filter := GtSearchDeprecatedPackagesFilter new.
+	
+	self assert: (filter matches: 'Deprecated80' asPackage).
+	self assert: (filter matches: 'GToolkit-Docs' asPackage) not.
+	
+	^ filter.
+]
+
 { #category : #'examples - result' }
 GtSearchPackageFilterExamples >> groupResultForPackagesInImageFilter [
 	<gtExample>
