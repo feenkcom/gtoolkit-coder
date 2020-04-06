@@ -83,7 +83,7 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 				beSmall;
 				look: BrGlamorousButtonWithIconLook new;
 				label: 'Apply';
-				margin: (BlInsets top: 0 left: 5 bottom: 5 right: 0);
+				margin: (BlInsets top: 0 left: 10 bottom: 10 right: 0);
 				action: [
 					anAcceptButton fireEvent: (BrDropdownHideWish new anchor: anAcceptButton).
 					self applyRefactoring ];
