@@ -3,10 +3,7 @@ I represent local slots of a behavior (class or trait)
 "
 Class {
 	#name : #GtSlotsDefinition,
-	#superclass : #GtCodeDefinition,
-	#instVars : [
-		'slots'
-	],
+	#superclass : #GtCompositeDefinition,
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
 
@@ -26,18 +23,13 @@ GtSlotsDefinition >> addSlotNamed: aSymbol [
 	
 	aSlotName := aSymbol asSymbol.
 	
-	(self hasSlotNamed: aSlotName)
+	(self hasDefinitionNamed: aSlotName)
 		ifTrue: [ self errorSlotAlreadyExists: aSlotName ].
 
 	aNewSlot := GtSlotDefinition named: aSlotName.
-	slots := slots copyWith: aNewSlot.
+	definitions := definitions copyWith: aNewSlot.
 
 	self notifySlotAdded: aNewSlot
-]
-
-{ #category : #accessing }
-GtSlotsDefinition >> all [
-	^ slots
 ]
 
 { #category : #converting }
@@ -46,28 +38,16 @@ GtSlotsDefinition >> asDefinitionString [
 		| isSpecial |
 		str nextPutAll: '{ '.
 	
-		slots do: [ :eachSlot |
+		definitions do: [ :eachSlot |
 				str nextPutAll: eachSlot asDefinitionString.
 				isSpecial := eachSlot isSpecial ]
 			separatedBy: [ 
 				str nextPutAll: '. '.  
 				isSpecial ifTrue: [ str cr;tab;tab;tab;tab ] ].
 			
-		slots ifNotEmpty: [ str nextPutAll: '.'  ].
+		definitions ifNotEmpty: [ str nextPutAll: '.'  ].
 
 		str nextPutAll: ' }'. ]
-]
-
-{ #category : #accessing }
-GtSlotsDefinition >> at: anIndex [
-	<return: #GtSlotDefinition>
-
-	^ slots at: anIndex
-]
-
-{ #category : #accessing }
-GtSlotsDefinition >> collect: aBlock [
-	^ slots collect: aBlock
 ]
 
 { #category : #'api - accepting' }
@@ -80,15 +60,13 @@ GtSlotsDefinition >> differenceWith: aGtSlotsDefinition [
 		difference: self all
 		with: aGtSlotsDefinition all
 		addedDo: [ :eachSlot | theDifference add: (GtSlotAddedDifference new slotName: eachSlot name) ]
-		renamedDo: [ :eachSlot | theDifference add: (GtSlotRenamedDifference new oldName: eachSlot originalName; newName: eachSlot name) ]
+		renamedDo: [ :eachSlot | theDifference add: (GtSlotRenamedDifference new
+			slotName: eachSlot originalName;
+			oldName: eachSlot originalName;
+			newName: eachSlot name) ]
 		removedDo: [ :eachSlot | theDifference add: (GtSlotRemovedDifference new slotName: eachSlot name) ].
 		
 	^ theDifference
-]
-
-{ #category : #accessing }
-GtSlotsDefinition >> do: aBlock [
-	slots do: aBlock
 ]
 
 { #category : #'gt - editors' }
@@ -112,47 +90,27 @@ GtSlotsDefinition >> errorSlotNotFound: aSymbol [
 
 { #category : #initialization }
 GtSlotsDefinition >> fromClass: aClass [
-	slots := aClass localSlots collect: [ :eachSlot | (GtSlotDefinition fromSlot: eachSlot) parent: self ]
+	definitions := aClass localSlots collect: [ :eachSlot | (GtSlotDefinition fromSlot: eachSlot) parent: self ]
 ]
 
 { #category : #initialization }
 GtSlotsDefinition >> fromTrait: aTrait [
-	slots := aTrait localSlots collect: [ :eachSlot | (GtSlotDefinition fromSlot: eachSlot) parent: self ]
+	definitions := aTrait localSlots collect: [ :eachSlot | (GtSlotDefinition fromSlot: eachSlot) parent: self ]
 ]
 
 { #category : #'gt-extension' }
 GtSlotsDefinition >> gtSlotsFor: aView [
 	<gtView>
 	
-	slots
-		ifEmpty: [ ^ aView empty ].
+	self isEmpty
+		ifTrue: [ ^ aView empty ].
 
 	^ aView columnedList
 		title: 'Slots';
 		priority: 1;
-		items: [ slots ];
+		items: [ definitions ];
 		column: 'Name' item: [ :eachSlot | eachSlot name ];
 		column: 'Type' item: [ :eachSlot | eachSlot type ]
-]
-
-{ #category : #'api - slots' }
-GtSlotsDefinition >> hasSlotNamed: aSymbol [
-	<return: #Boolean>
-	| aSlotName |
-	
-	aSlotName := aSymbol asSymbol.
-
-	^ slots
-		detect: [ :eachSlotDefinition | eachSlotDefinition name = aSlotName ]
-		ifFound: [ true ]
-		ifNone: [ false ]
-]
-
-{ #category : #accessing }
-GtSlotsDefinition >> names [
-	<return: #Collection of: #Symbol>
-	
-	^ slots collect: [ :eachSlot | eachSlot name ]
 ]
 
 { #category : #'private - notifying' }
@@ -178,22 +136,15 @@ GtSlotsDefinition >> notifySlotRenamed: aGtSlotDefinition from: anOldName to: aN
 		newName: aNewName)
 ]
 
-{ #category : #accessing }
-GtSlotsDefinition >> parent: aParent [
-	super parent: aParent.
-	
-	slots do: [ :eachSlot | eachSlot parent: aParent ]
-]
-
 { #category : #'api - slots' }
 GtSlotsDefinition >> removeSlotNamed: aSymbol [
 	| aRemovedSlot |
 	
-	(self hasSlotNamed: aSymbol)
+	(self hasDefinitionNamed: aSymbol)
 		ifFalse: [ self errorSlotNotFound: aSymbol ].
 	
 	aRemovedSlot := self slotNamed: aSymbol.
-	slots := slots copyWithout: aRemovedSlot.
+	definitions := definitions copyWithout: aRemovedSlot.
 	self notifySlotRemoved: aRemovedSlot
 ]
 
@@ -201,8 +152,11 @@ GtSlotsDefinition >> removeSlotNamed: aSymbol [
 GtSlotsDefinition >> renameSlotNamed: aCurrentName to: aNewName [
 	| aRenamedSlot |
 	
-	(self hasSlotNamed: aCurrentName)
+	(self hasDefinitionNamed: aCurrentName)
 		ifFalse: [ self errorSlotNotFound: aCurrentName ].
+		
+	(self hasDefinitionNamed: aNewName)
+		ifTrue: [ self errorSlotAlreadyExists: aCurrentName ].
 
 	aRenamedSlot := self slotNamed: aCurrentName.
 	aRenamedSlot name: aNewName.
@@ -213,19 +167,12 @@ GtSlotsDefinition >> renameSlotNamed: aCurrentName to: aNewName [
 		to: aNewName
 ]
 
-{ #category : #accessing }
-GtSlotsDefinition >> size [
-	<return: #Number>
-	
-	^ slots size
-]
-
 { #category : #'api - slots' }
 GtSlotsDefinition >> slotNamed: aSymbol [
 	<return: #GtSlotDefinition>
 	
-	^ slots
-		detect: [ :eachSlotDefinition | eachSlotDefinition name = aSymbol ]
+	^ self
+		definitionNamed: aSymbol 
 		ifNone: [ self errorSlotNotFound: aSymbol ]
 ]
 

@@ -38,11 +38,6 @@ GtCompositeDefinitionDifference >> asClassRefactorings: aClass in: anRBModel [
 	^ self differences flatCollect: [ :eachDifference | (eachDifference asClassRefactorings: aClass in: anRBModel) asOrderedCollection ]
 ]
 
-{ #category : #converting }
-GtCompositeDefinitionDifference >> asClassRefactoryChange: aClass in: aCompositeRefactoryChange [
-	self differences do: [ :eachDifference | eachDifference asClassRefactoryChange: aClass in: aCompositeRefactoryChange ]
-]
-
 { #category : #accessing }
 GtCompositeDefinitionDifference >> differences [
 	^ differences

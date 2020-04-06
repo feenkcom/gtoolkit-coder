@@ -29,11 +29,6 @@ GtBehaviorDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf:
 	^ self subclassResponsibility
 ]
 
-{ #category : #'api - accepting' }
-GtBehaviorDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoryChangeOf: aBehavior [
-	^ self subclassResponsibility
-]
-
 { #category : #accessing }
 GtBehaviorDefinition >> name [
 	<return: #Symbol>

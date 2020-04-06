@@ -58,20 +58,6 @@ GtCodeDefinitionDifference >> asClassRefactorings: aClass in: anRBModel [
 	^ #()
 ]
 
-{ #category : #converting }
-GtCodeDefinitionDifference >> asClassRefactoryChange: aClass [
-	| aCompositeRefactoryChange |
-	
-	aCompositeRefactoryChange := RBRefactoryChangeManager changeFactory compositeRefactoryChange.
-	self asClassRefactoryChange: aClass in: aCompositeRefactoryChange.
-	
-	^ aCompositeRefactoryChange
-]
-
-{ #category : #converting }
-GtCodeDefinitionDifference >> asClassRefactoryChange: aClass in: aCompositeRefactoryChange [
-]
-
 { #category : #testing }
 GtCodeDefinitionDifference >> hasDifference [
 	<return: #Boolean>
