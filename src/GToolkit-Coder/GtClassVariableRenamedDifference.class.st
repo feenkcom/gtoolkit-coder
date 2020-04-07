@@ -1,6 +1,6 @@
 Class {
-	#name : #GtSlotRenamedDifference,
-	#superclass : #GtSlotDifference,
+	#name : #GtClassVariableRenamedDifference,
+	#superclass : #GtClassVariableDifference,
 	#instVars : [
 		'oldName',
 		'newName'
@@ -9,8 +9,8 @@ Class {
 }
 
 { #category : #converting }
-GtSlotRenamedDifference >> asClassRefactorings: aClass in: anRBModel [
-	^ RBRenameInstanceVariableRefactoring
+GtClassVariableRenamedDifference >> asClassRefactorings: aClass in: anRBModel [
+	^ RBRenameClassVariableRefactoring
 		model: anRBModel
 		rename: self oldName
 		to: self newName
@@ -18,30 +18,30 @@ GtSlotRenamedDifference >> asClassRefactorings: aClass in: anRBModel [
 ]
 
 { #category : #accessing }
-GtSlotRenamedDifference >> newName [
+GtClassVariableRenamedDifference >> newName [
 	^ newName
 ]
 
 { #category : #accessing }
-GtSlotRenamedDifference >> newName: anObject [
+GtClassVariableRenamedDifference >> newName: anObject [
 	newName := anObject
 ]
 
 { #category : #accessing }
-GtSlotRenamedDifference >> oldName [
+GtClassVariableRenamedDifference >> oldName [
 	^ oldName
 ]
 
 { #category : #accessing }
-GtSlotRenamedDifference >> oldName: anObject [
+GtClassVariableRenamedDifference >> oldName: anObject [
 	oldName := anObject
 ]
 
 { #category : #printing }
-GtSlotRenamedDifference >> printOn: aStream [
+GtClassVariableRenamedDifference >> printOn: aStream [
 	aStream
 		nextPutAll: 'Renamed ';
 		print: self oldName;
-		nextPutAll: ' slot to ';
+		nextPutAll: ' class variable to ';
 		print: self newName
 ]

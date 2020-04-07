@@ -8,11 +8,6 @@ Class {
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
 
-{ #category : #converting }
-GtBehaviorNameDifference >> asClassRefactoryChange: aClass in: aCompositeRefactoryChange [
-	aCompositeRefactoryChange renameClass: aClass to: self newName
-]
-
 { #category : #accessing }
 GtBehaviorNameDifference >> newName [
 	^ newName

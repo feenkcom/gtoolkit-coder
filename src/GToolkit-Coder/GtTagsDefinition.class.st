@@ -1,9 +1,6 @@
 Class {
 	#name : #GtTagsDefinition,
-	#superclass : #GtCodeDefinition,
-	#instVars : [
-		'tags'
-	],
+	#superclass : #GtCompositeDefinition,
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
 
@@ -18,25 +15,13 @@ GtTagsDefinition >> addTagNamed: aSymbolOrString [
 	
 	aTagName := aSymbolOrString asSymbol.
 	
-	(self hasTagNamed: aTagName)
+	(self hasDefinitionNamed: aTagName)
 		ifTrue: [ self errorTagAlreadyAdded: aTagName ].
 	
 	aTagDefinition := GtTagDefinition named: aTagName.
-	tags := tags copyWith: aTagDefinition.
+	definitions := definitions copyWith: aTagDefinition.
 
 	self notifyTagAdded: aTagDefinition
-]
-
-{ #category : #accessing }
-GtTagsDefinition >> all [
-	^ tags
-]
-
-{ #category : #accessing }
-GtTagsDefinition >> at: anIndex [
-	<return: #GtTagDefinition>
-
-	^ tags at: anIndex
 ]
 
 { #category : #'gt - editors' }
@@ -72,46 +57,22 @@ GtTagsDefinition >> fromBehavior: aBehavior [
 
 	aTagsString := aTagsString trimBoth: [ :aChar | (aChar = $-) or: [ aChar isSeparator ] ].
 	
-	tags := ((aTagsString splitOn: '-')
+	definitions := ((aTagsString splitOn: '-')
 		collect: [ :eachPart | eachPart trimBoth ]
 		thenSelect: [ :eachPart | eachPart isNotEmpty ]) collect: [ :eachTagName | GtTagDefinition named: eachTagName ]
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extension' }
 GtTagsDefinition >> gtTagsFor: aView [
 	<gtView>
 	
-	tags
-		ifEmpty: [ ^ aView empty ].
+	self isEmpty
+		ifTrue: [ ^ aView empty ].
 	
 	^ aView list
 		title: 'Tags';
 		priority: 1;
-		items: [ tags ]
-]
-
-{ #category : #'api - tags' }
-GtTagsDefinition >> hasTagNamed: aSymbol [
-	<return: #Boolean>
-
-	^ tags
-		detect: [ :eachTagDefinition | eachTagDefinition name = aSymbol ]
-		ifFound: [ true ]
-		ifNone: [ false ]
-]
-
-{ #category : #initialization }
-GtTagsDefinition >> initialize [
-	super initialize.
-	
-	tags := #()
-]
-
-{ #category : #accessing }
-GtTagsDefinition >> names [
-	<return: #Collection of: #Symbol>
-	
-	^ tags collect: [ :eachTag | eachTag name ]
+		items: [ definitions ]
 ]
 
 { #category : #'private - notifying' }
@@ -137,22 +98,15 @@ GtTagsDefinition >> notifyTagRenamed: aTagDefinition from: anOldName to: aNewNam
 		newName: aNewName)
 ]
 
-{ #category : #accessing }
-GtTagsDefinition >> parent: aParent [
-	super parent: aParent.
-	
-	tags do: [ :eachTag | eachTag parent: aParent ]
-]
-
 { #category : #'api - tags' }
 GtTagsDefinition >> removeTagNamed: aSymbol [
 	| aRemovedTag |
 	
-	(self hasTagNamed: aSymbol)
+	(self hasDefinitionNamed: aSymbol)
 		ifFalse: [ self errorTagNotFound: aSymbol ].
 	
 	aRemovedTag := self tagNamed: aSymbol.
-	tags := tags copyWithout: aRemovedTag.
+	definitions := definitions copyWithout: aRemovedTag.
 	self notifyTagRemoved: aRemovedTag
 ]
 
@@ -160,7 +114,7 @@ GtTagsDefinition >> removeTagNamed: aSymbol [
 GtTagsDefinition >> renameTagNamed: aCurrentName to: aNewName [
 	| aRenamedTag |
 	
-	(self hasTagNamed: aCurrentName)
+	(self hasDefinitionNamed: aCurrentName)
 		ifFalse: [ self errorTagNotFound: aCurrentName ].
 
 	aRenamedTag := self tagNamed: aCurrentName.
@@ -172,17 +126,12 @@ GtTagsDefinition >> renameTagNamed: aCurrentName to: aNewName [
 		to: aNewName
 ]
 
-{ #category : #accessing }
-GtTagsDefinition >> size [
-	^ tags size
-]
-
 { #category : #'api - tags' }
 GtTagsDefinition >> tagNamed: aSymbol [
 	<return: #GtTagDefinition>
 	
-	^ tags
-		detect: [ :eachTagDefinition | eachTagDefinition name = aSymbol ]
+	^ self
+		definitionNamed: aSymbol 
 		ifNone: [ self errorTagNotFound: aSymbol ]
 ]
 

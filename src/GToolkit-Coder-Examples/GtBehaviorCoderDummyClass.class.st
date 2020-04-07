@@ -15,9 +15,12 @@ Class {
 		'newSlot'
 	],
 	#classVars : [
-		'classVarA',
-		'classVarB',
-		'classVarC'
+		'ClassVarA',
+		'ClassVarB',
+		'ClassVarC'
+	],
+	#pools : [
+		'GtBehaviorCoderDummySharedPool'
 	],
 	#category : #'GToolkit-Coder-Examples-Dummies'
 }

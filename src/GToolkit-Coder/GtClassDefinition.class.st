@@ -2,10 +2,12 @@ Class {
 	#name : #GtClassDefinition,
 	#superclass : #GtBehaviorDefinition,
 	#instVars : [
-		'traits',
-		'slots',
+		'layout',
 		'category',
-		'layout'
+		'slots',
+		'classVariables',
+		'traits',
+		'pools'
 	],
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
@@ -13,14 +15,6 @@ Class {
 { #category : #'instance creation' }
 GtClassDefinition class >> fromClass: aClass [
 	^ self new fromClass: aClass
-]
-
-{ #category : #'api - class vars' }
-GtClassDefinition >> addClassVarNamed: aString [
-	| aNewClassVariable |
-	
-	aNewClassVariable := ringDefinition addClassVarNamed: aString.
-	self notifyClassVarAdded: aNewClassVariable
 ]
 
 { #category : #converting }
@@ -77,32 +71,11 @@ GtClassDefinition >> category [
 	^ category
 ]
 
-{ #category : #'api - class vars' }
-GtClassDefinition >> classVarNames [
-	<return: #Collection of: #String>
-
-	^ ringDefinition classVarNames
-]
-
-{ #category : #'api - class vars' }
+{ #category : #accessing }
 GtClassDefinition >> classVariables [
-	^ ringDefinition classVariables
-]
+	<return: #GtClassVariablesDefinition>
 
-{ #category : #'gt - editors' }
-GtClassDefinition >> classVariablesEditor [
-	<return: #GtCodeDefinitionEditor>
-	
-	^ GtCodeDefinitionPluralEditor new
-			definition: self;
-			title: 'Class vars';
-			addSelector: #addClassVarNamed:;
-			removeSelector: #removeClassVarNamed:;
-			renameSelector: #renameClassVarNamed:to:;
-			getSelector: #classVarNames;
-			addEvent: GtBehaviorCoderHeaderClassVarAdded;
-			removeEvent: GtBehaviorCoderHeaderClassVarRemoved;
-			renameEvent: GtBehaviorCoderHeaderClassVarRenamed
+	^ classVariables
 ]
 
 { #category : #'api - accepting' }
@@ -113,13 +86,6 @@ GtClassDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aC
 { #category : #'api - accepting' }
 GtClassDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aClass in: anRBModel [
 	^ aGtCodeDefinitionDiffrence asClassRefactorings: aClass in: anRBModel
-]
-
-{ #category : #'api - accepting' }
-GtClassDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoryChangeOf: aClass [
-	<return: #RBRefactoryChange>
-
-	^ aGtCodeDefinitionDiffrence asClassRefactoryChange: aClass
 ]
 
 { #category : #'api - accepting' }
@@ -137,6 +103,7 @@ GtClassDefinition >> differenceWith: aClassDefinition [
 
 	aDifference add: (self category differenceWith: aClassDefinition category).
 	aDifference add: (self slots differenceWith: aClassDefinition slots).
+	aDifference add: (self classVariables differenceWith: aClassDefinition classVariables).
 	aDifference add: (self traits differenceWith: aClassDefinition traits).
 
 	^ aDifference
@@ -151,7 +118,8 @@ GtClassDefinition >> editors [
 		self category categoryEditor.
 	 	self traits traitsEditor.
 		self slots slotsEditor.
-		self classVariablesEditor
+		self classVariables classVariablesEditor.
+		self pools poolsEditor
 	}
 ]
 
@@ -168,11 +136,14 @@ GtClassDefinition >> fromClass: aClass [
 	
 	originalName := aClass name.
 
-	category := (GtCategoryDefinition fromBehavior: aClass) parent: self.
-	traits := (GtTraitsDefinition fromClass: aClass) parent: self.
-	slots := (GtSlotsDefinition fromClass: aClass) parent: self.
+	layout := aClass classLayout asRingMinimalDefinitionIn: anEnvironment.
 	
-	layout := aClass classLayout asRingMinimalDefinitionIn: anEnvironment
+	category := (GtCategoryDefinition fromBehavior: aClass) parent: self.
+	slots := (GtSlotsDefinition fromClass: aClass) parent: self.
+	classVariables := (GtClassVariablesDefinition fromClass: aClass) parent: self.
+	
+	traits := (GtTraitsDefinition fromClass: aClass) parent: self.
+	pools := (GtPoolsDefinition fromClass: aClass) parent: self
 ]
 
 { #category : #'gt-extension' }
@@ -202,44 +173,11 @@ GtClassDefinition >> layout [
 	^ layout
 ]
 
-{ #category : #'private - notifying' }
-GtClassDefinition >> notifyClassVarAdded: aClassVariable [
-	self dispatchEvent: (GtBehaviorCoderHeaderClassVarAdded new classVariable: aClassVariable)
-]
-
-{ #category : #'private - notifying' }
-GtClassDefinition >> notifyClassVarRemoved: aClassVariable [
-	self dispatchEvent: (GtBehaviorCoderHeaderClassVarRemoved new classVariable: aClassVariable)
-]
-
-{ #category : #'private - notifying' }
-GtClassDefinition >> notifyClassVarRenamed: aClassVariable from: anOldName to: aNewName [
-	self dispatchEvent: (GtBehaviorCoderHeaderClassVarRenamed new
-		classVariable: aClassVariable;
-		oldName: anOldName;
-		newName: aNewName)
-]
-
-{ #category : #'api - class vars' }
-GtClassDefinition >> removeClassVarNamed: aString [
-	| aRemovedClassVariable |
-
-	aRemovedClassVariable := ringDefinition classVarNamed: aString.
-	ringDefinition removeClassVariable: aRemovedClassVariable.
-	self notifyClassVarRemoved: aRemovedClassVariable
-]
-
-{ #category : #'api - class vars' }
-GtClassDefinition >> renameClassVarNamed: aCurrentName to: aNewName [
-	| aRenamedClassVariable |
-
-	aRenamedClassVariable := ringDefinition classVarNamed: aCurrentName.
-	aRenamedClassVariable name: aNewName.
+{ #category : #accessing }
+GtClassDefinition >> pools [
+	<return: #GtPoolsDefinition>
 	
-	self
-		notifyClassVarRenamed: aRenamedClassVariable
-		from: aCurrentName
-		to: aNewName
+	^ pools
 ]
 
 { #category : #accessing }

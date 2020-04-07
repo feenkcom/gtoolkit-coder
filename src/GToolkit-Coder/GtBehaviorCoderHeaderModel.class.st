@@ -100,11 +100,6 @@ GtBehaviorCoderHeaderModel >> refactoringsIn: anRBModel [
 	^  self definition difference: self difference toRefactoringsOf: self behavior in: anRBModel
 ]
 
-{ #category : #'api - behavior' }
-GtBehaviorCoderHeaderModel >> refactoryChange [	
-	^  self definition difference: self difference toRefactoryChangeOf: self behavior
-]
-
 { #category : #accessing }
 GtBehaviorCoderHeaderModel >> theClass [
 	self deprecated: 'Use #behavior instead'.

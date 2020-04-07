@@ -1,9 +1,6 @@
 Class {
 	#name : #GtTraitsDefinition,
-	#superclass : #GtCodeDefinition,
-	#instVars : [
-		'traits'
-	],
+	#superclass : #GtCompositeDefinition,
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
 
@@ -23,7 +20,7 @@ GtTraitsDefinition >> addTraitNamed: aSymbolOrString [
 	
 	aTraitName := aSymbolOrString asSymbol.
 	
-	(self hasTraitNamed: aTraitName)
+	(self hasDefinitionNamed: aTraitName)
 		ifTrue: [ self errorTraitAlreadyAdded: aTraitName ].
 		
 	(self doesTraitExist: aTraitName)
@@ -31,14 +28,9 @@ GtTraitsDefinition >> addTraitNamed: aSymbolOrString [
 	
 	aTrait := self class environment at: aTraitName.
 	aTraitDefinition := GtTraitDefinition fromTrait: aTrait.
-	traits := traits copyWith: aTraitDefinition.
+	definitions := definitions copyWith: aTraitDefinition.
 
 	self notifyTraitAdded: aTraitDefinition
-]
-
-{ #category : #accessing }
-GtTraitsDefinition >> all [
-	^ traits
 ]
 
 { #category : #converting }
@@ -47,17 +39,10 @@ GtTraitsDefinition >> asDefinitionString [
 		ifTrue: [ ^ '{}' ].
 
 	^ String streamContents: [ :stream | 
-		traits
+		definitions
 			do: [ :each | stream nextPutAll: each name ]
 			separatedBy: [ stream nextPutAll: ' + ' ].
-		stream space ]	
-]
-
-{ #category : #accessing }
-GtTraitsDefinition >> at: anIndex [
-	<return: #GtTraitsDefinition>
-
-	^ traits at: anIndex
+		stream space ]
 ]
 
 { #category : #'api - accepting' }
@@ -116,97 +101,59 @@ GtTraitsDefinition >> errorTraitNotFound: aSymbol [
 
 { #category : #initialization }
 GtTraitsDefinition >> fromClass: aClass [
-	traits := aClass traitComposition traits collect: [ :eachTrait | (GtTraitDefinition fromTrait: eachTrait) parent: self ]
+	definitions := aClass traitComposition traits collect: [ :eachTrait | (GtTraitDefinition fromTrait: eachTrait) parent: self ]
 ]
 
 { #category : #initialization }
 GtTraitsDefinition >> fromTrait: aTrait [
-	traits := aTrait traitComposition traits collect: [ :eachTrait | (GtTraitDefinition fromTrait: eachTrait) parent: self ]
+	definitions := aTrait traitComposition traits collect: [ :eachTrait | (GtTraitDefinition fromTrait: eachTrait) parent: self ]
 ]
 
 { #category : #'gt-extension' }
 GtTraitsDefinition >> gtTraitsFor: aView [
 	<gtView>
 	
-	traits
+	definitions
 		ifEmpty: [ ^ aView empty ].
 	
 	^ aView list
 		title: 'Traits';
 		priority: 1;
-		items: [ traits ]
-]
-
-{ #category : #'api - traits' }
-GtTraitsDefinition >> hasTraitNamed: aSymbol [
-	<return: #Boolean>
-
-	^ traits
-		detect: [ :eachTraitDefinition | eachTraitDefinition name = aSymbol ]
-		ifFound: [ true ]
-		ifNone: [ false ]
-]
-
-{ #category : #initialization }
-GtTraitsDefinition >> initialize [
-	super initialize.
-	
-	traits := #()
-]
-
-{ #category : #accessing }
-GtTraitsDefinition >> isEmpty [
-	<return: #Boolean>
-
-	^ self size isZero
-]
-
-{ #category : #accessing }
-GtTraitsDefinition >> names [
-	<return: #Collection of: #Symbol>
-	
-	^ traits collect: [ :eachTrait | eachTrait name ]
+		items: [ definitions ]
 ]
 
 { #category : #'private - notifying' }
-GtTraitsDefinition >> notifyTraitAdded: anRGTraitDefinition [
+GtTraitsDefinition >> notifyTraitAdded: aGtTraitDefinition [
 	self dispatchEvent: (GtBehaviorTraitAdded new
 		owner: self parent;
-		trait: anRGTraitDefinition)
+		trait: aGtTraitDefinition)
 ]
 
 { #category : #'private - notifying' }
-GtTraitsDefinition >> notifyTraitRemoved: anRGTraitDefinition [
+GtTraitsDefinition >> notifyTraitRemoved: aGtTraitDefinition [
 	self dispatchEvent: (GtBehaviorTraitRemoved new
 		owner: self parent;
-		trait: anRGTraitDefinition)
+		trait: aGtTraitDefinition)
 ]
 
 { #category : #'private - notifying' }
-GtTraitsDefinition >> notifyTraitRenamed: anRGTraitDefinition from: anOldName to: aNewName [
+GtTraitsDefinition >> notifyTraitRenamed: aGtTraitDefinition from: anOldName to: aNewName [
 	self dispatchEvent: (GtBehaviorTraitRenamed new
 		owner: self parent;
-		trait: anRGTraitDefinition;
+		trait: aGtTraitDefinition;
 		oldName: anOldName;
 		newName: aNewName)
-]
-
-{ #category : #accessing }
-GtTraitsDefinition >> parent: aParent [
-	super parent: aParent.
-	
-	traits do: [ :eachTrait | eachTrait parent: aParent ]
 ]
 
 { #category : #'api - traits' }
 GtTraitsDefinition >> removeTraitNamed: aSymbol [
 	| aRemovedTrait |
 	
-	(self hasTraitNamed: aSymbol)
+	(self hasDefinitionNamed: aSymbol)
 		ifFalse: [ self errorTraitNotFound: aSymbol ].
 	
 	aRemovedTrait := self traitNamed: aSymbol.
-	traits := traits copyWithout: aRemovedTrait.
+	definitions := definitions copyWithout: aRemovedTrait.
 	self notifyTraitRemoved: aRemovedTrait
 ]
 
@@ -214,8 +161,11 @@ GtTraitsDefinition >> removeTraitNamed: aSymbol [
 GtTraitsDefinition >> renameTraitNamed: aCurrentName to: aNewName [
 	| aRenamedTrait |
 	
-	(self hasTraitNamed: aCurrentName)
+	(self hasDefinitionNamed: aCurrentName)
 		ifFalse: [ self errorTraitNotFound: aCurrentName ].
+		
+	(self hasDefinitionNamed: aNewName)
+		ifTrue: [ self errorTraitAlreadyAdded: aCurrentName ].
 
 	aRenamedTrait := self traitNamed: aCurrentName.
 	aRenamedTrait name: aNewName.
@@ -226,25 +176,13 @@ GtTraitsDefinition >> renameTraitNamed: aCurrentName to: aNewName [
 		to: aNewName
 ]
 
-{ #category : #accessing }
-GtTraitsDefinition >> size [
-	^ traits size
-]
-
 { #category : #'api - traits' }
 GtTraitsDefinition >> traitNamed: aSymbol [
 	<return: #GtTraitDefinition>
 	
-	^ traits
-		detect: [ :eachTraitDefinition | eachTraitDefinition name = aSymbol ]
+	^ self
+		definitionNamed: aSymbol 
 		ifNone: [ self errorTraitNotFound: aSymbol ]
-]
-
-{ #category : #'api - traits' }
-GtTraitsDefinition >> traitNamed: aSymbol ifFound: aBlock [
-	traits
-		detect: [ :eachTraitDefinition | eachTraitDefinition name = aSymbol ]
-		ifFound: aBlock
 ]
 
 { #category : #'gt - editors' }

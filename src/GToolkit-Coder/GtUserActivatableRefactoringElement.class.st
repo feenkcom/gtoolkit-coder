@@ -91,7 +91,7 @@ GtUserActivatableRefactoringElement >> initialize [
 	checkbox := BrCheckbox new
 		look: BrGlamorousCheckboxLook new - BrSizeAdjustmentLook;
 		hExact: 16;
-		vExact: 28;
+		vExact: 30;
 		margin: (BlInsets top: 5 left: 5 bottom: 0 right: 0).
 
 	expander header: [ header ].
