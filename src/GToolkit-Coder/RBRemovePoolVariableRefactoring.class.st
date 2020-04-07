@@ -31,6 +31,17 @@ RBRemovePoolVariableRefactoring >> checkReferenceToPoolDictionary [
 			[ :binding | self checkClassReferencePoolVariable: binding ]
 ]
 
+{ #category : #'gt-extension' }
+RBRemovePoolVariableRefactoring >> gtDescription [
+	<return: #String or: #BlRopedText>
+	
+	^ ('Remove' asRopedText glamorousRoundedBackground)
+		append: ' pool named ' asRopedText;
+		append: variableName asRopedText glamorousRoundedBackground;
+		append: ' from ' asRopedText;
+		append: class name asRopedText
+]
+
 { #category : #preconditions }
 RBRemovePoolVariableRefactoring >> preconditions [
 	^ (RBCondition isMetaclass: class) not

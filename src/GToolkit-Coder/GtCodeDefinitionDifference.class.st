@@ -5,6 +5,32 @@ Class {
 }
 
 { #category : #enumerating }
+GtCodeDefinitionDifference class >> difference: aCollectionOfDefinitions with: anOtherCollectionOfDefinitions addedDo: anAddedBlock removedDo: aRemovedBlock [
+	"I do not try to find renamed differences and only rely on #name.
+	Basically, renames are remove + add"
+	| myNameMap otherNameMap addedDefs removedDefs |
+	
+	myNameMap := (aCollectionOfDefinitions collect: [ :each | each name -> each ]) asOrderedDictionary.
+	otherNameMap := (anOtherCollectionOfDefinitions collect: [ :each | each name -> each ]) asOrderedDictionary.
+	
+	addedDefs := OrderedCollection new.
+	removedDefs := OrderedCollection new.
+	
+	Array streamContents: [ :aStream | anOtherCollectionOfDefinitions do: [ :otherDef |
+		myNameMap
+			at: otherDef name
+			ifAbsent: [ removedDefs add: otherDef ] ] ].
+
+	aCollectionOfDefinitions do: [ :eachMyDef |
+		otherNameMap
+			at: eachMyDef name
+			ifAbsent: [ addedDefs add: eachMyDef ] ].
+		
+	addedDefs do: anAddedBlock.
+	removedDefs do: aRemovedBlock
+]
+
+{ #category : #enumerating }
 GtCodeDefinitionDifference class >> difference: aCollectionOfDefinitions with: anOtherCollectionOfDefinitions addedDo: anAddedBlock renamedDo: aRenamedBlock removedDo: aRemovedBlock [
 	| myOriginalNameMap myNameMap otherNameMap addedDefs removedDefs renamedDefs |
 	

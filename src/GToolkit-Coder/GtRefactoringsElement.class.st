@@ -10,6 +10,13 @@ Class {
 	#category : #'GToolkit-Coder-Refactorings - UI'
 }
 
+{ #category : #'api - refactorings' }
+GtRefactoringsElement >> applyRefactorings [
+	activatableRefactorings do: [ :eachRefactoring |
+		eachRefactoring isEnabled
+			ifTrue: [ eachRefactoring execute ] ]
+]
+
 { #category : #initialization }
 GtRefactoringsElement >> initialize [
 	super initialize.

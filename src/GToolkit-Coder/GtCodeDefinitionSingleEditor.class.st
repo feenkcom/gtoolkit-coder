@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtCodeDefinitionEntityEditor,
 	#instVars : [
 		'getSelector',
-		'setSelector'
+		'setSelector',
+		'renameAnnouncement'
 	],
 	#category : #'GToolkit-Coder-Behavior - Editors'
 }
@@ -31,9 +32,10 @@ GtCodeDefinitionSingleEditor >> addErrorOverlayTo: aTagElement [
 { #category : #'api - instantiation' }
 GtCodeDefinitionSingleEditor >> create [
 	<return: #Object>
-	| aDefinition theInitialName anEditor |
+	| aDefinition theInitialName anEditor anOwner |
 	
 	aDefinition := self definition.
+	anOwner := self owner.
 	theInitialName := aDefinition perform: getSelector withArguments: {}.
 
 	anEditor := BrEditableLabel new
@@ -55,7 +57,15 @@ GtCodeDefinitionSingleEditor >> create [
 		(GtCompletionController
 			on: anEditor
 			strategy: aStencil create) install ].
-		
+
+	renameAnnouncement
+		ifNotNil: [
+			aDefinition
+				when: renameAnnouncement
+				do: [ :anEvent |
+					(anOwner isNil or: [ anEvent owner = anOwner ])
+						ifTrue: [ anEditor text: anEvent newName ] ] ].
+
 	^ anEditor
 ]
 
@@ -84,21 +94,22 @@ GtCodeDefinitionSingleEditor >> handleRenameError: anError to: aNewName from: aT
 	self addErrorOverlayTo: aTagElement
 ]
 
+{ #category : #accessing }
+GtCodeDefinitionSingleEditor >> renameEvent: anObject [
+	renameAnnouncement := anObject
+]
+
 { #category : #private }
 GtCodeDefinitionSingleEditor >> requestRename: aDefinition to: aNewName from: aTagElement [
 	setSelector
 		ifNil: [ ^ self ].
 
-	[
-		| theInitialName |
+	[ | theInitialName |
+	
 		theInitialName := aDefinition perform: getSelector withArguments: {}.
 		aTagElement text: theInitialName.
-		
-		aDefinition perform: setSelector withEnoughArguments: { aNewName }.
-		
-		aTagElement text: aNewName.
-	]
-		on: Error
+		aDefinition perform: setSelector withEnoughArguments: { aNewName }
+	]  on: Error
 		do: [ :anError |
 			self
 				handleRenameError: anError

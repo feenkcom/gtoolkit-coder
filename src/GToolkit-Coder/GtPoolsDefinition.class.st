@@ -36,8 +36,22 @@ GtPoolsDefinition >> asDefinitionString [
 	^ String streamContents: [ :stream | 
 		definitions
 			do: [ :each | stream nextPutAll: each name ]
-			separatedBy: [ stream nextPutAll: ' ' ].
-		stream space ]	
+			separatedBy: [ stream nextPutAll: ' ' ] ]
+]
+
+{ #category : #'api - accepting' }
+GtPoolsDefinition >> differenceWith: aGtPoolsDefinition [
+	| theDifference |
+
+	theDifference := GtPoolsDefinitionDifference new.
+
+	GtCodeDefinitionDifference
+		difference: self all
+		with: aGtPoolsDefinition all
+		addedDo: [ :eachPool | theDifference add: (GtPoolAddedDifference new poolName: eachPool name) ]
+		removedDo: [ :eachPool | theDifference add: (GtPoolRemovedDifference new poolName: eachPool name) ].
+		
+	^ theDifference
 ]
 
 { #category : #'api - pools' }

@@ -11,15 +11,15 @@ Class {
 	#instVars : [
 		'instVarA',
 		'instVarB',
-		'instVarC',
-		'newSlot'
+		'newSLot'
 	],
 	#classVars : [
 		'ClassVarA',
-		'ClassVarB',
-		'ClassVarC'
+		'ClassVarC',
+		'renamedClassVar'
 	],
 	#pools : [
+		'GZipConstants',
 		'GtBehaviorCoderDummySharedPool'
 	],
 	#category : #'GToolkit-Coder-Examples-Dummies'

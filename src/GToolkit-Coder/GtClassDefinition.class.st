@@ -7,7 +7,8 @@ Class {
 		'slots',
 		'classVariables',
 		'traits',
-		'pools'
+		'pools',
+		'superclass'
 	],
 	#category : #'GToolkit-Coder-Behavior - Model'
 }
@@ -20,14 +21,10 @@ GtClassDefinition class >> fromClass: aClass [
 { #category : #converting }
 GtClassDefinition >> asDefinitionString [
 	<return: #String>
-	| aStream poolString|
-
-	poolString := ''.
+	| aStream |
 
 	aStream := (String new: 800) writeStream.
-	self theSuperclass 
-		ifNil: [ aStream nextPutAll: 'ProtoObject' ]
-		ifNotNil: [aStream nextPutAll: self theSuperclassName].
+	aStream nextPutAll: self superclass asDefinitionString.
 
 	aStream nextPutAll: ' subclass: ';
 			store: self name.
@@ -44,19 +41,18 @@ GtClassDefinition >> asDefinitionString [
 	aStream cr; tab; nextPutAll: 'slots: ';
 			nextPutAll: self slots asDefinitionString.
 	
-	"Class varsL"
-	"aStream cr; tab; nextPutAll: 'classVariables: ';
-			nextPutAll: self owner classVariableDefinitionString."
+	"Class vars"
+	aStream cr; tab; nextPutAll: 'classVariables: ';
+			nextPutAll: self classVariables asDefinitionString.
 	
 	"Pool Dictionaries"
-	"poolString = '' ifFalse: [
-		aStream cr; tab; nextPutAll: 'poolDictionaries: ';
-			store: poolString]."
+	aStream cr; tab; nextPutAll: 'poolDictionaries: ';
+		store: self pools asDefinitionString.
 
 	aStream cr; tab; nextPutAll: 'package: ';
 			store: self category asDefinitionString.
 
-	self theSuperclass ifNil: [ 
+	self superclass hasSuperclass ifFalse: [ 
 		aStream nextPutAll: '.'; cr.
 		aStream nextPutAll: self name.
 		aStream space; nextPutAll: 'superclass: nil'. ].
@@ -105,6 +101,7 @@ GtClassDefinition >> differenceWith: aClassDefinition [
 	aDifference add: (self slots differenceWith: aClassDefinition slots).
 	aDifference add: (self classVariables differenceWith: aClassDefinition classVariables).
 	aDifference add: (self traits differenceWith: aClassDefinition traits).
+	aDifference add: (self pools differenceWith: aClassDefinition pools).
 
 	^ aDifference
 ]
@@ -114,7 +111,7 @@ GtClassDefinition >> editors [
 	<return: #Collection of: #GtCodeDefinitionEditor>
 	
 	^ { 
-		self superclassEditor.
+		self superclass superclassEditor.
 		self category categoryEditor.
 	 	self traits traitsEditor.
 		self slots slotsEditor.
@@ -135,9 +132,10 @@ GtClassDefinition >> fromClass: aClass [
 	ringDefinition superclass: aClass superclass asRingDefinition.
 	
 	originalName := aClass name.
-
+	
 	layout := aClass classLayout asRingMinimalDefinitionIn: anEnvironment.
 	
+	superclass := (GtClassSuperclassDefinition fromClass: aClass) parent: self.
 	category := (GtCategoryDefinition fromBehavior: aClass) parent: self.
 	slots := (GtSlotsDefinition fromClass: aClass) parent: self.
 	classVariables := (GtClassVariablesDefinition fromClass: aClass) parent: self.
@@ -187,29 +185,11 @@ GtClassDefinition >> slots [
 	^ slots
 ]
 
-{ #category : #'gt - editors' }
-GtClassDefinition >> superclassEditor [
-	<return: #GtCodeDefinitionEditor>
-	
-	^ GtCodeDefinitionSingleEditor new
-			definition: self;
-			title: 'Superclass';
-			getSelector: #theSuperclassName;
-			completion: [ GtClassesCompletionStrategy forSuperclasses: ringDefinition realClass ]
-]
+{ #category : #accessing }
+GtClassDefinition >> superclass [
+	<return: #GtClassSuperclassDefinition>
 
-{ #category : #'api - superclass' }
-GtClassDefinition >> theSuperclass [
-	<return: #RGBehavior>
-
-	^ ringDefinition superclass
-]
-
-{ #category : #'api - superclass' }
-GtClassDefinition >> theSuperclassName [
-	<return: #String>
-
-	^ ringDefinition superclass name
+	^ superclass
 ]
 
 { #category : #accessing }

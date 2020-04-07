@@ -55,11 +55,8 @@ GtTraitsDefinition >> differenceWith: aGtTraitsDefinition [
 		difference: self all
 		with: aGtTraitsDefinition all
 		addedDo: [ :eachTrait | theDifference add: (GtTraitAddedToDefinitionDifference new traitName: eachTrait name) ]
-		renamedDo: [ :eachTrait |
-			theDifference add: (GtTraitRemovedFromDefinitionDifference new traitName: eachTrait originalName).
-			theDifference add: (GtTraitAddedToDefinitionDifference new traitName: eachTrait name) ]
 		removedDo: [ :eachTrait | theDifference add: (GtTraitRemovedFromDefinitionDifference new traitName: eachTrait name) ].
-		
+
 	^ theDifference
 ]
 

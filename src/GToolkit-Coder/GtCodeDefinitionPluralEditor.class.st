@@ -15,11 +15,6 @@ Class {
 }
 
 { #category : #accessing }
-GtCodeDefinitionPluralEditor >> addAnnouncement [
-	^ addAnnouncement
-]
-
-{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> addEvent: anObject [
 	addAnnouncement := anObject
 ]
@@ -121,11 +116,6 @@ GtCodeDefinitionPluralEditor >> initialize [
 ]
 
 { #category : #accessing }
-GtCodeDefinitionPluralEditor >> removeAnnouncement [
-	^ removeAnnouncement
-]
-
-{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> removeEvent: anObject [
 	removeAnnouncement := anObject
 ]
@@ -138,11 +128,6 @@ GtCodeDefinitionPluralEditor >> removeSelector [
 { #category : #accessing }
 GtCodeDefinitionPluralEditor >> removeSelector: anObject [
 	removeSelector := anObject
-]
-
-{ #category : #accessing }
-GtCodeDefinitionPluralEditor >> renameAnnouncement [
-	^ renameAnnouncement
 ]
 
 { #category : #accessing }
