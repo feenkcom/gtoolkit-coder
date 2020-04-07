@@ -187,7 +187,10 @@ GtSlotsDefinition >> slotsEditor [
 		removeSelector: #removeSlotNamed:;
 		renameSelector: #renameSlotNamed:to:;
 		getSelector: #names;
+		modelSelector: #slotNamed:;
 		addEvent: GtBehaviorSlotAdded;
 		removeEvent: GtBehaviorSlotRemoved;
-		renameEvent: GtBehaviorSlotRenamed
+		renameEvent: GtBehaviorSlotRenamed;
+		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

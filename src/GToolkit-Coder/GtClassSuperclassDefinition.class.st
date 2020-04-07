@@ -20,6 +20,13 @@ GtClassSuperclassDefinition >> asDefinitionString [
 ]
 
 { #category : #'api - superclass' }
+GtClassSuperclassDefinition >> browseFrom: anEvent [
+	self class environment
+		at: self name
+		ifPresent: [ :aClass | anEvent currentTarget phlow spawnObject: aClass ]
+]
+
+{ #category : #'api - superclass' }
 GtClassSuperclassDefinition >> canBeSuperclass: anObject [
 	^ anObject isClass and: [ anObject isMeta not ]
 ]
@@ -131,5 +138,7 @@ GtClassSuperclassDefinition >> superclassEditor [
 			getSelector: #name;
 			setSelector: #name:;
 			renameEvent: GtBehaviorSuperclassRenamed;
-			completion: [ GtClassesCompletionStrategy forSuperclasses: (self class environment at: self name) ]
+			completion: [ GtClassesCompletionStrategy forSuperclasses: (self class environment at: self name) ];
+			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+			whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

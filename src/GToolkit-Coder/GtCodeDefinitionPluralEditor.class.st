@@ -55,13 +55,35 @@ GtCodeDefinitionPluralEditor >> create [
 		look: (BrGlamorousTaggerEditableLook new
 			margin: self margin;
 			editableLabel: [ :aTaggerTag |
-				| anEditableLabel |
+				| anEditableLabel eachLabelDefinition |
+
+				eachLabelDefinition := aTaggerTag ifNotNil: [
+					modelSelector ifNotNil: [ :aSelector | 
+						aDefinition perform: aSelector withEnoughArguments: { aTaggerTag name } ] ].
+
 				anEditableLabel := BrEditableLabel new
 					text: aTaggerTag name;
 					styler: styler;
 					inputFilter: inputFilter;
 					look: lookStencil create;
 					yourself.
+				
+				interactions do: [ :eachAssociation |
+					anEditableLabel
+						whenKey: eachAssociation key
+						labelDo: [ :aTextEditor :anEvent |							
+							anEvent consumed: true.
+							eachLabelDefinition
+								ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ] ].
+					
+				eventHandlers do: [ :eachAssociation |
+					anEditableLabel
+						when: eachAssociation key
+						do: [ :anEvent |
+							anEvent currentTarget isReadOnly
+								ifTrue: [
+									eachLabelDefinition
+										ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ] ] ].
 				
 				completionStencil ifNotNil: [ :aStencil |
 					(GtCompletionController

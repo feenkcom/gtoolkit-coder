@@ -17,6 +17,13 @@ GtPoolDefinition >> asDefinitionString [
 	^ self name
 ]
 
+{ #category : #'api - pool' }
+GtPoolDefinition >> browseFrom: anEvent [
+	self class environment
+		at: self name
+		ifPresent: [ :aPool | anEvent currentTarget phlow spawnObject: aPool ]
+]
+
 { #category : #'instance creation' }
 GtPoolDefinition >> fromPool: aSharedPoolClass [
 	name := aSharedPoolClass name

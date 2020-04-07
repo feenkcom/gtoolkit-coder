@@ -56,9 +56,13 @@ GtClassVariablesDefinition >> classVariablesEditor [
 			removeSelector: #removeClassVariableNamed:;
 			renameSelector: #renameClassVariableNamed:to:;
 			getSelector: #names;
+			modelSelector: #classVariableNamed:;
 			addEvent: GtBehaviorClassVariableAdded;
 			removeEvent: GtBehaviorClassVariableRemoved;
-			renameEvent: GtBehaviorClassVariableRenamed
+			renameEvent: GtBehaviorClassVariableRenamed;
+			whenKey: BlKeyCombination primaryI do: [ :anEvent :aDefinition  | aDefinition inspectFrom: anEvent ];
+			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+			whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
 
 { #category : #'api - accepting' }

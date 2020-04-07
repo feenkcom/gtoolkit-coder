@@ -138,6 +138,7 @@ GtPoolsDefinition >> poolsEditor [
 		removeSelector: #removePoolNamed:;
 		renameSelector: #renamePoolNamed:to:;
 		getSelector: #names;
+		modelSelector: #poolNamed:;
 		addEvent: GtBehaviorPoolAdded;
 		removeEvent: GtBehaviorPoolRemoved;
 		renameEvent: GtBehaviorPoolRenamed;
@@ -145,7 +146,9 @@ GtPoolsDefinition >> poolsEditor [
 			BrLabel new
 				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
 				text: '+' ];
-		completion: [ GtPoolsCompletionStrategy new ]
+		completion: [ GtPoolsCompletionStrategy new ];
+		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
 
 { #category : #'api - pools' }

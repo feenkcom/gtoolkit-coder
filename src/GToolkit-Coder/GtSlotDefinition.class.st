@@ -31,6 +31,11 @@ GtSlotDefinition >> asDefinitionString [
 					print: self type ] ]
 ]
 
+{ #category : #'api - slot' }
+GtSlotDefinition >> browseFrom: anEvent [
+	anEvent currentTarget phlow spawnObject: self
+]
+
 { #category : #initialization }
 GtSlotDefinition >> defaultSlotType [
 	^ InstanceVariableSlot name

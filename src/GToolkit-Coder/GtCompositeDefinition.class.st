@@ -31,7 +31,7 @@ GtCompositeDefinition >> definitionNamed: aSymbol ifNone: anExceptionBlock [
 	<return: #GtCodeDefinition>
 	
 	^ definitions
-		detect: [ :eachDefinition | eachDefinition name = aSymbol ]
+		detect: [ :eachDefinition | eachDefinition name = aSymbol asSymbol ]
 		ifNone: anExceptionBlock
 ]
 

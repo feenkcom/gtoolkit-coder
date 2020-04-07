@@ -178,7 +178,7 @@ GtTraitsDefinition >> traitNamed: aSymbol [
 	<return: #GtTraitDefinition>
 	
 	^ self
-		definitionNamed: aSymbol 
+		definitionNamed: aSymbol
 		ifNone: [ self errorTraitNotFound: aSymbol ]
 ]
 
@@ -193,6 +193,7 @@ GtTraitsDefinition >> traitsEditor [
 		removeSelector: #removeTraitNamed:;
 		renameSelector: #renameTraitNamed:to:;
 		getSelector: #names;
+		modelSelector: #traitNamed:;
 		addEvent: GtBehaviorTraitAdded;
 		removeEvent: GtBehaviorTraitRemoved;
 		renameEvent: GtBehaviorTraitRenamed;
@@ -200,5 +201,7 @@ GtTraitsDefinition >> traitsEditor [
 			BrLabel new
 				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
 				text: '+' ];
-		completion: [ GtTraitsCompletionStrategy new ]
+		completion: [ GtTraitsCompletionStrategy new ];
+		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

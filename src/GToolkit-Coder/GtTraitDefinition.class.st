@@ -14,6 +14,13 @@ GtTraitDefinition class >> fromTrait: aTrait [
 	^ self new fromTrait: aTrait
 ]
 
+{ #category : #'api - trait' }
+GtTraitDefinition >> browseFrom: anEvent [
+	self class environment
+		at: self name
+		ifPresent: [ :aTrait | anEvent currentTarget phlow spawnObject: aTrait ]
+]
+
 { #category : #accessing }
 GtTraitDefinition >> category [
 	<return: #GtCategoryDefinition>

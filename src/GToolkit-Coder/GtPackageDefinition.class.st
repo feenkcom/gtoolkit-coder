@@ -17,6 +17,17 @@ GtPackageDefinition >> asDefinitionString [
 	^ self name
 ]
 
+{ #category : #'api - package' }
+GtPackageDefinition >> browseFrom: anEvent [
+	| aRealPackage |
+
+	aRealPackage := RPackageOrganizer default
+		packageNamed: self name
+		ifAbsent: [ ^ self ].
+		
+	anEvent currentTarget phlow spawnObject: aRealPackage
+]
+
 { #category : #'api - accepting' }
 GtPackageDefinition >> differenceWith: aPackageDefinition [
 	<return: #GtCodeDefinitionDifference>
@@ -60,5 +71,7 @@ GtPackageDefinition >> packageEditor [
 		definition: self;
 		getSelector: #name;
 		setSelector: #name:;
-		completion: [ GtPackagesCompletionStrategy new ]
+		completion: [ GtPackagesCompletionStrategy new ];
+		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

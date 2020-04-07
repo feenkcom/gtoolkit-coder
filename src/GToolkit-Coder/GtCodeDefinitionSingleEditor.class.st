@@ -32,13 +32,13 @@ GtCodeDefinitionSingleEditor >> addErrorOverlayTo: aTagElement [
 { #category : #'api - instantiation' }
 GtCodeDefinitionSingleEditor >> create [
 	<return: #Object>
-	| aDefinition theInitialName anEditor anOwner |
+	| aDefinition theInitialName anEditableLabel anOwner |
 	
 	aDefinition := self definition.
 	anOwner := self owner.
 	theInitialName := aDefinition perform: getSelector withArguments: {}.
 
-	anEditor := BrEditableLabel new
+	anEditableLabel := BrEditableLabel new
 		look: lookStencil create;
 		margin: self margin;
 		text: theInitialName;
@@ -47,15 +47,25 @@ GtCodeDefinitionSingleEditor >> create [
 				requestRename: aDefinition
 				to: aWish text asString
 				from: aWish currentTarget ].
+
+	interactions do: [ :eachAssociation |
+		anEditableLabel
+			whenKey: eachAssociation key
+			labelDo: [ :aTextEditor :anEvent |
+				anEvent consumed: true.
+				eachAssociation value cull: anEvent cull: aDefinition ] ].
 		
-		";
-		whenKey: BlKeyCombination primaryB
-			labelDo: [ :anEditor :anEvent | anEvent currentTarget phlow
-				spawnObject: headerModel packageName asPackage ]".
+	eventHandlers do: [ :eachAssociation |
+		anEditableLabel
+			when: eachAssociation key
+			do: [ :anEvent |
+				anEvent currentTarget isReadOnly
+					ifTrue: [
+						eachAssociation value cull: anEvent cull: aDefinition ] ] ].
 
 	completionStencil ifNotNil: [ :aStencil |
 		(GtCompletionController
-			on: anEditor
+			on: anEditableLabel
 			strategy: aStencil create) install ].
 
 	renameAnnouncement
@@ -64,9 +74,9 @@ GtCodeDefinitionSingleEditor >> create [
 				when: renameAnnouncement
 				do: [ :anEvent |
 					(anOwner isNil or: [ anEvent owner = anOwner ])
-						ifTrue: [ anEditor text: anEvent newName ] ] ].
+						ifTrue: [ anEditableLabel text: anEvent newName ] ] ].
 
-	^ anEditor
+	^ anEditableLabel
 ]
 
 { #category : #accessing }

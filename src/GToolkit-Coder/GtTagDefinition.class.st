@@ -25,6 +25,19 @@ GtTagDefinition >> asDefinitionString [
 	^ self name
 ]
 
+{ #category : #'api - package' }
+GtTagDefinition >> browseFrom: anEvent [
+	| aRealPackage |
+
+	aRealPackage := RPackageOrganizer default
+		packageNamed: self parent category package name
+		ifAbsent: [ ^ self ].
+		
+	aRealPackage
+		classTagNamed: self name
+		ifPresent: [ :aTag | anEvent currentTarget phlow spawnObject: aTag ]
+]
+
 { #category : #'api - accepting' }
 GtTagDefinition >> differenceWith: aTagDefinition [
 	<return: #GtCodeDefinitionDifference>
@@ -95,5 +108,7 @@ GtTagDefinition >> tagEditor [
 		definition: self;
 		getSelector: #name;
 		setSelector: #name:;
-		completion: [ GtPackagesCompletionStrategy new ]
+		completion: [ GtPackagesCompletionStrategy new ];
+		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
