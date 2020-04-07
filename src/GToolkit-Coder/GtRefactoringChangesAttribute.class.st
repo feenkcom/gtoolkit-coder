@@ -11,8 +11,7 @@ Class {
 GtRefactoringChangesAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 
 	^ GtRefactoringsPreviewButton new
-		refactorings: [ { refactoring } ];
-		label: 'Preview'
+		refactorings: [ { refactoring } ]
 ]
 
 { #category : #initialization }
