@@ -107,90 +107,6 @@ GtBehaviorCoderElement >> buildHeader [
 		margin: (BlInsets top: 5 left: 5)
 ]
 
-{ #category : #'building ui' }
-GtBehaviorCoderElement >> buildParentLink [
-	| element superclassElement packageElement packageCoder |
-	element := BlElement new.
-	element layout: BlLinearLayout new beVertical.
-	element
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	classCoder theClass superclass notNil
-		ifTrue: [ superclassElement := BlElement new.
-			superclassElement layout: BlLinearLayout new beHorizontal.
-			superclassElement
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical fitContent ].
-			superclassElement
-				addChild:
-					(BrLabel new
-						margin: (BlInsets left: 10);
-						look: BrGlamorousLabelLook new glamorousRegularFont;
-						text: 'Super: ').
-			superclassElement
-				addChild:
-					(BrButton new
-						look:
-							(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
-								+ BrGlamorousLabelLook new glamorousRegularFont;
-						label: classCoder theClass superclass name;
-						action: [ | coder |
-							coder := GtClassCoder forClass: classCoder theClass superclass.
-							self
-								allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
-								ifFound: [ :p | p updateSelection: coder ]
-								ifNone: [ self phlow spawnObject: coder ] ]).
-			element addChild: superclassElement ].
-	packageElement := BlElement new.
-	packageCoder := GtPackageCoder
-		forPackage: classCoder theClass package.
-	packageElement layout: BlLinearLayout new beHorizontal.
-	packageElement
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	packageElement
-		addChild:
-			(BrLabel new
-				margin: (BlInsets left: 10);
-				look: BrGlamorousLabelLook new glamorousRegularFont;
-				text: 'In: ').
-	packageElement
-		addChild:
-			(BrButton new
-				look:
-					(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
-						+ BrGlamorousLabelLook new glamorousRegularFont;
-				label: packageCoder name;
-				action: [ self
-						allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
-						ifFound: [ :p | p updateSelection: packageCoder ]
-						ifNone: [ self phlow spawnObject: packageCoder ] ]).
-	(packageCoder packageTagForClass: classCoder theClass)
-		ifNotNil: [ :tagCoder | 
-			packageElement
-				addChild:
-					(BrLabel new
-						margin: (BlInsets left: 5);
-						look: BrGlamorousLabelLook new glamorousRegularFont;
-						text: 'Tag: ').
-			packageElement
-				addChild:
-					(BrButton new
-						look:
-							(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
-								+ BrGlamorousLabelLook new glamorousRegularFont;
-						label: tagCoder name;
-						action: [ self
-								allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
-								ifFound: [ :p | p updateSelection: tagCoder ]
-								ifNone: [ self phlow spawnObject: tagCoder ] ]) ].
-	element addChild: packageElement.
-	^ element
-]
-
 { #category : #accessing }
 GtBehaviorCoderElement >> classCoder [
 	^ classCoder
@@ -246,7 +162,9 @@ GtBehaviorCoderElement >> initialize [
 			ClassModificationApplied , ClassModifiedClassDefinition
 				, ClassParentRenamed , ClassRenamed
 		send: #definitionChanged:
-		to: self
+		to: self.
+		
+	self when: BlClickEvent do: [ self requestFocus ]
 ]
 
 { #category : #'updating ui' }

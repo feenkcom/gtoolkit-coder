@@ -23,6 +23,7 @@ GtCodeDefinitionCompositeEntityEditor >> create [
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical fitContent ];
+		focusability: BlFocusability ignore;
 		addChildren: (Array streamContents: [ :aStream |
 			| aCurrentIndex |
 			aCurrentIndex := 1.
@@ -36,14 +37,12 @@ GtCodeDefinitionCompositeEntityEditor >> create [
 					separatedBy: [
 						separatorStencil ifNotNil: [ :aStencil |
 							aStream nextPut: (aStencil asElement
+								focusability: BlFocusability none;
 								margin: (BlInsets left: ((4 - self margin right) max: 0) right: ((4 - self margin left) max: 0));
 								constraintsDo: [ :c | c flow vertical alignCenter ]) ].
 						
 						showSectionNames ifTrue: [
-							aStream nextPut: (self buildSectionLabel: (editors at: aCurrentIndex) title)
-						].
-						
-						 ]])
+							aStream nextPut: (self buildSectionLabel: (editors at: aCurrentIndex) title) ] ] ])
 ]
 
 { #category : #accessing }

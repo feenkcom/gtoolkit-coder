@@ -15,6 +15,7 @@ GtCodeDefinitionNestedEntityEditor >> create [
 	
 	aContainer := BlElement new
 		layout: (BlLinearLayout vertical);
+		focusability: BlFocusability ignore;
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical fitContent ].
@@ -25,6 +26,7 @@ GtCodeDefinitionNestedEntityEditor >> create [
 	
 	theNestedEditors := BlElement new
 		layout: (BlGridLayout new columnCount: 2);
+		focusability: BlFocusability ignore;
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical fitContent ].
