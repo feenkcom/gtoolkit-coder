@@ -39,7 +39,7 @@ GtBehaviorCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
 
 { #category : #'private - instance creation' }
 GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
-	| theProperties anAcceptButton |
+	| theProperties |
 		
 	theProperties := BlElement new
 		layout: (BlGridLayout new columnCount: 2);
@@ -55,16 +55,8 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 					margin: self buttonMargin;
 					asElement) } ].
 
-	theProperties addChild: (anAcceptButton := BrButton new
-		icon: BrGlamorousIcons accept;
-		beSmall;
-		look: BrGlamorousButtonWithIconLook new + (BrGlamorousWithDropdownLook
-			handle: [ BrButton new
-				icon: BrGlamorousIcons empty asElement;
-				beSmall;
-				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
-			content: [ self buildRefactoringPreviewFrom: anAcceptButton ]);
-		label: 'Apply';
+	theProperties addChild: (GtRefactoringsPreviewButton new
+		refactorings: [ headerModel refactorings ];
 		constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
 	^ theProperties
@@ -91,43 +83,6 @@ GtBehaviorCoderHeaderElement >> buildDefinitionViewer [
 					asElement) } ].
 
 	^ theProperties
-]
-
-{ #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> buildRefactoringPreviewFrom: aDropdownAnchor [
-	| theRefactoringsElement anAcceptButton aContainer |
-
-	theRefactoringsElement := GtRefactoringsElement new
-		hExact: self previewWidth * 1.25;
-		vFitContent;
-		refactorings: headerModel refactorings.
-		
-	anAcceptButton := BrButton new
-		icon: BrGlamorousIcons accept asElement;
-		beSmall;
-		look: BrGlamorousButtonWithIconLook new;
-		label: 'Apply';
-		margin: (BlInsets top: 0 left: 10 bottom: 10 right: 0);
-		action: [
-			aDropdownAnchor fireEvent: (BrDropdownHideWish new anchor: aDropdownAnchor).
-			theRefactoringsElement applyRefactorings ];
-		yourself.
-	
-	aContainer := BlElement new
-		layout: BlLinearLayout vertical;
-		when: GtPhlowObjectToSpawn do: [ :anEvent | self fireEvent: (GtPhlowObjectToSpawn new
-			object: anEvent object;
-			sourceElement: anEvent target) ];
-		constraintsDo: [ :c |
-			c horizontal exact: self previewWidth.
-			c vertical fitContentLimitedOffset: 20 ].
-	aContainer addChild: (theRefactoringsElement asScalableElement
-			width: self previewWidth;
-			fitWidth;
-			constraintsDo: [ :c | c vertical fitContent ]) asScrollableElement.
-	aContainer addChild: anAcceptButton. 
-
-	^ aContainer
 ]
 
 { #category : #'private - instance creation' }
