@@ -1,7 +1,7 @@
 Class {
 	#name : #GtBehaviorDefinitionDifference,
 	#superclass : #GtCompositeDefinitionDifference,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Differences'
 }
 
 { #category : #'api - behavior difference' }

@@ -5,7 +5,7 @@ Class {
 		'name',
 		'originalName'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
@@ -32,7 +32,7 @@ GtTagDefinition >> browseFrom: anEvent [
 	aRealPackage := RPackageOrganizer default
 		packageNamed: self parent category package name
 		ifAbsent: [ ^ self ].
-		
+
 	aRealPackage
 		classTagNamed: self name
 		ifPresent: [ :aTag | anEvent currentTarget phlow spawnObject: aTag ]

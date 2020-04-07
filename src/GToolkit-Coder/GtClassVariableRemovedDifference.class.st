@@ -1,7 +1,7 @@
 Class {
 	#name : #GtClassVariableRemovedDifference,
 	#superclass : #GtClassVariableDifference,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Differences'
 }
 
 { #category : #converting }

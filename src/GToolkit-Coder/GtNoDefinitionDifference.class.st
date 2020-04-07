@@ -1,7 +1,7 @@
 Class {
 	#name : #GtNoDefinitionDifference,
 	#superclass : #GtCodeDefinitionDifference,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Differences'
 }
 
 { #category : #testing }

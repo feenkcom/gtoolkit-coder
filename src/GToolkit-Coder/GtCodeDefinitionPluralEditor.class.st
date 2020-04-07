@@ -59,7 +59,9 @@ GtCodeDefinitionPluralEditor >> create [
 
 				eachLabelDefinition := aTaggerTag ifNotNil: [
 					modelSelector ifNotNil: [ :aSelector | 
-						aDefinition perform: aSelector withEnoughArguments: { aTaggerTag name } ] ].
+						aTaggerTag name
+							ifEmpty: [ nil ]
+							ifNotEmpty: [ :aTagName | aDefinition perform: aSelector withEnoughArguments: { aTaggerTag name } ] ] ].
 
 				anEditableLabel := BrEditableLabel new
 					text: aTaggerTag name;

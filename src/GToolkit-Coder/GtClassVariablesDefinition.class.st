@@ -1,12 +1,17 @@
 Class {
 	#name : #GtClassVariablesDefinition,
 	#superclass : #GtCompositeDefinition,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
 GtClassVariablesDefinition class >> fromClass: aClass [
 	^ self new fromClass: aClass
+]
+
+{ #category : #'instance creation' }
+GtClassVariablesDefinition class >> fromTrait: aTrait [
+	^ self new fromTrait: aTrait
 ]
 
 { #category : #'api - class vars' }
@@ -27,13 +32,16 @@ GtClassVariablesDefinition >> addClassVariableNamed: aSymbol [
 { #category : #converting }
 GtClassVariablesDefinition >> asDefinitionString [
 	self isEmpty
-		ifTrue: [ ^ '' ].
+		ifTrue: [ ^ '{ }' ].
 
-	^ String streamContents: [ :stream | 
-		definitions
-			do: [ :each | stream nextPutAll: each name ]
-			separatedBy: [ stream nextPutAll: ' ' ].
-		stream space ]
+	^ String streamContents: [ :aStream | 
+		aStream nextPutAll: '{ '.
+	
+		definitions do: [ :eachVariable | aStream nextPutAll: eachVariable asDefinitionString ]
+			separatedBy: [ 
+				aStream nextPutAll: '. ' ].		
+		definitions ifNotEmpty: [ aStream nextPutAll: '.'  ].
+		aStream nextPutAll: ' }'. ]
 ]
 
 { #category : #'api - class vars' }
@@ -106,6 +114,11 @@ GtClassVariablesDefinition >> errorClassVariableNotFound: aSymbol [
 { #category : #initialization }
 GtClassVariablesDefinition >> fromClass: aClass [
 	definitions := aClass classVariables collect: [ :eachClassVariable | (GtVariableDefinition fromClassVariable: eachClassVariable) parent: self ]
+]
+
+{ #category : #initialization }
+GtClassVariablesDefinition >> fromTrait: aTrait [
+	definitions := aTrait classVariables collect: [ :eachClassVariable | (GtVariableDefinition fromClassVariable: eachClassVariable) parent: self ]
 ]
 
 { #category : #'private - notifying' }

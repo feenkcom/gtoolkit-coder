@@ -1,7 +1,7 @@
 Class {
 	#name : #GtClassVariablesDefinitionDifference,
 	#superclass : #GtCompositeDefinitionDifference,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Differences'
 }
 
 { #category : #printing }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'differences'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Differences'
 }
 
 { #category : #'instance creation' }

@@ -6,7 +6,7 @@ Class {
 		'name',
 		'value'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
@@ -21,7 +21,7 @@ GtVariableDefinition class >> named: aName [
 
 { #category : #converting }
 GtVariableDefinition >> asDefinitionString [
-	^ self name
+	^ self name printString
 ]
 
 { #category : #'api - variable' }

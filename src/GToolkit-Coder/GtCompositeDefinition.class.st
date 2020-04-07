@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'definitions'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #accessing }

@@ -10,7 +10,7 @@ Class {
 		'pools',
 		'superclass'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
@@ -129,7 +129,6 @@ GtClassDefinition >> fromClass: aClass [
 	anEnvironment backend: (RGReadOnlyImageBackend for: anEnvironment).
 	
 	ringDefinition := aClass asRingDefinition.
-	ringDefinition superclass: aClass superclass asRingDefinition.
 	
 	originalName := aClass name.
 	

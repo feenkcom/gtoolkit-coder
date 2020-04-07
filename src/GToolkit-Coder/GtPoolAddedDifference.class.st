@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPoolAddedDifference,
 	#superclass : #GtPoolDifference,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Differences'
 }
 
 { #category : #converting }

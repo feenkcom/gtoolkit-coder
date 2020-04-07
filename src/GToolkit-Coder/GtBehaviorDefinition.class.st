@@ -5,14 +5,14 @@ Class {
 		'ringDefinition',
 		'originalName'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
 GtBehaviorDefinition class >> fromBehavior: aBehavior [
 	^ aBehavior isClass
 		ifTrue: [ aBehavior isMeta
-			ifTrue: [ GtMetaclassDefinition new ]
+			ifTrue: [ GtMetaclassDefinition fromMetaclass: aBehavior ]
 			ifFalse: [ GtClassDefinition fromClass: aBehavior ] ]
 		ifFalse: [ aBehavior isTrait
 			ifTrue: [ GtTraitDefinition fromTrait: aBehavior ]
