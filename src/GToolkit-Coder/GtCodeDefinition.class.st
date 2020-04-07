@@ -5,7 +5,7 @@ Class {
 		'announcer',
 		'parent'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'announcer - subscription' }

@@ -11,8 +11,7 @@ Class {
 	#instVars : [
 		'instVarA',
 		'instVarB',
-		'instVarC',
-		'newSlot'
+		'instVarC'
 	],
 	#classVars : [
 		'ClassVarA',
@@ -21,6 +20,9 @@ Class {
 	],
 	#pools : [
 		'GtBehaviorCoderDummySharedPool'
+	],
+	#classInstVars : [
+		'hello'
 	],
 	#category : #'GToolkit-Coder-Examples-Dummies'
 }

@@ -1,10 +1,10 @@
 Class {
-	#name : #GtSlotsDefinitionDifference,
+	#name : #GtPoolsDefinitionDifference,
 	#superclass : #GtCompositeDefinitionDifference,
 	#category : #'GToolkit-Coder-Behavior - Differences'
 }
 
 { #category : #printing }
-GtSlotsDefinitionDifference >> printOn: aStream [
-	aStream nextPutAll: 'Slots'
+GtPoolsDefinitionDifference >> printOn: aStream [
+	aStream nextPutAll: 'Pools'
 ]

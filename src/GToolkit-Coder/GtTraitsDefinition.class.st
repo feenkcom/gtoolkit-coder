@@ -1,7 +1,7 @@
 Class {
 	#name : #GtTraitsDefinition,
 	#superclass : #GtCompositeDefinition,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
@@ -55,11 +55,8 @@ GtTraitsDefinition >> differenceWith: aGtTraitsDefinition [
 		difference: self all
 		with: aGtTraitsDefinition all
 		addedDo: [ :eachTrait | theDifference add: (GtTraitAddedToDefinitionDifference new traitName: eachTrait name) ]
-		renamedDo: [ :eachTrait |
-			theDifference add: (GtTraitRemovedFromDefinitionDifference new traitName: eachTrait originalName).
-			theDifference add: (GtTraitAddedToDefinitionDifference new traitName: eachTrait name) ]
 		removedDo: [ :eachTrait | theDifference add: (GtTraitRemovedFromDefinitionDifference new traitName: eachTrait name) ].
-		
+
 	^ theDifference
 ]
 
@@ -181,7 +178,7 @@ GtTraitsDefinition >> traitNamed: aSymbol [
 	<return: #GtTraitDefinition>
 	
 	^ self
-		definitionNamed: aSymbol 
+		definitionNamed: aSymbol
 		ifNone: [ self errorTraitNotFound: aSymbol ]
 ]
 
@@ -196,6 +193,7 @@ GtTraitsDefinition >> traitsEditor [
 		removeSelector: #removeTraitNamed:;
 		renameSelector: #renameTraitNamed:to:;
 		getSelector: #names;
+		modelSelector: #traitNamed:;
 		addEvent: GtBehaviorTraitAdded;
 		removeEvent: GtBehaviorTraitRemoved;
 		renameEvent: GtBehaviorTraitRenamed;
@@ -203,5 +201,7 @@ GtTraitsDefinition >> traitsEditor [
 			BrLabel new
 				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
 				text: '+' ];
-		completion: [ GtTraitsCompletionStrategy new ]
+		completion: [ GtTraitsCompletionStrategy new ];
+		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

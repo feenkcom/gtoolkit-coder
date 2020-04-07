@@ -5,13 +5,8 @@ Class {
 		'definition',
 		'behavior'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - UI'
 }
-
-{ #category : #'api - behavior' }
-GtBehaviorCoderHeaderModel >> apply [
-	self definition applyOn: self behavior
-]
 
 { #category : #'api - behavior' }
 GtBehaviorCoderHeaderModel >> behavior [
@@ -34,22 +29,6 @@ GtBehaviorCoderHeaderModel >> behaviorName [
 	<return: #String>
 	
 	^ self behavior name
-]
-
-{ #category : #'api - behavior' }
-GtBehaviorCoderHeaderModel >> changes [
-	| theRefactorings aModel |
-	
-	aModel := RBNamespace new.
-	theRefactorings := self refactoringsIn: aModel.
-
-	theRefactorings do: [ :eachRefactoring |
-		[
-		eachRefactoring transform  ]
-			on: RBRefactoringError
-			do: [:ex | ] ].
-		
-	^ aModel changes gtWhatToDisplay
 ]
 
 { #category : #accessing }

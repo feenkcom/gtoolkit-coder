@@ -1,18 +1,18 @@
 Class {
-	#name : #GtSlotDifference,
+	#name : #GtPoolDifference,
 	#superclass : #GtCodeDefinitionDifference,
 	#instVars : [
-		'slotName'
+		'poolName'
 	],
 	#category : #'GToolkit-Coder-Behavior - Differences'
 }
 
 { #category : #accessing }
-GtSlotDifference >> slotName [
-	^ slotName
+GtPoolDifference >> poolName [
+	^ poolName
 ]
 
 { #category : #accessing }
-GtSlotDifference >> slotName: anObject [
-	slotName := anObject
+GtPoolDifference >> poolName: anObject [
+	poolName := anObject
 ]

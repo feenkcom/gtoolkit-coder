@@ -1,7 +1,7 @@
 Class {
 	#name : #GtTagsDefinition,
 	#superclass : #GtCompositeDefinition,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }

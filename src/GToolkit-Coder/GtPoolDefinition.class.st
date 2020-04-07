@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'name'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
@@ -15,6 +15,13 @@ GtPoolDefinition class >> fromPool: aSharedPoolClass [
 { #category : #converting }
 GtPoolDefinition >> asDefinitionString [
 	^ self name
+]
+
+{ #category : #'api - pool' }
+GtPoolDefinition >> browseFrom: anEvent [
+	self class environment
+		at: self name
+		ifPresent: [ :aPool | anEvent currentTarget phlow spawnObject: aPool ]
 ]
 
 { #category : #'instance creation' }

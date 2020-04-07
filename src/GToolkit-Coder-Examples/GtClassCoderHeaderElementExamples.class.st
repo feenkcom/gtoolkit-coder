@@ -18,6 +18,19 @@ GtClassCoderHeaderElementExamples >> coderHeaderElementForClass [
 ]
 
 { #category : #'examples - header' }
+GtClassCoderHeaderElementExamples >> coderHeaderElementForMetaclass [
+	<gtExample>
+	| aCoder aCoderHeaderElement |
+
+	aCoder := GtClassCoderExamples new coderForClass.
+	aCoder forClass: GtBehaviorCoderDummyClass class.
+	aCoderHeaderElement := GtBehaviorCoderHeaderElement new classCoder: aCoder.
+	aCoderHeaderElement expand.
+
+	^ aCoderHeaderElement
+]
+
+{ #category : #'examples - header' }
 GtClassCoderHeaderElementExamples >> coderHeaderElementForTrait [
 	<gtExample>
 	| aCoder aCoderHeaderElement |

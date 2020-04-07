@@ -3,9 +3,10 @@ Class {
 	#superclass : #GtCodeDefinition,
 	#instVars : [
 		'originalName',
-		'name'
+		'name',
+		'value'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
@@ -20,13 +21,24 @@ GtVariableDefinition class >> named: aName [
 
 { #category : #converting }
 GtVariableDefinition >> asDefinitionString [
-	^ self name
+	^ self name printString
+]
+
+{ #category : #'api - variable' }
+GtVariableDefinition >> browseFrom: anEvent [
+	anEvent currentTarget phlow spawnObject: self
 ]
 
 { #category : #initialization }
 GtVariableDefinition >> fromClassVariable: aClassVariable [
 	name := aClassVariable name asSymbol.
-	originalName := name
+	originalName := name.
+	value := aClassVariable value
+]
+
+{ #category : #'api - variable' }
+GtVariableDefinition >> inspectFrom: anEvent [
+	anEvent currentTarget phlow spawnObject: self value
 ]
 
 { #category : #accessing }
@@ -58,4 +70,9 @@ GtVariableDefinition >> originalName: anObject [
 { #category : #printing }
 GtVariableDefinition >> printOn: aStream [
 	aStream print: self name
+]
+
+{ #category : #accessing }
+GtVariableDefinition >> value [
+	^ value
 ]

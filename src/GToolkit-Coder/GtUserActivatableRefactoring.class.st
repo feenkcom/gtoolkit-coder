@@ -3,6 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'refactoring',
+		'refactoringChanges',
 		'changes',
 		'isEnabled',
 		'dangers'
@@ -33,17 +34,19 @@ GtUserActivatableRefactoring >> changes [
 ]
 
 { #category : #private }
-GtUserActivatableRefactoring >> computeRefactoringChanges: aRBRefactoring [
-	| theChanges |
-
-	[ aRBRefactoring transform ] on: Error do: [ :e | ].	
-	theChanges := aRBRefactoring changes.
-	
+GtUserActivatableRefactoring >> computeInterestingChanges: aRefactoryChange [	
 	self
-		assert: [ theChanges class = RBCompositeRefactoryChange ]
+		assert: [ aRefactoryChange class = RBCompositeRefactoryChange ]
 		description: [ 'We assume that changes returned by the refactoring is a composite change' ].
 	
-	^ (theChanges gtChildren collect: [ :eachRefactoryChange | GtUserActivatableChange fromChange: eachRefactoryChange ])
+	^ (aRefactoryChange gtChildren collect: [ :eachRefactoryChange | GtUserActivatableChange fromChange: eachRefactoryChange ])
+]
+
+{ #category : #private }
+GtUserActivatableRefactoring >> computeRefactoringChanges: aRBRefactoring [
+	[ aRBRefactoring transform ] on: Error do: [ :e | ].	
+
+	^ aRBRefactoring changes
 ]
 
 { #category : #private }
@@ -61,12 +64,22 @@ GtUserActivatableRefactoring >> description [
 	^ self refactoring gtDescription
 ]
 
+{ #category : #execution }
+GtUserActivatableRefactoring >> execute [
+	self isEnabled
+		ifFalse: [ ^ self ].
+
+	RBRefactoryChangeManager instance performChange: refactoringChanges; addUndoPointer: 1
+]
+
 { #category : #initialization }
 GtUserActivatableRefactoring >> fromRefactoring: anRBRefactoring [
 	refactoring := anRBRefactoring.
 
 	dangers := self computeRefactoringDangers: refactoring.
-	changes := self computeRefactoringChanges: refactoring.
+	refactoringChanges := self computeRefactoringChanges: refactoring.
+	changes := self computeInterestingChanges: refactoringChanges.
+	
 	isEnabled := dangers isEmpty
 ]
 
@@ -88,12 +101,4 @@ GtUserActivatableRefactoring >> isEnabled: aBoolean [
 { #category : #accessing }
 GtUserActivatableRefactoring >> refactoring [
 	^ refactoring
-]
-
-{ #category : #accessing }
-GtUserActivatableRefactoring >> refactoring: anRBRefactoring [
-	
-	refactoring := anRBRefactoring.
-	changes := self computeRefactoringChanges: refactoring.
-	dangers := self computeRefactoringDangers: refactoring.
 ]

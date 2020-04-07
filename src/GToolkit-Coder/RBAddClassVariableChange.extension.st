@@ -1,19 +1,14 @@
-Extension { #name : #RBRemovePoolVariableChange }
+Extension { #name : #RBAddClassVariableChange }
 
 { #category : #'*GToolkit-Coder' }
-RBRemovePoolVariableChange >> changeObject [
-	^ Smalltalk globals at: self variable asSymbol
-]
-
-{ #category : #'*GToolkit-Coder' }
-RBRemovePoolVariableChange >> gtDiff [
+RBAddClassVariableChange >> gtDiff [
 	| aClass aDefinition oldSource newSource |
 	
 	aClass := self changeClass.
 	aDefinition := GtBehaviorDefinition fromBehavior: aClass.
 	oldSource := aDefinition asDefinitionString.
 	
-	aDefinition pools removePoolNamed: variable asSymbol.
+	aDefinition classVariables addClassVariableNamed: variable asSymbol.
 	newSource := aDefinition asDefinitionString.
 
 	^ ClassDiffBuilder

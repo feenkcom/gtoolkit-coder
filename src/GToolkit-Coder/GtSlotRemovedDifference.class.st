@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSlotRemovedDifference,
 	#superclass : #GtSlotDifference,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Differences'
 }
 
 { #category : #converting }

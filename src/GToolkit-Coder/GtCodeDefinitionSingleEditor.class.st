@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtCodeDefinitionEntityEditor,
 	#instVars : [
 		'getSelector',
-		'setSelector'
+		'setSelector',
+		'renameAnnouncement'
 	],
 	#category : #'GToolkit-Coder-Behavior - Editors'
 }
@@ -31,12 +32,13 @@ GtCodeDefinitionSingleEditor >> addErrorOverlayTo: aTagElement [
 { #category : #'api - instantiation' }
 GtCodeDefinitionSingleEditor >> create [
 	<return: #Object>
-	| aDefinition theInitialName anEditor |
+	| aDefinition theInitialName anEditableLabel anOwner |
 	
 	aDefinition := self definition.
+	anOwner := self owner.
 	theInitialName := aDefinition perform: getSelector withArguments: {}.
 
-	anEditor := BrEditableLabel new
+	anEditableLabel := BrEditableLabel new
 		look: lookStencil create;
 		margin: self margin;
 		text: theInitialName;
@@ -45,18 +47,36 @@ GtCodeDefinitionSingleEditor >> create [
 				requestRename: aDefinition
 				to: aWish text asString
 				from: aWish currentTarget ].
+
+	interactions do: [ :eachAssociation |
+		anEditableLabel
+			whenKey: eachAssociation key
+			labelDo: [ :aTextEditor :anEvent |
+				anEvent consumed: true.
+				eachAssociation value cull: anEvent cull: aDefinition ] ].
 		
-		";
-		whenKey: BlKeyCombination primaryB
-			labelDo: [ :anEditor :anEvent | anEvent currentTarget phlow
-				spawnObject: headerModel packageName asPackage ]".
+	eventHandlers do: [ :eachAssociation |
+		anEditableLabel
+			when: eachAssociation key
+			do: [ :anEvent |
+				anEvent currentTarget isReadOnly
+					ifTrue: [
+						eachAssociation value cull: anEvent cull: aDefinition ] ] ].
 
 	completionStencil ifNotNil: [ :aStencil |
 		(GtCompletionController
-			on: anEditor
+			on: anEditableLabel
 			strategy: aStencil create) install ].
-		
-	^ anEditor
+
+	renameAnnouncement
+		ifNotNil: [
+			aDefinition
+				when: renameAnnouncement
+				do: [ :anEvent |
+					(anOwner isNil or: [ anEvent owner = anOwner ])
+						ifTrue: [ anEditableLabel text: anEvent newName ] ] ].
+
+	^ anEditableLabel
 ]
 
 { #category : #accessing }
@@ -84,21 +104,22 @@ GtCodeDefinitionSingleEditor >> handleRenameError: anError to: aNewName from: aT
 	self addErrorOverlayTo: aTagElement
 ]
 
+{ #category : #accessing }
+GtCodeDefinitionSingleEditor >> renameEvent: anObject [
+	renameAnnouncement := anObject
+]
+
 { #category : #private }
 GtCodeDefinitionSingleEditor >> requestRename: aDefinition to: aNewName from: aTagElement [
 	setSelector
 		ifNil: [ ^ self ].
 
-	[
-		| theInitialName |
+	[ | theInitialName |
+	
 		theInitialName := aDefinition perform: getSelector withArguments: {}.
 		aTagElement text: theInitialName.
-		
-		aDefinition perform: setSelector withEnoughArguments: { aNewName }.
-		
-		aTagElement text: aNewName.
-	]
-		on: Error
+		aDefinition perform: setSelector withEnoughArguments: { aNewName }
+	]  on: Error
 		do: [ :anError |
 			self
 				handleRenameError: anError

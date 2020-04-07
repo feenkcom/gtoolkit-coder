@@ -7,7 +7,9 @@ Class {
 		'styler',
 		'inputFilter',
 		'completionStencil',
-		'modelSelector'
+		'modelSelector',
+		'interactions',
+		'eventHandlers'
 	],
 	#category : #'GToolkit-Coder-Behavior - Editors'
 }
@@ -33,6 +35,8 @@ GtCodeDefinitionEntityEditor >> initialize [
 
 	inputFilter := BrTextEditorNoInputFilter new.
 	styler := BlTextNullStyler new.
+	interactions := OrderedCollection new.
+	eventHandlers := OrderedCollection new.
 	
 	"no completion by default"
 	completionStencil := nil.
@@ -62,4 +66,31 @@ GtCodeDefinitionEntityEditor >> owner [
 { #category : #accessing }
 GtCodeDefinitionEntityEditor >> owner: anObject [
 	owner := anObject
+]
+
+{ #category : #interactions }
+GtCodeDefinitionEntityEditor >> when: aBlEvent do: aBlock [
+	"aBlock is in form [ :anEvent :aCodeDefinition ]"
+	
+	eventHandlers add: (aBlEvent -> aBlock)
+]
+
+{ #category : #interactions }
+GtCodeDefinitionEntityEditor >> whenKey: aBlKeyCombination do: aBlock [
+	"aBlock is in form [ :anEvent :aCodeDefinition ]"
+	
+	interactions add: (aBlKeyCombination -> aBlock)
+]
+
+{ #category : #interactions }
+GtCodeDefinitionEntityEditor >> whenPrimaryClickDo: aBlock [
+	"aBlock is in form [ :anEvent :aCodeDefinition ]"
+	
+	self
+		when: BlClickEvent
+		do: [ :anEvent :aDefinition |
+				anEvent modifiers isPrimaryModifier 
+					ifTrue: [
+						anEvent consumed: true.
+						aBlock cull: anEvent cull: aDefinition ] ]
 ]

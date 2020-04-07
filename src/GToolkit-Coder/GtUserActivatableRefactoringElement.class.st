@@ -92,7 +92,9 @@ GtUserActivatableRefactoringElement >> initialize [
 		look: BrGlamorousCheckboxLook new - BrSizeAdjustmentLook;
 		hExact: 16;
 		vExact: 30;
-		margin: (BlInsets top: 5 left: 5 bottom: 0 right: 0).
+		margin: (BlInsets top: 5 left: 5 bottom: 0 right: 0);
+		whenCheckedDo: [ activatableRefactoring isEnabled: true ];
+		whenUncheckedDo: [ activatableRefactoring isEnabled: false ].
 
 	expander header: [ header ].
 

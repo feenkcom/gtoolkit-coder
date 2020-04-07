@@ -6,7 +6,7 @@ Class {
 		'name',
 		'type'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
@@ -29,6 +29,11 @@ GtSlotDefinition >> asDefinitionString [
 				aStream
 					nextPutAll: ' => ';
 					print: self type ] ]
+]
+
+{ #category : #'api - slot' }
+GtSlotDefinition >> browseFrom: anEvent [
+	anEvent currentTarget phlow spawnObject: self
 ]
 
 { #category : #initialization }

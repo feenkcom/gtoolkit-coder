@@ -4,7 +4,7 @@ I represent local slots of a behavior (class or trait)
 Class {
 	#name : #GtSlotsDefinition,
 	#superclass : #GtCompositeDefinition,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
@@ -187,7 +187,10 @@ GtSlotsDefinition >> slotsEditor [
 		removeSelector: #removeSlotNamed:;
 		renameSelector: #renameSlotNamed:to:;
 		getSelector: #names;
+		modelSelector: #slotNamed:;
 		addEvent: GtBehaviorSlotAdded;
 		removeEvent: GtBehaviorSlotRemoved;
-		renameEvent: GtBehaviorSlotRenamed
+		renameEvent: GtBehaviorSlotRenamed;
+		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

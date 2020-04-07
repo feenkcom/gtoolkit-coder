@@ -38,6 +38,17 @@ RBAddPoolVariableRefactoring >> checkConflictingPoolVariableNames [
 										existingPoolName: pool name ] ] ] ]
 ]
 
+{ #category : #'gt-extension' }
+RBAddPoolVariableRefactoring >> gtDescription [
+	<return: #String or: #BlRopedText>
+	
+	^ ('Add' asRopedText glamorousRoundedBackground)
+		append: ' pool named ' asRopedText;
+		append: variableName asRopedText glamorousRoundedBackground;
+		append: ' to ' asRopedText;
+		append: class name asRopedText
+]
+
 { #category : #preconditions }
 RBAddPoolVariableRefactoring >> preconditions [
 	^ (RBCondition isMetaclass: class) not

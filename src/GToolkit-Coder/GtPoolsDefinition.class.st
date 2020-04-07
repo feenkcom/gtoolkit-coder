@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPoolsDefinition,
 	#superclass : #GtCompositeDefinition,
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #'instance creation' }
@@ -36,8 +36,22 @@ GtPoolsDefinition >> asDefinitionString [
 	^ String streamContents: [ :stream | 
 		definitions
 			do: [ :each | stream nextPutAll: each name ]
-			separatedBy: [ stream nextPutAll: ' ' ].
-		stream space ]	
+			separatedBy: [ stream nextPutAll: ' ' ] ]
+]
+
+{ #category : #'api - accepting' }
+GtPoolsDefinition >> differenceWith: aGtPoolsDefinition [
+	| theDifference |
+
+	theDifference := GtPoolsDefinitionDifference new.
+
+	GtCodeDefinitionDifference
+		difference: self all
+		with: aGtPoolsDefinition all
+		addedDo: [ :eachPool | theDifference add: (GtPoolAddedDifference new poolName: eachPool name) ]
+		removedDo: [ :eachPool | theDifference add: (GtPoolRemovedDifference new poolName: eachPool name) ].
+		
+	^ theDifference
 ]
 
 { #category : #'api - pools' }
@@ -124,6 +138,7 @@ GtPoolsDefinition >> poolsEditor [
 		removeSelector: #removePoolNamed:;
 		renameSelector: #renamePoolNamed:to:;
 		getSelector: #names;
+		modelSelector: #poolNamed:;
 		addEvent: GtBehaviorPoolAdded;
 		removeEvent: GtBehaviorPoolRemoved;
 		renameEvent: GtBehaviorPoolRenamed;
@@ -131,7 +146,9 @@ GtPoolsDefinition >> poolsEditor [
 			BrLabel new
 				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
 				text: '+' ];
-		completion: [ GtPoolsCompletionStrategy new ]
+		completion: [ GtPoolsCompletionStrategy new ];
+		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
 
 { #category : #'api - pools' }

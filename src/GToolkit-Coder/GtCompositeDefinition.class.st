@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'definitions'
 	],
-	#category : #'GToolkit-Coder-Behavior - Model'
+	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
 { #category : #accessing }
@@ -31,7 +31,7 @@ GtCompositeDefinition >> definitionNamed: aSymbol ifNone: anExceptionBlock [
 	<return: #GtCodeDefinition>
 	
 	^ definitions
-		detect: [ :eachDefinition | eachDefinition name = aSymbol ]
+		detect: [ :eachDefinition | eachDefinition name = aSymbol asSymbol ]
 		ifNone: anExceptionBlock
 ]
 

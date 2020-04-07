@@ -15,11 +15,6 @@ Class {
 }
 
 { #category : #accessing }
-GtCodeDefinitionPluralEditor >> addAnnouncement [
-	^ addAnnouncement
-]
-
-{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> addEvent: anObject [
 	addAnnouncement := anObject
 ]
@@ -60,13 +55,37 @@ GtCodeDefinitionPluralEditor >> create [
 		look: (BrGlamorousTaggerEditableLook new
 			margin: self margin;
 			editableLabel: [ :aTaggerTag |
-				| anEditableLabel |
+				| anEditableLabel eachLabelDefinition |
+
+				eachLabelDefinition := aTaggerTag ifNotNil: [
+					modelSelector ifNotNil: [ :aSelector | 
+						aTaggerTag name
+							ifEmpty: [ nil ]
+							ifNotEmpty: [ :aTagName | aDefinition perform: aSelector withEnoughArguments: { aTaggerTag name } ] ] ].
+
 				anEditableLabel := BrEditableLabel new
 					text: aTaggerTag name;
 					styler: styler;
 					inputFilter: inputFilter;
 					look: lookStencil create;
 					yourself.
+				
+				interactions do: [ :eachAssociation |
+					anEditableLabel
+						whenKey: eachAssociation key
+						labelDo: [ :aTextEditor :anEvent |							
+							anEvent consumed: true.
+							eachLabelDefinition
+								ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ] ].
+					
+				eventHandlers do: [ :eachAssociation |
+					anEditableLabel
+						when: eachAssociation key
+						do: [ :anEvent |
+							anEvent currentTarget isReadOnly
+								ifTrue: [
+									eachLabelDefinition
+										ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ] ] ].
 				
 				completionStencil ifNotNil: [ :aStencil |
 					(GtCompletionController
@@ -121,11 +140,6 @@ GtCodeDefinitionPluralEditor >> initialize [
 ]
 
 { #category : #accessing }
-GtCodeDefinitionPluralEditor >> removeAnnouncement [
-	^ removeAnnouncement
-]
-
-{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> removeEvent: anObject [
 	removeAnnouncement := anObject
 ]
@@ -138,11 +152,6 @@ GtCodeDefinitionPluralEditor >> removeSelector [
 { #category : #accessing }
 GtCodeDefinitionPluralEditor >> removeSelector: anObject [
 	removeSelector := anObject
-]
-
-{ #category : #accessing }
-GtCodeDefinitionPluralEditor >> renameAnnouncement [
-	^ renameAnnouncement
 ]
 
 { #category : #accessing }

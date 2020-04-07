@@ -37,11 +37,6 @@ GtBehaviorCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
 	self content: [ BlElement new ]
 ]
 
-{ #category : #'private - actions' }
-GtBehaviorCoderHeaderElement >> applyRefactoring [
-	headerModel refactorings do: [ :eachRefactoring | eachRefactoring execute ]
-]
-
 { #category : #'private - instance creation' }
 GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 	| theProperties anAcceptButton |
@@ -68,26 +63,7 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 				icon: BrGlamorousIcons empty asElement;
 				beSmall;
 				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
-			content: [ | aContainer |
-			aContainer := BlElement new
-				layout: BlLinearLayout vertical;
-				when: GtPhlowObjectToSpawn do: [ :anEvent | self fireEvent: (GtPhlowObjectToSpawn new
-					object: anEvent object;
-					sourceElement: anEvent target) ];
-				constraintsDo: [ :c |
-					c horizontal exact: self previewWidth.
-					c vertical fitContentLimitedOffset: 20 ].
-			aContainer addChild: self buildRefactoringPreview.
-			aContainer addChild: (BrButton new
-				icon: BrGlamorousIcons accept asElement;
-				beSmall;
-				look: BrGlamorousButtonWithIconLook new;
-				label: 'Apply';
-				margin: (BlInsets top: 0 left: 10 bottom: 10 right: 0);
-				action: [
-					anAcceptButton fireEvent: (BrDropdownHideWish new anchor: anAcceptButton).
-					self applyRefactoring ];
-				yourself). ]);
+			content: [ self buildRefactoringPreviewFrom: anAcceptButton ]);
 		label: 'Apply';
 		constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
@@ -96,7 +72,7 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 
 { #category : #'private - instance creation' }
 GtBehaviorCoderHeaderElement >> buildDefinitionViewer [
-	| theProperties |
+	| theProperties theEditors |
 
 	theProperties := BlElement new
 		layout: (BlGridLayout new columnCount: 2);
@@ -104,32 +80,54 @@ GtBehaviorCoderHeaderElement >> buildDefinitionViewer [
 			c horizontal matchParent.
 			c vertical fitContent ].
 
-	(headerModel editors first: 2) do: [ :eachEditor |
+	theEditors := headerModel editors.
+	theEditors := theEditors first: (2 min: theEditors size).
+	theEditors do: [ :eachEditor |
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
 					look: [ self editableLabelLook ];
 					margin: self buttonMargin;
 					asElement) } ].
-	
-	
-	
+
 	^ theProperties
 ]
 
 { #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> buildRefactoringPreview [
-	| theRefactoringsPreview |
-			
-	theRefactoringsPreview := (GtRefactoringsElement new
+GtBehaviorCoderHeaderElement >> buildRefactoringPreviewFrom: aDropdownAnchor [
+	| theRefactoringsElement anAcceptButton aContainer |
+
+	theRefactoringsElement := GtRefactoringsElement new
 		hExact: self previewWidth * 1.25;
 		vFitContent;
-		refactorings: headerModel refactorings) asScalableElement
+		refactorings: headerModel refactorings.
+		
+	anAcceptButton := BrButton new
+		icon: BrGlamorousIcons accept asElement;
+		beSmall;
+		look: BrGlamorousButtonWithIconLook new;
+		label: 'Apply';
+		margin: (BlInsets top: 0 left: 10 bottom: 10 right: 0);
+		action: [
+			aDropdownAnchor fireEvent: (BrDropdownHideWish new anchor: aDropdownAnchor).
+			theRefactoringsElement applyRefactorings ];
+		yourself.
+	
+	aContainer := BlElement new
+		layout: BlLinearLayout vertical;
+		when: GtPhlowObjectToSpawn do: [ :anEvent | self fireEvent: (GtPhlowObjectToSpawn new
+			object: anEvent object;
+			sourceElement: anEvent target) ];
+		constraintsDo: [ :c |
+			c horizontal exact: self previewWidth.
+			c vertical fitContentLimitedOffset: 20 ].
+	aContainer addChild: (theRefactoringsElement asScalableElement
 			width: self previewWidth;
 			fitWidth;
-			constraintsDo: [ :c | c vertical fitContent ].
+			constraintsDo: [ :c | c vertical fitContent ]) asScrollableElement.
+	aContainer addChild: anAcceptButton. 
 
-	^ theRefactoringsPreview asScrollableElement
+	^ aContainer
 ]
 
 { #category : #'private - instance creation' }
