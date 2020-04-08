@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'slots',
 		'traits',
-		'category',
-		'classVariables'
+		'category'
 	],
 	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
@@ -33,10 +32,6 @@ GtTraitDefinition >> asDefinitionString [
 	"Slots"
 	aStream cr; tab; nextPutAll: 'slots: ';
 			nextPutAll: self slots asDefinitionString.
-	
-	"Class vars"
-	aStream cr; tab; nextPutAll: 'classVariables: ';
-			nextPutAll: self classVariables asDefinitionString.
 
 	aStream cr; tab; nextPutAll: 'package: ';
 			store: self category asDefinitionString.
@@ -60,13 +55,6 @@ GtTraitDefinition >> category [
 	<return: #GtCategoryDefinition>
 
 	^ category
-]
-
-{ #category : #accessing }
-GtTraitDefinition >> classVariables [
-	<return: #GtClassVariablesDefinition>
-
-	^ classVariables
 ]
 
 { #category : #'api - accepting' }
@@ -94,7 +82,6 @@ GtTraitDefinition >> differenceWith: aTraitDefinition [
 
 	aDifference add: (self category differenceWith: aTraitDefinition category).
 	aDifference add: (self slots differenceWith: aTraitDefinition slots).
-	aDifference add: (self classVariables differenceWith: aTraitDefinition classVariables).
 	aDifference add: (self traits differenceWith: aTraitDefinition traits).
 
 	^ aDifference
@@ -108,7 +95,6 @@ GtTraitDefinition >> editors [
 		self category categoryEditor.
 		self traits traitsEditor.
 		self slots slotsEditor.
-		self classVariables classVariablesEditor
 	}
 ]
 
@@ -120,7 +106,6 @@ GtTraitDefinition >> fromTrait: aTrait [
 	category := (GtCategoryDefinition fromBehavior: aTrait) parent: self.
 
 	slots := (GtSlotsDefinition fromTrait: aTrait) parent: self.
-	classVariables := (GtClassVariablesDefinition fromTrait: aTrait) parent: self.
 	traits := (GtTraitsDefinition fromTrait: aTrait) parent: self
 ]
 

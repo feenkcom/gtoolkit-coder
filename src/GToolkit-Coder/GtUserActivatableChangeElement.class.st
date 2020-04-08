@@ -20,7 +20,7 @@ GtUserActivatableChangeElement >> fromActivatableChange: aGtUserActivatableChang
 		ifTrue: [ aGtUserActivatableChange change gtDiff asElement vFitContent beSmall ]
 		ifFalse: [ BrLabel new
 				look: BrGlamorousLabelLook new;
-				text: aGtUserActivatableChange change printString ])
+				text: aGtUserActivatableChange change class name ])
 ]
 
 { #category : #initialization }
