@@ -12,6 +12,17 @@ RBRemoveTraitUsageTransformation >> checkClassIncludesTrait [
 			[ ^ self refactoringError: traitName , ' is not used in ' , class name ]
 ]
 
+{ #category : #'gt-extension' }
+RBRemoveTraitUsageTransformation >> gtDescription [
+	<return: #String or: #BlRopedText>
+	
+	^ ('Remove' asRopedText glamorousRoundedBackground)
+		append: ' trait usage ' asRopedText;
+		append: traitName asRopedText glamorousRoundedBackground;
+		append: ' from ' asRopedText;
+		append: class name asRopedText
+]
+
 { #category : #preconditions }
 RBRemoveTraitUsageTransformation >> preconditions [
 	^ super preconditions

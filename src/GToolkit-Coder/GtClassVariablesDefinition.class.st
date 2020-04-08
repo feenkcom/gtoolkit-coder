@@ -9,11 +9,6 @@ GtClassVariablesDefinition class >> fromClass: aClass [
 	^ self new fromClass: aClass
 ]
 
-{ #category : #'instance creation' }
-GtClassVariablesDefinition class >> fromTrait: aTrait [
-	^ self new fromTrait: aTrait
-]
-
 { #category : #'api - class vars' }
 GtClassVariablesDefinition >> addClassVariableNamed: aSymbol [
 	| aClassVariableName aNewClassVariable |
@@ -114,11 +109,6 @@ GtClassVariablesDefinition >> errorClassVariableNotFound: aSymbol [
 { #category : #initialization }
 GtClassVariablesDefinition >> fromClass: aClass [
 	definitions := aClass classVariables collect: [ :eachClassVariable | (GtVariableDefinition fromClassVariable: eachClassVariable) parent: self ]
-]
-
-{ #category : #initialization }
-GtClassVariablesDefinition >> fromTrait: aTrait [
-	definitions := aTrait classVariables collect: [ :eachClassVariable | (GtVariableDefinition fromClassVariable: eachClassVariable) parent: self ]
 ]
 
 { #category : #'private - notifying' }
