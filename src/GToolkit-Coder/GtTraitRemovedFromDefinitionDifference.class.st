@@ -1,11 +1,15 @@
 Class {
 	#name : #GtTraitRemovedFromDefinitionDifference,
-	#superclass : #GtCodeDefinitionDifference,
-	#instVars : [
-		'traitName'
-	],
+	#superclass : #GtTraitDifference,
 	#category : #'GToolkit-Coder-Behavior - Differences'
 }
+
+{ #category : #converting }
+GtTraitRemovedFromDefinitionDifference >> asClassRefactorings: aClass in: anRBModel [
+	^ RBRemoveTraitUsageTransformation new
+		model: anRBModel;
+		class: aClass traitName: self traitName
+]
 
 { #category : #printing }
 GtTraitRemovedFromDefinitionDifference >> printOn: aStream [
@@ -13,14 +17,4 @@ GtTraitRemovedFromDefinitionDifference >> printOn: aStream [
 		nextPutAll: 'Removed ';
 		print: self traitName;
 		nextPutAll: ' trait'
-]
-
-{ #category : #accessing }
-GtTraitRemovedFromDefinitionDifference >> traitName [
-	^ traitName
-]
-
-{ #category : #accessing }
-GtTraitRemovedFromDefinitionDifference >> traitName: anObject [
-	traitName := anObject
 ]
