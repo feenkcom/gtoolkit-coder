@@ -18,7 +18,7 @@ RBTraitTransformation class >> traitName: aString class: aClass [
 { #category : #'initialize-release' }
 RBTraitTransformation >> class: aClass traitName: aString [
 	class := self model classFor: aClass.
-	class gtInstanceVariableNames.
+	class gtRemoveSlotsFromTraits.
 	traitName := aString
 ]
 

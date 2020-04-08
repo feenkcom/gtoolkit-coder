@@ -10,11 +10,9 @@ Class {
 
 { #category : #converting }
 GtClassSuperclassDefinitionDifference >> asClassRefactorings: aClass in: anRBModel [
-	^ RBRenameClassVariableRefactoring
-		model: anRBModel
-		rename: self oldName
-		to: self newName
-		in: aClass
+	^ RBChangeSuperclassTransformation new
+		model: anRBModel;
+		changeSuperclassOf: aClass to: (anRBModel classNamed: newName)
 ]
 
 { #category : #accessing }

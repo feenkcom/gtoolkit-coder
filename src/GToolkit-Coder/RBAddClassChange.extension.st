@@ -8,7 +8,7 @@ RBAddClassChange >> gtDiff [
 	
 	oldSource := (RBClass existingNamed: aClass name)
 		model: RBNamespace new;
-		gtInstanceVariableNames;
+		gtRemoveSlotsFromTraits;
 		gtDefinitionString.
 	newSource := self definition.
 

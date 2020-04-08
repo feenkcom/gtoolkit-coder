@@ -1,7 +1,7 @@
-Extension { #name : #RBRefactoring }
+Extension { #name : #RBTransformation }
 
 { #category : #'*GToolkit-Coder' }
-RBRefactoring >> gtDangers [
+RBTransformation >> gtDangers [
 	<return: #Collection of: #GtRefactoringDanger>
 
 	^ self gtPreconditions gtLeafChildren
@@ -12,26 +12,18 @@ RBRefactoring >> gtDangers [
 ]
 
 { #category : #'*GToolkit-Coder' }
-RBRefactoring >> gtDescription [
+RBTransformation >> gtDescription [
 	<return: #String or: #BlRopedText>
 	
 	^ self class name
 ]
 
 { #category : #'*GToolkit-Coder' }
-RBRefactoring >> gtExecute: isForce [
-	isForce
-		ifTrue: [ self transform ]
-		ifFalse: [ self primitiveExecute ].
-	RBRefactoryChangeManager instance performChange: self changes; addUndoPointer: 1
-]
-
-{ #category : #'*GToolkit-Coder' }
-RBRefactoring >> gtPreconditions [
+RBTransformation >> gtPreconditions [
 	^ self preconditions
 ]
 
 { #category : #'*GToolkit-Coder' }
-RBRefactoring >> gtTransform [
-	self transform
+RBTransformation >> gtTransform [
+	self privateTransform
 ]
