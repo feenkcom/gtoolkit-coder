@@ -9,6 +9,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtPackageDefinition class >> empty [
+	^ self new empty
+]
+
+{ #category : #'instance creation' }
 GtPackageDefinition class >> fromBehavior: aBehavior [
 	^ self new fromBehavior: aBehavior
 ]
@@ -43,6 +48,12 @@ GtPackageDefinition >> differenceWith: aPackageDefinition [
 { #category : #'gt - editors' }
 GtPackageDefinition >> editors [
 	^ { self packageEditor }
+]
+
+{ #category : #initialization }
+GtPackageDefinition >> empty [
+	name := #''.
+	originalName := name
 ]
 
 { #category : #initialization }

@@ -9,6 +9,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtTagDefinition class >> empty [
+	^ self new empty
+]
+
+{ #category : #'instance creation' }
 GtTagDefinition class >> fromBehavior: aBehavior [
 	^ self new fromBehavior: aBehavior
 ]
@@ -52,6 +57,12 @@ GtTagDefinition >> differenceWith: aTagDefinition [
 { #category : #'gt - editors' }
 GtTagDefinition >> editors [
 	^ { self tagEditor }
+]
+
+{ #category : #initialization }
+GtTagDefinition >> empty [
+	name := #''.
+	originalName := name
 ]
 
 { #category : #initialization }

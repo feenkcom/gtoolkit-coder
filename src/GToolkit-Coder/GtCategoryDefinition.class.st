@@ -9,6 +9,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtCategoryDefinition class >> empty [
+	^ self new empty
+]
+
+{ #category : #'instance creation' }
 GtCategoryDefinition class >> fromBehavior: aBehavior [
 	^ self new fromBehavior: aBehavior
 ]
@@ -60,6 +65,12 @@ GtCategoryDefinition >> editors [
 ]
 
 { #category : #initialization }
+GtCategoryDefinition >> empty [
+	package := GtPackageDefinition empty.	
+	tag := GtTagDefinition empty
+]
+
+{ #category : #initialization }
 GtCategoryDefinition >> fromBehavior: aBehavior [
 	package := GtPackageDefinition fromBehavior: aBehavior.	
 	tag := GtTagDefinition fromBehavior: aBehavior
@@ -67,24 +78,24 @@ GtCategoryDefinition >> fromBehavior: aBehavior [
 
 { #category : #accessing }
 GtCategoryDefinition >> name [
-	^ String streamContents: [ :aStream |
+	^ (String streamContents: [ :aStream |
 		aStream nextPutAll: self package name.
 		self tag name
 			ifNotEmpty: [ :aTag |
 				aStream
 					nextPut: $-;
-					nextPutAll: aTag ] ]
+					nextPutAll: aTag ] ]) asSymbol
 ]
 
 { #category : #accessing }
 GtCategoryDefinition >> originalName [
-	^ String streamContents: [ :aStream |
+	^ (String streamContents: [ :aStream |
 		aStream nextPutAll: self package originalName.
 		self tag originalName
 			ifNotEmpty: [ :aTag |
 				aStream
 					nextPut: $-;
-					nextPutAll: aTag ] ]
+					nextPutAll: aTag ] ]) asSymbol
 ]
 
 { #category : #accessing }
