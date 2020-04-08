@@ -59,6 +59,19 @@ GtSearchMethodFilterExamples >> astPatternFilter [
 	^ filter
 ]
 
+{ #category : #'as yet unclassified' }
+GtSearchMethodFilterExamples >> deprecatedMethodsFilter [
+	<gtExample>
+	| filter |
+	
+	filter := GtSearchDeprecatedMethodsFilter new.
+	
+	self assert: (filter matches: BlElement>>#managed).
+	self assert: (filter matches: BlElement>>#margin) not.
+	
+	^ filter.
+]
+
 { #category : #examples }
 GtSearchMethodFilterExamples >> gtExamplePragmas [
 	<gtExample>
@@ -76,6 +89,64 @@ GtSearchMethodFilterExamples >> implementorsOfThisMessage [
 	filter := #implementorsOfThisMessage gtImplementors.
 	self assert: (filter matches: thisContext method).
 	^ filter
+]
+
+{ #category : #'as yet unclassified' }
+GtSearchMethodFilterExamples >> implementorsPatternFilter [
+	<gtExample>
+	| filter |
+	filter := GtSearchImplementorPatternFilter pattern: #implementorsPattern.
+	
+	self assert: (filter matches: thisContext method).
+	
+	^ filter.
+]
+
+{ #category : #examples }
+GtSearchMethodFilterExamples >> methodsInCategoryFilter [
+	<gtExample>
+	| filter |
+	filter := GtSearchMethodCategoryFilter forCategory: 'examples'.
+	
+	self assert: (filter matches: thisContext method).
+	
+	^ filter.
+]
+
+{ #category : #'as yet unclassified' }
+GtSearchMethodFilterExamples >> methodsInImageFilter [
+	<gtExample>
+	| filter |
+	
+	filter := GtSearchImageMethodsFilter new.
+	
+	self assert: (filter matches: self class>>#methodsInImageFilter).
+	
+	^ filter.
+]
+
+{ #category : #'as yet unclassified' }
+GtSearchMethodFilterExamples >> methodsInPackageFilter [
+	<gtExample>
+	| filter |
+	
+	filter := GtSearchMethodsInPackageFilter new package: ('GToolkit-Coder-Examples' asPackage).
+	
+	self assert: filter notEmpty.
+	self assert: (filter matches: thisContext method).
+	
+	^ filter.
+]
+
+{ #category : #'as yet unclassified' }
+GtSearchMethodFilterExamples >> methodsWithClassPatternFilter [
+	<gtExample>
+	| filter |
+	filter := GtSearchMethodsWithClassPatternFilter pattern: #FilterExamples.
+	
+	self assert: (filter matches: thisContext method).
+	
+	^ filter.
 ]
 
 { #category : #examples }
