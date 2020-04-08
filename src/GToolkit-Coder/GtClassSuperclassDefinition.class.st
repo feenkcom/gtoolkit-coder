@@ -12,6 +12,11 @@ GtClassSuperclassDefinition class >> fromClass: aClass [
 	^ self new fromClass: aClass
 ]
 
+{ #category : #'instance creation' }
+GtClassSuperclassDefinition class >> named: aSuperclassName [
+	^ self new named: aSuperclassName
+]
+
 { #category : #converting }
 GtClassSuperclassDefinition >> asDefinitionString [
 	^ self hasSuperclass 
@@ -112,6 +117,11 @@ GtClassSuperclassDefinition >> name: aSymbol [
 		notifySuperclassRenamed: self
 		from: anOldName
 		to: name
+]
+
+{ #category : #initialization }
+GtClassSuperclassDefinition >> named: aSuperclassName [
+	name := aSuperclassName
 ]
 
 { #category : #'private - notifying' }
