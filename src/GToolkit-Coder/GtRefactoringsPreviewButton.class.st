@@ -9,23 +9,30 @@ Class {
 
 { #category : #initialization }
 GtRefactoringsPreviewButton >> buildRefactoringsPreview [
-	| theRefactoringsElement anAcceptButton aContainer |
+	| applyAction theRefactoringsElement anAcceptButton aContainer |
 
 	theRefactoringsElement := GtRefactoringsElement new
 		hExact: self previewWidth * 1.25;
 		vFitContent;
 		refactorings: self refactorings.
 
+	applyAction := [
+		self fireEvent: (BrDropdownHideWish new anchor: self).
+		theRefactoringsElement applyRefactorings ].
+
 	anAcceptButton := BrButton new
 		icon: BrGlamorousIcons accept asElement;
 		beSmall;
+		requestFocus;
 		look: BrGlamorousButtonWithIconLook new;
-		label: 'Apply';
+		label: 'Preview';
 		margin: (BlInsets top: 0 left: 10 bottom: 10 right: 0);
-		action: [
-			self fireEvent: (BrDropdownHideWish new anchor: self).
-			theRefactoringsElement applyRefactorings ];
+		action: applyAction;
 		yourself.
+		
+	anAcceptButton addShortcut: (BlShortcut new
+		combination: BlKeyCombination return;
+		action: applyAction).
 	
 	aContainer := BlElement new
 		layout: BlLinearLayout vertical;
@@ -59,7 +66,11 @@ GtRefactoringsPreviewButton >> initialize [
 				beSmall;
 				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
 			content: [ self buildRefactoringsPreview ]);
-		label: 'Apply'
+		label: 'Preview'.
+		
+	self addShortcut: (BlShortcut new
+		combination: BlKeyCombination return;
+		action: [ self fireEvent: (BrDropdownShowWish new anchor: self) ])
 ]
 
 { #category : #initialization }

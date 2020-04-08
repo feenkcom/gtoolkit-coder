@@ -16,6 +16,7 @@ GtCodeDefinitionEditor >> buildSectionLabel: aSectionName [
 		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
 		text: aSectionName, ':';
 		margin: (BlInsets top: 5 right: 5);
+		focusability: BlFocusability none;
 		constraintsDo: [ :c | c grid horizontal alignLeft ]
 ]
 

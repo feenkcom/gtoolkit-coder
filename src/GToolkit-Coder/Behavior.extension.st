@@ -73,19 +73,11 @@ Behavior >> gtBrowseFrom: anElement [
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtCoderCommentsFor: aView [
 	<gtClassView>
-	^ aView explicit
-		title: 'Comments';
-		priority: 30;
-		stencil: [ (GtClassCommentsCoder forClass: self) asElement ]
-]
 
-{ #category : #'*GToolkit-Coder' }
-Behavior >> gtCoderDefinitionsFor: aView [
-	<gtClassView>
 	^ aView explicit
-		title: 'Definitions';
+		title: 'Comment';
 		priority: 30;
-		stencil: [ (GtClassDefinitionsCoder forClass: self) asElement ]
+		stencil: [ (GtDocument forClass: self) asElement ]
 ]
 
 { #category : #'*GToolkit-Coder' }

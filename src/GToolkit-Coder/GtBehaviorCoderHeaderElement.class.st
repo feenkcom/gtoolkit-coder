@@ -46,6 +46,26 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical fitContent ].
+		
+	theProperties addShortcut: (BlShortcut new
+		combination: BlKeyCombination arrowUp;
+		action: [ :anEvent |
+			anEvent currentTarget deepestFocusedChild ifNotNil: [ :aFocusedChild |
+				BlFocusFinder new
+					up;
+					root: anEvent currentTarget;
+					referenceElement: aFocusedChild;
+					nextFocusDo: [ :aNextFocusElement | aNextFocusElement requestFocus ] ] ]).
+
+	theProperties addShortcut: (BlShortcut new
+		combination: BlKeyCombination arrowDown;
+		action: [ :anEvent |
+			anEvent currentTarget deepestFocusedChild ifNotNil: [ :aFocusedChild |
+				BlFocusFinder new
+					down;
+					root: anEvent currentTarget;
+					referenceElement: aFocusedChild;
+					nextFocusDo: [ :aNextFocusElement | aNextFocusElement requestFocus ] ] ]).
 
 	headerModel editors do: [ :eachEditor |
 		theProperties addChildren: { 
@@ -91,6 +111,7 @@ GtBehaviorCoderHeaderElement >> buildSectionLabel: aSectionName [
 	^ BrLabel new
 		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
 		text: aSectionName, ':';
+		focusability: BlFocusability none;
 		margin: (BlInsets top: 5 right: 2);
 		constraintsDo: [ :c | c grid horizontal alignLeft ]
 ]
