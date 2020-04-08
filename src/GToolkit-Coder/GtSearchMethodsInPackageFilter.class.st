@@ -21,7 +21,7 @@ GtSearchMethodsInPackageFilter >> defaultFilterScope [
 
 { #category : #testing }
 GtSearchMethodsInPackageFilter >> includesMethod: aCompiledMethod [
-	aCompiledMethod package = package
+	^ aCompiledMethod package = package
 ]
 
 { #category : #enumerating }
