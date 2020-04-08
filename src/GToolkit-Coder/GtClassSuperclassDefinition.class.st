@@ -12,6 +12,11 @@ GtClassSuperclassDefinition class >> fromClass: aClass [
 	^ self new fromClass: aClass
 ]
 
+{ #category : #'instance creation' }
+GtClassSuperclassDefinition class >> named: aSuperclassName [
+	^ self new named: aSuperclassName
+]
+
 { #category : #converting }
 GtClassSuperclassDefinition >> asDefinitionString [
 	^ self hasSuperclass 
@@ -114,6 +119,11 @@ GtClassSuperclassDefinition >> name: aSymbol [
 		to: name
 ]
 
+{ #category : #initialization }
+GtClassSuperclassDefinition >> named: aSuperclassName [
+	name := aSuperclassName
+]
+
 { #category : #'private - notifying' }
 GtClassSuperclassDefinition >> notifySuperclassRenamed: aGtClassSuperclassDefinition from: anOldName to: aNewName [
 	self dispatchEvent: (GtBehaviorSuperclassRenamed new
@@ -138,7 +148,7 @@ GtClassSuperclassDefinition >> superclassEditor [
 			getSelector: #name;
 			setSelector: #name:;
 			renameEvent: GtBehaviorSuperclassRenamed;
-			completion: [ GtClassesCompletionStrategy forSuperclasses: (self class environment at: self name) ];
+			completion: [ GtClassesCompletionStrategy new ];
 			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
 			whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

@@ -100,8 +100,8 @@ GtTraitDefinition >> editors [
 
 { #category : #initialization }
 GtTraitDefinition >> fromTrait: aTrait [
-	ringDefinition := aTrait asRingDefinition.
-	originalName := aTrait name.
+	name := aTrait name.
+	originalName := name.
 	
 	category := (GtCategoryDefinition fromBehavior: aTrait) parent: self.
 

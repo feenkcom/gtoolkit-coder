@@ -2,7 +2,7 @@ Class {
 	#name : #GtBehaviorDefinition,
 	#superclass : #GtCodeDefinition,
 	#instVars : [
-		'ringDefinition',
+		'name',
 		'originalName'
 	],
 	#category : #'GToolkit-Coder-Behavior - Definitions'
@@ -33,12 +33,44 @@ GtBehaviorDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf:
 GtBehaviorDefinition >> name [
 	<return: #Symbol>
 
-	^ ringDefinition name
+	^ name
 ]
 
 { #category : #accessing }
 GtBehaviorDefinition >> name: aSymbol [
-	ringDefinition name: aSymbol asSymbol
+	| anOldName |
+	
+	anOldName := name.
+	name := aSymbol asSymbol.
+
+	name = anOldName
+		ifTrue: [ ^ self ].
+
+	self
+		notifyBehaviorRenamed: self
+		from: anOldName
+		to: name
+]
+
+{ #category : #'gt-editors' }
+GtBehaviorDefinition >> nameEditor [
+	<return: #GtCodeDefinitionEditor>
+	
+	^ GtCodeDefinitionSingleEditor new
+		definition: self;
+		title: 'Name';
+		getSelector: #name;
+		setSelector: #name:;
+		renameEvent: GtBehaviorRenamed;
+		completion: [ GtClassesCompletionStrategy new ]
+]
+
+{ #category : #'private - notifying' }
+GtBehaviorDefinition >> notifyBehaviorRenamed: aBehaviorDefinition from: anOldName to: aNewName [
+	self dispatchEvent: (GtBehaviorRenamed new
+		behavior: aBehaviorDefinition;
+		oldName: anOldName;
+		newName: aNewName)
 ]
 
 { #category : #accessing }

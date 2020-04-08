@@ -8,18 +8,6 @@ Class {
 	#category : #'GToolkit-Coder-Completion'
 }
 
-{ #category : #'instance creation' }
-GtClassesCompletionStrategy class >> forSuperclasses: aClass [
-	"When completing superclasses of a class we should exclude a class itself and all direct subclasses"
-	| theExcludedClasses |
-	
-	theExcludedClasses := Set new
-		add: aClass;
-		yourself.
-	^ self new
-		excludeClasses: theExcludedClasses
-]
-
 { #category : #accessing }
 GtClassesCompletionStrategy >> candidateClasses [
 	^  candidateClasses ifNil: [ 

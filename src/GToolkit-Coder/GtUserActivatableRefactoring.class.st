@@ -44,7 +44,9 @@ GtUserActivatableRefactoring >> computeInterestingChanges: aRefactoryChange [
 
 { #category : #private }
 GtUserActivatableRefactoring >> computeRefactoringChanges: aRBRefactoring [
-	[ aRBRefactoring transform ] on: Error do: [ :e | ].	
+	[ aRBRefactoring gtTransform ]
+		on: Error
+		do: [ :e | dangers := dangers copyWith: (GtRefactoringDanger new description: e description) ].	
 
 	^ aRBRefactoring changes
 ]

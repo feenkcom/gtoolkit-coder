@@ -63,9 +63,8 @@ GtMetaclassDefinition >> editors [
 GtMetaclassDefinition >> fromMetaclass: aMetaclass [
 	"Initialize me from a given real Metaclass"
 
-	ringDefinition := aMetaclass asRingDefinition.
-		
-	originalName := aMetaclass name.
+	name := aMetaclass name.
+	originalName := name.
 		
 	slots := (GtSlotsDefinition fromClass: aMetaclass) parent: self
 ]

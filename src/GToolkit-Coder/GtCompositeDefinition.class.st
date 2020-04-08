@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
 
+{ #category : #'instance creation' }
+GtCompositeDefinition class >> empty [
+	^ self new
+]
+
 { #category : #accessing }
 GtCompositeDefinition >> all [
 	<return: #Collection of: #GtCodeDefinition>

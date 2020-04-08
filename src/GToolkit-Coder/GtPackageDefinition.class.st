@@ -2,10 +2,16 @@ Class {
 	#name : #GtPackageDefinition,
 	#superclass : #GtCodeDefinition,
 	#instVars : [
-		'name'
+		'name',
+		'originalName'
 	],
 	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
+
+{ #category : #'instance creation' }
+GtPackageDefinition class >> empty [
+	^ self new empty
+]
 
 { #category : #'instance creation' }
 GtPackageDefinition class >> fromBehavior: aBehavior [
@@ -45,8 +51,15 @@ GtPackageDefinition >> editors [
 ]
 
 { #category : #initialization }
+GtPackageDefinition >> empty [
+	name := #''.
+	originalName := name
+]
+
+{ #category : #initialization }
 GtPackageDefinition >> fromBehavior: aBehavior [
-	name := aBehavior package name
+	name := aBehavior package name.
+	originalName := name
 ]
 
 { #category : #initialization }
@@ -61,7 +74,32 @@ GtPackageDefinition >> name [
 
 { #category : #accessing }
 GtPackageDefinition >> name: aSymbol [
-	name := aSymbol asSymbol
+	| anOldName |
+	
+	anOldName := name.
+	name := aSymbol asSymbol.
+
+	name = anOldName
+		ifTrue: [ ^ self ].
+
+	self
+		notifyPackageRenamed: self
+		from: anOldName
+		to: name
+]
+
+{ #category : #'private - notifying' }
+GtPackageDefinition >> notifyPackageRenamed: aGtPackageDefinition from: anOldName to: aNewName [
+	self dispatchEvent: (GtBehaviorPackageRenamed new
+		owner: self parent;
+		package: aGtPackageDefinition;
+		oldName: anOldName;
+		newName: aNewName)
+]
+
+{ #category : #accessing }
+GtPackageDefinition >> originalName [
+	^ originalName
 ]
 
 { #category : #'gt - editors' }
@@ -71,6 +109,7 @@ GtPackageDefinition >> packageEditor [
 		definition: self;
 		getSelector: #name;
 		setSelector: #name:;
+		renameEvent: GtBehaviorPackageRenamed;
 		completion: [ GtPackagesCompletionStrategy new ];
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
 		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]

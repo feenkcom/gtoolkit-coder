@@ -14,6 +14,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtClassDefinition class >> forNew [
+	^ self new forNew
+]
+
+{ #category : #'instance creation' }
 GtClassDefinition class >> fromClass: aClass [
 	^ self new fromClass: aClass
 ]
@@ -97,6 +102,7 @@ GtClassDefinition >> differenceWith: aClassDefinition [
 	self name = aClassDefinition name
 		ifFalse: [ aDifference nameFrom: aClassDefinition name to: self name ].
 
+	aDifference add: (self superclass differenceWith: aClassDefinition superclass).
 	aDifference add: (self category differenceWith: aClassDefinition category).
 	aDifference add: (self slots differenceWith: aClassDefinition slots).
 	aDifference add: (self classVariables differenceWith: aClassDefinition classVariables).
@@ -121,16 +127,35 @@ GtClassDefinition >> editors [
 ]
 
 { #category : #initialization }
-GtClassDefinition >> fromClass: aClass [
+GtClassDefinition >> forNew [
 	| anEnvironment |
-	"Initialize me from a given real Class"
+	name := #NameOfSubclass.
+	originalName := name.
 	
 	anEnvironment := RGEnvironment new.
 	anEnvironment backend: (RGReadOnlyImageBackend for: anEnvironment).
 	
-	ringDefinition := aClass asRingDefinition.
+	layout := Object classLayout asRingMinimalDefinitionIn: anEnvironment.
 	
+	superclass := (GtClassSuperclassDefinition named: Object name) parent: self.
+	category := GtCategoryDefinition empty parent: self.
+	slots := GtSlotsDefinition empty parent: self.
+	classVariables := GtClassVariablesDefinition empty parent: self.
+	
+	traits := GtTraitsDefinition empty parent: self.
+	pools := GtPoolsDefinition empty parent: self
+]
+
+{ #category : #initialization }
+GtClassDefinition >> fromClass: aClass [
+	| anEnvironment |
+	"Initialize me from a given real Class"
+	
+	name := aClass name.
 	originalName := aClass name.
+	
+	anEnvironment := RGEnvironment new.
+	anEnvironment backend: (RGReadOnlyImageBackend for: anEnvironment).
 	
 	layout := aClass classLayout asRingMinimalDefinitionIn: anEnvironment.
 	

@@ -77,6 +77,7 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 
 	theProperties addChild: (GtRefactoringsPreviewButton new
 		refactorings: [ headerModel refactorings ];
+		when: GtRefactoringsAppliedEvent do: [ headerModel behavior: headerModel behavior ];
 		constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
 	^ theProperties
