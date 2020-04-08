@@ -43,7 +43,12 @@ GtBehaviorCoderElement >> actOnSelectMethod: aMethod [
 
 { #category : #'building ui' }
 GtBehaviorCoderElement >> buildClassLabel [
-	| aClassNameEditor |
+	| aClassNameEditor aContainer aPreviewButton |
+		
+	aContainer := BrHorizontalPane new
+		hMatchParent;
+		alignCenterLeft;
+		vFitContent.
 	
 	aClassNameEditor := BrEditableLabel new
 		look: (BrGlamorousEditableLabelLook new
@@ -54,12 +59,32 @@ GtBehaviorCoderElement >> buildClassLabel [
 		inputFilter: BrTextEditorAlphaNumericInputFilter new;
 		text: (classCoder name);
 		margin: (BlInsets all: 0).
-
+	
+	
 	(GtCompletionController
 		on: aClassNameEditor
 		strategy: (GtClassesCompletionStrategy new)) install.
 
-	^ aClassNameEditor
+	aPreviewButton := GtRefactoringsPreviewButton new
+		margin: (BlInsets left: 5);
+		visibility: BlVisibility hidden;
+		refactorings: [ { RBRenameClassRefactoring
+			model: RBNamespace new
+			rename: classCoder theClass
+			to: aClassNameEditor text asString } ];
+		when: GtRefactoringsAppliedEvent do: [ :anEvent | anEvent currentTarget visibility: BlVisibility hidden ].
+		
+	aClassNameEditor editor
+		when: BrTextEditorModifiedEvent 
+		do: [ :anEvent |
+			anEvent text asString = classCoder name
+				ifTrue: [ aPreviewButton visibility: BlVisibility hidden ]
+				ifFalse: [  aPreviewButton visibility: BlVisibility visible ] ].
+
+	aContainer addChild: aClassNameEditor.
+	aContainer addChild: aPreviewButton.
+
+	^ aContainer
 ]
 
 { #category : #'building ui' }
