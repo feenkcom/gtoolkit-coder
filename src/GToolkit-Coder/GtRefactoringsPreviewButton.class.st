@@ -18,7 +18,8 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 
 	applyAction := [
 		self fireEvent: (BrDropdownHideWish new anchor: self).
-		theRefactoringsElement applyRefactorings ].
+		theRefactoringsElement applyRefactorings.
+		self dispatchEvent: GtRefactoringsAppliedEvent new ].
 
 	anAcceptButton := BrButton new
 		icon: BrGlamorousIcons accept asElement;

@@ -44,6 +44,9 @@ GtCategoryDefinition >> differenceWith: aCategoryDefinition [
 		description: [ 'Must be of the same type' ].
 
 	aDifference := GtCategoryDefinitionDifference new.
+	aDifference
+		oldCategory: self originalName;
+		newCategory: self name.
 
 	aDifference packageDifference: (self package differenceWith: aCategoryDefinition package).
 	aDifference tagDifference: (self tag differenceWith: aCategoryDefinition tag).
@@ -60,6 +63,28 @@ GtCategoryDefinition >> editors [
 GtCategoryDefinition >> fromBehavior: aBehavior [
 	package := GtPackageDefinition fromBehavior: aBehavior.	
 	tag := GtTagDefinition fromBehavior: aBehavior
+]
+
+{ #category : #accessing }
+GtCategoryDefinition >> name [
+	^ String streamContents: [ :aStream |
+		aStream nextPutAll: self package name.
+		self tag name
+			ifNotEmpty: [ :aTag |
+				aStream
+					nextPut: $-;
+					nextPutAll: aTag ] ]
+]
+
+{ #category : #accessing }
+GtCategoryDefinition >> originalName [
+	^ String streamContents: [ :aStream |
+		aStream nextPutAll: self package originalName.
+		self tag originalName
+			ifNotEmpty: [ :aTag |
+				aStream
+					nextPut: $-;
+					nextPutAll: aTag ] ]
 ]
 
 { #category : #accessing }

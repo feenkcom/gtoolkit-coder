@@ -97,6 +97,7 @@ GtClassDefinition >> differenceWith: aClassDefinition [
 	self name = aClassDefinition name
 		ifFalse: [ aDifference nameFrom: aClassDefinition name to: self name ].
 
+	aDifference add: (self superclass differenceWith: aClassDefinition superclass).
 	aDifference add: (self category differenceWith: aClassDefinition category).
 	aDifference add: (self slots differenceWith: aClassDefinition slots).
 	aDifference add: (self classVariables differenceWith: aClassDefinition classVariables).

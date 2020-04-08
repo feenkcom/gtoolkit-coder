@@ -1,7 +1,7 @@
 Extension { #name : #RBAbstractClass }
 
 { #category : #'*GToolkit-Coder' }
-RBAbstractClass >> gtInstanceVariableNames [
+RBAbstractClass >> gtRemoveSlotsFromTraits [
 	| instVarsToRemove |
 	
 	instVarsToRemove := self isDefined

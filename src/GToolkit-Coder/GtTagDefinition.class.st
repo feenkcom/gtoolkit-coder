@@ -83,7 +83,27 @@ GtTagDefinition >> name [
 
 { #category : #accessing }
 GtTagDefinition >> name: aSymbol [
-	name := aSymbol asSymbol
+	| anOldName |
+	
+	anOldName := name.
+	name := aSymbol asSymbol.
+
+	name = anOldName
+		ifTrue: [ ^ self ].
+
+	self
+		notifyTagRenamed: self
+		from: anOldName
+		to: name
+]
+
+{ #category : #'private - notifying' }
+GtTagDefinition >> notifyTagRenamed: aTagDefinition from: anOldName to: aNewName [
+	self dispatchEvent: (GtBehaviorTagRenamed new
+		owner: self parent;
+		tag: aTagDefinition;
+		oldName: anOldName;
+		newName: aNewName)
 ]
 
 { #category : #accessing }
@@ -108,7 +128,7 @@ GtTagDefinition >> tagEditor [
 		definition: self;
 		getSelector: #name;
 		setSelector: #name:;
-		completion: [ GtPackagesCompletionStrategy new ];
+		renameEvent: GtBehaviorTagRenamed;
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
 		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

@@ -138,7 +138,7 @@ GtClassSuperclassDefinition >> superclassEditor [
 			getSelector: #name;
 			setSelector: #name:;
 			renameEvent: GtBehaviorSuperclassRenamed;
-			completion: [ GtClassesCompletionStrategy forSuperclasses: (self class environment at: self name) ];
+			completion: [ GtClassesCompletionStrategy new ];
 			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
 			whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

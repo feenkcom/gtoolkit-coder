@@ -3,10 +3,25 @@ Class {
 	#superclass : #GtCodeDefinitionDifference,
 	#instVars : [
 		'packageDifference',
-		'tagDifference'
+		'tagDifference',
+		'oldCategory',
+		'newCategory'
 	],
 	#category : #'GToolkit-Coder-Behavior - Differences'
 }
+
+{ #category : #converting }
+GtCategoryDefinitionDifference >> asClassRefactorings: aClass in: anRBModel [
+	^ RBMoveClassTransformation
+		model: anRBModel
+		move: aClass name
+		to: self newCategory
+]
+
+{ #category : #testing }
+GtCategoryDefinitionDifference >> hasDifference [
+	^ packageDifference hasDifference or: [ tagDifference hasDifference ]
+]
 
 { #category : #initialization }
 GtCategoryDefinitionDifference >> initialize [
@@ -14,6 +29,26 @@ GtCategoryDefinitionDifference >> initialize [
 	
 	packageDifference := GtNoDefinitionDifference new.
 	tagDifference := GtNoDefinitionDifference new
+]
+
+{ #category : #accessing }
+GtCategoryDefinitionDifference >> newCategory [
+	^ newCategory
+]
+
+{ #category : #accessing }
+GtCategoryDefinitionDifference >> newCategory: anObject [
+	newCategory := anObject
+]
+
+{ #category : #accessing }
+GtCategoryDefinitionDifference >> oldCategory [
+	^ oldCategory
+]
+
+{ #category : #accessing }
+GtCategoryDefinitionDifference >> oldCategory: anObject [
+	oldCategory := anObject
 ]
 
 { #category : #accessing }
