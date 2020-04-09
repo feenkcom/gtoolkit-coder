@@ -21,7 +21,7 @@ GtCoderNavigationPackagesTreeElement >> buildAddPackageButton [
 								look:
 									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
 										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousIcons add asElement;
+								icon: BrGlamorousVectorIcons add;
 								yourself ]
 						content: [ | editor button |
 							editor := BrEditor new
@@ -38,7 +38,7 @@ GtCoderNavigationPackagesTreeElement >> buildAddPackageButton [
 							button := BrButton new
 								look: BrGlamorousButtonWithIconLook;
 								margin: (BlInsets left: 10);
-								icon: BrGlamorousIcons accept asElement;
+								icon: BrGlamorousVectorIcons accept;
 								action: [ look hide.
 									navigationModel
 										packagesFilterString:

@@ -295,15 +295,15 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 		ifFalse: [ ^ self ].
 	coderAddOns
 		addContextAction: 'Play' translated
-		icon: BrGlamorousIcons play
+		icon: BrGlamorousVectorIcons play
 		action: [ :button | self playExampleFrom: button ].
 	coderAddOns
 		addContextAction: 'Play and Inspect' translated
-		icon: BrGlamorousIcons playinspect
+		icon: BrGlamorousVectorIcons playinspect
 		action: [ :button | self playAndInspectExampleFrom: button ].
 	coderAddOns
 		addContextAction: 'Debug' translated
-		icon: BrGlamorousIcons debug
+		icon: BrGlamorousVectorIcons debug
 		action: [ :button | self debugSelectionOrExampleFrom: button ]
 ]
 
@@ -413,7 +413,7 @@ GtMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 			^ self ].
 	coderAddOns
 		addContextAction: 'gtView' translated
-		icon: BrGlamorousIcons playinspect
+		icon: BrGlamorousVectorIcons playinspect
 		action: [ :button | self runGtViewFrom: button ]
 ]
 
@@ -478,8 +478,8 @@ GtMethodCoder >> initialize [
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
-	addOns addMainAction: 'Save' translated icon: BrGlamorousIcons accept action: [ self save ].
-	addOns addMainAction: 'Remove' translated icon: BrGlamorousIcons remove action: [ self remove ].
+	addOns addMainAction: 'Save' translated icon: BrGlamorousVectorIcons accept action: [ self save ].
+	addOns addMainAction: 'Remove' translated icon: BrGlamorousVectorIcons remove action: [ self remove ].
 	addOns clearChanges
 ]
 
@@ -583,7 +583,7 @@ GtMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 	self isModified
 		ifTrue: [ coderAddOns
 				addMainAction: 'Discard Changes' translated
-				icon: BrGlamorousIcons cancel
+				icon: BrGlamorousVectorIcons cancel
 				action: [ :button | self discardChanges ] ]
 		ifFalse: [ coderAddOns removeMainAction: 'Discard Changes' translated ]
 ]
@@ -600,7 +600,7 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 			^ self ].
 	coderAddOns
 		addContextAction: 'Mondrian' translated
-		icon: BrGlamorousIcons playinspect
+		icon: BrGlamorousVectorIcons playinspect
 		action: [ :button | self runMondrianPaintFrom: button ]
 ]
 
@@ -889,15 +889,15 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 			^ self ].
 	coderAddOns
 		addContextAction: 'Play' translated
-		icon: BrGlamorousIcons play
+		icon: BrGlamorousVectorIcons play
 		action: [ :button | self playSelectionOrMethodFrom: button ].
 	coderAddOns
 		addContextAction: 'Play and Inspect' translated
-		icon: BrGlamorousIcons playinspect
+		icon: BrGlamorousVectorIcons playinspect
 		action: [ :button | self playAndInspectSelectionOrMethodFrom: button ].
 	coderAddOns
 		addContextAction: 'Debug' translated
-		icon: BrGlamorousIcons debug
+		icon: BrGlamorousVectorIcons debug
 		action: [ :button | self debugSelectionOrMethod ]
 ]
 

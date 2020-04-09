@@ -52,7 +52,7 @@ GtPackageTagCoder >> gtLiveFor: aView [
 		title: 'Package Tag';
 		priority: 1;
 		stencil: [ self ];
-		actionButtonIcon: BrGlamorousIcons inspect
+		actionButtonIcon: BrGlamorousVectorIcons inspect
 			action: [ :aButton | aButton phlow spawnObject: self packageTag ]
 ]
 

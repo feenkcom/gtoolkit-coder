@@ -73,9 +73,9 @@ GtClassCoder >> gtLiveFor: aView [
 		title: 'Class';
 		priority: 1;
 		stencil: [ self ];
-		actionButtonIcon: BrGlamorousIcons browse
+		actionButtonIcon: BrGlamorousVectorIcons browse
 			action: [ :aButton | self theClass browse ];
-		actionButtonIcon: BrGlamorousIcons inspect
+		actionButtonIcon: BrGlamorousVectorIcons inspect
 			action: [ :aButton | 
 				aButton phlow spawnObject: self theClass ]
 		
