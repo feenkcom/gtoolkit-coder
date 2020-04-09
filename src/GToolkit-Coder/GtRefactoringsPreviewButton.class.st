@@ -22,7 +22,7 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 		self dispatchEvent: GtRefactoringsAppliedEvent new ].
 
 	anAcceptButton := BrButton new
-		icon: BrGlamorousIcons accept asElement;
+		icon: BrGlamorousVectorIcons accept;
 		beSmall;
 		requestFocus;
 		look: BrGlamorousButtonWithIconLook new;
@@ -59,11 +59,11 @@ GtRefactoringsPreviewButton >> initialize [
 	refactorings := [ #() ].
 	
 	self
-		icon: BrGlamorousIcons accept;
+		icon: BrGlamorousVectorIcons accept;
 		beSmall;
 		look: BrGlamorousButtonWithIconLook new + (BrGlamorousWithDropdownLook
 			handle: [ BrButton new
-				icon: BrGlamorousIcons empty asElement;
+				icon: BrGlamorousIcons empty;
 				beSmall;
 				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
 			content: [ self buildRefactoringsPreview ]);

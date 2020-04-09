@@ -22,7 +22,7 @@ GtPackagesCoderElement >> buildAddClassButton [
 								look:
 									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
 										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousIcons add asElement;
+								icon: BrGlamorousVectorIcons add;
 								yourself ]
 						content: [ | coder |
 							coder := GtClassDefinitionCoder new
@@ -43,7 +43,7 @@ GtPackagesCoderElement >> buildAddClassButton [
 								vFitContent;
 								margin: (BlInsets all: 10);
 								yourself ]);
-		icon: BrGlamorousIcons add asElement;
+		icon: BrGlamorousVectorIcons add;
 		yourself
 ]
 
@@ -282,7 +282,7 @@ GtPackagesCoderElement >> buildSpotterButton [
 												look:
 													BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
 														- BrGlamorousButtonExteriorLook;
-												icon: BrGlamorousIcons search asElement;
+												icon: BrGlamorousVectorIcons search;
 												yourself);
 										content:
 											(GtSpotterElement new
@@ -306,7 +306,7 @@ GtPackagesCoderElement >> buildSpotterButton [
 										yourself);
 								background: BrGlamorousColors secondaryHeaderBackgroundColor;
 								yourself ]);
-		icon: BrGlamorousIcons search asElement;
+		icon: BrGlamorousVectorIcons search;
 		yourself
 ]
 

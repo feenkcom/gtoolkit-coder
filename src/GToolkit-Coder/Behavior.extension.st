@@ -27,7 +27,7 @@ Behavior >> buildSpotterButtonFor: methodsCoder [
 												look:
 													BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
 														- BrGlamorousButtonExteriorLook;
-												icon: BrGlamorousIcons search asElement;
+												icon: BrGlamorousVectorIcons search;
 												yourself);
 										content:
 											(GtSpotterElement new
@@ -37,7 +37,7 @@ Behavior >> buildSpotterButtonFor: methodsCoder [
 										yourself);
 								background: BrGlamorousColors secondaryHeaderBackgroundColor;
 								yourself ]);
-		icon: BrGlamorousIcons search asElement;
+		icon: BrGlamorousVectorIcons search;
 		label: 'Search';
 		yourself
 ]
@@ -94,7 +94,7 @@ Behavior >> gtCoderMethodsFor: aView context: aDictionary [
 		title: 'Comments';
 		priority: 10;
 		title: 'Methods';
-		actionButtonIcon: BrGlamorousIcons add asElement
+		actionButtonIcon: BrGlamorousVectorIcons add
 			action: [ methodsCoder addNewCoder ];
 		actionStencil: [ self buildSpotterButtonFor: methodsCoder ];
 		stencil: [ methodsCoder asElement ]
