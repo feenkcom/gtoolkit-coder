@@ -113,9 +113,9 @@ GtSearchMethodFilterExamples >> methodsInCategoryFilter [
 	^ filter.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtSearchMethodFilterExamples >> methodsInImageFilter [
-	<gtExample>
+	"<gtExample>"
 	| filter |
 	
 	filter := GtSearchImageMethodsFilter new.
