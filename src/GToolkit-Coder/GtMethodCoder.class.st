@@ -313,7 +313,7 @@ GtMethodCoder >> exampleResult [
 	^ self example result
 ]
 
-{ #category : #acccessing }
+{ #category : #accessing }
 GtMethodCoder >> explanationFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	coderAddOns removeStylerOfType: GtSourceExplanationLinkStyler.
@@ -321,7 +321,7 @@ GtMethodCoder >> explanationFor: anAST into: coderAddOns [
 		ifTrue: [ coderAddOns addStyler: self explanationLink ].
 ]
 
-{ #category : #acccessing }
+{ #category : #accessing }
 GtMethodCoder >> explanationLink [
 	^ self attributeNamed: #explanationLink
 ]
@@ -761,14 +761,52 @@ GtMethodCoder >> removeSubCoder: aMethodCoder [
 ]
 
 { #category : #actions }
+GtMethodCoder >> renameClassIn: editorElement [
+	(GtRenameClassController new
+		coder: self;
+		sourceElement: editorElement) execute
+]
+
+{ #category : #actions }
+GtMethodCoder >> renameClassVariableIn: editorElement [
+	(GtRenameClassVariableController new
+		coder: self;
+		sourceElement: editorElement) execute
+]
+
+{ #category : #actions }
 GtMethodCoder >> renameIn: editorElement [
 	| node |
 	node := self rbNodeAtCursor: editorElement.
 	node isNil
 		ifTrue: [ ^ self ].
 	(node isMessage or: [ node isMethod ])
-		ifTrue: [ self renameMethod: editorElement ]
-		ifFalse: [ self renameVariableIn: editorElement ]
+		ifTrue: [ ^ self renameMethod: editorElement ].
+	node isVariable
+		ifTrue: [ node gtIsLocal
+				ifTrue: [ ^ self renameLocalVariableIn: editorElement ].
+			(self classOrMetaClass allInstVarNames includes: node name)
+				ifTrue: [ ^ self renameInstanceVariableIn: editorElement ].
+			(self classOrMetaClass classVariables
+				anySatisfy: [ :assoc | assoc key asString = node name ])
+				ifTrue: [ ^ self renameClassVariableIn: editorElement ].
+			Smalltalk globals
+				at: node name asSymbol
+				ifPresent: [ :cls | 
+					(cls isKindOf: Class)
+						ifTrue: [ ^ self renameClassIn: editorElement ] ] ]
+]
+
+{ #category : #actions }
+GtMethodCoder >> renameInstanceVariableIn: editorElement [
+	(GtRenameInstanceVariableController new
+		coder: self;
+		sourceElement: editorElement) execute
+]
+
+{ #category : #actions }
+GtMethodCoder >> renameLocalVariableIn: editorElement [
+	GtRenameAction pharoRenameLocalsOn: editorElement
 ]
 
 { #category : #actions }
@@ -776,11 +814,6 @@ GtMethodCoder >> renameMethod: editorElement [
 	(GtRenameMethodController new
 		coder: self;
 		sourceElement: editorElement) execute
-]
-
-{ #category : #actions }
-GtMethodCoder >> renameVariableIn: editorElement [
-	GtRenameAction pharoRenameLocalsOn: editorElement
 ]
 
 { #category : #examples }
