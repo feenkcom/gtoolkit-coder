@@ -73,7 +73,7 @@ GtClassDefinitionCoder >> initializeAddOns [
 	addOns
 		addStyler: BrRBTextStyler new;
 		addMainAction: 'Save' translated
-			icon: BrGlamorousIcons accept
+			icon: BrGlamorousVectorIcons accept
 			action: [ self doItAll ].
 	addOns clearChanges
 ]

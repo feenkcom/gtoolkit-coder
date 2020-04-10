@@ -62,19 +62,19 @@ GtPharoSnippetCoder >> initializeAddOns [
 	super initializeAddOns.
 	addOns
 		addMainAction: 'Evaluate' translated
-		icon: BrGlamorousIcons play
+		icon: BrGlamorousVectorIcons play
 		action: [ :aButton | self doItSelectionOrAll ].
 	addOns
 		addMainAction: 'Inspect' translated
-		icon: BrGlamorousIcons playinspect
+		icon: BrGlamorousVectorIcons playinspect
 		action: [ :aButton | self doItAndGoSelectionOrAll: aButton ].
 	addOns
 		addMainAction: 'Debug' translated
-		icon: BrGlamorousIcons debug
+		icon: BrGlamorousVectorIcons debug
 		action: [ :aButton | self debugSelection ].
 	addOns
 		addMainAction: 'Profile' translated
-		icon: BrGlamorousIcons performance
+		icon: BrGlamorousVectorIcons performance
 		action: [ :aButton | self profileWithMessageTallyFrom: aButton ].
 	addOns
 		addStyler:
