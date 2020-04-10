@@ -124,6 +124,12 @@ GtCoder >> contextActions [
 	^ addOns contextActions
 ]
 
+{ #category : #'actions - toolbar' }
+GtCoder >> contextMenuActions [
+	<return: #Collection of: #GtCoderAction>
+	^ addOns contextMenuActions
+]
+
 { #category : #accessing }
 GtCoder >> expanded [
 	^ expanded

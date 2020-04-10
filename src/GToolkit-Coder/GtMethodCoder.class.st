@@ -45,6 +45,25 @@ GtMethodCoder class >> newMethod [
 		yourself
 ]
 
+{ #category : #'add ons' }
+GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns [
+	<gtCoderContextMenuAddOns: 10>
+	#('Inline Assignment')
+		do: [ :each | coderAddOns removeContextMenuAction: each ].
+	self rbNodeAtCursor
+		ifNotNil: [ :node | 
+			(node isAssignment and: [ node variable gtIsLocal ])
+				ifTrue: [ coderAddOns
+						addContextMenuAction: 'Inline Assignment'
+						action: [ :element | self inlineTemporaryVariableIn: element ] ].
+			node isVariable
+				ifTrue: [ (node gtIsLocal
+						and: [ node parent isAssignment and: [ node parent variable == node ] ])
+						ifTrue: [ coderAddOns
+								addContextMenuAction: 'Inline Assignment'
+								action: [ :element | self inlineTemporaryVariableIn: element ] ] ] ]
+]
+
 { #category : #accessing }
 GtMethodCoder >> addSubCoder: aMethodCoder [
 	self subCoders addFirst: aMethodCoder
@@ -115,6 +134,17 @@ GtMethodCoder >> changeManager [
 	^ RBRefactoryChangeManager instance
 ]
 
+{ #category : #private }
+GtMethodCoder >> changedSourceForCurrentMethod: aRefactoryChange [
+	aRefactoryChange changes
+		reverseDo: [ :each | 
+			((each isKindOf: RBAddMethodChange)
+				and: [ each selector = self currentSelector
+						and: [ self classOrMetaClass = each changeClass ] ])
+				ifTrue: [ ^ each source ] ].
+	^ nil
+]
+
 { #category : #accessing }
 GtMethodCoder >> classOrMetaClass [
 	^ class ifNil: [ super classOrMetaClass ]
@@ -182,6 +212,31 @@ GtMethodCoder >> compiledMethod [
 					(cls includesSelector: sel)
 						ifTrue: [ 
 							cls >> sel ] ] ]
+]
+
+{ #category : #private }
+GtMethodCoder >> createRefactoringModel [
+	| model |
+	model := RBClassModelFactory rbNamespace
+		onEnvironment: RBBrowserEnvironment new.
+	(((model classFor: self classOrMetaClass)
+		directlyDefinesMethod: self currentSelector) not
+		or: [ ((model classFor: self classOrMetaClass)
+				sourceCodeFor: self currentSelector)
+				~= self sourceEditor text asString ])
+		ifTrue: [ (model classFor: self classOrMetaClass)
+				compile: self sourceEditor text asString
+				classified: self category ].
+	^ model
+]
+
+{ #category : #accessing }
+GtMethodCoder >> currentSelector [
+	^ selector
+		ifNil: [ self rbAST
+				ifNotNil: [ :ast | 
+					ast isMethod
+						ifTrue: [ ast selector ] ] ]
 ]
 
 { #category : #examples }
@@ -518,6 +573,25 @@ GtMethodCoder >> initializeShortcuts [
 			action: [ self format ])
 ]
 
+{ #category : #actions }
+GtMethodCoder >> inlineTemporaryVariableIn: editorElement [
+	| node refactoring model |
+	node := self rbNodeAtCursor.
+	node isVariable
+		ifTrue: [ node := node parent ].
+	model := self createRefactoringModel.
+	refactoring := RBInlineTemporaryRefactoring
+		model: model
+		inline: node sourceInterval
+		from: self currentSelector
+		in: (model classFor: self classOrMetaClass).
+	[ refactoring primitiveExecute ]
+		on: RBRefactoringError
+		do: [ :ex | ^ self ].
+	(self changedSourceForCurrentMethod: refactoring model changes)
+		ifNotNil: [ :source | self source: source ]
+]
+
 { #category : #private }
 GtMethodCoder >> intervalToStyleResult [
 	"If method was executed, it displays result next to the method selector."
@@ -724,6 +798,23 @@ GtMethodCoder >> printOn: aStream [
 		nextPutAll: '>>#';
 		nextPutAll: self selector asString;  
 		nextPut: $)
+]
+
+{ #category : #private }
+GtMethodCoder >> rbNodeAtCursor [
+	| editor ast position node |
+	editor := self sourceEditor.
+	editor cursor cursorsCount = 1
+		ifFalse: [ ^ nil ].
+	ast := self rbAST.
+	ast isNil
+		ifTrue: [ ^ nil ].
+	position := editor cursor first position.
+	ast
+		nodesDo: [ :each | 
+			(position between: each start and: each stop)
+				ifTrue: [ node := each ] ].
+	^ node
 ]
 
 { #category : #private }

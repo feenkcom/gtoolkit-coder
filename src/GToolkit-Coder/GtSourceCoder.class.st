@@ -379,11 +379,11 @@ GtSourceCoder >> expandedEditorElement [
 	^ BrEditorElement new
 		look:
 			(BrGlamorousWithContextMenuLook
-				content: [ BrGlamorousSimpleContextMenuContent new
+				content: [ self updateContextMenuAddOns.
+					BrGlamorousSimpleContextMenuContent new
 						display:
-							{('Cut' -> [ self sourceEditor cutSelected ]).
-							('Copy' -> [ self sourceEditor copySelected ]).
-							('Paste' -> [ self sourceEditor paste ])}
+							((self contextMenuActions reject: [ :e | e title isNil ])
+								collect: [ :e | e title -> e action ])
 								,
 									((self mainActions reject: [ :e | e title isNil ])
 										collect: [ :e | e title -> e action ]);
@@ -500,8 +500,19 @@ GtSourceCoder >> initialize [
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeAddOns [
 	super initializeAddOns.
+	self initializeContextMenuAddOns.
 	addOns addStyler: BrRBTextStyler new.
 	addOns clearChanges
+]
+
+{ #category : #'initialize-release' }
+GtSourceCoder >> initializeContextMenuAddOns [
+	addOns
+		addContextMenuAction: 'Cut'
+			action: [ self sourceEditor cutSelected ];
+		addContextMenuAction: 'Copy'
+			action: [ self sourceEditor copySelected ];
+		addContextMenuAction: 'Paste' action: [ self sourceEditor paste ]
 ]
 
 { #category : #'initialize-release' }
@@ -944,6 +955,19 @@ GtSourceCoder >> updateCollapsedSource [
 	firstLine
 		attributes: self defaultTextAttributes, self disabledTextAttributes.
 	self collapsedSource: firstLine
+]
+
+{ #category : #updating }
+GtSourceCoder >> updateContextMenuAddOns [
+	| updatedAddOns pragmas |
+	pragmas := self
+		pragmasNamed: #gtCoderContextMenuAddOns:
+		inHierarchy: self class.
+	updatedAddOns := addOns copy.
+	pragmas
+		reverseDo: [ :each | self perform: each methodSelector with: updatedAddOns ].
+	addOns := updatedAddOns.
+	updatedAddOns clearChanges
 ]
 
 { #category : #private }
