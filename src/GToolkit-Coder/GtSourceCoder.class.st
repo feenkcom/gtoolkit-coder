@@ -33,6 +33,16 @@ GtSourceCoder >> activeSourceEditor [
 		ifFalse: [ self collapsedEditor ]
 ]
 
+{ #category : #'add ons' }
+GtSourceCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
+	<gtCoderContextMenuAddOns: 10>
+	coderAddOns
+		addContextMenuItem: 'Cut' action: [ self sourceEditor cutSelected ];
+		addContextMenuItem: 'Copy'
+			action: [ self sourceEditor copySelected ];
+		addContextMenuItem: 'Paste' action: [ self sourceEditor paste ]
+]
+
 { #category : #updating }
 GtSourceCoder >> addOnChanged: aSymbol [
 	aSymbol = #stylers
@@ -380,13 +390,10 @@ GtSourceCoder >> expandedEditorElement [
 		look:
 			(BrGlamorousWithContextMenuLook
 				content: [ self updateContextMenuAddOns.
-					BrGlamorousSimpleContextMenuContent new
+					BrCoderContextMenuContent new
 						display:
-							((self contextMenuActions reject: [ :e | e title isNil ])
-								collect: [ :e | e title -> e action ])
-								,
-									((self mainActions reject: [ :e | e title isNil ])
-										collect: [ :e | e title -> e action ]);
+							(self contextMenuActions reject: [ :e | e title isNil ])
+								, (self mainActions reject: [ :e | e title isNil ]);
 						yourself ]);
 		padding:
 			(BlInsets
@@ -500,19 +507,8 @@ GtSourceCoder >> initialize [
 { #category : #'initialize-release' }
 GtSourceCoder >> initializeAddOns [
 	super initializeAddOns.
-	self initializeContextMenuAddOns.
 	addOns addStyler: BrRBTextStyler new.
 	addOns clearChanges
-]
-
-{ #category : #'initialize-release' }
-GtSourceCoder >> initializeContextMenuAddOns [
-	addOns
-		addContextMenuAction: 'Cut'
-			action: [ self sourceEditor cutSelected ];
-		addContextMenuAction: 'Copy'
-			action: [ self sourceEditor copySelected ];
-		addContextMenuAction: 'Paste' action: [ self sourceEditor paste ]
 ]
 
 { #category : #'initialize-release' }
@@ -964,8 +960,9 @@ GtSourceCoder >> updateContextMenuAddOns [
 		pragmasNamed: #gtCoderContextMenuAddOns:
 		inHierarchy: self class.
 	updatedAddOns := addOns copy.
+	updatedAddOns clearContextMenu.
 	pragmas
-		reverseDo: [ :each | self perform: each methodSelector with: updatedAddOns ].
+		do: [ :each | self perform: each methodSelector with: updatedAddOns ].
 	addOns := updatedAddOns.
 	updatedAddOns clearChanges
 ]

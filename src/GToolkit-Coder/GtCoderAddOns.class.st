@@ -29,13 +29,24 @@ GtCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
 ]
 
 { #category : #actions }
-GtCoderAddOns >> addContextMenuAction: aString action: aBlock [
-	self
-		updateActionList: #contextMenuActions
-		title: aString
-		icon: nil
+GtCoderAddOns >> addContextMenuItem: aString action: aBlock [
+	^ self
+		addContextMenuItem: aString
+		hover: nil
+		leave: nil
 		action: aBlock
-		onlyNew: true
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock [
+	| newAction |
+	newAction := GtCoderContextMenuAction new
+		title: aString;
+		action: aBlock;
+		hoverAction: hoverBlock;
+		leaveAction: leaveBlock.
+	contextMenuActions add: newAction.
+	modified add: #contextMenuActions
 ]
 
 { #category : #actions }
@@ -65,16 +76,6 @@ GtCoderAddOns >> addOrUpdateContextAction: aString icon: anIcon action: aBlock [
 		updateActionList: #contextActions
 		title: aString
 		icon: anIcon
-		action: aBlock
-		onlyNew: false
-]
-
-{ #category : #actions }
-GtCoderAddOns >> addOrUpdateContextMenuAction: aString action: aBlock [
-	self
-		updateActionList: #contextActions
-		title: aString
-		icon: nil
 		action: aBlock
 		onlyNew: false
 ]
@@ -111,6 +112,11 @@ GtCoderAddOns >> changesDo: aBlock [
 { #category : #changes }
 GtCoderAddOns >> clearChanges [
 	modified := Set new
+]
+
+{ #category : #actions }
+GtCoderAddOns >> clearContextMenu [
+	contextMenuActions := OrderedCollection new
 ]
 
 { #category : #shortcuts }
