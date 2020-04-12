@@ -45,6 +45,47 @@ GtMethodCoder class >> newMethod [
 		yourself
 ]
 
+{ #category : #private }
+GtMethodCoder >> addInlineSelfMessageFor: node to: coderAddOns [
+	node isMessage
+		ifFalse: [ ^ self ].
+	node receiver isSelf
+		ifFalse: [ ^ self ].
+	coderAddOns
+		addContextMenuItem: 'Inline Message'
+		hover: [ self highlightNode: node ]
+		leave: [ self removeHighlightFrom: node ]
+		action: [ :element | self inlineMessageSendIn: node ]
+]
+
+{ #category : #private }
+GtMethodCoder >> addInlineTempFor: node to: coderAddOns [
+	node isAssignment
+		ifFalse: [ ^ self ].
+	node variable gtIsLocal
+		ifFalse: [ ^ self ].
+	coderAddOns
+		addContextMenuItem: 'Inline Assignment'
+		hover: [ self highlightNode: node ]
+		leave: [ self removeHighlightFrom: node ]
+		action: [ :element | self inlineTemporaryVariableIn: node ]
+]
+
+{ #category : #'add ons' }
+GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns [
+	<gtCoderContextMenuAddOns: 20>
+	#('Inline Assignment')
+		do: [ :each | coderAddOns removeContextMenuAction: each ].
+	self rbNodeAtCursor
+		ifNotNil: [ :ast | 
+			| node |
+			node := ast.
+			[ node notNil ]
+				whileTrue: [ self addInlineTempFor: node to: coderAddOns.
+					self addInlineSelfMessageFor: node to: coderAddOns.
+					node := node parent ] ]
+]
+
 { #category : #accessing }
 GtMethodCoder >> addSubCoder: aMethodCoder [
 	self subCoders addFirst: aMethodCoder
@@ -115,6 +156,17 @@ GtMethodCoder >> changeManager [
 	^ RBRefactoryChangeManager instance
 ]
 
+{ #category : #private }
+GtMethodCoder >> changedSourceForCurrentMethod: aRefactoryChange [
+	aRefactoryChange changes
+		reverseDo: [ :each | 
+			((each isKindOf: RBAddMethodChange)
+				and: [ each selector = self currentSelector
+						and: [ self classOrMetaClass = each changeClass ] ])
+				ifTrue: [ ^ each source ] ].
+	^ nil
+]
+
 { #category : #accessing }
 GtMethodCoder >> classOrMetaClass [
 	^ class ifNil: [ super classOrMetaClass ]
@@ -182,6 +234,31 @@ GtMethodCoder >> compiledMethod [
 					(cls includesSelector: sel)
 						ifTrue: [ 
 							cls >> sel ] ] ]
+]
+
+{ #category : #private }
+GtMethodCoder >> createRefactoringModel [
+	| model |
+	model := RBClassModelFactory rbNamespace
+		onEnvironment: RBBrowserEnvironment new.
+	(((model classFor: self classOrMetaClass)
+		directlyDefinesMethod: self currentSelector) not
+		or: [ ((model classFor: self classOrMetaClass)
+				sourceCodeFor: self currentSelector)
+				~= self sourceEditor text asString ])
+		ifTrue: [ (model classFor: self classOrMetaClass)
+				compile: self sourceEditor text asString
+				classified: self category ].
+	^ model
+]
+
+{ #category : #accessing }
+GtMethodCoder >> currentSelector [
+	^ selector
+		ifNil: [ self rbAST
+				ifNotNil: [ :ast | 
+					ast isMethod
+						ifTrue: [ ast selector ] ] ]
 ]
 
 { #category : #examples }
@@ -445,6 +522,15 @@ GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
 	self styleSourceText.
 ]
 
+{ #category : #private }
+GtMethodCoder >> highlightNode: aNode [
+	(self sourceEditor text from: aNode start to: aNode stop)
+		attributes:
+			{(BlTextHighlightAttribute new
+				paint: BrGlamorousColors textHighlightColor)}.
+	self sourceEditor updater all update
+]
+
 { #category : #accessing }
 GtMethodCoder >> highlighter [
 	^ self attributeNamed: #highlighter
@@ -516,6 +602,38 @@ GtMethodCoder >> initializeShortcuts [
 		addShortcut: (BlShortcut new
 			combination: (BlKeyCombination primaryShiftF);
 			action: [ self format ])
+]
+
+{ #category : #actions }
+GtMethodCoder >> inlineMessageSendIn: messageNode [
+	| refactoring model |
+	model := self createRefactoringModel.
+	refactoring := RBInlineMethodRefactoring
+		model: model
+		inline: messageNode sourceInterval
+		inMethod: self currentSelector
+		forClass: (model classFor: self classOrMetaClass).
+	[ refactoring primitiveExecute ]
+		on: RBRefactoringError
+		do: [ :ex | ^ self ].
+	(self changedSourceForCurrentMethod: refactoring model changes)
+		ifNotNil: [ :source | self source: source ]
+]
+
+{ #category : #actions }
+GtMethodCoder >> inlineTemporaryVariableIn: assignmentNode [
+	| refactoring model |
+	model := self createRefactoringModel.
+	refactoring := RBInlineTemporaryRefactoring
+		model: model
+		inline: assignmentNode sourceInterval
+		from: self currentSelector
+		in: (model classFor: self classOrMetaClass).
+	[ refactoring primitiveExecute ]
+		on: RBRefactoringError
+		do: [ :ex | ^ self ].
+	(self changedSourceForCurrentMethod: refactoring model changes)
+		ifNotNil: [ :source | self source: source ]
 ]
 
 { #category : #private }
@@ -727,6 +845,23 @@ GtMethodCoder >> printOn: aStream [
 ]
 
 { #category : #private }
+GtMethodCoder >> rbNodeAtCursor [
+	| editor ast position node |
+	editor := self sourceEditor.
+	editor cursor cursorsCount = 1
+		ifFalse: [ ^ nil ].
+	ast := self rbAST.
+	ast isNil
+		ifTrue: [ ^ nil ].
+	position := editor cursor first position.
+	ast
+		nodesDo: [ :each | 
+			(position between: each start and: each stop)
+				ifTrue: [ node := each ] ].
+	^ node
+]
+
+{ #category : #private }
 GtMethodCoder >> rbNodeAtCursor: editorElement [
 	| editor ast position node |
 	editor := editorElement editor.
@@ -753,6 +888,13 @@ GtMethodCoder >> referencesFilterForCollapsed [
 { #category : #actions }
 GtMethodCoder >> remove [
 	^ class removeSelector: selector
+]
+
+{ #category : #private }
+GtMethodCoder >> removeHighlightFrom: aNode [
+	(self sourceEditor text from: aNode start to: aNode stop)
+		clearAttributes: [ :attr | attr isKindOf: BlTextHighlightAttribute ].
+	self sourceEditor updater all update
 ]
 
 { #category : #accessing }

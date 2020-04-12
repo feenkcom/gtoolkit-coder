@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'contextActions',
 		'mainActions',
+		'contextMenuActions',
 		'modified',
 		'shortcuts',
 		'collapsedShortcuts'
@@ -25,6 +26,27 @@ GtCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
 		icon: anIcon
 		action: aBlock
 		onlyNew: true
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addContextMenuItem: aString action: aBlock [
+	^ self
+		addContextMenuItem: aString
+		hover: nil
+		leave: nil
+		action: aBlock
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock [
+	| newAction |
+	newAction := GtCoderContextMenuAction new
+		title: aString;
+		action: aBlock;
+		hoverAction: hoverBlock;
+		leaveAction: leaveBlock.
+	contextMenuActions add: newAction.
+	modified add: #contextMenuActions
 ]
 
 { #category : #actions }
@@ -92,6 +114,11 @@ GtCoderAddOns >> clearChanges [
 	modified := Set new
 ]
 
+{ #category : #actions }
+GtCoderAddOns >> clearContextMenu [
+	contextMenuActions := OrderedCollection new
+]
+
 { #category : #shortcuts }
 GtCoderAddOns >> collapsedShortcuts [
 	^ collapsedShortcuts
@@ -100,6 +127,11 @@ GtCoderAddOns >> collapsedShortcuts [
 { #category : #accessing }
 GtCoderAddOns >> contextActions [
 	^ contextActions
+]
+
+{ #category : #accessing }
+GtCoderAddOns >> contextMenuActions [
+	^ contextMenuActions
 ]
 
 { #category : #ui }
@@ -142,6 +174,7 @@ GtCoderAddOns >> initialize [
 	super initialize.
 	contextActions := OrderedCollection new.
 	mainActions := OrderedCollection new.
+	contextMenuActions := OrderedCollection new.
 	shortcuts := OrderedCollection new.
 	collapsedShortcuts := OrderedCollection new.
 	modified := Set new
@@ -157,6 +190,7 @@ GtCoderAddOns >> postCopy [
 	super postCopy.
 	contextActions := contextActions copy.
 	mainActions := mainActions copy.
+	contextMenuActions := contextMenuActions copy.
 	modified := modified copy.
 	shortcuts := shortcuts copy.
 	collapsedShortcuts := collapsedShortcuts copy
@@ -185,6 +219,18 @@ GtCoderAddOns >> removeContextAction: aString [
 		ifTrue: [ ^ self ].
 	contextActions removeAt: index.
 	modified add: #contextActions
+]
+
+{ #category : #actions }
+GtCoderAddOns >> removeContextMenuAction: aString [
+	| index |
+	index := (1 to: contextMenuActions size)
+		detect: [ :i | (contextMenuActions at: i) title = aString ]
+		ifNone: [ 0 ].
+	index = 0
+		ifTrue: [ ^ self ].
+	contextMenuActions removeAt: index.
+	modified add: #contextMenuActions
 ]
 
 { #category : #actions }

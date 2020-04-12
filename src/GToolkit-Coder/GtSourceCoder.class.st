@@ -33,6 +33,16 @@ GtSourceCoder >> activeSourceEditor [
 		ifFalse: [ self collapsedEditor ]
 ]
 
+{ #category : #'add ons' }
+GtSourceCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
+	<gtCoderContextMenuAddOns: 10>
+	coderAddOns
+		addContextMenuItem: 'Cut' action: [ self sourceEditor cutSelected ];
+		addContextMenuItem: 'Copy'
+			action: [ self sourceEditor copySelected ];
+		addContextMenuItem: 'Paste' action: [ self sourceEditor paste ]
+]
+
 { #category : #updating }
 GtSourceCoder >> addOnChanged: aSymbol [
 	aSymbol = #stylers
@@ -379,14 +389,11 @@ GtSourceCoder >> expandedEditorElement [
 	^ BrEditorElement new
 		look:
 			(BrGlamorousWithContextMenuLook
-				content: [ BrGlamorousSimpleContextMenuContent new
+				content: [ self updateContextMenuAddOns.
+					BrCoderContextMenuContent new
 						display:
-							{('Cut' -> [ self sourceEditor cutSelected ]).
-							('Copy' -> [ self sourceEditor copySelected ]).
-							('Paste' -> [ self sourceEditor paste ])}
-								,
-									((self mainActions reject: [ :e | e title isNil ])
-										collect: [ :e | e title -> e action ]);
+							(self contextMenuActions reject: [ :e | e title isNil ])
+								, (self mainActions reject: [ :e | e title isNil ]);
 						yourself ]);
 		padding:
 			(BlInsets
@@ -944,6 +951,20 @@ GtSourceCoder >> updateCollapsedSource [
 	firstLine
 		attributes: self defaultTextAttributes, self disabledTextAttributes.
 	self collapsedSource: firstLine
+]
+
+{ #category : #updating }
+GtSourceCoder >> updateContextMenuAddOns [
+	| updatedAddOns pragmas |
+	pragmas := self
+		pragmasNamed: #gtCoderContextMenuAddOns:
+		inHierarchy: self class.
+	updatedAddOns := addOns copy.
+	updatedAddOns clearContextMenu.
+	pragmas
+		do: [ :each | self perform: each methodSelector with: updatedAddOns ].
+	addOns := updatedAddOns.
+	updatedAddOns clearChanges
 ]
 
 { #category : #private }

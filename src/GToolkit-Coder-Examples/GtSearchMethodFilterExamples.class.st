@@ -113,18 +113,6 @@ GtSearchMethodFilterExamples >> methodsInCategoryFilter [
 	^ filter.
 ]
 
-{ #category : #accessing }
-GtSearchMethodFilterExamples >> methodsInImageFilter [
-	"<gtExample>"
-	| filter |
-	
-	filter := GtSearchImageMethodsFilter new.
-	
-	self assert: (filter matches: self class>>#methodsInImageFilter).
-	
-	^ filter.
-]
-
 { #category : #'as yet unclassified' }
 GtSearchMethodFilterExamples >> methodsInPackageFilter [
 	<gtExample>
