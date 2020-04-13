@@ -8,6 +8,9 @@ Class {
 		'subCoders',
 		'isBuilt'
 	],
+	#classVars : [
+		'NodeHighlight'
+	],
 	#category : #'GToolkit-Coder-Coders'
 }
 
@@ -45,37 +48,142 @@ GtMethodCoder class >> newMethod [
 		yourself
 ]
 
-{ #category : #private }
-GtMethodCoder >> addInlineSelfMessageFor: node to: coderAddOns [
-	node isMessage
+{ #category : #accessing }
+GtMethodCoder class >> nodeHighlight [
+	^ NodeHighlight
+		ifNil: [ NodeHighlight := BlTextHighlightAttribute new
+				paint: BrGlamorousColors textHighlightColor ]
+]
+
+{ #category : #'actions-refactorings' }
+GtMethodCoder >> abstractClassVar: aNode [
+	| refactoring model cls |
+	model := self createRefactoringModel.
+	cls := (model classFor: self classOrMetaClass) instanceSide.
+	refactoring := RBAbstractClassVariableRefactoring
+		model: model
+		variable: aNode name
+		class: (cls whoDefinesClassVariable: aNode name).
+	self addRefactoringChangesPreview: refactoring at: aNode stop
+]
+
+{ #category : #'actions-refactorings' }
+GtMethodCoder >> abstractInstVar: aNode [
+	| refactoring model cls |
+	model := self createRefactoringModel.
+	cls := model classFor: self classOrMetaClass.
+	refactoring := RBAbstractInstanceVariableRefactoring
+		model: model
+		variable: aNode name
+		class: (cls whoDefinesInstanceVariable: aNode name).
+	self addRefactoringChangesPreview: refactoring at: aNode stop
+]
+
+{ #category : #'add ons-refactoring' }
+GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
+	aNode isVariable
 		ifFalse: [ ^ self ].
-	node receiver isSelf
+	(aNode whoDefines: aNode name) notNil
+		ifTrue: [ ^ self ].
+	(self classOrMetaClass allClassVarNames includes: aNode name asSymbol)
+		ifFalse: [ ^ self ].
+	coderAddOns
+		addContextMenuItem: 'Abstract variable'
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlightFrom: aNode ]
+		action: [ :element | self abstractClassVar: aNode ].
+	(self isAccessorMethodFor: aNode)
+		ifFalse: [ coderAddOns
+				addContextMenuItem: 'Create accessors'
+				hover: [ self highlightNode: aNode ]
+				leave: [ self removeHighlightFrom: aNode ]
+				action: [ :element | self createAccessorsFor: aNode instanceVariable: false ] ]
+]
+
+{ #category : #'add ons-refactoring' }
+GtMethodCoder >> addExtractTempFor: aNode to: coderAddOns [
+	aNode isValue
+		ifFalse: [ ^ self ].
+	aNode isUsed
+		ifFalse: [ ^ self ].
+	aNode isVariable
+		ifTrue: [ ^ self ].
+	aNode isAssignment
+		ifTrue: [ ^ self ].
+	aNode parent isAssignment
+		ifTrue: [ ^ self ].
+	coderAddOns
+		addContextMenuItem: 'Extract temporary'
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlightFrom: aNode ]
+		action: [ :element | self extractTemporaryVariable: aNode in: element ]
+]
+
+{ #category : #'add ons-refactoring' }
+GtMethodCoder >> addInlineSelfMessageFor: aNode to: coderAddOns [
+	aNode isMessage
+		ifFalse: [ ^ self ].
+	aNode receiver isSelf
 		ifFalse: [ ^ self ].
 	coderAddOns
 		addContextMenuItem: 'Inline Message'
-		hover: [ self highlightNode: node ]
-		leave: [ self removeHighlightFrom: node ]
-		action: [ :element | self inlineMessageSendIn: node ]
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlightFrom: aNode ]
+		action: [ :element | self inlineMessageSendIn: aNode ]
 ]
 
-{ #category : #private }
-GtMethodCoder >> addInlineTempFor: node to: coderAddOns [
-	node isAssignment
+{ #category : #'add ons-refactoring' }
+GtMethodCoder >> addInlineTempFor: aNode to: coderAddOns [
+	aNode isAssignment
 		ifFalse: [ ^ self ].
-	node variable gtIsLocal
+	aNode variable gtIsLocal
 		ifFalse: [ ^ self ].
 	coderAddOns
 		addContextMenuItem: 'Inline Assignment'
-		hover: [ self highlightNode: node ]
-		leave: [ self removeHighlightFrom: node ]
-		action: [ :element | self inlineTemporaryVariableIn: node ]
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlightFrom: aNode ]
+		action: [ :element | self inlineTemporaryVariableIn: aNode ]
 ]
 
-{ #category : #'add ons' }
+{ #category : #'add ons-refactoring' }
+GtMethodCoder >> addInstanceAccessorRefactoringsFor: aNode to: coderAddOns [
+	aNode isVariable
+		ifFalse: [ ^ self ].
+	(aNode whoDefines: aNode name) notNil
+		ifTrue: [ ^ self ].
+	(self classOrMetaClass allInstVarNames includes: aNode name)
+		ifFalse: [ ^ self ].
+	coderAddOns
+		addContextMenuItem: 'Abstract variable'
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlightFrom: aNode ]
+		action: [ :element | self abstractInstVar: aNode ].
+	(self isAccessorMethodFor: aNode)
+		ifTrue: [ coderAddOns
+				addContextMenuItem: 'Protect variable'
+				hover: [ self highlightNode: aNode ]
+				leave: [ self removeHighlightFrom: aNode ]
+				action: [ :element | self protectInstVar: aNode ] ]
+		ifFalse: [ coderAddOns
+				addContextMenuItem: 'Create accessors'
+				hover: [ self highlightNode: aNode ]
+				leave: [ self removeHighlightFrom: aNode ]
+				action: [ :element | self createAccessorsFor: aNode instanceVariable: true ] ]
+]
+
+{ #category : #'private-refactorings' }
+GtMethodCoder >> addRefactoringChangesPreview: aRefactoring at: position [
+	self removeRefactoringAttribute.
+	aRefactoring isNil
+		ifTrue: [ ^ self ].
+	(self sourceEditor text from: position to: position)
+		attributes: {(GtRefactoringChangesAttribute new refactoring: aRefactoring)}.
+	self sourceEditor updater all update
+]
+
+{ #category : #'add ons-refactoring' }
 GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns [
 	<gtCoderContextMenuAddOns: 20>
-	#('Inline Assignment')
-		do: [ :each | coderAddOns removeContextMenuAction: each ].
 	self rbNodeAtCursor
 		ifNotNil: [ :ast | 
 			| node |
@@ -83,6 +191,9 @@ GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns [
 			[ node notNil ]
 				whileTrue: [ self addInlineTempFor: node to: coderAddOns.
 					self addInlineSelfMessageFor: node to: coderAddOns.
+					self addInstanceAccessorRefactoringsFor: node to: coderAddOns.
+					self addClassAccessorRefactoringsFor: node to: coderAddOns.
+					self addExtractTempFor: node to: coderAddOns.
 					node := node parent ] ]
 ]
 
@@ -234,6 +345,22 @@ GtMethodCoder >> compiledMethod [
 					(cls includesSelector: sel)
 						ifTrue: [ 
 							cls >> sel ] ] ]
+]
+
+{ #category : #'actions-refactorings' }
+GtMethodCoder >> createAccessorsFor: aNode instanceVariable: aBoolean [
+	| refactoring model cls |
+	model := self createRefactoringModel.
+	cls := (model classFor: self classOrMetaClass) instanceSide.
+	refactoring := RBCreateAccessorsForVariableRefactoring
+		model: model
+		variable: aNode name
+		class:
+			(aBoolean
+				ifTrue: [ cls whoDefinesInstanceVariable: aNode name ]
+				ifFalse: [ cls whoDefinesClassVariable: aNode name ])
+		classVariable: aBoolean not.
+	self addRefactoringChangesPreview: refactoring at: aNode stop
 ]
 
 { #category : #private }
@@ -412,11 +539,39 @@ GtMethodCoder >> explanationLink: anExplanation [
 	self styleText
 ]
 
-{ #category : #actions }
+{ #category : #'actions-refactorings' }
 GtMethodCoder >> extractMethod: editorElement [
 	(GtExtractMethodController new
 		coder: self;
 		sourceElement: editorElement) execute
+]
+
+{ #category : #'actions-refactorings' }
+GtMethodCoder >> extractTemporaryVariable: aNode in: anElement [
+	| refactoring model tempName |
+	model := self createRefactoringModel.
+	tempName := self safeTemporaryName.
+	refactoring := RBExtractToTemporaryRefactoring
+		model: model
+		extract: aNode sourceInterval
+		to: tempName
+		from: self currentSelector
+		in: (model classFor: self classOrMetaClass).
+	(self performMethodRefactoring: refactoring)
+		ifFalse: [ ^ false ].
+	(self findNodeAssigning: tempName)
+		ifNotNil: [ :node | 
+			self sourceEditor moveCursorTo: node stop.
+			self renameLocalVariableIn: anElement ]
+]
+
+{ #category : #'private-refactorings' }
+GtMethodCoder >> findNodeAssigning: aString [
+	self rbAST
+		nodesDo: [ :each | 
+			(each isAssignment and: [ each variable name = aString ])
+				ifTrue: [ ^ each variable ] ].
+	^ nil
 ]
 
 { #category : #private }
@@ -522,12 +677,10 @@ GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
 	self styleSourceText.
 ]
 
-{ #category : #private }
+{ #category : #'private-refactorings' }
 GtMethodCoder >> highlightNode: aNode [
 	(self sourceEditor text from: aNode start to: aNode stop)
-		attributes:
-			{(BlTextHighlightAttribute new
-				paint: BrGlamorousColors textHighlightColor)}.
+		attributes: {self class nodeHighlight}.
 	self sourceEditor updater all update
 ]
 
@@ -604,7 +757,7 @@ GtMethodCoder >> initializeShortcuts [
 			action: [ self format ])
 ]
 
-{ #category : #actions }
+{ #category : #'actions-refactorings' }
 GtMethodCoder >> inlineMessageSendIn: messageNode [
 	| refactoring model |
 	model := self createRefactoringModel.
@@ -613,14 +766,10 @@ GtMethodCoder >> inlineMessageSendIn: messageNode [
 		inline: messageNode sourceInterval
 		inMethod: self currentSelector
 		forClass: (model classFor: self classOrMetaClass).
-	[ refactoring primitiveExecute ]
-		on: RBRefactoringError
-		do: [ :ex | ^ self ].
-	(self changedSourceForCurrentMethod: refactoring model changes)
-		ifNotNil: [ :source | self source: source ]
+	self performMethodRefactoring: refactoring
 ]
 
-{ #category : #actions }
+{ #category : #'actions-refactorings' }
 GtMethodCoder >> inlineTemporaryVariableIn: assignmentNode [
 	| refactoring model |
 	model := self createRefactoringModel.
@@ -629,11 +778,7 @@ GtMethodCoder >> inlineTemporaryVariableIn: assignmentNode [
 		inline: assignmentNode sourceInterval
 		from: self currentSelector
 		in: (model classFor: self classOrMetaClass).
-	[ refactoring primitiveExecute ]
-		on: RBRefactoringError
-		do: [ :ex | ^ self ].
-	(self changedSourceForCurrentMethod: refactoring model changes)
-		ifNotNil: [ :source | self source: source ]
+	self performMethodRefactoring: refactoring
 ]
 
 { #category : #private }
@@ -642,6 +787,30 @@ GtMethodCoder >> intervalToStyleResult [
 	^ self hasSelection 
 		ifTrue: [ self selectedSourceIntervalOrAll ]
 		ifFalse: [ 1 to: self selector size ]
+]
+
+{ #category : #'private-refactorings' }
+GtMethodCoder >> isAccessorMethodFor: aNode [
+	| statement |
+	aNode methodNode body statements size = 1
+		ifFalse: [ ^ false ].
+	aNode methodNode body temporaries isEmpty
+		ifFalse: [ ^ false ].
+	aNode parent isReturn
+		ifTrue: [ statement := aNode parent.
+			^ statement parent isSequence
+				and: [ statement parent parent == aNode methodNode
+						and: [ aNode methodNode selector isUnary ] ] ].
+	aNode parent isAssignment
+		ifFalse: [ ^ false ].
+	aNode methodNode selector numArgs = 1.
+	aNode parent value = aNode methodNode arguments first
+		ifFalse: [ ^ false ].
+	statement := aNode parent.
+	statement parent isReturn
+		ifTrue: [ statement := statement parent ].
+	^ statement parent isSequence
+		and: [ statement parent parent == aNode methodNode ]
 ]
 
 { #category : #testing }
@@ -779,6 +948,18 @@ GtMethodCoder >> patternSource [
 							nextPutAll: (arguments at: i) name ] ] ]
 ]
 
+{ #category : #private }
+GtMethodCoder >> performMethodRefactoring: refactoring [
+	[ refactoring primitiveExecute ]
+		on: RBRefactoringError
+		do: [ :ex | ^ false ].
+	(self changedSourceForCurrentMethod: refactoring model changes)
+		ifNotNil: [ :source | 
+			self source: source.
+			^ true ].
+	^ false
+]
+
 { #category : #examples }
 GtMethodCoder >> playAndInspectExampleFrom: anElement [
 	self runExample.
@@ -844,6 +1025,18 @@ GtMethodCoder >> printOn: aStream [
 		nextPut: $)
 ]
 
+{ #category : #'actions-refactorings' }
+GtMethodCoder >> protectInstVar: aNode [
+	| refactoring model cls |
+	model := self createRefactoringModel.
+	cls := model classFor: self classOrMetaClass.
+	refactoring := RBProtectInstanceVariableRefactoring
+		model: model
+		variable: aNode name
+		class: (cls whoDefinesInstanceVariable: aNode name).
+	self addRefactoringChangesPreview: refactoring at: aNode stop
+]
+
 { #category : #private }
 GtMethodCoder >> rbNodeAtCursor [
 	| editor ast position node |
@@ -890,10 +1083,17 @@ GtMethodCoder >> remove [
 	^ class removeSelector: selector
 ]
 
-{ #category : #private }
+{ #category : #'private-refactorings' }
 GtMethodCoder >> removeHighlightFrom: aNode [
 	(self sourceEditor text from: aNode start to: aNode stop)
-		clearAttributes: [ :attr | attr isKindOf: BlTextHighlightAttribute ].
+		clearAttributes: [ :attr | attr == self class nodeHighlight ].
+	self sourceEditor updater all update
+]
+
+{ #category : #'private-refactorings' }
+GtMethodCoder >> removeRefactoringAttribute [
+	self sourceEditor text
+		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ].
 	self sourceEditor updater all update
 ]
 
@@ -902,21 +1102,21 @@ GtMethodCoder >> removeSubCoder: aMethodCoder [
 	self subCoders remove: aMethodCoder ifAbsent: [  ]
 ]
 
-{ #category : #actions }
+{ #category : #'actions-refactorings' }
 GtMethodCoder >> renameClassIn: editorElement [
 	(GtRenameClassController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #actions }
+{ #category : #'actions-refactorings' }
 GtMethodCoder >> renameClassVariableIn: editorElement [
 	(GtRenameClassVariableController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #actions }
+{ #category : #'actions-refactorings' }
 GtMethodCoder >> renameIn: editorElement [
 	| node |
 	node := self rbNodeAtCursor: editorElement.
@@ -939,19 +1139,19 @@ GtMethodCoder >> renameIn: editorElement [
 						ifTrue: [ ^ self renameClassIn: editorElement ] ] ]
 ]
 
-{ #category : #actions }
+{ #category : #'actions-refactorings' }
 GtMethodCoder >> renameInstanceVariableIn: editorElement [
 	(GtRenameInstanceVariableController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #actions }
+{ #category : #'actions-refactorings' }
 GtMethodCoder >> renameLocalVariableIn: editorElement [
 	GtRenameAction pharoRenameLocalsOn: editorElement
 ]
 
-{ #category : #actions }
+{ #category : #'actions-refactorings' }
 GtMethodCoder >> renameMethod: editorElement [
 	(GtRenameMethodController new
 		coder: self;
@@ -995,6 +1195,25 @@ GtMethodCoder >> runMondrianPaintFrom: anElement [
 			(GtPhlowObjectToSpawn new
 				object: mondrian;
 				sourceElement: anElement)
+]
+
+{ #category : #'private-refactorings' }
+GtMethodCoder >> safeTemporaryName [
+	| name index found ast |
+	name := '_'.
+	index := 0.
+	ast := self rbAST.
+	[ found := false.
+	ast
+		nodesDo: [ :each | 
+			(each defines: name)
+				ifTrue: [ found := true ] ].
+	found
+		or: [ (self classOrMetaClass allInstVarNames includes: name)
+				or: [ self classOrMetaClass allClassVarNames includes: name asSymbol ] ] ]
+		whileTrue: [ name := 't' , index printString.
+			index := index + 1 ].
+	^ name
 ]
 
 { #category : #actions }

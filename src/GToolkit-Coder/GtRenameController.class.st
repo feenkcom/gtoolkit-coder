@@ -21,14 +21,9 @@ GtRenameController >> acceptRename [
 { #category : #private }
 GtRenameController >> addRefactoringChangesPreview [
 	newNode := nil.
-	self removeRefactoringAttribute.
-	self refactoring
-		ifNotNil: [ :ref | 
-			| position |
-			position := self positionForPreview.
-			(coder sourceEditor text from: position to: position)
-				attributes: {(GtRefactoringChangesAttribute new refactoring: ref)}.
-			coder sourceEditor updater all update ]
+	coder
+		addRefactoringChangesPreview: self refactoring
+		at: self positionForPreview
 ]
 
 { #category : #private }
@@ -40,7 +35,7 @@ GtRenameController >> calculateNewNode [
 GtRenameController >> cancelRename [
 	self uninstallPreviewEventHandlers.
 	sourceElement editor text: originalSource.
-	self removeRefactoringAttribute
+	coder removeRefactoringAttribute
 ]
 
 { #category : #accessing }
@@ -128,7 +123,7 @@ GtRenameController >> originalNode [
 
 { #category : #private }
 GtRenameController >> positionForPreview [
-	^ self newNode stop
+	^ self newNode ifNotNil: [ :ast | ast stop ]
 ]
 
 { #category : #accessing }
@@ -139,13 +134,6 @@ GtRenameController >> refactoring [
 { #category : #accessing }
 GtRenameController >> refactoringName [
 	^ self subclassResponsibility
-]
-
-{ #category : #private }
-GtRenameController >> removeRefactoringAttribute [
-	coder sourceEditor text
-		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ].
-	coder sourceEditor updater all update
 ]
 
 { #category : #executing }

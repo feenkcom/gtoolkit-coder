@@ -46,7 +46,7 @@ GtRenameMethodController >> newSelectorName [
 
 { #category : #private }
 GtRenameMethodController >> positionForPreview [
-	^ self newNode keywordsIntervals last last
+	^ self newNode ifNotNil: [ :ast | ast keywordsIntervals last last ]
 ]
 
 { #category : #private }
