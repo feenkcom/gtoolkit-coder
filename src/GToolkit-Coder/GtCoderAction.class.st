@@ -33,6 +33,11 @@ GtCoderAction >> gtViewActionSourceCodeFor: aView [
 ]
 
 { #category : #accessing }
+GtCoderAction >> hoverAction [
+	^ nil
+]
+
+{ #category : #accessing }
 GtCoderAction >> icon [
 	^ icon
 ]
@@ -40,6 +45,11 @@ GtCoderAction >> icon [
 { #category : #accessing }
 GtCoderAction >> icon: anObject [
 	icon := anObject
+]
+
+{ #category : #accessing }
+GtCoderAction >> leaveAction [
+	^ nil
 ]
 
 { #category : #printing }
