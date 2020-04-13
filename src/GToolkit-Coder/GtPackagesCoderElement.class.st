@@ -11,15 +11,20 @@ Class {
 
 { #category : #'building ui' }
 GtPackagesCoderElement >> addClassSource [
-	| aSuperClass |
-	aSuperClass := (self isSelectedCoderClassCoder and: [ 
+	| aSuperClassName aPackageName |
+	(self isSelectedCoderClassCoder and: [ 
 		selectedCoder theClass isNotNil ])
-			ifTrue: [ selectedCoder theClass name asString ] 
-			ifFalse: [ Object name asString ].
-	^ aSuperClass, ' subclass: #NameOfSubclass
+			ifTrue: [ 
+				aSuperClassName := selectedCoder theClass name asString.
+				aPackageName := selectedCoder theClass package name ] 
+			ifFalse: [ 
+				aSuperClassName := Object name asString.
+				aPackageName := ''
+				 ].
+	^ aSuperClassName, ' subclass: #NameOfSubclass
 	instanceVariableNames: ''''
 	classVariableNames: ''''
-	package: '''''
+	package: ''', aPackageName ,''''
 ]
 
 { #category : #'building ui' }
