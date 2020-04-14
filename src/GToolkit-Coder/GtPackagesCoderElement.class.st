@@ -10,6 +10,24 @@ Class {
 }
 
 { #category : #'building ui' }
+GtPackagesCoderElement >> addClassSource [
+	| aSuperClassName aPackageName |
+	(self isSelectedCoderClassCoder and: [ 
+		selectedCoder theClass isNotNil ])
+			ifTrue: [ 
+				aSuperClassName := selectedCoder theClass name asString.
+				aPackageName := selectedCoder theClass package name ] 
+			ifFalse: [ 
+				aSuperClassName := Object name asString.
+				aPackageName := ''
+				 ].
+	^ aSuperClassName, ' subclass: #NameOfSubclass
+	instanceVariableNames: ''''
+	classVariableNames: ''''
+	package: ''', aPackageName ,''''
+]
+
+{ #category : #'building ui' }
 GtPackagesCoderElement >> buildAddClassButton [
 	| look |
 	^ BrButton new
@@ -27,11 +45,7 @@ GtPackagesCoderElement >> buildAddClassButton [
 						content: [ | coder |
 							coder := GtClassDefinitionCoder new
 								expanded: true;
-								source:
-									'Object subclass: #NameOfSubclass
-	instanceVariableNames: ''''
-	classVariableNames: ''''
-	package: ''''';
+								source: self addClassSource;
 								yourself.
 							coder announcer
 								when: GtCoderEvaluationAnnouncement
