@@ -818,6 +818,9 @@ GtMethodCoder >> inlineMessageSendIn: messageNode [
 		inline: messageNode sourceInterval
 		inMethod: self currentSelector
 		forClass: (model classFor: self classOrMetaClass).
+	refactoring
+		setOption: #inlineExpression
+		toUse: [ :ref :string | true ].
 	self performMethodRefactoring: refactoring
 ]
 
