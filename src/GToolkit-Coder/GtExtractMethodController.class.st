@@ -144,9 +144,13 @@ GtExtractMethodController >> execute [
 
 { #category : #executing }
 GtExtractMethodController >> executeRefactoring [
+	| nodes |
+	nodes := coder rbSelectedNodes.
+	nodes isNil
+		ifTrue: [ ^ self ].
 	refactoring := RBExtractMethodRefactoring
 		model: model
-		extract: coder selectedSourceInterval
+		extract: (nodes first start to: nodes last stop)
 		from: methodSelector
 		in: self modelClass.
 	self setRefactoringOptions.
