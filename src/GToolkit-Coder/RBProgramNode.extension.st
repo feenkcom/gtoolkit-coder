@@ -15,3 +15,12 @@ RBProgramNode >> gtMoveAllBy: anInteger [
 RBProgramNode >> gtMoveBy: anInteger [
 	self comments do: [ :f | f with: f contents at: f start + anInteger ]
 ]
+
+{ #category : #'*GToolkit-Coder' }
+RBProgramNode >> withAllParentsDo: aBlock [
+	| node |
+	node := self.
+	[ node notNil ]
+		whileTrue: [ aBlock value: node.
+			node := node parent ]
+]

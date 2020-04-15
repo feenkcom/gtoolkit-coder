@@ -88,16 +88,29 @@ GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 	(self classOrMetaClass allClassVarNames includes: aNode name asSymbol)
 		ifFalse: [ ^ self ].
 	coderAddOns
-		addContextMenuItem: 'Abstract variable'
+		addContextMenuItem: (self createLabel: 'Abstract variable' description: aNode name)
 		hover: [ self highlightNode: aNode ]
-		leave: [ self removeHighlightFrom: aNode ]
+		leave: [ self removeHighlight ]
 		action: [ :element | self abstractClassVar: aNode ].
 	(self isAccessorMethodFor: aNode)
 		ifFalse: [ coderAddOns
-				addContextMenuItem: 'Create accessors'
+				addContextMenuItem: (self createLabel: 'Create accessors' description: aNode name)
 				hover: [ self highlightNode: aNode ]
-				leave: [ self removeHighlightFrom: aNode ]
+				leave: [ self removeHighlight ]
 				action: [ :element | self createAccessorsFor: aNode instanceVariable: false ] ]
+]
+
+{ #category : #'add ons-refactoring' }
+GtMethodCoder >> addExtractMethodTo: coderAddOns [
+	| nodes |
+	nodes := self rbSelectedNodes.
+	nodes isNil
+		ifTrue: [ ^ self ].
+	coderAddOns
+		addContextMenuItem: 'Extract method'
+		hover: [ self highlightFrom: nodes first start to: nodes last stop ]
+		leave: [ self removeHighlight ]
+		action: [ :element | self extractMethod: element ]
 ]
 
 { #category : #'add ons-refactoring' }
@@ -113,9 +126,12 @@ GtMethodCoder >> addExtractTempFor: aNode to: coderAddOns [
 	aNode parent isAssignment
 		ifTrue: [ ^ self ].
 	coderAddOns
-		addContextMenuItem: 'Extract temporary'
+		addContextMenuItem:
+			(self
+				createLabel: 'Extract temporary'
+				description: (self nodeDescription: aNode))
 		hover: [ self highlightNode: aNode ]
-		leave: [ self removeHighlightFrom: aNode ]
+		leave: [ self removeHighlight ]
 		action: [ :element | self extractTemporaryVariable: aNode in: element ]
 ]
 
@@ -126,9 +142,9 @@ GtMethodCoder >> addInlineSelfMessageFor: aNode to: coderAddOns [
 	aNode receiver isSelf
 		ifFalse: [ ^ self ].
 	coderAddOns
-		addContextMenuItem: 'Inline Message'
+		addContextMenuItem: (self createLabel: 'Inline Message' description: aNode selector)
 		hover: [ self highlightNode: aNode ]
-		leave: [ self removeHighlightFrom: aNode ]
+		leave: [ self removeHighlight ]
 		action: [ :element | self inlineMessageSendIn: aNode ]
 ]
 
@@ -139,9 +155,12 @@ GtMethodCoder >> addInlineTempFor: aNode to: coderAddOns [
 	aNode variable gtIsLocal
 		ifFalse: [ ^ self ].
 	coderAddOns
-		addContextMenuItem: 'Inline Assignment'
+		addContextMenuItem:
+			(self
+				createLabel: 'Inline Assignment'
+				description: aNode variable name)
 		hover: [ self highlightNode: aNode ]
-		leave: [ self removeHighlightFrom: aNode ]
+		leave: [ self removeHighlight ]
 		action: [ :element | self inlineTemporaryVariableIn: aNode ]
 ]
 
@@ -154,20 +173,20 @@ GtMethodCoder >> addInstanceAccessorRefactoringsFor: aNode to: coderAddOns [
 	(self classOrMetaClass allInstVarNames includes: aNode name)
 		ifFalse: [ ^ self ].
 	coderAddOns
-		addContextMenuItem: 'Abstract variable'
+		addContextMenuItem: (self createLabel: 'Abstract variable' description: aNode name)
 		hover: [ self highlightNode: aNode ]
-		leave: [ self removeHighlightFrom: aNode ]
+		leave: [ self removeHighlight ]
 		action: [ :element | self abstractInstVar: aNode ].
 	(self isAccessorMethodFor: aNode)
 		ifTrue: [ coderAddOns
-				addContextMenuItem: 'Protect variable'
+				addContextMenuItem: (self createLabel: 'Protect variable' description: aNode name)
 				hover: [ self highlightNode: aNode ]
-				leave: [ self removeHighlightFrom: aNode ]
+				leave: [ self removeHighlight ]
 				action: [ :element | self protectInstVar: aNode ] ]
 		ifFalse: [ coderAddOns
-				addContextMenuItem: 'Create accessors'
+				addContextMenuItem: (self createLabel: 'Create accessors' description: aNode name)
 				hover: [ self highlightNode: aNode ]
-				leave: [ self removeHighlightFrom: aNode ]
+				leave: [ self removeHighlight ]
 				action: [ :element | self createAccessorsFor: aNode instanceVariable: true ] ]
 ]
 
@@ -184,17 +203,35 @@ GtMethodCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 { #category : #'add ons-refactoring' }
 GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns [
 	<gtCoderContextMenuAddOns: 20>
-	self rbNodeAtCursor
+	self addExtractMethodTo: coderAddOns.
+	self rbSelectedNode
 		ifNotNil: [ :ast | 
-			| node |
-			node := ast.
-			[ node notNil ]
-				whileTrue: [ self addInlineTempFor: node to: coderAddOns.
-					self addInlineSelfMessageFor: node to: coderAddOns.
-					self addInstanceAccessorRefactoringsFor: node to: coderAddOns.
-					self addClassAccessorRefactoringsFor: node to: coderAddOns.
-					self addExtractTempFor: node to: coderAddOns.
-					node := node parent ] ]
+			self addInstanceAccessorRefactoringsFor: ast to: coderAddOns.
+			self addClassAccessorRefactoringsFor: ast to: coderAddOns.
+			self addRemoveParameterRefactoringFor: ast to: coderAddOns.
+			ast
+				withAllParentsDo: [ :node | self addInlineSelfMessageFor: node to: coderAddOns ].
+			ast
+				withAllParentsDo: [ :node | self addInlineTempFor: node to: coderAddOns ].
+			ast
+				withAllParentsDo: [ :node | self addExtractTempFor: node to: coderAddOns ] ]
+]
+
+{ #category : #'add ons-refactoring' }
+GtMethodCoder >> addRemoveParameterRefactoringFor: aNode to: coderAddOns [
+	aNode isVariable
+		ifFalse: [ ^ self ].
+	aNode parent isMethod
+		ifFalse: [ ^ self ].
+	aNode parent body
+		nodesDo: [ :each | 
+			each = aNode
+				ifTrue: [ ^ self ] ].
+	coderAddOns
+		addContextMenuItem: (self createLabel: 'Remove parameter' description: aNode name)
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlight ]
+		action: [ :element | self removeParameter: aNode ]
 ]
 
 { #category : #accessing }
@@ -361,6 +398,16 @@ GtMethodCoder >> createAccessorsFor: aNode instanceVariable: aBoolean [
 				ifFalse: [ cls whoDefinesClassVariable: aNode name ])
 		classVariable: aBoolean not.
 	self addRefactoringChangesPreview: refactoring at: aNode stop
+]
+
+{ #category : #'private-refactorings' }
+GtMethodCoder >> createLabel: aString description: description [
+	^ aString asRopedText
+		,
+			((' ' , description) asRopedText
+				attributes:
+					{(BlFontSizeAttribute size: 12).
+					(BlTextForegroundAttribute paint: Color gray)})
 ]
 
 { #category : #private }
@@ -678,10 +725,15 @@ GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
 ]
 
 { #category : #'private-refactorings' }
-GtMethodCoder >> highlightNode: aNode [
-	(self sourceEditor text from: aNode start to: aNode stop)
+GtMethodCoder >> highlightFrom: startIndex to: endIndex [
+	(self sourceEditor text from: startIndex to: endIndex)
 		attributes: {self class nodeHighlight}.
 	self sourceEditor updater all update
+]
+
+{ #category : #'private-refactorings' }
+GtMethodCoder >> highlightNode: aNode [
+	self highlightFrom: aNode start to: aNode stop
 ]
 
 { #category : #accessing }
@@ -766,6 +818,9 @@ GtMethodCoder >> inlineMessageSendIn: messageNode [
 		inline: messageNode sourceInterval
 		inMethod: self currentSelector
 		forClass: (model classFor: self classOrMetaClass).
+	refactoring
+		setOption: #inlineExpression
+		toUse: [ :ref :string | true ].
 	self performMethodRefactoring: refactoring
 ]
 
@@ -919,6 +974,17 @@ GtMethodCoder >> newSourceEditor [
 	^ aSourceEditor
 ]
 
+{ #category : #'private-refactorings' }
+GtMethodCoder >> nodeDescription: aNode [
+	| description |
+	description := aNode formattedCode.
+	description size > 40
+		ifTrue: [ description := (description first: 40) , '...' ].
+	^ ((description copyReplaceAll: String cr with: ' ')
+		copyReplaceAll: String lf
+		with: ' ') copyReplaceAll: '	' with: ' '
+]
+
 { #category : #accessing }
 GtMethodCoder >> object [
 	^ self attributeNamed: #object ifAbsent: [ class ]
@@ -1038,23 +1104,6 @@ GtMethodCoder >> protectInstVar: aNode [
 ]
 
 { #category : #private }
-GtMethodCoder >> rbNodeAtCursor [
-	| editor ast position node |
-	editor := self sourceEditor.
-	editor cursor cursorsCount = 1
-		ifFalse: [ ^ nil ].
-	ast := self rbAST.
-	ast isNil
-		ifTrue: [ ^ nil ].
-	position := editor cursor first position.
-	ast
-		nodesDo: [ :each | 
-			(position between: each start and: each stop)
-				ifTrue: [ node := each ] ].
-	^ node
-]
-
-{ #category : #private }
 GtMethodCoder >> rbNodeAtCursor: editorElement [
 	| editor ast position node |
 	editor := editorElement editor.
@@ -1071,6 +1120,49 @@ GtMethodCoder >> rbNodeAtCursor: editorElement [
 	^ node
 ]
 
+{ #category : #'private-refactorings' }
+GtMethodCoder >> rbSelectedNode [
+	| ast position node selections editor |
+	ast := self rbAST.
+	ast isNil
+		ifTrue: [ ^ nil ].
+	editor := self sourceEditor.
+	selections := editor selection allSelections.
+	selections size = 1
+		ifTrue: [ ^ ast bestNodeFor: selections first interval ]
+		ifFalse: [ editor cursor cursorsCount = 1
+				ifFalse: [ ^ nil ].
+			position := editor cursor first position.
+			ast
+				nodesDo: [ :each | 
+					(position between: each start and: each stop)
+						ifTrue: [ node := each ] ].
+			^ node ]
+]
+
+{ #category : #'private-refactorings' }
+GtMethodCoder >> rbSelectedNodes [
+	| node selections |
+	selections := self sourceEditor selection allSelections.
+	selections size = 1
+		ifFalse: [ ^ nil ].
+	node := self rbSelectedNode.
+	node isNil
+		ifTrue: [ ^ nil ].
+	node isSequence
+		ifTrue: [ | startIndex endIndex interval |
+			interval := selections first interval.
+			startIndex := ((node statements size to: 1 by: -1)
+				detect: [ :i | (node statements at: i) stop < interval first ]
+				ifNone: [ 0 ]) + 1.
+			endIndex := ((1 to: node statements size)
+				detect: [ :i | (node statements at: i) start > interval last ]
+				ifNone: [ node statements size + 1 ]) - 1.
+			startIndex <= endIndex
+				ifTrue: [ ^ node statements copyFrom: startIndex to: endIndex ] ].
+	^ {node}
+]
+
 { #category : #private }
 GtMethodCoder >> referencesFilterForCollapsed [
 	^ self selectorForCollapsed
@@ -1084,10 +1176,23 @@ GtMethodCoder >> remove [
 ]
 
 { #category : #'private-refactorings' }
-GtMethodCoder >> removeHighlightFrom: aNode [
-	(self sourceEditor text from: aNode start to: aNode stop)
+GtMethodCoder >> removeHighlight [
+	self sourceEditor text
 		clearAttributes: [ :attr | attr == self class nodeHighlight ].
 	self sourceEditor updater all update
+]
+
+{ #category : #'actions-refactorings' }
+GtMethodCoder >> removeParameter: aNode [
+	| refactoring model cls |
+	model := self createRefactoringModel.
+	cls := (model classFor: self classOrMetaClass) instanceSide.
+	refactoring := RBRemoveParameterRefactoring
+		model: model
+		removeParameter: aNode name
+		in: cls
+		selector: self currentSelector.
+	self addRefactoringChangesPreview: refactoring at: aNode stop
 ]
 
 { #category : #'private-refactorings' }
