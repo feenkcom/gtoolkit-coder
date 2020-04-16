@@ -116,7 +116,7 @@ GtExtractMethodController >> cursorMoved: anEvent [
 	attribute isNil
 		ifTrue: [ ^ self ].
 	renameAction := GtCompositeRenameAction locations: {(self intervalAt: anEvent newIndex)} element: sourceElement.
-	renameAction addLocations: {(self keywordStartPositionFor: attribute index)} to: extractedCoder sourceEditor.
+	renameAction addLocations: {(self keywordIntervalFor: attribute index)} to: extractedCoder sourceEditor.
 	renameAction install
 ]
 
@@ -214,10 +214,10 @@ GtExtractMethodController >> isRenaming [
 ]
 
 { #category : #'event handling' }
-GtExtractMethodController >> keywordStartPositionFor: anInteger [
+GtExtractMethodController >> keywordIntervalFor: anInteger [
 	| ast |
 	ast := self patternAst.
-	^ (ast selectorParts at: anInteger) startPosition
+	^ (ast selectorParts at: anInteger) sourceInterval
 ]
 
 { #category : #private }
