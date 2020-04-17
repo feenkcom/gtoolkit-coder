@@ -137,7 +137,7 @@ GtTagsDefinition >> tagNamed: aSymbol [
 
 { #category : #'gt - editors' }
 GtTagsDefinition >> tagsEditor [
-	<return: #GtCodeDefinitionEditor>
+	<return: #GtCodeDefinitionViewer>
 	
 	^ GtCodeDefinitionPluralEditor new
 		title: 'Tags';

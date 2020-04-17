@@ -184,7 +184,7 @@ GtTraitsDefinition >> traitNamed: aSymbol [
 
 { #category : #'gt - editors' }
 GtTraitsDefinition >> traitsEditor [
-	<return: #GtCodeDefinitionEditor>
+	<return: #GtCodeDefinitionViewer>
 	
 	^ GtCodeDefinitionPluralEditor new
 		definition: self;

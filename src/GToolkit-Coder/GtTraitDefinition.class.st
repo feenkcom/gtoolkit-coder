@@ -89,7 +89,7 @@ GtTraitDefinition >> differenceWith: aTraitDefinition [
 
 { #category : #'gt - editors' }
 GtTraitDefinition >> editors [
-	<return: #Collection of: #GtCodeDefinitionEditor>
+	<return: #Collection of: #GtCodeDefinitionViewer>
 
 	^ { 
 		self category categoryEditor.
@@ -129,6 +129,15 @@ GtTraitDefinition >> gtTraitsFor: aView [
 		priority: 3;
 		object: [ traits ];
 		view: #gtTraitsFor:
+]
+
+{ #category : #'gt - editors' }
+GtTraitDefinition >> readers [
+	<return: #Collection of: #GtCodeDefinitionViewer>
+
+	^ { 
+		self category categoryReader.
+	}
 ]
 
 { #category : #accessing }

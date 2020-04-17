@@ -33,11 +33,20 @@ GtCategoryDefinition >> asDefinitionString [
 
 { #category : #'gt - editors' }
 GtCategoryDefinition >> categoryEditor [
-	<return: #GtCodeDefinitionEditor>
+	<return: #GtCodeDefinitionViewer>
 	
-	^ GtCodeDefinitionCompositeEntityEditor withAll: {
+	^ GtCodeDefinitionCompositeEntityViewer withAll: {
 		self package packageEditor.
 		self tag tagEditor }
+]
+
+{ #category : #'gt - editors' }
+GtCategoryDefinition >> categoryReader [
+	<return: #GtCodeDefinitionViewer>
+	
+	^ GtCodeDefinitionCompositeEntityViewer withAll: {
+		self package packageReader.
+		self tag tagReader }
 ]
 
 { #category : #'api - accepting' }
@@ -109,6 +118,11 @@ GtCategoryDefinition >> parent: aParent [
 	
 	package parent: aParent.
 	tag parent: aParent
+]
+
+{ #category : #'gt - editors' }
+GtCategoryDefinition >> readers [
+	^ { self categoryReader }
 ]
 
 { #category : #accessing }

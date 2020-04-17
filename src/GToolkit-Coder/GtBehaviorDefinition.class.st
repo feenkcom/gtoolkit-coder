@@ -52,9 +52,9 @@ GtBehaviorDefinition >> name: aSymbol [
 		to: name
 ]
 
-{ #category : #'gt-editors' }
+{ #category : #'gt - viewers' }
 GtBehaviorDefinition >> nameEditor [
-	<return: #GtCodeDefinitionEditor>
+	<return: #GtCodeDefinitionViewer>
 	
 	^ GtCodeDefinitionSingleEditor new
 		definition: self;

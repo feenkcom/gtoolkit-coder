@@ -1,0 +1,76 @@
+Class {
+	#name : #GtCodeDefinitionPluralReader,
+	#superclass : #GtCodeDefinitionPluralViewer,
+	#category : #'GToolkit-Coder-Behavior - Editors'
+}
+
+{ #category : #'api - instantiation' }
+GtCodeDefinitionPluralReader >> create [
+	<return: #Object>
+	| aDefinition anOwner theInitialNames aTagger |
+
+	aDefinition := self definition.
+	anOwner := self owner.
+	
+	theInitialNames := aDefinition perform: getSelector withEnoughArguments: { anOwner }.
+
+	aTagger := BrTagger new
+		look: (BrGlamorousTaggerLook new
+			margin: self margin;
+			tagLabel: [ :aTaggerTag |
+				| aLabel eachLabelDefinition |
+
+				eachLabelDefinition := aTaggerTag ifNotNil: [
+					modelSelector ifNotNil: [ :aSelector | 
+						aTaggerTag name
+							ifEmpty: [ nil ]
+							ifNotEmpty: [ :aTagName | aDefinition perform: aSelector withEnoughArguments: { aTaggerTag name } ] ] ].
+
+				aLabel := BrEditor new
+					beReadOnlyWithoutSelection;
+					text: aTaggerTag name;
+					fitContent;
+					styler: styler;
+					look: lookStencil create;
+					yourself.
+				
+				interactions do: [ :eachAssociation |
+					aLabel addInteraction: (BrTextEditorInteraction new
+						combination: eachAssociation key;
+						action: [ :aTextEditor :anEvent |							
+							anEvent consumed: true.
+							eachLabelDefinition
+								ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ]) ].
+					
+				eventHandlers do: [ :eachAssociation |
+					aLabel
+						when: eachAssociation key
+						do: [ :anEvent |
+							eachLabelDefinition
+								ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ] ].
+				
+				aLabel ];
+			in: [ :aLook | separatorStencil ifNotNil: [ aLook separator: separatorStencil ] ];
+			yourself);
+		namedTags: theInitialNames.
+
+	aDefinition
+		when: addAnnouncement
+		do: [ :anEvent | 
+			(anOwner isNil or: [ anEvent owner = anOwner ])
+				ifTrue: [ aTagger addTagNamed: anEvent name ] ].
+		
+	aDefinition
+		when: removeAnnouncement
+		do: [ :anEvent |
+			(anOwner isNil or: [ anEvent owner = anOwner ])
+				ifTrue: [ aTagger removeTagNamed: anEvent name ] ].
+		
+	aDefinition
+		when: renameAnnouncement
+		do: [ :anEvent |
+			(anOwner isNil or: [ anEvent owner = anOwner ])
+				ifTrue: [ aTagger renameTagNamed: anEvent oldName to: anEvent newName ] ].
+		
+	^ aTagger
+]

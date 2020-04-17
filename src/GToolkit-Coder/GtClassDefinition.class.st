@@ -112,9 +112,9 @@ GtClassDefinition >> differenceWith: aClassDefinition [
 	^ aDifference
 ]
 
-{ #category : #'gt - editors' }
+{ #category : #'gt - viewers' }
 GtClassDefinition >> editors [
-	<return: #Collection of: #GtCodeDefinitionEditor>
+	<return: #Collection of: #GtCodeDefinitionViewer>
 	
 	^ { 
 		self superclass superclassEditor.
@@ -200,6 +200,16 @@ GtClassDefinition >> pools [
 	<return: #GtPoolsDefinition>
 	
 	^ pools
+]
+
+{ #category : #'gt - viewers' }
+GtClassDefinition >> readers [
+	<return: #Collection of: #GtCodeDefinitionViewer>
+	
+	^ { 
+		self superclass superclassReader.
+		self category categoryReader.
+	}
 ]
 
 { #category : #accessing }

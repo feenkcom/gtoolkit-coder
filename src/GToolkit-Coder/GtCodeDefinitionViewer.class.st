@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCodeDefinitionEditor,
+	#name : #GtCodeDefinitionViewer,
 	#superclass : #BrStencil,
 	#instVars : [
 		'title',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #'private - instance creation' }
-GtCodeDefinitionEditor >> buildSectionLabel: aSectionName [
+GtCodeDefinitionViewer >> buildSectionLabel: aSectionName [
 	
 	^ BrLabel new
 		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
@@ -21,7 +21,7 @@ GtCodeDefinitionEditor >> buildSectionLabel: aSectionName [
 ]
 
 { #category : #initialization }
-GtCodeDefinitionEditor >> initialize [
+GtCodeDefinitionViewer >> initialize [
 	super initialize.
 	
 	margin := BlInsets top: 3 left: 0 bottom: 3 right: 5.
@@ -32,31 +32,31 @@ GtCodeDefinitionEditor >> initialize [
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEditor >> look: aStencil [
+GtCodeDefinitionViewer >> look: aStencil [
 	lookStencil := aStencil asStencil
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEditor >> margin [
+GtCodeDefinitionViewer >> margin [
 	^ margin
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEditor >> margin: anObject [
+GtCodeDefinitionViewer >> margin: anObject [
 	margin := anObject
 ]
 
 { #category : #printing }
-GtCodeDefinitionEditor >> printOn: aStream [
+GtCodeDefinitionViewer >> printOn: aStream [
 	aStream print: self title
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEditor >> title [
+GtCodeDefinitionViewer >> title [
 	^ title
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEditor >> title: anObject [
+GtCodeDefinitionViewer >> title: anObject [
 	title := anObject
 ]

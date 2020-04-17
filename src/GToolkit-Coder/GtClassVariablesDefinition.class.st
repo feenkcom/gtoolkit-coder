@@ -50,7 +50,7 @@ GtClassVariablesDefinition >> classVariableNamed: aSymbol [
 
 { #category : #'gt - editors' }
 GtClassVariablesDefinition >> classVariablesEditor [
-	<return: #GtCodeDefinitionEditor>
+	<return: #GtCodeDefinitionViewer>
 	
 	^ GtCodeDefinitionPluralEditor new
 			definition: self;

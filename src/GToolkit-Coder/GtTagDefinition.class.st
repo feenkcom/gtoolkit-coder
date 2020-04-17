@@ -133,12 +133,28 @@ GtTagDefinition >> printOn: aStream [
 ]
 
 { #category : #'gt - editors' }
+GtTagDefinition >> readers [
+	^ { self tagReader }
+]
+
+{ #category : #'gt - editors' }
 GtTagDefinition >> tagEditor [
 	^ GtCodeDefinitionSingleEditor new
 		title: 'Tag';
 		definition: self;
 		getSelector: #name;
 		setSelector: #name:;
+		renameEvent: GtBehaviorTagRenamed;
+		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+]
+
+{ #category : #'gt - editors' }
+GtTagDefinition >> tagReader [
+	^ GtCodeDefinitionSingleReader new
+		title: 'Tag';
+		definition: self;
+		getSelector: #name;
 		renameEvent: GtBehaviorTagRenamed;
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
 		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]

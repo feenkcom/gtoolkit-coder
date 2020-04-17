@@ -114,3 +114,20 @@ GtPackageDefinition >> packageEditor [
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
 		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
+
+{ #category : #'gt - editors' }
+GtPackageDefinition >> packageReader [
+	^ GtCodeDefinitionSingleReader new
+		title: 'Package';
+		definition: self;
+		getSelector: #name;
+		renameEvent: GtBehaviorPackageRenamed;
+		completion: [ GtPackagesCompletionStrategy new ];
+		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+]
+
+{ #category : #'gt - editors' }
+GtPackageDefinition >> readers [
+	^ { self packageReader }
+]
