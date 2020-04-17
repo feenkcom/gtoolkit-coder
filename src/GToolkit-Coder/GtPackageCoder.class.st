@@ -10,9 +10,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtPackageCoder class >> forPackage: aPackage [
+GtPackageCoder class >> forPackage: anRPackage [
 	^ self new
-		package: aPackage;
+		package: anRPackage;
 		yourself
 ]
 

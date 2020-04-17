@@ -10,6 +10,16 @@ Class {
 	#category : #'GToolkit-Coder-! Core'
 }
 
+{ #category : #'instance creation' }
+GtCoder class >> forCoder: aCoder [
+	^ self basicNew initialize pushCoder: aCoder
+]
+
+{ #category : #'instance creation' }
+GtCoder class >> new [
+	^ self forCoder: GtPackagesCoder new
+]
+
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
@@ -17,11 +27,11 @@ GtCoder >> initialize [
 	self
 		when: GtCoderToReplace
 		do: [ :anEvent | self replaceFrom: anEvent ].
-	
+
 	self
 		when: GtCoderToSpawn
 		do: [ :anEvent | self spawnFrom: anEvent ].
-		
+
 	self
 		when: GtCoderToSpawnInSpace
 		do: [ :anEvent | self spawnInSpaceFrom: anEvent ].
@@ -37,9 +47,8 @@ GtCoder >> initialize [
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent ].
-		
-	self addChild: coderContent.
-	self pushCoder: GtPackagesCoder new
+
+	self addChild: coderContent
 ]
 
 { #category : #'api - coder' }
@@ -52,14 +61,14 @@ GtCoder >> pushCoder: aCoderOrCoders [
 GtCoder >> replaceFrom: aGtCoderToReplaceEvent [
 	aGtCoderToReplaceEvent consumed: true.
 	
-	
+	self pushCoder: aGtCoderToReplaceEvent coder
 ]
 
 { #category : #'api - spawning' }
 GtCoder >> spawnFrom: aGtCoderToSpawnEvent [
 	aGtCoderToSpawnEvent consumed: true.
 	
-	
+	self phlow spawnObject: (self class forCoder: aGtCoderToSpawnEvent coder)
 ]
 
 { #category : #'api - spawning' }

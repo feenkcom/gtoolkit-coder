@@ -64,8 +64,11 @@ GtCoderCardElement >> initialize [
 
 { #category : #private }
 GtCoderCardElement >> selectCoder [
-	self
-		allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
-		ifFound: [ :element | element updateSelection: coder ]
-		ifNone: [ self phlow spawnObject: coder ]
+	| anEvent |
+
+	anEvent := (GtCoderToReplace new coder: coder).
+	self fireEvent: anEvent.
+
+	anEvent isConsumed
+		ifFalse: [ self phlow spawnObject: anEvent coder ]
 ]

@@ -28,7 +28,14 @@ GtClassSuperclassDefinition >> asDefinitionString [
 GtClassSuperclassDefinition >> browseFrom: anEvent [
 	self class environment
 		at: self name
-		ifPresent: [ :aClass | anEvent currentTarget phlow spawnObject: aClass ]
+		ifPresent: [ :aClass |
+			| aCoderEvent aClassCoder |
+
+			aClassCoder := GtClassCoder forClass: aClass.
+			aCoderEvent := GtCoderToSpawn new coder: aClassCoder.
+			anEvent currentTarget fireEvent: aCoderEvent.
+			aCoderEvent isConsumed
+				ifFalse: [ anEvent currentTarget phlow spawnObject: aCoderEvent coder ] ]
 ]
 
 { #category : #'api - superclass' }
@@ -143,6 +150,19 @@ GtClassSuperclassDefinition >> readers [
 	^ { self superclassReader }
 ]
 
+{ #category : #'api - superclass' }
+GtClassSuperclassDefinition >> replaceFrom: anEvent [
+	self class environment
+		at: self name
+		ifPresent: [ :aClass |
+			| aCoderEvent aClassCoder |
+			aClassCoder := GtClassCoder forClass: aClass.
+			aCoderEvent := GtCoderToReplace new coder: aClassCoder.
+			anEvent currentTarget fireEvent: aCoderEvent.
+			aCoderEvent isConsumed
+				ifFalse: [ anEvent currentTarget phlow spawnObject: aCoderEvent coder ] ]
+]
+
 { #category : #'gt - editors' }
 GtClassSuperclassDefinition >> superclassEditor [
 	<return: #GtCodeDefinitionViewer>
@@ -167,6 +187,6 @@ GtClassSuperclassDefinition >> superclassReader [
 			title: 'Superclass';
 			getSelector: #name;
 			renameEvent: GtBehaviorSuperclassRenamed;
-			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-			whenClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+			whenPrimaryClickDo: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+			whenClickDo: [ :anEvent :aDefinition | aDefinition replaceFrom: anEvent ]
 ]

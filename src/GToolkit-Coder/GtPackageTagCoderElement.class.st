@@ -51,12 +51,14 @@ GtPackageTagCoderElement >> buildParentLink [
 					(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
 						+ BrGlamorousLabelLook new glamorousRegularFont;
 				label: packageTagCoder package name;
-				action: [ | coder |
-					coder := packageTagCoder packageCoder.
-					self
-						allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
-						ifFound: [ :p | p updateSelection: coder ]
-						ifNone: [ self phlow spawnObject: coder ] ]).
+				action: [
+					| anEvent |
+
+					anEvent := (GtCoderToReplace new coder: packageTagCoder packageCoder).
+					self fireEvent: anEvent.
+
+					anEvent isConsumed
+						ifFalse: [ self phlow spawnObject: anEvent coder ] ]).
 	^ element
 ]
 
