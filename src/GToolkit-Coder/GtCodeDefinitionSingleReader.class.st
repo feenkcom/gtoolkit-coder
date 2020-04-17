@@ -18,6 +18,7 @@ GtCodeDefinitionSingleReader >> create [
 		fitContent;
 		look: lookStencil create;
 		margin: self margin;
+		focusability: BlFocusability none;
 		text: theInitialName.
 
 	interactions do: [ :eachAssociation |

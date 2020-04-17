@@ -63,7 +63,7 @@ GtMetaclassDefinition >> editors [
 	<return: #Collection of: #GtCodeDefinitionViewer>
 	
 	^ { 
-		self category categoryReader.
+		self category categoryEditor.
 		self slots slotsEditor.
 	}
 ]

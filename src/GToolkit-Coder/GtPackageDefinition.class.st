@@ -124,7 +124,7 @@ GtPackageDefinition >> packageReader [
 		renameEvent: GtBehaviorPackageRenamed;
 		completion: [ GtPackagesCompletionStrategy new ];
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+		whenClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
 
 { #category : #'gt - editors' }
