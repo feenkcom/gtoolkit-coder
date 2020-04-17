@@ -157,5 +157,5 @@ GtTagDefinition >> tagReader [
 		getSelector: #name;
 		renameEvent: GtBehaviorTagRenamed;
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+		whenClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

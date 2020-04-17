@@ -32,6 +32,7 @@ GtCodeDefinitionPluralReader >> create [
 					fitContent;
 					styler: styler;
 					look: lookStencil create;
+					focusability: BlFocusability none;
 					yourself.
 				
 				interactions do: [ :eachAssociation |

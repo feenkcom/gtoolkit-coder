@@ -76,6 +76,20 @@ GtCodeDefinitionEntityViewer >> when: aBlEvent do: aBlock [
 ]
 
 { #category : #interactions }
+GtCodeDefinitionEntityViewer >> whenClickDo: aBlock [
+	"I do not react to primary+click"
+	"aBlock is in form [ :anEvent :aCodeDefinition ]"
+	
+	self
+		when: BlClickEvent
+		do: [ :anEvent :aDefinition |
+			anEvent modifiers isPrimaryModifier 
+				ifFalse: [
+					anEvent consumed: true.
+					aBlock cull: anEvent cull: aDefinition ] ]
+]
+
+{ #category : #interactions }
 GtCodeDefinitionEntityViewer >> whenKey: aBlKeyCombination do: aBlock [
 	"aBlock is in form [ :anEvent :aCodeDefinition ]"
 	
