@@ -52,7 +52,7 @@ GtBehaviorCoderHeaderModel >> difference [
 
 { #category : #accessing }
 GtBehaviorCoderHeaderModel >> editors [
-	<return: #Collection of: #GtCodeDefinitionEditor>
+	<return: #Collection of: #GtCodeDefinitionViewer>
 	
 	^ self definition editors
 ]
@@ -67,6 +67,13 @@ GtBehaviorCoderHeaderModel >> initialize [
 { #category : #'private - notifying' }
 GtBehaviorCoderHeaderModel >> notifyBehaviorChanged: aBehavior [
 	self dispatchEvent: (GtBehaviorCoderHeaderClassChanged new theClass: aBehavior)
+]
+
+{ #category : #accessing }
+GtBehaviorCoderHeaderModel >> readers [
+	<return: #Collection of: #GtCodeDefinitionViewer>
+	
+	^ self definition readers
 ]
 
 { #category : #'api - behavior' }

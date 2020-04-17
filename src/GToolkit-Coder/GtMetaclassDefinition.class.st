@@ -2,7 +2,8 @@ Class {
 	#name : #GtMetaclassDefinition,
 	#superclass : #GtBehaviorDefinition,
 	#instVars : [
-		'slots'
+		'slots',
+		'category'
 	],
 	#category : #'GToolkit-Coder-Behavior - Definitions'
 }
@@ -20,6 +21,13 @@ GtMetaclassDefinition >> asDefinitionString [
 			crtab;
 			nextPutAll: 'slots: ';
 			store: self slots asDefinitionString ]
+]
+
+{ #category : #accessing }
+GtMetaclassDefinition >> category [
+	<return: #GtCategoryDefinition>
+
+	^ category
 ]
 
 { #category : #'api - accepting' }
@@ -50,11 +58,12 @@ GtMetaclassDefinition >> differenceWith: aMetaclassDefinition [
 	^ aDifference
 ]
 
-{ #category : #'gt - editors' }
+{ #category : #'gt - viewers' }
 GtMetaclassDefinition >> editors [
-	<return: #Collection of: #GtCodeDefinitionEditor>
+	<return: #Collection of: #GtCodeDefinitionViewer>
 	
 	^ { 
+		self category categoryReader.
 		self slots slotsEditor.
 	}
 ]
@@ -65,8 +74,18 @@ GtMetaclassDefinition >> fromMetaclass: aMetaclass [
 
 	name := aMetaclass name.
 	originalName := name.
-		
+	
+	category := (GtCategoryDefinition fromBehavior: aMetaclass) parent: self.
 	slots := (GtSlotsDefinition fromClass: aMetaclass) parent: self
+]
+
+{ #category : #'gt - viewers' }
+GtMetaclassDefinition >> readers [
+	<return: #Collection of: #GtCodeDefinitionViewer>
+	
+	^ { 
+		self category categoryReader.
+	}
 ]
 
 { #category : #accessing }

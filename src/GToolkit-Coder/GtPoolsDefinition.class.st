@@ -129,7 +129,7 @@ GtPoolsDefinition >> poolNamed: aSymbol [
 
 { #category : #'gt - editors' }
 GtPoolsDefinition >> poolsEditor [
-	<return: #GtCodeDefinitionEditor>
+	<return: #GtCodeDefinitionViewer>
 	
 	^ GtCodeDefinitionPluralEditor new
 		definition: self;

@@ -139,8 +139,13 @@ GtClassSuperclassDefinition >> printOn: aStream [
 ]
 
 { #category : #'gt - editors' }
+GtClassSuperclassDefinition >> readers [
+	^ { self superclassReader }
+]
+
+{ #category : #'gt - editors' }
 GtClassSuperclassDefinition >> superclassEditor [
-	<return: #GtCodeDefinitionEditor>
+	<return: #GtCodeDefinitionViewer>
 	
 	^ GtCodeDefinitionSingleEditor new
 			definition: self;
@@ -149,6 +154,19 @@ GtClassSuperclassDefinition >> superclassEditor [
 			setSelector: #name:;
 			renameEvent: GtBehaviorSuperclassRenamed;
 			completion: [ GtClassesCompletionStrategy new ];
+			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+			whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+]
+
+{ #category : #'gt - editors' }
+GtClassSuperclassDefinition >> superclassReader [
+	<return: #GtCodeDefinitionViewer>
+	
+	^ GtCodeDefinitionSingleReader new
+			definition: self;
+			title: 'Superclass';
+			getSelector: #name;
+			renameEvent: GtBehaviorSuperclassRenamed;
 			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
 			whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

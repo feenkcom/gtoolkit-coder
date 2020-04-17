@@ -1,10 +1,8 @@
 Class {
 	#name : #GtCodeDefinitionSingleEditor,
-	#superclass : #GtCodeDefinitionEntityEditor,
+	#superclass : #GtCodeDefinitionSingleViewer,
 	#instVars : [
-		'getSelector',
-		'setSelector',
-		'renameAnnouncement'
+		'setSelector'
 	],
 	#category : #'GToolkit-Coder-Behavior - Editors'
 }
@@ -79,16 +77,6 @@ GtCodeDefinitionSingleEditor >> create [
 	^ anEditableLabel
 ]
 
-{ #category : #accessing }
-GtCodeDefinitionSingleEditor >> getSelector [
-	^ getSelector
-]
-
-{ #category : #accessing }
-GtCodeDefinitionSingleEditor >> getSelector: anObject [
-	getSelector := anObject
-]
-
 { #category : #private }
 GtCodeDefinitionSingleEditor >> handleRenameError: anError to: aNewName from: aTagElement [
 	anError description traceCr.
@@ -102,11 +90,6 @@ GtCodeDefinitionSingleEditor >> handleRenameError: anError to: aNewName from: aT
 		select.
 	
 	self addErrorOverlayTo: aTagElement
-]
-
-{ #category : #accessing }
-GtCodeDefinitionSingleEditor >> renameEvent: anObject [
-	renameAnnouncement := anObject
 ]
 
 { #category : #private }

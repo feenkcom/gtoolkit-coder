@@ -84,8 +84,8 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 ]
 
 { #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> buildDefinitionViewer [
-	| theProperties theEditors |
+GtBehaviorCoderHeaderElement >> buildDefinitionReader [
+	| theProperties theReaders |
 
 	theProperties := BlElement new
 		layout: (BlGridLayout new columnCount: 2);
@@ -93,9 +93,9 @@ GtBehaviorCoderHeaderElement >> buildDefinitionViewer [
 			c horizontal matchParent.
 			c vertical fitContent ].
 
-	theEditors := headerModel editors.
-	theEditors := theEditors first: (2 min: theEditors size).
-	theEditors do: [ :eachEditor |
+	theReaders := headerModel readers.
+	theReaders := theReaders first: (2 min: theReaders size).
+	theReaders do: [ :eachEditor |
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
@@ -167,7 +167,7 @@ GtBehaviorCoderHeaderElement >> initialize [
 
 { #category : #'private - ui' }
 GtBehaviorCoderHeaderElement >> initializeElements [
-	self header: [ self buildDefinitionViewer ].
+	self header: [ self buildDefinitionReader ].
 	self content: [ self buildDefinitionEditor ]
 ]
 

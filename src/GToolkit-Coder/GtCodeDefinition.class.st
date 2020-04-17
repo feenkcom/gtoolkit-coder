@@ -30,9 +30,9 @@ GtCodeDefinition >> dispatchEvent: anEvent [
 	self announcer announce: anEvent
 ]
 
-{ #category : #'gt - editors' }
+{ #category : #'gt - viewers' }
 GtCodeDefinition >> editors [
-	<return: #Collection of: #GtCodeDefinitionEditor>
+	<return: #Collection of: #GtCodeDefinitionViewer>
 	
 	^ #()
 ]
@@ -75,6 +75,13 @@ GtCodeDefinition >> parent [
 { #category : #accessing }
 GtCodeDefinition >> parent: anObject [
 	parent := anObject
+]
+
+{ #category : #'gt - viewers' }
+GtCodeDefinition >> readers [
+	<return: #Collection of: #GtCodeDefinitionViewer>
+	
+	^ #()
 ]
 
 { #category : #'announcer - subscription' }

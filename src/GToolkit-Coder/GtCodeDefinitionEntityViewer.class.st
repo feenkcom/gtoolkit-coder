@@ -1,6 +1,6 @@
 Class {
-	#name : #GtCodeDefinitionEntityEditor,
-	#superclass : #GtCodeDefinitionEditor,
+	#name : #GtCodeDefinitionEntityViewer,
+	#superclass : #GtCodeDefinitionViewer,
 	#instVars : [
 		'definition',
 		'owner',
@@ -15,22 +15,22 @@ Class {
 }
 
 { #category : #accessing }
-GtCodeDefinitionEntityEditor >> completion: aStencil [
+GtCodeDefinitionEntityViewer >> completion: aStencil [
 	completionStencil := aStencil asStencil
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEntityEditor >> definition [
+GtCodeDefinitionEntityViewer >> definition [
 	^ definition
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEntityEditor >> definition: anObject [
+GtCodeDefinitionEntityViewer >> definition: anObject [
 	definition := anObject
 ]
 
 { #category : #initialization }
-GtCodeDefinitionEntityEditor >> initialize [
+GtCodeDefinitionEntityViewer >> initialize [
 	super initialize.
 
 	inputFilter := BrTextEditorNoInputFilter new.
@@ -49,41 +49,41 @@ GtCodeDefinitionEntityEditor >> initialize [
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEntityEditor >> modelSelector [
+GtCodeDefinitionEntityViewer >> modelSelector [
 	^ modelSelector
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEntityEditor >> modelSelector: anObject [
+GtCodeDefinitionEntityViewer >> modelSelector: anObject [
 	modelSelector := anObject
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEntityEditor >> owner [
+GtCodeDefinitionEntityViewer >> owner [
 	^ owner
 ]
 
 { #category : #accessing }
-GtCodeDefinitionEntityEditor >> owner: anObject [
+GtCodeDefinitionEntityViewer >> owner: anObject [
 	owner := anObject
 ]
 
 { #category : #interactions }
-GtCodeDefinitionEntityEditor >> when: aBlEvent do: aBlock [
+GtCodeDefinitionEntityViewer >> when: aBlEvent do: aBlock [
 	"aBlock is in form [ :anEvent :aCodeDefinition ]"
 	
 	eventHandlers add: (aBlEvent -> aBlock)
 ]
 
 { #category : #interactions }
-GtCodeDefinitionEntityEditor >> whenKey: aBlKeyCombination do: aBlock [
+GtCodeDefinitionEntityViewer >> whenKey: aBlKeyCombination do: aBlock [
 	"aBlock is in form [ :anEvent :aCodeDefinition ]"
 	
 	interactions add: (aBlKeyCombination -> aBlock)
 ]
 
 { #category : #interactions }
-GtCodeDefinitionEntityEditor >> whenPrimaryClickDo: aBlock [
+GtCodeDefinitionEntityViewer >> whenPrimaryClickDo: aBlock [
 	"aBlock is in form [ :anEvent :aCodeDefinition ]"
 	
 	self

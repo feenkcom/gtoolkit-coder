@@ -1,23 +1,13 @@
 Class {
 	#name : #GtCodeDefinitionPluralEditor,
-	#superclass : #GtCodeDefinitionEntityEditor,
+	#superclass : #GtCodeDefinitionPluralViewer,
 	#instVars : [
-		'separatorStencil',
-		'getSelector',
 		'addSelector',
 		'renameSelector',
-		'removeSelector',
-		'addAnnouncement',
-		'removeAnnouncement',
-		'renameAnnouncement'
+		'removeSelector'
 	],
 	#category : #'GToolkit-Coder-Behavior - Editors'
 }
-
-{ #category : #accessing }
-GtCodeDefinitionPluralEditor >> addEvent: anObject [
-	addAnnouncement := anObject
-]
 
 { #category : #accessing }
 GtCodeDefinitionPluralEditor >> addSelector [
@@ -54,7 +44,7 @@ GtCodeDefinitionPluralEditor >> create [
 	aTagger := BrTagger new
 		look: (BrGlamorousTaggerEditableLook new
 			margin: self margin;
-			editableLabel: [ :aTaggerTag |
+			tagLabel: [ :aTaggerTag |
 				| anEditableLabel eachLabelDefinition |
 
 				eachLabelDefinition := aTaggerTag ifNotNil: [
@@ -122,29 +112,6 @@ GtCodeDefinitionPluralEditor >> create [
 ]
 
 { #category : #accessing }
-GtCodeDefinitionPluralEditor >> getSelector [
-	^ getSelector
-]
-
-{ #category : #accessing }
-GtCodeDefinitionPluralEditor >> getSelector: anObject [
-	getSelector := anObject
-]
-
-{ #category : #initialization }
-GtCodeDefinitionPluralEditor >> initialize [
-	super initialize.
-	
-	"no separator by default"
-	separatorStencil := nil
-]
-
-{ #category : #accessing }
-GtCodeDefinitionPluralEditor >> removeEvent: anObject [
-	removeAnnouncement := anObject
-]
-
-{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> removeSelector [
 	^ removeSelector
 ]
@@ -155,11 +122,6 @@ GtCodeDefinitionPluralEditor >> removeSelector: anObject [
 ]
 
 { #category : #accessing }
-GtCodeDefinitionPluralEditor >> renameEvent: anObject [
-	renameAnnouncement := anObject
-]
-
-{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> renameSelector [
 	^ renameSelector
 ]
@@ -167,9 +129,4 @@ GtCodeDefinitionPluralEditor >> renameSelector [
 { #category : #accessing }
 GtCodeDefinitionPluralEditor >> renameSelector: anObject [
 	renameSelector := anObject
-]
-
-{ #category : #accessing }
-GtCodeDefinitionPluralEditor >> separator: aStencil [
-	separatorStencil := aStencil asStencil
 ]

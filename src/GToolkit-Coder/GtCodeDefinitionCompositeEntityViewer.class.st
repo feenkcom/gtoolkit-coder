@@ -1,6 +1,6 @@
 Class {
-	#name : #GtCodeDefinitionCompositeEntityEditor,
-	#superclass : #GtCodeDefinitionEditor,
+	#name : #GtCodeDefinitionCompositeEntityViewer,
+	#superclass : #GtCodeDefinitionViewer,
 	#instVars : [
 		'editors',
 		'separatorStencil',
@@ -10,12 +10,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtCodeDefinitionCompositeEntityEditor class >> withAll: aCollectionOfEditors [
+GtCodeDefinitionCompositeEntityViewer class >> withAll: aCollectionOfEditors [
 	^ self new editors: aCollectionOfEditors
 ]
 
 { #category : #'api - instantiation' }
-GtCodeDefinitionCompositeEntityEditor >> create [
+GtCodeDefinitionCompositeEntityViewer >> create [
 	<return: #Object>
 
 	^ BlElement new
@@ -46,18 +46,18 @@ GtCodeDefinitionCompositeEntityEditor >> create [
 ]
 
 { #category : #accessing }
-GtCodeDefinitionCompositeEntityEditor >> editors [
+GtCodeDefinitionCompositeEntityViewer >> editors [
 	^ editors
 ]
 
 { #category : #accessing }
-GtCodeDefinitionCompositeEntityEditor >> editors: anObject [
+GtCodeDefinitionCompositeEntityViewer >> editors: anObject [
 	editors := anObject.
 	self title: editors first title
 ]
 
 { #category : #initialization }
-GtCodeDefinitionCompositeEntityEditor >> initialize [
+GtCodeDefinitionCompositeEntityViewer >> initialize [
 	super initialize.
 	
 	separatorStencil := nil.
@@ -65,16 +65,16 @@ GtCodeDefinitionCompositeEntityEditor >> initialize [
 ]
 
 { #category : #accessing }
-GtCodeDefinitionCompositeEntityEditor >> separator: aStencil [
+GtCodeDefinitionCompositeEntityViewer >> separator: aStencil [
 	separatorStencil := aStencil asStencil
 ]
 
 { #category : #accessing }
-GtCodeDefinitionCompositeEntityEditor >> withSectionNames [
+GtCodeDefinitionCompositeEntityViewer >> withSectionNames [
 	showSectionNames := true
 ]
 
 { #category : #accessing }
-GtCodeDefinitionCompositeEntityEditor >> withoutSectionNames [
+GtCodeDefinitionCompositeEntityViewer >> withoutSectionNames [
 	showSectionNames := false
 ]

@@ -178,7 +178,7 @@ GtSlotsDefinition >> slotNamed: aSymbol [
 
 { #category : #'gt - editors' }
 GtSlotsDefinition >> slotsEditor [
-	<return: #GtCodeDefinitionEditor>
+	<return: #GtCodeDefinitionViewer>
 	
 	^ GtCodeDefinitionPluralEditor new
 		title: 'Slots';
