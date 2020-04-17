@@ -1,7 +1,7 @@
 Class {
 	#name : #GtClassCoderPackagesAndHierarchyNavigation,
 	#superclass : #GtClassCoderPackagesTreeNavigation,
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Navigation'
 }
 
 { #category : #converting }

@@ -9,7 +9,7 @@ Class {
 
 { #category : #accessing }
 GtCoderContentElement >> coder [
-	<return: #GtCoder>
+	<return: #GtCoderModel>
 	^ coder
 ]
 

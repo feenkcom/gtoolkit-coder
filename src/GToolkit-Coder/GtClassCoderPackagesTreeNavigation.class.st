@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'packagesFilterString'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Navigation'
 }
 
 { #category : #converting }

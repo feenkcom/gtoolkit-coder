@@ -1,6 +1,6 @@
 Class {
 	#name : #GtClassCommentCoder,
-	#superclass : #GtCoder,
+	#superclass : #GtCoderModel,
 	#instVars : [
 		'class',
 		'document',

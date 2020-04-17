@@ -1,8 +1,6 @@
 Class {
-	#name : #GtCoderElement,
+	#name : #GtExpandableCoderElement,
 	#superclass : #BrExpander,
-	#traits : 'TBlDrawingCache',
-	#classTraits : 'TBlDrawingCache classTrait',
 	#instVars : [
 		'coder',
 		'collapsedElement',
@@ -12,7 +10,7 @@ Class {
 }
 
 { #category : #private }
-GtCoderElement >> addCodersCoderLookTo: anElement [
+GtExpandableCoderElement >> addCodersCoderLookTo: anElement [
 	| aLook |
 	aLook := anElement look.
 	(coder coders ifNotNil: #coderLook)
@@ -22,26 +20,28 @@ GtCoderElement >> addCodersCoderLookTo: anElement [
 ]
 
 { #category : #converting }
-GtCoderElement >> asVerticallyResizableDo: aBlock [
+GtExpandableCoderElement >> asVerticallyResizableDo: aBlock [
 	^ self
 ]
 
 { #category : #accessing }
-GtCoderElement >> coder [
+GtExpandableCoderElement >> coder [
 	<return: #GtMethodCoder>
 	self assert: [ coder isNotNil ] description: [ 'Coder is not set!' ].
 	^ coder
 ]
 
 { #category : #accessing }
-GtCoderElement >> coder: aCoder [
+GtExpandableCoderElement >> coder: aCoder [
 	self
 		assert: [ aCoder isNotNil ]
 		description: [ 'Coder must not be nil' ].
+
 	coder := aCoder.
 	self
 		header: [ collapsedElement := self newCollapsedElement ];
 		content: [ expandedElement := self newExpandedElement ].
+
 	coder stylerView: self.
 	coder expanded
 		ifTrue: [ self expand ].
@@ -51,7 +51,7 @@ GtCoderElement >> coder: aCoder [
 ]
 
 { #category : #accessing }
-GtCoderElement >> gtAllShortcutsFor: aView [
+GtExpandableCoderElement >> gtAllShortcutsFor: aView [
 	<gtView>
 	self shortcuts ifEmpty: [ ^ aView empty ].
 	^ aView columnedList
@@ -71,7 +71,7 @@ GtCoderElement >> gtAllShortcutsFor: aView [
 ]
 
 { #category : #initialization }
-GtCoderElement >> initialize [
+GtExpandableCoderElement >> initialize [
 	super initialize.
 
 	self
@@ -92,17 +92,17 @@ GtCoderElement >> initialize [
 ]
 
 { #category : #testing }
-GtCoderElement >> isExpanded [
+GtExpandableCoderElement >> isExpanded [
 	^ expandableModel isExpanded
 ]
 
 { #category : #testing }
-GtCoderElement >> isVerticallyResizeableElement [
+GtExpandableCoderElement >> isVerticallyResizeableElement [
 	^ true
 ]
 
 { #category : #'instance creation' }
-GtCoderElement >> newActionsElement [
+GtExpandableCoderElement >> newActionsElement [
 	^ GtCoderActionsElement new
 		coder: coder;
 		margin: (BlInsets top: 5);
@@ -110,7 +110,7 @@ GtCoderElement >> newActionsElement [
 ]
 
 { #category : #private }
-GtCoderElement >> newCollapsedElement [
+GtExpandableCoderElement >> newCollapsedElement [
 	^ GtCoderContentElement new
 		coder: coder editorElement: coder collapsedEditorElement;
 		in: [ :e | self addCodersCoderLookTo: e ];
@@ -118,7 +118,7 @@ GtCoderElement >> newCollapsedElement [
 ]
 
 { #category : #private }
-GtCoderElement >> newExpandedElement [
+GtExpandableCoderElement >> newExpandedElement [
 	^ GtCoderContentElement new
 		coder: coder editorElement: coder expandedEditorElement;
 		addChild: self newActionsElement as: #actions;
@@ -127,7 +127,7 @@ GtCoderElement >> newExpandedElement [
 ]
 
 { #category : #'focus requesting' }
-GtCoderElement >> requestFocus [
+GtExpandableCoderElement >> requestFocus [
 	^ self
 		childNamed: #editor
 		ifFound: [ :element | element requestFocus ]
@@ -135,7 +135,7 @@ GtCoderElement >> requestFocus [
 ]
 
 { #category : #events }
-GtCoderElement >> updateExpanded [
+GtExpandableCoderElement >> updateExpanded [
 	coder expanded
 		ifTrue: [ self isExpanded
 				ifFalse: [ self expand ] ]

@@ -1,6 +1,6 @@
 Class {
 	#name : #GtSourceCoder,
-	#superclass : #GtCoder,
+	#superclass : #GtCoderModel,
 	#instVars : [
 		'sourceEditor',
 		'collapsedEditor',

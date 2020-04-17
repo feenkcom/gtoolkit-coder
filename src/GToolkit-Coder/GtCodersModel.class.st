@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoders,
+	#name : #GtCodersModel,
 	#superclass : #Object,
 	#traits : 'TGtAnnouncer',
 	#classTraits : 'TGtAnnouncer classTrait',
@@ -12,47 +12,47 @@ Class {
 }
 
 { #category : #'initialize-release' }
-GtCoders class >> forItems: aCollection [
+GtCodersModel class >> forItems: aCollection [
 	^ self new
 		forItems: aCollection;
 		yourself
 ]
 
 { #category : #announcer }
-GtCoders >> announcer [
+GtCodersModel >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
 { #category : #elements }
-GtCoders >> asElement [
+GtCodersModel >> asElement [
 	^ self elementClass new
 		coders: self;
 		yourself
 ]
 
 { #category : #elements }
-GtCoders >> coderLook [
+GtCodersModel >> coderLook [
 	^ nil
 ]
 
 { #category : #accessing }
-GtCoders >> coders [
+GtCodersModel >> coders [
 	^ coders
 ]
 
 { #category : #elements }
-GtCoders >> elementClass [
+GtCodersModel >> elementClass [
 	self subclassResponsibility
 ]
 
 { #category : #'initialize-release' }
-GtCoders >> forItems: aCollection [
+GtCodersModel >> forItems: aCollection [
 	items := aCollection.
 	coders := items collect: [ :each | self newCoderFor: each ]
 ]
 
 { #category : #ui }
-GtCoders >> gtLiveFor: aView [
+GtCodersModel >> gtLiveFor: aView [
 	<gtView>
 	^ aView explicit 
 		title: 'Live';
@@ -61,19 +61,19 @@ GtCoders >> gtLiveFor: aView [
 ]
 
 { #category : #'initialize-release' }
-GtCoders >> initialize [
+GtCodersModel >> initialize [
 	super initialize.
 	coders := #().
 	items := #()
 ]
 
 { #category : #private }
-GtCoders >> newCoderFor: anObject [
+GtCodersModel >> newCoderFor: anObject [
 	self subclassResponsibility
 ]
 
 { #category : #updating }
-GtCoders >> updateCoders [
+GtCodersModel >> updateCoders [
 	coders := items collect: [ :each | self newCoderFor: each ].
 	self
 		announce:
