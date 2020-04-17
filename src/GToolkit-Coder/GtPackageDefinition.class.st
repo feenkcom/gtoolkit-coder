@@ -25,13 +25,17 @@ GtPackageDefinition >> asDefinitionString [
 
 { #category : #'api - package' }
 GtPackageDefinition >> browseFrom: anEvent [
-	| aRealPackage |
+	| aRealPackage aCoderEvent aPackageCoder |
 
 	aRealPackage := RPackageOrganizer default
 		packageNamed: self name
 		ifAbsent: [ ^ self ].
-		
-	anEvent currentTarget phlow spawnObject: aRealPackage
+
+	aPackageCoder := GtPackageCoder forPackage: aRealPackage.
+	aCoderEvent := GtCoderToSpawn new coder: aPackageCoder.
+	anEvent currentTarget fireEvent: aCoderEvent.
+	aCoderEvent isConsumed
+		ifFalse: [ anEvent currentTarget phlow spawnObject: aCoderEvent coder ]
 ]
 
 { #category : #'api - accepting' }
@@ -122,12 +126,26 @@ GtPackageDefinition >> packageReader [
 		definition: self;
 		getSelector: #name;
 		renameEvent: GtBehaviorPackageRenamed;
-		completion: [ GtPackagesCompletionStrategy new ];
-		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-		whenClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+		whenClickDo: [ :anEvent :aDefinition | aDefinition replaceFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ]
 ]
 
 { #category : #'gt - editors' }
 GtPackageDefinition >> readers [
 	^ { self packageReader }
+]
+
+{ #category : #'api - package' }
+GtPackageDefinition >> replaceFrom: anEvent [
+	| aRealPackage aCoderEvent aPackageCoder |
+
+	aRealPackage := RPackageOrganizer default
+		packageNamed: self name
+		ifAbsent: [ ^ self ].
+
+	aPackageCoder := GtPackageCoder forPackage: aRealPackage.
+	aCoderEvent := GtCoderToReplace new coder: aPackageCoder.
+	anEvent currentTarget fireEvent: aCoderEvent.
+	aCoderEvent isConsumed
+		ifFalse: [ anEvent currentTarget phlow spawnObject: aCoderEvent coder ]
 ]

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'selectedObject'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Navigation'
 }
 
 { #category : #accessing }

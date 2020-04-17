@@ -40,7 +40,14 @@ GtTagDefinition >> browseFrom: anEvent [
 
 	aRealPackage
 		classTagNamed: self name
-		ifPresent: [ :aTag | anEvent currentTarget phlow spawnObject: aTag ]
+		ifPresent: [ :aTag |
+			| aPackageTagCoder aCoderEvent |
+			aPackageTagCoder := (GtPackageTagCoder forPackageTag: aTag)
+				packageCoder: (GtPackageCoder forPackage: aRealPackage).
+			aCoderEvent := GtCoderToSpawn new coder: aPackageTagCoder.
+			anEvent currentTarget fireEvent: aCoderEvent.
+			aCoderEvent isConsumed
+				ifFalse: [ anEvent currentTarget phlow spawnObject: aCoderEvent coder ] ]
 ]
 
 { #category : #'api - accepting' }
@@ -137,6 +144,26 @@ GtTagDefinition >> readers [
 	^ { self tagReader }
 ]
 
+{ #category : #'api - package' }
+GtTagDefinition >> replaceFrom: anEvent [
+	| aRealPackage |
+
+	aRealPackage := RPackageOrganizer default
+		packageNamed: self parent category package name
+		ifAbsent: [ ^ self ].
+
+	aRealPackage
+		classTagNamed: self name
+		ifPresent: [ :aTag |
+			| aPackageTagCoder aCoderEvent |
+			aPackageTagCoder := (GtPackageTagCoder forPackageTag: aTag)
+				packageCoder: (GtPackageCoder forPackage: aRealPackage).
+			aCoderEvent := GtCoderToReplace new coder: aPackageTagCoder.
+			anEvent currentTarget fireEvent: aCoderEvent.
+			aCoderEvent isConsumed
+				ifFalse: [ anEvent currentTarget phlow spawnObject: aCoderEvent coder ] ]
+]
+
 { #category : #'gt - editors' }
 GtTagDefinition >> tagEditor [
 	^ GtCodeDefinitionSingleEditor new
@@ -156,6 +183,6 @@ GtTagDefinition >> tagReader [
 		definition: self;
 		getSelector: #name;
 		renameEvent: GtBehaviorTagRenamed;
-		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-		whenClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+		whenClickDo: [ :anEvent :aDefinition | aDefinition replaceFrom: anEvent ];
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

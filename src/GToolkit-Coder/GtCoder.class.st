@@ -1,263 +1,79 @@
+"
+I am the entrance point into the coder as a tool
+"
 Class {
 	#name : #GtCoder,
-	#superclass : #Object,
+	#superclass : #BlElement,
 	#instVars : [
-		'announcer',
-		'expanded',
-		'attributes',
-		'addOns',
-		'addOnCommand',
-		'addOnMonitor'
+		'coderContent'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-! Core'
 }
 
-{ #category : #elements }
-GtCoder >> addCollapsedShortcutsTo: anElement [
-	addOns collapsedShortcuts
-		do: [ :each | 
-			anElement
-				addShortcut: (each copy action: [ each action cull: anElement ]) ]
+{ #category : #'instance creation' }
+GtCoder class >> forCoder: aCoder [
+	^ self basicNew initialize pushCoder: aCoder
 ]
 
-{ #category : #updating }
-GtCoder >> addOnChanged: aSymbol [
-	aSymbol = #mainActions
-		ifTrue: [ self announce: (GtCoderMainActionsChanged new coder: self) ].
-	aSymbol = #contextActions
-		ifTrue: [ self announce: (GtCoderContextActionsChanged new coder: self) ]
-]
-
-{ #category : #accessing }
-GtCoder >> addOns [
-	^ addOns
-]
-
-{ #category : #'initialize-release' }
-GtCoder >> addOnsClass [
-	^ GtCoderAddOns
-]
-
-{ #category : #elements }
-GtCoder >> addShortcutsTo: anElement [
-	addOns shortcuts
-		do: [ :each | anElement addShortcut: each ]
-]
-
-{ #category : #updating }
-GtCoder >> announce: anAnnouncement [
-	announcer announce: anAnnouncement
-]
-
-{ #category : #accessing }
-GtCoder >> announcer [
-	^ announcer
-]
-
-{ #category : #elements }
-GtCoder >> asElement [
-	^ GtCoderElement new
-		coder: self;
-		yourself
-]
-
-{ #category : #'accessing-attributes' }
-GtCoder >> attributeNamed: aSymbol [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifAbsent: [  ] ]
-]
-
-{ #category : #'accessing-attributes' }
-GtCoder >> attributeNamed: aSymbol ifAbsent: aBlock [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifAbsent: aBlock ]
-		ifFalse: [ aBlock value ]
-]
-
-{ #category : #'accessing-attributes' }
-GtCoder >> attributeNamed: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock ]
-		ifFalse: [ anAbsentBlock value ]
-]
-
-{ #category : #'accessing-attributes' }
-GtCoder >> attributeNamed: aSymbol put: anObject [
-	^ self attributes at: aSymbol put: anObject
-]
-
-{ #category : #'accessing-attributes' }
-GtCoder >> attributes [
-	^ attributes ifNil: [ attributes := IdentityDictionary new ]
-]
-
-{ #category : #elements }
-GtCoder >> breadcrumbNamedActions [
-	^ #()
-]
-
-{ #category : #accessing }
-GtCoder >> coders [
-	^ self attributeNamed: #coders
-]
-
-{ #category : #accessing }
-GtCoder >> coders: aCoders [
-	^ self attributeNamed: #coders put: aCoders
-]
-
-{ #category : #elements }
-GtCoder >> collapsedEditorElement [
-	self subclassResponsibility
-]
-
-{ #category : #private }
-GtCoder >> context [
-	^ nil
-]
-
-{ #category : #'actions - toolbar' }
-GtCoder >> contextActions [
-	"Return a collection of contextual actions in the coder. They are renderred separately from mainActions"
-
-	<return: #Collection of: #GtCoderAction>
-	^ addOns contextActions
-]
-
-{ #category : #'actions - toolbar' }
-GtCoder >> contextMenuActions [
-	<return: #Collection of: #GtCoderAction>
-	^ addOns contextMenuActions
-]
-
-{ #category : #accessing }
-GtCoder >> expanded [
-	^ expanded
-]
-
-{ #category : #accessing }
-GtCoder >> expanded: aBoolean [
-	aBoolean = expanded
-		ifTrue: [ ^ self ].
-	expanded := aBoolean.
-	self expandedUpdated.
-	self announce: (GtCoderExpandedChanged new coder: self)
-]
-
-{ #category : #elements }
-GtCoder >> expandedEditorElement [
-	self subclassResponsibility
-]
-
-{ #category : #private }
-GtCoder >> expandedUpdated [
-]
-
-{ #category : #ui }
-GtCoder >> gtLiveFor: aView [
-	<gtView>
-	^ aView explicit
-		title: 'Live';
-		priority: 10;
-		stencil: [ self ]
-]
-
-{ #category : #ui }
-GtCoder >> gtViewContextActionsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewContextActionsFor: aView ]
-]
-
-{ #category : #ui }
-GtCoder >> gtViewKeybindingsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewKeybindingsFor: aView ]
-]
-
-{ #category : #ui }
-GtCoder >> gtViewMainActionsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewMainActionsFor: aView ]
-]
-
-{ #category : #testing }
-GtCoder >> hasObjectAttribute [
-	self 
-		attributeNamed: #object 
-		ifAbsent: [ ^ false ].
-	^ true
+{ #category : #'instance creation' }
+GtCoder class >> new [
+	^ self forCoder: GtPackagesCoder new
 ]
 
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
-	announcer := Announcer new.
-	expanded := false.
-	addOnMonitor := Monitor new.
-	self initializeAddOns
-]
-
-{ #category : #'initialize-release' }
-GtCoder >> initializeAddOns [
-	addOns := self addOnsClass new.
-	self initializeShortcuts
-]
-
-{ #category : #'initialize-release' }
-GtCoder >> initializeShortcuts [
 	
+	self
+		when: GtCoderToReplace
+		do: [ :anEvent | self replaceFrom: anEvent ].
+
+	self
+		when: GtCoderToSpawn
+		do: [ :anEvent | self spawnFrom: anEvent ].
+
+	self
+		when: GtCoderToSpawnInSpace
+		do: [ :anEvent | self spawnInSpaceFrom: anEvent ].
+
+	self
+		layout: BlLinearLayout vertical;
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical matchParent ].
+		
+	coderContent := BlElement new
+		layout: BlFrameLayout new;
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical matchParent ].
+
+	self addChild: coderContent
 ]
 
-{ #category : #'actions - toolbar' }
-GtCoder >> mainActions [
-	"Return a collection of main actions in the coder, for example save"
-
-	<return: #Collection of: #GtCoderAction>
-	^ addOns mainActions
+{ #category : #'api - coder' }
+GtCoder >> pushCoder: aCoderOrCoders [
+	coderContent removeChildren.
+	coderContent addChild: aCoderOrCoders asElement
 ]
 
-{ #category : #elements }
-GtCoder >> previewElement [
-	^ self asElement
+{ #category : #'api - spawning' }
+GtCoder >> replaceFrom: aGtCoderToReplaceEvent [
+	aGtCoderToReplaceEvent consumed: true.
+	
+	self pushCoder: aGtCoderToReplaceEvent coder
 ]
 
-{ #category : #'accessing-attributes' }
-GtCoder >> removeAttributeNamed: aSymbol [
-	attributes isNil
-		ifTrue: [ ^ self ].
-	attributes removeKey: aSymbol ifAbsent: [  ]
+{ #category : #'api - spawning' }
+GtCoder >> spawnFrom: aGtCoderToSpawnEvent [
+	aGtCoderToSpawnEvent consumed: true.
+	
+	self phlow spawnObject: (self class forCoder: aGtCoderToSpawnEvent coder)
 ]
 
-{ #category : #scripting }
-GtCoder >> requestFocus [
-	self announce: (GtCoderRequestFocus new coder: self)
-]
-
-{ #category : #elements }
-GtCoder >> stylerView: anElement [
-
-]
-
-{ #category : #subscriptions }
-GtCoder >> subscribeToSystem [
-	"do nothing"
-]
-
-{ #category : #private }
-GtCoder >> terminateAddOnsCommand [
-	addOnCommand isNil
-		ifTrue: [ ^ self ].
-	addOnCommand terminate.
-	addOnCommand := nil
-]
-
-{ #category : #subscriptions }
-GtCoder >> unsubscribeFromSystem [
-	SystemAnnouncer uniqueInstance unsubscribe: self
+{ #category : #'api - spawning' }
+GtCoder >> spawnInSpaceFrom: aGtCoderToSpawnInSpaceEvent [
+	aGtCoderToSpawnInSpaceEvent consumed: true.
+	
+	
 ]

@@ -80,10 +80,12 @@ GtPackageCoderElement >> buildParentLink [
 					(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
 						+ BrGlamorousLabelLook new glamorousRegularFont;
 				label: 'Pharo';
-				action: [ self
-						allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
-						ifFound: [ :p | p updateSelection: GtPackagesCoder new ]
-						ifNone: [ self phlow spawnObject: GtPackagesCoder new ] ]).
+				action: [
+					| anEvent |
+					anEvent := (GtCoderToReplace new coder: GtPackagesCoder new).
+					self fireEvent: anEvent.
+					anEvent isConsumed
+						ifFalse: [ self phlow spawnObject: anEvent coder ] ]).
 	^ element
 ]
 

@@ -99,7 +99,7 @@ GtBehaviorCoderHeaderElement >> buildDefinitionReader [
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
-					look: [ self editableLabelLook ];
+					look: [ self readonlyLabelLook ];
 					margin: self buttonMargin;
 					asElement) } ].
 
@@ -176,4 +176,19 @@ GtBehaviorCoderHeaderElement >> previewWidth [
 	^ self isAttachedToSceneGraph
 		ifTrue: [ (self topMostParent extent / 2.0) x ]
 		ifFalse: [ 500 ]
+]
+
+{ #category : #'private - ui' }
+GtBehaviorCoderHeaderElement >> readonlyLabelLook [
+	^ BrGlamorousEditorLook new
+		glamorousCodeFont;
+		fontSize: 10;
+		foreground: Color black;
+		add: (BrInteractiveCommonLook new
+			default: [ :aWidget |
+				aWidget
+					geometry: (BlRectangle cornerRadius: 4);
+					border: BlBorder empty ];
+			hovered: [ :aWidget | aWidget border: (BlBorder paint: BrGlamorousColors hoveredButtonBorderColor width: 1) ]);
+		yourself
 ]

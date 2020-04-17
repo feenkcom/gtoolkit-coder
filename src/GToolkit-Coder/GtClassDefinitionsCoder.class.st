@@ -1,6 +1,6 @@
 Class {
 	#name : #GtClassDefinitionsCoder,
-	#superclass : #GtCoders,
+	#superclass : #GtCodersModel,
 	#instVars : [
 		'class'
 	],

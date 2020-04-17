@@ -8,7 +8,7 @@ Class {
 		'announcer',
 		'selectedObject'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Navigation'
 }
 
 { #category : #accessing }
