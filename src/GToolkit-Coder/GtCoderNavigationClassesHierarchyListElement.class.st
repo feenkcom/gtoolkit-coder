@@ -14,7 +14,7 @@ Class {
 
 { #category : #'instance creation' }
 GtCoderNavigationClassesHierarchyListElement class >> fromClasses: aCollectionOfClasses [
-	^ self new fromClasses: aCollectionOfClasses
+	^ self new initializeWithClasses: aCollectionOfClasses
 ]
 
 { #category : #'private - ui' }
@@ -31,7 +31,8 @@ GtCoderNavigationClassesHierarchyListElement >> buildClassRow: aTreeNode index: 
 			hovered: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor ];
 			selected: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor ];
 			pressed: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor slightlyDarker ]);
-		when: BlClickEvent do: [ :anEvent |
+		when: BlMouseDownEvent do: [ :anEvent |
+			anEvent consumed: true.
 			aTreeElement selectOne: aRowIndex dueTo: anEvent.
 			aTreeElement requestFocus ];
 		hMatchParent;
@@ -41,17 +42,17 @@ GtCoderNavigationClassesHierarchyListElement >> buildClassRow: aTreeNode index: 
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyListElement >> fromClasses: aCollectionOfClasses [
-	classesTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses) sortByClassName.
-	
-	self items: classesTree subclassTrees children: [ :eachRope | eachRope subclassTrees ].
-	self expandAll
-]
-
-{ #category : #initialization }
 GtCoderNavigationClassesHierarchyListElement >> initialize [
 	super initialize.
 	
 	self stencil: [ :aBrTreeNode :anIndex :aTreeWidget |
 		self buildClassRow: aBrTreeNode index: anIndex tree: aTreeWidget ]
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesHierarchyListElement >> initializeWithClasses: aCollectionOfClasses [
+	classesTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses) sortByClassName.
+	
+	self items: classesTree subclassTrees children: [ :eachRope | eachRope subclassTrees ].
+	self expandAll
 ]

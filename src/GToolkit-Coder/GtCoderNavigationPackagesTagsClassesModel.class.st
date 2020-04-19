@@ -1,7 +1,10 @@
 Class {
 	#name : #GtCoderNavigationPackagesTagsClassesModel,
 	#superclass : #Object,
+	#traits : 'TGtAnnouncer',
+	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
+		'announcer',
 		'packages',
 		'selectedPackage',
 		'selectedTag',
@@ -12,7 +15,12 @@ Class {
 
 { #category : #'instance creation' }
 GtCoderNavigationPackagesTagsClassesModel class >> fromPackages: aCollectionOfPackages [
-	^ self new fromPackages: aCollectionOfPackages
+	^ self new initializeWithPackages: aCollectionOfPackages
+]
+
+{ #category : #announcer }
+GtCoderNavigationPackagesTagsClassesModel >> announcer [
+	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
 { #category : #'api - accessing' }
@@ -25,11 +33,6 @@ GtCoderNavigationPackagesTagsClassesModel >> classesToShow [
 	^ self hasSelectedTag
 		ifTrue: [ self selectedTag classes ]
 		ifFalse: [ self selectedPackage definedClasses ]
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesModel >> fromPackages: aCollectionOfRPackage [
-	packages := aCollectionOfRPackage
 ]
 
 { #category : #testing }
@@ -58,6 +61,60 @@ GtCoderNavigationPackagesTagsClassesModel >> initialize [
 	super initialize.
 	
 	packages := #()	
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesModel >> initializeWithPackages: aCollectionOfRPackage [
+	packages := aCollectionOfRPackage.
+	
+	
+]
+
+{ #category : #'private - notifying' }
+GtCoderNavigationPackagesTagsClassesModel >> notifyPackageSelected: anRPackage [
+	self announcer announce: (GtCoderNavigationPackageSelected new package: anRPackage)
+]
+
+{ #category : #'private - notifying' }
+GtCoderNavigationPackagesTagsClassesModel >> notifyTagSelected: anRPackageTag package: anRPackage [
+	self announcer announce: (GtCoderNavigationTagSelected new
+		package: anRPackage;
+		tag: anRPackageTag)
+]
+
+{ #category : #'api - accessing' }
+GtCoderNavigationPackagesTagsClassesModel >> packagesToShow [
+	<return: #Collection of: #RPackage>
+
+	^ packages
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> selectPackage: anRPackage [
+	(packages includes: anRPackage)
+		ifFalse: [ ^ self ].
+		
+	selectedPackage = anRPackage
+		ifTrue: [ ^ self ].
+		
+	selectedPackage := anRPackage.
+	selectedTag := nil.
+	
+	self notifyPackageSelected: selectedPackage
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> selectTag: anRPackageTag [
+	(packages includes: anRPackageTag package)
+		ifFalse: [ ^ self ].
+		
+	selectedTag = anRPackageTag
+		ifTrue: [ ^ self ].
+	
+	selectedPackage := anRPackageTag package.
+	selectedTag := anRPackageTag.
+	
+	self notifyTagSelected: selectedTag package: selectedPackage
 ]
 
 { #category : #'api - accessing' }

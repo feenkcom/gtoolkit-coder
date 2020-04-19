@@ -11,7 +11,7 @@ Class {
 
 { #category : #'instance creation' }
 GtCoderNavigationClassesListElement class >> fromClasses: aCollectionOfClasses [
-	^ self new fromClasses: aCollectionOfClasses
+	^ self new initializeWithClasses: aCollectionOfClasses
 ]
 
 { #category : #'private - ui' }
@@ -28,7 +28,8 @@ GtCoderNavigationClassesListElement >> buildClassRow: aClass index: aRowIndex li
 			hovered: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor ];
 			selected: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor ];
 			pressed: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor slightlyDarker ]);
-		when: BlClickEvent do: [ :anEvent |
+		when: BlMouseDownEvent do: [ :anEvent |
+			anEvent consumed: true.
 			aListElement selectOne: aRowIndex dueTo: anEvent.
 			aListElement requestFocus ];
 		hMatchParent;
@@ -38,13 +39,13 @@ GtCoderNavigationClassesListElement >> buildClassRow: aClass index: aRowIndex li
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesListElement >> fromClasses: aCollectionOfClasses [	
-	self items: (aCollectionOfClasses sorted: [ :classA :classB | classA name < classB name ])
-]
-
-{ #category : #initialization }
 GtCoderNavigationClassesListElement >> initialize [
 	super initialize.
 	
 	self stencil: [ :eachClass :eachIndex :aListElement | self buildClassRow: eachClass index: eachIndex list: aListElement ]
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesListElement >> initializeWithClasses: aCollectionOfClasses [	
+	self items: (aCollectionOfClasses sorted: [ :classA :classB | classA name < classB name ])
 ]

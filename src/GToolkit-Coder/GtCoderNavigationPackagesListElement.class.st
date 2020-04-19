@@ -6,7 +6,7 @@ Class {
 
 { #category : #'instance creation' }
 GtCoderNavigationPackagesListElement class >> fromPackages: aCollectionOfPackages [
-	^ self new fromPackages: aCollectionOfPackages
+	^ self new initializeWithPackages: aCollectionOfPackages
 ]
 
 { #category : #'private - ui' }
@@ -33,7 +33,8 @@ GtCoderNavigationPackagesListElement >> buildPackageRow: aTreeNode index: aRowIn
 			hovered: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor ];
 			selected: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor ];
 			pressed: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor slightlyDarker ]);
-		when: BlClickEvent do: [ :anEvent |
+		when: BlMouseDownEvent do: [ :anEvent |
+			anEvent consumed: true.
 			aTreeElement selectOne: aRowIndex dueTo: anEvent.
 			aTreeElement requestFocus ];
 		hMatchParent;
@@ -87,7 +88,15 @@ GtCoderNavigationPackagesListElement >> createExpandCollapseElementFor: aNode [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesListElement >> fromPackages: aCollectionOfPackages [
+GtCoderNavigationPackagesListElement >> initialize [
+	super initialize.
+	
+	self stencil: [ :aBrTreeNode :anIndex :aTreeWidget |
+		self buildPackageRow: aBrTreeNode index: anIndex tree: aTreeWidget ]
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesListElement >> initializeWithPackages: aCollectionOfPackages [
 	| theSortedPackages |
 
 	theSortedPackages := aCollectionOfPackages asArray
@@ -99,12 +108,4 @@ GtCoderNavigationPackagesListElement >> fromPackages: aCollectionOfPackages [
 			(eachPackageOrTag isKindOf: RPackage)
 				ifTrue: [ eachPackageOrTag classTags asArray sorted: [ :tagA :tagB | tagA name < tagB name ] ]
 				ifFalse: [ #() ] ]
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesListElement >> initialize [
-	super initialize.
-	
-	self stencil: [ :aBrTreeNode :anIndex :aTreeWidget |
-		self buildPackageRow: aBrTreeNode index: anIndex tree: aTreeWidget ]
 ]
