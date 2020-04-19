@@ -6,9 +6,6 @@ Class {
 	#superclass : #BrSimpleList,
 	#traits : 'TGtCoderNavigationClassesHelper',
 	#classTraits : 'TGtCoderNavigationClassesHelper classTrait',
-	#instVars : [
-		'classes'
-	],
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
 
