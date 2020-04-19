@@ -6,7 +6,7 @@ Class {
 		'tree',
 		'packagesFilterEditor'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-Navigation - UI'
 }
 
 { #category : #'building ui' }

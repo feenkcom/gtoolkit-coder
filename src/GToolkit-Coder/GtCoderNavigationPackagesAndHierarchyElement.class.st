@@ -7,7 +7,7 @@ Class {
 		'packagesTab',
 		'hierarchyTab'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-Navigation - UI'
 }
 
 { #category : #'building ui' }
