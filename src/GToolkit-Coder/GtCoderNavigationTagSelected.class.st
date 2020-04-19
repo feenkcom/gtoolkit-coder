@@ -1,0 +1,31 @@
+Class {
+	#name : #GtCoderNavigationTagSelected,
+	#superclass : #GtCoderNavigationAnnouncement,
+	#instVars : [
+		'package',
+		'tag'
+	],
+	#category : #'GToolkit-Coder-Navigation'
+}
+
+{ #category : #accessing }
+GtCoderNavigationTagSelected >> package [
+	^ package
+]
+
+{ #category : #accessing }
+GtCoderNavigationTagSelected >> package: anObject [
+	package := anObject
+]
+
+{ #category : #accessing }
+GtCoderNavigationTagSelected >> tag [
+	<return: #RPackageTag>
+
+	^ tag
+]
+
+{ #category : #accessing }
+GtCoderNavigationTagSelected >> tag: anObject [
+	tag := anObject
+]
