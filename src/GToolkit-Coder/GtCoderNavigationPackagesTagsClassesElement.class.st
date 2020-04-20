@@ -63,15 +63,21 @@ GtCoderNavigationPackagesTagsClassesElement >> navigationModel: aGtCoderNavigati
 				self expandPackage: navigationModel selectedPackage.
 				packagesList viewModel
 					indexOf: navigationModel selectedTag
-					do: [ :anIndex | packagesList selectOne: anIndex ] ]
+					do: [ :anIndex | packagesList
+						selectOne: anIndex;
+						scrollTo: (anIndex - 5 max: 1) ] ]
 			ifFalse: [ packagesList viewModel
 					indexOf: navigationModel selectedPackage
-					do: [ :anIndex | packagesList selectOne: anIndex ] ] ].
+					do: [ :anIndex | packagesList
+						selectOne: anIndex;
+						scrollTo: (anIndex - 5 max: 1) ] ] ].
 
 	navigationModel selectedClassDo: [ :aClass |
 		classesList viewModel
 			indexOfSuchThat: [ :each | each rootClass = aClass ]
-			do: [ :anIndex | classesList selectOne: anIndex ] ].
+			do: [ :anIndex | classesList
+				selectOne: anIndex;
+				scrollTo: (anIndex - 5 max: 1) ] ].
 	
 	packagesList
 		when: BrSelectionChanged
@@ -117,7 +123,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 	packagesList viewModel
 		indexOf: anAnnouncer package
 		do: [ :anIndex | packagesList selectOne: anIndex ].
-		
+
 	classesList initializeWithClasses: navigationModel classesToShow
 ]
 
