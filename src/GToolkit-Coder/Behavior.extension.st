@@ -44,30 +44,25 @@ Behavior >> buildSpotterButtonFor: methodsCoder [
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowse [
-	| aCoder aSpace coder |
-	coder := GtPackagesCoder new.
-	aCoder := GtInspector withToolOn: coder.
-	aSpace := BlSpace new.
-	aSpace title: 'Coder'.
-	aSpace extent: 1200 @ 600.
-	aSpace addChild: aCoder.
-	aSpace withHalos.
-	aSpace show.
-	coder withClass: self
+	BlSpace new
+		title: 'Coder';
+		extent: 1200 @ 600;
+		addChild: (GtInspector withToolOn: (GtCoder forClass: self));
+		withHalos;
+		show.
 ]
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowseFrom: anElement [
-	| aCoder aSpace coder |
-	coder := GtPackagesCoder new.
-	aCoder := GtInspector withToolOn: coder.
-	aSpace := BlSpace new.
-	aSpace title: 'Coder'.
-	aSpace extent: 1200 @ 600.
-	aSpace addChild: aCoder.
-	aSpace withHalos.
-	anElement showSpace: aSpace.
-	coder withClass: self
+	| aSpace |
+
+	aSpace := BlSpace new
+		title: 'Coder';
+		extent: 1200 @ 600;
+		addChild: (GtInspector withToolOn: (GtCoder forClass: self));
+		withHalos.
+
+	anElement showSpace: aSpace
 ]
 
 { #category : #'*GToolkit-Coder' }

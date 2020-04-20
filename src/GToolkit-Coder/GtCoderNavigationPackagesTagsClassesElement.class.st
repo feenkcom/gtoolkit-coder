@@ -63,20 +63,60 @@ GtCoderNavigationPackagesTagsClassesElement >> navigationModel: aGtCoderNavigati
 	navigationModel := aGtCoderNavigationPackagesTagsClassesModel.
 	
 	packagesList initializeWithPackages: navigationModel packagesToShow.
+	classesList initializeWithClasses: navigationModel classesToShow.
+	
+	navigationModel hasSelectedPackage
+		ifTrue: [ navigationModel hasSelectedTag
+			ifTrue: [
+				self expandPackage: navigationModel selectedPackage.
+				packagesList viewModel
+					indexOf: navigationModel selectedTag
+					do: [ :anIndex | packagesList selectOne: anIndex ] ]
+			ifFalse: [ packagesList viewModel
+					indexOf: navigationModel selectedPackage
+					do: [ :anIndex | packagesList selectOne: anIndex ] ] ].
+
+	navigationModel selectedClassDo: [ :aClass |
+		classesList viewModel
+			indexOfSuchThat: [ :each | each rootClass = aClass ]
+			do: [ :anIndex | classesList selectOne: anIndex ] ].
+	
 	packagesList
 		when: BrSelectionChanged
 		do: [ :anEvent |
 			anEvent currentTarget selectedIndices
 				ifNotEmpty: [ :theIndices |
-					| aSelectedItem |
-					aSelectedItem := (anEvent currentTarget viewModel itemAt: theIndices first) value.
-					(aSelectedItem isKindOf: RPackage)
-						ifTrue: [ self navigationModel selectPackage: aSelectedItem ]
-						ifFalse: [ self navigationModel selectTag: aSelectedItem ] ] ].
+					| anIndex aSelectedItem |
+					anIndex := theIndices first.
+					(anIndex between: 1 and: anEvent currentTarget items size)
+						ifTrue: [
+							aSelectedItem := (anEvent currentTarget viewModel itemAt: anIndex) value.
+							(aSelectedItem isKindOf: RPackage)
+								ifTrue: [ self navigationModel selectPackage: aSelectedItem ]
+								ifFalse: [ self navigationModel selectTag: aSelectedItem ] ] ] ].
+				
+	classesList
+		when: BrSelectionChanged
+		do: [ :anEvent |
+			anEvent currentTarget selectedIndices
+				ifNotEmpty: [ :theIndices |
+					| anIndex aSelectedItem |
+					anIndex := theIndices first.
+					(anIndex between: 1 and: anEvent currentTarget items size)
+						ifTrue: [
+							aSelectedItem := (anEvent currentTarget viewModel itemAt: anIndex) value rootClass.
+							self navigationModel selectClass: aSelectedItem  ] ] ].
 	
-	classesList initializeWithClasses: navigationModel classesToShow.
 	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
 	navigationModel when: GtCoderNavigationTagSelected send: #onTagSelected: to: self.
+	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
+	classesList viewModel
+		indexOfSuchThat: [ :each | each rootClass = anAnnouncement theClass ]
+		do: [ :anIndex | classesList selectOne: anIndex ]
 ]
 
 { #category : #'event handling' }
