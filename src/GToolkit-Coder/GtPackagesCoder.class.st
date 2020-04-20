@@ -44,10 +44,8 @@ GtPackagesCoder >> icon [
 { #category : #'initialize-release' }
 GtPackagesCoder >> initialize [
 	super initialize.
-	self
-		forItems:
-			(RPackageOrganizer default packages
-				asSortedCollection: [ :a :b | a name < b name ])
+
+	self forItems: (RPackageOrganizer default packages asSortedCollection: [ :a :b | a name < b name ])
 ]
 
 { #category : #accessing }
@@ -58,27 +56,4 @@ GtPackagesCoder >> name [
 { #category : #private }
 GtPackagesCoder >> newCoderFor: aPackage [
 	^ GtPackageCoder forPackage: aPackage
-]
-
-{ #category : #accessing }
-GtPackagesCoder >> packageTreeCoders [
-	^ self coders
-]
-
-{ #category : #scripting }
-GtPackagesCoder >> withClass: aClass [
-  self announce: (GtPackagesCoderNavigationAnnouncement new coder: (self coderForClass: aClass))
-]
-
-{ #category : #scripting }
-GtPackagesCoder >> withPackage: aPackage [
-  self announce: (GtPackagesCoderNavigationAnnouncement new coder: (self coderForPackage: aPackage))
-]
-
-{ #category : #scripting }
-GtPackagesCoder >> withSelectedMethod: aCompiledMethod [
-	| coder |
-	coder := self coderForClass: aCompiledMethod methodClass.
-	self withClass: aCompiledMethod methodClass.
-	coder withSelectedMethod: aCompiledMethod
 ]

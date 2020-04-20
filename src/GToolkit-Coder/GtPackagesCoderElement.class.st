@@ -3,106 +3,12 @@ Class {
 	#superclass : #BlElement,
 	#instVars : [
 		'packagesCoder',
-		'contentPane',
-		'selectedCoder'
+		'contentPane'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
-{ #category : #'building ui' }
-GtPackagesCoderElement >> addClassSource [
-	| aSuperClassName aPackageName |
-	(self isSelectedCoderClassCoder and: [ 
-		selectedCoder theClass isNotNil ])
-			ifTrue: [ 
-				aSuperClassName := selectedCoder theClass name asString.
-				aPackageName := selectedCoder theClass package name ] 
-			ifFalse: [ 
-				aSuperClassName := Object name asString.
-				aPackageName := ''
-				 ].
-	^ aSuperClassName, ' subclass: #NameOfSubclass
-	instanceVariableNames: ''''
-	classVariableNames: ''''
-	package: ''', aPackageName ,''''
-]
-
-{ #category : #'building ui' }
-GtPackagesCoderElement >> buildAddClassButton [
-	| look |
-	^ BrButton new
-		label: 'Add class';
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(look := BrGlamorousWithDropdownLook
-						handle: [ BrButton new
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousVectorIcons add;
-								yourself ]
-						content: [ | coder |
-							coder := GtClassDefinitionCoder new
-								expanded: true;
-								source: self addClassSource;
-								yourself.
-							coder announcer
-								when: GtCoderEvaluationAnnouncement
-								do: [ :e | 
-									look hide.
-									self updateSelection: (packagesCoder coderForClass: e value) ].
-							coder asElement
-								hFitContent;
-								vFitContent;
-								margin: (BlInsets all: 10);
-								yourself ]);
-		icon: BrGlamorousVectorIcons add;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
-GtPackagesCoderElement >> buildClassHierarchyTree [
-	| classes tree |
-	classes := (selectedCoder theClass withAllSuperclasses
-		, selectedCoder theClass allSubclasses) asIdentitySet.
-	tree := BrColumnedTree new
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical matchParent ];
-		items: {(packagesCoder coderForClass: ProtoObject)}
-			children: [ :anObject | 
-			((anObject theClass subclasses select: [ :c | classes includes: c ])
-				sorted: [ :a :b | a name < b name ])
-				collect: [ :c | packagesCoder coderForClass: c ] ];
-		yourself.
-	tree column
-		title: 'Name';
-		stencil: [ :aNode | 
-			BlElement new
-				layout: BlLinearLayout horizontal;
-				addChild:
-					(aNode value icon
-						transformDo: [ :t | t scaleBy: 0.5 ];
-						size: 8 @ 8;
-						margin: (BlInsets right: 5);
-						yourself);
-				addChild:
-					(BlTextElement new
-						text: aNode value name asRopedText glamorousRegularFontAndSize;
-						constraintsDo: [ :c | 
-							c horizontal matchParent.
-							c vertical fitContent ]);
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical fitContent ];
-				yourself ].
-	^ tree
-		selectAndScrollTo: selectedCoder;
-		yourself
-]
-
-{ #category : #'building ui' }
+{ #category : #'private - ui' }
 GtPackagesCoderElement >> buildContentPane [
 	contentPane := BlElement new.
 	contentPane layout: BlLinearLayout horizontal.
@@ -114,119 +20,18 @@ GtPackagesCoderElement >> buildContentPane [
 	^ contentPane
 ]
 
-{ #category : #'building ui' }
-GtPackagesCoderElement >> buildHierarchyButton [
-	^ BrButton new
-		label: 'Show Package and Class Hierarchies';
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(BrGlamorousWithDropdownLook
-						handle: [ BrButton new
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousIcons tree asElement;
-								yourself ]
-						content: [ self buildHierarchyTabs ]);
-		icon: BrGlamorousIcons tree asElement;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
-GtPackagesCoderElement >> buildHierarchyTabs [
-	| packageTab classTab packageTree classTree tabGroup |
-	packageTab := BrTab new
-		look: BrGlamorousTabLook new;
-		label: 'Package Hierarchy';
-		stencil: [ packageTree := self buildPackageHierarchyTree
-				when: BrSelectionChanged
-					do: [ :anEvent | 
-					anEvent target
-						selectedNodeDo: [ :aNode | 
-							self updateSelection: aNode value.
-							self isSelectedCoderClassCoder
-								ifTrue: [ (tabGroup hasTab: classTab)
-										ifFalse: [ tabGroup addTab: classTab ].
-									classTree
-										ifNotNil: [ classTree selectAndScrollTo: selectedCoder ] ] ] ];
-				yourself ];
-		yourself.
-	classTab := BrTab new
-		look: BrGlamorousTabLook new;
-		label: 'Class Hierarchy';
-		stencil: [ classTree := self buildClassHierarchyTree
-				when: BrSelectionChanged
-					do: [ :anEvent | 
-					anEvent target
-						selectedNodeDo: [ :aNode | 
-							self updateSelection: aNode value.
-							packageTree
-								ifNotNil: [ packageTree selectAndScrollTo: selectedCoder ] ] ];
-				yourself ];
-		yourself.
-	tabGroup := BrTabGroup new
-		look: BrGlamorousTabGroupLook new;
-		addTab: packageTab;
-		vExact: 400;
-		hExact: 400;
-		yourself.
-	self isSelectedCoderClassCoder
-		ifTrue: [ tabGroup addTab: classTab ].
-	^ tabGroup
-]
-
-{ #category : #'building ui' }
-GtPackagesCoderElement >> buildPackageHierarchyTree [
-	| tree |
-	tree := BrColumnedTree new
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical matchParent ];
-		items: {packagesCoder}
-			children: [ :anObject | 
-			anObject packageTreeCoders
-				asSortedCollection: [ :a :b | a name < b name ] ];
-		yourself.
-	tree column
-		title: 'Name';
-		stencil: [ :aNode | 
-			BlElement new
-				layout: BlLinearLayout horizontal;
-				addChild:
-					(aNode value icon
-						transformDo: [ :t | t scaleBy: 0.5 ];
-						size: 8 @ 8;
-						margin: (BlInsets right: 5);
-						yourself);
-				addChild:
-					(BlTextElement new
-						text: aNode value name asRopedText glamorousRegularFontAndSize;
-						constraintsDo: [ :c | 
-							c horizontal matchParent.
-							c vertical fitContent ]);
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical fitContent ];
-				yourself ].
-	^ tree
-		selectAndScrollTo: selectedCoder;
-		yourself
-]
-
-{ #category : #'building ui' }
+{ #category : #'private - ui' }
 GtPackagesCoderElement >> buildPackageList [
-	| element |
-	element := BrSimpleList new.
-	element stencil: [:each | each asCardElement
-					 constraintsDo: [:c | c horizontal matchParent.
-							c vertical fitContent ];
-					 yourself ].
-	element display: (packagesCoder coders asSortedCollection: [:a :b | a name < b name ]).
-	^element
+	^ BrSimpleList new
+		stencil: [:each | each asCardElement
+			constraintsDo: [:c |
+				c horizontal matchParent.
+				c vertical fitContent ];
+			 yourself ];
+		items: (packagesCoder coders asSortedCollection: [:a :b | a name < b name ])
 ]
 
-{ #category : #'building ui' }
+{ #category : #'private - ui' }
 GtPackagesCoderElement >> buildPackagesElement [
 	| element |
 	element := BlElement new.
@@ -252,103 +57,17 @@ GtPackagesCoderElement >> buildPackagesElement [
 	^ element
 ]
 
-{ #category : #'building ui' }
-GtPackagesCoderElement >> buildSpotterButton [
-	| look |
-	^ BrButton new
-		label: 'Search';
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(look := BrGlamorousWithDropdownLook
-						stencil: [ | model |
-							model := GtSpotter new initializeWith: GtCoderSpotterStart new.
-							model announcer
-								when: GtSpotterActOn
-								do: [ :e | 
-									| item |
-									item := e element.
-									e actedUpon: true.
-									self flag: 'FIXME candidates may be wrapped for some reason'.
-									[ (item isKindOf: GtSpotterCandidate)
-										and: [ item item ~~ item ] ]
-										whileTrue: [ item := item item ].
-									((#(singleClick doubleClick keyPressed) includes: e eventType)
-										and: [ {RPackage.
-											ClassDescription.
-											CompiledMethod} anySatisfy: [ :f | item isKindOf: f ] ])
-										ifTrue: [ look hide.
-											(item isKindOf: RPackage)
-												ifTrue: [ self updateSelection: (packagesCoder coderForPackage: item) ].
-											(item isKindOf: ClassDescription)
-												ifTrue: [ self updateSelection: (packagesCoder coderForClass: item) ].
-											(item isKindOf: CompiledMethod)
-												ifTrue: [ | classCoder |
-													classCoder := packagesCoder
-														coderForClass: item methodClass.
-													self updateSelection: classCoder.
-													classCoder withSelectedMethod: item ] ] ].
-							BlElement new
-								look:
-									(BrGlamorousDropdownLook new
-										handle:
-											(BrButton new
-												look:
-													BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
-														- BrGlamorousButtonExteriorLook;
-												icon: BrGlamorousVectorIcons search;
-												yourself);
-										content:
-											(GtSpotterElement new
-												spotterModel: model;
-												constraintsDo: [ :c | 
-													c horizontal exact: 600.
-													c vertical exact: 400 ];
-												margin: (BlInsets all: 1);
-												geometry: (BlRectangle cornerRadius: 4);
-												in: [ :e | 
-													self
-														flag: 'FIXME need to remove original listener to avoid phlow inspect'.
-													model announcer subscriptions subscriptions
-														detect: [ :g | 
-															g announcementClass == GtSpotterSelectedCandidateChanged
-																and: [ g action isMessageSend
-																		and: [ g action selector = #onCandidateSelected:
-																				and: [ g action receiver == e ] ] ] ]
-														ifFound: [ :g | g announcer subscriptions remove: g ] ];
-												yourself);
-										yourself);
-								background: BrGlamorousColors secondaryHeaderBackgroundColor;
-								yourself ]);
-		icon: BrGlamorousVectorIcons search;
-		yourself
-]
-
-{ #category : #'building ui' }
-GtPackagesCoderElement >> buildToolbar [
-	^ BrToolbar new
-		look: BrGlamorousToolbarLook new;
-		padding:
-			(BlInsets
-				top: 10
-				left: 0
-				bottom: 0
-				right: 5);
-		constraintsDo: [ :c | 
-			c ignoreByLayout.
-			c ignored horizontal alignRight.
-			c ignored vertical alignTop ];
-		addItem: self buildSpotterButton;
-		addItem: self buildHierarchyButton;
-		addItem: self buildAddClassButton;
-		yourself
-]
-
 { #category : #'initialize-release' }
 GtPackagesCoderElement >> coders: aPackagesCoder [
+  | coderElement |
+
   packagesCoder := aPackagesCoder.
-  self updateSelection: packagesCoder.
-  packagesCoder when: GtPackagesCoderNavigationAnnouncement do: [:evt |  self updateSelection: evt coder ]
+
+	coderElement := self buildPackagesElement.
+
+	contentPane
+		removeChildNamed: #coder;
+		addChild: coderElement as: #coder.
 ]
 
 { #category : #'initialize-release' }
@@ -358,23 +77,6 @@ GtPackagesCoderElement >> initialize [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
+
 	self addChild: self buildContentPane.
-	self addChild: self buildToolbar
-]
-
-{ #category : #testing }
-GtPackagesCoderElement >> isSelectedCoderClassCoder [
-	^ selectedCoder isKindOf: GtClassCoder
-]
-
-{ #category : #events }
-GtPackagesCoderElement >> updateSelection: aCoder [
-	| coderElement |
-	selectedCoder := aCoder.
-	coderElement := selectedCoder = packagesCoder
-		ifTrue: [ self buildPackagesElement ]
-		ifFalse: [ selectedCoder asElement ].
-	contentPane
-		removeChildNamed: #coder;
-		addChild: coderElement as: #coder
 ]
