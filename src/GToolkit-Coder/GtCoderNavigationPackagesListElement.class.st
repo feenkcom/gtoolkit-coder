@@ -1,3 +1,6 @@
+"
+I show a simple list of packages sorting alphabetically
+"
 Class {
 	#name : #GtCoderNavigationPackagesListElement,
 	#superclass : #BrSimpleTree,

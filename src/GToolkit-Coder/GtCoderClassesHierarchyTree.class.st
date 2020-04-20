@@ -10,7 +10,7 @@ Class {
 		'trees',
 		'rootClass'
 	],
-	#category : #'GToolkit-Coder-Navigation'
+	#category : #'GToolkit-Coder-Navigation - Model'
 }
 
 { #category : #'instance creation' }

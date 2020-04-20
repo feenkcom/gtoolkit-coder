@@ -138,7 +138,7 @@ GtCoder >> buildSpotterButton [
 												ifTrue: [ self pushCoder: (GtClassCoder forClass: item) ].
 											(item isKindOf: CompiledMethod)
 												ifTrue: [ | classCoder |
-													classCoder := (GtClassCoder forClass: item).
+													classCoder := (GtClassCoder forClass: item methodClass).
 													classCoder withSelectedMethod: item.
 													self pushCoder: classCoder ] ] ].
 							BlElement new
@@ -240,7 +240,9 @@ GtCoder >> onClassSelected: anAnnouncement [
 { #category : #'api - coder' }
 GtCoder >> pushCoder: aCoderOrCoders [
 	coderContent removeChildren.
-	coderContent addChild: aCoderOrCoders asElement
+	coderContent addChild: aCoderOrCoders asElement.
+	
+	aCoderOrCoders updateNavigation: navigationModel
 ]
 
 { #category : #'api - spawning' }
