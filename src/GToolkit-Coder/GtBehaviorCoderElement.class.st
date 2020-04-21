@@ -12,15 +12,11 @@ Class {
 
 { #category : #callbacks }
 GtBehaviorCoderElement >> actOnClassUpdated [
-	self classCoder navigationModel
-		updateSelectionWith: self classCoder theClass.
 	self updateContentTabs
 ]
 
 { #category : #callbacks }
 GtBehaviorCoderElement >> actOnPackageUpdated: ann [
-	self classCoder navigationModel 
-		updateSelectionWith: ann package.
 	self removeContentTabs
 ]
 
@@ -141,8 +137,6 @@ GtBehaviorCoderElement >> classCoder [
 GtBehaviorCoderElement >> classCoder: aCoder [
 	classCoder := aCoder.
 	classCoder
-		when: GtCoderClassUpdatedAnnouncement
-			do: [ self actOnClassUpdated ];
 		when: GtCoderPackageUpdatedAnnouncement
 			do: [ :ann | self actOnPackageUpdated: ann ];
 		when: GtClassCoderNavigationAnnouncement

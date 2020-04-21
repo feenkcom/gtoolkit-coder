@@ -102,3 +102,8 @@ GtPackageCoder >> packageTagForClass: aClass [
 GtPackageCoder >> packageTreeCoders [
 	^ self coders
 ]
+
+{ #category : #'api - navigation' }
+GtPackageCoder >> updateNavigation: aGtCoderNavigationPackagesTagsClassesModel [
+	aGtCoderNavigationPackagesTagsClassesModel selectPackage: package
+]

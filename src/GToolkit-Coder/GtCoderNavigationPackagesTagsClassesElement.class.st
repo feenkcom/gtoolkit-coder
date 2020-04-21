@@ -21,7 +21,7 @@ GtCoderNavigationPackagesTagsClassesElement >> expandPackage: anRPackage [
 GtCoderNavigationPackagesTagsClassesElement >> initialize [
 	super initialize.
 	
-	self layout: (BlGridLayout horizontal columnCount: 2).
+	self layout: (BlGridLayout horizontal columnCount: 2; cellSpacing: 5).
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical matchParent ].
@@ -31,20 +31,12 @@ GtCoderNavigationPackagesTagsClassesElement >> initialize [
 	
 	self addChildren: {
 		BrLabel new
-			look: (BrGlamorousLabelLook new fontSize: 14; foreground: Color gray);
+			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);
 			text: 'Packages'.
 			
 		BrLabel new
-			look: (BrGlamorousLabelLook new fontSize: 14; foreground: Color gray);
+			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);
 			text: 'Classes'.
-			
-		BlElement new
-			height: 1;
-			margin: (BlInsets top: 5 bottom: 5);
-			constraintsDo: [ :c |
-				c horizontal matchParent.
-				c grid horizontal span: 2 ];
-			background: BrGlamorousColors neutralBackgroundColor.
 	
 		packagesList.
 		classesList
@@ -63,20 +55,66 @@ GtCoderNavigationPackagesTagsClassesElement >> navigationModel: aGtCoderNavigati
 	navigationModel := aGtCoderNavigationPackagesTagsClassesModel.
 	
 	packagesList initializeWithPackages: navigationModel packagesToShow.
+	classesList initializeWithClasses: navigationModel classesToShow.
+	
+	navigationModel hasSelectedPackage
+		ifTrue: [ navigationModel hasSelectedTag
+			ifTrue: [
+				self expandPackage: navigationModel selectedPackage.
+				packagesList viewModel
+					indexOf: navigationModel selectedTag
+					do: [ :anIndex | packagesList
+						selectOne: anIndex;
+						scrollTo: (anIndex - 5 max: 1) ] ]
+			ifFalse: [ packagesList viewModel
+					indexOf: navigationModel selectedPackage
+					do: [ :anIndex | packagesList
+						selectOne: anIndex;
+						scrollTo: (anIndex - 5 max: 1) ] ] ].
+
+	navigationModel selectedClassDo: [ :aClass |
+		classesList viewModel
+			indexOfSuchThat: [ :each | each rootClass = aClass ]
+			do: [ :anIndex | classesList
+				selectOne: anIndex;
+				scrollTo: (anIndex - 5 max: 1) ] ].
+	
 	packagesList
 		when: BrSelectionChanged
 		do: [ :anEvent |
 			anEvent currentTarget selectedIndices
 				ifNotEmpty: [ :theIndices |
-					| aSelectedItem |
-					aSelectedItem := (anEvent currentTarget viewModel itemAt: theIndices first) value.
-					(aSelectedItem isKindOf: RPackage)
-						ifTrue: [ self navigationModel selectPackage: aSelectedItem ]
-						ifFalse: [ self navigationModel selectTag: aSelectedItem ] ] ].
+					| anIndex aSelectedItem |
+					anIndex := theIndices first.
+					(anIndex between: 1 and: anEvent currentTarget viewModel itemCount)
+						ifTrue: [
+							aSelectedItem := (anEvent currentTarget viewModel itemAt: anIndex) value.
+							(aSelectedItem isKindOf: RPackage)
+								ifTrue: [ self navigationModel selectPackage: aSelectedItem ]
+								ifFalse: [ self navigationModel selectTag: aSelectedItem ] ] ] ].
+				
+	classesList
+		when: BrSelectionChanged
+		do: [ :anEvent |
+			anEvent currentTarget selectedIndices
+				ifNotEmpty: [ :theIndices |
+					| anIndex aSelectedItem |
+					anIndex := theIndices first.
+					(anIndex between: 1 and: anEvent currentTarget viewModel itemCount)
+						ifTrue: [
+							aSelectedItem := (anEvent currentTarget viewModel itemAt: anIndex) value rootClass.
+							self navigationModel selectClass: aSelectedItem  ] ] ].
 	
-	classesList initializeWithClasses: navigationModel classesToShow.
 	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
 	navigationModel when: GtCoderNavigationTagSelected send: #onTagSelected: to: self.
+	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
+	classesList viewModel
+		indexOfSuchThat: [ :each | each rootClass = anAnnouncement theClass ]
+		do: [ :anIndex | classesList selectOne: anIndex ]
 ]
 
 { #category : #'event handling' }
@@ -85,7 +123,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 	packagesList viewModel
 		indexOf: anAnnouncer package
 		do: [ :anIndex | packagesList selectOne: anIndex ].
-		
+
 	classesList initializeWithClasses: navigationModel classesToShow
 ]
 

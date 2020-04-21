@@ -5,7 +5,7 @@ Class {
 		'package',
 		'tag'
 	],
-	#category : #'GToolkit-Coder-Navigation'
+	#category : #'GToolkit-Coder-Navigation - Events'
 }
 
 { #category : #accessing }

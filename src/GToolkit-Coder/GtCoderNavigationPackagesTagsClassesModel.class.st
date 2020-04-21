@@ -10,7 +10,7 @@ Class {
 		'selectedTag',
 		'selectedClass'
 	],
-	#category : #'GToolkit-Coder-Navigation'
+	#category : #'GToolkit-Coder-Navigation - Model'
 }
 
 { #category : #'instance creation' }
@@ -71,6 +71,14 @@ GtCoderNavigationPackagesTagsClassesModel >> initializeWithPackages: aCollection
 ]
 
 { #category : #'private - notifying' }
+GtCoderNavigationPackagesTagsClassesModel >> notifyClassSelected: aClass package: anRPackage tag: anRPackageTag [
+	self announcer announce: (GtCoderNavigationClassSelected new
+		package: anRPackage;
+		tag: anRPackageTag;
+		theClass: aClass)
+]
+
+{ #category : #'private - notifying' }
 GtCoderNavigationPackagesTagsClassesModel >> notifyPackageSelected: anRPackage [
 	self announcer announce: (GtCoderNavigationPackageSelected new package: anRPackage)
 ]
@@ -90,12 +98,26 @@ GtCoderNavigationPackagesTagsClassesModel >> packagesToShow [
 ]
 
 { #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> selectClass: aClass [
+	| aClassPackage |
+	
+	selectedClass = aClass
+		ifTrue: [ ^ self ].
+	
+	aClassPackage := aClass package.
+	
+	(packages includes: aClassPackage)
+		ifFalse: [ ^ self ].
+
+	selectedClass := aClass.
+	
+	self notifyClassSelected: selectedClass package: selectedPackage tag: selectedTag
+]
+
+{ #category : #'api - selection' }
 GtCoderNavigationPackagesTagsClassesModel >> selectPackage: anRPackage [
 	(packages includes: anRPackage)
 		ifFalse: [ ^ self ].
-		
-	selectedPackage = anRPackage
-		ifTrue: [ ^ self ].
 		
 	selectedPackage := anRPackage.
 	selectedTag := nil.
@@ -104,12 +126,12 @@ GtCoderNavigationPackagesTagsClassesModel >> selectPackage: anRPackage [
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationPackagesTagsClassesModel >> selectTag: anRPackageTag [
-	(packages includes: anRPackageTag package)
-		ifFalse: [ ^ self ].
-		
+GtCoderNavigationPackagesTagsClassesModel >> selectTag: anRPackageTag [		
 	selectedTag = anRPackageTag
 		ifTrue: [ ^ self ].
+		
+	(packages includes: anRPackageTag package)
+		ifFalse: [ ^ self ].
 	
 	selectedPackage := anRPackageTag package.
 	selectedTag := anRPackageTag.
