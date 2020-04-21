@@ -10,7 +10,6 @@ GtClassCoderHeaderElementExamples >> coderHeaderElementForClass [
 	| aCoder aCoderHeaderElement |
 
 	aCoder := GtClassCoderExamples new coderForClass.
-	aCoder forClass: GtBehaviorCoderDummyClass.
 	aCoderHeaderElement := GtBehaviorCoderHeaderElement new classCoder: aCoder.
 	aCoderHeaderElement expand.
 
@@ -23,7 +22,6 @@ GtClassCoderHeaderElementExamples >> coderHeaderElementForMetaclass [
 	| aCoder aCoderHeaderElement |
 
 	aCoder := GtClassCoderExamples new coderForClass.
-	aCoder forClass: GtBehaviorCoderDummyClass class.
 	aCoderHeaderElement := GtBehaviorCoderHeaderElement new classCoder: aCoder.
 	aCoderHeaderElement expand.
 
@@ -35,8 +33,7 @@ GtClassCoderHeaderElementExamples >> coderHeaderElementForTrait [
 	<gtExample>
 	| aCoder aCoderHeaderElement |
 
-	aCoder := GtClassCoderExamples new coderForClass.
-	aCoder forClass: TGtBehaviorCoderDummyTrait.
+	aCoder := GtClassCoder forClass: TGtBehaviorCoderDummyTrait.
 	aCoderHeaderElement := GtBehaviorCoderHeaderElement new classCoder: aCoder.
 	aCoderHeaderElement expand.
 
