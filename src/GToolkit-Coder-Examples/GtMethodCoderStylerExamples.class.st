@@ -298,8 +298,11 @@ GtMethodCoderStylerExamples >> viewsExplanationWithLinks [
 	container := BlElement new
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical matchParent];
-		layout: BlLinearLayout horizontal alignCenter.
+			c vertical fitContent ];
+		margin: (BlInsets all: 30);
+		background: Color white;
+		look: BrShadowLook;
+		layout: BlLinearLayout horizontal.
 	container explainer isExplanationHolder: true.
 	
 	editor := BrEditor new
