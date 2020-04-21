@@ -261,3 +261,7 @@ GtCoderModel >> terminateAddOnsCommand [
 GtCoderModel >> unsubscribeFromSystem [
 	SystemAnnouncer uniqueInstance unsubscribe: self
 ]
+
+{ #category : #'api - navigation' }
+GtCoderModel >> updateNavigation: aGtCoderNavigationPackagesTagsClassesModel [
+]

@@ -18,9 +18,6 @@ Class {
 
 { #category : #'event handling' }
 GtBehaviorCoderHeaderElement >> actOnClassChanged: theClass [
-	self classCoder navigationModel
-		updateSelectionWith: theClass.
-
 	self initializeElements
 ]
 
@@ -30,9 +27,7 @@ GtBehaviorCoderHeaderElement >> actOnClassUpdated [
 ]
 
 { #category : #'event handling' }
-GtBehaviorCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
-	self classCoder navigationModel updateSelectionWith: anAnnouncement package.
-	
+GtBehaviorCoderHeaderElement >> actOnPackageChanged: anAnnouncement [	
 	self header: [ BlElement new ].
 	self content: [ BlElement new ]
 ]
@@ -133,8 +128,6 @@ GtBehaviorCoderHeaderElement >> classCoder [
 GtBehaviorCoderHeaderElement >> classCoder: aGtClassCoder [
 	classCoder := aGtClassCoder.	
 	classCoder
-		when: GtCoderClassUpdatedAnnouncement
-			do: [ :anAnnouncement | headerModel behavior: anAnnouncement classOrMetaClass ];
 		when: GtCoderPackageUpdatedAnnouncement
 			do: [ :anAnnouncement | self actOnPackageChanged: anAnnouncement ].
 			

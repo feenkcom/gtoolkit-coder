@@ -10,7 +10,7 @@ Class {
 		'selectedTag',
 		'selectedClass'
 	],
-	#category : #'GToolkit-Coder-Navigation'
+	#category : #'GToolkit-Coder-Navigation - Model'
 }
 
 { #category : #'instance creation' }

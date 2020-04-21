@@ -90,3 +90,8 @@ GtPackageTagCoder >> packageTag [
 GtPackageTagCoder >> packageTag: anObject [
 	packageTag := anObject
 ]
+
+{ #category : #'api - navigation' }
+GtPackageTagCoder >> updateNavigation: aGtCoderNavigationPackagesTagsClassesModel [ 
+	aGtCoderNavigationPackagesTagsClassesModel selectTag: packageTag
+]
