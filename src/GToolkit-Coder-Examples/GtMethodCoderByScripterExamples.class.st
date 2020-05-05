@@ -133,7 +133,8 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 			label: 'Check Triggered Spawn Object Event';
 			satisfies: [ :theScripter | theScripter events reversed 
 				detectEventOfClass: GtPhlowObjectToSpawn
-				ifFound: [ :theEvent | theEvent object class = GtClassCoder and: [ theEvent object theClass = self class ] ]
+				ifFound: [ :theEvent |
+					theEvent object = GtMethodCoderByScripterExamples and: [ theEvent tool class = GtCoderTool ] ]
 				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
 			onScripter.
 		].
