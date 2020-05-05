@@ -3,27 +3,12 @@ Class {
 	#superclass : #GtRenameController,
 	#instVars : [
 		'selector',
-		'someImplementor'
+		'someImplementor',
+		'newSelectorParts',
+		'selectorIndex'
 	],
 	#category : #'GToolkit-Coder-Refactorings'
 }
-
-{ #category : #private }
-GtRenameMethodController >> calculateNewNode [
-	| newAST |
-	newAST := coder rbAST.
-	newAST isNil
-		ifTrue: [ ^ self ].
-	self originalNode isMethod
-		ifTrue: [ ^ newNode := newAST ].
-	newAST
-		nodesDo: [ :each | 
-			(each isMessage
-				and: [ each start = self originalNode start
-						and: [ each arguments = self originalNode arguments
-								and: [ each receiver = self originalNode receiver ] ] ])
-				ifTrue: [ newNode := each ] ]
-]
 
 { #category : #executing }
 GtRenameMethodController >> installRenamer [
@@ -32,21 +17,33 @@ GtRenameMethodController >> installRenamer [
 			selector := self originalNode selector.
 			self someImplementor isNil
 				ifTrue: [ ^ self ].
+			newSelectorParts := selector keywords.
 			self originalNode keywordsIntervals
-				do: [ :interval | 
+				keysAndValuesDo: [ :i :interval | 
 					(interval includes: position)
-						ifTrue: [ self installRenamerOnInterval: interval.
-							self installPreviewEventHandlers ] ] ]
+						ifTrue: [ selectorIndex := i.
+							newName := newSelectorParts at: i.
+							renameInterval := interval.
+							self installRenameAction ] ] ]
 ]
 
 { #category : #private }
 GtRenameMethodController >> newSelectorName [
-	^ self newNode ifNotNil: [ :n | n selector ]
+	selector numArgs = 0
+		ifTrue: [ ^ newName asSymbol ].
+	^ (String
+		streamContents: [ :stream | 
+			1 to: selector numArgs do: [ :i | 
+				stream
+					nextPutAll:
+						(selectorIndex = i
+							ifTrue: [ newName ]
+							ifFalse: [ newSelectorParts at: i ]) ] ]) asSymbol
 ]
 
-{ #category : #private }
-GtRenameMethodController >> positionForPreview [
-	^ self newNode ifNotNil: [ :ast | ast keywordsIntervals last last ]
+{ #category : #accessing }
+GtRenameMethodController >> originalName [
+	^ selector
 ]
 
 { #category : #private }

@@ -8,34 +8,30 @@ Class {
 		'handlers',
 		'renameAction',
 		'node',
-		'newNode'
+		'newName',
+		'renameInterval'
 	],
 	#category : #'GToolkit-Coder-Refactorings'
 }
 
 { #category : #executing }
 GtRenameController >> acceptRename [
-	self uninstallPreviewEventHandlers
+	renameAction notNil
+		ifTrue: [ renameAction accept ]
 ]
 
 { #category : #private }
 GtRenameController >> addRefactoringChangesPreview [
-	newNode := nil.
 	coder
 		addRefactoringChangesPreview: self refactoring
-		at: self positionForPreview
-]
-
-{ #category : #private }
-GtRenameController >> calculateNewNode [
-	self subclassResponsibility
+		at: self renamePosition
 ]
 
 { #category : #executing }
 GtRenameController >> cancelRename [
-	self uninstallPreviewEventHandlers.
-	sourceElement editor text: originalSource.
-	coder removeRefactoringAttribute
+	renameAction notNil
+		ifTrue: [ renameAction cancel ].
+	self restoreText
 ]
 
 { #category : #accessing }
@@ -70,18 +66,19 @@ GtRenameController >> execute [
 		do: [ :ex | ex return ]
 ]
 
-{ #category : #private }
-GtRenameController >> installPreviewEventHandlers [
-	handlers := {(BlEventHandler
-		on: BrTextEditorInsertedEvent
-		do: [ :event | self addRefactoringChangesPreview ]).
-	(BlEventHandler
-		on: BrTextEditorDeletedEvent
-		do: [ :event | self addRefactoringChangesPreview ]).
-	(BlEventHandler
-		on: BrTextEditorModifiedEvent
-		do: [ :event | self addRefactoringChangesPreview ])}.
-	handlers do: [ :each | coder sourceEditor addEventHandler: each ]
+{ #category : #executing }
+GtRenameController >> installRenameAction [
+	renameAction := GtRenameAction
+		locations: {renameInterval}
+		element: sourceElement.
+	renameAction
+		when: GtRenameActionAnnouncement
+		do: [ :ann | 
+			(#(#textUpdated accept) includes: ann eventType)
+				ifTrue: [ self updateName: renameAction newName ].
+			ann eventType = #cancel
+				ifTrue: [ coder removeRefactoringAttribute ] ].
+	renameAction install
 ]
 
 { #category : #executing }
@@ -89,41 +86,24 @@ GtRenameController >> installRenamer [
 	self subclassResponsibility
 ]
 
-{ #category : #executing }
-GtRenameController >> installRenamerOnInterval: interval [
-	renameAction := GtRenameAction
-		locations: {interval}
-		element: sourceElement.
-	renameAction
-		when: GtRenameActionAnnoucement
-		do: [ :ann | 
-			ann eventType = #cancel
-				ifTrue: [ self cancelRename ].
-			ann eventType = #accept
-				ifTrue: [ self acceptRename ] ].
-	renameAction install
-]
-
 { #category : #testing }
 GtRenameController >> isRenaming [
 	^ renameAction notNil and: [ renameAction isInstalled ]
 ]
 
-{ #category : #private }
-GtRenameController >> newNode [
-	newNode isNil
-		ifTrue: [ self calculateNewNode ].
-	^ newNode
+{ #category : #accessing }
+GtRenameController >> newName [
+	^ newName
+]
+
+{ #category : #accessing }
+GtRenameController >> originalName [
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
 GtRenameController >> originalNode [
 	^ node ifNil: [ node := coder rbNodeAtCursor: sourceElement ]
-]
-
-{ #category : #private }
-GtRenameController >> positionForPreview [
-	^ self newNode ifNotNil: [ :ast | ast stop ]
 ]
 
 { #category : #accessing }
@@ -134,6 +114,27 @@ GtRenameController >> refactoring [
 { #category : #accessing }
 GtRenameController >> refactoringName [
 	^ self subclassResponsibility
+]
+
+{ #category : #private }
+GtRenameController >> removeRefactoringAttribute [
+	| editor |
+	editor := renameAction editor.
+	editor text
+		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ].
+	editor updater all update
+]
+
+{ #category : #private }
+GtRenameController >> renamePosition [
+	^ (renameAction isNil or: [ renameAction isInstalled ])
+		ifTrue: [ renameInterval last ]
+		ifFalse: [ renameInterval last + newName size - self originalName size ]
+]
+
+{ #category : #private }
+GtRenameController >> restoreText [
+	sourceElement editor text: originalSource
 ]
 
 { #category : #executing }
@@ -152,8 +153,7 @@ GtRenameController >> sourceElement: textElement [
 ]
 
 { #category : #private }
-GtRenameController >> uninstallPreviewEventHandlers [
-	handlers isNil
-		ifTrue: [ ^ self ].
-	handlers do: [ :each | coder sourceEditor removeEventHandler: each ]
+GtRenameController >> updateName: aString [
+	newName := aString.
+	self addRefactoringChangesPreview
 ]

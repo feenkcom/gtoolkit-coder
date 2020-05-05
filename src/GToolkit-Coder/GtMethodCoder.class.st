@@ -264,7 +264,7 @@ GtMethodCoder >> breadcrumbNamedActions [
 				nextPut:
 					aClass name
 						->
-							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ]
+							[ :aButton | aButton phlow spawnObject: aClass withTool: GtCoderTool new ] ]
 ]
 
 { #category : #private }

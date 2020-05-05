@@ -4,33 +4,25 @@ Class {
 	#category : #'GToolkit-Coder-Refactorings'
 }
 
-{ #category : #private }
-GtRenameVariableController >> calculateNewNode [
-	| newAST |
-	newAST := coder rbAST.
-	newAST isNil
-		ifTrue: [ ^ self ].
-	newAST
-		nodesDo: [ :each | 
-			(each isVariable and: [ each start = self originalNode start ])
-				ifTrue: [ newNode := each ] ]
-]
-
 { #category : #executing }
 GtRenameVariableController >> installRenamer [
 	self originalNode isNil
 		ifTrue: [ ^ self ].
-	self installRenamerOnInterval: self originalNode sourceInterval.
-	self installPreviewEventHandlers
+	newName := self originalNode name.
+	renameInterval := self originalNode sourceInterval.
+	self installRenameAction
+]
+
+{ #category : #accessing }
+GtRenameVariableController >> originalName [
+	^ node name
 ]
 
 { #category : #accessing }
 GtRenameVariableController >> refactoring [
-	self newNode isNil
+	self originalName = self newName
 		ifTrue: [ ^ nil ].
-	self originalNode = self newNode
-		ifTrue: [ ^ nil ].
-	^ self rename: self originalNode name to: self newNode name
+	^ self rename: self originalName to: self newName
 ]
 
 { #category : #accessing }

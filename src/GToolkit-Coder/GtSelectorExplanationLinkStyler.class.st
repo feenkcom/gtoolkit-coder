@@ -53,19 +53,18 @@ GtSelectorExplanationLinkStyler >> visitMessageNode: aMessageNode [
 	super visitMessageNode: aMessageNode.
 	self selectorsAssociations do: [ :association | 
 		aMessageNode selector = association key ifTrue: [
-			aMessageNode keywordsIntervals do: [ :each |
-				self 
-					styleFrom: each first - 1 
-					to: each first - 1
+			self 
+					styleFrom: aMessageNode keywordsIntervals first first - 1 
+					to: aMessageNode keywordsIntervals first first - 1
 					with: ((self shouldAddUnderline)
 						ifTrue: [ {GtTargetCircleWithUnderlineAdornment new
 							identifier: (association value);
 							coder: coder;
 							node: aMessageNode;
-							start: each first;
-							stop: each last} ]
+							start: aMessageNode start;
+							stop: aMessageNode stop} ]
 						ifFalse: [ {GtYellowCircleExplanationTextAdornment 
-							forIdentifier: association value} ]) ] ] ].
+							forIdentifier: association value} ]) ] ].
 ]
 
 { #category : #visiting }
