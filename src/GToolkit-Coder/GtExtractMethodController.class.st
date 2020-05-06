@@ -34,7 +34,9 @@ GtExtractMethodController >> addReorderParametersAttributes [
 	message isNil
 		ifTrue: [ ^ self ].
 	text := coder sourceEditor text.
-	message values
+	(message isBinary
+		ifTrue: [ {message value} ]
+		ifFalse: [ message values ])
 		keysAndValuesDo: [ :i :each | 
 			i > 1
 				ifTrue: [ (text from: each startPosition - 1 to: each startPosition - 1)
@@ -135,7 +137,11 @@ GtExtractMethodController >> findExtractedSend [
 		do: [ :each | 
 			(each selector = self extractedSelector
 				and: [ ((1 to: methodArguments size)
-						allSatisfy: [ :i | (each values at: i) source = (methodArguments at: i) ])
+						allSatisfy: [ :i | 
+							(each isBinary
+								ifTrue: [ each value ]
+								ifFalse: [ each values at: i ]) source
+								= (methodArguments at: i) ])
 						and: [ (each parent receiver isKindOf: GtPharoVariableNode)
 								and: [ each parent receiver name value = 'self' ] ] ])
 				ifTrue: [ ^ each ] ].
@@ -147,7 +153,7 @@ GtExtractMethodController >> installRenamerAt: anInteger [
 	| message interval |
 	renameIndex := anInteger.
 	anInteger isNil
-		ifTrue: [ ^ self ].
+		ifTrue: [ ^ self addRefactoringPreview ].
 	message := self findExtractedSend.
 	message isNil
 		ifTrue: [ ^ self cancelRefactoring ].
@@ -204,7 +210,7 @@ GtExtractMethodController >> safeMethodName: methodName in: aModel [
 	[ selector := (String
 		streamContents: [ :stream | 
 			stream nextPutAll: name.
-			argCount > 1
+			argCount >= 1
 				ifTrue: [ stream nextPut: $:.
 					2 to: argCount do: [ :i | stream nextPutAll: '_:' ] ] ]) asSymbol.
 	modelClass hierarchyDefinesMethod: selector ]
