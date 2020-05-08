@@ -78,7 +78,7 @@ GtCoder >> buildAddClassButton [
 								when: GtCoderEvaluationAnnouncement
 								do: [ :e | 
 									look hide.
-									self pushCoder: (GtClassCoder forClass: e value) ].
+									navigationModel selectClass: e value ].
 							coder asElement
 								hFitContent;
 								vFitContent;
@@ -133,14 +133,11 @@ GtCoder >> buildSpotterButton [
 											CompiledMethod} anySatisfy: [ :f | item isKindOf: f ] ])
 										ifTrue: [ look hide.
 											(item isKindOf: RPackage)
-												ifTrue: [ self pushCoder: (GtPackageCoder forPackage: item) ].
+												ifTrue: [ navigationModel selectPackage: item ].
 											(item isKindOf: ClassDescription)
-												ifTrue: [ self pushCoder: (GtClassCoder forClass: item) ].
+												ifTrue: [ navigationModel selectClass: item ].
 											(item isKindOf: CompiledMethod)
-												ifTrue: [ | classCoder |
-													classCoder := (GtClassCoder forClass: item methodClass).
-													classCoder withSelectedMethod: item.
-													self pushCoder: classCoder ] ] ].
+												ifTrue: [ navigationModel selectMethod: item ] ] ].
 							BlElement new
 								look:
 									(BrGlamorousDropdownLook new
@@ -220,7 +217,9 @@ GtCoder >> initialize [
 			c vertical matchParent ].
 
 	navigationModel := GtCoderNavigationPackagesTagsClassesModel fromPackages: RPackageOrganizer default packages.
+	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
 	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
+	navigationModel when: GtCoderNavigationMethodSelected send: #onMethodSelected: to: self.
 
 	coderContent := BlElement new
 		layout: BlFrameLayout new;
@@ -237,12 +236,23 @@ GtCoder >> onClassSelected: anAnnouncement [
 	self pushCoder: (GtClassCoder forClass: anAnnouncement theClass)
 ]
 
+{ #category : #'api - spawning' }
+GtCoder >> onMethodSelected: anAnnouncement [
+	| coder |
+	coder := GtClassCoder forClass: anAnnouncement method methodClass.
+	self pushCoder: coder.
+	coder withSelectedMethod: anAnnouncement method
+]
+
+{ #category : #'api - spawning' }
+GtCoder >> onPackageSelected: anAnnouncement [
+	self pushCoder: (GtPackageCoder forPackage: anAnnouncement package)
+]
+
 { #category : #'api - coder' }
 GtCoder >> pushCoder: aCoderOrCoders [
 	coderContent removeChildren.
-	coderContent addChild: aCoderOrCoders asElement.
-	
-	aCoderOrCoders updateNavigation: navigationModel
+	coderContent addChild: aCoderOrCoders asElement
 ]
 
 { #category : #'api - spawning' }

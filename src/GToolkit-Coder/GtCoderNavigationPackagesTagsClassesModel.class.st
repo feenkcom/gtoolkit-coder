@@ -79,6 +79,12 @@ GtCoderNavigationPackagesTagsClassesModel >> notifyClassSelected: aClass package
 ]
 
 { #category : #'private - notifying' }
+GtCoderNavigationPackagesTagsClassesModel >> notifyMethodSelected: aMethod [
+	self announcer
+		announce: (GtCoderNavigationMethodSelected new method: aMethod)
+]
+
+{ #category : #'private - notifying' }
 GtCoderNavigationPackagesTagsClassesModel >> notifyPackageSelected: anRPackage [
 	self announcer announce: (GtCoderNavigationPackageSelected new package: anRPackage)
 ]
@@ -112,6 +118,12 @@ GtCoderNavigationPackagesTagsClassesModel >> selectClass: aClass [
 	selectedClass := aClass.
 	
 	self notifyClassSelected: selectedClass package: selectedPackage tag: selectedTag
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> selectMethod: aMethod [
+	selectedClass := aMethod methodClass.
+	self notifyMethodSelected: aMethod
 ]
 
 { #category : #'api - selection' }

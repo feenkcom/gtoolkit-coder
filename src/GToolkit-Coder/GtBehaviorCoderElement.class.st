@@ -28,13 +28,9 @@ GtBehaviorCoderElement >> actOnSelectMethod: aMethod [
 		ifNone: [ ^ self ].
 	tab isSelected
 		ifFalse: [ selectTabBlock := [ tab select ].
-			BlUseAsyncFeatures
-				ifEnabledDo: [ self enqueueTask: (BlTaskAction new action: selectTabBlock) ]
-				otherwise: selectTabBlock ].
+			self executeTask: selectTabBlock ].
 	selectMethodBlock := [ self selectAndScrollToMethod: aMethod ].
-	BlUseAsyncFeatures
-		ifEnabledDo: [ self enqueueTask: (BlTaskAction new action: selectMethodBlock) ]
-		otherwise: selectMethodBlock
+	self executeTask: selectMethodBlock
 ]
 
 { #category : #'building ui' }
@@ -167,6 +163,13 @@ GtBehaviorCoderElement >> definitionChanged: anAnnouncement [
 	self updateContentTabs
 ]
 
+{ #category : #private }
+GtBehaviorCoderElement >> executeTask: aBlock [
+	BlUseAsyncFeatures
+		ifEnabledDo: [ self enqueueTask: (BlTaskAction new action: aBlock) ]
+		otherwise: aBlock
+]
+
 { #category : #initialization }
 GtBehaviorCoderElement >> initialize [
 	super initialize.
@@ -206,6 +209,5 @@ GtBehaviorCoderElement >> updateContentTabs [
 		ifNil: [ childIndex := contentPane children size + 1 ]
 		ifNotNil: [ childIndex := contentPane childIndexOf: contentTabs ].
 	self removeContentTabs.
-	contentTabs := self buildContentTabs.
-	contentPane addChild: contentTabs asElement at: childIndex
+	contentPane addChild: self buildContentTabs at: childIndex
 ]
