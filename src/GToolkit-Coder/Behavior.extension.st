@@ -40,14 +40,14 @@ Behavior >> gtCoderExamplesFor: aView context: aDictionary [
 
 	anExamplesClassName := (self name , 'Examples') asSymbol.
 
-	^ self class environment
+	^ self environment
 		at: anExamplesClassName
 		ifPresent: [ :aClass | 
 			| methodsCoder |
 			methodsCoder := GtClassMethodsCoder forClass: aClass.
 			aView explicit
 				priority: 50;
-				title: 'Examples';
+				title: 'Related examples';
 				actionButtonIcon: BrGlamorousVectorIcons add
 					action: [ methodsCoder addNewCoder ];
 				stencil: [ methodsCoder asElement ] ]
