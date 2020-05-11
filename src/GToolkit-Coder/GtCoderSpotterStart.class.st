@@ -10,11 +10,12 @@ Class {
 { #category : #searching }
 GtCoderSpotterStart >> gtSpotterForClassMethodsInCurrentClassFor: aStep [
 	<gtSearch>
-	navigationModel hasSelectedClass ifFalse: [^ self].
+	navigationModel hasSelectedClass
+		ifFalse: [ ^ self ].
 	aStep listProcessor
-		priority: 1;
+		priority: 2;
 		title: 'Class methods';
-		allCandidates: [ navigationModel selectedClass class methods ];
+		allCandidates: [ navigationModel selectedClass classSide methods ];
 		filter: GTFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
 ]
