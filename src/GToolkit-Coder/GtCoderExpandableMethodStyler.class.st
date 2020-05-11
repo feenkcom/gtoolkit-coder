@@ -13,7 +13,7 @@ GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 	aMethodClass := aMessageNode isSuperSend
 			ifTrue: [ aMessageNode methodNode methodClass superclass ]
 			ifFalse: [ aMessageNode methodNode methodClass ].
-	(aMethodClass canPerform: aMessageNode selector)
+	(aMethodClass canUnderstand: aMessageNode selector)
 		ifFalse: [ ^ self ].
 	self
 		styleFrom: aMessageNode keywordsIntervals last last
