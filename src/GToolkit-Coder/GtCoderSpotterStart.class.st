@@ -1,8 +1,23 @@
 Class {
 	#name : #GtCoderSpotterStart,
 	#superclass : #Object,
+	#instVars : [
+		'navigationModel'
+	],
 	#category : #'GToolkit-Coder-UI'
 }
+
+{ #category : #searching }
+GtCoderSpotterStart >> gtSpotterForClassMethodsInCurrentClassFor: aStep [
+	<gtSearch>
+	navigationModel hasSelectedClass ifFalse: [^ self].
+	aStep listProcessor
+		priority: 1;
+		title: 'Class methods';
+		allCandidates: [ navigationModel selectedClass class methods ];
+		filter: GTFilterSubstring;
+		wantsToDisplayOnEmptyQuery: true
+]
 
 { #category : #searching }
 GtCoderSpotterStart >> gtSpotterForClassesFor: aStep [
@@ -14,6 +29,18 @@ GtCoderSpotterStart >> gtSpotterForClassesFor: aStep [
 		filter: GTFilterSubstring;
 		itemIcon: #systemIcon;
 		keyBinding: $b meta;
+		wantsToDisplayOnEmptyQuery: navigationModel hasSelectedClass not
+]
+
+{ #category : #searching }
+GtCoderSpotterStart >> gtSpotterForInstanceMethodsInCurrentClassFor: aStep [
+	<gtSearch>
+	navigationModel hasSelectedClass ifFalse: [^ self].
+	aStep listProcessor
+		priority: 1;
+		title: 'Instance methods';
+		allCandidates: [ navigationModel selectedClass methods ];
+		filter: GTFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
 ]
 
@@ -42,7 +69,7 @@ GtCoderSpotterStart >> gtSpotterForPackagesFor: aStep [
 		itemName: [ :package | package name ];
 		itemIcon: [ Smalltalk ui icons iconNamed: #packageIcon ];
 		filter: GTFilterSubstring;
-		wantsToDisplayOnEmptyQuery: true
+		wantsToDisplayOnEmptyQuery: navigationModel hasSelectedPackage not
 ]
 
 { #category : #searching }
@@ -58,6 +85,16 @@ GtCoderSpotterStart >> gtSpotterImplementorsFor: aStep [
 				allBehaviorsDo: [ :class | class localMethods do: filter ] ];
 		keyBinding: $m meta;
 		wantsToDisplayOnEmptyQuery: false
+]
+
+{ #category : #accessing }
+GtCoderSpotterStart >> navigationModel [
+	^ navigationModel
+]
+
+{ #category : #accessing }
+GtCoderSpotterStart >> navigationModel: anObject [
+	navigationModel := anObject
 ]
 
 { #category : #printing }
