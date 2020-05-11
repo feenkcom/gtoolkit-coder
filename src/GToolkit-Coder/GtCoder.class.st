@@ -116,7 +116,7 @@ GtCoder >> buildSpotterButton [
 				+
 					(look := BrGlamorousWithDropdownLook
 						stencil: [ | model |
-							model := GtSpotter new initializeWith: GtCoderSpotterStart new.
+							model := GtSpotter new initializeWith: (GtCoderSpotterStart new navigationModel: navigationModel).
 							model announcer
 								when: GtSpotterActOn
 								do: [ :e | 

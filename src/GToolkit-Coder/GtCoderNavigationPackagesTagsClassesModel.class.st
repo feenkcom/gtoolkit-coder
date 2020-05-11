@@ -122,7 +122,7 @@ GtCoderNavigationPackagesTagsClassesModel >> selectClass: aClass [
 
 { #category : #'api - selection' }
 GtCoderNavigationPackagesTagsClassesModel >> selectMethod: aMethod [
-	selectedClass := aMethod methodClass.
+	selectedClass := aMethod methodClass instanceSide.
 	self notifyMethodSelected: aMethod
 ]
 
