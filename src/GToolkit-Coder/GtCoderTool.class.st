@@ -9,8 +9,8 @@ GtCoderTool >> asElementDo: aOneArgBlock context: aContext [
 	"Create a tool element and execute the block.
 	A context can be passed to build the tool element."
 	| anElement |
-	anElement := Gt2InspectorWrapperStencil new
-		stencil: [ GtClassCoder forClass: aContext object ];
+	anElement := GtPagerWrapperElement new
+		tool: (GtClassCoder forClass: aContext object);
 		model: aContext object;
 		asElement.
 	aOneArgBlock cull: anElement.

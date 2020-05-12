@@ -2,25 +2,17 @@ Extension { #name : #Behavior }
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowse [
-	BlSpace new
-		title: 'Coder';
-		extent: 1200 @ 600;
-		addChild: (GtInspector withToolOn: (GtCoder forClass: self));
-		withHalos;
-		show.
+	GtPager 
+		openWrappedOn: (GtCoder forClass: self)
+		title: 'Coder'
 ]
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowseFrom: anElement [
-	| aSpace |
-
-	aSpace := BlSpace new
-		title: 'Coder';
-		extent: 1200 @ 600;
-		addChild: (GtInspector withToolOn: (GtCoder forClass: self));
-		withHalos.
-
-	anElement showSpace: aSpace
+	GtPager 
+		openWrappedOn: (GtCoder forClass: self) 
+		title: 'Coder' 
+		from: anElement
 ]
 
 { #category : #'*GToolkit-Coder' }
