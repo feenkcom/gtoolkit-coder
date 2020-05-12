@@ -1,6 +1,8 @@
 Class {
 	#name : #GtPackageTagCoder,
 	#superclass : #Announcer,
+	#traits : 'TGtCoderTrait',
+	#classTraits : 'TGtCoderTrait classTrait',
 	#instVars : [
 		'packageTag',
 		'packageCoder',
@@ -61,6 +63,11 @@ GtPackageTagCoder >> icon [
 	^ BrGlamorousIcons packageicon asElement
 ]
 
+{ #category : #testing }
+GtPackageTagCoder >> isForPackageTag [
+	^ true
+]
+
 { #category : #accessing }
 GtPackageTagCoder >> name [
 	^ packageTag name
@@ -89,9 +96,4 @@ GtPackageTagCoder >> packageTag [
 { #category : #accessing }
 GtPackageTagCoder >> packageTag: anObject [
 	packageTag := anObject
-]
-
-{ #category : #'api - navigation' }
-GtPackageTagCoder >> updateNavigation: aGtCoderNavigationPackagesTagsClassesModel [ 
-	aGtCoderNavigationPackagesTagsClassesModel selectTag: packageTag
 ]

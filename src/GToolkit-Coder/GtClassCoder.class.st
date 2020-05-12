@@ -1,6 +1,8 @@
 Class {
 	#name : #GtClassCoder,
 	#superclass : #Announcer,
+	#traits : 'TGtCoderTrait',
+	#classTraits : 'TGtCoderTrait classTrait',
 	#instVars : [
 		'class',
 		'object'
@@ -77,6 +79,11 @@ GtClassCoder >> icon [
 	^ BrGlamorousIcons classicon
 ]
 
+{ #category : #testing }
+GtClassCoder >> isForClass [
+	^ true
+]
+
 { #category : #accessing }
 GtClassCoder >> name [
 	^ self theClass name
@@ -88,21 +95,26 @@ GtClassCoder >> object [
 ]
 
 { #category : #accessing }
+GtClassCoder >> package [
+	^ self theClass package
+]
+
+{ #category : #accessing }
+GtClassCoder >> packageTag [
+	^ self package classTagForClass: self theClass
+]
+
+{ #category : #accessing }
 GtClassCoder >> theClass [
 	^ class
 ]
 
 { #category : #'api - navigation' }
-GtClassCoder >> updateNavigation: aGtCoderNavigationPackagesTagsClassesModel [
-	aGtCoderNavigationPackagesTagsClassesModel selectClass: class
-]
-
-{ #category : #'api - navigation' }
 GtClassCoder >> withSelectedMethod: aMethod [
 	self
-		assert: [ class = aMethod methodClass ]
+		assert: [ class instanceSide = aMethod methodClass instanceSide ]
 		description: [ 'Can not select a method from a different class' ].
-	
+		
 	self
 		announce: (GtClassCoderNavigationAnnouncement new method: aMethod)
 ]
