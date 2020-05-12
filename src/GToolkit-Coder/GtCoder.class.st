@@ -217,9 +217,7 @@ GtCoder >> initialize [
 			c vertical matchParent ].
 
 	navigationModel := GtCoderNavigationPackagesTagsClassesModel fromPackages: RPackageOrganizer default packages.
-	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
-	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
-	navigationModel when: GtCoderNavigationMethodSelected send: #onMethodSelected: to: self.
+	navigationModel when: GtCoderNavigationAnnouncement send: #updateCoder: to: self.
 
 	coderContent := BlElement new
 		layout: BlFrameLayout new;
@@ -231,28 +229,9 @@ GtCoder >> initialize [
 	self addChild: self buildToolbar
 ]
 
-{ #category : #'api - spawning' }
-GtCoder >> onClassSelected: anAnnouncement [
-	self pushCoder: (GtClassCoder forClass: anAnnouncement theClass)
-]
-
-{ #category : #'api - spawning' }
-GtCoder >> onMethodSelected: anAnnouncement [
-	| coder |
-	coder := GtClassCoder forClass: anAnnouncement method methodClass.
-	self pushCoder: coder.
-	coder withSelectedMethod: anAnnouncement method
-]
-
-{ #category : #'api - spawning' }
-GtCoder >> onPackageSelected: anAnnouncement [
-	self pushCoder: (GtPackageCoder forPackage: anAnnouncement package)
-]
-
 { #category : #'api - coder' }
 GtCoder >> pushCoder: aCoderOrCoders [
-	coderContent removeChildren.
-	coderContent addChild: aCoderOrCoders asElement
+	navigationModel selectCoder: aCoderOrCoders
 ]
 
 { #category : #'api - spawning' }
@@ -274,4 +253,10 @@ GtCoder >> spawnInSpaceFrom: aGtCoderToSpawnInSpaceEvent [
 	aGtCoderToSpawnInSpaceEvent consumed: true.
 	
 	
+]
+
+{ #category : #'api - spawning' }
+GtCoder >> updateCoder: anAnnouncement [
+	coderContent removeChildren.
+	coderContent addChild: anAnnouncement coder asElement
 ]
