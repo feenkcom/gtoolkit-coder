@@ -147,5 +147,5 @@ GtPackageDefinition >> replaceFrom: anEvent [
 	aCoderEvent := GtCoderToReplace new coder: aPackageCoder.
 	anEvent currentTarget fireEvent: aCoderEvent.
 	aCoderEvent isConsumed
-		ifFalse: [ anEvent currentTarget phlow spawnObject: aCoderEvent coder ]
+		ifFalse: [ anEvent currentTarget phlow spawnObject: aRealPackage withTool: (GtReadyCoderTool coder: aCoderEvent coder) ]
 ]

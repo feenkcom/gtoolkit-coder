@@ -8,10 +8,16 @@ Class {
 GtCoderTool >> asElementDo: aOneArgBlock context: aContext [
 	"Create a tool element and execute the block.
 	A context can be passed to build the tool element."
+
 	| anElement |
 	anElement := GtPagerWrapperElement new
-		tool: (GtClassCoder forClass: aContext object);
+		tool: (self newCoderFor: aContext object);
 		model: aContext object;
 		asElement.
-	aOneArgBlock cull: anElement.
+	aOneArgBlock cull: anElement
+]
+
+{ #category : #converting }
+GtCoderTool >> newCoderFor: aContext [
+	^ self subclassResponsibility
 ]

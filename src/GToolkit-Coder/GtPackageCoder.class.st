@@ -55,7 +55,7 @@ GtPackageCoder >> gtLiveFor: aView [
 		priority: 1;
 		stencil: [ self ];
 		actionButtonIcon: BrGlamorousVectorIcons inspect
-			action: [ :aButton | aButton phlow spawnObject: self package ]
+			action: [ :aButton | aButton phlow spawnObject: self package withTool: GtPackageCoderTool new ]
 ]
 
 { #category : #accessing }
