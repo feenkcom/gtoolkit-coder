@@ -2,9 +2,9 @@ Extension { #name : #Behavior }
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowse [
-	GtPager 
+	(GtPager 
 		openWrappedOn: (GtCoder forClass: self)
-		title: 'Coder'
+		title: 'Coder') maximized
 ]
 
 { #category : #'*GToolkit-Coder' }
