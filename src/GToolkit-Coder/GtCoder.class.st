@@ -37,24 +37,6 @@ GtCoder class >> new [
 ]
 
 { #category : #'private - ui' }
-GtCoder >> addClassSource [
-	"| aSuperClassName aPackageName |
-	(self isSelectedCoderClassCoder and: [ 
-		selectedCoder theClass isNotNil ])
-			ifTrue: [ 
-				aSuperClassName := selectedCoder theClass name asString.
-				aPackageName := selectedCoder theClass package name ] 
-			ifFalse: [ 
-				aSuperClassName := Object name asString.
-				aPackageName := ''
-				 ].
-	^ aSuperClassName, ' subclass: #NameOfSubclass
-	instanceVariableNames: ''''
-	classVariableNames: ''''
-	package: ''', aPackageName ,''''"
-]
-
-{ #category : #'private - ui' }
 GtCoder >> buildAddClassButton [
 	| look |
 	^ BrButton new
@@ -69,23 +51,45 @@ GtCoder >> buildAddClassButton [
 										- BrGlamorousButtonExteriorLook;
 								icon: BrGlamorousVectorIcons add;
 								yourself ]
-						content: [ | coder |
-							coder := GtClassDefinitionCoder new
-								expanded: true;
-								source: self addClassSource;
-								yourself.
-							coder announcer
-								when: GtCoderEvaluationAnnouncement
-								do: [ :e | 
+						content: [ | element |
+							element := GtCreateBehaviorElement new.
+							element
+								classBlock: [ :cls | 
 									look hide.
-									navigationModel selectClass: e value ].
-							coder asElement
-								hFitContent;
-								vFitContent;
-								margin: (BlInsets all: 10);
-								yourself ]);
+									navigationModel selectClass: cls ].
+							navigationModel
+								selectedPackageDo: [ :package | element forPackage: package ].
+							navigationModel
+								selectedTagDo: [ :tag | element forPackageTag: tag ].
+							navigationModel 
+								selectedClassDo: [ :cls | element forSuperclass: cls ].
+							element ]);
 		icon: BrGlamorousVectorIcons add;
 		yourself
+]
+
+{ #category : #'private - ui' }
+GtCoder >> buildClassLabel [
+	| aClassNameEditor aContainer |
+	aContainer := BrHorizontalPane new
+		hMatchParent;
+		alignCenterLeft;
+		vFitContent.
+	aClassNameEditor := BrEditableLabel new
+		look:
+			(BrGlamorousEditableLabelLook new
+				defaultBackground: Color transparent;
+				glamorousCodeFont;
+				bold;
+				fontSize: 20);
+		inputFilter: BrTextEditorAlphaNumericInputFilter new;
+		text: 'NameOfSubclass';
+		margin: (BlInsets all: 0).
+	(GtCompletionController
+		on: aClassNameEditor
+		strategy: GtClassesCompletionStrategy new) install.
+	aContainer addChild: aClassNameEditor.
+	^ aContainer
 ]
 
 { #category : #'private - ui' }
@@ -190,7 +194,7 @@ GtCoder >> buildToolbar [
 			c ignored vertical alignTop ];
 		addItem: self buildSpotterButton;
 		addItem: self buildHierarchyButton;
-		"addItem: self buildAddClassButton;"
+		addItem: self buildAddClassButton;
 		yourself
 ]
 
