@@ -9,10 +9,10 @@ Behavior >> gtBrowse [
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowseFrom: anElement [
-	GtPager 
+	(GtPager 
 		openWrappedOn: (GtCoder forClass: self) 
 		title: 'Coder' 
-		from: anElement
+		from: anElement) maximized
 ]
 
 { #category : #'*GToolkit-Coder' }

@@ -2,10 +2,10 @@ Extension { #name : #RPackage }
 
 { #category : #'*GToolkit-Coder' }
 RPackage >> gtBrowseFrom: anElement [
-	GtPager 
+	(GtPager 
 		openWrappedOn: (GtCoder forPackage: self) 
 		title: 'Coder' 
-		from: anElement
+		from: anElement) maximized
 ]
 
 { #category : #'*GToolkit-Coder' }
