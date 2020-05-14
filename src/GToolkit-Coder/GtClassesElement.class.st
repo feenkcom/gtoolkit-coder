@@ -12,14 +12,17 @@ GtClassesElement >> buildContainer [
 	| element |
 	self removeChildren.
 	element := BrSimpleList new.
-	element stencil: [ :each | 
-		each asCardElement
-			constraintsDo: [ :c | 
-				c horizontal matchParent.
-				c vertical fitContent ];
-			yourself ].
-	element display: (coder coders asSortedCollection: [ :a :b | 
-			 a theClass name < b theClass name ]).
+	element
+		stencil: [ :each | 
+			each asCardElement
+				constraintsDo: [ :c | 
+					c horizontal matchParent.
+					c vertical fitContent ];
+				yourself ].
+	element
+		items:
+			(coder coders
+				asSortedCollection: [ :a :b | a theClass name < b theClass name ]).
 	self addChild: element
 ]
 
