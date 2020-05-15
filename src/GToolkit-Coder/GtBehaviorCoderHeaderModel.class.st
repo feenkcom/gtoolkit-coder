@@ -38,6 +38,11 @@ GtBehaviorCoderHeaderModel >> definition [
 	^ definition
 ]
 
+{ #category : #accessing }
+GtBehaviorCoderHeaderModel >> definition: aCodeDefinition [
+	definition := aCodeDefinition
+]
+
 { #category : #initialization }
 GtBehaviorCoderHeaderModel >> definitionFrom: aBehavior [
 	^ GtBehaviorDefinition fromBehavior: aBehavior

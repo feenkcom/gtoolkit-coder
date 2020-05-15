@@ -134,7 +134,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 			satisfies: [ :theScripter | theScripter events reversed 
 				detectEventOfClass: GtPhlowObjectToSpawn
 				ifFound: [ :theEvent |
-					theEvent object = GtMethodCoderByScripterExamples and: [ theEvent tool class = GtCoderTool ] ]
+					theEvent object = GtMethodCoderByScripterExamples and: [ theEvent tool isKindOf: GtCoderTool ] ]
 				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
 			onScripter.
 		].

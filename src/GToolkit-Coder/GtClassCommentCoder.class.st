@@ -25,11 +25,11 @@ GtClassCommentCoder >> breadcrumbNamedActions [
 			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
 			aClass := class.
 			aStream
-				nextPut: aPackageName -> [ :aButton | aButton phlow spawnObject: aPackage ];
+				nextPut: aPackageName -> [ :aButton | aButton phlow spawnObject: aPackage withTool: GtPackageCoderTool new ];
 				nextPut:
 					aClass name
 						->
-							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) ] ]
+							[ :aButton | aButton phlow spawnObject: (GtClassCoder forClass: aClass) withTool: GtClassCoderTool new ] ]
 ]
 
 { #category : #accessing }

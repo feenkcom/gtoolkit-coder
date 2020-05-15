@@ -37,24 +37,6 @@ GtCoder class >> new [
 ]
 
 { #category : #'private - ui' }
-GtCoder >> addClassSource [
-	"| aSuperClassName aPackageName |
-	(self isSelectedCoderClassCoder and: [ 
-		selectedCoder theClass isNotNil ])
-			ifTrue: [ 
-				aSuperClassName := selectedCoder theClass name asString.
-				aPackageName := selectedCoder theClass package name ] 
-			ifFalse: [ 
-				aSuperClassName := Object name asString.
-				aPackageName := ''
-				 ].
-	^ aSuperClassName, ' subclass: #NameOfSubclass
-	instanceVariableNames: ''''
-	classVariableNames: ''''
-	package: ''', aPackageName ,''''"
-]
-
-{ #category : #'private - ui' }
 GtCoder >> buildAddClassButton [
 	| look |
 	^ BrButton new
@@ -69,23 +51,45 @@ GtCoder >> buildAddClassButton [
 										- BrGlamorousButtonExteriorLook;
 								icon: BrGlamorousVectorIcons add;
 								yourself ]
-						content: [ | coder |
-							coder := GtClassDefinitionCoder new
-								expanded: true;
-								source: self addClassSource;
-								yourself.
-							coder announcer
-								when: GtCoderEvaluationAnnouncement
-								do: [ :e | 
+						content: [ | element |
+							element := GtCreateBehaviorElement new.
+							element
+								classBlock: [ :cls | 
 									look hide.
-									navigationModel selectClass: e value ].
-							coder asElement
-								hFitContent;
-								vFitContent;
-								margin: (BlInsets all: 10);
-								yourself ]);
+									navigationModel selectClass: cls ].
+							navigationModel
+								selectedPackageDo: [ :package | element forPackage: package ].
+							navigationModel
+								selectedTagDo: [ :tag | element forPackageTag: tag ].
+							navigationModel 
+								selectedClassDo: [ :cls | element forSuperclass: cls ].
+							element ]);
 		icon: BrGlamorousVectorIcons add;
 		yourself
+]
+
+{ #category : #'private - ui' }
+GtCoder >> buildClassLabel [
+	| aClassNameEditor aContainer |
+	aContainer := BrHorizontalPane new
+		hMatchParent;
+		alignCenterLeft;
+		vFitContent.
+	aClassNameEditor := BrEditableLabel new
+		look:
+			(BrGlamorousEditableLabelLook new
+				defaultBackground: Color transparent;
+				glamorousCodeFont;
+				bold;
+				fontSize: 20);
+		inputFilter: BrTextEditorAlphaNumericInputFilter new;
+		text: 'NameOfSubclass';
+		margin: (BlInsets all: 0).
+	(GtCompletionController
+		on: aClassNameEditor
+		strategy: GtClassesCompletionStrategy new) install.
+	aContainer addChild: aClassNameEditor.
+	^ aContainer
 ]
 
 { #category : #'private - ui' }
@@ -190,7 +194,7 @@ GtCoder >> buildToolbar [
 			c ignored vertical alignTop ];
 		addItem: self buildSpotterButton;
 		addItem: self buildHierarchyButton;
-		"addItem: self buildAddClassButton;"
+		addItem: self buildAddClassButton;
 		yourself
 ]
 
@@ -217,9 +221,7 @@ GtCoder >> initialize [
 			c vertical matchParent ].
 
 	navigationModel := GtCoderNavigationPackagesTagsClassesModel fromPackages: RPackageOrganizer default packages.
-	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
-	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
-	navigationModel when: GtCoderNavigationMethodSelected send: #onMethodSelected: to: self.
+	navigationModel when: GtCoderNavigationAnnouncement send: #updateCoder: to: self.
 
 	coderContent := BlElement new
 		layout: BlFrameLayout new;
@@ -231,28 +233,9 @@ GtCoder >> initialize [
 	self addChild: self buildToolbar
 ]
 
-{ #category : #'api - spawning' }
-GtCoder >> onClassSelected: anAnnouncement [
-	self pushCoder: (GtClassCoder forClass: anAnnouncement theClass)
-]
-
-{ #category : #'api - spawning' }
-GtCoder >> onMethodSelected: anAnnouncement [
-	| coder |
-	coder := GtClassCoder forClass: anAnnouncement method methodClass.
-	self pushCoder: coder.
-	coder withSelectedMethod: anAnnouncement method
-]
-
-{ #category : #'api - spawning' }
-GtCoder >> onPackageSelected: anAnnouncement [
-	self pushCoder: (GtPackageCoder forPackage: anAnnouncement package)
-]
-
 { #category : #'api - coder' }
 GtCoder >> pushCoder: aCoderOrCoders [
-	coderContent removeChildren.
-	coderContent addChild: aCoderOrCoders asElement
+	navigationModel selectCoder: aCoderOrCoders
 ]
 
 { #category : #'api - spawning' }
@@ -266,7 +249,7 @@ GtCoder >> replaceFrom: aGtCoderToReplaceEvent [
 GtCoder >> spawnFrom: aGtCoderToSpawnEvent [
 	aGtCoderToSpawnEvent consumed: true.
 	
-	self phlow spawnObject: (self class forCoder: aGtCoderToSpawnEvent coder)
+	self phlow spawnTool: (GtReadyCoderTool coder: (self class forCoder: aGtCoderToSpawnEvent coder))
 ]
 
 { #category : #'api - spawning' }
@@ -274,4 +257,10 @@ GtCoder >> spawnInSpaceFrom: aGtCoderToSpawnInSpaceEvent [
 	aGtCoderToSpawnInSpaceEvent consumed: true.
 	
 	
+]
+
+{ #category : #'api - spawning' }
+GtCoder >> updateCoder: anAnnouncement [
+	coderContent removeChildren.
+	coderContent addChild: anAnnouncement coder asElement
 ]

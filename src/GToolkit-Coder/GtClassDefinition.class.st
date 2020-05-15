@@ -80,6 +80,11 @@ GtClassDefinition >> classVariables [
 ]
 
 { #category : #'api - accepting' }
+GtClassDefinition >> createClassChange [
+	^ RBAddClassWithSlotsChange definition: self asDefinitionString
+]
+
+{ #category : #'api - accepting' }
 GtClassDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aClass [
 	^ aGtCodeDefinitionDiffrence asClassRefactorings: aClass
 ]

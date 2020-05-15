@@ -1,6 +1,8 @@
 Class {
 	#name : #GtPackagesCoder,
 	#superclass : #GtCodersModel,
+	#traits : 'TGtCoderTrait',
+	#classTraits : 'TGtCoderTrait classTrait',
 	#category : #'GToolkit-Coder-Coders'
 }
 

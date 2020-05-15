@@ -35,7 +35,7 @@ GtClassSuperclassDefinition >> browseFrom: anEvent [
 			aCoderEvent := GtCoderToSpawn new coder: aClassCoder.
 			anEvent currentTarget fireEvent: aCoderEvent.
 			aCoderEvent isConsumed
-				ifFalse: [ anEvent currentTarget phlow spawnObject: aCoderEvent coder ] ]
+				ifFalse: [ anEvent currentTarget phlow spawnObject: aClass withTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
 ]
 
 { #category : #'api - superclass' }
@@ -160,7 +160,7 @@ GtClassSuperclassDefinition >> replaceFrom: anEvent [
 			aCoderEvent := GtCoderToReplace new coder: aClassCoder.
 			anEvent currentTarget fireEvent: aCoderEvent.
 			aCoderEvent isConsumed
-				ifFalse: [ anEvent currentTarget phlow spawnObject: aCoderEvent coder ] ]
+				ifFalse: [ anEvent currentTarget phlow spawnObject: aClass withTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
 ]
 
 { #category : #'gt - editors' }

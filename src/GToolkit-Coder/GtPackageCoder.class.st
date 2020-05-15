@@ -1,6 +1,8 @@
 Class {
 	#name : #GtPackageCoder,
 	#superclass : #Announcer,
+	#traits : 'TGtCoderTrait',
+	#classTraits : 'TGtCoderTrait classTrait',
 	#instVars : [
 		'package',
 		'packageTagCoders',
@@ -53,12 +55,17 @@ GtPackageCoder >> gtLiveFor: aView [
 		priority: 1;
 		stencil: [ self ];
 		actionButtonIcon: BrGlamorousVectorIcons inspect
-			action: [ :aButton | aButton phlow spawnObject: self package ]
+			action: [ :aButton | aButton phlow spawnObject: self package withTool: GtPackageCoderTool new ]
 ]
 
 { #category : #accessing }
 GtPackageCoder >> icon [
 	^ BrGlamorousIcons packageicon asElement
+]
+
+{ #category : #testing }
+GtPackageCoder >> isForPackage [
+	^ true
 ]
 
 { #category : #accessing }
@@ -76,6 +83,13 @@ GtPackageCoder >> package: aRPackage [
 	package := aRPackage.
 	classesCoder notNil
 		ifTrue: [ classesCoder forPackage: aRPackage ]
+]
+
+{ #category : #accessing }
+GtPackageCoder >> packageTagCoderFor: aPackageTag [
+	^ self packageTagCoders
+		detect: [ :each | each packageTag = aPackageTag ]
+		ifNone: [  ]
 ]
 
 { #category : #accessing }
@@ -101,9 +115,4 @@ GtPackageCoder >> packageTagForClass: aClass [
 { #category : #accessing }
 GtPackageCoder >> packageTreeCoders [
 	^ self coders
-]
-
-{ #category : #'api - navigation' }
-GtPackageCoder >> updateNavigation: aGtCoderNavigationPackagesTagsClassesModel [
-	aGtCoderNavigationPackagesTagsClassesModel selectPackage: package
 ]

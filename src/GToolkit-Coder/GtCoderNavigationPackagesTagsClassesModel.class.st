@@ -6,9 +6,7 @@ Class {
 	#instVars : [
 		'announcer',
 		'packages',
-		'selectedPackage',
-		'selectedTag',
-		'selectedClass'
+		'coder'
 	],
 	#category : #'GToolkit-Coder-Navigation - Model'
 }
@@ -38,29 +36,27 @@ GtCoderNavigationPackagesTagsClassesModel >> classesToShow [
 { #category : #testing }
 GtCoderNavigationPackagesTagsClassesModel >> hasSelectedClass [
 	<return: #Boolean>
-
-	^ selectedClass isNotNil
+	^ self selectedClass notNil
 ]
 
 { #category : #testing }
 GtCoderNavigationPackagesTagsClassesModel >> hasSelectedPackage [
 	<return: #Boolean>
-
-	^ selectedPackage isNotNil
+	^ self selectedPackage notNil
 ]
 
 { #category : #testing }
 GtCoderNavigationPackagesTagsClassesModel >> hasSelectedTag [
 	<return: #Boolean>
-
-	^ selectedTag isNotNil
+	^ self selectedTag notNil
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesModel >> initialize [
 	super initialize.
 	
-	packages := #()	
+	packages := #().
+	coder := GtPackagesCoder new
 ]
 
 { #category : #initialization }
@@ -72,28 +68,42 @@ GtCoderNavigationPackagesTagsClassesModel >> initializeWithPackages: aCollection
 
 { #category : #'private - notifying' }
 GtCoderNavigationPackagesTagsClassesModel >> notifyClassSelected: aClass package: anRPackage tag: anRPackageTag [
-	self announcer announce: (GtCoderNavigationClassSelected new
-		package: anRPackage;
-		tag: anRPackageTag;
-		theClass: aClass)
+	self
+		announce:
+			(GtCoderNavigationClassSelected new
+				coder: coder;
+				package: anRPackage;
+				tag: anRPackageTag;
+				theClass: aClass)
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> notifyCoderSelected [
+	self announce: (GtCoderNavigationPackagesSelected new coder: coder)
 ]
 
 { #category : #'private - notifying' }
 GtCoderNavigationPackagesTagsClassesModel >> notifyMethodSelected: aMethod [
-	self announcer
-		announce: (GtCoderNavigationMethodSelected new method: aMethod)
+	coder withSelectedMethod: aMethod
 ]
 
 { #category : #'private - notifying' }
 GtCoderNavigationPackagesTagsClassesModel >> notifyPackageSelected: anRPackage [
-	self announcer announce: (GtCoderNavigationPackageSelected new package: anRPackage)
+	self
+		announce:
+			(GtCoderNavigationPackageSelected new
+				coder: coder;
+				package: anRPackage)
 ]
 
 { #category : #'private - notifying' }
 GtCoderNavigationPackagesTagsClassesModel >> notifyTagSelected: anRPackageTag package: anRPackage [
-	self announcer announce: (GtCoderNavigationTagSelected new
-		package: anRPackage;
-		tag: anRPackageTag)
+	self
+		announce:
+			(GtCoderNavigationTagSelected new
+				coder: coder;
+				package: anRPackage;
+				tag: anRPackageTag)
 ]
 
 { #category : #'api - accessing' }
@@ -105,24 +115,44 @@ GtCoderNavigationPackagesTagsClassesModel >> packagesToShow [
 
 { #category : #'api - selection' }
 GtCoderNavigationPackagesTagsClassesModel >> selectClass: aClass [
-	| aClassPackage |
-	
-	selectedClass = aClass
-		ifTrue: [ ^ self ].
-	
-	aClassPackage := aClass package.
-	
-	(packages includes: aClassPackage)
+	(packages includes: aClass package)
 		ifFalse: [ ^ self ].
+	(coder isForClass and: [ coder theClass = aClass ])
+		ifFalse: [ coder := GtClassCoder forClass: aClass.
+			self
+				notifyClassSelected: aClass
+				package: aClass package
+				tag: (aClass package classTagForClass: aClass) ]
+]
 
-	selectedClass := aClass.
-	
-	self notifyClassSelected: selectedClass package: selectedPackage tag: selectedTag
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> selectCoder: aCoder [
+	aCoder isForPackage
+		ifTrue: [ (coder isForPackage and: [ aCoder package = coder package ])
+				ifTrue: [ ^ self ].
+			coder := aCoder.
+			^ self notifyPackageSelected: coder package ].
+	aCoder isForPackageTag
+		ifTrue:
+			[ (coder isForPackageTag and: [ aCoder packageTag = coder packageTag ])
+				ifTrue: [ ^ self ].
+			coder := aCoder.
+			^ self notifyTagSelected: coder packageTag package: coder package ].
+	aCoder isForClass
+		ifTrue: [ (coder isForClass and: [ aCoder theClass = coder theClass ])
+				ifTrue: [ ^ self ].
+			coder := aCoder.
+			^ self
+				notifyClassSelected: coder theClass
+				package: coder package
+				tag: coder packageTag ].
+	coder := aCoder.
+	self notifyCoderSelected
 ]
 
 { #category : #'api - selection' }
 GtCoderNavigationPackagesTagsClassesModel >> selectMethod: aMethod [
-	selectedClass := aMethod methodClass instanceSide.
+	self selectClass: aMethod methodClass instanceSide.
 	self notifyMethodSelected: aMethod
 ]
 
@@ -130,71 +160,56 @@ GtCoderNavigationPackagesTagsClassesModel >> selectMethod: aMethod [
 GtCoderNavigationPackagesTagsClassesModel >> selectPackage: anRPackage [
 	(packages includes: anRPackage)
 		ifFalse: [ ^ self ].
-		
-	selectedPackage := anRPackage.
-	selectedTag := nil.
-	
-	self notifyPackageSelected: selectedPackage
+	(coder isForPackage and: [ coder package = anRPackage ])
+		ifTrue: [ ^ self ].
+	(coder isForPackageTag and: [ coder package = anRPackage ])
+		ifTrue: [ coder := coder packageCoder ]
+		ifFalse: [ coder := GtPackageCoder forPackage: anRPackage ].
+	self notifyPackageSelected: anRPackage
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationPackagesTagsClassesModel >> selectTag: anRPackageTag [		
-	selectedTag = anRPackageTag
-		ifTrue: [ ^ self ].
-		
+GtCoderNavigationPackagesTagsClassesModel >> selectTag: anRPackageTag [
 	(packages includes: anRPackageTag package)
 		ifFalse: [ ^ self ].
-	
-	selectedPackage := anRPackageTag package.
-	selectedTag := anRPackageTag.
-	
-	self notifyTagSelected: selectedTag package: selectedPackage
+	(coder isForPackageTag and: [ coder packageTag = anRPackageTag ])
+		ifTrue: [ ^ self ].
+	coder := ((coder isForPackage
+		and: [ coder package = anRPackageTag package ])
+		ifTrue: [ coder packageTagCoderFor: anRPackageTag ])
+		ifNil: [ GtPackageTagCoder forPackageTag: anRPackageTag ].
+	self notifyTagSelected: anRPackageTag package: anRPackageTag package
 ]
 
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> selectedClass [
 	<return: #Class>
-	self
-		assert: [ self hasSelectedClass ]
-		description: [ 'A class must be selected' ].
-		
-	^ selectedClass
+	^ coder theClass
 ]
 
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> selectedClassDo: aBlock [
-	self hasSelectedClass
-		ifTrue: [ aBlock value: self selectedClass ]
+	self selectedClass ifNotNil: aBlock
 ]
 
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> selectedPackage [
 	<return: #RPackage>
-	self
-		assert: [ self hasSelectedPackage ]
-		description: [ 'A package must be selected' ].
-		
-	^ selectedPackage
+	^ coder package
 ]
 
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> selectedPackageDo: aBlock [
-	self hasSelectedPackage
-		ifTrue: [ aBlock value: self selectedPackage ]
+	self selectedPackage ifNotNil: aBlock
 ]
 
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> selectedTag [
 	<return: #RPackageTag>
-	self
-		assert: [ self hasSelectedTag ]
-		description: [ 'A tag must be selected' ].
-		
-	^ selectedTag
+	^ coder packageTag
 ]
 
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> selectedTagDo: aBlock [
-	self hasSelectedTag
-		ifTrue: [ aBlock value: self selectedTag ]
+	self selectedTag ifNotNil: aBlock
 ]

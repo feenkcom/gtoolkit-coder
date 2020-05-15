@@ -81,7 +81,3 @@ GtCodersModel >> updateCoders [
 				coders: self;
 				yourself)
 ]
-
-{ #category : #'api - navigation' }
-GtCodersModel >> updateNavigation: aGtCoderNavigationPackagesTagsClassesModel [
-]
