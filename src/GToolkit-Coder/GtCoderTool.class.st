@@ -5,9 +5,8 @@ Class {
 }
 
 { #category : #converting }
-GtCoderTool >> asElementDo: aOneArgBlock context: aContext [
-	"Create a tool element and execute the block.
-	A context can be passed to build the tool element."
+GtCoderTool >> asElementDo: aOneArgBlock [
+	"Create a tool element and execute the block."
 
 	aOneArgBlock cull: self newCoder asPagerPageElement
 ]

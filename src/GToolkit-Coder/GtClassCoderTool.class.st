@@ -23,6 +23,12 @@ GtClassCoderTool >> newCoderFor: aClass [
 ]
 
 { #category : #accessing }
+GtClassCoderTool >> object [
+	"compatibility method for ${GLMBlocObjectToSelect}$"
+	^ self observedClass
+]
+
+{ #category : #accessing }
 GtClassCoderTool >> observedClass [
 	^ observedClass
 ]

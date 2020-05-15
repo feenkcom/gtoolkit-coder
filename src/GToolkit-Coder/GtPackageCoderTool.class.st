@@ -18,6 +18,12 @@ GtPackageCoderTool >> newCoder [
 ]
 
 { #category : #accessing }
+GtPackageCoderTool >> object [
+	"compatibility method for ${GLMBlocObjectToSelect}$"
+	^ self package
+]
+
+{ #category : #accessing }
 GtPackageCoderTool >> package [
 	^ package
 ]
