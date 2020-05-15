@@ -3,15 +3,7 @@ Class {
 	#superclass : #BrExpander,
 	#instVars : [
 		'classCoder',
-		'expanderElement',
-		'headerModel',
-		'instVars',
-		'classVars',
-		'theSuperclass',
-		'thePackage',
-		'theTag',
-		'theClassName',
-		'traits'
+		'headerModel'
 	],
 	#category : #'GToolkit-Coder-Behavior - UI'
 }
@@ -162,13 +154,6 @@ GtBehaviorCoderHeaderElement >> initialize [
 GtBehaviorCoderHeaderElement >> initializeElements [
 	self header: [ self buildDefinitionReader ].
 	self content: [ self buildDefinitionEditor ]
-]
-
-{ #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> previewWidth [
-	^ self isAttachedToSceneGraph
-		ifTrue: [ (self topMostParent extent / 2.0) x ]
-		ifFalse: [ 500 ]
 ]
 
 { #category : #'private - ui' }

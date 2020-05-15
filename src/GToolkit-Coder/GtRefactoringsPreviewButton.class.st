@@ -37,9 +37,8 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 	
 	aContainer := BlElement new
 		layout: BlLinearLayout vertical;
-		when: GtPhlowObjectToSpawn do: [ :anEvent | self fireEvent: (GtPhlowObjectToSpawn new
-			object: anEvent object;
-			sourceElement: anEvent target) ];
+		when: GtPhlowObjectToSpawn do: [ :anEvent | 
+			anEvent target phlow spawnObject: anEvent object ];
 		constraintsDo: [ :c |
 			c horizontal exact: self previewWidth.
 			c vertical fitContentLimitedOffset: 20 ].

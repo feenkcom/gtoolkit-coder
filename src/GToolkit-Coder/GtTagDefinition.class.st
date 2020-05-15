@@ -47,7 +47,7 @@ GtTagDefinition >> browseFrom: anEvent [
 			aCoderEvent := GtCoderToSpawn new coder: aPackageTagCoder.
 			anEvent currentTarget fireEvent: aCoderEvent.
 			aCoderEvent isConsumed
-				ifFalse: [ anEvent currentTarget phlow spawnObject: aTag withTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
+				ifFalse: [ anEvent currentTarget phlow spawnTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
 ]
 
 { #category : #'api - accepting' }
@@ -161,7 +161,7 @@ GtTagDefinition >> replaceFrom: anEvent [
 			aCoderEvent := GtCoderToReplace new coder: aPackageTagCoder.
 			anEvent currentTarget fireEvent: aCoderEvent.
 			aCoderEvent isConsumed
-				ifFalse: [ anEvent currentTarget phlow spawnObject: aTag withTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
+				ifFalse: [ anEvent currentTarget phlow spawnTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
 ]
 
 { #category : #'gt - editors' }

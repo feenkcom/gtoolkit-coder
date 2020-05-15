@@ -261,9 +261,9 @@ GtMethodCoder >> breadcrumbNamedActions [
 			aClass := self classOrMetaClass.
 			aStream
 				nextPut: aPackageName -> [ :aButton | 
-					aButton phlow spawnObject: aPackage withTool: GtPackageCoderTool new ];
+					aButton phlow spawnTool: (GtPackageCoderTool package: aPackage) ];
 				nextPut: aClass name -> [ :aButton | 
-					aButton phlow spawnObject: aClass withTool: GtClassCoderTool new ] ]
+					aButton phlow spawnTool: (GtClassCoderTool observedClass: aClass) ] ]
 ]
 
 { #category : #private }

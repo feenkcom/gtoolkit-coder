@@ -13,14 +13,12 @@ GtReadyCoderTool class >> coder: aCoder [
 ]
 
 { #category : #converting }
-GtReadyCoderTool >> asElementDo: aOneArgBlock context: aContext [
-	"Create a tool element and execute the block.
-	A context can be passed to build the tool element."
+GtReadyCoderTool >> asElementDo: aOneArgBlock [
+	"Create a tool element and execute the block."
 
 	| anElement |
 	anElement := GtPagerWrapperElement new
 		tool: self coder;
-		model: aContext object;
 		asElement.
 	aOneArgBlock cull: anElement
 ]
