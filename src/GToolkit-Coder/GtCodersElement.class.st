@@ -51,6 +51,8 @@ GtCodersElement >> isVerticallyResizeableElement [
 
 { #category : #ui }
 GtCodersElement >> listElement [
+	listElement
+		ifNotNil: [ ^ listElement ].
 	listElement := BrSimpleList new
 		matchParent;
 		stencil: [ :eachCoder | eachCoder asElement ];
