@@ -47,7 +47,7 @@ GtBehaviorCoderElement >> buildClassLabel [
 			defaultBackground: Color transparent;
 			glamorousCodeFont;
 			bold;
-			fontSize: 20);
+			fontSize: 18);
 		inputFilter: BrTextEditorAlphaNumericInputFilter new;
 		text: (classCoder name);
 		margin: (BlInsets all: 0).
