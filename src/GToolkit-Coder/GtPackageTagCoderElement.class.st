@@ -25,7 +25,7 @@ GtPackageTagCoderElement >> buildPackageTagLabel [
 	^ BrLabel new
 		  margin: (BlInsets left: 10);
 		  look:
-			  (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 20);
+			  (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 18);
 		  text: packageTagCoder name
 ]
 

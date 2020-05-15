@@ -45,7 +45,7 @@ GtPackagesCoderElement >> buildPackagesElement [
 		addChild:
 			(BrLabel new
 				margin: (BlInsets left: 10);
-				look: (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 20);
+				look: (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 18);
 				text: packagesCoder name).
 	element
 		addChild:
