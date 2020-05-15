@@ -391,7 +391,7 @@ GtSourceCoder >> expandedEditorElement [
 			(BrGlamorousWithContextMenuLook
 				content: [ self updateContextMenuAddOns.
 					BrCoderContextMenuContent new
-						display:
+						items:
 							(self contextMenuActions reject: [ :e | e title isNil ])
 								, (self mainActions reject: [ :e | e title isNil ]);
 						yourself ]);
