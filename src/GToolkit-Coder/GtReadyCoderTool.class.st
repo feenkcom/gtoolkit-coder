@@ -20,7 +20,6 @@ GtReadyCoderTool >> asElementDo: aOneArgBlock context: aContext [
 	| anElement |
 	anElement := GtPagerWrapperElement new
 		tool: self coder;
-		model: aContext object;
 		asElement.
 	aOneArgBlock cull: anElement
 ]
