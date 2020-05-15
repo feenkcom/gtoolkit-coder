@@ -51,24 +51,12 @@ GtCodersElement >> isVerticallyResizeableElement [
 
 { #category : #ui }
 GtCodersElement >> listElement [
-	| dataSource |
-	dataSource := GtCodersDataSource new
-		coders: coders;
-		when: BlInfiniteDataSourceChanged
-			do: [ listElement ifNotNil: #removeFromParent.
-			self addChild: self listElement as: #codersList ];
-		yourself.
-	listElement := BlInfiniteElement new
-		in: [ :e | 
-			e
-				layout:
-					(BlInfiniteLinearLayout vertical
-						infiniteElement: e;
-						yourself) ];
-		dataSource: dataSource;
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ];
+	listElement
+		ifNotNil: [ ^ listElement ].
+	listElement := BrSimpleList new
+		matchParent;
+		stencil: [ :eachCoder | eachCoder asElement ];
+		items: coders coders;
 		yourself.
 	^ listElement
 ]
@@ -79,10 +67,10 @@ GtCodersElement >> scrollToEvent: anEvent [
 	coder := anEvent sourceCoder.
 	index := coders coders identityIndexOf: coder.
 	index > 0
-		ifTrue: [ (self childNamed: #codersList) scrollToPosition: index ]
+		ifTrue: [ (self childNamed: #codersList) look listElement scrollToPosition: index ]
 ]
 
 { #category : #private }
 GtCodersElement >> updateList [
-	listElement dataSource updateCoders
+	listElement items: coders coders
 ]
