@@ -16,7 +16,7 @@ GtCreateBehaviorElement >> buildClassLabel [
 				defaultBackground: Color transparent;
 				glamorousCodeFont;
 				bold;
-				fontSize: 20);
+				fontSize: 18);
 		yourself
 ]
 
@@ -28,7 +28,8 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 		layout: (BlGridLayout new columnCount: 2);
 		constraintsDo: [ :c |
 			c horizontal matchParent.
-			c vertical fitContent ].
+			c vertical fitContent ];
+		padding: (BlInsets all: 10).
 		
 	theProperties addShortcut: (BlShortcut new
 		combination: BlKeyCombination arrowUp;

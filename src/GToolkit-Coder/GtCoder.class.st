@@ -83,7 +83,7 @@ GtCoder >> buildClassLabel [
 				defaultBackground: Color transparent;
 				glamorousCodeFont;
 				bold;
-				fontSize: 20);
+				fontSize: 18);
 		inputFilter: BrTextEditorAlphaNumericInputFilter new;
 		text: 'NameOfSubclass';
 		margin: (BlInsets all: 0).
