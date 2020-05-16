@@ -70,11 +70,7 @@ GtSourceCoder >> browseClass: editorElement [
 	behavior := Smalltalk globals at: varName ifAbsent: [ ^ self ].
 	behavior isBehavior
 		ifFalse: [ ^ self ].
-	editorElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: (GtClassCoder forClass: behavior);
-				sourceElement: editorElement)
+	editorElement phlow spawnTool: (GtClassCoderTool observedClass: behavior).
 ]
 
 { #category : #actions }
@@ -88,11 +84,7 @@ GtSourceCoder >> browseImplementors: editorElement [
 			[ :currentSelection | self extractSelectorFromString: currentSelection ].
 	symbol isNil
 		ifTrue: [ ^ self ].
-	editorElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: (GtSearchImplementorsFilter selector: symbol);
-				sourceElement: editorElement)
+	editorElement phlow spawnObject: (GtSearchImplementorsFilter selector: symbol)
 ]
 
 { #category : #actions }
@@ -106,11 +98,7 @@ GtSourceCoder >> browseReferences: editorElement [
 			[ :currentSelection | self extractReferencesFilterFromString: currentSelection ].
 	filter isNil
 		ifTrue: [ ^ self ].
-	editorElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: filter;
-				sourceElement: editorElement)
+	editorElement phlow spawnObject: filter
 ]
 
 { #category : #private }
@@ -391,7 +379,7 @@ GtSourceCoder >> expandedEditorElement [
 			(BrGlamorousWithContextMenuLook
 				content: [ self updateContextMenuAddOns.
 					BrCoderContextMenuContent new
-						display:
+						items:
 							(self contextMenuActions reject: [ :e | e title isNil ])
 								, (self mainActions reject: [ :e | e title isNil ]);
 						yourself ]);

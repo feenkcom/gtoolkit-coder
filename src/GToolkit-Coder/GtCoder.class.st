@@ -4,6 +4,8 @@ I am the entrance point into the coder as a tool
 Class {
 	#name : #GtCoder,
 	#superclass : #BlElement,
+	#traits : 'TGtPagerPageInstantiator',
+	#classTraits : 'TGtPagerPageInstantiator classTrait',
 	#instVars : [
 		'coderContent',
 		'navigationModel'
