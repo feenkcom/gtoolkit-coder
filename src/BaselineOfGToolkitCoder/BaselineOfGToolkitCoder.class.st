@@ -40,7 +40,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			baseline: 'GToolkitUtility' with: [
 				spec repository: 'github://feenkcom/gtoolkit-utility:v0.7.27/src' ];
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.6.2/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.6.3/src' ];
 			baseline: 'GToolkitPhlow' with: [
 				spec repository: 'github://feenkcom/gtoolkit-phlow:v0.7.490/src' ].
 		spec 
