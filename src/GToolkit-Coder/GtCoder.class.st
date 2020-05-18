@@ -42,6 +42,11 @@ GtCoder class >> new [
 	^ self forCoder: GtPackagesCoder new
 ]
 
+{ #category : #converting }
+GtCoder >> asMainCoder [
+	^ self
+]
+
 { #category : #'private - ui' }
 GtCoder >> buildAddButton [
 	| look |
@@ -293,6 +298,12 @@ GtCoder >> initialize [
 
 	self addChild: coderContent.
 	self addChild: self buildToolbar
+]
+
+{ #category : #'instance creation' }
+GtCoder >> newEmbellisherExtension [
+	^ GtCoderEmbeddedPlaygroundExtension new
+		navigationModel: navigationModel
 ]
 
 { #category : #'api - coder' }
