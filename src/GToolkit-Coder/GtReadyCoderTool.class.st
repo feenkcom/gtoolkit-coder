@@ -16,11 +16,7 @@ GtReadyCoderTool class >> coder: aCoder [
 GtReadyCoderTool >> asElementDo: aOneArgBlock [
 	"Create a tool element and execute the block."
 
-	| anElement |
-	anElement := GtPagerWrapperElement new
-		tool: self coder;
-		asElement.
-	aOneArgBlock cull: anElement
+	aOneArgBlock cull: self coder asMainCoder asPagerPageElement
 ]
 
 { #category : #accessing }
