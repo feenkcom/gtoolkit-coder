@@ -30,6 +30,11 @@ RBPackageChange >> executeNotifying: aBlock [
 ]
 
 { #category : #accessing }
+RBPackageChange >> package [
+	^ RPackage organizer packageNamed: packageName ifAbsent: [  ]
+]
+
+{ #category : #accessing }
 RBPackageChange >> packageName [
 	^ packageName
 ]
@@ -46,4 +51,9 @@ RBPackageChange >> primitiveExecute [
 
 { #category : #accessing }
 RBPackageChange >> renameChangesForClass: oldClassName to: newClassName [
+]
+
+{ #category : #accessing }
+RBPackageChange >> tag [
+	^ nil
 ]
