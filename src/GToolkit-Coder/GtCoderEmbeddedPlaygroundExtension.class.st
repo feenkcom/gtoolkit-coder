@@ -14,7 +14,7 @@ GtCoderEmbeddedPlaygroundExtension >> fillToolWidgetIn: aCreationContext [
 	| aStencil |
 	aStencil := GEmbeddedPlaygroundStencil new
 		receiver: self receiver;
-		asChildIn: aCreationContext wrapperElement.
+		asChildIn: aCreationContext contentElement.
 	self playPage: aStencil playPage.
 	self hookToCoderSelections: nil.
 ]
