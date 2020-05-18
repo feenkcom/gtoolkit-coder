@@ -50,6 +50,13 @@ GtCategoryDefinition >> categoryReader [
 ]
 
 { #category : #'api - accepting' }
+GtCategoryDefinition >> createPackageChange [
+	^ tag name notEmpty
+		ifTrue: [ RBAddPackageTagChange packageName: package name tagName: tag name ]
+		ifFalse: [ RBAddPackageChange packageName: package name ]
+]
+
+{ #category : #'api - accepting' }
 GtCategoryDefinition >> differenceWith: aCategoryDefinition [
 	| aDifference |
 	
