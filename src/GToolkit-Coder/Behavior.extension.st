@@ -7,7 +7,9 @@ Behavior >> gtBrowse [
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowseFrom: anElement [
-	^ (GtCoder forClass: self) openInPager
+	^ ((GtCoder forClass: self) 
+		openInPagerFrom: anElement)
+			maximized
 ]
 
 { #category : #'*GToolkit-Coder' }
