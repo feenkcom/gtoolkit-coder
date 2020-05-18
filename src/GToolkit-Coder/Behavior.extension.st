@@ -2,17 +2,12 @@ Extension { #name : #Behavior }
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowse [
-	(GtPager 
-		openWrappedOn: (GtCoder forClass: self)
-		title: 'Coder') maximized
+	^ (GtCoder forClass: self) openInPager
 ]
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowseFrom: anElement [
-	(GtPager 
-		openWrappedOn: (GtCoder forClass: self) 
-		title: 'Coder' 
-		from: anElement) maximized
+	^ (GtCoder forClass: self) openInPager
 ]
 
 { #category : #'*GToolkit-Coder' }

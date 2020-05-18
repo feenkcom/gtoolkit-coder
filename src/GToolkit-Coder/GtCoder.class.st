@@ -250,6 +250,12 @@ GtCoder >> newEmbellisherExtension [
 		navigationModel: navigationModel
 ]
 
+{ #category : #opening }
+GtCoder >> pagerWindowTitle [
+	<return: #String>
+	^ 'Coder'
+]
+
 { #category : #'api - coder' }
 GtCoder >> pushCoder: aCoderOrCoders [
 	navigationModel selectCoder: aCoderOrCoders
