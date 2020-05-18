@@ -2,7 +2,7 @@ Extension { #name : #Behavior }
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowse [
-	^ (GtCoder forClass: self) openInPager
+	^ (GtCoder forClass: self) openInPager maximized
 ]
 
 { #category : #'*GToolkit-Coder' }
