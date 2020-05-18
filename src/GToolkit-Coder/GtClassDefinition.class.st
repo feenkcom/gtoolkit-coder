@@ -80,7 +80,7 @@ GtClassDefinition >> classVariables [
 ]
 
 { #category : #'api - accepting' }
-GtClassDefinition >> createClassChange [
+GtClassDefinition >> createBehaviorChange [
 	^ RBAddClassWithSlotsChange definition: self asDefinitionString
 ]
 

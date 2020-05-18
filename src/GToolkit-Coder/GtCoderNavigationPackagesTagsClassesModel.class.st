@@ -54,8 +54,6 @@ GtCoderNavigationPackagesTagsClassesModel >> hasSelectedTag [
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesModel >> initialize [
 	super initialize.
-	
-	packages := #().
 	coder := GtPackagesCoder new
 ]
 
@@ -109,13 +107,12 @@ GtCoderNavigationPackagesTagsClassesModel >> notifyTagSelected: anRPackageTag pa
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> packagesToShow [
 	<return: #Collection of: #RPackage>
-
-	^ packages
+	^ packages ifNil: [ RPackageOrganizer default packages ]
 ]
 
 { #category : #'api - selection' }
 GtCoderNavigationPackagesTagsClassesModel >> selectClass: aClass [
-	(packages includes: aClass package)
+	(self showPackage: aClass package)
 		ifFalse: [ ^ self ].
 	(coder isForClass and: [ coder theClass = aClass ])
 		ifFalse: [ coder := GtClassCoder forClass: aClass.
@@ -158,7 +155,7 @@ GtCoderNavigationPackagesTagsClassesModel >> selectMethod: aMethod [
 
 { #category : #'api - selection' }
 GtCoderNavigationPackagesTagsClassesModel >> selectPackage: anRPackage [
-	(packages includes: anRPackage)
+	(self showPackage: anRPackage)
 		ifFalse: [ ^ self ].
 	(coder isForPackage and: [ coder package = anRPackage ])
 		ifTrue: [ ^ self ].
@@ -169,8 +166,25 @@ GtCoderNavigationPackagesTagsClassesModel >> selectPackage: anRPackage [
 ]
 
 { #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> selectPackageTag: aRPackageTag [
+	| packageCoder |
+	(self showPackage: aRPackageTag package)
+		ifFalse: [ ^ self ].
+	(coder isForPackageTag
+		and: [ coder package = aRPackageTag package
+				and: [ coder packageTag = aRPackageTag ] ])
+		ifTrue: [ ^ self ].
+	packageCoder := ((coder isForPackage
+		and: [ coder package = aRPackageTag package ])
+		ifTrue: [ coder packageTagCoderFor: aRPackageTag ])
+		ifNil: [ GtPackageCoder forPackage: aRPackageTag package ].
+	coder := packageCoder packageTagCoderFor: aRPackageTag.
+	self notifyTagSelected: aRPackageTag package: aRPackageTag package
+]
+
+{ #category : #'api - selection' }
 GtCoderNavigationPackagesTagsClassesModel >> selectTag: anRPackageTag [
-	(packages includes: anRPackageTag package)
+	(self showPackage: anRPackageTag package)
 		ifFalse: [ ^ self ].
 	(coder isForPackageTag and: [ coder packageTag = anRPackageTag ])
 		ifTrue: [ ^ self ].
@@ -212,4 +226,9 @@ GtCoderNavigationPackagesTagsClassesModel >> selectedTag [
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> selectedTagDo: aBlock [
 	self selectedTag ifNotNil: aBlock
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> showPackage: anRPackage [
+	^ packages isNil or: [ packages includes: anRPackage ]
 ]

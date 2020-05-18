@@ -1,12 +1,16 @@
 Class {
 	#name : #GtCreateBehaviorElement,
-	#superclass : #BlElement,
+	#superclass : #GtCreateElement,
 	#instVars : [
-		'headerModel',
-		'classBlock'
+		'behaviorBlock'
 	],
 	#category : #'GToolkit-Coder-Behavior - UI'
 }
+
+{ #category : #accessing }
+GtCreateBehaviorElement >> behaviorBlock: aBlock [
+	behaviorBlock := aBlock
+]
 
 { #category : #'private - instance creation' }
 GtCreateBehaviorElement >> buildClassLabel [
@@ -69,48 +73,26 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 				beSmall;
 				look: BrGlamorousButtonWithIconLook new;
 				label: 'Save';
-				action: [ self compileClass ];
+				action: [ self compileBehavior ];
 				constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
 	^ theProperties
 ]
 
-{ #category : #'private - instance creation' }
-GtCreateBehaviorElement >> buildSectionLabel: aSectionName [
-	
-	^ BrLabel new
-		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
-		text: aSectionName, ':';
-		focusability: BlFocusability none;
-		margin: (BlInsets top: 5 right: 2);
-		constraintsDo: [ :c | c grid horizontal alignLeft ]
-]
-
-{ #category : #'private - ui' }
-GtCreateBehaviorElement >> buttonMargin [
-	^ BlInsets top: 3 left: 0 bottom: 3 right: 5
-]
-
-{ #category : #accessing }
-GtCreateBehaviorElement >> classBlock: aBlock [
-	classBlock := aBlock
-]
-
 { #category : #private }
-GtCreateBehaviorElement >> compileClass [
+GtCreateBehaviorElement >> compileBehavior [
 	| change |
-	change := headerModel definition createClassChange.
+	change := headerModel definition createBehaviorChange.
 	change execute.
-	classBlock notNil
-		ifTrue: [ classBlock cull: change definedClass ]
+	behaviorBlock notNil
+		ifTrue: [ behaviorBlock cull: change definedClass ]
 ]
 
-{ #category : #'private - ui' }
-GtCreateBehaviorElement >> editableLabelLook [
-	^ BrGlamorousEditableLabelLook new
-		glamorousCodeFont;
-		defaultForeground: Color black;
-		fontSize: 10
+{ #category : #initialization }
+GtCreateBehaviorElement >> forClassDefinition [
+	headerModel := GtBehaviorCoderHeaderModel new
+		definition: GtClassDefinition forNew.
+	self addChild: self buildDefinitionEditor
 ]
 
 { #category : #initialization }
@@ -129,15 +111,8 @@ GtCreateBehaviorElement >> forSuperclass: aClass [
 ]
 
 { #category : #initialization }
-GtCreateBehaviorElement >> initialize [
-	super initialize.
+GtCreateBehaviorElement >> forTraitDefinition [
 	headerModel := GtBehaviorCoderHeaderModel new
-		definition: GtClassDefinition forNew.
-	self layout: BlFlowLayout vertical.
-	self margin: (BlInsets all: 5).
-	self
-		constraintsDo: [ :c | 
-			c horizontal exact: 400.
-			c vertical fitContent ].
+		definition: GtTraitDefinition forNew.
 	self addChild: self buildDefinitionEditor
 ]

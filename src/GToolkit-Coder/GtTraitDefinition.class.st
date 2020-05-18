@@ -10,6 +10,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtTraitDefinition class >> forNew [
+	^ self new forNew
+]
+
+{ #category : #'instance creation' }
 GtTraitDefinition class >> fromTrait: aTrait [
 	^ self new fromTrait: aTrait
 ]
@@ -18,28 +23,29 @@ GtTraitDefinition class >> fromTrait: aTrait [
 GtTraitDefinition >> asDefinitionString [
 	<return: #String>
 	| aStream |
-
 	aStream := (String new: 800) writeStream.
-
-	aStream nextPutAll: 'ProtoObject subclass: ';
-			store: self name.
+	aStream
+		nextPutAll: 'Trait named: ';
+		store: self name.
 
 	"Traits"
-	(self traits isEmpty) ifFalse: [
-		aStream cr; tab; nextPutAll: 'uses: ';
-			nextPutAll: self traits asDefinitionString ].		
-	
+	aStream
+		cr;
+		tab;
+		nextPutAll: 'uses: ';
+		nextPutAll: self traits asDefinitionString.
+
 	"Slots"
-	aStream cr; tab; nextPutAll: 'slots: ';
-			nextPutAll: self slots asDefinitionString.
-
-	aStream cr; tab; nextPutAll: 'package: ';
-			store: self category asDefinitionString.
-
-	aStream nextPutAll: '.'; cr.
-	aStream nextPutAll: self name.
-	aStream space; nextPutAll: 'superclass: nil'.
-
+	aStream
+		cr;
+		tab;
+		nextPutAll: 'slots: ';
+		nextPutAll: self slots asDefinitionString.
+	aStream
+		cr;
+		tab;
+		nextPutAll: 'package: ';
+		store: self category asDefinitionString.
 	^ aStream contents
 ]
 
@@ -55,6 +61,11 @@ GtTraitDefinition >> category [
 	<return: #GtCategoryDefinition>
 
 	^ category
+]
+
+{ #category : #'api - accepting' }
+GtTraitDefinition >> createBehaviorChange [
+	^ RBAddTraitChange definition: self asDefinitionString
 ]
 
 { #category : #'api - accepting' }
@@ -96,6 +107,15 @@ GtTraitDefinition >> editors [
 		self traits traitsEditor.
 		self slots slotsEditor.
 	}
+]
+
+{ #category : #initialization }
+GtTraitDefinition >> forNew [
+	name := #TNameOfTrait.
+	originalName := name.
+	category := GtCategoryDefinition empty parent: self.
+	slots := GtSlotsDefinition empty parent: self.
+	traits := GtTraitsDefinition empty parent: self
 ]
 
 { #category : #initialization }

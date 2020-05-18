@@ -48,10 +48,10 @@ GtCoder >> asMainCoder [
 ]
 
 { #category : #'private - ui' }
-GtCoder >> buildAddClassButton [
+GtCoder >> buildAddButton [
 	| look |
 	^ BrButton new
-		label: 'Add class';
+		label: 'Add class or package';
 		look:
 			BrGlamorousButtonWithIconLook
 				+
@@ -63,20 +63,76 @@ GtCoder >> buildAddClassButton [
 								icon: BrGlamorousVectorIcons add;
 								yourself ]
 						content: [ | element |
-							element := GtCreateBehaviorElement new.
+							element := BlElement new.
 							element
-								classBlock: [ :cls | 
-									look hide.
-									navigationModel selectClass: cls ].
-							navigationModel
-								selectedPackageDo: [ :package | element forPackage: package ].
-							navigationModel
-								selectedTagDo: [ :tag | element forPackageTag: tag ].
-							navigationModel 
-								selectedClassDo: [ :cls | element forSuperclass: cls ].
+								constraintsDo: [ :c | 
+									c horizontal exact: 400.
+									c vertical exact: 300 ].
+							element addChild: (self buildAddInterface: look).
 							element ]);
 		icon: BrGlamorousVectorIcons add;
 		yourself
+]
+
+{ #category : #'private - ui' }
+GtCoder >> buildAddInterface: look [
+	| contentTabs tab |
+	contentTabs := BrTabGroup new.
+	contentTabs look: BrGlamorousTabGroupLook new.
+	contentTabs
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	tab := BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Class';
+		stencil: [ | element |
+			element := GtCreateBehaviorElement new.
+			element
+				behaviorBlock: [ :cls | 
+					look hide.
+					navigationModel selectClass: cls ].
+			element forClassDefinition.
+			navigationModel
+				selectedPackageDo: [ :package | element forPackage: package ].
+			navigationModel
+				selectedTagDo: [ :tag | element forPackageTag: tag ].
+			navigationModel
+				selectedClassDo: [ :cls | element forSuperclass: cls ].
+			element ].
+	contentTabs addTab: tab.
+	tab := BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Trait';
+		stencil: [ | element |
+			element := GtCreateBehaviorElement new.
+			element
+				behaviorBlock: [ :cls | 
+					look hide.
+					navigationModel selectClass: cls ].
+			element forTraitDefinition.
+			navigationModel
+				selectedPackageDo: [ :package | element forPackage: package ].
+			navigationModel
+				selectedTagDo: [ :tag | element forPackageTag: tag ].
+			element ].
+	contentTabs addTab: tab.
+	tab := BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Package';
+		stencil: [ | element |
+			element := GtCreatePackageElement new.
+			element
+				packageBlock: [ :pkg :tag | 
+					look hide.
+					tag isNil
+						ifTrue: [ navigationModel selectPackage: pkg ]
+						ifFalse: [ navigationModel selectPackageTag: tag ] ].
+			navigationModel
+				selectedPackageDo: [ :package | element forPackage: package ].
+			element ].
+	contentTabs addTab: tab.
+	^ contentTabs
 ]
 
 { #category : #'private - ui' }
@@ -205,7 +261,7 @@ GtCoder >> buildToolbar [
 			c ignored vertical alignTop ];
 		addItem: self buildSpotterButton;
 		addItem: self buildHierarchyButton;
-		addItem: self buildAddClassButton;
+		addItem: self buildAddButton;
 		yourself
 ]
 
@@ -231,7 +287,7 @@ GtCoder >> initialize [
 			c horizontal matchParent.
 			c vertical matchParent ].
 
-	navigationModel := GtCoderNavigationPackagesTagsClassesModel fromPackages: RPackageOrganizer default packages.
+	navigationModel := GtCoderNavigationPackagesTagsClassesModel new.
 	navigationModel when: GtCoderNavigationAnnouncement send: #updateCoder: to: self.
 
 	coderContent := BlElement new
