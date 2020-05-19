@@ -66,6 +66,13 @@ GtClassMethodsCoder >> classesFilter [
 	^ filter
 ]
 
+{ #category : #elements }
+GtClassMethodsCoder >> coderLook [
+	^ GtBehaviorMethodCoderCategoryLook new
+		methodsCoder: self;
+		yourself
+]
+
 { #category : #private }
 GtClassMethodsCoder >> combinedFilter [
 	| combined |
