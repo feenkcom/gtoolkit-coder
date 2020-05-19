@@ -8,7 +8,8 @@ Class {
 	#classTraits : 'TGtPagerPageInstantiator classTrait',
 	#instVars : [
 		'coderContent',
-		'navigationModel'
+		'navigationModel',
+		'leftSideBarContent'
 	],
 	#category : #'GToolkit-Coder-! Core'
 }
@@ -178,6 +179,13 @@ GtCoder >> buildHierarchyButton [
 ]
 
 { #category : #'private - ui' }
+GtCoder >> buildHorizontalPane [
+	^ BrHorizontalPane new
+		hFitContent;
+		vMatchParent
+]
+
+{ #category : #'private - ui' }
 GtCoder >> buildSpotterButton [
 	| look |
 	^ BrButton new
@@ -268,7 +276,42 @@ GtCoder >> buildToolbar [
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
-	
+	self initializeListeners.
+	self initializeNavigationModel.
+	self initializeMainContent.
+	self initializeLeftSideBarContent.
+	self initializeElement.
+]
+
+{ #category : #initialization }
+GtCoder >> initializeElement [
+	| aHorizontalPane |
+	self
+		layout: BlLinearLayout vertical;
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical matchParent ].
+
+	aHorizontalPane := BrHorizontalPane new
+		matchParent;
+		addChild: leftSideBarContent;
+		addChild: coderContent.
+
+	self addChild: aHorizontalPane.
+	self addChild: self buildToolbar
+]
+
+{ #category : #initialization }
+GtCoder >> initializeLeftSideBarContent [
+	leftSideBarContent := BlElement new
+		layout: BlFrameLayout new;
+		constraintsDo: [ :c |
+			c horizontal exact: 0.
+			c vertical matchParent ].
+]
+
+{ #category : #initialization }
+GtCoder >> initializeListeners [
 	self
 		when: GtCoderToReplace
 		do: [ :anEvent | self replaceFrom: anEvent ].
@@ -280,30 +323,33 @@ GtCoder >> initialize [
 	self
 		when: GtCoderToSpawnInSpace
 		do: [ :anEvent | self spawnInSpaceFrom: anEvent ].
+]
 
-	self
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c vertical matchParent ].
-
-	navigationModel := GtCoderNavigationPackagesTagsClassesModel new.
-	navigationModel when: GtCoderNavigationAnnouncement send: #updateCoder: to: self.
-
+{ #category : #initialization }
+GtCoder >> initializeMainContent [
 	coderContent := BlElement new
 		layout: BlFrameLayout new;
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent ].
+]
 
-	self addChild: coderContent.
-	self addChild: self buildToolbar
+{ #category : #initialization }
+GtCoder >> initializeNavigationModel [
+	navigationModel := GtCoderNavigationPackagesTagsClassesModel new.
+	navigationModel when: GtCoderNavigationAnnouncement send: #updateCoder: to: self.
+	
 ]
 
 { #category : #'instance creation' }
 GtCoder >> newEmbellisherExtension [
-	^ GtCoderEmbeddedPlaygroundExtension new
-		navigationModel: navigationModel
+	^ GtPagerPageEmbellisherExtensions new 
+		addExtension: (GtCoderEmbeddedPlaygroundExtension new
+			navigationModel: navigationModel);
+		addExtension: (GtCoderSideBarSystemNavigationExtension new
+			coder: self;
+			sideBar: leftSideBarContent;
+			navigationModel: navigationModel)
 ]
 
 { #category : #opening }

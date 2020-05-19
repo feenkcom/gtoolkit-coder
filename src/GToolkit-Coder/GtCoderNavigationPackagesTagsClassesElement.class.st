@@ -4,10 +4,17 @@ Class {
 	#instVars : [
 		'packagesList',
 		'classesList',
-		'navigationModel'
+		'navigationModel',
+		'supressListChanges',
+		'supressNavigationChanges'
 	],
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
+
+{ #category : #'api - packages' }
+GtCoderNavigationPackagesTagsClassesElement >> deselectClasses [
+	classesList deselectAll
+]
 
 { #category : #'api - packages' }
 GtCoderNavigationPackagesTagsClassesElement >> expandPackage: anRPackage [
@@ -20,15 +27,15 @@ GtCoderNavigationPackagesTagsClassesElement >> expandPackage: anRPackage [
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initialize [
 	super initialize.
-	
-	self layout: (BlGridLayout horizontal columnCount: 2; cellSpacing: 5).
-	self constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-	
-	packagesList := GtCoderNavigationPackagesListElement new.
-	classesList := GtCoderNavigationClassesHierarchyListElement new.
-	
+	supressListChanges := false.
+	supressNavigationChanges := false.
+	self initializeLayout.
+	self initializeLists.
+	self initializeElement.
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 	self addChildren: {
 		BrLabel new
 			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);
@@ -43,6 +50,20 @@ GtCoderNavigationPackagesTagsClassesElement >> initialize [
 	}
 ]
 
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
+	self layout: (BlGridLayout horizontal columnCount: 2; cellSpacing: 5).
+	self constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical matchParent ].
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> initializeLists [
+	packagesList := GtCoderNavigationPackagesListElement new.
+	classesList := GtCoderNavigationClassesHierarchyListElement new.
+]
+
 { #category : #accessing }
 GtCoderNavigationPackagesTagsClassesElement >> navigationModel [
 	<return: #GtCoderNavigationPackagesTagsClassesModel>
@@ -53,10 +74,181 @@ GtCoderNavigationPackagesTagsClassesElement >> navigationModel [
 { #category : #accessing }
 GtCoderNavigationPackagesTagsClassesElement >> navigationModel: aGtCoderNavigationPackagesTagsClassesModel [
 	navigationModel := aGtCoderNavigationPackagesTagsClassesModel.
+	self onNavigationModelChanged.
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onClassListSelectionChanged [
+	| anIndex aSelectedItem theIndices |
+	supressListChanges ifTrue: [ ^ self ].
+	theIndices := classesList selectedIndices.
+	theIndices ifEmpty: [ ^ self ].
+	anIndex := theIndices first.
+	(anIndex between: 1 and: classesList viewModel itemCount)
+		ifFalse: [ ^ self ].
+	aSelectedItem := (classesList viewModel itemAt: anIndex) value rootClass.
+	self navigationModel selectClass: aSelectedItem
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [  
+		self 
+			selectClass: anAnnouncement theClass
+			inPackage: anAnnouncement package 
+			tag: anAnnouncement tag ].
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onNavigationModelChanged [
+	self updatePackageAndClassLists.
+	self updateSelectedPackageAndTag.
+	self updateSelectedClass.
+	self subscribeToPackageList.
+	self subscribeToClassList.
+	self subscribeToNavigationModel.
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackageListSelectionChanged [
+	| anIndex aSelectedItem theIndices |
+	supressListChanges ifTrue: [ ^ self ].
+	theIndices := packagesList selectedIndices.
+	theIndices ifEmpty: [ ^ self ].
+	anIndex := theIndices first.
+	(anIndex between: 1 and: packagesList viewModel itemCount)
+		ifFalse: [ ^ self ].
+	aSelectedItem := (packagesList viewModel itemAt: anIndex) value.
+	(aSelectedItem isKindOf: RPackage)
+		ifTrue: [ self navigationModel selectPackage: aSelectedItem ]
+		ifFalse: [ self navigationModel selectTag: aSelectedItem ]
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [  
+		self selectPackage: anAnnouncer package.
+		self deselectClasses. ]
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onTagSelected: anAnnouncer [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [  
+		self 
+			selectPackage: anAnnouncer package 
+			tag: anAnnouncer tag.
+		self deselectClasses. ].
+]
+
+{ #category : #'api - packages' }
+GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass [
+	classesList viewModel
+		indexOfSuchThat: [ :each | each rootClass = aClass ]
+		do: [ :anIndex | classesList 
+			selectOne: anIndex;
+			scrollTo: anIndex ]
+]
+
+{ #category : #'api - packages' }
+GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aPackage tag: aPackageTag [
+	| anExistingIndex |
 	
+	anExistingIndex := classesList viewModel indexOfSuchThat: [ :each | each rootClass = aClass ].
+	anExistingIndex isZero ifTrue: [ 
+		self selectPackage: aPackage tag: aPackageTag ].
+	
+	self selectClass: aClass.
+]
+
+{ #category : #'api - packages' }
+GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
+
+	packagesList viewModel
+		indexOf: aPackage
+		do: [ :anIndex | packagesList 
+			selectOne: anIndex;
+			scrollTo: anIndex ].
+
+	self updateClassLists.
+]
+
+{ #category : #'api - packages' }
+GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPackageTag [
+	self expandPackage: aPackage.
+
+	packagesList viewModel
+		indexOf: aPackageTag
+		do: [ :anIndex | packagesList 
+			selectOne: anIndex;
+			scrollTo: anIndex ].
+		
+	self updateClassLists.
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> subscribeToClassList [
+	classesList
+		when: BrSelectionChanged
+		do: [ :anEvent | self onClassListSelectionChanged ].
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
+	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
+	navigationModel when: GtCoderNavigationTagSelected send: #onTagSelected: to: self.
+	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> subscribeToPackageList [
+	packagesList
+		when: BrSelectionChanged
+		do: [ :anEvent | self onPackageListSelectionChanged ].
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> suppressListChangeEventsDuring: aBlock [
+	supressListChanges := true.
+	aBlock ensure: [ supressListChanges := false ].
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> suppressNavigationChangeEventsDuring: aBlock [
+	supressNavigationChanges := true.
+	aBlock ensure: [ supressNavigationChanges := false ].
+]
+
+{ #category : #updateLists }
+GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
+	classesList initializeWithClasses: navigationModel classesToShow.
+]
+
+{ #category : #updateLists }
+GtCoderNavigationPackagesTagsClassesElement >> updatePackageAndClassLists [
 	packagesList initializeWithPackages: navigationModel packagesToShow.
 	classesList initializeWithClasses: navigationModel classesToShow.
-	
+]
+
+{ #category : #updateLists }
+GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
+	packagesList initializeWithPackages: navigationModel packagesToShow.
+]
+
+{ #category : #updateLists }
+GtCoderNavigationPackagesTagsClassesElement >> updateSelectedClass [
+	navigationModel selectedClassDo: [ :aClass |
+		classesList viewModel
+			indexOfSuchThat: [ :each | each rootClass = aClass ]
+			do: [ :anIndex | classesList
+				selectOne: anIndex;
+				scrollTo: (anIndex - 5 max: 1) ] ].
+]
+
+{ #category : #updateLists }
+GtCoderNavigationPackagesTagsClassesElement >> updateSelectedPackageAndTag [
 	navigationModel hasSelectedPackage
 		ifTrue: [ navigationModel hasSelectedTag
 			ifTrue: [
@@ -71,69 +263,4 @@ GtCoderNavigationPackagesTagsClassesElement >> navigationModel: aGtCoderNavigati
 					do: [ :anIndex | packagesList
 						selectOne: anIndex;
 						scrollTo: (anIndex - 5 max: 1) ] ] ].
-
-	navigationModel selectedClassDo: [ :aClass |
-		classesList viewModel
-			indexOfSuchThat: [ :each | each rootClass = aClass ]
-			do: [ :anIndex | classesList
-				selectOne: anIndex;
-				scrollTo: (anIndex - 5 max: 1) ] ].
-	
-	packagesList
-		when: BrSelectionChanged
-		do: [ :anEvent |
-			anEvent currentTarget selectedIndices
-				ifNotEmpty: [ :theIndices |
-					| anIndex aSelectedItem |
-					anIndex := theIndices first.
-					(anIndex between: 1 and: anEvent currentTarget viewModel itemCount)
-						ifTrue: [
-							aSelectedItem := (anEvent currentTarget viewModel itemAt: anIndex) value.
-							(aSelectedItem isKindOf: RPackage)
-								ifTrue: [ self navigationModel selectPackage: aSelectedItem ]
-								ifFalse: [ self navigationModel selectTag: aSelectedItem ] ] ] ].
-				
-	classesList
-		when: BrSelectionChanged
-		do: [ :anEvent |
-			anEvent currentTarget selectedIndices
-				ifNotEmpty: [ :theIndices |
-					| anIndex aSelectedItem |
-					anIndex := theIndices first.
-					(anIndex between: 1 and: anEvent currentTarget viewModel itemCount)
-						ifTrue: [
-							aSelectedItem := (anEvent currentTarget viewModel itemAt: anIndex) value rootClass.
-							self navigationModel selectClass: aSelectedItem  ] ] ].
-	
-	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
-	navigationModel when: GtCoderNavigationTagSelected send: #onTagSelected: to: self.
-	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
-	classesList viewModel
-		indexOfSuchThat: [ :each | each rootClass = anAnnouncement theClass ]
-		do: [ :anIndex | classesList selectOne: anIndex ]
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
-
-	packagesList viewModel
-		indexOf: anAnnouncer package
-		do: [ :anIndex | packagesList selectOne: anIndex ].
-
-	classesList initializeWithClasses: navigationModel classesToShow
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onTagSelected: anAnnouncer [
-	self expandPackage: anAnnouncer package.
-
-	packagesList viewModel
-		indexOf: anAnnouncer tag
-		do: [ :anIndex | packagesList selectOne: anIndex ].
-		
-	classesList initializeWithClasses: navigationModel classesToShow
 ]

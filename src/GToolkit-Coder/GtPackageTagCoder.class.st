@@ -28,6 +28,13 @@ GtPackageTagCoder >> asElement [
 	^ GtPackageTagCoderElement new packageTagCoder: self
 ]
 
+{ #category : #asserting }
+GtPackageTagCoder >> assertCoder: aCoder [
+	self 
+		assert: [ aCoder isNotNil ]
+		description: [ 'Coder must be non-nil' ].
+]
+
 { #category : #accessing }
 GtPackageTagCoder >> classesCoder [
 	^ classesCoder
@@ -80,11 +87,12 @@ GtPackageTagCoder >> package [
 
 { #category : #accessing }
 GtPackageTagCoder >> packageCoder [
-	^ packageCoder
+	^ packageCoder ifNil: [ packageCoder := GtPackageCoder forPackage: self package ]
 ]
 
 { #category : #accessing }
 GtPackageTagCoder >> packageCoder: aPackageCoder [
+	self assertCoder: aPackageCoder.
 	packageCoder := aPackageCoder
 ]
 
