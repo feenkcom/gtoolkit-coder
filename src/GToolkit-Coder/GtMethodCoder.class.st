@@ -1262,6 +1262,18 @@ GtMethodCoder >> renameMethod: editorElement [
 		sourceElement: editorElement) execute
 ]
 
+{ #category : #'actions-refactorings' }
+GtMethodCoder >> renameProtocol: aString [
+	| change |
+	self category: aString asSymbol.
+	selector notNil
+		ifTrue: [ change := RBMethodProtocolChange
+				selector: selector
+				in: self classOrMetaClass
+				classified: self category.
+			change execute ]
+]
+
 { #category : #examples }
 GtMethodCoder >> runExample [
 	self isModified
