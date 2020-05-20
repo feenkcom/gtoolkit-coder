@@ -9,7 +9,8 @@ Class {
 	#instVars : [
 		'coderContent',
 		'navigationModel',
-		'leftSideBarContent'
+		'leftSideBarContent',
+		'leftSideBarResizer'
 	],
 	#category : #'GToolkit-Coder-! Core'
 }
@@ -305,6 +306,8 @@ GtCoder >> initializeElement [
 GtCoder >> initializeLeftSideBarContent [
 	leftSideBarContent := BlElement new
 		layout: BlFrameLayout new;
+		look: (BrGlamorousWithHorizontalResizerLook new 
+			resizerDo: [ :theResizer | leftSideBarResizer := theResizer ]);
 		constraintsDo: [ :c |
 			c horizontal exact: 0.
 			c vertical matchParent ].
@@ -339,6 +342,16 @@ GtCoder >> initializeNavigationModel [
 	navigationModel := GtCoderNavigationPackagesTagsClassesModel new.
 	navigationModel when: GtCoderNavigationAnnouncement send: #updateCoder: to: self.
 	
+]
+
+{ #category : #'api - configuration' }
+GtCoder >> leftSideBarDo: aBlock [
+	aBlock value: leftSideBarContent
+]
+
+{ #category : #'api - configuration' }
+GtCoder >> leftSideBarResizerDo: aBlock [
+	aBlock value: leftSideBarResizer
 ]
 
 { #category : #'instance creation' }
