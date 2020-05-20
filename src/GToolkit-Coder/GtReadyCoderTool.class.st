@@ -20,14 +20,22 @@ GtReadyCoderTool >> asElementDo: aOneArgBlock [
 ]
 
 { #category : #accessing }
+GtReadyCoderTool >> assertCoder: aCoder [
+	self
+		assert: [ aCoder isNotNil ]
+		description: [ 'Coder must be non-nil' ].
+	self 
+		assert: [ (aCoder isKindOf: BlElement) not ] 
+		description: [ 'Coder cannot be an element because it may be added to a space graph several times' ]
+]
+
+{ #category : #accessing }
 GtReadyCoderTool >> coder [
 	^ coder
 ]
 
 { #category : #accessing }
 GtReadyCoderTool >> coder: aCoder [
-	self 
-		assert: [ aCoder isNotNil ] 
-		description: [ 'Coder must be non-nil' ].
+	self assertCoder: aCoder.
 	coder := aCoder
 ]
