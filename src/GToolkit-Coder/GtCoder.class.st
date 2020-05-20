@@ -374,7 +374,7 @@ GtCoder >> replaceFrom: aGtCoderToReplaceEvent [
 GtCoder >> spawnFrom: aGtCoderToSpawnEvent [
 	aGtCoderToSpawnEvent consumed: true.
 	
-	self phlow spawnTool: (GtReadyCoderTool coder: (self class forCoder: aGtCoderToSpawnEvent coder))
+	self phlow spawnTool: (GtReadyCoderTool coder: (aGtCoderToSpawnEvent coder))
 ]
 
 { #category : #'api - spawning' }
