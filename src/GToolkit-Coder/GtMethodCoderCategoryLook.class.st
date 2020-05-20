@@ -8,45 +8,47 @@ Class {
 }
 
 { #category : #initialization }
-GtMethodCoderCategoryLook >> addCategoryToggle [
+GtMethodCoderCategoryLook >> addCategoryEditor [
 	self widget
 		childNamed: #header
 		ifFound:
-			[ :header | header addChild: self buildCategoryToggle as: self categoryToggleName ]
+			[ :header | header addChild: self buildCategoryEditor as: self categoryEditorName ]
 		ifNone: [  ]
 ]
 
 { #category : #initialization }
-GtMethodCoderCategoryLook >> buildCategoryToggle [
-	| categoryToggle |
-	categoryToggle := BrToggle new
+GtMethodCoderCategoryLook >> buildCategoryEditor [
+	| editor |
+	editor := BrEditableLabel new
+		look:
+			(BrGlamorousEditableLabelLook new
+				glamorousCodeFont;
+				defaultForeground: Color black;
+				fontSize: 10);
+		padding: (BlInsets all: 2);
 		margin: (BlInsets all: 0);
 		constraintsDo: [ :c | 
 			c ignoreByLayout.
 			c ignored horizontal alignRight.
 			c ignored vertical alignBottom ];
-		activated: methodsCoder categoryFilterString = self category;
-		label:
-			((self category ifNil: [ '' ]) asRopedText
-				attributes:
-					{(BlFontSizeAttribute size: 12).
-					(BlFontFamilyAttribute named: 'Source Sans Pro')});
-		look: GtCategoryToggleLook;
-		when: BrToggleActivatedEvent
-			do: [ :anEvent | methodsCoder categoryFilterString: self category ];
-		when: BrToggleDeactivatedEvent
-			do: [ :anEvent | methodsCoder categoryFilterString: nil ].
-	^ categoryToggle
+		text: (self category ifNil: [ '' ]) asRopedText;
+		when: BrEditorAcceptWish
+			do:
+				[ :aWish | self methodCoder renameProtocol: aWish text asString ].
+	(GtCompletionController
+		on: editor
+		strategy: GtMethodProtocolCompletionStrategy new) install.
+	^ editor
 ]
 
 { #category : #accessing }
 GtMethodCoderCategoryLook >> category [
-	^ self widget coder category
+	^ self methodCoder category
 ]
 
 { #category : #initialization }
-GtMethodCoderCategoryLook >> categoryToggleName [
-	^ #categoryToggle
+GtMethodCoderCategoryLook >> categoryEditorName [
+	^ #categoryEditor
 ]
 
 { #category : #initialization }
@@ -55,9 +57,14 @@ GtMethodCoderCategoryLook >> initialize [
 	self
 		addChange:
 			(BrLookChange new
-				up: [ :e | self addCategoryToggle ];
-				down: [ :e | self removeCategoryToggle ];
+				up: [ :e | self addCategoryEditor ];
+				down: [ :e | self removeCategoryEditor ];
 				yourself)
+]
+
+{ #category : #accessing }
+GtMethodCoderCategoryLook >> methodCoder [
+	^ self widget coder
 ]
 
 { #category : #accessing }
@@ -71,9 +78,9 @@ GtMethodCoderCategoryLook >> methodsCoder: aMethodsCoder [
 ]
 
 { #category : #initialization }
-GtMethodCoderCategoryLook >> removeCategoryToggle [
+GtMethodCoderCategoryLook >> removeCategoryEditor [
 	self widget
-		childNamed: #categoryToggle
+		childNamed: self categoryEditorName
 		ifFound: [ :toggle | toggle removeFromParent ]
 		ifNone: [  ]
 ]

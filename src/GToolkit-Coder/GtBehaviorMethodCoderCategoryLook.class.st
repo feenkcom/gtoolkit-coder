@@ -5,19 +5,19 @@ Class {
 }
 
 { #category : #initialization }
-GtBehaviorMethodCoderCategoryLook >> addCategoryToggle [
+GtBehaviorMethodCoderCategoryLook >> addCategoryEditor [
 	self widget
 		childNamed: #header
 		ifFound: [ :header | header visibility: BlVisibility gone ]
 		ifNone: [  ].
 	self widget
-		addChild: self buildCategoryToggle
-		as: self categoryToggleName
+		addChild: self buildCategoryEditor
+		as: self categoryEditorName
 ]
 
 { #category : #initialization }
-GtBehaviorMethodCoderCategoryLook >> removeCategoryToggle [
-	super removeCategoryToggle.
+GtBehaviorMethodCoderCategoryLook >> removeCategoryEditor [
+	super removeCategoryEditor.
 	self widget
 		childNamed: #header
 		ifFound: [ :header | header visibility: BlVisibility visible ]
