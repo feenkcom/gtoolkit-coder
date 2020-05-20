@@ -69,13 +69,13 @@ GtTraitDefinition >> createBehaviorChange [
 ]
 
 { #category : #'api - accepting' }
-GtTraitDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aClass [
-	^ aGtCodeDefinitionDiffrence asClassRefactorings: aClass
+GtTraitDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf: aClass [
+	^ aGtCodeDefinitionDifference asClassRefactorings: aClass
 ]
 
 { #category : #'api - accepting' }
-GtTraitDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aClass in: anRBModel [
-	^ aGtCodeDefinitionDiffrence asClassRefactorings: aClass in: anRBModel
+GtTraitDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf: aClass in: anRBModel [
+	^ aGtCodeDefinitionDifference asClassRefactorings: aClass in: anRBModel
 ]
 
 { #category : #'api - accepting' }
