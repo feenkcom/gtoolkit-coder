@@ -61,9 +61,12 @@ GtCoderNavigationPackagesListElement >> buildTagLabel: anRPackageTag [
 
 { #category : #'private - enumeration' }
 GtCoderNavigationPackagesListElement >> childrenForPackageOrTag: eachPackageOrTag [
-	| theTags |
+	| theTags anExtension |
 	(eachPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
 	theTags := eachPackageOrTag classTags asArray sorted: [ :tagA :tagB | tagA name < tagB name ].
+	anExtension := GtCoderPackageExtentionTag forPackage: eachPackageOrTag.
+	anExtension hasExtendedClasses ifTrue: [ 
+		theTags := theTags copyWith: anExtension ].
 	"Do not return an only tag of the same name as the package"
 	theTags size = 1 ifTrue: [ ^ #() ].
 	^ theTags
