@@ -31,13 +31,13 @@ GtMetaclassDefinition >> category [
 ]
 
 { #category : #'api - accepting' }
-GtMetaclassDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aClass [
-	^ aGtCodeDefinitionDiffrence asClassRefactorings: aClass
+GtMetaclassDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf: aClass [
+	^ aGtCodeDefinitionDifference asClassRefactorings: aClass
 ]
 
 { #category : #'api - accepting' }
-GtMetaclassDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aClass in: anRBModel [
-	^ aGtCodeDefinitionDiffrence asClassRefactorings: aClass in: anRBModel
+GtMetaclassDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf: aClass in: anRBModel [
+	^ aGtCodeDefinitionDifference asClassRefactorings: aClass in: anRBModel
 ]
 
 { #category : #'api - accepting' }
@@ -76,7 +76,7 @@ GtMetaclassDefinition >> fromMetaclass: aMetaclass [
 	originalName := name.
 	
 	category := (GtCategoryDefinition fromBehavior: aMetaclass) parent: self.
-	slots := (GtSlotsDefinition fromClass: aMetaclass) parent: self
+	slots := (GtClassSlotsDefinition fromClass: aMetaclass) parent: self
 ]
 
 { #category : #'gt - viewers' }

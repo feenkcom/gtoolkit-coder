@@ -8,5 +8,5 @@ RBAddInstanceVariableRefactoring >> gtDescription [
 		append: ' instance variable ' asRopedText;
 		append: variableName asRopedText glamorousRoundedBackground;
 		append: ' to ' asRopedText;
-		append: class name asRopedText
+		append: class printString asRopedText
 ]

@@ -8,7 +8,7 @@ RBRemoveInstanceVariableRefactoring >> gtDescription [
 		append: ' instance variable ' asRopedText;
 		append: variableName asRopedText glamorousRoundedBackground;
 		append: ' from ' asRopedText;
-		append: class name asRopedText
+		append: class printString asRopedText
 ]
 
 { #category : #'*GToolkit-Coder' }
