@@ -18,6 +18,11 @@ GtCoderNavigationPackagesTagsClassesElement >> deselectClasses [
 ]
 
 { #category : #'api - packages' }
+GtCoderNavigationPackagesTagsClassesElement >> deselectPackages [
+	packagesList deselectAll
+]
+
+{ #category : #'api - packages' }
 GtCoderNavigationPackagesTagsClassesElement >> expandPackage: anRPackage [
 	packagesList viewModel root
 		allChildrenNodesBreadthFirstDo: [ :eachTreeNode |
@@ -150,6 +155,14 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [  
+		self deselectPackages.
+		self deselectClasses. ]
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onTagSelected: anAnnouncer [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [  
@@ -222,6 +235,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToClassList [
 
 { #category : #subscriptions }
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
+	navigationModel when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
 	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
 	navigationModel when: GtCoderNavigationTagSelected send: #onTagSelected: to: self.
 	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
