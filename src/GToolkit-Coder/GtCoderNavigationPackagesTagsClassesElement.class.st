@@ -6,7 +6,8 @@ Class {
 		'classesList',
 		'navigationModel',
 		'supressListChanges',
-		'supressNavigationChanges'
+		'supressNavigationChanges',
+		'classesLabel'
 	],
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
@@ -17,11 +18,30 @@ GtCoderNavigationPackagesTagsClassesElement >> deselectClasses [
 ]
 
 { #category : #'api - packages' }
+GtCoderNavigationPackagesTagsClassesElement >> deselectPackages [
+	packagesList deselectAll
+]
+
+{ #category : #'api - packages' }
 GtCoderNavigationPackagesTagsClassesElement >> expandPackage: anRPackage [
 	packagesList viewModel root
 		allChildrenNodesBreadthFirstDo: [ :eachTreeNode |
 			eachTreeNode value = anRPackage
 				ifTrue: [ eachTreeNode expand ] ]
+]
+
+{ #category : #'showing / hiding' }
+GtCoderNavigationPackagesTagsClassesElement >> hideClassList [
+	classesList visibility: BlVisibility gone.
+	classesLabel visibility: BlVisibility gone.
+	self layout columnCount: 1.
+]
+
+{ #category : #'showing / hiding' }
+GtCoderNavigationPackagesTagsClassesElement >> hideOrShowClassList [
+	classesList maxSelectionIndex isZero 
+		ifTrue: [ self hideClassList ] 
+		ifFalse: [ self showClassList ]
 ]
 
 { #category : #initialization }
@@ -41,7 +61,7 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);
 			text: 'Packages'.
 			
-		BrLabel new
+		classesLabel := BrLabel new
 			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);
 			text: 'Classes'.
 	
@@ -108,6 +128,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onNavigationModelChanged [
 	self subscribeToPackageList.
 	self subscribeToClassList.
 	self subscribeToNavigationModel.
+	self hideOrShowClassList.
 ]
 
 { #category : #'event handling' }
@@ -130,6 +151,14 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [  
 		self selectPackage: anAnnouncer package.
+		self deselectClasses. ]
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [  
+		self deselectPackages.
 		self deselectClasses. ]
 ]
 
@@ -173,6 +202,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 			scrollTo: anIndex ].
 
 	self updateClassLists.
+	self hideOrShowClassList.
 ]
 
 { #category : #'api - packages' }
@@ -186,6 +216,14 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPac
 			scrollTo: anIndex ].
 		
 	self updateClassLists.
+	self hideOrShowClassList.
+]
+
+{ #category : #'showing / hiding' }
+GtCoderNavigationPackagesTagsClassesElement >> showClassList [
+	classesList visibility: BlVisibility visible.
+	classesLabel visibility: BlVisibility visible.
+	self layout columnCount: 2.
 ]
 
 { #category : #subscriptions }
@@ -197,6 +235,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToClassList [
 
 { #category : #subscriptions }
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
+	navigationModel when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
 	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
 	navigationModel when: GtCoderNavigationTagSelected send: #onTagSelected: to: self.
 	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
@@ -221,23 +260,23 @@ GtCoderNavigationPackagesTagsClassesElement >> suppressNavigationChangeEventsDur
 	aBlock ensure: [ supressNavigationChanges := false ].
 ]
 
-{ #category : #updateLists }
+{ #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 	classesList initializeWithClasses: navigationModel classesToShow.
 ]
 
-{ #category : #updateLists }
+{ #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updatePackageAndClassLists [
-	packagesList initializeWithPackages: navigationModel packagesToShow.
-	classesList initializeWithClasses: navigationModel classesToShow.
+	self updatePackageLists.
+	self updateClassLists.
 ]
 
-{ #category : #updateLists }
+{ #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
 	packagesList initializeWithPackages: navigationModel packagesToShow.
 ]
 
-{ #category : #updateLists }
+{ #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateSelectedClass [
 	navigationModel selectedClassDo: [ :aClass |
 		classesList viewModel
@@ -247,7 +286,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updateSelectedClass [
 				scrollTo: (anIndex - 5 max: 1) ] ].
 ]
 
-{ #category : #updateLists }
+{ #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateSelectedPackageAndTag [
 	navigationModel hasSelectedPackage
 		ifTrue: [ navigationModel hasSelectedTag

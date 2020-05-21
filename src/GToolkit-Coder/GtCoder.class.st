@@ -9,7 +9,8 @@ Class {
 	#instVars : [
 		'coderContent',
 		'navigationModel',
-		'leftSideBarContent'
+		'leftSideBarContent',
+		'leftSideBarResizer'
 	],
 	#category : #'GToolkit-Coder-! Core'
 }
@@ -305,6 +306,8 @@ GtCoder >> initializeElement [
 GtCoder >> initializeLeftSideBarContent [
 	leftSideBarContent := BlElement new
 		layout: BlFrameLayout new;
+		look: (BrGlamorousWithHorizontalResizerLook new 
+			resizerDo: [ :theResizer | leftSideBarResizer := theResizer ]);
 		constraintsDo: [ :c |
 			c horizontal exact: 0.
 			c vertical matchParent ].
@@ -341,6 +344,16 @@ GtCoder >> initializeNavigationModel [
 	
 ]
 
+{ #category : #'api - configuration' }
+GtCoder >> leftSideBarDo: aBlock [
+	aBlock value: leftSideBarContent
+]
+
+{ #category : #'api - configuration' }
+GtCoder >> leftSideBarResizerDo: aBlock [
+	aBlock value: leftSideBarResizer
+]
+
 { #category : #'instance creation' }
 GtCoder >> newEmbellisherExtension [
 	^ GtPagerPageEmbellisherExtensions new 
@@ -374,7 +387,7 @@ GtCoder >> replaceFrom: aGtCoderToReplaceEvent [
 GtCoder >> spawnFrom: aGtCoderToSpawnEvent [
 	aGtCoderToSpawnEvent consumed: true.
 	
-	self phlow spawnTool: (GtReadyCoderTool coder: (self class forCoder: aGtCoderToSpawnEvent coder))
+	self phlow spawnTool: (GtReadyCoderTool coder: (aGtCoderToSpawnEvent coder))
 ]
 
 { #category : #'api - spawning' }

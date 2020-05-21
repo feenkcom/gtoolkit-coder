@@ -181,7 +181,7 @@ GtSlotsDefinition >> slotsEditor [
 	<return: #GtCodeDefinitionViewer>
 	
 	^ GtCodeDefinitionPluralEditor new
-		title: 'Slots';
+		title: self title;
 		definition: self;
 		addSelector: #addSlotNamed:;
 		removeSelector: #removeSlotNamed:;
@@ -191,6 +191,12 @@ GtSlotsDefinition >> slotsEditor [
 		addEvent: GtBehaviorSlotAdded;
 		removeEvent: GtBehaviorSlotRemoved;
 		renameEvent: GtBehaviorSlotRenamed;
-		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenKey: BlKeyCombination primaryB
+			do: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ];
 		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+]
+
+{ #category : #'gt - editors' }
+GtSlotsDefinition >> title [
+	^ 'Slots'
 ]

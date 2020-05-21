@@ -13,19 +13,19 @@ GtBehaviorDefinition class >> fromBehavior: aBehavior [
 	^ aBehavior isClass
 		ifTrue: [ aBehavior isMeta
 			ifTrue: [ GtMetaclassDefinition fromMetaclass: aBehavior ]
-			ifFalse: [ GtClassDefinition fromClass: aBehavior ] ]
+			ifFalse: [ GtFullClassDefinition fromClass: aBehavior ] ]
 		ifFalse: [ aBehavior isTrait
 			ifTrue: [ GtTraitDefinition fromTrait: aBehavior ]
-			ifFalse: [ self error: 'Uknown entity' ] ]
+			ifFalse: [ self error: 'Unknown entity' ] ]
 ]
 
 { #category : #'api - accepting' }
-GtBehaviorDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aBehavior [
+GtBehaviorDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf: aBehavior [
 	^ self subclassResponsibility
 ]
 
 { #category : #'api - accepting' }
-GtBehaviorDefinition >> difference: aGtCodeDefinitionDiffrence toRefactoringsOf: aBehavior in: anRBModel [
+GtBehaviorDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf: aBehavior in: anRBModel [
 	^ self subclassResponsibility
 ]
 

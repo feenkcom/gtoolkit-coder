@@ -59,6 +59,19 @@ GtCoderNavigationPackagesListElement >> buildTagLabel: anRPackageTag [
 	^ aLabel
 ]
 
+{ #category : #'private - enumeration' }
+GtCoderNavigationPackagesListElement >> childrenForPackageOrTag: eachPackageOrTag [
+	| theTags anExtension |
+	(eachPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
+	theTags := eachPackageOrTag classTags asArray sorted: [ :tagA :tagB | tagA name < tagB name ].
+	anExtension := GtCoderPackageExtentionTag forPackage: eachPackageOrTag.
+	anExtension hasExtendedClasses ifTrue: [ 
+		theTags := theTags copyWith: anExtension ].
+	"Do not return an only tag of the same name as the package"
+	theTags size = 1 ifTrue: [ ^ #() ].
+	^ theTags
+]
+
 { #category : #'private - ui' }
 GtCoderNavigationPackagesListElement >> createArrowInterationElementForNode: aNode [
 	^ BlElement new
@@ -109,7 +122,5 @@ GtCoderNavigationPackagesListElement >> initializeWithPackages: aCollectionOfPac
 	self
 		items: theSortedPackages
 		children: [ :eachPackageOrTag |
-			(eachPackageOrTag isKindOf: RPackage)
-				ifTrue: [ eachPackageOrTag classTags asArray sorted: [ :tagA :tagB | tagA name < tagB name ] ]
-				ifFalse: [ #() ] ]
+			self childrenForPackageOrTag: eachPackageOrTag ]
 ]
