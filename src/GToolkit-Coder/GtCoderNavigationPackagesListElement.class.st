@@ -31,12 +31,7 @@ GtCoderNavigationPackagesListElement >> buildPackageRow: aTreeNode index: aRowIn
 				BrSelectModel new }) ];
 		alignCenterLeft;
 		layout: BlLinearLayout horizontal;
-		look: BrHorizontalPaneLook new + (BrInteractiveCommonLook new
-			default: [ :aWidget | aWidget background: Color transparent ];
-			hovered: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor ];
-			selected: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor ];
-			pressed: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor slightlyDarker ];
-			focused: [ :aWidget | aWidget border: (BlBorder paint: BrGlamorousColors primaryBorderColor width: 1) ]);
+		look: BrHorizontalPaneLook + BrGlamorousListItemLook;
 		when: BlMouseDownEvent do: [ :anEvent |
 			anEvent consumed: true.
 			aTreeElement selectOne: aRowIndex dueTo: anEvent.
@@ -98,7 +93,7 @@ GtCoderNavigationPackagesListElement >> createExpandCollapseElementFor: aNode [
 						ifFalse: [ { BrHoverModel new . BrPressModel new } ]
 				), { BrEnablementModel new disabled: aNode isEmpty } });
 		look: (BrInteractiveCommonLook new
-			default: [ :aWidget | aWidget background: (Color transparent) ];
+			default: [ :aWidget | aWidget background: Color transparent ];
 			hovered: [ :aWidget | aWidget background: (Color gray alpha: 0.1) ];
 			pressed: [ :aWidget | aWidget background: (Color gray alpha: 0.2) ]);
 		addChild: (self createArrowInterationElementForNode: aNode)
