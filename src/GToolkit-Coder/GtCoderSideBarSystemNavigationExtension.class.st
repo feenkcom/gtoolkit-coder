@@ -11,17 +11,17 @@ Class {
 	#category : #'GToolkit-Coder-Coder in Pager'
 }
 
-{ #category : #'widget configuration' }
+{ #category : #'sidebar width' }
 GtCoderSideBarSystemNavigationExtension >> adjustSideBarWidth [
 	widthStrategy adjustWidthFor: self sideBar.
 ]
 
-{ #category : #converting }
+{ #category : #'sidebar width' }
 GtCoderSideBarSystemNavigationExtension >> beExact: aNumber [
 	widthStrategy := BrResizerElementLength exact: aNumber
 ]
 
-{ #category : #converting }
+{ #category : #'sidebar width' }
 GtCoderSideBarSystemNavigationExtension >> beWeighted: aNumber [
 	widthStrategy := BrResizerElementLength weight: aNumber
 ]
@@ -40,6 +40,11 @@ GtCoderSideBarSystemNavigationExtension >> coder: aGtCoder [
 ]
 
 { #category : #defaults }
+GtCoderSideBarSystemNavigationExtension >> defaultHiddenSideBarWidth [
+	^ 3
+]
+
+{ #category : #defaults }
 GtCoderSideBarSystemNavigationExtension >> defaultWeight [
 	^ 0.5
 ]
@@ -48,6 +53,11 @@ GtCoderSideBarSystemNavigationExtension >> defaultWeight [
 GtCoderSideBarSystemNavigationExtension >> fillToolWidgetIn: aCreationContext [
 	"initialize a tool widget"
 	self sideBar addChild: navigationElement.
+]
+
+{ #category : #'sidebar width' }
+GtCoderSideBarSystemNavigationExtension >> hideSideBar [
+	self sideBar width: self defaultHiddenSideBarWidth
 ]
 
 { #category : #initialization }
@@ -65,6 +75,12 @@ GtCoderSideBarSystemNavigationExtension >> initializeNavigationElement [
 { #category : #initialization }
 GtCoderSideBarSystemNavigationExtension >> initializeWidthStrategy [
 	widthStrategy := BrResizerElementLength weight: self defaultWeight.
+]
+
+{ #category : #'sidebar width' }
+GtCoderSideBarSystemNavigationExtension >> isSideBarHidden [
+	<return: #Boolean>
+	^ self sideBar width <= self defaultHiddenSideBarWidth
 ]
 
 { #category : #accessing }
@@ -93,6 +109,19 @@ GtCoderSideBarSystemNavigationExtension >> onNavigationModelChanged [
 	self initializeNavigationElement.
 ]
 
+{ #category : #hooks }
+GtCoderSideBarSystemNavigationExtension >> onResizerDoubleClick: anEvent [
+	anEvent consumed: true.
+	self isSideBarHidden
+		ifTrue: [ self adjustSideBarWidth ]
+		ifFalse: [ self hideSideBar ]
+]
+
+{ #category : #hooks }
+GtCoderSideBarSystemNavigationExtension >> onResizerResized: anEvent [
+	self beExact: anEvent extent x
+]
+
 { #category : #accessing }
 GtCoderSideBarSystemNavigationExtension >> sideBar [
 	<return: #BlElement>
@@ -114,16 +143,14 @@ GtCoderSideBarSystemNavigationExtension >> subscribeToCoder [
 
 { #category : #subscriptions }
 GtCoderSideBarSystemNavigationExtension >> subscribeToResizer [
-	self coder leftSideBarResizerDo: [ :aResizer | 
-		aResizer
-			when: BlResizerResizedEvent
-				do: [ :anEvent |
-					self beExact: anEvent extent x ];
-			when: BlDoubleClickEvent
-				do: [ :anEvent | 
-					anEvent consumed: true.
-					self beWeighted: self defaultWeight.
-					self adjustSideBarWidth ] ]
+	self coder
+		leftSideBarResizerDo: [ :aResizer | 
+			aResizer
+				when: BlResizerResizedEvent
+					do: [ :anEvent | self onResizerResized: anEvent ];
+				when: BlDoubleClickEvent
+					do:
+						[ :anEvent | self onResizerDoubleClick: anEvent ] ]
 ]
 
 { #category : #accessing }
