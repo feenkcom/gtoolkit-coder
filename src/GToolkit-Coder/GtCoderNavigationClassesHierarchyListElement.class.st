@@ -26,11 +26,7 @@ GtCoderNavigationClassesHierarchyListElement >> buildClassRow: aTreeNode index: 
 				BrPressModel new.
 				BrSelectModel new }) ];
 		layout: BlLinearLayout horizontal;
-		look: BrHorizontalPaneLook new + (BrInteractiveCommonLook new
-			default: [ :aWidget | aWidget background: Color transparent ];
-			hovered: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor ];
-			selected: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor ];
-			pressed: [ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor slightlyDarker ]);
+		look: BrHorizontalPaneLook + BrGlamorousListItemLook;
 		when: BlMouseDownEvent do: [ :anEvent |
 			anEvent consumed: true.
 			aTreeElement selectOne: aRowIndex dueTo: anEvent.
