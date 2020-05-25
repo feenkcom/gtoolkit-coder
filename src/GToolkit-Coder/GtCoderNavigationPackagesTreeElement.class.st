@@ -2,18 +2,18 @@
 I show a simple list of packages sorting alphabetically
 "
 Class {
-	#name : #GtCoderNavigationPackagesListElement,
+	#name : #GtCoderNavigationPackagesTreeElement,
 	#superclass : #BrSimpleTree,
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
 
 { #category : #'instance creation' }
-GtCoderNavigationPackagesListElement class >> fromPackages: aCollectionOfPackages [
+GtCoderNavigationPackagesTreeElement class >> fromPackages: aCollectionOfPackages [
 	^ self new initializeWithPackages: aCollectionOfPackages
 ]
 
 { #category : #'private - ui' }
-GtCoderNavigationPackagesListElement >> buildPackageLabel: anRPackage [
+GtCoderNavigationPackagesTreeElement >> buildPackageLabel: anRPackage [
 	| aLabel |
 	aLabel := BrLabel new
 		look: (BrGlamorousLabelLook new fontSize: 12);
@@ -22,7 +22,7 @@ GtCoderNavigationPackagesListElement >> buildPackageLabel: anRPackage [
 ]
 
 { #category : #'private - ui' }
-GtCoderNavigationPackagesListElement >> buildPackageRow: aTreeNode index: aRowIndex tree: aTreeElement [
+GtCoderNavigationPackagesTreeElement >> buildPackageRow: aTreeNode index: aRowIndex tree: aTreeElement [
 	^ BrWidgetContainer new
 		viewModelDo: [ :aBrInteractiveModel |
 			(aBrInteractiveModel addStates: {
@@ -46,7 +46,7 @@ GtCoderNavigationPackagesListElement >> buildPackageRow: aTreeNode index: aRowIn
 ]
 
 { #category : #'private - ui' }
-GtCoderNavigationPackagesListElement >> buildTagLabel: anRPackageTag [
+GtCoderNavigationPackagesTreeElement >> buildTagLabel: anRPackageTag [
 	| aLabel |
 	aLabel := BrLabel new
 		look: (BrGlamorousLabelLook new fontSize: 12);
@@ -55,7 +55,7 @@ GtCoderNavigationPackagesListElement >> buildTagLabel: anRPackageTag [
 ]
 
 { #category : #'private - enumeration' }
-GtCoderNavigationPackagesListElement >> childrenForPackageOrTag: eachPackageOrTag [
+GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: eachPackageOrTag [
 	| theTags anExtension |
 	(eachPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
 	theTags := eachPackageOrTag classTags asArray sorted: [ :tagA :tagB | tagA name < tagB name ].
@@ -68,7 +68,7 @@ GtCoderNavigationPackagesListElement >> childrenForPackageOrTag: eachPackageOrTa
 ]
 
 { #category : #'private - ui' }
-GtCoderNavigationPackagesListElement >> createArrowInterationElementForNode: aNode [
+GtCoderNavigationPackagesTreeElement >> createArrowInterationElementForNode: aNode [
 	^ BlElement new
 		background: (aNode isEmpty ifTrue: [ Color transparent ] ifFalse: [ Color gray ]);
 		size: 10@10;
@@ -79,7 +79,7 @@ GtCoderNavigationPackagesListElement >> createArrowInterationElementForNode: aNo
 ]
 
 { #category : #'private - ui' }
-GtCoderNavigationPackagesListElement >> createExpandCollapseElementFor: aNode [
+GtCoderNavigationPackagesTreeElement >> createExpandCollapseElementFor: aNode [
 	^ BlElement new
 		geometry: BlEllipse new;
 		margin: (BlInsets all: 2);
@@ -100,7 +100,7 @@ GtCoderNavigationPackagesListElement >> createExpandCollapseElementFor: aNode [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesListElement >> initialize [
+GtCoderNavigationPackagesTreeElement >> initialize [
 	super initialize.
 	
 	self stencil: [ :aBrTreeNode :anIndex :aTreeWidget |
@@ -108,7 +108,7 @@ GtCoderNavigationPackagesListElement >> initialize [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesListElement >> initializeWithPackages: aCollectionOfPackages [
+GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPackages [
 	| theSortedPackages |
 
 	theSortedPackages := aCollectionOfPackages asArray

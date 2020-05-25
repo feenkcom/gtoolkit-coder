@@ -149,7 +149,7 @@ GtBehaviorCoderElement >> classViewItems [
 	collector fromObject: classCoder theClass.
 	collector from: classCoder theClass class.
 	collector to: Behavior.
-	collector pragmaNames: #(gtClassView).
+	collector pragmaName: #gtClassView.
 	context := Dictionary new.
 	context at: #classCoder put: classCoder.
 	collector context: context.

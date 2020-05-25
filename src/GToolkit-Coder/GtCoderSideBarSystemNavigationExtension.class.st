@@ -68,8 +68,9 @@ GtCoderSideBarSystemNavigationExtension >> initialize [
 
 { #category : #initialization }
 GtCoderSideBarSystemNavigationExtension >> initializeNavigationElement [
-	navigationElement := (GtCoderSideBarNavigationPackagesTagsClassesElement new 
-		navigationModel: navigationModel).
+	navigationElement := (GtCoderNavigationTabsStencil new 
+		navigationModel: navigationModel;
+		asElement).
 ]
 
 { #category : #initialization }

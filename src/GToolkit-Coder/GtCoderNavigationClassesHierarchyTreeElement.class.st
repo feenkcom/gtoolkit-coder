@@ -2,7 +2,7 @@
 I show a list of classes grouping them based on the inheritance hierarchy and sorting alphabetically
 "
 Class {
-	#name : #GtCoderNavigationClassesHierarchyListElement,
+	#name : #GtCoderNavigationClassesHierarchyTreeElement,
 	#superclass : #BrSimpleTree,
 	#traits : 'TGtCoderNavigationClassesHelper',
 	#classTraits : 'TGtCoderNavigationClassesHelper classTrait',
@@ -13,12 +13,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtCoderNavigationClassesHierarchyListElement class >> fromClasses: aCollectionOfClasses [
+GtCoderNavigationClassesHierarchyTreeElement class >> fromClasses: aCollectionOfClasses [
 	^ self new initializeWithClasses: aCollectionOfClasses
 ]
 
 { #category : #'private - ui' }
-GtCoderNavigationClassesHierarchyListElement >> buildClassRow: aTreeNode index: aRowIndex tree: aTreeElement [
+GtCoderNavigationClassesHierarchyTreeElement >> buildClassRow: aTreeNode index: aRowIndex tree: aTreeElement [
 	^ BrWidgetContainer new
 		viewModelDo: [ :aBrInteractiveModel |
 			(aBrInteractiveModel addStates: {
@@ -38,7 +38,7 @@ GtCoderNavigationClassesHierarchyListElement >> buildClassRow: aTreeNode index: 
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyListElement >> initialize [
+GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
 	
 	self stencil: [ :aBrTreeNode :anIndex :aTreeWidget |
@@ -46,8 +46,16 @@ GtCoderNavigationClassesHierarchyListElement >> initialize [
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyListElement >> initializeWithClasses: aCollectionOfClasses [
+GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollectionOfClasses [
 	classesTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses) sortByClassName.
+	
+	self items: classesTree subclassTrees children: [ :eachTree | eachTree subclassTrees ].
+	self expandAll
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: aClass [
+	classesTree := (GtCoderClassesHierarchyTree hierarchyForClass: aClass) sortByClassName.
 	
 	self items: classesTree subclassTrees children: [ :eachTree | eachTree subclassTrees ].
 	self expandAll

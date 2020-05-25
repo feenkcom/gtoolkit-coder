@@ -18,3 +18,18 @@ GtCoderClassesHierarchyTreeExamples >> fromCollectionClasses [
 	
 	^ aHierarchyTree
 ]
+
+{ #category : #'instance creation' }
+GtCoderClassesHierarchyTreeExamples >> hierarchyForSequenceableCollectionClass [
+	<gtExample>
+	| aHierarchyTree |
+	
+	aHierarchyTree := GtCoderClassesHierarchyTree hierarchyForClass: SequenceableCollection.
+	
+	self assert: aHierarchyTree size equals: 1.
+	self assert: aHierarchyTree first classes equals: { Object }.
+	self assert: (aHierarchyTree first at: 1) classes equals: { Collection }.
+	self assert: (aHierarchyTree first first at: 1) classes equals: { SequenceableCollection }.
+	
+	^ aHierarchyTree
+]

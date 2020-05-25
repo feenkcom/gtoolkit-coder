@@ -8,5 +8,5 @@ Class {
 GtCoderNavigationPackagesListElementExamples >> fromAllPackages [
 	<gtExample>
 	
-	^ GtCoderNavigationPackagesListElement fromPackages: RPackageOrganizer default packages
+	^ GtCoderNavigationPackagesTreeElement fromPackages: RPackageOrganizer default packages
 ]
