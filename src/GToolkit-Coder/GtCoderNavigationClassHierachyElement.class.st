@@ -12,6 +12,11 @@ GtCoderNavigationClassHierachyElement >> deselectClasses [
 	classesList deselectAll
 ]
 
+{ #category : #'updating lists' }
+GtCoderNavigationClassHierachyElement >> emptyClassList [
+	classesList initializeWithClasses: #()
+]
+
 { #category : #initialization }
 GtCoderNavigationClassHierachyElement >> initializeContent [
 	classesList := GtCoderNavigationClassesHierarchyTreeElement new.
@@ -60,10 +65,11 @@ GtCoderNavigationClassHierachyElement >> onNavigationModelChanged [
 	self hideOrShowClassList."
 ]
 
-{ #category : #subscriptions }
+{ #category : #'event handling' }
 GtCoderNavigationClassHierachyElement >> onPackageSelected: anAnnouncer [
 	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [  
+	self suppressListChangeEventsDuring: [ 
+		self emptyClassList.
 		self deselectClasses. ]
 ]
 
@@ -71,6 +77,7 @@ GtCoderNavigationClassHierachyElement >> onPackageSelected: anAnnouncer [
 GtCoderNavigationClassHierachyElement >> onPackagesSelected: anAnnouncer [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [ 
+		self emptyClassList.
 		self deselectClasses. ]
 ]
 
@@ -78,6 +85,7 @@ GtCoderNavigationClassHierachyElement >> onPackagesSelected: anAnnouncer [
 GtCoderNavigationClassHierachyElement >> onTagSelected: anAnnouncer [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [
+		self emptyClassList.
 		self deselectClasses. ].
 ]
 
@@ -112,7 +120,7 @@ GtCoderNavigationClassHierachyElement >> updateClassLists [
 	theClasses := navigationModel classesToShow.
 	theClasses size = 1 
 		ifTrue: [ self updateClassListsWith: theClasses first ]
-		ifFalse: [ classesList initializeWithClasses: #() ].
+		ifFalse: [ self emptyClassList ].
 ]
 
 { #category : #'updating lists' }
