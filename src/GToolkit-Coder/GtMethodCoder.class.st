@@ -281,9 +281,40 @@ GtMethodCoder >> buildSource [
 			ex return ]
 ]
 
+{ #category : #testing }
+GtMethodCoder >> canCompileMethodIn: newClass [
+	| ast modelClass pools variables model |
+	ast := self rbAST.
+	variables := Set new.
+	ast
+		nodesDo: [ :node | 
+			(node isSelfOrSuper not
+				and: [ node isVariable and: [ node gtIsLocal not ] ])
+				ifTrue: [ variables add: node name ] ].
+	model := RBNamespace new.
+	modelClass := model classFor: newClass.
+	pools := {Smalltalk} , modelClass instanceSide sharedPools.
+	^ variables
+		allSatisfy: [ :each | 
+			(modelClass definesVariable: each)
+				or: [ pools anySatisfy: [ :pool | pool includesKey: each asSymbol ] ] ]
+]
+
 { #category : #examples }
 GtMethodCoder >> canExecuteExample [
 	^ self example ifNil: [ false ] ifNotNil: [ :anExample | anExample canBeExecuted ]
+]
+
+{ #category : #testing }
+GtMethodCoder >> canMoveMethodToInstanceOrClass [
+	| oldClass newClass |
+	oldClass := self classOrMetaClass.
+	newClass := oldClass isMeta
+		ifTrue: [ oldClass soleInstance ]
+		ifFalse: [ oldClass class ].
+	(newClass includesSelector: self currentSelector)
+		ifTrue: [ ^ false ].
+	^ self canCompileMethodIn: newClass
 ]
 
 { #category : #accessing }
@@ -943,6 +974,27 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 		addContextAction: 'Mondrian' translated
 		icon: BrGlamorousVectorIcons playinspect
 		action: [ :button | self runMondrianPaintFrom: button ]
+]
+
+{ #category : #'actions-refactorings' }
+GtMethodCoder >> moveMethodToInstanceOrClass [
+	| oldClass newClass model modelClass oldModelClass |
+	self canMoveMethodToInstanceOrClass
+		ifFalse: [ ^ false ].
+	oldClass := self classOrMetaClass.
+	newClass := oldClass isMeta
+		ifTrue: [ oldClass soleInstance ]
+		ifFalse: [ oldClass class ].
+	model := RBNamespace new.
+	modelClass := model classFor: newClass.
+	modelClass compile: self source classified: self category.
+	oldModelClass := model classFor: oldClass.
+	(oldModelClass directlyDefinesMethod: self currentSelector)
+		ifTrue: [ oldModelClass removeMethod: self currentSelector ].
+	self classOrMetaClass: newClass.
+	[ model changes execute ]
+		ifCurtailed: [ self classOrMetaClass: oldClass ].
+	^ true
 ]
 
 { #category : #actions }

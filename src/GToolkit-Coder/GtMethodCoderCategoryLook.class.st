@@ -8,12 +8,24 @@ Class {
 }
 
 { #category : #initialization }
-GtMethodCoderCategoryLook >> addCategoryEditor [
+GtMethodCoderCategoryLook >> addMethodTags [
 	self widget
 		childNamed: #header
-		ifFound:
-			[ :header | header addChild: self buildCategoryEditor as: self categoryEditorName ]
+		ifFound: [ :header | 
+			| editor |
+			editor := self buildCategoryEditor.
+			self attachToBottomRight: editor.
+			header addChild: editor as: self categoryEditorName ]
 		ifNone: [  ]
+]
+
+{ #category : #initialization }
+GtMethodCoderCategoryLook >> attachToBottomRight: anElement [
+	anElement
+		constraintsDo: [ :c | 
+			c ignoreByLayout.
+			c ignored horizontal alignRight.
+			c ignored vertical alignBottom ]
 ]
 
 { #category : #initialization }
@@ -27,10 +39,6 @@ GtMethodCoderCategoryLook >> buildCategoryEditor [
 				fontSize: 10);
 		padding: (BlInsets all: 2);
 		margin: (BlInsets all: 0);
-		constraintsDo: [ :c | 
-			c ignoreByLayout.
-			c ignored horizontal alignRight.
-			c ignored vertical alignBottom ];
 		text: (self category ifNil: [ '' ]) asRopedText;
 		when: BrEditorAcceptWish
 			do:
@@ -57,8 +65,8 @@ GtMethodCoderCategoryLook >> initialize [
 	self
 		addChange:
 			(BrLookChange new
-				up: [ :e | self addCategoryEditor ];
-				down: [ :e | self removeCategoryEditor ];
+				up: [ :e | self addMethodTags ];
+				down: [ :e | self removeMethodTags ];
 				yourself)
 ]
 
@@ -78,7 +86,7 @@ GtMethodCoderCategoryLook >> methodsCoder: aMethodsCoder [
 ]
 
 { #category : #initialization }
-GtMethodCoderCategoryLook >> removeCategoryEditor [
+GtMethodCoderCategoryLook >> removeMethodTags [
 	self widget
 		childNamed: self categoryEditorName
 		ifFound: [ :toggle | toggle removeFromParent ]
