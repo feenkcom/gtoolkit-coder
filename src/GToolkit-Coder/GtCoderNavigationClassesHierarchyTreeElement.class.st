@@ -37,6 +37,15 @@ GtCoderNavigationClassesHierarchyTreeElement >> buildClassRow: aTreeNode index: 
 		addChild: (self buildClassLabel: aTreeNode value rootClass)
 ]
 
+{ #category : #'private - ui' }
+GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
+	| aClassDepth |
+	aClassDepth := 0.
+	aClass
+		allSuperclassesDo: [ :eachClass | aClassDepth := aClassDepth + 1 ].
+	self expandUpTo: aClassDepth + 2
+]
+
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
@@ -47,16 +56,20 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollectionOfClasses [
-	classesTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses) sortByClassName.
-	
-	self items: classesTree subclassTrees children: [ :eachTree | eachTree subclassTrees ].
+	classesTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses) 
+		sortByClassName.
+	self 
+		items: classesTree subclassTrees 
+		children: [ :eachTree | eachTree subclassTrees ].
 	self expandAll
 ]
 
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: aClass [
-	classesTree := (GtCoderClassesHierarchyTree hierarchyForClass: aClass) sortByClassName.
-	
-	self items: classesTree subclassTrees children: [ :eachTree | eachTree subclassTrees ].
-	self expandAll
+	classesTree := (GtCoderClassesHierarchyTree hierarchyForClass: aClass)
+		sortByClassName.
+	self
+		items: classesTree subclassTrees
+		children: [ :eachTree | eachTree subclassTrees ].
+	self expandClass: aClass
 ]
