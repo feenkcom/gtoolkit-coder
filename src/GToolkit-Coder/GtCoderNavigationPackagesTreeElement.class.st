@@ -112,7 +112,7 @@ GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPac
 	| theSortedPackages |
 
 	theSortedPackages := aCollectionOfPackages asArray
-		sorted: [ :packageA :packageB | packageA name < packageB name ].
+		sorted: [ :packageA :packageB | packageA name asLowercase < packageB name asLowercase ].
 
 	self
 		items: theSortedPackages
