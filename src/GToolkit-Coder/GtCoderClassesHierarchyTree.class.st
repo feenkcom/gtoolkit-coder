@@ -7,8 +7,8 @@ Class {
 	#name : #GtCoderClassesHierarchyTree,
 	#superclass : #Object,
 	#instVars : [
-		'trees',
-		'rootClass'
+		'rootClass',
+		'subclassTrees'
 	],
 	#category : #'GToolkit-Coder-Navigation - Model'
 }
@@ -16,6 +16,15 @@ Class {
 { #category : #'instance creation' }
 GtCoderClassesHierarchyTree class >> fromClasses: aCollectionOfClasses [
 	^ self new fromClasses: aCollectionOfClasses
+]
+
+{ #category : #'instance creation' }
+GtCoderClassesHierarchyTree class >> hierarchyForClass: aClass [
+	^ self fromClasses: (Array streamContents: [ :aStream | 
+		aStream 
+			nextPutAll: aClass allSuperclasses;
+			nextPut: aClass;
+			nextPutAll: aClass allSubclasses ] )
 ]
 
 { #category : #accessing }
@@ -50,7 +59,7 @@ GtCoderClassesHierarchyTree >> fromClasses: aCollectionOfClasses [
 		thenCollect: [ :eachRootClass | eachRootClass -> (theSetOfClasses select: [ :eachClass | eachClass inheritsFrom: eachRootClass ]) ].
 	
 	rootClass := nil.
-	trees := theRootTrees collect: [ :eachAssoc | (self class fromClasses: eachAssoc value) rootClass: eachAssoc key ] as: Array.
+	subclassTrees := theRootTrees collect: [ :eachAssoc | (self class fromClasses: eachAssoc value) rootClass: eachAssoc key ] as: Array.
 ]
 
 { #category : #'gt-extension' }
@@ -101,13 +110,13 @@ GtCoderClassesHierarchyTree >> rootClass: anObject [
 GtCoderClassesHierarchyTree >> size [
 	<return: #Number>
 
-	^ trees size
+	^ subclassTrees size
 ]
 
 { #category : #sorting }
 GtCoderClassesHierarchyTree >> sort: aBlock [
-	trees := trees sorted: [ :treeA :treeB | aBlock value: treeA rootClass value: treeB rootClass ].
-	trees do: [ :eachTree | eachTree sort: aBlock ]
+	subclassTrees := subclassTrees sorted: [ :treeA :treeB | aBlock value: treeA rootClass value: treeB rootClass ].
+	subclassTrees do: [ :eachTree | eachTree sort: aBlock ]
 ]
 
 { #category : #sorting }
@@ -117,7 +126,7 @@ GtCoderClassesHierarchyTree >> sortByClassName [
 
 { #category : #accessing }
 GtCoderClassesHierarchyTree >> subclassTrees [
-	<return: #Collection of: #GtCoderClassHierarchyTree>
+	<return: #Collection of: #GtCoderClassesHierarchyTree>
 
-	^ trees
+	^ subclassTrees
 ]

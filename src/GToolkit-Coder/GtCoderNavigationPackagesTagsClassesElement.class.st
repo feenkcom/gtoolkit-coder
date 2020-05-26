@@ -1,18 +1,15 @@
 Class {
 	#name : #GtCoderNavigationPackagesTagsClassesElement,
-	#superclass : #BlElement,
+	#superclass : #GtCoderNavigationElement,
 	#instVars : [
 		'packagesList',
 		'classesList',
-		'navigationModel',
-		'supressListChanges',
-		'supressNavigationChanges',
 		'classesLabel'
 	],
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
 
-{ #category : #'api - packages' }
+{ #category : #'api - classes' }
 GtCoderNavigationPackagesTagsClassesElement >> deselectClasses [
 	classesList deselectAll
 ]
@@ -45,13 +42,9 @@ GtCoderNavigationPackagesTagsClassesElement >> hideOrShowClassList [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> initialize [
-	super initialize.
-	supressListChanges := false.
-	supressNavigationChanges := false.
-	self initializeLayout.
-	self initializeLists.
-	self initializeElement.
+GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
+	packagesList := GtCoderNavigationPackagesTreeElement new.
+	classesList := GtCoderNavigationClassesHierarchyTreeElement new.
 ]
 
 { #category : #initialization }
@@ -76,25 +69,6 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical matchParent ].
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> initializeLists [
-	packagesList := GtCoderNavigationPackagesListElement new.
-	classesList := GtCoderNavigationClassesHierarchyListElement new.
-]
-
-{ #category : #accessing }
-GtCoderNavigationPackagesTagsClassesElement >> navigationModel [
-	<return: #GtCoderNavigationPackagesTagsClassesModel>
-
-	^ navigationModel
-]
-
-{ #category : #accessing }
-GtCoderNavigationPackagesTagsClassesElement >> navigationModel: aGtCoderNavigationPackagesTagsClassesModel [
-	navigationModel := aGtCoderNavigationPackagesTagsClassesModel.
-	self onNavigationModelChanged.
 ]
 
 { #category : #'event handling' }
@@ -172,7 +146,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onTagSelected: anAnnouncer [
 		self deselectClasses. ].
 ]
 
-{ #category : #'api - packages' }
+{ #category : #'api - classes' }
 GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass [
 	classesList viewModel
 		indexOfSuchThat: [ :each | each rootClass = aClass ]
@@ -181,7 +155,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass [
 			scrollTo: anIndex ]
 ]
 
-{ #category : #'api - packages' }
+{ #category : #'api - classes' }
 GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aPackage tag: aPackageTag [
 	| anExistingIndex |
 	
@@ -246,18 +220,6 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToPackageList [
 	packagesList
 		when: BrSelectionChanged
 		do: [ :anEvent | self onPackageListSelectionChanged ].
-]
-
-{ #category : #subscriptions }
-GtCoderNavigationPackagesTagsClassesElement >> suppressListChangeEventsDuring: aBlock [
-	supressListChanges := true.
-	aBlock ensure: [ supressListChanges := false ].
-]
-
-{ #category : #subscriptions }
-GtCoderNavigationPackagesTagsClassesElement >> suppressNavigationChangeEventsDuring: aBlock [
-	supressNavigationChanges := true.
-	aBlock ensure: [ supressNavigationChanges := false ].
 ]
 
 { #category : #'updating lists' }

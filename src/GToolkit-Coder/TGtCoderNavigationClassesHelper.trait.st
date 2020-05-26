@@ -5,15 +5,15 @@ Trait {
 
 { #category : #'private - ui' }
 TGtCoderNavigationClassesHelper >> buildClassLabel: aClass [
-	| aLabel |
-	aLabel := BrLabel new
-		look: (BrGlamorousLabelLook new fontSize: 12);
-		text: aClass name.
-		
+	| aLook |
+	aLook := (BrGlamorousLabelLook new fontSize: 12).
+
 	(self isAbstractClass: aClass)
-		ifTrue: [ aLabel look italic ].
-		
-	^ aLabel
+		ifTrue: [ aLook italic ].
+	
+	^ BrLabel new
+		look: aLook;
+		text: aClass name
 ]
 
 { #category : #'private - testing' }

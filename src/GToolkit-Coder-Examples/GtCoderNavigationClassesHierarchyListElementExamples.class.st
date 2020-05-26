@@ -8,6 +8,6 @@ Class {
 GtCoderNavigationClassesHierarchyListElementExamples >> fromCollectionClasses [
 	<gtExample>
 
-	^ GtCoderNavigationClassesHierarchyListElement
+	^ GtCoderNavigationClassesHierarchyTreeElement
 		fromClasses: #'Collections-Abstract' asPackage definedClasses
 ]

@@ -97,23 +97,10 @@ GtBehaviorCoderElement >> buildContentPane [
 
 { #category : #'building ui' }
 GtBehaviorCoderElement >> buildContentTabs [
-	| tabPragmas |
-	tabPragmas := self classViewItems.
-	contentTabs := BrTabGroup new.
-	contentTabs look: BrGlamorousTabGroupLook new.
-	contentTabs constraintsDo: [ :c | c linear weight: 2 ].
-	tabPragmas
-		do: [ :each | 
-			each
-				ifItHasContent: [ | tab |
-					tab := BrTab new
-						look: BrGlamorousTabLook new;
-						label: each title;
-						stencil: [ each asElementDo: [ :el | el ] ].
-					each actions notEmpty
-						ifTrue:
-							[ tab toolbarStencil: [ each actionsToolbarForElement: tab ] ].
-					contentTabs addTab: tab ] ].
+	<return: #BrTabGroup>
+	contentTabs := GtPhlowCompositeView new
+		views: self classViewItems;
+		asElementDo: [ :aBrTabGroup | aBrTabGroup ].
 	^ contentTabs
 ]
 
@@ -149,7 +136,7 @@ GtBehaviorCoderElement >> classViewItems [
 	collector fromObject: classCoder theClass.
 	collector from: classCoder theClass class.
 	collector to: Behavior.
-	collector pragmaNames: #(gtClassView).
+	collector pragmaName: #gtClassView.
 	context := Dictionary new.
 	context at: #classCoder put: classCoder.
 	collector context: context.
