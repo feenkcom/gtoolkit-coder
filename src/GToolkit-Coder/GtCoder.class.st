@@ -16,8 +16,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtCoder class >> forClass: aCompiledMethod [
-	^ self forCoder: (GtClassCoder forClass: aCompiledMethod)
+GtCoder class >> forClass: aClass [
+	^ self forCoder: (GtClassCoder forClass: aClass)
 ]
 
 { #category : #'instance creation' }
@@ -42,11 +42,6 @@ GtCoder class >> forPackage: anRPackage [
 { #category : #'instance creation' }
 GtCoder class >> new [
 	^ self forCoder: GtPackagesCoder new
-]
-
-{ #category : #converting }
-GtCoder >> asMainCoder [
-	^ self
 ]
 
 { #category : #'private - ui' }

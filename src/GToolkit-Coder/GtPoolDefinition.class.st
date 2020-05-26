@@ -21,7 +21,7 @@ GtPoolDefinition >> asDefinitionString [
 GtPoolDefinition >> browseFrom: anEvent [
 	self class environment
 		at: self name
-		ifPresent: [ :aPool | anEvent currentTarget phlow spawnObject: aPool ]
+		ifPresent: [ :aPool | anEvent currentTarget phlow spawnTool: (GtClassCoderTool observedClass: aPool) ]
 ]
 
 { #category : #'instance creation' }

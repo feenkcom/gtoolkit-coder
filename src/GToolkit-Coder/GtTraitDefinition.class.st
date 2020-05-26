@@ -53,7 +53,7 @@ GtTraitDefinition >> asDefinitionString [
 GtTraitDefinition >> browseFrom: anEvent [
 	self class environment
 		at: self name
-		ifPresent: [ :aTrait | anEvent currentTarget phlow spawnObject: aTrait ]
+		ifPresent: [ :aTrait | anEvent currentTarget phlow spawnTool: (GtClassCoderTool observedClass: aTrait) ]
 ]
 
 { #category : #accessing }

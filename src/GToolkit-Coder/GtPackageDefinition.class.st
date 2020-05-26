@@ -35,7 +35,7 @@ GtPackageDefinition >> browseFrom: anEvent [
 	aCoderEvent := GtCoderToSpawn new coder: aPackageCoder.
 	anEvent currentTarget fireEvent: aCoderEvent.
 	aCoderEvent isConsumed
-		ifFalse: [ anEvent currentTarget phlow spawnObject: aCoderEvent coder ]
+		ifFalse: [ anEvent currentTarget phlow spawnTool: (GtReadyCoderTool coder: aCoderEvent coder) ]
 ]
 
 { #category : #'api - accepting' }
