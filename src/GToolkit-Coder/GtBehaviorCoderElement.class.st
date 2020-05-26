@@ -185,8 +185,11 @@ GtBehaviorCoderElement >> removeContentTabs [
 
 { #category : #'updating ui' }
 GtBehaviorCoderElement >> selectAndScrollToMethod: aMethod [
-	(contentTabs content childAt: 1) coders
-		selectAndScrollToMethod: aMethod
+
+	contentTabs content 
+		allChildrenBreadthFirstDetect: [ :eachElement | eachElement isKindOf: GtCodersElement ] 
+		ifFound: [ :theElement | theElement coders selectAndScrollToMethod: aMethod ] 
+		ifNone: [ "ignore" ]
 ]
 
 { #category : #'updating ui' }

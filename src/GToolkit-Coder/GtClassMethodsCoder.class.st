@@ -38,6 +38,8 @@ GtClassMethodsCoder >> addNewCoder [
 	coder := GtMethodCoder newMethod.
 	coder classOrMetaClass: self newMethodClass.
 	coder object: self object.
+	coder category: #accessing.
+	coder coders: self.
 	coders addFirst: coder.
 	self
 		announce:

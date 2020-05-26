@@ -254,16 +254,19 @@ GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 GtMethodCoder >> breadcrumbNamedActions [
 	^ Array
 		streamContents: [ :aStream | 
-			| aPackage aPackageName aClass |
+			| aPackage aPackageName aClass aClassTool |
 			aPackage := (self compiledMethod ifNil: [ self classOrMetaClass ])
 				package.
 			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
 			aClass := self classOrMetaClass.
+			aClassTool := self compiledMethod 
+				ifNil: [ GtClassCoderTool observedClass: aClass ] 
+				ifNotNil: [ :aMethod | GtMethodCoderTool compiledMethod: aMethod ].
 			aStream
 				nextPut: aPackageName -> [ :aButton | 
 					aButton phlow spawnTool: (GtPackageCoderTool package: aPackage) ];
 				nextPut: aClass name -> [ :aButton | 
-					aButton phlow spawnTool: (GtClassCoderTool observedClass: aClass) ] ]
+					aButton phlow spawnTool: aClassTool ] ]
 ]
 
 { #category : #private }
@@ -281,9 +284,40 @@ GtMethodCoder >> buildSource [
 			ex return ]
 ]
 
+{ #category : #testing }
+GtMethodCoder >> canCompileMethodIn: newClass [
+	| ast modelClass pools variables model |
+	ast := self rbAST.
+	variables := Set new.
+	ast
+		nodesDo: [ :node | 
+			(node isSelfOrSuper not
+				and: [ node isVariable and: [ node gtIsLocal not ] ])
+				ifTrue: [ variables add: node name ] ].
+	model := RBNamespace new.
+	modelClass := model classFor: newClass.
+	pools := {Smalltalk} , modelClass instanceSide sharedPools.
+	^ variables
+		allSatisfy: [ :each | 
+			(modelClass definesVariable: each)
+				or: [ pools anySatisfy: [ :pool | pool includesKey: each asSymbol ] ] ]
+]
+
 { #category : #examples }
 GtMethodCoder >> canExecuteExample [
 	^ self example ifNil: [ false ] ifNotNil: [ :anExample | anExample canBeExecuted ]
+]
+
+{ #category : #testing }
+GtMethodCoder >> canMoveMethodToInstanceOrClass [
+	| oldClass newClass |
+	oldClass := self classOrMetaClass.
+	newClass := oldClass isMeta
+		ifTrue: [ oldClass soleInstance ]
+		ifFalse: [ oldClass class ].
+	(newClass includesSelector: self currentSelector)
+		ifTrue: [ ^ false ].
+	^ self canCompileMethodIn: newClass
 ]
 
 { #category : #accessing }
@@ -327,6 +361,11 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 { #category : #private }
 GtMethodCoder >> clearPatternSyntaxErrors [
 	self collapsedText clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
+]
+
+{ #category : #ui }
+GtMethodCoder >> collapsedStyler [
+	^ BlTextNullStyler new
 ]
 
 { #category : #private }
@@ -945,6 +984,27 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 		action: [ :button | self runMondrianPaintFrom: button ]
 ]
 
+{ #category : #'actions-refactorings' }
+GtMethodCoder >> moveMethodToInstanceOrClass [
+	| oldClass newClass model modelClass oldModelClass |
+	self canMoveMethodToInstanceOrClass
+		ifFalse: [ ^ false ].
+	oldClass := self classOrMetaClass.
+	newClass := oldClass isMeta
+		ifTrue: [ oldClass soleInstance ]
+		ifFalse: [ oldClass class ].
+	model := RBNamespace new.
+	modelClass := model classFor: newClass.
+	modelClass compile: self source classified: self category.
+	oldModelClass := model classFor: oldClass.
+	(oldModelClass directlyDefinesMethod: self currentSelector)
+		ifTrue: [ oldModelClass removeMethod: self currentSelector ].
+	self classOrMetaClass: newClass.
+	[ model changes execute ]
+		ifCurtailed: [ self classOrMetaClass: oldClass ].
+	^ true
+]
+
 { #category : #actions }
 GtMethodCoder >> newMethodSource [
 	^ self newSourceText asString
@@ -1416,8 +1476,9 @@ GtMethodCoder >> updateCollapsedSource [
 	self expanded
 		ifTrue: [ ^ self ].
 	[ | patternText |
-	patternText := self patternSource asRopedText.
+	patternText := self currentSelector asRopedText.
 	patternText attributes: self defaultTextAttributes.
+	patternText bold.
 	self collapsedSource: patternText ]
 		on: Error
 		do: [ :ex | 

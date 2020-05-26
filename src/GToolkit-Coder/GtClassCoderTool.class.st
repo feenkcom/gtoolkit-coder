@@ -17,11 +17,6 @@ GtClassCoderTool >> newCoder [
 	^ GtCoder forClass: self observedClass
 ]
 
-{ #category : #converting }
-GtClassCoderTool >> newCoderFor: aClass [
-	^ GtCoder forClass: aClass
-]
-
 { #category : #accessing }
 GtClassCoderTool >> object [
 	"compatibility method for ${GLMBlocObjectToSelect}$"
