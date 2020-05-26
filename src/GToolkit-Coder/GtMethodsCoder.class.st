@@ -26,7 +26,7 @@ GtMethodsCoder >> methodAdded: aValueAdded [
 	(self coders
 		anySatisfy: [ :each | each isForMethod: aValueAdded newValue ])
 		ifTrue: [ ^ self ].
-	coder := GtMethodCoder forMethod: aValueAdded newValue.
+	coder := self newCoderFor: aValueAdded newValue.
 	coders add: coder.
 	self
 		announce:

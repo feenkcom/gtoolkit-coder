@@ -75,11 +75,11 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault [
 			onModel.
 		aStep check
 			label: 'Check Collapsed Source';
-			satisfies: [ :aCoder | aCoder collapsedSource = '? anObject' ];
+			satisfies: [ :aCoder | aCoder collapsedSource = '?' ];
 			onModel.
 		aStep check
 			label: 'Check Coder Editor Text';
-			satisfies: [ :anEditorElement | anEditorElement editor text asString = '? anObject' ];
+			satisfies: [ :anEditorElement | anEditorElement editor text asString = '?' ];
 			onChildNamed: #editor.
 		aStep check 
 			label: 'Check Coder UI is Collapsed';
@@ -178,7 +178,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
 			onChildAt: 1.
 		aStep check
 			label: 'Check Coder Editor Text';
-			satisfies: [ :anEditorElement | anEditorElement editor text asString = '? anObject' ];
+			satisfies: [ :anEditorElement | anEditorElement editor text asString = '?' ];
 			onChildNamed: #editor.
 		aStep check 
 			label: 'Check Coder UI Is Collapsed';
