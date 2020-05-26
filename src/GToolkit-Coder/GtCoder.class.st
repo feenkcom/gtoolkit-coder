@@ -16,8 +16,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtCoder class >> forClass: aCompiledMethod [
-	^ self forCoder: (GtClassCoder forClass: aCompiledMethod)
+GtCoder class >> forClass: aClass [
+	^ self forCoder: (GtClassCoder forClass: aClass)
 ]
 
 { #category : #'instance creation' }
