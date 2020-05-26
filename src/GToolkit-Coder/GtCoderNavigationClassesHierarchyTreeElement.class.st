@@ -45,8 +45,8 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollecti
 	classesTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses) 
 		sortByClassName.
 	self 
-		items: classesTree subclassTrees 
-		children: [ :eachTree | eachTree subclassTrees ].
+		items: classesTree fixedSubclassTrees 
+		children: [ :eachTree | eachTree fixedSubclassTrees ].
 	self expandAll
 ]
 
@@ -55,7 +55,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 	classesTree := (GtCoderClassesHierarchyTree hierarchyForClass: aClass)
 		sortByClassName.
 	self
-		items: classesTree subclassTrees
-		children: [ :eachTree | eachTree subclassTrees ].
+		items: classesTree growingSubclassTrees
+		children: [ :eachTree | eachTree growingSubclassTrees ].
 	self expandClass: aClass
 ]
