@@ -5,6 +5,21 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtCoderClassesHierarchyTreeExamples >> fixedHierarchyForSequenceableCollectionClass [
+	<gtExample>
+	| aHierarchyTree aSequenceableCollectionTree |
+	
+	aHierarchyTree := self hierarchyForSequenceableCollectionClass.
+	aSequenceableCollectionTree := aHierarchyTree first first first at: 1.
+	
+	self assert: aSequenceableCollectionTree rootClass equals: SequenceableCollection.
+	self assert: aSequenceableCollectionTree fixedSubclassTrees isEmpty.
+	self assert: aSequenceableCollectionTree size equals: 0.
+	
+	^ aHierarchyTree
+]
+
+{ #category : #'instance creation' }
 GtCoderClassesHierarchyTreeExamples >> fromCollectionClasses [
 	<gtExample>
 	| aHierarchyTree |
@@ -16,6 +31,47 @@ GtCoderClassesHierarchyTreeExamples >> fromCollectionClasses [
 	self assert: aHierarchyTree first classes equals: { Set . SequenceableCollection . OrderedDictionary . Dictionary }.
 	self assert: (aHierarchyTree first at: 2) classes equals: { Array . OrderedCollection }.
 	
+	^ aHierarchyTree
+]
+
+{ #category : #'instance creation' }
+GtCoderClassesHierarchyTreeExamples >> growingHierarchyForArrayedCollectionClass [
+	<gtExample>
+	| aHierarchyTree aSequenceableCollectionTree anArrayedCollection |
+	
+	aHierarchyTree := self growingHierarchyForSequenceableCollectionClass.
+	aSequenceableCollectionTree := aHierarchyTree first first first at: 1.
+	anArrayedCollection := aSequenceableCollectionTree fixedSubclassTrees 
+		detect: [ :each | each rootClass = ArrayedCollection ].
+	
+	self assert: anArrayedCollection fixedSubclassTrees isEmpty.
+	self assert: anArrayedCollection size equals: 0.
+	self assert: anArrayedCollection growingSize > 0.
+	
+
+	self assert: anArrayedCollection growingSubclassTrees size > 0.
+	self assert: anArrayedCollection size > 0.
+
+	^ aHierarchyTree
+]
+
+{ #category : #'instance creation' }
+GtCoderClassesHierarchyTreeExamples >> growingHierarchyForSequenceableCollectionClass [
+	<gtExample>
+	| aHierarchyTree aSequenceableCollectionTree |
+	
+	aHierarchyTree := self hierarchyForSequenceableCollectionClass.
+	aSequenceableCollectionTree := aHierarchyTree first first first at: 1.
+	
+	self assert: aSequenceableCollectionTree rootClass equals: SequenceableCollection.
+	self assert: aSequenceableCollectionTree fixedSubclassTrees isEmpty.
+	self assert: aSequenceableCollectionTree size equals: 0.
+	self assert: aSequenceableCollectionTree growingSize > 0.
+	
+
+	self assert: aSequenceableCollectionTree growingSubclassTrees size > 0.
+	self assert: aSequenceableCollectionTree size > 0.
+
 	^ aHierarchyTree
 ]
 

@@ -69,6 +69,15 @@ GtCoderClassesHierarchyTree >> fromClasses: aCollectionOfClasses [
 ]
 
 { #category : #accessing }
+GtCoderClassesHierarchyTree >> growingSize [
+	<return: #Number>
+
+	^ self size isZero
+		ifTrue: [ self rootClass subclasses size ] 
+		ifFalse: [ self size ]
+]
+
+{ #category : #accessing }
 GtCoderClassesHierarchyTree >> growingSubclassTrees [
 	<return: #Collection of: #GtCoderClassesHierarchyTree>
 
