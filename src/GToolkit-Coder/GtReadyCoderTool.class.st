@@ -16,7 +16,7 @@ GtReadyCoderTool class >> coder: aCoder [
 GtReadyCoderTool >> asElementDo: aOneArgBlock [
 	"Create a tool element and execute the block."
 
-	aOneArgBlock cull: self coder asMainCoder asPagerPageElement
+	aOneArgBlock cull: (GtCoder forCoder: self coder) asPagerPageElement
 ]
 
 { #category : #accessing }

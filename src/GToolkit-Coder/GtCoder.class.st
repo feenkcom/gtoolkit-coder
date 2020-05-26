@@ -44,11 +44,6 @@ GtCoder class >> new [
 	^ self forCoder: GtPackagesCoder new
 ]
 
-{ #category : #converting }
-GtCoder >> asMainCoder [
-	^ self
-]
-
 { #category : #'private - ui' }
 GtCoder >> buildAddButton [
 	| look |

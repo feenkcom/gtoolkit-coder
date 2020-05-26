@@ -3,11 +3,6 @@ Trait {
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #converting }
-TGtCoderTrait >> asMainCoder [
-	^ GtCoder forCoder: self
-]
-
 { #category : #testing }
 TGtCoderTrait >> isForClass [
 	^ false
