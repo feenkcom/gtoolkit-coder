@@ -254,16 +254,19 @@ GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 GtMethodCoder >> breadcrumbNamedActions [
 	^ Array
 		streamContents: [ :aStream | 
-			| aPackage aPackageName aClass |
+			| aPackage aPackageName aClass aClassTool |
 			aPackage := (self compiledMethod ifNil: [ self classOrMetaClass ])
 				package.
 			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
 			aClass := self classOrMetaClass.
+			aClassTool := self compiledMethod 
+				ifNil: [ GtClassCoderTool observedClass: aClass ] 
+				ifNotNil: [ :aMethod | GtMethodCoderTool compiledMethod: aMethod ].
 			aStream
 				nextPut: aPackageName -> [ :aButton | 
 					aButton phlow spawnTool: (GtPackageCoderTool package: aPackage) ];
 				nextPut: aClass name -> [ :aButton | 
-					aButton phlow spawnTool: (GtClassCoderTool observedClass: aClass) ] ]
+					aButton phlow spawnTool: aClassTool ] ]
 ]
 
 { #category : #private }
