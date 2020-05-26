@@ -59,6 +59,7 @@ Behavior >> gtCoderMethodsFor: aView context: aDictionary [
 	^ aView explicit
 		priority: 10;
 		title: 'Methods';
+		disableAsync;
 		actionButtonIcon: BrGlamorousVectorIcons add
 			action: [ methodsCoder addNewCoder ];
 		stencil: [ methodsCoder asElement ]
