@@ -4,10 +4,9 @@ I show a list of classes grouping them based on the inheritance hierarchy and so
 Class {
 	#name : #GtCoderNavigationClassesHierarchyTreeElement,
 	#superclass : #BrSimpleTree,
-	#traits : 'TGtCoderNavigationClassesHelper',
-	#classTraits : 'TGtCoderNavigationClassesHelper classTrait',
 	#instVars : [
-		'classesTree'
+		'classesTree',
+		'listItemStencilBuilder'
 	],
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
@@ -19,22 +18,11 @@ GtCoderNavigationClassesHierarchyTreeElement class >> fromClasses: aCollectionOf
 
 { #category : #'private - ui' }
 GtCoderNavigationClassesHierarchyTreeElement >> buildClassRow: aTreeNode index: aRowIndex tree: aTreeElement [
-	^ BrWidgetContainer new
-		viewModelDo: [ :aBrInteractiveModel |
-			(aBrInteractiveModel addStates: {
-				BrHoverModel new.
-				BrPressModel new.
-				BrSelectModel new }) ];
-		layout: BlLinearLayout horizontal;
-		look: BrHorizontalPaneLook + BrGlamorousListItemLook;
-		when: BlMouseDownEvent do: [ :anEvent |
-			anEvent consumed: true.
-			aTreeElement selectOne: aRowIndex dueTo: anEvent.
-			aTreeElement requestFocus ];
-		hMatchParent;
-		vFitContent;
-		padding: (BlInsets left: 3 + (aTreeNode depth * 10));
-		addChild: (self buildClassLabel: aTreeNode value rootClass)
+	^ listItemStencilBuilder new
+		node: aTreeNode;
+		index: aRowIndex;
+		widget: aTreeElement;
+		asElement
 ]
 
 { #category : #'private - ui' }
@@ -43,7 +31,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
 	aClassDepth := 0.
 	aClass
 		allSuperclassesDo: [ :eachClass | aClassDepth := aClassDepth + 1 ].
-	self expandUpTo: aClassDepth + 2
+	self expandUpTo: aClassDepth + 1
 ]
 
 { #category : #initialization }

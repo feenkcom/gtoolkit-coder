@@ -8,13 +8,6 @@ Class {
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
 
-{ #category : #accessing }
-GtCoderNavigationTabsStencil class >> default [
-	^ self new
-		addNavigation: (GtCoderNavigationPackagesTagsClassesElement new);
-		addNavigation: (GtCoderNavigationClassHierachyElement new)
-]
-
 { #category : #adding }
 GtCoderNavigationTabsStencil >> addNavigation: aNavigationElement [
 	self assertNavigationView: aNavigationElement.
@@ -63,7 +56,8 @@ GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 		title: 'Class Hierarchy';
 		priority: 2;
 		stencil: [ GtCoderNavigationClassHierachyElement new 
-			navigationModel: self navigationModel ]
+			navigationModel: self navigationModel;
+			listItemStencil: GtCoderExpandableClassTreeItemStencilBuilder new ]
 ]
 
 { #category : #'gt-extensions' }

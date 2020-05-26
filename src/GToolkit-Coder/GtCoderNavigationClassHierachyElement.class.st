@@ -35,6 +35,11 @@ GtCoderNavigationClassHierachyElement >> initializeLayout [
 		c vertical matchParent ].
 ]
 
+{ #category : #initialization }
+GtCoderNavigationClassHierachyElement >> listItemStencil: aStencilBuilder [
+	classesList stencil: aStencilBuilder
+]
+
 { #category : #'event handling' }
 GtCoderNavigationClassHierachyElement >> onClassListSelectionChanged [
 	| anIndex aSelectedItem theIndices |
@@ -119,7 +124,7 @@ GtCoderNavigationClassHierachyElement >> updateClassLists [
 	| theClasses |
 	theClasses := navigationModel classesToShow.
 	theClasses size = 1 
-		ifTrue: [ self updateClassListsWith: theClasses first ]
+		ifTrue: [ self updateClassListsWith: theClasses anyOne ]
 		ifFalse: [ self emptyClassList ].
 ]
 
