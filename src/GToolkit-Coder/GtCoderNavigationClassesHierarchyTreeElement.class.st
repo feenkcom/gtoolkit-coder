@@ -37,9 +37,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
-	
-	self stencil: [ :aBrTreeNode :anIndex :aTreeWidget |
-		self buildClassRow: aBrTreeNode index: anIndex tree: aTreeWidget ]
+	self stencil: GtCoderNonExpandableClassTreeItemStencilBuilder new.
 ]
 
 { #category : #initialization }
