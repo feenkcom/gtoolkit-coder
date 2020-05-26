@@ -878,7 +878,6 @@ GtSourceCoder >> stylersUpdated [
 	| stylers |
 	stylers := addOns stylers copy.
 	self sourceEditor styler stylers: stylers.
-	self collapsedEditor styler stylers: stylers.
 	self styleText
 ]
 

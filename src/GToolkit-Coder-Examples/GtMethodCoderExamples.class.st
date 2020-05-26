@@ -16,7 +16,7 @@ GtMethodCoderExamples >> binaryMethodCoder [
 	method := self class >> #?.
 	methodCoder := GtMethodCoder forMethod: method.
 	methodCoder ensureBuilt.
-	self assert: methodCoder collapsedSource = '? anObject'.
+	self assert: methodCoder collapsedSource = '?'.
 	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
 ]
@@ -106,7 +106,7 @@ GtMethodCoderExamples >> keywordSelectorCoder [
 	method := self class >> #keyword:selector:.
 	methodCoder := GtMethodCoder forMethod: method.
 	methodCoder ensureBuilt.
-	self assert: methodCoder collapsedSource = 'keyword: a selector: b'.
+	self assert: methodCoder collapsedSource = 'keyword:selector:'.
 	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
 ]

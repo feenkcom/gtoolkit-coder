@@ -363,6 +363,11 @@ GtMethodCoder >> clearPatternSyntaxErrors [
 	self collapsedText clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
 ]
 
+{ #category : #ui }
+GtMethodCoder >> collapsedStyler [
+	^ BlTextNullStyler new
+]
+
 { #category : #private }
 GtMethodCoder >> collapsedVariableNode [
 	^ self classOrMetaClass
@@ -1471,8 +1476,9 @@ GtMethodCoder >> updateCollapsedSource [
 	self expanded
 		ifTrue: [ ^ self ].
 	[ | patternText |
-	patternText := self patternSource asRopedText.
+	patternText := self currentSelector asRopedText.
 	patternText attributes: self defaultTextAttributes.
+	patternText bold.
 	self collapsedSource: patternText ]
 		on: Error
 		do: [ :ex | 
