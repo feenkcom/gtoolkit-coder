@@ -49,14 +49,14 @@ GtCoderClassesHierarchyTree class >> hierarchyForClass: aClass [
 GtCoderClassesHierarchyTree >> at: anIndex [
 	<return: #GtCoderClassesHierarchyTree>
 
-	^ self fixedSubclassTrees at: anIndex
+	^ self subclassTrees at: anIndex
 ]
 
 { #category : #accessing }
 GtCoderClassesHierarchyTree >> classes [
 	<return: #Collection of: #Class>
 	
-	^ self fixedSubclassTrees collect: [ :eachTree | eachTree rootClass ]
+	^ self subclassTrees collect: [ :eachTree | eachTree rootClass ]
 ]
 
 { #category : #accessing }
@@ -66,51 +66,15 @@ GtCoderClassesHierarchyTree >> first [
 	^ self at: 1
 ]
 
-{ #category : #accessing }
-GtCoderClassesHierarchyTree >> fixedSubclassTrees [
-	<return: #Collection of: #GtCoderClassesHierarchyTree>
-
-	^ subclassTrees
-]
-
-{ #category : #accessing }
-GtCoderClassesHierarchyTree >> growingSize [
-	<return: #Number>
-
-	^ self size isZero
-		ifTrue: [ self rootClass subclasses size ] 
-		ifFalse: [ self size ]
-]
-
-{ #category : #accessing }
-GtCoderClassesHierarchyTree >> growingSubclassTrees [
-	<return: #Collection of: #GtCoderClassesHierarchyTree>
-
-	self fixedSubclassTrees ifEmpty: [ self updateSubclasses ].
-	^ self fixedSubclassTrees
-]
-
 { #category : #'gt-extension' }
-GtCoderClassesHierarchyTree >> gtFixedTreeFor: aView [
+GtCoderClassesHierarchyTree >> gtTreeFor: aView [
 	<gtView>
 
 	^ aView tree
-		title: 'Fixed Classes';
+		title: 'Classes';
 		priority: 1;
 		items: [ { self } ];
-		children: [ :anItem | anItem fixedSubclassTrees ];
-		expandUpTo: 1
-]
-
-{ #category : #'gt-extension' }
-GtCoderClassesHierarchyTree >> gtGrowingTreeFor: aView [
-	<gtView>
-
-	^ aView tree
-		title: 'Growing Classes';
-		priority: 2;
-		items: [ { self } ];
-		children: [ :anItem | anItem growingSubclassTrees ];
+		children: [ :anItem | anItem subclassTrees ];
 		expandUpTo: 1
 ]
 
@@ -171,16 +135,14 @@ GtCoderClassesHierarchyTree >> sortByClassName [
 	self sort: [ :classA :classB | classA name < classB name ]
 ]
 
+{ #category : #accessing }
+GtCoderClassesHierarchyTree >> subclassTrees [
+	<return: #Collection of: #GtCoderClassesHierarchyTree>
+
+	^ subclassTrees
+]
+
 { #category : #initialization }
 GtCoderClassesHierarchyTree >> subclassTrees: aCollection [
 	subclassTrees := aCollection
-]
-
-{ #category : #updating }
-GtCoderClassesHierarchyTree >> updateSubclasses [
-	self rootClass hasSubclasses ifFalse: [ ^ self ].
-	subclassTrees := self rootClass subclasses 
-		collect: [ :eachClass |
-			self class new rootClass: eachClass ]
-		as: Array.
 ]
