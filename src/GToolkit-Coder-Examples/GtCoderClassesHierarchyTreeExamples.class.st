@@ -9,11 +9,11 @@ GtCoderClassesHierarchyTreeExamples >> fixedHierarchyForSequenceableCollectionCl
 	<gtExample>
 	| aHierarchyTree aSequenceableCollectionTree |
 	
-	aHierarchyTree := self hierarchyForSequenceableCollectionClass.
+	aHierarchyTree := GtCoderClassesHierarchyTree hierarchyForClass: SequenceableCollection.
 	aSequenceableCollectionTree := aHierarchyTree first first first at: 1.
 	
 	self assert: aSequenceableCollectionTree rootClass equals: SequenceableCollection.
-	self assert: aSequenceableCollectionTree fixedSubclassTrees isEmpty.
+	self assert: aSequenceableCollectionTree subclassTrees isEmpty.
 	self assert: aSequenceableCollectionTree size equals: 0.
 	
 	^ aHierarchyTree
@@ -41,16 +41,16 @@ GtCoderClassesHierarchyTreeExamples >> growingHierarchyForArrayedCollectionClass
 	
 	aHierarchyTree := self growingHierarchyForSequenceableCollectionClass.
 	aSequenceableCollectionTree := aHierarchyTree first first first at: 1.
-	anArrayedCollection := aSequenceableCollectionTree fixedSubclassTrees 
+	anArrayedCollection := aSequenceableCollectionTree currentSubclassTrees 
 		detect: [ :each | each rootClass = ArrayedCollection ].
 	
-	self assert: anArrayedCollection fixedSubclassTrees isEmpty.
-	self assert: anArrayedCollection size equals: 0.
-	self assert: anArrayedCollection growingSize > 0.
-	
+	self assert: anArrayedCollection currentSubclassTrees isEmpty.
+	self assert: anArrayedCollection currentSize equals: 0.	
 
-	self assert: anArrayedCollection growingSubclassTrees size > 0.
+	self assert: anArrayedCollection subclassTrees size > 0.
 	self assert: anArrayedCollection size > 0.
+	self assert: anArrayedCollection currentSubclassTrees size > 0.
+	self assert: anArrayedCollection currentSize > 0.	
 
 	^ aHierarchyTree
 ]
@@ -64,14 +64,16 @@ GtCoderClassesHierarchyTreeExamples >> growingHierarchyForSequenceableCollection
 	aSequenceableCollectionTree := aHierarchyTree first first first at: 1.
 	
 	self assert: aSequenceableCollectionTree rootClass equals: SequenceableCollection.
-	self assert: aSequenceableCollectionTree fixedSubclassTrees isEmpty.
-	self assert: aSequenceableCollectionTree size equals: 0.
-	self assert: aSequenceableCollectionTree growingSize > 0.
+	self assert: aSequenceableCollectionTree currentSubclassTrees isEmpty.
+	self assert: aSequenceableCollectionTree currentSize equals: 0.
+	self assert: aSequenceableCollectionTree size > 0.
 	
 
-	self assert: aSequenceableCollectionTree growingSubclassTrees size > 0.
+	self assert: aSequenceableCollectionTree subclassTrees size > 0.
 	self assert: aSequenceableCollectionTree size > 0.
-
+	self assert: aSequenceableCollectionTree currentSubclassTrees size > 0.
+	self assert: aSequenceableCollectionTree currentSize > 0.
+	
 	^ aHierarchyTree
 ]
 
@@ -80,7 +82,7 @@ GtCoderClassesHierarchyTreeExamples >> hierarchyForSequenceableCollectionClass [
 	<gtExample>
 	| aHierarchyTree |
 	
-	aHierarchyTree := GtCoderClassesHierarchyTree hierarchyForClass: SequenceableCollection.
+	aHierarchyTree := GtCoderGrowingClassesHierarchyTree hierarchyForClass: SequenceableCollection.
 	
 	self assert: aHierarchyTree size equals: 1.
 	self assert: aHierarchyTree first classes equals: { Object }.
