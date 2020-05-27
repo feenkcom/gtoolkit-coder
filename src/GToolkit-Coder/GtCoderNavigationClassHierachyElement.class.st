@@ -66,8 +66,7 @@ GtCoderNavigationClassHierachyElement >> onNavigationModelChanged [
 	self updateClassLists.
 	self updateSelectedClass.
 	self subscribeToClassList.
-	self subscribeToNavigationModel."
-	self hideOrShowClassList."
+	self subscribeToNavigationModel.
 ]
 
 { #category : #'event handling' }
@@ -121,10 +120,8 @@ GtCoderNavigationClassHierachyElement >> subscribeToNavigationModel [
 
 { #category : #'updating lists' }
 GtCoderNavigationClassHierachyElement >> updateClassLists [
-	| theClasses |
-	theClasses := navigationModel classesToShow.
-	theClasses size = 1 
-		ifTrue: [ self updateClassListsWith: theClasses anyOne ]
+	navigationModel hasSelectedClass 
+		ifTrue: [ self updateClassListsWith:navigationModel selectedClass ]
 		ifFalse: [ self emptyClassList ].
 ]
 
