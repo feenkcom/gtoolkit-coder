@@ -116,6 +116,12 @@ GtCoderClassesHierarchyTree >> hasRootClass [
 	^ rootClass isNotNil
 ]
 
+{ #category : #initialization }
+GtCoderClassesHierarchyTree >> initialize [
+	super initialize.
+	subclassTrees := Array empty.
+]
+
 { #category : #printing }
 GtCoderClassesHierarchyTree >> printOn: aStream [
 	self hasRootClass
@@ -163,6 +169,8 @@ GtCoderClassesHierarchyTree >> sortByClassName [
 { #category : #initialization }
 GtCoderClassesHierarchyTree >> updateSubclasses [
 	self rootClass hasSubclasses ifFalse: [ ^ self ].
-
-	subclassTrees := ((self class fromClasses: self rootClass subclasses) rootClass: self rootClass) as: Array.
+	subclassTrees := self rootClass subclasses 
+		collect: [ :eachClass |
+			self class new rootClass: eachClass ]
+		as: Array.
 ]
