@@ -3,7 +3,7 @@ Class {
 	#superclass : #BrEmptyColumnedTreeRowStencilBuilder,
 	#traits : 'TGtCoderNavigationClassesHelper',
 	#classTraits : 'TGtCoderNavigationClassesHelper classTrait',
-	#category : #'GToolkit-Coder-Navigation - UI'
+	#category : #'GToolkit-Coder-Navigation - Stencil'
 }
 
 { #category : #private }
