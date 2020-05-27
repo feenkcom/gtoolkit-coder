@@ -13,17 +13,36 @@ Class {
 	#category : #'GToolkit-Coder-Navigation - Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : #factory }
 GtCoderClassesHierarchyTree class >> fromClasses: aCollectionOfClasses [
-	^ self new fromClasses: aCollectionOfClasses
+	| aRootItem theSetOfClasses theRootTrees theSubclassTrees |
+	
+	aRootItem := self new.
+	
+	theSetOfClasses := aCollectionOfClasses asSet.
+	
+	theRootTrees := theSetOfClasses
+		reject: [ :eachClass | theSetOfClasses anySatisfy: [ :eachSuperclass | eachClass inheritsFrom: eachSuperclass ] ]
+		thenCollect: [ :eachRootClass | eachRootClass -> (theSetOfClasses select: [ :eachClass | eachClass inheritsFrom: eachRootClass ]) ].
+	
+	theSubclassTrees := theRootTrees collect: [ :eachAssoc | (self fromClasses: eachAssoc value) rootClass: eachAssoc key ] as: Array.
+	aRootItem subclassTrees: theSubclassTrees.
+	^ aRootItem
 ]
 
-{ #category : #'instance creation' }
+{ #category : #factory }
 GtCoderClassesHierarchyTree class >> hierarchyForClass: aClass [
-	^ self fromClasses: (Array streamContents: [ :aStream | 
-		aStream 
-			nextPutAll: aClass allSuperclasses;
-			nextPut: aClass ] )
+	| aRootNode aCurrentNode |
+	aRootNode := self new.
+	
+	aCurrentNode := aRootNode.
+	aClass withAllSuperclasses reverseDo: [ :eachClass | 
+		| aNewNode |
+		aNewNode := self new rootClass: eachClass.
+		aCurrentNode subclassTrees: { aNewNode }.
+		aCurrentNode := aNewNode. ].
+
+	^ aRootNode.
 ]
 
 { #category : #accessing }
@@ -52,20 +71,6 @@ GtCoderClassesHierarchyTree >> fixedSubclassTrees [
 	<return: #Collection of: #GtCoderClassesHierarchyTree>
 
 	^ subclassTrees
-]
-
-{ #category : #initialization }
-GtCoderClassesHierarchyTree >> fromClasses: aCollectionOfClasses [
-	| theSetOfClasses theRootTrees |
-	
-	theSetOfClasses := aCollectionOfClasses asSet.
-	
-	theRootTrees := theSetOfClasses
-		reject: [ :eachClass | theSetOfClasses anySatisfy: [ :eachSuperclass | eachClass inheritsFrom: eachSuperclass ] ]
-		thenCollect: [ :eachRootClass | eachRootClass -> (theSetOfClasses select: [ :eachClass | eachClass inheritsFrom: eachRootClass ]) ].
-	
-	rootClass := nil.
-	subclassTrees := theRootTrees collect: [ :eachAssoc | (self class fromClasses: eachAssoc value) rootClass: eachAssoc key ] as: Array.
 ]
 
 { #category : #accessing }
@@ -167,6 +172,11 @@ GtCoderClassesHierarchyTree >> sortByClassName [
 ]
 
 { #category : #initialization }
+GtCoderClassesHierarchyTree >> subclassTrees: aCollection [
+	subclassTrees := aCollection
+]
+
+{ #category : #updating }
 GtCoderClassesHierarchyTree >> updateSubclasses [
 	self rootClass hasSubclasses ifFalse: [ ^ self ].
 	subclassTrees := self rootClass subclasses 
