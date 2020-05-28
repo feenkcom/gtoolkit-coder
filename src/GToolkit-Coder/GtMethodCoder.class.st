@@ -896,8 +896,8 @@ GtMethodCoder >> isAccessorMethodFor: aNode [
 						and: [ aNode methodNode selector isUnary ] ] ].
 	aNode parent isAssignment
 		ifFalse: [ ^ false ].
-	aNode methodNode selector numArgs = 1.
-	aNode parent value = aNode methodNode arguments first
+	(aNode methodNode selector numArgs = 1
+		and: [ aNode parent value = aNode methodNode arguments first ])
 		ifFalse: [ ^ false ].
 	statement := aNode parent.
 	statement parent isReturn
