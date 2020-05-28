@@ -159,7 +159,7 @@ GtMethodCoderStylerExamples >> hasExampleStatusIn: coder [
 		expanded: true.	"need to collapse to compute collapsed text style"
 	collapsedAttribute := self
 		hasAttributeOfType: GtExampleStatusAttribute
-		in: coder collapsedEditor.
+		in: coder collapsedText.
 	self assert: sourceAttribute = collapsedAttribute.
 	^ sourceAttribute
 ]

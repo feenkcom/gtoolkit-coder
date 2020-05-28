@@ -340,13 +340,6 @@ GtExtractMethodController >> swapParameterWithNext: anInteger [
 	self addRefactoringPreview
 ]
 
-{ #category : #executing }
-GtExtractMethodController >> updateEditors [
-	| newSource |
-	newSource := (self modelClass methodFor: methodSelector) source.
-	self updateMethod: newSource
-]
-
 { #category : #private }
 GtExtractMethodController >> updateMethod: newSource [
 	self setCoderText: newSource.

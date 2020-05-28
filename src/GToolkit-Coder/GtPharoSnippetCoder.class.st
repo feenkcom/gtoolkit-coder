@@ -34,11 +34,6 @@ GtPharoSnippetCoder >> evaluationRequester [
 ]
 
 { #category : #private }
-GtPharoSnippetCoder >> finishedStylingCollapsedText [
-	self collapsedEditor text foreground: BrGlamorousColors disabledHeaderTextColor
-]
-
-{ #category : #private }
 GtPharoSnippetCoder >> highlightBindingsStrategy [
 	^ self context 
 		ifNil:  [ GtHighlightingBindingStrategy new 

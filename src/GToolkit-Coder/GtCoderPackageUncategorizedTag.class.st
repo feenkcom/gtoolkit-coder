@@ -4,7 +4,6 @@ Class {
 	#traits : 'TBlDebug',
 	#classTraits : 'TBlDebug classTrait',
 	#instVars : [
-		'classes',
 		'packageTag'
 	],
 	#category : #'GToolkit-Coder-Navigation - Model'

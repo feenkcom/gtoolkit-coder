@@ -20,6 +20,17 @@ GtCoderContentElement >> coder: aCoder editorElement: anElement [
 	self addChild: anElement as: #editor
 ]
 
+{ #category : #'initialize-release' }
+GtCoderContentElement >> coder: aCoder labelElement: anElement [
+	coder := aCoder.
+	self addChild: self newHeaderElement as: #header.
+	self addChild: anElement as: #label.
+	coder announcer weak
+		when: GtCoderCollapsedLabelChanged
+		send: #updateLabel:
+		to: self
+]
+
 { #category : #accessing }
 GtCoderContentElement >> gtAllShortcutsFor: aView [
 	<gtView>
@@ -108,4 +119,12 @@ GtCoderContentElement >> newHeaderElement [
 			c vertical fitContent ];
 		addChild: self newBreadcrumb as: #breadcrumb;
 		yourself
+]
+
+{ #category : #private }
+GtCoderContentElement >> updateLabel: anAnnouncement [
+	self
+		childNamed: #label
+		ifFound: [ :label | label text: anAnnouncement coder collapsedText ]
+		ifNone: [  ]
 ]

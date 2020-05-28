@@ -3,7 +3,7 @@ Class {
 	#superclass : #GtCoderModel,
 	#instVars : [
 		'sourceEditor',
-		'collapsedEditor',
+		'collapsedText',
 		'astCache',
 		'completionStrategy'
 	],
@@ -21,8 +21,11 @@ GtSourceCoder >> activeSelectedSource [
 
 { #category : #private }
 GtSourceCoder >> activeSelectedSourceInterval [
-	self activeSourceEditor selection
-		do: [ :each | ^ each from + 1 to: each to ].
+	| editor |
+	editor := self activeSourceEditor.
+	editor isNil
+		ifTrue: [ ^ nil ].
+	editor selection do: [ :each | ^ each from + 1 to: each to ].
 	^ nil
 ]
 
@@ -30,7 +33,6 @@ GtSourceCoder >> activeSelectedSourceInterval [
 GtSourceCoder >> activeSourceEditor [
 	^ self expanded
 		ifTrue: [ self sourceEditor ]
-		ifFalse: [ self collapsedEditor ]
 ]
 
 { #category : #'add ons' }
@@ -60,8 +62,7 @@ GtSourceCoder >> browseClass: editorElement [
 	| variable varName behavior |
 	variable := self activeSelectedSource
 		ifNil: [ self expanded
-				ifTrue: [ self variableNodeAtCursor ]
-				ifFalse: [ self collapsedVariableNode ] ]
+				ifTrue: [ self variableNodeAtCursor ] ]
 		ifNotNil:
 			[ :currentSelection | self extractVariableNodeFromString: currentSelection ].
 	variable isNil
@@ -70,7 +71,8 @@ GtSourceCoder >> browseClass: editorElement [
 	behavior := Smalltalk globals at: varName ifAbsent: [ ^ self ].
 	behavior isBehavior
 		ifFalse: [ ^ self ].
-	editorElement phlow spawnTool: (GtClassCoderTool observedClass: behavior).
+	editorElement phlow
+		spawnTool: (GtClassCoderTool observedClass: behavior)
 ]
 
 { #category : #actions }
@@ -92,13 +94,23 @@ GtSourceCoder >> browseReferences: editorElement [
 	| filter |
 	filter := self activeSelectedSource
 		ifNil: [ self expanded
-				ifTrue: [ self referencesFilterAtCursor ]
-				ifFalse: [ self referencesFilterForCollapsed ] ]
+				ifTrue: [ self referencesFilterAtCursor ] ]
 		ifNotNil:
 			[ :currentSelection | self extractReferencesFilterFromString: currentSelection ].
 	filter isNil
 		ifTrue: [ ^ self ].
 	editorElement phlow spawnObject: filter
+]
+
+{ #category : #'event handling' }
+GtSourceCoder >> buildCollapsedText [
+	| firstLine |
+	firstLine := (self sourceEditor text asString lines
+		detect: [ :each | each notEmpty ]
+		ifNone: [ '' ]) asRopedText.
+	firstLine
+		attributes: self defaultTextAttributes , self disabledTextAttributes.
+	^ firstLine
 ]
 
 { #category : #private }
@@ -126,19 +138,12 @@ GtSourceCoder >> clearSyntaxErrors: textEditor [
 ]
 
 { #category : #ui }
-GtSourceCoder >> collapsedEditor [
-	^ collapsedEditor ifNil: [ collapsedEditor := self newCollapsedEditor ]
-]
-
-{ #category : #ui }
-GtSourceCoder >> collapsedEditorElement [
-	^ BrEditorElement new
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ];
-		editor: self collapsedEditor;
-		in: [ :e | self addShortcutsTo: e ];
-		yourself
+GtSourceCoder >> collapsedLabelElement [
+	| label |
+	label := BrLabel new.
+	label text: self collapsedText.
+	label look: BrGlamorousLabelLook new.
+	^ label
 ]
 
 { #category : #accessing }
@@ -147,26 +152,8 @@ GtSourceCoder >> collapsedSource [
 ]
 
 { #category : #accessing }
-GtSourceCoder >> collapsedSource: aString [
-	| text |
-	text := aString asRopedText.
-	self collapsedEditor text: text "readonly".
-	self styleCollapsedText.
-]
-
-{ #category : #ui }
-GtSourceCoder >> collapsedStyler [
-	^ self newSourceStyler
-]
-
-{ #category : #accessing }
 GtSourceCoder >> collapsedText [
-	^ self collapsedEditor text
-]
-
-{ #category : #private }
-GtSourceCoder >> collapsedVariableNode [
-	^ nil
+	^ collapsedText ifNil: [ collapsedText := self buildCollapsedText ]
 ]
 
 { #category : #private }
@@ -467,10 +454,6 @@ GtSourceCoder >> extractVariableNodeFromString: aString [
 	^ nil
 ]
 
-{ #category : #private }
-GtSourceCoder >> finishedStylingCollapsedText [
-]
-
 { #category : #ui }
 GtSourceCoder >> gtViewStylersFor: aView [
 	<gtView>
@@ -529,21 +512,6 @@ GtSourceCoder >> isBuilt [
 ]
 
 { #category : #private }
-GtSourceCoder >> newCollapsedEditor [
-	| editor |
-	editor := BrTextEditor new.
-	self collapsedStyler ifNotNil: [ :styler | editor styler: styler ].
-	^ editor
-]
-
-{ #category : #accessing }
-GtSourceCoder >> newCollapsedText [
-	<retrun: #BlText>
-
-	^ self collapsedEditor textSnapshot
-]
-
-{ #category : #private }
 GtSourceCoder >> newCompletionStrategy [
 	^ GtPharoCompletionStrategy new
 		classOrMetaClass: self classOrMetaClass;
@@ -556,16 +524,6 @@ GtSourceCoder >> newRbAST: aString [
 	ast := RBParser parseFaultyExpression: aString.
 	ast doSemanticAnalysis.
 	^ ast
-]
-
-{ #category : #updating }
-GtSourceCoder >> newSource [
-	<return: #String>
-	self
-		deprecated: 'Use `newSourceText asString` or `newSourceText characters asString` instead'
-		transformWith: '`@receiver newSource' -> '`@receiver newSourceText asString'.
-
-	^ self newSourceText asString
 ]
 
 { #category : #ui }
@@ -691,11 +649,6 @@ GtSourceCoder >> referencesFilterAtCursor [
 ]
 
 { #category : #private }
-GtSourceCoder >> referencesFilterForCollapsed [
-	^ nil
-]
-
-{ #category : #private }
 GtSourceCoder >> referencesFilterForSymbol: aSymbol [
 	^ GtSearchReferencesFilter literal: aSymbol
 ]
@@ -787,7 +740,6 @@ GtSourceCoder >> sourceAst [
 { #category : #'event handling' }
 GtSourceCoder >> sourceChanged [
 	self clearSyntaxErrors: self sourceEditor.
-	self clearSyntaxErrors: self collapsedEditor.
 	self updateCollapsedSource.
 	self updateAddOns
 ]
@@ -807,13 +759,6 @@ GtSourceCoder >> sourceInterval [
 { #category : #accessing }
 GtSourceCoder >> sourceText [
 	^ self sourceEditor text
-]
-
-{ #category : #private }
-GtSourceCoder >> styleCollapsedText [
-	self expanded
-		ifTrue: [ ^ self ].
-	self collapsedEditor styleTextAndAfterDo: [ self finishedStylingCollapsedText ].
 ]
 
 { #category : #private }
@@ -857,14 +802,12 @@ GtSourceCoder >> styleSourceText [
 GtSourceCoder >> styleText [
 	self isBuilt
 		ifFalse: [ ^ self ].
-	self styleSourceText.
-	self styleCollapsedText
+	self styleSourceText
 ]
 
 { #category : #elements }
 GtSourceCoder >> stylerView: anElement [
 	self sourceEditor view: anElement.
-	self collapsedEditor view: anElement.
 	self styleText.
 ]
 
@@ -929,15 +872,8 @@ GtSourceCoder >> updateAddOnsCommand [
 
 { #category : #'event handling' }
 GtSourceCoder >> updateCollapsedSource [
-	| firstLine |
-	self expanded
-		ifTrue: [ ^ self ].
-	firstLine := (self sourceEditor text asString lines
-		detect: [ :each | each notEmpty ]
-		ifNone: [ '' ]) asRopedText.
-	firstLine
-		attributes: self defaultTextAttributes, self disabledTextAttributes.
-	self collapsedSource: firstLine
+	collapsedText := nil.
+	self announce: (GtCoderCollapsedLabelChanged new coder: self)
 ]
 
 { #category : #updating }
@@ -960,7 +896,6 @@ GtSourceCoder >> validateSyntax [
 		on: SmaCCParserError
 		do: [ :ex | 
 			self reportParseError: ex messageText at: ex tag position on: self sourceEditor.
-			self reportParseError: ex messageText at: ex tag position on: self collapsedEditor.
 			^ false ].
 	^ true
 ]

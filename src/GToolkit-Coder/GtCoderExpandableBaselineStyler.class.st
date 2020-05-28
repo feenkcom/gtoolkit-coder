@@ -1,9 +1,6 @@
 Class {
 	#name : #GtCoderExpandableBaselineStyler,
 	#superclass : #GtASTStyler,
-	#instVars : [
-		'completionAttributes'
-	],
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 

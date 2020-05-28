@@ -269,6 +269,15 @@ GtMethodCoder >> breadcrumbNamedActions [
 					aButton phlow spawnTool: aClassTool ] ]
 ]
 
+{ #category : #'event handling' }
+GtMethodCoder >> buildCollapsedText [
+	| patternText |
+	patternText := (self currentSelector ifNil: [ '' ]) asRopedText.
+	patternText attributes: self defaultTextAttributes.
+	patternText bold.
+	^ patternText
+]
+
 { #category : #private }
 GtMethodCoder >> buildSource [
 	isBuilt := true.
@@ -358,23 +367,9 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 	class := aBehavior
 ]
 
-{ #category : #private }
-GtMethodCoder >> clearPatternSyntaxErrors [
-	self collapsedText clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
-]
-
 { #category : #ui }
 GtMethodCoder >> collapsedStyler [
 	^ BlTextNullStyler new
-]
-
-{ #category : #private }
-GtMethodCoder >> collapsedVariableNode [
-	^ self classOrMetaClass
-		ifNotNil: [ :cls | 
-			GtPharoParser
-				parse: cls instanceSide name
-				startingAt: GtPharoParser startingStateForStatement ]
 ]
 
 { #category : #private }
@@ -643,7 +638,7 @@ GtMethodCoder >> extractTemporaryVariable: aNode in: anElement [
 		from: self currentSelector
 		in: (model classFor: self classOrMetaClass).
 	(self performMethodRefactoring: refactoring)
-		ifFalse: [ ^ false ].
+		ifFalse: [ ^ self ].
 	(self findNodeAssigning: tempName)
 		ifNotNil: [ :node | 
 			self sourceEditor moveCursorTo: node stop.
@@ -744,10 +739,6 @@ GtMethodCoder >> handleCompilerErrorsDuring: aBlock [
 				reportParseError: 'Undeclared' translated
 				at: ex location
 				on: self sourceEditor.
-			self
-				reportParseError: 'Undeclared' translated
-				at: ex location
-				on: self collapsedEditor.
 			ex return: false ]
 ]
 
@@ -758,7 +749,6 @@ GtMethodCoder >> handleExampleArgumentsChanged: aGtExampleArgumentsChanged [
 
 { #category : #'event handling' }
 GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
-	self styleCollapsedText.
 	self styleSourceText.
 ]
 
@@ -1222,13 +1212,6 @@ GtMethodCoder >> rbSelectedNodes [
 	^ {node}
 ]
 
-{ #category : #private }
-GtMethodCoder >> referencesFilterForCollapsed [
-	^ self selectorForCollapsed
-		ifNil: [ super referencesFilterForCollapsed ]
-		ifNotNil: [ :sym | self referencesFilterForSymbol: sym ]
-]
-
 { #category : #actions }
 GtMethodCoder >> remove [
 	^ class removeSelector: selector
@@ -1340,7 +1323,6 @@ GtMethodCoder >> runExample [
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
 	self example run.
-	self styleCollapsedText.
 	self styleSourceText
 ]
 
@@ -1412,10 +1394,7 @@ GtMethodCoder >> selector: aSymbol [
 
 { #category : #private }
 GtMethodCoder >> selectorForCollapsed [
-	self sourceAst
-		withAllNodesOfType: GtPharoMethodPatternNode
-		do: [ :node | ^ node selector ].
-	^ super selectorForCollapsed
+	^ self currentSelector
 ]
 
 { #category : #private }
@@ -1469,21 +1448,6 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
 		action: [ :button | self debugSelectionOrMethod ]
-]
-
-{ #category : #'event handling' }
-GtMethodCoder >> updateCollapsedSource [
-	self expanded
-		ifTrue: [ ^ self ].
-	[ | patternText |
-	patternText := self currentSelector asRopedText.
-	patternText attributes: self defaultTextAttributes.
-	patternText bold.
-	self collapsedSource: patternText ]
-		on: Error
-		do: [ :ex | 
-			self flag: 'FIXME do not do pokemon exception catching'.
-			super updateCollapsedSource ]
 ]
 
 { #category : #updating }
