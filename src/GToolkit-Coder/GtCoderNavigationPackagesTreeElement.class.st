@@ -16,12 +16,17 @@ GtCoderNavigationPackagesTreeElement class >> fromPackages: aCollectionOfPackage
 GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: eachPackageOrTag [
 	| theTags anExtension |
 	(eachPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
-	theTags := eachPackageOrTag classTags asArray sorted: [ :tagA :tagB | tagA name < tagB name ].
+	theTags := eachPackageOrTag classTags asOrderedCollection.
+	theTags withIndexDo: [ :eachTag :eachIndex | eachTag name = eachPackageOrTag name ifTrue: [ 
+		theTags at: eachIndex put: (GtCoderPackageUncategorizedTag forPackageTag: eachTag) ] ].
+	theTags sort: [ :tagA :tagB | self isTag: tagA lessThan: tagB ].
+
 	anExtension := GtCoderPackageExtentionTag forPackage: eachPackageOrTag.
 	anExtension hasExtendedClasses ifTrue: [ 
-		theTags := theTags copyWith: anExtension ].
+		theTags addLast: anExtension ].
 	"Do not return an only tag of the same name as the package"
 	theTags size = 1 ifTrue: [ ^ #() ].
+	
 	^ theTags
 ]
 
@@ -43,4 +48,12 @@ GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPac
 		items: theSortedPackages
 		children: [ :eachPackageOrTag |
 			self childrenForPackageOrTag: eachPackageOrTag ]
+]
+
+{ #category : #'private - testing' }
+GtCoderNavigationPackagesTreeElement >> isTag: tagA lessThan: tagB [
+	tagA class = GtCoderPackageUncategorizedTag ifTrue: [ ^ true ].
+	tagB class = GtCoderPackageUncategorizedTag ifTrue: [ ^ false ].
+	^ tagA name < tagB name
+	
 ]
