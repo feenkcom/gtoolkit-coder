@@ -1088,7 +1088,7 @@ GtMethodCoder >> performMethodRefactoring: refactoring [
 { #category : #examples }
 GtMethodCoder >> playAndInspectExampleFrom: anElement [
 	self runExample.
-	anElement phlow spawnObject: self exampleResult returnValue.
+	anElement phlow spawnObject: self exampleResult returnValueOrExampleException.
 ]
 
 { #category : #actions }
