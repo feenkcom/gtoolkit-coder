@@ -59,7 +59,7 @@ GtFullClassDefinition >> differenceWith: aGtCodeDefinition [
 { #category : #'gt - viewers' }
 GtFullClassDefinition >> editors [
 	<return: #Collection of: #GtCodeDefinitionViewer>
-	^ instanceSideDefinition editors , classSideDefinition editors
+	^ instanceSideDefinition editors , { classSideDefinition slots slotsEditor }
 ]
 
 { #category : #'instance creation' }
