@@ -7,7 +7,9 @@ Class {
 { #category : #private }
 GtCoderExpandablePackagesTreeItemStencilBuilder >> buildLabel [
 	<return: #BrLabel>
-	^ super buildLabel beSmall
+	^ super buildLabel  
+		beSmall;
+		margin: (BlInsets all: 1)
 ]
 
 { #category : #'private - ui' }
