@@ -1,17 +1,13 @@
 Class {
 	#name : #GtCoderExpandableClassTreeItemStencilBuilder,
 	#superclass : #BrSimpleTreeRowStencilBuilder,
-	#category : #'GToolkit-Coder-Navigation - UI'
+	#category : #'GToolkit-Coder-Navigation - Stencil'
 }
 
 { #category : #private }
 GtCoderExpandableClassTreeItemStencilBuilder >> buildLabel [
-	| aClass aBrLabel |
-	aClass := self treeNode value rootClass.
-	aBrLabel := super buildLabel.
-	(aClass isAbstract or: [ aClass hasAbstractMethods ]) ifTrue: [ 
-		aBrLabel look italic ].
-	^ aBrLabel
+	<return: #BrLabel>
+	^ super buildLabel beSmall
 ]
 
 { #category : #'private - ui' }
@@ -22,6 +18,11 @@ GtCoderExpandableClassTreeItemStencilBuilder >> buildTextFor: aNodeValue [
 	(aClass isAbstract or: [ aClass hasAbstractMethods ]) ifTrue: [ 
 		aText italic ].
 	^ aText
+]
+
+{ #category : #initialization }
+GtCoderExpandableClassTreeItemStencilBuilder >> defaultColumnedTreeRowStencilBuilder [
+	^ GtCoderColumnedTreeRowStencilBuilder new
 ]
 
 { #category : #initialization }

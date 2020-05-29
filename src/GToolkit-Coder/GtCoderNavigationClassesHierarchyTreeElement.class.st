@@ -5,8 +5,7 @@ Class {
 	#name : #GtCoderNavigationClassesHierarchyTreeElement,
 	#superclass : #BrSimpleTree,
 	#instVars : [
-		'classesTree',
-		'listItemStencilBuilder'
+		'classesTree'
 	],
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
@@ -14,15 +13,6 @@ Class {
 { #category : #'instance creation' }
 GtCoderNavigationClassesHierarchyTreeElement class >> fromClasses: aCollectionOfClasses [
 	^ self new initializeWithClasses: aCollectionOfClasses
-]
-
-{ #category : #'private - ui' }
-GtCoderNavigationClassesHierarchyTreeElement >> buildClassRow: aTreeNode index: aRowIndex tree: aTreeElement [
-	^ listItemStencilBuilder new
-		node: aTreeNode;
-		index: aRowIndex;
-		widget: aTreeElement;
-		asElement
 ]
 
 { #category : #'private - ui' }

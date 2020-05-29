@@ -12,99 +12,29 @@ GtCoderNavigationPackagesTreeElement class >> fromPackages: aCollectionOfPackage
 	^ self new initializeWithPackages: aCollectionOfPackages
 ]
 
-{ #category : #'private - ui' }
-GtCoderNavigationPackagesTreeElement >> buildPackageLabel: anRPackage [
-	| aLabel |
-	aLabel := BrLabel new
-		look: (BrGlamorousLabelLook new fontSize: 12);
-		text: anRPackage name.
-	^ aLabel
-]
-
-{ #category : #'private - ui' }
-GtCoderNavigationPackagesTreeElement >> buildPackageRow: aTreeNode index: aRowIndex tree: aTreeElement [
-	^ BrWidgetContainer new
-		viewModelDo: [ :aBrInteractiveModel |
-			(aBrInteractiveModel addStates: {
-				BrHoverModel new.
-				BrPressModel new.
-				BrSelectModel new }) ];
-		alignCenterLeft;
-		layout: BlLinearLayout horizontal;
-		look: BrHorizontalPaneLook + BrGlamorousListItemLook;
-		when: BlMouseDownEvent do: [ :anEvent |
-			anEvent consumed: true.
-			aTreeElement selectOne: aRowIndex dueTo: anEvent.
-			aTreeElement requestFocus ];
-		hMatchParent;
-		vFitContent;
-		padding: (BlInsets left: 3 + (aTreeNode depth * 10));
-		addChild: (self createExpandCollapseElementFor: aTreeNode);
-		addChild: (aTreeNode depth > 1
-			ifTrue: [ self buildPackageLabel: aTreeNode value ]
-			ifFalse: [ self buildTagLabel: aTreeNode value ])
-]
-
-{ #category : #'private - ui' }
-GtCoderNavigationPackagesTreeElement >> buildTagLabel: anRPackageTag [
-	| aLabel |
-	aLabel := BrLabel new
-		look: (BrGlamorousLabelLook new fontSize: 12);
-		text: anRPackageTag name.
-	^ aLabel
-]
-
 { #category : #'private - enumeration' }
 GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: eachPackageOrTag [
 	| theTags anExtension |
 	(eachPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
-	theTags := eachPackageOrTag classTags asArray sorted: [ :tagA :tagB | tagA name < tagB name ].
+	theTags := eachPackageOrTag classTags asOrderedCollection.
+	theTags withIndexDo: [ :eachTag :eachIndex | eachTag name = eachPackageOrTag name ifTrue: [ 
+		theTags at: eachIndex put: (GtCoderPackageUncategorizedTag forPackageTag: eachTag) ] ].
+	theTags sort: [ :tagA :tagB | self isTag: tagA lessThan: tagB ].
+
 	anExtension := GtCoderPackageExtentionTag forPackage: eachPackageOrTag.
 	anExtension hasExtendedClasses ifTrue: [ 
-		theTags := theTags copyWith: anExtension ].
+		theTags addLast: anExtension ].
 	"Do not return an only tag of the same name as the package"
 	theTags size = 1 ifTrue: [ ^ #() ].
+	
 	^ theTags
-]
-
-{ #category : #'private - ui' }
-GtCoderNavigationPackagesTreeElement >> createArrowInterationElementForNode: aNode [
-	^ BlElement new
-		background: (aNode isEmpty ifTrue: [ Color transparent ] ifFalse: [ Color gray ]);
-		size: 10@10;
-		relocate: (aNode isExpanded ifTrue: [ 1@2 ] ifFalse: [ 2@1 ]);
-		geometry: (aNode isExpanded
-			ifTrue: [ BlPolygon vertices: { 2@2 . 8@2 . 5@8 } ]
-			ifFalse: [ BlPolygon vertices: { 2@2 . 8@5 . 2@8 } ])
-]
-
-{ #category : #'private - ui' }
-GtCoderNavigationPackagesTreeElement >> createExpandCollapseElementFor: aNode [
-	^ BlElement new
-		geometry: BlEllipse new;
-		margin: (BlInsets all: 2);
-		size: 12@12;
-		viewModel: (BrWidgetModel new 
-			addAll: { 
-				BrButtonModel new action: [ aNode toggle ].
-				BrInteractiveModel new addStates: (
-					aNode isEmpty
-						ifTrue: [ #() ]
-						ifFalse: [ { BrHoverModel new . BrPressModel new } ]
-				), { BrEnablementModel new disabled: aNode isEmpty } });
-		look: (BrInteractiveCommonLook new
-			default: [ :aWidget | aWidget background: Color transparent ];
-			hovered: [ :aWidget | aWidget background: (Color gray alpha: 0.1) ];
-			pressed: [ :aWidget | aWidget background: (Color gray alpha: 0.2) ]);
-		addChild: (self createArrowInterationElementForNode: aNode)
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTreeElement >> initialize [
 	super initialize.
 	
-	self stencil: [ :aBrTreeNode :anIndex :aTreeWidget |
-		self buildPackageRow: aBrTreeNode index: anIndex tree: aTreeWidget ]
+	self stencil: GtCoderExpandablePackagesTreeItemStencilBuilder new.
 ]
 
 { #category : #initialization }
@@ -118,4 +48,12 @@ GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPac
 		items: theSortedPackages
 		children: [ :eachPackageOrTag |
 			self childrenForPackageOrTag: eachPackageOrTag ]
+]
+
+{ #category : #'private - testing' }
+GtCoderNavigationPackagesTreeElement >> isTag: tagA lessThan: tagB [
+	tagA class = GtCoderPackageUncategorizedTag ifTrue: [ ^ true ].
+	tagB class = GtCoderPackageUncategorizedTag ifTrue: [ ^ false ].
+	^ tagA name < tagB name
+	
 ]

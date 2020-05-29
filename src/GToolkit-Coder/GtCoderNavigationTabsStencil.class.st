@@ -5,7 +5,7 @@ Class {
 		'navigations',
 		'navigationModel'
 	],
-	#category : #'GToolkit-Coder-Navigation - UI'
+	#category : #'GToolkit-Coder-Navigation - Stencil'
 }
 
 { #category : #adding }

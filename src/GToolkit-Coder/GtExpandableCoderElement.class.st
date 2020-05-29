@@ -112,7 +112,7 @@ GtExpandableCoderElement >> newActionsElement [
 { #category : #private }
 GtExpandableCoderElement >> newCollapsedElement [
 	^ GtCoderContentElement new
-		coder: coder editorElement: coder collapsedEditorElement;
+		coder: coder labelElement: coder collapsedLabelElement;
 		in: [ :e | self addCodersCoderLookTo: e ];
 		yourself
 ]
