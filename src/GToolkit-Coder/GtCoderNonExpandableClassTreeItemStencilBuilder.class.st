@@ -7,7 +7,9 @@ Class {
 { #category : #private }
 GtCoderNonExpandableClassTreeItemStencilBuilder >> buildLabel [
 	<return: #BrLabel>
-	^ (BrColumnCellLabelStencil new text: self buildText) asElement beSmall
+	^ (BrColumnCellLabelStencil new text: self buildText) asElement  
+		beSmall;
+		margin: (BlInsets all: 1)
 ]
 
 { #category : #'private - ui' }
