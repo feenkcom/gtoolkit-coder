@@ -927,6 +927,29 @@ GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
 	^ true
 ]
 
+{ #category : #testing }
+GtMethodCoder >> isOverridden [
+	| sel |
+	sel := self currentSelector.
+	sel isNil
+		ifTrue: [ ^ false ].
+	self classOrMetaClass
+		allSubclassesDo: [ :cls | 
+			(cls includesSelector: sel)
+				ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : #testing }
+GtMethodCoder >> isOverriding [
+	| sel |
+	sel := self currentSelector.
+	^ sel notNil
+		and: [ self classOrMetaClass superclass
+				ifNil: [ false ]
+				ifNotNil: [ :spr | (spr whichClassIncludesSelector: sel) notNil ] ]
+]
+
 { #category : #'event handling' }
 GtMethodCoder >> methodChanged: aMethodModified [
 	| aCompiledMethod |

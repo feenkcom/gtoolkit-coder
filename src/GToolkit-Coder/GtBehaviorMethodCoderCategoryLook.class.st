@@ -14,6 +14,8 @@ GtBehaviorMethodCoderCategoryLook >> addMethodTags [
 	tags := BrHorizontalPane new.
 	tags fitContent.
 	tags cellSpacing: 2.
+	self hierarchyDropDown
+		ifNotNil: [ :element | tags addChild: element as: self hierarchyDropDownName ].
 	tags
 		addChild: self buildCategoryEditor as: self categoryEditorName;
 		addChild: self buildClassTag as: self classTagName.
@@ -68,17 +70,9 @@ GtBehaviorMethodCoderCategoryLook >> classTagText [
 
 { #category : #initialization }
 GtBehaviorMethodCoderCategoryLook >> removeMethodTags [
-	self widget
-		childNamed: self tagsName
-		ifFound: [ :tags | tags removeFromParent ]
-		ifNone: [  ].
+	super removeMethodTags.
 	self widget
 		childNamed: #header
 		ifFound: [ :header | header visibility: BlVisibility visible ]
 		ifNone: [  ]
-]
-
-{ #category : #initialization }
-GtBehaviorMethodCoderCategoryLook >> tagsName [
-	^ #tags
 ]
