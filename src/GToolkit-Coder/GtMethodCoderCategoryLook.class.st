@@ -27,7 +27,7 @@ GtMethodCoderCategoryLook >> addMethodTags [
 						addChild: self buildCategoryEditor
 						as: self categoryEditorName.
 					self attachToBottomRight: tags.
-					self widget addChild: tags as: self tagsName ] ]
+					header addChild: tags as: self tagsName ] ]
 		ifNone: [  ]
 ]
 
