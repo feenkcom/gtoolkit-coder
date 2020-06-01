@@ -95,7 +95,7 @@ GtMethodCoderCategoryLook >> hierarchyDropDown [
 			BrGlamorousButtonWithIconLook
 				+
 					(look := BrGlamorousWithDropdownLook
-						stencil: [ | tree |
+						stencil: [ | tree dropDownElement |
 							tree := self hierarchyTree.
 							tree
 								when: BrSelectionChanged
@@ -114,6 +114,47 @@ GtMethodCoderCategoryLook >> hierarchyDropDown [
 																spawnTool: (GtReadyCoderTool coder: coderEvent coder) ].
 													classCoder
 														withSelectedMethod: (node value classOrMetaClass methodNamed: node value currentSelector) ] ] ].
+							dropDownElement := BlElement new.
+							dropDownElement size: 250 @ 140.
+							dropDownElement margin: (BlInsets all: 1).
+							dropDownElement geometry: (BlRectangle cornerRadius: 4).
+							dropDownElement addChild: tree.
+							dropDownElement
+								addChild:
+									(BrResizer new
+										target: dropDownElement;
+										beTop;
+										look: BrGlamorousResizerLook new;
+										constraintsDo: [ :c | 
+											c ignoreByLayout.
+											c ignored horizontal weight: 0.2 ]).
+							dropDownElement
+								addChild:
+									(BrResizer new
+										target: dropDownElement;
+										beBottom;
+										look: BrGlamorousResizerLook new;
+										constraintsDo: [ :c | 
+											c ignoreByLayout.
+											c ignored horizontal weight: 0.2 ]).
+							dropDownElement
+								addChild:
+									(BrResizer new
+										target: dropDownElement;
+										beLeft;
+										look: BrGlamorousResizerLook;
+										constraintsDo: [ :c | 
+											c ignoreByLayout.
+											c ignored vertical weight: 0.2 ]).
+							dropDownElement
+								addChild:
+									(BrResizer new
+										target: dropDownElement;
+										beRight;
+										look: BrGlamorousResizerLook;
+										constraintsDo: [ :c | 
+											c ignoreByLayout.
+											c ignored vertical weight: 0.2 ]).
 							BlElement new
 								look:
 									(BrGlamorousDropdownLook new
@@ -125,13 +166,7 @@ GtMethodCoderCategoryLook >> hierarchyDropDown [
 														- BrGlamorousButtonExteriorLook;
 												icon: icon;
 												yourself);
-										content:
-											(BlElement new
-												size: 300 @ 160;
-												margin: (BlInsets all: 1);
-												geometry: (BlRectangle cornerRadius: 4);
-												addChild: tree;
-												yourself);
+										content: dropDownElement;
 										yourself);
 								yourself ]);
 		icon: icon;
