@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'coder',
 		'collapsedElement',
-		'expandedElement'
+		'expandedElement',
+		'removed'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -73,7 +74,8 @@ GtExpandableCoderElement >> gtAllShortcutsFor: aView [
 { #category : #initialization }
 GtExpandableCoderElement >> initialize [
 	super initialize.
-
+	removed := false.
+	
 	self
 		vFitContent;
 		hMatchParent;
@@ -126,6 +128,18 @@ GtExpandableCoderElement >> newExpandedElement [
 		yourself
 ]
 
+{ #category : #events }
+GtExpandableCoderElement >> onAddedToSceneGraph [
+	removed := false.
+	^ super onAddedToSceneGraph
+]
+
+{ #category : #events }
+GtExpandableCoderElement >> onRemovedFromSceneGraph [
+	removed := true.
+	^ super onRemovedFromSceneGraph
+]
+
 { #category : #'focus requesting' }
 GtExpandableCoderElement >> requestFocus [
 	^ self
@@ -136,6 +150,7 @@ GtExpandableCoderElement >> requestFocus [
 
 { #category : #events }
 GtExpandableCoderElement >> updateExpanded [
+	removed ifTrue: [ ^self ].
 	coder expanded
 		ifTrue: [ self isExpanded
 				ifFalse: [ self expand ] ]
