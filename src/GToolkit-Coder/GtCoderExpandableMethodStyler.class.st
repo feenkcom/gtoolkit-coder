@@ -11,8 +11,8 @@ GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 	(aMessageNode isSelfSend or: [ aMessageNode isSuperSend ])
 		ifFalse: [ ^ self ].
 	aMethodClass := aMessageNode isSuperSend
-			ifTrue: [ aMessageNode methodNode methodClass superclass ]
-			ifFalse: [ aMessageNode methodNode methodClass ].
+		ifTrue: [ aMessageNode methodNode methodClass superclass ]
+		ifFalse: [ aMessageNode methodNode methodClass ].
 	(aMethodClass canUnderstand: aMessageNode selector)
 		ifFalse: [ ^ self ].
 	self
@@ -24,10 +24,19 @@ GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 						beAppend;
 						stencil: [ | editorElement method coder |
 							method := aMethodClass lookupSelector: aMessageNode selector.
-							coder := GtMethodCoder forExample: (aMethodClass gtExamplesFactory createExample: method).
+							coder := GtMethodCoder
+								forExample: (aMethodClass gtExamplesFactory createExample: method).
 							coder subscribeToSystem.
 							coder expanded: true.
+							coder coderLook: GtMethodCoderCategoryLook.
 							editorElement := coder asElement.
-							editorElement border: (BlBorder paint: Color veryLightGray width: 1).
-							editorElement margin: (BlInsets top: 3 right: 10 bottom: 10 left: 10) ] ])}
+							editorElement
+								border: (BlBorder paint: Color veryLightGray width: 1).
+							editorElement
+								margin:
+									(BlInsets
+										top: 3
+										right: 10
+										bottom: 10
+										left: 10) ] ])}
 ]

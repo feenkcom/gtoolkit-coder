@@ -96,6 +96,16 @@ GtCoderModel >> breadcrumbNamedActions [
 	^ #()
 ]
 
+{ #category : #elements }
+GtCoderModel >> coderLook [
+	^ self attributeNamed: #coderLook ifAbsent: [  ]
+]
+
+{ #category : #elements }
+GtCoderModel >> coderLook: aLook [
+	^ self attributeNamed: #coderLook put: aLook
+]
+
 { #category : #accessing }
 GtCoderModel >> coders [
 	^ self attributeNamed: #coders
