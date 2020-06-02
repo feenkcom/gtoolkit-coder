@@ -6,26 +6,20 @@ Class {
 
 { #category : #initialization }
 GtMethodCoderCategoryLook >> addMethodTags [
-	self widget
-		childNamed: #header
-		ifFound: [ :header | 
-			self hierarchyDropDown
-				ifNil: [ | editor |
-					editor := self buildCategoryEditor.
-					self attachToBottomRight: editor.
-					header addChild: editor as: self categoryEditorName ]
-				ifNotNil: [ :dropDown | 
-					| tags |
-					tags := BrHorizontalPane new.
-					tags fitContent.
-					tags cellSpacing: 2.
-					tags addChild: dropDown as: self hierarchyDropDownName.
-					tags
-						addChild: self buildCategoryEditor
-						as: self categoryEditorName.
-					self attachToBottomRight: tags.
-					header addChild: tags as: self tagsName ] ]
-		ifNone: [  ]
+	self hierarchyDropDown
+		ifNil: [ | editor |
+			editor := self buildCategoryEditor.
+			self attachToBottomRight: editor.
+			self widget addChild: editor as: self categoryEditorName ]
+		ifNotNil: [ :dropDown | 
+			| tags |
+			tags := BrHorizontalPane new.
+			tags fitContent.
+			tags cellSpacing: 2.
+			tags addChild: dropDown as: self hierarchyDropDownName.
+			tags addChild: self buildCategoryEditor as: self categoryEditorName.
+			self attachToBottomRight: tags.
+			self widget addChild: tags as: self tagsName ]
 ]
 
 { #category : #initialization }
