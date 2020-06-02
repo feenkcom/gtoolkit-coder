@@ -1,9 +1,6 @@
 Class {
 	#name : #GtMethodCoderCategoryLook,
 	#superclass : #BrLook,
-	#instVars : [
-		'methodsCoder'
-	],
 	#category : #'GToolkit-Coder-Looks'
 }
 
@@ -225,16 +222,6 @@ GtMethodCoderCategoryLook >> methodCoderChildrenOf: aMethodCoder [
 				subclassCodersOf: aMethodCoder classOrMetaClass
 				into: OrderedCollection new ]
 		ifFalse: [ {(self superclassSubclassCoderOf: aMethodCoder classOrMetaClass)} ]
-]
-
-{ #category : #accessing }
-GtMethodCoderCategoryLook >> methodsCoder [
-	^ methodsCoder
-]
-
-{ #category : #accessing }
-GtMethodCoderCategoryLook >> methodsCoder: aMethodsCoder [
-	methodsCoder := aMethodsCoder
 ]
 
 { #category : #initialization }

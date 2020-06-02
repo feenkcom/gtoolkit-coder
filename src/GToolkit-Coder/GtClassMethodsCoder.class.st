@@ -71,8 +71,6 @@ GtClassMethodsCoder >> classesFilter [
 { #category : #elements }
 GtClassMethodsCoder >> coderLook [
 	^ GtBehaviorMethodCoderCategoryLook new
-		methodsCoder: self;
-		yourself
 ]
 
 { #category : #private }

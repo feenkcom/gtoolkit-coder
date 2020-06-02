@@ -13,7 +13,7 @@ Class {
 GtExpandableCoderElement >> addCodersCoderLookTo: anElement [
 	| aLook |
 	aLook := anElement look.
-	(coder coders ifNotNil: #coderLook)
+	(coder coderLook ifNil: [ coder coders ifNotNil: #coderLook ])
 		ifNotNil: [ :f | aLook := aLook ifNil: [ f ] ifNotNil: [ aLook + f ] ].
 	aLook notNil
 		ifTrue: [ anElement look: aLook ]
