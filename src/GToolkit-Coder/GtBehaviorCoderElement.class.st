@@ -33,6 +33,12 @@ GtBehaviorCoderElement >> actOnSelectMethod: aMethod [
 	self executeTask: selectMethodBlock
 ]
 
+{ #category : #callbacks }
+GtBehaviorCoderElement >> browseClassReferences [
+	classCoder theClass
+		ifNotNil: [ :class | self phlow spawnObject: class gtReferences ]
+]
+
 { #category : #'building ui' }
 GtBehaviorCoderElement >> buildClassLabel [
 	| aClassNameEditor aContainer aPreviewButton |
@@ -50,7 +56,8 @@ GtBehaviorCoderElement >> buildClassLabel [
 			fontSize: 18);
 		inputFilter: BrTextEditorAlphaNumericInputFilter new;
 		text: (classCoder name);
-		margin: (BlInsets all: 0).
+		margin: (BlInsets all: 0);
+		whenKey: BlKeyCombination primaryN labelDo: [ :anEvent  | self browseClassReferences ].
 	
 	
 	(GtCompletionController

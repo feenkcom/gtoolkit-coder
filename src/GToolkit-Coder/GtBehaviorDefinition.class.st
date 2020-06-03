@@ -19,6 +19,11 @@ GtBehaviorDefinition class >> fromBehavior: aBehavior [
 			ifFalse: [ self error: 'Unknown entity' ] ]
 ]
 
+{ #category : #accessing }
+GtBehaviorDefinition >> classOrMetaClass [
+	^ self class environment at: self originalName ifAbsent: [  ]
+]
+
 { #category : #'api - accepting' }
 GtBehaviorDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf: aBehavior [
 	^ self subclassResponsibility
