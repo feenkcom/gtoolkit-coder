@@ -153,7 +153,7 @@ GtMethodCoderCategoryLook >> hierarchyDropDown [
 											(BrButton new
 												beTiny;
 												look:
-													BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
+													BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
 														- BrGlamorousButtonExteriorLook;
 												icon: icon;
 												yourself);
