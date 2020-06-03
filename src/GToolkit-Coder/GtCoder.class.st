@@ -55,7 +55,7 @@ GtCoder >> buildAddButton [
 					(look := BrGlamorousWithDropdownLook
 						handle: [ BrButton new
 								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
+									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
 										- BrGlamorousButtonExteriorLook;
 								icon: BrGlamorousVectorIcons add;
 								yourself ]
@@ -163,7 +163,7 @@ GtCoder >> buildHierarchyButton [
 		look: BrGlamorousButtonWithIconLook + (BrGlamorousWithDropdownLook
 			handle: [
 				BrButton new
-					look: BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook - BrGlamorousButtonExteriorLook;
+					look: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook - BrGlamorousButtonExteriorLook;
 					icon: BrGlamorousIcons tree;
 					yourself ]
 			content: [
@@ -219,7 +219,7 @@ GtCoder >> buildSpotterButton [
 										handle:
 											(BrButton new
 												look:
-													BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
+													BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
 														- BrGlamorousButtonExteriorLook;
 												icon: BrGlamorousVectorIcons search;
 												yourself);

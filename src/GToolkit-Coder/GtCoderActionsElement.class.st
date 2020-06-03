@@ -108,7 +108,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 							aButton
 								beSmall;
 								look: BrGlamorousButtonWithIconLook 
-									- BrGlamorousWithLabelTooltipLook
+									- BrGlamorousButtonWithLabelTooltipLook
 									- BrGlamorousButtonExteriorLook;
 								padding: BlInsets empty;
 								margin: BlInsets empty;
