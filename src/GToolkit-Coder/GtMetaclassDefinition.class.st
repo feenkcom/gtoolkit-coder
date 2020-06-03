@@ -30,6 +30,16 @@ GtMetaclassDefinition >> category [
 	^ category
 ]
 
+{ #category : #accessing }
+GtMetaclassDefinition >> classOrMetaClass [
+	| instanceName |
+	instanceName := self originalName.
+	(instanceName endsWith: ' class')
+		ifTrue: [ instanceName := instanceName allButLast: 6 ].
+	^ (self class environment at: instanceName asSymbol ifAbsent: [  ])
+		ifNotNil: [ :cls | cls class ]
+]
+
 { #category : #'api - accepting' }
 GtMetaclassDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf: aClass [
 	^ aGtCodeDefinitionDifference asClassRefactorings: aClass

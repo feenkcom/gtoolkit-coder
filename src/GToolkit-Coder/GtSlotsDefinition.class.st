@@ -193,6 +193,8 @@ GtSlotsDefinition >> slotsEditor [
 		renameEvent: GtBehaviorSlotRenamed;
 		whenKey: BlKeyCombination primaryB
 			do: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ];
+		whenKey: BlKeyCombination primaryN
+			do: [ :anEvent :aDefinition | aDefinition browseReferencesFrom: anEvent ];
 		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
 

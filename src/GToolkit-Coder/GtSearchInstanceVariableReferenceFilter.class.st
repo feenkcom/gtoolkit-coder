@@ -14,6 +14,13 @@ GtSearchInstanceVariableReferenceFilter class >> forClass: aClass andVariable: a
 		yourself
 ]
 
+{ #category : #'instance creation' }
+GtSearchInstanceVariableReferenceFilter class >> forClassAndSubclasses: aClass andVariable: aString [
+	^ aClass withAllSubclasses
+		inject: GtSearchNullFilter new
+		into: [ :sum :each | sum | (self forClass: each andVariable: aString) ]
+]
+
 { #category : #'initialize-release' }
 GtSearchInstanceVariableReferenceFilter >> forClass: aClass andVariable: aString [
 	self forClass: aClass.

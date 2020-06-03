@@ -1,8 +1,14 @@
 Extension { #name : #RPackage }
 
 { #category : #'*GToolkit-Coder' }
+RPackage >> gtBrowse [
+	^ ((GtCoder forPackage: self) 
+		openInPager) maximized
+]
+
+{ #category : #'*GToolkit-Coder' }
 RPackage >> gtBrowseFrom: anElement [
-	((GtCoder forPackage: self) 
+	^ ((GtCoder forPackage: self) 
 		openInPagerFrom: anElement) maximized
 ]
 

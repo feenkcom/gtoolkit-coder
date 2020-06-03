@@ -65,6 +65,7 @@ GtClassVariablesDefinition >> classVariablesEditor [
 			renameEvent: GtBehaviorClassVariableRenamed;
 			whenKey: BlKeyCombination primaryI do: [ :anEvent :aDefinition  | aDefinition inspectFrom: anEvent ];
 			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+			whenKey: BlKeyCombination primaryN do: [ :anEvent :aDefinition  | aDefinition browseReferencesFrom: anEvent ];
 			whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
 

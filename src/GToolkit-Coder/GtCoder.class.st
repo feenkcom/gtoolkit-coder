@@ -35,6 +35,11 @@ GtCoder class >> forMethod: aCompiledMethod [
 ]
 
 { #category : #'instance creation' }
+GtCoder class >> forObject: anObject [
+	^ self forCoder: (GtClassCoder forObject: anObject)
+]
+
+{ #category : #'instance creation' }
 GtCoder class >> forPackage: anRPackage [
 	^ self forCoder: (GtPackageCoder forPackage: anRPackage)
 ]
