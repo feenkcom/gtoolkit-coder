@@ -655,12 +655,13 @@ GtSourceCoder >> referencesFilterForSymbol: aSymbol [
 
 { #category : #private }
 GtSourceCoder >> referencesFilterForVariable: aString [
-	| index binding |
+	| index binding class |
 	index := self classOrMetaClass instVarIndexFor: aString.
 	index > 0
-		ifTrue: [ ^ GtSearchInstanceVariableReferenceFilter 
-			forClass: self classOrMetaClass 
-			andVariable: aString ].
+		ifTrue: [ class := self classOrMetaClass whichClassDefinesInstVar: aString.
+			^ GtSearchInstanceVariableReferenceFilter
+				forClassAndSubclasses: class
+				andVariable: aString ].
 	binding := self classOrMetaClass bindingOf: aString.
 	binding notNil
 		ifTrue: [ ^ GtSearchReferencesFilter literal: binding ].
