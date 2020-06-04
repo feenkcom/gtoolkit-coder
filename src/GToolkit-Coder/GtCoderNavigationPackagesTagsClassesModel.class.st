@@ -119,6 +119,13 @@ GtCoderNavigationPackagesTagsClassesModel >> packageRegistered: aRPackageRegiste
 		package: aRPackageRegistered package)
 ]
 
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesModel >> packageUnregistered: aRPackageUnregistered [
+	self announcer announce: (GtCoderNavigationPackageUnregistered new 
+		coder: coder;
+		package: aRPackageUnregistered package)
+]
+
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> packagesToShow [
 	<return: #Collection of: #RPackage>
@@ -267,7 +274,8 @@ GtCoderNavigationPackagesTagsClassesModel >> showPackage: anRPackage [
 { #category : #subscriptions }
 GtCoderNavigationPackagesTagsClassesModel >> subscribeToSystem [
 	SystemAnnouncer uniqueInstance weak
-		when: RPackageRegistered send: #packageRegistered: to: self";
+		when: RPackageRegistered send: #packageRegistered: to: self;
+		when: RPackageUnregistered send: #packageUnregistered: to: self";
 		when: ClassRepackaged send: #classRepackaged: to: self;
 		when: ClassTagAdded send: #classTagAdded: to: self;
 		when: ClassTagRemoved send: #classTagRemoved: to: self;
