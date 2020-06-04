@@ -71,6 +71,7 @@ GtCoderSideBarSystemNavigationExtension >> initializeNavigationElement [
 	navigationElement := (GtCoderNavigationTabsStencil new 
 		navigationModel: navigationModel;
 		asElement).
+	navigationElement background: BrGlamorousColors neutralBackgroundColor
 ]
 
 { #category : #initialization }
