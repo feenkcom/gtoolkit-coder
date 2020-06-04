@@ -111,6 +111,14 @@ GtCoderNavigationPackagesTagsClassesModel >> notifyTagSelected: anRPackageTag pa
 				tag: anRPackageTag)
 ]
 
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesModel >> packageRegistered: aRPackageRegistered [
+	(self packagesToShow includes: aRPackageRegistered package) ifFalse: [ ^ self ].
+	self announcer announce: (GtCoderNavigationPackageRegistered new 
+		coder: coder;
+		package: aRPackageRegistered package)
+]
+
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> packagesToShow [
 	<return: #Collection of: #RPackage>
@@ -254,4 +262,20 @@ GtCoderNavigationPackagesTagsClassesModel >> selectedTagDo: aBlock [
 { #category : #'api - selection' }
 GtCoderNavigationPackagesTagsClassesModel >> showPackage: anRPackage [
 	^ packages isNil or: [ packages includes: anRPackage ]
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesModel >> subscribeToSystem [
+	SystemAnnouncer uniqueInstance weak
+		when: RPackageRegistered send: #packageRegistered: to: self";
+		when: ClassRepackaged send: #classRepackaged: to: self;
+		when: ClassTagAdded send: #classTagAdded: to: self;
+		when: ClassTagRemoved send: #classTagRemoved: to: self;
+		when: ClassTagRenamed send: #classTagRenamed: to: self;
+		when: MethodRepackaged send: #classTagRemoved: to: self"
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesModel >> unsubscribeFromSystem [
+	SystemAnnouncer uniqueInstance unsubscribe: self
 ]

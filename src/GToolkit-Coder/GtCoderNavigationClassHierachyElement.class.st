@@ -121,7 +121,7 @@ GtCoderNavigationClassHierachyElement >> subscribeToNavigationModel [
 { #category : #'updating lists' }
 GtCoderNavigationClassHierachyElement >> updateClassLists [
 	navigationModel hasSelectedClass 
-		ifTrue: [ self updateClassListsWith:navigationModel selectedClass ]
+		ifTrue: [ self updateClassListsWith: navigationModel selectedClass ]
 		ifFalse: [ self emptyClassList ].
 ]
 
