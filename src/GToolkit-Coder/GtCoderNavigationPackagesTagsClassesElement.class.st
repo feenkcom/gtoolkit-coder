@@ -107,17 +107,6 @@ GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
 ]
 
 { #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onNavigationModelChanged [
-	self updatePackageAndClassLists.
-	self updateSelectedPackageAndTag.
-	self updateSelectedClass.
-	self subscribeToPackageList.
-	self subscribeToClassList.
-	self subscribeToNavigationModel.
-	self hideOrShowClassList.
-]
-
-{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageListSelectionChanged [
 	| anIndex aSelectedItem theIndices |
 	supressListChanges ifTrue: [ ^ self ].
@@ -273,7 +262,16 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToClassList [
 ]
 
 { #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> subscribeToContent [
+	super subscribeToContent.
+	self subscribeToPackageList.
+	self subscribeToClassList.
+
+]
+
+{ #category : #subscriptions }
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
+	super subscribeToNavigationModel.
 	navigationModel when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
 	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
 	navigationModel when: GtCoderNavigationTagSelected send: #onTagSelected: to: self.
@@ -293,6 +291,14 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToPackageList [
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 	classesList initializeWithClasses: navigationModel classesToShow.
+]
+
+{ #category : #'updating lists' }
+GtCoderNavigationPackagesTagsClassesElement >> updateContent [
+	self updatePackageAndClassLists.
+	self updateSelectedPackageAndTag.
+	self updateSelectedClass.
+	self hideOrShowClassList
 ]
 
 { #category : #'updating lists' }

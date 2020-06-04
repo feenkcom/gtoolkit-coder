@@ -20,6 +20,7 @@ GtCoderNonExpandableClassTreeItemStencilBuilder >> buildText [
 { #category : #'private - ui' }
 GtCoderNonExpandableClassTreeItemStencilBuilder >> buildTextFor: aNodeValue [
 	| aClass aText |
+	aNodeValue ifNil: [ ^ '' asRopedText ].
 	aClass := aNodeValue rootClass.
 	aText := aClass name asRopedText.
 	(aClass isAbstract or: [ aClass hasAbstractMethods ]) ifTrue: [ 
