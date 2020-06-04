@@ -14,6 +14,7 @@ GtCoderExpandablePackagesTreeItemStencilBuilder >> buildLabel [
 
 { #category : #'private - ui' }
 GtCoderExpandablePackagesTreeItemStencilBuilder >> buildTextFor: aNodeValue [
+	aNodeValue ifNil: [ ^ '' asRopedText ].
 	^ aNodeValue name asRopedText
 ]
 

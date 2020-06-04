@@ -51,13 +51,40 @@ GtCoderNavigationElement >> navigationModel [
 { #category : #accessing }
 GtCoderNavigationElement >> navigationModel: aGtCoderNavigationPackagesTagsClassesModel [
 	self assertNavigationModel: aGtCoderNavigationPackagesTagsClassesModel.
+	self unsubscribeFromNavigationModel.
 	navigationModel := aGtCoderNavigationPackagesTagsClassesModel.
 	self onNavigationModelChanged.
+]
+
+{ #category : #'hooks - children' }
+GtCoderNavigationElement >> onAddedToSceneGraph [
+	super onAddedToSceneGraph.
+	self updateContent.
+	self subscribeToNavigationModel.
+	self subscribeToContent.
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onNavigationModelChanged [
 	"subclasses may perform actions on navigation model changes"
+	self isAttachedToSceneGraph ifFalse: [ ^ self ].
+	self subscribeToNavigationModel.
+	self updateContent.
+]
+
+{ #category : #'hooks - children' }
+GtCoderNavigationElement >> onRemovedFromSceneGraph [
+	super onRemovedFromSceneGraph.
+	self unsuscribeFromContent.
+	self unsubscribeFromNavigationModel.
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationElement >> subscribeToContent [
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationElement >> subscribeToNavigationModel [
 ]
 
 { #category : #subscriptions }
@@ -74,4 +101,17 @@ GtCoderNavigationElement >> suppressNavigationChangeEventsDuring: aBlock [
 	anOldValue := supressNavigationChanges.
 	supressNavigationChanges := true.
 	aBlock ensure: [ supressNavigationChanges := anOldValue ].
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationElement >> unsubscribeFromNavigationModel [
+	navigationModel ifNotNil: [ :aModel | aModel unsubscribe: self ].
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationElement >> unsuscribeFromContent [
+]
+
+{ #category : #updating }
+GtCoderNavigationElement >> updateContent [
 ]
