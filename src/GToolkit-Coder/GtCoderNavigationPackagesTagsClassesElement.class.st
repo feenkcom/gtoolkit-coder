@@ -184,7 +184,9 @@ GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage [
 	self updatePackageLists.
 	aSelectedPackage ifNotNil: [
 		aSelectedPackage = aPackage 
-			ifTrue: [ self deselectPackages ]
+			ifTrue: [ 
+				self deselectPackages.
+				self hideClassList. ]
 			ifFalse: [ self selectPackage: aSelectedPackage ] ].
 ]
 
