@@ -19,15 +19,30 @@ GtClassesCompletionStrategy >> candidateClasses [
 { #category : #accessing }
 GtClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
 	| currentInput completionActions |
-
 	currentInput := aText asString.
-	completionActions := (self candidateClasses first: maxInteger startingWith: currentInput) collect: [ :className | 
-		GtInsertTextCompletionAction
-			labeled: className
-			completion: (className allButFirst: currentInput size)
-			position: positionInteger
-			from: positionInteger - currentInput size + 1 ].
-
+	currentInput isEmpty
+		ifTrue: [ ^ #() ].
+	completionActions := (self candidateClasses
+		first: maxInteger
+		startingWith: currentInput)
+		collect: [ :className | 
+			| deletion insertion |
+			deletion := positionInteger < currentInput size
+				ifTrue: [ GtDeleteTextCompletionAction
+						labeled: className
+						from: positionInteger + 1
+						to: currentInput size ].
+			insertion := GtInsertTextCompletionAction
+				labeled: className
+				completion: (className allButFirst: positionInteger)
+				position: positionInteger
+				from: 1.
+			deletion notNil
+				ifTrue: [ (GtCompositeCompletionAction labeled: className)
+						addAction: deletion;
+						addAction: insertion;
+						yourself ]
+				ifFalse: [ insertion ] ].
 	^ completionActions
 ]
 
