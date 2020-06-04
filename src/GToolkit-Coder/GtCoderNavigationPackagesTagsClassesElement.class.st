@@ -9,6 +9,18 @@ Class {
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
 
+{ #category : #'api - packages' }
+GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage [
+	| aSelectedPackage |
+
+	packagesList selectedNodeDo: [ :aNode | 
+		aSelectedPackage := aNode value ].
+
+	self updatePackageLists.
+	aSelectedPackage ifNotNil: [
+		self selectPackage: aSelectedPackage ].
+]
+
 { #category : #'api - classes' }
 GtCoderNavigationPackagesTagsClassesElement >> deselectClasses [
 	classesList deselectAll
@@ -121,6 +133,13 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageListSelectionChanged [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackageRegistered: anAnnouncement [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [
+		self addPackage: anAnnouncement package ]
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [  
@@ -213,6 +232,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
 	navigationModel when: GtCoderNavigationTagSelected send: #onTagSelected: to: self.
 	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
+	navigationModel when: GtCoderNavigationPackageRegistered send: #onPackageRegistered: to: self.
 ]
 
 { #category : #subscriptions }

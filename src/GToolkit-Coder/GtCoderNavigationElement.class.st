@@ -62,12 +62,16 @@ GtCoderNavigationElement >> onNavigationModelChanged [
 
 { #category : #subscriptions }
 GtCoderNavigationElement >> suppressListChangeEventsDuring: aBlock [
+	| anOldValue |
+	anOldValue := supressListChanges.
 	supressListChanges := true.
-	aBlock ensure: [ supressListChanges := false ].
+	aBlock ensure: [ supressListChanges := anOldValue ].
 ]
 
 { #category : #subscriptions }
 GtCoderNavigationElement >> suppressNavigationChangeEventsDuring: aBlock [
+	| anOldValue |
+	anOldValue := supressNavigationChanges.
 	supressNavigationChanges := true.
-	aBlock ensure: [ supressNavigationChanges := false ].
+	aBlock ensure: [ supressNavigationChanges := anOldValue ].
 ]

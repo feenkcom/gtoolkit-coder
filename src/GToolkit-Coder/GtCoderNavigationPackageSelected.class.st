@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderNavigationPackageSelected,
-	#superclass : #GtCoderNavigationAnnouncement,
+	#superclass : #GtCoderNavigationSelectionAnnouncement,
 	#instVars : [
 		'package'
 	],

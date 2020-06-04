@@ -343,7 +343,7 @@ GtCoder >> initializeMainContent [
 { #category : #initialization }
 GtCoder >> initializeNavigationModel [
 	navigationModel := GtCoderNavigationPackagesTagsClassesModel new.
-	navigationModel when: GtCoderNavigationAnnouncement send: #updateCoder: to: self.
+	navigationModel when: GtCoderNavigationSelectionAnnouncement send: #updateCoder: to: self.
 	
 ]
 
@@ -366,6 +366,18 @@ GtCoder >> newEmbellisherExtension [
 			coder: self;
 			sideBar: leftSideBarContent;
 			navigationModel: navigationModel)
+]
+
+{ #category : #'hooks - children' }
+GtCoder >> onAddedToSceneGraph [
+	super onAddedToSceneGraph.
+	navigationModel subscribeToSystem.
+]
+
+{ #category : #'hooks - children' }
+GtCoder >> onRemovedFromSceneGraph [
+	super onRemovedFromSceneGraph.
+	navigationModel unsubscribeFromSystem.
 ]
 
 { #category : #opening }
