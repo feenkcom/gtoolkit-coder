@@ -219,7 +219,7 @@ GtCoderNavigationPackagesTagsClassesModel >> selectPackageTag: aRPackageTag [
 		ifTrue: [ ^ self ].
 	packageCoder := ((coder isForPackage
 		and: [ coder package = aRPackageTag package ])
-		ifTrue: [ coder packageTagCoderFor: aRPackageTag ])
+		ifTrue: [ coder ])
 		ifNil: [ GtPackageCoder forPackage: aRPackageTag package ].
 	aCoder := packageCoder packageTagCoderFor: aRPackageTag.
 	self assertCoder: aCoder.
