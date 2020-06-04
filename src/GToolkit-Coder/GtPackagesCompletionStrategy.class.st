@@ -42,6 +42,8 @@ GtPackagesCompletionStrategy class >> findPackagesMatching: aString [
 GtPackagesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
 	| string completionActions |
 	string := aText asString.
+	string isEmpty 
+		ifTrue: [ ^#() ].
 	completionActions := Set new.
 	(self class findPackagesMatching: string) do: [ :each | 
 		completionActions add: (GtReplaceTextCompletionAction forText: each name) ].
