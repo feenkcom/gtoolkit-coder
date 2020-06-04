@@ -172,8 +172,11 @@ GtCoder >> buildHierarchyButton [
 					icon: BrGlamorousIcons tree;
 					yourself ]
 			content: [
-				(GtCoderNavigationPackagesTagsClassesElement new navigationModel: navigationModel)
-					size: 400@400
+				BlElement new
+					size: 400@400;
+					addChild: (GtCoderNavigationTabsStencil new 
+						navigationModel: navigationModel;
+						asElement)
 			]);
 		icon: BrGlamorousIcons tree asElement;
 		yourself
