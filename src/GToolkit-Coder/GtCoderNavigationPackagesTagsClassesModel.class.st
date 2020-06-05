@@ -130,6 +130,15 @@ GtCoderNavigationPackagesTagsClassesModel >> packageRenamed: aRPackageRenamed [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesModel >> packageTagAdded: aClassTagAdded [
+	(self packagesToShow includes: aClassTagAdded package) ifFalse: [ ^ self ].
+	self announcer announce: (GtCoderNavigationPackageTagAdded new 
+		coder: coder;
+		package: aClassTagAdded package;
+		tag: aClassTagAdded tag)
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesModel >> packageUnregistered: aRPackageUnregistered [
 	self announcer announce: (GtCoderNavigationPackageUnregistered new 
 		coder: coder;
@@ -286,7 +295,8 @@ GtCoderNavigationPackagesTagsClassesModel >> subscribeToSystem [
 	SystemAnnouncer uniqueInstance weak
 		when: RPackageRegistered send: #packageRegistered: to: self;
 		when: RPackageUnregistered send: #packageUnregistered: to: self;
-		when: RPackageRenamed send: #packageRenamed: to: self
+		when: RPackageRenamed send: #packageRenamed: to: self;
+		when: ClassTagAdded send: #packageTagAdded: to: self
 ]
 
 { #category : #subscriptions }
