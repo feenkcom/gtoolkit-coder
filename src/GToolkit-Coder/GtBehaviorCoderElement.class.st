@@ -57,7 +57,9 @@ GtBehaviorCoderElement >> buildClassLabel [
 		inputFilter: BrTextEditorAlphaNumericInputFilter new;
 		text: (classCoder name);
 		margin: (BlInsets all: 0);
-		whenKey: BlKeyCombination primaryN labelDo: [ :anEvent  | self browseClassReferences ].
+		whenKey: BlKeyCombination primaryN labelDo: [ :anEvent  | self browseClassReferences ];
+		whenKey: BlKeyCombination primaryB labelDo: [ :anEvent  | self phlow spawnTool: (GtClassCoderTool observedClass: classCoder theClass) ];
+		whenKey: BlKeyCombination primaryG labelDo: [ :anEvent  | self phlow spawnObject: classCoder theClass ].
 	
 	
 	(GtCompletionController
