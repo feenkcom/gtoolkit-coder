@@ -26,7 +26,7 @@ GtCreateBehaviorElement >> buildClassLabel [
 
 { #category : #'private - instance creation' }
 GtCreateBehaviorElement >> buildDefinitionEditor [
-	| theProperties |
+	| theProperties saveButton |
 		
 	theProperties := BlElement new
 		layout: (BlGridLayout new columnCount: 2);
@@ -54,8 +54,21 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 					root: anEvent currentTarget;
 					referenceElement: aFocusedChild;
 					nextFocusDo: [ :aNextFocusElement | aNextFocusElement requestFocus ] ] ]).
-			
-	
+
+
+	saveButton := BrButton new
+		icon: BrGlamorousVectorIcons accept;
+		beSmall;
+		look: BrGlamorousButtonWithIconLook new;
+		label: 'Save';
+		action: [ self compileBehavior ];
+		constraintsDo: [ :c | c grid horizontal span: 2 ];
+		disable.
+
+	headerModel definition
+		when: GtBehaviorChangeEvent
+		do: [ :event | saveButton enabled: headerModel isValidForCreation ].
+
 	theProperties addChild: (self buildClassLabel constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
 	headerModel editors do: [ :eachEditor |
@@ -66,15 +79,7 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 					margin: self buttonMargin;
 					asElement) } ].
 
-	theProperties
-		addChild:
-			(BrButton new
-				icon: BrGlamorousVectorIcons accept;
-				beSmall;
-				look: BrGlamorousButtonWithIconLook new;
-				label: 'Save';
-				action: [ self compileBehavior ];
-				constraintsDo: [ :c | c grid horizontal span: 2 ]).
+	theProperties addChild: saveButton.
 
 	^ theProperties
 ]

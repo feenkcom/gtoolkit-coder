@@ -24,6 +24,11 @@ GtPoolDefinition >> browseFrom: anEvent [
 		ifPresent: [ :aPool | anEvent currentTarget phlow spawnTool: (GtClassCoderTool observedClass: aPool) ]
 ]
 
+{ #category : #testing }
+GtPoolDefinition >> exists [
+	^ Smalltalk globals includesKey: self name asSymbol
+]
+
 { #category : #'instance creation' }
 GtPoolDefinition >> fromPool: aSharedPoolClass [
 	name := aSharedPoolClass name

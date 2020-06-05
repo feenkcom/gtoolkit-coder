@@ -27,7 +27,8 @@ GtCodeDefinition >> differenceWith: aGtCodeDefinition [
 
 { #category : #'announcer - subscription' }
 GtCodeDefinition >> dispatchEvent: anEvent [
-	self announcer announce: anEvent
+	self announcer announce: anEvent.
+	parent notNil ifTrue: [ parent dispatchEvent: anEvent ]
 ]
 
 { #category : #'gt - viewers' }

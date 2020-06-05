@@ -84,6 +84,11 @@ GtClassDefinition >> createBehaviorChange [
 	^ RBAddClassWithSlotsChange definition: self asDefinitionString
 ]
 
+{ #category : #initialization }
+GtClassDefinition >> defaultNewClassName [
+	^ #NameOfSubclass
+]
+
 { #category : #'api - accepting' }
 GtClassDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf: aClass [
 	^ aGtCodeDefinitionDifference asClassRefactorings: aClass
@@ -131,10 +136,15 @@ GtClassDefinition >> editors [
 	}
 ]
 
+{ #category : #testing }
+GtClassDefinition >> exists [
+	^ Smalltalk globals includesKey: self name asSymbol
+]
+
 { #category : #initialization }
 GtClassDefinition >> forNew [
 	| anEnvironment |
-	name := #NameOfSubclass.
+	name := self defaultNewClassName.
 	originalName := name.
 	
 	anEnvironment := RGEnvironment new.
@@ -193,6 +203,30 @@ GtClassDefinition >> gtTraitsFor: aView [
 		priority: 3;
 		object: [ traits ];
 		view: #gtTraitsFor:
+]
+
+{ #category : #testing }
+GtClassDefinition >> isValidForCreation [
+	self name asSymbol = self defaultNewClassName
+		ifTrue: [ ^ false ].
+	(Smalltalk includesKey: self name asSymbol)
+		ifTrue: [ ^ false ].
+	superclass exists
+		ifFalse: [ ^ false ].
+	category packageExists
+		ifFalse: [ ^ false ].
+	traits exists
+		ifFalse: [ ^ false ].
+	(pools all allSatisfy: [ :each | each exists ])
+		ifFalse: [ ^ false ].
+	(slots all
+		allSatisfy:
+			[ :each | each isValidName and: [ (superclass hasSlotNamed: each name) not ] ])
+		ifFalse: [ ^ false ].
+	^ classVariables all
+		allSatisfy: [ :each | 
+			each isValidName
+				and: [ (superclass hasClassVariableNamed: each name) not ] ]
 ]
 
 { #category : #accessing }

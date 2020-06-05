@@ -69,6 +69,11 @@ GtBehaviorCoderHeaderModel >> initialize [
 	self behavior: Class new
 ]
 
+{ #category : #testing }
+GtBehaviorCoderHeaderModel >> isValidForCreation [
+	^ definition isValidForCreation
+]
+
 { #category : #'private - notifying' }
 GtBehaviorCoderHeaderModel >> notifyBehaviorChanged: aBehavior [
 	self dispatchEvent: (GtBehaviorCoderHeaderClassChanged new theClass: aBehavior)

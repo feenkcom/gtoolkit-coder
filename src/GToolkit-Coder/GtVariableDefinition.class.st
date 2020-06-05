@@ -51,6 +51,11 @@ GtVariableDefinition >> inspectFrom: anEvent [
 	anEvent currentTarget phlow spawnObject: self value
 ]
 
+{ #category : #testing }
+GtVariableDefinition >> isValidName [
+	^ RBScanner isVariable: self name
+]
+
 { #category : #accessing }
 GtVariableDefinition >> name [
 	^ name

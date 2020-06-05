@@ -9,7 +9,7 @@ Class {
 
 { #category : #initialization }
 GtCreatePackageElement >> buildDefinitionEditor [
-	| theProperties |
+	| theProperties saveButton |
 		
 	theProperties := BlElement new
 		layout: (BlGridLayout new columnCount: 2);
@@ -37,11 +37,26 @@ GtCreatePackageElement >> buildDefinitionEditor [
 					root: anEvent currentTarget;
 					referenceElement: aFocusedChild;
 					nextFocusDo: [ :aNextFocusElement | aNextFocusElement requestFocus ] ] ]).
-			
+
+	saveButton := BrButton new
+		icon: BrGlamorousVectorIcons accept;
+		beSmall;
+		look: BrGlamorousButtonWithIconLook new;
+		label: 'Save';
+		action: [ self createPackage ];
+		constraintsDo: [ :c | c grid horizontal span: 2 ];
+		disable.
+
+	headerModel package
+		when: GtBehaviorChangeEvent
+		do: [ :event | saveButton enabled: headerModel isValidForCreation ].
 	
 	theProperties addChild: (self buildPackageLabel constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
 	headerModel tag editors do: [ :eachEditor |
+		eachEditor definition
+			when: GtBehaviorChangeEvent
+			do: [ :event | saveButton enabled: headerModel isValidForCreation ].
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
@@ -49,15 +64,7 @@ GtCreatePackageElement >> buildDefinitionEditor [
 					margin: self buttonMargin;
 					asElement) } ].
 
-	theProperties
-		addChild:
-			(BrButton new
-				icon: BrGlamorousVectorIcons accept;
-				beSmall;
-				look: BrGlamorousButtonWithIconLook new;
-				label: 'Save';
-				action: [ self createPackage ];
-				constraintsDo: [ :c | c grid horizontal span: 2 ]).
+	theProperties addChild: saveButton.
 
 	^ theProperties
 ]
