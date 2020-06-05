@@ -92,6 +92,19 @@ GtCategoryDefinition >> fromBehavior: aBehavior [
 	tag := GtTagDefinition fromBehavior: aBehavior
 ]
 
+{ #category : #testing }
+GtCategoryDefinition >> isValidForCreation [
+	| tagName rpackage |
+	rpackage := package rpackage.
+	rpackage isNil
+		ifTrue: [ ^ package name notEmpty ].
+	tagName := tag name.
+	tagName isEmpty
+		ifTrue: [ ^ false ].
+	rpackage classTagNamed: tagName ifAbsent: [ ^ true ].
+	^ false
+]
+
 { #category : #accessing }
 GtCategoryDefinition >> name [
 	^ (String streamContents: [ :aStream |
@@ -117,6 +130,11 @@ GtCategoryDefinition >> originalName [
 { #category : #accessing }
 GtCategoryDefinition >> package [
 	^ package
+]
+
+{ #category : #testing }
+GtCategoryDefinition >> packageExists [
+	^package exists
 ]
 
 { #category : #accessing }

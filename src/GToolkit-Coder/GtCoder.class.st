@@ -100,7 +100,9 @@ GtCoder >> buildAddInterface: look [
 			navigationModel
 				selectedTagDo: [ :tag | element forPackageTag: tag ].
 			navigationModel
-				selectedClassDo: [ :cls | element forSuperclass: cls ].
+				selectedClassDo: [ :cls | 
+					cls isTrait
+						ifFalse: [ element forSuperclass: cls ] ].
 			element ].
 	contentTabs addTab: tab.
 	tab := BrTab new
@@ -127,7 +129,7 @@ GtCoder >> buildAddInterface: look [
 			element
 				packageBlock: [ :pkg :tag | 
 					look hide.
-					tag isNil
+					tag isNil 
 						ifTrue: [ navigationModel selectPackage: pkg ]
 						ifFalse: [ navigationModel selectPackageTag: tag ] ].
 			navigationModel
