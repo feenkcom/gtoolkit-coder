@@ -21,6 +21,18 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage [
 		self selectPackage: aSelectedPackage ].
 ]
 
+{ #category : #'api - packages' }
+GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackageTag [
+	| aSelectedPackage |
+
+	packagesList selectedNodeDo: [ :aNode | 
+		aSelectedPackage := aNode value ].
+
+	self updatePackageLists.
+	aSelectedPackage ifNotNil: [
+		self selectPackage: aSelectedPackage ].
+]
+
 { #category : #'api - classes' }
 GtCoderNavigationPackagesTagsClassesElement >> deselectClasses [
 	classesList deselectAll
@@ -144,6 +156,13 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 	self suppressListChangeEventsDuring: [  
 		self selectPackage: anAnnouncer package.
 		self deselectClasses. ]
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackageTagAdded: anAnnouncement [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [
+		self addPackage: anAnnouncement package tag: anAnnouncement tag ]
 ]
 
 { #category : #'event handling' }
@@ -281,6 +300,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 	navigationModel when: GtCoderNavigationPackageRegistered send: #onPackageRegistered: to: self.
 	navigationModel when: GtCoderNavigationPackageUnregistered send: #onPackageUnregistered: to: self.
 	navigationModel when: GtCoderNavigationPackageRenamed send: #onPackageRenamed: to: self.
+	navigationModel when: GtCoderNavigationPackageTagAdded send: #onPackageTagAdded: to: self.
 ]
 
 { #category : #subscriptions }

@@ -18,6 +18,15 @@ GtPackageCoder class >> forPackage: anRPackage [
 		yourself
 ]
 
+{ #category : #'private - adding / removing' }
+GtPackageCoder >> addMissingPackageTag: aPackageTag [
+	<return: #GtPackageTagCoder>
+	| aCoder |
+	aCoder := self newPackageTagCoderFor: aPackageTag.
+	self packageTagCoders add: aCoder.
+	^ aCoder
+]
+
 { #category : #elements }
 GtPackageCoder >> asCardElement [
 	^ GtPackageCardElement new coder: self
@@ -73,6 +82,21 @@ GtPackageCoder >> name [
 	^ package name
 ]
 
+{ #category : #'private - instance creation' }
+GtPackageCoder >> newPackageTagCoderFor: aPackageTag [
+	^ GtPackageTagCoder new
+		packageTag: aPackageTag;
+		packageCoder: self;
+		yourself
+]
+
+{ #category : #'private - instance creation' }
+GtPackageCoder >> newPackageTagCoders [
+	^ (package classTags
+			collect: [ :eachTag | self newPackageTagCoderFor: eachTag ])
+				asSortedCollection: [ :a :b | a name < b name ]
+]
+
 { #category : #accessing }
 GtPackageCoder >> package [
 	^ package
@@ -89,18 +113,14 @@ GtPackageCoder >> package: aRPackage [
 GtPackageCoder >> packageTagCoderFor: aPackageTag [
 	^ self packageTagCoders
 		detect: [ :each | each packageTag = aPackageTag ]
-		ifNone: [  ]
+		ifNone: [ self addMissingPackageTag: aPackageTag ]
 ]
 
 { #category : #accessing }
 GtPackageCoder >> packageTagCoders [
 	^ packageTagCoders
-		ifNil: [ packageTagCoders := (package classTags
-				collect: [ :each | 
-					GtPackageTagCoder new
-						packageTag: each;
-						packageCoder: self;
-						yourself ]) asSortedCollection: [ :a :b | a name < b name ] ]
+		ifNil:
+			[ packageTagCoders := self newPackageTagCoders ]
 ]
 
 { #category : #accessing }
