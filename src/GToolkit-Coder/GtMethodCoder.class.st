@@ -928,6 +928,11 @@ GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
 ]
 
 { #category : #testing }
+GtMethodCoder >> isNewMethod [
+	^ methodSource isEmpty
+]
+
+{ #category : #testing }
 GtMethodCoder >> isOverridden [
 	| sel |
 	sel := self currentSelector.
@@ -1000,12 +1005,15 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 { #category : #'actions-refactorings' }
 GtMethodCoder >> moveMethodToInstanceOrClass [
 	| oldClass newClass model modelClass oldModelClass |
-	self canMoveMethodToInstanceOrClass
-		ifFalse: [ ^ false ].
 	oldClass := self classOrMetaClass.
 	newClass := oldClass isMeta
 		ifTrue: [ oldClass soleInstance ]
 		ifFalse: [ oldClass class ].
+	self isNewMethod
+		ifTrue: [ self classOrMetaClass: newClass.
+			^ true ].
+	self canMoveMethodToInstanceOrClass
+		ifFalse: [ ^ false ].
 	model := RBNamespace new.
 	modelClass := model classFor: newClass.
 	modelClass compile: self source classified: self category.
