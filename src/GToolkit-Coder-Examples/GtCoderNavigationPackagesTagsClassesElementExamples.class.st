@@ -33,6 +33,12 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> classInPackageTag [
 	^ self class
 ]
 
+{ #category : #'examples - system items' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> classInUncategorizedPackageTag [
+	<gtExample>
+	^ GtCoderUncategorizedDummyClass
+]
+
 { #category : #'examples - basic' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementNavigationModel [
 	<gtExample>
@@ -72,11 +78,41 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageAndClas
 ]
 
 { #category : #'examples - class selection' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageAndClassSelection_BeforeInSpace [
+	<gtExample>
+	| anElement |
+	anElement := self elementNavigationModel.
+	anElement navigationModel selectClass: self classInPackage.
+	self putInSpace: anElement.
+	self 
+		assertSelectionOfPackage: self classInPackage package
+		tag: nil 
+		class: self classInPackage 
+		inElement: anElement.
+	^ anElement
+]
+
+{ #category : #'examples - class selection' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageTagAndClassSelection [
 	<gtExample>
 	| anElement |
 	anElement := self elementNavigationModelInSpace.
 	anElement navigationModel selectClass: self classInPackageTag.
+	self 
+		assertSelectionOfPackage: nil
+		tag: self packageTag 
+		class: self classInPackageTag 
+		inElement: anElement.
+	^ anElement
+]
+
+{ #category : #'examples - class selection' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageTagAndClassSelection_BeforeInSpace [
+	<gtExample>
+	| anElement |
+	anElement := self elementNavigationModel.
+	anElement navigationModel selectClass: self classInPackageTag.
+	self putInSpace: anElement.
 	self 
 		assertSelectionOfPackage: nil
 		tag: self packageTag 
@@ -124,6 +160,35 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageWithout
 	^ anElement
 ]
 
+{ #category : #'examples - class selection' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithUnategorizedPackageTagAndClassSelection [
+	<gtExample>
+	| anElement |
+	anElement := self elementNavigationModelInSpace.
+	anElement navigationModel selectClass: self classInUncategorizedPackageTag.
+	self 
+		assertSelectionOfPackage: nil
+		tag: self uncategorizedPackageTag 
+		class: self classInUncategorizedPackageTag 
+		inElement: anElement.
+	^ anElement
+]
+
+{ #category : #'examples - class selection' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithUnategorizedPackageTagAndClassSelection_BeforeInSpace [
+	<gtExample>
+	| anElement |
+	anElement := self elementNavigationModel.
+	anElement navigationModel selectClass: self classInUncategorizedPackageTag.
+	self putInSpace: anElement.
+	self 
+		assertSelectionOfPackage: nil
+		tag: self uncategorizedPackageTag 
+		class: self classInUncategorizedPackageTag 
+		inElement: anElement.
+	^ anElement
+]
+
 { #category : #'examples - system items' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> packageTag [
 	<gtExample>
@@ -140,4 +205,17 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> packageWithTagsAndWithout
 GtCoderNavigationPackagesTagsClassesElementExamples >> packageWithoutTagsAndExtensions [
 	<gtExample>
 	^ 'GToolkit-Coder-Examples-SystemS1' asPackage 
+]
+
+{ #category : #'examples - system items' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> uncategorizedPackageTag [
+	<gtExample>
+	| aPackage aPackageTag aTag |
+	aPackage := self classInUncategorizedPackageTag package.
+	aPackageTag := aPackage classTags detect: [ :eachTag | eachTag name = aPackage name ].
+	aTag := GtCoderPackageUncategorizedTag forPackageTag: aPackageTag.
+	self assert: (aTag = aPackageTag).
+	self assert: (aTag = aPackage) not.
+	self assert: (aTag = self packageTag) not.
+	^ aTag
 ]
