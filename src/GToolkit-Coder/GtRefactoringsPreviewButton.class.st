@@ -55,7 +55,7 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 GtRefactoringsPreviewButton >> initialize [
 	super initialize.
 	
-	refactorings := [ #() ].
+	refactoringsComputation := [ #() ].
 	
 	self
 		icon: BrGlamorousVectorIcons accept;
@@ -82,10 +82,10 @@ GtRefactoringsPreviewButton >> previewWidth [
 
 { #category : #accessing }
 GtRefactoringsPreviewButton >> refactorings [
-	^ refactorings value
+	^ refactoringsComputation value
 ]
 
 { #category : #accessing }
 GtRefactoringsPreviewButton >> refactorings: aBlock [
-	refactorings := aBlock
+	refactoringsComputation := aBlock
 ]
