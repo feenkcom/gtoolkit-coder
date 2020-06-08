@@ -25,16 +25,8 @@ GtBehaviorCoderHeaderElement >> actOnPackageChanged: anAnnouncement [
 ]
 
 { #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
-	| theProperties |
-		
-	theProperties := BlElement new
-		layout: (BlGridLayout new columnCount: 2);
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c vertical fitContent ].
-		
-	theProperties addShortcut: (BlShortcut new
+GtBehaviorCoderHeaderElement >> addDefinitionEditorShortcutsTo: aPropertiesElement [
+	aPropertiesElement addShortcut: (BlShortcut new
 		combination: BlKeyCombination arrowUp;
 		action: [ :anEvent |
 			anEvent currentTarget deepestFocusedChild ifNotNil: [ :aFocusedChild |
@@ -44,7 +36,7 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 					referenceElement: aFocusedChild;
 					nextFocusDo: [ :aNextFocusElement | aNextFocusElement requestFocus ] ] ]).
 
-	theProperties addShortcut: (BlShortcut new
+	aPropertiesElement addShortcut: (BlShortcut new
 		combination: BlKeyCombination arrowDown;
 		action: [ :anEvent |
 			anEvent currentTarget deepestFocusedChild ifNotNil: [ :aFocusedChild |
@@ -53,6 +45,19 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 					root: anEvent currentTarget;
 					referenceElement: aFocusedChild;
 					nextFocusDo: [ :aNextFocusElement | aNextFocusElement requestFocus ] ] ]).
+]
+
+{ #category : #'private - instance creation' }
+GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
+	| theProperties |
+		
+	theProperties := BlElement new
+		layout: (BlGridLayout new columnCount: 2);
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical fitContent ].
+		
+	self addDefinitionEditorShortcutsTo: theProperties.
 
 	headerModel editors do: [ :eachEditor |
 		theProperties addChildren: { 
