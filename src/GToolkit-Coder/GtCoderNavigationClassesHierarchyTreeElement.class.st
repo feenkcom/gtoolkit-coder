@@ -30,7 +30,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	self stencil: GtCoderNonExpandableClassTreeItemStencilBuilder new.
 ]
 
-{ #category : #initialization }
+{ #category : #'api - initialization' }
 GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollectionOfClasses [
 	classesTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses) 
 		sortByClassName.
@@ -40,7 +40,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollecti
 	self expandAll
 ]
 
-{ #category : #initialization }
+{ #category : #'api - initialization' }
 GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: aClass [
 	classesTree := (GtCoderGrowingClassesHierarchyTree hierarchyForClass: aClass)
 		sortByClassName.
@@ -48,4 +48,11 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 		items: classesTree subclassTrees
 		children: [ :eachTree | eachTree subclassTrees ].
 	self expandClass: aClass
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationClassesHierarchyTreeElement >> selectedClass [
+	<return: #Class or: nil>
+	self selectedNodeDo: [ :aNode | ^ aNode value rootClass ].
+	^ nil
 ]
