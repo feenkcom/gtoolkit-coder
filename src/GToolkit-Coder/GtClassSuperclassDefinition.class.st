@@ -167,8 +167,8 @@ GtClassSuperclassDefinition >> replaceFrom: anEvent [
 			aClassCoder := GtClassCoder forClass: aClass.
 			aCoderEvent := GtCoderToReplace new coder: aClassCoder.
 			anEvent currentTarget fireEvent: aCoderEvent.
-			aCoderEvent isConsumed
-				ifFalse: [ anEvent currentTarget phlow spawnTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
+			aCoderEvent isConsumed ifFalse: [ 
+				anEvent currentTarget phlow spawnTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
 ]
 
 { #category : #'gt - editors' }
@@ -182,9 +182,12 @@ GtClassSuperclassDefinition >> superclassEditor [
 			setSelector: #name:;
 			renameEvent: GtBehaviorSuperclassRenamed;
 			completion: [ GtClassesCompletionStrategy new ];
-			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-			whenKey: BlKeyCombination primaryN do: [ :anEvent :aDefinition  | aDefinition browseReferencesFrom: anEvent ];
-			whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | 
+				aDefinition browseFrom: anEvent ];
+			whenKey: BlKeyCombination primaryN do: [ :anEvent :aDefinition  | 
+				aDefinition browseReferencesFrom: anEvent ];
+			whenPrimaryClickDo: [ :anEvent :aDefinition | 
+				aDefinition browseFrom: anEvent ]
 ]
 
 { #category : #'gt - editors' }

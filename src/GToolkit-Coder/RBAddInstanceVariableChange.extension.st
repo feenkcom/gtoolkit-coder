@@ -5,7 +5,7 @@ RBAddInstanceVariableChange >> gtDiff [
 	| aClass aDefinition oldSource newSource |
 	
 	aClass := self changeClass.
-	aDefinition := GtBehaviorDefinition fromBehavior: aClass.
+	aDefinition := GtBehaviorDefinition targetDefinitionForBehavior: aClass.
 	oldSource := aDefinition asDefinitionString.
 	
 	aDefinition slots addSlotNamed: variable asSymbol.
