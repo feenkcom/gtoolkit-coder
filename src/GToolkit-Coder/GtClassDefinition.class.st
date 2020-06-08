@@ -213,8 +213,6 @@ GtClassDefinition >> isValidForCreation [
 		ifTrue: [ ^ false ].
 	superclass exists
 		ifFalse: [ ^ false ].
-	category packageExists
-		ifFalse: [ ^ false ].
 	traits exists
 		ifFalse: [ ^ false ].
 	(pools all allSatisfy: [ :each | each exists ])

@@ -174,8 +174,6 @@ GtTraitDefinition >> isValidForCreation [
 		ifTrue: [ ^ false ].
 	(Smalltalk includesKey: self name asSymbol)
 		ifTrue: [ ^ false ].
-	category packageExists
-		ifFalse: [ ^ false ].
 	traits exists
 		ifFalse: [ ^ false ].
 	^ slots all
