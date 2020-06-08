@@ -84,6 +84,21 @@ GtCoderNavigationElement >> onRemovedFromSceneGraph [
 	self unsubscribeFromNavigationModel.
 ]
 
+{ #category : #'private - selection' }
+GtCoderNavigationElement >> scrollIndexFrom: aNodeIndex [
+	<return: #Number>
+	"TODO: does not work if an index is at a bottom: aNodeIndex - 5 max: 1"
+	^ aNodeIndex 
+]
+
+{ #category : #'private - selection' }
+GtCoderNavigationElement >> scrollIndexFromPrevious: aPreviousIndex current: aNewIndex max: aNumberOfItems [
+	<return: #Number>
+	^ (aPreviousIndex isZero or: [ aPreviousIndex >= aNewIndex ])
+		ifTrue: [ aNewIndex - 5 max: 1 ]
+		ifFalse: [ aNewIndex + 5 min: aNumberOfItems ].
+]
+
 { #category : #subscriptions }
 GtCoderNavigationElement >> subscribeToContent [
 ]

@@ -60,6 +60,17 @@ GtCoderNavigationPackagesTreeElement >> isTag: tagA lessThan: tagB [
 ]
 
 { #category : #'api - selection' }
+GtCoderNavigationPackagesTreeElement >> selectedIndice [
+	"Return selected indice or zero"
+	
+	self selectedIndices
+		ifNotEmpty: [ :theIndices |
+			(theIndices first between: 1 and: self viewModel itemCount)
+				ifTrue: [ ^ theIndices first ] ].
+	^ 0
+]
+
+{ #category : #'api - selection' }
 GtCoderNavigationPackagesTreeElement >> selectedPackage [
 	<return: #RPackage or: nil>
 	^ self selectedPackageNodeDo: #value
