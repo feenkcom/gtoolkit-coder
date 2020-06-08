@@ -16,6 +16,11 @@ GtCoderNavigationElement >> assertNavigationModel: aGtCoderNavigationPackagesTag
 		description: [ 'Navigation model must be non-nil' ].
 ]
 
+{ #category : #testing }
+GtCoderNavigationElement >> hasNavigationModel [
+	^ self navigationModel isNotNil
+]
+
 { #category : #initialization }
 GtCoderNavigationElement >> initialize [
 	super initialize.

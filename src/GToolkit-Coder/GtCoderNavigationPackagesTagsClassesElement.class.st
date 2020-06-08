@@ -33,7 +33,7 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 		self selectPackageOrTag: aSelectedPackageOrTag ].
 ]
 
-{ #category : #'api - classes' }
+{ #category : #'api - class selections' }
 GtCoderNavigationPackagesTagsClassesElement >> deselectClasses [
 	classesList deselectAll
 ]
@@ -257,7 +257,7 @@ GtCoderNavigationPackagesTagsClassesElement >> reselectPackageOrTag: aSelectedPa
 				self selectPackageOrTag: aSelectedPackageOrTag ] ]
 ]
 
-{ #category : #'api - classes' }
+{ #category : #'api - class selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass [
 	classesList viewModel
 		indexOfSuchThat: [ :each | each rootClass = aClass ]
@@ -266,7 +266,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass [
 			scrollTo: anIndex ]
 ]
 
-{ #category : #'api - classes' }
+{ #category : #'api - class selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aPackage tag: aPackageTag [
 	| anExistingIndex |
 	
@@ -311,6 +311,34 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackageOrTag: aPackageOrTag
 		ifFalse: [ self selectPackage: aPackageOrTag package tag: aPackageOrTag ]
 ]
 
+{ #category : #'api - class selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedClass [
+	<return: #Class or: nil>
+	^ classesList selectedClass
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedPackage [
+	<return: #RPackage or: nil>
+	^ packagesList selectedPackage
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedPackageNodeDo: aBlock [
+	^ packagesList selectedPackageNodeDo: aBlock
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTag [
+	<return: #RPackageTag or: nil>
+	^ packagesList selectedPackageTag
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock [
+	^ packagesList selectedPackageTagNodeDo: aBlock
+]
+
 { #category : #'showing / hiding' }
 GtCoderNavigationPackagesTagsClassesElement >> showClassList [
 	classesList visibility: BlVisibility visible.
@@ -335,6 +363,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToContent [
 
 { #category : #subscriptions }
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
+	self hasNavigationModel ifFalse: [ ^ self ].
 	super subscribeToNavigationModel.
 	navigationModel when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
 	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
@@ -356,6 +385,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToPackageList [
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
+	self hasNavigationModel ifFalse: [ ^ self ].
 	classesList initializeWithClasses: navigationModel classesToShow.
 ]
 
@@ -375,11 +405,13 @@ GtCoderNavigationPackagesTagsClassesElement >> updatePackageAndClassLists [
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
+	self hasNavigationModel ifFalse: [ ^ self ].
 	packagesList initializeWithPackages: navigationModel packagesToShow.
 ]
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateSelectedClass [
+	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel selectedClassDo: [ :aClass |
 		classesList viewModel
 			indexOfSuchThat: [ :each | each rootClass = aClass ]
@@ -390,6 +422,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updateSelectedClass [
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateSelectedPackageAndTag [
+	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel hasSelectedPackage
 		ifTrue: [ navigationModel hasSelectedTag
 			ifTrue: [

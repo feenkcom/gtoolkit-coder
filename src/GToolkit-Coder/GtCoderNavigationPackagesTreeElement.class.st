@@ -13,20 +13,20 @@ GtCoderNavigationPackagesTreeElement class >> fromPackages: aCollectionOfPackage
 ]
 
 { #category : #'private - enumeration' }
-GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: eachPackageOrTag [
+GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 	| theTags anExtension |
-	(eachPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
-	theTags := eachPackageOrTag classTags asOrderedCollection.
-	theTags withIndexDo: [ :eachTag :eachIndex | eachTag name = eachPackageOrTag name ifTrue: [ 
+	(aPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
+	theTags := aPackageOrTag classTags asOrderedCollection.
+	theTags withIndexDo: [ :eachTag :eachIndex | eachTag name = aPackageOrTag name ifTrue: [ 
 		theTags at: eachIndex put: (GtCoderPackageUncategorizedTag forPackageTag: eachTag) ] ].
 	theTags sort: [ :tagA :tagB | self isTag: tagA lessThan: tagB ].
 
-	anExtension := GtCoderPackageExtentionTag forPackage: eachPackageOrTag.
+	anExtension := GtCoderPackageExtentionTag forPackage: aPackageOrTag.
 	anExtension hasExtendedClasses ifTrue: [ 
 		theTags addLast: anExtension ].
 	"Do not return an only tag of the same name as the package"
 	(theTags size = 1 and: [ 
-		theTags anyOne name = eachPackageOrTag name ]) ifTrue: [ ^ #() ].
+		theTags anyOne class = GtCoderPackageUncategorizedTag ]) ifTrue: [ ^ #() ].
 	
 	^ theTags
 ]
@@ -38,7 +38,7 @@ GtCoderNavigationPackagesTreeElement >> initialize [
 	self stencil: GtCoderExpandablePackagesTreeItemStencilBuilder new.
 ]
 
-{ #category : #initialization }
+{ #category : #'api - initialization' }
 GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPackages [
 	| theSortedPackages |
 
@@ -57,4 +57,30 @@ GtCoderNavigationPackagesTreeElement >> isTag: tagA lessThan: tagB [
 	tagB class = GtCoderPackageUncategorizedTag ifTrue: [ ^ false ].
 	^ tagA name < tagB name
 	
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTreeElement >> selectedPackage [
+	<return: #RPackage or: nil>
+	^ self selectedPackageNodeDo: #value
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTreeElement >> selectedPackageNodeDo: aBlock [
+	self selectedNodeDo: [ :aNode | aNode depth = 0
+		ifTrue: [ ^ aBlock cull: aNode ] ].
+	^ nil
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTreeElement >> selectedPackageTag [
+	<return: #RPackageTag or: nil>
+	^ self selectedPackageTagNodeDo: #value
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTreeElement >> selectedPackageTagNodeDo: aBlock [
+	self selectedNodeDo: [ :aNode | aNode depth = 1
+		ifTrue: [ ^ aBlock cull: aNode ] ].
+	^ nil
 ]
