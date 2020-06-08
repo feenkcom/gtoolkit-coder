@@ -53,6 +53,6 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 { #category : #'api - selection' }
 GtCoderNavigationClassesHierarchyTreeElement >> selectedClass [
 	<return: #Class or: nil>
-	self selectedNodeDo: [ :aNode | ^ aNode value ].
+	self selectedNodeDo: [ :aNode | ^ aNode value rootClass ].
 	^ nil
 ]

@@ -21,6 +21,12 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> basicElement [
 	^ anElement
 ]
 
+{ #category : #'examples - system items' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> classInPackageTag [
+	<gtExample>
+	^ self class
+]
+
 { #category : #'examples - basic' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementNavigationModel [
 	<gtExample>
@@ -42,6 +48,34 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementNavigationModelInS
 	self putInSpace: anElement.
 	self assert: anElement navigationModel announcer numberOfSubscriptions equals: 9.
 	self assertSelectionOfPackage: nil tag: nil class: nil inElement: anElement.
+	^ anElement
+]
+
+{ #category : #'examples - class selection' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageTagAndClassSelection [
+	<gtExample>
+	| anElement |
+	anElement := self elementNavigationModelInSpace.
+	anElement navigationModel selectClass: self classInPackageTag.
+	self 
+		assertSelectionOfPackage: nil
+		tag: self packageTag 
+		class: self classInPackageTag 
+		inElement: anElement.
+	^ anElement
+]
+
+{ #category : #'examples - package tag selection' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageTagSelection [
+	<gtExample>
+	| anElement |
+	anElement := self elementNavigationModelInSpace.
+	anElement navigationModel selectPackageTag: self packageTag.
+	self 
+		assertSelectionOfPackage: nil
+		tag: self packageTag 
+		class: nil 
+		inElement: anElement.
 	^ anElement
 ]
 
@@ -68,6 +102,18 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageWithout
 	self assert: aPackageNode isNotNil.
 	self assert: aPackageNode children size equals: 0.
 	^ anElement
+]
+
+{ #category : #'examples - system items' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> packageTag [
+	<gtExample>
+	^ self packageWithTagsAndWithoutExtensions classTagNamed: 'Navigation'
+]
+
+{ #category : #'examples - system items' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> packageWithTagsAndWithoutExtensions [
+	<gtExample>
+	^ 'GToolkit-Coder-Examples' asPackage 
 ]
 
 { #category : #'examples - system items' }
