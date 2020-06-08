@@ -10,10 +10,25 @@ Class {
 
 { #category : #'instance creation' }
 GtBehaviorDefinition class >> fromBehavior: aBehavior [
+	"Create a definition for editing the given behaviour."
 	^ aBehavior isClass
 		ifTrue: [ aBehavior isMeta
 			ifTrue: [ GtMetaclassDefinition fromMetaclass: aBehavior ]
 			ifFalse: [ GtFullClassDefinition fromClass: aBehavior ] ]
+		ifFalse: [ aBehavior isTrait
+			ifTrue: [ GtTraitDefinition fromTrait: aBehavior ]
+			ifFalse: [ self error: 'Unknown entity' ] ]
+]
+
+{ #category : #'instance creation' }
+GtBehaviorDefinition class >> targetDefinitionForBehavior: aBehavior [
+	"Create a definition for exactly the type of the give behaviour. 
+	I differ from ${method:GtBehaviorDefinition class>>#fromBehaviour:}$ 
+	in how I handle definitions for classes and metaclasses "
+	^ aBehavior isClass
+		ifTrue: [ aBehavior isMeta
+			ifTrue: [ GtMetaclassDefinition fromMetaclass: aBehavior ]
+			ifFalse: [ GtClassDefinition fromClass: aBehavior ] ]
 		ifFalse: [ aBehavior isTrait
 			ifTrue: [ GtTraitDefinition fromTrait: aBehavior ]
 			ifFalse: [ self error: 'Unknown entity' ] ]

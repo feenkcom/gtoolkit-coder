@@ -2,7 +2,7 @@ Class {
 	#name : #GtRefactoringsPreviewButton,
 	#superclass : #BrButton,
 	#instVars : [
-		'refactorings'
+		'refactoringsComputation'
 	],
 	#category : #'GToolkit-Coder-Refactorings - UI'
 }
@@ -26,7 +26,7 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 		beSmall;
 		requestFocus;
 		look: BrGlamorousButtonWithIconLook new;
-		label: 'Preview';
+		label: 'Save';
 		margin: (BlInsets top: 0 left: 10 bottom: 10 right: 0);
 		action: applyAction;
 		yourself.
@@ -55,7 +55,7 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 GtRefactoringsPreviewButton >> initialize [
 	super initialize.
 	
-	refactorings := [ #() ].
+	refactoringsComputation := [ #() ].
 	
 	self
 		icon: BrGlamorousVectorIcons accept;
@@ -82,10 +82,10 @@ GtRefactoringsPreviewButton >> previewWidth [
 
 { #category : #accessing }
 GtRefactoringsPreviewButton >> refactorings [
-	^ refactorings value
+	^ refactoringsComputation value
 ]
 
 { #category : #accessing }
 GtRefactoringsPreviewButton >> refactorings: aBlock [
-	refactorings := aBlock
+	refactoringsComputation := aBlock
 ]
