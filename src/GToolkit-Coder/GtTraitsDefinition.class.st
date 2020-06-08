@@ -96,6 +96,11 @@ GtTraitsDefinition >> errorTraitNotFound: aSymbol [
 	GtBehaviorCoderHeaderTraitNotFoundError signalFor: aSymbol
 ]
 
+{ #category : #testing }
+GtTraitsDefinition >> exists [
+	^ definitions allSatisfy: [ :each | each exists ]
+]
+
 { #category : #initialization }
 GtTraitsDefinition >> fromClass: aClass [
 	definitions := aClass traitComposition traits collect: [ :eachTrait | (GtTraitDefinition fromTrait: eachTrait) parent: self ]

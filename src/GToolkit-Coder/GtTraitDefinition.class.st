@@ -68,6 +68,11 @@ GtTraitDefinition >> createBehaviorChange [
 	^ RBAddTraitChange definition: self asDefinitionString
 ]
 
+{ #category : #initialization }
+GtTraitDefinition >> defaultNewTraitName [
+	^ #TNameOfTrait
+]
+
 { #category : #'api - accepting' }
 GtTraitDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf: aClass [
 	^ aGtCodeDefinitionDifference asClassRefactorings: aClass
@@ -109,9 +114,14 @@ GtTraitDefinition >> editors [
 	}
 ]
 
+{ #category : #testing }
+GtTraitDefinition >> exists [
+	^ Smalltalk globals includesKey: self name asSymbol
+]
+
 { #category : #initialization }
 GtTraitDefinition >> forNew [
-	name := #TNameOfTrait.
+	name := self defaultNewTraitName.
 	originalName := name.
 	category := GtCategoryDefinition empty parent: self.
 	slots := GtSlotsDefinition empty parent: self.
@@ -149,6 +159,29 @@ GtTraitDefinition >> gtTraitsFor: aView [
 		priority: 3;
 		object: [ traits ];
 		view: #gtTraitsFor:
+]
+
+{ #category : #testing }
+GtTraitDefinition >> hasSlotNamed: aString [
+	(slots all anySatisfy: [ :each | each name = aString asSymbol ])
+		ifTrue: [ ^ true ].
+	^ traits all anySatisfy: [ :each | each hasSlotNamed: aString ]
+]
+
+{ #category : #testing }
+GtTraitDefinition >> isValidForCreation [
+	self name asSymbol = self defaultNewTraitName
+		ifTrue: [ ^ false ].
+	(Smalltalk includesKey: self name asSymbol)
+		ifTrue: [ ^ false ].
+	category packageExists
+		ifFalse: [ ^ false ].
+	traits exists
+		ifFalse: [ ^ false ].
+	^ slots all
+		allSatisfy: [ :each | 
+			each isValidName
+				and: [ traits all noneSatisfy: [ :trait | trait hasSlotNamed: each name ] ] ]
 ]
 
 { #category : #'gt - editors' }

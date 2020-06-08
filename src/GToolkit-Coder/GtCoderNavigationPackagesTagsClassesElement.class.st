@@ -9,16 +9,28 @@ Class {
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
 
-{ #category : #'api - packages' }
+{ #category : #'api - package updates' }
 GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage [
-	| aSelectedPackage |
+	| aSelectedPackageOrTag |
 
 	packagesList selectedNodeDo: [ :aNode | 
-		aSelectedPackage := aNode value ].
+		aSelectedPackageOrTag := aNode value ].
 
 	self updatePackageLists.
-	aSelectedPackage ifNotNil: [
-		self selectPackage: aSelectedPackage ].
+	aSelectedPackageOrTag ifNotNil: [
+		self selectPackageOrTag: aSelectedPackageOrTag ].
+]
+
+{ #category : #'api - package updates' }
+GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackageTag [
+	| aSelectedPackageOrTag |
+
+	packagesList selectedNodeDo: [ :aNode | 
+		aSelectedPackageOrTag := aNode value ].
+
+	self updatePackageLists.
+	aSelectedPackageOrTag ifNotNil: [
+		self selectPackageOrTag: aSelectedPackageOrTag ].
 ]
 
 { #category : #'api - classes' }
@@ -26,12 +38,12 @@ GtCoderNavigationPackagesTagsClassesElement >> deselectClasses [
 	classesList deselectAll
 ]
 
-{ #category : #'api - packages' }
+{ #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> deselectPackages [
 	packagesList deselectAll
 ]
 
-{ #category : #'api - packages' }
+{ #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> expandPackage: anRPackage [
 	packagesList viewModel root
 		allChildrenNodesBreadthFirstDo: [ :eachTreeNode |
@@ -147,6 +159,20 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackageTagAdded: anAnnouncement [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [
+		self addPackage: anAnnouncement package tag: anAnnouncement tag ]
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackageTagRemoved: anAnnouncement [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [
+		self removePackage: anAnnouncement package tag: anAnnouncement tag ]
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageUnregistered: anAnnouncement [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [
@@ -171,35 +197,64 @@ GtCoderNavigationPackagesTagsClassesElement >> onTagSelected: anAnnouncer [
 		self deselectClasses. ].
 ]
 
-{ #category : #'api - packages' }
+{ #category : #'api - package updates' }
 GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage [
-	| aSelectedPackage anIndex |
+	| aSelectedPackageOrTag anIndex |
 
 	anIndex := packagesList viewModel indexOf: aPackage.
 	anIndex > 0 ifFalse: [ ^ self ].
 		
 	packagesList selectedNodeDo: [ :aNode | 
-		aSelectedPackage := aNode value ].
+		aSelectedPackageOrTag := aNode value ].
 
 	self updatePackageLists.
-	aSelectedPackage ifNotNil: [
-		aSelectedPackage = aPackage 
-			ifTrue: [ 
-				self deselectPackages.
-				self hideClassList. ]
-			ifFalse: [ self selectPackage: aSelectedPackage ] ].
+	self reselectPackageOrTag: aSelectedPackageOrTag afterRemovalOfPackageNamed: aPackage name.
 ]
 
-{ #category : #'api - packages' }
+{ #category : #'api - package updates' }
+GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage tag: aPackageTagName [
+	| aSelectedPackageOrTag anIndex |
+	anIndex := packagesList viewModel indexOf: aPackage.
+	anIndex > 0 ifFalse: [ ^ self ].
+	packagesList selectedNodeDo: [ :aNode | 
+		aSelectedPackageOrTag := aNode value ].
+	self updatePackageLists.
+	self reselectPackageOrTag: aSelectedPackageOrTag afterRemovalOfTagNamed: aPackageTagName.
+]
+
+{ #category : #'api - package updates' }
 GtCoderNavigationPackagesTagsClassesElement >> renamePackage: aPackage oldName: anOldName newName: aNewName [
-	| aSelectedPackage |
+	| aSelectedPackageOrTag |
 
 	packagesList selectedNodeDo: [ :aNode | 
-		aSelectedPackage := aNode value ].
+		aSelectedPackageOrTag := aNode value ].
 
 	self updatePackageLists.
-	aSelectedPackage ifNotNil: [
-		self selectPackage: aSelectedPackage ].
+	aSelectedPackageOrTag ifNotNil: [
+		self selectPackageOrTag: aSelectedPackageOrTag ].
+]
+
+{ #category : #'api - package reselections' }
+GtCoderNavigationPackagesTagsClassesElement >> reselectPackageOrTag: aSelectedPackageOrTag afterRemovalOfPackageNamed: aRemovedPackageOrTagName [
+	aSelectedPackageOrTag ifNotNil: [ 
+		self deselectPackages.
+		aSelectedPackageOrTag name = aRemovedPackageOrTagName
+			ifTrue: [ 
+				self hideClassList ]
+			ifFalse: [ 
+				self selectPackageOrTag: aSelectedPackageOrTag ] ]
+]
+
+{ #category : #'api - package reselections' }
+GtCoderNavigationPackagesTagsClassesElement >> reselectPackageOrTag: aSelectedPackageOrTag afterRemovalOfTagNamed: aRemovedTagName [
+	aSelectedPackageOrTag ifNotNil: [ 
+		self deselectPackages.
+		aSelectedPackageOrTag name = aRemovedTagName
+			ifTrue: [ 
+				self expandPackage: aSelectedPackageOrTag package.
+				self hideClassList. ]
+			ifFalse: [ 
+				self selectPackageOrTag: aSelectedPackageOrTag ] ]
 ]
 
 { #category : #'api - classes' }
@@ -222,7 +277,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aP
 	self selectClass: aClass.
 ]
 
-{ #category : #'api - packages' }
+{ #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 
 	packagesList viewModel
@@ -235,7 +290,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 	self hideOrShowClassList.
 ]
 
-{ #category : #'api - packages' }
+{ #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPackageTag [
 	self expandPackage: aPackage.
 
@@ -247,6 +302,13 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPac
 		
 	self updateClassLists.
 	self hideOrShowClassList.
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectPackageOrTag: aPackageOrTag [
+	(aPackageOrTag isKindOf: RPackage)
+		ifTrue: [ self selectPackage: aPackageOrTag ] 
+		ifFalse: [ self selectPackage: aPackageOrTag package tag: aPackageOrTag ]
 ]
 
 { #category : #'showing / hiding' }
@@ -281,6 +343,8 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 	navigationModel when: GtCoderNavigationPackageRegistered send: #onPackageRegistered: to: self.
 	navigationModel when: GtCoderNavigationPackageUnregistered send: #onPackageUnregistered: to: self.
 	navigationModel when: GtCoderNavigationPackageRenamed send: #onPackageRenamed: to: self.
+	navigationModel when: GtCoderNavigationPackageTagAdded send: #onPackageTagAdded: to: self.
+	navigationModel when: GtCoderNavigationPackageTagRemoved send: #onPackageTagRemoved: to: self.
 ]
 
 { #category : #subscriptions }

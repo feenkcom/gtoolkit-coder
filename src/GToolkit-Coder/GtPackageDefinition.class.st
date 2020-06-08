@@ -60,6 +60,11 @@ GtPackageDefinition >> empty [
 	originalName := name
 ]
 
+{ #category : #testing }
+GtPackageDefinition >> exists [
+	^ self rpackage notNil
+]
+
 { #category : #initialization }
 GtPackageDefinition >> fromBehavior: aBehavior [
 	name := aBehavior package name.
@@ -148,4 +153,11 @@ GtPackageDefinition >> replaceFrom: anEvent [
 	anEvent currentTarget fireEvent: aCoderEvent.
 	aCoderEvent isConsumed
 		ifFalse: [ anEvent currentTarget phlow spawnTool: (GtReadyCoderTool coder: aCoderEvent coder) ]
+]
+
+{ #category : #accessing }
+GtPackageDefinition >> rpackage [
+	^ RPackage organizer
+		packageNamed: self name asSymbol
+		ifAbsent: [ nil ]
 ]

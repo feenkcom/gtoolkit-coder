@@ -25,7 +25,8 @@ GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: eachPackageOrTa
 	anExtension hasExtendedClasses ifTrue: [ 
 		theTags addLast: anExtension ].
 	"Do not return an only tag of the same name as the package"
-	theTags size = 1 ifTrue: [ ^ #() ].
+	(theTags size = 1 and: [ 
+		theTags anyOne name = eachPackageOrTag name ]) ifTrue: [ ^ #() ].
 	
 	^ theTags
 ]

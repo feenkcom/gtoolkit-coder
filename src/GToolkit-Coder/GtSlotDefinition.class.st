@@ -76,6 +76,11 @@ GtSlotDefinition >> isSpecial [
 	^ self type ~= self defaultSlotType
 ]
 
+{ #category : #testing }
+GtSlotDefinition >> isValidName [
+	^ RBScanner isVariable: self name
+]
+
 { #category : #accessing }
 GtSlotDefinition >> name [
 	^ name

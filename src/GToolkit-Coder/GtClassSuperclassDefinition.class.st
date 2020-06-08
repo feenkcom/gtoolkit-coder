@@ -88,11 +88,33 @@ GtClassSuperclassDefinition >> errorSuperclassNotApplicable: aSymbol [
 	GtBehaviorCoderHeaderSuperclassNotApplicableError signalFor: aSymbol
 ]
 
+{ #category : #testing }
+GtClassSuperclassDefinition >> exists [
+	^ self hasSuperclass not
+		or: [ Smalltalk globals includesKey: self name ]
+]
+
 { #category : #initialization }
 GtClassSuperclassDefinition >> fromClass: aClass [
 	name := aClass superclass
 		ifNil: [ #nil ]
 		ifNotNil: [ :aSuperclass | aSuperclass name ]
+]
+
+{ #category : #testing }
+GtClassSuperclassDefinition >> hasClassVariableNamed: aString [
+	self hasSuperclass
+		ifFalse: [ ^ false ].
+	^ (Smalltalk globals at: self name ifAbsent: [ ProtoObject ])
+		allClassVarNames includes: aString asSymbol
+]
+
+{ #category : #testing }
+GtClassSuperclassDefinition >> hasSlotNamed: aString [
+	self hasSuperclass
+		ifFalse: [ ^ false ].
+	^ (Smalltalk globals at: self name ifAbsent: [ ProtoObject ])
+		allInstVarNames includes: aString asSymbol
 ]
 
 { #category : #'api - superclass' }
