@@ -44,11 +44,20 @@ GtCoderNavigationPackagesTagsClassesElement >> deselectPackages [
 ]
 
 { #category : #'api - package selections' }
-GtCoderNavigationPackagesTagsClassesElement >> expandPackage: anRPackage [
+GtCoderNavigationPackagesTagsClassesElement >> expandPackage: aRPackage [
 	packagesList viewModel root
 		allChildrenNodesBreadthFirstDo: [ :eachTreeNode |
-			eachTreeNode value = anRPackage
+			eachTreeNode value = aRPackage
 				ifTrue: [ eachTreeNode expand ] ]
+]
+
+{ #category : #'private - testing' }
+GtCoderNavigationPackagesTagsClassesElement >> hasPackageTagsIn: aRPackage [
+	<return: #Boolean>
+	| noTags noExtensions |
+	noTags := (aRPackage classTags size = 1 and: [ aRPackage classTags anyOne name = aRPackage name ]).
+	noExtensions := aRPackage extendedClasses isEmpty.
+	^ noTags not and: [ noExtensions not ]
 ]
 
 { #category : #'showing / hiding' }
@@ -269,8 +278,9 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass [
 { #category : #'api - class selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aPackage tag: aPackageTag [
 	| anExistingIndex |
-	
-	anExistingIndex := classesList viewModel indexOfSuchThat: [ :each | each rootClass = aClass ].
+
+	anExistingIndex := classesList viewModel indexOfSuchThat: [ :eachTreeNode | 
+		eachTreeNode rootClass = aClass ].
 	anExistingIndex isZero ifTrue: [ 
 		self selectPackage: aPackage tag: aPackageTag ].
 	
@@ -293,6 +303,9 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPackageTag [
 	self expandPackage: aPackage.
+	
+	(self hasPackageTagsIn: aPackage) ifFalse: [
+		^ self selectPackage: aPackage ].
 
 	packagesList viewModel
 		indexOf: aPackageTag

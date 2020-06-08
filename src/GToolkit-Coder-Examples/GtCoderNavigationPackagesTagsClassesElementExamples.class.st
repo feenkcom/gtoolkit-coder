@@ -22,6 +22,12 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> basicElement [
 ]
 
 { #category : #'examples - system items' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> classInPackage [
+	<gtExample>
+	^ BaselineOfGToolkitCoder
+]
+
+{ #category : #'examples - system items' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> classInPackageTag [
 	<gtExample>
 	^ self class
@@ -48,6 +54,20 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementNavigationModelInS
 	self putInSpace: anElement.
 	self assert: anElement navigationModel announcer numberOfSubscriptions equals: 9.
 	self assertSelectionOfPackage: nil tag: nil class: nil inElement: anElement.
+	^ anElement
+]
+
+{ #category : #'examples - class selection' }
+GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageAndClassSelection [
+	<gtExample>
+	| anElement |
+	anElement := self elementNavigationModelInSpace.
+	anElement navigationModel selectClass: self classInPackage.
+	self 
+		assertSelectionOfPackage: self classInPackage package
+		tag: nil 
+		class: self classInPackage 
+		inElement: anElement.
 	^ anElement
 ]
 
