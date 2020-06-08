@@ -16,6 +16,11 @@ GtCoderNavigationElement >> assertNavigationModel: aGtCoderNavigationPackagesTag
 		description: [ 'Navigation model must be non-nil' ].
 ]
 
+{ #category : #testing }
+GtCoderNavigationElement >> hasNavigationModel [
+	^ self navigationModel isNotNil
+]
+
 { #category : #initialization }
 GtCoderNavigationElement >> initialize [
 	super initialize.
@@ -77,6 +82,21 @@ GtCoderNavigationElement >> onRemovedFromSceneGraph [
 	super onRemovedFromSceneGraph.
 	self unsuscribeFromContent.
 	self unsubscribeFromNavigationModel.
+]
+
+{ #category : #'private - selection' }
+GtCoderNavigationElement >> scrollIndexFrom: aNodeIndex [
+	<return: #Number>
+	"TODO: does not work if an index is at a bottom: aNodeIndex - 5 max: 1"
+	^ aNodeIndex 
+]
+
+{ #category : #'private - selection' }
+GtCoderNavigationElement >> scrollIndexFromPrevious: aPreviousIndex current: aNewIndex max: aNumberOfItems [
+	<return: #Number>
+	^ (aPreviousIndex isZero or: [ aPreviousIndex >= aNewIndex ])
+		ifTrue: [ aNewIndex - 5 max: 1 ]
+		ifFalse: [ aNewIndex + 5 min: aNumberOfItems ].
 ]
 
 { #category : #subscriptions }
