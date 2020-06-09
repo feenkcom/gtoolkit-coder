@@ -211,6 +211,8 @@ GtClassDefinition >> isValidForCreation [
 		ifTrue: [ ^ false ].
 	(Smalltalk includesKey: self name asSymbol)
 		ifTrue: [ ^ false ].
+	self name isEmpty
+		ifTrue: [ ^ false ].
 	superclass exists
 		ifFalse: [ ^ false ].
 	traits exists
