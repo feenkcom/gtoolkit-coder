@@ -136,3 +136,8 @@ GtPackageCoder >> packageTagForClass: aClass [
 GtPackageCoder >> packageTreeCoders [
 	^ self coders
 ]
+
+{ #category : #actions }
+GtPackageCoder >> unload [
+	self package removeFromSystem
+]
