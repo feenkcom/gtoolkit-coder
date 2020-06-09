@@ -58,7 +58,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementNavigationModelInS
 	| anElement |
 	anElement := self elementNavigationModel.
 	self putInSpace: anElement.
-	self assert: anElement navigationModel announcer numberOfSubscriptions equals: 9.
+	self assert: anElement navigationModel announcer numberOfSubscriptions equals: self numberOfSubscriptions.
 	self assertSelectionOfPackage: nil tag: nil class: nil inElement: anElement.
 	^ anElement
 ]
@@ -187,6 +187,16 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithUnategorizedPa
 		class: self classInUncategorizedPackageTag 
 		inElement: anElement.
 	^ anElement
+]
+
+{ #category : #accessing }
+GtCoderNavigationPackagesTagsClassesElementExamples >> numberOfSubscriptions [
+	<gtExample>
+	| aMethod theGlobals |
+	aMethod := GtCoderNavigationPackagesTagsClassesElement >> #subscribeToNavigationModel.
+	theGlobals := aMethod ast allVariables select: #isGlobal.
+	self assert: theGlobals size > 9.
+	^ theGlobals size
 ]
 
 { #category : #'examples - system items' }
