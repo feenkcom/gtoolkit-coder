@@ -280,17 +280,11 @@ GtMethodCoder >> buildCollapsedText [
 
 { #category : #private }
 GtMethodCoder >> buildSource [
+	| text |
 	isBuilt := true.
-	[ | text |
 	text := methodSource asRopedText.
 	text attributes: self defaultTextAttributes.
-	self sourceEditor text: text ]
-		on: Error
-		do: [ :ex | 
-			self
-				flag:
-					'FIXME this is exception catching pokemon style. use better error or fail'.
-			ex return ]
+	self sourceEditor text: text
 ]
 
 { #category : #testing }
@@ -683,8 +677,15 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 
 { #category : #updating }
 GtMethodCoder >> format [
-	methodSource := (RBParser parseMethod: self source) formattedCode.
-	self buildSource
+	| ast |
+	ast := [ RBParser parseMethod: self source ]
+		on: SyntaxErrorNotification
+		do: [ :ex | 
+			^ self
+				reportParseError: ex errorMessage
+				at: ex location
+				on: self sourceEditor ].
+	self source: ast formattedCode
 ]
 
 { #category : #ui }

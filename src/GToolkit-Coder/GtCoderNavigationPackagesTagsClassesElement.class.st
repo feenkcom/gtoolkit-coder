@@ -118,6 +118,18 @@ GtCoderNavigationPackagesTagsClassesElement >> onClassListSelectionChanged [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onClassRenamed: anAnnouncement [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [
+		self 
+			renameClass: anAnnouncement theClass 
+			oldName: anAnnouncement oldName 
+			newName: anAnnouncement newName
+			inPackage: anAnnouncement package
+			tag: anAnnouncement tag ]
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [  
@@ -229,6 +241,17 @@ GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage tag: aPac
 		aSelectedPackageOrTag := aNode value ].
 	self updatePackageLists.
 	self reselectPackageOrTag: aSelectedPackageOrTag afterRemovalOfTagNamed: aPackageTagName.
+]
+
+{ #category : #'api - class updates' }
+GtCoderNavigationPackagesTagsClassesElement >> renameClass: aClass oldName: anOldName newName: aNewName inPackage: aPackage tag: aTag [
+	
+	classesList viewModel 
+		indexOfSuchThat: [ :aTree | 
+			aTree rootClass = aClass ] 
+		do: [ :aTree | 
+			self updateClassLists.
+			self updateSelectedClass ].
 ]
 
 { #category : #'api - package updates' }
@@ -407,6 +430,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 	navigationModel when: GtCoderNavigationPackageRenamed send: #onPackageRenamed: to: self.
 	navigationModel when: GtCoderNavigationPackageTagAdded send: #onPackageTagAdded: to: self.
 	navigationModel when: GtCoderNavigationPackageTagRemoved send: #onPackageTagRemoved: to: self.
+	navigationModel when: GtCoderNavigationClassRenamed send: #onClassRenamed: to: self.
 ]
 
 { #category : #subscriptions }
