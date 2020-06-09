@@ -105,3 +105,9 @@ GtPackageTagCoder >> packageTag [
 GtPackageTagCoder >> packageTag: anObject [
 	packageTag := anObject
 ]
+
+{ #category : #actions }
+GtPackageTagCoder >> unload [
+	self packageTag classes do: [ :each | each removeFromSystem ].
+	self packageTag removeFromPackage
+]
