@@ -28,6 +28,18 @@ GtCoderNavigationPackagesTagsClassesModel >> assertCoder: aCoder [
 		description: [ 'Coder must be non-nil' ].
 ]
 
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesModel >> classRenamed: aClassRenamed [
+	(self packagesToShow includes: aClassRenamed packageAffected) ifFalse: [ ^ self ].
+	self announcer announce: (GtCoderNavigationClassRenamed new 
+		coder: coder;
+		package: aClassRenamed packageAffected;
+		tag: aClassRenamed classTagAffected;
+		theClass: aClassRenamed classRenamed;
+		oldName: aClassRenamed oldName;
+		newName: aClassRenamed newName)
+]
+
 { #category : #'api - accessing' }
 GtCoderNavigationPackagesTagsClassesModel >> classesToShow [
 	<return: #Collection of: #Class>
@@ -306,7 +318,8 @@ GtCoderNavigationPackagesTagsClassesModel >> subscribeToSystem [
 		when: RPackageUnregistered send: #packageUnregistered: to: self;
 		when: RPackageRenamed send: #packageRenamed: to: self;
 		when: ClassTagAdded send: #packageTagAdded: to: self;
-		when: ClassTagRemoved send: #packageTagRemoved: to: self
+		when: ClassTagRemoved send: #packageTagRemoved: to: self;
+		when: ClassRenamed send: #classRenamed: to: self
 ]
 
 { #category : #subscriptions }
