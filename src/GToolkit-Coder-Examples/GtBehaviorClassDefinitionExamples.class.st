@@ -4,12 +4,33 @@ Class {
 	#category : #'GToolkit-Coder-Examples-Behavior'
 }
 
+{ #category : #'examples - validation' }
+GtBehaviorClassDefinitionExamples >> definitionWithEmptyNameIsInvalid [
+	<gtExample>
+	| definition |
+	definition := self fromClass.
+	definition name: ''.
+	
+	self assert: definition name equals: ''.
+	self assert: definition isValidForCreation not.
+]
+
+{ #category : #'examples - validation' }
+GtBehaviorClassDefinitionExamples >> definitionWithSameNameIsInvalid [
+	<gtExample>
+	| definition |
+	definition := self fromClass.
+	
+	self assert: definition name equals: self targetClass name.
+	self assert: definition isValidForCreation not.
+]
+
 { #category : #'instance creation' }
 GtBehaviorClassDefinitionExamples >> fromClass [
 	<gtExample>
 	| aDefinition |
 
-	aDefinition := GtClassDefinition fromClass: GtBehaviorCoderDummyClass.
+	aDefinition := GtClassDefinition fromClass: self targetClass.
 
 	self assert: aDefinition name equals: #GtBehaviorCoderDummyClass.
 	self assert: aDefinition hasParent not.
@@ -35,4 +56,9 @@ GtBehaviorClassDefinitionExamples >> fromClass [
 	self assert: (aDefinition slots at: 3) parent == aDefinition.
 
 	^ aDefinition
+]
+
+{ #category : #access }
+GtBehaviorClassDefinitionExamples >> targetClass [
+	^ GtBehaviorCoderDummyClass
 ]
