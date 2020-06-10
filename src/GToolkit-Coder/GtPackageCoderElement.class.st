@@ -65,17 +65,11 @@ GtPackageCoderElement >> buildPackageLabel [
 				ifTrue: [ previewButton visibility: BlVisibility gone ]
 				ifFalse: [  previewButton visibility: BlVisibility visible ] ].
 
-	unloadButton := BrButton new
-		margin: (BlInsets left: 5);
+	unloadButton := GtPreviewChangeButton new
 		icon: BrGlamorousVectorIcons remove;
-		beSmall;
-		look: BrGlamorousButtonWithIconLook new + (BrGlamorousWithDropdownLook
-			handle: [ BrButton new
-				icon: BrGlamorousIcons empty;
-				beSmall;
-				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
-			content: [ self buildRemovePackageElement ]);
-		label: 'Unload'.
+		label: 'Unload';
+		changeAction: [ self unloadPackage ];
+		changeStencil: [ self buildRemovePackageLabel ].
 
 	container addChild: packageNameEditor.
 	container addChild: previewButton.
@@ -125,12 +119,8 @@ GtPackageCoderElement >> buildParentLink [
 ]
 
 { #category : #'private - ui' }
-GtPackageCoderElement >> buildRemovePackageElement [
-	| element label labelText classCount extensionCount unloadButton |
-	element := BrVerticalPane new
-		hFitContent;
-		alignCenterLeft;
-		vFitContent.
+GtPackageCoderElement >> buildRemovePackageLabel [
+	| labelText classCount extensionCount |
 	classCount := packageCoder package definedClasses size.
 	extensionCount := packageCoder package extensionMethods size.
 	labelText := 'Remove package <1s> with <2p> class<3?:es> and <4p> extension method<5?:s>'
@@ -140,27 +130,10 @@ GtPackageCoderElement >> buildRemovePackageElement [
 			(classCount = 1).
 			extensionCount.
 			(extensionCount = 1)}.
-	label := BrLabel new
+	^ BrLabel new
 		margin: (BlInsets all: 10);
 		look: BrGlamorousLabelLook new glamorousRegularFont;
-		text: labelText asRopedText.
-	element addChild: label.
-	unloadButton := BrButton new
-		icon: BrGlamorousVectorIcons remove;
-		beSmall;
-		requestFocus;
-		look: BrGlamorousButtonWithIconLook new;
-		label: 'Unload';
-		margin:
-			(BlInsets
-				top: 0
-				left: 10
-				bottom: 10
-				right: 0);
-		action: [ self unloadPackage ];
-		yourself.
-	element addChild: unloadButton.
-	^ element
+		text: labelText asRopedText
 ]
 
 { #category : #initialization }
