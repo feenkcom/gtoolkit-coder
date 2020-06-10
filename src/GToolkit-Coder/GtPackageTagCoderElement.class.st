@@ -139,6 +139,6 @@ GtPackageTagCoderElement >> packageTagCoder: anObject [
 GtPackageTagCoderElement >> unloadPackageTag [
 	| event |
 	packageTagCoder unload.
-	event := GtCoderToReplace new coder: packageTagCoder packageCoder.
+	event := GtCoderToReplace new coder: (GtPackageCoder forPackage: packageTagCoder package).
 	self fireEvent: event
 ]
