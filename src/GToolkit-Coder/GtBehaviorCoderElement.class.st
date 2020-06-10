@@ -41,7 +41,7 @@ GtBehaviorCoderElement >> browseClassReferences [
 
 { #category : #'building ui' }
 GtBehaviorCoderElement >> buildClassLabel [
-	| aClassNameEditor aContainer aPreviewButton |
+	| aClassNameEditor aContainer aPreviewButton removeClassButton |
 		
 	aContainer := BrHorizontalPane new
 		hMatchParent;
@@ -68,7 +68,7 @@ GtBehaviorCoderElement >> buildClassLabel [
 
 	aPreviewButton := GtRefactoringsPreviewButton new
 		margin: (BlInsets left: 5);
-		visibility: BlVisibility hidden;
+		visibility: BlVisibility gone;
 		refactorings: [ { RBRenameClassRefactoring
 			model: RBNamespace new
 			rename: classCoder theClass
@@ -79,11 +79,18 @@ GtBehaviorCoderElement >> buildClassLabel [
 		when: BrTextEditorModifiedEvent 
 		do: [ :anEvent |
 			anEvent text asString = classCoder name
-				ifTrue: [ aPreviewButton visibility: BlVisibility hidden ]
+				ifTrue: [ aPreviewButton visibility: BlVisibility gone ]
 				ifFalse: [  aPreviewButton visibility: BlVisibility visible ] ].
+
+	removeClassButton := GtPreviewChangeButton new
+		icon: BrGlamorousVectorIcons remove;
+		label: 'Remove';
+		changeAction: [ self removeClass ];
+		changeStencil: [ self buildRemoveClassLabel ].
 
 	aContainer addChild: aClassNameEditor.
 	aContainer addChild: aPreviewButton.
+	aContainer addChild: removeClassButton.
 
 	^ aContainer
 ]
@@ -118,6 +125,21 @@ GtBehaviorCoderElement >> buildHeader [
 	^ GtBehaviorCoderHeaderElement new
 		classCoder: classCoder;
 		margin: (BlInsets top: 5 left: 5)
+]
+
+{ #category : #'building ui' }
+GtBehaviorCoderElement >> buildRemoveClassLabel [
+	| labelText |
+	labelText := (classCoder theClass isReferenced
+		ifTrue: [ '<1s> is referenced. Remove anyway?' ]
+		ifFalse: [ classCoder theClass subclasses isEmpty
+				ifTrue: [ 'Remove class <1s>' ]
+				ifFalse: [ '<1s> has subclasses. Remove anyway?' ] ])
+		expandMacrosWith: classCoder theClass name.
+	^ BrLabel new
+		margin: (BlInsets all: 10);
+		look: BrGlamorousLabelLook new glamorousRegularFont;
+		text: labelText asRopedText
 ]
 
 { #category : #accessing }
@@ -183,6 +205,17 @@ GtBehaviorCoderElement >> initialize [
 		to: self.
 		
 	self when: BlClickEvent do: [ self requestFocus ]
+]
+
+{ #category : #actions }
+GtBehaviorCoderElement >> removeClass [
+	| coder event |
+	coder := classCoder packageTag
+		ifNotNil: [ :tag | GtPackageTagCoder forPackageTag: tag ]
+		ifNil: [ GtPackageCoder forPackage: classCoder package ].
+	classCoder removeClass.
+	event := GtCoderToReplace new coder: coder.
+	self fireEvent: event
 ]
 
 { #category : #'updating ui' }

@@ -104,6 +104,11 @@ GtClassCoder >> packageTag [
 	^ self package classTagForClass: self theClass
 ]
 
+{ #category : #actions }
+GtClassCoder >> removeClass [
+	self theClass removeFromSystem
+]
+
 { #category : #accessing }
 GtClassCoder >> theClass [
 	^ class

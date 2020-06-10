@@ -52,17 +52,11 @@ GtPackageTagCoderElement >> buildPackageTagLabel [
 				ifTrue: [ previewButton visibility: BlVisibility gone ]
 				ifFalse: [  previewButton visibility: BlVisibility visible ] ].
 
-	unloadButton := BrButton new
-		margin: (BlInsets left: 5);
+	unloadButton := GtPreviewChangeButton new
 		icon: BrGlamorousVectorIcons remove;
-		beSmall;
-		look: BrGlamorousButtonWithIconLook new + (BrGlamorousWithDropdownLook
-			handle: [ BrButton new
-				icon: BrGlamorousIcons empty;
-				beSmall;
-				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
-			content: [ self buildRemovePackageTagElement ]);
-		label: 'Unload'.
+		label: 'Unload';
+		changeAction: [ self unloadPackageTag ];
+		changeStencil: [ self buildRemovePackageTagLabel ].
 
 	container addChild: tagNameEditor.
 	container addChild: previewButton.
@@ -105,39 +99,18 @@ GtPackageTagCoderElement >> buildParentLink [
 ]
 
 { #category : #'build ui' }
-GtPackageTagCoderElement >> buildRemovePackageTagElement [
-	| element label labelText count unloadButton |
-	element := BrVerticalPane new
-		hFitContent;
-		alignCenterLeft;
-		vFitContent.
+GtPackageTagCoderElement >> buildRemovePackageTagLabel [
+	| labelText count |
 	count := packageTagCoder packageTag classes size.
 	labelText := 'Remove package tag <1s> and <2p> class<3?:es>'
 		expandMacrosWithArguments:
 			{packageTagCoder packageTag name.
 			count.
 			(count = 1)}.
-	label := BrLabel new
+	^ BrLabel new
 		margin: (BlInsets all: 10);
 		look: BrGlamorousLabelLook new glamorousRegularFont;
-		text: labelText asRopedText.
-	element addChild: label.
-	unloadButton := BrButton new
-		icon: BrGlamorousVectorIcons remove;
-		beSmall;
-		requestFocus;
-		look: BrGlamorousButtonWithIconLook new;
-		label: 'Unload';
-		margin:
-			(BlInsets
-				top: 0
-				left: 10
-				bottom: 10
-				right: 0);
-		action: [ self unloadPackageTag ];
-		yourself.
-	element addChild: unloadButton.
-	^ element
+		text: labelText asRopedText
 ]
 
 { #category : #initialization }
