@@ -22,21 +22,23 @@ GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 			{(BrTextExpandButtonAttribute new
 				attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
 						beAppend;
-						stencil: [ | editorElement method coder |
-							method := aMethodClass lookupSelector: aMessageNode selector.
-							coder := GtMethodCoder
-								forExample: (aMethodClass gtExamplesFactory createExample: method).
-							coder subscribeToSystem.
-							coder expanded: true.
-							coder coderLook: GtMethodCoderCategoryLook.
-							editorElement := coder asElement.
-							editorElement
-								border: (BlBorder paint: Color veryLightGray width: 1).
-							editorElement
-								margin:
-									(BlInsets
-										top: 3
-										right: 10
-										bottom: 10
-										left: 10) ] ])}
+						stencil: [ | editorElement coder |
+							(aMethodClass lookupSelector: aMessageNode selector)
+								ifNil: [ BlElement new ]
+								ifNotNil: [ :method | 
+									coder := GtMethodCoder
+										forExample: (aMethodClass gtExamplesFactory createExample: method).
+									coder subscribeToSystem.
+									coder expanded: true.
+									coder coderLook: GtMethodCoderCategoryLook.
+									editorElement := coder asElement.
+									editorElement
+										border: (BlBorder paint: Color veryLightGray width: 1).
+									editorElement
+										margin:
+											(BlInsets
+												top: 3
+												right: 10
+												bottom: 10
+												left: 10) ] ] ])}
 ]
