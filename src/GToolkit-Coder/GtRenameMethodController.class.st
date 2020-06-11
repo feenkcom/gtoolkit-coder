@@ -27,6 +27,11 @@ GtRenameMethodController >> installRenamer [
 							self installRenameAction ] ] ]
 ]
 
+{ #category : #accessing }
+GtRenameMethodController >> newName [
+	^ self newSelectorName
+]
+
 { #category : #private }
 GtRenameMethodController >> newSelectorName [
 	selector numArgs = 0
