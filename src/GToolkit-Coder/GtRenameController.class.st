@@ -129,7 +129,7 @@ GtRenameController >> removeRefactoringAttribute [
 GtRenameController >> renamePosition [
 	^ (renameAction isNil or: [ renameAction isInstalled ])
 		ifTrue: [ renameInterval last ]
-		ifFalse: [ renameInterval last + newName size - self originalName size ]
+		ifFalse: [ renameInterval last + self newName size - self originalName size ]
 ]
 
 { #category : #private }
