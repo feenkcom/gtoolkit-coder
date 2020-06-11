@@ -10,6 +10,19 @@ Class {
 	#category : #'GToolkit-Coder-Refactorings - UI'
 }
 
+{ #category : #accessing }
+GtRefactoringsElement >> activatableRefactoring: aRefactoring [
+	^ aRefactoring options
+		at: #activatableRefactoring
+		ifAbsent: [ | activatableRefactoring |
+			activatableRefactoring := GtUserActivatableRefactoring
+				fromRefactoring: aRefactoring.
+			aRefactoring
+				setOption: #activatableRefactoring
+				toUse: activatableRefactoring.
+			activatableRefactoring ]
+]
+
 { #category : #'api - refactorings' }
 GtRefactoringsElement >> applyRefactorings [
 	activatableRefactorings do: [ :eachRefactoring |
@@ -41,9 +54,7 @@ GtRefactoringsElement >> initialize [
 { #category : #accessing }
 GtRefactoringsElement >> refactorings: aCollectionOfRBRefactorings [
 	activatableRefactorings := (aCollectionOfRBRefactorings
-		collect: [ :eachRefactoring | GtUserActivatableRefactoring fromRefactoring: eachRefactoring ])
-			sorted: [ :a :b | a isDangerous ].
-	
-	refactoringsList
-		items: activatableRefactorings
+		collect: [ :eachRefactoring | self activatableRefactoring: eachRefactoring ])
+		sorted: [ :a :b | a isDangerous ].
+	refactoringsList items: activatableRefactorings
 ]
