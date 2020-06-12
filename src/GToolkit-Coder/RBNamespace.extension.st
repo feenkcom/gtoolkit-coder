@@ -22,6 +22,11 @@ RBNamespace >> classObjectFor: anObject [
 ]
 
 { #category : #'*GToolkit-Coder' }
+RBNamespace >> newClasses [
+	^ newClasses
+]
+
+{ #category : #'*GToolkit-Coder' }
 RBNamespace >> removePool: aString from: aRBClass [ 
 	^changes removePool: aString from: aRBClass
 ]

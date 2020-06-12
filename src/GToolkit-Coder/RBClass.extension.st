@@ -7,7 +7,11 @@ RBClass >> asClassWithTrait [
 	| classWithTrait |
 	classWithTrait := RBClassWithTrait new.
 	1 to: self class instSize do: [ :i | classWithTrait instVarAt: i put: (self instVarAt: i) ].
-	(model changedClasses at: self name) at: 1 put: classWithTrait.
+	
+	(model changedClasses includesKey: self name)
+		ifTrue: [ (model changedClasses at: self name) at: 1 put: classWithTrait ]
+		ifFalse: [ (model newClasses at: self name) at: 1 put: classWithTrait ].
+	
 	^ classWithTrait
 ]
 
