@@ -36,13 +36,13 @@ BaselineOfGToolkitCoder >> baseline: spec [
 	spec for: #'common' do: [
 		spec 
 			baseline: 'Brick' with: [
-				spec repository: 'github://feenkcom/Brick:v0.7.515/src' ];
+				spec repository: 'github://feenkcom/Brick:v0.7.516/src' ];
 			baseline: 'GToolkitUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.7.32/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.7.33/src' ];
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.6.46/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.6.47/src' ];
 			baseline: 'GToolkitPhlow' with: [
-				spec repository: 'github://feenkcom/gtoolkit-phlow:v0.7.529/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-phlow:v0.7.530/src' ].
 		spec 
 			package: 'GToolkit-Coder' with: [
 				spec requires: #('Brick' 'GToolkitUtility' 'GToolkitPhlow' 'GToolkitPager' ). ];
