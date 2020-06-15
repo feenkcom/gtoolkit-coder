@@ -18,6 +18,7 @@ Behavior >> gtCoderCommentsFor: aView [
 
 	^ aView explicit
 		title: 'Comment';
+		tooltip: 'Class comment';
 		priority: 30;
 		stencil: [ (GtDocument forClass: self) asElement ]
 ]
