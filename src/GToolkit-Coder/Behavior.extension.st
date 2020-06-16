@@ -20,6 +20,7 @@ Behavior >> gtCoderCommentsFor: aView [
 		title: 'Comment';
 		tooltip: 'Class comment';
 		priority: 30;
+		actionUpdateButtonTooltip: 'Update class comment';
 		stencil: [ (GtDocument forClass: self) asElement ]
 ]
 
