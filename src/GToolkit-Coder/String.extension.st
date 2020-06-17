@@ -16,6 +16,11 @@ String >> gtClassMatches [
 ]
 
 { #category : #'*GToolkit-Coder' }
+String >> gtMethodCategories [
+	^ GtSearchMethodCategoryFilter forCategory: self
+]
+
+{ #category : #'*GToolkit-Coder' }
 String >> gtPackageMatches [
 	^ GtSearchMethodsWithPackagePatternFilter pattern: self
 ]
