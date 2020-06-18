@@ -28,7 +28,10 @@ GtExpandableCoderElement >> asVerticallyResizableDo: aBlock [
 { #category : #accessing }
 GtExpandableCoderElement >> coder [
 	<return: #GtMethodCoder>
-	self assert: [ coder isNotNil ] description: [ 'Coder is not set!' ].
+	self
+		assert: [ coder isNotNil ]
+		description: [ 'Coder is not set!' ].
+	
 	^ coder
 ]
 
@@ -37,6 +40,10 @@ GtExpandableCoderElement >> coder: aCoder [
 	self
 		assert: [ aCoder isNotNil ]
 		description: [ 'Coder must not be nil' ].
+		
+	self
+		assert: [ coder isNil ]
+		description: [ 'Coder model can not be replaced' ].
 
 	coder := aCoder.
 	self
@@ -93,16 +100,6 @@ GtExpandableCoderElement >> initialize [
 		do: [ :event | coder ifNotNil: [ :e | e expanded: self isExpanded ] ]
 ]
 
-{ #category : #testing }
-GtExpandableCoderElement >> isExpanded [
-	^ expandableModel isExpanded
-]
-
-{ #category : #testing }
-GtExpandableCoderElement >> isVerticallyResizeableElement [
-	^ true
-]
-
 { #category : #'instance creation' }
 GtExpandableCoderElement >> newActionsElement [
 	^ GtCoderActionsElement new
@@ -144,13 +141,14 @@ GtExpandableCoderElement >> onRemovedFromSceneGraph [
 GtExpandableCoderElement >> requestFocus [
 	^ self
 		childNamed: #editor
-		ifFound: [ :element | element requestFocus ]
+		ifFound: [ :anEditorElement | anEditorElement requestFocus ]
 		ifNone: [ super requestFocus ]
 ]
 
 { #category : #events }
 GtExpandableCoderElement >> updateExpanded [
-	removed ifTrue: [ ^self ].
+	removed
+		ifTrue: [ ^self ].
 	coder expanded
 		ifTrue: [ self isExpanded
 				ifFalse: [ self expand ] ]
