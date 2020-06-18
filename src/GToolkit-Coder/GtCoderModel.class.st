@@ -61,6 +61,15 @@ GtCoderModel >> asElement [
 		yourself
 ]
 
+{ #category : #elements }
+GtCoderModel >> asExpandedOnlyElement [
+	"Create an element for just the expanded coder without expander"
+
+	^ GtExpandedOnlyCoderElement new
+		coder: self;
+		yourself
+]
+
 { #category : #'accessing-attributes' }
 GtCoderModel >> attributeNamed: aSymbol [
 	^ attributes notNil
