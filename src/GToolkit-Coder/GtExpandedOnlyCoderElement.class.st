@@ -19,6 +19,34 @@ GtExpandedOnlyCoderElement >> asVerticallyResizableDo: aBlock [
 	^ self
 ]
 
+{ #category : #accessing }
+GtExpandedOnlyCoderElement >> coder: aCoder [
+	| anExpandedElement |
+	self
+		assert: [ aCoder isNotNil ]
+		description: [ 'Coder must not be nil' ].
+	
+	self addChild: (anExpandedElement := self newExpandedElement: aCoder).
+	self addChild: (self newActionsElement: aCoder) as: #actions.
+	
+	self addLook: (BrLayoutResizerLook new inheritIn: [ :aBlock | aBlock value: anExpandedElement ]).
+
+	aCoder stylerView: self.
+	aCoder expanded: true.
+	aCoder announcer weak
+		when: GtCoderRequestFocus send: #requestFocus to: self
+]
+
+{ #category : #initialization }
+GtExpandedOnlyCoderElement >> initialize [
+	super initialize.
+	
+	self
+		hMatchParent;
+		vFitContent;
+		margin: (BlInsets all: 10)
+]
+
 { #category : #'instance creation' }
 GtExpandedOnlyCoderElement >> newActionsElement: aCoderModel [
 	^ GtCoderActionsElement new
