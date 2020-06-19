@@ -121,8 +121,7 @@ GtRenameController >> removeRefactoringAttribute [
 	| editor |
 	editor := renameAction editor.
 	editor text
-		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ].
-	editor updater all update
+		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
 ]
 
 { #category : #private }

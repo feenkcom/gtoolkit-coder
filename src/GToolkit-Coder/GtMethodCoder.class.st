@@ -196,8 +196,7 @@ GtMethodCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 	aRefactoring isNil
 		ifTrue: [ ^ self ].
 	(self sourceEditor text from: position to: position)
-		attributes: {(GtRefactoringChangesAttribute new refactoring: aRefactoring)}.
-	self sourceEditor updater all update
+		attributes: {(GtRefactoringChangesAttribute new refactoring: aRefactoring)}
 ]
 
 { #category : #'add ons-refactoring' }
@@ -756,8 +755,7 @@ GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
 { #category : #'private-refactorings' }
 GtMethodCoder >> highlightFrom: startIndex to: endIndex [
 	(self sourceEditor text from: startIndex to: endIndex)
-		attributes: {self class nodeHighlight}.
-	self sourceEditor updater all update
+		attributes: { self class nodeHighlight }
 ]
 
 { #category : #'private-refactorings' }
@@ -1252,8 +1250,7 @@ GtMethodCoder >> remove [
 { #category : #'private-refactorings' }
 GtMethodCoder >> removeHighlight [
 	self sourceEditor text
-		clearAttributes: [ :attr | attr == self class nodeHighlight ].
-	self sourceEditor updater all update
+		clearAttributes: [ :attr | attr == self class nodeHighlight ]
 ]
 
 { #category : #'actions-refactorings' }
@@ -1272,8 +1269,7 @@ GtMethodCoder >> removeParameter: aNode [
 { #category : #'private-refactorings' }
 GtMethodCoder >> removeRefactoringAttribute [
 	self sourceEditor text
-		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ].
-	self sourceEditor updater all update
+		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
 ]
 
 { #category : #accessing }
