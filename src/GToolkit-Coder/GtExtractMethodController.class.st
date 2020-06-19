@@ -49,8 +49,7 @@ GtExtractMethodController >> addReorderParametersAttributes [
 						attributes:
 							{(GtReorderParametersAttribute
 								action: [ self swapParameterWithNext: i ]
-								icon: BrGlamorousIcons right)} ] ].
-	coder sourceEditor updater all update
+								icon: BrGlamorousIcons right)} ] ]
 ]
 
 { #category : #executing }

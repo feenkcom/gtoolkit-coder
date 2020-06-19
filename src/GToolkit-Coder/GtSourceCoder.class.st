@@ -126,8 +126,7 @@ GtSourceCoder >> clearPreviousEvaluations [
 			GtPlaygroundEvaluatedCodeButtonAttribute.
 			GtCoderPrintStringAttribute.
 			GtPlaygroundDebugExceptionButtonAttribute.
-			GtSourceCoderErrorAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
-	self sourceEditor updater all update
+			GtSourceCoderErrorAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ]
 ]
 
 { #category : #private }
@@ -788,8 +787,7 @@ GtSourceCoder >> styleResult: value showPrintString: aBoolean [
 		self 
 			styleResult: value 
 			at: interval 
-			showPrintString: aBoolean ].
-	self sourceEditor updater all update
+			showPrintString: aBoolean ]
 ]
 
 { #category : #private }
