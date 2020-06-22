@@ -192,9 +192,12 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithUnategorizedPa
 { #category : #accessing }
 GtCoderNavigationPackagesTagsClassesElementExamples >> numberOfSubscriptions [
 	<gtExample>
-	| aMethod theGlobals |
-	aMethod := GtCoderNavigationPackagesTagsClassesElement >> #subscribeToNavigationModel.
-	theGlobals := aMethod ast allVariables select: #isGlobal.
+	| aMethodOne aMethodTwo theGlobalsOne theGlobalsTwo theGlobals |
+	aMethodOne := GtCoderNavigationElement >> #subscribeToNavigationModel.
+	theGlobalsOne := aMethodOne ast allVariables select: #isGlobal.
+	aMethodTwo := GtCoderNavigationPackagesTagsClassesElement >> #subscribeToNavigationModel.
+	theGlobalsTwo := aMethodTwo ast allVariables select: #isGlobal.
+	theGlobals := theGlobalsOne, theGlobalsTwo.
 	self assert: theGlobals size > 9.
 	^ theGlobals size
 ]

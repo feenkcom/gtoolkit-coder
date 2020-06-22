@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderNavigationTagSelected,
+	#name : #GtCoderNavigationPackageTagSelected,
 	#superclass : #GtCoderNavigationSelectionAnnouncement,
 	#instVars : [
 		'package',
@@ -9,23 +9,23 @@ Class {
 }
 
 { #category : #accessing }
-GtCoderNavigationTagSelected >> package [
+GtCoderNavigationPackageTagSelected >> package [
 	^ package
 ]
 
 { #category : #accessing }
-GtCoderNavigationTagSelected >> package: anObject [
+GtCoderNavigationPackageTagSelected >> package: anObject [
 	package := anObject
 ]
 
 { #category : #accessing }
-GtCoderNavigationTagSelected >> tag [
+GtCoderNavigationPackageTagSelected >> tag [
 	<return: #RPackageTag>
 
 	^ tag
 ]
 
 { #category : #accessing }
-GtCoderNavigationTagSelected >> tag: anObject [
+GtCoderNavigationPackageTagSelected >> tag: anObject [
 	tag := anObject
 ]

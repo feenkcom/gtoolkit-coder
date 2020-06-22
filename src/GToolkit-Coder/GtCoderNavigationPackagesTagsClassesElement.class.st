@@ -3,7 +3,6 @@ Class {
 	#superclass : #GtCoderNavigationElement,
 	#instVars : [
 		'packagesList',
-		'classesList',
 		'classesLabel'
 	],
 	#category : #'GToolkit-Coder-Navigation - UI'
@@ -31,11 +30,6 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 	self updatePackageLists.
 	aSelectedPackageOrTag ifNotNil: [
 		self selectPackageOrTag: aSelectedPackageOrTag ].
-]
-
-{ #category : #'api - class selections' }
-GtCoderNavigationPackagesTagsClassesElement >> deselectClasses [
-	classesList deselectAll
 ]
 
 { #category : #'api - package selections' }
@@ -76,12 +70,13 @@ GtCoderNavigationPackagesTagsClassesElement >> hideOrShowClassList [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
+	super initializeContent.
 	packagesList := GtCoderNavigationPackagesTreeElement new.
-	classesList := GtCoderNavigationClassesHierarchyTreeElement new.
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
+	super initializeElement.
 	self addChildren: {
 		BrLabel new
 			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);
@@ -98,6 +93,7 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
+	super initializeLayout.
 	self layout: (BlGridLayout horizontal columnCount: 2; cellSpacing: 5).
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
@@ -115,28 +111,6 @@ GtCoderNavigationPackagesTagsClassesElement >> onClassListSelectionChanged [
 		ifFalse: [ ^ self ].
 	aSelectedItem := (classesList viewModel itemAt: anIndex) value rootClass.
 	self navigationModel selectClass: aSelectedItem
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onClassRenamed: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		self 
-			renameClass: anAnnouncement theClass 
-			oldName: anAnnouncement oldName 
-			newName: anAnnouncement newName
-			inPackage: anAnnouncement package
-			tag: anAnnouncement tag ]
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [  
-		self 
-			selectClass: anAnnouncement theClass
-			inPackage: anAnnouncement package 
-			tag: anAnnouncement tag ].
 ]
 
 { #category : #'event handling' }
@@ -194,6 +168,16 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageTagRemoved: anAnnounceme
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackageTagSelected: anAnnouncer [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [  
+		self 
+			selectPackage: anAnnouncer package 
+			tag: anAnnouncer tag.
+		self deselectClasses. ].
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageUnregistered: anAnnouncement [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [
@@ -206,16 +190,6 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 	self suppressListChangeEventsDuring: [  
 		self deselectPackages.
 		self deselectClasses. ]
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onTagSelected: anAnnouncer [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [  
-		self 
-			selectPackage: anAnnouncer package 
-			tag: anAnnouncer tag.
-		self deselectClasses. ].
 ]
 
 { #category : #'api - package updates' }
@@ -241,17 +215,6 @@ GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage tag: aPac
 		aSelectedPackageOrTag := aNode value ].
 	self updatePackageLists.
 	self reselectPackageOrTag: aSelectedPackageOrTag afterRemovalOfTagNamed: aPackageTagName.
-]
-
-{ #category : #'api - class updates' }
-GtCoderNavigationPackagesTagsClassesElement >> renameClass: aClass oldName: anOldName newName: aNewName inPackage: aPackage tag: aTag [
-	
-	classesList viewModel 
-		indexOfSuchThat: [ :aTree | 
-			aTree rootClass = aClass ] 
-		do: [ :aTree | 
-			self updateClassLists.
-			self updateSelectedClass ].
 ]
 
 { #category : #'api - package updates' }
@@ -287,22 +250,6 @@ GtCoderNavigationPackagesTagsClassesElement >> reselectPackageOrTag: aSelectedPa
 				self hideClassList. ]
 			ifFalse: [ 
 				self selectPackageOrTag: aSelectedPackageOrTag ] ]
-]
-
-{ #category : #'api - class selections' }
-GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass [
-
-	| aPreviousIndex |
-	aPreviousIndex := packagesList selectedIndice.
-	
-	classesList viewModel
-		indexOfSuchThat: [ :each | each rootClass = aClass ]
-		do: [ :aNewIndex | classesList 
-			selectOne: aNewIndex;
-			scrollTo: (self 
-				scrollIndexFromPrevious: aPreviousIndex 
-				current: aNewIndex
-				max: packagesList viewModel itemCount) ]
 ]
 
 { #category : #'api - class selections' }
@@ -423,14 +370,12 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 	super subscribeToNavigationModel.
 	navigationModel when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
 	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
-	navigationModel when: GtCoderNavigationTagSelected send: #onTagSelected: to: self.
-	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
+	navigationModel when: GtCoderNavigationPackageTagSelected send: #onPackageTagSelected: to: self.
 	navigationModel when: GtCoderNavigationPackageRegistered send: #onPackageRegistered: to: self.
 	navigationModel when: GtCoderNavigationPackageUnregistered send: #onPackageUnregistered: to: self.
 	navigationModel when: GtCoderNavigationPackageRenamed send: #onPackageRenamed: to: self.
 	navigationModel when: GtCoderNavigationPackageTagAdded send: #onPackageTagAdded: to: self.
 	navigationModel when: GtCoderNavigationPackageTagRemoved send: #onPackageTagRemoved: to: self.
-	navigationModel when: GtCoderNavigationClassRenamed send: #onClassRenamed: to: self.
 ]
 
 { #category : #subscriptions }
@@ -464,13 +409,6 @@ GtCoderNavigationPackagesTagsClassesElement >> updatePackageAndClassLists [
 GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	packagesList initializeWithPackages: navigationModel packagesToShow.
-]
-
-{ #category : #'updating lists' }
-GtCoderNavigationPackagesTagsClassesElement >> updateSelectedClass [
-	self hasNavigationModel ifFalse: [ ^ self ].
-	navigationModel selectedClassDo: [ :aClass |
-		self selectClass: aClass ].
 ]
 
 { #category : #'updating lists' }
