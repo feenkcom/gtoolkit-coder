@@ -1040,7 +1040,7 @@ GtMethodCoder >> newRbAST: aString [
 		compilationContext:
 			(CompilationContext new
 				class: (self classOrMetaClass ifNil: [ UndefinedObject ])).
-	ast doSemanticAnalysis.
+	self doSemanticAnalysis: ast.
 	^ ast
 ]
 

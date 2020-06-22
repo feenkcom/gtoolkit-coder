@@ -145,7 +145,7 @@ GtBlockCoder >> newRbAST: aString [
 		compilationContext: (CompilationContext new
 			class: (self classOrMetaClass ifNil: [UndefinedObject]);
          requestor: self highlightBindingsStrategy).
-	ast doSemanticAnalysis.
+	self doSemanticAnalysis: ast.
 	ast gtMoveAllBy: 1 - ast body start.
 	^ ast body
 ]
