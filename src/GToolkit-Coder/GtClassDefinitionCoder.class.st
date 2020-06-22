@@ -87,7 +87,7 @@ GtClassDefinitionCoder >> isModified [
 GtClassDefinitionCoder >> newRbAST: aString [
 	| ast |
 	ast := RBParser parseFaultyExpression: aString.
-	ast doSemanticAnalysis.
+	self doSemanticAnalysis: ast.
 	^ ast
 ]
 

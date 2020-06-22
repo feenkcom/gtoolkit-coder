@@ -301,6 +301,13 @@ GtSourceCoder >> doItSelectionOrAll [
 		ifFalse: [ self doItAll ]
 ]
 
+{ #category : #updating }
+GtSourceCoder >> doSemanticAnalysis: anAST [
+	[ anAST doSemanticAnalysis ]
+		on: NewUndeclaredWarning
+		do: [ "prevent it from being printed to the transcript" ]
+]
+
 { #category : #private }
 GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean [
 	| aResult wasErrorAlreadySignaled |
@@ -521,7 +528,7 @@ GtSourceCoder >> newCompletionStrategy [
 GtSourceCoder >> newRbAST: aString [
 	| ast |
 	ast := RBParser parseFaultyExpression: aString.
-	ast doSemanticAnalysis.
+	self doSemanticAnalysis: ast.
 	^ ast
 ]
 

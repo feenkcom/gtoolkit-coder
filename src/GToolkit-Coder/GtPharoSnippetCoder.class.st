@@ -117,7 +117,7 @@ GtPharoSnippetCoder >> newRbAST: aString [
 		compilationContext: (CompilationContext new
 			class: (self classOrMetaClass ifNil: [UndefinedObject]);
          requestor: self highlightBindingsStrategy).
-	ast doSemanticAnalysis.
+	self doSemanticAnalysis: ast.
 	^ ast
 ]
 
