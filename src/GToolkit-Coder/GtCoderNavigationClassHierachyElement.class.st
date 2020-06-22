@@ -1,16 +1,8 @@
 Class {
 	#name : #GtCoderNavigationClassHierachyElement,
 	#superclass : #GtCoderNavigationElement,
-	#instVars : [
-		'classesList'
-	],
 	#category : #'GToolkit-Coder-Navigation - UI'
 }
-
-{ #category : #'api - classes' }
-GtCoderNavigationClassHierachyElement >> deselectClasses [
-	classesList deselectAll
-]
 
 { #category : #'updating lists' }
 GtCoderNavigationClassHierachyElement >> emptyClassList [
@@ -18,17 +10,14 @@ GtCoderNavigationClassHierachyElement >> emptyClassList [
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassHierachyElement >> initializeContent [
-	classesList := GtCoderNavigationClassesHierarchyTreeElement new.
-]
-
-{ #category : #initialization }
 GtCoderNavigationClassHierachyElement >> initializeElement [
+	super initializeElement.
 	self addChild: classesList
 ]
 
 { #category : #initialization }
 GtCoderNavigationClassHierachyElement >> initializeLayout [
+	super initializeLayout.
 	self layout: BlLinearLayout vertical.
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
@@ -53,6 +42,28 @@ GtCoderNavigationClassHierachyElement >> onClassListSelectionChanged [
 	self navigationModel selectClass: aSelectedItem
 ]
 
+{ #category : #subscriptions }
+GtCoderNavigationClassHierachyElement >> onClassModified: anAnnouncement [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [
+		self 
+			updateClass: anAnnouncement theClass
+			inPackage: anAnnouncement package
+			tag: anAnnouncement tag ]
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationClassHierachyElement >> onClassRenamed: anAnnouncement [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [
+		self 
+			renameClass: anAnnouncement theClass 
+			oldName: anAnnouncement oldName 
+			newName: anAnnouncement newName
+			inPackage: anAnnouncement package
+			tag: anAnnouncement tag ]
+]
+
 { #category : #'event handling' }
 GtCoderNavigationClassHierachyElement >> onClassSelected: anAnnouncement [
 	supressNavigationChanges ifTrue: [ ^ self ].
@@ -70,29 +81,19 @@ GtCoderNavigationClassHierachyElement >> onPackageSelected: anAnnouncer [
 ]
 
 { #category : #'event handling' }
-GtCoderNavigationClassHierachyElement >> onPackagesSelected: anAnnouncer [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [ 
-		self emptyClassList.
-		self deselectClasses. ]
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationClassHierachyElement >> onTagSelected: anAnnouncer [
+GtCoderNavigationClassHierachyElement >> onPackageTagSelected: anAnnouncer [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [
 		self emptyClassList.
 		self deselectClasses. ].
 ]
 
-{ #category : #'api - classes' }
-GtCoderNavigationClassHierachyElement >> selectClass: aClass [
-
-	classesList viewModel
-		indexOfSuchThat: [ :each | each rootClass = aClass ]
-		do: [ :anIndex | classesList 
-			selectOne: anIndex;
-			scrollTo: anIndex ]
+{ #category : #'event handling' }
+GtCoderNavigationClassHierachyElement >> onPackagesSelected: anAnnouncer [
+	supressNavigationChanges ifTrue: [ ^ self ].
+	self suppressListChangeEventsDuring: [ 
+		self emptyClassList.
+		self deselectClasses. ]
 ]
 
 { #category : #subscriptions }
@@ -110,15 +111,16 @@ GtCoderNavigationClassHierachyElement >> subscribeToContent [
 
 { #category : #subscriptions }
 GtCoderNavigationClassHierachyElement >> subscribeToNavigationModel [
+	self hasNavigationModel ifFalse: [ ^ self ].
 	super subscribeToNavigationModel.
 	navigationModel when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
 	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
-	navigationModel when: GtCoderNavigationTagSelected send: #onTagSelected: to: self.
-	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
+	navigationModel when: GtCoderNavigationPackageTagSelected send: #onPackageTagSelected: to: self.
 ]
 
 { #category : #'updating lists' }
 GtCoderNavigationClassHierachyElement >> updateClassLists [
+	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel hasSelectedClass 
 		ifTrue: [ self updateClassListsWith: navigationModel selectedClass ]
 		ifFalse: [ self emptyClassList ].
@@ -133,14 +135,4 @@ GtCoderNavigationClassHierachyElement >> updateClassListsWith: aClass [
 GtCoderNavigationClassHierachyElement >> updateContent [
 	self updateClassLists.
 	self updateSelectedClass
-]
-
-{ #category : #'updating lists' }
-GtCoderNavigationClassHierachyElement >> updateSelectedClass [
-	navigationModel selectedClassDo: [ :aClass |
-		classesList viewModel
-			indexOfSuchThat: [ :each | each rootClass = aClass ]
-			do: [ :anIndex | classesList
-				selectOne: anIndex;
-				scrollTo: (anIndex - 5 max: 1) ] ].
 ]

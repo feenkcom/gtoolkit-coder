@@ -56,3 +56,14 @@ GtCoderNavigationClassesHierarchyTreeElement >> selectedClass [
 	self selectedNodeDo: [ :aNode | ^ aNode value rootClass ].
 	^ nil
 ]
+
+{ #category : #'api - selection' }
+GtCoderNavigationClassesHierarchyTreeElement >> selectedIndice [
+	"Return selected indice or zero"
+	
+	self selectedIndices
+		ifNotEmpty: [ :theIndices |
+			(theIndices first between: 1 and: self viewModel itemCount)
+				ifTrue: [ ^ theIndices first ] ].
+	^ 0
+]

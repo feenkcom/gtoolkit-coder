@@ -24,7 +24,7 @@ GtCoderEmbeddedPlaygroundExtension >> hookToCoderSelections: aPlayBook [
 	self navigationModel 
 		when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self;
 		when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self;
-		when: GtCoderNavigationTagSelected send: #onTagSelected: to: self;
+		when: GtCoderNavigationPackageTagSelected send: #onPackageTagSelected: to: self;
 		when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
 ]
 
@@ -49,13 +49,13 @@ GtCoderEmbeddedPlaygroundExtension >> onPackageSelected: anEvent [
 ]
 
 { #category : #hooks }
-GtCoderEmbeddedPlaygroundExtension >> onPackagesSelected: anEvent [
-	self playPage receiver: Smalltalk 
+GtCoderEmbeddedPlaygroundExtension >> onPackageTagSelected: anEvent [
+	self playPage receiver: anEvent tag
 ]
 
 { #category : #hooks }
-GtCoderEmbeddedPlaygroundExtension >> onTagSelected: anEvent [
-	self playPage receiver: anEvent tag
+GtCoderEmbeddedPlaygroundExtension >> onPackagesSelected: anEvent [
+	self playPage receiver: Smalltalk 
 ]
 
 { #category : #accessing }
