@@ -140,9 +140,12 @@ GtExpandableCoderElement >> onRemovedFromSceneGraph [
 { #category : #'focus requesting' }
 GtExpandableCoderElement >> requestFocus [
 	^ self
-		childNamed: #editor
-		ifFound: [ :anEditorElement | anEditorElement requestFocus ]
-		ifNone: [ super requestFocus ]
+		enqueueTask:
+			(BlTaskAction new
+				action: [ self
+						childNamed: #editor
+						ifFound: [ :anEditorElement | anEditorElement requestFocus ]
+						ifNone: [ super requestFocus ] ])
 ]
 
 { #category : #events }

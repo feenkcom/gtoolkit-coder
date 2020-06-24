@@ -66,7 +66,10 @@ GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
 { #category : #'focus requesting' }
 GtExpandedOnlyCoderElement >> requestFocus [
 	^ self
-		childNamed: #editor
-		ifFound: [ :anEditorElement | anEditorElement requestFocus ]
-		ifNone: [ super requestFocus ]
+		enqueueTask:
+			(BlTaskAction new
+				action: [ self
+						childNamed: #editor
+						ifFound: [ :anEditorElement | anEditorElement requestFocus ]
+						ifNone: [ super requestFocus ] ])
 ]
