@@ -34,7 +34,8 @@ GtExpandedOnlyCoderElement >> coder: aCoder [
 	aCoder stylerView: self.
 	aCoder expanded: true.
 	aCoder announcer weak
-		when: GtCoderRequestFocus send: #requestFocus to: self
+		when: GtCoderRequestFocus send: #requestFocus to: self;
+		when: GtCoderMethodChanged send: #updateSource: to: self
 ]
 
 { #category : #initialization }
@@ -72,4 +73,10 @@ GtExpandedOnlyCoderElement >> requestFocus [
 						childNamed: #editor
 						ifFound: [ :anEditorElement | anEditorElement requestFocus ]
 						ifNone: [ super requestFocus ] ])
+]
+
+{ #category : #events }
+GtExpandedOnlyCoderElement >> updateSource: aGtCoderMethodChanged [
+	self
+		enqueueTask: (BlTaskAction new action: [ aGtCoderMethodChanged coder buildSource ])
 ]

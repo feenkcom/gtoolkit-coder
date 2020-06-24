@@ -55,7 +55,8 @@ GtExpandableCoderElement >> coder: aCoder [
 		ifTrue: [ self expand ].
 	coder announcer weak
 		when: GtCoderExpandedChanged send: #updateExpanded to: self;
-		when: GtCoderRequestFocus send: #requestFocus to: self
+		when: GtCoderRequestFocus send: #requestFocus to: self;
+		when: GtCoderMethodChanged send: #updateSource: to: self
 ]
 
 { #category : #accessing }
@@ -157,4 +158,10 @@ GtExpandableCoderElement >> updateExpanded [
 				ifFalse: [ self expand ] ]
 		ifFalse: [ self isExpanded
 				ifTrue: [ self collapse ] ]
+]
+
+{ #category : #events }
+GtExpandableCoderElement >> updateSource: aGtCoderMethodChanged [
+	self
+		enqueueTask: (BlTaskAction new action: [ aGtCoderMethodChanged coder buildSource ])
 ]
