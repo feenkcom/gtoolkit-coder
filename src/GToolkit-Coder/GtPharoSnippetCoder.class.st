@@ -112,12 +112,10 @@ GtPharoSnippetCoder >> newCompletionStrategy [
 { #category : #updating }
 GtPharoSnippetCoder >> newRbAST: aString [
 	| ast |
-	ast := RBParser parseFaultyExpression: aString.
-	ast methodNode 
-		compilationContext: (CompilationContext new
-			class: (self classOrMetaClass ifNil: [UndefinedObject]);
-         requestor: self highlightBindingsStrategy).
-	self doSemanticAnalysis: ast.
+	ast := self
+		parseExpression: aString
+		requestor: self highlightBindingsStrategy.
+	ast doSemanticAnalysis.
 	^ ast
 ]
 
