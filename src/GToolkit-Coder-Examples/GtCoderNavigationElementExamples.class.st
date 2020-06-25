@@ -43,6 +43,7 @@ GtCoderNavigationElementExamples >> newSpace [
 	<gtExample>
 	| aSpace |
 	aSpace := BlSpace new.
+	aSpace host: BlHeadlessHost new.
 	aSpace title: 'Documenter Examples'.
 	aSpace extent: 600@400.
 	aSpace withHalos.

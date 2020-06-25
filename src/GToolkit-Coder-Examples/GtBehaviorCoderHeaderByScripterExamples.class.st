@@ -72,7 +72,7 @@ GtBehaviorCoderHeaderByScripterExamples >> coderHeaderScripter_ExpandHeader_Coll
 			label: 'Click on expand element';
 			onChildAt: 1.
 		aStep wait forEmptySpaceTaskQueue.
-		aStep check 
+		aStep check
 			label: 'Check header element is collapsed';
 			satisfies: [ :aHeaderElement | aHeaderElement isCollapsed ] ].
 	aScripter syncContinue.

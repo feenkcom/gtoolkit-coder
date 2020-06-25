@@ -669,9 +669,7 @@ GtMethodCoder >> forClass: aBehavior source: aString [
 GtMethodCoder >> forMethod: aCompiledMethod [
 	self classOrMetaClass: aCompiledMethod methodClass.
 	self selector: aCompiledMethod selector.
-	methodSource := aCompiledMethod sourceCode.
-	isBuilt
-		ifTrue: [ self buildSource ]
+	methodSource := aCompiledMethod sourceCode
 ]
 
 { #category : #updating }
@@ -1481,7 +1479,7 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 { #category : #updating }
 GtMethodCoder >> updateMethod: aCompiledMethod [
 	self forMethod: aCompiledMethod.
-	self buildSource
+	self announce: (GtCoderMethodChanged new coder: self)
 ]
 
 { #category : #private }
