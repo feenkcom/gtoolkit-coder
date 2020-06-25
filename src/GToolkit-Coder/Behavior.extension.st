@@ -20,8 +20,16 @@ Behavior >> gtCoderCommentsFor: aView [
 		title: 'Comment';
 		tooltip: 'Class comment';
 		priority: 30;
-		actionUpdateButtonTooltip: 'Update class comment';
-		stencil: [ (GtDocument forClass: self) asElement ]
+		disableAsync;
+		stencil: [ (GtDocumenter forClass: self) ];
+		actionButtonIcon: BrGlamorousVectorIcons accept 
+			tooltip: 'Save document' 
+			action: [ :aToggle :aTab | aTab viewContentElement save ];
+		actionToggleIcon: BrGlamorousIcons edit 
+			tooltip: 'Show/Hide Markups'
+			activated: [ :aToggle :aTab | aTab viewContentElement showMarkup ] 
+			deactivated: [ :aToggle :aTab | aTab viewContentElement hideMarkup ];
+		actionUpdateButtonTooltip: 'Update class comment'
 ]
 
 { #category : #'*GToolkit-Coder' }
