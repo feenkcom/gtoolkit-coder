@@ -301,13 +301,6 @@ GtSourceCoder >> doItSelectionOrAll [
 		ifFalse: [ self doItAll ]
 ]
 
-{ #category : #updating }
-GtSourceCoder >> doSemanticAnalysis: anAST [
-	[ anAST doSemanticAnalysis ]
-		on: NewUndeclaredWarning
-		do: [ :ex | ex resume ]
-]
-
 { #category : #private }
 GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean [
 	| aResult wasErrorAlreadySignaled |
@@ -527,8 +520,8 @@ GtSourceCoder >> newCompletionStrategy [
 { #category : #updating }
 GtSourceCoder >> newRbAST: aString [
 	| ast |
-	ast := RBParser parseFaultyExpression: aString.
-	self doSemanticAnalysis: ast.
+	ast := self parseExpression: aString requestor: nil.
+	ast doSemanticAnalysis.
 	^ ast
 ]
 
@@ -583,6 +576,26 @@ GtSourceCoder >> object: anObject [
 	anObject isNil
 		ifTrue: [ self removeAttributeNamed: #object ]
 		ifFalse: [ self attributeNamed: #object put: anObject ]
+]
+
+{ #category : #private }
+GtSourceCoder >> parse: aString asExpression: isExpression requestor: aRequestor [
+	^ (self classOrMetaClass ifNil: [ UndefinedObject ]) compiler
+		source: aString;
+		noPattern: isExpression;
+		options: #(+ optionParseErrors + optionSkipSemanticWarnings);
+		requestor: aRequestor;
+		parse
+]
+
+{ #category : #private }
+GtSourceCoder >> parseExpression: aString requestor: aRequestor [
+	^ self parse: aString asExpression: true requestor: aRequestor
+]
+
+{ #category : #private }
+GtSourceCoder >> parseMethod: aString [
+	^ self parse: aString asExpression: false requestor: nil
 ]
 
 { #category : #private }

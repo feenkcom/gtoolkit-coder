@@ -1031,14 +1031,10 @@ GtMethodCoder >> newMethodSource [
 { #category : #updating }
 GtMethodCoder >> newRbAST: aString [
 	| ast |
-	ast := RBParser parseFaultyMethod: aString.
+	ast := self parseMethod: aString.
 	ast isParseError
 		ifTrue: [ ^ ast ].
-	ast methodNode
-		compilationContext:
-			(CompilationContext new
-				class: (self classOrMetaClass ifNil: [ UndefinedObject ])).
-	self doSemanticAnalysis: ast.
+	ast doSemanticAnalysis.
 	^ ast
 ]
 
