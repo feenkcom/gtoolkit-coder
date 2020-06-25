@@ -305,7 +305,7 @@ GtSourceCoder >> doItSelectionOrAll [
 GtSourceCoder >> doSemanticAnalysis: anAST [
 	[ anAST doSemanticAnalysis ]
 		on: NewUndeclaredWarning
-		do: [ "prevent it from being printed to the transcript" ]
+		do: [ :ex | ex resume ]
 ]
 
 { #category : #private }
