@@ -544,7 +544,7 @@ GtMethodCoder >> example: anExampleWithResult [
 		and: [ method methodClass = self classOrMetaClass
 				and: [ method sourceCode = methodSource ] ])
 		ifFalse: [ self forMethod: method ].
-	self example announcer weak
+	self example announcer
 		when: GtExampleExecuted send: #handleExampleExecuted: to: self;
 		when: GtExampleArgumentsChanged
 			send: #handleExampleArgumentsChanged:
