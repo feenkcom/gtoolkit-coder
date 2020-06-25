@@ -85,7 +85,7 @@ GtClassCommentCoder >> theClass [
 { #category : #accessing }
 GtClassCommentCoder >> theClass: anObject [
 	class := anObject.
-	document := GtDocument forClass: class.
+	document := GtDocumenter forClass: class.
 	self updateCollapsedText
 ]
 
