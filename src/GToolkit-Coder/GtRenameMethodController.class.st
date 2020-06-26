@@ -66,7 +66,7 @@ GtRenameMethodController >> newNode [
 		ifNotNil: [ :ast | 
 			ast
 				nodesDo: [ :each | 
-					(each isMessage
+					((each isMessage or: [ each isMethod ])
 						and: [ each keywordsIntervals first first = startIndex ])
 						ifTrue: [ ^ each ] ] ].
 	^ nil
