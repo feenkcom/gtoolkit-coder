@@ -34,6 +34,11 @@ GtRenameController >> cancelRename [
 	self restoreText
 ]
 
+{ #category : #executing }
+GtRenameController >> canceled [
+	coder removeRefactoringAttribute
+]
+
 { #category : #accessing }
 GtRenameController >> coder [
 	^ coder
@@ -74,16 +79,24 @@ GtRenameController >> installRenameAction [
 	renameAction
 		when: GtRenameActionAnnouncement
 		do: [ :ann | 
-			(#(#textUpdated accept) includes: ann eventType)
+			(#(#textUpdated #accept) includes: ann eventType)
 				ifTrue: [ self updateName: renameAction newName ].
+			(#(#tab #shiftTab) includes: ann eventType)
+				ifTrue: [ self tab: ann eventType = #tab ].
 			ann eventType = #cancel
-				ifTrue: [ coder removeRefactoringAttribute ] ].
+				ifTrue: [ self canceled ] ].
+	self installValidation.
 	renameAction install
 ]
 
 { #category : #executing }
 GtRenameController >> installRenamer [
 	self subclassResponsibility
+]
+
+{ #category : #accessing }
+GtRenameController >> installValidation [
+	renameAction forVariableOrUnaryMessage
 ]
 
 { #category : #testing }
@@ -149,6 +162,10 @@ GtRenameController >> sourceElement [
 { #category : #accessing }
 GtRenameController >> sourceElement: textElement [
 	sourceElement := textElement
+]
+
+{ #category : #private }
+GtRenameController >> tab: forward [
 ]
 
 { #category : #private }
