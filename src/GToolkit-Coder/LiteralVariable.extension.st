@@ -1,6 +1,6 @@
-Extension { #name : #GlobalVariable }
+Extension { #name : #LiteralVariable }
 
 { #category : #'*GToolkit-Coder' }
-GlobalVariable >> gtReferences [
+LiteralVariable >> gtReferences [
 	^ GtSearchReferencesFilter literal: self
 ]
