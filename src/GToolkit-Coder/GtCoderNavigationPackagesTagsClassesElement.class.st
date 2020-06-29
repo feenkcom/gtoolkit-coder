@@ -254,14 +254,10 @@ GtCoderNavigationPackagesTagsClassesElement >> reselectPackageOrTag: aSelectedPa
 
 { #category : #'api - class selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aPackage tag: aPackageTag [
-	| anExistingIndex |
-
-	anExistingIndex := classesList viewModel indexOfSuchThat: [ :eachTreeNode | 
-		eachTreeNode rootClass = aClass ].
-	anExistingIndex isZero ifTrue: [ 
-		self selectPackage: aPackage tag: aPackageTag ].
-	
-	self selectClass: aClass.
+	(self selectedPackage ~= aPackage
+		or: [ self selectedPackageTag ~= aPackageTag ])
+		ifTrue: [ self selectPackage: aPackage tag: aPackageTag ].
+	self selectClass: aClass
 ]
 
 { #category : #'api - package selections' }
