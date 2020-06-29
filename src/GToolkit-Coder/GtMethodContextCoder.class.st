@@ -285,6 +285,7 @@ GtMethodContextCoder >> updateSelection [
 		attributes:
 			{(BlTextUnderlineAttribute new
 				paint: BrGlamorousColors errorBackgroundColor;
+				width: 3;
 				beNotOverwritableByStyler)}
 ]
 
