@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtClassCoderTool class >> forClass: aClass [ 
+	^ self new observedClass: aClass
+]
+
+{ #category : #'instance creation' }
 GtClassCoderTool class >> observedClass: aClass [ 
 	^ self new observedClass: aClass
 ]
