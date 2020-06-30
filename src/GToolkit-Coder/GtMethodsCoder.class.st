@@ -9,7 +9,7 @@ GtMethodsCoder >> elementClass [
 	^ GtCodersElement
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtMethodsCoder >> forItems: aCollection [
 	super forItems: aCollection.
 	(items isKindOf: GtSearchMethodGroupResult)
