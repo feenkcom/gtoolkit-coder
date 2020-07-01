@@ -16,7 +16,7 @@ GtReadyCoderTool class >> coder: aCoder [
 GtReadyCoderTool >> asElementDo: aOneArgBlock [
 	"Create a tool element and execute the block."
 
-	aOneArgBlock cull: (GtCoder forCoder: self coder) asPagerPageElement
+	^ aOneArgBlock cull: (GtCoder forCoder: self coder) asPagerPageElement
 ]
 
 { #category : #accessing }
@@ -38,4 +38,9 @@ GtReadyCoderTool >> coder [
 GtReadyCoderTool >> coder: aCoder [
 	self assertCoder: aCoder.
 	coder := aCoder
+]
+
+{ #category : #'api - accessing' }
+GtReadyCoderTool >> name [
+	^ 'coder'
 ]

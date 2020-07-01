@@ -8,7 +8,12 @@ Class {
 GtCoderTool >> asElementDo: aOneArgBlock [
 	"Create a tool element and execute the block."
 
-	aOneArgBlock cull: self newCoder asPagerPageElement
+	^ aOneArgBlock cull: self newCoder asPagerPageElement
+]
+
+{ #category : #'api - accessing' }
+GtCoderTool >> name [
+	^ 'coder'
 ]
 
 { #category : #converting }
