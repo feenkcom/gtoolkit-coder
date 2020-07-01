@@ -19,6 +19,17 @@ GtReadyCoderTool >> asElementDo: aOneArgBlock [
 	^ aOneArgBlock cull: (GtCoder forCoder: self coder) asPagerPageElement
 ]
 
+{ #category : #'api - converting' }
+GtReadyCoderTool >> asTabDo: aBlock [
+	| aTab |
+	aTab := BrTab new
+		look: BrGlamorousTabSwitcherWithIconLook;
+		label: self name;
+		icon: BrGlamorousVectorIcons browse;
+		stencil: [ self asElementDo: [ :anElement | anElement ] ].
+	aBlock cull: aTab.
+]
+
 { #category : #accessing }
 GtReadyCoderTool >> assertCoder: aCoder [
 	self
