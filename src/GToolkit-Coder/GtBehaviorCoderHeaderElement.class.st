@@ -14,11 +14,6 @@ GtBehaviorCoderHeaderElement >> actOnClassChanged: theClass [
 ]
 
 { #category : #'event handling' }
-GtBehaviorCoderHeaderElement >> actOnClassUpdated [
-	self initializeElements
-]
-
-{ #category : #'event handling' }
 GtBehaviorCoderHeaderElement >> actOnPackageChanged: anAnnouncement [	
 	self header: [ BlElement new ].
 	self content: [ BlElement new ]
