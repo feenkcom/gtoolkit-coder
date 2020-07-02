@@ -794,6 +794,7 @@ GtMethodCoder >> initialize [
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
+	addOns addStyler: (GtFixItStyler new methodCoder: self).
 	addOns addMainAction: 'Save' translated icon: BrGlamorousVectorIcons accept action: [ self save ].
 	addOns addMainAction: 'Remove' translated icon: BrGlamorousVectorIcons remove action: [ self remove ].
 	addOns clearChanges
