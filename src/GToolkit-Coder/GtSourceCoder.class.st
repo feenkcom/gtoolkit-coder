@@ -528,7 +528,7 @@ GtSourceCoder >> newRbAST: aString [
 { #category : #ui }
 GtSourceCoder >> newSourceEditor [
 	| editor |
-	editor := BrTextEditor new.
+	editor := BrTextEditor new beEditableCode.
 	self newSourceStyler ifNotNil: [ :styler | editor styler: styler ].
 	editor
 		when: BrTextEditorInsertedEvent do: [ :event | self sourceChanged ];
