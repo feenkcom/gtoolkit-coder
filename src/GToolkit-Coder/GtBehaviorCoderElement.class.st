@@ -11,11 +11,6 @@ Class {
 }
 
 { #category : #callbacks }
-GtBehaviorCoderElement >> actOnClassUpdated [
-	self updateContentTabs
-]
-
-{ #category : #callbacks }
 GtBehaviorCoderElement >> actOnPackageUpdated: ann [
 	self removeContentTabs
 ]
@@ -174,13 +169,6 @@ GtBehaviorCoderElement >> classViewItems [
 	^ collector collect
 ]
 
-{ #category : #subscriptions }
-GtBehaviorCoderElement >> definitionChanged: anAnnouncement [
-	anAnnouncement classAffected == classCoder theClass
-		ifFalse: [ ^ self ].
-	self updateContentTabs
-]
-
 { #category : #private }
 GtBehaviorCoderElement >> executeTask: aBlock [
 	BlUseAsyncFeatures
@@ -197,12 +185,6 @@ GtBehaviorCoderElement >> initialize [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-	SystemAnnouncer uniqueInstance weak
-		when:
-			ClassModificationApplied , ClassModifiedClassDefinition
-				, ClassParentRenamed , ClassRenamed
-		send: #definitionChanged:
-		to: self.
 		
 	self when: BlClickEvent do: [ self requestFocus ]
 ]
@@ -232,14 +214,4 @@ GtBehaviorCoderElement >> selectAndScrollToMethod: aMethod [
 		allChildrenBreadthFirstDetect: [ :eachElement | eachElement isKindOf: GtCodersElement ] 
 		ifFound: [ :theElement | theElement coders selectAndScrollToMethod: aMethod ] 
 		ifNone: [ "ignore" ]
-]
-
-{ #category : #'updating ui' }
-GtBehaviorCoderElement >> updateContentTabs [
-	| childIndex |
-	contentTabs
-		ifNil: [ childIndex := contentPane children size + 1 ]
-		ifNotNil: [ childIndex := contentPane childIndexOf: contentTabs ].
-	self removeContentTabs.
-	contentPane addChild: self buildContentTabs at: childIndex
 ]
