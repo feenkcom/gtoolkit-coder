@@ -56,17 +56,29 @@ GtSearchMethodGroupResult >> methodAdded: aMethodAnnouncement [
 
 { #category : #changes }
 GtSearchMethodGroupResult >> methodChanged: aMethodAnnouncement [
-	| index |
+	| index selector class |
 	(filtered and: [ filter notNil ])
 		ifFalse: [ ^ self ].
-	index := items identityIndexOf: aMethodAnnouncement oldMethod ifAbsent: [ 0 ].
+	selector := aMethodAnnouncement oldMethod selector.
+	class := aMethodAnnouncement oldMethod methodClass.
+	index := (1 to: items size)
+		detect: [ :i | 
+			| method |
+			method := items at: i.
+			method selector = selector and: [ method methodClass = class ] ]
+		ifNone: [ 0 ].
 	(filter matches: aMethodAnnouncement newMethod)
 		ifTrue: [ index = 0
 				ifTrue: [ items add: aMethodAnnouncement newMethod.
-					announcer announce: (ValueAdded newValue: aMethodAnnouncement newMethod) ] ].
+					announcer
+						announce: (ValueAdded newValue: aMethodAnnouncement newMethod) ] ].
 	index > 0
 		ifTrue: [ items at: index put: aMethodAnnouncement newMethod.
-			announcer announce: (ValueChanged oldValue: aMethodAnnouncement oldMethod newValue: aMethodAnnouncement newMethod) ]
+			announcer
+				announce:
+					(ValueChanged
+						oldValue: aMethodAnnouncement oldMethod
+						newValue: aMethodAnnouncement newMethod) ]
 ]
 
 { #category : #changes }

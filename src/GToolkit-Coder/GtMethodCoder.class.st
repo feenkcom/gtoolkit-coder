@@ -190,6 +190,17 @@ GtMethodCoder >> addInstanceAccessorRefactoringsFor: aNode to: coderAddOns [
 				action: [ :element | self createAccessorsFor: aNode instanceVariable: true ] ]
 ]
 
+{ #category : #'actions-refactorings' }
+GtMethodCoder >> addInstanceVariable: aString [
+	| refactoring |
+	refactoring := RBAddInstanceVariableRefactoring
+		variable: aString
+		class: self classOrMetaClass.
+	refactoring execute.
+	self resetASTCache.	"Need to reset AST for undeclared variables"
+	self styleText
+]
+
 { #category : #'private-refactorings' }
 GtMethodCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 	self removeRefactoringAttribute.

@@ -16,29 +16,6 @@ GtFixItAction class >> forCoder: aMethodCoder node: aRBProgramNode [
 		yourself
 ]
 
-{ #category : #element }
-GtFixItAction >> asElement [
-	| element |
-	element := BrHorizontalPane new.
-	element hMatchParent.
-	element vFitContent.
-	element padding: (BlInsets all: 5).
-	element
-		addChild:
-			(BrLabel new
-				text: self description;
-				look: BrGlamorousLabelLook).
-	element
-		addChild:
-			(BrButton new
-				icon: BrGlamorousVectorIcons accept;
-				beSmall;
-				look: BrGlamorousButtonWithIconLook new;
-				label: 'Save';
-				action: [ self execute ]).
-	^ element
-]
-
 { #category : #accessing }
 GtFixItAction >> description [
 	self subclassResponsibility
@@ -47,6 +24,13 @@ GtFixItAction >> description [
 { #category : #executing }
 GtFixItAction >> execute [
 	self subclassResponsibility
+]
+
+{ #category : #accessing }
+GtFixItAction >> menuAction [
+	^ GtCoderContextMenuAction new
+		action: [ self execute ];
+		title: self description
 ]
 
 { #category : #initialization }

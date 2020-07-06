@@ -12,9 +12,5 @@ GtDefineInstanceVariableFixItAction >> description [
 
 { #category : #accessing }
 GtDefineInstanceVariableFixItAction >> execute [
-	| refactoring |
-	refactoring := RBAddInstanceVariableRefactoring
-		variable: node name
-		class: methodCoder classOrMetaClass.
-	refactoring execute
+	methodCoder addInstanceVariable: node name
 ]
