@@ -11,20 +11,22 @@ Class {
 GtFixItAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| look |
 	^ BrButton new
-		label: 'Fit It';
+		beTiny;
+		label: 'Fix It';
 		look:
-			BrGlamorousButtonWithIconLook
+			BrGlamorousButtonWithIconLook - BrGlamorousButtonExteriorLook
 				+
 					(look := BrGlamorousWithDropdownLook
 						handle: [ BrButton new
+								beTiny;
 								look:
 									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
 										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousIcons empty;
+								icon: BrGlamorousIcons hamburger;
 								yourself ]
 						content: [ BrCoderContextMenuContent new
 								items: (fixItActions collect: [ :each | each menuAction ]) ]);
-		icon: BrGlamorousIcons more asElement;
+		icon: BrGlamorousIcons hamburger;
 		when: BrContextMenuHideWish do: [ look hide ];
 		yourself
 ]
