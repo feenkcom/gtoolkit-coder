@@ -9,26 +9,23 @@ Class {
 
 { #category : #accessing }
 GtFixItAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
+	| look |
 	^ BrButton new
 		label: 'Fit It';
 		look:
 			BrGlamorousButtonWithIconLook
 				+
-					(BrGlamorousWithDropdownLook
+					(look := BrGlamorousWithDropdownLook
 						handle: [ BrButton new
 								look:
 									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
 										- BrGlamorousButtonExteriorLook;
 								icon: BrGlamorousIcons empty;
 								yourself ]
-						content: [ BlElement new
-								size: 400 @ 200;
-								addChild:
-									(BrSimpleList new
-										matchParent;
-										stencil: [ :each | each asElement ];
-										items: fixItActions) ]);
+						content: [ BrCoderContextMenuContent new
+								items: (fixItActions collect: [ :each | each menuAction ]) ]);
 		icon: BrGlamorousIcons more asElement;
+		when: BrContextMenuHideWish do: [ look hide ];
 		yourself
 ]
 
