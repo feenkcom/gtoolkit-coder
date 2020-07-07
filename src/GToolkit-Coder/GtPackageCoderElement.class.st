@@ -81,12 +81,8 @@ GtPackageCoderElement >> buildPackageLabel [
 { #category : #'private - ui' }
 GtPackageCoderElement >> buildPackageTagsList [
 	^ BrSimpleList new
-		stencil: [ :eachTag | 
-			eachTag asCardElement
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical fitContent ];
-				yourself ];
+		itemStencil: [ GtPackageTagCardElement new ];
+		itemDataBinder: [ :eachTagCard :eachTagCoder | eachTagCard coder: eachTagCoder ];
 		items: (packageCoder packageTagCoders asSortedCollection: [ :a :b | a name < b name ])
 ]
 

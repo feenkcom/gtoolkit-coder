@@ -1,27 +1,22 @@
 Class {
 	#name : #GtClassCardElement,
 	#superclass : #GtCoderCardElement,
+	#instVars : [
+		'commentElement'
+	],
 	#category : #'GToolkit-Coder-UI'
 }
 
-{ #category : #'building ui' }
-GtClassCardElement >> buildContainer [
-	| comment commentElement |
-	super buildContainer.
-	comment := self commentText.
-	comment glamorousRegularFont thin foreground:
-		BrGlamorousColors defaultButtonTextColor.
-	comment isEmpty ifTrue: [ ^ self ].
-	commentElement := BrEditorElement new.
-	commentElement editor: (BrTextEditor new text: comment readonly).
-	commentElement padding: (BlInsets left: 1).
-	commentElement constraintsDo: [ :c | 
-		c horizontal matchParent.
-		c vertical fitContent ].
-	commentElement when: BlClickEvent do: [ :event | 
-		self selectCoder.
-		event consumed: true ].
-	self addChild: commentElement
+{ #category : #accessing }
+GtClassCardElement >> coder: aCoder [
+	super coder: aCoder.
+	
+	self commentText
+		ifEmpty: [ commentElement visibility: BlVisibility gone ]
+		ifNotEmpty: [ :aText |
+			commentElement
+				text: aText;
+				visibility: BlVisibility visible ]
 ]
 
 { #category : #'building ui' }
@@ -38,4 +33,24 @@ GtClassCardElement >> detailsLabel [
 	class := coder theClass.
 	^ 'Super: '
 	  , (class superclass ifNil: [ '' ] ifNotNil: [ :spr | spr name ])
+]
+
+{ #category : #initialization }
+GtClassCardElement >> initialize [
+	super initialize.
+
+	commentElement := BrEditor new
+		beInSingleCompositionLayer;
+		look: (BrGlamorousRegularEditorLook new thin foreground: BrGlamorousColors defaultButtonTextColor);
+		text: '';
+		beReadOnlyWithoutSelection;
+		visibility: BlVisibility gone;
+		hMatchParent;
+		vFitContent;
+		padding: (BlInsets left: 1);
+		when: BlClickEvent do: [ :anEvent | 
+			anEvent consumed: true.
+			self selectCoder ].
+
+	self addChild: commentElement
 ]
