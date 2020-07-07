@@ -281,7 +281,7 @@ GtMethodCoder >> breadcrumbNamedActions [
 			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
 			aClass := self classOrMetaClass.
 			aClassTool := self compiledMethod 
-				ifNil: [ GtClassCoderTool observedClass: aClass ] 
+				ifNil: [ GtClassCoderTool observedClass: aClass instanceSide ] 
 				ifNotNil: [ :aMethod | GtMethodCoderTool compiledMethod: aMethod ].
 			aStream
 				nextPut: aPackageName -> [ :aButton | 
