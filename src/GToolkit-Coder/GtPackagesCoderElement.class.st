@@ -23,11 +23,8 @@ GtPackagesCoderElement >> buildContentPane [
 { #category : #'private - ui' }
 GtPackagesCoderElement >> buildPackageList [
 	^ BrSimpleList new
-		stencil: [:each | each asCardElement
-			constraintsDo: [:c |
-				c horizontal matchParent.
-				c vertical fitContent ];
-			 yourself ];
+		itemStencil: [ GtPackageCardElement new ];
+		itemDataBinder: [ :eachPackageCard :eachPackageCoder | eachPackageCard coder: eachPackageCoder ];
 		items: (packagesCoder coders asSortedCollection: [:a :b | a name < b name ])
 ]
 

@@ -26,9 +26,7 @@ GtClassCoder class >> forObject: anObject [
 
 { #category : #elements }
 GtClassCoder >> asCardElement [
-	| coderElement |
-	coderElement := GtClassCardElement new coder: self.
-	^ coderElement
+	^ GtClassCardElement new coder: self
 ]
 
 { #category : #elements }
