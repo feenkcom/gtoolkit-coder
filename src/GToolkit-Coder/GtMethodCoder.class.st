@@ -100,6 +100,17 @@ GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 				action: [ :element | self createAccessorsFor: aNode instanceVariable: false ] ]
 ]
 
+{ #category : #accessing }
+GtMethodCoder >> addClassVariable: aString [
+	| refactoring |
+	refactoring := RBAddClassVariableRefactoring
+		variable: aString
+		class: self classOrMetaClass instanceSide.
+	refactoring execute.
+	self resetASTCache.	"Need to reset AST for undeclared variables"
+	self styleText
+]
+
 { #category : #'add ons-refactoring' }
 GtMethodCoder >> addExtractMethodTo: coderAddOns [
 	| nodes |

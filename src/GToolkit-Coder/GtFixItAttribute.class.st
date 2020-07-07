@@ -2,7 +2,7 @@ Class {
 	#name : #GtFixItAttribute,
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
-		'fixItActions'
+		'fixItActionsBlock'
 	],
 	#category : #'GToolkit-Coder-FixIt'
 }
@@ -25,7 +25,7 @@ GtFixItAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 								icon: BrGlamorousIcons hamburger;
 								yourself ]
 						content: [ BrCoderContextMenuContent new
-								items: (fixItActions collect: [ :each | each menuAction ]) ]);
+								items: (fixItActionsBlock value collect: [ :each | each menuAction ]) ]);
 		icon: BrGlamorousIcons hamburger;
 		when: BrContextMenuHideWish do: [ look hide ];
 		yourself
@@ -33,7 +33,7 @@ GtFixItAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 
 { #category : #initialization }
 GtFixItAttribute >> fixItActions: aCollection [
-	fixItActions := aCollection
+	fixItActionsBlock := aCollection
 ]
 
 { #category : #accessing }
