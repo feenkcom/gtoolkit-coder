@@ -12,7 +12,7 @@ GtFixItAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| look |
 	^ BrButton new
 		beTiny;
-		label: 'Fix It';
+		label: 'Fix it';
 		look:
 			BrGlamorousButtonWithIconLook - BrGlamorousButtonExteriorLook
 				+
@@ -22,11 +22,11 @@ GtFixItAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 								look:
 									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
 										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousIcons hamburger;
+								icon: BrGlamorousVectorIcons repair;
 								yourself ]
 						content: [ BrCoderContextMenuContent new
 								items: (fixItActions collect: [ :each | each menuAction ]) ]);
-		icon: BrGlamorousIcons hamburger;
+		icon: BrGlamorousVectorIcons repair;
 		when: BrContextMenuHideWish do: [ look hide ];
 		yourself
 ]
