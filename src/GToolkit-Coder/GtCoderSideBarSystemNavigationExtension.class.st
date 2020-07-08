@@ -98,12 +98,12 @@ GtCoderSideBarSystemNavigationExtension >> navigationModel: anObject [
 
 { #category : #hooks }
 GtCoderSideBarSystemNavigationExtension >> onMaximizedInPager: aPager [
-	self adjustSideBarWidth.
+	self sideBar visibility: BlVisibility visible.
 ]
 
 { #category : #hooks }
 GtCoderSideBarSystemNavigationExtension >> onMinimizedInPager: aPager [
-	self sideBar constraintsDo: [ :c | c horizontal exact: 0 ].
+	self sideBar visibility: BlVisibility gone.
 ]
 
 { #category : #hooks }
@@ -132,7 +132,8 @@ GtCoderSideBarSystemNavigationExtension >> sideBar [
 
 { #category : #accessing }
 GtCoderSideBarSystemNavigationExtension >> sideBar: anElement [
-	sideBar := anElement
+	sideBar := anElement.
+	self adjustSideBarWidth.
 ]
 
 { #category : #subscriptions }
