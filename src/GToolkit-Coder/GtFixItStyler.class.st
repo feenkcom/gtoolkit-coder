@@ -9,6 +9,8 @@ Class {
 
 { #category : #accessing }
 GtFixItStyler >> canAddInstanceVariable: aString to: aClass [
+	(Object includesBehavior: aClass)
+		ifTrue: [ ^ false ].
 	^ [ (RBAddInstanceVariableRefactoring variable: aString class: aClass)
 		checkPreconditions.
 	true ]
@@ -25,7 +27,29 @@ GtFixItStyler >> fixItActionsForVariable: aVariableNode [
 
 { #category : #accessing }
 GtFixItStyler >> globalFixItActionsFor: aVariableNode [
-	^ #()
+	| actions possibleNames results |
+	actions := OrderedCollection new.
+	actions
+		add:
+			(GtDefineClassVariableFixItAction
+				forCoder: methodCoder
+				node: aVariableNode).
+	possibleNames := aVariableNode temporaryVariables
+		, methodCoder classOrMetaClass allInstVarNames.
+	results := aVariableNode name
+		correctAgainst: aVariableNode temporaryVariables
+		continuedFrom: nil.
+	results := methodCoder classOrMetaClass
+		possibleVariablesFor: aVariableNode name
+		continuedFrom: results.
+	(aVariableNode name correctAgainst: nil continuedFrom: results)
+		do: [ :each | 
+			actions
+				add:
+					((GtRenameVariableFixItAction
+						forCoder: methodCoder
+						node: aVariableNode) newName: each) ].
+	^ actions
 ]
 
 { #category : #accessing }
@@ -69,14 +93,13 @@ GtFixItStyler >> visitVariableNode: aVariableNode [
 			cursor := -1.
 			methodCoder cursorPositionDo: [ :pos | cursor := pos ].
 			(cursor between: aVariableNode start and: aVariableNode stop)
-				ifFalse: [ (self fixItActionsForVariable: aVariableNode)
-						ifNotEmpty: [ :actions | 
-							| attribute |
-							attribute := GtFixItAttribute new.
-							attribute fixItActions: actions.
-							self
-								styleFrom: aVariableNode stop
-								to: aVariableNode stop
-								with: {attribute} ] ] ].
+				ifFalse: [ | attribute |
+					attribute := GtFixItAttribute new.
+					attribute
+						fixItActions: [ self fixItActionsForVariable: aVariableNode ].
+					self
+						styleFrom: aVariableNode stop
+						to: aVariableNode stop
+						with: {attribute} ] ].
 	super visitVariableNode: aVariableNode
 ]
