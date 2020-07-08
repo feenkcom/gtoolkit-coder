@@ -313,6 +313,7 @@ GtCoder >> initializeLeftSideBarContent [
 		layout: BlFrameLayout new;
 		look: (BrGlamorousWithHorizontalResizerLook new 
 			resizerDo: [ :theResizer | leftSideBarResizer := theResizer ]);
+		visibility: BlVisibility gone;
 		constraintsDo: [ :c |
 			c horizontal exact: 0.
 			c vertical matchParent ].
