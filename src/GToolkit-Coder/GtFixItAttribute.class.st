@@ -2,7 +2,7 @@ Class {
 	#name : #GtFixItAttribute,
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
-		'fixItActions'
+		'fixItActionsBlock'
 	],
 	#category : #'GToolkit-Coder-FixIt'
 }
@@ -12,7 +12,7 @@ GtFixItAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| look |
 	^ BrButton new
 		beTiny;
-		label: 'Fix it';
+		label: 'Fix It';
 		look:
 			BrGlamorousButtonWithIconLook - BrGlamorousButtonExteriorLook
 				+
@@ -22,18 +22,18 @@ GtFixItAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 								look:
 									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
 										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousVectorIcons repair;
+								icon: BrGlamorousIcons hamburger;
 								yourself ]
 						content: [ BrCoderContextMenuContent new
-								items: (fixItActions collect: [ :each | each menuAction ]) ]);
-		icon: BrGlamorousVectorIcons repair;
+								items: (fixItActionsBlock value collect: [ :each | each menuAction ]) ]);
+		icon: BrGlamorousIcons hamburger;
 		when: BrContextMenuHideWish do: [ look hide ];
 		yourself
 ]
 
 { #category : #initialization }
 GtFixItAttribute >> fixItActions: aCollection [
-	fixItActions := aCollection
+	fixItActionsBlock := aCollection
 ]
 
 { #category : #accessing }

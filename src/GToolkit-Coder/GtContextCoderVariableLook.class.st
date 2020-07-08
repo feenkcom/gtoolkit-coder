@@ -50,7 +50,7 @@ GtContextCoderVariableLook >> variablesElement [
 	variablesElement := BrColumnedList new.
 	variablesElement
 		addEventHandler:
-			(GtInspectorListToSelectHandler new
+			(GtPhlowListToSelectHandler new
 				transformation: [ :each | each last ]).
 	variablesElement column
 		title: 'Variable';

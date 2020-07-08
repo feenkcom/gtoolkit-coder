@@ -28,7 +28,7 @@ GtCoder class >> forCoder: aCoder [
 { #category : #'instance creation' }
 GtCoder class >> forMethod: aCompiledMethod [
     | classCoder coder |
-    classCoder := GtClassCoder forClass: aCompiledMethod methodClass.
+    classCoder := GtClassCoder forClass: aCompiledMethod methodClass instanceSide.
     coder := self forCoder: classCoder.
     classCoder withSelectedMethod: aCompiledMethod.
     ^ coder
