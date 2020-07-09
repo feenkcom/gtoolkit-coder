@@ -53,9 +53,7 @@ GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 	^ aView explicit
 		title: 'Class Hierarchy';
 		priority: 2;
-		stencil: [ GtCoderNavigationClassHierachyElement new 
-			listItemStencil: GtCoderExpandableClassTreeItemStencilBuilder new;
-			navigationModel: self navigationModel ]
+		stencil: [ GtCoderNavigationClassHierachyElement new navigationModel: self navigationModel ]
 ]
 
 { #category : #'gt-extensions' }

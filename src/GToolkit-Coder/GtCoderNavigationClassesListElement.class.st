@@ -24,7 +24,7 @@ GtCoderNavigationClassesListElement >> buildClassRow: aClass index: aRowIndex li
 				BrSelectModel new }) ];
 		layout: BlLinearLayout horizontal;
 		look: BrHorizontalPaneLook new + (BrInteractiveCommonLook new
-			default: [ :aWidget | aWidget background: BrGlamorousColors deselectedtListItemColor ];
+			default: [ :aWidget | aWidget background: BrGlamorousColors deselectedListItemColor ];
 			hovered: [ :aWidget | aWidget background: BrGlamorousColors hoveredListItemColor ];
 			selected: [ :aWidget | aWidget background: BrGlamorousColors selectedListItemColor ];
 			pressed: [ :aWidget | aWidget background: BrGlamorousColors pressedListItemColor ];

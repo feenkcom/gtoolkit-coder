@@ -24,11 +24,6 @@ GtCoderNavigationClassHierachyElement >> initializeLayout [
 		c vertical matchParent ].
 ]
 
-{ #category : #initialization }
-GtCoderNavigationClassHierachyElement >> listItemStencil: aStencilBuilder [
-	classesList stencil: aStencilBuilder
-]
-
 { #category : #'event handling' }
 GtCoderNavigationClassHierachyElement >> onClassListSelectionChanged [
 	| anIndex aSelectedItem theIndices |
