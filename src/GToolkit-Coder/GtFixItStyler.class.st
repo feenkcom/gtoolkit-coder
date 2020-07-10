@@ -86,6 +86,13 @@ GtFixItStyler >> methodCoder: aCoder [
 	methodCoder := aCoder
 ]
 
+{ #category : #accessing }
+GtFixItStyler >> visitMethodNode: aMethodNode [
+	aMethodNode selector isDoIt
+		ifTrue: [ ^ self ].
+	^ super visitMethodNode: aMethodNode
+]
+
 { #category : #visiting }
 GtFixItStyler >> visitVariableNode: aVariableNode [
 	aVariableNode isUndeclared
