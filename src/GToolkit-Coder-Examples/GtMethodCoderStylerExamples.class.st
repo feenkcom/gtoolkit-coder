@@ -373,7 +373,6 @@ GtMethodCoderStylerExamples >> viewsExplanationWithLinksText [
 	| text |
 	
 	text := 'A custom view is defined by a method in the class of the object we want to view. You can think of it as a print string method only that instead of returning a string, it returns a visual element.
-	
 As we can have many such representations for every single object, we have to identify the method that defines a view. This is achieved through the ' asRopedText,
 ('gtView' asRopedText glamorousExplanationFor: #gtView),
 ' pragma.
@@ -387,12 +386,10 @@ In our case the view consists of a ' asRopedText,
 ' and a ' asRopedText,
 ('title' asRopedText glamorousExplanationFor: #title:),
 '
-
 The columned list has as many rows as the collection returned by the ' asRopedText,
 ('items: block' asRopedText glamorousExplanationFor: #items:),
 '. In this case, this means it shows all the ' asRopedText,
 ('contacts list' asRopedText glamorousExplanationFor: #allContacts),
-
 'For each ' asRopedText, 
 ('contact' asRopedText glamorousExplanationFor: #aContact),
 ' it shows the ' asRopedText,
@@ -402,7 +399,6 @@ The columned list has as many rows as the collection returned by the ' asRopedTe
 ' in the second column, and the ' asRopedText,
 ('telephone' asRopedText glamorousExplanationFor: #telephone),
 ' in the third column.
-
 That''s it. That''s the whole specification.' asRopedText.
 	^ text
 		glamorousRegularFont;
