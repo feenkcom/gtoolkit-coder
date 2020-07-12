@@ -27,7 +27,21 @@ GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
-	self stencil: GtCoderNonExpandableClassTreeItemStencilBuilder new.
+
+	self nodeStencil: [
+			BrLabel new
+				beSmall;
+				look: BrGlamorousLabelLook ];
+		nodeDataBinder: [ :aClassElement :aClassHierarchyTree |
+			aClassElement text: (aClassHierarchyTree
+				ifNil: [ '' asRopedText ]
+				ifNotNil: [
+					| aClass aText |
+					aClass := aClassHierarchyTree rootClass.
+					aText := aClass name asRopedText.
+					(aClass isAbstract or: [ aClass hasAbstractMethods ]) ifTrue: [ 
+						aText italic ].
+					aText ]) ]
 ]
 
 { #category : #'api - initialization' }

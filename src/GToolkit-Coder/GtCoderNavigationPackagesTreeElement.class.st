@@ -34,8 +34,16 @@ GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 { #category : #initialization }
 GtCoderNavigationPackagesTreeElement >> initialize [
 	super initialize.
-	
-	self stencil: GtCoderExpandablePackagesTreeItemStencilBuilder new.
+
+	self nodeStencil: [
+			BrLabel new
+				beSmall;
+				look: BrGlamorousLabelLook ];
+		nodeDataBinder: [ :aPackageElement :aPackage |
+			aPackageElement
+				text: (aPackage
+					ifNil: [ '' ]
+					ifNotNil: [ aPackage name ]) ]
 ]
 
 { #category : #'api - initialization' }
