@@ -2,10 +2,10 @@ Class {
 	#name : #GtCoderExpandedContentElement,
 	#superclass : #GtCoderContentElement,
 	#instVars : [
-		'editor',
 		'interactions',
 		'completion',
-		'actions'
+		'actions',
+		'editorElement'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -13,7 +13,7 @@ Class {
 { #category : #'initialize-release' }
 GtCoderExpandedContentElement >> coder: aCoder [
 	coder ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
-	editor editor removeEditorShortcuts: interactions.
+	editorElement editor removeEditorShortcuts: interactions.
 	"completion ifNotNil: [ :aCompletionController | aCompletionController uninstall ]."
 
 	coder := aCoder.
@@ -26,10 +26,12 @@ GtCoderExpandedContentElement >> coder: aCoder [
 	interactions := aCoder shortcuts copy.
 	"completion := (GtCompletionController on: editor strategy: aCoder completionStrategy)."
 
-	editor editor text: aCoder sourceText.
-	editor editor addEditorShortcuts: interactions.
+	editorElement editor text: aCoder sourceText.
+	editorElement editor addEditorShortcuts: interactions.
 	aCoder newSourceStyler
-		ifNotNil: [ :styler | editor editor styler: styler ].
+		ifNotNil: [ :styler | editorElement editor styler: styler ].
+		
+	aCoder announcer weak when: GtCoderStyleTextRequest send: #styleText to: self.
 	
 	"completion install"
 ]
@@ -40,7 +42,7 @@ GtCoderExpandedContentElement >> createContextMenuContent [
 		ifNil: [ BlElement new ]
 		ifNotNil: [
 			coder updateContextMenuAddOns.
-			BrCoderContextMenuContent new
+			GtCoderContextMenuContent new
 				items: (coder contextMenuActions reject: [ :e | e title isNil ]), (coder mainActions reject: [ :e | e title isNil ]);
 				yourself ]
 ]
@@ -49,15 +51,15 @@ GtCoderExpandedContentElement >> createContextMenuContent [
 GtCoderExpandedContentElement >> initialize [
 	super initialize.
 	
-	editor := self newEditorElement.
-	editor editor when: BrTextEditorModifiedEvent do: [ self sourceChanged ].
+	editorElement := self newEditorElement.
+	editorElement editor when: BrTextEditorModifiedEvent do: [ self sourceChanged ].
 
-	actions := self newActionsElement editor: editor.
+	actions := self newActionsElement editor: editorElement.
 	interactions := #().
 	completion := nil.
 	
-	self look: (BrLayoutResizerLook inherit inherit: editor).
-	self addChild: editor as: #editor.
+	self look: (BrLayoutResizerLook inherit inherit: editorElement).
+	self addChild: editorElement as: #editor.
 	self addChild: actions as: #actions
 ]
 
@@ -82,4 +84,9 @@ GtCoderExpandedContentElement >> newEditorElement [
 { #category : #'event handling' }
 GtCoderExpandedContentElement >> sourceChanged [
 	coder ifNotNil: [ :aCoder | aCoder sourceChanged ]
+]
+
+{ #category : #'event handling' }
+GtCoderExpandedContentElement >> styleText [
+	editorElement editor styleText
 ]

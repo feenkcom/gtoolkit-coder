@@ -227,7 +227,7 @@ GtMethodCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 	aRefactoring isNil
 		ifTrue: [ ^ self ].
 	(self sourceEditor text from: position to: position)
-		attributes: {(GtRefactoringChangesAttribute new refactoring: aRefactoring)}
+		attributes: { (GtRefactoringChangesAttribute new refactoring: aRefactoring) }
 ]
 
 { #category : #'add ons-refactoring' }
@@ -509,7 +509,11 @@ GtMethodCoder >> debugMethodFrom: anEditorElement [
 	self isModified
 		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
-	self debug: self compiledMethod receiver: self object in: self context.
+
+	self
+		debug: self compiledMethod
+		receiver: self object
+		in: self context.
 ]
 
 { #category : #'api - actions examples' }
@@ -1399,7 +1403,7 @@ GtMethodCoder >> runExampleFrom: anEditorElement [
 
 	self example run.
 
-	self styleSourceTextInEditor: anEditorElement editor
+	self styleSourceTextFrom: anEditorElement
 ]
 
 { #category : #actions }

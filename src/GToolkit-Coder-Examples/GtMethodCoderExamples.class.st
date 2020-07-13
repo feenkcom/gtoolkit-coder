@@ -33,6 +33,13 @@ GtMethodCoderExamples >> binaryMethodCoder [
 	^ methodCoder
 ]
 
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> brokenExampleRemoveMeWhenFinished [
+	<gtExample>
+	
+	^ 1/0
+]
+
 { #category : #ui }
 GtMethodCoderExamples >> elementForOrderedCollectionMethods [
 	<gtExample>

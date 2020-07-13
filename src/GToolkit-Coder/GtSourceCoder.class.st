@@ -54,7 +54,7 @@ GtSourceCoder >> addOnsClass [
 ]
 
 { #category : #'api - actions' }
-GtSourceCoder >> browseClass: anEditorElement [
+GtSourceCoder >> browseClassFrom: anEditorElement [
 	self
 		pharoBehaviorInSelectionOrAtCursorInEditor: anEditorElement editor
 		ifFound: [ :aBehavior | anEditorElement phlow spawnTool: (GtClassCoderTool observedClass: aBehavior) ]
@@ -62,7 +62,7 @@ GtSourceCoder >> browseClass: anEditorElement [
 ]
 
 { #category : #'api - actions' }
-GtSourceCoder >> browseImplementors: anEditorElement [
+GtSourceCoder >> browseImplementorsFrom: anEditorElement [
 	| symbol |
 
 	symbol := (self selectedSourceInEditor: anEditorElement editor)
@@ -79,7 +79,7 @@ GtSourceCoder >> browseImplementors: anEditorElement [
 ]
 
 { #category : #'api - actions' }
-GtSourceCoder >> browseReferences: anEditorElement [
+GtSourceCoder >> browseReferencesFrom: anEditorElement [
 	| filter |
 
 	filter := (self selectedSourceInEditor: anEditorElement editor)
@@ -370,37 +370,6 @@ GtSourceCoder >> evaluationRequesterForEditor: anEditorElement [
 	^ GtSourceCoderEvaluationRequester on: self editor: anEditorElement
 ]
 
-{ #category : #ui }
-GtSourceCoder >> expandedEditorElement [
-	self
-		flag:
-			'TODO make coder actions aware of potential use in context menu, i.e. the actions actually expect the button of the action, but in the context menu they get the editor element as an argument. this only works as long they only do phlow stuff. also, actions should have preconditions, e.g. cut and copy without selection do not make sense'.
-	^ BrEditorElement new
-		look:
-			(BrGlamorousWithContextMenuLook
-				content: [ self updateContextMenuAddOns.
-					BrCoderContextMenuContent new
-						items:
-							(self contextMenuActions reject: [ :e | e title isNil ])
-								, (self mainActions reject: [ :e | e title isNil ]);
-						yourself ]);
-		padding:
-			(BlInsets
-				top: 0
-				left: 0
-				bottom: 2
-				right: 0);
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ];
-		editor: self sourceEditor;
-		in: [ :e | 
-			(GtCompletionController on: e strategy: self completionStrategy)
-				install.
-			self addShortcutsTo: e ];
-		yourself
-]
-
 { #category : #private }
 GtSourceCoder >> expandedUpdated [
 	super expandedUpdated.
@@ -489,17 +458,17 @@ GtSourceCoder >> initializeShortcuts [
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryM;
 			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder browseImplementors: aShortcutEvent currentTarget ];
+				aMethodCoder browseImplementorsFrom: aShortcutEvent currentTarget ];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryN;
 			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder browseReferences: aShortcutEvent currentTarget ];
+				aMethodCoder browseReferencesFrom: aShortcutEvent currentTarget ];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryB;
 			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder browseClass: aShortcutEvent currentTarget ];
+				aMethodCoder browseClassFrom: aShortcutEvent currentTarget ];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: (BlKeyCombination primaryL);
@@ -874,18 +843,18 @@ GtSourceCoder >> styleResult: value showPrintString: aBoolean in: anEditorElemen
 				inText: anEditorElement editor text ]
 ]
 
-{ #category : #updating }
+{ #category : #'private - text' }
 GtSourceCoder >> styleSourceText [
 	"Notify the text editor that it should restyle the text (for example due to environmental changes)"
 	
 	self announce: (GtCoderStyleTextRequest new coder: self)
 ]
 
-{ #category : #private }
-GtSourceCoder >> styleSourceTextInEditor: aTextEditor [
-	"Immediately request to restyle the source text in a given editor"
+{ #category : #'private - text' }
+GtSourceCoder >> styleSourceTextFrom: anEditorElement [
+	"Immediately request to restyle the source text in a given editor element"
 
-	aTextEditor styleText
+	anEditorElement editor styleText
 ]
 
 { #category : #updating }

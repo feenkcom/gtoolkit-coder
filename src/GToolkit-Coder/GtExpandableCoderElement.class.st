@@ -76,12 +76,12 @@ GtExpandableCoderElement >> gtAllShortcutsFor: aView [
 			do: [ :aColumn | 
 			aColumn
 				item: [ :each | each combination gtDisplayString ];
-				matchParent ];
+				weight: 1 ];
 		column: 'Action'
 			do: [ :aColumn | 
 			aColumn
 				item: [ :each | each action asString ];
-				matchParent ]
+				weight: 1 ]
 ]
 
 { #category : #initialization }

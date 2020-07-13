@@ -1,14 +1,14 @@
 Class {
-	#name : #BrCoderContextMenuContent,
+	#name : #GtCoderContextMenuContent,
 	#superclass : #BrSimpleList,
 	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #initialization }
-BrCoderContextMenuContent >> initialize [
+GtCoderContextMenuContent >> initialize [
 	super initialize.
 	self
-		stencil: [ :e | 
+		stencil: [ :eachGtCoderContextMenuAction | 
 			| element |
 			element := BlElement new.
 			element
@@ -27,7 +27,7 @@ BrCoderContextMenuContent >> initialize [
 					c vertical fitContent ];
 				padding: (BlInsets all: 5);
 				addEventHandlerOn: BlClickEvent
-					do: [ e action cull: self anchor.
+					do: [ eachGtCoderContextMenuAction action cull: self anchor.
 					self anchor
 						dispatchEvent:
 							(BrContextMenuHideWish new
@@ -36,14 +36,14 @@ BrCoderContextMenuContent >> initialize [
 				addChild:
 					(BrLabel new
 						look: BrGlamorousLabelLook;
-						text: e title;
+						text: eachGtCoderContextMenuAction title;
 						yourself).
-			e hoverAction
+			eachGtCoderContextMenuAction hoverAction
 				ifNotNil: [ :hover | 
 					element
 						when: BlMouseEnterEvent
 						do: [ :anEvent | hover cull: self anchor ] ].
-			e leaveAction
+			eachGtCoderContextMenuAction leaveAction
 				ifNotNil: [ :leave | 
 					element
 						when: BlMouseLeaveEvent
