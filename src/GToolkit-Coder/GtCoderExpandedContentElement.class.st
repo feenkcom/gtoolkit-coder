@@ -10,10 +10,10 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
-{ #category : #'initialize-release' }
+{ #category : #'api - initialization' }
 GtCoderExpandedContentElement >> coder: aCoder [
 	coder ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
-	editorElement editor removeEditorShortcuts: interactions.
+	self editorElement editor removeEditorShortcuts: interactions.
 	"completion ifNotNil: [ :aCompletionController | aCompletionController uninstall ]."
 
 	coder := aCoder.
@@ -26,12 +26,14 @@ GtCoderExpandedContentElement >> coder: aCoder [
 	interactions := aCoder shortcuts copy.
 	"completion := (GtCompletionController on: editor strategy: aCoder completionStrategy)."
 
-	editorElement editor text: aCoder sourceText.
-	editorElement editor addEditorShortcuts: interactions.
-	aCoder newSourceStyler
-		ifNotNil: [ :styler | editorElement editor styler: styler ].
+	self editorElement editor text: aCoder sourceText.
+	self editorElement editor addEditorShortcuts: interactions.
+	(aCoder newSourceStylerFrom: self editorElement)
+		ifNotNil: [ :styler | self editorElement editor styler: styler ].
 		
-	aCoder announcer weak when: GtCoderStyleTextRequest send: #styleText to: self.
+	aCoder announcer weak 
+		when: GtCoderStyleTextRequest send: #styleText to: self;
+		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged to: self.
 	
 	"completion install"
 ]
@@ -41,13 +43,20 @@ GtCoderExpandedContentElement >> createContextMenuContent [
 	^ coder
 		ifNil: [ BlElement new ]
 		ifNotNil: [
-			coder updateContextMenuAddOns.
+			coder updateContextMenuAddOnsFrom: self editorElement.
 			GtCoderContextMenuContent new
+				editorElement: self editorElement;
 				items: (coder contextMenuActions reject: [ :e | e title isNil ]), (coder mainActions reject: [ :e | e title isNil ]);
 				yourself ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #'private - accessing' }
+GtCoderExpandedContentElement >> editorElement [
+	<return: #BrEditorElement>
+	^ editorElement
+]
+
+{ #category : #initialization }
 GtCoderExpandedContentElement >> initialize [
 	super initialize.
 	
@@ -70,7 +79,7 @@ GtCoderExpandedContentElement >> newActionsElement [
 		yourself
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #'instance creation' }
 GtCoderExpandedContentElement >> newEditorElement [
 	^ BrEditorElement new
 		look: (BrGlamorousWithContextMenuLook content: [ self createContextMenuContent ]);
@@ -79,6 +88,12 @@ GtCoderExpandedContentElement >> newEditorElement [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical fitContent ]
+]
+
+{ #category : #'event handling' }
+GtCoderExpandedContentElement >> onSourceCodeChanged [
+	(self editorElement editor text = coder sourceText) ifTrue: [ ^ self ].
+	self editorElement editor text: coder sourceText.
 ]
 
 { #category : #'event handling' }

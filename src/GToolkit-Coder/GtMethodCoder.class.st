@@ -88,7 +88,7 @@ GtMethodCoder >> abstractInstVar: aNode [
 	self addRefactoringChangesPreview: refactoring at: aNode stop
 ]
 
-{ #category : #'add ons-refactoring' }
+{ #category : #'private - add ons - refactoring' }
 GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 	aNode isVariable
 		ifFalse: [ ^ self ].
@@ -120,10 +120,10 @@ GtMethodCoder >> addClassVariable: aString [
 	self styleText
 ]
 
-{ #category : #'add ons-refactoring' }
-GtMethodCoder >> addExtractMethodTo: coderAddOns [
+{ #category : #'private - add ons - refactoring' }
+GtMethodCoder >> addExtractMethodTo: coderAddOns from: anEditorElement [
 	| nodes |
-	nodes := self rbSelectedNodes.
+	nodes := self rbSelectedNodesFrom: anEditorElement.
 	nodes isNil
 		ifTrue: [ ^ self ].
 	coderAddOns
@@ -133,7 +133,7 @@ GtMethodCoder >> addExtractMethodTo: coderAddOns [
 		action: [ :element | self extractMethod: element ]
 ]
 
-{ #category : #'add ons-refactoring' }
+{ #category : #'private - add ons - refactoring' }
 GtMethodCoder >> addExtractTempFor: aNode to: coderAddOns [
 	aNode isValue
 		ifFalse: [ ^ self ].
@@ -155,7 +155,7 @@ GtMethodCoder >> addExtractTempFor: aNode to: coderAddOns [
 		action: [ :element | self extractTemporaryVariable: aNode in: element ]
 ]
 
-{ #category : #'add ons-refactoring' }
+{ #category : #'private - add ons - refactoring' }
 GtMethodCoder >> addInlineSelfMessageFor: aNode to: coderAddOns [
 	aNode isMessage
 		ifFalse: [ ^ self ].
@@ -168,7 +168,7 @@ GtMethodCoder >> addInlineSelfMessageFor: aNode to: coderAddOns [
 		action: [ :element | self inlineMessageSendIn: aNode ]
 ]
 
-{ #category : #'add ons-refactoring' }
+{ #category : #'private - add ons - refactoring' }
 GtMethodCoder >> addInlineTempFor: aNode to: coderAddOns [
 	aNode isAssignment
 		ifFalse: [ ^ self ].
@@ -184,7 +184,7 @@ GtMethodCoder >> addInlineTempFor: aNode to: coderAddOns [
 		action: [ :element | self inlineTemporaryVariableIn: aNode ]
 ]
 
-{ #category : #'add ons-refactoring' }
+{ #category : #'private - add ons - refactoring' }
 GtMethodCoder >> addInstanceAccessorRefactoringsFor: aNode to: coderAddOns [
 	aNode isVariable
 		ifFalse: [ ^ self ].
@@ -230,11 +230,11 @@ GtMethodCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 		attributes: { (GtRefactoringChangesAttribute new refactoring: aRefactoring) }
 ]
 
-{ #category : #'add ons-refactoring' }
-GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns [
+{ #category : #'private - add ons - refactoring' }
+GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns from: anEditorElement [
 	<gtCoderContextMenuAddOns: 20>
-	self addExtractMethodTo: coderAddOns.
-	self rbSelectedNode
+	self addExtractMethodTo: coderAddOns from: anEditorElement.
+	(self rbSelectedNodeFrom: anEditorElement)
 		ifNotNil: [ :ast | 
 			self addInstanceAccessorRefactoringsFor: ast to: coderAddOns.
 			self addClassAccessorRefactoringsFor: ast to: coderAddOns.
@@ -247,7 +247,7 @@ GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns [
 				withAllParentsDo: [ :node | self addExtractTempFor: node to: coderAddOns ] ]
 ]
 
-{ #category : #'add ons-refactoring' }
+{ #category : #'private - add ons - refactoring' }
 GtMethodCoder >> addRemoveParameterRefactoringFor: aNode to: coderAddOns [
 	aNode isVariable
 		ifFalse: [ ^ self ].
@@ -790,7 +790,7 @@ GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
 
 { #category : #'private - refactorings' }
 GtMethodCoder >> highlightFrom: startIndex to: endIndex [
-	(self sourceEditor text from: startIndex to: endIndex)
+	(self sourceText from: startIndex to: endIndex)
 		attributes: { self class nodeHighlight }
 ]
 
@@ -1250,12 +1250,11 @@ GtMethodCoder >> rbNodeAtCursor: editorElement [
 ]
 
 { #category : #'private - refactorings' }
-GtMethodCoder >> rbSelectedNode [
+GtMethodCoder >> rbSelectedNodeFrom: anEditorElement [
 	| ast position node selections editor |
 	ast := self rbAST.
-	ast isNil
-		ifTrue: [ ^ nil ].
-	editor := self sourceEditor.
+	ast ifNil: [ ^ nil ].
+	editor := anEditorElement editor.
 	selections := editor selection allSelections.
 	selections size = 1
 		ifTrue: [ ^ ast bestNodeFor: selections first interval ]
@@ -1270,12 +1269,12 @@ GtMethodCoder >> rbSelectedNode [
 ]
 
 { #category : #'private - refactorings' }
-GtMethodCoder >> rbSelectedNodes [
+GtMethodCoder >> rbSelectedNodesFrom: anEditorElement [
 	| node selections |
-	selections := self sourceEditor selection allSelections.
+	selections := anEditorElement editor selection allSelections.
 	selections size = 1
 		ifFalse: [ ^ nil ].
-	node := self rbSelectedNode.
+	node := self rbSelectedNodeFrom: anEditorElement.
 	node isNil
 		ifTrue: [ ^ nil ].
 	node isSequence
@@ -1299,7 +1298,7 @@ GtMethodCoder >> remove [
 
 { #category : #'private - refactorings' }
 GtMethodCoder >> removeHighlight [
-	self sourceEditor text
+	self sourceText
 		clearAttributes: [ :attr | attr == self class nodeHighlight ]
 ]
 

@@ -24,7 +24,7 @@ GtCoderCollapsedContentElement >> coder: aCoder [
 		to: self
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtCoderCollapsedContentElement >> initialize [
 	super initialize.
 	

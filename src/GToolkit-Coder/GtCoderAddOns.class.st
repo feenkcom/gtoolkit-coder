@@ -141,7 +141,9 @@ GtCoderAddOns >> gtViewContextActionsFor: aView [
 		title: 'Context actions' translated;
 		priority: 25;
 		items: [ self contextActions ];
-		column: 'Title' item: [ :anAction | anAction title ] format: [ :title | title ifNil: [''] ];
+		column: 'Title'
+			item: [ :anAction | anAction title ]
+			text: [ :title | title ifNil: [ '' ] ];
 		column: 'Action' item: [ :anAction | anAction action ]
 ]
 
@@ -165,7 +167,9 @@ GtCoderAddOns >> gtViewMainActionsFor: aView [
 		title: 'Main actions' translated;
 		priority: 20;
 		items: [ self mainActions ];
-		column: 'Title' item: [ :anAction | anAction title ] format: [ :title | title ifNil: [''] ];
+		column: 'Title'
+			item: [ :anAction | anAction title ]
+			text: [ :title | title ifNil: [ '' ] ];
 		column: 'Action' item: [ :anAction | anAction action ]
 ]
 

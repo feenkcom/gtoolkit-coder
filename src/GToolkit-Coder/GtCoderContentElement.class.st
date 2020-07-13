@@ -38,7 +38,7 @@ GtCoderContentElement >> gtAllShortcutsFor: aView [
 				matchParent ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtCoderContentElement >> initialize [
 	super initialize.
 	self

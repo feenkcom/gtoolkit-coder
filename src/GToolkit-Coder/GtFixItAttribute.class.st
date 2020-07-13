@@ -25,6 +25,7 @@ GtFixItAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 								icon: BrGlamorousVectorIcons repair;
 								yourself ]
 						content: [ GtCoderContextMenuContent new
+								editorElement: anEditorElement;
 								items: (fixItActionsBlock value collect: [ :each | each menuAction ]) ]);
 		icon: BrGlamorousVectorIcons repair;
 		when: BrContextMenuHideWish do: [ look hide ];

@@ -2,7 +2,8 @@ Class {
 	#name : #GtFixItStyler,
 	#superclass : #GtASTStyler,
 	#instVars : [
-		'methodCoder'
+		'methodCoder',
+		'editorElement'
 	],
 	#category : #'GToolkit-Coder-FixIt'
 }
@@ -16,6 +17,22 @@ GtFixItStyler >> canAddInstanceVariable: aString to: aClass [
 	true ]
 		on: RBRefactoringError
 		do: [ :ex | ex return: false ]
+]
+
+{ #category : #'private - accessing editor' }
+GtFixItStyler >> cursorPositionDo: aBlock [
+	self editorElement editor cursors do: [ :eachCursor | ^ aBlock value: eachCursor position ]
+]
+
+{ #category : #accessing }
+GtFixItStyler >> editorElement [
+	<return: #BlEditorElement>
+	^ editorElement
+]
+
+{ #category : #accessing }
+GtFixItStyler >> editorElement: anEditorElement [
+	editorElement := anEditorElement
 ]
 
 { #category : #accessing }
@@ -98,7 +115,7 @@ GtFixItStyler >> visitVariableNode: aVariableNode [
 	aVariableNode isUndeclared
 		ifTrue: [ | cursor |
 			cursor := -1.
-			methodCoder cursorPositionDo: [ :pos | cursor := pos ].
+			self cursorPositionDo: [ :pos | cursor := pos ].
 			(cursor between: aVariableNode start and: aVariableNode stop)
 				ifFalse: [ | attribute |
 					attribute := GtFixItAttribute new.

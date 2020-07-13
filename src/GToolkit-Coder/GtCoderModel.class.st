@@ -135,7 +135,7 @@ GtCoderModel >> context [
 	^ nil
 ]
 
-{ #category : #'actions - toolbar' }
+{ #category : #'api - accessing actions' }
 GtCoderModel >> contextActions [
 	"Return a collection of contextual actions in the coder. They are renderred separately from mainActions"
 
@@ -143,7 +143,7 @@ GtCoderModel >> contextActions [
 	^ addOns contextActions
 ]
 
-{ #category : #'actions - toolbar' }
+{ #category : #'api - accessing actions' }
 GtCoderModel >> contextMenuActions [
 	<return: #Collection of: #GtCoderAction>
 	^ addOns contextMenuActions
@@ -238,7 +238,7 @@ GtCoderModel >> initializeShortcuts [
 	
 ]
 
-{ #category : #'actions - toolbar' }
+{ #category : #'api - accessing actions' }
 GtCoderModel >> mainActions [
 	"Return a collection of main actions in the coder, for example save"
 
