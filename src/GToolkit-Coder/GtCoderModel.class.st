@@ -56,7 +56,7 @@ GtCoderModel >> announcer [
 
 { #category : #elements }
 GtCoderModel >> asElement [
-	^ GtExpandableCoderElement new
+	^ self elementClass new
 		coder: self;
 		yourself
 ]
@@ -147,6 +147,11 @@ GtCoderModel >> contextActions [
 GtCoderModel >> contextMenuActions [
 	<return: #Collection of: #GtCoderAction>
 	^ addOns contextMenuActions
+]
+
+{ #category : #elements }
+GtCoderModel >> elementClass [
+	^ GtExpandableCoderElement
 ]
 
 { #category : #accessing }
@@ -256,6 +261,13 @@ GtCoderModel >> removeAttributeNamed: aSymbol [
 { #category : #scripting }
 GtCoderModel >> requestFocus [
 	self announce: (GtCoderRequestFocus new coder: self)
+]
+
+{ #category : #elements }
+GtCoderModel >> shortcuts [
+	<return: #Collection of: #BlShortcut>
+
+	^ addOns shortcuts
 ]
 
 { #category : #elements }

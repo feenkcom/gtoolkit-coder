@@ -5,7 +5,8 @@ Class {
 		'mainToolbar',
 		'contextToolbar',
 		'separator',
-		'coder'
+		'coder',
+		'editor'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -36,6 +37,8 @@ GtCoderActionsElement >> coder [
 
 { #category : #accessing }
 GtCoderActionsElement >> coder: aCoder [
+	coder ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
+
 	coder := aCoder.
 	coder announcer weak
 		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
@@ -44,6 +47,18 @@ GtCoderActionsElement >> coder: aCoder [
 			to: self.
 	self addMainToolbarActions.
 	self addContextToolbarActions
+]
+
+{ #category : #accessing }
+GtCoderActionsElement >> editor [
+	<return: #BrEditorElement>
+
+	^ editor
+]
+
+{ #category : #accessing }
+GtCoderActionsElement >> editor: aBrEditorElement [
+	editor := aBrEditorElement
 ]
 
 { #category : #initialization }
@@ -79,7 +94,8 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 		beSmall;
 		label: aGtCoderAction title;
 		look: BrGlamorousButtonWithIconLook;
-		action: aGtCoderAction
+		action: [ :aButtonElement :aButtonModel :anEvent |
+			self editor ifNotNil: [ :anEditorElement | aGtCoderAction action glamourValueWithArgs: { anEditorElement . anEvent } ] ]
 ]
 
 { #category : #'instance creation' }

@@ -9,16 +9,17 @@ Class {
 }
 
 { #category : #accessing }
-GtSourceCoderEvaluationRequester >> coder: aCoder [
-	super coder: aCoder.
-	selectionInterval := aCoder selectedSourceInterval
+GtSourceCoderEvaluationRequester >> coder: aCoder editor: aBrTextEditor [
+	super coder: aCoder editor: aBrTextEditor.
+	
+	selectionInterval := aCoder selectedSourceIntervalInEditor: aBrTextEditor
 ]
 
 { #category : #requester }
 GtSourceCoderEvaluationRequester >> correctFrom: fromIndex to: toIndex with: aString [
 	super correctFrom: selectionInterval first + fromIndex - 1 to: selectionInterval first + toIndex - 1 with: aString.
 	selectionInterval := selectionInterval first to: selectionInterval last + aString size - (toIndex - fromIndex + 1).
-	coder sourceEditor selecter
+	self sourceCodeEditor selecter
 		from: selectionInterval first to: selectionInterval last;
 		select
 ]

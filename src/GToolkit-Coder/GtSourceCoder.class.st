@@ -1,39 +1,35 @@
+"
+! Source coder
+I am a coder for the source code. I know about the ==completionStrategy== (${class:GtCompletionStrategy}$) and the ==sourceText== (${class:BlText}$). The ==sourceText== represents the current source code which is being edited by the user through a UI text editor which is opened on my ==sourceText==. It means that at any time the value of ==sourceText== may be different from the original source code, for example a source code of a method.
+
+!! Actions
+All source coders know about basic actions such as code evaluation (==do it all, do it and go, do it selection and go==). Those actions can only be executed in a presence of a text editor UI element that is passed as an argument. It is required to provide a text editor element in order to get information about cursor position or current selection, in addition to being able to have a UI context to notify user or provide her with a feedback of the executed action. All actions are always performed on the current source code text (expanded/collapsed state is not taken into account).
+
+${method:GtSourceCoder>>#browseClass:}$ tries to browse an existing class based on the current selection and cursor position in the text editor.
+
+!! Add ons
+Q: Where are they used and where are they actually added to the UI?
+
+!! Accessors
+${method:GtSourceCoder>>#source}$ returns a ${class:String}$ snapshot of the current source code text (${method:GtSourceCoder>>#sourceText}$) that is being modified by the user.
+${method:GtSourceCoder>>#selectedSourceIn:}$ return a ${class:String}$ snapshot of the currently selected source text (${method:GtSourceCoder>>#sourceText}$). Returns empty string if the source code is empty or if there is no selection.
+
+!! Implementation details
+It is important to notice that I do not directly reference a text editor and I should not store any UI related information such as cursor position or selection.
+
+
+"
 Class {
 	#name : #GtSourceCoder,
 	#superclass : #GtCoderModel,
 	#instVars : [
-		'sourceEditor',
+		'sourceText',
 		'collapsedText',
 		'astCache',
 		'completionStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
-
-{ #category : #private }
-GtSourceCoder >> activeSelectedSource [
-	self activeSelectedSourceInterval
-		ifNotNil: [ :interval | 
-			^ (self activeSourceEditor text from: interval first to: interval last)
-				asString ].
-	^ nil
-]
-
-{ #category : #private }
-GtSourceCoder >> activeSelectedSourceInterval [
-	| editor |
-	editor := self activeSourceEditor.
-	editor isNil
-		ifTrue: [ ^ nil ].
-	editor selection do: [ :each | ^ each from + 1 to: each to ].
-	^ nil
-]
-
-{ #category : #private }
-GtSourceCoder >> activeSourceEditor [
-	^ self expanded
-		ifTrue: [ self sourceEditor ]
-]
 
 { #category : #'add ons' }
 GtSourceCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
@@ -57,55 +53,51 @@ GtSourceCoder >> addOnsClass [
 	^ GtSourceCoderAddOns
 ]
 
-{ #category : #actions }
-GtSourceCoder >> browseClass: editorElement [
-	| variable varName behavior |
-	variable := self activeSelectedSource
-		ifNil: [ self expanded
-				ifTrue: [ self variableNodeAtCursor ] ]
-		ifNotNil:
-			[ :currentSelection | self extractVariableNodeFromString: currentSelection ].
-	variable isNil
-		ifTrue: [ ^ self ].
-	varName := variable name value asSymbol.
-	behavior := Smalltalk globals at: varName ifAbsent: [ ^ self ].
-	behavior isBehavior
-		ifFalse: [ ^ self ].
-	editorElement phlow
-		spawnTool: (GtClassCoderTool observedClass: behavior)
+{ #category : #'api - actions' }
+GtSourceCoder >> browseClass: anEditorElement [
+	self
+		pharoBehaviorInSelectionOrAtCursorInEditor: anEditorElement editor
+		ifFound: [ :aBehavior | anEditorElement phlow spawnTool: (GtClassCoderTool observedClass: aBehavior) ]
+		ifNone: [  ]
 ]
 
-{ #category : #actions }
-GtSourceCoder >> browseImplementors: editorElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> browseImplementors: anEditorElement [
 	| symbol |
-	symbol := self activeSelectedSource
-		ifNil: [ self expanded
-				ifTrue: [ self selectorAtCursor ]
+
+	symbol := (self selectedSourceInEditor: anEditorElement editor)
+		ifEmpty: [
+			self expanded
+				ifTrue: [ self selectorAtCursorInEditor: anEditorElement editor ]
 				ifFalse: [ self selectorForCollapsed ] ]
-		ifNotNil:
-			[ :currentSelection | self extractSelectorFromString: currentSelection ].
+		ifNotEmpty: [ :currentSelection | self extractSelectorFromString: currentSelection ].
+
 	symbol isNil
 		ifTrue: [ ^ self ].
-	editorElement phlow spawnObject: (GtSearchImplementorsFilter selector: symbol)
+
+	anEditorElement phlow spawnObject: (GtSearchImplementorsFilter selector: symbol)
 ]
 
-{ #category : #actions }
-GtSourceCoder >> browseReferences: editorElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> browseReferences: anEditorElement [
 	| filter |
-	filter := self activeSelectedSource
-		ifNil: [ self expanded
-				ifTrue: [ self referencesFilterAtCursor ] ]
-		ifNotNil:
-			[ :currentSelection | self extractReferencesFilterFromString: currentSelection ].
+
+	filter := (self selectedSourceInEditor: anEditorElement editor)
+		ifEmpty: [
+			self expanded
+				ifTrue: [ self referencesFilterAtCursorIn: anEditorElement ] ]
+		ifNotEmpty: [ :currentSelection | self extractReferencesFilterFromString: currentSelection ].
+
 	filter isNil
 		ifTrue: [ ^ self ].
-	editorElement phlow spawnObject: filter
+
+	anEditorElement phlow spawnObject: filter
 ]
 
 { #category : #'event handling' }
 GtSourceCoder >> buildCollapsedText [
 	| firstLine |
-	firstLine := (self sourceEditor text asString lines
+	firstLine := (self sourceText asString lines
 		detect: [ :each | each notEmpty ]
 		ifNone: [ '' ]) asRopedText.
 	firstLine
@@ -118,31 +110,39 @@ GtSourceCoder >> classOrMetaClass [
 	^ self object class
 ]
 
-{ #category : #private }
+{ #category : #'private - text' }
 GtSourceCoder >> clearPreviousEvaluations [
-	self sourceText
-		clearAttributes: [ :each | 
-			{GtPlaygroundEvaluatedCodeHighlightedAttribute.
+	self clearPreviousEvaluationsInText: sourceText
+]
+
+{ #category : #'private - text' }
+GtSourceCoder >> clearPreviousEvaluationsInText: aBlText [
+	"Remove all attributes that may be related to the code evaluation in a given ${class:BlText}$ instance"
+	| theEvaluationAttributeTypes |
+	
+	theEvaluationAttributeTypes :=
+		{
+			GtPlaygroundEvaluatedCodeHighlightedAttribute.
 			GtPlaygroundEvaluatedCodeButtonAttribute.
 			GtCoderPrintStringAttribute.
 			GtPlaygroundDebugExceptionButtonAttribute.
-			GtSourceCoderErrorAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ]
+			GtSourceCoderErrorAttribute
+		}.
+
+	aBlText clearAttributes: [ :eachAttribute |
+		theEvaluationAttributeTypes anySatisfy: [ :eachClass | eachAttribute isKindOf: eachClass ] ]
 ]
 
-{ #category : #private }
-GtSourceCoder >> clearSyntaxErrors: textEditor [
-	textEditor isNil
-		ifTrue: [ ^ self ].
-	textEditor text clearAttributes: [ :each | each isKindOf: GtSourceCoderErrorAttribute ]
+{ #category : #'private - text' }
+GtSourceCoder >> clearSyntaxErrors [
+	self clearSyntaxErrorsInText: sourceText
 ]
 
-{ #category : #ui }
-GtSourceCoder >> collapsedLabelElement [
-	| label |
-	label := BrLabel new.
-	label text: self collapsedText.
-	label look: BrGlamorousLabelLook new.
-	^ label
+{ #category : #'private - text' }
+GtSourceCoder >> clearSyntaxErrorsInText: aBlText [
+	"Remove all text attributes that may be related to the syntax errors"
+
+	aBlText clearAttributes: [ :eachAttribute | eachAttribute isKindOf: GtSourceCoderErrorAttribute ]
 ]
 
 { #category : #accessing }
@@ -171,15 +171,17 @@ GtSourceCoder >> compile: aStream for: anObject in: evalContext withRequestor: r
 		compile
 ]
 
-{ #category : #private }
+{ #category : #'api - accessing' }
 GtSourceCoder >> completionStrategy [
+	<return: #GtCompletionStrategy>
+
 	^ completionStrategy
 		ifNil: [ completionStrategy := self newCompletionStrategy ]
 ]
 
-{ #category : #private }
-GtSourceCoder >> completionStrategy: aCompletionStrategy [
-	completionStrategy := aCompletionStrategy
+{ #category : #'api - accessing' }
+GtSourceCoder >> completionStrategy: aGtCompletionStrategy [
+	completionStrategy := aGtCompletionStrategy
 ]
 
 { #category : #private }
@@ -188,6 +190,11 @@ GtSourceCoder >> cursorPositionDo: aBlock [
 ]
 
 { #category : #private }
+GtSourceCoder >> cursorPositionIn: aBrTextEditor do: aBlock [
+	aBrTextEditor cursor do: [ :each | ^ aBlock value: each position ]
+]
+
+{ #category : #'private - actions' }
 GtSourceCoder >> debug: aCompiledMethod receiver: anObject in: evalContext [
 	| guineaPig context debugSession |
 	guineaPig := [ aCompiledMethod
@@ -203,30 +210,32 @@ GtSourceCoder >> debug: aCompiledMethod receiver: anObject in: evalContext [
 	Smalltalk tools debugger openOn: debugSession withFullView: true.
 ]
 
-{ #category : #actions }
-GtSourceCoder >> debugSelection [
-	| source |
-	source :=  self hasSelection
-		ifTrue: [ self selectedSource ]
-		ifFalse: [ self source ].
-	source isNil
-		ifTrue: [ ^ self ].
-	^ self debugSource: source
+{ #category : #'api - actions' }
+GtSourceCoder >> debugSelectionFrom: anEditorElement [
+	^ anEditorElement editor hasSelection
+		ifTrue: [ self
+			debugSource: (self selectedSourceInEditor: anEditorElement editor)
+			from: anEditorElement ]
+		ifFalse: [ self debugSource: self source from: anEditorElement ]
 ]
 
-{ #category : #private }
-GtSourceCoder >> debugSource: aString [ 
+{ #category : #'private - actions' }
+GtSourceCoder >> debugSource: aString from: anEditorElement [
 	| currentReceiver currentContext method |
+
 	self clearPreviousEvaluations.
+
 	currentReceiver := self object.
 	currentContext := self context.
+
 	method := self 
 		compile: aString 
 		for: currentReceiver 
 		in: currentContext
-		withRequestor: self requester.
-	method notNil ifTrue:
-		[ self debug: method receiver: currentReceiver in: currentContext ].
+		withRequestor: (self requesterForEditor: anEditorElement editor).
+
+	method
+		ifNotNil: [ self debug: method receiver: currentReceiver in: currentContext ]
 ]
 
 { #category : #private }
@@ -241,68 +250,70 @@ GtSourceCoder >> disabledTextAttributes [
 	^ {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)}
 ]
 
-{ #category : #actions }
+{ #category : #'api - actions' }
 GtSourceCoder >> discardChanges [
 	"Discard not-accepted changes."
 ]
 
-{ #category : #actions }
-GtSourceCoder >> doItAll [
-	| source |
-	source := self source.
-	source isNil
-		ifTrue: [ ^ self ].
-	^ self evaluateSource: source
+{ #category : #'api - actions' }
+GtSourceCoder >> doItAll: anEditorElement [
+	^ self
+		evaluateSource: self source
+		in: anEditorElement
 ]
 
-{ #category : #actions }
-GtSourceCoder >> doItAndGoAll: anElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> doItAndGoAll: anEditorElement [
 	| aSource aValue |
+
 	aSource := self source.
-	aSource isNil ifTrue: [ ^ self ].
-	aValue := self evaluateSource: aSource.
-	aValue == self ifTrue: [ ^ self ].
-	anElement phlow spawnObject: aValue
+	aValue := self evaluateSource: aSource in: anEditorElement.
+	aValue == self
+		ifTrue: [ ^ self ].
+	
+	anEditorElement phlow spawnObject: aValue
 ]
 
-{ #category : #actions }
-GtSourceCoder >> doItAndGoSelection: anElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> doItAndGoSelectionFrom: anEditorElement [
 	| source value |
-	source := self selectedSource.
+	source := self selectedSourceInEditor: anEditorElement editor.
 	source isEmpty
 		ifTrue: [ ^ self ].
-	value := self evaluateSource: source.
+	value := self evaluateSource: source in: anEditorElement.
 	value == self
 		ifTrue: [ ^ self ].
-	anElement phlow spawnObject: value
+	anEditorElement phlow spawnObject: value
 ]
 
-{ #category : #actions }
-GtSourceCoder >> doItAndGoSelectionOrAll: anElement [
-	self hasSelection
-		ifTrue: [ self doItAndGoSelection: anElement ] 
-		ifFalse: [ self doItAndGoAll: anElement ]
+{ #category : #'api - actions' }
+GtSourceCoder >> doItAndGoSelectionOrAll: anEditorElement [
+	anEditorElement editor hasSelection
+		ifTrue: [ self doItAndGoSelectionFrom: anEditorElement ] 
+		ifFalse: [ self doItAndGoAll: anEditorElement ]
 ]
 
-{ #category : #actions }
-GtSourceCoder >> doItSelection [
+{ #category : #'api - actions' }
+GtSourceCoder >> doItSelectionFrom: anEditorElement [
 	"Evaluate a selected piece of source code and return a result.
 	I am also able to evaluate an empty or only consisting of whitespace
 	source code in which case the result is nil"
 	<return: #Object>
 
-	^ self evaluateSource: self selectedSource
+	^ self
+		evaluateSource: (self selectedSourceInEditor: anEditorElement editor)
+		in: anEditorElement
 ]
 
-{ #category : #actions }
-GtSourceCoder >> doItSelectionOrAll [
-	^ self hasSelection 
-		ifTrue: [ self doItSelection ] 
-		ifFalse: [ self doItAll ]
+{ #category : #'api - actions' }
+GtSourceCoder >> doItSelectionOrAll: anEditorElement [
+	^ anEditorElement editor hasSelection 
+		ifTrue: [ self doItSelectionFrom: anEditorElement ] 
+		ifFalse: [ self doItAll: anEditorElement ]
 ]
 
-{ #category : #private }
-GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean [
+{ #category : #'private - actions' }
+GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean in: anEditorElement [
 	| aResult wasErrorAlreadySignaled |
 	
 	self clearPreviousEvaluations.
@@ -326,33 +337,37 @@ GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean [
 		
 	self resetASTCache.
 	self announce: (GtCoderEvaluationAnnouncement forCoder: self value: aResult isException: false).
-	self sourceEditor styleTextAndAfterDo: [
-		self styleResult: aResult showPrintString: aBoolean ].
+	anEditorElement editor styleTextAndAfterDo: [
+		self styleResult: aResult showPrintString: aBoolean in: anEditorElement ].
 	^ aResult
 ]
 
-{ #category : #private }
-GtSourceCoder >> evaluateSource: aString [
-	^ self evaluateSource: aString showPrintString: false
+{ #category : #'private - actions' }
+GtSourceCoder >> evaluateSource: aString in: anEditorElement [
+	^ self
+		evaluateSource: aString
+		showPrintString: false
+		in: anEditorElement
 ]
 
-{ #category : #private }
-GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean [
+{ #category : #'private - actions' }
+GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorElement [
 	^ self 
 		evaluateBlock: [ 
 			self classOrMetaClass compiler
 				source: aString;
 				receiver: self object;
 				context: self context;
-				requestor: (self evaluationRequester source: aString);
+				requestor: ((self evaluationRequesterForEditor: anEditorElement editor) source: aString);
 				failBlock: [ ^ self flag: 'insert error adornment' ];
 				evaluate ] 
 		showPrintString: aBoolean
+		in: anEditorElement
 ]
 
-{ #category : #actions }
-GtSourceCoder >> evaluationRequester [
-	^ GtSourceCoderEvaluationRequester on: self
+{ #category : #'api - actions' }
+GtSourceCoder >> evaluationRequesterForEditor: anEditorElement [
+	^ GtSourceCoderEvaluationRequester on: self editor: anEditorElement
 ]
 
 { #category : #ui }
@@ -389,7 +404,7 @@ GtSourceCoder >> expandedEditorElement [
 { #category : #private }
 GtSourceCoder >> expandedUpdated [
 	super expandedUpdated.
-	self styleText.
+	self styleSourceText.
 	self expanded
 		ifFalse: [ self updateCollapsedSource ]
 ]
@@ -439,20 +454,6 @@ GtSourceCoder >> extractSelectorFromString: aString [
 	^ nil
 ]
 
-{ #category : #private }
-GtSourceCoder >> extractVariableNodeFromString: aString [
-	| node |
-	node := GtPharoParser 
-		parseWithErrors: aString
-		startingAt: GtPharoParser startingStateForStatement.
-	[ node isNil ]
-		whileFalse: [ 
-			(node isKindOf: GtPharoVariableNode)
-				ifTrue: [ ^ node ].
-			node := node parent ].
-	^ nil
-]
-
 { #category : #ui }
 GtSourceCoder >> gtViewStylersFor: aView [
 	<gtView>
@@ -485,24 +486,26 @@ GtSourceCoder >> initializeAddOns [
 GtSourceCoder >> initializeShortcuts [
 
 	addOns
-		addShortcut: (BlShortcut new
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryM;
-			action: [ :anEvent | self browseImplementors: anEvent currentTarget ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder browseImplementors: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryN;
-			action: [ :anEvent | self browseReferences: anEvent currentTarget ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder browseReferences: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryB;
-			action: [ :anEvent | self browseClass: anEvent currentTarget ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder browseClass: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: (BlKeyCombination primaryL);
-			action: [ self discardChanges ])
-]
-
-{ #category : #private }
-GtSourceCoder >> intervalToStyleResult [
-	"Return interval that should be styled to display result."
-	^ self selectedSourceIntervalOrAll
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder discardChanges ];
+			options: self)
 ]
 
 { #category : #testing }
@@ -525,17 +528,6 @@ GtSourceCoder >> newRbAST: aString [
 	^ ast
 ]
 
-{ #category : #ui }
-GtSourceCoder >> newSourceEditor [
-	| editor |
-	editor := BrTextEditor new beEditableCode.
-	self newSourceStyler ifNotNil: [ :styler | editor styler: styler ].
-	editor
-		when: BrTextEditorInsertedEvent do: [ :event | self sourceChanged ];
-		when: BrTextEditorDeletedEvent do: [ :event | self sourceChanged ].
-	^ editor
-]
-
 { #category : #private }
 GtSourceCoder >> newSourceStyler [
 	^ (GtSourceCoderTextStyler forCoder: self)
@@ -547,13 +539,13 @@ GtSourceCoder >> newSourceStyler [
 GtSourceCoder >> newSourceText [
 	<retrun: #BlText>
 
-	^ self sourceEditor textSnapshot
+	^ self sourceText
 ]
 
 { #category : #private }
-GtSourceCoder >> nodeAtCursor [
+GtSourceCoder >> nodeAtCursorIn: aBrTextEditor [
 	self
-		cursorPositionDo: [ :position | 
+		cursorPositionIn: aBrTextEditor do: [ :position | 
 			[ | ast innerNode |
 			ast := self sourceAst.
 			ast
@@ -603,6 +595,29 @@ GtSourceCoder >> parserStartingState [
 	^ GtPharoParser startingStateForMethodSequence
 ]
 
+{ #category : #'private - ast' }
+GtSourceCoder >> pharoBehaviorInSelectionOrAtCursorInEditor: aTextEditor ifFound: aFoundBlock ifNone: aNoneBlock [
+	"Try to find a Pharo class within current selected source text or at the cursor position in a given text editor
+	and evaluate a found block with the found class as an argument if such class was found or none block otherwise. Return the result"
+	<return: #Object>
+	^ self
+		variableNodeInSelectionOrAtCursorInEditor: aTextEditor
+		ifFound: [ :aVariableNode |
+			| aVariableName aBehavior |
+			
+			aVariableName := aVariableNode name value asSymbol.
+			
+			aBehavior := Smalltalk globals
+				at: aVariableName
+				ifAbsent: [ ^ aNoneBlock value ].
+
+			aBehavior isBehavior
+				ifFalse: [ ^ aNoneBlock value ].
+				
+			aFoundBlock value: aBehavior ]
+		ifNone: aNoneBlock
+]
+
 { #category : #private }
 GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 	| actions |
@@ -612,24 +627,27 @@ GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 	^ actions
 ]
 
-{ #category : #actions }
-GtSourceCoder >> printItAll [
-	| aSource |
-	aSource := self source.
-	aSource ifNil: [ ^ self ].
-	^ self evaluateSource: aSource showPrintString: true.
+{ #category : #'api - actions' }
+GtSourceCoder >> printItAll: anEditorElement [
+	^ self
+		evaluateSource: self source
+		showPrintString: true
+		in: anEditorElement
 ]
 
-{ #category : #actions }
-GtSourceCoder >> printItSelection [
-	^ self evaluateSource: self selectedSource showPrintString: true
+{ #category : #'api - actions' }
+GtSourceCoder >> printItSelection: anEditorElement [
+	^ self
+		evaluateSource: (self selectedSourceInEditor: anEditorElement editor)
+		showPrintString: true
+		in: anEditorElement
 ]
 
-{ #category : #actions }
-GtSourceCoder >> printItSelectionOrAll [
-	^ self hasSelection 
-		ifTrue: [ self printItSelection ] 
-		ifFalse: [ self printItAll ]
+{ #category : #'api - actions' }
+GtSourceCoder >> printItSelectionOrAll: anEditorElement [
+	^ anEditorElement editor hasSelection 
+		ifTrue: [ self printItSelection: anEditorElement ] 
+		ifFalse: [ self printItAll: anEditorElement ]
 ]
 
 { #category : #updating }
@@ -650,9 +668,9 @@ GtSourceCoder >> rbAST [
 ]
 
 { #category : #private }
-GtSourceCoder >> referencesFilterAtCursor [
+GtSourceCoder >> referencesFilterAtCursorIn: aBrTextEditor [
 	| node |
-	node := self nodeAtCursor.
+	node := self nodeAtCursorIn: aBrTextEditor.
 	[ node isNil ]
 		whileFalse: [ (node isKindOf: GtPharoVariableNode)
 				ifTrue: [ ^ self referencesFilterForVariable: node name source ].
@@ -701,12 +719,17 @@ GtSourceCoder >> reportParseError: aString at: anInteger on: textEditor [
 	textEditor moveCursorTo: position
 ]
 
-{ #category : #actions }
+{ #category : #'api - actions' }
 GtSourceCoder >> requester [
-	^ GtSourceCoderRequester on: self
+	self halt.
 ]
 
-{ #category : #actions }
+{ #category : #'api - actions' }
+GtSourceCoder >> requesterForEditor: aTextEditor [
+	^ GtSourceCoderRequester on: self editor: aTextEditor
+]
+
+{ #category : #'api - actions' }
 GtSourceCoder >> resetASTCache [
 	astCache := nil -> nil
 ]
@@ -718,20 +741,41 @@ GtSourceCoder >> selectedSource [
 	^ self sourceEditor selectedText characters asString
 ]
 
+{ #category : #'private - text' }
+GtSourceCoder >> selectedSourceInEditor: aBrTextEditor [
+	<return: #String>
+
+	^ aBrTextEditor selectedText characters asString
+]
+
 { #category : #private }
 GtSourceCoder >> selectedSourceInterval [
-	self sourceEditor selection do: [ :each | ^ each from + 1 to: each to ].
-	^ nil
+	self halt
 ]
 
-{ #category : #private }
-GtSourceCoder >> selectedSourceIntervalOrAll [
-	^ self selectedSourceInterval ifNil: [ self sourceInterval ]
+{ #category : #'private - text' }
+GtSourceCoder >> selectedSourceIntervalInEditor: aBrTextEditor [
+	<return: #Interval>
+
+	aBrTextEditor selection
+		do: [ :eachMonotoneSelection | ^ eachMonotoneSelection from + 1 to: eachMonotoneSelection to ].
+
+	^ 0 to: 0
 ]
 
-{ #category : #private }
-GtSourceCoder >> selectorAtCursor [
-	^ self symbolFor: self nodeAtCursor
+{ #category : #'private - text' }
+GtSourceCoder >> selectedSourceIntervalOrAllInEditor: aBrTextEditor [
+	<return: #Interval>
+
+	^ (self selectedSourceIntervalInEditor: aBrTextEditor)
+		ifEmpty: [ self sourceIntervalInEditor: aBrTextEditor ]
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> selectorAtCursorInEditor: aBrTextEditor [
+	<return: #Symbol>
+
+	^ self symbolFor: (self nodeAtCursorIn: aBrTextEditor)
 ]
 
 { #category : #private }
@@ -741,15 +785,21 @@ GtSourceCoder >> selectorForCollapsed [
 
 { #category : #accessing }
 GtSourceCoder >> source [
-	^ self sourceText asString
+	<return: #String>
+
+	^ sourceText asString
 ]
 
 { #category : #accessing }
 GtSourceCoder >> source: aString [
-	| text |
-	text := aString asRopedText.
-	text attributes: self defaultTextAttributes.
-	^ self sourceEditor text: text
+	"Change the source text of the current coder to a given string"
+	| aNewSourceText |
+
+	aNewSourceText := aString asRopedText.
+	aNewSourceText attributes: self defaultTextAttributes.
+
+	sourceText := aNewSourceText.
+	self sourceChanged
 ]
 
 { #category : #private }
@@ -759,7 +809,7 @@ GtSourceCoder >> sourceAst [
 
 { #category : #'event handling' }
 GtSourceCoder >> sourceChanged [
-	self clearSyntaxErrors: self sourceEditor.
+	self clearSyntaxErrors.
 	self updateCollapsedSource.
 	self updateAddOns
 ]
@@ -768,7 +818,9 @@ GtSourceCoder >> sourceChanged [
 GtSourceCoder >> sourceEditor [
 	<return: #BrTextEditor>
 
-	^ sourceEditor ifNil: [ sourceEditor := self newSourceEditor ]
+	self halt.
+
+	^ nil
 ]
 
 { #category : #private }
@@ -776,24 +828,34 @@ GtSourceCoder >> sourceInterval [
 	^ 1 to: self sourceText size
 ]
 
-{ #category : #accessing }
-GtSourceCoder >> sourceText [
-	^ self sourceEditor text
+{ #category : #'private - text' }
+GtSourceCoder >> sourceIntervalInEditor: aBrTextEditor [
+	"Return the interval that represents the whole source text (first character to last character)"
+	<return: #Interval>
+
+	^ 1 to: aBrTextEditor text size
 ]
 
-{ #category : #private }
-GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
-	self sourceEditor text
+{ #category : #accessing }
+GtSourceCoder >> sourceText [
+	<return: #BlText>
+
+	^ sourceText
+]
+
+{ #category : #'private - actions' }
+GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean inText: aBlText [
+	aBlText
 		attributes:
 			{(GtPlaygroundEvaluatedCodeButtonAttribute new result: value)}
 		from: interval last
 		to: interval last.
 	aBoolean
-		ifTrue: [ self sourceEditor text
+		ifTrue: [ aBlText
 				attributes: {(GtCoderPrintStringAttribute forString: value printString)}
 				from: interval last
 				to: interval last ].
-	self sourceEditor text
+	aBlText
 		attributes:
 			{(GtPlaygroundEvaluatedCodeHighlightedAttribute new
 				paint: (Color fromHexString: #'90CAF9'))}
@@ -801,33 +863,44 @@ GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean [
 		to: interval last
 ]
 
-{ #category : #private }
-GtSourceCoder >> styleResult: value showPrintString: aBoolean [
-	self selectedSourceIntervalOrAll ifNotNil: [ :interval |
-		self 
-			styleResult: value 
-			at: interval 
-			showPrintString: aBoolean ]
+{ #category : #'private - actions' }
+GtSourceCoder >> styleResult: value showPrintString: aBoolean in: anEditorElement [
+	(self selectedSourceIntervalOrAllInEditor: anEditorElement)
+		ifNotEmpty: [ :interval |
+			self 
+				styleResult: value 
+				at: interval 
+				showPrintString: aBoolean
+				inText: anEditorElement editor text ]
+]
+
+{ #category : #updating }
+GtSourceCoder >> styleSourceText [
+	"Notify the text editor that it should restyle the text (for example due to environmental changes)"
+	
+	self announce: (GtCoderStyleTextRequest new coder: self)
 ]
 
 { #category : #private }
-GtSourceCoder >> styleSourceText [
-	self expanded
-		ifFalse: [ ^ self ].
-	self sourceEditor styleText
+GtSourceCoder >> styleSourceTextInEditor: aTextEditor [
+	"Immediately request to restyle the source text in a given editor"
+
+	aTextEditor styleText
 ]
 
 { #category : #updating }
 GtSourceCoder >> styleText [
-	self isBuilt
-		ifFalse: [ ^ self ].
-	self styleSourceText
+	"Notify the text editor that it should restyle the text (for example due to environmental changes)"
+	
+	self
+		deprecated: 'use #styleSourceText'
+		transformWith: '`@receiver styleText' -> '`@receiver styleSourceText'.
 ]
 
 { #category : #elements }
 GtSourceCoder >> stylerView: anElement [
-	self sourceEditor view: anElement.
-	self styleText.
+	"self sourceEditor view: anElement.
+	self styleText."
 ]
 
 { #category : #accessing }
@@ -839,8 +912,9 @@ GtSourceCoder >> stylers [
 GtSourceCoder >> stylersUpdated [
 	| stylers |
 	stylers := addOns stylers copy.
-	self sourceEditor styler stylers: stylers.
-	self styleText
+	self flag: #TODO.
+	"self sourceEditor styler stylers: stylers.
+	self styleText"
 ]
 
 { #category : #private }
@@ -919,18 +993,78 @@ GtSourceCoder >> validateSyntax [
 	^ true
 ]
 
-{ #category : #private }
-GtSourceCoder >> variableNodeAtCursor [
-	self
-		cursorPositionDo: [ :position | 
-			[ | ast |
-			ast := self sourceAst.
-			ast
-				withAllNodesOfType: GtPharoVariableNode
-				do: [ :node | 
-					(position between: node startPosition and: node stopPosition)
-						ifTrue: [ ^ node ] ] ]
-				on: Error
-				do: [ :ex | ex return ] ].
-	^ nil
+{ #category : #'private - ast' }
+GtSourceCoder >> variableNodeAtCursorInEditor: aTextEditor ifFound: aFoundBlock ifNone: aNoneBlock [
+	"Try to find a variable node ${class:GtPharoVariableNode}$ in a given text editor at the cursor position and evaluate a found
+	block if such node exists and none block otherwise. Return the result.
+	If there are multiple cursors evaluate a none found block because otherwise the result can be ambiguous"
+	<return: #Object>
+
+	aTextEditor cursor isSingle
+		ifFalse: [ ^ aNoneBlock value ].
+
+	aTextEditor cursor do: [ :aCursor |
+		^ self variableNodeAtCursorPosition: aCursor position ifFound: aFoundBlock ifNone: aNoneBlock ].
+	
+	^ aNoneBlock value
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> variableNodeAtCursorPosition: aCursorPosition ifFound: aFoundBlock ifNone: aNoneBlock [
+	"Try to find a variable node ${class:GtPharoVariableNode}$ at a given cursor position and evaluate a found
+	block if such node exists and none block otherwise. Return the result"
+	<return: #Object>
+	[
+		| ast |
+		ast := self sourceAst.
+		ast
+			withAllNodesOfType: GtPharoVariableNode
+			do: [ :node | 
+				(aCursorPosition between: node startPosition and: node stopPosition)
+					ifTrue: [ ^ aFoundBlock value: node ] ]
+	]
+		on: Error
+		do: [ :ex | ex return ].
+
+	^ aNoneBlock value
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> variableNodeInSelectionOrAtCursorInEditor: aTextEditor ifFound: aFoundBlock ifNone: aNoneBlock [
+	"Try to find a variable node ${class:GtPharoVariableNode}$ in a given text editor within the selected source or at the cursor position
+	and evaluate a found block if such node exists and none block otherwise. Return the result.
+	If there are multiple cursors evaluate a none found block because otherwise the result can be ambiguous"
+	<return: #Object>
+
+	^ (self selectedSourceInEditor:aTextEditor)
+		ifEmpty: [
+			self
+				variableNodeAtCursorInEditor: aTextEditor
+				ifFound: aFoundBlock
+				ifNone: aNoneBlock ]
+		ifNotEmpty: [ :aSelectedString |
+			self
+				variableNodeInString: aSelectedString
+				ifFound: aFoundBlock
+				ifNone: aNoneBlock ]
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> variableNodeInString: aString ifFound: aFoundBlock ifNone: aNoneBlock [
+	"Try to extract a variable node ${class:GtPharoVariableNode}$ in a given string and evaluate a found block
+	if such node was found and a none block otherwise. Return the result."
+	<return: #Object>
+	| node |
+
+	node := GtPharoParser 
+		parseWithErrors: aString
+		startingAt: GtPharoParser startingStateForStatement.
+
+	[ node isNil ]
+		whileFalse: [ 
+			(node isKindOf: GtPharoVariableNode)
+				ifTrue: [ ^ aFoundBlock value: node ].
+			node := node parent ].
+
+	^ aNoneBlock value
 ]

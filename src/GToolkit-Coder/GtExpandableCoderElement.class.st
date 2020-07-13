@@ -13,9 +13,12 @@ Class {
 { #category : #private }
 GtExpandableCoderElement >> addCodersCoderLookTo: anElement [
 	| aLook |
+
 	aLook := anElement look.
+
 	(coder coderLook ifNil: [ coder coders ifNotNil: #coderLook ])
 		ifNotNil: [ :f | aLook := aLook ifNil: [ f ] ifNotNil: [ aLook + f ] ].
+
 	aLook notNil
 		ifTrue: [ anElement look: aLook ]
 ]
@@ -41,14 +44,16 @@ GtExpandableCoderElement >> coder: aCoder [
 		assert: [ aCoder isNotNil ]
 		description: [ 'Coder must not be nil' ].
 		
-	self
-		assert: [ coder isNil ]
-		description: [ 'Coder model can not be replaced' ].
+	coder ifNotNil: [ :aPreviousCoder |
+		aPreviousCoder announcer unsubscribe: self ].
 
 	coder := aCoder.
 	self
 		header: [ collapsedElement := self newCollapsedElement ];
 		content: [ expandedElement := self newExpandedElement ].
+
+	collapsedElement ifNotNil: [ collapsedElement coder: coder ].
+	expandedElement ifNotNil: [ expandedElement coder: coder ].
 
 	coder stylerView: self.
 	coder expanded
@@ -101,27 +106,18 @@ GtExpandableCoderElement >> initialize [
 		do: [ :event | coder ifNotNil: [ :e | e expanded: self isExpanded ] ]
 ]
 
-{ #category : #'instance creation' }
-GtExpandableCoderElement >> newActionsElement [
-	^ GtCoderActionsElement new
-		coder: coder;
-		margin: (BlInsets top: 5);
-		yourself
-]
-
 { #category : #private }
 GtExpandableCoderElement >> newCollapsedElement [
-	^ GtCoderContentElement new
-		coder: coder labelElement: coder collapsedLabelElement;
+	^ GtCoderCollapsedContentElement new
+		coder: coder;
 		in: [ :e | self addCodersCoderLookTo: e ];
 		yourself
 ]
 
 { #category : #private }
 GtExpandableCoderElement >> newExpandedElement [
-	^ GtCoderContentElement new
-		coder: coder editorElement: coder expandedEditorElement;
-		addChild: self newActionsElement as: #actions;
+	^ GtCoderExpandedContentElement new
+		coder: coder;
 		in: [ :e | self addCodersCoderLookTo: e ];
 		yourself
 ]

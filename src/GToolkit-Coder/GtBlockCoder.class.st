@@ -62,22 +62,20 @@ GtBlockCoder >> blockSource: aString [
 ]
 
 { #category : #actions }
-GtBlockCoder >> doItAll [
-	| source |
-	source := self blockSource.
-	source isNil
-		ifTrue: [ ^ self ].
-	^ self evaluateSource: source
+GtBlockCoder >> doItAll: anEditorElement [
+	^ self
+		evaluateSource: (self blockSource ifNil: [ ^ self ])
+		in: anEditorElement
 ]
 
 { #category : #actions }
-GtBlockCoder >> doItAndGoAll: anElement [
+GtBlockCoder >> doItAndGoAll: anEditorElement [
 	| aSource aValue |
 	aSource := self blockSource.
 	aSource isNil ifTrue: [ ^ self ].
-	aValue := self evaluateSource: aSource.
+	aValue := self evaluateSource: aSource in: anEditorElement.
 	aValue == self ifTrue: [ ^ self ].
-	anElement phlow spawnObject: aValue
+	anEditorElement phlow spawnObject: aValue
 ]
 
 { #category : #actions }

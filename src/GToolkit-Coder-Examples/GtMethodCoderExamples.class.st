@@ -1,7 +1,7 @@
 Class {
 	#name : #GtMethodCoderExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Model'
 }
 
 { #category : #'sample methods' }
@@ -13,11 +13,23 @@ GtMethodCoderExamples >> ? anObject [
 GtMethodCoderExamples >> binaryMethodCoder [
 	<gtExample>
 	| method methodCoder |
+
 	method := self class >> #?.
 	methodCoder := GtMethodCoder forMethod: method.
-	methodCoder ensureBuilt.
-	self assert: methodCoder collapsedSource = '?'.
-	self assert: methodCoder source = method sourceCode.
+	
+	self assert: methodCoder selector equals: #?.
+	self assert: methodCoder currentSelector equals: #?.
+
+	self assert: methodCoder classOrMetaClass equals: self class.
+	self assert: methodCoder compiledMethod equals: method.
+	
+	self assert: methodCoder collapsedSource equals: '?'.
+	
+	self assert: methodCoder source equals: method sourceCode.
+	self assert: methodCoder sourceText asString equals: method sourceCode.
+
+	self assert: methodCoder isModified not.
+
 	^ methodCoder
 ]
 
@@ -58,7 +70,6 @@ GtMethodCoderExamples >> emptyBodyCoder [
 	| method methodCoder |
 	method := self class >> #emptyBody.
 	methodCoder := GtMethodCoder forMethod: method.
-	methodCoder ensureBuilt.
 	self assert: methodCoder collapsedSource = 'emptyBody'.
 	self assert: methodCoder source = 'emptyBody'.
 	^ methodCoder
@@ -88,9 +99,39 @@ GtMethodCoderExamples >> emptyLinesCoder [
 	| method methodCoder |
 	method := self class >> #emptyLines.
 	methodCoder := GtMethodCoder forMethod: method.
-	methodCoder ensureBuilt.
 	self assert: methodCoder collapsedSource = 'emptyLines'.
 	self assert: methodCoder source = method sourceCode.
+	^ methodCoder
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> example [
+	<gtExample>
+	
+	^ 42
+]
+
+{ #category : #model }
+GtMethodCoderExamples >> exampleMethodCoder [
+	<gtExample>
+	| method methodCoder |
+
+	method := self class >> #example.
+	methodCoder := GtMethodCoder forMethod: method.
+	
+	"self assert: methodCoder selector equals: #?.
+	self assert: methodCoder currentSelector equals: #?.
+
+	self assert: methodCoder classOrMetaClass equals: self class.
+	self assert: methodCoder compiledMethod equals: method.
+	
+	self assert: methodCoder collapsedSource equals: '?'.
+	
+	self assert: methodCoder source equals: method sourceCode.
+	self assert: methodCoder sourceText asString equals: method sourceCode.
+
+	self assert: methodCoder isModified not."
+
 	^ methodCoder
 ]
 
@@ -105,7 +146,6 @@ GtMethodCoderExamples >> keywordSelectorCoder [
 	| method methodCoder |
 	method := self class >> #keyword:selector:.
 	methodCoder := GtMethodCoder forMethod: method.
-	methodCoder ensureBuilt.
 	self assert: methodCoder collapsedSource = 'keyword:selector:'.
 	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
@@ -117,7 +157,6 @@ GtMethodCoderExamples >> noSpacesCoder [
 	| method methodCoder |
 	method := self class >> #noSpacesCoder.
 	methodCoder := GtMethodCoder forMethod: method.
-	methodCoder ensureBuilt.
 	self assert: methodCoder collapsedSource = 'noSpacesCoder'.
 	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
@@ -141,7 +180,6 @@ GtMethodCoderExamples >> selfReturnCoder [
 	| method methodCoder |
 	method := self class >> #returnSelf.
 	methodCoder := GtMethodCoder forMethod: method.
-	methodCoder ensureBuilt.
 	self assert: methodCoder collapsedSource = 'returnSelf'.
 	self assert: methodCoder source = method sourceCode.
 	^ methodCoder
@@ -153,7 +191,7 @@ GtMethodCoderExamples >> thisMethod [
 	| method methodCoder source |
 	method := self class >> #thisMethod.
 	methodCoder := GtMethodCoder forMethod: method.
-	methodCoder ensureBuilt.
+	
 	source := method sourceCode.
 	self assert: methodCoder collapsedSource = (source first: (source indexOf: Character cr) - 1).
 	self assert: methodCoder source = method sourceCode.

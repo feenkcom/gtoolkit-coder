@@ -22,12 +22,6 @@ GtMethodContextCoder >> actionsForPragmas: aSymbolsCollection [
 	^ self session class debuggingActionsForPragmas: aSymbolsCollection for: self
 ]
 
-{ #category : #private }
-GtMethodContextCoder >> buildSource [
-	super buildSource.
-	self updateSelection
-]
-
 { #category : #'debugger access' }
 GtMethodContextCoder >> close [
 	self notifyDebugger.
@@ -126,7 +120,7 @@ GtMethodContextCoder >> initializeShortcuts [
 	addOns 
 		addShortcut: (BlShortcut new
 			combination: BlKeyCombination primaryP;
-			action: [ self printItSelection ])
+			action: [ :anEvent | self printItSelection: anEvent currentTarget ])
 ]
 
 { #category : #'accessing variables' }

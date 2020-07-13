@@ -1,3 +1,12 @@
+"
+! Method Coder
+I extend a ${class:GtSourceCoder}$ with the knowledge of how to edit a method. In particular, I am aware of different types of methods and provide a wider variety of refactorings and actions.
+
+!! Actions
+
+
+!!! What is the difference between ${method:GtMethodCoder>>#selector}$ and ${method:GtMethodCoder>>#currentSelector}$
+"
 Class {
 	#name : #GtMethodCoder,
 	#superclass : #GtSourceCoder,
@@ -55,7 +64,7 @@ GtMethodCoder class >> nodeHighlight [
 				paint: BrGlamorousColors textHighlightColor ]
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> abstractClassVar: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
@@ -67,7 +76,7 @@ GtMethodCoder >> abstractClassVar: aNode [
 	self addRefactoringChangesPreview: refactoring at: aNode stop
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> abstractInstVar: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
@@ -100,7 +109,7 @@ GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 				action: [ :element | self createAccessorsFor: aNode instanceVariable: false ] ]
 ]
 
-{ #category : #accessing }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> addClassVariable: aString [
 	| refactoring |
 	refactoring := RBAddClassVariableRefactoring
@@ -201,7 +210,7 @@ GtMethodCoder >> addInstanceAccessorRefactoringsFor: aNode to: coderAddOns [
 				action: [ :element | self createAccessorsFor: aNode instanceVariable: true ] ]
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> addInstanceVariable: aString [
 	| refactoring |
 	refactoring := RBAddInstanceVariableRefactoring
@@ -212,7 +221,7 @@ GtMethodCoder >> addInstanceVariable: aString [
 	self styleText
 ]
 
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 	self removeRefactoringAttribute.
 	aRefactoring isNil
@@ -327,9 +336,13 @@ GtMethodCoder >> canCompileMethodIn: newClass [
 				or: [ pools anySatisfy: [ :pool | pool includesKey: each asSymbol ] ] ]
 ]
 
-{ #category : #examples }
+{ #category : #'api - actions examples' }
 GtMethodCoder >> canExecuteExample [
-	^ self example ifNil: [ false ] ifNotNil: [ :anExample | anExample canBeExecuted ]
+	<return: #Boolean>
+
+	^ self example
+		ifNil: [ false ]
+		ifNotNil: [ :anExample | anExample canBeExecuted ]
 ]
 
 { #category : #testing }
@@ -432,7 +445,7 @@ GtMethodCoder >> compiledMethod [
 							cls >> sel ] ] ]
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> createAccessorsFor: aNode instanceVariable: aBoolean [
 	| refactoring model cls |
 	model := self createRefactoringModel.
@@ -448,7 +461,7 @@ GtMethodCoder >> createAccessorsFor: aNode instanceVariable: aBoolean [
 	self addRefactoringChangesPreview: refactoring at: aNode stop
 ]
 
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> createLabel: aString description: description [
 	^ aString asRopedText
 		,
@@ -483,7 +496,7 @@ GtMethodCoder >> currentSelector [
 						ifTrue: [ ast selector ] ] ]
 ]
 
-{ #category : #examples }
+{ #category : #'api - actions examples' }
 GtMethodCoder >> debugExampleFrom: anElement [
 	self isModified
 		ifTrue: [ self save
@@ -491,30 +504,26 @@ GtMethodCoder >> debugExampleFrom: anElement [
 	self example openingDebugger result
 ]
 
-{ #category : #actions }
-GtMethodCoder >> debugMethod [
+{ #category : #'api - actions' }
+GtMethodCoder >> debugMethodFrom: anEditorElement [
 	self isModified
 		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
 	self debug: self compiledMethod receiver: self object in: self context.
 ]
 
-{ #category : #examples }
-GtMethodCoder >> debugSelectionOrExampleFrom: anElement [
-	| source |
-	source := self selectedSource.
-	source isEmpty
-		ifTrue: [ ^ self debugExampleFrom: anElement ].
-	^ self debugSource: source
+{ #category : #'api - actions examples' }
+GtMethodCoder >> debugSelectionOrExampleFrom: anEditorElement [
+	^ (self selectedSourceInEditor: anEditorElement editor)
+		ifEmpty: [ self debugExampleFrom: anEditorElement ]
+		ifNotEmpty: [ :aSelectedSource | self debugSource: aSelectedSource from: anEditorElement ]
 ]
 
-{ #category : #actions }
-GtMethodCoder >> debugSelectionOrMethod [
-	| source |
-	source := self selectedSource.
-	source isEmpty
-		ifTrue: [ ^ self debugMethod ].
-	^ self debugSource: source
+{ #category : #'api - actions' }
+GtMethodCoder >> debugSelectionOrMethodFrom: anEditorElement [
+	^ (self selectedSourceInEditor: anEditorElement editor)
+		ifEmpty: [ self debugMethodFrom: anEditorElement ]
+		ifNotEmpty: [ :aSelectedSource | self debugSource: aSelectedSource from: anEditorElement ]
 ]
 
 { #category : #actions }
@@ -531,14 +540,15 @@ GtMethodCoder >> ensureBuilt [
 	self buildSource
 ]
 
-{ #category : #private }
-GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean [
+{ #category : #'private - actions' }
+GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean in: anEditorElement [
 	^ self 
 		evaluateBlock: [ anObject perform: aSymbol ] 
 		showPrintString: aBoolean
+		in: anEditorElement
 ]
 
-{ #category : #examples }
+{ #category : #'api - actions examples' }
 GtMethodCoder >> example [
 	<return: #GtExampleWithResult or: nil>
 	| anExample |
@@ -550,7 +560,7 @@ GtMethodCoder >> example [
 	^ anExample
 ]
 
-{ #category : #examples }
+{ #category : #'api - actions examples' }
 GtMethodCoder >> example: anExampleWithResult [
 	| method |
 	self
@@ -595,18 +605,18 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Play' translated
 		icon: BrGlamorousVectorIcons play
-		action: [ :button | self playExampleFrom: button ].
+		action: [ :anEditorElement | self playExampleFrom: anEditorElement ].
 	coderAddOns
 		addContextAction: 'Play and Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :button | self playAndInspectExampleFrom: button ].
+		action: [ :anEditorElement | self playAndInspectExampleFrom: anEditorElement ].
 	coderAddOns
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action: [ :button | self debugSelectionOrExampleFrom: button ]
+		action: [ :anEditorElement | self debugSelectionOrExampleFrom: anEditorElement ]
 ]
 
-{ #category : #examples }
+{ #category : #'api - actions examples' }
 GtMethodCoder >> exampleResult [
 	<return: #GtExampleResult>
 	^ self example result
@@ -634,14 +644,14 @@ GtMethodCoder >> explanationLink: anExplanation [
 	self styleText
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> extractMethod: editorElement [
 	(GtExtractMethodController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> extractTemporaryVariable: aNode in: anElement [
 	| refactoring model tempName |
 	model := self createRefactoringModel.
@@ -660,7 +670,7 @@ GtMethodCoder >> extractTemporaryVariable: aNode in: anElement [
 			self renameLocalVariableIn: anElement ]
 ]
 
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> findNodeAssigning: aString [
 	self rbAST
 		nodesDo: [ :each | 
@@ -691,6 +701,8 @@ GtMethodCoder >> forClass: aBehavior source: aString [
 GtMethodCoder >> forMethod: aCompiledMethod [
 	self classOrMetaClass: aCompiledMethod methodClass.
 	self selector: aCompiledMethod selector.
+	self source: aCompiledMethod sourceCode.
+
 	methodSource := aCompiledMethod sourceCode
 ]
 
@@ -746,7 +758,7 @@ GtMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'gtView' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :button | self runGtViewFrom: button ]
+		action: [ :anEditorElement | self runGtViewFrom: anEditorElement ]
 ]
 
 { #category : #private }
@@ -762,23 +774,23 @@ GtMethodCoder >> handleCompilerErrorsDuring: aBlock [
 			ex return: false ]
 ]
 
-{ #category : #'event handling' }
+{ #category : #'examples - event handling' }
 GtMethodCoder >> handleExampleArgumentsChanged: aGtExampleArgumentsChanged [
-	self updateAddOns.
+	self updateAddOns
 ]
 
-{ #category : #'event handling' }
+{ #category : #'examples - event handling' }
 GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
-	self styleSourceText.
+	self styleSourceText
 ]
 
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> highlightFrom: startIndex to: endIndex [
 	(self sourceEditor text from: startIndex to: endIndex)
 		attributes: { self class nodeHighlight }
 ]
 
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> highlightNode: aNode [
 	self highlightFrom: aNode start to: aNode stop
 ]
@@ -827,37 +839,58 @@ GtMethodCoder >> initializeShortcuts [
 	super initializeShortcuts.
 
 	addOns
-		addCollapsedShortcut: (BlShortcut new
+		"addCollapsedShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryM;
-			action: [ :anEvent | self browseImplementors: anEvent currentTarget ]);
-		addCollapsedShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder browseImplementors: aShortcutEvent currentTarget ];
+			options: self);
+
+		addCollapsedShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryN;
-			action: [ :anEvent | self browseReferences: anEvent currentTarget ]);
-		addCollapsedShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder browseReferences: aShortcutEvent currentTarget ];
+			options: self);
+		addCollapsedShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryB;
-			action: [ :anEvent | self browseClass: anEvent currentTarget ]);
-			
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder browseClass: aShortcutEvent currentTarget ];
+			options: self);"
+		
+		
+		
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryD;
-			action: [ :anEvent | self playSelectionOrMethodFrom: anEvent currentTarget ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder playSelectionOrMethodFrom: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryG;
-			action: [ :anEvent | self playAndInspectSelectionOrMethodFrom: anEvent currentTarget ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder playAndInspectSelectionOrMethodFrom: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryR;
-			action: [ :anEvent | self renameIn: anEvent currentTarget ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder renameIn: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryE;
-			action: [ :anEvent | self extractMethod: anEvent currentTarget ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder extractMethod: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryS;
-			action: [ self save ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder save ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: (BlKeyCombination primaryShiftF);
-			action: [ self format ])
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder format ];
+			options: self)
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> inlineMessageSendIn: messageNode [
 	| refactoring model |
 	model := self createRefactoringModel.
@@ -872,7 +905,7 @@ GtMethodCoder >> inlineMessageSendIn: messageNode [
 	self performMethodRefactoring: refactoring
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> inlineTemporaryVariableIn: assignmentNode [
 	| refactoring model |
 	model := self createRefactoringModel.
@@ -884,15 +917,7 @@ GtMethodCoder >> inlineTemporaryVariableIn: assignmentNode [
 	self performMethodRefactoring: refactoring
 ]
 
-{ #category : #private }
-GtMethodCoder >> intervalToStyleResult [
-	"If method was executed, it displays result next to the method selector."
-	^ self hasSelection 
-		ifTrue: [ self selectedSourceIntervalOrAll ]
-		ifFalse: [ 1 to: self selector size ]
-]
-
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> isAccessorMethodFor: aNode [
 	| statement |
 	aNode methodNode body statements size = 1
@@ -1019,10 +1044,10 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Mondrian' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :button | self runMondrianPaintFrom: button ]
+		action: [ :anEditorElement | self runMondrianPaintFrom: anEditorElement ]
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> moveMethodToInstanceOrClass [
 	| oldClass newClass model modelClass oldModelClass |
 	oldClass := self classOrMetaClass.
@@ -1061,16 +1086,7 @@ GtMethodCoder >> newRbAST: aString [
 	^ ast
 ]
 
-{ #category : #'instance creation' }
-GtMethodCoder >> newSourceEditor [
-	<return: #BrTextEditor>
-	| aSourceEditor |
-	aSourceEditor := super newSourceEditor.
-	aSourceEditor when: BlInfiniteDataSourceChanged do: [ :event | self sourceChanged ].
-	^ aSourceEditor
-]
-
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> nodeDescription: aNode [
 	| description |
 	description := aNode formattedCode.
@@ -1122,51 +1138,64 @@ GtMethodCoder >> performMethodRefactoring: refactoring [
 	^ false
 ]
 
-{ #category : #examples }
-GtMethodCoder >> playAndInspectExampleFrom: anElement [
-	self runExample.
-	anElement phlow spawnObject: self exampleResult returnValueOrExampleException.
+{ #category : #'api - actions examples' }
+GtMethodCoder >> playAndInspectExampleFrom: anEditorElement [
+	self runExampleFrom: anEditorElement.
+	anEditorElement phlow spawnObject: self exampleResult returnValueOrExampleException.
 ]
 
-{ #category : #actions }
-GtMethodCoder >> playAndInspectFrom: anElement [
-	"Save and execute method"
+{ #category : #'api - actions' }
+GtMethodCoder >> playAndInspectFrom: anEditorElement [
+	"Save and execute a method"
 	| anObject |
+
 	self isModified
 		ifTrue: [ self save
 				ifFalse: [ ^ self ] ].
-	anObject := self evaluateSelector: self selector object: self object showPrintString: false.
-	anElement phlow spawnObject: anObject.
+
+	anObject := self
+		evaluateSelector: self selector
+		object: self object
+		showPrintString: false
+		in: anEditorElement.
+
+	anEditorElement phlow spawnObject: anObject
 ]
 
-{ #category : #actions }
-GtMethodCoder >> playAndInspectSelectionOrMethodFrom: anElement [
-	"If there is no selection, it saves and exexute method"
-	self hasSelection 
-		ifTrue: [ self doItAndGoSelection: anElement ]
-		ifFalse: [ self playAndInspectFrom: anElement ]
-]
-
-{ #category : #examples }
-GtMethodCoder >> playExampleFrom: anElement [
-	self runExample
-]
-
-{ #category : #actions }
-GtMethodCoder >> playFrom: anElement [
-	self isModified
-		ifTrue: [ self save
-				ifFalse: [ ^ self ] ].
-	self evaluateSelector: self selector object: self object showPrintString: false.
+{ #category : #'api - actions' }
+GtMethodCoder >> playAndInspectSelectionOrMethodFrom: anEditorElement [
+	"If there is no selection, it saves and executes a method"
 	
+	anEditorElement editor hasSelection 
+		ifTrue: [ self doItAndGoSelectionFrom: anEditorElement ]
+		ifFalse: [ self playAndInspectFrom: anEditorElement ]
 ]
 
-{ #category : #actions }
-GtMethodCoder >> playSelectionOrMethodFrom: anElement [
-	"If there is no selection, it saves and exexute method"
-	self hasSelection 
-		ifTrue: [ self doItSelection ]
-		ifFalse: [ self playFrom: anElement ]
+{ #category : #'api - actions examples' }
+GtMethodCoder >> playExampleFrom: anEditorElement [
+	self runExampleFrom: anEditorElement
+]
+
+{ #category : #'api - actions' }
+GtMethodCoder >> playFrom: anEditorElement [
+	self isModified
+		ifTrue: [ self save
+				ifFalse: [ ^ self ] ].
+	
+	self
+		evaluateSelector: self selector
+		object: self object
+		showPrintString: false
+		in: anEditorElement
+]
+
+{ #category : #'api - actions' }
+GtMethodCoder >> playSelectionOrMethodFrom: anEditorElement [
+	"If there is no selection, it saves and executes a method"
+
+	anEditorElement editor hasSelection 
+		ifTrue: [ self doItSelectionFrom: anEditorElement ]
+		ifFalse: [ self playFrom: anEditorElement ]
 ]
 
 { #category : #elements }
@@ -1187,7 +1216,7 @@ GtMethodCoder >> printOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> protectInstVar: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
@@ -1216,7 +1245,7 @@ GtMethodCoder >> rbNodeAtCursor: editorElement [
 	^ node
 ]
 
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> rbSelectedNode [
 	| ast position node selections editor |
 	ast := self rbAST.
@@ -1236,7 +1265,7 @@ GtMethodCoder >> rbSelectedNode [
 			^ node ]
 ]
 
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> rbSelectedNodes [
 	| node selections |
 	selections := self sourceEditor selection allSelections.
@@ -1264,13 +1293,13 @@ GtMethodCoder >> remove [
 	^ class removeSelector: selector
 ]
 
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> removeHighlight [
 	self sourceEditor text
 		clearAttributes: [ :attr | attr == self class nodeHighlight ]
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> removeParameter: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
@@ -1283,7 +1312,7 @@ GtMethodCoder >> removeParameter: aNode [
 	self addRefactoringChangesPreview: refactoring at: aNode stop
 ]
 
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> removeRefactoringAttribute [
 	self sourceEditor text
 		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
@@ -1294,21 +1323,21 @@ GtMethodCoder >> removeSubCoder: aMethodCoder [
 	self subCoders remove: aMethodCoder ifAbsent: [  ]
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> renameClassIn: editorElement [
 	(GtRenameClassController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> renameClassVariableIn: editorElement [
 	(GtRenameClassVariableController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> renameIn: editorElement [
 	| node |
 	node := self rbNodeAtCursor: editorElement.
@@ -1331,26 +1360,26 @@ GtMethodCoder >> renameIn: editorElement [
 						ifTrue: [ ^ self renameClassIn: editorElement ] ] ]
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> renameInstanceVariableIn: editorElement [
 	(GtRenameInstanceVariableController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> renameLocalVariableIn: editorElement [
 	GtRenameAction pharoRenameLocalsOn: editorElement
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> renameMethod: editorElement [
 	(GtRenameMethodController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #'actions-refactorings' }
+{ #category : #'actions - refactorings' }
 GtMethodCoder >> renameProtocol: aString [
 	| change |
 	self category: aString asSymbol.
@@ -1362,13 +1391,15 @@ GtMethodCoder >> renameProtocol: aString [
 			change execute ]
 ]
 
-{ #category : #examples }
-GtMethodCoder >> runExample [
+{ #category : #'api - actions examples' }
+GtMethodCoder >> runExampleFrom: anEditorElement [
 	self isModified
-		ifTrue: [ self save
-				ifFalse: [ ^ self ] ].
+		ifTrue: [
+			self save ifFalse: [ ^ self ] ].
+
 	self example run.
-	self styleSourceText
+
+	self styleSourceTextInEditor: anEditorElement editor
 ]
 
 { #category : #actions }
@@ -1400,7 +1431,7 @@ GtMethodCoder >> runMondrianPaintFrom: anElement [
 				sourceElement: anElement)
 ]
 
-{ #category : #'private-refactorings' }
+{ #category : #'private - refactorings' }
 GtMethodCoder >> safeTemporaryName [
 	| name index found ast |
 	name := '_'.
@@ -1429,6 +1460,8 @@ GtMethodCoder >> save [
 
 { #category : #accessing }
 GtMethodCoder >> selector [
+	<return: #Symbol>
+
 	^ selector
 ]
 
@@ -1453,9 +1486,7 @@ GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 
 { #category : #elements }
 GtMethodCoder >> stylerView: anElement [
-	self ensureBuilt.
-	super stylerView: anElement.
-
+	super stylerView: anElement
 ]
 
 { #category : #accessing }
@@ -1484,15 +1515,15 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Play' translated
 		icon: BrGlamorousVectorIcons play
-		action: [ :button | self playSelectionOrMethodFrom: button ].
+		action: [ :anEditorElement | self playSelectionOrMethodFrom: anEditorElement ].
 	coderAddOns
 		addContextAction: 'Play and Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :button | self playAndInspectSelectionOrMethodFrom: button ].
+		action: [ :anEditorElement | self playAndInspectSelectionOrMethodFrom: anEditorElement ].
 	coderAddOns
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action: [ :button | self debugSelectionOrMethod ]
+		action: [ :anEditorElement | self debugSelectionOrMethodFrom: anEditorElement ]
 ]
 
 { #category : #updating }
