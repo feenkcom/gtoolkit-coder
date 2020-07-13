@@ -33,7 +33,8 @@ GtCoderExpandedContentElement >> coder: aCoder [
 		
 	aCoder announcer weak 
 		when: GtCoderStyleTextRequest send: #styleText to: self;
-		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged to: self.
+		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged to: self;
+		when: GtCoderParseError send: #reportParseError: to: self.
 	
 	"completion install"
 ]
@@ -94,6 +95,25 @@ GtCoderExpandedContentElement >> newEditorElement [
 GtCoderExpandedContentElement >> onSourceCodeChanged [
 	(self editorElement editor text = coder sourceText) ifTrue: [ ^ self ].
 	self editorElement editor text: coder sourceText.
+]
+
+{ #category : #'event handling' }
+GtCoderExpandedContentElement >> reportParseError: aGtCoderParseError [
+	self 
+		reportParseError: aGtCoderParseError errorMessage 
+		at: aGtCoderParseError location.
+]
+
+{ #category : #'event handling' }
+GtCoderExpandedContentElement >> reportParseError: aString at: anInteger [
+	| text position |
+	text := self editorElement editor text.
+	position := anInteger - 1 max: 1.
+	text size < position
+		ifTrue: [ ^ self ].
+	(text from: position to: position)
+		attributes: {(GtSourceCoderErrorAttribute for: aString , ' ->')}.
+	self editorElement editor moveCursorTo: position
 ]
 
 { #category : #'event handling' }

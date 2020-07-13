@@ -218,7 +218,7 @@ GtMethodCoder >> addInstanceVariable: aString [
 		class: self classOrMetaClass.
 	refactoring execute.
 	self resetASTCache.	"Need to reset AST for undeclared variables"
-	self styleText
+	self styleSourceText
 ]
 
 { #category : #'private - refactorings' }
@@ -226,7 +226,7 @@ GtMethodCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 	self removeRefactoringAttribute.
 	aRefactoring isNil
 		ifTrue: [ ^ self ].
-	(self sourceEditor text from: position to: position)
+	(self sourceText from: position to: position)
 		attributes: { (GtRefactoringChangesAttribute new refactoring: aRefactoring) }
 ]
 
@@ -314,7 +314,7 @@ GtMethodCoder >> buildSource [
 	isBuilt := true.
 	text := methodSource asRopedText.
 	text attributes: self defaultTextAttributes.
-	self sourceEditor text: text
+	self notifySourceChanged.
 ]
 
 { #category : #testing }
@@ -480,9 +480,9 @@ GtMethodCoder >> createRefactoringModel [
 		directlyDefinesMethod: self currentSelector) not
 		or: [ ((model classFor: self classOrMetaClass)
 				sourceCodeFor: self currentSelector)
-				~= self sourceEditor text asString ])
+				~= self sourceText asString ])
 		ifTrue: [ (model classFor: self classOrMetaClass)
-				compile: self sourceEditor text asString
+				compile: self sourceText asString
 				classified: self category ].
 	^ model
 ]
@@ -656,7 +656,7 @@ GtMethodCoder >> extractMethod: editorElement [
 ]
 
 { #category : #'actions - refactorings' }
-GtMethodCoder >> extractTemporaryVariable: aNode in: anElement [
+GtMethodCoder >> extractTemporaryVariable: aNode in: anEditorElement [
 	| refactoring model tempName |
 	model := self createRefactoringModel.
 	tempName := self safeTemporaryName.
@@ -670,8 +670,8 @@ GtMethodCoder >> extractTemporaryVariable: aNode in: anElement [
 		ifFalse: [ ^ self ].
 	(self findNodeAssigning: tempName)
 		ifNotNil: [ :node | 
-			self sourceEditor moveCursorTo: node stop.
-			self renameLocalVariableIn: anElement ]
+			anEditorElement editor moveCursorTo: node stop.
+			self renameLocalVariableIn: anEditorElement ]
 ]
 
 { #category : #'private - refactorings' }
@@ -717,9 +717,8 @@ GtMethodCoder >> format [
 		on: SyntaxErrorNotification
 		do: [ :ex | 
 			^ self
-				reportParseError: ex errorMessage
-				at: ex location
-				on: self sourceEditor ].
+				notifyParseError: ex errorMessage
+				at: ex location ].
 	self source: ast formattedCode
 ]
 
@@ -772,9 +771,8 @@ GtMethodCoder >> handleCompilerErrorsDuring: aBlock [
 		on: OCUndeclaredVariableWarning
 		do: [ :ex | 
 			self
-				reportParseError: 'Undeclared' translated
-				at: ex location
-				on: self sourceEditor.
+				notifyParseError: 'Undeclared' translated
+				at: ex location.
 			ex return: false ]
 ]
 
@@ -1317,7 +1315,7 @@ GtMethodCoder >> removeParameter: aNode [
 
 { #category : #'private - refactorings' }
 GtMethodCoder >> removeRefactoringAttribute [
-	self sourceEditor text
+	self sourceText
 		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
 ]
 

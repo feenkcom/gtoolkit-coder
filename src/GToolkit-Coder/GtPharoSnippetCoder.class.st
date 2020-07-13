@@ -136,7 +136,7 @@ GtPharoSnippetCoder >> profileWithMessageTallyFrom: anEditorElement [
 		ifFalse: [ ^ self ].
 
 	aValue := self
-		evaluateSource: 'MessageTally on: [ ', self sourceEditor text asString, ']'
+		evaluateSource: 'MessageTally on: [ ', self sourceText asString, ']'
 		in: anEditorElement.
 	
 	anEditorElement phlow spawnObject: aValue

@@ -274,8 +274,8 @@ GtMethodContextCoder >> updateSelection [
 	interval := self session pcRangeForContext: context.
 	interval isEmpty
 		ifTrue: [ ^ self ].
-	self sourceEditor text clearAttributes: [ :each | each class = BlTextUnderlineAttribute ].
-	(self sourceEditor text from: interval first to: interval last)
+	self sourceText clearAttributes: [ :each | each class = BlTextUnderlineAttribute ].
+	(self sourceText from: interval first to: interval last)
 		attributes:
 			{(BlTextUnderlineAttribute new
 				paint: BrGlamorousColors errorBackgroundColor;

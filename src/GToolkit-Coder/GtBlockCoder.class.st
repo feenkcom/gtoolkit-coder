@@ -157,10 +157,3 @@ GtBlockCoder >> newSourceText [
 
 	^ self blockSource asRopedText
 ]
-
-{ #category : #accessing }
-GtBlockCoder >> source: aString [
-	self sourceEditor text: aString asRopedText.
-	self sourceEditor text attributes: self defaultTextAttributes.
-	self sourceChanged
-]

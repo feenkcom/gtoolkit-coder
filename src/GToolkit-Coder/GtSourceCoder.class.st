@@ -186,6 +186,7 @@ GtSourceCoder >> completionStrategy: aGtCompletionStrategy [
 
 { #category : #private }
 GtSourceCoder >> cursorPositionDo: aBlock [
+	self halt.
 	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
 ]
 
@@ -431,13 +432,6 @@ GtSourceCoder >> gtViewStylersFor: aView [
 		ifNotNil: [ :currentAddOns | currentAddOns gtViewStylersFor: aView ]
 ]
 
-{ #category : #testing }
-GtSourceCoder >> hasSelection [
-	<return: #Boolean>
-
-	^ self sourceEditor hasSelection
-]
-
 { #category : #'initialize-release' }
 GtSourceCoder >> initialize [
 	super initialize.
@@ -529,6 +523,14 @@ GtSourceCoder >> nodeAtCursorIn: aBrTextEditor [
 				on: Error
 				do: [ :ex | ex return ] ].
 	^ nil
+]
+
+{ #category : #'private - notifying' }
+GtSourceCoder >> notifyParseError: aString at: anInteger [
+	self announce: (GtCoderParseError new
+		coder: self;
+		errorMessage: aString;
+		location: anInteger)
 ]
 
 { #category : #'private - notifying' }
@@ -685,20 +687,6 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	^ nil
 ]
 
-{ #category : #private }
-GtSourceCoder >> reportParseError: aString at: anInteger on: textEditor [
-	| text position |
-	textEditor isNil
-		ifTrue: [ ^ self ].
-	text := textEditor text.
-	position := anInteger - 1 max: 1.
-	text size < position
-		ifTrue: [ ^ self ].
-	(text from: position to: position)
-		attributes: {(GtSourceCoderErrorAttribute for: aString , ' ->')}.
-	textEditor moveCursorTo: position
-]
-
 { #category : #'api - performing actions' }
 GtSourceCoder >> requester [
 	self halt.
@@ -712,13 +700,6 @@ GtSourceCoder >> requesterForEditor: aTextEditor [
 { #category : #'api - performing actions' }
 GtSourceCoder >> resetASTCache [
 	astCache := nil -> nil
-]
-
-{ #category : #private }
-GtSourceCoder >> selectedSource [
-	<return: #BlText>
-
-	^ self sourceEditor selectedText characters asString
 ]
 
 { #category : #'private - text' }
@@ -969,7 +950,7 @@ GtSourceCoder >> validateSyntax [
 	[ GtPharoParser parse: self source startingAt: self parserStartingState ]
 		on: SmaCCParserError
 		do: [ :ex | 
-			self reportParseError: ex messageText at: ex tag position on: self sourceEditor.
+			self notifyParseError: ex messageText at: ex tag position.
 			^ false ].
 	^ true
 ]
