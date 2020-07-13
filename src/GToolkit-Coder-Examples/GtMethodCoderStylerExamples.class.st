@@ -368,40 +368,38 @@ GtMethodCoderStylerExamples >> viewsExplanationWithLinksOnCoderAndInspector [
 		addChild: verticalContainer.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtMethodCoderStylerExamples >> viewsExplanationWithLinksText [
 	| text |
 	
-	text := 'A custom view is defined by a method in the class of the object we want to view. You can think of it as a print string method only that instead of returning a string, it returns an element.
-	
-As we can have many such representations for every single object, we have to identify the method. To this end, use the ' asRopedText,
+	text := 'A custom view is defined by a method in the class of the object we want to view. You can think of it as a print string method only that instead of returning a string, it returns a visual element.
+As we can have many such representations for every single object, we have to identify the method that defines a view. This is achieved through the ' asRopedText,
 ('gtView' asRopedText glamorousExplanationFor: #gtView),
 ' pragma.
-Then, make it so that it gets an empty ' asRopedText,
+The method takes an empty ' asRopedText,
 ('view' asRopedText glamorousExplanationFor: #aView),
 ' parameter that you can customize.
-In our case the view has a ' asRopedText,
-('title' asRopedText glamorousExplanationFor: #title:),
-'. The view consists of a ' asRopedText,
+In our case the view consists of a ' asRopedText,
 ('columned list' asRopedText glamorousExplanationFor: #columnedList),
 ' with ' asRopedText,
 ('three columns' asRopedText glamorousExplanationFor: #columns),
+' and a ' asRopedText,
+('title' asRopedText glamorousExplanationFor: #title:),
 '
-
 The columned list has as many rows as the collection returned by the ' asRopedText,
 ('items: block' asRopedText glamorousExplanationFor: #items:),
 '. In this case, this means it shows all the ' asRopedText,
 ('contacts list' asRopedText glamorousExplanationFor: #allContacts),
-
 'For each ' asRopedText, 
 ('contact' asRopedText glamorousExplanationFor: #aContact),
-' we show the ' asRopedText,
+' it shows the ' asRopedText,
 ('avatar' asRopedText glamorousExplanationFor: #avatar),
 ' in the first column, the ' asRopedText,
 ('full name' asRopedText glamorousExplanationFor: #fullName),
 ' in the second column, and the ' asRopedText,
 ('telephone' asRopedText glamorousExplanationFor: #telephone),
-' in the third column.' asRopedText.
+' in the third column.
+That''s it. That''s the whole specification.' asRopedText.
 	^ text
 		glamorousRegularFont;
 		fontSize: 20;
