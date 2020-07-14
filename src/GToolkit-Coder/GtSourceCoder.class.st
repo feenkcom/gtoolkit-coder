@@ -23,15 +23,14 @@ Class {
 	#name : #GtSourceCoder,
 	#superclass : #GtCoderModel,
 	#instVars : [
-		'sourceText',
-		'collapsedText',
+		'sourceCode',
 		'astCache',
 		'completionStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #'add ons' }
+{ #category : #'api - addons' }
 GtSourceCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
 	<gtCoderContextMenuAddOns: 10>
 	coderAddOns
@@ -44,7 +43,7 @@ GtSourceCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
 { #category : #updating }
 GtSourceCoder >> addOnChanged: aSymbol [
 	aSymbol = #stylers
-		ifTrue: [ self stylersUpdated ].
+		ifTrue: [ self notifyStylersUpdated ].
 	super addOnChanged: aSymbol
 ]
 
@@ -66,10 +65,7 @@ GtSourceCoder >> browseImplementorsFrom: anEditorElement [
 	| symbol |
 
 	symbol := (self selectedSourceInEditor: anEditorElement editor)
-		ifEmpty: [
-			self expanded
-				ifTrue: [ self selectorAtCursorInEditor: anEditorElement editor ]
-				ifFalse: [ self selectorForCollapsed ] ]
+		ifEmpty: [ self selectorAtCursorInEditor: anEditorElement editor ]
 		ifNotEmpty: [ :currentSelection | self extractSelectorFromString: currentSelection ].
 
 	symbol isNil
@@ -97,6 +93,9 @@ GtSourceCoder >> browseReferencesFrom: anEditorElement [
 { #category : #'event handling' }
 GtSourceCoder >> buildCollapsedText [
 	| firstLine |
+	
+	self halt.
+	
 	firstLine := (self sourceText asString lines
 		detect: [ :each | each notEmpty ]
 		ifNone: [ '' ]) asRopedText.
@@ -108,11 +107,6 @@ GtSourceCoder >> buildCollapsedText [
 { #category : #private }
 GtSourceCoder >> classOrMetaClass [
 	^ self object class
-]
-
-{ #category : #'private - text' }
-GtSourceCoder >> clearPreviousEvaluations [
-	self clearPreviousEvaluationsInText: sourceText
 ]
 
 { #category : #'private - text' }
@@ -135,7 +129,7 @@ GtSourceCoder >> clearPreviousEvaluationsInText: aBlText [
 
 { #category : #'private - text' }
 GtSourceCoder >> clearSyntaxErrors [
-	self clearSyntaxErrorsInText: sourceText
+	self sourceTextDo: [ :aSourceText | self clearSyntaxErrorsInText: aSourceText ]
 ]
 
 { #category : #'private - text' }
@@ -145,14 +139,9 @@ GtSourceCoder >> clearSyntaxErrorsInText: aBlText [
 	aBlText clearAttributes: [ :eachAttribute | eachAttribute isKindOf: GtSourceCoderErrorAttribute ]
 ]
 
-{ #category : #accessing }
-GtSourceCoder >> collapsedSource [
-	^ self collapsedText asString
-]
-
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoder >> collapsedText [
-	^ collapsedText ifNil: [ collapsedText := self buildCollapsedText ]
+	^ sourceCode collapsedText
 ]
 
 { #category : #private }
@@ -182,6 +171,14 @@ GtSourceCoder >> completionStrategy [
 { #category : #'api - accessing' }
 GtSourceCoder >> completionStrategy: aGtCompletionStrategy [
 	completionStrategy := aGtCompletionStrategy
+]
+
+{ #category : #accessing }
+GtSourceCoder >> currentSourceString [
+	"Return a String representation of the current source text"
+	<return: #String>
+
+	^ sourceCode sourceString
 ]
 
 { #category : #private }
@@ -224,7 +221,7 @@ GtSourceCoder >> debugSelectionFrom: anEditorElement [
 GtSourceCoder >> debugSource: aString from: anEditorElement [
 	| currentReceiver currentContext method |
 
-	self clearPreviousEvaluations.
+	self clearPreviousEvaluationsInText: anEditorElement editor text.
 
 	currentReceiver := self object.
 	currentContext := self context.
@@ -317,7 +314,8 @@ GtSourceCoder >> doItSelectionOrAll: anEditorElement [
 GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean in: anEditorElement [
 	| aResult wasErrorAlreadySignaled |
 	
-	self clearPreviousEvaluations.
+	self clearPreviousEvaluationsInText: anEditorElement editor text.
+
 	wasErrorAlreadySignaled := true. "Follow the normal way of opening the debugger for now."
 	aResult := aBlock on: Error do: [ :anError |
 		self resetASTCache.
@@ -374,9 +372,9 @@ GtSourceCoder >> evaluationRequesterForEditor: anEditorElement [
 { #category : #private }
 GtSourceCoder >> expandedUpdated [
 	super expandedUpdated.
-	self styleSourceText.
+	self requestStyleSourceText.
 	self expanded
-		ifFalse: [ self updateCollapsedSource ]
+		ifFalse: [ self requestUpdateCollapsedText ]
 ]
 
 { #category : #private }
@@ -471,11 +469,6 @@ GtSourceCoder >> initializeShortcuts [
 			options: self)
 ]
 
-{ #category : #testing }
-GtSourceCoder >> isBuilt [
-	^ true
-]
-
 { #category : #private }
 GtSourceCoder >> newCompletionStrategy [
 	^ GtPharoCompletionStrategy new
@@ -538,6 +531,15 @@ GtSourceCoder >> notifySourceChanged [
 	"Notify the text editor that it should update the text (for example due to refactoring changes)"
 	
 	self announce: (GtCoderSourceCodeChanged new coder: self)
+]
+
+{ #category : #'private - notifying' }
+GtSourceCoder >> notifyStylersUpdated [
+	"Is sent when AddOn stylers changed. It means that the text editor should restyle the text"
+
+	self announce: (GtCoderStylerChanged new
+		coder: self;
+		stylers: addOns stylers copy)
 ]
 
 { #category : #accessing }
@@ -687,9 +689,26 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	^ nil
 ]
 
+{ #category : #'api - text' }
+GtSourceCoder >> requestStyleSourceText [
+	"Request the text editor to restyle the text (for example due to environmental changes)"
+
+	self announce: (GtCoderStyleTextRequest new coder: self)
+]
+
+{ #category : #'api - text' }
+GtSourceCoder >> requestUpdateCollapsedText [
+	"Request to update the collapsed text, for example due to changes in the current source text.
+	It is not guaranteed that the collapsed text actually changes as for example in the method coder
+	opened on a compiled method"
+
+	sourceCode resetCollapsedText.
+	self announce: (GtCoderCollapsedLabelChanged new coder: self)
+]
+
 { #category : #'api - performing actions' }
 GtSourceCoder >> requester [
-	self halt.
+	self halt
 ]
 
 { #category : #'api - performing actions' }
@@ -739,16 +758,13 @@ GtSourceCoder >> selectorAtCursorInEditor: aBrTextEditor [
 	^ self symbolFor: (self nodeAtCursorIn: aBrTextEditor)
 ]
 
-{ #category : #private }
-GtSourceCoder >> selectorForCollapsed [
-	^ nil
-]
-
 { #category : #accessing }
 GtSourceCoder >> source [
 	<return: #String>
 
-	^ sourceText asString
+	self
+		deprecated: 'Use #currentSourceString instead'
+		transformWith: '`@receiver source' -> '`@receiver currentSourceString'.
 ]
 
 { #category : #accessing }
@@ -756,10 +772,11 @@ GtSourceCoder >> source: aString [
 	"Change the source text of the current coder to a given string"
 	| aNewSourceText |
 
+	"self halt."
+
 	aNewSourceText := aString asRopedText.
 	aNewSourceText attributes: self defaultTextAttributes.
 
-	sourceText := aNewSourceText.
 	self sourceChanged.
 	self notifySourceChanged.
 ]
@@ -771,9 +788,19 @@ GtSourceCoder >> sourceAst [
 
 { #category : #'event handling' }
 GtSourceCoder >> sourceChanged [
+
+	self flag: #TODO. "is there a better way to clear syntax errors than remove attributes affter *every* keystroke?"
 	self clearSyntaxErrors.
-	self updateCollapsedSource.
-	self updateAddOns
+
+	self requestUpdateCollapsedText.
+	self requestAddOnsUpdate
+]
+
+{ #category : #accessing }
+GtSourceCoder >> sourceCode [
+	<return: #GtCoderSourceCode>
+
+	^ sourceCode
 ]
 
 { #category : #private }
@@ -798,11 +825,20 @@ GtSourceCoder >> sourceIntervalInEditor: aBrTextEditor [
 	^ 1 to: aBrTextEditor text size
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoder >> sourceText [
+	"Return a source text for this coder. The computation of the source text may be expensive, use me with caution.
+	If the operation you would like to perform on the source text is optional consider using #sourceTextDo:"
 	<return: #BlText>
 
-	^ sourceText
+	^ sourceCode sourceText
+]
+
+{ #category : #'api - accessing' }
+GtSourceCoder >> sourceTextDo: aBlock [
+	"Evaluate a given block with my source code text if present"
+
+	^ sourceCode sourceTextDo: aBlock
 ]
 
 { #category : #'private - actions' }
@@ -837,13 +873,6 @@ GtSourceCoder >> styleResult: value showPrintString: aBoolean in: anEditorElemen
 ]
 
 { #category : #'private - text' }
-GtSourceCoder >> styleSourceText [
-	"Notify the text editor that it should restyle the text (for example due to environmental changes)"
-	
-	self announce: (GtCoderStyleTextRequest new coder: self)
-]
-
-{ #category : #'private - text' }
 GtSourceCoder >> styleSourceTextFrom: anEditorElement [
 	"Immediately request to restyle the source text in a given editor element"
 
@@ -865,18 +894,9 @@ GtSourceCoder >> stylerView: anElement [
 	self styleText."
 ]
 
-{ #category : #accessing }
+{ #category : #'api - addons' }
 GtSourceCoder >> stylers [
 	^ addOns stylers
-]
-
-{ #category : #updating }
-GtSourceCoder >> stylersUpdated [
-	| stylers |
-	stylers := addOns stylers copy.
-	self flag: #TODO.
-	"self sourceEditor styler stylers: stylers.
-	self styleText"
 ]
 
 { #category : #private }
@@ -895,21 +915,7 @@ GtSourceCoder >> symbolFor: aNode [
 	^ nil
 ]
 
-{ #category : #updating }
-GtSourceCoder >> updateAddOns [
-	addOnMonitor
-		critical: [ 
-			BlUseAsyncFeatures 
-				ifEnabledDo: [ 
-					self terminateAddOnsCommand.
-					addOnCommand := self updateAddOnsCommand.
-					addOnCommand name: 'AddOns: ' , self identityHash printString.
-					BlTktWorkerProvider highUICPUBoundPool schedule: addOnCommand ]
-				otherwise: [ 
-					self updateAddOnsCommand execute ] ]
-]
-
-{ #category : #updating }
+{ #category : #'api - addons' }
 GtSourceCoder >> updateAddOnsCommand [
 	^ [ | updatedAddOns pragmas ast |
 	ast := self rbAST.
@@ -921,17 +927,28 @@ GtSourceCoder >> updateAddOnsCommand [
 		reverseDo:
 			[ :each | self perform: each methodSelector with: ast with: updatedAddOns ].
 	addOns := updatedAddOns.
+	addOns markAsUpdated.
 	updatedAddOns changesDo: [ :each | self addOnChanged: each ].
 	updatedAddOns clearChanges ] asBlTktTerminableCommand
 ]
 
-{ #category : #'event handling' }
-GtSourceCoder >> updateCollapsedSource [
-	collapsedText := nil.
-	self announce: (GtCoderCollapsedLabelChanged new coder: self)
+{ #category : #'api - addons' }
+GtSourceCoder >> updateAddOnsFrom: anElement [
+	"Start the update of the addons in a context of a given element"
+
+	addOnMonitor
+		critical: [			 
+			BlUseAsyncFeatures 
+				ifEnabledDo: [ 
+					self terminateAddOnsCommand.
+					addOnCommand := self updateAddOnsCommand.
+					addOnCommand name: 'AddOns: ' , self identityHash printString.
+					BlTktWorkerProvider highUICPUBoundPool schedule: addOnCommand ]
+				otherwise: [ 
+					self updateAddOnsCommand execute ] ]
 ]
 
-{ #category : #'api - updating actions' }
+{ #category : #'api - addons' }
 GtSourceCoder >> updateContextMenuAddOnsFrom: anEditorElement [
 	| updatedAddOns pragmas |
 	pragmas := self

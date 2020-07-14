@@ -41,10 +41,13 @@ GtCoderActionsElement >> coder: aCoder [
 
 	coder := aCoder.
 	coder announcer weak
+		when: GtCoderAddOnsUpdateRequest send: #updateAddOns: to: self;
 		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
-		when: GtCoderContextActionsChanged
-			send: #updateContextToolbar
-			to: self.
+		when: GtCoderContextActionsChanged send: #updateContextToolbar to: self.
+	
+	coder shouldAddOnsBeUpdated
+		ifTrue: [ coder updateAddOnsFrom: self ].	
+
 	self addMainToolbarActions.
 	self addContextToolbarActions
 ]
@@ -174,6 +177,11 @@ GtCoderActionsElement >> removeContextToolbarActions [
 { #category : #private }
 GtCoderActionsElement >> removeMainToolbarActions [
 	mainToolbar numberOfItems timesRepeat: [ mainToolbar removeItemAt: 1 ]
+]
+
+{ #category : #private }
+GtCoderActionsElement >> updateAddOns: anAnnouncement [
+	anAnnouncement coder updateAddOnsFrom: self
 ]
 
 { #category : #private }

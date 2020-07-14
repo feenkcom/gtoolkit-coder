@@ -18,20 +18,21 @@ GtCoderExpandedContentElement >> coder: aCoder [
 
 	coder := aCoder.
 
-	breadcrumb removeAllItems.
-	breadcrumb addItems: (self newBreadcrumbItemElementsFor: aCoder).
+	breadcrumb ifNotNil: [ :aBreadcrumb | aBreadcrumb coder: aCoder ].
 	
 	actions coder: aCoder.
 	
 	interactions := aCoder shortcuts copy.
 	"completion := (GtCompletionController on: editor strategy: aCoder completionStrategy)."
 
-	self editorElement editor text: aCoder sourceText.
+	self editorElement text: aCoder sourceText.
 	self editorElement editor addEditorShortcuts: interactions.
+
 	(aCoder newSourceStylerFrom: self editorElement)
-		ifNotNil: [ :styler | self editorElement editor styler: styler ].
+		ifNotNil: [ :styler | self editorElement styler: styler ].
 		
-	aCoder announcer weak 
+	aCoder announcer weak
+		when: GtCoderStylerChanged send: #stylersUpdated: to: self;
 		when: GtCoderStyleTextRequest send: #styleText to: self;
 		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged to: self;
 		when: GtCoderParseError send: #reportParseError: to: self.
@@ -82,19 +83,17 @@ GtCoderExpandedContentElement >> newActionsElement [
 
 { #category : #'instance creation' }
 GtCoderExpandedContentElement >> newEditorElement [
-	^ BrEditorElement new
-		look: (BrGlamorousWithContextMenuLook content: [ self createContextMenuContent ]);
+	^ BrEditor new
+		look: BrGlamorousCodeEditorLook + (BrGlamorousWithContextMenuLook content: [ self createContextMenuContent ]);
 		padding: (BlInsets bottom: 2);
-		editor: BrTextEditor new;
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ]
+		hMatchParent;
+		vFitContent
 ]
 
 { #category : #'event handling' }
 GtCoderExpandedContentElement >> onSourceCodeChanged [
-	(self editorElement editor text = coder sourceText) ifTrue: [ ^ self ].
-	self editorElement editor text: coder sourceText.
+	(self editorElement text = coder sourceText) ifTrue: [ ^ self ].
+	self editorElement text: coder sourceText.
 ]
 
 { #category : #'event handling' }
@@ -118,10 +117,18 @@ GtCoderExpandedContentElement >> reportParseError: aString at: anInteger [
 
 { #category : #'event handling' }
 GtCoderExpandedContentElement >> sourceChanged [
+	"Is sent when the current source code changes due to user input in the editor"
+
 	coder ifNotNil: [ :aCoder | aCoder sourceChanged ]
 ]
 
 { #category : #'event handling' }
 GtCoderExpandedContentElement >> styleText [
 	editorElement editor styleText
+]
+
+{ #category : #'event handling' }
+GtCoderExpandedContentElement >> stylersUpdated: anAnnouncement [
+	(anAnnouncement coder newSourceStylerFrom: self editorElement)
+		ifNotNil: [ :styler | self editorElement styler: styler ]
 ]

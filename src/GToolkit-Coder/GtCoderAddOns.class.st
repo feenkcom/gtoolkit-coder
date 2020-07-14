@@ -2,12 +2,13 @@ Class {
 	#name : #GtCoderAddOns,
 	#superclass : #Object,
 	#instVars : [
+		'modified',
 		'contextActions',
 		'mainActions',
 		'contextMenuActions',
-		'modified',
 		'shortcuts',
-		'collapsedShortcuts'
+		'collapsedShortcuts',
+		'updateRequested'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -181,12 +182,18 @@ GtCoderAddOns >> initialize [
 	contextMenuActions := OrderedCollection new.
 	shortcuts := OrderedCollection new.
 	collapsedShortcuts := OrderedCollection new.
-	modified := Set new
+	modified := Set new.
+	updateRequested := true
 ]
 
 { #category : #accessing }
 GtCoderAddOns >> mainActions [
 	^ mainActions
+]
+
+{ #category : #changes }
+GtCoderAddOns >> markAsUpdated [
+	updateRequested := false
 ]
 
 { #category : #copying }
@@ -273,9 +280,24 @@ GtCoderAddOns >> removeShortcutsMatching: aBlock [
 		ifTrue: [ modified add: #shortcuts ]
 ]
 
+{ #category : #changes }
+GtCoderAddOns >> requestUpdate [
+	"Mark coder addons as potentially needed to be updated"
+	
+	updateRequested := true
+]
+
 { #category : #shortcuts }
 GtCoderAddOns >> shortcuts [
 	^ shortcuts
+]
+
+{ #category : #testing }
+GtCoderAddOns >> shouldBeUpdated [
+	"Return true if addons should be updated, false otherwise"
+	<return: #Boolean>
+
+	^ updateRequested
 ]
 
 { #category : #private }

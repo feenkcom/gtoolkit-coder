@@ -13,9 +13,7 @@ Class {
 	#instVars : [
 		'class',
 		'selector',
-		'methodSource',
-		'subCoders',
-		'isBuilt'
+		'subCoders'
 	],
 	#classVars : [
 		'NodeHighlight'
@@ -32,7 +30,9 @@ GtMethodCoder class >> forClass: aBehavior source: aString [
 
 { #category : #'instance creation' }
 GtMethodCoder class >> forExample: anExample [
-	^ self new example: anExample 
+	^ self new
+		forExample: anExample;
+		yourself
 ]
 
 { #category : #'instance creation' }
@@ -218,7 +218,7 @@ GtMethodCoder >> addInstanceVariable: aString [
 		class: self classOrMetaClass.
 	refactoring execute.
 	self resetASTCache.	"Need to reset AST for undeclared variables"
-	self styleSourceText
+	self requestStyleSourceText
 ]
 
 { #category : #'private - refactorings' }
@@ -299,7 +299,7 @@ GtMethodCoder >> breadcrumbNamedActions [
 					aButton phlow spawnTool: aClassTool ] ]
 ]
 
-{ #category : #'event handling' }
+{ #category : #'private - text' }
 GtMethodCoder >> buildCollapsedText [
 	| patternText |
 	patternText := (self currentSelector ifNil: [ '' ]) asRopedText.
@@ -311,10 +311,13 @@ GtMethodCoder >> buildCollapsedText [
 { #category : #private }
 GtMethodCoder >> buildSource [
 	| text |
-	isBuilt := true.
+	
+	self halt.
+	
+	"isBuilt := true.
 	text := methodSource asRopedText.
 	text attributes: self defaultTextAttributes.
-	self notifySourceChanged.
+	self notifySourceChanged."
 ]
 
 { #category : #testing }
@@ -403,6 +406,9 @@ GtMethodCoder >> collapsedStyler [
 { #category : #private }
 GtMethodCoder >> compile [
 	| change |
+	
+	self halt.
+	
 	subCoders notNil
 		ifTrue: [ subCoders
 				do: [ :each | 
@@ -428,7 +434,7 @@ GtMethodCoder >> compile [
 			self selector: sel.
 			self compiledMethod
 				ifNotNil: [ :method | 
-					methodSource := method sourceCode.
+					"methodSource := method sourceCode."
 					^ true ] ].
 	^ false
 ]
@@ -537,13 +543,6 @@ GtMethodCoder >> discardChanges [
 	self buildSource.
 ]
 
-{ #category : #private }
-GtMethodCoder >> ensureBuilt [
-	isBuilt
-		ifTrue: [ ^ self ].
-	self buildSource
-]
-
 { #category : #'private - actions' }
 GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean in: anEditorElement [
 	^ self 
@@ -566,25 +565,25 @@ GtMethodCoder >> example [
 
 { #category : #'api - actions examples' }
 GtMethodCoder >> example: anExampleWithResult [
-	| method |
+	| aCompiledMethod |
+	
 	self
 		attributeNamed: #example
-		ifPresent:
-			[ :anOldExampleWithResult | anOldExampleWithResult announcer unsubscribe: self ]
+		ifPresent: [ :anOldExampleWithResult | anOldExampleWithResult announcer unsubscribe: self ]
 		ifAbsent: [ "do nothing" ].
+
 	self
 		attributeNamed: #example
 		put: anExampleWithResult asExampleWithResult.
-	method := anExampleWithResult method.
-	(method selector = self selector
-		and: [ method methodClass = self classOrMetaClass
-				and: [ method sourceCode = methodSource ] ])
-		ifFalse: [ self forMethod: method ].
+
+	aCompiledMethod := anExampleWithResult method.
+	(aCompiledMethod selector = self selector
+		and: [ aCompiledMethod methodClass = self classOrMetaClass ])
+		ifFalse: [ self error: 'Can not assign example of the wrong method' ].
+
 	self example announcer
 		when: GtExampleExecuted send: #handleExampleExecuted: to: self;
-		when: GtExampleArgumentsChanged
-			send: #handleExampleArgumentsChanged:
-			to: self
+		when: GtExampleArgumentsChanged send: #handleExampleArgumentsChanged: to: self
 ]
 
 { #category : #'add ons' }
@@ -641,11 +640,12 @@ GtMethodCoder >> explanationLink [
 
 { #category : #setter }
 GtMethodCoder >> explanationLink: anExplanation [
-	self explanationLink == anExplanation ifTrue: [ ^ self ].
+	self halt.
+	"self explanationLink == anExplanation ifTrue: [ ^ self ].
 	self attributeNamed: #explanationLink put: anExplanation.
 	isBuilt ifFalse: [ ^ self ].
 	self updateAddOns.
-	self styleText
+	self styleText"
 ]
 
 { #category : #'actions - refactorings' }
@@ -695,19 +695,37 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 
 { #category : #'initialize-release' }
 GtMethodCoder >> forClass: aBehavior source: aString [
-	self classOrMetaClass: aBehavior.
+	self halt.
+	
+	"self classOrMetaClass: aBehavior.
 	methodSource := aString.
+	
+	sourceCode := GtCoderCompiledMethodSourceCode new
+		classOrMetaClass: aBehavior;
+		methodSource: aString.
+	
 	isBuilt
-		ifTrue: [ self buildSource ]
+		ifTrue: [ self buildSource ].
+		
+	"
+]
+
+{ #category : #'initialize-release' }
+GtMethodCoder >> forExample: anExampleWithResult [
+	self forMethod: anExampleWithResult method.
+	self example: anExampleWithResult
 ]
 
 { #category : #'initialize-release' }
 GtMethodCoder >> forMethod: aCompiledMethod [
 	self classOrMetaClass: aCompiledMethod methodClass.
 	self selector: aCompiledMethod selector.
-	self source: aCompiledMethod sourceCode.
+	
+	sourceCode := GtCoderCompiledMethodSourceCode new
+		compiledMethod: aCompiledMethod.
 
-	methodSource := aCompiledMethod sourceCode
+	self sourceChanged.
+	self notifySourceChanged.
 ]
 
 { #category : #updating }
@@ -724,7 +742,7 @@ GtMethodCoder >> format [
 
 { #category : #ui }
 GtMethodCoder >> gtDiffViewFor: aView [
-	<gtView>
+	"<gtView>
 	(methodSource = self newMethodSource) ifTrue: [ ^ aView ].
 	^ aView textEditor
 		title: 'Diff' translated;
@@ -733,7 +751,7 @@ GtMethodCoder >> gtDiffViewFor: aView [
 			GtEpiceaDiffStencil new
 				from: methodSource;
 				to: self newMethodSource;
-				create ]
+				create ]"
 ]
 
 { #category : #ui }
@@ -778,12 +796,12 @@ GtMethodCoder >> handleCompilerErrorsDuring: aBlock [
 
 { #category : #'examples - event handling' }
 GtMethodCoder >> handleExampleArgumentsChanged: aGtExampleArgumentsChanged [
-	self updateAddOns
+	self requestAddOnsUpdate
 ]
 
 { #category : #'examples - event handling' }
 GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
-	self styleSourceText
+	self requestStyleSourceText
 ]
 
 { #category : #'private - refactorings' }
@@ -799,16 +817,25 @@ GtMethodCoder >> highlightNode: aNode [
 
 { #category : #accessing }
 GtMethodCoder >> highlighter [
+	<return: #GtSourceReferenceHighlighter>
+
 	^ self attributeNamed: #highlighter
 ]
 
 { #category : #accessing }
-GtMethodCoder >> highlighter: aHighlighter [
-	self highlighter == aHighlighter ifTrue: [ ^ self ].
-	self attributeNamed: #highlighter put: aHighlighter.
-	isBuilt ifFalse: [ ^ self ].
-	self updateAddOns.
-	self styleText
+GtMethodCoder >> highlighter: aGtSourceReferenceHighlighter [
+	"Set a source reference highlighter thhat should be used tp highlight or mark some parts
+	of the source code. If a given highlighter is nil, it means that no highlighter should be used"
+
+	self highlighter == aGtSourceReferenceHighlighter
+		ifTrue: [ ^ self ].
+
+	self
+		attributeNamed: #highlighter
+		put: aGtSourceReferenceHighlighter.
+
+	self requestAddOnsUpdate.
+	self requestStyleSourceText
 ]
 
 { #category : #'add ons' }
@@ -821,8 +848,6 @@ GtMethodCoder >> highlighterFor: anAST into: coderAddOns [
 
 { #category : #'initialize-release' }
 GtMethodCoder >> initialize [
-	isBuilt := false.
-	methodSource := ''.
 	super initialize
 ]
 
@@ -944,18 +969,15 @@ GtMethodCoder >> isAccessorMethodFor: aNode [
 ]
 
 { #category : #testing }
-GtMethodCoder >> isBuilt [
-	^ isBuilt
-]
-
-{ #category : #testing }
 GtMethodCoder >> isForMethod: aCompiledMethod [
 	^ self classOrMetaClass = aCompiledMethod methodClass and: [ self selector = aCompiledMethod selector ]
 ]
 
 { #category : #testing }
 GtMethodCoder >> isModified [
-	^ isBuilt and: [ methodSource ~= self newMethodSource ]
+	<return: #Boolean>
+
+	^ sourceCode isModified
 ]
 
 { #category : #'add ons' }
@@ -976,7 +998,8 @@ GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
 
 { #category : #testing }
 GtMethodCoder >> isNewMethod [
-	^ methodSource isEmpty
+	^ self halt
+	"^ methodSource isEmpty"
 ]
 
 { #category : #testing }
@@ -1202,9 +1225,10 @@ GtMethodCoder >> playSelectionOrMethodFrom: anEditorElement [
 
 { #category : #elements }
 GtMethodCoder >> previewElement [
-	^ (self class forClass: class source: methodSource)
+	self halt.
+	"^ (self class forClass: class source: methodSource)
 		expanded: true;
-		asElement
+		asElement"
 ]
 
 { #category : #printing }
@@ -1469,11 +1493,6 @@ GtMethodCoder >> selector [
 { #category : #accessing }
 GtMethodCoder >> selector: aSymbol [
 	selector := aSymbol
-]
-
-{ #category : #private }
-GtMethodCoder >> selectorForCollapsed [
-	^ self currentSelector
 ]
 
 { #category : #private }

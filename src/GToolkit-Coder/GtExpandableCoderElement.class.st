@@ -122,18 +122,6 @@ GtExpandableCoderElement >> newExpandedElement [
 		yourself
 ]
 
-{ #category : #events }
-GtExpandableCoderElement >> onAddedToSceneGraph [
-	removed := false.
-	^ super onAddedToSceneGraph
-]
-
-{ #category : #events }
-GtExpandableCoderElement >> onRemovedFromSceneGraph [
-	removed := true.
-	^ super onRemovedFromSceneGraph
-]
-
 { #category : #'focus requesting' }
 GtExpandableCoderElement >> requestFocus [
 	^ self
@@ -147,13 +135,9 @@ GtExpandableCoderElement >> requestFocus [
 
 { #category : #events }
 GtExpandableCoderElement >> updateExpanded [
-	removed
-		ifTrue: [ ^self ].
-	coder expanded
-		ifTrue: [ self isExpanded
-				ifFalse: [ self expand ] ]
-		ifFalse: [ self isExpanded
-				ifTrue: [ self collapse ] ]
+	"Is sent when the coder model was requested to expand/collapse"
+
+	self expanded: coder expanded
 ]
 
 { #category : #events }

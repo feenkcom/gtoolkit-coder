@@ -12,7 +12,7 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #elements }
+{ #category : #'api - addons' }
 GtCoderModel >> addCollapsedShortcutsTo: anElement [
 	addOns collapsedShortcuts
 		do: [ :each | 
@@ -28,8 +28,10 @@ GtCoderModel >> addOnChanged: aSymbol [
 		ifTrue: [ self announce: (GtCoderContextActionsChanged new coder: self) ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - addons' }
 GtCoderModel >> addOns [
+	<return: #GtCoderAddOns>
+
 	^ addOns
 ]
 
@@ -38,7 +40,7 @@ GtCoderModel >> addOnsClass [
 	^ GtCoderAddOns
 ]
 
-{ #category : #elements }
+{ #category : #'api - addons' }
 GtCoderModel >> addShortcutsTo: anElement [
 	addOns shortcuts
 		do: [ :each | anElement addShortcut: each ]
@@ -125,11 +127,6 @@ GtCoderModel >> coders: aCoders [
 	^ self attributeNamed: #coders put: aCoders
 ]
 
-{ #category : #elements }
-GtCoderModel >> collapsedEditorElement [
-	self subclassResponsibility
-]
-
 { #category : #private }
 GtCoderModel >> context [
 	^ nil
@@ -163,14 +160,10 @@ GtCoderModel >> expanded [
 GtCoderModel >> expanded: aBoolean [
 	aBoolean = expanded
 		ifTrue: [ ^ self ].
+
 	expanded := aBoolean.
 	self expandedUpdated.
 	self announce: (GtCoderExpandedChanged new coder: self)
-]
-
-{ #category : #elements }
-GtCoderModel >> expandedEditorElement [
-	self subclassResponsibility
 ]
 
 { #category : #private }
@@ -258,6 +251,13 @@ GtCoderModel >> removeAttributeNamed: aSymbol [
 	attributes removeKey: aSymbol ifAbsent: [  ]
 ]
 
+{ #category : #'api - addons' }
+GtCoderModel >> requestAddOnsUpdate [
+	"Request addons to update due to some environmental changes (similar to requesting text to restyle)"
+
+	addOns requestUpdate
+]
+
 { #category : #scripting }
 GtCoderModel >> requestFocus [
 	self announce: (GtCoderRequestFocus new coder: self)
@@ -268,6 +268,14 @@ GtCoderModel >> shortcuts [
 	<return: #Collection of: #BlShortcut>
 
 	^ addOns shortcuts
+]
+
+{ #category : #'api - addons' }
+GtCoderModel >> shouldAddOnsBeUpdated [
+	"Return true if addons should be updated, false otherwise"
+	<return: #Boolean>
+
+	^ addOns shouldBeUpdated
 ]
 
 { #category : #elements }
@@ -291,4 +299,9 @@ GtCoderModel >> terminateAddOnsCommand [
 { #category : #subscriptions }
 GtCoderModel >> unsubscribeFromSystem [
 	SystemAnnouncer uniqueInstance unsubscribe: self
+]
+
+{ #category : #'api - addons' }
+GtCoderModel >> updateAddOnsFrom: anElement [
+	"Start the update of the addons in a context of a given element"
 ]

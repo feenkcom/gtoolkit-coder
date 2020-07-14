@@ -9,26 +9,37 @@ GtMethodCoderExamples >> ? anObject [
 	"Test binary method"
 ]
 
-{ #category : #model }
+{ #category : #'examples - model' }
 GtMethodCoderExamples >> binaryMethodCoder [
 	<gtExample>
 	| method methodCoder |
-
 	method := self class >> #?.
-	methodCoder := GtMethodCoder forMethod: method.
+
+	BlUseAsyncFeatures disableDuring: [ 
+		methodCoder := GtMethodCoder forMethod: method.
+	].
 	
+	self assert: (methodCoder sourceCode isKindOf: GtCoderCompiledMethodSourceCode).
+	self assert: methodCoder sourceCode compiledMethod equals: method.
+
+	self assert: methodCoder sourceCode hasSourceText not.
+	self assert: methodCoder sourceCode hasCollapsedText not.
+
 	self assert: methodCoder selector equals: #?.
 	self assert: methodCoder currentSelector equals: #?.
-
 	self assert: methodCoder classOrMetaClass equals: self class.
 	self assert: methodCoder compiledMethod equals: method.
 	
-	self assert: methodCoder collapsedSource equals: '?'.
+	self assert: methodCoder collapsedText asString equals: '?'.
+	self assert: methodCoder sourceCode hasCollapsedText.
 	
-	self assert: methodCoder source equals: method sourceCode.
 	self assert: methodCoder sourceText asString equals: method sourceCode.
+	self assert: methodCoder sourceCode hasSourceText.
+
+	self assert: methodCoder currentSourceString equals: method sourceCode.
 
 	self assert: methodCoder isModified not.
+	self assert: methodCoder shouldAddOnsBeUpdated.
 
 	^ methodCoder
 ]
@@ -71,7 +82,7 @@ GtMethodCoderExamples >> elementForThisMethod [
 GtMethodCoderExamples >> emptyBody [
 ]
 
-{ #category : #model }
+{ #category : #'examples - model' }
 GtMethodCoderExamples >> emptyBodyCoder [
 	<gtExample>
 	| method methodCoder |
@@ -82,7 +93,7 @@ GtMethodCoderExamples >> emptyBodyCoder [
 	^ methodCoder
 ]
 
-{ #category : #model }
+{ #category : #'examples - model' }
 GtMethodCoderExamples >> emptyCoder [
 	<gtExample>
 	| coder |
@@ -100,7 +111,7 @@ GtMethodCoderExamples >> emptyLines [
 "Some empty lines"
 ]
 
-{ #category : #model }
+{ #category : #'examples - model' }
 GtMethodCoderExamples >> emptyLinesCoder [
 	<gtExample>
 	| method methodCoder |
@@ -118,7 +129,7 @@ GtMethodCoderExamples >> example [
 	^ 42
 ]
 
-{ #category : #model }
+{ #category : #'examples - model' }
 GtMethodCoderExamples >> exampleMethodCoder [
 	<gtExample>
 	| method methodCoder |
@@ -147,7 +158,7 @@ GtMethodCoderExamples >> keyword: a selector: b [
 	^ a + b
 ]
 
-{ #category : #model }
+{ #category : #'examples - model' }
 GtMethodCoderExamples >> keywordSelectorCoder [
 	<gtExample>
 	| method methodCoder |
@@ -158,7 +169,7 @@ GtMethodCoderExamples >> keywordSelectorCoder [
 	^ methodCoder
 ]
 
-{ #category : #model }
+{ #category : #'examples - model' }
 GtMethodCoderExamples >> noSpacesCoder [
 	<gtExample>
 	| method methodCoder |
@@ -169,7 +180,7 @@ GtMethodCoderExamples >> noSpacesCoder [
 	^ methodCoder
 ]
 
-{ #category : #model }
+{ #category : #'examples - model' }
 GtMethodCoderExamples >> orderedCollectionMethods [
 	<gtExample>
 	| class |
@@ -181,7 +192,7 @@ GtMethodCoderExamples >> orderedCollectionMethods [
 GtMethodCoderExamples >> returnSelf [ ^self
 ]
 
-{ #category : #model }
+{ #category : #'examples - model' }
 GtMethodCoderExamples >> selfReturnCoder [
 	<gtExample>
 	| method methodCoder |
@@ -192,7 +203,7 @@ GtMethodCoderExamples >> selfReturnCoder [
 	^ methodCoder
 ]
 
-{ #category : #model }
+{ #category : #'examples - model' }
 GtMethodCoderExamples >> thisMethod [
 	<gtExample>
 	| method methodCoder source |

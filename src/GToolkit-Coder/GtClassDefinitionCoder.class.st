@@ -42,7 +42,7 @@ GtClassDefinitionCoder >> classOrMetaClass: anObject [
 	classOrMetaClass := anObject.
 	self
 		source: classOrMetaClass definition;
-		updateCollapsedSource
+		requestUpdateCollapsedText
 ]
 
 { #category : #subscriptions }
@@ -51,7 +51,7 @@ GtClassDefinitionCoder >> definitionChanged: anAnnouncement [
 		ifFalse: [ ^ self ].
 	self
 		source: classOrMetaClass definition;
-		updateCollapsedSource
+		requestUpdateCollapsedText
 ]
 
 { #category : #private }

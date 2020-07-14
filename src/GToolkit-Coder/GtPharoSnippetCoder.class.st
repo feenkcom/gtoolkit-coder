@@ -130,7 +130,7 @@ GtPharoSnippetCoder >> object [
 GtPharoSnippetCoder >> profileWithMessageTallyFrom: anEditorElement [
 	| aValue |
 
-	self clearPreviousEvaluations.
+	self clearPreviousEvaluationsInText: anEditorElement editor text.
 
 	self validateSyntax
 		ifFalse: [ ^ self ].

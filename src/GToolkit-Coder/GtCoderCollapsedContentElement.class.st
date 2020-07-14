@@ -13,8 +13,7 @@ GtCoderCollapsedContentElement >> coder: aCoder [
 
 	coder := aCoder.
 
-	breadcrumb removeAllItems.
-	breadcrumb addItems: (self newBreadcrumbItemElementsFor: aCoder).
+	breadcrumb ifNotNil: [ :aBreadcrumb | aBreadcrumb coder: aCoder ].
 
 	label text: aCoder collapsedText.
 
