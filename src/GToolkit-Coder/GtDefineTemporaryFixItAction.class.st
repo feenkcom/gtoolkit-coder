@@ -23,5 +23,5 @@ GtDefineTemporaryFixItAction >> execute [
 				ifFalse: [ ' ' ]) , node name , ' ' ].
 	newSource := (newSource first: location) , declaration
 		, (newSource allButFirst: location).
-	methodCoder source: newSource
+	methodCoder replaceSourceTextWith: newSource
 ]

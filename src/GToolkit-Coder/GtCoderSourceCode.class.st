@@ -52,6 +52,15 @@ GtCoderSourceCode >> isModified [
 ]
 
 { #category : #'api - changes' }
+GtCoderSourceCode >> replaceSourceTextWith: aString [
+	"Set a new source text"
+	
+	self sourceText
+		deleteAll;
+		insertString: aString asString at: 0
+]
+
+{ #category : #'api - changes' }
 GtCoderSourceCode >> resetCollapsedText [
 	"Remove the cached collapsed text forcing it to be recomputed next time it is accessed"
 	

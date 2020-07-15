@@ -676,10 +676,8 @@ GtMethodCoder >> format [
 			^ self
 				notifyParseError: ex errorMessage
 				at: ex location ].
-
-	self sourceText
-		deleteAll;
-		insertString: ast formattedCode at: 0
+			
+	self replaceSourceTextWith: ast formattedCode.
 ]
 
 { #category : #'gt-extensions' }

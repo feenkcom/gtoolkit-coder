@@ -705,6 +705,13 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 ]
 
 { #category : #'api - text' }
+GtSourceCoder >> replaceSourceTextWith: aString [
+	"Set a new source text"
+	
+	self sourceCode replaceSourceTextWith: aString
+]
+
+{ #category : #'api - text' }
 GtSourceCoder >> requestStyleSourceText [
 	"Request the text editor to restyle the text (for example due to environmental changes)"
 
@@ -779,7 +786,7 @@ GtSourceCoder >> source: aString [
 	"Change the source text of the current coder to a given string"
 
 	self
-		deprecated: 'Use #from* methods instead'.
+		deprecated: 'Use #replaceSourceTextWith: or #from* methods instead'.
 
 	self halt
 ]
