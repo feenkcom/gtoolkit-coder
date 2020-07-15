@@ -5,7 +5,8 @@ Class {
 		'coder',
 		'collapsedElement',
 		'expandedElement',
-		'removed'
+		'removed',
+		'shouldShowBreadcrumb'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -86,6 +87,7 @@ GtExpandableCoderElement >> gtAllShortcutsFor: aView [
 GtExpandableCoderElement >> initialize [
 	super initialize.
 	removed := false.
+	shouldShowBreadcrumb := false.
 	
 	self
 		vFitContent;
@@ -108,7 +110,10 @@ GtExpandableCoderElement >> initialize [
 GtExpandableCoderElement >> newCollapsedElement [
 	^ GtCoderCollapsedContentElement new
 		coder: coder;
-		in: [ :e | self addCodersCoderLookTo: e ];
+		in: [ :anElement |
+			self addCodersCoderLookTo: anElement.
+			shouldShowBreadcrumb
+				ifTrue: [ anElement withBreadcrumb ] ];
 		yourself
 ]
 
@@ -116,7 +121,10 @@ GtExpandableCoderElement >> newCollapsedElement [
 GtExpandableCoderElement >> newExpandedElement [
 	^ GtCoderExpandedContentElement new
 		coder: coder;
-		in: [ :e | self addCodersCoderLookTo: e ];
+		in: [ :anElement |
+			self addCodersCoderLookTo: anElement.
+			shouldShowBreadcrumb
+				ifTrue: [ anElement withBreadcrumb ] ];
 		yourself
 ]
 
@@ -136,4 +144,15 @@ GtExpandableCoderElement >> updateExpanded [
 	"Is sent when the coder model was requested to expand/collapse"
 
 	self expanded: coder expanded
+]
+
+{ #category : #initialization }
+GtExpandableCoderElement >> withBreadcrumb [
+	shouldShowBreadcrumb
+		ifTrue: [ ^ self ].
+
+	shouldShowBreadcrumb := true.
+	{ collapsedElement . expandedElement }
+		select: [ :eachElement | eachElement notNil ]
+		thenDo: [ :eachElement | eachElement withBreadcrumb ]
 ]

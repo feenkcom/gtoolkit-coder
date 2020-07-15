@@ -38,7 +38,7 @@ GtMethodCoderExamples >> elementForThisMethodCoder [
 
 	aCoder := self forThisMethodCoder.
 
-	aCoderElement :=aCoder asElement.
+	aCoderElement := aCoder asElement.
 	
 	self assert: (aCoderElement isKindOf: GtExpandableCoderElement).
 
@@ -49,6 +49,17 @@ GtMethodCoderExamples >> elementForThisMethodCoder [
 	self assert: aCoder expanded.
 	self assert: aCoderElement isExpanded.
 	
+	^ aCoderElement
+]
+
+{ #category : #'examples - ui' }
+GtMethodCoderExamples >> elementForThisMethodCoderWithBreadcrumb [
+	<gtExample>
+	| aCoderElement |
+
+	aCoderElement := self elementForThisMethodCoder.
+	aCoderElement withBreadcrumb.
+
 	^ aCoderElement
 ]
 

@@ -78,7 +78,7 @@ GtCoderContentElement >> newHeaderElement [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 GtCoderContentElement >> withBreadcrumb [
 	breadcrumb
 		ifNotNil: [ ^ self ].
@@ -86,5 +86,5 @@ GtCoderContentElement >> withBreadcrumb [
 	breadcrumb := self newBreadcrumb.
 	coder ifNotNil: [ :aCoder | breadcrumb coder: aCoder ].
 
-	header addChild: breadcrumb as: #breadcrumb.
+	header addChild: breadcrumb as: #breadcrumb
 ]
