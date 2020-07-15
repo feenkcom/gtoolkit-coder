@@ -208,6 +208,7 @@ GtCoderModel >> initialize [
 	announcer := Announcer new.
 	expanded := false.
 	addOnMonitor := Monitor new.
+
 	self initializeAddOns
 ]
 

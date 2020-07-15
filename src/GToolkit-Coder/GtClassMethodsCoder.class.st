@@ -70,7 +70,7 @@ GtClassMethodsCoder >> classesFilter [
 
 { #category : #elements }
 GtClassMethodsCoder >> coderLook [
-	^ nil"^ GtBehaviorMethodCoderCategoryLook new"
+	^ GtBehaviorMethodCoderCategoryLook new
 ]
 
 { #category : #private }

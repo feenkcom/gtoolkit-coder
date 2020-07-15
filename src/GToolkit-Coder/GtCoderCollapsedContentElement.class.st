@@ -28,7 +28,7 @@ GtCoderCollapsedContentElement >> initialize [
 	super initialize.
 	
 	label := BrLabel new
-		look: BrGlamorousLabelLook new.
+		look: BrGlamorousLabelLook new bold glamorousCodeFont.
 	
 	self addChild: label as: #label.
 	

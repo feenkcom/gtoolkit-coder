@@ -7,7 +7,8 @@ Class {
 { #category : #initialization }
 GtMethodCoderCategoryLook >> addMethodTags [
 	self hierarchyDropDown
-		ifNil: [ | editor |
+		ifNil: [
+			| editor |
 			editor := self buildCategoryEditor.
 			self attachToBottomRight: editor.
 			self widget addChild: editor as: self categoryEditorName ]
