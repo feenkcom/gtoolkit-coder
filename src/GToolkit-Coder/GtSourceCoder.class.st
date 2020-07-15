@@ -494,7 +494,7 @@ GtSourceCoder >> newRbAST: aString [
 { #category : #private }
 GtSourceCoder >> newSourceStylerFrom: anEditorElement [
 	| anAddOnsCopy |
-	anAddOnsCopy := addOns stylers copy.
+	anAddOnsCopy := self addOns stylers copy.
 	anAddOnsCopy do: [ :eachAddOn | 
 		eachAddOn editorElement: anEditorElement ].
 	^ (GtSourceCoderTextStyler forCoder: self)
@@ -546,7 +546,7 @@ GtSourceCoder >> notifyStylersUpdated [
 
 	self announce: (GtCoderStylerChanged new
 		coder: self;
-		stylers: addOns stylers copy)
+		stylers: self addOns stylers copy)
 ]
 
 { #category : #'api - accessing' }
@@ -889,7 +889,7 @@ GtSourceCoder >> styleSourceTextFrom: anEditorElement [
 
 { #category : #'api - addons' }
 GtSourceCoder >> stylers [
-	^ addOns stylers
+	^ self addOns stylers
 ]
 
 { #category : #private }
@@ -924,7 +924,7 @@ GtSourceCoder >> updateAddOnsCommand [
 		pragmas := self
 			pragmasNamed: #gtAstCoderAddOns:
 			inHierarchy: self class.
-		updatedAddOns := addOns copy.
+		updatedAddOns := self addOns copy.
 		pragmas
 			reverseDo:
 				[ :each | self perform: each methodSelector with: ast with: updatedAddOns ].
@@ -957,7 +957,7 @@ GtSourceCoder >> updateContextMenuAddOnsFrom: anEditorElement [
 	pragmas := self
 		pragmasNamed: #gtCoderContextMenuAddOns:
 		inHierarchy: self class.
-	updatedAddOns := addOns copy.
+	updatedAddOns := self addOns copy.
 	updatedAddOns clearContextMenu.
 	pragmas
 		do: [ :each | self perform: each methodSelector withEnoughArguments: { updatedAddOns. anEditorElement } ].

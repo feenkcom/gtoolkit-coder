@@ -24,6 +24,7 @@ GtCoderModel >> addOnChanged: aSymbol [
 GtCoderModel >> addOns [
 	<return: #GtCoderAddOns>
 
+	addOns ifNil: [ self initializeAddOns ].
 	^ addOns
 ]
 
@@ -125,14 +126,14 @@ GtCoderModel >> contextActions [
 	"Return a collection of contextual actions in the coder. They are renderred separately from mainActions"
 	<return: #Collection of: #GtCoderAction>
 
-	^ addOns contextActions
+	^ self addOns contextActions
 ]
 
 { #category : #'api - actions' }
 GtCoderModel >> contextMenuActions [
 	<return: #Collection of: #GtCoderAction>
 
-	^ addOns contextMenuActions
+	^ self addOns contextMenuActions
 ]
 
 { #category : #elements }
@@ -200,8 +201,6 @@ GtCoderModel >> initialize [
 	announcer := Announcer new.
 	expanded := false.
 	addOnMonitor := Monitor new.
-
-	self initializeAddOns
 ]
 
 { #category : #initialization }
@@ -220,7 +219,7 @@ GtCoderModel >> mainActions [
 	"Return a collection of main actions in the coder, for example save"
 	<return: #Collection of: #GtCoderAction>
 
-	^ addOns mainActions
+	^ self addOns mainActions
 ]
 
 { #category : #elements }
@@ -249,7 +248,8 @@ GtCoderModel >> requestUpdateAddOns [
 	It is a responsibility of the Coder's Element to start the actual addon update (${method:GtCoderModel>>#updateAddOnsFrom:}$) which may happen in
 	a background thread, that is why we can not start the update directly - we must have a reference to the element"
 
-	addOns requestUpdate.
+	addOns ifNil: [ ^ self ].
+	self addOns requestUpdate.
 	self announce: (GtCoderAddOnsUpdateRequest new coder: self)
 ]
 
@@ -257,7 +257,7 @@ GtCoderModel >> requestUpdateAddOns [
 GtCoderModel >> shortcuts [
 	<return: #Collection of: #BrTextEditorShortcut>
 
-	^ addOns shortcuts
+	^ self addOns shortcuts
 ]
 
 { #category : #'api - addons' }
@@ -266,7 +266,7 @@ GtCoderModel >> shouldAddOnsBeUpdated [
 	that element should check if addons need to be updated and if it is the case start the update with the help of ${method:GtCoderModel>>#updateAddOnsFrom:}$"
 	<return: #Boolean>
 
-	^ addOns shouldBeUpdated
+	^ self addOns shouldBeUpdated
 ]
 
 { #category : #subscriptions }
