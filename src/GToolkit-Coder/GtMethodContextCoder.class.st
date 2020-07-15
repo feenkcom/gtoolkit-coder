@@ -45,6 +45,7 @@ GtMethodContextCoder >> compiledMethod [
 	"The context coder should allways return the compiled method from the context 
 	as the method from the class can be changed. In that case the context will 
 	use its own method."
+
 	^ self context method
 ]
 
@@ -108,14 +109,15 @@ GtMethodContextCoder >> debuggerVariableNodes [
 	
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtMethodContextCoder >> initializeAddOns [
 	super initializeAddOns.
+
 "	addOns addStyler: (GtCoderContextVariableButtonStyler new methodCoder: self)."
 "	addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: self)"
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtMethodContextCoder >> initializeShortcuts [ 
 	super initializeShortcuts.
 	addOns 
@@ -172,11 +174,16 @@ GtMethodContextCoder >> receiver [
 ]
 
 { #category : #actions }
-GtMethodContextCoder >> save [ 	
+GtMethodContextCoder >> saveFrom: anEditorElement [
 	"Compiling creates a new method objects, so avoid the action if there are no changes"
-	self isModified ifFalse: [ ^ false ]. 
-	self validateSyntax ifFalse: [ ^ false ].
-	self compile ifFalse: [ ^ false ].
+	self isModified
+		ifFalse: [ ^ false ]. 
+	
+	self validateSyntax
+		ifFalse: [ ^ false ].
+	
+	(self compileFrom: anEditorElement)
+		ifFalse: [ ^ false ].
 	
 	"If compilation succedded notify the debugger. The current context is now in an 
 	invalid state, as it contains the code of the old compiled method object; the context 

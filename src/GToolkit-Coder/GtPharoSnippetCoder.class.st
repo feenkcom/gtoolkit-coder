@@ -52,8 +52,11 @@ GtPharoSnippetCoder >> highlightBindingsStrategy [
 GtPharoSnippetCoder >> initialize [
 	bindingStrategy := GtSnippetBindingStrategy new.
 	bindingStrategy bindings: GtSnippetBindings new.
+	
 	super initialize.
+	
 	expanded := true.
+	
 	self forSource: ''
 ]
 
