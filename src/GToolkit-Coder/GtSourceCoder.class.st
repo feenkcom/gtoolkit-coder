@@ -264,7 +264,7 @@ GtSourceCoder >> doItAll: anEditorElement [
 GtSourceCoder >> doItAndGoAll: anEditorElement [
 	| aSource aValue |
 
-	aSource := self source.
+	aSource := self currentSourceString.
 	aValue := self evaluateSource: aSource in: anEditorElement.
 	aValue == self
 		ifTrue: [ ^ self ].
@@ -770,15 +770,8 @@ GtSourceCoder >> source [
 { #category : #accessing }
 GtSourceCoder >> source: aString [
 	"Change the source text of the current coder to a given string"
-	| aNewSourceText |
 
-	"self halt."
-
-	aNewSourceText := aString asRopedText.
-	aNewSourceText attributes: self defaultTextAttributes.
-
-	self sourceChanged.
-	self notifySourceChanged.
+	self halt
 ]
 
 { #category : #private }
@@ -801,6 +794,16 @@ GtSourceCoder >> sourceCode [
 	<return: #GtCoderSourceCode>
 
 	^ sourceCode
+]
+
+{ #category : #accessing }
+GtSourceCoder >> sourceCode: aGtCoderSourceCode [
+	"Set the source code of this coder to a given one and notify about the changes"
+
+	sourceCode := aGtCoderSourceCode.
+
+	self sourceChanged.
+	self notifySourceChanged
 ]
 
 { #category : #private }

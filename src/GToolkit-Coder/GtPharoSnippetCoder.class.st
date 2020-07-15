@@ -35,10 +35,7 @@ GtPharoSnippetCoder >> evaluationRequesterForEditor: anEditorElement [
 
 { #category : #initialization }
 GtPharoSnippetCoder >> forSource: aString [
-	sourceCode := GtCoderConcreteSourceCode new source: aString.
-
-	self sourceChanged.
-	self notifySourceChanged.
+	self sourceCode: (GtCoderConcreteSourceCode new source: aString)
 ]
 
 { #category : #private }
@@ -197,8 +194,8 @@ GtPharoSnippetCoder >> xDocFilename [
 GtPharoSnippetCoder >> xDocLoadSavedContent [
 	"The receiver's object has been changed under us, reload the default code (if not empty)"
 
-	self source ifNotEmpty: [ ^self ].
-	self source: self xDocSourceString.
+	self currentSourceString ifNotEmpty: [ ^ self ].
+	self forSource: self xDocSourceString
 ]
 
 { #category : #store }

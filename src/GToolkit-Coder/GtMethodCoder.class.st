@@ -694,20 +694,10 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 ]
 
 { #category : #'initialize-release' }
-GtMethodCoder >> forClass: aBehavior source: aString [
-	self halt.
-	
-	"self classOrMetaClass: aBehavior.
-	methodSource := aString.
-	
-	sourceCode := GtCoderCompiledMethodSourceCode new
-		classOrMetaClass: aBehavior;
-		methodSource: aString.
-	
-	isBuilt
-		ifTrue: [ self buildSource ].
-		
-	"
+GtMethodCoder >> forClass: aBehavior source: aString [	
+	self classOrMetaClass: aBehavior.
+
+	self sourceCode: (GtCoderConcreteSourceCode new source: aString)
 ]
 
 { #category : #'initialize-release' }
@@ -721,11 +711,7 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 	self classOrMetaClass: aCompiledMethod methodClass.
 	self selector: aCompiledMethod selector.
 	
-	sourceCode := GtCoderCompiledMethodSourceCode new
-		compiledMethod: aCompiledMethod.
-
-	self sourceChanged.
-	self notifySourceChanged.
+	self sourceCode: (GtCoderCompiledMethodSourceCode new compiledMethod: aCompiledMethod)
 ]
 
 { #category : #updating }

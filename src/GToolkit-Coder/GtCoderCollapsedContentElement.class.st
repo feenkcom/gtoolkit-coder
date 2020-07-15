@@ -17,7 +17,7 @@ GtCoderCollapsedContentElement >> coder: aCoder [
 
 	label text: aCoder collapsedText.
 
-	coder announcer
+	coder announcer weak
 		when: GtCoderCollapsedLabelChanged
 		send: #updateLabel:
 		to: self
