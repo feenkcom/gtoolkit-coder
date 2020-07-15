@@ -280,34 +280,6 @@ GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 	coderAddOns addStyler: GtCoderExpandableBaselineStyler new
 ]
 
-{ #category : #elements }
-GtMethodCoder >> breadcrumbNamedActions [
-	^ Array
-		streamContents: [ :aStream | 
-			| aPackage aPackageName aClass aClassTool |
-			aPackage := (self compiledMethod ifNil: [ self classOrMetaClass ])
-				package.
-			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
-			aClass := self classOrMetaClass.
-			aClassTool := self compiledMethod 
-				ifNil: [ GtClassCoderTool observedClass: aClass instanceSide ] 
-				ifNotNil: [ :aMethod | GtMethodCoderTool compiledMethod: aMethod ].
-			aStream
-				nextPut: aPackageName -> [ :aButton | 
-					aButton phlow spawnTool: (GtPackageCoderTool package: aPackage) ];
-				nextPut: aClass name -> [ :aButton | 
-					aButton phlow spawnTool: aClassTool ] ]
-]
-
-{ #category : #'private - text' }
-GtMethodCoder >> buildCollapsedText [
-	| patternText |
-	patternText := (self currentSelector ifNil: [ '' ]) asRopedText.
-	patternText attributes: self defaultTextAttributes.
-	patternText bold.
-	^ patternText
-]
-
 { #category : #private }
 GtMethodCoder >> buildSource [
 	| text |
@@ -396,11 +368,6 @@ GtMethodCoder >> classOrMetaClass [
 { #category : #accessing }
 GtMethodCoder >> classOrMetaClass: aBehavior [
 	class := aBehavior
-]
-
-{ #category : #ui }
-GtMethodCoder >> collapsedStyler [
-	^ BlTextNullStyler new
 ]
 
 { #category : #private }
@@ -638,14 +605,15 @@ GtMethodCoder >> explanationLink [
 	^ self attributeNamed: #explanationLink
 ]
 
-{ #category : #setter }
+{ #category : #accessing }
 GtMethodCoder >> explanationLink: anExplanation [
-	self halt.
-	"self explanationLink == anExplanation ifTrue: [ ^ self ].
+	self explanationLink == anExplanation
+		ifTrue: [ ^ self ].
+
 	self attributeNamed: #explanationLink put: anExplanation.
-	isBuilt ifFalse: [ ^ self ].
-	self updateAddOns.
-	self styleText"
+	
+	self requestStyleSourceText.
+	self requestUpdateAddOns
 ]
 
 { #category : #'actions - refactorings' }
@@ -714,7 +682,7 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 	self sourceCode: (GtCoderCompiledMethodSourceCode new compiledMethod: aCompiledMethod)
 ]
 
-{ #category : #updating }
+{ #category : #'api - actions' }
 GtMethodCoder >> format [
 	| ast |
 	ast := [ RBParser parseMethod: self source ]
@@ -726,7 +694,7 @@ GtMethodCoder >> format [
 	self source: ast formattedCode
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtMethodCoder >> gtDiffViewFor: aView [
 	"<gtView>
 	(methodSource = self newMethodSource) ifTrue: [ ^ aView ].
@@ -740,7 +708,7 @@ GtMethodCoder >> gtDiffViewFor: aView [
 				create ]"
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtMethodCoder >> gtLiveFor: aView [
 	^ aView explicit 
 		title: 'Live';
@@ -748,7 +716,7 @@ GtMethodCoder >> gtLiveFor: aView [
 		stencil: [ self expanded: true ]
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 6>
 	(self hasObjectAttribute
@@ -782,7 +750,7 @@ GtMethodCoder >> handleCompilerErrorsDuring: aBlock [
 
 { #category : #'examples - event handling' }
 GtMethodCoder >> handleExampleArgumentsChanged: aGtExampleArgumentsChanged [
-	self requestAddOnsUpdate
+	self requestUpdateAddOns
 ]
 
 { #category : #'examples - event handling' }
@@ -820,7 +788,7 @@ GtMethodCoder >> highlighter: aGtSourceReferenceHighlighter [
 		attributeNamed: #highlighter
 		put: aGtSourceReferenceHighlighter.
 
-	self requestAddOnsUpdate.
+	self requestUpdateAddOns.
 	self requestStyleSourceText
 ]
 
@@ -963,7 +931,7 @@ GtMethodCoder >> isForMethod: aCompiledMethod [
 GtMethodCoder >> isModified [
 	<return: #Boolean>
 
-	^ sourceCode isModified
+	^ self sourceCode isModified
 ]
 
 { #category : #'add ons' }
@@ -1019,7 +987,7 @@ GtMethodCoder >> methodChanged: aMethodModified [
 		aMethodModified classAffected = aCompiledMethod methodClass
 			and: [ aMethodModified selector = aCompiledMethod selector ]])
 				ifFalse: [ ^ self ].
-	self updateMethod: aMethodModified newMethod
+	self forMethod: aMethodModified newMethod
 ]
 
 { #category : #'add ons' }
@@ -1209,12 +1177,14 @@ GtMethodCoder >> playSelectionOrMethodFrom: anEditorElement [
 		ifFalse: [ self playFrom: anEditorElement ]
 ]
 
-{ #category : #elements }
+{ #category : #'gt-extensions' }
 GtMethodCoder >> previewElement [
-	self halt.
-	"^ (self class forClass: class source: methodSource)
+	"Return a preview element for the Spotter"
+	<return: #BlElement>
+
+	^ (self class forClass: class source: self currentSourceString)
 		expanded: true;
-		asElement"
+		asElement
 ]
 
 { #category : #printing }
@@ -1490,11 +1460,6 @@ GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 	^ index
 ]
 
-{ #category : #elements }
-GtMethodCoder >> stylerView: anElement [
-	super stylerView: anElement
-]
-
 { #category : #accessing }
 GtMethodCoder >> subCoders [
 	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
@@ -1530,12 +1495,6 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
 		action: [ :anEditorElement | self debugSelectionOrMethodFrom: anEditorElement ]
-]
-
-{ #category : #updating }
-GtMethodCoder >> updateMethod: aCompiledMethod [
-	self forMethod: aCompiledMethod.
-	self announce: (GtCoderMethodChanged new coder: self)
 ]
 
 { #category : #private }

@@ -31,11 +31,9 @@ GtExpandedOnlyCoderElement >> coder: aCoder [
 	
 	self addLook: (BrLayoutResizerLook new inheritIn: [ :aBlock | aBlock value: anExpandedElement ]).
 
-	aCoder stylerView: self.
 	aCoder expanded: true.
 	aCoder announcer weak
-		when: GtCoderRequestFocus send: #requestFocus to: self;
-		when: GtCoderMethodChanged send: #updateSource: to: self
+		when: GtCoderRequestFocus send: #requestFocus to: self
 ]
 
 { #category : #initialization }
@@ -77,6 +75,4 @@ GtExpandedOnlyCoderElement >> requestFocus [
 
 { #category : #events }
 GtExpandedOnlyCoderElement >> updateSource: aGtCoderMethodChanged [
-	self
-		enqueueTask: (BlTaskAction new action: [ aGtCoderMethodChanged coder buildSource ])
 ]

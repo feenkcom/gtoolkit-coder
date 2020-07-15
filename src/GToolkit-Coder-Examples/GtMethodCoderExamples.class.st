@@ -9,8 +9,89 @@ GtMethodCoderExamples >> ? anObject [
 	"Test binary method"
 ]
 
-{ #category : #'examples - model' }
-GtMethodCoderExamples >> binaryMethodCoder [
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> brokenExampleRemoveMeWhenFinished [
+	<gtExample>
+	
+	^ 1/0
+]
+
+{ #category : #'examples - ui' }
+GtMethodCoderExamples >> elementForOrderedCollectionMethods [
+	<gtExample>
+	| container |
+	container := BlElement new.
+	container layout: BlLinearLayout vertical.
+	container padding: (BlInsets all: 10).
+	container
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
+	container addChildren: (self orderedCollectionMethods collect: [ :each | each asElement ]).
+	^ container
+]
+
+{ #category : #'examples - ui' }
+GtMethodCoderExamples >> elementForThisMethodCoder [
+	<gtExample>
+	| aCoder aCoderElement |
+
+	aCoder := self forThisMethodCoder.
+
+	aCoderElement :=aCoder asElement.
+	
+	self assert: (aCoderElement isKindOf: GtExpandableCoderElement).
+
+	self assert: aCoder expanded not.
+	self assert: aCoderElement isExpanded not.
+	aCoderElement expand.
+
+	self assert: aCoder expanded.
+	self assert: aCoderElement isExpanded.
+	
+	^ aCoderElement
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> emptyBody [
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> emptyLines [
+
+
+
+"Some empty lines"
+]
+
+{ #category : #'examples - default' }
+GtMethodCoderExamples >> emptyMethodCoder [
+	<gtExample>
+	| coder |
+
+	coder := GtMethodCoder new.
+
+	coder classOrMetaClass: Object.
+	coder object: nil.
+	
+	self assert: coder collapsedText asString equals: ''.
+	self assert: coder currentSourceString equals: ''.
+	
+	self assert: coder selector equals: nil.
+	self assert: coder currentSelector equals: #faulty.
+
+	^ coder
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> example [
+	<gtExample>
+	
+	^ 42
+]
+
+{ #category : #'examples - for method' }
+GtMethodCoderExamples >> forBinaryMethodCoder [
 	<gtExample>
 	| method methodCoder |
 	method := self class >> #?.
@@ -21,7 +102,6 @@ GtMethodCoderExamples >> binaryMethodCoder [
 	
 	self assert: (methodCoder sourceCode isKindOf: GtCoderCompiledMethodSourceCode).
 	self assert: methodCoder sourceCode compiledMethod equals: method.
-
 	self assert: methodCoder sourceCode hasSourceText not.
 	self assert: methodCoder sourceCode hasCollapsedText not.
 
@@ -44,98 +124,47 @@ GtMethodCoderExamples >> binaryMethodCoder [
 	^ methodCoder
 ]
 
-{ #category : #'sample methods' }
-GtMethodCoderExamples >> brokenExampleRemoveMeWhenFinished [
-	<gtExample>
-	
-	^ 1/0
-]
-
-{ #category : #ui }
-GtMethodCoderExamples >> elementForOrderedCollectionMethods [
-	<gtExample>
-	| container |
-	container := BlElement new.
-	container layout: BlLinearLayout vertical.
-	container padding: (BlInsets all: 10).
-	container
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	container addChildren: (self orderedCollectionMethods collect: [ :each | each asElement ]).
-	^ container
-]
-
-{ #category : #ui }
-GtMethodCoderExamples >> elementForThisMethod [
-	<gtExample>
-	| element |
-	element := self thisMethod asElement.
-	self assert: (element isKindOf: GtExpandableCoderElement).
-	self assert: element isExpanded not.
-	element expand.
-	self assert: element isExpanded.
-	^ element
-]
-
-{ #category : #'sample methods' }
-GtMethodCoderExamples >> emptyBody [
-]
-
-{ #category : #'examples - model' }
-GtMethodCoderExamples >> emptyBodyCoder [
+{ #category : #'examples - for method' }
+GtMethodCoderExamples >> forEmptyBodyMethodCoder [
 	<gtExample>
 	| method methodCoder |
+	
 	method := self class >> #emptyBody.
-	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder collapsedSource = 'emptyBody'.
-	self assert: methodCoder source = 'emptyBody'.
+	
+	BlUseAsyncFeatures disableDuring: [ 
+		methodCoder := GtMethodCoder forMethod: method.
+	].
+
+	self assert: methodCoder collapsedText asString equals: 'emptyBody'.
+	self assert: methodCoder currentSourceString equals: 'emptyBody'.
+
 	^ methodCoder
 ]
 
-{ #category : #'examples - model' }
-GtMethodCoderExamples >> emptyCoder [
-	<gtExample>
-	| coder |
-	coder := GtMethodCoder new.
-	coder classOrMetaClass: Object.
-	coder object: nil.
-	^ coder asElement
-]
-
-{ #category : #'sample methods' }
-GtMethodCoderExamples >> emptyLines [
-
-
-
-"Some empty lines"
-]
-
-{ #category : #'examples - model' }
-GtMethodCoderExamples >> emptyLinesCoder [
+{ #category : #'examples - for method' }
+GtMethodCoderExamples >> forEmptyLinesMethodCoder [
 	<gtExample>
 	| method methodCoder |
 	method := self class >> #emptyLines.
-	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder collapsedSource = 'emptyLines'.
-	self assert: methodCoder source = method sourceCode.
+	BlUseAsyncFeatures disableDuring: [ 
+		methodCoder := GtMethodCoder forMethod: method.
+	].
+
+	self assert: methodCoder collapsedText asString equals: 'emptyLines'.
+	self assert: methodCoder currentSourceString equals: method sourceCode.
+
 	^ methodCoder
 ]
 
-{ #category : #'sample methods' }
-GtMethodCoderExamples >> example [
-	<gtExample>
-	
-	^ 42
-]
-
-{ #category : #'examples - model' }
-GtMethodCoderExamples >> exampleMethodCoder [
+{ #category : #'examples - for method' }
+GtMethodCoderExamples >> forExampleMethodCoder [
 	<gtExample>
 	| method methodCoder |
 
 	method := self class >> #example.
-	methodCoder := GtMethodCoder forMethod: method.
+	BlUseAsyncFeatures disableDuring: [ 
+		methodCoder := GtMethodCoder forMethod: method.
+	].
 	
 	"self assert: methodCoder selector equals: #?.
 	self assert: methodCoder currentSelector equals: #?.
@@ -153,34 +182,61 @@ GtMethodCoderExamples >> exampleMethodCoder [
 	^ methodCoder
 ]
 
+{ #category : #'examples - for method' }
+GtMethodCoderExamples >> forKeywordSelectorMethodCoder [
+	<gtExample>
+	| method methodCoder |
+	method := self class >> #keyword:selector:.
+	BlUseAsyncFeatures disableDuring: [ 
+		methodCoder := GtMethodCoder forMethod: method.
+	].
+
+	self assert: methodCoder collapsedText asString equals: 'keyword:selector:'.
+	self assert: methodCoder currentSourceString equals: method sourceCode.
+
+	^ methodCoder
+]
+
+{ #category : #'examples - for method' }
+GtMethodCoderExamples >> forSelfReturnMethodCoder [
+	<gtExample>
+	| method methodCoder |
+	method := self class >> #returnSelf.
+	BlUseAsyncFeatures disableDuring: [ 
+		methodCoder := GtMethodCoder forMethod: method.
+	].
+
+	self assert: methodCoder collapsedText asString equals: 'returnSelf'.
+	self assert: methodCoder currentSourceString equals: method sourceCode.
+	^ methodCoder
+]
+
+{ #category : #'examples - for method' }
+GtMethodCoderExamples >> forThisMethodCoder [
+	<gtExample>
+	| method methodCoder source |
+	method := self class >> #forThisMethodCoder.
+
+	BlUseAsyncFeatures
+		disableDuring: [ methodCoder := GtMethodCoder forMethod: method ].
+
+	source := method sourceCode.
+	
+	self
+		assert: methodCoder collapsedText asString
+		equals: (source first: (source indexOf: Character cr) - 1).
+		
+	self assert: methodCoder currentSourceString equals: method sourceCode.
+
+	^ methodCoder
+]
+
 { #category : #'sample methods' }
 GtMethodCoderExamples >> keyword: a selector: b [
 	^ a + b
 ]
 
-{ #category : #'examples - model' }
-GtMethodCoderExamples >> keywordSelectorCoder [
-	<gtExample>
-	| method methodCoder |
-	method := self class >> #keyword:selector:.
-	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder collapsedSource = 'keyword:selector:'.
-	self assert: methodCoder source = method sourceCode.
-	^ methodCoder
-]
-
-{ #category : #'examples - model' }
-GtMethodCoderExamples >> noSpacesCoder [
-	<gtExample>
-	| method methodCoder |
-	method := self class >> #noSpacesCoder.
-	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder collapsedSource = 'noSpacesCoder'.
-	self assert: methodCoder source = method sourceCode.
-	^ methodCoder
-]
-
-{ #category : #'examples - model' }
+{ #category : #'examples - for method' }
 GtMethodCoderExamples >> orderedCollectionMethods [
 	<gtExample>
 	| class |
@@ -190,28 +246,4 @@ GtMethodCoderExamples >> orderedCollectionMethods [
 
 { #category : #'sample methods' }
 GtMethodCoderExamples >> returnSelf [ ^self
-]
-
-{ #category : #'examples - model' }
-GtMethodCoderExamples >> selfReturnCoder [
-	<gtExample>
-	| method methodCoder |
-	method := self class >> #returnSelf.
-	methodCoder := GtMethodCoder forMethod: method.
-	self assert: methodCoder collapsedSource = 'returnSelf'.
-	self assert: methodCoder source = method sourceCode.
-	^ methodCoder
-]
-
-{ #category : #'examples - model' }
-GtMethodCoderExamples >> thisMethod [
-	<gtExample>
-	| method methodCoder source |
-	method := self class >> #thisMethod.
-	methodCoder := GtMethodCoder forMethod: method.
-	
-	source := method sourceCode.
-	self assert: methodCoder collapsedSource = (source first: (source indexOf: Character cr) - 1).
-	self assert: methodCoder source = method sourceCode.
-	^ methodCoder
 ]

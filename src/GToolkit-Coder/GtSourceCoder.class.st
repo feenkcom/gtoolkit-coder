@@ -90,20 +90,6 @@ GtSourceCoder >> browseReferencesFrom: anEditorElement [
 	anEditorElement phlow spawnObject: filter
 ]
 
-{ #category : #'event handling' }
-GtSourceCoder >> buildCollapsedText [
-	| firstLine |
-	
-	self halt.
-	
-	firstLine := (self sourceText asString lines
-		detect: [ :each | each notEmpty ]
-		ifNone: [ '' ]) asRopedText.
-	firstLine
-		attributes: self defaultTextAttributes , self disabledTextAttributes.
-	^ firstLine
-]
-
 { #category : #private }
 GtSourceCoder >> classOrMetaClass [
 	^ self object class
@@ -141,7 +127,7 @@ GtSourceCoder >> clearSyntaxErrorsInText: aBlText [
 
 { #category : #'api - accessing' }
 GtSourceCoder >> collapsedText [
-	^ sourceCode collapsedText
+	^ self sourceCode collapsedText
 ]
 
 { #category : #private }
@@ -178,7 +164,7 @@ GtSourceCoder >> currentSourceString [
 	"Return a String representation of the current source text"
 	<return: #String>
 
-	^ sourceCode sourceString
+	^ self sourceCode sourceString
 ]
 
 { #category : #private }
@@ -433,7 +419,10 @@ GtSourceCoder >> gtViewStylersFor: aView [
 { #category : #'initialize-release' }
 GtSourceCoder >> initialize [
 	super initialize.
-	self resetASTCache
+	self resetASTCache.
+	
+	"initialized lazily in #sourceCode"
+	sourceCode := nil
 ]
 
 { #category : #'initialize-release' }
@@ -702,7 +691,7 @@ GtSourceCoder >> requestUpdateCollapsedText [
 	It is not guaranteed that the collapsed text actually changes as for example in the method coder
 	opened on a compiled method"
 
-	sourceCode resetCollapsedText.
+	self sourceCode resetCollapsedText.
 	self announce: (GtCoderCollapsedLabelChanged new coder: self)
 ]
 
@@ -786,14 +775,14 @@ GtSourceCoder >> sourceChanged [
 	self clearSyntaxErrors.
 
 	self requestUpdateCollapsedText.
-	self requestAddOnsUpdate
+	self requestUpdateAddOns
 ]
 
 { #category : #accessing }
 GtSourceCoder >> sourceCode [
 	<return: #GtCoderSourceCode>
 
-	^ sourceCode
+	^ sourceCode ifNil: [ self sourceCode: (GtCoderConcreteSourceCode new source: '') ]
 ]
 
 { #category : #accessing }
@@ -834,14 +823,14 @@ GtSourceCoder >> sourceText [
 	If the operation you would like to perform on the source text is optional consider using #sourceTextDo:"
 	<return: #BlText>
 
-	^ sourceCode sourceText
+	^ self sourceCode sourceText
 ]
 
 { #category : #'api - accessing' }
 GtSourceCoder >> sourceTextDo: aBlock [
 	"Evaluate a given block with my source code text if present"
 
-	^ sourceCode sourceTextDo: aBlock
+	^ self sourceCode sourceTextDo: aBlock
 ]
 
 { #category : #'private - actions' }
@@ -888,13 +877,7 @@ GtSourceCoder >> styleText [
 	
 	self
 		deprecated: 'use #styleSourceText'
-		transformWith: '`@receiver styleText' -> '`@receiver styleSourceText'.
-]
-
-{ #category : #elements }
-GtSourceCoder >> stylerView: anElement [
-	"self sourceEditor view: anElement.
-	self styleText."
+		transformWith: '`@receiver styleText' -> '`@receiver requestStyleSourceText'.
 ]
 
 { #category : #'api - addons' }
@@ -918,21 +901,31 @@ GtSourceCoder >> symbolFor: aNode [
 	^ nil
 ]
 
-{ #category : #'api - addons' }
+{ #category : #'private - add ons' }
+GtSourceCoder >> terminateAddOnsCommand [
+	addOnCommand
+		ifNil: [ ^ self ].
+	addOnCommand terminate.
+	addOnCommand := nil
+]
+
+{ #category : #'private - add ons' }
 GtSourceCoder >> updateAddOnsCommand [
-	^ [ | updatedAddOns pragmas ast |
-	ast := self rbAST.
-	pragmas := self
-		pragmasNamed: #gtAstCoderAddOns:
-		inHierarchy: self class.
-	updatedAddOns := addOns copy.
-	pragmas
-		reverseDo:
-			[ :each | self perform: each methodSelector with: ast with: updatedAddOns ].
-	addOns := updatedAddOns.
-	addOns markAsUpdated.
-	updatedAddOns changesDo: [ :each | self addOnChanged: each ].
-	updatedAddOns clearChanges ] asBlTktTerminableCommand
+	^ [
+		| updatedAddOns pragmas ast |
+		ast := self rbAST.
+		pragmas := self
+			pragmasNamed: #gtAstCoderAddOns:
+			inHierarchy: self class.
+		updatedAddOns := addOns copy.
+		pragmas
+			reverseDo:
+				[ :each | self perform: each methodSelector with: ast with: updatedAddOns ].
+		addOns := updatedAddOns.
+		addOns markAsUpdated.
+		updatedAddOns changesDo: [ :each | self addOnChanged: each ].
+		updatedAddOns clearChanges
+	] asBlTktTerminableCommand
 ]
 
 { #category : #'api - addons' }

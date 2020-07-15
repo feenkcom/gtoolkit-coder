@@ -41,7 +41,7 @@ GtMethodsCoder >> methodChanged: aValueChanged [
 	coders
 		do: [ :each | 
 			(each isForMethod: aValueChanged newValue)
-				ifTrue: [ each updateMethod: aValueChanged newValue ] ]
+				ifTrue: [ each forMethod: aValueChanged newValue ] ]
 ]
 
 { #category : #'event handling' }

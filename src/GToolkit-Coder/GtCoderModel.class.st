@@ -13,14 +13,6 @@ Class {
 }
 
 { #category : #'api - addons' }
-GtCoderModel >> addCollapsedShortcutsTo: anElement [
-	addOns collapsedShortcuts
-		do: [ :each | 
-			anElement
-				addShortcut: (each copy action: [ each action cull: anElement ]) ]
-]
-
-{ #category : #updating }
 GtCoderModel >> addOnChanged: aSymbol [
 	aSymbol = #mainActions
 		ifTrue: [ self announce: (GtCoderMainActionsChanged new coder: self) ].
@@ -35,24 +27,20 @@ GtCoderModel >> addOns [
 	^ addOns
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #'api - addons' }
 GtCoderModel >> addOnsClass [
 	^ GtCoderAddOns
 ]
 
-{ #category : #'api - addons' }
-GtCoderModel >> addShortcutsTo: anElement [
-	addOns shortcuts
-		do: [ :each | anElement addShortcut: each ]
-]
-
-{ #category : #updating }
+{ #category : #'api - announcer' }
 GtCoderModel >> announce: anAnnouncement [
 	announcer announce: anAnnouncement
 ]
 
-{ #category : #accessing }
+{ #category : #'api - announcer' }
 GtCoderModel >> announcer [
+	<return: #Announcer>
+
 	^ announcer
 ]
 
@@ -72,32 +60,32 @@ GtCoderModel >> asExpandedOnlyElement [
 		yourself
 ]
 
-{ #category : #'accessing-attributes' }
+{ #category : #'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol [
 	^ attributes notNil
 		ifTrue: [ attributes at: aSymbol ifAbsent: [  ] ]
 ]
 
-{ #category : #'accessing-attributes' }
+{ #category : #'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol ifAbsent: aBlock [
 	^ attributes notNil
 		ifTrue: [ attributes at: aSymbol ifAbsent: aBlock ]
 		ifFalse: [ aBlock value ]
 ]
 
-{ #category : #'accessing-attributes' }
+{ #category : #'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock [
 	^ attributes notNil
 		ifTrue: [ attributes at: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock ]
 		ifFalse: [ anAbsentBlock value ]
 ]
 
-{ #category : #'accessing-attributes' }
+{ #category : #'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol put: anObject [
 	^ self attributes at: aSymbol put: anObject
 ]
 
-{ #category : #'accessing-attributes' }
+{ #category : #'api - attributes' }
 GtCoderModel >> attributes [
 	^ attributes ifNil: [ attributes := IdentityDictionary new ]
 ]
@@ -132,17 +120,18 @@ GtCoderModel >> context [
 	^ nil
 ]
 
-{ #category : #'api - accessing actions' }
+{ #category : #'api - actions' }
 GtCoderModel >> contextActions [
 	"Return a collection of contextual actions in the coder. They are renderred separately from mainActions"
-
 	<return: #Collection of: #GtCoderAction>
+
 	^ addOns contextActions
 ]
 
-{ #category : #'api - accessing actions' }
+{ #category : #'api - actions' }
 GtCoderModel >> contextMenuActions [
 	<return: #Collection of: #GtCoderAction>
+
 	^ addOns contextMenuActions
 ]
 
@@ -153,6 +142,8 @@ GtCoderModel >> elementClass [
 
 { #category : #accessing }
 GtCoderModel >> expanded [
+	<return: #Boolean>
+
 	^ expanded
 ]
 
@@ -170,7 +161,7 @@ GtCoderModel >> expanded: aBoolean [
 GtCoderModel >> expandedUpdated [
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtCoderModel >> gtLiveFor: aView [
 	<gtView>
 	^ aView explicit
@@ -179,7 +170,7 @@ GtCoderModel >> gtLiveFor: aView [
 		stencil: [ self ]
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtCoderModel >> gtViewContextActionsFor: aView [
 	<gtView>
 	^ self addOns 
@@ -187,7 +178,7 @@ GtCoderModel >> gtViewContextActionsFor: aView [
 		ifNotNil: [ :currentAddOns | currentAddOns gtViewContextActionsFor: aView ]
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtCoderModel >> gtViewKeybindingsFor: aView [
 	<gtView>
 	^ self addOns 
@@ -195,7 +186,7 @@ GtCoderModel >> gtViewKeybindingsFor: aView [
 		ifNotNil: [ :currentAddOns | currentAddOns gtViewKeybindingsFor: aView ]
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtCoderModel >> gtViewMainActionsFor: aView [
 	<gtView>
 	^ self addOns 
@@ -220,50 +211,56 @@ GtCoderModel >> initialize [
 	self initializeAddOns
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtCoderModel >> initializeAddOns [
 	addOns := self addOnsClass new.
 	self initializeShortcuts
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtCoderModel >> initializeShortcuts [
 	
 ]
 
-{ #category : #'api - accessing actions' }
+{ #category : #'api - actions' }
 GtCoderModel >> mainActions [
 	"Return a collection of main actions in the coder, for example save"
-
 	<return: #Collection of: #GtCoderAction>
+
 	^ addOns mainActions
 ]
 
 { #category : #elements }
 GtCoderModel >> previewElement [
+	"Return a preview element for the Spotter"
+	<return: #BlElement>
+
 	^ self asElement
 ]
 
-{ #category : #'accessing-attributes' }
+{ #category : #'api - attributes' }
 GtCoderModel >> removeAttributeNamed: aSymbol [
 	attributes isNil
 		ifTrue: [ ^ self ].
 	attributes removeKey: aSymbol ifAbsent: [  ]
 ]
 
-{ #category : #'api - addons' }
-GtCoderModel >> requestAddOnsUpdate [
-	"Request addons to update due to some environmental changes (similar to requesting text to restyle)"
-
-	addOns requestUpdate
-]
-
-{ #category : #scripting }
+{ #category : #elements }
 GtCoderModel >> requestFocus [
 	self announce: (GtCoderRequestFocus new coder: self)
 ]
 
-{ #category : #elements }
+{ #category : #'api - addons' }
+GtCoderModel >> requestUpdateAddOns [
+	"Request addons to update due to some environmental changes (similar to requesting text to restyle).
+	It is a responsibility of the Coder's Element to start the actual addon update (${method:GtCoderModel>>#updateAddOnsFrom:}$) which may happen in
+	a background thread, that is why we can not start the update directly - we must have a reference to the element"
+
+	addOns requestUpdate.
+	self announce: (GtCoderAddOnsUpdateRequest new coder: self)
+]
+
+{ #category : #'api - addons' }
 GtCoderModel >> shortcuts [
 	<return: #Collection of: #BrTextEditorShortcut>
 
@@ -272,28 +269,16 @@ GtCoderModel >> shortcuts [
 
 { #category : #'api - addons' }
 GtCoderModel >> shouldAddOnsBeUpdated [
-	"Return true if addons should be updated, false otherwise"
+	"Return true if addons should be updated, false otherwise. When a Coder Model is attached to the corresponding Element
+	that element should check if addons need to be updated and if it is the case start the update with the help of ${method:GtCoderModel>>#updateAddOnsFrom:}$"
 	<return: #Boolean>
 
 	^ addOns shouldBeUpdated
 ]
 
-{ #category : #elements }
-GtCoderModel >> stylerView: anElement [
-
-]
-
 { #category : #subscriptions }
 GtCoderModel >> subscribeToSystem [
 	"do nothing"
-]
-
-{ #category : #private }
-GtCoderModel >> terminateAddOnsCommand [
-	addOnCommand isNil
-		ifTrue: [ ^ self ].
-	addOnCommand terminate.
-	addOnCommand := nil
 ]
 
 { #category : #subscriptions }
