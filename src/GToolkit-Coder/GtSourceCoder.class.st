@@ -449,23 +449,23 @@ GtSourceCoder >> initializeShortcuts [
 	addOns
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryM;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder browseImplementorsFrom: aShortcutEvent currentTarget ];
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
+				aSourceCoder browseImplementorsFrom: aShortcutEvent currentTarget ];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryN;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder browseReferencesFrom: aShortcutEvent currentTarget ];
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
+				aSourceCoder browseReferencesFrom: aShortcutEvent currentTarget ];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryB;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder browseClassFrom: aShortcutEvent currentTarget ];
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
+				aSourceCoder browseClassFrom: aShortcutEvent currentTarget ];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: (BlKeyCombination primaryL);
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder discardChanges ];
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
+				aSourceCoder discardChanges ];
 			options: self)
 ]
 
@@ -535,7 +535,7 @@ GtSourceCoder >> notifySourceChanged [
 
 { #category : #'private - notifying' }
 GtSourceCoder >> notifyStylersUpdated [
-	"Is sent when AddOn stylers changed. It means that the text editor should restyle the text"
+	"Is sent when AddOn stylers changed. It also means that the text editor should restyle the text"
 
 	self announce: (GtCoderStylerChanged new
 		coder: self;

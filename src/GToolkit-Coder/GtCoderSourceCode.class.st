@@ -60,6 +60,7 @@ GtCoderSourceCode >> resetCollapsedText [
 
 { #category : #'api - accessing' }
 GtCoderSourceCode >> sourceString [
+	"Return a string representation of the current source text"
 	<return: #String>
 	
 	^ self sourceText asString

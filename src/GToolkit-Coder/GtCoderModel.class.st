@@ -265,7 +265,7 @@ GtCoderModel >> requestFocus [
 
 { #category : #elements }
 GtCoderModel >> shortcuts [
-	<return: #Collection of: #BlShortcut>
+	<return: #Collection of: #BrTextEditorShortcut>
 
 	^ addOns shortcuts
 ]

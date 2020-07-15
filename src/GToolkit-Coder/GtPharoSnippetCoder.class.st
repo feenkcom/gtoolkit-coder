@@ -33,6 +33,14 @@ GtPharoSnippetCoder >> evaluationRequesterForEditor: anEditorElement [
 		yourself
 ]
 
+{ #category : #initialization }
+GtPharoSnippetCoder >> forSource: aString [
+	sourceCode := GtCoderConcreteSourceCode new source: aString.
+
+	self sourceChanged.
+	self notifySourceChanged.
+]
+
 { #category : #private }
 GtPharoSnippetCoder >> highlightBindingsStrategy [
 	^ self context 
@@ -49,7 +57,7 @@ GtPharoSnippetCoder >> initialize [
 	bindingStrategy bindings: GtSnippetBindings new.
 	super initialize.
 	expanded := true.
-	self source: ''
+	self forSource: ''
 ]
 
 { #category : #initialization }
@@ -84,18 +92,26 @@ GtPharoSnippetCoder >> initializeShortcuts [
 	super initializeShortcuts.
 
 	addOns
-		addShortcut: (BlShortcut new
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryD;
-			action: [ self doItSelectionOrAll ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder doItSelectionOrAllFrom: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryG;
-			action: [ :anEvent | self doItAndGoSelectionOrAll: anEvent currentTarget ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder doItAndGoSelectionOrAll: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryP;
-			action: [ :anEvent | self printItSelectionOrAll: anEvent currentTarget ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder printItSelectionOrAll: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryR;
-			action: [ :anEvent | self renameVariableIn: anEvent currentTarget ])
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder renameVariableIn: aShortcutEvent currentTarget ];
+			options: self)
 ]
 
 { #category : #private }
