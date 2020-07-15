@@ -194,9 +194,9 @@ GtSourceCoder >> debug: aCompiledMethod receiver: anObject in: evalContext [
 GtSourceCoder >> debugSelectionFrom: anEditorElement [
 	^ anEditorElement editor hasSelection
 		ifTrue: [ self
-			debugSource: (self selectedSourceInEditor: anEditorElement editor)
-			from: anEditorElement ]
-		ifFalse: [ self debugSource: self source from: anEditorElement ]
+				debugSource: (self selectedSourceInEditor: anEditorElement editor)
+				from: anEditorElement ]
+		ifFalse: [ self debugSource: self currentSourceString from: anEditorElement ]
 ]
 
 { #category : #'private - actions' }
@@ -247,7 +247,7 @@ GtSourceCoder >> discardChangesFrom: anEditorElement [
 { #category : #'api - actions' }
 GtSourceCoder >> doItAllFrom: anEditorElement [
 	^ self
-		evaluateSource: self source
+		evaluateSource: self currentSourceString
 		in: anEditorElement
 ]
 
