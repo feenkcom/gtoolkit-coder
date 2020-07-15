@@ -858,7 +858,7 @@ GtMethodCoder >> initializeShortcuts [
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryS;
 			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder save ];
+				aMethodCoder saveFrom: aShortcutEvent currentTarget ];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: (BlKeyCombination primaryShiftF);
