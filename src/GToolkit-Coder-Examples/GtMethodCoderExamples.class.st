@@ -220,12 +220,12 @@ GtMethodCoderExamples >> forThisMethodCoder [
 	BlUseAsyncFeatures
 		disableDuring: [ methodCoder := GtMethodCoder forMethod: method ].
 
-	source := method sourceCode...
+	source := method sourceCode.
 	
 	self
 		assert: methodCoder collapsedText asString
 		equals: (source first: (source indexOf: Character cr) - 1).
-		
+
 	self assert: methodCoder currentSourceString equals: method sourceCode.
 
 	^ methodCoder

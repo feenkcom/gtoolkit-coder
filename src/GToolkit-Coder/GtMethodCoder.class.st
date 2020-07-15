@@ -1,9 +1,7 @@
 "
 ! Method Coder
-I extend a ${class:GtSourceCoder}$ with the knowledge of how to edit a method. In particular, I am aware of different types of methods and provide a wider variety of refactorings and actions.
-
-!! Actions
-
+I extend a ${class:GtSourceCoder}$ with the knowledge of how to edit a method. In particular, I am aware of different types of methods and provide a wider variety of refactorings and actions. 
+!! Refactorings
 
 !!! What is the difference between ${method:GtMethodCoder>>#selector}$ and ${method:GtMethodCoder>>#currentSelector}$
 "
@@ -63,7 +61,7 @@ GtMethodCoder class >> nodeHighlight [
 				paint: BrGlamorousColors textHighlightColor ]
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> abstractClassVar: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
@@ -75,7 +73,7 @@ GtMethodCoder >> abstractClassVar: aNode [
 	self addRefactoringChangesPreview: refactoring at: aNode stop
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> abstractInstVar: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
@@ -87,7 +85,7 @@ GtMethodCoder >> abstractInstVar: aNode [
 	self addRefactoringChangesPreview: refactoring at: aNode stop
 ]
 
-{ #category : #'private - add ons - refactoring' }
+{ #category : #'private - addons' }
 GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 	aNode isVariable
 		ifFalse: [ ^ self ].
@@ -108,7 +106,7 @@ GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 				action: [ :element | self createAccessorsFor: aNode instanceVariable: false ] ]
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> addClassVariable: aString [
 	| refactoring |
 	refactoring := RBAddClassVariableRefactoring
@@ -119,7 +117,7 @@ GtMethodCoder >> addClassVariable: aString [
 	self requestStyleSourceText
 ]
 
-{ #category : #'private - add ons - refactoring' }
+{ #category : #'private - addons' }
 GtMethodCoder >> addExtractMethodTo: coderAddOns from: anEditorElement [
 	| nodes |
 	nodes := self rbSelectedNodesFrom: anEditorElement.
@@ -132,7 +130,7 @@ GtMethodCoder >> addExtractMethodTo: coderAddOns from: anEditorElement [
 		action: [ :element | self extractMethod: element ]
 ]
 
-{ #category : #'private - add ons - refactoring' }
+{ #category : #'private - addons' }
 GtMethodCoder >> addExtractTempFor: aNode to: coderAddOns [
 	aNode isValue
 		ifFalse: [ ^ self ].
@@ -154,7 +152,7 @@ GtMethodCoder >> addExtractTempFor: aNode to: coderAddOns [
 		action: [ :element | self extractTemporaryVariable: aNode in: element ]
 ]
 
-{ #category : #'private - add ons - refactoring' }
+{ #category : #'private - addons' }
 GtMethodCoder >> addInlineSelfMessageFor: aNode to: coderAddOns [
 	aNode isMessage
 		ifFalse: [ ^ self ].
@@ -167,7 +165,7 @@ GtMethodCoder >> addInlineSelfMessageFor: aNode to: coderAddOns [
 		action: [ :element | self inlineMessageSendIn: aNode ]
 ]
 
-{ #category : #'private - add ons - refactoring' }
+{ #category : #'private - addons' }
 GtMethodCoder >> addInlineTempFor: aNode to: coderAddOns [
 	aNode isAssignment
 		ifFalse: [ ^ self ].
@@ -183,7 +181,7 @@ GtMethodCoder >> addInlineTempFor: aNode to: coderAddOns [
 		action: [ :element | self inlineTemporaryVariableIn: aNode ]
 ]
 
-{ #category : #'private - add ons - refactoring' }
+{ #category : #'private - addons' }
 GtMethodCoder >> addInstanceAccessorRefactoringsFor: aNode to: coderAddOns [
 	aNode isVariable
 		ifFalse: [ ^ self ].
@@ -209,7 +207,7 @@ GtMethodCoder >> addInstanceAccessorRefactoringsFor: aNode to: coderAddOns [
 				action: [ :element | self createAccessorsFor: aNode instanceVariable: true ] ]
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> addInstanceVariable: aString [
 	| refactoring |
 	refactoring := RBAddInstanceVariableRefactoring
@@ -229,7 +227,7 @@ GtMethodCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 		attributes: { (GtRefactoringChangesAttribute new refactoring: aRefactoring) }
 ]
 
-{ #category : #'private - add ons - refactoring' }
+{ #category : #'private - addons' }
 GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns from: anEditorElement [
 	<gtCoderContextMenuAddOns: 20>
 	self addExtractMethodTo: coderAddOns from: anEditorElement.
@@ -246,7 +244,7 @@ GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns from: anEditorEl
 				withAllParentsDo: [ :node | self addExtractTempFor: node to: coderAddOns ] ]
 ]
 
-{ #category : #'private - add ons - refactoring' }
+{ #category : #'private - addons' }
 GtMethodCoder >> addRemoveParameterRefactoringFor: aNode to: coderAddOns [
 	aNode isVariable
 		ifFalse: [ ^ self ].
@@ -326,7 +324,7 @@ GtMethodCoder >> category: aSymbol [
 	^ self attributeNamed: #category put: aSymbol
 ]
 
-{ #category : #actions }
+{ #category : #'private - actions' }
 GtMethodCoder >> changeManager [
 	^ RBRefactoryChangeManager instance
 ]
@@ -395,7 +393,7 @@ GtMethodCoder >> compiledMethod [
 							cls >> sel ] ] ]
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> createAccessorsFor: aNode instanceVariable: aBoolean [
 	| refactoring model cls |
 	model := self createRefactoringModel.
@@ -457,8 +455,9 @@ GtMethodCoder >> debugExampleFrom: anElement [
 { #category : #'api - actions' }
 GtMethodCoder >> debugMethodFrom: anEditorElement [
 	self isModified
-		ifTrue: [ self save
-			ifFalse: [ ^ self ] ].
+		ifTrue: [
+			(self saveFrom: anEditorElement)
+				ifFalse: [ ^ self ] ].
 
 	self
 		debug: self compiledMethod
@@ -586,14 +585,14 @@ GtMethodCoder >> explanationLink: anExplanation [
 	self requestUpdateAddOns
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> extractMethod: editorElement [
 	(GtExtractMethodController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> extractTemporaryVariable: aNode in: anEditorElement [
 	| refactoring model tempName |
 	model := self createRefactoringModel.
@@ -655,13 +654,16 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 { #category : #'api - actions' }
 GtMethodCoder >> format [
 	| ast |
-	ast := [ RBParser parseMethod: self source ]
+	ast := [ RBParser parseMethod: self currentSourceString ]
 		on: SyntaxErrorNotification
 		do: [ :ex | 
 			^ self
 				notifyParseError: ex errorMessage
 				at: ex location ].
-	self source: ast formattedCode
+
+	self sourceText
+		deleteAll;
+		insertString: ast formattedCode at: 0
 ]
 
 { #category : #'gt-extensions' }
@@ -851,7 +853,7 @@ GtMethodCoder >> initializeShortcuts [
 			options: self)
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> inlineMessageSendIn: messageNode [
 	| refactoring model |
 	model := self createRefactoringModel.
@@ -866,7 +868,7 @@ GtMethodCoder >> inlineMessageSendIn: messageNode [
 	self performMethodRefactoring: refactoring
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> inlineTemporaryVariableIn: assignmentNode [
 	| refactoring model |
 	model := self createRefactoringModel.
@@ -999,7 +1001,7 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 		action: [ :anEditorElement | self runMondrianPaintFrom: anEditorElement ]
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> moveMethodToInstanceOrClass [
 	| oldClass newClass model modelClass oldModelClass |
 	oldClass := self classOrMetaClass.
@@ -1023,7 +1025,7 @@ GtMethodCoder >> moveMethodToInstanceOrClass [
 	^ true
 ]
 
-{ #category : #actions }
+{ #category : #'private - actions' }
 GtMethodCoder >> newMethodSource [
 	^ self newSourceText asString
 ]
@@ -1104,7 +1106,8 @@ GtMethodCoder >> playAndInspectFrom: anEditorElement [
 	| anObject |
 
 	self isModified
-		ifTrue: [ self save
+		ifTrue: [
+			(self saveFrom: anEditorElement)
 				ifFalse: [ ^ self ] ].
 
 	anObject := self
@@ -1174,7 +1177,7 @@ GtMethodCoder >> printOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> protectInstVar: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
@@ -1256,7 +1259,7 @@ GtMethodCoder >> removeHighlight [
 		clearAttributes: [ :attr | attr == self class nodeHighlight ]
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> removeParameter: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
@@ -1275,21 +1278,21 @@ GtMethodCoder >> removeRefactoringAttribute [
 		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> renameClassIn: editorElement [
 	(GtRenameClassController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> renameClassVariableIn: editorElement [
 	(GtRenameClassVariableController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> renameIn: editorElement [
 	| node |
 	node := self rbNodeAtCursor: editorElement.
@@ -1312,26 +1315,26 @@ GtMethodCoder >> renameIn: editorElement [
 						ifTrue: [ ^ self renameClassIn: editorElement ] ] ]
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> renameInstanceVariableIn: editorElement [
 	(GtRenameInstanceVariableController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> renameLocalVariableIn: editorElement [
 	GtRenameAction pharoRenameLocalsOn: editorElement
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> renameMethod: editorElement [
 	(GtRenameMethodController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
-{ #category : #'actions - refactorings' }
+{ #category : #'api - refactorings' }
 GtMethodCoder >> renameProtocol: aString [
 	| change |
 	self category: aString asSymbol.
@@ -1355,33 +1358,31 @@ GtMethodCoder >> runExampleFrom: anEditorElement [
 	self styleSourceTextFrom: anEditorElement
 ]
 
-{ #category : #actions }
+{ #category : #'api - actions' }
 GtMethodCoder >> runGtViewFrom: anElement [
 	| view |
+	
 	self isModified
-		ifTrue: [ self save
+		ifTrue: [
+			(self saveFrom: anElement)
 				ifFalse: [ ^ self ] ].
+	
 	view := self object perform: self selector with: GtPhlowEmptyView new.
-	anElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: view;
-				sourceElement: anElement)
+	anElement phlow spawnObject: view
 ]
 
-{ #category : #actions }
+{ #category : #'api - actions' }
 GtMethodCoder >> runMondrianPaintFrom: anElement [
 	| mondrian |
+	
 	self isModified
-		ifTrue: [ self save
+		ifTrue: [
+			(self saveFrom: anElement)
 				ifFalse: [ ^ self ] ].
+	
 	mondrian := GtMondrian new.
 	self object perform: self selector with: mondrian.
-	anElement
-		fireEvent:
-			(GtPhlowObjectToSpawn new
-				object: mondrian;
-				sourceElement: anElement)
+	anElement phlow spawnObject: mondrian
 ]
 
 { #category : #'private - refactorings' }
