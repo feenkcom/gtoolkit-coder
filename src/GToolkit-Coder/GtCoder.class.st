@@ -360,10 +360,9 @@ GtCoder >> leftSideBarResizerDo: aBlock [
 
 { #category : #'instance creation' }
 GtCoder >> newEmbellisherExtension [
-	self flag: 'temporary deletion of Playground #1301'.
 	^ GtPagerPageEmbellisherExtensions new 
-		"addExtension: (GtCoderEmbeddedPlaygroundExtension new
-			navigationModel: navigationModel);"
+		addExtension: (GtCoderEmbeddedPlaygroundExtension new
+			navigationModel: navigationModel);
 		addExtension: (GtCoderSideBarSystemNavigationExtension new
 			coder: self;
 			sideBar: leftSideBarContent;
