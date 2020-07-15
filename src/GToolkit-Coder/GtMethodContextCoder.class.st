@@ -31,12 +31,13 @@ GtMethodContextCoder >> close [
 ]
 
 { #category : #actions }
-GtMethodContextCoder >> compile [
+GtMethodContextCoder >> compileFrom: anEditorElement [
 	^ self
-		handleCompilerErrorsDuring: [ self session
+		handleCompilerErrorsDuring: [
+			self session
 				gtRecompileMethodTo: self newMethodSource
 				inContext: self context
-				notifying: self requester ]
+				notifying: (self requesterForEditor: anEditorElement editor) ]
 ]
 
 { #category : #accessing }
@@ -118,9 +119,11 @@ GtMethodContextCoder >> initializeAddOns [
 GtMethodContextCoder >> initializeShortcuts [ 
 	super initializeShortcuts.
 	addOns 
-		addShortcut: (BlShortcut new
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryP;
-			action: [ :anEvent | self printItSelection: anEvent currentTarget ])
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
+				aSourceCoder printItSelectionFrom: aShortcutEvent currentTarget ];
+			options: self)
 ]
 
 { #category : #'accessing variables' }
@@ -258,7 +261,7 @@ GtMethodContextCoder >> temporaryVariableNodesDo: aBloc [
 ]
 
 { #category : #updating }
-GtMethodContextCoder >> updateContent [ 
+GtMethodContextCoder >> updateContent [
 	"Update the source code and the selection. The save action in the debugger 
 	can change the compiled method stored  in the context. "
 	self
@@ -285,13 +288,7 @@ GtMethodContextCoder >> updateSelection [
 
 { #category : #updating }
 GtMethodContextCoder >> updateSourceFromContext [
-	| contextSourceCode |
-	contextSourceCode := self context method sourceCode.
-	contextSourceCode = methodSource ifTrue: [ 
-		^ self ].
-	
-	methodSource := contextSourceCode.
-	self buildSource.
+	self forMethod: self context method
 ]
 
 { #category : #'accessing variables' }

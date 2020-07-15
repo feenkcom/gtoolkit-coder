@@ -12,8 +12,7 @@ Class {
 	#superclass : #GtSourceCoder,
 	#instVars : [
 		'class',
-		'selector',
-		'subCoders'
+		'selector'
 	],
 	#classVars : [
 		'NodeHighlight'
@@ -117,7 +116,7 @@ GtMethodCoder >> addClassVariable: aString [
 		class: self classOrMetaClass instanceSide.
 	refactoring execute.
 	self resetASTCache.	"Need to reset AST for undeclared variables"
-	self styleText
+	self requestStyleSourceText
 ]
 
 { #category : #'private - add ons - refactoring' }
@@ -264,12 +263,7 @@ GtMethodCoder >> addRemoveParameterRefactoringFor: aNode to: coderAddOns [
 		action: [ :element | self removeParameter: aNode ]
 ]
 
-{ #category : #accessing }
-GtMethodCoder >> addSubCoder: aMethodCoder [
-	self subCoders addFirst: aMethodCoder
-]
-
-{ #category : #'add ons' }
+{ #category : #'api - addons' }
 GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	(anAST isNil or: [ anAST methodNode isNil ])
@@ -278,18 +272,6 @@ GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 	(class isNil or: [ (class inheritsFrom: BaselineOf) not ])
 		ifTrue: [ ^ self ].
 	coderAddOns addStyler: GtCoderExpandableBaselineStyler new
-]
-
-{ #category : #private }
-GtMethodCoder >> buildSource [
-	| text |
-	
-	self halt.
-	
-	"isBuilt := true.
-	text := methodSource asRopedText.
-	text attributes: self defaultTextAttributes.
-	self notifySourceChanged."
 ]
 
 { #category : #testing }
@@ -370,28 +352,23 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 	class := aBehavior
 ]
 
-{ #category : #private }
-GtMethodCoder >> compile [
+{ #category : #'api - actions' }
+GtMethodCoder >> compileFrom: anEditorElement [
+	"Try to compile the current source code and return true if it was successful, false otherwise"
+	<return: #Boolean>
 	| change |
 	
-	self halt.
-	
-	subCoders notNil
-		ifTrue: [ subCoders
-				do: [ :each | 
-					each compile
-						ifFalse: [ ^ false ] ] ].
 	change := self category
 		ifNil: [ RBAddMethodChange
 				compile: self newMethodSource
 				in: self classOrMetaClass
-				for: self requester ]
+				for: (self requesterForEditor: anEditorElement editor) ]
 		ifNotNil: [ :category | 
 			RBAddMethodChange
 				compile: self newMethodSource
 				in: self classOrMetaClass
 				classified: category
-				for: self requester ].
+				for: (self requesterForEditor: anEditorElement editor) ].
 	selector := change selector.
 	(self
 		handleCompilerErrorsDuring: [ self changeManager performChange: change ])
@@ -400,8 +377,8 @@ GtMethodCoder >> compile [
 		ifNotNil: [ :sel | 
 			self selector: sel.
 			self compiledMethod
-				ifNotNil: [ :method | 
-					"methodSource := method sourceCode."
+				ifNotNil: [ :method |
+					self forMethod: method.
 					^ true ] ].
 	^ false
 ]
@@ -503,13 +480,6 @@ GtMethodCoder >> debugSelectionOrMethodFrom: anEditorElement [
 		ifNotEmpty: [ :aSelectedSource | self debugSource: aSelectedSource from: anEditorElement ]
 ]
 
-{ #category : #actions }
-GtMethodCoder >> discardChanges [
-	"Discard not-accepted changes."
-	self isModified ifFalse: [ ^ self ].
-	self buildSource.
-]
-
 { #category : #'private - actions' }
 GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean in: anEditorElement [
 	^ self 
@@ -553,7 +523,7 @@ GtMethodCoder >> example: anExampleWithResult [
 		when: GtExampleArgumentsChanged send: #handleExampleArgumentsChanged: to: self
 ]
 
-{ #category : #'add ons' }
+{ #category : #'api - addons' }
 GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	(self compiledMethod notNil
@@ -661,20 +631,20 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 	^ startIndex
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtMethodCoder >> forClass: aBehavior source: aString [	
 	self classOrMetaClass: aBehavior.
 
 	self sourceCode: (GtCoderConcreteSourceCode new source: aString)
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtMethodCoder >> forExample: anExampleWithResult [
 	self forMethod: anExampleWithResult method.
 	self example: anExampleWithResult
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtMethodCoder >> forMethod: aCompiledMethod [
 	self classOrMetaClass: aCompiledMethod methodClass.
 	self selector: aCompiledMethod selector.
@@ -792,7 +762,7 @@ GtMethodCoder >> highlighter: aGtSourceReferenceHighlighter [
 	self requestStyleSourceText
 ]
 
-{ #category : #'add ons' }
+{ #category : #'api - addons' }
 GtMethodCoder >> highlighterFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	coderAddOns removeStylerOfType: GtSourceReferenceHighlighter.
@@ -800,22 +770,32 @@ GtMethodCoder >> highlighterFor: anAST into: coderAddOns [
 		ifTrue: [ coderAddOns addStyler: self highlighter ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtMethodCoder >> initialize [
 	super initialize
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
+	
 	addOns addStyler: (GtFixItStyler new methodCoder: self).
-	addOns addMainAction: 'Save' translated icon: BrGlamorousVectorIcons accept action: [ self save ].
-	addOns addMainAction: 'Remove' translated icon: BrGlamorousVectorIcons remove action: [ self remove ].
+	
+	addOns
+		addMainAction: 'Save' translated
+		icon: BrGlamorousVectorIcons accept
+		action: [ :anEditorElement | self saveFrom: anEditorElement ].
+	
+	addOns
+		addMainAction: 'Remove' translated
+		icon: BrGlamorousVectorIcons remove
+		action: [ :anEditorElement | self removeFrom: anEditorElement ].
+
 	addOns clearChanges
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtMethodCoder >> initializeShortcuts [
 	super initializeShortcuts.
 
@@ -927,14 +907,7 @@ GtMethodCoder >> isForMethod: aCompiledMethod [
 	^ self classOrMetaClass = aCompiledMethod methodClass and: [ self selector = aCompiledMethod selector ]
 ]
 
-{ #category : #testing }
-GtMethodCoder >> isModified [
-	<return: #Boolean>
-
-	^ self sourceCode isModified
-]
-
-{ #category : #'add ons' }
+{ #category : #'api - addons' }
 GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
 	| variable |
 	aMethodNode arguments size ~= 1
@@ -952,8 +925,7 @@ GtMethodCoder >> isMondrianPaintMethod: aMethodNode [
 
 { #category : #testing }
 GtMethodCoder >> isNewMethod [
-	^ self halt
-	"^ methodSource isEmpty"
+	^ self currentSourceString isEmpty
 ]
 
 { #category : #testing }
@@ -990,7 +962,7 @@ GtMethodCoder >> methodChanged: aMethodModified [
 	self forMethod: aMethodModified newMethod
 ]
 
-{ #category : #'add ons' }
+{ #category : #'api - addons' }
 GtMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	(anAST isNil or: [ anAST methodNode isNil ])
@@ -999,18 +971,19 @@ GtMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
 	coderAddOns addStyler: GtCoderExpandableMethodStyler new
 ]
 
-{ #category : #'add ons' }
+{ #category : #'api - addons' }
 GtMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 1>
 	self isModified
-		ifTrue: [ coderAddOns
+		ifTrue: [
+			coderAddOns
 				addMainAction: 'Discard Changes' translated
 				icon: BrGlamorousVectorIcons cancel
-				action: [ :button | self discardChanges ] ]
+				action: [ :anEditorElement | self discardChangesFrom: anEditorElement ] ]
 		ifFalse: [ coderAddOns removeMainAction: 'Discard Changes' translated ]
 ]
 
-{ #category : #'add ons' }
+{ #category : #'api - addons' }
 GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 7>
 	(self hasObjectAttribute
@@ -1078,7 +1051,9 @@ GtMethodCoder >> nodeDescription: aNode [
 
 { #category : #accessing }
 GtMethodCoder >> object [
-	^ self attributeNamed: #object ifAbsent: [ class ]
+	^ self
+		attributeNamed: #object
+		ifAbsent: [ class ]
 ]
 
 { #category : #private }
@@ -1158,7 +1133,8 @@ GtMethodCoder >> playExampleFrom: anEditorElement [
 { #category : #'api - actions' }
 GtMethodCoder >> playFrom: anEditorElement [
 	self isModified
-		ifTrue: [ self save
+		ifTrue: [
+			(self saveFrom: anEditorElement)
 				ifFalse: [ ^ self ] ].
 	
 	self
@@ -1269,8 +1245,8 @@ GtMethodCoder >> rbSelectedNodesFrom: anEditorElement [
 	^ {node}
 ]
 
-{ #category : #actions }
-GtMethodCoder >> remove [
+{ #category : #'api - actions' }
+GtMethodCoder >> removeFrom: anEditorElement [
 	^ class removeSelector: selector
 ]
 
@@ -1297,11 +1273,6 @@ GtMethodCoder >> removeParameter: aNode [
 GtMethodCoder >> removeRefactoringAttribute [
 	self sourceText
 		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
-]
-
-{ #category : #accessing }
-GtMethodCoder >> removeSubCoder: aMethodCoder [
-	self subCoders remove: aMethodCoder ifAbsent: [  ]
 ]
 
 { #category : #'actions - refactorings' }
@@ -1376,7 +1347,8 @@ GtMethodCoder >> renameProtocol: aString [
 GtMethodCoder >> runExampleFrom: anEditorElement [
 	self isModified
 		ifTrue: [
-			self save ifFalse: [ ^ self ] ].
+			(self saveFrom: anEditorElement)
+				ifFalse: [ ^ self ] ].
 
 	self example run.
 
@@ -1431,12 +1403,18 @@ GtMethodCoder >> safeTemporaryName [
 	^ name
 ]
 
-{ #category : #actions }
-GtMethodCoder >> save [
-	^ self validateSyntax
-		and: [ self compile
-				and: [ self buildSource.
-					true ] ]
+{ #category : #'api - actions' }
+GtMethodCoder >> saveFrom: anEditorElement [
+	"Try to save the current method validating syntax and return `true` if save was succesful, false otherwise"
+	<return: #Boolean>
+
+	self validateSyntax
+		ifFalse: [ ^ false ].
+
+	(self compileFrom: anEditorElement)
+		ifFalse: [ ^ false ].
+		
+	^ true
 ]
 
 { #category : #accessing }
@@ -1460,18 +1438,13 @@ GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 	^ index
 ]
 
-{ #category : #accessing }
-GtMethodCoder >> subCoders [
-	^ subCoders ifNil: [ subCoders := OrderedCollection new ]
-]
-
 { #category : #subscriptions }
 GtMethodCoder >> subscribeToSystem [
 	SystemAnnouncer uniqueInstance weak
 		when: MethodModified send: #methodChanged: to: self
 ]
 
-{ #category : #'add ons' }
+{ #category : #'api - addons' }
 GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 20>
 	(self hasObjectAttribute
@@ -1495,14 +1468,4 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
 		action: [ :anEditorElement | self debugSelectionOrMethodFrom: anEditorElement ]
-]
-
-{ #category : #private }
-GtMethodCoder >> validateSyntax [
-	subCoders notNil
-		ifTrue: [ subCoders
-				do: [ :each | 
-					each validateSyntax
-						ifFalse: [ ^ false ] ] ].
-	^ super validateSyntax
 ]

@@ -34,25 +34,27 @@ Class {
 GtSourceCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
 	<gtCoderContextMenuAddOns: 10>
 	coderAddOns
-		addContextMenuItem: 'Cut' action: [ :anEditorElement | anEditorElement editor cutSelected ];
+		addContextMenuItem: 'Cut'
+			action: [ :anEditorElement | anEditorElement editor cutSelected ];
 		addContextMenuItem: 'Copy'
 			action: [ :anEditorElement | anEditorElement editor copySelected ];
-		addContextMenuItem: 'Paste' action: [ :anEditorElement | anEditorElement editor paste ]
+		addContextMenuItem: 'Paste'
+			action: [ :anEditorElement | anEditorElement editor paste ]
 ]
 
-{ #category : #updating }
+{ #category : #'private - addons' }
 GtSourceCoder >> addOnChanged: aSymbol [
 	aSymbol = #stylers
 		ifTrue: [ self notifyStylersUpdated ].
 	super addOnChanged: aSymbol
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #'private - addons' }
 GtSourceCoder >> addOnsClass [
 	^ GtSourceCoderAddOns
 ]
 
-{ #category : #'api - performing actions' }
+{ #category : #'api - actions' }
 GtSourceCoder >> browseClassFrom: anEditorElement [
 	self
 		pharoBehaviorInSelectionOrAtCursorInEditor: anEditorElement editor
@@ -60,7 +62,7 @@ GtSourceCoder >> browseClassFrom: anEditorElement [
 		ifNone: [  ]
 ]
 
-{ #category : #'api - performing actions' }
+{ #category : #'api - actions' }
 GtSourceCoder >> browseImplementorsFrom: anEditorElement [
 	| symbol |
 
@@ -74,14 +76,12 @@ GtSourceCoder >> browseImplementorsFrom: anEditorElement [
 	anEditorElement phlow spawnObject: (GtSearchImplementorsFilter selector: symbol)
 ]
 
-{ #category : #'api - performing actions' }
+{ #category : #'api - actions' }
 GtSourceCoder >> browseReferencesFrom: anEditorElement [
 	| filter |
 
 	filter := (self selectedSourceInEditor: anEditorElement editor)
-		ifEmpty: [
-			self expanded
-				ifTrue: [ self referencesFilterAtCursorIn: anEditorElement ] ]
+		ifEmpty: [ self referencesFilterAtCursorIn: anEditorElement ]
 		ifNotEmpty: [ :currentSelection | self extractReferencesFilterFromString: currentSelection ].
 
 	filter isNil
@@ -125,8 +125,10 @@ GtSourceCoder >> clearSyntaxErrorsInText: aBlText [
 	aBlText clearAttributes: [ :eachAttribute | eachAttribute isKindOf: GtSourceCoderErrorAttribute ]
 ]
 
-{ #category : #'api - accessing' }
+{ #category : #'api - text' }
 GtSourceCoder >> collapsedText [
+	<return: #BlText>
+
 	^ self sourceCode collapsedText
 ]
 
@@ -159,18 +161,12 @@ GtSourceCoder >> completionStrategy: aGtCompletionStrategy [
 	completionStrategy := aGtCompletionStrategy
 ]
 
-{ #category : #accessing }
+{ #category : #'api - text' }
 GtSourceCoder >> currentSourceString [
 	"Return a String representation of the current source text"
 	<return: #String>
 
 	^ self sourceCode sourceString
-]
-
-{ #category : #private }
-GtSourceCoder >> cursorPositionDo: aBlock [
-	self halt.
-	self sourceEditor cursor do: [ :each | ^ aBlock value: each position ]
 ]
 
 { #category : #private }
@@ -194,7 +190,7 @@ GtSourceCoder >> debug: aCompiledMethod receiver: anObject in: evalContext [
 	Smalltalk tools debugger openOn: debugSession withFullView: true.
 ]
 
-{ #category : #'api - performing actions' }
+{ #category : #'api - actions' }
 GtSourceCoder >> debugSelectionFrom: anEditorElement [
 	^ anEditorElement editor hasSelection
 		ifTrue: [ self
@@ -234,20 +230,29 @@ GtSourceCoder >> disabledTextAttributes [
 	^ {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)}
 ]
 
-{ #category : #'api - performing actions' }
-GtSourceCoder >> discardChanges [
+{ #category : #'api - actions' }
+GtSourceCoder >> discardChangesFrom: anEditorElement [
 	"Discard not-accepted changes."
+
+	self isModified
+		ifFalse: [ ^ self ].
+
+	self sourceCode resetCollapsedText.
+	self sourceCode resetSourceText.
+
+	self sourceChanged.
+	self notifySourceChanged
 ]
 
-{ #category : #'api - performing actions' }
-GtSourceCoder >> doItAll: anEditorElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> doItAllFrom: anEditorElement [
 	^ self
 		evaluateSource: self source
 		in: anEditorElement
 ]
 
-{ #category : #'api - performing actions' }
-GtSourceCoder >> doItAndGoAll: anEditorElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> doItAndGoAllFrom: anEditorElement [
 	| aSource aValue |
 
 	aSource := self currentSourceString.
@@ -258,26 +263,29 @@ GtSourceCoder >> doItAndGoAll: anEditorElement [
 	anEditorElement phlow spawnObject: aValue
 ]
 
-{ #category : #'api - performing actions' }
+{ #category : #'api - actions' }
 GtSourceCoder >> doItAndGoSelectionFrom: anEditorElement [
 	| source value |
 	source := self selectedSourceInEditor: anEditorElement editor.
-	source isEmpty
-		ifTrue: [ ^ self ].
+	source
+		ifEmpty: [ ^ self ].
+	
 	value := self evaluateSource: source in: anEditorElement.
+	
 	value == self
 		ifTrue: [ ^ self ].
+	
 	anEditorElement phlow spawnObject: value
 ]
 
-{ #category : #'api - performing actions' }
-GtSourceCoder >> doItAndGoSelectionOrAll: anEditorElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> doItAndGoSelectionOrAllFrom: anEditorElement [
 	anEditorElement editor hasSelection
 		ifTrue: [ self doItAndGoSelectionFrom: anEditorElement ] 
-		ifFalse: [ self doItAndGoAll: anEditorElement ]
+		ifFalse: [ self doItAndGoAllFrom: anEditorElement ]
 ]
 
-{ #category : #'api - performing actions' }
+{ #category : #'api - actions' }
 GtSourceCoder >> doItSelectionFrom: anEditorElement [
 	"Evaluate a selected piece of source code and return a result.
 	I am also able to evaluate an empty or only consisting of whitespace
@@ -289,11 +297,11 @@ GtSourceCoder >> doItSelectionFrom: anEditorElement [
 		in: anEditorElement
 ]
 
-{ #category : #'api - performing actions' }
-GtSourceCoder >> doItSelectionOrAll: anEditorElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> doItSelectionOrAllFrom: anEditorElement [
 	^ anEditorElement editor hasSelection 
 		ifTrue: [ self doItSelectionFrom: anEditorElement ] 
-		ifFalse: [ self doItAll: anEditorElement ]
+		ifFalse: [ self doItAllFrom: anEditorElement ]
 ]
 
 { #category : #'private - actions' }
@@ -350,7 +358,7 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorE
 		in: anEditorElement
 ]
 
-{ #category : #'api - performing actions' }
+{ #category : #'private - actions' }
 GtSourceCoder >> evaluationRequesterForEditor: anEditorElement [
 	^ GtSourceCoderEvaluationRequester on: self editor: anEditorElement
 ]
@@ -408,7 +416,7 @@ GtSourceCoder >> extractSelectorFromString: aString [
 	^ nil
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtSourceCoder >> gtViewStylersFor: aView [
 	<gtView>
 	^ self addOns 
@@ -416,7 +424,17 @@ GtSourceCoder >> gtViewStylersFor: aView [
 		ifNotNil: [ :currentAddOns | currentAddOns gtViewStylersFor: aView ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #testing }
+GtSourceCoder >> hasObjectAttribute [
+	<return: #Boolean>
+	self 
+		attributeNamed: #object 
+		ifAbsent: [ ^ false ].
+
+	^ true
+]
+
+{ #category : #initialize }
 GtSourceCoder >> initialize [
 	super initialize.
 	self resetASTCache.
@@ -425,14 +443,16 @@ GtSourceCoder >> initialize [
 	sourceCode := nil
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtSourceCoder >> initializeAddOns [
 	super initializeAddOns.
+	
 	addOns addStyler: BrRBTextStyler new.
+	
 	addOns clearChanges
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtSourceCoder >> initializeShortcuts [
 
 	addOns
@@ -454,8 +474,15 @@ GtSourceCoder >> initializeShortcuts [
 		addShortcut: (BrTextEditorShortcut new
 			combination: (BlKeyCombination primaryL);
 			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
-				aSourceCoder discardChanges ];
+				aSourceCoder discardChangesFrom: aShortcutEvent currentTarget ];
 			options: self)
+]
+
+{ #category : #testing }
+GtSourceCoder >> isModified [
+	<return: #Boolean>
+
+	^ self sourceCode isModified
 ]
 
 { #category : #private }
@@ -465,7 +492,7 @@ GtSourceCoder >> newCompletionStrategy [
 		yourself
 ]
 
-{ #category : #updating }
+{ #category : #'private - ast' }
 GtSourceCoder >> newRbAST: aString [
 	| ast |
 	ast := self parseExpression: aString requestor: nil.
@@ -484,7 +511,7 @@ GtSourceCoder >> newSourceStylerFrom: anEditorElement [
 		yourself
 ]
 
-{ #category : #updating }
+{ #category : #'private - text' }
 GtSourceCoder >> newSourceText [
 	<retrun: #BlText>
 
@@ -531,16 +558,24 @@ GtSourceCoder >> notifyStylersUpdated [
 		stylers: addOns stylers copy)
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoder >> object [
-	^ self attributeNamed: #object
+	"Return an object in the context of which the source code is modified (may influence self binding)
+	or nil otherwise of not set"
+	<return: #Object or: nil>
+
+	^ self
+		attributeNamed: #object
+		ifAbsent: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoder >> object: anObject [
-	anObject isNil
-		ifTrue: [ self removeAttributeNamed: #object ]
-		ifFalse: [ self attributeNamed: #object put: anObject ]
+	"Set an object in the context of which the source code should be modified (may influence self binding)"
+
+	anObject 
+		ifNil: [ self removeAttributeNamed: #object ]
+		ifNotNil: [ self attributeNamed: #object put: anObject ]
 ]
 
 { #category : #private }
@@ -600,30 +635,30 @@ GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 	^ actions
 ]
 
-{ #category : #'api - performing actions' }
-GtSourceCoder >> printItAll: anEditorElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> printItAllFrom: anEditorElement [
 	^ self
 		evaluateSource: self source
 		showPrintString: true
 		in: anEditorElement
 ]
 
-{ #category : #'api - performing actions' }
-GtSourceCoder >> printItSelection: anEditorElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> printItSelectionFrom: anEditorElement [
 	^ self
 		evaluateSource: (self selectedSourceInEditor: anEditorElement editor)
 		showPrintString: true
 		in: anEditorElement
 ]
 
-{ #category : #'api - performing actions' }
-GtSourceCoder >> printItSelectionOrAll: anEditorElement [
+{ #category : #'api - actions' }
+GtSourceCoder >> printItSelectionOrAllFrom: anEditorElement [
 	^ anEditorElement editor hasSelection 
-		ifTrue: [ self printItSelection: anEditorElement ] 
-		ifFalse: [ self printItAll: anEditorElement ]
+		ifTrue: [ self printItSelectionFrom: anEditorElement ] 
+		ifFalse: [ self printItAllFrom: anEditorElement ]
 ]
 
-{ #category : #updating }
+{ #category : #'private - ast' }
 GtSourceCoder >> rbAST [
 	| source |
 
@@ -695,17 +730,12 @@ GtSourceCoder >> requestUpdateCollapsedText [
 	self announce: (GtCoderCollapsedLabelChanged new coder: self)
 ]
 
-{ #category : #'api - performing actions' }
-GtSourceCoder >> requester [
-	self halt
-]
-
-{ #category : #'api - performing actions' }
+{ #category : #'private - actions' }
 GtSourceCoder >> requesterForEditor: aTextEditor [
 	^ GtSourceCoderRequester on: self editor: aTextEditor
 ]
 
-{ #category : #'api - performing actions' }
+{ #category : #'private - actions' }
 GtSourceCoder >> resetASTCache [
 	astCache := nil -> nil
 ]
@@ -715,11 +745,6 @@ GtSourceCoder >> selectedSourceInEditor: aBrTextEditor [
 	<return: #String>
 
 	^ aBrTextEditor selectedText characters asString
-]
-
-{ #category : #private }
-GtSourceCoder >> selectedSourceInterval [
-	self halt
 ]
 
 { #category : #'private - text' }
@@ -747,45 +772,52 @@ GtSourceCoder >> selectorAtCursorInEditor: aBrTextEditor [
 	^ self symbolFor: (self nodeAtCursorIn: aBrTextEditor)
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoder >> source [
 	<return: #String>
 
 	self
 		deprecated: 'Use #currentSourceString instead'
 		transformWith: '`@receiver source' -> '`@receiver currentSourceString'.
+		
+	^ self currentSourceString
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoder >> source: aString [
 	"Change the source text of the current coder to a given string"
+
+	self
+		deprecated: 'Use #from* methods instead'.
 
 	self halt
 ]
 
 { #category : #private }
 GtSourceCoder >> sourceAst [
-	^ GtPharoParser parseWithErrors: self source startingAt: self parserStartingState
+	^ GtPharoParser
+		parseWithErrors: self currentSourceString
+		startingAt: self parserStartingState
 ]
 
 { #category : #'event handling' }
 GtSourceCoder >> sourceChanged [
 
-	self flag: #TODO. "is there a better way to clear syntax errors than remove attributes affter *every* keystroke?"
+	self flag: #TODO. "is there a better way to clear syntax errors than remove attributes after *every* keystroke?"
 	self clearSyntaxErrors.
 
 	self requestUpdateCollapsedText.
 	self requestUpdateAddOns
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoder >> sourceCode [
 	<return: #GtCoderSourceCode>
 
 	^ sourceCode ifNil: [ self sourceCode: (GtCoderConcreteSourceCode new source: '') ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoder >> sourceCode: aGtCoderSourceCode [
 	"Set the source code of this coder to a given one and notify about the changes"
 
@@ -793,20 +825,6 @@ GtSourceCoder >> sourceCode: aGtCoderSourceCode [
 
 	self sourceChanged.
 	self notifySourceChanged
-]
-
-{ #category : #private }
-GtSourceCoder >> sourceEditor [
-	<return: #BrTextEditor>
-
-	self halt.
-
-	^ nil
-]
-
-{ #category : #private }
-GtSourceCoder >> sourceInterval [
-	^ 1 to: self sourceText size
 ]
 
 { #category : #'private - text' }
@@ -817,7 +835,7 @@ GtSourceCoder >> sourceIntervalInEditor: aBrTextEditor [
 	^ 1 to: aBrTextEditor text size
 ]
 
-{ #category : #'api - accessing' }
+{ #category : #'api - text' }
 GtSourceCoder >> sourceText [
 	"Return a source text for this coder. The computation of the source text may be expensive, use me with caution.
 	If the operation you would like to perform on the source text is optional consider using #sourceTextDo:"
@@ -826,7 +844,7 @@ GtSourceCoder >> sourceText [
 	^ self sourceCode sourceText
 ]
 
-{ #category : #'api - accessing' }
+{ #category : #'api - text' }
 GtSourceCoder >> sourceTextDo: aBlock [
 	"Evaluate a given block with my source code text if present"
 
@@ -871,15 +889,6 @@ GtSourceCoder >> styleSourceTextFrom: anEditorElement [
 	anEditorElement editor styleText
 ]
 
-{ #category : #updating }
-GtSourceCoder >> styleText [
-	"Notify the text editor that it should restyle the text (for example due to environmental changes)"
-	
-	self
-		deprecated: 'use #styleSourceText'
-		transformWith: '`@receiver styleText' -> '`@receiver requestStyleSourceText'.
-]
-
 { #category : #'api - addons' }
 GtSourceCoder >> stylers [
 	^ addOns stylers
@@ -901,7 +910,7 @@ GtSourceCoder >> symbolFor: aNode [
 	^ nil
 ]
 
-{ #category : #'private - add ons' }
+{ #category : #'private - addons' }
 GtSourceCoder >> terminateAddOnsCommand [
 	addOnCommand
 		ifNil: [ ^ self ].
@@ -909,7 +918,7 @@ GtSourceCoder >> terminateAddOnsCommand [
 	addOnCommand := nil
 ]
 
-{ #category : #'private - add ons' }
+{ #category : #'private - addons' }
 GtSourceCoder >> updateAddOnsCommand [
 	^ [
 		| updatedAddOns pragmas ast |
@@ -960,7 +969,11 @@ GtSourceCoder >> updateContextMenuAddOnsFrom: anEditorElement [
 
 { #category : #private }
 GtSourceCoder >> validateSyntax [
-	[ GtPharoParser parse: self source startingAt: self parserStartingState ]
+	<return: #Boolean>
+
+	[ GtPharoParser
+		parse: self currentSourceString
+		startingAt: self parserStartingState ]
 		on: SmaCCParserError
 		do: [ :ex | 
 			self notifyParseError: ex messageText at: ex tag position.

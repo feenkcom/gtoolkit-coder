@@ -27,6 +27,6 @@ GtPharoSnippetCoderExamples >> syntaxError [
 	<gtExample>
 	^ GtPharoSnippetCoder new
 		source: '3 + - 4';
-		doItAndGoSelectionOrAll: nil;
+		doItAndGoSelectionOrAllFrom: nil;
 		yourself
 ]

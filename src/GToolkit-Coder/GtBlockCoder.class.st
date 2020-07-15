@@ -62,14 +62,14 @@ GtBlockCoder >> blockSource: aString [
 ]
 
 { #category : #actions }
-GtBlockCoder >> doItAll: anEditorElement [
+GtBlockCoder >> doItAllFrom: anEditorElement [
 	^ self
 		evaluateSource: (self blockSource ifNil: [ ^ self ])
 		in: anEditorElement
 ]
 
 { #category : #actions }
-GtBlockCoder >> doItAndGoAll: anEditorElement [
+GtBlockCoder >> doItAndGoAllFrom: anEditorElement [
 	| aSource aValue |
 	aSource := self blockSource.
 	aSource isNil ifTrue: [ ^ self ].

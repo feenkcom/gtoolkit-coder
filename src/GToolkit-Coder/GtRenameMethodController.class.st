@@ -20,6 +20,7 @@ GtRenameMethodController >> canceled [
 
 { #category : #executing }
 GtRenameMethodController >> installRenamer [
+	self halt.
 	coder
 		cursorPositionDo: [ :position | 
 			| message |

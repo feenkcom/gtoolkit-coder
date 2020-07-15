@@ -12,7 +12,7 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #'api - addons' }
+{ #category : #'private - addons' }
 GtCoderModel >> addOnChanged: aSymbol [
 	aSymbol = #mainActions
 		ifTrue: [ self announce: (GtCoderMainActionsChanged new coder: self) ].
@@ -27,7 +27,7 @@ GtCoderModel >> addOns [
 	^ addOns
 ]
 
-{ #category : #'api - addons' }
+{ #category : #'private - addons' }
 GtCoderModel >> addOnsClass [
 	^ GtCoderAddOns
 ]
@@ -192,14 +192,6 @@ GtCoderModel >> gtViewMainActionsFor: aView [
 	^ self addOns 
 		ifNil: [ aView ]
 		ifNotNil: [ :currentAddOns | currentAddOns gtViewMainActionsFor: aView ]
-]
-
-{ #category : #testing }
-GtCoderModel >> hasObjectAttribute [
-	self 
-		attributeNamed: #object 
-		ifAbsent: [ ^ false ].
-	^ true
 ]
 
 { #category : #initialization }

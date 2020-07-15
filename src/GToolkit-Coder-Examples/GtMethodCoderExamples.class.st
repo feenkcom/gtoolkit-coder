@@ -220,7 +220,7 @@ GtMethodCoderExamples >> forThisMethodCoder [
 	BlUseAsyncFeatures
 		disableDuring: [ methodCoder := GtMethodCoder forMethod: method ].
 
-	source := method sourceCode.
+	source := method sourceCode...
 	
 	self
 		assert: methodCoder collapsedText asString

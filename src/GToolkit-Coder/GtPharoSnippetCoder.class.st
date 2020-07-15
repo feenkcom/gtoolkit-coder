@@ -67,7 +67,7 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self doItAndGoSelectionOrAll: anEditorElement ].
+		action: [ :anEditorElement | self doItAndGoSelectionOrAllFrom: anEditorElement ].
 	addOns
 		addMainAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
@@ -97,12 +97,12 @@ GtPharoSnippetCoder >> initializeShortcuts [
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryG;
 			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
-				aSnippetCoder doItAndGoSelectionOrAll: aShortcutEvent currentTarget ];
+				aSnippetCoder doItAndGoSelectionOrAllFrom: aShortcutEvent currentTarget ];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryP;
 			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
-				aSnippetCoder printItSelectionOrAll: aShortcutEvent currentTarget ];
+				aSnippetCoder printItSelectionOrAllFrom: aShortcutEvent currentTarget ];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryR;

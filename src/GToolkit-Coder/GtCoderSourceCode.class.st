@@ -58,6 +58,13 @@ GtCoderSourceCode >> resetCollapsedText [
 	collapsedText := nil
 ]
 
+{ #category : #'api - changes' }
+GtCoderSourceCode >> resetSourceText [
+	"Remove the cached source text forcing it to be recomputed next time it is accessed"
+	
+	sourceText := nil
+]
+
 { #category : #'api - accessing' }
 GtCoderSourceCode >> sourceString [
 	"Return a string representation of the current source text"
