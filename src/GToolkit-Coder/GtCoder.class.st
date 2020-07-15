@@ -205,24 +205,22 @@ GtCoder >> buildSpotterButton [
 							model announcer
 								when: GtSpotterActOn
 								do: [ :e | 
-									| item |
+									| item acted |
+									acted := false.
 									item := e element.
-									e actedUpon: true.
 									self flag: 'FIXME candidates may be wrapped for some reason'.
 									[ (item isKindOf: GtSpotterCandidate)
 										and: [ item item ~~ item ] ]
 										whileTrue: [ item := item item ].
-									((#(singleClick doubleClick keyPressed) includes: e eventType)
-										and: [ {RPackage.
-											ClassDescription.
-											CompiledMethod} anySatisfy: [ :f | item isKindOf: f ] ])
-										ifTrue: [ look hide.
-											(item isKindOf: RPackage)
-												ifTrue: [ navigationModel selectPackage: item ].
-											(item isKindOf: ClassDescription)
-												ifTrue: [ navigationModel selectClass: item ].
-											(item isKindOf: CompiledMethod)
-												ifTrue: [ navigationModel selectMethod: item ] ] ].
+									(item isKindOf: RPackage)
+										ifTrue: [ navigationModel selectPackage: item. acted := true ].
+									(item isKindOf: ClassDescription)
+										ifTrue: [ navigationModel selectClass: item. acted := true ].
+									(item isKindOf: CompiledMethod)
+										ifTrue: [ navigationModel selectMethod: item. acted := true ].
+									acted ifTrue: [ 
+										e actedUpon: true.
+										look hide ] ].
 							BlElement new
 								look:
 									(BrGlamorousDropdownLook new
