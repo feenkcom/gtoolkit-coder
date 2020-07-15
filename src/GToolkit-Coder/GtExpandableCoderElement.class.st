@@ -137,7 +137,3 @@ GtExpandableCoderElement >> updateExpanded [
 
 	self expanded: coder expanded
 ]
-
-{ #category : #events }
-GtExpandableCoderElement >> updateSource: aGtCoderMethodChanged [
-]

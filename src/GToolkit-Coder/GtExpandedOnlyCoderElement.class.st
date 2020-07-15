@@ -72,7 +72,3 @@ GtExpandedOnlyCoderElement >> requestFocus [
 						ifFound: [ :anEditorElement | anEditorElement requestFocus ]
 						ifNone: [ super requestFocus ] ])
 ]
-
-{ #category : #events }
-GtExpandedOnlyCoderElement >> updateSource: aGtCoderMethodChanged [
-]
