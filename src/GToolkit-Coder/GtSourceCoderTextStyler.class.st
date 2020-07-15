@@ -26,32 +26,17 @@ GtSourceCoderTextStyler >> coder: aMethodCoder [
 
 { #category : #private }
 GtSourceCoderTextStyler >> parse: aText [
-	| ast aString aCoderSource aHeaderSource isCoderSourceSame isHeaderSourceSame |
+	| aString aCoderSource isCoderSourceSame |
 	
 	"see https://github.com/feenkcom/gtoolkit/issues/593"
 	aString := aText asString.
 	aCoderSource := coder newSourceText characters asString.
-	aHeaderSource := coder newCollapsedText characters asString.
 	
 	isCoderSourceSame := aString = aCoderSource.
-	isHeaderSourceSame := aString = aHeaderSource.
 	
-	"a given text is neither coder source nor header, let's ignore it"
-	(isCoderSourceSame or: [ isHeaderSourceSame ])
+	"a given text is not coder source, let's ignore it"
+	isCoderSourceSame 
 		ifFalse: [ ^ nil ].
 
-	isCoderSourceSame
-		ifTrue: [ ast := coder rbAST ]
-		ifFalse: [ ast := coder rbAST copy.
-			(ast isNotNil and: [ ast isMethod and: [ ast isParseError not ] ])
-				ifTrue: [ ast
-						body: (RBSequenceNode statements: #());
-						pragmas: #();
-						yourself.
-					ast
-						instVarNamed: #properties
-						put: (ast instVarNamed: #properties) copy.
-					ast comments: #().
-					ast arguments do: [ :e | e parent: ast ] ] ].
-	^ ast
+	^ coder rbAST
 ]

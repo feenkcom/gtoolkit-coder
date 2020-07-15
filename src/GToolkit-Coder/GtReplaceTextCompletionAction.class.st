@@ -40,6 +40,11 @@ GtReplaceTextCompletionAction >> previewOn: aCompletionController [
 ]
 
 { #category : #accessing }
+GtReplaceTextCompletionAction >> searchStartPosition [
+	^ 1
+]
+
+{ #category : #accessing }
 GtReplaceTextCompletionAction >> text [
 	^ text
 ]

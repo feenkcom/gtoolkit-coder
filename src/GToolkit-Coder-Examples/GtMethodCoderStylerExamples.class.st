@@ -35,6 +35,29 @@ GtMethodCoderStylerExamples >> b [
 ]
 
 { #category : #'as yet unclassified' }
+GtMethodCoderStylerExamples >> coderOnViewMethod [
+	| selectors variables coder coderElement |
+	
+	coder := GtMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsOn:).
+	
+	selectors := GtSelectorExplanationLinkStyler new coder: coder.
+	selectors addSelectors: 
+		{#gtView . #columnedList . #title: . #items: .#contacts . #fullName . #avatar. #telephone. #allContacts }.
+	selectors addSelector: #column:format: withIdentifier: #columns.
+	selectors addSelector: #column:do: withIdentifier: #columns.
+	
+	variables := GtVariableExplanationLinkStyler new coder: coder.
+	variables addVariables: {'aView' . 'aContact'}.
+	
+	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { selectors. variables }).
+	coderElement := (coder expanded: true) asElement margin: (BlInsets all: 10).
+	coderElement forceLayout.
+	coderElement vMatchParent.
+	
+	^ coderElement.
+]
+
+{ #category : #'as yet unclassified' }
 GtMethodCoderStylerExamples >> explanationLinkExample [
 	<gtExample>
 	| container inspectorContainer editor coder coderElement selectors variables |
@@ -136,7 +159,7 @@ GtMethodCoderStylerExamples >> hasExampleStatusIn: coder [
 		expanded: true.	"need to collapse to compute collapsed text style"
 	collapsedAttribute := self
 		hasAttributeOfType: GtExampleStatusAttribute
-		in: coder collapsedEditor.
+		in: coder collapsedText.
 	self assert: sourceAttribute = collapsedAttribute.
 	^ sourceAttribute
 ]
@@ -144,6 +167,112 @@ GtMethodCoderStylerExamples >> hasExampleStatusIn: coder [
 { #category : #accessing }
 GtMethodCoderStylerExamples >> hasUnderlineAttributeIn: coder [
 	^ self hasAttributeOfType: self unlineAttributeClass in: coder sourceEditor
+]
+
+{ #category : #'as yet unclassified' }
+GtMethodCoderStylerExamples >> inspectorOnViewMethod [
+	| resultElement resultInspectorTree titleTab avatarLabel phoneLabel nameLabel avatarElementsCollection listLabelsCollection |
+	
+	resultElement := BlUseAsyncFeatures
+		disableDuring: [ (GtPhlowView empty composite
+				views:
+					{(GtABCartoonAddressBookExample new cartoonAddressBook
+						gtViewContactsOn: GtPhlowView empty)};
+				labelled: 'a GtABAddressBook (Cartoons)' asRopedText)
+				asElementDo: [ :e | e ] ].
+	resultElement forceLayout.
+	resultInspectorTree := resultElement phlow firstChildWithView viewContentElement.
+	
+	titleTab := resultInspectorTree
+		allChildrenBreadthFirstDetect: [ :aChild | 
+			(aChild isKindOf: BrTab)
+				and: [ aChild label asString = 'Contacts with details' ] ]
+		ifFound: [ :aChild | aChild ].
+	avatarLabel := resultInspectorTree
+		allChildrenBreadthFirstDetect:
+			[ :aChild | (aChild isKindOf: BrLabel) and: [ aChild text asString = 'Avatar' ] ]
+		ifFound: [ :aChild | aChild ].
+	nameLabel := resultInspectorTree
+		allChildrenBreadthFirstDetect:
+			[ :aChild | (aChild isKindOf: BrLabel) and: [ aChild text asString = 'Name' ] ]
+		ifFound: [ :aChild | aChild ].
+	phoneLabel := resultInspectorTree
+		allChildrenBreadthFirstDetect:
+			[ :aChild | (aChild isKindOf: BrLabel) and: [ aChild text asString = 'Phone' ] ]
+		ifFound: [ :aChild | aChild ].
+	avatarElementsCollection := resultInspectorTree
+		allChildrenBreadthFirstSelect: [ :aChild | 
+			(aChild isKindOf: BlScalableElement)
+				and: [ aChild parent parent isKindOf: BrInfiniteListElement ] ].
+	listLabelsCollection := resultInspectorTree
+		allChildrenBreadthFirstSelect: [ :aChild | 
+			(aChild isKindOf: BrLabel)
+				and: [ aChild parent parent isKindOf: BrInfiniteListElement ] ].
+
+	titleTab
+		addChild:
+			(BrButton new
+				constraintsDo: [ :c | c ignoreByLayout ];
+				size: 5 @ 5;
+				elevation: (BlRelativeElevation elevation: 10);
+				geometry: BlCircle new;
+				look: (GtExplainerTargetLook new explanationModel: #title:);
+				relocate: 10 @ titleTab extent y / 2).
+	avatarLabel
+		addChild:
+			(BrButton new
+				constraintsDo: [ :c | c ignoreByLayout ];
+				size: 5 @ 5;
+				elevation: (BlRelativeElevation elevation: 10);
+				geometry: BlCircle new;
+				look: (GtExplainerTargetLook new explanationModel: #columns);
+				relocate: -5 @ avatarLabel extent y / 2).
+	nameLabel
+		addChild:
+			(BrButton new
+				constraintsDo: [ :c | c ignoreByLayout ];
+				size: 5 @ 5;
+				elevation: (BlRelativeElevation elevation: 10);
+				geometry: BlCircle new;
+				look: (GtExplainerTargetLook new explanationModel: #columns);
+				relocate: -5 @ nameLabel extent y / 2).
+	phoneLabel
+		addChild:
+			(BrButton new
+				constraintsDo: [ :c | c ignoreByLayout ];
+				size: 5 @ 5;
+				elevation: (BlRelativeElevation elevation: 10);
+				geometry: BlCircle new;
+				look: (GtExplainerTargetLook new explanationModel: #columns);
+				relocate: -5 @ phoneLabel extent y / 2).
+	avatarElementsCollection
+		do: [ :eachAvatar | 
+			eachAvatar parent
+				addChild:
+					(BrButton new
+						constraintsDo: [ :c | c ignoreByLayout ];
+						size: 5 @ 5;
+						elevation: (BlRelativeElevation elevation: 10);
+						geometry: BlCircle new;
+						look: (GtExplainerTargetLook new explanationModel: #avatar);
+						relocate: 0 @ eachAvatar extent y / 2) ].			
+	listLabelsCollection
+		do: [ :eachLabel | 
+			| modelName |
+			modelName := (eachLabel text asString beginsWith: '+' asString)
+				ifTrue: [ #telephone ]
+				ifFalse: [ #fullName ].
+			eachLabel
+				addChild:
+					(BrButton new
+						constraintsDo: [ :c | c ignoreByLayout ];
+						size: 5 @ 5;
+						elevation: (BlRelativeElevation elevation: 10);
+						geometry: BlCircle new;
+						look: (GtExplainerTargetLook new explanationModel: modelName);
+						relocate: -5 @ eachLabel extent y / 2) ].
+	
+	^ resultElement.
 ]
 
 { #category : #dummies }
@@ -164,31 +293,17 @@ GtMethodCoderStylerExamples >> unlineAttributeClass [
 { #category : #'as yet unclassified' }
 GtMethodCoderStylerExamples >> viewsExplanationWithLinks [
 	<gtExample>
-	| container inspectorContainer editor coder coderElement selectors variables |
-	inspectorContainer := BlElement new
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ];
-		layout: BlLinearLayout horizontal.
+	| container editor |
+	
 	container := BlElement new
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
-			c vertical fitContent];
-		layout: BlLinearLayout horizontal alignCenter.
+			c vertical fitContent ];
+		margin: (BlInsets all: 30);
+		background: Color white;
+		look: BrShadowLook;
+		layout: BlLinearLayout horizontal.
 	container explainer isExplanationHolder: true.
-	
-	selectors := GtSelectorExplanationLinkStyler new.
-	selectors addSelectors: {#gtView . #columnedList . #title: . #items: . #column:format: .#contacts . #fullName . #telephone }.
-	
-	variables := GtVariableExplanationLinkStyler new.
-	variables addVariables: {'aView' . 'aContact' . 'contacts'}.
-	
-	coder := GtMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsOn:).
-	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { selectors. variables }).
-	coderElement := (coder expanded: true) asElement margin: (BlInsets all: 10).
-	coderElement forceLayout.
-	
-	inspectorContainer addChild: coderElement.
 	
 	editor := BrEditor new
 		look: (BrGlamorousRegularEditorLook new fontSize: 16);
@@ -198,44 +313,93 @@ GtMethodCoderStylerExamples >> viewsExplanationWithLinks [
 			c vertical fitContent.
 			c horizontal matchParent.
 			c linear weight: 0.5 ].
+		
 	container addChild: editor.
-	container addChild: inspectorContainer.
+	container addChild: self coderOnViewMethod.
 	^ container
 ]
 
 { #category : #'as yet unclassified' }
+GtMethodCoderStylerExamples >> viewsExplanationWithLinksOnCoderAndInspector [
+	<gtExample>
+	| coderElement inspectorContainer verticalContainer editor container |
+	
+	container := BlElement new
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent];
+		layout: BlLinearLayout horizontal alignCenter.
+	container explainer isExplanationHolder: true.
+	
+	verticalContainer := BlElement new
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent.
+			c padding: (BlInsets all: 5)];
+		layout: BlLinearLayout vertical.
+	
+	inspectorContainer := BlElement new
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ];
+		layout: BlLinearLayout horizontal;
+		look: BrShadowLook;
+		background: Color white;
+		margin: (BlInsets all: 10).
+	
+	coderElement := self coderOnViewMethod.
+	inspectorContainer addChild: self inspectorOnViewMethod.
+	
+	verticalContainer
+		addChild: coderElement;
+		addChild: inspectorContainer.
+	
+	editor := BrEditor new
+		look: (BrGlamorousRegularEditorLook new fontSize: 16);
+		text: self viewsExplanationWithLinksText;
+		margin: (BlInsets all: 10);
+		constraintsDo: [ :c | 
+			c vertical fitContent.
+			c horizontal matchParent.
+			c linear weight: 0.5 ].
+	
+	^ container
+		addChild: editor;
+		addChild: verticalContainer.
+]
+
+{ #category : #accessing }
 GtMethodCoderStylerExamples >> viewsExplanationWithLinksText [
 	| text |
 	
-	text := 'A custom view is defined by a method in the class of the object we want to view. You can think of it as a print string method only that instead of returning a string, it returns an element.
-
-As we can have many such representations for every single object, we have to identify the method. To this end, use the ' asRopedText,
+	text := 'A custom view is defined by a method in the class of the object we want to view. You can think of it as a print string method only that instead of returning a string, it returns a visual element.
+As we can have many such representations for every single object, we have to identify the method that defines a view. This is achieved through the ' asRopedText,
 ('gtView' asRopedText glamorousExplanationFor: #gtView),
 ' pragma.
-Then, make it so that it gets an empty ' asRopedText,
+The method takes an empty ' asRopedText,
 ('view' asRopedText glamorousExplanationFor: #aView),
 ' parameter that you can customize.
-
-In our case the view has a ' asRopedText,
-('title' asRopedText glamorousExplanationFor: #title:),
-'. The view consists of a ' asRopedText,
+In our case the view consists of a ' asRopedText,
 ('columned list' asRopedText glamorousExplanationFor: #columnedList),
 ' with ' asRopedText,
-('two columns' asRopedText glamorousExplanationFor: #column:format:),
+('three columns' asRopedText glamorousExplanationFor: #columns),
+' and a ' asRopedText,
+('title' asRopedText glamorousExplanationFor: #title:),
 '
-
 The columned list has as many rows as the collection returned by the ' asRopedText,
 ('items: block' asRopedText glamorousExplanationFor: #items:),
 '. In this case, this means it shows all the ' asRopedText,
-('contacts list' asRopedText glamorousExplanationFor: #contacts),
-
+('contacts list' asRopedText glamorousExplanationFor: #allContacts),
 'For each ' asRopedText, 
 ('contact' asRopedText glamorousExplanationFor: #aContact),
-' we show the ' asRopedText,
+' it shows the ' asRopedText,
+('avatar' asRopedText glamorousExplanationFor: #avatar),
+' in the first column, the ' asRopedText,
 ('full name' asRopedText glamorousExplanationFor: #fullName),
-' in the first column, and the ' asRopedText,
+' in the second column, and the ' asRopedText,
 ('telephone' asRopedText glamorousExplanationFor: #telephone),
-' in the second column' asRopedText.
+' in the third column.
+That''s it. That''s the whole specification.' asRopedText.
 	^ text
 		glamorousRegularFont;
 		fontSize: 20;

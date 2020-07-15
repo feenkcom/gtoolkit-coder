@@ -1,6 +1,8 @@
 Class {
 	#name : #GtPackageTagCoder,
 	#superclass : #Announcer,
+	#traits : 'TGtCoderTrait',
+	#classTraits : 'TGtCoderTrait classTrait',
 	#instVars : [
 		'packageTag',
 		'packageCoder',
@@ -24,6 +26,13 @@ GtPackageTagCoder >> asCardElement [
 { #category : #element }
 GtPackageTagCoder >> asElement [
 	^ GtPackageTagCoderElement new packageTagCoder: self
+]
+
+{ #category : #asserting }
+GtPackageTagCoder >> assertCoder: aCoder [
+	self 
+		assert: [ aCoder isNotNil ]
+		description: [ 'Coder must be non-nil' ].
 ]
 
 { #category : #accessing }
@@ -52,8 +61,18 @@ GtPackageTagCoder >> gtLiveFor: aView [
 		title: 'Package Tag';
 		priority: 1;
 		stencil: [ self ];
-		actionButtonIcon: BrGlamorousIcons inspect
+		actionButtonIcon: BrGlamorousVectorIcons inspect
 			action: [ :aButton | aButton phlow spawnObject: self packageTag ]
+]
+
+{ #category : #accessing }
+GtPackageTagCoder >> icon [
+	^ BrGlamorousIcons packageicon asElement
+]
+
+{ #category : #testing }
+GtPackageTagCoder >> isForPackageTag [
+	^ true
 ]
 
 { #category : #accessing }
@@ -68,11 +87,12 @@ GtPackageTagCoder >> package [
 
 { #category : #accessing }
 GtPackageTagCoder >> packageCoder [
-	^ packageCoder
+	^ packageCoder ifNil: [ packageCoder := GtPackageCoder forPackage: self package ]
 ]
 
 { #category : #accessing }
 GtPackageTagCoder >> packageCoder: aPackageCoder [
+	self assertCoder: aPackageCoder.
 	packageCoder := aPackageCoder
 ]
 
@@ -84,4 +104,10 @@ GtPackageTagCoder >> packageTag [
 { #category : #accessing }
 GtPackageTagCoder >> packageTag: anObject [
 	packageTag := anObject
+]
+
+{ #category : #actions }
+GtPackageTagCoder >> unload [
+	self packageTag classes do: [ :each | each removeFromSystem ].
+	self packageTag removeFromPackage
 ]

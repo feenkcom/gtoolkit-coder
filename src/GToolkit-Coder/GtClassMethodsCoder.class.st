@@ -38,6 +38,8 @@ GtClassMethodsCoder >> addNewCoder [
 	coder := GtMethodCoder newMethod.
 	coder classOrMetaClass: self newMethodClass.
 	coder object: self object.
+	coder category: #accessing.
+	coder coders: self.
 	coders addFirst: coder.
 	self
 		announce:
@@ -64,6 +66,11 @@ GtClassMethodsCoder >> classesFilter [
 				ifTrue: [ classFilter ]
 				ifFalse: [ filter | classFilter ] ].
 	^ filter
+]
+
+{ #category : #elements }
+GtClassMethodsCoder >> coderLook [
+	^ GtBehaviorMethodCoderCategoryLook new
 ]
 
 { #category : #private }

@@ -1,0 +1,23 @@
+Class {
+	#name : #GtRenameClassVariableController,
+	#superclass : #GtRenameVariableController,
+	#category : #'GToolkit-Coder-Refactorings'
+}
+
+{ #category : #accessing }
+GtRenameClassVariableController >> refactoringName [
+	^ 'Rename class variable'
+]
+
+{ #category : #accessing }
+GtRenameClassVariableController >> rename: oldName to: newName [
+	| model class |
+	model := self createModel.
+	class := (model classFor: coder classOrMetaClass) instanceSide
+		whoDefinesClassVariable: oldName.
+	^ RBRenameClassVariableRefactoring
+		model: model
+		rename: oldName
+		to: newName
+		in: class
+]

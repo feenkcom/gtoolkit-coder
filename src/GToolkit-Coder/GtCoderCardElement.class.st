@@ -2,27 +2,12 @@ Class {
 	#name : #GtCoderCardElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'coder'
+		'coder',
+		'coderNameLabel',
+		'coderDetailsLabel'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
-
-{ #category : #'building ui' }
-GtCoderCardElement >> buildContainer [
-	self removeChildren.
-	self addChild: (BlShrinkingTextElement new
-			 text: coder name asRopedText glamorousRegularFont bold;
-			 constraintsDo: [ :c | 
-				 c vertical fitContent.
-				 c horizontal matchParent ]).
-	self detailsLabel ifNotEmpty: [ :label | 
-		self addChild: (BlShrinkingTextElement new
-				 text: (label asRopedText glamorousRegularFont thin foreground:
-							  BrGlamorousColors defaultButtonTextColor);
-				 constraintsDo: [ :c | 
-					 c vertical fitContent.
-					 c horizontal matchParent ]) ]
-]
 
 { #category : #accessing }
 GtCoderCardElement >> coder [
@@ -32,7 +17,31 @@ GtCoderCardElement >> coder [
 { #category : #accessing }
 GtCoderCardElement >> coder: anObject [
 	coder := anObject.
-	self buildContainer
+	
+	coderNameLabel text: (self coderNameTextFrom: coder name).
+
+	self detailsLabel
+		ifEmpty: [ coderDetailsLabel visibility: BlVisibility gone ]
+		ifNotEmpty: [ :aDetailsString |
+			coderDetailsLabel
+				visibility: (BlVisibility visible);
+				text: (self coderDetailsTextFrom: aDetailsString) ]
+]
+
+{ #category : #'private - instance creation' }
+GtCoderCardElement >> coderDetailsTextFrom: aString [
+	"Convert a coder's details to a styled text"
+	<return: #BlText>
+
+	^ aString asRopedText glamorousRegularFont thin foreground: BrGlamorousColors defaultButtonTextColor
+]
+
+{ #category : #'private - instance creation' }
+GtCoderCardElement >> coderNameTextFrom: aString [
+	"Convert a coder's name to a styled text"
+	<return: #BlText>
+	
+	^ aString asRopedText glamorousRegularFont bold
 ]
 
 { #category : #'building ui' }
@@ -44,28 +53,46 @@ GtCoderCardElement >> detailsLabel [
 GtCoderCardElement >> initialize [
 	super initialize.
 	self viewModel: (BrInteractiveModel new addStates: { 
-				 BrActivationModel new.
+				 BrEnablementModel new.
 				 BrPressModel new.
 				 BrHoverModel new }).
-	self look:
-		(BrGlamorousButtonExteriorLook new borderPaint: Color transparent).
+	self look: (BrGlamorousButtonExteriorLook new borderPaint: Color transparent).
 	self layout: (BlLinearLayout vertical cellSpacing: 2).
 	self constraintsDo: [ :c | 
 		c horizontal matchParent.
-		c vertical matchParent ].
+		c vertical fitContent ].
+
 	self margin: (BlInsets
 			 top: 5
 			 left: 10
 			 bottom: 5
 			 right: 10).
 	self padding: (BlInsets all: 5).
-	self when: BlClickEvent do: [ :event | self selectCoder ]
+	self when: BlClickEvent do: [ :event | self selectCoder ].
+
+	coderNameLabel := BlShrinkingTextElement new
+		text: (self coderNameTextFrom: 'Coder');
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
+
+	coderDetailsLabel := BlShrinkingTextElement new
+		visibility: BlVisibility gone;
+		text: (self coderDetailsTextFrom: '');
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
+
+	self addChildren: { coderNameLabel . coderDetailsLabel }
 ]
 
 { #category : #private }
 GtCoderCardElement >> selectCoder [
-	self
-		allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
-		ifFound: [ :element | element updateSelection: coder ]
-		ifNone: [ self phlow spawnObject: coder ]
+	| anEvent |
+
+	anEvent := (GtCoderToReplace new coder: coder).
+	self fireEvent: anEvent.
+
+	anEvent isConsumed
+		ifFalse: [ self phlow spawnObject: anEvent coder ]
 ]

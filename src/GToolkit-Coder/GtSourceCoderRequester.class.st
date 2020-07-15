@@ -3,15 +3,16 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'coder',
+		'sourceCodeEditor',
 		'bindingStrategy'
 	],
 	#category : #'GToolkit-Coder'
 }
 
 { #category : #'instance creation' }
-GtSourceCoderRequester class >> on: aCoder [
+GtSourceCoderRequester class >> on: aCoder editor: aBrTextEditor [
 	^ self new
-		coder: aCoder;
+		coder: aCoder editor: aBrTextEditor;
 		yourself
 ]
 
@@ -34,16 +35,22 @@ GtSourceCoderRequester >> bindingStrategy: anObject [
 
 { #category : #accessing }
 GtSourceCoderRequester >> coder: aCoder [
-	coder := aCoder
+	self halt.
+]
+
+{ #category : #accessing }
+GtSourceCoderRequester >> coder: aCoder editor: aBrTextEditor [
+	coder := aCoder.
+	sourceCodeEditor := aBrTextEditor
 ]
 
 { #category : #requester }
 GtSourceCoderRequester >> correctFrom: fromIndex to: toIndex with: aString [
 	fromIndex > toIndex
-		ifFalse: [ coder sourceEditor deleter
+		ifFalse: [ self sourceCodeEditor deleter
 				from: fromIndex - 1 to: toIndex;
 				delete ].
-	coder sourceEditor inserter
+	self sourceCodeEditor inserter
 		withoutSelectionDelete;
 		at: fromIndex - 1;
 		text: aString;
@@ -68,10 +75,10 @@ GtSourceCoderRequester >> hasBindingOf: aSymbol [
 { #category : #requester }
 GtSourceCoderRequester >> notify: message at: anIndex in: aString [
 	| index |
-	index := (anIndex max: 1) min: coder sourceEditor text size.
-	(coder sourceEditor text from: index to: index)
+	index := (anIndex max: 1) min: self sourceCodeEditor text size.
+	(self sourceCodeEditor text from: index to: index)
 		attributes: {(GtSourceCoderErrorAttribute for: message)}.
-	coder sourceEditor moveCursorTo: index
+	self sourceCodeEditor moveCursorTo: index
 ]
 
 { #category : #hack }
@@ -79,6 +86,13 @@ GtSourceCoderRequester >> paragraph [
 	"Hack to handle inserting local variables"
 
 	^ self
+]
+
+{ #category : #accessing }
+GtSourceCoderRequester >> sourceCodeEditor [
+	<return: #BrTextEditor>
+
+	^ sourceCodeEditor
 ]
 
 { #category : #requester }

@@ -1,194 +1,105 @@
+"
+I show a simple list of packages sorting alphabetically
+"
 Class {
 	#name : #GtCoderNavigationPackagesTreeElement,
-	#superclass : #BlElement,
-	#instVars : [
-		'navigationModel',
-		'tree',
-		'packagesFilterEditor'
-	],
-	#category : #'GToolkit-Coder-UI'
+	#superclass : #BrSimpleTree,
+	#category : #'GToolkit-Coder-Navigation - UI'
 }
 
-{ #category : #'building ui' }
-GtCoderNavigationPackagesTreeElement >> buildAddPackageButton [
-	| look |
-	^ BrButton new
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(look := BrGlamorousWithDropdownLook
-						handle: [ BrButton new
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousIcons add asElement;
-								yourself ]
-						content: [ | editor button |
-							editor := BrEditor new
-								look: BrGlamorousRegularEditorLook new;
-								geometry: (BlRectangle cornerRadius: 4);
-								border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
-								hExact: 100;
-								vMatchParent;
-								padding: (BlInsets all: 3);
-								constraintsDo: [ :c | 
-									c horizontal matchParent.
-									c vertical fitContent ];
-								yourself.
-							button := BrButton new
-								look: BrGlamorousButtonWithIconLook;
-								margin: (BlInsets left: 10);
-								icon: BrGlamorousIcons accept asElement;
-								action: [ look hide.
-									navigationModel
-										packagesFilterString:
-											(RPackageOrganizer default createPackageNamed: editor text asString)
-												name ];
-								yourself.
-							BlElement new
-								layout: BlLinearLayout horizontal;
-								padding: (BlInsets all: 10);
-								constraintsDo: [ :c | 
-									c horizontal fitContent.
-									c vertical fitContent ];
-								addChild: editor;
-								addChild: button;
-								yourself ]);
-		yourself
+{ #category : #'instance creation' }
+GtCoderNavigationPackagesTreeElement class >> fromPackages: aCollectionOfPackages [
+	^ self new initializeWithPackages: aCollectionOfPackages
 ]
 
-{ #category : #'as yet unclassified' }
-GtCoderNavigationPackagesTreeElement >> buildPackageTree [
-	^ self buildPackageTree: RPackageOrganizer default packages
-]
+{ #category : #'private - enumeration' }
+GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
+	| theTags anExtension |
+	(aPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
+	theTags := aPackageOrTag classTags asOrderedCollection.
+	theTags withIndexDo: [ :eachTag :eachIndex | eachTag name = aPackageOrTag name ifTrue: [ 
+		theTags at: eachIndex put: (GtCoderPackageUncategorizedTag forPackageTag: eachTag) ] ].
+	theTags sort: [ :tagA :tagB | self isTag: tagA lessThan: tagB ].
 
-{ #category : #'as yet unclassified' }
-GtCoderNavigationPackagesTreeElement >> buildPackageTree: somePackages [
-	^ BrSimpleTree new
-		items: (somePackages sort: [ :a :b | a name < b name ])
-			children: [ :anObject | 
-			(anObject isKindOf: RPackage)
-				ifTrue: [ anObject definedClasses asOrderedCollection
-						sort: [ :a :b | a name < b name ] ]
-				ifFalse: [ #() ] ];
-		stencil:
-			(BrSimpleTreeRowStencilBuilder new
-				text:
-					[ :anObject | anObject name asRopedText glamorousRegularFontAndSize ]);
-		in: [ :e | 
-			e
-				when: BrSelectionChanged
-				do: [ :anEvent | 
-					anEvent
-						selectedDo: [ :anInterval | 
-							e
-								selectedNodeDo: [ :aNode | 
-									aNode value isClass
-										ifTrue: [ navigationModel selectInCoderClass: aNode value ].
-									(aNode value isKindOf: RPackage)  
-										ifTrue: [ navigationModel selectInCoderPackage: aNode value ] ] ] ] ];
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
-GtCoderNavigationPackagesTreeElement >> buildPackagesFilterEditor [
-	^ BrEditor new
-		look: BrGlamorousCodeEditorLook new;
-		geometry: (BlRectangle cornerRadius: 4);
-		border: (BlBorder paint: BrGlamorousColors editorBorderColor width: 1);
-		hExact: 100;
-		vMatchParent;
-		padding: (BlInsets all: 3);
-		text: navigationModel packagesFilterString;
-		in: [ :e | 
-			e editor
-				when: BrTextEditorInsertedEvent
-					do: [ e text asString ~= navigationModel packagesFilterString
-						ifTrue: [ navigationModel packagesFilterString: e text asString ] ];
-				when: BrTextEditorDeletedEvent
-					do: [ e text asString ~= navigationModel packagesFilterString
-						ifTrue: [ navigationModel packagesFilterString: e text asString ] ] ];
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
-GtCoderNavigationPackagesTreeElement >> buildToolbar [
-	^ BrToolbar new
-		look: BrGlamorousToolbarLook new;
-		addItem: (packagesFilterEditor := self buildPackagesFilterEditor);
-		addItem: self buildAddPackageButton;
-		yourself
+	anExtension := GtCoderPackageExtentionTag forPackage: aPackageOrTag.
+	anExtension hasExtendedClasses ifTrue: [ 
+		theTags addLast: anExtension ].
+	"Do not return an only tag of the same name as the package"
+	(theTags size = 1 and: [ 
+		theTags anyOne class = GtCoderPackageUncategorizedTag ]) ifTrue: [ ^ #() ].
+	
+	^ theTags
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTreeElement >> initialize [
 	super initialize.
+
+	self nodeStencil: [
+			BrLabel new
+				beSmall;
+				look: BrGlamorousLabelLook ];
+		nodeDataBinder: [ :aPackageElement :aPackage |
+			aPackageElement
+				text: (aPackage
+					ifNil: [ '' ]
+					ifNotNil: [ aPackage name ]) ]
+]
+
+{ #category : #'api - initialization' }
+GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPackages [
+	| theSortedPackages |
+
+	theSortedPackages := aCollectionOfPackages asArray
+		sorted: [ :packageA :packageB | packageA name asLowercase < packageB name asLowercase ].
+
 	self
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ]
+		items: theSortedPackages
+		children: [ :eachPackageOrTag |
+			self childrenForPackageOrTag: eachPackageOrTag ]
 ]
 
-{ #category : #accessing }
-GtCoderNavigationPackagesTreeElement >> navigationModel: aNavigationModel [
-	navigationModel ifNotNil: [ navigationModel unsubscribe: self ].
-	navigationModel := aNavigationModel.
-	navigationModel
-		when: GtClassCoderPackagesFilterStringChanged
-		send: #updatePackageFilterEditorAndPackageTree
-		to: self.
-	navigationModel
-		when: GtClassCoderNavigationSelectionChanged
-		send: #updateSelection
-		to: self.
-	self
-		removeChildren;
-		addChild: self buildToolbar;
-		addChild: (tree := self buildPackageTree).
-	packagesFilterEditor text: navigationModel packagesFilterString.
-	navigationModel theClass
-		ifNotNil: [ :aClass | self selectClass: aClass ]
-]
-
-{ #category : #accessing }
-GtCoderNavigationPackagesTreeElement >> selectClass: aClass [
-	self selectPackage: aClass package
-]
-
-{ #category : #accessing }
-GtCoderNavigationPackagesTreeElement >> selectPackage: aPackage [
-	self updatePackageFilterEditorAndPackageTree.
-	tree viewModel collapseAll.
-	tree viewModel root withAllChildrenNodesBreadthFirst
-		detect: [ :each | each value = aPackage ]
-		ifFound: [ :e | e withAllParentNodesDo: #expand ]
-]
-
-{ #category : #'as yet unclassified' }
-GtCoderNavigationPackagesTreeElement >> updatePackageFilterEditorAndPackageTree [
-	packagesFilterEditor text: navigationModel packagesFilterString.
-	tree removeFromParent.
-	tree := self
-		buildPackageTree:
-			(RPackageOrganizer default packages
-				select: [ :g | 
-					g name asLowercase
-						includesSubstring: navigationModel packagesFilterString asLowercase ]).
-	self addChild: tree
-]
-
-{ #category : #callbacks }
-GtCoderNavigationPackagesTreeElement >> updateSelection [
-	tree selectedNodeDo: [ :selectionNode |
-		selectionNode value = navigationModel selectedObject ifTrue: [ 
-			"If the object selected in the model is the same as the one selected
-			in the tree do not select it again."
-			^ self ] ].
+{ #category : #'private - testing' }
+GtCoderNavigationPackagesTreeElement >> isTag: tagA lessThan: tagB [
+	tagA class = GtCoderPackageUncategorizedTag ifTrue: [ ^ true ].
+	tagB class = GtCoderPackageUncategorizedTag ifTrue: [ ^ false ].
+	^ tagA name < tagB name
 	
-	tree viewModel root allChildrenNodesBreadthFirstDo: [ :treeNode |
-		treeNode ensureChildNodesComputed.
-		navigationModel selectedObject = treeNode value ifTrue: [ 
-			treeNode withAllParentNodesDo: [ :node | node expand ].
-			tree selectOne: treeNode globalIndexInTree ] ]
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTreeElement >> selectedIndice [
+	"Return selected indice or zero"
+	
+	self selectedIndices
+		ifNotEmpty: [ :theIndices |
+			(theIndices first between: 1 and: self viewModel itemCount)
+				ifTrue: [ ^ theIndices first ] ].
+	^ 0
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTreeElement >> selectedPackage [
+	<return: #RPackage or: nil>
+	^ self selectedPackageNodeDo: #value
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTreeElement >> selectedPackageNodeDo: aBlock [
+	self selectedNodeDo: [ :aNode | aNode depth = 0
+		ifTrue: [ ^ aBlock cull: aNode ] ].
+	^ nil
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTreeElement >> selectedPackageTag [
+	<return: #RPackageTag or: nil>
+	^ self selectedPackageTagNodeDo: #value
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTreeElement >> selectedPackageTagNodeDo: aBlock [
+	self selectedNodeDo: [ :aNode | aNode depth = 1
+		ifTrue: [ ^ aBlock cull: aNode ] ].
+	^ nil
 ]

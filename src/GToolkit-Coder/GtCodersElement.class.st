@@ -44,32 +44,19 @@ GtCodersElement >> coders: aCoders [
 		when: GtCodersScrollToCoder send: #scrollToEvent: to: self
 ]
 
-{ #category : #testing }
-GtCodersElement >> isVerticallyResizeableElement [
-	^ true
-]
-
 { #category : #ui }
 GtCodersElement >> listElement [
-	| dataSource |
-	dataSource := GtCodersDataSource new
-		coders: coders;
-		when: BlInfiniteDataSourceChanged
-			do: [ listElement ifNotNil: #removeFromParent.
-			self addChild: self listElement as: #codersList ];
+	listElement
+		ifNotNil: [ ^ listElement ].
+
+	listElement := BrSimpleList new
+		matchParent;
+		itemType: [ :itemTypeFactory :eachCoder | eachCoder elementClass ];
+		itemStencil: [ :anElementClass | anElementClass new ];
+		itemDataBinder: [ :eachCoderElement :eachCoder | eachCoderElement coder: eachCoder ];
+		items: coders coders;
 		yourself.
-	listElement := BlInfiniteElement new
-		in: [ :e | 
-			e
-				layout:
-					(BlInfiniteLinearLayout vertical
-						infiniteElement: e;
-						yourself) ];
-		dataSource: dataSource;
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ];
-		yourself.
+
 	^ listElement
 ]
 
@@ -79,10 +66,10 @@ GtCodersElement >> scrollToEvent: anEvent [
 	coder := anEvent sourceCoder.
 	index := coders coders identityIndexOf: coder.
 	index > 0
-		ifTrue: [ (self childNamed: #codersList) scrollToPosition: index ]
+		ifTrue: [ (self childNamed: #codersList) look listElement scrollToPosition: index ]
 ]
 
 { #category : #private }
 GtCodersElement >> updateList [
-	listElement dataSource updateCoders
+	listElement items: coders coders
 ]

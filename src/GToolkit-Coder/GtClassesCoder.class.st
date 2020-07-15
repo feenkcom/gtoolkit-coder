@@ -1,6 +1,6 @@
 Class {
 	#name : #GtClassesCoder,
-	#superclass : #GtCoders,
+	#superclass : #GtCodersModel,
 	#category : #'GToolkit-Coder-Coders'
 }
 

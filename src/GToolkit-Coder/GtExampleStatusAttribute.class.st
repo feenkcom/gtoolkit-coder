@@ -16,22 +16,20 @@ GtExampleStatusAttribute class >> forResult: anExampleResult [
 
 { #category : #accessing }
 GtExampleStatusAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
-	| aLabelElement |
-	aLabelElement := BrLabel new
+	| aButtonElement |
+	aButtonElement := BrButton new
 		look: (BrGlamorousLabelLook new fontSize: 12);
-		text: self resultLabel.
+		label: self resultLabel.
 	(result notNil and: [ result isError ])
-		ifTrue: [ aLabelElement background: (BrGlamorousColors errorBackgroundColor alpha: 0.5) ].
-	aLabelElement padding: (BlInsets top: 4 left: 0 bottom: 0 right: 0).
-	aLabelElement margin: (BlInsets left: 5).
-	result ifNil: [ ^ aLabelElement ].
+		ifTrue: [ aButtonElement background: (BrGlamorousColors errorBackgroundColor alpha: 0.5) ].
+	aButtonElement padding: (BlInsets top: 1 left: 0 bottom: 0 right: 0).
+	aButtonElement margin: (BlInsets left: 5).
+	result ifNil: [ ^ aButtonElement ].
 	result isSuccess ifTrue: [ 
-		aLabelElement addViewModel: (BrButtonModel new 
-				action: [ :aButton | aButton phlow spawnObject: self result returnValue ]) ].
+		aButtonElement action: [ :aButton | aButton phlow spawnObject: self result returnValue ] ].
 	(result isFailure or: [ result isError ]) ifTrue: [ 
-		aLabelElement addViewModel: (BrButtonModel new 
-				action: [ :aButton | self result exampleException debug ]) ].
-	^ aLabelElement
+		aButtonElement action: [ :aButton | self result exampleException debug ] ].
+	^ aButtonElement
 ]
 
 { #category : #'initialize-release' }

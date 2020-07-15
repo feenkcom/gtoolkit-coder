@@ -1,13 +1,11 @@
 Class {
 	#name : #GtClassCoder,
 	#superclass : #Announcer,
+	#traits : 'TGtCoderTrait',
+	#classTraits : 'TGtCoderTrait classTrait',
 	#instVars : [
-		'searchFilter',
-		'navigationModel',
-		'methodsCoder',
-		'definitionsCoder',
-		'commentsCoder',
-		'class'
+		'class',
+		'object'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -28,96 +26,60 @@ GtClassCoder class >> forObject: anObject [
 
 { #category : #elements }
 GtClassCoder >> asCardElement [
-	| coderElement |
-	coderElement := GtClassCardElement new coder: self.
-	^ coderElement
+	^ GtClassCardElement new coder: self
 ]
 
 { #category : #elements }
 GtClassCoder >> asElement [
 	| coderElement |
-	coderElement := GtClassCoderElement new classCoder: self.
-	^ coderElement asScrollableElement
+	coderElement := GtBehaviorCoderElement new classCoder: self.
+	^ coderElement
 ]
 
-{ #category : #accessing }
-GtClassCoder >> commentsCoder [
-	^ commentsCoder
-		ifNil: [ commentsCoder := GtClassCommentsCoder new.
-			class notNil
-				ifTrue: [ commentsCoder forClass: class ].
-			commentsCoder ]
-]
-
-{ #category : #accessing }
-GtClassCoder >> definitionsCoder [
-	^ definitionsCoder
-		ifNil: [ definitionsCoder := GtClassDefinitionsCoder new.
-			class notNil
-				ifTrue: [ definitionsCoder forClass: class ].
-			definitionsCoder ]
-]
-
-{ #category : #updating }
+{ #category : #initialize }
 GtClassCoder >> forClass: aClass [
-	class := aClass.
-	methodsCoder notNil
-		ifTrue: [ methodsCoder forClass: class ].
-	definitionsCoder notNil
-		ifTrue: [ definitionsCoder forClass: class ].
-	commentsCoder notNil
-		ifTrue: [ commentsCoder forClass: class ].
-	self announce: (GtCoderClassUpdatedAnnouncement forClass: class)
+	self
+		assert: [ class isNil ]
+		description: [ 'Can not change the behavior behind this coder' ].
+
+	class := aClass
 ]
 
 { #category : #initialize }
 GtClassCoder >> forObject: anObject [
-	class := anObject class.
-	anObject notNil
-		ifTrue: [ self methodsCoder forObject: anObject ].
-	definitionsCoder notNil
-		ifTrue: [ definitionsCoder forClass: class ].
-	commentsCoder notNil
-		ifTrue: [ commentsCoder forClass: class ].
-	self announce: (GtCoderClassUpdatedAnnouncement forClass: class)
+	object := anObject.
+	self forClass: anObject class
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extension' }
 GtClassCoder >> gtLiveFor: aView [
 	<gtView>
 	^ aView explicit 
 		title: 'Class';
 		priority: 1;
-		stencil: [ self ];
-		actionButtonIcon: BrGlamorousIcons browse
+		stencil: self;
+		actionButtonIcon: BrGlamorousVectorIcons browse
 			action: [ :aButton | self theClass browse ];
-		actionButtonIcon: BrGlamorousIcons inspect
-			action: [ :aButton | 
-				aButton phlow spawnObject: self theClass ]
-		
+		actionButtonIcon: BrGlamorousVectorIcons inspect
+			action: [ :aButton | aButton phlow spawnObject: self theClass ]
+]
+
+{ #category : #'system annoucements' }
+GtClassCoder >> handleClassDefinitionModified: a [
+]
+
+{ #category : #'system annoucements' }
+GtClassCoder >> handleClassModified: anAnnouncement [
 ]
 
 { #category : #accessing }
-GtClassCoder >> implementorsFilterString: aString [
-	"Set implementors filter"
-	self methodsCoder implementorsFilterString: aString
+GtClassCoder >> icon [
+	^ BrGlamorousIcons classicon
 ]
 
-{ #category : #initialize }
-GtClassCoder >> initialize [
-	super initialize.
-	navigationModel := GtClassCoderPackagesAndHierarchyNavigation new
-		classCoder: self;
-		yourself
-]
-
-{ #category : #accessing }
-GtClassCoder >> methodsCoder [
-	^ methodsCoder
-		ifNil: [ methodsCoder := GtClassMethodsCoder new.
-			class notNil
-				ifTrue: [ methodsCoder forClass: class ].
-			methodsCoder ]
+{ #category : #testing }
+GtClassCoder >> isForClass [
+	^ true
 ]
 
 { #category : #accessing }
@@ -126,45 +88,23 @@ GtClassCoder >> name [
 ]
 
 { #category : #accessing }
-GtClassCoder >> navigationModel [
-	^ navigationModel
+GtClassCoder >> object [
+	^ object
 ]
 
 { #category : #accessing }
-GtClassCoder >> navigationModel: aNavigationModel [
-	navigationModel := aNavigationModel.
-	navigationModel classCoder: self.
-	self announce: GtCoderNavigationModelChangedAnnouncement
-]
-
-{ #category : #opening }
-GtClassCoder >> openInInspector [
-	| anInspector aSpace |
-	anInspector := GtInspector new.
-	anInspector
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	anInspector addPageWithContent: self asElement for: self.
-	aSpace := BlSpace new.
-	aSpace withHalos.
-	aSpace title: 'Class Coder'.
-	aSpace extent: 1200 @ 600.
-	aSpace addChild: anInspector.
-	aSpace show
+GtClassCoder >> package [
+	^ self theClass package
 ]
 
 { #category : #accessing }
-GtClassCoder >> packageTreeCoders [
-	^ #()
+GtClassCoder >> packageTag [
+	^ self package classTagForClass: self theClass
 ]
 
-{ #category : #accessing }
-GtClassCoder >> searchFilter [
-	^ searchFilter
-		ifNil: [ searchFilter := GtCoderClassSelector new
-				coder: self;
-				yourself ]
+{ #category : #actions }
+GtClassCoder >> removeClass [
+	self theClass removeFromSystem
 ]
 
 { #category : #accessing }
@@ -172,34 +112,12 @@ GtClassCoder >> theClass [
 	^ class
 ]
 
-{ #category : #updating }
-GtClassCoder >> updateForPackage: aPackage [
-	class := nil.
-	self announce: (GtCoderPackageUpdatedAnnouncement new package: aPackage)
-]
-
-{ #category : #scripting }
-GtClassCoder >> withClass: aClass [
-	self forClass: aClass
-]
-
-{ #category : #scripting }
-GtClassCoder >> withHierarchy [
-	self
-		announce: (GtClassCoderNavigationAnnouncement new navigationTab: #hierarchy)
-]
-
-{ #category : #scripting }
-GtClassCoder >> withPackages [
-	self
-		announce: (GtClassCoderNavigationAnnouncement new navigationTab: #packages)
-]
-
-{ #category : #scripting }
+{ #category : #'api - navigation' }
 GtClassCoder >> withSelectedMethod: aMethod [
-	self forClass: aMethod methodClass.
-	(self methodsCoder coders
-		detect: [ :each | each compiledMethod == aMethod ]
-		ifNone: [  ])
-		ifNotNil: [ :coder | self methodsCoder selectAndScrollTo: coder ]
+	self
+		assert: [ class instanceSide = aMethod methodClass instanceSide ]
+		description: [ 'Can not select a method from a different class' ].
+		
+	self
+		announce: (GtClassCoderNavigationAnnouncement new method: aMethod)
 ]

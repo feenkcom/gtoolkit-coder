@@ -1,13 +1,13 @@
 Class {
 	#name : #GtPackageCoderElement,
-	#superclass : #BlElement,
+	#superclass : #BrVerticalPane,
 	#instVars : [
 		'packageCoder'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
-{ #category : #'building ui' }
+{ #category : #'private - ui' }
 GtPackageCoderElement >> buildClassesAndTagsTabs [
 	| tabGroup |
 	tabGroup := BrTabGroup new.
@@ -26,84 +26,137 @@ GtPackageCoderElement >> buildClassesAndTagsTabs [
 	^ tabGroup
 ]
 
-{ #category : #'building ui' }
+{ #category : #'private - ui' }
 GtPackageCoderElement >> buildContentPane [
-	self removeChildren.
-	self addChild: self buildPackageLabel.
-	self addChild: self buildParentLink.
-	self addChild: self buildClassesAndTagsTabs
+	self addChildren: {
+		self buildPackageLabel.
+		self buildParentLink.
+		self buildClassesAndTagsTabs }
 ]
 
-{ #category : #'building ui' }
+{ #category : #'private - ui' }
 GtPackageCoderElement >> buildPackageLabel [
-	^ BrLabel new
-		margin: (BlInsets left: 10);
-		look: (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 20);
-		text: packageCoder package name
+	| packageNameEditor container previewButton unloadButton |
+		
+	container := BrHorizontalPane new
+		hMatchParent;
+		alignCenterLeft;
+		vFitContent.
+	
+	packageNameEditor := BrEditableLabel new
+		look: (BrGlamorousEditableLabelLook new
+			defaultBackground: Color transparent;
+			glamorousCodeFont;
+			bold;
+			fontSize: 18);
+		text: packageCoder package name;
+		margin: (BlInsets all: 0).
+
+	previewButton := GtRefactoringsPreviewButton new
+		margin: (BlInsets left: 5);
+		visibility: BlVisibility gone;
+		refactorings: [ { RBRenamePackageRefactoring from: packageCoder package name to: packageNameEditor text asString } ];
+		when: GtRefactoringsAppliedEvent do: [ :anEvent | anEvent currentTarget visibility: BlVisibility hidden ].
+		
+	packageNameEditor editor
+		when: BrTextEditorModifiedEvent 
+		do: [ :anEvent |
+			anEvent text asString = packageCoder package name
+				ifTrue: [ previewButton visibility: BlVisibility gone ]
+				ifFalse: [  previewButton visibility: BlVisibility visible ] ].
+
+	unloadButton := GtPreviewChangeButton new
+		icon: BrGlamorousVectorIcons remove;
+		label: 'Unload';
+		changeAction: [ self unloadPackage ];
+		changeStencil: [ self buildRemovePackageLabel ].
+
+	container addChild: packageNameEditor.
+	container addChild: previewButton.
+	container addChild: unloadButton.
+
+	^ container
 ]
 
-{ #category : #'building ui' }
+{ #category : #'private - ui' }
 GtPackageCoderElement >> buildPackageTagsList [
-	| element |
-	element := BrSimpleList new.
-	element stencil: [ :each | 
-		each asCardElement
-			constraintsDo: [ :c | 
-				c horizontal matchParent.
-				c vertical fitContent ];
-			yourself ].
-	element display:
-		(packageCoder packageTagCoders asSortedCollection: [ :a :b | 
-			 a name < b name ]).
-	^ element
+	^ BrSimpleList new
+		itemStencil: [ GtPackageTagCardElement new ];
+		itemDataBinder: [ :eachTagCard :eachTagCoder | eachTagCard coder: eachTagCoder ];
+		items: (packageCoder packageTagCoders asSortedCollection: [ :a :b | a name < b name ])
 ]
 
-{ #category : #'building ui' }
+{ #category : #'private - ui' }
 GtPackageCoderElement >> buildParentLink [
-	| element |
-	element := BlElement new.
-	element layout: BlLinearLayout new beHorizontal.
-	element
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
-	element
-		addChild:
-			(BrLabel new
-				margin: (BlInsets left: 10);
-				look: BrGlamorousLabelLook new glamorousRegularFont;
-				text: 'In: ').
-	element
-		addChild:
-			(BrButton new
-				look:
-					(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
-						+ BrGlamorousLabelLook new glamorousRegularFont;
-				label: 'Pharo';
-				action: [ self
-						allParentsDetect: [ :each | each isKindOf: GtPackagesCoderElement ]
-						ifFound: [ :p | p updateSelection: GtPackagesCoder new ]
-						ifNone: [ self phlow spawnObject: GtPackagesCoder new ] ]).
-	^ element
+	| aLinkContainer |
+
+	aLinkContainer := BrHorizontalPane new
+		hMatchParent;
+		vFitContent.
+
+	aLinkContainer addChild:
+		(BrLabel new
+			margin: (BlInsets left: 10);
+			look: BrGlamorousLabelLook new glamorousRegularFont;
+			text: 'In: ').
+
+	aLinkContainer addChild:
+		(BrButton new 
+			look: (BrGlamorousButtonExteriorLook new borderPaint: Color transparent) + BrGlamorousLabelLook new glamorousRegularFont;
+			label: 'Pharo';
+			action: [
+				| aCoderToReplace |
+				aCoderToReplace := (GtCoderToReplace new coder: GtPackagesCoder new).
+				self fireEvent: aCoderToReplace.
+				aCoderToReplace isConsumed
+					ifFalse: [ self phlow spawnObject: aCoderToReplace coder ] ]).
+
+	^ aLinkContainer
+]
+
+{ #category : #'private - ui' }
+GtPackageCoderElement >> buildRemovePackageLabel [
+	| labelText classCount extensionCount |
+	classCount := packageCoder package definedClasses size.
+	extensionCount := packageCoder package extensionMethods size.
+	labelText := 'Remove package <1s> with <2p> class<3?:es> and <4p> extension method<5?:s>'
+		expandMacrosWithArguments:
+			{packageCoder package name.
+			classCount.
+			(classCount = 1).
+			extensionCount.
+			(extensionCount = 1)}.
+	^ BrLabel new
+		margin: (BlInsets all: 10);
+		look: BrGlamorousLabelLook new glamorousRegularFont;
+		text: labelText asRopedText
 ]
 
 { #category : #initialization }
 GtPackageCoderElement >> initialize [
 	super initialize.
-	self layout: BlLinearLayout vertical.
-	self
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ]
+	self padding: (BlInsets top: 5 left: 6 bottom: 5 right: 6).
+	self matchParent
 ]
 
 { #category : #accessing }
 GtPackageCoderElement >> packageCoder [
+	<return: #GtPackageCoder>
+
 	^ packageCoder
 ]
 
 { #category : #accessing }
-GtPackageCoderElement >> packageCoder: anObject [
-	packageCoder := anObject.
+GtPackageCoderElement >> packageCoder: aGtPackageCoder [
+	packageCoder := aGtPackageCoder.
+
 	self buildContentPane
+]
+
+{ #category : #actions }
+GtPackageCoderElement >> unloadPackage [
+	| event |
+	packageCoder unload.
+	event := GtCoderToReplace new coder: GtPackagesCoder new.
+	self fireEvent: event
 ]

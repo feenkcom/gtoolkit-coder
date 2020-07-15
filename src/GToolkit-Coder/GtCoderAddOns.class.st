@@ -2,11 +2,13 @@ Class {
 	#name : #GtCoderAddOns,
 	#superclass : #Object,
 	#instVars : [
+		'modified',
 		'contextActions',
 		'mainActions',
-		'modified',
+		'contextMenuActions',
 		'shortcuts',
-		'collapsedShortcuts'
+		'collapsedShortcuts',
+		'updateRequested'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -25,6 +27,27 @@ GtCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
 		icon: anIcon
 		action: aBlock
 		onlyNew: true
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addContextMenuItem: aString action: aBlock [
+	^ self
+		addContextMenuItem: aString
+		hover: nil
+		leave: nil
+		action: aBlock
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock [
+	| newAction |
+	newAction := GtCoderContextMenuAction new
+		title: aString;
+		action: aBlock;
+		hoverAction: hoverBlock;
+		leaveAction: leaveBlock.
+	contextMenuActions add: newAction.
+	modified add: #contextMenuActions
 ]
 
 { #category : #actions }
@@ -92,6 +115,11 @@ GtCoderAddOns >> clearChanges [
 	modified := Set new
 ]
 
+{ #category : #actions }
+GtCoderAddOns >> clearContextMenu [
+	contextMenuActions := OrderedCollection new
+]
+
 { #category : #shortcuts }
 GtCoderAddOns >> collapsedShortcuts [
 	^ collapsedShortcuts
@@ -102,6 +130,11 @@ GtCoderAddOns >> contextActions [
 	^ contextActions
 ]
 
+{ #category : #accessing }
+GtCoderAddOns >> contextMenuActions [
+	^ contextMenuActions
+]
+
 { #category : #ui }
 GtCoderAddOns >> gtViewContextActionsFor: aView [
 	<gtView>
@@ -109,7 +142,9 @@ GtCoderAddOns >> gtViewContextActionsFor: aView [
 		title: 'Context actions' translated;
 		priority: 25;
 		items: [ self contextActions ];
-		column: 'Title' item: [ :anAction | anAction title ] format: [ :title | title ifNil: [''] ];
+		column: 'Title'
+			item: [ :anAction | anAction title ]
+			text: [ :title | title ifNil: [ '' ] ];
 		column: 'Action' item: [ :anAction | anAction action ]
 ]
 
@@ -120,10 +155,10 @@ GtCoderAddOns >> gtViewKeybindingsFor: aView [
 		title: 'Key bindings' translated;
 		priority: 15;
 		items: [ self shortcuts ];
-		column: 'Shortcut' item: [ :aShortcut | aShortcut combination ] width: 200;
-		column: 'Name' item: [ :aShortcut | aShortcut name ifNil: [ '' ] ];
-		column: 'Action' item: [ :aShortcut | aShortcut action ];
-		column: 'Description' item: [ :aShortcut | aShortcut description ifNil: [ '' ] ]
+		column: 'Shortcut' item: [ :eachShortcut | eachShortcut combination ] width: 200;
+		column: 'Name' item: [ :eachShortcut | eachShortcut name ifNil: [ '' ] ];
+		column: 'Action' item: [ :eachShortcut | eachShortcut action ];
+		column: 'Description' item: [ :eachShortcut | eachShortcut description ifNil: [ '' ] ]
 ]
 
 { #category : #ui }
@@ -133,7 +168,9 @@ GtCoderAddOns >> gtViewMainActionsFor: aView [
 		title: 'Main actions' translated;
 		priority: 20;
 		items: [ self mainActions ];
-		column: 'Title' item: [ :anAction | anAction title ] format: [ :title | title ifNil: [''] ];
+		column: 'Title'
+			item: [ :anAction | anAction title ]
+			text: [ :title | title ifNil: [ '' ] ];
 		column: 'Action' item: [ :anAction | anAction action ]
 ]
 
@@ -142,9 +179,11 @@ GtCoderAddOns >> initialize [
 	super initialize.
 	contextActions := OrderedCollection new.
 	mainActions := OrderedCollection new.
+	contextMenuActions := OrderedCollection new.
 	shortcuts := OrderedCollection new.
 	collapsedShortcuts := OrderedCollection new.
-	modified := Set new
+	modified := Set new.
+	updateRequested := true
 ]
 
 { #category : #accessing }
@@ -152,11 +191,17 @@ GtCoderAddOns >> mainActions [
 	^ mainActions
 ]
 
+{ #category : #changes }
+GtCoderAddOns >> markAsUpdated [
+	updateRequested := false
+]
+
 { #category : #copying }
 GtCoderAddOns >> postCopy [
 	super postCopy.
 	contextActions := contextActions copy.
 	mainActions := mainActions copy.
+	contextMenuActions := contextMenuActions copy.
 	modified := modified copy.
 	shortcuts := shortcuts copy.
 	collapsedShortcuts := collapsedShortcuts copy
@@ -185,6 +230,18 @@ GtCoderAddOns >> removeContextAction: aString [
 		ifTrue: [ ^ self ].
 	contextActions removeAt: index.
 	modified add: #contextActions
+]
+
+{ #category : #actions }
+GtCoderAddOns >> removeContextMenuAction: aString [
+	| index |
+	index := (1 to: contextMenuActions size)
+		detect: [ :i | (contextMenuActions at: i) title = aString ]
+		ifNone: [ 0 ].
+	index = 0
+		ifTrue: [ ^ self ].
+	contextMenuActions removeAt: index.
+	modified add: #contextMenuActions
 ]
 
 { #category : #actions }
@@ -223,9 +280,24 @@ GtCoderAddOns >> removeShortcutsMatching: aBlock [
 		ifTrue: [ modified add: #shortcuts ]
 ]
 
+{ #category : #changes }
+GtCoderAddOns >> requestUpdate [
+	"Mark coder addons as potentially needed to be updated"
+	
+	updateRequested := true
+]
+
 { #category : #shortcuts }
 GtCoderAddOns >> shortcuts [
 	^ shortcuts
+]
+
+{ #category : #testing }
+GtCoderAddOns >> shouldBeUpdated [
+	"Return true if addons should be updated, false otherwise"
+	<return: #Boolean>
+
+	^ updateRequested
 ]
 
 { #category : #private }

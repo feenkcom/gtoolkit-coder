@@ -1,13 +1,15 @@
 Class {
 	#name : #GtDiffElement,
 	#superclass : #BlElement,
+	#traits : 'TBrLayoutResizable + TBrSizeAdjustable',
+	#classTraits : 'TBrLayoutResizable classTrait + TBrSizeAdjustable classTrait',
 	#instVars : [
 		'leftElement',
 		'rightElement',
 		'syncScrollRanges',
 		'diff',
 		'outlines',
-		'updateDelay'
+		'separatorElement'
 	],
 	#category : #'GToolkit-Coder-Diff'
 }
@@ -63,47 +65,18 @@ GtDiffElement class >> originalString [
 
 { #category : #private }
 GtDiffElement >> buildInterface [
-	| left right |
 	syncScrollRanges := GtSyncScrollRanges createFromDiff: diff.
-	self
-		padding: (BlInsets all: 10);
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	leftElement := BrEditor new
-				background: Color white;
-				padding: (BlInsets all: 10);
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical fitContent ];
-				look: BrGlamorousCodeEditorLook new + BrShadowLook new;
-				when: BlInfiniteScrollChangedEvent do: [ :e | self leftScrolled ];
-				text: self previousRopedText.
-	diff newStyler ifNotNil: [ :style | leftElement styler: style ].
-	self addChild: leftElement.
-	self
-		addChild:
-			(BlElement new
-				width: 75;
-				yourself).
-	self
-		addChild:
-			(rightElement := BrEditor new
-				background: Color white;
-				padding: (BlInsets all: 10);
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical fitContent ];
-				look: BrGlamorousCodeEditorLook new + BrShadowLook new;
-				when: BlInfiniteScrollChangedEvent
-					do: [ :e | self rightScrolled ];
-				text: self newRopedText).
-	diff newStyler ifNotNil: [ :style | rightElement styler: style ].
+
+	leftElement text: self previousRopedText.
+	diff newStyler ifNotNil: [ :aStyler | leftElement styler: aStyler ].
+
+	rightElement text: self newRopedText.
+	diff newStyler ifNotNil: [ :aStyler | rightElement styler: aStyler ].
+
 	self updateOutlines
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtDiffElement >> diff: aDiffBuilder [
 	diff := aDiffBuilder.
 	self buildInterface
@@ -130,13 +103,73 @@ GtDiffElement >> drawMeAndChildrenOnSpartaCanvas: aCanvas [
 				draw ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtDiffElement >> initialize [
 	super initialize.
+	
+	self viewModel: (BrInteractiveModel new addStates: {
+		BrLayoutHorizontalResizerModel matchParent.
+		BrLayoutVerticalResizerModel matchParent.
+		BrSizeAdjustmentModel new.
+	}).
+	
+	self layout: BlLinearLayout horizontal.
+
+	self matchParent.
+
 	outlines := #().
-	updateDelay := BlDelayedTaskAction new.
-	updateDelay delay: 5 milliSeconds.
-	updateDelay element: self
+	
+	leftElement := BrEditor new
+		beReadOnlyWithSelection;
+		matchParent;
+		background: Color white;
+		look: BrGlamorousCodeEditorLook new + BrShadowLook new;
+		when: BlElementScrolledEvent do: [ :e | self leftScrolled ].
+		
+	rightElement := BrEditor new
+		beReadOnlyWithSelection;
+		matchParent;
+		background: Color white;
+		look: BrGlamorousCodeEditorLook new + BrShadowLook new;
+		when: BlElementScrolledEvent do: [ :e | self rightScrolled ].
+	
+	separatorElement := BlElement new
+		height: 0;
+		yourself.
+	
+	self addChildren: { 
+		leftElement.
+		separatorElement.
+		rightElement
+	}.
+	
+	self addLook: (BrLayoutResizerLook inherit inherit: leftElement; inherit: rightElement).
+	self addLook: (BrSizeAdjustmentLook new
+		default: [ :aWidget |
+			aWidget padding: (BlInsets all: 10).
+			leftElement look glamorousCodeSize.
+			leftElement padding: (BlInsets all: 10).
+			separatorElement width: 40.
+			rightElement look glamorousCodeSize ];
+		small: [ :aWidget |
+			aWidget padding: (BlInsets all: 8).
+			leftElement look glamorousCodeSmallSize.
+			leftElement padding: (BlInsets all: 6).
+			separatorElement width: 25.
+			rightElement look glamorousCodeSmallSize ];
+		tiny: [ :aWidget |
+			aWidget padding: (BlInsets all: 6).
+			leftElement padding: (BlInsets all: 4).
+			leftElement look glamorousCodeTinySize.
+			separatorElement width: 20.
+			rightElement look glamorousCodeTinySize ];
+		mini: [ :aWidget |
+			aWidget padding: (BlInsets all: 6).
+			leftElement padding: (BlInsets all: 2).
+			leftElement look glamorousCodeMiniSize.
+			separatorElement width: 10.
+			rightElement look glamorousCodeMiniSize ]
+	)
 ]
 
 { #category : #'event handling' }
@@ -165,12 +198,14 @@ GtDiffElement >> leftRange [
 GtDiffElement >> leftScrolled [
 	| newPosition |
 	newPosition := syncScrollRanges rightLineFor: self leftRange first.
+
 	(self rightRange includes: newPosition)
 		ifTrue: [ | offset |
 			offset := rightElement children first bounds position y.
 			1 to: newPosition - self rightRange first do: [ :i | offset := offset + (rightElement children at: i) height ].
-			rightElement scrollVerticallyBy: offset ]
-		ifFalse: [ rightElement scrollToPosition: newPosition ].
+			"rightElement scrollBy: 0@offset" ]
+		ifFalse: [ "rightElement scrollToPosition: newPosition" ].
+
 	self updateOutlines
 ]
 
@@ -194,19 +229,7 @@ GtDiffElement >> leftTopFor: anInteger [
 
 { #category : #private }
 GtDiffElement >> newRopedText [
-	| text |
-	text := '' asRopedText.
-	diff
-		patchSequenceDoIfMatch: [ :string | 
-			text
-				append: string asRopedText;
-				append: String cr asRopedText ]
-		ifInsert: [ :string | 
-			text
-				append: string asRopedText;
-				append: String cr asRopedText ]
-		ifRemove: [ :string |  ].
-	^ text
+	^ diff newRopedText
 ]
 
 { #category : #'geometry hooks' }
@@ -241,19 +264,7 @@ GtDiffElement >> outlineFor: aSyncScrollRange [
 
 { #category : #private }
 GtDiffElement >> previousRopedText [
-	| text |
-	text := '' asRopedText.
-	diff
-		patchSequenceDoIfMatch: [ :string | 
-			text
-				append: string asRopedText;
-				append: String cr asRopedText ]
-		ifInsert: [ :string |  ]
-		ifRemove: [ :string | 
-			text
-				append: string asRopedText;
-				append: String cr asRopedText ].
-	^ text
+	^ diff previousRopedText
 ]
 
 { #category : #'event handling' }
@@ -282,12 +293,14 @@ GtDiffElement >> rightRange [
 GtDiffElement >> rightScrolled [
 	| newPosition |
 	newPosition := syncScrollRanges leftLineFor: self rightRange first.
+	
 	(self leftRange includes: newPosition)
 		ifTrue: [ | offset |
 			offset := leftElement children first bounds position y.
 			1 to: newPosition - self leftRange first do: [ :i | offset := offset + (leftElement children at: i) height ].
-			leftElement scrollVerticallyBy: offset ]
-		ifFalse: [ leftElement scrollToPosition: newPosition ].
+			"leftElement scrollBy: 0@ offset" ]
+		ifFalse: [ "leftElement scrollToPosition: newPosition" ].
+
 	self updateOutlines
 ]
 
@@ -311,17 +324,14 @@ GtDiffElement >> rightTopFor: anInteger [
 
 { #category : #'event handling' }
 GtDiffElement >> updateOutlines [
-	updateDelay stop.
-	updateDelay
-		action: [ | ranges |
-			outlines := OrderedCollection new.
-			ranges := syncScrollRanges
-				rangesForLeft: self leftRange
-				andRight: self rightRange.
-			ranges
-				do: [ :each | 
-					each isDifference
-						ifTrue: [ outlines add: (self outlineFor: each) ] ].
-			self invalidate ].
-	updateDelay start
+	| ranges |
+	outlines := OrderedCollection new.
+	ranges := syncScrollRanges
+		rangesForLeft: self leftRange
+		andRight: self rightRange.
+	ranges
+		do: [ :each | 
+			each isDifference
+				ifTrue: [ outlines add: (self outlineFor: each) ] ].
+	self invalidate
 ]

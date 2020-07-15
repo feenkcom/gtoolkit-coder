@@ -75,12 +75,12 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault [
 			onModel.
 		aStep check
 			label: 'Check Collapsed Source';
-			satisfies: [ :aCoder | aCoder collapsedSource = '? anObject' ];
+			satisfies: [ :aCoder | aCoder collapsedSource = '?' ];
 			onModel.
 		aStep check
 			label: 'Check Coder Editor Text';
-			satisfies: [ :anEditorElement | anEditorElement editor text asString = '? anObject' ];
-			onChildNamed: #editor.
+			satisfies: [ :label | label text asString = '?' ];
+			onChildNamed: #label.
 		aStep check 
 			label: 'Check Coder UI is Collapsed';
 			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] 
@@ -133,7 +133,8 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 			label: 'Check Triggered Spawn Object Event';
 			satisfies: [ :theScripter | theScripter events reversed 
 				detectEventOfClass: GtPhlowObjectToSpawn
-				ifFound: [ :theEvent | theEvent object class = GtClassCoder and: [ theEvent object theClass = self class ] ]
+				ifFound: [ :theEvent |
+					theEvent object = self binaryMethod and: [ theEvent tool isKindOf: GtCoderTool ] ]
 				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
 			onScripter.
 		].
@@ -177,8 +178,8 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
 			onChildAt: 1.
 		aStep check
 			label: 'Check Coder Editor Text';
-			satisfies: [ :anEditorElement | anEditorElement editor text asString = '? anObject' ];
-			onChildNamed: #editor.
+			satisfies: [ :label | label text asString = '?' ];
+			onChildNamed: #label.
 		aStep check 
 			label: 'Check Coder UI Is Collapsed';
 			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
@@ -393,7 +394,6 @@ GtMethodCoderByScripterExamples >> coderOnMethod: aMethod [
 	"Source code is empty as Coder is not displayed yet."
 	self assert: aCoder isBuilt not.
 	self assert: aCoder source isEmpty.
-	self assert: aCoder collapsedSource isEmpty.
 	^ aCoder
 ]
 

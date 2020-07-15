@@ -127,7 +127,7 @@ GtProcessCoderElement >> variablesListElement [
 	| list |
 	list := BrColumnedList new.
 	list margin: (BlInsets all: 10).
-	list addEventHandler: (GtInspectorListToSelectHandler new transformation: [ :each | each last ]).
+	list addEventHandler: (GtPhlowListToSelectHandler new transformation: [ :each | each last ]).
 	list column
 		title: 'Icon';
 		stencil: [ :each | 

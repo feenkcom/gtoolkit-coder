@@ -1,115 +1,83 @@
 Extension { #name : #Behavior }
 
 { #category : #'*GToolkit-Coder' }
-Behavior >> buildCommentsTabIn: tabGroup for: classCoder [
-	<gtClassView: 30>
-	tabGroup
-		addTab:
-			(BrTab new
-				look: BrGlamorousTabLook new;
-				label: 'Comments';
-				stencil: [ classCoder commentsCoder asElement ])
-]
-
-{ #category : #'*GToolkit-Coder' }
-Behavior >> buildDefinitionsTabIn: tabGroup for: classCoder [
-	<gtClassView: 20>
-	tabGroup
-		addTab:
-			(BrTab new
-				look: BrGlamorousTabLook new;
-				label: 'Definitions';
-				stencil: [ classCoder definitionsCoder asElement ])
-]
-
-{ #category : #'*GToolkit-Coder' }
-Behavior >> buildMethodsTabIn: tabGroup for: classCoder [
-	<gtClassView: 10>
-	tabGroup
-		addTab:
-			(BrTab new
-				look: BrGlamorousTabLook new;
-				label: 'Methods';
-				stencil: [ classCoder methodsCoder asElement ];
-				toolbarStencil: [ BrToolbar new
-						look: BrGlamorousToolbarLook new;
-						addItem: (self buildSpotterButtonFor: classCoder);
-						addItem:
-							(BrButton new
-								look: BrGlamorousButtonWithIconLook;
-								icon: BrGlamorousIcons add asElement;
-								action: [ classCoder methodsCoder addNewCoder ];
-								yourself);
-						yourself ])
-]
-
-{ #category : #'*GToolkit-Coder' }
-Behavior >> buildSpotterButtonFor: classCoder [
-	| look |
-	^ BrButton new
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(look := BrGlamorousWithDropdownLook
-						stencil: [ | model |
-							model := GtSpotter new initializeWith: classCoder methodsCoder.
-							model announcer
-								when: GtSpotterActOn
-								do: [ :anEvent | 
-									classCoder methodsCoder selectAndScrollTo: anEvent element.
-									anEvent actedUpon: true.
-									look hide ].
-							model announcer
-								when: GtSpotterExitAnnouncement
-								do: [ :e | look hide ].
-							BlElement new
-								look:
-									(BrGlamorousDropdownLook new
-										handle:
-											(BrButton new
-												look:
-													BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
-														- BrGlamorousButtonExteriorLook;
-												icon: BrGlamorousIcons search asElement;
-												label: 'Playground History';
-												yourself);
-										content:
-											(GtSpotterElement new
-												spotterModel: model;
-												size: 600 @ 400;
-												yourself);
-										yourself);
-								background: BrGlamorousColors secondaryHeaderBackgroundColor;
-								yourself ]);
-		icon: BrGlamorousIcons search asElement;
-		label: 'Search';
-		yourself
-]
-
-{ #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowse [
-	| aCoder aSpace coder |
-	coder := GtPackagesCoder new.
-	aCoder := GtInspector withToolOn: coder.
-	aSpace := BlSpace new.
-	aSpace title: 'Coder'.
-	aSpace extent: 1200 @ 600.
-	aSpace addChild: aCoder.
-	aSpace withHalos.
-	aSpace show.
-	coder withClass: self
+	^ (GtCoder forClass: self) openInPager maximized
 ]
 
 { #category : #'*GToolkit-Coder' }
 Behavior >> gtBrowseFrom: anElement [
-	| aCoder aSpace coder |
-	coder := GtPackagesCoder new.
-	aCoder := GtInspector withToolOn: coder.
-	aSpace := BlSpace new.
-	aSpace title: 'Coder'.
-	aSpace extent: 1200 @ 600.
-	aSpace addChild: aCoder.
-	aSpace withHalos.
-	anElement showSpace: aSpace.
-	coder withClass: self
+	^ ((GtCoder forClass: self) 
+		openInPagerFrom: anElement)
+			maximized
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> gtCoderCommentsFor: aView [
+	<gtClassView>
+
+	^ aView explicit
+		title: 'Comment';
+		tooltip: 'Class comment';
+		priority: 30;
+		disableAsync;
+		stencil: [ (GtDocumenter forClass: self) ];
+		actionButtonIcon: BrGlamorousVectorIcons accept 
+			tooltip: 'Save document' 
+			action: [ :aToggle :aTab | aTab viewContentElement save ];
+		actionToggleIcon: BrGlamorousIcons edit 
+			tooltip: 'Show/Hide Markups'
+			activated: [ :aToggle :aTab | aTab viewContentElement showMarkup ] 
+			deactivated: [ :aToggle :aTab | aTab viewContentElement hideMarkup ];
+		actionButtonIcon: BrGlamorousVectorIcons remove
+			tooltip: 'Decrease font size'
+			action: [ :aToggle :aTab | aTab viewContentElement decreaseNormalFontSize ];
+		actionButtonIcon: BrGlamorousVectorIcons add
+			tooltip: 'Increase font size'
+			action: [ :aToggle :aTab | aTab viewContentElement increaseNormalFontSize ];
+		actionUpdateButtonTooltip: 'Update class comment'
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> gtCoderExamplesFor: aView context: aDictionary [
+	<gtClassView>
+	| anExamplesClassName |
+
+	anExamplesClassName := (self name , 'Examples') asSymbol.
+
+	^ self environment
+		at: anExamplesClassName
+		ifPresent: [ :aClass | 
+			| methodsCoder |
+			methodsCoder := GtClassMethodsCoder forClass: aClass.
+			aView explicit
+				priority: 50;
+				title: 'Related examples';
+				actionButtonIcon: BrGlamorousVectorIcons add
+					action: [ methodsCoder addNewCoder ];
+				stencil: [ methodsCoder asElement ] ]
+		ifAbsent: [ aView empty ]
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> gtCoderMethodsFor: aView context: aDictionary [
+	<gtClassView>
+	| methodsCoder object |
+
+	aDictionary
+		at: #classCoder
+		ifPresent: [ :coder | object := coder object ].
+
+	methodsCoder := object notNil
+		ifTrue: [ GtClassMethodsCoder forObject: object ]
+		ifFalse: [ GtClassMethodsCoder forClass: self ].
+
+	^ aView explicit
+		priority: 10;
+		title: 'Methods';
+		disableAsync;
+		actionButtonIcon: BrGlamorousVectorIcons add
+			tooltip: 'Add new method'
+			action: [ methodsCoder addNewCoder ];
+		stencil: [ methodsCoder asElement ]
 ]

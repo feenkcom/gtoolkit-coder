@@ -1,259 +1,420 @@
+"
+I am the entrance point into the coder as a tool
+"
 Class {
 	#name : #GtCoder,
-	#superclass : #Object,
+	#superclass : #BlElement,
+	#traits : 'TGtPagerPageInstantiator',
+	#classTraits : 'TGtPagerPageInstantiator classTrait',
 	#instVars : [
-		'announcer',
-		'expanded',
-		'attributes',
-		'addOns',
-		'addOnCommand',
-		'addOnMonitor'
+		'coderContent',
+		'navigationModel',
+		'leftSideBarContent',
+		'leftSideBarResizer'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-! Core'
 }
 
-{ #category : #elements }
-GtCoder >> addCollapsedShortcutsTo: anElement [
-	addOns collapsedShortcuts
-		do: [ :each | 
-			anElement
-				addShortcut: (each copy action: [ each action cull: anElement ]) ]
+{ #category : #'instance creation' }
+GtCoder class >> forClass: aClass [
+	^ self forCoder: (GtClassCoder forClass: aClass)
 ]
 
-{ #category : #updating }
-GtCoder >> addOnChanged: aSymbol [
-	aSymbol = #mainActions
-		ifTrue: [ self announce: (GtCoderMainActionsChanged new coder: self) ].
-	aSymbol = #contextActions
-		ifTrue: [ self announce: (GtCoderContextActionsChanged new coder: self) ]
+{ #category : #'instance creation' }
+GtCoder class >> forCoder: aCoder [
+	^ self basicNew initialize pushCoder: aCoder
 ]
 
-{ #category : #accessing }
-GtCoder >> addOns [
-	^ addOns
+{ #category : #'instance creation' }
+GtCoder class >> forMethod: aCompiledMethod [
+    | classCoder coder |
+    classCoder := GtClassCoder forClass: aCompiledMethod methodClass instanceSide.
+    coder := self forCoder: classCoder.
+    classCoder withSelectedMethod: aCompiledMethod.
+    ^ coder
 ]
 
-{ #category : #'initialize-release' }
-GtCoder >> addOnsClass [
-	^ GtCoderAddOns
+{ #category : #'instance creation' }
+GtCoder class >> forObject: anObject [
+	^ self forCoder: (GtClassCoder forObject: anObject)
 ]
 
-{ #category : #elements }
-GtCoder >> addShortcutsTo: anElement [
-	addOns shortcuts
-		do: [ :each | 
-			anElement
-				addShortcut: (each copy action: [ each action cull: anElement ]) ]
+{ #category : #'instance creation' }
+GtCoder class >> forPackage: anRPackage [
+	^ self forCoder: (GtPackageCoder forPackage: anRPackage)
 ]
 
-{ #category : #updating }
-GtCoder >> announce: anAnnouncement [
-	announcer announce: anAnnouncement
+{ #category : #'instance creation' }
+GtCoder class >> new [
+	^ self forCoder: GtPackagesCoder new
 ]
 
-{ #category : #accessing }
-GtCoder >> announcer [
-	^ announcer
-]
-
-{ #category : #elements }
-GtCoder >> asElement [
-	^ GtCoderElement new
-		coder: self;
+{ #category : #'private - ui' }
+GtCoder >> buildAddButton [
+	| look |
+	^ BrButton new
+		label: 'Add class or package';
+		look:
+			BrGlamorousButtonWithIconLook
+				+
+					(look := BrGlamorousWithDropdownLook
+						handle: [ BrButton new
+								look:
+									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
+										- BrGlamorousButtonExteriorLook;
+								icon: BrGlamorousVectorIcons add;
+								yourself ]
+						content: [ | element |
+							element := BlElement new.
+							element
+								constraintsDo: [ :c | 
+									c horizontal exact: 400.
+									c vertical exact: 300 ].
+							element addChild: (self buildAddInterface: look).
+							element ]);
+		icon: BrGlamorousVectorIcons add;
 		yourself
 ]
 
-{ #category : #'accessing-attributes' }
-GtCoder >> attributeNamed: aSymbol [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifAbsent: [  ] ]
+{ #category : #'private - ui' }
+GtCoder >> buildAddInterface: look [
+	| contentTabs tab |
+	contentTabs := BrTabGroup new.
+	contentTabs look: BrGlamorousTabGroupLook new.
+	contentTabs
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	tab := BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Class';
+		stencil: [ | element |
+			element := GtCreateBehaviorElement new.
+			element
+				behaviorBlock: [ :cls | 
+					look hide.
+					navigationModel selectClass: cls ].
+			element forClassDefinition.
+			navigationModel
+				selectedPackageDo: [ :package | element forPackage: package ].
+			navigationModel
+				selectedTagDo: [ :tag | element forPackageTag: tag ].
+			navigationModel
+				selectedClassDo: [ :cls | 
+					cls isTrait
+						ifFalse: [ element forSuperclass: cls ] ].
+			element ].
+	contentTabs addTab: tab.
+	tab := BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Trait';
+		stencil: [ | element |
+			element := GtCreateBehaviorElement new.
+			element
+				behaviorBlock: [ :cls | 
+					look hide.
+					navigationModel selectClass: cls ].
+			element forTraitDefinition.
+			navigationModel
+				selectedPackageDo: [ :package | element forPackage: package ].
+			navigationModel
+				selectedTagDo: [ :tag | element forPackageTag: tag ].
+			element ].
+	contentTabs addTab: tab.
+	tab := BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Package';
+		stencil: [ | element |
+			element := GtCreatePackageElement new.
+			element
+				packageBlock: [ :pkg :tag | 
+					look hide.
+					tag isNil 
+						ifTrue: [ navigationModel selectPackage: pkg ]
+						ifFalse: [ navigationModel selectPackageTag: tag ] ].
+			navigationModel
+				selectedPackageDo: [ :package | element forPackage: package ].
+			element ].
+	contentTabs addTab: tab.
+	^ contentTabs
 ]
 
-{ #category : #'accessing-attributes' }
-GtCoder >> attributeNamed: aSymbol ifAbsent: aBlock [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifAbsent: aBlock ]
-		ifFalse: [ aBlock value ]
+{ #category : #'private - ui' }
+GtCoder >> buildClassLabel [
+	| aClassNameEditor aContainer |
+	aContainer := BrHorizontalPane new
+		hMatchParent;
+		alignCenterLeft;
+		vFitContent.
+	aClassNameEditor := BrEditableLabel new
+		look:
+			(BrGlamorousEditableLabelLook new
+				defaultBackground: Color transparent;
+				glamorousCodeFont;
+				bold;
+				fontSize: 18);
+		inputFilter: BrTextEditorAlphaNumericInputFilter new;
+		text: 'NameOfSubclass';
+		margin: (BlInsets all: 0).
+	(GtCompletionController
+		on: aClassNameEditor
+		strategy: GtClassesCompletionStrategy new) install.
+	aContainer addChild: aClassNameEditor.
+	^ aContainer
 ]
 
-{ #category : #'accessing-attributes' }
-GtCoder >> attributeNamed: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock [
-	^ attributes notNil
-		ifTrue: [ attributes at: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock ]
-		ifFalse: [ anAbsentBlock value ]
+{ #category : #'private - ui' }
+GtCoder >> buildHierarchyButton [
+	^ BrButton new
+		label: 'Show Package and Class Hierarchies';
+		look: BrGlamorousButtonWithIconLook + (BrGlamorousWithDropdownLook
+			handle: [
+				BrButton new
+					look: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook - BrGlamorousButtonExteriorLook;
+					icon: BrGlamorousIcons tree;
+					yourself ]
+			content: [
+				BlElement new
+					size: 400@400;
+					addChild: (GtCoderNavigationTabsStencil new 
+						navigationModel: navigationModel;
+						asElement)
+			]);
+		icon: BrGlamorousIcons tree asElement;
+		yourself
 ]
 
-{ #category : #'accessing-attributes' }
-GtCoder >> attributeNamed: aSymbol put: anObject [
-	^ self attributes at: aSymbol put: anObject
+{ #category : #'private - ui' }
+GtCoder >> buildHorizontalPane [
+	^ BrHorizontalPane new
+		hFitContent;
+		vMatchParent
 ]
 
-{ #category : #'accessing-attributes' }
-GtCoder >> attributes [
-	^ attributes ifNil: [ attributes := IdentityDictionary new ]
+{ #category : #'private - ui' }
+GtCoder >> buildSpotterButton [
+	| look |
+	^ BrButton new
+		label: 'Search';
+		look:
+			BrGlamorousButtonWithIconLook
+				+
+					(look := BrGlamorousWithDropdownLook
+						stencil: [ | model |
+							model := GtSpotter new initializeWith: (GtCoderSpotterStart new navigationModel: navigationModel).
+							model announcer
+								when: GtSpotterActOn
+								do: [ :e | 
+									| item acted |
+									acted := false.
+									item := e element.
+									self flag: 'FIXME candidates may be wrapped for some reason'.
+									[ (item isKindOf: GtSpotterCandidate)
+										and: [ item item ~~ item ] ]
+										whileTrue: [ item := item item ].
+									(item isKindOf: RPackage)
+										ifTrue: [ navigationModel selectPackage: item. acted := true ].
+									(item isKindOf: ClassDescription)
+										ifTrue: [ navigationModel selectClass: item. acted := true ].
+									(item isKindOf: CompiledMethod)
+										ifTrue: [ navigationModel selectMethod: item. acted := true ].
+									acted ifTrue: [ 
+										e actedUpon: true.
+										look hide ] ].
+							BlElement new
+								look:
+									(BrGlamorousDropdownLook new
+										handle:
+											(BrButton new
+												look:
+													BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
+														- BrGlamorousButtonExteriorLook;
+												icon: BrGlamorousVectorIcons search;
+												yourself);
+										content:
+											(GtSpotterElement new
+												spotterModel: model;
+												constraintsDo: [ :c | 
+													c horizontal exact: 600.
+													c vertical exact: 400 ];
+												margin: (BlInsets all: 1);
+												geometry: (BlRectangle cornerRadius: 4);
+												in: [ :e | 
+													self
+														flag: 'FIXME need to remove original listener to avoid phlow inspect'.
+													model announcer subscriptions subscriptions
+														detect: [ :g | 
+															g announcementClass == GtSpotterSelectedCandidateChanged
+																and: [ g action isMessageSend
+																		and: [ g action selector = #onCandidateSelected:
+																				and: [ g action receiver == e ] ] ] ]
+														ifFound: [ :g | g announcer subscriptions remove: g ] ];
+												yourself);
+										yourself);
+								background: BrGlamorousColors secondaryHeaderBackgroundColor;
+								yourself ]);
+		icon: BrGlamorousVectorIcons search;
+		yourself
 ]
 
-{ #category : #elements }
-GtCoder >> breadcrumbNamedActions [
-	^ #()
-]
-
-{ #category : #accessing }
-GtCoder >> coders [
-	^ self attributeNamed: #coders
-]
-
-{ #category : #accessing }
-GtCoder >> coders: aCoders [
-	^ self attributeNamed: #coders put: aCoders
-]
-
-{ #category : #elements }
-GtCoder >> collapsedEditorElement [
-	self subclassResponsibility
-]
-
-{ #category : #private }
-GtCoder >> context [
-	^ nil
-]
-
-{ #category : #'actions - toolbar' }
-GtCoder >> contextActions [
-	"Return a collection of contextual actions in the coder. They are renderred separately from mainActions"
-
-	<return: #Collection of: #GtCoderAction>
-	^ addOns contextActions
-]
-
-{ #category : #accessing }
-GtCoder >> expanded [
-	^ expanded
-]
-
-{ #category : #accessing }
-GtCoder >> expanded: aBoolean [
-	aBoolean = expanded
-		ifTrue: [ ^ self ].
-	expanded := aBoolean.
-	self expandedUpdated.
-	self announce: (GtCoderExpandedChanged new coder: self)
-]
-
-{ #category : #elements }
-GtCoder >> expandedEditorElement [
-	self subclassResponsibility
-]
-
-{ #category : #private }
-GtCoder >> expandedUpdated [
-]
-
-{ #category : #ui }
-GtCoder >> gtLiveFor: aView [
-	<gtView>
-	^ aView explicit
-		title: 'Live';
-		priority: 10;
-		stencil: [ self ]
-]
-
-{ #category : #ui }
-GtCoder >> gtViewContextActionsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewContextActionsFor: aView ]
-]
-
-{ #category : #ui }
-GtCoder >> gtViewKeybindingsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewKeybindingsFor: aView ]
-]
-
-{ #category : #ui }
-GtCoder >> gtViewMainActionsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewMainActionsFor: aView ]
-]
-
-{ #category : #testing }
-GtCoder >> hasObjectAttribute [
-	self 
-		attributeNamed: #object 
-		ifAbsent: [ ^ false ].
-	^ true
+{ #category : #'private - ui' }
+GtCoder >> buildToolbar [
+	^ BrToolbar new
+		look: BrGlamorousToolbarLook new;
+		padding:
+			(BlInsets
+				top: 10
+				left: 0
+				bottom: 0
+				right: 5);
+		constraintsDo: [ :c | 
+			c ignoreByLayout.
+			c ignored horizontal alignRight.
+			c ignored vertical alignTop ];
+		addItem: self buildSpotterButton;
+		addItem: self buildHierarchyButton;
+		addItem: self buildAddButton;
+		yourself
 ]
 
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
-	announcer := Announcer new.
-	expanded := false.
-	addOnMonitor := Monitor new.
-	self initializeAddOns
+	self initializeListeners.
+	self initializeNavigationModel.
+	self initializeMainContent.
+	self initializeLeftSideBarContent.
+	self initializeElement.
 ]
 
-{ #category : #'initialize-release' }
-GtCoder >> initializeAddOns [
-	addOns := self addOnsClass new.
-	self initializeShortcuts
+{ #category : #initialization }
+GtCoder >> initializeElement [
+	| aHorizontalPane |
+	self
+		layout: BlLinearLayout vertical;
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical matchParent ].
+
+	aHorizontalPane := BrHorizontalPane new
+		matchParent;
+		addChild: leftSideBarContent;
+		addChild: coderContent.
+
+	self addChild: aHorizontalPane.
+	self addChild: self buildToolbar
 ]
 
-{ #category : #'initialize-release' }
-GtCoder >> initializeShortcuts [
+{ #category : #initialization }
+GtCoder >> initializeLeftSideBarContent [
+	leftSideBarContent := BlElement new
+		layout: BlFrameLayout new;
+		look: (BrGlamorousWithHorizontalResizerLook new 
+			resizerDo: [ :theResizer | leftSideBarResizer := theResizer ]);
+		visibility: BlVisibility gone;
+		constraintsDo: [ :c |
+			c horizontal exact: 0.
+			c vertical matchParent ].
+]
+
+{ #category : #initialization }
+GtCoder >> initializeListeners [
+	self
+		when: GtCoderToReplace
+		do: [ :anEvent | self replaceFrom: anEvent ].
+
+	self
+		when: GtCoderToSpawn
+		do: [ :anEvent | self spawnFrom: anEvent ].
+
+	self
+		when: GtCoderToSpawnInSpace
+		do: [ :anEvent | self spawnInSpaceFrom: anEvent ].
+]
+
+{ #category : #initialization }
+GtCoder >> initializeMainContent [
+	coderContent := BlElement new
+		layout: BlFrameLayout new;
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical matchParent ].
+]
+
+{ #category : #initialization }
+GtCoder >> initializeNavigationModel [
+	navigationModel := GtCoderNavigationPackagesTagsClassesModel new.
+	navigationModel when: GtCoderNavigationSelectionAnnouncement send: #updateCoder: to: self.
 	
 ]
 
-{ #category : #'actions - toolbar' }
-GtCoder >> mainActions [
-	"Return a collection of main actions in the coder, for example save"
-
-	<return: #Collection of: #GtCoderAction>
-	^ addOns mainActions
+{ #category : #'api - configuration' }
+GtCoder >> leftSideBarDo: aBlock [
+	aBlock value: leftSideBarContent
 ]
 
-{ #category : #elements }
-GtCoder >> previewElement [
-	^ self asElement
+{ #category : #'api - configuration' }
+GtCoder >> leftSideBarResizerDo: aBlock [
+	aBlock value: leftSideBarResizer
 ]
 
-{ #category : #'accessing-attributes' }
-GtCoder >> removeAttributeNamed: aSymbol [
-	attributes isNil
-		ifTrue: [ ^ self ].
-	attributes removeKey: aSymbol ifAbsent: [  ]
+{ #category : #'instance creation' }
+GtCoder >> newEmbellisherExtension [
+	^ GtPagerPageEmbellisherExtensions new 
+		addExtension: (GtCoderEmbeddedPlaygroundExtension new
+			navigationModel: navigationModel);
+		addExtension: (GtCoderSideBarSystemNavigationExtension new
+			coder: self;
+			sideBar: leftSideBarContent;
+			navigationModel: navigationModel)
 ]
 
-{ #category : #scripting }
-GtCoder >> requestFocus [
-	self announce: (GtCoderRequestFocus new coder: self)
+{ #category : #'hooks - children' }
+GtCoder >> onAddedToSceneGraph [
+	super onAddedToSceneGraph.
+	navigationModel subscribeToSystem.
 ]
 
-{ #category : #elements }
-GtCoder >> stylerView: anElement [
-
+{ #category : #'hooks - children' }
+GtCoder >> onRemovedFromSceneGraph [
+	super onRemovedFromSceneGraph.
+	navigationModel unsubscribeFromSystem.
 ]
 
-{ #category : #subscriptions }
-GtCoder >> subscribeToSystem [
-	"do nothing"
+{ #category : #opening }
+GtCoder >> pagerWindowTitle [
+	<return: #String>
+	^ 'Coder'
 ]
 
-{ #category : #private }
-GtCoder >> terminateAddOnsCommand [
-	addOnCommand isNil
-		ifTrue: [ ^ self ].
-	addOnCommand terminate.
-	addOnCommand := nil
+{ #category : #'api - coder' }
+GtCoder >> pushCoder: aCoderOrCoders [
+	navigationModel selectCoder: aCoderOrCoders
 ]
 
-{ #category : #subscriptions }
-GtCoder >> unsubscribeFromSystem [
-	SystemAnnouncer uniqueInstance unsubscribe: self
+{ #category : #'api - spawning' }
+GtCoder >> replaceFrom: aGtCoderToReplaceEvent [
+	aGtCoderToReplaceEvent consumed: true.
+	
+	self pushCoder: aGtCoderToReplaceEvent coder
+]
+
+{ #category : #'api - spawning' }
+GtCoder >> spawnFrom: aGtCoderToSpawnEvent [
+	aGtCoderToSpawnEvent consumed: true.
+	
+	self phlow spawnTool: (GtReadyCoderTool coder: (aGtCoderToSpawnEvent coder))
+]
+
+{ #category : #'api - spawning' }
+GtCoder >> spawnInSpaceFrom: aGtCoderToSpawnInSpaceEvent [
+	aGtCoderToSpawnInSpaceEvent consumed: true.
+	
+	
+]
+
+{ #category : #'api - spawning' }
+GtCoder >> updateCoder: anAnnouncement [
+	coderContent removeChildren.
+	coderContent addChild: anAnnouncement coder asElement
 ]

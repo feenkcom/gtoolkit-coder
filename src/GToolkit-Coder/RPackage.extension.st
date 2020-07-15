@@ -1,17 +1,40 @@
 Extension { #name : #RPackage }
 
 { #category : #'*GToolkit-Coder' }
+RPackage >> gtBrowse [
+	^ ((GtCoder forPackage: self) 
+		openInPager) maximized
+]
+
+{ #category : #'*GToolkit-Coder' }
 RPackage >> gtBrowseFrom: anElement [
-	| aSpace aCoder coder |
-	coder := GtPackagesCoder new.
-	aCoder := GtInspector withToolOn: coder.
-	aSpace := BlSpace new.
-	aSpace title: 'Coder'.
-	aSpace extent: 1200 @ 600.
-	aSpace addChild: aCoder.
-	aSpace withHalos.
-	anElement showSpace: aSpace.
-	coder withPackage: self
+	^ ((GtCoder forPackage: self) 
+		openInPagerFrom: anElement) maximized
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtClassExtensions [
+	^ self extensionMethods collect: [ :each | GtPharoClassExtension new extendingMethod: each ]
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtClassReferences [
+	^ self methodReferences flatCollectAsSet: [ :m | 
+		m method referencedClasses collect: [ :each | 
+			GtPharoClassReference new 
+				referencingMethod: m; 
+				referencedClass: each ]]
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtDependencies [
+	| all |
+	all := Set new.
+	all addAll: self gtClassExtensions.
+	all addAll: self gtInheritances.
+	all addAll: self gtTraitUsages.
+	all addAll: self gtClassReferences.
+	^ all select: [ :each | each toPackage ~= self ]
 ]
 
 { #category : #'*GToolkit-Coder' }
@@ -22,58 +45,80 @@ RPackage >> gtDependenciesMapFor: aView [
 	priority: 10;
 	painting: [ :mondrian |
 		mondrian nodes 
-			shape: [ :each |
-				| textElement |
-				textElement := BlTextElement new.
-				textElement text: each name asRopedText.
-				textElement
+			shape: [ :each | 
+				BrLabel new 
+					text: each name asRopedText;
+					look: BrGlamorousLabelLook
 			];
-		  with: (self withDeepCollect: #usedPackages).
+		  with: (self gtPackagesUsed, {self}).
 		mondrian edges 
 			shape: [ 
 				BlParabollaArcElement new 
 					zIndex: 0;
-					curvatureFraction: 0.2;
-					border: (BlBorder paint: (Color gray alpha: 0.2) width:2 );
+					curvatureFraction: 0.1;
+					border: (BlBorder paint: (Color gray alpha: 0.1) width:2 );
 					toHead: (BlArrowheadSimpleArrow new
-						border: (BlBorder builder paint: (Color gray alpha: 0.2); width:2; build)) ];
+						border: (BlBorder builder paint: (Color gray alpha: 0.1); width:2; build)) ];
 			fromRightCenter;
 			toLeftCenter;
 			connectFrom: #yourself
 			toAll: [ :each | |usedPackages | 
-				usedPackages := each usedPackages].
-		mondrian layout custom: (GtGradHorizontalTreeLayout new).
+				usedPackages := each gtPackagesUsed].
+		mondrian layout custom: (GtGraphHorizontalDominanceTreeLayout new).
 	]
 ]
 
 { #category : #'*GToolkit-Coder' }
-RPackage >> gtUsedPackagesFor: aView [
-	<gtView>
-	^ (self usedPackages gtItemsFor: aView)
-		title: 'Used Packages';
-		priority: 1
+RPackage >> gtInheritances [
+	^ self definedClasses 
+		select: [ : each | each isClass and: [ each superclass notNil ] ]
+		thenCollect: [ :each | each gtInheritance ]
 ]
 
 { #category : #'*GToolkit-Coder' }
-RPackage >> usedPackages [
+RPackage >> gtPackageScope [
+	^ self
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtPackagesUsed [
 	| result |
 	result := Set new.
-	result addAll: (self usedPackagesByExtending).
-	result addAll: (self usedPackagesBySubclassing).
+	result addAll: self gtPackagesUsedThroughClassExtensions.
+	result addAll: self gtPackagesUsedThroughSubclassing.
+	result addAll: self gtPackagesUsedThroughTraitUsages.
+	result addAll: self gtPackagesUsedThroughClassReferences.
 	^ result
 	
 ]
 
 { #category : #'*GToolkit-Coder' }
-RPackage >> usedPackagesByExtending [
-	^ (self extendedClasses collect: #package) asSet
-	
+RPackage >> gtPackagesUsedThroughClassExtensions [
+	^ self gtClassExtensions collectAsSet: [ :each | each toPackage ]
 ]
 
 { #category : #'*GToolkit-Coder' }
-RPackage >> usedPackagesBySubclassing [
-	| selfClasses |
-	selfClasses := self classes.
-	^ (((selfClasses flatCollect: [ :aClass | aClass withDeep: #superclass collect: [:each | (selfClasses includes: each) ifFalse: [each]]]) select: #isNotNil)) collect: #package.
-	
+RPackage >> gtPackagesUsedThroughClassReferences [
+	^ (self gtClassReferences collectAsSet: [ :each | each toPackage ])
+		remove: self ifAbsent: [];
+		yourself
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtPackagesUsedThroughSubclassing [
+	^ (self gtInheritances collectAsSet: [ :each | each toPackage ]) 
+		remove: self ifAbsent: []; 
+		yourself
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtPackagesUsedThroughTraitUsages [
+	^ (self gtTraitUsages collectAsSet: [ :each | each toPackage ])
+		remove: self ifAbsent: [];
+		yourself
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtTraitUsages [
+	^ self definedClasses flatCollect: [ :each | each gtTraitUsages ]
 ]

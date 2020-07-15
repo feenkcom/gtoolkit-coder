@@ -30,8 +30,6 @@ GtFilteredMethodsCoder >> categoryFilterString: aSymbol [
 { #category : #elements }
 GtFilteredMethodsCoder >> coderLook [
 	^ GtMethodCoderCategoryLook new
-		methodsCoder: self;
-		yourself
 ]
 
 { #category : #private }

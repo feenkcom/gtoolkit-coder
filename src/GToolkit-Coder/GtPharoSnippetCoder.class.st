@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtSourceCoder,
 	#instVars : [
 		'bindingStrategy',
-		'context'
+		'context',
+		'xdocFilename'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -18,16 +19,23 @@ GtPharoSnippetCoder >> context: doItContext [
 	context := doItContext
 ]
 
+{ #category : #private }
+GtPharoSnippetCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorElement [
+
+	self xDocSaveSource: aString.
+	^ super evaluateSource: aString showPrintString: aBoolean in: anEditorElement
+]
+
 { #category : #actions }
-GtPharoSnippetCoder >> evaluationRequester [
-	^ super evaluationRequester
+GtPharoSnippetCoder >> evaluationRequesterForEditor: anEditorElement [
+	^ (super evaluationRequesterForEditor: anEditorElement)
 		bindingStrategy: bindingStrategy;
 		yourself
 ]
 
-{ #category : #private }
-GtPharoSnippetCoder >> finishedStylingCollapsedText [
-	self collapsedEditor text foreground: BrGlamorousColors disabledHeaderTextColor
+{ #category : #initialization }
+GtPharoSnippetCoder >> forSource: aString [
+	self sourceCode: (GtCoderConcreteSourceCode new source: aString)
 ]
 
 { #category : #private }
@@ -44,9 +52,12 @@ GtPharoSnippetCoder >> highlightBindingsStrategy [
 GtPharoSnippetCoder >> initialize [
 	bindingStrategy := GtSnippetBindingStrategy new.
 	bindingStrategy bindings: GtSnippetBindings new.
+	
 	super initialize.
+	
 	expanded := true.
-	self source: ''
+	
+	self forSource: ''
 ]
 
 { #category : #initialization }
@@ -54,20 +65,20 @@ GtPharoSnippetCoder >> initializeAddOns [
 	super initializeAddOns.
 	addOns
 		addMainAction: 'Evaluate' translated
-		icon: BrGlamorousIcons play
-		action: [ :aButton | self doItSelectionOrAll ].
+		icon: BrGlamorousVectorIcons play
+		action: [ :anEditorElement | self doItSelectionOrAllFrom: anEditorElement ].
 	addOns
 		addMainAction: 'Inspect' translated
-		icon: BrGlamorousIcons playinspect
-		action: [ :aButton | self doItAndGoSelectionOrAll: aButton ].
+		icon: BrGlamorousVectorIcons playinspect
+		action: [ :anEditorElement | self doItAndGoSelectionOrAllFrom: anEditorElement ].
 	addOns
 		addMainAction: 'Debug' translated
-		icon: BrGlamorousIcons debug
-		action: [ :aButton | self debugSelection ].
+		icon: BrGlamorousVectorIcons debug
+		action: [ :anEditorElement | self debugSelectionFrom: anEditorElement ].
 	addOns
 		addMainAction: 'Profile' translated
-		icon: BrGlamorousIcons performance
-		action: [ :aButton | self profileWithMessageTallyFrom: aButton ].
+		icon: BrGlamorousVectorIcons performance
+		action: [ :anEditorElement | self profileWithMessageTallyFrom: anEditorElement ].
 	addOns
 		addStyler:
 			(BrRBTextStyler new
@@ -81,18 +92,26 @@ GtPharoSnippetCoder >> initializeShortcuts [
 	super initializeShortcuts.
 
 	addOns
-		addShortcut: (BlShortcut new
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryD;
-			action: [ self doItSelectionOrAll ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder doItSelectionOrAllFrom: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryG;
-			action: [ :editorElement | self doItAndGoSelectionOrAll: editorElement ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder doItAndGoSelectionOrAllFrom: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryP;
-			action: [ self printItSelectionOrAll ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder printItSelectionOrAllFrom: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryR;
-			action: [ :editorElement | self renameVariableIn: editorElement ])
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder renameVariableIn: aShortcutEvent currentTarget ];
+			options: self)
 ]
 
 { #category : #private }
@@ -109,11 +128,9 @@ GtPharoSnippetCoder >> newCompletionStrategy [
 { #category : #updating }
 GtPharoSnippetCoder >> newRbAST: aString [
 	| ast |
-	ast := RBParser parseFaultyExpression: aString.
-	ast methodNode 
-		compilationContext: (CompilationContext new
-			class: (self classOrMetaClass ifNil: [UndefinedObject]);
-         requestor: self highlightBindingsStrategy).
+	ast := self
+		parseExpression: aString
+		requestor: self highlightBindingsStrategy.
 	ast doSemanticAnalysis.
 	^ ast
 ]
@@ -126,13 +143,19 @@ GtPharoSnippetCoder >> object [
 ]
 
 { #category : #actions }
-GtPharoSnippetCoder >> profileWithMessageTallyFrom: aButton [
+GtPharoSnippetCoder >> profileWithMessageTallyFrom: anEditorElement [
 	| aValue |
-	self clearPreviousEvaluations.
+
+	self clearPreviousEvaluationsInText: anEditorElement editor text.
+
 	self validateSyntax
 		ifFalse: [ ^ self ].
-	aValue := self evaluateSource: 'MessageTally on: [ ', self sourceEditor text asString, ']'.
-	aButton phlow spawnObject: aValue.
+
+	aValue := self
+		evaluateSource: 'MessageTally on: [ ', self sourceText asString, ']'
+		in: anEditorElement.
+	
+	anEditorElement phlow spawnObject: aValue
 ]
 
 { #category : #actions }
@@ -141,17 +164,10 @@ GtPharoSnippetCoder >> renameVariableIn: editorElement [
 ]
 
 { #category : #ui }
-GtPharoSnippetCoder >> requester [
-	^ super requester
+GtPharoSnippetCoder >> requesterForEditor: aTextEditor [
+	^ (super requesterForEditor: aTextEditor)
 		bindingStrategy: bindingStrategy;
 		yourself
-]
-
-{ #category : #accessing }
-GtPharoSnippetCoder >> source: aString [
-	self sourceEditor text: aString asRopedText.
-	self sourceEditor text attributes: self defaultTextAttributes.
-	self sourceChanged
 ]
 
 { #category : #accessing }
@@ -164,4 +180,73 @@ GtPharoSnippetCoder >> variableBindings: aGtPlaygroundBindings [
 	bindingStrategy bindings: aGtPlaygroundBindings.
 	completionStrategy notNil
 		ifTrue: [ completionStrategy bindings: aGtPlaygroundBindings ]
+]
+
+{ #category : #store }
+GtPharoSnippetCoder >> xDocFilename [
+	"Answer the filename containing the receiver's source.
+	If no action has been performed, use the last saved code.
+	If an action has been performed gtPlaygroundFilename will have been set."
+
+	^xdocFilename ifNil: 
+		[ self xDocStore latestFilename ].
+
+]
+
+{ #category : #store }
+GtPharoSnippetCoder >> xDocLoadSavedContent [
+	"The receiver's object has been changed under us, reload the default code (if not empty)"
+
+	self currentSourceString ifNotEmpty: [ ^ self ].
+	self forSource: self xDocSourceString
+]
+
+{ #category : #store }
+GtPharoSnippetCoder >> xDocSaveSource: aString [ 
+	"Save the supplied source code"
+
+	self object ifNil: [ ^self ].
+
+	xdocFilename ifNil: 
+		[ xdocFilename := self xDocStore newFile ].
+
+	^ XdWriter new 
+				streamingStrategy: (XdStreamingStrategy file: xdocFilename);
+				authorName: 'PharoLink Playground';
+				title: 'Playground Source Code';
+				description: 'Playground Source Code';
+				text;
+				attachment: 'playground.source' text: aString;
+				write
+]
+
+{ #category : #store }
+GtPharoSnippetCoder >> xDocSourceString [
+	"Answer the string to be initially displayed in the snippet"
+	| sourceFile xDoc |
+
+	self object ifNil: [ ^'' ].
+
+	sourceFile := self xDocFilename.
+	sourceFile ifNil: [ ^'' ].
+
+	xDoc := XdReader new 
+				streamingStrategy: (XdStreamingStrategy file: sourceFile);
+				read.
+	^ (xDoc memberNamed: 'playground.source') contents utf8Decoded.
+
+]
+
+{ #category : #store }
+GtPharoSnippetCoder >> xDocStore [
+	"Answer the XDoc store for the receiver."
+
+	^ XdKeyDocumentStore forKey: self xDocStoreKey
+]
+
+{ #category : #store }
+GtPharoSnippetCoder >> xDocStoreKey [
+	"Answer the key to be used for storing documents"
+
+	^ self object class name
 ]

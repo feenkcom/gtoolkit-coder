@@ -5,7 +5,8 @@ Class {
 		'mainToolbar',
 		'contextToolbar',
 		'separator',
-		'coder'
+		'coder',
+		'editor'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -36,14 +37,31 @@ GtCoderActionsElement >> coder [
 
 { #category : #accessing }
 GtCoderActionsElement >> coder: aCoder [
+	coder ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
+
 	coder := aCoder.
 	coder announcer weak
+		when: GtCoderAddOnsUpdateRequest send: #updateAddOns: to: self;
 		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
-		when: GtCoderContextActionsChanged
-			send: #updateContextToolbar
-			to: self.
+		when: GtCoderContextActionsChanged send: #updateContextToolbar to: self.
+	
+	coder shouldAddOnsBeUpdated
+		ifTrue: [ coder updateAddOnsFrom: self ].	
+
 	self addMainToolbarActions.
 	self addContextToolbarActions
+]
+
+{ #category : #accessing }
+GtCoderActionsElement >> editor [
+	<return: #BrEditorElement>
+
+	^ editor
+]
+
+{ #category : #accessing }
+GtCoderActionsElement >> editor: aBrEditorElement [
+	editor := aBrEditorElement
 ]
 
 { #category : #initialization }
@@ -56,16 +74,16 @@ GtCoderActionsElement >> initialize [
 		c horizontal matchParent.
 		c vertical fitContent ].
 
-	mainToolbar := self newToolbar.
+	mainToolbar := self newToolbar labeled: 'Main toolbar'.
 	
 	separator := BlElement new
 		background: (Color gray alpha: 0.2);
-		margin: (BlInsets top: 5 left: 5 bottom: 5 right: 5);
+		margin: (BlInsets all: 5);
 		constraintsDo: [ :c |
 			c horizontal exact: 1.
 			c vertical matchParent ].
 
-	contextToolbar := self newToolbar.
+	contextToolbar := self newToolbar labeled: 'Context toolbar'.
 
 	self addChildren: { mainToolbar . separator . contextToolbar }
 ]
@@ -75,11 +93,12 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 	<return: #BrButton>
 	
 	^ BrButton new
-		beSmall;
-		look: BrGlamorousButtonWithIconLook;
-		label: aGtCoderAction title;
 		icon: aGtCoderAction icon asElement;
-		action: aGtCoderAction
+		beSmall;
+		label: aGtCoderAction title;
+		look: BrGlamorousButtonWithIconLook;
+		action: [ :aButtonElement :aButtonModel :anEvent |
+			self editor ifNotNil: [ :anEditorElement | aGtCoderAction action glamourValueWithArgs: { anEditorElement . anEvent } ] ]
 ]
 
 { #category : #'instance creation' }
@@ -107,9 +126,9 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 								ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
 							aButton
 								beSmall;
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
+								look: BrGlamorousButtonWithIconLook 
+									- BrGlamorousButtonWithLabelTooltipLook
+									- BrGlamorousButtonExteriorLook;
 								padding: BlInsets empty;
 								margin: BlInsets empty;
 								yourself ]
@@ -118,19 +137,13 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 								layout: BlLinearLayout vertical;
 								constraintsDo: [ :c | 
 									c horizontal exact: 200.
-									c vertical matchParent ].
+									c vertical fitContent ].
 							titleElement := BrEditorElement new
 								look: BrGlamorousInputFieldSpacingLook;
 								editor: (BrTextEditor new text: '' asRopedText);
 								requestFocus;
 								constraintsDo: [ :c | 
-									c
-										margin:
-											(BlInsets
-												top: 1
-												left: 0
-												bottom: 0
-												right: 0).
+									c margin: (BlInsets top: 1 left: 0 bottom: 0 right: 0).
 									c horizontal matchParent.
 									c vertical fitContent ].
 							classCompleter := GtCompletionController
@@ -152,11 +165,8 @@ GtCoderActionsElement >> newToolbar [
 	<return: #BrToolbar>
 
 	^ BrToolbar new
-		look: BrToolbarLook new;
-		layout: (BlGridLayout horizontal rowCount: 1; cellSpacing: 3);
-		constraintsDo: [ :c |
-			c horizontal fitContent.
-			c vertical fitContent ]
+		look: (BrGlamorousToolbarLook new spacing: 4);
+		padding: (BlInsets left: -4)
 ]
 
 { #category : #private }
@@ -167,6 +177,11 @@ GtCoderActionsElement >> removeContextToolbarActions [
 { #category : #private }
 GtCoderActionsElement >> removeMainToolbarActions [
 	mainToolbar numberOfItems timesRepeat: [ mainToolbar removeItemAt: 1 ]
+]
+
+{ #category : #private }
+GtCoderActionsElement >> updateAddOns: anAnnouncement [
+	anAnnouncement coder updateAddOnsFrom: self
 ]
 
 { #category : #private }

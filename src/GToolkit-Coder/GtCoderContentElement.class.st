@@ -1,23 +1,21 @@
 Class {
 	#name : #GtCoderContentElement,
 	#superclass : #BlElement,
+	#traits : 'TBrLayoutResizable',
+	#classTraits : 'TBrLayoutResizable classTrait',
 	#instVars : [
-		'coder'
+		'coder',
+		'breadcrumb',
+		'header'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #accessing }
 GtCoderContentElement >> coder [
-	<return: #GtCoder>
-	^ coder
-]
+	<return: #GtCoderModel>
 
-{ #category : #'initialize-release' }
-GtCoderContentElement >> coder: aCoder editorElement: anElement [
-	coder := aCoder.
-	self addChild: self newHeaderElement as: #header.
-	self addChild: anElement as: #editor
+	^ coder
 ]
 
 { #category : #accessing }
@@ -40,61 +38,32 @@ GtCoderContentElement >> gtAllShortcutsFor: aView [
 				matchParent ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtCoderContentElement >> initialize [
 	super initialize.
 	self
 		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c | c margin: (BlInsets left: 5) ].
+		margin: (BlInsets left: 5).
 
 	self viewModel: (BrInteractiveModel new addStates: {
 		BrLayoutHorizontalResizerModel matchParent.
-		BrLayoutVerticalResizerModel fitContent }).
-		
-	self look: (BrLayoutResizerLook inherit
-		inheritIn: [ :aBlock | self
-			childNamed: #editor
-			ifFound: aBlock
-			ifNone: [  ] ])
+		BrLayoutVerticalResizerModel fitContentLimited }).
+
+	breadcrumb := nil.
+	header := self newHeaderElement.
+	self addChild: header as: #header
 ]
 
 { #category : #'instance creation' }
 GtCoderContentElement >> newBreadcrumb [
 	<return: #BrBreadcrumb>
-	^ BrBreadcrumb new
-		look: self newBreadcrumbLook;
-		addItems: self newBreadcrumbItemElements;
-		vFitContent;
-		hFitContent;
-		background: Color transparent;
+
+	^ GtCoderBreadcrumbElement new
 		constraintsDo: [ :c | 
 			c margin: (BlInsets top: 2).
 			c frame horizontal alignLeft.
 			c frame vertical alignCenter ];
 		yourself
-]
-
-{ #category : #'instance creation' }
-GtCoderContentElement >> newBreadcrumbItemElements [
-	<return: #Collection of: #BrButton>
-	^ coder breadcrumbNamedActions
-		collect: [ :eachNamedAction | 
-			BrButton new
-				look:
-					(BrGlamorousLabelLook new
-						foreground: BrGlamorousColors defaultButtonTextColor;
-						fontSize: 12);
-				label: eachNamedAction key;
-				action: eachNamedAction value ]
-]
-
-{ #category : #'instance creation' }
-GtCoderContentElement >> newBreadcrumbLook [
-	^ BrGlamorousBreadcrumbLook new
-		separator: [ BrLabel new
-			look: (BrGlamorousLabelLook new thin foreground: BrGlamorousColors defaultButtonTextColor);
-			text: '>';
-			margin: (BlInsets left: 5 right: 5) ]
 ]
 
 { #category : #'instance creation' }
@@ -106,6 +75,16 @@ GtCoderContentElement >> newHeaderElement [
 			c padding: BlInsets empty.
 			c horizontal matchParent.
 			c vertical fitContent ];
-		addChild: self newBreadcrumb as: #breadcrumb;
 		yourself
+]
+
+{ #category : #initialization }
+GtCoderContentElement >> withBreadcrumb [
+	breadcrumb
+		ifNotNil: [ ^ self ].
+
+	breadcrumb := self newBreadcrumb.
+	coder ifNotNil: [ :aCoder | breadcrumb coder: aCoder ].
+
+	header addChild: breadcrumb as: #breadcrumb
 ]

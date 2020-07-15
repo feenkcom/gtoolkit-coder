@@ -1,6 +1,6 @@
 Class {
 	#name : #GtMethodsCoder,
-	#superclass : #GtCoders,
+	#superclass : #GtCodersModel,
 	#category : #'GToolkit-Coder-Coders'
 }
 
@@ -9,7 +9,7 @@ GtMethodsCoder >> elementClass [
 	^ GtCodersElement
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtMethodsCoder >> forItems: aCollection [
 	super forItems: aCollection.
 	(items isKindOf: GtSearchMethodGroupResult)
@@ -23,7 +23,10 @@ GtMethodsCoder >> forItems: aCollection [
 { #category : #'event handling' }
 GtMethodsCoder >> methodAdded: aValueAdded [
 	| coder |
-	coder := GtMethodCoder forMethod: aValueAdded newValue.
+	(self coders
+		anySatisfy: [ :each | each isForMethod: aValueAdded newValue ])
+		ifTrue: [ ^ self ].
+	coder := self newCoderFor: aValueAdded newValue.
 	coders add: coder.
 	self
 		announce:
@@ -38,7 +41,7 @@ GtMethodsCoder >> methodChanged: aValueChanged [
 	coders
 		do: [ :each | 
 			(each isForMethod: aValueChanged newValue)
-				ifTrue: [ each updateMethod: aValueChanged newValue ] ]
+				ifTrue: [ each forMethod: aValueChanged newValue ] ]
 ]
 
 { #category : #'event handling' }
@@ -83,4 +86,13 @@ GtMethodsCoder >> selectAndScrollTo: aMethodCoder [
 				scheduledTime: BlTime real now + 100 milliSeconds.
 			BlTaskAtQueue default schedule: aCommand ]
 		otherwise: [ aMethodCoder requestFocus ]
+]
+
+{ #category : #scripting }
+GtMethodsCoder >> selectAndScrollToMethod: aCompiledMethod [
+	| methodCoder |
+	methodCoder := self coders
+		detect: [ :each | each isForMethod: aCompiledMethod ]
+		ifNone: [ ^ self ].
+	self selectAndScrollTo: methodCoder
 ]

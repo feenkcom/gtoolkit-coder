@@ -62,22 +62,20 @@ GtBlockCoder >> blockSource: aString [
 ]
 
 { #category : #actions }
-GtBlockCoder >> doItAll [
-	| source |
-	source := self blockSource.
-	source isNil
-		ifTrue: [ ^ self ].
-	^ self evaluateSource: source
+GtBlockCoder >> doItAllFrom: anEditorElement [
+	^ self
+		evaluateSource: (self blockSource ifNil: [ ^ self ])
+		in: anEditorElement
 ]
 
 { #category : #actions }
-GtBlockCoder >> doItAndGoAll: anElement [
+GtBlockCoder >> doItAndGoAllFrom: anEditorElement [
 	| aSource aValue |
 	aSource := self blockSource.
 	aSource isNil ifTrue: [ ^ self ].
-	aValue := self evaluateSource: aSource.
+	aValue := self evaluateSource: aSource in: anEditorElement.
 	aValue == self ifTrue: [ ^ self ].
-	anElement phlow spawnObject: aValue
+	anEditorElement phlow spawnObject: aValue
 ]
 
 { #category : #actions }
@@ -140,11 +138,9 @@ GtBlockCoder >> newCompletionStrategy [
 { #category : #updating }
 GtBlockCoder >> newRbAST: aString [
 	| ast |
-	ast := RBParser parseFaultyExpression: aString.
-	ast methodNode 
-		compilationContext: (CompilationContext new
-			class: (self classOrMetaClass ifNil: [UndefinedObject]);
-         requestor: self highlightBindingsStrategy).
+	ast := self
+		parseExpression: aString
+		requestor: self highlightBindingsStrategy.
 	ast doSemanticAnalysis.
 	ast gtMoveAllBy: 1 - ast body start.
 	^ ast body
@@ -160,11 +156,4 @@ GtBlockCoder >> newSourceText [
 	<retrun: #BlText>
 
 	^ self blockSource asRopedText
-]
-
-{ #category : #accessing }
-GtBlockCoder >> source: aString [
-	self sourceEditor text: aString asRopedText.
-	self sourceEditor text attributes: self defaultTextAttributes.
-	self sourceChanged
 ]

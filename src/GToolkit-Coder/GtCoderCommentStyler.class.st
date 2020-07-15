@@ -18,7 +18,7 @@ GtCoderCommentStyler >> visitNode: aNode [
 					comment := ((String new: each start withAll: Character cr) , each contents) asRopedText.
 					(text from: each start + 1 to: comment size)
 						attributes: {(GtCompletionStrategyAttribute new strategy: GtDocumentCompletionStrategy new)}.
-					document := GtDocument new.
+					document := GtDocumenter new.
 					document editor useSyncStylerStrategy.
 					document text: comment.
 					comment := document text.

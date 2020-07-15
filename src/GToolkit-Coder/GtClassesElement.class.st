@@ -9,18 +9,15 @@ Class {
 
 { #category : #'building ui' }
 GtClassesElement >> buildContainer [
-	| element |
+	| aClassList |
 	self removeChildren.
-	element := BrSimpleList new.
-	element stencil: [ :each | 
-		each asCardElement
-			constraintsDo: [ :c | 
-				c horizontal matchParent.
-				c vertical fitContent ];
-			yourself ].
-	element display: (coder coders asSortedCollection: [ :a :b | 
-			 a theClass name < b theClass name ]).
-	self addChild: element
+
+	aClassList := BrSimpleList new
+		itemStencil: [ GtClassCardElement new ];
+		itemDataBinder: [ :eachClassCard :eachClassCoder | eachClassCard coder: eachClassCoder ];
+		items: (coder coders asSortedCollection: [ :a :b | a theClass name < b theClass name ]).
+
+	self addChild: aClassList
 ]
 
 { #category : #accessing }

@@ -42,7 +42,7 @@ GtClassDefinitionCoder >> classOrMetaClass: anObject [
 	classOrMetaClass := anObject.
 	self
 		source: classOrMetaClass definition;
-		updateCollapsedSource
+		requestUpdateCollapsedText
 ]
 
 { #category : #subscriptions }
@@ -51,20 +51,21 @@ GtClassDefinitionCoder >> definitionChanged: anAnnouncement [
 		ifFalse: [ ^ self ].
 	self
 		source: classOrMetaClass definition;
-		updateCollapsedSource
+		requestUpdateCollapsedText
 ]
 
 { #category : #private }
-GtClassDefinitionCoder >> evaluateSource: aString showPrintString: aBoolean [
+GtClassDefinitionCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorElement [
 	^ self
 		evaluateBlock: [ (classOrMetaClass ifNil: [ Smalltalk ]) compiler
 				source: aString;
 				receiver: self object;
 				context: self context;
-				requestor: (self evaluationRequester source: aString);
+				requestor: ((self evaluationRequesterForEditor: anEditorElement editor) source: aString);
 				failBlock: [ ^ self flag: 'insert error adornment' ];
 				evaluate ]
 		showPrintString: aBoolean
+		in: anEditorElement
 ]
 
 { #category : #'initialize-release' }
@@ -73,8 +74,8 @@ GtClassDefinitionCoder >> initializeAddOns [
 	addOns
 		addStyler: BrRBTextStyler new;
 		addMainAction: 'Save' translated
-			icon: BrGlamorousIcons accept
-			action: [ self doItAll ].
+			icon: BrGlamorousVectorIcons accept
+			action: [ self halt. "self doItAll" ].
 	addOns clearChanges
 ]
 
@@ -86,7 +87,7 @@ GtClassDefinitionCoder >> isModified [
 { #category : #updating }
 GtClassDefinitionCoder >> newRbAST: aString [
 	| ast |
-	ast := RBParser parseFaultyExpression: aString.
+	ast := self parseExpression: aString requestor: nil.
 	ast doSemanticAnalysis.
 	^ ast
 ]

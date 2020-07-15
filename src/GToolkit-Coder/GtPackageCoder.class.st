@@ -1,6 +1,8 @@
 Class {
 	#name : #GtPackageCoder,
 	#superclass : #Announcer,
+	#traits : 'TGtCoderTrait',
+	#classTraits : 'TGtCoderTrait classTrait',
 	#instVars : [
 		'package',
 		'packageTagCoders',
@@ -10,10 +12,19 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtPackageCoder class >> forPackage: aPackage [
+GtPackageCoder class >> forPackage: anRPackage [
 	^ self new
-		package: aPackage;
+		package: anRPackage;
 		yourself
+]
+
+{ #category : #'private - adding / removing' }
+GtPackageCoder >> addMissingPackageTag: aPackageTag [
+	<return: #GtPackageTagCoder>
+	| aCoder |
+	aCoder := self newPackageTagCoderFor: aPackageTag.
+	self packageTagCoders add: aCoder.
+	^ aCoder
 ]
 
 { #category : #elements }
@@ -52,13 +63,38 @@ GtPackageCoder >> gtLiveFor: aView [
 		title: 'Package';
 		priority: 1;
 		stencil: [ self ];
-		actionButtonIcon: BrGlamorousIcons inspect
-			action: [ :aButton | aButton phlow spawnObject: self package ]
+		actionButtonIcon: BrGlamorousVectorIcons inspect
+			action: [ :aButton | aButton phlow spawnTool: (GtPackageCoderTool package: self package) ]
+]
+
+{ #category : #accessing }
+GtPackageCoder >> icon [
+	^ BrGlamorousIcons packageicon asElement
+]
+
+{ #category : #testing }
+GtPackageCoder >> isForPackage [
+	^ true
 ]
 
 { #category : #accessing }
 GtPackageCoder >> name [
 	^ package name
+]
+
+{ #category : #'private - instance creation' }
+GtPackageCoder >> newPackageTagCoderFor: aPackageTag [
+	^ GtPackageTagCoder new
+		packageTag: aPackageTag;
+		packageCoder: self;
+		yourself
+]
+
+{ #category : #'private - instance creation' }
+GtPackageCoder >> newPackageTagCoders [
+	^ (package classTags
+			collect: [ :eachTag | self newPackageTagCoderFor: eachTag ])
+				asSortedCollection: [ :a :b | a name < b name ]
 ]
 
 { #category : #accessing }
@@ -74,14 +110,17 @@ GtPackageCoder >> package: aRPackage [
 ]
 
 { #category : #accessing }
+GtPackageCoder >> packageTagCoderFor: aPackageTag [
+	^ self packageTagCoders
+		detect: [ :each | each packageTag = aPackageTag ]
+		ifNone: [ self addMissingPackageTag: aPackageTag ]
+]
+
+{ #category : #accessing }
 GtPackageCoder >> packageTagCoders [
 	^ packageTagCoders
-		ifNil: [ packageTagCoders := (package classTags
-				collect: [ :each | 
-					GtPackageTagCoder new
-						packageTag: each;
-						packageCoder: self;
-						yourself ]) asSortedCollection: [ :a :b | a name < b name ] ]
+		ifNil:
+			[ packageTagCoders := self newPackageTagCoders ]
 ]
 
 { #category : #accessing }
@@ -96,4 +135,9 @@ GtPackageCoder >> packageTagForClass: aClass [
 { #category : #accessing }
 GtPackageCoder >> packageTreeCoders [
 	^ self coders
+]
+
+{ #category : #actions }
+GtPackageCoder >> unload [
+	self package removeFromSystem
 ]
