@@ -8,7 +8,7 @@ Class {
 		'coder',
 		'editor'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UI - Source Coder'
 }
 
 { #category : #private }
@@ -47,6 +47,9 @@ GtCoderActionsElement >> coder: aCoder [
 	
 	coder shouldAddOnsBeUpdated
 		ifTrue: [ coder updateAddOnsFrom: self ].	
+
+	self removeMainToolbarActions.
+	self removeContextToolbarActions.
 
 	self addMainToolbarActions.
 	self addContextToolbarActions

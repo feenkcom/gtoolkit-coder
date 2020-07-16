@@ -52,17 +52,6 @@ GtMethodCoderExamples >> elementForThisMethodCoder [
 	^ aCoderElement
 ]
 
-{ #category : #'examples - ui' }
-GtMethodCoderExamples >> elementForThisMethodCoderWithBreadcrumb [
-	<gtExample>
-	| aCoderElement |
-
-	aCoderElement := self elementForThisMethodCoder.
-	aCoderElement withBreadcrumb.
-
-	^ aCoderElement
-]
-
 { #category : #'sample methods' }
 GtMethodCoderExamples >> emptyBody [
 ]

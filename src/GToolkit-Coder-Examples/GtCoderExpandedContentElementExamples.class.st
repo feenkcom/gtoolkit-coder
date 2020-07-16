@@ -8,10 +8,11 @@ Class {
 GtCoderExpandedContentElementExamples >> forMethodCoder [
 	<gtExample>
 	| aMethodCoder aContentElement |
-	
+
 	aMethodCoder := GtMethodCoder forMethod: (BlElement >> #position:extent:).
-	
-	aContentElement := GtCoderExpandedContentElement new coder: aMethodCoder.
+
+	aContentElement := GtSourceCoderExpandedContentElement new coder: aMethodCoder.
+	aContentElement look: GtSourceCoderExpandedWithHeaderLook.
 
 	^ aContentElement
 ]

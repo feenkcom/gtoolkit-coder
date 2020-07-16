@@ -99,7 +99,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 			label: 'Check Breadcrumb Package Name';
 			satisfies: [ :aButton | aButton label asString = self class package name ];
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderContentElement;
 			onChildAt: 1;
 			onChildOfClass: BrBreadcrumb;
 			onChildAt: 1.
@@ -107,7 +107,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 			label: 'Check Breadcrumb Class Name';
 			satisfies: [ :aButton | aButton label asString = self className ];
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderContentElement;
 			onChildAt: 1;
 			onChildOfClass: BrBreadcrumb;
 			onChildAt: 3.
@@ -125,7 +125,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 		aStep click
 			label: 'Click On Class Name';
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderContentElement;
 			onChildAt: 1;
 			onChildOfClass: BrBreadcrumb;
 			onChildAt: 3.
@@ -151,7 +151,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 		aStep click
 			label: 'Click On Package Name';
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderContentElement;
 			onChildAt: 1;
 			onChildOfClass: BrBreadcrumb;
 			onChildAt: 1.
@@ -301,14 +301,14 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMai
 			label: 'Number of main actions';
 			childrenCount: aMainActionsCount;
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderContentElement;
 			onChildOfClass: GtCoderActionsElement;
 			onChildAt: 1.
 		aStep check 
 			label: 'Number of addons actions';
 			childrenCount: anAddonsActionsCount;
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderContentElement;
 			onChildOfClass: GtCoderActionsElement;
 			onChildAt: 3.
 		].

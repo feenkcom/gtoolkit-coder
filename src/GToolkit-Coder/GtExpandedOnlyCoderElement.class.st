@@ -56,7 +56,7 @@ GtExpandedOnlyCoderElement >> newActionsElement: aCoderModel [
 
 { #category : #'instance creation' }
 GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
-	^ GtCoderExpandedContentElement new
+	^ GtSourceCoderExpandedContentElement new
 		coder: aCoderModel;
 		in: [ :anElement | self addCodersLookTo: anElement coder: aCoderModel ];
 		yourself

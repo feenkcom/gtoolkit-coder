@@ -52,7 +52,7 @@ GtCodersElement >> listElement [
 	listElement := BrSimpleList new
 		matchParent;
 		itemType: [ :itemTypeFactory :eachCoder | eachCoder elementClass ];
-		itemStencil: [ :anElementClass | anElementClass new withBreadcrumb ];
+		itemStencil: [ :anElementClass | anElementClass new ];
 		itemDataBinder: [ :eachCoderElement :eachCoder | eachCoderElement coder: eachCoder ];
 		items: coders coders;
 		yourself.

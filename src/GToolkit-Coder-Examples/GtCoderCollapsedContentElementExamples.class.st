@@ -11,7 +11,8 @@ GtCoderCollapsedContentElementExamples >> forMethodCoder [
 	
 	aMethodCoder := GtMethodCoder forMethod: (BlElement >> #position:extent:).
 	
-	aContentElement := GtCoderCollapsedContentElement new coder: aMethodCoder.
+	aContentElement := GtSourceCoderCollapsedContentElement new coder: aMethodCoder.
+	aContentElement look: GtSourceCoderCollapsedWithHeaderLook.
 
 	^ aContentElement
 ]

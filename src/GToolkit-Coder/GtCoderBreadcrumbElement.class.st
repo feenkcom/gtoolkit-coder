@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderBreadcrumbElement,
 	#superclass : #BrBreadcrumb,
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UI - Source Coder'
 }
 
 { #category : #accessing }

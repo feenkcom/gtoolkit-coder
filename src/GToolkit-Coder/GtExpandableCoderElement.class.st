@@ -4,29 +4,43 @@ Class {
 	#instVars : [
 		'coder',
 		'collapsedElement',
-		'expandedElement',
-		'removed',
-		'shouldShowBreadcrumb'
+		'expandedElement'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #private }
-GtExpandableCoderElement >> addCodersCoderLookTo: anElement [
-	| aLook |
+GtExpandableCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
+	aSourceCoder coderLook
+		ifNotNil: [ :aCoderLook | anElement addLook: aCoderLook ].
 
-	aLook := anElement look.
-
-	(coder coderLook ifNil: [ coder coders ifNotNil: #coderLook ])
-		ifNotNil: [ :f | aLook := aLook ifNil: [ f ] ifNotNil: [ aLook + f ] ].
-
-	aLook notNil
-		ifTrue: [ anElement look: aLook ]
+	(aSourceCoder coders ifNotNil: #coderLook)
+		ifNotNil: [ :aCodersLook | anElement addLook: aCodersLook ]
 ]
 
 { #category : #converting }
 GtExpandableCoderElement >> asVerticallyResizableDo: aBlock [
 	^ self
+]
+
+{ #category : #private }
+GtExpandableCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollapsedElement [
+	aCollapsedElement coder: aSourceCoder.
+
+	"Initialize look just once"
+	aCollapsedElement look ifNil: [
+		self addCodersCoderLook: aSourceCoder to: aCollapsedElement.
+		aCollapsedElement addLook: GtSourceCoderCollapsedWithoutHeaderLook ].
+]
+
+{ #category : #private }
+GtExpandableCoderElement >> assignExpandedCoder: aSourceCoder to: anExpandedElement [
+	anExpandedElement coder: aSourceCoder.
+
+	"Initialize look just once"
+	anExpandedElement look ifNil: [
+		self addCodersCoderLook: aSourceCoder to: anExpandedElement.
+		anExpandedElement addLook: GtSourceCoderExpandedWithoutHeaderLook ]
 ]
 
 { #category : #accessing }
@@ -49,12 +63,10 @@ GtExpandableCoderElement >> coder: aCoder [
 		aPreviousCoder announcer unsubscribe: self ].
 
 	coder := aCoder.
-	self
-		header: [ collapsedElement := self newCollapsedElement ];
-		content: [ expandedElement := self newExpandedElement ].
 
-	collapsedElement ifNotNil: [ collapsedElement coder: coder ].
-	expandedElement ifNotNil: [ expandedElement coder: coder ].
+	coder expanded
+		ifTrue: [ expandedElement ifNotNil: [ :anElement | self assignExpandedCoder: aCoder to: anElement ] ]
+		ifFalse: [ collapsedElement ifNotNil: [ :anElement | self assignCollapsedCoder: aCoder to: anElement ] ].
 
 	self expanded: coder expanded.
 
@@ -86,46 +98,47 @@ GtExpandableCoderElement >> gtAllShortcutsFor: aView [
 { #category : #initialization }
 GtExpandableCoderElement >> initialize [
 	super initialize.
-	removed := false.
-	shouldShowBreadcrumb := false.
 	
 	self
 		vFitContent;
 		hMatchParent;
 		margin: (BlInsets all: 4);
-		look:
-			GtCoderExpanderLook new + (BrInteractiveCommonLook new
-				default: [ self background: Color transparent ];
-				expanded: [ self background: Color white ]);
-		addShortcut:
-			(BlShortcut new
-				combination: BlKeyCombination primaryReturn;
-				action: [ self toggle ]).
+		look: GtCoderExpanderLook;
+		beInSingleCompositionLayer.
+
 	self
 		when: BrExpansionChanged
-		do: [ :event | coder ifNotNil: [ :e | e expanded: self isExpanded ] ]
+		do: [ :anEvent |
+			anEvent isExpanded
+				ifTrue: [ self beInSeparateCompositionLayer ]
+				ifFalse: [ self beInSingleCompositionLayer ].
+			coder ifNotNil: [ :aCoder | aCoder expanded: anEvent isExpanded ] ].
+
+	self
+		header: [ collapsedElement := self newCollapsedElement ];
+		content: [ expandedElement := self newExpandedElement ]
 ]
 
 { #category : #private }
 GtExpandableCoderElement >> newCollapsedElement [
-	^ GtCoderCollapsedContentElement new
-		coder: coder;
-		in: [ :anElement |
-			self addCodersCoderLookTo: anElement.
-			shouldShowBreadcrumb
-				ifTrue: [ anElement withBreadcrumb ] ];
-		yourself
+	| aCollapsedElement |
+	aCollapsedElement := GtSourceCoderCollapsedContentElement new.
+
+	coder
+		ifNotNil: [ :aCoder | self assignCollapsedCoder: aCoder to: aCollapsedElement ].
+
+	^ aCollapsedElement
 ]
 
 { #category : #private }
 GtExpandableCoderElement >> newExpandedElement [
-	^ GtCoderExpandedContentElement new
-		coder: coder;
-		in: [ :anElement |
-			self addCodersCoderLookTo: anElement.
-			shouldShowBreadcrumb
-				ifTrue: [ anElement withBreadcrumb ] ];
-		yourself
+	| anExpandedElement |
+	anExpandedElement := GtSourceCoderExpandedContentElement new.
+
+	coder
+		ifNotNil: [ :aCoder | self assignExpandedCoder: aCoder to: anExpandedElement ].
+
+	^ anExpandedElement
 ]
 
 { #category : #'focus requesting' }
@@ -144,15 +157,4 @@ GtExpandableCoderElement >> updateExpanded [
 	"Is sent when the coder model was requested to expand/collapse"
 
 	self expanded: coder expanded
-]
-
-{ #category : #initialization }
-GtExpandableCoderElement >> withBreadcrumb [
-	shouldShowBreadcrumb
-		ifTrue: [ ^ self ].
-
-	shouldShowBreadcrumb := true.
-	{ collapsedElement . expandedElement }
-		select: [ :eachElement | eachElement notNil ]
-		thenDo: [ :eachElement | eachElement withBreadcrumb ]
 ]

@@ -54,7 +54,7 @@ GtCoderSourceCode >> isModified [
 { #category : #'api - changes' }
 GtCoderSourceCode >> replaceSourceTextWith: aString [
 	"Set a new source text"
-	
+
 	self sourceText
 		deleteAll;
 		insertString: aString asString at: 0

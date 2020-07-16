@@ -30,7 +30,7 @@ GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 										forExample: (aMethodClass gtExamplesFactory createExample: method).
 									coder subscribeToSystem.
 									coder expanded: true.
-									coder coderLook: GtMethodCoderCategoryLook.
+									coder coderLook: GtMethodCoderCategoryLookOld.
 									editorElement := coder asElement.
 									editorElement
 										border: (BlBorder paint: Color veryLightGray width: 1).
