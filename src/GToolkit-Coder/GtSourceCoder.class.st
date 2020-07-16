@@ -72,7 +72,7 @@ GtSourceCoder >> browseReferencesFrom: anEditorElement [
 	| filter |
 
 	filter := (self selectedSourceInEditor: anEditorElement editor)
-		ifEmpty: [ self referencesFilterAtCursorIn: anEditorElement ]
+		ifEmpty: [ self referencesFilterAtCursorIn: anEditorElement editor ]
 		ifNotEmpty: [ :currentSelection | self extractReferencesFilterFromString: currentSelection ].
 
 	filter isNil
