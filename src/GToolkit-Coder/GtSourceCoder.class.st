@@ -812,7 +812,8 @@ GtSourceCoder >> sourceChanged [
 GtSourceCoder >> sourceCode [
 	<return: #GtCoderSourceCode>
 
-	^ sourceCode ifNil: [ self sourceCode: (GtCoderConcreteSourceCode new source: '') ]
+	sourceCode ifNil: [ self sourceCode: (GtCoderConcreteSourceCode new source: '') ].
+	^ sourceCode
 ]
 
 { #category : #'api - accessing' }
