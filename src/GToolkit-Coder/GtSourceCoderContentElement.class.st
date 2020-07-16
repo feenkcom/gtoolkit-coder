@@ -29,16 +29,8 @@ GtSourceCoderContentElement >> gtAllShortcutsFor: aView [
 		title: 'All shortcuts' translated;
 		priority: 10;
 		items: [ self shortcuts , self coder addOns shortcuts ];
-		column: 'Key'
-			do: [ :aColumn | 
-			aColumn
-				item: [ :each | each combination gtDisplayString ];
-				matchParent ];
-		column: 'Action'
-			do: [ :aColumn | 
-			aColumn
-				item: [ :each | each action asString ];
-				matchParent ]
+		column: 'Key' item: [ :each | each combination gtDisplayString ];
+		column: 'Action' item: [ :each | each action asString ]
 ]
 
 { #category : #initialization }

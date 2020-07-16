@@ -83,16 +83,8 @@ GtExpandableCoderElement >> gtAllShortcutsFor: aView [
 		title: 'All shortcuts' translated;
 		priority: 10;
 		items: [ self shortcuts , coder addOns shortcuts ];
-		column: 'Key'
-			do: [ :aColumn | 
-			aColumn
-				item: [ :each | each combination gtDisplayString ];
-				weight: 1 ];
-		column: 'Action'
-			do: [ :aColumn | 
-			aColumn
-				item: [ :each | each action asString ];
-				weight: 1 ]
+		column: 'Key' item: [ :each | each combination gtDisplayString ]
+		column: 'Action' item: [ :each | each action asString ]
 ]
 
 { #category : #initialization }
