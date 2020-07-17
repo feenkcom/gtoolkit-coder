@@ -109,6 +109,16 @@ GtMethodContextCoder >> debuggerVariableNodes [
 	
 ]
 
+{ #category : #private }
+GtMethodContextCoder >> expandedUpdated [
+	super expandedUpdated.
+
+	"https://github.com/feenkcom/gtoolkit/issues/1323
+	Ideally, we should convert this to the add-on styler"
+	self flag: #TODO.
+	self updateSelection
+]
+
 { #category : #initialize }
 GtMethodContextCoder >> initializeAddOns [
 	super initializeAddOns.
@@ -279,6 +289,10 @@ GtMethodContextCoder >> updateContent [
 { #category : #updating }
 GtMethodContextCoder >> updateSelection [
 	| interval |
+	"https://github.com/feenkcom/gtoolkit/issues/1323
+	Ideally, we should convert this to the add-on styler"
+	self flag: #TODO.
+	
 	(self session process isNil or: [ context isDead ])
 		ifTrue: [ ^ self ].
 	interval := self session pcRangeForContext: context.
