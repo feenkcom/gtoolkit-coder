@@ -1103,7 +1103,7 @@ GtMethodCoder >> performMethodRefactoring: refactoring [
 		do: [ :ex | ^ false ].
 	(self changedSourceForCurrentMethod: refactoring model changes)
 		ifNotNil: [ :source | 
-			self source: source.
+			self replaceSourceTextWith: source.
 			^ true ].
 	^ false
 ]

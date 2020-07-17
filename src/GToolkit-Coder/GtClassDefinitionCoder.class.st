@@ -41,7 +41,7 @@ GtClassDefinitionCoder >> classOrMetaClass [
 GtClassDefinitionCoder >> classOrMetaClass: anObject [
 	classOrMetaClass := anObject.
 	self
-		source: classOrMetaClass definition;
+		replaceSourceTextWith: classOrMetaClass definition;
 		requestUpdateCollapsedText
 ]
 
@@ -50,7 +50,7 @@ GtClassDefinitionCoder >> definitionChanged: anAnnouncement [
 	anAnnouncement classAffected == classOrMetaClass
 		ifFalse: [ ^ self ].
 	self
-		source: classOrMetaClass definition;
+		replaceSourceTextWith: classOrMetaClass definition;
 		requestUpdateCollapsedText
 ]
 
