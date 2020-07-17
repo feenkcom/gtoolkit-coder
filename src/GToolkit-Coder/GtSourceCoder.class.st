@@ -502,13 +502,6 @@ GtSourceCoder >> newSourceStylerFrom: anEditorElement [
 		yourself
 ]
 
-{ #category : #'private - text' }
-GtSourceCoder >> newSourceText [
-	<retrun: #BlText>
-
-	^ self sourceText
-]
-
 { #category : #private }
 GtSourceCoder >> nodeAtCursorIn: aBrTextEditor [
 	self
@@ -656,7 +649,7 @@ GtSourceCoder >> rbAST [
 	"The AST should be built out of the `characters` of the source text.
 	This is needed to support `crlf` and logical items
 	see https://github.com/feenkcom/gtoolkit/issues/593"
-	source := self newSourceText characters asString.
+	source := self currentSourceString.
 	astCache key = source
 		ifTrue: [ ^ astCache value ].
 	^ [ 

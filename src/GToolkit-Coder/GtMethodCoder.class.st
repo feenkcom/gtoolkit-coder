@@ -1041,7 +1041,7 @@ GtMethodCoder >> moveMethodToInstanceOrClass [
 
 { #category : #'private - actions' }
 GtMethodCoder >> newMethodSource [
-	^ self newSourceText asString
+	^ self currentSourceString
 ]
 
 { #category : #updating }
