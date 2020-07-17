@@ -9,7 +9,7 @@ GtPharoSnippetCoderExamples >> snippetCoder [
 	<gtExample>
 	| aSnippetCoder |
 	aSnippetCoder := GtPharoSnippetCoder new
-		source:
+		forSource:
 			'3 +
 	4';
 		yourself.
@@ -26,7 +26,6 @@ GtPharoSnippetCoderExamples >> snippetCoder [
 GtPharoSnippetCoderExamples >> syntaxError [
 	<gtExample>
 	^ GtPharoSnippetCoder new
-		source: '3 + - 4';
-		doItAndGoSelectionOrAllFrom: nil;
+		forSource: '3 + - 4';
 		yourself
 ]
