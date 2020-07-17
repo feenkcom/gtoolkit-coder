@@ -32,6 +32,15 @@ GtCoderSourceCode >> collapsedText [
 	^ collapsedText ifNil: [ collapsedText := self buildCollapsedText ]
 ]
 
+{ #category : #'api - changes' }
+GtCoderSourceCode >> currentSourceString: aString [
+	"Set a new source text"
+
+	self sourceText
+		deleteAll;
+		insertString: aString asString at: 0
+]
+
 { #category : #'api - testing' }
 GtCoderSourceCode >> hasCollapsedText [
 	<return: #Boolean>
@@ -49,15 +58,6 @@ GtCoderSourceCode >> hasSourceText [
 { #category : #'api - testing' }
 GtCoderSourceCode >> isModified [
 	^ self subclassResponsibility
-]
-
-{ #category : #'api - changes' }
-GtCoderSourceCode >> replaceSourceTextWith: aString [
-	"Set a new source text"
-
-	self sourceText
-		deleteAll;
-		insertString: aString asString at: 0
 ]
 
 { #category : #'api - changes' }

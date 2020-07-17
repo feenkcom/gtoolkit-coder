@@ -99,7 +99,7 @@ GtBlockCoder >> forSource: aString [
 
 { #category : #'api - actions' }
 GtBlockCoder >> format [
-	self replaceSourceTextWith: (self newRbAST: self currentSourceString asString) formattedCode
+	self currentSourceString: (self newRbAST: self currentSourceString asString) formattedCode
 ]
 
 { #category : #private }

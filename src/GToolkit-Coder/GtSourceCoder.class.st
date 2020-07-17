@@ -160,6 +160,13 @@ GtSourceCoder >> currentSourceString [
 	^ self sourceCode sourceString
 ]
 
+{ #category : #'api - text' }
+GtSourceCoder >> currentSourceString: aString [
+	"Set a new source text"
+	
+	self sourceCode currentSourceString: aString
+]
+
 { #category : #private }
 GtSourceCoder >> cursorPositionIn: aBrTextEditor do: aBlock [
 	aBrTextEditor cursor do: [ :each | ^ aBlock value: each position ]
@@ -695,13 +702,6 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	binding notNil
 		ifTrue: [ ^ GtSearchReferencesFilter literal: binding ].
 	^ nil
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> replaceSourceTextWith: aString [
-	"Set a new source text"
-	
-	self sourceCode replaceSourceTextWith: aString
 ]
 
 { #category : #'api - text' }

@@ -50,7 +50,7 @@ GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
 GtMethodCoder class >> newMethod [
 	^ self new
 		expanded: true;
-		replaceSourceTextWith: '';
+		currentSourceString: '';
 		yourself
 ]
 
@@ -677,7 +677,7 @@ GtMethodCoder >> format [
 				notifyParseError: ex errorMessage
 				at: ex location ].
 			
-	self replaceSourceTextWith: ast formattedCode.
+	self currentSourceString: ast formattedCode.
 ]
 
 { #category : #'gt-extensions' }
@@ -1103,7 +1103,7 @@ GtMethodCoder >> performMethodRefactoring: refactoring [
 		do: [ :ex | ^ false ].
 	(self changedSourceForCurrentMethod: refactoring model changes)
 		ifNotNil: [ :source | 
-			self replaceSourceTextWith: source.
+			self currentSourceString: source.
 			^ true ].
 	^ false
 ]
