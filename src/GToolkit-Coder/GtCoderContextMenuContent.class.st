@@ -19,7 +19,7 @@ GtCoderContextMenuContent >> defaultLabelChildName [
 
 { #category : #'api - accessing' }
 GtCoderContextMenuContent >> editorElement [
-	<return: #EditorElement>
+	<return: #BrEditorElement>
 	^ editorElement
 ]
 

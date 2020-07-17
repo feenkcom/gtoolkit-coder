@@ -26,7 +26,7 @@ GtFixItStyler >> cursorPositionDo: aBlock [
 
 { #category : #accessing }
 GtFixItStyler >> editorElement [
-	<return: #BlEditorElement>
+	<return: #BrEditorElement>
 	^ editorElement
 ]
 
