@@ -81,7 +81,7 @@ GtClassDefinitionCoder >> initializeAddOns [
 
 { #category : #testing }
 GtClassDefinitionCoder >> isModified [
-	^ classOrMetaClass definition ~= self source
+	^ classOrMetaClass definition ~= self currentSourceString
 ]
 
 { #category : #updating }

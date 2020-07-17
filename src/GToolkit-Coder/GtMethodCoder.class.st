@@ -1029,7 +1029,7 @@ GtMethodCoder >> moveMethodToInstanceOrClass [
 		ifFalse: [ ^ false ].
 	model := RBNamespace new.
 	modelClass := model classFor: newClass.
-	modelClass compile: self source classified: self category.
+	modelClass compile: self currentSourceString classified: self category.
 	oldModelClass := model classFor: oldClass.
 	(oldModelClass directlyDefinesMethod: self currentSelector)
 		ifTrue: [ oldModelClass removeMethod: self currentSelector ].

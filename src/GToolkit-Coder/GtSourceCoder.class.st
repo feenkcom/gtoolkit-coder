@@ -622,7 +622,7 @@ GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 { #category : #'api - actions' }
 GtSourceCoder >> printItAllFrom: anEditorElement [
 	^ self
-		evaluateSource: self source
+		evaluateSource: self currentSourceString
 		showPrintString: true
 		in: anEditorElement
 ]
