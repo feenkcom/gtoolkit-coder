@@ -61,7 +61,7 @@ GtSourceCoderEditorLook >> newActionsElement [
 GtSourceCoderEditorLook >> newEditorElement [
 	^ BrEditor new
 		look: BrGlamorousCodeEditorLook + (BrGlamorousWithContextMenuLook content: [ self createContextMenuContent ]);
-		padding: (BlInsets bottom: 2);
+		padding: (BlInsets all: 1);
 		hMatchParent;
 		vFitContent
 ]

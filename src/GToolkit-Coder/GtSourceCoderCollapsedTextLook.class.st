@@ -19,7 +19,7 @@ GtSourceCoderCollapsedTextLook >> initialize [
 { #category : #'instance creation' }
 GtSourceCoderCollapsedTextLook >> newLabel [
 	^ BrLabel new
-		look: BrGlamorousLabelLook new bold glamorousCodeFont
+		look: BrGlamorousLabelLook new editorMeasurement bold glamorousCodeFont
 ]
 
 { #category : #initialization }

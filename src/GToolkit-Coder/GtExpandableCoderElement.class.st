@@ -65,8 +65,12 @@ GtExpandableCoderElement >> coder: aCoder [
 	coder := aCoder.
 
 	coder expanded
-		ifTrue: [ expandedElement ifNotNil: [ :anElement | self assignExpandedCoder: aCoder to: anElement ] ]
-		ifFalse: [ collapsedElement ifNotNil: [ :anElement | self assignCollapsedCoder: aCoder to: anElement ] ].
+		ifTrue: [
+			expandedElement ifNotNil: [ :anElement | self assignExpandedCoder: aCoder to: anElement ].
+			collapsedElement ifNotNil: [ :anElement | self markDirty: anElement as: true ] ]
+		ifFalse: [
+			collapsedElement ifNotNil: [ :anElement | self assignCollapsedCoder: aCoder to: anElement ].
+			expandedElement ifNotNil: [ :anElement | self markDirty: anElement as: true ] ].
 
 	self expanded: coder expanded.
 
@@ -99,16 +103,38 @@ GtExpandableCoderElement >> initialize [
 		beInSingleCompositionLayer.
 
 	self
-		when: BrExpansionChanged
-		do: [ :anEvent |
-			anEvent isExpanded
-				ifTrue: [ self beInSeparateCompositionLayer ]
-				ifFalse: [ self beInSingleCompositionLayer ].
-			coder ifNotNil: [ :aCoder | aCoder expanded: anEvent isExpanded ] ].
+		when: BrExpandedEvent
+		do: [
+			self beInSeparateCompositionLayer.
+			coder ifNotNil: [ :aCoder |			
+				aCoder expanded: true.
+				(expandedElement notNil and: [ self isDirty: expandedElement ])
+					ifTrue: [ self assignExpandedCoder: aCoder to: expandedElement ] ] ].
+				
+	self
+		when: BrCollapsedEvent
+		do: [  :anEvent |
+			self beInSingleCompositionLayer.	
+			coder ifNotNil: [ :aCoder |			
+				aCoder expanded: false.
+				(collapsedElement notNil and: [ self isDirty: collapsedElement ])
+					ifTrue: [ self assignCollapsedCoder: aCoder to: collapsedElement ] ] ].
 
 	self
 		header: [ collapsedElement := self newCollapsedElement ];
 		content: [ expandedElement := self newExpandedElement ]
+]
+
+{ #category : #private }
+GtExpandableCoderElement >> isDirty: anElement [
+	^ anElement userData
+		at: #coderDirty
+		ifAbsent: [ false ]
+]
+
+{ #category : #private }
+GtExpandableCoderElement >> markDirty: anElement as: aBoolean [
+	anElement userData at: #coderDirty put: aBoolean
 ]
 
 { #category : #private }
