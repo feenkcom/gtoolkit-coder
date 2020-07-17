@@ -156,9 +156,7 @@ GtCoderAddOns >> gtViewKeybindingsFor: aView [
 		priority: 15;
 		items: [ self shortcuts ];
 		column: 'Shortcut' item: [ :eachShortcut | eachShortcut combination ] width: 200;
-		column: 'Name' item: [ :eachShortcut | eachShortcut name ifNil: [ '' ] ];
-		column: 'Action' item: [ :eachShortcut | eachShortcut action ];
-		column: 'Description' item: [ :eachShortcut | eachShortcut description ifNil: [ '' ] ]
+		column: 'Action' item: [ :eachShortcut | eachShortcut action ]
 ]
 
 { #category : #ui }
@@ -171,7 +169,9 @@ GtCoderAddOns >> gtViewMainActionsFor: aView [
 		column: 'Title'
 			item: [ :anAction | anAction title ]
 			text: [ :title | title ifNil: [ '' ] ];
-		column: 'Action' item: [ :anAction | anAction action ]
+		column: 'Action' 
+			item: [ :anAction | anAction action ]
+			weight: 3
 ]
 
 { #category : #'initialize-release' }
