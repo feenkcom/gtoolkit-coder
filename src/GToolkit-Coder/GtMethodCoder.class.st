@@ -50,7 +50,7 @@ GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
 GtMethodCoder class >> newMethod [
 	^ self new
 		expanded: true;
-		source: '';
+		replaceSourceTextWith: '';
 		yourself
 ]
 
