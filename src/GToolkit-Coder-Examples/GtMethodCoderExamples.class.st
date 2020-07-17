@@ -9,13 +9,6 @@ GtMethodCoderExamples >> ? anObject [
 	"Test binary method"
 ]
 
-{ #category : #'sample methods' }
-GtMethodCoderExamples >> brokenExampleRemoveMeWhenFinished [
-	<gtExample>
-	
-	^ 1/0
-]
-
 { #category : #'examples - ui' }
 GtMethodCoderExamples >> elementForOrderedCollectionMethods [
 	<gtExample>
