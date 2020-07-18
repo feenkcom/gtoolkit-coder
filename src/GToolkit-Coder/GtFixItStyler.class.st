@@ -8,7 +8,7 @@ Class {
 	#category : #'GToolkit-Coder-FixIt'
 }
 
-{ #category : #accessing }
+{ #category : #'private-variables' }
 GtFixItStyler >> canAddInstanceVariable: aString to: aClass [
 	(Object includesBehavior: aClass)
 		ifTrue: [ ^ false ].
@@ -35,14 +35,14 @@ GtFixItStyler >> editorElement: anEditorElement [
 	editorElement := anEditorElement
 ]
 
-{ #category : #accessing }
+{ #category : #'private-variables' }
 GtFixItStyler >> fixItActionsForVariable: aVariableNode [
 	^ aVariableNode name first isUppercase
 		ifTrue: [ self globalFixItActionsFor: aVariableNode ]
 		ifFalse: [ self localFixItActionsFor: aVariableNode ]
 ]
 
-{ #category : #accessing }
+{ #category : #'private-variables' }
 GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 	| actions possibleNames results |
 	actions := OrderedCollection new.
@@ -69,7 +69,7 @@ GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 	^ actions
 ]
 
-{ #category : #accessing }
+{ #category : #'private-variables' }
 GtFixItStyler >> localFixItActionsFor: aVariableNode [
 	| actions possibleNames |
 	actions := OrderedCollection new.
@@ -103,7 +103,57 @@ GtFixItStyler >> methodCoder: aCoder [
 	methodCoder := aCoder
 ]
 
-{ #category : #accessing }
+{ #category : #'private-messages' }
+GtFixItStyler >> typeOf: aNode [
+	aNode isSelf
+		ifTrue: [ ^ methodCoder classOrMetaClass ].
+	aNode isSuper
+		ifTrue: [ ^ methodCoder classOrMetaClass
+				ifNotNil: [ :class | class superclass ] ].
+	aNode isLiteralNode
+		ifTrue: [ ^ aNode value class ].
+	aNode isDynamicArray
+		ifTrue: [ ^ {} class ].
+	aNode isMessage
+		ifTrue: [ aNode selector = #class
+				ifTrue: [ ^ (self typeOf: aNode receiver) ifNotNil: [ :class | class class ] ].
+			(#(new new:) includes: aNode selector)
+				ifTrue: [ ^ (self typeOf: aNode receiver)
+						ifNotNil: [ :class | class instanceSide ] ] ].
+	aNode isVariable
+		ifTrue: [ aNode binding
+				ifNotNil: [ :binding | 
+					binding isLiteralVariable
+						ifTrue: [ binding value ifNotNil: [ :object | ^ object class ] ].
+					binding isThisContext
+						ifTrue: [ ^ Context ] ] ].
+	^ nil
+]
+
+{ #category : #visiting }
+GtFixItStyler >> visitMessageNode: aNode [
+	| cursor intervals |
+	cursor := -1.
+	self cursorPositionDo: [ :pos | cursor := pos ].
+	intervals := aNode keywordsIntervals.
+	(intervals
+		anySatisfy: [ :each | cursor between: each first and: each last ])
+		ifFalse: [ (self typeOf: aNode receiver)
+				ifNotNil: [ :class | 
+					(class whichClassIncludesSelector: aNode selector)
+						ifNil: [ | attribute |
+							attribute := GtFixItAttribute new.
+							attribute
+								fixItActions: [ {((GtDefineMethodFixItAction forCoder: methodCoder node: aNode)
+										classOrMetaClass: class)} ].
+							self
+								styleFrom: intervals last last
+								to: intervals last last
+								with: {attribute} ] ] ].
+	super visitMessageNode: aNode
+]
+
+{ #category : #visiting }
 GtFixItStyler >> visitMethodNode: aMethodNode [
 	aMethodNode selector isDoIt
 		ifTrue: [ ^ self ].
