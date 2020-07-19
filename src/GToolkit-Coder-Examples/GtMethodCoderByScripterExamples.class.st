@@ -31,11 +31,13 @@ GtMethodCoderByScripterExamples >> basicMethodCoder [
 	<gtExample>
 	| aCoder |
 	aCoder := GtMethodCoder new.
+	aCoder coderLook: GtSourceCoderHeaderLook.
+
 	self assert: aCoder selector isNil.
 	self assert: aCoder classOrMetaClass equals: UndefinedObject.
 	self assert: aCoder category isNil.
-	self assert: aCoder source isString.
-	self assert: aCoder source isEmpty.
+	self assert: aCoder currentSourceString isString.
+	self assert: aCoder currentSourceString isEmpty.
 	^ aCoder
 ]
 
@@ -68,23 +70,24 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI.
-	aScripter checks: 'Check Sources' do: [ :aStep |
-		aStep check
-			label: 'Check Expanded Source';
-			satisfies: [ :aCoder | aCoder source = self binaryMethod sourceCode ];
-			onModel.
-		aStep check
-			label: 'Check Collapsed Source';
-			satisfies: [ :aCoder | aCoder collapsedSource = '?' ];
-			onModel.
-		aStep check
-			label: 'Check Coder Editor Text';
-			satisfies: [ :label | label text asString = '?' ];
-			onChildNamed: #label.
-		aStep check 
-			label: 'Check Coder UI is Collapsed';
-			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] 
-		].
+	aScripter
+		checks: 'Check Sources'
+		do: [ :aStep | 
+			aStep check
+				label: 'Check Expanded Source';
+				satisfies: [ :aCoder | aCoder currentSourceString = self binaryMethod sourceCode ];
+				onModel.
+			aStep check
+				label: 'Check Collapsed Source';
+				satisfies: [ :aCoder | aCoder collapsedText asString = '?' ];
+				onModel.
+			aStep check
+				label: 'Check Coder Editor Text';
+				satisfies: [ :label | label text asString = '?' ];
+				onChildNamed: #label.
+			aStep check
+				label: 'Check Coder UI is Collapsed';
+				satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
 	aScripter syncContinue.
 	^ aScripter
 ]
@@ -99,17 +102,17 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 			label: 'Check Breadcrumb Package Name';
 			satisfies: [ :aButton | aButton label asString = self class package name ];
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: BrBreadcrumb;
+			onChildOfClass: GtCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Breadcrumb Class Name';
 			satisfies: [ :aButton | aButton label asString = self className ];
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: BrBreadcrumb;
+			onChildOfClass: GtCoderBreadcrumbElement;
 			onChildAt: 3.
 		].
 	aScripter syncContinue.
@@ -125,16 +128,16 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 		aStep click
 			label: 'Click On Class Name';
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: BrBreadcrumb;
+			onChildOfClass: GtCoderBreadcrumbElement;
 			onChildAt: 3.
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
 			satisfies: [ :theScripter | theScripter events reversed 
 				detectEventOfClass: GtPhlowObjectToSpawn
 				ifFound: [ :theEvent |
-					theEvent object = self binaryMethod and: [ theEvent tool isKindOf: GtCoderTool ] ]
+					theEvent object = self binaryMethod methodClass and: [ theEvent tool isKindOf: GtClassCoderTool ] ]
 				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
 			onScripter.
 		].
@@ -151,9 +154,9 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 		aStep click
 			label: 'Click On Package Name';
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: BrBreadcrumb;
+			onChildOfClass: GtCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
@@ -237,7 +240,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CodeStyle 
 	aScripter checks: 'Check Expanded Source Code Style' do: [ :aStep |
 		aStep check
 			label: 'Check Method Name Attributes';
-			anySatisfies: [ :aTextAttribute | aTextAttribute = BlFontGenericFamilyAttribute monospace ];
+			anySatisfies: [ :aTextAttribute | aTextAttribute = (BlTextForegroundAttribute new paint: Color black) ];
 			onChildNamed: #editor;
 			onBrTextEditor;
 			onBrTextEditorText;
@@ -301,14 +304,14 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMai
 			label: 'Number of main actions';
 			childrenCount: aMainActionsCount;
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderExpandedContentElement;
 			onChildOfClass: GtCoderActionsElement;
 			onChildAt: 1.
 		aStep check 
 			label: 'Number of addons actions';
 			childrenCount: anAddonsActionsCount;
 			onChildAt: 2;
-			onChildOfClass: GtCoderContentElement;
+			onChildOfClass: GtSourceCoderExpandedContentElement;
 			onChildOfClass: GtCoderActionsElement;
 			onChildAt: 3.
 		].
@@ -384,16 +387,18 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExpandAttribute
 GtMethodCoderByScripterExamples >> coderOnMethod: aMethod [
 	<gtExample>
 	| aCoder |
+
 	aCoder := self basicMethodCoder.
 	aCoder forMethod: aMethod.
+
 	self assert: aCoder selector equals: aMethod selector.
 	self assert: aCoder classOrMetaClass equals: aMethod methodClass.
 	self assert: aCoder category equals: aMethod protocol.
-	self assert: aCoder source isString.
 	self assert: aCoder expanded not.
-	"Source code is empty as Coder is not displayed yet."
-	self assert: aCoder isBuilt not.
-	self assert: aCoder source isEmpty.
+	
+	"a coder is not displayed and its source text is not initialized"
+	self assert: aCoder sourceCode hasSourceText not.
+
 	^ aCoder
 ]
 

@@ -29,7 +29,8 @@ GtFixItAction >> execute [
 { #category : #accessing }
 GtFixItAction >> menuAction [
 	^ GtCoderContextMenuAction new
-		action: [ self execute ];
+		action: [ :anEditorElement | 
+			self execute ];
 		title: self description
 ]
 

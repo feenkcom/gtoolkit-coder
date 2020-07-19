@@ -9,7 +9,7 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #arguments }
+{ #category : #'initialize-release' }
 GtBlockCoder >> addParameter: aString ofType: aBehavior [
 	parameters at: aString put: aBehavior.
 	bindingStrategy bindings at: aString asSymbol put: nil
@@ -19,6 +19,7 @@ GtBlockCoder >> addParameter: aString ofType: aBehavior [
 GtBlockCoder >> block [
 	self validateSyntax
 		ifFalse: [ ^ nil ].
+
 	^ (class ifNil: [ Object ]) compiler
 		source: self blockSource;
 		logged: false;
@@ -28,20 +29,7 @@ GtBlockCoder >> block [
 
 { #category : #private }
 GtBlockCoder >> blockSource [
-	^ String
-		streamContents: [ :stream | 
-			stream nextPut: $[.
-			parameters
-				keysDo: [ :each | 
-					stream
-						nextPut: $:;
-						nextPutAll: each;
-						nextPut: $  ].
-			parameters notEmpty
-				ifTrue: [ stream nextPutAll: '| ' ].
-			stream
-				nextPutAll: self source;
-				nextPut: $] ]
+	^ self blockSourceFromText: self sourceText
 ]
 
 { #category : #private }
@@ -58,36 +46,60 @@ GtBlockCoder >> blockSource: aString [
 	endIndex := ast rightBracket startPosition - 1.
 	[ startIndex < endIndex and: [ (aString at: startIndex) isSeparator ] ] whileTrue: [ startIndex := startIndex + 1 ].
 	[ endIndex > startIndex and: [ (aString at: endIndex) isSeparator ] ] whileTrue: [ endIndex := endIndex - 1 ].
-	self source: (aString copyFrom: startIndex to: endIndex)
+
+	self forSource: (aString copyFrom: startIndex to: endIndex)
 ]
 
-{ #category : #actions }
-GtBlockCoder >> doItAll [
-	| source |
-	source := self blockSource.
-	source isNil
-		ifTrue: [ ^ self ].
-	^ self evaluateSource: source
+{ #category : #private }
+GtBlockCoder >> blockSourceFromText: aSourceTextOrString [
+	^ String
+		streamContents: [ :stream | 
+			stream nextPut: $[.
+			parameters
+				keysDo: [ :each | 
+					stream
+						nextPut: $:;
+						nextPutAll: each;
+						nextPut: $  ].
+			parameters notEmpty
+				ifTrue: [ stream nextPutAll: '| ' ].
+			stream
+				nextPutAll: aSourceTextOrString;
+				nextPut: $] ]
 ]
 
-{ #category : #actions }
-GtBlockCoder >> doItAndGoAll: anElement [
+{ #category : #'api - actions' }
+GtBlockCoder >> doItAllFrom: anEditorElement [
+	^ self
+		evaluateSource: self blockSource
+		in: anEditorElement
+]
+
+{ #category : #'api - actions' }
+GtBlockCoder >> doItAndGoAllFrom: anEditorElement [
 	| aSource aValue |
+
 	aSource := self blockSource.
-	aSource isNil ifTrue: [ ^ self ].
-	aValue := self evaluateSource: aSource.
-	aValue == self ifTrue: [ ^ self ].
-	anElement phlow spawnObject: aValue
+	aValue := self evaluateSource: aSource in: anEditorElement.
+	aValue == self
+		ifTrue: [ ^ self ].
+	
+	anEditorElement phlow spawnObject: aValue
 ]
 
-{ #category : #actions }
-GtBlockCoder >> evaluationRequester [
-	^ GtBlockCoderEvaluationRequester on: self
+{ #category : #'api - actions' }
+GtBlockCoder >> evaluationRequesterForEditor: aTextEditor [
+	^ GtBlockCoderEvaluationRequester on: self editor: aTextEditor
 ]
 
-{ #category : #formatting }
+{ #category : #'initialize-release' }
+GtBlockCoder >> forSource: aString [
+	self sourceCode: (GtCoderConcreteSourceCode new source: aString)
+]
+
+{ #category : #'api - actions' }
 GtBlockCoder >> format [
-	self source: (self newRbAST: self newSourceText asString) formattedCode
+	self currentSourceString: (self newRbAST: self currentSourceString asString) formattedCode
 ]
 
 { #category : #private }
@@ -105,29 +117,34 @@ GtBlockCoder >> initialize [
 	parameters := OrderedDictionary new.
 	bindingStrategy := GtHighlightingBindingStrategy new.
 	bindingStrategy bindings: Dictionary new.
+
 	super initialize.
+
 	expanded := true
 ]
 
 { #category : #'initialize-release' }
 GtBlockCoder >> initializeAddOns [
 	super initializeAddOns.
-	addOns
-		addStyler:
-			(BrRBTextStyler new
-				workspace: bindingStrategy;
-				yourself).
+	
+	addOns addStyler:
+		(BrRBTextStyler new
+			workspace: bindingStrategy;
+			yourself).
+
 	addOns clearChanges
 ]
 
 { #category : #'initialize-release' }
 GtBlockCoder >> initializeShortcuts [
 	super initializeShortcuts.
-	addOns
-		addShortcut:
-			(BlShortcut new
-				combination: BlKeyCombination primaryShiftF;
-				action: [ self format ])
+	
+	addOns addShortcut:
+		(BrTextEditorShortcut new
+			combination: BlKeyCombination primaryShiftF;
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
+				aMethodCoder format ];
+			options: self)
 ]
 
 { #category : #private }
@@ -141,28 +158,9 @@ GtBlockCoder >> newCompletionStrategy [
 GtBlockCoder >> newRbAST: aString [
 	| ast |
 	ast := self
-		parseExpression: aString
+		parseExpression: (self blockSourceFromText: aString)
 		requestor: self highlightBindingsStrategy.
 	ast doSemanticAnalysis.
 	ast gtMoveAllBy: 1 - ast body start.
 	^ ast body
-]
-
-{ #category : #updating }
-GtBlockCoder >> newSource [
-	^ self blockSource
-]
-
-{ #category : #updating }
-GtBlockCoder >> newSourceText [
-	<retrun: #BlText>
-
-	^ self blockSource asRopedText
-]
-
-{ #category : #accessing }
-GtBlockCoder >> source: aString [
-	self sourceEditor text: aString asRopedText.
-	self sourceEditor text attributes: self defaultTextAttributes.
-	self sourceChanged
 ]

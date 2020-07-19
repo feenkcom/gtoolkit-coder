@@ -4,25 +4,43 @@ Class {
 	#instVars : [
 		'coder',
 		'collapsedElement',
-		'expandedElement',
-		'removed'
+		'expandedElement'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
 
 { #category : #private }
-GtExpandableCoderElement >> addCodersCoderLookTo: anElement [
-	| aLook |
-	aLook := anElement look.
-	(coder coderLook ifNil: [ coder coders ifNotNil: #coderLook ])
-		ifNotNil: [ :f | aLook := aLook ifNil: [ f ] ifNotNil: [ aLook + f ] ].
-	aLook notNil
-		ifTrue: [ anElement look: aLook ]
+GtExpandableCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
+	aSourceCoder coderLook
+		ifNotNil: [ :aCoderLook | anElement addLook: aCoderLook ].
+
+	(aSourceCoder coders ifNotNil: #coderLook)
+		ifNotNil: [ :aCodersLook | anElement addLook: aCodersLook ]
 ]
 
 { #category : #converting }
 GtExpandableCoderElement >> asVerticallyResizableDo: aBlock [
 	^ self
+]
+
+{ #category : #private }
+GtExpandableCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollapsedElement [
+	aCollapsedElement coder: aSourceCoder.
+
+	"Initialize look just once"
+	aCollapsedElement look ifNil: [
+		self addCodersCoderLook: aSourceCoder to: aCollapsedElement.
+		aCollapsedElement addLook: GtSourceCoderCollapsedWithoutHeaderLook ].
+]
+
+{ #category : #private }
+GtExpandableCoderElement >> assignExpandedCoder: aSourceCoder to: anExpandedElement [
+	anExpandedElement coder: aSourceCoder.
+
+	"Initialize look just once"
+	anExpandedElement look ifNil: [
+		self addCodersCoderLook: aSourceCoder to: anExpandedElement.
+		anExpandedElement addLook: GtSourceCoderExpandedWithoutHeaderLook ]
 ]
 
 { #category : #accessing }
@@ -41,22 +59,24 @@ GtExpandableCoderElement >> coder: aCoder [
 		assert: [ aCoder isNotNil ]
 		description: [ 'Coder must not be nil' ].
 		
-	self
-		assert: [ coder isNil ]
-		description: [ 'Coder model can not be replaced' ].
+	coder ifNotNil: [ :aPreviousCoder |
+		aPreviousCoder announcer unsubscribe: self ].
 
 	coder := aCoder.
-	self
-		header: [ collapsedElement := self newCollapsedElement ];
-		content: [ expandedElement := self newExpandedElement ].
 
-	coder stylerView: self.
 	coder expanded
-		ifTrue: [ self expand ].
+		ifTrue: [
+			expandedElement ifNotNil: [ :anElement | self assignExpandedCoder: aCoder to: anElement ].
+			collapsedElement ifNotNil: [ :anElement | self markDirty: anElement as: true ] ]
+		ifFalse: [
+			collapsedElement ifNotNil: [ :anElement | self assignCollapsedCoder: aCoder to: anElement ].
+			expandedElement ifNotNil: [ :anElement | self markDirty: anElement as: true ] ].
+
+	self expanded: coder expanded.
+
 	coder announcer weak
 		when: GtCoderExpandedChanged send: #updateExpanded to: self;
-		when: GtCoderRequestFocus send: #requestFocus to: self;
-		when: GtCoderMethodChanged send: #updateSource: to: self
+		when: GtCoderRequestFocus send: #requestFocus to: self
 ]
 
 { #category : #accessing }
@@ -67,75 +87,76 @@ GtExpandableCoderElement >> gtAllShortcutsFor: aView [
 		title: 'All shortcuts' translated;
 		priority: 10;
 		items: [ self shortcuts , coder addOns shortcuts ];
-		column: 'Key'
-			do: [ :aColumn | 
-			aColumn
-				item: [ :each | each combination gtDisplayString ];
-				matchParent ];
-		column: 'Action'
-			do: [ :aColumn | 
-			aColumn
-				item: [ :each | each action asString ];
-				matchParent ]
+		column: 'Key' item: [ :each | each combination gtDisplayString ]
+		column: 'Action' item: [ :each | each action asString ]
 ]
 
 { #category : #initialization }
 GtExpandableCoderElement >> initialize [
 	super initialize.
-	removed := false.
 	
 	self
 		vFitContent;
 		hMatchParent;
 		margin: (BlInsets all: 4);
-		look:
-			GtCoderExpanderLook new + (BrInteractiveCommonLook new
-				default: [ self background: Color transparent ];
-				expanded: [ self background: Color white ]);
-		addShortcut:
-			(BlShortcut new
-				combination: BlKeyCombination primaryReturn;
-				action: [ self toggle ]).
+		look: GtCoderExpanderLook;
+		beInSingleCompositionLayer.
+
 	self
-		when: BrExpansionChanged
-		do: [ :event | coder ifNotNil: [ :e | e expanded: self isExpanded ] ]
+		when: BrExpandedEvent
+		do: [
+			self beInSeparateCompositionLayer.
+			coder ifNotNil: [ :aCoder |			
+				aCoder expanded: true.
+				(expandedElement notNil and: [ self isDirty: expandedElement ])
+					ifTrue: [ self assignExpandedCoder: aCoder to: expandedElement ] ] ].
+				
+	self
+		when: BrCollapsedEvent
+		do: [  :anEvent |
+			self beInSingleCompositionLayer.	
+			coder ifNotNil: [ :aCoder |			
+				aCoder expanded: false.
+				(collapsedElement notNil and: [ self isDirty: collapsedElement ])
+					ifTrue: [ self assignCollapsedCoder: aCoder to: collapsedElement ] ] ].
+
+	self
+		header: [ collapsedElement := self newCollapsedElement ];
+		content: [ expandedElement := self newExpandedElement ]
 ]
 
-{ #category : #'instance creation' }
-GtExpandableCoderElement >> newActionsElement [
-	^ GtCoderActionsElement new
-		coder: coder;
-		margin: (BlInsets top: 5);
-		yourself
+{ #category : #private }
+GtExpandableCoderElement >> isDirty: anElement [
+	^ anElement userData
+		at: #coderDirty
+		ifAbsent: [ false ]
+]
+
+{ #category : #private }
+GtExpandableCoderElement >> markDirty: anElement as: aBoolean [
+	anElement userData at: #coderDirty put: aBoolean
 ]
 
 { #category : #private }
 GtExpandableCoderElement >> newCollapsedElement [
-	^ GtCoderContentElement new
-		coder: coder labelElement: coder collapsedLabelElement;
-		in: [ :e | self addCodersCoderLookTo: e ];
-		yourself
+	| aCollapsedElement |
+	aCollapsedElement := GtSourceCoderCollapsedContentElement new.
+
+	coder
+		ifNotNil: [ :aCoder | self assignCollapsedCoder: aCoder to: aCollapsedElement ].
+
+	^ aCollapsedElement
 ]
 
 { #category : #private }
 GtExpandableCoderElement >> newExpandedElement [
-	^ GtCoderContentElement new
-		coder: coder editorElement: coder expandedEditorElement;
-		addChild: self newActionsElement as: #actions;
-		in: [ :e | self addCodersCoderLookTo: e ];
-		yourself
-]
+	| anExpandedElement |
+	anExpandedElement := GtSourceCoderExpandedContentElement new.
 
-{ #category : #events }
-GtExpandableCoderElement >> onAddedToSceneGraph [
-	removed := false.
-	^ super onAddedToSceneGraph
-]
+	coder
+		ifNotNil: [ :aCoder | self assignExpandedCoder: aCoder to: anExpandedElement ].
 
-{ #category : #events }
-GtExpandableCoderElement >> onRemovedFromSceneGraph [
-	removed := true.
-	^ super onRemovedFromSceneGraph
+	^ anExpandedElement
 ]
 
 { #category : #'focus requesting' }
@@ -151,17 +172,7 @@ GtExpandableCoderElement >> requestFocus [
 
 { #category : #events }
 GtExpandableCoderElement >> updateExpanded [
-	removed
-		ifTrue: [ ^self ].
-	coder expanded
-		ifTrue: [ self isExpanded
-				ifFalse: [ self expand ] ]
-		ifFalse: [ self isExpanded
-				ifTrue: [ self collapse ] ]
-]
+	"Is sent when the coder model was requested to expand/collapse"
 
-{ #category : #events }
-GtExpandableCoderElement >> updateSource: aGtCoderMethodChanged [
-	self
-		enqueueTask: (BlTaskAction new action: [ aGtCoderMethodChanged coder buildSource ])
+	self expanded: coder expanded
 ]

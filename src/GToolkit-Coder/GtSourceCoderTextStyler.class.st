@@ -30,7 +30,7 @@ GtSourceCoderTextStyler >> parse: aText [
 	
 	"see https://github.com/feenkcom/gtoolkit/issues/593"
 	aString := aText asString.
-	aCoderSource := coder newSourceText characters asString.
+	aCoderSource := coder currentSourceString.
 	
 	isCoderSourceSame := aString = aCoderSource.
 	

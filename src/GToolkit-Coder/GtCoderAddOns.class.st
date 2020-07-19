@@ -2,12 +2,13 @@ Class {
 	#name : #GtCoderAddOns,
 	#superclass : #Object,
 	#instVars : [
+		'modified',
 		'contextActions',
 		'mainActions',
 		'contextMenuActions',
-		'modified',
 		'shortcuts',
-		'collapsedShortcuts'
+		'collapsedShortcuts',
+		'updateRequested'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -141,7 +142,9 @@ GtCoderAddOns >> gtViewContextActionsFor: aView [
 		title: 'Context actions' translated;
 		priority: 25;
 		items: [ self contextActions ];
-		column: 'Title' item: [ :anAction | anAction title ] format: [ :title | title ifNil: [''] ];
+		column: 'Title'
+			item: [ :anAction | anAction title ]
+			text: [ :title | title ifNil: [ '' ] ];
 		column: 'Action' item: [ :anAction | anAction action ]
 ]
 
@@ -153,9 +156,7 @@ GtCoderAddOns >> gtViewKeybindingsFor: aView [
 		priority: 15;
 		items: [ self shortcuts ];
 		column: 'Shortcut' item: [ :eachShortcut | eachShortcut combination ] width: 200;
-		column: 'Name' item: [ :eachShortcut | eachShortcut name ifNil: [ '' ] ];
-		column: 'Action' item: [ :eachShortcut | eachShortcut action ];
-		column: 'Description' item: [ :eachShortcut | eachShortcut description ifNil: [ '' ] ]
+		column: 'Action' item: [ :eachShortcut | eachShortcut action ]
 ]
 
 { #category : #ui }
@@ -165,8 +166,12 @@ GtCoderAddOns >> gtViewMainActionsFor: aView [
 		title: 'Main actions' translated;
 		priority: 20;
 		items: [ self mainActions ];
-		column: 'Title' item: [ :anAction | anAction title ] format: [ :title | title ifNil: [''] ];
-		column: 'Action' item: [ :anAction | anAction action ]
+		column: 'Title'
+			item: [ :anAction | anAction title ]
+			text: [ :title | title ifNil: [ '' ] ];
+		column: 'Action' 
+			item: [ :anAction | anAction action ]
+			weight: 3
 ]
 
 { #category : #'initialize-release' }
@@ -177,12 +182,18 @@ GtCoderAddOns >> initialize [
 	contextMenuActions := OrderedCollection new.
 	shortcuts := OrderedCollection new.
 	collapsedShortcuts := OrderedCollection new.
-	modified := Set new
+	modified := Set new.
+	updateRequested := true
 ]
 
 { #category : #accessing }
 GtCoderAddOns >> mainActions [
 	^ mainActions
+]
+
+{ #category : #changes }
+GtCoderAddOns >> markAsUpdated [
+	updateRequested := false
 ]
 
 { #category : #copying }
@@ -269,9 +280,24 @@ GtCoderAddOns >> removeShortcutsMatching: aBlock [
 		ifTrue: [ modified add: #shortcuts ]
 ]
 
+{ #category : #changes }
+GtCoderAddOns >> requestUpdate [
+	"Mark coder addons as potentially needed to be updated"
+	
+	updateRequested := true
+]
+
 { #category : #shortcuts }
 GtCoderAddOns >> shortcuts [
 	^ shortcuts
+]
+
+{ #category : #testing }
+GtCoderAddOns >> shouldBeUpdated [
+	"Return true if addons should be updated, false otherwise"
+	<return: #Boolean>
+
+	^ updateRequested
 ]
 
 { #category : #private }

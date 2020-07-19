@@ -5,13 +5,12 @@ Class {
 }
 
 { #category : #adding }
-GtExpandedOnlyCoderElement >> addCodersLookTo: anElement coder: aCoderModel [ 
-	| aLook |
-	aLook := anElement look.
-	(aCoderModel coderLook ifNil: [ aCoderModel coders ifNotNil: #coderLook ])
-		ifNotNil: [ :f | aLook := aLook ifNil: [ f ] ifNotNil: [ aLook + f ] ].
-	aLook notNil
-		ifTrue: [ anElement look: aLook ]
+GtExpandedOnlyCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
+	aSourceCoder coderLook
+		ifNotNil: [ :aCoderLook | anElement addLook: aCoderLook ].
+
+	(aSourceCoder coders ifNotNil: #coderLook)
+		ifNotNil: [ :aCodersLook | anElement addLook: aCodersLook ]
 ]
 
 { #category : #converting }
@@ -27,15 +26,11 @@ GtExpandedOnlyCoderElement >> coder: aCoder [
 		description: [ 'Coder must not be nil' ].
 	
 	self addChild: (anExpandedElement := self newExpandedElement: aCoder).
-	self addChild: (self newActionsElement: aCoder) as: #actions.
-	
 	self addLook: (BrLayoutResizerLook new inheritIn: [ :aBlock | aBlock value: anExpandedElement ]).
 
-	aCoder stylerView: self.
 	aCoder expanded: true.
 	aCoder announcer weak
-		when: GtCoderRequestFocus send: #requestFocus to: self;
-		when: GtCoderMethodChanged send: #updateSource: to: self
+		when: GtCoderRequestFocus send: #requestFocus to: self
 ]
 
 { #category : #initialization }
@@ -49,18 +44,11 @@ GtExpandedOnlyCoderElement >> initialize [
 ]
 
 { #category : #'instance creation' }
-GtExpandedOnlyCoderElement >> newActionsElement: aCoderModel [
-	^ GtCoderActionsElement new
-		coder: aCoderModel;
-		margin: (BlInsets top: 5);
-		yourself
-]
-
-{ #category : #'instance creation' }
 GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
-	^ GtCoderContentElement new
-		coder: aCoderModel editorElement: aCoderModel expandedEditorElement;
-		in: [ :anElement | self addCodersLookTo: anElement coder: aCoderModel ];
+	^ GtSourceCoderExpandedContentElement new
+		coder: aCoderModel;
+		in: [ :anElement | self addCodersCoderLook: aCoderModel to: anElement ];
+		addLook: GtSourceCoderExpandedWithHeaderLook;
 		yourself
 ]
 
@@ -73,10 +61,4 @@ GtExpandedOnlyCoderElement >> requestFocus [
 						childNamed: #editor
 						ifFound: [ :anEditorElement | anEditorElement requestFocus ]
 						ifNone: [ super requestFocus ] ])
-]
-
-{ #category : #events }
-GtExpandedOnlyCoderElement >> updateSource: aGtCoderMethodChanged [
-	self
-		enqueueTask: (BlTaskAction new action: [ aGtCoderMethodChanged coder buildSource ])
 ]

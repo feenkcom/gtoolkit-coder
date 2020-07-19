@@ -49,17 +49,17 @@ GtCodeDefinitionSingleEditor >> create [
 	interactions do: [ :eachAssociation |
 		anEditableLabel
 			whenKey: eachAssociation key
-			labelDo: [ :aTextEditor :anEvent |
-				anEvent consumed: true.
-				eachAssociation value cull: anEvent cull: aDefinition ] ].
+			labelDo: [ :aShortcutEvent |
+				aShortcutEvent consumed: true.
+				eachAssociation value cull: aShortcutEvent cull: aDefinition ] ].
 		
 	eventHandlers do: [ :eachAssociation |
 		anEditableLabel
 			when: eachAssociation key
-			do: [ :anEvent |
-				anEvent currentTarget isReadOnly
+			do: [ :aShortcutEvent |
+				aShortcutEvent currentTarget isReadOnly
 					ifTrue: [
-						eachAssociation value cull: anEvent cull: aDefinition ] ] ].
+						eachAssociation value cull: aShortcutEvent cull: aDefinition ] ] ].
 
 	completionStencil ifNotNil: [ :aStencil |
 		(GtCompletionController

@@ -41,8 +41,8 @@ GtClassDefinitionCoder >> classOrMetaClass [
 GtClassDefinitionCoder >> classOrMetaClass: anObject [
 	classOrMetaClass := anObject.
 	self
-		source: classOrMetaClass definition;
-		updateCollapsedSource
+		currentSourceString: classOrMetaClass definition;
+		requestUpdateCollapsedText
 ]
 
 { #category : #subscriptions }
@@ -50,21 +50,22 @@ GtClassDefinitionCoder >> definitionChanged: anAnnouncement [
 	anAnnouncement classAffected == classOrMetaClass
 		ifFalse: [ ^ self ].
 	self
-		source: classOrMetaClass definition;
-		updateCollapsedSource
+		currentSourceString: classOrMetaClass definition;
+		requestUpdateCollapsedText
 ]
 
 { #category : #private }
-GtClassDefinitionCoder >> evaluateSource: aString showPrintString: aBoolean [
+GtClassDefinitionCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorElement [
 	^ self
 		evaluateBlock: [ (classOrMetaClass ifNil: [ Smalltalk ]) compiler
 				source: aString;
 				receiver: self object;
 				context: self context;
-				requestor: (self evaluationRequester source: aString);
+				requestor: ((self evaluationRequesterForEditor: anEditorElement editor) source: aString);
 				failBlock: [ ^ self flag: 'insert error adornment' ];
 				evaluate ]
 		showPrintString: aBoolean
+		in: anEditorElement
 ]
 
 { #category : #'initialize-release' }
@@ -74,13 +75,13 @@ GtClassDefinitionCoder >> initializeAddOns [
 		addStyler: BrRBTextStyler new;
 		addMainAction: 'Save' translated
 			icon: BrGlamorousVectorIcons accept
-			action: [ self doItAll ].
+			action: [ self halt. "self doItAll" ].
 	addOns clearChanges
 ]
 
 { #category : #testing }
 GtClassDefinitionCoder >> isModified [
-	^ classOrMetaClass definition ~= self source
+	^ classOrMetaClass definition ~= self currentSourceString
 ]
 
 { #category : #updating }

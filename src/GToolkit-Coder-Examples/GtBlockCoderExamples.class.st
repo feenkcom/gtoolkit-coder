@@ -19,7 +19,7 @@ GtBlockCoderExamples >> syntaxError [
 	^ GtBlockCoder new
 		addParameter: 'a' ofType: Integer;
 		addParameter: 'b' ofType: Integer;
-		source: '2 * (+a sqrt + b)';
+		forSource: '2 * (+a sqrt + b)';
 		block;
 		yourself
 ]
@@ -30,5 +30,5 @@ GtBlockCoderExamples >> twoArgumentBlock [
 	^ GtBlockCoder new
 		addParameter: 'a' ofType: Integer;
 		addParameter: 'b' ofType: Integer;
-		source: '2 * (a sqrt + b)'
+		forSource: '2 * (a sqrt + b)'
 ]

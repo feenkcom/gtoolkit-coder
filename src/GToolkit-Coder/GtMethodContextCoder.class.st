@@ -22,12 +22,6 @@ GtMethodContextCoder >> actionsForPragmas: aSymbolsCollection [
 	^ self session class debuggingActionsForPragmas: aSymbolsCollection for: self
 ]
 
-{ #category : #private }
-GtMethodContextCoder >> buildSource [
-	super buildSource.
-	self updateSelection
-]
-
 { #category : #'debugger access' }
 GtMethodContextCoder >> close [
 	self notifyDebugger.
@@ -37,12 +31,13 @@ GtMethodContextCoder >> close [
 ]
 
 { #category : #actions }
-GtMethodContextCoder >> compile [
+GtMethodContextCoder >> compileFrom: anEditorElement [
 	^ self
-		handleCompilerErrorsDuring: [ self session
+		handleCompilerErrorsDuring: [
+			self session
 				gtRecompileMethodTo: self newMethodSource
 				inContext: self context
-				notifying: self requester ]
+				notifying: (self requesterForEditor: anEditorElement editor) ]
 ]
 
 { #category : #accessing }
@@ -50,6 +45,7 @@ GtMethodContextCoder >> compiledMethod [
 	"The context coder should allways return the compiled method from the context 
 	as the method from the class can be changed. In that case the context will 
 	use its own method."
+
 	^ self context method
 ]
 
@@ -113,20 +109,33 @@ GtMethodContextCoder >> debuggerVariableNodes [
 	
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #private }
+GtMethodContextCoder >> expandedUpdated [
+	super expandedUpdated.
+
+	"https://github.com/feenkcom/gtoolkit/issues/1323
+	Ideally, we should convert this to the add-on styler"
+	self flag: #TODO.
+	self updateSelection
+]
+
+{ #category : #initialize }
 GtMethodContextCoder >> initializeAddOns [
 	super initializeAddOns.
+
 "	addOns addStyler: (GtCoderContextVariableButtonStyler new methodCoder: self)."
 "	addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: self)"
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtMethodContextCoder >> initializeShortcuts [ 
 	super initializeShortcuts.
 	addOns 
-		addShortcut: (BlShortcut new
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryP;
-			action: [ self printItSelection ])
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
+				aSourceCoder printItSelectionFrom: aShortcutEvent currentTarget ];
+			options: self)
 ]
 
 { #category : #'accessing variables' }
@@ -175,11 +184,16 @@ GtMethodContextCoder >> receiver [
 ]
 
 { #category : #actions }
-GtMethodContextCoder >> save [ 	
+GtMethodContextCoder >> saveFrom: anEditorElement [
 	"Compiling creates a new method objects, so avoid the action if there are no changes"
-	self isModified ifFalse: [ ^ false ]. 
-	self validateSyntax ifFalse: [ ^ false ].
-	self compile ifFalse: [ ^ false ].
+	self isModified
+		ifFalse: [ ^ false ]. 
+	
+	self validateSyntax
+		ifFalse: [ ^ false ].
+	
+	(self compileFrom: anEditorElement)
+		ifFalse: [ ^ false ].
 	
 	"If compilation succedded notify the debugger. The current context is now in an 
 	invalid state, as it contains the code of the old compiled method object; the context 
@@ -264,7 +278,7 @@ GtMethodContextCoder >> temporaryVariableNodesDo: aBloc [
 ]
 
 { #category : #updating }
-GtMethodContextCoder >> updateContent [ 
+GtMethodContextCoder >> updateContent [
 	"Update the source code and the selection. The save action in the debugger 
 	can change the compiled method stored  in the context. "
 	self
@@ -275,13 +289,17 @@ GtMethodContextCoder >> updateContent [
 { #category : #updating }
 GtMethodContextCoder >> updateSelection [
 	| interval |
+	"https://github.com/feenkcom/gtoolkit/issues/1323
+	Ideally, we should convert this to the add-on styler"
+	self flag: #TODO.
+	
 	(self session process isNil or: [ context isDead ])
 		ifTrue: [ ^ self ].
 	interval := self session pcRangeForContext: context.
 	interval isEmpty
 		ifTrue: [ ^ self ].
-	self sourceEditor text clearAttributes: [ :each | each class = BlTextUnderlineAttribute ].
-	(self sourceEditor text from: interval first to: interval last)
+	self sourceText clearAttributes: [ :each | each class = BlTextUnderlineAttribute ].
+	(self sourceText from: interval first to: interval last)
 		attributes:
 			{(BlTextUnderlineAttribute new
 				paint: BrGlamorousColors errorBackgroundColor;
@@ -291,13 +309,7 @@ GtMethodContextCoder >> updateSelection [
 
 { #category : #updating }
 GtMethodContextCoder >> updateSourceFromContext [
-	| contextSourceCode |
-	contextSourceCode := self context method sourceCode.
-	contextSourceCode = methodSource ifTrue: [ 
-		^ self ].
-	
-	methodSource := contextSourceCode.
-	self buildSource.
+	self forMethod: self context method
 ]
 
 { #category : #'accessing variables' }

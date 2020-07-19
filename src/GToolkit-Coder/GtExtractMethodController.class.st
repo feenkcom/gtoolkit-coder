@@ -288,7 +288,7 @@ GtExtractMethodController >> setPreviewOptionsOn: aRefactoring [
 
 { #category : #private }
 GtExtractMethodController >> sourceAst [
-	^ GtPharoParser parse: coder source startingAt: GtPharoParser startingStateForMethod
+	^ GtPharoParser parse: coder currentSourceString startingAt: GtPharoParser startingStateForMethod
 ]
 
 { #category : #accessing }

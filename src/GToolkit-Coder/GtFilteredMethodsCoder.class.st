@@ -29,7 +29,7 @@ GtFilteredMethodsCoder >> categoryFilterString: aSymbol [
 
 { #category : #elements }
 GtFilteredMethodsCoder >> coderLook [
-	^ GtMethodCoderCategoryLook new
+	^ GtSourceCoderHeaderLook + GtMethodCoderCategoryLook
 ]
 
 { #category : #private }

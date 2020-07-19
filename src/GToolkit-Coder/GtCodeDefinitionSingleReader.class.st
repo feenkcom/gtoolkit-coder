@@ -22,7 +22,7 @@ GtCodeDefinitionSingleReader >> create [
 		text: theInitialName.
 
 	interactions do: [ :eachAssociation |
-		aLabel addInteraction: (BrTextEditorInteraction new
+		aLabel addEditorShortcut: (BrTextEditorShortcut new
 			combination: eachAssociation key;
 			action: [ :aTextEditor :anEvent |
 				anEvent consumed: true.

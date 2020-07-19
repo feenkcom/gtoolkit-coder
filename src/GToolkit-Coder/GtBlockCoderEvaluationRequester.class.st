@@ -13,5 +13,5 @@ GtBlockCoderEvaluationRequester >> source: aString [
 
 { #category : #requester }
 GtBlockCoderEvaluationRequester >> text [
-	^ coder newSourceText asString
+	^ coder blockSource
 ]

@@ -20,17 +20,22 @@ GtPharoSnippetCoder >> context: doItContext [
 ]
 
 { #category : #private }
-GtPharoSnippetCoder >> evaluateSource: aString showPrintString: aBoolean [
+GtPharoSnippetCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorElement [
 
 	self xDocSaveSource: aString.
-	^ super evaluateSource: aString showPrintString: aBoolean
+	^ super evaluateSource: aString showPrintString: aBoolean in: anEditorElement
 ]
 
 { #category : #actions }
-GtPharoSnippetCoder >> evaluationRequester [
-	^ super evaluationRequester
+GtPharoSnippetCoder >> evaluationRequesterForEditor: anEditorElement [
+	^ (super evaluationRequesterForEditor: anEditorElement)
 		bindingStrategy: bindingStrategy;
 		yourself
+]
+
+{ #category : #initialization }
+GtPharoSnippetCoder >> forSource: aString [
+	self sourceCode: (GtCoderConcreteSourceCode new source: aString)
 ]
 
 { #category : #private }
@@ -47,9 +52,12 @@ GtPharoSnippetCoder >> highlightBindingsStrategy [
 GtPharoSnippetCoder >> initialize [
 	bindingStrategy := GtSnippetBindingStrategy new.
 	bindingStrategy bindings: GtSnippetBindings new.
+	
 	super initialize.
+	
 	expanded := true.
-	self source: ''
+	
+	self forSource: ''
 ]
 
 { #category : #initialization }
@@ -58,19 +66,19 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Evaluate' translated
 		icon: BrGlamorousVectorIcons play
-		action: [ :aButton | self doItSelectionOrAll ].
+		action: [ :anEditorElement | self doItSelectionOrAllFrom: anEditorElement ].
 	addOns
 		addMainAction: 'Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :aButton | self doItAndGoSelectionOrAll: aButton ].
+		action: [ :anEditorElement | self doItAndGoSelectionOrAllFrom: anEditorElement ].
 	addOns
 		addMainAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action: [ :aButton | self debugSelection ].
+		action: [ :anEditorElement | self debugSelectionFrom: anEditorElement ].
 	addOns
 		addMainAction: 'Profile' translated
 		icon: BrGlamorousVectorIcons performance
-		action: [ :aButton | self profileWithMessageTallyFrom: aButton ].
+		action: [ :anEditorElement | self profileWithMessageTallyFrom: anEditorElement ].
 	addOns
 		addStyler:
 			(BrRBTextStyler new
@@ -84,18 +92,26 @@ GtPharoSnippetCoder >> initializeShortcuts [
 	super initializeShortcuts.
 
 	addOns
-		addShortcut: (BlShortcut new
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryD;
-			action: [ self doItSelectionOrAll ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder doItSelectionOrAllFrom: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryG;
-			action: [ :anEvent | self doItAndGoSelectionOrAll: anEvent currentTarget ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder doItAndGoSelectionOrAllFrom: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryP;
-			action: [ self printItSelectionOrAll ]);
-		addShortcut: (BlShortcut new
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder printItSelectionOrAllFrom: aShortcutEvent currentTarget ];
+			options: self);
+		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryR;
-			action: [ :anEvent | self renameVariableIn: anEvent currentTarget ])
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
+				aSnippetCoder renameVariableIn: aShortcutEvent currentTarget ];
+			options: self)
 ]
 
 { #category : #private }
@@ -127,13 +143,19 @@ GtPharoSnippetCoder >> object [
 ]
 
 { #category : #actions }
-GtPharoSnippetCoder >> profileWithMessageTallyFrom: aButton [
+GtPharoSnippetCoder >> profileWithMessageTallyFrom: anEditorElement [
 	| aValue |
-	self clearPreviousEvaluations.
+
+	self clearPreviousEvaluationsInText: anEditorElement editor text.
+
 	self validateSyntax
 		ifFalse: [ ^ self ].
-	aValue := self evaluateSource: 'MessageTally on: [ ', self sourceEditor text asString, ']'.
-	aButton phlow spawnObject: aValue.
+
+	aValue := self
+		evaluateSource: 'MessageTally on: [ ', self sourceText asString, ']'
+		in: anEditorElement.
+	
+	anEditorElement phlow spawnObject: aValue
 ]
 
 { #category : #actions }
@@ -142,17 +164,10 @@ GtPharoSnippetCoder >> renameVariableIn: editorElement [
 ]
 
 { #category : #ui }
-GtPharoSnippetCoder >> requester [
-	^ super requester
+GtPharoSnippetCoder >> requesterForEditor: aTextEditor [
+	^ (super requesterForEditor: aTextEditor)
 		bindingStrategy: bindingStrategy;
 		yourself
-]
-
-{ #category : #accessing }
-GtPharoSnippetCoder >> source: aString [
-	self sourceEditor text: aString asRopedText.
-	self sourceEditor text attributes: self defaultTextAttributes.
-	self sourceChanged
 ]
 
 { #category : #accessing }
@@ -182,8 +197,8 @@ GtPharoSnippetCoder >> xDocFilename [
 GtPharoSnippetCoder >> xDocLoadSavedContent [
 	"The receiver's object has been changed under us, reload the default code (if not empty)"
 
-	self source ifNotEmpty: [ ^self ].
-	self source: self xDocSourceString.
+	self currentSourceString ifNotEmpty: [ ^ self ].
+	self forSource: self xDocSourceString
 ]
 
 { #category : #store }

@@ -63,10 +63,10 @@ GtCodeDefinitionPluralEditor >> create [
 				interactions do: [ :eachAssociation |
 					anEditableLabel
 						whenKey: eachAssociation key
-						labelDo: [ :aTextEditor :anEvent |							
-							anEvent consumed: true.
+						labelDo: [ :aShortcutEvent :aShortcut :aTextEditor |						
+							aShortcutEvent consumed: true.
 							eachLabelDefinition
-								ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ] ].
+								ifNotNil: [ eachAssociation value cull: aShortcutEvent cull: eachLabelDefinition ] ] ].
 					
 				eventHandlers do: [ :eachAssociation |
 					anEditableLabel

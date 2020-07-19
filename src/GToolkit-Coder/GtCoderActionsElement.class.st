@@ -5,9 +5,10 @@ Class {
 		'mainToolbar',
 		'contextToolbar',
 		'separator',
-		'coder'
+		'coder',
+		'editor'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UI - Source Coder'
 }
 
 { #category : #private }
@@ -36,14 +37,34 @@ GtCoderActionsElement >> coder [
 
 { #category : #accessing }
 GtCoderActionsElement >> coder: aCoder [
+	coder ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
+
 	coder := aCoder.
 	coder announcer weak
+		when: GtCoderAddOnsUpdateRequest send: #updateAddOns: to: self;
 		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
-		when: GtCoderContextActionsChanged
-			send: #updateContextToolbar
-			to: self.
+		when: GtCoderContextActionsChanged send: #updateContextToolbar to: self.
+	
+	coder shouldAddOnsBeUpdated
+		ifTrue: [ coder updateAddOnsFrom: self ].	
+
+	self removeMainToolbarActions.
+	self removeContextToolbarActions.
+
 	self addMainToolbarActions.
 	self addContextToolbarActions
+]
+
+{ #category : #accessing }
+GtCoderActionsElement >> editor [
+	<return: #BrEditorElement>
+
+	^ editor
+]
+
+{ #category : #accessing }
+GtCoderActionsElement >> editor: aBrEditorElement [
+	editor := aBrEditorElement
 ]
 
 { #category : #initialization }
@@ -79,7 +100,8 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 		beSmall;
 		label: aGtCoderAction title;
 		look: BrGlamorousButtonWithIconLook;
-		action: aGtCoderAction
+		action: [ :aButtonElement :aButtonModel :anEvent |
+			self editor ifNotNil: [ :anEditorElement | aGtCoderAction action glamourValueWithArgs: { anEditorElement . anEvent } ] ]
 ]
 
 { #category : #'instance creation' }
@@ -158,6 +180,11 @@ GtCoderActionsElement >> removeContextToolbarActions [
 { #category : #private }
 GtCoderActionsElement >> removeMainToolbarActions [
 	mainToolbar numberOfItems timesRepeat: [ mainToolbar removeItemAt: 1 ]
+]
+
+{ #category : #private }
+GtCoderActionsElement >> updateAddOns: anAnnouncement [
+	anAnnouncement coder updateAddOnsFrom: self
 ]
 
 { #category : #private }

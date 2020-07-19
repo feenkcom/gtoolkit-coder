@@ -48,11 +48,15 @@ GtCodersElement >> coders: aCoders [
 GtCodersElement >> listElement [
 	listElement
 		ifNotNil: [ ^ listElement ].
+
 	listElement := BrSimpleList new
 		matchParent;
-		stencil: [ :eachCoder | eachCoder asElement ];
+		itemType: [ :itemTypeFactory :eachCoder | eachCoder elementClass ];
+		itemStencil: [ :anElementClass | anElementClass new ];
+		itemDataBinder: [ :eachCoderElement :eachCoder | eachCoderElement coder: eachCoder ];
 		items: coders coders;
 		yourself.
+
 	^ listElement
 ]
 
