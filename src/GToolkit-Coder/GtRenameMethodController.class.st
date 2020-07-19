@@ -20,8 +20,7 @@ GtRenameMethodController >> canceled [
 
 { #category : #executing }
 GtRenameMethodController >> installRenamer [
-	self halt.
-	coder
+	self
 		cursorPositionDo: [ :position | 
 			| message |
 			selector := self originalNode selector.
@@ -143,7 +142,7 @@ GtRenameMethodController >> tab: forward [
 	self newNode
 		ifNotNil: [ :message | 
 			coder removeRefactoringAttribute.
-			coder sourceEditor
+			self sourceEditor
 				moveCursorTo: (message keywordsIntervals at: selectorIndex) last.
 			self installRenamerOn: message.
 			newSelectorParts = selector keywords

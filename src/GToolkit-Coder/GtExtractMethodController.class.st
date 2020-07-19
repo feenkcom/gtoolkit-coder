@@ -33,7 +33,7 @@ GtExtractMethodController >> addReorderParametersAttributes [
 	message := self findExtractedSend.
 	message isNil
 		ifTrue: [ ^ self ].
-	text := coder sourceEditor text.
+	text := self sourceEditor text.
 	(message isBinary
 		ifTrue: [ {message value} ]
 		ifFalse: [ message values ])
@@ -55,7 +55,7 @@ GtExtractMethodController >> addReorderParametersAttributes [
 { #category : #executing }
 GtExtractMethodController >> cancelRefactoring [
 	self cancelRenaming.
-	coder sourceEditor text: originalSource
+	self sourceEditor text: originalSource
 ]
 
 { #category : #executing }
@@ -123,7 +123,7 @@ GtExtractMethodController >> extractedSelector [
 GtExtractMethodController >> extractionInterval [
 	^ extractionInterval
 		ifNil: [ | nodes |
-			nodes := coder rbSelectedNodes.
+			nodes := coder rbSelectedNodesFrom: self sourceElement.
 			nodes isNil
 				ifTrue: [ ^ 1 to: 0 ].
 			extractionInterval := nodes first start to: nodes last stop ]
@@ -195,7 +195,7 @@ GtExtractMethodController >> refactoring [
 
 { #category : #private }
 GtExtractMethodController >> removeReorderParametersAttributes [
-	coder sourceEditor text
+	self sourceEditor text
 		clearAttributes: [ :each | each isKindOf: GtReorderParametersAttribute ]
 ]
 
@@ -220,7 +220,7 @@ GtExtractMethodController >> safeMethodName: methodName in: aModel [
 
 { #category : #executing }
 GtExtractMethodController >> saveSource [
-	originalSource := coder sourceEditor text copy
+	originalSource := self sourceEditor text copy
 ]
 
 { #category : #private }
@@ -234,17 +234,13 @@ GtExtractMethodController >> setBodyText: bodySource andAttributesAt: positions 
 				attributes:
 					{GtCompletionPartAttribute new.
 					(GtSelectorKeywordAttribute keywordIndex: i)} ].
-	coder sourceEditor text: bodyText
+	self sourceEditor text: bodyText
 ]
 
 { #category : #private }
 GtExtractMethodController >> setCoderText: aString [
-	| text |
-	text := aString asRopedText.
-	text attributes: coder defaultTextAttributes.
-	coder sourceEditor
-		selectNone;
-		text: text
+	self sourceEditor deselecter all deselect.
+	coder currentSourceString: aString
 ]
 
 { #category : #private }
@@ -292,6 +288,11 @@ GtExtractMethodController >> sourceAst [
 ]
 
 { #category : #accessing }
+GtExtractMethodController >> sourceEditor [
+	^ self sourceElement editor
+]
+
+{ #category : #accessing }
 GtExtractMethodController >> sourceElement [
 	^ sourceElement
 ]
@@ -332,7 +333,7 @@ GtExtractMethodController >> swapParameterWithNext: anInteger [
 	self
 		swap: (message values at: anInteger)
 		with: (message values at: anInteger + 1)
-		in: coder sourceEditor.
+		in: self sourceEditor.
 	self addReorderParametersAttributes.
 	renameIndex notNil
 		ifTrue: [ self installRenamerAt: renameIndex ].
