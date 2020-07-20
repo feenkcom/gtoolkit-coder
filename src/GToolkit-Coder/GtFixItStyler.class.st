@@ -125,7 +125,7 @@ GtFixItStyler >> typeOf: aNode [
 				ifNotNil: [ :binding | 
 					binding isLiteralVariable
 						ifTrue: [ binding value ifNotNil: [ :object | ^ object class ] ].
-					binding isThisContext
+					(binding isSpecialVariable and: [ binding isThisContext ])
 						ifTrue: [ ^ Context ] ] ].
 	^ nil
 ]
