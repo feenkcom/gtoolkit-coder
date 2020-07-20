@@ -30,7 +30,7 @@ GtDefineMethodFixItAction >> addCoderAttribute [
 						right: 10
 						bottom: 10
 						left: 10) ] ].
-	methodCoder
+	sourceCoder
 		sourceTextDo: [ :text | 
 			(text from: position to: position)
 				attributes:
@@ -53,7 +53,7 @@ GtDefineMethodFixItAction >> classOrMetaClass: anObject [
 GtDefineMethodFixItAction >> clearFixItAttribute [
 	| position |
 	position := node keywordsIntervals last last.
-	methodCoder
+	sourceCoder
 		sourceTextDo: [ :text | 
 			(text from: position to: position)
 				clearAttributes: [ :each | each isKindOf: GtFixItAttribute ] ]
@@ -65,7 +65,7 @@ GtDefineMethodFixItAction >> compileMethod [
 	refactoring := RBAddMethodRefactoring
 		addMethod: self methodSource
 		toClass: classOrMetaClass
-		inProtocols: {(methodCoder category ifNil: [ #accessing ])}.
+		inProtocols: {(sourceCoder category ifNil: [ #accessing ])}.
 	refactoring execute
 ]
 

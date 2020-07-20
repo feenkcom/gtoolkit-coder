@@ -2,8 +2,9 @@ Class {
 	#name : #GtFixItStyler,
 	#superclass : #GtASTStyler,
 	#instVars : [
-		'methodCoder',
-		'editorElement'
+		'editorElement',
+		'sourceCoder',
+		'isForWorkspace'
 	],
 	#category : #'GToolkit-Coder-FixIt'
 }
@@ -46,17 +47,18 @@ GtFixItStyler >> fixItActionsForVariable: aVariableNode [
 GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 	| actions possibleNames results |
 	actions := OrderedCollection new.
-	actions
-		add:
-			(GtDefineClassVariableFixItAction
-				forCoder: methodCoder
-				node: aVariableNode).
+	isForWorkspace
+		ifFalse: [ actions
+				add:
+					(GtDefineClassVariableFixItAction
+						forCoder: sourceCoder
+						node: aVariableNode) ].
 	possibleNames := aVariableNode temporaryVariables
-		, methodCoder classOrMetaClass allInstVarNames.
+		, sourceCoder classOrMetaClass allInstVarNames.
 	results := aVariableNode name
 		correctAgainst: aVariableNode temporaryVariables
 		continuedFrom: nil.
-	results := methodCoder classOrMetaClass
+	results := sourceCoder classOrMetaClass
 		possibleVariablesFor: aVariableNode name
 		continuedFrom: results.
 	(aVariableNode name correctAgainst: nil continuedFrom: results)
@@ -64,9 +66,14 @@ GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 			actions
 				add:
 					((GtRenameVariableFixItAction
-						forCoder: methodCoder
+						forCoder: sourceCoder
 						node: aVariableNode) newName: each) ].
 	^ actions
+]
+
+{ #category : #accessing }
+GtFixItStyler >> isForWorkspace: aBoolean [
+	isForWorkspace := aBoolean
 ]
 
 { #category : #'private-variables' }
@@ -76,40 +83,41 @@ GtFixItStyler >> localFixItActionsFor: aVariableNode [
 	actions
 		add:
 			(GtDefineTemporaryFixItAction
-				forCoder: methodCoder
+				forCoder: sourceCoder
 				node: aVariableNode).
 	(self
 		canAddInstanceVariable: aVariableNode name
-		to: methodCoder classOrMetaClass)
+		to: sourceCoder classOrMetaClass)
 		ifTrue: [ actions
 				add:
 					(GtDefineInstanceVariableFixItAction
-						forCoder: methodCoder
+						forCoder: sourceCoder
 						node: aVariableNode) ].
 	possibleNames := aVariableNode temporaryVariables
-		, methodCoder classOrMetaClass allInstVarNames.
+		, sourceCoder classOrMetaClass allInstVarNames.
 	(aVariableNode name correctAgainst: possibleNames)
 		do: [ :each | 
 			actions
 				add:
 					((GtRenameVariableFixItAction
-						forCoder: methodCoder
+						forCoder: sourceCoder
 						node: aVariableNode) newName: each) ].
 	^ actions
 ]
 
 { #category : #accessing }
-GtFixItStyler >> methodCoder: aCoder [
-	methodCoder := aCoder
+GtFixItStyler >> sourceCoder: aCoder [
+	sourceCoder := aCoder
 ]
 
 { #category : #'private-messages' }
 GtFixItStyler >> typeOf: aNode [
-	aNode isSelf
-		ifTrue: [ ^ methodCoder classOrMetaClass ].
-	aNode isSuper
-		ifTrue: [ ^ methodCoder classOrMetaClass
-				ifNotNil: [ :class | class superclass ] ].
+	isForWorkspace
+		ifFalse: [ aNode isSelf
+				ifTrue: [ ^ sourceCoder classOrMetaClass ].
+			aNode isSuper
+				ifTrue: [ ^ sourceCoder classOrMetaClass
+						ifNotNil: [ :class | class superclass ] ] ].
 	aNode isLiteralNode
 		ifTrue: [ ^ aNode value class ].
 	aNode isDynamicArray
@@ -144,7 +152,7 @@ GtFixItStyler >> visitMessageNode: aNode [
 						ifNil: [ | attribute |
 							attribute := GtFixItAttribute new.
 							attribute
-								fixItActions: [ {((GtDefineMethodFixItAction forCoder: methodCoder node: aNode)
+								fixItActions: [ {((GtDefineMethodFixItAction forCoder: sourceCoder node: aNode)
 										classOrMetaClass: class)} ].
 							self
 								styleFrom: intervals last last
@@ -162,7 +170,8 @@ GtFixItStyler >> visitMethodNode: aMethodNode [
 
 { #category : #visiting }
 GtFixItStyler >> visitVariableNode: aVariableNode [
-	aVariableNode isUndeclared
+	(aVariableNode isUndeclared
+		and: [ isForWorkspace not or: [ aVariableNode name first isUppercase ] ])
 		ifTrue: [ | cursor |
 			cursor := -1.
 			self cursorPositionDo: [ :pos | cursor := pos ].
