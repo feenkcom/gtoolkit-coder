@@ -1,10 +1,10 @@
 "
 ! Coder
-I am an abstract model of a moldable Coder - a tool for creating and manipulating code.
+Is an abstract model of a moldable Coder - a tool for creating and manipulating code.
 
-As a root entity in the hierarchy of coders I do not make any assumptions on the way code is represented. In fact in contrast to ${class:GtSourceCoder}$ I do not know anything about code.
+As a root entity in the hierarchy of coders ${class:GtCoderModel}$ do not make any assumptions on the way code is represented. In fact in contrast to ${class:GtSourceCoder}$ , it does not know anything about code.
 !! Moldability
-I am designed to be easily adapted by the users in order to be used in various contexts through so called ==add-ons== ${class:GtCoderAddOns}$. My subclasses can override ${method:GtCoderModel>>#addOnsClass}$ to allow coder to have extra kinds of addons or ${method:GtCoderModel>>#initializeAddOns}$ to customize the default add-ons.
+Coder is designed to be easily adapted by the users in order to be used in various contexts through so called ==add-ons== ${class:GtCoderAddOns}$. Its subclasses can override ${method:GtCoderModel>>#addOnsClass}$ to allow coder to have extra kinds of addons or ${method:GtCoderModel>>#initializeAddOns}$ to customize the default add-ons.
 !! Add-ons
 By default there are the following types of add-ons:
 1) ${method:GtCoderAddOns>>#mainActions}$ that are typically added as a button at the bottom of a coder. One of such actions is usually ==Save==. Main actions are usually static and should not depend on the source code or context of the coder.

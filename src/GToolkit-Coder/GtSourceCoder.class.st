@@ -744,8 +744,10 @@ GtSourceCoder >> selectedSourceIntervalInEditor: aBrTextEditor [
 
 	aBrTextEditor selection
 		do: [ :eachMonotoneSelection | ^ eachMonotoneSelection from + 1 to: eachMonotoneSelection to ].
-
-	^ 0 to: 0
+	
+	"this is an empty interval
+	https://github.com/feenkcom/gtoolkit/issues/1352"
+	^ 1 to: 0
 ]
 
 { #category : #'private - text' }
