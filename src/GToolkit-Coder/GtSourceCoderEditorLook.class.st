@@ -69,6 +69,8 @@ GtSourceCoderEditorLook >> newEditorElement [
 { #category : #hooks }
 GtSourceCoderEditorLook >> onCoderChanged: aSourceCoder [
 	coder ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
+	completion ifNotNil: [ :aPreviousCompletion | aPreviousCompletion uninstall ].
+	
 	self editorElement editor removeEditorShortcuts: interactions.
 
 	coder := aSourceCoder.
@@ -79,6 +81,9 @@ GtSourceCoderEditorLook >> onCoderChanged: aSourceCoder [
 	
 	self editorElement text: aSourceCoder sourceText.
 	self editorElement editor addEditorShortcuts: interactions.
+
+	completion := (GtCompletionController on: self editorElement strategy: aSourceCoder completionStrategy).
+	completion install.
 
 	(aSourceCoder newSourceStylerFrom: self editorElement)
 		ifNotNil: [ :styler | self editorElement styler: styler ].
