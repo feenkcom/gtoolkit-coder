@@ -15,10 +15,10 @@ GtRenameVariableFixItAction >> description [
 { #category : #accessing }
 GtRenameVariableFixItAction >> execute [
 	| newSource |
-	newSource := methodCoder currentSourceString.
+	newSource := sourceCoder currentSourceString.
 	newSource := (newSource first: node start - 1) , newName
 		, (newSource allButFirst: node stop).
-	methodCoder currentSourceString: newSource
+	sourceCoder currentSourceString: newSource
 ]
 
 { #category : #initialization }

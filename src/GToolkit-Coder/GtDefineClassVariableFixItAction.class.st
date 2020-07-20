@@ -7,10 +7,10 @@ Class {
 { #category : #accessing }
 GtDefineClassVariableFixItAction >> description [
 	^ 'Add class variable ' , node name , ' to class '
-		, methodCoder classOrMetaClass name
+		, sourceCoder classOrMetaClass name
 ]
 
 { #category : #accessing }
 GtDefineClassVariableFixItAction >> execute [
-	methodCoder addClassVariable: node name
+	sourceCoder addClassVariable: node name
 ]
