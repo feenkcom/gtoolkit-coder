@@ -1,3 +1,17 @@
+"
+! Coder
+I am an abstract model of a moldable Coder - a tool for creating and manipulating code.
+
+As a root entity in the hierarchy of coders I do not make any assumptions on the way code is represented. In fact in contrast to ${class:GtSourceCoder}$ I do not know anything about code.
+!! Moldability
+I am designed to be easily adapted by the users in order to be used in various contexts through so called ==add-ons== ${class:GtCoderAddOns}$. My subclasses can override ${method:GtCoderModel>>#addOnsClass}$ to allow coder to have extra kinds of addons or ${method:GtCoderModel>>#initializeAddOns}$ to customize the default add-ons.
+!! Add-ons
+By default there are the following types of add-ons:
+1) ${method:GtCoderAddOns>>#mainActions}$ that are typically added as a button at the bottom of a coder. One of such actions is usually ==Save==. Main actions are usually static and should not depend on the source code or context of the coder.
+2) ${method:GtCoderAddOns>>#contextActions}$ appear near main actions and are usually contextual, which means they depend on the source code. One example may be a ==Play== button that appears when a method is marked with ==<gtExample>== pragma.
+3) ${method:GtCoderAddOns>>#contextMenuActions}$is a set of actions that appear in a context menu usually triggered with a right mouse click. ==Copy / Cut / Paste== are typical examples of context menu actions.
+4) ${method:GtCoderAddOns>>#shortcuts}$are actions that are triggered due to a pressed key combination when a coder has focus.
+"
 Class {
 	#name : #GtCoderModel,
 	#superclass : #Object,
@@ -98,12 +112,14 @@ GtCoderModel >> breadcrumbNamedActions [
 
 { #category : #elements }
 GtCoderModel >> coderLook [
-	^ self attributeNamed: #coderLook ifAbsent: [  ]
+	<return: #BrLook>
+
+	^ (self attributeNamed: #coderLook ifAbsent: [  ]) value
 ]
 
 { #category : #elements }
-GtCoderModel >> coderLook: aLook [
-	^ self attributeNamed: #coderLook put: aLook
+GtCoderModel >> coderLook: aLookOrBlock [
+	self attributeNamed: #coderLook put: aLookOrBlock
 ]
 
 { #category : #accessing }
