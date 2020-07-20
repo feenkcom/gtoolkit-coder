@@ -330,7 +330,7 @@ GtMethodCoder >> canMoveMethodToInstanceOrClass [
 
 { #category : #accessing }
 GtMethodCoder >> category [
-	^ (self attributeNamed: #category)
+	^ super category
 		ifNil: [ (self classOrMetaClass notNil and: [ self selector notNil ])
 				ifTrue: [ self classOrMetaClass whichCategoryIncludesSelector: self selector ] ]
 ]
@@ -796,7 +796,7 @@ GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
 	
-	addOns addStyler: (GtFixItStyler new methodCoder: self).
+	addOns addStyler: (GtFixItStyler new sourceCoder: self).
 	
 	addOns
 		addMainAction: 'Save' translated

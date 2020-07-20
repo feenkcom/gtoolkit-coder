@@ -63,6 +63,12 @@ GtRenameController >> createModel [
 	^ model
 ]
 
+{ #category : #accessing }
+GtRenameController >> cursorPositionDo: aBlock [
+	self sourceEditor cursors
+		do: [ :eachCursor | ^ aBlock value: eachCursor position ]
+]
+
 { #category : #executing }
 GtRenameController >> execute [
 	[ self saveSource.
@@ -151,7 +157,12 @@ GtRenameController >> restoreText [
 
 { #category : #executing }
 GtRenameController >> saveSource [
-	originalSource := coder sourceEditor text copy
+	originalSource := self sourceEditor text copy
+]
+
+{ #category : #accessing }
+GtRenameController >> sourceEditor [
+	^ self sourceElement editor
 ]
 
 { #category : #accessing }

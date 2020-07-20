@@ -2,16 +2,16 @@ Class {
 	#name : #GtFixItAction,
 	#superclass : #Object,
 	#instVars : [
-		'methodCoder',
-		'node'
+		'node',
+		'sourceCoder'
 	],
 	#category : #'GToolkit-Coder-FixIt'
 }
 
 { #category : #'instance creation' }
-GtFixItAction class >> forCoder: aMethodCoder node: aRBProgramNode [
+GtFixItAction class >> forCoder: aSourceCoder node: aRBProgramNode [
 	^ self new
-		methodCoder: aMethodCoder;
+		sourceCoder: aSourceCoder;
 		node: aRBProgramNode;
 		yourself
 ]
@@ -35,11 +35,11 @@ GtFixItAction >> menuAction [
 ]
 
 { #category : #initialization }
-GtFixItAction >> methodCoder: aCoder [
-	methodCoder := aCoder
+GtFixItAction >> node: aRBProgramNode [
+	node := aRBProgramNode
 ]
 
 { #category : #initialization }
-GtFixItAction >> node: aRBProgramNode [
-	node := aRBProgramNode
+GtFixItAction >> sourceCoder: aCoder [
+	sourceCoder := aCoder
 ]

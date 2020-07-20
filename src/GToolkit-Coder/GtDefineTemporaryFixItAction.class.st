@@ -12,8 +12,8 @@ GtDefineTemporaryFixItAction >> description [
 { #category : #executing }
 GtDefineTemporaryFixItAction >> execute [
 	| ast newSource location declaration |
-	ast := methodCoder rbAST.
-	newSource := methodCoder currentSourceString.
+	ast := sourceCoder rbAST.
+	newSource := sourceCoder currentSourceString.
 	ast body rightBar isNil
 		ifTrue: [ location := ast body start - 1.
 			declaration := '| ' , node name , ' |' , String cr , String tab ]
@@ -23,5 +23,5 @@ GtDefineTemporaryFixItAction >> execute [
 				ifFalse: [ ' ' ]) , node name , ' ' ].
 	newSource := (newSource first: location) , declaration
 		, (newSource allButFirst: location).
-	methodCoder currentSourceString: newSource
+	sourceCoder currentSourceString: newSource
 ]
