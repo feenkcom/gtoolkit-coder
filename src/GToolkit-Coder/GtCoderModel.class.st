@@ -112,12 +112,14 @@ GtCoderModel >> breadcrumbNamedActions [
 
 { #category : #elements }
 GtCoderModel >> coderLook [
-	^ self attributeNamed: #coderLook ifAbsent: [  ]
+	<return: #BrLook>
+
+	^ (self attributeNamed: #coderLook ifAbsent: [  ]) value
 ]
 
 { #category : #elements }
-GtCoderModel >> coderLook: aLook [
-	^ self attributeNamed: #coderLook put: aLook
+GtCoderModel >> coderLook: aLookOrBlock [
+	self attributeNamed: #coderLook put: aLookOrBlock
 ]
 
 { #category : #accessing }
