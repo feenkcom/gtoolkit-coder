@@ -125,7 +125,7 @@ GtClassMethodsCoder >> gtSpotterMethodsFor: aStep [
 		allCandidates: [ self coders ];
 		itemName: [ :method | method selector ];
 		previewElement: [ :coder | coder previewElement ];
-		filter: GTFilterSubstring
+		filter: GtFilterSubstring
 ]
 
 { #category : #testing }

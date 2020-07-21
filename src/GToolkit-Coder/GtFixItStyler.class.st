@@ -72,6 +72,12 @@ GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 ]
 
 { #category : #accessing }
+GtFixItStyler >> initialize [
+	super initialize.
+	isForWorkspace := false
+]
+
+{ #category : #accessing }
 GtFixItStyler >> isForWorkspace: aBoolean [
 	isForWorkspace := aBoolean
 ]

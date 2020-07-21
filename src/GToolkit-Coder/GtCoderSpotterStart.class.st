@@ -16,7 +16,7 @@ GtCoderSpotterStart >> gtSpotterForClassMethodsInCurrentClassFor: aStep [
 		priority: 2;
 		title: 'Class methods';
 		allCandidates: [ navigationModel selectedClass classSide methods ];
-		filter: GTFilterSubstring;
+		filter: GtFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
 ]
 
@@ -27,7 +27,7 @@ GtCoderSpotterStart >> gtSpotterForClassesFor: aStep [
 		priority: 10;
 		allCandidates: [ Smalltalk allClassesAndTraits ];
 		title: 'Classes';
-		filter: GTFilterSubstring;
+		filter: GtFilterSubstring;
 		itemIcon: #systemIcon;
 		keyBinding: $b meta;
 		wantsToDisplayOnEmptyQuery: navigationModel hasSelectedClass not
@@ -42,7 +42,7 @@ GtCoderSpotterStart >> gtSpotterForInstanceMethodsInCurrentClassFor: aStep [
 		priority: 1;
 		title: 'Instance methods';
 		allCandidates: [ navigationModel selectedClass instanceSide methods ];
-		filter: GTFilterSubstring;
+		filter: GtFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
 ]
 
@@ -52,7 +52,7 @@ GtCoderSpotterStart >> gtSpotterForMessagesFor: aStep [
 	aStep listProcessor
 		priority: 35;
 		title: 'Messages';
-		filter: GTNullFilter
+		filter: GtNullFilter
 			item:
 				[ :filter :context | GTSelector substring: context textTrimmed filter: filter ];
 		actLogic: [ :each :step | 
@@ -70,7 +70,7 @@ GtCoderSpotterStart >> gtSpotterForPackagesFor: aStep [
 		title: 'Packages';
 		itemName: [ :package | package name ];
 		itemIcon: [ Smalltalk ui icons iconNamed: #packageIcon ];
-		filter: GTFilterSubstring;
+		filter: GtFilterSubstring;
 		wantsToDisplayOnEmptyQuery: navigationModel hasSelectedPackage not
 ]
 
@@ -81,7 +81,7 @@ GtCoderSpotterStart >> gtSpotterImplementorsFor: aStep [
 	aStep listProcessor
 		priority: 30;
 		title: 'Implementors';
-		filter: GTFilterImplementor
+		filter: GtFilterImplementor
 			item: [ :filter :context | 
 			SystemNavigation default
 				allBehaviorsDo: [ :class | class localMethods do: filter ] ];
