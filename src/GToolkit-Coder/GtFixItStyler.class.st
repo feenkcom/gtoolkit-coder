@@ -159,15 +159,17 @@ GtFixItStyler >> visitMessageNode: aNode [
 						ifFalse: [ sourceCoder classOrMetaClass ]))
 				ifNotNil: [ :class | 
 					(class whichClassIncludesSelector: aNode selector)
-						ifNil: [ | attribute |
-							attribute := GtFixItAttribute new.
-							attribute
-								fixItActions: [ {((GtDefineMethodFixItAction forCoder: sourceCoder node: aNode)
-										classOrMetaClass: class)} ].
-							self
-								styleFrom: intervals last last
-								to: intervals last last
-								with: {attribute} ] ] ].
+						ifNil: [ (class isTrait
+								and: [ (Object whichClassIncludesSelector: aNode selector) notNil ])
+								ifFalse: [ | attribute |
+									attribute := GtFixItAttribute new.
+									attribute
+										fixItActions: [ {((GtDefineMethodFixItAction forCoder: sourceCoder node: aNode)
+												classOrMetaClass: class)} ].
+									self
+										styleFrom: intervals last last
+										to: intervals last last
+										with: {attribute} ] ] ] ].
 	super visitMessageNode: aNode
 ]
 
