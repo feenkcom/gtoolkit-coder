@@ -35,6 +35,7 @@ GtDefineMethodFixItAction >> addCoderAttribute [
 			(text from: position to: position)
 				attributes:
 					{(BrTextExpandButtonAttribute new
+						isExpanded: true;
 						createdAttributes:
 							{(BrTextAdornmentDynamicAttribute new
 								beAppend;
