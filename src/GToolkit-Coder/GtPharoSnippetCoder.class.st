@@ -177,6 +177,14 @@ GtPharoSnippetCoder >> requesterForEditor: aTextEditor [
 		yourself
 ]
 
+{ #category : #initialization }
+GtPharoSnippetCoder >> source: aString [
+	self
+		deprecated: 'Use #forSource: instead'
+		transformWith: '`@receiver source:' -> '`@receiver forSource:'.
+	self halt
+]
+
 { #category : #accessing }
 GtPharoSnippetCoder >> variableBindings [
 	^ bindingStrategy bindings
