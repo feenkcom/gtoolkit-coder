@@ -81,6 +81,11 @@ GtSourceCoder >> browseReferencesFrom: anEditorElement [
 	anEditorElement phlow spawnObject: filter
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> category [
+	^ self attributeNamed: #category
+]
+
 { #category : #private }
 GtSourceCoder >> classOrMetaClass [
 	^ self object class

@@ -70,7 +70,8 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self doItAndGoSelectionOrAllFrom: anEditorElement ].
+		action:
+			[ :anEditorElement | self doItAndGoSelectionOrAllFrom: anEditorElement ].
 	addOns
 		addMainAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
@@ -78,12 +79,18 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Profile' translated
 		icon: BrGlamorousVectorIcons performance
-		action: [ :anEditorElement | self profileWithMessageTallyFrom: anEditorElement ].
+		action:
+			[ :anEditorElement | self profileWithMessageTallyFrom: anEditorElement ].
 	addOns
 		addStyler:
 			(BrRBTextStyler new
 				isForWorkspace: true;
 				yourself).
+	addOns
+		addStyler:
+			(GtFixItStyler new
+				sourceCoder: self;
+				isForWorkspace: true).
 	addOns clearChanges
 ]
 
@@ -168,6 +175,14 @@ GtPharoSnippetCoder >> requesterForEditor: aTextEditor [
 	^ (super requesterForEditor: aTextEditor)
 		bindingStrategy: bindingStrategy;
 		yourself
+]
+
+{ #category : #initialization }
+GtPharoSnippetCoder >> source: aString [
+	self
+		deprecated: 'Use #forSource: instead'
+		transformWith: '`@receiver source:' -> '`@receiver forSource:'.
+	self halt
 ]
 
 { #category : #accessing }
