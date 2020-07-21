@@ -17,7 +17,7 @@ GtDefineMethodFixItAction >> addCoderAttribute [
 		ifNotNil: [ :method | 
 			coder := GtMethodCoder forMethod: method.
 			coder
-				coderLook: GtSourceCoderHeaderLook + GtMethodCoderCategoryLook.
+				coderLook: [ GtSourceCoderHeaderLook + GtMethodCoderCategoryLook ].
 			coder subscribeToSystem.
 			coder expanded: true.
 			editorElement := coder asElement.

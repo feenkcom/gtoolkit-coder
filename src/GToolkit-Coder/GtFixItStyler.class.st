@@ -152,7 +152,11 @@ GtFixItStyler >> visitMessageNode: aNode [
 	intervals := aNode keywordsIntervals.
 	(intervals
 		anySatisfy: [ :each | cursor between: each first and: each last ])
-		ifFalse: [ (self typeOf: aNode receiver)
+		ifFalse: [ (self
+				typeOf: aNode receiver
+				in:
+					(isForWorkspace
+						ifFalse: [ sourceCoder classOrMetaClass ]))
 				ifNotNil: [ :class | 
 					(class whichClassIncludesSelector: aNode selector)
 						ifNil: [ | attribute |

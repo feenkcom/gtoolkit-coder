@@ -6,13 +6,13 @@ Class {
 
 { #category : #visiting }
 GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
-	| aMethodClass |
+	| aMethodClass type |
 	super visitMessageNode: aMessageNode.
-	(aMessageNode isSelfSend or: [ aMessageNode isSuperSend ])
-		ifFalse: [ ^ self ].
-	aMethodClass := aMessageNode isSuperSend
-		ifTrue: [ aMessageNode methodNode methodClass superclass ]
-		ifFalse: [ aMessageNode methodNode methodClass ].
+	aMethodClass := self
+		typeOf: aMessageNode receiver
+		in: aMessageNode methodNode methodClass.
+	aMethodClass isNil
+		ifTrue: [ ^ self ].
 	(aMethodClass canUnderstand: aMessageNode selector)
 		ifFalse: [ ^ self ].
 	self
@@ -30,7 +30,8 @@ GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 										forExample: (aMethodClass gtExamplesFactory createExample: method).
 									coder subscribeToSystem.
 									coder expanded: true.
-									coder coderLook: GtMethodCoderCategoryLookOld.
+									coder
+										coderLook: [ GtSourceCoderHeaderLook + GtMethodCoderCategoryLook ].
 									editorElement := coder asElement.
 									editorElement
 										border: (BlBorder paint: Color veryLightGray width: 1).
