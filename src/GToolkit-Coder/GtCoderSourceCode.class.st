@@ -6,10 +6,16 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'sourceText',
-		'collapsedText'
+		'collapsedText',
+		'sourceCoder'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #private }
+GtCoderSourceCode >> attachToCoder: aGtSourceCoder [
+	sourceCoder := aGtSourceCoder
+]
 
 { #category : #initialization }
 GtCoderSourceCode >> buildCollapsedText [
@@ -41,6 +47,11 @@ GtCoderSourceCode >> currentSourceString: aString [
 		insertString: aString asString at: 0
 ]
 
+{ #category : #private }
+GtCoderSourceCode >> detachFromCoder: aGtSourceCoder [
+	sourceCoder := nil
+]
+
 { #category : #'api - testing' }
 GtCoderSourceCode >> hasCollapsedText [
 	<return: #Boolean>
@@ -60,6 +71,11 @@ GtCoderSourceCode >> isModified [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'private - hooks' }
+GtCoderSourceCode >> onTextModified [
+	sourceCoder ifNotNil: [ :aSourceCoder | aSourceCoder textModified ]
+]
+
 { #category : #'api - changes' }
 GtCoderSourceCode >> resetCollapsedText [
 	"Remove the cached collapsed text forcing it to be recomputed next time it is accessed"
@@ -70,7 +86,8 @@ GtCoderSourceCode >> resetCollapsedText [
 { #category : #'api - changes' }
 GtCoderSourceCode >> resetSourceText [
 	"Remove the cached source text forcing it to be recomputed next time it is accessed"
-	
+
+	sourceText ifNotNil: [ :aPreviousText | aPreviousText unsubscribe: self ].
 	sourceText := nil
 ]
 
@@ -86,7 +103,11 @@ GtCoderSourceCode >> sourceString [
 GtCoderSourceCode >> sourceText [
 	<return: #BlText>
 
-	^ sourceText ifNil: [ sourceText := self buildSourceText ]
+	^ sourceText ifNil: [
+		sourceText := self buildSourceText.
+		sourceText when: BlTextStringsInserted send: #onTextModified to: self.
+		sourceText when: BlTextsDeleted send: #onTextModified to: self.
+		sourceText ]
 ]
 
 { #category : #'api - accessing' }

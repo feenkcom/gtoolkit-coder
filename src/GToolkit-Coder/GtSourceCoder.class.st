@@ -549,6 +549,11 @@ GtSourceCoder >> notifyStylersUpdated [
 		stylers: self addOns stylers copy)
 ]
 
+{ #category : #'private - notifying' }
+GtSourceCoder >> notifyTextModified [	
+	self announce: (GtCoderSourceTextModified new coder: self)
+]
+
 { #category : #'api - accessing' }
 GtSourceCoder >> object [
 	"Return an object in the context of which the source code is modified (may influence self binding)
@@ -814,8 +819,10 @@ GtSourceCoder >> sourceCode [
 { #category : #'api - accessing' }
 GtSourceCoder >> sourceCode: aGtCoderSourceCode [
 	"Set the source code of this coder to a given one and notify about the changes"
-
+	
+	sourceCode ifNotNil: [ :aPreviousSourceCode | aPreviousSourceCode detachFromCoder: self ].
 	sourceCode := aGtCoderSourceCode.
+	sourceCode attachToCoder: self.
 
 	self sourceChanged.
 	self notifySourceChanged
@@ -910,6 +917,13 @@ GtSourceCoder >> terminateAddOnsCommand [
 		ifNil: [ ^ self ].
 	addOnCommand terminate.
 	addOnCommand := nil
+]
+
+{ #category : #'event handling' }
+GtSourceCoder >> textModified [
+	"Is sent when source text is modified by the user or due to refactorings"
+
+	self notifyTextModified
 ]
 
 { #category : #'private - addons' }
