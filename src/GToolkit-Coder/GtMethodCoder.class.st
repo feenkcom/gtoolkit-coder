@@ -1072,6 +1072,28 @@ GtMethodCoder >> object [
 		ifAbsent: [ class ]
 ]
 
+{ #category : #accessing }
+GtMethodCoder >> package [
+	^ super package
+		ifNil: [ self compiledMethod
+				ifNil: [ self classOrMetaClass ifNotNil: [ :cls | cls package ] ]
+				ifNotNil: [ :method | method package ] ]
+]
+
+{ #category : #accessing }
+GtMethodCoder >> packageTag [
+	^ super packageTag
+		ifNil: [ self compiledMethod
+				ifNotNil: [ :method | 
+					method isExtension
+						ifFalse: [ self package
+								ifNotNil: [ :package | 
+									| cls |
+									cls := self classOrMetaClass.
+									cls category asString = package name asString
+										ifFalse: [ package classTagForClass: cls ] ] ] ] ]
+]
+
 { #category : #private }
 GtMethodCoder >> parserStartingState [
 	^ GtPharoParser startingStateForMethod

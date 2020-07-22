@@ -579,6 +579,16 @@ GtSourceCoder >> object: anObject [
 		ifNotNil: [ self attributeNamed: #object put: anObject ]
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> package [
+	^ self attributeNamed: #package
+]
+
+{ #category : #accessing }
+GtSourceCoder >> packageTag [
+	^ self attributeNamed: #packageTag
+]
+
 { #category : #private }
 GtSourceCoder >> parse: aString asExpression: isExpression requestor: aRequestor [
 	^ (self classOrMetaClass ifNil: [ UndefinedObject ]) compiler
@@ -718,6 +728,7 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 GtSourceCoder >> requestStyleSourceText [
 	"Request the text editor to restyle the text (for example due to environmental changes)"
 
+	self resetASTCache.
 	self announce: (GtCoderStyleTextRequest new coder: self)
 ]
 

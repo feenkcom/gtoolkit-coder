@@ -21,18 +21,13 @@ GtDefineMethodFixItAction >> addCoderAttribute [
 ]
 
 { #category : #accessing }
-GtDefineMethodFixItAction >> classOrMetaClass: anObject [
-	classOrMetaClass := anObject
+GtDefineMethodFixItAction >> attributePosition [
+	^ node keywordsIntervals last last
 ]
 
-{ #category : #executing }
-GtDefineMethodFixItAction >> clearFixItAttribute [
-	| position |
-	position := node keywordsIntervals last last.
-	sourceCoder
-		sourceTextDo: [ :text | 
-			(text from: position to: position)
-				clearAttributes: [ :each | each isKindOf: GtFixItAttribute ] ]
+{ #category : #accessing }
+GtDefineMethodFixItAction >> classOrMetaClass: anObject [
+	classOrMetaClass := anObject
 ]
 
 { #category : #private }

@@ -17,6 +17,21 @@ GtFixItAction class >> forCoder: aSourceCoder node: aRBProgramNode [
 ]
 
 { #category : #accessing }
+GtFixItAction >> attributePosition [
+	^ node stop
+]
+
+{ #category : #private }
+GtFixItAction >> clearFixItAttribute [
+	| position |
+	position := self attributePosition.
+	sourceCoder
+		sourceTextDo: [ :text | 
+			(text from: position to: position)
+				clearAttributes: [ :each | each isKindOf: GtFixItAttribute ] ]
+]
+
+{ #category : #accessing }
 GtFixItAction >> description [
 	self subclassResponsibility
 ]
