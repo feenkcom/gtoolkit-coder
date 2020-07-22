@@ -152,18 +152,24 @@ GtFixItStyler >> visitMessageNode: aNode [
 	intervals := aNode keywordsIntervals.
 	(intervals
 		anySatisfy: [ :each | cursor between: each first and: each last ])
-		ifFalse: [ (self typeOf: aNode receiver)
+		ifFalse: [ (self
+				typeOf: aNode receiver
+				in:
+					(isForWorkspace
+						ifFalse: [ sourceCoder classOrMetaClass ]))
 				ifNotNil: [ :class | 
 					(class whichClassIncludesSelector: aNode selector)
-						ifNil: [ | attribute |
-							attribute := GtFixItAttribute new.
-							attribute
-								fixItActions: [ {((GtDefineMethodFixItAction forCoder: sourceCoder node: aNode)
-										classOrMetaClass: class)} ].
-							self
-								styleFrom: intervals last last
-								to: intervals last last
-								with: {attribute} ] ] ].
+						ifNil: [ (class isTrait
+								and: [ (Object whichClassIncludesSelector: aNode selector) notNil ])
+								ifFalse: [ | attribute |
+									attribute := GtFixItAttribute new.
+									attribute
+										fixItActions: [ {((GtDefineMethodFixItAction forCoder: sourceCoder node: aNode)
+												classOrMetaClass: class)} ].
+									self
+										styleFrom: intervals last last
+										to: intervals last last
+										with: {attribute} ] ] ] ].
 	super visitMessageNode: aNode
 ]
 

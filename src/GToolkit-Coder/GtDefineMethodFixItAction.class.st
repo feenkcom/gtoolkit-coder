@@ -9,39 +9,15 @@ Class {
 
 { #category : #executing }
 GtDefineMethodFixItAction >> addCoderAttribute [
-	| position stencilBlock |
+	| position |
 	position := node keywordsIntervals last last.
-	stencilBlock := [ | editorElement coder |
-	(classOrMetaClass lookupSelector: node selector)
-		ifNil: [ BlElement new ]
-		ifNotNil: [ :method | 
-			coder := GtMethodCoder forMethod: method.
-			coder
-				coderLook: GtSourceCoderHeaderLook + GtMethodCoderCategoryLook.
-			coder subscribeToSystem.
-			coder expanded: true.
-			editorElement := coder asElement.
-			editorElement
-				border: (BlBorder paint: Color veryLightGray width: 1).
-			editorElement
-				margin:
-					(BlInsets
-						top: 3
-						right: 10
-						bottom: 10
-						left: 10) ] ].
 	sourceCoder
 		sourceTextDo: [ :text | 
 			(text from: position to: position)
 				attributes:
-					{(BrTextExpandButtonAttribute new
-						createdAttributes:
-							{(BrTextAdornmentDynamicAttribute new
-								beAppend;
-								stencil: stencilBlock)};
-						attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
-								beAppend;
-								stencil: stencilBlock ])} ]
+					{((GtMethodExpanderAttribute
+						forClass: classOrMetaClass
+						andSelector: node selector) isExpanded: true)} ]
 ]
 
 { #category : #accessing }

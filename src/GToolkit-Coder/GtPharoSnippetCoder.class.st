@@ -85,12 +85,12 @@ GtPharoSnippetCoder >> initializeAddOns [
 		addStyler:
 			(BrRBTextStyler new
 				isForWorkspace: true;
-				yourself).
-	addOns
+				yourself);
 		addStyler:
 			(GtFixItStyler new
 				sourceCoder: self;
-				isForWorkspace: true).
+				isForWorkspace: true);
+		addStyler: GtCoderExpandableMethodStyler new.
 	addOns clearChanges
 ]
 

@@ -24,9 +24,57 @@ GtStylerExamples >> expanderAttribute [
 GtStylerExamples >> indexOfExpanderIn: ropedText [
 	1 to: ropedText size do: [ :i | 
 		((ropedText attributesAt: i)
-			anySatisfy: [ :attr | attr isKindOf: BrTextExpandButtonAttribute ])
+			anySatisfy: [ :attr | attr isKindOf: GtMethodExpanderAttribute ])
 			ifTrue: [ ^ i ] ].
 	^ -1
+]
+
+{ #category : #accessing }
+GtStylerExamples >> messageToGlobal [
+	<gtExample>
+	| text source ast |
+	source := 'foo Transcript print: each'.
+	ast := RBParser parseMethod: source.
+	ast methodNode
+		compilationContext: (CompilationContext new class: Collection).
+	ast doSemanticAnalysis.
+	text := source asRopedText.
+	GtCoderExpandableMethodStyler new style: text ast: ast.
+	self
+		assert:
+			((self methodExpanderAttributesIn: text)
+				anySatisfy: [ :each | each selector = #print: ]).
+	^ text
+]
+
+{ #category : #accessing }
+GtStylerExamples >> messageToLiteral [
+	<gtExample>
+	| text source ast |
+	source := 'foo ^42 odd'.
+	ast := RBParser parseMethod: source.
+	ast methodNode
+		compilationContext: (CompilationContext new class: Collection).
+	ast doSemanticAnalysis.
+	text := source asRopedText.
+	GtCoderExpandableMethodStyler new style: text ast: ast.
+	self
+		assert:
+			((self methodExpanderAttributesIn: text)
+				anySatisfy: [ :each | each selector = #odd ]).
+	^ text
+]
+
+{ #category : #examples }
+GtStylerExamples >> methodExpanderAttributesIn: ropedText [
+	| attributes |
+	attributes := OrderedCollection new.
+	1 to: ropedText size do: [ :i | 
+		(ropedText attributesAt: i)
+			do: [ :attr | 
+				(attr isKindOf: GtMethodExpanderAttribute)
+					ifTrue: [ attributes add: attr ] ] ].
+	^ attributes
 ]
 
 { #category : #examples }
@@ -40,7 +88,10 @@ GtStylerExamples >> missingSelfSend [
 	ast doSemanticAnalysis.
 	text := source asRopedText.
 	GtCoderExpandableMethodStyler new style: text ast: ast.
-	self assert: (self indexOfExpanderIn: text) = -1.
+	self
+		assert:
+			((self methodExpanderAttributesIn: text)
+				allSatisfy: [ :each | each selector ~= #nonExistentMethod ]).
 	^ text
 ]
 
@@ -55,7 +106,10 @@ GtStylerExamples >> missingSuperSend [
 	ast doSemanticAnalysis.
 	text := source asRopedText.
 	GtCoderExpandableMethodStyler new style: text ast: ast.
-	self assert: (self indexOfExpanderIn: text) = -1.
+	self
+		assert:
+			((self methodExpanderAttributesIn: text)
+				allSatisfy: [ :each | each selector ~= #do: ]).
 	^ text
 ]
 

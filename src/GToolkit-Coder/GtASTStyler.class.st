@@ -52,6 +52,33 @@ GtASTStyler >> styleFrom: from to: to with: attributes [
 	(text from: from to: to) attributes: attributes
 ]
 
+{ #category : #accessing }
+GtASTStyler >> typeOf: aNode in: aClass [
+	aNode isSelf
+		ifTrue: [ ^ aClass ].
+	aNode isSuper
+		ifTrue: [ ^ aClass ifNotNil: [ :class | class superclass ] ].
+	aNode isLiteralNode
+		ifTrue: [ ^ aNode value class ].
+	aNode isDynamicArray
+		ifTrue: [ ^ {} class ].
+	aNode isMessage
+		ifTrue: [ aNode selector = #class
+				ifTrue: [ ^ (self typeOf: aNode receiver in: aClass)
+						ifNotNil: [ :class | class class ] ].
+			(#(new new:) includes: aNode selector)
+				ifTrue: [ ^ (self typeOf: aNode receiver in: aClass)
+						ifNotNil: [ :class | class instanceSide ] ] ].
+	aNode isVariable
+		ifTrue: [ aNode binding
+				ifNotNil: [ :binding | 
+					binding isLiteralVariable
+						ifTrue: [ binding value ifNotNil: [ :object | ^ object class ] ].
+					(binding isSpecialVariable and: [ binding isThisContext ])
+						ifTrue: [ ^ Context ] ] ].
+	^ nil
+]
+
 { #category : #visiting }
 GtASTStyler >> visitArgumentNodes: aNodeCollection [ 
 	"Sent *once* when visiting method and block nodes"
