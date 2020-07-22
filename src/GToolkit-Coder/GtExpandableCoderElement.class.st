@@ -94,7 +94,7 @@ GtExpandableCoderElement >> gtAllShortcutsFor: aView [
 { #category : #initialization }
 GtExpandableCoderElement >> initialize [
 	super initialize.
-	
+
 	self
 		vFitContent;
 		hMatchParent;
@@ -110,12 +110,12 @@ GtExpandableCoderElement >> initialize [
 				aCoder expanded: true.
 				(expandedElement notNil and: [ self isDirty: expandedElement ])
 					ifTrue: [ self assignExpandedCoder: aCoder to: expandedElement ] ] ].
-				
+
 	self
 		when: BrCollapsedEvent
 		do: [  :anEvent |
-			self beInSingleCompositionLayer.	
-			coder ifNotNil: [ :aCoder |			
+			self beInSingleCompositionLayer.
+			coder ifNotNil: [ :aCoder |
 				aCoder expanded: false.
 				(collapsedElement notNil and: [ self isDirty: collapsedElement ])
 					ifTrue: [ self assignCollapsedCoder: aCoder to: collapsedElement ] ] ].

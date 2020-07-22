@@ -1069,3 +1069,8 @@ GtSourceCoder >> variableNodeInString: aString ifFound: aFoundBlock ifNone: aNon
 
 	^ aNoneBlock value
 ]
+
+{ #category : #elements }
+GtSourceCoder >> withHeader [
+	self coderLook: [ GtSourceCoderHeaderLook ]
+]
