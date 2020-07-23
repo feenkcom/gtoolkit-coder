@@ -9,7 +9,8 @@ Class {
 		'renameAction',
 		'node',
 		'newName',
-		'renameInterval'
+		'renameInterval',
+		'completionAction'
 	],
 	#category : #'GToolkit-Coder-Refactorings'
 }
@@ -25,6 +26,7 @@ GtRenameController >> addRefactoringChangesPreview [
 	coder
 		addRefactoringChangesPreview: self refactoring
 		at: self renamePosition
+		whenComplete: completionAction
 ]
 
 { #category : #executing }
@@ -49,17 +51,23 @@ GtRenameController >> coder: methodCoder [
 	coder := methodCoder
 ]
 
+{ #category : #accessing }
+GtRenameController >> completionAction: aBlock [
+	completionAction := aBlock
+]
+
 { #category : #executing }
 GtRenameController >> createModel [
 	| model |
 	model := RBClassModelFactory rbNamespace
 		onEnvironment: RBBrowserEnvironment new.
 	model name: self refactoringName.
-	((model classFor: coder classOrMetaClass)
-		sourceCodeFor: coder selector) ~= originalSource asString
-		ifTrue: [ (model classFor: coder classOrMetaClass)
-				compile: originalSource asString
-				classified: coder category ].
+	coder isForMethod
+		ifTrue: [ ((model classFor: coder classOrMetaClass)
+				sourceCodeFor: coder selector) ~= originalSource asString
+				ifTrue: [ (model classFor: coder classOrMetaClass)
+						compile: originalSource asString
+						classified: coder category ] ].
 	^ model
 ]
 

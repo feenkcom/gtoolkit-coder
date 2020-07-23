@@ -45,6 +45,26 @@ GtSourceCoder >> addOnsClass [
 	^ GtSourceCoderAddOns
 ]
 
+{ #category : #'private - refactorings' }
+GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position [
+	self
+		addRefactoringChangesPreview: aRefactoring
+		at: position
+		whenComplete: nil
+]
+
+{ #category : #'private - refactorings' }
+GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position whenComplete: aBlock [
+	self removeRefactoringAttribute.
+	aRefactoring isNil
+		ifTrue: [ ^ self ].
+	(self sourceText from: position to: position)
+		attributes:
+			{(GtRefactoringChangesAttribute new
+				refactoring: aRefactoring;
+				completionAction: aBlock)}
+]
+
 { #category : #'api - actions' }
 GtSourceCoder >> browseClassFrom: anEditorElement [
 	self
@@ -482,6 +502,11 @@ GtSourceCoder >> initializeShortcuts [
 ]
 
 { #category : #testing }
+GtSourceCoder >> isForMethod [
+	^ false
+]
+
+{ #category : #testing }
 GtSourceCoder >> isModified [
 	<return: #Boolean>
 
@@ -687,6 +712,23 @@ GtSourceCoder >> rbAST [
 ]
 
 { #category : #private }
+GtSourceCoder >> rbNodeAtCursor: editorElement [
+	| editor ast position node |
+	editor := editorElement editor.
+	editor cursor cursorsCount = 1
+		ifFalse: [ ^ nil ].
+	ast := self rbAST.
+	ast isNil
+		ifTrue: [ ^ nil ].
+	position := editor cursor first position.
+	ast
+		nodesDo: [ :each | 
+			(position between: each start and: each stop)
+				ifTrue: [ node := each ] ].
+	^ node
+]
+
+{ #category : #private }
 GtSourceCoder >> referencesFilterAtCursorIn: aBrTextEditor [
 	| node |
 	node := self nodeAtCursorIn: aBrTextEditor.
@@ -722,6 +764,12 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	binding notNil
 		ifTrue: [ ^ GtSearchReferencesFilter literal: binding ].
 	^ nil
+]
+
+{ #category : #'private - refactorings' }
+GtSourceCoder >> removeRefactoringAttribute [
+	self sourceText
+		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
 ]
 
 { #category : #'api - text' }
