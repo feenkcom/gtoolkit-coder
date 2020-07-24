@@ -31,7 +31,6 @@ GtMethodCoderByScripterExamples >> basicMethodCoder [
 	<gtExample>
 	| aCoder |
 	aCoder := GtMethodCoder new.
-	aCoder coderLook: GtSourceCoderHeaderLook.
 
 	self assert: aCoder selector isNil.
 	self assert: aCoder classOrMetaClass equals: UndefinedObject.

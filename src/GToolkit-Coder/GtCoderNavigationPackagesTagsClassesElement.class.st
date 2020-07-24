@@ -262,21 +262,20 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aP
 
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
-
 	| aPreviousIndex |
 	aPreviousIndex := packagesList selectedIndice.
-	
 	packagesList viewModel
 		indexOf: aPackage
-		do: [ :aNewIndex | packagesList 
-			selectOne: aNewIndex;
-			scrollTo: (self 
-				scrollIndexFromPrevious: aPreviousIndex 
-				current: aNewIndex
-				max: packagesList viewModel itemCount) ].
-
+		do: [ :aNewIndex | 
+			packagesList
+				selectOne: aNewIndex;
+				scrollToIndex:
+					(self
+						scrollIndexFromPrevious: aPreviousIndex
+						current: aNewIndex
+						max: packagesList viewModel itemCount) ].
 	self updateClassLists.
-	self hideOrShowClassList.
+	self hideOrShowClassList
 ]
 
 { #category : #'api - package selections' }
