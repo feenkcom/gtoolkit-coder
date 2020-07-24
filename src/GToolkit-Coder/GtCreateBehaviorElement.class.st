@@ -101,6 +101,11 @@ GtCreateBehaviorElement >> forClassDefinition [
 ]
 
 { #category : #initialization }
+GtCreateBehaviorElement >> forClassName: aSymbol [
+	headerModel definition name: aSymbol
+]
+
+{ #category : #initialization }
 GtCreateBehaviorElement >> forPackage: aPackage [
 	headerModel definition category package name: aPackage name
 ]

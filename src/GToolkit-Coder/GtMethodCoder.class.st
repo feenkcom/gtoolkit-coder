@@ -218,15 +218,6 @@ GtMethodCoder >> addInstanceVariable: aString [
 	self requestStyleSourceText
 ]
 
-{ #category : #'private - refactorings' }
-GtMethodCoder >> addRefactoringChangesPreview: aRefactoring at: position [
-	self removeRefactoringAttribute.
-	aRefactoring isNil
-		ifTrue: [ ^ self ].
-	(self sourceText from: position to: position)
-		attributes: { (GtRefactoringChangesAttribute new refactoring: aRefactoring) }
-]
-
 { #category : #'private - addons' }
 GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns from: anEditorElement [
 	<gtCoderContextMenuAddOns: 20>
@@ -919,6 +910,11 @@ GtMethodCoder >> isAccessorMethodFor: aNode [
 ]
 
 { #category : #testing }
+GtMethodCoder >> isForMethod [
+	^ true
+]
+
+{ #category : #testing }
 GtMethodCoder >> isForMethod: aCompiledMethod [
 	^ self classOrMetaClass = aCompiledMethod methodClass and: [ self selector = aCompiledMethod selector ]
 ]
@@ -1072,6 +1068,28 @@ GtMethodCoder >> object [
 		ifAbsent: [ class ]
 ]
 
+{ #category : #accessing }
+GtMethodCoder >> package [
+	^ super package
+		ifNil: [ self compiledMethod
+				ifNil: [ self classOrMetaClass ifNotNil: [ :cls | cls package ] ]
+				ifNotNil: [ :method | method package ] ]
+]
+
+{ #category : #accessing }
+GtMethodCoder >> packageTag [
+	^ super packageTag
+		ifNil: [ self compiledMethod
+				ifNotNil: [ :method | 
+					method isExtension
+						ifFalse: [ self package
+								ifNotNil: [ :package | 
+									| cls |
+									cls := self classOrMetaClass.
+									cls category asString = package name asString
+										ifFalse: [ package classTagForClass: cls ] ] ] ] ]
+]
+
 { #category : #private }
 GtMethodCoder >> parserStartingState [
 	^ GtPharoParser startingStateForMethod
@@ -1203,23 +1221,6 @@ GtMethodCoder >> protectInstVar: aNode [
 	self addRefactoringChangesPreview: refactoring at: aNode stop
 ]
 
-{ #category : #private }
-GtMethodCoder >> rbNodeAtCursor: editorElement [
-	| editor ast position node |
-	editor := editorElement editor.
-	editor cursor cursorsCount = 1
-		ifFalse: [ ^ nil ].
-	ast := self rbAST.
-	ast isNil
-		ifTrue: [ ^ nil ].
-	position := editor cursor first position.
-	ast
-		nodesDo: [ :each | 
-			(position between: each start and: each stop)
-				ifTrue: [ node := each ] ].
-	^ node
-]
-
 { #category : #'private - refactorings' }
 GtMethodCoder >> rbSelectedNodeFrom: anEditorElement [
 	| ast position node selections editor |
@@ -1284,12 +1285,6 @@ GtMethodCoder >> removeParameter: aNode [
 		in: cls
 		selector: self currentSelector.
 	self addRefactoringChangesPreview: refactoring at: aNode stop
-]
-
-{ #category : #'private - refactorings' }
-GtMethodCoder >> removeRefactoringAttribute [
-	self sourceText
-		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
 ]
 
 { #category : #'api - refactorings' }

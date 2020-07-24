@@ -2,16 +2,25 @@ Class {
 	#name : #GtRefactoringChangesAttribute,
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
-		'refactoring'
+		'refactoring',
+		'completionAction'
 	],
 	#category : #'GToolkit-Coder-Refactorings - UI'
 }
 
+{ #category : #initialization }
+GtRefactoringChangesAttribute >> completionAction: aBlock [
+	completionAction := aBlock
+]
+
 { #category : #accessing }
 GtRefactoringChangesAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
-
 	^ GtRefactoringsPreviewButton new
-		refactorings: [ { refactoring } ]
+		refactorings: [ {refactoring} ];
+		when: GtRefactoringsAppliedEvent
+			do: [ :event | 
+			completionAction notNil
+				ifTrue: [ completionAction cull: event ] ]
 ]
 
 { #category : #initialization }

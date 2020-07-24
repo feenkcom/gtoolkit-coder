@@ -47,6 +47,8 @@ GtFixItStyler >> fixItActionsForVariable: aVariableNode [
 GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 	| actions possibleNames results |
 	actions := OrderedCollection new.
+	actions
+		add: (GtDefineClassFixItAction forCoder: sourceCoder node: aVariableNode).
 	isForWorkspace
 		ifFalse: [ actions
 				add:
