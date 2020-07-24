@@ -150,18 +150,18 @@ GtCoderNavigationElement >> scrollIndexFromPrevious: aPreviousIndex current: aNe
 
 { #category : #'api - class selections' }
 GtCoderNavigationElement >> selectClass: aClass [
-
 	| aPreviousIndex |
 	aPreviousIndex := classesList selectedIndice.
-	
 	classesList viewModel
 		indexOfSuchThat: [ :each | each rootClass = aClass ]
-		do: [ :aNewIndex | classesList 
-			selectOne: aNewIndex;
-			scrollTo: (self 
-				scrollIndexFromPrevious: aPreviousIndex 
-				current: aNewIndex
-				max: classesList viewModel itemCount) ]
+		do: [ :aNewIndex | 
+			classesList
+				selectOne: aNewIndex;
+				scrollToIndex:
+					(self
+						scrollIndexFromPrevious: aPreviousIndex
+						current: aNewIndex
+						max: classesList viewModel itemCount) ]
 ]
 
 { #category : #subscriptions }

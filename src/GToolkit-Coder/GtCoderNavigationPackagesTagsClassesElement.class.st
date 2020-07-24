@@ -281,26 +281,23 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPackageTag [
-
 	| aPreviousIndex |
-	(self hasPackageTagsIn: aPackage) ifFalse: [
-		^ self selectPackage: aPackage ].
-
+	(self hasPackageTagsIn: aPackage)
+		ifFalse: [ ^ self selectPackage: aPackage ].
 	self expandPackage: aPackage.
-
 	aPreviousIndex := packagesList selectedIndice.
-	
 	packagesList viewModel
 		indexOf: aPackageTag
-		do: [ :aNewIndex | packagesList 
-			selectOne: aNewIndex;
-			scrollTo: (self 
-				scrollIndexFromPrevious: aPreviousIndex 
-				current: aNewIndex
-				max: packagesList viewModel itemCount) ].
-		
+		do: [ :aNewIndex | 
+			packagesList
+				selectOne: aNewIndex;
+				scrollToIndex:
+					(self
+						scrollIndexFromPrevious: aPreviousIndex
+						current: aNewIndex
+						max: packagesList viewModel itemCount) ].
 	self updateClassLists.
-	self hideOrShowClassList.
+	self hideOrShowClassList
 ]
 
 { #category : #'api - package selections' }
