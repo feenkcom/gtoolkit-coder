@@ -48,7 +48,7 @@ GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
 	^ GtSourceCoderExpandedContentElement new
 		coder: aCoderModel;
 		in: [ :anElement | self addCodersCoderLook: aCoderModel to: anElement ];
-		addLook: GtSourceCoderExpandedWithHeaderLook;
+		addLook: GtSourceCoderExpandedWithoutHeaderLook;
 		yourself
 ]
 
