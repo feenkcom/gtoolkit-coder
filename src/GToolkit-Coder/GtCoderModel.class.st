@@ -114,7 +114,7 @@ GtCoderModel >> breadcrumbNamedActions [
 GtCoderModel >> coderLook [
 	<return: #BrLook>
 
-	^ (self attributeNamed: #coderLook ifAbsent: [  ]) value
+	^ (self attributeNamed: #coderLook ifAbsent: [ nil ]) value
 ]
 
 { #category : #elements }
@@ -150,6 +150,11 @@ GtCoderModel >> contextMenuActions [
 	<return: #Collection of: #GtCoderAction>
 
 	^ self addOns contextMenuActions
+]
+
+{ #category : #initialization }
+GtCoderModel >> defaultCoderLook [
+	^ nil
 ]
 
 { #category : #elements }
@@ -217,6 +222,8 @@ GtCoderModel >> initialize [
 	announcer := Announcer new.
 	expanded := false.
 	addOnMonitor := Monitor new.
+
+	self coderLook: self defaultCoderLook
 ]
 
 { #category : #initialization }

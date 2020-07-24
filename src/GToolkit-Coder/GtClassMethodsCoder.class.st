@@ -141,7 +141,8 @@ GtClassMethodsCoder >> initialize [
 
 { #category : #private }
 GtClassMethodsCoder >> newCoderFor: aMethod [
-	^ (super newCoderFor: aMethod) object: object
+	^ (super newCoderFor: aMethod)
+		withoutHeader object: object
 ]
 
 { #category : #private }
