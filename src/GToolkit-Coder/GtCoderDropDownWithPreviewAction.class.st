@@ -14,7 +14,10 @@ GtCoderDropDownWithPreviewAction >> buildElementIn: aCoderActionsElement [
 		icon: self icon;
 		label: self title;
 		changeAction: self changeAction;
-		changeStencil: self changeStencil
+		changeStencil:
+			(self changeStencil isBlock
+				ifTrue: [ self changeStencil asStencil arguments: {aCoderActionsElement} ]
+				ifFalse: [ self changeStencil ])
 ]
 
 { #category : #accessing }
