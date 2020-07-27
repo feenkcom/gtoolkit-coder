@@ -96,10 +96,10 @@ GtDiffElement >> drawMeAndChildrenOnSpartaCanvas: aCanvas [
 	outlines
 		do: [ :each | 
 			fill
-				path: (each pathOnSpartaCanvas: aCanvas);
+				path: (each pathOnSpartaCanvas: aCanvas of: self);
 				draw.
 			stroke
-				path: (each pathOnSpartaCanvas: aCanvas);
+				path: (each pathOnSpartaCanvas: aCanvas of: self);
 				draw ]
 ]
 

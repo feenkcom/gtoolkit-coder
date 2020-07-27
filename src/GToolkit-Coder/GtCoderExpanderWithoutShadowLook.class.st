@@ -129,7 +129,7 @@ GtCoderExpanderWithoutShadowLook >> initialize [
 		with: [ BlLinearLayout horizontal ].
 	self
 		addChangeProperty: #(widget geometry)
-		with: [ BlRectangle cornerRadius: self cornerRadius ]
+		with: [ BlRoundedRectangleGeometry cornerRadius: self cornerRadius ]
 ]
 
 { #category : #'private - instance creation' }

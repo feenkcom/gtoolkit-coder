@@ -165,7 +165,7 @@ GtBehaviorCoderHeaderElement >> readonlyLabelLook [
 		add: (BrInteractiveCommonLook new
 			default: [ :aWidget |
 				aWidget
-					geometry: (BlRectangle cornerRadius: 4);
+					geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
 					border: BlBorder empty ];
 			hovered: [ :aWidget | aWidget border: (BlBorder paint: BrGlamorousColors hoveredButtonBorderColor width: 1) ]);
 		yourself

@@ -238,7 +238,7 @@ GtCoder >> buildSpotterButton [
 													c horizontal exact: 600.
 													c vertical exact: 400 ];
 												margin: (BlInsets all: 1);
-												geometry: (BlRectangle cornerRadius: 4);
+												geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
 												in: [ :e | 
 													self
 														flag: 'FIXME need to remove original listener to avoid phlow inspect'.

@@ -112,7 +112,7 @@ GtMethodCoderCategoryLookOld >> hierarchyDropDown [
 							dropDownElement := BlElement new.
 							dropDownElement size: 250 @ 140.
 							dropDownElement margin: (BlInsets all: 1).
-							dropDownElement geometry: (BlRectangle cornerRadius: 4).
+							dropDownElement geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
 							dropDownElement addChild: tree.
 							dropDownElement
 								addChild:
