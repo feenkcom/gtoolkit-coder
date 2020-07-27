@@ -72,6 +72,16 @@ GtCodersModel >> newCoderFor: anObject [
 	self subclassResponsibility
 ]
 
+{ #category : #coders }
+GtCodersModel >> removeCoder: aCoder [
+	coders remove: aCoder ifAbsent: [ ^ self ].
+	self
+		announce:
+			(GtCodersCodersChanged new
+				coders: self;
+				yourself)
+]
+
 { #category : #updating }
 GtCodersModel >> updateCoders [
 	coders := items collect: [ :each | self newCoderFor: each ].

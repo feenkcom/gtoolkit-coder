@@ -19,6 +19,11 @@ GtCoderAction >> action: anObject [
 	action := anObject
 ]
 
+{ #category : #ui }
+GtCoderAction >> buildElementIn: aCoderActionsElement [
+	^ aCoderActionsElement newButtonForAction: self
+]
+
 { #category : #evaluating }
 GtCoderAction >> glamourValueWithArgs: aSequenceOfArguments [
 	^ self action glamourValueWithArgs: aSequenceOfArguments

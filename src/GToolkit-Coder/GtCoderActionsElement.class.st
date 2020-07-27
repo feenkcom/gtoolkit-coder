@@ -23,11 +23,12 @@ GtCoderActionsElement >> addContextToolbarActions [
 
 { #category : #private }
 GtCoderActionsElement >> addMainToolbarActions [
-	mainToolbar addItems: (coder mainActions collect: [ :aGtCoderAction | 
-		self flag: 'Temporary hack. Coder should to Phlow actions'.
-		aGtCoderAction class = GtCoderDropDownAction 
-			ifTrue: [ self newDropButtonForAction: aGtCoderAction ] 
-			ifFalse: [ self newButtonForAction: aGtCoderAction  ] ])
+	mainToolbar
+		addItems:
+			(coder mainActions
+				collect: [ :aGtCoderAction | 
+					self flag: 'Temporary hack. Coder should to Phlow actions'.
+					aGtCoderAction buildElementIn: self ])
 ]
 
 { #category : #accessing }
