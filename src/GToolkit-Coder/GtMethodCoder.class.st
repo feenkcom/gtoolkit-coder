@@ -279,6 +279,21 @@ GtMethodCoder >> breadcrumbNamedActions [
 					aButton phlow spawnTool: (GtClassCoderTool observedClass: aClass) ] ]
 ]
 
+{ #category : #elements }
+GtMethodCoder >> buildRemoveMethodLabel [
+	| labelText references |
+	labelText := (self isNewMethod
+		or: [ selector isNil
+				or: [ (references := self selector gtReferences) isEmpty ] ])
+		ifTrue: [ 'Remove method?' ]
+		ifFalse: [ '<1s> has references. Remove anyway?'
+				expandMacrosWith: self selector ].
+	^ BrLabel new
+		margin: (BlInsets all: 10);
+		look: BrGlamorousLabelLook new glamorousRegularFont;
+		text: labelText asRopedText
+]
+
 { #category : #testing }
 GtMethodCoder >> canCompileMethodIn: newClass [
 	| ast modelClass pools variables model |
@@ -786,19 +801,16 @@ GtMethodCoder >> initialize [
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
-	
 	addOns addStyler: (GtFixItStyler new sourceCoder: self).
-	
 	addOns
 		addMainAction: 'Save' translated
 		icon: BrGlamorousVectorIcons accept
 		action: [ :anEditorElement | self saveFrom: anEditorElement ].
-	
 	addOns
-		addMainAction: 'Remove' translated
+		addDropDownWithPreviewAction: 'Remove' translated
 		icon: BrGlamorousVectorIcons remove
-		action: [ :anEditorElement | self removeFrom: anEditorElement ].
-
+		action: [ :anEditorElement | self removeFrom: anEditorElement ]
+		stencil: [ self buildRemoveMethodLabel ].
 	addOns clearChanges
 ]
 
@@ -1265,6 +1277,9 @@ GtMethodCoder >> rbSelectedNodesFrom: anEditorElement [
 
 { #category : #'api - actions' }
 GtMethodCoder >> removeFrom: anEditorElement [
+	selector isNil
+		ifTrue: [ (self attributeNamed: #coders)
+				ifNotNil: [ :coders | coders removeCoder: self ] ].
 	^ class removeSelector: selector
 ]
 

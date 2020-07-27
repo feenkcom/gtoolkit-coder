@@ -62,6 +62,18 @@ GtCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
 ]
 
 { #category : #actions }
+GtCoderAddOns >> addDropDownWithPreviewAction: aString icon: anIcon action: actionBlock stencil: stencilBlock [
+	| newAction |
+	newAction := GtCoderDropDownWithPreviewAction new
+		title: aString;
+		icon: anIcon;
+		changeAction: actionBlock;
+		changeStencil: stencilBlock.
+	mainActions add: newAction.
+	modified add: #mainActions
+]
+
+{ #category : #actions }
 GtCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
 	self
 		updateActionList: #mainActions
