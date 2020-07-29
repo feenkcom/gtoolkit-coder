@@ -34,7 +34,7 @@ GtMethodCoderStylerExamples >> b [
 	^ self a * self notAnExample
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtMethodCoderStylerExamples >> coderOnViewMethod [
 	| selectors variables coder coderElement |
 	
@@ -43,8 +43,8 @@ GtMethodCoderStylerExamples >> coderOnViewMethod [
 	selectors := GtSelectorExplanationLinkStyler new coder: coder.
 	selectors addSelectors: 
 		{#gtView . #columnedList . #title: . #items: .#contacts . #fullName . #avatar. #telephone. #allContacts }.
-	selectors addSelector: #column:format: withIdentifier: #columns.
-	selectors addSelector: #column:do: withIdentifier: #columns.
+	selectors addSelector: #column:icon: withIdentifier: #columns.
+	selectors addSelector: #column:text: withIdentifier: #columns.
 	
 	variables := GtVariableExplanationLinkStyler new coder: coder.
 	variables addVariables: {'aView' . 'aContact'}.
@@ -169,7 +169,7 @@ GtMethodCoderStylerExamples >> hasUnderlineAttributeIn: coder [
 	^ self hasAttributeOfType: self unlineAttributeClass in: coder sourceEditor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtMethodCoderStylerExamples >> inspectorOnViewMethod [
 	| resultElement resultInspectorTree titleTab avatarLabel phoneLabel nameLabel avatarElementsCollection listLabelsCollection |
 	
@@ -202,12 +202,11 @@ GtMethodCoderStylerExamples >> inspectorOnViewMethod [
 		ifFound: [ :aChild | aChild ].
 	avatarElementsCollection := resultInspectorTree
 		allChildrenBreadthFirstSelect: [ :aChild | 
-			(aChild isKindOf: BlScalableElement)
-				and: [ aChild parent parent isKindOf: BrInfiniteListElement ] ].
+			(aChild isKindOf: BrHorizontalPane) ].
 	listLabelsCollection := resultInspectorTree
 		allChildrenBreadthFirstSelect: [ :aChild | 
-			(aChild isKindOf: BrLabel)
-				and: [ aChild parent parent isKindOf: BrInfiniteListElement ] ].
+			(aChild isKindOf: BlTextElement)
+				and: [ aChild parent parent isKindOf: GtPhlowCellElement ] ].
 
 	titleTab
 		addChild:
@@ -226,7 +225,7 @@ GtMethodCoderStylerExamples >> inspectorOnViewMethod [
 				elevation: (BlRelativeElevation elevation: 10);
 				geometry: BlCircle new;
 				look: (GtExplainerTargetLook new explanationModel: #columns);
-				relocate: -5 @ avatarLabel extent y / 2).
+				relocate: 5 @ avatarLabel extent y / 2).
 	nameLabel
 		addChild:
 			(BrButton new
@@ -235,7 +234,7 @@ GtMethodCoderStylerExamples >> inspectorOnViewMethod [
 				elevation: (BlRelativeElevation elevation: 10);
 				geometry: BlCircle new;
 				look: (GtExplainerTargetLook new explanationModel: #columns);
-				relocate: -5 @ nameLabel extent y / 2).
+				relocate: 5 @ nameLabel extent y / 2).
 	phoneLabel
 		addChild:
 			(BrButton new
@@ -244,7 +243,7 @@ GtMethodCoderStylerExamples >> inspectorOnViewMethod [
 				elevation: (BlRelativeElevation elevation: 10);
 				geometry: BlCircle new;
 				look: (GtExplainerTargetLook new explanationModel: #columns);
-				relocate: -5 @ phoneLabel extent y / 2).
+				relocate: 5 @ phoneLabel extent y / 2).
 	avatarElementsCollection
 		do: [ :eachAvatar | 
 			eachAvatar parent
