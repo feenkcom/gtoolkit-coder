@@ -15,14 +15,30 @@ GtSearchASTFilter class >> ast: aRBProgramNode [
 		yourself
 ]
 
+{ #category : #accessing }
+GtSearchASTFilter class >> filterDescriptorFor: aMethodCoder [
+	^ GtFilterDescriptor
+		forClass: self
+		named: 'AST'
+		order: 100
+		getter: #source
+		setter: #sourceExpression:
+		completion: nil
+]
+
 { #category : #'instance creation' }
 GtSearchASTFilter class >> sourceExpression: aString [
-	^ self ast: (RBParser parseRewriteExpression: aString)
+	^ self new sourceExpression: aString
 ]
 
 { #category : #'instance creation' }
 GtSearchASTFilter class >> sourceMethod: aString [
-	^ self ast: (RBParser parseRewriteMethod: aString)
+	^ self new sourceMethod: aString
+]
+
+{ #category : #comparing }
+GtSearchASTFilter >> = anObject [
+	^ self class = anObject class and: [ self ast = anObject ast ]
 ]
 
 { #category : #accessing }
@@ -51,6 +67,11 @@ GtSearchASTFilter >> gtDisplayOn: stream [
 	self ast gtDisplayOn: stream
 ]
 
+{ #category : #comparing }
+GtSearchASTFilter >> hash [
+	^ self class hash bitXor: self ast hash
+]
+
 { #category : #accessing }
 GtSearchASTFilter >> highlighter [
 	^ GtASTPatternHighlighter ast: ast
@@ -67,4 +88,19 @@ GtSearchASTFilter >> includesMethod: aCompiledMethod [
 			(ast match: each inContext: Dictionary new)
 				ifTrue: [ ^ true ] ].
 	^ false
+]
+
+{ #category : #accessing }
+GtSearchASTFilter >> source [
+	^ ast source ifNil: [ ast formattedCode ]
+]
+
+{ #category : #accessing }
+GtSearchASTFilter >> sourceExpression: aString [
+	self ast: (RBParser parseRewriteExpression: aString)
+]
+
+{ #category : #accessing }
+GtSearchASTFilter >> sourceMethod: aString [
+	self ast: (RBParser parseRewriteMethod: aString)
 ]

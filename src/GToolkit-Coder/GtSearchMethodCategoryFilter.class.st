@@ -7,11 +7,26 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #accessing }
+GtSearchMethodCategoryFilter class >> filterDescriptorFor: aMethodCoder [
+	^ GtFilterDescriptor
+		forClass: self
+		named: 'Category'
+		order: 15
+		getter: #category
+]
+
 { #category : #'instance creation' }
 GtSearchMethodCategoryFilter class >> forCategory: aSymbol [
 	^ self new
 		category: aSymbol;
 		yourself
+]
+
+{ #category : #comparing }
+GtSearchMethodCategoryFilter >> = anObject [
+	^ self class = anObject class
+		and: [ self category = anObject category ]
 ]
 
 { #category : #accessing }
@@ -29,6 +44,11 @@ GtSearchMethodCategoryFilter >> gtDisplayOn: stream [
 	stream
 		nextPutAll: self category printString;
 		nextPutAll: ' method category'
+]
+
+{ #category : #comparing }
+GtSearchMethodCategoryFilter >> hash [
+	^ self class hash bitXor: self category hash
 ]
 
 { #category : #testing }

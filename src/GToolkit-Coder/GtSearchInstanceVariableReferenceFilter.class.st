@@ -7,6 +7,17 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #accessing }
+GtSearchInstanceVariableReferenceFilter class >> filterDescriptorFor: aMethodCoder [
+	aMethodCoder isForClass
+		ifFalse: [ ^ nil ].
+	^ GtFilterDescriptor
+		forClass: self
+		named: 'InstVar'
+		order: 25
+		getter: #variableName
+]
+
 { #category : #'instance creation' }
 GtSearchInstanceVariableReferenceFilter class >> forClass: aClass andVariable: aString [
 	^ self new
@@ -21,10 +32,20 @@ GtSearchInstanceVariableReferenceFilter class >> forClassAndSubclasses: aClass a
 		into: [ :sum :each | sum | (self forClass: each andVariable: aString) ]
 ]
 
+{ #category : #comparing }
+GtSearchInstanceVariableReferenceFilter >> = anObject [
+	^ super = anObject and: [ self variableName = anObject variableName ]
+]
+
 { #category : #'initialize-release' }
 GtSearchInstanceVariableReferenceFilter >> forClass: aClass andVariable: aString [
 	self forClass: aClass.
 	variableName := aString
+]
+
+{ #category : #comparing }
+GtSearchInstanceVariableReferenceFilter >> hash [
+	^ super hash bitXor: self variableName
 ]
 
 { #category : #accessing }
@@ -45,4 +66,14 @@ GtSearchInstanceVariableReferenceFilter >> includesMethod: aCompiledMethod [
 GtSearchInstanceVariableReferenceFilter >> initialize [
 	super initialize.
 	includeSubclasses := true
+]
+
+{ #category : #accessing }
+GtSearchInstanceVariableReferenceFilter >> variableName [
+	^ variableName
+]
+
+{ #category : #accessing }
+GtSearchInstanceVariableReferenceFilter >> variableName: aString [
+	variableName := aString
 ]

@@ -49,9 +49,51 @@ GtClassMethodsCoder >> addNewCoder [
 				yourself)
 ]
 
+{ #category : #elements }
+GtClassMethodsCoder >> categoryFilter: aView [
+	<gtFilterTypes>
+	^ aView explicit
+		title: 'Categories';
+		priority: 10;
+		stencil: [ | categories |
+			categories := class organization categories asSet.
+			categories addAll: class class organization categories.
+			categories := categories asSortedCollection.
+			GtCoderContextMenuContent new
+				constraintsDo: [ :c | c horizontal matchParent ];
+				items:
+					(categories
+						collect: [ :each | 
+							GtCoderContextMenuAction new
+								action: [ :element | self toggleCategoryFilter: each ];
+								title: each ]);
+				hMatchParent;
+				vMatchParent ]
+]
+
 { #category : #accessing }
 GtClassMethodsCoder >> classOrMetaClass [
 	^ class
+]
+
+{ #category : #elements }
+GtClassMethodsCoder >> classVariableFilter: aView [
+	<gtFilterTypes>
+	^ aView explicit
+		title: 'Class Variables';
+		priority: 30;
+		stencil: [ | variables |
+			variables := class allClassVarNames.
+			GtCoderContextMenuContent new
+				constraintsDo: [ :c | c horizontal matchParent ];
+				items:
+					(variables
+						collect: [ :each | 
+							GtCoderContextMenuAction new
+								action: [ :element | self toggleClassVariableFilter: each ];
+								title: each ]);
+				hMatchParent;
+				vMatchParent ]
 ]
 
 { #category : #private }
@@ -77,24 +119,33 @@ GtClassMethodsCoder >> coderLook [
 GtClassMethodsCoder >> combinedFilter [
 	| combined |
 	combined := super combinedFilter.
-	^ combined isNil
-		ifTrue: [ self classesFilter ]
-		ifFalse: [ self classesFilter 
-			ifNil: [ nil ] 
-			ifNotNil: [ :filter | filter & combined ] ]
+	^ self classesFilter
+		ifNil: [ combined ]
+		ifNotNil:
+			[ :filter | combined ifNil: [ filter ] ifNotNil: [ filter & combined ] ]
+]
+
+{ #category : #elements }
+GtClassMethodsCoder >> filterDropDown: anElement [
+	^ BlElement new
+		size: 400 @ 400;
+		addChild:
+			(GtPhlowCompositeView new
+				views: self filterTypes;
+				asElementDo: [ :aTabGroup | aTabGroup matchParent ])
+]
+
+{ #category : #elements }
+GtClassMethodsCoder >> filterTypes [
+	^ GtPhlowViewsCollector new
+		fromObject: self;
+		pragmaName: #gtFilterTypes;
+		collect
 ]
 
 { #category : #testing }
 GtClassMethodsCoder >> filteredClass: aBehavior [
 	^ filteredClasses includes: aBehavior
-]
-
-{ #category : #private }
-GtClassMethodsCoder >> filters [
-	^ {
-		self classesFilter.
-		self categoryFilter.
-		self implementorsFilter}
 ]
 
 { #category : #'initialize-release' }
@@ -137,6 +188,31 @@ GtClassMethodsCoder >> hasFilter [
 GtClassMethodsCoder >> initialize [
 	super initialize.
 	filteredClasses := Set new
+]
+
+{ #category : #elements }
+GtClassMethodsCoder >> instanceVariableFilter: aView [
+	<gtFilterTypes>
+	^ aView explicit
+		title: 'Instance Variables';
+		priority: 20;
+		stencil: [ | variables |
+			variables := class allInstVarNames.
+			GtCoderContextMenuContent new
+				constraintsDo: [ :c | c horizontal matchParent ];
+				items:
+					(variables
+						collect: [ :each | 
+							GtCoderContextMenuAction new
+								action: [ :element | self toggleInstanceVariableFilter: each ];
+								title: each ]);
+				hMatchParent;
+				vMatchParent ]
+]
+
+{ #category : #testing }
+GtClassMethodsCoder >> isForClass [
+	^ true
 ]
 
 { #category : #private }
@@ -190,4 +266,22 @@ GtClassMethodsCoder >> shouldSort: a before: b [
 	a selector > b selector
 		ifTrue: [ ^ false ].
 	^ a classOrMetaClass allSuperclasses size >= b classOrMetaClass allSuperclasses size
+]
+
+{ #category : #filters }
+GtClassMethodsCoder >> toggleClassVariableFilter: aVariable [
+	self
+		toggleFilter:
+			(GtSearchClassVariableReferenceFilter
+				forClass: self classOrMetaClass
+				andVariable: aVariable)
+]
+
+{ #category : #filters }
+GtClassMethodsCoder >> toggleInstanceVariableFilter: aVariable [
+	self
+		toggleFilter:
+			(GtSearchInstanceVariableReferenceFilter
+				forClass: self classOrMetaClass
+				andVariable: aVariable)
 ]

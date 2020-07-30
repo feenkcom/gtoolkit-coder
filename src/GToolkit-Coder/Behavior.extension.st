@@ -63,19 +63,19 @@ Behavior >> gtCoderExamplesFor: aView context: aDictionary [
 Behavior >> gtCoderMethodsFor: aView context: aDictionary [
 	<gtClassView>
 	| methodsCoder object |
-
 	aDictionary
 		at: #classCoder
 		ifPresent: [ :coder | object := coder object ].
-
 	methodsCoder := object notNil
 		ifTrue: [ GtClassMethodsCoder forObject: object ]
 		ifFalse: [ GtClassMethodsCoder forClass: self ].
-
 	^ aView explicit
 		priority: 10;
 		title: 'Methods';
 		disableAsync;
+		actionDropdownButtonIcon: BrGlamorousIcons hamburger
+			tooltip: 'Filter'
+			content: [ :element | methodsCoder filterDropDown: element ];
 		actionButtonIcon: BrGlamorousVectorIcons add
 			tooltip: 'Add new method'
 			action: [ methodsCoder addNewCoder ];
