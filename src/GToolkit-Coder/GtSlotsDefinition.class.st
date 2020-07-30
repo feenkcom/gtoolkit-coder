@@ -195,6 +195,8 @@ GtSlotsDefinition >> slotsEditor [
 			do: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ];
 		whenKey: BlKeyCombination primaryN
 			do: [ :anEvent :aDefinition | aDefinition browseReferencesFrom: anEvent ];
+		whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
+			Clipboard clipboardText: aDefinition name asString ];
 		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
 

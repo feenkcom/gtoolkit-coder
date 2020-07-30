@@ -209,7 +209,9 @@ GtClassSuperclassDefinition >> superclassEditor [
 			whenKey: BlKeyCombination primaryN do: [ :anEvent :aDefinition  | 
 				aDefinition browseReferencesFrom: anEvent ];
 			whenPrimaryClickDo: [ :anEvent :aDefinition | 
-				aDefinition browseFrom: anEvent ]
+				aDefinition browseFrom: anEvent ];
+			whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
+				Clipboard clipboardText: aDefinition name asString ]
 ]
 
 { #category : #'gt - editors' }

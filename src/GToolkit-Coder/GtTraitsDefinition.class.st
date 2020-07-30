@@ -208,5 +208,7 @@ GtTraitsDefinition >> traitsEditor [
 				text: '+' ];
 		completion: [ GtTraitsCompletionStrategy new ];
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
+		whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
+			Clipboard clipboardText: aDefinition name asString ];
 		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
