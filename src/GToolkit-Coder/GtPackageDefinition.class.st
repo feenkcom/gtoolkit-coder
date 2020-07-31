@@ -121,7 +121,9 @@ GtPackageDefinition >> packageEditor [
 		renameEvent: GtBehaviorPackageRenamed;
 		completion: [ GtPackagesCompletionStrategy new ];
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ];
+		whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
+			Clipboard clipboardText: aDefinition name asString ]
 ]
 
 { #category : #'gt - editors' }

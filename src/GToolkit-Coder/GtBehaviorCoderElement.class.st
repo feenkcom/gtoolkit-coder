@@ -60,6 +60,10 @@ GtBehaviorCoderElement >> buildClassLabel [
 			with: self;
 		whenKey: BlKeyCombination primaryG
 			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | aCoderElement phlow spawnObject: aCoderElement classCoder theClass ]
+			with: self;
+		whenKey: BlKeyCombination primaryC
+			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | 
+				Clipboard clipboardText: aCoderElement classCoder theClass name asString ]
 			with: self.
 	
 	
