@@ -97,10 +97,11 @@ GtSourceCoderEditorLook >> onCoderChanged: aSourceCoder [
 
 { #category : #hooks }
 GtSourceCoderEditorLook >> onSourceCodeChanged [
-	(self editorElement text = coder sourceText)
-		ifTrue: [ ^ self ].
-	
-	self editorElement text: coder sourceText
+	self widgetDo: [ :aWidget | 
+		self editorElement enqueueTask: (
+			BlTaskAction new action: [
+				(self editorElement text = coder sourceText)
+					ifFalse: [ self editorElement text: coder sourceText ] ]) ]
 ]
 
 { #category : #private }
