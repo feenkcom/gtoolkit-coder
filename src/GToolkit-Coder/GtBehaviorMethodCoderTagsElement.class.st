@@ -62,7 +62,12 @@ GtBehaviorMethodCoderTagsElement >> newEditableClassTag [
 				ifFalse: [ wish text asString asLowercase = 'class' ])
 				ifTrue: [ self coder moveMethodToInstanceOrClass ].
 			editor text: (self classTagStringFor: self coder).
-			wish consumed: true ].
+			wish consumed: true ];
+		whenKey: BlKeyCombination primaryC
+			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderTagsElement | 
+				Clipboard clipboardText: aTextEditor text asString ]
+			with: self.
+	
 	strategy := GtStringsCompletionStrategy new.
 	(GtCompletionController on: editor strategy: strategy) install.
 	completion := GtPrefixTree withAll: #('instance' 'class').

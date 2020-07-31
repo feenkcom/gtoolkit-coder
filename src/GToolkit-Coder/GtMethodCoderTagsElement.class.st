@@ -67,8 +67,13 @@ GtMethodCoderTagsElement >> newEditableProtocolTag [
 				fontSize: 10);
 		padding: (BlInsets all: 2);
 		when: BrEditorAcceptWish
-			do:
-				[ :aWish | self coder ifNotNil: [ :aCoder | aCoder renameProtocol: aWish text asString ] ].
+			do: [ :aWish | 
+				self coder ifNotNil: [ :aCoder | 
+					aCoder renameProtocol: aWish text asString ] ];
+		whenKey: BlKeyCombination primaryC
+			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderTagsElement | 
+				Clipboard clipboardText: aTextEditor text asString ]
+			with: self.
 
 	(GtCompletionController
 		on: editor
