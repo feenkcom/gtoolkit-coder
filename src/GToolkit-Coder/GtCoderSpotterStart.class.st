@@ -55,9 +55,10 @@ GtCoderSpotterStart >> gtSpotterForMessagesFor: aStep [
 		filter: GtNullFilter
 			item:
 				[ :filter :context | GTSelector substring: context textTrimmed filter: filter ];
-		actLogic: [ :each :step | 
-			step exit.
-			self systemNavigation browseAllImplementorsOf: each name ];
+		actLogic: [ :each :step :spotterElement | 
+			(each name asSymbol gtImplementors)
+				gtSpotterActDefault: step
+				from: spotterElement ];
 		wantsToDisplayOnEmptyQuery: false
 ]
 

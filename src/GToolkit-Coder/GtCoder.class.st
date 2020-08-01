@@ -193,68 +193,22 @@ GtCoder >> buildHorizontalPane [
 
 { #category : #'private - ui' }
 GtCoder >> buildSpotterButton [
-	| look |
-	^ BrButton new
-		label: 'Search';
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(look := BrGlamorousWithDropdownLook
-						stencil: [ | model |
-							model := GtSpotter new initializeWith: (GtCoderSpotterStart new navigationModel: navigationModel).
-							model announcer
-								when: GtSpotterActOn
-								do: [ :e | 
-									| item acted |
-									acted := false.
-									item := e element.
-									self flag: 'FIXME candidates may be wrapped for some reason'.
-									[ (item isKindOf: GtSpotterCandidate)
-										and: [ item item ~~ item ] ]
-										whileTrue: [ item := item item ].
-									(item isKindOf: RPackage)
-										ifTrue: [ navigationModel selectPackage: item. acted := true ].
-									(item isKindOf: ClassDescription)
-										ifTrue: [ navigationModel selectClass: item. acted := true ].
-									(item isKindOf: CompiledMethod)
-										ifTrue: [ navigationModel selectMethod: item. acted := true ].
-									acted ifTrue: [ 
-										e actedUpon: true.
-										look hide ] ].
-							BlElement new
-								look:
-									(BrGlamorousDropdownLook new
-										handle:
-											(BrButton new
-												look:
-													BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
-														- BrGlamorousButtonExteriorLook;
-												icon: BrGlamorousVectorIcons search;
-												yourself);
-										content:
-											(GtSpotterElement new
-												spotterModel: model;
-												constraintsDo: [ :c | 
-													c horizontal exact: 600.
-													c vertical exact: 400 ];
-												margin: (BlInsets all: 1);
-												geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
-												in: [ :e | 
-													self
-														flag: 'FIXME need to remove original listener to avoid phlow inspect'.
-													model announcer subscriptions subscriptions
-														detect: [ :g | 
-															g announcementClass == GtSpotterSelectedCandidateChanged
-																and: [ g action isMessageSend
-																		and: [ g action selector = #onCandidateSelected:
-																				and: [ g action receiver == e ] ] ] ]
-														ifFound: [ :g | g announcer subscriptions remove: g ] ];
-												yourself);
-										yourself);
-								background: BrGlamorousColors secondaryHeaderBackgroundColor;
-								yourself ]);
-		icon: BrGlamorousVectorIcons search;
-		yourself
+	<return: #BrButton>
+	
+	^ GtSpotterDropdownButtonStencil new
+		valuable: (GtCoderSpotterStart new navigationModel: navigationModel);
+		tooltip: 'Search Code';
+		actOn: [ :anActOnEvent :anItem :theButton | 
+			| acted |
+			acted := false.
+			(anItem isKindOf: RPackage) ifTrue: [ 
+				navigationModel selectPackage: anItem. acted := true ].
+			(anItem isKindOf: ClassDescription) ifTrue: [ 
+				navigationModel selectClass: anItem. acted := true ].
+			(anItem isKindOf: CompiledMethod) ifTrue: [ 
+				navigationModel selectMethod: anItem. acted := true ].
+			acted ifTrue: [ anActOnEvent beActed ] ];
+		asElement.
 ]
 
 { #category : #'private - ui' }
