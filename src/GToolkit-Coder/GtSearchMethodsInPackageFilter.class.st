@@ -19,6 +19,11 @@ GtSearchMethodsInPackageFilter >> defaultFilterScope [
 	^ self
 ]
 
+{ #category : #comparing }
+GtSearchMethodsInPackageFilter >> hash [
+	^ self class hash bitXor: self package hash
+]
+
 { #category : #testing }
 GtSearchMethodsInPackageFilter >> includesMethod: aCompiledMethod [
 	^ aCompiledMethod package = package

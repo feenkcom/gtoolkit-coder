@@ -14,11 +14,22 @@ GtSearchImplementorsFilter class >> selector: aSymbol [
 		yourself
 ]
 
+{ #category : #comparing }
+GtSearchImplementorsFilter >> = anObject [
+	^ self class = anObject class
+		and: [ self selector = anObject selector ]
+]
+
 { #category : #ui }
 GtSearchImplementorsFilter >> gtDisplayOn: stream [
 	stream
 		nextPutAll: self selector printString;
 		nextPutAll: ' implementors'
+]
+
+{ #category : #comparing }
+GtSearchImplementorsFilter >> hash [
+	^ self class hash bitXor: self selector hash
 ]
 
 { #category : #accessing }

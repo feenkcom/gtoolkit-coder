@@ -7,6 +7,15 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #accessing }
+GtSearchMethodsWithPackagePatternFilter class >> filterDescriptorFor: aMethodCoder [
+	^ GtFilterDescriptor
+		forClass: self
+		named: 'Package'
+		order: 30
+		getter: #pattern
+]
+
 { #category : #'instance creation' }
 GtSearchMethodsWithPackagePatternFilter class >> pattern: aString [
 	^ self new
@@ -14,11 +23,22 @@ GtSearchMethodsWithPackagePatternFilter class >> pattern: aString [
 		yourself
 ]
 
+{ #category : #comparing }
+GtSearchMethodsWithPackagePatternFilter >> = anObject [
+	^ self class = anObject class
+		and: [ self pattern asLowercase = anObject pattern asLowercase ]
+]
+
 { #category : #printing }
 GtSearchMethodsWithPackagePatternFilter >> gtDisplayOn: stream [
 	stream
 		nextPutAll: self pattern printString;
 		nextPutAll: ' packages matching'
+]
+
+{ #category : #comparing }
+GtSearchMethodsWithPackagePatternFilter >> hash [
+	^ self class hash bitXor: self pattern asLowercase hash
 ]
 
 { #category : #testing }

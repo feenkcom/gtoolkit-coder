@@ -7,6 +7,15 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #accessing }
+GtSearchPragmasFilter class >> filterDescriptorFor: aMethodCoder [
+	^ GtFilterDescriptor
+		forClass: self
+		named: 'Pragma'
+		order: 11
+		getter: #symbol
+]
+
 { #category : #'instance creation' }
 GtSearchPragmasFilter class >> forPragma: aSymbol [
 	^ self new
@@ -14,11 +23,21 @@ GtSearchPragmasFilter class >> forPragma: aSymbol [
 		yourself
 ]
 
+{ #category : #comparing }
+GtSearchPragmasFilter >> = anObject [
+	^ self class = anObject class and: [ self symbol = anObject symbol ]
+]
+
 { #category : #printing }
 GtSearchPragmasFilter >> gtDisplayOn: stream [
 	stream 
 		nextPutAll: self symbol printString;
 		nextPutAll: ' pragmas'
+]
+
+{ #category : #comparing }
+GtSearchPragmasFilter >> hash [
+	^ self class hash bitXor: self symbol hash
 ]
 
 { #category : #accessing }

@@ -7,6 +7,17 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #accessing }
+GtSearchMethodsWithClassPatternFilter class >> filterDescriptorFor: aMethodCoder [
+	aMethodCoder isForClass
+		ifTrue: [ ^ nil ].
+	^ GtFilterDescriptor
+		forClass: self
+		named: 'Class'
+		order: 20
+		getter: #pattern
+]
+
 { #category : #'instance creation' }
 GtSearchMethodsWithClassPatternFilter class >> pattern: aString [
 	^ self new
@@ -14,11 +25,22 @@ GtSearchMethodsWithClassPatternFilter class >> pattern: aString [
 		yourself
 ]
 
+{ #category : #comparing }
+GtSearchMethodsWithClassPatternFilter >> = anObject [
+	^ self class = anObject class
+		and: [ self pattern asLowercase = anObject pattern asLowercase ]
+]
+
 { #category : #printing }
 GtSearchMethodsWithClassPatternFilter >> gtDisplayOn: stream [
 	stream
 		nextPutAll: self pattern printString;
 		nextPutAll: ' classes matching'
+]
+
+{ #category : #comparing }
+GtSearchMethodsWithClassPatternFilter >> hash [
+	^ self class hash bitXor: self pattern asLowercase hash
 ]
 
 { #category : #testing }
