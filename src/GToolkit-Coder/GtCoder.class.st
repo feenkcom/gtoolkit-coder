@@ -4,8 +4,8 @@ I am the entrance point into the coder as a tool
 Class {
 	#name : #GtCoder,
 	#superclass : #BlElement,
-	#traits : 'TGtPagerPageInstantiator',
-	#classTraits : 'TGtPagerPageInstantiator classTrait',
+	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolVolumeAdjustable',
+	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolVolumeAdjustable classTrait',
 	#instVars : [
 		'coderContent',
 		'navigationModel',
@@ -235,6 +235,7 @@ GtCoder >> buildToolbar [
 GtCoder >> initialize [
 	super initialize.
 	self initializeListeners.
+	self initializeToolVolumeModel.
 	self initializeNavigationModel.
 	self initializeMainContent.
 	self initializeLeftSideBarContent.
@@ -302,6 +303,11 @@ GtCoder >> initializeNavigationModel [
 	
 ]
 
+{ #category : #initialization }
+GtCoder >> initializeToolVolumeModel [
+	self addInteractiveModelState: GtPhlowToolVolumeModel new.
+]
+
 { #category : #'api - configuration' }
 GtCoder >> leftSideBarDo: aBlock [
 	aBlock value: leftSideBarContent
@@ -318,8 +324,8 @@ GtCoder >> newEmbellisherExtension [
 		addExtension: (GtCoderEmbeddedPlaygroundExtension new
 			navigationModel: navigationModel);
 		addExtension: (GtCoderSideBarSystemNavigationExtension new
-			coder: self;
-			sideBar: leftSideBarContent;
+			coder: self
+			sideBar: leftSideBarContent
 			navigationModel: navigationModel)
 ]
 
