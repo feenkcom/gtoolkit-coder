@@ -26,17 +26,30 @@ GtCoderSideBarSystemNavigationExtension >> beWeighted: aNumber [
 	widthStrategy := BrResizerElementLength weight: aNumber
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 GtCoderSideBarSystemNavigationExtension >> coder [
 	<return: #GtCoder>
 	^ coder
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 GtCoderSideBarSystemNavigationExtension >> coder: aGtCoder [
+	self
+		assert: [ coder isNil ] 
+		description: [ 'You can add sidebar navigation extension only once to a coder' ].
 	coder := aGtCoder.
+]
+
+{ #category : #accessing }
+GtCoderSideBarSystemNavigationExtension >> coder: aGtCoder sideBar: anElement navigationModel: aNavigationModel [
+	self coder: aGtCoder.
+	self sideBar: anElement.
+	self navigationModel: aNavigationModel.
 	self subscribeToCoder.
 	self subscribeToResizer.
+	self adjustSideBarWidth.
+	self onNavigationModelChanged.
+	self sideBar addChild: navigationElement.
 ]
 
 { #category : #defaults }
@@ -52,7 +65,7 @@ GtCoderSideBarSystemNavigationExtension >> defaultWeight [
 { #category : #'widget configuration' }
 GtCoderSideBarSystemNavigationExtension >> fillToolWidgetIn: aCreationContext [
 	"initialize a tool widget"
-	self sideBar addChild: navigationElement.
+	"self sideBar addChild: navigationElement."
 ]
 
 { #category : #'sidebar width' }
@@ -85,15 +98,14 @@ GtCoderSideBarSystemNavigationExtension >> isSideBarHidden [
 	^ self sideBar width <= self defaultHiddenSideBarWidth
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 GtCoderSideBarSystemNavigationExtension >> navigationModel [
 	^ navigationModel
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 GtCoderSideBarSystemNavigationExtension >> navigationModel: anObject [
 	navigationModel := anObject.
-	self onNavigationModelChanged.
 ]
 
 { #category : #hooks }
@@ -124,24 +136,22 @@ GtCoderSideBarSystemNavigationExtension >> onResizerResized: anEvent [
 	self beExact: anEvent extent x
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 GtCoderSideBarSystemNavigationExtension >> sideBar [
 	<return: #BlElement>
 	^ sideBar
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 GtCoderSideBarSystemNavigationExtension >> sideBar: anElement [
 	sideBar := anElement.
-	self adjustSideBarWidth.
 ]
 
 { #category : #subscriptions }
 GtCoderSideBarSystemNavigationExtension >> subscribeToCoder [
-	self coder when: GtPagerPageMaximizedEvent do: [ :anEvent | 
-		self onMaximizedInPager: anEvent pager ].
-	self coder when: GtPagerPageMinimizedEvent do: [ :anEvent | 
-		self onMinimizedInPager: anEvent pager ].
+	self coder addLook: (GtPhlowToolVolumeLook new
+		normal: [ self onMinimizedInPager: nil ];
+		detailed: [ self onMaximizedInPager: nil ]).
 ]
 
 { #category : #subscriptions }
@@ -156,7 +166,7 @@ GtCoderSideBarSystemNavigationExtension >> subscribeToResizer [
 						[ :anEvent | self onResizerDoubleClick: anEvent ] ]
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 GtCoderSideBarSystemNavigationExtension >> weight [
 	^ 0.5
 ]
