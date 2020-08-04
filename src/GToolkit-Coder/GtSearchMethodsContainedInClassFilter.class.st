@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtSearchMethodsContainedInClassFilter class >> createFilterFor: aMethodCoder [
+	^ self forClass: aMethodCoder classOrMetaClass
+]
+
+{ #category : #'instance creation' }
 GtSearchMethodsContainedInClassFilter class >> forClass: aClass [
 	^ self new
 		forClass: aClass;

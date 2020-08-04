@@ -4,6 +4,16 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #'instance creation' }
+GtSearchMethodsFilter class >> createFilterFor: aMethodCoder [
+	^ self new
+]
+
+{ #category : #accessing }
+GtSearchMethodsFilter class >> filterDescriptorFor: aMethodCoder [
+	^ nil
+]
+
 { #category : #accessing }
 GtSearchMethodsFilter class >> resultType [
 	^ GtSearchMethodGroupResult 

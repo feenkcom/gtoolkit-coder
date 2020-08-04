@@ -30,6 +30,11 @@ GtCodersModel >> asElement [
 		yourself
 ]
 
+{ #category : #testing }
+GtCodersModel >> canFilter [
+	^ false
+]
+
 { #category : #elements }
 GtCodersModel >> coderLook [
 	^ nil

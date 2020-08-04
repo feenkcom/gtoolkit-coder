@@ -8,6 +8,19 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
+{ #category : #comparing }
+GtSearchMethodsInClassFilter >> = anObject [
+	^ self class = anObject class
+		and: [ self filterClass = anObject filterClass
+				and: [ self includeSubclasses = anObject includeSubclasses
+						and: [ self includeSuperclass = anObject includeSuperclass ] ] ]
+]
+
+{ #category : #comparing }
+GtSearchMethodsInClassFilter >> hash [
+	^ self class hash bitXor: self filterClass hash
+]
+
 { #category : #testing }
 GtSearchMethodsInClassFilter >> includeSubclasses [
 	^ includeSubclasses

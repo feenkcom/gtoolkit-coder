@@ -3,28 +3,25 @@ Class {
 	#superclass : #GtMethodsCoder,
 	#instVars : [
 		'originalFilter',
-		'categoryFilterString',
-		'implementorsFilterString'
+		'additionalFilters'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #private }
-GtFilteredMethodsCoder >> categoryFilter [
-	^ categoryFilterString notNil
-		ifTrue: [ GtSearchMethodCategoryFilter forCategory: categoryFilterString ]
+{ #category : #filters }
+GtFilteredMethodsCoder >> additionalFilters [
+	^ additionalFilters
 ]
 
-{ #category : #accessing }
-GtFilteredMethodsCoder >> categoryFilterString [
-	^ categoryFilterString
+{ #category : #filters }
+GtFilteredMethodsCoder >> additionalFilters: aCollection [
+	additionalFilters := OrderedCollection withAll: aCollection.
+	self runFilters
 ]
 
-{ #category : #accessing }
-GtFilteredMethodsCoder >> categoryFilterString: aSymbol [
-	categoryFilterString := aSymbol.
-	self updateMethods.
-	self updateCoders
+{ #category : #testing }
+GtFilteredMethodsCoder >> canFilter [
+	^ true
 ]
 
 { #category : #elements }
@@ -33,28 +30,32 @@ GtFilteredMethodsCoder >> coderLook [
 ]
 
 { #category : #private }
-GtFilteredMethodsCoder >> combineFilters: anArray [
-	| result |
-	result := nil.
-	anArray
-		do: [ :each | 
-			each notNil
-				ifTrue: [ result := result isNil
-						ifTrue: [ each ]
-						ifFalse: [ result & each ] ] ].
-	^ result
-]
-
-{ #category : #private }
 GtFilteredMethodsCoder >> combinedFilter [
-	^ self combineFilters: self filters
+	| combinedFilters |
+	combinedFilters := additionalFilters
+		inject: nil
+		into: [ :sum :each | sum ifNil: [ each ] ifNotNil: [ sum | each ] ].
+	^ originalFilter
+		ifNil: [ combinedFilters ]
+		ifNotNil: [ combinedFilters
+				ifNil: [ originalFilter ]
+				ifNotNil: [ originalFilter & combinedFilters ] ]
 ]
 
-{ #category : #private }
-GtFilteredMethodsCoder >> filters [
-	^ {originalFilter.
-	self categoryFilter.
-	self implementorsFilter}
+{ #category : #filters }
+GtFilteredMethodsCoder >> filterDescriptors [
+	| descriptors |
+	descriptors := OrderedCollection new.
+	GtSearchMethodsFilter
+		withAllSubclassesDo: [ :each | 
+			(each filterDescriptorFor: self)
+				ifNotNil: [ :descriptor | descriptors add: descriptor ] ].
+	^ descriptors asSortedCollection: [ :a :b | a order < b order ]
+]
+
+{ #category : #filters }
+GtFilteredMethodsCoder >> filterNames [
+	^ self filterDescriptors collect: [ :each | each name ]
 ]
 
 { #category : #'initialize-release' }
@@ -63,20 +64,25 @@ GtFilteredMethodsCoder >> forItems: compiledMethods [
 	originalFilter := compiledMethods filter
 ]
 
-{ #category : #private }
-GtFilteredMethodsCoder >> implementorsFilter [
-	^ (implementorsFilterString notNil and: [ implementorsFilterString notEmpty ])
-		ifTrue: [ GtSearchImplementorPatternFilter pattern: implementorsFilterString ]
+{ #category : #filters }
+GtFilteredMethodsCoder >> hasCategoryFilter: aCategory [
+	^ additionalFilters
+		includes: (GtSearchMethodCategoryFilter forCategory: aCategory)
 ]
 
-{ #category : #accessing }
-GtFilteredMethodsCoder >> implementorsFilterString [
-	^ implementorsFilterString
+{ #category : #'initialize-release' }
+GtFilteredMethodsCoder >> initialize [
+	super initialize.
+	additionalFilters := OrderedCollection new
 ]
 
-{ #category : #accessing }
-GtFilteredMethodsCoder >> implementorsFilterString: aString [
-	implementorsFilterString := aString.
+{ #category : #testing }
+GtFilteredMethodsCoder >> isForClass [
+	^ false
+]
+
+{ #category : #filters }
+GtFilteredMethodsCoder >> runFilters [
 	self updateMethods.
 	self updateCoders
 ]
@@ -90,6 +96,30 @@ GtFilteredMethodsCoder >> shouldSort: a before: b [
 	a classOrMetaClass = b classOrMetaClass
 		ifTrue: [ ^ a selector < b selector ].
 	^ a classOrMetaClass name < b classOrMetaClass name
+]
+
+{ #category : #filters }
+GtFilteredMethodsCoder >> toggleCategoryFilter: aCategory [
+	self
+		toggleFilter: (GtSearchMethodCategoryFilter forCategory: aCategory)
+]
+
+{ #category : #filters }
+GtFilteredMethodsCoder >> toggleFilter: aGtSearchMethodsFilter [
+	additionalFilters
+		remove: aGtSearchMethodsFilter
+		ifAbsent: [ additionalFilters add: aGtSearchMethodsFilter ].
+	self runFilters.
+	self
+		announce:
+			(GtCodersFiltersChanged new
+				coders: self;
+				yourself)
+]
+
+{ #category : #filters }
+GtFilteredMethodsCoder >> toggleReferenceFilter: anObject [
+	self toggleFilter: (GtSearchReferencesFilter literal: anObject)
 ]
 
 { #category : #private }
