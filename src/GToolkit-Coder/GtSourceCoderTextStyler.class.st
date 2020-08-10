@@ -34,9 +34,9 @@ GtSourceCoderTextStyler >> parse: aText [
 	
 	isCoderSourceSame := aString = aCoderSource.
 	
-	"a given text is not coder source, let's ignore it"
+	"on Windows these may be different due to cr/lf"
 	isCoderSourceSame 
-		ifFalse: [ ^ nil ].
+		ifFalse: [ ^ coder newRbAST: aString ].
 
 	^ coder rbAST
 ]
