@@ -90,7 +90,7 @@ GtSourceCoderEditorLook >> onCoderChanged: aSourceCoder [
 
 	aSourceCoder announcer weak
 		when: GtCoderStylerChanged send: #stylersUpdated: to: self;
-		when: GtCoderStyleTextRequest send: #styleText to: self;
+		when: GtCoderStyleTextRequest send: #styleTextEvent: to: self;
 		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged to: self;
 		when: GtCoderParseError send: #reportParseError: to: self
 ]
@@ -132,7 +132,17 @@ GtSourceCoderEditorLook >> sourceChanged [
 
 { #category : #private }
 GtSourceCoderEditorLook >> styleText [
-	editorElement editor styleText
+	self styleTextAndAfterDo: [  ]
+]
+
+{ #category : #private }
+GtSourceCoderEditorLook >> styleTextAndAfterDo: aBlock [
+	editorElement editor styleTextAndAfterDo: aBlock
+]
+
+{ #category : #private }
+GtSourceCoderEditorLook >> styleTextEvent: anEvent [
+	self styleTextAndAfterDo: anEvent afterAction
 ]
 
 { #category : #private }

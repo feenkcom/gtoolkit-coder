@@ -26,7 +26,8 @@ GtRenameController >> addRefactoringChangesPreview [
 	coder
 		addRefactoringChangesPreview: self refactoring
 		at: self renamePosition
-		whenComplete: completionAction
+		whenComplete: [ self completionAction value.
+			coder requestStyleSourceText ]
 ]
 
 { #category : #executing }
@@ -49,6 +50,11 @@ GtRenameController >> coder [
 { #category : #accessing }
 GtRenameController >> coder: methodCoder [
 	coder := methodCoder
+]
+
+{ #category : #accessing }
+GtRenameController >> completionAction [
+	^ completionAction ifNil: [ [  ] ]
 ]
 
 { #category : #accessing }
