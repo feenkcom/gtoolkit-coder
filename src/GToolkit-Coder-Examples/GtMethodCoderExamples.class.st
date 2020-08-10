@@ -229,6 +229,24 @@ GtMethodCoderExamples >> keyword: a selector: b [
 	^ a + b
 ]
 
+{ #category : #examples }
+GtMethodCoderExamples >> nodeAtCursor [
+	<gtExample>
+	| coder element editorElement node |
+	coder := GtMethodCoder
+		forMethod: self class >> #sampleMethodWithCascades.
+	coder expanded: true.
+	element := coder asElement.
+	element
+		allChildrenBreadthFirstDetect: [ :each | each isKindOf: BrEditor ]
+		ifFound: [ :each | editorElement := each ].
+	editorElement editor
+		moveCursorTo: (coder currentSourceString indexOfSubCollection: 'self') + 1.
+	node := coder rbNodeAtCursor: editorElement.
+	self assert: node isVariable.
+	^ node
+]
+
 { #category : #'examples - for method' }
 GtMethodCoderExamples >> orderedCollectionMethods [
 	<gtExample>
@@ -239,4 +257,16 @@ GtMethodCoderExamples >> orderedCollectionMethods [
 
 { #category : #'sample methods' }
 GtMethodCoderExamples >> returnSelf [ ^self
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> sampleMethodWithCascades [
+	| stream |
+	stream := WriteStream on: String new.
+	stream
+		print: self;
+		cr;
+		nextPutAll: 'Testing';
+		next: 4 put: Character space.
+	^ stream contents
 ]
