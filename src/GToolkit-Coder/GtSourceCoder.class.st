@@ -729,7 +729,9 @@ GtSourceCoder >> rbNodeAtCursor: editorElement [
 	ast
 		nodesDo: [ :each | 
 			(position between: each start and: each stop)
-				ifTrue: [ node := each ] ].
+				ifTrue: [ (node isNil
+						or: [ node sourceInterval size > each sourceInterval size ])
+						ifTrue: [ node := each ] ] ].
 	^ node
 ]
 
