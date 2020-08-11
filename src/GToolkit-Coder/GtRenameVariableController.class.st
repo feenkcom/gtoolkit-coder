@@ -4,6 +4,12 @@ Class {
 	#category : #'GToolkit-Coder-Refactorings'
 }
 
+{ #category : #accessing }
+GtRenameVariableController >> addRefactoringChangesPreview [
+	super addRefactoringChangesPreview.
+	coder requestStyleSourceTextAndAfterDo: [ self styleRenamedVariable ]
+]
+
 { #category : #executing }
 GtRenameVariableController >> installRenamer [
 	self originalNode isNil
@@ -28,4 +34,12 @@ GtRenameVariableController >> refactoring [
 { #category : #accessing }
 GtRenameVariableController >> rename: oldName to: newName [
 	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+GtRenameVariableController >> styleRenamedVariable [
+	(coder sourceCode sourceText
+		from: renameInterval first
+		to: self renamePosition)
+		attributes: {(BlTextForegroundAttribute paint: Color gray)}
 ]

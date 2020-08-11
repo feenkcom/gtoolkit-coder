@@ -5,5 +5,18 @@ One of the usecases is to restyle the text after execution of a ==gtExample==
 Class {
 	#name : #GtCoderStyleTextRequest,
 	#superclass : #GtCoderAnnouncement,
+	#instVars : [
+		'afterAction'
+	],
 	#category : #'GToolkit-Coder-Event'
 }
+
+{ #category : #accessing }
+GtCoderStyleTextRequest >> afterAction [
+	^ afterAction ifNil: [ [  ] ]
+]
+
+{ #category : #accessing }
+GtCoderStyleTextRequest >> afterAction: aBlock [
+	afterAction := aBlock
+]

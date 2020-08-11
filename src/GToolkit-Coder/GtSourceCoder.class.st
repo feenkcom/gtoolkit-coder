@@ -788,6 +788,18 @@ GtSourceCoder >> requestStyleSourceText [
 ]
 
 { #category : #'api - text' }
+GtSourceCoder >> requestStyleSourceTextAndAfterDo: aBlock [
+	"Request the text editor to restyle the text (for example due to environmental changes)"
+
+	self resetASTCache.
+	self
+		announce:
+			(GtCoderStyleTextRequest new
+				coder: self;
+				afterAction: aBlock)
+]
+
+{ #category : #'api - text' }
 GtSourceCoder >> requestUpdateCollapsedText [
 	"Request to update the collapsed text, for example due to changes in the current source text.
 	It is not guaranteed that the collapsed text actually changes as for example in the method coder
