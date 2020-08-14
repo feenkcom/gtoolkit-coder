@@ -10,8 +10,26 @@ GtSearchMethodsFilter class >> createFilterFor: aMethodCoder [
 ]
 
 { #category : #accessing }
+GtSearchMethodsFilter class >> descriptorForTagType: aString in: aMethodsCoder [
+	self withAllSubclasses
+		do: [ :each | 
+			(each filterDescriptorFor: aMethodsCoder)
+				ifNotNil: [ :descriptor | 
+					descriptor name = aString
+						ifTrue: [ ^ descriptor ] ] ]
+]
+
+{ #category : #accessing }
 GtSearchMethodsFilter class >> filterDescriptorFor: aMethodCoder [
 	^ nil
+]
+
+{ #category : #testing }
+GtSearchMethodsFilter class >> isTag: aTag validFor: aMethodsCoder [
+	^ (self descriptorForTagType: aTag tagType in: aMethodsCoder)
+		ifNil: [ false ]
+		ifNotNil:
+			[ :descriptor | descriptor getter isNil or: [ aTag name trim notEmpty ] ]
 ]
 
 { #category : #accessing }

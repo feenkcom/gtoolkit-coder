@@ -14,6 +14,8 @@ GtSearchMethodCategoryFilter class >> filterDescriptorFor: aMethodCoder [
 		named: 'Category'
 		order: 15
 		getter: #category
+		setter: #category:
+		completion: GtMethodProtocolCompletionStrategy new
 ]
 
 { #category : #'instance creation' }

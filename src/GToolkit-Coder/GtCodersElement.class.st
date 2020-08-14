@@ -31,21 +31,21 @@ GtCodersElement >> buildElementForCoder: aCoder [
 
 { #category : #ui }
 GtCodersElement >> buildFilter [
-	| filterElement filterNames |
+	| filterElement filterDescriptors |
 	coders canFilter
 		ifFalse: [ ^ self ].
-	filterNames := coders filterNames.
-	filterNames isEmpty
+	filterDescriptors := coders filterDescriptors.
+	filterDescriptors isEmpty
 		ifTrue: [ ^ self ].
 	filterElement := GtFilterTagger new
 		padding: (BlInsets all: 2);
-		tagTypes: filterNames;
-		defaultTagType: filterNames first;
+		descriptors: filterDescriptors;
+		defaultTagType: filterDescriptors first name;
 		look: GtFilterTaggerEditableLook;
 		when: BrTaggerAddTagRequest
 			do: [ :aRequest | 
-			aRequest tag name
-				ifNotEmpty: [ aRequest currentTarget addTag: aRequest tag ].
+			(GtSearchMethodsFilter isTag: aRequest tag validFor: coders)
+				ifTrue: [ aRequest currentTarget addTag: aRequest tag ].
 			self updateFilters: aRequest currentTarget viewModel tags ];
 		when: BrTaggerRemoveTagRequest
 			do: [ :aRequest | 
@@ -53,10 +53,10 @@ GtCodersElement >> buildFilter [
 			self updateFilters: aRequest currentTarget viewModel tags ];
 		when: BrTaggerRenameTagRequest
 			do: [ :aRequest | 
-			aRequest newName trimmed
-				ifEmpty: [ aRequest currentTarget removeTag: aRequest tag ]
-				ifNotEmpty:
-					[ :aNewName | aRequest currentTarget renameTag: aRequest tag to: aNewName ].
+			(GtSearchMethodsFilter isTag: aRequest tag validFor: coders)
+				ifFalse: [ aRequest currentTarget removeTag: aRequest tag ]
+				ifTrue:
+					[ aRequest currentTarget renameTag: aRequest tag to: aRequest newName ].
 			self updateFilters: aRequest currentTarget viewModel tags ];
 		when: GtTaggerChangeTagType
 			do:

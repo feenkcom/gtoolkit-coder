@@ -14,6 +14,16 @@ GtFilterTagger >> defaultTagType: aString [
 	^ self viewModel defaultTagType: aString
 ]
 
+{ #category : #accessing }
+GtFilterTagger >> descriptors [
+	^ self viewModel descriptors
+]
+
+{ #category : #accessing }
+GtFilterTagger >> descriptors: aCollection [
+	^ self viewModel descriptors: aCollection
+]
+
 { #category : #initialization }
 GtFilterTagger >> initialize [
 	super initialize.
@@ -27,11 +37,6 @@ GtFilterTagger >> initialize [
 { #category : #accessing }
 GtFilterTagger >> tagTypes [
 	^ self viewModel tagTypes
-]
-
-{ #category : #accessing }
-GtFilterTagger >> tagTypes: aCollection [
-	^ self viewModel tagTypes: aCollection
 ]
 
 { #category : #initialization }
