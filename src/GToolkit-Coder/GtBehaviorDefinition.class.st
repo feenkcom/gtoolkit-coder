@@ -49,6 +49,11 @@ GtBehaviorDefinition >> difference: aGtCodeDefinitionDifference toRefactoringsOf
 	^ self subclassResponsibility
 ]
 
+{ #category : #testing }
+GtBehaviorDefinition >> isForMetaclass [
+	^ false
+]
+
 { #category : #accessing }
 GtBehaviorDefinition >> name [
 	<return: #Symbol>

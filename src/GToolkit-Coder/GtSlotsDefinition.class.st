@@ -191,6 +191,8 @@ GtSlotsDefinition >> slotsEditor [
 		addEvent: GtBehaviorSlotAdded;
 		removeEvent: GtBehaviorSlotRemoved;
 		renameEvent: GtBehaviorSlotRenamed;
+		whenKey: BlKeyCombination primaryG
+			do: [ :anEvent :aDefinition | aDefinition inspectFrom: anEvent ];
 		whenKey: BlKeyCombination primaryB
 			do: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ];
 		whenKey: BlKeyCombination primaryN

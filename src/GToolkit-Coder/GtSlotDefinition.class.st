@@ -71,6 +71,13 @@ GtSlotDefinition >> initialize [
 	
 ]
 
+{ #category : #'api - slot' }
+GtSlotDefinition >> inspectFrom: anEvent [
+	parent isForMetaclass
+		ifFalse: [ ^ self ].
+	anEvent currentTarget phlow spawnObject: self value
+]
+
 { #category : #testing }
 GtSlotDefinition >> isSpecial [
 	^ self type ~= self defaultSlotType
@@ -124,4 +131,12 @@ GtSlotDefinition >> type [
 { #category : #accessing }
 GtSlotDefinition >> type: anObject [
 	type := anObject
+]
+
+{ #category : #accessing }
+GtSlotDefinition >> value [
+	^ parent classOrMetaClass
+		ifNotNil: [ :cls | 
+			(cls classSide allInstVarNames includes: self name)
+				ifTrue: [ cls instanceSide instVarNamed: self name ] ]
 ]
