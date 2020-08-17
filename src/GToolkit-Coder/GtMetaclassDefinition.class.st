@@ -89,6 +89,11 @@ GtMetaclassDefinition >> fromMetaclass: aMetaclass [
 	slots := (GtClassSlotsDefinition fromClass: aMetaclass) parent: self
 ]
 
+{ #category : #testing }
+GtMetaclassDefinition >> isForMetaclass [
+	^ true
+]
+
 { #category : #'gt - viewers' }
 GtMetaclassDefinition >> readers [
 	<return: #Collection of: #GtCodeDefinitionViewer>
