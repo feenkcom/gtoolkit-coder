@@ -98,6 +98,11 @@ GtFilterDescriptor >> order: anInteger [
 	order := anInteger
 ]
 
+{ #category : #testing }
+GtFilterDescriptor >> requiresValue [
+	^ self getter notNil
+]
+
 { #category : #accessing }
 GtFilterDescriptor >> setter [
 	^ setter

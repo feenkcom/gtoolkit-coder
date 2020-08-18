@@ -37,34 +37,13 @@ GtCodersElement >> buildFilter [
 	filterDescriptors := coders filterDescriptors.
 	filterDescriptors isEmpty
 		ifTrue: [ ^ self ].
-	filterElement := GtFilterTagger new
+	filterElement := GtMethodsFilterElement new
 		padding: (BlInsets all: 2);
-		descriptors: filterDescriptors;
-		defaultTagType: filterDescriptors first name;
-		look: GtFilterTaggerEditableLook;
-		when: BrTaggerAddTagRequest
-			do: [ :aRequest | 
-			(GtSearchMethodsFilter isTag: aRequest tag validFor: coders)
-				ifTrue: [ aRequest currentTarget addTag: aRequest tag ].
-			self updateFilters: aRequest currentTarget viewModel tags ];
-		when: BrTaggerRemoveTagRequest
-			do: [ :aRequest | 
-			aRequest currentTarget removeTag: aRequest tag.
-			self updateFilters: aRequest currentTarget viewModel tags ];
-		when: BrTaggerRenameTagRequest
-			do: [ :aRequest | 
-			(GtSearchMethodsFilter isTag: aRequest tag validFor: coders)
-				ifFalse: [ aRequest currentTarget removeTag: aRequest tag ]
-				ifTrue:
-					[ aRequest currentTarget renameTag: aRequest tag to: aRequest newName ].
-			self updateFilters: aRequest currentTarget viewModel tags ];
-		when: GtTaggerChangeTagType
-			do:
-				[ :aRequest | self updateFilters: aRequest currentTarget viewModel tags ];
+		coders: coders;
 		yourself.
 	coders
 		when: GtCodersFiltersChanged
-		do: [ :event | self updateTagger: filterElement ].
+		do: [ :event | filterElement buildFiltersFrom: coders ].
 	self addChild: filterElement as: #filter
 ]
 
@@ -131,20 +110,4 @@ GtCodersElement >> updateFilters: tags [
 { #category : #private }
 GtCodersElement >> updateList [
 	listElement items: coders coders
-]
-
-{ #category : #private }
-GtCodersElement >> updateTagger: taggerElement [
-	| tags |
-	tags := OrderedCollection new.
-	coders additionalFilters
-		do: [ :each | 
-			(each class filterDescriptorFor: coders)
-				ifNotNil: [ :descriptor | 
-					tags
-						add:
-							(GtFilterTaggerTag new
-								name: (each perform: descriptor getter);
-								tagType: descriptor name) ] ].
-	taggerElement viewModel tags: tags
 ]
