@@ -22,7 +22,7 @@ GtMethodsFilterTagElement >> activateEditor [
 
 { #category : #'initialize-release' }
 GtMethodsFilterTagElement >> allLabelText [
-	^ ' '
+	^ 'All'
 ]
 
 { #category : #private }
