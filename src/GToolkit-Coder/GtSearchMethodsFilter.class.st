@@ -29,7 +29,7 @@ GtSearchMethodsFilter class >> isTag: aTag validFor: aMethodsCoder [
 	^ (self descriptorForTagType: aTag tagType in: aMethodsCoder)
 		ifNil: [ false ]
 		ifNotNil:
-			[ :descriptor | descriptor getter isNil or: [ aTag name trim notEmpty ] ]
+			[ :descriptor | descriptor requiresValue not or: [ aTag name trim notEmpty ] ]
 ]
 
 { #category : #accessing }

@@ -15,6 +15,8 @@ GtFilteredMethodsCoder >> additionalFilters [
 
 { #category : #filters }
 GtFilteredMethodsCoder >> additionalFilters: aCollection [
+	additionalFilters = aCollection
+		ifTrue: [ ^ self ].
 	additionalFilters := OrderedCollection withAll: aCollection.
 	self runFilters
 ]
@@ -64,12 +66,6 @@ GtFilteredMethodsCoder >> forItems: compiledMethods [
 	originalFilter := compiledMethods filter
 ]
 
-{ #category : #filters }
-GtFilteredMethodsCoder >> hasCategoryFilter: aCategory [
-	^ additionalFilters
-		includes: (GtSearchMethodCategoryFilter forCategory: aCategory)
-]
-
 { #category : #'initialize-release' }
 GtFilteredMethodsCoder >> initialize [
 	super initialize.
@@ -106,24 +102,6 @@ GtFilteredMethodsCoder >> shouldSort: a before: b [
 	a classOrMetaClass = b classOrMetaClass
 		ifTrue: [ ^ a selector < b selector ].
 	^ a classOrMetaClass name < b classOrMetaClass name
-]
-
-{ #category : #filters }
-GtFilteredMethodsCoder >> toggleFilter: aGtSearchMethodsFilter [
-	additionalFilters
-		remove: aGtSearchMethodsFilter
-		ifAbsent: [ additionalFilters add: aGtSearchMethodsFilter ].
-	self runFilters.
-	self
-		announce:
-			(GtCodersFiltersChanged new
-				coders: self;
-				yourself)
-]
-
-{ #category : #filters }
-GtFilteredMethodsCoder >> toggleReferenceFilter: anObject [
-	self toggleFilter: (GtSearchReferencesFilter literal: anObject)
 ]
 
 { #category : #private }
