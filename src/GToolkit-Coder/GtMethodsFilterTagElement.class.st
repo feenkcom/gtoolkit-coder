@@ -180,7 +180,9 @@ GtMethodsFilterTagElement >> makeDefaultAllFilter [
 	valueString := ''.
 	(self childNamed: #editableLabel) text
 		deleteAll;
-		append: self allLabelText asRopedText glamorousRegularFont
+		append:
+			self allLabelText asRopedText glamorousRegularFont
+				glamorousRegularSmallSize
 ]
 
 { #category : #accessing }
@@ -196,5 +198,6 @@ GtMethodsFilterTagElement >> valueString: aString [
 		ifFound: [ :label | 
 			label text deleteAll.
 			aString notEmpty
-				ifTrue: [ label text append: aString asRopedText ] ]
+				ifTrue: [ label text
+						append: aString asRopedText glamorousRegularFont glamorousRegularSmallSize ] ]
 ]
