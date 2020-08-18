@@ -65,7 +65,8 @@ GtClassMethodsCoder >> categoryFilter: aView [
 					(categories
 						collect: [ :each | 
 							GtCoderContextMenuAction new
-								action: [ :element | self toggleCategoryFilter: each ];
+								action:
+										[ :element | self setFilters: {(GtSearchMethodCategoryFilter forCategory: each)} ];
 								title: each ]);
 				hMatchParent;
 				vMatchParent ]
@@ -90,7 +91,12 @@ GtClassMethodsCoder >> classVariableFilter: aView [
 					(variables
 						collect: [ :each | 
 							GtCoderContextMenuAction new
-								action: [ :element | self toggleClassVariableFilter: each ];
+								action: [ :element | 
+									self
+										setFilters:
+											{(GtSearchClassVariableReferenceFilter
+												forClass: self classOrMetaClass
+												andVariable: each)} ];
 								title: each ]);
 				hMatchParent;
 				vMatchParent ]
@@ -204,7 +210,12 @@ GtClassMethodsCoder >> instanceVariableFilter: aView [
 					(variables
 						collect: [ :each | 
 							GtCoderContextMenuAction new
-								action: [ :element | self toggleInstanceVariableFilter: each ];
+								action: [ :element | 
+									self
+										setFilters:
+											{(GtSearchInstanceVariableReferenceFilter
+												forClass: self classOrMetaClass
+												andVariable: each)} ];
 								title: each ]);
 				hMatchParent;
 				vMatchParent ]
@@ -266,22 +277,4 @@ GtClassMethodsCoder >> shouldSort: a before: b [
 	a selector > b selector
 		ifTrue: [ ^ false ].
 	^ a classOrMetaClass allSuperclasses size >= b classOrMetaClass allSuperclasses size
-]
-
-{ #category : #filters }
-GtClassMethodsCoder >> toggleClassVariableFilter: aVariable [
-	self
-		toggleFilter:
-			(GtSearchClassVariableReferenceFilter
-				forClass: self classOrMetaClass
-				andVariable: aVariable)
-]
-
-{ #category : #filters }
-GtClassMethodsCoder >> toggleInstanceVariableFilter: aVariable [
-	self
-		toggleFilter:
-			(GtSearchInstanceVariableReferenceFilter
-				forClass: self classOrMetaClass
-				andVariable: aVariable)
 ]

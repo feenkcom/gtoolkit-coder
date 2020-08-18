@@ -16,6 +16,8 @@ GtSearchMethodsWithClassPatternFilter class >> filterDescriptorFor: aMethodCoder
 		named: 'Class'
 		order: 20
 		getter: #pattern
+		setter: #pattern:
+		completion: GtClassesCompletionStrategy new
 ]
 
 { #category : #'instance creation' }

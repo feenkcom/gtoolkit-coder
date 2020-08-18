@@ -14,6 +14,8 @@ GtSearchMethodsWithPackagePatternFilter class >> filterDescriptorFor: aMethodCod
 		named: 'Package'
 		order: 30
 		getter: #pattern
+		setter: #pattern:
+		completion: GtPackagesCompletionStrategy new
 ]
 
 { #category : #'instance creation' }

@@ -3,7 +3,7 @@ Class {
 	#superclass : #BrTaggerModel,
 	#instVars : [
 		'defaultTagType',
-		'tagTypes'
+		'descriptors'
 	],
 	#category : #'GToolkit-Coder-Filters - UI'
 }
@@ -26,6 +26,16 @@ GtFilterTaggerModel >> defaultTagType: aString [
 	defaultTagType := aString
 ]
 
+{ #category : #accessing }
+GtFilterTaggerModel >> descriptors [
+	^ descriptors
+]
+
+{ #category : #accessing }
+GtFilterTaggerModel >> descriptors: aCollection [
+	descriptors := aCollection
+]
+
 { #category : #'api - tags' }
 GtFilterTaggerModel >> tagClass [
 	^ GtFilterTaggerTag
@@ -33,10 +43,5 @@ GtFilterTaggerModel >> tagClass [
 
 { #category : #accessing }
 GtFilterTaggerModel >> tagTypes [
-	^ tagTypes
-]
-
-{ #category : #accessing }
-GtFilterTaggerModel >> tagTypes: aCollection [
-	tagTypes := aCollection
+	^ descriptors collect: [ :each | each name ]
 ]

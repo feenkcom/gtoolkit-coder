@@ -27,7 +27,7 @@ GtFilterTaggerEditableLook >> dropDownFor: aTag [
 				look: BrGlamorousButtonWithLabelAndIconLook - BrGlamorousButtonExteriorLook;
 				yourself ]
 		content: [ BrSimpleList new
-				items: self widget viewModel tagTypes;
+				items: self widget viewModel descriptors;
 				stencil: [ :each | 
 					| element |
 					element := BlElement new.
@@ -47,15 +47,15 @@ GtFilterTaggerEditableLook >> dropDownFor: aTag [
 							c vertical fitContent ];
 						padding: (BlInsets all: 5);
 						addEventHandlerOn: BlClickEvent
-							do: [ button label: each.
+							do: [ button label: each name.
 							dropDownLook hide.
-							aTag tagType: each.
+							self update: aTag to: each inPane: button parent.
 							(self widget viewModel tags includes: aTag)
 								ifTrue: [ self dispatchEvent: (GtTaggerChangeTagType new tag: aTag) ] ];
 						addChild:
 							(BrLabel new
 								look: BrGlamorousLabelLook;
-								text: each;
+								text: each name;
 								yourself).
 					element ];
 				hFitContent;
@@ -241,4 +241,28 @@ GtFilterTaggerEditableLook >> requestRenameTag: aTaggerTag to: aNewName from: aT
 				handleRenameError: anError
 				to: aNewName
 				from: (aTagElement childNamed: #editableLabel) ]
+]
+
+{ #category : #private }
+GtFilterTaggerEditableLook >> update: aTag to: descriptor inPane: aPane [
+	aTag tagType: descriptor name.
+	aTag name: ''.
+	aPane
+		childNamed: #editableLabel
+		ifFound: [ :label | self updateLabel: label using: descriptor ]
+]
+
+{ #category : #private }
+GtFilterTaggerEditableLook >> updateLabel: label using: descriptor [
+	| completionController |
+	label deleter
+		from: 0 to: label text size;
+		delete.
+	(label userData at: #completionController ifAbsent: [ nil ])
+		ifNotNil: [ :controller | controller uninstall ].
+	completionController := descriptor completion
+		ifNil: [ nil ]
+		ifNotNil:
+			[ :strategy | (GtCompletionController on: label strategy: strategy) install ].
+	label userData at: #completionController put: completionController
 ]

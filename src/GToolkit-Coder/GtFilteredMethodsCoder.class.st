@@ -87,6 +87,16 @@ GtFilteredMethodsCoder >> runFilters [
 	self updateCoders
 ]
 
+{ #category : #accessing }
+GtFilteredMethodsCoder >> setFilters: aCollection [
+	self additionalFilters: aCollection.
+	self
+		announce:
+			(GtCodersFiltersChanged new
+				coders: self;
+				yourself)
+]
+
 { #category : #private }
 GtFilteredMethodsCoder >> shouldSort: a before: b [
 	a selector isNil
@@ -96,12 +106,6 @@ GtFilteredMethodsCoder >> shouldSort: a before: b [
 	a classOrMetaClass = b classOrMetaClass
 		ifTrue: [ ^ a selector < b selector ].
 	^ a classOrMetaClass name < b classOrMetaClass name
-]
-
-{ #category : #filters }
-GtFilteredMethodsCoder >> toggleCategoryFilter: aCategory [
-	self
-		toggleFilter: (GtSearchMethodCategoryFilter forCategory: aCategory)
 ]
 
 { #category : #filters }

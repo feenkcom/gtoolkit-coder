@@ -51,9 +51,11 @@ GtFilterDescriptor >> completion: completionStrategy [
 
 { #category : #filters }
 GtFilterDescriptor >> createForCoders: aMethodsCoder andValue: aString [
-	^ (filterClass createFilterFor: aMethodsCoder)
-		perform: self setter with: aString;
-		yourself
+	| filter |
+	filter := filterClass createFilterFor: aMethodsCoder.
+	self setter
+		ifNotNil: [ :selector | filter perform: selector with: aString ].
+	^ filter
 ]
 
 { #category : #accessing }
@@ -98,7 +100,9 @@ GtFilterDescriptor >> order: anInteger [
 
 { #category : #accessing }
 GtFilterDescriptor >> setter [
-	^ setter ifNil: [ setter := (getter , ':') asSymbol ]
+	^ setter
+		ifNil: [ setter := getter notNil
+				ifTrue: [ (getter , ':') asSymbol ] ]
 ]
 
 { #category : #accessing }
