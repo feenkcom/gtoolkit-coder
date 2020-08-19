@@ -21,6 +21,16 @@ GtPackageCoderElement >> buildClassesAndTagsTabs [
 			 stencil: [ packageCoder classesCoder asElement ]).
 	tabGroup addTab: (BrTab new
 			 look: BrGlamorousTabLook new;
+			 label: 'Comment';
+			 stencil: [ 
+			 	| v |
+			 	v := GtPhlowView empty on: ManifestBloc perform: #gtCoderCommentsFor:.
+			 	ManifestBloc gtActions do: [ :eachAction | 
+				(eachAction target isForViewDefinedIn: #gtCoderCommentsFor:) ifTrue: [ 
+					v addPhlowAction: eachAction ] ].
+				v asElement ]).
+	tabGroup addTab: (BrTab new
+			 look: BrGlamorousTabLook new;
 			 label: 'Tags';
 			 stencil: [ self buildPackageTagsList ]).
 	^ tabGroup
