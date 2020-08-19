@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-GtSubstringFilter class >> filterDescriptorFor: aMethodCoder [
+GtSubstringFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
 		forClass: self
 		named: 'Substring'

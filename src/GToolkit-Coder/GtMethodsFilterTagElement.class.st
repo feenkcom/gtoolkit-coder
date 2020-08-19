@@ -43,14 +43,9 @@ GtMethodsFilterTagElement >> buildTagElements [
 { #category : #elements }
 GtMethodsFilterTagElement >> createDropDown [
 	| button dropDownLook |
-	button := BrButton new.
+	button := self createDropDownButton.
 	dropDownLook := BrGlamorousWithDropdownLook
-		handle: [ BrButton new
-				label: self descriptor name;
-				icon: BrGlamorousVectorIcons downwards;
-				beSmall;
-				look: BrGlamorousButtonWithLabelAndIconLook - BrGlamorousButtonExteriorLook;
-				yourself ]
+		handle: [ self createDropDownButton ]
 		content: [ BrSimpleList new
 				items: filter descriptors;
 				stencil: [ :each | 
@@ -77,13 +72,31 @@ GtMethodsFilterTagElement >> createDropDown [
 							self applyDescriptor: each ];
 						addChild:
 							(BrLabel new
-								look: BrGlamorousLabelLook;
+								look: BrGlamorousLabelLook new glamorousRegularFont glamorousCodeSmallSize;
 								text: each name;
 								yourself).
 					element ];
 				hFitContent;
 				vFitContent ].
-	button look: BrGlamorousButtonWithLabelAndIconLook + dropDownLook.
+	button addLook: dropDownLook.
+	button
+		addLook:
+			(BrInteractiveCommonLook new
+				default: [ button background: Color transparent ];
+				hovered: [ button background: BrGlamorousColors neutralBackgroundColor darker ]).
+	^ button
+]
+
+{ #category : #elements }
+GtMethodsFilterTagElement >> createDropDownButton [
+	| button |
+	button := BrButton new.
+	button
+		look:
+			BrTextLabelLook new glamorousRegularFont glamorousCodeSmallSize
+				+ BrGlamorousButtonIconLook + BrGlamorousButtonLayoutLook.
+	button vExact: 20.
+	button padding: (BlInsets left: 4 right: 2).
 	button label: self descriptor name.
 	button icon: BrGlamorousVectorIcons downwards.
 	button beSmall.
@@ -160,7 +173,17 @@ GtMethodsFilterTagElement >> filterForCoders: aMethodsCoder [
 GtMethodsFilterTagElement >> initialize [
 	super initialize.
 	self fitContent.
-	self margin: (BlInsets all: 3)
+	self margin: (BlInsets all: 3).
+	self
+		look:
+			(BrInteractiveCommonLook new
+				default: [ :aWidget | 
+					aWidget geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
+					aWidget background: BrGlamorousColors neutralBackgroundColor.
+					aWidget border: BlBorder empty ];
+				when: BrInteractionState hovered
+					style:
+						[ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor darker ])
 ]
 
 { #category : #testing }

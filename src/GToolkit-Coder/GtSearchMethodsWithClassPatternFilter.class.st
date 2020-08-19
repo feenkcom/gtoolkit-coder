@@ -8,8 +8,8 @@ Class {
 }
 
 { #category : #accessing }
-GtSearchMethodsWithClassPatternFilter class >> filterDescriptorFor: aMethodCoder [
-	aMethodCoder isForClass
+GtSearchMethodsWithClassPatternFilter class >> filterDescriptorFor: aMethodsCoder [
+	aMethodsCoder isForClass
 		ifTrue: [ ^ nil ].
 	^ GtFilterDescriptor
 		forClass: self
@@ -17,7 +17,8 @@ GtSearchMethodsWithClassPatternFilter class >> filterDescriptorFor: aMethodCoder
 		order: 20
 		getter: #pattern
 		setter: #pattern:
-		completion: GtClassesCompletionStrategy new
+		completion:
+			(GtStringsCompletionStrategy new completions: aMethodsCoder classNames)
 ]
 
 { #category : #'instance creation' }

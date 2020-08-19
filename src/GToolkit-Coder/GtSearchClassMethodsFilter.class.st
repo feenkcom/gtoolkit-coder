@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #accessing }
-GtSearchClassMethodsFilter class >> filterDescriptorFor: aMethodCoder [
+GtSearchClassMethodsFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
 		forClass: self
 		named: 'Class Methods'

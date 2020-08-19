@@ -8,14 +8,15 @@ Class {
 }
 
 { #category : #accessing }
-GtSearchMethodCategoryFilter class >> filterDescriptorFor: aMethodCoder [
+GtSearchMethodCategoryFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
 		forClass: self
 		named: 'Category'
 		order: 15
 		getter: #category
 		setter: #category:
-		completion: GtMethodProtocolCompletionStrategy new
+		completion:
+			(GtStringsCompletionStrategy new completions: aMethodsCoder categories)
 ]
 
 { #category : #'instance creation' }

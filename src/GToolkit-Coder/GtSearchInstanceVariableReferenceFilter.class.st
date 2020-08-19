@@ -8,14 +8,18 @@ Class {
 }
 
 { #category : #accessing }
-GtSearchInstanceVariableReferenceFilter class >> filterDescriptorFor: aMethodCoder [
-	aMethodCoder isForClass
+GtSearchInstanceVariableReferenceFilter class >> filterDescriptorFor: aMethodsCoder [
+	aMethodsCoder isForClass
 		ifFalse: [ ^ nil ].
 	^ GtFilterDescriptor
 		forClass: self
 		named: 'InstVar'
 		order: 25
 		getter: #variableName
+		setter: #variableName:
+		completion:
+			(GtStringsCompletionStrategy new
+				completions: (GtPrefixTree withAll: aMethodsCoder classOrMetaClass allInstVarNames))
 ]
 
 { #category : #'instance creation' }
