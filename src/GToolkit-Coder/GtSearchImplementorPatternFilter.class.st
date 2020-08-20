@@ -8,12 +8,16 @@ Class {
 }
 
 { #category : #accessing }
-GtSearchImplementorPatternFilter class >> filterDescriptorFor: aMethodCoder [
+GtSearchImplementorPatternFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
 		forClass: self
 		named: 'Implementor'
 		order: 10
 		getter: #pattern
+		setter: #pattern:
+		completion:
+			(GtStringsCompletionStrategy new
+				completions: aMethodsCoder selectorNames)
 ]
 
 { #category : #'instance creation' }

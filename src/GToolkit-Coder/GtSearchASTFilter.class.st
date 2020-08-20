@@ -16,7 +16,7 @@ GtSearchASTFilter class >> ast: aRBProgramNode [
 ]
 
 { #category : #accessing }
-GtSearchASTFilter class >> filterDescriptorFor: aMethodCoder [
+GtSearchASTFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
 		forClass: self
 		named: 'AST'

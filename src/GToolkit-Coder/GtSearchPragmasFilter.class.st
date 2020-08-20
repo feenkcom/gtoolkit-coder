@@ -8,12 +8,16 @@ Class {
 }
 
 { #category : #accessing }
-GtSearchPragmasFilter class >> filterDescriptorFor: aMethodCoder [
+GtSearchPragmasFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
 		forClass: self
 		named: 'Pragma'
 		order: 11
 		getter: #symbol
+		setter: #symbol:
+		completion:
+			(GtStringsCompletionStrategy new
+				completions: aMethodsCoder pragmaNames)
 ]
 
 { #category : #'instance creation' }

@@ -8,14 +8,16 @@ Class {
 }
 
 { #category : #accessing }
-GtSearchMethodsWithPackagePatternFilter class >> filterDescriptorFor: aMethodCoder [
+GtSearchMethodsWithPackagePatternFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
 		forClass: self
 		named: 'Package'
 		order: 30
 		getter: #pattern
 		setter: #pattern:
-		completion: GtPackagesCompletionStrategy new
+		completion:
+			(GtStringsCompletionStrategy new
+				completions: aMethodsCoder packageNames)
 ]
 
 { #category : #'instance creation' }

@@ -20,7 +20,7 @@ GtSearchMethodsFilter class >> descriptorForTagType: aString in: aMethodsCoder [
 ]
 
 { #category : #accessing }
-GtSearchMethodsFilter class >> filterDescriptorFor: aMethodCoder [
+GtSearchMethodsFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ nil
 ]
 

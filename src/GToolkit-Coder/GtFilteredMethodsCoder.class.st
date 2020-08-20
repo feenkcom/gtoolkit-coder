@@ -26,6 +26,23 @@ GtFilteredMethodsCoder >> canFilter [
 	^ true
 ]
 
+{ #category : #completion }
+GtFilteredMethodsCoder >> categories [
+	| categories |
+	categories := GtPrefixTree new.
+	items do: [ :each | categories add: each category ].
+	^ categories
+]
+
+{ #category : #completion }
+GtFilteredMethodsCoder >> classNames [
+	| classNames |
+	classNames := GtPrefixTree new.
+	items
+		do: [ :each | classNames add: each methodClass instanceSide name ].
+	^ classNames
+]
+
 { #category : #elements }
 GtFilteredMethodsCoder >> coderLook [
 	^ GtMethodCoderCategoryLook
@@ -77,10 +94,38 @@ GtFilteredMethodsCoder >> isForClass [
 	^ false
 ]
 
+{ #category : #completion }
+GtFilteredMethodsCoder >> packageNames [
+	| packageNames |
+	packageNames := GtPrefixTree new.
+	items
+		do:
+			[ :each | each package ifNotNil: [ :package | packageNames add: package name ] ].
+	^ packageNames
+]
+
+{ #category : #completion }
+GtFilteredMethodsCoder >> pragmaNames [
+	| pragmaNames |
+	pragmaNames := GtPrefixTree new.
+	items
+		do:
+			[ :each | each pragmas do: [ :pragma | pragmaNames add: pragma selector ] ].
+	^ pragmaNames
+]
+
 { #category : #filters }
 GtFilteredMethodsCoder >> runFilters [
 	self updateMethods.
 	self updateCoders
+]
+
+{ #category : #completion }
+GtFilteredMethodsCoder >> selectorNames [
+	| selectorNames |
+	selectorNames := GtPrefixTree new.
+	items do: [ :each | selectorNames add: each selector ].
+	^ selectorNames
 ]
 
 { #category : #accessing }
