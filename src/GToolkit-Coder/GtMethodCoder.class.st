@@ -1116,7 +1116,7 @@ GtMethodCoder >> nodeDescription: aNode [
 GtMethodCoder >> object [
 	^ self
 		attributeNamed: #object
-		ifAbsent: [ class ]
+		ifAbsent: [ class instanceSide ]
 ]
 
 { #category : #accessing }
