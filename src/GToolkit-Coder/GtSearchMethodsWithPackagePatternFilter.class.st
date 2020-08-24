@@ -10,11 +10,9 @@ Class {
 { #category : #accessing }
 GtSearchMethodsWithPackagePatternFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
-		forClass: self
+		creator: [ :value | self pattern: value ]
 		named: 'Package'
 		order: 30
-		getter: #pattern
-		setter: #pattern:
 		completion:
 			(GtStringsCompletionStrategy new
 				completions: aMethodsCoder packageNames)
@@ -31,6 +29,11 @@ GtSearchMethodsWithPackagePatternFilter class >> pattern: aString [
 GtSearchMethodsWithPackagePatternFilter >> = anObject [
 	^ self class = anObject class
 		and: [ self pattern asLowercase = anObject pattern asLowercase ]
+]
+
+{ #category : #accessing }
+GtSearchMethodsWithPackagePatternFilter >> filterValueString [
+	^ self pattern
 ]
 
 { #category : #printing }

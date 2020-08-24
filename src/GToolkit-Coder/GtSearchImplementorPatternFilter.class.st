@@ -10,11 +10,9 @@ Class {
 { #category : #accessing }
 GtSearchImplementorPatternFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
-		forClass: self
+		creator: [ :value | self pattern: value ]
 		named: 'Implementor'
 		order: 10
-		getter: #pattern
-		setter: #pattern:
 		completion:
 			(GtStringsCompletionStrategy new
 				completions: aMethodsCoder selectorNames)
@@ -31,6 +29,11 @@ GtSearchImplementorPatternFilter class >> pattern: aString [
 GtSearchImplementorPatternFilter >> = anObject [
 	^ self class = anObject class
 		and: [ self pattern asLowercase = anObject pattern asLowercase ]
+]
+
+{ #category : #accessing }
+GtSearchImplementorPatternFilter >> filterValueString [
+	^ self pattern
 ]
 
 { #category : #printing }

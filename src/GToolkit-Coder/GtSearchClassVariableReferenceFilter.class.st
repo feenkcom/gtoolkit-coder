@@ -18,11 +18,10 @@ GtSearchClassVariableReferenceFilter class >> filterDescriptorFor: aMethodsCoder
 	aMethodsCoder isForClass
 		ifFalse: [ ^ nil ].
 	^ GtFilterDescriptor
-		forClass: self
+		creator:
+			[ :value | self forClass: aMethodsCoder classOrMetaClass andVariable: value ]
 		named: 'ClassVar'
 		order: 25
-		getter: #variableName
-		setter: #variableName:
 		completion:
 			(GtStringsCompletionStrategy new
 				completions:
@@ -41,6 +40,11 @@ GtSearchClassVariableReferenceFilter class >> forClass: aClass andVariable: aStr
 	^ (self forClass: aClass)
 		variableName: aString;
 		yourself
+]
+
+{ #category : #accessing }
+GtSearchClassVariableReferenceFilter >> filterValueString [
+	^ self variableName
 ]
 
 { #category : #'initialize-release' }

@@ -2,40 +2,43 @@ Class {
 	#name : #GtFilterDescriptor,
 	#superclass : #Object,
 	#instVars : [
-		'filterClass',
 		'name',
 		'order',
-		'getter',
-		'setter',
-		'completion'
+		'completion',
+		'emptyDefaultValue',
+		'creationBlock',
+		'valueIsRequired'
 	],
-	#category : #'GToolkit-Coder-Filters'
+	#category : #'GToolkit-Coder-Filters - UI'
 }
 
-{ #category : #'instance creation' }
-GtFilterDescriptor class >> forClass: aClass [
+{ #category : #'instace creation' }
+GtFilterDescriptor class >> creator: aBlock named: aString order: anInteger [
 	^ self new
-		filterClass: aClass;
+		creationBlock: aBlock;
+		name: aString;
+		order: anInteger;
 		yourself
 ]
 
 { #category : #'instance creation' }
-GtFilterDescriptor class >> forClass: aClass named: aString order: anInteger getter: getterSymbol [
-	^ (self forClass: aClass)
+GtFilterDescriptor class >> creator: aBlock named: aString order: anInteger completion: completionStrategy [
+	^ self new
+		creationBlock: aBlock;
 		name: aString;
 		order: anInteger;
-		getter: getterSymbol;
-		yourself
-]
-
-{ #category : #'instance creation' }
-GtFilterDescriptor class >> forClass: aClass named: aString order: anInteger getter: getterSymbol setter: setterSymbol completion: completionStrategy [
-	^ (self forClass: aClass)
-		name: aString;
-		order: anInteger;
-		getter: getterSymbol;
-		setter: setterSymbol;
 		completion: completionStrategy;
+		yourself
+]
+
+{ #category : #'instance creation' }
+GtFilterDescriptor class >> creator: aBlock named: aString order: anInteger completion: completionStrategy emptyDefaultValue: defaultValueString [
+	^ self new
+		creationBlock: aBlock;
+		name: aString;
+		order: anInteger;
+		completion: completionStrategy;
+		emptyDefaultValue: defaultValueString;
 		yourself
 ]
 
@@ -49,33 +52,25 @@ GtFilterDescriptor >> completion: completionStrategy [
 	completion := completionStrategy
 ]
 
-{ #category : #filters }
-GtFilterDescriptor >> createForCoders: aMethodsCoder andValue: aString [
-	| filter |
-	filter := filterClass createFilterFor: aMethodsCoder.
-	self setter
-		ifNotNil: [ :selector | filter perform: selector with: aString ].
-	^ filter
+{ #category : #accessing }
+GtFilterDescriptor >> creationBlock: aBlock [
+	creationBlock := aBlock
 ]
 
 { #category : #accessing }
-GtFilterDescriptor >> filterClass [
-	^ filterClass
+GtFilterDescriptor >> emptyDefaultValue [
+	^ emptyDefaultValue
 ]
 
 { #category : #accessing }
-GtFilterDescriptor >> filterClass: aClass [
-	filterClass := aClass
+GtFilterDescriptor >> emptyDefaultValue: aString [
+	emptyDefaultValue := aString
 ]
 
-{ #category : #accessing }
-GtFilterDescriptor >> getter [
-	^ getter
-]
-
-{ #category : #accessing }
-GtFilterDescriptor >> getter: aSymbol [
-	getter := aSymbol
+{ #category : #'initialize-release' }
+GtFilterDescriptor >> initialize [
+	super initialize.
+	valueIsRequired := true
 ]
 
 { #category : #accessing }
@@ -86,6 +81,11 @@ GtFilterDescriptor >> name [
 { #category : #accessing }
 GtFilterDescriptor >> name: aString [
 	name := aString
+]
+
+{ #category : #filters }
+GtFilterDescriptor >> newFilterWithValue: aString [
+	^ creationBlock value: aString
 ]
 
 { #category : #accessing }
@@ -99,18 +99,16 @@ GtFilterDescriptor >> order: anInteger [
 ]
 
 { #category : #testing }
-GtFilterDescriptor >> requiresValue [
-	^ self getter notNil
+GtFilterDescriptor >> showAsDefaultWhenEmpty [
+	^ emptyDefaultValue notNil
 ]
 
-{ #category : #accessing }
-GtFilterDescriptor >> setter [
-	^ setter
-		ifNil: [ setter := getter notNil
-				ifTrue: [ (getter , ':') asSymbol ] ]
+{ #category : #testing }
+GtFilterDescriptor >> valueIsRequired [
+	^ valueIsRequired
 ]
 
-{ #category : #accessing }
-GtFilterDescriptor >> setter: aSymbol [
-	setter := aSymbol
+{ #category : #'initialize-release' }
+GtFilterDescriptor >> valueNotRequired [
+	valueIsRequired := false
 ]

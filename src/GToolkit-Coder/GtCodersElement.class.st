@@ -37,13 +37,16 @@ GtCodersElement >> buildFilter [
 	filterDescriptors := coders filterDescriptors.
 	filterDescriptors isEmpty
 		ifTrue: [ ^ self ].
-	filterElement := GtMethodsFilterElement new
+	filterElement := GtFiltersElement new
 		padding: (BlInsets all: 2);
-		coders: coders;
+		descriptors: filterDescriptors;
 		yourself.
+	filterElement
+		when: GtFiltersChangedEvent
+		do: [ :event | self updateCodersFilters: event ].
 	coders
 		when: GtCodersFiltersChanged
-		do: [ :event | filterElement buildFiltersFrom: coders ].
+		do: [ :event | self updateDisplayedFilters: filterElement ].
 	self addChild: filterElement as: #filter
 ]
 
@@ -88,23 +91,29 @@ GtCodersElement >> scrollToEvent: anEvent [
 		ifTrue: [ (self childNamed: #codersList) look listElement scrollToPosition: index ]
 ]
 
-{ #category : #private }
-GtCodersElement >> updateFilters: tags [
-	| descriptorsMap items |
-	tags isEmpty
-		ifTrue: [ ^ coders additionalFilters: #() ].
-	descriptorsMap := coders filterDescriptors
-		inject: Dictionary new
-		into: [ :sum :each | 
-			sum
-				at: each name put: each;
-				yourself ].
-	items := tags
-		collect: [ :each | (descriptorsMap at: each tagType) -> each name ].
-	coders
-		additionalFilters:
-			((items asSortedCollection: [ :a :b | a key order < b key order ])
-				collect: [ :each | each key createForCoders: coders andValue: each value ])
+{ #category : #ui }
+GtCodersElement >> updateCodersFilters: event [
+	| filters |
+	filters := OrderedCollection new.
+	event filterElement
+		filtersDo:
+			[ :descriptor :value | filters add: (descriptor newFilterWithValue: value) ].
+	^ coders additionalFilters: filters
+]
+
+{ #category : #ui }
+GtCodersElement >> updateDisplayedFilters: filterElement [
+	filterElement
+		buildFilters: [ coders additionalFilters
+				do: [ :each | 
+					(each class filterDescriptorFor: coders)
+						ifNotNil: [ :descriptor | 
+							| label |
+							label := descriptor valueIsRequired
+								ifTrue: [ each filterValueString ].
+							filterElement
+								addFilterForDescriptor: descriptor
+								andValue: label ] ] ]
 ]
 
 { #category : #private }
