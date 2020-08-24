@@ -403,7 +403,8 @@ GtMethodCoder >> changedSourceForCurrentMethod: aRefactoryChange [
 
 { #category : #accessing }
 GtMethodCoder >> classOrMetaClass [
-	^ class ifNil: [ super classOrMetaClass ]
+	^ class
+		ifNil: [ (self attributeNamed: #object ifAbsent: [ nil ]) class ]
 ]
 
 { #category : #accessing }
@@ -1116,7 +1117,7 @@ GtMethodCoder >> nodeDescription: aNode [
 GtMethodCoder >> object [
 	^ self
 		attributeNamed: #object
-		ifAbsent: [ class instanceSide ]
+		ifAbsent: [ (class ifNil: [ nil class ]) instanceSide ]
 ]
 
 { #category : #accessing }
