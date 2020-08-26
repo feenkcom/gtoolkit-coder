@@ -1,66 +1,63 @@
 Class {
-	#name : #GtMethodsFilterElement,
+	#name : #GtFiltersElement,
 	#superclass : #BrHorizontalFlow,
 	#instVars : [
-		'coders'
+		'descriptors'
 	],
 	#category : #'GToolkit-Coder-Filters - UI'
 }
 
 { #category : #accessing }
-GtMethodsFilterElement >> addDefaultAllCategory [
-	| filterElement |
+GtFiltersElement >> addEmptyDefault [
+	| filterElement defaultDescriptor |
 	self childrenCount = 1
 		ifFalse: [ ^ self ].
-	filterElement := GtMethodsFilterTagElement new.
+	defaultDescriptor := self descriptors
+		detect: [ :each | each showAsDefaultWhenEmpty ]
+		ifNone: [ ^ self ].
+	filterElement := GtFilterTagElement new.
 	filterElement filter: self.
-	filterElement
-		descriptor: (self descriptors detect: [ :each | each name = 'Category' ]).
-	filterElement makeDefaultAllFilter.
+	filterElement descriptor: defaultDescriptor.
+	filterElement makeDefaultFilter.
 	self addChild: filterElement at: self childrenCount
 ]
 
+{ #category : #accessing }
+GtFiltersElement >> addFilterForDescriptor: aFilterDescriptor andValue: aString [
+	| element |
+	element := GtFilterTagElement new.
+	element filter: self.
+	element descriptor: aFilterDescriptor.
+	aFilterDescriptor valueIsRequired
+		ifTrue: [ element valueString: aString ].
+	self addChild: element at: self childrenCount
+]
+
 { #category : #actions }
-GtMethodsFilterElement >> applyFilters [
-	| filters |
-	filters := OrderedCollection new.
-	1 to: self childrenCount - 1 do: [ :i | 
-		((self childAt: i) filterForCoders: coders)
-			ifNotNil: [ :filter | filters add: filter ] ].
-	coders additionalFilters: filters.
-	self addDefaultAllCategory
+GtFiltersElement >> applyFilters [
+	self fireEvent: (GtFiltersChangedEvent new filterElement: self).
+	self addEmptyDefault
 ]
 
 { #category : #accessing }
-GtMethodsFilterElement >> buildFiltersFrom: methodsCoder [
-	[ self childrenCount > 1 ] whileTrue: [ self removeChildAt: 1 ].
-	methodsCoder additionalFilters
-		do: [ :each | 
-			(each class filterDescriptorFor: methodsCoder)
-				ifNotNil: [ :descriptor | 
-					| filterElement |
-					filterElement := GtMethodsFilterTagElement new.
-					filterElement filter: self.
-					filterElement descriptor: descriptor.
-					descriptor requiresValue
-						ifTrue: [ filterElement valueString: (each perform: descriptor getter) ].
-					self addChild: filterElement at: self childrenCount ] ].
-	self addDefaultAllCategory
+GtFiltersElement >> buildFilters: aBlock [
+	self clearFilters.
+	aBlock value.
+	self addEmptyDefault
 ]
 
 { #category : #accessing }
-GtMethodsFilterElement >> coders: aMethodsCoder [
-	coders := aMethodsCoder.
-	self addDefaultAllCategory
+GtFiltersElement >> clearFilters [
+	[ self childrenCount > 1 ] whileTrue: [ self removeChildAt: 1 ]
 ]
 
 { #category : #accessing }
-GtMethodsFilterElement >> createNewTag [
+GtFiltersElement >> createNewTag [
 	| tag |
 	(self childrenCount > 1
 		and: [ (self childAt: self childrenCount - 1) isDefaultAllFilter ])
 		ifTrue: [ self removeChildAt: self childrenCount - 1 ].
-	tag := GtMethodsFilterTagElement new.
+	tag := GtFilterTagElement new.
 	tag filter: self.
 	tag descriptor: self descriptors first.
 	self addChild: tag at: self childrenCount.
@@ -68,12 +65,29 @@ GtMethodsFilterElement >> createNewTag [
 ]
 
 { #category : #accessing }
-GtMethodsFilterElement >> descriptors [
-	^ coders filterDescriptors
+GtFiltersElement >> descriptors [
+	^ descriptors
 ]
 
 { #category : #accessing }
-GtMethodsFilterElement >> initialize [
+GtFiltersElement >> descriptors: aCollection [
+	descriptors := aCollection.
+	self addEmptyDefault
+]
+
+{ #category : #accessing }
+GtFiltersElement >> filtersDo: aBlock [
+	1 to: self childrenCount - 1 do: [ :i | 
+		| filterTagElement |
+		filterTagElement := self childAt: i.
+		filterTagElement isValid
+			ifTrue: [ aBlock
+					value: filterTagElement descriptor
+					value: filterTagElement valueString ] ]
+]
+
+{ #category : #accessing }
+GtFiltersElement >> initialize [
 	super initialize.
 	self hMatchParent.
 	self vFitContent.
@@ -81,7 +95,7 @@ GtMethodsFilterElement >> initialize [
 ]
 
 { #category : #accessing }
-GtMethodsFilterElement >> newAddTagButton [
+GtFiltersElement >> newAddTagButton [
 	^ BrButton new
 		look:
 			BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new

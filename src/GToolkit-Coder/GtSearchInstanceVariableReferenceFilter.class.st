@@ -12,11 +12,12 @@ GtSearchInstanceVariableReferenceFilter class >> filterDescriptorFor: aMethodsCo
 	aMethodsCoder isForClass
 		ifFalse: [ ^ nil ].
 	^ GtFilterDescriptor
-		forClass: self
+		creator: [ :value | 
+			self
+				forClassAndSubclasses: aMethodsCoder classOrMetaClass
+				andVariable: value ]
 		named: 'InstVar'
 		order: 25
-		getter: #variableName
-		setter: #variableName:
 		completion:
 			(GtStringsCompletionStrategy new
 				completions: (GtPrefixTree withAll: aMethodsCoder classOrMetaClass allInstVarNames))
@@ -39,6 +40,11 @@ GtSearchInstanceVariableReferenceFilter class >> forClassAndSubclasses: aClass a
 { #category : #comparing }
 GtSearchInstanceVariableReferenceFilter >> = anObject [
 	^ super = anObject and: [ self variableName = anObject variableName ]
+]
+
+{ #category : #accessing }
+GtSearchInstanceVariableReferenceFilter >> filterValueString [
+	^ self variableName
 ]
 
 { #category : #'initialize-release' }

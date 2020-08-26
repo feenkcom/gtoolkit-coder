@@ -10,11 +10,9 @@ Class {
 { #category : #accessing }
 GtSearchPragmasFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
-		forClass: self
+		creator: [ :value | self forPragma: value ]
 		named: 'Pragma'
 		order: 11
-		getter: #symbol
-		setter: #symbol:
 		completion:
 			(GtStringsCompletionStrategy new
 				completions: aMethodsCoder pragmaNames)
@@ -30,6 +28,11 @@ GtSearchPragmasFilter class >> forPragma: aSymbol [
 { #category : #comparing }
 GtSearchPragmasFilter >> = anObject [
 	^ self class = anObject class and: [ self symbol = anObject symbol ]
+]
+
+{ #category : #accessing }
+GtSearchPragmasFilter >> filterValueString [
+	^ self symbol
 ]
 
 { #category : #printing }

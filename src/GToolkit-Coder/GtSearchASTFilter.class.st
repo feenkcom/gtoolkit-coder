@@ -18,12 +18,9 @@ GtSearchASTFilter class >> ast: aRBProgramNode [
 { #category : #accessing }
 GtSearchASTFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
-		forClass: self
+		creator: [ :value | self sourceExpression: value ]
 		named: 'AST'
 		order: 100
-		getter: #source
-		setter: #sourceExpression:
-		completion: nil
 ]
 
 { #category : #'instance creation' }
@@ -60,6 +57,11 @@ GtSearchASTFilter >> computeMessagesFilter [
 		ifTrue: [ ^ sentMessagesFilter := nil ].
 	filters := messages collect: [ :each | GtSearchReferencesFilter literal: each ].
 	sentMessagesFilter := filters reduce: [ :a :b | a & b ]
+]
+
+{ #category : #accessing }
+GtSearchASTFilter >> filterValueString [
+	^ self source
 ]
 
 { #category : #ui }

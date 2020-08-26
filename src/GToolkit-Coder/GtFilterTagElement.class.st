@@ -1,16 +1,16 @@
 Class {
-	#name : #GtMethodsFilterTagElement,
+	#name : #GtFilterTagElement,
 	#superclass : #BrHorizontalPane,
 	#instVars : [
 		'descriptor',
-		'filter',
-		'valueString'
+		'valueString',
+		'filterElement'
 	],
 	#category : #'GToolkit-Coder-Filters - UI'
 }
 
 { #category : #actions }
-GtMethodsFilterTagElement >> activateEditor [
+GtFilterTagElement >> activateEditor [
 	self
 		childNamed: #editableLabel
 		ifFound: [ :label | 
@@ -20,34 +20,29 @@ GtMethodsFilterTagElement >> activateEditor [
 		ifNone: [ (self childNamed: #dropDown) requestFocus ]
 ]
 
-{ #category : #'initialize-release' }
-GtMethodsFilterTagElement >> allLabelText [
-	^ 'All'
-]
-
 { #category : #private }
-GtMethodsFilterTagElement >> applyDescriptor: aDescriptor [
+GtFilterTagElement >> applyDescriptor: aDescriptor [
 	self descriptor: aDescriptor.
 	self activateEditor.
-	filter applyFilters
+	filterElement applyFilters
 ]
 
 { #category : #elements }
-GtMethodsFilterTagElement >> buildTagElements [
+GtFilterTagElement >> buildTagElements [
 	self removeChildren.
 	self addChild: self createDropDown as: #dropDown.
-	descriptor requiresValue
+	descriptor valueIsRequired
 		ifTrue: [ self addChild: self createEditableLabel as: #editableLabel ]
 ]
 
 { #category : #elements }
-GtMethodsFilterTagElement >> createDropDown [
+GtFilterTagElement >> createDropDown [
 	| button dropDownLook |
 	button := self createDropDownButton.
 	dropDownLook := BrGlamorousWithDropdownLook
 		handle: [ self createDropDownButton ]
 		content: [ BrSimpleList new
-				items: filter descriptors;
+				items: filterElement descriptors;
 				stencil: [ :each | 
 					| element |
 					element := BlElement new.
@@ -88,7 +83,7 @@ GtMethodsFilterTagElement >> createDropDown [
 ]
 
 { #category : #elements }
-GtMethodsFilterTagElement >> createDropDownButton [
+GtFilterTagElement >> createDropDownButton [
 	| button |
 	button := BrButton new.
 	button
@@ -104,7 +99,7 @@ GtMethodsFilterTagElement >> createDropDownButton [
 ]
 
 { #category : #elements }
-GtMethodsFilterTagElement >> createEditableLabel [
+GtFilterTagElement >> createEditableLabel [
 	| label |
 	label := BrEditableLabel new.
 	label
@@ -125,18 +120,18 @@ GtMethodsFilterTagElement >> createEditableLabel [
 			valueString := aWish text asString trim.
 			(label parent == self and: [ valueString isEmpty ])
 				ifTrue: [ self removeFromParent ].
-			filter applyFilters ].
+			filterElement applyFilters ].
 	label
 		when: BrEditorCancelWish
 		do: [ :aWish | 
 			(label parent == self and: [ self isValid not ])
 				ifTrue: [ self removeFromParent ].
-			filter applyFilters ].
+			filterElement applyFilters ].
 	label
 		whenKey: BlKeyCombination backspace
 		labelDo: [ :aShortcutEvent :aShortcut :aTextEditor | 
 			self removeFromParent.
-			filter applyFilters ].
+			filterElement applyFilters ].
 	descriptor completion
 		ifNotNil:
 			[ :strategy | (GtCompletionController on: label strategy: strategy) install ].
@@ -144,33 +139,29 @@ GtMethodsFilterTagElement >> createEditableLabel [
 ]
 
 { #category : #accessing }
-GtMethodsFilterTagElement >> descriptor [
+GtFilterTagElement >> descriptor [
 	^ descriptor
 ]
 
 { #category : #accessing }
-GtMethodsFilterTagElement >> descriptor: aFilterDescriptor [
+GtFilterTagElement >> descriptor: aFilterDescriptor [
 	descriptor := aFilterDescriptor.
 	valueString := ''.
 	self buildTagElements
 ]
 
-{ #category : #accessing }
-GtMethodsFilterTagElement >> filter: aGtMethodsFilter [
-	filter := aGtMethodsFilter
+{ #category : #'initialize-release' }
+GtFilterTagElement >> emptyDefaultValueLabel [
+	^ descriptor emptyDefaultValue
 ]
 
 { #category : #accessing }
-GtMethodsFilterTagElement >> filterForCoders: aMethodsCoder [
-	self isValid
-		ifFalse: [ ^ nil ].
-	^ self descriptor
-		createForCoders: aMethodsCoder
-		andValue: self valueString
+GtFilterTagElement >> filter: aGtMethodsFilter [
+	filterElement := aGtMethodsFilter
 ]
 
 { #category : #'initialize-release' }
-GtMethodsFilterTagElement >> initialize [
+GtFilterTagElement >> initialize [
 	super initialize.
 	self fitContent.
 	self margin: (BlInsets all: 3).
@@ -187,35 +178,26 @@ GtMethodsFilterTagElement >> initialize [
 ]
 
 { #category : #testing }
-GtMethodsFilterTagElement >> isDefaultAllFilter [
-	^ self descriptor name = 'Category'
+GtFilterTagElement >> isDefaultAllFilter [
+	^ self descriptor showAsDefaultWhenEmpty
 		and: [ valueString isEmpty
-				and: [ (self childNamed: #editableLabel) text asString = self allLabelText ] ]
+				and:
+					[ (self childNamed: #editableLabel) text asString = self emptyDefaultValueLabel ] ]
 ]
 
 { #category : #testing }
-GtMethodsFilterTagElement >> isValid [
-	^ descriptor requiresValue not or: [ self valueString notEmpty ]
+GtFilterTagElement >> isValid [
+	^ descriptor valueIsRequired not or: [ self valueString notEmpty ]
 ]
 
 { #category : #'initialize-release' }
-GtMethodsFilterTagElement >> makeDefaultAllFilter [
+GtFilterTagElement >> makeDefaultFilter [
 	valueString := ''.
-	(self childNamed: #editableLabel) text
-		deleteAll;
-		append:
-			self allLabelText asRopedText glamorousRegularFont
-				glamorousRegularSmallSize
+	self setLabelText: self emptyDefaultValueLabel
 ]
 
-{ #category : #accessing }
-GtMethodsFilterTagElement >> valueString [
-	^ valueString
-]
-
-{ #category : #accessing }
-GtMethodsFilterTagElement >> valueString: aString [
-	valueString := aString.
+{ #category : #private }
+GtFilterTagElement >> setLabelText: aString [
 	self
 		childNamed: #editableLabel
 		ifFound: [ :label | 
@@ -223,4 +205,15 @@ GtMethodsFilterTagElement >> valueString: aString [
 			aString notEmpty
 				ifTrue: [ label text
 						append: aString asRopedText glamorousRegularFont glamorousRegularSmallSize ] ]
+]
+
+{ #category : #accessing }
+GtFilterTagElement >> valueString [
+	^ valueString
+]
+
+{ #category : #accessing }
+GtFilterTagElement >> valueString: aString [
+	valueString := aString.
+	self setLabelText: aString
 ]

@@ -6,11 +6,12 @@ Class {
 
 { #category : #accessing }
 GtSearchInstanceMethodsFilter class >> filterDescriptorFor: aMethodsCoder [
-	^ GtFilterDescriptor
-		forClass: self
+	^ (GtFilterDescriptor
+		creator: [ :value | self new ]
 		named: 'Instance Methods'
-		order: 16
-		getter: nil
+		order: 16)
+		valueNotRequired;
+		yourself
 ]
 
 { #category : #comparing }

@@ -10,13 +10,12 @@ Class {
 { #category : #accessing }
 GtSearchMethodCategoryFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
-		forClass: self
+		creator: [ :value | self forCategory: value ]
 		named: 'Category'
 		order: 15
-		getter: #category
-		setter: #category:
 		completion:
 			(GtStringsCompletionStrategy new completions: aMethodsCoder categories)
+		emptyDefaultValue: 'All'
 ]
 
 { #category : #'instance creation' }
@@ -40,6 +39,11 @@ GtSearchMethodCategoryFilter >> category [
 { #category : #accessing }
 GtSearchMethodCategoryFilter >> category: aSymbol [
 	category := aSymbol
+]
+
+{ #category : #accessing }
+GtSearchMethodCategoryFilter >> filterValueString [
+	^ self category
 ]
 
 { #category : #printing }

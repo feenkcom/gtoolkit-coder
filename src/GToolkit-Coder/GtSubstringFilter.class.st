@@ -10,10 +10,9 @@ Class {
 { #category : #accessing }
 GtSubstringFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
-		forClass: self
+		creator: [ :value | self substring: value ]
 		named: 'Substring'
 		order: 90
-		getter: #substring
 ]
 
 { #category : #'instance creation' }
@@ -25,6 +24,11 @@ GtSubstringFilter class >> substring: aString [
 GtSubstringFilter >> = anObject [
 	^ self class = anObject class
 		and: [ self substring asLowercase = anObject substring asLowercase ]
+]
+
+{ #category : #accessing }
+GtSubstringFilter >> filterValueString [
+	^ self substring
 ]
 
 { #category : #printing }
