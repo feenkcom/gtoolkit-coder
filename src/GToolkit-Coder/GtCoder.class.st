@@ -50,6 +50,69 @@ GtCoder class >> new [
 ]
 
 { #category : #'private - ui' }
+GtCoder >> addClassTab: look [
+	<gtCreateComponentTab: 10>
+	^ BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Class';
+		stencil: [ | element |
+			element := GtCreateBehaviorElement new.
+			element
+				behaviorBlock: [ :cls | 
+					look hide.
+					navigationModel selectClass: cls ].
+			element forClassDefinition.
+			navigationModel
+				selectedPackageDo: [ :package | element forPackage: package ].
+			navigationModel
+				selectedTagDo: [ :tag | element forPackageTag: tag ].
+			navigationModel
+				selectedClassDo: [ :cls | 
+					cls isTrait
+						ifFalse: [ element forSuperclass: cls ] ].
+			element ]
+]
+
+{ #category : #'private - ui' }
+GtCoder >> addPackageTab: look [
+	<gtCreateComponentTab: 30>
+	^ BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Package';
+		stencil: [ | element |
+			element := GtCreatePackageElement new.
+			element
+				packageBlock: [ :pkg :tag | 
+					look hide.
+					tag isNil
+						ifTrue: [ navigationModel selectPackage: pkg ]
+						ifFalse: [ navigationModel selectPackageTag: tag ] ].
+			navigationModel
+				selectedPackageDo: [ :package | element forPackage: package ].
+			element ]
+]
+
+{ #category : #'private - ui' }
+GtCoder >> addTraitTab: look [
+	<gtCreateComponentTab: 20>
+	^ BrTab new
+		look: BrGlamorousTabLook new;
+		label: 'Trait';
+		stencil: [ | element |
+			element := GtCreateBehaviorElement new.
+			element
+				behaviorBlock: [ :cls | 
+					look hide.
+					navigationModel selectClass: cls ].
+			element forTraitDefinition.
+			navigationModel
+				selectedPackageDo: [ :package | element forPackage: package ].
+			navigationModel
+				selectedTagDo: [ :tag | element forPackageTag: tag ].
+			element ]
+]
+
+{ #category : #'private - ui' }
 GtCoder >> buildAddButton [
 	| look |
 	^ BrButton new
@@ -78,64 +141,18 @@ GtCoder >> buildAddButton [
 
 { #category : #'private - ui' }
 GtCoder >> buildAddInterface: look [
-	| contentTabs tab |
+	| contentTabs tabMethods |
 	contentTabs := BrTabGroup new.
 	contentTabs look: BrGlamorousTabGroupLook new.
 	contentTabs
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-	tab := BrTab new
-		look: BrGlamorousTabLook new;
-		label: 'Class';
-		stencil: [ | element |
-			element := GtCreateBehaviorElement new.
-			element
-				behaviorBlock: [ :cls | 
-					look hide.
-					navigationModel selectClass: cls ].
-			element forClassDefinition.
-			navigationModel
-				selectedPackageDo: [ :package | element forPackage: package ].
-			navigationModel
-				selectedTagDo: [ :tag | element forPackageTag: tag ].
-			navigationModel
-				selectedClassDo: [ :cls | 
-					cls isTrait
-						ifFalse: [ element forSuperclass: cls ] ].
-			element ].
-	contentTabs addTab: tab.
-	tab := BrTab new
-		look: BrGlamorousTabLook new;
-		label: 'Trait';
-		stencil: [ | element |
-			element := GtCreateBehaviorElement new.
-			element
-				behaviorBlock: [ :cls | 
-					look hide.
-					navigationModel selectClass: cls ].
-			element forTraitDefinition.
-			navigationModel
-				selectedPackageDo: [ :package | element forPackage: package ].
-			navigationModel
-				selectedTagDo: [ :tag | element forPackageTag: tag ].
-			element ].
-	contentTabs addTab: tab.
-	tab := BrTab new
-		look: BrGlamorousTabLook new;
-		label: 'Package';
-		stencil: [ | element |
-			element := GtCreatePackageElement new.
-			element
-				packageBlock: [ :pkg :tag | 
-					look hide.
-					tag isNil 
-						ifTrue: [ navigationModel selectPackage: pkg ]
-						ifFalse: [ navigationModel selectPackageTag: tag ] ].
-			navigationModel
-				selectedPackageDo: [ :package | element forPackage: package ].
-			element ].
-	contentTabs addTab: tab.
+	tabMethods := (Pragma allNamed: #gtCreateComponentTab: in: self class)
+		asSortedCollection: [ :a :b | a arguments first < b arguments first ].
+	tabMethods
+		do:
+			[ :each | contentTabs addTab: (self perform: each method selector with: look) ].
 	^ contentTabs
 ]
 
