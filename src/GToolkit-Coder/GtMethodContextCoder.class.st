@@ -292,19 +292,22 @@ GtMethodContextCoder >> updateSelection [
 	"https://github.com/feenkcom/gtoolkit/issues/1323
 	Ideally, we should convert this to the add-on styler"
 	self flag: #TODO.
-	
 	(self session process isNil or: [ context isDead ])
 		ifTrue: [ ^ self ].
+
 	interval := self session pcRangeForContext: context.
 	interval isEmpty
 		ifTrue: [ ^ self ].
-	self sourceText clearAttributes: [ :each | each class = BlTextUnderlineAttribute ].
+
+	self sourceText
+		clearAttributes: [ :each | each class = BlTextDecorationAttribute ].
+
 	(self sourceText from: interval first to: interval last)
-		attributes:
-			{(BlTextUnderlineAttribute new
-				paint: BrGlamorousColors errorBackgroundColor;
-				width: 3;
-				beNotOverwritableByStyler)}
+		underlineDo: [ :anAttribute |
+			anAttribute
+				color: BrGlamorousColors errorBackgroundColor;
+				width: 1.5;
+				beNotOverwritableByStyler ]
 ]
 
 { #category : #updating }
