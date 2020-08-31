@@ -11,5 +11,5 @@ Class {
 GtSourceReferenceHighlighter class >> initialize [
 	HighlightAttributes := {(BlTextUnderlineAttribute new
 		paint: BrGlamorousColors textHighlightColor;
-		width: 3)}
+		thickness: 3)}
 ]
