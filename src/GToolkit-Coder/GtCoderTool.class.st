@@ -12,14 +12,8 @@ GtCoderTool >> asElementDo: aOneArgBlock [
 ]
 
 { #category : #'api - converting' }
-GtCoderTool >> asTabDo: aBlock [
-	| aTab |
-	aTab := BrTab new
-		look: BrGlamorousTabSwitcherWithIconLook;
-		label: self name;
-		icon: BrGlamorousVectorIcons browse;
-		stencil: [ self asElementDo: [ :anElement | anElement ] ].
-	aBlock cull: aTab.
+GtCoderTool >> icon [
+	^ BrGlamorousVectorIcons browse
 ]
 
 { #category : #'api - accessing' }
@@ -30,4 +24,9 @@ GtCoderTool >> name [
 { #category : #converting }
 GtCoderTool >> newCoder [
 	^ self subclassResponsibility
+]
+
+{ #category : #'private - accessing' }
+GtCoderTool >> tabLook [
+	^ BrGlamorousTabSwitcherWithIconLook
 ]

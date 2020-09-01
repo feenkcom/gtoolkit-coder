@@ -10,6 +10,6 @@ Class {
 { #category : #'class initialization' }
 GtSourceReferenceHighlighter class >> initialize [
 	HighlightAttributes := {(BlTextUnderlineAttribute new
-		paint: BrGlamorousColors textHighlightColor;
-		width: 3)}
+		color: BrGlamorousColors textHighlightColor;
+		thickness: 3)}
 ]
