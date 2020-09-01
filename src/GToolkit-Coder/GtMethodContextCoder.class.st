@@ -294,19 +294,16 @@ GtMethodContextCoder >> updateSelection [
 	self flag: #TODO.
 	(self session process isNil or: [ context isDead ])
 		ifTrue: [ ^ self ].
-
 	interval := self session pcRangeForContext: context.
 	interval isEmpty
 		ifTrue: [ ^ self ].
-
 	self sourceText
 		clearAttributes: [ :each | each class = BlTextDecorationAttribute ].
-
 	(self sourceText from: interval first to: interval last)
-		underlineDo: [ :anAttribute |
+		underlineDo: [ :anAttribute | 
 			anAttribute
 				color: BrGlamorousColors errorBackgroundColor;
-				width: 1.5;
+				thickness: 1.5;
 				beNotOverwritableByStyler ]
 ]
 
