@@ -44,7 +44,7 @@ GtCodersElement >> buildFilter [
 	filterElement
 		when: GtFiltersChangedEvent
 		do: [ :event | self updateCodersFilters: event ].
-	coders
+	coders weak
 		when: GtCodersFiltersChanged
 		do: [ :event | self updateDisplayedFilters: filterElement ].
 	self addChild: filterElement as: #filter
