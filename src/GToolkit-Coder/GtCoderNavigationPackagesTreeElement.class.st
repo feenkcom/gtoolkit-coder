@@ -49,14 +49,13 @@ GtCoderNavigationPackagesTreeElement >> initialize [
 { #category : #'api - initialization' }
 GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPackages [
 	| theSortedPackages |
-
 	theSortedPackages := aCollectionOfPackages asArray
-		sorted: [ :packageA :packageB | packageA name asLowercase < packageB name asLowercase ].
-
+		sorted:
+			[ :packageA :packageB | packageA name asLowercase < packageB name asLowercase ].
 	self
 		items: theSortedPackages
-		children: [ :eachPackageOrTag |
-			self childrenForPackageOrTag: eachPackageOrTag ]
+		lazy:
+			[ :eachPackageOrTag | self childrenForPackageOrTag: eachPackageOrTag ]
 ]
 
 { #category : #'private - testing' }
