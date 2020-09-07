@@ -46,11 +46,11 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 
 { #category : #'api - initialization' }
 GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollectionOfClasses [
-	classesTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses) 
-		sortByClassName.
-	self 
-		items: classesTree subclassTrees 
-		children: [ :eachTree | eachTree subclassTrees ].
+	classesTree := (GtCoderClassesHierarchyTree
+		fromClasses: aCollectionOfClasses) sortByClassName.
+	self
+		items: classesTree subclassTrees
+		lazy: [ :eachTree | eachTree subclassTrees ].
 	self expandAll
 ]
 

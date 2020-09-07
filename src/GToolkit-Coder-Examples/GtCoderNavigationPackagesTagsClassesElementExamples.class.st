@@ -65,6 +65,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementNavigationModelInS
 
 { #category : #'examples - class selection' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageAndClassSelection [
+	<noTest>
 	<gtExample>
 	| anElement |
 	anElement := self elementNavigationModelInSpace.
@@ -79,6 +80,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageAndClas
 
 { #category : #'examples - class selection' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageAndClassSelection_BeforeInSpace [
+	<noTest>
 	<gtExample>
 	| anElement |
 	anElement := self elementNavigationModel.
@@ -94,6 +96,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageAndClas
 
 { #category : #'examples - class selection' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageTagAndClassSelection [
+	<noTest>
 	<gtExample>
 	| anElement |
 	anElement := self elementNavigationModelInSpace.
@@ -108,6 +111,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageTagAndC
 
 { #category : #'examples - class selection' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageTagAndClassSelection_BeforeInSpace [
+	<noTest>
 	<gtExample>
 	| anElement |
 	anElement := self elementNavigationModel.
@@ -123,6 +127,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageTagAndC
 
 { #category : #'examples - package tag selection' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageTagSelection [
+	<noTest>
 	<gtExample>
 	| anElement |
 	anElement := self elementNavigationModelInSpace.
@@ -137,6 +142,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageTagSele
 
 { #category : #'examples - package selection' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageWithoutTagsAndExtensionsSelection [
+	<noTest>
 	<gtExample>
 	| anElement |
 	anElement := self elementNavigationModelInSpace.
@@ -151,6 +157,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageWithout
 
 { #category : #'examples - package selection' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageWithoutTagsAndExtensionsSelection_Children [
+	<noTest>
 	<gtExample>
 	| anElement aPackageNode |
 	anElement := self elementWithPackageWithoutTagsAndExtensionsSelection.
@@ -162,6 +169,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageWithout
 
 { #category : #'examples - class selection' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithUnategorizedPackageTagAndClassSelection [
+	<noTest>
 	<gtExample>
 	| anElement |
 	anElement := self elementNavigationModelInSpace.
@@ -176,6 +184,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithUnategorizedPa
 
 { #category : #'examples - class selection' }
 GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithUnategorizedPackageTagAndClassSelection_BeforeInSpace [
+	<noTest>
 	<gtExample>
 	| anElement |
 	anElement := self elementNavigationModel.
