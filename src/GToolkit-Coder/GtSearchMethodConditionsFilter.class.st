@@ -3,7 +3,7 @@ I include ${class:CompiledMethod}$ instances that satisfy all ${method:GtSearchM
 !! Example With One Condition
 ${example:GtSearchMethodFilterExamples>>methodConditionsFilter_OneCondition}$
 !! Example With Two Conditions
-${example:GtSearchMethodFilterExamples>>methodConditionsFilter_TwoConditions}$ 
+${example:GtSearchMethodFilterExamples>>methodConditionsFilter_TwoConditions}$
 "
 Class {
 	#name : #GtSearchMethodConditionsFilter,
