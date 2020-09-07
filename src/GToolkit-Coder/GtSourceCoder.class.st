@@ -194,7 +194,7 @@ GtSourceCoder >> currentSourceString: aString [
 
 { #category : #private }
 GtSourceCoder >> cursorPositionIn: aBrTextEditor do: aBlock [
-	aBrTextEditor cursor do: [ :each | ^ aBlock value: each position ]
+	aBrTextEditor cursors do: [ :each | ^ aBlock value: each position ]
 ]
 
 { #category : #'private - actions' }
@@ -1077,14 +1077,16 @@ GtSourceCoder >> variableNodeAtCursorInEditor: aTextEditor ifFound: aFoundBlock 
 	"Try to find a variable node ${class:GtPharoVariableNode}$ in a given text editor at the cursor position and evaluate a found
 	block if such node exists and none block otherwise. Return the result.
 	If there are multiple cursors evaluate a none found block because otherwise the result can be ambiguous"
+
 	<return: #Object>
-
-	aTextEditor cursor isSingle
+	aTextEditor cursors isSingle
 		ifFalse: [ ^ aNoneBlock value ].
-
-	aTextEditor cursor do: [ :aCursor |
-		^ self variableNodeAtCursorPosition: aCursor position ifFound: aFoundBlock ifNone: aNoneBlock ].
-	
+	aTextEditor cursors
+		do: [ :aCursor | 
+			^ self
+				variableNodeAtCursorPosition: aCursor position
+				ifFound: aFoundBlock
+				ifNone: aNoneBlock ].
 	^ aNoneBlock value
 ]
 
