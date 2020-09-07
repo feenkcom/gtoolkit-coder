@@ -38,6 +38,7 @@ GtSearchMethodGroupResult >> asElement [
 
 { #category : #ui }
 GtSearchMethodGroupResult >> gtItemsFor: aView [
+	<gtView>
 	^ aView explicit 
 		title: 'Live' translated;
 		priority: 10;

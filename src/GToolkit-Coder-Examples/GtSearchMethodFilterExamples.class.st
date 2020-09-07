@@ -102,6 +102,47 @@ GtSearchMethodFilterExamples >> implementorsPatternFilter [
 	^ filter.
 ]
 
+{ #category : #accessing }
+GtSearchMethodFilterExamples >> methodConditionsFilter_Default [
+	<gtExample>
+	| filter |
+	
+	filter := GtSearchMethodConditionsFilter new.
+	"By default all methods satisfy the filter"
+	self assert: (filter matches: GtSearchMethodConditionsFilter>>#conditions).
+	
+	^ filter.
+]
+
+{ #category : #accessing }
+GtSearchMethodFilterExamples >> methodConditionsFilter_OneCondition [
+	<gtExample>
+	| filter |
+	
+	filter := GtSearchMethodConditionsFilter 
+		condition: [ :aMethod | aMethod numArgs isZero ].
+	
+	self assert: (filter matches: GtSearchMethodConditionsFilter>>#conditions).
+	self assert: (filter matches: GtSearchMethodConditionsFilter>>#condition:) not.
+	
+	^ filter.
+]
+
+{ #category : #accessing }
+GtSearchMethodFilterExamples >> methodConditionsFilter_TwoConditions [
+	<gtExample>
+	| filter |
+	
+	filter := GtSearchMethodConditionsFilter new 
+		condition: [ :aMethod | aMethod numArgs = 1 ];
+		condition: [ :aMethod | aMethod protocol = 'api - accessing' ].
+	
+	self assert: (filter matches: GtSearchMethodConditionsFilter>>#condition:).
+	self assert: (filter matches: GtSearchMethodConditionsFilter>>#conditions) not.
+	
+	^ filter.
+]
+
 { #category : #examples }
 GtSearchMethodFilterExamples >> methodsInCategoryFilter [
 	<gtExample>

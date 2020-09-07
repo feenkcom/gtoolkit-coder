@@ -742,6 +742,7 @@ GtMethodCoder >> gtDiffViewFor: aView [
 
 { #category : #'gt-extensions' }
 GtMethodCoder >> gtLiveFor: aView [
+	<gtView>
 	^ aView explicit 
 		title: 'Live';
 		priority: 10;

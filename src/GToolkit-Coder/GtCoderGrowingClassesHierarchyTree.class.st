@@ -38,7 +38,7 @@ GtCoderGrowingClassesHierarchyTree >> gtFixedTreeFor: aView [
 
 { #category : #'gt-extension' }
 GtCoderGrowingClassesHierarchyTree >> gtTreeFor: aView [
-
+	<gtView>
 	^ (super gtTreeFor: aView)
 		title: 'Growing Classes';
 		priority: 2
