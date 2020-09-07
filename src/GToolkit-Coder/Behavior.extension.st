@@ -73,7 +73,7 @@ Behavior >> gtCoderMethodsFor: aView context: aDictionary [
 		priority: 10;
 		title: 'Methods';
 		disableAsync;
-		actionDropdownButtonIcon: BrGlamorousIcons hamburger
+		actionDropdownButtonIcon: BrGlamorousVectorIcons filter
 			tooltip: 'Filter'
 			content: [ :element | methodsCoder filterDropDown: element ];
 		actionButtonIcon: BrGlamorousVectorIcons add
