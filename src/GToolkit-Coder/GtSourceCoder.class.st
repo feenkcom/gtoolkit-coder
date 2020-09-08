@@ -720,12 +720,12 @@ GtSourceCoder >> rbAST [
 GtSourceCoder >> rbNodeAtCursor: editorElement [
 	| editor ast position node |
 	editor := editorElement editor.
-	editor cursor cursorsCount = 1
+	editor cursors cursorsCount = 1
 		ifFalse: [ ^ nil ].
 	ast := self rbAST.
 	ast isNil
 		ifTrue: [ ^ nil ].
-	position := editor cursor first position.
+	position := editor cursors first position.
 	ast
 		nodesDo: [ :each | 
 			(position between: each start and: each stop)
