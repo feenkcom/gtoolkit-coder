@@ -10,11 +10,11 @@ GtRenameClassController >> refactoringName [
 ]
 
 { #category : #accessing }
-GtRenameClassController >> rename: oldName to: newName [
+GtRenameClassController >> rename: oldNameString to: newNameString [
 	| model |
 	model := self createModel.
-	^ RBRenameClassRefactoring
+	^ RBRenameClassWithCommentsRefactoring
 		model: model
-		rename: (Smalltalk at: oldName asSymbol)
-		to: newName
+		rename: (Smalltalk at: oldNameString asSymbol)
+		to: newNameString
 ]
