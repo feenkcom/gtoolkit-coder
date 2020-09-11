@@ -1283,9 +1283,9 @@ GtMethodCoder >> rbSelectedNodeFrom: anEditorElement [
 	selections := editor selection allSelections.
 	selections size = 1
 		ifTrue: [ ^ ast bestNodeFor: selections first interval ]
-		ifFalse: [ editor cursor cursorsCount = 1
+		ifFalse: [ editor cursors cursorsCount = 1
 				ifFalse: [ ^ nil ].
-			position := editor cursor first position.
+			position := editor cursors first position.
 			ast
 				nodesDo: [ :each | 
 					(position between: each start and: each stop)

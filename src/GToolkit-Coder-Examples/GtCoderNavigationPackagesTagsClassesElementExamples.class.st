@@ -163,7 +163,7 @@ GtCoderNavigationPackagesTagsClassesElementExamples >> elementWithPackageWithout
 	anElement := self elementWithPackageWithoutTagsAndExtensionsSelection.
 	aPackageNode := anElement selectedPackageNodeDo: [ :aNode | aNode ].
 	self assert: aPackageNode isNotNil.
-	self assert: aPackageNode children size equals: 0.
+	self assert: aPackageNode childrenValues size equals: 0.
 	^ anElement
 ]
 

@@ -74,7 +74,7 @@ GtBehaviorCoderElement >> buildClassLabel [
 	aPreviewButton := GtRefactoringsPreviewButton new
 		margin: (BlInsets left: 5);
 		visibility: BlVisibility gone;
-		refactorings: [ { RBRenameClassRefactoring
+		refactorings: [ { RBRenameClassWithCommentsRefactoring
 			model: RBNamespace new
 			rename: classCoder theClass
 			to: aClassNameEditor text asString } ];
