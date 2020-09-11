@@ -1,7 +1,7 @@
 Class {
 	#name : #GtUnionFilterExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Filters'
 }
 
 { #category : #examples }

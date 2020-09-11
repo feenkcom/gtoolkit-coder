@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchNullFilterExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Filters'
 }
 
 { #category : #'as yet unclassified' }

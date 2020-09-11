@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchMethodsContainedInClassFilterExamples,
 	#superclass : #GtSearchMethodFilterExamples,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Filters'
 }
 
 { #category : #examples }

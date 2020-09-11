@@ -41,7 +41,7 @@ ${example:GtSearchMethodReferencesFilterExamples>>#gtExamplePragmasAndReferences
 Class {
 	#name : #GtSearchMethodFilterExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Filters'
 }
 
 { #category : #asserting }

@@ -11,6 +11,11 @@ Class >> gtReferences [
 ]
 
 { #category : #'*GToolkit-Coder' }
+Class >> gtReferencesAndComments [
+	^ self gtReferences & (GtSearchCommentsFilter new text: self name)
+]
+
+{ #category : #'*GToolkit-Coder' }
 Class >> gtTraitUsages [
 	^ self traits collect: [ :each | GtPharoTraitUsage new baseBehavior: self; usedTrait: each ]
 ]
