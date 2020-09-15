@@ -46,3 +46,31 @@ GtSearchMethodConditionsFilter >> initialize [
 	super initialize.
 	conditions := OrderedCollection new: 1.
 ]
+
+{ #category : #'api - accessing' }
+GtSearchMethodConditionsFilter >> referenceClassThat: aValuable [
+	"Valuable is an object (block) that understands #value:.
+	It must return a ${class:Boolean}$ on aValuble value: aClass."
+	self
+		assert: [ aValuable isNotNil ] 
+		description: [ 'Condition must be non-nil' ].
+	self condition: ([ :aMethod | 
+		aMethod ast allChildren 
+			anySatisfy: [ :aNode | 
+				aNode isVariable and: [ 
+					aNode isGlobal and: [ 
+						aNode binding isGlobalClassNameBinding and: [
+							aValuable value: aNode binding value ] ] ] ] ])
+]
+
+{ #category : #'api - accessing' }
+GtSearchMethodConditionsFilter >> referenceSubclass: aClass [
+	"aClass is global class.
+	It returns true if a method references aClass or its subclass."
+	self
+		assert: [ aClass isNotNil ] 
+		description: [ 'Class must be non-nil' ].
+	self referenceClassThat: [ :eachClass |
+		eachClass == aClass or: [
+			eachClass inheritsFrom: aClass ] ]
+]

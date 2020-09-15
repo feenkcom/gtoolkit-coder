@@ -102,7 +102,7 @@ GtSearchMethodFilterExamples >> implementorsPatternFilter [
 	^ filter.
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - method conditions' }
 GtSearchMethodFilterExamples >> methodConditionsFilter_Default [
 	<gtExample>
 	| filter |
@@ -114,7 +114,7 @@ GtSearchMethodFilterExamples >> methodConditionsFilter_Default [
 	^ filter.
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - method conditions' }
 GtSearchMethodFilterExamples >> methodConditionsFilter_OneCondition [
 	<gtExample>
 	| filter |
@@ -128,7 +128,21 @@ GtSearchMethodFilterExamples >> methodConditionsFilter_OneCondition [
 	^ filter.
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - method conditions' }
+GtSearchMethodFilterExamples >> methodConditionsFilter_SubclassRerence [
+	<gtExample>
+	| filter |
+	
+	filter := GtSearchMethodConditionsFilter new
+		referenceSubclass: OrderedCollection.
+	
+	self assert: (filter matches: GtSearchMethodConditionsFilter>>#initialize).
+	self assert: (filter matches: GtSearchMethodConditionsFilter>>#condition:) not.
+	
+	^ filter.
+]
+
+{ #category : #'examples - method conditions' }
 GtSearchMethodFilterExamples >> methodConditionsFilter_TwoConditions [
 	<gtExample>
 	| filter |
