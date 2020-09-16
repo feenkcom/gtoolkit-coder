@@ -204,7 +204,9 @@ GtPharoSnippetCoder >> xDocFilename [
 	If an action has been performed gtPlaygroundFilename will have been set."
 
 	^xdocFilename ifNil: 
-		[ self xDocStore latestFilename ].
+		[ XdPlaygroundSettings directory isWritable 
+			ifTrue: [ self xDocStore latestFilename ]
+			ifFalse: [ nil ] ].
 
 ]
 
