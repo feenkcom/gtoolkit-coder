@@ -41,6 +41,8 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 					aText := aClass name asRopedText.
 					(aClass isAbstract or: [ aClass hasAbstractMethods ]) ifTrue: [ 
 						aText italic ].
+					(aClass isDeprecated) ifTrue: [ 
+						aText append: (' (deprecated)' asRopedText italic) ].
 					aText ]) ]
 ]
 
