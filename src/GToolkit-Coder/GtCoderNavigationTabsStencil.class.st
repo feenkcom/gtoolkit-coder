@@ -34,7 +34,9 @@ GtCoderNavigationTabsStencil >> create [
 	^ GtPhlowCompositeView new
 		views: self navigations;
 		asElementDo: [ :aTabGroup | 
-			aTabGroup matchParent ]
+			aTabGroup 
+				background: BrGlamorousColors neutralBackgroundColor;
+				matchParent ]
 ]
 
 { #category : #defaults }

@@ -9,8 +9,7 @@ Class {
 	#instVars : [
 		'coderContent',
 		'navigationModel',
-		'leftSideBarContent',
-		'leftSideBarResizer'
+		'sidebarElement'
 	],
 	#category : #'GToolkit-Coder-! Core'
 }
@@ -255,7 +254,7 @@ GtCoder >> initialize [
 	self initializeToolVolumeModel.
 	self initializeNavigationModel.
 	self initializeMainContent.
-	self initializeLeftSideBarContent.
+	self initializeSidebarElement.
 	self initializeElement.
 ]
 
@@ -270,23 +269,11 @@ GtCoder >> initializeElement [
 
 	aHorizontalPane := BrHorizontalPane new
 		matchParent;
-		addChild: leftSideBarContent;
+		addChild: sidebarElement;
 		addChild: coderContent.
 
 	self addChild: aHorizontalPane.
 	self addChild: self buildToolbar
-]
-
-{ #category : #initialization }
-GtCoder >> initializeLeftSideBarContent [
-	leftSideBarContent := BlElement new
-		layout: BlFrameLayout new;
-		look: (BrGlamorousWithHorizontalResizerLook new 
-			resizerDo: [ :theResizer | leftSideBarResizer := theResizer ]);
-		visibility: BlVisibility gone;
-		constraintsDo: [ :c |
-			c horizontal exact: 0.
-			c vertical matchParent ].
 ]
 
 { #category : #initialization }
@@ -321,29 +308,18 @@ GtCoder >> initializeNavigationModel [
 ]
 
 { #category : #initialization }
+GtCoder >> initializeSidebarElement [
+	sidebarElement := GtPhlowSidebarElement new
+		contentStencil: (GtCoderNavigationTabsStencil new 
+			navigationModel: navigationModel).
+	self addLook: (GtPhlowToolVolumeLook new
+		normal: [ :theInstance | sidebarElement hide ];
+		detailed: [ :theInstance | sidebarElement show ]).
+]
+
+{ #category : #initialization }
 GtCoder >> initializeToolVolumeModel [
 	self addInteractiveModelState: GtPhlowToolVolumeModel new.
-]
-
-{ #category : #'api - configuration' }
-GtCoder >> leftSideBarDo: aBlock [
-	aBlock value: leftSideBarContent
-]
-
-{ #category : #'api - configuration' }
-GtCoder >> leftSideBarResizerDo: aBlock [
-	aBlock value: leftSideBarResizer
-]
-
-{ #category : #'instance creation' }
-GtCoder >> newEmbellisherExtension [
-	^ GtPagerPageEmbellisherExtensions new 
-		addExtension: (GtCoderEmbeddedPlaygroundExtension new
-			navigationModel: navigationModel);
-		addExtension: (GtCoderSideBarSystemNavigationExtension new
-			coder: self
-			sideBar: leftSideBarContent
-			navigationModel: navigationModel)
 ]
 
 { #category : #'hooks - children' }
