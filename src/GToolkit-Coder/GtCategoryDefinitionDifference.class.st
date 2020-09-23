@@ -12,7 +12,7 @@ Class {
 
 { #category : #converting }
 GtCategoryDefinitionDifference >> asClassRefactorings: aClass in: anRBModel [
-	^ RBMoveClassTransformation
+	^ RBMoveClassToPackageRefactoring
 		model: anRBModel
 		move: aClass name
 		to: self newCategory
