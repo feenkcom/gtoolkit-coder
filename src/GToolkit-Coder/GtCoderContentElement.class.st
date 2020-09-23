@@ -24,17 +24,6 @@ GtCoderContentElement >> initialize [
 	self addLook: (BrLayoutResizerLook inherit).
 ]
 
-{ #category : #initialization }
-GtCoderContentElement >> initializeListeners [
-	self
-		when: GtCoderToReplace
-		do: [ :anEvent | self replaceFrom: anEvent ].
-
-	self
-		when: GtCoderToSpawn
-		do: [ :anEvent | self spawnFrom: anEvent ].
-]
-
 { #category : #'hooks - children' }
 GtCoderContentElement >> onAddedToSceneGraph [
 	super onAddedToSceneGraph.
@@ -45,20 +34,6 @@ GtCoderContentElement >> onAddedToSceneGraph [
 GtCoderContentElement >> onRemovedFromSceneGraph [
 	super onRemovedFromSceneGraph.
 	self navigationModel unsubscribeFromSystem.
-]
-
-{ #category : #'private - event handling' }
-GtCoderContentElement >> replaceFrom: aGtCoderToReplaceEvent [
-	aGtCoderToReplaceEvent consumed: true.
-	
-	self pushCoder: aGtCoderToReplaceEvent coder
-]
-
-{ #category : #'private - event handling' }
-GtCoderContentElement >> spawnFrom: aGtCoderToSpawnEvent [
-	aGtCoderToSpawnEvent consumed: true.
-	
-	self phlow spawnTool: (GtReadyCoderTool coder: (aGtCoderToSpawnEvent coder))
 ]
 
 { #category : #'private - subscriptions' }

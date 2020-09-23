@@ -32,6 +32,23 @@ GtCoderNavigationModelElement >> defaultNavigationModel [
 GtCoderNavigationModelElement >> initialize [
 	super initialize.
 	navigationModel := self defaultNavigationModel.
+	self initializeListeners.
+
+]
+
+{ #category : #initialization }
+GtCoderNavigationModelElement >> initializeListeners [
+	self
+		when: GtCoderToReplace
+		do: [ :anEvent | self replaceFrom: anEvent ].
+
+	self
+		when: GtCoderToSpawn
+		do: [ :anEvent | self spawnFrom: anEvent ].
+		
+	self
+		when: GtCoderToSpawnInSpace
+		do: [ :anEvent | self spawnInSpaceFrom: anEvent ].
 ]
 
 { #category : #'api - accessing' }
@@ -59,6 +76,25 @@ GtCoderNavigationModelElement >> onNavigationModelChanged [
 GtCoderNavigationModelElement >> pushCoder: aCoderOrCoders [
 	self assertNavigationModel: self navigationModel.
 	self navigationModel selectCoder: aCoderOrCoders
+]
+
+{ #category : #'private - event handling' }
+GtCoderNavigationModelElement >> replaceFrom: aGtCoderToReplaceEvent [
+	aGtCoderToReplaceEvent consumed: true.
+	
+	self pushCoder: aGtCoderToReplaceEvent coder
+]
+
+{ #category : #'private - event handling' }
+GtCoderNavigationModelElement >> spawnFrom: aGtCoderToSpawnEvent [
+	aGtCoderToSpawnEvent consumed: true.
+	
+	self phlow spawnTool: (GtReadyCoderTool coder: (aGtCoderToSpawnEvent coder))
+]
+
+{ #category : #'private - event handling' }
+GtCoderNavigationModelElement >> spawnInSpaceFrom: aGtCoderToSpawnInSpaceEvent [
+	aGtCoderToSpawnInSpaceEvent consumed: true.
 ]
 
 { #category : #'private - subscriptions' }

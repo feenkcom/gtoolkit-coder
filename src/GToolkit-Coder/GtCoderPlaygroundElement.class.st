@@ -56,6 +56,7 @@ GtCoderPlaygroundElement >> initializePlayPageElement [
 		beBottom;
 		show;
 		collapse;
+		background: BlBackground transparent;
 		contentStencil: aStencil.
 ]
 
