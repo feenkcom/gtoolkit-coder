@@ -12,6 +12,8 @@ ${example:GtCoderElementExamples>>#coderElementWithObject|previewExpanded|codeEx
 Class {
 	#name : #GtCoder,
 	#superclass : #GtCoderNavigationModelElement,
+	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolVolumeAdjustable',
+	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolVolumeAdjustable classTrait',
 	#instVars : [
 		'sidebarElement',
 		'contentElement',
