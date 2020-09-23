@@ -1,15 +1,21 @@
 "
-I am the entrance point into the coder as a tool
+I am the entrance point into the coder as a tool. To instantiate me, use one of the following class-side methods:
+- ${method:GtCoder class>>#forObject:|label=#selector}$,
+- ${method:GtCoder class>>#forClass:|label=#selector}$,
+- ${method:GtCoder class>>#forMethod:|label=#selector}$,
+- ${method:GtCoder class>>#forPackage:|label=#selector}$,
+- ${method:GtCoder class>>#new|label=#selector}$.
+!! Example
+${example:GtCoderElementExamples>>#coderElementWithObject|previewExpanded|codeExpanded=false|previewHeight=700}$
+
 "
 Class {
 	#name : #GtCoder,
-	#superclass : #BlElement,
-	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolVolumeAdjustable',
-	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolVolumeAdjustable classTrait',
+	#superclass : #GtCoderNavigationModelElement,
 	#instVars : [
-		'coderContent',
-		'navigationModel',
-		'sidebarElement'
+		'sidebarElement',
+		'contentElement',
+		'toolbarElement'
 	],
 	#category : #'GToolkit-Coder-! Core'
 }
@@ -21,7 +27,9 @@ GtCoder class >> forClass: aClass [
 
 { #category : #'instance creation' }
 GtCoder class >> forCoder: aCoder [
-	^ self basicNew initialize pushCoder: aCoder
+	^ self basicNew initialize
+		navigationModel: GtCoderNavigationModel default;
+		pushCoder: aCoder
 ]
 
 { #category : #'instance creation' }
@@ -48,326 +56,74 @@ GtCoder class >> new [
 	^ self forCoder: GtPackagesCoder new
 ]
 
-{ #category : #'private - ui' }
-GtCoder >> addClassTab: look [
-	<gtCreateComponentTab: 10>
-	^ BrTab new
-		look: BrGlamorousTabLook new;
-		label: 'Class';
-		stencil: [ | element |
-			element := GtCreateBehaviorElement new.
-			element
-				behaviorBlock: [ :cls | 
-					look hide.
-					navigationModel selectClass: cls ].
-			element forClassDefinition.
-			navigationModel
-				selectedPackageDo: [ :package | element forPackage: package ].
-			navigationModel
-				selectedTagDo: [ :tag | element forPackageTag: tag ].
-			navigationModel
-				selectedClassDo: [ :cls | 
-					cls isTrait
-						ifFalse: [ element forSuperclass: cls ] ].
-			element ]
-]
-
-{ #category : #'private - ui' }
-GtCoder >> addPackageTab: look [
-	<gtCreateComponentTab: 30>
-	^ BrTab new
-		look: BrGlamorousTabLook new;
-		label: 'Package';
-		stencil: [ | element |
-			element := GtCreatePackageElement new.
-			element
-				packageBlock: [ :pkg :tag | 
-					look hide.
-					tag isNil
-						ifTrue: [ navigationModel selectPackage: pkg ]
-						ifFalse: [ navigationModel selectPackageTag: tag ] ].
-			navigationModel
-				selectedPackageDo: [ :package | element forPackage: package ].
-			element ]
-]
-
-{ #category : #'private - ui' }
-GtCoder >> addTraitTab: look [
-	<gtCreateComponentTab: 20>
-	^ BrTab new
-		look: BrGlamorousTabLook new;
-		label: 'Trait';
-		stencil: [ | element |
-			element := GtCreateBehaviorElement new.
-			element
-				behaviorBlock: [ :cls | 
-					look hide.
-					navigationModel selectClass: cls ].
-			element forTraitDefinition.
-			navigationModel
-				selectedPackageDo: [ :package | element forPackage: package ].
-			navigationModel
-				selectedTagDo: [ :tag | element forPackageTag: tag ].
-			element ]
-]
-
-{ #category : #'private - ui' }
-GtCoder >> buildAddButton [
-	| look |
-	^ BrButton new
-		label: 'Add class or package';
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(look := BrGlamorousWithDropdownLook
-						handle: [ BrButton new
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousVectorIcons add;
-								yourself ]
-						content: [ | element |
-							element := BlElement new.
-							element
-								constraintsDo: [ :c | 
-									c horizontal exact: 400.
-									c vertical exact: 300 ].
-							element addChild: (self buildAddInterface: look).
-							element ]);
-		icon: BrGlamorousVectorIcons add;
-		yourself
-]
-
-{ #category : #'private - ui' }
-GtCoder >> buildAddInterface: look [
-	| contentTabs tabMethods |
-	contentTabs := BrTabGroup new.
-	contentTabs look: BrGlamorousTabGroupLook new.
-	contentTabs
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	tabMethods := (Pragma allNamed: #gtCreateComponentTab: in: self class)
-		asSortedCollection: [ :a :b | a arguments first < b arguments first ].
-	tabMethods
-		do:
-			[ :each | contentTabs addTab: (self perform: each method selector with: look) ].
-	^ contentTabs
-]
-
-{ #category : #'private - ui' }
-GtCoder >> buildClassLabel [
-	| aClassNameEditor aContainer |
-	aContainer := BrHorizontalPane new
-		hMatchParent;
-		alignCenterLeft;
-		vFitContent.
-	aClassNameEditor := BrEditableLabel new
-		look:
-			(BrGlamorousEditableLabelLook new
-				defaultBackground: Color transparent;
-				glamorousCodeFont;
-				bold;
-				fontSize: 18);
-		inputFilter: BrTextEditorAlphaNumericInputFilter new;
-		text: 'NameOfSubclass';
-		margin: (BlInsets all: 0).
-	(GtCompletionController
-		on: aClassNameEditor
-		strategy: GtClassesCompletionStrategy new) install.
-	aContainer addChild: aClassNameEditor.
-	^ aContainer
-]
-
-{ #category : #'private - ui' }
-GtCoder >> buildHierarchyButton [
-	^ BrButton new
-		label: 'Show Package and Class Hierarchies';
-		look: BrGlamorousButtonWithIconLook + (BrGlamorousWithDropdownLook
-			handle: [
-				BrButton new
-					look: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook - BrGlamorousButtonExteriorLook;
-					icon: BrGlamorousIcons tree;
-					yourself ]
-			content: [
-				BlElement new
-					size: 400@400;
-					addChild: (GtCoderNavigationTabsStencil new 
-						navigationModel: navigationModel;
-						asElement)
-			]);
-		icon: BrGlamorousIcons tree asElement;
-		yourself
-]
-
-{ #category : #'private - ui' }
-GtCoder >> buildHorizontalPane [
-	^ BrHorizontalPane new
-		hFitContent;
-		vMatchParent
-]
-
-{ #category : #'private - ui' }
-GtCoder >> buildSpotterButton [
-	<return: #BrButton>
-	
-	^ GtSpotterDropdownButtonStencil new
-		valuable: (GtCoderSpotterStart new navigationModel: navigationModel);
-		tooltip: 'Search Code';
-		actOn: [ :anActOnEvent :anItem :theButton | 
-			| acted |
-			acted := false.
-			(anItem isKindOf: RPackage) ifTrue: [ 
-				navigationModel selectPackage: anItem. acted := true ].
-			(anItem isKindOf: ClassDescription) ifTrue: [ 
-				navigationModel selectClass: anItem. acted := true ].
-			(anItem isKindOf: CompiledMethod) ifTrue: [ 
-				navigationModel selectMethod: anItem. acted := true ].
-			acted ifTrue: [ anActOnEvent beActed ] ];
-		asElement.
-]
-
-{ #category : #'private - ui' }
-GtCoder >> buildToolbar [
-	^ BrToolbar new
-		look: BrGlamorousToolbarLook new;
-		padding:
-			(BlInsets
-				top: 10
-				left: 0
-				bottom: 0
-				right: 5);
-		constraintsDo: [ :c | 
-			c ignoreByLayout.
-			c ignored horizontal alignRight.
-			c ignored vertical alignTop ];
-		addItem: self buildSpotterButton;
-		addItem: self buildHierarchyButton;
-		addItem: self buildAddButton;
-		yourself
+{ #category : #'private - accessing' }
+GtCoder >> contentElement [
+	<return: #GtCoderContentElement>
+	^ contentElement
 ]
 
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
-	self initializeListeners.
-	self initializeToolVolumeModel.
-	self initializeNavigationModel.
-	self initializeMainContent.
+	self addInteractiveModelState: GtPhlowToolVolumeModel new.
+	self initializeContentElement.
 	self initializeSidebarElement.
-	self initializeElement.
-]
-
-{ #category : #initialization }
-GtCoder >> initializeElement [
-	| aHorizontalPane |
-	self
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c vertical matchParent ].
-
-	aHorizontalPane := BrHorizontalPane new
-		matchParent;
-		addChild: sidebarElement;
-		addChild: coderContent.
-
-	self addChild: aHorizontalPane.
-	self addChild: self buildToolbar
-]
-
-{ #category : #initialization }
-GtCoder >> initializeListeners [
-	self
-		when: GtCoderToReplace
-		do: [ :anEvent | self replaceFrom: anEvent ].
-
-	self
-		when: GtCoderToSpawn
-		do: [ :anEvent | self spawnFrom: anEvent ].
-
-	self
-		when: GtCoderToSpawnInSpace
-		do: [ :anEvent | self spawnInSpaceFrom: anEvent ].
-]
-
-{ #category : #initialization }
-GtCoder >> initializeMainContent [
-	coderContent := BlElement new
-		layout: BlFrameLayout new;
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c vertical matchParent ].
-]
-
-{ #category : #initialization }
-GtCoder >> initializeNavigationModel [
-	navigationModel := GtCoderNavigationPackagesTagsClassesModel new.
-	navigationModel when: GtCoderNavigationSelectionAnnouncement send: #updateCoder: to: self.
+	self initializeToolbarElement.
 	
+	self layout: BlLinearLayout horizontal.
+	
+	self addChild: self sidebarElement as: #sidebar.
+	self addChild: self contentElement as: #content.
+	self addChild: self toolbarElement as: #toolbar.
+	
+	self addLook: (BrLayoutResizerLook inherit).
+]
+
+{ #category : #initialization }
+GtCoder >> initializeContentElement [
+	contentElement := GtCoderPlaygroundElement new.
 ]
 
 { #category : #initialization }
 GtCoder >> initializeSidebarElement [
-	sidebarElement := GtPhlowSidebarElement new
-		contentStencil: (GtCoderNavigationTabsStencil new 
-			navigationModel: navigationModel).
+	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
 	self addLook: (GtPhlowToolVolumeLook new
 		normal: [ :theInstance | sidebarElement hide ];
 		detailed: [ :theInstance | sidebarElement show ]).
 ]
 
 { #category : #initialization }
-GtCoder >> initializeToolVolumeModel [
-	self addInteractiveModelState: GtPhlowToolVolumeModel new.
+GtCoder >> initializeToolbarElement [
+	toolbarElement := GtCoderToolbarElement new
+		constraintsDo: [ :c | 
+			c ignoreByLayout.
+			c ignored horizontal alignRight.
+			c ignored vertical alignTop ].
 ]
 
-{ #category : #'hooks - children' }
-GtCoder >> onAddedToSceneGraph [
-	super onAddedToSceneGraph.
-	navigationModel subscribeToSystem.
+{ #category : #'private - hooks' }
+GtCoder >> onNavigationModelChanged [
+	super onNavigationModelChanged.
+	self contentElement navigationModel: self navigationModel.
+	self toolbarElement navigationModel: self navigationModel.
+	self updateSidebarContent.
 ]
 
-{ #category : #'hooks - children' }
-GtCoder >> onRemovedFromSceneGraph [
-	super onRemovedFromSceneGraph.
-	navigationModel unsubscribeFromSystem.
+{ #category : #'private - accessing' }
+GtCoder >> sidebarElement [
+	<return: #GtPhlowHorizontalSidebarElement>
+	^ sidebarElement
 ]
 
-{ #category : #opening }
-GtCoder >> pagerWindowTitle [
-	<return: #String>
-	^ 'Coder'
+{ #category : #'private - accessing' }
+GtCoder >> toolbarElement [
+	<return: #GtCoderToolbarElement>
+	^ toolbarElement
 ]
 
-{ #category : #'api - coder' }
-GtCoder >> pushCoder: aCoderOrCoders [
-	navigationModel selectCoder: aCoderOrCoders
-]
-
-{ #category : #'api - spawning' }
-GtCoder >> replaceFrom: aGtCoderToReplaceEvent [
-	aGtCoderToReplaceEvent consumed: true.
-	
-	self pushCoder: aGtCoderToReplaceEvent coder
-]
-
-{ #category : #'api - spawning' }
-GtCoder >> spawnFrom: aGtCoderToSpawnEvent [
-	aGtCoderToSpawnEvent consumed: true.
-	
-	self phlow spawnTool: (GtReadyCoderTool coder: (aGtCoderToSpawnEvent coder))
-]
-
-{ #category : #'api - spawning' }
-GtCoder >> spawnInSpaceFrom: aGtCoderToSpawnInSpaceEvent [
-	aGtCoderToSpawnInSpaceEvent consumed: true.
-	
-	
-]
-
-{ #category : #'api - spawning' }
-GtCoder >> updateCoder: anAnnouncement [
-	coderContent removeChildren.
-	coderContent addChild: anAnnouncement coder asElement
+{ #category : #'private - updating' }
+GtCoder >> updateSidebarContent [
+	self sidebarElement
+		contentStencil: (GtCoderNavigationTabsStencil new 
+			navigationModel: self navigationModel)
 ]

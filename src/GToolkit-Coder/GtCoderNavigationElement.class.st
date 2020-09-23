@@ -24,7 +24,8 @@ GtCoderNavigationElement >> deselectClasses [
 
 { #category : #testing }
 GtCoderNavigationElement >> hasNavigationModel [
-	^ self navigationModel isNotNil
+	^ self navigationModel isNotNil and: [
+		self navigationModel isNavigationModel ]
 ]
 
 { #category : #initialization }
@@ -194,6 +195,7 @@ GtCoderNavigationElement >> suppressNavigationChangeEventsDuring: aBlock [
 
 { #category : #subscriptions }
 GtCoderNavigationElement >> unsubscribeFromNavigationModel [
+	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel ifNotNil: [ :aModel | aModel unsubscribe: self ].
 ]
 

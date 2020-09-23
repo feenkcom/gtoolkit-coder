@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderNavigationPackagesTagsClassesModel,
-	#superclass : #Object,
+	#superclass : #GtCoderNavigationModel,
 	#traits : 'TGtAnnouncer',
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
@@ -62,19 +62,19 @@ GtCoderNavigationPackagesTagsClassesModel >> classesToShow [
 		ifFalse: [ self selectedPackage definedClasses ]
 ]
 
-{ #category : #testing }
+{ #category : #'api - testing' }
 GtCoderNavigationPackagesTagsClassesModel >> hasSelectedClass [
 	<return: #Boolean>
 	^ self selectedClass notNil
 ]
 
-{ #category : #testing }
+{ #category : #'api - testing' }
 GtCoderNavigationPackagesTagsClassesModel >> hasSelectedPackage [
 	<return: #Boolean>
 	^ self selectedPackage notNil
 ]
 
-{ #category : #testing }
+{ #category : #'api - testing' }
 GtCoderNavigationPackagesTagsClassesModel >> hasSelectedTag [
 	<return: #Boolean>
 	^ self selectedTag notNil
@@ -321,7 +321,7 @@ GtCoderNavigationPackagesTagsClassesModel >> showPackage: anRPackage [
 	^ packages isNil or: [ packages includes: anRPackage ]
 ]
 
-{ #category : #subscriptions }
+{ #category : #'api - subscriptions' }
 GtCoderNavigationPackagesTagsClassesModel >> subscribeToSystem [
 	SystemAnnouncer uniqueInstance weak
 		when: RPackageRegistered send: #packageRegistered: to: self;
@@ -333,7 +333,7 @@ GtCoderNavigationPackagesTagsClassesModel >> subscribeToSystem [
 		when: ClassModificationApplied send: #classModificationApplied: to: self
 ]
 
-{ #category : #subscriptions }
+{ #category : #'api - subscriptions' }
 GtCoderNavigationPackagesTagsClassesModel >> unsubscribeFromSystem [
 	SystemAnnouncer uniqueInstance unsubscribe: self
 ]
