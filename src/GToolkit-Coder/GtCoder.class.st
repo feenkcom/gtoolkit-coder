@@ -58,16 +58,6 @@ GtCoder class >> new [
 	^ self forCoder: GtPackagesCoder new
 ]
 
-{ #category : #'api - tool volume adjustable' }
-GtCoder >> beDetailedTool [
-	self dispatchEvent: GtPhlowToolDetailWish beDetailedTool
-]
-
-{ #category : #'api - tool volume adjustable' }
-GtCoder >> beNormalTool [
-	self dispatchEvent: GtPhlowToolDetailWish beNormalTool
-]
-
 { #category : #'private - accessing' }
 GtCoder >> contentElement [
 	<return: #GtCoderContentElement>
