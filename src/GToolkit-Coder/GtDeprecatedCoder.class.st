@@ -113,16 +113,6 @@ GtDeprecatedCoder >> addTraitTab: look [
 			element ]
 ]
 
-{ #category : #'api - tool volume adjustable' }
-GtDeprecatedCoder >> beDetailedTool [
-	self dispatchEvent: GtPhlowToolDetailWish beDetailedTool
-]
-
-{ #category : #'api - tool volume adjustable' }
-GtDeprecatedCoder >> beNormalTool [
-	self dispatchEvent: GtPhlowToolDetailWish beNormalTool
-]
-
 { #category : #'private - ui' }
 GtDeprecatedCoder >> buildAddButton [
 	| look |
