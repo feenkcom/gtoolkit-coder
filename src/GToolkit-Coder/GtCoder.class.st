@@ -12,8 +12,8 @@ ${example:GtCoderElementExamples>>#coderElementWithObject|previewExpanded|codeEx
 Class {
 	#name : #GtCoder,
 	#superclass : #GtCoderNavigationModelElement,
-	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolVolumeAdjustable',
-	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolVolumeAdjustable classTrait',
+	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolDetailAdjustable',
+	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolDetailAdjustable classTrait',
 	#instVars : [
 		'sidebarElement',
 		'contentElement',
@@ -58,6 +58,16 @@ GtCoder class >> new [
 	^ self forCoder: GtPackagesCoder new
 ]
 
+{ #category : #'api - tool volume adjustable' }
+GtCoder >> beDetailedTool [
+	self dispatchEvent: GtPhlowToolDetailWish beDetailedTool
+]
+
+{ #category : #'api - tool volume adjustable' }
+GtCoder >> beNormalTool [
+	self dispatchEvent: GtPhlowToolDetailWish beNormalTool
+]
+
 { #category : #'private - accessing' }
 GtCoder >> contentElement [
 	<return: #GtCoderContentElement>
@@ -67,7 +77,7 @@ GtCoder >> contentElement [
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
-	self addInteractiveModelState: GtPhlowToolVolumeModel new.
+	self addInteractiveModelState: GtPhlowToolDetailModel new.
 	self initializeContentElement.
 	self initializeSidebarElement.
 	self initializeToolbarElement.
@@ -89,7 +99,7 @@ GtCoder >> initializeContentElement [
 { #category : #initialization }
 GtCoder >> initializeSidebarElement [
 	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
-	self addLook: (GtPhlowToolVolumeLook new
+	self addLook: (GtPhlowToolDetailLook new
 		normal: [ :theInstance | sidebarElement hide ];
 		detailed: [ :theInstance | sidebarElement show ]).
 ]

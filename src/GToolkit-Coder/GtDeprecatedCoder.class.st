@@ -1,8 +1,8 @@
 Class {
 	#name : #GtDeprecatedCoder,
 	#superclass : #BlElement,
-	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolVolumeAdjustable',
-	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolVolumeAdjustable classTrait',
+	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolDetailAdjustable',
+	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolDetailAdjustable classTrait',
 	#instVars : [
 		'coderContent',
 		'navigationModel',
@@ -111,6 +111,16 @@ GtDeprecatedCoder >> addTraitTab: look [
 			navigationModel
 				selectedTagDo: [ :tag | element forPackageTag: tag ].
 			element ]
+]
+
+{ #category : #'api - tool volume adjustable' }
+GtDeprecatedCoder >> beDetailedTool [
+	self dispatchEvent: GtPhlowToolDetailWish beDetailedTool
+]
+
+{ #category : #'api - tool volume adjustable' }
+GtDeprecatedCoder >> beNormalTool [
+	self dispatchEvent: GtPhlowToolDetailWish beNormalTool
 ]
 
 { #category : #'private - ui' }
@@ -314,14 +324,14 @@ GtDeprecatedCoder >> initializeSidebarElement [
 	sidebarElement := GtPhlowHorizontalSidebarElement new
 		contentStencil: (GtCoderNavigationTabsStencil new 
 			navigationModel: navigationModel).
-	self addLook: (GtPhlowToolVolumeLook new
+	self addLook: (GtPhlowToolDetailLook new
 		normal: [ :theInstance | sidebarElement hide ];
 		detailed: [ :theInstance | sidebarElement show ]).
 ]
 
 { #category : #initialization }
 GtDeprecatedCoder >> initializeToolVolumeModel [
-	self addInteractiveModelState: GtPhlowToolVolumeModel new.
+	self addInteractiveModelState: GtPhlowToolDetailModel new.
 ]
 
 { #category : #'hooks - children' }
