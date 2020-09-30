@@ -115,12 +115,13 @@ GtCoder >> onNavigationModelChanged [
 	self contentElement navigationModel: self navigationModel.
 	self toolbarElement navigationModel: self navigationModel.
 	self updateSidebarContent.
+	self updateTabLabel.
 ]
 
 { #category : #opening }
 GtCoder >> pagerWindowTitle [
 	<return: #String>
-	^ 'Coder'
+	^ self selectedEntityShortName
 ]
 
 { #category : #'private - accessing' }
@@ -130,6 +131,16 @@ GtCoder >> selectedEntityName [
 	self navigationModel selectedTagDo: [ :aPackageTag | ^ aPackageTag packageName, '-', aPackageTag name ].
 	self navigationModel selectedPackageDo: [ :aPackage | ^ aPackage name ].
 	^ 'Coder'.
+]
+
+{ #category : #'private - accessing' }
+GtCoder >> selectedEntityShortName [
+	| aTitle |
+	aTitle := self selectedEntityName.
+	^ aTitle size < 27
+		ifTrue: [ aTitle ]
+		ifFalse: [ 
+			(aTitle first: 9), '...', (aTitle last: 9) ].
 ]
 
 { #category : #'private - accessing' }
@@ -167,11 +178,7 @@ GtCoder >> updateSidebarContent [
 
 { #category : #'private - updating' }
 GtCoder >> updateTabLabel [
-	| aTitle aShortTitle |
-	aTitle := self selectedEntityName.
-	aShortTitle := aTitle size < 27
-		ifTrue: [ aTitle ]
-		ifFalse: [ 
-			(aTitle first: 9), '...', (aTitle last: 9) ].
-	self notifyTabAppearanceChangeWishTo: aShortTitle
+	| aTitle |
+	aTitle := self selectedEntityShortName.
+	self notifyTabAppearanceChangeWishTo: aTitle
 ]
