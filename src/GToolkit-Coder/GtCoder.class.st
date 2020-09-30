@@ -64,6 +64,15 @@ GtCoder >> contentElement [
 	^ contentElement
 ]
 
+{ #category : #'private - accessing' }
+GtCoder >> fullTitle [
+	<return: #String>
+	self navigationModel selectedClassDo: [ :aClass | ^ 'Coder: ', aClass name ].
+	self navigationModel selectedTagDo: [ :aPackageTag | ^ 'Coder: ', aPackageTag packageName, '-', aPackageTag name ].
+	self navigationModel selectedPackageDo: [ :aPackage | ^ 'Coder: ', aPackage name ].
+	^ 'Coder'.
+]
+
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
@@ -115,21 +124,23 @@ GtCoder >> onNavigationModelChanged [
 	self contentElement navigationModel: self navigationModel.
 	self toolbarElement navigationModel: self navigationModel.
 	self updateSidebarContent.
+	self updateTabLabel.
 ]
 
 { #category : #opening }
 GtCoder >> pagerWindowTitle [
 	<return: #String>
-	^ 'Coder'
+	^ self shortTitle
 ]
 
 { #category : #'private - accessing' }
-GtCoder >> selectedEntityName [
-	<return: #String>
-	self navigationModel selectedClassDo: [ :aClass | ^ aClass name ].
-	self navigationModel selectedTagDo: [ :aPackageTag | ^ aPackageTag packageName, '-', aPackageTag name ].
-	self navigationModel selectedPackageDo: [ :aPackage | ^ aPackage name ].
-	^ 'Coder'.
+GtCoder >> shortTitle [
+	| aTitle |
+	aTitle := self fullTitle.
+	^ aTitle size < 42
+		ifTrue: [ aTitle ]
+		ifFalse: [ 
+			(aTitle first: 16), '...', (aTitle last: 9) ].
 ]
 
 { #category : #'private - accessing' }
@@ -167,11 +178,7 @@ GtCoder >> updateSidebarContent [
 
 { #category : #'private - updating' }
 GtCoder >> updateTabLabel [
-	| aTitle aShortTitle |
-	aTitle := self selectedEntityName.
-	aShortTitle := aTitle size < 27
-		ifTrue: [ aTitle ]
-		ifFalse: [ 
-			(aTitle first: 9), '...', (aTitle last: 9) ].
-	self notifyTabAppearanceChangeWishTo: aShortTitle
+	| aTitle |
+	aTitle := self shortTitle.
+	self notifyTabAppearanceChangeWishTo: aTitle
 ]
