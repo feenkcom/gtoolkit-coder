@@ -111,6 +111,12 @@ GtCoder >> onNavigationModelChanged [
 	self updateSidebarContent.
 ]
 
+{ #category : #opening }
+GtCoder >> pagerWindowTitle [
+	<return: #String>
+	^ 'Coder'
+]
+
 { #category : #'private - accessing' }
 GtCoder >> sidebarElement [
 	<return: #GtPhlowHorizontalSidebarElement>
