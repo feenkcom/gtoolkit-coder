@@ -103,6 +103,12 @@ GtCoder >> initializeToolbarElement [
 			c ignored vertical alignTop ].
 ]
 
+{ #category : #'private - notifying' }
+GtCoder >> notifyTabAppearanceChangeWishTo: aString [
+	self enqueueTask: (BlTaskAction new action: [
+		self fireEvent: (GtWorldChangeTabLabelWish new label: aString) ])
+]
+
 { #category : #'private - hooks' }
 GtCoder >> onNavigationModelChanged [
 	super onNavigationModelChanged.
@@ -118,9 +124,32 @@ GtCoder >> pagerWindowTitle [
 ]
 
 { #category : #'private - accessing' }
+GtCoder >> selectedEntityName [
+	<return: #String>
+	self navigationModel selectedClassDo: [ :aClass | ^ aClass name ].
+	self navigationModel selectedTagDo: [ :aPackageTag | ^ aPackageTag packageName, '-', aPackageTag name ].
+	self navigationModel selectedPackageDo: [ :aPackage | ^ aPackage name ].
+	^ 'Coder'.
+]
+
+{ #category : #'private - accessing' }
 GtCoder >> sidebarElement [
 	<return: #GtPhlowHorizontalSidebarElement>
 	^ sidebarElement
+]
+
+{ #category : #'private - subscriptions' }
+GtCoder >> subscribeToNavigationModel [
+	super subscribeToNavigationModel.
+	self navigationModel weak 
+		when: GtCoderNavigationPackagesSelected,
+			GtCoderNavigationPackageSelected,
+			GtCoderNavigationPackageRenamed,
+			GtCoderNavigationPackageTagSelected,
+			GtCoderNavigationClassSelected,
+			GtCoderNavigationClassRenamed,
+			GtCoderNavigationClassModified
+		send: #updateTabLabel to: self
 ]
 
 { #category : #'private - accessing' }
@@ -134,4 +163,15 @@ GtCoder >> updateSidebarContent [
 	self sidebarElement
 		contentStencil: (GtCoderNavigationTabsStencil new 
 			navigationModel: self navigationModel)
+]
+
+{ #category : #'private - updating' }
+GtCoder >> updateTabLabel [
+	| aTitle aShortTitle |
+	aTitle := self selectedEntityName.
+	aShortTitle := aTitle size < 27
+		ifTrue: [ aTitle ]
+		ifFalse: [ 
+			(aTitle first: 9), '...', (aTitle last: 9) ].
+	self notifyTabAppearanceChangeWishTo: aShortTitle
 ]
