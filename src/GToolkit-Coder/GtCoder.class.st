@@ -12,8 +12,8 @@ ${example:GtCoderElementExamples>>#coderElementWithObject|previewExpanded|codeEx
 Class {
 	#name : #GtCoder,
 	#superclass : #GtCoderNavigationModelElement,
-	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolVolumeAdjustable',
-	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolVolumeAdjustable classTrait',
+	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolDetailAdjustable',
+	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolDetailAdjustable classTrait',
 	#instVars : [
 		'sidebarElement',
 		'contentElement',
@@ -64,10 +64,19 @@ GtCoder >> contentElement [
 	^ contentElement
 ]
 
+{ #category : #'private - accessing' }
+GtCoder >> fullTitle [
+	<return: #String>
+	self navigationModel selectedClassDo: [ :aClass | ^ 'Coder: ', aClass name ].
+	self navigationModel selectedTagDo: [ :aPackageTag | ^ 'Coder: ', aPackageTag packageName, '-', aPackageTag name ].
+	self navigationModel selectedPackageDo: [ :aPackage | ^ 'Coder: ', aPackage name ].
+	^ 'Coder'.
+]
+
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
-	self addInteractiveModelState: GtPhlowToolVolumeModel new.
+	self addInteractiveModelState: GtPhlowToolDetailModel new.
 	self initializeContentElement.
 	self initializeSidebarElement.
 	self initializeToolbarElement.
@@ -89,7 +98,7 @@ GtCoder >> initializeContentElement [
 { #category : #initialization }
 GtCoder >> initializeSidebarElement [
 	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
-	self addLook: (GtPhlowToolVolumeLook new
+	self addLook: (GtPhlowToolDetailLook new
 		normal: [ :theInstance | sidebarElement hide ];
 		detailed: [ :theInstance | sidebarElement show ]).
 ]
@@ -103,18 +112,55 @@ GtCoder >> initializeToolbarElement [
 			c ignored vertical alignTop ].
 ]
 
+{ #category : #'private - notifying' }
+GtCoder >> notifyTabAppearanceChangeWishTo: aString [
+	self enqueueTask: (BlTaskAction new action: [
+		self fireEvent: (GtWorldChangeTabLabelWish new label: aString) ])
+]
+
 { #category : #'private - hooks' }
 GtCoder >> onNavigationModelChanged [
 	super onNavigationModelChanged.
 	self contentElement navigationModel: self navigationModel.
 	self toolbarElement navigationModel: self navigationModel.
 	self updateSidebarContent.
+	self updateTabLabel.
+]
+
+{ #category : #opening }
+GtCoder >> pagerWindowTitle [
+	<return: #String>
+	^ self shortTitle
+]
+
+{ #category : #'private - accessing' }
+GtCoder >> shortTitle [
+	| aTitle |
+	aTitle := self fullTitle.
+	^ aTitle size < 42
+		ifTrue: [ aTitle ]
+		ifFalse: [ 
+			(aTitle first: 16), '...', (aTitle last: 9) ].
 ]
 
 { #category : #'private - accessing' }
 GtCoder >> sidebarElement [
 	<return: #GtPhlowHorizontalSidebarElement>
 	^ sidebarElement
+]
+
+{ #category : #'private - subscriptions' }
+GtCoder >> subscribeToNavigationModel [
+	super subscribeToNavigationModel.
+	self navigationModel weak 
+		when: GtCoderNavigationPackagesSelected,
+			GtCoderNavigationPackageSelected,
+			GtCoderNavigationPackageRenamed,
+			GtCoderNavigationPackageTagSelected,
+			GtCoderNavigationClassSelected,
+			GtCoderNavigationClassRenamed,
+			GtCoderNavigationClassModified
+		send: #updateTabLabel to: self
 ]
 
 { #category : #'private - accessing' }
@@ -128,4 +174,11 @@ GtCoder >> updateSidebarContent [
 	self sidebarElement
 		contentStencil: (GtCoderNavigationTabsStencil new 
 			navigationModel: self navigationModel)
+]
+
+{ #category : #'private - updating' }
+GtCoder >> updateTabLabel [
+	| aTitle |
+	aTitle := self shortTitle.
+	self notifyTabAppearanceChangeWishTo: aTitle
 ]
