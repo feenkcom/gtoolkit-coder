@@ -11,7 +11,7 @@ Class {
 GtCoderSpotterStart >> gtSpotterForClassMethodsInCurrentClassFor: aStep [
 	<gtSearch>
 	self navigationModel hasSelectedClass
-		ifFalse: [ ^ self halt ].
+		ifFalse: [ ^ self ].
 	aStep listProcessor
 		priority: 2;
 		title: 'Class methods';
@@ -30,14 +30,14 @@ GtCoderSpotterStart >> gtSpotterForClassesFor: aStep [
 		filter: GtFilterSubstring;
 		itemIcon: #systemIcon;
 		keyBinding: $b meta;
-		wantsToDisplayOnEmptyQuery: navigationModelBlock hasSelectedClass not
+		wantsToDisplayOnEmptyQuery: self navigationModel hasSelectedClass not
 ]
 
 { #category : #searching }
 GtCoderSpotterStart >> gtSpotterForInstanceMethodsInCurrentClassFor: aStep [
 	<gtSearch>
 	self navigationModel hasSelectedClass
-		ifFalse: [ ^ self halt ].
+		ifFalse: [ ^ self ].
 	aStep listProcessor
 		priority: 1;
 		title: 'Instance methods';
@@ -72,7 +72,7 @@ GtCoderSpotterStart >> gtSpotterForPackagesFor: aStep [
 		itemName: [ :package | package name ];
 		itemIcon: [ Smalltalk ui icons iconNamed: #packageIcon ];
 		filter: GtFilterSubstring;
-		wantsToDisplayOnEmptyQuery: navigationModelBlock hasSelectedPackage not
+		wantsToDisplayOnEmptyQuery: self navigationModel hasSelectedPackage not
 ]
 
 { #category : #searching }
