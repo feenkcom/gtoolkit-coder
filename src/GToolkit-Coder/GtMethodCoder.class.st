@@ -1214,6 +1214,15 @@ GtMethodCoder >> playAndInspectSelectionOrMethodFrom: anEditorElement [
 ]
 
 { #category : #'api - actions examples' }
+GtMethodCoder >> playAndInspectSlideFrom: anEditorElement [
+	self isModified
+		ifTrue: [
+			(self saveFrom: anEditorElement)
+				ifFalse: [ ^ self ] ].
+	anEditorElement phlow spawnObject: self compiledMethod gtSlide.
+]
+
+{ #category : #'api - actions examples' }
 GtMethodCoder >> playExampleFrom: anEditorElement [
 	self runExampleFrom: anEditorElement
 ]
@@ -1502,6 +1511,25 @@ GtMethodCoder >> skipBlankLinesIn: source at: startIndex [
 	[ index <= source size and: [ (char := source at: index) = Character cr or: [ char = Character lf ] ] ]
 		whileTrue: [ index := index + 1 ].
 	^ index
+]
+
+{ #category : #'api - addons' }
+GtMethodCoder >> slideAstFor: anAST into: coderAddOns [
+	<gtAstCoderAddOns: 10>
+	(self compiledMethod notNil
+		and: [ anAST notNil
+				and: [ 
+					anAST methodNode
+						ifNotNil: [ :node | 
+							node pragmas
+								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtSlide ] ] ]
+						ifNil: [ false ] ] ])
+		ifFalse: [ ^ self ].
+	(anAST methodNode numArgs = 1) ifFalse: [ ^ self ].
+	coderAddOns
+		addContextAction: 'Play and Inspect' translated
+		icon: BrGlamorousVectorIcons playinspect
+		action: [ :anEditorElement | self playAndInspectSlideFrom: anEditorElement ].
 ]
 
 { #category : #subscriptions }

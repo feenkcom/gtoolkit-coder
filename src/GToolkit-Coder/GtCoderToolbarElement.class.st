@@ -176,7 +176,7 @@ GtCoderToolbarElement >> newSpotterButton [
 	<return: #BrButton>
 	
 	^ GtSpotterDropdownButtonStencil new
-		valuable: (GtCoderSpotterStart new navigationModel: navigationModel);
+		valuable: (GtCoderSpotterStart new navigationModelBlock: [self navigationModel]);
 		tooltip: 'Search Code';
 		actOn: [ :anActOnEvent :anItem :theButton | 
 			| acted |
