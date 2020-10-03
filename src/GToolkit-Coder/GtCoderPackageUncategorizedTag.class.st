@@ -35,6 +35,11 @@ GtCoderPackageUncategorizedTag >> package [
 	^ self packageTag package
 ]
 
+{ #category : #'as yet unclassified' }
+GtCoderPackageUncategorizedTag >> packageName [
+	^ self package name
+]
+
 { #category : #accessing }
 GtCoderPackageUncategorizedTag >> packageTag [
 	<return: #RPackageTag>
