@@ -1530,10 +1530,6 @@ GtMethodCoder >> slideAstFor: anAST into: coderAddOns [
 		addContextAction: 'Play and Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
 		action: [ :anEditorElement | self playAndInspectSlideFrom: anEditorElement ].
-	"coderAddOns
-		addContextAction: 'Debug' translated
-		icon: BrGlamorousVectorIcons debug
-		action: [ :anEditorElement | self debugSelectionOrExampleFrom: anEditorElement ]"
 ]
 
 { #category : #subscriptions }
