@@ -2,7 +2,7 @@ Class {
 	#name : #GtCoderSpotterStart,
 	#superclass : #Object,
 	#instVars : [
-		'navigationModel'
+		'navigationModelBlock'
 	],
 	#category : #'GToolkit-Coder-UI'
 }
@@ -10,12 +10,12 @@ Class {
 { #category : #searching }
 GtCoderSpotterStart >> gtSpotterForClassMethodsInCurrentClassFor: aStep [
 	<gtSearch>
-	navigationModel hasSelectedClass
-		ifFalse: [ ^ self ].
+	self navigationModel hasSelectedClass
+		ifFalse: [ ^ self halt ].
 	aStep listProcessor
 		priority: 2;
 		title: 'Class methods';
-		allCandidates: [ navigationModel selectedClass classSide methods ];
+		allCandidates: [ self navigationModel selectedClass classSide methods ];
 		filter: GtFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
 ]
@@ -30,18 +30,18 @@ GtCoderSpotterStart >> gtSpotterForClassesFor: aStep [
 		filter: GtFilterSubstring;
 		itemIcon: #systemIcon;
 		keyBinding: $b meta;
-		wantsToDisplayOnEmptyQuery: navigationModel hasSelectedClass not
+		wantsToDisplayOnEmptyQuery: navigationModelBlock hasSelectedClass not
 ]
 
 { #category : #searching }
 GtCoderSpotterStart >> gtSpotterForInstanceMethodsInCurrentClassFor: aStep [
 	<gtSearch>
-	navigationModel hasSelectedClass
-		ifFalse: [ ^ self ].
+	self navigationModel hasSelectedClass
+		ifFalse: [ ^ self halt ].
 	aStep listProcessor
 		priority: 1;
 		title: 'Instance methods';
-		allCandidates: [ navigationModel selectedClass instanceSide methods ];
+		allCandidates: [ self navigationModel selectedClass instanceSide methods ];
 		filter: GtFilterSubstring;
 		wantsToDisplayOnEmptyQuery: true
 ]
@@ -72,7 +72,7 @@ GtCoderSpotterStart >> gtSpotterForPackagesFor: aStep [
 		itemName: [ :package | package name ];
 		itemIcon: [ Smalltalk ui icons iconNamed: #packageIcon ];
 		filter: GtFilterSubstring;
-		wantsToDisplayOnEmptyQuery: navigationModel hasSelectedPackage not
+		wantsToDisplayOnEmptyQuery: navigationModelBlock hasSelectedPackage not
 ]
 
 { #category : #searching }
@@ -92,12 +92,12 @@ GtCoderSpotterStart >> gtSpotterImplementorsFor: aStep [
 
 { #category : #accessing }
 GtCoderSpotterStart >> navigationModel [
-	^ navigationModel
+	^ navigationModelBlock value
 ]
 
 { #category : #accessing }
-GtCoderSpotterStart >> navigationModel: anObject [
-	navigationModel := anObject
+GtCoderSpotterStart >> navigationModelBlock: aBlock [
+	navigationModelBlock := aBlock
 ]
 
 { #category : #printing }
