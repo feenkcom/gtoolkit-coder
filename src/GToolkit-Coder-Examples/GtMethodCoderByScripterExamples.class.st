@@ -83,7 +83,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault [
 			aStep check
 				label: 'Check Coder Editor Text';
 				satisfies: [ :label | label text asString = '?' ];
-				onChildNamed: #label.
+				onChildNamed: #methodLabel.
 			aStep check
 				label: 'Check Coder UI is Collapsed';
 				satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
@@ -181,7 +181,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
 		aStep check
 			label: 'Check Coder Editor Text';
 			satisfies: [ :label | label text asString = '?' ];
-			onChildNamed: #label.
+			onChildNamed: #methodLabel.
 		aStep check 
 			label: 'Check Coder UI Is Collapsed';
 			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
