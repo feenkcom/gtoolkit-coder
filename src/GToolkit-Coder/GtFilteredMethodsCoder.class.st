@@ -2,6 +2,7 @@ Class {
 	#name : #GtFilteredMethodsCoder,
 	#superclass : #GtMethodsCoder,
 	#instVars : [
+		'allCoders',
 		'originalFilter',
 		'additionalFilters'
 	],
@@ -19,6 +20,14 @@ GtFilteredMethodsCoder >> additionalFilters: aCollection [
 		ifTrue: [ ^ self ].
 	additionalFilters := OrderedCollection withAll: aCollection.
 	self runFilters
+]
+
+{ #category : #'private - accessing' }
+GtFilteredMethodsCoder >> allCoders [
+	<return: #Collection of: #GtMethodCoder>
+	"Return all non-filtered coders.
+	I keep all coders in this variable to keep state of all coders while filtering."
+	^ allCoders
 ]
 
 { #category : #testing }
@@ -43,6 +52,19 @@ GtFilteredMethodsCoder >> classNames [
 	^ classNames
 ]
 
+{ #category : #'private - accessing' }
+GtFilteredMethodsCoder >> coderFor: aCompiledMethod [
+	<return: #GtMethodCoder>
+	^ self allCoders 
+		detect: [ :eachCoder | eachCoder isForMethod: aCompiledMethod ] 
+		ifFound: [ :aCoder | aCoder ] 
+		ifNone: [ 
+			| aNewCoder |
+			aNewCoder := self newCoderFor: aCompiledMethod.
+			allCoders add: aNewCoder.
+			aNewCoder ]
+]
+
 { #category : #elements }
 GtFilteredMethodsCoder >> coderLook [
 	^ GtMethodCoderCategoryLook
@@ -64,12 +86,13 @@ GtFilteredMethodsCoder >> combinedFilter [
 { #category : #filters }
 GtFilteredMethodsCoder >> filterDescriptors [
 	| descriptors |
-	descriptors := OrderedCollection new.
+	descriptors := SortedCollection sortBlock: [ :a :b | a order < b order ].
 	GtSearchMethodsFilter
-		withAllSubclassesDo: [ :each | 
-			(each filterDescriptorFor: self)
-				ifNotNil: [ :descriptor | descriptors add: descriptor ] ].
-	^ descriptors asSortedCollection: [ :a :b | a order < b order ]
+		withAllSubclassesDo: [ :eachClass | 
+			eachClass 
+				filterDescriptorsFor: self 
+				into: descriptors ].
+	^ descriptors
 ]
 
 { #category : #filters }
@@ -80,13 +103,20 @@ GtFilteredMethodsCoder >> filterNames [
 { #category : #'initialize-release' }
 GtFilteredMethodsCoder >> forItems: compiledMethods [
 	super forItems: compiledMethods.
+
+	"I store all initialized coders in allCoders variable in order to
+	keep their state while filtering. The coders variable includes
+	a filtered subset of allCoders variable."
+	allCoders := coders.
+
 	originalFilter := compiledMethods filter
 ]
 
 { #category : #'initialize-release' }
 GtFilteredMethodsCoder >> initialize [
 	super initialize.
-	additionalFilters := OrderedCollection new
+	additionalFilters := OrderedCollection new.
+	allCoders := #().
 ]
 
 { #category : #testing }
@@ -154,10 +184,10 @@ GtFilteredMethodsCoder >> updateCoders [
 	| newCoders highlighter |
 	newCoders := coders select: [ :each | each isModified ].
 	items
-		do: [ :each | 
+		do: [ :eachMethod | 
 			(newCoders
-				anySatisfy: [ :coder | coder isForMethod: each compiledMethod ])
-				ifFalse: [ newCoders add: (self newCoderFor: each) ] ].
+				anySatisfy: [ :coder | coder isForMethod: eachMethod compiledMethod ])
+				ifFalse: [ newCoders add: (self coderFor: eachMethod) ] ].
 	coders := newCoders.
 	coders sort: [ :a :b | self shouldSort: a before: b ].
 	(items isKindOf: GtSearchMethodGroupResult)
