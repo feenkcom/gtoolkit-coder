@@ -27,20 +27,27 @@ GtCoderExampler >> coder: anObject [
 	coder := anObject
 ]
 
-{ #category : #'private - accessing' }
-GtCoderExampler >> exampleCoders [
-	<return: #Collection of: #GtMethodCoder>
+{ #category : #'api - accessing' }
+GtCoderExampler >> coderFor: aCompiledMethod [
+	<return: #GtMethodCoder>
 	^ self subclassResponsibility
+]
+
+{ #category : #'private - accessing' }
+GtCoderExampler >> exampleCodersDo: aBlock [
+	"iterate all coders with examples"
+	self subclassResponsibility
 ]
 
 { #category : #'api - testing' }
 GtCoderExampler >> hasExamples [
-	^ self exampleCoders isNotEmpty
+	self exampleCodersDo: [ ^ true ].
+	^ false
 ]
 
 { #category : #'api - execution' }
 GtCoderExampler >> runExamples [
-	self exampleCoders do: [ :eachCoder | 
+	self exampleCodersDo: [ :eachCoder | 
 		eachCoder isModified ifFalse: [ 
 			eachCoder example run ] ]
 ]
