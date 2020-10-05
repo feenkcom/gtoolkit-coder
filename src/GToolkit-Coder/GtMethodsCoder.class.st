@@ -10,6 +10,12 @@ GtMethodsCoder >> elementClass [
 ]
 
 { #category : #accessing }
+GtMethodsCoder >> exampler [
+	^ GtMethodsCoderExampler new
+		coder: self
+]
+
+{ #category : #accessing }
 GtMethodsCoder >> forItems: aCollection [
 	super forItems: aCollection.
 	(items isKindOf: GtSearchMethodGroupResult)

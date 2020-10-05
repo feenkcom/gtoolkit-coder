@@ -619,8 +619,8 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 
 { #category : #'api - actions examples' }
 GtMethodCoder >> exampleResult [
-	<return: #GtExampleResult>
-	^ self example result
+	<return: #GtExampleResult or: nil>
+	^ self example ifNotNil: #result
 ]
 
 { #category : #accessing }
@@ -744,6 +744,7 @@ GtMethodCoder >> gtDiffViewFor: aView [
 GtMethodCoder >> gtLiveFor: aView [
 	<gtView>
 	^ aView explicit 
+		disableAsync;
 		title: 'Live';
 		priority: 10;
 		stencil: [ self expanded: true ]
@@ -788,7 +789,10 @@ GtMethodCoder >> handleExampleArgumentsChanged: aGtExampleArgumentsChanged [
 
 { #category : #'examples - event handling' }
 GtMethodCoder >> handleExampleExecuted: aGtExampleExecuted [
-	self requestStyleSourceText
+	self requestStyleSourceText.
+	self announce: (GtCoderExampleExecuted new 
+		coder: self;
+		example: aGtExampleExecuted example)
 ]
 
 { #category : #'private - refactorings' }

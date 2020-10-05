@@ -24,6 +24,12 @@ GtSearchMethodsFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ nil
 ]
 
+{ #category : #accessing }
+GtSearchMethodsFilter class >> filterDescriptorsFor: aMethodsCoder into: aCollection [
+	(self filterDescriptorFor: aMethodsCoder) 
+		ifNotNil: [ :aDescriptor | aCollection add: aDescriptor ]
+]
+
 { #category : #testing }
 GtSearchMethodsFilter class >> isTag: aTag validFor: aMethodsCoder [
 	^ (self descriptorForTagType: aTag tagType in: aMethodsCoder)
