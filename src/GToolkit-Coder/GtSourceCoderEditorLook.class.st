@@ -37,7 +37,8 @@ GtSourceCoderEditorLook >> initialize [
 	editorElement := self newEditorElement.
 	editorElement editor
 		when: BrTextEditorModifiedEvent
-		do: [ self sourceChanged ].
+		do: [ self sourceChanged ];
+		beEditableCode.
 		
 	actions := self newActionsElement editor: editorElement.
 		

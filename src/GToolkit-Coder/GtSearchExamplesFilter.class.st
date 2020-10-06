@@ -15,7 +15,7 @@ GtSearchExamplesFilter class >> defaultState [
 
 { #category : #defaults }
 GtSearchExamplesFilter class >> filterDescriptorFor: aMethodsCoder [
-	^ GtFilterDescriptor
+	^ (GtFilterDescriptor
 		creator: [ :value | self new
 			resultStateString: value;
 			coder: aMethodsCoder ]
@@ -23,7 +23,8 @@ GtSearchExamplesFilter class >> filterDescriptorFor: aMethodsCoder [
 		order: 12
 		completion: (GtStringsCompletionStrategy new completions: 
 			(GtPrefixTree withAll: GtFilterExampleStatus default labels)) 
-		emptyDefaultValue: self defaultState label
+		emptyDefaultValue: self defaultState label)
+		beNotDefault
 ]
 
 { #category : #comparing }
@@ -41,6 +42,11 @@ GtSearchExamplesFilter >> coder [
 { #category : #accessing }
 GtSearchExamplesFilter >> coder: anObject [
 	coder := anObject
+]
+
+{ #category : #accessing }
+GtSearchExamplesFilter >> filterValueString [
+	^ self resultState label
 ]
 
 { #category : #comparing }
