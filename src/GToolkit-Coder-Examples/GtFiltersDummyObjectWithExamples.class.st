@@ -18,11 +18,13 @@ GtFiltersDummyObjectWithExamples >> one [
 { #category : #examples }
 GtFiltersDummyObjectWithExamples >> three [
 	<gtExample>
+	<noTest>
 	self assert: false
 ]
 
 { #category : #examples }
 GtFiltersDummyObjectWithExamples >> two [
 	<gtExample>
+	<noTest>
 	^ 1/0
 ]
