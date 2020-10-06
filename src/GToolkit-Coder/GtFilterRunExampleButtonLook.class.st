@@ -47,6 +47,8 @@ GtFilterRunExampleButtonLook >> initializeExampleElement [
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonLook >> newBackground [
+	self coder exampler hasNotExecutedExamples ifTrue: [ 
+		^ self newNotExecutedBackground ].
 	self coder exampler hasErrorExamples ifTrue: [ 
 		^ self newErrorBackground ].
 	self coder exampler hasFailureExamples ifTrue: [ 

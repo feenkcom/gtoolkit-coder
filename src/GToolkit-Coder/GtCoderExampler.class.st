@@ -78,6 +78,15 @@ GtCoderExampler >> hasFailureExamples [
 ]
 
 { #category : #'api - testing' }
+GtCoderExampler >> hasNotExecutedExamples [
+	<return: #Boolean>
+	self allExampleCodersDo: [ :eachCoder | 
+		eachCoder exampleResult ifNil: [ 
+			^ true ] ].
+	^ false
+]
+
+{ #category : #'api - testing' }
 GtCoderExampler >> hasSuccessExamples [
 	<return: #Boolean>
 	self allExampleResultCodersDo: [ :eachCoder | 
