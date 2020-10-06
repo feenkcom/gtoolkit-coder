@@ -147,7 +147,7 @@ GtClassMethodsCoder >> examplesFilter: aView [
 								((GtSearchExamplesFilter new
 									resultState: eachState)
 									coder: self)} ];
-						title: eachState label ]);
+						title: (eachState labelWithAmountFor: self exampler) ]);
 				hMatchParent;
 				vMatchParent ]
 ]

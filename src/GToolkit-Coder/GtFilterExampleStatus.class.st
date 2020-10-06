@@ -22,10 +22,27 @@ GtFilterExampleStatus >> label [
 ]
 
 { #category : #'api - accessing' }
+GtFilterExampleStatus >> labelWithAmountFor: anExampler [
+	<return: #BlText>
+	| aTotal aTotalString aTotalText |
+	aTotal := self numberOfExamplesFor: anExampler.
+	aTotalString := ' (', aTotal asString, (' example' asPluralBasedOn: aTotal), ')'.
+	aTotalText := aTotalString asRopedText foreground: Color gray.
+	^ self label asRopedText
+		append: aTotalText.
+]
+
+{ #category : #'api - accessing' }
 GtFilterExampleStatus >> labels [
 	"Return all available labels"
 	<return: #Array of: #String>
 	^ self statuses collect: #label
+]
+
+{ #category : #'private - accessing' }
+GtFilterExampleStatus >> numberOfExamplesFor: anExampler [
+	"Return number of examples with a given status"
+	^ 0
 ]
 
 { #category : #'api - accessing' }

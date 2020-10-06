@@ -16,6 +16,11 @@ GtFilterExampleSuccessStatus >> label [
 	^ 'Success'
 ]
 
+{ #category : #'private - accessing' }
+GtFilterExampleSuccessStatus >> numberOfExamplesFor: anExampler [
+	^ anExampler numberOfSuccessExamples
+]
+
 { #category : #'api - accessing' }
 GtFilterExampleSuccessStatus >> order [
 	^ 2

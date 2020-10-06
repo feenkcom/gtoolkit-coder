@@ -8,7 +8,7 @@ Class {
 	#category : #'GToolkit-Coder-Exampler'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - accessing' }
 GtMethodsCoderExampler >> coderFor: aCompiledMethod [
 	<return: #GtMethodCoder>
 	^ self coder coderFor: aCompiledMethod
@@ -16,7 +16,7 @@ GtMethodsCoderExampler >> coderFor: aCompiledMethod [
 
 { #category : #'private - accessing' }
 GtMethodsCoderExampler >> exampleCodersDo: aBlock [
-	^ self coder coders do: [ :eachCoder | 
-			eachCoder canExecuteExample ifTrue: [ 
-				aBlock cull: eachCoder ] ]
+	self coder coders do: [ :eachCoder | 
+		eachCoder example ifNotNil: [ 
+			aBlock cull: eachCoder ] ]
 ]

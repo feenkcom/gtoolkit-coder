@@ -33,10 +33,24 @@ GtCoderExampler >> coderFor: aCompiledMethod [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'private - enumeration' }
 GtCoderExampler >> exampleCodersDo: aBlock [
 	"iterate all coders with examples"
 	self subclassResponsibility
+]
+
+{ #category : #'private - enumeration' }
+GtCoderExampler >> exampleResultCodersDo: aBlock [
+	self executableExampleCodersDo: [ :eachCoder | 
+			eachCoder exampleResult ifNotNil: [ 
+				aBlock cull: eachCoder ] ]
+]
+
+{ #category : #'private - enumeration' }
+GtCoderExampler >> executableExampleCodersDo: aBlock [
+	self exampleCodersDo: [ :eachCoder | 
+			eachCoder canExecuteExample ifTrue: [ 
+				aBlock cull: eachCoder ] ]
 ]
 
 { #category : #'api - testing' }
@@ -45,9 +59,63 @@ GtCoderExampler >> hasExamples [
 	^ false
 ]
 
+{ #category : #'api - accessing' }
+GtCoderExampler >> numberOfAllExamples [
+	<return: #Integer>
+	| aTotal |
+	aTotal := 0.
+	self executableExampleCodersDo: [ :eachCoder | 
+		aTotal := aTotal + 1 ].
+	^ aTotal
+]
+
+{ #category : #'api - accessing' }
+GtCoderExampler >> numberOfErrorExamples [
+	<return: #Integer>
+	| aTotal |
+	aTotal := 0.
+	self exampleResultCodersDo: [ :eachCoder | 
+		eachCoder exampleResult isError ifTrue: [ 
+			aTotal := aTotal + 1 ] ].
+	^ aTotal
+]
+
+{ #category : #'api - accessing' }
+GtCoderExampler >> numberOfFailureExamples [
+	<return: #Integer>
+	| aTotal |
+	aTotal := 0.
+	self exampleResultCodersDo: [ :eachCoder | 
+		eachCoder exampleResult isFailure ifTrue: [ 
+			aTotal := aTotal + 1 ] ].
+	^ aTotal
+]
+
+{ #category : #'api - accessing' }
+GtCoderExampler >> numberOfNotExecutedExamples [
+	<return: #Integer>
+	| aTotal |
+	aTotal := 0.
+	self executableExampleCodersDo: [ :eachCoder | 
+		eachCoder exampleResult ifNil: [ 
+			aTotal := aTotal + 1 ] ].
+	^ aTotal
+]
+
+{ #category : #'api - accessing' }
+GtCoderExampler >> numberOfSuccessExamples [
+	<return: #Integer>
+	| aTotal |
+	aTotal := 0.
+	self exampleResultCodersDo: [ :eachCoder | 
+		eachCoder exampleResult isSuccess ifTrue: [ 
+			aTotal := aTotal + 1 ] ].
+	^ aTotal
+]
+
 { #category : #'api - execution' }
 GtCoderExampler >> runExamples [
-	self exampleCodersDo: [ :eachCoder | 
+	self executableExampleCodersDo: [ :eachCoder | 
 		eachCoder isModified ifFalse: [ 
 			eachCoder example run ] ]
 ]
