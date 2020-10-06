@@ -39,7 +39,7 @@ GtFilterExampleStatus >> labels [
 	^ self statuses collect: #label
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleStatus >> numberOfExamplesFor: anExampler [
 	"Return number of examples with a given status"
 	^ 0

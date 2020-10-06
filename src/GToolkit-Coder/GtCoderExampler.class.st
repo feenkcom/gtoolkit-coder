@@ -64,7 +64,7 @@ GtCoderExampler >> hasErrorExamples [
 
 { #category : #'api - testing' }
 GtCoderExampler >> hasExamples [
-	self allExampleResultCodersDo: [ ^ true ].
+	self allExecutableExampleCodersDo: [ ^ true ].
 	^ false
 ]
 
@@ -80,7 +80,7 @@ GtCoderExampler >> hasFailureExamples [
 { #category : #'api - testing' }
 GtCoderExampler >> hasNotExecutedExamples [
 	<return: #Boolean>
-	self allExampleCodersDo: [ :eachCoder | 
+	self allExecutableExampleCodersDo: [ :eachCoder | 
 		eachCoder exampleResult ifNil: [ 
 			^ true ] ].
 	^ false
@@ -110,7 +110,7 @@ GtCoderExampler >> numberOfErrorExamples [
 	<return: #Integer>
 	| aTotal |
 	aTotal := 0.
-	self allExecutableExampleCodersDo: [ :eachCoder | 
+	self allExampleResultCodersDo: [ :eachCoder | 
 		eachCoder exampleResult isError ifTrue: [ 
 			aTotal := aTotal + 1 ] ].
 	^ aTotal
@@ -121,7 +121,7 @@ GtCoderExampler >> numberOfFailureExamples [
 	<return: #Integer>
 	| aTotal |
 	aTotal := 0.
-	self allExecutableExampleCodersDo: [ :eachCoder | 
+	self allExampleResultCodersDo: [ :eachCoder | 
 		eachCoder exampleResult isFailure ifTrue: [ 
 			aTotal := aTotal + 1 ] ].
 	^ aTotal
@@ -143,7 +143,7 @@ GtCoderExampler >> numberOfSuccessExamples [
 	<return: #Integer>
 	| aTotal |
 	aTotal := 0.
-	self allExecutableExampleCodersDo: [ :eachCoder | 
+	self allExampleResultCodersDo: [ :eachCoder | 
 		eachCoder exampleResult isSuccess ifTrue: [ 
 			aTotal := aTotal + 1 ] ].
 	^ aTotal

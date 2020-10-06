@@ -14,7 +14,7 @@ GtFilterExampleNotExecutedStatus >> label [
 	^ 'Not Executed'
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleNotExecutedStatus >> numberOfExamplesFor: anExampler [
 	^ anExampler numberOfNotExecutedExamples
 ]

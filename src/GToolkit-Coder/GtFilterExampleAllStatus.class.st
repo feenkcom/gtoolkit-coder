@@ -14,7 +14,7 @@ GtFilterExampleAllStatus >> label [
 	^ 'All'
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleAllStatus >> numberOfExamplesFor: anExampler [
 	^ anExampler numberOfAllExamples
 ]
