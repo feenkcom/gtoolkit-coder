@@ -8,6 +8,13 @@ Class {
 	#category : #'GToolkit-Coder-Exampler'
 }
 
+{ #category : #'private - enumeration' }
+GtMethodsCoderExampler >> allExampleCodersDo: aBlock [
+	self coder allCoders do: [ :eachCoder | 
+		eachCoder example ifNotNil: [ 
+			aBlock cull: eachCoder ] ]
+]
+
 { #category : #'api - accessing' }
 GtMethodsCoderExampler >> coderFor: aCompiledMethod [
 	<return: #GtMethodCoder>
@@ -15,7 +22,7 @@ GtMethodsCoderExampler >> coderFor: aCompiledMethod [
 ]
 
 { #category : #'private - accessing' }
-GtMethodsCoderExampler >> exampleCodersDo: aBlock [
+GtMethodsCoderExampler >> selectedExampleCodersDo: aBlock [
 	self coder coders do: [ :eachCoder | 
 		eachCoder example ifNotNil: [ 
 			aBlock cull: eachCoder ] ]

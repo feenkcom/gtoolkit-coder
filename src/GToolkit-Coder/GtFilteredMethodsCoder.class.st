@@ -30,6 +30,13 @@ GtFilteredMethodsCoder >> allCoders [
 	^ allCoders
 ]
 
+{ #category : #'private - accessing' }
+GtFilteredMethodsCoder >> allCoders: aCollection [
+	self unsubscribeFromAllCoders.
+	allCoders := aCollection.
+	self subscribeToAllCoders.
+]
+
 { #category : #testing }
 GtFilteredMethodsCoder >> canFilter [
 	^ true
@@ -107,7 +114,7 @@ GtFilteredMethodsCoder >> forItems: compiledMethods [
 	"I store all initialized coders in allCoders variable in order to
 	keep their state while filtering. The coders variable includes
 	a filtered subset of allCoders variable."
-	allCoders := coders.
+	self allCoders: coders.
 
 	originalFilter := compiledMethods filter
 ]
@@ -122,6 +129,11 @@ GtFilteredMethodsCoder >> initialize [
 { #category : #testing }
 GtFilteredMethodsCoder >> isForClass [
 	^ false
+]
+
+{ #category : #'private - announcement handling' }
+GtFilteredMethodsCoder >> onExampleExecuted: aGtCoderExampleExecuted [
+	self announce: aGtCoderExampleExecuted
 ]
 
 { #category : #completion }
@@ -177,6 +189,21 @@ GtFilteredMethodsCoder >> shouldSort: a before: b [
 	a classOrMetaClass = b classOrMetaClass
 		ifTrue: [ ^ a selector < b selector ].
 	^ a classOrMetaClass name < b classOrMetaClass name
+]
+
+{ #category : #'private - subscriptions' }
+GtFilteredMethodsCoder >> subscribeToAllCoders [
+	self allCoders do: [ :eachCoder |
+		eachCoder weak
+			when: GtCoderExampleExecuted 
+			send: #onExampleExecuted: 
+			to: self ]
+]
+
+{ #category : #'private - subscriptions' }
+GtFilteredMethodsCoder >> unsubscribeFromAllCoders [
+	self allCoders do: [ :eachCoder |
+		eachCoder unsubscribe: self ]
 ]
 
 { #category : #private }
