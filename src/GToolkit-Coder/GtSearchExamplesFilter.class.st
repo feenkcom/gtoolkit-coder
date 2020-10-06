@@ -44,6 +44,11 @@ GtSearchExamplesFilter >> coder: anObject [
 	coder := anObject
 ]
 
+{ #category : #accessing }
+GtSearchExamplesFilter >> filterValueString [
+	^ self resultState label
+]
+
 { #category : #comparing }
 GtSearchExamplesFilter >> hash [
 	^ (super hash bitXor: self resultState hash) 
