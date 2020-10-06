@@ -15,6 +15,8 @@ By default there are the following types of add-ons:
 Class {
 	#name : #GtCoderModel,
 	#superclass : #Object,
+	#traits : 'TGtAnnouncer',
+	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'announcer',
 		'expanded',
@@ -45,11 +47,6 @@ GtCoderModel >> addOns [
 { #category : #'private - addons' }
 GtCoderModel >> addOnsClass [
 	^ GtCoderAddOns
-]
-
-{ #category : #'api - announcer' }
-GtCoderModel >> announce: anAnnouncement [
-	announcer announce: anAnnouncement
 ]
 
 { #category : #'api - announcer' }

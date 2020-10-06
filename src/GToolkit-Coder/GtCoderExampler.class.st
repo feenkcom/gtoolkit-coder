@@ -54,8 +54,35 @@ GtCoderExampler >> executableExampleCodersDo: aBlock [
 ]
 
 { #category : #'api - testing' }
+GtCoderExampler >> hasErrorExamples [
+	<return: #Boolean>
+	self exampleResultCodersDo: [ :eachCoder | 
+		eachCoder exampleResult isError ifTrue: [ 
+			^ true ] ].
+	^ false
+]
+
+{ #category : #'api - testing' }
 GtCoderExampler >> hasExamples [
 	self exampleCodersDo: [ ^ true ].
+	^ false
+]
+
+{ #category : #'api - testing' }
+GtCoderExampler >> hasFailureExamples [
+	<return: #Boolean>
+	self exampleResultCodersDo: [ :eachCoder | 
+		eachCoder exampleResult isFailure ifTrue: [ 
+			^ true ] ].
+	^ false
+]
+
+{ #category : #'api - testing' }
+GtCoderExampler >> hasSuccessExamples [
+	<return: #Boolean>
+	self exampleResultCodersDo: [ :eachCoder | 
+		eachCoder exampleResult isSuccess ifTrue: [ 
+			^ true ] ].
 	^ false
 ]
 

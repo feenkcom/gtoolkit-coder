@@ -36,12 +36,13 @@ GtSearchExamplesFilter >> = anObject [
 
 { #category : #accessing }
 GtSearchExamplesFilter >> coder [
+	<return: #GtSearchMethodsFilter>
 	^ coder
 ]
 
 { #category : #accessing }
-GtSearchExamplesFilter >> coder: anObject [
-	coder := anObject
+GtSearchExamplesFilter >> coder: aGtSearchMethodsFilter [
+	coder := aGtSearchMethodsFilter
 ]
 
 { #category : #accessing }
