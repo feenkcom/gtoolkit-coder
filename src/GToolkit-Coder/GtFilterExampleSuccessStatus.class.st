@@ -16,7 +16,7 @@ GtFilterExampleSuccessStatus >> label [
 	^ 'Success'
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleSuccessStatus >> numberOfExamplesFor: anExampler [
 	^ anExampler numberOfSuccessExamples
 ]

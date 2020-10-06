@@ -80,13 +80,13 @@ Behavior >> gtCoderMethodsFor: aView context: aDictionary [
 			tooltip: 'Add new method'
 			action: [ methodsCoder addNewCoder ];
 		actionStencil: [ BrButton new
-				addLook: (GtFilterRunExampleButtonLook new 
+				addLook: (GtFilterRunExampleButtonIconLook new 
 					coder: methodsCoder);
-				addLook: BrGlamorousButtonWithIconLook;
+				addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
+				addLook: (GtFilterRunExampleButtonTooltipLook new coder: methodsCoder);
 				icon: BrGlamorousIcons play;
 				label: 'Run All Examples';
 				action: [ :element | 
-					methodsCoder exampler runExamplesFrom: element ] ]
-			tooltip: 'Run all examples';
+					methodsCoder exampler runExamplesFrom: element ] ];
 		stencil: [ methodsCoder asElement ]
 ]

@@ -16,7 +16,7 @@ GtFilterExampleFailureStatus >> label [
 	^ 'Failure'
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleFailureStatus >> numberOfExamplesFor: anExampler [
 	^ anExampler numberOfFailureExamples
 ]
