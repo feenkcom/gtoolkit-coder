@@ -2,7 +2,6 @@ Class {
 	#name : #GtFilterRunExampleButtonTooltipLook,
 	#superclass : #GtFilterRunExampleButtonLook,
 	#instVars : [
-		'tooltipContainer',
 		'tooltipContent'
 	],
 	#category : #'GToolkit-Coder-Filters - UI'
@@ -11,16 +10,9 @@ Class {
 { #category : #initialization }
 GtFilterRunExampleButtonTooltipLook >> initialize [
 	super initialize.
-	self initializeTooltipContainer.
 	self initializeTooltipContent.
-	self tooltipContainer addChild: self tooltipContent.
-	self add: (BrGlamorousWithTooltipLook2 content: self tooltipContainer).
-]
 
-{ #category : #initialization }
-GtFilterRunExampleButtonTooltipLook >> initializeTooltipContainer [
-	tooltipContainer := BrVerticalPane new
-		fitContent
+	self add: (BrGlamorousWithTooltipLook2 content: self tooltipContent).
 ]
 
 { #category : #initialization }
@@ -28,7 +20,7 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 	tooltipContent := BrColumnedList new.
 	tooltipContent 
 		items: GtFilterExampleStatus default statuses;
-		margin: (BlInsets all: 10);
+		padding: (BlInsets all: 10);
 		fitContent.
 	
 	tooltipContent column
@@ -74,12 +66,6 @@ GtFilterRunExampleButtonTooltipLook >> onExampleExecuted: aGtCoderExampleExecute
 	self widgetDo: [ :aWidget | 
 		aWidget enqueueTask: (BlTaskAction new action: [
 			self updateList ]) ]
-]
-
-{ #category : #'private - accessing' }
-GtFilterRunExampleButtonTooltipLook >> tooltipContainer [
-	<return: #BlElement>
-	^ tooltipContainer
 ]
 
 { #category : #'private - accessing' }
