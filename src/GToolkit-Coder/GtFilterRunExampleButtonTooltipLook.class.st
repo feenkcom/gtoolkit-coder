@@ -50,14 +50,14 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 		title: 'Amount';
 		cellStencil: [ 
 			BrLabel new
-				look: BrGlamorousLabelLook ];
+				look: BrGlamorousLabelLook;
+				fitContent ];
 		dataBinder: [ :anElement :anItem | 
 			| aTotal aTotalString aTotalText |
 			aTotal := anItem numberOfExamplesFor: self coder exampler.
 			aTotalString := aTotal asString, (' example' asPluralBasedOn: aTotal).
 			aTotalText := aTotalString asRopedText foreground: Color gray.
-			anElement text: aTotalText ];
-		width: 100.
+			anElement text: aTotalText ].
 	
 ]
 
@@ -73,6 +73,12 @@ GtFilterRunExampleButtonTooltipLook >> listItems [
 GtFilterRunExampleButtonTooltipLook >> onCoderChanged [
 	super onCoderChanged.
 	self updateList.
+]
+
+{ #category : #'private - announcement handling' }
+GtFilterRunExampleButtonTooltipLook >> onCoderChanged: aGtCodersCodersChanged [
+	super onCoderChanged: aGtCodersCodersChanged.
+	self postponeUpdate.
 ]
 
 { #category : #'private - announcement handling' }

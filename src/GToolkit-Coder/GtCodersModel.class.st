@@ -18,6 +18,20 @@ GtCodersModel class >> forItems: aCollection [
 		yourself
 ]
 
+{ #category : #'private - adding / removing' }
+GtCodersModel >> addCoder: aCoder [
+	coders add: aCoder.
+	self subscribeToCoder: aCoder.
+	self notifyCoderAdded: aCoder.
+]
+
+{ #category : #'private - adding / removing' }
+GtCodersModel >> addFirstCoder: aCoder [
+	coders addFirst: aCoder.
+	self subscribeToCoder: aCoder.
+	self notifyCoderAdded: aCoder
+]
+
 { #category : #announcer }
 GtCodersModel >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
@@ -77,14 +91,34 @@ GtCodersModel >> newCoderFor: anObject [
 	self subclassResponsibility
 ]
 
-{ #category : #coders }
+{ #category : #'private - notifying' }
+GtCodersModel >> notifyCoderAdded: aCoder [
+	self announce: (GtCodersCoderAdded new
+		coders: self;
+		coder: aCoder)
+]
+
+{ #category : #'private - notifying' }
+GtCodersModel >> notifyCoderRemoved: aCoder [
+	self announce: (GtCodersCoderRemoved new
+		coders: self;
+		coder: aCoder)
+]
+
+{ #category : #'private - adding / removing' }
 GtCodersModel >> removeCoder: aCoder [
+	self unsubscribeFromCoder: aCoder.
 	coders remove: aCoder ifAbsent: [ ^ self ].
-	self
-		announce:
-			(GtCodersCodersChanged new
-				coders: self;
-				yourself)
+	self notifyCoderRemoved: aCoder
+]
+
+{ #category : #'private - subscriptions' }
+GtCodersModel >> subscribeToCoder: eachCoder [
+]
+
+{ #category : #'private - subscriptions' }
+GtCodersModel >> unsubscribeFromCoder: aCoder [
+	aCoder unsubscribe: self
 ]
 
 { #category : #updating }

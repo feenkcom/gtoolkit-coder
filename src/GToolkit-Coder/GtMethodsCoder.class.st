@@ -28,18 +28,12 @@ GtMethodsCoder >> forItems: aCollection [
 
 { #category : #'event handling' }
 GtMethodsCoder >> methodAdded: aValueAdded [
-	| coder |
+	| aCoder |
 	(self coders
-		anySatisfy: [ :each | each isForMethod: aValueAdded newValue ])
+		anySatisfy: [ :eachCoder | eachCoder isForMethod: aValueAdded newValue ])
 		ifTrue: [ ^ self ].
-	coder := self newCoderFor: aValueAdded newValue.
-	coders add: coder.
-	self
-		announce:
-			(GtCodersCoderAdded new
-				coders: self;
-				coder: coder;
-				yourself)
+	aCoder := self newCoderFor: aValueAdded newValue.
+	self addCoder: aCoder.
 ]
 
 { #category : #'event handling' }
@@ -57,13 +51,7 @@ GtMethodsCoder >> methodRemoved: aValueRemoved [
 		select: [ :each | each isForMethod: aValueRemoved oldValue ].
 	toRemove
 		do: [ :each | 
-			coders remove: each.
-			self
-				announce:
-					(GtCodersCoderRemoved new
-						coders: self;
-						coder: each;
-						yourself) ]
+			self removeCoder: each ]
 ]
 
 { #category : #private }

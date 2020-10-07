@@ -412,6 +412,12 @@ GtMethodCoder >> classOrMetaClass: aBehavior [
 	class := aBehavior
 ]
 
+{ #category : #'private - actions' }
+GtMethodCoder >> clearExample [
+	self unsubscribeFromExample.
+	self removeAttributeNamed: #example.
+]
+
 { #category : #'api - actions' }
 GtMethodCoder >> compileFrom: anEditorElement [
 	"Try to compile the current source code and return true if it was successful, false otherwise"
@@ -565,11 +571,8 @@ GtMethodCoder >> example [
 GtMethodCoder >> example: anExampleWithResult [
 	| aCompiledMethod |
 	
-	self
-		attributeNamed: #example
-		ifPresent: [ :anOldExampleWithResult | anOldExampleWithResult announcer unsubscribe: self ]
-		ifAbsent: [ "do nothing" ].
-
+	self unsubscribeFromExample.
+	
 	self
 		attributeNamed: #example
 		put: anExampleWithResult asExampleWithResult.
@@ -1536,6 +1539,12 @@ GtMethodCoder >> slideAstFor: anAST into: coderAddOns [
 		action: [ :anEditorElement | self playAndInspectSlideFrom: anEditorElement ].
 ]
 
+{ #category : #'api - accessing' }
+GtMethodCoder >> sourceCode: aGtCoderSourceCode [
+	self clearExample.
+	super sourceCode: aGtCoderSourceCode.
+]
+
 { #category : #subscriptions }
 GtMethodCoder >> subscribeToSystem [
 	SystemAnnouncer uniqueInstance weak
@@ -1566,4 +1575,12 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
 		action: [ :anEditorElement | self debugSelectionOrMethodFrom: anEditorElement ]
+]
+
+{ #category : #'private - subscriptions' }
+GtMethodCoder >> unsubscribeFromExample [
+	self
+		attributeNamed: #example
+		ifPresent: [ :anOldExampleWithResult | anOldExampleWithResult announcer unsubscribe: self ]
+		ifAbsent: [ "do nothing" ].
 ]

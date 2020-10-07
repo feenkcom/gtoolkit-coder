@@ -45,6 +45,10 @@ GtFilterRunExampleButtonLook >> onCoderChanged [
 ]
 
 { #category : #'private - announcement handling' }
+GtFilterRunExampleButtonLook >> onCoderChanged: aGtCodersCodersChanged [
+]
+
+{ #category : #'private - announcement handling' }
 GtFilterRunExampleButtonLook >> onExampleExecuted: aGtCoderExampleExecuted [
 ]
 
@@ -82,6 +86,10 @@ GtFilterRunExampleButtonLook >> subscribeToCoder [
 	self coder weak
 		when: GtCoderExampleExecuted
 		send: #onExampleExecuted:
+		to: self.
+	self coder weak
+		when: GtCodersCoderAdded , GtCodersCoderRemoved , GtCodersCodersChanged, GtCoderSourceCodeChanged
+		send: #onCoderChanged: 
 		to: self
 ]
 

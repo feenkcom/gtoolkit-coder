@@ -23,17 +23,17 @@ GtCoderExampler >> allExampleCodersDo: aBlock [
 ]
 
 { #category : #'private - enumeration' }
-GtCoderExampler >> allExampleResultCodersDo: aBlock [
-	self allExecutableExampleCodersDo: [ :eachCoder | 
-		eachCoder exampleResult ifNotNil: [ 
-			aBlock cull: eachCoder ] ]
-]
-
-{ #category : #'private - enumeration' }
 GtCoderExampler >> allExecutableExampleCodersDo: aBlock [
 	self allExampleCodersDo: [ :eachCoder | 
 		eachCoder canExecuteExample ifTrue: [ 
 			aBlock cull: eachCoder ] ]
+]
+
+{ #category : #'private - enumeration' }
+GtCoderExampler >> allExecutableExampleCodersWithResultsDo: aBlock [
+	self allExecutableExampleCodersDo: [ :eachCoder | 
+		eachCoder exampleResult ifNotNil: [ :aResult |
+			aBlock cull: eachCoder cull: aResult ] ]
 ]
 
 { #category : #'api - accessing' }
@@ -56,7 +56,7 @@ GtCoderExampler >> coderFor: aCompiledMethod [
 { #category : #'api - testing' }
 GtCoderExampler >> hasErrorExamples [
 	<return: #Boolean>
-	self allExampleResultCodersDo: [ :eachCoder | 
+	self allExecutableExampleCodersWithResultsDo: [ :eachCoder | 
 		eachCoder exampleResult isError ifTrue: [ 
 			^ true ] ].
 	^ false
@@ -71,7 +71,7 @@ GtCoderExampler >> hasExamples [
 { #category : #'api - testing' }
 GtCoderExampler >> hasFailureExamples [
 	<return: #Boolean>
-	self allExampleResultCodersDo: [ :eachCoder | 
+	self allExecutableExampleCodersWithResultsDo: [ :eachCoder | 
 		eachCoder exampleResult isFailure ifTrue: [ 
 			^ true ] ].
 	^ false
@@ -87,9 +87,15 @@ GtCoderExampler >> hasNotExecutedExamples [
 ]
 
 { #category : #'api - testing' }
+GtCoderExampler >> hasSelectedExecutableExamples [
+	self selectedExecutableExampleCodersDo: [ ^ true ].
+	^ false
+]
+
+{ #category : #'api - testing' }
 GtCoderExampler >> hasSuccessExamples [
 	<return: #Boolean>
-	self allExampleResultCodersDo: [ :eachCoder | 
+	self allExecutableExampleCodersWithResultsDo: [ :eachCoder | 
 		eachCoder exampleResult isSuccess ifTrue: [ 
 			^ true ] ].
 	^ false
@@ -110,7 +116,7 @@ GtCoderExampler >> numberOfErrorExamples [
 	<return: #Integer>
 	| aTotal |
 	aTotal := 0.
-	self allExampleResultCodersDo: [ :eachCoder | 
+	self allExecutableExampleCodersWithResultsDo: [ :eachCoder | 
 		eachCoder exampleResult isError ifTrue: [ 
 			aTotal := aTotal + 1 ] ].
 	^ aTotal
@@ -121,7 +127,7 @@ GtCoderExampler >> numberOfFailureExamples [
 	<return: #Integer>
 	| aTotal |
 	aTotal := 0.
-	self allExampleResultCodersDo: [ :eachCoder | 
+	self allExecutableExampleCodersWithResultsDo: [ :eachCoder | 
 		eachCoder exampleResult isFailure ifTrue: [ 
 			aTotal := aTotal + 1 ] ].
 	^ aTotal
@@ -143,7 +149,7 @@ GtCoderExampler >> numberOfSuccessExamples [
 	<return: #Integer>
 	| aTotal |
 	aTotal := 0.
-	self allExampleResultCodersDo: [ :eachCoder | 
+	self allExecutableExampleCodersWithResultsDo: [ :eachCoder | 
 		eachCoder exampleResult isSuccess ifTrue: [ 
 			aTotal := aTotal + 1 ] ].
 	^ aTotal
@@ -168,15 +174,15 @@ GtCoderExampler >> selectedExampleCodersDo: aBlock [
 ]
 
 { #category : #'private - enumeration' }
-GtCoderExampler >> selectedExampleResultCodersDo: aBlock [
-	self selectedExecutableExampleCodersDo: [ :eachCoder | 
-		eachCoder exampleResult ifNotNil: [ 
-			aBlock cull: eachCoder ] ]
-]
-
-{ #category : #'private - enumeration' }
 GtCoderExampler >> selectedExecutableExampleCodersDo: aBlock [
 	self selectedExampleCodersDo: [ :eachCoder | 
 		eachCoder canExecuteExample ifTrue: [ 
 			aBlock cull: eachCoder ] ]
+]
+
+{ #category : #'private - enumeration' }
+GtCoderExampler >> selectedExecutableExampleCodersWithResultsDo: aBlock [
+	self selectedExecutableExampleCodersDo: [ :eachCoder | 
+		eachCoder exampleResult ifNotNil: [ :aResult |
+			aBlock cull: eachCoder cull: aResult ] ]
 ]
