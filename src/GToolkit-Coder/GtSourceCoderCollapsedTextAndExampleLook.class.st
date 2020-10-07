@@ -58,6 +58,15 @@ GtSourceCoderCollapsedTextAndExampleLook >> initializeContainer [
 ]
 
 { #category : #initialization }
+GtSourceCoderCollapsedTextAndExampleLook >> initializeExampleElement [
+	exampleElement := BlElement new
+		background: GtFilterExampleNotExecutedStatus default color;
+		geometry: BlCircle new;
+		margin: (BlInsets top: 4 left: 1 bottom: 1 right: 1);
+		size: 8 @ 8.
+]
+
+{ #category : #initialization }
 GtSourceCoderCollapsedTextAndExampleLook >> initializeMethodLabel [
 	methodLabel := BrLabel new
 		look: BrGlamorousLabelLook new editorMeasurement bold glamorousCodeFont
