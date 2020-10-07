@@ -22,6 +22,20 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 		items: GtFilterExampleStatus default statuses;
 		padding: (BlInsets all: 10);
 		fitContent.
+		
+	tooltipContent 
+		addEventHandlerOn: BrSelectionChanged do: [ :anEvent |
+			anEvent selectedDo: [ :theIndices |
+				| aWidgetElement aSelectedObject |
+
+				aWidgetElement := anEvent currentTarget.
+				aSelectedObject := aWidgetElement viewModel itemAt: theIndices first.
+				
+				self coder setFilters: {
+					((GtSearchExamplesFilter new
+						resultState: aSelectedObject)
+						coder: self coder)}
+		] ].
 	
 	tooltipContent column
 		title: 'Name';
@@ -43,7 +57,7 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 			aTotalString := aTotal asString, (' example' asPluralBasedOn: aTotal).
 			aTotalText := aTotalString asRopedText foreground: Color gray.
 			anElement text: aTotalText ];
-		width: 80.
+		width: 100.
 	
 ]
 
