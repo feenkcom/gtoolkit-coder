@@ -54,18 +54,24 @@ GtFilterRunExampleButtonIconLook >> newFailureBackground [
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconLook >> newNotExecutedBackground [
-	^ BrGlamorousColors defaultButtonBorderColor
+	^ BrGlamorousColors neutralBackgroundColor
 ]
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconLook >> newSuccessBackground [
-	^ BrGlamorousColors successBorderColor
+	^ BrGlamorousColors successBackgroundColor
 ]
 
 { #category : #'private - hooks' }
 GtFilterRunExampleButtonIconLook >> onCoderChanged [
 	super onCoderChanged.
-	self updateStatus.
+	self updateWidget.
+]
+
+{ #category : #'private - announcement handling' }
+GtFilterRunExampleButtonIconLook >> onCoderChanged: aGtCodersCodersChanged [
+	super onCoderChanged: aGtCodersCodersChanged.
+	self postponeUpdate.
 ]
 
 { #category : #'private - announcement handling' }
@@ -73,8 +79,26 @@ GtFilterRunExampleButtonIconLook >> onExampleExecuted: aGtCoderExampleExecuted [
 	self postponeUpdate.
 ]
 
+{ #category : #'api - hooks' }
+GtFilterRunExampleButtonIconLook >> onInstalledIn: anElement [
+	super onInstalledIn: anElement.
+	self updateButtonStatus.
+]
+
 { #category : #'private - updating' }
-GtFilterRunExampleButtonIconLook >> updateStatus [
+GtFilterRunExampleButtonIconLook >> updateButtonStatus [
+	"I must be called in a UI process".
+	self widgetDo: [ :aWidget | 
+		| aStatus |
+		aStatus := self coder exampler hasSelectedExecutableExamples.
+		aWidget dispatchEvent: (BrEnablementWish enabled: aStatus).
+		self coder exampler hasExamples 
+			ifFalse: [ aWidget visibility: BlVisibility gone ]
+			ifTrue: [ aWidget visibility: BlVisibility visible] ]
+]
+
+{ #category : #'private - updating' }
+GtFilterRunExampleButtonIconLook >> updateExampleStatus [
 	"I must be called in a UI process".
 	self exampleElement
 		background: self newBackground
@@ -83,5 +107,6 @@ GtFilterRunExampleButtonIconLook >> updateStatus [
 { #category : #'private - updating' }
 GtFilterRunExampleButtonIconLook >> updateWidget [
 	super updateWidget.
-	self updateStatus.
+	self updateExampleStatus.
+	self updateButtonStatus.
 ]

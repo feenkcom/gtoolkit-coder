@@ -34,19 +34,13 @@ GtClassMethodsCoder >> addMethodsForClass: aClass [
 
 { #category : #actions }
 GtClassMethodsCoder >> addNewCoder [
-	| coder |
-	coder := GtMethodCoder newMethod.
-	coder classOrMetaClass: self newMethodClass.
-	coder object: self object.
-	coder category: #accessing.
-	coder coders: self.
-	coders addFirst: coder.
-	self
-		announce:
-			(GtCodersCoderAdded new
-				coders: self;
-				coder: coder;
-				yourself)
+	| aCoder |
+	aCoder := GtMethodCoder newMethod.
+	aCoder classOrMetaClass: self newMethodClass.
+	aCoder object: self object.
+	aCoder category: #accessing.
+	aCoder coders: self.
+	self addFirstCoder: aCoder.
 ]
 
 { #category : #elements }

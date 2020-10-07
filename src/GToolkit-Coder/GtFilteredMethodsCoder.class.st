@@ -9,6 +9,18 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #'private - adding / removing' }
+GtFilteredMethodsCoder >> addCoder: aCoder [
+	self allCoders add: aCoder.
+	super addCoder: aCoder
+]
+
+{ #category : #'private - adding / removing' }
+GtFilteredMethodsCoder >> addFirstCoder: aCoder [
+	self allCoders addFirst: aCoder.
+	super addFirstCoder: aCoder
+]
+
 { #category : #filters }
 GtFilteredMethodsCoder >> additionalFilters [
 	^ additionalFilters
@@ -114,7 +126,7 @@ GtFilteredMethodsCoder >> forItems: compiledMethods [
 	"I store all initialized coders in allCoders variable in order to
 	keep their state while filtering. The coders variable includes
 	a filtered subset of allCoders variable."
-	self allCoders: coders.
+	self allCoders: coders copy.
 
 	originalFilter := compiledMethods filter
 ]
@@ -131,9 +143,24 @@ GtFilteredMethodsCoder >> isForClass [
 	^ false
 ]
 
+{ #category : #'private - accessing' }
+GtFilteredMethodsCoder >> methodRemoved: aValueRemoved [
+	| toRemove |
+	toRemove := self allCoders
+		select: [ :each | each isForMethod: aValueRemoved oldValue ].
+	toRemove
+		do: [ :each | 
+			self removeCoder: each ]
+]
+
 { #category : #'private - announcement handling' }
 GtFilteredMethodsCoder >> onExampleExecuted: aGtCoderExampleExecuted [
 	self announce: aGtCoderExampleExecuted
+]
+
+{ #category : #'private - announcement handling' }
+GtFilteredMethodsCoder >> onSourceCodeChanged: aGtCoderSourceCodeChanged [
+	self announce: aGtCoderSourceCodeChanged
 ]
 
 { #category : #completion }
@@ -154,6 +181,12 @@ GtFilteredMethodsCoder >> pragmaNames [
 		do:
 			[ :each | each pragmas do: [ :pragma | pragmaNames add: pragma selector ] ].
 	^ pragmaNames
+]
+
+{ #category : #'private - adding / removing' }
+GtFilteredMethodsCoder >> removeCoder: aCoder [
+	self allCoders remove: aCoder ifAbsent: [ "ignore" ].
+	super removeCoder: aCoder
 ]
 
 { #category : #filters }
@@ -193,17 +226,27 @@ GtFilteredMethodsCoder >> shouldSort: a before: b [
 
 { #category : #'private - subscriptions' }
 GtFilteredMethodsCoder >> subscribeToAllCoders [
-	self allCoders do: [ :eachCoder |
-		eachCoder weak
-			when: GtCoderExampleExecuted 
-			send: #onExampleExecuted: 
-			to: self ]
+	self allCoders do: [ :eachCoder | 
+		self subscribeToCoder: eachCoder ]
+]
+
+{ #category : #'private - subscriptions' }
+GtFilteredMethodsCoder >> subscribeToCoder: eachCoder [
+	super subscribeToCoder: eachCoder.
+	eachCoder weak
+		when: GtCoderExampleExecuted
+		send: #onExampleExecuted:
+		to: self.
+	eachCoder weak
+		when: GtCoderSourceCodeChanged
+		send: #onSourceCodeChanged:
+		to: self
 ]
 
 { #category : #'private - subscriptions' }
 GtFilteredMethodsCoder >> unsubscribeFromAllCoders [
 	self allCoders do: [ :eachCoder |
-		eachCoder unsubscribe: self ]
+		self unsubscribeFromCoder: eachCoder ]
 ]
 
 { #category : #private }
