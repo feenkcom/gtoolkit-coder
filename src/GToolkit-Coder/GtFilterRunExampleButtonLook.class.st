@@ -33,6 +33,12 @@ GtFilterRunExampleButtonLook >> enqueueUpdate [
 			self updateWidget ]) ].
 ]
 
+{ #category : #accessing }
+GtFilterRunExampleButtonLook >> exampler [
+	<return: #GtCoderExampler>
+	^ self coder exampler
+]
+
 { #category : #initialization }
 GtFilterRunExampleButtonLook >> initialize [
 	super initialize.
