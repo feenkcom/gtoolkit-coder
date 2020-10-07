@@ -35,10 +35,10 @@ GtFilterRunExampleButtonFourStateIconLook >> initialize [
 	self initializeFailureIconElement.
 	self initializeSuccessIconElement.
 	
-	self fourIconElement addChild: self neutralIconElement as: #neutral.
-	self fourIconElement addChild: self errorIconElement as: #error.
-	self fourIconElement addChild: self failureIconElement as: #failure.
 	self fourIconElement addChild: self successIconElement as: #success.
+	self fourIconElement addChild: self failureIconElement as: #failure.
+	self fourIconElement addChild: self errorIconElement as: #error.
+	self fourIconElement addChild: self neutralIconElement as: #neutral.
 	
 	self addChangeAddChildAs: #(content fourStateExample) with: [ self fourIconElement ].
 ]
@@ -67,14 +67,6 @@ GtFilterRunExampleButtonFourStateIconLook >> initializeFourStateIconElement [
 		constraintsDo: [ :c | 
 			c horizontal fitContent.
 			c vertical fitContent ].
-]
-
-{ #category : #initialization }
-GtFilterRunExampleButtonFourStateIconLook >> initializeIconElement: anElement [
-	anElement
-		geometry: BlCircle new;
-		margin: (BlInsets all: 1);
-		size: 8 @ 8.
 ]
 
 { #category : #initialization }

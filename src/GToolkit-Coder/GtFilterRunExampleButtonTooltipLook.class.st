@@ -36,6 +36,18 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 						resultState: aSelectedObject)
 						coder: self coder)}
 		] ].
+
+	tooltipContent column
+		title: 'Icon';
+		cellStencil: [ 
+			| anElement |
+			anElement := BlElement new
+				background: BlBackground transparent.
+			self initializeIconElement: anElement.
+			anElement ];
+		dataBinder: [ :anElement :anItem |
+			anElement background: anItem color ];
+		width: 10.
 	
 	tooltipContent column
 		title: 'Name';
@@ -94,8 +106,12 @@ GtFilterRunExampleButtonTooltipLook >> tooltipContent [
 
 { #category : #'private - updating' }
 GtFilterRunExampleButtonTooltipLook >> updateList [
+	| statusesToDisplay |
+	statusesToDisplay := GtFilterExampleStatus default statuses reject: [ :eachStatus | 
+		(eachStatus numberOfExamplesFor: self exampler) isZero ].
+
 	self tooltipContent
-		items: GtFilterExampleStatus default statuses
+		items: statusesToDisplay
 ]
 
 { #category : #'private - updating' }

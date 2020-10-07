@@ -24,9 +24,8 @@ GtFilterRunExampleButtonIconLook >> initialize [
 { #category : #initialization }
 GtFilterRunExampleButtonIconLook >> initializeExampleElement [
 	exampleElement := BlElement new
-		geometry: BlCircle new;
-		size: 8@8;
-		background: self newNotExecutedBackground
+		background: self newNotExecutedBackground.
+	self initializeIconElement: exampleElement.
 ]
 
 { #category : #'private - instance creation' }
@@ -44,22 +43,22 @@ GtFilterRunExampleButtonIconLook >> newBackground [
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconLook >> newErrorBackground [
-	^ BrGlamorousColors errorBackgroundColor
+	^ GtFilterExampleErrorStatus default color
 ]
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconLook >> newFailureBackground [
-	^ BrGlamorousColors failureBackgroundColor
+	^ GtFilterExampleFailureStatus default color
 ]
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconLook >> newNotExecutedBackground [
-	^ BrGlamorousColors neutralBackgroundColor
+	^ GtFilterExampleNotExecutedStatus default color
 ]
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconLook >> newSuccessBackground [
-	^ BrGlamorousColors successBackgroundColor
+	^ GtFilterExampleSuccessStatus default color
 ]
 
 { #category : #'private - hooks' }
