@@ -106,8 +106,12 @@ GtFilterRunExampleButtonTooltipLook >> tooltipContent [
 
 { #category : #'private - updating' }
 GtFilterRunExampleButtonTooltipLook >> updateList [
+	| statusesToDisplay |
+	statusesToDisplay := GtFilterExampleStatus default statuses reject: [ :eachStatus | 
+		(eachStatus numberOfExamplesFor: self exampler) isZero ].
+
 	self tooltipContent
-		items: GtFilterExampleStatus default statuses
+		items: statusesToDisplay
 ]
 
 { #category : #'private - updating' }
