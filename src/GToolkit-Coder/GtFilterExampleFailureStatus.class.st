@@ -4,6 +4,11 @@ Class {
 	#category : #'GToolkit-Coder-Filters - Support'
 }
 
+{ #category : #'api - accessing' }
+GtFilterExampleFailureStatus >> color [
+	^ BrGlamorousColors failureBackgroundColor
+]
+
 { #category : #'api - testing' }
 GtFilterExampleFailureStatus >> includesCoder: aCoder [
 	^ aCoder canExecuteExample and: [ 

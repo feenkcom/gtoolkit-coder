@@ -36,6 +36,18 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 						resultState: aSelectedObject)
 						coder: self coder)}
 		] ].
+
+	tooltipContent column
+		title: 'Icon';
+		cellStencil: [ 
+			| anElement |
+			anElement := BlElement new
+				background: BlBackground transparent.
+			self initializeIconElement: anElement.
+			anElement ];
+		dataBinder: [ :anElement :anItem |
+			anElement background: anItem color ];
+		width: 10.
 	
 	tooltipContent column
 		title: 'Name';

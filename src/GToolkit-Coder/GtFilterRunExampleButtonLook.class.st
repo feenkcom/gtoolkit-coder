@@ -46,6 +46,14 @@ GtFilterRunExampleButtonLook >> initialize [
 	mutex := Mutex new.
 ]
 
+{ #category : #initialization }
+GtFilterRunExampleButtonLook >> initializeIconElement: anElement [
+	anElement
+		geometry: BlCircle new;
+		margin: (BlInsets all: 1);
+		size: 8 @ 8.
+]
+
 { #category : #'private - hooks' }
 GtFilterRunExampleButtonLook >> onCoderChanged [
 ]

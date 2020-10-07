@@ -6,6 +6,13 @@ Class {
 	#category : #'GToolkit-Coder-Filters - Support'
 }
 
+{ #category : #'api - accessing' }
+GtFilterExampleStatus >> color [
+	"Return a color that represents given status"
+	<return: #Color>
+	^ Color transparent
+]
+
 { #category : #'api - testing' }
 GtFilterExampleStatus >> includesCoder: aCoder [
 	"Return true if a method filter should be displayed.

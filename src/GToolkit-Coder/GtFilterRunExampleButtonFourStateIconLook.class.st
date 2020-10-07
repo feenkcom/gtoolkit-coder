@@ -70,14 +70,6 @@ GtFilterRunExampleButtonFourStateIconLook >> initializeFourStateIconElement [
 ]
 
 { #category : #initialization }
-GtFilterRunExampleButtonFourStateIconLook >> initializeIconElement: anElement [
-	anElement
-		geometry: BlCircle new;
-		margin: (BlInsets all: 1);
-		size: 8 @ 8.
-]
-
-{ #category : #initialization }
 GtFilterRunExampleButtonFourStateIconLook >> initializeNeutralIconElement [
 	neutralIconElement := BlElement new
 		background: self newNotExecutedBackground.
