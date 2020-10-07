@@ -80,7 +80,7 @@ Behavior >> gtCoderMethodsFor: aView context: aDictionary [
 			tooltip: 'Add new method'
 			action: [ methodsCoder addNewCoder ];
 		actionStencil: [ BrButton new
-				addLook: (GtFilterRunExampleButtonIconLook new 
+				addLook: (GtFilterRunExampleButtonFourStateIconLook new 
 					coder: methodsCoder);
 				addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
 				addLook: (GtFilterRunExampleButtonTooltipLook new coder: methodsCoder);
