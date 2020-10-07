@@ -77,9 +77,7 @@ GtFilterRunExampleButtonTooltipLook >> onCoderChanged [
 
 { #category : #'private - announcement handling' }
 GtFilterRunExampleButtonTooltipLook >> onExampleExecuted: aGtCoderExampleExecuted [
-	self widgetDo: [ :aWidget | 
-		aWidget enqueueTask: (BlTaskAction new action: [
-			self updateList ]) ]
+	self postponeUpdate.
 ]
 
 { #category : #'private - accessing' }
@@ -92,4 +90,10 @@ GtFilterRunExampleButtonTooltipLook >> tooltipContent [
 GtFilterRunExampleButtonTooltipLook >> updateList [
 	self tooltipContent
 		items: GtFilterExampleStatus default statuses
+]
+
+{ #category : #'private - updating' }
+GtFilterRunExampleButtonTooltipLook >> updateWidget [
+	super updateWidget.
+	self updateList.
 ]
