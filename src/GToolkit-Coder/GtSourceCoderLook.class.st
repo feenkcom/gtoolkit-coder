@@ -4,6 +4,12 @@ Class {
 	#category : #'GToolkit-Coder-UI - Source Coder Look'
 }
 
+{ #category : #'private - accessing' }
+GtSourceCoderLook >> coder [
+	<return: #GtCoderModel>
+	^ self widget ifNotNil: #coder
+]
+
 { #category : #initialization }
 GtSourceCoderLook >> initializeListeners [
 	super initializeListeners.

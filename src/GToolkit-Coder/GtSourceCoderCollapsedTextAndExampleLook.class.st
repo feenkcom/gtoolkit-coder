@@ -14,7 +14,7 @@ Class {
 	#instVars : [
 		'container',
 		'methodLabel',
-		'exampleLabel'
+		'exampleElement'
 	],
 	#category : #'GToolkit-Coder-UI - Source Coder Look'
 }
@@ -26,26 +26,26 @@ GtSourceCoderCollapsedTextAndExampleLook >> container [
 ]
 
 { #category : #'private - accessing' }
-GtSourceCoderCollapsedTextAndExampleLook >> exampleLabel [
-	<return: #BrLabel>
-	^ exampleLabel
+GtSourceCoderCollapsedTextAndExampleLook >> exampleElement [
+	<return: #BlElement>
+	^ exampleElement
 ]
 
 { #category : #'private - updating' }
 GtSourceCoderCollapsedTextAndExampleLook >> hide [
-	self exampleLabel visibility: BlVisibility hidden
+	self exampleElement visibility: BlVisibility hidden
 ]
 
 { #category : #initialization }
 GtSourceCoderCollapsedTextAndExampleLook >> initialize [
 	super initialize.
 	self initializeMethodLabel.
-	self initializeExampleLabel.
+	self initializeExampleElement.
 	self initializeContainer.
 	
 	self container 
 		addChild: self methodLabel as: #methodLabel;
-		addChild: self exampleLabel as: #exampleLabel.
+		addChild: self exampleElement as: #exampleElement.
 	
 	self addChangeAddChildAs: #(content label) with: [ self container ].
 ]
@@ -55,14 +55,6 @@ GtSourceCoderCollapsedTextAndExampleLook >> initializeContainer [
 	container := BrHorizontalPane new
 		fitContent;
 		alignCenterLeft
-]
-
-{ #category : #initialization }
-GtSourceCoderCollapsedTextAndExampleLook >> initializeExampleLabel [
-	exampleLabel := BrLabel new
-		look: (BrGlamorousLabelLook new editorMeasurement fontSize: 12);
-		padding: (BlInsets top: 1 left: 0 bottom: 0 right: 0);
-		margin: (BlInsets left: 5).
 ]
 
 { #category : #initialization }
@@ -100,7 +92,7 @@ GtSourceCoderCollapsedTextAndExampleLook >> onCollapsedLabelChanged: anAnnouncem
 
 { #category : #'private - announcement handling' }
 GtSourceCoderCollapsedTextAndExampleLook >> onExampleExecuted: anAnnouncement [
-	self updateExampleLabelFor: anAnnouncement coder
+	self updateExampleElementFor: anAnnouncement coder
 ]
 
 { #category : #'private - accessing' }
@@ -108,36 +100,51 @@ GtSourceCoderCollapsedTextAndExampleLook >> resultLabelFor: aSourceCoder [
 	| result |
 	result := aSourceCoder exampleResult.
 	result isNil
-		ifTrue: [ ^ 'N/A' asRopedText foreground: BrGlamorousColors lightBorderColor ].
+		ifTrue: [ ^ 'N/A' asRopedText background: GtFilterExampleNotExecutedStatus default color ].
 	result isSuccess
-		ifTrue: [ ^ 'Success' asRopedText foreground: BrGlamorousColors successBorderColor ].
+		ifTrue: [ ^ 'Success' asRopedText background: GtFilterExampleSuccessStatus default color ].
 	result isFailure
-		ifTrue: [ ^ 'Failure' asRopedText foreground: BrGlamorousColors errorBorderColor ].
-	^ result isError
-		ifTrue: [ 'Error' asRopedText 
-			foreground: BrGlamorousColors errorBorderColor;
-			background: (BrGlamorousColors errorBackgroundColor alpha: 0.5) ]
-		ifFalse: [ 'N/A' asRopedText foreground: BrGlamorousColors lightBorderColor ]
+		ifTrue: [ ^ 'Failure' asRopedText background: GtFilterExampleFailureStatus default color ].
+	result isError
+		ifTrue: [ 'Error' asRopedText background: GtFilterExampleErrorStatus default color ].
+	^ 'N/A' asRopedText background: GtFilterExampleNotExecutedStatus default color
 ]
 
 { #category : #'private - updating' }
 GtSourceCoderCollapsedTextAndExampleLook >> show [
-	self exampleLabel visibility: BlVisibility visible
+	self exampleElement visibility: BlVisibility visible
 ]
 
 { #category : #'private - updating' }
-GtSourceCoderCollapsedTextAndExampleLook >> updateExampleLabelFor: aSourceCoder [
-	| aText |
-	aSourceCoder canExecuteExample ifFalse: [ self hide. ^ self ].
+GtSourceCoderCollapsedTextAndExampleLook >> updateExampleElementFor: aSourceCoder [
+	| anExampleResult |
+
+	aSourceCoder canExecuteExample
+		ifFalse: [ self hide.
+			^ self ].
 	self show.
-	aText := self resultLabelFor: aSourceCoder.
-	self exampleLabel text: aText
+
+	anExampleResult := aSourceCoder exampleResult.
+	anExampleResult ifNil: [ 
+		self exampleElement
+			background: GtFilterExampleNotExecutedStatus default color.
+		^ self ].
+	anExampleResult isSuccess ifTrue: [ 
+		self exampleElement
+			background: GtFilterExampleSuccessStatus default color.
+		^ self ].
+	anExampleResult isFailure ifTrue: [ 
+		self exampleElement
+			background: GtFilterExampleFailureStatus default color.
+		^ self ].
+	self exampleElement
+		background: GtFilterExampleErrorStatus default color.
 ]
 
 { #category : #'private - updating' }
 GtSourceCoderCollapsedTextAndExampleLook >> updateLabelsFor: aSourceCoder [
 	self updateMethodLabelFor: aSourceCoder.
-	self updateExampleLabelFor: aSourceCoder.
+	self updateExampleElementFor: aSourceCoder.
 ]
 
 { #category : #'private - updating' }
