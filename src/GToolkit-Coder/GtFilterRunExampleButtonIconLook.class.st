@@ -70,9 +70,7 @@ GtFilterRunExampleButtonIconLook >> onCoderChanged [
 
 { #category : #'private - announcement handling' }
 GtFilterRunExampleButtonIconLook >> onExampleExecuted: aGtCoderExampleExecuted [
-	self widgetDo: [ :aWidget | 
-		aWidget enqueueTask: (BlTaskAction new action: [
-			self updateStatus ]) ]
+	self postponeUpdate.
 ]
 
 { #category : #'private - updating' }
@@ -80,4 +78,10 @@ GtFilterRunExampleButtonIconLook >> updateStatus [
 	"I must be called in a UI process".
 	self exampleElement
 		background: self newBackground
+]
+
+{ #category : #'private - updating' }
+GtFilterRunExampleButtonIconLook >> updateWidget [
+	super updateWidget.
+	self updateStatus.
 ]
