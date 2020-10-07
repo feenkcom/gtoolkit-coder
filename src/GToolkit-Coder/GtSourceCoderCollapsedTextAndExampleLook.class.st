@@ -3,7 +3,7 @@ I am a ${class:BrLook}$.
 I am a ${class:GtSourceCoderLook}$.
 I attach two labels:
 # a ${method:GtSourceCoderCollapsedTextAndExampleLook>>#methodLabel|label=method name}$, and
-# example ${method:GtSourceCoderCollapsedTextAndExampleLook>>#exampleLabel|label=execution status}$.
+# example ${method:GtSourceCoderCollapsedTextAndExampleLook>>#exampleElement|label=execution state}$.
 !! Examples
 If a method is an example, I display the method name and example result: ${example:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withExampleMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}$ 
 If a method is """"not"""" an example, I omit displaying the example result: ${example:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withRegularMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}$ 
