@@ -44,6 +44,7 @@ GtMethodCoderTagsElement >> initialize [
 	
 	self 
 		layout: (BlLinearLayout horizontal cellSpacing: 4);
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
 		background: Color white;
 		constraintsDo: [ :c |
 			c horizontal fitContent.
