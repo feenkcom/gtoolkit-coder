@@ -76,6 +76,7 @@ GtCoderExampleStateElement >> hasExampleResult [
 { #category : #initialization }
 GtCoderExampleStateElement >> initialize [
 	super initialize.
+	self initializeListeners.
 	self initializeInteractiveModel.
 
 	self 
@@ -105,6 +106,13 @@ GtCoderExampleStateElement >> initializeInteractiveModel [
 		BrLayoutVerticalResizerModel exact: 8.
 		BrHoverModel new.
 	})
+]
+
+{ #category : #initialization }
+GtCoderExampleStateElement >> initializeListeners [
+	self 
+		when: BlClickEvent 
+		do: [ :anEvent | self onClickEvent: anEvent ]
 ]
 
 { #category : #initialization }
@@ -181,6 +189,14 @@ GtCoderExampleStateElement >> newTooltipContent [
 	^ aContainer
 ]
 
+{ #category : #'private - event handling' }
+GtCoderExampleStateElement >> onClickEvent: anEvent [
+	self exampleDo: [ :anExample | 
+		anExample hasResult ifFalse: [ ^ self ].
+		anExample isSuccess ifTrue: [ ^ self spawnExampleFrom: anEvent currentTarget ].
+		self debugExampleFrom: anEvent currentTarget ]
+]
+
 { #category : #'private - hooks' }
 GtCoderExampleStateElement >> onExampleChanged [
 	self updateIcon.
@@ -198,15 +214,20 @@ GtCoderExampleStateElement >> onExampleExecuted: aGtExampleExecuted [
 { #category : #'private - actions' }
 GtCoderExampleStateElement >> playAndInspectExampleFrom: aButton [
 	self playExampleFrom: aButton.
-	self exampleDo: [ :anExample |
-		anExample hasResult ifTrue: [ 
-			aButton phlow spawnObject: anExample result returnValueOrExampleException ] ]
+	self spawnExampleFrom: aButton.
 ]
 
 { #category : #'private - actions' }
 GtCoderExampleStateElement >> playExampleFrom: aButton [
 	self exampleDo: [ :anExample |
 		anExample run ]
+]
+
+{ #category : #'private - actions' }
+GtCoderExampleStateElement >> spawnExampleFrom: anElement [
+	self exampleDo: [ :anExample |
+		anExample hasResult ifTrue: [ 
+			anElement phlow spawnObject: anExample result returnValueOrExampleException ] ]
 ]
 
 { #category : #'private - subscriptions' }
