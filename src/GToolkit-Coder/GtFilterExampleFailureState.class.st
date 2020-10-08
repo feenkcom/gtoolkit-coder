@@ -18,8 +18,9 @@ GtFilterExampleFailureState >> includesCoder: aCoder [
 
 { #category : #'api - testing' }
 GtFilterExampleFailureState >> isStatusFor: aGtExampleWithResult [
-	^ aGtExampleWithResult hasResult and: [ 
-		aGtExampleWithResult isFailure ]
+	^ aGtExampleWithResult isNotNil and: [ 
+			aGtExampleWithResult hasResult and: [ 
+				aGtExampleWithResult isFailure ] ]
 ]
 
 { #category : #'api - accessing' }
