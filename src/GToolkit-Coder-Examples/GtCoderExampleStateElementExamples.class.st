@@ -33,7 +33,6 @@ GtCoderExampleStateElementExamples >> basicExampleStatusElement [
 { #category : #accessing }
 GtCoderExampleStateElementExamples >> errorExample [
 	<gtExample>
-	<noTest>
 	^ (self class >>#three) gtExample asExampleWithResult
 ]
 
