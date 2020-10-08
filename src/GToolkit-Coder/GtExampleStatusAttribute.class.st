@@ -2,34 +2,34 @@ Class {
 	#name : #GtExampleStatusAttribute,
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
-		'result'
+		'example'
 	],
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #'instance creation' }
-GtExampleStatusAttribute class >> forResult: anExampleResult [
+GtExampleStatusAttribute class >> forExample: anExampleWithResult [
 	^ self new
-		result: anExampleResult;
+		example: anExampleWithResult;
 		yourself
 ]
 
 { #category : #accessing }
-GtExampleStatusAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
-	| aButtonElement |
-	aButtonElement := BrButton new
-		look: (BrGlamorousLabelLook new fontSize: 12);
-		label: self resultLabel.
-	(result notNil and: [ result isError ])
-		ifTrue: [ aButtonElement background: (BrGlamorousColors errorBackgroundColor alpha: 0.5) ].
-	aButtonElement padding: (BlInsets top: 1 left: 0 bottom: 0 right: 0).
-	aButtonElement margin: (BlInsets left: 5).
-	result ifNil: [ ^ aButtonElement ].
-	result isSuccess ifTrue: [ 
-		aButtonElement action: [ :aButton | aButton phlow spawnObject: self result returnValue ] ].
-	(result isFailure or: [ result isError ]) ifTrue: [ 
-		aButtonElement action: [ :aButton | self result exampleException debug ] ].
-	^ aButtonElement
+GtExampleStatusAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
+	^ { GtCoderExampleStateElement new 
+			example: self example;
+			margin: (BlInsets top: 1 left: 2 bottom: 1 right: 1) }.
+]
+
+{ #category : #accessing }
+GtExampleStatusAttribute >> example [
+	<return: #GtExampleWithResult or: nil>
+	^ example
+]
+
+{ #category : #accessing }
+GtExampleStatusAttribute >> example: aGtExampleWithResult [
+	example := aGtExampleWithResult asExampleWithResult.
 ]
 
 { #category : #'initialize-release' }
@@ -40,23 +40,5 @@ GtExampleStatusAttribute >> initialize [
 
 { #category : #accessing }
 GtExampleStatusAttribute >> result [
-	^ result
-]
-
-{ #category : #accessing }
-GtExampleStatusAttribute >> result: exampleResult [
-	result := exampleResult
-]
-
-{ #category : #accessing }
-GtExampleStatusAttribute >> resultLabel [
-	result isNil
-		ifTrue: [ ^ 'N/A' asRopedText foreground: BrGlamorousColors lightBorderColor ].
-	result isSuccess
-		ifTrue: [ ^ 'Success' asRopedText foreground: BrGlamorousColors successBorderColor ].
-	result isFailure
-		ifTrue: [ ^ 'Failure' asRopedText foreground: BrGlamorousColors errorBorderColor ].
-	^ result isError
-		ifTrue: [ 'Error' asRopedText foreground: BrGlamorousColors errorBorderColor ]
-		ifFalse: [ 'N/A' asRopedText foreground: BrGlamorousColors lightBorderColor ]
+	^ self example ifNotNil: #result
 ]

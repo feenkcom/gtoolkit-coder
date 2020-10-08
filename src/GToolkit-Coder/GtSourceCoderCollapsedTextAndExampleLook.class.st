@@ -59,11 +59,8 @@ GtSourceCoderCollapsedTextAndExampleLook >> initializeContainer [
 
 { #category : #initialization }
 GtSourceCoderCollapsedTextAndExampleLook >> initializeExampleElement [
-	exampleElement := BlElement new
-		background: GtFilterExampleNotExecutedStatus default color;
-		geometry: BlCircle new;
-		margin: (BlInsets top: 4 left: 1 bottom: 1 right: 1);
-		size: 8 @ 8.
+	exampleElement := GtCoderExampleStateElement new
+		margin: (BlInsets top: 4 left: 1 bottom: 1 right: 1).
 ]
 
 { #category : #initialization }
@@ -104,21 +101,6 @@ GtSourceCoderCollapsedTextAndExampleLook >> onExampleExecuted: anAnnouncement [
 	self updateExampleElementFor: anAnnouncement coder
 ]
 
-{ #category : #'private - accessing' }
-GtSourceCoderCollapsedTextAndExampleLook >> resultLabelFor: aSourceCoder [
-	| result |
-	result := aSourceCoder exampleResult.
-	result isNil
-		ifTrue: [ ^ 'N/A' asRopedText background: GtFilterExampleNotExecutedStatus default color ].
-	result isSuccess
-		ifTrue: [ ^ 'Success' asRopedText background: GtFilterExampleSuccessStatus default color ].
-	result isFailure
-		ifTrue: [ ^ 'Failure' asRopedText background: GtFilterExampleFailureStatus default color ].
-	result isError
-		ifTrue: [ 'Error' asRopedText background: GtFilterExampleErrorStatus default color ].
-	^ 'N/A' asRopedText background: GtFilterExampleNotExecutedStatus default color
-]
-
 { #category : #'private - updating' }
 GtSourceCoderCollapsedTextAndExampleLook >> show [
 	self exampleElement visibility: BlVisibility visible
@@ -126,28 +108,12 @@ GtSourceCoderCollapsedTextAndExampleLook >> show [
 
 { #category : #'private - updating' }
 GtSourceCoderCollapsedTextAndExampleLook >> updateExampleElementFor: aSourceCoder [
-	| anExampleResult |
-
 	aSourceCoder canExecuteExample
 		ifFalse: [ self hide.
 			^ self ].
 	self show.
 
-	anExampleResult := aSourceCoder exampleResult.
-	anExampleResult ifNil: [ 
-		self exampleElement
-			background: GtFilterExampleNotExecutedStatus default color.
-		^ self ].
-	anExampleResult isSuccess ifTrue: [ 
-		self exampleElement
-			background: GtFilterExampleSuccessStatus default color.
-		^ self ].
-	anExampleResult isFailure ifTrue: [ 
-		self exampleElement
-			background: GtFilterExampleFailureStatus default color.
-		^ self ].
-	self exampleElement
-		background: GtFilterExampleErrorStatus default color.
+	self exampleElement example: aSourceCoder example.
 ]
 
 { #category : #'private - updating' }

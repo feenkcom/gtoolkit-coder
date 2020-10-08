@@ -158,7 +158,7 @@ GtCoderExampler >> numberOfSuccessExamples [
 { #category : #'api - execution' }
 GtCoderExampler >> runExamples [
 	self selectedExecutableExampleCodersDo: [ :eachCoder | 
-		eachCoder isModified ifFalse: [ 
+		(eachCoder isModified or: [ eachCoder example hasNoTestPragma ]) ifFalse: [ 
 			eachCoder example run ] ]
 ]
 
