@@ -15,7 +15,7 @@ GtExampleStatusAttribute class >> forResult: anExampleResult [
 ]
 
 { #category : #accessing }
-GtExampleStatusAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
+GtExampleStatusAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| aButtonElement |
 	aButtonElement := BrButton new
 		look: (BrGlamorousLabelLook new fontSize: 12);

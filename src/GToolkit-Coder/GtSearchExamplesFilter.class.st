@@ -10,7 +10,7 @@ Class {
 
 { #category : #defaults }
 GtSearchExamplesFilter class >> defaultState [
-	^ GtFilterExampleAllStatus default
+	^ GtFilterExampleAllState default
 ]
 
 { #category : #defaults }
@@ -22,7 +22,7 @@ GtSearchExamplesFilter class >> filterDescriptorFor: aMethodsCoder [
 		named: 'Examples'
 		order: 12
 		completion: (GtStringsCompletionStrategy new completions: 
-			(GtPrefixTree withAll: GtFilterExampleStatus default labels)) 
+			(GtPrefixTree withAll: GtFilterExampleState default allLabels)) 
 		emptyDefaultValue: self defaultState label)
 		beNotDefault
 ]
@@ -71,7 +71,7 @@ GtSearchExamplesFilter >> initialize [
 
 { #category : #accessing }
 GtSearchExamplesFilter >> resultState [
-	<return: #GtFilterExampleStatus>
+	<return: #GtFilterExampleState>
 	^ resultState
 ]
 
@@ -82,7 +82,7 @@ GtSearchExamplesFilter >> resultState: aGtFilterExampleStatus [
 
 { #category : #'api - initialization' }
 GtSearchExamplesFilter >> resultStateString: aString [
-	self resultState: (GtFilterExampleStatus default statusLabeled: aString)
+	self resultState: (GtFilterExampleState default stateFromLabel: aString)
 ]
 
 { #category : #testing }

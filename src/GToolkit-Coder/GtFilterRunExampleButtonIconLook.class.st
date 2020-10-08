@@ -43,22 +43,22 @@ GtFilterRunExampleButtonIconLook >> newBackground [
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconLook >> newErrorBackground [
-	^ GtFilterExampleErrorStatus default color
+	^ GtFilterExampleErrorState default color
 ]
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconLook >> newFailureBackground [
-	^ GtFilterExampleFailureStatus default color
+	^ GtFilterExampleFailureState default color
 ]
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconLook >> newNotExecutedBackground [
-	^ GtFilterExampleNotExecutedStatus default color
+	^ GtFilterExampleNotExecutedState default color
 ]
 
 { #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconLook >> newSuccessBackground [
-	^ GtFilterExampleSuccessStatus default color
+	^ GtFilterExampleSuccessState default color
 ]
 
 { #category : #'private - hooks' }

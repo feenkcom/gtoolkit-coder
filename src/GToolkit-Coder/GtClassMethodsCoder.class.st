@@ -132,7 +132,7 @@ GtClassMethodsCoder >> examplesFilter: aView [
 		title: 'Examples';
 		priority: 40;
 		stencil: [ | states |
-			states := GtFilterExampleStatus default statuses.
+			states := GtFilterExampleState default allStates.
 			GtCoderContextMenuContent new
 				items: (states collect: [ :eachState | 
 					GtCoderContextMenuAction new

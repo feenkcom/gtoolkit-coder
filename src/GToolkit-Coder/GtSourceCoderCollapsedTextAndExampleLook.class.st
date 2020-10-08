@@ -60,7 +60,7 @@ GtSourceCoderCollapsedTextAndExampleLook >> initializeContainer [
 { #category : #initialization }
 GtSourceCoderCollapsedTextAndExampleLook >> initializeExampleElement [
 	exampleElement := BlElement new
-		background: GtFilterExampleNotExecutedStatus default color;
+		background: GtFilterExampleNotExecutedState default color;
 		geometry: BlCircle new;
 		margin: (BlInsets top: 4 left: 1 bottom: 1 right: 1);
 		size: 8 @ 8.
@@ -109,14 +109,14 @@ GtSourceCoderCollapsedTextAndExampleLook >> resultLabelFor: aSourceCoder [
 	| result |
 	result := aSourceCoder exampleResult.
 	result isNil
-		ifTrue: [ ^ 'N/A' asRopedText background: GtFilterExampleNotExecutedStatus default color ].
+		ifTrue: [ ^ 'N/A' asRopedText background: GtFilterExampleNotExecutedState default color ].
 	result isSuccess
-		ifTrue: [ ^ 'Success' asRopedText background: GtFilterExampleSuccessStatus default color ].
+		ifTrue: [ ^ 'Success' asRopedText background: GtFilterExampleSuccessState default color ].
 	result isFailure
-		ifTrue: [ ^ 'Failure' asRopedText background: GtFilterExampleFailureStatus default color ].
+		ifTrue: [ ^ 'Failure' asRopedText background: GtFilterExampleFailureState default color ].
 	result isError
-		ifTrue: [ 'Error' asRopedText background: GtFilterExampleErrorStatus default color ].
-	^ 'N/A' asRopedText background: GtFilterExampleNotExecutedStatus default color
+		ifTrue: [ 'Error' asRopedText background: GtFilterExampleErrorState default color ].
+	^ 'N/A' asRopedText background: GtFilterExampleNotExecutedState default color
 ]
 
 { #category : #'private - updating' }
@@ -136,18 +136,18 @@ GtSourceCoderCollapsedTextAndExampleLook >> updateExampleElementFor: aSourceCode
 	anExampleResult := aSourceCoder exampleResult.
 	anExampleResult ifNil: [ 
 		self exampleElement
-			background: GtFilterExampleNotExecutedStatus default color.
+			background: GtFilterExampleNotExecutedState default color.
 		^ self ].
 	anExampleResult isSuccess ifTrue: [ 
 		self exampleElement
-			background: GtFilterExampleSuccessStatus default color.
+			background: GtFilterExampleSuccessState default color.
 		^ self ].
 	anExampleResult isFailure ifTrue: [ 
 		self exampleElement
-			background: GtFilterExampleFailureStatus default color.
+			background: GtFilterExampleFailureState default color.
 		^ self ].
 	self exampleElement
-		background: GtFilterExampleErrorStatus default color.
+		background: GtFilterExampleErrorState default color.
 ]
 
 { #category : #'private - updating' }
