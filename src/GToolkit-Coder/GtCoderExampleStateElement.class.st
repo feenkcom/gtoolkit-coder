@@ -13,8 +13,8 @@ ${example:GtCoderExampleStateElementExamples>>#exampleStateElement_Error|codeExp
 Class {
 	#name : #GtCoderExampleStateElement,
 	#superclass : #BlElement,
-	#traits : 'TBrLayoutResizable',
-	#classTraits : 'TBrLayoutResizable classTrait',
+	#traits : 'TBrLayoutResizable + TBrEnableable',
+	#classTraits : 'TBrLayoutResizable classTrait + TBrEnableable classTrait',
 	#instVars : [
 		'example'
 	],
@@ -76,8 +76,7 @@ GtCoderExampleStateElement >> hasExampleResult [
 { #category : #initialization }
 GtCoderExampleStateElement >> initialize [
 	super initialize.
-	self initializeListeners.
-	self initializeInteractiveModel.
+	self initializeViewModels.
 
 	self 
 		layout: BlLinearLayout horizontal;
@@ -100,26 +99,22 @@ GtCoderExampleStateElement >> initializeInteractiveLook [
 ]
 
 { #category : #initialization }
-GtCoderExampleStateElement >> initializeInteractiveModel [
-	self viewModel: (BrInteractiveModel new addStates: {
-		BrLayoutHorizontalResizerModel exact: 8.
-		BrLayoutVerticalResizerModel exact: 8.
-		BrHoverModel new.
-	})
-]
-
-{ #category : #initialization }
-GtCoderExampleStateElement >> initializeListeners [
-	self 
-		when: BlClickEvent 
-		do: [ :anEvent | self onClickEvent: anEvent ]
-]
-
-{ #category : #initialization }
 GtCoderExampleStateElement >> initializeTooltipLook [
 	self addLook:
 		(BrGlamorousWithTooltipLook2 content: [
 			self newTooltipContent ])
+]
+
+{ #category : #initialization }
+GtCoderExampleStateElement >> initializeViewModels [
+	| anInteractiveModel aButtonModel |
+	anInteractiveModel := BrInteractiveModel new addStates: {
+		BrLayoutHorizontalResizerModel exact: 8.
+		BrLayoutVerticalResizerModel exact: 8.
+		BrHoverModel new }.
+	aButtonModel := BrButtonModel new
+		action: [ :aButton | self onClick: aButton ].
+	self viewModel: (aButtonModel + anInteractiveModel)
 ]
 
 { #category : #'private - instance creation' }
@@ -190,11 +185,11 @@ GtCoderExampleStateElement >> newTooltipContent [
 ]
 
 { #category : #'private - event handling' }
-GtCoderExampleStateElement >> onClickEvent: anEvent [
+GtCoderExampleStateElement >> onClick: aButton [
 	self exampleDo: [ :anExample | 
 		anExample hasResult ifFalse: [ ^ self ].
-		anExample isSuccess ifTrue: [ ^ self spawnExampleFrom: anEvent currentTarget ].
-		self debugExampleFrom: anEvent currentTarget ]
+		anExample isSuccess ifTrue: [ ^ self spawnExampleFrom: aButton ].
+		self debugExampleFrom: aButton ]
 ]
 
 { #category : #'private - hooks' }
