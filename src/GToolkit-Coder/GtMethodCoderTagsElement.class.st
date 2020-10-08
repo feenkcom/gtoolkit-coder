@@ -42,8 +42,9 @@ GtMethodCoderTagsElement >> initialize [
 	
 	isEditable := false.
 	
-	self layout: (BlLinearLayout horizontal cellSpacing: 4).
-	self
+	self 
+		layout: (BlLinearLayout horizontal cellSpacing: 4);
+		background: Color white;
 		constraintsDo: [ :c |
 			c horizontal fitContent.
 			c vertical fitContent ]
