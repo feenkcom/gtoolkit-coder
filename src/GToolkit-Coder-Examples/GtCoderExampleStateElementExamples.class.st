@@ -37,7 +37,7 @@ GtCoderExampleStateElementExamples >> errorExample [
 ]
 
 { #category : #accessing }
-GtCoderExampleStateElementExamples >> exampleStatusElement_Error [
+GtCoderExampleStateElementExamples >> exampleStateElement_Error [
 	<gtExample>
 	| anElement anExample |
 	anElement := self basicExampleStatusElement.
@@ -58,7 +58,7 @@ GtCoderExampleStateElementExamples >> exampleStatusElement_Error [
 ]
 
 { #category : #accessing }
-GtCoderExampleStateElementExamples >> exampleStatusElement_Failure [
+GtCoderExampleStateElementExamples >> exampleStateElement_Failure [
 	<gtExample>
 	| anElement anExample |
 	anElement := self basicExampleStatusElement.
@@ -79,7 +79,7 @@ GtCoderExampleStateElementExamples >> exampleStatusElement_Failure [
 ]
 
 { #category : #accessing }
-GtCoderExampleStateElementExamples >> exampleStatusElement_NotExecuted [
+GtCoderExampleStateElementExamples >> exampleStateElement_NotExecuted [
 	<gtExample>
 	| anElement anExample |
 	anElement := self basicExampleStatusElement.
@@ -94,10 +94,10 @@ GtCoderExampleStateElementExamples >> exampleStatusElement_NotExecuted [
 ]
 
 { #category : #accessing }
-GtCoderExampleStateElementExamples >> exampleStatusElement_Success [
+GtCoderExampleStateElementExamples >> exampleStateElement_Success [
 	<gtExample>
 	| anElement anExample |
-	anElement := self exampleStatusElement_NotExecuted.
+	anElement := self exampleStateElement_NotExecuted.
 	anExample := anElement example.
 	BlUseAsyncFeatures disableDuring: [
 		anExample run ].
