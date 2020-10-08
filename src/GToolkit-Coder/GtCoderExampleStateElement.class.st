@@ -28,6 +28,12 @@ GtCoderExampleStateElement >> assertExample: aGtExampleWithResult [
 		description: [ 'Example must be non-nil' ].
 ]
 
+{ #category : #'private - actions' }
+GtCoderExampleStateElement >> debugExampleFrom: aButton [
+	self exampleDo: [ :anExample |
+		anExample openingDebugger result ]
+]
+
 { #category : #'api - accessing' }
 GtCoderExampleStateElement >> example [
 	<return: #GtExampleWithResult or: nil>
@@ -41,6 +47,11 @@ GtCoderExampleStateElement >> example: aGtExampleWithResult [
 	example := aGtExampleWithResult asExampleWithResult.
 	self subscribeToExample.
 	self onExampleChanged.
+]
+
+{ #category : #'private - accessing' }
+GtCoderExampleStateElement >> exampleDo: aBlock [
+	self example ifNotNil: aBlock
 ]
 
 { #category : #'private - accessing' }
@@ -105,18 +116,9 @@ GtCoderExampleStateElement >> initializeTooltipLook [
 
 { #category : #'private - instance creation' }
 GtCoderExampleStateElement >> newInspectorWithExampleResult [
-	| aContainer anInspector |
-	aContainer := BrFrame new
-		fitContent;
-		when: GtPhlowObjectToSpawn do: [ :anEvent | self fireEvent: (GtPhlowObjectToSpawn new
-				object: anEvent object;
-				sourceElement: anEvent target) ].
-	anInspector := ((GtInspector forObject: self tooltipObject)
+	^ ((GtInspector forObject: self tooltipObject)
 			exact: 400@400)
 				asScalableElement size: 200@200.
-	aContainer
-		addChild: anInspector.
-	^ aContainer
 ]
 
 { #category : #'private - instance creation' }
@@ -128,10 +130,55 @@ GtCoderExampleStateElement >> newNotExecutedLabel [
 ]
 
 { #category : #'private - instance creation' }
+GtCoderExampleStateElement >> newNotExecutedToolbar [
+	^ BrToolbar new
+		look: BrGlamorousToolbarLook new;
+		addItem: (BrButton new
+			look: BrGlamorousButtonWithIconLook;
+			icon: BrGlamorousVectorIcons play;
+			label: 'Play';
+			action: [ :aButton | self playExampleFrom: aButton ];
+			beSmall);
+		addItem: (BrButton new
+			look: BrGlamorousButtonWithIconLook;
+			icon: BrGlamorousVectorIcons playinspect;
+			label: 'Play and Inspect';
+			action: [ :aButton | self playAndInspectExampleFrom: aButton ];
+			beSmall);
+		addChild: (BrButton new
+			look: BrGlamorousButtonWithIconLook;
+			icon: BrGlamorousVectorIcons debug;
+			label: 'Debug';
+			action: [ :aButton | self debugExampleFrom: aButton ];
+			beSmall)
+]
+
+{ #category : #'private - instance creation' }
+GtCoderExampleStateElement >> newNotExecutedTooltipContent [
+	^ BrVerticalPane new
+		fitContent;
+		alignCenterLeft;
+		padding: (BlInsets all: 5);
+		addChild: (BrLabel new
+			look: BrGlamorousLabelLook;
+			margin: (BlInsets left: 2);
+			text: 'Example not executed');
+		addChild: (self newNotExecutedToolbar
+			margin: (BlInsets top: 3)).
+]
+
+{ #category : #'private - instance creation' }
 GtCoderExampleStateElement >> newTooltipContent [
-	^ self example hasResult
+	| aContainer |
+	aContainer := BrFrame new
+		fitContent;
+		when: GtPhlowObjectToSpawn do: [ :anEvent | self fireEvent: (GtPhlowObjectToSpawn new
+				object: anEvent object;
+				sourceElement: anEvent target) ].
+	aContainer addChild: (self example hasResult
 			ifTrue: [ self newInspectorWithExampleResult ]
-			ifFalse: [ self newNotExecutedLabel ]
+			ifFalse: [ self newNotExecutedTooltipContent ]).
+	^ aContainer
 ]
 
 { #category : #'private - hooks' }
@@ -146,6 +193,20 @@ GtCoderExampleStateElement >> onExampleExecuted: aGtExampleExecuted [
 			self enqueueTask: (BlTaskAction new action: [
 				self updateIcon ]) ]
 		otherwise: [ self updateIcon ]
+]
+
+{ #category : #'private - actions' }
+GtCoderExampleStateElement >> playAndInspectExampleFrom: aButton [
+	self playExampleFrom: aButton.
+	self exampleDo: [ :anExample |
+		anExample hasResult ifTrue: [ 
+			aButton phlow spawnObject: anExample result returnValueOrExampleException ] ]
+]
+
+{ #category : #'private - actions' }
+GtCoderExampleStateElement >> playExampleFrom: aButton [
+	self exampleDo: [ :anExample |
+		anExample run ]
 ]
 
 { #category : #'private - subscriptions' }
