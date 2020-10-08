@@ -16,7 +16,8 @@ GtFilterExampleNotExecutedState >> includesCoder: aCoder [
 
 { #category : #'api - testing' }
 GtFilterExampleNotExecutedState >> isStatusFor: aGtExampleWithResult [
-	^ aGtExampleWithResult hasResult not
+	^ aGtExampleWithResult isNotNil and: [ 
+			aGtExampleWithResult hasResult not ]
 ]
 
 { #category : #'api - accessing' }

@@ -513,9 +513,9 @@ GtMethodCoder >> currentSelector [
 ]
 
 { #category : #'api - actions examples' }
-GtMethodCoder >> debugExampleFrom: anElement [
+GtMethodCoder >> debugExampleFrom: anEditorElement [
 	self isModified
-		ifTrue: [ self save
+		ifTrue: [ (self saveFrom: anEditorElement)
 			ifFalse: [ ^ self ] ].
 	self example openingDebugger result
 ]

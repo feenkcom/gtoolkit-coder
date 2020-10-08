@@ -78,10 +78,11 @@ GtFilterExampleState >> order [
 
 { #category : #'api - accessing' }
 GtFilterExampleState >> stateFromExample: aGtExampleWithResult [
-	self allStates do: [ :eachStatus | 
-		(eachStatus isStatusFor: aGtExampleWithResult)
-			ifTrue: [ ^ eachStatus ] ].
-	self error: 'There must be corresponding example status'.
+	aGtExampleWithResult ifNotNil: [ 
+		self allStates do: [ :eachStatus | 
+			(eachStatus isStatusFor: aGtExampleWithResult)
+				ifTrue: [ ^ eachStatus ] ] ].
+	^ GtFilterExampleNotExecutedState default
 ]
 
 { #category : #'api - accessing' }
