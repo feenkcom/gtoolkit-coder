@@ -84,7 +84,7 @@ Behavior >> gtCoderMethodsFor: aView context: aDictionary [
 					coder: methodsCoder);
 				addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
 				addLook: (GtFilterRunExampleButtonTooltipLook new coder: methodsCoder);
-				icon: BrGlamorousIcons play;
+				icon: BrGlamorousVectorIcons play;
 				label: 'Run All Examples';
 				action: [ :element | 
 					methodsCoder exampler runExamplesFrom: element ] ];

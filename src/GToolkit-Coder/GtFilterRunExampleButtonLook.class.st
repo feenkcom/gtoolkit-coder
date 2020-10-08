@@ -11,32 +11,41 @@ Class {
 
 { #category : #'api - accessing' }
 GtFilterRunExampleButtonLook >> coder [
-	<return: #GtSearchMethodsFilter>
+	<return: #GtMethodsCoder>
 	^ coder
 ]
 
 { #category : #'api - accessing' }
-GtFilterRunExampleButtonLook >> coder: aGtSearchMethodsFilter [
-	coder = aGtSearchMethodsFilter ifTrue: [ ^ self ].
+GtFilterRunExampleButtonLook >> coder: aGtFilteredMethodsCoder [
+	coder = aGtFilteredMethodsCoder ifTrue: [ ^ self ].
 	self unsubscribeFromCoder.
-	coder := aGtSearchMethodsFilter.
+	coder := aGtFilteredMethodsCoder.
 	self subscribeToCoder.
 	self onCoderChanged.
+]
+
+{ #category : #'private - accessing' }
+GtFilterRunExampleButtonLook >> coderDo: aBlock [
+	self coder ifNotNil: aBlock
 ]
 
 { #category : #'private - updating' }
 GtFilterRunExampleButtonLook >> enqueueUpdate [
 	self widgetDo: [ :aWidget | 
 		aWidget enqueueTask: (BlTaskAction new action: [
-			mutex critical: [ 
-				isUpdateRequested := false ].
 			self updateWidget ]) ].
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 GtFilterRunExampleButtonLook >> exampler [
 	<return: #GtCoderExampler>
 	^ self coder exampler
+]
+
+{ #category : #'private - accessing' }
+GtFilterRunExampleButtonLook >> examplerDo: aBlock [
+	self coderDo: [ :aCoder |
+		aBlock cull: aCoder exampler ]
 ]
 
 { #category : #initialization }
@@ -79,9 +88,13 @@ GtFilterRunExampleButtonLook >> postponeUpdate [
 		mutex critical: [ 
 			isUpdateRequested ifTrue: [ ^ self ].
 			isUpdateRequested := true ].
-		BlTaskAtQueue default
-			schedule: [ self enqueueUpdate ]
-			at: self postponedTime ]
+		BlUseAsyncFeatures 
+			ifEnabledDo: [ 
+				BlTaskAtQueue default
+					schedule: [ self enqueueUpdate ]
+					at: self postponedTime ]
+			otherwise: [ 
+				self updateNow ] ]
 ]
 
 { #category : #'private - updating' }
@@ -111,6 +124,13 @@ GtFilterRunExampleButtonLook >> subscribeToCoder [
 GtFilterRunExampleButtonLook >> unsubscribeFromCoder [
 	self coder ifNil: [ ^ self ].
 	self coder unsubscribe: self.
+]
+
+{ #category : #'private - updating' }
+GtFilterRunExampleButtonLook >> updateNow [
+	mutex critical: [ 
+		isUpdateRequested := false ].
+	self updateWidget.
 ]
 
 { #category : #'private - updating' }
