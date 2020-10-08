@@ -1,5 +1,5 @@
 "
-I exemplify ${class:GtCoderExampleStatusElement}$.
+I exemplify ${class:GtCoderExampleStateElement}$.
 "
 Class {
 	#name : #GtCoderExampleStateElementExamples,

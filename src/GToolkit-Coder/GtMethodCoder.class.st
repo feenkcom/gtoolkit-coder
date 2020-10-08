@@ -1435,8 +1435,6 @@ GtMethodCoder >> runExampleFrom: anEditorElement [
 				ifFalse: [ ^ self ] ].
 
 	self example run.
-
-	self styleSourceTextFrom: anEditorElement
 ]
 
 { #category : #'api - actions' }

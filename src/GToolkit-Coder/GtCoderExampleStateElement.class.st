@@ -2,13 +2,13 @@
 I am an ${class:BlElement}$.
 I am an icon that represents an ${class:GtExampleWithResult}$ result state.
 !! Not Executed State
-${example:GtCoderExampleStateElementExamples>>#exampleStatusElement_NotExecuted|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
+${example:GtCoderExampleStateElementExamples>>#exampleStateElement_NotExecuted|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
 !! Success State
-${example:GtCoderExampleStateElementExamples>>#exampleStatusElement_Success|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
+${example:GtCoderExampleStateElementExamples>>#exampleStateElement_Success|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
 !! Failure State
-${example:GtCoderExampleStateElementExamples>>#exampleStatusElement_Failure|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
+${example:GtCoderExampleStateElementExamples>>#exampleStateElement_Failure|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
 !! Error State
-${example:GtCoderExampleStateElementExamples>>#exampleStatusElement_Error|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
+${example:GtCoderExampleStateElementExamples>>#exampleStateElement_Error|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
 "
 Class {
 	#name : #GtCoderExampleStateElement,
