@@ -1,3 +1,18 @@
+"
+I am a ${class:GtFilterRunExampleButtonLook}$.
+I display a colored icon that represent an ${class:GtExampleWithResult}$ execution and result state.
+!! Examples
+The following examples shows a colored icon as a part of a button in four possible states.
+!!! Not Executed Examples
+${example:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_SkipNoTest|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}$
+!!! Examples With Successful Execution
+${example:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_Success|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}$
+!!! Examples With Not Satisfying Assertions
+${example:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_Failure|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}$
+!!! Examples With Execution Errors
+${example:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_Error|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}$
+
+"
 Class {
 	#name : #GtFilterRunExampleButtonIconLook,
 	#superclass : #GtFilterRunExampleButtonLook,

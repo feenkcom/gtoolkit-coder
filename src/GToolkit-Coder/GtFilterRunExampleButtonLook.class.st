@@ -1,3 +1,9 @@
+"
+I am an abstract class.
+I am a ${class:BrLook}$.
+I provide common behavior to update a ${class:BrButton}$ visual apperance based on ${class:GtMethodsCoder}$ and ${class:GtExampleWithResult}$ changes. See my ${method:GtFilterRunExampleButtonLook>>#subscribeToCoder|label=subscriptions}$ for more details.
+Look at my ${class:GtFilterRunExampleButtonLook|show=#gtSubclassesFor:|expanded=true|height=150}$ for more details and examples:
+"
 Class {
 	#name : #GtFilterRunExampleButtonLook,
 	#superclass : #BrLook,

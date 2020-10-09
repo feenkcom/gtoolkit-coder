@@ -20,7 +20,7 @@ GtFilterRunExampleButtonLookExamples >> assert: anElement backgroundColor: aColo
 		equals: aColor.
 ]
 
-{ #category : #'examples - looks' }
+{ #category : #'examples - one icon look' }
 GtFilterRunExampleButtonLookExamples >> basicOneIconLook [
 	<gtExample>
 	| aLook |
@@ -38,8 +38,8 @@ GtFilterRunExampleButtonLookExamples >> button [
 		label: 'Run All Examples'
 ]
 
-{ #category : #'examples - looks' }
-GtFilterRunExampleButtonLookExamples >> buttonWithOneLook [
+{ #category : #'examples - one icon look' }
+GtFilterRunExampleButtonLookExamples >> buttonWithOneIconLook [
 	<gtExample>
 	| aButton aLook |
 	aButton := self button.
@@ -47,6 +47,9 @@ GtFilterRunExampleButtonLookExamples >> buttonWithOneLook [
 	aButton
 		addLook: aLook;
 		addLook: BrGlamorousButtonWithIconLook.
+	self 
+		assert: (aButton childAt: 1) 
+		backgroundColor: GtFilterExampleNotExecutedState default color.
 	^ aButton
 ]
 
@@ -57,29 +60,28 @@ GtFilterRunExampleButtonLookExamples >> methodsCoder [
 ]
 
 { #category : #'examples - support' }
+GtFilterRunExampleButtonLookExamples >> methodsCoderWithFailingExamples [
+	<gtExample>
+	^ GtClassMethodsCoder forClass: GtFiltersDummyObjectWithFailureExampleStates
+]
+
+{ #category : #'examples - support' }
+GtFilterRunExampleButtonLookExamples >> methodsCoderWithSuccessExamples [
+	<gtExample>
+	^ GtClassMethodsCoder forClass: GtFiltersDummyObjectWithSuccessExampleStates
+]
+
+{ #category : #'examples - support' }
 GtFilterRunExampleButtonLookExamples >> oneExample [
 	<gtExample>
 	^ (GtFilterRunExampleButtonLookDummyExamples >> #one) gtExample asExampleWithResult
 ]
 
-{ #category : #'examples - looks' }
-GtFilterRunExampleButtonLookExamples >> oneIconLookButton [
-	<gtExample>
-	| aLook aButton |
-	aButton := self button.
-	aLook := self basicOneIconLook.
-	aButton addLook: aLook.
-	self 
-		assert: (aButton childAt: 1) 
-		backgroundColor: GtFilterExampleNotExecutedState default color.
-	^ aButton
-]
-
-{ #category : #accessing }
+{ #category : #'examples - one icon look' }
 GtFilterRunExampleButtonLookExamples >> oneIconLookButton_Error [
 	<gtExample>
 	| aLook aButton aCoder |
-	aButton := self buttonWithOneLook.
+	aButton := self buttonWithOneIconLook.
 	aLook := aButton look.
 	aCoder := self methodsCoder.
 	aLook coder: aCoder.
@@ -95,11 +97,31 @@ GtFilterRunExampleButtonLookExamples >> oneIconLookButton_Error [
 	^ aButton
 ]
 
-{ #category : #'examples - looks' }
+{ #category : #'examples - one icon look' }
+GtFilterRunExampleButtonLookExamples >> oneIconLookButton_Failure [
+	<gtExample>
+	| aLook aButton aCoder |
+	aButton := self buttonWithOneIconLook.
+	aLook := aButton look.
+	aCoder := self methodsCoderWithFailingExamples.
+	aLook coder: aCoder.
+
+	BlUseAsyncFeatures disableDuring: [ 
+		aCoder exampler 
+			runExamples;
+			runNotTestExamples ].
+	
+	self 
+		assert: (aButton childAt: 1) 
+		backgroundColor: GtFilterExampleFailureState default color.
+	^ aButton
+]
+
+{ #category : #'examples - one icon look' }
 GtFilterRunExampleButtonLookExamples >> oneIconLookButton_NotExecuted [
 	<gtExample>
 	| aLook aButton |
-	aButton := self buttonWithOneLook.
+	aButton := self buttonWithOneIconLook.
 	aLook := aButton look.
 	
 	self 
@@ -108,11 +130,11 @@ GtFilterRunExampleButtonLookExamples >> oneIconLookButton_NotExecuted [
 	^ aButton
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - one icon look' }
 GtFilterRunExampleButtonLookExamples >> oneIconLookButton_SkipNoTest [
 	<gtExample>
 	| aLook aButton aCoder |
-	aButton := self buttonWithOneLook.
+	aButton := self buttonWithOneIconLook.
 	aLook := aButton look.
 	aCoder := self methodsCoder.
 	aLook coder: aCoder.
@@ -124,6 +146,26 @@ GtFilterRunExampleButtonLookExamples >> oneIconLookButton_SkipNoTest [
 	self 
 		assert: (aButton childAt: 1) 
 		backgroundColor: GtFilterExampleNotExecutedState default color.
+	^ aButton
+]
+
+{ #category : #'examples - one icon look' }
+GtFilterRunExampleButtonLookExamples >> oneIconLookButton_Success [
+	<gtExample>
+	| aLook aButton aCoder |
+	aButton := self buttonWithOneIconLook.
+	aLook := aButton look.
+	aCoder := self methodsCoderWithSuccessExamples.
+	aLook coder: aCoder.
+
+	BlUseAsyncFeatures disableDuring: [ 
+		aCoder exampler 
+			runExamples;
+			runNotTestExamples ].
+	
+	self 
+		assert: (aButton childAt: 1) 
+		backgroundColor: GtFilterExampleSuccessState default color.
 	^ aButton
 ]
 
