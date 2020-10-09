@@ -66,11 +66,12 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 				fitContent ];
 		dataBinder: [ :anElement :anItem | 
 			| aTotal aTotalString aTotalText |
-			aTotal := anItem numberOfExamplesFor: self coder exampler.
-			aTotalString := aTotal asString, (' example' asPluralBasedOn: aTotal).
+			self examplerDo: [ :anExampler | 
+				aTotal := anItem numberOfExamplesFor: anExampler.
+				aTotalString := aTotal asString, (' example' asPluralBasedOn: aTotal) ].
+			aTotalString ifNil: [ aTotalString := '? examples' ].
 			aTotalText := aTotalString asRopedText foreground: Color gray.
 			anElement text: aTotalText ].
-	
 ]
 
 { #category : #'private - accessing' }
