@@ -167,6 +167,13 @@ GtCoderExampler >> runExamplesFrom: anElement [
 	self runExamples. 
 ]
 
+{ #category : #'api - execution' }
+GtCoderExampler >> runNotTestExamples [
+	self selectedExecutableExampleCodersDo: [ :eachCoder | 
+		(eachCoder isModified not and: [ eachCoder example hasNoTestPragma ]) ifTrue: [ 
+			eachCoder example run ] ]
+]
+
 { #category : #'private - enumeration' }
 GtCoderExampler >> selectedExampleCodersDo: aBlock [
 	"iterate selected coders with examples"

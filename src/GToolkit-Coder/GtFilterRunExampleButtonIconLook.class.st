@@ -88,12 +88,13 @@ GtFilterRunExampleButtonIconLook >> onInstalledIn: anElement [
 GtFilterRunExampleButtonIconLook >> updateButtonStatus [
 	"I must be called in a UI process".
 	self widgetDo: [ :aWidget | 
-		| aStatus |
-		aStatus := self coder exampler hasSelectedExecutableExamples.
-		aWidget dispatchEvent: (BrEnablementWish enabled: aStatus).
-		self coder exampler hasExamples 
-			ifFalse: [ aWidget visibility: BlVisibility gone ]
-			ifTrue: [ aWidget visibility: BlVisibility visible] ]
+		self examplerDo: [ :anExampler | 
+			| aStatus |
+			aStatus := anExampler hasSelectedExecutableExamples.
+			aWidget dispatchEvent: (BrEnablementWish enabled: aStatus).
+			anExampler hasExamples 
+				ifFalse: [ aWidget visibility: BlVisibility gone ]
+				ifTrue: [ aWidget visibility: BlVisibility visible] ] ]
 ]
 
 { #category : #'private - updating' }
