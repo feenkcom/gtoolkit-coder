@@ -79,7 +79,6 @@ GtFilterRunExampleButtonIconLook >> newSuccessBackground [
 { #category : #'private - hooks' }
 GtFilterRunExampleButtonIconLook >> onCoderChanged [
 	super onCoderChanged.
-	self haltOnce.
 	self updateWidget.
 ]
 
