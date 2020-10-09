@@ -151,6 +151,46 @@ GtFilterRunExampleButtonLookExamples >> fourIconLookButton_AllExecutionStates [
 ]
 
 { #category : #'examples - four-icon look' }
+GtFilterRunExampleButtonLookExamples >> fourIconLookButton_NoExamples [
+	<gtExample>
+	| aButton aCoder |
+	aButton := self buttonWithFourIconLook.
+	aCoder := self methodsCoderWithoutExamples.
+	self attachCoder: aCoder toElementLooks: aButton.
+
+	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.
+	self 
+		assert: (aButton childAt: 1) 
+		backgroundColor: GtFilterExampleNotExecutedState default color.
+
+	self
+		assert: aButton visibility
+		equals: BlVisibility gone.
+	
+	^ aButton
+]
+
+{ #category : #'examples - four-icon look' }
+GtFilterRunExampleButtonLookExamples >> fourIconLookButton_NoExamples_Examples [
+	<gtExample>
+	| aButton aCoder |
+	aButton := self fourIconLookButton_NoExamples.
+	aCoder := self methodsCoder.
+	self attachCoder: aCoder toElementLooks: aButton.
+
+	self assertVisibilityIn: aButton oneIcon: true fourIcon: false.
+	self 
+		assert: (aButton childAt: 1) 
+		backgroundColor: GtFilterExampleNotExecutedState default color.
+
+	self
+		assert: aButton visibility
+		equals: BlVisibility visible.
+	
+	^ aButton
+]
+
+{ #category : #'examples - four-icon look' }
 GtFilterRunExampleButtonLookExamples >> fourIconLookButton_NotExecuted [
 	<gtExample>
 	| aButton aCoder |
@@ -213,6 +253,12 @@ GtFilterRunExampleButtonLookExamples >> methodsCoderWithFailingExamples [
 GtFilterRunExampleButtonLookExamples >> methodsCoderWithSuccessExamples [
 	<gtExample>
 	^ GtClassMethodsCoder forClass: GtFiltersDummyObjectWithSuccessExampleStates
+]
+
+{ #category : #'examples - support' }
+GtFilterRunExampleButtonLookExamples >> methodsCoderWithoutExamples [
+	<gtExample>
+	^ GtClassMethodsCoder forClass: GtFiltersDummyObjectWithNoExampleStates
 ]
 
 { #category : #'examples - support' }
