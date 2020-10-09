@@ -59,7 +59,7 @@ GtFiltersElementExamples >> filteredMethodsCoder [
 	<gtExample>
 	| aCoder aClass |
 	aCoder := self basicFilteredMethodsCoder.
-	aClass := GtFiltersDummyObjectWithExamples.
+	aClass := GtFiltersDummyObjectWithAllExampleStates.
 	aCoder forClass: aClass.
 	self assert: aCoder classOrMetaClass equals: aClass.
 	^ aCoder
