@@ -30,10 +30,6 @@ GtCoderToolbarElement >> addClassTab: look [
 				selectedPackageDo: [ :package | element forPackage: package ].
 			navigationModel
 				selectedTagDo: [ :tag | element forPackageTag: tag ].
-			navigationModel
-				selectedClassDo: [ :cls | 
-					cls isTrait
-						ifFalse: [ element forSuperclass: cls ] ].
 			element ]
 ]
 
