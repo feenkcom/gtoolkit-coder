@@ -168,7 +168,7 @@ GtCoderExampler >> runExamplesFrom: anElement [
 ]
 
 { #category : #'api - execution' }
-GtCoderExampler >> runNotTestExamples [
+GtCoderExampler >> runNoTestExamples [
 	self selectedExecutableExampleCodersDo: [ :eachCoder | 
 		(eachCoder isModified not and: [ eachCoder example hasNoTestPragma ]) ifTrue: [ 
 			eachCoder example run ] ]

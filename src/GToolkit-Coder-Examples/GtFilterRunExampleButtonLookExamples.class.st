@@ -20,7 +20,68 @@ GtFilterRunExampleButtonLookExamples >> assert: anElement backgroundColor: aColo
 		equals: aColor.
 ]
 
-{ #category : #'examples - one icon look' }
+{ #category : #'private - asserting' }
+GtFilterRunExampleButtonLookExamples >> assertFourIconVisibilityIn: anElement success: isSuccessVisible failure: isFailureVisible error: isErrorVisible noExecution: isNoExecutionVisible [
+	
+	"The four-icon is expected in the second position"
+	| aFourIconElement |
+	aFourIconElement := (anElement childAt: 2).
+	
+	self 
+		assert: (aFourIconElement childAt: 1) visibility
+		equals: (self visibleOrHiddenFrom: isSuccessVisible).
+	self 
+		assert: (aFourIconElement childAt: 2) visibility
+		equals: (self visibleOrHiddenFrom: isFailureVisible).
+	self 
+		assert: (aFourIconElement childAt: 3) visibility
+		equals: (self visibleOrHiddenFrom: isErrorVisible).
+	self 
+		assert: (aFourIconElement childAt: 4) visibility
+		equals: (self visibleOrHiddenFrom: isNoExecutionVisible).
+]
+
+{ #category : #'private - asserting' }
+GtFilterRunExampleButtonLookExamples >> assertVisibilityIn: anElement oneIcon: isOneIconVisible fourIcon: isFourIconVisible [
+	"The one-icon is expected in the first position"
+	self 
+		assert: (anElement childAt: 1) visibility
+		equals: (self visibleOrGoneFrom: isOneIconVisible).
+	
+	"The fuor-icon is expected in the second position"
+	self 
+		assert: (anElement childAt: 2) visibility
+		equals: (self visibleOrGoneFrom: isFourIconVisible).
+]
+
+{ #category : #'examples - support' }
+GtFilterRunExampleButtonLookExamples >> attachCoder: aCoder toElementLooks: anElement [
+	<gtExample>
+	| isAttached |
+	self assert: anElement look isNotNil.
+
+	isAttached := false.	
+	anElement look withAllChildren do: [ :eachLook | 
+		(eachLook isKindOf: GtFilterRunExampleButtonLook) ifTrue: [ 
+			isAttached := true.
+			eachLook coder: aCoder ] ].
+	
+	self assert: isAttached description: 'Coder must be attached at least to one look'.
+	
+	^ aCoder
+]
+
+{ #category : #'examples - four-icon look' }
+GtFilterRunExampleButtonLookExamples >> basicFourIconLook [
+	<gtExample>
+	| aLook |
+	aLook := GtFilterRunExampleButtonFourStateIconLook new.
+	self assert: aLook exampleElement isNotNil.
+	self assert: aLook coder isNil.
+	^ aLook
+]
+
+{ #category : #'examples - one-icon look' }
 GtFilterRunExampleButtonLookExamples >> basicOneIconLook [
 	<gtExample>
 	| aLook |
@@ -38,7 +99,22 @@ GtFilterRunExampleButtonLookExamples >> button [
 		label: 'Run All Examples'
 ]
 
-{ #category : #'examples - one icon look' }
+{ #category : #'examples - four-icon look' }
+GtFilterRunExampleButtonLookExamples >> buttonWithFourIconLook [
+	<gtExample>
+	| aButton aLook |
+	aButton := self button.
+	aLook := self basicFourIconLook.
+	aButton
+		addLook: aLook;
+		addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
+		addLook: GtFilterRunExampleButtonTooltipLook.
+	
+	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.
+	^ aButton
+]
+
+{ #category : #'examples - one-icon look' }
 GtFilterRunExampleButtonLookExamples >> buttonWithOneIconLook [
 	<gtExample>
 	| aButton aLook |
@@ -46,17 +122,85 @@ GtFilterRunExampleButtonLookExamples >> buttonWithOneIconLook [
 	aLook := self basicOneIconLook.
 	aButton
 		addLook: aLook;
-		addLook: BrGlamorousButtonWithIconLook.
+		addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
+		addLook: GtFilterRunExampleButtonTooltipLook.
+		
 	self 
 		assert: (aButton childAt: 1) 
 		backgroundColor: GtFilterExampleNotExecutedState default color.
 	^ aButton
 ]
 
+{ #category : #'examples - four-icon look' }
+GtFilterRunExampleButtonLookExamples >> fourIconLookButton_AllExecutionStates [
+	<gtExample>
+	| aButton aCoder |
+	aButton := self buttonWithFourIconLook.
+	aCoder := self methodsCoder.
+	self attachCoder: aCoder toElementLooks: aButton.
+
+	BlUseAsyncFeatures disableDuring: [
+		aCoder exampler 
+			runExamples;
+			runNoTestExamples ].
+
+	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.
+	self assertFourIconVisibilityIn: aButton success: true failure: true error: true noExecution: false.
+
+	^ aButton
+]
+
+{ #category : #'examples - four-icon look' }
+GtFilterRunExampleButtonLookExamples >> fourIconLookButton_NotExecuted [
+	<gtExample>
+	| aButton aCoder |
+	aButton := self buttonWithFourIconLook.
+	aCoder := self methodsCoder.
+	self attachCoder: aCoder toElementLooks: aButton.
+
+	self assertVisibilityIn: aButton oneIcon: true fourIcon: false.
+	self 
+		assert: (aButton childAt: 1) 
+		backgroundColor: GtFilterExampleNotExecutedState default color.
+		
+	^ aButton
+]
+
+{ #category : #'examples - four-icon look' }
+GtFilterRunExampleButtonLookExamples >> fourIconLookButton_SuccessAndNotExecutedStates [
+	<gtExample>
+	| aButton aCoder |
+	aButton := self buttonWithFourIconLook.
+	aCoder := self methodsCoder.
+	self attachCoder: aCoder toElementLooks: aButton.
+
+	BlUseAsyncFeatures disableDuring: [ 
+		aCoder exampler 
+			runExamples ].
+
+	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.
+	self assertFourIconVisibilityIn: aButton success: true failure: false error: false noExecution: true.
+
+	^ aButton
+]
+
+{ #category : #'examples - four-icon look' }
+GtFilterRunExampleButtonLookExamples >> fourIconLookButton_WithoutCoder [
+	<gtExample>
+	| aButton |
+	aButton := self buttonWithFourIconLook.
+	aButton look - GtFilterRunExampleButtonTooltipLook.
+
+	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.
+	self assertFourIconVisibilityIn: aButton success: true failure: true error: true noExecution: true.
+
+	^ aButton
+]
+
 { #category : #'examples - support' }
 GtFilterRunExampleButtonLookExamples >> methodsCoder [
 	<gtExample>
-	^ GtClassMethodsCoder forClass: GtFilterRunExampleButtonLookDummyExamples
+	^ GtClassMethodsCoder forClass: GtFiltersDummyObjectWithAllExampleStates
 ]
 
 { #category : #'examples - support' }
@@ -74,22 +218,21 @@ GtFilterRunExampleButtonLookExamples >> methodsCoderWithSuccessExamples [
 { #category : #'examples - support' }
 GtFilterRunExampleButtonLookExamples >> oneExample [
 	<gtExample>
-	^ (GtFilterRunExampleButtonLookDummyExamples >> #one) gtExample asExampleWithResult
+	^ (GtFiltersDummyObjectWithAllExampleStates >> #one) gtExample asExampleWithResult
 ]
 
-{ #category : #'examples - one icon look' }
+{ #category : #'examples - one-icon look' }
 GtFilterRunExampleButtonLookExamples >> oneIconLookButton_Error [
 	<gtExample>
-	| aLook aButton aCoder |
+	| aButton aCoder |
 	aButton := self buttonWithOneIconLook.
-	aLook := aButton look.
 	aCoder := self methodsCoder.
-	aLook coder: aCoder.
+	self attachCoder: aCoder toElementLooks: aButton.
 
 	BlUseAsyncFeatures disableDuring: [ 
 		aCoder exampler 
 			runExamples;
-			runNotTestExamples ].
+			runNoTestExamples ].
 	
 	self 
 		assert: (aButton childAt: 1) 
@@ -97,19 +240,18 @@ GtFilterRunExampleButtonLookExamples >> oneIconLookButton_Error [
 	^ aButton
 ]
 
-{ #category : #'examples - one icon look' }
+{ #category : #'examples - one-icon look' }
 GtFilterRunExampleButtonLookExamples >> oneIconLookButton_Failure [
 	<gtExample>
-	| aLook aButton aCoder |
+	| aButton aCoder |
 	aButton := self buttonWithOneIconLook.
-	aLook := aButton look.
 	aCoder := self methodsCoderWithFailingExamples.
-	aLook coder: aCoder.
+	self attachCoder: aCoder toElementLooks: aButton.
 
 	BlUseAsyncFeatures disableDuring: [ 
 		aCoder exampler 
 			runExamples;
-			runNotTestExamples ].
+			runNoTestExamples ].
 	
 	self 
 		assert: (aButton childAt: 1) 
@@ -117,27 +259,13 @@ GtFilterRunExampleButtonLookExamples >> oneIconLookButton_Failure [
 	^ aButton
 ]
 
-{ #category : #'examples - one icon look' }
-GtFilterRunExampleButtonLookExamples >> oneIconLookButton_NotExecuted [
-	<gtExample>
-	| aLook aButton |
-	aButton := self buttonWithOneIconLook.
-	aLook := aButton look.
-	
-	self 
-		assert: (aButton childAt: 1) 
-		backgroundColor: GtFilterExampleNotExecutedState default color.
-	^ aButton
-]
-
-{ #category : #'examples - one icon look' }
+{ #category : #'examples - one-icon look' }
 GtFilterRunExampleButtonLookExamples >> oneIconLookButton_SkipNoTest [
 	<gtExample>
-	| aLook aButton aCoder |
+	| aButton aCoder |
 	aButton := self buttonWithOneIconLook.
-	aLook := aButton look.
 	aCoder := self methodsCoder.
-	aLook coder: aCoder.
+	self attachCoder: aCoder toElementLooks: aButton.
 
 	BlUseAsyncFeatures disableDuring: [ 
 		aCoder exampler 
@@ -149,19 +277,18 @@ GtFilterRunExampleButtonLookExamples >> oneIconLookButton_SkipNoTest [
 	^ aButton
 ]
 
-{ #category : #'examples - one icon look' }
+{ #category : #'examples - one-icon look' }
 GtFilterRunExampleButtonLookExamples >> oneIconLookButton_Success [
 	<gtExample>
-	| aLook aButton aCoder |
+	| aButton aCoder |
 	aButton := self buttonWithOneIconLook.
-	aLook := aButton look.
 	aCoder := self methodsCoderWithSuccessExamples.
-	aLook coder: aCoder.
+	self attachCoder: aCoder toElementLooks: aButton.
 
 	BlUseAsyncFeatures disableDuring: [ 
 		aCoder exampler 
 			runExamples;
-			runNotTestExamples ].
+			runNoTestExamples ].
 	
 	self 
 		assert: (aButton childAt: 1) 
@@ -169,14 +296,40 @@ GtFilterRunExampleButtonLookExamples >> oneIconLookButton_Success [
 	^ aButton
 ]
 
+{ #category : #'examples - one-icon look' }
+GtFilterRunExampleButtonLookExamples >> oneIconLookButton_WithoutCoder [
+	<gtExample>
+	| aButton |
+	aButton := self buttonWithOneIconLook.
+	
+	self 
+		assert: (aButton childAt: 1) 
+		backgroundColor: GtFilterExampleNotExecutedState default color.
+	^ aButton
+]
+
 { #category : #'examples - support' }
 GtFilterRunExampleButtonLookExamples >> threeExample [
 	<gtExample>
-	^ (GtFilterRunExampleButtonLookDummyExamples >> #three) gtExample asExampleWithResult
+	^ (GtFiltersDummyObjectWithAllExampleStates >> #three) gtExample asExampleWithResult
 ]
 
 { #category : #'examples - support' }
 GtFilterRunExampleButtonLookExamples >> twoExample [
 	<gtExample>
-	^ (GtFilterRunExampleButtonLookDummyExamples >> #two) gtExample asExampleWithResult
+	^ (GtFiltersDummyObjectWithAllExampleStates >> #two) gtExample asExampleWithResult
+]
+
+{ #category : #'private - asserting' }
+GtFilterRunExampleButtonLookExamples >> visibleOrGoneFrom: aBoolean [
+	^ aBoolean
+		ifTrue: [ BlVisibility visible ]
+		ifFalse: [ BlVisibility gone ]
+]
+
+{ #category : #'private - asserting' }
+GtFilterRunExampleButtonLookExamples >> visibleOrHiddenFrom: aBoolean [
+	^ aBoolean
+		ifTrue: [ BlVisibility visible ]
+		ifFalse: [ BlVisibility hidden ]
 ]
