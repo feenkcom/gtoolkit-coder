@@ -6,6 +6,15 @@ Class >> gtInheritance [
 ]
 
 { #category : #'*GToolkit-Coder' }
+Class >> gtMetaFor: aView [
+	<gtView>
+	^ aView explicit
+		title: 'Meta';
+		priority: 200;
+		stencil: [ (GtClassCoder forClass: self) asElement ]
+]
+
+{ #category : #'*GToolkit-Coder' }
 Class >> gtReferences [
 	^ GtSearchReferencesFilter literal: self binding
 ]
