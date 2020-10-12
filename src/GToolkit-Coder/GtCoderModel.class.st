@@ -180,6 +180,17 @@ GtCoderModel >> expanded: aBoolean [
 GtCoderModel >> expandedUpdated [
 ]
 
+{ #category : #accessing }
+GtCoderModel >> gtAttributesFor: aView [
+	<gtView>
+	attributes ifNil: [ ^ aView empty ].
+	^ aView forward
+		title: 'Attributes';
+		priority: 40;
+		object: [ self attributes ];
+		view: #gtItemsFor:
+]
+
 { #category : #'gt-extensions' }
 GtCoderModel >> gtLiveFor: aView [
 	<gtView>

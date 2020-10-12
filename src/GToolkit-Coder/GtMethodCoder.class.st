@@ -549,8 +549,14 @@ GtMethodCoder >> debugSelectionOrMethodFrom: anEditorElement [
 
 { #category : #'private - actions' }
 GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean in: anEditorElement [
+
+	| aReceiver |
+	aReceiver := (anObject respondsTo: aSymbol)
+		ifTrue: [ anObject ]
+		ifFalse: [ anObject class ].
+	
 	^ self 
-		evaluateBlock: [ anObject perform: aSymbol ] 
+		evaluateBlock: [ aReceiver perform: aSymbol ] 
 		showPrintString: aBoolean
 		in: anEditorElement
 ]
@@ -1552,11 +1558,18 @@ GtMethodCoder >> subscribeToSystem [
 { #category : #'api - addons' }
 GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 20>
-	(self hasObjectAttribute
+	| isUnaryInstanceSideMethod isUnaryClassSideMethod |
+	isUnaryInstanceSideMethod := (self hasObjectAttribute
 		and: [ anAST notNil
-				and: [ anAST methodNode
-						ifNotNil: [ :node | node arguments isEmpty ]
-						ifNil: [ false ] ] ])
+			and: [ anAST methodNode
+				ifNotNil: [ :node | node arguments isEmpty ]
+				ifNil: [ false ] ] ]).
+	isUnaryClassSideMethod := (anAST notNil
+		and: [ anAST methodNode
+			ifNotNil: [ :node | node arguments isEmpty and: [ 
+				node methodClass isClassSide ] ]
+			ifNil: [ false ] ] ).
+	(isUnaryInstanceSideMethod or: [ isUnaryClassSideMethod ])		
 		ifFalse: [ coderAddOns removeContextAction: 'Play' translated.
 			coderAddOns removeContextAction: 'Play and Inspect' translated.
 			coderAddOns removeContextAction: 'Debug' translated.
