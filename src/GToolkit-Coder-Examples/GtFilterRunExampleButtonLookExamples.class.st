@@ -42,6 +42,20 @@ GtFilterRunExampleButtonLookExamples >> assertFourIconVisibilityIn: anElement su
 ]
 
 { #category : #'private - asserting' }
+GtFilterRunExampleButtonLookExamples >> assertUpdateRequestedState: aBoolean for: anElement [
+	| isAttached |
+	self assert: anElement look isNotNil.
+
+	isAttached := false.	
+	anElement look withAllChildren do: [ :eachLook | 
+		(eachLook isKindOf: GtFilterRunExampleButtonLook) ifTrue: [ 
+			isAttached := true.
+			self assert: eachLook isUpdateRequested equals: aBoolean. ] ].
+	
+	self assert: isAttached description: 'Element must be attached to at least one example look'.
+]
+
+{ #category : #'private - asserting' }
 GtFilterRunExampleButtonLookExamples >> assertVisibilityIn: anElement oneIcon: isOneIconVisible fourIcon: isFourIconVisible [
 	"The one-icon is expected in the first position"
 	self 
@@ -64,9 +78,11 @@ GtFilterRunExampleButtonLookExamples >> attachCoder: aCoder toElementLooks: anEl
 	anElement look withAllChildren do: [ :eachLook | 
 		(eachLook isKindOf: GtFilterRunExampleButtonLook) ifTrue: [ 
 			isAttached := true.
-			eachLook coder: aCoder ] ].
+			self assert: eachLook isUpdateRequested not description: 'Example button look should NOT be in update requested state'.
+			eachLook coder: aCoder.
+			self assert: eachLook isUpdateRequested not description: 'Example button look should NOT be in update requested state'. ] ].
 	
-	self assert: isAttached description: 'Coder must be attached at least to one look'.
+	self assert: isAttached description: 'Coder must be attached to at least one look'.
 	
 	^ aCoder
 ]
@@ -138,12 +154,14 @@ GtFilterRunExampleButtonLookExamples >> fourIconLookButton_AllExecutionStates [
 	aButton := self buttonWithFourIconLook.
 	aCoder := self methodsCoder.
 	self attachCoder: aCoder toElementLooks: aButton.
+	self assertUpdateRequestedState: false for: aButton.
 
 	BlUseAsyncFeatures disableDuring: [
 		aCoder exampler 
 			runExamples;
 			runNoTestExamples ].
 
+	self assertUpdateRequestedState: false for: aButton.
 	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.
 	self assertFourIconVisibilityIn: aButton success: true failure: true error: true noExecution: false.
 
@@ -157,6 +175,8 @@ GtFilterRunExampleButtonLookExamples >> fourIconLookButton_NoExamples [
 	aButton := self buttonWithFourIconLook.
 	aCoder := self methodsCoderWithoutExamples.
 	self attachCoder: aCoder toElementLooks: aButton.
+
+	self assertUpdateRequestedState: false for: aButton.
 
 	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.
 	self 
@@ -178,6 +198,8 @@ GtFilterRunExampleButtonLookExamples >> fourIconLookButton_NoExamples_Examples [
 	aCoder := self methodsCoder.
 	self attachCoder: aCoder toElementLooks: aButton.
 
+	self assertUpdateRequestedState: false for: aButton.
+
 	self assertVisibilityIn: aButton oneIcon: true fourIcon: false.
 	self 
 		assert: (aButton childAt: 1) 
@@ -198,6 +220,8 @@ GtFilterRunExampleButtonLookExamples >> fourIconLookButton_NotExecuted [
 	aCoder := self methodsCoder.
 	self attachCoder: aCoder toElementLooks: aButton.
 
+	self assertUpdateRequestedState: false for: aButton.
+
 	self assertVisibilityIn: aButton oneIcon: true fourIcon: false.
 	self 
 		assert: (aButton childAt: 1) 
@@ -214,10 +238,13 @@ GtFilterRunExampleButtonLookExamples >> fourIconLookButton_SuccessAndNotExecuted
 	aCoder := self methodsCoder.
 	self attachCoder: aCoder toElementLooks: aButton.
 
+	self assertUpdateRequestedState: false for: aButton.
+
 	BlUseAsyncFeatures disableDuring: [ 
 		aCoder exampler 
 			runExamples ].
 
+	self assertUpdateRequestedState: false for: aButton.
 	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.
 	self assertFourIconVisibilityIn: aButton success: true failure: false error: false noExecution: true.
 
@@ -231,6 +258,7 @@ GtFilterRunExampleButtonLookExamples >> fourIconLookButton_WithoutCoder [
 	aButton := self buttonWithFourIconLook.
 	aButton look - GtFilterRunExampleButtonTooltipLook.
 
+	self assertUpdateRequestedState: false for: aButton.
 	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.
 	self assertFourIconVisibilityIn: aButton success: true failure: true error: true noExecution: true.
 

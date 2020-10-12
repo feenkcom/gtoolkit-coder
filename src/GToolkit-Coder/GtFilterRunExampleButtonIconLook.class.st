@@ -76,29 +76,6 @@ GtFilterRunExampleButtonIconLook >> newSuccessBackground [
 	^ GtFilterExampleSuccessState default color
 ]
 
-{ #category : #'private - hooks' }
-GtFilterRunExampleButtonIconLook >> onCoderChanged [
-	super onCoderChanged.
-	self updateWidget.
-]
-
-{ #category : #'private - announcement handling' }
-GtFilterRunExampleButtonIconLook >> onCoderChanged: aGtCodersCodersChanged [
-	super onCoderChanged: aGtCodersCodersChanged.
-	self postponeUpdate.
-]
-
-{ #category : #'private - announcement handling' }
-GtFilterRunExampleButtonIconLook >> onExampleExecuted: aGtCoderExampleExecuted [
-	self postponeUpdate.
-]
-
-{ #category : #'api - hooks' }
-GtFilterRunExampleButtonIconLook >> onInstalledIn: anElement [
-	super onInstalledIn: anElement.
-	self updateButtonStatus.
-]
-
 { #category : #'private - updating' }
 GtFilterRunExampleButtonIconLook >> updateButtonStatus [
 	"I must be called in a UI process".
