@@ -15,6 +15,13 @@ Class {
 	#category : #'GToolkit-Coder-Filters - UI'
 }
 
+{ #category : #'private - updating' }
+GtFilterRunExampleButtonLook >> beUpdateRequestedIfDoneEarlierDo: aBlock [
+	mutex critical: [ 
+		self isUpdateRequested ifTrue: aBlock.
+		isUpdateRequested := true. ]
+]
+
 { #category : #'api - accessing' }
 GtFilterRunExampleButtonLook >> coder [
 	<return: #GtMethodsCoder>
@@ -37,9 +44,9 @@ GtFilterRunExampleButtonLook >> coderDo: aBlock [
 
 { #category : #'private - updating' }
 GtFilterRunExampleButtonLook >> enqueueUpdate [
-	self widgetDo: [ :aWidget | 
+	self widgetAndCoderDo: [ :aWidget :aCoder | 
 		aWidget enqueueTask: (BlTaskAction new action: [
-			self updateWidget ]) ].
+			self updateNow ]) ].
 ]
 
 { #category : #'private - accessing' }
@@ -69,31 +76,45 @@ GtFilterRunExampleButtonLook >> initializeIconElement: anElement [
 		size: 8 @ 8.
 ]
 
+{ #category : #'private - testing' }
+GtFilterRunExampleButtonLook >> isUpdateRequested [
+	<return: #Boolean>
+	^ isUpdateRequested
+]
+
 { #category : #'private - hooks' }
 GtFilterRunExampleButtonLook >> onCoderChanged [
+	"We expect that the Coder is changed just once before the look is attached."
+	self beUpdateRequestedIfDoneEarlierDo: [ ^ self ].
+	self updateNow.
 ]
 
 { #category : #'private - announcement handling' }
 GtFilterRunExampleButtonLook >> onCoderChanged: aGtCodersCodersChanged [
+	self postponeUpdate.
 ]
 
 { #category : #'private - announcement handling' }
 GtFilterRunExampleButtonLook >> onExampleExecuted: aGtCoderExampleExecuted [
+	self postponeUpdate.
+]
+
+{ #category : #'api - hooks' }
+GtFilterRunExampleButtonLook >> onInstalledIn: anElement [
+	super onInstalledIn: anElement.
+	self postponeUpdate.
 ]
 
 { #category : #'api - hooks' }
 GtFilterRunExampleButtonLook >> onUninstalledIn: anElement [
 	super onUninstalledIn: anElement.
-	mutex critical: [ 
-		isUpdateRequested := false ].
+	self resetUpdateRequested.
 ]
 
 { #category : #'private - updating' }
 GtFilterRunExampleButtonLook >> postponeUpdate [
-	self widgetDo: [ :aWidget | 
-		mutex critical: [ 
-			isUpdateRequested ifTrue: [ ^ self ].
-			isUpdateRequested := true ].
+	self widgetAndCoderDo: [ :aWidget :aCoder | 
+		self beUpdateRequestedIfDoneEarlierDo: [ ^ self ].
 		BlUseAsyncFeatures 
 			ifEnabledDo: [ 
 				BlTaskAtQueue default
@@ -114,6 +135,12 @@ GtFilterRunExampleButtonLook >> postponedTime [
 	^ aNow + 300 milliSeconds.
 ]
 
+{ #category : #'private - updating' }
+GtFilterRunExampleButtonLook >> resetUpdateRequested [
+	mutex critical: [ 
+		isUpdateRequested := false ].
+]
+
 { #category : #'private - subscriptions' }
 GtFilterRunExampleButtonLook >> subscribeToCoder [
 	self coder weak
@@ -128,14 +155,13 @@ GtFilterRunExampleButtonLook >> subscribeToCoder [
 
 { #category : #'private - subscriptions' }
 GtFilterRunExampleButtonLook >> unsubscribeFromCoder [
-	self coder ifNil: [ ^ self ].
-	self coder unsubscribe: self.
+	self coderDo: [ :aCoder |
+		aCoder unsubscribe: self ].
 ]
 
 { #category : #'private - updating' }
 GtFilterRunExampleButtonLook >> updateNow [
-	mutex critical: [ 
-		isUpdateRequested := false ].
+	self resetUpdateRequested.
 	self updateWidget.
 ]
 
@@ -143,4 +169,11 @@ GtFilterRunExampleButtonLook >> updateNow [
 GtFilterRunExampleButtonLook >> updateWidget [
 	"Subclasses may perform update actions.
 	I should be called from a UI process."
+]
+
+{ #category : #'private - accessing' }
+GtFilterRunExampleButtonLook >> widgetAndCoderDo: aTwoArgBlock [
+	self widgetDo: [ :aWidget | 
+		self coderDo: [ :aCoder |
+			aTwoArgBlock cull: aWidget cull: aCoder ] ]
 ]

@@ -82,23 +82,6 @@ GtFilterRunExampleButtonTooltipLook >> listItems [
 		eachState labelWithAmountFor: self coder exampler ].
 ]
 
-{ #category : #'private - hooks' }
-GtFilterRunExampleButtonTooltipLook >> onCoderChanged [
-	super onCoderChanged.
-	self updateList.
-]
-
-{ #category : #'private - announcement handling' }
-GtFilterRunExampleButtonTooltipLook >> onCoderChanged: aGtCodersCodersChanged [
-	super onCoderChanged: aGtCodersCodersChanged.
-	self postponeUpdate.
-]
-
-{ #category : #'private - announcement handling' }
-GtFilterRunExampleButtonTooltipLook >> onExampleExecuted: aGtCoderExampleExecuted [
-	self postponeUpdate.
-]
-
 { #category : #'private - accessing' }
 GtFilterRunExampleButtonTooltipLook >> tooltipContent [
 	<return: #BlElement>
