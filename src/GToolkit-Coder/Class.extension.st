@@ -4,22 +4,26 @@ Extension { #name : #Class }
 Class >> gtExamplesMapFor: aView context: aPhlowContext [
 	<gtView>
 	<gtClassView>
-	| aMethodsCoder allExamples |
+	| aMethodsCoder |
 	aMethodsCoder := self methodsCoderFromContext: aPhlowContext.
 	aMethodsCoder exampler hasExamples ifFalse: [ ^ aView empty ].
-	allExamples := Array streamContents: [ :aStream | 
-		aMethodsCoder exampler allExecutableExampleCodersDo: [ :aCoder :anExample |
-			aStream nextPut: anExample ] ].
 	^ aView forward
 		title: 'Examples map';
 		priority: 11;
-		object: [ GtExampleGroup withAll: allExamples ];
+		object: [ 
+			| allExamples |
+			allExamples := Array streamContents: [ :aStream | 
+		aMethodsCoder exampler allExecutableExampleCodersDo: [ :aCoder :anExample |
+			aStream nextPut: anExample ] ].
+			GtExampleGroup withAll: allExamples ];
 		view: #gtMapFor:;
 		actionStencilDo: [ :anExplicitAction |
 			anExplicitAction
 				priority: 80;
 				stencil: [
-					self runAllExamplesButtonorMethodsCoder: aMethodsCoder ] ]
+					self runAllExamplesButtonForMethodsCoder: aMethodsCoder ] ];
+		updateWhen: GtCodersCoderAdded , GtCodersCoderRemoved , GtCodersCodersChanged, GtCoderSourceCodeChanged 
+			in: [ aMethodsCoder ]
 ]
 
 { #category : #'*GToolkit-Coder' }
