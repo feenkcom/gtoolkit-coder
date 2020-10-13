@@ -55,7 +55,11 @@ Behavior >> gtCoderExamplesFor: aView context: aDictionary [
 				title: 'Related examples';
 				actionButtonIcon: BrGlamorousVectorIcons add
 					action: [ methodsCoder addNewCoder ];
-				stencil: [ methodsCoder asElement ] ]
+				stencil: [ methodsCoder asElement ];
+				actionButtonIcon: BrGlamorousIcons browse 
+					tooltip: 'Browse ', aClass name 
+					action: [ :aButton | 
+						aButton phlow spawnTool: (GtClassCoderTool forClass: aClass) ] ]
 		ifAbsent: [ aView empty ]
 ]
 
