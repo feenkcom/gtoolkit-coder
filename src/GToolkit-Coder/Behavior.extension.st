@@ -75,7 +75,7 @@ Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
 			tooltip: 'Add new method'
 			action: [ aMethodsCoder addNewCoder ];
 		actionStencil:
-				[ self runAllExamplesButtonorMethodsCoder: aMethodsCoder ];
+				[ self runAllExamplesButtonForMethodsCoder: aMethodsCoder ];
 		stencil: [ aMethodsCoder asElement ]
 ]
 
@@ -95,7 +95,7 @@ Behavior >> methodsCoderFromContext: aPhlowContext [
 ]
 
 { #category : #'*GToolkit-Coder' }
-Behavior >> runAllExamplesButtonorMethodsCoder: aMethodsCoder [
+Behavior >> runAllExamplesButtonForMethodsCoder: aMethodsCoder [
 	^ BrButton new
 		addLook:
 			(GtFilterRunExampleButtonFourStateIconLook new coder: aMethodsCoder);
