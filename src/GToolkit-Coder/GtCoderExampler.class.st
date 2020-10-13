@@ -16,24 +16,24 @@ GtCoderExampler class >> coder: aCoder [
 	^ self new coder: aCoder
 ]
 
-{ #category : #'private - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> allExampleCodersDo: aBlock [
 	"iterate all coders with examples"
 	self subclassResponsibility
 ]
 
-{ #category : #'private - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> allExecutableExampleCodersDo: aBlock [
-	self allExampleCodersDo: [ :eachCoder | 
-		eachCoder canExecuteExample ifTrue: [ 
-			aBlock cull: eachCoder ] ]
+	self allExampleCodersDo: [ :aCoder :anExample | 
+		aCoder canExecuteExample ifTrue: [ 
+			aBlock cull: aCoder cull: anExample ] ]
 ]
 
-{ #category : #'private - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> allExecutableExampleCodersWithResultsDo: aBlock [
-	self allExecutableExampleCodersDo: [ :eachCoder | 
-		eachCoder exampleResult ifNotNil: [ :aResult |
-			aBlock cull: eachCoder cull: aResult ] ]
+	self allExecutableExampleCodersDo: [ :aCoder :anExample | 
+		aCoder exampleResult ifNotNil: [ :aResult |
+			aBlock cull: aCoder cull: anExample cull: aResult ] ]
 ]
 
 { #category : #'api - accessing' }
@@ -174,22 +174,22 @@ GtCoderExampler >> runNoTestExamples [
 			eachCoder example run ] ]
 ]
 
-{ #category : #'private - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> selectedExampleCodersDo: aBlock [
 	"iterate selected coders with examples"
 	self subclassResponsibility
 ]
 
-{ #category : #'private - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> selectedExecutableExampleCodersDo: aBlock [
-	self selectedExampleCodersDo: [ :eachCoder | 
-		eachCoder canExecuteExample ifTrue: [ 
-			aBlock cull: eachCoder ] ]
+	self selectedExampleCodersDo: [ :aCoder :anExample | 
+		aCoder canExecuteExample ifTrue: [ 
+			aBlock cull: aCoder cull: anExample ] ]
 ]
 
-{ #category : #'private - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> selectedExecutableExampleCodersWithResultsDo: aBlock [
-	self selectedExecutableExampleCodersDo: [ :eachCoder | 
-		eachCoder exampleResult ifNotNil: [ :aResult |
-			aBlock cull: eachCoder cull: aResult ] ]
+	self selectedExecutableExampleCodersDo: [ :aCoder :anExample | 
+		aCoder exampleResult ifNotNil: [ :aResult |
+			aBlock cull: aCoder cull: anExample cull: aResult ] ]
 ]
