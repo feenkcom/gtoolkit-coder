@@ -19,7 +19,7 @@ GtSourceCoderCollapsedTextLook >> initialize [
 { #category : #'instance creation' }
 GtSourceCoderCollapsedTextLook >> newLabel [
 	^ BrLabel new
-		look: BrGlamorousLabelLook new editorMeasurement "bold glamorousCodeFont"
+		look: BrGlamorousLabelLook new editorMeasurement bold glamorousCodeFont
 ]
 
 { #category : #initialization }
@@ -41,5 +41,5 @@ GtSourceCoderCollapsedTextLook >> updateLabel: anAnnouncement [
 
 { #category : #private }
 GtSourceCoderCollapsedTextLook >> updateLabelFor: aSourceCoder [
-	label text: aSourceCoder collapsedText copy bold glamorousCodeFont
+	label text: aSourceCoder collapsedText
 ]
