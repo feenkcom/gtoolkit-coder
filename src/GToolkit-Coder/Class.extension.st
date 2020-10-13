@@ -1,6 +1,24 @@
 Extension { #name : #Class }
 
 { #category : #'*GToolkit-Coder' }
+Class >> gtExamplesMapFor: aView context: aPhlowContext [
+	<gtView>
+	<gtClassView>
+	| aMethodsCoder allExamples |
+	aMethodsCoder := self methodsCoderFromContext: aPhlowContext.
+	aMethodsCoder exampler hasExamples ifFalse: [ ^ aView empty ].
+	allExamples := Array streamContents: [ :aStream | 
+		aMethodsCoder exampler allExecutableExampleCodersDo: [ :aCoder :anExample |
+			aStream nextPut: anExample ] ].
+	^ aView forward
+		title: 'Examples map';
+		priority: 11;
+		object: [ GtExampleGroup withAll: allExamples ];
+		view: #gtMapFor:;
+		actionStencil: [ self runAllExamplesButtonorMethodsCoder: aMethodsCoder ]
+]
+
+{ #category : #'*GToolkit-Coder' }
 Class >> gtInheritance [
 	^ GtPharoInheritance new subclass: self; superclass: self superclass
 ]

@@ -60,33 +60,48 @@ Behavior >> gtCoderExamplesFor: aView context: aDictionary [
 ]
 
 { #category : #'*GToolkit-Coder' }
-Behavior >> gtCoderMethodsFor: aView context: aDictionary [
+Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
 	<gtClassView>
-	| methodsCoder object |
-	aDictionary
-		at: #classCoder
-		ifPresent: [ :coder | object := coder object ].
-	methodsCoder := object notNil
-		ifTrue: [ GtClassMethodsCoder forObject: object ]
-		ifFalse: [ GtClassMethodsCoder forClass: self ].
+	| aMethodsCoder |
+	aMethodsCoder := self methodsCoderFromContext: aPhlowContext.
 	^ aView explicit
 		priority: 10;
 		title: 'Methods';
 		disableAsync;
 		actionDropdownButtonIcon: BrGlamorousVectorIcons filter
 			tooltip: 'Filter'
-			content: [ :element | methodsCoder filterDropDown: element ];
+			content: [ :element | aMethodsCoder filterDropDown: element ];
 		actionButtonIcon: BrGlamorousVectorIcons add
 			tooltip: 'Add new method'
-			action: [ methodsCoder addNewCoder ];
-		actionStencil: [ BrButton new
-				addLook: (GtFilterRunExampleButtonFourStateIconLook new 
-					coder: methodsCoder);
-				addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
-				addLook: (GtFilterRunExampleButtonTooltipLook new coder: methodsCoder);
-				icon: BrGlamorousVectorIcons play;
-				label: 'Run All Examples';
-				action: [ :element | 
-					methodsCoder exampler runExamplesFrom: element ] ];
-		stencil: [ methodsCoder asElement ]
+			action: [ aMethodsCoder addNewCoder ];
+		actionStencil:
+				[ self runAllExamplesButtonorMethodsCoder: aMethodsCoder ];
+		stencil: [ aMethodsCoder asElement ]
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> methodsCoderFromContext: aPhlowContext [ 
+	^ aPhlowContext
+		at: #methodsCoder
+		ifPresent: [ :aCoder | aCoder ]
+		ifAbsentPut: [
+			aPhlowContext
+				at: #classCoder
+				ifPresent: [ :aCoder | 
+					aCoder hasObject
+						ifTrue: [ GtClassMethodsCoder forObject: aCoder object ]
+						ifFalse: [ GtClassMethodsCoder forClass: self ] ]
+				ifAbsent: [ GtClassMethodsCoder forClass: self ] ]
+]
+
+{ #category : #'*GToolkit-Coder' }
+Behavior >> runAllExamplesButtonorMethodsCoder: aMethodsCoder [
+	^ BrButton new
+		addLook:
+			(GtFilterRunExampleButtonFourStateIconLook new coder: aMethodsCoder);
+		addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
+		addLook: (GtFilterRunExampleButtonTooltipLook new coder: aMethodsCoder);
+		icon: BrGlamorousVectorIcons play;
+		label: 'Run All Examples';
+		action: [ :element | aMethodsCoder exampler runExamplesFrom: element ]
 ]
