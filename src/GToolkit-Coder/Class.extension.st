@@ -23,7 +23,8 @@ Class >> gtExamplesMapFor: aView context: aPhlowContext [
 				stencil: [
 					self runAllExamplesButtonForMethodsCoder: aMethodsCoder ] ];
 		updateWhen: GtCodersCoderAdded , GtCodersCoderRemoved , GtCodersCodersChanged, GtCoderSourceCodeChanged 
-			in: [ aMethodsCoder ]
+			in: [ aMethodsCoder ];
+		addAutoUpdate: GtPhlowUpdateViewOnAddedToScene
 ]
 
 { #category : #'*GToolkit-Coder' }
