@@ -15,7 +15,11 @@ Class >> gtExamplesMapFor: aView context: aPhlowContext [
 		priority: 11;
 		object: [ GtExampleGroup withAll: allExamples ];
 		view: #gtMapFor:;
-		actionStencil: [ self runAllExamplesButtonorMethodsCoder: aMethodsCoder ]
+		actionStencilDo: [ :anExplicitAction |
+			anExplicitAction
+				priority: 80;
+				stencil: [
+					self runAllExamplesButtonorMethodsCoder: aMethodsCoder ] ]
 ]
 
 { #category : #'*GToolkit-Coder' }
