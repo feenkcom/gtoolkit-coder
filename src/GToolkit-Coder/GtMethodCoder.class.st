@@ -847,11 +847,6 @@ GtMethodCoder >> highlighterFor: anAST into: coderAddOns [
 ]
 
 { #category : #initialize }
-GtMethodCoder >> initialize [
-	super initialize
-]
-
-{ #category : #initialize }
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
