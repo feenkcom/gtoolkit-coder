@@ -186,6 +186,18 @@ GtPharoSnippetCoder >> source: aString [
 ]
 
 { #category : #accessing }
+GtPharoSnippetCoder >> spawnDirection [
+	^ self 
+		attributeNamed: #spawnDirection 
+		ifAbsent: [ GtPhlowSpawnDirection defaultDirection ]
+]
+
+{ #category : #accessing }
+GtPharoSnippetCoder >> spawnDirection: aSpawnDirection [
+	^ self attributeNamed: #spawnDirection put: aSpawnDirection
+]
+
+{ #category : #accessing }
 GtPharoSnippetCoder >> variableBindings [
 	^ bindingStrategy bindings
 ]
