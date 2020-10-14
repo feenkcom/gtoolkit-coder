@@ -99,6 +99,7 @@ GtCoderToolbarElement >> initializeToolbarElement [
 		addItem: self newSpotterButton;
 		addItem: self newHierarchyButton;
 		addItem: self newAddButton;
+		addItem: self newPopOutButton;
 		yourself
 ]
 
@@ -106,14 +107,14 @@ GtCoderToolbarElement >> initializeToolbarElement [
 GtCoderToolbarElement >> newAddButton [
 	| look |
 	^ BrButton new
-		label: 'Add class or package';
+		label: 'Add (e.g. class or package)';
 		look:
 			BrGlamorousButtonWithIconLook
 				+
 					(look := BrGlamorousWithDropdownLook
 						handle: [ BrButton new
 								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
+									BrGlamorousButtonWithIconLook
 										- BrGlamorousButtonExteriorLook;
 								icon: BrGlamorousVectorIcons add;
 								yourself ]
@@ -153,7 +154,7 @@ GtCoderToolbarElement >> newHierarchyButton [
 		look: BrGlamorousButtonWithIconLook + (BrGlamorousWithDropdownLook
 			handle: [
 				BrButton new
-					look: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook - BrGlamorousButtonExteriorLook;
+					look: BrGlamorousButtonWithIconLook - BrGlamorousButtonExteriorLook;
 					icon: BrGlamorousIcons tree;
 					yourself ]
 			content: [
@@ -164,6 +165,16 @@ GtCoderToolbarElement >> newHierarchyButton [
 						asElement)
 			]);
 		icon: BrGlamorousIcons tree asElement;
+		yourself
+]
+
+{ #category : #'private - instance creation' }
+GtCoderToolbarElement >> newPopOutButton [
+	^ BrButton new
+		label: 'Browse in a new window';
+		look: BrGlamorousButtonWithIconLook;
+		icon: BrGlamorousIcons maximize asElement;
+		action: [ (GtCoder forClass: self navigationModel selectedClass) openInPager maximized ];
 		yourself
 ]
 
