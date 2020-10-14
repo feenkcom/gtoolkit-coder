@@ -101,6 +101,12 @@ GtSourceCoder >> browseReferencesFrom: anEditorElement [
 	anEditorElement phlow spawnObject: filter
 ]
 
+{ #category : #'api - actions examples' }
+GtSourceCoder >> canExecuteExample [
+	<return: #Boolean>
+	^ false
+]
+
 { #category : #accessing }
 GtSourceCoder >> category [
 	^ self attributeNamed: #category

@@ -5,7 +5,8 @@ Class {
 	#classTraits : 'TGtCoderTrait classTrait',
 	#instVars : [
 		'class',
-		'object'
+		'object',
+		'hasObject'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -36,19 +37,17 @@ GtClassCoder >> asElement [
 	^ coderElement
 ]
 
-{ #category : #initialize }
+{ #category : #'api - initialization' }
 GtClassCoder >> forClass: aClass [
-	self
-		assert: [ class isNil ]
-		description: [ 'Can not change the behavior behind this coder' ].
-
-	class := aClass
+	hasObject := false.
+	self initializeClass: aClass
 ]
 
-{ #category : #initialize }
+{ #category : #'api - initialization' }
 GtClassCoder >> forObject: anObject [
 	object := anObject.
-	self forClass: anObject class
+	hasObject := true.
+	self initializeClass: anObject class
 ]
 
 { #category : #'gt-extension' }
@@ -72,9 +71,29 @@ GtClassCoder >> handleClassDefinitionModified: a [
 GtClassCoder >> handleClassModified: anAnnouncement [
 ]
 
+{ #category : #testing }
+GtClassCoder >> hasObject [
+	^ hasObject = true
+]
+
 { #category : #accessing }
 GtClassCoder >> icon [
 	^ BrGlamorousIcons classicon
+]
+
+{ #category : #initialize }
+GtClassCoder >> initialize [
+	super initialize.
+	hasObject := false.
+]
+
+{ #category : #initialize }
+GtClassCoder >> initializeClass: aClass [
+	self
+		assert: [ class isNil ]
+		description: [ 'Can not change the behavior behind this coder' ].
+
+	class := aClass
 ]
 
 { #category : #testing }
