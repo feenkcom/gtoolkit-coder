@@ -1,7 +1,7 @@
 Class {
 	#name : #GtMethodsCoderExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Model'
 }
 
 { #category : #'examples - filters' }

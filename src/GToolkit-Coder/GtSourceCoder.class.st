@@ -294,7 +294,9 @@ GtSourceCoder >> doItAndGoAllFrom: anEditorElement [
 	aValue == self
 		ifTrue: [ ^ self ].
 	
-	anEditorElement phlow spawnObject: aValue
+	anEditorElement phlow 
+		spawnObject: aValue
+		withDestination: self spawnDestination
 ]
 
 { #category : #'api - actions' }
@@ -309,7 +311,9 @@ GtSourceCoder >> doItAndGoSelectionFrom: anEditorElement [
 	value == self
 		ifTrue: [ ^ self ].
 	
-	anEditorElement phlow spawnObject: value
+	anEditorElement phlow 
+		spawnObject: value
+		withDestination: self spawnDestination
 ]
 
 { #category : #'api - actions' }
@@ -939,6 +943,18 @@ GtSourceCoder >> sourceTextDo: aBlock [
 	"Evaluate a given block with my source code text if present"
 
 	^ self sourceCode sourceTextDo: aBlock
+]
+
+{ #category : #accessing }
+GtSourceCoder >> spawnDestination [
+	^ self 
+		attributeNamed: #spawnDestination 
+		ifAbsent: [ GtPhlowSpawnDesiredDestination defaultDestination ]
+]
+
+{ #category : #accessing }
+GtSourceCoder >> spawnDestination: aSpawnDestination [
+	^ self attributeNamed: #spawnDestination put: aSpawnDestination
 ]
 
 { #category : #'private - actions' }

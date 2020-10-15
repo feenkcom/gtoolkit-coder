@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPharoSnippetCoderExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Model'
 }
 
 { #category : #examples }
@@ -20,6 +20,29 @@ GtPharoSnippetCoderExamples >> snippetCoder [
 		equals: GtSnippetBindings new.
 	
 	^ aSnippetCoder
+]
+
+{ #category : #examples }
+GtPharoSnippetCoderExamples >> snippetCoderDefaultDestinationExample [
+	<gtExample>
+	| snippetCoder |
+	snippetCoder := self snippetCoder.
+	
+	self assert: snippetCoder spawnDestination isSpawnNextPane.
+	
+	^ snippetCoder
+]
+
+{ #category : #examples }
+GtPharoSnippetCoderExamples >> snippetCoderDestinationChangeExample [
+	<gtExample>
+	| snippetCoder |
+	snippetCoder := self snippetCoderDefaultDestinationExample.
+	
+	snippetCoder spawnDestination: GtPhlowSpawnBelowDestination new.
+	self assert: snippetCoder spawnDestination isSpawnBelow.
+	
+	^ snippetCoder
 ]
 
 { #category : #examples }
