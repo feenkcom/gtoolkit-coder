@@ -186,15 +186,15 @@ GtPharoSnippetCoder >> source: aString [
 ]
 
 { #category : #accessing }
-GtPharoSnippetCoder >> spawnDirection [
+GtPharoSnippetCoder >> spawnDestination [
 	^ self 
-		attributeNamed: #spawnDirection 
-		ifAbsent: [ GtPhlowSpawnDirection defaultDirection ]
+		attributeNamed: #spawnDestination 
+		ifAbsent: [ GtPhlowSpawnDesiredDestination defaultDestination ]
 ]
 
 { #category : #accessing }
-GtPharoSnippetCoder >> spawnDirection: aSpawnDirection [
-	^ self attributeNamed: #spawnDirection put: aSpawnDirection
+GtPharoSnippetCoder >> spawnDestination: aSpawnDestination [
+	^ self attributeNamed: #spawnDestination put: aSpawnDestination
 ]
 
 { #category : #accessing }
