@@ -62,7 +62,8 @@ GtCoderElementForSnippetsWithDestinationExamples >> coderContainerWithSpawnBelow
 		satisfies: [ 
 			spawnEvents size = 1 and: [ 
 				spawnEvents first spawnDestination isSpawnBelow and: [ 
-					spawnEvents first previousSpawnEvent notNil ] ] ].
+					spawnEvents first previousSpawnEvent notNil and: [ 
+						spawnEvents first previousSpawnEvent spawnDestination isSpawnBelow ] ] ] ].
 	
 	aScripter syncContinue.
 	^ aScripter
@@ -138,13 +139,8 @@ GtCoderElementForSnippetsWithDestinationExamples >> coderElementWithHandlerScrip
 	aScripter check
 		label: 'Check spawn event';
 		satisfies: [ 
-			"Even in this case the event will be spawn next as there should be a 
-			container that captures the event and transforms it. 
-			
-			This should be fixed in the future and coder should set the destination 
-			of all spawn events."
 			spawnEvents size = 1 and: [ 
-				spawnEvents first spawnDestination isSpawnNextPane and: [ 
+				spawnEvents first spawnDestination isSpawnBelow and: [ 
 					spawnEvents first previousSpawnEvent isNil ] ] ].
 	
 	aScripter syncContinue.
@@ -185,6 +181,7 @@ GtCoderElementForSnippetsWithDestinationExamples >> snippetsCoderWithDestination
 	<gtExample>
 	| coder |
 	coder := GtPharoSnippetCoder new
+		forSource: '1+1';
 		coderLook: [ GtSourceCoderSpawnDestinationLook ].
 	
 	self assert: coder spawnDestination isSpawnNextPane.

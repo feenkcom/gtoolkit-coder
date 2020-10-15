@@ -23,24 +23,24 @@ GtPharoSnippetCoderExamples >> snippetCoder [
 ]
 
 { #category : #examples }
-GtPharoSnippetCoderExamples >> snippetCoderDefaultDestinationChangeExample [
+GtPharoSnippetCoderExamples >> snippetCoderDefaultDestinationExample [
 	<gtExample>
 	| snippetCoder |
-	snippetCoder := GtPharoSnippetCoder new.
+	snippetCoder := self snippetCoder.
 	
-	snippetCoder spawnDestination: GtPhlowSpawnBelowDestination new.
-	self assert: snippetCoder spawnDestination isSpawnBelow.
+	self assert: snippetCoder spawnDestination isSpawnNextPane.
 	
 	^ snippetCoder
 ]
 
 { #category : #examples }
-GtPharoSnippetCoderExamples >> snippetCoderDefaultDestinationExample [
+GtPharoSnippetCoderExamples >> snippetCoderDestinationChangeExample [
 	<gtExample>
 	| snippetCoder |
-	snippetCoder := GtPharoSnippetCoder new.
+	snippetCoder := self snippetCoderDefaultDestinationExample.
 	
-	self assert: snippetCoder spawnDestination isSpawnNextPane.
+	snippetCoder spawnDestination: GtPhlowSpawnBelowDestination new.
+	self assert: snippetCoder spawnDestination isSpawnBelow.
 	
 	^ snippetCoder
 ]

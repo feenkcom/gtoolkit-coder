@@ -186,18 +186,6 @@ GtPharoSnippetCoder >> source: aString [
 ]
 
 { #category : #accessing }
-GtPharoSnippetCoder >> spawnDestination [
-	^ self 
-		attributeNamed: #spawnDestination 
-		ifAbsent: [ GtPhlowSpawnDesiredDestination defaultDestination ]
-]
-
-{ #category : #accessing }
-GtPharoSnippetCoder >> spawnDestination: aSpawnDestination [
-	^ self attributeNamed: #spawnDestination put: aSpawnDestination
-]
-
-{ #category : #accessing }
 GtPharoSnippetCoder >> variableBindings [
 	^ bindingStrategy bindings
 ]
