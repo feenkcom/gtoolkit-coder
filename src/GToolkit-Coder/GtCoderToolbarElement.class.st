@@ -174,7 +174,14 @@ GtCoderToolbarElement >> newPopOutButton [
 		label: 'Browse in a new window';
 		look: BrGlamorousButtonWithIconLook;
 		icon: BrGlamorousIcons maximize asElement;
-		action: [ (GtCoder forClass: self navigationModel selectedClass) openInPager maximized ];
+		action: [ 
+			| aSpace |
+	aSpace := BlSpace new.
+	aSpace title: 'Coder'.
+	"aSpace extent: 1200@600."
+	aSpace addChild: "GtCoderStencil new" (GtCoder new"forClass: self navigationModel selectedClass") createInPager maximized .
+	aSpace withHalos.
+	self  showSpace: aSpace ];
 		yourself
 ]
 
