@@ -7,5 +7,10 @@ Class {
 { #category : #'examples - scripter' }
 GtCoderExamples >> scripter [
 	<gtExample>
-	^ BlDevScripter new
+	| scripter |
+	scripter := BlDevScripter new.
+	
+	self assert: scripter events isEmpty.
+	
+	^ scripter
 ]
