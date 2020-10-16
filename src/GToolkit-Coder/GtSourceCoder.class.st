@@ -961,7 +961,9 @@ GtSourceCoder >> spawnDestination: aSpawnDestination [
 GtSourceCoder >> styleResult: value at: interval showPrintString: aBoolean inText: aBlText [
 	aBlText
 		attributes:
-			{(GtPlaygroundEvaluatedCodeButtonAttribute new result: value)}
+			{(GtPlaygroundEvaluatedCodeButtonAttribute new 
+				result: value;
+				coder: self "Pass the coder to get the spawn destination")}
 		from: interval last
 		to: interval last.
 	aBoolean

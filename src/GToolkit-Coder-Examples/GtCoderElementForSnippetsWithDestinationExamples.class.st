@@ -23,13 +23,13 @@ GtCoderElementForSnippetsWithDestinationExamples >> coderContainerWithSpawnBelow
 	coderElement
 		when: GtPhlowObjectToSpawn
 		do: [ :aSpawnEvent | 
-			coder spawnDestination isSpawnBelow ifTrue: [ 
+			aSpawnEvent spawnDestination isSpawnBelow ifTrue: [ 
 				aSpawnEvent consumed: true. 
 				containerElement fireEvent: (GtPhlowObjectToSpawn new 
 					previousSpawnEvent: aSpawnEvent;
 					tool: aSpawnEvent tool; 
 					sourceElement: aSpawnEvent currentTarget;
-					spawnDestination: coder spawnDestination;
+					spawnDestination: aSpawnEvent spawnDestination;
 					yourself) ] ].
 			
 	^ containerElement
