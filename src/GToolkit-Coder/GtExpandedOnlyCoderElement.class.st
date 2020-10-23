@@ -30,7 +30,7 @@ GtExpandedOnlyCoderElement >> coder: aCoder [
 
 	aCoder expanded: true.
 	aCoder announcer weak
-		when: GtCoderRequestFocus send: #requestFocus to: self
+		when: GtCoderRequestFocus send: #requestFocusAsyncronously to: self
 ]
 
 { #category : #initialization }
@@ -54,11 +54,16 @@ GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
 
 { #category : #'focus requesting' }
 GtExpandedOnlyCoderElement >> requestFocus [
-	^ self
+	self
+		childNamed: #editor
+		ifFound: [ :anEditorElement | anEditorElement requestFocus ]
+		ifNone: [ super requestFocus ] 
+]
+
+{ #category : #'focus requesting' }
+GtExpandedOnlyCoderElement >> requestFocusAsyncronously [
+	^ self 
 		enqueueTask:
 			(BlTaskAction new
-				action: [ self
-						childNamed: #editor
-						ifFound: [ :anEditorElement | anEditorElement requestFocus ]
-						ifNone: [ super requestFocus ] ])
+				action: [ self requestFocus ])
 ]
