@@ -159,10 +159,9 @@ GtCoderToolbarElement >> newHierarchyButton [
 			content: [
 				BlElement new
 					size: 400@400;
-					addChild: (GtCoderNavigationTabsStencil new 
+					addChild: ((GtCoderNavigationTabsStencil new 
 						navigationModel: navigationModel;
-						asElement) ]
-			lookDo: [ :aDropdownLook | aDropdownLook background: BrGlamorousColors neutralBackgroundColor ]);
+						asElement) background: Color white) ]);
 		icon: BrGlamorousIcons tree asElement;
 		yourself
 ]
