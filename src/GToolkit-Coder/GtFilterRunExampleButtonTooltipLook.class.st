@@ -12,7 +12,7 @@ GtFilterRunExampleButtonTooltipLook >> initialize [
 	super initialize.
 	self initializeTooltipContent.
 
-	self add: (BrGlamorousWithTooltipLook2 content: self tooltipContent).
+	self add: (BrGlamorousWithTooltipLook content: [self initializeTooltipContent]).
 ]
 
 { #category : #initialization }
@@ -72,6 +72,7 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 			aTotalString ifNil: [ aTotalString := '? examples' ].
 			aTotalText := aTotalString asRopedText foreground: Color gray.
 			anElement text: aTotalText ].
+	^ tooltipContent
 ]
 
 { #category : #'private - accessing' }

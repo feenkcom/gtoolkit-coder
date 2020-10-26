@@ -279,6 +279,13 @@ GtMethodCoder >> breadcrumbNamedActions [
 					aButton phlow spawnTool: (GtClassCoderTool observedClass: aClass) ] ]
 ]
 
+{ #category : #initialize }
+GtMethodCoder >> browseFrom: anEditorElement [ 
+	((GtCoder forMethod: self compiledMethod)
+		openInPagerFrom: anEditorElement)
+			maximized
+]
+
 { #category : #elements }
 GtMethodCoder >> buildRemoveMethodLabel: anElement [
 	| references element labelText |
@@ -860,6 +867,10 @@ GtMethodCoder >> initializeAddOns [
 		icon: BrGlamorousVectorIcons remove
 		action: [ :anEditorElement | self removeFrom: anEditorElement ]
 		stencil: [ :element | self buildRemoveMethodLabel: element ].
+	addOns
+		addMainAction: 'Browse' translated
+		icon: BrGlamorousVectorIcons browse
+		action: [ :anEditorElement | self browseFrom: anEditorElement ].
 	addOns clearChanges
 ]
 
