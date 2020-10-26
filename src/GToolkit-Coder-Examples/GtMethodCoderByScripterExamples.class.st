@@ -443,7 +443,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 	self 
 		checkFor: aScripter 
 		numberOfMainActions: 3
-		contextAction: 3.
+		contextAction: 4.
 	self checkFor: aScripter existenceOfContextActionNamed: 'Play'.
 	aScripter syncContinue.
 	^ aScripter
