@@ -443,7 +443,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 	self 
 		checkFor: aScripter 
 		numberOfMainActions: 3
-		contextAction: 3.
+		contextAction: 4.
 	self checkFor: aScripter existenceOfContextActionNamed: 'Play'.
 	aScripter syncContinue.
 	^ aScripter
@@ -746,7 +746,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI
 		self 
 			checkFor: aStep
 			numberOfMainActions: 3
-			contextAction: 3.
+			contextAction: 4.
 		self checkFor: aStep existenceOfContextActionNamed: 'Play' ].
 	aScripter checks: 'Check Example Status Is Present' do: [ :aStep | 
 		self checkFor: aStep textExpandAttributeAt: 24.

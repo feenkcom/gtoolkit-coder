@@ -610,7 +610,10 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 							node pragmas
 								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
 						ifNil: [ false ] ] ])
-		ifFalse: [ coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
+		ifFalse: [ 
+			coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
+			coderAddOns removeContextAction: 'Play and Inspect Example Result' translated.
+			coderAddOns removeContextAction: 'Inspect Example Object' translated.
 			^ self ].
 	coderAddOns
 		addStyler:
@@ -624,9 +627,13 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 		icon: BrGlamorousVectorIcons play
 		action: [ :anEditorElement | self playExampleFrom: anEditorElement ].
 	coderAddOns
-		addContextAction: 'Play and Inspect' translated
+		addContextAction: 'Play and Inspect Example Result' translated
 		icon: BrGlamorousVectorIcons playinspect
 		action: [ :anEditorElement | self playAndInspectExampleFrom: anEditorElement ].
+	coderAddOns
+		addContextAction: 'Inspect Example Object' translated
+		icon: BrGlamorousVectorIcons inspect
+		action: [ :anEditorElement | anEditorElement phlow spawnObject: self example ].
 	coderAddOns
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
