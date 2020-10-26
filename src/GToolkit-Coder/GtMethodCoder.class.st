@@ -610,7 +610,10 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 							node pragmas
 								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
 						ifNil: [ false ] ] ])
-		ifFalse: [ coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
+		ifFalse: [ 
+			coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
+			coderAddOns removeContextAction: 'Play and Inspect Example Result' translated.
+			coderAddOns removeContextAction: 'Inspect Example Object' translated.
 			^ self ].
 	coderAddOns
 		addStyler:
