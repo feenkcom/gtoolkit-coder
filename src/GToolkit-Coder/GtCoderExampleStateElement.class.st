@@ -227,7 +227,7 @@ GtCoderExampleStateElement >> spawnExampleFrom: anElement [
 
 { #category : #'private - subscriptions' }
 GtCoderExampleStateElement >> subscribeToExample [
-	self example announcer weak
+	self example announcer
 		when: GtExampleExecuted
 		send: #onExampleExecuted:
 		to: self.
