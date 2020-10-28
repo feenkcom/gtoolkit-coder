@@ -53,3 +53,8 @@ GtCoderPackageExtentionTag >> package: aRPackage [
 	package := aRPackage.
 	self onPackageChange.
 ]
+
+{ #category : #accessing }
+GtCoderPackageExtentionTag >> packageName [
+	^ self package name.
+]

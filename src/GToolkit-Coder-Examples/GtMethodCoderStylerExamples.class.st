@@ -42,7 +42,7 @@ GtMethodCoderStylerExamples >> coderOnViewMethod [
 	
 	selectors := GtSelectorExplanationLinkStyler new coder: coder.
 	selectors addSelectors: 
-		{#gtView . #columnedList . #title: . #items: .#contacts . #fullName . #avatar. #telephone. #allContacts }.
+		{#gtView . #columnedList . #title: . #items: .#contacts . #fullName . #avatar. #telephone. #contacts }.
 	selectors addSelector: #column:icon: withIdentifier: #columns.
 	selectors addSelector: #column:text: withIdentifier: #columns.
 	
@@ -388,7 +388,7 @@ In our case the view consists of a ' asRopedText,
 The columned list has as many rows as the collection returned by the ' asRopedText,
 ('items: block' asRopedText glamorousExplanationFor: #items:),
 '. In this case, this means it shows all the ' asRopedText,
-('contacts list' asRopedText glamorousExplanationFor: #allContacts),
+('contacts list' asRopedText glamorousExplanationFor: #contacts),
 'For each ' asRopedText, 
 ('contact' asRopedText glamorousExplanationFor: #aContact),
 ' it shows the ' asRopedText,
