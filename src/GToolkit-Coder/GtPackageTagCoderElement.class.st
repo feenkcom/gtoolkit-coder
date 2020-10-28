@@ -87,8 +87,9 @@ GtPackageTagCoderElement >> buildParentLink [
 	element
 		addChild:
 			(BrLabel new
-				margin: (BlInsets left: 10);
-				look: BrGlamorousLabelLook new glamorousRegularFont;
+				margin: (BlInsets left: 4);
+				beSmall;
+				look: (BrGlamorousLabelLook new glamorousRegularFont foreground: BrGlamorousColors defaultButtonTextColor);
 				text: 'In: ').
 	element
 		addChild:
@@ -97,6 +98,7 @@ GtPackageTagCoderElement >> buildParentLink [
 					(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
 						+ BrGlamorousLabelLook new glamorousRegularFont;
 				label: packageTagCoder package name;
+				beSmall;
 				action: [
 					| anEvent |
 
