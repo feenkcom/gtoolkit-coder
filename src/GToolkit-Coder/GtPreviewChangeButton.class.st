@@ -28,7 +28,9 @@ GtPreviewChangeButton >> buildDropDownElement [
 				left: 10
 				bottom: 10
 				right: 0);
-		action: changeAction;
+		action: [ :aButtonElement :aButtonModel :anEvent |
+			changeAction cull: aButtonElement cull: aButtonModel cull: anEvent.
+			aButtonElement fireEvent: BrDropdownHideWish new ];
 		yourself.
 	element addChild: unloadButton.
 	^ element
