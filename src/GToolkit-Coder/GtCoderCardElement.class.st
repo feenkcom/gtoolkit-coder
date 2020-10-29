@@ -41,7 +41,7 @@ GtCoderCardElement >> coderNameTextFrom: aString [
 	"Convert a coder's name to a styled text"
 	<return: #BlText>
 	
-	^ aString asRopedText glamorousRegularFont bold
+	^ aString asRopedText glamorousCodeFont bold
 ]
 
 { #category : #'building ui' }
