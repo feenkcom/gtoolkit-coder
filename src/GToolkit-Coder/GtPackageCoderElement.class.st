@@ -31,7 +31,17 @@ GtPackageCoderElement >> buildContentPane [
 	self addChildren: {
 		self buildPackageLabel.
 		self buildParentLink.
-		self buildClassesAndTagsTabs }
+		self buildContentTabs }
+]
+
+{ #category : #'private - ui' }
+GtPackageCoderElement >> buildContentTabs [
+	<return: #BrTabGroup>
+	| contentTabs |
+	contentTabs := GtPhlowCompositeView new
+		views: self packageViewItems;
+		asElementDo: [ :aBrTabGroup | aBrTabGroup ].
+	^ contentTabs
 ]
 
 { #category : #'private - ui' }
@@ -151,6 +161,18 @@ GtPackageCoderElement >> packageCoder: aGtPackageCoder [
 	packageCoder := aGtPackageCoder.
 
 	self buildContentPane
+]
+
+{ #category : #'private - ui' }
+GtPackageCoderElement >> packageViewItems [
+	| collector context |
+	collector := GtPhlowViewsCollector new.
+	collector fromObject: self packageCoder package.
+	collector pragmaName: #gtPackageView.
+	context := GtPhlowContext new.
+	context packageCoder: self packageCoder.
+	collector context: context.
+	^ collector collect
 ]
 
 { #category : #actions }

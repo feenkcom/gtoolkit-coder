@@ -27,6 +27,36 @@ RPackage >> gtClassReferences [
 ]
 
 { #category : #'*GToolkit-Coder' }
+RPackage >> gtDefinedClassesFor: aView context: aPhlowContext [
+	<gtPackageView>
+	(aPhlowContext isKindOf: GtPhlowExecutionContext) ifFalse: [ ^ aView empty ].
+	aPhlowContext hasPackageCoder ifFalse: [ ^ aView empty ].
+	^ aView explicit
+		priority: 10;
+		title: 'Classes';
+		disableAsync;
+		stencil: [ aPhlowContext packageCoder classesCoder asElement ]
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtDefinedTagsFor: aView context: aPhlowContext [
+	<gtPackageView>
+	(aPhlowContext isKindOf: GtPhlowExecutionContext) ifFalse: [ ^ aView empty ].
+	aPhlowContext hasPackageCoder ifFalse: [ ^ aView empty ].
+	^ aView explicit
+		priority: 10.5;
+		title: 'Tags';
+		disableAsync;
+		stencil: [ 
+			BrSimpleList new
+				itemStencil: [ GtPackageTagCardElement new ];
+				itemDataBinder: [ :eachTagCard :eachTagCoder | 
+					eachTagCard coder: eachTagCoder ];
+				items: (aPhlowContext packageCoder packageTagCoders 
+					asSortedCollection: [ :a :b | a name < b name ]) ]
+]
+
+{ #category : #'*GToolkit-Coder' }
 RPackage >> gtDependencies [
 	| all |
 	all := Set new.
