@@ -8,30 +8,21 @@ Class {
 }
 
 { #category : #'private - ui' }
-GtPackageCoderElement >> buildClassesAndTagsTabs [
-	| tabGroup |
-	tabGroup := BrTabGroup new.
-	tabGroup look: BrGlamorousTabGroupLook new.
-	tabGroup constraintsDo: [ :c | 
-		c horizontal matchParent.
-		c vertical matchParent ].
-	tabGroup addTab: (BrTab new
-			 look: BrGlamorousTabLook new;
-			 label: 'Classes';
-			 stencil: [ packageCoder classesCoder asElement ]).
-	tabGroup addTab: (BrTab new
-			 look: BrGlamorousTabLook new;
-			 label: 'Tags';
-			 stencil: [ self buildPackageTagsList ]).
-	^ tabGroup
-]
-
-{ #category : #'private - ui' }
 GtPackageCoderElement >> buildContentPane [
 	self addChildren: {
 		self buildPackageLabel.
 		self buildParentLink.
-		self buildClassesAndTagsTabs }
+		self buildContentTabs }
+]
+
+{ #category : #'private - ui' }
+GtPackageCoderElement >> buildContentTabs [
+	<return: #BrTabGroup>
+	| contentTabs |
+	contentTabs := GtPhlowCompositeView new
+		views: self packageViewItems;
+		asElementDo: [ :aBrTabGroup | aBrTabGroup ].
+	^ contentTabs
 ]
 
 { #category : #'private - ui' }
@@ -96,14 +87,17 @@ GtPackageCoderElement >> buildParentLink [
 
 	aLinkContainer addChild:
 		(BrLabel new
-			margin: (BlInsets left: 10);
-			look: BrGlamorousLabelLook new glamorousRegularFont;
+			margin: (BlInsets left: 4);
+			beSmall;
+			look: (BrGlamorousLabelLook new glamorousRegularFont foreground: BrGlamorousColors defaultButtonTextColor);
 			text: 'In: ').
 
 	aLinkContainer addChild:
 		(BrButton new 
-			look: (BrGlamorousButtonExteriorLook new borderPaint: Color transparent) + BrGlamorousLabelLook new glamorousRegularFont;
+			look: (BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
+				+ BrGlamorousLabelLook new glamorousRegularFont;
 			label: 'Pharo';
+			beSmall;
 			action: [
 				| aCoderToReplace |
 				aCoderToReplace := (GtCoderToReplace new coder: GtPackagesCoder new).
@@ -151,6 +145,18 @@ GtPackageCoderElement >> packageCoder: aGtPackageCoder [
 	packageCoder := aGtPackageCoder.
 
 	self buildContentPane
+]
+
+{ #category : #'private - ui' }
+GtPackageCoderElement >> packageViewItems [
+	| collector context |
+	collector := GtPhlowViewsCollector new.
+	collector fromObject: self packageCoder package.
+	collector pragmaName: #gtPackageView.
+	context := GtPhlowContext new.
+	context packageCoder: self packageCoder.
+	collector context: context.
+	^ collector collect
 ]
 
 { #category : #actions }
