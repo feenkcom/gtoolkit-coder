@@ -8,11 +8,6 @@ Class {
 }
 
 { #category : #'build ui' }
-GtPackageTagCoderElement >> buildClassesList [
-	^ packageTagCoder classesCoder asElement
-]
-
-{ #category : #'build ui' }
 GtPackageTagCoderElement >> buildContentPane [
 	self removeChildren.
 	self addChild: self buildPackageTagLabel.

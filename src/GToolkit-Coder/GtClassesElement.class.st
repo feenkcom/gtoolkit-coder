@@ -13,7 +13,7 @@ GtClassesElement >> buildContainer [
 	self removeChildren.
 
 	aClassList := BrSimpleList new
-		itemStencil: [ GtCoderClassOneLineElement new ];
+		itemStencil: [ GtClassCardElement new ];
 		itemDataBinder: [ :eachClassCard :eachClassCoder | eachClassCard coder: eachClassCoder ];
 		items: (coder coders asSortedCollection: [ :a :b | a theClass name < b theClass name ]).
 

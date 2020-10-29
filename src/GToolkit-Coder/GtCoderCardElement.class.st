@@ -33,7 +33,7 @@ GtCoderCardElement >> coderDetailsTextFrom: aString [
 	"Convert a coder's details to a styled text"
 	<return: #BlText>
 
-	^ aString asRopedText glamorousRegularFont thin foreground: BrGlamorousColors defaultButtonTextColor
+	^ aString asRopedText glamorousRegularFont foreground: BrGlamorousColors defaultButtonTextColor
 ]
 
 { #category : #'private - instance creation' }
