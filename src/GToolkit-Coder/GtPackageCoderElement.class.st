@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'packageCoder'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #'private - ui' }

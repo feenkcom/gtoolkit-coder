@@ -6,7 +6,7 @@ Class {
 		'coderNameLabel',
 		'coderDetailsLabel'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #accessing }

@@ -9,7 +9,7 @@ Class {
 	#superclass : #BlElement,
 	#traits : 'TBrLayoutResizable',
 	#classTraits : 'TBrLayoutResizable classTrait',
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #initialization }

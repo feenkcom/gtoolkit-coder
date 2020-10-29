@@ -35,9 +35,9 @@ GtSourceCoderSpawnDestinationLook >> newSwitchButton [
 ]
 
 { #category : #hooks }
-GtSourceCoderSpawnDestinationLook >> onCoderChanged: aCoder [
+GtSourceCoderSpawnDestinationLook >> onCoderChanged: aGtSourceCoderUIModel [
 	self switchButton 
-		icon: aCoder spawnDestination icon
+		icon: aGtSourceCoderUIModel coder spawnDestination icon
 ]
 
 { #category : #accessing }

@@ -7,7 +7,7 @@ ${example:GtCoderElementExamples>>#contentElementWithClass|previewExpanded|codeE
 Class {
 	#name : #GtCoderContentElement,
 	#superclass : #GtCoderNavigationModelElement,
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #factory }

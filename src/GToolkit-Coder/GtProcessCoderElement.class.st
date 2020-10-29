@@ -1,13 +1,13 @@
 Class {
 	#name : #GtProcessCoderElement,
-	#superclass : #GtCodersElement,
+	#superclass : #GtMethodsCoderElement,
 	#instVars : [
 		'activeCoder',
 		'contextVariablesElement',
 		'watchVariablesElement',
 		'watchExpressions'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #private }
@@ -28,32 +28,6 @@ GtProcessCoderElement >> buildElement [
 	super buildElement.
 	self layout: BlLinearLayout horizontal.
 	self addChild: self variablesElement
-]
-
-{ #category : #ui }
-GtProcessCoderElement >> buildElementForCoder: aMethodCoder [
-	| element |
-	aMethodCoder addOns
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						w;
-						build);
-				action: [ self addWatchExpressionFrom: aMethodCoder ]);
-		addShortcut:
-			(BlShortcut new
-				combination:
-					(BlKeyCombination builder
-						primary;
-						shift;
-						w;
-						build);
-				action: [ self addMethodWatchExpressionFrom: aMethodCoder ]).
-	element := super buildElementForCoder: aMethodCoder.
-	element when: BlFocusInEvent do: [ :event | self focusedCoder: aMethodCoder in: element ].
-	^ element
 ]
 
 { #category : #private }

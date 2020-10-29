@@ -110,11 +110,6 @@ GtClassMethodsCoder >> classesFilter [
 	^ filter
 ]
 
-{ #category : #elements }
-GtClassMethodsCoder >> coderLook [
-	^ GtBehaviorMethodCoderCategoryLook
-]
-
 { #category : #private }
 GtClassMethodsCoder >> combinedFilter [
 	| combined |

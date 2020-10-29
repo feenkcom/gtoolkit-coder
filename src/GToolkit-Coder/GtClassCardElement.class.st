@@ -1,7 +1,7 @@
 Class {
 	#name : #GtClassCardElement,
 	#superclass : #GtCoderCardElement,
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #'building ui' }

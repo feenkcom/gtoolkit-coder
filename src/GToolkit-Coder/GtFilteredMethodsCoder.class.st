@@ -84,11 +84,6 @@ GtFilteredMethodsCoder >> coderFor: aCompiledMethod [
 			aNewCoder ]
 ]
 
-{ #category : #elements }
-GtFilteredMethodsCoder >> coderLook [
-	^ GtMethodCoderCategoryLook
-]
-
 { #category : #private }
 GtFilteredMethodsCoder >> combinedFilter [
 	| combinedFilters |

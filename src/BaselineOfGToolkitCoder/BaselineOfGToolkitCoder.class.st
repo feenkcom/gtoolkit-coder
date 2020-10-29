@@ -40,8 +40,10 @@ BaselineOfGToolkitCoder >> baseline: spec [
 		spec 
 			package: 'GToolkit-Coder' with: [
 				spec requires: #('Brick' 'GToolkitUtility' 'GToolkitPhlow' 'GToolkitPager' ). ];
+			package: 'GToolkit-Coder-UI' with: [
+				spec requires: #('GToolkit-Coder' 'Brick' 'GToolkitUtility' 'GToolkitPhlow' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-Examples-SystemS1';
 			package: 'GToolkit-Coder-Examples' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Examples-SystemS1'). ]. ].
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-Examples-SystemS1'). ]. ].
 
 ]

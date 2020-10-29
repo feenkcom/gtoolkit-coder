@@ -5,7 +5,7 @@ Class {
 		'changeAction',
 		'changeStencil'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #ui }

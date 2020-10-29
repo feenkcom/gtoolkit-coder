@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'navigationModelBlock'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #searching }

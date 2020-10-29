@@ -12,7 +12,7 @@ Class {
 		'playPageElement',
 		'playPage'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #'private - accessing' }

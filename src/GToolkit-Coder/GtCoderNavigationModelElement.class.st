@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'navigationModel'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #'private - asserting' }

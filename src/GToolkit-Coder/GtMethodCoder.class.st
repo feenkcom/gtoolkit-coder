@@ -263,22 +263,6 @@ GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 	coderAddOns addStyler: GtCoderExpandableBaselineStyler new
 ]
 
-{ #category : #elements }
-GtMethodCoder >> breadcrumbNamedActions [
-	^ Array
-		streamContents: [ :aStream | 
-			| aPackage aPackageName aClass |
-			aPackage := (self compiledMethod ifNil: [ self classOrMetaClass ])
-				package.
-			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
-			aClass := self classOrMetaClass.
-			aStream
-				nextPut: aPackageName -> [ :aButton | 
-					aButton phlow spawnTool: (GtPackageCoderTool package: aPackage) ];
-				nextPut: aClass name -> [ :aButton | 
-					aButton phlow spawnTool: (GtClassCoderTool observedClass: aClass) ] ]
-]
-
 { #category : #initialize }
 GtMethodCoder >> browseFrom: anEditorElement [ 
 	((GtCoder forMethod: self compiledMethod)

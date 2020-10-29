@@ -10,7 +10,7 @@ Class {
 	#instVars : [
 		'toolbarElement'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #'gt-extensions' }

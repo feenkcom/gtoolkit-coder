@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'packageTagCoder'
 	],
-	#category : #'GToolkit-Coder-UI'
+	#category : #'GToolkit-Coder-UIOld'
 }
 
 { #category : #'build ui' }

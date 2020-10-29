@@ -6,7 +6,7 @@ Class {
 
 { #category : #elements }
 GtMethodsCoder >> elementClass [
-	^ GtCodersElement
+	^ GtMethodsCoderElement
 ]
 
 { #category : #accessing }
