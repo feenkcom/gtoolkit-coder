@@ -6,3 +6,13 @@ GtSourceCoder >> breadcrumbActions [
 
 	^ #()
 ]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtSourceCoder >> defaultCoderLook [
+	^ [ GtSourceCoderHeaderLook ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtSourceCoder >> withHeader [
+	self coderLook: [ GtSourceCoderHeaderLook ]
+]

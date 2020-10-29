@@ -247,11 +247,6 @@ GtSourceCoder >> debugSource: aString from: anEditorElement [
 		ifNotNil: [ self debug: method receiver: currentReceiver in: currentContext ]
 ]
 
-{ #category : #initialize }
-GtSourceCoder >> defaultCoderLook [
-	^ [ GtSourceCoderHeaderLook ]
-]
-
 { #category : #private }
 GtSourceCoder >> defaultTextAttributes [
 	^ {(BlFontFamilyAttribute named: 'Source Code Pro') beNotOverwritableByStyler.
@@ -1172,11 +1167,6 @@ GtSourceCoder >> variableNodeInString: aString ifFound: aFoundBlock ifNone: aNon
 			node := node parent ].
 
 	^ aNoneBlock value
-]
-
-{ #category : #elements }
-GtSourceCoder >> withHeader [
-	self coderLook: [ GtSourceCoderHeaderLook ]
 ]
 
 { #category : #elements }

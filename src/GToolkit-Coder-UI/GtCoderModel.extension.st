@@ -13,6 +13,15 @@ GtCoderModel >> asElement [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+GtCoderModel >> asExpandedOnlyElement [
+	"Create an element for just the expanded coder without expander"
+
+	^ GtExpandedOnlyCoderElement new
+		coder: self;
+		yourself
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 GtCoderModel >> coderLook [
 	<return: #BrLook>
 
@@ -22,6 +31,11 @@ GtCoderModel >> coderLook [
 { #category : #'*GToolkit-Coder-UI' }
 GtCoderModel >> coderLook: aLookOrBlock [
 	self attributeNamed: #coderLook put: aLookOrBlock
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtCoderModel >> defaultCoderLook [
+	^ nil
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

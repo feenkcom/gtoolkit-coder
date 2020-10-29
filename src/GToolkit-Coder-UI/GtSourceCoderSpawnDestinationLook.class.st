@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'switchButton'
 	],
-	#category : #'GToolkit-Coder-Direction'
+	#category : #'GToolkit-Coder-UI-Coder - Source Look'
 }
 
 { #category : #initialization }

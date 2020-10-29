@@ -56,15 +56,6 @@ GtCoderModel >> announcer [
 	^ announcer
 ]
 
-{ #category : #elements }
-GtCoderModel >> asExpandedOnlyElement [
-	"Create an element for just the expanded coder without expander"
-
-	^ GtExpandedOnlyCoderElement new
-		coder: self;
-		yourself
-]
-
 { #category : #'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol [
 	^ attributes notNil
@@ -123,11 +114,6 @@ GtCoderModel >> contextMenuActions [
 	<return: #Collection of: #GtCoderAction>
 
 	^ self addOns contextMenuActions
-]
-
-{ #category : #initialization }
-GtCoderModel >> defaultCoderLook [
-	^ nil
 ]
 
 { #category : #accessing }
