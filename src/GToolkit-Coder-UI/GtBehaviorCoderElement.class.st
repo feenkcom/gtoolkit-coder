@@ -49,7 +49,7 @@ GtBehaviorCoderElement >> buildClassLabel [
 			glamorousCodeFont;
 			bold;
 			fontSize: 18);
-		inputFilter: BrTextEditorAlphaNumericInputFilter new;
+		inputFilter: BrTextEditorClassNameInputFilter new;
 		text: (classCoder name);
 		margin: (BlInsets all: 0);
 		whenKey: BlKeyCombination primaryN
