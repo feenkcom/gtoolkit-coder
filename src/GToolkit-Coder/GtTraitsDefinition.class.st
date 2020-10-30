@@ -70,11 +70,6 @@ GtTraitsDefinition >> doesTraitExist: aTraitName [
 		ifAbsent: [ false ]
 ]
 
-{ #category : #'gt - editors' }
-GtTraitsDefinition >> editors [
-	^ { self traitsEditor }
-]
-
 { #category : #'private - errors' }
 GtTraitsDefinition >> errorTraitAlreadyAdded: aSymbol [ 
 	"Create an error notification that there is already a trait with a given name"
@@ -109,19 +104,6 @@ GtTraitsDefinition >> fromClass: aClass [
 { #category : #initialization }
 GtTraitsDefinition >> fromTrait: aTrait [
 	definitions := aTrait traitComposition traits collect: [ :eachTrait | (GtTraitDefinition fromTrait: eachTrait) parent: self ]
-]
-
-{ #category : #'gt-extension' }
-GtTraitsDefinition >> gtTraitsFor: aView [
-	<gtView>
-	
-	definitions
-		ifEmpty: [ ^ aView empty ].
-	
-	^ aView list
-		title: 'Traits';
-		priority: 1;
-		items: [ definitions ]
 ]
 
 { #category : #'private - notifying' }
@@ -185,30 +167,4 @@ GtTraitsDefinition >> traitNamed: aSymbol [
 	^ self
 		definitionNamed: aSymbol
 		ifNone: [ self errorTraitNotFound: aSymbol ]
-]
-
-{ #category : #'gt - editors' }
-GtTraitsDefinition >> traitsEditor [
-	<return: #GtCodeDefinitionViewer>
-	
-	^ GtCodeDefinitionPluralEditor new
-		definition: self;
-		title: 'Traits';
-		addSelector: #addTraitNamed:;
-		removeSelector: #removeTraitNamed:;
-		renameSelector: #renameTraitNamed:to:;
-		getSelector: #names;
-		modelSelector: #traitNamed:;
-		addEvent: GtBehaviorTraitAdded;
-		removeEvent: GtBehaviorTraitRemoved;
-		renameEvent: GtBehaviorTraitRenamed;
-		separator: [
-			BrLabel new
-				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
-				text: '+' ];
-		completion: [ GtTraitsCompletionStrategy new ];
-		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-		whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
-			Clipboard clipboardText: aDefinition name asString ];
-		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

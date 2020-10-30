@@ -49,11 +49,6 @@ GtCodersModel >> canFilter [
 	^ false
 ]
 
-{ #category : #elements }
-GtCodersModel >> coderLook [
-	^ nil
-]
-
 { #category : #accessing }
 GtCodersModel >> coders [
 	^ coders

@@ -56,22 +56,6 @@ GtCoderModel >> announcer [
 	^ announcer
 ]
 
-{ #category : #elements }
-GtCoderModel >> asElement [
-	^ self elementClass new
-		coder: self;
-		yourself
-]
-
-{ #category : #elements }
-GtCoderModel >> asExpandedOnlyElement [
-	"Create an element for just the expanded coder without expander"
-
-	^ GtExpandedOnlyCoderElement new
-		coder: self;
-		yourself
-]
-
 { #category : #'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol [
 	^ attributes notNil
@@ -102,23 +86,6 @@ GtCoderModel >> attributes [
 	^ attributes ifNil: [ attributes := IdentityDictionary new ]
 ]
 
-{ #category : #elements }
-GtCoderModel >> breadcrumbNamedActions [
-	^ #()
-]
-
-{ #category : #elements }
-GtCoderModel >> coderLook [
-	<return: #BrLook>
-
-	^ (self attributeNamed: #coderLook ifAbsent: [ nil ]) value
-]
-
-{ #category : #elements }
-GtCoderModel >> coderLook: aLookOrBlock [
-	self attributeNamed: #coderLook put: aLookOrBlock
-]
-
 { #category : #accessing }
 GtCoderModel >> coders [
 	^ self attributeNamed: #coders
@@ -147,16 +114,6 @@ GtCoderModel >> contextMenuActions [
 	<return: #Collection of: #GtCoderAction>
 
 	^ self addOns contextMenuActions
-]
-
-{ #category : #initialization }
-GtCoderModel >> defaultCoderLook [
-	^ nil
-]
-
-{ #category : #elements }
-GtCoderModel >> elementClass [
-	^ GtExpandableCoderElement
 ]
 
 { #category : #accessing }

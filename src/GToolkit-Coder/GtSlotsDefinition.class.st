@@ -69,11 +69,6 @@ GtSlotsDefinition >> differenceWith: aGtSlotsDefinition [
 	^ theDifference
 ]
 
-{ #category : #'gt - editors' }
-GtSlotsDefinition >> editors [
-	^ { self slotsEditor }
-]
-
 { #category : #'private - errors' }
 GtSlotsDefinition >> errorSlotAlreadyExists: aSymbol [ 
 	"Create an error notification that there is already a slot with a given name"
@@ -96,21 +91,6 @@ GtSlotsDefinition >> fromClass: aClass [
 { #category : #initialization }
 GtSlotsDefinition >> fromTrait: aTrait [
 	definitions := aTrait localSlots collect: [ :eachSlot | (GtSlotDefinition fromSlot: eachSlot) parent: self ]
-]
-
-{ #category : #'gt-extension' }
-GtSlotsDefinition >> gtSlotsFor: aView [
-	<gtView>
-	
-	self isEmpty
-		ifTrue: [ ^ aView empty ].
-
-	^ aView columnedList
-		title: 'Slots';
-		priority: 1;
-		items: [ definitions ];
-		column: 'Name' item: [ :eachSlot | eachSlot name ];
-		column: 'Type' item: [ :eachSlot | eachSlot type ]
 ]
 
 { #category : #'private - notifying' }
@@ -174,32 +154,6 @@ GtSlotsDefinition >> slotNamed: aSymbol [
 	^ self
 		definitionNamed: aSymbol 
 		ifNone: [ self errorSlotNotFound: aSymbol ]
-]
-
-{ #category : #'gt - editors' }
-GtSlotsDefinition >> slotsEditor [
-	<return: #GtCodeDefinitionViewer>
-	
-	^ GtCodeDefinitionPluralEditor new
-		title: self title;
-		definition: self;
-		addSelector: #addSlotNamed:;
-		removeSelector: #removeSlotNamed:;
-		renameSelector: #renameSlotNamed:to:;
-		getSelector: #names;
-		modelSelector: #slotNamed:;
-		addEvent: GtBehaviorSlotAdded;
-		removeEvent: GtBehaviorSlotRemoved;
-		renameEvent: GtBehaviorSlotRenamed;
-		whenKey: BlKeyCombination primaryG
-			do: [ :anEvent :aDefinition | aDefinition inspectFrom: anEvent ];
-		whenKey: BlKeyCombination primaryB
-			do: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ];
-		whenKey: BlKeyCombination primaryN
-			do: [ :anEvent :aDefinition | aDefinition browseReferencesFrom: anEvent ];
-		whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
-			Clipboard clipboardText: aDefinition name asString ];
-		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
 
 { #category : #'gt - editors' }

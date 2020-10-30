@@ -28,11 +28,6 @@ GtPackagesCoder >> coderForPackage: aPackage [
 			coder ]
 ]
 
-{ #category : #elements }
-GtPackagesCoder >> elementClass [
-	^ GtPackagesCoderElement
-]
-
 { #category : #comparing }
 GtPackagesCoder >> hash [
 	^ self class hash

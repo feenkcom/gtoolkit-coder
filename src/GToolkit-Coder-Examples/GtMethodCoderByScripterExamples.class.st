@@ -103,7 +103,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtCoderBreadcrumbElement;
+			onChildOfClass: GtSourceCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Breadcrumb Class Name';
@@ -111,7 +111,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtCoderBreadcrumbElement;
+			onChildOfClass: GtSourceCoderBreadcrumbElement;
 			onChildAt: 3.
 		].
 	aScripter syncContinue.
@@ -129,7 +129,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtCoderBreadcrumbElement;
+			onChildOfClass: GtSourceCoderBreadcrumbElement;
 			onChildAt: 3.
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
@@ -155,7 +155,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtCoderBreadcrumbElement;
+			onChildOfClass: GtSourceCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
@@ -304,14 +304,14 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMai
 			childrenCount: aMainActionsCount;
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderExpandedContentElement;
-			onChildOfClass: GtCoderActionsElement;
+			onChildOfClass: GtSourceCoderActionsElement;
 			onChildAt: 1.
 		aStep check 
 			label: 'Number of addons actions';
 			childrenCount: anAddonsActionsCount;
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderExpandedContentElement;
-			onChildOfClass: GtCoderActionsElement;
+			onChildOfClass: GtSourceCoderActionsElement;
 			onChildAt: 3.
 		].
 	^ aScripter

@@ -122,20 +122,6 @@ GtClassDefinition >> differenceWith: aClassDefinition [
 	^ aDifference
 ]
 
-{ #category : #'gt - viewers' }
-GtClassDefinition >> editors [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-	
-	^ { 
-		self superclass superclassEditor.
-		self category categoryEditor.
-	 	self traits traitsEditor.
-		self slots slotsEditor.
-		self classVariables classVariablesEditor.
-		self pools poolsEditor
-	}
-]
-
 { #category : #testing }
 GtClassDefinition >> exists [
 	^ Smalltalk globals includesKey: self name asSymbol
@@ -183,28 +169,6 @@ GtClassDefinition >> fromClass: aClass [
 	pools := (GtPoolsDefinition fromClass: aClass) parent: self
 ]
 
-{ #category : #'gt-extension' }
-GtClassDefinition >> gtSlotsFor: aView [
-	<gtView>
-
-	^ aView forward
-		title: 'Slots';
-		priority: 2;
-		object: [ slots ];
-		view: #gtSlotsFor:
-]
-
-{ #category : #'gt-extension' }
-GtClassDefinition >> gtTraitsFor: aView [
-	<gtView>
-
-	^ aView forward
-		title: 'Traits';
-		priority: 3;
-		object: [ traits ];
-		view: #gtTraitsFor:
-]
-
 { #category : #testing }
 GtClassDefinition >> isValidForCreation [
 	self name asSymbol = self defaultNewClassName
@@ -239,16 +203,6 @@ GtClassDefinition >> pools [
 	<return: #GtPoolsDefinition>
 	
 	^ pools
-]
-
-{ #category : #'gt - viewers' }
-GtClassDefinition >> readers [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-	
-	^ { 
-		self superclass superclassReader.
-		self category categoryReader.
-	}
 ]
 
 { #category : #accessing }

@@ -21,11 +21,6 @@ GtProcessCoder class >> forProcess: aProcess [
 		yourself
 ]
 
-{ #category : #elements }
-GtProcessCoder >> elementClass [
-	^ GtProcessCoderElement
-]
-
 { #category : #'initialize-release' }
 GtProcessCoder >> forDebugSession: aDebugSession [
 	session := aDebugSession.

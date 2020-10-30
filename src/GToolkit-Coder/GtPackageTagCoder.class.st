@@ -18,16 +18,6 @@ GtPackageTagCoder class >> forPackageTag: aPackageTag [
 		yourself
 ]
 
-{ #category : #converting }
-GtPackageTagCoder >> asCardElement [
-	^ GtPackageTagCardElement new coder: self
-]
-
-{ #category : #element }
-GtPackageTagCoder >> asElement [
-	^ GtPackageTagCoderElement new packageTagCoder: self
-]
-
 { #category : #asserting }
 GtPackageTagCoder >> assertCoder: aCoder [
 	self 

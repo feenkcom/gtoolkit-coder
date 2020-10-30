@@ -64,11 +64,6 @@ GtPoolsDefinition >> doesPoolExist: aPoolName [
 		ifAbsent: [ false ]
 ]
 
-{ #category : #'gt - editors' }
-GtPoolsDefinition >> editors [
-	^ { self poolsEditor }
-]
-
 { #category : #'private - errors' }
 GtPoolsDefinition >> errorPoolAlreadyAdded: aSymbol [ 
 	"Create an error notification that there is already a pool with a given name"
@@ -125,32 +120,6 @@ GtPoolsDefinition >> poolNamed: aSymbol [
 	^ self
 		definitionNamed: aSymbol 
 		ifNone: [ self errorPoolNotFound: aSymbol ]
-]
-
-{ #category : #'gt - editors' }
-GtPoolsDefinition >> poolsEditor [
-	<return: #GtCodeDefinitionViewer>
-	
-	^ GtCodeDefinitionPluralEditor new
-		definition: self;
-		title: 'Pools';
-		addSelector: #addPoolNamed:;
-		removeSelector: #removePoolNamed:;
-		renameSelector: #renamePoolNamed:to:;
-		getSelector: #names;
-		modelSelector: #poolNamed:;
-		addEvent: GtBehaviorPoolAdded;
-		removeEvent: GtBehaviorPoolRemoved;
-		renameEvent: GtBehaviorPoolRenamed;
-		separator: [
-			BrLabel new
-				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
-				text: '+' ];
-		completion: [ GtPoolsCompletionStrategy new ];
-		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-		whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
-			Clipboard clipboardText: aDefinition name asString ];
-		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]
 
 { #category : #'api - pools' }

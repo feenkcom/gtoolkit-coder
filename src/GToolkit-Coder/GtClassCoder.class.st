@@ -25,18 +25,6 @@ GtClassCoder class >> forObject: anObject [
 		yourself
 ]
 
-{ #category : #elements }
-GtClassCoder >> asCardElement [
-	^ GtClassCardElement new coder: self
-]
-
-{ #category : #elements }
-GtClassCoder >> asElement [
-	| coderElement |
-	coderElement := GtBehaviorCoderElement new classCoder: self.
-	^ coderElement
-]
-
 { #category : #'api - initialization' }
 GtClassCoder >> forClass: aClass [
 	hasObject := false.

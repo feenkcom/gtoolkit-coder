@@ -56,12 +56,6 @@ GtFullClassDefinition >> differenceWith: aGtCodeDefinition [
 		yourself
 ]
 
-{ #category : #'gt - viewers' }
-GtFullClassDefinition >> editors [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-	^ instanceSideDefinition editors , { classSideDefinition slots slotsEditor }
-]
-
 { #category : #'instance creation' }
 GtFullClassDefinition >> fromClass: aClass [
 	name := aClass name.
@@ -73,9 +67,4 @@ GtFullClassDefinition >> fromClass: aClass [
 { #category : #accessing }
 GtFullClassDefinition >> instanceSideDefinition [
 	^ instanceSideDefinition
-]
-
-{ #category : #'gt - viewers' }
-GtFullClassDefinition >> readers [
-	^ instanceSideDefinition readers
 ]

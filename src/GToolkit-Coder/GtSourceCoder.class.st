@@ -66,14 +66,6 @@ GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position whenCom
 ]
 
 { #category : #'api - actions' }
-GtSourceCoder >> browseClassFrom: anEditorElement [
-	self
-		pharoBehaviorInSelectionOrAtCursorInEditor: anEditorElement editor
-		ifFound: [ :aBehavior | anEditorElement phlow spawnTool: (GtClassCoderTool observedClass: aBehavior) ]
-		ifNone: [  ]
-]
-
-{ #category : #'api - actions' }
 GtSourceCoder >> browseImplementorsFrom: anEditorElement [
 	| symbol |
 
@@ -245,11 +237,6 @@ GtSourceCoder >> debugSource: aString from: anEditorElement [
 
 	method
 		ifNotNil: [ self debug: method receiver: currentReceiver in: currentContext ]
-]
-
-{ #category : #initialize }
-GtSourceCoder >> defaultCoderLook [
-	^ [ GtSourceCoderHeaderLook ]
 ]
 
 { #category : #private }
@@ -1172,11 +1159,6 @@ GtSourceCoder >> variableNodeInString: aString ifFound: aFoundBlock ifNone: aNon
 			node := node parent ].
 
 	^ aNoneBlock value
-]
-
-{ #category : #elements }
-GtSourceCoder >> withHeader [
-	self coderLook: [ GtSourceCoderHeaderLook ]
 ]
 
 { #category : #elements }

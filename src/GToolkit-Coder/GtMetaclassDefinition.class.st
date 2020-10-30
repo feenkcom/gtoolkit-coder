@@ -68,16 +68,6 @@ GtMetaclassDefinition >> differenceWith: aMetaclassDefinition [
 	^ aDifference
 ]
 
-{ #category : #'gt - viewers' }
-GtMetaclassDefinition >> editors [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-	
-	^ { 
-		self category categoryEditor.
-		self slots slotsEditor.
-	}
-]
-
 { #category : #initialization }
 GtMetaclassDefinition >> fromMetaclass: aMetaclass [
 	"Initialize me from a given real Metaclass"
@@ -92,15 +82,6 @@ GtMetaclassDefinition >> fromMetaclass: aMetaclass [
 { #category : #testing }
 GtMetaclassDefinition >> isForMetaclass [
 	^ true
-]
-
-{ #category : #'gt - viewers' }
-GtMetaclassDefinition >> readers [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-	
-	^ { 
-		self category categoryReader.
-	}
 ]
 
 { #category : #accessing }

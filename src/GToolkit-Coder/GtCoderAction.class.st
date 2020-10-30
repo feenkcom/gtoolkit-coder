@@ -19,22 +19,9 @@ GtCoderAction >> action: anObject [
 	action := anObject
 ]
 
-{ #category : #ui }
-GtCoderAction >> buildElementIn: aCoderActionsElement [
-	^ aCoderActionsElement newButtonForAction: self
-]
-
 { #category : #evaluating }
 GtCoderAction >> glamourValueWithArgs: aSequenceOfArguments [
 	^ self action glamourValueWithArgs: aSequenceOfArguments
-]
-
-{ #category : #ui }
-GtCoderAction >> gtViewActionSourceCodeFor: aView [
-	<gtView>
-	^ self action 
-		ifNil: [ aView ]
-		ifNotNil: [ self action gtSourceCodeFor: aView ]
 ]
 
 { #category : #accessing }

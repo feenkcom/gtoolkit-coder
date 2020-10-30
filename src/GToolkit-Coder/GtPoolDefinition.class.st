@@ -17,13 +17,6 @@ GtPoolDefinition >> asDefinitionString [
 	^ self name
 ]
 
-{ #category : #'api - pool' }
-GtPoolDefinition >> browseFrom: anEvent [
-	self class environment
-		at: self name
-		ifPresent: [ :aPool | anEvent currentTarget phlow spawnTool: (GtClassCoderTool observedClass: aPool) ]
-]
-
 { #category : #testing }
 GtPoolDefinition >> exists [
 	^ Smalltalk globals includesKey: self name asSymbol

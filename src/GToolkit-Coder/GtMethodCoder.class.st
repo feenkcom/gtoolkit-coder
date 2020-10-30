@@ -252,40 +252,6 @@ GtMethodCoder >> addRemoveParameterRefactoringFor: aNode to: coderAddOns [
 		action: [ :element | self removeParameter: aNode ]
 ]
 
-{ #category : #'api - addons' }
-GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 10>
-	(anAST isNil or: [ anAST methodNode isNil ])
-		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
-			^ self ].
-	(class isNil or: [ (class inheritsFrom: BaselineOf) not ])
-		ifTrue: [ ^ self ].
-	coderAddOns addStyler: GtCoderExpandableBaselineStyler new
-]
-
-{ #category : #elements }
-GtMethodCoder >> breadcrumbNamedActions [
-	^ Array
-		streamContents: [ :aStream | 
-			| aPackage aPackageName aClass |
-			aPackage := (self compiledMethod ifNil: [ self classOrMetaClass ])
-				package.
-			aPackageName := aPackage ifNil: [ '' ] ifNotNil: #name.
-			aClass := self classOrMetaClass.
-			aStream
-				nextPut: aPackageName -> [ :aButton | 
-					aButton phlow spawnTool: (GtPackageCoderTool package: aPackage) ];
-				nextPut: aClass name -> [ :aButton | 
-					aButton phlow spawnTool: (GtClassCoderTool observedClass: aClass) ] ]
-]
-
-{ #category : #initialize }
-GtMethodCoder >> browseFrom: anEditorElement [ 
-	((GtCoder forMethod: self compiledMethod)
-		openInPagerFrom: anEditorElement)
-			maximized
-]
-
 { #category : #elements }
 GtMethodCoder >> buildRemoveMethodLabel: anElement [
 	| references element labelText |
@@ -600,58 +566,10 @@ GtMethodCoder >> example: anExampleWithResult [
 		when: GtExampleArgumentsChanged send: #handleExampleArgumentsChanged: to: self
 ]
 
-{ #category : #'api - addons' }
-GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 10>
-	(self compiledMethod notNil
-		and: [ anAST notNil
-				and: [ anAST methodNode
-						ifNotNil: [ :node | 
-							node pragmas
-								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
-						ifNil: [ false ] ] ])
-		ifFalse: [ 
-			coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
-			coderAddOns removeContextAction: 'Play and Inspect Example Result' translated.
-			coderAddOns removeContextAction: 'Inspect Example Object' translated.
-			^ self ].
-	coderAddOns
-		addStyler:
-			(GtCoderExampleStatusStyler new
-				coder: self;
-				classOrMetaClass: self classOrMetaClass).
-	(self canExecuteExample or: [ anAST methodNode numArgs isZero ])
-		ifFalse: [ ^ self ].
-	coderAddOns
-		addContextAction: 'Play' translated
-		icon: BrGlamorousVectorIcons play
-		action: [ :anEditorElement | self playExampleFrom: anEditorElement ].
-	coderAddOns
-		addContextAction: 'Play and Inspect Example Result' translated
-		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self playAndInspectExampleFrom: anEditorElement ].
-	coderAddOns
-		addContextAction: 'Inspect Example Object' translated
-		icon: BrGlamorousVectorIcons inspect
-		action: [ :anEditorElement | anEditorElement phlow spawnObject: self example ].
-	coderAddOns
-		addContextAction: 'Debug' translated
-		icon: BrGlamorousVectorIcons debug
-		action: [ :anEditorElement | self debugSelectionOrExampleFrom: anEditorElement ]
-]
-
 { #category : #'api - actions examples' }
 GtMethodCoder >> exampleResult [
 	<return: #GtExampleResult or: nil>
 	^ self example ifNotNil: #result
-]
-
-{ #category : #accessing }
-GtMethodCoder >> explanationFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 10>
-	coderAddOns removeStylerOfType: GtSourceExplanationLinkStyler.
-	self explanationLink notNil
-		ifTrue: [ coderAddOns addStyler: self explanationLink ].
 ]
 
 { #category : #accessing }
@@ -773,26 +691,6 @@ GtMethodCoder >> gtLiveFor: aView [
 		stencil: [ self expanded: true ]
 ]
 
-{ #category : #'gt-extensions' }
-GtMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 6>
-	(self hasObjectAttribute
-		and: [ anAST notNil
-				and: [ anAST methodNode
-						ifNotNil: [ :node | 
-							node arguments size = 1
-								and: [ node pragmas
-										anySatisfy:
-											[ :each | each isParseError not and: [ each selector = #gtView ] ] ] ]
-						ifNil: [ false ] ] ])
-		ifFalse: [ coderAddOns removeContextAction: 'gtView' translated.
-			^ self ].
-	coderAddOns
-		addContextAction: 'gtView' translated
-		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self runGtViewFrom: anEditorElement ]
-]
-
 { #category : #private }
 GtMethodCoder >> handleCompilerErrorsDuring: aBlock [
 	^ [ aBlock value.
@@ -850,35 +748,6 @@ GtMethodCoder >> highlighter: aGtSourceReferenceHighlighter [
 
 	self requestUpdateAddOns.
 	self requestStyleSourceText
-]
-
-{ #category : #'api - addons' }
-GtMethodCoder >> highlighterFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 10>
-	coderAddOns removeStylerOfType: GtSourceReferenceHighlighter.
-	self highlighter notNil
-		ifTrue: [ coderAddOns addStyler: self highlighter ]
-]
-
-{ #category : #initialize }
-GtMethodCoder >> initializeAddOns [
-	super initializeAddOns.
-	"addOns addStyler: GtCoderCommentStyler new."
-	addOns addStyler: (GtFixItStyler new sourceCoder: self).
-	addOns
-		addMainAction: 'Save' translated
-		icon: BrGlamorousVectorIcons accept
-		action: [ :anEditorElement | self saveFrom: anEditorElement ].
-	addOns
-		addDropDownWithPreviewAction: 'Remove' translated
-		icon: BrGlamorousVectorIcons remove
-		action: [ :anEditorElement | self removeFrom: anEditorElement ]
-		stencil: [ :element | self buildRemoveMethodLabel: element ].
-	addOns
-		addMainAction: 'Browse' translated
-		icon: BrGlamorousVectorIcons browse
-		action: [ :anEditorElement | self browseFrom: anEditorElement ].
-	addOns clearChanges
 ]
 
 { #category : #initialize }
@@ -1051,43 +920,6 @@ GtMethodCoder >> methodChanged: aMethodModified [
 			and: [ aMethodModified selector = aCompiledMethod selector ]])
 				ifFalse: [ ^ self ].
 	self forMethod: aMethodModified newMethod
-]
-
-{ #category : #'api - addons' }
-GtMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 10>
-	(anAST isNil or: [ anAST methodNode isNil ])
-		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
-			^ self ].
-	coderAddOns addStyler: GtCoderExpandableMethodStyler new
-]
-
-{ #category : #'api - addons' }
-GtMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 1>
-	self isModified
-		ifTrue: [
-			coderAddOns
-				addMainAction: 'Discard Changes' translated
-				icon: BrGlamorousVectorIcons cancel
-				action: [ :anEditorElement | self discardChangesFrom: anEditorElement ] ]
-		ifFalse: [ coderAddOns removeMainAction: 'Discard Changes' translated ]
-]
-
-{ #category : #'api - addons' }
-GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 7>
-	(self hasObjectAttribute
-		and: [ anAST notNil
-				and: [ anAST methodNode
-						ifNotNil: [ :node | self isMondrianPaintMethod: node ]
-						ifNil: [ false ] ] ])
-		ifFalse: [ coderAddOns removeContextAction: 'Mondrian' translated.
-			^ self ].
-	coderAddOns
-		addContextAction: 'Mondrian' translated
-		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self runMondrianPaintFrom: anEditorElement ]
 ]
 
 { #category : #'api - refactorings' }
