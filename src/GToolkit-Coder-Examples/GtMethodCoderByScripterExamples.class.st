@@ -368,7 +368,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExampleStatusAt
 	self 
 		checkFor: aScripterOrStep 
 		textAttributesAt: anIndex 
-		anySatisfies: [ :aTextAttribute | aTextAttribute class = GtExampleStatusAttribute ].
+		anySatisfies: [ :aTextAttribute | aTextAttribute class = GtCoderExampleStatusAttribute ].
 	^ aScripterOrStep
 ]
 
@@ -726,7 +726,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI
 		self 
 			checkFor: aStep 
 			textAttributesAt: 1 
-			nonSatisfies: [ :aTextAttribute | aTextAttribute class = GtExampleStatusAttribute ] ].
+			nonSatisfies: [ :aTextAttribute | aTextAttribute class = GtCoderExampleStatusAttribute ] ].
 	aScripter syncContinue.
 	^ aScripter
 ]

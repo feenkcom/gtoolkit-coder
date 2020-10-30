@@ -1,44 +1,44 @@
 Class {
-	#name : #GtExampleStatusAttribute,
+	#name : #GtCoderExampleStatusAttribute,
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
 		'example'
 	],
-	#category : #'GToolkit-Coder-AddOns-Example'
+	#category : #'GToolkit-Coder-AddOns-Example status'
 }
 
 { #category : #'instance creation' }
-GtExampleStatusAttribute class >> forExample: anExampleWithResult [
+GtCoderExampleStatusAttribute class >> forExample: anExampleWithResult [
 	^ self new
 		example: anExampleWithResult;
 		yourself
 ]
 
 { #category : #accessing }
-GtExampleStatusAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
+GtCoderExampleStatusAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	^ { GtCoderExampleStateElement new 
 			example: self example;
 			margin: (BlInsets top: 1 left: 2 bottom: 1 right: 1) }.
 ]
 
 { #category : #accessing }
-GtExampleStatusAttribute >> example [
+GtCoderExampleStatusAttribute >> example [
 	<return: #GtExampleWithResult or: nil>
 	^ example
 ]
 
 { #category : #accessing }
-GtExampleStatusAttribute >> example: aGtExampleWithResult [
+GtCoderExampleStatusAttribute >> example: aGtExampleWithResult [
 	example := aGtExampleWithResult asExampleWithResult.
 ]
 
 { #category : #'initialize-release' }
-GtExampleStatusAttribute >> initialize [
+GtCoderExampleStatusAttribute >> initialize [
 	super initialize.
 	self beAppend
 ]
 
 { #category : #accessing }
-GtExampleStatusAttribute >> result [
+GtCoderExampleStatusAttribute >> result [
 	^ self example ifNotNil: #result
 ]

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'coder'
 	],
-	#category : #'GToolkit-Coder-AddOns-Example'
+	#category : #'GToolkit-Coder-AddOns-Example status'
 }
 
 { #category : #'method coder styler' }
@@ -34,5 +34,5 @@ GtCoderExampleStatusStyler >> style: aText ast: ast [
 	super style: aText ast: ast.
 	keywordIntervals := ast keywordsIntervals.
 	(aText from: keywordIntervals first last to: keywordIntervals first last) 
-		attributes: {(GtExampleStatusAttribute forExample: coder example)}
+		attributes: {(GtCoderExampleStatusAttribute forExample: coder example)}
 ]

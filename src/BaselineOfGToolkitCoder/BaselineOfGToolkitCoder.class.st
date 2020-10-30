@@ -45,9 +45,9 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			package: 'GToolkit-Coder-AddOns' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI'). ];
 			package: 'GToolkit-Coder-Extensions' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-Stylers'). ];
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns'). ];
 			package: 'GToolkit-Coder-Examples-SystemS1';
 			package: 'GToolkit-Coder-Examples' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-Stylers' 'GToolkit-Coder-Examples-SystemS1'). ]. ].
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Examples-SystemS1'). ]. ].
 
 ]
