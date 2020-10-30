@@ -4,7 +4,7 @@ I contain examples for working with destinations in a pharo code snippet.
 Class {
 	#name : #GtCoderElementForSnippetsWithDestinationExamples,
 	#superclass : #GtCoderExamples,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Basic'
 }
 
 { #category : #'examples - setup' }

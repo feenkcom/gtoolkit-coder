@@ -377,14 +377,6 @@ GtSourceCoder >> evaluationRequesterForEditor: anEditorElement [
 ]
 
 { #category : #private }
-GtSourceCoder >> expandedUpdated [
-	super expandedUpdated.
-	self requestStyleSourceText.
-	self expanded
-		ifFalse: [ self requestUpdateCollapsedText ]
-]
-
-{ #category : #private }
 GtSourceCoder >> extractReferencesFilterFromString: selectedString [
 	| node |
 	node := GtPharoParser 

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtStylerExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Basic'
 }
 
 { #category : #examples }

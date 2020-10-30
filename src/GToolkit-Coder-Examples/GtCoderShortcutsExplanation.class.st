@@ -21,5 +21,5 @@ ${example:GtPlaygroundPharoSnippetExamples>>#pharoSnippet|previewShow=#gtKeybind
 Class {
 	#name : #GtCoderShortcutsExplanation,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Basic'
 }

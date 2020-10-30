@@ -63,3 +63,12 @@ GtSourceCoderContentElement >> initialize [
 		BrLayoutHorizontalResizerModel matchParent.
 		BrLayoutVerticalResizerModel fitContentLimited }))
 ]
+
+{ #category : #accessing }
+GtSourceCoderContentElement >> saveCoderUIModel: aCoderUIModel [
+	self
+		assert: [ aCoderUIModel isNotNil ]
+		description: [ 'Coder must not be nil' ].
+	
+	self dispatchEvent: (GtCoderSaveUIModelWish new coderUIModel: aCoderUIModel)
+]

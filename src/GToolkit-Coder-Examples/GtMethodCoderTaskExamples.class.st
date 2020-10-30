@@ -1,7 +1,7 @@
 Class {
 	#name : #GtMethodCoderTaskExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Basic'
 }
 
 { #category : #private }

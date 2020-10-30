@@ -634,7 +634,7 @@ GtMethodCoder >> gtLiveFor: aView [
 		disableAsync;
 		title: 'Live';
 		priority: 10;
-		stencil: [ self expanded: true ]
+		stencil: [ self ]
 ]
 
 { #category : #private }

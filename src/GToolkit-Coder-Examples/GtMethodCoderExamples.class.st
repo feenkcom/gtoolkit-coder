@@ -35,11 +35,9 @@ GtMethodCoderExamples >> elementForThisMethodCoder [
 	
 	self assert: (aCoderElement isKindOf: GtExpandableCoderElement).
 
-	self assert: aCoder expanded not.
 	self assert: aCoderElement isExpanded not.
 	aCoderElement expand.
 
-	self assert: aCoder expanded.
 	self assert: aCoderElement isExpanded.
 	
 	^ aCoderElement
@@ -235,8 +233,9 @@ GtMethodCoderExamples >> nodeAtCursor [
 	| coder element editorElement node |
 	coder := GtMethodCoder
 		forMethod: self class >> #sampleMethodWithCascades.
-	coder expanded: true.
+
 	element := coder asElement.
+	element expand.
 	element
 		allChildrenBreadthFirstDetect: [ :each | each isKindOf: BrEditor ]
 		ifFound: [ :each | editorElement := each ].

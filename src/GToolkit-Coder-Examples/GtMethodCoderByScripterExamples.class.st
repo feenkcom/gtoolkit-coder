@@ -1,7 +1,7 @@
 Class {
 	#name : #GtMethodCoderByScripterExamples,
 	#superclass : #GtCoderExamples,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Basic'
 }
 
 { #category : #'sample methods' }

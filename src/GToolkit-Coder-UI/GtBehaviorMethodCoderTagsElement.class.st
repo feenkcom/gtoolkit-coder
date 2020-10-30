@@ -13,19 +13,19 @@ GtBehaviorMethodCoderTagsElement >> buildTags [
 ]
 
 { #category : #private }
-GtBehaviorMethodCoderTagsElement >> classTagStringFor: aMethodCoder [
+GtBehaviorMethodCoderTagsElement >> classTagStringFor: aMethodCoderUIModel [
 	<return: #String>
 
-	^ aMethodCoder classOrMetaClass isMeta
+	^ aMethodCoderUIModel coder classOrMetaClass isMeta
 		ifTrue: [ 'class' ]
 		ifFalse: [ 'instance' ]
 ]
 
 { #category : #accessing }
-GtBehaviorMethodCoderTagsElement >> coder: aMethodCoder [
-	super coder: aMethodCoder.
+GtBehaviorMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
+	super methodCoderUIModel: aMethodCoderUIModel.
 
-	classTag text: (self classTagStringFor: aMethodCoder)
+	classTag text: (self classTagStringFor: aMethodCoderUIModel)
 ]
 
 { #category : #'instance creation' }
@@ -52,16 +52,16 @@ GtBehaviorMethodCoderTagsElement >> newEditableClassTag [
 		when: BrEditorModeWish
 			do: [ :wish | 				
 			(wish mode isEditable
-				and: [ self coder canMoveMethodToInstanceOrClass not ])
+				and: [ self methodCoderUIModel coder canMoveMethodToInstanceOrClass not ])
 				ifTrue: [ editor beReadOnlyWithoutSelection.
 					wish mode: BrTextEditorReadonlyWithoutSelectionMode new ] ];
 		when: BrEditorAcceptWish
 			do: [ :wish | 
-			(self coder classOrMetaClass isMeta
+			(self methodCoderUIModel coder classOrMetaClass isMeta
 				ifTrue: [ wish text asString asLowercase = 'instance' ]
 				ifFalse: [ wish text asString asLowercase = 'class' ])
-				ifTrue: [ self coder moveMethodToInstanceOrClass ].
-			editor text: (self classTagStringFor: self coder).
+				ifTrue: [ self methodCoderUIModel coder moveMethodToInstanceOrClass ].
+			editor text: (self classTagStringFor: self methodCoderUIModel coder).
 			wish consumed: true ];
 		whenKey: BlKeyCombination primaryC
 			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderTagsElement | 

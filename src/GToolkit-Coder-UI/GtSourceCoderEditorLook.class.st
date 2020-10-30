@@ -51,6 +51,13 @@ GtSourceCoderEditorLook >> initialize [
 	self add: (BrLayoutResizerLook new inherit: editorElement)
 ]
 
+{ #category : #initialization }
+GtSourceCoderEditorLook >> initializeListeners [
+	super initializeListeners.
+	
+	self when: GtCoderSaveUIModelWish do: [ :anEvent | self onSaveSourceCoderUIModel: anEvent coderUIModel ]
+]
+
 { #category : #'instance creation' }
 GtSourceCoderEditorLook >> newActionsElement [
 	^ GtSourceCoderActionsElement new
@@ -69,23 +76,27 @@ GtSourceCoderEditorLook >> newEditorElement [
 
 { #category : #hooks }
 GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
-	sourceCoderUIModel ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
-	completion ifNotNil: [ :aPreviousCompletion | aPreviousCompletion uninstall ].
+	sourceCoderUIModel
+		ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
+	completion
+		ifNotNil: [ :aPreviousCompletion | aPreviousCompletion uninstall ].
+
 	self editorElement editor removeEditorShortcuts: interactions.
 
 	sourceCoderUIModel := aGtSourceCoderUIModel.
-	
 	actions coder: aGtSourceCoderUIModel coder.
-	
-	aGtSourceCoderUIModel editorState
-		ifNotNil: [ :anEditorState | self editorElement editor restoreState: anEditorState ].
 
-	interactions := aGtSourceCoderUIModel coder shortcuts copy.
+	aGtSourceCoderUIModel editorState
+		ifNotNil: [ :anEditorState | self editorElement editor restoreState: anEditorState ]
+		ifNil: [ self editorElement editor restoreState: BrTextEditorMemento default ].
 	
+	interactions := aGtSourceCoderUIModel coder shortcuts copy.
+
 	self editorElement text: aGtSourceCoderUIModel coder sourceText.
 	self editorElement editor addEditorShortcuts: interactions.
-
-	completion := (GtCompletionController on: self editorElement strategy: aGtSourceCoderUIModel coder completionStrategy).
+	completion := GtCompletionController
+		on: self editorElement
+		strategy: aGtSourceCoderUIModel coder completionStrategy.
 	completion install.
 
 	(aGtSourceCoderUIModel coder newSourceStylerFrom: self editorElement)
@@ -95,7 +106,16 @@ GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 		when: GtCoderStylerChanged send: #stylersUpdated: to: self;
 		when: GtCoderStyleTextRequest send: #styleTextEvent: to: self;
 		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged to: self;
-		when: GtCoderParseError send: #reportParseError: to: self
+		when: GtCoderParseError send: #reportParseError: to: self.
+
+	aGtSourceCoderUIModel focused
+		ifTrue: [ self editorElement requestFocus ]
+]
+
+{ #category : #hooks }
+GtSourceCoderEditorLook >> onSaveSourceCoderUIModel: aGtSourceCoderUIModel [
+	aGtSourceCoderUIModel editorState: self editorElement editor saveState.
+	aGtSourceCoderUIModel hasFocus: self editorElement hasFocus
 ]
 
 { #category : #hooks }

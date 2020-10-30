@@ -47,7 +47,7 @@ GtProcessCoderElement >> contextVariables [
 { #category : #ui }
 GtProcessCoderElement >> contextVariablesElement [
 	contextVariablesElement := self variablesListElement.
-	contextVariablesElement display: self contextVariables.
+	contextVariablesElement items: self contextVariables.
 	^ contextVariablesElement
 ]
 
@@ -163,7 +163,7 @@ GtProcessCoderElement >> watchVariables [
 { #category : #ui }
 GtProcessCoderElement >> watchVariablesElement [
 	watchVariablesElement := self variablesListElement.
-	watchVariablesElement display: self watchVariables.
+	watchVariablesElement items: self watchVariables.
 	^ watchVariablesElement
 ]
 

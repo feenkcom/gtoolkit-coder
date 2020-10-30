@@ -61,9 +61,7 @@ GtProcessCoder >> updateCoders [
 						to: self.
 					newCoders add: coder.
 					context := context sender ].
-			coders addAllFirst: newCoders.
-			coders notEmpty
-				ifTrue: [ coders first expanded: true ] ]
+			coders addAllFirst: newCoders ]
 		ifFalse: [ coders := OrderedCollection new ].
 	self
 		announce:

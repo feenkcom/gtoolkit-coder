@@ -28,6 +28,16 @@ Class {
 }
 
 { #category : #accessing }
+GtBehaviorCoderDummyClass >> computeSurfaceArea [
+	"Compute and return a surface area of the rectangle"
+	<return: #Number>
+	| aRectangle |
+
+	aRectangle := Rectangle origin: 20@30 extent: 40@50.
+	^ aRectangle width * aRectangle height
+]
+
+{ #category : #accessing }
 GtBehaviorCoderDummyClass >> instVarA [
 	^ instVarA
 ]

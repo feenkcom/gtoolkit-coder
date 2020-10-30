@@ -118,9 +118,7 @@ GtBlockCoder >> initialize [
 	bindingStrategy := GtHighlightingBindingStrategy new.
 	bindingStrategy bindings: Dictionary new.
 
-	super initialize.
-
-	expanded := true
+	super initialize
 ]
 
 { #category : #'initialize-release' }

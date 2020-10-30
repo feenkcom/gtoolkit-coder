@@ -3,7 +3,8 @@ Class {
 	#superclass : #BlElement,
 	#instVars : [
 		'coders',
-		'listElement'
+		'listElement',
+		'codersUIModel'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Methods'
 }
@@ -53,17 +54,15 @@ GtMethodsCoderElement >> coders [
 { #category : #accessing }
 GtMethodsCoderElement >> coders: aCoders [
 	coders := aCoders.
+	
+	codersUIModel := GtCodersUIModel new coders: aCoders.
+
 	self buildElement.
 	coders announcer weak
 		when: GtCodersCoderAdded , GtCodersCoderRemoved , GtCodersCodersChanged
 			send: #updateList
 			to: self;
 		when: GtCodersScrollToCoder send: #scrollToEvent: to: self
-]
-
-{ #category : #'private - instance creation' }
-GtMethodsCoderElement >> createUIModelsFor: aGtMethodsCoder [
-	^ aGtMethodsCoder coders collect: [ :eachMethodCoder | eachMethodCoder asCoderUIModel ]
 ]
 
 { #category : #ui }
@@ -76,7 +75,8 @@ GtMethodsCoderElement >> listElement [
 		itemType: [ :itemTypeFactory :eachCoderUIModel | eachCoderUIModel coder elementClass ];
 		itemStencil: [ :anElementClass | anElementClass new ];
 		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ];
-		items: (self createUIModelsFor: coders);
+		itemDataUnbinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement saveCoderUIModel: eachCoderUIModel ];
+		items: codersUIModel coderUIModels;
 		yourself.
 
 	^ listElement
@@ -118,5 +118,8 @@ GtMethodsCoderElement >> updateDisplayedFilters: filterElement [
 
 { #category : #'private - updating' }
 GtMethodsCoderElement >> updateList [
-	self listElement items: (self createUIModelsFor: coders)
+	codersUIModel
+		ifNil: [ ^ self ].
+	codersUIModel updateCoderUIModels.
+	self listElement items: codersUIModel coderUIModels
 ]

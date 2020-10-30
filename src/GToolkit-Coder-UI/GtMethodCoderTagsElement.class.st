@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'protocolTag',
 		'isEditable',
-		'coder'
+		'methodCoderUIModel'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Method'
 }
@@ -21,19 +21,22 @@ GtMethodCoderTagsElement >> buildTags [
 
 { #category : #accessing }
 GtMethodCoderTagsElement >> coder [
-	^ coder
+	<return: #GtMethodCoderUIModel>
+	
+	self 
+		deprecated: 'Use #methodCoderUIModel instead.'
+		transformWith: '`@receiver coder' -> '`@receiver methodCoderUIModel'.
+		
+	^ self methodCoderUIModel
 ]
 
 { #category : #accessing }
-GtMethodCoderTagsElement >> coder: aMethodCoder [
-	(coder isNil or: [ isEditable ~= aMethodCoder expanded ])
-		ifTrue: [
-			isEditable := aMethodCoder expanded.
-			self initializeTags ].
-
-	coder := aMethodCoder.
-
-	protocolTag text: (self protocolStringFor: aMethodCoder)
+GtMethodCoderTagsElement >> coder: aMethodCoderUIModel [
+	self 
+		deprecated: 'Use #methodCoderUIModel: instead.'
+		transformWith: '`@receiver coder: `@arg' -> '`@receiver methodCoderUIModel: `@arg'.
+		
+	self methodCoderUIModel: aMethodCoderUIModel
 ]
 
 { #category : #initialization }
@@ -57,6 +60,27 @@ GtMethodCoderTagsElement >> initializeTags [
 	self addChildren: self buildTags
 ]
 
+{ #category : #accessing }
+GtMethodCoderTagsElement >> methodCoderUIModel [
+	^ methodCoderUIModel
+]
+
+{ #category : #accessing }
+GtMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
+	self
+		assert: [ aMethodCoderUIModel isKindOf: GtMethodCoderUIModel ]
+		description: [ 'Must be method coder''s UI Model' ].
+
+	(methodCoderUIModel isNil or: [ isEditable ~= aMethodCoderUIModel expanded ])
+		ifTrue: [
+			isEditable := aMethodCoderUIModel expanded.
+			self initializeTags ].
+
+	methodCoderUIModel := aMethodCoderUIModel.
+
+	protocolTag text: (self protocolStringFor: aMethodCoderUIModel)
+]
+
 { #category : #'instance creation' }
 GtMethodCoderTagsElement >> newEditableProtocolTag [
 	| editor |
@@ -70,8 +94,8 @@ GtMethodCoderTagsElement >> newEditableProtocolTag [
 		padding: (BlInsets all: 2);
 		when: BrEditorAcceptWish
 			do: [ :aWish | 
-				self coder ifNotNil: [ :aCoder | 
-					aCoder renameProtocol: aWish text asString ] ];
+				self methodCoderUIModel
+					ifNotNil: [ :aMethodCoderUIModel | aMethodCoderUIModel coder renameProtocol: aWish text asString ] ];
 		whenKey: BlKeyCombination primaryC
 			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderTagsElement | 
 				Clipboard clipboardText: aTextEditor text asString ]
@@ -110,8 +134,8 @@ GtMethodCoderTagsElement >> newTag [
 ]
 
 { #category : #private }
-GtMethodCoderTagsElement >> protocolStringFor: aMethodCoder [
+GtMethodCoderTagsElement >> protocolStringFor: aMethodCoderUIModel [
 	<return: #String>
 
-	^ aMethodCoder category
+	^ aMethodCoderUIModel coder category
 ]

@@ -1,5 +1,5 @@
 Class {
 	#name : #GtMethodCoderActionExamples,
 	#superclass : #GtMethodCoderTaskExamples,
-	#category : #'GToolkit-Coder-Examples'
+	#category : #'GToolkit-Coder-Examples-Basic'
 }
