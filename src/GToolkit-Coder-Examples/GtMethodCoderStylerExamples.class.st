@@ -286,7 +286,7 @@ GtMethodCoderStylerExamples >> printStringReference [
 
 { #category : #accessing }
 GtMethodCoderStylerExamples >> unlineAttributeClass [
-	^ BlTextUnderlineAttribute
+	^ BlTextDecorationAttribute
 ]
 
 { #category : #'as yet unclassified' }
