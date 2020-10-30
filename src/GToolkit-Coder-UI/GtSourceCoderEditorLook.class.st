@@ -71,13 +71,15 @@ GtSourceCoderEditorLook >> newEditorElement [
 GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 	sourceCoderUIModel ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
 	completion ifNotNil: [ :aPreviousCompletion | aPreviousCompletion uninstall ].
-	
 	self editorElement editor removeEditorShortcuts: interactions.
 
 	sourceCoderUIModel := aGtSourceCoderUIModel.
 	
 	actions coder: aGtSourceCoderUIModel coder.
 	
+	aGtSourceCoderUIModel editorState
+		ifNotNil: [ :anEditorState | self editorElement editor restoreState: anEditorState ].
+
 	interactions := aGtSourceCoderUIModel coder shortcuts copy.
 	
 	self editorElement text: aGtSourceCoderUIModel coder sourceText.

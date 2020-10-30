@@ -27,16 +27,6 @@ GtPackageCoder >> addMissingPackageTag: aPackageTag [
 	^ aCoder
 ]
 
-{ #category : #elements }
-GtPackageCoder >> asCardElement [
-	^ GtPackageCardElement new coder: self
-]
-
-{ #category : #elements }
-GtPackageCoder >> asElement [
-	^ GtPackageCoderElement new packageCoder: self
-]
-
 { #category : #accessing }
 GtPackageCoder >> classesCoder [
 	^ classesCoder
@@ -54,17 +44,6 @@ GtPackageCoder >> coderForClass: aClass [
 { #category : #accessing }
 GtPackageCoder >> coders [
 	^ self classesCoder coders
-]
-
-{ #category : #ui }
-GtPackageCoder >> gtLiveFor: aView [
-	<gtView>
-	^ aView explicit
-		title: 'Package';
-		priority: 1;
-		stencil: [ self ];
-		actionButtonIcon: BrGlamorousVectorIcons inspect
-			action: [ :aButton | aButton phlow spawnTool: (GtPackageCoderTool package: self package) ]
 ]
 
 { #category : #accessing }

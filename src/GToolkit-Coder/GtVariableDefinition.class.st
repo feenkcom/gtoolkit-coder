@@ -24,31 +24,11 @@ GtVariableDefinition >> asDefinitionString [
 	^ self name printString
 ]
 
-{ #category : #'api - variable' }
-GtVariableDefinition >> browseFrom: anEvent [
-	anEvent currentTarget phlow spawnObject: self
-]
-
-{ #category : #'api - variable' }
-GtVariableDefinition >> browseReferencesFrom: anEvent [
-	parent classOrMetaClass
-		ifNotNil: [ :class | 
-			(class bindingOf: self originalName)
-				ifNotNil: [ :binding |
-					anEvent currentTarget phlow
-						spawnObject: (GtSearchReferencesFilter literal: binding) ] ]
-]
-
 { #category : #initialization }
 GtVariableDefinition >> fromClassVariable: aClassVariable [
 	name := aClassVariable name asSymbol.
 	originalName := name.
 	value := aClassVariable value
-]
-
-{ #category : #'api - variable' }
-GtVariableDefinition >> inspectFrom: anEvent [
-	anEvent currentTarget phlow spawnObject: self value
 ]
 
 { #category : #testing }

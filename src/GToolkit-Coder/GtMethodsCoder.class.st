@@ -4,11 +4,6 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #elements }
-GtMethodsCoder >> elementClass [
-	^ GtMethodsCoderElement
-]
-
 { #category : #accessing }
 GtMethodsCoder >> exampler [
 	^ GtMethodsCoderExampler new

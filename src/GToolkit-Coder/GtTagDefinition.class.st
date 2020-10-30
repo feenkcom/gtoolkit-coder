@@ -30,26 +30,6 @@ GtTagDefinition >> asDefinitionString [
 	^ self name
 ]
 
-{ #category : #'api - package' }
-GtTagDefinition >> browseFrom: anEvent [
-	| aRealPackage |
-
-	aRealPackage := RPackageOrganizer default
-		packageNamed: self parent category package name
-		ifAbsent: [ ^ self ].
-
-	aRealPackage
-		classTagNamed: self name
-		ifPresent: [ :aTag |
-			| aPackageTagCoder aCoderEvent |
-			aPackageTagCoder := (GtPackageTagCoder forPackageTag: aTag)
-				packageCoder: (GtPackageCoder forPackage: aRealPackage).
-			aCoderEvent := GtCoderToSpawn new coder: aPackageTagCoder.
-			anEvent currentTarget fireEvent: aCoderEvent.
-			aCoderEvent isConsumed
-				ifFalse: [ anEvent currentTarget phlow spawnTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
-]
-
 { #category : #'api - accepting' }
 GtTagDefinition >> differenceWith: aTagDefinition [
 	<return: #GtCodeDefinitionDifference>
@@ -59,11 +39,6 @@ GtTagDefinition >> differenceWith: aTagDefinition [
 		ifFalse: [ GtTagDefinitionDifference new
 			oldName: aTagDefinition name;
 			newName: self name ]
-]
-
-{ #category : #'gt - editors' }
-GtTagDefinition >> editors [
-	^ { self tagEditor }
 ]
 
 { #category : #initialization }
@@ -142,49 +117,4 @@ GtTagDefinition >> printOn: aStream [
 { #category : #'gt - editors' }
 GtTagDefinition >> readers [
 	^ { self tagReader }
-]
-
-{ #category : #'api - package' }
-GtTagDefinition >> replaceFrom: anEvent [
-	| aRealPackage |
-
-	aRealPackage := RPackageOrganizer default
-		packageNamed: self parent category package name
-		ifAbsent: [ ^ self ].
-
-	aRealPackage
-		classTagNamed: self name
-		ifPresent: [ :aTag |
-			| aPackageTagCoder aCoderEvent |
-			aPackageTagCoder := (GtPackageTagCoder forPackageTag: aTag)
-				packageCoder: (GtPackageCoder forPackage: aRealPackage).
-			aCoderEvent := GtCoderToReplace new coder: aPackageTagCoder.
-			anEvent currentTarget fireEvent: aCoderEvent.
-			aCoderEvent isConsumed
-				ifFalse: [ anEvent currentTarget phlow spawnTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
-]
-
-{ #category : #'gt - editors' }
-GtTagDefinition >> tagEditor [
-	^ GtCodeDefinitionSingleEditor new
-		title: 'Tag';
-		definition: self;
-		getSelector: #name;
-		setSelector: #name:;
-		renameEvent: GtBehaviorTagRenamed;
-		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-		whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
-			Clipboard clipboardText: aDefinition name asString ];
-		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
-]
-
-{ #category : #'gt - editors' }
-GtTagDefinition >> tagReader [
-	^ GtCodeDefinitionSingleReader new
-		title: 'Tag';
-		definition: self;
-		getSelector: #name;
-		renameEvent: GtBehaviorTagRenamed;
-		whenClickDo: [ :anEvent :aDefinition | aDefinition replaceFrom: anEvent ];
-		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
 ]

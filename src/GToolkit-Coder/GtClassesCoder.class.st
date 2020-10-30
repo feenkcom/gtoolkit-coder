@@ -15,11 +15,6 @@ GtClassesCoder >> coderForClass: aClass [
 			coder ]
 ]
 
-{ #category : #elements }
-GtClassesCoder >> elementClass [
-	^ GtClassesElement
-]
-
 { #category : #updating }
 GtClassesCoder >> forPackage: aPackage [
 	items := aPackage definedClasses

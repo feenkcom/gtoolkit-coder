@@ -31,36 +31,6 @@ GtCodeDefinition >> dispatchEvent: anEvent [
 	parent notNil ifTrue: [ parent dispatchEvent: anEvent ]
 ]
 
-{ #category : #'gt - viewers' }
-GtCodeDefinition >> editors [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-	
-	^ #()
-]
-
-{ #category : #'gt-extension' }
-GtCodeDefinition >> gtDefinitionFor: aView [
-	<gtView>
-
-	^ aView textEditor
-		title: 'Definition';
-		priority: 1;
-		text: [ self asDefinitionString ]
-]
-
-{ #category : #'gt-extension' }
-GtCodeDefinition >> gtEditorsFor: aView [
-	<gtView>
-	
-	self editors
-		ifEmpty: [ ^ aView empty ].
-	
-	^ aView list
-		title: 'Editors';
-		priority: 8;
-		items: [ self editors ]
-]
-
 { #category : #testing }
 GtCodeDefinition >> hasParent [
 	<return: #Boolean>
@@ -76,13 +46,6 @@ GtCodeDefinition >> parent [
 { #category : #accessing }
 GtCodeDefinition >> parent: anObject [
 	parent := anObject
-]
-
-{ #category : #'gt - viewers' }
-GtCodeDefinition >> readers [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-	
-	^ #()
 ]
 
 { #category : #'announcer - subscription' }

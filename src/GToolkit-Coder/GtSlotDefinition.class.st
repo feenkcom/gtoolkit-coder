@@ -31,22 +31,6 @@ GtSlotDefinition >> asDefinitionString [
 					print: self type ] ]
 ]
 
-{ #category : #'api - slot' }
-GtSlotDefinition >> browseFrom: anEvent [
-	anEvent currentTarget phlow spawnObject: self
-]
-
-{ #category : #'api - slot' }
-GtSlotDefinition >> browseReferencesFrom: anEvent [
-	parent classOrMetaClass
-		ifNotNil: [ :class | 
-			anEvent currentTarget phlow
-				spawnObject:
-					(GtSearchInstanceVariableReferenceFilter
-						forClassAndSubclasses: class
-						andVariable: self name) ]
-]
-
 { #category : #initialization }
 GtSlotDefinition >> defaultSlotType [
 	^ InstanceVariableSlot name
@@ -69,13 +53,6 @@ GtSlotDefinition >> initialize [
 	super initialize.
 	
 	
-]
-
-{ #category : #'api - slot' }
-GtSlotDefinition >> inspectFrom: anEvent [
-	parent isForMetaclass
-		ifFalse: [ ^ self ].
-	anEvent currentTarget phlow spawnObject: self value
 ]
 
 { #category : #testing }

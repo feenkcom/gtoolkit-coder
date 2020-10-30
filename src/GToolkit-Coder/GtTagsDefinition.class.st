@@ -24,11 +24,6 @@ GtTagsDefinition >> addTagNamed: aSymbolOrString [
 	self notifyTagAdded: aTagDefinition
 ]
 
-{ #category : #'gt - editors' }
-GtTagsDefinition >> editors [
-	^ { self tagsEditor }
-]
-
 { #category : #'private - errors' }
 GtTagsDefinition >> errorTagAlreadyAdded: aSymbol [ 
 	"Create an error notification that there is already a tag with a given name"
@@ -60,19 +55,6 @@ GtTagsDefinition >> fromBehavior: aBehavior [
 	definitions := ((aTagsString splitOn: '-')
 		collect: [ :eachPart | eachPart trimBoth ]
 		thenSelect: [ :eachPart | eachPart isNotEmpty ]) collect: [ :eachTagName | GtTagDefinition named: eachTagName ]
-]
-
-{ #category : #'gt-extension' }
-GtTagsDefinition >> gtTagsFor: aView [
-	<gtView>
-	
-	self isEmpty
-		ifTrue: [ ^ aView empty ].
-	
-	^ aView list
-		title: 'Tags';
-		priority: 1;
-		items: [ definitions ]
 ]
 
 { #category : #'private - notifying' }
@@ -133,24 +115,4 @@ GtTagsDefinition >> tagNamed: aSymbol [
 	^ self
 		definitionNamed: aSymbol 
 		ifNone: [ self errorTagNotFound: aSymbol ]
-]
-
-{ #category : #'gt - editors' }
-GtTagsDefinition >> tagsEditor [
-	<return: #GtCodeDefinitionViewer>
-	
-	^ GtCodeDefinitionPluralEditor new
-		title: 'Tags';
-		definition: self;
-		addSelector: #addTagNamed:;
-		removeSelector: #removeTagNamed:;
-		renameSelector: #renameTagNamed:to:;
-		getSelector: #names;
-		addEvent: GtBehaviorTagAdded;
-		removeEvent: GtBehaviorTagRemoved;
-		renameEvent: GtBehaviorTagRenamed;
-		separator: [
-			BrLabel new
-				look: (BrGlamorousLabelLook new glamorousCodeFontAndSmallSize foreground: BrGlamorousColors defaultButtonTextColor );
-				text: ',' ]
 ]

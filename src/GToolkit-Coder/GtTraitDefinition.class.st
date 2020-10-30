@@ -49,13 +49,6 @@ GtTraitDefinition >> asDefinitionString [
 	^ aStream contents
 ]
 
-{ #category : #'api - trait' }
-GtTraitDefinition >> browseFrom: anEvent [
-	self class environment
-		at: self name
-		ifPresent: [ :aTrait | anEvent currentTarget phlow spawnTool: (GtClassCoderTool observedClass: aTrait) ]
-]
-
 { #category : #accessing }
 GtTraitDefinition >> category [
 	<return: #GtCategoryDefinition>
@@ -103,17 +96,6 @@ GtTraitDefinition >> differenceWith: aTraitDefinition [
 	^ aDifference
 ]
 
-{ #category : #'gt - editors' }
-GtTraitDefinition >> editors [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-
-	^ { 
-		self category categoryEditor.
-		self traits traitsEditor.
-		self slots slotsEditor.
-	}
-]
-
 { #category : #testing }
 GtTraitDefinition >> exists [
 	^ Smalltalk globals includesKey: self name asSymbol
@@ -139,28 +121,6 @@ GtTraitDefinition >> fromTrait: aTrait [
 	traits := (GtTraitsDefinition fromTrait: aTrait) parent: self
 ]
 
-{ #category : #'gt-extension' }
-GtTraitDefinition >> gtSlotsFor: aView [
-	<gtView>
-
-	^ aView forward
-		title: 'Slots';
-		priority: 2;
-		object: [ slots ];
-		view: #gtSlotsFor:
-]
-
-{ #category : #'gt-extension' }
-GtTraitDefinition >> gtTraitsFor: aView [
-	<gtView>
-
-	^ aView forward
-		title: 'Traits';
-		priority: 3;
-		object: [ traits ];
-		view: #gtTraitsFor:
-]
-
 { #category : #testing }
 GtTraitDefinition >> hasSlotNamed: aString [
 	(slots all anySatisfy: [ :each | each name = aString asSymbol ])
@@ -180,15 +140,6 @@ GtTraitDefinition >> isValidForCreation [
 		allSatisfy: [ :each | 
 			each isValidName
 				and: [ traits all noneSatisfy: [ :trait | trait hasSlotNamed: each name ] ] ]
-]
-
-{ #category : #'gt - editors' }
-GtTraitDefinition >> readers [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-
-	^ { 
-		self category categoryReader.
-	}
 ]
 
 { #category : #accessing }

@@ -25,28 +25,6 @@ GtClassSuperclassDefinition >> asDefinitionString [
 ]
 
 { #category : #'api - superclass' }
-GtClassSuperclassDefinition >> browseFrom: anEvent [
-	self class environment
-		at: self name
-		ifPresent: [ :aClass |
-			| aCoderEvent aClassCoder |
-
-			aClassCoder := GtClassCoder forClass: aClass.
-			aCoderEvent := GtCoderToSpawn new coder: aClassCoder.
-			anEvent currentTarget fireEvent: aCoderEvent.
-			aCoderEvent isConsumed
-				ifFalse: [ anEvent currentTarget phlow spawnTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
-]
-
-{ #category : #'api - superclass' }
-GtClassSuperclassDefinition >> browseReferencesFrom: anEvent [
-	self class environment
-		at: self name
-		ifPresent:
-			[ :class | anEvent currentTarget phlow spawnObject: class gtReferences ]
-]
-
-{ #category : #'api - superclass' }
 GtClassSuperclassDefinition >> canBeSuperclass: anObject [
 	^ anObject isClass and: [ anObject isMeta not ]
 ]
@@ -67,11 +45,6 @@ GtClassSuperclassDefinition >> doesClassExist: aClassName [
 	<return: #Boolean>
 
 	^ self class environment includesKey: aClassName
-]
-
-{ #category : #'gt - editors' }
-GtClassSuperclassDefinition >> editors [
-	^ { self superclassEditor }
 ]
 
 { #category : #'private - errors' }
@@ -173,56 +146,4 @@ GtClassSuperclassDefinition >> notifySuperclassRenamed: aGtClassSuperclassDefini
 { #category : #printing }
 GtClassSuperclassDefinition >> printOn: aStream [
 	aStream print: self name
-]
-
-{ #category : #'gt - editors' }
-GtClassSuperclassDefinition >> readers [
-	^ { self superclassReader }
-]
-
-{ #category : #'api - superclass' }
-GtClassSuperclassDefinition >> replaceFrom: anEvent [
-	self class environment
-		at: self name
-		ifPresent: [ :aClass |
-			| aCoderEvent aClassCoder |
-			aClassCoder := GtClassCoder forClass: aClass.
-			aCoderEvent := GtCoderToReplace new coder: aClassCoder.
-			anEvent currentTarget fireEvent: aCoderEvent.
-			aCoderEvent isConsumed ifFalse: [ 
-				anEvent currentTarget phlow spawnTool: (GtReadyCoderTool coder: aCoderEvent coder) ] ]
-]
-
-{ #category : #'gt - editors' }
-GtClassSuperclassDefinition >> superclassEditor [
-	<return: #GtCodeDefinitionViewer>
-	
-	^ GtCodeDefinitionSingleEditor new
-			definition: self;
-			title: 'Superclass';
-			getSelector: #name;
-			setSelector: #name:;
-			renameEvent: GtBehaviorSuperclassRenamed;
-			completion: [ GtClassesCompletionStrategy new ];
-			whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | 
-				aDefinition browseFrom: anEvent ];
-			whenKey: BlKeyCombination primaryN do: [ :anEvent :aDefinition  | 
-				aDefinition browseReferencesFrom: anEvent ];
-			whenPrimaryClickDo: [ :anEvent :aDefinition | 
-				aDefinition browseFrom: anEvent ];
-			whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
-				Clipboard clipboardText: aDefinition name asString ]
-]
-
-{ #category : #'gt - editors' }
-GtClassSuperclassDefinition >> superclassReader [
-	<return: #GtCodeDefinitionViewer>
-	
-	^ GtCodeDefinitionSingleReader new
-			definition: self;
-			title: 'Superclass';
-			getSelector: #name;
-			renameEvent: GtBehaviorSuperclassRenamed;
-			whenPrimaryClickDo: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
-			whenClickDo: [ :anEvent :aDefinition | aDefinition replaceFrom: anEvent ]
 ]

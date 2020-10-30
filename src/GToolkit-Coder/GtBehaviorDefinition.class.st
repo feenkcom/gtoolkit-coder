@@ -77,19 +77,6 @@ GtBehaviorDefinition >> name: aSymbol [
 		to: name
 ]
 
-{ #category : #'gt - viewers' }
-GtBehaviorDefinition >> nameEditor [
-	<return: #GtCodeDefinitionViewer>
-	
-	^ GtCodeDefinitionSingleEditor new
-		definition: self;
-		title: 'Name';
-		getSelector: #name;
-		setSelector: #name:;
-		renameEvent: GtBehaviorRenamed;
-		completion: [ GtClassesCompletionStrategy new ]
-]
-
 { #category : #'private - notifying' }
 GtBehaviorDefinition >> notifyBehaviorRenamed: aBehaviorDefinition from: anOldName to: aNewName [
 	self dispatchEvent: (GtBehaviorRenamed new

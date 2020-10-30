@@ -31,24 +31,6 @@ GtCategoryDefinition >> asDefinitionString [
 			aStream nextPutAll: aTag ] ]
 ]
 
-{ #category : #'gt - editors' }
-GtCategoryDefinition >> categoryEditor [
-	<return: #GtCodeDefinitionViewer>
-	
-	^ GtCodeDefinitionCompositeEntityViewer withAll: {
-		self package packageEditor.
-		self tag tagEditor }
-]
-
-{ #category : #'gt - editors' }
-GtCategoryDefinition >> categoryReader [
-	<return: #GtCodeDefinitionViewer>
-	
-	^ GtCodeDefinitionCompositeEntityViewer withAll: {
-		self package packageReader.
-		self tag tagReader }
-]
-
 { #category : #'api - accepting' }
 GtCategoryDefinition >> createPackageChange [
 	^ tag name notEmpty
@@ -73,11 +55,6 @@ GtCategoryDefinition >> differenceWith: aCategoryDefinition [
 	aDifference tagDifference: (self tag differenceWith: aCategoryDefinition tag).
 
 	^ aDifference
-]
-
-{ #category : #'gt - editors' }
-GtCategoryDefinition >> editors [
-	^ { self categoryEditor }
 ]
 
 { #category : #initialization }
@@ -143,11 +120,6 @@ GtCategoryDefinition >> parent: aParent [
 	
 	package parent: aParent.
 	tag parent: aParent
-]
-
-{ #category : #'gt - editors' }
-GtCategoryDefinition >> readers [
-	^ { self categoryReader }
 ]
 
 { #category : #accessing }

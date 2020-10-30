@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'tags'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Look'
+	#category : #'GToolkit-Coder-UI-Coder - Method'
 }
 
 { #category : #initialization }

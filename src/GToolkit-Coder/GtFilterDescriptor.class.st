@@ -2,7 +2,7 @@
 I describe how a ${class:GtSearchMethodsFilter}$ should look and behave in a UI.
 I am used to build ${class:GtFilterTagElement}$ instances inside of ${class:GtFiltersElement}$.
 For more details:
-- ${method:GtCodersElement>>#buildFilter}$ is a code that inittialize ${class:GtFiltersElement}$ using instances of myself,
+- ${method:GtMethodsCoderElement>>#buildFilter}$ is a code that inittialize ${class:GtFiltersElement}$ using instances of myself,
 - ${method:GtSearchMethodsFilter class>>#filterDescriptorFor:|show=#gtImplementorsFor:}$ displays a list of various definitions of myself.
 See ${class:GtFiltersElement}$ for an example.
 "

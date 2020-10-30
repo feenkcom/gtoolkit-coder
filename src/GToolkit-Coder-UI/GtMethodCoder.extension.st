@@ -16,3 +16,10 @@ GtMethodCoder >> breadcrumbActions [
 			
 		aStream nextPut: (GtSourceCoderBreadcrumbSpawnClassAction new classOrMetaClass: self classOrMetaClass) ]
 ]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtMethodCoder >> browseFrom: anEditorElement [ 
+	((GtCoder forMethod: self compiledMethod)
+		openInPagerFrom: anEditorElement)
+			maximized
+]

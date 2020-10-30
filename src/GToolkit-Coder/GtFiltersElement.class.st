@@ -1,6 +1,6 @@
 "
 I am a ${class:BlElement}$.
-I build a filter in ${class:GtCoderElement}$, see ${method:GtCodersElement>>#buildFilter|label=#selector}$.
+I build a filter in ${class:GtCoderElement}$, see ${method:GtMethodsCoderElement>>#buildFilter|label=#selector}$.
 !! Element Example
 The following example shows how I look like: ${example:GtFiltersElementExamples>>#filtersElement|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=70}$
 !! Coder Example
