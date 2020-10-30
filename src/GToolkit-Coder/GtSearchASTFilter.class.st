@@ -15,14 +15,6 @@ GtSearchASTFilter class >> ast: aRBProgramNode [
 		yourself
 ]
 
-{ #category : #accessing }
-GtSearchASTFilter class >> filterDescriptorFor: aMethodsCoder [
-	^ GtFilterDescriptor
-		creator: [ :value | self sourceExpression: value ]
-		named: 'AST'
-		order: 100
-]
-
 { #category : #'instance creation' }
 GtSearchASTFilter class >> sourceExpression: aString [
 	^ self new sourceExpression: aString

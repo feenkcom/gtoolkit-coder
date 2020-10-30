@@ -7,14 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
-{ #category : #accessing }
-GtSubstringFilter class >> filterDescriptorFor: aMethodsCoder [
-	^ GtFilterDescriptor
-		creator: [ :value | self substring: value ]
-		named: 'Substring'
-		order: 90
-]
-
 { #category : #'instance creation' }
 GtSubstringFilter class >> substring: aString [
 	^ self new substring: aString

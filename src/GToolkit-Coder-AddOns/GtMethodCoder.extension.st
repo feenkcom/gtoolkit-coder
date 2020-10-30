@@ -20,3 +20,31 @@ GtMethodCoder >> initializeAddOns [
 		action: [ :anEditorElement | self browseFrom: anEditorElement ].
 	addOns clearChanges
 ]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtMethodCoder >> renameClassIn: editorElement [
+	(GtRenameClassController new
+		coder: self;
+		sourceElement: editorElement) execute
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtMethodCoder >> renameClassVariableIn: editorElement [
+	(GtRenameClassVariableController new
+		coder: self;
+		sourceElement: editorElement) execute
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtMethodCoder >> renameInstanceVariableIn: editorElement [
+	(GtRenameInstanceVariableController new
+		coder: self;
+		sourceElement: editorElement) execute
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtMethodCoder >> renameMethod: editorElement [
+	(GtRenameMethodController new
+		coder: self;
+		sourceElement: editorElement) execute
+]

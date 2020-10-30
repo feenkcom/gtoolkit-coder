@@ -7,22 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
-{ #category : #accessing }
-GtSearchInstanceVariableReferenceFilter class >> filterDescriptorFor: aMethodsCoder [
-	aMethodsCoder isForClass
-		ifFalse: [ ^ nil ].
-	^ GtFilterDescriptor
-		creator: [ :value | 
-			self
-				forClassAndSubclasses: aMethodsCoder classOrMetaClass
-				andVariable: value ]
-		named: 'InstVar'
-		order: 25
-		completion:
-			(GtStringsCompletionStrategy new
-				completions: (GtPrefixTree withAll: aMethodsCoder classOrMetaClass allInstVarNames))
-]
-
 { #category : #'instance creation' }
 GtSearchInstanceVariableReferenceFilter class >> forClass: aClass andVariable: aString [
 	^ self new

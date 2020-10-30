@@ -1,5 +1,5 @@
 Class {
 	#name : #GtBehaviorChangeEvent,
-	#superclass : #BrChangeEvent,
+	#superclass : #Announcement,
 	#category : #'GToolkit-Coder-Behavior - Events'
 }

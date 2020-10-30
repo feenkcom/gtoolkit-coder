@@ -7,17 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
-{ #category : #accessing }
-GtSearchPragmasFilter class >> filterDescriptorFor: aMethodsCoder [
-	^ GtFilterDescriptor
-		creator: [ :value | self forPragma: value ]
-		named: 'Pragma'
-		order: 11
-		completion:
-			(GtStringsCompletionStrategy new
-				completions: aMethodsCoder pragmaNames)
-]
-
 { #category : #'instance creation' }
 GtSearchPragmasFilter class >> forPragma: aSymbol [
 	^ self new

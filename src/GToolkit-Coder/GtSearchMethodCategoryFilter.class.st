@@ -7,17 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
-{ #category : #accessing }
-GtSearchMethodCategoryFilter class >> filterDescriptorFor: aMethodsCoder [
-	^ GtFilterDescriptor
-		creator: [ :value | self forCategory: value ]
-		named: 'Category'
-		order: 15
-		completion:
-			(GtStringsCompletionStrategy new completions: aMethodsCoder categories)
-		emptyDefaultValue: 'All'
-]
-
 { #category : #'instance creation' }
 GtSearchMethodCategoryFilter class >> forCategory: aSymbol [
 	^ self new

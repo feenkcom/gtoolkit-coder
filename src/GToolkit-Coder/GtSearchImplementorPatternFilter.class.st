@@ -7,17 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
-{ #category : #accessing }
-GtSearchImplementorPatternFilter class >> filterDescriptorFor: aMethodsCoder [
-	^ GtFilterDescriptor
-		creator: [ :value | self pattern: value ]
-		named: 'Implementor'
-		order: 10
-		completion:
-			(GtStringsCompletionStrategy new
-				completions: aMethodsCoder selectorNames)
-]
-
 { #category : #'instance creation' }
 GtSearchImplementorPatternFilter class >> pattern: aString [
 	^ self new

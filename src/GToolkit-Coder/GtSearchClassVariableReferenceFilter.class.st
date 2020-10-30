@@ -13,21 +13,6 @@ GtSearchClassVariableReferenceFilter class >> createFilterFor: aMethodCoder [
 	^ self forClass: aMethodCoder classOrMetaClass
 ]
 
-{ #category : #accessing }
-GtSearchClassVariableReferenceFilter class >> filterDescriptorFor: aMethodsCoder [
-	aMethodsCoder isForClass
-		ifFalse: [ ^ nil ].
-	^ GtFilterDescriptor
-		creator:
-			[ :value | self forClass: aMethodsCoder classOrMetaClass andVariable: value ]
-		named: 'ClassVar'
-		order: 25
-		completion:
-			(GtStringsCompletionStrategy new
-				completions:
-					(GtPrefixTree withAll: aMethodsCoder classOrMetaClass allClassVarNames))
-]
-
 { #category : #'instance creation' }
 GtSearchClassVariableReferenceFilter class >> forClass: aClass [
 	^ self new
