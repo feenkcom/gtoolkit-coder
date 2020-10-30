@@ -252,60 +252,6 @@ GtMethodCoder >> addRemoveParameterRefactoringFor: aNode to: coderAddOns [
 		action: [ :element | self removeParameter: aNode ]
 ]
 
-{ #category : #elements }
-GtMethodCoder >> buildRemoveMethodLabel: anElement [
-	| references element labelText |
-	(self isNewMethod
-		or: [ selector isNil
-				or: [ (references := self selector gtReferences) isEmpty ] ])
-		ifTrue: [ ^ BrLabel new
-				margin: (BlInsets all: 10);
-				look: BrGlamorousLabelLook new glamorousRegularFont;
-				text: 'Remove method?' asRopedText ].
-	labelText := selector asRopedText glamorousCodeFontAndSize bold.
-	labelText
-		append: ' is still referenced in ' asRopedText glamorousRegularFontAndSize.
-	element := BlElement new
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c | 
-			c horizontal fitContent.
-			c vertical fitContent ].
-	element
-		addChild:
-			(BrLabel new
-				margin:
-					(BlInsets
-						top: 10
-						left: 10
-						bottom: 10
-						right: 0);
-				look: BrGlamorousLabelLook new;
-				text: labelText).
-	(labelText from: 1 to: selector size)
-		attributes:
-			{(BlFontFamilyAttribute named: 'Source Code Pro')
-				beNotOverwritableByStyler}.
-	element
-		addChild:
-			(BrButton new
-				look: BrGlamorousLinkSquaredButtonWithLabelLook new;
-				beSmall;
-				margin:
-					(BlInsets
-						top: 10
-						left: 2
-						bottom: 10
-						right: 10);
-				label:
-					(references size printString , ' method'
-						,
-							(references size = 1
-								ifTrue: [ '' ]
-								ifFalse: [ 's' ])) asRopedText glamorousRegularFontAndSize;
-				action: [ anElement phlow spawnObject: references ]).
-	^ element
-]
-
 { #category : #testing }
 GtMethodCoder >> canCompileMethodIn: newClass [
 	| ast modelClass pools variables model |
@@ -1211,20 +1157,6 @@ GtMethodCoder >> removeParameter: aNode [
 ]
 
 { #category : #'api - refactorings' }
-GtMethodCoder >> renameClassIn: editorElement [
-	(GtRenameClassController new
-		coder: self;
-		sourceElement: editorElement) execute
-]
-
-{ #category : #'api - refactorings' }
-GtMethodCoder >> renameClassVariableIn: editorElement [
-	(GtRenameClassVariableController new
-		coder: self;
-		sourceElement: editorElement) execute
-]
-
-{ #category : #'api - refactorings' }
 GtMethodCoder >> renameIn: editorElement [
 	| node |
 	node := self rbNodeAtCursor: editorElement.
@@ -1248,22 +1180,8 @@ GtMethodCoder >> renameIn: editorElement [
 ]
 
 { #category : #'api - refactorings' }
-GtMethodCoder >> renameInstanceVariableIn: editorElement [
-	(GtRenameInstanceVariableController new
-		coder: self;
-		sourceElement: editorElement) execute
-]
-
-{ #category : #'api - refactorings' }
 GtMethodCoder >> renameLocalVariableIn: editorElement [
 	GtRenameAction pharoRenameLocalsOn: editorElement
-]
-
-{ #category : #'api - refactorings' }
-GtMethodCoder >> renameMethod: editorElement [
-	(GtRenameMethodController new
-		coder: self;
-		sourceElement: editorElement) execute
 ]
 
 { #category : #'api - refactorings' }

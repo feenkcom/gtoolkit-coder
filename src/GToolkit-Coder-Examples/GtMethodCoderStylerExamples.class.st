@@ -152,13 +152,13 @@ GtMethodCoderStylerExamples >> hasExampleExpandAttributeIn: coder [
 GtMethodCoderStylerExamples >> hasExampleStatusIn: coder [
 	| collapsedAttribute sourceAttribute |
 	sourceAttribute := self
-		hasAttributeOfType: GtExampleStatusAttribute
+		hasAttributeOfType: GtCoderExampleStatusAttribute
 		in: coder sourceEditor.
 	coder
 		expanded: false;
 		expanded: true.	"need to collapse to compute collapsed text style"
 	collapsedAttribute := self
-		hasAttributeOfType: GtExampleStatusAttribute
+		hasAttributeOfType: GtCoderExampleStatusAttribute
 		in: coder collapsedText.
 	self assert: sourceAttribute = collapsedAttribute.
 	^ sourceAttribute
@@ -286,7 +286,7 @@ GtMethodCoderStylerExamples >> printStringReference [
 
 { #category : #accessing }
 GtMethodCoderStylerExamples >> unlineAttributeClass [
-	^ BlTextUnderlineAttribute
+	^ BlTextDecorationAttribute
 ]
 
 { #category : #'as yet unclassified' }

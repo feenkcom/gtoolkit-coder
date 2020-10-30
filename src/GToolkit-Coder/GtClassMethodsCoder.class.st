@@ -73,16 +73,6 @@ GtClassMethodsCoder >> combinedFilter [
 ]
 
 { #category : #elements }
-GtClassMethodsCoder >> filterDropDown: anElement [
-	^ BlElement new
-		size: 430 @ 430;
-		addChild:
-			(GtPhlowCompositeView new
-				views: self filterTypes;
-				asElementDo: [ :aTabGroup | aTabGroup matchParent ])
-]
-
-{ #category : #elements }
 GtClassMethodsCoder >> filterTypes [
 	^ GtPhlowViewsCollector new
 		fromObject: self;

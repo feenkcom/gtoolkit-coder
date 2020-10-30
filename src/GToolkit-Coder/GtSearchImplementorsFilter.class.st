@@ -32,11 +32,6 @@ GtSearchImplementorsFilter >> hash [
 	^ self class hash bitXor: self selector hash
 ]
 
-{ #category : #accessing }
-GtSearchImplementorsFilter >> highlighter [
-	^ GtImplementorHighlighter forSelector: selector
-]
-
 { #category : #testing }
 GtSearchImplementorsFilter >> includesMethod: aCompiledMethod [
 	^ aCompiledMethod selector = selector

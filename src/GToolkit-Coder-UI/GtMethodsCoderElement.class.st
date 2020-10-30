@@ -118,5 +118,5 @@ GtMethodsCoderElement >> updateDisplayedFilters: filterElement [
 
 { #category : #'private - updating' }
 GtMethodsCoderElement >> updateList [
-	listElement items: (self createUIModelsFor: coders)
+	self listElement items: (self createUIModelsFor: coders)
 ]

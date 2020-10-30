@@ -73,14 +73,6 @@ GtSearchReferencesFilter >> hash [
 	^ self class hash bitXor: self object hash
 ]
 
-{ #category : #accessing }
-GtSearchReferencesFilter >> highlighter [
-	((self object isKindOf: Association) and: [ self object key isSymbol ])
-				ifTrue: [ ^ GtVariableReferenceHighlighter forVariableName: self object key ].
-	self object isLiteral ifTrue: [ ^ GtSelectorReferenceAndLiteralHighlighter forSelector: self object ].
-	^ nil
-]
-
 { #category : #testing }
 GtSearchReferencesFilter >> includesMethod: aCompiledMethod [
 	(aCompiledMethod encoderClass specialLiterals includes: self object)

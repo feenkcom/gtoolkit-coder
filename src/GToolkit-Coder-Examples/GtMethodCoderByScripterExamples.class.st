@@ -368,7 +368,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExampleStatusAt
 	self 
 		checkFor: aScripterOrStep 
 		textAttributesAt: anIndex 
-		anySatisfies: [ :aTextAttribute | aTextAttribute class = GtExampleStatusAttribute ].
+		anySatisfies: [ :aTextAttribute | aTextAttribute class = GtCoderExampleStatusAttribute ].
 	^ aScripterOrStep
 ]
 
@@ -544,8 +544,8 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded_Chec
 	| aScripter |
 	aScripter := self patternHighlighterMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
-		self checkFor: aStep textAttributesAt: 2 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
-		self checkFor: aStep numberfOfTextAttributes: 6 OfType: BlTextUnderlineAttribute.
+		self checkFor: aStep textAttributesAt: 2 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
+		self checkFor: aStep numberfOfTextAttributes: 6 OfType: BlTextDecorationAttribute.
 	].
 	aScripter syncContinue.
 	^ aScripter
@@ -592,9 +592,9 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_Expanded
 	| aScripter |
 	aScripter := self patternHighlighterPrintMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
-		self checkFor: aStep textAttributesAt: 1 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
-		self checkFor: aStep numberfOfTextAttributes: 5 OfType: BlTextUnderlineAttribute.
-		self checkFor: aStep textAttributesAt: 30 nonSatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
+		self checkFor: aStep textAttributesAt: 1 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
+		self checkFor: aStep numberfOfTextAttributes: 5 OfType: BlTextDecorationAttribute.
+		self checkFor: aStep textAttributesAt: 30 nonSatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
 	].
 	aScripter syncContinue.
 	^ aScripter
@@ -635,9 +635,9 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Ex
 	| aScripter |
 	aScripter := self patternHighlighterPrintStringMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
-		self checkFor: aStep textAttributesAt: 1 nonSatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
-		self checkFor: aStep textAttributesAt: 30 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextUnderlineAttribute ].
-		self checkFor: aStep numberfOfTextAttributes: 11 OfType: BlTextUnderlineAttribute.
+		self checkFor: aStep textAttributesAt: 1 nonSatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
+		self checkFor: aStep textAttributesAt: 30 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
+		self checkFor: aStep numberfOfTextAttributes: 11 OfType: BlTextDecorationAttribute.
 	].
 	aScripter syncContinue.
 	^ aScripter
@@ -726,7 +726,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI
 		self 
 			checkFor: aStep 
 			textAttributesAt: 1 
-			nonSatisfies: [ :aTextAttribute | aTextAttribute class = GtExampleStatusAttribute ] ].
+			nonSatisfies: [ :aTextAttribute | aTextAttribute class = GtCoderExampleStatusAttribute ] ].
 	aScripter syncContinue.
 	^ aScripter
 ]

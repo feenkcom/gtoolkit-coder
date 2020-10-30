@@ -4,16 +4,6 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
-{ #category : #accessing }
-GtSearchClassMethodsFilter class >> filterDescriptorFor: aMethodsCoder [
-	^ (GtFilterDescriptor
-		creator: [ :value | self new ]
-		named: 'Class Methods'
-		order: 17)
-		valueNotRequired;
-		yourself
-]
-
 { #category : #comparing }
 GtSearchClassMethodsFilter >> = anObject [
 	^ self class = anObject class

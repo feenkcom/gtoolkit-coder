@@ -14,7 +14,8 @@ GtMethodsCoder >> exampler [
 GtMethodsCoder >> forItems: aCollection [
 	super forItems: aCollection.
 	(items isKindOf: GtSearchMethodGroupResult)
-		ifTrue: [ items announcer weak
+		ifTrue: [
+			items announcer weak
 				when: ValueAdded send: #methodAdded: to: self;
 				when: ValueChanged send: #methodChanged: to: self;
 				when: ValueRemoved send: #methodRemoved: to: self.

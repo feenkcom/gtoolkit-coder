@@ -32,11 +32,6 @@ GtSearchCommentsFilter >> hash [
 	^ self class hash bitXor: self text hash
 ]
 
-{ #category : #accessing }
-GtSearchCommentsFilter >> highlighter [
-	^ GtCommentsReferenceHighlighter new commentsFilter: self
-]
-
 { #category : #testing }
 GtSearchCommentsFilter >> includesMethod: aCompiledMethod [
 	| methodAst |

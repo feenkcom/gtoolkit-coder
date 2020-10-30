@@ -70,6 +70,16 @@ GtClassMethodsCoder >> examplesFilter: aView [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
+GtClassMethodsCoder >> filterDropDown: anElement [
+	^ BlElement new
+		size: 430 @ 430;
+		addChild:
+			(GtPhlowCompositeView new
+				views: self filterTypes;
+				asElementDo: [ :aTabGroup | aTabGroup matchParent ])
+]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
 GtClassMethodsCoder >> instanceVariableFilter: aView [
 	<gtFilterTypes>
 	^ aView explicit

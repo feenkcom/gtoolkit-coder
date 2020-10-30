@@ -7,14 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-Filters'
 }
 
-{ #category : #accessing }
-GtSubstringFilter class >> filterDescriptorFor: aMethodsCoder [
-	^ GtFilterDescriptor
-		creator: [ :value | self substring: value ]
-		named: 'Substring'
-		order: 90
-]
-
 { #category : #'instance creation' }
 GtSubstringFilter class >> substring: aString [
 	^ self new substring: aString
@@ -41,11 +33,6 @@ GtSubstringFilter >> gtDisplayOn: stream [
 { #category : #comparing }
 GtSubstringFilter >> hash [
 	^ self class hash bitXor: self substring asLowercase hash
-]
-
-{ #category : #accessing }
-GtSubstringFilter >> highlighter [
-	^ GtSubstringHighlighter substring: self substring
 ]
 
 { #category : #testing }

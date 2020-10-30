@@ -53,18 +53,6 @@ GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 		whenComplete: nil
 ]
 
-{ #category : #'private - refactorings' }
-GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position whenComplete: aBlock [
-	self removeRefactoringAttribute.
-	aRefactoring isNil
-		ifTrue: [ ^ self ].
-	(self sourceText from: position to: position)
-		attributes:
-			{(GtRefactoringChangesAttribute new
-				refactoring: aRefactoring;
-				completionAction: aBlock)}
-]
-
 { #category : #'api - actions' }
 GtSourceCoder >> browseImplementorsFrom: anEditorElement [
 	| symbol |
@@ -768,12 +756,6 @@ GtSourceCoder >> referencesFilterForVariable: aString [
 	binding notNil
 		ifTrue: [ ^ GtSearchReferencesFilter literal: binding ].
 	^ nil
-]
-
-{ #category : #'private - refactorings' }
-GtSourceCoder >> removeRefactoringAttribute [
-	self sourceText
-		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
 ]
 
 { #category : #'api - text' }
