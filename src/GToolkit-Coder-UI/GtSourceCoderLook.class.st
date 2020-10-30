@@ -6,8 +6,11 @@ Class {
 
 { #category : #'private - accessing' }
 GtSourceCoderLook >> coder [
-	<return: #GtCoderModel>
-	^ self widget ifNotNil: #coder
+	self
+		deprecated: 'Please use #sourceCoderUIModel instead'
+		transformWith: '`@receiver coder' -> '`@receiver sourceCoderUIModel'.
+		
+	^ self sourceCoderUIModel
 ]
 
 { #category : #initialization }
@@ -28,4 +31,11 @@ GtSourceCoderLook >> initializeRequests [
 
 { #category : #hooks }
 GtSourceCoderLook >> onCoderChanged: aGtSourceCoder [
+]
+
+{ #category : #'private - accessing' }
+GtSourceCoderLook >> sourceCoderUIModel [
+	<return: #GtSourceCoderUIModel>
+
+	^ (self request: GtSourceCoderContentCoderRequest oneWay) sourceCoder
 ]

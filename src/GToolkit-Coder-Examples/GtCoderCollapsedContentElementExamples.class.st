@@ -9,9 +9,9 @@ GtCoderCollapsedContentElementExamples >> forExampleCoder [
 	<gtExample>
 	| aMethodCoder aContentElement |
 	
-	aMethodCoder := GtMethodCoder forMethod: (self class >> #greenExample).
-	
-	aContentElement := GtSourceCoderCollapsedContentElement new coder: aMethodCoder.
+	aMethodCoder := GtMethodCoder forMethod: self class >> #greenExample.
+	aContentElement := GtSourceCoderCollapsedContentElement new
+		coderUIModel: aMethodCoder asCoderUIModel.
 	aContentElement look: GtSourceCoderCollapsedWithoutHeaderLook.
 
 	^ aContentElement
@@ -21,12 +21,11 @@ GtCoderCollapsedContentElementExamples >> forExampleCoder [
 GtCoderCollapsedContentElementExamples >> forMethodCoder [
 	<gtExample>
 	| aMethodCoder aContentElement |
-	
-	aMethodCoder := GtMethodCoder forMethod: (BlElement >> #position:extent:).
-	
-	aContentElement := GtSourceCoderCollapsedContentElement new coder: aMethodCoder.
+	aMethodCoder := GtMethodCoder
+		forMethod: BlElement >> #position:extent:.
+	aContentElement := GtSourceCoderCollapsedContentElement new
+		coderUIModel: aMethodCoder asCoderUIModel.
 	aContentElement look: GtSourceCoderCollapsedWithHeaderLook.
-
 	^ aContentElement
 ]
 
@@ -45,14 +44,12 @@ GtCoderCollapsedContentElementExamples >> noExample [
 GtCoderCollapsedContentElementExamples >> textAndExampleLook_withExampleMethod [
 	<gtExample>
 	| aMethodCoder aContentElement |
-	
-	aMethodCoder := GtMethodCoder forMethod: (self class >> #greenExample).
+	aMethodCoder := GtMethodCoder forMethod: self class >> #greenExample.
 	aMethodCoder example run.
-	
-	aContentElement := GtSourceCoderCollapsedContentElement new coder: aMethodCoder.
+	aContentElement := GtSourceCoderCollapsedContentElement new
+		coderUIModel: aMethodCoder asCoderUIModel.
 	aContentElement addLook: BrLayoutResizerLook inherit.
 	aContentElement look: GtSourceCoderCollapsedTextAndExampleLook.
-
 	^ aContentElement
 ]
 
@@ -60,12 +57,10 @@ GtCoderCollapsedContentElementExamples >> textAndExampleLook_withExampleMethod [
 GtCoderCollapsedContentElementExamples >> textAndExampleLook_withRegularMethod [
 	<gtExample>
 	| aMethodCoder aContentElement |
-	
-	aMethodCoder := GtMethodCoder forMethod: (self class >> #noExample).
-	
-	aContentElement := GtSourceCoderCollapsedContentElement new coder: aMethodCoder.
+	aMethodCoder := GtMethodCoder forMethod: self class >> #noExample.
+	aContentElement := GtSourceCoderCollapsedContentElement new
+		coderUIModel: aMethodCoder asCoderUIModel.
 	aContentElement addLook: BrLayoutResizerLook inherit.
 	aContentElement look: GtSourceCoderCollapsedTextAndExampleLook.
-
 	^ aContentElement
 ]

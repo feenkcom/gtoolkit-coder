@@ -95,22 +95,21 @@ GtCoderElementForSnippetsWithDestinationExamples >> coderElementScripter_Destina
 	<gtExample>
 	| aScripter |
 	aScripter := self coderElementScripter.
-	
-	aScripter substep: 'Change destination' do: [ :aStep |
-		aStep click
-			label: 'Click on destination button';
-			onGtPharoSnippetDestinationButton.
-		aStep wait forEmptySpaceTaskQueue.
-		aStep check
-			label: 'Check changed button icon';
-			onGtPharoSnippetDestinationButton;
-			satisfies: [ :aButton | 
-				aButton icon = BrGlamorousIcons down ].
-		aStep check
-			label: 'Check coder destination';
-			satisfies: [ :aCoderElement | 
-				aCoderElement coder spawnDestination isSpawnBelow ] ].
-		
+	aScripter
+		substep: 'Change destination'
+		do: [ :aStep | 
+			aStep click
+				label: 'Click on destination button';
+				onGtPharoSnippetDestinationButton.
+			aStep wait forEmptySpaceTaskQueue.
+			aStep check
+				label: 'Check changed button icon';
+				onGtPharoSnippetDestinationButton;
+				satisfies: [ :aButton | aButton icon = BrGlamorousIcons down ].
+			aStep check
+				label: 'Check coder destination';
+				satisfies:
+						[ :aCoderElement | aCoderElement coderUIModel coder spawnDestination isSpawnBelow ] ].
 	aScripter syncContinue.
 	^ aScripter
 ]

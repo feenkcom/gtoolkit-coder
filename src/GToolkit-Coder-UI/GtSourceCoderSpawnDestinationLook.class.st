@@ -47,7 +47,9 @@ GtSourceCoderSpawnDestinationLook >> switchButton [
 
 { #category : #'instance creation' }
 GtSourceCoderSpawnDestinationLook >> switchSpawnDestination [
-	self coder 
-		spawnDestination: self coder spawnDestination followingDestination.
-	self switchButton icon: self coder spawnDestination icon
+	| aSourceCoder |
+	
+	aSourceCoder := self sourceCoderUIModel coder.
+	aSourceCoder spawnDestination: aSourceCoder spawnDestination followingDestination.
+	self switchButton icon: aSourceCoder spawnDestination icon
 ]
