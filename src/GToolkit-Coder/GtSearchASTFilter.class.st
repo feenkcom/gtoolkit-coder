@@ -74,11 +74,6 @@ GtSearchASTFilter >> hash [
 	^ self class hash bitXor: self ast hash
 ]
 
-{ #category : #accessing }
-GtSearchASTFilter >> highlighter [
-	^ GtASTPatternHighlighter ast: ast
-]
-
 { #category : #testing }
 GtSearchASTFilter >> includesMethod: aCompiledMethod [
 	| methodAst |

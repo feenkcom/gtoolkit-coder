@@ -48,13 +48,6 @@ GtSearchImplementorPatternFilter >> hash [
 	^ self class hash bitXor: self pattern asLowercase hash
 ]
 
-{ #category : #accessing }
-GtSearchImplementorPatternFilter >> highlighter [
-	pattern isEmpty
-		ifTrue: [ ^ super highlighter ].
-	^ GtImplementorPatternHighlighter forPattern: pattern
-]
-
 { #category : #testing }
 GtSearchImplementorPatternFilter >> includesMethod: aCompiledMethod [
 	^ pattern isEmpty or: [ (aCompiledMethod selector asLowercase indexOfSubCollection: pattern asLowercase) > 0 ]

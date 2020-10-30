@@ -47,11 +47,6 @@ GtSearchPragmasFilter >> hash [
 	^ self class hash bitXor: self symbol hash
 ]
 
-{ #category : #accessing }
-GtSearchPragmasFilter >> highlighter [
-	^ GtPragmaHighlighter forPragma: symbol
-]
-
 { #category : #testing }
 GtSearchPragmasFilter >> includesMethod: aCompiledMethod [
 	^ aCompiledMethod hasPragmaNamed: symbol

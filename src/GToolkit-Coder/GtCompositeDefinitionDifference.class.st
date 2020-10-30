@@ -43,16 +43,6 @@ GtCompositeDefinitionDifference >> differences [
 	^ differences
 ]
 
-{ #category : #'gt-extension' }
-GtCompositeDefinitionDifference >> gtDifferencesFor: aView [
-	<gtView>
-	
-	^ aView list
-		title: 'Differences';
-		priority: 1;
-		items: [ self differences ]
-]
-
 { #category : #testing }
 GtCompositeDefinitionDifference >> hasDifference [
 	<return: #Boolean>

@@ -43,11 +43,6 @@ GtSubstringFilter >> hash [
 	^ self class hash bitXor: self substring asLowercase hash
 ]
 
-{ #category : #accessing }
-GtSubstringFilter >> highlighter [
-	^ GtSubstringHighlighter substring: self substring
-]
-
 { #category : #testing }
 GtSubstringFilter >> includesMethod: aCompiledMethod [
 	^ (aCompiledMethod sourceCode

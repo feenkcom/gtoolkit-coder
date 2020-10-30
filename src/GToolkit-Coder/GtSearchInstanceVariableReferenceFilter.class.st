@@ -58,11 +58,6 @@ GtSearchInstanceVariableReferenceFilter >> hash [
 	^ super hash bitXor: self variableName
 ]
 
-{ #category : #accessing }
-GtSearchInstanceVariableReferenceFilter >> highlighter [
-	^ GtVariableReferenceHighlighter forVariableName: variableName
-]
-
 { #category : #testing }
 GtSearchInstanceVariableReferenceFilter >> includesMethod: aCompiledMethod [
 	| index |
