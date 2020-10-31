@@ -60,7 +60,6 @@ GtMethodsCoder >> newCoderFor: aMethod [
 
 { #category : #scripting }
 GtMethodsCoder >> selectAndScrollTo: aMethodCoder [
-	aMethodCoder expanded: true.
 	self
 		announce:
 			(GtCodersScrollToCoder new
