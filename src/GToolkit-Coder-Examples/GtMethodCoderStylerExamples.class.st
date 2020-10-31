@@ -85,7 +85,7 @@ GtMethodCoderStylerExamples >> explanationLinkExample [
 	
 	coder := GtMethodCoder forMethod: (GtPharoMethodExample>>#exampleWithNumber:).
 	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { variables. selectors }).
-	coderElement := (coder expanded: true) asElement.
+	coderElement := (coder asCoderUIModel expanded: true) asElement.
 	coderElement forceLayout.
 	inspectorContainer addChild: coderElement.
 	

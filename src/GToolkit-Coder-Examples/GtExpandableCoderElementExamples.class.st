@@ -9,7 +9,6 @@ GtExpandableCoderElementExamples >> forCollapsedMethodCoder [
 	<gtExample>
 	| anElement aCoder |
 	aCoder := GtMethodCoder forMethod: GtMethodCoderExamples >> #example.
-	self assert: aCoder expanded not.
 	anElement := GtExpandableCoderElement new.
 	anElement coderUIModel: aCoder asCoderUIModel.
 	self assert: anElement isExpanded not.
