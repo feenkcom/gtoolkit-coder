@@ -49,7 +49,6 @@ GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
 { #category : #'instance creation' }
 GtMethodCoder class >> newMethod [
 	^ self new
-		expanded: true;
 		currentSourceString: '';
 		yourself
 ]

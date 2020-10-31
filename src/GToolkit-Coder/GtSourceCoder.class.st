@@ -694,6 +694,23 @@ GtSourceCoder >> rbAST [
 ]
 
 { #category : #private }
+GtSourceCoder >> rbNodeAt: aTextIndex [
+	| ast node |
+
+	ast := self rbAST.
+	ast ifNil: [ ^ nil ].
+
+	node := nil.
+	ast
+		nodesDo: [ :each | 
+			(aTextIndex between: each start and: each stop)
+				ifTrue: [ (node isNil
+						or: [ node sourceInterval size > each sourceInterval size ])
+						ifTrue: [ node := each ] ] ].
+	^ node
+]
+
+{ #category : #private }
 GtSourceCoder >> rbNodeAtCursor: editorElement [
 	| editor ast position node |
 	editor := editorElement editor.

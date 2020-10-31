@@ -1,7 +1,7 @@
 Class {
 	#name : #GtMethodCoderByScripterExamples,
-	#superclass : #GtCoderExamples,
-	#category : #'GToolkit-Coder-Examples-Basic'
+	#superclass : #GtCoderByScripterExamples,
+	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
 { #category : #'sample methods' }
@@ -393,7 +393,6 @@ GtMethodCoderByScripterExamples >> coderOnMethod: aMethod [
 	self assert: aCoder selector equals: aMethod selector.
 	self assert: aCoder classOrMetaClass equals: aMethod methodClass.
 	self assert: aCoder category equals: aMethod protocol.
-	self assert: aCoder expanded not.
 	
 	"a coder is not displayed and its source text is not initialized"
 	self assert: aCoder sourceCode hasSourceText not.
@@ -420,9 +419,10 @@ GtMethodCoderByScripterExamples >> exampleMethodCoder [
 GtMethodCoderByScripterExamples >> exampleMethodCoderUI [
 	<gtExample>
 	| aScripter |
+	
 	aScripter := self scripterForBlock: [ self exampleMethodCoder ].
-	aScripter syncContinue.
-	^ aScripter
+	
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - example method' }

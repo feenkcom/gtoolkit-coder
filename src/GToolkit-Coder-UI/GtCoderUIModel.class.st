@@ -133,5 +133,5 @@ GtCoderUIModel >> initialize [
 	super initialize.
 	
 	hasFocus := false.
-	expanded := false
+	expanded := true
 ]

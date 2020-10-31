@@ -114,8 +114,9 @@ GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 
 { #category : #hooks }
 GtSourceCoderEditorLook >> onSaveSourceCoderUIModel: aGtSourceCoderUIModel [
-	aGtSourceCoderUIModel editorState: self editorElement editor saveState.
-	aGtSourceCoderUIModel hasFocus: self editorElement hasFocus
+	aGtSourceCoderUIModel
+		editorState: self editorElement editor saveState.
+	aGtSourceCoderUIModel focused: self editorElement hasFocus
 ]
 
 { #category : #hooks }

@@ -1,11 +1,11 @@
 Class {
-	#name : #GtCoderExamples,
+	#name : #GtCoderByScripterExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples-Basic'
+	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
 { #category : #'examples - scripter' }
-GtCoderExamples >> scripter [
+GtCoderByScripterExamples >> scripter [
 	<gtExample>
 	| scripter |
 	scripter := BlDevScripter new.

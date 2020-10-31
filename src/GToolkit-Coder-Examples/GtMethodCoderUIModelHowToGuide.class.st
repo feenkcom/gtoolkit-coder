@@ -2,11 +2,13 @@
 !Method Coder's UI model
 When embedding a method coder as a UI component we often want to be able to specify (or save/restore) its initial UI state, such as expansion or a focus state. ${class:GtMethodCoderUIModel}$ fascilicates users with that ability.
 !!How to create a UI model?
-To create a default ${class:GtMethodCoderUIModel}$ for an existing instance of ${class:GtMethodCoder}$ it is enough to send a ${method:GtCoderModel>>#asCoderUIModel}$ message to that coder model. By default, the method coder does not have a focus and is not expanded:
+To create a default ${class:GtMethodCoderUIModel}$ for an existing instance of ${class:GtMethodCoder}$ it is enough to send a ${method:GtCoderModel>>#asCoderUIModel}$ message to that coder model. By default, the method coder is expanded and does not have a focus:
 ${example:GtMethodCoderUIModelHowToGuide>>#uiModelForCoder|codeExpanded=true}$
-!!How to expand it?
+!!How to expand/collapse it?
 Users may choose to visually expand a method coder:
 ${example:GtMethodCoderUIModelHowToGuide>>#expandedMethodCoder|codeExpanded=true|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=140}$
+or collapse it:
+${example:GtMethodCoderUIModelHowToGuide>>#collapsedMethodCoder|codeExpanded=true|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=95}$
 !!How to give it focus?
 Or also give it a focus by default:
 ${example:GtMethodCoderUIModelHowToGuide>>#expandedAndFocusedMethodCoder|codeExpanded=true|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=140}$
@@ -16,6 +18,17 @@ Class {
 	#superclass : #GtMethodCoderHowToGuide,
 	#category : #'GToolkit-Coder-Examples-! HowTo'
 }
+
+{ #category : #'examples - method coder' }
+GtMethodCoderUIModelHowToGuide >> collapsedMethodCoder [
+	<gtExample>
+	| aCoderUIModel |
+
+	aCoderUIModel := self uiModelForCoder.
+	aCoderUIModel expanded: false.
+	
+	^ aCoderUIModel
+]
 
 { #category : #'examples - method coder' }
 GtMethodCoderUIModelHowToGuide >> expandedAndFocusedMethodCoder [
@@ -72,7 +85,7 @@ GtMethodCoderUIModelHowToGuide >> uiModelForCoder [
 	aCoderUIModel := self coderForMethod asCoderUIModel.
 
 	self assert: aCoderUIModel focused equals: false.
-	self assert: aCoderUIModel expanded equals: false.
+	self assert: aCoderUIModel expanded equals: true.
 	
 	^ aCoderUIModel
 ]

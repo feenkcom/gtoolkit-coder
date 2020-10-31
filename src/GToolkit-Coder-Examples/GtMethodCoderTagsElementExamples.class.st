@@ -8,10 +8,9 @@ Class {
 GtMethodCoderTagsElementExamples >> forMethodCoder [
 	<gtExample>
 	| aMethodCoder theTagsElement |
-	
-	aMethodCoder := GtMethodCoder forMethod: (GtMethodCoderExamples >> #forExampleMethodCoder).
-	
-	theTagsElement := GtMethodCoderTagsElement new coder: aMethodCoder.
-
+	aMethodCoder := GtMethodCoder
+		forMethod: GtMethodCoderExamples >> #forExampleMethodCoder.
+	theTagsElement := GtMethodCoderTagsElement new
+		methodCoderUIModel: aMethodCoder.
 	^ theTagsElement
 ]

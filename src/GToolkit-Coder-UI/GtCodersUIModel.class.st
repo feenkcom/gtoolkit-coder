@@ -57,5 +57,5 @@ GtCodersUIModel >> unfocusCoderUIModel: aCoderUIModel [
 
 { #category : #updating }
 GtCodersUIModel >> updateCoderUIModels [
-	coderUIModels := coders coders collect: [ :eachCoder | eachCoder asCoderUIModel ]
+	coderUIModels := coders coders collect: [ :eachCoder | eachCoder asCoderUIModel expanded: false ]
 ]

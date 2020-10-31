@@ -1,22 +1,22 @@
 Class {
-	#name : #GtMethodCoderStylerExamples,
-	#superclass : #GtMethodCoderTaskExamples,
-	#category : #'GToolkit-Coder-Examples-Basic'
+	#name : #GtMethodCoderExplanationStylerExamples,
+	#superclass : #Object,
+	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
 { #category : #dummies }
-GtMethodCoderStylerExamples >> a [
+GtMethodCoderExplanationStylerExamples >> a [
 	<gtExample>
 	^ 42
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
+GtMethodCoderExplanationStylerExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
 	"test method for highlighting implementors"
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> attributeCountOfType: aClass in: aTextEditor [
+GtMethodCoderExplanationStylerExamples >> attributeCountOfType: aClass in: aTextEditor [
 	| text iterator count |
 	count := 0.
 	text := aTextEditor text.
@@ -29,13 +29,13 @@ GtMethodCoderStylerExamples >> attributeCountOfType: aClass in: aTextEditor [
 ]
 
 { #category : #dummies }
-GtMethodCoderStylerExamples >> b [
+GtMethodCoderExplanationStylerExamples >> b [
 	<gtExample>
 	^ self a * self notAnExample
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> coderOnViewMethod [
+GtMethodCoderExplanationStylerExamples >> coderOnViewMethod [
 	| selectors variables coder coderElement |
 	
 	coder := GtMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsOn:).
@@ -50,7 +50,7 @@ GtMethodCoderStylerExamples >> coderOnViewMethod [
 	variables addVariables: {'aView' . 'aContact'}.
 	
 	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { selectors. variables }).
-	coderElement := (coder expanded: true) asElement margin: (BlInsets all: 10).
+	coderElement := (coder asCoderUIModel expanded: true) asElement margin: (BlInsets all: 10).
 	coderElement forceLayout.
 	coderElement vMatchParent.
 	
@@ -58,7 +58,7 @@ GtMethodCoderStylerExamples >> coderOnViewMethod [
 ]
 
 { #category : #'as yet unclassified' }
-GtMethodCoderStylerExamples >> explanationLinkExample [
+GtMethodCoderExplanationStylerExamples >> explanationLinkExample [
 	<gtExample>
 	| container inspectorContainer editor coder coderElement selectors variables |
 	
@@ -104,7 +104,7 @@ GtMethodCoderStylerExamples >> explanationLinkExample [
 ]
 
 { #category : #'as yet unclassified' }
-GtMethodCoderStylerExamples >> explanationLinkExampleText [
+GtMethodCoderExplanationStylerExamples >> explanationLinkExampleText [
 	| text |
 	
 	text := ('pragma' asRopedText glamorousExplanationFor: #syntaxOn:),
@@ -139,17 +139,17 @@ GtMethodCoderStylerExamples >> explanationLinkExampleText [
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> hasAttributeOfType: aClass in: aTextEditor [
+GtMethodCoderExplanationStylerExamples >> hasAttributeOfType: aClass in: aTextEditor [
 	^ (self attributeCountOfType: aClass in: aTextEditor) > 0
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> hasExampleExpandAttributeIn: coder [
+GtMethodCoderExplanationStylerExamples >> hasExampleExpandAttributeIn: coder [
 	^ self hasAttributeOfType: BrTextExpandButtonAttribute in: coder sourceEditor
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> hasExampleStatusIn: coder [
+GtMethodCoderExplanationStylerExamples >> hasExampleStatusIn: coder [
 	| collapsedAttribute sourceAttribute |
 	sourceAttribute := self
 		hasAttributeOfType: GtCoderExampleStatusAttribute
@@ -165,12 +165,12 @@ GtMethodCoderStylerExamples >> hasExampleStatusIn: coder [
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> hasUnderlineAttributeIn: coder [
+GtMethodCoderExplanationStylerExamples >> hasUnderlineAttributeIn: coder [
 	^ self hasAttributeOfType: self unlineAttributeClass in: coder sourceEditor
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> inspectorOnViewMethod [
+GtMethodCoderExplanationStylerExamples >> inspectorOnViewMethod [
 	| resultElement resultInspectorTree titleTab avatarLabel phoneLabel nameLabel avatarElementsCollection listLabelsCollection |
 	
 	resultElement := BlUseAsyncFeatures
@@ -275,22 +275,22 @@ GtMethodCoderStylerExamples >> inspectorOnViewMethod [
 ]
 
 { #category : #dummies }
-GtMethodCoderStylerExamples >> notAnExample [
+GtMethodCoderExplanationStylerExamples >> notAnExample [
 	^ 42
 ]
 
 { #category : #dummies }
-GtMethodCoderStylerExamples >> printStringReference [
+GtMethodCoderExplanationStylerExamples >> printStringReference [
 	^ self printString
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> unlineAttributeClass [
+GtMethodCoderExplanationStylerExamples >> unlineAttributeClass [
 	^ BlTextDecorationAttribute
 ]
 
 { #category : #'as yet unclassified' }
-GtMethodCoderStylerExamples >> viewsExplanationWithLinks [
+GtMethodCoderExplanationStylerExamples >> viewsExplanationWithLinks [
 	<gtExample>
 	| container editor |
 	
@@ -319,7 +319,7 @@ GtMethodCoderStylerExamples >> viewsExplanationWithLinks [
 ]
 
 { #category : #'as yet unclassified' }
-GtMethodCoderStylerExamples >> viewsExplanationWithLinksOnCoderAndInspector [
+GtMethodCoderExplanationStylerExamples >> viewsExplanationWithLinksOnCoderAndInspector [
 	<gtExample>
 	| coderElement inspectorContainer verticalContainer editor container |
 	
@@ -368,7 +368,7 @@ GtMethodCoderStylerExamples >> viewsExplanationWithLinksOnCoderAndInspector [
 ]
 
 { #category : #accessing }
-GtMethodCoderStylerExamples >> viewsExplanationWithLinksText [
+GtMethodCoderExplanationStylerExamples >> viewsExplanationWithLinksText [
 	| text |
 	
 	text := 'A custom view is defined by a method in the class of the object we want to view. You can think of it as a print string method only that instead of returning a string, it returns a visual element.
