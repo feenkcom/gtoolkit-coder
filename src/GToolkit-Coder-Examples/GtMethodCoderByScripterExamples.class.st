@@ -585,25 +585,14 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripterForBlock: [ self patternHighlighterMethodCoder ].
-	aScripter syncContinue.
-	^ aScripter
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - pattern highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded [
+GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_CheckUndelineAttributes [
 	<gtExample>
 	| aScripter |
 	aScripter := self patternHighlighterMethodCoderUI.
-	self expandFromUI: aScripter method: self patternHighlighterMethod.
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - pattern highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded_CheckUndelineAttributes [
-	<gtExample>
-	| aScripter |
-	aScripter := self patternHighlighterMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
 		self checkFor: aStep textAttributesAt: 2 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
 		self checkFor: aStep numberfOfTextAttributes: 6 OfType: BlTextDecorationAttribute.
@@ -633,25 +622,14 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripterForBlock: [ self patternHighlighterPrintMethodCoder ].
-	aScripter syncContinue.
-	^ aScripter
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - pattern highlither - print' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_Expanded [
+GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_CheckUndelineAttributes [
 	<gtExample>
 	| aScripter |
 	aScripter := self patternHighlighterPrintMethodCoderUI.
-	self expandFromUI: aScripter method: self patternHighlighterPrintMethod.
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - pattern highlither - print' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_Expanded_CheckUndelineAttributes [
-	<gtExample>
-	| aScripter |
-	aScripter := self patternHighlighterPrintMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
 		self checkFor: aStep textAttributesAt: 1 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
 		self checkFor: aStep numberfOfTextAttributes: 5 OfType: BlTextDecorationAttribute.
@@ -676,25 +654,14 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripterForBlock: [ self patternHighlighterPrintStringMethodCoder ].
-	aScripter syncContinue.
-	^ aScripter
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - reference highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Expanded [
+GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_CheckUndelineAttributes [
 	<gtExample>
 	| aScripter |
 	aScripter := self patternHighlighterPrintStringMethodCoderUI.
-	self expandFromUI: aScripter method: self patternHighlighterPrintMethod.
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - reference highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Expanded_CheckUndelineAttributes [
-	<gtExample>
-	| aScripter |
-	aScripter := self patternHighlighterPrintStringMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
 		self checkFor: aStep textAttributesAt: 1 nonSatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
 		self checkFor: aStep textAttributesAt: 30 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
@@ -737,7 +704,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI [
 GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleAttribute [
 	<gtExample>
 	| aScripter |
-	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI.
+	aScripter := self referencedExampleMethodCoderUI.
 	aScripter checks: 'Check Example Status' do: [ :aStep | 
 		self checkFor: aStep textExampleStatusAttributeAt: 1 ].
 	aScripter syncContinue.
@@ -745,20 +712,10 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleAt
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI [
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleExpandAttribute [
 	<gtExample>
 	| aScripter |
 	aScripter := self referencedExampleMethodCoderUI.
-	self expandFromUI: aScripter method: self referencedExampleMethod.
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI_CheckExampleExpandAttribute [
-	<gtExample>
-	| aScripter |
-	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI.
 	aScripter checks: 'Check Example Status and Expand Attribute' do: [ :aStep | 
 		self checkFor: aStep textExpandAttributeAt: 24.
 		self checkFor: aStep textExampleStatusAttributeAt: 1 ].
@@ -767,10 +724,10 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI_NoExampleStatusAfterPragmaDeletion [
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion [
 	<gtExample>
 	| aScripter |
-	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI.
+	aScripter := self referencedExampleMethodCoderUI.
 	aScripter substeps: 'Remove Pragma' do: [ :aStep |
 		aStep do
 			label: 'Delete e character from <gtExample>';
@@ -793,10 +750,10 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI_NoExampleStatusAfterPragmaDeletion_WriteExamplePragma [
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion_WriteExamplePragma [
 	<gtExample>
 	| aScripter |
-	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI_NoExampleStatusAfterPragmaDeletion.
+	aScripter := self referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion.
 	aScripter substeps: 'Insert Pragma' do: [ :aStep |
 		aStep do
 			label: 'Insert e character in <gtExample>';
