@@ -12,6 +12,6 @@ BaselineOfGToolkitCoderMetamodels >> baseline: spec [
 			baseline: 'GToolkitRefactoringsUtility' with: [
 				spec repository: 'github://feenkcom/gtoolkit-utility/src' ].
 		spec 
-			package: 'GToolkit-Coder-Meta' with: [
+			package: 'GToolkit-Coder-Metamodels' with: [
 				spec requires: #(GToolkitRefactoringsUtility). ]. ].
 ]
