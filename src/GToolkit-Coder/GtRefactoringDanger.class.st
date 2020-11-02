@@ -5,7 +5,7 @@ Class {
 		'condition',
 		'description'
 	],
-	#category : #'GToolkit-Coder-Refactorings'
+	#category : #'GToolkit-Coder-Refactoring'
 }
 
 { #category : #accessing }

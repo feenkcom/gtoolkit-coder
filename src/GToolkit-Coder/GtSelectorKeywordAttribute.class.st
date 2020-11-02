@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'index'
 	],
-	#category : #'GToolkit-Coder-Refactorings'
+	#category : #'GToolkit-Coder-Refactoring'
 }
 
 { #category : #'instance creation' }

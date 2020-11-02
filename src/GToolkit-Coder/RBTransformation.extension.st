@@ -12,13 +12,6 @@ RBTransformation >> gtDangers [
 ]
 
 { #category : #'*GToolkit-Coder' }
-RBTransformation >> gtDescription [
-	<return: #String or: #BlRopedText>
-	
-	^ self class name
-]
-
-{ #category : #'*GToolkit-Coder' }
 RBTransformation >> gtPreconditions [
 	^ self preconditions
 ]

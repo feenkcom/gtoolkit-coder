@@ -852,16 +852,6 @@ GtSourceCoder >> source [
 	^ self currentSourceString
 ]
 
-{ #category : #'api - accessing' }
-GtSourceCoder >> source: aString [
-	"Change the source text of the current coder to a given string"
-
-	self
-		deprecated: 'Use #replaceSourceTextWith: or #from* methods instead'.
-
-	self halt
-]
-
 { #category : #private }
 GtSourceCoder >> sourceAst [
 	^ GtPharoParser

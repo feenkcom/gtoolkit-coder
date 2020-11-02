@@ -31,17 +31,21 @@ BaselineOfGToolkitCoder >> baseline: spec [
 		spec 
 			baseline: 'Brick' with: [
 				spec repository: 'github://feenkcom/Brick/src' ];
-			baseline: 'GToolkitUtility' with: [
+			baseline: 'GToolkitBasicUtility' with: [
 				spec repository: 'github://feenkcom/gtoolkit-utility/src' ];
+			baseline: 'GToolkitAnnouncerUtility' with: [
+				spec repository: 'github://feenkcom/gtoolkit-utility/src' ];
+			baseline: 'GToolkitCoderMetamodels' with: [
+				spec repository: 'github://feenkcom/gtoolkit-coder/src' ];
 			baseline: 'GToolkitPager' with: [
 				spec repository: 'github://feenkcom/gtoolkit-pager/src' ];
 			baseline: 'GToolkitPhlow' with: [
 				spec repository: 'github://feenkcom/gtoolkit-phlow/src' ].
 		spec 
 			package: 'GToolkit-Coder' with: [
-				spec requires: #('Brick' 'GToolkitUtility' 'GToolkitPhlow' 'GToolkitPager' ). ];
+				spec requires: #('Brick' 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitCoderMetamodels' 'GToolkitPhlow' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-UI' with: [
-				spec requires: #('GToolkit-Coder' 'Brick' 'GToolkitUtility' 'GToolkitPhlow' 'GToolkitPager' ). ];
+				spec requires: #('GToolkit-Coder' 'Brick' 'GToolkitBasicUtility' 'GToolkitPhlow' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-AddOns' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI'). ];
 			package: 'GToolkit-Coder-Extensions' with: [

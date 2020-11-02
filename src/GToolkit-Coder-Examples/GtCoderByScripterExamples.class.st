@@ -14,3 +14,19 @@ GtCoderByScripterExamples >> scripter [
 	
 	^ scripter
 ]
+
+{ #category : #utilities }
+GtCoderByScripterExamples >> scripterForBlock: aBlock [
+	<gtExample>
+	| aScripter |
+	aScripter := self scripter.
+	aScripter substep: 'Initialize Coder Model and UI' do: [ :aStep | 
+		aStep set 
+			label: 'Initialize Coder Model';
+			model: aBlock.
+		aStep set 
+			label: 'Initialize Coder UI';
+			element: [ :aCoder | aCoder asElement ];
+			onModel ].
+	^ aScripter
+]

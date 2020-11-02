@@ -1,6 +1,6 @@
 Class {
 	#name : #GtClassCoder,
-	#superclass : #Announcer,
+	#superclass : #GtCoderModel,
 	#traits : 'TGtCoderTrait',
 	#classTraits : 'TGtCoderTrait classTrait',
 	#instVars : [
@@ -10,6 +10,11 @@ Class {
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #constants }
+GtClassCoder class >> addNewMethodButtonName [
+	^ #'button--add-new-method'
+]
 
 { #category : #'instance creation' }
 GtClassCoder class >> forClass: aBehavior [

@@ -13,7 +13,7 @@ Class {
 		'renameIndex',
 		'originalSource'
 	],
-	#category : #'GToolkit-Coder-Refactorings'
+	#category : #'GToolkit-Coder-Refactoring'
 }
 
 { #category : #private }

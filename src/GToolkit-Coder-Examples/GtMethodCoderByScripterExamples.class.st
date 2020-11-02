@@ -773,22 +773,6 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatu
 	^ aScripter
 ]
 
-{ #category : #utilities }
-GtMethodCoderByScripterExamples >> scripterForBlock: aBlock [
-	<gtExample>
-	| aScripter |
-	aScripter := self scripter.
-	aScripter substep: 'Initialize Coder Model and UI' do: [ :aStep | 
-		aStep set 
-			label: 'Initialize Coder Model';
-			model: aBlock.
-		aStep set 
-			label: 'Initialize Coder UI';
-			element: [ :aCoder | aCoder asElement ];
-			onModel ].
-	^ aScripter
-]
-
 { #category : #'sample methods' }
 GtMethodCoderByScripterExamples >> sumMethod [
 	<gtExample>

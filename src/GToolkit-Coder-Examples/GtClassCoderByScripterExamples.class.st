@@ -1,0 +1,43 @@
+Class {
+	#name : #GtClassCoderByScripterExamples,
+	#superclass : #GtCoderByScripterExamples,
+	#category : #'GToolkit-Coder-Examples-By scripter'
+}
+
+{ #category : #'examples - for class' }
+GtClassCoderByScripterExamples >> classCoderForClass [
+	<gtExample>
+	
+	^ GtClassCoder forClass: GtBehaviorCoderDummyClass
+]
+
+{ #category : #'examples - for class' }
+GtClassCoderByScripterExamples >> classCoderForClassUI [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ self classCoderForClass ].
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - for class' }
+GtClassCoderByScripterExamples >> classCoderForClassUI_click_add_method [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self classCoderForClassUI.
+	
+	aScripter
+		substep: 'Add new method'
+		do: [ :aStep |
+			aStep click
+				label: 'Click add method button';
+				onChildNamed: GtClassCoder addNewMethodButtonName.
+			aStep wait forEmptySpaceTaskQueue.
+			
+			aStep check
+				label: 'Check new method'
+			 ].
+
+	^ aScripter syncContinue
+]

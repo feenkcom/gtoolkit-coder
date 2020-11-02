@@ -87,7 +87,7 @@ GtBehaviorDefinitionElement >> initializeElements [
 
 	self addChild: (GtRefactoringsPreviewButton new
 		refactorings: [ { 
-				RBDefineClassTransformation
+				RBDefineClassRefactoring
 					model: RBNamespace new
 					addClass: self definition name
 					superclass: self definition superclass name
