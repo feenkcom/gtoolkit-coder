@@ -9,7 +9,7 @@ GtClassCoderExamples >> coderForClass [
 	<gtExample>
 	| aCoder |
 
-	aCoder := GtClassCoder forClass: GtBehaviorCoderDummyClass.
+	aCoder := GtBehaviorCoder forClass: GtBehaviorCoderDummyClass.
 
 	^ aCoder
 ]

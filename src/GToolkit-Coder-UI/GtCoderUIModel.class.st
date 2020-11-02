@@ -7,9 +7,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'coder',
-		'codersUIModel',
-		'hasFocus',
-		'expanded'
+		'codersUIModel'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
@@ -66,36 +64,6 @@ GtCoderUIModel >> elementClass [
 	^ GtExpandableCoderElement
 ]
 
-{ #category : #'api - ui' }
-GtCoderUIModel >> expanded [
-	^ expanded
-]
-
-{ #category : #'api - ui' }
-GtCoderUIModel >> expanded: aBoolean [
-	expanded := aBoolean
-]
-
-{ #category : #'api - ui' }
-GtCoderUIModel >> focused [
-	<return: #Boolean>
-
-	^ hasFocus
-]
-
-{ #category : #'api - ui' }
-GtCoderUIModel >> focused: aBoolean [
-	hasFocus = aBoolean
-		ifTrue: [ ^ self ].
-
-	hasFocus := aBoolean.
-
-	codersUIModel ifNotNil: [ :theCoders |
-		aBoolean
-			ifTrue: [ theCoders focusCoderUIModel: self  ]
-			ifFalse: [ theCoders unfocusCoderUIModel: self ] ]
-]
-
 { #category : #'gt-extension' }
 GtCoderUIModel >> gtLiveFor: aView [
 	<gtView>
@@ -126,12 +94,4 @@ GtCoderUIModel >> hasFocus: aBoolean [
 				-> '`@receiver focused: `@statements1'.
 
 	self focused: aBoolean
-]
-
-{ #category : #initialization }
-GtCoderUIModel >> initialize [
-	super initialize.
-	
-	hasFocus := false.
-	expanded := true
 ]

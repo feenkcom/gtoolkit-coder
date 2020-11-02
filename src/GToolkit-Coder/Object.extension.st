@@ -6,5 +6,5 @@ Object >> gtMetaFor: aView [
 	^ aView explicit
 		title: 'Meta';
 		priority: 200;
-		stencil: [ (GtClassCoder forObject: self) asElement ]
+		stencil: [ (GtBehaviorCoder forObject: self) asElement ]
 ]

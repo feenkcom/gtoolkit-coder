@@ -33,7 +33,7 @@ GtClassCoderHeaderElementExamples >> coderHeaderElementForTrait [
 	<gtExample>
 	| aCoder aCoderHeaderElement |
 
-	aCoder := GtClassCoder forClass: TGtBehaviorCoderDummyTrait.
+	aCoder := GtBehaviorCoder forClass: TGtBehaviorCoderDummyTrait.
 	aCoderHeaderElement := GtBehaviorCoderHeaderElement new classCoder: aCoder.
 	aCoderHeaderElement expand.
 

@@ -7,7 +7,7 @@ GtClassSuperclassDefinition >> browseFrom: anEvent [
 		ifPresent: [ :aClass |
 			| aCoderEvent aClassCoder |
 
-			aClassCoder := GtClassCoder forClass: aClass.
+			aClassCoder := GtBehaviorCoder forClass: aClass.
 			aCoderEvent := GtCoderToSpawn new coder: aClassCoder.
 			anEvent currentTarget fireEvent: aCoderEvent.
 			aCoderEvent isConsumed
@@ -38,7 +38,7 @@ GtClassSuperclassDefinition >> replaceFrom: anEvent [
 		at: self name
 		ifPresent: [ :aClass |
 			| aCoderEvent aClassCoder |
-			aClassCoder := GtClassCoder forClass: aClass.
+			aClassCoder := GtBehaviorCoder forClass: aClass.
 			aCoderEvent := GtCoderToReplace new coder: aClassCoder.
 			anEvent currentTarget fireEvent: aCoderEvent.
 			aCoderEvent isConsumed ifFalse: [ 

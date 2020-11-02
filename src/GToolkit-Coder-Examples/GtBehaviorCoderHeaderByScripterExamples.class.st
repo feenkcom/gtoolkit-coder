@@ -8,7 +8,7 @@ Class {
 GtBehaviorCoderHeaderByScripterExamples >> classCoderForBasicClass [
 	<gtExample>
 
-	^ GtClassCoder forClass: self targetClass
+	^ GtBehaviorCoder forClass: self targetClass
 ]
 
 { #category : #'examples - setup' }

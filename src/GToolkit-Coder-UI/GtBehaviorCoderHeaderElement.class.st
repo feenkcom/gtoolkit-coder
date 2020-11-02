@@ -111,7 +111,7 @@ GtBehaviorCoderHeaderElement >> buttonMargin [
 
 { #category : #accessing }
 GtBehaviorCoderHeaderElement >> classCoder [
-	<return: #GtClassCoder>
+	<return: #GtBehaviorCoder>
 
 	^ classCoder
 ]

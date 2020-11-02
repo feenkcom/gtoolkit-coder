@@ -8,7 +8,7 @@ Class {
 GtClassCoderByScripterExamples >> classCoderForClass [
 	<gtExample>
 	
-	^ GtClassCoder forClass: GtBehaviorCoderDummyClass
+	^ GtBehaviorCoder forClass: GtBehaviorCoderDummyClass
 ]
 
 { #category : #'examples - for class' }
@@ -32,7 +32,7 @@ GtClassCoderByScripterExamples >> classCoderForClassUI_click_add_method [
 		do: [ :aStep |
 			aStep click
 				label: 'Click add method button';
-				onChildNamed: GtClassCoder addNewMethodButtonName.
+				onChildNamed: GtBehaviorCoder addNewMethodButtonName.
 			aStep wait forEmptySpaceTaskQueue.
 			
 			aStep check

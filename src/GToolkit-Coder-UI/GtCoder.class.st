@@ -24,7 +24,7 @@ Class {
 
 { #category : #'instance creation' }
 GtCoder class >> forClass: aClass [
-	^ self forCoder: (GtClassCoder forClass: aClass)
+	^ self forCoder: (GtBehaviorCoder forClass: aClass)
 ]
 
 { #category : #'instance creation' }
@@ -37,7 +37,7 @@ GtCoder class >> forCoder: aCoder [
 { #category : #'instance creation' }
 GtCoder class >> forMethod: aCompiledMethod [
     | classCoder coder |
-    classCoder := GtClassCoder forClass: aCompiledMethod methodClass instanceSide.
+    classCoder := GtBehaviorCoder forClass: aCompiledMethod methodClass instanceSide.
     coder := self forCoder: classCoder.
     classCoder withSelectedMethod: aCompiledMethod.
     ^ coder
@@ -45,7 +45,7 @@ GtCoder class >> forMethod: aCompiledMethod [
 
 { #category : #'instance creation' }
 GtCoder class >> forObject: anObject [
-	^ self forCoder: (GtClassCoder forObject: anObject)
+	^ self forCoder: (GtBehaviorCoder forObject: anObject)
 ]
 
 { #category : #'instance creation' }
