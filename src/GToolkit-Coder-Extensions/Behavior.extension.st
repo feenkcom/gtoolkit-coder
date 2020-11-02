@@ -78,9 +78,12 @@ Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
 		actionDropdownButtonIcon: BrGlamorousVectorIcons filter
 			tooltip: 'Filter'
 			content: [ :element | aMethodsCoder filterDropDown: element ];
-		actionButtonIcon: BrGlamorousVectorIcons add
-			tooltip: 'Add new method'
-			action: [ aMethodsCoderUIModel addNewCoder ];
+		actionButtonDo: [ :aButtonAction |
+			aButtonAction
+				icon: BrGlamorousVectorIcons add;
+				tooltip: 'Add new method';
+				action: [ aMethodsCoder addNewCoder ];
+				name: GtBehaviorCoder addNewMethodButtonName ];
 		actionStencil:
 				[ self runAllExamplesButtonForMethodsCoder: aMethodsCoder ];
 		stencil: [ aMethodsCoderUIModel asElement ]
