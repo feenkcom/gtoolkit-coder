@@ -126,6 +126,13 @@ GtPackageCoderElement >> buildRemovePackageLabel [
 		text: labelText asRopedText
 ]
 
+{ #category : #accessing }
+GtPackageCoderElement >> coderUIModel: aGtPackageCoder [
+	packageCoder := aGtPackageCoder coder.
+
+	self buildContentPane
+]
+
 { #category : #initialization }
 GtPackageCoderElement >> initialize [
 	super initialize.

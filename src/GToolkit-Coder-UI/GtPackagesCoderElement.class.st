@@ -5,7 +5,7 @@ Class {
 		'packagesCoder',
 		'contentPane'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Packages'
 }
 
 { #category : #'private - ui' }
@@ -61,6 +61,19 @@ GtPackagesCoderElement >> coders: aPackagesCoder [
   | coderElement |
 
   packagesCoder := aPackagesCoder.
+
+	coderElement := self buildPackagesElement.
+
+	contentPane
+		removeChildNamed: #coder;
+		addChild: coderElement as: #coder.
+]
+
+{ #category : #'initialize-release' }
+GtPackagesCoderElement >> codersUIModel: aPackagesCoder [
+  | coderElement |
+
+  packagesCoder := aPackagesCoder coder.
 
 	coderElement := self buildPackagesElement.
 

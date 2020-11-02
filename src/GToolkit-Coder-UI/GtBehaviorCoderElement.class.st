@@ -2,12 +2,12 @@ Class {
 	#name : #GtBehaviorCoderElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'classCoder',
+		'behaviorCoderUIModel',
 		'container',
 		'contentPane',
 		'contentTabs'
 	],
-	#category : #'GToolkit-Coder-UI-Behaviour'
+	#category : #'GToolkit-Coder-UI-Coder - Behavior'
 }
 
 { #category : #callbacks }
@@ -30,14 +30,18 @@ GtBehaviorCoderElement >> actOnSelectMethod: aMethod [
 
 { #category : #callbacks }
 GtBehaviorCoderElement >> browseClassReferences [
+	| classCoder |
+	classCoder := behaviorCoderUIModel coder.
+
 	classCoder theClass
 		ifNotNil: [ :class | self phlow spawnObject: class gtReferences ]
 ]
 
 { #category : #'building ui' }
 GtBehaviorCoderElement >> buildClassLabel [
-	| aClassNameEditor aContainer aPreviewButton removeClassButton |
-		
+	| classCoder aClassNameEditor aContainer aPreviewButton removeClassButton |
+	classCoder := behaviorCoderUIModel coder.
+
 	aContainer := BrHorizontalPane new
 		hMatchParent;
 		alignCenterLeft;
@@ -114,7 +118,7 @@ GtBehaviorCoderElement >> buildContentPane [
 		c vertical matchParent ].
 	contentPane padding: (BlInsets top: 5 left: 6 bottom: 5 right: 6).
 	contentPane addChild: self buildClassLabel.
-	contentPane addChild: self buildHeader.
+	contentPane addChild: self buildDefinitionElement.
 	contentPane addChild: self buildContentTabs.
 
 	^ contentPane
@@ -123,22 +127,27 @@ GtBehaviorCoderElement >> buildContentPane [
 { #category : #'building ui' }
 GtBehaviorCoderElement >> buildContentTabs [
 	<return: #BrTabGroup>
+
 	contentTabs := GtPhlowCompositeView new
 		views: self classViewItems;
 		asElementDo: [ :aBrTabGroup | aBrTabGroup ].
+
 	^ contentTabs
 ]
 
 { #category : #'building ui' }
-GtBehaviorCoderElement >> buildHeader [
-	^ GtBehaviorCoderHeaderElement new
-		classCoder: classCoder;
+GtBehaviorCoderElement >> buildDefinitionElement [
+
+	^ GtBehaviorDefinitionCoderElement new
+		coderUIModel: behaviorCoderUIModel definitionCoderUIModel;
 		margin: (BlInsets top: 5 left: 5)
 ]
 
 { #category : #'building ui' }
 GtBehaviorCoderElement >> buildRemoveClassLabel [
-	| labelText |
+	| labelText classCoder |
+	
+	classCoder := behaviorCoderUIModel coder.
 	labelText := (classCoder theClass isReferenced
 		ifTrue: [ '<1s> is referenced. Remove anyway?' ]
 		ifFalse: [ classCoder theClass subclasses isEmpty
@@ -153,34 +162,42 @@ GtBehaviorCoderElement >> buildRemoveClassLabel [
 
 { #category : #accessing }
 GtBehaviorCoderElement >> classCoder [
-	^ classCoder
-]
-
-{ #category : #accessing }
-GtBehaviorCoderElement >> classCoder: aCoder [
-	classCoder := aCoder.
-	classCoder
-		when: GtCoderPackageUpdatedAnnouncement
-			do: [ :ann | self actOnPackageUpdated: ann ];
-		when: GtClassCoderNavigationAnnouncement
-			do: [ :ann | self actOnSelectMethod: ann method ].
-	container ifNotNil: #removeFromParent.
-	container := self buildContentPane.
-	self addChildFirst: container
+	^ behaviorCoderUIModel classCoder
 ]
 
 { #category : #private }
 GtBehaviorCoderElement >> classViewItems [
-	| collector context |
-	collector := GtPhlowViewsCollector new.
-	collector fromObject: classCoder theClass.
-	collector from: classCoder theClass class.
-	collector to: Behavior.
-	collector pragmaName: #gtClassView.
-	context := Dictionary new.
-	context at: #classCoder put: classCoder.
+	| classCoder collector context |
+	
+	classCoder := behaviorCoderUIModel coder.
+
+	collector := GtPhlowViewsCollector new
+		fromObject: classCoder theClass;
+		from: classCoder theClass class;
+		to: Behavior;
+		pragmaName: #gtClassView.
+
+	context := GtPhlowContext new.
+	context optionAt: #behaviorCoder put: behaviorCoderUIModel.
+
 	collector context: context.
+
 	^ collector collect
+]
+
+{ #category : #accessing }
+GtBehaviorCoderElement >> coderUIModel: aBehaviorCoderUIModel [
+
+	behaviorCoderUIModel := aBehaviorCoderUIModel.
+	behaviorCoderUIModel coder
+		when: GtCoderPackageUpdatedAnnouncement
+			do: [ :ann | self actOnPackageUpdated: ann ];
+		when: GtClassCoderNavigationAnnouncement
+			do: [ :ann | self actOnSelectMethod: ann method ].
+
+	container ifNotNil: #removeFromParent.
+	container := self buildContentPane.
+	self addChildFirst: container
 ]
 
 { #category : #private }
@@ -205,11 +222,14 @@ GtBehaviorCoderElement >> initialize [
 
 { #category : #actions }
 GtBehaviorCoderElement >> removeClass [
-	| coder event |
-	coder := classCoder packageTag
+	| aClassCoder coder event |
+	
+	aClassCoder := behaviorCoderUIModel coder.
+	
+	coder := aClassCoder packageTag
 		ifNotNil: [ :tag | GtPackageTagCoder forPackageTag: tag ]
-		ifNil: [ GtPackageCoder forPackage: classCoder package ].
-	classCoder removeClass.
+		ifNil: [ GtPackageCoder forPackage: aClassCoder package ].
+	aClassCoder removeClass.
 	event := GtCoderToReplace new coder: coder.
 	self fireEvent: event
 ]

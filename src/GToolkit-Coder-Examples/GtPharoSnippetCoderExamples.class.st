@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPharoSnippetCoderExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples-Model'
+	#category : #'GToolkit-Coder-Examples-Coders'
 }
 
 { #category : #examples }

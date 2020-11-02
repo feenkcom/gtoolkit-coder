@@ -35,7 +35,7 @@ GtBehaviorCoder class >> forObject: anObject [
 { #category : #accessing }
 GtBehaviorCoder >> definitionCoder [
 	<return: #GtBehaviorDefinitionCoder>
-	
+
 	^ definitionCoder
 ]
 

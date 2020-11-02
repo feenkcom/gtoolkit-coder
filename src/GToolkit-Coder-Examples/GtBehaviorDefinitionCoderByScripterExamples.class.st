@@ -1,48 +1,46 @@
 Class {
-	#name : #GtBehaviorCoderHeaderByScripterExamples,
+	#name : #GtBehaviorDefinitionCoderByScripterExamples,
 	#superclass : #GtCoderByScripterExamples,
 	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
 { #category : #'examples - setup' }
-GtBehaviorCoderHeaderByScripterExamples >> classCoderForBasicClass [
+GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionCoderForBasicClass [
 	<gtExample>
 
-	^ GtBehaviorCoder forClass: self targetClass
+	^ GtBehaviorDefinitionCoder forBehavior: self targetClass
 ]
 
 { #category : #'examples - setup' }
-GtBehaviorCoderHeaderByScripterExamples >> coderHeaderElement [
+GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionElement [
 	<gtExample>
-	| classCoder coderHeaderElement |
+	| behaviorDefinitionCoder behaviorDefinitionElement |
 
-	classCoder := self classCoderForBasicClass.
-	coderHeaderElement := GtBehaviorCoderHeaderElement new classCoder: classCoder.
+	behaviorDefinitionCoder := self behaviorDefinitionCoderForBasicClass.
+	behaviorDefinitionElement := behaviorDefinitionCoder asElement.
 
-	self assert: coderHeaderElement classCoder theClass equals: self targetClass.
-
-	^ coderHeaderElement
+	^ behaviorDefinitionElement
 ]
 
 { #category : #examples }
-GtBehaviorCoderHeaderByScripterExamples >> coderHeaderScripter [
+GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionScripter [
 	<gtExample>
 	| aScripter |
 
 	aScripter := self scripter.
 	aScripter set 
 		label: 'Initialize Header Element';
-		element: [ self coderHeaderElement ].
+		element: [ self behaviorDefinitionElement ].
 
 	^ aScripter syncContinue
 ]
 
 { #category : #examples }
-GtBehaviorCoderHeaderByScripterExamples >> coderHeaderScripter_CollapsedByDefault [
+GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionScripter_CollapsedByDefault [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self coderHeaderScripter.
+	aScripter := self behaviorDefinitionScripter.
 	aScripter check
 		label: 'Check collapsed header';
 		satisfies: [ :aHeaderElement | aHeaderElement isCollapsed ].
@@ -51,11 +49,11 @@ GtBehaviorCoderHeaderByScripterExamples >> coderHeaderScripter_CollapsedByDefaul
 ]
 
 { #category : #examples }
-GtBehaviorCoderHeaderByScripterExamples >> coderHeaderScripter_ExpandHeader [
+GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionScripter_ExpandHeader [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self coderHeaderScripter.
+	aScripter := self behaviorDefinitionScripter.
 	aScripter substep: 'Expand header' do: [ :aStep |
 		aStep click
 			label: 'Click on expand element';
@@ -69,11 +67,11 @@ GtBehaviorCoderHeaderByScripterExamples >> coderHeaderScripter_ExpandHeader [
 ]
 
 { #category : #examples }
-GtBehaviorCoderHeaderByScripterExamples >> coderHeaderScripter_ExpandHeader_CollapseHeader [
+GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionScripter_ExpandHeader_CollapseHeader [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self coderHeaderScripter_ExpandHeader.
+	aScripter := self behaviorDefinitionScripter_ExpandHeader.
 	aScripter substep: 'Expand and collapse header' do: [ :aStep |
 		aStep click
 			label: 'Click on expand element';
@@ -87,6 +85,6 @@ GtBehaviorCoderHeaderByScripterExamples >> coderHeaderScripter_ExpandHeader_Coll
 ]
 
 { #category : #accessing }
-GtBehaviorCoderHeaderByScripterExamples >> targetClass [
+GtBehaviorDefinitionCoderByScripterExamples >> targetClass [
 	^ GtBehaviorCoderDummyBasicClass
 ]

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtExpandedOnlyCoderElement,
 	#superclass : #BrVerticalPane,
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #adding }

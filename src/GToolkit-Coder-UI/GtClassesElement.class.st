@@ -26,6 +26,12 @@ GtClassesElement >> coders: aCoder [
 	self buildContainer
 ]
 
+{ #category : #accessing }
+GtClassesElement >> codersUIModel: aCoder [
+	coder := aCoder coder.
+	self buildContainer
+]
+
 { #category : #initialization }
 GtClassesElement >> initialize [
 	super initialize.

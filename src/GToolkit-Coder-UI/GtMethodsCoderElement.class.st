@@ -2,9 +2,8 @@ Class {
 	#name : #GtMethodsCoderElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'coders',
-		'listElement',
-		'codersUIModel'
+		'methodsCoderUIModel',
+		'listElement'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Methods'
 }
@@ -22,15 +21,15 @@ GtMethodsCoderElement >> buildElement [
 			c horizontal matchParent.
 			c vertical matchParent ].
 	self buildFilter.
-	self addChild: self listElement as: #codersList.
+	self addChild: self listElement as: #codersList
 ]
 
 { #category : #ui }
 GtMethodsCoderElement >> buildFilter [
 	| filterElement filterDescriptors |
-	coders canFilter
+	methodsCoderUIModel coder canFilter
 		ifFalse: [ ^ self ].
-	filterDescriptors := coders filterDescriptors.
+	filterDescriptors := methodsCoderUIModel coder filterDescriptors.
 	filterDescriptors isEmpty
 		ifTrue: [ ^ self ].
 	filterElement := GtFiltersElement new
@@ -40,25 +39,19 @@ GtMethodsCoderElement >> buildFilter [
 	filterElement
 		when: GtFiltersChangedEvent
 		do: [ :event | self updateCodersFilters: event ].
-	coders
+	methodsCoderUIModel announcer
 		when: GtCodersFiltersChanged
 		do: [ :event | self updateDisplayedFilters: filterElement ].
 	self addChild: filterElement as: #filter
 ]
 
 { #category : #accessing }
-GtMethodsCoderElement >> coders [
-	^ coders
-]
-
-{ #category : #accessing }
-GtMethodsCoderElement >> coders: aCoders [
-	coders := aCoders.
-	
-	codersUIModel := GtCodersUIModel new coders: aCoders.
+GtMethodsCoderElement >> codersUIModel: aGtMethodsCoderUIModel [	
+	methodsCoderUIModel := aGtMethodsCoderUIModel.
 
 	self buildElement.
-	coders announcer weak
+
+	methodsCoderUIModel announcer weak
 		when: GtCodersCoderAdded , GtCodersCoderRemoved , GtCodersCodersChanged
 			send: #updateList
 			to: self;
@@ -76,7 +69,7 @@ GtMethodsCoderElement >> listElement [
 		itemStencil: [ :anElementClass | anElementClass new ];
 		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ];
 		itemDataUnbinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement saveCoderUIModel: eachCoderUIModel ];
-		items: codersUIModel coderUIModels;
+		items: methodsCoderUIModel coderUIModels;
 		yourself.
 
 	^ listElement
@@ -86,7 +79,7 @@ GtMethodsCoderElement >> listElement [
 GtMethodsCoderElement >> scrollToEvent: anEvent [
 	| coder index |
 	coder := anEvent sourceCoder.
-	index := coders coders identityIndexOf: coder.
+	index := methodsCoderUIModel coders coders identityIndexOf: coder.
 	index > 0
 		ifTrue: [ (self childNamed: #codersList) look listElement scrollToPosition: index ]
 ]
@@ -98,15 +91,15 @@ GtMethodsCoderElement >> updateCodersFilters: event [
 	event filterElement
 		filtersDo:
 			[ :descriptor :value | filters add: (descriptor newFilterWithValue: value) ].
-	^ coders additionalFilters: filters
+	^ methodsCoderUIModel coders additionalFilters: filters
 ]
 
 { #category : #'private - updating' }
 GtMethodsCoderElement >> updateDisplayedFilters: filterElement [
 	filterElement
-		buildFilters: [ coders additionalFilters
+		buildFilters: [ methodsCoderUIModel coders additionalFilters
 				do: [ :each | 
-					(each class filterDescriptorFor: coders)
+					(each class filterDescriptorFor: methodsCoderUIModel coders)
 						ifNotNil: [ :descriptor | 
 							| label |
 							label := descriptor valueIsRequired
@@ -118,8 +111,8 @@ GtMethodsCoderElement >> updateDisplayedFilters: filterElement [
 
 { #category : #'private - updating' }
 GtMethodsCoderElement >> updateList [
-	codersUIModel
+	methodsCoderUIModel
 		ifNil: [ ^ self ].
-	codersUIModel updateCoderUIModels.
-	self listElement items: codersUIModel coderUIModels
+	methodsCoderUIModel updateCoderUIModels.
+	self listElement items: methodsCoderUIModel coderUIModels
 ]

@@ -1,26 +1,14 @@
 Class {
-	#name : #GtBehaviorCoderHeaderElement,
+	#name : #GtBehaviorDefinitionCoderElement,
 	#superclass : #BrExpander,
 	#instVars : [
-		'classCoder',
-		'headerModel'
+		'behaviorCoderUIModel'
 	],
-	#category : #'GToolkit-Coder-UI-Behaviour'
+	#category : #'GToolkit-Coder-UI-Coder - Behavior-Definition'
 }
 
-{ #category : #'event handling' }
-GtBehaviorCoderHeaderElement >> actOnClassChanged: theClass [
-	self initializeElements
-]
-
-{ #category : #'event handling' }
-GtBehaviorCoderHeaderElement >> actOnPackageChanged: anAnnouncement [	
-	self header: [ BlElement new ].
-	self content: [ BlElement new ]
-]
-
 { #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> addDefinitionEditorShortcutsTo: aPropertiesElement [
+GtBehaviorDefinitionCoderElement >> addDefinitionEditorShortcutsTo: aPropertiesElement [
 	aPropertiesElement addShortcut: (BlShortcut new
 		combination: BlKeyCombination arrowUp;
 		action: [ :anEvent |
@@ -43,7 +31,7 @@ GtBehaviorCoderHeaderElement >> addDefinitionEditorShortcutsTo: aPropertiesEleme
 ]
 
 { #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
+GtBehaviorDefinitionCoderElement >> buildDefinitionEditor [
 	| theProperties |
 		
 	theProperties := BlElement new
@@ -54,7 +42,7 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 		
 	self addDefinitionEditorShortcutsTo: theProperties.
 
-	headerModel editors do: [ :eachEditor |
+	self editors do: [ :eachEditor |
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
@@ -63,15 +51,17 @@ GtBehaviorCoderHeaderElement >> buildDefinitionEditor [
 					asElement) } ].
 
 	theProperties addChild: (GtRefactoringsPreviewButton new
-		refactorings: [ headerModel refactorings ];
-		when: GtRefactoringsAppliedEvent do: [ headerModel behavior: headerModel behavior ];
+		refactorings: [ self coderUIModel coder refactorings ];
+		when: GtRefactoringsAppliedEvent do: [
+			self initializeElements
+		];
 		constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
 	^ theProperties
 ]
 
 { #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> buildDefinitionReader [
+GtBehaviorDefinitionCoderElement >> buildDefinitionReader [
 	| theProperties theReaders |
 
 	theProperties := BlElement new
@@ -80,7 +70,7 @@ GtBehaviorCoderHeaderElement >> buildDefinitionReader [
 			c horizontal matchParent.
 			c vertical fitContent ].
 
-	theReaders := headerModel readers.
+	theReaders := self readers.
 	theReaders := theReaders first: (2 min: theReaders size).
 	theReaders do: [ :eachEditor |
 		theProperties addChildren: { 
@@ -94,7 +84,7 @@ GtBehaviorCoderHeaderElement >> buildDefinitionReader [
 ]
 
 { #category : #'private - instance creation' }
-GtBehaviorCoderHeaderElement >> buildSectionLabel: aSectionName [
+GtBehaviorDefinitionCoderElement >> buildSectionLabel: aSectionName [
 	
 	^ BrLabel new
 		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
@@ -105,59 +95,61 @@ GtBehaviorCoderHeaderElement >> buildSectionLabel: aSectionName [
 ]
 
 { #category : #'private - ui' }
-GtBehaviorCoderHeaderElement >> buttonMargin [
+GtBehaviorDefinitionCoderElement >> buttonMargin [
 	^ BlInsets top: 3 left: 0 bottom: 3 right: 5
 ]
 
 { #category : #accessing }
-GtBehaviorCoderHeaderElement >> classCoder [
-	<return: #GtBehaviorCoder>
-
-	^ classCoder
+GtBehaviorDefinitionCoderElement >> coderUIModel [
+	^ behaviorCoderUIModel
 ]
 
 { #category : #accessing }
-GtBehaviorCoderHeaderElement >> classCoder: aGtClassCoder [
-	classCoder := aGtClassCoder.	
-	classCoder
-		when: GtCoderPackageUpdatedAnnouncement
-			do: [ :anAnnouncement | self actOnPackageChanged: anAnnouncement ].
-			
-	headerModel behavior: classCoder theClass
+GtBehaviorDefinitionCoderElement >> coderUIModel: aGtBehaviorDefinitionCoderUIModel [
+	behaviorCoderUIModel := aGtBehaviorDefinitionCoderUIModel.	
+	self initializeElements
 ]
 
 { #category : #'private - ui' }
-GtBehaviorCoderHeaderElement >> editableLabelLook [
+GtBehaviorDefinitionCoderElement >> editableLabelLook [
 	^ BrGlamorousEditableLabelLook new
 		glamorousCodeFont;
 		defaultForeground: Color black;
 		fontSize: 10
 ]
 
+{ #category : #'private - accessing' }
+GtBehaviorDefinitionCoderElement >> editors [
+	<return: #Collection of: #GtCodeDefinitionViewer>
+
+	^ behaviorCoderUIModel coder definition editors
+]
+
 { #category : #initialization }
-GtBehaviorCoderHeaderElement >> initialize [
+GtBehaviorDefinitionCoderElement >> initialize [
 	super initialize.	
-	
-	self viewModel add: (headerModel := GtBehaviorCoderHeaderModel new).
 
 	self
 		look: GtCoderExpanderLook;
 		hMatchParent;
-		vFitContent.
-
-	self
-		when: GtBehaviorCoderHeaderClassChanged
-		do: [ :anEvent | self actOnClassChanged: anEvent theClass ]
+		vFitContent
 ]
 
 { #category : #'private - ui' }
-GtBehaviorCoderHeaderElement >> initializeElements [
+GtBehaviorDefinitionCoderElement >> initializeElements [
 	self header: [ self buildDefinitionReader ].
 	self content: [ self buildDefinitionEditor ]
 ]
 
+{ #category : #'private - accessing' }
+GtBehaviorDefinitionCoderElement >> readers [
+	<return: #Collection of: #GtCodeDefinitionViewer>
+	
+	^ behaviorCoderUIModel coder definition readers
+]
+
 { #category : #'private - ui' }
-GtBehaviorCoderHeaderElement >> readonlyLabelLook [
+GtBehaviorDefinitionCoderElement >> readonlyLabelLook [
 	^ BrGlamorousEditorLook new
 		glamorousCodeFont;
 		fontSize: 10;

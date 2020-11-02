@@ -4,25 +4,28 @@ Extension { #name : #Class }
 Class >> gtExamplesMapFor: aView context: aPhlowContext [
 	<gtView>
 	<gtClassView>
-	| aMethodsCoder |
-	aMethodsCoder := self methodsCoderFromContext: aPhlowContext.
-	aMethodsCoder exampler hasExamples ifFalse: [ ^ aView empty ].
+	| aMethodsCoderUIModel aMethodsCoder |
+	aMethodsCoderUIModel := self methodsCoderFromContext: aPhlowContext.
+	aMethodsCoder := aMethodsCoderUIModel coder.
+	aMethodsCoder exampler hasExamples
+		ifFalse: [ ^ aView empty ].
 	^ aView forward
 		title: 'Examples map';
 		priority: 11;
-		object: [ 
-			| allExamples |
-			allExamples := Array streamContents: [ :aStream | 
-		aMethodsCoder exampler allExecutableExampleCodersDo: [ :aCoder :anExample |
-			aStream nextPut: anExample ] ].
+		object: [ | allExamples |
+			allExamples := Array
+				streamContents: [ :aStream | 
+					aMethodsCoder exampler
+						allExecutableExampleCodersDo: [ :aCoder :anExample | aStream nextPut: anExample ] ].
 			GtExampleGroup withAll: allExamples ];
 		view: #gtMapFor:;
-		actionStencilDo: [ :anExplicitAction |
+		actionStencilDo: [ :anExplicitAction | 
 			anExplicitAction
 				priority: 80;
-				stencil: [
-					self runAllExamplesButtonForMethodsCoder: aMethodsCoder ] ];
-		updateWhen: GtCodersCoderAdded , GtCodersCoderRemoved , GtCodersCodersChanged, GtCoderSourceCodeChanged 
+				stencil: [ self runAllExamplesButtonForMethodsCoder: aMethodsCoder ] ];
+		updateWhen:
+			GtCodersCoderAdded , GtCodersCoderRemoved , GtCodersCodersChanged
+				, GtCoderSourceCodeChanged
 			in: [ aMethodsCoder ];
 		addAutoUpdate: GtPhlowUpdateViewOnAddedToScene
 ]

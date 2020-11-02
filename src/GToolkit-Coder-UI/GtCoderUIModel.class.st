@@ -61,7 +61,7 @@ GtCoderUIModel >> codersUIModel: anObject [
 
 { #category : #accessing }
 GtCoderUIModel >> elementClass [
-	^ GtExpandableCoderElement
+	^ self subclassResponsibility
 ]
 
 { #category : #'gt-extension' }

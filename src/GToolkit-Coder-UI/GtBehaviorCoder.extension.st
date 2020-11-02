@@ -7,12 +7,5 @@ GtBehaviorCoder >> asCardElement [
 
 { #category : #'*GToolkit-Coder-UI' }
 GtBehaviorCoder >> asCoderUIModel [
-	^ GtClassCoderUIModel new coder: self
-]
-
-{ #category : #'*GToolkit-Coder-UI' }
-GtBehaviorCoder >> asElement [
-	| coderElement |
-	coderElement := GtBehaviorCoderElement new classCoder: self.
-	^ coderElement
+	^ GtBehaviorCoderUIModel new coder: self
 ]

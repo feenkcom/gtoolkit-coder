@@ -1,6 +1,6 @@
 Extension { #name : #GtClassesCoder }
 
 { #category : #'*GToolkit-Coder-UI' }
-GtClassesCoder >> elementClass [
-	^ GtClassesElement
+GtClassesCoder >> asCoderUIModel [
+	^ GtClassesCoderUIModel new coder: self
 ]

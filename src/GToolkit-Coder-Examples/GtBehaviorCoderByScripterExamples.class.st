@@ -1,18 +1,18 @@
 Class {
-	#name : #GtClassCoderByScripterExamples,
+	#name : #GtBehaviorCoderByScripterExamples,
 	#superclass : #GtCoderByScripterExamples,
 	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
 { #category : #'examples - for class' }
-GtClassCoderByScripterExamples >> classCoderForClass [
+GtBehaviorCoderByScripterExamples >> classCoderForClass [
 	<gtExample>
 	
 	^ GtBehaviorCoder forClass: GtBehaviorCoderDummyClass
 ]
 
 { #category : #'examples - for class' }
-GtClassCoderByScripterExamples >> classCoderForClassUI [
+GtBehaviorCoderByScripterExamples >> classCoderForClassUI [
 	<gtExample>
 	| aScripter |
 
@@ -21,8 +21,9 @@ GtClassCoderByScripterExamples >> classCoderForClassUI [
 ]
 
 { #category : #'examples - for class' }
-GtClassCoderByScripterExamples >> classCoderForClassUI_click_add_method [
+GtBehaviorCoderByScripterExamples >> classCoderForClassUI_click_add_method [
 	<gtExample>
+	<noTest>
 	| aScripter |
 
 	aScripter := self classCoderForClassUI.

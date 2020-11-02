@@ -6,7 +6,7 @@ Class {
 		'expandedElement',
 		'coderUIModel'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #private }

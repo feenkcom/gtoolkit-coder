@@ -66,3 +66,8 @@ GtBehaviorCoderDummyClass >> instVarC [
 GtBehaviorCoderDummyClass >> instVarC: anObject [
 	instVarC := anObject
 ]
+
+{ #category : #accessing }
+GtBehaviorCoderDummyClass >> newMethod [
+	^ 4
+]

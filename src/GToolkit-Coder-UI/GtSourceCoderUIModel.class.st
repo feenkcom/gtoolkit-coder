@@ -19,6 +19,11 @@ GtSourceCoderUIModel >> editorState: anObject [
 	editorState := anObject
 ]
 
+{ #category : #accessing }
+GtSourceCoderUIModel >> elementClass [
+	^ GtExpandableCoderElement
+]
+
 { #category : #'api - ui' }
 GtSourceCoderUIModel >> expanded [
 	^ expanded
