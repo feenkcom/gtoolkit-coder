@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #accessing }
+GtCreateBehaviorElement class >> saveButtonName [
+	^ #'creator--save-button'
+]
+
+{ #category : #accessing }
 GtCreateBehaviorElement >> behaviorBlock: aBlock [
 	behaviorBlock := aBlock
 ]
@@ -54,7 +59,6 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 					referenceElement: aFocusedChild;
 					nextFocusDo: [ :aNextFocusElement | aNextFocusElement requestFocus ] ] ]).
 
-
 	saveButton := BrButton new
 		icon: BrGlamorousVectorIcons accept;
 		beSmall;
@@ -62,6 +66,7 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 		label: 'Save';
 		action: [ self compileBehavior ];
 		constraintsDo: [ :c | c grid horizontal span: 2 ];
+		containerName: self class saveButtonName;
 		disable.
 
 	definition
@@ -86,8 +91,15 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 { #category : #private }
 GtCreateBehaviorElement >> compileBehavior [
 	| change |
+	
+	"before creating a class we should create a proper package + tag"
+	definition category isValidForCreation
+		ifTrue: [ definition category createPackageChange execute ].
+	
 	change := definition createBehaviorChange.
+	
 	change execute.
+	
 	behaviorBlock notNil
 		ifTrue: [ behaviorBlock cull: change definedClass ]
 ]

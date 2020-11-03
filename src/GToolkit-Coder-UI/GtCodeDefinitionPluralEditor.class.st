@@ -90,6 +90,9 @@ GtCodeDefinitionPluralEditor >> create [
 		when: BrTaggerRemoveTagRequest do: [ :aRequest | removeAction value: aRequest tag ];
 		when: BrTaggerRenameTagRequest do: [ :aRequest | renameAction value: aRequest tag value: aRequest newName ].
 
+	self containerName
+		ifNotNil: [ :aContainerName | aTagger containerName: aContainerName ].
+
 	aDefinition
 		when: addAnnouncement
 		do: [ :anEvent | 

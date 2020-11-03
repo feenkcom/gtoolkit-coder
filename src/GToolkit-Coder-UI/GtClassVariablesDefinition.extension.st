@@ -20,7 +20,8 @@ GtClassVariablesDefinition >> classVariablesEditor [
 			whenKey: BlKeyCombination primaryN do: [ :anEvent :aDefinition  | aDefinition browseReferencesFrom: anEvent ];
 			whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
 				Clipboard clipboardText: aDefinition name asString ];
-			whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+			whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ];
+		containerName: self class classVariablesEditorName
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

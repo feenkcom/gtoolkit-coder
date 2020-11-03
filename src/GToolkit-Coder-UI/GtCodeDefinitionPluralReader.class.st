@@ -55,6 +55,9 @@ GtCodeDefinitionPluralReader >> create [
 			yourself);
 		namedTags: theInitialNames.
 
+	self containerName
+		ifNotNil: [ :aContainerName | aTagger containerName: aContainerName ].
+
 	aDefinition
 		when: addAnnouncement
 		do: [ :anEvent | 

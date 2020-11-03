@@ -61,7 +61,8 @@ GtTagDefinition >> tagEditor [
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
 		whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
 			Clipboard clipboardText: aDefinition name asString ];
-		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ]
+		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ];
+		containerName: self class tagEditorName
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
