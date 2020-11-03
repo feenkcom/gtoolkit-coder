@@ -14,9 +14,8 @@ GtCreateBehaviorElement >> behaviorBlock: aBlock [
 
 { #category : #'private - instance creation' }
 GtCreateBehaviorElement >> buildClassLabel [
-	^ headerModel definition nameEditor asElement
-		look:
-			(BrGlamorousEditableLabelLook new
+	^ definition nameEditor asElement
+		look: (BrGlamorousEditableLabelLook new
 				defaultBackground: Color transparent;
 				glamorousCodeFont;
 				bold;
@@ -65,13 +64,13 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 		constraintsDo: [ :c | c grid horizontal span: 2 ];
 		disable.
 
-	headerModel definition
+	definition
 		when: GtBehaviorChangeEvent
-		do: [ :event | saveButton enabled: headerModel isValidForCreation ].
+		do: [ :event | saveButton enabled: definition isValidForCreation ].
 
 	theProperties addChild: (self buildClassLabel constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
-	headerModel editors do: [ :eachEditor |
+	self editors do: [ :eachEditor |
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
@@ -87,42 +86,50 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 { #category : #private }
 GtCreateBehaviorElement >> compileBehavior [
 	| change |
-	change := headerModel definition createBehaviorChange.
+	change := definition createBehaviorChange.
 	change execute.
 	behaviorBlock notNil
 		ifTrue: [ behaviorBlock cull: change definedClass ]
 ]
 
+{ #category : #private }
+GtCreateBehaviorElement >> editors [
+	^ definition editors
+]
+
 { #category : #initialization }
 GtCreateBehaviorElement >> forClassDefinition [
-	headerModel := GtBehaviorCoderHeaderModel new
-		definition: GtClassDefinition forNew.
+	definition := GtClassDefinition forNew.
 	self addChild: self buildDefinitionEditor
 ]
 
 { #category : #initialization }
 GtCreateBehaviorElement >> forClassName: aSymbol [
-	headerModel definition name: aSymbol
+	definition name: aSymbol
 ]
 
 { #category : #initialization }
 GtCreateBehaviorElement >> forPackage: aPackage [
-	headerModel definition category package name: aPackage name
+	definition category package name: aPackage name
 ]
 
 { #category : #initialization }
 GtCreateBehaviorElement >> forPackageTag: aPackageTag [
-	headerModel definition category tag name: aPackageTag name
+	definition category tag name: aPackageTag name
 ]
 
 { #category : #initialization }
 GtCreateBehaviorElement >> forSuperclass: aClass [
-	headerModel definition superclass name: aClass name
+	definition superclass name: aClass name
 ]
 
 { #category : #initialization }
 GtCreateBehaviorElement >> forTraitDefinition [
-	headerModel := GtBehaviorCoderHeaderModel new
-		definition: GtTraitDefinition forNew.
+	definition := GtTraitDefinition forNew.
 	self addChild: self buildDefinitionEditor
+]
+
+{ #category : #private }
+GtCreateBehaviorElement >> isValidForCreation [
+	^ definition isValidForCreation
 ]

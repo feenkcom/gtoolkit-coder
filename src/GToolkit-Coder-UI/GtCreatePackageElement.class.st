@@ -47,16 +47,16 @@ GtCreatePackageElement >> buildDefinitionEditor [
 		constraintsDo: [ :c | c grid horizontal span: 2 ];
 		disable.
 
-	headerModel package
+	definition package
 		when: GtBehaviorChangeEvent
-		do: [ :event | saveButton enabled: headerModel isValidForCreation ].
+		do: [ :event | saveButton enabled: definition isValidForCreation ].
 	
 	theProperties addChild: (self buildPackageLabel constraintsDo: [ :c | c grid horizontal span: 2 ]).
 
-	headerModel tag editors do: [ :eachEditor |
+	definition tag editors do: [ :eachEditor |
 		eachEditor definition
 			when: GtBehaviorChangeEvent
-			do: [ :event | saveButton enabled: headerModel isValidForCreation ].
+			do: [ :event | saveButton enabled: definition isValidForCreation ].
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
@@ -71,7 +71,7 @@ GtCreatePackageElement >> buildDefinitionEditor [
 
 { #category : #'private - ui' }
 GtCreatePackageElement >> buildPackageLabel [
-	^ headerModel package packageEditor asElement
+	^ definition package packageEditor asElement
 		look:
 			(BrGlamorousEditableLabelLook new
 				defaultBackground: Color transparent;
@@ -84,7 +84,7 @@ GtCreatePackageElement >> buildPackageLabel [
 { #category : #initialization }
 GtCreatePackageElement >> createPackage [
 	| change |
-	change := headerModel createPackageChange.
+	change := definition createPackageChange.
 	change execute.
 	packageBlock notNil
 		ifTrue: [ packageBlock cull: change package cull: change tag ]
@@ -92,14 +92,14 @@ GtCreatePackageElement >> createPackage [
 
 { #category : #initialization }
 GtCreatePackageElement >> forPackage: aPackage [
-	headerModel package name: aPackage name
+	definition package name: aPackage name
 ]
 
 { #category : #initialization }
 GtCreatePackageElement >> initialize [
 	super initialize.
-	headerModel := GtCategoryDefinition empty.
-	headerModel package name: 'NewPackage'.
+	definition := GtCategoryDefinition empty.
+	definition package name: 'NewPackage'.
 	self addChild: self buildDefinitionEditor
 ]
 
