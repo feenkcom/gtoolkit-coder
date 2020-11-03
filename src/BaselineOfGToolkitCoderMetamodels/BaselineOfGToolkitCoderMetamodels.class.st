@@ -8,10 +8,9 @@ Class {
 BaselineOfGToolkitCoderMetamodels >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
-		spec 
-			baseline: 'GToolkitRefactoringsUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility/src' ].
-		spec 
-			package: 'GToolkit-Coder-Metamodels' with: [
-				spec requires: #(GToolkitRefactoringsUtility). ]. ].
+		spec baseline: 'GToolkitRefactoringsUtility' with: [
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.4/src' ].
+		spec package: 'GToolkit-Coder-Metamodels' with: [
+				spec requires: #('GToolkitRefactoringsUtility' ). ]. ].
+
 ]
