@@ -258,6 +258,6 @@ GtBehaviorCoderElement >> selectAndScrollToMethod: aMethod [
 
 	contentTabs content 
 		allChildrenBreadthFirstDetect: [ :eachElement | eachElement isKindOf: GtMethodsCoderElement ] 
-		ifFound: [ :theElement | theElement coders selectAndScrollToMethod: aMethod ] 
+		ifFound: [ :theElement | theElement codersUIModel coder selectAndScrollToMethod: aMethod ] 
 		ifNone: [ "ignore" ]
 ]

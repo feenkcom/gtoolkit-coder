@@ -46,6 +46,11 @@ GtMethodsCoderElement >> buildFilter [
 ]
 
 { #category : #accessing }
+GtMethodsCoderElement >> codersUIModel [
+	^ methodsCoderUIModel
+]
+
+{ #category : #accessing }
 GtMethodsCoderElement >> codersUIModel: aGtMethodsCoderUIModel [	
 	methodsCoderUIModel := aGtMethodsCoderUIModel.
 
@@ -79,9 +84,10 @@ GtMethodsCoderElement >> listElement [
 GtMethodsCoderElement >> scrollToEvent: anEvent [
 	| coder index |
 	coder := anEvent sourceCoder.
-	index := methodsCoderUIModel coders coders identityIndexOf: coder.
+	index := methodsCoderUIModel coder coders identityIndexOf: coder.
 	index > 0
-		ifTrue: [ (self childNamed: #codersList) look listElement scrollToPosition: index ]
+		ifTrue: [ (self childNamed: #codersList) look listElement
+				scrollToPosition: index ]
 ]
 
 { #category : #'private - updating' }
