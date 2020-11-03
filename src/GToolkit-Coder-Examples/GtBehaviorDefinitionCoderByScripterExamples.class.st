@@ -29,7 +29,7 @@ GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionScripter [
 
 	aScripter := self scripter.
 	aScripter set 
-		label: 'Initialize Header Element';
+		label: 'Initialize behavior definition element';
 		element: [ self behaviorDefinitionElement ].
 
 	^ aScripter syncContinue
@@ -42,7 +42,7 @@ GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionScripter_Collap
 
 	aScripter := self behaviorDefinitionScripter.
 	aScripter check
-		label: 'Check collapsed header';
+		label: 'Check that behavior definition is collapsed by default';
 		satisfies: [ :aHeaderElement | aHeaderElement isCollapsed ].
 
 	^ aScripter syncContinue
@@ -53,15 +53,15 @@ GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionScripter_Expand
 	<gtExample>
 	| aScripter |
 
-	aScripter := self behaviorDefinitionScripter.
-	aScripter substep: 'Expand header' do: [ :aStep |
+	aScripter := self behaviorDefinitionScripter_CollapsedByDefault.
+	aScripter substep: 'Expand behavior definition' do: [ :aStep |
 		aStep click
 			label: 'Click on expand element';
 			onChildAt: 1.
 		aStep wait forEmptySpaceTaskQueue.
 		aStep check 
-			label: 'Check header element is expanded';
-			satisfies: [ :aHeaderElement | aHeaderElement isExpanded ] ].
+			label: 'Check behavior definition element is expanded';
+			satisfies: [ :aBehaviorDefinition | aBehaviorDefinition isExpanded ] ].
 
 	^ aScripter syncContinue
 ]
@@ -72,14 +72,14 @@ GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionScripter_Expand
 	| aScripter |
 
 	aScripter := self behaviorDefinitionScripter_ExpandHeader.
-	aScripter substep: 'Expand and collapse header' do: [ :aStep |
+	aScripter substep: 'Expand and collapse behavior definition' do: [ :aStep |
 		aStep click
 			label: 'Click on expand element';
 			onChildAt: 1.
 		aStep wait forEmptySpaceTaskQueue.
 		aStep check
-			label: 'Check header element is collapsed';
-			satisfies: [ :aHeaderElement | aHeaderElement isCollapsed ] ].
+			label: 'Check behavior definition element is collapsed';
+			satisfies: [ :aBehaviorDefinition | aBehaviorDefinition isCollapsed ] ].
 
 	^ aScripter syncContinue
 ]
