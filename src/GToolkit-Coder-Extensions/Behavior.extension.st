@@ -82,7 +82,7 @@ Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
 			aButtonAction
 				icon: BrGlamorousVectorIcons add;
 				tooltip: 'Add new method';
-				action: [ aMethodsCoder addNewCoder ];
+				action: [ aMethodsCoderUIModel addNewCoder ];
 				name: GtBehaviorCoder addNewMethodButtonName ];
 		actionStencil:
 				[ self runAllExamplesButtonForMethodsCoder: aMethodsCoder ];
