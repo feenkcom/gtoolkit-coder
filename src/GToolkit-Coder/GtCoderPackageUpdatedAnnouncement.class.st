@@ -1,5 +1,5 @@
 "
-I am sent by the ${class:GtClassCoder}$ when the current package changes (means class is not selected and we have to remove the content from the class coder)
+I am sent by the ${class:GtBehaviorCoder}$ when the current package changes (means class is not selected and we have to remove the content from the class coder)
 "
 Class {
 	#name : #GtCoderPackageUpdatedAnnouncement,
