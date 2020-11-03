@@ -19,6 +19,7 @@ Class {
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'announcer',
+		'suppressedAnnouncements',
 		'attributes',
 		'addOns',
 		'addOnCommand',
@@ -130,7 +131,7 @@ GtCoderModel >> expanded: aBoolean [
 { #category : #initialization }
 GtCoderModel >> initialize [
 	super initialize.
-	announcer := Announcer new.
+	announcer := GtCoderAnnouncer new.
 	addOnMonitor := Monitor new.
 
 	self coderLook: self defaultCoderLook
