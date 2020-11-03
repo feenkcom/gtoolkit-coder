@@ -33,5 +33,5 @@ GtMethodCoderCategoryLook >> newTagsElementClass [
 
 { #category : #hooks }
 GtMethodCoderCategoryLook >> onCoderChanged: aGtSourceCoderUIModel [
-	tags coder: aGtSourceCoderUIModel coder
+	tags methodCoderUIModel: aGtSourceCoderUIModel
 ]

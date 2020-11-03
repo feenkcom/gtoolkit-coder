@@ -55,8 +55,6 @@ GtPharoSnippetCoder >> initialize [
 	
 	super initialize.
 	
-	expanded := true.
-	
 	self forSource: ''
 ]
 

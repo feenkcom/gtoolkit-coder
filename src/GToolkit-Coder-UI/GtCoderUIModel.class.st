@@ -6,7 +6,8 @@ Class {
 	#name : #GtCoderUIModel,
 	#superclass : #Object,
 	#instVars : [
-		'coder'
+		'coder',
+		'codersUIModel'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
@@ -14,6 +15,18 @@ Class {
 { #category : #accessing }
 GtCoderUIModel >> announcer [
 	^ coder announcer
+]
+
+{ #category : #converting }
+GtCoderUIModel >> asCoderUIModel [
+	^ self
+]
+
+{ #category : #converting }
+GtCoderUIModel >> asElement [
+	^ self elementClass new
+		coderUIModel: self;
+		yourself
 ]
 
 { #category : #accessing }
@@ -37,11 +50,48 @@ GtCoderUIModel >> coders [
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> expanded [
-	^ coder expanded
+GtCoderUIModel >> codersUIModel [
+	^ codersUIModel
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> expanded: aBoolean [
-	self coder expanded: aBoolean
+GtCoderUIModel >> codersUIModel: anObject [
+	codersUIModel := anObject
+]
+
+{ #category : #accessing }
+GtCoderUIModel >> elementClass [
+	^ self subclassResponsibility
+]
+
+{ #category : #'gt-extension' }
+GtCoderUIModel >> gtLiveFor: aView [
+	<gtView>
+
+	^ aView forward
+		title: 'Live';
+		priority: 1;
+		object: [ self asElement ];
+		view: #gtLiveFor:
+]
+
+{ #category : #accessing }
+GtCoderUIModel >> hasFocus [
+
+	self
+		deprecated: 'Please use #focused instead'
+		transformWith: '`@receiver hasFocus' -> '`@receiver focused'.
+
+	^ self focused
+]
+
+{ #category : #accessing }
+GtCoderUIModel >> hasFocus: aBoolean [
+	self
+		deprecated: 'Please use #focused: instead.'
+		transformWith:
+			'`@receiver hasFocus: `@statements1'
+				-> '`@receiver focused: `@statements1'.
+
+	self focused: aBoolean
 ]

@@ -11,7 +11,7 @@ Class >> gtMetaFor: aView [
 	^ aView explicit
 		title: 'Meta';
 		priority: 200;
-		stencil: [ (GtClassCoder forClass: self) asElement ]
+		stencil: [ (GtBehaviorCoder forClass: self) asElement ]
 ]
 
 { #category : #'*GToolkit-Coder' }

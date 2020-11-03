@@ -16,6 +16,11 @@ GtPackageDefinition >> browseFrom: anEvent [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+GtPackageDefinition >> editors [
+	^ { self packageEditor }
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 GtPackageDefinition >> packageEditor [
 	^ GtCodeDefinitionSingleEditor new
 		title: 'Package';

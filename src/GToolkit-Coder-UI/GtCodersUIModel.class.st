@@ -1,0 +1,81 @@
+Class {
+	#name : #GtCodersUIModel,
+	#superclass : #Object,
+	#instVars : [
+		'coder',
+		'coderUIModels'
+	],
+	#category : #'GToolkit-Coder-UI-Coder - Basic'
+}
+
+{ #category : #accessing }
+GtCodersUIModel >> announcer [
+	^ coder announcer
+]
+
+{ #category : #converting }
+GtCodersUIModel >> asCoderUIModel [
+	^ self
+]
+
+{ #category : #converting }
+GtCodersUIModel >> asElement [
+	^ self elementClass new
+		codersUIModel: self;
+		yourself
+]
+
+{ #category : #accessing }
+GtCodersUIModel >> coder [
+	<return: #GtCodersModel>
+	
+	^ coder
+]
+
+{ #category : #accessing }
+GtCodersUIModel >> coder: aGtCodersModel [
+	coder := aGtCodersModel.
+	self updateCoderUIModels
+]
+
+{ #category : #updating }
+GtCodersUIModel >> coderUIModelFor: aCoder [
+	^ aCoder asCoderUIModel
+]
+
+{ #category : #accessing }
+GtCodersUIModel >> coderUIModels [
+	^ coderUIModels
+]
+
+{ #category : #accessing }
+GtCodersUIModel >> coders [
+	<return: #GtCodersModel>
+	
+	self
+		deprecated: 'Please use #coder instead'
+		transformWith: '`@receiver coders' -> '`@receiver coder'.
+	
+	^ coder
+]
+
+{ #category : #accessing }
+GtCodersUIModel >> coders: aGtCodersModel [
+	self
+		deprecated: 'Please use coder: instead.'
+		transformWith:
+			'`@receiver coders: `@statements1'
+				-> '`@receiver coder: `@statements1'.
+				
+	self coder: aGtCodersModel
+]
+
+{ #category : #accessing }
+GtCodersUIModel >> elementClass [
+	^ self subclassResponsibility
+]
+
+{ #category : #updating }
+GtCodersUIModel >> updateCoderUIModels [
+	coderUIModels := coder coders collect: [ :eachCoder | self coderUIModelFor: eachCoder ]
+]

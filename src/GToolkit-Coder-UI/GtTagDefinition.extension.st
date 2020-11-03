@@ -26,6 +26,11 @@ GtTagDefinition >> editors [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+GtTagDefinition >> readers [
+	^ { self tagReader }
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 GtTagDefinition >> replaceFrom: anEvent [
 	| aRealPackage |
 

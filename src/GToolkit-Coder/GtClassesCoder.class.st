@@ -32,6 +32,6 @@ GtClassesCoder >> forPackageTag: aPackageTag [
 { #category : #private }
 GtClassesCoder >> newCoderFor: aClass [
 	| coder |
-	coder := GtClassCoder forClass: aClass.
+	coder := GtBehaviorCoder forClass: aClass.
 	^ coder
 ]

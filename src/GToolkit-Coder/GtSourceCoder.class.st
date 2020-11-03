@@ -377,14 +377,6 @@ GtSourceCoder >> evaluationRequesterForEditor: anEditorElement [
 ]
 
 { #category : #private }
-GtSourceCoder >> expandedUpdated [
-	super expandedUpdated.
-	self requestStyleSourceText.
-	self expanded
-		ifFalse: [ self requestUpdateCollapsedText ]
-]
-
-{ #category : #private }
 GtSourceCoder >> extractReferencesFilterFromString: selectedString [
 	| node |
 	node := GtPharoParser 
@@ -702,6 +694,23 @@ GtSourceCoder >> rbAST [
 ]
 
 { #category : #private }
+GtSourceCoder >> rbNodeAt: aTextIndex [
+	| ast node |
+
+	ast := self rbAST.
+	ast ifNil: [ ^ nil ].
+
+	node := nil.
+	ast
+		nodesDo: [ :each | 
+			(aTextIndex between: each start and: each stop)
+				ifTrue: [ (node isNil
+						or: [ node sourceInterval size > each sourceInterval size ])
+						ifTrue: [ node := each ] ] ].
+	^ node
+]
+
+{ #category : #private }
 GtSourceCoder >> rbNodeAtCursor: editorElement [
 	| editor ast position node |
 	editor := editorElement editor.
@@ -841,16 +850,6 @@ GtSourceCoder >> source [
 		transformWith: '`@receiver source' -> '`@receiver currentSourceString'.
 		
 	^ self currentSourceString
-]
-
-{ #category : #'api - accessing' }
-GtSourceCoder >> source: aString [
-	"Change the source text of the current coder to a given string"
-
-	self
-		deprecated: 'Use #replaceSourceTextWith: or #from* methods instead'.
-
-	self halt
 ]
 
 { #category : #private }

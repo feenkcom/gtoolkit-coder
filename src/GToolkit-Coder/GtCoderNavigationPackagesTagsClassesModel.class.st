@@ -189,7 +189,7 @@ GtCoderNavigationPackagesTagsClassesModel >> selectClass: aClass [
 		ifFalse: [ ^ self ].
 	(coder isForClass and: [ coder theClass = aClass ])
 		ifTrue: [ ^ self ].
-	aCoder := GtClassCoder forClass: aClass.
+	aCoder := GtBehaviorCoder forClass: aClass.
 	self assertCoder: aCoder.
 	coder := aCoder.
 	self

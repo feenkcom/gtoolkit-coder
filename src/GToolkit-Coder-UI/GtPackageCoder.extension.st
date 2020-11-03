@@ -6,6 +6,6 @@ GtPackageCoder >> asCardElement [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
-GtPackageCoder >> asElement [
-	^ GtPackageCoderElement new packageCoder: self
+GtPackageCoder >> asCoderUIModel [
+	^ GtPackageCoderUIModel new coder: self
 ]

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtMethodCoderByScripterExamples,
-	#superclass : #GtCoderExamples,
-	#category : #'GToolkit-Coder-Examples'
+	#superclass : #GtCoderByScripterExamples,
+	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
 { #category : #'sample methods' }
@@ -59,43 +59,36 @@ GtMethodCoderByScripterExamples >> binaryMethodCoder [
 GtMethodCoderByScripterExamples >> binaryMethodCoderUI [
 	<gtExample>
 	| aScripter |
+
 	aScripter := self scripterForBlock: [ self binaryMethodCoder ].
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI.
+	aScripter substep: 'Collapse and Check Coder' do: [ :aStep |
+		aStep click
+			label: 'Click on Expander';
+			onChildAt: 1.
+		aStep check
+			label: 'Check Coder Editor Text';
+			satisfies: [ :label | label text asString = '?' ];
+			onChildNamed: #methodLabel.
+		aStep check 
+			label: 'Check Coder UI Is Collapsed';
+			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
 	aScripter syncContinue.
 	^ aScripter
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault [
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbContent [
 	<gtExample>
 	| aScripter |
-	aScripter := self binaryMethodCoderUI.
-	aScripter
-		checks: 'Check Sources'
-		do: [ :aStep | 
-			aStep check
-				label: 'Check Expanded Source';
-				satisfies: [ :aCoder | aCoder currentSourceString = self binaryMethod sourceCode ];
-				onModel.
-			aStep check
-				label: 'Check Collapsed Source';
-				satisfies: [ :aCoder | aCoder collapsedText asString = '?' ];
-				onModel.
-			aStep check
-				label: 'Check Coder Editor Text';
-				satisfies: [ :label | label text asString = '?' ];
-				onChildNamed: #methodLabel.
-			aStep check
-				label: 'Check Coder UI is Collapsed';
-				satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_BreadcrumbContent [
-	<gtExample>
-	| aScripter |
-	aScripter := self binaryMethodCoderUI.
+	aScripter := self binaryMethodCoderUI_CollapsedFromUI.
 	aScripter checks: 'Check Breadcrumb' do: [ :aStep | 
 		aStep  check 
 			label: 'Check Breadcrumb Package Name';
@@ -119,10 +112,10 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_BreadcrumbOnClassNameClick [
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnClassNameClick [
 	<gtExample>
 	| aScripter |
-	aScripter := self binaryMethodCoderUI.
+	aScripter := self binaryMethodCoderUI_CollapsedFromUI.
 	aScripter substeps: 'Click On Breadcrumb' do: [ :aStep |
 		aStep click
 			label: 'Click On Class Name';
@@ -145,10 +138,10 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_BreadcrumbOnPackageClick [
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnPackageClick [
 	<gtExample>
 	| aScripter |
-	aScripter := self binaryMethodCoderUI.
+	aScripter := self binaryMethodCoderUI_CollapsedFromUI.
 	aScripter substeps: 'Click On Breadcrumb' do: [ :aStep |
 		aStep click
 			label: 'Click On Package Name';
@@ -170,52 +163,13 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedByDefault_Breadc
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
-	<gtExample>
-	| aScripter |
-	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
-	aScripter substep: 'Collapse and Check Coder' do: [ :aStep |
-		aStep click
-			label: 'Click on Expander';
-			onChildAt: 1.
-		aStep check
-			label: 'Check Coder Editor Text';
-			satisfies: [ :label | label text asString = '?' ];
-			onChildNamed: #methodLabel.
-		aStep check 
-			label: 'Check Coder UI Is Collapsed';
-			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromModel [
-	<gtExample>
-	| aScripter |
-	aScripter := self binaryMethodCoderUI.
-	aScripter substep: 'Expand and Check Coder' do: [ :aStep |
-		aStep do
-			label: 'Expand Coder';
-			action: [ :aCoder | aCoder expanded: true ];
-			onModel.
-		aStep check
-			label: 'Check Coder Editor Text';
-			satisfies: [ :anEditorElement | anEditorElement editor text asString = self binaryMethod sourceCode ];
-			onChildNamed: #editor.
-		aStep wait forEmptySpaceTaskQueue ].
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - binary method' }
 GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI [
 	<gtExample>
 	| aScripter |
-	aScripter := self binaryMethodCoderUI.
+	aScripter := self binaryMethodCoderUI_CollapsedFromUI.
 	self expandFromUI: aScripter method: self binaryMethod.
-	aScripter syncContinue.
-	^ aScripter
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - binary method' }
@@ -257,17 +211,95 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CodeStyle 
 ]
 
 { #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbContent [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI.
+	aScripter checks: 'Check Breadcrumb' do: [ :aStep | 
+		aStep  check 
+			label: 'Check Breadcrumb Package Name';
+			satisfies: [ :aButton | aButton label asString = self class package name ];
+			onChildAt: 2;
+			onChildOfClass: GtSourceCoderExpandedContentElement;
+			onChildAt: 1;
+			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildAt: 1.
+		aStep  check 
+			label: 'Check Breadcrumb Class Name';
+			satisfies: [ :aButton | aButton label asString = self className ];
+			onChildAt: 2;
+			onChildOfClass: GtSourceCoderExpandedContentElement;
+			onChildAt: 1;
+			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildAt: 3.
+		].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnClassNameClick [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI.
+	aScripter substeps: 'Click On Breadcrumb' do: [ :aStep |
+		aStep click
+			label: 'Click On Class Name';
+			onChildAt: 2;
+			onChildOfClass: GtSourceCoderExpandedContentElement;
+			onChildAt: 1;
+			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildAt: 3.
+		aStep  check 
+			label: 'Check Triggered Spawn Object Event';
+			satisfies: [ :theScripter | theScripter events reversed 
+				detectEventOfClass: GtPhlowObjectToSpawn
+				ifFound: [ :theEvent |
+					theEvent object = self binaryMethod methodClass and: [ theEvent tool isKindOf: GtClassCoderTool ] ]
+				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
+			onScripter.
+		].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - binary method' }
+GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnPackageClick [
+	<gtExample>
+	| aScripter |
+	aScripter := self binaryMethodCoderUI.
+	aScripter substeps: 'Click On Breadcrumb' do: [ :aStep |
+		aStep click
+			label: 'Click On Package Name';
+			onChildAt: 2;
+			onChildOfClass: GtSourceCoderExpandedContentElement;
+			onChildAt: 1;
+			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildAt: 1.
+		aStep  check 
+			label: 'Check Triggered Spawn Object Event';
+			satisfies: [ :theScripter | theScripter events reversed 
+				detectEventOfClass: GtPhlowObjectToSpawn
+				ifFound: [ :theEvent | theEvent object class = RPackage and: [ theEvent object name = self class package name ] ]
+				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
+			onScripter.
+		].
+	aScripter syncContinue.
+	^ aScripter
+]
+
+{ #category : #'examples - binary method' }
 GtMethodCoderByScripterExamples >> binaryMethodCoderUI_WithoutExampleActions [
 	<gtExample>
 	| aScripter |
-	aScripter := self binaryMethodCoderUI_ExpandedFromModel.
+	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
 	self 
 		checkFor: aScripter 
 		numberOfMainActions: 3
 		contextAction: 0.
 	self checkFor: aScripter absenceOfContextActionNamed: 'Play'.
-	aScripter syncContinue.
-	^ aScripter
+
+	^ aScripter syncContinue
 ]
 
 { #category : #utilities }
@@ -393,12 +425,30 @@ GtMethodCoderByScripterExamples >> coderOnMethod: aMethod [
 	self assert: aCoder selector equals: aMethod selector.
 	self assert: aCoder classOrMetaClass equals: aMethod methodClass.
 	self assert: aCoder category equals: aMethod protocol.
-	self assert: aCoder expanded not.
 	
 	"a coder is not displayed and its source text is not initialized"
 	self assert: aCoder sourceCode hasSourceText not.
 
 	^ aCoder
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> collapseFromUI: aScripter method: aMethod [
+	<gtExample>
+	aScripter substep: 'Collapse and Check Coder' do: [ :aStep |
+		aStep click
+			label: 'Click on Expander';
+			onChildAt: 1.
+		aStep wait forEmptySpaceTaskQueue.
+		aStep check 
+			label: 'Check Coder UI is Expanded';
+			satisfies: [ :aCoderElement | aCoderElement isExpanded not ].
+		aStep check
+			label: 'Check Coder Collapsed Label Text';
+			satisfies: [ :aLabelElement | aLabelElement text asString = aMethod selector ];
+			onChildNamed: #methodLabel.
+		aStep wait forEmptySpaceTaskQueue ].
+	^ aScripter
 ]
 
 { #category : #'examples - example method' }
@@ -420,19 +470,30 @@ GtMethodCoderByScripterExamples >> exampleMethodCoder [
 GtMethodCoderByScripterExamples >> exampleMethodCoderUI [
 	<gtExample>
 	| aScripter |
+	
 	aScripter := self scripterForBlock: [ self exampleMethodCoder ].
-	aScripter syncContinue.
-	^ aScripter
+	
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - example method' }
+GtMethodCoderByScripterExamples >> exampleMethodCoderUI_CollapsedFromUI [
+	<gtExample>
+	| aScripter |
+	aScripter := self exampleMethodCoderUI.
+	self collapseFromUI: aScripter method: self exampleMethod.
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - example method' }
 GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI [
 	<gtExample>
 	| aScripter |
-	aScripter := self exampleMethodCoderUI.
+	aScripter := self exampleMethodCoderUI_CollapsedFromUI.
 	self expandFromUI: aScripter method: self exampleMethod.
-	aScripter syncContinue.
-	^ aScripter
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - example method' }
@@ -524,25 +585,14 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripterForBlock: [ self patternHighlighterMethodCoder ].
-	aScripter syncContinue.
-	^ aScripter
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - pattern highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded [
+GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_CheckUndelineAttributes [
 	<gtExample>
 	| aScripter |
 	aScripter := self patternHighlighterMethodCoderUI.
-	self expandFromUI: aScripter method: self patternHighlighterMethod.
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - pattern highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_Expanded_CheckUndelineAttributes [
-	<gtExample>
-	| aScripter |
-	aScripter := self patternHighlighterMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
 		self checkFor: aStep textAttributesAt: 2 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
 		self checkFor: aStep numberfOfTextAttributes: 6 OfType: BlTextDecorationAttribute.
@@ -572,25 +622,14 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripterForBlock: [ self patternHighlighterPrintMethodCoder ].
-	aScripter syncContinue.
-	^ aScripter
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - pattern highlither - print' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_Expanded [
+GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_CheckUndelineAttributes [
 	<gtExample>
 	| aScripter |
 	aScripter := self patternHighlighterPrintMethodCoderUI.
-	self expandFromUI: aScripter method: self patternHighlighterPrintMethod.
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - pattern highlither - print' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_Expanded_CheckUndelineAttributes [
-	<gtExample>
-	| aScripter |
-	aScripter := self patternHighlighterPrintMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
 		self checkFor: aStep textAttributesAt: 1 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
 		self checkFor: aStep numberfOfTextAttributes: 5 OfType: BlTextDecorationAttribute.
@@ -615,25 +654,14 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripterForBlock: [ self patternHighlighterPrintStringMethodCoder ].
-	aScripter syncContinue.
-	^ aScripter
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - reference highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Expanded [
+GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_CheckUndelineAttributes [
 	<gtExample>
 	| aScripter |
 	aScripter := self patternHighlighterPrintStringMethodCoderUI.
-	self expandFromUI: aScripter method: self patternHighlighterPrintMethod.
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - reference highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Expanded_CheckUndelineAttributes [
-	<gtExample>
-	| aScripter |
-	aScripter := self patternHighlighterPrintStringMethodCoderUI_Expanded.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
 		self checkFor: aStep textAttributesAt: 1 nonSatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
 		self checkFor: aStep textAttributesAt: 30 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
@@ -676,7 +704,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI [
 GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleAttribute [
 	<gtExample>
 	| aScripter |
-	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI.
+	aScripter := self referencedExampleMethodCoderUI.
 	aScripter checks: 'Check Example Status' do: [ :aStep | 
 		self checkFor: aStep textExampleStatusAttributeAt: 1 ].
 	aScripter syncContinue.
@@ -684,20 +712,10 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleAt
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI [
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleExpandAttribute [
 	<gtExample>
 	| aScripter |
 	aScripter := self referencedExampleMethodCoderUI.
-	self expandFromUI: aScripter method: self referencedExampleMethod.
-	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI_CheckExampleExpandAttribute [
-	<gtExample>
-	| aScripter |
-	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI.
 	aScripter checks: 'Check Example Status and Expand Attribute' do: [ :aStep | 
 		self checkFor: aStep textExpandAttributeAt: 24.
 		self checkFor: aStep textExampleStatusAttributeAt: 1 ].
@@ -706,10 +724,10 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI_NoExampleStatusAfterPragmaDeletion [
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion [
 	<gtExample>
 	| aScripter |
-	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI.
+	aScripter := self referencedExampleMethodCoderUI.
 	aScripter substeps: 'Remove Pragma' do: [ :aStep |
 		aStep do
 			label: 'Delete e character from <gtExample>';
@@ -732,10 +750,10 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI_NoExampleStatusAfterPragmaDeletion_WriteExamplePragma [
+GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion_WriteExamplePragma [
 	<gtExample>
 	| aScripter |
-	aScripter := self referencedExampleMethodCoderUI_ExpandedFromUI_NoExampleStatusAfterPragmaDeletion.
+	aScripter := self referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion.
 	aScripter substeps: 'Insert Pragma' do: [ :aStep |
 		aStep do
 			label: 'Insert e character in <gtExample>';
@@ -752,22 +770,6 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_ExpandedFromUI
 		self checkFor: aStep textExpandAttributeAt: 24.
 		self checkFor: aStep textExampleStatusAttributeAt: 1. ].
 	aScripter syncContinue.
-	^ aScripter
-]
-
-{ #category : #utilities }
-GtMethodCoderByScripterExamples >> scripterForBlock: aBlock [
-	<gtExample>
-	| aScripter |
-	aScripter := self scripter.
-	aScripter substep: 'Initialize Coder Model and UI' do: [ :aStep | 
-		aStep set 
-			label: 'Initialize Coder Model';
-			model: aBlock.
-		aStep set 
-			label: 'Initialize Coder UI';
-			element: [ :aCoder | aCoder asElement ];
-			onModel ].
 	^ aScripter
 ]
 

@@ -49,7 +49,6 @@ GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
 { #category : #'instance creation' }
 GtMethodCoder class >> newMethod [
 	^ self new
-		expanded: true;
 		currentSourceString: '';
 		yourself
 ]
@@ -634,7 +633,7 @@ GtMethodCoder >> gtLiveFor: aView [
 		disableAsync;
 		title: 'Live';
 		priority: 10;
-		stencil: [ self expanded: true ]
+		stencil: [ self ]
 ]
 
 { #category : #private }

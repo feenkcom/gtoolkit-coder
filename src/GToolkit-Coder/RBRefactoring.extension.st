@@ -12,13 +12,6 @@ RBRefactoring >> gtDangers [
 ]
 
 { #category : #'*GToolkit-Coder' }
-RBRefactoring >> gtDescription [
-	<return: #String or: #BlRopedText>
-	
-	^ self class name
-]
-
-{ #category : #'*GToolkit-Coder' }
 RBRefactoring >> gtExecute: isForce [
 	isForce
 		ifTrue: [ self transform ]

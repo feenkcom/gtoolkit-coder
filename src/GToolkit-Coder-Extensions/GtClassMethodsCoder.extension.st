@@ -80,6 +80,18 @@ GtClassMethodsCoder >> filterDropDown: anElement [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
+GtClassMethodsCoder >> gtSpotterMethodsFor: aStep [
+	<gtSearch>
+	aStep listProcessor
+		priority: 10;
+		title: 'Methods';
+		allCandidates: [ self coders ];
+		itemName: [ :method | method selector ];
+		previewElement: [ :coder | coder previewElement ];
+		filter: GtFilterSubstring
+]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
 GtClassMethodsCoder >> instanceVariableFilter: aView [
 	<gtFilterTypes>
 	^ aView explicit

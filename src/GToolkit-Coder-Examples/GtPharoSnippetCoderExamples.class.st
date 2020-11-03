@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPharoSnippetCoderExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples-Model'
+	#category : #'GToolkit-Coder-Examples-Coders'
 }
 
 { #category : #examples }
@@ -14,7 +14,6 @@ GtPharoSnippetCoderExamples >> snippetCoder [
 	4';
 		yourself.
 
-	self assert: aSnippetCoder expanded.
 	self
 		assert: aSnippetCoder variableBindings
 		equals: GtSnippetBindings new.

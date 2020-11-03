@@ -1,6 +1,6 @@
 Class {
 	#name : #GtPackageCoder,
-	#superclass : #Announcer,
+	#superclass : #GtCoderModel,
 	#traits : 'TGtCoderTrait',
 	#classTraits : 'TGtCoderTrait classTrait',
 	#instVars : [

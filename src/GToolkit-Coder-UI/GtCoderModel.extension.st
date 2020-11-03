@@ -7,9 +7,7 @@ GtCoderModel >> asCoderUIModel [
 
 { #category : #'*GToolkit-Coder-UI' }
 GtCoderModel >> asElement [
-	^ self elementClass new
-		coderUIModel: self asCoderUIModel;
-		yourself
+	^ self asCoderUIModel asElement
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

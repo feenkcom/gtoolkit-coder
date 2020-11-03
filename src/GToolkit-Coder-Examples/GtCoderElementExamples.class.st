@@ -46,7 +46,7 @@ GtCoderElementExamples >> basicToolbarElement [
 { #category : #'examples - coders' }
 GtCoderElementExamples >> classCoder [
 	<gtExample>
-	^ GtClassCoder forClass: self class
+	^ GtBehaviorCoder forClass: self class
 ]
 
 { #category : #'examples - coder element' }

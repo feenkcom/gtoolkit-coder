@@ -29,7 +29,7 @@ GtMethodsCoder >> methodAdded: aValueAdded [
 		anySatisfy: [ :eachCoder | eachCoder isForMethod: aValueAdded newValue ])
 		ifTrue: [ ^ self ].
 	aCoder := self newCoderFor: aValueAdded newValue.
-	self addCoder: aCoder.
+	self addCoder: aCoder
 ]
 
 { #category : #'event handling' }
@@ -60,7 +60,6 @@ GtMethodsCoder >> newCoderFor: aMethod [
 
 { #category : #scripting }
 GtMethodsCoder >> selectAndScrollTo: aMethodCoder [
-	aMethodCoder expanded: true.
 	self
 		announce:
 			(GtCodersScrollToCoder new
@@ -69,7 +68,7 @@ GtMethodsCoder >> selectAndScrollTo: aMethodCoder [
 	BlUseAsyncFeatures 
 		ifEnabledDo: [ 
 			| aCommand |
-			"Wait for scrolling to create the element"
+			
 			aCommand := BlTaskAtPostponedTerminableTask new
 				command: [ aMethodCoder requestFocus ];
 				pool: BlTktWorkerProvider highUICPUBoundPool;

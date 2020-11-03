@@ -6,7 +6,7 @@ Class {
 		'expandedElement',
 		'coderUIModel'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #private }
@@ -78,22 +78,22 @@ GtExpandableCoderElement >> coderUIModel: aCoderUIModel [
 	self
 		assert: [ aCoderUIModel isNotNil ]
 		description: [ 'Coder must not be nil' ].
-		
-	coderUIModel ifNotNil: [ :aPreviousCoder |
-		aPreviousCoder announcer unsubscribe: self ].
-
+	coderUIModel
+		ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
 	coderUIModel := aCoderUIModel.
-
 	coderUIModel expanded
-		ifTrue: [
-			expandedElement ifNotNil: [ :anElement | self assignExpandedCoder: aCoderUIModel to: anElement ].
-			collapsedElement ifNotNil: [ :anElement | self markDirty: anElement as: true ] ]
-		ifFalse: [
-			collapsedElement ifNotNil: [ :anElement | self assignCollapsedCoder: aCoderUIModel to: anElement ].
-			expandedElement ifNotNil: [ :anElement | self markDirty: anElement as: true ] ].
-
+		ifTrue: [ expandedElement
+				ifNotNil: [ :anElement | self assignExpandedCoder: aCoderUIModel to: anElement ].
+			collapsedElement
+				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ]
+		ifFalse: [ collapsedElement
+				ifNotNil:
+					[ :anElement | self assignCollapsedCoder: aCoderUIModel to: anElement ].
+			expandedElement
+				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ].
+	coderUIModel focused
+		ifFalse: [ self loseFocus ].
 	self expanded: coderUIModel expanded.
-
 	coderUIModel announcer weak
 		when: GtCoderExpandedChanged send: #updateExpanded to: self;
 		when: GtCoderRequestFocus send: #requestFocusAsyncronously to: self
@@ -193,6 +193,15 @@ GtExpandableCoderElement >> requestFocusAsyncronously [
 		enqueueTask:
 			(BlTaskAction new
 				action: [ self requestFocus ])
+]
+
+{ #category : #accessing }
+GtExpandableCoderElement >> saveCoderUIModel: aCoderUIModel [
+	self
+		assert: [ aCoderUIModel isNotNil ]
+		description: [ 'Coder must not be nil' ].
+	
+	expandedElement ifNotNil: [ :anExpandedElement | anExpandedElement saveCoderUIModel: aCoderUIModel ]
 ]
 
 { #category : #events }

@@ -23,7 +23,6 @@ GtMethodExpanderAttribute >> buildMethodCoder [
 	coder := GtMethodCoder
 		forExample: (classOrMetaClass gtExamplesFactory createExample: method).
 	coder subscribeToSystem.
-	coder expanded: true.
 	editorElement := coder asElement.
 	editorElement border: (BlBorder paint: Color veryLightGray width: 1).
 	editorElement

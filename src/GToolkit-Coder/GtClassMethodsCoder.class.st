@@ -41,6 +41,7 @@ GtClassMethodsCoder >> addNewCoder [
 	aCoder category: #accessing.
 	aCoder coders: self.
 	self addFirstCoder: aCoder.
+	^ aCoder
 ]
 
 { #category : #accessing }
@@ -102,18 +103,6 @@ GtClassMethodsCoder >> forObject: anObject [
 { #category : #printing }
 GtClassMethodsCoder >> gtDisplayString [
 	^ class name , ' methods'
-]
-
-{ #category : #spotter }
-GtClassMethodsCoder >> gtSpotterMethodsFor: aStep [
-	<gtSearch>
-	aStep listProcessor
-		priority: 10;
-		title: 'Methods';
-		allCandidates: [ self coders ];
-		itemName: [ :method | method selector ];
-		previewElement: [ :coder | coder previewElement ];
-		filter: GtFilterSubstring
 ]
 
 { #category : #testing }

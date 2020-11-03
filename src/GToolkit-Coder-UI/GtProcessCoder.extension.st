@@ -1,6 +1,6 @@
 Extension { #name : #GtProcessCoder }
 
 { #category : #'*GToolkit-Coder-UI' }
-GtProcessCoder >> elementClass [
-	^ GtProcessCoderElement
+GtProcessCoder >> asCoderUIModel [
+	^ GtProcessCoderUIModel new coder: self
 ]

@@ -19,7 +19,6 @@ Class {
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'announcer',
-		'expanded',
 		'attributes',
 		'addOns',
 		'addOnCommand',
@@ -120,72 +119,18 @@ GtCoderModel >> contextMenuActions [
 GtCoderModel >> expanded [
 	<return: #Boolean>
 
-	^ expanded
+	self halt
 ]
 
 { #category : #accessing }
 GtCoderModel >> expanded: aBoolean [
-	aBoolean = expanded
-		ifTrue: [ ^ self ].
-
-	expanded := aBoolean.
-	self expandedUpdated.
-	self announce: (GtCoderExpandedChanged new coder: self)
-]
-
-{ #category : #private }
-GtCoderModel >> expandedUpdated [
-]
-
-{ #category : #accessing }
-GtCoderModel >> gtAttributesFor: aView [
-	<gtView>
-	attributes ifNil: [ ^ aView empty ].
-	^ aView forward
-		title: 'Attributes';
-		priority: 40;
-		object: [ self attributes ];
-		view: #gtItemsFor:
-]
-
-{ #category : #'gt-extensions' }
-GtCoderModel >> gtLiveFor: aView [
-	<gtView>
-	^ aView explicit
-		title: 'Live';
-		priority: 10;
-		stencil: [ self ]
-]
-
-{ #category : #'gt-extensions' }
-GtCoderModel >> gtViewContextActionsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewContextActionsFor: aView ]
-]
-
-{ #category : #'gt-extensions' }
-GtCoderModel >> gtViewKeybindingsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewKeybindingsFor: aView ]
-]
-
-{ #category : #'gt-extensions' }
-GtCoderModel >> gtViewMainActionsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewMainActionsFor: aView ]
+	self halt
 ]
 
 { #category : #initialization }
 GtCoderModel >> initialize [
 	super initialize.
 	announcer := Announcer new.
-	expanded := false.
 	addOnMonitor := Monitor new.
 
 	self coderLook: self defaultCoderLook

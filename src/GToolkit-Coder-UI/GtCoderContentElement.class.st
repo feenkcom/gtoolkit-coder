@@ -1,5 +1,5 @@
 "
-I display a ${class:GtClassCoder}$, ${class:GtPackageTagCoder}$, ${class:GtPackageCoder}$, and ${class:GtCodersModel}$ coders.
+I display a ${class:GtBehaviorCoder}$, ${class:GtPackageTagCoder}$, ${class:GtPackageCoder}$, and ${class:GtCodersModel}$ coders.
 !! Example
 ${example:GtCoderElementExamples>>#contentElementWithClass|previewExpanded|codeExpanded=false|previewHeight=700}$
 

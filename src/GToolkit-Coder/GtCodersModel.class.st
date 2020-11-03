@@ -5,8 +5,8 @@ Class {
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'announcer',
-		'coders',
-		'items'
+		'items',
+		'coders'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -37,13 +37,6 @@ GtCodersModel >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
-{ #category : #elements }
-GtCodersModel >> asElement [
-	^ self elementClass new
-		coders: self;
-		yourself
-]
-
 { #category : #testing }
 GtCodersModel >> canFilter [
 	^ false
@@ -52,11 +45,6 @@ GtCodersModel >> canFilter [
 { #category : #accessing }
 GtCodersModel >> coders [
 	^ coders
-]
-
-{ #category : #elements }
-GtCodersModel >> elementClass [
-	self subclassResponsibility
 ]
 
 { #category : #'initialize-release' }

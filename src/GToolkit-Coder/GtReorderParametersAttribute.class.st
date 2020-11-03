@@ -5,7 +5,7 @@ Class {
 		'actionBlock',
 		'icon'
 	],
-	#category : #'GToolkit-Coder-Refactorings'
+	#category : #'GToolkit-Coder-Refactoring'
 }
 
 { #category : #'instance creation' }

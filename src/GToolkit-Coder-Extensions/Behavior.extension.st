@@ -66,8 +66,11 @@ Behavior >> gtCoderExamplesFor: aView context: aDictionary [
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
 	<gtClassView>
-	| aMethodsCoder |
-	aMethodsCoder := self methodsCoderFromContext: aPhlowContext.
+	| aMethodsCoderUIModel aMethodsCoder |
+
+	aMethodsCoderUIModel := self methodsCoderFromContext: aPhlowContext.
+	aMethodsCoder := aMethodsCoderUIModel coder.
+
 	^ aView explicit
 		priority: 10;
 		title: 'Methods';
@@ -75,27 +78,25 @@ Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
 		actionDropdownButtonIcon: BrGlamorousVectorIcons filter
 			tooltip: 'Filter'
 			content: [ :element | aMethodsCoder filterDropDown: element ];
-		actionButtonIcon: BrGlamorousVectorIcons add
-			tooltip: 'Add new method'
-			action: [ aMethodsCoder addNewCoder ];
+		actionButtonDo: [ :aButtonAction |
+			aButtonAction
+				icon: BrGlamorousVectorIcons add;
+				tooltip: 'Add new method';
+				action: [ aMethodsCoder addNewCoder ];
+				name: GtBehaviorCoder addNewMethodButtonName ];
 		actionStencil:
 				[ self runAllExamplesButtonForMethodsCoder: aMethodsCoder ];
-		stencil: [ aMethodsCoder asElement ]
+		stencil: [ aMethodsCoderUIModel asElement ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-Behavior >> methodsCoderFromContext: aPhlowContext [ 
+Behavior >> methodsCoderFromContext: aPhlowContext [
+	<return: #GtMethodsCoderUIModel>
+
 	^ aPhlowContext
-		at: #methodsCoder
-		ifPresent: [ :aCoder | aCoder ]
-		ifAbsentPut: [
-			aPhlowContext
-				at: #classCoder
-				ifPresent: [ :aCoder | 
-					aCoder hasObject
-						ifTrue: [ GtClassMethodsCoder forObject: aCoder object ]
-						ifFalse: [ GtClassMethodsCoder forClass: self ] ]
-				ifAbsent: [ GtClassMethodsCoder forClass: self ] ]
+		optionAt: #behaviorCoder
+		ifPresent: [ :aBehaviorCoderUIModel | aBehaviorCoderUIModel methodsCoderUIModel ]
+		ifAbsentPut: [ (GtClassMethodsCoder forClass: self) asCoderUIModel ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }

@@ -3,8 +3,8 @@ I contain examples for working with destinations in a pharo code snippet.
 "
 Class {
 	#name : #GtCoderElementForSnippetsWithDestinationExamples,
-	#superclass : #GtCoderExamples,
-	#category : #'GToolkit-Coder-Examples'
+	#superclass : #GtCoderByScripterExamples,
+	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
 { #category : #'examples - setup' }
