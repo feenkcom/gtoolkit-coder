@@ -45,8 +45,8 @@ GtMethodsCoderUIModel >> focusCoder: aMethodCoder [
 GtMethodsCoderUIModel >> focusCoderUIModel: aCoderUIModel [
 	(focusedCoderUIModel notNil
 		and: [ focusedCoderUIModel ~= aCoderUIModel ])
-		ifTrue: [ focusedCoderUIModel := nil.
-			focusedCoderUIModel hasFocus: false ].
+		ifTrue: [ focusedCoderUIModel focused: false.
+			focusedCoderUIModel := nil ].
 	focusedCoderUIModel := aCoderUIModel.
 	focusedCoderUIModel focused: true
 ]
