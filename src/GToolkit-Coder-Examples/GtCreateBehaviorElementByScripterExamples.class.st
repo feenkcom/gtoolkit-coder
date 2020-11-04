@@ -8,7 +8,11 @@ Class {
 GtCreateBehaviorElementByScripterExamples >> behaviorCreatorForClass [
 	<gtExample>
 	
-	^ GtCreateBehaviorElement new forClassDefinition
+	^ GtCreateBehaviorElement new
+		forClassDefinition;
+		constraintsDo: [ :c |
+			c horizontal fitContent.
+			c vertical fitContent ]
 ]
 
 { #category : #'private - checks' }
@@ -483,7 +487,7 @@ GtCreateBehaviorElementByScripterExamples >> typePackageNameForClass [
 		
 		aStep check
 			label: 'Check save button is enabled';
-			satisfies: [ :aButton | aButton isEnabled ];
+			satisfies: [ :aButton | aButton isEnabled not ];
 			onChildNamed: GtCreateBehaviorElement saveButtonName ].
 
 	^ aScripter syncContinue
