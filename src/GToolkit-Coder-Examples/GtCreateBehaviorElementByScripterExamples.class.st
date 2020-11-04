@@ -487,7 +487,7 @@ GtCreateBehaviorElementByScripterExamples >> typePackageNameForClass [
 		
 		aStep check
 			label: 'Check save button is enabled';
-			satisfies: [ :aButton | aButton isEnabled ];
+			satisfies: [ :aButton | aButton isEnabled not ];
 			onChildNamed: GtCreateBehaviorElement saveButtonName ].
 
 	^ aScripter syncContinue
