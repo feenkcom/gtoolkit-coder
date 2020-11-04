@@ -179,7 +179,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CheckActio
 	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
 	self 
 		checkFor: aScripter 
-		numberOfMainActions: 3 
+		numberOfMainActions: 4
 		contextAction: 0.
 	aScripter syncContinue.
 	^ aScripter
@@ -295,7 +295,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_WithoutExampleActions [
 	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
 	self 
 		checkFor: aScripter 
-		numberOfMainActions: 3
+		numberOfMainActions: 4
 		contextAction: 0.
 	self checkFor: aScripter absenceOfContextActionNamed: 'Play'.
 
@@ -503,7 +503,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 	aScripter := self exampleMethodCoderUI_ExpandedFromUI.
 	self 
 		checkFor: aScripter 
-		numberOfMainActions: 3
+		numberOfMainActions: 4
 		contextAction: 4.
 	self checkFor: aScripter existenceOfContextActionNamed: 'Play'.
 	aScripter syncContinue.
@@ -524,7 +524,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePra
 			onBrTextEditor.
 		self 
 			checkFor: aStep
-			numberOfMainActions: 4
+			numberOfMainActions: 5
 			contextAction: 0.
 		self checkFor: aStep absenceOfContextActionNamed: 'Play' ].
 	aScripter syncContinue.
@@ -736,7 +736,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatu
 			onBrTextEditor.
 		self 
 			checkFor: aStep
-			numberOfMainActions: 4
+			numberOfMainActions: 5
 			contextAction: 0.
 		self checkFor: aStep absenceOfContextActionNamed: 'Play' ].
 	aScripter checks: 'Check Example Status Is Not Present' do: [ :aStep | 
@@ -763,7 +763,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatu
 		aStep wait forEmptySpaceTaskQueue.
 		self 
 			checkFor: aStep
-			numberOfMainActions: 3
+			numberOfMainActions: 4
 			contextAction: 4.
 		self checkFor: aStep existenceOfContextActionNamed: 'Play' ].
 	aScripter checks: 'Check Example Status Is Present' do: [ :aStep | 
