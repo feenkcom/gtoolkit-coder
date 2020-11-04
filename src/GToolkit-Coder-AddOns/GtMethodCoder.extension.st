@@ -18,6 +18,10 @@ GtMethodCoder >> initializeAddOns [
 		addMainAction: 'Browse' translated
 		icon: BrGlamorousVectorIcons browse
 		action: [ :anEditorElement | self browseFrom: anEditorElement ].
+	addOns
+		addMainAction: 'Inspect Compiled Method' translated
+		icon: BrGlamorousVectorIcons inspect
+		action: [ :anEditorElement | anEditorElement phlow spawnObject: self compiledMethod ].
 	addOns clearChanges
 ]
 
