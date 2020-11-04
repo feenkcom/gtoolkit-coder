@@ -43,7 +43,7 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 		action: [ :anEditorElement | self playAndInspectExampleFrom: anEditorElement ].
 	coderAddOns
 		addContextAction: 'Inspect Example Object' translated
-		icon: BrGlamorousVectorIcons inspect
+		icon: BrGlamorousVectorIcons eg
 		action: [ :anEditorElement | anEditorElement phlow spawnObject: self example ].
 	coderAddOns
 		addContextAction: 'Debug' translated

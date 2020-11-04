@@ -103,9 +103,9 @@ GtMethodsCoderElement >> updateCodersFilters: event [
 { #category : #'private - updating' }
 GtMethodsCoderElement >> updateDisplayedFilters: filterElement [
 	filterElement
-		buildFilters: [ methodsCoderUIModel coders additionalFilters
+		buildFilters: [ methodsCoderUIModel coder additionalFilters
 				do: [ :each | 
-					(each class filterDescriptorFor: methodsCoderUIModel coders)
+					(each class filterDescriptorFor: methodsCoderUIModel coder)
 						ifNotNil: [ :descriptor | 
 							| label |
 							label := descriptor valueIsRequired
