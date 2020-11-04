@@ -45,6 +45,9 @@ GtCodeDefinitionSingleEditor >> create [
 				requestRename: aDefinition
 				to: aWish text asString
 				from: aWish currentTarget ].
+			
+	self containerName
+		ifNotNil: [ :aContainerName | anEditableLabel containerName: aContainerName ].
 
 	interactions do: [ :eachAssociation |
 		anEditableLabel

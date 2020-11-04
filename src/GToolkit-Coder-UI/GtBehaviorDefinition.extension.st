@@ -10,5 +10,6 @@ GtBehaviorDefinition >> nameEditor [
 		getSelector: #name;
 		setSelector: #name:;
 		renameEvent: GtBehaviorRenamed;
-		completion: [ GtClassesCompletionStrategy new ]
+		completion: [ GtClassesCompletionStrategy new ];
+		containerName: self class behaviorNameEditorName
 ]

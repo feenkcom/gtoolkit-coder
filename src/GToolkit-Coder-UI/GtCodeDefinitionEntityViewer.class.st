@@ -9,7 +9,8 @@ Class {
 		'completionStencil',
 		'modelSelector',
 		'interactions',
-		'eventHandlers'
+		'eventHandlers',
+		'containerName'
 	],
 	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
@@ -17,6 +18,16 @@ Class {
 { #category : #accessing }
 GtCodeDefinitionEntityViewer >> completion: aStencil [
 	completionStencil := aStencil asStencil
+]
+
+{ #category : #accessing }
+GtCodeDefinitionEntityViewer >> containerName [
+	^ containerName
+]
+
+{ #category : #accessing }
+GtCodeDefinitionEntityViewer >> containerName: anObject [
+	containerName := anObject
 ]
 
 { #category : #accessing }

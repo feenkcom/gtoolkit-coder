@@ -32,7 +32,8 @@ GtPackageDefinition >> packageEditor [
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];
 		whenPrimaryClickDo: [ :anEvent :aDefinition | aDefinition browseFrom: anEvent ];
 		whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
-			Clipboard clipboardText: aDefinition name asString ]
+			Clipboard clipboardText: aDefinition name asString ];
+		containerName: self class packageEditorName
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

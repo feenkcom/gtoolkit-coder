@@ -2,7 +2,7 @@ Class {
 	#name : #GtCreateElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'headerModel'
+		'definition'
 	],
 	#category : #'GToolkit-Coder-UI-Behaviour'
 }

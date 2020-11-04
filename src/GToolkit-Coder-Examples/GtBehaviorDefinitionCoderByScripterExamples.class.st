@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'examples - setup' }
-GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionCoderForBasicClass [
+GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionCoder [
 	<gtExample>
 
 	^ GtBehaviorDefinitionCoder forBehavior: self targetClass
@@ -16,7 +16,7 @@ GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionElement [
 	<gtExample>
 	| behaviorDefinitionCoder behaviorDefinitionElement |
 
-	behaviorDefinitionCoder := self behaviorDefinitionCoderForBasicClass.
+	behaviorDefinitionCoder := self behaviorDefinitionCoder.
 	behaviorDefinitionElement := behaviorDefinitionCoder asElement.
 
 	^ behaviorDefinitionElement
@@ -86,5 +86,5 @@ GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionScripter_Expand
 
 { #category : #accessing }
 GtBehaviorDefinitionCoderByScripterExamples >> targetClass [
-	^ GtBehaviorCoderDummyBasicClass
+	^ GtBehaviorCoderDummyClass
 ]

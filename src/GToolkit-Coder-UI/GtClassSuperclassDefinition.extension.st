@@ -63,7 +63,8 @@ GtClassSuperclassDefinition >> superclassEditor [
 			whenPrimaryClickDo: [ :anEvent :aDefinition | 
 				aDefinition browseFrom: anEvent ];
 			whenKey: BlKeyCombination primaryC do: [ :anEvent :aDefinition  |
-				Clipboard clipboardText: aDefinition name asString ]
+				Clipboard clipboardText: aDefinition name asString ];
+		containerName: self class behaviorSuperclassEditorName
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

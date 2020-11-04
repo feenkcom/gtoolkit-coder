@@ -28,6 +28,13 @@ GtBehaviorCoderElement >> actOnSelectMethod: aMethod [
 	self executeTask: selectMethodBlock
 ]
 
+{ #category : #accessing }
+GtBehaviorCoderElement >> behavior [
+	<return: #Behavior>
+
+	^ self coderUIModel coder behavior
+]
+
 { #category : #callbacks }
 GtBehaviorCoderElement >> browseClassReferences [
 	| classCoder |
@@ -56,14 +63,15 @@ GtBehaviorCoderElement >> buildClassLabel [
 		inputFilter: BrTextEditorClassNameInputFilter new;
 		text: (classCoder name);
 		margin: (BlInsets all: 0);
+		containerName: GtBehaviorCoder behaviorNameEditorName;
 		whenKey: BlKeyCombination primaryN
 			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | aCoderElement browseClassReferences ]
 			with: self;
 		whenKey: BlKeyCombination primaryB
-			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | aCoderElement phlow spawnTool: (GtClassCoderTool observedClass: aCoderElement classCoder theClass) ]
+			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | aCoderElement phlow spawnTool: (GtClassCoderTool observedClass: aCoderElement behavior) ]
 			with: self;
 		whenKey: BlKeyCombination primaryG
-			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | aCoderElement phlow spawnObject: aCoderElement classCoder theClass ]
+			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | aCoderElement phlow spawnObject: aCoderElement behavior ]
 			with: self;
 		whenKey: BlKeyCombination primaryR
 			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | 
@@ -71,9 +79,8 @@ GtBehaviorCoderElement >> buildClassLabel [
 			with: self;
 		whenKey: BlKeyCombination primaryC
 			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | 
-				Clipboard clipboardText: aCoderElement classCoder theClass name asString ]
+				Clipboard clipboardText: aCoderElement behavior name asString ]
 			with: self.
-	
 	
 	(GtCompletionController
 		on: aClassNameEditor
@@ -186,9 +193,14 @@ GtBehaviorCoderElement >> classViewItems [
 ]
 
 { #category : #accessing }
-GtBehaviorCoderElement >> coderUIModel: aBehaviorCoderUIModel [
+GtBehaviorCoderElement >> coderUIModel [
+	^ behaviorCoderUIModel
+]
 
-	behaviorCoderUIModel := aBehaviorCoderUIModel.
+{ #category : #accessing }
+GtBehaviorCoderElement >> coderUIModel: aGtBehaviorCoderUIModel [
+
+	behaviorCoderUIModel := aGtBehaviorCoderUIModel.
 	behaviorCoderUIModel coder
 		when: GtCoderPackageUpdatedAnnouncement
 			do: [ :ann | self actOnPackageUpdated: ann ];
@@ -246,6 +258,6 @@ GtBehaviorCoderElement >> selectAndScrollToMethod: aMethod [
 
 	contentTabs content 
 		allChildrenBreadthFirstDetect: [ :eachElement | eachElement isKindOf: GtMethodsCoderElement ] 
-		ifFound: [ :theElement | theElement coders selectAndScrollToMethod: aMethod ] 
+		ifFound: [ :theElement | theElement codersUIModel coder selectAndScrollToMethod: aMethod ] 
 		ifNone: [ "ignore" ]
 ]

@@ -21,6 +21,9 @@ GtCodeDefinitionSingleReader >> create [
 		focusability: BlFocusability none;
 		text: theInitialName.
 
+	self containerName
+		ifNotNil: [ :aContainerName | aLabel containerName: aContainerName ].
+
 	interactions do: [ :eachAssociation |
 		aLabel addEditorShortcut: (BrTextEditorShortcut new
 			combination: eachAssociation key;

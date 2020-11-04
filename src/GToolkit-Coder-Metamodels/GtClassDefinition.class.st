@@ -177,6 +177,8 @@ GtClassDefinition >> isValidForCreation [
 		ifTrue: [ ^ false ].
 	self name isEmpty
 		ifTrue: [ ^ false ].
+	category package name isEmpty
+		ifTrue: [ ^ false ].
 	superclass exists
 		ifFalse: [ ^ false ].
 	traits exists

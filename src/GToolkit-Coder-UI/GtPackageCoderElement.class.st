@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'packageCoder'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Package'
 }
 
 { #category : #'private - ui' }
@@ -111,8 +111,10 @@ GtPackageCoderElement >> buildParentLink [
 { #category : #'private - ui' }
 GtPackageCoderElement >> buildRemovePackageLabel [
 	| labelText classCount extensionCount |
+
 	classCount := packageCoder package definedClasses size.
 	extensionCount := packageCoder package extensionMethods size.
+
 	labelText := 'Remove package <1s> with <2p> class<3?:es> and <4p> extension method<5?:s>'
 		expandMacrosWithArguments:
 			{packageCoder package name.
@@ -120,6 +122,7 @@ GtPackageCoderElement >> buildRemovePackageLabel [
 			(classCount = 1).
 			extensionCount.
 			(extensionCount = 1)}.
+
 	^ BrLabel new
 		margin: (BlInsets all: 10);
 		look: BrGlamorousLabelLook new glamorousRegularFont;
@@ -136,6 +139,7 @@ GtPackageCoderElement >> coderUIModel: aGtPackageCoder [
 { #category : #initialization }
 GtPackageCoderElement >> initialize [
 	super initialize.
+
 	self padding: (BlInsets top: 5 left: 6 bottom: 5 right: 6).
 	self matchParent
 ]
@@ -168,8 +172,7 @@ GtPackageCoderElement >> packageViewItems [
 
 { #category : #actions }
 GtPackageCoderElement >> unloadPackage [
-	| event |
 	packageCoder unload.
-	event := GtCoderToReplace new coder: GtPackagesCoder new.
-	self fireEvent: event
+
+	self fireEvent: (GtCoderToReplace new coder: GtPackagesCoder new)
 ]

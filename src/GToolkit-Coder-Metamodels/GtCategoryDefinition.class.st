@@ -111,7 +111,7 @@ GtCategoryDefinition >> package [
 
 { #category : #testing }
 GtCategoryDefinition >> packageExists [
-	^package exists
+	^ package exists
 ]
 
 { #category : #accessing }

@@ -18,6 +18,11 @@ GtBehaviorCoder class >> addNewMethodButtonName [
 	^ #'button--add-new-method'
 ]
 
+{ #category : #constants }
+GtBehaviorCoder class >> behaviorNameEditorName [
+	^ #'behavior-coder--behavior-name-editor'
+]
+
 { #category : #'instance creation' }
 GtBehaviorCoder class >> forClass: aBehavior [
 	^ self new
@@ -30,6 +35,13 @@ GtBehaviorCoder class >> forObject: anObject [
 	^ self new
 		forObject: anObject;
 		yourself
+]
+
+{ #category : #accessing }
+GtBehaviorCoder >> behavior [
+	<return: #Class>
+
+	^ class
 ]
 
 { #category : #accessing }
