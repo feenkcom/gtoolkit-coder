@@ -97,7 +97,7 @@ GtMethodsCoderElement >> updateCodersFilters: event [
 	event filterElement
 		filtersDo:
 			[ :descriptor :value | filters add: (descriptor newFilterWithValue: value) ].
-	^ methodsCoderUIModel coders additionalFilters: filters
+	^ methodsCoderUIModel coder additionalFilters: filters
 ]
 
 { #category : #'private - updating' }
