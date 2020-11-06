@@ -2,7 +2,8 @@ Class {
 	#name : #GtCoderEvaluationUnhandledError,
 	#superclass : #UnhandledError,
 	#instVars : [
-		'sourceCoder'
+		'sourceCoder',
+		'selection'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -15,6 +16,7 @@ GtCoderEvaluationUnhandledError >> debug [
 		gtDebugProcess: Processor activeProcess  
 		context: self exception signalerContext
 		withEmbeddedDebuggerIn: sourceCoder
+		withSelection: selection
 		forException: self exception
 ]
 
@@ -22,6 +24,11 @@ GtCoderEvaluationUnhandledError >> debug [
 GtCoderEvaluationUnhandledError >> defaultAction [
 	<reflective: #unhandledErrorDefaultAction:message:>
  	^ UIManager default unhandledErrorDefaultAction: self
+]
+
+{ #category : #accessing }
+GtCoderEvaluationUnhandledError >> selection: aBlSelection [
+	selection := aBlSelection
 ]
 
 { #category : #accessing }

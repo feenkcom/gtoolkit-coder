@@ -343,7 +343,8 @@ GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean in: anEditorEle
 				anError resignalAs:
 					(GtCoderEvaluationUnhandledError new
 						exception: anError;
-						sourceCoder: self) ].
+						sourceCoder: self;
+						selection: anEditorElement selection) ].
 		"The process will be terminated. Return nil in case there is some error whil opening the debugger
 		that prevents the debugger from opening and does not kill the process."
 		^ nil ].
