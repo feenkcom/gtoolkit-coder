@@ -33,9 +33,8 @@ GtMethodContextCoder >> close [
 { #category : #actions }
 GtMethodContextCoder >> compile [
 	^ self
-		handleCompilerErrorsDuring: [
-			self session
-				gtRecompileMethodTo: self newMethodSource
+		handleCompilerErrorsDuring: [ self session
+				gtRecompileMethodTo: self currentSourceString
 				inContext: self context
 				notifying: self compilationRequester ]
 ]
