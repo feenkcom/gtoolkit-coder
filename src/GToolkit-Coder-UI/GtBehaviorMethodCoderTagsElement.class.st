@@ -15,8 +15,7 @@ GtBehaviorMethodCoderTagsElement >> buildTags [
 { #category : #private }
 GtBehaviorMethodCoderTagsElement >> classTagStringFor: aMethodCoderUIModel [
 	<return: #String>
-
-	^ aMethodCoderUIModel coder classOrMetaClass isMeta
+	^ aMethodCoderUIModel coder behavior isMeta
 		ifTrue: [ 'class' ]
 		ifFalse: [ 'instance' ]
 ]

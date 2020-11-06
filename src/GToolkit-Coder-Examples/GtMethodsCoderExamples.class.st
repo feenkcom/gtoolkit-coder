@@ -1,6 +1,6 @@
 Class {
 	#name : #GtMethodsCoderExamples,
-	#superclass : #Object,
+	#superclass : #GtCoderModelExamples,
 	#category : #'GToolkit-Coder-Examples-Coders'
 }
 

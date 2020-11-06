@@ -12,6 +12,16 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #'api - converting' }
+GtCoderSourceCode >> asCompiledMethodSourceCode: aCompiledMethod [
+	^ (GtCoderCompiledMethodSourceCode new fromSourceCode: self) compiledMethod: aCompiledMethod
+]
+
+{ #category : #'api - converting' }
+GtCoderSourceCode >> asExplicitSourceCode: aString [
+	^ (GtCoderExplicitSourceCode new fromSourceCode: self) source: aString
+]
+
 { #category : #private }
 GtCoderSourceCode >> attachToCoder: aGtSourceCoder [
 	sourceCoder := aGtSourceCoder
@@ -38,6 +48,13 @@ GtCoderSourceCode >> collapsedText [
 	^ collapsedText ifNil: [ collapsedText := self buildCollapsedText ]
 ]
 
+{ #category : #'api - accessing' }
+GtCoderSourceCode >> collapsedTextDo: aBlock [
+	"Evaluate a given block with my source code if present"
+
+	^ collapsedText ifNotNil: aBlock
+]
+
 { #category : #'api - changes' }
 GtCoderSourceCode >> currentSourceString: aString [
 	"Set a new source text"
@@ -50,6 +67,15 @@ GtCoderSourceCode >> currentSourceString: aString [
 { #category : #private }
 GtCoderSourceCode >> detachFromCoder: aGtSourceCoder [
 	sourceCoder := nil
+]
+
+{ #category : #initialization }
+GtCoderSourceCode >> fromSourceCode: aGtCoderSourceCode [
+	sourceText := nil.
+	collapsedText := nil.
+
+	aGtCoderSourceCode sourceTextDo: [ :aSourceText | sourceText := aSourceText ].
+	aGtCoderSourceCode collapsedTextDo: [ :aCollapsedText | collapsedText := aCollapsedText ].
 ]
 
 { #category : #'api - testing' }

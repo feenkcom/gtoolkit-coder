@@ -24,7 +24,7 @@ GtSourceCoderHeaderLook >> initialize [
 GtSourceCoderHeaderLook >> newBreadcrumb [
 	<return: #BrBreadcrumb>
 
-	^ GtSourceCoderBreadcrumbElement new
+	^ GtMethodCoderBreadcrumbElement new
 		constraintsDo: [ :c | 
 			c margin: (BlInsets top: 2).
 			c frame horizontal alignLeft.

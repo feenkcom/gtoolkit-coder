@@ -36,9 +36,9 @@ GtClassMethodsCoder >> addMethodsForClass: aClass [
 GtClassMethodsCoder >> addNewCoder [
 	| aCoder |
 	aCoder := GtMethodCoder newMethod.
-	aCoder classOrMetaClass: self newMethodClass.
+	aCoder behavior: self newMethodClass.
 	aCoder object: self object.
-	aCoder category: #accessing.
+	aCoder protocol: #accessing.
 	aCoder coders: self.
 	self addFirstCoder: aCoder.
 	^ aCoder

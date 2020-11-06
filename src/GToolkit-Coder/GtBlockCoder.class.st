@@ -94,7 +94,7 @@ GtBlockCoder >> evaluationRequesterForEditor: aTextEditor [
 
 { #category : #'initialize-release' }
 GtBlockCoder >> forSource: aString [
-	self sourceCode: (GtCoderConcreteSourceCode new source: aString)
+	self sourceCode: (GtCoderExplicitSourceCode new source: aString)
 ]
 
 { #category : #'api - actions' }

@@ -31,10 +31,9 @@ GtMethodCoderByScripterExamples >> basicMethodCoder [
 	<gtExample>
 	| aCoder |
 	aCoder := GtMethodCoder new.
-
 	self assert: aCoder selector isNil.
-	self assert: aCoder classOrMetaClass equals: UndefinedObject.
-	self assert: aCoder category isNil.
+	self assert: aCoder behavior equals: UndefinedObject.
+	self assert: aCoder protocol isNil.
 	self assert: aCoder currentSourceString isString.
 	self assert: aCoder currentSourceString isEmpty.
 	^ aCoder
@@ -96,7 +95,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbConte
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Breadcrumb Class Name';
@@ -104,7 +103,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbConte
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 3.
 		].
 	aScripter syncContinue.
@@ -122,7 +121,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnCla
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 3.
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
@@ -148,7 +147,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnPac
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderCollapsedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
@@ -222,7 +221,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbConten
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderExpandedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Breadcrumb Class Name';
@@ -230,7 +229,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbConten
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderExpandedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 3.
 		].
 	aScripter syncContinue.
@@ -248,7 +247,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnClas
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderExpandedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 3.
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
@@ -274,7 +273,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnPack
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderExpandedContentElement;
 			onChildAt: 1;
-			onChildOfClass: GtSourceCoderBreadcrumbElement;
+			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
@@ -418,17 +417,14 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExpandAttribute
 GtMethodCoderByScripterExamples >> coderOnMethod: aMethod [
 	<gtExample>
 	| aCoder |
-
 	aCoder := self basicMethodCoder.
 	aCoder forMethod: aMethod.
-
 	self assert: aCoder selector equals: aMethod selector.
-	self assert: aCoder classOrMetaClass equals: aMethod methodClass.
-	self assert: aCoder category equals: aMethod protocol.
-	
+	self assert: aCoder behavior equals: aMethod methodClass.
+	self assert: aCoder protocol equals: aMethod protocol.
+
 	"a coder is not displayed and its source text is not initialized"
 	self assert: aCoder sourceCode hasSourceText not.
-
 	^ aCoder
 ]
 

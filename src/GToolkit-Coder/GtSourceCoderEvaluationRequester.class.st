@@ -1,11 +1,11 @@
 Class {
 	#name : #GtSourceCoderEvaluationRequester,
-	#superclass : #GtSourceCoderRequester,
+	#superclass : #GtSourceCoderBasicEvaluationRequester,
 	#instVars : [
 		'selectionInterval',
 		'source'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #accessing }

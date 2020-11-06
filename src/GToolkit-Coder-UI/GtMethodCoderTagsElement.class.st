@@ -136,6 +136,5 @@ GtMethodCoderTagsElement >> newTag [
 { #category : #private }
 GtMethodCoderTagsElement >> protocolStringFor: aMethodCoderUIModel [
 	<return: #String>
-
-	^ aMethodCoderUIModel coder category
+	^ aMethodCoderUIModel coder protocol
 ]

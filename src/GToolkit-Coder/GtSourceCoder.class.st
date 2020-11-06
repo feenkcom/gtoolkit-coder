@@ -53,6 +53,14 @@ GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 		whenComplete: nil
 ]
 
+{ #category : #private }
+GtSourceCoder >> behavior [
+	"Return a Behavior whose instance the object is"
+	<return: #Behavior>
+	
+	^ self object class
+]
+
 { #category : #'api - actions' }
 GtSourceCoder >> browseImplementorsFrom: anEditorElement [
 	| symbol |
@@ -87,14 +95,13 @@ GtSourceCoder >> canExecuteExample [
 	^ false
 ]
 
-{ #category : #accessing }
-GtSourceCoder >> category [
-	^ self attributeNamed: #category
-]
-
 { #category : #private }
 GtSourceCoder >> classOrMetaClass [
-	^ self object class
+	self
+		deprecated: 'Use #behavior instead.'
+		transformWith: '`@receiver classOrMetaClass' -> '`@receiver behavior'.
+		
+	^ self behavior
 ]
 
 { #category : #'private - text' }
@@ -358,15 +365,16 @@ GtSourceCoder >> evaluateSource: aString in: anEditorElement [
 
 { #category : #'private - actions' }
 GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorElement [
-	^ self 
-		evaluateBlock: [ 
-			self classOrMetaClass compiler
+	^ self
+		evaluateBlock: [ self behavior compiler
 				source: aString;
 				receiver: self object;
 				context: self context;
-				requestor: ((self evaluationRequesterForEditor: anEditorElement editor) source: aString);
+				requestor:
+					((self evaluationRequesterForEditor: anEditorElement editor)
+						source: aString);
 				failBlock: [ ^ self flag: 'insert error adornment' ];
-				evaluate ] 
+				evaluate ]
 		showPrintString: aBoolean
 		in: anEditorElement
 ]
@@ -442,10 +450,8 @@ GtSourceCoder >> hasObjectAttribute [
 { #category : #initialize }
 GtSourceCoder >> initialize [
 	super initialize.
-	self resetASTCache.
-	
-	"initialized lazily in #sourceCode"
-	sourceCode := nil
+
+	self reset
 ]
 
 { #category : #initialize }
@@ -498,7 +504,7 @@ GtSourceCoder >> isModified [
 { #category : #private }
 GtSourceCoder >> newCompletionStrategy [
 	^ GtPharoCompletionStrategy new
-		classOrMetaClass: self classOrMetaClass;
+		classOrMetaClass: self behavior;
 		yourself
 ]
 
@@ -598,7 +604,7 @@ GtSourceCoder >> packageTag [
 
 { #category : #private }
 GtSourceCoder >> parse: aString asExpression: isExpression requestor: aRequestor [
-	^ (self classOrMetaClass ifNil: [ UndefinedObject ]) compiler
+	^ (self behavior ifNil: [ UndefinedObject ]) compiler
 		source: aString;
 		noPattern: isExpression;
 		options: #(+ optionParseErrors + optionSkipSemanticWarnings);
@@ -802,6 +808,15 @@ GtSourceCoder >> requesterForEditor: aTextEditor [
 	^ GtSourceCoderRequester on: self editor: aTextEditor
 ]
 
+{ #category : #initialize }
+GtSourceCoder >> reset [
+	self resetASTCache.
+
+	"initialized lazily in #sourceCode"
+	sourceCode := nil.
+	completionStrategy := nil
+]
+
 { #category : #'private - actions' }
 GtSourceCoder >> resetASTCache [
 	astCache := nil -> nil
@@ -873,7 +888,7 @@ GtSourceCoder >> sourceChanged [
 GtSourceCoder >> sourceCode [
 	<return: #GtCoderSourceCode>
 
-	sourceCode ifNil: [ self sourceCode: (GtCoderConcreteSourceCode new source: '') ].
+	sourceCode ifNil: [ self sourceCode: (GtCoderExplicitSourceCode new source: '') ].
 	^ sourceCode
 ]
 

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtBlockCoderEvaluationRequester,
-	#superclass : #GtSourceCoderRequester,
-	#category : #'GToolkit-Coder'
+	#superclass : #GtSourceCoderBasicEvaluationRequester,
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #accessing }

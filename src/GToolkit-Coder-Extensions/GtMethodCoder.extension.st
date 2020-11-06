@@ -6,7 +6,7 @@ GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 	(anAST isNil or: [ anAST methodNode isNil ])
 		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
 			^ self ].
-	(class isNil or: [ (class inheritsFrom: BaselineOf) not ])
+	(self behavior isNil or: [ (self behavior inheritsFrom: BaselineOf) not ])
 		ifTrue: [ ^ self ].
 	coderAddOns addStyler: GtCoderExpandableBaselineStyler new
 ]
@@ -21,16 +21,17 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 							node pragmas
 								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
 						ifNil: [ false ] ] ])
-		ifFalse: [ 
-			coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
-			coderAddOns removeContextAction: 'Play and Inspect Example Result' translated.
-			coderAddOns removeContextAction: 'Inspect Example Object' translated.
+		ifFalse: [ coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
+			coderAddOns
+				removeContextAction: 'Play and Inspect Example Result' translated.
+			coderAddOns
+				removeContextAction: 'Inspect Example Object' translated.
 			^ self ].
 	coderAddOns
 		addStyler:
 			(GtCoderExampleStatusStyler new
 				coder: self;
-				classOrMetaClass: self classOrMetaClass).
+				classOrMetaClass: self behavior).
 	(self canExecuteExample or: [ anAST methodNode numArgs isZero ])
 		ifFalse: [ ^ self ].
 	coderAddOns
@@ -48,7 +49,8 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action: [ :anEditorElement | self debugSelectionOrExampleFrom: anEditorElement ]
+		action:
+			[ :anEditorElement | self debugSelectionOrExampleFrom: anEditorElement ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
@@ -122,4 +124,31 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 		addContextAction: 'Mondrian' translated
 		icon: BrGlamorousVectorIcons playinspect
 		action: [ :anEditorElement | self runMondrianPaintFrom: anEditorElement ]
+]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
+GtMethodCoder >> runGtViewFrom: anElement [
+	| view |
+	
+	self isModified
+		ifTrue: [
+			(self saveFrom: anElement)
+				ifFalse: [ ^ self ] ].
+	
+	view := self object perform: self selector with: GtPhlowEmptyView new.
+	anElement phlow spawnObject: view
+]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
+GtMethodCoder >> runMondrianPaintFrom: anElement [
+	| mondrian |
+	
+	self isModified
+		ifTrue: [
+			(self saveFrom: anElement)
+				ifFalse: [ ^ self ] ].
+	
+	mondrian := GtMondrian new.
+	self object perform: self selector with: mondrian.
+	anElement phlow spawnObject: mondrian
 ]
