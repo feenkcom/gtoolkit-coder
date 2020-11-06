@@ -9,7 +9,7 @@ Class {
 	#name : #GtMethodCoder,
 	#superclass : #GtSourceCoder,
 	#instVars : [
-		'class',
+		'methodBehavior',
 		'selector'
 	],
 	#classVars : [
@@ -251,6 +251,22 @@ GtMethodCoder >> addRemoveParameterRefactoringFor: aNode to: coderAddOns [
 		action: [ :element | self removeParameter: aNode ]
 ]
 
+{ #category : #'api - accessing' }
+GtMethodCoder >> behavior [
+	<return: #GtMethodCoderBehavior>
+
+	self methodBehavior isClass
+		ifTrue: [ ^ self methodBehavior ].
+
+	self methodBehavior realBehaviorDo: [ :aBehavior | ^ aBehavior ].
+	^ UndefinedObject
+]
+
+{ #category : #'api - accessing' }
+GtMethodCoder >> behavior: aBehavior [
+	self methodBehavior: (GtMethodCoderExplicitBehavior new behavior: aBehavior)
+]
+
 { #category : #testing }
 GtMethodCoder >> canCompileMethodIn: newClass [
 	| ast modelClass pools variables model |
@@ -291,16 +307,22 @@ GtMethodCoder >> canMoveMethodToInstanceOrClass [
 	^ self canCompileMethodIn: newClass
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtMethodCoder >> category [
-	^ super category
-		ifNil: [ (self classOrMetaClass notNil and: [ self selector notNil ])
-				ifTrue: [ self classOrMetaClass whichCategoryIncludesSelector: self selector ] ]
+	self
+		deprecated: 'Use #protocol instead.'
+		transformWith: '`@receiver category' -> '`@receiver protocol'.
+
+	^ self protocol
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtMethodCoder >> category: aSymbol [
-	^ self attributeNamed: #category put: aSymbol
+	self
+		deprecated: 'Use #protocol: instead.'
+		transformWith: '`@receiver category: `@arg' -> '`@receiver protocol: `@arg'.
+
+	self protocol: aSymbol
 ]
 
 { #category : #'private - actions' }
@@ -320,14 +342,12 @@ GtMethodCoder >> changedSourceForCurrentMethod: aRefactoryChange [
 ]
 
 { #category : #accessing }
-GtMethodCoder >> classOrMetaClass [
-	^ class
-		ifNil: [ (self attributeNamed: #object ifAbsent: [ nil ]) class ]
-]
-
-{ #category : #accessing }
 GtMethodCoder >> classOrMetaClass: aBehavior [
-	class := aBehavior
+	self
+		deprecated: 'Use #behavior: instead.'
+		transformWith: '`@receiver classOrMetaClass: `@arg' -> '`@receiver behavior: `@arg'.
+
+	self behavior: aBehavior
 ]
 
 { #category : #'private - actions' }
@@ -336,47 +356,48 @@ GtMethodCoder >> clearExample [
 	self removeAttributeNamed: #example.
 ]
 
+{ #category : #private }
+GtMethodCoder >> compilationRequester [
+	^ GtSourceCoderCompilationRequester new coder: self
+]
+
 { #category : #'api - actions' }
-GtMethodCoder >> compileFrom: anEditorElement [
+GtMethodCoder >> compile [
 	"Try to compile the current source code and return true if it was successful, false otherwise"
 	<return: #Boolean>
-	| change |
 	
-	change := self category
-		ifNil: [ RBAddMethodChange
-				compile: self newMethodSource
-				in: self classOrMetaClass
-				for: (self requesterForEditor: anEditorElement editor) ]
-		ifNotNil: [ :category | 
-			RBAddMethodChange
-				compile: self newMethodSource
-				in: self classOrMetaClass
-				classified: category
-				for: (self requesterForEditor: anEditorElement editor) ].
-	selector := change selector.
-	(self
-		handleCompilerErrorsDuring: [ self changeManager performChange: change ])
-		ifFalse: [ ^ false ].
-	change definedSelector
-		ifNotNil: [ :sel | 
-			self selector: sel.
-			self compiledMethod
-				ifNotNil: [ :method |
-					self forMethod: method.
-					^ true ] ].
-	^ false
+	self selector
+		ifNil: [ ^ false ].
+
+	^ self methodBehavior
+		realBehaviorDo: [ :aBehavior |
+			| aChange |
+			aChange := self createCompileMethodChangeIn: aBehavior.
+
+			selector := aChange selector.
+
+			(self
+				handleCompilerErrorsDuring: [ self changeManager performChange: aChange ])
+				ifFalse: [ ^ false ].
+
+			aChange definedSelector
+				ifNotNil: [ :sel | 
+					self selector: sel.
+					self compiledMethod
+						ifNotNil: [ :method |
+							self forMethod: method.
+							^ true ] ].
+			false ]
+		ifAbsent: [ false ]
 ]
 
 { #category : #accessing }
 GtMethodCoder >> compiledMethod [
 	<return: #CompiledMethod or: nil>
-	^ self classOrMetaClass
-		ifNotNil: [ :cls | 
-			self selector
-				ifNotNil: [ :sel | 
-					(cls includesSelector: sel)
-						ifTrue: [ 
-							cls >> sel ] ] ]
+	
+	^ self existsInTheSystem
+		ifTrue: [ self behavior >> self selector ]
+		ifFalse: [ nil ]
 ]
 
 { #category : #'api - refactorings' }
@@ -393,6 +414,33 @@ GtMethodCoder >> createAccessorsFor: aNode instanceVariable: aBoolean [
 				ifFalse: [ cls whoDefinesClassVariable: aNode name ])
 		classVariable: aBoolean not.
 	self addRefactoringChangesPreview: refactoring at: aNode stop
+]
+
+{ #category : #private }
+GtMethodCoder >> createCompileMethodChange [
+	<return: #RBAddMethodChange or: nil>
+
+	^ self methodBehavior
+		realBehaviorDo: [ :aBehavior | self createCompileMethodChangeIn: aBehavior ]
+		ifAbsent: [ nil ]
+]
+
+{ #category : #private }
+GtMethodCoder >> createCompileMethodChangeIn: aBehavior [
+	<return: #RBAddMethodChange>
+
+	^ self protocol
+		ifNil: [
+			RBAddMethodChange
+				compile: self currentSourceString
+				in: aBehavior
+				for: self compilationRequester ]
+		ifNotNil: [ :aCategory | 
+			RBAddMethodChange
+				compile: self currentSourceString
+				in: aBehavior
+				classified: aCategory
+				for: self compilationRequester ]
 ]
 
 { #category : #'private - refactorings' }
@@ -430,25 +478,24 @@ GtMethodCoder >> currentSelector [
 						ifTrue: [ ast selector ] ] ]
 ]
 
-{ #category : #'api - actions examples' }
-GtMethodCoder >> debugExampleFrom: anEditorElement [
-	self isModified
-		ifTrue: [ (self saveFrom: anEditorElement)
-			ifFalse: [ ^ self ] ].
-	self example openingDebugger result
-]
-
 { #category : #'api - actions' }
-GtMethodCoder >> debugMethodFrom: anEditorElement [
-	self isModified
-		ifTrue: [
-			(self saveFrom: anEditorElement)
-				ifFalse: [ ^ self ] ].
+GtMethodCoder >> debug [
+	self isModified ifTrue: [
+		self save
+			ifFalse: [ ^ self ] ].
 
 	self
 		debug: self compiledMethod
 		receiver: self object
-		in: self context.
+		in: self context
+]
+
+{ #category : #'api - actions examples' }
+GtMethodCoder >> debugExampleFrom: anEditorElement [
+	self isModified
+		ifTrue: [ self save
+			ifFalse: [ ^ self ] ].
+	self example openingDebugger result
 ]
 
 { #category : #'api - actions examples' }
@@ -461,14 +508,14 @@ GtMethodCoder >> debugSelectionOrExampleFrom: anEditorElement [
 { #category : #'api - actions' }
 GtMethodCoder >> debugSelectionOrMethodFrom: anEditorElement [
 	^ (self selectedSourceInEditor: anEditorElement editor)
-		ifEmpty: [ self debugMethodFrom: anEditorElement ]
+		ifEmpty: [ self debug ]
 		ifNotEmpty: [ :aSelectedSource | self debugSource: aSelectedSource from: anEditorElement ]
 ]
 
 { #category : #'private - actions' }
 GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean in: anEditorElement [
-
 	| aReceiver |
+
 	aReceiver := (anObject respondsTo: aSymbol)
 		ifTrue: [ anObject ]
 		ifFalse: [ anObject class ].
@@ -494,27 +541,42 @@ GtMethodCoder >> example [
 { #category : #'api - actions examples' }
 GtMethodCoder >> example: anExampleWithResult [
 	| aCompiledMethod |
-	
 	self unsubscribeFromExample.
-	
 	self
 		attributeNamed: #example
 		put: anExampleWithResult asExampleWithResult.
-
 	aCompiledMethod := anExampleWithResult method.
 	(aCompiledMethod selector = self selector
-		and: [ aCompiledMethod methodClass = self classOrMetaClass ])
+		and: [ aCompiledMethod methodClass = self behavior ])
 		ifFalse: [ self error: 'Can not assign example of the wrong method' ].
-
 	self example announcer
 		when: GtExampleExecuted send: #handleExampleExecuted: to: self;
-		when: GtExampleArgumentsChanged send: #handleExampleArgumentsChanged: to: self
+		when: GtExampleArgumentsChanged
+			send: #handleExampleArgumentsChanged:
+			to: self
 ]
 
 { #category : #'api - actions examples' }
 GtMethodCoder >> exampleResult [
 	<return: #GtExampleResult or: nil>
 	^ self example ifNotNil: #result
+]
+
+{ #category : #testing }
+GtMethodCoder >> existsInTheSystem [
+	"Return true if a method with the given #selector exists in the behavior"
+	<return: #Boolean>
+
+	self behavior
+		ifNil: [ ^ false ].
+
+	self behavior isObsolete
+		ifTrue: [ ^ false ].
+
+	self selector
+		ifNil: [ ^ false ].
+
+	^ self behavior includesSelector: self selector
 ]
 
 { #category : #accessing }
@@ -582,7 +644,7 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 GtMethodCoder >> forClass: aBehavior source: aString [	
 	self classOrMetaClass: aBehavior.
 
-	self sourceCode: (GtCoderConcreteSourceCode new source: aString)
+	self sourceCode: (GtCoderExplicitSourceCode new source: aString)
 ]
 
 { #category : #initialize }
@@ -593,10 +655,10 @@ GtMethodCoder >> forExample: anExampleWithResult [
 
 { #category : #initialize }
 GtMethodCoder >> forMethod: aCompiledMethod [
-	self classOrMetaClass: aCompiledMethod methodClass.
+	self methodBehavior: (GtMethodCoderExplicitBehavior new behavior: aCompiledMethod methodClass).
 	self selector: aCompiledMethod selector.
-	
-	self sourceCode: (GtCoderCompiledMethodSourceCode new compiledMethod: aCompiledMethod)
+	self sourceCode: (GtCoderCompiledMethodSourceCode new compiledMethod: aCompiledMethod).
+	self protocol: aCompiledMethod category
 ]
 
 { #category : #'api - actions' }
@@ -741,8 +803,7 @@ GtMethodCoder >> initializeShortcuts [
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryS;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder saveFrom: aShortcutEvent currentTarget ];
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder | aMethodCoder save];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: (BlKeyCombination primaryShiftF);
@@ -809,7 +870,8 @@ GtMethodCoder >> isForMethod [
 
 { #category : #testing }
 GtMethodCoder >> isForMethod: aCompiledMethod [
-	^ self classOrMetaClass = aCompiledMethod methodClass and: [ self selector = aCompiledMethod selector ]
+	^ self behavior = aCompiledMethod methodClass
+		and: [ self selector = aCompiledMethod selector ]
 ]
 
 { #category : #'api - addons' }
@@ -856,15 +918,20 @@ GtMethodCoder >> isOverriding [
 				ifNotNil: [ :spr | (spr whichClassIncludesSelector: sel) notNil ] ]
 ]
 
-{ #category : #'event handling' }
-GtMethodCoder >> methodChanged: aMethodModified [
-	| aCompiledMethod |
-	aCompiledMethod := self compiledMethod.
-	(aCompiledMethod notNil and: [ 
-		aMethodModified classAffected = aCompiledMethod methodClass
-			and: [ aMethodModified selector = aCompiledMethod selector ]])
-				ifFalse: [ ^ self ].
-	self forMethod: aMethodModified newMethod
+{ #category : #'api - accessing' }
+GtMethodCoder >> methodBehavior [
+	<return: #GtMethodCoderBehavior>
+
+	^ methodBehavior
+]
+
+{ #category : #'api - accessing' }
+GtMethodCoder >> methodBehavior: aGtMethodCoderBehavior [
+	self
+		assert: [ aGtMethodCoderBehavior isKindOf: GtMethodCoderBehavior ]
+		description: [ 'Behavior must be reifined as an object' ].
+
+	methodBehavior := aGtMethodCoderBehavior
 ]
 
 { #category : #'api - refactorings' }
@@ -875,24 +942,30 @@ GtMethodCoder >> moveMethodToInstanceOrClass [
 		ifTrue: [ oldClass soleInstance ]
 		ifFalse: [ oldClass class ].
 	self isNewMethod
-		ifTrue: [ self classOrMetaClass: newClass.
+		ifTrue: [ self behavior: newClass.
 			^ true ].
 	self canMoveMethodToInstanceOrClass
 		ifFalse: [ ^ false ].
+
 	model := RBNamespace new.
 	modelClass := model classFor: newClass.
 	modelClass compile: self currentSourceString classified: self category.
 	oldModelClass := model classFor: oldClass.
 	(oldModelClass directlyDefinesMethod: self currentSelector)
 		ifTrue: [ oldModelClass removeMethod: self currentSelector ].
-	self classOrMetaClass: newClass.
+	self behavior: newClass.
+
 	[ model changes execute ]
-		ifCurtailed: [ self classOrMetaClass: oldClass ].
+		ifCurtailed: [ self behavior: oldClass ].
 	^ true
 ]
 
 { #category : #'private - actions' }
 GtMethodCoder >> newMethodSource [
+	self
+		deprecated: 'Use #currentSourceString instead.'
+		transformWith: '`@receiver newMethodSource' -> '`@receiver currentSourceString'.
+
 	^ self currentSourceString
 ]
 
@@ -917,11 +990,111 @@ GtMethodCoder >> nodeDescription: aNode [
 		with: ' ') copyReplaceAll: '	' with: ' '
 ]
 
+{ #category : #'private - notifying' }
+GtMethodCoder >> notifyClassAdded [
+	self announce: (GtCoderClassAdded new coder: self)
+]
+
+{ #category : #'private - notifying' }
+GtMethodCoder >> notifyClassRemoved [
+	self announce: (GtCoderClassRemoved new coder: self)
+]
+
+{ #category : #'private - notifying' }
+GtMethodCoder >> notifyClassRenamed [
+	self announce: (GtCoderClassRenamed new coder: self)
+]
+
+{ #category : #'private - notifying' }
+GtMethodCoder >> notifyMethodAdded [
+	self announce: (GtCoderMethodAdded new coder: self)
+]
+
+{ #category : #'private - notifying' }
+GtMethodCoder >> notifyMethodModified [
+	self announce: (GtCoderMethodModified new coder: self)
+]
+
+{ #category : #'private - notifying' }
+GtMethodCoder >> notifyMethodRemoved [
+	self announce: (GtCoderMethodRemoved new coder: self)
+]
+
 { #category : #accessing }
 GtMethodCoder >> object [
 	^ self
 		attributeNamed: #object
-		ifAbsent: [ (class ifNil: [ nil class ]) instanceSide ]
+		ifAbsent: [ (self behavior ifNil: [ nil class ]) instanceSide ]
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> onClassAdded: aClassAddedAnnouncement [
+	(self methodBehavior affectedByClassAdded: aClassAddedAnnouncement)
+		ifFalse: [ ^ self ].
+
+	methodBehavior := self methodBehavior affectByClassAdded: aClassAddedAnnouncement.
+	self notifyClassAdded
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> onClassRemoved: aClassRemovedAnnouncement [
+	(self methodBehavior affectedByClassRemoved: aClassRemovedAnnouncement)
+		ifFalse: [ ^ self ].
+		
+	methodBehavior := self methodBehavior affectByClassRemoved: aClassRemovedAnnouncement.
+	self notifyClassRemoved
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> onClassRenamed: aClassRenamedAnnouncement [
+	(self methodBehavior affectedByClassRenamed: aClassRenamedAnnouncement)
+		ifFalse: [ ^ self ].
+
+	methodBehavior := self methodBehavior affectByClassRenamed: aClassRenamedAnnouncement.
+	self notifyClassRenamed
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> onMethodAdded: aMethodAddedAnnouncement [
+	(aMethodAddedAnnouncement methodAdded methodClass = self behavior
+		and: [ aMethodAddedAnnouncement methodAdded selector = self selector ])
+			ifFalse: [ ^ self ].
+
+	self notifyMethodAdded
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> onMethodModified: aMethodModified [
+	| doesAffect |
+
+	doesAffect := self methodBehavior
+		realBehaviorDo: [ :aBehavior |
+			aMethodModified classAffected = aBehavior
+				and: [ aMethodModified selector = self selector ] ]
+		ifAbsent: [
+			self methodBehavior
+				behaviorNameDo: [ :aBehaviorName |
+					aMethodModified classAffected name = aBehaviorName
+						and: [ aMethodModified selector = self selector ] ]
+			ifAbsent: [ false ] ].
+	
+	doesAffect
+		ifFalse: [ ^ self ].
+
+	self isModified
+		ifFalse: [ self forMethod: aMethodModified newMethod ]
+		ifTrue: [ sourceCode := self sourceCode asCompiledMethodSourceCode: aMethodModified newMethod ].
+	
+	self notifyMethodModified
+]
+
+{ #category : #'event handling' }
+GtMethodCoder >> onMethodRemoved: aMethodRemovedAnnouncement [
+	(aMethodRemovedAnnouncement methodRemoved methodClass = self behavior
+		and: [ aMethodRemovedAnnouncement methodRemoved selector = self selector ])
+			ifFalse: [ ^ self ].
+
+	self notifyMethodRemoved
 ]
 
 { #category : #accessing }
@@ -995,7 +1168,7 @@ GtMethodCoder >> playAndInspectFrom: anEditorElement [
 
 	self isModified
 		ifTrue: [
-			(self saveFrom: anEditorElement)
+			self save
 				ifFalse: [ ^ self ] ].
 
 	anObject := self
@@ -1020,7 +1193,7 @@ GtMethodCoder >> playAndInspectSelectionOrMethodFrom: anEditorElement [
 GtMethodCoder >> playAndInspectSlideFrom: anEditorElement [
 	self isModified
 		ifTrue: [
-			(self saveFrom: anEditorElement)
+			self save
 				ifFalse: [ ^ self ] ].
 	anEditorElement phlow spawnObject: self compiledMethod gtSlide.
 ]
@@ -1034,9 +1207,9 @@ GtMethodCoder >> playExampleFrom: anEditorElement [
 GtMethodCoder >> playFrom: anEditorElement [
 	self isModified
 		ifTrue: [
-			(self saveFrom: anEditorElement)
+			self save
 				ifFalse: [ ^ self ] ].
-	
+
 	self
 		evaluateSelector: self selector
 		object: self object
@@ -1058,7 +1231,7 @@ GtMethodCoder >> previewElement [
 	"Return a preview element for the Spotter"
 	<return: #BlElement>
 
-	^ (self class forClass: class source: self currentSourceString)
+	^ (self class forClass: self behavior source: self currentSourceString)
 		expanded: true;
 		asElement
 ]
@@ -1066,11 +1239,11 @@ GtMethodCoder >> previewElement [
 { #category : #printing }
 GtMethodCoder >> printOn: aStream [
 	super printOn: aStream.
-	aStream 
+	aStream
 		nextPut: $(;
-		nextPutAll: self classOrMetaClass asString; 
+		nextPutAll: self behavior asString;
 		nextPutAll: '>>#';
-		nextPutAll: self selector asString;  
+		nextPutAll: self selector asString;
 		nextPut: $)
 ]
 
@@ -1084,6 +1257,22 @@ GtMethodCoder >> protectInstVar: aNode [
 		variable: aNode name
 		class: (cls whoDefinesInstanceVariable: aNode name).
 	self addRefactoringChangesPreview: refactoring at: aNode stop
+]
+
+{ #category : #'api - accessing' }
+GtMethodCoder >> protocol [
+	<return: #String or: nil>
+
+	^ self
+		attributeNamed: #category
+		ifAbsent: [
+			(self behavior notNil and: [ self selector notNil ])
+				ifTrue: [ self behavior whichCategoryIncludesSelector: self selector ] ]
+]
+
+{ #category : #'api - accessing' }
+GtMethodCoder >> protocol: aSymbol [
+	^ self attributeNamed: #category put: aSymbol
 ]
 
 { #category : #'private - refactorings' }
@@ -1129,11 +1318,17 @@ GtMethodCoder >> rbSelectedNodesFrom: anEditorElement [
 ]
 
 { #category : #'api - actions' }
-GtMethodCoder >> removeFrom: anEditorElement [
-	selector isNil
-		ifTrue: [ (self attributeNamed: #coders)
-				ifNotNil: [ :coders | coders removeCoder: self ] ].
-	^ class removeSelector: selector
+GtMethodCoder >> remove [
+	self coders
+		ifNotNil: [ :theCoders | theCoders removeCoder: self ].
+
+	self announcer
+		suppress: GtCoderMethodRemoved
+		during: [ self methodBehavior realBehaviorDo: [ :aBehavior | aBehavior removeSelector: selector ] ].
+	
+	self reset.
+	
+	self notifyMethodRemoved
 ]
 
 { #category : #'private - refactorings' }
@@ -1195,41 +1390,22 @@ GtMethodCoder >> renameProtocol: aString [
 			change execute ]
 ]
 
+{ #category : #initialize }
+GtMethodCoder >> reset [
+	super reset.
+	methodBehavior := GtMethodCoderUnspecifiedBehavior new.
+	selector := nil.
+	self protocol: nil
+]
+
 { #category : #'api - actions examples' }
 GtMethodCoder >> runExampleFrom: anEditorElement [
 	self isModified
 		ifTrue: [
-			(self saveFrom: anEditorElement)
+			self save
 				ifFalse: [ ^ self ] ].
 
 	self example run.
-]
-
-{ #category : #'api - actions' }
-GtMethodCoder >> runGtViewFrom: anElement [
-	| view |
-	
-	self isModified
-		ifTrue: [
-			(self saveFrom: anElement)
-				ifFalse: [ ^ self ] ].
-	
-	view := self object perform: self selector with: GtPhlowEmptyView new.
-	anElement phlow spawnObject: view
-]
-
-{ #category : #'api - actions' }
-GtMethodCoder >> runMondrianPaintFrom: anElement [
-	| mondrian |
-	
-	self isModified
-		ifTrue: [
-			(self saveFrom: anElement)
-				ifFalse: [ ^ self ] ].
-	
-	mondrian := GtMondrian new.
-	self object perform: self selector with: mondrian.
-	anElement phlow spawnObject: mondrian
 ]
 
 { #category : #'private - refactorings' }
@@ -1252,16 +1428,16 @@ GtMethodCoder >> safeTemporaryName [
 ]
 
 { #category : #'api - actions' }
-GtMethodCoder >> saveFrom: anEditorElement [
+GtMethodCoder >> save [
 	"Try to save the current method validating syntax and return `true` if save was succesful, false otherwise"
 	<return: #Boolean>
 
 	self validateSyntax
 		ifFalse: [ ^ false ].
 
-	(self compileFrom: anEditorElement)
+	self compile
 		ifFalse: [ ^ false ].
-		
+
 	^ true
 ]
 
@@ -1311,10 +1487,17 @@ GtMethodCoder >> sourceCode: aGtCoderSourceCode [
 	super sourceCode: aGtCoderSourceCode.
 ]
 
-{ #category : #subscriptions }
+{ #category : #'private - subscriptions' }
 GtMethodCoder >> subscribeToSystem [
+	self unsubscribeFromSystem.
+
 	SystemAnnouncer uniqueInstance weak
-		when: MethodModified send: #methodChanged: to: self
+		when: ClassAdded send: #onClassAdded: to: self;
+		when: ClassRenamed send: #onClassRenamed: to: self;
+		when: ClassRemoved send: #onClassRemoved: to: self;
+		when: MethodAdded send: #onMethodAdded: to: self;
+		when: MethodRemoved send: #onMethodRemoved: to: self;
+		when: MethodModified send: #onMethodModified: to: self
 ]
 
 { #category : #'api - addons' }

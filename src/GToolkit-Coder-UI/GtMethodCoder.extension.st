@@ -8,13 +8,13 @@ GtMethodCoder >> asCoderUIModel [
 { #category : #'*GToolkit-Coder-UI' }
 GtMethodCoder >> breadcrumbActions [
 	<return: #Array of: #GtSourceCoderBreadcrumbAction>
-
-	^ Array streamContents: [ :aStream |
-		(self compiledMethod ifNil: [ self classOrMetaClass ]) package
-			ifNotNil: [ :aPackage |
-				aStream nextPut: (GtSourceCoderBreadcrumbSpawnPackageAction new package: aPackage) ].
-			
-		aStream nextPut: (GtSourceCoderBreadcrumbSpawnClassAction new classOrMetaClass: self classOrMetaClass) ]
+	^ Array
+		streamContents: [ :aStream | 
+			(self compiledMethod ifNil: [ self behavior ]) package
+				ifNotNil: [ :aPackage | 
+					aStream
+						nextPut: (GtSourceCoderBreadcrumbSpawnPackageAction new package: aPackage) ].
+			aStream nextPut: (GtSourceCoderBreadcrumbSpawnBehaviorAction new methodBehavior: self methodBehavior) ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

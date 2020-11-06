@@ -9,7 +9,7 @@ GtSourceCoderExpandedWithHeaderLook >> initialize [
 	super initialize.
 
 	self addAll: {
-		GtSourceCoderHeaderLook new.
+		GtMethodCoderHeaderLook new.
 		GtSourceCoderEditorLook new.
 		BrLayoutResizerLook inherit
 	}

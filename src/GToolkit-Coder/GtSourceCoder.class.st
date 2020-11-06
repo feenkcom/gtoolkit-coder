@@ -15,8 +15,10 @@ Class {
 	#superclass : #GtCoderModel,
 	#instVars : [
 		'sourceCode',
+		'completionStrategy',
 		'astCache',
-		'completionStrategy'
+		'astMonitor',
+		'astCommand'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -53,6 +55,25 @@ GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 		whenComplete: nil
 ]
 
+{ #category : #'private - ast' }
+GtSourceCoder >> astCache [
+	^ astMonitor critical: [ astCache ]
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> astCache: anAssociation [
+	astMonitor critical: [ astCache := anAssociation ].
+	self onAstChanged
+]
+
+{ #category : #private }
+GtSourceCoder >> behavior [
+	"Return a Behavior whose instance the object is"
+	<return: #Behavior>
+	
+	^ self object class
+]
+
 { #category : #'api - actions' }
 GtSourceCoder >> browseImplementorsFrom: anEditorElement [
 	| symbol |
@@ -87,14 +108,13 @@ GtSourceCoder >> canExecuteExample [
 	^ false
 ]
 
-{ #category : #accessing }
-GtSourceCoder >> category [
-	^ self attributeNamed: #category
-]
-
 { #category : #private }
 GtSourceCoder >> classOrMetaClass [
-	^ self object class
+	self
+		deprecated: 'Use #behavior instead.'
+		transformWith: '`@receiver classOrMetaClass' -> '`@receiver behavior'.
+		
+	^ self behavior
 ]
 
 { #category : #'private - text' }
@@ -240,7 +260,7 @@ GtSourceCoder >> disabledTextAttributes [
 ]
 
 { #category : #'api - actions' }
-GtSourceCoder >> discardChangesFrom: anEditorElement [
+GtSourceCoder >> discardChanges [
 	"Discard not-accepted changes."
 
 	self isModified
@@ -250,7 +270,7 @@ GtSourceCoder >> discardChangesFrom: anEditorElement [
 	self sourceCode resetSourceText.
 
 	self sourceChanged.
-	self notifySourceChanged
+	self textModified
 ]
 
 { #category : #'api - actions' }
@@ -359,15 +379,16 @@ GtSourceCoder >> evaluateSource: aString in: anEditorElement [
 
 { #category : #'private - actions' }
 GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorElement [
-	^ self 
-		evaluateBlock: [ 
-			self classOrMetaClass compiler
+	^ self
+		evaluateBlock: [ self behavior compiler
 				source: aString;
 				receiver: self object;
 				context: self context;
-				requestor: ((self evaluationRequesterForEditor: anEditorElement editor) source: aString);
+				requestor:
+					((self evaluationRequesterForEditor: anEditorElement editor)
+						source: aString);
 				failBlock: [ ^ self flag: 'insert error adornment' ];
-				evaluate ] 
+				evaluate ]
 		showPrintString: aBoolean
 		in: anEditorElement
 ]
@@ -443,10 +464,9 @@ GtSourceCoder >> hasObjectAttribute [
 { #category : #initialize }
 GtSourceCoder >> initialize [
 	super initialize.
-	self resetASTCache.
-	
-	"initialized lazily in #sourceCode"
-	sourceCode := nil
+
+	astMonitor := Monitor new.
+	self reset
 ]
 
 { #category : #initialize }
@@ -480,7 +500,7 @@ GtSourceCoder >> initializeShortcuts [
 		addShortcut: (BrTextEditorShortcut new
 			combination: (BlKeyCombination primaryL);
 			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
-				aSourceCoder discardChangesFrom: aShortcutEvent currentTarget ];
+				aSourceCoder discardChanges ];
 			options: self)
 ]
 
@@ -499,7 +519,7 @@ GtSourceCoder >> isModified [
 { #category : #private }
 GtSourceCoder >> newCompletionStrategy [
 	^ GtPharoCompletionStrategy new
-		classOrMetaClass: self classOrMetaClass;
+		classOrMetaClass: self behavior;
 		yourself
 ]
 
@@ -587,6 +607,10 @@ GtSourceCoder >> object: anObject [
 		ifNotNil: [ self attributeNamed: #object put: anObject ]
 ]
 
+{ #category : #'private - ast' }
+GtSourceCoder >> onAstChanged [
+]
+
 { #category : #accessing }
 GtSourceCoder >> package [
 	^ self attributeNamed: #package
@@ -599,7 +623,7 @@ GtSourceCoder >> packageTag [
 
 { #category : #private }
 GtSourceCoder >> parse: aString asExpression: isExpression requestor: aRequestor [
-	^ (self classOrMetaClass ifNil: [ UndefinedObject ]) compiler
+	^ (self behavior ifNil: [ UndefinedObject ]) compiler
 		source: aString;
 		noPattern: isExpression;
 		options: #(+ optionParseErrors + optionSkipSemanticWarnings);
@@ -688,10 +712,51 @@ GtSourceCoder >> rbAST [
 	astCache key = source
 		ifTrue: [ ^ astCache value ].
 	^ [ 
-		astCache := source -> (self newRbAST: source).
+		self astCache: source -> (self newRbAST: source).
 		astCache value ]
 	on: Error
 	do: [ :ex | ex return: nil ]
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> rbASTAsyncDo: aBlock [
+
+	astMonitor critical: [ 
+		| aCommand astComputationCommand |
+		astCommand ifNotNil: #terminate.
+
+		astComputationCommand := [
+			| source currentAstCache |
+			"The AST should be built out of the `characters` of the source text.
+			This is needed to support `crlf` and logical items
+			see https://github.com/feenkcom/gtoolkit/issues/593"
+			source := self sourceText copy characters asString.
+			currentAstCache := self astCache.
+
+			currentAstCache key = source
+				ifTrue: [ currentAstCache ]
+				ifFalse: [
+					[ source -> (self newRbAST: source) ]
+						on: Error
+						do: [ :ex | ex return: nil ] ].
+
+		] asBlTktTerminableCommand asBlTktLoggingCommand.
+		astComputationCommand name: 'Coder ast computation'.
+		
+		astCommand := aCommand := BlTaskAtPostponedTerminableFuture new.
+		aCommand
+			command: astComputationCommand;
+			onSuccessDo:  [ :aResult | 
+				(aCommand == astCommand and: [ aResult notNil ])
+					ifTrue: [
+						self astCache: aResult.
+						aBlock value: aResult ] ];
+			onFailureDo: [ :anException | "handle error here" ];
+			pool: BlTktWorkerProvider coderPool;
+			scheduledTime: BlTime real now + 100 milliSeconds.
+		BlTaskAtQueue default schedule: astCommand.
+	
+	 ].
 ]
 
 { #category : #private }
@@ -803,9 +868,18 @@ GtSourceCoder >> requesterForEditor: aTextEditor [
 	^ GtSourceCoderRequester on: self editor: aTextEditor
 ]
 
+{ #category : #initialize }
+GtSourceCoder >> reset [
+	self resetASTCache.
+
+	"initialized lazily in #sourceCode"
+	sourceCode := nil.
+	completionStrategy := nil
+]
+
 { #category : #'private - actions' }
 GtSourceCoder >> resetASTCache [
-	astCache := nil -> nil
+	self astCache: (nil -> nil)
 ]
 
 { #category : #'private - text' }
@@ -867,14 +941,16 @@ GtSourceCoder >> sourceChanged [
 	self clearSyntaxErrors.
 
 	self requestUpdateCollapsedText.
-	self requestUpdateAddOns
+	self requestUpdateAddOns.
+	
+	self notifySourceChanged
 ]
 
 { #category : #'api - accessing' }
 GtSourceCoder >> sourceCode [
 	<return: #GtCoderSourceCode>
 
-	sourceCode ifNil: [ self sourceCode: (GtCoderConcreteSourceCode new source: '') ].
+	sourceCode ifNil: [ self sourceCode: (GtCoderExplicitSourceCode new source: '') ].
 	^ sourceCode
 ]
 
@@ -887,7 +963,7 @@ GtSourceCoder >> sourceCode: aGtCoderSourceCode [
 	sourceCode attachToCoder: self.
 
 	self sourceChanged.
-	self notifySourceChanged
+	self textModified
 ]
 
 { #category : #'private - text' }
@@ -1002,6 +1078,22 @@ GtSourceCoder >> textModified [
 	self notifyTextModified
 ]
 
+{ #category : #'api - addons' }
+GtSourceCoder >> updateAddOns [
+	"Start the update of the addons in a context of a given element"
+
+	addOnMonitor
+		critical: [			 
+			BlUseAsyncFeatures 
+				ifEnabledDo: [ 
+					self terminateAddOnsCommand.
+					addOnCommand := self updateAddOnsCommand.
+					addOnCommand name: 'AddOns: ' , self identityHash printString.
+					BlTktWorkerProvider coderPool schedule: addOnCommand ]
+				otherwise: [ 
+					self updateAddOnsCommand execute ] ]
+]
+
 { #category : #'private - addons' }
 GtSourceCoder >> updateAddOnsCommand [
 	^ [
@@ -1019,22 +1111,6 @@ GtSourceCoder >> updateAddOnsCommand [
 		updatedAddOns changesDo: [ :each | self addOnChanged: each ].
 		updatedAddOns clearChanges
 	] asBlTktTerminableCommand
-]
-
-{ #category : #'api - addons' }
-GtSourceCoder >> updateAddOnsFrom: anElement [
-	"Start the update of the addons in a context of a given element"
-
-	addOnMonitor
-		critical: [			 
-			BlUseAsyncFeatures 
-				ifEnabledDo: [ 
-					self terminateAddOnsCommand.
-					addOnCommand := self updateAddOnsCommand.
-					addOnCommand name: 'AddOns: ' , self identityHash printString.
-					BlTktWorkerProvider highUICPUBoundPool schedule: addOnCommand ]
-				otherwise: [ 
-					self updateAddOnsCommand execute ] ]
 ]
 
 { #category : #'api - addons' }

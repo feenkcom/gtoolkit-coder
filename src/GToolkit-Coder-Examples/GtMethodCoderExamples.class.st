@@ -1,12 +1,211 @@
 Class {
 	#name : #GtMethodCoderExamples,
-	#superclass : #Object,
+	#superclass : #GtCoderModelExamples,
 	#category : #'GToolkit-Coder-Examples-Coders'
 }
 
 { #category : #'sample methods' }
 GtMethodCoderExamples >> ? anObject [
 	"Test binary method"
+]
+
+{ #category : #'examples - instance creation' }
+GtMethodCoderExamples >> coderOnMethodInPackagedClass [
+	<gtExample>
+	<after: #cleanUp>
+	| aPackage aClass aMethod aMethodCoder |
+
+	aPackage := self fakeRegisteredPackage.
+	aClass := (self fakeClassesInFakePackage: aPackage) first.
+	aMethod := (self fakeMethodsInFakeClass: aClass) first.
+
+	aMethodCoder := GtMethodCoder forMethod: aMethod.
+	aMethodCoder attributeNamed: #fakePackage put: aPackage.
+	aMethodCoder attributeNamed: #fakeClass put: aClass.
+	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
+	aMethodCoder attributeNamed: #fakeMethod put: aMethod.
+	aMethodCoder attributeNamed: #fakeProtocol put: (self fakeCategoryForFakeMethod: aMethod).
+
+	self assert: aMethodCoder behavior equals: aClass.
+	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior explicit: aClass).
+	self assert: aMethodCoder selector equals: aMethod selector.
+	self assert: aMethodCoder compiledMethod equals: aMethod.
+	self assert: aMethodCoder protocol equals: (self fakeCategoryForFakeMethod: aMethod).
+	self assert: aMethodCoder sourceCode class equals: GtCoderCompiledMethodSourceCode.
+	self assert: aMethodCoder sourceCode compiledMethod equals: aMethod.
+
+	^ aMethodCoder
+]
+
+{ #category : #'examples - compile' }
+GtMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToSystem [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethodCoder aCompiledSelector anEventsRecoder anOldMethod aNewMethod |
+	
+	anEventsRecoder := self eventsRecorder.
+	
+	aMethodCoder := self coderOnMethodInPackagedClass.
+	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
+	
+	aMethodCoder sourceText append: '"modified"' asRopedText.
+	aMethodCoder subscribeToSystem.
+	
+	self assert: aMethodCoder isModified.
+	self assert: aMethodCoder currentSourceString equals: anOldMethod sourceCode, '"modified"'.
+	
+	aMethodCoder
+		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
+		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
+		when: GtCoderMethodModified send: #record: to: anEventsRecoder;
+		when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
+
+	aCompiledSelector := [ anOldMethod methodClass compile: anOldMethod sourceCode, '"new method"' classified: anOldMethod protocol ]
+		ensure: [ aMethodCoder unsubscribeFromSystem ].
+	
+	self assert: aCompiledSelector equals: anOldMethod selector.
+	aNewMethod := (aMethodCoder attributeNamed: #fakeClass) >> aCompiledSelector.
+
+	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #fakeClass).
+	self assert: aMethodCoder selector equals: aNewMethod selector.
+	self assert: aMethodCoder compiledMethod equals: aNewMethod.
+	self assert: aMethodCoder protocol equals: aNewMethod protocol.
+	self assert: aMethodCoder existsInTheSystem.
+	self assert: aMethodCoder isModified.
+
+	self assert: aMethodCoder currentSourceString equals: anOldMethod sourceCode, '"modified"'.
+	self assert: aMethodCoder sourceCode class equals: GtCoderCompiledMethodSourceCode.
+	self assert: aMethodCoder sourceCode compiledMethod == aNewMethod.
+	self assert: aMethodCoder sourceCode sourceString equals: anOldMethod sourceCode, '"modified"'.
+	self assert: aMethodCoder sourceCode buildSourceText asString equals: anOldMethod sourceCode, '"new method"'.
+
+	self assert: anEventsRecoder numberOfEvents equals: 1.
+	self assert: anEventsRecoder first class equals: GtCoderMethodModified.
+	self assert: anEventsRecoder first coder equals: aMethodCoder.
+	
+	^ aMethodCoder
+]
+
+{ #category : #'examples - compile' }
+GtMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribedToSystem [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethodCoder aCompiledSelector anEventsRecoder anOldMethod aNewMethod |
+	
+	anEventsRecoder := self eventsRecorder.
+	
+	aMethodCoder := self coderOnMethodInPackagedClass.
+	aMethodCoder subscribeToSystem.
+	
+	self assert: aMethodCoder isModified not.
+	
+	aMethodCoder
+		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
+		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
+		when: GtCoderMethodModified send: #record: to: anEventsRecoder;
+		when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
+
+	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
+
+	aCompiledSelector := [ anOldMethod methodClass compile: anOldMethod sourceCode, '"new method"' classified: anOldMethod protocol ]
+		ensure: [ aMethodCoder unsubscribeFromSystem ].
+	
+	self assert: aCompiledSelector equals: anOldMethod selector.
+	aNewMethod := (aMethodCoder attributeNamed: #fakeClass) >> aCompiledSelector.
+
+	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #fakeClass).
+	self assert: aMethodCoder selector equals: aNewMethod selector.
+	self assert: aMethodCoder compiledMethod equals: aNewMethod.
+	self assert: aMethodCoder protocol equals: aNewMethod protocol.
+	self assert: aMethodCoder existsInTheSystem.
+	self assert: aMethodCoder isModified not.
+
+	self assert: aMethodCoder currentSourceString equals: anOldMethod sourceCode, '"new method"'.
+	self assert: aMethodCoder sourceCode class equals: GtCoderCompiledMethodSourceCode.
+	self assert: aMethodCoder sourceCode compiledMethod == aNewMethod.
+	self assert: aMethodCoder sourceCode sourceString equals: anOldMethod sourceCode, '"new method"'.
+	self assert: aMethodCoder sourceCode buildSourceText asString equals: anOldMethod sourceCode, '"new method"'.
+
+	self assert: anEventsRecoder numberOfEvents equals: 1.
+	self assert: anEventsRecoder first class equals: GtCoderMethodModified.
+	self assert: anEventsRecoder first coder equals: aMethodCoder.
+	
+	^ aMethodCoder
+]
+
+{ #category : #'examples - compile' }
+GtMethodCoderExamples >> compileRemovedMethodWithCoderWhenSubscribedToSystem [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethodCoder aCompileChange aCompilationResult anEventsRecoder |
+	
+	anEventsRecoder := self eventsRecorder.
+	
+	aMethodCoder := self removeMethodWithCoderWhenSubscribedToSystem.
+	aMethodCoder subscribeToSystem.
+
+	aCompileChange := aMethodCoder createCompileMethodChange.
+	self assert: aCompileChange equals: nil.
+
+	aMethodCoder
+		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
+		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
+		when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
+
+	aCompilationResult := [ aMethodCoder compile ] ensure: [
+		aMethodCoder unsubscribeFromSystem ].
+	
+	self assert: aCompilationResult not.
+	
+	self assert: aMethodCoder behavior equals: UndefinedObject.
+	self assert: aMethodCoder selector equals: nil.
+	self assert: aMethodCoder protocol equals: nil.
+	self assert: aMethodCoder compiledMethod equals: nil.
+	self assert: aMethodCoder existsInTheSystem not.
+
+	self assert: anEventsRecoder numberOfEvents equals: 0.
+	
+	^ aMethodCoder
+]
+
+{ #category : #'examples - compile' }
+GtMethodCoderExamples >> compileRemovedMethodWithoutCoderWhenSubscribedToSystem [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethodCoder aCompileChange aCompilationResult anEventsRecoder |
+	
+	anEventsRecoder := self eventsRecorder.
+	
+	aMethodCoder := self removeMethodWithoutCoderWhenSubscribedToSystem.
+	aMethodCoder subscribeToSystem.
+	
+	aCompileChange := aMethodCoder createCompileMethodChange.
+	self assert: aCompileChange changeClass equals: (aMethodCoder attributeNamed: #fakeClass).
+	self assert: aCompileChange selector equals: (aMethodCoder attributeNamed: #fakeMethod) selector.
+	self assert: aCompileChange protocol equals: (aMethodCoder attributeNamed: #fakeProtocol).
+	self assert: aCompileChange isMeta not.
+	
+	aMethodCoder
+		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
+		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
+		when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
+
+	aCompilationResult := [ aMethodCoder compile ]
+		ensure: [ aMethodCoder unsubscribeFromSystem ].
+	
+	self assert: aCompilationResult.
+
+	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #fakeClass).
+	self assert: aMethodCoder selector equals: (aMethodCoder attributeNamed: #fakeMethod) selector.
+	self assert: aMethodCoder compiledMethod equals: (aMethodCoder attributeNamed: #fakeMethod).
+	self assert: aMethodCoder protocol equals: (aMethodCoder attributeNamed: #fakeProtocol).
+	self assert: aMethodCoder existsInTheSystem.
+
+	self assert: anEventsRecoder numberOfEvents equals: 1.
+	self assert: anEventsRecoder first class equals: GtCoderMethodAdded.
+	self assert: anEventsRecoder first coder equals: aMethodCoder.
+	
+	^ aMethodCoder
 ]
 
 { #category : #'sample methods' }
@@ -27,11 +226,13 @@ GtMethodCoderExamples >> emptyMethodCoder [
 	| coder |
 
 	coder := GtMethodCoder new.
-	
+
+	self assert: coder behavior equals: UndefinedObject.
+	self assert: coder selector equals: nil.
+
 	self assert: coder collapsedText asString equals: ''.
 	self assert: coder currentSourceString equals: ''.
-	
-	self assert: coder selector equals: nil.
+
 	self assert: coder currentSelector equals: #faulty.
 
 	^ coder
@@ -49,30 +250,27 @@ GtMethodCoderExamples >> forBinaryMethodCoder [
 	<gtExample>
 	| method methodCoder |
 	method := self class >> #?.
-
 	methodCoder := GtMethodCoder forMethod: method.
-
-	self assert: (methodCoder sourceCode isKindOf: GtCoderCompiledMethodSourceCode).
+	self
+		assert: (methodCoder sourceCode isKindOf: GtCoderCompiledMethodSourceCode).
 	self assert: methodCoder sourceCode compiledMethod equals: method.
 	self assert: methodCoder sourceCode hasSourceText not.
 	self assert: methodCoder sourceCode hasCollapsedText not.
-
 	self assert: methodCoder selector equals: #?.
 	self assert: methodCoder currentSelector equals: #?.
-	self assert: methodCoder classOrMetaClass equals: self class.
+	self assert: methodCoder behavior equals: self class.
 	self assert: methodCoder compiledMethod equals: method.
-	
 	self assert: methodCoder collapsedText asString equals: '?'.
 	self assert: methodCoder sourceCode hasCollapsedText.
-	
-	self assert: methodCoder sourceText asString equals: method sourceCode.
+	self
+		assert: methodCoder sourceText asString
+		equals: method sourceCode.
 	self assert: methodCoder sourceCode hasSourceText.
-
-	self assert: methodCoder currentSourceString equals: method sourceCode.
-
+	self
+		assert: methodCoder currentSourceString
+		equals: method sourceCode.
 	self assert: methodCoder isModified not.
 	self assert: methodCoder shouldAddOnsBeUpdated.
-
 	^ methodCoder
 ]
 
@@ -109,27 +307,20 @@ GtMethodCoderExamples >> forEmptyLinesMethodCoder [
 GtMethodCoderExamples >> forExampleMethodCoder [
 	<gtExample>
 	| method methodCoder |
-
 	method := self class >> #example.
-
 	methodCoder := GtMethodCoder forMethod: method.
-
 	self assert: methodCoder selector equals: #example.
 	self assert: methodCoder currentSelector equals: #example.
-	self assert: methodCoder classOrMetaClass equals: self class.
+	self assert: methodCoder behavior equals: self class.
 	self assert: methodCoder compiledMethod equals: method.
-
 	self assert: methodCoder collapsedText asString equals: 'example'.
 	self
 		assert: methodCoder currentSourceString
 		equals: method sourceCode.
-
 	self
 		assert: methodCoder sourceText asString
 		equals: method sourceCode.
-
 	self assert: methodCoder isModified not.
-
 	^ methodCoder
 ]
 
@@ -152,17 +343,12 @@ GtMethodCoderExamples >> forKeywordSelectorMethodCoder [
 GtMethodCoderExamples >> forNewMethod [
 	<gtExample>
 	| methodCoder |
-
 	methodCoder := GtMethodCoder newMethod.
-	
-	self assert: methodCoder classOrMetaClass equals: UndefinedObject.
-	
+	self assert: methodCoder behavior equals: UndefinedObject.
 	self assert: methodCoder collapsedText asString equals: ''.
 	self assert: methodCoder currentSourceString equals: ''.
-	
 	self assert: methodCoder selector equals: nil.
 	self assert: methodCoder currentSelector equals: #faulty.
-
 	^ methodCoder
 ]
 
@@ -222,6 +408,43 @@ GtMethodCoderExamples >> keyword: a selector: b [
 	^ a + b
 ]
 
+{ #category : #'examples - modification' }
+GtMethodCoderExamples >> modifyBackCompiledMethodWithoutCoderModifiedWhenSubscribedToSystem [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethodCoder anOldMethod aNewMethod |
+	
+	aMethodCoder := self compileMethodWithoutCoderModifiedWhenSubscribedToSystem.
+	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
+	aNewMethod := aMethodCoder compiledMethod.
+	
+	self assert: aMethodCoder isModified.
+	
+	aMethodCoder sourceText
+		delete: aMethodCoder sourceText size - '"modified"' size + 1
+		to: aMethodCoder sourceText size.
+	
+	self assert: aMethodCoder isModified.
+
+	self assert: aMethodCoder currentSourceString equals: anOldMethod sourceCode.
+	self assert: aMethodCoder sourceCode class equals: GtCoderCompiledMethodSourceCode.
+	self assert: aMethodCoder sourceCode sourceString equals: anOldMethod sourceCode.
+	self assert: aMethodCoder sourceCode buildSourceText asString equals: anOldMethod sourceCode, '"new method"'.
+	self assert: aMethodCoder sourceCode buildSourceText asString equals: aNewMethod sourceCode.
+	
+	aMethodCoder sourceText append: '"new method"' asRopedText.
+	
+	self assert: aMethodCoder isModified not.
+
+	self assert: aMethodCoder currentSourceString equals: aNewMethod sourceCode.
+	self assert: aMethodCoder sourceCode class equals: GtCoderCompiledMethodSourceCode.
+	self assert: aMethodCoder sourceCode sourceString equals: aNewMethod sourceCode.
+	self assert: aMethodCoder sourceCode buildSourceText asString equals: anOldMethod sourceCode, '"new method"'.
+	self assert: aMethodCoder sourceCode buildSourceText asString equals: aNewMethod sourceCode.
+	
+	^ aMethodCoder
+]
+
 { #category : #'examples - api' }
 GtMethodCoderExamples >> nodeAtCursor [
 	<gtExample>
@@ -251,6 +474,136 @@ GtMethodCoderExamples >> orderedCollectionMethods [
 	| class |
 	class := OrderedCollection.
 	^ class selectors asSortedCollection collect: [ :each | GtMethodCoder forMethod: class >> each ]
+]
+
+{ #category : #'examples - remove class' }
+GtMethodCoderExamples >> removeClassWhenSubscribedToSystem [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethod aMethodCoder anEventsRecoder |
+
+	anEventsRecoder := self eventsRecorder.
+
+	aMethodCoder := self coderOnMethodInPackagedClass.
+	aMethodCoder subscribeToSystem.
+	
+	aMethod := aMethodCoder compiledMethod.
+	
+	aMethodCoder when: GtCoderClassRemoved send: #record: to: anEventsRecoder.
+
+	[ aMethodCoder behavior removeFromSystem ] ensure: [
+		aMethodCoder unsubscribeFromSystem ].
+
+	self assert: aMethodCoder behavior equals: UndefinedObject.
+	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior named: (aMethodCoder attributeNamed: #fakeClassName)).
+	self assert: aMethodCoder selector equals: aMethod selector.
+	self assert: aMethodCoder compiledMethod equals: nil.
+	self assert: aMethodCoder existsInTheSystem not.
+	
+	self assert: anEventsRecoder numberOfEvents equals: 1.
+	self assert: anEventsRecoder first class equals: GtCoderClassRemoved.
+	self assert: anEventsRecoder first coder equals: aMethodCoder.
+
+	^ aMethodCoder
+]
+
+{ #category : #'examples - remove method' }
+GtMethodCoderExamples >> removeMethodWithCoderWhenSubscribedToSystem [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethodCoder anEventsRecoder |
+
+	anEventsRecoder := self eventsRecorder.
+
+	aMethodCoder := self coderOnMethodInPackagedClass.
+	aMethodCoder subscribeToSystem.
+	aMethodCoder
+		when: GtCoderMethodRemoved
+		send: #record:
+		to: anEventsRecoder.
+
+	[ aMethodCoder remove ]
+		ensure: [ aMethodCoder unsubscribeFromSystem ].
+
+	"when the method is removed using coder's api we reset the state of the coder"
+	self assert: aMethodCoder behavior equals: UndefinedObject.
+	self assert: aMethodCoder methodBehavior equals: GtMethodCoderBehavior unspecified.
+	self assert: aMethodCoder selector equals: nil.
+	self assert: aMethodCoder protocol equals: nil.
+	self assert: aMethodCoder compiledMethod equals: nil.
+	self assert: aMethodCoder existsInTheSystem not.
+
+	self assert: anEventsRecoder numberOfEvents equals: 1.
+	self assert: anEventsRecoder first class equals: GtCoderMethodRemoved.
+	self assert: anEventsRecoder first coder equals: aMethodCoder.
+
+	^ aMethodCoder
+]
+
+{ #category : #'examples - remove method' }
+GtMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethod aMethodCoder anEventsRecoder |
+
+	anEventsRecoder := self eventsRecorder.
+
+	aMethodCoder := self coderOnMethodInPackagedClass.
+	aMethodCoder subscribeToSystem.
+
+	aMethod := aMethodCoder compiledMethod.
+
+	aMethodCoder when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
+
+	[ aMethod removeFromSystem ] ensure: [
+		aMethodCoder unsubscribeFromSystem ].
+
+	"when the method is removed not via coder's api we do not reset the state of the coder,
+	allowing users to maybe re-install the method"
+	self assert: aMethodCoder behavior equals: aMethod methodClass.
+	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior explicit: (aMethodCoder attributeNamed: #fakeClass)).
+	self assert: aMethodCoder selector equals: aMethod selector.
+	self assert: aMethodCoder protocol equals: (aMethodCoder attributeNamed: #fakeProtocol).
+	self assert: aMethodCoder compiledMethod equals: nil.
+	self assert: aMethodCoder existsInTheSystem not.
+
+	self assert: anEventsRecoder numberOfEvents equals: 1.
+	self assert: anEventsRecoder first class equals: GtCoderMethodRemoved.
+	self assert: anEventsRecoder first coder equals: aMethodCoder.
+
+	^ aMethodCoder
+]
+
+{ #category : #'examples - remove package' }
+GtMethodCoderExamples >> removePackageWhenSubscribedToSystem [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethodCoder aMethod aPackage anEventsRecoder |
+
+	anEventsRecoder := self eventsRecorder.
+
+	aMethodCoder := self coderOnMethodInPackagedClass.
+	aMethodCoder subscribeToSystem.
+	
+	aMethod := aMethodCoder compiledMethod.
+	aPackage := aMethod methodClass package.
+
+	aMethodCoder when: GtCoderClassRemoved send: #record: to: anEventsRecoder.
+
+	[ aPackage removeFromSystem ] ensure: [
+		aMethodCoder unsubscribeFromSystem ].
+
+	self assert: aMethodCoder behavior equals: UndefinedObject.
+	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior named: (aMethodCoder attributeNamed: #fakeClassName)).
+	self assert: aMethodCoder selector equals: aMethod selector.
+	self assert: aMethodCoder compiledMethod equals: nil.
+	self assert: aMethodCoder existsInTheSystem not.
+
+	self assert: anEventsRecoder numberOfEvents equals: 1.
+	self assert: anEventsRecoder first class equals: GtCoderClassRemoved.
+	self assert: anEventsRecoder first coder equals: aMethodCoder.
+
+	^ aMethodCoder
 ]
 
 { #category : #'sample methods' }

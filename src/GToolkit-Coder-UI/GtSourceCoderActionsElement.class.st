@@ -47,7 +47,7 @@ GtSourceCoderActionsElement >> coder: aCoder [
 		when: GtCoderContextActionsChanged send: #updateContextToolbar to: self.
 	
 	coder shouldAddOnsBeUpdated
-		ifTrue: [ coder updateAddOnsFrom: self ].	
+		ifTrue: [ coder updateAddOns ].	
 
 	self removeMainToolbarActions.
 	self removeContextToolbarActions.
@@ -185,7 +185,7 @@ GtSourceCoderActionsElement >> removeMainToolbarActions [
 
 { #category : #private }
 GtSourceCoderActionsElement >> updateAddOns: anAnnouncement [
-	anAnnouncement coder updateAddOnsFrom: self
+	anAnnouncement coder updateAddOns
 ]
 
 { #category : #private }

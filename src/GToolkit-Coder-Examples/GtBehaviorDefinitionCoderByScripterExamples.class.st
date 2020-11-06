@@ -76,7 +76,9 @@ GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionScripter_Expand
 		aStep click
 			label: 'Click on expand element';
 			onChildAt: 1.
+	
 		aStep wait forEmptySpaceTaskQueue.
+	
 		aStep check
 			label: 'Check behavior definition element is collapsed';
 			satisfies: [ :aBehaviorDefinition | aBehaviorDefinition isCollapsed ] ].

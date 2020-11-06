@@ -158,7 +158,7 @@ GtFixItStyler >> visitMessageNode: aNode [
 				typeOf: aNode receiver
 				in:
 					(isForWorkspace
-						ifFalse: [ sourceCoder classOrMetaClass ]))
+						ifFalse: [ sourceCoder behavior ]))
 				ifNotNil: [ :class | 
 					(class whichClassIncludesSelector: aNode selector)
 						ifNil: [ (class isTrait

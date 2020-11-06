@@ -29,7 +29,7 @@ GtSourceCoder >> browseClassFrom: anEditorElement [
 
 { #category : #'*GToolkit-Coder-UI' }
 GtSourceCoder >> defaultCoderLook [
-	^ [ GtSourceCoderHeaderLook ]
+	^ [ GtMethodCoderHeaderLook ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
@@ -40,5 +40,5 @@ GtSourceCoder >> removeRefactoringAttribute [
 
 { #category : #'*GToolkit-Coder-UI' }
 GtSourceCoder >> withHeader [
-	self coderLook: [ GtSourceCoderHeaderLook ]
+	self coderLook: [ GtMethodCoderHeaderLook ]
 ]

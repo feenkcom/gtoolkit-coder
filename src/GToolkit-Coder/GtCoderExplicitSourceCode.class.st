@@ -1,8 +1,8 @@
 "
-I represent a concrete source code that was provided as a string
+I represent an explicit source code that was provided as a string
 "
 Class {
-	#name : #GtCoderConcreteSourceCode,
+	#name : #GtCoderExplicitSourceCode,
 	#superclass : #GtCoderSourceCode,
 	#instVars : [
 		'source'
@@ -11,30 +11,30 @@ Class {
 }
 
 { #category : #initialization }
-GtCoderConcreteSourceCode >> buildCollapsedText [
+GtCoderExplicitSourceCode >> buildCollapsedText [
 	<return: #BlText>
 
 	^ (self sourceString linesDo: [ :eachLine | eachLine trimmed ifNotEmpty: [ :aNonEmptyLine | ^ aNonEmptyLine ] ]) asRopedText
 ]
 
 { #category : #initialization }
-GtCoderConcreteSourceCode >> buildSourceText [
+GtCoderExplicitSourceCode >> buildSourceText [
 	<return: #BlText>
 
 	^ source asRopedText
 ]
 
 { #category : #'api - testing' }
-GtCoderConcreteSourceCode >> isModified [
+GtCoderExplicitSourceCode >> isModified [
 	^ self source ~= self sourceString
 ]
 
 { #category : #accessing }
-GtCoderConcreteSourceCode >> source [
+GtCoderExplicitSourceCode >> source [
 	^ source
 ]
 
 { #category : #accessing }
-GtCoderConcreteSourceCode >> source: anObject [
-	source := anObject
+GtCoderExplicitSourceCode >> source: aString [
+	source := aString
 ]

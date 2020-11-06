@@ -8,11 +8,11 @@ GtMethodCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Save' translated
 		icon: BrGlamorousVectorIcons accept
-		action: [ :anEditorElement | self saveFrom: anEditorElement ].
+		action: [ :anEditorElement | self save ].
 	addOns
 		addDropDownWithPreviewAction: 'Remove' translated
 		icon: BrGlamorousVectorIcons remove
-		action: [ :anEditorElement | self removeFrom: anEditorElement ]
+		action: [ :anEditorElement | self remove ]
 		stencil: [ :element | self buildRemoveMethodLabel: element ].
 	addOns
 		addMainAction: 'Browse' translated

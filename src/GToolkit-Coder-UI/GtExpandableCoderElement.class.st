@@ -78,6 +78,7 @@ GtExpandableCoderElement >> coderUIModel: aCoderUIModel [
 	self
 		assert: [ aCoderUIModel isNotNil ]
 		description: [ 'Coder must not be nil' ].
+
 	coderUIModel
 		ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
 	coderUIModel := aCoderUIModel.
@@ -91,12 +92,18 @@ GtExpandableCoderElement >> coderUIModel: aCoderUIModel [
 					[ :anElement | self assignCollapsedCoder: aCoderUIModel to: anElement ].
 			expandedElement
 				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ].
+
 	coderUIModel focused
 		ifFalse: [ self loseFocus ].
+
 	self expanded: coderUIModel expanded.
+	
+	aCoderUIModel coder subscribeToSystem.
+
 	coderUIModel announcer weak
 		when: GtCoderExpandedChanged send: #updateExpanded to: self;
-		when: GtCoderRequestFocus send: #requestFocusAsyncronously to: self
+		when: GtCoderRequestFocus send: #requestFocusAsyncronously to: self;
+		when: GtCoderMethodRemoved send: #onMethodRemoved: to: self
 ]
 
 { #category : #accessing }
@@ -177,6 +184,17 @@ GtExpandableCoderElement >> newExpandedElement [
 		ifNotNil: [ :aCoder | self assignExpandedCoder: aCoder to: anExpandedElement ].
 
 	^ anExpandedElement
+]
+
+{ #category : #events }
+GtExpandableCoderElement >> onMethodRemoved: anAnnouncement [
+	self addChild: (BlElement new
+		constraintsDo: [ :c |
+			c ignoreByLayout.
+			c horizontal matchParent.
+			c vertical matchParent ];
+		zIndex: 10;
+		background: (Color gray alpha: 0.2))
 ]
 
 { #category : #'focus requesting' }

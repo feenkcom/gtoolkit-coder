@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+GtSourceCoderBreadcrumbAction >> foreground [
+	^ BrGlamorousColors defaultButtonTextColor
+]
+
+{ #category : #accessing }
 GtSourceCoderBreadcrumbAction >> name [
 	<return: #String>
 

@@ -35,7 +35,7 @@ GtPharoSnippetCoder >> evaluationRequesterForEditor: anEditorElement [
 
 { #category : #initialization }
 GtPharoSnippetCoder >> forSource: aString [
-	self sourceCode: (GtCoderConcreteSourceCode new source: aString)
+	self sourceCode: (GtCoderExplicitSourceCode new source: aString)
 ]
 
 { #category : #private }
