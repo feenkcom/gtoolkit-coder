@@ -343,7 +343,7 @@ GtSourceCoder >> evaluateBlock: aBlock showPrintString: aBoolean in: anEditorEle
 	
 	self clearPreviousEvaluationsInText: anEditorElement editor text.
 
-	wasErrorAlreadySignaled := true. "Follow the normal way of opening the debugger for now."
+	wasErrorAlreadySignaled := false.
 	aResult := aBlock on: Error do: [ :anError |
 		self resetASTCache.
 		wasErrorAlreadySignaled 
