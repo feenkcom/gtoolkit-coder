@@ -19,14 +19,23 @@ Class {
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'announcer',
+		'id',
 		'suppressedAnnouncements',
 		'attributes',
 		'addOns',
 		'addOnCommand',
 		'addOnMonitor'
 	],
+	#classVars : [
+		'UniqueIdGenerator'
+	],
 	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #'class initialization' }
+GtCoderModel class >> initialize [
+	UniqueIdGenerator := BlUniqueIdGenerator new
+]
 
 { #category : #'private - addons' }
 GtCoderModel >> addOnChanged: aSymbol [
@@ -128,9 +137,16 @@ GtCoderModel >> expanded: aBoolean [
 	self halt
 ]
 
+{ #category : #accessing }
+GtCoderModel >> id [
+	^ id
+]
+
 { #category : #initialization }
 GtCoderModel >> initialize [
 	super initialize.
+
+	id := UniqueIdGenerator generateUniqueId.
 	announcer := GtCoderAnnouncer new.
 	addOnMonitor := Monitor new.
 

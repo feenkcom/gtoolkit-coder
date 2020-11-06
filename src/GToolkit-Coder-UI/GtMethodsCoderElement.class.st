@@ -71,6 +71,7 @@ GtMethodsCoderElement >> listElement [
 	listElement := BrSimpleList new
 		matchParent;
 		itemType: [ :itemTypeFactory :eachCoderUIModel | eachCoderUIModel coder elementClass ];
+		itemId: [ :eachCoderUIModel | eachCoderUIModel coder id ];
 		itemStencil: [ :anElementClass | anElementClass new ];
 		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ];
 		itemDataUnbinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement saveCoderUIModel: eachCoderUIModel ];
