@@ -21,16 +21,17 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 							node pragmas
 								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
 						ifNil: [ false ] ] ])
-		ifFalse: [ 
-			coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
-			coderAddOns removeContextAction: 'Play and Inspect Example Result' translated.
-			coderAddOns removeContextAction: 'Inspect Example Object' translated.
+		ifFalse: [ coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
+			coderAddOns
+				removeContextAction: 'Play and Inspect Example Result' translated.
+			coderAddOns
+				removeContextAction: 'Inspect Example Object' translated.
 			^ self ].
 	coderAddOns
 		addStyler:
 			(GtCoderExampleStatusStyler new
 				coder: self;
-				classOrMetaClass: self classOrMetaClass).
+				classOrMetaClass: self behavior).
 	(self canExecuteExample or: [ anAST methodNode numArgs isZero ])
 		ifFalse: [ ^ self ].
 	coderAddOns
@@ -48,7 +49,8 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action: [ :anEditorElement | self debugSelectionOrExampleFrom: anEditorElement ]
+		action:
+			[ :anEditorElement | self debugSelectionOrExampleFrom: anEditorElement ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
@@ -104,7 +106,7 @@ GtMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 			coderAddOns
 				addMainAction: 'Discard Changes' translated
 				icon: BrGlamorousVectorIcons cancel
-				action: [ :anEditorElement | self discardChangesFrom: anEditorElement ] ]
+				action: [ self discardChanges ] ]
 		ifFalse: [ coderAddOns removeMainAction: 'Discard Changes' translated ]
 ]
 
@@ -130,7 +132,7 @@ GtMethodCoder >> runGtViewFrom: anElement [
 	
 	self isModified
 		ifTrue: [
-			(self saveFrom: anElement)
+			self save
 				ifFalse: [ ^ self ] ].
 	
 	view := self object perform: self selector with: GtPhlowEmptyView new.
@@ -143,7 +145,7 @@ GtMethodCoder >> runMondrianPaintFrom: anElement [
 	
 	self isModified
 		ifTrue: [
-			(self saveFrom: anElement)
+			self save
 				ifFalse: [ ^ self ] ].
 	
 	mondrian := GtMondrian new.

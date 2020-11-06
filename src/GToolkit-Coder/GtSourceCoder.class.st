@@ -247,7 +247,7 @@ GtSourceCoder >> disabledTextAttributes [
 ]
 
 { #category : #'api - actions' }
-GtSourceCoder >> discardChangesFrom: anEditorElement [
+GtSourceCoder >> discardChanges [
 	"Discard not-accepted changes."
 
 	self isModified
@@ -257,7 +257,8 @@ GtSourceCoder >> discardChangesFrom: anEditorElement [
 	self sourceCode resetSourceText.
 
 	self sourceChanged.
-	self notifySourceChanged
+	self notifySourceChanged.
+	self notifyTextModified
 ]
 
 { #category : #'api - actions' }
@@ -486,7 +487,7 @@ GtSourceCoder >> initializeShortcuts [
 		addShortcut: (BrTextEditorShortcut new
 			combination: (BlKeyCombination primaryL);
 			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
-				aSourceCoder discardChangesFrom: aShortcutEvent currentTarget ];
+				aSourceCoder discardChanges ];
 			options: self)
 ]
 

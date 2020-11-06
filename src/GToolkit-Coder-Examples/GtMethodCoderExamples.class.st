@@ -242,7 +242,7 @@ GtMethodCoderExamples >> emptyMethodCoder [
 GtMethodCoderExamples >> example [
 	<gtExample>
 	
-	^ 43
+	^ 42
 ]
 
 { #category : #'examples - instance creation' }

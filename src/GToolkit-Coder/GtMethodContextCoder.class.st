@@ -31,13 +31,13 @@ GtMethodContextCoder >> close [
 ]
 
 { #category : #actions }
-GtMethodContextCoder >> compileFrom: anEditorElement [
+GtMethodContextCoder >> compile [
 	^ self
 		handleCompilerErrorsDuring: [
 			self session
 				gtRecompileMethodTo: self newMethodSource
 				inContext: self context
-				notifying: (self requesterForEditor: anEditorElement editor) ]
+				notifying: self compilationRequester ]
 ]
 
 { #category : #accessing }
@@ -174,22 +174,16 @@ GtMethodContextCoder >> receiver [
 ]
 
 { #category : #actions }
-GtMethodContextCoder >> saveFrom: anEditorElement [
-	"Compiling creates a new method objects, so avoid the action if there are no changes"
-	self isModified
-		ifFalse: [ ^ false ]. 
-	
-	self validateSyntax
+GtMethodContextCoder >> save [
+	super save
 		ifFalse: [ ^ false ].
-	
-	(self compileFrom: anEditorElement)
-		ifFalse: [ ^ false ].
-	
+
 	"If compilation succedded notify the debugger. The current context is now in an 
 	invalid state, as it contains the code of the old compiled method object; the context 
 	has a new compiled method objects. The debugger should properly update this context if
 	the context still need to be displayed on the stack."
 	self notifyDebugger.
+
 	^ true
 ]
 

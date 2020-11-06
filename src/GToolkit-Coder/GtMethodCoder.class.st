@@ -391,37 +391,6 @@ GtMethodCoder >> compile [
 		ifAbsent: [ false ]
 ]
 
-{ #category : #'api - actions deprecated' }
-GtMethodCoder >> compileFrom: anEditorElement [
-	"Try to compile the current source code and return true if it was successful, false otherwise"
-
-	<return: #Boolean>
-	| change |
-	change := self protocol
-		ifNil: [ RBAddMethodChange
-				compile: self newMethodSource
-				in: self classOrMetaClass
-				for: (self requesterForEditor: anEditorElement editor) ]
-		ifNotNil: [ :category | 
-			RBAddMethodChange
-				compile: self currentSourceString
-				in: self behavior
-				classified: category
-				for: (self requesterForEditor: anEditorElement editor) ].
-	selector := change selector.
-	(self
-		handleCompilerErrorsDuring: [ self changeManager performChange: change ])
-		ifFalse: [ ^ false ].
-	change definedSelector
-		ifNotNil: [ :sel | 
-			self selector: sel.
-			self compiledMethod
-				ifNotNil: [ :method | 
-					self forMethod: method.
-					^ true ] ].
-	^ false
-]
-
 { #category : #accessing }
 GtMethodCoder >> compiledMethod [
 	<return: #CompiledMethod or: nil>
@@ -524,7 +493,7 @@ GtMethodCoder >> debug [
 { #category : #'api - actions examples' }
 GtMethodCoder >> debugExampleFrom: anEditorElement [
 	self isModified
-		ifTrue: [ (self saveFrom: anEditorElement)
+		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
 	self example openingDebugger result
 ]
@@ -834,8 +803,7 @@ GtMethodCoder >> initializeShortcuts [
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: BlKeyCombination primaryS;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder saveFrom: aShortcutEvent currentTarget ];
+			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder | aMethodCoder save];
 			options: self);
 		addShortcut: (BrTextEditorShortcut new
 			combination: (BlKeyCombination primaryShiftF);
@@ -974,19 +942,21 @@ GtMethodCoder >> moveMethodToInstanceOrClass [
 		ifTrue: [ oldClass soleInstance ]
 		ifFalse: [ oldClass class ].
 	self isNewMethod
-		ifTrue: [ self classOrMetaClass: newClass.
+		ifTrue: [ self behavior: newClass.
 			^ true ].
 	self canMoveMethodToInstanceOrClass
 		ifFalse: [ ^ false ].
+
 	model := RBNamespace new.
 	modelClass := model classFor: newClass.
 	modelClass compile: self currentSourceString classified: self category.
 	oldModelClass := model classFor: oldClass.
 	(oldModelClass directlyDefinesMethod: self currentSelector)
 		ifTrue: [ oldModelClass removeMethod: self currentSelector ].
-	self classOrMetaClass: newClass.
+	self behavior: newClass.
+
 	[ model changes execute ]
-		ifCurtailed: [ self classOrMetaClass: oldClass ].
+		ifCurtailed: [ self behavior: oldClass ].
 	^ true
 ]
 
@@ -1198,7 +1168,7 @@ GtMethodCoder >> playAndInspectFrom: anEditorElement [
 
 	self isModified
 		ifTrue: [
-			(self saveFrom: anEditorElement)
+			self save
 				ifFalse: [ ^ self ] ].
 
 	anObject := self
@@ -1223,7 +1193,7 @@ GtMethodCoder >> playAndInspectSelectionOrMethodFrom: anEditorElement [
 GtMethodCoder >> playAndInspectSlideFrom: anEditorElement [
 	self isModified
 		ifTrue: [
-			(self saveFrom: anEditorElement)
+			self save
 				ifFalse: [ ^ self ] ].
 	anEditorElement phlow spawnObject: self compiledMethod gtSlide.
 ]
@@ -1237,7 +1207,7 @@ GtMethodCoder >> playExampleFrom: anEditorElement [
 GtMethodCoder >> playFrom: anEditorElement [
 	self isModified
 		ifTrue: [
-			(self saveFrom: anEditorElement)
+			self save
 				ifFalse: [ ^ self ] ].
 
 	self
@@ -1361,11 +1331,6 @@ GtMethodCoder >> remove [
 	self notifyMethodRemoved
 ]
 
-{ #category : #'api - actions deprecated' }
-GtMethodCoder >> removeFrom: anEditorElement [
-	self remove
-]
-
 { #category : #'private - refactorings' }
 GtMethodCoder >> removeHighlight [
 	self sourceText
@@ -1437,7 +1402,7 @@ GtMethodCoder >> reset [
 GtMethodCoder >> runExampleFrom: anEditorElement [
 	self isModified
 		ifTrue: [
-			(self saveFrom: anEditorElement)
+			self save
 				ifFalse: [ ^ self ] ].
 
 	self example run.
@@ -1473,20 +1438,6 @@ GtMethodCoder >> save [
 	self compile
 		ifFalse: [ ^ false ].
 
-	^ true
-]
-
-{ #category : #'api - actions deprecated' }
-GtMethodCoder >> saveFrom: anEditorElement [
-	"Try to save the current method validating syntax and return `true` if save was succesful, false otherwise"
-	<return: #Boolean>
-
-	self validateSyntax
-		ifFalse: [ ^ false ].
-
-	self compile
-		ifFalse: [ ^ false ].
-		
 	^ true
 ]
 

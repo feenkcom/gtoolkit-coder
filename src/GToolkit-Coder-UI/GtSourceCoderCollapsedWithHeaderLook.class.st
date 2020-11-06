@@ -9,7 +9,7 @@ GtSourceCoderCollapsedWithHeaderLook >> initialize [
 	super initialize.
 
 	self addAll: {
-		GtSourceCoderHeaderLook new.
+		GtMethodCoderHeaderLook new.
 		GtSourceCoderCollapsedTextLook new.
 		BrLayoutResizerLook inherit
 	}

@@ -1,6 +1,6 @@
 "
 !Source coder breadcrumb
-${example:GtSourceCoderBreadcrumbElementExamples>>#breadcrumbForSourceCoder}$
+${example:GtMethodCoderBreadcrumbElementExamples>>#breadcrumbForSourceCoder}$
 "
 Class {
 	#name : #GtMethodCoderBreadcrumbElement,
