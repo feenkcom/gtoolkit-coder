@@ -2,7 +2,8 @@ Class {
 	#name : #GtSourceCoderAddOns,
 	#superclass : #GtCoderAddOns,
 	#instVars : [
-		'stylers'
+		'stylers',
+		'sidebarActions'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }

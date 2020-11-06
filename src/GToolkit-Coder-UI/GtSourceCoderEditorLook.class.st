@@ -39,12 +39,12 @@ GtSourceCoderEditorLook >> initialize [
 		when: BrTextEditorModifiedEvent
 		do: [ self sourceChanged ];
 		beEditableCode.
-		
+
 	actions := self newActionsElement editor: editorElement.
-		
+
 	interactions := #().
 	completion := nil.
-	
+
 	self addChangeAddChildAs: #(content editor) with: [ editorElement ].
 	self addChangeAddChildAs: #(content actions) with: [ actions ].
 	

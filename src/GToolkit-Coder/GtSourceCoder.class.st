@@ -15,8 +15,10 @@ Class {
 	#superclass : #GtCoderModel,
 	#instVars : [
 		'sourceCode',
+		'completionStrategy',
 		'astCache',
-		'completionStrategy'
+		'astMonitor',
+		'astCommand'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -51,6 +53,17 @@ GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 		addRefactoringChangesPreview: aRefactoring
 		at: position
 		whenComplete: nil
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> astCache [
+	^ astMonitor critical: [ astCache ]
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> astCache: anAssociation [
+	astMonitor critical: [ astCache := anAssociation ].
+	self onAstChanged
 ]
 
 { #category : #private }
@@ -257,8 +270,7 @@ GtSourceCoder >> discardChanges [
 	self sourceCode resetSourceText.
 
 	self sourceChanged.
-	self notifySourceChanged.
-	self notifyTextModified
+	self textModified
 ]
 
 { #category : #'api - actions' }
@@ -453,6 +465,7 @@ GtSourceCoder >> hasObjectAttribute [
 GtSourceCoder >> initialize [
 	super initialize.
 
+	astMonitor := Monitor new.
 	self reset
 ]
 
@@ -594,6 +607,10 @@ GtSourceCoder >> object: anObject [
 		ifNotNil: [ self attributeNamed: #object put: anObject ]
 ]
 
+{ #category : #'private - ast' }
+GtSourceCoder >> onAstChanged [
+]
+
 { #category : #accessing }
 GtSourceCoder >> package [
 	^ self attributeNamed: #package
@@ -695,10 +712,51 @@ GtSourceCoder >> rbAST [
 	astCache key = source
 		ifTrue: [ ^ astCache value ].
 	^ [ 
-		astCache := source -> (self newRbAST: source).
+		self astCache: source -> (self newRbAST: source).
 		astCache value ]
 	on: Error
 	do: [ :ex | ex return: nil ]
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> rbASTAsyncDo: aBlock [
+
+	astMonitor critical: [ 
+		| aCommand astComputationCommand |
+		astCommand ifNotNil: #terminate.
+
+		astComputationCommand := [
+			| source currentAstCache |
+			"The AST should be built out of the `characters` of the source text.
+			This is needed to support `crlf` and logical items
+			see https://github.com/feenkcom/gtoolkit/issues/593"
+			source := self sourceText copy characters asString.
+			currentAstCache := self astCache.
+
+			currentAstCache key = source
+				ifTrue: [ currentAstCache ]
+				ifFalse: [
+					[ source -> (self newRbAST: source) ]
+						on: Error
+						do: [ :ex | ex return: nil ] ].
+
+		] asBlTktTerminableCommand asBlTktLoggingCommand.
+		astComputationCommand name: 'Coder ast computation'.
+		
+		astCommand := aCommand := BlTaskAtPostponedTerminableFuture new.
+		aCommand
+			command: astComputationCommand;
+			onSuccessDo:  [ :aResult | 
+				(aCommand == astCommand and: [ aResult notNil ])
+					ifTrue: [
+						self astCache: aResult.
+						aBlock value: aResult ] ];
+			onFailureDo: [ :anException | "handle error here" ];
+			pool: BlTktWorkerProvider coderPool;
+			scheduledTime: BlTime real now + 100 milliSeconds.
+		BlTaskAtQueue default schedule: astCommand.
+	
+	 ].
 ]
 
 { #category : #private }
@@ -821,7 +879,7 @@ GtSourceCoder >> reset [
 
 { #category : #'private - actions' }
 GtSourceCoder >> resetASTCache [
-	astCache := nil -> nil
+	self astCache: (nil -> nil)
 ]
 
 { #category : #'private - text' }
@@ -883,7 +941,9 @@ GtSourceCoder >> sourceChanged [
 	self clearSyntaxErrors.
 
 	self requestUpdateCollapsedText.
-	self requestUpdateAddOns
+	self requestUpdateAddOns.
+	
+	self notifySourceChanged
 ]
 
 { #category : #'api - accessing' }
@@ -903,7 +963,7 @@ GtSourceCoder >> sourceCode: aGtCoderSourceCode [
 	sourceCode attachToCoder: self.
 
 	self sourceChanged.
-	self notifySourceChanged
+	self textModified
 ]
 
 { #category : #'private - text' }
@@ -1018,6 +1078,22 @@ GtSourceCoder >> textModified [
 	self notifyTextModified
 ]
 
+{ #category : #'api - addons' }
+GtSourceCoder >> updateAddOns [
+	"Start the update of the addons in a context of a given element"
+
+	addOnMonitor
+		critical: [			 
+			BlUseAsyncFeatures 
+				ifEnabledDo: [ 
+					self terminateAddOnsCommand.
+					addOnCommand := self updateAddOnsCommand.
+					addOnCommand name: 'AddOns: ' , self identityHash printString.
+					BlTktWorkerProvider coderPool schedule: addOnCommand ]
+				otherwise: [ 
+					self updateAddOnsCommand execute ] ]
+]
+
 { #category : #'private - addons' }
 GtSourceCoder >> updateAddOnsCommand [
 	^ [
@@ -1035,22 +1111,6 @@ GtSourceCoder >> updateAddOnsCommand [
 		updatedAddOns changesDo: [ :each | self addOnChanged: each ].
 		updatedAddOns clearChanges
 	] asBlTktTerminableCommand
-]
-
-{ #category : #'api - addons' }
-GtSourceCoder >> updateAddOnsFrom: anElement [
-	"Start the update of the addons in a context of a given element"
-
-	addOnMonitor
-		critical: [			 
-			BlUseAsyncFeatures 
-				ifEnabledDo: [ 
-					self terminateAddOnsCommand.
-					addOnCommand := self updateAddOnsCommand.
-					addOnCommand name: 'AddOns: ' , self identityHash printString.
-					BlTktWorkerProvider highUICPUBoundPool schedule: addOnCommand ]
-				otherwise: [ 
-					self updateAddOnsCommand execute ] ]
 ]
 
 { #category : #'api - addons' }
