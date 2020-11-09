@@ -761,54 +761,12 @@ GtMethodCoder >> initializeShortcuts [
 	super initializeShortcuts.
 
 	addOns
-		"addCollapsedShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryM;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder browseImplementors: aShortcutEvent currentTarget ];
-			options: self);
-
-		addCollapsedShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryN;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder browseReferences: aShortcutEvent currentTarget ];
-			options: self);
-		addCollapsedShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryB;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder browseClass: aShortcutEvent currentTarget ];
-			options: self);"
-		
-		
-		
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryD;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder playSelectionOrMethodFrom: aShortcutEvent currentTarget ];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryG;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder playAndInspectSelectionOrMethodFrom: aShortcutEvent currentTarget ];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryR;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder renameIn: aShortcutEvent currentTarget ];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryE;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder extractMethod: aShortcutEvent currentTarget ];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryS;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder | aMethodCoder save];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: (BlKeyCombination primaryShiftF);
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder format ];
-			options: self)
+		addShortcut: GtSourceCoderPlayShortcut new;
+		addShortcut: GtSourceCoderPlayAndInspectShortcut new;
+		addShortcut: GtSourceCoderRenameShortcut new;
+		addShortcut: GtSourceCoderExtractMethodShortcut new;
+		addShortcut: GtSourceCoderSaveShortcut new;
+		addShortcut: GtSourceCoderFormatShortcut new
 ]
 
 { #category : #'api - refactorings' }

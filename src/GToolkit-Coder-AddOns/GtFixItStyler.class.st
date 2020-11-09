@@ -95,14 +95,14 @@ GtFixItStyler >> localFixItActionsFor: aVariableNode [
 				node: aVariableNode).
 	(self
 		canAddInstanceVariable: aVariableNode name
-		to: sourceCoder classOrMetaClass)
+		to: sourceCoder behavior)
 		ifTrue: [ actions
 				add:
 					(GtDefineInstanceVariableFixItAction
 						forCoder: sourceCoder
 						node: aVariableNode) ].
 	possibleNames := aVariableNode temporaryVariables
-		, sourceCoder classOrMetaClass allInstVarNames.
+		, sourceCoder behavior allInstVarNames.
 	(aVariableNode name correctAgainst: possibleNames)
 		do: [ :each | 
 			actions

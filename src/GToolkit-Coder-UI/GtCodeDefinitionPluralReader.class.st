@@ -11,7 +11,7 @@ GtCodeDefinitionPluralReader >> create [
 
 	aDefinition := self definition.
 	anOwner := self owner.
-	
+
 	theInitialNames := aDefinition perform: getSelector withEnoughArguments: { anOwner }.
 
 	aTagger := BrTagger new
@@ -36,12 +36,12 @@ GtCodeDefinitionPluralReader >> create [
 					yourself.
 				
 				interactions do: [ :eachAssociation |
-					aLabel addEditorShortcut: (BrTextEditorShortcut new
+					aLabel addEditorShortcut: (BlShortcutWithAction new
 						combination: eachAssociation key;
-						action: [ :aTextEditor :anEvent |							
-							anEvent consumed: true.
+						action: [ :aShortcutEvent |							
+							aShortcutEvent consumed: true.
 							eachLabelDefinition
-								ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ]) ].
+								ifNotNil: [ eachAssociation value cull: aShortcutEvent cull: eachLabelDefinition ] ]) ].
 					
 				eventHandlers do: [ :eachAssociation |
 					aLabel

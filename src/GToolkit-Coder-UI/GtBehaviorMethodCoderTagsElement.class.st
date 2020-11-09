@@ -63,9 +63,7 @@ GtBehaviorMethodCoderTagsElement >> newEditableClassTag [
 			editor text: (self classTagStringFor: self methodCoderUIModel coder).
 			wish consumed: true ];
 		whenKey: BlKeyCombination primaryC
-			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderTagsElement | 
-				Clipboard clipboardText: aTextEditor text asString ]
-			with: self.
+			labelDo: [ :anEvent :aShortcut | Clipboard clipboardText: anEvent currentTarget text asString ].
 	
 	strategy := GtStringsCompletionStrategy new.
 	(GtCompletionController on: editor strategy: strategy) install.

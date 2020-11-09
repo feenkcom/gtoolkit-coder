@@ -18,7 +18,7 @@ GtCreatePackageElement >> buildDefinitionEditor [
 			c vertical fitContent ];
 		padding: (BlInsets all: 10).
 		
-	theProperties addShortcut: (BlShortcut new
+	theProperties addShortcut: (BlShortcutWithAction new
 		combination: BlKeyCombination arrowUp;
 		action: [ :anEvent |
 			anEvent currentTarget deepestFocusedChild ifNotNil: [ :aFocusedChild |
@@ -28,7 +28,7 @@ GtCreatePackageElement >> buildDefinitionEditor [
 					referenceElement: aFocusedChild;
 					nextFocusDo: [ :aNextFocusElement | aNextFocusElement requestFocus ] ] ]).
 
-	theProperties addShortcut: (BlShortcut new
+	theProperties addShortcut: (BlShortcutWithAction new
 		combination: BlKeyCombination arrowDown;
 		action: [ :anEvent |
 			anEvent currentTarget deepestFocusedChild ifNotNil: [ :aFocusedChild |

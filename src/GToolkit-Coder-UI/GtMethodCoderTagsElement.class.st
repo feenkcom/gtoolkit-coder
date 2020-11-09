@@ -97,9 +97,8 @@ GtMethodCoderTagsElement >> newEditableProtocolTag [
 				self methodCoderUIModel
 					ifNotNil: [ :aMethodCoderUIModel | aMethodCoderUIModel coder renameProtocol: aWish text asString ] ];
 		whenKey: BlKeyCombination primaryC
-			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderTagsElement | 
-				Clipboard clipboardText: aTextEditor text asString ]
-			with: self.
+			labelDo: [ :aShortcutEvent :aShortcut | 
+				Clipboard clipboardText: aShortcutEvent currentTarget text asString ].
 
 	(GtCompletionController
 		on: editor

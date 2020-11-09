@@ -63,26 +63,10 @@ GtPharoSnippetCoder >> initializeShortcuts [
 	super initializeShortcuts.
 
 	addOns
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryD;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
-				aSnippetCoder doItSelectionOrAllFrom: aShortcutEvent currentTarget ];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryG;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
-				aSnippetCoder doItAndGoSelectionOrAllFrom: aShortcutEvent currentTarget ];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryP;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
-				aSnippetCoder printItSelectionOrAllFrom: aShortcutEvent currentTarget ];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryR;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSnippetCoder |
-				aSnippetCoder renameVariableIn: aShortcutEvent currentTarget ];
-			options: self)
+		addShortcut: GtSourceCoderDoItShortcut new;
+		addShortcut: GtSourceCoderDoItAndInspectShortcut new;
+		addShortcut: GtSourceCoderPrintShortcut new;
+		addShortcut: GtSourceCoderRenameShortcut new
 ]
 
 { #category : #private }
@@ -130,7 +114,7 @@ GtPharoSnippetCoder >> profileWithMessageTallyFrom: anEditorElement [
 ]
 
 { #category : #actions }
-GtPharoSnippetCoder >> renameVariableIn: editorElement [
+GtPharoSnippetCoder >> renameIn: editorElement [
 	GtRenameAction pharoRenameSnippetLocalsOn: editorElement
 ]
 

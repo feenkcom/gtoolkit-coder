@@ -163,12 +163,13 @@ GtCoderAddOns >> gtViewContextActionsFor: aView [
 { #category : #ui }
 GtCoderAddOns >> gtViewKeybindingsFor: aView [
 	<gtView>
+	self shortcuts ifEmpty: [ ^ aView empty ].
 	^ aView columnedList
-		title: 'Key bindings' translated;
-		priority: 15;
-		items: [ self shortcuts ];
-		column: 'Shortcut' item: [ :eachShortcut | eachShortcut combination ] width: 200;
-		column: 'Action' item: [ :eachShortcut | eachShortcut action ]
+		title: 'Shortcuts' translated;
+		priority: 10;
+		items: [ self shortcuts asArray ];
+		column: 'Name' item: [ :each | each name ifNil: [ each gtDisplayString ] ];
+		column: 'Combination' item: [ :each | each combination gtDisplayString ]
 ]
 
 { #category : #ui }
