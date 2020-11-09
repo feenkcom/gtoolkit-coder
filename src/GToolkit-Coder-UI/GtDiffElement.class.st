@@ -104,6 +104,11 @@ GtDiffElement >> drawMeAndChildrenOnSpartaCanvas: aCanvas [
 ]
 
 { #category : #initialize }
+GtDiffElement >> editorLook [
+	^ BrGlamorousCodeEditorLook new + BrShadowLook new
+]
+
+{ #category : #initialize }
 GtDiffElement >> initialize [
 	super initialize.
 	
@@ -123,14 +128,14 @@ GtDiffElement >> initialize [
 		beReadOnlyWithSelection;
 		matchParent;
 		background: Color white;
-		look: BrGlamorousCodeEditorLook new + BrShadowLook new;
+		look: self editorLook;
 		when: BlElementScrolledEvent do: [ :e | self leftScrolled ].
 		
 	rightElement := BrEditor new
 		beReadOnlyWithSelection;
 		matchParent;
 		background: Color white;
-		look: BrGlamorousCodeEditorLook new + BrShadowLook new;
+		look: self editorLook;
 		when: BlElementScrolledEvent do: [ :e | self rightScrolled ].
 	
 	separatorElement := BlElement new
