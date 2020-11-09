@@ -119,12 +119,8 @@ GtMethodContextCoder >> initializeAddOns [
 { #category : #initialize }
 GtMethodContextCoder >> initializeShortcuts [ 
 	super initializeShortcuts.
-	addOns 
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryP;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
-				aSourceCoder printItSelectionFrom: aShortcutEvent currentTarget ];
-			options: self)
+	
+	addOns addShortcut: GtSourceCoderPrintShortcut new
 ]
 
 { #category : #'accessing variables' }

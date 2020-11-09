@@ -25,11 +25,11 @@ GtCodeDefinitionSingleReader >> create [
 		ifNotNil: [ :aContainerName | aLabel containerName: aContainerName ].
 
 	interactions do: [ :eachAssociation |
-		aLabel addEditorShortcut: (BrTextEditorShortcut new
+		aLabel addEditorShortcut: (BlShortcutWithAction new
 			combination: eachAssociation key;
-			action: [ :aTextEditor :anEvent |
-				anEvent consumed: true.
-				eachAssociation value cull: anEvent cull: aDefinition ]) ].
+			action: [ :aShortcutEvent |
+				aShortcutEvent consumed: true.
+				eachAssociation value cull: aShortcutEvent cull: aDefinition ]) ].
 		
 	eventHandlers do: [ :eachAssociation |
 		aLabel

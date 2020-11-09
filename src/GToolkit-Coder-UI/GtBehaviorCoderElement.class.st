@@ -65,22 +65,15 @@ GtBehaviorCoderElement >> buildClassLabel [
 		margin: (BlInsets all: 0);
 		containerName: GtBehaviorCoder behaviorNameEditorName;
 		whenKey: BlKeyCombination primaryN
-			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | aCoderElement browseClassReferences ]
-			with: self;
+			labelDo: [ :aShortcutEvent | self browseClassReferences ];
 		whenKey: BlKeyCombination primaryB
-			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | aCoderElement phlow spawnTool: (GtClassCoderTool observedClass: aCoderElement behavior) ]
-			with: self;
+			labelDo: [ :aShortcutEvent| self phlow spawnTool: (GtClassCoderTool observedClass: self behavior) ];
 		whenKey: BlKeyCombination primaryG
-			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | aCoderElement phlow spawnObject: aCoderElement behavior ]
-			with: self;
+			labelDo: [ :aShortcutEvent | self phlow spawnObject: self behavior ];
 		whenKey: BlKeyCombination primaryR
-			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | 
-				anEvent currentTarget switchToEditor ]
-			with: self;
+			labelDo: [ :aShortcutEvent | aShortcutEvent currentTarget switchToEditor ];
 		whenKey: BlKeyCombination primaryC
-			labelDo: [ :anEvent :aShortcut :aTextEditor :aCoderElement | 
-				Clipboard clipboardText: aCoderElement behavior name asString ]
-			with: self.
+			labelDo: [ :aShortcutEvent | Clipboard clipboardText: self behavior name asString ].
 	
 	(GtCompletionController
 		on: aClassNameEditor

@@ -137,12 +137,7 @@ GtBlockCoder >> initializeAddOns [
 GtBlockCoder >> initializeShortcuts [
 	super initializeShortcuts.
 	
-	addOns addShortcut:
-		(BrTextEditorShortcut new
-			combination: BlKeyCombination primaryShiftF;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aMethodCoder |
-				aMethodCoder format ];
-			options: self)
+	addOns addShortcut: GtSourceCoderFormatShortcut new
 ]
 
 { #category : #private }
