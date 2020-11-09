@@ -40,16 +40,14 @@ GtMethodCoder class >> forMethod: aCompiledMethod [
 ]
 
 { #category : #'instance creation' }
-GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
-	^ (self forMethod: anObject class >> aSymbol)
-		object: anObject;
-		yourself
+GtMethodCoder class >> forNewMethod: aBehavior [
+	^ self forClass: aBehavior source: ''
 ]
 
 { #category : #'instance creation' }
-GtMethodCoder class >> newMethod [
-	^ self new
-		currentSourceString: '';
+GtMethodCoder class >> forObject: anObject andSelector: aSymbol [
+	^ (self forMethod: anObject class >> aSymbol)
+		object: anObject;
 		yourself
 ]
 
@@ -365,8 +363,10 @@ GtMethodCoder >> compilationRequester [
 GtMethodCoder >> compile [
 	"Try to compile the current source code and return true if it was successful, false otherwise"
 	<return: #Boolean>
-	
-	self selector
+
+	"we should use #currentSelector instead of #selector because we care
+	about the `current` state of the coder (#selector may be nil for new methods)"
+	self currentSelector
 		ifNil: [ ^ false ].
 
 	^ self methodBehavior
@@ -641,9 +641,8 @@ GtMethodCoder >> findSeparatorBetweenPatternAndBodyIn: aMethodNode [
 ]
 
 { #category : #initialize }
-GtMethodCoder >> forClass: aBehavior source: aString [	
-	self classOrMetaClass: aBehavior.
-
+GtMethodCoder >> forClass: aBehavior source: aString [
+	self behavior: aBehavior.
 	self sourceCode: (GtCoderExplicitSourceCode new source: aString)
 ]
 
