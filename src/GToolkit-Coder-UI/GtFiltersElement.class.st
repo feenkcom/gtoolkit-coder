@@ -131,7 +131,7 @@ GtFiltersElement >> newAddTagButton [
 		constraintsDo: [ :c | c flow vertical alignCenter ];
 		action: [ :aButton | self createNewTag ];
 		addShortcut:
-			(BlShortcut new
+			(BlShortcutWithAction new
 				combination: BlKeyCombination return;
 				action: [ :anEvent | self createNewTag ])
 ]

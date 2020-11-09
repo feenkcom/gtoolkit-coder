@@ -9,7 +9,7 @@ Class {
 
 { #category : #'private - instance creation' }
 GtBehaviorDefinitionCoderElement >> addDefinitionEditorShortcutsTo: aPropertiesElement [
-	aPropertiesElement addShortcut: (BlShortcut new
+	aPropertiesElement addShortcut: (BlShortcutWithAction new
 		combination: BlKeyCombination arrowUp;
 		action: [ :anEvent |
 			anEvent currentTarget deepestFocusedChild ifNotNil: [ :aFocusedChild |
@@ -19,7 +19,7 @@ GtBehaviorDefinitionCoderElement >> addDefinitionEditorShortcutsTo: aPropertiesE
 					referenceElement: aFocusedChild;
 					nextFocusDo: [ :aNextFocusElement | aNextFocusElement requestFocus ] ] ]).
 
-	aPropertiesElement addShortcut: (BlShortcut new
+	aPropertiesElement addShortcut: (BlShortcutWithAction new
 		combination: BlKeyCombination arrowDown;
 		action: [ :anEvent |
 			anEvent currentTarget deepestFocusedChild ifNotNil: [ :aFocusedChild |
