@@ -296,7 +296,7 @@ GtMethodCoder >> canExecuteExample [
 { #category : #testing }
 GtMethodCoder >> canMoveMethodToInstanceOrClass [
 	| oldClass newClass |
-	oldClass := self classOrMetaClass.
+	oldClass := self behavior.
 	newClass := oldClass isMeta
 		ifTrue: [ oldClass soleInstance ]
 		ifFalse: [ oldClass class ].
@@ -894,7 +894,7 @@ GtMethodCoder >> methodBehavior: aGtMethodCoderBehavior [
 { #category : #'api - refactorings' }
 GtMethodCoder >> moveMethodToInstanceOrClass [
 	| oldClass newClass model modelClass oldModelClass |
-	oldClass := self classOrMetaClass.
+	oldClass := self behavior.
 	newClass := oldClass isMeta
 		ifTrue: [ oldClass soleInstance ]
 		ifFalse: [ oldClass class ].
@@ -903,15 +903,15 @@ GtMethodCoder >> moveMethodToInstanceOrClass [
 			^ true ].
 	self canMoveMethodToInstanceOrClass
 		ifFalse: [ ^ false ].
-
 	model := RBNamespace new.
 	modelClass := model classFor: newClass.
-	modelClass compile: self currentSourceString classified: self category.
+	modelClass
+		compile: self currentSourceString
+		classified: self protocol.
 	oldModelClass := model classFor: oldClass.
 	(oldModelClass directlyDefinesMethod: self currentSelector)
 		ifTrue: [ oldModelClass removeMethod: self currentSelector ].
 	self behavior: newClass.
-
 	[ model changes execute ]
 		ifCurtailed: [ self behavior: oldClass ].
 	^ true
