@@ -106,7 +106,7 @@ GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel announcer weak
 		when: GtCoderStylerChanged send: #stylersUpdated: to: self;
 		when: GtCoderStyleTextRequest send: #styleTextEvent: to: self;
-		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged to: self;
+		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged: to: self;
 		when: GtCoderParseError send: #reportParseError: to: self.
 
 	aGtSourceCoderUIModel focused
@@ -122,6 +122,7 @@ GtSourceCoderEditorLook >> onSaveSourceCoderUIModel: aGtSourceCoderUIModel [
 
 { #category : #hooks }
 GtSourceCoderEditorLook >> onSourceCodeChanged [
+	"To remove"
 	self widgetDo: [ :aWidget | 
 		self editorElement enqueueTask: (
 			BlTaskAction new action: [ 
