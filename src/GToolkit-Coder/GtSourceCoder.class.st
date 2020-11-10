@@ -401,17 +401,15 @@ GtSourceCoder >> evaluationRequesterForEditor: anEditorElement [
 { #category : #private }
 GtSourceCoder >> extractReferencesFilterFromString: selectedString [
 	| node |
-	node := GtPharoParser 
+	node := GtPharoParser
 		parseWithErrors: selectedString
 		startingAt: GtPharoParser startingStateForStatement.
 	[ node isNil ]
-		whileFalse: [ 
-			(node isKindOf: GtPharoVariableNode)
-				ifTrue: [ 
-					| binding |
-					binding := self classOrMetaClass bindingOf: node name source.
-					^ binding 
-						ifNil: [ self referencesFilterForSymbol: node name source asSymbol ] 
+		whileFalse: [ (node isKindOf: GtPharoVariableNode)
+				ifTrue: [ | binding |
+					binding := self behavior bindingOf: node name source.
+					^ binding
+						ifNil: [ self referencesFilterForSymbol: node name source asSymbol ]
 						ifNotNil: [ self referencesFilterForSymbol: binding ] ].
 			(node isKindOf: GtPharoSymbolLiteralNode)
 				ifTrue: [ ^ self referencesFilterForSymbol: node asSymbol ].
@@ -551,10 +549,12 @@ GtSourceCoder >> notifyParseError: aString at: anInteger [
 ]
 
 { #category : #'private - notifying' }
-GtSourceCoder >> notifySourceChanged [
+GtSourceCoder >> notifySourceChangedWith: anUpdateStragegy [
 	"Notify the text editor that it should update the text (for example due to refactoring changes)"
 	
-	self announce: (GtCoderSourceCodeChanged new coder: self)
+	self announce: (GtCoderSourceCodeChanged new 
+		updateStragegy: anUpdateStragegy;
+		coder: self)
 ]
 
 { #category : #'private - notifying' }
@@ -920,14 +920,20 @@ GtSourceCoder >> sourceAst [
 
 { #category : #'event handling' }
 GtSourceCoder >> sourceChanged [
+	self sourceChangedWith: GtCoderUpdateStragegy new
+		makeAsynchronous
+]
 
-	self flag: #TODO. "is there a better way to clear syntax errors than remove attributes after *every* keystroke?"
+{ #category : #'event handling' }
+GtSourceCoder >> sourceChangedWith: anUpdateStragegy [
+
+	"self flag: #TODO." "is there a better way to clear syntax errors than remove attributes after *every* keystroke?"
 	self clearSyntaxErrors.
 
 	self requestUpdateCollapsedText.
 	self requestUpdateAddOns.
 	
-	self notifySourceChanged
+	self notifySourceChangedWith: anUpdateStragegy
 ]
 
 { #category : #'api - accessing' }
@@ -942,12 +948,31 @@ GtSourceCoder >> sourceCode [
 GtSourceCoder >> sourceCode: aGtCoderSourceCode [
 	"Set the source code of this coder to a given one and notify about the changes"
 	
+	self 
+		sourceCode: aGtCoderSourceCode 
+		withStrategy: GtCoderUpdateStragegy new 
+			makeAsynchronous
+]
+
+{ #category : #'api - accessing' }
+GtSourceCoder >> sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy [
+	"Set the source code of this coder to a given one and notify about the changes"
+	
 	sourceCode ifNotNil: [ :aPreviousSourceCode | aPreviousSourceCode detachFromCoder: self ].
 	sourceCode := aGtCoderSourceCode.
 	sourceCode attachToCoder: self.
 
-	self sourceChanged.
+	self sourceChangedWith: anUpdateStragegy.
 	self textModified
+]
+
+{ #category : #'api - accessing' }
+GtSourceCoder >> sourceCodeSynchronously: aGtCoderSourceCode [
+	ContextStackSignal emit.
+	self 
+		sourceCode: aGtCoderSourceCode 
+		withStrategy: GtCoderUpdateStragegy new 
+			makeSynchronous
 ]
 
 { #category : #'private - text' }
