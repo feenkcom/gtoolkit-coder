@@ -1338,12 +1338,12 @@ GtMethodCoder >> renameLocalVariableIn: editorElement [
 { #category : #'api - refactorings' }
 GtMethodCoder >> renameProtocol: aString [
 	| change |
-	self category: aString asSymbol.
+	self protocol: aString asSymbol.
 	selector notNil
 		ifTrue: [ change := RBMethodProtocolChange
 				selector: selector
-				in: self classOrMetaClass
-				classified: self category.
+				in: self behavior
+				classified: self protocol.
 			change execute ]
 ]
 

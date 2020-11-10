@@ -7,6 +7,16 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Method'
 }
 
+{ #category : #private }
+GtBehaviorMethodCoderTagsElement >> behaviorOtherSideName [
+	^ self classTagStringForMeta: (self isMeta: self methodCoderUIModel) not
+]
+
+{ #category : #private }
+GtBehaviorMethodCoderTagsElement >> behaviorSideName [
+	^ self classTagStringForMeta: (self isMeta: self methodCoderUIModel)
+]
+
 { #category : #initialization }
 GtBehaviorMethodCoderTagsElement >> buildTags [
 	^ super buildTags, { classTag := self newClassTag }
@@ -15,16 +25,36 @@ GtBehaviorMethodCoderTagsElement >> buildTags [
 { #category : #private }
 GtBehaviorMethodCoderTagsElement >> classTagStringFor: aMethodCoderUIModel [
 	<return: #String>
-	^ aMethodCoderUIModel coder behavior isMeta
+
+	^ self classTagStringForMeta: (self isMeta: aMethodCoderUIModel)
+]
+
+{ #category : #private }
+GtBehaviorMethodCoderTagsElement >> classTagStringForMeta: aBoolean [
+	<return: #String>
+
+	^ aBoolean
 		ifTrue: [ 'class' ]
 		ifFalse: [ 'instance' ]
+]
+
+{ #category : #private }
+GtBehaviorMethodCoderTagsElement >> isMeta: aMethodCoderUIModel [
+	<return: #String>
+
+	^ aMethodCoderUIModel coder behavior isMeta
 ]
 
 { #category : #accessing }
 GtBehaviorMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 	super methodCoderUIModel: aMethodCoderUIModel.
 
-	classTag text: (self classTagStringFor: aMethodCoderUIModel)
+	isEditable
+		ifTrue: [
+			classTag label: (self classTagStringFor: aMethodCoderUIModel).
+			classTag enabled: self methodCoderUIModel coder canMoveMethodToInstanceOrClass ]
+		ifFalse: [ classTag text: (self classTagStringFor: aMethodCoderUIModel) ]
+	
 ]
 
 { #category : #'instance creation' }
@@ -35,39 +65,25 @@ GtBehaviorMethodCoderTagsElement >> newClassTag [
 ]
 
 { #category : #'instance creation' }
-GtBehaviorMethodCoderTagsElement >> newEditableClassTag [
-	| editor completion strategy |
-	editor := BrEditableLabel new
-		look:
-			(BrGlamorousEditableLabelLook new
-				glamorousCodeFont;
-				defaultForeground: Color black;
-				fontSize: 10);
-		padding: (BlInsets all: 2);
-		margin: (BlInsets all: 0).
-	editor
-		when: BrEditorModeWish
-			do: [ :wish | 
-			(wish mode isEditable
-				and: [ self methodCoderUIModel coder canMoveMethodToInstanceOrClass not ])
-				ifTrue: [ editor beReadOnlyWithoutSelection.
-					wish mode: BrTextEditorReadonlyWithoutSelectionMode new ] ];
-		when: BrEditorAcceptWish
-			do: [ :wish | 
-			(self methodCoderUIModel coder behavior isMeta
-				ifTrue: [ wish text asString asLowercase = 'instance' ]
-				ifFalse: [ wish text asString asLowercase = 'class' ])
-				ifTrue: [ self methodCoderUIModel coder moveMethodToInstanceOrClass ].
-			editor text: (self classTagStringFor: self methodCoderUIModel).
-			wish consumed: true ];
-		whenKey: BlKeyCombination primaryC
-			labelDo:
-				[ :anEvent :aShortcut | Clipboard clipboardText: anEvent currentTarget text asString ].
-	strategy := GtStringsCompletionStrategy new.
-	(GtCompletionController on: editor strategy: strategy) install.
-	completion := GtPrefixTree withAll: #('instance' 'class').
-	strategy completions: completion.
-	^ editor
+GtBehaviorMethodCoderTagsElement >> newEditableClassTag [	
+	^ BrButton new
+		beTiny;
+		look: BrGlamorousButtonWithLabelLook + (BrGlamorousWithDropdownLook
+			handle: [
+				BrButton new
+					beSmall;
+					disable;
+					look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
+					label: self behaviorSideName ]
+			content: [
+				BrButton new
+					beSmall;
+					look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
+					label: self behaviorOtherSideName;
+					action: [ :aButton |
+						aButton fireEvent: (BrDropdownHideWish new).
+						self methodCoderUIModel coder moveMethodToInstanceOrClass.
+						classTag label: self behaviorSideName ] ])
 ]
 
 { #category : #'instance creation' }
