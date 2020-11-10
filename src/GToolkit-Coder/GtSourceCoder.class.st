@@ -480,26 +480,10 @@ GtSourceCoder >> initializeAddOns [
 GtSourceCoder >> initializeShortcuts [
 
 	addOns
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryM;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
-				aSourceCoder browseImplementorsFrom: aShortcutEvent currentTarget ];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryN;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
-				aSourceCoder browseReferencesFrom: aShortcutEvent currentTarget ];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: BlKeyCombination primaryB;
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
-				aSourceCoder browseClassFrom: aShortcutEvent currentTarget ];
-			options: self);
-		addShortcut: (BrTextEditorShortcut new
-			combination: (BlKeyCombination primaryL);
-			action: [ :aShortcutEvent :aShortcut :aTextEditor :aSourceCoder |
-				aSourceCoder discardChanges ];
-			options: self)
+		addShortcut: GtSourceCoderBrowseImplementorsShortcut new;
+		addShortcut: GtSourceCoderBrowseReferencesShortcut new;
+		addShortcut: GtSourceCoderBrowseBehaviorShortcut new;
+		addShortcut: GtSourceCoderDiscardChangesShortcut new
 ]
 
 { #category : #testing }

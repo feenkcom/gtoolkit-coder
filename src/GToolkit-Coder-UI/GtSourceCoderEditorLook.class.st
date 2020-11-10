@@ -89,10 +89,11 @@ GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel editorState
 		ifNotNil: [ :anEditorState | self editorElement editor restoreState: anEditorState ]
 		ifNil: [ self editorElement editor restoreState: BrTextEditorMemento default ].
-	
+
 	interactions := aGtSourceCoderUIModel coder shortcuts copy.
 
 	self editorElement text: aGtSourceCoderUIModel coder sourceText.
+	self editorElement editor model: aGtSourceCoderUIModel coder.
 	self editorElement editor addEditorShortcuts: interactions.
 	completion := GtCompletionController
 		on: self editorElement
@@ -105,7 +106,7 @@ GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel announcer weak
 		when: GtCoderStylerChanged send: #stylersUpdated: to: self;
 		when: GtCoderStyleTextRequest send: #styleTextEvent: to: self;
-		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged: to: self;
+		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged to: self;
 		when: GtCoderParseError send: #reportParseError: to: self.
 
 	aGtSourceCoderUIModel focused

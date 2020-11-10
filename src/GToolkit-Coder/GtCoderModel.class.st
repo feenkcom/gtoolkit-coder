@@ -206,7 +206,7 @@ GtCoderModel >> requestUpdateAddOns [
 
 { #category : #'api - addons' }
 GtCoderModel >> shortcuts [
-	<return: #Collection of: #BrTextEditorShortcut>
+	<return: #Collection of: #BlBasicShortcut>
 
 	^ self addOns shortcuts
 ]

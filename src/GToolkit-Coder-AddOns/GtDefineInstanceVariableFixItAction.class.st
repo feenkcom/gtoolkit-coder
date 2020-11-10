@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 GtDefineInstanceVariableFixItAction >> description [
 	^ 'Add instance variable ' , node name , ' to class '
-		, sourceCoder classOrMetaClass name
+		, sourceCoder behavior name
 ]
 
 { #category : #accessing }
