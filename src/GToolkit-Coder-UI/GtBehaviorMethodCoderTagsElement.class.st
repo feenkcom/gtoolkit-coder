@@ -37,7 +37,6 @@ GtBehaviorMethodCoderTagsElement >> newClassTag [
 { #category : #'instance creation' }
 GtBehaviorMethodCoderTagsElement >> newEditableClassTag [
 	| editor completion strategy |
-
 	editor := BrEditableLabel new
 		look:
 			(BrGlamorousEditableLabelLook new
@@ -46,25 +45,24 @@ GtBehaviorMethodCoderTagsElement >> newEditableClassTag [
 				fontSize: 10);
 		padding: (BlInsets all: 2);
 		margin: (BlInsets all: 0).
-		
 	editor
 		when: BrEditorModeWish
-			do: [ :wish | 				
+			do: [ :wish | 
 			(wish mode isEditable
 				and: [ self methodCoderUIModel coder canMoveMethodToInstanceOrClass not ])
 				ifTrue: [ editor beReadOnlyWithoutSelection.
 					wish mode: BrTextEditorReadonlyWithoutSelectionMode new ] ];
 		when: BrEditorAcceptWish
 			do: [ :wish | 
-			(self methodCoderUIModel coder classOrMetaClass isMeta
+			(self methodCoderUIModel coder behavior isMeta
 				ifTrue: [ wish text asString asLowercase = 'instance' ]
 				ifFalse: [ wish text asString asLowercase = 'class' ])
 				ifTrue: [ self methodCoderUIModel coder moveMethodToInstanceOrClass ].
-			editor text: (self classTagStringFor: self methodCoderUIModel coder).
+			editor text: (self classTagStringFor: self methodCoderUIModel).
 			wish consumed: true ];
 		whenKey: BlKeyCombination primaryC
-			labelDo: [ :anEvent :aShortcut | Clipboard clipboardText: anEvent currentTarget text asString ].
-	
+			labelDo:
+				[ :anEvent :aShortcut | Clipboard clipboardText: anEvent currentTarget text asString ].
 	strategy := GtStringsCompletionStrategy new.
 	(GtCompletionController on: editor strategy: strategy) install.
 	completion := GtPrefixTree withAll: #('instance' 'class').
