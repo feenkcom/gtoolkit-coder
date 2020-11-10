@@ -85,7 +85,7 @@ GtClassMethodsCoder >> filteredClass: aBehavior [
 	^ filteredClasses includes: aBehavior
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtClassMethodsCoder >> forClass: aBehavior [
 	class := aBehavior.
 	filteredClasses := Set with: aBehavior.
@@ -93,7 +93,7 @@ GtClassMethodsCoder >> forClass: aBehavior [
 		forFilter: (GtSearchMethodsInInstanceAndClassSideFilter forClass: class))
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtClassMethodsCoder >> forObject: anObject [
 	object := anObject.
 	self forClass: anObject class
@@ -109,7 +109,7 @@ GtClassMethodsCoder >> hasFilter [
 	^ filteredClasses notEmpty
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialize }
 GtClassMethodsCoder >> initialize [
 	super initialize.
 	filteredClasses := Set new
