@@ -74,6 +74,11 @@ GtSourceCoderEditorLook >> newEditorElement [
 		vFitContent
 ]
 
+{ #category : #'instance creation' }
+GtSourceCoderEditorLook >> newEditorMemento [
+	^ BrTextEditorCompositeMemento new text selection cursors history
+]
+
 { #category : #hooks }
 GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 	sourceCoderUIModel
@@ -87,14 +92,16 @@ GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 	actions coder: aGtSourceCoderUIModel coder.
 
 	aGtSourceCoderUIModel editorState
-		ifNotNil: [ :anEditorState | self editorElement editor restoreState: anEditorState ]
-		ifNil: [ self editorElement editor restoreState: BrTextEditorMemento default ].
+		ifNil: [ aGtSourceCoderUIModel editorState: self newEditorMemento ].
+
+	self editorElement editor restoreState: aGtSourceCoderUIModel editorState.
 
 	interactions := aGtSourceCoderUIModel coder shortcuts copy.
 
 	self editorElement text: aGtSourceCoderUIModel coder sourceText.
 	self editorElement editor model: aGtSourceCoderUIModel coder.
 	self editorElement editor addEditorShortcuts: interactions.
+
 	completion := GtCompletionController
 		on: self editorElement
 		strategy: aGtSourceCoderUIModel coder completionStrategy.
@@ -116,7 +123,7 @@ GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 { #category : #hooks }
 GtSourceCoderEditorLook >> onSaveSourceCoderUIModel: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel
-		editorState: self editorElement editor saveState.
+		editorState: (self editorElement editor saveState: self newEditorMemento).
 	aGtSourceCoderUIModel focused: self editorElement hasFocus
 ]
 
