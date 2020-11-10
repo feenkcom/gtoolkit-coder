@@ -51,14 +51,14 @@ GtBehaviorCoder >> definitionCoder [
 	^ definitionCoder
 ]
 
-{ #category : #'api - initialization' }
+{ #category : #initialize }
 GtBehaviorCoder >> forClass: aClass [
 	hasObject := false.
 	self initializeClass: aClass.
 	methodsCoder := GtClassMethodsCoder forClass: aClass
 ]
 
-{ #category : #'api - initialization' }
+{ #category : #initialize }
 GtBehaviorCoder >> forObject: anObject [
 	object := anObject.
 	hasObject := true.

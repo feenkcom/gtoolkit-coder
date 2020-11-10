@@ -15,5 +15,7 @@ GtSearchMethodsInInstanceAndClassSideFilter >> includesMethod: aCompiledMethod [
 { #category : #enumerating }
 GtSearchMethodsInInstanceAndClassSideFilter >> methodsDo: aBlock [
 	class instanceSide methods do: aBlock.
-	class classSide methods do: aBlock.
+
+	"#methods includes ones from TraitedClass"
+	class classSide visibleMethods do: aBlock
 ]
