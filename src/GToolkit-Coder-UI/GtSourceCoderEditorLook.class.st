@@ -105,7 +105,7 @@ GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel announcer weak
 		when: GtCoderStylerChanged send: #stylersUpdated: to: self;
 		when: GtCoderStyleTextRequest send: #styleTextEvent: to: self;
-		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged to: self;
+		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged: to: self;
 		when: GtCoderParseError send: #reportParseError: to: self.
 
 	aGtSourceCoderUIModel focused
@@ -123,9 +123,20 @@ GtSourceCoderEditorLook >> onSaveSourceCoderUIModel: aGtSourceCoderUIModel [
 GtSourceCoderEditorLook >> onSourceCodeChanged [
 	self widgetDo: [ :aWidget | 
 		self editorElement enqueueTask: (
-			BlTaskAction new action: [
-				(self editorElement text = sourceCoderUIModel coder sourceText)
-					ifFalse: [ self editorElement text: sourceCoderUIModel coder sourceText ] ]) ]
+			BlTaskAction new action: [ 
+				self updateSourceCode ]) ] 
+]
+
+{ #category : #hooks }
+GtSourceCoderEditorLook >> onSourceCodeChanged: aGtCoderSourceCodeChanged [
+	self widgetDo: [ :aWidget | 
+		(aGtCoderSourceCodeChanged updateStragegy notNil and: [ 
+			 aGtCoderSourceCodeChanged updateStragegy isSynchronous ])
+				ifTrue: [ self updateSourceCode ] 
+				ifFalse: [ 
+					self editorElement enqueueTask: (
+						BlTaskAction new action: [ 
+							self updateSourceCode ]) ] ]
 ]
 
 { #category : #private }
@@ -173,4 +184,10 @@ GtSourceCoderEditorLook >> styleTextEvent: anEvent [
 GtSourceCoderEditorLook >> stylersUpdated: anAnnouncement [
 	(anAnnouncement coder newSourceStylerFrom: self editorElement)
 		ifNotNil: [ :styler | self editorElement styler: styler ]
+]
+
+{ #category : #hooks }
+GtSourceCoderEditorLook >> updateSourceCode [
+	(self editorElement text = sourceCoderUIModel coder sourceText)
+		ifFalse: [ self editorElement text: sourceCoderUIModel coder sourceText ]
 ]

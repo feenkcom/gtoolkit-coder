@@ -1486,6 +1486,12 @@ GtMethodCoder >> sourceCode: aGtCoderSourceCode [
 	super sourceCode: aGtCoderSourceCode.
 ]
 
+{ #category : #'api - accessing' }
+GtMethodCoder >> sourceCodeSynchronously: aGtCoderSourceCode [
+	self clearExample.
+	super sourceCodeSynchronously: aGtCoderSourceCode.
+]
+
 { #category : #'private - subscriptions' }
 GtMethodCoder >> subscribeToSystem [
 	self unsubscribeFromSystem.
