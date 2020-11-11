@@ -14,6 +14,7 @@ GtMethodContextCoder class >> forContext: aContext session: aDebugSession [
 		context: aContext;
 		session: aDebugSession;
 		object: aContext receiver;
+		updateContent;
 		yourself
 ]
 
