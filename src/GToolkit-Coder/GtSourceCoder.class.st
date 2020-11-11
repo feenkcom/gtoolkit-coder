@@ -849,7 +849,7 @@ GtSourceCoder >> requestUpdateCollapsedText [
 
 { #category : #'private - actions' }
 GtSourceCoder >> requesterForEditor: aTextEditor [
-	^ GtSourceCoderRequester on: self editor: aTextEditor
+	^ GtSourceCoderBasicEvaluationRequester on: self editor: aTextEditor
 ]
 
 { #category : #initialize }

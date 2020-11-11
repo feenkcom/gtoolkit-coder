@@ -8,6 +8,13 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #'instance creation' }
+GtSourceCoderBasicEvaluationRequester class >> on: aCoder editor: aBrTextEditor [
+	^ self new
+		coder: aCoder editor: aBrTextEditor;
+		yourself
+]
+
 { #category : #requester }
 GtSourceCoderBasicEvaluationRequester >> bindingOf: aSymbol [
 	^ bindingStrategy isNil
