@@ -14,6 +14,7 @@ GtMethodContextCoder class >> forContext: aContext session: aDebugSession [
 		context: aContext;
 		session: aDebugSession;
 		object: aContext receiver;
+		updateContent;
 		yourself
 ]
 
@@ -288,6 +289,8 @@ GtMethodContextCoder >> updateSelection [
 
 { #category : #updating }
 GtMethodContextCoder >> updateSourceFromContext [
+	(self isModified not and: [ self compiledMethod == self context method ])
+		ifTrue: [ ^ self ].
 	self forMethod: self context method
 ]
 

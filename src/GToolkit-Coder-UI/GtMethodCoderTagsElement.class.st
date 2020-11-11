@@ -69,6 +69,11 @@ GtMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 			self initializeTags ].
 
 	methodCoderUIModel := aMethodCoderUIModel.
+	
+	aMethodCoderUIModel coder weak
+		when: GtCoderSourceTextModified
+		send: #onCoderSourceTextModified:
+		to: self.
 
 	self updateProtocolButton
 ]
@@ -147,6 +152,13 @@ GtMethodCoderTagsElement >> newTag [
 			fontSize: 10);
 		text: '';
 		padding: (BlInsets all: 2)
+]
+
+{ #category : #'event handling' }
+GtMethodCoderTagsElement >> onCoderSourceTextModified: anAnnouncement [
+	
+	isEditable
+		ifTrue: [ protocolTag disabled: anAnnouncement coder isModified ]
 ]
 
 { #category : #private }

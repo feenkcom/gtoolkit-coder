@@ -77,7 +77,7 @@ GtBehaviorCoderElement >> buildClassLabel [
 	
 	(GtCompletionController
 		on: aClassNameEditor
-		strategy: (GtClassesCompletionStrategy new)) install.
+		strategy: (GtClassesCompletionStrategy new)) install showOnTextModification: false.
 
 	aPreviewButton := GtRefactoringsPreviewButton new
 		margin: (BlInsets left: 5);

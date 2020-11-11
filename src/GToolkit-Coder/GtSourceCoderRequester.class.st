@@ -7,13 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #'instance creation' }
-GtSourceCoderRequester class >> on: aCoder editor: aBrTextEditor [
-	^ self new
-		coder: aCoder editor: aBrTextEditor;
-		yourself
-]
-
 { #category : #accessing }
 GtSourceCoderRequester >> coder [
 	^ coder
