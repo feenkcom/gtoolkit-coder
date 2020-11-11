@@ -63,7 +63,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 	self
 		items: classesTree subclassTrees
 		lazy: [ :eachTree | eachTree subclassTrees ].
-	self expandClass: aClass
+	self expandAll
 ]
 
 { #category : #'api - selection' }
