@@ -289,6 +289,8 @@ GtMethodContextCoder >> updateSelection [
 
 { #category : #updating }
 GtMethodContextCoder >> updateSourceFromContext [
+	(self isModified not and: [ self compiledMethod == self context method ])
+		ifTrue: [ ^ self ].
 	self forMethod: self context method
 ]
 
