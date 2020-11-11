@@ -12,31 +12,25 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Method'
 }
 
+{ #category : #private }
+GtMethodCoderTagsElement >> behaviorProtocols [
+	| allSubAndSuperclassProtocols excludedClasses |
+	
+	allSubAndSuperclassProtocols := Set new.
+	excludedClasses := Set withAll: { ProtoObject . Object }.
+	
+	self methodCoderUIModel coder behavior withAllSubAndSuperclassesDo: [ :eachBehavior |
+		(excludedClasses includes: eachBehavior)
+			ifFalse: [ allSubAndSuperclassProtocols addAll: eachBehavior protocols ] ].
+
+	^ allSubAndSuperclassProtocols asArray sorted
+]
+
 { #category : #initialization }
 GtMethodCoderTagsElement >> buildTags [	
 	protocolTag := self newProtocolTag.
 
 	^ { protocolTag }
-]
-
-{ #category : #accessing }
-GtMethodCoderTagsElement >> coder [
-	<return: #GtMethodCoderUIModel>
-	
-	self 
-		deprecated: 'Use #methodCoderUIModel instead.'
-		transformWith: '`@receiver coder' -> '`@receiver methodCoderUIModel'.
-		
-	^ self methodCoderUIModel
-]
-
-{ #category : #accessing }
-GtMethodCoderTagsElement >> coder: aMethodCoderUIModel [
-	self 
-		deprecated: 'Use #methodCoderUIModel: instead.'
-		transformWith: '`@receiver coder: `@arg' -> '`@receiver methodCoderUIModel: `@arg'.
-		
-	self methodCoderUIModel: aMethodCoderUIModel
 ]
 
 { #category : #initialization }
@@ -47,8 +41,6 @@ GtMethodCoderTagsElement >> initialize [
 	
 	self 
 		layout: (BlLinearLayout horizontal cellSpacing: 4);
-		geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
-		background: Color white;
 		constraintsDo: [ :c |
 			c horizontal fitContent.
 			c vertical fitContent ]
@@ -78,33 +70,58 @@ GtMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 
 	methodCoderUIModel := aMethodCoderUIModel.
 
-	protocolTag text: (self protocolStringFor: aMethodCoderUIModel)
+	self updateProtocolButton
 ]
 
 { #category : #'instance creation' }
 GtMethodCoderTagsElement >> newEditableProtocolTag [
-	| editor |
+	^ BrButton new
+		beTiny;
+		look: BrGlamorousButtonWithLabelLook + (BrGlamorousWithDropdownLook
+			handle: [
+				| editor |
 
-	editor := BrEditableLabel new
-		look:
-			(BrGlamorousEditableLabelLook new
-				glamorousCodeFont;
-				defaultForeground: Color black;
-				fontSize: 10);
-		padding: (BlInsets all: 2);
-		when: BrEditorAcceptWish
-			do: [ :aWish | 
-				self methodCoderUIModel
-					ifNotNil: [ :aMethodCoderUIModel | aMethodCoderUIModel coder renameProtocol: aWish text asString ] ];
-		whenKey: BlKeyCombination primaryC
-			labelDo: [ :aShortcutEvent :aShortcut | 
-				Clipboard clipboardText: aShortcutEvent currentTarget text asString ].
-
-	(GtCompletionController
-		on: editor
-		strategy: GtMethodProtocolCompletionStrategy new) install.
-		
-	^ editor
+				editor := BrEditableLabel new
+					text: (self protocolStringFor: self methodCoderUIModel);
+					constraintsDo: [ :c | c minWidth: 100 ];
+					look:
+						(BrGlamorousEditableLabelLook new
+							glamorousCodeFont;
+							defaultForeground: Color black;
+							fontSize: 13);
+					padding: (BlInsets all: 4);
+					switchToEditor;
+					requestFocus;
+					when: BrEditorAcceptWish
+						do: [ :aWish | 
+							aWish currentTarget fireEvent: (BrDropdownHideWish new).
+							self methodCoderUIModel coder renameProtocol: aWish text asString.
+							protocolTag label: (self protocolStringFor: self methodCoderUIModel) ];
+					when: BrEditorCancelWish
+						do: [ :aWish | aWish currentTarget fireEvent: (BrDropdownHideWish new) ];
+					whenKey: BlKeyCombination primaryC
+						labelDo: [ :aShortcutEvent :aShortcut | 
+							Clipboard clipboardText: aShortcutEvent currentTarget text asString ].
+				(GtCompletionController
+					on: editor
+					strategy: GtMethodProtocolCompletionStrategy new) install.
+				editor ]
+			content: [
+				BrSimpleList new
+					vFitContentLimited;
+					hExact: 250;
+					itemStencil: [
+						BrButton new
+							beSmall;
+							look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
+							action: [ :aButton :aButtonModel |
+								aButton fireEvent: (BrDropdownHideWish new).
+								self methodCoderUIModel coder renameProtocol: aButtonModel model asString.
+								protocolTag label: (self protocolStringFor: self methodCoderUIModel) ] ];
+					itemDataBinder: [ :eachButton :eachProtocol |
+						eachButton viewModel model: eachProtocol.
+						eachButton label: eachProtocol ];
+					items: self behaviorProtocols ])
 ]
 
 { #category : #'instance creation' }
@@ -135,5 +152,13 @@ GtMethodCoderTagsElement >> newTag [
 { #category : #private }
 GtMethodCoderTagsElement >> protocolStringFor: aMethodCoderUIModel [
 	<return: #String>
+
 	^ aMethodCoderUIModel coder protocol
+]
+
+{ #category : #private }
+GtMethodCoderTagsElement >> updateProtocolButton [
+	isEditable
+		ifTrue: [ protocolTag label: (self protocolStringFor: self methodCoderUIModel) ]
+		ifFalse: [ protocolTag text: (self protocolStringFor: self methodCoderUIModel) ]
 ]
