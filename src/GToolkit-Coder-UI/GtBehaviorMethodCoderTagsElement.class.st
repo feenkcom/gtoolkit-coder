@@ -49,12 +49,7 @@ GtBehaviorMethodCoderTagsElement >> isMeta: aMethodCoderUIModel [
 GtBehaviorMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 	super methodCoderUIModel: aMethodCoderUIModel.
 
-	isEditable
-		ifTrue: [
-			classTag label: (self classTagStringFor: aMethodCoderUIModel).
-			classTag enabled: self methodCoderUIModel coder canMoveMethodToInstanceOrClass ]
-		ifFalse: [ classTag text: (self classTagStringFor: aMethodCoderUIModel) ]
-	
+	self updateBehaviorSideButton
 ]
 
 { #category : #'instance creation' }
@@ -91,4 +86,13 @@ GtBehaviorMethodCoderTagsElement >> newReadonlyClassTag [
 	<return: #BlElement>
 
 	^ self newTag
+]
+
+{ #category : #private }
+GtBehaviorMethodCoderTagsElement >> updateBehaviorSideButton [
+	isEditable
+		ifTrue: [
+			classTag label: (self classTagStringFor: self methodCoderUIModel).
+			classTag enabled: self methodCoderUIModel coder canMoveMethodToInstanceOrClass ]
+		ifFalse: [ classTag text: (self classTagStringFor: self methodCoderUIModel) ]
 ]
