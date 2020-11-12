@@ -697,18 +697,6 @@ GtMethodCoder >> gtLiveFor: aView [
 		stencil: [ self ]
 ]
 
-{ #category : #private }
-GtMethodCoder >> handleCompilerErrorsDuring: aBlock [
-	^ [ aBlock value.
-	true ]
-		on: OCUndeclaredVariableWarning
-		do: [ :ex | 
-			self
-				notifyParseError: 'Undeclared' translated
-				at: ex location.
-			ex return: false ]
-]
-
 { #category : #'examples - event handling' }
 GtMethodCoder >> handleExampleArgumentsChanged: aGtExampleArgumentsChanged [
 	self requestUpdateAddOns
