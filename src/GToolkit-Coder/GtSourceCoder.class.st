@@ -381,8 +381,8 @@ GtSourceCoder >> evaluateSource: aString in: anEditorElement [
 GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorElement [
 	^ self
 		evaluateBlock: [ 
-			(self
-				handleCompilerErrorsDuring: [ 
+			self
+				handleCompilerErrorsDuringExecutionOf: [ 
 					self behavior compiler
 						source: aString;
 						receiver: self object;
@@ -391,10 +391,13 @@ GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorE
 							((self evaluationRequesterForEditor: anEditorElement editor)
 								source: aString);
 						failBlock: [ ^ self flag: 'insert error adornment' ];
-						evaluate ])
-				ifFalse: [ 
+						evaluate ]
+				ifPresent: [ :anException |
 					"A better solution would be to return an exlicit object indicating a failed compilation"
-					^ nil ] ]
+					self
+						notifyParseError: 'Undeclared' translated
+						at: anException location.
+					^ nil  ] ]
 		showPrintString: aBoolean
 		in: anEditorElement
 ]
@@ -456,15 +459,10 @@ GtSourceCoder >> gtViewStylersFor: aView [
 ]
 
 { #category : #private }
-GtSourceCoder >> handleCompilerErrorsDuring: aBlock [
-	^ [ aBlock value.
-	true ]
+GtSourceCoder >> handleCompilerErrorsDuringExecutionOf: aBlock ifPresent: anExceptionBlock [
+	^ [ aBlock value. ]
 		on: OCUndeclaredVariableWarning
-		do: [ :ex | 
-			self
-				notifyParseError: 'Undeclared' translated
-				at: ex location.
-			ex return: false ]
+		do: [ :ex | anExceptionBlock cull: ex ]
 ]
 
 { #category : #testing }
