@@ -43,13 +43,13 @@ GtExtractMethodController >> addReorderParametersAttributes [
 						attributes:
 							{(GtReorderParametersAttribute
 								action: [ self swapParameterWithNext: i - 1 ]
-								icon: BrGlamorousIcons left)} ].
+								icon: BrGlamorousVectorIcons left)} ].
 			i < message values size
 				ifTrue: [ (text from: each stopPosition to: each stopPosition)
 						attributes:
 							{(GtReorderParametersAttribute
 								action: [ self swapParameterWithNext: i ]
-								icon: BrGlamorousIcons right)} ] ]
+								icon: BrGlamorousVectorIcons right)} ] ]
 ]
 
 { #category : #executing }

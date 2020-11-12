@@ -83,8 +83,7 @@ GtCoderElementForSnippetsWithDestinationExamples >> coderElementScripter [
 		aStep check
 			label: 'Check initial button icon';
 			onGtPharoSnippetDestinationButton;
-			satisfies: [ :aButton | 
-				aButton icon = BrGlamorousIcons right ] ].
+			value: [ :aButton | aButton icon asElement containerName ] equals: #'icon--right' ].
 		
 	aScripter syncContinue.
 	^ aScripter
@@ -105,7 +104,7 @@ GtCoderElementForSnippetsWithDestinationExamples >> coderElementScripter_Destina
 			aStep check
 				label: 'Check changed button icon';
 				onGtPharoSnippetDestinationButton;
-				satisfies: [ :aButton | aButton icon = BrGlamorousIcons down ].
+				value: [ :aButton | aButton icon asElement containerName ] equals: #'icon--down'.
 			aStep check
 				label: 'Check coder destination';
 				satisfies:
