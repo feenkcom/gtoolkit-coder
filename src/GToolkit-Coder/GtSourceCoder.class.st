@@ -380,7 +380,8 @@ GtSourceCoder >> evaluateSource: aString in: anEditorElement [
 { #category : #'private - actions' }
 GtSourceCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorElement [
 	^ self
-		evaluateBlock: [ self behavior compiler
+		evaluateBlock: [ 
+			self behavior compiler
 				source: aString;
 				receiver: self object;
 				context: self context;
