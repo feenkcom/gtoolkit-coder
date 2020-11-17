@@ -164,7 +164,6 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnPac
 { #category : #'examples - binary method' }
 GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI [
 	<gtExample>
-	<noTest>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI_CollapsedFromUI.
 	self expandFromUI: aScripter method: self binaryMethod.
@@ -175,7 +174,6 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI [
 { #category : #'examples - binary method' }
 GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CheckActionButtons [
 	<gtExample>
-	<noTest>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
 	self 
@@ -189,7 +187,6 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CheckActio
 { #category : #'examples - binary method' }
 GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CodeStyle [
 	<gtExample>
-	<noTest>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
 	aScripter checks: 'Check Expanded Source Code Style' do: [ :aStep |
@@ -293,7 +290,6 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnPack
 { #category : #'examples - binary method' }
 GtMethodCoderByScripterExamples >> binaryMethodCoderUI_WithoutExampleActions [
 	<gtExample>
-	<noTest>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
 	self 

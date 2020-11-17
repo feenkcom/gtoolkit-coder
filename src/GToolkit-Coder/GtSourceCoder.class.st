@@ -516,10 +516,13 @@ GtSourceCoder >> newRbAST: aString [
 
 { #category : #private }
 GtSourceCoder >> newSourceStylerFrom: anEditorElement [
+	<return: #GtSourceCoderTextStyler>
 	| anAddOnsCopy |
+
 	anAddOnsCopy := self addOns stylers copy.
 	anAddOnsCopy do: [ :eachAddOn | 
 		eachAddOn editorElement: anEditorElement ].
+
 	^ (GtSourceCoderTextStyler forCoder: self)
 		stylers: anAddOnsCopy;
 		yourself
