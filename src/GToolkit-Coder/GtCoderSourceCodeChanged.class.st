@@ -10,6 +10,12 @@ Class {
 	#category : #'GToolkit-Coder-Event'
 }
 
+{ #category : #testing }
+GtCoderSourceCodeChanged >> isSynchronous [
+	^ self updateStragegy notNil
+		and: [ self updateStragegy isSynchronous ]
+]
+
 { #category : #accessing }
 GtCoderSourceCodeChanged >> updateStragegy [
 	^ updateStragegy

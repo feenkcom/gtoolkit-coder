@@ -231,6 +231,6 @@ GtCoderModel >> unsubscribeFromSystem [
 ]
 
 { #category : #'api - addons' }
-GtCoderModel >> updateAddOnsFrom: anElement [
+GtCoderModel >> updateAddOns [
 	"Start the update of the addons in a context of a given element"
 ]
