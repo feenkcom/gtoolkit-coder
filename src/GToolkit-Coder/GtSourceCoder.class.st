@@ -809,13 +809,13 @@ GtSourceCoder >> referencesFilterForSymbol: aSymbol [
 { #category : #private }
 GtSourceCoder >> referencesFilterForVariable: aString [
 	| index binding class |
-	index := self classOrMetaClass instVarIndexFor: aString.
+	index := self behavior instVarIndexFor: aString.
 	index > 0
 		ifTrue: [ class := self classOrMetaClass whichClassDefinesInstVar: aString.
 			^ GtSearchInstanceVariableReferenceFilter
 				forClassAndSubclasses: class
 				andVariable: aString ].
-	binding := self classOrMetaClass bindingOf: aString.
+	binding := self behavior bindingOf: aString.
 	binding notNil
 		ifTrue: [ ^ GtSearchReferencesFilter literal: binding ].
 	^ nil
