@@ -36,7 +36,7 @@ GtDefineMethodFixItAction >> compileMethod [
 	refactoring := RBAddMethodRefactoring
 		addMethod: self methodSource
 		toClass: classOrMetaClass
-		inProtocols: {(sourceCoder category ifNil: [ #accessing ])}.
+		inProtocols: {(sourceCoder protocol ifNil: [ #accessing ])}.
 	refactoring execute
 ]
 

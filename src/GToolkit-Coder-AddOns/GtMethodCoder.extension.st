@@ -1,6 +1,12 @@
 Extension { #name : #GtMethodCoder }
 
 { #category : #'*GToolkit-Coder-AddOns' }
+GtMethodCoder >> copyMethodNameToClipboard [
+	self compiledMethod ifNotNil: [ :aCompiledMethod | 
+		Clipboard clipboardText: aCompiledMethod printString ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
@@ -22,6 +28,10 @@ GtMethodCoder >> initializeAddOns [
 		addMainAction: 'Inspect Compiled Method' translated
 		icon: BrGlamorousVectorIcons inspect
 		action: [ :anEditorElement | anEditorElement phlow spawnObject: self compiledMethod ].
+	addOns
+		addMainAction: 'Copy Method Name' translated
+		icon: BrGlamorousVectorIcons clipboard
+		action: [ :anEditorElement | self copyMethodNameToClipboard ].
 	addOns clearChanges
 ]
 
