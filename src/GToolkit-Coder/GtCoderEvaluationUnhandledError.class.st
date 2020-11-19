@@ -3,7 +3,8 @@ Class {
 	#superclass : #UnhandledError,
 	#instVars : [
 		'sourceCoder',
-		'selection'
+		'sourceString',
+		'sourceInterval'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -11,12 +12,13 @@ Class {
 { #category : #handling }
 GtCoderEvaluationUnhandledError >> debug [
 	"Request a debugger on myself embedded in the given text editor"
-	
+
 	UIManager default
-		gtDebugProcess: Processor activeProcess  
+		gtDebugProcess: Processor activeProcess
 		context: self exception signalerContext
 		withEmbeddedDebuggerIn: sourceCoder
-		withSelection: selection
+		withSourceString: self sourceString
+		withSourceInterval: self sourceInterval
 		forException: self exception
 ]
 
@@ -27,11 +29,31 @@ GtCoderEvaluationUnhandledError >> defaultAction [
 ]
 
 { #category : #accessing }
-GtCoderEvaluationUnhandledError >> selection: aBlSelection [
-	selection := aBlSelection
+GtCoderEvaluationUnhandledError >> sourceCoder [
+	^ sourceCoder
 ]
 
 { #category : #accessing }
 GtCoderEvaluationUnhandledError >> sourceCoder: aSourceCoder [
 	sourceCoder := aSourceCoder
+]
+
+{ #category : #accessing }
+GtCoderEvaluationUnhandledError >> sourceInterval [
+	^ sourceInterval
+]
+
+{ #category : #accessing }
+GtCoderEvaluationUnhandledError >> sourceInterval: anObject [
+	sourceInterval := anObject
+]
+
+{ #category : #accessing }
+GtCoderEvaluationUnhandledError >> sourceString [
+	^ sourceString
+]
+
+{ #category : #accessing }
+GtCoderEvaluationUnhandledError >> sourceString: anObject [
+	sourceString := anObject
 ]

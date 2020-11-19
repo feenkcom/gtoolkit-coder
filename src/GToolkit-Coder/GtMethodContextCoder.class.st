@@ -121,7 +121,7 @@ GtMethodContextCoder >> initializeAddOns [
 GtMethodContextCoder >> initializeShortcuts [ 
 	super initializeShortcuts.
 	
-	addOns addShortcut: GtSourceCoderPrintShortcut new
+	addOns addShortcut: GtSourceCoderPrintItShortcut new
 ]
 
 { #category : #'accessing variables' }

@@ -1,50 +1,60 @@
 Class {
 	#name : #GtSourceCoderEvaluationRequester,
-	#superclass : #GtSourceCoderBasicEvaluationRequester,
+	#superclass : #GtSourceCoderRequester,
 	#instVars : [
-		'selectionInterval',
-		'source'
+		'bindingStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #requester }
+GtSourceCoderEvaluationRequester >> bindingOf: aSymbol [
+	^ bindingStrategy isNil
+		ifTrue: [ super bindingOf: aSymbol ]
+		ifFalse: [ bindingStrategy bindingOf: aSymbol ]
+]
+
 { #category : #accessing }
-GtSourceCoderEvaluationRequester >> coder: aCoder editor: aBrTextEditor [
-	super coder: aCoder editor: aBrTextEditor.
+GtSourceCoderEvaluationRequester >> bindingStrategy [
+	^ bindingStrategy
+]
+
+{ #category : #accessing }
+GtSourceCoderEvaluationRequester >> bindingStrategy: anObject [
+	bindingStrategy := anObject
+]
+
+{ #category : #requester }
+GtSourceCoderEvaluationRequester >> correctFrom: aFromIndex to: aToIndex with: aString [
+	self coder
+		correctFrom: aFromIndex
+		to: aToIndex
+		with: aString
+]
+
+{ #category : #binding }
+GtSourceCoderEvaluationRequester >> hasBindingOf: aSymbol [
+	^ self bindingStrategy isNil
+		ifTrue: [ super hasBindingOf: aSymbol ]
+		ifFalse: [ bindingStrategy hasBindingOf: aSymbol ]
+
+]
+
+{ #category : #requester }
+GtSourceCoderEvaluationRequester >> notify: message at: anIndex in: aString [	
+	self coder
+		notifyParseError: message
+		at: anIndex
+]
+
+{ #category : #hack }
+GtSourceCoderEvaluationRequester >> paragraph [
+	"Hack to handle inserting local variables"
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
+GtSourceCoderEvaluationRequester >> withInterval: aSourceInterval [
 	
-	selectionInterval := aCoder selectedSourceIntervalInEditor: aBrTextEditor
-]
-
-{ #category : #requester }
-GtSourceCoderEvaluationRequester >> correctFrom: fromIndex to: toIndex with: aString [
-	super correctFrom: selectionInterval first + fromIndex - 1 to: selectionInterval first + toIndex - 1 with: aString.
-	selectionInterval := selectionInterval first to: selectionInterval last + aString size - (toIndex - fromIndex + 1).
-	self sourceCodeEditor selecter
-		from: selectionInterval first to: selectionInterval last;
-		select
-]
-
-{ #category : #requester }
-GtSourceCoderEvaluationRequester >> notify: message at: anIndex in: aString [
-	| location selectionStart |
-	selectionStart := selectionInterval isNil
-		ifTrue: [ 1 ]
-		ifFalse: [ selectionInterval first ].
-	location := anIndex + selectionStart - 2.
-	^ super notify: message at: (location max: 1) in: aString
-]
-
-{ #category : #requester }
-GtSourceCoderEvaluationRequester >> selection [
-	^ source
-]
-
-{ #category : #accessing }
-GtSourceCoderEvaluationRequester >> source: aString [
-	source := aString
-]
-
-{ #category : #requester }
-GtSourceCoderEvaluationRequester >> text [
-	^ self selection
 ]

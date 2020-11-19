@@ -1,49 +1,18 @@
 Class {
 	#name : #GtCoderEvaluationAnnouncement,
-	#superclass : #Announcement,
+	#superclass : #GtCoderAnnouncement,
 	#instVars : [
-		'coder',
-		'value',
-		'isException'
+		'evaluationResult'
 	],
 	#category : #'GToolkit-Coder-Event'
 }
 
-{ #category : #'instance creation' }
-GtCoderEvaluationAnnouncement class >> forCoder: aCoder value: anObject isException: aBoolean [
-	^ self new
-		coder: aCoder;
-		value: anObject;
-		isException: aBoolean;
-		yourself
+{ #category : #accessing }
+GtCoderEvaluationAnnouncement >> evaluationResult [
+	^ evaluationResult
 ]
 
 { #category : #accessing }
-GtCoderEvaluationAnnouncement >> coder [
-	^ coder
-]
-
-{ #category : #accessing }
-GtCoderEvaluationAnnouncement >> coder: aSourceCoder [
-	coder := aSourceCoder
-]
-
-{ #category : #accessing }
-GtCoderEvaluationAnnouncement >> isException [
-	^ isException
-]
-
-{ #category : #accessing }
-GtCoderEvaluationAnnouncement >> isException: aBoolean [
-	isException := aBoolean
-]
-
-{ #category : #accessing }
-GtCoderEvaluationAnnouncement >> value [
-	^ value
-]
-
-{ #category : #accessing }
-GtCoderEvaluationAnnouncement >> value: anObject [
-	value := anObject
+GtCoderEvaluationAnnouncement >> evaluationResult: anObject [
+	evaluationResult := anObject
 ]

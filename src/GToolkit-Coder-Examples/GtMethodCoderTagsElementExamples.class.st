@@ -1,7 +1,7 @@
 Class {
 	#name : #GtMethodCoderTagsElementExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples-UI'
+	#category : #'GToolkit-Coder-Examples-Source Coder - UI'
 }
 
 { #category : #examples }

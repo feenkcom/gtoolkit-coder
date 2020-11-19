@@ -23,5 +23,8 @@ GtSourceCoderBrowseImplementorsShortcut >> name [
 
 { #category : #evaluation }
 GtSourceCoderBrowseImplementorsShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
-	aGtSourceCoder browseImplementorsFrom: aBrEditorElement
+	self
+		forEditor: aBrTextEditor
+		selectedStringDo: [ :aSelectedString | aGtSourceCoder browseImplementorsIn: aSelectedString ]
+		orCursorStringPositionDo: [ :aStringPosition | aGtSourceCoder browseImplementorsAt: aStringPosition ]
 ]

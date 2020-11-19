@@ -37,11 +37,11 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Play' translated
 		icon: BrGlamorousVectorIcons play
-		action: [ :anEditorElement | self playExampleFrom: anEditorElement ].
+		action: [ :anEditorElement | self playExample ].
 	coderAddOns
 		addContextAction: 'Play and Inspect Example Result' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self playAndInspectExampleFrom: anEditorElement ].
+		action: [ :anEditorElement | self playAndInspectExample ].
 	coderAddOns
 		addContextAction: 'Inspect Example Object' translated
 		icon: BrGlamorousVectorIcons eg
@@ -50,7 +50,7 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
 		action:
-			[ :anEditorElement | self debugSelectionOrExampleFrom: anEditorElement ]
+			[ :anEditorElement | self debugExample ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }

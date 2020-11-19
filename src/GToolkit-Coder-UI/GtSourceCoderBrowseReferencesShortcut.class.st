@@ -23,5 +23,8 @@ GtSourceCoderBrowseReferencesShortcut >> name [
 
 { #category : #evaluation }
 GtSourceCoderBrowseReferencesShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
-	aGtSourceCoder browseReferencesFrom: aBrEditorElement
+	self
+		forEditor: aBrTextEditor
+		selectedStringDo: [ :aSelectedString | aGtSourceCoder browseReferencesIn: aSelectedString ]
+		orCursorStringPositionDo: [ :aStringPosition | aGtSourceCoder browseReferencesAt: aStringPosition ]
 ]

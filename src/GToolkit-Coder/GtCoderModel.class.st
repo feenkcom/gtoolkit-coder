@@ -18,6 +18,7 @@ Class {
 	#traits : 'TGtAnnouncer',
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
+		'monitor',
 		'announcer',
 		'id',
 		'suppressedAnnouncements',
@@ -125,6 +126,11 @@ GtCoderModel >> contextMenuActions [
 	^ self addOns contextMenuActions
 ]
 
+{ #category : #'mutual exclusion' }
+GtCoderModel >> critical: aBlock [
+	^ monitor critical: aBlock
+]
+
 { #category : #accessing }
 GtCoderModel >> expanded [
 	<return: #Boolean>
@@ -147,6 +153,7 @@ GtCoderModel >> initialize [
 	super initialize.
 
 	id := UniqueIdGenerator generateUniqueId.
+	monitor := Monitor new.
 	announcer := GtCoderAnnouncer new.
 	addOnMonitor := Monitor new.
 
