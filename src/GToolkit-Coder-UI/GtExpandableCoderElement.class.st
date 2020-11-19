@@ -79,6 +79,9 @@ GtExpandableCoderElement >> coderUIModel: aCoderUIModel [
 		assert: [ aCoderUIModel isNotNil ]
 		description: [ 'Coder must not be nil' ].
 
+	coderUIModel == aCoderUIModel
+		ifTrue: [ ^ self ].
+
 	coderUIModel
 		ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
 	coderUIModel := aCoderUIModel.
