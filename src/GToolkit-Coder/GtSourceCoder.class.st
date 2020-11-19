@@ -1305,22 +1305,22 @@ GtSourceCoder >> variableNodeToBehavior: aVariableNode ifFound: aFoundBlock ifNo
 GtSourceCoder >> variableNodeToReferencesFilter: aVariableNode ifFound: aFoundBlock ifNone: aNoneBlock [
 	"Convert a given variable node to the references filter and evaluate
 	a found block if such filter can be created, evaluate none block otherwise. Return the result"
-
 	<return: #Object>
 	| aVariableName aVariableIndex aDefiningClass aBinding |
+	
 	aVariableName := aVariableNode name source.
 	aVariableIndex := self behavior instVarIndexFor: aVariableName.
 	aVariableIndex > 0
-		ifTrue: [ aDefiningClass := self classOrMetaClass
-				whichClassDefinesInstVar: aVariableName.
-			^ aFoundBlock
-				value:
-					(GtSearchInstanceVariableReferenceFilter
-						forClassAndSubclasses: aDefiningClass
-						andVariable: aVariableName) ].
+		ifTrue: [
+			aDefiningClass := self behavior whichClassDefinesInstVar: aVariableName.
+			^ aFoundBlock value: (GtSearchInstanceVariableReferenceFilter
+				forClassAndSubclasses: aDefiningClass
+				andVariable: aVariableName) ].
+
 	aBinding := self behavior bindingOf: aVariableName.
 	aBinding notNil
 		ifTrue: [ ^ aFoundBlock value: (GtSearchReferencesFilter literal: aBinding) ].
+
 	^ aNoneBlock value
 ]
 
