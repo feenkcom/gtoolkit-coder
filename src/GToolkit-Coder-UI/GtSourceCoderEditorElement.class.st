@@ -129,10 +129,7 @@ GtSourceCoderEditorElement >> onObjectSpawnRequest: anAnnouncement [
 
 { #category : #'private - event handling' }
 GtSourceCoderEditorElement >> onSaveSourceCoderUIModel: aGtSourceCoderUIModel [
-	aGtSourceCoderUIModel
-		editorState: (self editor saveState: self newEditorMemento).
-	aGtSourceCoderUIModel focused: self hasFocus.
-	aGtSourceCoderUIModel evaluationResult: evaluationHighlighter evaluationResult
+	self saveCoderUIModel: aGtSourceCoderUIModel
 ]
 
 { #category : #'private - event handling' }
@@ -220,6 +217,14 @@ GtSourceCoderEditorElement >> reportParseError: aString at: anInteger [
 	(text from: position to: position)
 		attributes: {(GtSourceCoderErrorAttribute for: aString , ' ->')}.
 	self editor moveCursorTo: position
+]
+
+{ #category : #accessing }
+GtSourceCoderEditorElement >> saveCoderUIModel: aGtSourceCoderUIModel [
+	aGtSourceCoderUIModel
+		editorState: (self editor saveState: self newEditorMemento).
+	aGtSourceCoderUIModel focused: self hasFocus.
+	aGtSourceCoderUIModel evaluationResult: evaluationHighlighter evaluationResult
 ]
 
 { #category : #accessing }
