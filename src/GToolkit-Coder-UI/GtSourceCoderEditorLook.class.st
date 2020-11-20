@@ -23,7 +23,7 @@ GtSourceCoderEditorLook >> initialize [
 	super initialize.
 	
 	editorElement := self newEditorElement.
-	actions := self newActionsElement editor: editorElement.
+	actions := self newActionsElement.
 
 	self addChangeAddChildAs: #(content editor) with: [ editorElement ].
 	self addChangeAddChildAs: #(content actions) with: [ actions ].
@@ -40,7 +40,7 @@ GtSourceCoderEditorLook >> initializeListeners [
 
 { #category : #'instance creation' }
 GtSourceCoderEditorLook >> newActionsElement [
-	^ GtSourceCoderActionsElement new
+	^ GtCoderActionsElement new
 		margin: (BlInsets top: 5);
 		yourself
 ]
@@ -52,7 +52,7 @@ GtSourceCoderEditorLook >> newEditorElement [
 
 { #category : #hooks }
 GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
-	actions coder: aGtSourceCoderUIModel coder.
+	actions coderUIModel: aGtSourceCoderUIModel.
 	editorElement sourceCoderUIModel: aGtSourceCoderUIModel
 ]
 

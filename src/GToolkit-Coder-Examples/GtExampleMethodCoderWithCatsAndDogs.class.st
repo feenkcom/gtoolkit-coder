@@ -19,5 +19,5 @@ GtExampleMethodCoderWithCatsAndDogs >> catsAddOnFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Feed cats' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self inform: 'Feed cats' ].
+		action: [ :aCoderUIModel :anEvent | self inform: 'Feed cats' ].
 ]

@@ -6,20 +6,19 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Evaluate' translated
 		icon: BrGlamorousVectorIcons play
-		action: [ :anEditorElement | self doItAll ].
+		action: [ :aCoderUIModel :anEvent | self doItAll ].
 	addOns
 		addMainAction: 'Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self doItAndGoAll ].
+		action: [ :aCoderUIModel :anEvent | self doItAndGoAll ].
 	addOns
 		addMainAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action: [ :anEditorElement | self debug ].
+		action: [ :aCoderUIModel :anEvent | self debug ].
 	addOns
 		addMainAction: 'Profile' translated
 		icon: BrGlamorousVectorIcons performance
-		action:
-			[ :anEditorElement | self profileWithMessageTally ].
+		action: [ :aCoderUIModel :anEvent | self profileWithMessageTally ].
 	addOns
 		addStyler:
 			(BrRBTextStyler new

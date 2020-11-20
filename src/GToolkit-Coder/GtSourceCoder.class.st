@@ -473,7 +473,10 @@ GtSourceCoder >> evaluateBlock: aBlock onErrorDo: anErrorBlock [
 				ifTrue: [ 
 					"Continue the handling of this exception. This will open a debugger 
 					if the error is not caught elsewhere."
-					anError pass ]
+					NonInteractiveTranscript stdout nextPutAll: 'before anError pass.'; cr.
+					anError pass.
+					NonInteractiveTranscript stdout nextPutAll: 'after anError pass.'; cr.
+					^ nil ]
 				ifFalse: [
 					wasErrorAlreadySignaled := true.
 					
@@ -483,7 +486,10 @@ GtSourceCoder >> evaluateBlock: aBlock onErrorDo: anErrorBlock [
 							sourceString: aResultWithError sourceString;
 							sourceInterval: aResultWithError sourceInterval).
 					
-					anError resignalAs: aResultWithError error ].
+					NonInteractiveTranscript stdout nextPutAll: 'before anError resignalAs: aResultWithError error.'; cr.
+					anError resignalAs: aResultWithError error.
+					NonInteractiveTranscript stdout nextPutAll: 'after anError resignalAs: aResultWithError error.'; cr.
+					^ nil ].
 			
 			"Normally, the process will be terminated during error handling, however if debugger fails to open
 			it may not be terminated, so we should return a result with an explicit error "
@@ -750,6 +756,13 @@ GtSourceCoder >> notifyEvaluatedWithResult: anEvaluationResult [
 ]
 
 { #category : #'private - notifying' }
+GtSourceCoder >> notifyObjectSpawn: anObject [
+	self
+		notifyObjectSpawn: anObject
+		withDestination: self spawnDestination
+]
+
+{ #category : #'private - notifying' }
 GtSourceCoder >> notifyObjectSpawn: anObject withDestination: aSpawnDestination [
 	self announce: (GtCoderObjectSpawnRequest new 
 		object: anObject;
@@ -765,7 +778,6 @@ GtSourceCoder >> notifyObjectSpawnFromEvaluationResult: anEvaluationResult [
 	
 	self
 		notifyObjectSpawn: anEvaluationResult value
-		withDestination: self spawnDestination
 ]
 
 { #category : #'private - notifying' }

@@ -1156,8 +1156,7 @@ GtMethodCoder >> playAndInspectExample [
 		self playExample.
 	
 		self
-			notifyObjectSpawn: self exampleResult
-			returnValueOrExampleException withDestination: self spawnDestination ]
+			notifyObjectSpawn: self exampleResult ]
 ]
 
 { #category : #'api - actions examples' }
@@ -1169,9 +1168,7 @@ GtMethodCoder >> playAndInspectSlide [
 				self save
 					ifFalse: [ ^ self ] ].
 
-		self
-			notifyObjectSpawn: self compiledMethod gtSlide
-			returnValueOrExampleException withDestination: self spawnDestination ]
+		self notifyObjectSpawn: self compiledMethod gtSlide ]
 ]
 
 { #category : #'api - actions examples' }
@@ -1184,8 +1181,7 @@ GtMethodCoder >> playAndInspectSlideFrom: anEditorElement [
 					ifFalse: [ ^ self ] ].
 
 		self
-			notifyObjectSpawn: self compiledMethod gtSlide
-			returnValueOrExampleException withDestination: self spawnDestination ]
+			notifyObjectSpawn: self compiledMethod gtSlide returnValueOrExampleException ]
 ]
 
 { #category : #'api - actions examples' }
@@ -1440,7 +1436,7 @@ GtMethodCoder >> slideAstFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Play and Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self playAndInspectSlide ].
+		action: [ :aCoderUIModel :anEvent | self playAndInspectSlide ].
 ]
 
 { #category : #'api - accessing' }
@@ -1490,15 +1486,15 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Play' translated
 		icon: BrGlamorousVectorIcons play
-		action: [ :anEditorElement | self playAll ].
+		action: [ :aCoderUIModel :anEvent | self playAll ].
 	coderAddOns
 		addContextAction: 'Play and Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self playAllAndInspect ].
+		action: [ :aCoderUIModel :anEvent | self playAllAndInspect ].
 	coderAddOns
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action: [ :anEditorElement | self debug ]
+		action: [ :aCoderUIModel :anEvent | self debug ]
 ]
 
 { #category : #'private - subscriptions' }

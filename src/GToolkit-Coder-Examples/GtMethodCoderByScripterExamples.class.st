@@ -335,14 +335,14 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMai
 			childrenCount: aMainActionsCount;
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderExpandedContentElement;
-			onChildOfClass: GtSourceCoderActionsElement;
+			onChildOfClass: GtCoderActionsElement;
 			onChildAt: 1.
 		aStep check 
 			label: 'Number of addons actions';
 			childrenCount: anAddonsActionsCount;
 			onChildAt: 2;
 			onChildOfClass: GtSourceCoderExpandedContentElement;
-			onChildOfClass: GtSourceCoderActionsElement;
+			onChildOfClass: GtCoderActionsElement;
 			onChildAt: 3.
 		].
 	^ aScripter

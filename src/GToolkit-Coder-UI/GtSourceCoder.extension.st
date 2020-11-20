@@ -53,8 +53,7 @@ GtSourceCoder >> browseImplementorsAt: aTextPosition [
 		detectSelectorAt: aTextPosition
 		ifFound: [ :aSelector |
 			self
-				notifyObjectSpawn: (GtSearchImplementorsFilter selector: aSelector)
-				withDestination: self spawnDestination  ]
+				notifyObjectSpawn: (GtSearchImplementorsFilter selector: aSelector)  ]
 		ifNone: [  ]
 ]
 
@@ -66,8 +65,7 @@ GtSourceCoder >> browseImplementorsIn: aSourceString [
 		detectSelectorIn: aSourceString
 		ifFound: [ :aSelector |
 			self
-				notifyObjectSpawn: (GtSearchImplementorsFilter selector: aSelector)
-				withDestination: self spawnDestination  ]
+				notifyObjectSpawn: (GtSearchImplementorsFilter selector: aSelector) ]
 		ifNone: [  ]
 ]
 
@@ -79,7 +77,6 @@ GtSourceCoder >> browseReferencesAt: aTextPosition [
 		notifyObjectSpawn: (self detectReferencesFilterAt: aTextPosition
 			ifFound: [ :aReferencesFilter | aReferencesFilter ]
 			ifNone: [ GtSearchNullFilter new ])
-		withDestination: self spawnDestination
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
@@ -90,7 +87,6 @@ GtSourceCoder >> browseReferencesIn: aSourceString [
 		notifyObjectSpawn: (self detectReferencesFilterIn: aSourceString
 			ifFound: [ :aReferencesFilter | aReferencesFilter ]
 			ifNone: [ GtSearchNullFilter new ])
-		withDestination: self spawnDestination
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
