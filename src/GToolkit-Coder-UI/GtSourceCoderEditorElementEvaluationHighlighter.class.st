@@ -42,9 +42,9 @@ GtSourceCoderEditorElementEvaluationHighlighter >> addHighlight: anEvaluationRes
 					result: anEvaluationResult value;
 					coder: anEvaluationResult sourceCoder; "Pass the coder to get the spawn destination"
 					beNotOverwritableByStyler }.
-			(self text 
+			"(self text 
 				from: theSourceStartInText
-				to: theSourceEndInText) attribute: anUnderlineAttribute.
+				to: theSourceEndInText) attribute: anUnderlineAttribute."
 			(self text 
 				from: theSourceEndInText
 				to: theSourceEndInText) attribute: aResultButtonAttribute ].
