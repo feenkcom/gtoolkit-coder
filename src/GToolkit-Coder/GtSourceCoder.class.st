@@ -1176,7 +1176,7 @@ GtSourceCoder >> spawnDestination [
 
 { #category : #accessing }
 GtSourceCoder >> spawnDestination: aSpawnDestination [
-	^ self attributeNamed: #spawnDestination put: aSpawnDestination
+	self attributeNamed: #spawnDestination put: aSpawnDestination
 ]
 
 { #category : #'api - addons' }
