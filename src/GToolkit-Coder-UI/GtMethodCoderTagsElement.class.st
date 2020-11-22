@@ -71,7 +71,7 @@ GtMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 	methodCoderUIModel := aMethodCoderUIModel.
 	
 	aMethodCoderUIModel coder weak
-		when: GtCoderSourceTextModified
+		when: GtCoderSourceCodeChanged
 		send: #onCoderSourceTextModified:
 		to: self.
 

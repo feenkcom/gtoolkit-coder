@@ -578,8 +578,8 @@ GtMethodCoderExamples >> modifyBackCompiledMethodWithoutCoderModifiedWhenSubscri
 	
 	self assert: aMethodCoder isModified.
 	
-	aMethodCoder sourceText
-		delete: aMethodCoder sourceText size - '"modified"' size + 1
+	aMethodCoder
+		deleteSourceTextFrom: aMethodCoder sourceText size - '"modified"' size + 1
 		to: aMethodCoder sourceText size.
 	
 	self assert: aMethodCoder isModified.
@@ -590,7 +590,7 @@ GtMethodCoderExamples >> modifyBackCompiledMethodWithoutCoderModifiedWhenSubscri
 	self assert: aMethodCoder sourceCode buildSourceText asString equals: anOldMethod sourceCode, '"new method"'.
 	self assert: aMethodCoder sourceCode buildSourceText asString equals: aNewMethod sourceCode.
 	
-	aMethodCoder sourceText append: '"new method"' asRopedText.
+	aMethodCoder appendString: '"new method"'.
 	
 	self assert: aMethodCoder isModified not.
 
@@ -607,13 +607,25 @@ GtMethodCoderExamples >> modifyBackCompiledMethodWithoutCoderModifiedWhenSubscri
 GtMethodCoderExamples >> modifyNewMethod [
 	<gtExample>
 	<after: #cleanUp>
-	| aMethodCoder aMethodName |
+	| aMethodCoder aMethodName anEventsRecoder |
 
 	aMethodCoder := self forNewMethod.
 	aMethodName := aMethodCoder attributeNamed: #fakeMethodName.
+	
+	anEventsRecoder := self eventsRecorder.
+
+	aMethodCoder
+		when: GtCoderAnnouncement send: #record: to: anEventsRecoder.
 
 	self assert: aMethodCoder isModified not.
-	aMethodCoder sourceText append: aMethodName asRopedText.
+	aMethodCoder appendString: aMethodName.
+	
+	self assert: anEventsRecoder numberOfEvents equals: 2.
+	self assert: anEventsRecoder first class equals: GtCoderCollapsedLabelChanged.
+	self assert: anEventsRecoder first coder equals: aMethodCoder.
+	self assert: anEventsRecoder second class equals: GtCoderSourceCodeChanged.
+	self assert: anEventsRecoder second coder equals: aMethodCoder.
+	self assert: anEventsRecoder second isSynchronous not.
 
 	self assert: aMethodCoder isModified.
 	self assert: aMethodCoder selector equals: nil.

@@ -87,7 +87,7 @@ GtMethodCoderBreadcrumbElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 		to: self.
 		
 	aGtSourceCoderUIModel coder weak
-		when: GtCoderSourceTextModified
+		when: GtCoderSourceCodeChanged
 		send: #onCoderSourceTextModified:
 		to: self.
 		

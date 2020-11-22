@@ -484,46 +484,54 @@ GtMethodCoder >> debug [
 		self save
 			ifFalse: [ ^ self ] ].
 
-	self
+	self class
 		debug: self compiledMethod
 		receiver: self object
 		in: self context
 ]
 
 { #category : #'api - actions examples' }
-GtMethodCoder >> debugExampleFrom: anEditorElement [
+GtMethodCoder >> debugExample [
 	self isModified
 		ifTrue: [ self save
 			ifFalse: [ ^ self ] ].
 	self example openingDebugger result
 ]
 
-{ #category : #'api - actions examples' }
-GtMethodCoder >> debugSelectionOrExampleFrom: anEditorElement [
-	^ (self selectedSourceInEditor: anEditorElement editor)
-		ifEmpty: [ self debugExampleFrom: anEditorElement ]
-		ifNotEmpty: [ :aSelectedSource | self debugSource: aSelectedSource from: anEditorElement ]
-]
-
-{ #category : #'api - actions' }
-GtMethodCoder >> debugSelectionOrMethodFrom: anEditorElement [
-	^ (self selectedSourceInEditor: anEditorElement editor)
-		ifEmpty: [ self debug ]
-		ifNotEmpty: [ :aSelectedSource | self debugSource: aSelectedSource from: anEditorElement ]
+{ #category : #'private - actions' }
+GtMethodCoder >> evaluateSelector: aSymbol object: anObject [
+	^ self
+		evaluateSelector: aSymbol
+		object: anObject
+		thenDo: [ ]
 ]
 
 { #category : #'private - actions' }
-GtMethodCoder >> evaluateSelector: aSymbol object: anObject showPrintString: aBoolean in: anEditorElement [
-	| aReceiver |
+GtMethodCoder >> evaluateSelector: aSymbol object: anObject thenDo: aThenBlock [
+	"Evaluate a given source code and show the print string if needed"
 
-	aReceiver := (anObject respondsTo: aSymbol)
-		ifTrue: [ anObject ]
-		ifFalse: [ anObject class ].
-	
-	^ self 
-		evaluateBlock: [ aReceiver perform: aSymbol ] 
-		showPrintString: aBoolean
-		in: anEditorElement
+	^ self critical: [
+		| aResult aReceiver aSourceString |
+
+		aReceiver := (anObject respondsTo: aSymbol)
+			ifTrue: [ anObject ]
+			ifFalse: [ anObject class ].
+			
+		aSourceString := self currentSourceString.
+
+		aResult := self evaluateBlock: [ aReceiver perform: aSymbol ]
+			onErrorDo: [ :aResultWithError |
+				aResultWithError
+					sourceString: aSourceString;
+					sourceInterval: (1 to: aSourceString size) ].
+
+		aResult
+			sourceString: aSourceString;
+			sourceInterval: (1 to: aSourceString size).
+
+		self notifyEvaluatedWithResult: aResult.
+		aThenBlock cull: aResult.
+		aResult ]
 ]
 
 { #category : #'api - actions examples' }
@@ -1112,75 +1120,78 @@ GtMethodCoder >> performMethodRefactoring: refactoring [
 	^ false
 ]
 
-{ #category : #'api - actions examples' }
-GtMethodCoder >> playAndInspectExampleFrom: anEditorElement [
-	self runExampleFrom: anEditorElement.
-	anEditorElement phlow spawnObject: self exampleResult returnValueOrExampleException.
+{ #category : #'api - actions' }
+GtMethodCoder >> playAll [
+	self critical: [
+		self isModified
+			ifTrue: [
+				self save
+					ifFalse: [ ^ self ] ].
+
+		self
+			evaluateSelector: self selector
+			object: self object ]
 ]
 
 { #category : #'api - actions' }
-GtMethodCoder >> playAndInspectFrom: anEditorElement [
+GtMethodCoder >> playAllAndInspect [
 	"Save and execute a method"
-	| anObject |
 
-	self isModified
-		ifTrue: [
-			self save
-				ifFalse: [ ^ self ] ].
+	^ self critical: [
+		self isModified
+			ifTrue: [
+				self save
+					ifFalse: [ ^ self ] ].
 
-	anObject := self
-		evaluateSelector: self selector
-		object: self object
-		showPrintString: false
-		in: anEditorElement.
-
-	anEditorElement phlow spawnObject: anObject
+		self
+			evaluateSelector: self selector
+			object: self object
+			thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ] ]
 ]
 
-{ #category : #'api - actions' }
-GtMethodCoder >> playAndInspectSelectionOrMethodFrom: anEditorElement [
-	"If there is no selection, it saves and executes a method"
+{ #category : #'api - actions examples' }
+GtMethodCoder >> playAndInspectExample [
 	
-	anEditorElement editor hasSelection 
-		ifTrue: [ self doItAndGoSelectionFrom: anEditorElement ]
-		ifFalse: [ self playAndInspectFrom: anEditorElement ]
+	self critical: [
+		self playExample.
+	
+		self
+			notifyObjectSpawn: self exampleResult ]
+]
+
+{ #category : #'api - actions examples' }
+GtMethodCoder >> playAndInspectSlide [
+
+	self critical: [
+		self isModified
+			ifTrue: [
+				self save
+					ifFalse: [ ^ self ] ].
+
+		self notifyObjectSpawn: self compiledMethod gtSlide ]
 ]
 
 { #category : #'api - actions examples' }
 GtMethodCoder >> playAndInspectSlideFrom: anEditorElement [
-	self isModified
-		ifTrue: [
-			self save
-				ifFalse: [ ^ self ] ].
-	anEditorElement phlow spawnObject: self compiledMethod gtSlide.
+
+	self critical: [
+		self isModified
+			ifTrue: [
+				self save
+					ifFalse: [ ^ self ] ].
+
+		self
+			notifyObjectSpawn: self compiledMethod gtSlide returnValueOrExampleException ]
 ]
 
 { #category : #'api - actions examples' }
-GtMethodCoder >> playExampleFrom: anEditorElement [
-	self runExampleFrom: anEditorElement
-]
-
-{ #category : #'api - actions' }
-GtMethodCoder >> playFrom: anEditorElement [
+GtMethodCoder >> playExample [
 	self isModified
 		ifTrue: [
 			self save
 				ifFalse: [ ^ self ] ].
 
-	self
-		evaluateSelector: self selector
-		object: self object
-		showPrintString: false
-		in: anEditorElement
-]
-
-{ #category : #'api - actions' }
-GtMethodCoder >> playSelectionOrMethodFrom: anEditorElement [
-	"If there is no selection, it saves and executes a method"
-
-	anEditorElement editor hasSelection 
-		ifTrue: [ self doItSelectionFrom: anEditorElement ]
-		ifFalse: [ self playFrom: anEditorElement ]
+	self example run
 ]
 
 { #category : #'gt-extensions' }
@@ -1355,16 +1366,6 @@ GtMethodCoder >> reset [
 	self protocol: nil
 ]
 
-{ #category : #'api - actions examples' }
-GtMethodCoder >> runExampleFrom: anEditorElement [
-	self isModified
-		ifTrue: [
-			self save
-				ifFalse: [ ^ self ] ].
-
-	self example run.
-]
-
 { #category : #'private - refactorings' }
 GtMethodCoder >> safeTemporaryName [
 	| name index found ast |
@@ -1435,7 +1436,7 @@ GtMethodCoder >> slideAstFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Play and Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self playAndInspectSlideFrom: anEditorElement ].
+		action: [ :aCoderUIModel :anEvent | self playAndInspectSlide ].
 ]
 
 { #category : #'api - accessing' }
@@ -1485,15 +1486,15 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Play' translated
 		icon: BrGlamorousVectorIcons play
-		action: [ :anEditorElement | self playSelectionOrMethodFrom: anEditorElement ].
+		action: [ :aCoderUIModel :anEvent | self playAll ].
 	coderAddOns
 		addContextAction: 'Play and Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self playAndInspectSelectionOrMethodFrom: anEditorElement ].
+		action: [ :aCoderUIModel :anEvent | self playAllAndInspect ].
 	coderAddOns
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action: [ :anEditorElement | self debugSelectionOrMethodFrom: anEditorElement ]
+		action: [ :aCoderUIModel :anEvent | self debug ]
 ]
 
 { #category : #'private - subscriptions' }

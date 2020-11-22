@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'hasFocus',
 		'expanded',
-		'editorState'
+		'editorState',
+		'evaluationResult'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source Model'
 }
@@ -22,6 +23,16 @@ GtSourceCoderUIModel >> editorState: anObject [
 { #category : #accessing }
 GtSourceCoderUIModel >> elementClass [
 	^ GtExpandableCoderElement
+]
+
+{ #category : #accessing }
+GtSourceCoderUIModel >> evaluationResult [
+	^ evaluationResult
+]
+
+{ #category : #accessing }
+GtSourceCoderUIModel >> evaluationResult: anObject [
+	evaluationResult := anObject
 ]
 
 { #category : #'api - ui' }

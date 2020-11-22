@@ -2,31 +2,33 @@ Class {
 	#name : #GtCoderAnnouncer,
 	#superclass : #Announcer,
 	#instVars : [
-		'suppressedAnnouncements'
+		'suppressedAnnouncements',
+		'monitor'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #announce }
 GtCoderAnnouncer >> announce: anAnnouncement [
-	(suppressedAnnouncements includes: anAnnouncement class)
-		ifTrue: [ ^ self ].
-		
-	super announce: anAnnouncement
+	monitor critical: [
+		(suppressedAnnouncements includes: anAnnouncement class)
+			ifTrue: [ ^ self ].
+		super announce: anAnnouncement ]
 ]
 
 { #category : #initialization }
 GtCoderAnnouncer >> initialize [
 	super initialize.
 	
+	monitor := Monitor new.
 	suppressedAnnouncements := #()
 ]
 
 { #category : #announce }
 GtCoderAnnouncer >> suppress: aCollectionOfAnnouncementClasses during: aBlock [
-	| aPreviousSuppressedAnnouncements |
-	
-	aPreviousSuppressedAnnouncements := suppressedAnnouncements copy.
-	suppressedAnnouncements := (suppressedAnnouncements, aCollectionOfAnnouncementClasses asCollection) asSet.
-	aBlock ensure: [ suppressedAnnouncements := aPreviousSuppressedAnnouncements ]
+	monitor critical: [
+		| aPreviousSuppressedAnnouncements |
+		aPreviousSuppressedAnnouncements := suppressedAnnouncements copy.
+		suppressedAnnouncements := (suppressedAnnouncements, aCollectionOfAnnouncementClasses asCollection) asSet.
+		aBlock ensure: [ suppressedAnnouncements := aPreviousSuppressedAnnouncements ] ]
 ]

@@ -1,6 +1,12 @@
 Extension { #name : #GtMethodCoder }
 
 { #category : #'*GToolkit-Coder-AddOns' }
+GtMethodCoder >> copyMethodNameToClipboard [
+	self compiledMethod ifNotNil: [ :aCompiledMethod | 
+		Clipboard clipboardText: aCompiledMethod printString ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
 GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
@@ -8,20 +14,24 @@ GtMethodCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Save' translated
 		icon: BrGlamorousVectorIcons accept
-		action: [ :anEditorElement | self save ].
+		action: [ :aCoderUIModel :anEvent | self save ].
 	addOns
 		addDropDownWithPreviewAction: 'Remove' translated
 		icon: BrGlamorousVectorIcons remove
-		action: [ :anEditorElement | self remove ]
+		action: [ :aButtonElement :aButtonModel :anEvent | self remove ]
 		stencil: [ :element | self buildRemoveMethodLabel: element ].
 	addOns
 		addMainAction: 'Browse' translated
 		icon: BrGlamorousVectorIcons browse
-		action: [ :anEditorElement | self browseFrom: anEditorElement ].
+		action: [ :aCoderUIModel :anEvent | self browseFrom: anEvent currentTarget ].
 	addOns
 		addMainAction: 'Inspect Compiled Method' translated
 		icon: BrGlamorousVectorIcons inspect
-		action: [ :anEditorElement | anEditorElement phlow spawnObject: self compiledMethod ].
+		action: [ :aCoderUIModel :anEvent | self notifyObjectSpawn: self compiledMethod ].
+	addOns
+		addMainAction: 'Copy Method Name' translated
+		icon: BrGlamorousVectorIcons clipboard
+		action: [ :aCoderUIModel :anEvent | self copyMethodNameToClipboard ].
 	addOns clearChanges
 ]
 

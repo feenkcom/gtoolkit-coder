@@ -1,5 +1,5 @@
 "
-Is sent when a coder is rebuilt with a completely new source code it is not when user types
+Is sent when coder's source code changes
 "
 Class {
 	#name : #GtCoderSourceCodeChanged,

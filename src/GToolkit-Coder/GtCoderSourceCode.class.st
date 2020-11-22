@@ -5,12 +5,17 @@ Class {
 	#name : #GtCoderSourceCode,
 	#superclass : #Object,
 	#instVars : [
+		'monitor',
 		'sourceText',
-		'collapsedText',
-		'sourceCoder'
+		'collapsedText'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #'api - text' }
+GtCoderSourceCode >> appendString: aString [
+	self critical: [ self sourceText appendString: aString ]
+]
 
 { #category : #'api - converting' }
 GtCoderSourceCode >> asCompiledMethodSourceCode: aCompiledMethod [
@@ -20,11 +25,6 @@ GtCoderSourceCode >> asCompiledMethodSourceCode: aCompiledMethod [
 { #category : #'api - converting' }
 GtCoderSourceCode >> asExplicitSourceCode: aString [
 	^ (GtCoderExplicitSourceCode new fromSourceCode: self) source: aString
-]
-
-{ #category : #private }
-GtCoderSourceCode >> attachToCoder: aGtSourceCoder [
-	sourceCoder := aGtSourceCoder
 ]
 
 { #category : #initialization }
@@ -45,28 +45,38 @@ GtCoderSourceCode >> buildSourceText [
 GtCoderSourceCode >> collapsedText [
 	<return: #BlText>
 
-	^ collapsedText ifNil: [ collapsedText := self buildCollapsedText ]
+	^ self critical: [ collapsedText ifNil: [ collapsedText := self buildCollapsedText ] ]
 ]
 
 { #category : #'api - accessing' }
 GtCoderSourceCode >> collapsedTextDo: aBlock [
 	"Evaluate a given block with my source code if present"
 
-	^ collapsedText ifNotNil: aBlock
+	^ self critical: [ collapsedText ifNotNil: aBlock ]
 ]
 
-{ #category : #'api - changes' }
+{ #category : #'mutual exclusion' }
+GtCoderSourceCode >> critical: aBlock [
+	^ monitor critical: aBlock
+]
+
+{ #category : #'api - text' }
 GtCoderSourceCode >> currentSourceString: aString [
 	"Set a new source text"
 
-	self sourceText
-		deleteAll;
-		insertString: aString asString at: 0
+	self critical: [ sourceText := aString asRopedText ]
 ]
 
-{ #category : #private }
-GtCoderSourceCode >> detachFromCoder: aGtSourceCoder [
-	sourceCoder := nil
+{ #category : #'api - text' }
+GtCoderSourceCode >> currentSourceText: aText [
+	"Set a new source text"
+
+	self critical: [ sourceText := aText copyWithoutExternalReferences ]
+]
+
+{ #category : #'api - text' }
+GtCoderSourceCode >> delete: aFromIndex to: aToIndex [
+	self sourceTextDo: [ :aText | aText delete: aFromIndex to: aToIndex ]
 ]
 
 { #category : #initialization }
@@ -82,14 +92,21 @@ GtCoderSourceCode >> fromSourceCode: aGtCoderSourceCode [
 GtCoderSourceCode >> hasCollapsedText [
 	<return: #Boolean>
 
-	^ collapsedText notNil
+	^ self critical: [ collapsedText notNil ]
 ]
 
 { #category : #'api - testing' }
 GtCoderSourceCode >> hasSourceText [
 	<return: #Boolean>
 
-	^ sourceText notNil
+	^ self critical: [ sourceText notNil ]
+]
+
+{ #category : #initialization }
+GtCoderSourceCode >> initialize [
+	super initialize.
+	
+	monitor := Monitor new
 ]
 
 { #category : #'api - testing' }
@@ -97,23 +114,22 @@ GtCoderSourceCode >> isModified [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'private - hooks' }
-GtCoderSourceCode >> onTextModified [
-	sourceCoder ifNotNil: [ :aSourceCoder | aSourceCoder textModified ]
+{ #category : #'api - text' }
+GtCoderSourceCode >> replaceFrom: aFromIndex to: aToIndex withString: aString [
+	self critical: [ self sourceText replace: aFromIndex to: aToIndex withString: aString ]
 ]
 
-{ #category : #'api - changes' }
+{ #category : #'api - text' }
 GtCoderSourceCode >> resetCollapsedText [
 	"Remove the cached collapsed text forcing it to be recomputed next time it is accessed"
 	
 	collapsedText := nil
 ]
 
-{ #category : #'api - changes' }
+{ #category : #'api - text' }
 GtCoderSourceCode >> resetSourceText [
 	"Remove the cached source text forcing it to be recomputed next time it is accessed"
 
-	sourceText ifNotNil: [ :aPreviousText | aPreviousText unsubscribe: self ].
 	sourceText := nil
 ]
 
@@ -122,23 +138,24 @@ GtCoderSourceCode >> sourceString [
 	"Return a string representation of the current source text"
 	<return: #String>
 	
-	^ self sourceText asString
+	^ self critical: [ self sourceText asString ]
 ]
 
 { #category : #'api - accessing' }
 GtCoderSourceCode >> sourceText [
 	<return: #BlText>
 
-	^ sourceText ifNil: [
-		sourceText := self buildSourceText.
-		sourceText when: BlTextStringsInserted send: #onTextModified to: self.
-		sourceText when: BlTextsDeleted send: #onTextModified to: self.
-		sourceText ]
+	^ self critical: [ sourceText ifNil: [ sourceText := self buildSourceText ] ]
+]
+
+{ #category : #'api - accessing' }
+GtCoderSourceCode >> sourceText: aText [
+	self critical: [ sourceText := aText copyWithoutExternalReferences ]
 ]
 
 { #category : #'api - accessing' }
 GtCoderSourceCode >> sourceTextDo: aBlock [
 	"Evaluate a given block with my source code if present"
 
-	^ sourceText ifNotNil: aBlock
+	^ self critical: [ sourceText ifNotNil: [ :aText | aBlock value: aText ] ]
 ]

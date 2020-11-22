@@ -1,6 +1,6 @@
 Class {
 	#name : #GtBlockCoderEvaluationRequester,
-	#superclass : #GtSourceCoderBasicEvaluationRequester,
+	#superclass : #GtSourceCoderEvaluationRequester,
 	#category : #'GToolkit-Coder-Coders'
 }
 

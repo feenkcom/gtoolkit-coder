@@ -37,20 +37,19 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Play' translated
 		icon: BrGlamorousVectorIcons play
-		action: [ :anEditorElement | self playExampleFrom: anEditorElement ].
+		action: [ :aCoderUIModel :anEvent | self playExample ].
 	coderAddOns
 		addContextAction: 'Play and Inspect Example Result' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self playAndInspectExampleFrom: anEditorElement ].
+		action: [ :aCoderUIModel :anEvent | self playAndInspectExample ].
 	coderAddOns
 		addContextAction: 'Inspect Example Object' translated
 		icon: BrGlamorousVectorIcons eg
-		action: [ :anEditorElement | anEditorElement phlow spawnObject: self example ].
+		action: [ :aCoderUIModel :anEvent | self notifyObjectSpawn: self example ].
 	coderAddOns
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action:
-			[ :anEditorElement | self debugSelectionOrExampleFrom: anEditorElement ]
+		action: [ :aCoderUIModel :anEvent | self debugExample ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
@@ -78,7 +77,7 @@ GtMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'gtView' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self runGtViewFrom: anEditorElement ]
+		action: [ :aCoderUIModel :anEvent | self runGtViewFrom: anEvent currentTarget ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
@@ -106,7 +105,7 @@ GtMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 			coderAddOns
 				addMainAction: 'Discard Changes' translated
 				icon: BrGlamorousVectorIcons cancel
-				action: [ self discardChanges ] ]
+				action: [ :aCoderUIModel :anEvent | self discardChanges ] ]
 		ifFalse: [ coderAddOns removeMainAction: 'Discard Changes' translated ]
 ]
 
@@ -123,7 +122,7 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Mondrian' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :anEditorElement | self runMondrianPaintFrom: anEditorElement ]
+		action: [ :aCoderUIModel :anEvent | self runMondrianPaintFrom: anEvent currentTarget ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }

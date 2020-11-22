@@ -1,19 +1,19 @@
 Class {
-	#name : #GtSourceCoderActionsElement,
+	#name : #GtCoderActionsElement,
 	#superclass : #BlElement,
 	#instVars : [
+		'coderUIModel',
 		'mainToolbar',
 		'contextToolbar',
 		'separator',
-		'coder',
 		'editor'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source'
+	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #private }
-GtSourceCoderActionsElement >> addContextToolbarActions [
-	contextToolbar addItems: (coder contextActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
+GtCoderActionsElement >> addContextToolbarActions [
+	contextToolbar addItems: (coderUIModel coder contextActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
 	separator
 		visibility:
 			(contextToolbar hasItems
@@ -22,32 +22,32 @@ GtSourceCoderActionsElement >> addContextToolbarActions [
 ]
 
 { #category : #private }
-GtSourceCoderActionsElement >> addMainToolbarActions [
+GtCoderActionsElement >> addMainToolbarActions [
 	mainToolbar
 		addItems:
-			(coder mainActions
+			(coderUIModel coder mainActions
 				collect: [ :aGtCoderAction | 
 					self flag: 'Temporary hack. Coder should to Phlow actions'.
 					aGtCoderAction buildElementIn: self ])
 ]
 
 { #category : #accessing }
-GtSourceCoderActionsElement >> coder [
-	^ coder
+GtCoderActionsElement >> coderUIModel [
+	^ coderUIModel
 ]
 
 { #category : #accessing }
-GtSourceCoderActionsElement >> coder: aCoder [
-	coder ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
+GtCoderActionsElement >> coderUIModel: aCoderUIModel [	
+	coderUIModel ifNotNil: [ :aPreviousCoderUIModel | aPreviousCoderUIModel announcer unsubscribe: self ].
 
-	coder := aCoder.
-	coder announcer weak
+	coderUIModel := aCoderUIModel.
+	aCoderUIModel announcer weak
 		when: GtCoderAddOnsUpdateRequest send: #updateAddOns: to: self;
 		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
 		when: GtCoderContextActionsChanged send: #updateContextToolbar to: self.
 	
-	coder shouldAddOnsBeUpdated
-		ifTrue: [ coder updateAddOns ].	
+	aCoderUIModel coder shouldAddOnsBeUpdated
+		ifTrue: [ aCoderUIModel coder updateAddOns ].	
 
 	self removeMainToolbarActions.
 	self removeContextToolbarActions.
@@ -56,20 +56,8 @@ GtSourceCoderActionsElement >> coder: aCoder [
 	self addContextToolbarActions
 ]
 
-{ #category : #accessing }
-GtSourceCoderActionsElement >> editor [
-	<return: #BrEditorElement>
-
-	^ editor
-]
-
-{ #category : #accessing }
-GtSourceCoderActionsElement >> editor: aBrEditorElement [
-	editor := aBrEditorElement
-]
-
 { #category : #initialization }
-GtSourceCoderActionsElement >> initialize [
+GtCoderActionsElement >> initialize [
 	super initialize.
 	
 	self layout: BlLinearLayout horizontal.
@@ -93,7 +81,7 @@ GtSourceCoderActionsElement >> initialize [
 ]
 
 { #category : #'instance creation' }
-GtSourceCoderActionsElement >> newButtonForAction: aGtCoderAction [
+GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 	<return: #BrButton>
 	
 	^ BrButton new
@@ -102,11 +90,11 @@ GtSourceCoderActionsElement >> newButtonForAction: aGtCoderAction [
 		label: aGtCoderAction title;
 		look: BrGlamorousButtonWithIconLook;
 		action: [ :aButtonElement :aButtonModel :anEvent |
-			self editor ifNotNil: [ :anEditorElement | aGtCoderAction action glamourValueWithArgs: { anEditorElement . anEvent } ] ]
+			aGtCoderAction action glamourValueWithArgs: { coderUIModel . anEvent } ]
 ]
 
 { #category : #'instance creation' }
-GtSourceCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
+GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 	<return: #BrButton>
 	| withLook button |
 	button := BrButton new.
@@ -165,7 +153,7 @@ GtSourceCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 ]
 
 { #category : #'instance creation' }
-GtSourceCoderActionsElement >> newToolbar [
+GtCoderActionsElement >> newToolbar [
 	<return: #BrToolbar>
 
 	^ BrToolbar new
@@ -174,22 +162,22 @@ GtSourceCoderActionsElement >> newToolbar [
 ]
 
 { #category : #private }
-GtSourceCoderActionsElement >> removeContextToolbarActions [
+GtCoderActionsElement >> removeContextToolbarActions [
 	contextToolbar numberOfItems timesRepeat: [ contextToolbar removeItemAt: 1 ]
 ]
 
 { #category : #private }
-GtSourceCoderActionsElement >> removeMainToolbarActions [
+GtCoderActionsElement >> removeMainToolbarActions [
 	mainToolbar numberOfItems timesRepeat: [ mainToolbar removeItemAt: 1 ]
 ]
 
 { #category : #private }
-GtSourceCoderActionsElement >> updateAddOns: anAnnouncement [
+GtCoderActionsElement >> updateAddOns: anAnnouncement [
 	anAnnouncement coder updateAddOns
 ]
 
 { #category : #private }
-GtSourceCoderActionsElement >> updateContextToolbar [
+GtCoderActionsElement >> updateContextToolbar [
 	self
 		enqueueTask:
 			(BlTaskAction new
@@ -198,7 +186,7 @@ GtSourceCoderActionsElement >> updateContextToolbar [
 ]
 
 { #category : #private }
-GtSourceCoderActionsElement >> updateMainToolbar [
+GtCoderActionsElement >> updateMainToolbar [
 	self
 		enqueueTask:
 			(BlTaskAction new

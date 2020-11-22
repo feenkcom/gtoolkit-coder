@@ -69,22 +69,15 @@ GtBlockCoder >> blockSourceFromText: aSourceTextOrString [
 ]
 
 { #category : #'api - actions' }
-GtBlockCoder >> doItAllFrom: anEditorElement [
-	^ self
-		evaluateSource: self blockSource
-		in: anEditorElement
+GtBlockCoder >> doItAll [
+	^ self critical: [ self evaluate: self blockSource ]
 ]
 
 { #category : #'api - actions' }
-GtBlockCoder >> doItAndGoAllFrom: anEditorElement [
-	| aSource aValue |
-
-	aSource := self blockSource.
-	aValue := self evaluateSource: aSource in: anEditorElement.
-	aValue == self
-		ifTrue: [ ^ self ].
-	
-	anEditorElement phlow spawnObject: aValue
+GtBlockCoder >> doItAndGoAll [
+	^ self
+		evaluate: [ :thisCoder | thisCoder blockSource ]
+		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
 { #category : #'api - actions' }

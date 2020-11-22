@@ -19,18 +19,20 @@ GtPharoSnippetCoder >> context: doItContext [
 	context := doItContext
 ]
 
-{ #category : #private }
-GtPharoSnippetCoder >> evaluateSource: aString showPrintString: aBoolean in: anEditorElement [
-
-	self xDocSaveSource: aString.
-	^ super evaluateSource: aString showPrintString: aBoolean in: anEditorElement
+{ #category : #'private - actions' }
+GtPharoSnippetCoder >> evaluateBlock: aBlock onErrorDo: anErrorBlock [
+	self xDocSaveSource: self currentSourceString.
+	^ super evaluateBlock: aBlock onErrorDo: anErrorBlock
 ]
 
-{ #category : #actions }
-GtPharoSnippetCoder >> evaluationRequesterForEditor: anEditorElement [
-	^ (super evaluationRequesterForEditor: anEditorElement)
-		bindingStrategy: bindingStrategy;
-		yourself
+{ #category : #'private - actions' }
+GtPharoSnippetCoder >> evaluationRequester [
+	^ super evaluationRequester bindingStrategy: bindingStrategy
+]
+
+{ #category : #'private - actions' }
+GtPharoSnippetCoder >> evaluationRequesterWithInterval [
+	^ super evaluationRequesterWithInterval bindingStrategy: bindingStrategy
 ]
 
 { #category : #initialization }
@@ -65,7 +67,7 @@ GtPharoSnippetCoder >> initializeShortcuts [
 	addOns
 		addShortcut: GtSourceCoderDoItShortcut new;
 		addShortcut: GtSourceCoderDoItAndInspectShortcut new;
-		addShortcut: GtSourceCoderPrintShortcut new;
+		addShortcut: GtSourceCoderPrintItShortcut new;
 		addShortcut: GtSourceCoderRenameShortcut new
 ]
 
@@ -98,39 +100,16 @@ GtPharoSnippetCoder >> object [
 ]
 
 { #category : #actions }
-GtPharoSnippetCoder >> profileWithMessageTallyFrom: anEditorElement [
-	| aValue |
-
-	self clearPreviousEvaluationsInText: anEditorElement editor text.
-
-	self validateSyntax
-		ifFalse: [ ^ self ].
-
-	aValue := self
-		evaluateSource: 'MessageTally on: [ ', self sourceText asString, ']'
-		in: anEditorElement.
-	
-	anEditorElement phlow spawnObject: aValue
+GtPharoSnippetCoder >> profileWithMessageTally [
+	^ self
+		evaluate: [ :thisCoder | thisCoder currentSourceString ]
+		decorated: [ :aSourceString | 'MessageTally on: [ ', aSourceString, ']' ]
+		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
 { #category : #actions }
 GtPharoSnippetCoder >> renameIn: editorElement [
 	GtRenameAction pharoRenameSnippetLocalsOn: editorElement
-]
-
-{ #category : #ui }
-GtPharoSnippetCoder >> requesterForEditor: aTextEditor [
-	^ (super requesterForEditor: aTextEditor)
-		bindingStrategy: bindingStrategy;
-		yourself
-]
-
-{ #category : #initialization }
-GtPharoSnippetCoder >> source: aString [
-	self
-		deprecated: 'Use #forSource: instead'
-		transformWith: '`@receiver source:' -> '`@receiver forSource:'.
-	self halt
 ]
 
 { #category : #accessing }
