@@ -11,6 +11,6 @@ GtDefineClassVariableFixItAction >> description [
 ]
 
 { #category : #accessing }
-GtDefineClassVariableFixItAction >> execute [
+GtDefineClassVariableFixItAction >> executeOn: anEditorElement [
 	sourceCoder addClassVariable: node name
 ]

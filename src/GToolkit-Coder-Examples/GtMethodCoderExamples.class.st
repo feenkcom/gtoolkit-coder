@@ -109,6 +109,36 @@ GtMethodCoderExamples >> compileMethodWithCoderWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - compile' }
+GtMethodCoderExamples >> compileMethodWithTempAndBlockArgsConflictWhenSubscribedToSystem [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethodCoder wasSuccessful anEventsRecoder |
+	
+	anEventsRecoder := self eventsRecorder.
+
+	aMethodCoder := self forNewMethod.
+	aMethodCoder currentSourceString: self methodSourceWithTempAndBlockArgsConflict.
+	aMethodCoder subscribeToSystem.
+	
+	self assert: aMethodCoder isModified.
+	
+	aMethodCoder
+		when: GtCoderAnnouncement send: #record: to: anEventsRecoder.
+
+	wasSuccessful := [ aMethodCoder compile ]
+		ensure: [ aMethodCoder unsubscribeFromSystem ].
+	
+	self assert: wasSuccessful not.
+
+	self assert: anEventsRecoder numberOfEvents equals: 1.
+	self assert: anEventsRecoder first class equals: GtCoderParseError.
+	self assert: anEventsRecoder first coder equals: aMethodCoder.
+	self assert: anEventsRecoder first errorMessage equals: 'Temp shadows: each'.
+	
+	^ aMethodCoder
+]
+
+{ #category : #'examples - compile' }
 GtMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
@@ -566,6 +596,15 @@ GtMethodCoderExamples >> keyword: a selector: b [
 	^ a + b
 ]
 
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> methodSourceWithTempAndBlockArgsConflict [
+	^ 'method
+	| each |
+	each := #().
+	each collect: [ :each | each ].
+	^ each'
+]
+
 { #category : #'examples - modification' }
 GtMethodCoderExamples >> modifyBackCompiledMethodWithoutCoderModifiedWhenSubscribedToSystem [
 	<gtExample>
@@ -815,4 +854,28 @@ GtMethodCoderExamples >> sampleMethodWithCascades [
 		nextPutAll: 'Testing';
 		next: 4 put: Character space.
 	^ stream contents
+]
+
+{ #category : #'examples - validate syntax' }
+GtMethodCoderExamples >> validateSyntaxTempArgAndBlockArgsConflict [
+	<gtExample>
+	<after: #cleanUp>
+	| aMethodCoder anEventsRecoder isSyntaxValid |
+
+	anEventsRecoder := self eventsRecorder.
+
+	aMethodCoder := self forNewMethod.
+	aMethodCoder currentSourceString: self methodSourceWithTempAndBlockArgsConflict.
+	
+	aMethodCoder subscribeToSystem.
+	aMethodCoder when: GtCoderParseError send: #record: to: anEventsRecoder.
+
+	isSyntaxValid := [ aMethodCoder validateSyntax ] ensure: [
+		aMethodCoder unsubscribeFromSystem ].
+
+	"tmp and block conflict is not a syntax error, it is a semantic error (at least now)"
+	self assert: isSyntaxValid.
+	self assert: anEventsRecoder isEmpty.
+
+	^ aMethodCoder
 ]

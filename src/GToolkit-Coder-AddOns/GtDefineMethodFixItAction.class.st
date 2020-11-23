@@ -8,16 +8,14 @@ Class {
 }
 
 { #category : #executing }
-GtDefineMethodFixItAction >> addCoderAttribute [
+GtDefineMethodFixItAction >> addCoderAttributeinEditor: aBrTextEditor [
 	| position |
 	position := node keywordsIntervals last last.
-	sourceCoder
-		sourceTextDo: [ :text | 
-			(text from: position to: position)
-				attributes:
-					{((GtMethodExpanderAttribute
-						forClass: classOrMetaClass
-						andSelector: node selector) isExpanded: true)} ]
+	(aBrTextEditor text from: position to: position)
+		attributes:
+			{((GtMethodExpanderAttribute
+				forClass: classOrMetaClass
+				andSelector: node selector) isExpanded: true)}
 ]
 
 { #category : #accessing }
@@ -47,10 +45,10 @@ GtDefineMethodFixItAction >> description [
 ]
 
 { #category : #executing }
-GtDefineMethodFixItAction >> execute [
+GtDefineMethodFixItAction >> executeOn: anEditorElement [
 	self compileMethod.
-	self clearFixItAttribute.
-	self addCoderAttribute
+	self clearFixItAttributeInEditor: anEditorElement editor.
+	self addCoderAttributeinEditor: anEditorElement editor.
 ]
 
 { #category : #private }

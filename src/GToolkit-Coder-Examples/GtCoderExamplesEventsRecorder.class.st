@@ -24,6 +24,11 @@ GtCoderExamplesEventsRecorder >> initialize [
 	events := OrderedCollection new
 ]
 
+{ #category : #testing }
+GtCoderExamplesEventsRecorder >> isEmpty [
+	^ events isEmpty
+]
+
 { #category : #accessing }
 GtCoderExamplesEventsRecorder >> numberOfEvents [
 	^ events size

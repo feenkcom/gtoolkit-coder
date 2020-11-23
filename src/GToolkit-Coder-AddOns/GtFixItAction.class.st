@@ -22,13 +22,11 @@ GtFixItAction >> attributePosition [
 ]
 
 { #category : #private }
-GtFixItAction >> clearFixItAttribute [
+GtFixItAction >> clearFixItAttributeInEditor: aBrTextEditor [
 	| position |
 	position := self attributePosition.
-	sourceCoder
-		sourceTextDo: [ :text | 
-			(text from: position to: position)
-				clearAttributes: [ :each | each isKindOf: GtFixItAttribute ] ]
+	(aBrTextEditor text from: position to: position)
+		clearAttributes: [ :each | each isKindOf: GtFixItAttribute ]
 ]
 
 { #category : #accessing }
@@ -37,15 +35,14 @@ GtFixItAction >> description [
 ]
 
 { #category : #executing }
-GtFixItAction >> execute [
+GtFixItAction >> executeOn: anEditorElement [
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
 GtFixItAction >> menuAction [
 	^ GtCoderContextMenuAction new
-		action: [ :anEditorElement | 
-			self execute ];
+		action: [ :anEditorElement | self executeOn: anEditorElement ];
 		title: self description
 ]
 

@@ -8,27 +8,27 @@ Class {
 }
 
 { #category : #accessing }
-GtFixItAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
-	| look |
+GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
+	"Return an element that should affect (either append or replace) a provided text piece"
+	<return: #SequenceableCollection of: #BlElement>
+
 	^ BrButton new
 		beTiny;
 		label: 'Fix it';
-		look:
-			BrGlamorousButtonWithIconLook - BrGlamorousButtonExteriorLook
-				+
-					(look := BrGlamorousWithDropdownLook
-						handle: [ BrButton new
-								beTiny;
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
-								icon: BrGlamorousVectorIcons repair;
-								yourself ]
-						content: [ GtCoderContextMenuContent new
-								editorElement: anEditorElement;
-								items: (fixItActionsBlock value collect: [ :each | each menuAction ]) ]);
+		look: BrGlamorousButtonWithIconLook - BrGlamorousButtonExteriorLook +
+			(BrGlamorousWithDropdownLook
+				handle: [
+					BrButton new
+						beTiny;
+						look: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
+								- BrGlamorousButtonExteriorLook;
+						icon: BrGlamorousVectorIcons repair;
+						yourself ]
+				content: [
+					GtCoderContextMenuContent new
+						editorElement: anEditorElement;
+						items: (fixItActionsBlock value collect: [ :each | each menuAction ]) ]);
 		icon: BrGlamorousVectorIcons repair;
-		when: BrContextMenuHideWish do: [ look hide ];
 		yourself
 ]
 
@@ -40,5 +40,6 @@ GtFixItAttribute >> fixItActions: aCollection [
 { #category : #accessing }
 GtFixItAttribute >> initialize [
 	super initialize.
+
 	self beAppend
 ]

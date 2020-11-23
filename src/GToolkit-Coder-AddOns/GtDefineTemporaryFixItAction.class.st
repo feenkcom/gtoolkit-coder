@@ -10,7 +10,7 @@ GtDefineTemporaryFixItAction >> description [
 ]
 
 { #category : #executing }
-GtDefineTemporaryFixItAction >> execute [
+GtDefineTemporaryFixItAction >> executeOn: anEditorElement [
 	| ast newSource location declaration |
 	ast := sourceCoder rbAST.
 	newSource := sourceCoder currentSourceString.
