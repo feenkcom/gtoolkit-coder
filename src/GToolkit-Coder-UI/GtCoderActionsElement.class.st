@@ -90,7 +90,9 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 		label: aGtCoderAction title;
 		look: BrGlamorousButtonWithIconLook;
 		action: [ :aButtonElement :aButtonModel :anEvent |
-			aGtCoderAction action glamourValueWithArgs: { coderUIModel . anEvent } ]
+			GtCoderExecutionContextVariable 
+				element: aButtonElement
+				do: [ aGtCoderAction action glamourValueWithArgs: { coderUIModel . anEvent } ] ]
 ]
 
 { #category : #'instance creation' }
