@@ -16,7 +16,7 @@ GtCoderModel >> gtLiveFor: aView [
 	<gtView>
 	^ aView explicit
 		title: 'Live';
-		priority: 10;
+		priority: 5;
 		stencil: [ self ]
 ]
 

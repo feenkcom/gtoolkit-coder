@@ -175,14 +175,16 @@ GtSourceCoder >> currentSourceString [
 GtSourceCoder >> currentSourceString: aString [
 	"Set a new source text"
 
-	self critical: [ self sourceCode currentSourceString: aString ]
+	self critical: [
+		self sourceCode currentSourceString: aString.
+		self sourceChanged ]
 ]
 
 { #category : #'api - text' }
 GtSourceCoder >> currentSourceText: aText [
 	"Set a new source text"
 
-	self critical: [
+	self critical: [ 
 		self sourceCode currentSourceText: aText.
 		self sourceChanged ]
 ]

@@ -695,24 +695,15 @@ GtMethodCoder >> gtDiffViewFor: aView [
 				create ]"
 ]
 
-{ #category : #'gt-extensions' }
-GtMethodCoder >> gtLiveFor: aView [
-	<gtView>
-	^ aView explicit 
-		disableAsync;
-		title: 'Live';
-		priority: 10;
-		stencil: [ self ]
-]
-
 { #category : #private }
 GtMethodCoder >> handleCompilerErrorsDuring: aBlock [
-	^ [ aBlock value.
-	true ]
-		on: OCUndeclaredVariableWarning
+	^ [
+			aBlock value.
+			true ]
+		on: OCSemanticWarning
 		do: [ :ex | 
 			self
-				notifyParseError: 'Undeclared' translated
+				notifyParseError: ex errorMessage
 				at: ex location.
 			ex return: false ]
 ]
