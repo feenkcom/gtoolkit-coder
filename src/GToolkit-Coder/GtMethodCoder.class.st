@@ -106,11 +106,16 @@ GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 { #category : #'api - refactorings' }
 GtMethodCoder >> addClassVariable: aString [
 	| refactoring |
+
 	refactoring := RBAddClassVariableRefactoring
 		variable: aString
 		class: self classOrMetaClass instanceSide.
 	refactoring execute.
-	self resetASTCache.	"Need to reset AST for undeclared variables"
+	
+	"Need to reset AST for undeclared variables"
+	self resetASTCache.
+	
+	"and restyle the text"
 	self requestStyleSourceText
 ]
 
@@ -209,7 +214,7 @@ GtMethodCoder >> addInstanceVariable: aString [
 	| refactoring |
 	refactoring := RBAddInstanceVariableRefactoring
 		variable: aString
-		class: self classOrMetaClass.
+		class: self behavior.
 	refactoring execute.
 	self resetASTCache.	"Need to reset AST for undeclared variables"
 	self requestStyleSourceText

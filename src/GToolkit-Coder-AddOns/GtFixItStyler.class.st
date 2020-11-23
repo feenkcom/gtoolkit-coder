@@ -56,11 +56,11 @@ GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 						forCoder: sourceCoder
 						node: aVariableNode) ].
 	possibleNames := aVariableNode temporaryVariables
-		, sourceCoder classOrMetaClass allInstVarNames.
+		, sourceCoder behavior allInstVarNames.
 	results := aVariableNode name
 		correctAgainst: aVariableNode temporaryVariables
 		continuedFrom: nil.
-	results := sourceCoder classOrMetaClass
+	results := sourceCoder behavior
 		possibleVariablesFor: aVariableNode name
 		continuedFrom: results.
 	(aVariableNode name correctAgainst: nil continuedFrom: results)

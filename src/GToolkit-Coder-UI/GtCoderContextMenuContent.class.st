@@ -54,12 +54,10 @@ GtCoderContextMenuContent >> initialize [
 					c vertical fitContent ];
 				padding: (BlInsets all: 5);
 				addEventHandlerOn: BlClickEvent
-					do: [ eachGtCoderContextMenuAction action cull: self editorElement cull: self anchor.
-					self anchor
-						dispatchEvent:
-							(BrContextMenuHideWish new
-								anchor: self anchor;
-								yourself) ];
+					do: [
+						eachGtCoderContextMenuAction action cull: self editorElement cull: self anchor.
+						self fireEvent: BrDropdownHideWish new.
+						self fireEvent: BrContextMenuHideWish new ];
 				addChild:
 					(BrLabel new
 						look: BrGlamorousLabelLook;
@@ -78,32 +76,4 @@ GtCoderContextMenuContent >> initialize [
 			element ];
 		hFitContent;
 		vFitContent
-]
-
-{ #category : #'instance creation' }
-GtCoderContextMenuContent >> newItemElement [
-	| anElement |
-	anElement := BlElement new
-		viewModel: (BrInteractiveModel new withHover);
-		look: (BrInteractiveCommonLook new
-			default: [ :f | f background: Color transparent ];
-			hovered: [ :f | f background: BrGlamorousColors defaultButtonBorderColor ]);
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent.
-			c padding: (BlInsets all: 5) ];
-		addEventHandlerOn: BlClickEvent
-			do: [ :anEvent | self onClickEvent: anEvent ];
-		addChild: (BrLabel new look: BrGlamorousLabelLook) as: self defaultLabelChildName
-]
-
-{ #category : #hooks }
-GtCoderContextMenuContent >> onClickEvent: anEvent [
-	anEvent currentTarget userData 
-		at: self defaultContextMenuActionName
-		ifPresent: [ :aMenuAction | 
-			aMenuAction action cull: self anchor.
-			self anchor dispatchEvent: (BrContextMenuHideWish new
-				anchor: self anchor) ]
 ]

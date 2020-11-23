@@ -13,7 +13,7 @@ GtRenameVariableFixItAction >> description [
 ]
 
 { #category : #accessing }
-GtRenameVariableFixItAction >> execute [
+GtRenameVariableFixItAction >> executeOn: anEditorElement [
 	| newSource |
 	newSource := sourceCoder currentSourceString.
 	newSource := (newSource first: node start - 1) , newName
