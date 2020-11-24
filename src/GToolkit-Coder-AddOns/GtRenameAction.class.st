@@ -49,7 +49,11 @@ GtRenameAction class >> pharoRenameLocalsOn: aTextEditorElement [
 	action forVariableOrUnaryMessage.
 	action install ]
 		on: Error
-		do: [ :ex | ex return: nil ]
+		do: [ :ex |
+			NonInteractiveTranscript stdout
+				nextPutAll: ('[{1}] {2}' format: { self name . ex asString });
+				cr.
+			ex return: nil ]
 ]
 
 { #category : #pharo }
@@ -84,6 +88,7 @@ GtRenameAction class >> pharoRenameSnippetLocalsOn: aTextEditorElement [
 GtRenameAction >> accept [
 	self updateSource.
 	self uninstall.
+	self allowSave.
 	self announceEvent: #accept
 ]
 
@@ -113,6 +118,11 @@ GtRenameAction >> addRenameAttributes [
 			attribute ]
 ]
 
+{ #category : #'private - actions' }
+GtRenameAction >> allowSave [
+	textElement sourceCoderUIModel allowSaveDueTo: self
+]
+
 { #category : #private }
 GtRenameAction >> announceEvent: aSymbol [
 	^ self announce: (GtRenameActionAnnouncement for: self type: aSymbol)
@@ -127,6 +137,7 @@ GtRenameAction >> announcer [
 GtRenameAction >> cancel [
 	self uninstall.
 	self undoChanges.
+	self allowSave.
 	self announceEvent: #cancel
 ]
 
@@ -179,6 +190,7 @@ GtRenameAction >> initialize [
 GtRenameAction >> install [
 	originalLocations isEmpty
 		ifTrue: [ ^ self ].
+	self preventSave.
 	self saveOriginalState.
 	self addRenameAttributes.
 	isInstalled := true.
@@ -225,6 +237,11 @@ GtRenameAction >> originalName [
 	^ (originalText
 		copyFrom: originalLocations first first
 		to: originalLocations first last) asString
+]
+
+{ #category : #'private - actions' }
+GtRenameAction >> preventSave [
+	textElement sourceCoderUIModel preventSaveDueTo: self
 ]
 
 { #category : #private }
@@ -314,6 +331,7 @@ GtRenameAction >> undoChanges [
 GtRenameAction >> uninstall [
 	self removeAttributes.
 	isInstalled := false.
+	self allowSave.
 	self announceEvent: #uninstall.
 	textElement
 		enqueueTask: (BlTaskAction new action: [ textElement requestFocus ])
@@ -368,7 +386,7 @@ GtRenameAction >> updateText: text at: intervals attributes: attributeCollection
 	index := 1.
 	intervals
 		with: attributeCollection
-		do: [ :each :attr | 
+		do: [ :each :attr |
 			each first = 1
 				ifTrue: [ newText := newText , attr text ]
 				ifFalse: [ newText := newText , (text copyFrom: index to: each first - 1)
@@ -376,7 +394,10 @@ GtRenameAction >> updateText: text at: intervals attributes: attributeCollection
 			index := each last + 1 ].
 	index > text size
 		ifFalse: [ newText := newText , (text copyFrom: index to: text size) ].
-	self textEditor text: newText
+
+	textElement
+		text: newText;
+		onTextModified
 ]
 
 { #category : #'private-validation' }

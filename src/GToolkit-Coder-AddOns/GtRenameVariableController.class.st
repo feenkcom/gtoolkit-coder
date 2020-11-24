@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 GtRenameVariableController >> addRefactoringChangesPreview [
 	super addRefactoringChangesPreview.
-	coder requestStyleSourceTextAndAfterDo: [ self styleRenamedVariable ]
+	self styleRenamedVariable
 ]
 
 { #category : #executing }
@@ -37,8 +37,8 @@ GtRenameVariableController >> rename: oldName to: newName [
 
 { #category : #accessing }
 GtRenameVariableController >> styleRenamedVariable [
-	(self sourceEditor text
+	(self sourceText
 		from: renameInterval first
 		to: self renamePosition)
-			attributes: {(BlTextForegroundAttribute paint: Color gray)}
+			attributes: {(BlTextForegroundAttribute paint: Color gray) }
 ]
