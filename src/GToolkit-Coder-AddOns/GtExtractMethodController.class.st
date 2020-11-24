@@ -28,6 +28,7 @@ GtExtractMethodController >> addRefactoringPreview [
 	self
 		addRefactoringChangesPreview: refactoring
 		at: message stopPosition
+		whenComplete: [ self allowSave ]
 ]
 
 { #category : #private }
@@ -57,15 +58,11 @@ GtExtractMethodController >> addReorderParametersAttributes [
 
 { #category : #executing }
 GtExtractMethodController >> cancelRefactoring [
-	self cancelRenaming.
-	self restoreText
-]
-
-{ #category : #executing }
-GtExtractMethodController >> cancelRenaming [
 	self isRenaming
-		ifFalse: [ ^ self ].
-	renameAction cancel
+		ifTrue: [ renameAction cancel ].
+	
+	self restoreText.
+	self allowSave
 ]
 
 { #category : #executing }
@@ -80,7 +77,7 @@ GtExtractMethodController >> createModel [
 	(modelClass sourceCodeFor: ast selector) = originalSource asString
 		ifFalse: [ modelClass
 				compile: originalSource asString
-				classified: coder category ].
+				classified: coder protocol ].
 	^ model
 ]
 
@@ -186,6 +183,11 @@ GtExtractMethodController >> refactoring [
 		in: (model classFor: coder behavior)
 ]
 
+{ #category : #executing }
+GtExtractMethodController >> refactoringFailed [
+	self sourceElement sourceCoderUIModel allowSaveDueTo: self
+]
+
 { #category : #accessing }
 GtExtractMethodController >> refactoringName [
 	^ 'Extract method'
@@ -237,12 +239,6 @@ GtExtractMethodController >> setBodyText: bodySource andAttributesAt: positions 
 ]
 
 { #category : #private }
-GtExtractMethodController >> setCoderText: aString [
-	self sourceEditor deselecter all deselect.
-	self setText: aString
-]
-
-{ #category : #private }
 GtExtractMethodController >> setDefaultOptionsOn: aRefactoring [
 	isExisting := false.
 	aRefactoring
@@ -283,7 +279,9 @@ GtExtractMethodController >> setPreviewOptionsOn: aRefactoring [
 
 { #category : #private }
 GtExtractMethodController >> sourceAst [
-	^ GtPharoParser parse: coder currentSourceString startingAt: GtPharoParser startingStateForMethod
+	^ GtPharoParser
+		parse: self sourceText characters asString
+		startingAt: GtPharoParser startingStateForMethod
 ]
 
 { #category : #private }
@@ -326,13 +324,17 @@ GtExtractMethodController >> swapParameterWithNext: anInteger [
 
 { #category : #private }
 GtExtractMethodController >> updateMethod: newSource [
-	self setCoderText: newSource.
+	self sourceEditor deselecter all deselect.
+	self setText: newSource.
 
 	"refactoring decided that there is an existing method that can be used instead
 	of creating a new one. In this case there is no need to spawn a renamer"
 	isExisting
 		ifTrue: [ ^ self ].
 
+	"At this point saving is undefined, we disable it until refactoring is applied or canceled"
+	self preventSave.
+	
 	extractedSelectorKeywords size > 1
 		ifTrue: [ self addReorderParametersAttributes ].
 

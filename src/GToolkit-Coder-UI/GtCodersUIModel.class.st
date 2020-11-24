@@ -10,7 +10,11 @@ Class {
 
 { #category : #accessing }
 GtCodersUIModel >> announcer [
-	^ coder announcer
+	self
+		deprecated: 'Use #coder announcer instead.'
+		transformWith: '`@receiver announcer' -> '`@receiver coder announcer'.
+
+	^ self coder announcer
 ]
 
 { #category : #converting }

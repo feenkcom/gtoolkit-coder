@@ -250,49 +250,47 @@ GtSourceCoderEditorElement >> sourceCoderUIModel [
 { #category : #accessing }
 GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 	sourceCoderUIModel
-		ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
+		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
 	completion
 		ifNotNil: [ :aPreviousCompletion | aPreviousCompletion uninstall ].
-
 	self editor removeEditorShortcuts: interactions.
-
 	sourceCoderUIModel := aGtSourceCoderUIModel.
-
 	aGtSourceCoderUIModel editorState
 		ifNil: [ aGtSourceCoderUIModel editorState: self newEditorMemento ].
-
 	self editor restoreState: aGtSourceCoderUIModel editorState.
-
 	interactions := aGtSourceCoderUIModel coder shortcuts copy.
-
 	self text: aGtSourceCoderUIModel coder sourceText.
 	self editor model: aGtSourceCoderUIModel coder.
 	self editor addEditorShortcuts: interactions.
-
 	completion := GtCompletionController
 		on: self
 		strategy: aGtSourceCoderUIModel coder completionStrategy.
 	completion install.
-
 	(aGtSourceCoderUIModel coder newSourceStylerFrom: self)
 		ifNotNil: [ :styler | self styler: styler ].
-
-	aGtSourceCoderUIModel announcer weak
-		when: GtCoderEvaluationAnnouncement send: #onCodeEvaluated: to: self;
-		when: GtCoderAddOnsUpdateRequest send: #onUpdateAddOnsRequest: to: self;
+	aGtSourceCoderUIModel coder announcer weak
+		when: GtCoderEvaluationAnnouncement
+			send: #onCodeEvaluated:
+			to: self;
+		when: GtCoderAddOnsUpdateRequest
+			send: #onUpdateAddOnsRequest:
+			to: self;
 		when: GtCoderStylerChanged send: #onStylersUpdated: to: self;
 		when: GtCoderStyleTextRequest send: #onStyleTextRequest: to: self;
 		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged: to: self;
 		when: GtCoderParseError send: #onCoderParseError: to: self;
-		when: GtCoderObjectSpawnRequest send: #onObjectSpawnRequest: to: self;
+		when: GtCoderObjectSpawnRequest
+			send: #onObjectSpawnRequest:
+			to: self;
 		when: GtCoderToolSpawnRequest send: #onToolSpawnRequest: to: self;
-		when: GtCoderShowDebuggerRequest send: #onShowDebuggerRequest: to: self.
-
+		when: GtCoderShowDebuggerRequest
+			send: #onShowDebuggerRequest:
+			to: self.
 	aGtSourceCoderUIModel focused
 		ifTrue: [ self requestFocus ].
-
 	aGtSourceCoderUIModel coder updateAddOns.
-	evaluationHighlighter highlight: aGtSourceCoderUIModel evaluationResult
+	evaluationHighlighter
+		highlight: aGtSourceCoderUIModel evaluationResult
 ]
 
 { #category : #private }

@@ -39,7 +39,7 @@ GtMethodsCoderElement >> buildFilter [
 	filterElement
 		when: GtFiltersChangedEvent
 		do: [ :event | self updateCodersFilters: event ].
-	methodsCoderUIModel announcer
+	methodsCoderUIModel coder announcer
 		when: GtCodersFiltersChanged
 		do: [ :event | self updateDisplayedFilters: filterElement ].
 	self addChild: filterElement as: #filter
@@ -51,12 +51,10 @@ GtMethodsCoderElement >> codersUIModel [
 ]
 
 { #category : #accessing }
-GtMethodsCoderElement >> codersUIModel: aGtMethodsCoderUIModel [	
+GtMethodsCoderElement >> codersUIModel: aGtMethodsCoderUIModel [
 	methodsCoderUIModel := aGtMethodsCoderUIModel.
-
 	self buildElement.
-
-	methodsCoderUIModel announcer weak
+	methodsCoderUIModel coder announcer weak
 		when: GtCodersCoderAdded , GtCodersCoderRemoved , GtCodersCodersChanged
 			send: #updateList
 			to: self;

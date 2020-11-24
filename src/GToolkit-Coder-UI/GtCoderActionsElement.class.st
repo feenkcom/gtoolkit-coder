@@ -37,21 +37,21 @@ GtCoderActionsElement >> coderUIModel [
 ]
 
 { #category : #accessing }
-GtCoderActionsElement >> coderUIModel: aCoderUIModel [	
-	coderUIModel ifNotNil: [ :aPreviousCoderUIModel | aPreviousCoderUIModel announcer unsubscribe: self ].
-
+GtCoderActionsElement >> coderUIModel: aCoderUIModel [
+	coderUIModel
+		ifNotNil:
+			[ :aPreviousCoderUIModel | aPreviousCoderUIModel coder announcer unsubscribe: self ].
 	coderUIModel := aCoderUIModel.
-	aCoderUIModel announcer weak
+	aCoderUIModel coder announcer weak
 		when: GtCoderAddOnsUpdateRequest send: #updateAddOns: to: self;
 		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
-		when: GtCoderContextActionsChanged send: #updateContextToolbar to: self.
-	
+		when: GtCoderContextActionsChanged
+			send: #updateContextToolbar
+			to: self.
 	aCoderUIModel coder shouldAddOnsBeUpdated
-		ifTrue: [ aCoderUIModel coder updateAddOns ].	
-
+		ifTrue: [ aCoderUIModel coder updateAddOns ].
 	self removeMainToolbarActions.
 	self removeContextToolbarActions.
-
 	self addMainToolbarActions.
 	self addContextToolbarActions
 ]
