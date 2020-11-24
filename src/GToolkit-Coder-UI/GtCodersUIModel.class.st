@@ -75,7 +75,23 @@ GtCodersUIModel >> elementClass [
 	^ self subclassResponsibility
 ]
 
+{ #category : #initialization }
+GtCodersUIModel >> initialize [
+	super initialize.
+	
+	coderUIModels := #()
+]
+
 { #category : #updating }
 GtCodersUIModel >> updateCoderUIModels [
-	coderUIModels := coder coders collect: [ :eachCoder | self coderUIModelFor: eachCoder ]
+	| aMappingOfCoderToCoderUI |
+	
+	aMappingOfCoderToCoderUI := IdentityDictionary new.
+	coderUIModels do: [ :eachCoderUIModel |
+		aMappingOfCoderToCoderUI at: eachCoderUIModel coder put: eachCoderUIModel ].
+	
+	coderUIModels := coder coders collect: [ :eachCoder |
+		aMappingOfCoderToCoderUI
+			at: eachCoder
+			ifAbsent: [ self coderUIModelFor: eachCoder ] ]
 ]

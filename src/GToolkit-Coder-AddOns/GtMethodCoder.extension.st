@@ -11,6 +11,7 @@ GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
 	addOns addStyler: (GtFixItStyler new sourceCoder: self).
+	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
 	addOns
 		addMainAction: 'Save' translated
 		icon: BrGlamorousVectorIcons accept
@@ -36,6 +37,30 @@ GtMethodCoder >> initializeAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
+GtMethodCoder >> renameAt: aTextPosition in: anEditorElement [
+	self
+		nodeAt: aTextPosition
+		ifFound: [ :aNode |
+			(aNode isMessage or: [ aNode isMethod ])
+				ifTrue: [ ^ self renameMethod: anEditorElement ].
+			aNode isVariable
+				ifTrue: [ 
+					aNode isLocallyDefined
+						ifTrue: [ ^ self renameLocalVariableIn: anEditorElement ].
+					(self behavior allInstVarNames includes: aNode name value)
+						ifTrue: [ ^ self renameInstanceVariableIn: anEditorElement node: aNode ].
+					(self classOrMetaClass classVariables
+						anySatisfy: [ :assoc | assoc key asString = aNode name value ])
+						ifTrue: [ ^ self renameClassVariableIn: anEditorElement ].
+					Smalltalk globals
+						at: aNode name value asSymbol
+						ifPresent: [ :cls | 
+							(cls isKindOf: Class)
+								ifTrue: [ ^ self renameClassIn: anEditorElement ] ] ] ]
+		ifNone: [  ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
 GtMethodCoder >> renameClassIn: editorElement [
 	(GtRenameClassController new
 		coder: self;
@@ -50,10 +75,16 @@ GtMethodCoder >> renameClassVariableIn: editorElement [
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> renameInstanceVariableIn: editorElement [
+GtMethodCoder >> renameInstanceVariableIn: editorElement node: aVariableNode [
 	(GtRenameInstanceVariableController new
 		coder: self;
-		sourceElement: editorElement) execute
+		sourceElement: editorElement;
+		originalNode: aVariableNode) execute
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtMethodCoder >> renameLocalVariableIn: editorElement [
+	GtRenameAction pharoRenameLocalsOn: editorElement
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }

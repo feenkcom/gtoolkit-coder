@@ -13,7 +13,7 @@ GtRenameInstanceVariableController >> refactoringName [
 GtRenameInstanceVariableController >> rename: oldName to: newName [
 	| model class |
 	model := self createModel.
-	class := (model classFor: coder classOrMetaClass)
+	class := (model classFor: coder behavior)
 		whoDefinesInstanceVariable: oldName.
 	^ RBRenameInstanceVariableRefactoring
 		model: model
