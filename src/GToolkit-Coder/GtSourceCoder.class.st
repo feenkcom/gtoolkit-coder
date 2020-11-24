@@ -913,6 +913,11 @@ GtSourceCoder >> printItWithin: aSourceIntervalBlock [
 		thenDo: [ :aResult | ]
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> protocol [
+	^ #accessing
+]
+
 { #category : #'private - ast' }
 GtSourceCoder >> rbAST [
 	| source |
