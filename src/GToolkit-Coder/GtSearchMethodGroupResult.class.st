@@ -52,6 +52,10 @@ GtSearchMethodGroupResult >> methodAdded: aMethodAnnouncement [
 	(filter matches: aMethodAnnouncement methodAdded)
 		ifFalse: [ ^ self ].
 	items add: aMethodAnnouncement methodAdded.
+	
+	"we should just re-sort when a method is added"
+	self sortMethods: items.
+
 	announcer announce: (ValueAdded newValue: aMethodAnnouncement methodAdded)
 ]
 
@@ -104,7 +108,14 @@ GtSearchMethodGroupResult >> refreshMethods [
 		scope itemsDo: [ :aCompiledMethod | 
 			(filter matches: aCompiledMethod) ifTrue: [
 				methods add: aCompiledMethod ] ] ].
-	methods
+	self sortMethods: methods.
+	items := methods.
+	filtered := true.
+]
+
+{ #category : #private }
+GtSearchMethodGroupResult >> sortMethods: aCollectionOfMethods [
+	aCollectionOfMethods
 		sort: [ :a :b | 
 			a methodClass = b methodClass
 				ifTrue: [
@@ -112,8 +123,6 @@ GtSearchMethodGroupResult >> refreshMethods [
 						ifTrue: [ a selector < b selector ]
 						ifFalse: [ a selector isBinary ] ]
 				ifFalse: [ a methodClass name < b methodClass name ] ].
-	items := methods.
-	filtered := true.
 ]
 
 { #category : #subscription }

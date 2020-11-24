@@ -18,6 +18,24 @@ GtSourceCoderShortcut >> forEditor: aBrTextEditor selectedStringDo: aSelectedTex
 		ifNotEmpty: [ :aSelectedText | aSelectedTextBlock value: aSelectedText asString ]
 ]
 
+{ #category : #private }
+GtSourceCoderShortcut >> forEditor: aBrTextEditor selectionIntervalDo: aSelectionIntervalBlock orCursorStringPositionDo: aCursorTextPositionBlock [
+	aBrTextEditor hasSelection
+		ifTrue: [
+			| aFromIndex aToIndex |
+			aFromIndex := (aBrTextEditor selection from + 1) min: aBrTextEditor text size max: 1.
+			aToIndex := ((aBrTextEditor selection to) max: 1) min: aBrTextEditor text size.
+			aSelectionIntervalBlock value: (aFromIndex to: aToIndex) ]
+		ifFalse: [ aBrTextEditor hasCursors 
+			ifTrue: [
+				| aCursorPosition aTextPosition |
+				
+				aCursorPosition := aBrTextEditor cursors first position.
+				aTextPosition := (aCursorPosition + 1) min: aBrTextEditor text size.
+
+				aCursorTextPositionBlock value: aTextPosition ] ]
+]
+
 { #category : #evaluation }
 GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
 	self subclassResponsibility

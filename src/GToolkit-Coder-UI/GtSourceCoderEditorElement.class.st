@@ -99,7 +99,20 @@ GtSourceCoderEditorElement >> initializeListeners [
 	
 	self editor
 		when: BrTextEditorModifiedEvent
-		do: [ :anEvent | self onTextModified: anEvent ]
+		do: [ :anEvent | self onTextModified ].
+		
+	self editor
+		when: BrTextEditorCursorChangedEvent 
+		do: [ :anEvent | self maySaveCoderUIModel ].
+		
+	self editor
+		when: BrTextEditorSelectionChangedEvent 
+		do: [ :anEvent | self maySaveCoderUIModel ]
+]
+
+{ #category : #private }
+GtSourceCoderEditorElement >> maySaveCoderUIModel [
+	sourceCoderUIModel ifNotNil: [ :aCoderUIModel | self saveCoderUIModel: aCoderUIModel ]
 ]
 
 { #category : #'instance creation' }
@@ -172,7 +185,7 @@ GtSourceCoderEditorElement >> onSourceCodeChanged: aGtCoderSourceCodeChanged [
 	aGtCoderSourceCodeChanged isSynchronous
 		ifTrue: [ self updateSourceCode ] 
 		ifFalse: [ self enqueueTask: (BlTaskAction new action: [ self updateSourceCode ]) ].
-		
+
 	evaluationHighlighter highlight: nil
 ]
 
@@ -187,11 +200,13 @@ GtSourceCoderEditorElement >> onStylersUpdated: anAnnouncement [
 ]
 
 { #category : #'private - event handling' }
-GtSourceCoderEditorElement >> onTextModified: aBrTextEditorModifiedEvent [
+GtSourceCoderEditorElement >> onTextModified [
 	"Is sent when the text changes in the editor. Here we should synchronise the UI and the model."
 
 	sourceCoderUIModel ifNotNil: [ :aSourceCoderUIModel |
-		aSourceCoderUIModel coder currentSourceTextSynchronously: self text ]
+		aSourceCoderUIModel coder currentSourceTextSynchronously: self text ].
+	
+	self maySaveCoderUIModel
 ]
 
 { #category : #'private - event handling' }
@@ -219,7 +234,7 @@ GtSourceCoderEditorElement >> reportParseError: aString at: anInteger [
 	self editor moveCursorTo: position
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 GtSourceCoderEditorElement >> saveCoderUIModel: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel
 		editorState: (self editor saveState: self newEditorMemento).
@@ -297,6 +312,9 @@ GtSourceCoderEditorElement >> updateSourceCode [
 	aNewSourceCode := sourceCoderUIModel coder sourceText copy.
 	
 	(self text generation = aNewSourceCode generation)
+		ifTrue: [ ^ self ].
+		
+	(self text characters = aNewSourceCode characters)
 		ifTrue: [ ^ self ].
 	
 	aNewSourceCode clearAttributes: [ :eachAttribute | eachAttribute isKindOf: GtSourceCoderErrorAttribute ].

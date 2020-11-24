@@ -16,7 +16,11 @@ GtRefactoringChangesAttribute >> completionAction: aBlock [
 { #category : #accessing }
 GtRefactoringChangesAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	^ GtRefactoringsPreviewButton new
+		beTiny;
+		lookDo: [ :aLook | aLook - BrSizeAdjustmentLook ];
+		vMatchParent;
 		refactorings: [ {refactoring} ];
+		margin: (BlInsets top: 1 right: 4 bottom: 0 left: 4);
 		when: GtRefactoringsAppliedEvent
 			do: [ :event | 
 			completionAction notNil
@@ -26,7 +30,8 @@ GtRefactoringChangesAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEdit
 { #category : #initialization }
 GtRefactoringChangesAttribute >> initialize [
 	super initialize.
-	self beAppend beNotOverwritableByStyler
+	self beAppend.
+	self beNotOverwritableByStyler
 ]
 
 { #category : #accessing }

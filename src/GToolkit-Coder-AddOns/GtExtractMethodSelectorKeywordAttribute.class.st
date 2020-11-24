@@ -1,43 +1,44 @@
 Class {
-	#name : #GtSelectorKeywordAttribute,
+	#name : #GtExtractMethodSelectorKeywordAttribute,
 	#superclass : #BlTextAttribute,
 	#instVars : [
 		'index'
 	],
-	#category : #'GToolkit-Coder-Refactoring'
+	#category : #'GToolkit-Coder-AddOns-Extract method'
 }
 
 { #category : #'instance creation' }
-GtSelectorKeywordAttribute class >> keywordIndex: anInteger [
+GtExtractMethodSelectorKeywordAttribute class >> keywordIndex: anInteger [
 	^ self new
 		index: anInteger;
 		yourself
 ]
 
 { #category : #comparing }
-GtSelectorKeywordAttribute >> equals: aTextAttribute [
+GtExtractMethodSelectorKeywordAttribute >> equals: aTextAttribute [
 	^ self index = aTextAttribute index
 ]
 
 { #category : #comparing }
-GtSelectorKeywordAttribute >> hash [
+GtExtractMethodSelectorKeywordAttribute >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ super hash bitXor: self index hash
 ]
 
 { #category : #accessing }
-GtSelectorKeywordAttribute >> index [
+GtExtractMethodSelectorKeywordAttribute >> index [
 	^ index
 ]
 
 { #category : #accessing }
-GtSelectorKeywordAttribute >> index: anInteger [
+GtExtractMethodSelectorKeywordAttribute >> index: anInteger [
 	index := anInteger
 ]
 
 { #category : #initialization }
-GtSelectorKeywordAttribute >> initialize [
+GtExtractMethodSelectorKeywordAttribute >> initialize [
 	super initialize.
+
 	self beNotOverwritableByStyler
 ]
