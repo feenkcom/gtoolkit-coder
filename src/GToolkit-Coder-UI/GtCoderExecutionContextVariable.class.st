@@ -1,14 +1,12 @@
 "
 I am a ${class:DynamicVariable}$.
-I hold a ${class:GtCoderExecutionContext}$ as a ${class:Process}$ specific value.
-I am used to pass an execution context information that can be requested, for example to display some information to user.
+I hold a ${method:BlSpace>>id}$ as a ${class:Process}$ specific value.
+I am used to pass an execution context information that can be requested, for example to display a user information.
 !! Usage
 !!! Initializing Execution Context
-To initialize context using a ${class:BlElement}$, use ${method:GtCoderExecutionContextVariable class>>#element:do:|label=#selector|expanded=true}$ class-side method:
+To initialize execution context value using a ${class:BlElement}$, use ${method:GtCoderExecutionContextVariable class>>#element:do:|label=#selector|expanded=true}$ class-side method:
 !!! Obtaining Execution Context
-To obtain the execution context, use ${method:ProcessSpecificVariable class>>#value|label=#selector|expanded=true}$ class-side method:
-!!! Default Execution Context
-If the execution context is not initialized, I return a ${method:GtCoderExecutionContextVariable>>#default|label=#selector|expanded=true}$ one:
+To obtain the execution context, use ${method:GtCoderExecutionContextVariable class>>#spaceDo:ifClosed:|label=#selector|expanded=true}$ class-side method:
 
 "
 Class {
@@ -19,11 +17,11 @@ Class {
 
 { #category : #'api - execution' }
 GtCoderExecutionContextVariable class >> element: anElement do: aBlock [
-	"Initialize a Bloc UI execution context using the element and evaluate the block"
-	| aContext |
-	aContext := self newContextWithElement: anElement.
+	"Initialize a Space ID using the element and evaluate the block"
+	| aSpaceId |
+	aSpaceId := self newSpaceIdFromElement: anElement.
 	^ self
-		value: aContext
+		value: aSpaceId
 		during: aBlock
 ]
 
@@ -33,14 +31,17 @@ GtCoderExecutionContextVariable class >> isInheritable [
 ]
 
 { #category : #'private - instance creation' }
-GtCoderExecutionContextVariable class >> newContextWithElement: anElement [
+GtCoderExecutionContextVariable class >> newSpaceIdFromElement: anElement [
 	anElement spaceDo: [ :aSpace | 
-		^ GtCoderUIExecutionContext new
-			spaceId: aSpace id ].
-	^ GtCoderDefaultExecutionContext default
+		^ aSpace id ].
+	^ nil
 ]
 
-{ #category : #accessing }
-GtCoderExecutionContextVariable >> default [
-	^ GtCoderDefaultExecutionContext default
+{ #category : #'api - execution' }
+GtCoderExecutionContextVariable class >> spaceDo: aSpaceBlock ifClosed: aClosedBlock [
+	self value ifNotNil: [ :aSpaceId |
+		BlSpace
+			spaceWithId: aSpaceId
+			do: [ :aSpace | ^ aSpaceBlock cull: aSpace ] ].
+	^ aClosedBlock value
 ]
