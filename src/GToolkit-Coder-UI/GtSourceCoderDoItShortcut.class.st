@@ -23,13 +23,16 @@ GtSourceCoderDoItShortcut >> name [
 
 { #category : #evaluation }
 GtSourceCoderDoItShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
-	aBrTextEditor hasSelection 
-		ifTrue: [
-			aGtSourceCoder doIt: [ :aSourceText |
-				aBrTextEditor text characters = aSourceText characters
-					ifTrue: [ self selectionIntervalIn: aBrTextEditor ]
-					ifFalse: [
-						self flag: 'Handle modified text here'.
-						1 to: 0 ] ] ] 
-		ifFalse: [ aGtSourceCoder doItAll ]
+	GtCoderExecutionContextVariable
+		element: aBrEditorElement
+		do: [
+			aBrTextEditor hasSelection 
+				ifTrue: [
+					aGtSourceCoder doIt: [ :aSourceText |
+						aBrTextEditor text characters = aSourceText characters
+							ifTrue: [ self selectionIntervalIn: aBrTextEditor ]
+							ifFalse: [
+								self flag: 'Handle modified text here'.
+								1 to: 0 ] ] ] 
+				ifFalse: [ aGtSourceCoder doItAll ] ]
 ]
