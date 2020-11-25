@@ -6,28 +6,6 @@ Class {
 	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> ? anObject [
-	"Test binary method"
-]
-
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> a [
-	<gtExample>
-	^ 42
-]
-
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
-	"test method for highlighting implementors"
-]
-
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> b [
-	<gtExample>
-	^ self a * self notAnExample
-]
-
 { #category : #'examples - basic' }
 GtMethodCoderByScripterExamples >> basicMethodCoder [
 	<gtExample>
@@ -799,11 +777,6 @@ GtMethodCoderByScripterExamples >> methodCoder [
 	^ aScripter
 ]
 
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> notAnExample [
-	^ 42
-]
-
 { #category : #'examples - pattern highlighter' }
 GtMethodCoderByScripterExamples >> patternHighlighterMethod [
 	<gtExample>
@@ -911,11 +884,6 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Ch
 	^ aScripter
 ]
 
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> printStringReference [
-	^ self printString
-]
-
 { #category : #'examples - referenced example' }
 GtMethodCoderByScripterExamples >> referencedExampleMethod [
 	<gtExample>
@@ -1011,12 +979,4 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatu
 		self checkFor: aStep textExampleStatusAttributeAt: 1. ].
 	aScripter syncContinue.
 	^ aScripter
-]
-
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> sumMethod [
-	<gtExample>
-	"sum two numbers"
-	self assert: 21 + 21 equals: 42.
-	^ 42
 ]
