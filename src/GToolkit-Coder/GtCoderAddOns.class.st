@@ -40,12 +40,23 @@ GtCoderAddOns >> addContextMenuItem: aString action: aBlock [
 
 { #category : #actions }
 GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock [
+	self
+		addContextMenuItem: aString
+		hover: hoverBlock
+		leave: leaveBlock
+		action: aBlock
+		name: nil
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock name: aSymbol [
 	| newAction |
 	newAction := GtCoderContextMenuAction new
 		title: aString;
 		action: aBlock;
 		hoverAction: hoverBlock;
-		leaveAction: leaveBlock.
+		leaveAction: leaveBlock;
+		name: aSymbol.
 	contextMenuActions add: newAction.
 	modified add: #contextMenuActions
 ]

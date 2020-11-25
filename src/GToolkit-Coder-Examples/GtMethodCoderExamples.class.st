@@ -501,7 +501,9 @@ GtMethodCoderExamples >> forMethodInPackagedClass [
 	aMethodCoder attributeNamed: #fakeClass put: aClass.
 	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
 	aMethodCoder attributeNamed: #fakeMethod put: aMethod.
+	aMethodCoder attributeNamed: #fakeMethodName put: aMethod selector.
 	aMethodCoder attributeNamed: #fakeProtocol put: (self fakeCategoryForFakeMethod: aMethod).
+	aMethodCoder attributeNamed: #fakeInstVarNames put: aClass instVarNames.
 
 	self assert: aMethodCoder behavior equals: aClass.
 	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior explicit: aClass).
@@ -529,6 +531,7 @@ GtMethodCoderExamples >> forNewMethod [
 	aMethodCoder attributeNamed: #fakeClass put: aClass.
 	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
 	aMethodCoder attributeNamed: #fakeMethodName put: (aMethod selector, 'New').
+	aMethodCoder attributeNamed: #fakeInstVarNames put: aClass instVarNames.
 
 	self assert: aMethodCoder behavior equals: aClass.
 	self assert: aMethodCoder collapsedText asString equals: ''.

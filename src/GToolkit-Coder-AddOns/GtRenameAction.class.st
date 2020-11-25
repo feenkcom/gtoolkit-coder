@@ -323,7 +323,10 @@ GtRenameAction >> textElement: aTextEditorElement [
 
 { #category : #private }
 GtRenameAction >> undoChanges [
-	self textEditor text: originalText.
+	self textElement
+		text: originalText;
+		onTextModified.
+
 	self textEditor moveCursorTo: originalCursorPosition
 ]
 

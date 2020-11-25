@@ -9,7 +9,10 @@ GtCoderModelExamples >> addFakeClassesToPackage: aPackage [
 	self fakeClassNames do: [ :eachClassName |
 		| aNewClass |
 		aNewClass := Object subclass: eachClassName
-			instanceVariableNames: ''
+			instanceVariableNames: (String streamContents: [ :aStream |
+				self fakeInstVarNames
+					do: [ :each | aStream nextPutAll: each ]
+					separatedBy: [ aStream space ] ])
 			classVariableNames: ''
 			package: aPackage name.
 		
@@ -95,6 +98,18 @@ GtCoderModelExamples >> fakeClassesInSystem [
 { #category : #'private - set up' }
 GtCoderModelExamples >> fakeClassesInSystemCount [
 	^ self fakeClassesInSystem size
+]
+
+{ #category : #'private - set up' }
+GtCoderModelExamples >> fakeInstVarCount [
+	^ 2
+]
+
+{ #category : #'private - set up' }
+GtCoderModelExamples >> fakeInstVarNames [
+	<script: 'self new fakeInstVarNames inspect'>
+	
+	^ (1 to: self fakeInstVarCount) collect: [ :index | ('instVar', index asString) asSymbol ]
 ]
 
 { #category : #'private - set up' }
