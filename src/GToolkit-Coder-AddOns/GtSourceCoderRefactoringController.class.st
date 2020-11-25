@@ -34,6 +34,11 @@ GtSourceCoderRefactoringController >> addRefactoringChangesPreview: aRefactoring
 				completionAction: aBlock) }
 ]
 
+{ #category : #private }
+GtSourceCoderRefactoringController >> allowSave [
+	self sourceElement sourceCoderUIModel allowSaveDueTo: self
+]
+
 { #category : #accessing }
 GtSourceCoderRefactoringController >> coder [
 	^ coder
@@ -51,15 +56,25 @@ GtSourceCoderRefactoringController >> execute [
 		self safelyExecute ]
 			on: Error
 			do: [ :ex |
+				self refactoringFailed.
 				NonInteractiveTranscript stdout
 					nextPutAll: ('[{1}] {2}' format: { self class name . ex asString });
 					cr.
 				ex return ]
 ]
 
+{ #category : #private }
+GtSourceCoderRefactoringController >> preventSave [
+	self sourceElement sourceCoderUIModel preventSaveDueTo: self
+]
+
 { #category : #accessing }
 GtSourceCoderRefactoringController >> refactoring [
 	^ self subclassResponsibility
+]
+
+{ #category : #executing }
+GtSourceCoderRefactoringController >> refactoringFailed [
 ]
 
 { #category : #accessing }

@@ -78,14 +78,13 @@ GtSourceCoderCollapsedTextAndExampleLook >> methodLabel [
 { #category : #hooks }
 GtSourceCoderCollapsedTextAndExampleLook >> onCoderChanged: aGtSourceCoderUIModel [
 	self widget coderUIModel
-		ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
+		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
 	self updateLabelsFor: aGtSourceCoderUIModel coder.
-
-	aGtSourceCoderUIModel announcer weak
+	aGtSourceCoderUIModel coder announcer weak
 		when: GtCoderCollapsedLabelChanged
 		send: #onCollapsedLabelChanged:
 		to: self.
-	aGtSourceCoderUIModel announcer weak
+	aGtSourceCoderUIModel coder announcer weak
 		when: GtCoderExampleExecuted
 		send: #onExampleExecuted:
 		to: self

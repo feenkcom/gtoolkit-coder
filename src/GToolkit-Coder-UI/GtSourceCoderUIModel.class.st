@@ -10,6 +10,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Source Model'
 }
 
+{ #category : #'api - actions' }
+GtSourceCoderUIModel >> discardChanges [
+	self coder discardChanges
+]
+
 { #category : #accessing }
 GtSourceCoderUIModel >> editorState [
 	^ editorState
@@ -63,6 +68,36 @@ GtSourceCoderUIModel >> focused: aBoolean [
 		aBoolean
 			ifTrue: [ theCoders focusCoderUIModel: self  ]
 			ifFalse: [ theCoders unfocusCoderUIModel: self ] ]
+]
+
+{ #category : #'gt-extension' }
+GtSourceCoderUIModel >> gtInfo [
+	^ Array streamContents: [ :aStream |
+		aStream nextPut: (#coderModel -> self coder).
+		aStream nextPut: (#hasFocus -> self focused).
+		aStream nextPut: (#expanded -> self expanded).
+		
+		self editorState ifNotNil: [ :theCompositeMemento |
+			theCompositeMemento mementos do: [ :eachMemento |
+				aStream nextPut: (eachMemento label -> eachMemento value) ] ] ]
+]
+
+{ #category : #'gt-extension' }
+GtSourceCoderUIModel >> gtInfoFor: aView [
+	<gtView>
+
+	^ aView columnedList
+		title: 'Info';
+		priority: 0;
+		items: [ self gtInfo ];
+		actionUpdateButtonTooltip: 'Refresh';
+		column: 'Property' 
+			item: [ :eachItem :eachIndex | 
+				eachItem key asRopedText foreground: Color gray ]
+			width: 150;
+		column: 'Value' 
+			text: [ :eachItem | eachItem value gtDisplayText ];
+		send: [ :assoc | assoc value ]
 ]
 
 { #category : #initialization }

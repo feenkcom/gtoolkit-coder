@@ -6,6 +6,7 @@ Class {
 	#name : #GtCoderUIModel,
 	#superclass : #Object,
 	#instVars : [
+		'announcer',
 		'coder',
 		'codersUIModel'
 	],
@@ -14,7 +15,16 @@ Class {
 
 { #category : #accessing }
 GtCoderUIModel >> announcer [
-	^ coder announcer
+	self
+		deprecated: 'Use #coder announcer instead.'
+		transformWith: '`@receiver announcer' -> '`@receiver coder announcer'.
+
+	^ self coder announcer
+]
+
+{ #category : #accessing }
+GtCoderUIModel >> announcerUIModel [
+	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
 { #category : #converting }

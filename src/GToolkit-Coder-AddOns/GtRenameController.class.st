@@ -12,12 +12,6 @@ Class {
 	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : #executing }
-GtRenameController >> acceptRename [
-	renameAction notNil
-		ifTrue: [ renameAction accept ]
-]
-
 { #category : #private }
 GtRenameController >> addRefactoringChangesPreview [
 	| aRefactoring aRenamePosition |
@@ -25,28 +19,25 @@ GtRenameController >> addRefactoringChangesPreview [
 
 	aRefactoring := self refactoring.
 	aRefactoring
-		ifNil: [ ^ self ].
+		ifNil: [ ^ self cancelRefactoring ].
 
 	aRenamePosition := self renamePosition.
-	(self sourceEditor text from: aRenamePosition to: aRenamePosition)
-		attributes: {
-			(GtRefactoringChangesAttribute new
-				refactoring: aRefactoring;
-				completionAction: [
-					self completionAction value.
-					coder requestStyleSourceText ]) }
+
+	self
+		addRefactoringChangesPreview: aRefactoring
+		at: aRenamePosition
+		whenComplete: [
+			self removeRefactoringAttribute.
+			self completionAction value.
+			coder requestStyleSourceText.
+			self allowSave ]
 ]
 
 { #category : #executing }
-GtRenameController >> cancelRename [
-	renameAction notNil
-		ifTrue: [ renameAction cancel ].
-	self restoreText
-]
-
-{ #category : #executing }
-GtRenameController >> canceled [
-	self removeRefactoringAttribute
+GtRenameController >> cancelRefactoring [
+	self removeRefactoringAttribute.
+	self restoreText.
+	self allowSave
 ]
 
 { #category : #accessing }
@@ -68,9 +59,9 @@ GtRenameController >> createModel [
 	coder isForMethod
 		ifTrue: [ ((model classFor: coder behavior) sourceCodeFor: coder selector)
 				~= originalSource asString
-				ifTrue: [ (model classFor: coder classOrMetaClass)
+				ifTrue: [ (model classFor: coder behavior)
 						compile: originalSource asString
-						classified: coder category ] ].
+						classified: coder protocol ] ].
 	^ model
 ]
 
@@ -85,6 +76,8 @@ GtRenameController >> installRenameAction [
 	renameAction := GtRenameAction
 		locations: { renameInterval }
 		element: sourceElement.
+		
+	self preventSave.
 
 	renameAction
 		when: GtRenameActionAnnouncement
@@ -94,7 +87,7 @@ GtRenameController >> installRenameAction [
 			(#(#tab #shiftTab) includes: ann eventType)
 				ifTrue: [ self tab: ann eventType = #tab ].
 			ann eventType = #cancel
-				ifTrue: [ self canceled ] ].
+				ifTrue: [ self cancelRefactoring ] ].
 
 	self installValidation.
 	renameAction install
@@ -108,11 +101,6 @@ GtRenameController >> installRenamer [
 { #category : #accessing }
 GtRenameController >> installValidation [
 	renameAction forVariableOrUnaryMessage
-]
-
-{ #category : #testing }
-GtRenameController >> isRenaming [
-	^ renameAction notNil and: [ renameAction isInstalled ]
 ]
 
 { #category : #accessing }

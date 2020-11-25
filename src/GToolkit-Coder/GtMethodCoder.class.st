@@ -18,6 +18,11 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #constants }
+GtMethodCoder class >> extractMethodContextMenuItemName [
+	^ #'context-menu-item--extract-method'
+]
+
 { #category : #'instance creation' }
 GtMethodCoder class >> forClass: aBehavior source: aString [
 	^ self new
@@ -131,6 +136,7 @@ GtMethodCoder >> addExtractMethodTo: coderAddOns from: anEditorElement [
 		hover: [ self highlightFrom: nodes first start to: nodes last stop ]
 		leave: [ self removeHighlight ]
 		action: [ :element | self extractMethod: element ]
+		name: self class extractMethodContextMenuItemName
 ]
 
 { #category : #'private - addons' }

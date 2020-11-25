@@ -13,9 +13,12 @@ GtMethodCoder >> initializeAddOns [
 	addOns addStyler: (GtFixItStyler new sourceCoder: self).
 	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
 	addOns
-		addMainAction: 'Save' translated
-		icon: BrGlamorousVectorIcons accept
-		action: [ :aCoderUIModel :anEvent | self save ].
+		addMainAction: (GtCoderActivatableAction new
+			title: 'Save' translated;
+			icon: BrGlamorousVectorIcons accept;
+			action: [ :aCoderUIModel :anEvent | self save ];
+			enabled: [ :aCoderUIModel | aCoderUIModel isSaveEnabled ];
+			updateWhen: GtMethodCoderSaveAbilityChanged).
 	addOns
 		addDropDownWithPreviewAction: 'Remove' translated
 		icon: BrGlamorousVectorIcons remove
@@ -26,9 +29,9 @@ GtMethodCoder >> initializeAddOns [
 		icon: BrGlamorousVectorIcons browse
 		action: [ :aCoderUIModel :anEvent | self browseFrom: anEvent currentTarget ].
 	addOns
-		addMainAction: 'Inspect Compiled Method' translated
+		addMainAction: 'Inspect UI Model' translated
 		icon: BrGlamorousVectorIcons inspect
-		action: [ :aCoderUIModel :anEvent | self notifyObjectSpawn: self compiledMethod ].
+		action: [ :aCoderUIModel :anEvent | self notifyObjectSpawn: aCoderUIModel ].
 	addOns
 		addMainAction: 'Copy Method Name' translated
 		icon: BrGlamorousVectorIcons clipboard

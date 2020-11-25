@@ -13,12 +13,6 @@ Class {
 }
 
 { #category : #executing }
-GtRenameMethodController >> canceled [
-	super canceled.
-	self restoreText
-]
-
-{ #category : #executing }
 GtRenameMethodController >> installRenamer [
 	self
 		cursorPositionDo: [ :position | 

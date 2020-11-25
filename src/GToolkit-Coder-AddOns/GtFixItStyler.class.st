@@ -9,7 +9,7 @@ Class {
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
 
-{ #category : #'private-variables' }
+{ #category : #'private - variables' }
 GtFixItStyler >> canAddInstanceVariable: aString to: aClass [
 	(Object includesBehavior: aClass)
 		ifTrue: [ ^ false ].
@@ -36,14 +36,14 @@ GtFixItStyler >> editorElement: anEditorElement [
 	editorElement := anEditorElement
 ]
 
-{ #category : #'private-variables' }
+{ #category : #'private - variables' }
 GtFixItStyler >> fixItActionsForVariable: aVariableNode [
 	^ aVariableNode name first isUppercase
 		ifTrue: [ self globalFixItActionsFor: aVariableNode ]
 		ifFalse: [ self localFixItActionsFor: aVariableNode ]
 ]
 
-{ #category : #'private-variables' }
+{ #category : #'private - variables' }
 GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 	| actions possibleNames results |
 	actions := OrderedCollection new.
@@ -73,6 +73,11 @@ GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 	^ actions
 ]
 
+{ #category : #testing }
+GtFixItStyler >> hasRefactoring [
+	^ text hasAttributeSuchThat: [ :eachAttribute | eachAttribute isKindOf: GtRefactoringChangesAttribute ]
+]
+
 { #category : #accessing }
 GtFixItStyler >> initialize [
 	super initialize.
@@ -84,7 +89,7 @@ GtFixItStyler >> isForWorkspace: aBoolean [
 	isForWorkspace := aBoolean
 ]
 
-{ #category : #'private-variables' }
+{ #category : #'private - variables' }
 GtFixItStyler >> localFixItActionsFor: aVariableNode [
 	| actions possibleNames |
 	actions := OrderedCollection new.
@@ -118,7 +123,7 @@ GtFixItStyler >> sourceCoder: aCoder [
 	sourceCoder := aCoder
 ]
 
-{ #category : #'private-messages' }
+{ #category : #'private - messages' }
 GtFixItStyler >> typeOf: aNode [
 	isForWorkspace
 		ifFalse: [ aNode isSelf
@@ -154,24 +159,24 @@ GtFixItStyler >> visitMessageNode: aNode [
 	intervals := aNode keywordsIntervals.
 	(intervals
 		anySatisfy: [ :each | cursor between: each first and: each last ])
-		ifFalse: [ (self
+		ifFalse: [
+			(self
 				typeOf: aNode receiver
-				in:
-					(isForWorkspace
-						ifFalse: [ sourceCoder behavior ]))
+				in: (isForWorkspace ifFalse: [ sourceCoder behavior ]))
 				ifNotNil: [ :class | 
 					(class whichClassIncludesSelector: aNode selector)
-						ifNil: [ (class isTrait
-								and: [ (Object whichClassIncludesSelector: aNode selector) notNil ])
-								ifFalse: [ | attribute |
-									attribute := GtFixItAttribute new.
-									attribute
-										fixItActions: [ {((GtDefineMethodFixItAction forCoder: sourceCoder node: aNode)
-												classOrMetaClass: class)} ].
-									self
-										styleFrom: intervals last last
-										to: intervals last last
-										with: {attribute} ] ] ] ].
+						ifNil: [
+							(((class isTrait
+								and: [ (Object whichClassIncludesSelector: aNode selector) notNil ]) ) or: [ self hasRefactoring ])
+									ifFalse: [ | attribute |
+										attribute := GtFixItAttribute new.
+										attribute
+											fixItActions: [ {((GtDefineMethodFixItAction forCoder: sourceCoder node: aNode)
+													classOrMetaClass: class)} ].
+										self
+											styleFrom: intervals last last
+											to: intervals last last
+											with: {attribute} ] ] ] ].
 	super visitMessageNode: aNode
 ]
 
@@ -179,6 +184,7 @@ GtFixItStyler >> visitMessageNode: aNode [
 GtFixItStyler >> visitMethodNode: aMethodNode [
 	aMethodNode selector isDoIt
 		ifTrue: [ ^ self ].
+
 	^ super visitMethodNode: aMethodNode
 ]
 
