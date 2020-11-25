@@ -1,6 +1,8 @@
 Class {
 	#name : #GtMethodCoderByScripterExamples,
-	#superclass : #GtCoderByScripterExamples,
+	#superclass : #GtMethodCoderExamples,
+	#traits : 'TCoderByScripterExamples',
+	#classTraits : 'TCoderByScripterExamples classTrait',
 	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
@@ -556,7 +558,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_01_setup [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self scripterForBlock: [ GtMethodCoderExamples new forMethodInPackagedClass ].
+	aScripter := self scripterForBlock: [ self forMethodInPackagedClass ].
 	aScripter do
 		label: 'type in a method with argument';
 		action: [ :aCoder | aCoder appendString:
