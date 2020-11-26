@@ -154,7 +154,7 @@ GtSourceCoderEditorElement >> onShowDebuggerRequest: aShowDebuggerAnnouncement [
 	sharedDebugSession := GtSharedDebugSession new
 		session: aShowDebuggerAnnouncement debugSession.
 	
-	self showNotification: (GtNotificationDebugSessionEvent new debugSession: sharedDebugSession).
+	self showNotification: (GtNotificationDebugSession new debugSession: sharedDebugSession).
 	
 	anEvaluatedSource := aShowDebuggerAnnouncement sourceString.
 	anEvaluatedInterval := aShowDebuggerAnnouncement sourceInterval.
