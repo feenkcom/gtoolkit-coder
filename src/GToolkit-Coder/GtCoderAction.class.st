@@ -5,7 +5,7 @@ Class {
 		'title',
 		'icon',
 		'action',
-		'name'
+		'id'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -41,18 +41,30 @@ GtCoderAction >> icon: anObject [
 ]
 
 { #category : #accessing }
+GtCoderAction >> id [
+	<return: #Object>
+	
+	^ id
+]
+
+{ #category : #accessing }
+GtCoderAction >> id: anObject [
+	id := anObject
+]
+
+{ #category : #accessing }
 GtCoderAction >> leaveAction [
 	^ nil
 ]
 
 { #category : #accessing }
 GtCoderAction >> name [
-	^ name
+	^ id
 ]
 
 { #category : #accessing }
 GtCoderAction >> name: anObject [
-	name := anObject
+	id := anObject
 ]
 
 { #category : #printing }

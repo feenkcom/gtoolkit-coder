@@ -1,9 +1,70 @@
 Extension { #name : #GtMethodCoder }
 
 { #category : #'*GToolkit-Coder-AddOns' }
+GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns from: anEditorElement [
+	<gtCoderContextMenuAddOns: 20>
+	self addExtractMethodTo: coderAddOns from: anEditorElement.
+	(self rbSelectedNodeFrom: anEditorElement)
+		ifNotNil: [ :ast | 
+			self addInstanceAccessorRefactoringsFor: ast to: coderAddOns.
+			self addClassAccessorRefactoringsFor: ast to: coderAddOns.
+			self addRemoveParameterRefactoringFor: ast to: coderAddOns.
+			ast
+				withAllParentsDo: [ :node | self addInlineSelfMessageFor: node to: coderAddOns ].
+			ast
+				withAllParentsDo: [ :node | self addInlineTempFor: node to: coderAddOns ].
+			ast
+				withAllParentsDo: [ :node | self addExtractTempFor: node to: coderAddOns ] ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
 GtMethodCoder >> copyMethodNameToClipboard [
 	self compiledMethod ifNotNil: [ :aCompiledMethod | 
 		Clipboard clipboardText: aCompiledMethod printString ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
+	<gtAstCoderAddOns: 10>
+	(self compiledMethod notNil
+		and: [ anAST notNil
+				and: [ anAST methodNode
+						ifNotNil: [ :node | 
+							node pragmas
+								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
+						ifNil: [ false ] ] ])
+		ifFalse: [ coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
+			coderAddOns
+				removeContextAction: 'Play and Inspect Example Result' translated.
+			coderAddOns
+				removeContextAction: 'Inspect Example Object' translated.
+			^ self ].
+	coderAddOns
+		addStyler:
+			(GtCoderExampleStatusStyler new
+				coder: self;
+				classOrMetaClass: self behavior).
+	(self canExecuteExample or: [ anAST methodNode numArgs isZero ])
+		ifFalse: [ ^ self ].
+
+	coderAddOns
+		addContextAction: 'Play' translated
+		icon: BrGlamorousVectorIcons play
+		action: [ :aCoderUIModel :anEvent | self playExample ]
+		id: GtMethodCoderPlayExampleActionId.
+	coderAddOns
+		addContextAction: 'Play and Inspect Example Result' translated
+		icon: BrGlamorousVectorIcons playinspect
+		action: [ :aCoderUIModel :anEvent | self playAndInspectExample ]
+		id: GtMethodCoderPlayAndInspectExampleActionId.
+	coderAddOns
+		addContextAction: 'Inspect Example Object' translated
+		icon: BrGlamorousVectorIcons eg
+		action: [ :aCoderUIModel :anEvent | self notifyObjectSpawn: self example ].
+	coderAddOns
+		addContextAction: 'Debug Example' translated
+		icon: BrGlamorousVectorIcons debug
+		action: [ :aCoderUIModel :anEvent | self debugExample ]
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }

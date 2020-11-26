@@ -115,14 +115,7 @@ GtSearchMethodGroupResult >> refreshMethods [
 
 { #category : #private }
 GtSearchMethodGroupResult >> sortMethods: aCollectionOfMethods [
-	aCollectionOfMethods
-		sort: [ :a :b | 
-			a methodClass = b methodClass
-				ifTrue: [
-					(a selector isBinary = b selector isBinary)
-						ifTrue: [ a selector < b selector ]
-						ifFalse: [ a selector isBinary ] ]
-				ifFalse: [ a methodClass name < b methodClass name ] ].
+	aCollectionOfMethods sort: GtMethodsSortFunction new
 ]
 
 { #category : #subscription }
