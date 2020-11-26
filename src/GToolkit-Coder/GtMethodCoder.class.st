@@ -1156,9 +1156,7 @@ GtMethodCoder >> playAndInspectExample [
 	
 	self critical: [
 		self playExample.
-	
-		self
-			notifyObjectSpawn: self exampleResult ]
+		self notifyObjectSpawn: self exampleResult returnValueOrExampleException ]
 ]
 
 { #category : #'api - actions examples' }

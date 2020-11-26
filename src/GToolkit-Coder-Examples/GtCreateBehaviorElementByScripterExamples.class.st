@@ -122,6 +122,8 @@ GtCreateBehaviorElementByScripterExamples >> saveClassWithName [
 	aScripter substep: 'Save class with just name' do: [ :aStep | 
 		aStep click
 			onChildNamed: GtCreateBehaviorElement saveButtonName.
+			
+		aStep wait forEmptySpaceTaskQueue.
 		
 		aStep check
 			label: 'New class does not exist';
@@ -143,6 +145,8 @@ GtCreateBehaviorElementByScripterExamples >> saveClassWithNamePackage [
 	aScripter substep: 'Save class with name and package' do: [ :aStep | 
 		aStep click
 			onChildNamed: GtCreateBehaviorElement saveButtonName.
+		
+		aStep wait forEmptySpaceTaskQueue.
 		
 		aStep check
 			label: 'New class exists';
@@ -188,6 +192,8 @@ GtCreateBehaviorElementByScripterExamples >> saveClassWithNamePackageTag [
 	aScripter substep: 'Save class with name, package and tag' do: [ :aStep | 
 		aStep click
 			onChildNamed: GtCreateBehaviorElement saveButtonName.
+		
+		aStep wait forEmptySpaceTaskQueue.
 		
 		aStep check
 			label: 'New class exists';
@@ -247,6 +253,8 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNameForClass [
 	aScripter substep: 'Type new class name' do: [ :aStep | 
 		aStep click
 			onChildNamed: GtCodeDefinition behaviorNameEditorName.
+			
+		aStep wait forEmptySpaceTaskQueue.
 	
 		aStep check
 			label: 'Check class name editor has focus';
@@ -259,6 +267,8 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNameForClass [
 			onChildNamed: GtCodeDefinition behaviorNameEditorName.
 			
 		aStep keyClick: BlKeyboardKey return.
+		
+		aStep wait forEmptySpaceTaskQueue.
 			
 		aStep check
 			label: 'Check class name editor is in editable mode';
@@ -269,12 +279,16 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNameForClass [
 			text: self newClassName;
 			onChildNamed: GtCodeDefinition behaviorNameEditorName.
 			
+		aStep wait forEmptySpaceTaskQueue.
+			
 		aStep check
 			label: 'Check typed new class name';
 			value: [ :aNameEditor | aNameEditor text asString ] equals: self newClassName;
 			onChildNamed: GtCodeDefinition behaviorNameEditorName.
 			
 		aStep keyClick: BlKeyboardKey return.
+		
+		aStep wait forEmptySpaceTaskQueue.
 		
 		aStep check
 			label: 'Check class name editor has focus';
@@ -287,6 +301,8 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNameForClass [
 			onChildNamed: GtCodeDefinition behaviorNameEditorName.
 			
 		aStep keyClick: BlKeyboardKey escape.
+		
+		aStep wait forEmptySpaceTaskQueue.
 		
 		aStep check
 			label: 'Check class name editor does not have focus';
@@ -311,6 +327,8 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNamePackageForClass [
 	aScripter substep: 'Type new package name' do: [ :aStep | 
 		aStep click
 			onChildNamed: GtCodeDefinition packageEditorName.
+			
+		aStep wait forEmptySpaceTaskQueue.
 	
 		aStep check
 			label: 'Check package name editor has focus';
@@ -323,6 +341,8 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNamePackageForClass [
 			onChildNamed: GtCodeDefinition packageEditorName.
 			
 		aStep keyClick: BlKeyboardKey return.
+		
+		aStep wait forEmptySpaceTaskQueue.
 			
 		aStep check
 			label: 'Check package name editor is in editable mode';
@@ -333,12 +353,16 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNamePackageForClass [
 			text: self newPackageName;
 			onChildNamed: GtCodeDefinition packageEditorName.
 			
+		aStep wait forEmptySpaceTaskQueue.
+			
 		aStep check
 			label: 'Check typed new package name';
 			value: [ :aNameEditor | aNameEditor text asString ] equals: self newPackageName;
 			onChildNamed: GtCodeDefinition packageEditorName.
 			
 		aStep keyClick: BlKeyboardKey return.
+		
+		aStep wait forEmptySpaceTaskQueue.
 		
 		aStep check
 			label: 'Check package name editor has focus';
@@ -351,6 +375,8 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNamePackageForClass [
 			onChildNamed: GtCodeDefinition packageEditorName.
 			
 		aStep keyClick: BlKeyboardKey escape.
+		
+		aStep wait forEmptySpaceTaskQueue.
 		
 		aStep check
 			label: 'Check package name editor does not have focus';
@@ -376,6 +402,8 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNamePackageTagForClass 
 		aStep click
 			onChildNamed: GtCodeDefinition tagEditorName.
 	
+		aStep wait forEmptySpaceTaskQueue.
+	
 		aStep check
 			label: 'Check tag name editor has focus';
 			satisfies: [ :aNameEditor | aNameEditor hasFocus ];
@@ -387,6 +415,8 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNamePackageTagForClass 
 			onChildNamed: GtCodeDefinition tagEditorName.
 			
 		aStep keyClick: BlKeyboardKey return.
+		
+		aStep wait forEmptySpaceTaskQueue.
 			
 		aStep check
 			label: 'Check tag name editor is in editable mode';
@@ -397,12 +427,16 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNamePackageTagForClass 
 			text: self newTagName;
 			onChildNamed: GtCodeDefinition tagEditorName.
 			
+		aStep wait forEmptySpaceTaskQueue.
+			
 		aStep check
 			label: 'Check typed new tag name';
 			value: [ :aNameEditor | aNameEditor text asString ] equals: self newTagName;
 			onChildNamed: GtCodeDefinition tagEditorName.
 			
 		aStep keyClick: BlKeyboardKey return.
+		
+		aStep wait forEmptySpaceTaskQueue.
 		
 		aStep check
 			label: 'Check tag name editor has focus';
@@ -415,6 +449,8 @@ GtCreateBehaviorElementByScripterExamples >> typeNewClassNamePackageTagForClass 
 			onChildNamed: GtCodeDefinition tagEditorName.
 			
 		aStep keyClick: BlKeyboardKey escape.
+		
+		aStep wait forEmptySpaceTaskQueue.
 		
 		aStep check
 			label: 'Check tag name editor does not have focus';
@@ -439,6 +475,8 @@ GtCreateBehaviorElementByScripterExamples >> typePackageNameForClass [
 	aScripter substep: 'Type new class name' do: [ :aStep | 
 		aStep click
 			onChildNamed: GtCodeDefinition behaviorNameEditorName.
+			
+		aStep wait forEmptySpaceTaskQueue.
 	
 		aStep check
 			label: 'Check class name editor has focus';
@@ -479,6 +517,8 @@ GtCreateBehaviorElementByScripterExamples >> typePackageNameForClass [
 			onChildNamed: GtCodeDefinition behaviorNameEditorName.
 			
 		aStep keyClick: BlKeyboardKey escape.
+		
+		aStep wait forEmptySpaceTaskQueue.
 		
 		aStep check
 			label: 'Check class name editor does not have focus';
