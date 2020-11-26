@@ -12,8 +12,7 @@ GtSourceCoderCollapsedTextLook >> initialize [
 	super initialize.
 	
 	label := self newLabel.
-
-	self addChangeAddChildAs: #(content label) with: [ label ].
+	self addChangeAddChildAs: { #content . GtSourceCoderCollapsedTextId } with: [ label ].
 ]
 
 { #category : #'instance creation' }

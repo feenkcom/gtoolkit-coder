@@ -18,11 +18,6 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #constants }
-GtMethodCoder class >> extractMethodContextMenuItemName [
-	^ #'context-menu-item--extract-method'
-]
-
 { #category : #'instance creation' }
 GtMethodCoder class >> forClass: aBehavior source: aString [
 	^ self new
@@ -136,7 +131,7 @@ GtMethodCoder >> addExtractMethodTo: coderAddOns from: anEditorElement [
 		hover: [ self highlightFrom: nodes first start to: nodes last stop ]
 		leave: [ self removeHighlight ]
 		action: [ :element | self extractMethod: element ]
-		name: self class extractMethodContextMenuItemName
+		id: GtMethodCoderExtractMethodContextMenuItemId
 ]
 
 { #category : #'private - addons' }
@@ -225,23 +220,6 @@ GtMethodCoder >> addInstanceVariable: aString [
 	refactoring execute.
 	self resetASTCache.	"Need to reset AST for undeclared variables"
 	self requestStyleSourceText
-]
-
-{ #category : #'private - addons' }
-GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns from: anEditorElement [
-	<gtCoderContextMenuAddOns: 20>
-	self addExtractMethodTo: coderAddOns from: anEditorElement.
-	(self rbSelectedNodeFrom: anEditorElement)
-		ifNotNil: [ :ast | 
-			self addInstanceAccessorRefactoringsFor: ast to: coderAddOns.
-			self addClassAccessorRefactoringsFor: ast to: coderAddOns.
-			self addRemoveParameterRefactoringFor: ast to: coderAddOns.
-			ast
-				withAllParentsDo: [ :node | self addInlineSelfMessageFor: node to: coderAddOns ].
-			ast
-				withAllParentsDo: [ :node | self addInlineTempFor: node to: coderAddOns ].
-			ast
-				withAllParentsDo: [ :node | self addExtractTempFor: node to: coderAddOns ] ]
 ]
 
 { #category : #'private - addons' }

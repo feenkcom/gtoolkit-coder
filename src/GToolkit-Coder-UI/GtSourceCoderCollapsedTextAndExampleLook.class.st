@@ -44,10 +44,10 @@ GtSourceCoderCollapsedTextAndExampleLook >> initialize [
 	self initializeContainer.
 	
 	self container 
-		addChild: self methodLabel as: #methodLabel;
+		addChild: self methodLabel as: GtSourceCoderCollapsedTextId;
 		addChild: self exampleElement as: #exampleElement.
 	
-	self addChangeAddChildAs: #(content label) with: [ self container ].
+	self addChangeAddChildAs: #(content label) with: [ self container ]
 ]
 
 { #category : #initialization }
@@ -112,7 +112,7 @@ GtSourceCoderCollapsedTextAndExampleLook >> updateExampleElementFor: aSourceCode
 			^ self ].
 	self show.
 
-	self exampleElement example: aSourceCoder example.
+	self exampleElement example: aSourceCoder example
 ]
 
 { #category : #'private - updating' }

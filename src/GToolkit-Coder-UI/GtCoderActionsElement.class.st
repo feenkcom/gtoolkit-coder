@@ -89,6 +89,7 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 		beSmall;
 		label: aGtCoderAction title;
 		look: BrGlamorousButtonWithIconLook;
+		in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ];
 		action: [ :aButtonElement :aButtonModel :anEvent |
 			| aCurrentTarget |
 	

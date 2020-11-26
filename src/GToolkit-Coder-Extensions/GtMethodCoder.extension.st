@@ -12,47 +12,6 @@ GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 10>
-	(self compiledMethod notNil
-		and: [ anAST notNil
-				and: [ anAST methodNode
-						ifNotNil: [ :node | 
-							node pragmas
-								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
-						ifNil: [ false ] ] ])
-		ifFalse: [ coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
-			coderAddOns
-				removeContextAction: 'Play and Inspect Example Result' translated.
-			coderAddOns
-				removeContextAction: 'Inspect Example Object' translated.
-			^ self ].
-	coderAddOns
-		addStyler:
-			(GtCoderExampleStatusStyler new
-				coder: self;
-				classOrMetaClass: self behavior).
-	(self canExecuteExample or: [ anAST methodNode numArgs isZero ])
-		ifFalse: [ ^ self ].
-	coderAddOns
-		addContextAction: 'Play' translated
-		icon: BrGlamorousVectorIcons play
-		action: [ :aCoderUIModel :anEvent | self playExample ].
-	coderAddOns
-		addContextAction: 'Play and Inspect Example Result' translated
-		icon: BrGlamorousVectorIcons playinspect
-		action: [ :aCoderUIModel :anEvent | self playAndInspectExample ].
-	coderAddOns
-		addContextAction: 'Inspect Example Object' translated
-		icon: BrGlamorousVectorIcons eg
-		action: [ :aCoderUIModel :anEvent | self notifyObjectSpawn: self example ].
-	coderAddOns
-		addContextAction: 'Debug' translated
-		icon: BrGlamorousVectorIcons debug
-		action: [ :aCoderUIModel :anEvent | self debugExample ]
-]
-
-{ #category : #'*GToolkit-Coder-Extensions' }
 GtMethodCoder >> explanationFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	coderAddOns removeStylerOfType: GtSourceExplanationLinkStyler.
