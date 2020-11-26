@@ -90,13 +90,15 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 		label: aGtCoderAction title;
 		look: BrGlamorousButtonWithIconLook;
 		action: [ :aButtonElement :aButtonModel :anEvent |
-			| aCurrentTarget |
-	
-			aCurrentTarget := anEvent currentTarget.
-			[
-				anEvent forwardingTarget: aButtonElement.
-				aGtCoderAction action glamourValueWithArgs: { coderUIModel . anEvent } ]
-				ensure: [ anEvent currentTarget: aCurrentTarget ] ]
+			GtCoderExecutionContextVariable
+				element: aButtonElement
+				do: [ 
+					| aCurrentTarget |
+					aCurrentTarget := anEvent currentTarget.
+					[
+						anEvent forwardingTarget: aButtonElement.
+						aGtCoderAction action glamourValueWithArgs: { coderUIModel . anEvent } ]
+					ensure: [ anEvent currentTarget: aCurrentTarget ] ] ]
 ]
 
 { #category : #'instance creation' }
