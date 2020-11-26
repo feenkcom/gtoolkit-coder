@@ -7,21 +7,20 @@ Class {
 { #category : #accessing }
 GtRenameVariableController >> addRefactoringChangesPreview [
 	super addRefactoringChangesPreview.
-	coder requestStyleSourceTextAndAfterDo: [ self styleRenamedVariable ]
+	self styleRenamedVariable
 ]
 
 { #category : #executing }
 GtRenameVariableController >> installRenamer [
-	self originalNode isNil
-		ifTrue: [ ^ self ].
-	newName := self originalNode name.
+	newName := self originalNode source.
 	renameInterval := self originalNode sourceInterval.
+
 	self installRenameAction
 ]
 
 { #category : #accessing }
 GtRenameVariableController >> originalName [
-	^ node name
+	^ self originalNode source
 ]
 
 { #category : #accessing }
@@ -38,8 +37,8 @@ GtRenameVariableController >> rename: oldName to: newName [
 
 { #category : #accessing }
 GtRenameVariableController >> styleRenamedVariable [
-	(coder sourceCode sourceText
+	(self sourceText
 		from: renameInterval first
 		to: self renamePosition)
-		attributes: {(BlTextForegroundAttribute paint: Color gray)}
+			attributes: {(BlTextForegroundAttribute paint: Color gray) }
 ]

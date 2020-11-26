@@ -1,15 +1,15 @@
 Class {
-	#name : #GtReorderParametersAttribute,
+	#name : #GtExtractMethodReorderParametersAttribute,
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
 		'actionBlock',
 		'icon'
 	],
-	#category : #'GToolkit-Coder-Refactoring'
+	#category : #'GToolkit-Coder-AddOns-Extract method'
 }
 
 { #category : #'instance creation' }
-GtReorderParametersAttribute class >> action: aBlock icon: anIcon [
+GtExtractMethodReorderParametersAttribute class >> action: aBlock icon: anIcon [
 	^ self new
 		actionBlock: aBlock;
 		icon: anIcon;
@@ -17,17 +17,17 @@ GtReorderParametersAttribute class >> action: aBlock icon: anIcon [
 ]
 
 { #category : #accessing }
-GtReorderParametersAttribute >> actionBlock [
+GtExtractMethodReorderParametersAttribute >> actionBlock [
 	^ actionBlock
 ]
 
 { #category : #accessing }
-GtReorderParametersAttribute >> actionBlock: aBlock [
+GtExtractMethodReorderParametersAttribute >> actionBlock: aBlock [
 	actionBlock := aBlock
 ]
 
 { #category : #accessing }
-GtReorderParametersAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
+GtExtractMethodReorderParametersAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	^ BlElement new
 		size: icon extent;
 		background: icon;
@@ -36,18 +36,19 @@ GtReorderParametersAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorE
 ]
 
 { #category : #accessing }
-GtReorderParametersAttribute >> icon [
+GtExtractMethodReorderParametersAttribute >> icon [
 	^ icon
 ]
 
 { #category : #accessing }
-GtReorderParametersAttribute >> icon: anObject [
+GtExtractMethodReorderParametersAttribute >> icon: anObject [
 	icon := anObject
 ]
 
 { #category : #'initialize-release' }
-GtReorderParametersAttribute >> initialize [
+GtExtractMethodReorderParametersAttribute >> initialize [
 	super initialize.
+
 	self beAppend.
 	self beNotOverwritableByStyler
 ]

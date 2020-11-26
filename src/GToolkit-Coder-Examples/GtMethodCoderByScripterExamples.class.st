@@ -1,30 +1,10 @@
 Class {
 	#name : #GtMethodCoderByScripterExamples,
-	#superclass : #GtCoderByScripterExamples,
+	#superclass : #GtMethodCoderExamples,
+	#traits : 'TCoderByScripterExamples',
+	#classTraits : 'TCoderByScripterExamples classTrait',
 	#category : #'GToolkit-Coder-Examples-By scripter'
 }
-
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> ? anObject [
-	"Test binary method"
-]
-
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> a [
-	<gtExample>
-	^ 42
-]
-
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
-	"test method for highlighting implementors"
-]
-
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> b [
-	<gtExample>
-	^ self a * self notAnExample
-]
 
 { #category : #'examples - basic' }
 GtMethodCoderByScripterExamples >> basicMethodCoder [
@@ -42,7 +22,8 @@ GtMethodCoderByScripterExamples >> basicMethodCoder [
 { #category : #'examples - binary method' }
 GtMethodCoderByScripterExamples >> binaryMethod [
 	<gtExample>
-	^ self class >> #?
+
+	^ GtMethodCoderExamples >> #?
 ]
 
 { #category : #'examples - binary method' }
@@ -67,20 +48,24 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI [
 GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
 	<gtExample>
 	| aScripter |
+
 	aScripter := self binaryMethodCoderUI.
 	aScripter substep: 'Collapse and Check Coder' do: [ :aStep |
 		aStep click
 			label: 'Click on Expander';
 			onChildAt: 1.
+		
+		aStep wait forEmptySpaceTaskQueue.
+		
 		aStep check
 			label: 'Check Coder Editor Text';
-			satisfies: [ :label | label text asString = '?' ];
+			value: [ :label | label text asString ] equals: '?';
 			onChildNamed: #methodLabel.
 		aStep check 
 			label: 'Check Coder UI Is Collapsed';
 			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
-	aScripter syncContinue.
-	^ aScripter
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - binary method' }
@@ -91,23 +76,16 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbConte
 	aScripter checks: 'Check Breadcrumb' do: [ :aStep | 
 		aStep  check 
 			label: 'Check Breadcrumb Package Name';
-			satisfies: [ :aButton | aButton label asString = self class package name ];
-			onChildAt: 2;
-			onChildOfClass: GtSourceCoderCollapsedContentElement;
-			onChildAt: 1;
-			onChildOfClass: GtMethodCoderBreadcrumbElement;
+			value: [ :aButton | aButton label asString ] equals: [ GtMethodCoderExamples package name ];
+			onBreadthFirstChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Breadcrumb Class Name';
-			satisfies: [ :aButton | aButton label asString = self className ];
-			onChildAt: 2;
-			onChildOfClass: GtSourceCoderCollapsedContentElement;
-			onChildAt: 1;
-			onChildOfClass: GtMethodCoderBreadcrumbElement;
-			onChildAt: 3.
-		].
-	aScripter syncContinue.
-	^ aScripter
+			value: [ :aButton | aButton label asString ] equals: [ GtMethodCoderExamples name ];
+			onBreadthFirstChildOfClass: GtMethodCoderBreadcrumbElement;
+			onChildAt: 3 ].
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - binary method' }
@@ -123,6 +101,9 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnCla
 			onChildAt: 1;
 			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 3.
+		
+		aStep wait forEmptySpaceTaskQueue.	
+		
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
 			satisfies: [ :theScripter | theScripter events reversed 
@@ -132,8 +113,8 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnCla
 				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
 			onScripter.
 		].
-	aScripter syncContinue.
-	^ aScripter
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - binary method' }
@@ -149,6 +130,9 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnPac
 			onChildAt: 1;
 			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 1.
+		
+		aStep wait forEmptySpaceTaskQueue.
+		
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
 			satisfies: [ :theScripter | theScripter events reversed 
@@ -157,8 +141,8 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnPac
 				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
 			onScripter.
 		].
-	aScripter syncContinue.
-	^ aScripter
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - binary method' }
@@ -175,13 +159,14 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI [
 GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CheckActionButtons [
 	<gtExample>
 	| aScripter |
+
 	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
 	self 
 		checkFor: aScripter 
 		numberOfMainActions: 5
 		contextAction: 0.
-	aScripter syncContinue.
-	^ aScripter
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - binary method' }
@@ -205,8 +190,8 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CodeStyle 
 			onBrTextEditorText;
 			onTextAttributesAt: 13.
 	].
-	aScripter syncContinue.
-	^ aScripter
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - binary method' }
@@ -217,23 +202,16 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbConten
 	aScripter checks: 'Check Breadcrumb' do: [ :aStep | 
 		aStep  check 
 			label: 'Check Breadcrumb Package Name';
-			satisfies: [ :aButton | aButton label asString = self class package name ];
-			onChildAt: 2;
-			onChildOfClass: GtSourceCoderExpandedContentElement;
-			onChildAt: 1;
-			onChildOfClass: GtMethodCoderBreadcrumbElement;
+			value: [ :aButton | aButton label asString ] equals: [ GtMethodCoderExamples package name ];
+			onBreadthFirstChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Breadcrumb Class Name';
-			satisfies: [ :aButton | aButton label asString = self className ];
-			onChildAt: 2;
-			onChildOfClass: GtSourceCoderExpandedContentElement;
-			onChildAt: 1;
-			onChildOfClass: GtMethodCoderBreadcrumbElement;
-			onChildAt: 3.
-		].
-	aScripter syncContinue.
-	^ aScripter
+			value: [ :aButton | aButton label asString ] equals: [ GtMethodCoderExamples name ];
+			onBreadthFirstChildOfClass: GtMethodCoderBreadcrumbElement;
+			onChildAt: 3 ].
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - binary method' }
@@ -249,6 +227,9 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnClas
 			onChildAt: 1;
 			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 3.
+			
+		aStep wait forEmptySpaceTaskQueue.
+		
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
 			satisfies: [ :theScripter | theScripter events reversed 
@@ -258,8 +239,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnClas
 				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
 			onScripter.
 		].
-	aScripter syncContinue.
-	^ aScripter
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - binary method' }
@@ -275,6 +255,9 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnPack
 			onChildAt: 1;
 			onChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 1.
+			
+		aStep wait forEmptySpaceTaskQueue.
+		
 		aStep  check 
 			label: 'Check Triggered Spawn Object Event';
 			satisfies: [ :theScripter | theScripter events reversed 
@@ -283,8 +266,8 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnPack
 				ifNone: [ AssertionFailure signal: GtPhlowObjectToSpawn name, ' event was not found' ]  ];
 			onScripter.
 		].
-	aScripter syncContinue.
-	^ aScripter
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - binary method' }
@@ -304,24 +287,28 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_WithoutExampleActions [
 { #category : #utilities }
 GtMethodCoderByScripterExamples >> checkFor: aScripter absenceOfContextActionNamed: anActionName [
 	<gtExample>
+	
 	aScripter check 
-			label: 'Check Context Action Existence Named ', anActionName asString;
-			nonSatisfies: [ :aContextActions | aContextActions title = anActionName translated
-				and: [ aContextActions action method = (GtMethodCoder>>#exampleAstFor:into:) ] ];
-			onModel;
-			onChildFromMessage: #contextActions.
+		label: 'Check Context Action Existence Named ', anActionName asString;
+		nonSatisfies: [ :aContextActions | aContextActions title = anActionName translated
+			and: [ aContextActions action method = (GtMethodCoder>>#exampleAstFor:into:) ] ];
+		onModel;
+		onChildFromMessage: #contextActions.
+	
 	^ aScripter
 ]
 
 { #category : #utilities }
 GtMethodCoderByScripterExamples >> checkFor: aScripter existenceOfContextActionNamed: anActionName [
 	<gtExample>
+	
 	aScripter check 
-			label: 'Check Context Action Existence Named ', anActionName asString;
-			anySatisfies: [ :aContextActions | aContextActions title = anActionName translated
-				and: [ aContextActions action method = (GtMethodCoder>>#exampleAstFor:into:) ] ];
-			onModel;
-			onChildFromMessage: #contextActions.
+		label: 'Check Context Action Existence Named ', anActionName asString;
+		anySatisfies: [ :aContextActions | aContextActions title = anActionName translated
+			and: [ aContextActions action method = (GtMethodCoder>>#exampleAstFor:into:) ] ];
+		onModel;
+		onChildFromMessage: #contextActions.
+	
 	^ aScripter
 ]
 
@@ -330,21 +317,19 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMai
 	<gtExample>
 	aScripter substeps: 'Check Available Action Buttons' do: [ :aStep |
 		aStep wait forEmptySpaceTaskQueue.
+
 		aStep check 
 			label: 'Number of main actions';
 			childrenCount: aMainActionsCount;
-			onChildAt: 2;
-			onChildOfClass: GtSourceCoderExpandedContentElement;
-			onChildOfClass: GtCoderActionsElement;
+			onBreadthFirstChildOfClass: GtCoderActionsElement;
 			onChildAt: 1.
+
 		aStep check 
 			label: 'Number of addons actions';
 			childrenCount: anAddonsActionsCount;
-			onChildAt: 2;
-			onChildOfClass: GtSourceCoderExpandedContentElement;
-			onChildOfClass: GtCoderActionsElement;
-			onChildAt: 3.
-		].
+			onBreadthFirstChildOfClass: GtCoderActionsElement;
+			onChildAt: 3 ].
+
 	^ aScripter
 ]
 
@@ -436,21 +421,24 @@ GtMethodCoderByScripterExamples >> collapseFromUI: aScripter method: aMethod [
 			label: 'Click on Expander';
 			onChildAt: 1.
 		aStep wait forEmptySpaceTaskQueue.
+
 		aStep check 
 			label: 'Check Coder UI is Expanded';
 			satisfies: [ :aCoderElement | aCoderElement isExpanded not ].
+
 		aStep check
 			label: 'Check Coder Collapsed Label Text';
-			satisfies: [ :aLabelElement | aLabelElement text asString = aMethod selector ];
-			onChildNamed: #methodLabel.
-		aStep wait forEmptySpaceTaskQueue ].
+			value: [ :aLabelElement | aLabelElement text asString ] equals: [ aMethod selector ];
+			onChildNamed: #methodLabel ].
+
 	^ aScripter
 ]
 
 { #category : #'examples - example method' }
 GtMethodCoderByScripterExamples >> exampleMethod [
 	<gtExample>
-	^ self class >> #sumMethod
+
+	^ GtMethodCoderExamples >> #sumMethod
 ]
 
 { #category : #'examples - example method' }
@@ -534,16 +522,261 @@ GtMethodCoderByScripterExamples >> expandFromUI: aScripter method: aMethod [
 		aStep click
 			label: 'Click on Expander';
 			onChildAt: 1.
+
 		aStep wait forEmptySpaceTaskQueue.
+
 		aStep check 
 			label: 'Check Coder UI is Expanded';
 			satisfies: [ :aCoderElement | aCoderElement isExpanded ].
+
 		aStep check
 			label: 'Check Coder Editor Text';
-			satisfies: [ :anEditorElement | anEditorElement editor text asString = aMethod sourceCode ];
-			onChildNamed: #editor.
-		aStep wait forEmptySpaceTaskQueue ].
+			value: [ :anEditorElement | anEditorElement editor text asString ] equals: [ aMethod sourceCode ];
+			onChildNamed: #editor ].
+
 	^ aScripter
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> extractedUnaryMethodNameFor: aMethodCoder [
+	^ 'sub', (aMethodCoder attributeNamed: #fakeMethodName) capitalized
+]
+
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_01_setup [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ self forMethodInPackagedClass ].
+	aScripter do
+		label: 'type in a method with argument';
+		action: [ :aCoder | aCoder appendString:
+(': anObject
+	{1} := anObject.
+	{1} := {1} + 42.' format: { (aCoder attributeNamed:  #fakeInstVarNames) first })
+		];
+		onModel.
+
+	aScripter do
+		label: 'Save a method with argument';
+		action: [ :aCoder | aCoder save ];
+		onModel.
+		
+	aScripter wait forEmptySpaceTaskQueue.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_02_select [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryExtraction_01_setup.
+	aScripter do
+		label: 'Select part of the method to extract';
+		action: [ :aSourceEditor |
+			aSourceEditor selecter
+				from: 42 to: 67;
+				select ];
+		onChildNamed: GtSourceCoder sourceEditorName.
+
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	aScripter check
+		label: 'Check selected text';
+		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ]
+			equals: [ '{1} := {1} + 42' format: { (aScripter model attributeNamed:  #fakeInstVarNames) first } ];
+		onChildNamed: GtSourceCoder sourceEditorName.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_03_context_menu [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryExtraction_02_select.
+	aScripter secondaryClick
+		label: 'Open context menu';
+		onChildNamed: GtSourceCoder sourceEditorName.
+
+	aScripter wait forEmptySpaceTaskQueue.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_04_hover_extract_method [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryExtraction_03_context_menu.
+
+	aScripter mouseMoveOver
+		label: 'Hover extract method';
+		onSpaceRoot;
+		onChildNamed: GtMethodCoder extractMethodContextMenuItemName.
+
+	aScripter wait forEmptySpaceTaskQueue.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_05_click_extract_method [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryExtraction_04_hover_extract_method.
+
+	aScripter click
+		label: 'Click extract method';
+		onSpaceRoot;
+		onChildNamed: GtMethodCoder extractMethodContextMenuItemName.
+
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	aScripter check
+		label: 'Check current source in coder model';
+		value: [ :aCoder | aCoder currentSourceString ] equals: [ :aCoder |
+('{1}: anObject
+	{2} := anObject.
+	self _' format: {
+		aCoder attributeNamed: #fakeMethodName.
+		(aCoder attributeNamed:  #fakeInstVarNames) first
+	}) ];
+		onModel.
+		
+	aScripter check
+		label: 'Check source code modified';
+		satisfies: [ :aCoder | aCoder isModified ];
+		onModel.
+	
+	aScripter check
+		label: 'Check rename editor attribute';
+		value: [ :aCoderEditor |
+			aCoderEditor text
+				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRenameEditorAttribute ]
+				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
+			equals: [ 48 to: 48 ];
+		onChildNamed: GtSourceCoder sourceEditorName.
+
+	aScripter check
+		label: 'Check refactoring changes attribute';
+		value: [ :aCoderEditor |
+			aCoderEditor text
+				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRefactoringChangesAttribute ]
+				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
+			equals: [ 48 to: 48 ];
+		onChildNamed: GtSourceCoder sourceEditorName.
+		
+	aScripter check
+		label: 'Check source editor is not focused';
+		satisfies: [ :aCoderEditor | aCoderEditor isFocused not ];
+		onChildNamed: GtSourceCoder sourceEditorName.
+		
+	aScripter check
+		label: 'Check source editor has focus';
+		satisfies: [ :aCoderEditor | aCoderEditor hasFocus ];
+		onChildNamed: GtSourceCoder sourceEditorName.
+	
+	aScripter check
+		label: 'Check method name editor source code';
+		value: [ :aNameEditor | aNameEditor text asString ] equals: '_';
+		onChildNamed: GtSourceCoder sourceEditorName;
+		onBreadthFirstChildOfClass: GtRenameEditor.
+		
+	aScripter check
+		label: 'Check method name editor selected text';
+		value: [ :aNameEditor | aNameEditor editor selectedText asString ] equals: '_';
+		onChildNamed: GtSourceCoder sourceEditorName;
+		onBreadthFirstChildOfClass: GtRenameEditor.
+
+	aScripter check
+		label: 'Check method name editor has focus';
+		satisfies: [ :aNameEditor | aNameEditor isFocused ];
+		onChildNamed: GtSourceCoder sourceEditorName;
+		onBreadthFirstChildOfClass: GtRenameEditor.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_06_type_method_name [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryExtraction_05_click_extract_method.
+
+	aScripter type: 'sub', (aScripter model attributeNamed: #fakeMethodName) capitalized.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	"aScripter check
+		label: 'Check refactoring changes attribute';
+		value: [ :aCoderEditor |
+			aCoderEditor text
+				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRefactoringChangesAttribute ]
+				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
+			equals: [ 48 to: 48 ];
+		onChildNamed: GtSourceCoder sourceEditorName."
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_07_01_accept_with_enter [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryExtraction_06_type_method_name.
+
+	aScripter keyClick: BlKeyboardKey return.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	aScripter check
+		label: 'Check current source in coder model';
+		value: [ :aCoder | aCoder currentSourceString ] equals: [ :aCoder |
+('{1}: anObject
+	{2} := anObject.
+	self {3}' format: {
+		aCoder attributeNamed: #fakeMethodName.
+		(aCoder attributeNamed:  #fakeInstVarNames) first.
+		self extractedUnaryMethodNameFor: aCoder
+	}) ];
+		onModel.
+		
+	aScripter check
+		label: 'Check source code modified';
+		satisfies: [ :aCoder | aCoder isModified ];
+		onModel.
+	
+	aScripter check
+		label: 'Check rename editor attribute';
+		value: [ :aCoderEditor |
+			aCoderEditor text
+				hasAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRenameEditorAttribute ] ]
+			equals: false;
+		onChildNamed: GtSourceCoder sourceEditorName.
+
+	aScripter check
+		label: 'Check refactoring changes attribute';
+		value: [ :aCoderEditor |
+			aCoderEditor text
+				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRefactoringChangesAttribute ]
+				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
+			equals: [ 57 to: 57 ];
+		onChildNamed: GtSourceCoder sourceEditorName.
+		
+	aScripter check
+		label: 'Check source editor is focused';
+		satisfies: [ :aCoderEditor | aCoderEditor isFocused ];
+		onChildNamed: GtSourceCoder sourceEditorName.
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - basic' }
@@ -555,15 +788,10 @@ GtMethodCoderByScripterExamples >> methodCoder [
 	^ aScripter
 ]
 
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> notAnExample [
-	^ 42
-]
-
 { #category : #'examples - pattern highlighter' }
 GtMethodCoderByScripterExamples >> patternHighlighterMethod [
 	<gtExample>
-	^ self class >> #a:a:a:a:
+	^ GtMethodCoderExamples >> #a:a:a:a:
 ]
 
 { #category : #'examples - pattern highlighter' }
@@ -600,7 +828,8 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_CheckUndeline
 { #category : #'examples - pattern highlither - print' }
 GtMethodCoderByScripterExamples >> patternHighlighterPrintMethod [
 	<gtExample>
-	^ self class >> #printStringReference
+
+	^ GtMethodCoderExamples >> #printStringReference
 ]
 
 { #category : #'examples - pattern highlither - print' }
@@ -667,15 +896,10 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Ch
 	^ aScripter
 ]
 
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> printStringReference [
-	^ self printString
-]
-
 { #category : #'examples - referenced example' }
 GtMethodCoderByScripterExamples >> referencedExampleMethod [
 	<gtExample>
-	^ self class >> #b
+	^ GtMethodCoderExamples >> #b
 ]
 
 { #category : #'examples - referenced example' }
@@ -767,12 +991,4 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatu
 		self checkFor: aStep textExampleStatusAttributeAt: 1. ].
 	aScripter syncContinue.
 	^ aScripter
-]
-
-{ #category : #'sample methods' }
-GtMethodCoderByScripterExamples >> sumMethod [
-	<gtExample>
-	"sum two numbers"
-	self assert: 21 + 21 equals: 42.
-	^ 42
 ]

@@ -13,12 +13,6 @@ Class {
 }
 
 { #category : #executing }
-GtRenameMethodController >> canceled [
-	super canceled.
-	self restoreText
-]
-
-{ #category : #executing }
 GtRenameMethodController >> installRenamer [
 	self
 		cursorPositionDo: [ :position | 
@@ -26,10 +20,10 @@ GtRenameMethodController >> installRenamer [
 			selector := self originalNode selector.
 			self someImplementor isNil
 				ifTrue: [ ^ self ].
-			startIndex := self originalNode keywordsIntervals first first.
+			startIndex := self originalNode selectorParts first first.
 			newSelectorParts := selector keywords.
 			message := self originalNode.
-			message keywordsIntervals
+			message selectorParts
 				keysAndValuesDo: [ :i :interval | 
 					(interval includes: position)
 						ifTrue: [ selectorIndex := i.
@@ -113,10 +107,10 @@ GtRenameMethodController >> refactoringName [
 { #category : #accessing }
 GtRenameMethodController >> renamePosition [
 	self newNode
-		ifNotNil: [ :message | ^ message keywordsIntervals last last ].
+		ifNotNil: [ :message | ^ message selectorParts last last ].
 	^ (renameAction isNil or: [ renameAction isInstalled ])
 		ifTrue: [ previewIndex ]
-		ifFalse: [ self originalNode keywordsIntervals last last + self newName size
+		ifFalse: [ self originalNode selectorParts last last + self newName size
 				- self originalName size ]
 ]
 
@@ -141,7 +135,7 @@ GtRenameMethodController >> tab: forward [
 				ifTrue: [ selectorIndex := self originalNode arguments size ] ].
 	self newNode
 		ifNotNil: [ :message | 
-			coder removeRefactoringAttribute.
+			self removeRefactoringAttribute.
 			self sourceEditor
 				moveCursorTo: (message keywordsIntervals at: selectorIndex) last.
 			self installRenamerOn: message.

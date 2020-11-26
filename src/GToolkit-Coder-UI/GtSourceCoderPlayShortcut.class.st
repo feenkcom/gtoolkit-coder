@@ -23,7 +23,10 @@ GtSourceCoderPlayShortcut >> name [
 
 { #category : #evaluation }
 GtSourceCoderPlayShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [	
-	aBrTextEditor hasSelection 
-		ifTrue: [ GtSourceCoderDoItShortcut new performDueTo: aShortcutEvent ]
-		ifFalse: [ aGtSourceCoder playAll ]
+	GtCoderExecutionContextVariable
+		element: aBrEditorElement
+		do: [
+			aBrTextEditor hasSelection 
+				ifTrue: [ GtSourceCoderDoItShortcut new performDueTo: aShortcutEvent ]
+				ifFalse: [ aGtSourceCoder playAll ] ]
 ]

@@ -68,7 +68,7 @@ GtPharoSnippetCoder >> initializeShortcuts [
 		addShortcut: GtSourceCoderDoItShortcut new;
 		addShortcut: GtSourceCoderDoItAndInspectShortcut new;
 		addShortcut: GtSourceCoderPrintItShortcut new;
-		addShortcut: GtSourceCoderRenameShortcut new
+		addShortcut: GtSourceCoderInlineRenameShortcut new
 ]
 
 { #category : #private }

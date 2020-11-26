@@ -58,6 +58,11 @@ GtSourceCoder class >> debug: aCompiledMethod receiver: anObject in: evalContext
 		withFullView: true
 ]
 
+{ #category : #constants }
+GtSourceCoder class >> sourceEditorName [
+	^ #editor
+]
+
 { #category : #'api - addons' }
 GtSourceCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
 	<gtCoderContextMenuAddOns: 10>
@@ -911,6 +916,11 @@ GtSourceCoder >> printItWithin: aSourceIntervalBlock [
 	^ self
 		evaluateInterval: aSourceIntervalBlock
 		thenDo: [ :aResult | ]
+]
+
+{ #category : #accessing }
+GtSourceCoder >> protocol [
+	^ #accessing
 ]
 
 { #category : #'private - ast' }

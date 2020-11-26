@@ -37,21 +37,21 @@ GtCoderActionsElement >> coderUIModel [
 ]
 
 { #category : #accessing }
-GtCoderActionsElement >> coderUIModel: aCoderUIModel [	
-	coderUIModel ifNotNil: [ :aPreviousCoderUIModel | aPreviousCoderUIModel announcer unsubscribe: self ].
-
+GtCoderActionsElement >> coderUIModel: aCoderUIModel [
+	coderUIModel
+		ifNotNil:
+			[ :aPreviousCoderUIModel | aPreviousCoderUIModel coder announcer unsubscribe: self ].
 	coderUIModel := aCoderUIModel.
-	aCoderUIModel announcer weak
+	aCoderUIModel coder announcer weak
 		when: GtCoderAddOnsUpdateRequest send: #updateAddOns: to: self;
 		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
-		when: GtCoderContextActionsChanged send: #updateContextToolbar to: self.
-	
+		when: GtCoderContextActionsChanged
+			send: #updateContextToolbar
+			to: self.
 	aCoderUIModel coder shouldAddOnsBeUpdated
-		ifTrue: [ aCoderUIModel coder updateAddOns ].	
-
+		ifTrue: [ aCoderUIModel coder updateAddOns ].
 	self removeMainToolbarActions.
 	self removeContextToolbarActions.
-
 	self addMainToolbarActions.
 	self addContextToolbarActions
 ]
@@ -90,7 +90,13 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 		label: aGtCoderAction title;
 		look: BrGlamorousButtonWithIconLook;
 		action: [ :aButtonElement :aButtonModel :anEvent |
-			aGtCoderAction action glamourValueWithArgs: { coderUIModel . anEvent } ]
+			| aCurrentTarget |
+	
+			aCurrentTarget := anEvent currentTarget.
+			[
+				anEvent forwardingTarget: aButtonElement.
+				aGtCoderAction action glamourValueWithArgs: { coderUIModel . anEvent } ]
+				ensure: [ anEvent currentTarget: aCurrentTarget ] ]
 ]
 
 { #category : #'instance creation' }

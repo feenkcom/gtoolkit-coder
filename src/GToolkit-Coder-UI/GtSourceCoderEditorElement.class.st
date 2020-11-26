@@ -99,7 +99,20 @@ GtSourceCoderEditorElement >> initializeListeners [
 	
 	self editor
 		when: BrTextEditorModifiedEvent
-		do: [ :anEvent | self onTextModified: anEvent ]
+		do: [ :anEvent | self onTextModified ].
+		
+	self editor
+		when: BrTextEditorCursorChangedEvent 
+		do: [ :anEvent | self maySaveCoderUIModel ].
+		
+	self editor
+		when: BrTextEditorSelectionChangedEvent 
+		do: [ :anEvent | self maySaveCoderUIModel ]
+]
+
+{ #category : #private }
+GtSourceCoderEditorElement >> maySaveCoderUIModel [
+	sourceCoderUIModel ifNotNil: [ :aCoderUIModel | self saveCoderUIModel: aCoderUIModel ]
 ]
 
 { #category : #'instance creation' }
@@ -141,7 +154,7 @@ GtSourceCoderEditorElement >> onShowDebuggerRequest: aShowDebuggerAnnouncement [
 	sharedDebugSession := GtSharedDebugSession new
 		session: aShowDebuggerAnnouncement debugSession.
 	
-	self showNotification: (GtNotificationDebugSessionEvent new debugSession: sharedDebugSession).
+	self showNotification: (GtNotificationDebugSession new debugSession: sharedDebugSession).
 	
 	anEvaluatedSource := aShowDebuggerAnnouncement sourceString.
 	anEvaluatedInterval := aShowDebuggerAnnouncement sourceInterval.
@@ -172,7 +185,7 @@ GtSourceCoderEditorElement >> onSourceCodeChanged: aGtCoderSourceCodeChanged [
 	aGtCoderSourceCodeChanged isSynchronous
 		ifTrue: [ self updateSourceCode ] 
 		ifFalse: [ self enqueueTask: (BlTaskAction new action: [ self updateSourceCode ]) ].
-		
+
 	evaluationHighlighter highlight: nil
 ]
 
@@ -187,11 +200,13 @@ GtSourceCoderEditorElement >> onStylersUpdated: anAnnouncement [
 ]
 
 { #category : #'private - event handling' }
-GtSourceCoderEditorElement >> onTextModified: aBrTextEditorModifiedEvent [
+GtSourceCoderEditorElement >> onTextModified [
 	"Is sent when the text changes in the editor. Here we should synchronise the UI and the model."
 
 	sourceCoderUIModel ifNotNil: [ :aSourceCoderUIModel |
-		aSourceCoderUIModel coder currentSourceTextSynchronously: self text ]
+		aSourceCoderUIModel coder currentSourceTextSynchronously: self text ].
+	
+	self maySaveCoderUIModel
 ]
 
 { #category : #'private - event handling' }
@@ -219,7 +234,7 @@ GtSourceCoderEditorElement >> reportParseError: aString at: anInteger [
 	self editor moveCursorTo: position
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 GtSourceCoderEditorElement >> saveCoderUIModel: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel
 		editorState: (self editor saveState: self newEditorMemento).
@@ -235,49 +250,47 @@ GtSourceCoderEditorElement >> sourceCoderUIModel [
 { #category : #accessing }
 GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 	sourceCoderUIModel
-		ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
+		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
 	completion
 		ifNotNil: [ :aPreviousCompletion | aPreviousCompletion uninstall ].
-
 	self editor removeEditorShortcuts: interactions.
-
 	sourceCoderUIModel := aGtSourceCoderUIModel.
-
 	aGtSourceCoderUIModel editorState
 		ifNil: [ aGtSourceCoderUIModel editorState: self newEditorMemento ].
-
 	self editor restoreState: aGtSourceCoderUIModel editorState.
-
 	interactions := aGtSourceCoderUIModel coder shortcuts copy.
-
 	self text: aGtSourceCoderUIModel coder sourceText.
 	self editor model: aGtSourceCoderUIModel coder.
 	self editor addEditorShortcuts: interactions.
-
 	completion := GtCompletionController
 		on: self
 		strategy: aGtSourceCoderUIModel coder completionStrategy.
 	completion install.
-
 	(aGtSourceCoderUIModel coder newSourceStylerFrom: self)
 		ifNotNil: [ :styler | self styler: styler ].
-
-	aGtSourceCoderUIModel announcer weak
-		when: GtCoderEvaluationAnnouncement send: #onCodeEvaluated: to: self;
-		when: GtCoderAddOnsUpdateRequest send: #onUpdateAddOnsRequest: to: self;
+	aGtSourceCoderUIModel coder announcer weak
+		when: GtCoderEvaluationAnnouncement
+			send: #onCodeEvaluated:
+			to: self;
+		when: GtCoderAddOnsUpdateRequest
+			send: #onUpdateAddOnsRequest:
+			to: self;
 		when: GtCoderStylerChanged send: #onStylersUpdated: to: self;
 		when: GtCoderStyleTextRequest send: #onStyleTextRequest: to: self;
 		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged: to: self;
 		when: GtCoderParseError send: #onCoderParseError: to: self;
-		when: GtCoderObjectSpawnRequest send: #onObjectSpawnRequest: to: self;
+		when: GtCoderObjectSpawnRequest
+			send: #onObjectSpawnRequest:
+			to: self;
 		when: GtCoderToolSpawnRequest send: #onToolSpawnRequest: to: self;
-		when: GtCoderShowDebuggerRequest send: #onShowDebuggerRequest: to: self.
-
+		when: GtCoderShowDebuggerRequest
+			send: #onShowDebuggerRequest:
+			to: self.
 	aGtSourceCoderUIModel focused
 		ifTrue: [ self requestFocus ].
-
 	aGtSourceCoderUIModel coder updateAddOns.
-	evaluationHighlighter highlight: aGtSourceCoderUIModel evaluationResult
+	evaluationHighlighter
+		highlight: aGtSourceCoderUIModel evaluationResult
 ]
 
 { #category : #private }
@@ -297,6 +310,9 @@ GtSourceCoderEditorElement >> updateSourceCode [
 	aNewSourceCode := sourceCoderUIModel coder sourceText copy.
 	
 	(self text generation = aNewSourceCode generation)
+		ifTrue: [ ^ self ].
+		
+	(self text characters = aNewSourceCode characters)
 		ifTrue: [ ^ self ].
 	
 	aNewSourceCode clearAttributes: [ :eachAttribute | eachAttribute isKindOf: GtSourceCoderErrorAttribute ].

@@ -18,6 +18,11 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #constants }
+GtMethodCoder class >> extractMethodContextMenuItemName [
+	^ #'context-menu-item--extract-method'
+]
+
 { #category : #'instance creation' }
 GtMethodCoder class >> forClass: aBehavior source: aString [
 	^ self new
@@ -88,7 +93,7 @@ GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 		ifFalse: [ ^ self ].
 	(aNode whoDefines: aNode name) notNil
 		ifTrue: [ ^ self ].
-	(self classOrMetaClass allClassVarNames includes: aNode name asSymbol)
+	(self behavior allClassVarNames includes: aNode name asSymbol)
 		ifFalse: [ ^ self ].
 	coderAddOns
 		addContextMenuItem: (self createLabel: 'Abstract variable' description: aNode name)
@@ -96,7 +101,8 @@ GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 		leave: [ self removeHighlight ]
 		action: [ :element | self abstractClassVar: aNode ].
 	(self isAccessorMethodFor: aNode)
-		ifFalse: [ coderAddOns
+		ifFalse: [
+			coderAddOns
 				addContextMenuItem: (self createLabel: 'Create accessors' description: aNode name)
 				hover: [ self highlightNode: aNode ]
 				leave: [ self removeHighlight ]
@@ -130,6 +136,7 @@ GtMethodCoder >> addExtractMethodTo: coderAddOns from: anEditorElement [
 		hover: [ self highlightFrom: nodes first start to: nodes last stop ]
 		leave: [ self removeHighlight ]
 		action: [ :element | self extractMethod: element ]
+		name: self class extractMethodContextMenuItemName
 ]
 
 { #category : #'private - addons' }
@@ -189,7 +196,7 @@ GtMethodCoder >> addInstanceAccessorRefactoringsFor: aNode to: coderAddOns [
 		ifFalse: [ ^ self ].
 	(aNode whoDefines: aNode name) notNil
 		ifTrue: [ ^ self ].
-	(self classOrMetaClass allInstVarNames includes: aNode name)
+	(self behavior allInstVarNames includes: aNode name)
 		ifFalse: [ ^ self ].
 	coderAddOns
 		addContextMenuItem: (self createLabel: 'Abstract variable' description: aNode name)
@@ -339,7 +346,7 @@ GtMethodCoder >> changedSourceForCurrentMethod: aRefactoryChange [
 		reverseDo: [ :each | 
 			((each isKindOf: RBAddMethodChange)
 				and: [ each selector = self currentSelector
-						and: [ self classOrMetaClass = each changeClass ] ])
+						and: [ self behavior = each changeClass ] ])
 				ifTrue: [ ^ each source ] ].
 	^ nil
 ]
@@ -463,10 +470,10 @@ GtMethodCoder >> createRefactoringModel [
 	| model |
 	model := RBClassModelFactory rbNamespace
 		onEnvironment: RBBrowserEnvironment new.
-	(((model classFor: self classOrMetaClass)
+	(((model classFor: self behavior)
 		directlyDefinesMethod: self currentSelector) not
-		or: [ ((model classFor: self classOrMetaClass)
-				sourceCodeFor: self currentSelector)
+		or:
+			[ ((model classFor: self behavior) sourceCodeFor: self currentSelector)
 				~= self sourceText asString ])
 		ifTrue: [ (model classFor: self classOrMetaClass)
 				compile: self sourceText asString
@@ -767,7 +774,6 @@ GtMethodCoder >> initializeShortcuts [
 	addOns
 		addShortcut: GtSourceCoderPlayShortcut new;
 		addShortcut: GtSourceCoderPlayAndInspectShortcut new;
-		addShortcut: GtSourceCoderRenameShortcut new;
 		addShortcut: GtSourceCoderExtractMethodShortcut new;
 		addShortcut: GtSourceCoderSaveShortcut new;
 		addShortcut: GtSourceCoderFormatShortcut new
@@ -781,7 +787,7 @@ GtMethodCoder >> inlineMessageSendIn: messageNode [
 		model: model
 		inline: messageNode sourceInterval
 		inMethod: self currentSelector
-		forClass: (model classFor: self classOrMetaClass).
+		forClass: (model classFor: self behavior).
 	refactoring
 		setOption: #inlineExpression
 		toUse: [ :ref :string | true ].
@@ -1215,7 +1221,7 @@ GtMethodCoder >> printOn: aStream [
 GtMethodCoder >> protectInstVar: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
-	cls := model classFor: self classOrMetaClass.
+	cls := model classFor: self behavior.
 	refactoring := RBProtectInstanceVariableRefactoring
 		model: model
 		variable: aNode name
@@ -1312,34 +1318,6 @@ GtMethodCoder >> removeParameter: aNode [
 		in: cls
 		selector: self currentSelector.
 	self addRefactoringChangesPreview: refactoring at: aNode stop
-]
-
-{ #category : #'api - refactorings' }
-GtMethodCoder >> renameIn: editorElement [
-	| node |
-	node := self rbNodeAtCursor: editorElement.
-	node isNil
-		ifTrue: [ ^ self ].
-	(node isMessage or: [ node isMethod ])
-		ifTrue: [ ^ self renameMethod: editorElement ].
-	node isVariable
-		ifTrue: [ node gtIsLocal
-				ifTrue: [ ^ self renameLocalVariableIn: editorElement ].
-			(self classOrMetaClass allInstVarNames includes: node name)
-				ifTrue: [ ^ self renameInstanceVariableIn: editorElement ].
-			(self classOrMetaClass classVariables
-				anySatisfy: [ :assoc | assoc key asString = node name ])
-				ifTrue: [ ^ self renameClassVariableIn: editorElement ].
-			Smalltalk globals
-				at: node name asSymbol
-				ifPresent: [ :cls | 
-					(cls isKindOf: Class)
-						ifTrue: [ ^ self renameClassIn: editorElement ] ] ]
-]
-
-{ #category : #'api - refactorings' }
-GtMethodCoder >> renameLocalVariableIn: editorElement [
-	GtRenameAction pharoRenameLocalsOn: editorElement
 ]
 
 { #category : #'api - refactorings' }

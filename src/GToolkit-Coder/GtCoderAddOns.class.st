@@ -40,12 +40,23 @@ GtCoderAddOns >> addContextMenuItem: aString action: aBlock [
 
 { #category : #actions }
 GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock [
+	self
+		addContextMenuItem: aString
+		hover: hoverBlock
+		leave: leaveBlock
+		action: aBlock
+		name: nil
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock name: aSymbol [
 	| newAction |
 	newAction := GtCoderContextMenuAction new
 		title: aString;
 		action: aBlock;
 		hoverAction: hoverBlock;
-		leaveAction: leaveBlock.
+		leaveAction: leaveBlock;
+		name: aSymbol.
 	contextMenuActions add: newAction.
 	modified add: #contextMenuActions
 ]
@@ -71,6 +82,14 @@ GtCoderAddOns >> addDropDownWithPreviewAction: aString icon: anIcon action: acti
 		changeStencil: stencilBlock.
 	mainActions add: newAction.
 	modified add: #mainActions
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addMainAction: aGtCoderAction [
+	self
+		updateActionList: #mainActions
+		withAction: aGtCoderAction
+		onlyNew: true
 ]
 
 { #category : #actions }
@@ -315,19 +334,29 @@ GtCoderAddOns >> shouldBeUpdated [
 
 { #category : #private }
 GtCoderAddOns >> updateActionList: listSymbol title: aString icon: anIcon action: aBlock onlyNew: aBoolean [
-	| newAction index actions |
+	self
+		updateActionList: listSymbol
+		withAction: (GtCoderAction new
+			title: aString;
+			icon: anIcon;
+			action: aBlock)
+		onlyNew: aBoolean
+]
+
+{ #category : #private }
+GtCoderAddOns >> updateActionList: listSymbol withAction: aGtCoderAction onlyNew: aBoolean [
+	| index actions |
+
 	actions := self perform: listSymbol.
 	index := (1 to: actions size)
-		detect: [ :i | (actions at: i) title = aString ]
+		detect: [ :i | (actions at: i) title = aGtCoderAction title ]
 		ifNone: [ 0 ].
+
 	(aBoolean and: [ index > 0 ])
 		ifTrue: [ ^ self ].
-	newAction := GtCoderAction new
-		title: aString;
-		icon: anIcon;
-		action: aBlock.
+
 	index = 0
-		ifTrue: [ actions add: newAction ]
-		ifFalse: [ actions at: index put: newAction ].
+		ifTrue: [ actions add: aGtCoderAction ]
+		ifFalse: [ actions at: index put: aGtCoderAction ].
 	modified add: listSymbol
 ]

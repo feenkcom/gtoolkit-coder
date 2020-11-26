@@ -1,10 +1,7 @@
 Class {
 	#name : #GtRenameController,
-	#superclass : #Object,
+	#superclass : #GtSourceCoderRefactoringController,
 	#instVars : [
-		'coder',
-		'sourceElement',
-		'originalSource',
 		'handlers',
 		'renameAction',
 		'node',
@@ -15,41 +12,32 @@ Class {
 	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : #executing }
-GtRenameController >> acceptRename [
-	renameAction notNil
-		ifTrue: [ renameAction accept ]
-]
-
 { #category : #private }
 GtRenameController >> addRefactoringChangesPreview [
-	coder
-		addRefactoringChangesPreview: self refactoring
-		at: self renamePosition
-		whenComplete: [ self completionAction value.
-			coder requestStyleSourceText ]
+	| aRefactoring aRenamePosition |
+	self removeRefactoringAttribute.
+
+	aRefactoring := self refactoring.
+	aRefactoring
+		ifNil: [ ^ self cancelRefactoring ].
+
+	aRenamePosition := self renamePosition.
+
+	self
+		addRefactoringChangesPreview: aRefactoring
+		at: aRenamePosition
+		whenComplete: [
+			self removeRefactoringAttribute.
+			self completionAction value.
+			coder requestStyleSourceText.
+			self allowSave ]
 ]
 
 { #category : #executing }
-GtRenameController >> cancelRename [
-	renameAction notNil
-		ifTrue: [ renameAction cancel ].
-	self restoreText
-]
-
-{ #category : #executing }
-GtRenameController >> canceled [
-	coder removeRefactoringAttribute
-]
-
-{ #category : #accessing }
-GtRenameController >> coder [
-	^ coder
-]
-
-{ #category : #accessing }
-GtRenameController >> coder: methodCoder [
-	coder := methodCoder
+GtRenameController >> cancelRefactoring [
+	self removeRefactoringAttribute.
+	self restoreText.
+	self allowSave
 ]
 
 { #category : #accessing }
@@ -69,11 +57,11 @@ GtRenameController >> createModel [
 		onEnvironment: RBBrowserEnvironment new.
 	model name: self refactoringName.
 	coder isForMethod
-		ifTrue: [ ((model classFor: coder classOrMetaClass)
-				sourceCodeFor: coder selector) ~= originalSource asString
-				ifTrue: [ (model classFor: coder classOrMetaClass)
+		ifTrue: [ ((model classFor: coder behavior) sourceCodeFor: coder selector)
+				~= originalSource asString
+				ifTrue: [ (model classFor: coder behavior)
 						compile: originalSource asString
-						classified: coder category ] ].
+						classified: coder protocol ] ].
 	^ model
 ]
 
@@ -84,18 +72,13 @@ GtRenameController >> cursorPositionDo: aBlock [
 ]
 
 { #category : #executing }
-GtRenameController >> execute [
-	[ self saveSource.
-	self installRenamer ]
-		on: Error
-		do: [ :ex | ex return ]
-]
-
-{ #category : #executing }
 GtRenameController >> installRenameAction [
 	renameAction := GtRenameAction
-		locations: {renameInterval}
+		locations: { renameInterval }
 		element: sourceElement.
+		
+	self preventSave.
+
 	renameAction
 		when: GtRenameActionAnnouncement
 		do: [ :ann | 
@@ -104,7 +87,8 @@ GtRenameController >> installRenameAction [
 			(#(#tab #shiftTab) includes: ann eventType)
 				ifTrue: [ self tab: ann eventType = #tab ].
 			ann eventType = #cancel
-				ifTrue: [ self canceled ] ].
+				ifTrue: [ self cancelRefactoring ] ].
+
 	self installValidation.
 	renameAction install
 ]
@@ -119,11 +103,6 @@ GtRenameController >> installValidation [
 	renameAction forVariableOrUnaryMessage
 ]
 
-{ #category : #testing }
-GtRenameController >> isRenaming [
-	^ renameAction notNil and: [ renameAction isInstalled ]
-]
-
 { #category : #accessing }
 GtRenameController >> newName [
 	^ newName
@@ -136,25 +115,14 @@ GtRenameController >> originalName [
 
 { #category : #accessing }
 GtRenameController >> originalNode [
-	^ node ifNil: [ node := coder rbNodeAtCursor: sourceElement ]
+	<return: #GtPharoProgramNode>
+
+	^ node
 ]
 
 { #category : #accessing }
-GtRenameController >> refactoring [
-	^ self subclassResponsibility
-]
-
-{ #category : #accessing }
-GtRenameController >> refactoringName [
-	^ self subclassResponsibility
-]
-
-{ #category : #private }
-GtRenameController >> removeRefactoringAttribute [
-	| editor |
-	editor := renameAction editor.
-	editor text
-		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
+GtRenameController >> originalNode: aGtPharoProgramNode [
+	node := aGtPharoProgramNode
 ]
 
 { #category : #private }
@@ -164,29 +132,9 @@ GtRenameController >> renamePosition [
 		ifFalse: [ renameInterval last + self newName size - self originalName size ]
 ]
 
-{ #category : #private }
-GtRenameController >> restoreText [
-	sourceElement editor text: originalSource
-]
-
 { #category : #executing }
-GtRenameController >> saveSource [
-	originalSource := self sourceEditor text copy
-]
-
-{ #category : #accessing }
-GtRenameController >> sourceEditor [
-	^ self sourceElement editor
-]
-
-{ #category : #accessing }
-GtRenameController >> sourceElement [
-	^ sourceElement
-]
-
-{ #category : #accessing }
-GtRenameController >> sourceElement: textElement [
-	sourceElement := textElement
+GtRenameController >> safelyExecute [
+	self installRenamer
 ]
 
 { #category : #private }

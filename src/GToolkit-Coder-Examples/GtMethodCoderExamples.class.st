@@ -9,6 +9,23 @@ GtMethodCoderExamples >> ? anObject [
 	"Test binary method"
 ]
 
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> a [
+	<gtExample>
+	^ 42
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
+	"test method for highlighting implementors"
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> b [
+	<gtExample>
+	^ self a * self notAnExample
+]
+
 { #category : #'examples - compile' }
 GtMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSystem [
 	<gtExample>
@@ -396,7 +413,7 @@ GtMethodCoderExamples >> example [
 GtMethodCoderExamples >> forBinaryMethodCoder [
 	<gtExample>
 	| method methodCoder |
-	method := self class >> #?.
+	method := GtMethodCoderExamples >> #?.
 	methodCoder := GtMethodCoder forMethod: method.
 	self
 		assert: (methodCoder sourceCode isKindOf: GtCoderCompiledMethodSourceCode).
@@ -405,7 +422,7 @@ GtMethodCoderExamples >> forBinaryMethodCoder [
 	self assert: methodCoder sourceCode hasCollapsedText not.
 	self assert: methodCoder selector equals: #?.
 	self assert: methodCoder currentSelector equals: #?.
-	self assert: methodCoder behavior equals: self class.
+	self assert: methodCoder behavior equals: GtMethodCoderExamples.
 	self assert: methodCoder compiledMethod equals: method.
 	self assert: methodCoder collapsedText asString equals: '?'.
 	self assert: methodCoder sourceCode hasCollapsedText.
@@ -425,9 +442,9 @@ GtMethodCoderExamples >> forBinaryMethodCoder [
 GtMethodCoderExamples >> forEmptyBodyMethodCoder [
 	<gtExample>
 	| method methodCoder |
-	
-	method := self class >> #emptyBody.
-	
+
+	method := GtMethodCoderExamples >> #emptyBody.
+
 	methodCoder := GtMethodCoder forMethod: method.
 
 	self assert: methodCoder collapsedText asString equals: 'emptyBody'.
@@ -440,7 +457,7 @@ GtMethodCoderExamples >> forEmptyBodyMethodCoder [
 GtMethodCoderExamples >> forEmptyLinesMethodCoder [
 	<gtExample>
 	| method methodCoder |
-	method := self class >> #emptyLines.
+	method := GtMethodCoderExamples >> #emptyLines.
 
 	methodCoder := GtMethodCoder forMethod: method.
 
@@ -454,11 +471,11 @@ GtMethodCoderExamples >> forEmptyLinesMethodCoder [
 GtMethodCoderExamples >> forExampleMethodCoder [
 	<gtExample>
 	| method methodCoder |
-	method := self class >> #example.
+	method := GtMethodCoderExamples >> #example.
 	methodCoder := GtMethodCoder forMethod: method.
 	self assert: methodCoder selector equals: #example.
 	self assert: methodCoder currentSelector equals: #example.
-	self assert: methodCoder behavior equals: self class.
+	self assert: methodCoder behavior equals: GtMethodCoderExamples.
 	self assert: methodCoder compiledMethod equals: method.
 	self assert: methodCoder collapsedText asString equals: 'example'.
 	self
@@ -476,7 +493,7 @@ GtMethodCoderExamples >> forKeywordSelectorMethodCoder [
 	<gtExample>
 	| method methodCoder |
 
-	method := self class >> #keyword:selector:.
+	method := GtMethodCoderExamples >> #keyword:selector:.
 
 	methodCoder := GtMethodCoder forMethod: method.
 
@@ -501,7 +518,9 @@ GtMethodCoderExamples >> forMethodInPackagedClass [
 	aMethodCoder attributeNamed: #fakeClass put: aClass.
 	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
 	aMethodCoder attributeNamed: #fakeMethod put: aMethod.
+	aMethodCoder attributeNamed: #fakeMethodName put: aMethod selector.
 	aMethodCoder attributeNamed: #fakeProtocol put: (self fakeCategoryForFakeMethod: aMethod).
+	aMethodCoder attributeNamed: #fakeInstVarNames put: aClass instVarNames.
 
 	self assert: aMethodCoder behavior equals: aClass.
 	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior explicit: aClass).
@@ -529,6 +548,7 @@ GtMethodCoderExamples >> forNewMethod [
 	aMethodCoder attributeNamed: #fakeClass put: aClass.
 	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
 	aMethodCoder attributeNamed: #fakeMethodName put: (aMethod selector, 'New').
+	aMethodCoder attributeNamed: #fakeInstVarNames put: aClass instVarNames.
 
 	self assert: aMethodCoder behavior equals: aClass.
 	self assert: aMethodCoder collapsedText asString equals: ''.
@@ -544,7 +564,7 @@ GtMethodCoderExamples >> forNewMethod [
 GtMethodCoderExamples >> forSelfReturnMethodCoder [
 	<gtExample>
 	| method methodCoder |
-	method := self class >> #returnSelf.
+	method := GtMethodCoderExamples >> #returnSelf.
 
 	methodCoder := GtMethodCoder forMethod: method.
 
@@ -557,7 +577,7 @@ GtMethodCoderExamples >> forSelfReturnMethodCoder [
 GtMethodCoderExamples >> forThisMethodCoder [
 	<gtExample>
 	| method methodCoder source |
-	method := self class >> #forThisMethodCoder.
+	method := GtMethodCoderExamples >> #forThisMethodCoder.
 
 	methodCoder := GtMethodCoder forMethod: method.
 
@@ -576,9 +596,9 @@ GtMethodCoderExamples >> forThisMethodCoder [
 GtMethodCoderExamples >> forThisObjectMethodCoder [
 	<gtExample>
 	| method methodCoder source |
-	method := self class >> #forThisMethodCoder.
+	method := GtMethodCoderExamples >> #forThisMethodCoder.
 
-	methodCoder := GtMethodCoder forObject: self class new andSelector: #forThisMethodCoder.
+	methodCoder := GtMethodCoder forObject: GtMethodCoderExamples new andSelector: #forThisMethodCoder.
 
 	source := method sourceCode.
 	
@@ -685,7 +705,7 @@ GtMethodCoderExamples >> nodeAtCursor [
 	| coder node |
 
 	coder := GtMethodCoder
-		forMethod: self class >> #sampleMethodWithCascades.
+		forMethod: GtMethodCoderExamples >> #sampleMethodWithCascades.
 	
 	node := coder rbNodeAt: ((coder currentSourceString indexOfSubCollection: 'self') - 1).
 	self assert: node isSelf not.
@@ -702,12 +722,22 @@ GtMethodCoderExamples >> nodeAtCursor [
 	^ node
 ]
 
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> notAnExample [
+	^ 42
+]
+
 { #category : #'examples - instance creation' }
 GtMethodCoderExamples >> orderedCollectionMethods [
 	<gtExample>
 	| class |
 	class := OrderedCollection.
 	^ class selectors asSortedCollection collect: [ :each | GtMethodCoder forMethod: class >> each ]
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> printStringReference [
+	^ self printString
 ]
 
 { #category : #'examples - remove class' }
@@ -854,6 +884,14 @@ GtMethodCoderExamples >> sampleMethodWithCascades [
 		nextPutAll: 'Testing';
 		next: 4 put: Character space.
 	^ stream contents
+]
+
+{ #category : #'sample methods' }
+GtMethodCoderExamples >> sumMethod [
+	<gtExample>
+	"sum two numbers"
+	self assert: 21 + 21 equals: 42.
+	^ 42
 ]
 
 { #category : #'examples - validate syntax' }

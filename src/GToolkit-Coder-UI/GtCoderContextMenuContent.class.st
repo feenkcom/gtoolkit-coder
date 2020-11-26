@@ -73,6 +73,10 @@ GtCoderContextMenuContent >> initialize [
 					element
 						when: BlMouseLeaveEvent
 						do: [ :anEvent | leave cull: self editorElement cull: self anchor ] ].
+			
+			eachGtCoderContextMenuAction name
+				ifNotNil: [ :anActionName | element containerName: anActionName ].
+			
 			element ];
 		hFitContent;
 		vFitContent

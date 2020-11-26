@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'title',
 		'icon',
-		'action'
+		'action',
+		'name'
 	],
 	#category : #'GToolkit-Coder'
 }
@@ -42,6 +43,16 @@ GtCoderAction >> icon: anObject [
 { #category : #accessing }
 GtCoderAction >> leaveAction [
 	^ nil
+]
+
+{ #category : #accessing }
+GtCoderAction >> name [
+	^ name
+]
+
+{ #category : #accessing }
+GtCoderAction >> name: anObject [
+	name := anObject
 ]
 
 { #category : #printing }
