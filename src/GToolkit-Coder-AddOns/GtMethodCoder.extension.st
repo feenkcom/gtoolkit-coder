@@ -33,11 +33,16 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 							node pragmas
 								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
 						ifNil: [ false ] ] ])
-		ifFalse: [ coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
+		ifFalse: [
+			coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
+			coderAddOns
+				removeContextAction: 'Play Example' translated.
 			coderAddOns
 				removeContextAction: 'Play and Inspect Example Result' translated.
 			coderAddOns
 				removeContextAction: 'Inspect Example Object' translated.
+			coderAddOns
+				removeContextAction: 'Debug Example' translated.
 			^ self ].
 	coderAddOns
 		addStyler:
@@ -48,7 +53,7 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 		ifFalse: [ ^ self ].
 
 	coderAddOns
-		addContextAction: 'Play' translated
+		addContextAction: 'Play Example' translated
 		icon: BrGlamorousVectorIcons play
 		action: [ :aCoderUIModel :anEvent | self playExample ]
 		id: GtMethodCoderPlayExampleActionId.

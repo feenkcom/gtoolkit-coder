@@ -526,9 +526,10 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePra
 			checkFor: aStep
 			numberOfMainActions: 6
 			contextAction: 0.
+
 		self checkFor: aStep absenceOfContextActionNamed: 'Play' ].
-	aScripter syncContinue.
-	^ aScripter
+
+	^ aScripter syncContinue
 ]
 
 { #category : #utilities }
