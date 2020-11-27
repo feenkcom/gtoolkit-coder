@@ -70,6 +70,7 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 		addContextAction: 'Debug Example' translated
 		icon: BrGlamorousVectorIcons debug
 		action: [ :aCoderUIModel :anEvent | self debugExample ]
+		id: GtMethodCoderDebugExampleActionId
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
