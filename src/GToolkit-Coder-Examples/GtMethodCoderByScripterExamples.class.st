@@ -490,7 +490,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 		numberOfMainActions: 5
 		contextAction: 4.
 
-	self checkFor: aScripter existenceOfContextActionNamed: 'Play'.
+	self checkFor: aScripter existenceOfContextActionNamed: 'Play Example'.
 	self checkFor: aScripter existenceOfContextActionNamed: 'Play and Inspect Example Result'.
 
 	^ aScripter syncContinue
@@ -527,7 +527,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePra
 			numberOfMainActions: 6
 			contextAction: 0.
 
-		self checkFor: aStep absenceOfContextActionNamed: 'Play' ].
+		self checkFor: aStep absenceOfContextActionNamed: 'Play Example' ].
 
 	^ aScripter syncContinue
 ]
@@ -975,7 +975,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatu
 			checkFor: aStep
 			numberOfMainActions: 6
 			contextAction: 0.
-		self checkFor: aStep absenceOfContextActionNamed: 'Play' ].
+		self checkFor: aStep absenceOfContextActionNamed: 'Play Example' ].
 	aScripter checks: 'Check Example Status Is Not Present' do: [ :aStep | 
 		self checkFor: aStep textExpandAttributeAt: 23.
 		self 
@@ -1002,7 +1002,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatu
 			checkFor: aStep
 			numberOfMainActions: 5
 			contextAction: 4.
-		self checkFor: aStep existenceOfContextActionNamed: 'Play' ].
+		self checkFor: aStep existenceOfContextActionNamed: 'Play Example' ].
 	aScripter checks: 'Check Example Status Is Present' do: [ :aStep | 
 		self checkFor: aStep textExpandAttributeAt: 24.
 		self checkFor: aStep textExampleStatusAttributeAt: 1. ].
