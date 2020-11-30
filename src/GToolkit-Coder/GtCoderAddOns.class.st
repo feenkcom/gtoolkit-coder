@@ -20,12 +20,23 @@ GtCoderAddOns >> addCollapsedShortcut: aBlShortcut [
 ]
 
 { #category : #actions }
-GtCoderAddOns >> addContextAction: aString icon: anIcon action: aBlock [
+GtCoderAddOns >> addContextAction: aTitleString icon: anIcon action: aBlock [
 	self
-		updateActionList: #contextActions
-		title: aString
+		addContextAction: aTitleString
 		icon: anIcon
 		action: aBlock
+		id: nil
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addContextAction: aTitleString icon: anIcon action: aBlock id: aBlElementId [
+	self
+		updateActionList: #contextActions
+		withAction: (GtCoderAction new
+			title: aTitleString;
+			icon: anIcon;
+			action: aBlock;
+			id: aBlElementId)
 		onlyNew: true
 ]
 
@@ -45,11 +56,11 @@ GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock
 		hover: hoverBlock
 		leave: leaveBlock
 		action: aBlock
-		name: nil
+		id: nil
 ]
 
 { #category : #actions }
-GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock name: aSymbol [
+GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock id: aSymbol [
 	| newAction |
 	newAction := GtCoderContextMenuAction new
 		title: aString;
@@ -99,6 +110,18 @@ GtCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
 		title: aString
 		icon: anIcon
 		action: aBlock
+		onlyNew: true
+]
+
+{ #category : #actions }
+GtCoderAddOns >> addMainAction: aTitleString icon: anIcon action: aBlock id: aNameSymbol [
+	self
+		updateActionList: #mainActions
+		withAction: (GtCoderAction new
+			title: aTitleString;
+			icon: anIcon;
+			action: aBlock;
+			id: aNameSymbol)
 		onlyNew: true
 ]
 

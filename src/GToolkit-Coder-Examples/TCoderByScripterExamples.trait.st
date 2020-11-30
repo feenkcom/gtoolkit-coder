@@ -26,5 +26,7 @@ TCoderByScripterExamples >> scripterForBlock: aBlock [
 			label: 'Initialize Coder UI';
 			element: [ :aCoder | aCoder asElement ];
 			onModel ].
-	^ aScripter
+		
+	aScripter wait forEmptySpaceTaskQueue.
+	^ aScripter syncContinue
 ]

@@ -374,6 +374,123 @@ GtMethodCoderExamples >> compileRemovedMethodWithoutCoderWhenSubscribedToSystem 
 	^ aMethodCoder
 ]
 
+{ #category : #'examples - ast' }
+GtMethodCoderExamples >> detectReferencesFilterInClassName [
+	<gtExample>
+	| aCoder aReferencesFilter |
+	
+	aCoder := self emptyMethodCoder.
+	aReferencesFilter := aCoder
+		detectReferencesFilterIn: 'Object'
+		ifFound: #yourself
+		ifNone: [ nil ].
+
+	self assert: aReferencesFilter notNil.
+	self assert: aReferencesFilter object equals: (Smalltalk globals associationAt: #Object) .
+
+	^ aReferencesFilter
+]
+
+{ #category : #'examples - ast' }
+GtMethodCoderExamples >> detectReferencesFilterInEmpty [
+	<gtExample>
+	| aCoder aReferencesFilter |
+	
+	aCoder := self emptyMethodCoder.
+	aReferencesFilter := aCoder
+		detectReferencesFilterIn: ''
+		ifFound: #yourself
+		ifNone: [ nil ].
+		
+	self assert: aReferencesFilter isNil.  
+		
+	^ aReferencesFilter
+]
+
+{ #category : #'examples - ast' }
+GtMethodCoderExamples >> detectReferencesFilterInKeyword [
+	<gtExample>
+	| aCoder aReferencesFilter |
+	
+	aCoder := self emptyMethodCoder.
+	aReferencesFilter := aCoder
+		detectReferencesFilterIn: 'printOn:'
+		ifFound: #yourself
+		ifNone: [ nil ].
+		
+	self assert: aReferencesFilter notNil.
+	self assert: aReferencesFilter object equals: #printOn:.
+
+	^ aReferencesFilter
+]
+
+{ #category : #'examples - ast' }
+GtMethodCoderExamples >> detectReferencesFilterInKeywordWithArgument [
+	<gtExample>
+	| aCoder aReferencesFilter |
+	
+	aCoder := self emptyMethodCoder.
+	aReferencesFilter := aCoder
+		detectReferencesFilterIn: 'printOn: aStream'
+		ifFound: #yourself
+		ifNone: [ nil ].
+		
+	self assert: aReferencesFilter notNil.
+	self assert: aReferencesFilter object equals: #printOn:.
+
+	^ aReferencesFilter
+]
+
+{ #category : #'examples - ast' }
+GtMethodCoderExamples >> detectReferencesFilterInMessageSend [
+	<gtExample>
+	| aCoder aReferencesFilter |
+	
+	aCoder := self emptyMethodCoder.
+	aReferencesFilter := aCoder
+		detectReferencesFilterIn: 'Object new'
+		ifFound: #yourself
+		ifNone: [ nil ].
+
+	self assert: aReferencesFilter notNil.
+	self assert: aReferencesFilter object equals: #new.
+
+	^ aReferencesFilter
+]
+
+{ #category : #'examples - ast' }
+GtMethodCoderExamples >> detectReferencesFilterInUnary [
+	<gtExample>
+	| aCoder aReferencesFilter |
+	
+	aCoder := self emptyMethodCoder.
+	aReferencesFilter := aCoder
+		detectReferencesFilterIn: 'printString'
+		ifFound: #yourself
+		ifNone: [ nil ].
+		
+	self assert: aReferencesFilter notNil.
+	self assert: aReferencesFilter object equals: #printString.
+
+	^ aReferencesFilter
+]
+
+{ #category : #'examples - ast' }
+GtMethodCoderExamples >> detectReferencesFilterInWhiteSpace [
+	<gtExample>
+	| aCoder aReferencesFilter |
+	
+	aCoder := self emptyMethodCoder.
+	aReferencesFilter := aCoder
+		detectReferencesFilterIn: ' '
+		ifFound: #yourself
+		ifNone: [ nil ].
+		
+	self assert: aReferencesFilter isNil.  
+		
+	^ aReferencesFilter
+]
+
 { #category : #'sample methods' }
 GtMethodCoderExamples >> emptyBody [
 ]

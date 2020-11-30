@@ -60,7 +60,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
 		aStep check
 			label: 'Check Coder Editor Text';
 			value: [ :label | label text asString ] equals: '?';
-			onChildNamed: #methodLabel.
+			id: GtSourceCoderCollapsedTextId.
 		aStep check 
 			label: 'Check Coder UI Is Collapsed';
 			satisfies: [ :aCoderElement | aCoderElement isExpanded not ] ].
@@ -429,7 +429,7 @@ GtMethodCoderByScripterExamples >> collapseFromUI: aScripter method: aMethod [
 		aStep check
 			label: 'Check Coder Collapsed Label Text';
 			value: [ :aLabelElement | aLabelElement text asString ] equals: [ aMethod selector ];
-			onChildNamed: #methodLabel ].
+			id: GtSourceCoderCollapsedTextId ].
 
 	^ aScripter
 ]
@@ -489,9 +489,25 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 		checkFor: aScripter 
 		numberOfMainActions: 5
 		contextAction: 4.
-	self checkFor: aScripter existenceOfContextActionNamed: 'Play'.
-	aScripter syncContinue.
-	^ aScripter
+
+	self checkFor: aScripter existenceOfContextActionNamed: 'Play Example'.
+	self checkFor: aScripter existenceOfContextActionNamed: 'Play and Inspect Example Result'.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - example method' }
+GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_PlayAndInspect [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self exampleMethodCoderUI_ExpandedFromUI_CheckActionButtons.
+	
+	aScripter click
+		label: 'Click play and inspect';
+		id: GtMethodCoderPlayAndInspectExampleActionId.
+
+	^ aScripter syncContinue
 ]
 
 { #category : #'examples - example method' }
@@ -510,9 +526,10 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePra
 			checkFor: aStep
 			numberOfMainActions: 6
 			contextAction: 0.
-		self checkFor: aStep absenceOfContextActionNamed: 'Play' ].
-	aScripter syncContinue.
-	^ aScripter
+
+		self checkFor: aStep absenceOfContextActionNamed: 'Play Example' ].
+
+	^ aScripter syncContinue
 ]
 
 { #category : #utilities }
@@ -617,7 +634,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_04_hover_extract_method [
 	aScripter mouseMoveOver
 		label: 'Hover extract method';
 		onSpaceRoot;
-		onChildNamed: GtMethodCoder extractMethodContextMenuItemName.
+		onChildNamed: GtMethodCoderExtractMethodContextMenuItemId.
 
 	aScripter wait forEmptySpaceTaskQueue.
 
@@ -634,7 +651,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_05_click_extract_method [
 	aScripter click
 		label: 'Click extract method';
 		onSpaceRoot;
-		onChildNamed: GtMethodCoder extractMethodContextMenuItemName.
+		onChildNamed: GtMethodCoderExtractMethodContextMenuItemId.
 
 	aScripter wait forEmptySpaceTaskQueue.
 	
@@ -958,7 +975,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatu
 			checkFor: aStep
 			numberOfMainActions: 6
 			contextAction: 0.
-		self checkFor: aStep absenceOfContextActionNamed: 'Play' ].
+		self checkFor: aStep absenceOfContextActionNamed: 'Play Example' ].
 	aScripter checks: 'Check Example Status Is Not Present' do: [ :aStep | 
 		self checkFor: aStep textExpandAttributeAt: 23.
 		self 
@@ -985,7 +1002,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatu
 			checkFor: aStep
 			numberOfMainActions: 5
 			contextAction: 4.
-		self checkFor: aStep existenceOfContextActionNamed: 'Play' ].
+		self checkFor: aStep existenceOfContextActionNamed: 'Play Example' ].
 	aScripter checks: 'Check Example Status Is Present' do: [ :aStep | 
 		self checkFor: aStep textExpandAttributeAt: 24.
 		self checkFor: aStep textExampleStatusAttributeAt: 1. ].
