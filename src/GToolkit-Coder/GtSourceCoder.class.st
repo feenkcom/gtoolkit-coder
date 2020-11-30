@@ -716,8 +716,8 @@ GtSourceCoder >> nodeToReferencesFilter: aNode ifFound: aFoundBlock ifNone: aNon
 			or: [ aCurrentNode isKindOf: GtPharoMethodPatternNode ])
 			ifTrue: [ ^ aFoundBlock value: (self referencesFilterForLiteral: aCurrentNode selector) ].
 		(aCurrentNode isKindOf: GtPharoMessageSendNode)
-			ifTrue: [ aCurrentNode := aCurrentNode message ].
-		aCurrentNode := aCurrentNode parent ].
+			ifTrue: [ aCurrentNode := aCurrentNode message ]
+			ifFalse: [ aCurrentNode := aCurrentNode parent ] ].
 
 	^ aNoneBlock value
 ]
@@ -1344,8 +1344,11 @@ GtSourceCoder >> variableNodeToReferencesFilter: aVariableNode ifFound: aFoundBl
 	aBinding := self behavior bindingOf: aVariableName.
 	aBinding notNil
 		ifTrue: [ ^ aFoundBlock value: (GtSearchReferencesFilter literal: aBinding) ].
+		
+	"At this point we know that it is not an instance/class varaible, nor it is a binding.
+	We therefore fallback to the basic literal references filter"
 
-	^ aNoneBlock value
+	^ aFoundBlock value: (self referencesFilterForLiteral: aVariableName asSymbol)
 ]
 
 { #category : #elements }
