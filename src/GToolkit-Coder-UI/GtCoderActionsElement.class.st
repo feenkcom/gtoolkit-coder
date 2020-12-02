@@ -86,7 +86,7 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 	
 	^ BrButton new
 		icon: aGtCoderAction icon asElement;
-		beSmall;
+		beTiny;
 		label: aGtCoderAction title;
 		look: BrGlamorousButtonWithIconLook;
 		in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ];
