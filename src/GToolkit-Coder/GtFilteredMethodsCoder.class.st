@@ -211,12 +211,13 @@ GtFilteredMethodsCoder >> setFilters: aCollection [
 { #category : #private }
 GtFilteredMethodsCoder >> shouldSort: a before: b [
 	a selector isNil
-		ifTrue: [ ^ b selector notNil or: [ a classOrMetaClass name <= b classOrMetaClass name ] ].
+		ifTrue: [ ^ b selector notNil
+				or: [ a classOrMetaClass name <= b classOrMetaClass name ] ].
 	b selector isNil
 		ifTrue: [ ^ false ].
-	a classOrMetaClass = b classOrMetaClass
+	a behavior = b behavior
 		ifTrue: [ ^ a selector < b selector ].
-	^ a classOrMetaClass name < b classOrMetaClass name
+	^ a behavior name < b behavior name
 ]
 
 { #category : #'private - subscriptions' }
