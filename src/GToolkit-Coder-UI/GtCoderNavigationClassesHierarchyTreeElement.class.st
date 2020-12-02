@@ -38,7 +38,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 				ifNotNil: [
 					| aClass aText |
 					aClass := aClassHierarchyTree rootClass.
-					aText := aClass name asRopedText.
+					aText := aClass gtDisplayText asRopedText.
 					(aClass isAbstract or: [ aClass hasAbstractMethods ]) ifTrue: [ 
 						aText italic ].
 					(aClass isDeprecated) ifTrue: [ 
