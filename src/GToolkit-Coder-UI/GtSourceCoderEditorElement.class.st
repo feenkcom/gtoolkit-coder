@@ -22,55 +22,6 @@ GtSourceCoderEditorElement >> createContextMenuContent [
 				yourself ]
 ]
 
-{ #category : #private }
-GtSourceCoderEditorElement >> highlightEvaluatedCode: anEvaluationResult [
-	| anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText |
-	
-	anEvaluatedSource := anEvaluationResult sourceString.
-	anEvaluatedInterval := anEvaluationResult sourceInterval.
-	
-	theSourceStartInText := self text finder
-		caseSensitiveSubstring: anEvaluatedSource;
-		startAtPosition: anEvaluatedInterval first;
-		searchClosest.
-
-	"what did we evaluate?"
-	theSourceStartInText isZero
-		ifTrue: [ ^ self ].
-
-	theSourceEndInText := theSourceStartInText + anEvaluatedSource size - 1.
-	
-	anEvaluationResult isSuccess
-		ifTrue: [
-			(self text 
-				from: theSourceStartInText
-				to: theSourceEndInText) underlineDo: [ :anUnderline | 
-					anUnderline
-						color: (Color fromHexString: #'90CAF9');
-						thickness: 1 ]
-		].
-
-
-	"self text
-		attributes:
-			{(GtPlaygroundEvaluatedCodeButtonAttribute new 
-				result: value;
-				coder: self ""Pass the coder to get the spawn destination"")}
-		from: interval last
-		to: interval last.
-	aBoolean
-		ifTrue: [ aBlText
-				attributes: {(GtCoderPrintStringAttribute forString: value printString)}
-				from: interval last
-				to: interval last ].
-	aBlText
-		attributes:
-			{(GtPlaygroundEvaluatedCodeHighlightedAttribute new
-				paint: (Color fromHexString: #'90CAF9'))}
-		from: interval first
-		to: interval last"
-]
-
 { #category : #initialization }
 GtSourceCoderEditorElement >> initialize [
 	super initialize.
