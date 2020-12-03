@@ -26,7 +26,7 @@ GtSourceCoderPlayShortcut >> performOnEditor: aBrTextEditor element: aBrEditorEl
 	GtCoderExecutionContextVariable
 		element: aBrEditorElement
 		do: [
+			"only execute if there is selection"
 			aBrTextEditor hasSelection 
-				ifTrue: [ GtSourceCoderDoItShortcut new performDueTo: aShortcutEvent ]
-				ifFalse: [ aGtSourceCoder playAll ] ]
+				ifTrue: [ GtSourceCoderDoItShortcut new performDueTo: aShortcutEvent ] ]
 ]
