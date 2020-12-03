@@ -28,7 +28,7 @@ GtSourceCoderEditorElementEvaluationHighlighter >> addHighlight: anEvaluationRes
 	theSourceStartInText isZero
 		ifTrue: [ ^ self ].
 
-	theSourceEndInText := theSourceStartInText + anEvaluatedSource size - 1.
+	theSourceEndInText := (theSourceStartInText + anEvaluatedSource size - 1) min: self text size.
 	
 	anEvaluationResult isSuccess
 		ifTrue: [
