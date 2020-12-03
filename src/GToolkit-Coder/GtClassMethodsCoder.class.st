@@ -163,12 +163,14 @@ GtClassMethodsCoder >> removeMethodsForClass: aClass [
 { #category : #private }
 GtClassMethodsCoder >> shouldSort: a before: b [
 	a selector isNil
-		ifTrue: [ ^ b selector notNil or: [ a classOrMetaClass allSuperclasses size >= b classOrMetaClass allSuperclasses size ] ].
+		ifTrue: [ ^ b selector notNil
+				or: [ a classOrMetaClass allSuperclasses size
+						>= b classOrMetaClass allSuperclasses size ] ].
 	b selector isNil
 		ifTrue: [ ^ false ].
 	a selector < b selector
 		ifTrue: [ ^ true ].
 	a selector > b selector
 		ifTrue: [ ^ false ].
-	^ a classOrMetaClass allSuperclasses size >= b classOrMetaClass allSuperclasses size
+	^ a behavior allSuperclasses size >= b behavior allSuperclasses size
 ]
