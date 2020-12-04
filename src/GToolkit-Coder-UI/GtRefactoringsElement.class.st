@@ -34,11 +34,6 @@ GtRefactoringsElement >> applyRefactorings [
 GtRefactoringsElement >> initialize [
 	super initialize.
 	
-	self viewModel: (BrInteractiveModel new addStates: {
-		BrLayoutHorizontalResizerModel matchParent.
-		BrLayoutVerticalResizerModel matchParent.
-	}).
-	
 	self layout: BlLinearLayout vertical.
 	self matchParent.
 	self padding: (BlInsets all: 10).

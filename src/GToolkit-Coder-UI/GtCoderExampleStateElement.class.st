@@ -107,14 +107,13 @@ GtCoderExampleStateElement >> initializeTooltipLook [
 
 { #category : #initialization }
 GtCoderExampleStateElement >> initializeViewModels [
-	| anInteractiveModel aButtonModel |
-	anInteractiveModel := BrInteractiveModel new addStates: {
-		BrLayoutHorizontalResizerModel exact: 8.
-		BrLayoutVerticalResizerModel exact: 8.
-		BrHoverModel new }.
+	| aButtonModel |
+	
+	self exact: 8@8.
+	
 	aButtonModel := BrButtonModel new
 		action: [ :aButton | self onClick: aButton ].
-	self viewModel: (aButtonModel + anInteractiveModel)
+	self viewModel: (aButtonModel)
 ]
 
 { #category : #'private - instance creation' }

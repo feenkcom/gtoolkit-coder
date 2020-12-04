@@ -57,11 +57,11 @@ GtSourceCoderContentElement >> initialize [
 	super initialize.
 	self
 		layout: BlLinearLayout vertical;
-		margin: (BlInsets left: 5).
+		margin: (BlInsets left: 5);
+		hMatchParent;
+		vFitContentLimited.
 
-	self viewModel: (GtSourceCoderContentModel new add: (BrInteractiveModel new addStates: {
-		BrLayoutHorizontalResizerModel matchParent.
-		BrLayoutVerticalResizerModel fitContentLimited }))
+	self viewModel: (GtSourceCoderContentModel new)
 ]
 
 { #category : #accessing }

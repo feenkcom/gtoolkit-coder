@@ -25,10 +25,7 @@ GtExpandedOnlyCoderElement >> coder: aCoder [
 		assert: [ aCoder isNotNil ]
 		description: [ 'Coder must not be nil' ].
 	self addChild: (anExpandedElement := self newExpandedElement: aCoder).
-	self
-		addLook:
-			(BrLayoutResizerLook new
-				inheritIn: [ :aBlock | aBlock value: anExpandedElement ]).
+	self addLook: (BrLayoutResizerLook new inherit: anExpandedElement).
 	aCoder expanded: true.
 	aCoder coder announcer weak
 		when: GtCoderRequestFocus

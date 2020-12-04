@@ -16,7 +16,7 @@ GtRefactoringChangesAttribute >> completionAction: aBlock [
 { #category : #accessing }
 GtRefactoringChangesAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	^ GtRefactoringsPreviewButton new
-		beTiny;
+		beTinySize;
 		lookDo: [ :aLook | aLook - BrSizeAdjustmentLook ];
 		vMatchParent;
 		refactorings: [ {refactoring} ];

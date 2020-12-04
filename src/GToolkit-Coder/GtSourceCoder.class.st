@@ -811,7 +811,8 @@ GtSourceCoder >> notifySourceChangedWith: anUpdateStragegy [
 	
 	self announce: (GtCoderSourceCodeChanged new 
 		updateStragegy: anUpdateStragegy;
-		coder: self)
+		coder: self;
+		source: anUpdateStragegy announcementSource)
 ]
 
 { #category : #'private - notifying' }
