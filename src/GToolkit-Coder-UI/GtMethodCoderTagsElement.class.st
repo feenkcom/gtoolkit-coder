@@ -81,7 +81,7 @@ GtMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 { #category : #'instance creation' }
 GtMethodCoderTagsElement >> newEditableProtocolTag [
 	^ BrButton new
-		beTiny;
+		beTinySize;
 		look: BrGlamorousButtonWithLabelLook + (BrGlamorousWithDropdownLook
 			handle: [
 				| editor |
@@ -117,7 +117,7 @@ GtMethodCoderTagsElement >> newEditableProtocolTag [
 					hExact: 250;
 					itemStencil: [
 						BrButton new
-							beSmall;
+							beSmallSize;
 							look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
 							action: [ :aButton :aButtonModel |
 								aButton fireEvent: (BrDropdownHideWish new).

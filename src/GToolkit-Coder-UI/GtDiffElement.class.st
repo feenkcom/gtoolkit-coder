@@ -112,14 +112,7 @@ GtDiffElement >> editorLook [
 GtDiffElement >> initialize [
 	super initialize.
 	
-	self viewModel: (BrInteractiveModel new addStates: {
-		BrLayoutHorizontalResizerModel matchParent.
-		BrLayoutVerticalResizerModel matchParent.
-		BrSizeAdjustmentModel new.
-	}).
-	
 	self layout: BlLinearLayout horizontal.
-
 	self matchParent.
 
 	outlines := #().
@@ -149,7 +142,7 @@ GtDiffElement >> initialize [
 	}.
 	
 	self addLook: (BrLayoutResizerLook inherit inherit: leftElement; inherit: rightElement).
-	self addLook: (BrSizeAdjustmentLook new
+	self addLook: (BrDeprecatedSizeAdjustmentLook new
 		default: [ :aWidget |
 			aWidget padding: (BlInsets all: 10).
 			leftElement look glamorousCodeSize.

@@ -59,11 +59,11 @@ GtRefactoringsPreviewButton >> initialize [
 	
 	self
 		icon: BrGlamorousVectorIcons accept;
-		beSmall;
+		beSmallSize;
 		look: BrGlamorousButtonWithIconLook new + (BrGlamorousWithDropdownLook
 			handle: [ BrButton new
 				icon: BrGlamorousIcons empty;
-				beSmall;
+				beSmallSize;
 				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
 			content: [ self buildRefactoringsPreview ]);
 		label: 'Preview'.

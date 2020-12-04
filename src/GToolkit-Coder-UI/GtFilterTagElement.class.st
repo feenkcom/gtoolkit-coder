@@ -103,7 +103,7 @@ GtFilterTagElement >> createDropDownButton [
 	button padding: (BlInsets left: 4 right: 2).
 	button label: self descriptor name.
 	button icon: BrGlamorousVectorIcons downwards.
-	button beSmall.
+	button beSmallSize.
 	^ button
 ]
 

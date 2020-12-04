@@ -60,7 +60,7 @@ GtPreviewChangeButton >> changeStencil: aStencil [
 GtPreviewChangeButton >> initialize [
 	super initialize.
 	self margin: (BlInsets left: 5).
-	self beSmall.
+	self beSmallSize.
 	self
 		look:
 			BrGlamorousButtonWithIconLook new

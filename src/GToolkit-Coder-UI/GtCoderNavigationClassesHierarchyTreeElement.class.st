@@ -27,23 +27,23 @@ GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
-
-	self nodeStencil: [
-			BrLabel new
-				beSmall;
+	self
+		nodeStencil: [ BrLabel new
+				beSmallSize;
 				look: BrGlamorousLabelLook ];
-		nodeDataBinder: [ :aClassElement :aClassHierarchyTree |
-			aClassElement text: (aClassHierarchyTree
-				ifNil: [ '' asRopedText ]
-				ifNotNil: [
-					| aClass aText |
-					aClass := aClassHierarchyTree rootClass.
-					aText := aClass gtDisplayText asRopedText.
-					(aClass isAbstract or: [ aClass hasAbstractMethods ]) ifTrue: [ 
-						aText italic ].
-					(aClass isDeprecated) ifTrue: [ 
-						aText append: (' (deprecated)' asRopedText italic) ].
-					aText ]) ]
+		nodeDataBinder: [ :aClassElement :aClassHierarchyTree | 
+			aClassElement
+				text:
+					(aClassHierarchyTree
+						ifNil: [ '' asRopedText ]
+						ifNotNil: [ | aClass aText |
+							aClass := aClassHierarchyTree rootClass.
+							aText := aClass gtDisplayText asRopedText.
+							(aClass isAbstract or: [ aClass hasAbstractMethods ])
+								ifTrue: [ aText italic ].
+							aClass isDeprecated
+								ifTrue: [ aText append: ' (deprecated)' asRopedText italic ].
+							aText ]) ]
 ]
 
 { #category : #'api - initialization' }

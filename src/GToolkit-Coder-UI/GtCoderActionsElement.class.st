@@ -83,23 +83,22 @@ GtCoderActionsElement >> initialize [
 { #category : #'instance creation' }
 GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 	<return: #BrButton>
-	
 	^ BrButton new
 		icon: aGtCoderAction icon asElement;
-		beTiny;
+		beTinySize;
 		label: aGtCoderAction title;
 		look: BrGlamorousButtonWithIconLook;
 		in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ];
-		action: [ :aButtonElement :aButtonModel :anEvent |
+		action: [ :aButtonElement :aButtonModel :anEvent | 
 			GtCoderExecutionContextVariable
 				element: aButtonElement
-				do: [ 
-					| aCurrentTarget |
-			
+				do: [ | aCurrentTarget |
 					aCurrentTarget := anEvent currentTarget.
-					[
-						anEvent forwardingTarget: aButtonElement.
-						aGtCoderAction action glamourValueWithArgs: { coderUIModel . anEvent } ]
+					[ anEvent forwardingTarget: aButtonElement.
+					aGtCoderAction action
+						glamourValueWithArgs:
+							{coderUIModel.
+							anEvent} ]
 						ensure: [ anEvent currentTarget: aCurrentTarget ] ] ]
 ]
 
@@ -113,7 +112,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 	aGtCoderAction icon
 		ifNotNil: [ button icon: aGtCoderAction icon asElement ].
 	^ button
-		beSmall;
+		beSmallSize;
 		padding: BlInsets empty;
 		margin: BlInsets empty;
 		look:
@@ -128,9 +127,9 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 								ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
 							aButton
 								beSmall;
-								look: BrGlamorousButtonWithIconLook 
-									- BrGlamorousButtonWithLabelTooltipLook
-									- BrGlamorousButtonExteriorLook;
+								look:
+									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
+										- BrGlamorousButtonExteriorLook;
 								padding: BlInsets empty;
 								margin: BlInsets empty;
 								yourself ]
@@ -145,7 +144,13 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 								editor: (BrTextEditor new text: '' asRopedText);
 								requestFocus;
 								constraintsDo: [ :c | 
-									c margin: (BlInsets top: 1 left: 0 bottom: 0 right: 0).
+									c
+										margin:
+											(BlInsets
+												top: 1
+												left: 0
+												bottom: 0
+												right: 0).
 									c horizontal matchParent.
 									c vertical fitContent ].
 							classCompleter := GtCompletionController
