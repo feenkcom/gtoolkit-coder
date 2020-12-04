@@ -1389,15 +1389,9 @@ GtMethodCoder >> slideAstFor: anAST into: coderAddOns [
 ]
 
 { #category : #'api - accessing' }
-GtMethodCoder >> sourceCode: aGtCoderSourceCode [
+GtMethodCoder >> sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy [
 	self clearExample.
-	super sourceCode: aGtCoderSourceCode.
-]
-
-{ #category : #'api - accessing' }
-GtMethodCoder >> sourceCodeSynchronously: aGtCoderSourceCode [
-	self clearExample.
-	super sourceCodeSynchronously: aGtCoderSourceCode.
+	super sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy
 ]
 
 { #category : #'private - subscriptions' }
