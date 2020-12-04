@@ -23,5 +23,5 @@ GtSourceCoderDiscardChangesShortcut >> name [
 
 { #category : #evaluation }
 GtSourceCoderDiscardChangesShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
-	aGtSourceCoder sourceCoderUIModel discardChanges
+	aGtSourceCoder discardChanges
 ]
