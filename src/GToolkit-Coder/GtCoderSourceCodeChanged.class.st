@@ -5,6 +5,7 @@ Class {
 	#name : #GtCoderSourceCodeChanged,
 	#superclass : #GtCoderAnnouncement,
 	#instVars : [
+		'source',
 		'updateStragegy'
 	],
 	#category : #'GToolkit-Coder-Event'
@@ -14,6 +15,16 @@ Class {
 GtCoderSourceCodeChanged >> isSynchronous [
 	^ self updateStragegy notNil
 		and: [ self updateStragegy isSynchronous ]
+]
+
+{ #category : #accessing }
+GtCoderSourceCodeChanged >> source [
+	^ source
+]
+
+{ #category : #accessing }
+GtCoderSourceCodeChanged >> source: anObject [
+	source := anObject
 ]
 
 { #category : #accessing }

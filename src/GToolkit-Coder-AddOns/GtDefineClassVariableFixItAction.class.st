@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 GtDefineClassVariableFixItAction >> description [
 	^ 'Add class variable ' , node name , ' to class '
-		, sourceCoder classOrMetaClass name
+		, sourceCoder behavior name
 ]
 
 { #category : #accessing }

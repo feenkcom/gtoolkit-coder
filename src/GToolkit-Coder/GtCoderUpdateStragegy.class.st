@@ -7,10 +7,21 @@ Class {
 	#name : #GtCoderUpdateStragegy,
 	#superclass : #Object,
 	#instVars : [
+		'announcementSource',
 		'isSynchronous'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #accessing }
+GtCoderUpdateStragegy >> announcementSource [
+	^ announcementSource
+]
+
+{ #category : #accessing }
+GtCoderUpdateStragegy >> announcementSource: anObject [
+	announcementSource := anObject
+]
 
 { #category : #accessing }
 GtCoderUpdateStragegy >> isSynchronous [

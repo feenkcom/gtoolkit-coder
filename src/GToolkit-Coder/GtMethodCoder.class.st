@@ -107,15 +107,14 @@ GtMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 { #category : #'api - refactorings' }
 GtMethodCoder >> addClassVariable: aString [
 	| refactoring |
-
 	refactoring := RBAddClassVariableRefactoring
 		variable: aString
-		class: self classOrMetaClass instanceSide.
+		class: self behavior instanceSide.
 	refactoring execute.
-	
+
 	"Need to reset AST for undeclared variables"
 	self resetASTCache.
-	
+
 	"and restyle the text"
 	self requestStyleSourceText
 ]
@@ -1390,15 +1389,9 @@ GtMethodCoder >> slideAstFor: anAST into: coderAddOns [
 ]
 
 { #category : #'api - accessing' }
-GtMethodCoder >> sourceCode: aGtCoderSourceCode [
+GtMethodCoder >> sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy [
 	self clearExample.
-	super sourceCode: aGtCoderSourceCode.
-]
-
-{ #category : #'api - accessing' }
-GtMethodCoder >> sourceCodeSynchronously: aGtCoderSourceCode [
-	self clearExample.
-	super sourceCodeSynchronously: aGtCoderSourceCode.
+	super sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy
 ]
 
 { #category : #'private - subscriptions' }
