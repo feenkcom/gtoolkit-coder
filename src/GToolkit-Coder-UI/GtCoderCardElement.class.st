@@ -52,10 +52,6 @@ GtCoderCardElement >> detailsLabel [
 { #category : #initialization }
 GtCoderCardElement >> initialize [
 	super initialize.
-	self viewModel: (BrInteractiveModel new addStates: { 
-				 BrEnablementModel new.
-				 BrPressModel new.
-				 BrHoverModel new }).
 	self look: (BrGlamorousButtonExteriorLook new borderPaint: Color transparent).
 	self layout: (BlLinearLayout vertical cellSpacing: 2).
 	self constraintsDo: [ :c | 

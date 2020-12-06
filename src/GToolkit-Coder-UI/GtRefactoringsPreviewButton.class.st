@@ -23,7 +23,7 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 
 	anAcceptButton := BrButton new
 		icon: BrGlamorousVectorIcons accept;
-		beSmall;
+		beSmallSize;
 		requestFocus;
 		look: BrGlamorousButtonWithIconLook new;
 		label: 'Save';

@@ -126,7 +126,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 							aGtCoderAction icon
 								ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
 							aButton
-								beSmall;
+								beSmallSize;
 								look:
 									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
 										- BrGlamorousButtonExteriorLook;

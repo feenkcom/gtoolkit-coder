@@ -18,7 +18,7 @@ GtPreviewChangeButton >> buildDropDownElement [
 	element addChild: changeStencil asElement.
 	unloadButton := BrButton new
 		icon: self icon;
-		beSmall;
+		beSmallSize;
 		requestFocus;
 		look: BrGlamorousButtonWithIconLook new;
 		label: self label;
@@ -68,7 +68,7 @@ GtPreviewChangeButton >> initialize [
 					(BrGlamorousWithDropdownLook
 						handle: [ BrButton new
 								icon: BrGlamorousIcons empty;
-								beSmall;
+								beSmallSize;
 								look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
 						content: [ self buildDropDownElement ])
 ]

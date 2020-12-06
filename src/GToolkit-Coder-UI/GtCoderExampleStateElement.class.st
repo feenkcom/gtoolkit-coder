@@ -140,19 +140,19 @@ GtCoderExampleStateElement >> newNotExecutedToolbar [
 			icon: BrGlamorousVectorIcons play;
 			label: 'Play';
 			action: [ :aButton | self playExampleFrom: aButton ];
-			beSmall);
+			beSmallSize);
 		addItem: (BrButton new
 			look: BrGlamorousButtonWithIconLook;
 			icon: BrGlamorousVectorIcons playinspect;
 			label: 'Play and Inspect';
 			action: [ :aButton | self playAndInspectExampleFrom: aButton ];
-			beSmall);
+			beSmallSize);
 		addChild: (BrButton new
 			look: BrGlamorousButtonWithIconLook;
 			icon: BrGlamorousVectorIcons debug;
 			label: 'Debug';
 			action: [ :aButton | self debugExampleFrom: aButton ];
-			beSmall)
+			beSmallSize)
 ]
 
 { #category : #'private - instance creation' }

@@ -68,12 +68,12 @@ GtBehaviorMethodCoderTagsElement >> newEditableClassTag [
 				+
 					(BrGlamorousWithDropdownLook
 						handle: [ BrButton new
-								beSmall;
+								beSmallSize;
 								disable;
 								look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
 								label: self behaviorSideName ]
 						content: [ BrButton new
-								beSmall;
+								beSmallSize;
 								look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
 								label: self behaviorOtherSideName;
 								action: [ :aButton | 

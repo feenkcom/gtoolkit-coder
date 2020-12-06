@@ -61,13 +61,8 @@ GtMethodCoder >> buildRemoveMethodLabel: anElement [
 		addChild:
 			(BrButton new
 				look: BrGlamorousLinkSquaredButtonWithLabelLook new;
-				beSmall;
-				margin:
-					(BlInsets
-						top: 10
-						left: 2
-						bottom: 10
-						right: 10);
+				beSmallSize;
+				margin: (BlInsets top: 10 left: 2 bottom: 10 right: 10);
 				label:
 					(references size printString , ' method'
 						,
