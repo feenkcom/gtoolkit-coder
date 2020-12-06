@@ -174,16 +174,13 @@ GtFilterTagElement >> initialize [
 	super initialize.
 	self fitContent.
 	self margin: (BlInsets all: 3).
-	self
-		look:
-			(BrInteractiveCommonLook new
-				default: [ :aWidget | 
-					aWidget geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
-					aWidget background: BrGlamorousColors neutralBackgroundColor.
-					aWidget border: BlBorder empty ];
-				when: BrInteractionState hovered
-					style:
-						[ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor darker ])
+	self addLook:
+		(BrStyleCommonLook new
+			default: [ :aStyle | 
+				aStyle geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
+				aStyle background: BrGlamorousColors neutralBackgroundColor.
+				aStyle border: BlBorder empty ];
+			hovered: [ :aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker ])
 ]
 
 { #category : #testing }
