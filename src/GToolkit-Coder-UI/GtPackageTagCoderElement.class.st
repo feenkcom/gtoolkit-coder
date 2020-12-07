@@ -95,6 +95,7 @@ GtPackageTagCoderElement >> buildParentLink [
 					(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
 						+ BrGlamorousLabelLook new glamorousRegularFont;
 				label: packageTagCoder package name;
+				fitContent;
 				beSmallSize;
 				action: [ | anEvent |
 					anEvent := GtCoderToReplace new

@@ -82,8 +82,8 @@ GtCoderToolbarElement >> initialize [
 	self addChild: self toolbarElement as: #toolbar.
 	
 	self addLook: (BrLayoutResizerLook new
-		anyToFitContent: self;
-		anyToFitContent: self toolbarElement).
+		anyToFitContent;
+		anyToFitContent: self toolbarElement)
 ]
 
 { #category : #initialization }

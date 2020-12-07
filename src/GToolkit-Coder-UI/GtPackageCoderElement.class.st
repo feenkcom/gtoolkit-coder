@@ -98,6 +98,7 @@ GtPackageCoderElement >> buildParentLink [
 				+ BrGlamorousLabelLook new glamorousRegularFont;
 			label: 'Pharo';
 			beSmallSize;
+			fitContent;
 			action: [
 				| aCoderToReplace |
 				aCoderToReplace := (GtCoderToReplace new coder: GtPackagesCoder new).
