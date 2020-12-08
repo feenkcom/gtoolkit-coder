@@ -27,6 +27,9 @@ GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
+	
+	self rowStencil: BrGlamorousSimpleTreeSelectableRowElementStencilBuilder new.
+	
 	self
 		nodeStencil: [ BrLabel new
 				beSmallSize;
