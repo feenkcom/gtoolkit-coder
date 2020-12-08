@@ -20,7 +20,7 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 				+
 					(BrGlamorousWithDropdownLook
 						handle: [ BrButton new
-								beTiny;
+								beTinySize;
 								look:
 									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
 										- BrGlamorousButtonExteriorLook;
