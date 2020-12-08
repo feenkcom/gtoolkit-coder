@@ -83,8 +83,10 @@ GtPackageTagCoderElement >> buildParentLink [
 		addChild:
 			(BrLabel new
 				margin: (BlInsets left: 4);
-				beSmall;
-				look: (BrGlamorousLabelLook new glamorousRegularFont foreground: BrGlamorousColors defaultButtonTextColor);
+				beSmallSize;
+				look:
+					(BrGlamorousLabelLook new glamorousRegularFont
+						foreground: BrGlamorousColors defaultButtonTextColor);
 				text: 'In: ').
 	element
 		addChild:
@@ -93,13 +95,12 @@ GtPackageTagCoderElement >> buildParentLink [
 					(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
 						+ BrGlamorousLabelLook new glamorousRegularFont;
 				label: packageTagCoder package name;
-				beSmall;
-				action: [
-					| anEvent |
-
-					anEvent := (GtCoderToReplace new coder: packageTagCoder packageCoder).
+				fitContent;
+				beSmallSize;
+				action: [ | anEvent |
+					anEvent := GtCoderToReplace new
+						coder: packageTagCoder packageCoder.
 					self fireEvent: anEvent.
-
 					anEvent isConsumed
 						ifFalse: [ self phlow spawnObject: anEvent coder ] ]).
 	^ element

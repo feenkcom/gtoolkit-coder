@@ -60,25 +60,26 @@ GtBehaviorMethodCoderTagsElement >> newClassTag [
 ]
 
 { #category : #'instance creation' }
-GtBehaviorMethodCoderTagsElement >> newEditableClassTag [	
+GtBehaviorMethodCoderTagsElement >> newEditableClassTag [
 	^ BrButton new
-		beTiny;
-		look: BrGlamorousButtonWithLabelLook + (BrGlamorousWithDropdownLook
-			handle: [
-				BrButton new
-					beSmall;
-					disable;
-					look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
-					label: self behaviorSideName ]
-			content: [
-				BrButton new
-					beSmall;
-					look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
-					label: self behaviorOtherSideName;
-					action: [ :aButton |
-						aButton fireEvent: (BrDropdownHideWish new).
-						self methodCoderUIModel coder moveMethodToInstanceOrClass.
-						classTag label: self behaviorSideName ] ])
+		beTinySize;
+		look:
+			BrGlamorousButtonWithLabelLook
+				+
+					(BrGlamorousWithDropdownLook
+						handle: [ BrButton new
+								beSmallSize;
+								disable;
+								look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
+								label: self behaviorSideName ]
+						content: [ BrButton new
+								beSmallSize;
+								look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
+								label: self behaviorOtherSideName;
+								action: [ :aButton | 
+									aButton fireEvent: BrDropdownHideWish new.
+									self methodCoderUIModel coder moveMethodToInstanceOrClass.
+									classTag label: self behaviorSideName ] ])
 ]
 
 { #category : #'instance creation' }

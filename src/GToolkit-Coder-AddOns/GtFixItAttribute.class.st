@@ -10,24 +10,25 @@ Class {
 { #category : #accessing }
 GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	"Return an element that should affect (either append or replace) a provided text piece"
-	<return: #SequenceableCollection of: #BlElement>
 
+	<return: #SequenceableCollection of: #BlElement>
 	^ BrButton new
-		beTiny;
+		beTinySize;
 		label: 'Fix it';
-		look: BrGlamorousButtonWithIconLook - BrGlamorousButtonExteriorLook +
-			(BrGlamorousWithDropdownLook
-				handle: [
-					BrButton new
-						beTiny;
-						look: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
-								- BrGlamorousButtonExteriorLook;
-						icon: BrGlamorousVectorIcons repair;
-						yourself ]
-				content: [
-					GtCoderContextMenuContent new
-						editorElement: anEditorElement;
-						items: (fixItActionsBlock value collect: [ :each | each menuAction ]) ]);
+		look:
+			BrGlamorousButtonWithIconLook - BrGlamorousButtonExteriorLook
+				+
+					(BrGlamorousWithDropdownLook
+						handle: [ BrButton new
+								beTinySize;
+								look:
+									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
+										- BrGlamorousButtonExteriorLook;
+								icon: BrGlamorousVectorIcons repair;
+								yourself ]
+						content: [ GtCoderContextMenuContent new
+								editorElement: anEditorElement;
+								items: (fixItActionsBlock value collect: [ :each | each menuAction ]) ]);
 		icon: BrGlamorousVectorIcons repair;
 		yourself
 ]

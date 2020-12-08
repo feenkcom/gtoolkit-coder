@@ -61,7 +61,7 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 
 	saveButton := BrButton new
 		icon: BrGlamorousVectorIcons accept;
-		beSmall;
+		beSmallSize;
 		look: BrGlamorousButtonWithIconLook new;
 		label: 'Save';
 		action: [ self compileBehavior ];

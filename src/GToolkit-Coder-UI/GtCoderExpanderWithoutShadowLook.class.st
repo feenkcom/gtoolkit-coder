@@ -23,8 +23,7 @@ GtCoderExpanderWithoutShadowLook >> borderFocusedPaint [
 
 { #category : #accessing }
 GtCoderExpanderWithoutShadowLook >> borderFocusedPaint: aPaintOrColor [
-	borderFocusedPaint := aPaintOrColor.
-	styleLook requestStates
+	borderFocusedPaint := aPaintOrColor
 ]
 
 { #category : #accessing }
@@ -34,8 +33,7 @@ GtCoderExpanderWithoutShadowLook >> borderPaint [
 
 { #category : #accessing }
 GtCoderExpanderWithoutShadowLook >> borderPaint: aPaintOrColor [
-	borderPaint := aPaintOrColor.
-	styleLook requestStates
+	borderPaint := aPaintOrColor
 ]
 
 { #category : #accessing }
@@ -45,8 +43,7 @@ GtCoderExpanderWithoutShadowLook >> borderWidth [
 
 { #category : #accessing }
 GtCoderExpanderWithoutShadowLook >> borderWidth: anInteger [
-	borderWidth := anInteger.
-	styleLook requestStates
+	borderWidth := anInteger
 ]
 
 { #category : #accessing }
@@ -56,8 +53,7 @@ GtCoderExpanderWithoutShadowLook >> cornerRadius [
 
 { #category : #accessing }
 GtCoderExpanderWithoutShadowLook >> cornerRadius: aNumber [
-	cornerRadius := aNumber.
-	styleLook requestStates
+	cornerRadius := aNumber
 ]
 
 { #category : #initialization }
@@ -98,7 +94,7 @@ GtCoderExpanderWithoutShadowLook >> initialize [
 	aTriangle := self newTriangle.
 	toggle := self newToggle.
 	toggle addChild: aTriangle.
-			
+
 	sidebar := self newSidebar.
 	sidebar addChild: toggle.
 
@@ -106,21 +102,23 @@ GtCoderExpanderWithoutShadowLook >> initialize [
 		padding: self padding;
 		layout: BlLinearLayout vertical.
 
-	self add: (styleLook := BrInteractiveCommonLook new
-			default: [ :aWidget | 
-				sidebar background: self borderPaint.
-				aWidget border: (BlBorder paint: self borderPaint width: self borderWidth) ];
-			collapsed: [ :aWidget | 
-				aTriangle geometry: self newCollapsedTriangleGeometry.
-				aWidget background: Color transparent.
-				aWidget border: (aWidget border copyWithWidth: self borderWidth) ];
-			expanded: [ :aWidget | 
-				aTriangle geometry: self newExpandedTriangleGeometry.
-				aWidget background: Color white.
-				aWidget border: (aWidget border copyWithWidth: self expandedBorderWidth) ];
-			focused: [ :aWidget |
-				sidebar background: self borderFocusedPaint.
-				aWidget border: (aWidget border copyWithPaint: self borderFocusedPaint) ]).
+	self add: (BrStyleCommonLook new
+		collapsed: [ :aStyle |
+			aStyle border: (BlBorder paint: self borderPaint width: self borderWidth) ];
+		expanded: [ :aStyle |
+			aStyle background: Color white.
+			aStyle border: (BlBorder paint: self borderPaint width: self expandedBorderWidth) ];
+		focused: [ :aStyle | (BlBorder paint: self borderFocusedPaint width: self expandedBorderWidth) ]).
+
+	self add: (BrStyleCommonLook new
+		target: aTriangle;
+		collapsed: [ :aStyle | aStyle geometry: self newCollapsedTriangleGeometry ];
+		expanded: [ :aStyle | aStyle geometry: self newExpandedTriangleGeometry ]).
+
+	self add: (BrStyleCommonLook new
+		target: sidebar;
+		default: [ :aStyle | aStyle background: self borderPaint ];
+		focused: [ :aStyle | aStyle background: self borderFocusedPaint ]).
 
 	self addChangeAddChildAs: #(sidebar) with: [ sidebar ].
 	self addChangeAddChildAs: #(content) with: [ container ].

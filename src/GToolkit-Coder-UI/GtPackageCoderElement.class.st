@@ -88,7 +88,7 @@ GtPackageCoderElement >> buildParentLink [
 	aLinkContainer addChild:
 		(BrLabel new
 			margin: (BlInsets left: 4);
-			beSmall;
+			beSmallSize;
 			look: (BrGlamorousLabelLook new glamorousRegularFont foreground: BrGlamorousColors defaultButtonTextColor);
 			text: 'In: ').
 
@@ -97,7 +97,8 @@ GtPackageCoderElement >> buildParentLink [
 			look: (BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
 				+ BrGlamorousLabelLook new glamorousRegularFont;
 			label: 'Pharo';
-			beSmall;
+			beSmallSize;
+			fitContent;
 			action: [
 				| aCoderToReplace |
 				aCoderToReplace := (GtCoderToReplace new coder: GtPackagesCoder new).

@@ -107,14 +107,13 @@ GtCoderExampleStateElement >> initializeTooltipLook [
 
 { #category : #initialization }
 GtCoderExampleStateElement >> initializeViewModels [
-	| anInteractiveModel aButtonModel |
-	anInteractiveModel := BrInteractiveModel new addStates: {
-		BrLayoutHorizontalResizerModel exact: 8.
-		BrLayoutVerticalResizerModel exact: 8.
-		BrHoverModel new }.
+	| aButtonModel |
+	
+	self exact: 8@8.
+	
 	aButtonModel := BrButtonModel new
 		action: [ :aButton | self onClick: aButton ].
-	self viewModel: (aButtonModel + anInteractiveModel)
+	self viewModel: (aButtonModel)
 ]
 
 { #category : #'private - instance creation' }
@@ -141,19 +140,19 @@ GtCoderExampleStateElement >> newNotExecutedToolbar [
 			icon: BrGlamorousVectorIcons play;
 			label: 'Play';
 			action: [ :aButton | self playExampleFrom: aButton ];
-			beSmall);
+			beSmallSize);
 		addItem: (BrButton new
 			look: BrGlamorousButtonWithIconLook;
 			icon: BrGlamorousVectorIcons playinspect;
 			label: 'Play and Inspect';
 			action: [ :aButton | self playAndInspectExampleFrom: aButton ];
-			beSmall);
+			beSmallSize);
 		addChild: (BrButton new
 			look: BrGlamorousButtonWithIconLook;
 			icon: BrGlamorousVectorIcons debug;
 			label: 'Debug';
 			action: [ :aButton | self debugExampleFrom: aButton ];
-			beSmall)
+			beSmallSize)
 ]
 
 { #category : #'private - instance creation' }

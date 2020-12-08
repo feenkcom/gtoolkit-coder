@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderExpanderShadowLook,
-	#superclass : #BrInteractiveCommonLook,
+	#superclass : #BrStyleCommonLook,
 	#category : #'GToolkit-Coder-UI-Looks'
 }
 
@@ -10,14 +10,18 @@ GtCoderExpanderShadowLook >> initialize [
 	super initialize.
 	
 	shadowLook := BrShadowLook new.
+	
 	focusedShadowLook := BrShadowLook new color: (BrGlamorousColors primaryBorderColor alpha: 0.4).
 
 	self
-		default: [ 			
-			self remove: shadowLook.
-			self remove: focusedShadowLook ];						
 		when: (self state expanded & self state focused)
-			style: [ self add: focusedShadowLook ];
+			style: [ :aStyle |
+				aStyle
+					do: [ self add: focusedShadowLook ]
+					after: [ self remove: focusedShadowLook ] ];
 		when: (self state expanded & self state unfocused)
-			style: [ self add: shadowLook ]
+			style: [  :aStyle |
+				aStyle
+					do: [ self add: shadowLook ]
+					after: [ self remove: shadowLook ] ]
 ]

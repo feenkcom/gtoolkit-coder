@@ -15,6 +15,6 @@ Class {
 { #category : #initialization }
 GtCoderElement >> initialize [
 	super initialize.
-	self addInteractiveModelState: BrLayoutHorizontalResizerModel matchParent.
-	self addInteractiveModelState: BrLayoutVerticalResizerModel matchParent.
+	
+	self matchParent
 ]

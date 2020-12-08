@@ -35,10 +35,12 @@ GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 GtCoderNavigationPackagesTreeElement >> initialize [
 	super initialize.
 
+	self rowStencil: BrGlamorousSimpleTreeSelectableRowElementStencilBuilder new.
+
 	self nodeStencil: [
 			BrLabel new
-				beSmall;
-				look: BrGlamorousLabelLook ];
+				beSmallSize;
+				look: BrGlamorousListLabelLook ];
 		nodeDataBinder: [ :aPackageElement :aPackage |
 			aPackageElement
 				text: (aPackage

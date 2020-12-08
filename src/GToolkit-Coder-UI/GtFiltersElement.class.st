@@ -126,7 +126,7 @@ GtFiltersElement >> newAddTagButton [
 		icon: BrGlamorousVectorIcons add;
 		label: 'Add Filter';
 		margin: (BlInsets all: 2);
-		beSmall;
+		beSmallSize;
 		hExact: 20;
 		constraintsDo: [ :c | c flow vertical alignCenter ];
 		action: [ :aButton | self createNewTag ];
