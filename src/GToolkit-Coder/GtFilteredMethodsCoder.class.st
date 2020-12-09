@@ -133,11 +133,6 @@ GtFilteredMethodsCoder >> initialize [
 	allCoders := #().
 ]
 
-{ #category : #testing }
-GtFilteredMethodsCoder >> isForClass [
-	^ false
-]
-
 { #category : #'private - accessing' }
 GtFilteredMethodsCoder >> methodRemoved: aValueRemoved [
 	| toRemove |

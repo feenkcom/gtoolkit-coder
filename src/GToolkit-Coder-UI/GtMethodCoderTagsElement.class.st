@@ -6,7 +6,6 @@ Class {
 	#superclass : #BlElement,
 	#instVars : [
 		'protocolTag',
-		'isEditable',
 		'methodCoderUIModel'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Method'
@@ -37,18 +36,12 @@ GtMethodCoderTagsElement >> buildTags [
 GtMethodCoderTagsElement >> initialize [
 	super initialize.
 	
-	isEditable := false.
-	
 	self 
 		layout: (BlLinearLayout horizontal cellSpacing: 4);
 		constraintsDo: [ :c |
 			c horizontal fitContent.
-			c vertical fitContent ]
-]
-
-{ #category : #initialization }
-GtMethodCoderTagsElement >> initializeTags [
-	self removeChildren.	
+			c vertical fitContent ].
+		
 	self addChildren: self buildTags
 ]
 
@@ -63,10 +56,11 @@ GtMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 		assert: [ aMethodCoderUIModel isKindOf: GtMethodCoderUIModel ]
 		description: [ 'Must be method coder''s UI Model' ].
 
-	(methodCoderUIModel isNil or: [ isEditable ~= aMethodCoderUIModel expanded ])
-		ifTrue: [
-			isEditable := aMethodCoderUIModel expanded.
-			self initializeTags ].
+	methodCoderUIModel == aMethodCoderUIModel
+		ifTrue: [ ^ self ].
+
+	"do not forget to unsubscribe from the previous coder"
+	self unsubscribeFromCoder.
 
 	methodCoderUIModel := aMethodCoderUIModel.
 	
@@ -78,87 +72,69 @@ GtMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 	self updateProtocolButton
 ]
 
-{ #category : #'instance creation' }
-GtMethodCoderTagsElement >> newEditableProtocolTag [
+{ #category : #'private - instance creation' }
+GtMethodCoderTagsElement >> newProtocolEditor [
+	| anEditor |
+
+	anEditor := BrEditableLabel new
+		text: (self protocolStringFor: self methodCoderUIModel);
+		constraintsDo: [ :c | c minWidth: 100 ];
+		look:
+			(BrGlamorousEditableLabelLook new
+				glamorousCodeFont;
+				defaultForeground: Color black;
+				fontSize: 13);
+		padding: (BlInsets all: 4);
+		switchToEditor;
+		requestFocus;
+		when: BrEditorAcceptWish
+			do: [ :aWish | 
+				aWish currentTarget fireEvent: (BrDropdownHideWish new).
+				self methodCoderUIModel coder renameProtocol: aWish text asString.
+				self updateProtocolButton ];
+		when: BrEditorCancelWish
+			do: [ :aWish | aWish currentTarget fireEvent: (BrDropdownHideWish new) ];
+		whenKey: BlKeyCombination primaryC
+			labelDo: [ :aShortcutEvent :aShortcut | 
+				Clipboard clipboardText: aShortcutEvent currentTarget text asString ].
+	(GtCompletionController
+		on: anEditor
+		strategy: GtMethodProtocolCompletionStrategy new) install.
+
+	^ anEditor
+]
+
+{ #category : #'private - instance creation' }
+GtMethodCoderTagsElement >> newProtocolPickerList [
+	^ BrSimpleList new
+		vFitContentLimited;
+		hExact: 250;
+		itemStencil: [
+			BrButton new
+				beSmallSize;
+				look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
+				action: [ :aButton :aButtonModel |
+					aButton fireEvent: (BrDropdownHideWish new).
+					self methodCoderUIModel coder renameProtocol: aButtonModel model asString.
+					self updateProtocolButton ] ];
+		itemDataBinder: [ :eachButton :eachProtocol |
+			eachButton viewModel model: eachProtocol.
+			eachButton label: eachProtocol ];
+		items: self behaviorProtocols
+]
+
+{ #category : #'private - instance creation' }
+GtMethodCoderTagsElement >> newProtocolTag [
 	^ BrButton new
 		beTinySize;
 		look: BrGlamorousButtonWithLabelLook + (BrGlamorousWithDropdownLook
-			handle: [
-				| editor |
-
-				editor := BrEditableLabel new
-					text: (self protocolStringFor: self methodCoderUIModel);
-					constraintsDo: [ :c | c minWidth: 100 ];
-					look:
-						(BrGlamorousEditableLabelLook new
-							glamorousCodeFont;
-							defaultForeground: Color black;
-							fontSize: 13);
-					padding: (BlInsets all: 4);
-					switchToEditor;
-					requestFocus;
-					when: BrEditorAcceptWish
-						do: [ :aWish | 
-							aWish currentTarget fireEvent: (BrDropdownHideWish new).
-							self methodCoderUIModel coder renameProtocol: aWish text asString.
-							protocolTag label: (self protocolStringFor: self methodCoderUIModel) ];
-					when: BrEditorCancelWish
-						do: [ :aWish | aWish currentTarget fireEvent: (BrDropdownHideWish new) ];
-					whenKey: BlKeyCombination primaryC
-						labelDo: [ :aShortcutEvent :aShortcut | 
-							Clipboard clipboardText: aShortcutEvent currentTarget text asString ].
-				(GtCompletionController
-					on: editor
-					strategy: GtMethodProtocolCompletionStrategy new) install.
-				editor ]
-			content: [
-				BrSimpleList new
-					vFitContentLimited;
-					hExact: 250;
-					itemStencil: [
-						BrButton new
-							beSmallSize;
-							look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
-							action: [ :aButton :aButtonModel |
-								aButton fireEvent: (BrDropdownHideWish new).
-								self methodCoderUIModel coder renameProtocol: aButtonModel model asString.
-								protocolTag label: (self protocolStringFor: self methodCoderUIModel) ] ];
-					itemDataBinder: [ :eachButton :eachProtocol |
-						eachButton viewModel model: eachProtocol.
-						eachButton label: eachProtocol ];
-					items: self behaviorProtocols ])
-]
-
-{ #category : #'instance creation' }
-GtMethodCoderTagsElement >> newProtocolTag [
-	^ isEditable
-		ifTrue: [ self newEditableProtocolTag ]
-		ifFalse: [ self newReadonlyProtocolTag ]
-]
-
-{ #category : #'instance creation' }
-GtMethodCoderTagsElement >> newReadonlyProtocolTag [
-	^ self newTag
-]
-
-{ #category : #'instance creation' }
-GtMethodCoderTagsElement >> newTag [
-	<return: #BlElement>
-
-	^ BrLabel new
-		look: (BrGlamorousLabelLook new
-			glamorousCodeFont;
-			foreground: Color black;
-			fontSize: 10);
-		text: '';
-		padding: (BlInsets all: 2)
+			handle: [ self newProtocolEditor ]
+			content: [ self newProtocolPickerList ])
 ]
 
 { #category : #'event handling' }
 GtMethodCoderTagsElement >> onCoderSourceTextModified: anAnnouncement [
-	
-	isEditable
-		ifTrue: [ protocolTag disabled: anAnnouncement coder isModified ]
+	protocolTag disabled: anAnnouncement coder isModified
 ]
 
 { #category : #private }
@@ -169,8 +145,14 @@ GtMethodCoderTagsElement >> protocolStringFor: aMethodCoderUIModel [
 ]
 
 { #category : #private }
+GtMethodCoderTagsElement >> unsubscribeFromCoder [
+	methodCoderUIModel
+		ifNil: [ ^ self ].
+
+	methodCoderUIModel coder unsubscribe: self
+]
+
+{ #category : #private }
 GtMethodCoderTagsElement >> updateProtocolButton [
-	isEditable
-		ifTrue: [ protocolTag label: (self protocolStringFor: self methodCoderUIModel) ]
-		ifFalse: [ protocolTag text: (self protocolStringFor: self methodCoderUIModel) ]
+	protocolTag label: (self protocolStringFor: self methodCoderUIModel)
 ]

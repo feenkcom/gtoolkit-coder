@@ -51,7 +51,7 @@ GtCoderElementForSnippetsWithDestinationExamples >> coderContainerWithSpawnBelow
 			yourself ].
 	aScripter click
 		label: 'Click on destination button';
-		onChildOfClass: GtExpandableCoderElement;
+		onChildOfClass: GtExpandableSourceCoderElement;
 		onGtPharoSnippetDestinationButton.
 	aScripter click
 		label: 'Click on the inspect button';

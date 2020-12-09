@@ -54,13 +54,6 @@ GtBehaviorMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 
 { #category : #'instance creation' }
 GtBehaviorMethodCoderTagsElement >> newClassTag [
-	^ isEditable
-		ifTrue: [ self newEditableClassTag ]
-		ifFalse: [ self newReadonlyClassTag ]
-]
-
-{ #category : #'instance creation' }
-GtBehaviorMethodCoderTagsElement >> newEditableClassTag [
 	^ BrButton new
 		beTinySize;
 		look:
@@ -82,18 +75,8 @@ GtBehaviorMethodCoderTagsElement >> newEditableClassTag [
 									classTag label: self behaviorSideName ] ])
 ]
 
-{ #category : #'instance creation' }
-GtBehaviorMethodCoderTagsElement >> newReadonlyClassTag [
-	<return: #BlElement>
-
-	^ self newTag
-]
-
 { #category : #private }
 GtBehaviorMethodCoderTagsElement >> updateBehaviorSideButton [
-	isEditable
-		ifTrue: [
-			classTag label: (self classTagStringFor: self methodCoderUIModel).
-			classTag enabled: self methodCoderUIModel coder canMoveMethodToInstanceOrClass ]
-		ifFalse: [ classTag text: (self classTagStringFor: self methodCoderUIModel) ]
+	classTag label: (self classTagStringFor: self methodCoderUIModel).
+	classTag enabled: self methodCoderUIModel coder canMoveMethodToInstanceOrClass
 ]

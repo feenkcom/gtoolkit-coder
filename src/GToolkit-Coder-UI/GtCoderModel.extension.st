@@ -38,5 +38,5 @@ GtCoderModel >> defaultCoderLook [
 
 { #category : #'*GToolkit-Coder-UI' }
 GtCoderModel >> elementClass [
-	^ GtExpandableCoderElement
+	^ GtExpandableSourceCoderElement
 ]

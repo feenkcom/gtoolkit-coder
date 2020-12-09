@@ -22,6 +22,11 @@ GtMethodsCoder >> forItems: aCollection [
 			coders do: [ :each | each highlighter: items highlighter ] ]
 ]
 
+{ #category : #testing }
+GtMethodsCoder >> isForClass [
+	^ false
+]
+
 { #category : #'event handling' }
 GtMethodsCoder >> methodAdded: aValueAdded [
 	| aCoder |

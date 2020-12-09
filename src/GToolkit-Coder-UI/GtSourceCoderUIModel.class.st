@@ -27,7 +27,7 @@ GtSourceCoderUIModel >> editorState: anObject [
 
 { #category : #accessing }
 GtSourceCoderUIModel >> elementClass [
-	^ GtExpandableCoderElement
+	^ GtExpandableSourceCoderElement
 ]
 
 { #category : #accessing }
