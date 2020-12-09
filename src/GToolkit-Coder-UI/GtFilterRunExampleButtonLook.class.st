@@ -82,6 +82,13 @@ GtFilterRunExampleButtonLook >> isUpdateRequested [
 	^ isUpdateRequested
 ]
 
+{ #category : #'api - hooks' }
+GtFilterRunExampleButtonLook >> onAttachedTo: anElement [
+	super onAttachedTo: anElement.
+
+	self postponeUpdate.
+]
+
 { #category : #'private - hooks' }
 GtFilterRunExampleButtonLook >> onCoderChanged [
 	"We expect that the Coder is changed just once before the look is attached."
@@ -96,12 +103,6 @@ GtFilterRunExampleButtonLook >> onCoderChanged: aGtCodersCodersChanged [
 
 { #category : #'private - announcement handling' }
 GtFilterRunExampleButtonLook >> onExampleExecuted: aGtCoderExampleExecuted [
-	self postponeUpdate.
-]
-
-{ #category : #'api - hooks' }
-GtFilterRunExampleButtonLook >> onInstalledIn: anElement [
-	super onInstalledIn: anElement.
 	self postponeUpdate.
 ]
 

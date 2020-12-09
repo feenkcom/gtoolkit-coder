@@ -33,6 +33,16 @@ GtMethodCoderUIModel >> discardChanges [
 	self allowSave
 ]
 
+{ #category : #accessing }
+GtMethodCoderUIModel >> elementClass [
+	self coders
+		ifNil: [ ^ GtExpandableMethodCoderElement ].
+
+	^ self coders isForClass
+		ifTrue: [ GtExpandableMethodCoderForBehaviorElement ]
+		ifFalse: [ GtExpandableMethodCoderElement ]
+]
+
 { #category : #'gt-extension' }
 GtMethodCoderUIModel >> gtInfo [
 	^ super gtInfo, (Array streamContents: [ :aStream |

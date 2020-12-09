@@ -7,10 +7,7 @@ Class {
 { #category : #adding }
 GtExpandedOnlyCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
 	aSourceCoder coderLook
-		ifNotNil: [ :aCoderLook | anElement addLook: aCoderLook ].
-
-	(aSourceCoder coders ifNotNil: #coderLook)
-		ifNotNil: [ :aCodersLook | anElement addLook: aCodersLook ]
+		ifNotNil: [ :aCoderLook | anElement addLook: aCoderLook ]
 ]
 
 { #category : #converting }

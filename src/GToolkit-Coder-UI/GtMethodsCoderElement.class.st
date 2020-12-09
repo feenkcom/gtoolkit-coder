@@ -69,7 +69,7 @@ GtMethodsCoderElement >> listElement [
 	listElement := BrSimpleList new
 		matchParent;
 		beInSeparateCompositionLayer;
-		itemType: [ :itemTypeFactory :eachCoderUIModel | eachCoderUIModel coder elementClass ];
+		itemType: [ :itemTypeFactory :eachCoderUIModel | eachCoderUIModel elementClass ];
 		itemId: [ :eachCoderUIModel | eachCoderUIModel coder id ];
 		itemStencil: [ :anElementClass | anElementClass new ];
 		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ];

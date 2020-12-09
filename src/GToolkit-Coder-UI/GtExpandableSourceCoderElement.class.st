@@ -1,5 +1,5 @@
 Class {
-	#name : #GtExpandableCoderElement,
+	#name : #GtExpandableSourceCoderElement,
 	#superclass : #BrExpander,
 	#instVars : [
 		'collapsedElement',
@@ -10,21 +10,18 @@ Class {
 }
 
 { #category : #private }
-GtExpandableCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
+GtExpandableSourceCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
 	aSourceCoder coderLook
-		ifNotNil: [ :aCoderLook | anElement addLook: aCoderLook ].
-
-	(aSourceCoder coders ifNotNil: #coderLook)
-		ifNotNil: [ :aCodersLook | anElement addLook: aCodersLook ]
+		ifNotNil: [ :aCoderLook | anElement addLook: aCoderLook ]
 ]
 
 { #category : #converting }
-GtExpandableCoderElement >> asVerticallyResizableDo: aBlock [
+GtExpandableSourceCoderElement >> asVerticallyResizableDo: aBlock [
 	^ self
 ]
 
 { #category : #private }
-GtExpandableCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollapsedElement [
+GtExpandableSourceCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollapsedElement [
 	aCollapsedElement coderUIModel: aSourceCoder.
 
 	"Initialize look just once"
@@ -34,7 +31,7 @@ GtExpandableCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollapsedEle
 ]
 
 { #category : #private }
-GtExpandableCoderElement >> assignExpandedCoder: aSourceCoder to: anExpandedElement [
+GtExpandableSourceCoderElement >> assignExpandedCoder: aSourceCoder to: anExpandedElement [
 	anExpandedElement coderUIModel: aSourceCoder.
 
 	"Initialize look just once"
@@ -44,27 +41,7 @@ GtExpandableCoderElement >> assignExpandedCoder: aSourceCoder to: anExpandedElem
 ]
 
 { #category : #accessing }
-GtExpandableCoderElement >> coder [
-	<return: #GtMethodCoder>
-	
-	self 
-		deprecated: 'Use #coderUIModel instead.'
-		transformWith: '`@receiver coder' -> '`@receiver coderUIModel'.
-		
-	^ self coderUIModel
-]
-
-{ #category : #accessing }
-GtExpandableCoderElement >> coder: aCoderUIModel [
-	self 
-		deprecated: 'Use #coderUIModel: instead.'
-		transformWith: '`@receiver coder: `@arg' -> '`@receiver coderUIModel: `@arg'.
-		
-	self coderUIModel: aCoderUIModel
-]
-
-{ #category : #accessing }
-GtExpandableCoderElement >> coderUIModel [
+GtExpandableSourceCoderElement >> coderUIModel [
 	<return: #GtMethodCoder>
 	self
 		assert: [ coderUIModel isNotNil ]
@@ -74,15 +51,19 @@ GtExpandableCoderElement >> coderUIModel [
 ]
 
 { #category : #accessing }
-GtExpandableCoderElement >> coderUIModel: aCoderUIModel [
+GtExpandableSourceCoderElement >> coderUIModel: aCoderUIModel [
 	self
 		assert: [ aCoderUIModel isNotNil ]
 		description: [ 'Coder must not be nil' ].
+
 	coderUIModel == aCoderUIModel
 		ifTrue: [ ^ self ].
+
 	coderUIModel
 		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
+
 	coderUIModel := aCoderUIModel.
+
 	coderUIModel expanded
 		ifTrue: [ expandedElement
 				ifNotNil: [ :anElement | self assignExpandedCoder: aCoderUIModel to: anElement ].
@@ -93,10 +74,13 @@ GtExpandableCoderElement >> coderUIModel: aCoderUIModel [
 					[ :anElement | self assignCollapsedCoder: aCoderUIModel to: anElement ].
 			expandedElement
 				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ].
+
 	coderUIModel focused
 		ifFalse: [ self loseFocus ].
+
 	self expanded: coderUIModel expanded.
-	aCoderUIModel coder subscribeToSystem.
+
+	coderUIModel coder subscribeToSystem.
 	coderUIModel coder announcer weak
 		when: GtCoderExpandedChanged send: #updateExpanded to: self;
 		when: GtCoderRequestFocus send: #requestFocusAsyncronously to: self;
@@ -104,19 +88,20 @@ GtExpandableCoderElement >> coderUIModel: aCoderUIModel [
 ]
 
 { #category : #accessing }
-GtExpandableCoderElement >> gtAllShortcutsFor: aView [
+GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 	<gtView>
 	self shortcuts ifEmpty: [ ^ aView empty ].
+
 	^ aView columnedList
 		title: 'All shortcuts' translated;
 		priority: 10;
 		items: [ self shortcuts , coderUIModel addOns shortcuts ];
-		column: 'Key' item: [ :each | each combination gtDisplayString ]
+		column: 'Key' item: [ :each | each combination gtDisplayString ];
 		column: 'Action' item: [ :each | each action asString ]
 ]
 
 { #category : #initialization }
-GtExpandableCoderElement >> initialize [
+GtExpandableSourceCoderElement >> initialize [
 	super initialize.
 
 	self
@@ -126,23 +111,10 @@ GtExpandableCoderElement >> initialize [
 		look: GtCoderExpanderLook;
 		beInSingleCompositionLayer.
 
-	self
-		when: BrExpandedEvent
-		do: [
-			self beInSeparateCompositionLayer.
-			coderUIModel ifNotNil: [ :aCoderUIModel |			
-				aCoderUIModel expanded: true.
-				(expandedElement notNil and: [ self isDirty: expandedElement ])
-					ifTrue: [ self assignExpandedCoder: aCoderUIModel to: expandedElement ] ] ].
+	self states withExpansion.
 
-	self
-		when: BrCollapsedEvent
-		do: [  :anEvent |
-			self beInSingleCompositionLayer.
-			coderUIModel ifNotNil: [ :aCoderUIModel |
-				aCoderUIModel expanded: false.
-				(collapsedElement notNil and: [ self isDirty: collapsedElement ])
-					ifTrue: [ self assignCollapsedCoder: aCoderUIModel to: collapsedElement ] ] ].
+	self when: BrExpandedEvent do: [ self onExpanded ].
+	self when: BrCollapsedEvent do: [ self onCollapsed ].
 
 	self
 		header: [ collapsedElement := self newCollapsedElement ];
@@ -150,19 +122,19 @@ GtExpandableCoderElement >> initialize [
 ]
 
 { #category : #private }
-GtExpandableCoderElement >> isDirty: anElement [
+GtExpandableSourceCoderElement >> isDirty: anElement [
 	^ anElement userData
 		at: #coderDirty
 		ifAbsent: [ false ]
 ]
 
 { #category : #private }
-GtExpandableCoderElement >> markDirty: anElement as: aBoolean [
+GtExpandableSourceCoderElement >> markDirty: anElement as: aBoolean [
 	anElement userData at: #coderDirty put: aBoolean
 ]
 
 { #category : #private }
-GtExpandableCoderElement >> newCollapsedElement [
+GtExpandableSourceCoderElement >> newCollapsedElement [
 	| aCollapsedElement |
 	aCollapsedElement := GtSourceCoderCollapsedContentElement new.
 
@@ -173,7 +145,7 @@ GtExpandableCoderElement >> newCollapsedElement [
 ]
 
 { #category : #private }
-GtExpandableCoderElement >> newExpandedElement [
+GtExpandableSourceCoderElement >> newExpandedElement [
 	| anExpandedElement |
 	anExpandedElement := GtSourceCoderExpandedContentElement new.
 
@@ -183,12 +155,32 @@ GtExpandableCoderElement >> newExpandedElement [
 	^ anExpandedElement
 ]
 
+{ #category : #private }
+GtExpandableSourceCoderElement >> onCollapsed [
+	self beInSingleCompositionLayer.
+	
+	coderUIModel ifNotNil: [ :aCoderUIModel |
+		aCoderUIModel expanded: false.
+		(collapsedElement notNil and: [ self isDirty: collapsedElement ])
+			ifTrue: [ self assignCollapsedCoder: aCoderUIModel to: collapsedElement ] ]
+]
+
+{ #category : #private }
+GtExpandableSourceCoderElement >> onExpanded [
+	self beInSeparateCompositionLayer.
+
+	coderUIModel ifNotNil: [ :aCoderUIModel |			
+		aCoderUIModel expanded: true.
+		(expandedElement notNil and: [ self isDirty: expandedElement ])
+			ifTrue: [ self assignExpandedCoder: aCoderUIModel to: expandedElement ] ]
+]
+
 { #category : #events }
-GtExpandableCoderElement >> onMethodRemoved: anAnnouncement [
+GtExpandableSourceCoderElement >> onMethodRemoved: anAnnouncement [
 ]
 
 { #category : #'focus requesting' }
-GtExpandableCoderElement >> requestFocus [
+GtExpandableSourceCoderElement >> requestFocus [
 	self
 		childNamed: #editor
 		ifFound: [ :anEditorElement | anEditorElement requestFocus ]
@@ -196,7 +188,7 @@ GtExpandableCoderElement >> requestFocus [
 ]
 
 { #category : #'focus requesting' }
-GtExpandableCoderElement >> requestFocusAsyncronously [
+GtExpandableSourceCoderElement >> requestFocusAsyncronously [
 	^ self
 		enqueueTask:
 			(BlTaskAction new
@@ -204,7 +196,7 @@ GtExpandableCoderElement >> requestFocusAsyncronously [
 ]
 
 { #category : #accessing }
-GtExpandableCoderElement >> saveCoderUIModel: aCoderUIModel [
+GtExpandableSourceCoderElement >> saveCoderUIModel: aCoderUIModel [
 	self
 		assert: [ aCoderUIModel isNotNil ]
 		description: [ 'Coder must not be nil' ].
@@ -213,7 +205,7 @@ GtExpandableCoderElement >> saveCoderUIModel: aCoderUIModel [
 ]
 
 { #category : #events }
-GtExpandableCoderElement >> updateExpanded [
+GtExpandableSourceCoderElement >> updateExpanded [
 	"Is sent when the coder model was requested to expand/collapse"
 
 	self expanded: coderUIModel expanded
