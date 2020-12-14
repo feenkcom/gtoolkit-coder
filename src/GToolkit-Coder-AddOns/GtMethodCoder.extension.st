@@ -111,8 +111,8 @@ GtMethodCoder >> renameAt: aTextPosition in: anEditorElement [
 	self
 		nodeAt: aTextPosition
 		ifFound: [ :aNode |
-			(aNode isMessage or: [ aNode isMethod ])
-				ifTrue: [ ^ self renameMethod: anEditorElement ].
+			(aNode isMessage or: [ aNode isMethod or: [ aNode isMethodPattern ] ])
+				ifTrue: [ ^ self renameMethod: anEditorElement node: aNode ].
 			aNode isVariable
 				ifTrue: [ 
 					aNode isLocallyDefined
@@ -158,8 +158,9 @@ GtMethodCoder >> renameLocalVariableIn: editorElement [
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> renameMethod: editorElement [
+GtMethodCoder >> renameMethod: editorElement node: aMessageOrMethodOrMethodPatternNode [
 	(GtRenameMethodController new
 		coder: self;
-		sourceElement: editorElement) execute
+		sourceElement: editorElement;
+		originalNode: aMessageOrMethodOrMethodPatternNode) execute
 ]

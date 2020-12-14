@@ -4,7 +4,7 @@ One of the usecases is to restyle the text after execution of a ==gtExample==
 "
 Class {
 	#name : #GtCoderStyleTextRequest,
-	#superclass : #GtCoderAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'afterAction'
 	],

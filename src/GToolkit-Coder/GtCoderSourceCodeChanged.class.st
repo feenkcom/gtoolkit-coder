@@ -3,7 +3,7 @@ Is sent when coder's source code changes
 "
 Class {
 	#name : #GtCoderSourceCodeChanged,
-	#superclass : #GtCoderAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'source',
 		'updateStragegy'

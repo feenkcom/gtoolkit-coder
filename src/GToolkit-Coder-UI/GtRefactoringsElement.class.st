@@ -25,9 +25,8 @@ GtRefactoringsElement >> activatableRefactoring: aRefactoring [
 
 { #category : #'api - refactorings' }
 GtRefactoringsElement >> applyRefactorings [
-	activatableRefactorings do: [ :eachRefactoring |
-		eachRefactoring isEnabled
-			ifTrue: [ eachRefactoring execute ] ]
+	activatableRefactorings
+		do: [ :eachRefactoring | eachRefactoring execute ]
 ]
 
 { #category : #initialization }
@@ -38,9 +37,15 @@ GtRefactoringsElement >> initialize [
 	self matchParent.
 	self padding: (BlInsets all: 10).
 	
-	refactoringsList := BrSimpleList new matchParent.
-	refactoringsList stencil: [ :eachRefactoring | eachRefactoring asElement ].
-	
+	refactoringsList := BrSimpleTree new.
+	refactoringsList
+		nodeType: [ :aTypeFactory :aTreeNode | aTreeNode value elementClass ];
+		nodeStencil: [ :aNodeType | aNodeType new ];
+		nodeDataBinder: [ :eachElement :eachUserActivatableRefactoring |
+			eachUserActivatableRefactoring isRefactoring
+				ifTrue: [ (eachElement activatableRefactoring: eachUserActivatableRefactoring) ]
+				ifFalse: [ (eachElement activatableChange: eachUserActivatableRefactoring) ] ].	
+
 	self addLook: (BrLayoutResizerLook inherit inherit: refactoringsList).
 	
 	self addChild: refactoringsList
@@ -51,5 +56,11 @@ GtRefactoringsElement >> refactorings: aCollectionOfRBRefactorings [
 	activatableRefactorings := (aCollectionOfRBRefactorings
 		collect: [ :eachRefactoring | self activatableRefactoring: eachRefactoring ])
 		sorted: [ :a :b | a isDangerous ].
-	refactoringsList items: activatableRefactorings
+
+	refactoringsList
+		items: activatableRefactorings
+		lazy: [ :eachUserActivatableChangeOrRefactoring |
+			eachUserActivatableChangeOrRefactoring isRefactoring
+				ifTrue: [ eachUserActivatableChangeOrRefactoring allChanges ]
+				ifFalse: [ #() ] ]
 ]

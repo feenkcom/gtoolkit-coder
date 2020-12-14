@@ -82,7 +82,6 @@ GtExpandableSourceCoderElement >> coderUIModel: aCoderUIModel [
 
 	coderUIModel coder subscribeToSystem.
 	coderUIModel coder announcer weak
-		when: GtCoderExpandedChanged send: #updateExpanded to: self;
 		when: GtCoderRequestFocus send: #requestFocusAsyncronously to: self;
 		when: GtCoderMethodRemoved send: #onMethodRemoved: to: self
 ]
@@ -202,11 +201,4 @@ GtExpandableSourceCoderElement >> saveCoderUIModel: aCoderUIModel [
 		description: [ 'Coder must not be nil' ].
 	
 	expandedElement ifNotNil: [ :anExpandedElement | anExpandedElement saveCoderUIModel: aCoderUIModel ]
-]
-
-{ #category : #events }
-GtExpandableSourceCoderElement >> updateExpanded [
-	"Is sent when the coder model was requested to expand/collapse"
-
-	self expanded: coderUIModel expanded
 ]

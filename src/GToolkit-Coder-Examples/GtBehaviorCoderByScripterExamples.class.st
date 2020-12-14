@@ -1,19 +1,33 @@
 Class {
 	#name : #GtBehaviorCoderByScripterExamples,
-	#superclass : #GtCoderByScripterExamples,
+	#superclass : #GtCoderModelExamples,
+	#traits : 'TCoderByScripterExamples',
+	#classTraits : 'TCoderByScripterExamples classTrait',
 	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClass [
 	<gtExample>
+	<after: #cleanUp>
+	| aPackage aClass aBehaviorCoder |
 	
-	^ GtBehaviorCoder forClass: self targetClass
+	aPackage := self fakeRegisteredPackage.
+	aClass := (self fakeClassesInFakePackage: aPackage) first.
+
+	aBehaviorCoder := GtBehaviorCoder forClass: aClass.
+
+	aBehaviorCoder attributeNamed: #fakePackage put: aPackage.
+	aBehaviorCoder attributeNamed: #fakeClass put: aClass.
+	aBehaviorCoder attributeNamed: #fakeClassName put: aClass name.
+
+	^ aBehaviorCoder
 ]
 
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClassUI [
 	<gtExample>
+	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self scripterForBlock: [ self classCoderForClass ].
@@ -23,6 +37,7 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI [
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClassUI_click_add_method [
 	<gtExample>
+	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self classCoderForClassUI.
@@ -32,14 +47,11 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_click_add_method [
 		do: [ :aStep |
 			aStep click
 				label: 'Click add method button';
-				onChildNamed: GtBehaviorCoder addNewMethodButtonName.
+				id: GtBehaviorCoder addNewMethodButtonName.
 			aStep wait forEmptySpaceTaskQueue.
 			
 			aStep check
-				label: 'Check new method'
-			 ].
-		
-			
+				label: 'Check new method' ].	
 
 	^ aScripter syncContinue
 ]
@@ -47,6 +59,7 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_click_add_method [
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClassUI_copyClassName [
 	<gtExample>
+	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self classCoderForClassUI.
@@ -56,30 +69,64 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_copyClassName [
 		do: [ :aStep |
 			aStep click
 				label: 'Click class name';
-				onChildNamed: GtBehaviorCoder behaviorNameEditorName.
+				id: GtBehaviorCoderBehaviorNameId.
 
 			aStep wait forEmptySpaceTaskQueue.
 
 			aStep check
 				label: 'Check class name has focus';
 				satisfies: [ :aClassNameEditor | aClassNameEditor hasFocus ];
-				onChildNamed: GtBehaviorCoder behaviorNameEditorName.
+				id: GtBehaviorCoderBehaviorNameId.
 				
 			aStep shortcut
 				combination: BlKeyCombination primaryC;
-				onChildNamed: GtBehaviorCoder behaviorNameEditorName.
+				id: GtBehaviorCoderBehaviorNameId.
 				
 			aStep check
 				label: 'Check clipboard has class name';
-				value: [ Clipboard clipboardText ] equals: self targetClass name
+				value: [ Clipboard clipboardText ] equals: [ :aCoder | aCoder attributeNamed: #fakeClassName ];
+				onModel
 	].
 		
 	^ aScripter syncContinue
 ]
 
 { #category : #'examples - for class' }
-GtBehaviorCoderByScripterExamples >> classCoderForClassUI_editClassName [
+GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_01_doubleClick [
 	<gtExample>
+	<after: #cleanUp>
+	| aScripter |
+
+	aScripter := self classCoderForClassUI.
+	
+	aScripter
+		substep: 'Make class name editable with a double click'
+		do: [ :aStep |
+			
+			aStep doubleClick
+				label: 'Click class name';
+				id: GtBehaviorCoderBehaviorNameId.
+
+			aStep wait forEmptySpaceTaskQueue.
+
+			aStep check
+				label: 'Check class name has focus';
+				satisfies: [ :aClassNameEditor | aClassNameEditor hasFocus ];
+				id: GtBehaviorCoderBehaviorNameId.
+				
+			aStep check
+				label: 'Check class name is editable';
+				satisfies: [ :aClassNameEditor | aClassNameEditor isEditable ];
+				id: GtBehaviorCoderBehaviorNameId.
+	].
+		
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - for class' }
+GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_01_shortcut [
+	<gtExample>
+	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self classCoderForClassUI.
@@ -89,34 +136,99 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_editClassName [
 		do: [ :aStep |
 			aStep click
 				label: 'Click class name';
-				onChildNamed: GtBehaviorCoder behaviorNameEditorName.
+				onChildNamed: GtBehaviorCoderBehaviorNameId.
 
 			aStep wait forEmptySpaceTaskQueue.
 
 			aStep check
 				label: 'Check class name has focus';
 				satisfies: [ :aClassNameEditor | aClassNameEditor hasFocus ];
-				onChildNamed: GtBehaviorCoder behaviorNameEditorName.
+				id: GtBehaviorCoderBehaviorNameId.
 				
 			aStep shortcut
 				combination: BlKeyCombination primaryR;
-				onChildNamed: GtBehaviorCoder behaviorNameEditorName.
-				
+				id: GtBehaviorCoderBehaviorNameId.
+	
 			aStep check
 				label: 'Check class name is editable';
 				satisfies: [ :aClassNameEditor | aClassNameEditor isEditable ];
-				onChildNamed: GtBehaviorCoder behaviorNameEditorName.
+				id: GtBehaviorCoderBehaviorNameId.
 				
 			aStep check
 				label: 'Check class name has focus';
 				satisfies: [ :aClassNameEditor | aClassNameEditor hasFocus ];
-				onChildNamed: GtBehaviorCoder behaviorNameEditorName.
+				id: GtBehaviorCoderBehaviorNameId.
 	].
 		
 	^ aScripter syncContinue
 ]
 
 { #category : #'examples - for class' }
-GtBehaviorCoderByScripterExamples >> targetClass [
-	^ GtBehaviorCoderDummyClass
+GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_02_type_new_class_name [
+	<gtExample>
+	<after: #cleanUp>
+	| aScripter |
+
+	aScripter := self classCoderForClassUI_renameClass_01_shortcut.
+	
+	aScripter
+		substep: 'Type new class name'
+		do: [ :aStep |
+			
+			aStep check
+				label: 'Check apply preview button does not exist yet';
+				notExists;
+				id: GtBehaviorCoderBehaviorNameApplyPreviewId.
+			
+			(aStep type: (aScripter model attributeNamed: #fakeClassName), 'New')
+				label: 'Click class name'.
+
+			aStep wait forEmptySpaceTaskQueue.
+
+			aStep check
+				label: 'Check class name has focus';
+				satisfies: [ :aClassNameEditor | aClassNameEditor hasFocus ];
+				id: GtBehaviorCoderBehaviorNameId.
+
+			aStep check
+				label: 'Check class name is editable';
+				satisfies: [ :aClassNameEditor | aClassNameEditor isEditable ];
+				id: GtBehaviorCoderBehaviorNameId.
+
+			aStep check
+				label: 'Check entered name';
+				value: [ :aClassNameEditor | aClassNameEditor text asString ] equals: [  (aScripter model attributeNamed: #fakeClassName), 'New' ];
+				id: GtBehaviorCoderBehaviorNameId.
+			
+			aStep check
+				label: 'Check apply preview button exists not';
+				exists;
+				id: GtBehaviorCoderBehaviorNameApplyPreviewId.
+				
+	].
+		
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - for class' }
+GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_03_click_rename_preview [
+	<gtExample>
+	<after: #cleanUp>
+	| aScripter |
+
+	aScripter := self classCoderForClassUI_renameClass_02_type_new_class_name.
+	
+	aScripter
+		substep: 'Click rename preview'
+		do: [ :aStep |
+			
+			aStep click
+				label: 'Click apply preview button';
+				id: GtBehaviorCoderBehaviorNameApplyPreviewId.
+
+			aStep wait forEmptySpaceTaskQueue.
+				
+	].
+		
+	^ aScripter syncContinue
 ]

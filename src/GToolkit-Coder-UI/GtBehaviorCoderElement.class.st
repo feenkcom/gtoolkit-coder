@@ -63,7 +63,7 @@ GtBehaviorCoderElement >> buildClassLabel [
 		inputFilter: BrTextEditorClassNameInputFilter new;
 		text: (classCoder name);
 		margin: (BlInsets all: 0);
-		containerName: GtBehaviorCoder behaviorNameEditorName;
+		id: GtBehaviorCoderBehaviorNameId;
 		whenKey: BlKeyCombination primaryN
 			labelDo: [ :aShortcutEvent | self browseClassReferences ];
 		whenKey: BlKeyCombination primaryB
@@ -80,20 +80,25 @@ GtBehaviorCoderElement >> buildClassLabel [
 		strategy: (GtClassesCompletionStrategy new)) install showOnTextModification: false.
 
 	aPreviewButton := GtRefactoringsPreviewButton new
+		id: GtBehaviorCoderBehaviorNameApplyPreviewId;
 		margin: (BlInsets left: 5);
-		visibility: BlVisibility gone;
-		refactorings: [ { RBRenameClassWithCommentsRefactoring
+		refactorings: [ { RBRenameClassRefactoring
 			model: RBNamespace new
 			rename: classCoder theClass
 			to: aClassNameEditor text asString } ];
-		when: GtRefactoringsAppliedEvent do: [ :anEvent | anEvent currentTarget visibility: BlVisibility hidden ].
-		
+		when: GtRefactoringsAppliedEvent do: [ :anEvent |
+			aClassNameEditor text asString trimBoth asSymbol = classCoder name
+				ifTrue: [ aContainer removeChild: anEvent currentTarget ] ].
+
 	aClassNameEditor editor
 		when: BrTextEditorModifiedEvent 
 		do: [ :anEvent |
-			anEvent text asString = classCoder name
-				ifTrue: [ aPreviewButton visibility: BlVisibility gone ]
-				ifFalse: [  aPreviewButton visibility: BlVisibility visible ] ].
+			anEvent text asString trimBoth asSymbol = classCoder name
+				ifTrue: [ aContainer removeChild: aPreviewButton ]
+				ifFalse: [
+					"show preview button when name is modified"
+					(aContainer hasChild: aPreviewButton)
+						ifFalse: [ aContainer addChild: aPreviewButton after: aClassNameEditor ] ] ].
 
 	removeClassButton := GtPreviewChangeButton new
 		icon: BrGlamorousVectorIcons remove;
@@ -102,7 +107,6 @@ GtBehaviorCoderElement >> buildClassLabel [
 		changeStencil: [ self buildRemoveClassLabel ].
 
 	aContainer addChild: aClassNameEditor.
-	aContainer addChild: aPreviewButton.
 	aContainer addChild: removeClassButton.
 
 	^ aContainer

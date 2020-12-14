@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderEvaluationAnnouncement,
-	#superclass : #GtCoderAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'evaluationResult'
 	],

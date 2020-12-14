@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderParseError,
-	#superclass : #GtCoderAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'errorMessage',
 		'location'

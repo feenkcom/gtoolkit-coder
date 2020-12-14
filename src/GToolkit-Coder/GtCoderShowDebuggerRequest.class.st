@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderShowDebuggerRequest,
-	#superclass : #GtCoderAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'debugSession',
 		'exception',

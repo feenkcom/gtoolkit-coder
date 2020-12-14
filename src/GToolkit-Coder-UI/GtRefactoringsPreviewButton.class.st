@@ -13,7 +13,7 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 
 	theRefactoringsElement := GtRefactoringsElement new
 		hExact: self previewWidth * 1.25;
-		vFitContent;
+		vFitContentLimited;
 		refactorings: self refactorings.
 
 	applyAction := [
@@ -41,11 +41,12 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 			anEvent target phlow spawnObject: anEvent object ];
 		constraintsDo: [ :c |
 			c horizontal exact: self previewWidth.
-			c vertical fitContentLimitedOffset: 20 ].
-	aContainer addChild: (theRefactoringsElement asScalableElement
+			c vertical fitContentLimited ].
+	aContainer addChild: ((theRefactoringsElement asScalableElement
 			width: self previewWidth;
 			fitWidth;
-			constraintsDo: [ :c | c vertical fitContent ]) asScrollableElement.
+			constraintsDo: [ :c | c vertical fitContentLimited ]) asScrollableElement
+				constraintsDo: [ :c | c vertical fitContentLimited ]).
 	aContainer addChild: anAcceptButton. 
 
 	^ aContainer
@@ -61,11 +62,22 @@ GtRefactoringsPreviewButton >> initialize [
 		icon: BrGlamorousVectorIcons accept;
 		beSmallSize;
 		look: BrGlamorousButtonWithIconLook new + (BrGlamorousWithDropdownLook
-			handle: [ BrButton new
-				icon: BrGlamorousIcons empty;
-				beSmallSize;
-				look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
-			content: [ self buildRefactoringsPreview ]);
+			handle: [
+				BrButton new
+					icon: BrGlamorousIcons empty;
+					beSmallSize;
+					look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
+			content: [
+				BlLazyElement new
+					layout: BlLinearLayout vertical;
+					withGlamorousPreview: 'Computing...';
+					constraintsDo: [ :c |
+						c vertical exact: 50.
+						c horizontal exact: self previewWidth ];
+					postAction: [ :theLazyElement |								
+						theLazyElement constraintsDo: [ :c | 
+							c vertical fitContentLimited ] ];
+					elementBuilder: [ self buildRefactoringsPreview ] ]);
 		label: 'Preview'.
 		
 	self addShortcut: (BlShortcutWithAction new

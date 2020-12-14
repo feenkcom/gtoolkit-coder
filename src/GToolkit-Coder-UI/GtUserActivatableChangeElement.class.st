@@ -9,14 +9,16 @@ Class {
 
 { #category : #'instance creation' }
 GtUserActivatableChangeElement class >> fromActivatableChange: aGtUserActivatableChange [
-	^ self new fromActivatableChange: aGtUserActivatableChange
+	^ self new activatableChange: aGtUserActivatableChange
 ]
 
 { #category : #'instance creation' }
-GtUserActivatableChangeElement >> fromActivatableChange: aGtUserActivatableChange [
+GtUserActivatableChangeElement >> activatableChange: aGtUserActivatableChange [
+	self removeChildren.
+
 	activatableChange := aGtUserActivatableChange.
 	
-	self addChild: ((aGtUserActivatableChange change respondsTo: #gtDiff)
+	self addChild: ((aGtUserActivatableChange hasDiff)
 		ifTrue: [ aGtUserActivatableChange change gtDiff asElement vFitContent beSmallSize ]
 		ifFalse: [ BrLabel new
 				look: BrGlamorousLabelLook new;
@@ -28,5 +30,7 @@ GtUserActivatableChangeElement >> initialize [
 	super initialize.
 	
 	self hMatchParent.
-	self vFitContent
+	self vFitContent.
+	
+	
 ]

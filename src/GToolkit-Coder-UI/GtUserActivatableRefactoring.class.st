@@ -2,11 +2,12 @@ Class {
 	#name : #GtUserActivatableRefactoring,
 	#superclass : #Object,
 	#instVars : [
+		'announcer',
 		'refactoring',
 		'refactoringChanges',
 		'changes',
-		'isEnabled',
-		'dangers'
+		'dangers',
+		'enablementState'
 	],
 	#category : #'GToolkit-Coder-UI-Refactoring'
 }
@@ -21,9 +22,33 @@ GtUserActivatableRefactoring >> allChanges [
 	^ self changes flatCollect: #allChanges
 ]
 
+{ #category : #accessing }
+GtUserActivatableRefactoring >> announcer [
+	^ announcer ifNil: [ announcer := Announcer new ]
+]
+
 { #category : #converting }
 GtUserActivatableRefactoring >> asElement [
-	^ GtUserActivatableRefactoringElement fromActivatableRefactoring: self
+	^ self elementClass fromActivatableRefactoring: self
+]
+
+{ #category : #private }
+GtUserActivatableRefactoring >> changeStateChanged [
+	| hasEnabled hasDisabled |
+	
+	hasEnabled := false.
+	hasDisabled := false.
+	
+	self allChanges do: [ :eachChange |
+		hasEnabled := hasEnabled or: eachChange isEnabled.
+		hasDisabled := hasDisabled or: eachChange isEnabled not ].
+	
+	self enablementState: ((hasEnabled and: [ hasDisabled ])
+		ifTrue: [ BrCheckboxState indeterminate ]
+		ifFalse: [
+			hasEnabled
+				ifTrue: [ BrCheckboxState checked ]
+				ifFalse: [ BrCheckboxState unchecked ] ])
 ]
 
 { #category : #accessing }
@@ -34,12 +59,17 @@ GtUserActivatableRefactoring >> changes [
 ]
 
 { #category : #private }
+GtUserActivatableRefactoring >> computeActivatedRefactoringChange [
+	
+]
+
+{ #category : #private }
 GtUserActivatableRefactoring >> computeInterestingChanges: aRefactoryChange [	
 	self
 		assert: [ aRefactoryChange class = RBCompositeRefactoryChange ]
 		description: [ 'We assume that changes returned by the refactoring is a composite change' ].
 	
-	^ (aRefactoryChange gtChildren collect: [ :eachRefactoryChange | GtUserActivatableChange fromChange: eachRefactoryChange ])
+	^ (aRefactoryChange gtChildren collect: [ :eachRefactoryChange | (GtUserActivatableChange fromChange: eachRefactoryChange) refactoring: self ])
 ]
 
 { #category : #private }
@@ -66,12 +96,45 @@ GtUserActivatableRefactoring >> description [
 	^ self refactoring gtDescription
 ]
 
+{ #category : #converting }
+GtUserActivatableRefactoring >> elementClass [
+	^ GtUserActivatableRefactoringElement
+]
+
+{ #category : #accessing }
+GtUserActivatableRefactoring >> enablementState [
+	^ enablementState
+]
+
+{ #category : #accessing }
+GtUserActivatableRefactoring >> enablementState: aBrCheckboxState [
+	enablementState = aBrCheckboxState
+		ifTrue: [ ^ self ].
+		
+	enablementState := aBrCheckboxState.
+	self onEnablementStateChanged.
+
+	self isIndeterminate
+		ifFalse: [ self allChanges do: [ :eachChange | eachChange setEnabledWithoutRefactoring: self isEnabled ] ]
+]
+
 { #category : #execution }
 GtUserActivatableRefactoring >> execute [
-	self isEnabled
-		ifFalse: [ ^ self ].
+	| aCompositeChange theChanges |
 
-	RBRefactoryChangeManager instance performChange: refactoringChanges; addUndoPointer: 1
+	self isDisabled
+		ifTrue: [ ^ self ].
+
+	aCompositeChange := RBCompositeRefactoryChange new.
+	theChanges := self allChanges
+		select: [ :eachChange | eachChange isEnabled ]
+		thenCollect: [ :eachChange | eachChange change gtWithoutChanges ].
+
+	aCompositeChange changes: theChanges.
+
+	RBRefactoryChangeManager instance
+		performChange: aCompositeChange;
+		addUndoPointer: 1
 ]
 
 { #category : #initialization }
@@ -81,8 +144,13 @@ GtUserActivatableRefactoring >> fromRefactoring: anRBRefactoring [
 	dangers := self computeRefactoringDangers: refactoring.
 	refactoringChanges := self computeRefactoringChanges: refactoring.
 	changes := self computeInterestingChanges: refactoringChanges.
-	
-	isEnabled := dangers isEmpty
+
+	self isEnabled: dangers isEmpty
+]
+
+{ #category : #testing }
+GtUserActivatableRefactoring >> isChange [
+	^ false
 ]
 
 { #category : #accessing }
@@ -90,14 +158,36 @@ GtUserActivatableRefactoring >> isDangerous [
 	^ dangers isNotEmpty
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
+GtUserActivatableRefactoring >> isDisabled [
+	^ enablementState isUnchecked
+]
+
+{ #category : #testing }
 GtUserActivatableRefactoring >> isEnabled [
-	^ isEnabled
+	^ enablementState isChecked
 ]
 
 { #category : #accessing }
 GtUserActivatableRefactoring >> isEnabled: aBoolean [
-	isEnabled := aBoolean
+	self enablementState: (aBoolean
+		ifTrue: [ BrCheckboxState checked ]
+		ifFalse: [ BrCheckboxState unchecked ])
+]
+
+{ #category : #testing }
+GtUserActivatableRefactoring >> isIndeterminate [
+	^ enablementState isIndeterminate
+]
+
+{ #category : #testing }
+GtUserActivatableRefactoring >> isRefactoring [
+	^ true
+]
+
+{ #category : #private }
+GtUserActivatableRefactoring >> onEnablementStateChanged [
+	announcer ifNotNil: [ announcer announce: #enablementChanged ]
 ]
 
 { #category : #accessing }

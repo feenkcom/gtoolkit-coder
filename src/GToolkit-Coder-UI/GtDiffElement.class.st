@@ -17,6 +17,7 @@ Class {
 { #category : #examples }
 GtDiffElement class >> example [
 	<gtExample>
+
 	^ self on: self exampleDiff
 ]
 
@@ -24,6 +25,20 @@ GtDiffElement class >> example [
 GtDiffElement class >> exampleDiff [
 	<gtExample>
 	^ TextDiffBuilder from: self originalString to: self newString
+]
+
+{ #category : #examples }
+GtDiffElement class >> exampleFlat [
+	<gtExample>
+
+	^ (self on: self exampleDiff) look: GtDiffFlatLook
+]
+
+{ #category : #examples }
+GtDiffElement class >> exampleShadow [
+	<gtExample>
+
+	^ (self on: self exampleDiff) look: GtDiffShadowLook
 ]
 
 { #category : #examples }
@@ -105,7 +120,7 @@ GtDiffElement >> drawMeAndChildrenOnSpartaCanvas: aCanvas [
 
 { #category : #initialize }
 GtDiffElement >> editorLook [
-	^ BrGlamorousCodeEditorLook new + BrShadowLook new
+	^ BrGlamorousCodeEditorLook
 ]
 
 { #category : #initialize }
@@ -114,60 +129,27 @@ GtDiffElement >> initialize [
 	
 	self layout: BlLinearLayout horizontal.
 	self matchParent.
+	
+	self beNormalSize.	
 
 	outlines := #().
 	
-	leftElement := BrEditor new
-		beReadOnlyWithSelection;
-		matchParent;
-		background: Color white;
-		look: self editorLook;
+	leftElement := self newTextElement
+		id: GtDiffOldTextId;
 		when: BlElementScrolledEvent do: [ :e | self leftScrolled ].
-		
-	rightElement := BrEditor new
-		beReadOnlyWithSelection;
-		matchParent;
-		background: Color white;
-		look: self editorLook;
+
+	rightElement := self newTextElement
+		id: GtDiffNewTextId;
 		when: BlElementScrolledEvent do: [ :e | self rightScrolled ].
 	
-	separatorElement := BlElement new
-		height: 0;
-		yourself.
+	separatorElement := self newSeparatorElement
+		id: GtDiffSeparatorId.
 	
 	self addChildren: { 
 		leftElement.
 		separatorElement.
 		rightElement
 	}.
-	
-	self addLook: (BrLayoutResizerLook inherit inherit: leftElement; inherit: rightElement).
-	self addLook: (BrDeprecatedSizeAdjustmentLook new
-		default: [ :aWidget |
-			aWidget padding: (BlInsets all: 10).
-			leftElement look glamorousCodeSize.
-			leftElement padding: (BlInsets all: 10).
-			separatorElement width: 40.
-			rightElement look glamorousCodeSize ];
-		small: [ :aWidget |
-			aWidget padding: (BlInsets all: 8).
-			leftElement look glamorousCodeSmallSize.
-			leftElement padding: (BlInsets all: 6).
-			separatorElement width: 25.
-			rightElement look glamorousCodeSmallSize ];
-		tiny: [ :aWidget |
-			aWidget padding: (BlInsets all: 6).
-			leftElement padding: (BlInsets all: 4).
-			leftElement look glamorousCodeTinySize.
-			separatorElement width: 20.
-			rightElement look glamorousCodeTinySize ];
-		mini: [ :aWidget |
-			aWidget padding: (BlInsets all: 6).
-			leftElement padding: (BlInsets all: 2).
-			leftElement look glamorousCodeMiniSize.
-			separatorElement width: 10.
-			rightElement look glamorousCodeMiniSize ]
-	)
 ]
 
 { #category : #'event handling' }
@@ -181,6 +163,11 @@ GtDiffElement >> leftBottomFor: anInteger [
 	element := (leftElement children at: anInteger - range first + 1).
 	^ (element bounds bottom + leftElement padding top)
 		max: 0
+]
+
+{ #category : #accessing }
+GtDiffElement >> leftEditorLook: aLook [
+	leftElement look: aLook
 ]
 
 { #category : #private }
@@ -230,6 +217,24 @@ GtDiffElement >> newRopedText [
 	^ diff newRopedText
 ]
 
+{ #category : #initialize }
+GtDiffElement >> newSeparatorElement [
+	^ BlElement new
+		constraintsDo: [ :c |
+			c vertical matchParent.
+			c horizontal exact: 0 ]
+		yourself
+]
+
+{ #category : #initialize }
+GtDiffElement >> newTextElement [
+	^ BrEditor new
+		focusability: BlFocusability none;
+		beReadOnlyWithSelection;
+		matchParent;
+		look: self editorLook
+]
+
 { #category : #'geometry hooks' }
 GtDiffElement >> notifyExtentChanged [
 	super notifyExtentChanged.
@@ -276,6 +281,11 @@ GtDiffElement >> rightBottomFor: anInteger [
 	element := (rightElement children at: anInteger - range first + 1).
 	^ (element bounds bottom + rightElement padding top)
 		max: 0
+]
+
+{ #category : #accessing }
+GtDiffElement >> rightEditorLook: aLook [
+	rightElement look: aLook
 ]
 
 { #category : #private }
