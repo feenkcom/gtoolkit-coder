@@ -1,1 +1,1 @@
-{	"repositories" : {		"github://feenkcom/gtoolkit-utility/src" : "v0.8.8",		"github://feenkcom/gtoolkit-pager/src" : "v0.8.180",		"github://feenkcom/gtoolkit-phlow/src" : "v0.8.178",		"github://feenkcom/Brick/src" : "v0.8.164"	}}
+{	"repositories" : {		"github://feenkcom/bloc-pac/src" : "v0.6.0",		"github://feenkcom/Brick/src" : "v0.8.165",		"github://feenkcom/gtoolkit-utility/src" : "v0.8.8",		"github://feenkcom/gtoolkit-pager/src" : "v0.8.181",		"github://feenkcom/gtoolkit-phlow/src" : "v0.8.179"	}}
