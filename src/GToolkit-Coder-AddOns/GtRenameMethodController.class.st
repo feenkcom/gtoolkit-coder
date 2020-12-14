@@ -20,21 +20,23 @@ GtRenameMethodController >> installRenamer [
 			selector := self originalNode selector.
 			self someImplementor isNil
 				ifTrue: [ ^ self ].
-			startIndex := self originalNode selectorParts first first.
+
+			startIndex := self originalNode selectorParts first startPosition.
 			newSelectorParts := selector keywords.
 			message := self originalNode.
 			message selectorParts
-				keysAndValuesDo: [ :i :interval | 
-					(interval includes: position)
-						ifTrue: [ selectorIndex := i.
+				keysAndValuesDo: [ :i :eachSmaCCToken | 
+					(eachSmaCCToken sourceInterval includes: position)
+						ifTrue: [
+							selectorIndex := i.
 							self installRenamerOn: message ] ] ]
 ]
 
 { #category : #executing }
-GtRenameMethodController >> installRenamerOn: aRBMessageNode [
-	previewIndex := node keywordsIntervals last last.
+GtRenameMethodController >> installRenamerOn: aGtPharoMessageNode [
+	previewIndex := node selectorParts last stopPosition.
 	newName := newSelectorParts at: selectorIndex.
-	renameInterval := aRBMessageNode keywordsIntervals at: selectorIndex.
+	renameInterval := (aGtPharoMessageNode selectorParts at: selectorIndex) sourceInterval.
 	self installRenameAction
 ]
 
@@ -56,13 +58,10 @@ GtRenameMethodController >> newName [
 
 { #category : #private }
 GtRenameMethodController >> newNode [
-	coder rbAST
-		ifNotNil: [ :ast | 
-			ast
-				nodesDo: [ :each | 
-					((each isMessage or: [ each isMethod ])
-						and: [ each keywordsIntervals first first = startIndex ])
-						ifTrue: [ ^ each ] ] ].
+	coder sourceAst nodesDo: [ :each | 
+		((each isMessage or: [ each isMethod or: [ each isMethodPattern ] ])
+			and: [ each selectorParts first startPosition = startIndex ])
+			ifTrue: [ ^ each ] ].
 	^ nil
 ]
 
@@ -107,10 +106,10 @@ GtRenameMethodController >> refactoringName [
 { #category : #accessing }
 GtRenameMethodController >> renamePosition [
 	self newNode
-		ifNotNil: [ :message | ^ message selectorParts last last ].
+		ifNotNil: [ :message | ^ message selectorParts last stopPosition ].
 	^ (renameAction isNil or: [ renameAction isInstalled ])
 		ifTrue: [ previewIndex ]
-		ifFalse: [ self originalNode selectorParts last last + self newName size
+		ifFalse: [ self originalNode selectorParts last stopPosition + self newName size
 				- self originalName size ]
 ]
 
@@ -137,7 +136,7 @@ GtRenameMethodController >> tab: forward [
 		ifNotNil: [ :message | 
 			self removeRefactoringAttribute.
 			self sourceEditor
-				moveCursorTo: (message keywordsIntervals at: selectorIndex) last.
+				moveCursorTo: (message selectorParts at: selectorIndex) stopPosition.
 			self installRenamerOn: message.
 			newSelectorParts = selector keywords
 				ifFalse: [ self addRefactoringChangesPreview ] ]

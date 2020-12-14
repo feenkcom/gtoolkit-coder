@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderToolSpawnRequest,
-	#superclass : #GtCoderAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'tool',
 		'spawnDestination'

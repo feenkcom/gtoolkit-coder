@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderObjectSpawnRequest,
-	#superclass : #GtCoderAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'object',
 		'spawnDestination'

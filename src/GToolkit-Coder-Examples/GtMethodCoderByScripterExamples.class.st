@@ -796,6 +796,63 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_07_01_accept_with_enter [
 	^ aScripter syncContinue
 ]
 
+{ #category : #'examples - rename method' }
+GtMethodCoderByScripterExamples >> forUnaryRename_01_setup [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ self forMethodInPackagedClass ].
+	aScripter click
+		label: 'Click on the coder editor to give it focus';
+		id: GtSourceCoderEditorId.
+
+	aScripter shortcut
+		combination: BlKeyCombination arrowUp;
+		id: GtSourceCoderEditorId.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	aScripter check
+		label: 'Check editor is focused';
+		satisfies: [ :anEditorElement | anEditorElement isFocused ];
+		id: GtSourceCoderEditorId.
+	
+	aScripter check
+		label: 'Check cursor position';
+		value: [ :anEditorElement | anEditorElement editor cursors positions ] equals: [ #(0) ];
+		id: GtSourceCoderEditorId.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - rename method' }
+GtMethodCoderByScripterExamples >> forUnaryRename_02_shortcut [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryRename_01_setup.
+	
+	aScripter shortcut
+		combination: BlKeyCombination primaryR;
+		id: GtSourceCoderEditorId.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	aScripter check
+		label: 'Check rename editor exists';
+		exists;
+		id: GtSourceCoderEditorId;
+		onBreadthFirstChildOfClass: GtRenameEditor.
+
+	aScripter check
+		label: 'Check rename editor all selected';
+		value: [ :anEditor | anEditor editor selectedText asString ] equals: [ aScripter model attributeNamed: #fakeMethodName ];
+		id: GtSourceCoderEditorId;
+		onBreadthFirstChildOfClass: GtRenameEditor.
+
+	^ aScripter syncContinue
+]
+
 { #category : #'examples - basic' }
 GtMethodCoderByScripterExamples >> methodCoder [
 	<gtExample>

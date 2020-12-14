@@ -3,6 +3,6 @@ Is sent by the ${class:GtSourceCoder}$ when it thinks that the collapsed text sh
 "
 Class {
 	#name : #GtCoderCollapsedLabelChanged,
-	#superclass : #GtCoderAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#category : #'GToolkit-Coder-Event'
 }

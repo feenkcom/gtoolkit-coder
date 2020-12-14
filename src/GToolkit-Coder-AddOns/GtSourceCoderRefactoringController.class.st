@@ -57,9 +57,15 @@ GtSourceCoderRefactoringController >> execute [
 			on: Error
 			do: [ :ex |
 				self refactoringFailed.
-				NonInteractiveTranscript stdout
+				NonInteractiveTranscript stderr
 					nextPutAll: ('[{1}] {2}' format: { self class name . ex asString });
 					cr.
+				
+				(ex signalerContext stack first: 20) do: [ :eachStackEntry |
+					NonInteractiveTranscript stderr
+						nextPutAll: eachStackEntry printString;
+						cr ].
+					
 				ex return ]
 ]
 

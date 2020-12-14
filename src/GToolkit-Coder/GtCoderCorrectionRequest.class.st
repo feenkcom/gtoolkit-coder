@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderCorrectionRequest,
-	#superclass : #GtCoderAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'fromIndex',
 		'toIndex',

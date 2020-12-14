@@ -68,7 +68,7 @@ GtRenameController >> createModel [
 { #category : #accessing }
 GtRenameController >> cursorPositionDo: aBlock [
 	self sourceEditor cursors
-		do: [ :eachCursor | ^ aBlock value: eachCursor position ]
+		do: [ :eachCursor | ^ aBlock value: (eachCursor position + 1 min: self sourceEditor text size) ]
 ]
 
 { #category : #executing }
@@ -76,7 +76,9 @@ GtRenameController >> installRenameAction [
 	renameAction := GtRenameAction
 		locations: { renameInterval }
 		element: sourceElement.
-		
+	
+	renameAction selectAll: true.	
+	
 	self preventSave.
 
 	renameAction

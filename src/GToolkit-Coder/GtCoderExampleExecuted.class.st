@@ -5,7 +5,7 @@ I am used by ${class:GtMethodCoder}$, see ${method:GtMethodCoder>>#handleExample
 "
 Class {
 	#name : #GtCoderExampleExecuted,
-	#superclass : #GtCoderAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'example'
 	],
