@@ -39,8 +39,11 @@ GtDiffShadowLook >> newSeparatorLook [
 
 { #category : #initialization }
 GtDiffShadowLook >> newShadowLook [
-	^ BrShadowLook new
-		add: (BrStyleCommonLook new default: [ :aStyle | aStyle background: Color white ]);
+	^ BrStyleCommonLook new
+		default: [ :aStyle |
+			aStyle
+				background: Color white;
+				effect: BrGlamorousShadowEffect new ];
 		yourself
 ]
 
