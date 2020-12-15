@@ -36,6 +36,16 @@ String >> gtReferences [
 ]
 
 { #category : #'*GToolkit-Coder' }
+String >> gtSubstringLiteralCaseSensitiveMatch [
+	^ GtSearchLiteralStringFilter substring: self caseSensitive: true
+]
+
+{ #category : #'*GToolkit-Coder' }
+String >> gtSubstringLiteralMatch [
+	^ GtSearchLiteralStringFilter substring: self
+]
+
+{ #category : #'*GToolkit-Coder' }
 String >> gtSubstringMatch [
 	^ GtSubstringFilter substring: self
 ]
