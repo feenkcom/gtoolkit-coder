@@ -59,16 +59,16 @@ GtPreviewChangeButton >> changeStencil: aStencil [
 { #category : #ui }
 GtPreviewChangeButton >> initialize [
 	super initialize.
+
 	self margin: (BlInsets left: 5).
-	self beSmallSize.
-	self
-		look:
-			BrGlamorousButtonWithIconLook new
-				+
-					(BrGlamorousWithDropdownLook
-						handle: [ BrButton new
-								icon: BrGlamorousIcons empty;
-								beSmallSize;
-								look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
-						content: [ self buildDropDownElement ])
+	self beTinySize.
+
+	self look: BrGlamorousButtonWithIconLook new +
+		(BrGlamorousWithDropdownLook
+			handle: [
+				BrButton new
+					icon: BrGlamorousIcons empty;
+					beTinySize;
+					look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
+			content: [ self buildDropDownElement ])
 ]

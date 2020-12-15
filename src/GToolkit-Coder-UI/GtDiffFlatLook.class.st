@@ -13,8 +13,8 @@ GtDiffFlatLook >> initialize [
 		inherit: GtDiffOldTextId;
 		inherit: GtDiffNewTextId).
 
-	self add: (self newTextLook target: GtDiffOldTextId).
-	self add: (self newTextLook target: GtDiffNewTextId)
+	self add: (self newTextLook // GtDiffOldTextId).
+	self add: (self newTextLook // GtDiffNewTextId)
 ]
 
 { #category : #'instance creation' }

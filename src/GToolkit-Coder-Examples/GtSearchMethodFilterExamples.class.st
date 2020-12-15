@@ -66,7 +66,7 @@ GtSearchMethodFilterExamples >> deprecatedMethodsFilter [
 	
 	filter := GtSearchDeprecatedMethodsFilter new.
 	
-	self assert: (filter matches: BlElement>>#managed).
+	self assert: (filter matches: BlElement>>#extent:).
 	self assert: (filter matches: BlElement>>#margin) not.
 	
 	^ filter.
