@@ -105,65 +105,57 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 { #category : #'instance creation' }
 GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 	<return: #BrButton>
-	| withLook button |
+	| button |
 	button := BrButton new.
+
 	aGtCoderAction title
 		ifNotNil: [ button label: aGtCoderAction title asRopedText ].
 	aGtCoderAction icon
 		ifNotNil: [ button icon: aGtCoderAction icon asElement ].
+
 	^ button
-		beSmallSize;
-		padding: BlInsets empty;
-		margin: BlInsets empty;
-		look:
-			BrGlamorousButtonWithIconLook
-				+
-					(withLook := BrGlamorousWithDropdownLook
-						handle: [ | aButton |
-							aButton := BrButton new.
-							aGtCoderAction title
-								ifNotNil: [ aButton label: aGtCoderAction title asRopedText ].
-							aGtCoderAction icon
-								ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
-							aButton
-								beSmallSize;
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
-								padding: BlInsets empty;
-								margin: BlInsets empty;
-								yourself ]
-						content: [ | classCompleter containerElement titleElement |
-							containerElement := BlElement new
-								layout: BlLinearLayout vertical;
-								constraintsDo: [ :c | 
-									c horizontal exact: 200.
-									c vertical fitContent ].
-							titleElement := BrEditorElement new
-								look: BrGlamorousInputFieldSpacingLook;
-								editor: (BrTextEditor new text: '' asRopedText);
-								requestFocus;
-								constraintsDo: [ :c | 
-									c
-										margin:
-											(BlInsets
-												top: 1
-												left: 0
-												bottom: 0
-												right: 0).
-									c horizontal matchParent.
-									c vertical fitContent ].
-							classCompleter := GtCompletionController
-								on: titleElement
-								strategy: GtCoderClassWithPackageCompletionStrategy new.
-							classCompleter install.
-							classCompleter announcer
-								when: GtCompleterCompletionAccepted
-								do: [ :event | 
-									aGtCoderAction action value: titleElement editor text asString asClass.
-									withLook hide ].
-							containerElement addChild: titleElement.
-							containerElement ]);
+		beTinySize;
+		look: BrGlamorousButtonWithIconLook +
+			(BrGlamorousWithDropdownLook
+				handle: [ | aButton |
+					aButton := BrButton new.
+					aGtCoderAction title
+						ifNotNil: [ aButton label: aGtCoderAction title asRopedText ].
+					aGtCoderAction icon
+						ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
+					aButton
+						beSmallSize;
+						look:
+							BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
+								- BrGlamorousButtonExteriorLook;
+						padding: BlInsets empty;
+						margin: BlInsets empty;
+						yourself ]
+				content: [ | classCompleter containerElement titleElement |
+					containerElement := BlElement new
+						layout: BlLinearLayout vertical;
+						constraintsDo: [ :c | 
+							c horizontal exact: 200.
+							c vertical fitContent ].
+					titleElement := BrEditorElement new
+						look: BrGlamorousInputFieldSpacingLook;
+						editor: (BrTextEditor new text: '' asRopedText);
+						requestFocus;
+						constraintsDo: [ :c | 
+							c margin: (BlInsets top: 1).
+							c horizontal matchParent.
+							c vertical fitContent ].
+					classCompleter := GtCompletionController
+						on: titleElement
+						strategy: GtCoderClassWithPackageCompletionStrategy new.
+					classCompleter install.
+					classCompleter announcer
+						when: GtCompleterCompletionAccepted
+						do: [ :event | 
+							aGtCoderAction action value: titleElement editor text asString asClass.
+							titleElement fireEvent: BrDropdownHideWish new ].
+					containerElement addChild: titleElement.
+					containerElement ]);
 		yourself
 ]
 
