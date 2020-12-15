@@ -19,13 +19,13 @@ GtDiffShadowLook >> initialize [
 		tiny: [ :aStyle | aStyle padding: (BlInsets all: 6) ];
 		mini: [ :aStyle | aStyle padding: (BlInsets all: 6) ]).
 
-	self add: (self newTextLook target: GtDiffOldTextId).
-	self add: (self newShadowLook target: GtDiffOldTextId).
+	self add: (self newTextLook // GtDiffOldTextId).
+	self add: (self newShadowLook // GtDiffOldTextId).
 	
-	self add: (self newSeparatorLook target: GtDiffSeparatorId).
+	self add: (self newSeparatorLook // GtDiffSeparatorId).
 	
-	self add: (self newTextLook target: GtDiffNewTextId).
-	self add: (self newShadowLook target: GtDiffNewTextId)
+	self add: (self newTextLook // GtDiffNewTextId).
+	self add: (self newShadowLook // GtDiffNewTextId)
 ]
 
 { #category : #initialization }
