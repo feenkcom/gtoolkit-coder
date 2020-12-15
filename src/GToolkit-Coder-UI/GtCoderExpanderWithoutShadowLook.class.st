@@ -111,12 +111,12 @@ GtCoderExpanderWithoutShadowLook >> initialize [
 		focused: [ :aStyle | (BlBorder paint: self borderFocusedPaint width: self expandedBorderWidth) ]).
 
 	self add: (BrStyleCommonLook new
-		target: aTriangle;
+		@ aTriangle;
 		collapsed: [ :aStyle | aStyle geometry: self newCollapsedTriangleGeometry ];
 		expanded: [ :aStyle | aStyle geometry: self newExpandedTriangleGeometry ]).
 
 	self add: (BrStyleCommonLook new
-		target: sidebar;
+		@ sidebar;
 		default: [ :aStyle | aStyle background: self borderPaint ];
 		focused: [ :aStyle | aStyle background: self borderFocusedPaint ]).
 
