@@ -3,9 +3,10 @@ Extension { #name : #GtSearchFilter }
 { #category : #'*GToolkit-Coder-Extensions' }
 GtSearchFilter class >> gtHierarchyFor: aView [
 	<gtView>
+	<gtClassView>
 	^ aView mondrian
 		title: 'Hierarchy';
-		priority: 0;
+		priority: 10;
 		painting: [ :m | 
 			m nodes 
 				stencil: [ :eachClass | 
