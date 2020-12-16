@@ -1066,7 +1066,7 @@ GtMethodCoder >> packageTag [
 						ifFalse: [ self package
 								ifNotNil: [ :package | 
 									| cls |
-									cls := self classOrMetaClass.
+									cls := self behavior.
 									cls category asString = package name asString
 										ifFalse: [ package classTagForClass: cls ] ] ] ] ]
 ]
