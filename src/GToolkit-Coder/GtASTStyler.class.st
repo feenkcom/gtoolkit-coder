@@ -11,10 +11,10 @@ GtASTStyler >> extraStyle: aText ast: ast [
 	
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extension' }
 GtASTStyler >> gtViewTextFor: aView [
 	<gtView>
-	text  ifNil: [ ^ aView ].
+	text ifNil: [ ^ aView empty ].
 	^ aView textEditor
 		title: 'Last styled text';
 		priority: 105;

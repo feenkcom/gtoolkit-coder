@@ -37,23 +37,13 @@ GtCoderContextMenuContent >> initialize [
 	self
 		stencil: [ :eachGtCoderContextMenuAction | 
 			| element |
-			element := BlElement new.
-			element
-				viewModel:
-					(BrInteractiveModel new
-						withHover;
-						yourself);
-				look:
-					(BrInteractiveCommonLook new
-						default: [ :f | f background: Color transparent ];
-						hovered: [ :f | f background: BrGlamorousColors defaultButtonBorderColor ];
-						yourself);
-				layout: BlLinearLayout horizontal;
-				constraintsDo: [ :c | 
-					c horizontal matchParent.
-					c vertical fitContent ];
+			element := BrHorizontalPane new
+				hMatchParent;
+				vFitContent;
+				addLook: (BrStyleCommonLook new
+					hovered: [ :aStyle | aStyle background: BrGlamorousColors defaultButtonBorderColor ]);
 				padding: (BlInsets all: 5);
-				addEventHandlerOn: BlClickEvent
+				when: BlClickEvent
 					do: [
 						eachGtCoderContextMenuAction action cull: self editorElement cull: self anchor.
 						self fireEvent: BrDropdownHideWish new.
