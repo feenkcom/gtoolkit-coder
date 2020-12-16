@@ -299,6 +299,27 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter absenceOfContextActionNam
 ]
 
 { #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep discardButtonExists: doesExist [
+	<gtExample>
+	| aCheck |
+
+	aCheck := aScripterOrStep check
+		id: GtMethodCoderDiscardChangesActionId.
+
+	doesExist
+		ifTrue: [
+			aCheck
+				exists;
+				label: 'Check discard button exists' ]
+		ifFalse: [
+			aCheck
+				notExists;
+				label: 'Check discard button does not exist' ].
+
+	^ aScripterOrStep
+]
+
+{ #category : #utilities }
 GtMethodCoderByScripterExamples >> checkFor: aScripter existenceOfContextActionNamed: anActionName [
 	<gtExample>
 	
@@ -349,6 +370,71 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep numberfOfTextAttrib
 		onChildNamed: #editor;
 		onBrTextEditor;
 		onBrTextEditorText.
+	^ aScripterOrStep
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep refactoringPreviewButtonExists: doesExist [
+	<gtExample>
+	| aCheck |
+
+	aCheck := aScripterOrStep check
+		id: GtSourceCoderEditorId;
+		onBreadthFirstChildOfClass: GtRefactoringsPreviewButton.
+
+	doesExist
+		ifTrue: [
+			aCheck
+				exists;
+				label: 'Check refactoring preview button exists' ]
+		ifFalse: [
+			aCheck
+				notExists;
+				label: 'Check refactoring preview button does not exist' ].
+
+	^ aScripterOrStep
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep renameEditorExists: doesExist [
+	<gtExample>
+	| aCheck |
+
+	aCheck := aScripterOrStep check
+		id: GtSourceCoderEditorId;
+		onBreadthFirstChildOfClass: GtRenameEditor.
+
+	doesExist
+		ifTrue: [
+			aCheck
+				exists;
+				label: 'Check rename editor exists' ]
+		ifFalse: [
+			aCheck
+				notExists;
+				label: 'Check rename editor does not exist' ].
+
+	^ aScripterOrStep
+]
+
+{ #category : #utilities }
+GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep saveButtonEnabled: isEnabled [
+	<gtExample>
+	| aCheck |
+
+	aCheck := aScripterOrStep check
+		id: GtMethodCoderSaveActionId.
+
+	isEnabled
+		ifTrue: [
+			aCheck
+				satisfies: [ :aButton | aButton isEnabled ];
+				label: 'Check save button is enabled' ]
+		ifFalse: [
+			aCheck
+				satisfies: [ :aButton | aButton isDisabled ];
+				label: 'Check save button is disbled' ].
+
 	^ aScripterOrStep
 ]
 
@@ -559,12 +645,171 @@ GtMethodCoderByScripterExamples >> extractedUnaryMethodNameFor: aMethodCoder [
 	^ 'sub', (aMethodCoder attributeNamed: #fakeMethodName) capitalized
 ]
 
+{ #category : #'examples - rename method' }
+GtMethodCoderByScripterExamples >> forKeywordRename_01_setup [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ self forKeywordMethodInPackagedClass ].
+	aScripter click
+		label: 'Click on the coder editor to give it focus';
+		id: GtSourceCoderEditorId.
+
+	aScripter shortcut
+		combination: BlKeyCombination arrowUp;
+		id: GtSourceCoderEditorId.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	self checkFor: aScripter saveButtonEnabled: true.
+	self checkFor: aScripter discardButtonExists: false.
+	
+	aScripter check
+		label: 'Check editor is focused';
+		satisfies: [ :anEditorElement | anEditorElement isFocused ];
+		id: GtSourceCoderEditorId.
+	
+	aScripter check
+		label: 'Check cursor position';
+		value: [ :anEditorElement | anEditorElement editor cursors positions ] equals: [ #(0) ];
+		id: GtSourceCoderEditorId.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - rename method' }
+GtMethodCoderByScripterExamples >> forKeywordRename_02_shortcut [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forKeywordRename_01_setup.
+	
+	aScripter shortcut
+		combination: BlKeyCombination primaryR;
+		id: GtSourceCoderEditorId.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	self checkFor: aScripter saveButtonEnabled: false.
+	self checkFor: aScripter renameEditorExists: true.
+	self checkFor: aScripter discardButtonExists: false.
+
+	aScripter check
+		label: 'Check rename editor all selected';
+		value: [ :anEditor | anEditor editor selectedText asString ] equals: [ aScripter model attributeNamed: #fakeMethodName ];
+		id: GtSourceCoderEditorId;
+		onBreadthFirstChildOfClass: GtRenameEditor.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - rename method' }
+GtMethodCoderByScripterExamples >> forKeywordRename_03_move_cursor [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forKeywordRename_02_shortcut.
+	
+	"this positions the cursor before `:`"
+	aScripter keyClick: BlKeyboardKey arrowLeft.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	self checkFor: aScripter refactoringPreviewButtonExists: false.
+	
+	aScripter check
+		label: 'Check cursor position';
+		value: [ :anEditor | anEditor editor cursors positions ] equals: [ { (aScripter model attributeNamed: #fakeMethodName) size - 1 } ];
+		id: GtSourceCoderEditorId;
+		onBreadthFirstChildOfClass: GtRenameEditor.
+
+	aScripter check
+		label: 'Check rename editor all selected';
+		value: [ :anEditor | anEditor editor selectedText asString ] equals: [ '' ];
+		id: GtSourceCoderEditorId;
+		onBreadthFirstChildOfClass: GtRenameEditor.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - rename method' }
+GtMethodCoderByScripterExamples >> forKeywordRename_04_type [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forKeywordRename_03_move_cursor.
+
+	aScripter type: 'New'.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	self checkFor: aScripter renameEditorExists: true.
+	self checkFor: aScripter refactoringPreviewButtonExists: true.
+	self checkFor: aScripter saveButtonEnabled: false.
+	self checkFor: aScripter discardButtonExists: false.
+
+	aScripter check
+		label: 'Check text';
+		value: [ :anEditor | anEditor text asString ] equals: [ (aScripter model attributeNamed: #fakeMethodName) allButLast, 'New:' ];
+		id: GtSourceCoderEditorId;
+		onBreadthFirstChildOfClass: GtRenameEditor.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - rename method' }
+GtMethodCoderByScripterExamples >> forKeywordRename_05_click_preview [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forKeywordRename_04_type.
+
+	aScripter click
+		label: 'Click refactoring preview button';
+		id: GtSourceCoderEditorId;
+		onBreadthFirstChildOfClass: GtRefactoringsPreviewButton.
+
+	aScripter wait forEmptySpaceTaskQueue.
+
+	self checkFor: aScripter discardButtonExists: true.
+
+	aScripter check
+		label: 'Check that refactorings preview appeared';
+		exists;
+		onSpaceRoot;
+		id: GtRefactoringsPreviewAcceptId.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - rename method' }
+GtMethodCoderByScripterExamples >> forKeywordRename_06_click_apply [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forKeywordRename_05_click_preview.
+
+	aScripter click
+		label: 'Click refactorings apply button';
+		onSpaceRoot;
+		id: GtRefactoringsPreviewAcceptId.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	self checkFor: aScripter renameEditorExists: false.
+	self checkFor: aScripter refactoringPreviewButtonExists: false.
+	self checkFor: aScripter saveButtonEnabled: true.
+	self checkFor: aScripter discardButtonExists: false.
+
+	^ aScripter syncContinue
+]
+
 { #category : #'examples - extract method' }
 GtMethodCoderByScripterExamples >> forUnaryExtraction_01_setup [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self scripterForBlock: [ self forMethodInPackagedClass ].
+	aScripter := self scripterForBlock: [ self forUnaryMethodInPackagedClass ].
 	aScripter do
 		label: 'type in a method with argument';
 		action: [ :aCoder | aCoder appendString:
@@ -801,7 +1046,7 @@ GtMethodCoderByScripterExamples >> forUnaryRename_01_setup [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self scripterForBlock: [ self forMethodInPackagedClass ].
+	aScripter := self scripterForBlock: [ self forUnaryMethodInPackagedClass ].
 	aScripter click
 		label: 'Click on the coder editor to give it focus';
 		id: GtSourceCoderEditorId.

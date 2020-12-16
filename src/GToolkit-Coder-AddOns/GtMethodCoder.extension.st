@@ -81,6 +81,7 @@ GtMethodCoder >> initializeAddOns [
 	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
 	addOns
 		addMainAction: (GtCoderActivatableAction new
+			id: GtMethodCoderSaveActionId;
 			title: 'Save' translated;
 			icon: BrGlamorousVectorIcons accept;
 			action: [ :aCoderUIModel :anEvent | self save ];

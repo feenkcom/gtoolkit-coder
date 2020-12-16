@@ -22,6 +22,7 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 		self dispatchEvent: GtRefactoringsAppliedEvent new ].
 
 	anAcceptButton := BrButton new
+		id: GtRefactoringsPreviewAcceptId;
 		icon: BrGlamorousVectorIcons accept;
 		beSmallSize;
 		requestFocus;

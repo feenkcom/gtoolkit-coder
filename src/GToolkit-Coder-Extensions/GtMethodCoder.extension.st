@@ -64,7 +64,8 @@ GtMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 			coderAddOns
 				addMainAction: 'Discard Changes' translated
 				icon: BrGlamorousVectorIcons cancel
-				action: [ :aCoderUIModel :anEvent | aCoderUIModel discardChanges ] ]
+				action: [ :aCoderUIModel :anEvent | aCoderUIModel discardChanges ]
+				id: GtMethodCoderDiscardChangesActionId ]
 		ifFalse: [ coderAddOns removeMainAction: 'Discard Changes' translated ]
 ]
 
