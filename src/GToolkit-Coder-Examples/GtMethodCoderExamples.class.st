@@ -34,7 +34,7 @@ GtMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSystem [
 	
 	anEventsRecoder := self eventsRecorder.
 	
-	aMethodCoder := self forMethodInPackagedClass.
+	aMethodCoder := self forUnaryMethodInPackagedClass.
 	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
 	
 	aMethodCoder sourceText append: '"modified"' asRopedText.
@@ -84,7 +84,7 @@ GtMethodCoderExamples >> compileMethodWithCoderWhenSubscribedToSystem [
 	
 	anEventsRecoder := self eventsRecorder.
 	
-	aMethodCoder := self forMethodInPackagedClass.
+	aMethodCoder := self forUnaryMethodInPackagedClass.
 	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
 	
 	aMethodCoder subscribeToSystem.
@@ -163,7 +163,7 @@ GtMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToSystem
 	
 	anEventsRecoder := self eventsRecorder.
 	
-	aMethodCoder := self forMethodInPackagedClass.
+	aMethodCoder := self forUnaryMethodInPackagedClass.
 	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
 	
 	aMethodCoder sourceText append: '"modified"' asRopedText.
@@ -212,7 +212,7 @@ GtMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribedToSys
 	
 	anEventsRecoder := self eventsRecorder.
 	
-	aMethodCoder := self forMethodInPackagedClass.
+	aMethodCoder := self forUnaryMethodInPackagedClass.
 	aMethodCoder subscribeToSystem.
 	
 	self assert: aMethodCoder isModified not.
@@ -606,29 +606,14 @@ GtMethodCoderExamples >> forExampleMethodCoder [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forKeywordSelectorMethodCoder [
-	<gtExample>
-	| method methodCoder |
-
-	method := GtMethodCoderExamples >> #keyword:selector:.
-
-	methodCoder := GtMethodCoder forMethod: method.
-
-	self assert: methodCoder collapsedText asString equals: 'keyword:selector:'.
-	self assert: methodCoder currentSourceString equals: method sourceCode.
-
-	^ methodCoder
-]
-
-{ #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forMethodInPackagedClass [
+GtMethodCoderExamples >> forKeywordMethodInPackagedClass [
 	<gtExample>
 	<after: #cleanUp>
 	| aPackage aClass aMethod aMethodCoder |
 
 	aPackage := self fakeRegisteredPackage.
 	aClass := (self fakeClassesInFakePackage: aPackage) first.
-	aMethod := (self fakeMethodsInFakeClass: aClass) first.
+	aMethod := (self fakeKeywordMethodsInFakeClass: aClass) first.
 
 	aMethodCoder := GtMethodCoder forMethod: aMethod.
 	aMethodCoder attributeNamed: #fakePackage put: aPackage.
@@ -648,6 +633,21 @@ GtMethodCoderExamples >> forMethodInPackagedClass [
 	self assert: aMethodCoder sourceCode compiledMethod equals: aMethod.
 
 	^ aMethodCoder
+]
+
+{ #category : #'examples - instance creation' }
+GtMethodCoderExamples >> forKeywordSelectorMethodCoder [
+	<gtExample>
+	| method methodCoder |
+
+	method := GtMethodCoderExamples >> #keyword:selector:.
+
+	methodCoder := GtMethodCoder forMethod: method.
+
+	self assert: methodCoder collapsedText asString equals: 'keyword:selector:'.
+	self assert: methodCoder currentSourceString equals: method sourceCode.
+
+	^ methodCoder
 ]
 
 { #category : #'examples - instance creation' }
@@ -726,6 +726,36 @@ GtMethodCoderExamples >> forThisObjectMethodCoder [
 	self assert: methodCoder currentSourceString equals: method sourceCode.
 
 	^ methodCoder
+]
+
+{ #category : #'examples - instance creation' }
+GtMethodCoderExamples >> forUnaryMethodInPackagedClass [
+	<gtExample>
+	<after: #cleanUp>
+	| aPackage aClass aMethod aMethodCoder |
+
+	aPackage := self fakeRegisteredPackage.
+	aClass := (self fakeClassesInFakePackage: aPackage) first.
+	aMethod := (self fakeUnaryMethodsInFakeClass: aClass) first.
+
+	aMethodCoder := GtMethodCoder forMethod: aMethod.
+	aMethodCoder attributeNamed: #fakePackage put: aPackage.
+	aMethodCoder attributeNamed: #fakeClass put: aClass.
+	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
+	aMethodCoder attributeNamed: #fakeMethod put: aMethod.
+	aMethodCoder attributeNamed: #fakeMethodName put: aMethod selector.
+	aMethodCoder attributeNamed: #fakeProtocol put: (self fakeCategoryForFakeMethod: aMethod).
+	aMethodCoder attributeNamed: #fakeInstVarNames put: aClass instVarNames.
+
+	self assert: aMethodCoder behavior equals: aClass.
+	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior explicit: aClass).
+	self assert: aMethodCoder selector equals: aMethod selector.
+	self assert: aMethodCoder compiledMethod equals: aMethod.
+	self assert: aMethodCoder protocol equals: (self fakeCategoryForFakeMethod: aMethod).
+	self assert: aMethodCoder sourceCode class equals: GtCoderCompiledMethodSourceCode.
+	self assert: aMethodCoder sourceCode compiledMethod equals: aMethod.
+
+	^ aMethodCoder
 ]
 
 { #category : #'sample methods' }
@@ -865,7 +895,7 @@ GtMethodCoderExamples >> removeClassWhenSubscribedToSystem [
 
 	anEventsRecoder := self eventsRecorder.
 
-	aMethodCoder := self forMethodInPackagedClass.
+	aMethodCoder := self forUnaryMethodInPackagedClass.
 	aMethodCoder subscribeToSystem.
 	
 	aMethod := aMethodCoder compiledMethod.
@@ -896,7 +926,7 @@ GtMethodCoderExamples >> removeMethodWithCoderWhenSubscribedToSystem [
 
 	anEventsRecoder := self eventsRecorder.
 
-	aMethodCoder := self forMethodInPackagedClass.
+	aMethodCoder := self forUnaryMethodInPackagedClass.
 	aMethodCoder subscribeToSystem.
 	aMethodCoder
 		when: GtCoderMethodRemoved
@@ -929,7 +959,7 @@ GtMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
 
 	anEventsRecoder := self eventsRecorder.
 
-	aMethodCoder := self forMethodInPackagedClass.
+	aMethodCoder := self forUnaryMethodInPackagedClass.
 	aMethodCoder subscribeToSystem.
 
 	aMethod := aMethodCoder compiledMethod.
@@ -963,7 +993,7 @@ GtMethodCoderExamples >> removePackageWhenSubscribedToSystem [
 
 	anEventsRecoder := self eventsRecorder.
 
-	aMethodCoder := self forMethodInPackagedClass.
+	aMethodCoder := self forUnaryMethodInPackagedClass.
 	aMethodCoder subscribeToSystem.
 	
 	aMethod := aMethodCoder compiledMethod.

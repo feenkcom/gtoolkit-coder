@@ -1000,9 +1000,14 @@ GtMethodCoder >> onClassRenamed: aClassRenamedAnnouncement [
 
 { #category : #'event handling' }
 GtMethodCoder >> onMethodAdded: aMethodAddedAnnouncement [
+
 	(aMethodAddedAnnouncement methodAdded methodClass = self behavior
 		and: [ aMethodAddedAnnouncement methodAdded selector = self selector ])
 			ifFalse: [ ^ self ].
+
+	self isModified
+		ifFalse: [ self forMethod: aMethodAddedAnnouncement methodAdded ]
+		ifTrue: [ self sourceCode: (self sourceCode asCompiledMethodSourceCode: aMethodAddedAnnouncement methodAdded) ].
 
 	self notifyMethodAdded
 ]
@@ -1014,26 +1019,29 @@ GtMethodCoder >> onMethodModified: aMethodModified [
 	doesAffect := self methodBehavior
 		realBehaviorDo: [ :aBehavior |
 			aMethodModified classAffected = aBehavior
-				and: [ aMethodModified selector = self selector ] ]
+				and: [ aMethodModified oldMethod selector = self selector
+					or: [ aMethodModified newMethod selector = self selector ] ] ]
 		ifAbsent: [
 			self methodBehavior
 				behaviorNameDo: [ :aBehaviorName |
 					aMethodModified classAffected name = aBehaviorName
-						and: [ aMethodModified selector = self selector ] ]
+						and: [ aMethodModified oldMethod selector = self selector
+							or: [ aMethodModified newMethod selector = self selector ] ] ]
 			ifAbsent: [ false ] ].
-	
+
 	doesAffect
 		ifFalse: [ ^ self ].
 
 	self isModified
 		ifFalse: [ self forMethod: aMethodModified newMethod ]
-		ifTrue: [ sourceCode := self sourceCode asCompiledMethodSourceCode: aMethodModified newMethod ].
-	
+		ifTrue: [ self sourceCode: (self sourceCode asCompiledMethodSourceCode: aMethodModified newMethod) ].
+
 	self notifyMethodModified
 ]
 
 { #category : #'event handling' }
 GtMethodCoder >> onMethodRemoved: aMethodRemovedAnnouncement [
+
 	(aMethodRemovedAnnouncement methodRemoved methodClass = self behavior
 		and: [ aMethodRemovedAnnouncement methodRemoved selector = self selector ])
 			ifFalse: [ ^ self ].
@@ -1058,7 +1066,7 @@ GtMethodCoder >> packageTag [
 						ifFalse: [ self package
 								ifNotNil: [ :package | 
 									| cls |
-									cls := self classOrMetaClass.
+									cls := self behavior.
 									cls category asString = package name asString
 										ifFalse: [ package classTagForClass: cls ] ] ] ] ]
 ]

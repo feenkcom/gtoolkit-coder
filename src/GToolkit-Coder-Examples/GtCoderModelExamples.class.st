@@ -16,8 +16,10 @@ GtCoderModelExamples >> addFakeClassesToPackage: aPackage [
 			classVariableNames: ''
 			package: aPackage name.
 		
-		self fakeMethodNames do: [ :eachMethodName |
-			aNewClass compile: eachMethodName classified: (self fakeCategoryForFakeMethodName: eachMethodName) ] ]
+		self fakeUnaryMethodNames do: [ :eachMethodName |
+			aNewClass compile: eachMethodName classified: (self fakeCategoryForFakeMethodName: eachMethodName) ].
+		self fakeKeywordMethodNames do: [ :eachMethodName |
+			aNewClass compile: (eachMethodName, ' anObject') classified: (self fakeCategoryForFakeMethodName: eachMethodName) ] ]
 ]
 
 { #category : #'private - set up' }
@@ -113,6 +115,18 @@ GtCoderModelExamples >> fakeInstVarNames [
 ]
 
 { #category : #'private - set up' }
+GtCoderModelExamples >> fakeKeywordMethodNames [
+	<script: 'self new fakeKeywordMethodNames inspect'>
+	
+	^ (1 to: self fakeMethodCount) collect: [ :index | (#method, index asString, ':') asSymbol ]
+]
+
+{ #category : #'private - set up' }
+GtCoderModelExamples >> fakeKeywordMethodsInFakeClass: aFakeClass [
+	^ self fakeKeywordMethodNames collect: [ :each | aFakeClass >> each ]
+]
+
+{ #category : #'private - set up' }
 GtCoderModelExamples >> fakeMethodCount [
 	^ 2
 ]
@@ -121,7 +135,7 @@ GtCoderModelExamples >> fakeMethodCount [
 GtCoderModelExamples >> fakeMethodNames [
 	<script: 'self new fakeMethodNames inspect'>
 	
-	^ (1 to: self fakeMethodCount) collect: [ :index | (#method, index asString) asSymbol ]
+	^ self fakeUnaryMethodNames, self fakeKeywordMethodNames
 ]
 
 { #category : #'private - set up' }
@@ -162,6 +176,18 @@ GtCoderModelExamples >> fakeRegisteredPackage [
 	self addFakeClassesToPackage: aPackage.
 	
 	^ aPackage
+]
+
+{ #category : #'private - set up' }
+GtCoderModelExamples >> fakeUnaryMethodNames [
+	<script: 'self new fakeUnaryMethodNames inspect'>
+	
+	^ (1 to: self fakeMethodCount) collect: [ :index | (#method, index asString) asSymbol ]
+]
+
+{ #category : #'private - set up' }
+GtCoderModelExamples >> fakeUnaryMethodsInFakeClass: aFakeClass [
+	^ self fakeUnaryMethodNames collect: [ :each | aFakeClass >> each ]
 ]
 
 { #category : #'private - set up' }

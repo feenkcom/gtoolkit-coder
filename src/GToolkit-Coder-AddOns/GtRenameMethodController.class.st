@@ -90,12 +90,13 @@ GtRenameMethodController >> refactoring [
 	newSelector = selector
 		ifTrue: [ ^ nil ].
 	model := self createModel.
-	^ RBRenameMethodRefactoring
+	^ (GtCoderRenameMethodRefactoring
 		model: model
 		renameMethod: selector
 		in: (model classFor: implementor)
 		to: newSelector
-		permutation: (1 to: selector numArgs)
+		permutation: (1 to: selector numArgs))
+			methodCoder: coder
 ]
 
 { #category : #accessing }
@@ -144,6 +145,8 @@ GtRenameMethodController >> tab: forward [
 
 { #category : #private }
 GtRenameMethodController >> updateName: aString [
-	super updateName: aString.
-	newSelectorParts at: selectorIndex put: aString
+
+	"we should update selector parts before updating the name, otherwise the refactoring will be canceled"
+	newSelectorParts at: selectorIndex put: aString.
+	super updateName: aString
 ]
