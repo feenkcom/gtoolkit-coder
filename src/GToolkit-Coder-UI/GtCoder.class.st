@@ -115,7 +115,7 @@ GtCoder >> initializeToolbarElement [
 { #category : #'private - notifying' }
 GtCoder >> notifyTabAppearanceChangeWishTo: aString [
 	self enqueueTask: (BlTaskAction new action: [
-		self fireEvent: (GtWorldChangeTabLabelWish new label: aString) ])
+		self fireEvent: (GtPhlowChangeDescriptionLabelWish new label: aString) ])
 ]
 
 { #category : #'private - hooks' }
