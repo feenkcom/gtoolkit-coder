@@ -14,7 +14,7 @@ GtSourceCoderEvaluationPrinter >> addAttributesFor: anEvaluationResult within: a
 		ifTrue: [
 			| aPrintAttribute | 
 
-			aPrintAttribute := (GtCoderPrintStringAttribute forString: anEvaluationResult value printString).
+			aPrintAttribute := (GtCoderPrintStringAttribute forObject: anEvaluationResult value).
 
 			(self text 
 				from: aTextInterval last
