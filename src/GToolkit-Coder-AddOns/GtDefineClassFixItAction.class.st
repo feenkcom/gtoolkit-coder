@@ -30,7 +30,7 @@ GtDefineClassFixItAction >> addCreateClassAttributeInEditor: aBrTextEditor [
 			c textFlow pushLine.
 			c horizontal matchParent ].
 	element ].
-	attribute := BrTextExpandButtonAttribute new.
+	attribute := BrGlamorousTrangleExpanderTextAttribute new.
 	attribute isExpanded: true.
 	attribute
 		attributesCreatingBlock: [ adornmentAttribute := BrTextAdornmentDynamicAttribute new
