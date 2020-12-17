@@ -92,10 +92,9 @@ GtCoderExampleStateElement >> initialize [
 { #category : #initialization }
 GtCoderExampleStateElement >> initializeInteractiveLook [
 	self addLook:
-		(BrInteractiveCommonLook new
-			default: [ :aWidget | aWidget background: self exampleState color ];
-			hovered: [ :aWidget | aWidget background: self exampleState color darker ])
-		
+		(BrStyleCommonLook new
+			default: [ :aStyle | aStyle background: self exampleState color ];
+			hovered: [ :aStyle | aStyle background: self exampleState color darker ])
 ]
 
 { #category : #initialization }

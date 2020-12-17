@@ -154,11 +154,11 @@ GtBehaviorDefinitionCoderElement >> readonlyLabelLook [
 		glamorousCodeFont;
 		fontSize: 10;
 		foreground: Color black;
-		add: (BrInteractiveCommonLook new
-			default: [ :aWidget |
-				aWidget
+		add: (BrStyleCommonLook new
+			default: [ :aStyle |
+				aStyle
 					geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
 					border: BlBorder empty ];
-			hovered: [ :aWidget | aWidget border: (BlBorder paint: BrGlamorousColors hoveredButtonBorderColor width: 1) ]);
+			hovered: [ :aStyle | aStyle border: (BlBorder paint: BrGlamorousColors hoveredButtonBorderColor width: 1) ]);
 		yourself
 ]

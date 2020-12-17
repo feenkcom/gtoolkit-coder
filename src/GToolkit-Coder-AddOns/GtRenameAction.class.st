@@ -358,7 +358,7 @@ GtRenameAction >> updateCursorLocation [
 ]
 
 { #category : #actions }
-GtRenameAction >> updateName: blText [
+GtRenameAction >> updateName: blText [	
 	renameAttributes do: [ :each | each updateText: blText ].
 	self announceEvent: #textUpdated
 ]
