@@ -29,8 +29,6 @@ BaselineOfGToolkitCoder >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
 		spec 
-			baseline: 'BlocPacFocusFinder' with: [
-				spec repository: 'github://feenkcom/bloc-pac:main/src' ];
 			baseline: 'Brick' with: [
 				spec repository: 'github://feenkcom/Brick/src' ];
 			baseline: 'GToolkitBasicUtility' with: [
@@ -47,7 +45,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			package: 'GToolkit-Coder' with: [
 				spec requires: #('Brick' 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitCoderMetamodels' 'GToolkitPhlow' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-UI' with: [
-				spec requires: #('GToolkit-Coder' 'BlocPacFocusFinder' 'Brick' 'GToolkitBasicUtility' 'GToolkitPhlow' 'GToolkitPager' ). ];
+				spec requires: #('GToolkit-Coder' 'Brick' 'GToolkitBasicUtility' 'GToolkitPhlow' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-AddOns' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI'). ];
 			package: 'GToolkit-Coder-Extensions' with: [
