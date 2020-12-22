@@ -42,7 +42,7 @@ GtSearchMethodGroupResult >> gtItemsFor: aView [
 	^ aView explicit 
 		title: 'Live' translated;
 		priority: 10;
-		stencil: [ self asCoder ]
+		stencil: [ (self asCoder) asElement margin: (BlInsets all: 5) ]
 ]
 
 { #category : #changes }

@@ -210,7 +210,7 @@ GtSourceCoder >> cursorPositionIn: aBrTextEditor do: aBlock [
 
 { #category : #'api - actions' }
 GtSourceCoder >> debug [
-	self critical: [ self debug: self currentSourceString ]
+	self debug: self currentSourceString
 ]
 
 { #category : #'private - actions' }
@@ -367,12 +367,16 @@ GtSourceCoder >> doIt: aSourceIntervalOrBlock [
 	source code in which case the result is nil"
 	<return: #Object>
 
-	^ self evaluateInterval: aSourceIntervalOrBlock
+	^ self
+		evaluateInterval: aSourceIntervalOrBlock
+		thenDo: [ :aResult | self notifyEvaluatedWithResult: aResult ]
 ]
 
 { #category : #'api - actions' }
 GtSourceCoder >> doItAll [
-	^ self evaluate: [ :thisCoder | thisCoder currentSourceString ]
+	^ self
+		evaluate: [ :thisCoder | thisCoder currentSourceString ]
+		thenDo: [ :aResult | self notifyEvaluatedWithResult: aResult ]
 ]
 
 { #category : #'api - actions' }
@@ -380,14 +384,18 @@ GtSourceCoder >> doItAndGo: aSourceIntervalOrBlock [
 
 	^ self
 		evaluateInterval: aSourceIntervalOrBlock
-		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
+		thenDo: [ :anEvaluationResult |
+			self notifyEvaluatedWithResult: anEvaluationResult.
+			self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
 { #category : #'api - actions' }
 GtSourceCoder >> doItAndGoAll [
 	^ self
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
-		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
+		thenDo: [ :anEvaluationResult |
+			self notifyEvaluatedWithResult: anEvaluationResult.
+			self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
 { #category : #'private - actions' }
@@ -442,7 +450,6 @@ GtSourceCoder >> evaluate: aSourceStringOrBlock decorated: aSourceCodeDecorator 
 		sourceString: aSourceString;
 		sourceInterval: (1 to: aSourceString size).
 
-	self notifyEvaluatedWithResult: aResult.
 	aThenBlock cull: aResult.
 	^ aResult
 ]
@@ -796,6 +803,13 @@ GtSourceCoder >> notifyParseError: aString at: anInteger [
 ]
 
 { #category : #'private - notifying' }
+GtSourceCoder >> notifyPrintResult: anEvaluationResult [
+	self announce: (GtCoderPrintAnnouncement new 
+		evaluationResult: anEvaluationResult;
+		coder: self)
+]
+
+{ #category : #'private - notifying' }
 GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
 	self announce: (GtCoderShowDebuggerRequest new
 		coder: self;
@@ -904,7 +918,7 @@ GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 GtSourceCoder >> printItAll [
 	^ self
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
-		thenDo: [ :aResult | ]
+		thenDo: [ :aResult | self notifyPrintResult: aResult ]
 ]
 
 { #category : #'api - actions' }
@@ -916,7 +930,7 @@ GtSourceCoder >> printItWithin: aSourceIntervalBlock [
 
 	^ self
 		evaluateInterval: aSourceIntervalBlock
-		thenDo: [ :aResult | ]
+		thenDo: [ :aResult | self notifyPrintResult: aResult ]
 ]
 
 { #category : #accessing }

@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderEvaluationAnnouncement,
+	#name : #GtCoderPrintAnnouncement,
 	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'evaluationResult'
@@ -8,13 +8,13 @@ Class {
 }
 
 { #category : #accessing }
-GtCoderEvaluationAnnouncement >> evaluationResult [
+GtCoderPrintAnnouncement >> evaluationResult [
 	<return: #GtSourceCoderEvaluationResult>
 
 	^ evaluationResult
 ]
 
 { #category : #accessing }
-GtCoderEvaluationAnnouncement >> evaluationResult: aGtSourceCoderEvaluationResult [
+GtCoderPrintAnnouncement >> evaluationResult: aGtSourceCoderEvaluationResult [
 	evaluationResult := aGtSourceCoderEvaluationResult
 ]

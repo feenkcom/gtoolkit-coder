@@ -29,7 +29,7 @@ GtCoderExpandableBaselineStyler >> styleBaselineMessage: aMessageNode [
 		styleFrom: stringNode startWithoutParentheses
 		to: stringNode stopWithoutParentheses
 		with:
-			{(BrTextExpandButtonAttribute new
+			{(BrGlamorousTrangleExpanderTextAttribute new
 				attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
 						beAppend;
 						stencil: [ | editorElement method coder |

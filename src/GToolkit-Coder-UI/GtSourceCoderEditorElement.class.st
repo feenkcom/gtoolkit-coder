@@ -5,7 +5,8 @@ Class {
 		'sourceCoderUIModel',
 		'interactions',
 		'completion',
-		'evaluationHighlighter'
+		'evaluationHighlighter',
+		'evaluationPrinter'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
@@ -37,7 +38,9 @@ GtSourceCoderEditorElement >> initialize [
 
 	interactions := #().
 	completion := nil.
-	evaluationHighlighter := GtSourceCoderEditorElementEvaluationHighlighter new editorElement: self.
+
+	evaluationHighlighter := GtSourceCoderEvaluationHighlighter new editorElement: self.
+	evaluationPrinter := GtSourceCoderEvaluationPrinter new editorElement: self.
 
 	self initializeListeners
 ]
@@ -73,7 +76,8 @@ GtSourceCoderEditorElement >> newEditorMemento [
 
 { #category : #'private - event handling' }
 GtSourceCoderEditorElement >> onCodeEvaluated: anEvaluationAnnouncement [
-	evaluationHighlighter highlight: anEvaluationAnnouncement evaluationResult
+	evaluationHighlighter displayResult: anEvaluationAnnouncement evaluationResult.
+	evaluationPrinter hideResult
 ]
 
 { #category : #'private - event handling' }
@@ -92,6 +96,12 @@ GtSourceCoderEditorElement >> onObjectSpawnRequest: anAnnouncement [
 ]
 
 { #category : #'private - event handling' }
+GtSourceCoderEditorElement >> onPrintRequest: anEvaluationAnnouncement [
+	evaluationHighlighter hideResult.
+	evaluationPrinter displayResult: anEvaluationAnnouncement evaluationResult.
+]
+
+{ #category : #'private - event handling' }
 GtSourceCoderEditorElement >> onSaveSourceCoderUIModel: aGtSourceCoderUIModel [
 	self saveCoderUIModel: aGtSourceCoderUIModel
 ]
@@ -100,7 +110,8 @@ GtSourceCoderEditorElement >> onSaveSourceCoderUIModel: aGtSourceCoderUIModel [
 GtSourceCoderEditorElement >> onShowDebuggerRequest: aShowDebuggerAnnouncement [
 	| sharedDebugSession anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText |
 	
-	evaluationHighlighter highlight: nil.
+	evaluationHighlighter hideResult.
+	evaluationPrinter hideResult.
 	
 	sharedDebugSession := GtSharedDebugSession new
 		session: aShowDebuggerAnnouncement debugSession.
@@ -137,7 +148,8 @@ GtSourceCoderEditorElement >> onSourceCodeChanged: aGtCoderSourceCodeChanged [
 		ifTrue: [ self updateSourceCode ] 
 		ifFalse: [ self enqueueTask: (BlTaskAction new action: [ self updateSourceCode ]) ].
 
-	evaluationHighlighter highlight: nil
+	evaluationHighlighter hideResult.
+	evaluationPrinter hideResult
 ]
 
 { #category : #'private - event handling' }
@@ -205,6 +217,7 @@ GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 	completion
 		ifNotNil: [ :aPreviousCompletion | aPreviousCompletion uninstall ].
 	self editor removeEditorShortcuts: interactions.
+
 	sourceCoderUIModel := aGtSourceCoderUIModel.
 	aGtSourceCoderUIModel editorState
 		ifNil: [ aGtSourceCoderUIModel editorState: self newEditorMemento ].
@@ -219,29 +232,46 @@ GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 	completion install.
 	(aGtSourceCoderUIModel coder newSourceStylerFrom: self)
 		ifNotNil: [ :styler | self styler: styler ].
+
 	aGtSourceCoderUIModel coder announcer weak
-		when: GtCoderEvaluationAnnouncement
-			send: #onCodeEvaluated:
-			to: self;
 		when: GtCoderAddOnsUpdateRequest
 			send: #onUpdateAddOnsRequest:
 			to: self;
-		when: GtCoderStylerChanged send: #onStylersUpdated: to: self;
-		when: GtCoderStyleTextRequest send: #onStyleTextRequest: to: self;
-		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged: to: self;
-		when: GtCoderParseError send: #onCoderParseError: to: self;
+		when: GtCoderStylerChanged
+			send: #onStylersUpdated:
+			to: self;
+		when: GtCoderStyleTextRequest
+			send: #onStyleTextRequest:
+			to: self;
+		when: GtCoderSourceCodeChanged
+			send: #onSourceCodeChanged:
+			to: self;
+		when: GtCoderParseError
+			send: #onCoderParseError:
+			to: self;
 		when: GtCoderObjectSpawnRequest
 			send: #onObjectSpawnRequest:
 			to: self;
-		when: GtCoderToolSpawnRequest send: #onToolSpawnRequest: to: self;
+		when: GtCoderToolSpawnRequest
+			send: #onToolSpawnRequest:
+			to: self;
+		when: GtCoderEvaluationAnnouncement
+			send: #onCodeEvaluated:
+			to: self;
+		when: GtCoderPrintAnnouncement
+			send: #onPrintRequest:
+			to: self;
 		when: GtCoderShowDebuggerRequest
 			send: #onShowDebuggerRequest:
 			to: self.
+
 	aGtSourceCoderUIModel focused
 		ifTrue: [ self requestFocus ].
 	aGtSourceCoderUIModel coder updateAddOns.
-	evaluationHighlighter
-		highlight: aGtSourceCoderUIModel evaluationResult
+
+	aGtSourceCoderUIModel evaluationResult
+		ifNil: [ evaluationHighlighter hideResult ]
+		ifNotNil: [ :aResult | evaluationHighlighter displayResult: aResult ].
 ]
 
 { #category : #private }
@@ -268,5 +298,7 @@ GtSourceCoderEditorElement >> updateSourceCode [
 	
 	aNewSourceCode clearAttributes: [ :eachAttribute | eachAttribute isKindOf: GtSourceCoderErrorAttribute ].
 	self text: aNewSourceCode.
-	evaluationHighlighter highlightSynchronously: nil
+
+	evaluationHighlighter hideResultSynchronously.
+	evaluationPrinter hideResultSynchronously
 ]

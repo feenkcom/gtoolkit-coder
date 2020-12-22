@@ -1,6 +1,6 @@
 Class {
 	#name : #GtMethodExpanderAttribute,
-	#superclass : #BrTextExpandButtonAttribute,
+	#superclass : #BrGlamorousTrangleExpanderTextAttribute,
 	#instVars : [
 		'classOrMetaClass',
 		'selector'

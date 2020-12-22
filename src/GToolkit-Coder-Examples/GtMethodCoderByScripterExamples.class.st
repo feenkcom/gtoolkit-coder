@@ -480,7 +480,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExpandAttribute
 	self 
 		checkFor: aScripterOrStep 
 		textAttributesAt: anIndex 
-		anySatisfies: [ :aTextAttribute | aTextAttribute isKindOf: BrTextExpandButtonAttribute ].
+		anySatisfies: [ :aTextAttribute | aTextAttribute isKindOf: BrGlamorousTrangleExpanderTextAttribute ].
 	^ aScripterOrStep
 ]
 

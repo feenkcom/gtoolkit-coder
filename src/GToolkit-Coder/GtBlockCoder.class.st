@@ -70,14 +70,18 @@ GtBlockCoder >> blockSourceFromText: aSourceTextOrString [
 
 { #category : #'api - actions' }
 GtBlockCoder >> doItAll [
-	^ self critical: [ self evaluate: self blockSource ]
+	^ self
+		evaluate: [ :thisCoder | thisCoder blockSource ]
+		thenDo: [ :anEvaluationResult | self notifyEvaluatedWithResult: anEvaluationResult ]
 ]
 
 { #category : #'api - actions' }
 GtBlockCoder >> doItAndGoAll [
 	^ self
 		evaluate: [ :thisCoder | thisCoder blockSource ]
-		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
+		thenDo: [ :anEvaluationResult |
+			self notifyEvaluatedWithResult: anEvaluationResult.
+			self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
 { #category : #'api - actions' }
