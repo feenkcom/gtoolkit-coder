@@ -150,10 +150,9 @@ GtCoder >> pagerWindowTitle [
 GtCoder >> shortTitle [
 	| aTitle |
 	aTitle := self fullTitle.
-	^ aTitle size < 42
-		ifTrue: [ aTitle ]
-		ifFalse: [ 
-			(aTitle first: 16), '...', (aTitle last: 9) ].
+	^ GtPhlowShortLabelBuilder new
+		fullLabel: aTitle;
+		build
 ]
 
 { #category : #'private - accessing' }
