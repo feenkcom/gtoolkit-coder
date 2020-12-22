@@ -80,6 +80,7 @@ GtCoder >> initialize [
 	self initializeContentElement.
 	self initializeSidebarElement.
 	self initializeToolbarElement.
+	self initializeListeners.
 	
 	self layout: BlLinearLayout horizontal.
 	
@@ -93,6 +94,13 @@ GtCoder >> initialize [
 { #category : #initialization }
 GtCoder >> initializeContentElement [
 	contentElement := GtCoderPlaygroundElement new.
+]
+
+{ #category : #initialization }
+GtCoder >> initializeListeners [
+	self 
+		when: BlFocusInEvent 
+		do: [ self onFocusReceived ]
 ]
 
 { #category : #initialization }
@@ -116,6 +124,11 @@ GtCoder >> initializeToolbarElement [
 GtCoder >> notifyTabAppearanceChangeWishTo: aString [
 	self enqueueTask: (BlTaskAction new action: [
 		self fireEvent: (GtPhlowChangeDescriptionLabelWish new label: aString) ])
+]
+
+{ #category : #'private - event handling' }
+GtCoder >> onFocusReceived [
+	self updateTabLabel
 ]
 
 { #category : #'private - hooks' }
