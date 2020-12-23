@@ -80,6 +80,7 @@ GtCoder >> initialize [
 	self initializeContentElement.
 	self initializeSidebarElement.
 	self initializeToolbarElement.
+	self initializeListeners.
 	
 	self layout: BlLinearLayout horizontal.
 	
@@ -93,6 +94,13 @@ GtCoder >> initialize [
 { #category : #initialization }
 GtCoder >> initializeContentElement [
 	contentElement := GtCoderPlaygroundElement new.
+]
+
+{ #category : #initialization }
+GtCoder >> initializeListeners [
+	self 
+		when: BlFocusInEvent 
+		do: [ self onFocusReceived ]
 ]
 
 { #category : #initialization }
@@ -118,6 +126,11 @@ GtCoder >> notifyTabAppearanceChangeWishTo: aString [
 		self fireEvent: (GtPhlowChangeDescriptionLabelWish new label: aString) ])
 ]
 
+{ #category : #'private - event handling' }
+GtCoder >> onFocusReceived [
+	self updateTabLabel
+]
+
 { #category : #'private - hooks' }
 GtCoder >> onNavigationModelChanged [
 	super onNavigationModelChanged.
@@ -137,10 +150,9 @@ GtCoder >> pagerWindowTitle [
 GtCoder >> shortTitle [
 	| aTitle |
 	aTitle := self fullTitle.
-	^ aTitle size < 42
-		ifTrue: [ aTitle ]
-		ifFalse: [ 
-			(aTitle first: 16), '...', (aTitle last: 9) ].
+	^ GtPhlowShortLabelBuilder new
+		fullLabel: aTitle;
+		build
 ]
 
 { #category : #'private - accessing' }

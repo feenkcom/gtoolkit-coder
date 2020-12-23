@@ -35,13 +35,22 @@ GtPackageCoderElement >> buildPackageLabel [
 		vFitContent.
 	
 	packageNameEditor := BrEditableLabel new
+		id: GtPackageCoderPackageNameId;
 		look: (BrGlamorousEditableLabelLook new
 			defaultBackground: Color transparent;
 			glamorousCodeFont;
 			bold;
 			fontSize: 18);
 		text: packageCoder package name;
-		margin: (BlInsets all: 0).
+		margin: (BlInsets all: 0);
+		whenKey: BlKeyCombination primaryB
+			labelDo: [ :aShortcutEvent| self phlow spawnTool: (GtPackageCoderTool package: self package) ];
+		whenKey: BlKeyCombination primaryG
+			labelDo: [ :aShortcutEvent | self phlow spawnObject: self package ];
+		whenKey: BlKeyCombination primaryR
+			labelDo: [ :aShortcutEvent | aShortcutEvent currentTarget switchToEditor ];
+		whenKey: BlKeyCombination primaryC
+			labelDo: [ :aShortcutEvent | Clipboard clipboardText: self package name asString ].
 
 	previewButton := GtRefactoringsPreviewButton new
 		margin: (BlInsets left: 5);
@@ -143,6 +152,13 @@ GtPackageCoderElement >> initialize [
 
 	self padding: (BlInsets top: 5 left: 6 bottom: 5 right: 6).
 	self matchParent
+]
+
+{ #category : #accessing }
+GtPackageCoderElement >> package [
+	<return: #RPackage>
+
+	^ self packageCoder package
 ]
 
 { #category : #accessing }
