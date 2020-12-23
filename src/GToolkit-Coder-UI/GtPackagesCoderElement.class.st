@@ -90,6 +90,7 @@ GtPackagesCoderElement >> initialize [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-
+	
+	self when: BlClickEvent do: [ self requestFocus ].
 	self addChild: self buildContentPane.
 ]
