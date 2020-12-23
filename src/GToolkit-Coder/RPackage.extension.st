@@ -8,7 +8,7 @@ RPackage >> gtClassExtensions [
 { #category : #'*GToolkit-Coder' }
 RPackage >> gtClassReferences [
 	^ self methodReferences flatCollectAsSet: [ :m | 
-		m method referencedClasses collect: [ :each | 
+		m method gtReferencedClasses collect: [ :each | 
 			GtPharoClassReference new 
 				referencingMethod: m; 
 				referencedClass: each ]]
