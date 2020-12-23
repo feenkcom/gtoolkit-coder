@@ -139,10 +139,9 @@ GtCoder >> pagerWindowTitle [
 
 { #category : #'private - accessing' }
 GtCoder >> shortTitle [
-	^ GtPhlowToolTitleLabelBuilder new
-		toolName: 'Coder';
-		subjectName: self subjectTitle;
-		build
+	^ (GtPhlowTitleLabelBuilder 
+		longLabel: self subjectTitle)
+			build
 ]
 
 { #category : #'private - accessing' }
@@ -189,8 +188,9 @@ GtCoder >> updateSidebarContent [
 
 { #category : #'private - updating' }
 GtCoder >> updateTabLabel [
-	GtPhlowTitleLabelNotifier new
+	GtPhlowTitleIconAndLabelNotifier new
 		element: self;
-		block: [ self shortTitle ];
+		shortLabel: [ self shortTitle ifEmpty: [ 'Coder' asRopedText ] ];
+		icon: BrGlamorousVectorIcons emphasizedBrowse;
 		notify
 ]
