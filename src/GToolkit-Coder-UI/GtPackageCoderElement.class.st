@@ -151,6 +151,7 @@ GtPackageCoderElement >> initialize [
 	super initialize.
 
 	self padding: (BlInsets top: 5 left: 6 bottom: 5 right: 6).
+	self when: BlClickEvent do: [ self requestFocus ].
 	self matchParent
 ]
 
