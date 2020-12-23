@@ -64,15 +64,6 @@ GtCoder >> contentElement [
 	^ contentElement
 ]
 
-{ #category : #'private - accessing' }
-GtCoder >> fullTitle [
-	<return: #String>
-	self navigationModel selectedClassDo: [ :aClass | ^ 'Coder: ', aClass name ].
-	self navigationModel selectedTagDo: [ :aPackageTag | ^ 'Coder: ', aPackageTag packageName, '-', aPackageTag name ].
-	self navigationModel selectedPackageDo: [ :aPackage | ^ 'Coder: ', aPackage name ].
-	^ 'Coder'.
-]
-
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
@@ -80,6 +71,7 @@ GtCoder >> initialize [
 	self initializeContentElement.
 	self initializeSidebarElement.
 	self initializeToolbarElement.
+	self initializeListeners.
 	
 	self layout: BlLinearLayout horizontal.
 	
@@ -93,6 +85,13 @@ GtCoder >> initialize [
 { #category : #initialization }
 GtCoder >> initializeContentElement [
 	contentElement := GtCoderPlaygroundElement new.
+]
+
+{ #category : #initialization }
+GtCoder >> initializeListeners [
+	self 
+		when: BlFocusInEvent 
+		do: [ self onFocusReceived ]
 ]
 
 { #category : #initialization }
@@ -112,10 +111,9 @@ GtCoder >> initializeToolbarElement [
 			c ignored vertical alignTop ].
 ]
 
-{ #category : #'private - notifying' }
-GtCoder >> notifyTabAppearanceChangeWishTo: aString [
-	self enqueueTask: (BlTaskAction new action: [
-		self fireEvent: (GtPhlowChangeDescriptionLabelWish new label: aString) ])
+{ #category : #'private - event handling' }
+GtCoder >> onFocusReceived [
+	self updateTabLabel
 ]
 
 { #category : #'private - hooks' }
@@ -127,6 +125,12 @@ GtCoder >> onNavigationModelChanged [
 	self updateTabLabel.
 ]
 
+{ #category : #'private - announcement handling' }
+GtCoder >> onNavigationModelSubjectChange [
+	self enqueueTask: (BlTaskAction new action: [
+		self updateTabLabel ])
+]
+
 { #category : #opening }
 GtCoder >> pagerWindowTitle [
 	<return: #String>
@@ -135,18 +139,25 @@ GtCoder >> pagerWindowTitle [
 
 { #category : #'private - accessing' }
 GtCoder >> shortTitle [
-	| aTitle |
-	aTitle := self fullTitle.
-	^ aTitle size < 42
-		ifTrue: [ aTitle ]
-		ifFalse: [ 
-			(aTitle first: 16), '...', (aTitle last: 9) ].
+	^ GtPhlowToolTitleLabelBuilder new
+		toolName: 'Coder';
+		subjectName: self subjectTitle;
+		build
 ]
 
 { #category : #'private - accessing' }
 GtCoder >> sidebarElement [
 	<return: #GtPhlowHorizontalSidebarElement>
 	^ sidebarElement
+]
+
+{ #category : #'private - accessing' }
+GtCoder >> subjectTitle [
+	<return: #String or: nil>
+	self navigationModel selectedClassDo: [ :aClass | ^ aClass name ].
+	self navigationModel selectedTagDo: [ :aPackageTag | ^ aPackageTag packageName, '-', aPackageTag name ].
+	self navigationModel selectedPackageDo: [ :aPackage | ^ aPackage name ].
+	^ nil
 ]
 
 { #category : #'private - subscriptions' }
@@ -160,7 +171,7 @@ GtCoder >> subscribeToNavigationModel [
 			GtCoderNavigationClassSelected,
 			GtCoderNavigationClassRenamed,
 			GtCoderNavigationClassModified
-		send: #updateTabLabel to: self
+		send: #onNavigationModelSubjectChange to: self
 ]
 
 { #category : #'private - accessing' }
@@ -178,7 +189,8 @@ GtCoder >> updateSidebarContent [
 
 { #category : #'private - updating' }
 GtCoder >> updateTabLabel [
-	| aTitle |
-	aTitle := self shortTitle.
-	self notifyTabAppearanceChangeWishTo: aTitle
+	GtPhlowTitleLabelNotifier new
+		element: self;
+		block: [ self shortTitle ];
+		notify
 ]

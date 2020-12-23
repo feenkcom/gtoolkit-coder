@@ -24,9 +24,9 @@ GtSourceCoderCollapsedTextLook >> newLabel [
 { #category : #initialization }
 GtSourceCoderCollapsedTextLook >> onCoderChanged: aGtSourceCoderUIModel [
 	self widget coderUIModel
-		ifNotNil: [ :aPreviousCoder | aPreviousCoder announcer unsubscribe: self ].
+		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
 	self updateLabelFor: aGtSourceCoderUIModel coder.
-	aGtSourceCoderUIModel announcer weak
+	aGtSourceCoderUIModel coder announcer weak
 		when: GtCoderCollapsedLabelChanged
 		send: #updateLabel:
 		to: self
