@@ -15,7 +15,8 @@ GtClassesElement >> buildContainer [
 	aClassList := BrSimpleList new
 		itemStencil: [ GtClassCardElement new ];
 		itemDataBinder: [ :eachClassCard :eachClassCoder | eachClassCard coder: eachClassCoder ];
-		items: (coder coders asSortedCollection: [ :a :b | a theClass name < b theClass name ]).
+		items: (coder coders asSortedCollection: [ :a :b | a theClass name < b theClass name ]);
+		addEventFilterOn: BlClickEvent do: [ :anEvent | self requestFocus ].
 
 	self addChild: aClassList
 ]
