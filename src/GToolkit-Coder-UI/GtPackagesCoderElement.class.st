@@ -25,7 +25,8 @@ GtPackagesCoderElement >> buildPackageList [
 	^ BrSimpleList new
 		itemStencil: [ GtPackageCardElement new ];
 		itemDataBinder: [ :eachPackageCard :eachPackageCoder | eachPackageCard coder: eachPackageCoder ];
-		items: (packagesCoder coders asSortedCollection: [:a :b | a name < b name ])
+		items: (packagesCoder coders asSortedCollection: [:a :b | a name < b name ]);
+		addEventFilterOn: BlClickEvent do: [ :anEvent | self requestFocus ]
 ]
 
 { #category : #'private - ui' }

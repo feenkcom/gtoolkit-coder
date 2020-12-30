@@ -17,7 +17,8 @@ Class {
 	#instVars : [
 		'sidebarElement',
 		'contentElement',
-		'toolbarElement'
+		'toolbarElement',
+		'titleNotifier'
 	],
 	#category : #'GToolkit-Coder-UI-! Core'
 }
@@ -67,6 +68,7 @@ GtCoder >> contentElement [
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
+	self initializeTitleNotifier.
 	self addInteractiveModelState: GtPhlowToolDetailModel new.
 	self initializeContentElement.
 	self initializeSidebarElement.
@@ -88,18 +90,19 @@ GtCoder >> initializeContentElement [
 ]
 
 { #category : #initialization }
-GtCoder >> initializeListeners [
-	self 
-		when: BlFocusInEvent 
-		do: [ self onFocusReceived ]
-]
-
-{ #category : #initialization }
 GtCoder >> initializeSidebarElement [
 	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
 	self addLook: (GtPhlowToolDetailLook new
 		normal: [ :theInstance | sidebarElement hide ];
 		detailed: [ :theInstance | sidebarElement show ]).
+]
+
+{ #category : #initialization }
+GtCoder >> initializeTitleNotifier [
+	titleNotifier := GtPhlowTitleIconAndLabelNotifier new
+		shortLabel: [ self shortTitle ifEmpty: [ 'Coder' asRopedText ] ];
+		icon: BrGlamorousVectorIcons emphasizedBrowse.
+	self addEventHandler: titleNotifier.
 ]
 
 { #category : #initialization }
@@ -109,11 +112,6 @@ GtCoder >> initializeToolbarElement [
 			c ignoreByLayout.
 			c ignored horizontal alignRight.
 			c ignored vertical alignTop ].
-]
-
-{ #category : #'private - event handling' }
-GtCoder >> onFocusReceived [
-	self updateTabLabel
 ]
 
 { #category : #'private - hooks' }
@@ -174,6 +172,12 @@ GtCoder >> subscribeToNavigationModel [
 ]
 
 { #category : #'private - accessing' }
+GtCoder >> titleNotifier [
+	<return: #GtPhlowTitleNotifier>
+	^ titleNotifier
+]
+
+{ #category : #'private - accessing' }
 GtCoder >> toolbarElement [
 	<return: #GtCoderToolbarElement>
 	^ toolbarElement
@@ -188,9 +192,5 @@ GtCoder >> updateSidebarContent [
 
 { #category : #'private - updating' }
 GtCoder >> updateTabLabel [
-	GtPhlowTitleIconAndLabelNotifier new
-		element: self;
-		shortLabel: [ self shortTitle ifEmpty: [ 'Coder' asRopedText ] ];
-		icon: BrGlamorousVectorIcons emphasizedBrowse;
-		notify
+	self titleNotifier notifyIfFocused
 ]

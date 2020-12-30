@@ -39,7 +39,8 @@ RPackage >> gtDefinedTagsFor: aView context: aPhlowContext [
 				itemDataBinder: [ :eachTagCard :eachTagCoder | 
 					eachTagCard coder: eachTagCoder ];
 				items: (aPhlowContext packageCoder packageTagCoders 
-					asSortedCollection: [ :a :b | a name < b name ]) ]
+					asSortedCollection: [ :a :b | a name < b name ]);
+				addEventFilterOn: BlClickEvent do: [ :anEvent | anEvent currentTarget requestFocus ] ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
