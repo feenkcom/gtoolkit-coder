@@ -1,6 +1,14 @@
 Extension { #name : #RPackage }
 
 { #category : #'*GToolkit-Coder-Extensions' }
+RPackage >> gtBaselinesFor: aView [
+	<gtPackageView>
+	^ aView explicit
+		title: 'References';
+		stencil: [ self name gtSubstringLiteralCaseSensitiveMatch ]
+]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtBrowse [
 	^ ((GtCoder forPackage: self) 
 		openInPager) maximized
