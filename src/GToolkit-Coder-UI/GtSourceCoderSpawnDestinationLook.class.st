@@ -49,7 +49,7 @@ GtSourceCoderSpawnDestinationLook >> switchButton [
 GtSourceCoderSpawnDestinationLook >> switchSpawnDestination [
 	| aSourceCoder |
 	
-	aSourceCoder := self sourceCoderUIModel coder.
+	aSourceCoder := self sourceCoderUIModel.
 	aSourceCoder spawnDestination: aSourceCoder spawnDestination followingDestination.
 	self switchButton icon: aSourceCoder spawnDestination icon
 ]
