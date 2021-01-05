@@ -1,9 +1,6 @@
 Class {
 	#name : #GtClassBreadcrumbToggleLook,
-	#superclass : #BrToggleLook,
-	#instVars : [
-		'label'
-	],
+	#superclass : #BrLook,
 	#category : #'GToolkit-Coder-UI-Looks'
 }
 
@@ -16,31 +13,13 @@ GtClassBreadcrumbToggleLook >> initialize [
 	self
 		addChangeProperty: #(widget constraints horizontal resizer)
 		with: BlLayoutResizer fitContent.
-	self
-		add:
-			(label := BrGlamorousLabelLook new
-				foreground: Color black;
-				yourself).
-	self
-		addChange:
-			(BrLookChange new
-				up: [ :e | 
-					self flag: 'Working around a toggled display issue'.
-					self widget isActivated
-						ifTrue: [ self toggleActivated ]
-						ifFalse: [ self toggleDeactivated ] ];
-				down: [ :e |  ];
-				yourself)
-]
 
-{ #category : #'event handling' }
-GtClassBreadcrumbToggleLook >> toggleActivated [
-	super toggleActivated.
-	label foreground: Color black
-]
-
-{ #category : #'event handling' }
-GtClassBreadcrumbToggleLook >> toggleDeactivated [
-	super toggleDeactivated.
-	label foreground: Color gray
+	self add: (BrGlamorousLabelLook new
+		foreground: Color black;
+		yourself).			
+							
+	self add: (BrToggleLook new
+		// #label;
+		activated: [ :aStyle | aStyle foreground: Color black ];
+		deactivated: [ :aStyle | aStyle foreground: Color gray ])
 ]

@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : #accessing }
+GtPharoSnippetCoder >> coder [ 
+
+	^ self
+]
+
+{ #category : #accessing }
 GtPharoSnippetCoder >> context [
 	^ context
 ]
