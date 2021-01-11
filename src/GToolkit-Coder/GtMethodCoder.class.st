@@ -654,7 +654,8 @@ GtMethodCoder >> forMethod: aCompiledMethod [
 	self methodBehavior: (GtMethodCoderExplicitBehavior new behavior: aCompiledMethod methodClass).
 	self selector: aCompiledMethod selector.
 	self sourceCode: (GtCoderCompiledMethodSourceCode new compiledMethod: aCompiledMethod).
-	self protocol: aCompiledMethod category
+	self protocol: aCompiledMethod category.
+	self astCache: aCompiledMethod sourceCode -> aCompiledMethod ast
 ]
 
 { #category : #'api - actions' }
