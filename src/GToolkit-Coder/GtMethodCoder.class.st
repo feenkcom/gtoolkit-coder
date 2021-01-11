@@ -651,11 +651,10 @@ GtMethodCoder >> forExample: anExampleWithResult [
 
 { #category : #initialize }
 GtMethodCoder >> forMethod: aCompiledMethod [
-	self methodBehavior: (GtMethodCoderExplicitBehavior new behavior: aCompiledMethod methodClass).
+	self methodBehavior:(GtMethodCoderExplicitBehavior new behavior: aCompiledMethod methodClass).
 	self selector: aCompiledMethod selector.
 	self sourceCode: (GtCoderCompiledMethodSourceCode new compiledMethod: aCompiledMethod).
-	self protocol: aCompiledMethod category.
-	self astCache: aCompiledMethod sourceCode -> aCompiledMethod ast
+	self protocol: aCompiledMethod category
 ]
 
 { #category : #'api - actions' }
