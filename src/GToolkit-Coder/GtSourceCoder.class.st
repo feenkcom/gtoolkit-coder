@@ -232,9 +232,10 @@ GtSourceCoder >> debug: aString [
 
 { #category : #private }
 GtSourceCoder >> defaultTextAttributes [
-	^ {(BlFontFamilyAttribute named: 'Source Code Pro') beNotOverwritableByStyler.
-	(BlFontGenericFamilyAttribute monospace) beNotOverwritableByStyler.
-	(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}
+	^ {
+		(BlFontFamilyAttribute named: 'Source Code Pro') beNotOverwritableByStyler.
+		(BlFontSizeAttribute size: 14) beNotOverwritableByStyler
+	}
 ]
 
 { #category : #'api - text' }
