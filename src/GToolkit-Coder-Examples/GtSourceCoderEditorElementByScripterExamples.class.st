@@ -7,7 +7,6 @@ Class {
 { #category : #'example - play example' }
 GtSourceCoderEditorElementByScripterExamples >> playExample [
 	<gtExample>
-	<noTest>
 	| aScripter |
 
 	aScripter := self scripterWithElement.
