@@ -38,6 +38,14 @@ GtCoderExampleStatusAttribute >> initialize [
 	self beAppend
 ]
 
+{ #category : #printing }
+GtCoderExampleStatusAttribute >> printOn: aStream [
+	self example ifNil: [ ^ super printOn: aStream ].
+	aStream 
+		nextPutAll: 'example-status: ';
+		print: self example statusText.
+]
+
 { #category : #accessing }
 GtCoderExampleStatusAttribute >> result [
 	^ self example ifNotNil: #result
