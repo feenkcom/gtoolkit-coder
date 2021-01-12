@@ -4,6 +4,49 @@ Class {
 	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
+{ #category : #'example - play example' }
+GtSourceCoderEditorElementByScripterExamples >> playExample [
+	<gtExample>
+	<noTest>
+	| aScripter |
+
+	aScripter := self scripterWithElement.
+	
+	aScripter substep: 'Play example' do: [ :aStep | 
+		
+		aStep check
+			label: 'Check gray example status';
+			value: [ :aStateElement | 
+				aStateElement background paint color ]
+			equals: GtFilterExampleNotExecutedState default color;
+			onBreadthFirstChildOfClass: GtCoderExampleStateElement.
+	
+		aStep do
+			label: 'Play button from model';
+			block: [ :aUIModel | aUIModel coder playExample ];
+			onModel.
+		
+		aStep check
+			label: 'Check green example status';
+			value: [ :aStateElement | 
+				aStateElement background paint color ]
+			equals: GtFilterExampleSuccessState default color;
+			onBreadthFirstChildOfClass: GtCoderExampleStateElement.
+			
+		aStep wait forEmptySpaceTaskQueue.
+			
+		aStep check
+			label: 'Check green example status after all actions (styling)';
+			value: [ :aStateElement | 
+				aStateElement background paint color ]
+			equals: GtFilterExampleSuccessState default color;
+			onBreadthFirstChildOfClass: GtCoderExampleStateElement.
+
+	].
+
+	^ aScripter syncContinue
+]
+
 { #category : #'example - instance creation' }
 GtSourceCoderEditorElementByScripterExamples >> scripterWithElement [
 	<gtExample>
