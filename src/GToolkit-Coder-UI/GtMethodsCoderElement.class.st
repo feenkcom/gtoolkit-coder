@@ -39,9 +39,10 @@ GtMethodsCoderElement >> buildFilter [
 	filterElement
 		when: GtFiltersChangedEvent
 		do: [ :event | self updateCodersFilters: event ].
-	methodsCoderUIModel coder announcer
+	methodsCoderUIModel coder announcer weak
 		when: GtCodersFiltersChanged
-		do: [ :event | self updateDisplayedFilters: filterElement ].
+		send: #updateDisplayedFilters
+		to: self.
 	self addChild: filterElement as: #filter
 ]
 
@@ -101,18 +102,22 @@ GtMethodsCoderElement >> updateCodersFilters: event [
 ]
 
 { #category : #'private - updating' }
-GtMethodsCoderElement >> updateDisplayedFilters: filterElement [
-	filterElement
-		buildFilters: [ methodsCoderUIModel coder additionalFilters
-				do: [ :each | 
-					(each class filterDescriptorFor: methodsCoderUIModel coder)
-						ifNotNil: [ :descriptor | 
-							| label |
-							label := descriptor valueIsRequired
-								ifTrue: [ each filterValueString ].
-							filterElement
-								addFilterForDescriptor: descriptor
-								andValue: label ] ] ]
+GtMethodsCoderElement >> updateDisplayedFilters [
+	self
+		childWithId: #filter
+		ifFound: [ :aFiltersElement |
+			aFiltersElement
+				buildFilters: [ methodsCoderUIModel coder additionalFilters
+						do: [ :each | 
+							(each class filterDescriptorFor: methodsCoderUIModel coder)
+								ifNotNil: [ :descriptor | 
+									| label |
+									label := descriptor valueIsRequired
+										ifTrue: [ each filterValueString ].
+									aFiltersElement
+										addFilterForDescriptor: descriptor
+										andValue: label ] ] ] ]
+		ifNone: [  ]
 ]
 
 { #category : #'private - updating' }
