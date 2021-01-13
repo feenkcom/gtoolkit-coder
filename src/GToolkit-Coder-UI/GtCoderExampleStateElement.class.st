@@ -16,7 +16,8 @@ Class {
 	#traits : 'TBrLayoutResizable + TBrEnableable',
 	#classTraits : 'TBrLayoutResizable classTrait + TBrEnableable classTrait',
 	#instVars : [
-		'example'
+		'example',
+		'styleLook'
 	],
 	#category : #'GToolkit-Coder-UI-Basic'
 }
@@ -91,10 +92,8 @@ GtCoderExampleStateElement >> initialize [
 
 { #category : #initialization }
 GtCoderExampleStateElement >> initializeInteractiveLook [
-	self addLook:
-		(BrStyleCommonLook new
-			default: [ :aStyle | aStyle background: self exampleState color ];
-			hovered: [ :aStyle | aStyle background: self exampleState color darker ])
+	self addLook: (styleLook := BrStyleCommonLook new).
+	self updateStyleLook.
 ]
 
 { #category : #initialization }
@@ -108,11 +107,9 @@ GtCoderExampleStateElement >> initializeTooltipLook [
 GtCoderExampleStateElement >> initializeViewModels [
 	| aButtonModel |
 	
-	self exact: 8@8.
-	
 	aButtonModel := BrButtonModel new
 		action: [ :aButton | self onClick: aButton ].
-	self viewModel: (aButtonModel)
+	self viewModel: aButtonModel.
 ]
 
 { #category : #'private - instance creation' }
@@ -223,6 +220,12 @@ GtCoderExampleStateElement >> spawnExampleFrom: anElement [
 			anElement phlow spawnObject: anExample result returnValueOrExampleException ] ]
 ]
 
+{ #category : #'private - accessing' }
+GtCoderExampleStateElement >> styleLook [
+	<return: #BrStyleCommonLook>
+	^ styleLook
+]
+
 { #category : #'private - subscriptions' }
 GtCoderExampleStateElement >> subscribeToExample [
 	self example announcer
@@ -245,5 +248,18 @@ GtCoderExampleStateElement >> unsubscribeFromExample [
 
 { #category : #'private - updating' }
 GtCoderExampleStateElement >> updateIcon [
-	self background: self exampleState color
+	self background: self exampleState color.
+	self updateStyleLook.
+]
+
+{ #category : #'private - updating' }
+GtCoderExampleStateElement >> updateStyleLook [
+	
+	"the following nil check can be removed anytime later.
+	It is useful for a couple of days until the next image build (instead of update)."
+	self styleLook ifNil: [ ^ self ].
+	
+	self styleLook
+		default: [ :aStyle | aStyle background: self exampleState color ];
+		hovered: [ :aStyle | aStyle background: self exampleState color darker ].
 ]
