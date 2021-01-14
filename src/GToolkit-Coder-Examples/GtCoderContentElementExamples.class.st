@@ -8,5 +8,5 @@ Class {
 GtCoderContentElementExamples >> methodCoder [
 	<gtExample>
 	
-	^ GtMethodCoder forMethod: (BlElement >> #position:extent:)
+	^ GtMethodCoder forMethod: (BlElement >> #position:extent:context:)
 ]
