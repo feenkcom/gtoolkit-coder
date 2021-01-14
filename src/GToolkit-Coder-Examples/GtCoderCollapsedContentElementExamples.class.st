@@ -22,7 +22,7 @@ GtCoderCollapsedContentElementExamples >> forMethodCoder [
 	<gtExample>
 	| aMethodCoder aContentElement |
 	aMethodCoder := GtMethodCoder
-		forMethod: BlElement >> #position:extent:.
+		forMethod: BlElement >> #position:extent:context:.
 	aContentElement := GtSourceCoderCollapsedContentElement new
 		coderUIModel: aMethodCoder asCoderUIModel.
 	aContentElement look: GtSourceCoderCollapsedWithHeaderLook.
