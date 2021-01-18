@@ -1,5 +1,8 @@
 "
-I am by the ${GtSourceCoder}$ sent when the AddOn stylers changed
+!Coder styler changed event
+""""This is an asynchronous event""""
+
+Is announced by the ${class:GtCoderModel}$ when stylers change.
 "
 Class {
 	#name : #GtCoderStylerChanged,

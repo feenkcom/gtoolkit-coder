@@ -40,6 +40,8 @@ GtCoderModel class >> initialize [
 
 { #category : #'private - addons' }
 GtCoderModel >> addOnChanged: aSymbol [
+	"Is sent from a Coder Worker thread when a given category of add-ons changed"
+
 	aSymbol = #mainActions
 		ifTrue: [ self announce: (GtCoderMainActionsChanged new coder: self) ].
 	aSymbol = #contextActions

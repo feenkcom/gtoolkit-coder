@@ -42,14 +42,15 @@ GtCoderActionsElement >> coderUIModel: aCoderUIModel [
 		ifNotNil:
 			[ :aPreviousCoderUIModel | aPreviousCoderUIModel coder announcer unsubscribe: self ].
 	coderUIModel := aCoderUIModel.
+
 	aCoderUIModel coder announcer weak
 		when: GtCoderAddOnsUpdateRequest send: #updateAddOns: to: self;
 		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
-		when: GtCoderContextActionsChanged
-			send: #updateContextToolbar
-			to: self.
+		when: GtCoderContextActionsChanged send: #updateContextToolbar to: self.
+
 	aCoderUIModel coder shouldAddOnsBeUpdated
 		ifTrue: [ aCoderUIModel coder updateAddOns ].
+
 	self removeMainToolbarActions.
 	self removeContextToolbarActions.
 	self addMainToolbarActions.
@@ -185,18 +186,17 @@ GtCoderActionsElement >> updateAddOns: anAnnouncement [
 
 { #category : #private }
 GtCoderActionsElement >> updateContextToolbar [
-	self
-		enqueueTask:
-			(BlTaskAction new
-				action: [ self removeContextToolbarActions.
-					self addContextToolbarActions ])
+	self enqueueTask:
+		(BlTaskAction new
+			action: [
+				self removeContextToolbarActions.
+				self addContextToolbarActions ])
 ]
 
 { #category : #private }
 GtCoderActionsElement >> updateMainToolbar [
-	self
-		enqueueTask:
-			(BlTaskAction new
-				action: [ self removeMainToolbarActions.
-					self addMainToolbarActions ])
+	self enqueueTask: (BlTaskAction new
+		action: [
+			self removeMainToolbarActions.
+			self addMainToolbarActions ])
 ]
