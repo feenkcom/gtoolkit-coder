@@ -104,3 +104,8 @@ GtSourceCoder >> removeRefactoringAttribute [
 GtSourceCoder >> withHeader [
 	self coderLook: [ GtMethodCoderHeaderLook ]
 ]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtSourceCoder >> withoutHeader [
+	self coderLook: nil
+]

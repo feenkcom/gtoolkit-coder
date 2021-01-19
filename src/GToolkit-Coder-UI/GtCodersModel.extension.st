@@ -9,8 +9,3 @@ GtCodersModel >> asCoderUIModel [
 GtCodersModel >> asElement [
 	^ self asCoderUIModel asElement
 ]
-
-{ #category : #'*GToolkit-Coder-UI' }
-GtCodersModel >> coderLook [
-	^ nil
-]

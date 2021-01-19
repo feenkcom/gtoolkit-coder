@@ -36,7 +36,8 @@ GtExpandableSourceCoderElement >> assignExpandedCoder: aSourceCoder to: anExpand
 
 	"Initialize look just once"
 	anExpandedElement look
-		ifNil: [ self addCodersCoderLook: aSourceCoder to: anExpandedElement.
+		ifNil: [
+			self addCodersCoderLook: aSourceCoder to: anExpandedElement.
 			anExpandedElement addLook: GtSourceCoderExpandedWithoutHeaderLook ]
 ]
 

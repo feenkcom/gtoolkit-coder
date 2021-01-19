@@ -1366,8 +1366,3 @@ GtSourceCoder >> variableNodeToReferencesFilter: aVariableNode ifFound: aFoundBl
 
 	^ aFoundBlock value: (self referencesFilterForLiteral: aVariableName asSymbol)
 ]
-
-{ #category : #elements }
-GtSourceCoder >> withoutHeader [
-	self coderLook: nil
-]

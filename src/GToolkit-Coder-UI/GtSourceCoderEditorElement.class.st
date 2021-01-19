@@ -159,7 +159,8 @@ GtSourceCoderEditorElement >> onStyleTextRequest: anEvent [
 
 { #category : #'private - event handling' }
 GtSourceCoderEditorElement >> onStylersUpdated: anAnnouncement [
-	self styler: (anAnnouncement coder newSourceStylerFrom: self)
+	self enqueueTask: (BlTaskAction new
+		action: [ self styler: (anAnnouncement coder newSourceStylerFrom: self) ])
 ]
 
 { #category : #'private - event handling' }
