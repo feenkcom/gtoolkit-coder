@@ -18,6 +18,18 @@ TBlDevScripterTarget >> onGtPharoSnippetEditor [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+TBlDevScripterTarget >> onGtPharoSnippetEvaluateButton [
+	self 
+		"onChildOfClass: GtExpandableCoderElement;"
+		onChildNamed: #content;
+		onChildOfClass: GtSourceCoderExpandedContentElement;
+		onChildNamed: #actions;
+		onChildAt: 1; "BrToolbar"
+		"onChildOfClass: BrToolbar;"
+		onChildAt: 1
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 TBlDevScripterTarget >> onGtPharoSnippetInspectButton [
 	self 
 		"onChildOfClass: GtExpandableCoderElement;"
