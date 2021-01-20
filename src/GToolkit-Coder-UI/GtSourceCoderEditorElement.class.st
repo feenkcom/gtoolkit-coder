@@ -23,6 +23,14 @@ GtSourceCoderEditorElement >> createContextMenuContent [
 				yourself ]
 ]
 
+{ #category : #private }
+GtSourceCoderEditorElement >> hideHighlighters [
+	self text clearAttributes: [ :eachAttribute | 
+		eachAttribute isKindOf: GtSourceCoderErrorAttribute ].
+	evaluationHighlighter hideResultSynchronously.
+	evaluationPrinter hideResultSynchronously.
+]
+
 { #category : #initialization }
 GtSourceCoderEditorElement >> initialize [
 	super initialize.
@@ -145,11 +153,12 @@ GtSourceCoderEditorElement >> onShowDebuggerRequest: aShowDebuggerAnnouncement [
 { #category : #'private - event handling' }
 GtSourceCoderEditorElement >> onSourceCodeChanged: aGtCoderSourceCodeChanged [
 	aGtCoderSourceCodeChanged isSynchronous
-		ifTrue: [ self updateSourceCode ] 
-		ifFalse: [ self enqueueTask: (BlTaskAction new action: [ self updateSourceCode ]) ].
-
-	evaluationHighlighter hideResult.
-	evaluationPrinter hideResult
+		ifTrue: [ 
+			self updateSourceCode.
+			self hideHighlighters ] 
+		ifFalse: [ self enqueueTask: (BlTaskAction new action: [ 
+			self updateSourceCode.
+			self hideHighlighters ]) ].
 ]
 
 { #category : #'private - event handling' }
@@ -297,9 +306,7 @@ GtSourceCoderEditorElement >> updateSourceCode [
 	(self text characters = aNewSourceCode characters)
 		ifTrue: [ ^ self ].
 	
-	aNewSourceCode clearAttributes: [ :eachAttribute | eachAttribute isKindOf: GtSourceCoderErrorAttribute ].
 	self text: aNewSourceCode.
+	
 
-	evaluationHighlighter hideResultSynchronously.
-	evaluationPrinter hideResultSynchronously
 ]
