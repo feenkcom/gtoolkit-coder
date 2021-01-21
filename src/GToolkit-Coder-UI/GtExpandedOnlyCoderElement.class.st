@@ -1,6 +1,10 @@
 Class {
 	#name : #GtExpandedOnlyCoderElement,
 	#superclass : #BrVerticalPane,
+	#instVars : [
+		'coderUIModel',
+		'expandedElement'
+	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
@@ -16,15 +20,40 @@ GtExpandedOnlyCoderElement >> asVerticallyResizableDo: aBlock [
 ]
 
 { #category : #accessing }
-GtExpandedOnlyCoderElement >> coder: aCoder [
-	| anExpandedElement |
+GtExpandedOnlyCoderElement >> coder: aCoderUIModel [
+
+	self 
+		deprecated: 'Use #coderUIModel: instead.'
+		transformWith: '`@receiver coder: `@arg' -> '`@receiver coderUIModel: `@arg'.
+
+	^ self coderUIModel: aCoderUIModel
+]
+
+{ #category : #accessing }
+GtExpandedOnlyCoderElement >> coderUIModel [
+	^ coderUIModel
+]
+
+{ #category : #accessing }
+GtExpandedOnlyCoderElement >> coderUIModel: aCoderUIModel [
+
 	self
-		assert: [ aCoder isNotNil ]
+		assert: [ aCoderUIModel isNotNil ]
 		description: [ 'Coder must not be nil' ].
-	self addChild: (anExpandedElement := self newExpandedElement: aCoder).
-	self addLook: (BrLayoutResizerLook new inherit: anExpandedElement).
-	aCoder expanded: true.
-	aCoder coder announcer weak
+	coderUIModel == aCoderUIModel ifTrue: [ ^ self ].
+
+	coderUIModel ifNotNil: 
+		[ coderUIModel coder announcer unsubscribe: self.
+		coderUIModel := aCoderUIModel.
+		expandedElement coderUIModel: aCoderUIModel.
+		^ self ].
+
+	coderUIModel := aCoderUIModel.
+	expandedElement := self newExpandedElement: aCoderUIModel.
+	self addChild: expandedElement.
+	self addLook: (BrLayoutResizerLook new inherit: expandedElement).
+	aCoderUIModel expanded: true.
+	aCoderUIModel coder announcer weak
 		when: GtCoderRequestFocus
 		send: #requestFocusAsyncronously
 		to: self
