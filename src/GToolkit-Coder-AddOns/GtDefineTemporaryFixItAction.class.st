@@ -25,3 +25,10 @@ GtDefineTemporaryFixItAction >> executeOn: anEditorElement [
 		, (newSource allButFirst: location).
 	sourceCoder currentSourceString: newSource
 ]
+
+{ #category : #accessing }
+GtDefineTemporaryFixItAction >> id [
+	<return: #BlElementId>
+
+	^ GtDefineTemporaryVariableFixItActionElementId
+]

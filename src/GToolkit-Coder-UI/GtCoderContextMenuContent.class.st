@@ -44,7 +44,8 @@ GtCoderContextMenuContent >> initialize [
 					hovered: [ :aStyle | aStyle background: BrGlamorousColors defaultButtonBorderColor ]);
 				padding: (BlInsets all: 5);
 				when: BlClickEvent
-					do: [
+					do: [ :anEvent |
+						anEvent consumed: true.
 						eachGtCoderContextMenuAction action cull: self editorElement cull: self anchor.
 						self fireEvent: BrDropdownHideWish new.
 						self fireEvent: BrContextMenuHideWish new ];

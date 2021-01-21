@@ -49,3 +49,10 @@ GtDefineClassFixItAction >> executeOn: anEditorElement [
 	self clearFixItAttributeInEditor: anEditorElement editor.
 	self addCreateClassAttributeInEditor: anEditorElement editor.
 ]
+
+{ #category : #accessing }
+GtDefineClassFixItAction >> id [
+	<return: #BlElementId>
+
+	^ GtDefineClassFixItActionElementId
+]

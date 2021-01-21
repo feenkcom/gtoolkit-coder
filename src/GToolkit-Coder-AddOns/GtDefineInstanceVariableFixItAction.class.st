@@ -14,3 +14,10 @@ GtDefineInstanceVariableFixItAction >> description [
 GtDefineInstanceVariableFixItAction >> executeOn: anEditorElement [
 	sourceCoder addInstanceVariable: node name
 ]
+
+{ #category : #accessing }
+GtDefineInstanceVariableFixItAction >> id [
+	<return: #BlElementId>
+
+	^ GtDefineInstanceVariableFixItActionElementId
+]

@@ -645,6 +645,80 @@ GtMethodCoderByScripterExamples >> extractedUnaryMethodNameFor: aMethodCoder [
 	^ 'sub', (aMethodCoder attributeNamed: #fakeMethodName) capitalized
 ]
 
+{ #category : #'examples - fixit class' }
+GtMethodCoderByScripterExamples >> fixitCreateClass_01_setup [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ self forUnaryMethodInPackagedClass ].
+	aScripter do
+		label: 'type in a class that does not exist';
+		action: [ :aCoder | aCoder appendString: (String cr, String tab, '{1}ThatDoesNotExist' format: { (aCoder attributeNamed:  #fakeClassName) }) ];
+		onModel.
+		
+	aScripter wait forEmptySpaceTaskQueue.
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - fixit class' }
+GtMethodCoderByScripterExamples >> fixitCreateClass_02_click_fixit [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self fixitCreateClass_01_setup.
+	
+	"there is no context menu before clicking on the fixit button"
+	aScripter check
+		onSpaceRoot;
+		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
+		notExists.
+	
+	aScripter click
+		onBreadthFirstChildOfClass: GtFixItButton.
+
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	"now it appeared"
+	aScripter check
+		onSpaceRoot;
+		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
+		exists.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - fixit class' }
+GtMethodCoderByScripterExamples >> fixitCreateClass_03_click_define_class [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self fixitCreateClass_02_click_fixit.
+	
+	"there is no create behavior element before clicking on the menu"
+	aScripter check
+		onBreadthFirstChildOfClass: GtCreateBehaviorElement;
+		notExists.
+	
+	aScripter click
+		onSpaceRoot;
+		id: (GtDefineClassFixItActionElementId indexed: 1).
+
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	"now it appeared"
+	aScripter check
+		onBreadthFirstChildOfClass: GtCreateBehaviorElement;
+		exists.
+	
+	"context menu should disappear"
+	aScripter check
+		onSpaceRoot;
+		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
+		notExists.
+
+	^ aScripter syncContinue
+]
+
 { #category : #'examples - rename method' }
 GtMethodCoderByScripterExamples >> forKeywordRename_01_setup [
 	<gtExample>
@@ -879,7 +953,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_04_hover_extract_method [
 	aScripter mouseMoveOver
 		label: 'Hover extract method';
 		onSpaceRoot;
-		onChildNamed: GtMethodCoderExtractMethodContextMenuItemId.
+		id: GtMethodCoderExtractMethodContextMenuItemId.
 
 	aScripter wait forEmptySpaceTaskQueue.
 
@@ -1037,6 +1111,55 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_07_01_accept_with_enter [
 		label: 'Check source editor is focused';
 		satisfies: [ :aCoderEditor | aCoderEditor isFocused ];
 		onChildNamed: GtSourceCoder sourceEditorName.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_08_preview_refactoring [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryExtraction_07_01_accept_with_enter.
+
+	aScripter click
+		onBreadthFirstChildOfClass: GtRefactoringsPreviewButton.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	aScripter check
+		onSpaceRoot;
+		id: GtRefactoringsPreviewAcceptId;
+		exists.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_09_apply_refactoring [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryExtraction_08_preview_refactoring.
+
+	aScripter click
+		onSpaceRoot;
+		id: GtRefactoringsPreviewAcceptId.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	aScripter check
+		label: 'Check refactoring changes attribute does not exist';
+		value: [ :aCoderEditor |
+			aCoderEditor text
+				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRefactoringChangesAttribute ]
+				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
+			equals: [ nil ];
+		onChildNamed: GtSourceCoder sourceEditorName.
+
+	aScripter check
+		onBreadthFirstChildOfClass: GtRefactoringsPreviewButton;
+		notExists.
 
 	^ aScripter syncContinue
 ]

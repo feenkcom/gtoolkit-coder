@@ -28,7 +28,9 @@ GtExtractMethodController >> addRefactoringPreview [
 	self
 		addRefactoringChangesPreview: refactoring
 		at: message stopPosition
-		whenComplete: [ self allowSave ]
+		whenComplete: [
+			self removeRefactoringAttribute.
+			self allowSave ]
 ]
 
 { #category : #private }
@@ -256,9 +258,8 @@ GtExtractMethodController >> setDefaultOptionsOn: aRefactoring [
 				selector: selector;
 				yourself ];
 		setOption: #extractAssignment
-			toUse: [ :ref :varName | 
-			(aRefactoring model classFor: coder classOrMetaClass)
-				definesVariable: varName ]
+			toUse:
+				[ :ref :varName | (aRefactoring model classFor: coder behavior) definesVariable: varName ]
 ]
 
 { #category : #private }
@@ -272,9 +273,8 @@ GtExtractMethodController >> setPreviewOptionsOn: aRefactoring [
 				arguments: methodArguments;
 				yourself ];
 		setOption: #extractAssignment
-			toUse: [ :ref :varName | 
-			(aRefactoring model classFor: coder classOrMetaClass)
-				definesVariable: varName ]
+			toUse:
+				[ :ref :varName | (aRefactoring model classFor: coder behavior) definesVariable: varName ]
 ]
 
 { #category : #private }

@@ -21,6 +21,13 @@ GtRenameVariableFixItAction >> executeOn: anEditorElement [
 	sourceCoder currentSourceString: newSource
 ]
 
+{ #category : #accessing }
+GtRenameVariableFixItAction >> id [
+	<return: #BlElementId>
+
+	^ GtRenameVariableFixItActionElementId
+]
+
 { #category : #initialization }
 GtRenameVariableFixItAction >> newName: aString [
 	newName := aString
