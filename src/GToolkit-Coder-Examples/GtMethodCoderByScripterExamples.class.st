@@ -1115,6 +1115,55 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_07_01_accept_with_enter [
 	^ aScripter syncContinue
 ]
 
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_08_preview_refactoring [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryExtraction_07_01_accept_with_enter.
+
+	aScripter click
+		onBreadthFirstChildOfClass: GtRefactoringsPreviewButton.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	aScripter check
+		onSpaceRoot;
+		id: GtRefactoringsPreviewAcceptId;
+		exists.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - extract method' }
+GtMethodCoderByScripterExamples >> forUnaryExtraction_09_apply_refactoring [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self forUnaryExtraction_08_preview_refactoring.
+
+	aScripter click
+		onSpaceRoot;
+		id: GtRefactoringsPreviewAcceptId.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	aScripter check
+		label: 'Check refactoring changes attribute does not exist';
+		value: [ :aCoderEditor |
+			aCoderEditor text
+				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRefactoringChangesAttribute ]
+				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
+			equals: [ nil ];
+		onChildNamed: GtSourceCoder sourceEditorName.
+
+	aScripter check
+		onBreadthFirstChildOfClass: GtRefactoringsPreviewButton;
+		notExists.
+
+	^ aScripter syncContinue
+]
+
 { #category : #'examples - rename method' }
 GtMethodCoderByScripterExamples >> forUnaryRename_01_setup [
 	<gtExample>
