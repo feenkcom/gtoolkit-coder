@@ -916,6 +916,8 @@ GtMethodCoder >> newMethodSource [
 { #category : #updating }
 GtMethodCoder >> newRbAST: aString [
 	| ast |
+	self isModified
+		ifFalse: [ self compiledMethod ifNotNil: [ :m | ^ m ast ] ].
 	ast := self parseMethod: aString.
 	ast isParseError
 		ifTrue: [ ^ ast ].
