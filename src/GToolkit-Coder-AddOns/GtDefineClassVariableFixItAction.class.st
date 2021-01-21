@@ -14,3 +14,10 @@ GtDefineClassVariableFixItAction >> description [
 GtDefineClassVariableFixItAction >> executeOn: anEditorElement [
 	sourceCoder addClassVariable: node name
 ]
+
+{ #category : #accessing }
+GtDefineClassVariableFixItAction >> id [
+	<return: #BlElementId>
+
+	^ GtDefineClassVariableFixItActionElementId
+]

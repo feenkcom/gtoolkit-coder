@@ -40,10 +40,18 @@ GtFixItAction >> executeOn: anEditorElement [
 ]
 
 { #category : #accessing }
-GtFixItAction >> menuAction [
+GtFixItAction >> id [
+	<return: #BlElementId>
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+GtFixItAction >> menuActionWithIndex: anIndex [
 	^ GtCoderContextMenuAction new
 		action: [ :anEditorElement | self executeOn: anEditorElement ];
-		title: self description
+		title: self description;
+		id: (self id indexed: anIndex)
 ]
 
 { #category : #initialization }

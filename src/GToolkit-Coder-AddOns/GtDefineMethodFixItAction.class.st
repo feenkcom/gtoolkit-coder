@@ -51,6 +51,13 @@ GtDefineMethodFixItAction >> executeOn: anEditorElement [
 	self addCoderAttributeinEditor: anEditorElement editor.
 ]
 
+{ #category : #accessing }
+GtDefineMethodFixItAction >> id [
+	<return: #BlElementId>
+
+	^ GtDefineMethodFixItActionElementId
+]
+
 { #category : #private }
 GtDefineMethodFixItAction >> methodSource [
 	node arguments isEmpty

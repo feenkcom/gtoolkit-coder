@@ -645,6 +645,80 @@ GtMethodCoderByScripterExamples >> extractedUnaryMethodNameFor: aMethodCoder [
 	^ 'sub', (aMethodCoder attributeNamed: #fakeMethodName) capitalized
 ]
 
+{ #category : #'examples - fixit class' }
+GtMethodCoderByScripterExamples >> fixitCreateClass_01_setup [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ self forUnaryMethodInPackagedClass ].
+	aScripter do
+		label: 'type in a class that does not exist';
+		action: [ :aCoder | aCoder appendString: (String cr, String tab, '{1}ThatDoesNotExist' format: { (aCoder attributeNamed:  #fakeClassName) }) ];
+		onModel.
+		
+	aScripter wait forEmptySpaceTaskQueue.
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - fixit class' }
+GtMethodCoderByScripterExamples >> fixitCreateClass_02_click_fixit [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self fixitCreateClass_01_setup.
+	
+	"there is no context menu before clicking on the fixit button"
+	aScripter check
+		onSpaceRoot;
+		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
+		notExists.
+	
+	aScripter click
+		onBreadthFirstChildOfClass: GtFixItButton.
+
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	"now it appeared"
+	aScripter check
+		onSpaceRoot;
+		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
+		exists.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - fixit class' }
+GtMethodCoderByScripterExamples >> fixitCreateClass_03_click_define_class [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self fixitCreateClass_02_click_fixit.
+	
+	"there is no create behavior element before clicking on the menu"
+	aScripter check
+		onBreadthFirstChildOfClass: GtCreateBehaviorElement;
+		notExists.
+	
+	aScripter click
+		onSpaceRoot;
+		id: (GtDefineClassFixItActionElementId indexed: 1).
+
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	"now it appeared"
+	aScripter check
+		onBreadthFirstChildOfClass: GtCreateBehaviorElement;
+		exists.
+	
+	"context menu should disappear"
+	aScripter check
+		onSpaceRoot;
+		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
+		notExists.
+
+	^ aScripter syncContinue
+]
+
 { #category : #'examples - rename method' }
 GtMethodCoderByScripterExamples >> forKeywordRename_01_setup [
 	<gtExample>
@@ -879,7 +953,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_04_hover_extract_method [
 	aScripter mouseMoveOver
 		label: 'Hover extract method';
 		onSpaceRoot;
-		onChildNamed: GtMethodCoderExtractMethodContextMenuItemId.
+		id: GtMethodCoderExtractMethodContextMenuItemId.
 
 	aScripter wait forEmptySpaceTaskQueue.
 

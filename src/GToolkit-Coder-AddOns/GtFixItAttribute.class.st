@@ -10,9 +10,9 @@ Class {
 { #category : #accessing }
 GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	"Return an element that should affect (either append or replace) a provided text piece"
-
 	<return: #SequenceableCollection of: #BlElement>
-	^ BrButton new
+
+	^ GtFixItButton new
 		beTinySize;
 		label: 'Fix it';
 		look:
@@ -28,7 +28,8 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 								yourself ]
 						content: [ GtCoderContextMenuContent new
 								editorElement: anEditorElement;
-								items: (fixItActionsBlock value collect: [ :each | each menuAction ]) ]);
+								items: ((fixItActionsBlock value groupedBy: [ :eachFixitAction | eachFixitAction id ]) values
+									flatCollect: [ :fixitActionsPerId | fixitActionsPerId collectWithIndex: [ :eachFixItAction :eachIndex | eachFixItAction menuActionWithIndex: eachIndex ] ]) ]);
 		icon: BrGlamorousVectorIcons repair;
 		yourself
 ]
