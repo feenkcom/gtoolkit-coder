@@ -88,6 +88,7 @@ GtSourceCoderEvaluationResultDisplayer >> primitiveAddResult: anEvaluationResult
 	| anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText |
 	
 	anEvaluatedSource := anEvaluationResult sourceString.
+	anEvaluatedSource ifEmpty: [ ^ self ].
 	anEvaluatedInterval := anEvaluationResult sourceInterval.
 	
 	theSourceStartInText := self text finder
