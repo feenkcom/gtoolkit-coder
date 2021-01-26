@@ -57,16 +57,20 @@ GtSourceCoderEditorElement >> initialize [
 GtSourceCoderEditorElement >> initializeListeners [
 	self when: GtCoderSaveUIModelWish do: [ :anEvent | self onSaveSourceCoderUIModel: anEvent coderUIModel ].
 	self when: BlFocusInEvent do: [ :anEvent | self sourceCoderUIModel focused: true ].
-	self when: BlFocusOutEvent do: [ :anEvent | self sourceCoderUIModel focused: false ].
-	
+	self when: BlFocusOutEvent do: [ :anEvent |
+		"when elements are removed from the scene graph due to tab switching or scrolling they lose focus.
+		We are only interested when focus is lost explicitly via user interaction"
+		anEvent isDueToRemoval
+			ifFalse: [ self sourceCoderUIModel focused: false ] ].
+
 	self editor
 		when: BrTextEditorModifiedEvent
 		do: [ :anEvent | self onTextModified ].
-		
+
 	self editor
 		when: BrTextEditorCursorChangedEvent 
 		do: [ :anEvent | self maySaveCoderUIModel ].
-		
+
 	self editor
 		when: BrTextEditorSelectionChangedEvent 
 		do: [ :anEvent | self maySaveCoderUIModel ]
