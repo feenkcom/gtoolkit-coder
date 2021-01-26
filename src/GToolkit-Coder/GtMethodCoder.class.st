@@ -1055,7 +1055,7 @@ GtMethodCoder >> onMethodRemoved: aMethodRemovedAnnouncement [
 GtMethodCoder >> package [
 	^ super package
 		ifNil: [ self compiledMethod
-				ifNil: [ self classOrMetaClass ifNotNil: [ :cls | cls package ] ]
+				ifNil: [ self behavior ifNotNil: [ :cls | cls package ] ]
 				ifNotNil: [ :method | method package ] ]
 ]
 
