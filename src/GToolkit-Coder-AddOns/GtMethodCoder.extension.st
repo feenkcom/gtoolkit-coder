@@ -111,16 +111,15 @@ GtMethodCoder >> initializeAddOns [
 GtMethodCoder >> renameAt: aTextPosition in: anEditorElement [
 	self
 		nodeAt: aTextPosition
-		ifFound: [ :aNode |
+		ifFound: [ :aNode | 
 			(aNode isMessage or: [ aNode isMethod or: [ aNode isMethodPattern ] ])
 				ifTrue: [ ^ self renameMethod: anEditorElement node: aNode ].
 			aNode isVariable
-				ifTrue: [ 
-					aNode isLocallyDefined
+				ifTrue: [ aNode isLocallyDefined
 						ifTrue: [ ^ self renameLocalVariableIn: anEditorElement ].
 					(self behavior allInstVarNames includes: aNode name value)
 						ifTrue: [ ^ self renameInstanceVariableIn: anEditorElement node: aNode ].
-					(self classOrMetaClass classVariables
+					(self behavior classVariables
 						anySatisfy: [ :assoc | assoc key asString = aNode name value ])
 						ifTrue: [ ^ self renameClassVariableIn: anEditorElement ].
 					Smalltalk globals
