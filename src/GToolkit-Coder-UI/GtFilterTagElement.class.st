@@ -138,7 +138,7 @@ GtFilterTagElement >> createEditableLabel [
 			filterElement applyFilters ].
 	label
 		whenKey: BlKeyCombination backspace
-		labelDo: [ :aShortcutEvent :aShortcut :aTextEditor | 
+		labelDo: [ :aShortcutEvent :aShortcut | 
 			self removeFromParent.
 			filterElement applyFilters ].
 	descriptor completion

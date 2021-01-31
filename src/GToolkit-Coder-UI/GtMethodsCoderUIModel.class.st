@@ -14,7 +14,8 @@ GtMethodsCoderUIModel >> addNewCoder [
 	aNewCoder := self coder addNewCoder.
 	self
 		expandCoder: aNewCoder;
-		focusCoder: aNewCoder
+		focusCoder: aNewCoder.
+	^ aNewCoder
 ]
 
 { #category : #updating }
