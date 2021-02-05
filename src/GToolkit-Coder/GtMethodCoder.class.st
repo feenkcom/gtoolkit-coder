@@ -609,7 +609,7 @@ GtMethodCoder >> extractTemporaryVariable: aNode in: anEditorElement [
 		extract: aNode sourceInterval
 		to: tempName
 		from: self currentSelector
-		in: (model classFor: self classOrMetaClass).
+		in: (model classFor: self behavior).
 	(self performMethodRefactoring: refactoring)
 		ifFalse: [ ^ self ].
 	(self findNodeAssigning: tempName)
@@ -1337,8 +1337,8 @@ GtMethodCoder >> safeTemporaryName [
 			(each defines: name)
 				ifTrue: [ found := true ] ].
 	found
-		or: [ (self classOrMetaClass allInstVarNames includes: name)
-				or: [ self classOrMetaClass allClassVarNames includes: name asSymbol ] ] ]
+		or: [ (self behavior allInstVarNames includes: name)
+				or: [ self behavior allClassVarNames includes: name asSymbol ] ] ]
 		whileTrue: [ name := 't' , index printString.
 			index := index + 1 ].
 	^ name
