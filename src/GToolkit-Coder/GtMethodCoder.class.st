@@ -1111,64 +1111,58 @@ GtMethodCoder >> performMethodRefactoring: refactoring [
 
 { #category : #'api - actions' }
 GtMethodCoder >> playAll [
-	self critical: [
-		self isModified
-			ifTrue: [
-				self save
-					ifFalse: [ ^ self ] ].
+	self isModified
+		ifTrue: [
+			self save
+				ifFalse: [ ^ self ] ].
 
-		self
-			evaluateSelector: self selector
-			object: self object ]
+	^ self
+		evaluateSelector: self selector
+		object: self object
 ]
 
 { #category : #'api - actions' }
 GtMethodCoder >> playAllAndInspect [
 	"Save and execute a method"
 
-	^ self critical: [
-		self isModified
-			ifTrue: [
-				self save
-					ifFalse: [ ^ self ] ].
+	self isModified
+		ifTrue: [
+			self save
+				ifFalse: [ ^ self ] ].
 
-		self
-			evaluateSelector: self selector
-			object: self object
-			thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ] ]
+	^ self
+		evaluateSelector: self selector
+		object: self object
+		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
 { #category : #'api - actions examples' }
 GtMethodCoder >> playAndInspectExample [
-	
-	self critical: [
-		self playExample.
-		self notifyObjectSpawn: self exampleResult returnValueOrExampleException ]
+	self playExample.
+	self notifyObjectSpawn: self exampleResult returnValueOrExampleException
 ]
 
 { #category : #'api - actions examples' }
 GtMethodCoder >> playAndInspectSlide [
 
-	self critical: [
-		self isModified
-			ifTrue: [
-				self save
-					ifFalse: [ ^ self ] ].
+	self isModified
+		ifTrue: [
+			self save
+				ifFalse: [ ^ self ] ].
 
-		self notifyObjectSpawn: self compiledMethod gtSlide ]
+	self notifyObjectSpawn: self compiledMethod gtSlide
 ]
 
 { #category : #'api - actions examples' }
 GtMethodCoder >> playAndInspectSlideFrom: anEditorElement [
 
-	self critical: [
-		self isModified
-			ifTrue: [
-				self save
-					ifFalse: [ ^ self ] ].
+	self isModified
+		ifTrue: [
+			self save
+				ifFalse: [ ^ self ] ].
 
-		self
-			notifyObjectSpawn: self compiledMethod gtSlide returnValueOrExampleException ]
+	self
+		notifyObjectSpawn: self compiledMethod gtSlide returnValueOrExampleException
 ]
 
 { #category : #'api - actions examples' }
