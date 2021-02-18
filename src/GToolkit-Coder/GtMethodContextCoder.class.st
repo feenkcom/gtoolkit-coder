@@ -75,9 +75,7 @@ GtMethodContextCoder >> contextActions [
 				action: [
 					aDebuggingAction execute.
 					aDebuggingAction needsUpdate
-						ifTrue: [ 
-							self notifyDebugger.
-							
+						ifTrue: [ 						
 							"If after a debugging action this context becomes the second on the stack 
 							the selected PC range could change. The debugger also updates the selection
 							of the top context. This will be called twice if the context remains on the

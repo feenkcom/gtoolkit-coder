@@ -112,7 +112,7 @@ GtSourceCoderUIModel >> initialize [
 GtSourceCoderUIModel >> selection [
 	self editorState ifNotNil: [ :theCompositeMemento |
 			theCompositeMemento mementos do: [ :eachMemento |
-				eachMemento label = 'Selection' ifTrue: [
+				eachMemento isSelectionMemento ifTrue: [
 					^ eachMemento value ] ] ].
 	^ 1 to: 0
 ]
@@ -121,7 +121,7 @@ GtSourceCoderUIModel >> selection [
 GtSourceCoderUIModel >> text [
 	self editorState ifNotNil: [ :theCompositeMemento |
 			theCompositeMemento mementos do: [ :eachMemento |
-				eachMemento label = 'Text' ifTrue: [
+				eachMemento isTextMemento ifTrue: [
 					^ eachMemento value ] ] ].
 	^ '' asRopedText
 ]
