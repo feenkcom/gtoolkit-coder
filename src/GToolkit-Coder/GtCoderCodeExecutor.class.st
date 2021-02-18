@@ -14,7 +14,7 @@ Class {
 		'selectionAction',
 		'allAction'
 	],
-	#category : #'GToolkit-Coder-AddOns-Execution'
+	#category : #'GToolkit-Coder-Execution'
 }
 
 { #category : #'api - instance creation' }
@@ -27,6 +27,18 @@ GtCoderCodeExecutor class >> doIt [
 GtCoderCodeExecutor class >> doItAndGo [
 	"Execute a code and display the execution result"
 	^ self new doItAndGo
+]
+
+{ #category : #'api - instance creation' }
+GtCoderCodeExecutor class >> playAll [
+	"Execute a method code (and do not display the execution result)"
+	^ self new playAll
+]
+
+{ #category : #'api - instance creation' }
+GtCoderCodeExecutor class >> playAllAndInspect [
+	"Execute a method code and display the execution result"
+	^ self new playAllAndInspect
 ]
 
 { #category : #'private - accessing' }
@@ -111,4 +123,18 @@ GtCoderCodeExecutor >> execute [
 GtCoderCodeExecutor >> initialize [
 	super initialize.
 	self doItAndGo.
+]
+
+{ #category : #initialization }
+GtCoderCodeExecutor >> playAll [
+	"Execute a method code (and do not display the execution result)"
+	allAction := #playAll.
+	selectionAction := #doIt:.
+]
+
+{ #category : #initialization }
+GtCoderCodeExecutor >> playAllAndInspect [
+	"Execute a method code and display the execution result"
+	allAction := #playAllAndInspect.
+	selectionAction := #doItAndGo:.
 ]
