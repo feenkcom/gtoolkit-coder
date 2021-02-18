@@ -6,29 +6,20 @@ GtPharoSnippetCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Evaluate' translated
 		icon: BrGlamorousVectorIcons play
-		action: [ :aCoderUIModel :anEvent | self doItAll ]
+		action: [ :aCoderUIModel :anEvent | 
+			GtCoderCodeExecutor doIt
+				coderUIModel: aCoderUIModel;
+				event: anEvent;
+				execute ]
 		id: GtSourceCoderDoItActionId.
 	addOns
 		addMainAction: 'Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
 		action: [ :aCoderUIModel :anEvent | 
-			| aSelection aText |
-			aSelection := aCoderUIModel selection.
-			aText := aCoderUIModel text. 
-			aSelection isNotEmpty
-				ifTrue: [
-					self doItAndGo: [ :aSourceText |
-						aText characters = aSourceText characters
-							ifTrue: [ 
-								| aMonoSelection |
-								aMonoSelection := 1 to: 0.
-								aSelection do: [ :eachMonotoneSelection | 
-									aMonoSelection := eachMonotoneSelection from + 1 to: eachMonotoneSelection to ].
-								aMonoSelection ]
-							ifFalse: [
-								self flag: 'Handle modified text here'.
-								1 to: 0 ] ] ] 
-				ifFalse: [ self doItAndGoAll ] ]
+			GtCoderCodeExecutor doItAndGo
+				coderUIModel: aCoderUIModel;
+				event: anEvent;
+				execute ]
 		id: GtSourceCoderDoItAndGoActionId.
 	addOns
 		addMainAction: 'Debug' translated
