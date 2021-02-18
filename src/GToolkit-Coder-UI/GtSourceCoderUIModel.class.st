@@ -107,3 +107,21 @@ GtSourceCoderUIModel >> initialize [
 	hasFocus := false.
 	expanded := true
 ]
+
+{ #category : #accessing }
+GtSourceCoderUIModel >> selection [
+	self editorState ifNotNil: [ :theCompositeMemento |
+			theCompositeMemento mementos do: [ :eachMemento |
+				eachMemento label = 'Selection' ifTrue: [
+					^ eachMemento value ] ] ].
+	^ 1 to: 0
+]
+
+{ #category : #accessing }
+GtSourceCoderUIModel >> text [
+	self editorState ifNotNil: [ :theCompositeMemento |
+			theCompositeMemento mementos do: [ :eachMemento |
+				eachMemento label = 'Text' ifTrue: [
+					^ eachMemento value ] ] ].
+	^ '' asRopedText
+]
