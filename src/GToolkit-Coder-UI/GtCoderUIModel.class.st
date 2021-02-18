@@ -105,3 +105,10 @@ GtCoderUIModel >> hasFocus: aBoolean [
 
 	self focused: aBoolean
 ]
+
+{ #category : #accessing }
+GtCoderUIModel >> programCounterRange [
+	"This is workwound util the method coder context had a dedicated element.
+	Now the element for displaying a coder is shared between all types of coders."
+	^ nil
+]
