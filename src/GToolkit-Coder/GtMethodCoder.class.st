@@ -1437,11 +1437,19 @@ GtMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Play' translated
 		icon: BrGlamorousVectorIcons play
-		action: [ :aCoderUIModel :anEvent | self playAll ].
+		action: [ :aCoderUIModel :anEvent | 
+			GtCoderCodeExecutor playAll
+				coderUIModel: aCoderUIModel;
+				event: anEvent;
+				execute ].
 	coderAddOns
 		addContextAction: 'Play and Inspect' translated
 		icon: BrGlamorousVectorIcons playinspect
-		action: [ :aCoderUIModel :anEvent | self playAllAndInspect ].
+		action: [ :aCoderUIModel :anEvent | 
+			GtCoderCodeExecutor playAllAndInspect
+				coderUIModel: aCoderUIModel;
+				event: anEvent;
+				execute ].
 	coderAddOns
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug

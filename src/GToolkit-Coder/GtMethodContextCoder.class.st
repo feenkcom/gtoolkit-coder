@@ -14,7 +14,6 @@ GtMethodContextCoder class >> forContext: aContext session: aDebugSession [
 		context: aContext;
 		session: aDebugSession;
 		object: aContext receiver;
-		updateContent;
 		yourself
 ]
 
@@ -27,8 +26,8 @@ GtMethodContextCoder >> actionsForPragmas: aSymbolsCollection [
 GtMethodContextCoder >> close [
 	self notifyDebugger.
 	
-	self flag: 'check why this is needed'.
-	self updateSelection
+	"self flag: 'check why this is needed'.
+	self updateSelection"
 ]
 
 { #category : #actions }
@@ -72,17 +71,7 @@ GtMethodContextCoder >> contextActions [
 			GtCoderAction new
 				title: aDebuggingAction label;
 				icon: (aDebuggingAction icon ifNil: [ BlElement new size: 0@0 ]);
-				action: [
-					aDebuggingAction execute.
-					aDebuggingAction needsUpdate
-						ifTrue: [ 
-							self notifyDebugger.
-							
-							"If after a debugging action this context becomes the second on the stack 
-							the selected PC range could change. The debugger also updates the selection
-							of the top context. This will be called twice if the context remains on the
-							top, but its the easiest solution to avoid warking the stack to find what changed."
-							self updateSelection ] ] ]
+				action: [ aDebuggingAction execute ] ]
 ]
 
 { #category : #'debugger access' }
@@ -162,6 +151,13 @@ GtMethodContextCoder >> printOn: aStream [
 		aStream nextPut: $(.
 		self context printOn: aStream. 
 		aStream nextPut: $) ]
+]
+
+{ #category : #accessing }
+GtMethodContextCoder >> programCounterRange [
+	(self session process isNil or: [ context isDead ])
+		ifTrue: [ ^ nil ].
+	^ self session pcRangeForContext: context.
 ]
 
 { #category : #accessing }
@@ -258,33 +254,9 @@ GtMethodContextCoder >> temporaryVariableNodesDo: aBloc [
 ]
 
 { #category : #updating }
-GtMethodContextCoder >> updateContent [
-	"Update the source code and the selection. The save action in the debugger 
-	can change the compiled method stored  in the context. "
-	self
-		updateSourceFromContext;
-		updateSelection
-]
-
-{ #category : #updating }
 GtMethodContextCoder >> updateSelection [
-	| interval |
-	"https://github.com/feenkcom/gtoolkit/issues/1323
-	Ideally, we should convert this to the add-on styler"
-	self flag: #TODO.
-	(self session process isNil or: [ context isDead ])
-		ifTrue: [ ^ self ].
-	interval := self session pcRangeForContext: context.
-	interval isEmpty
-		ifTrue: [ ^ self ].
-	self sourceText
-		clearAttributes: [ :each | each class = BlTextDecorationAttribute ].
-	(self sourceText from: interval first to: interval last)
-		underlineDo: [ :anAttribute | 
-			anAttribute
-				color: BrGlamorousColors errorBackgroundColor;
-				thickness: 1.5;
-				beNotOverwritableByStyler ]
+	"Still here as it is called from the SmaCC debugger.
+	Remove after updating the SmaCC debugger."
 ]
 
 { #category : #updating }
