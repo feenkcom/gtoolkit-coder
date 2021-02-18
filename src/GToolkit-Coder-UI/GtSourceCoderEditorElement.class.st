@@ -31,6 +31,18 @@ GtSourceCoderEditorElement >> hideHighlighters [
 	evaluationPrinter hideResultSynchronously.
 ]
 
+{ #category : #private }
+GtSourceCoderEditorElement >> highlightPCRangeForInterval: aSelectionInterval [
+	self text
+		clearAttributes: [ :each | each class = BlTextDecorationAttribute ].
+	(self text from: aSelectionInterval first to: aSelectionInterval last)
+		underlineDo: [ :anAttribute | 
+			anAttribute
+				color: BrGlamorousColors errorBackgroundColor;
+				thickness: 1.5;
+				beNotOverwritableByStyler ]
+]
+
 { #category : #initialization }
 GtSourceCoderEditorElement >> initialize [
 	super initialize.
@@ -97,6 +109,14 @@ GtSourceCoderEditorElement >> onCoderParseError: aGtCoderParseError [
 	self 
 		reportParseError: aGtCoderParseError errorMessage 
 		at: aGtCoderParseError location
+]
+
+{ #category : #'private - event handling' }
+GtSourceCoderEditorElement >> onContextPCRangeChanged: aContextPCRangeChangedAnnouncement [
+	| selectionInterval |
+	
+	selectionInterval := aContextPCRangeChangedAnnouncement pcRange.
+	self highlightPCRangeForInterval: selectionInterval
 ]
 
 { #category : #'private - event handling' }
@@ -227,7 +247,9 @@ GtSourceCoderEditorElement >> sourceCoderUIModel [
 { #category : #accessing }
 GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 	sourceCoderUIModel
-		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
+		ifNotNil: [ :aPreviousCoderUIModel | 
+			aPreviousCoderUIModel coder announcer unsubscribe: self.
+			aPreviousCoderUIModel announcerUIModel unsubscribe: self ].
 	completion
 		ifNotNil: [ :aPreviousCompletion | aPreviousCompletion uninstall ].
 	self editor removeEditorShortcuts: interactions.
@@ -278,6 +300,11 @@ GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 		when: GtCoderShowDebuggerRequest
 			send: #onShowDebuggerRequest:
 			to: self.
+	
+	aGtSourceCoderUIModel announcerUIModel weak
+		when: GtMethodCoderContextPCRangeChanged
+			send: #onContextPCRangeChanged:
+			to: self.
 
 	aGtSourceCoderUIModel focused
 		ifTrue: [ self requestFocus ].
@@ -286,6 +313,11 @@ GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel evaluationResult
 		ifNil: [ evaluationHighlighter hideResult ]
 		ifNotNil: [ :aResult | evaluationHighlighter displayResult: aResult ].
+
+	aGtSourceCoderUIModel programCounterRange
+		ifNotNil: [ :aRange |
+			self highlightPCRangeForInterval: aRange ]
+
 ]
 
 { #category : #private }
