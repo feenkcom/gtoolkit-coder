@@ -498,29 +498,33 @@ GtMethodCoder >> evaluateSelector: aSymbol object: anObject [
 { #category : #'private - actions' }
 GtMethodCoder >> evaluateSelector: aSymbol object: anObject thenDo: aThenBlock [
 	"Evaluate a given source code and show the print string if needed"
+	| aReceiver aSourceString aResult |
 
-	^ self critical: [
-		| aResult aReceiver aSourceString |
-
+	"we can not wrap everything in a critical: because if there is an exception while evaluating
+	the source code the current running process will be suspended, meaning that the very next evaluation
+	will indefinitely wait when trying to enter a critical section."
+	self critical: [
 		aReceiver := (anObject respondsTo: aSymbol)
 			ifTrue: [ anObject ]
 			ifFalse: [ anObject class ].
 			
-		aSourceString := self currentSourceString.
+	aSourceString := self currentSourceString. ].
 
-		aResult := self evaluateBlock: [ aReceiver perform: aSymbol ]
-			onErrorDo: [ :aResultWithError |
-				aResultWithError
-					sourceString: aSourceString;
-					sourceInterval: (1 to: aSourceString size) ].
+	aResult := self
+		evaluateBlock: [ aReceiver perform: aSymbol ]
+		onErrorDo: [ :aResultWithError |
+			aResultWithError
+				sourceString: aSourceString;
+				sourceInterval: (1 to: aSourceString size) ].
 
-		aResult
-			sourceString: aSourceString;
-			sourceInterval: (1 to: aSourceString size).
+	aResult
+		sourceString: aSourceString;
+		sourceInterval: (1 to: aSourceString size).
 
-		self notifyEvaluatedWithResult: aResult.
-		aThenBlock cull: aResult.
-		aResult ]
+	self notifyEvaluatedWithResult: aResult.
+	aThenBlock cull: aResult.
+
+	^ aResult
 ]
 
 { #category : #'api - actions examples' }
