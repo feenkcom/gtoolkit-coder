@@ -256,7 +256,7 @@ GtSourceCoderEditorElement >> reportParseError: aString at: anInteger [
 GtSourceCoderEditorElement >> saveCoderUIModel: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel
 		editorState: (self editor saveState: self newEditorMemento).
-	aGtSourceCoderUIModel focused: self hasFocus.
+	aGtSourceCoderUIModel basicFocus: self hasFocus.
 	aGtSourceCoderUIModel evaluationResult: evaluationHighlighter evaluationResult
 ]
 

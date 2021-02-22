@@ -10,6 +10,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Source Model'
 }
 
+{ #category : #accessing }
+GtSourceCoderUIModel >> basicFocus: aBoolean [
+	hasFocus := aBoolean
+]
+
 { #category : #'api - actions' }
 GtSourceCoderUIModel >> discardChanges [
 	self coder discardChanges
