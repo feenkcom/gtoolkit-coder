@@ -139,6 +139,13 @@ GtMethodContextCoder >> isDead [
 	^ context isDead
 ]
 
+{ #category : #testing }
+GtMethodContextCoder >> needsUpdate [
+	^ self isModified or: [ 
+		(self compiledMethod == self context method) not or: [ 
+			(self selector == self compiledMethod selector) not ]]
+]
+
 { #category : #private }
 GtMethodContextCoder >> notifyDebugger [
 	announcer announce: GtCoderRefreshStackAnnouncement new.
@@ -261,8 +268,8 @@ GtMethodContextCoder >> updateSelection [
 
 { #category : #updating }
 GtMethodContextCoder >> updateSourceFromContext [
-	(self isModified not and: [ self compiledMethod == self context method ])
-		ifTrue: [ ^ self ].
+	self needsUpdate
+		ifFalse: [ ^ self ].
 	self forMethod: self context method
 ]
 
