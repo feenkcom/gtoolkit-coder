@@ -1,6 +1,8 @@
 Class {
 	#name : #GtSourceCoderEditorElement,
 	#superclass : #BrEditor,
+	#traits : 'TBlAssertUIProcess',
+	#classTraits : 'TBlAssertUIProcess classTrait',
 	#instVars : [
 		'sourceCoderUIModel',
 		'interactions',
@@ -68,12 +70,14 @@ GtSourceCoderEditorElement >> initialize [
 { #category : #initialization }
 GtSourceCoderEditorElement >> initializeListeners [
 	self when: GtCoderSaveUIModelWish do: [ :anEvent | self onSaveSourceCoderUIModel: anEvent coderUIModel ].
-	self when: BlFocusInEvent do: [ :anEvent | self sourceCoderUIModel focused: true ].
+	self when: BlFocusInEvent do: [ :anEvent | 
+		self sourceCoderUIModel focused: true from: self ].
 	self when: BlFocusOutEvent do: [ :anEvent |
 		"when elements are removed from the scene graph due to tab switching or scrolling they lose focus.
 		We are only interested when focus is lost explicitly via user interaction"
 		anEvent isDueToRemoval
-			ifFalse: [ self sourceCoderUIModel focused: false ] ].
+			ifFalse: [ self sourceCoderUIModel 
+				focused: false from: self ] ].
 
 	self editor
 		when: BrTextEditorModifiedEvent
@@ -112,11 +116,28 @@ GtSourceCoderEditorElement >> onCoderParseError: aGtCoderParseError [
 ]
 
 { #category : #'private - event handling' }
+GtSourceCoderEditorElement >> onCoderViewModelFocused: aBoolean [
+	aBoolean
+		ifTrue: [ self requestFocus ]
+		ifFalse: [ self loseFocus ]
+]
+
+{ #category : #'private - event handling' }
 GtSourceCoderEditorElement >> onContextPCRangeChanged: aContextPCRangeChangedAnnouncement [
 	| selectionInterval |
 	
 	selectionInterval := aContextPCRangeChangedAnnouncement pcRange.
 	self highlightPCRangeForInterval: selectionInterval
+]
+
+{ #category : #'private - event handling' }
+GtSourceCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
+	self assertUIProcess.
+
+	anAnnouncement source == self
+		ifTrue: [ ^ self ].
+		
+	self onCoderViewModelFocused: anAnnouncement focused
 ]
 
 { #category : #'private - event handling' }
@@ -304,6 +325,10 @@ GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel announcerUIModel weak
 		when: GtMethodCoderContextPCRangeChanged
 			send: #onContextPCRangeChanged:
+			to: self.
+	aGtSourceCoderUIModel announcerUIModel weak
+		when: GtSourceCoderFocusChanged
+			send: #onFocusChangedAnnouncement:
 			to: self.
 
 	aGtSourceCoderUIModel focused

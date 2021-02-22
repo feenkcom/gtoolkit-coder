@@ -59,10 +59,18 @@ GtSourceCoderUIModel >> focused [
 
 { #category : #'api - ui' }
 GtSourceCoderUIModel >> focused: aBoolean [
+	self focused: aBoolean from: self
+]
+
+{ #category : #'api - ui' }
+GtSourceCoderUIModel >> focused: aBoolean from: aSourceObject [
 	hasFocus = aBoolean
-		ifTrue: [ ^ self ].
+		ifTrue: [ 
+			self inform: 'already focused'.
+			^ self ].
 
 	hasFocus := aBoolean.
+	self notifyFocusChanged: hasFocus from: aSourceObject.
 
 	codersUIModel ifNotNil: [ :theCoders |
 		aBoolean
@@ -106,6 +114,13 @@ GtSourceCoderUIModel >> initialize [
 	
 	hasFocus := false.
 	expanded := true
+]
+
+{ #category : #private }
+GtSourceCoderUIModel >> notifyFocusChanged: aBoolean from: aSourceObject [
+	self announcerUIModel announce: (GtSourceCoderFocusChanged new 
+		focused: aBoolean; 
+		source: aSourceObject)
 ]
 
 { #category : #accessing }
