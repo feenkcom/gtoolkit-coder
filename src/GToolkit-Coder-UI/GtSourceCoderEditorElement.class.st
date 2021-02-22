@@ -278,6 +278,9 @@ GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 	sourceCoderUIModel := aGtSourceCoderUIModel.
 	aGtSourceCoderUIModel editorState
 		ifNil: [ aGtSourceCoderUIModel editorState: self newEditorMemento ].
+		
+	self onCoderViewModelFocused: aGtSourceCoderUIModel focused.
+		
 	self editor restoreState: aGtSourceCoderUIModel editorState.
 	interactions := aGtSourceCoderUIModel coder shortcuts copy.
 	self text: aGtSourceCoderUIModel coder sourceText.
@@ -331,14 +334,11 @@ GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 			send: #onFocusChangedAnnouncement:
 			to: self.
 
-	aGtSourceCoderUIModel focused
-		ifTrue: [ self requestFocus ].
 	aGtSourceCoderUIModel coder updateAddOns.
-
+	
 	aGtSourceCoderUIModel evaluationResult
 		ifNil: [ evaluationHighlighter hideResult ]
 		ifNotNil: [ :aResult | evaluationHighlighter displayResult: aResult ].
-
 	aGtSourceCoderUIModel programCounterRange
 		ifNotNil: [ :aRange |
 			self highlightPCRangeForInterval: aRange ]
