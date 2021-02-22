@@ -4,6 +4,13 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Method Model'
 }
 
+{ #category : #initialization }
+GtMethodContextCoderUIModel >> initialize [
+	super initialize.
+	
+	expanded := false
+]
+
 { #category : #notifications }
 GtMethodContextCoderUIModel >> notifyContextPCRangeChangedTo: anInterval [
 	self announcerUIModel
