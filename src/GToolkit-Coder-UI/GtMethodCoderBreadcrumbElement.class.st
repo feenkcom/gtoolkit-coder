@@ -5,6 +5,9 @@ ${example:GtMethodCoderBreadcrumbElementExamples>>#breadcrumbForSourceCoder}$
 Class {
 	#name : #GtMethodCoderBreadcrumbElement,
 	#superclass : #BrBreadcrumb,
+	#instVars : [
+		'sourceCoderUIModel'
+	],
 	#category : #'GToolkit-Coder-UI-Coder - Method'
 }
 
@@ -74,19 +77,23 @@ GtMethodCoderBreadcrumbElement >> onCoderSourceTextModified: anAnnouncement [
 
 { #category : #accessing }
 GtMethodCoderBreadcrumbElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
-	self updateBreadcrumbElements: aGtSourceCoderUIModel coder.
+	sourceCoderUIModel ifNotNil: [ :aPreviousCoderUIModel | 
+		aPreviousCoderUIModel coder announcer unsubscribe: self ].
 	
-	 aGtSourceCoderUIModel coder weak
+	sourceCoderUIModel := aGtSourceCoderUIModel.
+	self updateBreadcrumbElements: sourceCoderUIModel coder.
+	
+	sourceCoderUIModel coder weak
 		when: GtCoderClassAdded, GtCoderClassRenamed, GtCoderClassRemoved
 		send: #onCoderClassChanged:
 		to: self.
 
-	aGtSourceCoderUIModel coder weak
+	sourceCoderUIModel coder weak
 		when: GtCoderMethodModified
 		send: #onCoderMethodModified:
 		to: self.
 		
-	aGtSourceCoderUIModel coder weak
+	sourceCoderUIModel coder weak
 		when: GtCoderSourceCodeChanged
 		send: #onCoderSourceTextModified:
 		to: self.
@@ -97,5 +104,9 @@ GtMethodCoderBreadcrumbElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 { #category : #accessing }
 GtMethodCoderBreadcrumbElement >> updateBreadcrumbElements: aMethodCoder [
 	self removeAllItems.
-	self addItems: (self newBreadcrumbItemElementsFor: aMethodCoder)
+	self addItems: (self newBreadcrumbItemElementsFor: aMethodCoder).
+	
+	aMethodCoder isModified
+		ifTrue: [ self background: BrGlamorousColors failureBackgroundColor ]
+		ifFalse: [ self background: Color white ]
 ]
