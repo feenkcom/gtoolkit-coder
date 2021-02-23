@@ -5,6 +5,7 @@ RPackage >> gtBaselinesFor: aView [
 	<gtPackageView>
 	^ aView explicit
 		title: 'References';
+		priority: 30;
 		stencil: [ self name gtSubstringLiteralCaseSensitiveMatch ]
 ]
 
