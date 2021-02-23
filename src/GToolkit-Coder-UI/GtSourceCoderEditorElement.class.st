@@ -1,6 +1,8 @@
 Class {
 	#name : #GtSourceCoderEditorElement,
 	#superclass : #BrEditor,
+	#traits : 'TBlAssertUIProcess',
+	#classTraits : 'TBlAssertUIProcess classTrait',
 	#instVars : [
 		'sourceCoderUIModel',
 		'interactions',
@@ -68,12 +70,14 @@ GtSourceCoderEditorElement >> initialize [
 { #category : #initialization }
 GtSourceCoderEditorElement >> initializeListeners [
 	self when: GtCoderSaveUIModelWish do: [ :anEvent | self onSaveSourceCoderUIModel: anEvent coderUIModel ].
-	self when: BlFocusInEvent do: [ :anEvent | self sourceCoderUIModel focused: true ].
+	self when: BlFocusInEvent do: [ :anEvent | 
+		self sourceCoderUIModel focused: true from: self ].
 	self when: BlFocusOutEvent do: [ :anEvent |
 		"when elements are removed from the scene graph due to tab switching or scrolling they lose focus.
 		We are only interested when focus is lost explicitly via user interaction"
 		anEvent isDueToRemoval
-			ifFalse: [ self sourceCoderUIModel focused: false ] ].
+			ifFalse: [ self sourceCoderUIModel 
+				focused: false from: self ] ].
 
 	self editor
 		when: BrTextEditorModifiedEvent
@@ -112,11 +116,28 @@ GtSourceCoderEditorElement >> onCoderParseError: aGtCoderParseError [
 ]
 
 { #category : #'private - event handling' }
+GtSourceCoderEditorElement >> onCoderViewModelFocused: aBoolean [
+	aBoolean
+		ifTrue: [ self requestFocus ]
+		ifFalse: [ self loseFocus ]
+]
+
+{ #category : #'private - event handling' }
 GtSourceCoderEditorElement >> onContextPCRangeChanged: aContextPCRangeChangedAnnouncement [
 	| selectionInterval |
 	
 	selectionInterval := aContextPCRangeChangedAnnouncement pcRange.
 	self highlightPCRangeForInterval: selectionInterval
+]
+
+{ #category : #'private - event handling' }
+GtSourceCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
+	self assertUIProcess.
+
+	anAnnouncement source == self
+		ifTrue: [ ^ self ].
+		
+	self onCoderViewModelFocused: anAnnouncement focused
 ]
 
 { #category : #'private - event handling' }
@@ -219,6 +240,41 @@ GtSourceCoderEditorElement >> onUpdateAddOnsRequest: anAnnouncement [
 	anAnnouncement coder updateAddOns
 ]
 
+{ #category : #registration }
+GtSourceCoderEditorElement >> registerCoderModelAnnouncementsFor: aCoderModel [
+	aCoderModel announcer weak
+		when: GtCoderAddOnsUpdateRequest
+			send: #onUpdateAddOnsRequest:
+			to: self;
+		when: GtCoderStylerChanged send: #onStylersUpdated: to: self;
+		when: GtCoderStyleTextRequest send: #onStyleTextRequest: to: self;
+		when: GtCoderSourceCodeChanged send: #onSourceCodeChanged: to: self;
+		when: GtCoderParseError send: #onCoderParseError: to: self;
+		when: GtCoderObjectSpawnRequest
+			send: #onObjectSpawnRequest:
+			to: self;
+		when: GtCoderToolSpawnRequest send: #onToolSpawnRequest: to: self;
+		when: GtCoderEvaluationAnnouncement
+			send: #onCodeEvaluated:
+			to: self;
+		when: GtCoderPrintAnnouncement send: #onPrintRequest: to: self;
+		when: GtCoderShowDebuggerRequest
+			send: #onShowDebuggerRequest:
+			to: self
+]
+
+{ #category : #registration }
+GtSourceCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSourceCoderUIModel [
+	aGtSourceCoderUIModel announcerUIModel weak
+		when: GtMethodCoderContextPCRangeChanged
+		send: #onContextPCRangeChanged:
+		to: self.
+	aGtSourceCoderUIModel announcerUIModel weak
+		when: GtSourceCoderFocusChanged
+		send: #onFocusChangedAnnouncement:
+		to: self.
+]
+
 { #category : #private }
 GtSourceCoderEditorElement >> reportParseError: aString at: anInteger [
 	| text position |
@@ -231,11 +287,38 @@ GtSourceCoderEditorElement >> reportParseError: aString at: anInteger [
 	self editor moveCursorTo: position
 ]
 
+{ #category : #restoring }
+GtSourceCoderEditorElement >> restoreCoderElementStateFrom: aGtSourceCoderUIModel [
+	aGtSourceCoderUIModel editorState
+		ifNil: [ aGtSourceCoderUIModel editorState: self newEditorMemento ].
+	
+	self onCoderViewModelFocused: aGtSourceCoderUIModel focused.
+	
+	self editor restoreState: aGtSourceCoderUIModel editorState.
+	interactions := aGtSourceCoderUIModel coder shortcuts copy.
+	self text: aGtSourceCoderUIModel coder sourceText.
+	self editor model: aGtSourceCoderUIModel coder.
+	self editor addEditorShortcuts: interactions.
+	
+	completion := GtCompletionController
+		on: self
+		strategy: aGtSourceCoderUIModel coder completionStrategy.
+	completion install.
+	(aGtSourceCoderUIModel coder newSourceStylerFrom: self)
+		ifNotNil: [ :styler | self styler: styler ].
+		
+	aGtSourceCoderUIModel evaluationResult
+		ifNil: [ evaluationHighlighter hideResult ]
+		ifNotNil: [ :aResult | evaluationHighlighter displayResult: aResult ].
+	aGtSourceCoderUIModel programCounterRange
+		ifNotNil: [ :aRange | self highlightPCRangeForInterval: aRange ].
+]
+
 { #category : #private }
 GtSourceCoderEditorElement >> saveCoderUIModel: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel
 		editorState: (self editor saveState: self newEditorMemento).
-	aGtSourceCoderUIModel focused: self hasFocus.
+	aGtSourceCoderUIModel basicFocus: self hasFocus.
 	aGtSourceCoderUIModel evaluationResult: evaluationHighlighter evaluationResult
 ]
 
@@ -250,73 +333,18 @@ GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 		ifNotNil: [ :aPreviousCoderUIModel | 
 			aPreviousCoderUIModel coder announcer unsubscribe: self.
 			aPreviousCoderUIModel announcerUIModel unsubscribe: self ].
+		
 	completion
 		ifNotNil: [ :aPreviousCompletion | aPreviousCompletion uninstall ].
 	self editor removeEditorShortcuts: interactions.
-
-	sourceCoderUIModel := aGtSourceCoderUIModel.
-	aGtSourceCoderUIModel editorState
-		ifNil: [ aGtSourceCoderUIModel editorState: self newEditorMemento ].
-	self editor restoreState: aGtSourceCoderUIModel editorState.
-	interactions := aGtSourceCoderUIModel coder shortcuts copy.
-	self text: aGtSourceCoderUIModel coder sourceText.
-	self editor model: aGtSourceCoderUIModel coder.
-	self editor addEditorShortcuts: interactions.
-	completion := GtCompletionController
-		on: self
-		strategy: aGtSourceCoderUIModel coder completionStrategy.
-	completion install.
-	(aGtSourceCoderUIModel coder newSourceStylerFrom: self)
-		ifNotNil: [ :styler | self styler: styler ].
-
-	aGtSourceCoderUIModel coder announcer weak
-		when: GtCoderAddOnsUpdateRequest
-			send: #onUpdateAddOnsRequest:
-			to: self;
-		when: GtCoderStylerChanged
-			send: #onStylersUpdated:
-			to: self;
-		when: GtCoderStyleTextRequest
-			send: #onStyleTextRequest:
-			to: self;
-		when: GtCoderSourceCodeChanged
-			send: #onSourceCodeChanged:
-			to: self;
-		when: GtCoderParseError
-			send: #onCoderParseError:
-			to: self;
-		when: GtCoderObjectSpawnRequest
-			send: #onObjectSpawnRequest:
-			to: self;
-		when: GtCoderToolSpawnRequest
-			send: #onToolSpawnRequest:
-			to: self;
-		when: GtCoderEvaluationAnnouncement
-			send: #onCodeEvaluated:
-			to: self;
-		when: GtCoderPrintAnnouncement
-			send: #onPrintRequest:
-			to: self;
-		when: GtCoderShowDebuggerRequest
-			send: #onShowDebuggerRequest:
-			to: self.
 	
-	aGtSourceCoderUIModel announcerUIModel weak
-		when: GtMethodCoderContextPCRangeChanged
-			send: #onContextPCRangeChanged:
-			to: self.
-
-	aGtSourceCoderUIModel focused
-		ifTrue: [ self requestFocus ].
+	sourceCoderUIModel := aGtSourceCoderUIModel.
+	
+	self restoreCoderElementStateFrom: sourceCoderUIModel.
+		
+	self registerCoderModelAnnouncementsFor: sourceCoderUIModel coder.
+	self registerCoderViewModelAnnouncementsFor: sourceCoderUIModel.
 	aGtSourceCoderUIModel coder updateAddOns.
-
-	aGtSourceCoderUIModel evaluationResult
-		ifNil: [ evaluationHighlighter hideResult ]
-		ifNotNil: [ :aResult | evaluationHighlighter displayResult: aResult ].
-
-	aGtSourceCoderUIModel programCounterRange
-		ifNotNil: [ :aRange |
-			self highlightPCRangeForInterval: aRange ]
 
 ]
 

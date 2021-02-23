@@ -10,6 +10,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Source Model'
 }
 
+{ #category : #accessing }
+GtSourceCoderUIModel >> basicFocus: aBoolean [
+	hasFocus := aBoolean
+]
+
 { #category : #'api - actions' }
 GtSourceCoderUIModel >> discardChanges [
 	self coder discardChanges
@@ -59,10 +64,16 @@ GtSourceCoderUIModel >> focused [
 
 { #category : #'api - ui' }
 GtSourceCoderUIModel >> focused: aBoolean [
+	self focused: aBoolean from: self
+]
+
+{ #category : #'api - ui' }
+GtSourceCoderUIModel >> focused: aBoolean from: aSourceObject [
 	hasFocus = aBoolean
 		ifTrue: [ ^ self ].
 
 	hasFocus := aBoolean.
+	self notifyFocusChanged: hasFocus from: aSourceObject.
 
 	codersUIModel ifNotNil: [ :theCoders |
 		aBoolean
@@ -106,6 +117,13 @@ GtSourceCoderUIModel >> initialize [
 	
 	hasFocus := false.
 	expanded := true
+]
+
+{ #category : #private }
+GtSourceCoderUIModel >> notifyFocusChanged: aBoolean from: aSourceObject [
+	self announcerUIModel announce: (GtSourceCoderFocusChanged new 
+		focused: aBoolean; 
+		source: aSourceObject)
 ]
 
 { #category : #accessing }
