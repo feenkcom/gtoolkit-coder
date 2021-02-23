@@ -306,8 +306,7 @@ GtSourceCoderEditorElement >> restoreCoderElementStateFrom: aGtSourceCoderUIMode
 	completion install.
 	(aGtSourceCoderUIModel coder newSourceStylerFrom: self)
 		ifNotNil: [ :styler | self styler: styler ].
-	
-	aGtSourceCoderUIModel coder updateAddOns.
+		
 	aGtSourceCoderUIModel evaluationResult
 		ifNil: [ evaluationHighlighter hideResult ]
 		ifNotNil: [ :aResult | evaluationHighlighter displayResult: aResult ].
@@ -345,6 +344,8 @@ GtSourceCoderEditorElement >> sourceCoderUIModel: aGtSourceCoderUIModel [
 		
 	self registerCoderModelAnnouncementsFor: sourceCoderUIModel coder.
 	self registerCoderViewModelAnnouncementsFor: sourceCoderUIModel.
+	aGtSourceCoderUIModel coder updateAddOns.
+
 ]
 
 { #category : #private }
