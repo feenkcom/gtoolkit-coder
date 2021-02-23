@@ -70,9 +70,7 @@ GtSourceCoderUIModel >> focused: aBoolean [
 { #category : #'api - ui' }
 GtSourceCoderUIModel >> focused: aBoolean from: aSourceObject [
 	hasFocus = aBoolean
-		ifTrue: [ 
-			self inform: 'already focused'.
-			^ self ].
+		ifTrue: [ ^ self ].
 
 	hasFocus := aBoolean.
 	self notifyFocusChanged: hasFocus from: aSourceObject.
