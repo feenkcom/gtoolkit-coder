@@ -44,6 +44,7 @@ GtMethodCoderExplanationStylerExamples >> coderOnViewMethod [
 	selectors addSelectors: 
 		{#gtView . #columnedList . #title: . #items: .#contacts . #fullName . #avatar. #telephone. #contacts }.
 	selectors addSelector: #column:icon: withIdentifier: #columns.
+	selectors addSelector: #column:icon:width: withIdentifier: #columns.
 	selectors addSelector: #column:text: withIdentifier: #columns.
 	
 	variables := GtVariableExplanationLinkStyler new coder: coder.
