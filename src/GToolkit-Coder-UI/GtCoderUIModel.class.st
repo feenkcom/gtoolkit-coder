@@ -106,6 +106,11 @@ GtCoderUIModel >> hasFocus: aBoolean [
 	self focused: aBoolean
 ]
 
+{ #category : #testing }
+GtCoderUIModel >> isModified [
+	^ self coder isModified
+]
+
 { #category : #accessing }
 GtCoderUIModel >> programCounterRange [
 	"This is workwound util the method coder context had a dedicated element.
