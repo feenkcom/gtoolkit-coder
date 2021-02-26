@@ -35,6 +35,8 @@ GtSourceCoderEditorElement >> hideHighlighters [
 
 { #category : #private }
 GtSourceCoderEditorElement >> highlightPCRangeForInterval: aSelectionInterval [
+	self sourceCoderUIModel isModified
+		ifTrue: [ ^ self ].
 	self text
 		clearAttributes: [ :each | each class = BlTextDecorationAttribute ].
 	(self text from: aSelectionInterval first to: aSelectionInterval last)
