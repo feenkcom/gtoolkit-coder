@@ -34,9 +34,9 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			baseline: 'GToolkitAnnouncerUtility' with: [
 				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.21/src' ];
 			baseline: 'GToolkitCoderMetamodels' with: [
-				spec repository: 'github://feenkcom/gtoolkit-coder:v0.8.347/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-coder:v0.8.348/src' ];
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.281/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.282/src' ].
 		spec 
 			package: 'GToolkit-Coder' with: [
 				spec requires: #('GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitCoderMetamodels' 'GToolkitPager' ). ];
