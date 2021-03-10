@@ -109,6 +109,11 @@ GtCoderNavigationPackagesTagsClassesModel >> notifyCoderSelected [
 	self announce: (GtCoderNavigationPackagesSelected new coder: coder)
 ]
 
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> notifyMethodProtocolSelected: aMethodProtocol [
+	coder withMethodProtocol: aMethodProtocol 
+]
+
 { #category : #'private - notifying' }
 GtCoderNavigationPackagesTagsClassesModel >> notifyMethodSelected: aMethod [
 	coder withSelectedMethod: aMethod
@@ -231,6 +236,11 @@ GtCoderNavigationPackagesTagsClassesModel >> selectCoder: aCoder [
 GtCoderNavigationPackagesTagsClassesModel >> selectMethod: aMethod [
 	self selectClass: aMethod methodClass instanceSide.
 	self notifyMethodSelected: aMethod
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> selectMethodProtocol: aMethodProtocol [
+	self notifyMethodProtocolSelected: aMethodProtocol
 ]
 
 { #category : #'api - selection' }

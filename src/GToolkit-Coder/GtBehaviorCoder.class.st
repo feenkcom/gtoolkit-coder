@@ -154,10 +154,16 @@ GtBehaviorCoder >> theClass [
 ]
 
 { #category : #'api - navigation' }
+GtBehaviorCoder >> withMethodProtocol: aMethodProtocol [
+
+	self announce: (GtClassCoderMethodProtocolNavigationAnnouncement new methodProtocol: aMethodProtocol)
+]
+
+{ #category : #'api - navigation' }
 GtBehaviorCoder >> withSelectedMethod: aMethod [
 	self
 		assert: [ class instanceSide = aMethod methodClass instanceSide ]
 		description: [ 'Can not select a method from a different class' ].
 
-	self announce: (GtClassCoderNavigationAnnouncement new method: aMethod)
+	self announce: (GtClassCoderMethodNavigationAnnouncement new method: aMethod)
 ]

@@ -22,6 +22,11 @@ GtCoderNavigationElement >> deselectClasses [
 	classesList deselectAll
 ]
 
+{ #category : #'updating lists' }
+GtCoderNavigationElement >> emptyClassList [
+	classesList initializeWithClasses: #().
+]
+
 { #category : #testing }
 GtCoderNavigationElement >> hasNavigationModel [
 	^ self navigationModel isNotNil and: [
@@ -74,6 +79,19 @@ GtCoderNavigationElement >> onAddedToSceneGraph [
 	self updateContent.
 	self subscribeToNavigationModel.
 	self subscribeToContent.
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationElement >> onClassListSelectionChanged [
+	| anIndex aSelectedItem theIndices |
+	supressListChanges ifTrue: [ ^ self ].
+	theIndices := classesList selectedIndices.
+	theIndices ifEmpty: [ ^ self ].
+	anIndex := theIndices first.
+	(anIndex between: 1 and: classesList viewModel itemCount)
+		ifFalse: [ ^ self ].
+	aSelectedItem := (classesList viewModel itemAt: anIndex) value rootClass.
+	self navigationModel selectClass: aSelectedItem
 ]
 
 { #category : #'event handling' }
@@ -163,6 +181,13 @@ GtCoderNavigationElement >> selectClass: aClass [
 						scrollIndexFromPrevious: aPreviousIndex
 						current: aNewIndex
 						max: classesList viewModel itemCount) ]
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationElement >> subscribeToClassList [
+	classesList
+		when: BrSelectionChanged
+		do: [ :anEvent | self onClassListSelectionChanged ].
 ]
 
 { #category : #subscriptions }

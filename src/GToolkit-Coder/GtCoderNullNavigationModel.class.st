@@ -47,6 +47,11 @@ GtCoderNullNavigationModel >> selectMethod: aCompiledMethod [
 ]
 
 { #category : #'api - selection' }
+GtCoderNullNavigationModel >> selectMethodProtocol: aMethodProtocol [
+	"do nothing"
+]
+
+{ #category : #'api - selection' }
 GtCoderNullNavigationModel >> selectPackage: aPackage [
 	"do nothing"
 ]

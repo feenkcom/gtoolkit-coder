@@ -3,7 +3,10 @@ Class {
 	#superclass : #GtCoderNavigationElement,
 	#instVars : [
 		'packagesList',
-		'classesLabel'
+		'classesLabel',
+		'methodProtocolsList',
+		'classAndMethodProtocolList',
+		'protocolLabel'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
@@ -37,6 +40,11 @@ GtCoderNavigationPackagesTagsClassesElement >> deselectPackages [
 	packagesList deselectAll
 ]
 
+{ #category : #'updating lists' }
+GtCoderNavigationPackagesTagsClassesElement >> emptyMethodProtocolList [
+	methodProtocolsList initializeWithProtocols: #().
+]
+
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> expandPackage: aRPackage [
 	packagesList viewModel root
@@ -56,7 +64,7 @@ GtCoderNavigationPackagesTagsClassesElement >> hasPackageTagsIn: aRPackage [
 
 { #category : #'showing / hiding' }
 GtCoderNavigationPackagesTagsClassesElement >> hideClassList [
-	classesList visibility: BlVisibility gone.
+	classAndMethodProtocolList visibility: BlVisibility gone.
 	classesLabel visibility: BlVisibility gone.
 	self layout columnCount: 1.
 ]
@@ -72,6 +80,16 @@ GtCoderNavigationPackagesTagsClassesElement >> hideOrShowClassList [
 GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
 	super initializeContent.
 	packagesList := GtCoderNavigationPackagesTreeElement new.
+	
+	methodProtocolsList := GtCoderNavigationMethodProtocolListElement new 
+		matchParent.
+	
+	classAndMethodProtocolList := BrVerticalPane new
+		addChild: classesList;
+		addChild: (protocolLabel := BrLabel new
+			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);
+			text: 'Categories');
+		addChild: methodProtocolsList.
 ]
 
 { #category : #initialization }
@@ -87,7 +105,7 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 			text: 'Classes'.
 	
 		packagesList.
-		classesList
+		classAndMethodProtocolList.
 	}
 ]
 
@@ -98,19 +116,6 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical matchParent ].
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onClassListSelectionChanged [
-	| anIndex aSelectedItem theIndices |
-	supressListChanges ifTrue: [ ^ self ].
-	theIndices := classesList selectedIndices.
-	theIndices ifEmpty: [ ^ self ].
-	anIndex := theIndices first.
-	(anIndex between: 1 and: classesList viewModel itemCount)
-		ifFalse: [ ^ self ].
-	aSelectedItem := (classesList viewModel itemAt: anIndex) value rootClass.
-	self navigationModel selectClass: aSelectedItem
 ]
 
 { #category : #'event handling' }
@@ -190,6 +195,19 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 	self suppressListChangeEventsDuring: [  
 		self deselectPackages.
 		self deselectClasses. ]
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
+	| anIndex aSelectedItem theIndices |
+	supressListChanges ifTrue: [ ^ self ].
+	theIndices := methodProtocolsList selectedIndices.
+	theIndices ifEmpty: [ ^ self ].
+	anIndex := theIndices first.
+	(anIndex between: 1 and: methodProtocolsList viewModel itemCount)
+		ifFalse: [ ^ self ].
+	aSelectedItem := (methodProtocolsList viewModel itemAt: anIndex) value.
+	self navigationModel selectMethodProtocol: aSelectedItem
 ]
 
 { #category : #'api - package updates' }
@@ -336,16 +354,9 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock 
 
 { #category : #'showing / hiding' }
 GtCoderNavigationPackagesTagsClassesElement >> showClassList [
-	classesList visibility: BlVisibility visible.
+	classAndMethodProtocolList visibility: BlVisibility visible.
 	classesLabel visibility: BlVisibility visible.
 	self layout columnCount: 2.
-]
-
-{ #category : #subscriptions }
-GtCoderNavigationPackagesTagsClassesElement >> subscribeToClassList [
-	classesList
-		when: BrSelectionChanged
-		do: [ :anEvent | self onClassListSelectionChanged ].
 ]
 
 { #category : #subscriptions }
@@ -353,7 +364,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToContent [
 	super subscribeToContent.
 	self subscribeToPackageList.
 	self subscribeToClassList.
-
+	self subscribeToProtocolList.
 ]
 
 { #category : #subscriptions }
@@ -377,10 +388,29 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToPackageList [
 		do: [ :anEvent | self onPackageListSelectionChanged ].
 ]
 
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> subscribeToProtocolList [
+	methodProtocolsList
+		when: BrSelectionChanged
+		do: [ :anEvent | self onProtocolListSelectionChanged ].
+]
+
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	classesList initializeWithClasses: navigationModel classesToShow.
+
+	navigationModel hasSelectedClass
+		ifTrue: [ 
+			| methodProtocols |
+			methodProtocols := navigationModel selectedClass organization protocols.
+			methodProtocolsList initializeWithProtocols: methodProtocols.
+			protocolLabel visibility: BlVisibility visible.
+			methodProtocolsList visibility: BlVisibility visible ]
+		ifFalse: [ 
+			methodProtocolsList initializeWithProtocols: Array empty.
+			protocolLabel visibility: BlVisibility gone.
+			methodProtocolsList visibility: BlVisibility gone ]
 ]
 
 { #category : #'updating lists' }
