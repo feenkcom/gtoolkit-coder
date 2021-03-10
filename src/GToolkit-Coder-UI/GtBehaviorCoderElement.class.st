@@ -11,6 +11,19 @@ Class {
 }
 
 { #category : #callbacks }
+GtBehaviorCoderElement >> actOnMethodProtocol: aProtocol [ 
+	| tab selectTabBlock selectMethodBlock |
+	tab := contentTabs viewModel tabs
+		detect: [ :each | each widget label asString = 'Methods' ]
+		ifNone: [ ^ self ].
+	tab isSelected
+		ifFalse: [ selectTabBlock := [ tab select ].
+			self executeTask: selectTabBlock ].
+	selectMethodBlock := [ self filterWithMethodProtocol: aProtocol ].
+	self executeTask: selectMethodBlock
+]
+
+{ #category : #callbacks }
 GtBehaviorCoderElement >> actOnPackageUpdated: ann [
 	self removeContentTabs
 ]
@@ -201,8 +214,10 @@ GtBehaviorCoderElement >> coderUIModel: aGtBehaviorCoderUIModel [
 	behaviorCoderUIModel coder
 		when: GtCoderPackageUpdatedAnnouncement
 			do: [ :ann | self actOnPackageUpdated: ann ];
-		when: GtClassCoderNavigationAnnouncement
-			do: [ :ann | self actOnSelectMethod: ann method ].
+		when: GtClassCoderMethodNavigationAnnouncement
+			do: [ :ann | self actOnSelectMethod: ann method ];
+		when: GtClassCoderMethodProtocolNavigationAnnouncement
+			do: [ :ann | self actOnMethodProtocol: ann methodProtocol ].
 
 	container ifNotNil: #removeFromParent.
 	container := self buildContentPane.
@@ -214,6 +229,15 @@ GtBehaviorCoderElement >> executeTask: aBlock [
 	BlUseAsyncFeatures
 		ifEnabledDo: [ self enqueueTask: (BlTaskAction new action: aBlock) ]
 		otherwise: aBlock
+]
+
+{ #category : #'updating ui' }
+GtBehaviorCoderElement >> filterWithMethodProtocol: aMethodProtocol [
+
+	contentTabs content 
+		allChildrenBreadthFirstDetect: [ :eachElement | eachElement isKindOf: GtMethodsCoderElement ] 
+		ifFound: [ :theElement | theElement filterWithMethodProtocol: aMethodProtocol ] 
+		ifNone: [ "ignore" ]
 ]
 
 { #category : #initialization }

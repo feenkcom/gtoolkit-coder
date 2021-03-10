@@ -63,6 +63,19 @@ GtMethodsCoderElement >> codersUIModel: aGtMethodsCoderUIModel [
 ]
 
 { #category : #ui }
+GtMethodsCoderElement >> filterElement [ 
+	^ self childWithId: #filter
+]
+
+{ #category : #'updating ui' }
+GtMethodsCoderElement >> filterWithMethodProtocol: aMethodProtocol [
+
+	| aFilter |
+	aFilter := GtSearchMethodCategoryFilter forCategory: aMethodProtocol name.
+	methodsCoderUIModel coder setFilters: { aFilter }.
+]
+
+{ #category : #ui }
 GtMethodsCoderElement >> listElement [
 	listElement
 		ifNotNil: [ ^ listElement ].
@@ -81,7 +94,7 @@ GtMethodsCoderElement >> listElement [
 	^ listElement
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - event handling' }
 GtMethodsCoderElement >> scrollToEvent: anEvent [
 	| coder index |
 	coder := anEvent sourceCoder.
