@@ -17,7 +17,9 @@ GtClassMethodsCoder >> categoryFilter: aView [
 						collect: [ :each | 
 							GtCoderContextMenuAction new
 								action:
-										[ :element | self setFilters: {(GtSearchMethodCategoryFilter forCategory: each)} ];
+										[ :element | self 
+											setFilters: {(GtSearchMethodCategoryFilter forCategory: each)}
+											source: element ];
 								title: each ]);
 				hMatchParent;
 				vMatchParent ]
@@ -42,7 +44,8 @@ GtClassMethodsCoder >> classVariableFilter: aView [
 										setFilters:
 											{(GtSearchClassVariableReferenceFilter
 												forClass: self classOrMetaClass
-												andVariable: each)} ];
+												andVariable: each)}
+										source: element ];
 								title: each ]);
 				hMatchParent;
 				vMatchParent ]
@@ -60,10 +63,12 @@ GtClassMethodsCoder >> examplesFilter: aView [
 				items: (states collect: [ :eachState | 
 					GtCoderContextMenuAction new
 						action: [ :element | 
-							self setFilters: {
-								((GtSearchExamplesFilter new
-									resultState: eachState)
-									coder: self)} ];
+							self 
+								setFilters: {
+									((GtSearchExamplesFilter new
+										resultState: eachState)
+										coder: self)}
+								source: element ];
 						title: (eachState labelWithAmountFor: self exampler) ]);
 				hMatchParent;
 				vMatchParent ]
@@ -110,7 +115,8 @@ GtClassMethodsCoder >> instanceVariableFilter: aView [
 										setFilters:
 											{(GtSearchInstanceVariableReferenceFilter
 												forClass: self classOrMetaClass
-												andVariable: each)} ];
+												andVariable: each)}
+										source: element ];
 								title: each ]);
 				hMatchParent;
 				vMatchParent ]

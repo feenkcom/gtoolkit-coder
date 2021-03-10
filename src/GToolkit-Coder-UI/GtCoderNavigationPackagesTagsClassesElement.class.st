@@ -6,7 +6,8 @@ Class {
 		'classesLabel',
 		'methodProtocolsList',
 		'classAndMethodProtocolList',
-		'protocolLabel'
+		'protocolLabel',
+		'coderFilterChangesSubscription'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
@@ -119,6 +120,31 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onMethodsCoderFiltersChanged: aGtCodersFiltersChanged [
+	aGtCodersFiltersChanged source = self ifTrue: [ ^ self ].
+	
+	methodProtocolsList selectedItemDo: [ :aSelectedItem | 
+		| aCategoryFilter |
+		aCategoryFilter := GtSearchMethodCategoryFilter forCategory: aSelectedItem name.
+		
+		aGtCodersFiltersChanged filters do: [ :eachFilter | 
+			eachFilter = aCategoryFilter ifTrue: [ 
+				^ self ] ] ].
+			
+	aGtCodersFiltersChanged filters do: [ :eachFilter | 
+		eachFilter class = GtSearchMethodCategoryFilter ifTrue: [
+			methodProtocolsList items
+				doWithIndex: [ :aProtocol :anIndex | 
+					(aProtocol name = eachFilter category) ifTrue: [ 
+						self suppressListChangeEventsDuring: [
+							methodProtocolsList selectOne: anIndex ].
+						^ self ] ] ] ].
+	
+	self suppressListChangeEventsDuring: [
+		methodProtocolsList deselectAll ].
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageListSelectionChanged [
 	| anIndex aSelectedItem theIndices |
 	supressListChanges ifTrue: [ ^ self ].
@@ -207,7 +233,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 	(anIndex between: 1 and: methodProtocolsList viewModel itemCount)
 		ifFalse: [ ^ self ].
 	aSelectedItem := (methodProtocolsList viewModel itemAt: anIndex) value.
-	self navigationModel selectMethodProtocol: aSelectedItem
+	self navigationModel selectMethodProtocol: aSelectedItem source: self.
 ]
 
 { #category : #'api - package updates' }
@@ -379,6 +405,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 	navigationModel when: GtCoderNavigationPackageRenamed send: #onPackageRenamed: to: self.
 	navigationModel when: GtCoderNavigationPackageTagAdded send: #onPackageTagAdded: to: self.
 	navigationModel when: GtCoderNavigationPackageTagRemoved send: #onPackageTagRemoved: to: self.
+	navigationModel when: GtCodersFiltersChanged send: #onMethodsCoderFiltersChanged: to: self.
 ]
 
 { #category : #subscriptions }
@@ -406,11 +433,11 @@ GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 			methodProtocols := navigationModel selectedClass organization protocols.
 			methodProtocolsList initializeWithProtocols: methodProtocols.
 			protocolLabel visibility: BlVisibility visible.
-			methodProtocolsList visibility: BlVisibility visible ]
+			methodProtocolsList visibility: BlVisibility visible. ]
 		ifFalse: [ 
 			methodProtocolsList initializeWithProtocols: Array empty.
 			protocolLabel visibility: BlVisibility gone.
-			methodProtocolsList visibility: BlVisibility gone ]
+			methodProtocolsList visibility: BlVisibility gone. ]
 ]
 
 { #category : #'updating lists' }

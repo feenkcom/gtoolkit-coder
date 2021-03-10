@@ -11,16 +11,18 @@ Class {
 }
 
 { #category : #callbacks }
-GtBehaviorCoderElement >> actOnMethodProtocol: aProtocol [ 
+GtBehaviorCoderElement >> actOnMethodProtocol: anAnnouncement [ 
 	| tab selectTabBlock selectMethodBlock |
+	
 	tab := contentTabs viewModel tabs
 		detect: [ :each | each widget label asString = 'Methods' ]
 		ifNone: [ ^ self ].
 	tab isSelected
 		ifFalse: [ selectTabBlock := [ tab select ].
 			self executeTask: selectTabBlock ].
-	selectMethodBlock := [ self filterWithMethodProtocol: aProtocol ].
-	self executeTask: selectMethodBlock
+
+	selectMethodBlock := [ self filterWithMethodProtocol: anAnnouncement methodProtocol source: anAnnouncement source ].
+	self executeTask: selectMethodBlock 
 ]
 
 { #category : #callbacks }
@@ -217,7 +219,7 @@ GtBehaviorCoderElement >> coderUIModel: aGtBehaviorCoderUIModel [
 		when: GtClassCoderMethodNavigationAnnouncement
 			do: [ :ann | self actOnSelectMethod: ann method ];
 		when: GtClassCoderMethodProtocolNavigationAnnouncement
-			do: [ :ann | self actOnMethodProtocol: ann methodProtocol ].
+			do: [ :ann | self actOnMethodProtocol: ann ].
 
 	container ifNotNil: #removeFromParent.
 	container := self buildContentPane.
@@ -232,11 +234,11 @@ GtBehaviorCoderElement >> executeTask: aBlock [
 ]
 
 { #category : #'updating ui' }
-GtBehaviorCoderElement >> filterWithMethodProtocol: aMethodProtocol [
+GtBehaviorCoderElement >> filterWithMethodProtocol: aMethodProtocol source: aSource [
 
 	contentTabs content 
 		allChildrenBreadthFirstDetect: [ :eachElement | eachElement isKindOf: GtMethodsCoderElement ] 
-		ifFound: [ :theElement | theElement filterWithMethodProtocol: aMethodProtocol ] 
+		ifFound: [ :theElement | theElement filterWithMethodProtocol: aMethodProtocol source: aSource ] 
 		ifNone: [ "ignore" ]
 ]
 

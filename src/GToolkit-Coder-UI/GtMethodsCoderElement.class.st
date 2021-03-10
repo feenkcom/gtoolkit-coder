@@ -41,7 +41,7 @@ GtMethodsCoderElement >> buildFilter [
 		do: [ :event | self updateCodersFilters: event ].
 	methodsCoderUIModel coder announcer weak
 		when: GtCodersFiltersChanged
-		send: #updateDisplayedFilters
+		send: #updateDisplayedFilters:
 		to: self.
 	self addChild: filterElement as: #filter
 ]
@@ -68,11 +68,11 @@ GtMethodsCoderElement >> filterElement [
 ]
 
 { #category : #'updating ui' }
-GtMethodsCoderElement >> filterWithMethodProtocol: aMethodProtocol [
+GtMethodsCoderElement >> filterWithMethodProtocol: aMethodProtocol source: aSource [
 
 	| aFilter |
 	aFilter := GtSearchMethodCategoryFilter forCategory: aMethodProtocol name.
-	methodsCoderUIModel coder setFilters: { aFilter }.
+	methodsCoderUIModel coder setFilters: { aFilter } source: aSource.
 ]
 
 { #category : #ui }
@@ -111,11 +111,12 @@ GtMethodsCoderElement >> updateCodersFilters: event [
 	event filterElement
 		filtersDo:
 			[ :descriptor :value | filters add: (descriptor newFilterWithValue: value) ].
-	^ methodsCoderUIModel coder additionalFilters: filters
+	^ methodsCoderUIModel coder setFilters: filters source: self
 ]
 
 { #category : #'private - updating' }
-GtMethodsCoderElement >> updateDisplayedFilters [
+GtMethodsCoderElement >> updateDisplayedFilters: anAnnouncement [
+	anAnnouncement source = self ifTrue: [ ^ self ].
 	self
 		childWithId: #filter
 		ifFound: [ :aFiltersElement |
