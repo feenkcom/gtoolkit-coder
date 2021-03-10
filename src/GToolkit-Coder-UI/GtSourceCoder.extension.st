@@ -13,13 +13,6 @@ GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position whenCom
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> breadcrumbActions [
-	<return: #Array of: #GtSourceCoderBreadcrumbAction>
-
-	^ #()
-]
-
-{ #category : #'*GToolkit-Coder-UI' }
 GtSourceCoder >> browseBehaviorAt: aTextPosition [
 	"Try to find a behavior reference at a given source text position and request to browse it"
 
