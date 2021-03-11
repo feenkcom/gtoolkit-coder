@@ -31,8 +31,11 @@ GtBehaviorCoderElement >> actOnPackageUpdated: ann [
 ]
 
 { #category : #callbacks }
-GtBehaviorCoderElement >> actOnSelectMethod: aMethod [
-	| tab selectTabBlock selectMethodBlock |
+GtBehaviorCoderElement >> actOnSelectMethod: aGtClassCoderMethodNavigationAnnouncement [
+	| aMethod tab selectTabBlock selectMethodBlock |
+
+	aMethod := aGtClassCoderMethodNavigationAnnouncement method.
+
 	tab := contentTabs viewModel tabs
 		detect: [ :each | each widget label asString = 'Methods' ]
 		ifNone: [ ^ self ].
@@ -211,15 +214,20 @@ GtBehaviorCoderElement >> coderUIModel [
 
 { #category : #accessing }
 GtBehaviorCoderElement >> coderUIModel: aGtBehaviorCoderUIModel [
-
+	
+	behaviorCoderUIModel ifNotNil: [ :aPreviousCoderViewModel | aPreviousCoderViewModel unsubscribe: self ].
+	
 	behaviorCoderUIModel := aGtBehaviorCoderUIModel.
-	behaviorCoderUIModel coder
+	behaviorCoderUIModel coder weak
 		when: GtCoderPackageUpdatedAnnouncement
-			do: [ :ann | self actOnPackageUpdated: ann ];
+			send: #actOnPackageUpdated:
+			to: self;
 		when: GtClassCoderMethodNavigationAnnouncement
-			do: [ :ann | self actOnSelectMethod: ann method ];
+			send: #actOnSelectMethod:
+			to: self;
 		when: GtClassCoderMethodProtocolNavigationAnnouncement
-			do: [ :ann | self actOnMethodProtocol: ann ].
+			send: #actOnMethodProtocol:
+			to: self.
 
 	container ifNotNil: #removeFromParent.
 	container := self buildContentPane.
