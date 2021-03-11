@@ -78,6 +78,7 @@ GtMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
 	addOns addStyler: (GtFixItStyler new sourceCoder: self).
+	addOns addStyler: BrRBTextStyler new.
 	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
 	addOns
 		addMainAction: (GtCoderActivatableAction new
