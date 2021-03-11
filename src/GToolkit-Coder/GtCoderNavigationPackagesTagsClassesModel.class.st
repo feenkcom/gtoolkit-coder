@@ -62,6 +62,21 @@ GtCoderNavigationPackagesTagsClassesModel >> classesToShow [
 		ifFalse: [ self selectedPackage definedClasses ]
 ]
 
+{ #category : #'private - accessing' }
+GtCoderNavigationPackagesTagsClassesModel >> coder: aCoder [
+	coder == aCoder ifTrue: [ ^ self ].
+	coder ifNotNil: [ :oldCoder | 
+		oldCoder announcer unsubscribe: self ].
+	
+	coder := aCoder.
+	
+	"forward coder announcements"
+	aCoder announcer weak
+		when: Announcement
+		send: #onCoderAnnouncement:
+		to: self
+]
+
 { #category : #'api - testing' }
 GtCoderNavigationPackagesTagsClassesModel >> hasSelectedClass [
 	<return: #Boolean>
@@ -83,7 +98,7 @@ GtCoderNavigationPackagesTagsClassesModel >> hasSelectedTag [
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesModel >> initialize [
 	super initialize.
-	coder := GtPackagesCoder new
+	self coder: GtPackagesCoder new
 ]
 
 { #category : #initialization }
@@ -109,6 +124,11 @@ GtCoderNavigationPackagesTagsClassesModel >> notifyCoderSelected [
 	self announce: (GtCoderNavigationPackagesSelected new coder: coder)
 ]
 
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> notifyMethodProtocolSelected: aMethodProtocol source: aSource [
+	coder withMethodProtocol: aMethodProtocol source: aSource
+]
+
 { #category : #'private - notifying' }
 GtCoderNavigationPackagesTagsClassesModel >> notifyMethodSelected: aMethod [
 	coder withSelectedMethod: aMethod
@@ -131,6 +151,11 @@ GtCoderNavigationPackagesTagsClassesModel >> notifyTagSelected: anRPackageTag pa
 				coder: coder;
 				package: anRPackage;
 				tag: anRPackageTag)
+]
+
+{ #category : #'private - announcement handling' }
+GtCoderNavigationPackagesTagsClassesModel >> onCoderAnnouncement: anAnnouncement [
+	self announcer announce: anAnnouncement
 ]
 
 { #category : #'event handling' }
@@ -191,7 +216,7 @@ GtCoderNavigationPackagesTagsClassesModel >> selectClass: aClass [
 		ifTrue: [ ^ self ].
 	aCoder := GtBehaviorCoder forClass: aClass.
 	self assertCoder: aCoder.
-	coder := aCoder.
+	self coder: aCoder.
 	self
 		notifyClassSelected: aClass
 		package: aClass package
@@ -204,26 +229,26 @@ GtCoderNavigationPackagesTagsClassesModel >> selectCoder: aCoder [
 		ifTrue: [ (coder isForPackage and: [ aCoder package = coder package ])
 				ifTrue: [ ^ self ].
 			self assertCoder: aCoder.
-			coder := aCoder.
+			self coder: aCoder.
 			^ self notifyPackageSelected: coder package ].
 	aCoder isForPackageTag
 		ifTrue:
 			[ (coder isForPackageTag and: [ aCoder packageTag = coder packageTag ])
 				ifTrue: [ ^ self ].
 			self assertCoder: aCoder.
-			coder := aCoder.
+			self coder: aCoder.
 			^ self notifyTagSelected: coder packageTag package: coder package ].
 	aCoder isForClass
 		ifTrue: [ (coder isForClass and: [ aCoder theClass = coder theClass ])
 				ifTrue: [ ^ self ].
 			self assertCoder: aCoder.
-			coder := aCoder.
+			self coder: aCoder.
 			^ self
 				notifyClassSelected: coder theClass
 				package: coder package
 				tag: coder packageTag ].
 	self assertCoder: aCoder.
-	coder := aCoder.
+	self coder: aCoder.
 	self notifyCoderSelected
 ]
 
@@ -231,6 +256,11 @@ GtCoderNavigationPackagesTagsClassesModel >> selectCoder: aCoder [
 GtCoderNavigationPackagesTagsClassesModel >> selectMethod: aMethod [
 	self selectClass: aMethod methodClass instanceSide.
 	self notifyMethodSelected: aMethod
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationPackagesTagsClassesModel >> selectMethodProtocol: aMethodProtocol source: aSource [
+	self notifyMethodProtocolSelected: aMethodProtocol source: aSource
 ]
 
 { #category : #'api - selection' }
@@ -244,7 +274,7 @@ GtCoderNavigationPackagesTagsClassesModel >> selectPackage: anRPackage [
 		ifTrue: [ coder packageCoder ]
 		ifFalse: [ GtPackageCoder forPackage: anRPackage ].
 	self assertCoder: aCoder.
-	coder := aCoder.
+	self coder: aCoder.
 	self notifyPackageSelected: anRPackage
 ]
 
@@ -263,7 +293,7 @@ GtCoderNavigationPackagesTagsClassesModel >> selectPackageTag: aRPackageTag [
 		ifNil: [ GtPackageCoder forPackage: aRPackageTag package ].
 	aCoder := packageCoder packageTagCoderFor: aRPackageTag.
 	self assertCoder: aCoder.
-	coder := aCoder.
+	self coder: aCoder.
 	self notifyTagSelected: aRPackageTag package: aRPackageTag package
 ]
 
@@ -279,7 +309,7 @@ GtCoderNavigationPackagesTagsClassesModel >> selectTag: anRPackageTag [
 		ifTrue: [ coder packageTagCoderFor: anRPackageTag ])
 		ifNil: [ GtPackageTagCoder forPackageTag: anRPackageTag ].
 	self assertCoder: aCoder.
-	coder := aCoder.
+	self coder: aCoder.
 	self notifyTagSelected: anRPackageTag package: anRPackageTag package
 ]
 

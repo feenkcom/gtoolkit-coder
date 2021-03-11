@@ -1,5 +1,5 @@
 Class {
-	#name : #GtClassCoderNavigationAnnouncement,
+	#name : #GtClassCoderMethodNavigationAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
 		'method'
@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #accessing }
-GtClassCoderNavigationAnnouncement >> method [
+GtClassCoderMethodNavigationAnnouncement >> method [
 	^ method
 ]
 
 { #category : #accessing }
-GtClassCoderNavigationAnnouncement >> method: aMethod [
+GtClassCoderMethodNavigationAnnouncement >> method: aMethod [
 	method := aMethod
 ]

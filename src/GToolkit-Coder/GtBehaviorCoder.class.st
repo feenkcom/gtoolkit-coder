@@ -55,7 +55,7 @@ GtBehaviorCoder >> definitionCoder [
 GtBehaviorCoder >> forClass: aClass [
 	hasObject := false.
 	self initializeClass: aClass.
-	methodsCoder := GtClassMethodsCoder forClass: aClass
+	self methodsCoder: (GtClassMethodsCoder forClass: aClass)
 ]
 
 { #category : #initialize }
@@ -64,7 +64,7 @@ GtBehaviorCoder >> forObject: anObject [
 	hasObject := true.
 	self initializeClass: anObject class.
 	
-	methodsCoder := GtClassMethodsCoder forObject: object
+	self methodsCoder: (GtClassMethodsCoder forObject: object)
 ]
 
 { #category : #'gt-extension' }
@@ -120,6 +120,16 @@ GtBehaviorCoder >> methodsCoder [
 ]
 
 { #category : #accessing }
+GtBehaviorCoder >> methodsCoder: aMethodsCoder [
+	methodsCoder ifNotNil: [ :aCoder | aCoder announcer unsubscribe: self ].
+	methodsCoder := aMethodsCoder.
+	aMethodsCoder weak
+		when: GtCodersFiltersChanged
+		send: #onMethodsCoderFiltersChanged:
+		to: self
+]
+
+{ #category : #accessing }
 GtBehaviorCoder >> name [
 	^ self theClass name
 ]
@@ -129,6 +139,11 @@ GtBehaviorCoder >> object [
 	<return: #Object>
 
 	^ object
+]
+
+{ #category : #'private - announcement handling' }
+GtBehaviorCoder >> onMethodsCoderFiltersChanged: aGtCodersFiltersChanged [
+	self announcer announce: aGtCodersFiltersChanged.
 ]
 
 { #category : #accessing }
@@ -154,10 +169,18 @@ GtBehaviorCoder >> theClass [
 ]
 
 { #category : #'api - navigation' }
+GtBehaviorCoder >> withMethodProtocol: aMethodProtocol source: aSource [
+
+	self announce: (GtClassCoderMethodProtocolNavigationAnnouncement new 
+		source: aSource;
+		methodProtocol: aMethodProtocol)
+]
+
+{ #category : #'api - navigation' }
 GtBehaviorCoder >> withSelectedMethod: aMethod [
 	self
 		assert: [ class instanceSide = aMethod methodClass instanceSide ]
 		description: [ 'Can not select a method from a different class' ].
 
-	self announce: (GtClassCoderNavigationAnnouncement new method: aMethod)
+	self announce: (GtClassCoderMethodNavigationAnnouncement new method: aMethod)
 ]

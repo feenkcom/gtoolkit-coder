@@ -4,11 +4,6 @@ Class {
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
 
-{ #category : #'updating lists' }
-GtCoderNavigationClassHierachyElement >> emptyClassList [
-	classesList initializeWithClasses: #()
-]
-
 { #category : #initialization }
 GtCoderNavigationClassHierachyElement >> initializeElement [
 	super initializeElement.
@@ -22,19 +17,6 @@ GtCoderNavigationClassHierachyElement >> initializeLayout [
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical matchParent ].
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationClassHierachyElement >> onClassListSelectionChanged [
-	| anIndex aSelectedItem theIndices |
-	supressListChanges ifTrue: [ ^ self ].
-	theIndices := classesList selectedIndices.
-	theIndices ifEmpty: [ ^ self ].
-	anIndex := theIndices first.
-	(anIndex between: 1 and: classesList viewModel itemCount)
-		ifFalse: [ ^ self ].
-	aSelectedItem := (classesList viewModel itemAt: anIndex) value rootClass.
-	self navigationModel selectClass: aSelectedItem
 ]
 
 { #category : #subscriptions }
@@ -92,13 +74,6 @@ GtCoderNavigationClassHierachyElement >> onPackagesSelected: anAnnouncer [
 ]
 
 { #category : #subscriptions }
-GtCoderNavigationClassHierachyElement >> subscribeToClassList [
-	classesList
-		when: BrSelectionChanged
-		do: [ :anEvent | self onClassListSelectionChanged ].
-]
-
-{ #category : #subscriptions }
 GtCoderNavigationClassHierachyElement >> subscribeToContent [
 	super subscribeToContent.
 	self subscribeToClassList.
@@ -123,7 +98,7 @@ GtCoderNavigationClassHierachyElement >> updateClassLists [
 
 { #category : #'updating lists' }
 GtCoderNavigationClassHierachyElement >> updateClassListsWith: aClass [
-	classesList initializeWithHierachyForClass: aClass
+	classesList initializeWithHierachyForClass: aClass.
 ]
 
 { #category : #'updating lists' }

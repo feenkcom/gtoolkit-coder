@@ -12,14 +12,7 @@ It is important to notice that I do not directly reference a text editor and I s
 "
 Class {
 	#name : #GtSourceCoder,
-	#superclass : #GtCoderModel,
-	#instVars : [
-		'sourceCode',
-		'completionStrategy',
-		'astCache',
-		'astMonitor',
-		'astCommand'
-	],
+	#superclass : #GtTextualCoder,
 	#category : #'GToolkit-Coder-Coders'
 }
 
@@ -63,30 +56,6 @@ GtSourceCoder class >> sourceEditorName [
 	^ #editor
 ]
 
-{ #category : #'api - addons' }
-GtSourceCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
-	<gtCoderContextMenuAddOns: 10>
-	coderAddOns
-		addContextMenuItem: 'Cut'
-			action: [ :anEditorElement | anEditorElement editor cutSelected ];
-		addContextMenuItem: 'Copy'
-			action: [ :anEditorElement | anEditorElement editor copySelected ];
-		addContextMenuItem: 'Paste'
-			action: [ :anEditorElement | anEditorElement editor paste ]
-]
-
-{ #category : #'private - addons' }
-GtSourceCoder >> addOnChanged: aSymbol [
-	aSymbol = #stylers
-		ifTrue: [ self notifyStylersUpdated ].
-	super addOnChanged: aSymbol
-]
-
-{ #category : #'private - addons' }
-GtSourceCoder >> addOnsClass [
-	^ GtSourceCoderAddOns
-]
-
 { #category : #'private - refactorings' }
 GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 	self
@@ -95,22 +64,9 @@ GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 		whenComplete: nil
 ]
 
-{ #category : #'api - text' }
-GtSourceCoder >> appendString: aString [
-	self critical: [
-		self sourceCode appendString: aString.
-		self sourceChanged ]
-]
-
-{ #category : #'private - ast' }
-GtSourceCoder >> astCache [
-	^ astMonitor critical: [ astCache ]
-]
-
-{ #category : #'private - ast' }
-GtSourceCoder >> astCache: anAssociation [
-	astMonitor critical: [ astCache := anAssociation ].
-	self onAstChanged
+{ #category : #'api - accessing' }
+GtSourceCoder >> ast [
+	^ self rbAST
 ]
 
 { #category : #private }
@@ -135,72 +91,6 @@ GtSourceCoder >> classOrMetaClass [
 		transformWith: '`@receiver classOrMetaClass' -> '`@receiver behavior'.
 		
 	^ self behavior
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> collapsedText [
-	<return: #BlText>
-
-	^ self sourceCode collapsedText
-]
-
-{ #category : #'api - accessing' }
-GtSourceCoder >> completionStrategy [
-	<return: #GtCompletionStrategy>
-
-	^ completionStrategy
-		ifNil: [ completionStrategy := self newCompletionStrategy ]
-]
-
-{ #category : #'api - accessing' }
-GtSourceCoder >> completionStrategy: aGtCompletionStrategy [
-	completionStrategy := aGtCompletionStrategy
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> correctFrom: aFromIndex to: aToIndex with: aString [
-	self critical: [
-		self sourceCode
-			replaceFrom: aFromIndex
-			to: aToIndex
-			withString: aString.
-		self sourceChanged.
-		self notifyCorrectionFrom: aFromIndex to: aToIndex with: aString ]
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> currentSourceString [
-	"Return a String representation of the current source text"
-	<return: #String>
-
-	^ self critical: [ self sourceCode sourceString ]
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> currentSourceString: aString [
-	"Set a new source text"
-
-	self critical: [
-		self sourceCode currentSourceString: aString.
-		self sourceChanged ]
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> currentSourceText: aText [
-	"Set a new source text"
-
-	self critical: [ 
-		self sourceCode currentSourceText: aText.
-		self sourceChanged ]
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> currentSourceTextSynchronously: aText [
-	"Set a new source text"
-
-	self critical: [
-		self sourceCode currentSourceText: aText.
-		self sourceChangedWith: GtCoderUpdateStragegy new makeSynchronous ]
 ]
 
 { #category : #private }
@@ -236,13 +126,6 @@ GtSourceCoder >> defaultTextAttributes [
 		(BlFontFamilyAttribute named: 'Source Code Pro') beNotOverwritableByStyler.
 		(BlFontSizeAttribute size: 14) beNotOverwritableByStyler
 	}
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> deleteSourceTextFrom: aFromIndex to: aToIndex [
-	self critical: [
-		self sourceCode delete: aFromIndex to: aToIndex.
-		self sourceChanged ]
 ]
 
 { #category : #'private - ast' }
@@ -590,14 +473,6 @@ GtSourceCoder >> evaluationRequesterWithInterval [
 	^ GtSourceCoderIntervalEvaluationRequester new coder: self
 ]
 
-{ #category : #'gt-extensions' }
-GtSourceCoder >> gtViewStylersFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewStylersFor: aView ]
-]
-
 { #category : #testing }
 GtSourceCoder >> hasObjectAttribute [
 	<return: #Boolean>
@@ -609,24 +484,8 @@ GtSourceCoder >> hasObjectAttribute [
 ]
 
 { #category : #initialize }
-GtSourceCoder >> initialize [
-	super initialize.
-
-	astMonitor := Monitor new.
-	self reset
-]
-
-{ #category : #initialize }
-GtSourceCoder >> initializeAddOns [
-	super initializeAddOns.
-	
-	addOns addStyler: BrRBTextStyler new.
-	
-	addOns clearChanges
-]
-
-{ #category : #initialize }
 GtSourceCoder >> initializeShortcuts [
+	super initializeShortcuts.
 
 	addOns
 		addShortcut: GtSourceCoderBrowseImplementorsShortcut new;
@@ -638,13 +497,6 @@ GtSourceCoder >> initializeShortcuts [
 { #category : #testing }
 GtSourceCoder >> isForMethod [
 	^ false
-]
-
-{ #category : #testing }
-GtSourceCoder >> isModified [
-	<return: #Boolean>
-
-	^ self sourceCode isModified
 ]
 
 { #category : #private }
@@ -821,25 +673,6 @@ GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sou
 ]
 
 { #category : #'private - notifying' }
-GtSourceCoder >> notifySourceChangedWith: anUpdateStragegy [
-	"Notify the text editor that it should update the text (for example due to refactoring changes)"
-	
-	self announce: (GtCoderSourceCodeChanged new 
-		updateStragegy: anUpdateStragegy;
-		coder: self;
-		source: anUpdateStragegy announcementSource)
-]
-
-{ #category : #'private - notifying' }
-GtSourceCoder >> notifyStylersUpdated [
-	"Is sent when AddOn stylers changed. It also means that the text editor should restyle the text"
-
-	self announce: (GtCoderStylerChanged new
-		coder: self;
-		stylers: self addOns stylers copy)
-]
-
-{ #category : #'private - notifying' }
 GtSourceCoder >> notifyToolSpawn: aTool withDestination: aSpawnDestination [
 	self announce: (GtCoderToolSpawnRequest new 
 		tool: aTool;
@@ -865,10 +698,6 @@ GtSourceCoder >> object: anObject [
 	anObject 
 		ifNil: [ self removeAttributeNamed: #object ]
 		ifNotNil: [ self attributeNamed: #object put: anObject ]
-]
-
-{ #category : #'private - ast' }
-GtSourceCoder >> onAstChanged [
 ]
 
 { #category : #accessing }
@@ -904,15 +733,6 @@ GtSourceCoder >> parseMethod: aString [
 { #category : #private }
 GtSourceCoder >> parserStartingState [
 	^ GtPharoParser startingStateForMethodSequence
-]
-
-{ #category : #private }
-GtSourceCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
-	| actions |
-	actions := OrderedCollection new.
-	aClass withAllSuperclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
-	actions sort: [ :a :b | a arguments first < b arguments first ].
-	^ actions
 ]
 
 { #category : #'api - actions' }
@@ -1072,50 +892,6 @@ GtSourceCoder >> referencesFilterForSymbol: aSymbol [
 	^ self referencesFilterForLiteral: aSymbol
 ]
 
-{ #category : #'api - text' }
-GtSourceCoder >> requestStyleSourceText [
-	"Request the text editor to restyle the text (for example due to environmental changes)"
-
-	self resetASTCache.
-	self announce: (GtCoderStyleTextRequest new coder: self)
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> requestStyleSourceTextAndAfterDo: aBlock [
-	"Request the text editor to restyle the text (for example due to environmental changes)"
-
-	self resetASTCache.
-	self
-		announce:
-			(GtCoderStyleTextRequest new
-				coder: self;
-				afterAction: aBlock)
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> requestUpdateCollapsedText [
-	"Request to update the collapsed text, for example due to changes in the current source text.
-	It is not guaranteed that the collapsed text actually changes as for example in the method coder
-	opened on a compiled method"
-
-	self sourceCode resetCollapsedText.
-	self announce: (GtCoderCollapsedLabelChanged new coder: self)
-]
-
-{ #category : #initialize }
-GtSourceCoder >> reset [
-	self resetASTCache.
-
-	"initialized lazily in #sourceCode"
-	sourceCode := nil.
-	completionStrategy := nil
-]
-
-{ #category : #'private - actions' }
-GtSourceCoder >> resetASTCache [
-	self astCache: (nil -> nil)
-]
-
 { #category : #'api - accessing' }
 GtSourceCoder >> source [
 	<return: #String>
@@ -1134,67 +910,6 @@ GtSourceCoder >> sourceAst [
 		startingAt: self parserStartingState
 ]
 
-{ #category : #'event handling' }
-GtSourceCoder >> sourceChanged [
-	self sourceChangedWith: GtCoderUpdateStragegy new makeAsynchronous
-]
-
-{ #category : #'event handling' }
-GtSourceCoder >> sourceChangedWith: anUpdateStrategy [
-	self requestUpdateCollapsedText.
-	self requestUpdateAddOns.
-	
-	self notifySourceChangedWith: anUpdateStrategy
-]
-
-{ #category : #'api - accessing' }
-GtSourceCoder >> sourceCode [
-	<return: #GtCoderSourceCode>
-
-	sourceCode ifNil: [ self sourceCode: (GtCoderExplicitSourceCode new source: '') ].
-	^ sourceCode
-]
-
-{ #category : #'api - accessing' }
-GtSourceCoder >> sourceCode: aGtCoderSourceCode [
-	"Set the source code of this coder to a given one and notify about the changes"
-	
-	self 
-		sourceCode: aGtCoderSourceCode 
-		withStrategy: GtCoderUpdateStragegy new makeAsynchronous
-]
-
-{ #category : #'api - accessing' }
-GtSourceCoder >> sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy [
-	"Set the source code of this coder to a given one and notify about the changes"
-	
-	sourceCode := aGtCoderSourceCode.
-	self sourceChangedWith: anUpdateStragegy.
-]
-
-{ #category : #'api - accessing' }
-GtSourceCoder >> sourceCodeSynchronously: aGtCoderSourceCode [
-	self
-		sourceCode: aGtCoderSourceCode 
-		withStrategy: GtCoderUpdateStragegy new makeSynchronous
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> sourceText [
-	"Return the source text for this coder. The computation of the source text may be expensive, use me with caution.
-	If the operation you would like to perform on the source text is optional consider using #sourceTextDo:"
-	<return: #BlText>
-
-	^ self sourceCode sourceText
-]
-
-{ #category : #'api - text' }
-GtSourceCoder >> sourceTextDo: aBlock [
-	"Evaluate a given block with my source code text if present"
-
-	^ self sourceCode sourceTextDo: aBlock
-]
-
 { #category : #accessing }
 GtSourceCoder >> spawnDestination [
 	^ self 
@@ -1205,68 +920,6 @@ GtSourceCoder >> spawnDestination [
 { #category : #accessing }
 GtSourceCoder >> spawnDestination: aSpawnDestination [
 	self attributeNamed: #spawnDestination put: aSpawnDestination
-]
-
-{ #category : #'api - addons' }
-GtSourceCoder >> stylers [
-	^ self addOns stylers
-]
-
-{ #category : #'private - addons' }
-GtSourceCoder >> terminateAddOnsCommand [
-	addOnCommand
-		ifNil: [ ^ self ].
-	addOnCommand terminate.
-	addOnCommand := nil
-]
-
-{ #category : #'api - addons' }
-GtSourceCoder >> updateAddOns [
-	"Start the update of the addons in a context of a given element"
-
-	addOnMonitor
-		critical: [			 
-			BlUseAsyncFeatures 
-				ifEnabledDo: [ 
-					self terminateAddOnsCommand.
-					addOnCommand := self updateAddOnsCommand.
-					addOnCommand name: 'AddOns: ' , self identityHash printString.
-					BlTktWorkerProvider coderPool schedule: addOnCommand ]
-				otherwise: [ 
-					self updateAddOnsCommand execute ] ]
-]
-
-{ #category : #'private - addons' }
-GtSourceCoder >> updateAddOnsCommand [
-	^ [
-		| updatedAddOns pragmas ast |
-		ast := self rbAST.
-		pragmas := self
-			pragmasNamed: #gtAstCoderAddOns:
-			inHierarchy: self class.
-		updatedAddOns := self addOns copy.
-		pragmas
-			reverseDo:
-				[ :each | self perform: each methodSelector with: ast with: updatedAddOns ].
-		addOns := updatedAddOns.
-		addOns markAsUpdated.
-		updatedAddOns changesDo: [ :each | self addOnChanged: each ].
-		updatedAddOns clearChanges
-	] asBlTktTerminableCommand
-]
-
-{ #category : #'api - addons' }
-GtSourceCoder >> updateContextMenuAddOnsFrom: anEditorElement [
-	| updatedAddOns pragmas |
-	pragmas := self
-		pragmasNamed: #gtCoderContextMenuAddOns:
-		inHierarchy: self class.
-	updatedAddOns := self addOns copy.
-	updatedAddOns clearContextMenu.
-	pragmas
-		do: [ :each | self perform: each methodSelector withEnoughArguments: { updatedAddOns. anEditorElement } ].
-	addOns := updatedAddOns.
-	updatedAddOns clearChanges
 ]
 
 { #category : #private }

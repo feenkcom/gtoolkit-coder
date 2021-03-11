@@ -31,10 +31,12 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 				aWidgetElement := anEvent currentTarget.
 				aSelectedObject := aWidgetElement viewModel itemAt: theIndices first.
 				
-				self coder setFilters: {
-					((GtSearchExamplesFilter new
-						resultState: aSelectedObject)
-						coder: self coder)}
+				self coder 
+					setFilters: {
+						((GtSearchExamplesFilter new
+							resultState: aSelectedObject)
+							coder: self coder)}
+					source: self
 		] ].
 
 	tooltipContent column

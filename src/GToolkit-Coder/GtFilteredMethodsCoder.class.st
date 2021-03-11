@@ -194,11 +194,13 @@ GtFilteredMethodsCoder >> selectorNames [
 ]
 
 { #category : #accessing }
-GtFilteredMethodsCoder >> setFilters: aCollection [
+GtFilteredMethodsCoder >> setFilters: aCollection source: aSource [
 	self additionalFilters: aCollection.
 	self
 		announce:
 			(GtCodersFiltersChanged new
+				source: aSource;
+				filters: aCollection;
 				coders: self;
 				yourself)
 ]
