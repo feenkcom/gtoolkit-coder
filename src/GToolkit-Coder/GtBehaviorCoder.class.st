@@ -37,6 +37,15 @@ GtBehaviorCoder class >> forObject: anObject [
 		yourself
 ]
 
+{ #category : #'api - converting' }
+GtBehaviorCoder >> asNewCoderModelWithSameSubject [
+	"Return new coder model with same subject (e.g., package, class, method)"
+	<return: #GtCoderModel>
+	^ self hasObject 
+		ifTrue: [ self class forObject: self object ] 
+		ifFalse: [ self class forClass: self behavior ]
+]
+
 { #category : #accessing }
 GtBehaviorCoder >> behavior [
 	<return: #Class>

@@ -27,6 +27,13 @@ GtPackageCoder >> addMissingPackageTag: aPackageTag [
 	^ aCoder
 ]
 
+{ #category : #'api - converting' }
+GtPackageCoder >> asNewCoderModelWithSameSubject [
+	"Return new coder model with same subject (e.g., package, class, method)"
+	<return: #GtCoderModel>
+	^ self class forPackage: self package
+]
+
 { #category : #accessing }
 GtPackageCoder >> classes [
 	^ self package classes

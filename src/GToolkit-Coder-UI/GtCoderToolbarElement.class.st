@@ -72,6 +72,15 @@ GtCoderToolbarElement >> addTraitTab: look [
 			element ]
 ]
 
+{ #category : #'private - actions' }
+GtCoderToolbarElement >> browseFrom: anElement [
+	"Do we want to share the same coder model?"
+	self navigationModel coderDo: [ :aCoder | 
+		((GtCoder forCoder: aCoder asNewCoderModelWithSameSubject)
+			openInPagerFrom: anElement)
+				maximized ]
+]
+
 { #category : #initialization }
 GtCoderToolbarElement >> initialize [
 	super initialize.
@@ -96,6 +105,7 @@ GtCoderToolbarElement >> initializeToolbarElement [
 				left: 0
 				bottom: 0
 				right: 5);
+		addItem: self newBrowseButton;
 		addItem: self newSpotterButton;
 		addItem: self newHierarchyButton;
 		addItem: self newAddButton;
@@ -144,6 +154,15 @@ GtCoderToolbarElement >> newAddInterface: look [
 		do:
 			[ :each | contentTabs addTab: (self perform: each method selector with: look) ].
 	^ contentTabs
+]
+
+{ #category : #'private - instance creation' }
+GtCoderToolbarElement >> newBrowseButton [
+	^ BrButton new
+		look: BrGlamorousButtonWithIconLook;
+		label: 'Browse in another world tab';
+		icon: BrGlamorousVectorIcons browse;
+		action: [ :aButton | self browseFrom: aButton ]
 ]
 
 { #category : #'private - instance creation' }

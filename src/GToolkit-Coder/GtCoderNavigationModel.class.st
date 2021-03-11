@@ -20,6 +20,11 @@ GtCoderNavigationModel >> classesToShow [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'api - accessing' }
+GtCoderNavigationModel >> coderDo: aBlock [
+	self subclassResponsibility
+]
+
 { #category : #'api - testing' }
 GtCoderNavigationModel >> hasSelectedClass [
 	<return: #Boolean>
