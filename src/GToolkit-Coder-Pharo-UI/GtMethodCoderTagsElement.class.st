@@ -8,7 +8,7 @@ Class {
 		'protocolTag',
 		'methodCoderUIModel'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Method'
+	#category : #'GToolkit-Coder-Pharo-UI-! Views'
 }
 
 { #category : #private }
@@ -53,7 +53,7 @@ GtMethodCoderTagsElement >> methodCoderUIModel [
 { #category : #accessing }
 GtMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 	self
-		assert: [ aMethodCoderUIModel isKindOf: GtMethodCoderUIModel ]
+		assert: [ aMethodCoderUIModel isKindOf: GtPharoMethodCoderViewModel ]
 		description: [ 'Must be method coder''s UI Model' ].
 
 	methodCoderUIModel == aMethodCoderUIModel

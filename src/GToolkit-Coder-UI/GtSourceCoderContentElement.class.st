@@ -27,7 +27,7 @@ GtSourceCoderContentElement >> coder: aCoder [
 
 { #category : #accessing }
 GtSourceCoderContentElement >> coderUIModel [
-	<return: #GtSourceCoderUIModel>
+	<return: #GtSourceCoderViewModel>
 
 	^ self viewModel sourceCoder
 ]

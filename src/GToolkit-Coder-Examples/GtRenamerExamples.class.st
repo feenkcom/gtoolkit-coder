@@ -68,7 +68,7 @@ GtRenamerExamples >> smalltalkRenamer [
 	styler classOrMetaClass: GtPharoCompletionStrategy.
 
 	editorElement := GtSourceCoderEditorElement new
-		sourceCoderUIModel: (GtMethodCoderUIModel new coder: GtMethodCoder new);
+		sourceCoderUIModel: (GtPharoMethodCoderViewModel new coder: GtPharoMethodCoder new);
 		styler: styler;
 		text: text;
 		fitContent.

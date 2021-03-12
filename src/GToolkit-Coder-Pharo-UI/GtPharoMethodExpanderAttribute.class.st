@@ -1,26 +1,26 @@
 Class {
-	#name : #GtMethodExpanderAttribute,
+	#name : #GtPharoMethodExpanderAttribute,
 	#superclass : #BrGlamorousTrangleExpanderTextAttribute,
 	#instVars : [
 		'classOrMetaClass',
 		'selector'
 	],
-	#category : #'GToolkit-Coder-UI-Attributes'
+	#category : #'GToolkit-Coder-Pharo-UI-Attributes'
 }
 
 { #category : #'instance creation' }
-GtMethodExpanderAttribute class >> forClass: aClass andSelector: aSymbol [
+GtPharoMethodExpanderAttribute class >> forClass: aClass andSelector: aSymbol [
 	^ self new
 		forClass: aClass andSelector: aSymbol;
 		yourself
 ]
 
 { #category : #private }
-GtMethodExpanderAttribute >> buildMethodCoder [
+GtPharoMethodExpanderAttribute >> buildMethodCoder [
 	| editorElement coder method |
 	(method := classOrMetaClass lookupSelector: selector)
 		ifNil: [ ^ BlElement new ].
-	coder := GtMethodCoder
+	coder := GtPharoMethodCoder
 		forExample: (classOrMetaClass gtExamplesFactory createExample: method).
 	coder subscribeToSystem.
 	editorElement := coder asElement.
@@ -36,18 +36,18 @@ GtMethodExpanderAttribute >> buildMethodCoder [
 ]
 
 { #category : #accessing }
-GtMethodExpanderAttribute >> classOrNonMetaClass [
+GtPharoMethodExpanderAttribute >> classOrNonMetaClass [
 	^ classOrMetaClass
 ]
 
 { #category : #'initialize-release' }
-GtMethodExpanderAttribute >> forClass: aClass andSelector: aSymbol [
+GtPharoMethodExpanderAttribute >> forClass: aClass andSelector: aSymbol [
 	classOrMetaClass := aClass.
 	selector := aSymbol
 ]
 
 { #category : #'initialize-release' }
-GtMethodExpanderAttribute >> initialize [
+GtPharoMethodExpanderAttribute >> initialize [
 	super initialize.
 	self
 		attributesCreatingBlock: [ BrTextAdornmentDynamicAttribute new
@@ -56,6 +56,6 @@ GtMethodExpanderAttribute >> initialize [
 ]
 
 { #category : #accessing }
-GtMethodExpanderAttribute >> selector [
+GtPharoMethodExpanderAttribute >> selector [
 	^ selector
 ]

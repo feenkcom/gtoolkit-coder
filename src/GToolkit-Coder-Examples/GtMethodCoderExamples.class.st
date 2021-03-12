@@ -508,7 +508,7 @@ GtMethodCoderExamples >> emptyMethodCoder [
 	<gtExample>
 	| methodCoder |
 
-	methodCoder := GtMethodCoder new.
+	methodCoder := GtPharoMethodCoder new.
 
 	self assert: methodCoder behavior equals: UndefinedObject.
 	self assert: methodCoder collapsedText asString equals: ''.
@@ -531,7 +531,7 @@ GtMethodCoderExamples >> forBinaryMethodCoder [
 	<gtExample>
 	| method methodCoder |
 	method := GtMethodCoderExamples >> #?.
-	methodCoder := GtMethodCoder forMethod: method.
+	methodCoder := GtPharoMethodCoder forMethod: method.
 	self
 		assert: (methodCoder sourceCode isKindOf: GtCoderCompiledMethodSourceCode).
 	self assert: methodCoder sourceCode compiledMethod equals: method.
@@ -562,7 +562,7 @@ GtMethodCoderExamples >> forEmptyBodyMethodCoder [
 
 	method := GtMethodCoderExamples >> #emptyBody.
 
-	methodCoder := GtMethodCoder forMethod: method.
+	methodCoder := GtPharoMethodCoder forMethod: method.
 
 	self assert: methodCoder collapsedText asString equals: 'emptyBody'.
 	self assert: methodCoder currentSourceString equals: 'emptyBody'.
@@ -576,7 +576,7 @@ GtMethodCoderExamples >> forEmptyLinesMethodCoder [
 	| method methodCoder |
 	method := GtMethodCoderExamples >> #emptyLines.
 
-	methodCoder := GtMethodCoder forMethod: method.
+	methodCoder := GtPharoMethodCoder forMethod: method.
 
 	self assert: methodCoder collapsedText asString equals: 'emptyLines'.
 	self assert: methodCoder currentSourceString equals: method sourceCode.
@@ -589,7 +589,7 @@ GtMethodCoderExamples >> forExampleMethodCoder [
 	<gtExample>
 	| method methodCoder |
 	method := GtMethodCoderExamples >> #example.
-	methodCoder := GtMethodCoder forMethod: method.
+	methodCoder := GtPharoMethodCoder forMethod: method.
 	self assert: methodCoder selector equals: #example.
 	self assert: methodCoder currentSelector equals: #example.
 	self assert: methodCoder behavior equals: GtMethodCoderExamples.
@@ -615,7 +615,7 @@ GtMethodCoderExamples >> forKeywordMethodInPackagedClass [
 	aClass := (self fakeClassesInFakePackage: aPackage) first.
 	aMethod := (self fakeKeywordMethodsInFakeClass: aClass) first.
 
-	aMethodCoder := GtMethodCoder forMethod: aMethod.
+	aMethodCoder := GtPharoMethodCoder forMethod: aMethod.
 	aMethodCoder attributeNamed: #fakePackage put: aPackage.
 	aMethodCoder attributeNamed: #fakeClass put: aClass.
 	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
@@ -642,7 +642,7 @@ GtMethodCoderExamples >> forKeywordSelectorMethodCoder [
 
 	method := GtMethodCoderExamples >> #keyword:selector:.
 
-	methodCoder := GtMethodCoder forMethod: method.
+	methodCoder := GtPharoMethodCoder forMethod: method.
 
 	self assert: methodCoder collapsedText asString equals: 'keyword:selector:'.
 	self assert: methodCoder currentSourceString equals: method sourceCode.
@@ -660,7 +660,7 @@ GtMethodCoderExamples >> forNewMethod [
 	aClass := (self fakeClassesInFakePackage: aPackage) first.
 	aMethod := (self fakeMethodsInFakeClass: aClass) first.
 
-	aMethodCoder := GtMethodCoder forNewMethod: aClass.
+	aMethodCoder := GtPharoMethodCoder forNewMethod: aClass.
 	aMethodCoder attributeNamed: #fakePackage put: aPackage.
 	aMethodCoder attributeNamed: #fakeClass put: aClass.
 	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
@@ -683,7 +683,7 @@ GtMethodCoderExamples >> forSelfReturnMethodCoder [
 	| method methodCoder |
 	method := GtMethodCoderExamples >> #returnSelf.
 
-	methodCoder := GtMethodCoder forMethod: method.
+	methodCoder := GtPharoMethodCoder forMethod: method.
 
 	self assert: methodCoder collapsedText asString equals: 'returnSelf'.
 	self assert: methodCoder currentSourceString equals: method sourceCode.
@@ -696,7 +696,7 @@ GtMethodCoderExamples >> forThisMethodCoder [
 	| method methodCoder source |
 	method := GtMethodCoderExamples >> #forThisMethodCoder.
 
-	methodCoder := GtMethodCoder forMethod: method.
+	methodCoder := GtPharoMethodCoder forMethod: method.
 
 	source := method sourceCode.
 	
@@ -715,7 +715,7 @@ GtMethodCoderExamples >> forThisObjectMethodCoder [
 	| method methodCoder source |
 	method := GtMethodCoderExamples >> #forThisMethodCoder.
 
-	methodCoder := GtMethodCoder forObject: GtMethodCoderExamples new andSelector: #forThisMethodCoder.
+	methodCoder := GtPharoMethodCoder forObject: GtMethodCoderExamples new andSelector: #forThisMethodCoder.
 
 	source := method sourceCode.
 	
@@ -738,7 +738,7 @@ GtMethodCoderExamples >> forUnaryMethodInPackagedClass [
 	aClass := (self fakeClassesInFakePackage: aPackage) first.
 	aMethod := (self fakeUnaryMethodsInFakeClass: aClass) first.
 
-	aMethodCoder := GtMethodCoder forMethod: aMethod.
+	aMethodCoder := GtPharoMethodCoder forMethod: aMethod.
 	aMethodCoder attributeNamed: #fakePackage put: aPackage.
 	aMethodCoder attributeNamed: #fakeClass put: aClass.
 	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
@@ -851,7 +851,7 @@ GtMethodCoderExamples >> nodeAtCursor [
 	<gtExample>
 	| coder node |
 
-	coder := GtMethodCoder
+	coder := GtPharoMethodCoder
 		forMethod: GtMethodCoderExamples >> #sampleMethodWithCascades.
 	
 	node := coder rbNodeAt: ((coder currentSourceString indexOfSubCollection: 'self') - 1).
@@ -879,7 +879,7 @@ GtMethodCoderExamples >> orderedCollectionMethods [
 	<gtExample>
 	| class |
 	class := OrderedCollection.
-	^ class selectors asSortedCollection collect: [ :each | GtMethodCoder forMethod: class >> each ]
+	^ class selectors asSortedCollection collect: [ :each | GtPharoMethodCoder forMethod: class >> each ]
 ]
 
 { #category : #'sample methods' }

@@ -1,6 +1,6 @@
 Class {
 	#name : #GtExampleMethodCoderWithCatsAndDogs,
-	#superclass : #GtMethodCoder,
+	#superclass : #GtPharoMethodCoder,
 	#category : #'GToolkit-Coder-Examples-Dummies'
 }
 

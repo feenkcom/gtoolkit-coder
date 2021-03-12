@@ -17,6 +17,11 @@ GtCoderSourceCode >> appendString: aString [
 	self critical: [ self sourceText appendString: aString ]
 ]
 
+{ #category : #'api - text' }
+GtCoderSourceCode >> appendText: aText [
+	self critical: [ self sourceText append: aText ]
+]
+
 { #category : #'api - converting' }
 GtCoderSourceCode >> asCompiledMethodSourceCode: aCompiledMethod [
 	^ (GtCoderCompiledMethodSourceCode new fromSourceCode: self) compiledMethod: aCompiledMethod

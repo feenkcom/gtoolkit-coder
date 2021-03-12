@@ -2,7 +2,8 @@ Class {
 	#name : #GtSourceCoderRequester,
 	#superclass : #Object,
 	#instVars : [
-		'coder'
+		'coder',
+		'requesterObject'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -26,6 +27,16 @@ GtSourceCoderRequester >> editor [
 
 { #category : #requester }
 GtSourceCoderRequester >> notify: message at: anIndex in: aString [
+]
+
+{ #category : #accessing }
+GtSourceCoderRequester >> requesterObject [
+	^ requesterObject
+]
+
+{ #category : #accessing }
+GtSourceCoderRequester >> requesterObject: anObject [
+	requesterObject := anObject
 ]
 
 { #category : #requester }

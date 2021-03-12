@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPharoAssociation,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Pharo'
+	#category : #'GToolkit-Coder-Support-Pharo'
 }
 
 { #category : #'instance creation' }

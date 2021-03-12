@@ -10,7 +10,7 @@ Class {
 GtMethodCoderByScripterExamples >> basicMethodCoder [
 	<gtExample>
 	| aCoder |
-	aCoder := GtMethodCoder new.
+	aCoder := GtPharoMethodCoder new.
 	self assert: aCoder selector isNil.
 	self assert: aCoder behavior equals: UndefinedObject.
 	self assert: aCoder protocol isNil.
@@ -291,7 +291,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter absenceOfContextActionNam
 	aScripter check 
 		label: 'Check Context Action Existence Named ', anActionName asString;
 		nonSatisfies: [ :aContextActions | aContextActions title = anActionName translated
-			and: [ aContextActions action method = (GtMethodCoder>>#exampleAstFor:into:) ] ];
+			and: [ aContextActions action method = (GtPharoMethodCoder>>#exampleAstFor:into:) ] ];
 		onModel;
 		onChildFromMessage: #contextActions.
 	
@@ -326,7 +326,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter existenceOfContextActionN
 	aScripter check 
 		label: 'Check Context Action Existence Named ', anActionName asString;
 		anySatisfies: [ :aContextActions | aContextActions title = anActionName translated
-			and: [ aContextActions action method = (GtMethodCoder>>#exampleAstFor:into:) ] ];
+			and: [ aContextActions action method = (GtPharoMethodCoder>>#exampleAstFor:into:) ] ];
 		onModel;
 		onChildFromMessage: #contextActions.
 	
@@ -915,7 +915,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_02_select [
 			aSourceEditor selecter
 				from: 42 to: 67;
 				select ];
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 
 	aScripter wait forEmptySpaceTaskQueue.
 	
@@ -923,7 +923,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_02_select [
 		label: 'Check selected text';
 		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ]
 			equals: [ '{1} := {1} + 42' format: { (aScripter model attributeNamed:  #fakeInstVarNames) first } ];
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 
 	^ aScripter syncContinue
 ]
@@ -936,7 +936,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_03_context_menu [
 	aScripter := self forUnaryExtraction_02_select.
 	aScripter secondaryClick
 		label: 'Open context menu';
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 
 	aScripter wait forEmptySpaceTaskQueue.
 
@@ -997,7 +997,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_05_click_extract_method [
 				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRenameEditorAttribute ]
 				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
 			equals: [ 48 to: 48 ];
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 
 	aScripter check
 		label: 'Check refactoring changes attribute';
@@ -1006,34 +1006,34 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_05_click_extract_method [
 				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRefactoringChangesAttribute ]
 				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
 			equals: [ 48 to: 48 ];
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 		
 	aScripter check
 		label: 'Check source editor is not focused';
 		satisfies: [ :aCoderEditor | aCoderEditor isFocused not ];
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 		
 	aScripter check
 		label: 'Check source editor has focus';
 		satisfies: [ :aCoderEditor | aCoderEditor hasFocus ];
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 	
 	aScripter check
 		label: 'Check method name editor source code';
 		value: [ :aNameEditor | aNameEditor text asString ] equals: '_';
-		onChildNamed: GtSourceCoder sourceEditorName;
+		onChildNamed: GtPharoSourceCoder sourceEditorName;
 		onBreadthFirstChildOfClass: GtRenameEditor.
 		
 	aScripter check
 		label: 'Check method name editor selected text';
 		value: [ :aNameEditor | aNameEditor editor selectedText asString ] equals: '_';
-		onChildNamed: GtSourceCoder sourceEditorName;
+		onChildNamed: GtPharoSourceCoder sourceEditorName;
 		onBreadthFirstChildOfClass: GtRenameEditor.
 
 	aScripter check
 		label: 'Check method name editor has focus';
 		satisfies: [ :aNameEditor | aNameEditor isFocused ];
-		onChildNamed: GtSourceCoder sourceEditorName;
+		onChildNamed: GtPharoSourceCoder sourceEditorName;
 		onBreadthFirstChildOfClass: GtRenameEditor.
 
 	^ aScripter syncContinue
@@ -1096,7 +1096,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_07_01_accept_with_enter [
 			aCoderEditor text
 				hasAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRenameEditorAttribute ] ]
 			equals: false;
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 
 	aScripter check
 		label: 'Check refactoring changes attribute';
@@ -1105,12 +1105,12 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_07_01_accept_with_enter [
 				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRefactoringChangesAttribute ]
 				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
 			equals: [ 57 to: 57 ];
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 		
 	aScripter check
 		label: 'Check source editor is focused';
 		satisfies: [ :aCoderEditor | aCoderEditor isFocused ];
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 
 	^ aScripter syncContinue
 ]
@@ -1155,7 +1155,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_09_apply_refactoring [
 				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRefactoringChangesAttribute ]
 				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
 			equals: [ nil ];
-		onChildNamed: GtSourceCoder sourceEditorName.
+		onChildNamed: GtPharoSourceCoder sourceEditorName.
 
 	aScripter check
 		onBreadthFirstChildOfClass: GtRefactoringsPreviewButton;

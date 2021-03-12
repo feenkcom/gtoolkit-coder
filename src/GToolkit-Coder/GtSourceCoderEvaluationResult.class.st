@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'sourceCoder',
 		'sourceString',
-		'sourceInterval'
+		'sourceInterval',
+		'requesterObject'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -27,6 +28,16 @@ GtSourceCoderEvaluationResult >> isSuccess [
 { #category : #testing }
 GtSourceCoderEvaluationResult >> isSyntaxError [
 	^ false
+]
+
+{ #category : #accessing }
+GtSourceCoderEvaluationResult >> requesterObject [
+	^ requesterObject
+]
+
+{ #category : #accessing }
+GtSourceCoderEvaluationResult >> requesterObject: anObject [
+	requesterObject := anObject
 ]
 
 { #category : #accessing }

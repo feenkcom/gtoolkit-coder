@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'tagsElement'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Method'
+	#category : #'GToolkit-Coder-Pharo-UI-! Views'
 }
 
 { #category : #private }

@@ -5,7 +5,7 @@ Class {
 		'referencingMethod',
 		'referencedClass'
 	],
-	#category : #'GToolkit-Coder-Pharo'
+	#category : #'GToolkit-Coder-Support-Pharo'
 }
 
 { #category : #accessing }

@@ -5,7 +5,7 @@ Class {
 		'superclass',
 		'subclass'
 	],
-	#category : #'GToolkit-Coder-Pharo'
+	#category : #'GToolkit-Coder-Support-Pharo'
 }
 
 { #category : #'instance creation' }

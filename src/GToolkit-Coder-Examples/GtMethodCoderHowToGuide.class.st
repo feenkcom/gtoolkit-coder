@@ -16,5 +16,5 @@ Class {
 GtMethodCoderHowToGuide >> coderForMethod [
 	<gtExample>
 	
-	^ GtMethodCoder forMethod: GtBehaviorCoderDummyClass >> #instVarB:
+	^ GtPharoMethodCoder forMethod: GtBehaviorCoderDummyClass >> #instVarB:
 ]

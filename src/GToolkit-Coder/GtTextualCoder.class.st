@@ -42,6 +42,20 @@ GtTextualCoder >> appendString: aString [
 		self sourceChanged ]
 ]
 
+{ #category : #'api - text' }
+GtTextualCoder >> appendText: aText [
+	self critical: [
+		self sourceCode appendText: aText.
+		self sourceChanged ]
+]
+
+{ #category : #'api - text' }
+GtTextualCoder >> appendText: aText with: aGtCoderUpdateStragegy [
+	self critical: [
+		self sourceCode appendText: aText.
+		self sourceChangedWith: aGtCoderUpdateStragegy ]
+]
+
 { #category : #'api - accessing' }
 GtTextualCoder >> ast [
 	^ self subclassResponsibility
@@ -116,6 +130,15 @@ GtTextualCoder >> currentSourceText: aText [
 ]
 
 { #category : #'api - text' }
+GtTextualCoder >> currentSourceText: aText with: aGtCoderUpdateStragegy [
+	"Set a new source text"
+
+	self critical: [ 
+		self sourceCode currentSourceText: aText.
+		self sourceChangedWith: aGtCoderUpdateStragegy ]
+]
+
+{ #category : #'api - text' }
 GtTextualCoder >> currentSourceTextSynchronously: aText [
 	"Set a new source text"
 
@@ -168,6 +191,15 @@ GtTextualCoder >> newSourceStylerFrom: anEditorElement [
 	<return: #BlTextStyler>
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'private - notifying' }
+GtTextualCoder >> notifyCorrectionFrom: aFromIndex to: aToIndex with: aString [
+	self announce: (GtCoderCorrectionRequest new
+		coder: self;
+		fromIndex: aFromIndex;
+		toIndex: aToIndex;
+		correctionString: aString)
 ]
 
 { #category : #'private - notifying' }
@@ -293,7 +325,7 @@ GtTextualCoder >> sourceCodeSynchronously: aGtCoderSourceCode [
 
 { #category : #'api - text' }
 GtTextualCoder >> sourceText [
-	"Return the source text for this coder. The computation of the source text may be expensive, use me with caution.
+	"Return the source text of this coder. The computation of the source text may be expensive, use me with caution.
 	If the operation you would like to perform on the source text is optional consider using #sourceTextDo:"
 	<return: #BlText>
 

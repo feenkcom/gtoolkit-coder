@@ -299,7 +299,7 @@ GtSourceCoderEditorElement >> restoreCoderElementStateFrom: aGtSourceCoderUIMode
 	self editor restoreState: aGtSourceCoderUIModel editorState.
 	interactions := aGtSourceCoderUIModel coder shortcuts copy.
 	self text: aGtSourceCoderUIModel coder sourceText.
-	self editor model: aGtSourceCoderUIModel coder.
+	self editor model: aGtSourceCoderUIModel.
 	self editor addEditorShortcuts: interactions.
 	
 	completion := GtCompletionController

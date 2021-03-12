@@ -38,7 +38,7 @@ GtMethodCoderExplanationStylerExamples >> b [
 GtMethodCoderExplanationStylerExamples >> coderOnViewMethod [
 	| selectors variables coder coderElement |
 	
-	coder := GtMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsOn:).
+	coder := GtPharoMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsOn:).
 	
 	selectors := GtSelectorExplanationLinkStyler new coder: coder.
 	selectors addSelectors: 
@@ -84,7 +84,7 @@ GtMethodCoderExplanationStylerExamples >> explanationLinkExample [
 	variables := GtVariableExplanationLinkStyler new.
 	variables addVariables: {'self'. 'y' }.
 	
-	coder := GtMethodCoder forMethod: (GtPharoMethodExample>>#exampleWithNumber:).
+	coder := GtPharoMethodCoder forMethod: (GtPharoMethodExample>>#exampleWithNumber:).
 	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { variables. selectors }).
 	coderElement := (coder asCoderUIModel expanded: true) asElement.
 	coderElement forceLayout.

@@ -1,14 +1,14 @@
 Class {
-	#name : #GtMethodCoderUIModel,
-	#superclass : #GtSourceCoderUIModel,
+	#name : #GtPharoMethodCoderViewModel,
+	#superclass : #GtSourceCoderViewModel,
 	#instVars : [
 		'savePreventors'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Method Model'
+	#category : #'GToolkit-Coder-Pharo-UI-! View Models'
 }
 
 { #category : #'api - actions' }
-GtMethodCoderUIModel >> allowSave [
+GtPharoMethodCoderViewModel >> allowSave [
 	"Remove all save prventors and recompute the updated save availability"
 
 	savePreventors removeAll.
@@ -16,7 +16,7 @@ GtMethodCoderUIModel >> allowSave [
 ]
 
 { #category : #'api - actions' }
-GtMethodCoderUIModel >> allowSaveDueTo: aSavePreventor [
+GtPharoMethodCoderViewModel >> allowSaveDueTo: aSavePreventor [
 	savePreventors
 		remove: aSavePreventor
 		ifAbsent: [ ^ self ].
@@ -28,13 +28,13 @@ GtMethodCoderUIModel >> allowSaveDueTo: aSavePreventor [
 ]
 
 { #category : #'api - actions' }
-GtMethodCoderUIModel >> discardChanges [
+GtPharoMethodCoderViewModel >> discardChanges [
 	super discardChanges.
 	self allowSave
 ]
 
 { #category : #accessing }
-GtMethodCoderUIModel >> elementClass [
+GtPharoMethodCoderViewModel >> elementClass [
 	self coders
 		ifNil: [ ^ GtExpandableMethodCoderElement ].
 
@@ -44,7 +44,7 @@ GtMethodCoderUIModel >> elementClass [
 ]
 
 { #category : #'gt-extension' }
-GtMethodCoderUIModel >> gtInfo [
+GtPharoMethodCoderViewModel >> gtInfo [
 	^ super gtInfo, (Array streamContents: [ :aStream |
 		aStream nextPut: (#saveEnabled -> self isSaveEnabled).
 		self isSaveEnabled
@@ -52,29 +52,29 @@ GtMethodCoderUIModel >> gtInfo [
 ]
 
 { #category : #initialization }
-GtMethodCoderUIModel >> initialize [
+GtPharoMethodCoderViewModel >> initialize [
 	super initialize.
 	
 	savePreventors := OrderedCollection new
 ]
 
 { #category : #testing }
-GtMethodCoderUIModel >> isSaveEnabled [
+GtPharoMethodCoderViewModel >> isSaveEnabled [
 	^ savePreventors isEmpty
 ]
 
 { #category : #'private - notifying' }
-GtMethodCoderUIModel >> notifySaveDisabled [
+GtPharoMethodCoderViewModel >> notifySaveDisabled [
 	self announcerUIModel announce: (GtMethodCoderSaveDisabled new preventors: savePreventors asArray)
 ]
 
 { #category : #'private - notifying' }
-GtMethodCoderUIModel >> notifySaveEnabled [
+GtPharoMethodCoderViewModel >> notifySaveEnabled [
 	self announcerUIModel announce: (GtMethodCoderSaveEnabled new)
 ]
 
 { #category : #'api - actions' }
-GtMethodCoderUIModel >> preventSaveDueTo: aSavePreventor [
+GtPharoMethodCoderViewModel >> preventSaveDueTo: aSavePreventor [
 	(savePreventors includes: aSavePreventor)
 		ifTrue: [ ^ self ].
 

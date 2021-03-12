@@ -9,10 +9,10 @@ GtCoderCollapsedContentElementExamples >> forExampleCoder [
 	<gtExample>
 	| aMethodCoder aContentElement |
 	
-	aMethodCoder := GtMethodCoder forMethod: self class >> #greenExample.
+	aMethodCoder := GtPharoMethodCoder forMethod: self class >> #greenExample.
 	aContentElement := GtSourceCoderCollapsedContentElement new
 		coderUIModel: aMethodCoder asCoderUIModel.
-	aContentElement look: GtSourceCoderCollapsedWithoutHeaderLook.
+	aContentElement look: GtSourceCoderCollapsedTextAndExampleLook.
 
 	^ aContentElement
 ]
@@ -21,11 +21,13 @@ GtCoderCollapsedContentElementExamples >> forExampleCoder [
 GtCoderCollapsedContentElementExamples >> forMethodCoder [
 	<gtExample>
 	| aMethodCoder aContentElement |
-	aMethodCoder := GtMethodCoder
+	aMethodCoder := GtPharoMethodCoder
 		forMethod: BlElement >> #position:extent:context:.
 	aContentElement := GtSourceCoderCollapsedContentElement new
 		coderUIModel: aMethodCoder asCoderUIModel.
-	aContentElement look: GtSourceCoderCollapsedWithHeaderLook.
+	
+	aContentElement look: GtMethodCoderHeaderLook + GtSourceCoderCollapsedTextLook.
+	
 	^ aContentElement
 ]
 
@@ -44,7 +46,7 @@ GtCoderCollapsedContentElementExamples >> noExample [
 GtCoderCollapsedContentElementExamples >> textAndExampleLook_withExampleMethod [
 	<gtExample>
 	| aMethodCoder aContentElement |
-	aMethodCoder := GtMethodCoder forMethod: self class >> #greenExample.
+	aMethodCoder := GtPharoMethodCoder forMethod: self class >> #greenExample.
 	aMethodCoder example run.
 	aContentElement := GtSourceCoderCollapsedContentElement new
 		coderUIModel: aMethodCoder asCoderUIModel.
@@ -57,7 +59,7 @@ GtCoderCollapsedContentElementExamples >> textAndExampleLook_withExampleMethod [
 GtCoderCollapsedContentElementExamples >> textAndExampleLook_withRegularMethod [
 	<gtExample>
 	| aMethodCoder aContentElement |
-	aMethodCoder := GtMethodCoder forMethod: self class >> #noExample.
+	aMethodCoder := GtPharoMethodCoder forMethod: self class >> #noExample.
 	aContentElement := GtSourceCoderCollapsedContentElement new
 		coderUIModel: aMethodCoder asCoderUIModel.
 	aContentElement addLook: BrLayoutResizerLook inherit.

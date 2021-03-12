@@ -42,9 +42,18 @@ GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElemen
 ]
 
 { #category : #evaluation }
+GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
+	self
+		performOnEditor: aBrTextEditor
+		element: aBrEditorElement
+		coder: aSourceCoderViewModel coder
+		dueTo: aShortcutEvent
+]
+
+{ #category : #evaluation }
 GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement dueTo: aShortcutEvent [
-	aBrTextEditor model ifNotNil: [ :aSourceCoder |
-		self performOnEditor: aBrTextEditor element: aBrEditorElement coder: aSourceCoder dueTo: aShortcutEvent ]
+	aBrTextEditor model ifNotNil: [ :aSourceCoderViewModel |
+		self performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent ]
 ]
 
 { #category : #private }

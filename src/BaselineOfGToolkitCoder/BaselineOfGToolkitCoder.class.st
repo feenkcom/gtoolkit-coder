@@ -30,24 +30,29 @@ BaselineOfGToolkitCoder >> baseline: spec [
 	spec for: #'common' do: [
 		spec 
 			baseline: 'GToolkitBasicUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.25/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-utility/src' ];
 			baseline: 'GToolkitAnnouncerUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.25/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-utility/src' ];
 			baseline: 'GToolkitCoderMetamodels' with: [
-				spec repository: 'github://feenkcom/gtoolkit-coder:v0.8.365/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-coder/src' ];
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.297/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-pager/src' ].
 		spec 
 			package: 'GToolkit-Coder' with: [
-				spec requires: #('GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitCoderMetamodels' 'GToolkitPager' ). ];
+				spec requires: #( 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitCoderMetamodels' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-UI' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkitBasicUtility' 'GToolkitPager' ). ];
+			
+			package: 'GToolkit-Coder-Pharo' with: [
+				spec requires: #('GToolkit-Coder') ];
+			package: 'GToolkit-Coder-Pharo-UI' with: [
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-UI') ];
 			package: 'GToolkit-Coder-AddOns' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' ). ];
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-Pharo-UI'). ];
 			package: 'GToolkit-Coder-Extensions' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' ). ];
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Pharo'). ];
 			package: 'GToolkit-Coder-Examples-SystemS1';
 			package: 'GToolkit-Coder-Examples' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Examples-SystemS1' ). ]. ].
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Examples-SystemS1'). ]. ].
 
 ]

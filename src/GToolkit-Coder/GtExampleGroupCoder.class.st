@@ -7,7 +7,7 @@ Class {
 { #category : #'instance creation' }
 GtExampleGroupCoder >> newCoderFor: aMethod [
 	| coder |
-	coder := GtMethodCoder forExample: aMethod.
+	coder := GtPharoMethodCoder forExample: aMethod.
 	coder coders: self.
 	^ coder
 ]

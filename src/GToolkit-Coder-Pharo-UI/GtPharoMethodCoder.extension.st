@@ -1,12 +1,12 @@
-Extension { #name : #GtMethodCoder }
+Extension { #name : #GtPharoMethodCoder }
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtMethodCoder >> asCoderUIModel [
-	^ GtMethodCoderUIModel new coder: self
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoMethodCoder >> asCoderUIModel [
+	^ GtPharoMethodCoderViewModel new coder: self
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtMethodCoder >> breadcrumbActions [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoMethodCoder >> breadcrumbActions [
 	<return: #Array of: #GtSourceCoderBreadcrumbAction>
 	^ Array
 		streamContents: [ :aStream | 
@@ -17,15 +17,15 @@ GtMethodCoder >> breadcrumbActions [
 			aStream nextPut: (GtSourceCoderBreadcrumbSpawnBehaviorAction new methodBehavior: self methodBehavior) ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtMethodCoder >> browseFrom: anEditorElement [ 
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoMethodCoder >> browseFrom: anEditorElement [ 
 	((GtCoder forMethod: self compiledMethod)
 		openInPagerFrom: anEditorElement)
 			maximized
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtMethodCoder >> buildRemoveMethodLabel: anElement [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoMethodCoder >> buildRemoveMethodLabel: anElement [
 	| references element labelText |
 	(self isNewMethod
 		or: [ selector isNil
@@ -71,4 +71,16 @@ GtMethodCoder >> buildRemoveMethodLabel: anElement [
 								ifFalse: [ 's' ])) asRopedText glamorousRegularFontAndSize;
 				action: [ anElement phlow spawnObject: references ]).
 	^ element
+]
+
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoMethodCoder >> initializeShortcuts [
+	super initializeShortcuts.
+
+	addOns
+		addShortcut: GtSourceCoderPlayShortcut new;
+		addShortcut: GtSourceCoderPlayAndInspectShortcut new;
+		addShortcut: GtSourceCoderExtractMethodShortcut new;
+		addShortcut: GtSourceCoderSaveShortcut new;
+		addShortcut: GtSourceCoderFormatShortcut new
 ]

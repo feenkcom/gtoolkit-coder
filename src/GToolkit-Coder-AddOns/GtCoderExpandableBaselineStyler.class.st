@@ -35,7 +35,7 @@ GtCoderExpandableBaselineStyler >> styleBaselineMessage: aMessageNode [
 						stencil: [ | editorElement method coder |
 							method := (Smalltalk globals
 								at: ('BaselineOf' , stringNode value) asSymbol) >> #baseline:.
-							coder := GtMethodCoder forMethod: method.
+							coder := GtPharoMethodCoder forMethod: method.
 							coder subscribeToSystem.
 							editorElement := (coder asCoderUIModel expanded: true) asElement.
 							editorElement

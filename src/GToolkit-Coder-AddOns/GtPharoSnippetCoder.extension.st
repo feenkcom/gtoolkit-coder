@@ -41,5 +41,11 @@ GtPharoSnippetCoder >> initializeAddOns [
 				sourceCoder: self;
 				isForWorkspace: true);
 		addStyler: GtCoderExpandableMethodStyler new.
-	addOns clearChanges
+	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
+	addOns clearChanges.
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoSnippetCoder >> renameIn: editorElement [
+	GtRenameAction pharoRenameSnippetLocalsOn: editorElement
 ]

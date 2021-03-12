@@ -37,3 +37,8 @@ GtCoderUpdateStragegy >> makeAsynchronous [
 GtCoderUpdateStragegy >> makeSynchronous [
 	isSynchronous := true
 ]
+
+{ #category : #accessing }
+GtCoderUpdateStragegy >> source: anObject [
+	announcementSource := anObject
+]

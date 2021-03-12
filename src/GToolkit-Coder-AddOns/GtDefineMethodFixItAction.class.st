@@ -13,7 +13,7 @@ GtDefineMethodFixItAction >> addCoderAttributeinEditor: aBrTextEditor [
 	position := node keywordsIntervals last last.
 	(aBrTextEditor text from: position to: position)
 		attributes:
-			{((GtMethodExpanderAttribute
+			{((GtPharoMethodExpanderAttribute
 				forClass: classOrMetaClass
 				andSelector: node selector) isExpanded: true)}
 ]

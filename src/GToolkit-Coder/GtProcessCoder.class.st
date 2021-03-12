@@ -54,7 +54,7 @@ GtProcessCoder >> updateCoders [
 			context := session process suspendedContext.
 			newCoders := OrderedCollection new.
 			[ context notNil and: [ context ~~ firstContext ] ]
-				whileTrue: [ coder := GtMethodContextCoder forContext: context session: session.
+				whileTrue: [ coder := GtPharoMethodContextCoder forContext: context session: session.
 					coder announcer weak
 						when: GtCoderRefreshStackAnnouncement
 						send: #updateCoders

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtExpandableMethodCoderForBehaviorElement,
 	#superclass : #GtExpandableMethodCoderElement,
-	#category : #'GToolkit-Coder-UI-Coder - Method'
+	#category : #'GToolkit-Coder-Pharo-UI-! Views'
 }
 
 { #category : #initialization }
