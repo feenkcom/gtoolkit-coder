@@ -5,6 +5,8 @@ Wraps ${class:GtCoderModel}$ and optionally adds UI related api and state. Coder
 Class {
 	#name : #GtCoderUIModel,
 	#superclass : #Object,
+	#traits : 'TGtAnnouncer',
+	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'announcer',
 		'coder',
@@ -15,16 +17,12 @@ Class {
 
 { #category : #accessing }
 GtCoderUIModel >> announcer [
-	self
-		deprecated: 'Use #coder announcer instead.'
-		transformWith: '`@receiver announcer' -> '`@receiver coder announcer'.
-
-	^ self coder announcer
+	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
 { #category : #accessing }
 GtCoderUIModel >> announcerUIModel [
-	^ announcer ifNil: [ announcer := Announcer new ]
+	^ self announcer
 ]
 
 { #category : #converting }

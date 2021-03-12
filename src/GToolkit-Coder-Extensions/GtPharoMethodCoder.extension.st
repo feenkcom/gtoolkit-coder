@@ -1,7 +1,7 @@
-Extension { #name : #GtMethodCoder }
+Extension { #name : #GtPharoMethodCoder }
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
+GtPharoMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	(anAST isNil or: [ anAST methodNode isNil ])
 		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
@@ -12,7 +12,7 @@ GtMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtMethodCoder >> explanationFor: anAST into: coderAddOns [
+GtPharoMethodCoder >> explanationFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	coderAddOns removeStylerOfType: GtSourceExplanationLinkStyler.
 	self explanationLink notNil
@@ -20,7 +20,7 @@ GtMethodCoder >> explanationFor: anAST into: coderAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
+GtPharoMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 6>
 	(self hasObjectAttribute
 		and: [ anAST notNil
@@ -40,7 +40,7 @@ GtMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtMethodCoder >> highlighterFor: anAST into: coderAddOns [
+GtPharoMethodCoder >> highlighterFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	coderAddOns removeStylerOfType: GtSourceReferenceHighlighter.
 	self highlighter notNil
@@ -48,7 +48,7 @@ GtMethodCoder >> highlighterFor: anAST into: coderAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
+GtPharoMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	(anAST isNil or: [ anAST methodNode isNil ])
 		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
@@ -57,7 +57,7 @@ GtMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
+GtPharoMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 1>
 	self isModified
 		ifTrue: [
@@ -70,7 +70,7 @@ GtMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
+GtPharoMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 7>
 	(self hasObjectAttribute
 		and: [ anAST notNil
@@ -86,7 +86,7 @@ GtMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtMethodCoder >> runGtViewFrom: anElement [
+GtPharoMethodCoder >> runGtViewFrom: anElement [
 	| view |
 	
 	self isModified
@@ -99,7 +99,7 @@ GtMethodCoder >> runGtViewFrom: anElement [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtMethodCoder >> runMondrianPaintFrom: anElement [
+GtPharoMethodCoder >> runMondrianPaintFrom: anElement [
 	| mondrian |
 	
 	self isModified

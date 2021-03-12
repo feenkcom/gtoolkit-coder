@@ -5,7 +5,7 @@ Class {
 		'trait',
 		'baseBehavior'
 	],
-	#category : #'GToolkit-Coder-Pharo'
+	#category : #'GToolkit-Coder-Support-Pharo'
 }
 
 { #category : #accessing }

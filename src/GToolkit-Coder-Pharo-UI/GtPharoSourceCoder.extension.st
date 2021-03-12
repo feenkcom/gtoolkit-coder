@@ -1,7 +1,7 @@
-Extension { #name : #GtSourceCoder }
+Extension { #name : #GtPharoSourceCoder }
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position whenComplete: aBlock [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position whenComplete: aBlock [
 	self removeRefactoringAttribute.
 	aRefactoring isNil
 		ifTrue: [ ^ self ].
@@ -12,8 +12,8 @@ GtSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position whenCom
 				completionAction: aBlock)}
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> browseBehaviorAt: aTextPosition [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> browseBehaviorAt: aTextPosition [
 	"Try to find a behavior reference at a given source text position and request to browse it"
 
 	self
@@ -25,8 +25,8 @@ GtSourceCoder >> browseBehaviorAt: aTextPosition [
 		ifNone: [  ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> browseBehaviorIn: aSourceString [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> browseBehaviorIn: aSourceString [
 	"Try to find a behavior reference within a given source code and request to browse it"
 
 	self
@@ -38,8 +38,8 @@ GtSourceCoder >> browseBehaviorIn: aSourceString [
 		ifNone: [  ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> browseImplementorsAt: aTextPosition [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> browseImplementorsAt: aTextPosition [
 	"Try to find a message selector at a given source text position and request to browse it"
 
 	self
@@ -50,8 +50,8 @@ GtSourceCoder >> browseImplementorsAt: aTextPosition [
 		ifNone: [  ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> browseImplementorsIn: aSourceString [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> browseImplementorsIn: aSourceString [
 	"Try to find a message selector within a given source string and request to browse it"
 
 	self
@@ -62,8 +62,8 @@ GtSourceCoder >> browseImplementorsIn: aSourceString [
 		ifNone: [  ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> browseReferencesAt: aTextPosition [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> browseReferencesAt: aTextPosition [
 	"Try to create a references filter for an entity at the given text position and request to browse it"
 
 	self
@@ -72,8 +72,8 @@ GtSourceCoder >> browseReferencesAt: aTextPosition [
 			ifNone: [ GtSearchNullFilter new ])
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> browseReferencesIn: aSourceString [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> browseReferencesIn: aSourceString [
 	"Try to create a references filter for an entity within a given source string and request to browse it"
 
 	self
@@ -82,23 +82,34 @@ GtSourceCoder >> browseReferencesIn: aSourceString [
 			ifNone: [ GtSearchNullFilter new ])
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> defaultCoderLook [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> defaultCoderLook [
 	^ [ GtMethodCoderHeaderLook ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> removeRefactoringAttribute [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> initializeShortcuts [
+	super initializeShortcuts.
+
+	addOns
+		addShortcut: GtSourceCoderBrowseImplementorsShortcut new;
+		addShortcut: GtSourceCoderBrowseReferencesShortcut new;
+		addShortcut: GtSourceCoderBrowseBehaviorShortcut new;
+		addShortcut: GtSourceCoderDiscardChangesShortcut new
+]
+
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> removeRefactoringAttribute [
 	self sourceText
 		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> withHeader [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> withHeader [
 	self coderLook: [ GtMethodCoderHeaderLook ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
-GtSourceCoder >> withoutHeader [
+{ #category : #'*GToolkit-Coder-Pharo-UI' }
+GtPharoSourceCoder >> withoutHeader [
 	self coderLook: nil
 ]

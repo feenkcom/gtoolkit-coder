@@ -8,7 +8,7 @@ Class {
 GtSearchMethodReferencesFilterExamples >> gtExamplePragmasAndReferencesToMethodCoder [
 	<gtExample>
 	| filter |
-	filter := #gtExample gtPragmas & GtMethodCoder gtReferences.
+	filter := #gtExample gtPragmas & GtPharoMethodCoder gtReferences.
 	self assert: (filter matches: thisContext method).
 	^ filter
 ]

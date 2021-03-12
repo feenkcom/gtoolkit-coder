@@ -26,8 +26,9 @@ GtExpandableSourceCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollap
 
 	"Initialize look just once"
 	aCollapsedElement look
-		ifNil: [ self addCodersCoderLook: aSourceCoder to: aCollapsedElement.
-			aCollapsedElement addLook: GtSourceCoderCollapsedWithoutHeaderLook ]
+		ifNil: [
+			self addCodersCoderLook: aSourceCoder to: aCollapsedElement.
+			aCollapsedElement addLook: GtSourceCoderCollapsedTextAndExampleLook ]
 ]
 
 { #category : #private }
@@ -38,12 +39,12 @@ GtExpandableSourceCoderElement >> assignExpandedCoder: aSourceCoder to: anExpand
 	anExpandedElement look
 		ifNil: [
 			self addCodersCoderLook: aSourceCoder to: anExpandedElement.
-			anExpandedElement addLook: GtSourceCoderExpandedWithoutHeaderLook ]
+			anExpandedElement addLook: GtSourceCoderEditorLook ]
 ]
 
 { #category : #accessing }
 GtExpandableSourceCoderElement >> coderUIModel [
-	<return: #GtMethodCoder>
+	<return: #GtPharoMethodCoder>
 	self
 		assert: [ coderUIModel isNotNil ]
 		description: [ 'Coder is not set!' ].

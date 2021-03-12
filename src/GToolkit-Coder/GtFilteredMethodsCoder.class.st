@@ -36,7 +36,7 @@ GtFilteredMethodsCoder >> additionalFilters: aCollection [
 
 { #category : #'private - accessing' }
 GtFilteredMethodsCoder >> allCoders [
-	<return: #Collection of: #GtMethodCoder>
+	<return: #Collection of: #GtPharoMethodCoder>
 	"Return all non-filtered coders.
 	I keep all coders in this variable to keep state of all coders while filtering."
 	^ allCoders
@@ -73,7 +73,7 @@ GtFilteredMethodsCoder >> classNames [
 
 { #category : #'private - accessing' }
 GtFilteredMethodsCoder >> coderFor: aCompiledMethod [
-	<return: #GtMethodCoder>
+	<return: #GtPharoMethodCoder>
 	^ self allCoders 
 		detect: [ :eachCoder | eachCoder isForMethod: aCompiledMethod ] 
 		ifFound: [ :aCoder | aCoder ] 

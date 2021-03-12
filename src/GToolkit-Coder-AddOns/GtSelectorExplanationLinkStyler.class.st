@@ -35,7 +35,7 @@ GtSelectorExplanationLinkStyler >> coder: aMethodCoder [
 GtSelectorExplanationLinkStyler >> initialize [
 	super initialize.
 	selectorsDictionary := IdentityDictionary new.
-	coder := GtMethodCoder new.
+	coder := GtPharoMethodCoder new.
 ]
 
 { #category : #accessing }

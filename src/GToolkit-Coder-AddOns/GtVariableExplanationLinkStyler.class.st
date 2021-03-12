@@ -35,7 +35,7 @@ GtVariableExplanationLinkStyler >> coder: aMethodCoder [
 GtVariableExplanationLinkStyler >> initialize [
 	super initialize.
 	variablesDictionary := IdentityDictionary new.
-	coder := GtMethodCoder new.
+	coder := GtPharoMethodCoder new.
 ]
 
 { #category : #asserting }

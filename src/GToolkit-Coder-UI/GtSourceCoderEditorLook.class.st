@@ -25,7 +25,7 @@ GtSourceCoderEditorLook >> initialize [
 	editorElement := self newEditorElement.
 	actions := self newActionsElement.
 
-	self addChangeAddChildAs: { #content . GtSourceCoder sourceEditorName } with: [ editorElement ].
+	self addChangeAddChildAs: { #content . GtSourceCoderEditorId uniqueInstance asSymbol } with: [ editorElement ].
 	self addChangeAddChildAs: #(content actions) with: [ actions ].
 	
 	self add: (BrLayoutResizerLook new inherit: editorElement)

@@ -42,10 +42,15 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec requires: #( 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitCoderMetamodels' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-UI' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkitBasicUtility' 'GToolkitPager' ). ];
+			
+			package: 'GToolkit-Coder-Pharo' with: [
+				spec requires: #('GToolkit-Coder') ];
+			package: 'GToolkit-Coder-Pharo-UI' with: [
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-UI') ];
 			package: 'GToolkit-Coder-AddOns' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI'). ];
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-Pharo-UI'). ];
 			package: 'GToolkit-Coder-Extensions' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns'). ];
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Pharo'). ];
 			package: 'GToolkit-Coder-Examples-SystemS1';
 			package: 'GToolkit-Coder-Examples' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Examples-SystemS1'). ]. ].

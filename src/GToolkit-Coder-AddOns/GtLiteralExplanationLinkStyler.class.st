@@ -35,7 +35,7 @@ GtLiteralExplanationLinkStyler >> coder: aMethodCoder [
 GtLiteralExplanationLinkStyler >> initialize [
 	super initialize.
 	literalsDictionary := IdentityDictionary new.
-	coder := GtMethodCoder new.
+	coder := GtPharoMethodCoder new.
 ]
 
 { #category : #accessing }

@@ -25,7 +25,7 @@ GtMethodCoderBreadcrumbElementExamples >> breadcrumbForSourceCoder [
 GtMethodCoderBreadcrumbElementExamples >> methodCoder [
 	<gtExample>
 	
-	^ GtMethodCoder forMethod: (GtBehaviorCoderDummyClass >> #instVarB:)
+	^ GtPharoMethodCoder forMethod: (GtBehaviorCoderDummyClass >> #instVarB:)
 ]
 
 { #category : #examples }
@@ -45,5 +45,5 @@ GtMethodCoderBreadcrumbElementExamples >> methodCoderBreadcrumbActions [
 GtMethodCoderBreadcrumbElementExamples >> methodCoderUIModel [
 	<gtExample>
 	
-	^ GtSourceCoderUIModel new coder: self methodCoder
+	^ GtSourceCoderViewModel new coder: self methodCoder
 ]

@@ -8,7 +8,7 @@ Class {
 	#instVars : [
 		'sourceCoderUIModel'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Method'
+	#category : #'GToolkit-Coder-Pharo-UI-! Views'
 }
 
 { #category : #accessing }

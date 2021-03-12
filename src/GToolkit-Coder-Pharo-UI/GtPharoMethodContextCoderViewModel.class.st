@@ -1,30 +1,30 @@
 Class {
-	#name : #GtMethodContextCoderUIModel,
-	#superclass : #GtMethodCoderUIModel,
-	#category : #'GToolkit-Coder-UI-Coder - Method Model'
+	#name : #GtPharoMethodContextCoderViewModel,
+	#superclass : #GtPharoMethodCoderViewModel,
+	#category : #'GToolkit-Coder-Pharo-UI-! View Models'
 }
 
 { #category : #initialization }
-GtMethodContextCoderUIModel >> initialize [
+GtPharoMethodContextCoderViewModel >> initialize [
 	super initialize.
 	
 	expanded := false
 ]
 
 { #category : #notifications }
-GtMethodContextCoderUIModel >> notifyContextPCRangeChangedTo: anInterval [
+GtPharoMethodContextCoderViewModel >> notifyContextPCRangeChangedTo: anInterval [
 	self announcerUIModel
 		announce: (GtMethodCoderContextPCRangeChanged new
 			pcRange: anInterval)
 ]
 
 { #category : #accessing }
-GtMethodContextCoderUIModel >> programCounterRange [
+GtPharoMethodContextCoderViewModel >> programCounterRange [
 	^ self coder 
 		ifNotNil: [ :aCoder | aCoder programCounterRange ]
 ]
 
 { #category : #updating }
-GtMethodContextCoderUIModel >> updateProgramCounterRange [
+GtPharoMethodContextCoderViewModel >> updateProgramCounterRange [
 	self notifyContextPCRangeChangedTo: self programCounterRange
 ]

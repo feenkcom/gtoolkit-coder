@@ -19,7 +19,7 @@ GtCoderExpandableMethodStyler >> visitMessageNode: aMessageNode [
 		styleFrom: aMessageNode keywordsIntervals last last
 		to: aMessageNode keywordsIntervals last last
 		with:
-			{(GtMethodExpanderAttribute
+			{(GtPharoMethodExpanderAttribute
 				forClass: aMethodClass
 				andSelector: aMessageNode selector)}
 ]

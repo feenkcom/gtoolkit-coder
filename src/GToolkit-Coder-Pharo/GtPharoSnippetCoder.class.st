@@ -1,12 +1,12 @@
 Class {
 	#name : #GtPharoSnippetCoder,
-	#superclass : #GtSourceCoder,
+	#superclass : #GtPharoSourceCoder,
 	#instVars : [
 		'bindingStrategy',
 		'context',
 		'xdocFilename'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Pharo-Coders'
 }
 
 { #category : #accessing }
@@ -66,17 +66,6 @@ GtPharoSnippetCoder >> initialize [
 	self forSource: ''
 ]
 
-{ #category : #initialization }
-GtPharoSnippetCoder >> initializeShortcuts [
-	super initializeShortcuts.
-
-	addOns
-		addShortcut: GtSourceCoderDoItShortcut new;
-		addShortcut: GtSourceCoderDoItAndInspectShortcut new;
-		addShortcut: GtSourceCoderPrintItShortcut new;
-		addShortcut: GtSourceCoderInlineRenameShortcut new
-]
-
 { #category : #private }
 GtPharoSnippetCoder >> newCompletionStrategy [
 	| strategy |
@@ -110,12 +99,8 @@ GtPharoSnippetCoder >> profileWithMessageTally [
 	^ self
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
 		decorated: [ :aSourceString | 'MessageTally on: [ ', aSourceString, ']' ]
+		requestedBy: self
 		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
-]
-
-{ #category : #actions }
-GtPharoSnippetCoder >> renameIn: editorElement [
-	GtRenameAction pharoRenameSnippetLocalsOn: editorElement
 ]
 
 { #category : #accessing }

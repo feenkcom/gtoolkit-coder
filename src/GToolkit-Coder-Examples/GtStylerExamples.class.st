@@ -24,7 +24,7 @@ GtStylerExamples >> expanderAttribute [
 GtStylerExamples >> indexOfExpanderIn: ropedText [
 	1 to: ropedText size do: [ :i | 
 		((ropedText attributesAt: i)
-			anySatisfy: [ :attr | attr isKindOf: GtMethodExpanderAttribute ])
+			anySatisfy: [ :attr | attr isKindOf: GtPharoMethodExpanderAttribute ])
 			ifTrue: [ ^ i ] ].
 	^ -1
 ]
@@ -72,7 +72,7 @@ GtStylerExamples >> methodExpanderAttributesIn: ropedText [
 	1 to: ropedText size do: [ :i | 
 		(ropedText attributesAt: i)
 			do: [ :attr | 
-				(attr isKindOf: GtMethodExpanderAttribute)
+				(attr isKindOf: GtPharoMethodExpanderAttribute)
 					ifTrue: [ attributes add: attr ] ] ].
 	^ attributes
 ]

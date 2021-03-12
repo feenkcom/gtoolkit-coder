@@ -1,7 +1,120 @@
-Extension { #name : #GtMethodCoder }
+Extension { #name : #GtPharoMethodCoder }
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns from: anEditorElement [
+GtPharoMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
+	aNode isVariable
+		ifFalse: [ ^ self ].
+	(aNode whoDefines: aNode name) notNil
+		ifTrue: [ ^ self ].
+	(self behavior allClassVarNames includes: aNode name asSymbol)
+		ifFalse: [ ^ self ].
+	coderAddOns
+		addContextMenuItem: (self createLabel: 'Abstract variable' description: aNode name)
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlight ]
+		action: [ :element | self abstractClassVar: aNode ].
+	(self isAccessorMethodFor: aNode)
+		ifFalse: [
+			coderAddOns
+				addContextMenuItem: (self createLabel: 'Create accessors' description: aNode name)
+				hover: [ self highlightNode: aNode ]
+				leave: [ self removeHighlight ]
+				action: [ :element | self createAccessorsFor: aNode instanceVariable: false ] ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> addExtractMethodTo: coderAddOns from: anEditorElement [
+	| nodes |
+	nodes := self rbSelectedNodesFrom: anEditorElement.
+	nodes isNil
+		ifTrue: [ ^ self ].
+	coderAddOns
+		addContextMenuItem: 'Extract method'
+		hover: [ self highlightFrom: nodes first start to: nodes last stop ]
+		leave: [ self removeHighlight ]
+		action: [ :element | self extractMethod: element ]
+		id: GtMethodCoderExtractMethodContextMenuItemId
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> addExtractTempFor: aNode to: coderAddOns [
+	aNode isValue
+		ifFalse: [ ^ self ].
+	aNode isUsed
+		ifFalse: [ ^ self ].
+	aNode isVariable
+		ifTrue: [ ^ self ].
+	aNode isAssignment
+		ifTrue: [ ^ self ].
+	aNode parent isAssignment
+		ifTrue: [ ^ self ].
+	coderAddOns
+		addContextMenuItem:
+			(self
+				createLabel: 'Extract temporary'
+				description: (self nodeDescription: aNode))
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlight ]
+		action: [ :element | self extractTemporaryVariable: aNode in: element ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> addInlineSelfMessageFor: aNode to: coderAddOns [
+	aNode isMessage
+		ifFalse: [ ^ self ].
+	aNode receiver isSelf
+		ifFalse: [ ^ self ].
+	coderAddOns
+		addContextMenuItem: (self createLabel: 'Inline Message' description: aNode selector)
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlight ]
+		action: [ :element | self inlineMessageSendIn: aNode ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> addInlineTempFor: aNode to: coderAddOns [
+	aNode isAssignment
+		ifFalse: [ ^ self ].
+	aNode variable gtIsLocal
+		ifFalse: [ ^ self ].
+	coderAddOns
+		addContextMenuItem:
+			(self
+				createLabel: 'Inline Assignment'
+				description: aNode variable name)
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlight ]
+		action: [ :element | self inlineTemporaryVariableIn: aNode ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> addInstanceAccessorRefactoringsFor: aNode to: coderAddOns [
+	aNode isVariable
+		ifFalse: [ ^ self ].
+	(aNode whoDefines: aNode name) notNil
+		ifTrue: [ ^ self ].
+	(self behavior allInstVarNames includes: aNode name)
+		ifFalse: [ ^ self ].
+	coderAddOns
+		addContextMenuItem: (self createLabel: 'Abstract variable' description: aNode name)
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlight ]
+		action: [ :element | self abstractInstVar: aNode ].
+	(self isAccessorMethodFor: aNode)
+		ifTrue: [ coderAddOns
+				addContextMenuItem: (self createLabel: 'Protect variable' description: aNode name)
+				hover: [ self highlightNode: aNode ]
+				leave: [ self removeHighlight ]
+				action: [ :element | self protectInstVar: aNode ] ]
+		ifFalse: [ coderAddOns
+				addContextMenuItem: (self createLabel: 'Create accessors' description: aNode name)
+				hover: [ self highlightNode: aNode ]
+				leave: [ self removeHighlight ]
+				action: [ :element | self createAccessorsFor: aNode instanceVariable: true ] ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns from: anEditorElement [
 	<gtCoderContextMenuAddOns: 20>
 	self addExtractMethodTo: coderAddOns from: anEditorElement.
 	(self rbSelectedNodeFrom: anEditorElement)
@@ -18,13 +131,30 @@ GtMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns from: anEditorEl
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> copyMethodNameToClipboard [
+GtPharoMethodCoder >> addRemoveParameterRefactoringFor: aNode to: coderAddOns [
+	aNode isVariable
+		ifFalse: [ ^ self ].
+	aNode parent isMethod
+		ifFalse: [ ^ self ].
+	aNode parent body
+		nodesDo: [ :each | 
+			each = aNode
+				ifTrue: [ ^ self ] ].
+	coderAddOns
+		addContextMenuItem: (self createLabel: 'Remove parameter' description: aNode name)
+		hover: [ self highlightNode: aNode ]
+		leave: [ self removeHighlight ]
+		action: [ :element | self removeParameter: aNode ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> copyMethodNameToClipboard [
 	self compiledMethod ifNotNil: [ :aCompiledMethod | 
 		Clipboard clipboardText: aCompiledMethod printString ]
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
+GtPharoMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	(self compiledMethod notNil
 		and: [ anAST notNil
@@ -74,7 +204,14 @@ GtMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> initializeAddOns [
+GtPharoMethodCoder >> extractMethod: editorElement [
+	(GtExtractMethodController new
+		coder: self;
+		sourceElement: editorElement) execute
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
 	addOns addStyler: (GtFixItStyler new sourceCoder: self).
@@ -109,7 +246,7 @@ GtMethodCoder >> initializeAddOns [
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> renameAt: aTextPosition in: anEditorElement [
+GtPharoMethodCoder >> renameAt: aTextPosition in: anEditorElement [
 	self
 		nodeAt: aTextPosition
 		ifFound: [ :aNode | 
@@ -132,21 +269,21 @@ GtMethodCoder >> renameAt: aTextPosition in: anEditorElement [
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> renameClassIn: editorElement [
+GtPharoMethodCoder >> renameClassIn: editorElement [
 	(GtRenameClassController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> renameClassVariableIn: editorElement [
+GtPharoMethodCoder >> renameClassVariableIn: editorElement [
 	(GtRenameClassVariableController new
 		coder: self;
 		sourceElement: editorElement) execute
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> renameInstanceVariableIn: editorElement node: aVariableNode [
+GtPharoMethodCoder >> renameInstanceVariableIn: editorElement node: aVariableNode [
 	(GtRenameInstanceVariableController new
 		coder: self;
 		sourceElement: editorElement;
@@ -154,12 +291,12 @@ GtMethodCoder >> renameInstanceVariableIn: editorElement node: aVariableNode [
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> renameLocalVariableIn: editorElement [
+GtPharoMethodCoder >> renameLocalVariableIn: editorElement [
 	GtRenameAction pharoRenameLocalsOn: editorElement
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtMethodCoder >> renameMethod: editorElement node: aMessageOrMethodOrMethodPatternNode [
+GtPharoMethodCoder >> renameMethod: editorElement node: aMessageOrMethodOrMethodPatternNode [
 	(GtRenameMethodController new
 		coder: self;
 		sourceElement: editorElement;

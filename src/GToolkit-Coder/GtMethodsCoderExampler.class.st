@@ -17,7 +17,7 @@ GtMethodsCoderExampler >> allExampleCodersDo: aBlock [
 
 { #category : #'api - accessing' }
 GtMethodsCoderExampler >> coderFor: aCompiledMethod [
-	<return: #GtMethodCoder>
+	<return: #GtPharoMethodCoder>
 	^ self coder coderFor: aCompiledMethod
 ]
 

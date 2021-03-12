@@ -1,22 +1,22 @@
 Class {
-	#name : #GtBlockCoder,
-	#superclass : #GtSourceCoder,
+	#name : #GtPharoBlockClosureCoder,
+	#superclass : #GtPharoSourceCoder,
 	#instVars : [
 		'class',
 		'parameters',
 		'bindingStrategy'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Pharo-Coders'
 }
 
 { #category : #'initialize-release' }
-GtBlockCoder >> addParameter: aString ofType: aBehavior [
+GtPharoBlockClosureCoder >> addParameter: aString ofType: aBehavior [
 	parameters at: aString put: aBehavior.
 	bindingStrategy bindings at: aString asSymbol put: nil
 ]
 
 { #category : #accessing }
-GtBlockCoder >> block [
+GtPharoBlockClosureCoder >> block [
 	self validateSyntax
 		ifFalse: [ ^ nil ].
 
@@ -28,12 +28,12 @@ GtBlockCoder >> block [
 ]
 
 { #category : #private }
-GtBlockCoder >> blockSource [
+GtPharoBlockClosureCoder >> blockSource [
 	^ self blockSourceFromText: self sourceText
 ]
 
 { #category : #private }
-GtBlockCoder >> blockSource: aString [
+GtPharoBlockClosureCoder >> blockSource: aString [
 	| ast startIndex endIndex |
 	ast := GtPharoParser parse: aString startingAt: GtPharoParser startingStateForStatement.
 	(ast isKindOf: GtPharoBlockNode)
@@ -51,7 +51,7 @@ GtBlockCoder >> blockSource: aString [
 ]
 
 { #category : #private }
-GtBlockCoder >> blockSourceFromText: aSourceTextOrString [
+GtPharoBlockClosureCoder >> blockSourceFromText: aSourceTextOrString [
 	^ String
 		streamContents: [ :stream | 
 			stream nextPut: $[.
@@ -69,14 +69,14 @@ GtBlockCoder >> blockSourceFromText: aSourceTextOrString [
 ]
 
 { #category : #'api - actions' }
-GtBlockCoder >> doItAll [
+GtPharoBlockClosureCoder >> doItAllThenDo: aBlock [
 	^ self
 		evaluate: [ :thisCoder | thisCoder blockSource ]
-		thenDo: [ :anEvaluationResult | self notifyEvaluatedWithResult: anEvaluationResult ]
+		thenDo: aBlock
 ]
 
 { #category : #'api - actions' }
-GtBlockCoder >> doItAndGoAll [
+GtPharoBlockClosureCoder >> doItAndGoAll [
 	^ self
 		evaluate: [ :thisCoder | thisCoder blockSource ]
 		thenDo: [ :anEvaluationResult |
@@ -85,22 +85,22 @@ GtBlockCoder >> doItAndGoAll [
 ]
 
 { #category : #'api - actions' }
-GtBlockCoder >> evaluationRequesterForEditor: aTextEditor [
+GtPharoBlockClosureCoder >> evaluationRequesterForEditor: aTextEditor [
 	^ GtBlockCoderEvaluationRequester on: self editor: aTextEditor
 ]
 
 { #category : #'initialize-release' }
-GtBlockCoder >> forSource: aString [
+GtPharoBlockClosureCoder >> forSource: aString [
 	self sourceCode: (GtCoderExplicitSourceCode new source: aString)
 ]
 
 { #category : #'api - actions' }
-GtBlockCoder >> format [
+GtPharoBlockClosureCoder >> format [
 	self currentSourceString: (self newRbAST: self currentSourceString asString) formattedCode
 ]
 
 { #category : #private }
-GtBlockCoder >> highlightBindingsStrategy [
+GtPharoBlockClosureCoder >> highlightBindingsStrategy [
 	^ self context 
 		ifNil:  [ GtHighlightingBindingStrategy new 
 			bindings: bindingStrategy bindings]
@@ -110,7 +110,7 @@ GtBlockCoder >> highlightBindingsStrategy [
 ]
 
 { #category : #'initialize-release' }
-GtBlockCoder >> initialize [
+GtPharoBlockClosureCoder >> initialize [
 	parameters := OrderedDictionary new.
 	bindingStrategy := GtHighlightingBindingStrategy new.
 	bindingStrategy bindings: Dictionary new.
@@ -119,7 +119,7 @@ GtBlockCoder >> initialize [
 ]
 
 { #category : #'initialize-release' }
-GtBlockCoder >> initializeAddOns [
+GtPharoBlockClosureCoder >> initializeAddOns [
 	super initializeAddOns.
 	
 	addOns addStyler:
@@ -130,22 +130,15 @@ GtBlockCoder >> initializeAddOns [
 	addOns clearChanges
 ]
 
-{ #category : #'initialize-release' }
-GtBlockCoder >> initializeShortcuts [
-	super initializeShortcuts.
-	
-	addOns addShortcut: GtSourceCoderFormatShortcut new
-]
-
 { #category : #private }
-GtBlockCoder >> newCompletionStrategy [
+GtPharoBlockClosureCoder >> newCompletionStrategy [
 	^ super newCompletionStrategy
 		blockVariables: parameters;
 		yourself
 ]
 
 { #category : #updating }
-GtBlockCoder >> newRbAST: aString [
+GtPharoBlockClosureCoder >> newRbAST: aString [
 	| ast |
 	ast := self
 		parseExpression: (self blockSourceFromText: aString)

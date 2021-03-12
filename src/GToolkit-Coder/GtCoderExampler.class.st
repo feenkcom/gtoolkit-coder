@@ -49,7 +49,7 @@ GtCoderExampler >> coder: anObject [
 
 { #category : #'api - accessing' }
 GtCoderExampler >> coderFor: aCompiledMethod [
-	<return: #GtMethodCoder>
+	<return: #GtPharoMethodCoder>
 	^ self subclassResponsibility
 ]
 

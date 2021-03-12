@@ -35,7 +35,7 @@ GtSourceCoderLook >> onCoderChanged: aGtSourceCoder [
 
 { #category : #'private - accessing' }
 GtSourceCoderLook >> sourceCoderUIModel [
-	<return: #GtSourceCoderUIModel>
+	<return: #GtSourceCoderViewModel>
 
 	^ (self request: GtSourceCoderContentCoderRequest oneWay) sourceCoder
 ]
