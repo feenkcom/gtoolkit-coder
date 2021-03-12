@@ -69,9 +69,10 @@ GtPharoBlockClosureCoder >> blockSourceFromText: aSourceTextOrString [
 ]
 
 { #category : #'api - actions' }
-GtPharoBlockClosureCoder >> doItAllThenDo: aBlock [
+GtPharoBlockClosureCoder >> doItAllThenDo: aBlock requestedBy: aRequesterObject [
 	^ self
 		evaluate: [ :thisCoder | thisCoder blockSource ]
+		requestedBy: aRequesterObject
 		thenDo: aBlock
 ]
 

@@ -1,3 +1,17 @@
+"
+!Source coder
+Is a language agnostic model of a source coder.
+My subclasses extend my by adding support for a specific language.
+!! Code execution
+To add support for code execution the subclasses must implement
+- ${method:GtSourceCoder>>#evaluationRequester}$.
+- ${method:GtSourceCoder>>#evaluationRequesterWithInterval}$.
+- ${method:GtSourceCoder>>#primitiveEvaluate:requester:onFailDo:}$.
+!! Code debugging
+To add support for code debugging the subclasses must implement
+- ${method:GtSourceCoder>>#debug:}$
+
+"
 Class {
 	#name : #GtSourceCoder,
 	#superclass : #GtTextualCoder,
@@ -54,13 +68,28 @@ GtSourceCoder >> doIt: aSourceIntervalOrBlock thenDo: aBlock [
 
 { #category : #'api - actions' }
 GtSourceCoder >> doItAll [
-	^ self doItAllThenDo: [ :aResult | self notifyEvaluatedWithResult: aResult ]
+	^ self doItAllRequestedBy: self
+]
+
+{ #category : #'api - actions' }
+GtSourceCoder >> doItAllRequestedBy: aRequesterObject [
+	^ self
+		doItAllThenDo: [ :aResult | self notifyEvaluatedWithResult: aResult ]
+		requestedBy: aRequesterObject
 ]
 
 { #category : #'api - actions' }
 GtSourceCoder >> doItAllThenDo: aBlock [
 	^ self
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
+		thenDo: aBlock
+]
+
+{ #category : #'api - actions' }
+GtSourceCoder >> doItAllThenDo: aBlock requestedBy: aRequesterObject [
+	^ self
+		evaluate: [ :thisCoder | thisCoder currentSourceString ]
+		requestedBy: aRequesterObject
 		thenDo: aBlock
 ]
 
@@ -138,12 +167,22 @@ GtSourceCoder >> evaluate: aSourceStringOrBlock decorated: aSourceCodeDecorator 
 ]
 
 { #category : #'private - actions' }
-GtSourceCoder >> evaluate: aSourceStringOrBlock thenDo: aThenBlock [
+GtSourceCoder >> evaluate: aSourceStringOrBlock requestedBy: aRequesterObject thenDo: aThenBlock [
 	"Evaluate a given source code and show the print string if needed"
 
 	^ self
 		evaluate: aSourceStringOrBlock
 		decorated: [ :aSource | aSource ]
+		requestedBy: aRequesterObject
+		thenDo: aThenBlock
+]
+
+{ #category : #'private - actions' }
+GtSourceCoder >> evaluate: aSourceStringOrBlock thenDo: aThenBlock [
+	"Evaluate a given source code and show the print string if needed"
+
+	^ self
+		evaluate: aSourceStringOrBlock
 		requestedBy: self
 		thenDo: aThenBlock
 ]
@@ -265,6 +304,13 @@ GtSourceCoder >> evaluationRequester [
 { #category : #'private - actions' }
 GtSourceCoder >> evaluationRequesterWithInterval [
 	^ self subclassResponsibility
+]
+
+{ #category : #'private - notifying' }
+GtSourceCoder >> notifyEvaluatedWithResult: anEvaluationResult [
+	self announce: (GtCoderEvaluationAnnouncement new 
+		evaluationResult: anEvaluationResult;
+		coder: self)
 ]
 
 { #category : #'private - actions' }

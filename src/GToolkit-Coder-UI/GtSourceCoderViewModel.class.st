@@ -27,14 +27,17 @@ GtSourceCoderViewModel >> doIt: aSourceIntervalOrBlock [
 	source code in which case the result is nil"
 	<return: #Object>
 	
-	^ self coder
-		doIt: aSourceIntervalOrBlock
-		thenDo: [ :aResult | self notifyEvaluatedWithResult: aResult ]
+	^ self coder doIt: aSourceIntervalOrBlock
 ]
 
 { #category : #'api - actions' }
 GtSourceCoderViewModel >> doItAll [
-	^ self coder doItAllThenDo: [ :aResult | self notifyEvaluatedWithResult: aResult ]
+	^ self doItAllRequestedBy: self
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAllRequestedBy: aRequesterObject [
+	^ self coder doItAllRequestedBy: aRequesterObject
 ]
 
 { #category : #accessing }
@@ -134,20 +137,6 @@ GtSourceCoderViewModel >> initialize [
 	
 	hasFocus := false.
 	expanded := true
-]
-
-{ #category : #private }
-GtSourceCoderViewModel >> notifyEvaluatedWithResult: anEvaluationResult [
-	self announce: (GtSourceCoderViewModelEvaluationAnnouncement new 
-		evaluationResult: anEvaluationResult;
-		coder: self coder)
-]
-
-{ #category : #private }
-GtSourceCoderViewModel >> notifyEvaluatedWithResult: anEvaluationResult source: aSourceObject [
-	self announce: (GtSourceCoderViewModelEvaluationAnnouncement new 
-		evaluationResult: anEvaluationResult;
-		coder: self coder)
 ]
 
 { #category : #private }
