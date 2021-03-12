@@ -11,6 +11,11 @@ GtCoderNullNavigationModel >> classesToShow [
 	^ #()
 ]
 
+{ #category : #'api - accessing' }
+GtCoderNullNavigationModel >> coderDo: aBlock [
+	"do nothing"
+]
+
 { #category : #'api - testing' }
 GtCoderNullNavigationModel >> hasSelectedClass [
 	^ false

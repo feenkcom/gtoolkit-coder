@@ -77,6 +77,11 @@ GtCoderNavigationPackagesTagsClassesModel >> coder: aCoder [
 		to: self
 ]
 
+{ #category : #'api - accessing' }
+GtCoderNavigationPackagesTagsClassesModel >> coderDo: aBlock [
+	coder ifNotNil: aBlock
+]
+
 { #category : #'api - testing' }
 GtCoderNavigationPackagesTagsClassesModel >> hasSelectedClass [
 	<return: #Boolean>

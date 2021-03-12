@@ -18,6 +18,13 @@ GtPackageTagCoder class >> forPackageTag: aPackageTag [
 		yourself
 ]
 
+{ #category : #'api - converting' }
+GtPackageTagCoder >> asNewCoderModelWithSameSubject [
+	"Return new coder model with same subject (e.g., package, class, method)"
+	<return: #GtCoderModel>
+	^ self class forPackageTag: self packageTag
+]
+
 { #category : #asserting }
 GtPackageTagCoder >> assertCoder: aCoder [
 	self 

@@ -81,6 +81,13 @@ GtCoderModel >> announcer [
 	^ announcer
 ]
 
+{ #category : #'api - converting' }
+GtCoderModel >> asNewCoderModelWithSameSubject [
+	"Return new coder model with same subject (e.g., package, class, method)"
+	<return: #GtCoderModel>
+	^ self subclassResponsibility
+]
+
 { #category : #'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol [
 	^ attributes notNil
