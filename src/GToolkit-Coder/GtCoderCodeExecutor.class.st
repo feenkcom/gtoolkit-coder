@@ -59,13 +59,13 @@ GtCoderCodeExecutor >> coderUIModel: anObject [
 { #category : #initialization }
 GtCoderCodeExecutor >> doIt [
 	"Execute a code (and do not display the execution result)"
-	allAction := #doItAll.
+	allAction := #doItAllRequestedBy:.
 	selectionAction := #doIt:.
 ]
 
 { #category : #'private - execution' }
 GtCoderCodeExecutor >> doItAll [
-	self coder perform: allAction
+	self coder perform: allAction withEnoughArguments: { self event currentTarget }
 ]
 
 { #category : #initialization }

@@ -359,13 +359,6 @@ GtPharoSourceCoder >> nodeToSelector: aNode ifFound: aFoundBlock ifNone: aNoneBl
 ]
 
 { #category : #'private - notifying' }
-GtPharoSourceCoder >> notifyEvaluatedWithResult: anEvaluationResult [
-	self announce: (GtCoderEvaluationAnnouncement new 
-		evaluationResult: anEvaluationResult;
-		coder: self)
-]
-
-{ #category : #'private - notifying' }
 GtPharoSourceCoder >> notifyObjectSpawn: anObject [
 	self
 		notifyObjectSpawn: anObject
