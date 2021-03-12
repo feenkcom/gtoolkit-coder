@@ -272,8 +272,6 @@ GtPharoSourceCoder >> newSourceStylerFrom: anEditorElement [
 	| anAddOnsCopy |
 
 	anAddOnsCopy := self addOns stylers copy.
-	anAddOnsCopy do: [ :eachAddOn | 
-		eachAddOn editorElement: anEditorElement ].
 
 	^ (GtSourceCoderTextStyler forCoder: self)
 		stylers: anAddOnsCopy;

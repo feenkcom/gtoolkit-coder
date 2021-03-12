@@ -2,7 +2,6 @@ Class {
 	#name : #GtFixItStyler,
 	#superclass : #GtASTStyler,
 	#instVars : [
-		'editorElement',
 		'sourceCoder',
 		'isForWorkspace'
 	],
@@ -18,22 +17,6 @@ GtFixItStyler >> canAddInstanceVariable: aString to: aClass [
 	true ]
 		on: RBRefactoringError
 		do: [ :ex | ex return: false ]
-]
-
-{ #category : #'private - accessing editor' }
-GtFixItStyler >> cursorPositionDo: aBlock [
-	self editorElement editor cursors do: [ :eachCursor | ^ aBlock value: eachCursor position ]
-]
-
-{ #category : #accessing }
-GtFixItStyler >> editorElement [
-	<return: #BrEditorElement>
-	^ editorElement
-]
-
-{ #category : #accessing }
-GtFixItStyler >> editorElement: anEditorElement [
-	editorElement := anEditorElement
 ]
 
 { #category : #'private - variables' }
@@ -153,30 +136,27 @@ GtFixItStyler >> typeOf: aNode [
 
 { #category : #visiting }
 GtFixItStyler >> visitMessageNode: aNode [
-	| cursor intervals |
-	cursor := -1.
-	self cursorPositionDo: [ :pos | cursor := pos ].
+	| intervals |
+
 	intervals := aNode keywordsIntervals.
-	(intervals
-		anySatisfy: [ :each | cursor between: each first and: each last ])
-		ifFalse: [
-			(self
-				typeOf: aNode receiver
-				in: (isForWorkspace ifFalse: [ sourceCoder behavior ]))
-				ifNotNil: [ :class | 
-					(class whichClassIncludesSelector: aNode selector)
-						ifNil: [
-							(((class isTrait
-								and: [ (Object whichClassIncludesSelector: aNode selector) notNil ]) ) or: [ self hasRefactoring ])
-									ifFalse: [ | attribute |
-										attribute := GtFixItAttribute new.
-										attribute
-											fixItActions: [ {((GtDefineMethodFixItAction forCoder: sourceCoder node: aNode)
-													classOrMetaClass: class)} ].
-										self
-											styleFrom: intervals last last
-											to: intervals last last
-											with: {attribute} ] ] ] ].
+	(self
+		typeOf: aNode receiver
+		in: (isForWorkspace ifFalse: [ sourceCoder behavior ]))
+		ifNotNil: [ :class | 
+			(class whichClassIncludesSelector: aNode selector)
+				ifNil: [
+					(((class isTrait
+						and: [ (Object whichClassIncludesSelector: aNode selector) notNil ]) ) or: [ self hasRefactoring ])
+							ifFalse: [ | attribute |
+								attribute := GtFixItAttribute new.
+								attribute
+									fixItActions: [ {((GtDefineMethodFixItAction forCoder: sourceCoder node: aNode)
+											classOrMetaClass: class)} ].
+								self
+									styleFrom: intervals last last
+									to: intervals last last
+									with: {attribute} ] ] ].
+
 	super visitMessageNode: aNode
 ]
 
@@ -192,17 +172,15 @@ GtFixItStyler >> visitMethodNode: aMethodNode [
 GtFixItStyler >> visitVariableNode: aVariableNode [
 	(aVariableNode isUndeclared
 		and: [ isForWorkspace not or: [ aVariableNode name first isUppercase ] ])
-		ifTrue: [ | cursor |
-			cursor := -1.
-			self cursorPositionDo: [ :pos | cursor := pos ].
-			(cursor between: aVariableNode start and: aVariableNode stop)
-				ifFalse: [ | attribute |
-					attribute := GtFixItAttribute new.
-					attribute
-						fixItActions: [ self fixItActionsForVariable: aVariableNode ].
-					self
-						styleFrom: aVariableNode stop
-						to: aVariableNode stop
-						with: {attribute} ] ].
+		ifTrue: [
+			 | attribute |
+			attribute := GtFixItAttribute new.
+			attribute
+				fixItActions: [ self fixItActionsForVariable: aVariableNode ].
+			self
+				styleFrom: aVariableNode stop
+				to: aVariableNode stop
+				with: {attribute} ].
+
 	super visitVariableNode: aVariableNode
 ]
