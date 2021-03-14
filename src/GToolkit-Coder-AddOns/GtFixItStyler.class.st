@@ -1,6 +1,6 @@
 Class {
 	#name : #GtFixItStyler,
-	#superclass : #GtASTStyler,
+	#superclass : #GtRBASTStyler,
 	#instVars : [
 		'sourceCoder',
 		'isForWorkspace'

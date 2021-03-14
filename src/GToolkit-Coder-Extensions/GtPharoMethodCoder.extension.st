@@ -4,8 +4,7 @@ Extension { #name : #GtPharoMethodCoder }
 GtPharoMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	(anAST isNil or: [ anAST methodNode isNil ])
-		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
-			^ self ].
+		ifTrue: [ ^ self ].
 	(self behavior isNil or: [ (self behavior inheritsFrom: BaselineOf) not ])
 		ifTrue: [ ^ self ].
 	coderAddOns addStyler: GtCoderExpandableBaselineStyler new
@@ -14,7 +13,7 @@ GtPharoMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> explanationFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	coderAddOns removeStylerOfType: GtSourceExplanationLinkStyler.
+
 	self explanationLink notNil
 		ifTrue: [ coderAddOns addStyler: self explanationLink ].
 ]
@@ -31,8 +30,8 @@ GtPharoMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 										anySatisfy:
 											[ :each | each isParseError not and: [ each selector = #gtView ] ] ] ]
 						ifNil: [ false ] ] ])
-		ifFalse: [ coderAddOns removeContextAction: 'gtView' translated.
-			^ self ].
+		ifFalse: [ ^ self ].
+
 	coderAddOns
 		addContextAction: 'gtView' translated
 		icon: BrGlamorousVectorIcons playinspect
@@ -42,7 +41,6 @@ GtPharoMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> highlighterFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	coderAddOns removeStylerOfType: GtSourceReferenceHighlighter.
 	self highlighter notNil
 		ifTrue: [ coderAddOns addStyler: self highlighter ]
 ]
@@ -51,9 +49,8 @@ GtPharoMethodCoder >> highlighterFor: anAST into: coderAddOns [
 GtPharoMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
 	(anAST isNil or: [ anAST methodNode isNil ])
-		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
-			^ self ].
-	coderAddOns addStyler: GtCoderExpandableMethodStyler new
+		ifTrue: [ ^ self ].
+	coderAddOns addStyler: (GtCoderExpandablePharoMethodStyler new coder: self)
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
@@ -77,8 +74,8 @@ GtPharoMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
 				and: [ anAST methodNode
 						ifNotNil: [ :node | self isMondrianPaintMethod: node ]
 						ifNil: [ false ] ] ])
-		ifFalse: [ coderAddOns removeContextAction: 'Mondrian' translated.
-			^ self ].
+		ifFalse: [ ^ self ].
+
 	coderAddOns
 		addContextAction: 'Mondrian' translated
 		icon: BrGlamorousVectorIcons playinspect

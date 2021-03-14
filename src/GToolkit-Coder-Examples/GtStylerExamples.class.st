@@ -14,7 +14,7 @@ GtStylerExamples >> expanderAttribute [
 		compilationContext: (CompilationContext new class: Collection).
 	ast doSemanticAnalysis.
 	text := source asRopedText.
-	GtCoderExpandableMethodStyler new style: text ast: ast.
+	GtCoderExpandablePharoMethodStyler new style: text ast: ast.
 	index := source indexOfSubCollection: 'do:'.
 	self assert: (self indexOfExpanderIn: text) = (index + 2).
 	^ text
@@ -39,7 +39,7 @@ GtStylerExamples >> messageToGlobal [
 		compilationContext: (CompilationContext new class: Collection).
 	ast doSemanticAnalysis.
 	text := source asRopedText.
-	GtCoderExpandableMethodStyler new style: text ast: ast.
+	GtCoderExpandablePharoMethodStyler new style: text ast: ast.
 	self
 		assert:
 			((self methodExpanderAttributesIn: text)
@@ -57,7 +57,7 @@ GtStylerExamples >> messageToLiteral [
 		compilationContext: (CompilationContext new class: Collection).
 	ast doSemanticAnalysis.
 	text := source asRopedText.
-	GtCoderExpandableMethodStyler new style: text ast: ast.
+	GtCoderExpandablePharoMethodStyler new style: text ast: ast.
 	self
 		assert:
 			((self methodExpanderAttributesIn: text)
@@ -87,7 +87,7 @@ GtStylerExamples >> missingSelfSend [
 		compilationContext: (CompilationContext new class: Collection).
 	ast doSemanticAnalysis.
 	text := source asRopedText.
-	GtCoderExpandableMethodStyler new style: text ast: ast.
+	GtCoderExpandablePharoMethodStyler new style: text ast: ast.
 	self
 		assert:
 			((self methodExpanderAttributesIn: text)
@@ -105,7 +105,7 @@ GtStylerExamples >> missingSuperSend [
 		compilationContext: (CompilationContext new class: Collection).
 	ast doSemanticAnalysis.
 	text := source asRopedText.
-	GtCoderExpandableMethodStyler new style: text ast: ast.
+	GtCoderExpandablePharoMethodStyler new style: text ast: ast.
 	self
 		assert:
 			((self methodExpanderAttributesIn: text)
@@ -123,7 +123,7 @@ GtStylerExamples >> superExpanderAttribute [
 		compilationContext: (CompilationContext new class: SequenceableCollection).
 	ast doSemanticAnalysis.
 	text := source asRopedText.
-	GtCoderExpandableMethodStyler new style: text ast: ast.
+	GtCoderExpandablePharoMethodStyler new style: text ast: ast.
 	index := source indexOfSubCollection: 'do:'.
 	self assert: (self indexOfExpanderIn: text) = (index + 2).
 	^ text

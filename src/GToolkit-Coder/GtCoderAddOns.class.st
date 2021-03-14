@@ -2,22 +2,14 @@ Class {
 	#name : #GtCoderAddOns,
 	#superclass : #Object,
 	#instVars : [
-		'modified',
 		'contextActions',
 		'mainActions',
 		'contextMenuActions',
 		'shortcuts',
-		'collapsedShortcuts',
 		'updateRequested'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders - Addons'
 }
-
-{ #category : #shortcuts }
-GtCoderAddOns >> addCollapsedShortcut: aBlShortcut [
-	modified add: #collapsedShortcuts.
-	self addOrUpdateShortcut: aBlShortcut to: collapsedShortcuts
-]
 
 { #category : #actions }
 GtCoderAddOns >> addContextAction: aTitleString icon: anIcon action: aBlock [
@@ -169,24 +161,48 @@ GtCoderAddOns >> clearChanges [
 	modified := Set new
 ]
 
-{ #category : #actions }
-GtCoderAddOns >> clearContextMenu [
-	contextMenuActions := OrderedCollection new
-]
-
-{ #category : #shortcuts }
-GtCoderAddOns >> collapsedShortcuts [
-	^ collapsedShortcuts
-]
-
 { #category : #accessing }
 GtCoderAddOns >> contextActions [
 	^ contextActions
 ]
 
 { #category : #accessing }
+GtCoderAddOns >> contextActions: anObject [
+	contextActions := anObject
+]
+
+{ #category : #accessing }
 GtCoderAddOns >> contextMenuActions [
 	^ contextMenuActions
+]
+
+{ #category : #accessing }
+GtCoderAddOns >> contextMenuActions: anObject [
+	contextMenuActions := anObject
+]
+
+{ #category : #changes }
+GtCoderAddOns >> differenceWith: aGtCoderAddOns [
+	^ Array streamContents: [ :aStream | self differenceWith: aGtCoderAddOns on: aStream ]
+]
+
+{ #category : #changes }
+GtCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
+	self
+		assert: [ self class = aGtCoderAddOns class ]
+		description: [ 'Coder AddOns type must be identical to compute the difference' ].
+		
+	self mainActions = aGtCoderAddOns mainActions
+		ifFalse: [ aStream nextPut: GtCoderAddOnsMainActionsDifference new ].
+		
+	self contextActions = aGtCoderAddOns contextActions
+		ifFalse: [ aStream nextPut: GtCoderAddOnsContextActionsDifference new ].
+		
+	self contextMenuActions = aGtCoderAddOns contextMenuActions
+		ifFalse: [ aStream nextPut: GtCoderAddOnsContextMenuDifference new ].
+		
+	self shortcuts = aGtCoderAddOns shortcuts
+		ifFalse: [ aStream nextPut: GtCoderAddOnsShortcutsDifference new ].
 ]
 
 { #category : #ui }
@@ -236,7 +252,6 @@ GtCoderAddOns >> initialize [
 	mainActions := OrderedCollection new.
 	contextMenuActions := OrderedCollection new.
 	shortcuts := OrderedCollection new.
-	collapsedShortcuts := OrderedCollection new.
 	modified := Set new.
 	updateRequested := true
 ]
@@ -244,6 +259,11 @@ GtCoderAddOns >> initialize [
 { #category : #accessing }
 GtCoderAddOns >> mainActions [
 	^ mainActions
+]
+
+{ #category : #accessing }
+GtCoderAddOns >> mainActions: anObject [
+	mainActions := anObject
 ]
 
 { #category : #changes }
@@ -258,23 +278,7 @@ GtCoderAddOns >> postCopy [
 	mainActions := mainActions copy.
 	contextMenuActions := contextMenuActions copy.
 	modified := modified copy.
-	shortcuts := shortcuts copy.
-	collapsedShortcuts := collapsedShortcuts copy
-]
-
-{ #category : #shortcuts }
-GtCoderAddOns >> removeCollapsedShortcut: aBlShortcut [
-	(self removeShortcut: aBlShortcut from: collapsedShortcuts)
-		ifTrue: [ modified add: #collapsedShortcuts ]
-]
-
-{ #category : #shortcuts }
-GtCoderAddOns >> removeCollapsedShortcutsMatching: aBlock [
-	| originalSize |
-	originalSize := collapsedShortcuts size.
-	collapsedShortcuts removeAllSuchThat: aBlock.
-	originalSize > collapsedShortcuts size
-		ifTrue: [ modified add: #collapsedShortcuts ]
+	shortcuts := shortcuts copy
 ]
 
 { #category : #actions }
@@ -288,18 +292,6 @@ GtCoderAddOns >> removeContextAction: aString [
 ]
 
 { #category : #actions }
-GtCoderAddOns >> removeContextMenuAction: aString [
-	| index |
-	index := (1 to: contextMenuActions size)
-		detect: [ :i | (contextMenuActions at: i) title = aString ]
-		ifNone: [ 0 ].
-	index = 0
-		ifTrue: [ ^ self ].
-	contextMenuActions removeAt: index.
-	modified add: #contextMenuActions
-]
-
-{ #category : #actions }
 GtCoderAddOns >> removeMainAction: aString [
 	| index |
 	index := (1 to: mainActions size) detect: [ :i | (mainActions at: i) title = aString ] ifNone: [ 0 ].
@@ -307,32 +299,6 @@ GtCoderAddOns >> removeMainAction: aString [
 		ifTrue: [ ^ self ].
 	mainActions removeAt: index.
 	modified add: #mainActions
-]
-
-{ #category : #shortcuts }
-GtCoderAddOns >> removeShortcut: aBlShortcut [
-	(self removeShortcut: aBlShortcut from: shortcuts)
-		ifTrue: [ modified add: #shortcuts ]
-]
-
-{ #category : #private }
-GtCoderAddOns >> removeShortcut: aBlShortcut from: aCollection [
-	| changed |
-	changed := false.
-	shortcuts size to: 1 by: -1 do: [ :i | 
-		(shortcuts at: i) combination = aBlShortcut combination
-			ifTrue: [ shortcuts removeAt: i.
-				changed := true ] ].
-	^ changed
-]
-
-{ #category : #shortcuts }
-GtCoderAddOns >> removeShortcutsMatching: aBlock [
-	| originalSize |
-	originalSize := shortcuts size.
-	shortcuts removeAllSuchThat: aBlock.
-	originalSize > shortcuts size
-		ifTrue: [ modified add: #shortcuts ]
 ]
 
 { #category : #changes }
@@ -345,6 +311,11 @@ GtCoderAddOns >> requestUpdate [
 { #category : #shortcuts }
 GtCoderAddOns >> shortcuts [
 	^ shortcuts
+]
+
+{ #category : #accessing }
+GtCoderAddOns >> shortcuts: anObject [
+	shortcuts := anObject
 ]
 
 { #category : #testing }

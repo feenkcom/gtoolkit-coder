@@ -201,6 +201,11 @@ GtCoderModel >> mainActions [
 	^ self addOns mainActions
 ]
 
+{ #category : #'api - addons' }
+GtCoderModel >> newAddOns [
+	^ self addOnsClass new
+]
+
 { #category : #elements }
 GtCoderModel >> previewElement [
 	"Return a preview element for the Spotter"

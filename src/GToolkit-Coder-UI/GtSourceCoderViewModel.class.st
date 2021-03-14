@@ -1,9 +1,7 @@
 Class {
 	#name : #GtSourceCoderViewModel,
-	#superclass : #GtCoderUIModel,
+	#superclass : #GtTextualCoderViewModel,
 	#instVars : [
-		'hasFocus',
-		'expanded',
 		'editorState',
 		'evaluationResult'
 	],

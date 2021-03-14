@@ -268,12 +268,13 @@ GtPharoSourceCoder >> newRbAST: aString [
 
 { #category : #private }
 GtPharoSourceCoder >> newSourceStylerFrom: anEditorElement [
-	<return: #GtSourceCoderTextStyler>
+	<return: #GtAstCompositeStyler>
 	| anAddOnsCopy |
 
 	anAddOnsCopy := self addOns stylers copy.
 
-	^ (GtSourceCoderTextStyler forCoder: self)
+	^ GtAstCompositeStyler new
+		coder: self;
 		stylers: anAddOnsCopy;
 		yourself
 ]

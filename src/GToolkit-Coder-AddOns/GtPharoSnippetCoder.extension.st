@@ -40,7 +40,7 @@ GtPharoSnippetCoder >> initializeAddOns [
 			(GtFixItStyler new
 				sourceCoder: self;
 				isForWorkspace: true);
-		addStyler: GtCoderExpandableMethodStyler new.
+		addStyler: GtCoderExpandablePharoMethodStyler new.
 	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
 	addOns clearChanges.
 ]

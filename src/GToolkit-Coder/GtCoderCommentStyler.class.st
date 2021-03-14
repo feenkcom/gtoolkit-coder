@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderCommentStyler,
-	#superclass : #GtASTStyler,
+	#superclass : #GtRBASTStyler,
 	#traits : 'TRBProgramNodeVisitor',
 	#classTraits : 'TRBProgramNodeVisitor classTrait',
 	#category : #'GToolkit-Coder-Styler/Highlighter'

@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderExpandableBaselineStyler,
-	#superclass : #GtASTStyler,
+	#superclass : #GtRBASTStyler,
 	#category : #'GToolkit-Coder-AddOns-Expandable baseline'
 }
 

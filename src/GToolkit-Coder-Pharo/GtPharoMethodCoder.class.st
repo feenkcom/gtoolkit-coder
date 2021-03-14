@@ -259,6 +259,20 @@ GtPharoMethodCoder >> compiledMethod [
 		ifFalse: [ nil ]
 ]
 
+{ #category : #'api - ast' }
+GtPharoMethodCoder >> computeAst [
+	^ self isModified
+		ifTrue: [
+			GtPharoParser
+				parseWithErrors: self currentSourceString
+				startingAt: self parserStartingState ]
+		ifFalse: [ GtAstCache default
+			cachedAstAt: self sourceCode asAstCacheKey
+			ifAbsentPut: [ GtPharoParser
+				parseWithErrors: self currentSourceString
+				startingAt: self parserStartingState ] ]
+]
+
 { #category : #'api - refactorings' }
 GtPharoMethodCoder >> createAccessorsFor: aNode instanceVariable: aBoolean [
 	| refactoring model cls |

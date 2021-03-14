@@ -1,33 +1,39 @@
 Class {
-	#name : #GtASTCompositeStyler,
-	#superclass : #GtASTStyler,
-	#traits : 'TRBProgramNodeVisitor',
-	#classTraits : 'TRBProgramNodeVisitor classTrait',
+	#name : #GtAstCompositeStyler,
+	#superclass : #GtAstStyler,
 	#instVars : [
 		'stylers'
 	],
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
-{ #category : #styling }
-GtASTCompositeStyler >> extraStyle: aText ast: ast [
-	self stylers do: [ :each | each extraStyle: aText ast: ast ]
+{ #category : #'api - styling' }
+GtAstCompositeStyler >> extraStyle: aText ast: theAst [
+	self stylers do: [ :eachStyler | eachStyler extraStyle: aText ast: theAst ]
 ]
 
-{ #category : #styling }
-GtASTCompositeStyler >> style: aText ast: ast [
-	self stylers do: [ :each |
-		[ each style: aText ast: ast ]
+{ #category : #'api - styling' }
+GtAstCompositeStyler >> style: aText ast: theAst [
+	self stylers do: [ :eachStyler |
+		[ eachStyler style: aText ast: theAst ]
 			on: Error
-			do: [ :anError | anError emit ] ]
+			do: [ :anError |
+				NonInteractiveTranscript stdout
+					nextPutAll: '[';
+					nextPutAll: eachStyler class name;
+					nextPutAll: '] ';
+					print: anError;
+					cr.
+				
+				anError emit ] ]
 ]
 
 { #category : #accessing }
-GtASTCompositeStyler >> stylers [
+GtAstCompositeStyler >> stylers [
 	^ stylers ifNil: [ #() ]
 ]
 
 { #category : #accessing }
-GtASTCompositeStyler >> stylers: aCollection [
-	stylers := aCollection
+GtAstCompositeStyler >> stylers: anObject [
+	stylers := anObject
 ]

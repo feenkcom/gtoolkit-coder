@@ -5,11 +5,10 @@ Wraps ${class:GtCoderModel}$ and optionally adds UI related api and state. Coder
 Class {
 	#name : #GtCoderUIModel,
 	#superclass : #Object,
-	#traits : 'TGtAnnouncer',
-	#classTraits : 'TGtAnnouncer classTrait',
+	#traits : 'TGtAnnouncer + TGtWithCoderModel',
+	#classTraits : 'TGtAnnouncer classTrait + TGtWithCoderModel classTrait',
 	#instVars : [
 		'announcer',
-		'coder',
 		'codersUIModel'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
@@ -39,12 +38,12 @@ GtCoderUIModel >> asElement [
 
 { #category : #accessing }
 GtCoderUIModel >> coder [
-	^ coder
+	^ self coderModel
 ]
 
 { #category : #accessing }
 GtCoderUIModel >> coder: anObject [
-	coder := anObject
+	self coderModel: anObject
 ]
 
 { #category : #accessing }
@@ -107,6 +106,11 @@ GtCoderUIModel >> hasFocus: aBoolean [
 { #category : #testing }
 GtCoderUIModel >> isModified [
 	^ self coder isModified
+]
+
+{ #category : #'api - coder model' }
+GtCoderUIModel >> onCoderModelChanged [
+	"Is sent when a new coder model is assigned to the view model"
 ]
 
 { #category : #accessing }

@@ -2,10 +2,9 @@ Class {
 	#name : #GtSourceCoderAddOns,
 	#superclass : #GtCoderAddOns,
 	#instVars : [
-		'stylers',
-		'sidebarActions'
+		'stylers'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders - Addons'
 }
 
 { #category : #stylers }
@@ -14,6 +13,14 @@ GtSourceCoderAddOns >> addStyler: aStyler [
 		ifTrue: [ ^ self ].
 	stylers add: aStyler.
 	modified add: #stylers
+]
+
+{ #category : #changes }
+GtSourceCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
+	super differenceWith: aGtCoderAddOns on: aStream.
+	
+	self stylers = aGtCoderAddOns stylers
+		ifFalse: [ aStream nextPut: GtCoderAddOnsStylersDifference new ]
 ]
 
 { #category : #ui }

@@ -5,6 +5,7 @@ Class {
 		'sourceCode',
 		'completionStrategy',
 		'astCache',
+		'newAstCache',
 		'astMonitor',
 		'astCommand'
 	],
@@ -56,9 +57,49 @@ GtTextualCoder >> appendText: aText with: aGtCoderUpdateStragegy [
 		self sourceChangedWith: aGtCoderUpdateStragegy ]
 ]
 
-{ #category : #'api - accessing' }
+{ #category : #'api - ast' }
 GtTextualCoder >> ast [
 	^ self subclassResponsibility
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> astAsyncDo: aBlock [
+	astMonitor critical: [
+		newAstCache ifNotNil: [ :anAST | ^ aBlock value: anAST ].
+		astCommand ifNotNil: [ :aCommand | aCommand terminate ].
+	
+		astCommand := [
+			| aComputedAst |
+			
+			aComputedAst := self computeAst.
+			astMonitor critical: [ newAstCache := aComputedAst ].
+			aBlock value: aComputedAst
+		] asBlTktTerminableCommand asBlTktLoggingCommand.
+
+		BlTktWorkerProvider coderAstPool schedule: astCommand ]
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> astAwait [
+	| theAst |
+	
+	theAst := nil.
+	self astAwaitDo: [ :aComputedAst | theAst := aComputedAst ].
+	^ theAst
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> astAwaitDo: aBlock [
+	| aSemaphore anAst |
+	
+	aSemaphore := Semaphore new.
+	anAst := nil.
+	self astAsyncDo: [ :aComputedAst |
+		anAst := aComputedAst.
+		aSemaphore signal ].
+	
+	aSemaphore wait: 5 seconds.
+	aBlock value: anAst
 ]
 
 { #category : #'private - ast' }
@@ -90,6 +131,11 @@ GtTextualCoder >> completionStrategy [
 { #category : #'api - accessing' }
 GtTextualCoder >> completionStrategy: aGtCompletionStrategy [
 	completionStrategy := aGtCompletionStrategy
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> computeAst [
+	^ self subclassResponsibility
 ]
 
 { #category : #'api - text' }
@@ -285,6 +331,7 @@ GtTextualCoder >> sourceChanged [
 
 { #category : #'event handling' }
 GtTextualCoder >> sourceChangedWith: anUpdateStrategy [
+	newAstCache := nil.
 	self requestUpdateCollapsedText.
 	self requestUpdateAddOns.
 	
@@ -393,10 +440,7 @@ GtTextualCoder >> updateContextMenuAddOnsFrom: anEditorElement [
 	pragmas := self
 		pragmasNamed: #gtCoderContextMenuAddOns:
 		inHierarchy: self class.
-	updatedAddOns := self addOns copy.
-	updatedAddOns clearContextMenu.
-	pragmas
-		do: [ :each | self perform: each methodSelector withEnoughArguments: { updatedAddOns. anEditorElement } ].
-	addOns := updatedAddOns.
-	updatedAddOns clearChanges
+	updatedAddOns := self newAddOns.
+	pragmas do: [ :each | self perform: each methodSelector withEnoughArguments: { updatedAddOns. anEditorElement } ].
+	addOns contextMenuActions: updatedAddOns contextMenuActions
 ]

@@ -163,17 +163,7 @@ GtPharoMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 							node pragmas
 								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
 						ifNil: [ false ] ] ])
-		ifFalse: [
-			coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
-			coderAddOns
-				removeContextAction: 'Play Example' translated.
-			coderAddOns
-				removeContextAction: 'Play and Inspect Example Result' translated.
-			coderAddOns
-				removeContextAction: 'Inspect Example Object' translated.
-			coderAddOns
-				removeContextAction: 'Debug Example' translated.
-			^ self ].
+		ifFalse: [ ^ self ].
 	coderAddOns
 		addStyler:
 			(GtCoderExampleStatusStyler new
@@ -215,7 +205,7 @@ GtPharoMethodCoder >> initializeAddOns [
 	super initializeAddOns.
 	"addOns addStyler: GtCoderCommentStyler new."
 	addOns addStyler: (GtFixItStyler new sourceCoder: self).
-	addOns addStyler: BrRBTextStyler new.
+	addOns addStyler: (GtPharoStyler new coder: self).
 	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
 	addOns
 		addMainAction: (GtCoderActivatableAction new

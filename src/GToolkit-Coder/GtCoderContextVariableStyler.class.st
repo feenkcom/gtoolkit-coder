@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderContextVariableStyler,
-	#superclass : #GtASTStyler,
+	#superclass : #GtRBASTStyler,
 	#traits : 'TRBProgramNodeVisitor',
 	#classTraits : 'TRBProgramNodeVisitor classTrait',
 	#instVars : [
