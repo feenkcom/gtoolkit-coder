@@ -60,8 +60,7 @@ GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock
 		hoverAction: hoverBlock;
 		leaveAction: leaveBlock;
 		name: aSymbol.
-	contextMenuActions add: newAction.
-	modified add: #contextMenuActions
+	contextMenuActions add: newAction
 ]
 
 { #category : #actions }
@@ -71,8 +70,7 @@ GtCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
 		title: aString;
 		icon: anIcon;
 		action: aBlock.
-	mainActions add: newAction.
-	modified add: #mainActions
+	mainActions add: newAction
 ]
 
 { #category : #actions }
@@ -83,8 +81,7 @@ GtCoderAddOns >> addDropDownWithPreviewAction: aString icon: anIcon action: acti
 		icon: anIcon;
 		changeAction: actionBlock;
 		changeStencil: stencilBlock.
-	mainActions add: newAction.
-	modified add: #mainActions
+	mainActions add: newAction
 ]
 
 { #category : #actions }
@@ -147,18 +144,12 @@ GtCoderAddOns >> addOrUpdateShortcut: aBlShortcut to: aCollection [
 
 { #category : #shortcuts }
 GtCoderAddOns >> addShortcut: aBlShortcut [
-	modified add: #shortcuts.
 	self addOrUpdateShortcut: aBlShortcut to: shortcuts
 ]
 
 { #category : #changes }
 GtCoderAddOns >> changesDo: aBlock [
 	modified do: aBlock
-]
-
-{ #category : #changes }
-GtCoderAddOns >> clearChanges [
-	modified := Set new
 ]
 
 { #category : #accessing }
@@ -205,7 +196,7 @@ GtCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
 		ifFalse: [ aStream nextPut: GtCoderAddOnsShortcutsDifference new ].
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtCoderAddOns >> gtViewContextActionsFor: aView [
 	<gtView>
 	^ aView columnedList
@@ -218,7 +209,7 @@ GtCoderAddOns >> gtViewContextActionsFor: aView [
 		column: 'Action' item: [ :anAction | anAction action ]
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtCoderAddOns >> gtViewKeybindingsFor: aView [
 	<gtView>
 	self shortcuts ifEmpty: [ ^ aView empty ].
@@ -230,7 +221,7 @@ GtCoderAddOns >> gtViewKeybindingsFor: aView [
 		column: 'Combination' item: [ :each | each combination gtDisplayString ]
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtCoderAddOns >> gtViewMainActionsFor: aView [
 	<gtView>
 	^ aView columnedList
@@ -252,7 +243,6 @@ GtCoderAddOns >> initialize [
 	mainActions := OrderedCollection new.
 	contextMenuActions := OrderedCollection new.
 	shortcuts := OrderedCollection new.
-	modified := Set new.
 	updateRequested := true
 ]
 
@@ -277,28 +267,7 @@ GtCoderAddOns >> postCopy [
 	contextActions := contextActions copy.
 	mainActions := mainActions copy.
 	contextMenuActions := contextMenuActions copy.
-	modified := modified copy.
 	shortcuts := shortcuts copy
-]
-
-{ #category : #actions }
-GtCoderAddOns >> removeContextAction: aString [
-	| index |
-	index := (1 to: contextActions size) detect: [ :i | (contextActions at: i) title = aString ] ifNone: [ 0 ].
-	index = 0
-		ifTrue: [ ^ self ].
-	contextActions removeAt: index.
-	modified add: #contextActions
-]
-
-{ #category : #actions }
-GtCoderAddOns >> removeMainAction: aString [
-	| index |
-	index := (1 to: mainActions size) detect: [ :i | (mainActions at: i) title = aString ] ifNone: [ 0 ].
-	index = 0
-		ifTrue: [ ^ self ].
-	mainActions removeAt: index.
-	modified add: #mainActions
 ]
 
 { #category : #changes }
@@ -351,6 +320,5 @@ GtCoderAddOns >> updateActionList: listSymbol withAction: aGtCoderAction onlyNew
 
 	index = 0
 		ifTrue: [ actions add: aGtCoderAction ]
-		ifFalse: [ actions at: index put: aGtCoderAction ].
-	modified add: listSymbol
+		ifFalse: [ actions at: index put: aGtCoderAction ]
 ]

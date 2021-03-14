@@ -1295,10 +1295,7 @@ GtPharoMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 				node methodClass isClassSide ] ]
 			ifNil: [ false ] ] ).
 	(isUnaryInstanceSideMethod or: [ isUnaryClassSideMethod ])		
-		ifFalse: [ coderAddOns removeContextAction: 'Play' translated.
-			coderAddOns removeContextAction: 'Play and Inspect' translated.
-			coderAddOns removeContextAction: 'Debug' translated.
-			^ self ].
+		ifFalse: [ ^ self ].
 	coderAddOns
 		addContextAction: 'Play' translated
 		icon: BrGlamorousVectorIcons play

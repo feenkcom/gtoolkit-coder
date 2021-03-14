@@ -510,47 +510,6 @@ GtPharoSourceCoder >> rbAST [
 	do: [ :ex | ex return: nil ]
 ]
 
-{ #category : #'private - ast' }
-GtPharoSourceCoder >> rbASTAsyncDo: aBlock [
-
-	astMonitor critical: [ 
-		| aCommand astComputationCommand |
-		astCommand ifNotNil: #terminate.
-
-		astComputationCommand := [
-			| source currentAstCache |
-			"The AST should be built out of the `characters` of the source text.
-			This is needed to support `crlf` and logical items
-			see https://github.com/feenkcom/gtoolkit/issues/593"
-			source := self sourceText copy characters asString.
-			currentAstCache := self astCache.
-
-			currentAstCache key = source
-				ifTrue: [ currentAstCache ]
-				ifFalse: [
-					[ source -> (self newRbAST: source) ]
-						on: Error
-						do: [ :ex | ex return: nil ] ].
-
-		] asBlTktTerminableCommand asBlTktLoggingCommand.
-		astComputationCommand name: 'Coder ast computation'.
-		
-		astCommand := aCommand := BlTaskAtPostponedTerminableFuture new.
-		aCommand
-			command: astComputationCommand;
-			onSuccessDo:  [ :aResult | 
-				(aCommand == astCommand and: [ aResult notNil ])
-					ifTrue: [
-						self astCache: aResult.
-						aBlock value: aResult ] ];
-			onFailureDo: [ :anException | "handle error here" ];
-			pool: BlTktWorkerProvider coderPool;
-			scheduledTime: BlTime real now + 100 milliSeconds.
-		BlTaskAtQueue default schedule: astCommand.
-	
-	 ].
-]
-
 { #category : #private }
 GtPharoSourceCoder >> rbNodeAt: aTextIndex [
 	| ast node |

@@ -11,8 +11,8 @@ Class {
 GtSourceCoderAddOns >> addStyler: aStyler [
 	(stylers anySatisfy: [ :each | each class = aStyler class ])
 		ifTrue: [ ^ self ].
-	stylers add: aStyler.
-	modified add: #stylers
+
+	stylers add: aStyler
 ]
 
 { #category : #changes }
@@ -23,7 +23,7 @@ GtSourceCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
 		ifFalse: [ aStream nextPut: GtCoderAddOnsStylersDifference new ]
 ]
 
-{ #category : #ui }
+{ #category : #'gt-extensions' }
 GtSourceCoderAddOns >> gtViewStylersFor: aView [
 	<gtView>
 	^ aView list
@@ -42,16 +42,6 @@ GtSourceCoderAddOns >> initialize [
 GtSourceCoderAddOns >> postCopy [
 	super postCopy.
 	stylers := stylers copy
-]
-
-{ #category : #stylers }
-GtSourceCoderAddOns >> removeStylerOfType: aClass [
-	| styler |
-	styler := stylers detect: [ :each | each isKindOf: aClass ] ifNone: [  ].
-	styler isNil
-		ifTrue: [ ^ self ].
-	stylers remove: styler.
-	modified add: #stylers
 ]
 
 { #category : #accessing }

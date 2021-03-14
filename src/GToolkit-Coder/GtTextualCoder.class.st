@@ -7,7 +7,8 @@ Class {
 		'astCache',
 		'newAstCache',
 		'astMonitor',
-		'astCommand'
+		'astCommand',
+		'astCommandBlock'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -65,18 +66,32 @@ GtTextualCoder >> ast [
 { #category : #'api - ast' }
 GtTextualCoder >> astAsyncDo: aBlock [
 	astMonitor critical: [
+		astCommand ifNotNil: [
+			"the ast is being computed, subscribe to the ast changed announcement to wait until is finishes"
+			^ self
+				when: GtCoderAstChanged
+				doOnce: [ :anAnnouncement |
+					aBlock value: anAnnouncement ast ]
+				for: #astChanged ].
+		
+		"the ast is already computed, return it directly"
 		newAstCache ifNotNil: [ :anAST | ^ aBlock value: anAST ].
-		astCommand ifNotNil: [ :aCommand | aCommand terminate ].
-	
-		astCommand := [
-			| aComputedAst |
-			
-			aComputedAst := self computeAst.
-			astMonitor critical: [ newAstCache := aComputedAst ].
-			aBlock value: aComputedAst
-		] asBlTktTerminableCommand asBlTktLoggingCommand.
 
-		BlTktWorkerProvider coderAstPool schedule: astCommand ]
+		astCommandBlock := [
+			| aComputedAst |
+
+			aComputedAst := self computeAst.
+			astMonitor critical: [
+				newAstCache := aComputedAst.
+				astCommand := nil.
+				astCommandBlock := nil.
+				self announce: (GtCoderAstChanged new coder: self; ast: aComputedAst) ].
+			aBlock value: aComputedAst ].
+		astCommand := astCommandBlock asBlTktTerminableCommand asBlTktLoggingCommand.
+		
+		BlUseAsyncFeatures 
+			ifEnabledDo: [ BlTktWorkerProvider coderAstPool schedule: astCommand ]
+			otherwise: [ astCommand execute ] ]
 ]
 
 { #category : #'api - ast' }
@@ -331,11 +346,19 @@ GtTextualCoder >> sourceChanged [
 
 { #category : #'event handling' }
 GtTextualCoder >> sourceChangedWith: anUpdateStrategy [
-	newAstCache := nil.
+	"if there is an ast computation that was triggered before source code change we re-schedule
+	the computation. Any #astAsyncDo: caller will be waiting for the result with the new ast"
+	astMonitor critical: [
+		newAstCache := nil.
+		astCommand ifNotNil: [ :anAstCommand | 
+			anAstCommand terminate.
+			astCommand := astCommandBlock asBlTktTerminableCommand asBlTktLoggingCommand.
+			BlTktWorkerProvider coderAstPool schedule: astCommand ] ].
+
+	self notifySourceChangedWith: anUpdateStrategy.
+
 	self requestUpdateCollapsedText.
-	self requestUpdateAddOns.
-	
-	self notifySourceChangedWith: anUpdateStrategy
+	self requestUpdateAddOns
 ]
 
 { #category : #'api - accessing' }
@@ -430,7 +453,6 @@ GtTextualCoder >> updateAddOnsCommand [
 		addOns := updatedAddOns.
 		addOns markAsUpdated.
 		updatedAddOns changesDo: [ :each | self addOnChanged: each ].
-		updatedAddOns clearChanges
 	] asBlTktTerminableCommand
 ]
 

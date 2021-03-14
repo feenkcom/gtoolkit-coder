@@ -126,9 +126,7 @@ GtPharoBlockClosureCoder >> initializeAddOns [
 	addOns addStyler:
 		(BrRBTextStyler new
 			workspace: bindingStrategy;
-			yourself).
-
-	addOns clearChanges
+			yourself)
 ]
 
 { #category : #private }

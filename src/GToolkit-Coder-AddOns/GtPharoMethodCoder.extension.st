@@ -231,8 +231,24 @@ GtPharoMethodCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Copy Method Name' translated
 		icon: BrGlamorousVectorIcons clipboard
-		action: [ :aCoderUIModel :anEvent | self copyMethodNameToClipboard ].
-	addOns clearChanges
+		action: [ :aCoderUIModel :anEvent | self copyMethodNameToClipboard ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> petitParserProductionAstFor: anAST into: coderAddOns [
+	<gtAstCoderAddOns: 10>
+	
+	(anAST notNil
+		and: [ anAST isParseError not
+				and: [ anAST methodClass inheritsFrom: PP2CompositeNode ] ])
+		ifFalse: [ ^ self ].
+
+	coderAddOns
+		addStyler: GtCoderExpandablePetitParserProductionStyler new.
+	coderAddOns
+		addContextAction: 'Inspect parser' translated
+		icon: BrGlamorousVectorIcons inspect
+		action: [ :aCoderUIModel :anEvent | self notifyObjectSpawn: (anAST methodClass new perform: anAST selector) ]
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }

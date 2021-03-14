@@ -56,14 +56,15 @@ GtPharoMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 1>
+
 	self isModified
-		ifTrue: [
-			coderAddOns
-				addMainAction: 'Discard Changes' translated
-				icon: BrGlamorousVectorIcons cancel
-				action: [ :aCoderUIModel :anEvent | aCoderUIModel discardChanges ]
-				id: GtMethodCoderDiscardChangesActionId ]
-		ifFalse: [ coderAddOns removeMainAction: 'Discard Changes' translated ]
+		ifFalse: [ ^ self ].
+
+	coderAddOns
+		addMainAction: 'Discard Changes' translated
+		icon: BrGlamorousVectorIcons cancel
+		action: [ :aCoderUIModel :anEvent | aCoderUIModel discardChanges ]
+		id: GtMethodCoderDiscardChangesActionId
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
