@@ -29,8 +29,7 @@ GtTextualCoderViewModel >> addOnsAsyncDo: aBlock [
 			"the add-ons are being computed, subscribe to the ast changed announcement to wait until is finishes"
 			^ self
 				when: GtTextualCoderViewModelAddOnsChanged
-				doOnce: [ :anAnnouncement |
-					aBlock value: anAnnouncement addOns ]
+				doOnce: [ :anAnnouncement | aBlock value: anAnnouncement addOns ]
 				for: aUniqueSubscriber ].
 
 		"the add-ons are already computed, return it directly"

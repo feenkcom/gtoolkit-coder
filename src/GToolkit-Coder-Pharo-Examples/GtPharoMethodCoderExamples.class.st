@@ -1,33 +1,33 @@
 Class {
-	#name : #GtMethodCoderExamples,
+	#name : #GtPharoMethodCoderExamples,
 	#superclass : #GtCoderModelExamples,
-	#category : #'GToolkit-Coder-Examples-Coders'
+	#category : #'GToolkit-Coder-Pharo-Examples'
 }
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> ? anObject [
+GtPharoMethodCoderExamples >> ? anObject [
 	"Test binary method"
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> a [
+GtPharoMethodCoderExamples >> a [
 	<gtExample>
 	^ 42
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
+GtPharoMethodCoderExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
 	"test method for highlighting implementors"
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> b [
+GtPharoMethodCoderExamples >> b [
 	<gtExample>
 	^ self a * self notAnExample
 ]
 
 { #category : #'examples - compile' }
-GtMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder wasSuccessful anEventsRecoder anOldMethod aNewMethod |
@@ -77,7 +77,7 @@ GtMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - compile' }
-GtMethodCoderExamples >> compileMethodWithCoderWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> compileMethodWithCoderWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder wasSuccessful anEventsRecoder anOldMethod aNewMethod |
@@ -126,7 +126,7 @@ GtMethodCoderExamples >> compileMethodWithCoderWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - compile' }
-GtMethodCoderExamples >> compileMethodWithTempAndBlockArgsConflictWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> compileMethodWithTempAndBlockArgsConflictWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder wasSuccessful anEventsRecoder |
@@ -147,16 +147,18 @@ GtMethodCoderExamples >> compileMethodWithTempAndBlockArgsConflictWhenSubscribed
 	
 	self assert: wasSuccessful not.
 
-	self assert: anEventsRecoder numberOfEvents equals: 1.
-	self assert: anEventsRecoder first class equals: GtCoderParseError.
+	self assert: anEventsRecoder numberOfEvents equals: 2.
+	self assert: anEventsRecoder first class equals: GtCoderAstChanged.
 	self assert: anEventsRecoder first coder equals: aMethodCoder.
-	self assert: anEventsRecoder first errorMessage equals: 'Temp shadows: each'.
+	self assert: anEventsRecoder second class equals: GtCoderParseError.
+	self assert: anEventsRecoder second coder equals: aMethodCoder.
+	self assert: anEventsRecoder second errorMessage equals: 'Temp shadows: each'.
 	
 	^ aMethodCoder
 ]
 
 { #category : #'examples - compile' }
-GtMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder aCompiledSelector anEventsRecoder anOldMethod aNewMethod |
@@ -205,7 +207,7 @@ GtMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToSystem
 ]
 
 { #category : #'examples - compile' }
-GtMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder aCompiledSelector anEventsRecoder anOldMethod aNewMethod |
@@ -252,7 +254,7 @@ GtMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribedToSys
 ]
 
 { #category : #'examples - compile' }
-GtMethodCoderExamples >> compileModifiedNewMethodWithCoderWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> compileModifiedNewMethodWithCoderWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder wasSuccessful anEventsRecoder aNewMethodSelector aNewMethod |
@@ -300,7 +302,7 @@ GtMethodCoderExamples >> compileModifiedNewMethodWithCoderWhenSubscribedToSystem
 ]
 
 { #category : #'examples - compile' }
-GtMethodCoderExamples >> compileRemovedMethodWithCoderWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> compileRemovedMethodWithCoderWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder aCompileChange aCompilationResult anEventsRecoder |
@@ -335,7 +337,7 @@ GtMethodCoderExamples >> compileRemovedMethodWithCoderWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - compile' }
-GtMethodCoderExamples >> compileRemovedMethodWithoutCoderWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> compileRemovedMethodWithoutCoderWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder aCompileChange aCompilationResult anEventsRecoder |
@@ -375,7 +377,7 @@ GtMethodCoderExamples >> compileRemovedMethodWithoutCoderWhenSubscribedToSystem 
 ]
 
 { #category : #'examples - ast' }
-GtMethodCoderExamples >> detectReferencesFilterInClassName [
+GtPharoMethodCoderExamples >> detectReferencesFilterInClassName [
 	<gtExample>
 	| aCoder aReferencesFilter |
 	
@@ -392,7 +394,7 @@ GtMethodCoderExamples >> detectReferencesFilterInClassName [
 ]
 
 { #category : #'examples - ast' }
-GtMethodCoderExamples >> detectReferencesFilterInEmpty [
+GtPharoMethodCoderExamples >> detectReferencesFilterInEmpty [
 	<gtExample>
 	| aCoder aReferencesFilter |
 	
@@ -408,7 +410,7 @@ GtMethodCoderExamples >> detectReferencesFilterInEmpty [
 ]
 
 { #category : #'examples - ast' }
-GtMethodCoderExamples >> detectReferencesFilterInKeyword [
+GtPharoMethodCoderExamples >> detectReferencesFilterInKeyword [
 	<gtExample>
 	| aCoder aReferencesFilter |
 	
@@ -425,7 +427,7 @@ GtMethodCoderExamples >> detectReferencesFilterInKeyword [
 ]
 
 { #category : #'examples - ast' }
-GtMethodCoderExamples >> detectReferencesFilterInKeywordWithArgument [
+GtPharoMethodCoderExamples >> detectReferencesFilterInKeywordWithArgument [
 	<gtExample>
 	| aCoder aReferencesFilter |
 	
@@ -442,7 +444,7 @@ GtMethodCoderExamples >> detectReferencesFilterInKeywordWithArgument [
 ]
 
 { #category : #'examples - ast' }
-GtMethodCoderExamples >> detectReferencesFilterInMessageSend [
+GtPharoMethodCoderExamples >> detectReferencesFilterInMessageSend [
 	<gtExample>
 	| aCoder aReferencesFilter |
 	
@@ -459,7 +461,7 @@ GtMethodCoderExamples >> detectReferencesFilterInMessageSend [
 ]
 
 { #category : #'examples - ast' }
-GtMethodCoderExamples >> detectReferencesFilterInUnary [
+GtPharoMethodCoderExamples >> detectReferencesFilterInUnary [
 	<gtExample>
 	| aCoder aReferencesFilter |
 	
@@ -476,7 +478,7 @@ GtMethodCoderExamples >> detectReferencesFilterInUnary [
 ]
 
 { #category : #'examples - ast' }
-GtMethodCoderExamples >> detectReferencesFilterInWhiteSpace [
+GtPharoMethodCoderExamples >> detectReferencesFilterInWhiteSpace [
 	<gtExample>
 	| aCoder aReferencesFilter |
 	
@@ -492,11 +494,11 @@ GtMethodCoderExamples >> detectReferencesFilterInWhiteSpace [
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> emptyBody [
+GtPharoMethodCoderExamples >> emptyBody [
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> emptyLines [
+GtPharoMethodCoderExamples >> emptyLines [
 
 
 
@@ -504,7 +506,7 @@ GtMethodCoderExamples >> emptyLines [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> emptyMethodCoder [
+GtPharoMethodCoderExamples >> emptyMethodCoder [
 	<gtExample>
 	| methodCoder |
 
@@ -520,17 +522,17 @@ GtMethodCoderExamples >> emptyMethodCoder [
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> example [
+GtPharoMethodCoderExamples >> example [
 	<gtExample>
 	
 	^ 42
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forBinaryMethodCoder [
+GtPharoMethodCoderExamples >> forBinaryMethodCoder [
 	<gtExample>
 	| method methodCoder |
-	method := GtMethodCoderExamples >> #?.
+	method := GtPharoMethodCoderExamples >> #?.
 	methodCoder := GtPharoMethodCoder forMethod: method.
 	self
 		assert: (methodCoder sourceCode isKindOf: GtCoderCompiledMethodSourceCode).
@@ -539,7 +541,7 @@ GtMethodCoderExamples >> forBinaryMethodCoder [
 	self assert: methodCoder sourceCode hasCollapsedText not.
 	self assert: methodCoder selector equals: #?.
 	self assert: methodCoder currentSelector equals: #?.
-	self assert: methodCoder behavior equals: GtMethodCoderExamples.
+	self assert: methodCoder behavior equals: GtPharoMethodCoderExamples.
 	self assert: methodCoder compiledMethod equals: method.
 	self assert: methodCoder collapsedText asString equals: '?'.
 	self assert: methodCoder sourceCode hasCollapsedText.
@@ -551,16 +553,15 @@ GtMethodCoderExamples >> forBinaryMethodCoder [
 		assert: methodCoder currentSourceString
 		equals: method sourceCode.
 	self assert: methodCoder isModified not.
-	self assert: methodCoder shouldAddOnsBeUpdated.
 	^ methodCoder
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forEmptyBodyMethodCoder [
+GtPharoMethodCoderExamples >> forEmptyBodyMethodCoder [
 	<gtExample>
 	| method methodCoder |
 
-	method := GtMethodCoderExamples >> #emptyBody.
+	method := GtPharoMethodCoderExamples >> #emptyBody.
 
 	methodCoder := GtPharoMethodCoder forMethod: method.
 
@@ -571,10 +572,10 @@ GtMethodCoderExamples >> forEmptyBodyMethodCoder [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forEmptyLinesMethodCoder [
+GtPharoMethodCoderExamples >> forEmptyLinesMethodCoder [
 	<gtExample>
 	| method methodCoder |
-	method := GtMethodCoderExamples >> #emptyLines.
+	method := GtPharoMethodCoderExamples >> #emptyLines.
 
 	methodCoder := GtPharoMethodCoder forMethod: method.
 
@@ -585,14 +586,14 @@ GtMethodCoderExamples >> forEmptyLinesMethodCoder [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forExampleMethodCoder [
+GtPharoMethodCoderExamples >> forExampleMethodCoder [
 	<gtExample>
 	| method methodCoder |
-	method := GtMethodCoderExamples >> #example.
+	method := GtPharoMethodCoderExamples >> #example.
 	methodCoder := GtPharoMethodCoder forMethod: method.
 	self assert: methodCoder selector equals: #example.
 	self assert: methodCoder currentSelector equals: #example.
-	self assert: methodCoder behavior equals: GtMethodCoderExamples.
+	self assert: methodCoder behavior equals: GtPharoMethodCoderExamples.
 	self assert: methodCoder compiledMethod equals: method.
 	self assert: methodCoder collapsedText asString equals: 'example'.
 	self
@@ -606,7 +607,7 @@ GtMethodCoderExamples >> forExampleMethodCoder [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forKeywordMethodInPackagedClass [
+GtPharoMethodCoderExamples >> forKeywordMethodInPackagedClass [
 	<gtExample>
 	<after: #cleanUp>
 	| aPackage aClass aMethod aMethodCoder |
@@ -636,11 +637,11 @@ GtMethodCoderExamples >> forKeywordMethodInPackagedClass [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forKeywordSelectorMethodCoder [
+GtPharoMethodCoderExamples >> forKeywordSelectorMethodCoder [
 	<gtExample>
 	| method methodCoder |
 
-	method := GtMethodCoderExamples >> #keyword:selector:.
+	method := GtPharoMethodCoderExamples >> #keyword:selector:.
 
 	methodCoder := GtPharoMethodCoder forMethod: method.
 
@@ -651,7 +652,7 @@ GtMethodCoderExamples >> forKeywordSelectorMethodCoder [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forNewMethod [
+GtPharoMethodCoderExamples >> forNewMethod [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder aPackage aClass aMethod |
@@ -678,10 +679,10 @@ GtMethodCoderExamples >> forNewMethod [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forSelfReturnMethodCoder [
+GtPharoMethodCoderExamples >> forSelfReturnMethodCoder [
 	<gtExample>
 	| method methodCoder |
-	method := GtMethodCoderExamples >> #returnSelf.
+	method := GtPharoMethodCoderExamples >> #returnSelf.
 
 	methodCoder := GtPharoMethodCoder forMethod: method.
 
@@ -691,10 +692,10 @@ GtMethodCoderExamples >> forSelfReturnMethodCoder [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forThisMethodCoder [
+GtPharoMethodCoderExamples >> forThisMethodCoder [
 	<gtExample>
 	| method methodCoder source |
-	method := GtMethodCoderExamples >> #forThisMethodCoder.
+	method := GtPharoMethodCoderExamples >> #forThisMethodCoder.
 
 	methodCoder := GtPharoMethodCoder forMethod: method.
 
@@ -710,12 +711,12 @@ GtMethodCoderExamples >> forThisMethodCoder [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forThisObjectMethodCoder [
+GtPharoMethodCoderExamples >> forThisObjectMethodCoder [
 	<gtExample>
 	| method methodCoder source |
-	method := GtMethodCoderExamples >> #forThisMethodCoder.
+	method := GtPharoMethodCoderExamples >> #forThisMethodCoder.
 
-	methodCoder := GtPharoMethodCoder forObject: GtMethodCoderExamples new andSelector: #forThisMethodCoder.
+	methodCoder := GtPharoMethodCoder forObject: GtPharoMethodCoderExamples new andSelector: #forThisMethodCoder.
 
 	source := method sourceCode.
 	
@@ -729,7 +730,7 @@ GtMethodCoderExamples >> forThisObjectMethodCoder [
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> forUnaryMethodInPackagedClass [
+GtPharoMethodCoderExamples >> forUnaryMethodInPackagedClass [
 	<gtExample>
 	<after: #cleanUp>
 	| aPackage aClass aMethod aMethodCoder |
@@ -759,12 +760,12 @@ GtMethodCoderExamples >> forUnaryMethodInPackagedClass [
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> keyword: a selector: b [
+GtPharoMethodCoderExamples >> keyword: a selector: b [
 	^ a + b
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> methodSourceWithTempAndBlockArgsConflict [
+GtPharoMethodCoderExamples >> methodSourceWithTempAndBlockArgsConflict [
 	^ 'method
 	| each |
 	each := #().
@@ -773,7 +774,7 @@ GtMethodCoderExamples >> methodSourceWithTempAndBlockArgsConflict [
 ]
 
 { #category : #'examples - modification' }
-GtMethodCoderExamples >> modifyBackCompiledMethodWithoutCoderModifiedWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> modifyBackCompiledMethodWithoutCoderModifiedWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder anOldMethod aNewMethod |
@@ -810,7 +811,7 @@ GtMethodCoderExamples >> modifyBackCompiledMethodWithoutCoderModifiedWhenSubscri
 ]
 
 { #category : #'examples - modification' }
-GtMethodCoderExamples >> modifyNewMethod [
+GtPharoMethodCoderExamples >> modifyNewMethod [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder aMethodName anEventsRecoder |
@@ -827,11 +828,11 @@ GtMethodCoderExamples >> modifyNewMethod [
 	aMethodCoder appendString: aMethodName.
 	
 	self assert: anEventsRecoder numberOfEvents equals: 2.
-	self assert: anEventsRecoder first class equals: GtCoderCollapsedLabelChanged.
+	self assert: anEventsRecoder first class equals: GtCoderSourceCodeChanged.
 	self assert: anEventsRecoder first coder equals: aMethodCoder.
-	self assert: anEventsRecoder second class equals: GtCoderSourceCodeChanged.
+	self assert: anEventsRecoder first isSynchronous not.
+	self assert: anEventsRecoder second class equals: GtCoderCollapsedLabelChanged.
 	self assert: anEventsRecoder second coder equals: aMethodCoder.
-	self assert: anEventsRecoder second isSynchronous not.
 
 	self assert: aMethodCoder isModified.
 	self assert: aMethodCoder selector equals: nil.
@@ -847,12 +848,12 @@ GtMethodCoderExamples >> modifyNewMethod [
 ]
 
 { #category : #'examples - api' }
-GtMethodCoderExamples >> nodeAtCursor [
+GtPharoMethodCoderExamples >> nodeAtCursor [
 	<gtExample>
 	| coder node |
 
 	coder := GtPharoMethodCoder
-		forMethod: GtMethodCoderExamples >> #sampleMethodWithCascades.
+		forMethod: GtPharoMethodCoderExamples >> #sampleMethodWithCascades.
 	
 	node := coder
 		nodeAt: ((coder currentSourceString indexOfSubCollection: 'self') - 1)
@@ -882,12 +883,12 @@ GtMethodCoderExamples >> nodeAtCursor [
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> notAnExample [
+GtPharoMethodCoderExamples >> notAnExample [
 	^ 42
 ]
 
 { #category : #'examples - instance creation' }
-GtMethodCoderExamples >> orderedCollectionMethods [
+GtPharoMethodCoderExamples >> orderedCollectionMethods [
 	<gtExample>
 	| class |
 	class := OrderedCollection.
@@ -895,12 +896,12 @@ GtMethodCoderExamples >> orderedCollectionMethods [
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> printStringReference [
+GtPharoMethodCoderExamples >> printStringReference [
 	^ self printString
 ]
 
 { #category : #'examples - remove class' }
-GtMethodCoderExamples >> removeClassWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> removeClassWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethod aMethodCoder anEventsRecoder |
@@ -931,7 +932,7 @@ GtMethodCoderExamples >> removeClassWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - remove method' }
-GtMethodCoderExamples >> removeMethodWithCoderWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> removeMethodWithCoderWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder anEventsRecoder |
@@ -964,7 +965,7 @@ GtMethodCoderExamples >> removeMethodWithCoderWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - remove method' }
-GtMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethod aMethodCoder anEventsRecoder |
@@ -998,7 +999,7 @@ GtMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - remove package' }
-GtMethodCoderExamples >> removePackageWhenSubscribedToSystem [
+GtPharoMethodCoderExamples >> removePackageWhenSubscribedToSystem [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder aMethod aPackage anEventsRecoder |
@@ -1030,11 +1031,11 @@ GtMethodCoderExamples >> removePackageWhenSubscribedToSystem [
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> returnSelf [ ^self
+GtPharoMethodCoderExamples >> returnSelf [ ^self
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> sampleMethodWithCascades [
+GtPharoMethodCoderExamples >> sampleMethodWithCascades [
 	| stream |
 	stream := WriteStream on: String new.
 	stream
@@ -1046,7 +1047,7 @@ GtMethodCoderExamples >> sampleMethodWithCascades [
 ]
 
 { #category : #'sample methods' }
-GtMethodCoderExamples >> sumMethod [
+GtPharoMethodCoderExamples >> sumMethod [
 	<gtExample>
 	"sum two numbers"
 	self assert: 21 + 21 equals: 42.
@@ -1054,7 +1055,7 @@ GtMethodCoderExamples >> sumMethod [
 ]
 
 { #category : #'examples - validate syntax' }
-GtMethodCoderExamples >> validateSyntaxTempArgAndBlockArgsConflict [
+GtPharoMethodCoderExamples >> validateSyntaxTempArgAndBlockArgsConflict [
 	<gtExample>
 	<after: #cleanUp>
 	| aMethodCoder anEventsRecoder isSyntaxValid |

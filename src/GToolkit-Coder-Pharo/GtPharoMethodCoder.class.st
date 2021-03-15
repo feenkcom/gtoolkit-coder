@@ -347,7 +347,7 @@ GtPharoMethodCoder >> currentSelector [
 		ifNil: [ ^ nil ].
 	
 	theAst isMethod
-		ifFalse: [ ^ nil ].
+		ifFalse: [ ^ #faulty ].
 			
 	 ^ theAst selector
 ]
@@ -1266,6 +1266,10 @@ GtPharoMethodCoder >> subscribeToSystem [
 GtPharoMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 20>
 	| isUnaryInstanceSideMethod isUnaryClassSideMethod |
+	
+	self compiledMethod
+		ifNil: [ ^ self ].
+	
 	isUnaryInstanceSideMethod := (self hasObjectAttribute
 		and: [ anAST notNil
 			and: [ anAST methodNode

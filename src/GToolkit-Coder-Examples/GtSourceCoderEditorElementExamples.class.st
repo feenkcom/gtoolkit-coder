@@ -9,7 +9,7 @@ GtSourceCoderEditorElementExamples >> editorForExampleMethodCoder [
 	<gtExample>
 	| aMethodCoder aMethodCoderUIModel anEditorElement |
 	
-	aMethodCoder := GtMethodCoderExamples new forExampleMethodCoder.
+	aMethodCoder := GtPharoMethodCoderExamples new forExampleMethodCoder.
 	aMethodCoderUIModel := aMethodCoder asCoderUIModel.
 	
 	self assert: aMethodCoder addOns shouldBeUpdated.

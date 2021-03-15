@@ -8,7 +8,7 @@ Class {
 GtExpandableCoderElementExamples >> forCollapsedMethodCoder [
 	<gtExample>
 	| anElement aCoder |
-	aCoder := GtPharoMethodCoder forMethod: GtMethodCoderExamples >> #example.
+	aCoder := GtPharoMethodCoder forMethod: GtPharoMethodCoderExamples >> #example.
 	anElement := GtExpandableSourceCoderElement new.
 	anElement coderUIModel: (aCoder asCoderUIModel expanded: false).
 	self assert: anElement isExpanded not.
@@ -19,7 +19,7 @@ GtExpandableCoderElementExamples >> forCollapsedMethodCoder [
 GtExpandableCoderElementExamples >> forExpandedMethodCoder [
 	<gtExample>
 	| anElement aCoder |
-	aCoder := GtPharoMethodCoder forMethod: GtMethodCoderExamples >> #example.
+	aCoder := GtPharoMethodCoder forMethod: GtPharoMethodCoderExamples >> #example.
 	anElement := GtExpandableSourceCoderElement new.
 	anElement coderUIModel: (aCoder asCoderUIModel expanded: true).
 	self assert: anElement isExpanded.

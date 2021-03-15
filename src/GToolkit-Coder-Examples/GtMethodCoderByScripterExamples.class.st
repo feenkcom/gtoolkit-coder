@@ -1,6 +1,6 @@
 Class {
 	#name : #GtMethodCoderByScripterExamples,
-	#superclass : #GtMethodCoderExamples,
+	#superclass : #GtPharoMethodCoderExamples,
 	#traits : 'TCoderByScripterExamples',
 	#classTraits : 'TCoderByScripterExamples classTrait',
 	#category : #'GToolkit-Coder-Examples-By scripter'
@@ -23,7 +23,7 @@ GtMethodCoderByScripterExamples >> basicMethodCoder [
 GtMethodCoderByScripterExamples >> binaryMethod [
 	<gtExample>
 
-	^ GtMethodCoderExamples >> #?
+	^ GtPharoMethodCoderExamples >> #?
 ]
 
 { #category : #'examples - binary method' }
@@ -76,12 +76,12 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbConte
 	aScripter checks: 'Check Breadcrumb' do: [ :aStep | 
 		aStep  check 
 			label: 'Check Breadcrumb Package Name';
-			value: [ :aButton | aButton label asString ] equals: [ GtMethodCoderExamples package name ];
+			value: [ :aButton | aButton label asString ] equals: [ GtPharoMethodCoderExamples package name ];
 			onBreadthFirstChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Breadcrumb Class Name';
-			value: [ :aButton | aButton label asString ] equals: [ GtMethodCoderExamples name ];
+			value: [ :aButton | aButton label asString ] equals: [ GtPharoMethodCoderExamples name ];
 			onBreadthFirstChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 3 ].
 
@@ -202,12 +202,12 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbConten
 	aScripter checks: 'Check Breadcrumb' do: [ :aStep | 
 		aStep  check 
 			label: 'Check Breadcrumb Package Name';
-			value: [ :aButton | aButton label asString ] equals: [ GtMethodCoderExamples package name ];
+			value: [ :aButton | aButton label asString ] equals: [ GtPharoMethodCoderExamples package name ];
 			onBreadthFirstChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 1.
 		aStep  check 
 			label: 'Check Breadcrumb Class Name';
-			value: [ :aButton | aButton label asString ] equals: [ GtMethodCoderExamples name ];
+			value: [ :aButton | aButton label asString ] equals: [ GtPharoMethodCoderExamples name ];
 			onBreadthFirstChildOfClass: GtMethodCoderBreadcrumbElement;
 			onChildAt: 3 ].
 
@@ -524,7 +524,7 @@ GtMethodCoderByScripterExamples >> collapseFromUI: aScripter method: aMethod [
 GtMethodCoderByScripterExamples >> exampleMethod [
 	<gtExample>
 
-	^ GtMethodCoderExamples >> #sumMethod
+	^ GtPharoMethodCoderExamples >> #sumMethod
 ]
 
 { #category : #'examples - example method' }
@@ -1233,7 +1233,7 @@ GtMethodCoderByScripterExamples >> methodCoder [
 { #category : #'examples - pattern highlighter' }
 GtMethodCoderByScripterExamples >> patternHighlighterMethod [
 	<gtExample>
-	^ GtMethodCoderExamples >> #a:a:a:a:
+	^ GtPharoMethodCoderExamples >> #a:a:a:a:
 ]
 
 { #category : #'examples - pattern highlighter' }
@@ -1271,7 +1271,7 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_CheckUndeline
 GtMethodCoderByScripterExamples >> patternHighlighterPrintMethod [
 	<gtExample>
 
-	^ GtMethodCoderExamples >> #printStringReference
+	^ GtPharoMethodCoderExamples >> #printStringReference
 ]
 
 { #category : #'examples - pattern highlither - print' }
@@ -1341,7 +1341,7 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Ch
 { #category : #'examples - referenced example' }
 GtMethodCoderByScripterExamples >> referencedExampleMethod [
 	<gtExample>
-	^ GtMethodCoderExamples >> #b
+	^ GtPharoMethodCoderExamples >> #b
 ]
 
 { #category : #'examples - referenced example' }

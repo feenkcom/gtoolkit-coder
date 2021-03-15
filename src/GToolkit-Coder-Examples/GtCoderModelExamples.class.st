@@ -24,18 +24,19 @@ GtCoderModelExamples >> addFakeClassesToPackage: aPackage [
 
 { #category : #'private - set up' }
 GtCoderModelExamples >> cleanUp [
-	self fakeClassNames do: [ :eachClassName |
-		self class environment
-			at: eachClassName
-			ifPresent: [ :eachClass | eachClass removeFromSystem ] ].
+	EpMonitor disableDuring: [
+		self fakeClassNames do: [ :eachClassName |
+			self class environment
+				at: eachClassName
+				ifPresent: [ :eachClass | eachClass removeFromSystem ] ].
 
-	(RPackageOrganizer default
-		packageNamed: self fakePackageName
-		ifAbsent: [ nil ]) ifNotNil: #removeFromSystem.
+		(RPackageOrganizer default
+			packageNamed: self fakePackageName
+			ifAbsent: [ nil ]) ifNotNil: #removeFromSystem.
 
-	(RPackageOrganizer default
-		packageNamed: self renamedFakePackageName
-		ifAbsent: [ nil ]) ifNotNil: #removeFromSystem
+		(RPackageOrganizer default
+			packageNamed: self renamedFakePackageName
+			ifAbsent: [ nil ]) ifNotNil: #removeFromSystem ]
 ]
 
 { #category : #'private - set up' }
@@ -165,15 +166,14 @@ GtCoderModelExamples >> fakePackageName [
 GtCoderModelExamples >> fakeRegisteredPackage [
 	| aFakePackageName aPackage |
 	
-	self cleanUp.
+	EpMonitor disableDuring: [
+		self cleanUp.
 
-	aFakePackageName := self fakePackageName.
-	
-	self assert: (RPackageOrganizer default includesPackageNamed: aFakePackageName) not.
-	
-	aPackage := RPackageOrganizer default createPackageNamed: aFakePackageName.
-	
-	self addFakeClassesToPackage: aPackage.
+		aFakePackageName := self fakePackageName.
+		self assert: (RPackageOrganizer default includesPackageNamed: aFakePackageName) not.
+		
+		aPackage := RPackageOrganizer default createPackageNamed: aFakePackageName.
+		self addFakeClassesToPackage: aPackage ].
 	
 	^ aPackage
 ]
