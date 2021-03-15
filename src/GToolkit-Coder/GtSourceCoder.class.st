@@ -298,12 +298,12 @@ GtSourceCoder >> evaluateInterval: aSourceIntervalOrBlock requestedBy: aRequeste
 
 { #category : #'private - actions' }
 GtSourceCoder >> evaluationRequester [
-	^ self subclassResponsibility
+	^ GtSourceCoderEvaluationRequester new coder: self
 ]
 
 { #category : #'private - actions' }
 GtSourceCoder >> evaluationRequesterWithInterval [
-	^ self subclassResponsibility
+	^ GtSourceCoderIntervalEvaluationRequester new coder: self
 ]
 
 { #category : #'private - notifying' }

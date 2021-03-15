@@ -12,5 +12,6 @@ GtPharoSnippetCoder >> initializeShortcuts: addOns [
 	addOns
 		addShortcut: GtSourceCoderDoItShortcut new;
 		addShortcut: GtSourceCoderDoItAndInspectShortcut new;
-		addShortcut: GtSourceCoderPrintItShortcut new
+		addShortcut: GtSourceCoderPrintItShortcut new;
+		addShortcut: GtSourceCoderInlineRenameShortcut new
 ]

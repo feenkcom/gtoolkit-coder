@@ -6,6 +6,7 @@ Class {
 		'addOnMonitor',
 		'addOnCommand',
 		'addOnCommandBlock',
+		'extraAddOns',
 		'stylers',
 		'mainActions',
 		'contextActions',
@@ -76,6 +77,13 @@ GtTextualCoderViewModel >> addOnsAwaitDo: aBlock [
 	aBlock value: theAddOns
 ]
 
+{ #category : #'api - shortcuts' }
+GtTextualCoderViewModel >> addShortcut: aShortcut [
+	"Add an extra shortcut add-on independent from the dynamically computed add-ons"
+
+	extraAddOns addShortcut: aShortcut
+]
+
 { #category : #converting }
 GtTextualCoderViewModel >> asEditorState [
 	^ BrTextEditorCompositeMemento new
@@ -87,7 +95,7 @@ GtTextualCoderViewModel >> asEditorState [
 
 { #category : #'api - stylers' }
 GtTextualCoderViewModel >> compositeStyler [
-	^ GtAstCompositeStyler new
+	^ GtCoderAstCompositeStyler new
 		coderViewModel: self;
 		stylers: self stylers;
 		yourself
@@ -114,6 +122,9 @@ GtTextualCoderViewModel >> computeAddOns [
 			aCoderModel
 				perform: each methodSelector
 				withEnoughArguments: { theAst . newAddOns . self } ] ].
+	
+	"view model add-ons override coder model add-ons"
+	newAddOns addAddOns: extraAddOns.
 
 	^ newAddOns
 ]
@@ -250,6 +261,7 @@ GtTextualCoderViewModel >> gtInfoFor: aView [
 GtTextualCoderViewModel >> initialize [
 	super initialize.
 	
+	extraAddOns := GtTextualCoderAddOns new.
 	addOnMonitor := Monitor new.
 	stylers := #().
 	shortcuts := #().
@@ -300,6 +312,7 @@ GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 	"Is sent when new add-ons are computed"
 
 	self stylers: theAddOns stylers.
+	self shortcuts: theAddOns shortcuts.
 	self mainActions: theAddOns mainActions.
 	self contextActions: theAddOns contextActions.
 	self contextMenuActions: theAddOns contextMenuActions
@@ -358,14 +371,14 @@ GtTextualCoderViewModel >> selection: aBlCompositeSelection from: aSourceObject 
 
 { #category : #'api - shortcuts' }
 GtTextualCoderViewModel >> shortcuts [
-	^ #()
+	^ shortcuts
 ]
 
 { #category : #'api - shortcuts' }
 GtTextualCoderViewModel >> shortcuts: aCollectionOfShortcuts [
 	shortcuts = aCollectionOfShortcuts
 		ifTrue: [ ^ self ].
-
+	
 	shortcuts := aCollectionOfShortcuts.
 	self announce: GtTextualCoderViewModelShortcutsChanged new
 ]
@@ -380,6 +393,13 @@ GtTextualCoderViewModel >> shouldAddOnsBeUpdated [
 		addOns
 			ifNil: [ true ]
 			ifNotNil: [ :theAddOns | theAddOns shouldBeUpdated ] ]
+]
+
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> sourceText [
+	<return: #BlText>
+
+	^ self coderModel sourceText
 ]
 
 { #category : #'api - text' }
@@ -402,7 +422,9 @@ GtTextualCoderViewModel >> stylers: theStylers [
 		ifTrue: [ ^ self ].
 
 	stylers := theStylers.
-	theStylers do: [ :eachStyler | eachStyler coderViewModel: self ].
+	theStylers do: [ :eachStyler |
+		(eachStyler respondsTo: #coderViewModel:)
+			ifTrue: [ eachStyler coderViewModel: self ] ].
 	self announce: GtTextualCoderViewModelStylersChanged new
 ]
 

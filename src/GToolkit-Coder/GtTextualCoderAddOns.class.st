@@ -1,5 +1,5 @@
 Class {
-	#name : #GtSourceCoderAddOns,
+	#name : #GtTextualCoderAddOns,
 	#superclass : #GtCoderAddOns,
 	#instVars : [
 		'stylers'
@@ -8,14 +8,14 @@ Class {
 }
 
 { #category : #accessing }
-GtSourceCoderAddOns >> addAddOns: aGtCoderAddOns [
+GtTextualCoderAddOns >> addAddOns: aGtCoderAddOns [
 	super addAddOns: aGtCoderAddOns.
 
 	self addStylers: aGtCoderAddOns stylers
 ]
 
 { #category : #'api - stylers' }
-GtSourceCoderAddOns >> addStyler: aStyler [
+GtTextualCoderAddOns >> addStyler: aStyler [
 	(stylers anySatisfy: [ :each | each class = aStyler class ])
 		ifTrue: [ ^ self ].
 
@@ -23,12 +23,12 @@ GtSourceCoderAddOns >> addStyler: aStyler [
 ]
 
 { #category : #'api - stylers' }
-GtSourceCoderAddOns >> addStylers: aCollectionOfStylers [
+GtTextualCoderAddOns >> addStylers: aCollectionOfStylers [
 	aCollectionOfStylers do: [ :eachStyler | self addStyler: eachStyler ]
 ]
 
 { #category : #changes }
-GtSourceCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
+GtTextualCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
 	super differenceWith: aGtCoderAddOns on: aStream.
 	
 	self stylers = aGtCoderAddOns stylers
@@ -36,7 +36,7 @@ GtSourceCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
 ]
 
 { #category : #'gt-extensions' }
-GtSourceCoderAddOns >> gtViewStylersFor: aView [
+GtTextualCoderAddOns >> gtViewStylersFor: aView [
 	<gtView>
 	^ aView list
 		title: 'Stylers' translated;
@@ -45,18 +45,18 @@ GtSourceCoderAddOns >> gtViewStylersFor: aView [
 ]
 
 { #category : #'initialize-release' }
-GtSourceCoderAddOns >> initialize [
+GtTextualCoderAddOns >> initialize [
 	super initialize.
 	stylers := OrderedCollection new
 ]
 
 { #category : #copying }
-GtSourceCoderAddOns >> postCopy [
+GtTextualCoderAddOns >> postCopy [
 	super postCopy.
 	stylers := stylers copy
 ]
 
 { #category : #'api - stylers' }
-GtSourceCoderAddOns >> stylers [
+GtTextualCoderAddOns >> stylers [
 	^ stylers
 ]

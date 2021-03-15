@@ -1,7 +1,6 @@
 Class {
 	#name : #GtRBASTStyler,
 	#superclass : #BlTextStyler,
-	#traits : 'TRBProgramNodeVisitor',
 	#classTraits : 'TRBProgramNodeVisitor classTrait',
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }

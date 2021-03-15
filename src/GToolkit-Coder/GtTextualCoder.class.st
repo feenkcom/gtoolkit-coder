@@ -27,7 +27,7 @@ GtTextualCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
 
 { #category : #'private - addons' }
 GtTextualCoder >> addOnsClass [
-	^ GtSourceCoderAddOns
+	^ GtTextualCoderAddOns
 ]
 
 { #category : #'api - text' }
@@ -51,9 +51,12 @@ GtTextualCoder >> appendText: aText with: aGtCoderUpdateStragegy [
 		self sourceChangedWith: aGtCoderUpdateStragegy ]
 ]
 
-{ #category : #'api - ast' }
-GtTextualCoder >> ast [
-	^ self subclassResponsibility
+{ #category : #'api - converting' }
+GtTextualCoder >> asNewCoderModelWithSameSubject [
+	"Return new coder model with same subject (e.g., package, class, method)"
+	<return: #GtCoderModel>
+
+	^ self shouldNotImplement
 ]
 
 { #category : #'api - ast' }
@@ -73,7 +76,11 @@ GtTextualCoder >> astAsyncDo: aBlock [
 		astCommandBlock := [
 			| aComputedAst |
 
-			aComputedAst := self computeAst.
+			aComputedAst := self isModified
+				ifTrue: [ self computeAst ]
+				ifFalse: [ GtAstCache default
+					cachedAstAt: self sourceCode asAstCacheKey
+					ifAbsentPut: [ self computeAst ] ].
 			astMonitor critical: [
 				newAstCache := aComputedAst.
 				astCommand := nil.
@@ -241,13 +248,6 @@ GtTextualCoder >> newCompletionStrategy [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'instance creation' }
-GtTextualCoder >> newSourceStylerFrom: anEditorElement [
-	<return: #BlTextStyler>
-
-	^ self subclassResponsibility
-]
-
 { #category : #'private - notifying' }
 GtTextualCoder >> notifyCorrectionFrom: aFromIndex to: aToIndex with: aString [
 	self announce: (GtCoderCorrectionRequest new
@@ -350,8 +350,7 @@ GtTextualCoder >> sourceChangedWith: anUpdateStrategy [
 
 	self notifySourceChangedWith: anUpdateStrategy.
 
-	self requestUpdateCollapsedText.
-	self requestUpdateAddOns
+	self requestUpdateCollapsedText
 ]
 
 { #category : #'api - accessing' }

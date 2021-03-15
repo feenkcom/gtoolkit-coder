@@ -275,7 +275,7 @@ GtTextualCoderEditorElement >> onToolSpawnRequest: anAnnouncement [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onUpdateAddOnsRequest: anAnnouncement [
-	anAnnouncement coder updateAddOns
+	
 ]
 
 { #category : #'private - event handling' }
@@ -418,7 +418,7 @@ GtTextualCoderEditorElement >> reportParseError: aString at: anInteger [
 
 { #category : #private }
 GtTextualCoderEditorElement >> styleText [
-	self styleTextAndAfterDo: [  ]
+	self editor styleText
 ]
 
 { #category : #private }

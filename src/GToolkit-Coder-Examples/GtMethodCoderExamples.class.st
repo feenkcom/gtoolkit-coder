@@ -854,16 +854,28 @@ GtMethodCoderExamples >> nodeAtCursor [
 	coder := GtPharoMethodCoder
 		forMethod: GtMethodCoderExamples >> #sampleMethodWithCascades.
 	
-	node := coder rbNodeAt: ((coder currentSourceString indexOfSubCollection: 'self') - 1).
-	self assert: node isSelf not.
-
-	node := coder rbNodeAt: ((coder currentSourceString indexOfSubCollection: 'self') + 4).
-	self assert: node isSelf not.
-
-	node := coder rbNodeAt: ((coder currentSourceString indexOfSubCollection: 'self')).
+	node := coder
+		nodeAt: ((coder currentSourceString indexOfSubCollection: 'self') - 1)
+		ifFound: [ :aNode | aNode ]
+		ifNone: [ nil ].
+	self assert: (node isKindOf: GtPharoVariableNode) not.
+	
+	node := coder
+		nodeAt: ((coder currentSourceString indexOfSubCollection: 'self') + 4)
+		ifFound: [ :aNode | aNode ]
+		ifNone: [ nil ].
+	self assert: (node isKindOf: GtPharoVariableNode) not.
+	
+	node := coder
+		nodeAt: ((coder currentSourceString indexOfSubCollection: 'self'))
+		ifFound: [ :aNode | aNode ]
+		ifNone: [ nil ].
 	self assert: node isSelf.
 
-	node := coder rbNodeAt: ((coder currentSourceString indexOfSubCollection: 'self') + 3).
+	node := coder
+		nodeAt: ((coder currentSourceString indexOfSubCollection: 'self') + 3)
+		ifFound: [ :aNode | aNode ]
+		ifNone: [ nil ].
 	self assert: node isSelf.
 
 	^ node

@@ -58,7 +58,7 @@ GtRenameMethodController >> newName [
 
 { #category : #private }
 GtRenameMethodController >> newNode [
-	coder sourceAst nodesDo: [ :each | 
+	coder astAwait nodesDo: [ :each | 
 		((each isMessage or: [ each isMethod or: [ each isMethodPattern ] ])
 			and: [ each selectorParts first startPosition = startIndex ])
 			ifTrue: [ ^ each ] ].

@@ -1,5 +1,5 @@
 Class {
 	#name : #GtMethodCoderSaveAbilityChanged,
-	#superclass : #Announcement,
+	#superclass : #GtTextualCoderViewModelAnnouncement,
 	#category : #'GToolkit-Coder-UI-Coder - Method Events'
 }

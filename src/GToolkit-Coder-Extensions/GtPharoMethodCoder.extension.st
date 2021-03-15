@@ -71,7 +71,7 @@ GtPharoMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 7>
+	"<gtAstCoderAddOns: 7>"
 	(self hasObjectAttribute
 		and: [ anAST notNil
 				and: [ anAST methodNode

@@ -1,5 +1,5 @@
 Class {
-	#name : #GtAstStyler,
+	#name : #GtCoderAstStyler,
 	#superclass : #BlTextStyler,
 	#instVars : [
 		'coderViewModel'
@@ -8,22 +8,21 @@ Class {
 }
 
 { #category : #accessing }
-GtAstStyler >> coderViewModel [
+GtCoderAstStyler >> coderViewModel [
 	^ coderViewModel
 ]
 
 { #category : #accessing }
-GtAstStyler >> coderViewModel: anObject [
+GtCoderAstStyler >> coderViewModel: anObject [
 	coderViewModel := anObject
 ]
 
 { #category : #'api - styling' }
-GtAstStyler >> extraStyle: aText ast: theAst [
-	
+GtCoderAstStyler >> extraStyle: aText ast: theAst [
 ]
 
 { #category : #private }
-GtAstStyler >> privateStyle: aText [
+GtCoderAstStyler >> privateStyle: aText [
 	| theAst |
 	
 	"Styling happens in a non-UI process, therefore it is fine to wait until AST is computed in a blocking way"
@@ -48,6 +47,6 @@ GtAstStyler >> privateStyle: aText [
 ]
 
 { #category : #'api - styling' }
-GtAstStyler >> style: aText ast: theAst [
+GtCoderAstStyler >> style: aText ast: theAst [
 	self subclassResponsibility
 ]

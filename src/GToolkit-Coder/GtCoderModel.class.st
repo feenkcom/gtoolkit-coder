@@ -54,7 +54,7 @@ GtCoderModel >> addOns [
 	^ extraAddOns ifNil: [ extraAddOns := self newAddOns ]
 ]
 
-{ #category : #'private - addons' }
+{ #category : #'api - addons' }
 GtCoderModel >> addOnsClass [
 	^ GtCoderAddOns
 ]
@@ -140,14 +140,12 @@ GtCoderModel >> critical: aBlock [
 
 { #category : #accessing }
 GtCoderModel >> expanded [
-	<return: #Boolean>
-
-	self halt
+	self deprecated: 'The expansion state was moved to the ViewModel'
 ]
 
 { #category : #accessing }
 GtCoderModel >> expanded: aBoolean [
-	self halt
+	self deprecated: 'The expansion state was moved to the ViewModel'
 ]
 
 { #category : #accessing }
@@ -219,13 +217,6 @@ GtCoderModel >> requestUpdateAddOns [
 	self announce: (GtCoderAddOnsUpdateRequest new coder: self)"
 ]
 
-{ #category : #'api - addons' }
-GtCoderModel >> shortcuts [
-	<return: #Collection of: #BlBasicShortcut>
-
-	^ self addOns shortcuts
-]
-
 { #category : #subscriptions }
 GtCoderModel >> subscribeToSystem [
 	"do nothing"
@@ -234,9 +225,4 @@ GtCoderModel >> subscribeToSystem [
 { #category : #subscriptions }
 GtCoderModel >> unsubscribeFromSystem [
 	SystemAnnouncer uniqueInstance unsubscribe: self
-]
-
-{ #category : #'api - addons' }
-GtCoderModel >> updateAddOns [
-	"Start the update of the addons in a context of a given element"
 ]

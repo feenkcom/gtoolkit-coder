@@ -7,11 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
-{ #category : #'api - accessing' }
-GtTextCoder >> ast [
-	^ nil
-]
-
 { #category : #'instance creation' }
 GtTextCoder >> newCompletionStrategy [
 	^ GtCompletionStrategy new

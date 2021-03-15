@@ -1,6 +1,6 @@
 Class {
-	#name : #GtAstCompositeStyler,
-	#superclass : #GtAstStyler,
+	#name : #GtCoderAstCompositeStyler,
+	#superclass : #GtCoderAstStyler,
 	#instVars : [
 		'stylers'
 	],
@@ -8,12 +8,12 @@ Class {
 }
 
 { #category : #'api - styling' }
-GtAstCompositeStyler >> extraStyle: aText ast: theAst [
+GtCoderAstCompositeStyler >> extraStyle: aText ast: theAst [
 	self stylers do: [ :eachStyler | eachStyler extraStyle: aText ast: theAst ]
 ]
 
 { #category : #'api - styling' }
-GtAstCompositeStyler >> style: aText ast: theAst [
+GtCoderAstCompositeStyler >> style: aText ast: theAst [
 	self stylers do: [ :eachStyler |
 		[ eachStyler style: aText ast: theAst ]
 			on: Error
@@ -29,11 +29,11 @@ GtAstCompositeStyler >> style: aText ast: theAst [
 ]
 
 { #category : #accessing }
-GtAstCompositeStyler >> stylers [
+GtCoderAstCompositeStyler >> stylers [
 	^ stylers ifNil: [ #() ]
 ]
 
 { #category : #accessing }
-GtAstCompositeStyler >> stylers: anObject [
+GtCoderAstCompositeStyler >> stylers: anObject [
 	stylers := anObject
 ]

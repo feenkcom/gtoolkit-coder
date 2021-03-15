@@ -261,16 +261,9 @@ GtPharoMethodCoder >> compiledMethod [
 
 { #category : #'api - ast' }
 GtPharoMethodCoder >> computeAst [
-	^ self isModified
-		ifTrue: [
-			GtPharoParser
-				parseWithErrors: self currentSourceString
-				startingAt: self parserStartingState ]
-		ifFalse: [ GtAstCache default
-			cachedAstAt: self sourceCode asAstCacheKey
-			ifAbsentPut: [ GtPharoParser
-				parseWithErrors: self currentSourceString
-				startingAt: self parserStartingState ] ]
+	^ GtPharoParser
+		parseWithErrors: self currentSourceString
+		startingAt: self parserStartingState
 ]
 
 { #category : #'api - refactorings' }
@@ -344,11 +337,19 @@ GtPharoMethodCoder >> createRefactoringModel [
 
 { #category : #accessing }
 GtPharoMethodCoder >> currentSelector [
-	^ selector
-		ifNil: [ self rbAST
-				ifNotNil: [ :ast | 
-					ast isMethod
-						ifTrue: [ ast selector ] ] ]
+	| theAst |
+
+	selector
+		ifNotNil: [ ^ selector ].
+
+	theAst := self astAwait.
+	theAst
+		ifNil: [ ^ nil ].
+	
+	theAst isMethod
+		ifFalse: [ ^ nil ].
+			
+	 ^ theAst selector
 ]
 
 { #category : #'api - actions' }
@@ -945,25 +946,6 @@ GtPharoMethodCoder >> packageTag [
 { #category : #private }
 GtPharoMethodCoder >> parserStartingState [
 	^ GtPharoParser startingStateForMethod
-]
-
-{ #category : #private }
-GtPharoMethodCoder >> patternSource [
-	^ String
-		streamContents: [ :stream | 
-			| ast selectorParts arguments |
-			ast := self rbAST.
-			selectorParts := ast selectorParts.
-			arguments := ast arguments.
-			(selectorParts size = 1 and: [ arguments isEmpty ])
-				ifTrue: [ stream nextPutAll: selectorParts first ]
-				ifFalse: [ 1 to: selectorParts size do: [ :i | 
-						i = 1
-							ifFalse: [ stream space ].
-						stream
-							nextPutAll: (selectorParts at: i);
-							space;
-							nextPutAll: (arguments at: i) name ] ] ]
 ]
 
 { #category : #private }

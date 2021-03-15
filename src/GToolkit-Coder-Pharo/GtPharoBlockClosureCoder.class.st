@@ -97,7 +97,7 @@ GtPharoBlockClosureCoder >> forSource: aString [
 
 { #category : #'api - actions' }
 GtPharoBlockClosureCoder >> format [
-	self currentSourceString: (self newRbAST: self currentSourceString asString) formattedCode
+	self currentSourceString: self rbAST formattedCode
 ]
 
 { #category : #private }

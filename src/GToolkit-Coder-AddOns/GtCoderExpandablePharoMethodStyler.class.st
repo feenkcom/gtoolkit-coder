@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderExpandablePharoMethodStyler,
-	#superclass : #GtAstStyler,
+	#superclass : #GtCoderAstStyler,
 	#traits : 'TGtPharoProgramNodeVisitor',
 	#classTraits : 'TGtPharoProgramNodeVisitor classTrait',
 	#category : #'GToolkit-Coder-AddOns-Expandable method'
