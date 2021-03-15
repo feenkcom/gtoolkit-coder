@@ -4,9 +4,9 @@ Extension { #name : #GtPharoSnippetCoder }
 GtPharoSnippetCoder >> initializeAddOns: addOns [
 	super initializeAddOns: addOns.
 
-	addOns addStyler: (GtPharoStyler new).
-	"addOns addStyler: (GtFixItStyler new isForWorkspace: true).
-	addOns addStyler: GtCoderExpandablePharoMethodStyler new."
+	addOns addStyler: GtPharoStyler new.
+	addOns addStyler: GtCoderExpandablePharoMethodStyler new.
+	"addOns addStyler: (GtFixItStyler new isForWorkspace: true)."
 
 	addOns
 		addMainAction: 'Evaluate' translated

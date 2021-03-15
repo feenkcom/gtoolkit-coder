@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPharoMethodCoderExamples,
 	#superclass : #GtCoderModelExamples,
-	#category : #'GToolkit-Coder-Pharo-Examples'
+	#category : #'GToolkit-Coder-Examples-Pharo'
 }
 
 { #category : #'sample methods' }

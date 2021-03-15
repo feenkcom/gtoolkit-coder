@@ -203,10 +203,14 @@ GtPharoMethodCoder >> extractMethod: editorElement [
 { #category : #'*GToolkit-Coder-AddOns' }
 GtPharoMethodCoder >> initializeAddOns: addOns [
 	super initializeAddOns: addOns.
+	
+	addOns addStyler: GtPharoStyler new.
+	addOns addStyler: GtCoderExpandablePharoMethodStyler new.
+	addOns addStyler: GtFixItStyler new.
+
 	"addOns addStyler: GtCoderCommentStyler new."
 	"addOns addStyler: GtFixItStyler new."
-	addOns addStyler: GtPharoStyler new.
-	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
+
 	addOns
 		addMainAction: (GtCoderActivatableAction new
 			id: GtMethodCoderSaveActionId;
@@ -232,6 +236,19 @@ GtPharoMethodCoder >> initializeAddOns: addOns [
 		addMainAction: 'Copy Method Name' translated
 		icon: BrGlamorousVectorIcons clipboard
 		action: [ :aCoderUIModel :anEvent | self copyMethodNameToClipboard ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> initializeShortcuts: addOns [
+	super initializeShortcuts: addOns.
+
+	addOns
+		addShortcut: GtSourceCoderPlayShortcut new;
+		addShortcut: GtSourceCoderPlayAndInspectShortcut new;
+		addShortcut: GtSourceCoderExtractMethodShortcut new;
+		addShortcut: GtSourceCoderSaveShortcut new;
+		addShortcut: GtSourceCoderFormatShortcut new;
+		addShortcut: GtSourceCoderInlineRenameShortcut new
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }

@@ -1,13 +1,13 @@
 Class {
-	#name : #GtMethodCoderByScripterExamples,
+	#name : #GtPharoMethodCoderByScripterExamples,
 	#superclass : #GtPharoMethodCoderExamples,
 	#traits : 'TCoderByScripterExamples',
 	#classTraits : 'TCoderByScripterExamples classTrait',
-	#category : #'GToolkit-Coder-Examples-By scripter'
+	#category : #'GToolkit-Coder-Examples-Pharo'
 }
 
 { #category : #'examples - basic' }
-GtMethodCoderByScripterExamples >> basicMethodCoder [
+GtPharoMethodCoderByScripterExamples >> basicMethodCoder [
 	<gtExample>
 	| aCoder |
 	aCoder := GtPharoMethodCoder new.
@@ -20,14 +20,14 @@ GtMethodCoderByScripterExamples >> basicMethodCoder [
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethod [
+GtPharoMethodCoderByScripterExamples >> binaryMethod [
 	<gtExample>
 
 	^ GtPharoMethodCoderExamples >> #?
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoder [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoder [
 	<gtExample>
 	| aMethod aCoder |
 	aMethod := self binaryMethod.
@@ -36,7 +36,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoder [
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI [
 	<gtExample>
 	| aScripter |
 
@@ -45,7 +45,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI [
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
 	<gtExample>
 	| aScripter |
 
@@ -69,7 +69,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_CollapsedFromUI [
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbContent [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbContent [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI_CollapsedFromUI.
@@ -89,7 +89,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbConte
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnClassNameClick [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnClassNameClick [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI_CollapsedFromUI.
@@ -118,7 +118,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnCla
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnPackageClick [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnPackageClick [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI_CollapsedFromUI.
@@ -146,7 +146,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Collapsed_BreadcrumbOnPac
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI_CollapsedFromUI.
@@ -156,7 +156,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI [
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CheckActionButtons [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CheckActionButtons [
 	<gtExample>
 	| aScripter |
 
@@ -170,7 +170,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CheckActio
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CodeStyle [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CodeStyle [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
@@ -195,7 +195,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CodeStyle 
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbContent [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbContent [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI.
@@ -215,7 +215,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbConten
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnClassNameClick [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnClassNameClick [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI.
@@ -243,7 +243,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnClas
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnPackageClick [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnPackageClick [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI.
@@ -271,7 +271,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_Expanded_BreadcrumbOnPack
 ]
 
 { #category : #'examples - binary method' }
-GtMethodCoderByScripterExamples >> binaryMethodCoderUI_WithoutExampleActions [
+GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_WithoutExampleActions [
 	<gtExample>
 	| aScripter |
 	aScripter := self binaryMethodCoderUI_ExpandedFromUI.
@@ -285,7 +285,7 @@ GtMethodCoderByScripterExamples >> binaryMethodCoderUI_WithoutExampleActions [
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripter absenceOfContextActionNamed: anActionName [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripter absenceOfContextActionNamed: anActionName [
 	<gtExample>
 	
 	aScripter check 
@@ -299,7 +299,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter absenceOfContextActionNam
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep discardButtonExists: doesExist [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep discardButtonExists: doesExist [
 	<gtExample>
 	| aCheck |
 
@@ -320,7 +320,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep discardButtonExists
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripter existenceOfContextActionNamed: anActionName [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripter existenceOfContextActionNamed: anActionName [
 	<gtExample>
 	
 	aScripter check 
@@ -334,7 +334,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter existenceOfContextActionN
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMainActionsCount contextAction: anAddonsActionsCount [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMainActionsCount contextAction: anAddonsActionsCount [
 	<gtExample>
 	aScripter substeps: 'Check Available Action Buttons' do: [ :aStep |
 		aStep wait forEmptySpaceTaskQueue.
@@ -355,7 +355,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripter numberOfMainActions: aMai
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep numberfOfTextAttributes: aNumber OfType: aClass [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep numberfOfTextAttributes: aNumber OfType: aClass [
 	<gtExample>
 	aScripterOrStep check
 		label: 'Check Editor Text Attributes';
@@ -374,7 +374,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep numberfOfTextAttrib
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep refactoringPreviewButtonExists: doesExist [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep refactoringPreviewButtonExists: doesExist [
 	<gtExample>
 	| aCheck |
 
@@ -396,7 +396,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep refactoringPreviewB
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep renameEditorExists: doesExist [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep renameEditorExists: doesExist [
 	<gtExample>
 	| aCheck |
 
@@ -418,7 +418,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep renameEditorExists:
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep saveButtonEnabled: isEnabled [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep saveButtonEnabled: isEnabled [
 	<gtExample>
 	| aCheck |
 
@@ -439,7 +439,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep saveButtonEnabled: 
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributesAt: anIndex anySatisfies: aBlock [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributesAt: anIndex anySatisfies: aBlock [
 	<gtExample>
 	aScripterOrStep check
 		label: 'Check Editor Text Attributes';
@@ -452,7 +452,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributesAt: a
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributesAt: anIndex nonSatisfies: aBlock [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributesAt: anIndex nonSatisfies: aBlock [
 	<gtExample>
 	aScripterOrStep check
 		label: 'Check Editor Text Attributes';
@@ -465,7 +465,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textAttributesAt: a
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExampleStatusAttributeAt: anIndex [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExampleStatusAttributeAt: anIndex [
 	<gtExample>
 	self 
 		checkFor: aScripterOrStep 
@@ -475,7 +475,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExampleStatusAt
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExpandAttributeAt: anIndex [
+GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExpandAttributeAt: anIndex [
 	<gtExample>
 	self 
 		checkFor: aScripterOrStep 
@@ -485,7 +485,7 @@ GtMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExpandAttribute
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> coderOnMethod: aMethod [
+GtPharoMethodCoderByScripterExamples >> coderOnMethod: aMethod [
 	<gtExample>
 	| aCoder |
 	aCoder := self basicMethodCoder.
@@ -500,7 +500,7 @@ GtMethodCoderByScripterExamples >> coderOnMethod: aMethod [
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> collapseFromUI: aScripter method: aMethod [
+GtPharoMethodCoderByScripterExamples >> collapseFromUI: aScripter method: aMethod [
 	<gtExample>
 	aScripter substep: 'Collapse and Check Coder' do: [ :aStep |
 		aStep click
@@ -521,14 +521,14 @@ GtMethodCoderByScripterExamples >> collapseFromUI: aScripter method: aMethod [
 ]
 
 { #category : #'examples - example method' }
-GtMethodCoderByScripterExamples >> exampleMethod [
+GtPharoMethodCoderByScripterExamples >> exampleMethod [
 	<gtExample>
 
 	^ GtPharoMethodCoderExamples >> #sumMethod
 ]
 
 { #category : #'examples - example method' }
-GtMethodCoderByScripterExamples >> exampleMethodCoder [
+GtPharoMethodCoderByScripterExamples >> exampleMethodCoder [
 	<gtExample>
 	| aMethod aCoder |
 	aMethod := self exampleMethod.
@@ -537,7 +537,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoder [
 ]
 
 { #category : #'examples - example method' }
-GtMethodCoderByScripterExamples >> exampleMethodCoderUI [
+GtPharoMethodCoderByScripterExamples >> exampleMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	
@@ -547,7 +547,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI [
 ]
 
 { #category : #'examples - example method' }
-GtMethodCoderByScripterExamples >> exampleMethodCoderUI_CollapsedFromUI [
+GtPharoMethodCoderByScripterExamples >> exampleMethodCoderUI_CollapsedFromUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self exampleMethodCoderUI.
@@ -557,7 +557,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_CollapsedFromUI [
 ]
 
 { #category : #'examples - example method' }
-GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI [
+GtPharoMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self exampleMethodCoderUI_CollapsedFromUI.
@@ -567,7 +567,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI [
 ]
 
 { #category : #'examples - example method' }
-GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActionButtons [
+GtPharoMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActionButtons [
 	<gtExample>
 	| aScripter |
 	aScripter := self exampleMethodCoderUI_ExpandedFromUI.
@@ -583,7 +583,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_CheckActi
 ]
 
 { #category : #'examples - example method' }
-GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_PlayAndInspect [
+GtPharoMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_PlayAndInspect [
 	<gtExample>
 	| aScripter |
 
@@ -597,7 +597,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_PlayAndIn
 ]
 
 { #category : #'examples - example method' }
-GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePragma [
+GtPharoMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePragma [
 	<gtExample>
 	| aScripter |
 	aScripter := self exampleMethodCoderUI_ExpandedFromUI.
@@ -619,7 +619,7 @@ GtMethodCoderByScripterExamples >> exampleMethodCoderUI_ExpandedFromUI_RemovePra
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> expandFromUI: aScripter method: aMethod [
+GtPharoMethodCoderByScripterExamples >> expandFromUI: aScripter method: aMethod [
 	<gtExample>
 	aScripter substep: 'Expand and Check Coder' do: [ :aStep |
 		aStep click
@@ -641,12 +641,12 @@ GtMethodCoderByScripterExamples >> expandFromUI: aScripter method: aMethod [
 ]
 
 { #category : #utilities }
-GtMethodCoderByScripterExamples >> extractedUnaryMethodNameFor: aMethodCoder [
+GtPharoMethodCoderByScripterExamples >> extractedUnaryMethodNameFor: aMethodCoder [
 	^ 'sub', (aMethodCoder attributeNamed: #fakeMethodName) capitalized
 ]
 
 { #category : #'examples - fixit class' }
-GtMethodCoderByScripterExamples >> fixitCreateClass_01_setup [
+GtPharoMethodCoderByScripterExamples >> fixitCreateClass_01_setup [
 	<gtExample>
 	| aScripter |
 
@@ -661,7 +661,7 @@ GtMethodCoderByScripterExamples >> fixitCreateClass_01_setup [
 ]
 
 { #category : #'examples - fixit class' }
-GtMethodCoderByScripterExamples >> fixitCreateClass_02_click_fixit [
+GtPharoMethodCoderByScripterExamples >> fixitCreateClass_02_click_fixit [
 	<gtExample>
 	| aScripter |
 
@@ -688,7 +688,7 @@ GtMethodCoderByScripterExamples >> fixitCreateClass_02_click_fixit [
 ]
 
 { #category : #'examples - fixit class' }
-GtMethodCoderByScripterExamples >> fixitCreateClass_03_click_define_class [
+GtPharoMethodCoderByScripterExamples >> fixitCreateClass_03_click_define_class [
 	<gtExample>
 	| aScripter |
 
@@ -720,7 +720,7 @@ GtMethodCoderByScripterExamples >> fixitCreateClass_03_click_define_class [
 ]
 
 { #category : #'examples - rename method' }
-GtMethodCoderByScripterExamples >> forKeywordRename_01_setup [
+GtPharoMethodCoderByScripterExamples >> forKeywordRename_01_setup [
 	<gtExample>
 	| aScripter |
 
@@ -752,7 +752,7 @@ GtMethodCoderByScripterExamples >> forKeywordRename_01_setup [
 ]
 
 { #category : #'examples - rename method' }
-GtMethodCoderByScripterExamples >> forKeywordRename_02_shortcut [
+GtPharoMethodCoderByScripterExamples >> forKeywordRename_02_shortcut [
 	<gtExample>
 	| aScripter |
 
@@ -778,7 +778,7 @@ GtMethodCoderByScripterExamples >> forKeywordRename_02_shortcut [
 ]
 
 { #category : #'examples - rename method' }
-GtMethodCoderByScripterExamples >> forKeywordRename_03_move_cursor [
+GtPharoMethodCoderByScripterExamples >> forKeywordRename_03_move_cursor [
 	<gtExample>
 	| aScripter |
 
@@ -807,7 +807,7 @@ GtMethodCoderByScripterExamples >> forKeywordRename_03_move_cursor [
 ]
 
 { #category : #'examples - rename method' }
-GtMethodCoderByScripterExamples >> forKeywordRename_04_type [
+GtPharoMethodCoderByScripterExamples >> forKeywordRename_04_type [
 	<gtExample>
 	| aScripter |
 
@@ -832,7 +832,7 @@ GtMethodCoderByScripterExamples >> forKeywordRename_04_type [
 ]
 
 { #category : #'examples - rename method' }
-GtMethodCoderByScripterExamples >> forKeywordRename_05_click_preview [
+GtPharoMethodCoderByScripterExamples >> forKeywordRename_05_click_preview [
 	<gtExample>
 	| aScripter |
 
@@ -857,7 +857,7 @@ GtMethodCoderByScripterExamples >> forKeywordRename_05_click_preview [
 ]
 
 { #category : #'examples - rename method' }
-GtMethodCoderByScripterExamples >> forKeywordRename_06_click_apply [
+GtPharoMethodCoderByScripterExamples >> forKeywordRename_06_click_apply [
 	<gtExample>
 	| aScripter |
 
@@ -879,7 +879,7 @@ GtMethodCoderByScripterExamples >> forKeywordRename_06_click_apply [
 ]
 
 { #category : #'examples - extract method' }
-GtMethodCoderByScripterExamples >> forUnaryExtraction_01_setup [
+GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_01_setup [
 	<gtExample>
 	| aScripter |
 
@@ -904,7 +904,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_01_setup [
 ]
 
 { #category : #'examples - extract method' }
-GtMethodCoderByScripterExamples >> forUnaryExtraction_02_select [
+GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_02_select [
 	<gtExample>
 	| aScripter |
 
@@ -929,7 +929,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_02_select [
 ]
 
 { #category : #'examples - extract method' }
-GtMethodCoderByScripterExamples >> forUnaryExtraction_03_context_menu [
+GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_03_context_menu [
 	<gtExample>
 	| aScripter |
 
@@ -944,7 +944,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_03_context_menu [
 ]
 
 { #category : #'examples - extract method' }
-GtMethodCoderByScripterExamples >> forUnaryExtraction_04_hover_extract_method [
+GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_04_hover_extract_method [
 	<gtExample>
 	| aScripter |
 
@@ -961,7 +961,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_04_hover_extract_method [
 ]
 
 { #category : #'examples - extract method' }
-GtMethodCoderByScripterExamples >> forUnaryExtraction_05_click_extract_method [
+GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_05_click_extract_method [
 	<gtExample>
 	| aScripter |
 
@@ -1040,7 +1040,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_05_click_extract_method [
 ]
 
 { #category : #'examples - extract method' }
-GtMethodCoderByScripterExamples >> forUnaryExtraction_06_type_method_name [
+GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_06_type_method_name [
 	<gtExample>
 	| aScripter |
 
@@ -1063,7 +1063,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_06_type_method_name [
 ]
 
 { #category : #'examples - extract method' }
-GtMethodCoderByScripterExamples >> forUnaryExtraction_07_01_accept_with_enter [
+GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_07_01_accept_with_enter [
 	<gtExample>
 	| aScripter |
 
@@ -1116,7 +1116,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_07_01_accept_with_enter [
 ]
 
 { #category : #'examples - extract method' }
-GtMethodCoderByScripterExamples >> forUnaryExtraction_08_preview_refactoring [
+GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_08_preview_refactoring [
 	<gtExample>
 	| aScripter |
 
@@ -1136,7 +1136,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_08_preview_refactoring [
 ]
 
 { #category : #'examples - extract method' }
-GtMethodCoderByScripterExamples >> forUnaryExtraction_09_apply_refactoring [
+GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_09_apply_refactoring [
 	<gtExample>
 	| aScripter |
 
@@ -1165,7 +1165,7 @@ GtMethodCoderByScripterExamples >> forUnaryExtraction_09_apply_refactoring [
 ]
 
 { #category : #'examples - rename method' }
-GtMethodCoderByScripterExamples >> forUnaryRename_01_setup [
+GtPharoMethodCoderByScripterExamples >> forUnaryRename_01_setup [
 	<gtExample>
 	| aScripter |
 
@@ -1194,7 +1194,7 @@ GtMethodCoderByScripterExamples >> forUnaryRename_01_setup [
 ]
 
 { #category : #'examples - rename method' }
-GtMethodCoderByScripterExamples >> forUnaryRename_02_shortcut [
+GtPharoMethodCoderByScripterExamples >> forUnaryRename_02_shortcut [
 	<gtExample>
 	| aScripter |
 
@@ -1222,7 +1222,7 @@ GtMethodCoderByScripterExamples >> forUnaryRename_02_shortcut [
 ]
 
 { #category : #'examples - basic' }
-GtMethodCoderByScripterExamples >> methodCoder [
+GtPharoMethodCoderByScripterExamples >> methodCoder [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripter.
@@ -1231,13 +1231,13 @@ GtMethodCoderByScripterExamples >> methodCoder [
 ]
 
 { #category : #'examples - pattern highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterMethod [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterMethod [
 	<gtExample>
 	^ GtPharoMethodCoderExamples >> #a:a:a:a:
 ]
 
 { #category : #'examples - pattern highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterMethodCoder [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterMethodCoder [
 	<gtExample>
 	| aMethod aCoder |
 	aMethod := self patternHighlighterMethod.
@@ -1247,7 +1247,7 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoder [
 ]
 
 { #category : #'examples - pattern highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripterForBlock: [ self patternHighlighterMethodCoder ].
@@ -1255,7 +1255,7 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI [
 ]
 
 { #category : #'examples - pattern highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_CheckUndelineAttributes [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_CheckUndelineAttributes [
 	<gtExample>
 	| aScripter |
 	aScripter := self patternHighlighterMethodCoderUI.
@@ -1268,14 +1268,14 @@ GtMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_CheckUndeline
 ]
 
 { #category : #'examples - pattern highlither - print' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintMethod [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterPrintMethod [
 	<gtExample>
 
 	^ GtPharoMethodCoderExamples >> #printStringReference
 ]
 
 { #category : #'examples - pattern highlither - print' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoder [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoder [
 	<gtExample>
 	| aMethod aCoder |
 	aMethod := self patternHighlighterPrintMethod.
@@ -1285,7 +1285,7 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoder [
 ]
 
 { #category : #'examples - pattern highlither - print' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripterForBlock: [ self patternHighlighterPrintMethodCoder ].
@@ -1293,7 +1293,7 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI [
 ]
 
 { #category : #'examples - pattern highlither - print' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_CheckUndelineAttributes [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_CheckUndelineAttributes [
 	<gtExample>
 	| aScripter |
 	aScripter := self patternHighlighterPrintMethodCoderUI.
@@ -1307,7 +1307,7 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoderUI_CheckUnd
 ]
 
 { #category : #'examples - reference highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoder [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoder [
 	<gtExample>
 	| aMethod aCoder |
 	aMethod := self patternHighlighterPrintMethod.
@@ -1317,7 +1317,7 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoder [
 ]
 
 { #category : #'examples - reference highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripterForBlock: [ self patternHighlighterPrintStringMethodCoder ].
@@ -1325,7 +1325,7 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI [
 ]
 
 { #category : #'examples - reference highlighter' }
-GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_CheckUndelineAttributes [
+GtPharoMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_CheckUndelineAttributes [
 	<gtExample>
 	| aScripter |
 	aScripter := self patternHighlighterPrintStringMethodCoderUI.
@@ -1339,13 +1339,13 @@ GtMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoderUI_Ch
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethod [
+GtPharoMethodCoderByScripterExamples >> referencedExampleMethod [
 	<gtExample>
 	^ GtPharoMethodCoderExamples >> #b
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoder [
+GtPharoMethodCoderByScripterExamples >> referencedExampleMethodCoder [
 	<gtExample>
 	| aMethod aCoder |
 	aMethod := self referencedExampleMethod.
@@ -1354,7 +1354,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoder [
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI [
+GtPharoMethodCoderByScripterExamples >> referencedExampleMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	aScripter := self scripterForBlock: [ self referencedExampleMethodCoder ].
@@ -1363,7 +1363,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI [
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleAttribute [
+GtPharoMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleAttribute [
 	<gtExample>
 	| aScripter |
 	aScripter := self referencedExampleMethodCoderUI.
@@ -1374,7 +1374,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleAt
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleExpandAttribute [
+GtPharoMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleExpandAttribute [
 	<gtExample>
 	| aScripter |
 	aScripter := self referencedExampleMethodCoderUI.
@@ -1386,7 +1386,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_CheckExampleEx
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion [
+GtPharoMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion [
 	<gtExample>
 	| aScripter |
 	aScripter := self referencedExampleMethodCoderUI.
@@ -1412,7 +1412,7 @@ GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatu
 ]
 
 { #category : #'examples - referenced example' }
-GtMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion_WriteExamplePragma [
+GtPharoMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion_WriteExamplePragma [
 	<gtExample>
 	| aScripter |
 	aScripter := self referencedExampleMethodCoderUI_NoExampleStatusAfterPragmaDeletion.

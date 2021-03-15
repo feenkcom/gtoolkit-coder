@@ -72,15 +72,3 @@ GtPharoMethodCoder >> buildRemoveMethodLabel: anElement [
 				action: [ anElement phlow spawnObject: references ]).
 	^ element
 ]
-
-{ #category : #'*GToolkit-Coder-Pharo-UI' }
-GtPharoMethodCoder >> initializeShortcuts: addOns [
-	super initializeShortcuts: addOns.
-
-	addOns
-		addShortcut: GtSourceCoderPlayShortcut new;
-		addShortcut: GtSourceCoderPlayAndInspectShortcut new;
-		addShortcut: GtSourceCoderExtractMethodShortcut new;
-		addShortcut: GtSourceCoderSaveShortcut new;
-		addShortcut: GtSourceCoderFormatShortcut new
-]

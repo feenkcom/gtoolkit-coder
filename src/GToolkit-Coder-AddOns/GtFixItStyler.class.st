@@ -1,6 +1,8 @@
 Class {
 	#name : #GtFixItStyler,
 	#superclass : #GtCoderAstStyler,
+	#traits : 'TGtPharoProgramNodeVisitor',
+	#classTraits : 'TGtPharoProgramNodeVisitor classTrait',
 	#instVars : [
 		'isForWorkspace'
 	],
@@ -105,6 +107,13 @@ GtFixItStyler >> sourceCoder [
 	^ self coderViewModel coderModel
 ]
 
+{ #category : #'api - styling' }
+GtFixItStyler >> style: aText ast: theAst [
+	text := aText.
+	[ self accept: theAst ]
+		ensure: [ text := nil ]
+]
+
 { #category : #'private - messages' }
 GtFixItStyler >> typeOf: aNode [
 	isForWorkspace
@@ -135,28 +144,36 @@ GtFixItStyler >> typeOf: aNode [
 
 { #category : #visiting }
 GtFixItStyler >> visitMessageNode: aNode [
-	| intervals |
+	| theNodeType theClassForSelector attribute |
+	super visitMessageNode: aNode.
 
-	intervals := aNode keywordsIntervals.
-	(self
+	self hasRefactoring
+		ifTrue: [ ^ self ].
+
+	theNodeType := GtPharoProgramNode
 		typeOf: aNode receiver
-		in: (isForWorkspace ifFalse: [ self sourceCoder behavior ]))
-		ifNotNil: [ :class | 
-			(class whichClassIncludesSelector: aNode selector)
-				ifNil: [
-					(((class isTrait
-						and: [ (Object whichClassIncludesSelector: aNode selector) notNil ]) ) or: [ self hasRefactoring ])
-							ifFalse: [ | attribute |
-								attribute := GtFixItAttribute new.
-								attribute
-									fixItActions: [ {((GtDefineMethodFixItAction forCoder: self sourceCoder node: aNode)
-											classOrMetaClass: class)} ].
-								self
-									styleFrom: intervals last last
-									to: intervals last last
-									with: {attribute} ] ] ].
+		in: (isForWorkspace ifFalse: [ self sourceCoder behavior ]).	
+	theNodeType
+		ifNil: [ ^ self ].
+		
+	theClassForSelector := theNodeType whichClassIncludesSelector: aNode selector.
+	theClassForSelector
+		ifNotNil: [ ^ self ].
+	
+	(theNodeType isTrait
+		and: [ (Object whichClassIncludesSelector: aNode selector) notNil ])
+			ifTrue: [ ^ self ].
 
-	super visitMessageNode: aNode
+	attribute := GtFixItAttribute new.
+	attribute fixItActions: [ {
+		(GtDefineMethodFixItAction forCoder: self sourceCoder node: aNode)
+			classOrMetaClass: theNodeType
+		} ].
+	
+	text
+		attribute: attribute
+		from: aNode selectorParts last stopPosition
+		to: aNode selectorParts last stopPosition
 ]
 
 { #category : #visiting }
