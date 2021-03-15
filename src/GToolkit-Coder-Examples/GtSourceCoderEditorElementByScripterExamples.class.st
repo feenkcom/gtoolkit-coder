@@ -60,7 +60,7 @@ GtSourceCoderEditorElementByScripterExamples >> scripterWithElement [
 
 		aStep set
 			label: 'Initialize Coder UI Model';
-			model: [ :anElement | anElement sourceCoderUIModel ];
+			model: [ :anElement | anElement textualCoderViewModel ];
 			onSelf ].
 
 	^ aScripter syncContinue

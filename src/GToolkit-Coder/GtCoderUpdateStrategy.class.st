@@ -4,7 +4,7 @@ I contain properties for how a coder should send notifications when code changes
 Currently I indicate if code should be changed syncronously or asyncronously.
 "
 Class {
-	#name : #GtCoderUpdateStragegy,
+	#name : #GtCoderUpdateStrategy,
 	#superclass : #Object,
 	#instVars : [
 		'announcementSource',
@@ -14,31 +14,31 @@ Class {
 }
 
 { #category : #accessing }
-GtCoderUpdateStragegy >> announcementSource [
-	^ announcementSource
-]
-
-{ #category : #accessing }
-GtCoderUpdateStragegy >> announcementSource: anObject [
-	announcementSource := anObject
-]
-
-{ #category : #accessing }
-GtCoderUpdateStragegy >> isSynchronous [
+GtCoderUpdateStrategy >> isSynchronous [
 	^ isSynchronous ifNil: [ false ]
 ]
 
 { #category : #accessing }
-GtCoderUpdateStragegy >> makeAsynchronous [
+GtCoderUpdateStrategy >> isSynchronous: anObject [
+	isSynchronous := anObject
+]
+
+{ #category : #accessing }
+GtCoderUpdateStrategy >> makeAsynchronous [
 	isSynchronous := false
 ]
 
 { #category : #accessing }
-GtCoderUpdateStragegy >> makeSynchronous [
+GtCoderUpdateStrategy >> makeSynchronous [
 	isSynchronous := true
 ]
 
 { #category : #accessing }
-GtCoderUpdateStragegy >> source: anObject [
+GtCoderUpdateStrategy >> source [
+	^ announcementSource
+]
+
+{ #category : #accessing }
+GtCoderUpdateStrategy >> source: anObject [
 	announcementSource := anObject
 ]

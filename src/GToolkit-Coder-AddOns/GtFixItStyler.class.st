@@ -1,8 +1,7 @@
 Class {
 	#name : #GtFixItStyler,
-	#superclass : #GtRBASTStyler,
+	#superclass : #GtAstStyler,
 	#instVars : [
-		'sourceCoder',
 		'isForWorkspace'
 	],
 	#category : #'GToolkit-Coder-AddOns-FixIt'
@@ -31,19 +30,19 @@ GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 	| actions possibleNames results |
 	actions := OrderedCollection new.
 	actions
-		add: (GtDefineClassFixItAction forCoder: sourceCoder node: aVariableNode).
+		add: (GtDefineClassFixItAction forCoder: self sourceCoder node: aVariableNode).
 	isForWorkspace
 		ifFalse: [ actions
 				add:
 					(GtDefineClassVariableFixItAction
-						forCoder: sourceCoder
+						forCoder: self sourceCoder
 						node: aVariableNode) ].
 	possibleNames := aVariableNode temporaryVariables
-		, sourceCoder behavior allInstVarNames.
+		, self sourceCoder behavior allInstVarNames.
 	results := aVariableNode name
 		correctAgainst: aVariableNode temporaryVariables
 		continuedFrom: nil.
-	results := sourceCoder behavior
+	results := self sourceCoder behavior
 		possibleVariablesFor: aVariableNode name
 		continuedFrom: results.
 	(aVariableNode name correctAgainst: nil continuedFrom: results)
@@ -51,7 +50,7 @@ GtFixItStyler >> globalFixItActionsFor: aVariableNode [
 			actions
 				add:
 					((GtRenameVariableFixItAction
-						forCoder: sourceCoder
+						forCoder: self sourceCoder
 						node: aVariableNode) newName: each) ].
 	^ actions
 ]
@@ -79,40 +78,40 @@ GtFixItStyler >> localFixItActionsFor: aVariableNode [
 	actions
 		add:
 			(GtDefineTemporaryFixItAction
-				forCoder: sourceCoder
+				forCoder: self sourceCoder
 				node: aVariableNode).
 	(self
 		canAddInstanceVariable: aVariableNode name
-		to: sourceCoder behavior)
+		to: self sourceCoder behavior)
 		ifTrue: [ actions
 				add:
 					(GtDefineInstanceVariableFixItAction
-						forCoder: sourceCoder
+						forCoder: self sourceCoder
 						node: aVariableNode) ].
 	possibleNames := aVariableNode temporaryVariables
-		, sourceCoder behavior allInstVarNames.
+		, self sourceCoder behavior allInstVarNames.
 	(aVariableNode name correctAgainst: possibleNames)
 		do: [ :each | 
 			actions
 				add:
 					((GtRenameVariableFixItAction
-						forCoder: sourceCoder
+						forCoder: self sourceCoder
 						node: aVariableNode) newName: each) ].
 	^ actions
 ]
 
 { #category : #accessing }
-GtFixItStyler >> sourceCoder: aCoder [
-	sourceCoder := aCoder
+GtFixItStyler >> sourceCoder [
+	^ self coderViewModel coderModel
 ]
 
 { #category : #'private - messages' }
 GtFixItStyler >> typeOf: aNode [
 	isForWorkspace
 		ifFalse: [ aNode isSelf
-				ifTrue: [ ^ sourceCoder classOrMetaClass ].
+				ifTrue: [ ^ self sourceCoder classOrMetaClass ].
 			aNode isSuper
-				ifTrue: [ ^ sourceCoder classOrMetaClass
+				ifTrue: [ ^ self sourceCoder classOrMetaClass
 						ifNotNil: [ :class | class superclass ] ] ].
 	aNode isLiteralNode
 		ifTrue: [ ^ aNode value class ].
@@ -141,7 +140,7 @@ GtFixItStyler >> visitMessageNode: aNode [
 	intervals := aNode keywordsIntervals.
 	(self
 		typeOf: aNode receiver
-		in: (isForWorkspace ifFalse: [ sourceCoder behavior ]))
+		in: (isForWorkspace ifFalse: [ self sourceCoder behavior ]))
 		ifNotNil: [ :class | 
 			(class whichClassIncludesSelector: aNode selector)
 				ifNil: [
@@ -150,7 +149,7 @@ GtFixItStyler >> visitMessageNode: aNode [
 							ifFalse: [ | attribute |
 								attribute := GtFixItAttribute new.
 								attribute
-									fixItActions: [ {((GtDefineMethodFixItAction forCoder: sourceCoder node: aNode)
+									fixItActions: [ {((GtDefineMethodFixItAction forCoder: self sourceCoder node: aNode)
 											classOrMetaClass: class)} ].
 								self
 									styleFrom: intervals last last

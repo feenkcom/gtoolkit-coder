@@ -13,7 +13,9 @@ GtSourceCoderEditorElementExamples >> editorForExampleMethodCoder [
 	aMethodCoderUIModel := aMethodCoder asCoderUIModel.
 	
 	self assert: aMethodCoder addOns shouldBeUpdated.
-	BlUseAsyncFeatures disableDuring: [ anEditorElement := GtSourceCoderEditorElement new sourceCoderUIModel: aMethodCoderUIModel ].
+	BlUseAsyncFeatures disableDuring: [
+		anEditorElement := GtSourceCoderEditorElement new
+			textualCoderViewModel: aMethodCoderUIModel ].
 	self assert: aMethodCoder addOns shouldBeUpdated not.
 
 	self assert: anEditorElement hasFocus not.

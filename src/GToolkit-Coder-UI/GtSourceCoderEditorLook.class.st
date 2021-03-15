@@ -31,13 +31,6 @@ GtSourceCoderEditorLook >> initialize [
 	self add: (BrLayoutResizerLook new inherit: editorElement)
 ]
 
-{ #category : #initialization }
-GtSourceCoderEditorLook >> initializeListeners [
-	super initializeListeners.
-	
-	self when: GtCoderSaveUIModelWish do: [ :anEvent | self onSaveSourceCoderUIModel: anEvent coderUIModel ]
-]
-
 { #category : #'instance creation' }
 GtSourceCoderEditorLook >> newActionsElement [
 	^ GtCoderActionsElement new
@@ -53,10 +46,5 @@ GtSourceCoderEditorLook >> newEditorElement [
 { #category : #hooks }
 GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
 	actions coderUIModel: aGtSourceCoderUIModel.
-	editorElement sourceCoderUIModel: aGtSourceCoderUIModel
-]
-
-{ #category : #hooks }
-GtSourceCoderEditorLook >> onSaveSourceCoderUIModel: aGtSourceCoderUIModel [
-	editorElement onSaveSourceCoderUIModel: aGtSourceCoderUIModel
+	editorElement textualCoderViewModel: aGtSourceCoderUIModel
 ]

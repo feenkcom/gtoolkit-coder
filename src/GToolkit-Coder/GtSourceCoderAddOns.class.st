@@ -7,12 +7,24 @@ Class {
 	#category : #'GToolkit-Coder-Coders - Addons'
 }
 
-{ #category : #stylers }
+{ #category : #accessing }
+GtSourceCoderAddOns >> addAddOns: aGtCoderAddOns [
+	super addAddOns: aGtCoderAddOns.
+
+	self addStylers: aGtCoderAddOns stylers
+]
+
+{ #category : #'api - stylers' }
 GtSourceCoderAddOns >> addStyler: aStyler [
 	(stylers anySatisfy: [ :each | each class = aStyler class ])
 		ifTrue: [ ^ self ].
 
 	stylers add: aStyler
+]
+
+{ #category : #'api - stylers' }
+GtSourceCoderAddOns >> addStylers: aCollectionOfStylers [
+	aCollectionOfStylers do: [ :eachStyler | self addStyler: eachStyler ]
 ]
 
 { #category : #changes }
@@ -44,7 +56,7 @@ GtSourceCoderAddOns >> postCopy [
 	stylers := stylers copy
 ]
 
-{ #category : #accessing }
+{ #category : #'api - stylers' }
 GtSourceCoderAddOns >> stylers [
 	^ stylers
 ]

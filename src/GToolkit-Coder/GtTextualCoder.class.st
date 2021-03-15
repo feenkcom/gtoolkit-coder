@@ -26,13 +26,6 @@ GtTextualCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
 ]
 
 { #category : #'private - addons' }
-GtTextualCoder >> addOnChanged: aSymbol [
-	aSymbol = #stylers
-		ifTrue: [ self notifyStylersUpdated ].
-	super addOnChanged: aSymbol
-]
-
-{ #category : #'private - addons' }
 GtTextualCoder >> addOnsClass [
 	^ GtSourceCoderAddOns
 ]
@@ -205,7 +198,7 @@ GtTextualCoder >> currentSourceTextSynchronously: aText [
 
 	self critical: [
 		self sourceCode currentSourceText: aText.
-		self sourceChangedWith: GtCoderUpdateStragegy new makeSynchronous ]
+		self sourceChangedWith: GtCoderUpdateStrategy new makeSynchronous ]
 ]
 
 { #category : #'api - text' }
@@ -213,6 +206,11 @@ GtTextualCoder >> deleteSourceTextFrom: aFromIndex to: aToIndex [
 	self critical: [
 		self sourceCode delete: aFromIndex to: aToIndex.
 		self sourceChanged ]
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> ensureAst [
+	self astAsyncDo: [ :theAst | ]
 ]
 
 { #category : #'gt-extensions' }
@@ -229,10 +227,6 @@ GtTextualCoder >> initialize [
 
 	astMonitor := Monitor new.
 	self reset
-]
-
-{ #category : #initialize }
-GtTextualCoder >> initializeShortcuts [
 ]
 
 { #category : #testing }
@@ -268,9 +262,8 @@ GtTextualCoder >> notifySourceChangedWith: anUpdateStragegy [
 	"Notify the text editor that it should update the text (for example due to refactoring changes)"
 	
 	self announce: (GtCoderSourceCodeChanged new 
-		updateStragegy: anUpdateStragegy;
-		coder: self;
-		source: anUpdateStragegy announcementSource)
+		updateStrategy: anUpdateStragegy;
+		coder: self)
 ]
 
 { #category : #'private - notifying' }
@@ -341,7 +334,7 @@ GtTextualCoder >> resetASTCache [
 
 { #category : #'event handling' }
 GtTextualCoder >> sourceChanged [
-	self sourceChangedWith: GtCoderUpdateStragegy new makeAsynchronous
+	self sourceChangedWith: GtCoderUpdateStrategy new makeAsynchronous
 ]
 
 { #category : #'event handling' }
@@ -375,7 +368,7 @@ GtTextualCoder >> sourceCode: aGtCoderSourceCode [
 	
 	self 
 		sourceCode: aGtCoderSourceCode 
-		withStrategy: GtCoderUpdateStragegy new makeAsynchronous
+		withStrategy: GtCoderUpdateStrategy new makeAsynchronous
 ]
 
 { #category : #'api - accessing' }
@@ -390,7 +383,7 @@ GtTextualCoder >> sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy 
 GtTextualCoder >> sourceCodeSynchronously: aGtCoderSourceCode [
 	self
 		sourceCode: aGtCoderSourceCode 
-		withStrategy: GtCoderUpdateStragegy new makeSynchronous
+		withStrategy: GtCoderUpdateStrategy new makeSynchronous
 ]
 
 { #category : #'api - text' }
@@ -411,58 +404,13 @@ GtTextualCoder >> sourceTextDo: aBlock [
 
 { #category : #'api - addons' }
 GtTextualCoder >> stylers [
-	^ self addOns stylers
+	^ #()
 ]
 
-{ #category : #'private - addons' }
-GtTextualCoder >> terminateAddOnsCommand [
-	addOnCommand
-		ifNil: [ ^ self ].
-	addOnCommand terminate.
-	addOnCommand := nil
-]
-
-{ #category : #'api - addons' }
-GtTextualCoder >> updateAddOns [
-	"Start the update of the addons in a context of a given element"
-
-	addOnMonitor
-		critical: [			 
-			BlUseAsyncFeatures 
-				ifEnabledDo: [ 
-					self terminateAddOnsCommand.
-					addOnCommand := self updateAddOnsCommand.
-					addOnCommand name: 'AddOns: ' , self identityHash printString.
-					BlTktWorkerProvider coderPool schedule: addOnCommand ]
-				otherwise: [ 
-					self updateAddOnsCommand execute ] ]
-]
-
-{ #category : #'private - addons' }
-GtTextualCoder >> updateAddOnsCommand [
-	^ [
-		| updatedAddOns pragmas ast |
-		ast := self ast.
-		pragmas := self
-			pragmasNamed: #gtAstCoderAddOns:
-			inHierarchy: self class.
-		updatedAddOns := self addOns copy.
-		pragmas
-			reverseDo:
-				[ :each | self perform: each methodSelector with: ast with: updatedAddOns ].
-		addOns := updatedAddOns.
-		addOns markAsUpdated.
-		updatedAddOns changesDo: [ :each | self addOnChanged: each ].
-	] asBlTktTerminableCommand
-]
-
-{ #category : #'api - addons' }
-GtTextualCoder >> updateContextMenuAddOnsFrom: anEditorElement [
-	| updatedAddOns pragmas |
-	pragmas := self
-		pragmasNamed: #gtCoderContextMenuAddOns:
-		inHierarchy: self class.
-	updatedAddOns := self newAddOns.
-	pragmas do: [ :each | self perform: each methodSelector withEnoughArguments: { updatedAddOns. anEditorElement } ].
-	addOns contextMenuActions: updatedAddOns contextMenuActions
+{ #category : #'api - ast' }
+GtTextualCoder >> terminateAstCommand [
+	astMonitor critical: [
+		astCommand ifNotNil: [ :anAstCommand | anAstCommand terminate ].
+		astCommand := nil.
+		astCommandBlock := nil ]
 ]

@@ -48,9 +48,11 @@ GtPharoMethodCoder >> highlighterFor: anAST into: coderAddOns [
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	(anAST isNil or: [ anAST methodNode isNil ])
-		ifTrue: [ ^ self ].
-	coderAddOns addStyler: (GtCoderExpandablePharoMethodStyler new coder: self)
+	
+	anAST methodNode
+		ifNil: [ ^ self ].
+
+	"coderAddOns addStyler: (GtCoderExpandablePharoMethodStyler new)"
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }

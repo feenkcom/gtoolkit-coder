@@ -27,10 +27,10 @@ GtAstStyler >> privateStyle: aText [
 	| theAst |
 	
 	"Styling happens in a non-UI process, therefore it is fine to wait until AST is computed in a blocking way"
-	theAst := self coder astAwait.
+	theAst := self coderViewModel coderModel astAwait.
 	theAst
 		ifNil: [ ^ aText ].
-	
+
 	[
 		self style: aText ast: theAst.
 		self extraStyle: aText ast: theAst ]

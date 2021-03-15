@@ -120,8 +120,8 @@ GtPharoBlockClosureCoder >> initialize [
 ]
 
 { #category : #'initialize-release' }
-GtPharoBlockClosureCoder >> initializeAddOns [
-	super initializeAddOns.
+GtPharoBlockClosureCoder >> initializeAddOns: addOns [
+	super initializeAddOns: addOns.
 	
 	addOns addStyler:
 		(BrRBTextStyler new

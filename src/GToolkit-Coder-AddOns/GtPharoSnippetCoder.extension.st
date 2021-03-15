@@ -1,9 +1,9 @@
 Extension { #name : #GtPharoSnippetCoder }
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtPharoSnippetCoder >> initializeAddOns [
-	super initializeAddOns.
-	addOns
+GtPharoSnippetCoder >> initializeAddOns: addOns [
+	super initializeAddOns: addOns.
+	"addOns
 		addMainAction: 'Evaluate' translated
 		icon: BrGlamorousVectorIcons play
 		action: [ :aCoderUIModel :anEvent | 
@@ -37,11 +37,9 @@ GtPharoSnippetCoder >> initializeAddOns [
 				isForWorkspace: true;
 				yourself);
 		addStyler:
-			(GtFixItStyler new
-				sourceCoder: self;
-				isForWorkspace: true);
+			(GtFixItStyler new isForWorkspace: true);
 		addStyler: GtCoderExpandablePharoMethodStyler new.
-	addOns addShortcut: GtSourceCoderInlineRenameShortcut new
+	addOns addShortcut: GtSourceCoderInlineRenameShortcut new"
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }

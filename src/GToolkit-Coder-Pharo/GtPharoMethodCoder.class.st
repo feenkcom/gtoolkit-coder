@@ -1244,7 +1244,7 @@ GtPharoMethodCoder >> skipBlankLinesIn: source at: startIndex [
 
 { #category : #'api - addons' }
 GtPharoMethodCoder >> slideAstFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 10>
+	"<gtAstCoderAddOns: 10>"
 	(self compiledMethod notNil
 		and: [ anAST notNil
 				and: [ 
@@ -1287,12 +1287,11 @@ GtPharoMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	isUnaryInstanceSideMethod := (self hasObjectAttribute
 		and: [ anAST notNil
 			and: [ anAST methodNode
-				ifNotNil: [ :node | node arguments isEmpty ]
+				ifNotNil: [ :node | node variables isEmpty ]
 				ifNil: [ false ] ] ]).
 	isUnaryClassSideMethod := (anAST notNil
 		and: [ anAST methodNode
-			ifNotNil: [ :node | node arguments isEmpty and: [ 
-				node methodClass isClassSide ] ]
+			ifNotNil: [ :node | node variables isEmpty and: [ self compiledMethod methodClass isClassSide ] ]
 			ifNil: [ false ] ] ).
 	(isUnaryInstanceSideMethod or: [ isUnaryClassSideMethod ])		
 		ifFalse: [ ^ self ].

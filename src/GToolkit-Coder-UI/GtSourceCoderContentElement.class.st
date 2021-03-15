@@ -63,12 +63,3 @@ GtSourceCoderContentElement >> initialize [
 
 	self viewModel: (GtSourceCoderContentModel new)
 ]
-
-{ #category : #accessing }
-GtSourceCoderContentElement >> saveCoderUIModel: aCoderUIModel [
-	self
-		assert: [ aCoderUIModel isNotNil ]
-		description: [ 'Coder must not be nil' ].
-	
-	self dispatchEvent: (GtCoderSaveUIModelWish new coderUIModel: aCoderUIModel)
-]

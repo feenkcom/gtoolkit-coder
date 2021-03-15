@@ -23,9 +23,7 @@ Class {
 		'id',
 		'suppressedAnnouncements',
 		'attributes',
-		'addOns',
-		'addOnCommand',
-		'addOnMonitor'
+		'extraAddOns'
 	],
 	#classVars : [
 		'UniqueIdGenerator'
@@ -51,22 +49,9 @@ GtCoderModel class >> initialize [
 	UniqueIdGenerator := BlUniqueIdGenerator new
 ]
 
-{ #category : #'private - addons' }
-GtCoderModel >> addOnChanged: aSymbol [
-	"Is sent from a Coder Worker thread when a given category of add-ons changed"
-
-	aSymbol = #mainActions
-		ifTrue: [ self announce: (GtCoderMainActionsChanged new coder: self) ].
-	aSymbol = #contextActions
-		ifTrue: [ self announce: (GtCoderContextActionsChanged new coder: self) ]
-]
-
 { #category : #'api - addons' }
 GtCoderModel >> addOns [
-	<return: #GtCoderAddOns>
-
-	addOns ifNil: [ self initializeAddOns ].
-	^ addOns
+	^ extraAddOns ifNil: [ extraAddOns := self newAddOns ]
 ]
 
 { #category : #'private - addons' }
@@ -177,20 +162,16 @@ GtCoderModel >> initialize [
 	id := UniqueIdGenerator generateUniqueId.
 	monitor := Monitor new.
 	announcer := GtCoderAnnouncer new.
-	addOnMonitor := Monitor new.
 
 	self coderLook: self defaultCoderLook
 ]
 
 { #category : #initialization }
-GtCoderModel >> initializeAddOns [
-	addOns := self addOnsClass new.
-	self initializeShortcuts
+GtCoderModel >> initializeAddOns: addOns [
 ]
 
 { #category : #initialization }
-GtCoderModel >> initializeShortcuts [
-	
+GtCoderModel >> initializeShortcuts: addOns [
 ]
 
 { #category : #'api - actions' }
@@ -232,10 +213,10 @@ GtCoderModel >> requestUpdateAddOns [
 	It is a responsibility of the Coder's Element to start the actual addon update (${method:GtCoderModel>>#updateAddOnsFrom:}$) which may happen in
 	a background thread, that is why we can not start the update directly - we must have a reference to the element"
 
-	addOns
+	"addOns
 		ifNil: [ ^ self ].
 	self addOns requestUpdate.
-	self announce: (GtCoderAddOnsUpdateRequest new coder: self)
+	self announce: (GtCoderAddOnsUpdateRequest new coder: self)"
 ]
 
 { #category : #'api - addons' }
@@ -243,15 +224,6 @@ GtCoderModel >> shortcuts [
 	<return: #Collection of: #BlBasicShortcut>
 
 	^ self addOns shortcuts
-]
-
-{ #category : #'api - addons' }
-GtCoderModel >> shouldAddOnsBeUpdated [
-	"Return true if addons should be updated, false otherwise. When a Coder Model is attached to the corresponding Element
-	that element should check if addons need to be updated and if it is the case start the update with the help of ${method:GtCoderModel>>#updateAddOnsFrom:}$"
-	<return: #Boolean>
-
-	^ self addOns shouldBeUpdated
 ]
 
 { #category : #subscriptions }

@@ -155,7 +155,7 @@ GtPharoMethodCoder >> copyMethodNameToClipboard [
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtPharoMethodCoder >> exampleAstFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 10>
+	"<gtAstCoderAddOns: 10>"
 	(self compiledMethod notNil
 		and: [ anAST notNil
 				and: [ anAST methodNode
@@ -201,11 +201,11 @@ GtPharoMethodCoder >> extractMethod: editorElement [
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtPharoMethodCoder >> initializeAddOns [
-	super initializeAddOns.
+GtPharoMethodCoder >> initializeAddOns: addOns [
+	super initializeAddOns: addOns.
 	"addOns addStyler: GtCoderCommentStyler new."
-	addOns addStyler: (GtFixItStyler new sourceCoder: self).
-	addOns addStyler: (GtPharoStyler new coder: self).
+	"addOns addStyler: GtFixItStyler new."
+	addOns addStyler: GtPharoStyler new.
 	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
 	addOns
 		addMainAction: (GtCoderActivatableAction new
@@ -236,7 +236,7 @@ GtPharoMethodCoder >> initializeAddOns [
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtPharoMethodCoder >> petitParserProductionAstFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 10>
+	"<gtAstCoderAddOns: 10>"
 	
 	(anAST notNil
 		and: [ anAST isParseError not

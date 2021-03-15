@@ -187,7 +187,7 @@ GtExtractMethodController >> refactoring [
 
 { #category : #executing }
 GtExtractMethodController >> refactoringFailed [
-	self sourceElement sourceCoderUIModel allowSaveDueTo: self
+	self sourceElement textualCoderViewModel allowSaveDueTo: self
 ]
 
 { #category : #accessing }

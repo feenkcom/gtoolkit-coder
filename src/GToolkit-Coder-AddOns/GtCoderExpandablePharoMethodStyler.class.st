@@ -51,7 +51,7 @@ GtCoderExpandablePharoMethodStyler >> visitMessage: aMessageNode [
 	
 	aMethodClass := self
 		typeOf: aMessageNode messageReceiver
-		in: self coder behavior.
+		in: self coderViewModel coderModel behavior.
 
 	aMethodClass isNil
 		ifTrue: [ ^ self ].

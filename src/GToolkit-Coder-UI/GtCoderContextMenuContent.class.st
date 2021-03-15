@@ -46,7 +46,7 @@ GtCoderContextMenuContent >> initialize [
 				when: BlClickEvent
 					do: [ :anEvent |
 						anEvent consumed: true.
-						eachGtCoderContextMenuAction action cull: self editorElement cull: self anchor.
+						eachGtCoderContextMenuAction action cull: self editorElement textualCoderViewModel cull: anEvent.
 						self fireEvent: BrDropdownHideWish new.
 						self fireEvent: BrContextMenuHideWish new ];
 				addChild:
@@ -58,12 +58,12 @@ GtCoderContextMenuContent >> initialize [
 				ifNotNil: [ :hover | 
 					element
 						when: BlMouseEnterEvent
-						do: [ :anEvent | hover cull: self editorElement cull: self anchor ] ].
+						do: [ :anEvent | hover cull: self editorElement cull: anEvent ] ].
 			eachGtCoderContextMenuAction leaveAction
 				ifNotNil: [ :leave | 
 					element
 						when: BlMouseLeaveEvent
-						do: [ :anEvent | leave cull: self editorElement cull: self anchor ] ].
+						do: [ :anEvent | leave cull: self editorElement cull: anEvent ] ].
 			
 			eachGtCoderContextMenuAction name
 				ifNotNil: [ :anActionName | element containerName: anActionName ].

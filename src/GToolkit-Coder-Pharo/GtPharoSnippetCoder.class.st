@@ -15,6 +15,20 @@ GtPharoSnippetCoder >> coder [
 	^ self
 ]
 
+{ #category : #'api - ast' }
+GtPharoSnippetCoder >> computeAst [
+	^ self isModified
+		ifTrue: [
+			GtPharoParser
+				parseWithErrors: self currentSourceString
+				startingAt: self parserStartingState ]
+		ifFalse: [ GtAstCache default
+			cachedAstAt: self sourceCode asAstCacheKey
+			ifAbsentPut: [ GtPharoParser
+				parseWithErrors: self currentSourceString
+				startingAt: self parserStartingState ] ]
+]
+
 { #category : #accessing }
 GtPharoSnippetCoder >> context [
 	^ context
