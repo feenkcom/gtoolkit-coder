@@ -349,7 +349,9 @@ GtPharoMethodCoder >> currentSelector [
 	theAst isMethod
 		ifFalse: [ ^ #faulty ].
 			
-	 ^ theAst selector
+	theAst selectorDo: [ :aSymbol | ^ aSymbol ].
+
+	^ #faulty
 ]
 
 { #category : #'api - actions' }
