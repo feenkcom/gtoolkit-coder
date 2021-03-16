@@ -117,11 +117,20 @@ GtTextualCoderViewModel >> computeAddOns [
 	aCoderModel initializeShortcuts: newAddOns.
 	aCoderModel initializeAddOns: newAddOns.
 	theAst ifNotNil: [
-		pragmas reverseDo: [ :each |
-			aCoderModel
-				perform: each methodSelector
-				withEnoughArguments: { theAst . newAddOns . self } ] ].
-	
+		pragmas reverseDo: [ :eachPragma |
+			[ aCoderModel
+				perform: eachPragma methodSelector
+				withEnoughArguments: { theAst . newAddOns . self } ]
+			on: Error
+			do: [ :anError |
+				NonInteractiveTranscript stdout
+					nextPut: $[;
+					nextPutAll: aCoderModel class name;
+					nextPut: $];
+					space;
+					print: anError;
+					cr ] ] ].
+
 	"view model add-ons override coder model add-ons"
 	newAddOns addAddOns: extraAddOns.
 

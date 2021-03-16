@@ -14,21 +14,17 @@ GtCoderExpandablePharoMethodStyler >> style: aText ast: theAst [
 ]
 
 { #category : #visiting }
-GtCoderExpandablePharoMethodStyler >> visitMessage: aMessageNode [
+GtCoderExpandablePharoMethodStyler >> visitMessageSend: aMessageNode [
 	| aMethodClass |
 	
+	self visitValue: aMessageNode.
+
 	aMethodClass := GtPharoProgramNode
-		typeOf: aMessageNode messageReceiver
+		typeOf: aMessageNode receiver
 		in: self coderViewModel coderModel behavior.
 	
-	NonInteractiveTranscript stdout
-		print: aMessageNode selector;
-		space;
-		nextPutAll: aMethodClass asString;
-		cr.
-
-	aMethodClass isNil
-		ifTrue: [ ^ self ].
+	aMethodClass
+		ifNil: [ ^ self ].
 
 	(aMethodClass canUnderstand: aMessageNode selector)
 		ifFalse: [ ^ self ].
