@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #visiting }
-GtPharoStyler >> visitAssignment: anAssignment [
-	self accept: anAssignment variable.
-	self accept: anAssignment value
-]
-
-{ #category : #visiting }
 GtPharoStyler >> visitBooleanLiteral: aBooleanLiteral [
 	self
 		attributes: { BlTextForegroundAttribute color: Color red muchDarker }
@@ -53,20 +47,11 @@ GtPharoStyler >> visitErrorToken: anErrorToken [
 ]
 
 { #category : #visiting }
-GtPharoStyler >> visitMethod: aMethod [
-	aMethod comments ifNotNil: [ :theComments |
-		theComments do: [ :eachComment |
-			self visitCommentFrom: eachComment first to: eachComment second ] ].
-	
-	^ self visitProgram: aMethod
-]
-
-{ #category : #visiting }
 GtPharoStyler >> visitMethodPattern: aMethodPattern [
 	aMethodPattern selectorParts do: [ :eachSelectorPart |
 		self visitMethodSelectorPart: eachSelectorPart ].
 
-	^ self visitProgram: aMethodPattern
+	super visitMethodPattern: aMethodPattern
 ]
 
 { #category : #visiting }
@@ -123,9 +108,9 @@ GtPharoStyler >> visitPragmaSelectorPart: aSmaCCToken [
 
 { #category : #visiting }
 GtPharoStyler >> visitReturn: aReturn [
-	self visitReturnUpArrow: aReturn upArrow.
-	
-	^ self visitProgram: aReturn
+	super visitReturn: aReturn.
+
+	self visitReturnUpArrow: aReturn upArrow
 ]
 
 { #category : #visiting }
@@ -142,6 +127,15 @@ GtPharoStyler >> visitSelfVariable: aSelfVariable [
 		attributes: { BlTextForegroundAttribute color: Color cyan muchDarker }
 		from: aSelfVariable name startPosition
 		to: aSelfVariable name stopPosition
+]
+
+{ #category : #visiting }
+GtPharoStyler >> visitSmaCCParseNode: aSmaCCParseNode [
+	super visitSmaCCParseNode: aSmaCCParseNode.
+
+	aSmaCCParseNode comments ifNotNil: [ :theComments |
+		theComments do: [ :eachComment |
+			self visitCommentFrom: eachComment first to: eachComment second ] ]
 ]
 
 { #category : #visiting }
