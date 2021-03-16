@@ -163,20 +163,19 @@ GtPharoMethodCoder >> copyMethodNameToClipboard [
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtPharoMethodCoder >> exampleAstFor: anAST into: coderAddOns [
-	"<gtAstCoderAddOns: 10>"
-	(self compiledMethod notNil
-		and: [ anAST notNil
-				and: [ anAST methodNode
-						ifNotNil: [ :node | 
-							node pragmas
-								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
-						ifNil: [ false ] ] ])
+	<gtAstCoderAddOns: 10>
+	
+	self compiledMethod
+		ifNil: [ ^ self ].
+	
+	anAST methodNode
+		ifNil: [ ^ self ].
+		
+	(anAST methodNode pragmas anySatisfy: [ :each | each isErrorNode not and: [ each selector = #gtExample ] ])
 		ifFalse: [ ^ self ].
-	coderAddOns
-		addStyler:
-			(GtCoderExampleStatusStyler new
-				coder: self;
-				classOrMetaClass: self behavior).
+
+	coderAddOns addStyler: GtCoderExampleStatusStyler new.
+
 	(self canExecuteExample or: [ anAST methodNode numArgs isZero ])
 		ifFalse: [ ^ self ].
 
