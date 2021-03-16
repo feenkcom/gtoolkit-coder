@@ -4,35 +4,34 @@ Extension { #name : #GtPharoMethodCoder }
 GtPharoMethodCoder >> addClassAccessorRefactoringsFor: aNode to: coderAddOns [
 	aNode isVariable
 		ifFalse: [ ^ self ].
-	(aNode whoDefines: aNode name) notNil
+	(aNode whoDefines: aNode variableName) notNil
 		ifTrue: [ ^ self ].
-	(self behavior allClassVarNames includes: aNode name asSymbol)
+	(self behavior allClassVarNames includes: aNode variableName)
 		ifFalse: [ ^ self ].
 	coderAddOns
-		addContextMenuItem: (self createLabel: 'Abstract variable' description: aNode name)
+		addContextMenuItem: (self createLabel: 'Abstract variable' description: aNode variableName)
 		hover: [ self highlightNode: aNode ]
 		leave: [ self removeHighlight ]
 		action: [ :element | self abstractClassVar: aNode ].
 	(self isAccessorMethodFor: aNode)
 		ifFalse: [
 			coderAddOns
-				addContextMenuItem: (self createLabel: 'Create accessors' description: aNode name)
+				addContextMenuItem: (self createLabel: 'Create accessors' description: aNode variableName)
 				hover: [ self highlightNode: aNode ]
 				leave: [ self removeHighlight ]
 				action: [ :element | self createAccessorsFor: aNode instanceVariable: false ] ]
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtPharoMethodCoder >> addExtractMethodTo: coderAddOns from: anEditorElement [
-	| nodes |
-	nodes := self rbSelectedNodesFrom: anEditorElement.
-	nodes isNil
-		ifTrue: [ ^ self ].
+GtPharoMethodCoder >> addExtractMethodTo: coderAddOns from: aCoderViewModel [
+	| theNodes |
+	theNodes := self extractableNodesFrom: aCoderViewModel.
+
 	coderAddOns
 		addContextMenuItem: 'Extract method'
-		hover: [ self highlightFrom: nodes first start to: nodes last stop ]
+		hover: [ self highlightFrom: theNodes first startPosition to: theNodes last stopPosition ]
 		leave: [ self removeHighlight ]
-		action: [ :element | self extractMethod: element ]
+		action: [ :aTextualViewModel :anEvent :anEditorElement | self extractMethod: anEditorElement ]
 		id: GtMethodCoderExtractMethodContextMenuItemId
 ]
 
@@ -91,43 +90,52 @@ GtPharoMethodCoder >> addInlineTempFor: aNode to: coderAddOns [
 GtPharoMethodCoder >> addInstanceAccessorRefactoringsFor: aNode to: coderAddOns [
 	aNode isVariable
 		ifFalse: [ ^ self ].
-	(aNode whoDefines: aNode name) notNil
+
+	(aNode whoDefines: aNode variableName) notNil
 		ifTrue: [ ^ self ].
-	(self behavior allInstVarNames includes: aNode name)
+
+	(self behavior allInstVarNames includes: aNode variableName)
 		ifFalse: [ ^ self ].
+
 	coderAddOns
-		addContextMenuItem: (self createLabel: 'Abstract variable' description: aNode name)
+		addContextMenuItem: (self createLabel: 'Abstract variable' description: aNode variableName)
 		hover: [ self highlightNode: aNode ]
 		leave: [ self removeHighlight ]
 		action: [ :element | self abstractInstVar: aNode ].
 	(self isAccessorMethodFor: aNode)
 		ifTrue: [ coderAddOns
-				addContextMenuItem: (self createLabel: 'Protect variable' description: aNode name)
+				addContextMenuItem: (self createLabel: 'Protect variable' description: aNode variableName)
 				hover: [ self highlightNode: aNode ]
 				leave: [ self removeHighlight ]
 				action: [ :element | self protectInstVar: aNode ] ]
 		ifFalse: [ coderAddOns
-				addContextMenuItem: (self createLabel: 'Create accessors' description: aNode name)
+				addContextMenuItem: (self createLabel: 'Create accessors' description: aNode variableName)
 				hover: [ self highlightNode: aNode ]
 				leave: [ self removeHighlight ]
 				action: [ :element | self createAccessorsFor: aNode instanceVariable: true ] ]
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtPharoMethodCoder >> addRefactoringContextMenuAddOnsTo: coderAddOns from: anEditorElement [
+GtPharoMethodCoder >> addRefactoringContextMenuAddOnsAst: anAst to: coderAddOns from: aCoderViewModel [
 	<gtCoderContextMenuAddOns: 20>
-	self addExtractMethodTo: coderAddOns from: anEditorElement.
-	(self rbSelectedNodeFrom: anEditorElement)
-		ifNotNil: [ :ast | 
-			self addInstanceAccessorRefactoringsFor: ast to: coderAddOns.
-			self addClassAccessorRefactoringsFor: ast to: coderAddOns.
-			self addRemoveParameterRefactoringFor: ast to: coderAddOns.
-			ast
+	
+	self addExtractMethodTo: coderAddOns from: aCoderViewModel.
+	
+	(self extractableNodesFrom: aCoderViewModel)
+		ifNotEmpty: [ :theNodes | 
+			| aNode |
+			
+			aNode := theNodes first.
+			
+			self addInstanceAccessorRefactoringsFor: aNode to: coderAddOns.
+			"self addClassAccessorRefactoringsFor: aNode to: coderAddOns.
+			self addRemoveParameterRefactoringFor: aNode to: coderAddOns.
+			aNode
 				withAllParentsDo: [ :node | self addInlineSelfMessageFor: node to: coderAddOns ].
-			ast
+			aNode
 				withAllParentsDo: [ :node | self addInlineTempFor: node to: coderAddOns ].
-			ast
-				withAllParentsDo: [ :node | self addExtractTempFor: node to: coderAddOns ] ]
+			aNode
+				withAllParentsDo: [ :node | self addExtractTempFor: node to: coderAddOns ]" ]
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
@@ -141,7 +149,7 @@ GtPharoMethodCoder >> addRemoveParameterRefactoringFor: aNode to: coderAddOns [
 			each = aNode
 				ifTrue: [ ^ self ] ].
 	coderAddOns
-		addContextMenuItem: (self createLabel: 'Remove parameter' description: aNode name)
+		addContextMenuItem: (self createLabel: 'Remove parameter' description: aNode variableName)
 		hover: [ self highlightNode: aNode ]
 		leave: [ self removeHighlight ]
 		action: [ :element | self removeParameter: aNode ]
@@ -156,29 +164,18 @@ GtPharoMethodCoder >> copyMethodNameToClipboard [
 { #category : #'*GToolkit-Coder-AddOns' }
 GtPharoMethodCoder >> exampleAstFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	(self compiledMethod notNil
-		and: [ anAST notNil
-				and: [ anAST methodNode
-						ifNotNil: [ :node | 
-							node pragmas
-								anySatisfy: [ :each | each isParseError not and: [ each selector = #gtExample ] ] ]
-						ifNil: [ false ] ] ])
-		ifFalse: [
-			coderAddOns removeStylerOfType: GtCoderExampleStatusStyler.
-			coderAddOns
-				removeContextAction: 'Play Example' translated.
-			coderAddOns
-				removeContextAction: 'Play and Inspect Example Result' translated.
-			coderAddOns
-				removeContextAction: 'Inspect Example Object' translated.
-			coderAddOns
-				removeContextAction: 'Debug Example' translated.
-			^ self ].
-	coderAddOns
-		addStyler:
-			(GtCoderExampleStatusStyler new
-				coder: self;
-				classOrMetaClass: self behavior).
+	
+	self compiledMethod
+		ifNil: [ ^ self ].
+	
+	anAST methodNode
+		ifNil: [ ^ self ].
+		
+	(anAST methodNode pragmas anySatisfy: [ :each | each isErrorNode not and: [ each selector = #gtExample ] ])
+		ifFalse: [ ^ self ].
+
+	coderAddOns addStyler: GtCoderExampleStatusStyler new.
+
 	(self canExecuteExample or: [ anAST methodNode numArgs isZero ])
 		ifFalse: [ ^ self ].
 
@@ -211,12 +208,29 @@ GtPharoMethodCoder >> extractMethod: editorElement [
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtPharoMethodCoder >> initializeAddOns [
-	super initializeAddOns.
+GtPharoMethodCoder >> extractableNodesFrom: aCoderViewModel [
+	| allSelections allCursors |
+
+	allSelections := aCoderViewModel selection allSelections.
+	allCursors := aCoderViewModel cursors allCursors.
+
+	^ allSelections size = 1
+		ifTrue: [ self extractableNodesWithin: allSelections first interval ]
+		ifFalse: [ allCursors size = 1
+			ifTrue: [ self extractableNodesAt: allCursors first position ]
+			ifFalse: [ #() ] ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> initializeAddOns: addOns [
+	super initializeAddOns: addOns.
+	
+	addOns addStyler: GtPharoStyler new.
+	addOns addStyler: GtPharoMethodExpanderStyler new.
+	addOns addStyler: (GtFixItStyler new isForWorkspace: false).
+
 	"addOns addStyler: GtCoderCommentStyler new."
-	addOns addStyler: (GtFixItStyler new sourceCoder: self).
-	addOns addStyler: BrRBTextStyler new.
-	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
+
 	addOns
 		addMainAction: (GtCoderActivatableAction new
 			id: GtMethodCoderSaveActionId;
@@ -241,8 +255,20 @@ GtPharoMethodCoder >> initializeAddOns [
 	addOns
 		addMainAction: 'Copy Method Name' translated
 		icon: BrGlamorousVectorIcons clipboard
-		action: [ :aCoderUIModel :anEvent | self copyMethodNameToClipboard ].
-	addOns clearChanges
+		action: [ :aCoderUIModel :anEvent | self copyMethodNameToClipboard ]
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtPharoMethodCoder >> initializeShortcuts: addOns [
+	super initializeShortcuts: addOns.
+
+	addOns
+		addShortcut: GtSourceCoderPlayShortcut new;
+		addShortcut: GtSourceCoderPlayAndInspectShortcut new;
+		addShortcut: GtSourceCoderExtractMethodShortcut new;
+		addShortcut: GtSourceCoderSaveShortcut new;
+		addShortcut: GtSourceCoderFormatShortcut new;
+		addShortcut: GtSourceCoderInlineRenameShortcut new
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }

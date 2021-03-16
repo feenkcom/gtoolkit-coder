@@ -6,6 +6,11 @@ GtCoderModel >> asCoderUIModel [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+GtCoderModel >> asCoderViewModel [
+	^ self asCoderUIModel
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 GtCoderModel >> asElement [
 	^ self asCoderUIModel asElement
 ]

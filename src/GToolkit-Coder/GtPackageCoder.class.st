@@ -31,6 +31,7 @@ GtPackageCoder >> addMissingPackageTag: aPackageTag [
 GtPackageCoder >> asNewCoderModelWithSameSubject [
 	"Return new coder model with same subject (e.g., package, class, method)"
 	<return: #GtCoderModel>
+
 	^ self class forPackage: self package
 ]
 

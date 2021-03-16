@@ -10,6 +10,11 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #'api - accessing' }
+GtCoderCompiledMethodSourceCode >> asAstCacheKey [
+	^ compiledMethod
+]
+
 { #category : #initialization }
 GtCoderCompiledMethodSourceCode >> buildCollapsedText [
 	<return: #BlText>

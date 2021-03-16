@@ -97,7 +97,7 @@ GtPharoBlockClosureCoder >> forSource: aString [
 
 { #category : #'api - actions' }
 GtPharoBlockClosureCoder >> format [
-	self currentSourceString: (self newRbAST: self currentSourceString asString) formattedCode
+	self currentSourceString: self rbAST formattedCode
 ]
 
 { #category : #private }
@@ -120,15 +120,13 @@ GtPharoBlockClosureCoder >> initialize [
 ]
 
 { #category : #'initialize-release' }
-GtPharoBlockClosureCoder >> initializeAddOns [
-	super initializeAddOns.
+GtPharoBlockClosureCoder >> initializeAddOns: addOns [
+	super initializeAddOns: addOns.
 	
 	addOns addStyler:
 		(BrRBTextStyler new
 			workspace: bindingStrategy;
-			yourself).
-
-	addOns clearChanges
+			yourself)
 ]
 
 { #category : #private }

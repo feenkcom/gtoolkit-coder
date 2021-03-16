@@ -15,6 +15,13 @@ GtPharoSnippetCoder >> coder [
 	^ self
 ]
 
+{ #category : #'api - ast' }
+GtPharoSnippetCoder >> computeAst: theSourceString [
+	^ GtPharoParser
+		parseWithErrors: theSourceString
+		startingAt: self parserStartingState
+]
+
 { #category : #accessing }
 GtPharoSnippetCoder >> context [
 	^ context

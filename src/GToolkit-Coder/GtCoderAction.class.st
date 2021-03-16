@@ -10,6 +10,17 @@ Class {
 	#category : #'GToolkit-Coder'
 }
 
+{ #category : #comparing }
+GtCoderAction >> = anObject [
+	"Answer whether the receiver and anObject represent the same object."
+
+	self == anObject
+		ifTrue: [ ^ true ].
+	self class = anObject class
+		ifFalse: [ ^ false ].
+	^ id = anObject id and: [ title = anObject title ]
+]
+
 { #category : #accessing }
 GtCoderAction >> action [
 	^ action
@@ -23,6 +34,13 @@ GtCoderAction >> action: anObject [
 { #category : #evaluating }
 GtCoderAction >> glamourValueWithArgs: aSequenceOfArguments [
 	^ self action glamourValueWithArgs: aSequenceOfArguments
+]
+
+{ #category : #comparing }
+GtCoderAction >> hash [
+	"Answer an integer value that is related to the identity of the receiver."
+
+	^ id hash bitXor: title hash
 ]
 
 { #category : #accessing }

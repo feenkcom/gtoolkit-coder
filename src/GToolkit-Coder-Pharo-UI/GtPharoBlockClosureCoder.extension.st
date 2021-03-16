@@ -6,8 +6,8 @@ GtPharoBlockClosureCoder >> asCoderUIModel [
 ]
 
 { #category : #'*GToolkit-Coder-Pharo-UI' }
-GtPharoBlockClosureCoder >> initializeShortcuts [
-	super initializeShortcuts.
+GtPharoBlockClosureCoder >> initializeShortcuts: addOns [
+	super initializeShortcuts: addOns.
 	
 	addOns addShortcut: GtSourceCoderFormatShortcut new
 ]

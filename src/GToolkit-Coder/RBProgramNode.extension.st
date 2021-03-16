@@ -2,7 +2,7 @@ Extension { #name : #RBProgramNode }
 
 { #category : #'*GToolkit-Coder' }
 RBProgramNode >> gtASTMatches [
-	^ GtSearchASTFilter ast: self
+	^ GtSearchRBASTFilter ast: self
 ]
 
 { #category : #'*GToolkit-Coder' }

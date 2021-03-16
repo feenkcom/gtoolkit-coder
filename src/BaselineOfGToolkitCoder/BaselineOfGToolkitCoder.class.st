@@ -47,8 +47,13 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec requires: #('GToolkit-Coder') ];
 			package: 'GToolkit-Coder-Pharo-UI' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-UI') ];
+			package: 'GToolkit-Coder-Pharo-AddOns' with: [
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-Pharo-UI') ];
+			package: 'GToolkit-Coder-Pharo-Examples' with: [
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-Pharo-UI' 'GToolkit-Coder-Pharo-AddOns') ];
+			
 			package: 'GToolkit-Coder-AddOns' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-Pharo-UI'). ];
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-Pharo-UI' 'GToolkit-Coder-Pharo-AddOns'). ];
 			package: 'GToolkit-Coder-Extensions' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Pharo'). ];
 			package: 'GToolkit-Coder-Examples-SystemS1';

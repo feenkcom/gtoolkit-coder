@@ -6,11 +6,12 @@ GtPharoSnippetCoder >> asCoderUIModel [
 ]
 
 { #category : #'*GToolkit-Coder-Pharo-UI' }
-GtPharoSnippetCoder >> initializeShortcuts [
-	super initializeShortcuts.
+GtPharoSnippetCoder >> initializeShortcuts: addOns [
+	super initializeShortcuts: addOns.
 
 	addOns
 		addShortcut: GtSourceCoderDoItShortcut new;
 		addShortcut: GtSourceCoderDoItAndInspectShortcut new;
-		addShortcut: GtSourceCoderPrintItShortcut new
+		addShortcut: GtSourceCoderPrintItShortcut new;
+		addShortcut: GtSourceCoderInlineRenameShortcut new
 ]

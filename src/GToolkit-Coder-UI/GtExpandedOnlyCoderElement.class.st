@@ -93,12 +93,3 @@ GtExpandedOnlyCoderElement >> requestFocusAsyncronously [
 			(BlTaskAction new
 				action: [ self requestFocus ])
 ]
-
-{ #category : #accessing }
-GtExpandedOnlyCoderElement >> saveCoderUIModel: aCoderUIModel [
-	self
-		assert: [ aCoderUIModel isNotNil ]
-		description: [ 'Coder must not be nil' ].
-
-	expandedElement ifNotNil: [ :anExpandedElement | anExpandedElement saveCoderUIModel: aCoderUIModel ]
-]

@@ -64,11 +64,6 @@ GtPharoSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 		whenComplete: nil
 ]
 
-{ #category : #'api - accessing' }
-GtPharoSourceCoder >> ast [
-	^ self rbAST
-]
-
 { #category : #private }
 GtPharoSourceCoder >> behavior [
 	"Return a Behavior whose instance the object is"
@@ -226,14 +221,32 @@ GtPharoSourceCoder >> disabledTextAttributes [
 	^ {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)}
 ]
 
-{ #category : #'private - actions' }
-GtPharoSourceCoder >> evaluationRequester [
-	^ GtSourceCoderEvaluationRequester new coder: self
+{ #category : #'private - ast' }
+GtPharoSourceCoder >> extractableNodesAt: anIndex [
+	"Return a collection of extractable nodes that intersect a given interval"
+	<return: #Collection of: #GtPharoProgramNode>
+
+	^ self
+		nodeAt: anIndex
+		ifFound: [ :aNode |
+			aNode isSequence
+				ifTrue: [ aNode statements select: [ :eachNode | eachNode intersectsInterval: (anIndex to: anIndex) ] ]
+				ifFalse: [ { aNode } ] ]
+		ifNone: [ #() ]
 ]
 
-{ #category : #'private - actions' }
-GtPharoSourceCoder >> evaluationRequesterWithInterval [
-	^ GtSourceCoderIntervalEvaluationRequester new coder: self
+{ #category : #'private - ast' }
+GtPharoSourceCoder >> extractableNodesWithin: anInterval [
+	"Return a collection of extractable nodes that intersect a given interval"
+	<return: #Collection of: #GtPharoProgramNode>
+
+	^ self
+		nodeWithin: anInterval
+		ifFound: [ :aNode |
+			aNode isSequence
+				ifTrue: [ aNode statements select: [ :eachNode | eachNode intersectsInterval: anInterval ] ]
+				ifFalse: [ { aNode } ] ]
+		ifNone: [ #() ]
 ]
 
 { #category : #testing }
@@ -258,7 +271,7 @@ GtPharoSourceCoder >> newCompletionStrategy [
 		yourself
 ]
 
-{ #category : #'private - ast' }
+{ #category : #'private - ast rb' }
 GtPharoSourceCoder >> newRbAST: aString [
 	| ast |
 	ast := self parseExpression: aString requestor: nil.
@@ -268,12 +281,13 @@ GtPharoSourceCoder >> newRbAST: aString [
 
 { #category : #private }
 GtPharoSourceCoder >> newSourceStylerFrom: anEditorElement [
-	<return: #GtSourceCoderTextStyler>
+	<return: #GtCoderAstCompositeStyler>
 	| anAddOnsCopy |
 
 	anAddOnsCopy := self addOns stylers copy.
 
-	^ (GtSourceCoderTextStyler forCoder: self)
+	^ GtCoderAstCompositeStyler new
+		coder: self;
 		stylers: anAddOnsCopy;
 		yourself
 ]
@@ -283,7 +297,7 @@ GtPharoSourceCoder >> nodeAt: aTextPosition ifFound: aFoundBlock ifNone: aNoneBl
 	<return: #Object>
 	[
 		| theAST innerNode |
-		theAST := self sourceAst.
+		theAST := self astAwait.
 		theAST
 			withAllNodesDo: [ :node | 
 				(aTextPosition between: node startPosition and: node stopPosition)
@@ -291,7 +305,7 @@ GtPharoSourceCoder >> nodeAt: aTextPosition ifFound: aFoundBlock ifNone: aNoneBl
 		^ innerNode ifNil: aNoneBlock ifNotNil: aFoundBlock ]
 			on: Error
 			do: [ :ex | ex return ].
-		
+
 	^ aNoneBlock value
 ]
 
@@ -353,6 +367,23 @@ GtPharoSourceCoder >> nodeToSelector: aNode ifFound: aFoundBlock ifNone: aNoneBl
 				or: [ aCurrentNode isKindOf: GtPharoMethodPatternNode ])
 				ifTrue: [ ^ aFoundBlock value: aCurrentNode selector ].
 			aCurrentNode := aCurrentNode parent ].
+	^ aNoneBlock value
+]
+
+{ #category : #'private - ast' }
+GtPharoSourceCoder >> nodeWithin: anInterval ifFound: aFoundBlock ifNone: aNoneBlock [
+	<return: #Object>
+
+	[
+		| theAST |
+		theAST := self astAwait.
+		^ theAST
+			bestNodeFor: anInterval
+			ifFound: aFoundBlock
+			ifNone: aNoneBlock ]
+				on: Error
+				do: [ :ex | ex return ].
+
 	^ aNoneBlock value
 ]
 
@@ -444,7 +475,7 @@ GtPharoSourceCoder >> packageTag [
 	^ self attributeNamed: #packageTag
 ]
 
-{ #category : #private }
+{ #category : #'private - ast rb' }
 GtPharoSourceCoder >> parse: aString asExpression: isExpression requestor: aRequestor [
 	^ (self behavior ifNil: [ UndefinedObject ]) compiler
 		source: aString;
@@ -454,12 +485,12 @@ GtPharoSourceCoder >> parse: aString asExpression: isExpression requestor: aRequ
 		parse
 ]
 
-{ #category : #private }
+{ #category : #'private - ast rb' }
 GtPharoSourceCoder >> parseExpression: aString requestor: aRequestor [
 	^ self parse: aString asExpression: true requestor: aRequestor
 ]
 
-{ #category : #private }
+{ #category : #'private - ast rb' }
 GtPharoSourceCoder >> parseMethod: aString [
 	^ self parse: aString asExpression: false requestor: nil
 ]
@@ -492,7 +523,7 @@ GtPharoSourceCoder >> protocol [
 	^ #accessing
 ]
 
-{ #category : #'private - ast' }
+{ #category : #'private - ast rb' }
 GtPharoSourceCoder >> rbAST [
 	| source |
 
@@ -500,90 +531,9 @@ GtPharoSourceCoder >> rbAST [
 	This is needed to support `crlf` and logical items
 	see https://github.com/feenkcom/gtoolkit/issues/593"
 	source := self currentSourceString.
-	astCache key = source
-		ifTrue: [ ^ astCache value ].
-	^ [ 
-		self astCache: source -> (self newRbAST: source).
-		astCache value ]
-	on: Error
-	do: [ :ex | ex return: nil ]
-]
-
-{ #category : #'private - ast' }
-GtPharoSourceCoder >> rbASTAsyncDo: aBlock [
-
-	astMonitor critical: [ 
-		| aCommand astComputationCommand |
-		astCommand ifNotNil: #terminate.
-
-		astComputationCommand := [
-			| source currentAstCache |
-			"The AST should be built out of the `characters` of the source text.
-			This is needed to support `crlf` and logical items
-			see https://github.com/feenkcom/gtoolkit/issues/593"
-			source := self sourceText copy characters asString.
-			currentAstCache := self astCache.
-
-			currentAstCache key = source
-				ifTrue: [ currentAstCache ]
-				ifFalse: [
-					[ source -> (self newRbAST: source) ]
-						on: Error
-						do: [ :ex | ex return: nil ] ].
-
-		] asBlTktTerminableCommand asBlTktLoggingCommand.
-		astComputationCommand name: 'Coder ast computation'.
-		
-		astCommand := aCommand := BlTaskAtPostponedTerminableFuture new.
-		aCommand
-			command: astComputationCommand;
-			onSuccessDo:  [ :aResult | 
-				(aCommand == astCommand and: [ aResult notNil ])
-					ifTrue: [
-						self astCache: aResult.
-						aBlock value: aResult ] ];
-			onFailureDo: [ :anException | "handle error here" ];
-			pool: BlTktWorkerProvider coderPool;
-			scheduledTime: BlTime real now + 100 milliSeconds.
-		BlTaskAtQueue default schedule: astCommand.
-	
-	 ].
-]
-
-{ #category : #private }
-GtPharoSourceCoder >> rbNodeAt: aTextIndex [
-	| ast node |
-
-	ast := self rbAST.
-	ast ifNil: [ ^ nil ].
-
-	node := nil.
-	ast
-		nodesDo: [ :each | 
-			(aTextIndex between: each start and: each stop)
-				ifTrue: [ (node isNil
-						or: [ node sourceInterval size > each sourceInterval size ])
-						ifTrue: [ node := each ] ] ].
-	^ node
-]
-
-{ #category : #private }
-GtPharoSourceCoder >> rbNodeAtCursor: editorElement [
-	| editor ast position node |
-	editor := editorElement editor.
-	editor cursors cursorsCount = 1
-		ifFalse: [ ^ nil ].
-	ast := self rbAST.
-	ast isNil
-		ifTrue: [ ^ nil ].
-	position := editor cursors first position.
-	ast
-		nodesDo: [ :each | 
-			(position between: each start and: each stop)
-				ifTrue: [ (node isNil
-						or: [ node sourceInterval size > each sourceInterval size ])
-						ifTrue: [ node := each ] ] ].
-	^ node
+	^ [ self newRbAST: source ]
+		on: Error
+		do: [ :ex | ex return: nil ]
 ]
 
 { #category : #'private - ast' }
@@ -637,19 +587,10 @@ GtPharoSourceCoder >> source [
 ]
 
 { #category : #private }
-GtPharoSourceCoder >> sourceAst [
-	^ GtPharoParser
-		parseWithErrors: self currentSourceString
-		startingAt: self parserStartingState
-]
-
-{ #category : #private }
 GtPharoSourceCoder >> validateSyntax [
 	<return: #Boolean>
 
-	[ GtPharoParser
-		parse: self currentSourceString
-		startingAt: self parserStartingState ]
+	[ self computeAst ]
 		on: SmaCCParserError
 		do: [ :ex | 
 			self notifyParseError: ex messageText at: ex tag position.
@@ -664,7 +605,7 @@ GtPharoSourceCoder >> variableNodeAt: aTextPosition ifFound: aFoundBlock ifNone:
 	<return: #Object>
 	[
 		| theAST |
-		theAST := self sourceAst.
+		theAST := self astAwait.
 		theAST
 			withAllNodesOfType: GtPharoVariableNode
 			do: [ :node | 

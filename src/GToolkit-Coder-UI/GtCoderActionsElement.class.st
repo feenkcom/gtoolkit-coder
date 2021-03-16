@@ -1,8 +1,9 @@
 Class {
 	#name : #GtCoderActionsElement,
 	#superclass : #BlElement,
+	#traits : 'TGtWithTextualCoderViewModel',
+	#classTraits : 'TGtWithTextualCoderViewModel classTrait',
 	#instVars : [
-		'coderUIModel',
 		'mainToolbar',
 		'contextToolbar',
 		'separator',
@@ -13,7 +14,7 @@ Class {
 
 { #category : #private }
 GtCoderActionsElement >> addContextToolbarActions [
-	contextToolbar addItems: (coderUIModel coder contextActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
+	contextToolbar addItems: (self textualCoderViewModel contextActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
 	separator
 		visibility:
 			(contextToolbar hasItems
@@ -25,7 +26,7 @@ GtCoderActionsElement >> addContextToolbarActions [
 GtCoderActionsElement >> addMainToolbarActions [
 	mainToolbar
 		addItems:
-			(coderUIModel coder mainActions
+			(self textualCoderViewModel mainActions
 				collect: [ :aGtCoderAction | 
 					self flag: 'Temporary hack. Coder should to Phlow actions'.
 					aGtCoderAction buildElementIn: self ])
@@ -33,28 +34,12 @@ GtCoderActionsElement >> addMainToolbarActions [
 
 { #category : #accessing }
 GtCoderActionsElement >> coderUIModel [
-	^ coderUIModel
+	^ self textualCoderViewModel
 ]
 
 { #category : #accessing }
 GtCoderActionsElement >> coderUIModel: aCoderUIModel [
-	coderUIModel
-		ifNotNil:
-			[ :aPreviousCoderUIModel | aPreviousCoderUIModel coder announcer unsubscribe: self ].
-	coderUIModel := aCoderUIModel.
-
-	aCoderUIModel coder announcer weak
-		when: GtCoderAddOnsUpdateRequest send: #updateAddOns: to: self;
-		when: GtCoderMainActionsChanged send: #updateMainToolbar to: self;
-		when: GtCoderContextActionsChanged send: #updateContextToolbar to: self.
-
-	aCoderUIModel coder shouldAddOnsBeUpdated
-		ifTrue: [ aCoderUIModel coder updateAddOns ].
-
-	self removeMainToolbarActions.
-	self removeContextToolbarActions.
-	self addMainToolbarActions.
-	self addContextToolbarActions
+	self textualCoderViewModel: aCoderUIModel
 ]
 
 { #category : #initialization }
@@ -98,7 +83,7 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 					[ anEvent forwardingTarget: aButtonElement.
 					aGtCoderAction action
 						glamourValueWithArgs:
-							{coderUIModel.
+							{self textualCoderViewModel.
 							anEvent} ]
 						ensure: [ anEvent currentTarget: aCurrentTarget ] ] ]
 ]
@@ -169,6 +154,29 @@ GtCoderActionsElement >> newToolbar [
 		padding: (BlInsets left: -4)
 ]
 
+{ #category : #'api - textual coder view model' }
+GtCoderActionsElement >> onPostTextualCoderViewModelChanged [
+	"I am an optional hook method that is sent after #subscribeToTextualCoderViewModel.
+	I do nothing by default but allow users to perform update operations when a receiver object is already
+	subscribed to announcements."
+	
+	self textualCoderViewModel ensureAddOns
+]
+
+{ #category : #'api - textual coder view model' }
+GtCoderActionsElement >> onTextualCoderViewModelChanged [
+	"Is sent when a new textualCoder view model is assigned to the element.
+	Note: #onTextualCoderViewModelChanged is sent before #subscribeToTextualCoderViewModel
+	which means that if you perform any operation that triggers an announcement it will be ignored because the receiver
+	didn't get a chance to subscribe to any announcement. Override #onPostTextualCoderViewModelChanged if you
+	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
+
+	self removeMainToolbarActions.
+	self removeContextToolbarActions.
+	self addMainToolbarActions.
+	self addContextToolbarActions
+]
+
 { #category : #private }
 GtCoderActionsElement >> removeContextToolbarActions [
 	contextToolbar numberOfItems timesRepeat: [ contextToolbar removeItemAt: 1 ]
@@ -179,12 +187,26 @@ GtCoderActionsElement >> removeMainToolbarActions [
 	mainToolbar numberOfItems timesRepeat: [ mainToolbar removeItemAt: 1 ]
 ]
 
-{ #category : #private }
-GtCoderActionsElement >> updateAddOns: anAnnouncement [
-	anAnnouncement coder updateAddOns
+{ #category : #'api - textual coder view model' }
+GtCoderActionsElement >> subscribeToTextualCoderViewModel [
+	"Is sent after a new textualCoder view model is assigned to the element.
+	It is required to unsubscribe from the view model or domain model by implementing
+	#unsubscribeFromTextualCoderViewModel if elements subscribe to them"
+
+	self textualCoderViewModel weak
+		when: GtTextualCoderViewModelMainActionsChanged send: #updateMainToolbar to: self;
+		when: GtTextualCoderViewModelContextActionsChanged send: #updateContextToolbar to: self
 ]
 
-{ #category : #private }
+{ #category : #'api - textual coder view model' }
+GtCoderActionsElement >> unsubscribeFromTextualCoderViewModel [
+	"Is sent before a new textualCoder view model is assigned to the element.
+	Elements that subscribe to textualCoder view model in domain model are required to implement this methods."
+	
+	self textualCoderViewModel unsubscribe: self
+]
+
+{ #category : #'private - event handling' }
 GtCoderActionsElement >> updateContextToolbar [
 	self enqueueTask:
 		(BlTaskAction new
@@ -193,10 +215,10 @@ GtCoderActionsElement >> updateContextToolbar [
 				self addContextToolbarActions ])
 ]
 
-{ #category : #private }
+{ #category : #'private - event handling' }
 GtCoderActionsElement >> updateMainToolbar [
 	self enqueueTask: (BlTaskAction new
-		action: [
+		action: [			
 			self removeMainToolbarActions.
 			self addMainToolbarActions ])
 ]

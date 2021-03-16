@@ -65,12 +65,12 @@ GtPharoMethodCoderViewModel >> isSaveEnabled [
 
 { #category : #'private - notifying' }
 GtPharoMethodCoderViewModel >> notifySaveDisabled [
-	self announcerUIModel announce: (GtMethodCoderSaveDisabled new preventors: savePreventors asArray)
+	self announce: (GtMethodCoderSaveDisabled new preventors: savePreventors asArray)
 ]
 
 { #category : #'private - notifying' }
 GtPharoMethodCoderViewModel >> notifySaveEnabled [
-	self announcerUIModel announce: (GtMethodCoderSaveEnabled new)
+	self announce: (GtMethodCoderSaveEnabled new)
 ]
 
 { #category : #'api - actions' }

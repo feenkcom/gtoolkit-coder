@@ -1,9 +1,6 @@
 Class {
 	#name : #GtCoderExampleStatusStyler,
-	#superclass : #BrRBTextStyler,
-	#instVars : [
-		'coder'
-	],
+	#superclass : #GtGenericPharoStyler,
 	#category : #'GToolkit-Coder-AddOns-Example status'
 }
 
@@ -18,21 +15,16 @@ GtCoderExampleStatusStyler class >> examplePatternStylerFor: aMethodCoder [
 		yourself
 ]
 
-{ #category : #accessing }
-GtCoderExampleStatusStyler >> coder [
-	^ coder
-]
+{ #category : #generated }
+GtCoderExampleStatusStyler >> visitMethod: aMethodNode [
+	| anExample |
 
-{ #category : #accessing }
-GtCoderExampleStatusStyler >> coder: aMethodCoder [
-	coder := aMethodCoder
-]
-
-{ #category : #private }
-GtCoderExampleStatusStyler >> style: aText ast: ast [
-	| keywordIntervals |
-	super style: aText ast: ast.
-	keywordIntervals := ast keywordsIntervals.
-	(aText from: keywordIntervals first last to: keywordIntervals first last) 
-		attributes: {(GtCoderExampleStatusAttribute forExample: coder example)}
+	anExample := self coderViewModel coderModel example.
+	anExample
+		ifNil: [ ^ self ].
+	
+	self
+		attribute: (GtCoderExampleStatusAttribute forExample: anExample)
+		from: aMethodNode pattern stopPosition
+		to: aMethodNode pattern stopPosition
 ]

@@ -87,7 +87,6 @@ GtMethodsCoderElement >> listElement [
 		itemId: [ :eachCoderUIModel | eachCoderUIModel coder id ];
 		itemStencil: [ :anElementClass | anElementClass new ];
 		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ];
-		itemDataUnbinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement saveCoderUIModel: eachCoderUIModel ];
 		items: methodsCoderUIModel coderUIModels;
 		yourself.
 

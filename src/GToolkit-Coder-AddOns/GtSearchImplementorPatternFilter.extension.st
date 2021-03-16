@@ -4,5 +4,5 @@ Extension { #name : #GtSearchImplementorPatternFilter }
 GtSearchImplementorPatternFilter >> highlighter [
 	pattern isEmpty
 		ifTrue: [ ^ super highlighter ].
-	^ GtImplementorPatternHighlighter forPattern: pattern
+	^ GtPharoImplementorPatternHighlighter forPattern: pattern
 ]

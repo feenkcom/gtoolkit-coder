@@ -36,7 +36,7 @@ GtSourceCoderRefactoringController >> addRefactoringChangesPreview: aRefactoring
 
 { #category : #private }
 GtSourceCoderRefactoringController >> allowSave [
-	self sourceElement sourceCoderUIModel allowSaveDueTo: self
+	self sourceElement textualCoderViewModel allowSaveDueTo: self
 ]
 
 { #category : #accessing }
@@ -71,7 +71,7 @@ GtSourceCoderRefactoringController >> execute [
 
 { #category : #private }
 GtSourceCoderRefactoringController >> preventSave [
-	self sourceElement sourceCoderUIModel preventSaveDueTo: self
+	self sourceElement textualCoderViewModel preventSaveDueTo: self
 ]
 
 { #category : #accessing }

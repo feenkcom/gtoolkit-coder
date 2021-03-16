@@ -100,13 +100,12 @@ GtCoderCodeExecutor >> execute [
 	GtCoderExecutionContextVariable
 		element: self element
 		do: [ 
-			| aSelection aText |
+			| aSelection |
 			aSelection := self coderUIModel selection.
-			aText := self coderUIModel text.
 			aSelection isNotEmpty
 				ifTrue: [
 					self doItSelection: [ :aSourceText |
-						aText characters = aSourceText characters
+						self coderUIModel sourceText characters = aSourceText characters
 							ifTrue: [ 
 								| aMonoSelection |
 								aMonoSelection := 1 to: 0.
