@@ -14,7 +14,7 @@ Class {
 }
 
 { #category : #'api - addons' }
-GtTextualCoder >> addCopyCutPasteContextMenuAddOnsTo: coderAddOns [
+GtTextualCoder >> addCopyCutPasteContextMenuAddOnsAst: anAst to: coderAddOns [
 	<gtCoderContextMenuAddOns: 10>
 	coderAddOns
 		addContextMenuItem: 'Cut'
@@ -341,12 +341,21 @@ GtTextualCoder >> sourceChanged [
 GtTextualCoder >> sourceChangedWith: anUpdateStrategy [
 	"if there is an ast computation that was triggered before source code change we re-schedule
 	the computation. Any #astAsyncDo: caller will be waiting for the result with the new ast"
+
 	astMonitor critical: [
 		newAstCache := nil.
 		astCommand ifNotNil: [ :anAstCommand | 
 			anAstCommand terminate.
 			astCommand := astCommandBlock asBlTktTerminableCommand asBlTktLoggingCommand.
-			BlTktWorkerProvider coderAstPool schedule: astCommand ] ].
+			[ BlTktWorkerProvider coderAstPool schedule: astCommand ] on: Error do: [ :anError |
+				astCommand := nil.
+				anError emit.
+				NonInteractiveTranscript stderr
+					nextPut: $[;
+					nextPutAll: self class name;
+					nextPutAll: '#>>sourceChangedWith:';
+					nextPut: $];
+					nextPutAll: ' Failed to schedule an ast computation command' ] ] ].
 
 	self notifySourceChangedWith: anUpdateStrategy.
 

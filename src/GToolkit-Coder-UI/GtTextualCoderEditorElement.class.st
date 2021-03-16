@@ -19,11 +19,15 @@ GtTextualCoderEditorElement >> createContextMenuContent [
 	
 	theContextMenu := GtCoderContextMenuContent new
 		editorElement: self.	
-		
+	
 	self textualCoderViewModel addOnsAsyncDo: [ :theAddOns |
-		| theItems |
-		theItems := (theAddOns contextMenuActions reject: [ :e | e title isNil ]),
-			(theAddOns mainActions reject: [ :e | e title isNil ]).
+		| theItems theContextMenuAstAddons |
+		
+		"extra context menu items that depend on ast and view model state such as selection"
+		theContextMenuAstAddons := self textualCoderViewModel computeContextMenuAstAddOns.
+		
+		theItems := theAddOns contextMenuActions, theAddOns mainActions, theContextMenuAstAddons contextMenuActions.
+		theItems := theItems reject: [ :e | e title isNil ]. 
 		
 		theContextMenu enqueueTask: (BlTaskAction new action: [ theContextMenu items: theItems ]) ].
 

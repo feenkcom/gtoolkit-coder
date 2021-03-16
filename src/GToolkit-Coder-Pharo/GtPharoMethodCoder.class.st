@@ -74,12 +74,12 @@ GtPharoMethodCoder >> abstractClassVar: aNode [
 GtPharoMethodCoder >> abstractInstVar: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
-	cls := model classFor: self classOrMetaClass.
+	cls := model classFor: self behavior.
 	refactoring := RBAbstractInstanceVariableRefactoring
 		model: model
-		variable: aNode name
-		class: (cls whoDefinesInstanceVariable: aNode name).
-	self addRefactoringChangesPreview: refactoring at: aNode stop
+		variable: aNode variableName
+		class: (cls whoDefinesInstanceVariable: aNode variableName).
+	self addRefactoringChangesPreview: refactoring at: aNode stopPosition
 ]
 
 { #category : #'api - refactorings' }
@@ -600,7 +600,7 @@ GtPharoMethodCoder >> highlightFrom: startIndex to: endIndex [
 
 { #category : #'private - refactorings' }
 GtPharoMethodCoder >> highlightNode: aNode [
-	self highlightFrom: aNode start to: aNode stop
+	self highlightFrom: aNode startPosition to: aNode stopPosition
 ]
 
 { #category : #accessing }
@@ -1073,48 +1073,6 @@ GtPharoMethodCoder >> protocol [
 { #category : #'api - accessing' }
 GtPharoMethodCoder >> protocol: aSymbol [
 	^ self attributeNamed: #category put: aSymbol
-]
-
-{ #category : #'private - refactorings' }
-GtPharoMethodCoder >> rbSelectedNodeFrom: anEditorElement [
-	| ast position node selections editor |
-	ast := self rbAST.
-	ast ifNil: [ ^ nil ].
-	editor := anEditorElement editor.
-	selections := editor selection allSelections.
-	selections size = 1
-		ifTrue: [ ^ ast bestNodeFor: selections first interval ]
-		ifFalse: [ editor cursors cursorsCount = 1
-				ifFalse: [ ^ nil ].
-			position := editor cursors first position.
-			ast
-				nodesDo: [ :each | 
-					(position between: each start and: each stop)
-						ifTrue: [ node := each ] ].
-			^ node ]
-]
-
-{ #category : #'private - refactorings' }
-GtPharoMethodCoder >> rbSelectedNodesFrom: anEditorElement [
-	| node selections |
-	selections := anEditorElement editor selection allSelections.
-	selections size = 1
-		ifFalse: [ ^ nil ].
-	node := self rbSelectedNodeFrom: anEditorElement.
-	node isNil
-		ifTrue: [ ^ nil ].
-	node isSequence
-		ifTrue: [ | startIndex endIndex interval |
-			interval := selections first interval.
-			startIndex := ((node statements size to: 1 by: -1)
-				detect: [ :i | (node statements at: i) stop < interval first ]
-				ifNone: [ 0 ]) + 1.
-			endIndex := ((1 to: node statements size)
-				detect: [ :i | (node statements at: i) start > interval last ]
-				ifNone: [ node statements size + 1 ]) - 1.
-			startIndex <= endIndex
-				ifTrue: [ ^ node statements copyFrom: startIndex to: endIndex ] ].
-	^ {node}
 ]
 
 { #category : #'api - actions' }

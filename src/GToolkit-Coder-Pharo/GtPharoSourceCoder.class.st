@@ -221,6 +221,34 @@ GtPharoSourceCoder >> disabledTextAttributes [
 	^ {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)}
 ]
 
+{ #category : #'private - ast' }
+GtPharoSourceCoder >> extractableNodesAt: anIndex [
+	"Return a collection of extractable nodes that intersect a given interval"
+	<return: #Collection of: #GtPharoProgramNode>
+
+	^ self
+		nodeAt: anIndex
+		ifFound: [ :aNode |
+			aNode isSequence
+				ifTrue: [ aNode statements select: [ :eachNode | eachNode intersectsInterval: (anIndex to: anIndex) ] ]
+				ifFalse: [ { aNode } ] ]
+		ifNone: [ #() ]
+]
+
+{ #category : #'private - ast' }
+GtPharoSourceCoder >> extractableNodesWithin: anInterval [
+	"Return a collection of extractable nodes that intersect a given interval"
+	<return: #Collection of: #GtPharoProgramNode>
+
+	^ self
+		nodeWithin: anInterval
+		ifFound: [ :aNode |
+			aNode isSequence
+				ifTrue: [ aNode statements select: [ :eachNode | eachNode intersectsInterval: anInterval ] ]
+				ifFalse: [ { aNode } ] ]
+		ifNone: [ #() ]
+]
+
 { #category : #testing }
 GtPharoSourceCoder >> hasObjectAttribute [
 	<return: #Boolean>
@@ -277,7 +305,7 @@ GtPharoSourceCoder >> nodeAt: aTextPosition ifFound: aFoundBlock ifNone: aNoneBl
 		^ innerNode ifNil: aNoneBlock ifNotNil: aFoundBlock ]
 			on: Error
 			do: [ :ex | ex return ].
-		
+
 	^ aNoneBlock value
 ]
 
@@ -339,6 +367,23 @@ GtPharoSourceCoder >> nodeToSelector: aNode ifFound: aFoundBlock ifNone: aNoneBl
 				or: [ aCurrentNode isKindOf: GtPharoMethodPatternNode ])
 				ifTrue: [ ^ aFoundBlock value: aCurrentNode selector ].
 			aCurrentNode := aCurrentNode parent ].
+	^ aNoneBlock value
+]
+
+{ #category : #'private - ast' }
+GtPharoSourceCoder >> nodeWithin: anInterval ifFound: aFoundBlock ifNone: aNoneBlock [
+	<return: #Object>
+
+	[
+		| theAST |
+		theAST := self astAwait.
+		^ theAST
+			bestNodeFor: anInterval
+			ifFound: aFoundBlock
+			ifNone: aNoneBlock ]
+				on: Error
+				do: [ :ex | ex return ].
+
 	^ aNoneBlock value
 ]
 

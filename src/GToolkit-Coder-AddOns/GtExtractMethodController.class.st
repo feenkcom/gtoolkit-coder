@@ -107,9 +107,8 @@ GtExtractMethodController >> extractedSelector [
 GtExtractMethodController >> extractionInterval [
 	^ extractionInterval
 		ifNil: [ | nodes |
-			nodes := coder rbSelectedNodesFrom: self sourceElement.
-			nodes isNil
-				ifTrue: [ ^ 1 to: 0 ].
+			nodes := coder extractableNodesFrom: self sourceElement textualCoderModel.
+			nodes ifEmpty: [ ^ 1 to: 0 ].
 			extractionInterval := nodes first start to: nodes last stop ]
 ]
 

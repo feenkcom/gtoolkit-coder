@@ -140,6 +140,39 @@ GtTextualCoderViewModel >> computeAddOns [
 	^ newAddOns
 ]
 
+{ #category : #'private - addons' }
+GtTextualCoderViewModel >> computeContextMenuAstAddOns [
+	| aCoderModel newAddOns pragmas theAst |
+
+	aCoderModel := self coderModel.
+
+	theAst := aCoderModel astAwait.
+	pragmas := aCoderModel
+		pragmasNamed: #gtCoderContextMenuAddOns:
+		inHierarchy: aCoderModel class.
+
+	newAddOns := aCoderModel newAddOns.
+	theAst ifNotNil: [
+		pragmas reverseDo: [ :eachPragma |
+			[ aCoderModel
+				perform: eachPragma methodSelector
+				withEnoughArguments: { theAst . newAddOns . self } ]
+			on: Error
+			do: [ :anError |
+				"emit as a beacon signal"
+				anError emit.
+				
+				NonInteractiveTranscript stderr
+					nextPut: $[;
+					print: eachPragma method printString;
+					nextPut: $];
+					space;
+					print: anError;
+					cr ] ] ].
+
+	^ newAddOns
+]
+
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> contextActions [
 	^ contextActions
