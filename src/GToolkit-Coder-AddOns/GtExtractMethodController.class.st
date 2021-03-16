@@ -70,13 +70,18 @@ GtExtractMethodController >> cancelRefactoring [
 { #category : #executing }
 GtExtractMethodController >> createModel [
 	| model ast modelClass |
+	
 	model := RBClassModelFactory rbNamespace
 		onEnvironment: RBBrowserEnvironment new.
 	model name: self refactoringName.
-	ast := RBParser parseFaultyMethod: originalSource asString.
+	
 	modelClass := model classFor: coder behavior.
+	
+	"this is just to extract the method name"
+	ast := RBParser parseFaultyMethod: originalSource asString.
 	methodSelector := ast selector.
-	(modelClass sourceCodeFor: ast selector) = originalSource asString
+
+	(modelClass sourceCodeFor: methodSelector) = originalSource asString
 		ifFalse: [ modelClass
 				compile: originalSource asString
 				classified: coder protocol ].
@@ -107,9 +112,9 @@ GtExtractMethodController >> extractedSelector [
 GtExtractMethodController >> extractionInterval [
 	^ extractionInterval
 		ifNil: [ | nodes |
-			nodes := coder extractableNodesFrom: self sourceElement textualCoderModel.
+			nodes := coder extractableNodesFrom: self sourceElement textualCoderViewModel.
 			nodes ifEmpty: [ ^ 1 to: 0 ].
-			extractionInterval := nodes first start to: nodes last stop ]
+			extractionInterval := nodes first startPosition to: nodes last stopPosition ]
 ]
 
 { #category : #private }

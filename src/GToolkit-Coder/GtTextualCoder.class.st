@@ -74,13 +74,19 @@ GtTextualCoder >> astAsyncDo: aBlock [
 		newAstCache ifNotNil: [ :anAST | ^ aBlock value: anAST ].
 
 		astCommandBlock := [
-			| aComputedAst |
+			|  theSourceString isModified astCacheKey aComputedAst |
+			
+			self critical: [
+				theSourceString := self currentSourceString.
+				isModified := self isModified.
+				astCacheKey := self sourceCode asAstCacheKey ].
 
-			aComputedAst := self isModified
-				ifTrue: [ self computeAst ]
+			aComputedAst := isModified
+				ifTrue: [ self computeAst: theSourceString ]
 				ifFalse: [ GtAstCache default
-					cachedAstAt: self sourceCode asAstCacheKey
-					ifAbsentPut: [ self computeAst ] ].
+					cachedAstAt: astCacheKey
+					ifAbsentPut: [ self computeAst: theSourceString ] ].
+
 			astMonitor critical: [
 				newAstCache := aComputedAst.
 				astCommand := nil.
@@ -150,6 +156,11 @@ GtTextualCoder >> completionStrategy: aGtCompletionStrategy [
 
 { #category : #'api - ast' }
 GtTextualCoder >> computeAst [
+	^ self computeAst: self currentSourceString
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> computeAst: theSourceString [
 	^ self subclassResponsibility
 ]
 

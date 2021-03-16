@@ -260,9 +260,9 @@ GtPharoMethodCoder >> compiledMethod [
 ]
 
 { #category : #'api - ast' }
-GtPharoMethodCoder >> computeAst [
+GtPharoMethodCoder >> computeAst: theSourceString [
 	^ GtPharoParser
-		parseWithErrors: self currentSourceString
+		parseWithErrors: theSourceString
 		startingAt: self parserStartingState
 ]
 

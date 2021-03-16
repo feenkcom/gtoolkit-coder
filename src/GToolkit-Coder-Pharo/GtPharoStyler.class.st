@@ -12,7 +12,7 @@ GtPharoStyler >> visitAssignment: anAssignment [
 
 { #category : #visiting }
 GtPharoStyler >> visitBooleanLiteral: aBooleanLiteral [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color red muchDarker }
 		from: aBooleanLiteral value startPosition
 		to: aBooleanLiteral value stopPosition
@@ -20,7 +20,7 @@ GtPharoStyler >> visitBooleanLiteral: aBooleanLiteral [
 
 { #category : #visiting }
 GtPharoStyler >> visitCharacterLiteral: aCharacterLiteral [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color red muchDarker }
 		from: aCharacterLiteral value startPosition
 		to: aCharacterLiteral value stopPosition
@@ -28,7 +28,7 @@ GtPharoStyler >> visitCharacterLiteral: aCharacterLiteral [
 
 { #category : #visiting }
 GtPharoStyler >> visitCommentFrom: aCommentStart to: aCommentEnd [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color gray darker }
 		from: aCommentStart
 		to: aCommentEnd
@@ -46,7 +46,7 @@ GtPharoStyler >> visitError: anError [
 
 { #category : #visiting }
 GtPharoStyler >> visitErrorToken: anErrorToken [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color red }
 		from: anErrorToken startPosition
 		to: anErrorToken stopPosition
@@ -71,7 +71,7 @@ GtPharoStyler >> visitMethodPattern: aMethodPattern [
 
 { #category : #visiting }
 GtPharoStyler >> visitMethodSelectorPart: aSmaCCToken [
-	text
+	self
 		attributes: { BlFontWeightAttribute bold }
 		from: aSmaCCToken startPosition
 		to: aSmaCCToken stopPosition
@@ -79,7 +79,7 @@ GtPharoStyler >> visitMethodSelectorPart: aSmaCCToken [
 
 { #category : #visiting }
 GtPharoStyler >> visitNamedVariable: aNamedVariable [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color blue muchDarker }
 		from: aNamedVariable name startPosition
 		to: aNamedVariable name stopPosition
@@ -87,7 +87,7 @@ GtPharoStyler >> visitNamedVariable: aNamedVariable [
 
 { #category : #visiting }
 GtPharoStyler >> visitNilLiteral: aNilLiteral [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color red muchDarker }
 		from: aNilLiteral value startPosition
 		to: aNilLiteral value stopPosition
@@ -95,7 +95,7 @@ GtPharoStyler >> visitNilLiteral: aNilLiteral [
 
 { #category : #visiting }
 GtPharoStyler >> visitNumberLiteral: aNumberLiteral [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color red muchDarker }
 		from: aNumberLiteral value startPosition
 		to: aNumberLiteral value stopPosition
@@ -115,7 +115,7 @@ GtPharoStyler >> visitPragma: aPragma [
 
 { #category : #visiting }
 GtPharoStyler >> visitPragmaSelectorPart: aSmaCCToken [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color green muchDarker }
 		from: aSmaCCToken startPosition
 		to: aSmaCCToken stopPosition
@@ -130,7 +130,7 @@ GtPharoStyler >> visitReturn: aReturn [
 
 { #category : #visiting }
 GtPharoStyler >> visitReturnUpArrow: aSmaCCToken [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color cyan muchDarker }
 		from: aSmaCCToken startPosition
 		to: aSmaCCToken stopPosition
@@ -138,7 +138,7 @@ GtPharoStyler >> visitReturnUpArrow: aSmaCCToken [
 
 { #category : #visiting }
 GtPharoStyler >> visitSelfVariable: aSelfVariable [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color cyan muchDarker }
 		from: aSelfVariable name startPosition
 		to: aSelfVariable name stopPosition
@@ -146,7 +146,7 @@ GtPharoStyler >> visitSelfVariable: aSelfVariable [
 
 { #category : #visiting }
 GtPharoStyler >> visitStringLiteral: aStringLiteral [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color magenta muchDarker }
 		from: aStringLiteral value startPosition
 		to: aStringLiteral value stopPosition
@@ -154,7 +154,7 @@ GtPharoStyler >> visitStringLiteral: aStringLiteral [
 
 { #category : #visiting }
 GtPharoStyler >> visitSuperVariable: aSuperVariable [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color cyan muchDarker }
 		from: aSuperVariable name startPosition
 		to: aSuperVariable name stopPosition
@@ -162,7 +162,7 @@ GtPharoStyler >> visitSuperVariable: aSuperVariable [
 
 { #category : #visiting }
 GtPharoStyler >> visitSymbolLiteral: aSymbolLiteral [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color magenta muchDarker }
 		from: aSymbolLiteral value startPosition
 		to: aSymbolLiteral value stopPosition
@@ -170,7 +170,7 @@ GtPharoStyler >> visitSymbolLiteral: aSymbolLiteral [
 
 { #category : #visiting }
 GtPharoStyler >> visitThisContextVariable: aThisContextVariable [
-	text
+	self
 		attributes: { BlTextForegroundAttribute color: Color cyan muchDarker }
 		from: aThisContextVariable name startPosition
 		to: aThisContextVariable name stopPosition

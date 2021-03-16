@@ -34,15 +34,16 @@ GtCoderAstStyler >> privateStyle: aText [
 		self style: aText ast: theAst.
 		self extraStyle: aText ast: theAst ]
 			on: Error
-			do: [ :e |
+			do: [ :anError |
+				anError emit.
+
 				NonInteractiveTranscript stdout
 					nextPutAll: '[';
 					nextPutAll: self class name;
 					nextPutAll: '] ';
-					print: e;
-					cr.
-				e return ].
-	
+					print: anError;
+					cr ].
+
 	^ aText
 ]
 

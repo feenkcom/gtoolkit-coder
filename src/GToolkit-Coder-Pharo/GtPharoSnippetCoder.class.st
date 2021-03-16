@@ -16,9 +16,9 @@ GtPharoSnippetCoder >> coder [
 ]
 
 { #category : #'api - ast' }
-GtPharoSnippetCoder >> computeAst [
+GtPharoSnippetCoder >> computeAst: theSourceString [
 	^ GtPharoParser
-		parseWithErrors: self currentSourceString
+		parseWithErrors: theSourceString
 		startingAt: self parserStartingState
 ]
 

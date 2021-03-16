@@ -1,6 +1,6 @@
 Class {
 	#name : #GtPharoMethodCoderByScripterExamples,
-	#superclass : #GtPharoMethodCoderExamples,
+	#superclass : #GtCoderModelExamples,
 	#traits : 'TCoderByScripterExamples',
 	#classTraits : 'TCoderByScripterExamples classTrait',
 	#category : #'GToolkit-Coder-Examples-Pharo'
@@ -1050,14 +1050,14 @@ GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_06_type_method_name [
 	
 	aScripter wait forEmptySpaceTaskQueue.
 	
-	"aScripter check
+	aScripter check
 		label: 'Check refactoring changes attribute';
 		value: [ :aCoderEditor |
 			aCoderEditor text
 				findAttributeSuchThat: [ :eachAttribute | eachAttribute class = GtRefactoringChangesAttribute ]
 				indicesDo: [ :aStart :anEnd | aStart to: anEnd ] ]
 			equals: [ 48 to: 48 ];
-		onChildNamed: GtSourceCoder sourceEditorName."
+		onChildNamed: GtSourceCoderEditorId.
 
 	^ aScripter syncContinue
 ]
@@ -1145,9 +1145,9 @@ GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_09_apply_refactoring 
 	aScripter click
 		onSpaceRoot;
 		id: GtRefactoringsPreviewAcceptId.
-	
+
 	aScripter wait forEmptySpaceTaskQueue.
-	
+
 	aScripter check
 		label: 'Check refactoring changes attribute does not exist';
 		value: [ :aCoderEditor |
