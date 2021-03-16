@@ -11,6 +11,11 @@ Class {
 }
 
 { #category : #accessing }
+GtAstCache class >> cleanUp [
+	default := nil
+]
+
+{ #category : #accessing }
 GtAstCache class >> default [
 	^ default ifNil: [ default := self new ]
 ]
