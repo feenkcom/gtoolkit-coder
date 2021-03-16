@@ -177,7 +177,7 @@ GtPharoMethodCoderByScripterExamples >> binaryMethodCoderUI_ExpandedFromUI_CodeS
 	aScripter checks: 'Check Expanded Source Code Style' do: [ :aStep |
 		aStep check
 			label: 'Check Method Name Attributes';
-			anySatisfies: [ :aTextAttribute | aTextAttribute = (BlTextForegroundAttribute new paint: Color black) ];
+			anySatisfies: [ :aTextAttribute | aTextAttribute = BlFontWeightAttribute bold ];
 			onChildNamed: #editor;
 			onBrTextEditor;
 			onBrTextEditorText;
@@ -359,14 +359,14 @@ GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep numberfOfTextA
 	<gtExample>
 	aScripterOrStep check
 		label: 'Check Editor Text Attributes';
-		satisfies: [ :aText | 
+		value: [ :aText | 
 			| anIterator aCounter |
 			aCounter := 0.
 			anIterator := aText iterator.
 			[ anIterator hasNext ] whileTrue: [ (anIterator attributes 
 				anySatisfy: [ :eachAttribute | eachAttribute class = aClass ]) ifTrue: [ aCounter := aCounter + 1 ].
 				anIterator next ].
-			aCounter = aNumber ];
+			aCounter ] equals: aNumber;
 		onChildNamed: #editor;
 		onBrTextEditor;
 		onBrTextEditorText.
@@ -1242,7 +1242,7 @@ GtPharoMethodCoderByScripterExamples >> patternHighlighterMethodCoder [
 	| aMethod aCoder |
 	aMethod := self patternHighlighterMethod.
 	aCoder := self coderOnMethod: aMethod.
-	aCoder highlighter: (GtImplementorPatternHighlighter forPattern: ':a:').
+	aCoder highlighter: (GtPharoImplementorPatternHighlighter forPattern: 'a:').
 	^ aCoder
 ]
 
@@ -1261,7 +1261,7 @@ GtPharoMethodCoderByScripterExamples >> patternHighlighterMethodCoderUI_CheckUnd
 	aScripter := self patternHighlighterMethodCoderUI.
 	aScripter checks: 'Check Pattern Highlighter Source Code Style' do: [ :aStep |
 		self checkFor: aStep textAttributesAt: 2 anySatisfies: [ :aTextAttribute | aTextAttribute class = BlTextDecorationAttribute ].
-		self checkFor: aStep numberfOfTextAttributes: 6 OfType: BlTextDecorationAttribute.
+		self checkFor: aStep numberfOfTextAttributes: 8 OfType: BlTextDecorationAttribute.
 	].
 	aScripter syncContinue.
 	^ aScripter
@@ -1280,7 +1280,7 @@ GtPharoMethodCoderByScripterExamples >> patternHighlighterPrintMethodCoder [
 	| aMethod aCoder |
 	aMethod := self patternHighlighterPrintMethod.
 	aCoder := self coderOnMethod: aMethod.
-	aCoder highlighter: (GtImplementorPatternHighlighter forPattern: 'print').
+	aCoder highlighter: (GtPharoImplementorPatternHighlighter forPattern: 'print').
 	^ aCoder
 ]
 
@@ -1312,7 +1312,7 @@ GtPharoMethodCoderByScripterExamples >> patternHighlighterPrintStringMethodCoder
 	| aMethod aCoder |
 	aMethod := self patternHighlighterPrintMethod.
 	aCoder := self coderOnMethod: aMethod.
-	aCoder highlighter: (GtSelectorReferenceAndLiteralHighlighter forSelector: #printString).
+	aCoder highlighter: (GtPharoSelectorReferenceAndLiteralHighlighter forSelector: #printString).
 	^ aCoder
 ]
 

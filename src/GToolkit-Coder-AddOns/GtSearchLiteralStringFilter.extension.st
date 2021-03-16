@@ -2,7 +2,7 @@ Extension { #name : #GtSearchLiteralStringFilter }
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtSearchLiteralStringFilter >> highlighter [
-	^ GtSubstringLiteralHighlighter 
+	^ GtPharoSubstringLiteralHighlighter 
 		substring: self substring
 		caseSensitive: self caseSensitive
 ]

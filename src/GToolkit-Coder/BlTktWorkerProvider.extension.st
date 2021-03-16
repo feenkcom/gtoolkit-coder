@@ -1,14 +1,6 @@
 Extension { #name : #BlTktWorkerProvider }
 
 { #category : #'*GToolkit-Coder' }
-BlTktWorkerProvider class >> coderAddOnsPool [
-
-	^ self 
-		serviceNamed: self coderAddOnsPoolName 
-		ifMissing: [ self new coderAddOnsPool; service ]
-]
-
-{ #category : #'*GToolkit-Coder' }
 BlTktWorkerProvider >> coderAddOnsPool [
 	"Coder addons computation: maxPoolSize: 2, priority: 30"
 	self
@@ -16,6 +8,14 @@ BlTktWorkerProvider >> coderAddOnsPool [
 		priorityQueue;
 		poolMaxSize: 2;
 		nonUIPriority
+]
+
+{ #category : #'*GToolkit-Coder' }
+BlTktWorkerProvider class >> coderAddOnsPool [
+
+	^ self 
+		serviceNamed: self coderAddOnsPoolName 
+		ifMissing: [ self new coderAddOnsPool; service ]
 ]
 
 { #category : #'*GToolkit-Coder' }

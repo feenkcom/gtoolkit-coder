@@ -1,46 +1,46 @@
 Class {
-	#name : #GtASTNodeHighlighterStylerRule,
-	#superclass : #GtSourceReferenceHighlighter,
+	#name : #GtPharoAstNodeHighlighterStylerRule,
+	#superclass : #GtPharoCodeHighlighter,
 	#instVars : [
 		'styleBlock',
 		'nodeClassName',
 		'nodeClass'
 	],
-	#category : #'GToolkit-Coder-AddOns-Reference highlighter'
+	#category : #'GToolkit-Coder-Pharo-AddOns-Highlighter'
 }
 
 { #category : #accessing }
-GtASTNodeHighlighterStylerRule >> nodeClass [
+GtPharoAstNodeHighlighterStylerRule >> nodeClass [
 	^ nodeClass ifNil: [ nodeClass := Smalltalk at: nodeClassName ifAbsent: [ self class ] ]
 ]
 
 { #category : #accessing }
-GtASTNodeHighlighterStylerRule >> nodeClassName [
+GtPharoAstNodeHighlighterStylerRule >> nodeClassName [
 	^ nodeClassName.
 ]
 
 { #category : #accessing }
-GtASTNodeHighlighterStylerRule >> nodeClassName: aNodeClassName [
+GtPharoAstNodeHighlighterStylerRule >> nodeClassName: aNodeClassName [
 	nodeClassName := aNodeClassName.
 ]
 
 { #category : #asserting }
-GtASTNodeHighlighterStylerRule >> shouldApplyToNode: aNode [
+GtPharoAstNodeHighlighterStylerRule >> shouldApplyToNode: aNode [
 	^ aNode isKindOf: self nodeClass.
 ]
 
 { #category : #accessing }
-GtASTNodeHighlighterStylerRule >> styleBlock [
+GtPharoAstNodeHighlighterStylerRule >> styleBlock [
 	^ styleBlock.
 ]
 
 { #category : #accessing }
-GtASTNodeHighlighterStylerRule >> styleBlock: aBlock [
+GtPharoAstNodeHighlighterStylerRule >> styleBlock: aBlock [
 	styleBlock := aBlock.
 ]
 
 { #category : #visiting }
-GtASTNodeHighlighterStylerRule >> visitNode: aNode [
+GtPharoAstNodeHighlighterStylerRule >> visitNode: aNode [
 	super visitNode: aNode.
 	(self shouldApplyToNode: aNode)
 		ifTrue: [ self styleBlock cull: aNode cull: text ].

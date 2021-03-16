@@ -57,7 +57,30 @@ GtSearchCommentsFilter >> isWordBoundaryCharacter: aCharacter [
 ]
 
 { #category : #iterating }
-GtSearchCommentsFilter >> matchingIntervalsInAST: methodAst do: aBlock [
+GtSearchCommentsFilter >> matchingIntervalsInAst: methodAst do: aBlock [
+	"Evaluate a given block with text intervals of the matched comment within the given SmaCC Pharo AST"
+	methodAst
+		withAllNodesDo: [ :node | 
+			node comments ifNotNil: [ :theComments |
+				theComments 
+					do: [ :comment | 
+						self
+							matchingIntervalsInString: (methodAst completeSource
+								copyFrom: comment first
+								to: comment last) asString
+							do: [ :interval | 
+								aBlock value: (comment first + interval first - 1 to: comment first + interval last - 1) ] ] ] ]
+]
+
+{ #category : #iterating }
+GtSearchCommentsFilter >> matchingIntervalsInMethod: aCompiledMethod do: aBlock [
+	| methodAst |
+	methodAst := aCompiledMethod ast.
+	self matchingIntervalsInRBAST: methodAst do: aBlock
+]
+
+{ #category : #iterating }
+GtSearchCommentsFilter >> matchingIntervalsInRBAST: methodAst do: aBlock [
 	methodAst
 		nodesDo: [ :node | 
 			node comments
@@ -67,13 +90,6 @@ GtSearchCommentsFilter >> matchingIntervalsInAST: methodAst do: aBlock [
 						do: [ :interval | 
 							aBlock
 								value: (comment start + interval first to: comment start + interval last) ] ] ]
-]
-
-{ #category : #iterating }
-GtSearchCommentsFilter >> matchingIntervalsInMethod: aCompiledMethod do: aBlock [
-	| methodAst |
-	methodAst := aCompiledMethod ast.
-	self matchingIntervalsInAST: methodAst do: aBlock
 ]
 
 { #category : #private }

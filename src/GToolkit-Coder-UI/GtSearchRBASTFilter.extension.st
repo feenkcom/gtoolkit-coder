@@ -1,7 +1,7 @@
-Extension { #name : #GtSearchAstFilter }
+Extension { #name : #GtSearchRBASTFilter }
 
 { #category : #'*GToolkit-Coder-UI' }
-GtSearchAstFilter class >> filterDescriptorFor: aMethodsCoder [
+GtSearchRBASTFilter class >> filterDescriptorFor: aMethodsCoder [
 	^ GtFilterDescriptor
 		creator: [ :value | self sourceExpression: value ]
 		named: 'AST'

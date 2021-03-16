@@ -2,12 +2,12 @@ Extension { #name : #String }
 
 { #category : #'*GToolkit-Coder' }
 String >> gtASTMatches [
-	^ GtSearchASTFilter sourceExpression: self
+	^ GtSearchAstFilter sourceExpression: self
 ]
 
 { #category : #'*GToolkit-Coder' }
 String >> gtASTMethodMatches [
-	^ GtSearchASTFilter sourceMethod: self
+	^ GtSearchAstFilter sourceMethod: self
 ]
 
 { #category : #'*GToolkit-Coder' }

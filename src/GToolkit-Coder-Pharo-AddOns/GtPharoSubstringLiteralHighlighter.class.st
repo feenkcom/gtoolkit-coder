@@ -1,31 +1,31 @@
 Class {
-	#name : #GtSubstringLiteralHighlighter,
-	#superclass : #GtSourceReferenceHighlighter,
+	#name : #GtPharoSubstringLiteralHighlighter,
+	#superclass : #GtPharoCodeHighlighter,
 	#instVars : [
 		'substring',
 		'caseSensitive'
 	],
-	#category : #'GToolkit-Coder-AddOns-Reference highlighter'
+	#category : #'GToolkit-Coder-Pharo-AddOns-Highlighter'
 }
 
 { #category : #'instance creation' }
-GtSubstringLiteralHighlighter class >> substring: aString [
+GtPharoSubstringLiteralHighlighter class >> substring: aString [
 	^ self new substring: aString
 ]
 
 { #category : #'instance creation' }
-GtSubstringLiteralHighlighter class >> substring: aString caseSensitive: aBoolean [
+GtPharoSubstringLiteralHighlighter class >> substring: aString caseSensitive: aBoolean [
 	^ self new substring: aString; caseSensitive: aBoolean
 ]
 
 { #category : #'api - accessing' }
-GtSubstringLiteralHighlighter >> caseSensitive [
+GtPharoSubstringLiteralHighlighter >> caseSensitive [
 	<return: #Boolean>
 	^ caseSensitive
 ]
 
 { #category : #'api - accessing' }
-GtSubstringLiteralHighlighter >> caseSensitive: aBoolean [
+GtPharoSubstringLiteralHighlighter >> caseSensitive: aBoolean [
 	self 
 		assert: [ aBoolean isBoolean ] 
 		description: [ 'Case sensitive must be a boolean value' ].
@@ -33,33 +33,33 @@ GtSubstringLiteralHighlighter >> caseSensitive: aBoolean [
 ]
 
 { #category : #initialization }
-GtSubstringLiteralHighlighter >> initialize [
+GtPharoSubstringLiteralHighlighter >> initialize [
 	super initialize.
-	caseSensitive := false.
+
+	caseSensitive := false
 ]
 
 { #category : #'api - accessing' }
-GtSubstringLiteralHighlighter >> substring [
+GtPharoSubstringLiteralHighlighter >> substring [
 	^ substring
 ]
 
 { #category : #'api - accessing' }
-GtSubstringLiteralHighlighter >> substring: aString [
+GtPharoSubstringLiteralHighlighter >> substring: aString [
 	substring := aString
 ]
 
 { #category : #visiting }
-GtSubstringLiteralHighlighter >> visitLiteralValueNode: aNode [
+GtPharoSubstringLiteralHighlighter >> visitStringLiteral: aNode [
 	| source index |
-	source := aNode value.
+
+	source := aNode string.
 	index := 1.
 	[ (index := source
 		findString: self substring
 		startingAt: index
 		caseSensitive: self caseSensitive) > 0 ]
-		whileTrue: [ self
-				styleFrom: index + aNode start
-				to: index + aNode start + self substring size - 1
-				with: HighlightAttributes.
+		whileTrue: [
+			stream nextPut: (index - 1 + aNode startPosition to: index + aNode startPosition + self substring size - 2).
 			index := index + self substring size ]
 ]

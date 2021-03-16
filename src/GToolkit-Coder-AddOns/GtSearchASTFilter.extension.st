@@ -1,6 +1,6 @@
-Extension { #name : #GtSearchASTFilter }
+Extension { #name : #GtSearchAstFilter }
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtSearchASTFilter >> highlighter [
-	^ GtASTPatternHighlighter ast: ast
+GtSearchAstFilter >> highlighter [
+	^ GtPharoEmptyHighlighter new
 ]
