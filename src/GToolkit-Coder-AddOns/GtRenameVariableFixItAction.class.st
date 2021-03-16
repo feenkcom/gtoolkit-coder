@@ -1,6 +1,6 @@
 Class {
 	#name : #GtRenameVariableFixItAction,
-	#superclass : #GtFixItAction,
+	#superclass : #GtFixItVariableNodeAction,
 	#instVars : [
 		'newName'
 	],
@@ -9,15 +9,15 @@ Class {
 
 { #category : #accessing }
 GtRenameVariableFixItAction >> description [
-	^ 'Use ' , newName , ' instead of ' , node name
+	^ 'Use ' , newName , ' instead of ' , self nodeName
 ]
 
 { #category : #accessing }
 GtRenameVariableFixItAction >> executeOn: anEditorElement [
 	| newSource |
 	newSource := sourceCoder currentSourceString.
-	newSource := (newSource first: node start - 1) , newName
-		, (newSource allButFirst: node stop).
+	newSource := (newSource first: self startPosition - 1) , newName
+		, (newSource allButFirst: self stopPosition).
 	sourceCoder currentSourceString: newSource
 ]
 

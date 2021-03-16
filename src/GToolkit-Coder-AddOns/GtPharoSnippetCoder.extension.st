@@ -6,7 +6,7 @@ GtPharoSnippetCoder >> initializeAddOns: addOns [
 
 	addOns addStyler: GtPharoStyler new.
 	addOns addStyler: GtCoderExpandablePharoMethodStyler new.
-	"addOns addStyler: (GtFixItStyler new isForWorkspace: true)."
+	addOns addStyler: (GtFixItStyler new isForWorkspace: true).
 
 	addOns
 		addMainAction: 'Evaluate' translated

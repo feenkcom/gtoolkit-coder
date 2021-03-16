@@ -1,13 +1,12 @@
 Class {
 	#name : #GtDefineClassVariableFixItAction,
-	#superclass : #GtFixItAction,
+	#superclass : #GtFixItVariableNodeAction,
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
 
 { #category : #accessing }
 GtDefineClassVariableFixItAction >> description [
-	^ 'Add class variable ' , node name , ' to class '
-		, sourceCoder behavior name
+	^ 'Add class variable ' , self nodeName , ' to class ', sourceCoder behavior name
 ]
 
 { #category : #accessing }

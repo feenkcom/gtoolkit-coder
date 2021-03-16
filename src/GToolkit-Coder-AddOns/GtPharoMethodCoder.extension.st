@@ -206,10 +206,9 @@ GtPharoMethodCoder >> initializeAddOns: addOns [
 	
 	addOns addStyler: GtPharoStyler new.
 	addOns addStyler: GtCoderExpandablePharoMethodStyler new.
-	addOns addStyler: GtFixItStyler new.
+	addOns addStyler: (GtFixItStyler new isForWorkspace: false).
 
 	"addOns addStyler: GtCoderCommentStyler new."
-	"addOns addStyler: GtFixItStyler new."
 
 	addOns
 		addMainAction: (GtCoderActivatableAction new

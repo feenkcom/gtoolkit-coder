@@ -1,8 +1,6 @@
 Class {
 	#name : #GtFixItStyler,
-	#superclass : #GtCoderAstStyler,
-	#traits : 'TGtPharoProgramNodeVisitor',
-	#classTraits : 'TGtPharoProgramNodeVisitor classTrait',
+	#superclass : #GtGenericPharoStyler,
 	#instVars : [
 		'isForWorkspace'
 	],
@@ -22,39 +20,42 @@ GtFixItStyler >> canAddInstanceVariable: aString to: aClass [
 
 { #category : #'private - variables' }
 GtFixItStyler >> fixItActionsForVariable: aVariableNode [
-	^ aVariableNode name first isUppercase
+	^ aVariableNode variableName first isUppercase
 		ifTrue: [ self globalFixItActionsFor: aVariableNode ]
 		ifFalse: [ self localFixItActionsFor: aVariableNode ]
 ]
 
 { #category : #'private - variables' }
 GtFixItStyler >> globalFixItActionsFor: aVariableNode [
-	| actions possibleNames results |
-	actions := OrderedCollection new.
-	actions
-		add: (GtDefineClassFixItAction forCoder: self sourceCoder node: aVariableNode).
+	| theFixitActions results |
+
+	theFixitActions := OrderedCollection new.
+	theFixitActions add: (GtDefineClassFixItAction forCoder: self sourceCoder node: aVariableNode).
+
 	isForWorkspace
-		ifFalse: [ actions
-				add:
-					(GtDefineClassVariableFixItAction
-						forCoder: self sourceCoder
-						node: aVariableNode) ].
-	possibleNames := aVariableNode temporaryVariables
-		, self sourceCoder behavior allInstVarNames.
-	results := aVariableNode name
-		correctAgainst: aVariableNode temporaryVariables
+		ifFalse: [
+			| aDefineClassAction |
+			aDefineClassAction := GtDefineClassVariableFixItAction
+				forCoder: self sourceCoder
+				node: aVariableNode.
+			theFixitActions add: aDefineClassAction ].
+
+	results := aVariableNode variableName
+		correctAgainst: aVariableNode localVariables
 		continuedFrom: nil.
+
 	results := self sourceCoder behavior
-		possibleVariablesFor: aVariableNode name
+		possibleVariablesFor: aVariableNode variableName
 		continuedFrom: results.
-	(aVariableNode name correctAgainst: nil continuedFrom: results)
-		do: [ :each | 
-			actions
-				add:
-					((GtRenameVariableFixItAction
-						forCoder: self sourceCoder
-						node: aVariableNode) newName: each) ].
-	^ actions
+
+	theFixitActions addAll: ((aVariableNode variableName correctAgainst: nil continuedFrom: results)
+		collect: [ :each | 
+			(GtRenameVariableFixItAction
+				forCoder: self sourceCoder
+				node: aVariableNode)
+					newName: each ]).
+
+	^ theFixitActions
 ]
 
 { #category : #testing }
@@ -65,6 +66,7 @@ GtFixItStyler >> hasRefactoring [
 { #category : #accessing }
 GtFixItStyler >> initialize [
 	super initialize.
+
 	isForWorkspace := false
 ]
 
@@ -75,43 +77,36 @@ GtFixItStyler >> isForWorkspace: aBoolean [
 
 { #category : #'private - variables' }
 GtFixItStyler >> localFixItActionsFor: aVariableNode [
-	| actions possibleNames |
-	actions := OrderedCollection new.
-	actions
-		add:
-			(GtDefineTemporaryFixItAction
-				forCoder: self sourceCoder
-				node: aVariableNode).
+	| theFixitActions possibleNames |
+
+	theFixitActions := OrderedCollection new.
+	theFixitActions add:
+		(GtDefineTemporaryFixItAction
+			forCoder: self sourceCoder
+			node: aVariableNode).
+	
 	(self
-		canAddInstanceVariable: aVariableNode name
+		canAddInstanceVariable: aVariableNode variableName
 		to: self sourceCoder behavior)
-		ifTrue: [ actions
-				add:
-					(GtDefineInstanceVariableFixItAction
-						forCoder: self sourceCoder
-						node: aVariableNode) ].
-	possibleNames := aVariableNode temporaryVariables
-		, self sourceCoder behavior allInstVarNames.
-	(aVariableNode name correctAgainst: possibleNames)
-		do: [ :each | 
-			actions
-				add:
-					((GtRenameVariableFixItAction
-						forCoder: self sourceCoder
-						node: aVariableNode) newName: each) ].
-	^ actions
+		ifTrue: [
+			theFixitActions add:
+				(GtDefineInstanceVariableFixItAction
+					forCoder: self sourceCoder
+					node: aVariableNode) ].
+	possibleNames := aVariableNode localVariables, self sourceCoder behavior allInstVarNames.
+
+	theFixitActions addAll: ((aVariableNode variableName correctAgainst: possibleNames)
+		collect: [ :each | 
+			(GtRenameVariableFixItAction
+				forCoder: self sourceCoder
+				node: aVariableNode) newName: each ]).
+
+	^ theFixitActions
 ]
 
 { #category : #accessing }
 GtFixItStyler >> sourceCoder [
 	^ self coderViewModel coderModel
-]
-
-{ #category : #'api - styling' }
-GtFixItStyler >> style: aText ast: theAst [
-	text := aText.
-	[ self accept: theAst ]
-		ensure: [ text := nil ]
 ]
 
 { #category : #'private - messages' }
@@ -143,9 +138,9 @@ GtFixItStyler >> typeOf: aNode [
 ]
 
 { #category : #visiting }
-GtFixItStyler >> visitMessageNode: aNode [
+GtFixItStyler >> visitMessageSend: aNode [
 	| theNodeType theClassForSelector attribute |
-	super visitMessageNode: aNode.
+	super visitMessageSend: aNode.
 
 	self hasRefactoring
 		ifTrue: [ ^ self ].
@@ -177,26 +172,25 @@ GtFixItStyler >> visitMessageNode: aNode [
 ]
 
 { #category : #visiting }
-GtFixItStyler >> visitMethodNode: aMethodNode [
+GtFixItStyler >> visitMethod: aMethodNode [
 	aMethodNode selector isDoIt
 		ifTrue: [ ^ self ].
 
-	^ super visitMethodNode: aMethodNode
+	^ super visitMethod: aMethodNode
 ]
 
 { #category : #visiting }
-GtFixItStyler >> visitVariableNode: aVariableNode [
+GtFixItStyler >> visitVariable: aVariableNode [
 	(aVariableNode isUndeclared
-		and: [ isForWorkspace not or: [ aVariableNode name first isUppercase ] ])
+		and: [ isForWorkspace not or: [ aVariableNode variableName first isUppercase ] ])
 		ifTrue: [
 			 | attribute |
 			attribute := GtFixItAttribute new.
-			attribute
-				fixItActions: [ self fixItActionsForVariable: aVariableNode ].
-			self
-				styleFrom: aVariableNode stop
-				to: aVariableNode stop
-				with: {attribute} ].
+			attribute fixItActions: [ self fixItActionsForVariable: aVariableNode ].
+			text
+				attribute: attribute
+				from: aVariableNode name stopPosition
+				to: aVariableNode name stopPosition ].
 
-	super visitVariableNode: aVariableNode
+	super visitVariable: aVariableNode
 ]

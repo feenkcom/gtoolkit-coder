@@ -1,17 +1,8 @@
 Class {
 	#name : #GtCoderExpandablePharoMethodStyler,
-	#superclass : #GtCoderAstStyler,
-	#traits : 'TGtPharoProgramNodeVisitor',
-	#classTraits : 'TGtPharoProgramNodeVisitor classTrait',
+	#superclass : #GtGenericPharoStyler,
 	#category : #'GToolkit-Coder-AddOns-Expandable method'
 }
-
-{ #category : #'api - styling' }
-GtCoderExpandablePharoMethodStyler >> style: aText ast: theAst [
-	text := aText.
-	[ self accept: theAst ]
-		ensure: [ text := nil ]
-]
 
 { #category : #visiting }
 GtCoderExpandablePharoMethodStyler >> visitMessageSend: aMessageNode [

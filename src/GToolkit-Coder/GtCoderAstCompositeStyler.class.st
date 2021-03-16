@@ -18,14 +18,14 @@ GtCoderAstCompositeStyler >> style: aText ast: theAst [
 		[ eachStyler style: aText ast: theAst ]
 			on: Error
 			do: [ :anError |
+				anError emit.
+	
 				NonInteractiveTranscript stdout
 					nextPutAll: '[';
 					nextPutAll: eachStyler class name;
 					nextPutAll: '] ';
 					print: anError;
-					cr.
-				
-				anError emit ] ]
+					cr ] ]
 ]
 
 { #category : #accessing }

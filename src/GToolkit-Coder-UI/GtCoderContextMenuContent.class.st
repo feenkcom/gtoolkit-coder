@@ -46,7 +46,7 @@ GtCoderContextMenuContent >> initialize [
 				when: BlClickEvent
 					do: [ :anEvent |
 						anEvent consumed: true.
-						eachGtCoderContextMenuAction action cull: self editorElement textualCoderViewModel cull: anEvent.
+						eachGtCoderContextMenuAction action cull: self editorElement textualCoderViewModel cull: anEvent cull: self editorElement.
 						self fireEvent: BrDropdownHideWish new.
 						self fireEvent: BrContextMenuHideWish new ];
 				addChild:

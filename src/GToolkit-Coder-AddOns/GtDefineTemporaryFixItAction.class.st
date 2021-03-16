@@ -1,12 +1,12 @@
 Class {
 	#name : #GtDefineTemporaryFixItAction,
-	#superclass : #GtFixItAction,
+	#superclass : #GtFixItVariableNodeAction,
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
 
 { #category : #accessing }
 GtDefineTemporaryFixItAction >> description [
-	^ 'Add temporary variable ' , node name
+	^ 'Add temporary variable ' , self nodeName
 ]
 
 { #category : #executing }

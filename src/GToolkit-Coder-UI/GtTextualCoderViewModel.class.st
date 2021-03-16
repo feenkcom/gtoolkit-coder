@@ -123,9 +123,12 @@ GtTextualCoderViewModel >> computeAddOns [
 				withEnoughArguments: { theAst . newAddOns . self } ]
 			on: Error
 			do: [ :anError |
-				NonInteractiveTranscript stdout
+				"emit as a beacon signal"
+				anError emit.
+				
+				NonInteractiveTranscript stderr
 					nextPut: $[;
-					nextPutAll: aCoderModel class name;
+					print: eachPragma method printString;
 					nextPut: $];
 					space;
 					print: anError;
