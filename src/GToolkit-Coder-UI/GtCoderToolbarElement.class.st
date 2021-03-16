@@ -161,7 +161,7 @@ GtCoderToolbarElement >> newBrowseButton [
 	^ BrButton new
 		look: BrGlamorousButtonWithIconLook;
 		label: 'Browse in another world tab';
-		icon: BrGlamorousVectorIcons browse;
+		icon: BrGlamorousVectorIcons emphasizedBrowse;
 		action: [ :aButton | self browseFrom: aButton ]
 ]
 
