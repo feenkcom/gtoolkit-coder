@@ -1,11 +1,11 @@
 Class {
-	#name : #GtCoderExpandablePharoMethodStyler,
+	#name : #GtPharoMethodExpanderStyler,
 	#superclass : #GtGenericPharoStyler,
-	#category : #'GToolkit-Coder-AddOns-Expandable method'
+	#category : #'GToolkit-Coder-Pharo-AddOns-Expander'
 }
 
 { #category : #visiting }
-GtCoderExpandablePharoMethodStyler >> visitMessageSend: aMessageNode [
+GtPharoMethodExpanderStyler >> visitMessageSend: aMessageNode [
 	| aMethodClass |
 	
 	self visitValue: aMessageNode.
