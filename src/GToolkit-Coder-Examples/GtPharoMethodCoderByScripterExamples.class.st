@@ -541,7 +541,7 @@ GtPharoMethodCoderByScripterExamples >> exampleMethodCoderUI [
 	<gtExample>
 	| aScripter |
 	
-	aScripter := self scripterForBlock: [ self exampleMethodCoder ].
+	aScripter := self scripterForBlock: [ self exampleMethodCoder asCoderViewModel ].
 	
 	^ aScripter syncContinue
 ]
@@ -1357,7 +1357,7 @@ GtPharoMethodCoderByScripterExamples >> referencedExampleMethodCoder [
 GtPharoMethodCoderByScripterExamples >> referencedExampleMethodCoderUI [
 	<gtExample>
 	| aScripter |
-	aScripter := self scripterForBlock: [ self referencedExampleMethodCoder ].
+	aScripter := self scripterForBlock: [ self referencedExampleMethodCoder asCoderViewModel ].
 	aScripter syncContinue.
 	^ aScripter
 ]
