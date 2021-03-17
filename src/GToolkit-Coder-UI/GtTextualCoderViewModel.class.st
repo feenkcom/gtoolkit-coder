@@ -301,6 +301,14 @@ GtTextualCoderViewModel >> gtInfoFor: aView [
 		updateWhen: GtTextualCoderViewModelAnnouncement in: self announcer
 ]
 
+{ #category : #'api - coder model' }
+GtTextualCoderViewModel >> hasDeclaredVariableNamed: aVariableName [
+	"Return true if a variable with a given name is declared"
+	<return: #Boolean>
+
+	^ false
+]
+
 { #category : #initialization }
 GtTextualCoderViewModel >> initialize [
 	super initialize.

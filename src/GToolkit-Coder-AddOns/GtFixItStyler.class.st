@@ -165,7 +165,7 @@ GtFixItStyler >> visitMessageSend: aNode [
 			classOrMetaClass: theNodeType
 		} ].
 	
-	text
+	self
 		attribute: attribute
 		from: aNode selectorParts last stopPosition
 		to: aNode selectorParts last stopPosition
@@ -182,16 +182,25 @@ GtFixItStyler >> visitMethod: aMethodNode [
 
 { #category : #visiting }
 GtFixItStyler >> visitVariable: aVariableNode [
-	(aVariableNode isUndeclared
-		and: [ isForWorkspace not or: [ aVariableNode variableName first isUppercase ] ])
-		ifTrue: [
-			 | attribute |
-			attribute := GtFixItAttribute new.
-			attribute fixItActions: [ self fixItActionsForVariable: aVariableNode ].
-			text
-				attribute: attribute
-				from: aVariableNode name stopPosition
-				to: aVariableNode name stopPosition ].
+	| isUndeclared anAttribute |
+
+	isUndeclared := aVariableNode isUndeclared.
+	isUndeclared
+		ifFalse: [ ^ self ].
+
+	"in case of the workspace we ignore non-capitalized variables as they are temporary variables"
+	(isForWorkspace and: [ aVariableNode variableName first isUppercase not ])
+		ifFalse: [ ^ self ].
+
+	(self coderViewModel hasDeclaredVariableNamed: aVariableNode variableName)
+		ifTrue: [ ^ self ].
+
+	anAttribute := GtFixItAttribute new.
+	anAttribute fixItActions: [ self fixItActionsForVariable: aVariableNode ].
+	self
+		attribute: anAttribute
+		from: aVariableNode name stopPosition
+		to: aVariableNode name stopPosition.
 
 	super visitVariable: aVariableNode
 ]
