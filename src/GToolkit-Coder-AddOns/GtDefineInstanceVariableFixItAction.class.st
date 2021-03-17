@@ -11,7 +11,7 @@ GtDefineInstanceVariableFixItAction >> description [
 
 { #category : #accessing }
 GtDefineInstanceVariableFixItAction >> executeOn: anEditorElement [
-	sourceCoder addInstanceVariable: node name
+	sourceCoder addInstanceVariable: self nodeName
 ]
 
 { #category : #accessing }
