@@ -136,7 +136,7 @@ GtTextualCoderViewModel >> computeAddOns [
 
 	"view model add-ons override coder model add-ons"
 	newAddOns addAddOns: extraAddOns.
-
+	newAddOns markAsUpdated.
 	^ newAddOns
 ]
 
