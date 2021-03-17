@@ -11,6 +11,10 @@ Class {
 
 { #category : #visiting }
 GtPharoCodeHighlighter >> acceptNode: aSmaCCParseNode [
+	"Using acceptVisitor: is the correct way to use a visitor pattern.
+	The constraint was design for RB"
+	<gtIgnoreConstraint: #GtRBAcceptVisitorCalledFromNonVisitingMethods>
+
 	aSmaCCParseNode isNil
 		ifTrue: [ ^ #() ].
 	
