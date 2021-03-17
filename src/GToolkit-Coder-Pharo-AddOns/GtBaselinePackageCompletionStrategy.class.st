@@ -1,7 +1,7 @@
 Class {
 	#name : #GtBaselinePackageCompletionStrategy,
 	#superclass : #GtBaselineCompletionStrategy,
-	#category : #'GToolkit-Coder-AddOns-Expandable baseline'
+	#category : #'GToolkit-Coder-Pharo-AddOns-Expandable baseline'
 }
 
 { #category : #private }

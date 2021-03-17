@@ -3,10 +3,10 @@ Extension { #name : #GtPharoMethodCoder }
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	(anAST isNil or: [ anAST methodNode isNil ])
-		ifTrue: [ ^ self ].
-	(self behavior isNil or: [ (self behavior inheritsFrom: BaselineOf) not ])
-		ifTrue: [ ^ self ].
+
+	(self behavior inheritsFrom: BaselineOf)
+		ifFalse: [ ^ self ].
+
 	coderAddOns addStyler: GtCoderExpandableBaselineStyler new
 ]
 
