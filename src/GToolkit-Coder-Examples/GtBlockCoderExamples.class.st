@@ -18,13 +18,21 @@ GtBlockCoderExamples >> compileBlock [
 { #category : #examples }
 GtBlockCoderExamples >> syntaxError [
 	<gtExample>
-
-	^ GtPharoBlockClosureCoder new
+	| aBlockClosureCoder wasSignalled |
+	
+	aBlockClosureCoder := GtPharoBlockClosureCoder new
 		addParameter: 'a' ofType: Integer;
 		addParameter: 'b' ofType: Integer;
-		forSource: '2 * (+a sqrt + b)';
-		block;
-		yourself
+		forSource: '2 * (+a sqrt + b)'.
+	
+	wasSignalled := false.
+	[ aBlockClosureCoder block ]
+		on: SyntaxErrorNotification
+		do: [ :e | wasSignalled := true ].
+
+	self assert: wasSignalled.
+
+	^ aBlockClosureCoder
 ]
 
 { #category : #examples }

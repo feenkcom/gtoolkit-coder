@@ -68,6 +68,32 @@ GtPharoBlockClosureCoder >> blockSourceFromText: aSourceTextOrString [
 				nextPut: $] ]
 ]
 
+{ #category : #'api - ast' }
+GtPharoBlockClosureCoder >> computeAst: theSourceString [
+	| anAst anOffset |
+	
+	anAst := GtPharoParser
+		parseWithErrors: (self blockSourceFromText: theSourceString)
+		startingAt: GtPharoParser startingStateForMethodSequence.
+	
+	anAst := anAst statements first body.
+	anAst parent: nil.
+	anAst completeSource: theSourceString.
+
+	anOffset := 1 - anAst startPosition.
+	anAst withAllNodesDo: [ :eachNode |
+		eachNode removeAttributeNamed: #startPosition.
+		eachNode removeAttributeNamed: #stopPosition ]
+	andTokensDo: [ :eachToken |
+		eachToken
+			value: eachToken value
+			start: eachToken startPosition + anOffset
+			ids: eachToken ids ]
+	includesErrors: true.
+	
+	^ anAst
+]
+
 { #category : #'api - actions' }
 GtPharoBlockClosureCoder >> doItAllThenDo: aBlock requestedBy: aRequesterObject [
 	^ self
@@ -123,10 +149,7 @@ GtPharoBlockClosureCoder >> initialize [
 GtPharoBlockClosureCoder >> initializeAddOns: addOns [
 	super initializeAddOns: addOns.
 	
-	addOns addStyler:
-		(BrRBTextStyler new
-			workspace: bindingStrategy;
-			yourself)
+	addOns addStyler: GtPharoStyler new.
 ]
 
 { #category : #private }

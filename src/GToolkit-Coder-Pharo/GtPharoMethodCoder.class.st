@@ -263,7 +263,7 @@ GtPharoMethodCoder >> compiledMethod [
 GtPharoMethodCoder >> computeAst: theSourceString [
 	^ GtPharoParser
 		parseWithErrors: theSourceString
-		startingAt: self parserStartingState
+		startingAt: GtPharoParser startingStateForMethod
 ]
 
 { #category : #'api - refactorings' }
@@ -943,11 +943,6 @@ GtPharoMethodCoder >> packageTag [
 									cls := self behavior.
 									cls category asString = package name asString
 										ifFalse: [ package classTagForClass: cls ] ] ] ] ]
-]
-
-{ #category : #private }
-GtPharoMethodCoder >> parserStartingState [
-	^ GtPharoParser startingStateForMethod
 ]
 
 { #category : #private }

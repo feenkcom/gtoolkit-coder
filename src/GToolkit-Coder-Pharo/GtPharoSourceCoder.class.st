@@ -495,11 +495,6 @@ GtPharoSourceCoder >> parseMethod: aString [
 	^ self parse: aString asExpression: false requestor: nil
 ]
 
-{ #category : #private }
-GtPharoSourceCoder >> parserStartingState [
-	^ GtPharoParser startingStateForMethodSequence
-]
-
 { #category : #'private - actions' }
 GtPharoSourceCoder >> primitiveEvaluate: aSourceString requester: aRequester onFailDo: anEvaluationFailBlock [
 	| aBehavior anObject aContext |

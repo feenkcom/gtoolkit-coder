@@ -19,7 +19,7 @@ GtPharoSnippetCoder >> coder [
 GtPharoSnippetCoder >> computeAst: theSourceString [
 	^ GtPharoParser
 		parseWithErrors: theSourceString
-		startingAt: self parserStartingState
+		startingAt: GtPharoParser startingStateForMethodSequence
 ]
 
 { #category : #accessing }
