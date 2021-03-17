@@ -1,6 +1,6 @@
 Class {
 	#name : #GtSourceReferenceHighlighter,
-	#superclass : #GtASTStyler,
+	#superclass : #GtCoderAstStyler,
 	#classVars : [
 		'HighlightAttributes'
 	],

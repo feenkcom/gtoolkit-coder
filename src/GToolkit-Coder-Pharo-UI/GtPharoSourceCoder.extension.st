@@ -88,8 +88,8 @@ GtPharoSourceCoder >> defaultCoderLook [
 ]
 
 { #category : #'*GToolkit-Coder-Pharo-UI' }
-GtPharoSourceCoder >> initializeShortcuts [
-	super initializeShortcuts.
+GtPharoSourceCoder >> initializeShortcuts: addOns [
+	super initializeShortcuts: addOns.
 
 	addOns
 		addShortcut: GtSourceCoderBrowseImplementorsShortcut new;

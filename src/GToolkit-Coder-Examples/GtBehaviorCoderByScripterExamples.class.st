@@ -157,8 +157,7 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_01_shortcu
 			aStep check
 				label: 'Check class name has focus';
 				satisfies: [ :aClassNameEditor | aClassNameEditor hasFocus ];
-				id: GtBehaviorCoderBehaviorNameId.
-	].
+				id: GtBehaviorCoderBehaviorNameId ].
 		
 	^ aScripter syncContinue
 ]

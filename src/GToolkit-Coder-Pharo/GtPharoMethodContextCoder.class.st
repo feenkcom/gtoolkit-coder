@@ -99,8 +99,8 @@ GtPharoMethodContextCoder >> debuggerVariableNodes [
 ]
 
 { #category : #initialize }
-GtPharoMethodContextCoder >> initializeAddOns [
-	super initializeAddOns.
+GtPharoMethodContextCoder >> initializeAddOns: addOns [
+	super initializeAddOns: addOns.
 
 "	addOns addStyler: (GtCoderContextVariableButtonStyler new methodCoder: self)."
 "	addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: self)"

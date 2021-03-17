@@ -120,7 +120,7 @@ GtRenameAction >> addRenameAttributes [
 
 { #category : #'private - actions' }
 GtRenameAction >> allowSave [
-	textElement sourceCoderUIModel allowSaveDueTo: self
+	textElement textualCoderViewModel allowSaveDueTo: self
 ]
 
 { #category : #private }
@@ -241,7 +241,7 @@ GtRenameAction >> originalName [
 
 { #category : #'private - actions' }
 GtRenameAction >> preventSave [
-	textElement sourceCoderUIModel preventSaveDueTo: self
+	textElement textualCoderViewModel preventSaveDueTo: self
 ]
 
 { #category : #private }

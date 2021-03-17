@@ -55,7 +55,7 @@ GtCoderElementForSnippetsWithDestinationExamples >> coderContainerWithSpawnBelow
 		onGtPharoSnippetDestinationButton.
 	aScripter click
 		label: 'Click on the inspect button';
-		onGtPharoSnippetInspectButton.
+		id: GtSourceCoderDoItAndGoActionId.
 	aScripter wait forEmptySpaceTaskQueue.
 	aScripter check
 		label: 'Check spawn event';
@@ -132,7 +132,7 @@ GtCoderElementForSnippetsWithDestinationExamples >> coderElementWithHandlerScrip
 		onGtPharoSnippetDestinationButton.
 	aScripter click
 		label: 'Click on the inspect button';
-		onGtPharoSnippetInspectButton.
+		id: GtSourceCoderDoItAndGoActionId.
 	aScripter wait forEmptySpaceTaskQueue.
 	aScripter check
 		label: 'Check spawn event';
@@ -161,7 +161,7 @@ GtCoderElementForSnippetsWithDestinationExamples >> coderElementWithHandlerScrip
 			yourself ].
 	aScripter click
 		label: 'Click on destination button';
-		onGtPharoSnippetInspectButton.
+		id: GtSourceCoderDoItAndGoActionId.
 	aScripter wait forEmptySpaceTaskQueue.
 	aScripter check
 		label: 'Check spawn event';

@@ -1,18 +1,17 @@
 Class {
 	#name : #GtDefineInstanceVariableFixItAction,
-	#superclass : #GtFixItAction,
+	#superclass : #GtFixItVariableNodeAction,
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
 
 { #category : #accessing }
 GtDefineInstanceVariableFixItAction >> description [
-	^ 'Add instance variable ' , node name , ' to class '
-		, sourceCoder behavior name
+	^ 'Add instance variable ' , self nodeName , ' to class ', sourceCoder behavior name
 ]
 
 { #category : #accessing }
 GtDefineInstanceVariableFixItAction >> executeOn: anEditorElement [
-	sourceCoder addInstanceVariable: node name
+	sourceCoder addInstanceVariable: self nodeName
 ]
 
 { #category : #accessing }

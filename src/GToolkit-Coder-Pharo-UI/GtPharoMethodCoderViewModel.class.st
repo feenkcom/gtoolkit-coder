@@ -27,6 +27,11 @@ GtPharoMethodCoderViewModel >> allowSaveDueTo: aSavePreventor [
 	self notifySaveEnabled
 ]
 
+{ #category : #'api - coder model' }
+GtPharoMethodCoderViewModel >> behavior [
+	^ self coderModel behavior
+]
+
 { #category : #'api - actions' }
 GtPharoMethodCoderViewModel >> discardChanges [
 	super discardChanges.
@@ -51,6 +56,23 @@ GtPharoMethodCoderViewModel >> gtInfo [
 			ifFalse: [ aStream nextPut: (#savePreventors -> savePreventors asArray) ] ])
 ]
 
+{ #category : #'api - coder model' }
+GtPharoMethodCoderViewModel >> hasDeclaredVariableNamed: aVariableName [
+	"Return true if a variable with a given name is declared"
+	<return: #Boolean>
+	
+	(super hasDeclaredVariableNamed: aVariableName)
+		ifTrue: [ ^ true ].
+	
+	(self behavior classThatDefinesInstVarNamed: aVariableName)
+		 ifNotNil: [ ^ true ].
+		
+	(self behavior classThatDefinesClassVariable: aVariableName)
+		 ifNotNil: [ ^ true ].
+
+	^ false
+]
+
 { #category : #initialization }
 GtPharoMethodCoderViewModel >> initialize [
 	super initialize.
@@ -65,12 +87,12 @@ GtPharoMethodCoderViewModel >> isSaveEnabled [
 
 { #category : #'private - notifying' }
 GtPharoMethodCoderViewModel >> notifySaveDisabled [
-	self announcerUIModel announce: (GtMethodCoderSaveDisabled new preventors: savePreventors asArray)
+	self announce: (GtMethodCoderSaveDisabled new preventors: savePreventors asArray)
 ]
 
 { #category : #'private - notifying' }
 GtPharoMethodCoderViewModel >> notifySaveEnabled [
-	self announcerUIModel announce: (GtMethodCoderSaveEnabled new)
+	self announce: (GtMethodCoderSaveEnabled new)
 ]
 
 { #category : #'api - actions' }

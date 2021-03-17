@@ -74,12 +74,12 @@ GtPharoMethodCoder >> abstractClassVar: aNode [
 GtPharoMethodCoder >> abstractInstVar: aNode [
 	| refactoring model cls |
 	model := self createRefactoringModel.
-	cls := model classFor: self classOrMetaClass.
+	cls := model classFor: self behavior.
 	refactoring := RBAbstractInstanceVariableRefactoring
 		model: model
-		variable: aNode name
-		class: (cls whoDefinesInstanceVariable: aNode name).
-	self addRefactoringChangesPreview: refactoring at: aNode stop
+		variable: aNode variableName
+		class: (cls whoDefinesInstanceVariable: aNode variableName).
+	self addRefactoringChangesPreview: refactoring at: aNode stopPosition
 ]
 
 { #category : #'api - refactorings' }
@@ -259,6 +259,13 @@ GtPharoMethodCoder >> compiledMethod [
 		ifFalse: [ nil ]
 ]
 
+{ #category : #'api - ast' }
+GtPharoMethodCoder >> computeAst: theSourceString [
+	^ GtPharoParser
+		parseWithErrors: theSourceString
+		startingAt: GtPharoParser startingStateForMethod
+]
+
 { #category : #'api - refactorings' }
 GtPharoMethodCoder >> createAccessorsFor: aNode instanceVariable: aBoolean [
 	| refactoring model cls |
@@ -330,11 +337,21 @@ GtPharoMethodCoder >> createRefactoringModel [
 
 { #category : #accessing }
 GtPharoMethodCoder >> currentSelector [
-	^ selector
-		ifNil: [ self rbAST
-				ifNotNil: [ :ast | 
-					ast isMethod
-						ifTrue: [ ast selector ] ] ]
+	| theAst |
+
+	selector
+		ifNotNil: [ ^ selector ].
+
+	theAst := self astAwait.
+	theAst
+		ifNil: [ ^ nil ].
+	
+	theAst isMethod
+		ifFalse: [ ^ #faulty ].
+			
+	theAst selectorDo: [ :aSymbol | ^ aSymbol ].
+
+	^ #faulty
 ]
 
 { #category : #'api - actions' }
@@ -585,7 +602,7 @@ GtPharoMethodCoder >> highlightFrom: startIndex to: endIndex [
 
 { #category : #'private - refactorings' }
 GtPharoMethodCoder >> highlightNode: aNode [
-	self highlightFrom: aNode start to: aNode stop
+	self highlightFrom: aNode startPosition to: aNode stopPosition
 ]
 
 { #category : #accessing }
@@ -929,30 +946,6 @@ GtPharoMethodCoder >> packageTag [
 ]
 
 { #category : #private }
-GtPharoMethodCoder >> parserStartingState [
-	^ GtPharoParser startingStateForMethod
-]
-
-{ #category : #private }
-GtPharoMethodCoder >> patternSource [
-	^ String
-		streamContents: [ :stream | 
-			| ast selectorParts arguments |
-			ast := self rbAST.
-			selectorParts := ast selectorParts.
-			arguments := ast arguments.
-			(selectorParts size = 1 and: [ arguments isEmpty ])
-				ifTrue: [ stream nextPutAll: selectorParts first ]
-				ifFalse: [ 1 to: selectorParts size do: [ :i | 
-						i = 1
-							ifFalse: [ stream space ].
-						stream
-							nextPutAll: (selectorParts at: i);
-							space;
-							nextPutAll: (arguments at: i) name ] ] ]
-]
-
-{ #category : #private }
 GtPharoMethodCoder >> performMethodRefactoring: refactoring [
 	[ refactoring primitiveExecute ]
 		on: RBRefactoringError
@@ -1079,48 +1072,6 @@ GtPharoMethodCoder >> protocol: aSymbol [
 	^ self attributeNamed: #category put: aSymbol
 ]
 
-{ #category : #'private - refactorings' }
-GtPharoMethodCoder >> rbSelectedNodeFrom: anEditorElement [
-	| ast position node selections editor |
-	ast := self rbAST.
-	ast ifNil: [ ^ nil ].
-	editor := anEditorElement editor.
-	selections := editor selection allSelections.
-	selections size = 1
-		ifTrue: [ ^ ast bestNodeFor: selections first interval ]
-		ifFalse: [ editor cursors cursorsCount = 1
-				ifFalse: [ ^ nil ].
-			position := editor cursors first position.
-			ast
-				nodesDo: [ :each | 
-					(position between: each start and: each stop)
-						ifTrue: [ node := each ] ].
-			^ node ]
-]
-
-{ #category : #'private - refactorings' }
-GtPharoMethodCoder >> rbSelectedNodesFrom: anEditorElement [
-	| node selections |
-	selections := anEditorElement editor selection allSelections.
-	selections size = 1
-		ifFalse: [ ^ nil ].
-	node := self rbSelectedNodeFrom: anEditorElement.
-	node isNil
-		ifTrue: [ ^ nil ].
-	node isSequence
-		ifTrue: [ | startIndex endIndex interval |
-			interval := selections first interval.
-			startIndex := ((node statements size to: 1 by: -1)
-				detect: [ :i | (node statements at: i) stop < interval first ]
-				ifNone: [ 0 ]) + 1.
-			endIndex := ((1 to: node statements size)
-				detect: [ :i | (node statements at: i) start > interval last ]
-				ifNone: [ node statements size + 1 ]) - 1.
-			startIndex <= endIndex
-				ifTrue: [ ^ node statements copyFrom: startIndex to: endIndex ] ].
-	^ {node}
-]
-
 { #category : #'api - actions' }
 GtPharoMethodCoder >> remove [
 	self coders
@@ -1230,7 +1181,7 @@ GtPharoMethodCoder >> skipBlankLinesIn: source at: startIndex [
 
 { #category : #'api - addons' }
 GtPharoMethodCoder >> slideAstFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 10>
+	"<gtAstCoderAddOns: 10>"
 	(self compiledMethod notNil
 		and: [ anAST notNil
 				and: [ 
@@ -1270,21 +1221,21 @@ GtPharoMethodCoder >> subscribeToSystem [
 GtPharoMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 20>
 	| isUnaryInstanceSideMethod isUnaryClassSideMethod |
+	
+	self compiledMethod
+		ifNil: [ ^ self ].
+	
 	isUnaryInstanceSideMethod := (self hasObjectAttribute
 		and: [ anAST notNil
 			and: [ anAST methodNode
-				ifNotNil: [ :node | node arguments isEmpty ]
+				ifNotNil: [ :node | node variables isEmpty ]
 				ifNil: [ false ] ] ]).
 	isUnaryClassSideMethod := (anAST notNil
 		and: [ anAST methodNode
-			ifNotNil: [ :node | node arguments isEmpty and: [ 
-				node methodClass isClassSide ] ]
+			ifNotNil: [ :node | node variables isEmpty and: [ self compiledMethod methodClass isClassSide ] ]
 			ifNil: [ false ] ] ).
 	(isUnaryInstanceSideMethod or: [ isUnaryClassSideMethod ])		
-		ifFalse: [ coderAddOns removeContextAction: 'Play' translated.
-			coderAddOns removeContextAction: 'Play and Inspect' translated.
-			coderAddOns removeContextAction: 'Debug' translated.
-			^ self ].
+		ifFalse: [ ^ self ].
 	coderAddOns
 		addContextAction: 'Play' translated
 		icon: BrGlamorousVectorIcons play

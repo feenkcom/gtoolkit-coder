@@ -18,7 +18,7 @@ GtPharoMethodExpanderAttribute class >> forClass: aClass andSelector: aSymbol [
 { #category : #private }
 GtPharoMethodExpanderAttribute >> buildMethodCoder [
 	| editorElement coder method |
-	(method := classOrMetaClass lookupSelector: selector)
+	(method := self compiledMethod)
 		ifNil: [ ^ BlElement new ].
 	coder := GtPharoMethodCoder
 		forExample: (classOrMetaClass gtExamplesFactory createExample: method).
@@ -36,8 +36,13 @@ GtPharoMethodExpanderAttribute >> buildMethodCoder [
 ]
 
 { #category : #accessing }
-GtPharoMethodExpanderAttribute >> classOrNonMetaClass [
+GtPharoMethodExpanderAttribute >> classOrMetaClass [
 	^ classOrMetaClass
+]
+
+{ #category : #accessing }
+GtPharoMethodExpanderAttribute >> compiledMethod [
+	^ classOrMetaClass lookupSelector: selector
 ]
 
 { #category : #'initialize-release' }

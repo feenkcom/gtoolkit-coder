@@ -34,12 +34,6 @@ GtMethodsCoderExamples >> exceptionProcessCoderExample [
 	^ GtProcessCoder forProcess: self suspendedErrorProcess
 ]
 
-{ #category : #accessing }
-GtMethodsCoderExamples >> factorialExample [
-	<gtExample>
-	^ GtProcessCoder forProcess: self suspendedFactorialProcess
-]
-
 { #category : #'examples - coder' }
 GtMethodsCoderExamples >> gtExamplesCoder [
 	<gtExample>
@@ -97,6 +91,12 @@ GtMethodsCoderExamples >> printStringFilter [
 	^ GtSearchReferencesFilter literal: #printString
 ]
 
+{ #category : #accessing }
+GtMethodsCoderExamples >> processCoderExample [
+	<gtExample>
+	^ GtProcessCoder forProcess: self suspendedProcess
+]
+
 { #category : #'examples - filters' }
 GtMethodsCoderExamples >> selectFilter [
 	<gtExample>
@@ -122,10 +122,10 @@ GtMethodsCoderExamples >> suspendedErrorProcess [
 ]
 
 { #category : #accessing }
-GtMethodsCoderExamples >> suspendedFactorialProcess [
+GtMethodsCoderExamples >> suspendedProcess [
 	<gtExample>
 	| process |
-	process := [ 100000 factorial printString ] newProcess.
+	process := [ 1 second wait. 3.14 squared . 42 sqrt ] newProcess.
 	process priority: Processor activePriority - 1.
 	process resume.
 	(Delay forMilliseconds: 2) wait.

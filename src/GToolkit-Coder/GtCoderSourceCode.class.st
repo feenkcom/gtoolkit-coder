@@ -22,6 +22,11 @@ GtCoderSourceCode >> appendText: aText [
 	self critical: [ self sourceText append: aText ]
 ]
 
+{ #category : #'api - accessing' }
+GtCoderSourceCode >> asAstCacheKey [
+	^ self subclassResponsibility
+]
+
 { #category : #'api - converting' }
 GtCoderSourceCode >> asCompiledMethodSourceCode: aCompiledMethod [
 	^ (GtCoderCompiledMethodSourceCode new fromSourceCode: self) compiledMethod: aCompiledMethod

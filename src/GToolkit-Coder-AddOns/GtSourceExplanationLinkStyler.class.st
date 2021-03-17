@@ -1,5 +1,5 @@
 Class {
 	#name : #GtSourceExplanationLinkStyler,
-	#superclass : #GtASTStyler,
+	#superclass : #GtRBASTStyler,
 	#category : #'GToolkit-Coder-AddOns-Explainer'
 }

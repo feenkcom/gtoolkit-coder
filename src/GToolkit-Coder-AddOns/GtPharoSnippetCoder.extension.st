@@ -1,8 +1,13 @@
 Extension { #name : #GtPharoSnippetCoder }
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtPharoSnippetCoder >> initializeAddOns [
-	super initializeAddOns.
+GtPharoSnippetCoder >> initializeAddOns: addOns [
+	super initializeAddOns: addOns.
+
+	addOns addStyler: GtPharoStyler new.
+	addOns addStyler: GtPharoMethodExpanderStyler new.
+	addOns addStyler: (GtFixItStyler new isForWorkspace: true).
+
 	addOns
 		addMainAction: 'Evaluate' translated
 		icon: BrGlamorousVectorIcons play
@@ -30,19 +35,7 @@ GtPharoSnippetCoder >> initializeAddOns [
 		addMainAction: 'Profile' translated
 		icon: BrGlamorousVectorIcons performance
 		action: [ :aCoderUIModel :anEvent | self profileWithMessageTally ]
-		id: GtSourceCoderProfileActionId.
-	addOns
-		addStyler:
-			(BrRBTextStyler new
-				isForWorkspace: true;
-				yourself);
-		addStyler:
-			(GtFixItStyler new
-				sourceCoder: self;
-				isForWorkspace: true);
-		addStyler: GtCoderExpandableMethodStyler new.
-	addOns addShortcut: GtSourceCoderInlineRenameShortcut new.
-	addOns clearChanges.
+		id: GtSourceCoderProfileActionId
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }

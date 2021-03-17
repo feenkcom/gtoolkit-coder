@@ -13,7 +13,7 @@ Class {
 
 { #category : #accessing }
 GtCoderStyleTextRequest >> afterAction [
-	^ afterAction ifNil: [ [  ] ]
+	^ afterAction ifNil: [ [ :aStyleText | "do nothing" ] ]
 ]
 
 { #category : #accessing }

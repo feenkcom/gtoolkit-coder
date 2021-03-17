@@ -1,6 +1,6 @@
 Class {
 	#name : #GtDefineClassFixItAction,
-	#superclass : #GtFixItAction,
+	#superclass : #GtFixItVariableNodeAction,
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
 
@@ -17,7 +17,7 @@ GtDefineClassFixItAction >> addCreateClassAttributeInEditor: aBrTextEditor [
 				clearAttributes: [ :each | each == attribute or: [ each == adornmentAttribute ] ].
 			sourceCoder requestStyleSourceText ].
 	element forClassDefinition.
-	element forClassName: node name asSymbol.
+	element forClassName: node name value asSymbol.
 	sourceCoder package
 		ifNotNil: [ :package | element forPackage: package ].
 	sourceCoder packageTag
@@ -36,12 +36,15 @@ GtDefineClassFixItAction >> addCreateClassAttributeInEditor: aBrTextEditor [
 		attributesCreatingBlock: [ adornmentAttribute := BrTextAdornmentDynamicAttribute new
 				beAppend;
 				stencil: stencilBlock ].
-	(text from: node stop to: node stop) attributes: {attribute}
+	text
+		attribute: attribute
+		from: self attributePosition
+		to: self attributePosition
 ]
 
 { #category : #accessing }
 GtDefineClassFixItAction >> description [
-	^ 'Create class ' , node name
+	^ 'Create class ' , self nodeName
 ]
 
 { #category : #accessing }

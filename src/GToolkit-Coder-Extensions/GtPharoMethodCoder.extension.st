@@ -3,18 +3,17 @@ Extension { #name : #GtPharoMethodCoder }
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> baselineAddOnFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	(anAST isNil or: [ anAST methodNode isNil ])
-		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
-			^ self ].
-	(self behavior isNil or: [ (self behavior inheritsFrom: BaselineOf) not ])
-		ifTrue: [ ^ self ].
+
+	(self behavior inheritsFrom: BaselineOf)
+		ifFalse: [ ^ self ].
+
 	coderAddOns addStyler: GtCoderExpandableBaselineStyler new
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> explanationFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	coderAddOns removeStylerOfType: GtSourceExplanationLinkStyler.
+
 	self explanationLink notNil
 		ifTrue: [ coderAddOns addStyler: self explanationLink ].
 ]
@@ -31,8 +30,8 @@ GtPharoMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 										anySatisfy:
 											[ :each | each isParseError not and: [ each selector = #gtView ] ] ] ]
 						ifNil: [ false ] ] ])
-		ifFalse: [ coderAddOns removeContextAction: 'gtView' translated.
-			^ self ].
+		ifFalse: [ ^ self ].
+
 	coderAddOns
 		addContextAction: 'gtView' translated
 		icon: BrGlamorousVectorIcons playinspect
@@ -42,7 +41,6 @@ GtPharoMethodCoder >> gtViewAddOnFor: anAST into: coderAddOns [
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> highlighterFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	coderAddOns removeStylerOfType: GtSourceReferenceHighlighter.
 	self highlighter notNil
 		ifTrue: [ coderAddOns addStyler: self highlighter ]
 ]
@@ -50,35 +48,37 @@ GtPharoMethodCoder >> highlighterFor: anAST into: coderAddOns [
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> methodExpanderFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 10>
-	(anAST isNil or: [ anAST methodNode isNil ])
-		ifTrue: [ coderAddOns removeStylerOfType: GtCoderExpandableMethodStyler.
-			^ self ].
-	coderAddOns addStyler: GtCoderExpandableMethodStyler new
+	
+	anAST methodNode
+		ifNil: [ ^ self ].
+
+	"coderAddOns addStyler: (GtCoderExpandablePharoMethodStyler new)"
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> modifiedMessageAstFor: anAST into: coderAddOns [
 	<gtAstCoderAddOns: 1>
+
 	self isModified
-		ifTrue: [
-			coderAddOns
-				addMainAction: 'Discard Changes' translated
-				icon: BrGlamorousVectorIcons cancel
-				action: [ :aCoderUIModel :anEvent | aCoderUIModel discardChanges ]
-				id: GtMethodCoderDiscardChangesActionId ]
-		ifFalse: [ coderAddOns removeMainAction: 'Discard Changes' translated ]
+		ifFalse: [ ^ self ].
+
+	coderAddOns
+		addMainAction: 'Discard Changes' translated
+		icon: BrGlamorousVectorIcons cancel
+		action: [ :aCoderUIModel :anEvent | aCoderUIModel discardChanges ]
+		id: GtMethodCoderDiscardChangesActionId
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
 GtPharoMethodCoder >> mondrianPaintAddOnFor: anAST into: coderAddOns [
-	<gtAstCoderAddOns: 7>
+	"<gtAstCoderAddOns: 7>"
 	(self hasObjectAttribute
 		and: [ anAST notNil
 				and: [ anAST methodNode
 						ifNotNil: [ :node | self isMondrianPaintMethod: node ]
 						ifNil: [ false ] ] ])
-		ifFalse: [ coderAddOns removeContextAction: 'Mondrian' translated.
-			^ self ].
+		ifFalse: [ ^ self ].
+
 	coderAddOns
 		addContextAction: 'Mondrian' translated
 		icon: BrGlamorousVectorIcons playinspect

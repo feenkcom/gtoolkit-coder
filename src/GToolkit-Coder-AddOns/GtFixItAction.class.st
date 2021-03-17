@@ -16,9 +16,9 @@ GtFixItAction class >> forCoder: aSourceCoder node: aRBProgramNode [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : #'api - node' }
 GtFixItAction >> attributePosition [
-	^ node stop
+	^ node name stopPosition
 ]
 
 { #category : #private }
@@ -29,7 +29,7 @@ GtFixItAction >> clearFixItAttributeInEditor: aBrTextEditor [
 		clearAttributes: [ :each | each isKindOf: GtFixItAttribute ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - action' }
 GtFixItAction >> description [
 	self subclassResponsibility
 ]
@@ -39,17 +39,17 @@ GtFixItAction >> executeOn: anEditorElement [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #'api - action' }
 GtFixItAction >> id [
 	<return: #BlElementId>
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 GtFixItAction >> menuActionWithIndex: anIndex [
 	^ GtCoderContextMenuAction new
-		action: [ :anEditorElement | self executeOn: anEditorElement ];
+		action: [ :aCoderViewModel :anEvent :anEditorElement | self executeOn: anEditorElement ];
 		title: self description;
 		id: (self id indexed: anIndex)
 ]
@@ -62,4 +62,14 @@ GtFixItAction >> node: aRBProgramNode [
 { #category : #initialization }
 GtFixItAction >> sourceCoder: aCoder [
 	sourceCoder := aCoder
+]
+
+{ #category : #'api - node' }
+GtFixItAction >> startPosition [
+	^ node name startPosition
+]
+
+{ #category : #'api - node' }
+GtFixItAction >> stopPosition [
+	^ node name stopPosition
 ]

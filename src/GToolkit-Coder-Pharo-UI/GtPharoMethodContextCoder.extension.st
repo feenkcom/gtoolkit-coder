@@ -6,8 +6,8 @@ GtPharoMethodContextCoder >> asCoderUIModel [
 ]
 
 { #category : #'*GToolkit-Coder-Pharo-UI' }
-GtPharoMethodContextCoder >> initializeShortcuts [ 
-	super initializeShortcuts.
+GtPharoMethodContextCoder >> initializeShortcuts: addOns [
+	super initializeShortcuts: addOns.
 	
 	addOns addShortcut: GtSourceCoderPrintItShortcut new
 ]
