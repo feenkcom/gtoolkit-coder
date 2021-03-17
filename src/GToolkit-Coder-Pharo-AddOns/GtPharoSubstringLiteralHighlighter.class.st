@@ -52,8 +52,9 @@ GtPharoSubstringLiteralHighlighter >> substring: aString [
 { #category : #visiting }
 GtPharoSubstringLiteralHighlighter >> visitStringLiteral: aNode [
 	| source index |
-
-	source := aNode string.
+	
+	"can not use #string or #literalValue here because we care about the actual source code, which includes quotes"
+	source := aNode value source.
 	index := 1.
 	[ (index := source
 		findString: self substring
