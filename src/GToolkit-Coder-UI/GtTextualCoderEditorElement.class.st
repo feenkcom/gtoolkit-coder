@@ -343,10 +343,10 @@ GtTextualCoderEditorElement >> onViewModelStylersChanged [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelTextChanged [
-	
+
 	aGtTextualCoderViewModelTextChanged source == self
-		ifTrue: [ ^ self ].
-		
+		ifTrue: [ ^ self hideHighlighters ].
+
 	aGtTextualCoderViewModelTextChanged isSynchronous
 		ifTrue: [ 
 			self text: aGtTextualCoderViewModelTextChanged text copy.

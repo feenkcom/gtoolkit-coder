@@ -173,8 +173,9 @@ GtFixItStyler >> visitMessageSend: aNode [
 
 { #category : #visiting }
 GtFixItStyler >> visitMethod: aMethodNode [
-	aMethodNode selector isDoIt
-		ifTrue: [ ^ self ].
+	aMethodNode selectorDo: [ :aSelector |
+		aSelector isDoIt
+			ifTrue: [ ^ self ] ].
 
 	^ super visitMethod: aMethodNode
 ]
