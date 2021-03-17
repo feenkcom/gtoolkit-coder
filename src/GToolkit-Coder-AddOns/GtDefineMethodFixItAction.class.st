@@ -10,7 +10,8 @@ Class {
 { #category : #executing }
 GtDefineMethodFixItAction >> addCoderAttributeinEditor: aBrTextEditor [
 	| position |
-	position := node keywordsIntervals last last.
+	
+	position := self attributePosition.
 	(aBrTextEditor text from: position to: position)
 		attributes:
 			{((GtPharoMethodExpanderAttribute
@@ -20,7 +21,7 @@ GtDefineMethodFixItAction >> addCoderAttributeinEditor: aBrTextEditor [
 
 { #category : #accessing }
 GtDefineMethodFixItAction >> attributePosition [
-	^ node keywordsIntervals last last
+	^ node selectorParts last stopPosition
 ]
 
 { #category : #accessing }
@@ -40,8 +41,7 @@ GtDefineMethodFixItAction >> compileMethod [
 
 { #category : #accessing }
 GtDefineMethodFixItAction >> description [
-	^ 'Create method ' , node selector , ' in class '
-		, classOrMetaClass name
+	^ 'Create method ' , node selector , ' in class ', classOrMetaClass name
 ]
 
 { #category : #executing }
@@ -68,13 +68,16 @@ GtDefineMethodFixItAction >> methodSource [
 			variables := Set new.
 			node selectorParts
 				with: node arguments
-				do: [ :sel :arg | 
+				do: [ :eachSelectorPart :arg | 
 					stream
-						nextPutAll: sel;
+						nextPutAll: eachSelectorPart value;
 						space.
-					baseName := (arg isTemp or: [ arg isArgument ])
-						ifTrue: [ arg name ]
-						ifFalse: [ 'anObject' ].
+					baseName := arg isVariable
+						ifTrue: [ arg variableName ]
+						ifFalse: [ 
+							arg isLiteral
+								ifTrue: [ arg literalValue class canonicalArgumentName ]
+								ifFalse: [ 'anObject' ] ].
 					index := 0.
 					name := baseName.
 					[ variables includes: name ]
