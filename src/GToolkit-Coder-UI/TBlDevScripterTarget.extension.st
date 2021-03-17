@@ -9,15 +9,6 @@ TBlDevScripterTarget >> onGtPharoSnippetDestinationButton [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
-TBlDevScripterTarget >> onGtPharoSnippetEditor [
-	self 
-		"onChildOfClass: GtExpandableCoderElement;"
-		onChildNamed: #content;
-		onChildOfClass: GtSourceCoderExpandedContentElement;
-		onChildNamed: #editor
-]
-
-{ #category : #'*GToolkit-Coder-UI' }
 TBlDevScripterTarget >> onGtPharoSnippetEvaluateButton [
 	self 
 		"onChildOfClass: GtExpandableCoderElement;"
