@@ -6,23 +6,21 @@ GtClassMethodsCoder >> categoryFilter: aView [
 	^ aView explicit
 		title: 'Categories';
 		priority: 10;
-		stencil: [ | categories |
+		stencil: [
+			|  categories anElement |
 			categories := class organization categories asSet.
 			categories addAll: class class organization categories.
 			categories := categories asSortedCollection.
-			GtCoderContextMenuContent new
-				constraintsDo: [ :c | c horizontal matchParent ];
-				items:
-					(categories
-						collect: [ :each | 
-							GtCoderContextMenuAction new
-								action:
-										[ :element | self 
-											setFilters: {(GtSearchMethodCategoryFilter forCategory: each)}
-											source: element ];
-								title: each ]);
-				hMatchParent;
-				vMatchParent ]
+			
+			anElement := GtCoderFilterList new.
+			anElement
+				matchParent;
+				items: categories 
+				title: [ :aCategory | aCategory ]
+				action: [ :aCategory | self 
+					setFilters: { (GtSearchMethodCategoryFilter
+						forCategory: aCategory) }
+					source: anElement ] ].
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
@@ -31,24 +29,18 @@ GtClassMethodsCoder >> classVariableFilter: aView [
 	^ aView explicit
 		title: 'Class Variables';
 		priority: 30;
-		stencil: [ | variables |
-			variables := class allClassVarNames.
-			GtCoderContextMenuContent new
-				constraintsDo: [ :c | c horizontal matchParent ];
-				items:
-					(variables
-						collect: [ :each | 
-							GtCoderContextMenuAction new
-								action: [ :element | 
-									self
-										setFilters:
-											{(GtSearchClassVariableReferenceFilter
-												forClass: self classOrMetaClass
-												andVariable: each)}
-										source: element ];
-								title: each ]);
-				hMatchParent;
-				vMatchParent ]
+		stencil: [
+			| anElement |
+			anElement := GtCoderFilterList new.
+			anElement
+				matchParent;
+				items: class allClassVarNames 
+				title: [ :aVariable | aVariable ]
+				action: [ :aVariable | self 
+					setFilters: { (GtSearchClassVariableReferenceFilter
+						forClass: self classOrMetaClass
+						andVariable: aVariable) }
+					source: anElement ] ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
@@ -57,21 +49,18 @@ GtClassMethodsCoder >> examplesFilter: aView [
 	^ aView explicit
 		title: 'Examples';
 		priority: 40;
-		stencil: [ | states |
-			states := GtFilterExampleState default allStates.
-			GtCoderContextMenuContent new
-				items: (states collect: [ :eachState | 
-					GtCoderContextMenuAction new
-						action: [ :element | 
-							self 
-								setFilters: {
-									((GtSearchExamplesFilter new
-										resultState: eachState)
-										coder: self)}
-								source: element ];
-						title: (eachState labelWithAmountFor: self exampler) ]);
-				hMatchParent;
-				vMatchParent ]
+		stencil: [
+			| anElement |
+			anElement := GtCoderFilterList new.
+			anElement
+				matchParent;
+				items: GtFilterExampleState default allStates
+				title: [ :aState | aState labelWithAmountFor: self exampler ]
+				action: [ :aState | self 
+					setFilters: { (GtSearchExamplesFilter new
+						resultState: aState)
+						coder: self }
+					source: anElement ] ].
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
@@ -102,22 +91,16 @@ GtClassMethodsCoder >> instanceVariableFilter: aView [
 	^ aView explicit
 		title: 'Instance Variables';
 		priority: 20;
-		stencil: [ | variables |
-			variables := class allInstVarNames.
-			GtCoderContextMenuContent new
-				constraintsDo: [ :c | c horizontal matchParent ];
-				items:
-					(variables
-						collect: [ :each | 
-							GtCoderContextMenuAction new
-								action: [ :element | 
-									self
-										setFilters:
-											{(GtSearchInstanceVariableReferenceFilter
-												forClass: self classOrMetaClass
-												andVariable: each)}
-										source: element ];
-								title: each ]);
-				hMatchParent;
-				vMatchParent ]
+		stencil: [
+			| anElement |
+			anElement := GtCoderFilterList new.
+			anElement
+				matchParent;
+				items: class allInstVarNames
+				title: [ :aVariable | aVariable ]
+				action: [ :aVariable | self 
+					setFilters: { GtSearchInstanceVariableReferenceFilter
+						forClass: self classOrMetaClass
+						andVariable: aVariable }
+					source: anElement ] ]
 ]
