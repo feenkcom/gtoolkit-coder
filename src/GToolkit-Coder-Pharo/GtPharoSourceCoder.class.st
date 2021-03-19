@@ -403,16 +403,6 @@ GtPharoSourceCoder >> notifyPrintResult: anEvaluationResult [
 ]
 
 { #category : #'private - notifying' }
-GtPharoSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
-	self announce: (GtCoderShowDebuggerRequest new
-		coder: self;
-		debugSession: aDebugSession;
-		exception: anException;
-		sourceString: aSourceString;
-		sourceInterval: aSourceInterval)
-]
-
-{ #category : #'private - notifying' }
 GtPharoSourceCoder >> notifyToolSpawn: aTool withDestination: aSpawnDestination [
 	self announce: (GtCoderToolSpawnRequest new 
 		tool: aTool;
