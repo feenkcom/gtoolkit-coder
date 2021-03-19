@@ -32,6 +32,13 @@ GtPharoMethodCoderViewModel >> behavior [
 	^ self coderModel behavior
 ]
 
+{ #category : #'api - coder model' }
+GtPharoMethodCoderViewModel >> compiledMethod [
+	<return: #CompiledMethod>
+
+	^ self coderModel compiledMethod
+]
+
 { #category : #'api - actions' }
 GtPharoMethodCoderViewModel >> discardChanges [
 	super discardChanges.

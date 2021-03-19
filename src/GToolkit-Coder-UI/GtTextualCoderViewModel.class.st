@@ -83,6 +83,20 @@ GtTextualCoderViewModel >> addShortcut: aShortcut [
 	extraAddOns addShortcut: aShortcut
 ]
 
+{ #category : #'api - shortcuts' }
+GtTextualCoderViewModel >> addStyler: aGtCoderStyler [
+	"Add an extra styler add-on independent from the dynamically computed add-ons"
+
+	extraAddOns addStyler: aGtCoderStyler
+]
+
+{ #category : #'api - shortcuts' }
+GtTextualCoderViewModel >> addStylers: aCollectionOfGtCoderStyler [
+	"Add extra styler add-ons independent from the dynamically computed add-ons"
+
+	aCollectionOfGtCoderStyler do: [ :eachStyler | self addStyler: eachStyler ]
+]
+
 { #category : #converting }
 GtTextualCoderViewModel >> asEditorState [
 	^ BrTextEditorCompositeMemento new
