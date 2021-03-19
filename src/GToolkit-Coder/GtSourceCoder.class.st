@@ -338,6 +338,16 @@ GtSourceCoder >> notifyObjectSpawnFromEvaluationResult: anEvaluationResult [
 		notifyObjectSpawn: anEvaluationResult value
 ]
 
+{ #category : #'private - notifying' }
+GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
+	self announce: (GtCoderShowDebuggerRequest new
+		coder: self;
+		debugSession: aDebugSession;
+		exception: anException;
+		sourceString: aSourceString;
+		sourceInterval: aSourceInterval)
+]
+
 { #category : #'private - actions' }
 GtSourceCoder >> primitiveEvaluate: aSourceString requester: aRequester onFailDo: anEvaluationFailBlock [
 	^ self subclassResponsibility
