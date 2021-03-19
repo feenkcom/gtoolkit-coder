@@ -313,6 +313,31 @@ GtSourceCoder >> notifyEvaluatedWithResult: anEvaluationResult [
 		coder: self)
 ]
 
+{ #category : #'private - notifying' }
+GtSourceCoder >> notifyObjectSpawn: anObject [
+	self
+		notifyObjectSpawn: anObject
+		withDestination: self spawnDestination
+]
+
+{ #category : #'private - notifying' }
+GtSourceCoder >> notifyObjectSpawn: anObject withDestination: aSpawnDestination [
+	self announce: (GtCoderObjectSpawnRequest new 
+		object: anObject;
+		spawnDestination: aSpawnDestination;
+		coder: self)
+]
+
+{ #category : #'private - notifying' }
+GtSourceCoder >> notifyObjectSpawnFromEvaluationResult: anEvaluationResult [
+	
+	anEvaluationResult isSuccess
+		ifFalse: [ ^ self ].
+	
+	self
+		notifyObjectSpawn: anEvaluationResult value
+]
+
 { #category : #'private - actions' }
 GtSourceCoder >> primitiveEvaluate: aSourceString requester: aRequester onFailDo: anEvaluationFailBlock [
 	^ self subclassResponsibility

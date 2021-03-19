@@ -388,31 +388,6 @@ GtPharoSourceCoder >> nodeWithin: anInterval ifFound: aFoundBlock ifNone: aNoneB
 ]
 
 { #category : #'private - notifying' }
-GtPharoSourceCoder >> notifyObjectSpawn: anObject [
-	self
-		notifyObjectSpawn: anObject
-		withDestination: self spawnDestination
-]
-
-{ #category : #'private - notifying' }
-GtPharoSourceCoder >> notifyObjectSpawn: anObject withDestination: aSpawnDestination [
-	self announce: (GtCoderObjectSpawnRequest new 
-		object: anObject;
-		spawnDestination: aSpawnDestination;
-		coder: self)
-]
-
-{ #category : #'private - notifying' }
-GtPharoSourceCoder >> notifyObjectSpawnFromEvaluationResult: anEvaluationResult [
-	
-	anEvaluationResult isSuccess
-		ifFalse: [ ^ self ].
-	
-	self
-		notifyObjectSpawn: anEvaluationResult value
-]
-
-{ #category : #'private - notifying' }
 GtPharoSourceCoder >> notifyParseError: aString at: anInteger [
 	self announce: (GtCoderParseError new
 		coder: self;
