@@ -30,12 +30,7 @@ GtPharoStyler >> visitCommentFrom: aCommentStart to: aCommentEnd [
 
 { #category : #visiting }
 GtPharoStyler >> visitError: anError [
-	anError smaccError
-		nodesDo: [ :eachNode | self acceptNode: eachNode ]
-		andTokensDo: [ :eachToken | ]
-		includeErrors: true.
-
-	anError smaccError dismissedTokens do: [ :eachToken | self visitErrorToken: eachToken ]
+	anError smaccError acceptVisitor: self
 ]
 
 { #category : #visiting }
@@ -127,6 +122,15 @@ GtPharoStyler >> visitSelfVariable: aSelfVariable [
 		attributes: { BlTextForegroundAttribute color: Color cyan muchDarker }
 		from: aSelfVariable name startPosition
 		to: aSelfVariable name stopPosition
+]
+
+{ #category : #visiting }
+GtPharoStyler >> visitSmaCCError: anErrorNode [
+	anErrorNode
+		nodesDo: [ :eachNode | self acceptNode: eachNode ]
+		andTokensDo: [ :eachToken | ]
+		includeErrors: true.
+	anErrorNode dismissedTokens do: [ :eachToken | self visitErrorToken: eachToken ]
 ]
 
 { #category : #visiting }
