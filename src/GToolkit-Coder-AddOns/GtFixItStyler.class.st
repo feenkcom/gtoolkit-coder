@@ -188,11 +188,10 @@ GtFixItStyler >> visitVariable: aVariableNode [
 	isUndeclared
 		ifFalse: [ ^ self ].
 
-	"in case of the workspace we ignore non-capitalized variables as they are temporary variables"
-	(isForWorkspace and: [ aVariableNode variableName first isUppercase not ])
-		ifTrue: [ ^ self ].
-
 	(self coderViewModel hasDeclaredVariableNamed: aVariableNode variableName)
+		ifTrue: [ ^ self ].
+		
+	(self coderViewModel hasDeclaredGlobalNamed: aVariableNode variableName)
 		ifTrue: [ ^ self ].
 
 	anAttribute := GtFixItAttribute new.

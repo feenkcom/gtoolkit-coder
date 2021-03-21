@@ -1,6 +1,6 @@
 Class {
 	#name : #GtPharoMethodCoderViewModel,
-	#superclass : #GtSourceCoderViewModel,
+	#superclass : #GtPharoSourceCoderViewModel,
 	#instVars : [
 		'savePreventors'
 	],
@@ -70,7 +70,7 @@ GtPharoMethodCoderViewModel >> hasDeclaredVariableNamed: aVariableName [
 	
 	(super hasDeclaredVariableNamed: aVariableName)
 		ifTrue: [ ^ true ].
-	
+		
 	(self behavior classThatDefinesInstVarNamed: aVariableName)
 		 ifNotNil: [ ^ true ].
 		
