@@ -30,10 +30,6 @@ GtPharoStyler >> visitCommentFrom: aCommentStart to: aCommentEnd [
 
 { #category : #'visiting - variables' }
 GtPharoStyler >> visitDeclaredGlobalVariable: aNamedVariable [
-
-	(self coderViewModel isDeprecatedGlobalNamed: aNamedVariable variableName)
-		ifTrue: [ self visitDeprecatedGlobalVariable: aNamedVariable ].
-
 	self visitDeclaredVariable: aNamedVariable
 ]
 
@@ -42,15 +38,6 @@ GtPharoStyler >> visitDeclaredVariable: aNamedVariable [
 
 	self
 		attributes: { BlTextForegroundAttribute color: Color blue muchDarker }
-		from: aNamedVariable name startPosition
-		to: aNamedVariable name stopPosition
-]
-
-{ #category : #'visiting - variables' }
-GtPharoStyler >> visitDeprecatedGlobalVariable: aNamedVariable [
-
-	self
-		attribute: (BlTextDecorationAttribute new lineThrough color: Color blue muchDarker)
 		from: aNamedVariable name startPosition
 		to: aNamedVariable name stopPosition
 ]

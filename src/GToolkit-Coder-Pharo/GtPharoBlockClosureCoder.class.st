@@ -150,6 +150,7 @@ GtPharoBlockClosureCoder >> initializeAddOns: addOns [
 	super initializeAddOns: addOns.
 	
 	addOns addStyler: GtPharoStyler new.
+	addOns addStyler: GtPharoDeprecationStyler new.
 ]
 
 { #category : #private }
