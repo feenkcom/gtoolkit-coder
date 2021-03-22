@@ -90,8 +90,8 @@ GtTextualCoder >> astAsyncDo: aBlock [
 			astMonitor critical: [
 				newAstCache := aComputedAst.
 				astCommand := nil.
-				astCommandBlock := nil.
-				self announce: (GtCoderAstChanged new coder: self; ast: aComputedAst) ].
+				astCommandBlock := nil ].
+			self announce: (GtCoderAstChanged new coder: self; ast: aComputedAst).
 			aBlock value: aComputedAst ].
 		astCommand := astCommandBlock asBlTktTerminableCommand asBlTktLoggingCommand.
 		

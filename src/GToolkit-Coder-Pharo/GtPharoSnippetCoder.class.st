@@ -85,7 +85,7 @@ GtPharoSnippetCoder >> profileWithMessageTally [
 	^ self
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
 		decorated: [ :aSourceString | 'MessageTally on: [ ', aSourceString, ']' ]
-		inContext: (GtSourceCoderEvaluationContext new requesterObject: self)
+		inContext: self evaluationContext
 		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
