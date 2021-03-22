@@ -219,7 +219,9 @@ GtTextualCoderEditorElement >> onShowDebuggerRequest: aShowDebuggerAnnouncement 
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onStyleTextRequest: anEvent [
-	self styleTextAndAfterDo: anEvent afterAction
+	"onStyleTextRequest: may be sent from a non-UI thread"
+
+	self enqueueTask: (BlTaskAction new action: [ self styleTextAndAfterDo: anEvent afterAction ])
 ]
 
 { #category : #'private - event handling' }
@@ -411,13 +413,18 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 { #category : #private }
 GtTextualCoderEditorElement >> reportParseError: aString at: anInteger [
 	| text position |
+
 	text := self editor text.
+	
 	position := anInteger - 1 max: 1.
 	text size < position
 		ifTrue: [ ^ self ].
-	(text from: position to: position)
-		attributes: {(GtSourceCoderErrorAttribute for: aString , ' ->')}.
-	self editor moveCursorTo: position
+	
+	text clearAttributesOfClass: GtSourceCoderErrorAttribute.
+	text 
+		attribute: (GtSourceCoderErrorAttribute for: aString)
+		from: position
+		to: position
 ]
 
 { #category : #private }

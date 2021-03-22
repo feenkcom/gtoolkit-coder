@@ -9,10 +9,9 @@ Class {
 	#category : #'GToolkit-Coder-Pharo-Coders'
 }
 
-{ #category : #accessing }
-GtPharoSnippetCoder >> coder [ 
-
-	^ self
+{ #category : #'instance creation' }
+GtPharoSnippetCoder class >> forSource: aString [
+	^ self new sourceCodeSynchronously: (GtCoderExplicitSourceCode new source: aString)
 ]
 
 { #category : #'api - ast' }
@@ -32,22 +31,6 @@ GtPharoSnippetCoder >> context: doItContext [
 	context := doItContext
 ]
 
-{ #category : #'private - actions' }
-GtPharoSnippetCoder >> evaluateBlock: aBlock onErrorDo: anErrorBlock [
-	self xDocSaveSource: self currentSourceString.
-	^ super evaluateBlock: aBlock onErrorDo: anErrorBlock
-]
-
-{ #category : #'private - actions' }
-GtPharoSnippetCoder >> evaluationRequester [
-	^ super evaluationRequester bindingStrategy: bindingStrategy
-]
-
-{ #category : #'private - actions' }
-GtPharoSnippetCoder >> evaluationRequesterWithInterval [
-	^ super evaluationRequesterWithInterval bindingStrategy: bindingStrategy
-]
-
 { #category : #initialization }
 GtPharoSnippetCoder >> forSource: aString [
 	self sourceCode: (GtCoderExplicitSourceCode new source: aString)
@@ -60,7 +43,7 @@ GtPharoSnippetCoder >> highlightBindingsStrategy [
 			bindings: bindingStrategy bindings]
 		ifNotNil: [ GtContextHighlightingBindingStrategy new
 			bindings: bindingStrategy bindings;
-			context: self context ] 
+			context: self context ]
 ]
 
 { #category : #initialization }
@@ -94,63 +77,64 @@ GtPharoSnippetCoder >> newRbAST: aString [
 	^ ast
 ]
 
-{ #category : #accessing }
-GtPharoSnippetCoder >> object [
-	^ (bindingStrategy bindings respondsTo: #receiver)
-		ifTrue: [ bindingStrategy bindings receiver ]
-		ifFalse: [ nil ]
+{ #category : #'private - actions' }
+GtPharoSnippetCoder >> primitiveEvaluate: aSourceString inContext: aGtPharoCoderEvaluationContext onFailDo: anEvaluationFailBlock [
+	self
+		xDocSaveSource: self currentSourceString
+		receiverObject: aGtPharoCoderEvaluationContext receiverObject.
+	
+	^ super primitiveEvaluate: aSourceString inContext: aGtPharoCoderEvaluationContext onFailDo: anEvaluationFailBlock
 ]
 
-{ #category : #actions }
+{ #category : #'api - actions' }
 GtPharoSnippetCoder >> profileWithMessageTally [
 	^ self
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
 		decorated: [ :aSourceString | 'MessageTally on: [ ', aSourceString, ']' ]
-		requestedBy: self
+		inContext: (GtSourceCoderEvaluationContext new requesterObject: self)
 		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
 { #category : #accessing }
 GtPharoSnippetCoder >> variableBindings [
-	^ bindingStrategy bindings
+	self deprecated: 'Use GtPharoSourceViewModel>>#bindingStrategy instead'
 ]
 
 { #category : #accessing }
 GtPharoSnippetCoder >> variableBindings: aGtPlaygroundBindings [
-	bindingStrategy bindings: aGtPlaygroundBindings.
-	completionStrategy notNil
-		ifTrue: [ completionStrategy bindings: aGtPlaygroundBindings ]
+	self deprecated: 'Use GtPharoSourceViewModel>>#bindingStrategy: instead'
 ]
 
 { #category : #store }
-GtPharoSnippetCoder >> xDocFilename [
+GtPharoSnippetCoder >> xDocFilenameForReceiverObject: anObject [
 	"Answer the filename containing the receiver's source.
 	If no action has been performed, use the last saved code.
 	If an action has been performed gtPlaygroundFilename will have been set."
 
 	^xdocFilename ifNil: 
 		[ XdPlaygroundSettings directory isWritable 
-			ifTrue: [ self xDocStore latestFilename ]
-			ifFalse: [ nil ] ].
-
+			ifTrue: [ (self xDocStoreForReceiverObject: anObject) latestFilename ]
+			ifFalse: [ nil ] ]
 ]
 
 { #category : #store }
-GtPharoSnippetCoder >> xDocLoadSavedContent [
+GtPharoSnippetCoder >> xDocLoadSavedContentForReceiverObject: anObject [
 	"The receiver's object has been changed under us, reload the default code (if not empty)"
 
-	self currentSourceString ifNotEmpty: [ ^ self ].
-	self forSource: self xDocSourceString
+	self currentSourceString
+		ifNotEmpty: [ ^ self ].
+	self forSource: (self xDocSourceStringForReceiverObject: anObject)
 ]
 
 { #category : #store }
-GtPharoSnippetCoder >> xDocSaveSource: aString [ 
+GtPharoSnippetCoder >> xDocSaveSource: aString receiverObject: anObject [
 	"Save the supplied source code"
 
-	self object ifNil: [ ^self ].
+	anObject
+		ifNil: [ ^ self ].
 
 	xdocFilename ifNil: 
-		[ xdocFilename := self xDocStore newFile ].
+		[ xdocFilename := (self xDocStoreForReceiverObject: anObject) newFile ].
 
 	^ XdWriter new 
 				streamingStrategy: (XdStreamingStrategy file: xdocFilename);
@@ -163,32 +147,32 @@ GtPharoSnippetCoder >> xDocSaveSource: aString [
 ]
 
 { #category : #store }
-GtPharoSnippetCoder >> xDocSourceString [
+GtPharoSnippetCoder >> xDocSourceStringForReceiverObject: anObject [
 	"Answer the string to be initially displayed in the snippet"
 	| sourceFile xDoc |
 
-	self object ifNil: [ ^'' ].
+	anObject
+		ifNil: [ ^ '' ].
 
-	sourceFile := self xDocFilename.
-	sourceFile ifNil: [ ^'' ].
+	sourceFile := self xDocFilenameForReceiverObject: anObject.
+	sourceFile ifNil: [ ^ '' ].
 
 	xDoc := XdReader new 
 				streamingStrategy: (XdStreamingStrategy file: sourceFile);
 				read.
-	^ (xDoc memberNamed: 'playground.source') contents utf8Decoded.
-
+	^ (xDoc memberNamed: 'playground.source') contents utf8Decoded
 ]
 
 { #category : #store }
-GtPharoSnippetCoder >> xDocStore [
+GtPharoSnippetCoder >> xDocStoreForReceiverObject: anObject [
 	"Answer the XDoc store for the receiver."
 
-	^ XdKeyDocumentStore forKey: self xDocStoreKey
+	^ XdKeyDocumentStore forKey: (self xDocStoreKeyForReceiverObject: anObject)
 ]
 
 { #category : #store }
-GtPharoSnippetCoder >> xDocStoreKey [
+GtPharoSnippetCoder >> xDocStoreKeyForReceiverObject: anObject [
 	"Answer the key to be used for storing documents"
 
-	^ self object class name
+	^ anObject class name
 ]

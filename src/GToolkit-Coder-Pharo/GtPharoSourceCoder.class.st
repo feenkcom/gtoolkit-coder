@@ -64,12 +64,14 @@ GtPharoSourceCoder >> addRefactoringChangesPreview: aRefactoring at: position [
 		whenComplete: nil
 ]
 
-{ #category : #private }
+{ #category : #'api - accessing' }
 GtPharoSourceCoder >> behavior [
-	"Return a Behavior whose instance the object is"
+	"Return an optional Behavior in context of which this coder operates.
+	Behavior (class, metaclass or trait) helps various add-ons and styler to provide users with better
+	contextual information"
 	<return: #Behavior>
 	
-	^ self object class
+	^ UndefinedObject
 ]
 
 { #category : #'api - actions examples' }
@@ -100,7 +102,7 @@ GtPharoSourceCoder >> debug: aString [
 	self critical: [
 		currentReceiver := self object.
 		currentContext := self context.
-		anEvaluationRequester := self evaluationRequester ].
+		anEvaluationRequester := self evaluationContext ].
 
 	(self class
 		compile: aString 
@@ -221,6 +223,15 @@ GtPharoSourceCoder >> disabledTextAttributes [
 	^ {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)}
 ]
 
+{ #category : #'private - actions' }
+GtPharoSourceCoder >> evaluationContext [
+	<return: #GtSourceCoderEvaluationContext>
+
+	^ GtPharoSourceCoderEvaluationContext new
+		requesterObject: self;
+		coder: self
+]
+
 { #category : #'private - ast' }
 GtPharoSourceCoder >> extractableNodesAt: anIndex [
 	"Return a collection of extractable nodes that intersect a given interval"
@@ -252,11 +263,8 @@ GtPharoSourceCoder >> extractableNodesWithin: anInterval [
 { #category : #testing }
 GtPharoSourceCoder >> hasObjectAttribute [
 	<return: #Boolean>
-	self 
-		attributeNamed: #object 
-		ifAbsent: [ ^ false ].
 
-	^ true
+	^ false
 ]
 
 { #category : #testing }
@@ -396,13 +404,6 @@ GtPharoSourceCoder >> notifyParseError: aString at: anInteger [
 ]
 
 { #category : #'private - notifying' }
-GtPharoSourceCoder >> notifyPrintResult: anEvaluationResult [
-	self announce: (GtCoderPrintAnnouncement new 
-		evaluationResult: anEvaluationResult;
-		coder: self)
-]
-
-{ #category : #'private - notifying' }
 GtPharoSourceCoder >> notifyToolSpawn: aTool withDestination: aSpawnDestination [
 	self announce: (GtCoderToolSpawnRequest new 
 		tool: aTool;
@@ -412,22 +413,19 @@ GtPharoSourceCoder >> notifyToolSpawn: aTool withDestination: aSpawnDestination 
 
 { #category : #'api - accessing' }
 GtPharoSourceCoder >> object [
-	"Return an object in the context of which the source code is modified (may influence self binding)
-	or nil otherwise of not set"
+	"Deprecated! Use GtPharoSourceCoderViewModel>>#selfObject: instead"
 	<return: #Object or: nil>
 
-	^ self
-		attributeNamed: #object
-		ifAbsent: [ nil ]
+	self deprecated: 'Use GtPharoSourceCoderViewModel>>#selfObject instead'.
+
+	^ nil
 ]
 
 { #category : #'api - accessing' }
 GtPharoSourceCoder >> object: anObject [
 	"Set an object in the context of which the source code should be modified (may influence self binding)"
 
-	anObject 
-		ifNil: [ self removeAttributeNamed: #object ]
-		ifNotNil: [ self attributeNamed: #object put: anObject ]
+	self deprecated: 'Use GtPharoSourceCoderViewModel>>#selfObject: instead'.
 ]
 
 { #category : #accessing }
@@ -461,19 +459,16 @@ GtPharoSourceCoder >> parseMethod: aString [
 ]
 
 { #category : #'private - actions' }
-GtPharoSourceCoder >> primitiveEvaluate: aSourceString requester: aRequester onFailDo: anEvaluationFailBlock [
-	| aBehavior anObject aContext |
+GtPharoSourceCoder >> primitiveEvaluate: aSourceString inContext: aGtPharoCoderEvaluationContext onFailDo: anEvaluationFailBlock [
+	| aContext |
 
-	self critical: [
-		aBehavior := self behavior.
-		anObject := self object.
-		aContext := self context ].
-	
-	^ aBehavior compiler
+	self critical: [ aContext := self context ].
+
+	^ aGtPharoCoderEvaluationContext receiverObject class compiler
 		source: aSourceString;
-		receiver: anObject;
+		receiver: aGtPharoCoderEvaluationContext receiverObject;
 		context: aContext;
-		requestor: aRequester;
+		requestor: aGtPharoCoderEvaluationContext;
 		failBlock: anEvaluationFailBlock;
 		evaluate
 ]

@@ -4,6 +4,11 @@ Class {
 	#category : #'GToolkit-Coder-Pharo-UI-! View Models'
 }
 
+{ #category : #initialization }
+GtPharoSnippetCoderViewModel >> defaultBindingStrategy [
+	^ GtSnippetBindingStrategy new bindings: GtSnippetBindings new
+]
+
 { #category : #'api - coder model' }
 GtPharoSnippetCoderViewModel >> hasDeclaredVariableNamed: aVariableName [
 	"Return true if a variable with a given name is declared"

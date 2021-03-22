@@ -88,6 +88,14 @@ GtPharoMethodCoderViewModel >> initialize [
 ]
 
 { #category : #testing }
+GtPharoMethodCoderViewModel >> isMeta [
+	"Return true if the method is implemented in a pharo metaclass (~ class side)"
+	<return: #Boolean>
+
+	^ self coderModel isMeta
+]
+
+{ #category : #testing }
 GtPharoMethodCoderViewModel >> isSaveEnabled [
 	^ savePreventors isEmpty
 ]
@@ -103,6 +111,20 @@ GtPharoMethodCoderViewModel >> notifySaveEnabled [
 ]
 
 { #category : #'api - actions' }
+GtPharoMethodCoderViewModel >> playAll [
+	"Evaluate the whole source code and inspect the result"
+
+	^ self coder playAllInContext: (self evaluationContext all; receiverObject: self receiverObjectToPlay)
+]
+
+{ #category : #'api - actions' }
+GtPharoMethodCoderViewModel >> playAllAndInspect [
+	"Evaluate the whole source code and inspect the result"
+	
+	^ self coder playAllAndInspectInContext: (self evaluationContext all; receiverObject: self receiverObjectToPlay)
+]
+
+{ #category : #'api - actions' }
 GtPharoMethodCoderViewModel >> preventSaveDueTo: aSavePreventor [
 	(savePreventors includes: aSavePreventor)
 		ifTrue: [ ^ self ].
@@ -113,4 +135,13 @@ GtPharoMethodCoderViewModel >> preventSaveDueTo: aSavePreventor [
 		ifTrue: [ ^ self ].
 		
 	self notifySaveDisabled
+]
+
+{ #category : #private }
+GtPharoMethodCoderViewModel >> receiverObjectToPlay [
+	^ self selfObject
+		ifNil: [
+			self isMeta
+				ifTrue: [ self behavior instanceSide ]
+				ifFalse: [ self behavior new ] ]
 ]

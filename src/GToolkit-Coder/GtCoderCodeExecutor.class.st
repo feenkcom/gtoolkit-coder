@@ -11,8 +11,7 @@ Class {
 	#instVars : [
 		'coderUIModel',
 		'event',
-		'selectionAction',
-		'allAction'
+		'action'
 	],
 	#category : #'GToolkit-Coder-Execution'
 }
@@ -59,25 +58,15 @@ GtCoderCodeExecutor >> coderUIModel: anObject [
 { #category : #initialization }
 GtCoderCodeExecutor >> doIt [
 	"Execute a code (and do not display the execution result)"
-	allAction := #doItAllRequestedBy:.
-	selectionAction := #doIt:.
-]
 
-{ #category : #'private - execution' }
-GtCoderCodeExecutor >> doItAll [
-	self coder perform: allAction withEnoughArguments: { self event currentTarget }
+	action := #doIt
 ]
 
 { #category : #initialization }
 GtCoderCodeExecutor >> doItAndGo [
 	"Execute a code and display the execution result"
-	allAction := #doItAndGoAll.
-	selectionAction := #doItAndGo:.
-]
 
-{ #category : #'private - execution' }
-GtCoderCodeExecutor >> doItSelection: aBlock [
-	self coder perform: selectionAction with: aBlock
+	action := #doItAndGo
 ]
 
 { #category : #'private - accessing' }
@@ -99,41 +88,26 @@ GtCoderCodeExecutor >> event: anObject [
 GtCoderCodeExecutor >> execute [
 	GtCoderExecutionContextVariable
 		element: self element
-		do: [ 
-			| aSelection |
-			aSelection := self coderUIModel selection.
-			aSelection isNotEmpty
-				ifTrue: [
-					self doItSelection: [ :aSourceText |
-						self coderUIModel sourceText characters = aSourceText characters
-							ifTrue: [ 
-								| aMonoSelection |
-								aMonoSelection := 1 to: 0.
-								aSelection do: [ :eachMonotoneSelection | 
-									aMonoSelection := eachMonotoneSelection from + 1 to: eachMonotoneSelection to ].
-								aMonoSelection ]
-							ifFalse: [
-								"Text was modified"
-								1 to: 0 ] ] ] 
-				ifFalse: [ self doItAll ] ]
+		do: [ self coderUIModel perform: action ]
 ]
 
 { #category : #initialization }
 GtCoderCodeExecutor >> initialize [
 	super initialize.
+
 	self doItAndGo.
 ]
 
 { #category : #initialization }
 GtCoderCodeExecutor >> playAll [
 	"Execute a method code (and do not display the execution result)"
-	allAction := #playAll.
-	selectionAction := #doIt:.
+
+	action := #playAll
 ]
 
 { #category : #initialization }
 GtCoderCodeExecutor >> playAllAndInspect [
 	"Execute a method code and display the execution result"
-	allAction := #playAllAndInspect.
-	selectionAction := #doItAndGo:.
+
+	action := #playAllAndInspect
 ]

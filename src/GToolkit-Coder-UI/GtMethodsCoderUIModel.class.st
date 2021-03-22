@@ -20,7 +20,9 @@ GtMethodsCoderUIModel >> addNewCoder [
 
 { #category : #updating }
 GtMethodsCoderUIModel >> coderUIModelFor: aCoder [
-	^ aCoder asCoderUIModel expanded: false
+	^ aCoder asCoderUIModel
+		expanded: false;
+		selfObject: self coder object
 ]
 
 { #category : #accessing }

@@ -46,9 +46,7 @@ GtPharoMethodCoder class >> forNewMethod: aBehavior [
 
 { #category : #'instance creation' }
 GtPharoMethodCoder class >> forObject: anObject andSelector: aSymbol [
-	^ (self forMethod: anObject class >> aSymbol)
-		object: anObject;
-		yourself
+	^ self forMethod: anObject class >> aSymbol
 ]
 
 { #category : #accessing }
@@ -215,7 +213,7 @@ GtPharoMethodCoder >> clearExample [
 
 { #category : #private }
 GtPharoMethodCoder >> compilationRequester [
-	^ GtSourceCoderCompilationRequester new coder: self
+	^ self evaluationContext
 ]
 
 { #category : #'api - actions' }
@@ -375,15 +373,7 @@ GtPharoMethodCoder >> debugExample [
 ]
 
 { #category : #'private - actions' }
-GtPharoMethodCoder >> evaluateSelector: aSymbol object: anObject [
-	^ self
-		evaluateSelector: aSymbol
-		object: anObject
-		thenDo: [ ]
-]
-
-{ #category : #'private - actions' }
-GtPharoMethodCoder >> evaluateSelector: aSymbol object: anObject thenDo: aThenBlock [
+GtPharoMethodCoder >> evaluateSelector: aSymbol inContext: aGtPharoSourceCoderEvaluationContext thenDo: aThenBlock [
 	"Evaluate a given source code and show the print string if needed"
 	| aReceiver aSourceString aResult |
 
@@ -391,22 +381,18 @@ GtPharoMethodCoder >> evaluateSelector: aSymbol object: anObject thenDo: aThenBl
 	the source code the current running process will be suspended, meaning that the very next evaluation
 	will indefinitely wait when trying to enter a critical section."
 	self critical: [
-		aReceiver := (anObject respondsTo: aSymbol)
-			ifTrue: [ anObject ]
-			ifFalse: [ anObject class ].
-			
-	aSourceString := self currentSourceString. ].
+		aReceiver := aGtPharoSourceCoderEvaluationContext receiverObject.
+
+	aSourceString := self currentSourceString ].
+	
+	aGtPharoSourceCoderEvaluationContext evaluatedSourceString: aSourceString.
+	aGtPharoSourceCoderEvaluationContext evaluatedInterval: (1 to: aSourceString size).
 
 	aResult := self
 		evaluateBlock: [ aReceiver perform: aSymbol ]
-		onErrorDo: [ :aResultWithError |
-			aResultWithError
-				sourceString: aSourceString;
-				sourceInterval: (1 to: aSourceString size) ].
+		onErrorDo: [ :aResultWithError | aResultWithError evaluationContext: aGtPharoSourceCoderEvaluationContext ].
 
-	aResult
-		sourceString: aSourceString;
-		sourceInterval: (1 to: aSourceString size).
+	aResult evaluationContext: aGtPharoSourceCoderEvaluationContext.
 
 	self notifyEvaluatedWithResult: aResult.
 	aThenBlock cull: aResult.
@@ -690,6 +676,14 @@ GtPharoMethodCoder >> isForMethod: aCompiledMethod [
 		and: [ self selector = aCompiledMethod selector ]
 ]
 
+{ #category : #testing }
+GtPharoMethodCoder >> isMeta [
+	"Return true if the method is implemented in the metaclass (~ class side)"
+	<return: #Boolean>
+
+	^ self behavior isMeta
+]
+
 { #category : #'api - addons' }
 GtPharoMethodCoder >> isMondrianPaintMethod: aMethodNode [
 	| variable |
@@ -840,9 +834,9 @@ GtPharoMethodCoder >> notifyMethodRemoved [
 
 { #category : #accessing }
 GtPharoMethodCoder >> object [
-	^ self
-		attributeNamed: #object
-		ifAbsent: [ (self behavior ifNil: [ nil class ]) instanceSide ]
+	self deprecated: 'Use GtPharoSourceCoderViewModel>>#selfObject instead'.
+
+	^ UndefinedObject
 ]
 
 { #category : #'event handling' }
@@ -958,19 +952,7 @@ GtPharoMethodCoder >> performMethodRefactoring: refactoring [
 ]
 
 { #category : #'api - actions' }
-GtPharoMethodCoder >> playAll [
-	self isModified
-		ifTrue: [
-			self save
-				ifFalse: [ ^ self ] ].
-
-	^ self
-		evaluateSelector: self selector
-		object: self object
-]
-
-{ #category : #'api - actions' }
-GtPharoMethodCoder >> playAllAndInspect [
+GtPharoMethodCoder >> playAllAndInspectInContext: aGtPharoSourceCoderEvaluationContext [
 	"Save and execute a method"
 
 	self isModified
@@ -980,8 +962,21 @@ GtPharoMethodCoder >> playAllAndInspect [
 
 	^ self
 		evaluateSelector: self selector
-		object: self object
+		inContext: aGtPharoSourceCoderEvaluationContext
 		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
+]
+
+{ #category : #'api - actions' }
+GtPharoMethodCoder >> playAllInContext: aGtPharoSourceCoderEvaluationContext [
+	self isModified
+		ifTrue: [
+			self save
+				ifFalse: [ ^ self ] ].
+
+	^ self
+		evaluateSelector: self selector
+		inContext: aGtPharoSourceCoderEvaluationContext
+		thenDo: [ :aResult | ]
 ]
 
 { #category : #'api - actions examples' }

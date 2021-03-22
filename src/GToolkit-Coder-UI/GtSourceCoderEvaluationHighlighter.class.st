@@ -22,8 +22,20 @@ GtSourceCoderEvaluationHighlighter >> addAttributesFor: anEvaluationResult withi
 			(self text 
 				from: aTextInterval last
 				to: aTextInterval last) attribute: aResultButtonAttribute.
-			
-			theAttributes := { aResultButtonAttribute } ].
+
+			theAttributes := { aResultButtonAttribute } ]
+		ifFalse: [
+			anEvaluationResult isSyntaxError
+				ifTrue: [
+					theAttributes := {
+						BlTextDecorationAttribute new underline color: Color red; beNotOverwritableByStyler.
+						(GtSourceCoderErrorAttribute for: 'Syntax error') beNotOverwritableByStyler
+					}.
+
+					self text
+						attributes: theAttributes
+						from: aTextInterval first
+						to: aTextInterval last ] ].
 
 	^ theAttributes
 ]
