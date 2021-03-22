@@ -13,7 +13,6 @@ GtPharoMethodContextCoder class >> forContext: aContext session: aDebugSession [
 	^ (self forMethod: aContext method)
 		context: aContext;
 		session: aDebugSession;
-		object: aContext receiver;
 		yourself
 ]
 
