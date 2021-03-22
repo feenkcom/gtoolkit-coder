@@ -4,9 +4,19 @@ Class {
 	#category : #'GToolkit-Coder-Pharo-UI-! View Models'
 }
 
+{ #category : #'api - coder model' }
+GtPharoSnippetCoderViewModel >> behavior [
+	^ self selfObject class
+]
+
 { #category : #initialization }
 GtPharoSnippetCoderViewModel >> defaultBindingStrategy [
-	^ GtSnippetBindingStrategy new bindings: GtSnippetBindings new
+	| defaultBindings |
+	
+	defaultBindings := GtLocalSnippetBindings new.
+	defaultBindings sharedBindings: GtSnippetBindings new.
+
+	^ GtSnippetBindingStrategy new bindings: defaultBindings
 ]
 
 { #category : #'api - coder model' }
@@ -23,4 +33,27 @@ GtPharoSnippetCoderViewModel >> hasDeclaredVariableNamed: aVariableName [
 		ifTrue: [ ^ true ].
 
 	^ false
+]
+
+{ #category : #'api - coder model' }
+GtPharoSnippetCoderViewModel >> onCoderModelChanged [
+	super onCoderModelChanged.
+
+	self bindingStrategy bindings
+		localAt: #thisCoderViewModel
+		put: self.
+		
+	self bindingStrategy bindings
+		localAt: #thisCoder
+		put: self coderModel
+]
+
+{ #category : #'api - bindings' }
+GtPharoSnippetCoderViewModel >> sharedBindings [
+	^ self bindingStrategy bindings sharedBindings
+]
+
+{ #category : #'api - bindings' }
+GtPharoSnippetCoderViewModel >> sharedBindings: aGtSnippetBindings [
+	self bindingStrategy bindings sharedBindings: aGtSnippetBindings
 ]

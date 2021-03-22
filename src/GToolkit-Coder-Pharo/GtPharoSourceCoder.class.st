@@ -90,11 +90,6 @@ GtPharoSourceCoder >> classOrMetaClass [
 	^ self behavior
 ]
 
-{ #category : #private }
-GtPharoSourceCoder >> cursorPositionIn: aBrTextEditor do: aBlock [
-	aBrTextEditor cursors do: [ :each | ^ aBlock value: each position ]
-]
-
 { #category : #'private - actions' }
 GtPharoSourceCoder >> debug: aString [
 	| currentReceiver currentContext anEvaluationRequester |
@@ -110,14 +105,6 @@ GtPharoSourceCoder >> debug: aString [
 		in: currentContext
 		withRequestor: anEvaluationRequester) ifNotNil: [ :aMethodToDebug |
 			self class debug: aMethodToDebug receiver: currentReceiver in: currentContext ]
-]
-
-{ #category : #private }
-GtPharoSourceCoder >> defaultTextAttributes [
-	^ {
-		(BlFontFamilyAttribute named: 'Source Code Pro') beNotOverwritableByStyler.
-		(BlFontSizeAttribute size: 14) beNotOverwritableByStyler
-	}
 ]
 
 { #category : #'private - ast' }
@@ -218,11 +205,6 @@ GtPharoSourceCoder >> detectSelectorIn: aSourceString ifFound: aFoundBlock ifNon
 		ifNone: aNoneBlock
 ]
 
-{ #category : #private }
-GtPharoSourceCoder >> disabledTextAttributes [
-	^ {(BlTextForegroundAttribute paint: BrGlamorousColors disabledButtonTextColor)}
-]
-
 { #category : #'private - actions' }
 GtPharoSourceCoder >> evaluationContext [
 	<return: #GtSourceCoderEvaluationContext>
@@ -285,19 +267,6 @@ GtPharoSourceCoder >> newRbAST: aString [
 	ast := self parseExpression: aString requestor: nil.
 	ast doSemanticAnalysis.
 	^ ast
-]
-
-{ #category : #private }
-GtPharoSourceCoder >> newSourceStylerFrom: anEditorElement [
-	<return: #GtCoderAstCompositeStyler>
-	| anAddOnsCopy |
-
-	anAddOnsCopy := self addOns stylers copy.
-
-	^ GtCoderAstCompositeStyler new
-		coder: self;
-		stylers: anAddOnsCopy;
-		yourself
 ]
 
 { #category : #'private - ast' }

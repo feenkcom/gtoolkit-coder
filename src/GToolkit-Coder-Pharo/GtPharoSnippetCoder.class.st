@@ -2,7 +2,6 @@ Class {
 	#name : #GtPharoSnippetCoder,
 	#superclass : #GtPharoSourceCoder,
 	#instVars : [
-		'bindingStrategy',
 		'context',
 		'xdocFilename'
 	],
@@ -39,20 +38,16 @@ GtPharoSnippetCoder >> forSource: aString [
 { #category : #private }
 GtPharoSnippetCoder >> highlightBindingsStrategy [
 	^ self context 
-		ifNil:  [ GtHighlightingBindingStrategy new 
-			bindings: bindingStrategy bindings]
+		ifNil:  [ GtHighlightingBindingStrategy new "bindings: bindingStrategy bindings" ]
 		ifNotNil: [ GtContextHighlightingBindingStrategy new
-			bindings: bindingStrategy bindings;
+			"bindings: bindingStrategy bindings;"
 			context: self context ]
 ]
 
 { #category : #initialization }
-GtPharoSnippetCoder >> initialize [
-	bindingStrategy := GtSnippetBindingStrategy new.
-	bindingStrategy bindings: GtSnippetBindings new.
-	
+GtPharoSnippetCoder >> initialize [	
 	super initialize.
-	
+
 	self forSource: ''
 ]
 
@@ -63,7 +58,6 @@ GtPharoSnippetCoder >> newCompletionStrategy [
 		isMethod: false;
 		hasImplicitVariables: true;
 		yourself.
-	strategy bindings: bindingStrategy bindings.
 	^ strategy
 ]
 

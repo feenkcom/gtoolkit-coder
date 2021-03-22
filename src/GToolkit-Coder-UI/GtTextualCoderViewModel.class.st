@@ -385,13 +385,6 @@ GtTextualCoderViewModel >> onAstChanged: anAstChangedAnnouncement [
 	self addOnsAsyncDo: [ :theAddOns | self announce: GtTextualCoderViewModelReadyToRestyle new ]
 ]
 
-{ #category : #'api - coder model' }
-GtTextualCoderViewModel >> onCoderModelChanged [
-	super onCoderModelChanged.
-	
-	
-]
-
 { #category : #'private - event handling' }
 GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement [
 	self announce: (GtTextualCoderViewModelTextChanged new

@@ -8,16 +8,19 @@ Class {
 	#category : #'GToolkit-Coder-Pharo-UI-! View Models'
 }
 
-{ #category : #accessing }
+{ #category : #'api - coder model' }
+GtPharoSourceCoderViewModel >> behavior [
+	"Return a class (or trait) in the context of which the coder is opened"
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'private - bindings' }
 GtPharoSourceCoderViewModel >> bindingStrategy [
+	"Private. Return the underlying bindings strategy. Do not modify the object from the outside!"
 	<return: #GtBindingStrategy>
 
 	^ bindingStrategy
-]
-
-{ #category : #accessing }
-GtPharoSourceCoderViewModel >> bindingStrategy: aGtBindingStrategy [
-	bindingStrategy := aGtBindingStrategy
 ]
 
 { #category : #initialization }
@@ -68,14 +71,19 @@ GtPharoSourceCoderViewModel >> isDeprecatedGlobalNamed: aVariableName [
 		ifAbsent: [ false ]
 ]
 
-{ #category : #accessing }
+{ #category : #'private - evaluation' }
+GtPharoSourceCoderViewModel >> onBindingsReplaced [
+	"Is sent when current variable bindings are replaced with new ones"
+]
+
+{ #category : #'api - accessing' }
 GtPharoSourceCoderViewModel >> selfObject [
 	"Return an object that should be bound to `self` during code evaluation"
 
 	^ selfObject
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtPharoSourceCoderViewModel >> selfObject: anObject [
 	"Assign an object that should be bound to `self` during code evaluation"
 
