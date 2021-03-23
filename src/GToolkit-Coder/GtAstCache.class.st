@@ -21,9 +21,9 @@ GtAstCache class >> default [
 ]
 
 { #category : #accessing }
-GtAstCache >> cachedAstAt: aGtAstCacheKey ifAbsentPut: anAbsentBlock [
+GtAstCache >> cachedAstAt: anAstKey ifAbsentPut: anAbsentBlock [
 	^ dictionary 
-		at: aGtAstCacheKey
+		at: anAstKey
 		ifAbsentPut: anAbsentBlock
 ]
 
@@ -31,5 +31,5 @@ GtAstCache >> cachedAstAt: aGtAstCacheKey ifAbsentPut: anAbsentBlock [
 GtAstCache >> initialize [
 	super initialize.
 	
-	dictionary := WeakKeyDictionary new
+	dictionary := WeakIdentityKeyDictionary new
 ]

@@ -10,8 +10,8 @@ Class {
 	#classTraits : 'TGtBehaviorCoderDummyTrait classTrait',
 	#instVars : [
 		'instVarA',
-		'instVarB',
-		'instVarC'
+		'instVarC',
+		'instVarB'
 	],
 	#classVars : [
 		'ClassVarA',

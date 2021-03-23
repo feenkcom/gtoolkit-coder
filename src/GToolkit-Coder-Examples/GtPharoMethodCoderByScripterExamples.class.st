@@ -1,6 +1,6 @@
 Class {
 	#name : #GtPharoMethodCoderByScripterExamples,
-	#superclass : #GtCoderModelExamples,
+	#superclass : #GtBasicPharoCoderExamples,
 	#traits : 'TCoderByScripterExamples',
 	#classTraits : 'TCoderByScripterExamples classTrait',
 	#category : #'GToolkit-Coder-Examples-Pharo'
@@ -653,7 +653,7 @@ GtPharoMethodCoderByScripterExamples >> fixitCreateClass_01_setup [
 	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryMethodInPackagedClass ].
 	aScripter do
 		label: 'type in a class that does not exist';
-		action: [ :aCoder | aCoder appendString: (String cr, String tab, '{1}ThatDoesNotExist' format: { (aCoder attributeNamed:  #fakeClassName) }) ];
+		action: [ :aCoder | aCoder appendString: (String cr, String tab, '{1}ThatDoesNotExist' format: { (aCoder attributeNamed: #dummyMethod) className }) ];
 		onModel.
 		
 	aScripter wait forEmptySpaceTaskQueue.
@@ -889,7 +889,7 @@ GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_01_setup [
 		action: [ :aCoder | aCoder appendString:
 (': anObject
 	{1} := anObject.
-	{1} := {1} + 42.' format: { (aCoder attributeNamed:  #fakeInstVarNames) first })
+	{1} := {1} + 42.' format: { (aCoder attributeNamed: #dummyMethod) anyInstVarName })
 		];
 		onModel.
 
