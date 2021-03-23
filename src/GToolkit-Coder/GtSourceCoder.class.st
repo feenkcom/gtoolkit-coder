@@ -111,7 +111,7 @@ GtSourceCoder >> evaluate: aSourceStringOrBlock decorated: aSourceCodeDecorator 
 	aDecoratedSourceString := aSourceCodeDecorator value: aSourceString.
 	
 	aSourceCoderEvaluationContext
-		sourceString: aSourceString;
+		evaluatedSourceString: aSourceString;
 		evaluatedInterval: aSourceInterval.
 
 	aResult := self evaluateBlock: [ 

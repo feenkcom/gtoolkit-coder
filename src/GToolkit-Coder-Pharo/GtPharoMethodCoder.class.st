@@ -292,19 +292,26 @@ GtPharoMethodCoder >> createCompileMethodChange [
 { #category : #private }
 GtPharoMethodCoder >> createCompileMethodChangeIn: aBehavior [
 	<return: #RBAddMethodChange>
+	| aSourceString aCompilationRequester |
+	
+	aSourceString := self currentSourceString.
+	aCompilationRequester := self compilationRequester.
+
+	aCompilationRequester evaluatedInterval: (1 to: aSourceString size).
+	aCompilationRequester evaluatedSourceString: aSourceString size.
 
 	^ self protocol
 		ifNil: [
 			RBAddMethodChange
-				compile: self currentSourceString
+				compile: aSourceString
 				in: aBehavior
-				for: self compilationRequester ]
+				for: aCompilationRequester ]
 		ifNotNil: [ :aCategory | 
 			RBAddMethodChange
-				compile: self currentSourceString
+				compile: aSourceString
 				in: aBehavior
 				classified: aCategory
-				for: self compilationRequester ]
+				for: aCompilationRequester ]
 ]
 
 { #category : #'private - refactorings' }
@@ -335,6 +342,7 @@ GtPharoMethodCoder >> createRefactoringModel [
 
 { #category : #accessing }
 GtPharoMethodCoder >> currentSelector [
+	<return: #Symbol or: nil>
 	| theAst |
 
 	selector
@@ -1155,7 +1163,10 @@ GtPharoMethodCoder >> save [
 
 { #category : #accessing }
 GtPharoMethodCoder >> selector [
-	<return: #Symbol>
+	"Assign an original selector which changes when the compiled method is assigned.
+	The selector of the new method is undefined (nil).
+	See #currentSelector if you need to take the source code into account"
+	<return: #Symbol or: nil>
 
 	^ selector
 ]
