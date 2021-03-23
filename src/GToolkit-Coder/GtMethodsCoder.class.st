@@ -63,6 +63,11 @@ GtMethodsCoder >> newCoderFor: aMethod [
 	^ coder
 ]
 
+{ #category : #accessing }
+GtMethodsCoder >> object [
+	^ nil
+]
+
 { #category : #scripting }
 GtMethodsCoder >> selectAndScrollTo: aMethodCoder [
 	self

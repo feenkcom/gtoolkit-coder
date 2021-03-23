@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderEvaluationResultWithSyntaxError,
 	#superclass : #GtSourceCoderEvaluationResult,
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders - Evaluation'
 }
 
 { #category : #testing }

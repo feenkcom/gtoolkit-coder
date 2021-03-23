@@ -10,7 +10,7 @@ GtMethodCoderExplanationStylerExamples >> a [
 	^ 42
 ]
 
-{ #category : #accessing }
+{ #category : #dummies }
 GtMethodCoderExplanationStylerExamples >> a: arg1 a: arg2 a: arg3 a: arg4 [
 	"test method for highlighting implementors"
 ]
@@ -34,34 +34,36 @@ GtMethodCoderExplanationStylerExamples >> b [
 	^ self a * self notAnExample
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtMethodCoderExplanationStylerExamples >> coderOnViewMethod [
-	| selectors variables coder coderElement |
+	<gtExample>
+	| selectors variables coder coderViewModel coderElement |
 	
-	coder := GtPharoMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsOn:).
-	
-	selectors := GtSelectorExplanationLinkStyler new coder: coder.
-	selectors addSelectors: 
-		{#gtView . #columnedList . #title: . #items: .#contacts . #fullName . #avatar. #telephone. #contacts }.
+	selectors := GtSelectorExplanationLinkStyler new.
+	selectors addSelectors: #(gtView columnedList title: items: contacts fullName avatar telephone contacts).
 	selectors addSelector: #column:icon: withIdentifier: #columns.
 	selectors addSelector: #column:icon:width: withIdentifier: #columns.
 	selectors addSelector: #column:text: withIdentifier: #columns.
 	
-	variables := GtVariableExplanationLinkStyler new coder: coder.
+	variables := GtVariableExplanationLinkStyler new.
 	variables addVariables: {'aView' . 'aContact'}.
 	
-	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { selectors. variables }).
-	coderElement := (coder asCoderUIModel expanded: true) asElement margin: (BlInsets all: 10).
-	coderElement forceLayout.
+	coder := GtPharoMethodCoder forMethod: (GtABAddressBook>>#gtViewContactsOn:).
+	coderViewModel := coder asCoderViewModel.
+	coderViewModel addStylers: { selectors. variables }.
+	coderViewModel expanded: true.
+
+	coderElement := coderViewModel asElement.
+	coderElement margin: (BlInsets all: 10).
 	coderElement vMatchParent.
-	
-	^ coderElement.
+
+	^ coderElement
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 GtMethodCoderExplanationStylerExamples >> explanationLinkExample [
 	<gtExample>
-	| container inspectorContainer editor coder coderElement selectors variables |
+	| container inspectorContainer editor coder coderViewModel coderElement selectors variables |
 	
 	inspectorContainer := BlElement new
 		constraintsDo: [ :c | 
@@ -79,14 +81,17 @@ GtMethodCoderExplanationStylerExamples >> explanationLinkExample [
 	container explainer isExplanationHolder: true.
 	
 	selectors := GtSelectorExplanationLinkStyler new.
-	selectors addSelectors: {#syntaxOn:. #not. #+. #size. #<. #do:. #show: }.
+	selectors addSelectors: #(syntaxOn: not + size < do: show:).
 
 	variables := GtVariableExplanationLinkStyler new.
 	variables addVariables: {'self'. 'y' }.
 	
-	coder := GtPharoMethodCoder forMethod: (GtPharoMethodExample>>#exampleWithNumber:).
-	coder explanationLink: (GtCompositeExplanationLinkStyler forLinks: { variables. selectors }).
-	coderElement := (coder asCoderUIModel expanded: true) asElement.
+	coder := GtPharoMethodCoder forMethod: (GtPharoMethodExample>>#exampleWithNumber:).	
+	coderViewModel := coder asCoderViewModel.
+	coderViewModel addStylers: { variables. selectors }.
+	coderViewModel expanded: true.
+	
+	coderElement := coderViewModel asElement.
 	coderElement forceLayout.
 	inspectorContainer addChild: coderElement.
 	
@@ -104,8 +109,9 @@ GtMethodCoderExplanationStylerExamples >> explanationLinkExample [
 	^ container.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 GtMethodCoderExplanationStylerExamples >> explanationLinkExampleText [
+	<gtExample>
 	| text |
 	
 	text := ('pragma' asRopedText glamorousExplanationFor: #syntaxOn:),
@@ -170,8 +176,9 @@ GtMethodCoderExplanationStylerExamples >> hasUnderlineAttributeIn: coder [
 	^ self hasAttributeOfType: self unlineAttributeClass in: coder sourceEditor
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtMethodCoderExplanationStylerExamples >> inspectorOnViewMethod [
+	<gtExample>
 	| resultElement resultInspectorTree titleTab avatarLabel phoneLabel nameLabel avatarElementsCollection listLabelsCollection |
 	
 	resultElement := BlUseAsyncFeatures
@@ -290,7 +297,7 @@ GtMethodCoderExplanationStylerExamples >> unlineAttributeClass [
 	^ BlTextDecorationAttribute
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 GtMethodCoderExplanationStylerExamples >> viewsExplanationWithLinks [
 	<gtExample>
 	| container editor |
@@ -319,7 +326,7 @@ GtMethodCoderExplanationStylerExamples >> viewsExplanationWithLinks [
 	^ container
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 GtMethodCoderExplanationStylerExamples >> viewsExplanationWithLinksOnCoderAndInspector [
 	<gtExample>
 	| coderElement inspectorContainer verticalContainer editor container |

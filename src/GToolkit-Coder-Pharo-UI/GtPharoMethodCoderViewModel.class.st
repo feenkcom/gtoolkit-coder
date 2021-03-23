@@ -1,6 +1,6 @@
 Class {
 	#name : #GtPharoMethodCoderViewModel,
-	#superclass : #GtSourceCoderViewModel,
+	#superclass : #GtPharoSourceCoderViewModel,
 	#instVars : [
 		'savePreventors'
 	],
@@ -30,6 +30,13 @@ GtPharoMethodCoderViewModel >> allowSaveDueTo: aSavePreventor [
 { #category : #'api - coder model' }
 GtPharoMethodCoderViewModel >> behavior [
 	^ self coderModel behavior
+]
+
+{ #category : #'api - coder model' }
+GtPharoMethodCoderViewModel >> compiledMethod [
+	<return: #CompiledMethod>
+
+	^ self coderModel compiledMethod
 ]
 
 { #category : #'api - actions' }
@@ -63,7 +70,7 @@ GtPharoMethodCoderViewModel >> hasDeclaredVariableNamed: aVariableName [
 	
 	(super hasDeclaredVariableNamed: aVariableName)
 		ifTrue: [ ^ true ].
-	
+		
 	(self behavior classThatDefinesInstVarNamed: aVariableName)
 		 ifNotNil: [ ^ true ].
 		
@@ -78,6 +85,14 @@ GtPharoMethodCoderViewModel >> initialize [
 	super initialize.
 	
 	savePreventors := OrderedCollection new
+]
+
+{ #category : #testing }
+GtPharoMethodCoderViewModel >> isMeta [
+	"Return true if the method is implemented in a pharo metaclass (~ class side)"
+	<return: #Boolean>
+
+	^ self coderModel isMeta
 ]
 
 { #category : #testing }
@@ -96,6 +111,20 @@ GtPharoMethodCoderViewModel >> notifySaveEnabled [
 ]
 
 { #category : #'api - actions' }
+GtPharoMethodCoderViewModel >> playAll [
+	"Evaluate the whole source code and inspect the result"
+
+	^ self coder playAllInContext: (self evaluationContext all; receiverObject: self receiverObjectToPlay)
+]
+
+{ #category : #'api - actions' }
+GtPharoMethodCoderViewModel >> playAllAndInspect [
+	"Evaluate the whole source code and inspect the result"
+	
+	^ self coder playAllAndInspectInContext: (self evaluationContext all; receiverObject: self receiverObjectToPlay)
+]
+
+{ #category : #'api - actions' }
 GtPharoMethodCoderViewModel >> preventSaveDueTo: aSavePreventor [
 	(savePreventors includes: aSavePreventor)
 		ifTrue: [ ^ self ].
@@ -106,4 +135,13 @@ GtPharoMethodCoderViewModel >> preventSaveDueTo: aSavePreventor [
 		ifTrue: [ ^ self ].
 		
 	self notifySaveDisabled
+]
+
+{ #category : #private }
+GtPharoMethodCoderViewModel >> receiverObjectToPlay [
+	^ self selfObject
+		ifNil: [
+			self isMeta
+				ifTrue: [ self behavior instanceSide ]
+				ifFalse: [ self behavior new ] ]
 ]

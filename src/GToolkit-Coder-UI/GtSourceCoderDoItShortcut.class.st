@@ -25,14 +25,5 @@ GtSourceCoderDoItShortcut >> name [
 GtSourceCoderDoItShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
 	GtCoderExecutionContextVariable
 		element: aBrEditorElement
-		do: [
-			aBrTextEditor hasSelection 
-				ifTrue: [
-					aSourceCoderViewModel doIt: [ :aSourceText |
-						aBrTextEditor text characters = aSourceText characters
-							ifTrue: [ self selectionIntervalIn: aBrTextEditor ]
-							ifFalse: [
-								self flag: 'Handle modified text here'.
-								1 to: 0 ] ] ] 
-				ifFalse: [ aSourceCoderViewModel doItAll ] ]
+		do: [ aSourceCoderViewModel doIt ]
 ]

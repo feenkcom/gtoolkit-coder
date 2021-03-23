@@ -22,16 +22,8 @@ GtSourceCoderPrintItShortcut >> name [
 ]
 
 { #category : #evaluation }
-GtSourceCoderPrintItShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
+GtSourceCoderPrintItShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aGtSourceCoderViewModel dueTo: aShortcutEvent [
 	GtCoderExecutionContextVariable
 		element: aBrEditorElement
-		do: [
-			aBrTextEditor hasSelection 
-				ifTrue: [ aGtSourceCoder printItWithin: [ :aSourceText |
-					aBrTextEditor text characters = aSourceText characters
-						ifTrue: [ self selectionIntervalIn: aBrTextEditor ]
-						ifFalse: [
-							self flag: 'Handle modified text here'.
-							1 to: 0 ] ] ] 
-				ifFalse: [ aGtSourceCoder printItAll ] ]
+		do: [ aGtSourceCoderViewModel printIt ]
 ]

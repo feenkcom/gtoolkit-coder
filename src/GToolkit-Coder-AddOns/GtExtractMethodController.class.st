@@ -234,7 +234,6 @@ GtExtractMethodController >> safelyExecute [
 GtExtractMethodController >> setBodyText: bodySource andAttributesAt: positions [
 	| bodyText |
 	bodyText := bodySource asRopedText.
-	bodyText attributes: coder defaultTextAttributes.
 	positions
 		keysAndValuesDo: [ :i :each | 
 			(bodyText from: each to: each)

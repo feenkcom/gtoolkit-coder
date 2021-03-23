@@ -3,7 +3,7 @@ Trait {
 	#instVars : [
 		'textualCoderViewModel'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source'
+	#category : #'GToolkit-Coder-UI-Coder - Textual'
 }
 
 { #category : #'api - textual coder view model' }

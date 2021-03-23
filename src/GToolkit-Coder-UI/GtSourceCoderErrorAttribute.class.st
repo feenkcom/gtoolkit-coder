@@ -18,19 +18,18 @@ GtSourceCoderErrorAttribute class >> for: aString [
 
 { #category : #accessing }
 GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
-	| text attributes |
+	| text |
 
-	text := string asRopedText.
-	attributes := (anEditorElement editor text attributesAt: aTBrTextEditorTextualPiece textEnd) reject: [ :each | each = self ].
-
-	text
-		attributes: attributes;
+	text := string asRopedText
 		foreground: BrGlamorousColors defaultButtonTextColor;
-		bold.
+		medium;
+		glamorousCodeFontAndSmallSize.
 
-	^ (BlTextElement text: text)
-		background: (BrGlamorousColors errorBackgroundColor alpha: 0.5);
+	^ BlTextElement new
+		text: text;
+		background: (BrGlamorousColors errorBackgroundColor alpha: 0.4);
 		padding: (BlInsets top: 3 left: 0 bottom: 3 right: 0);
+		margin: (BlInsets left: 2 right: 2);
 		yourself
 ]
 

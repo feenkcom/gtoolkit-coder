@@ -9,12 +9,12 @@ Class {
 
 { #category : #private }
 GtBehaviorMethodCoderTagsElement >> behaviorOtherSideName [
-	^ self classTagStringForMeta: (self isMeta: self methodCoderUIModel) not
+	^ self classTagStringForMeta: self methodCoderUIModel isMeta not
 ]
 
 { #category : #private }
 GtBehaviorMethodCoderTagsElement >> behaviorSideName [
-	^ self classTagStringForMeta: (self isMeta: self methodCoderUIModel)
+	^ self classTagStringForMeta: self methodCoderUIModel isMeta
 ]
 
 { #category : #initialization }
@@ -26,7 +26,7 @@ GtBehaviorMethodCoderTagsElement >> buildTags [
 GtBehaviorMethodCoderTagsElement >> classTagStringFor: aMethodCoderUIModel [
 	<return: #String>
 
-	^ self classTagStringForMeta: (self isMeta: aMethodCoderUIModel)
+	^ self classTagStringForMeta: aMethodCoderUIModel isMeta
 ]
 
 { #category : #private }
@@ -36,13 +36,6 @@ GtBehaviorMethodCoderTagsElement >> classTagStringForMeta: aBoolean [
 	^ aBoolean
 		ifTrue: [ 'class' ]
 		ifFalse: [ 'instance' ]
-]
-
-{ #category : #private }
-GtBehaviorMethodCoderTagsElement >> isMeta: aMethodCoderUIModel [
-	<return: #String>
-
-	^ aMethodCoderUIModel coder behavior isMeta
 ]
 
 { #category : #accessing }

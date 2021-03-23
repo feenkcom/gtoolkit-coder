@@ -226,6 +226,7 @@ GtPharoMethodCoder >> initializeAddOns: addOns [
 	super initializeAddOns: addOns.
 	
 	addOns addStyler: GtPharoStyler new.
+	addOns addStyler: GtPharoDeprecationStyler new.
 	addOns addStyler: GtPharoMethodExpanderStyler new.
 	addOns addStyler: (GtFixItStyler new isForWorkspace: false).
 

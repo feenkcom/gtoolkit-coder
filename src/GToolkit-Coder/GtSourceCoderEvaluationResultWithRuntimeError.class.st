@@ -5,7 +5,7 @@ Class {
 		'error',
 		'isResignaled'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders - Evaluation'
 }
 
 { #category : #'error handling' }

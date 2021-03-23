@@ -36,7 +36,6 @@ GtClassMethodsCoder >> addMethodsForClass: aClass [
 GtClassMethodsCoder >> addNewCoder [
 	| aCoder |
 	aCoder := GtPharoMethodCoder forNewMethod: self newMethodClass.
-	aCoder object: self object.
 	aCoder protocol: #accessing.
 	aCoder coders: self.
 	self addFirstCoder: aCoder.
@@ -122,7 +121,7 @@ GtClassMethodsCoder >> isForClass [
 
 { #category : #private }
 GtClassMethodsCoder >> newCoderFor: aMethod [
-	^ (super newCoderFor: aMethod) withoutHeader object: object
+	^ (super newCoderFor: aMethod) withoutHeader
 ]
 
 { #category : #private }

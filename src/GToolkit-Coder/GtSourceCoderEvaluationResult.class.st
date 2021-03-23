@@ -2,13 +2,20 @@ Class {
 	#name : #GtSourceCoderEvaluationResult,
 	#superclass : #Object,
 	#instVars : [
-		'sourceCoder',
-		'sourceString',
-		'sourceInterval',
-		'requesterObject'
+		'evaluationContext'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders - Evaluation'
 }
+
+{ #category : #accessing }
+GtSourceCoderEvaluationResult >> evaluationContext [
+	^ evaluationContext
+]
+
+{ #category : #accessing }
+GtSourceCoderEvaluationResult >> evaluationContext: anObject [
+	evaluationContext := anObject
+]
 
 { #category : #testing }
 GtSourceCoderEvaluationResult >> isError [
@@ -32,42 +39,28 @@ GtSourceCoderEvaluationResult >> isSyntaxError [
 
 { #category : #accessing }
 GtSourceCoderEvaluationResult >> requesterObject [
-	^ requesterObject
-]
-
-{ #category : #accessing }
-GtSourceCoderEvaluationResult >> requesterObject: anObject [
-	requesterObject := anObject
+	^ self evaluationContext requesterObject
 ]
 
 { #category : #accessing }
 GtSourceCoderEvaluationResult >> sourceCoder [
-	^ sourceCoder
-]
-
-{ #category : #accessing }
-GtSourceCoderEvaluationResult >> sourceCoder: aGtSourceCoder [
-	sourceCoder := aGtSourceCoder.
-	sourceString := sourceCoder currentSourceString.
-	sourceInterval := 1 to: sourceString size
+	^ self evaluationContext coder
 ]
 
 { #category : #accessing }
 GtSourceCoderEvaluationResult >> sourceInterval [
-	^ sourceInterval
+	^ self evaluationContext evaluatedInterval
 ]
 
 { #category : #accessing }
 GtSourceCoderEvaluationResult >> sourceInterval: anObject [
-	sourceInterval := anObject
 ]
 
 { #category : #accessing }
 GtSourceCoderEvaluationResult >> sourceString [
-	^ sourceString
+	^ self evaluationContext evaluatedSourceString
 ]
 
 { #category : #accessing }
 GtSourceCoderEvaluationResult >> sourceString: anObject [
-	sourceString := anObject
 ]

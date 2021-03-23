@@ -28,14 +28,23 @@ GtPharoStyler >> visitCommentFrom: aCommentStart to: aCommentEnd [
 		to: aCommentEnd
 ]
 
+{ #category : #'visiting - variables' }
+GtPharoStyler >> visitDeclaredGlobalVariable: aNamedVariable [
+	self visitDeclaredVariable: aNamedVariable
+]
+
+{ #category : #'visiting - variables' }
+GtPharoStyler >> visitDeclaredVariable: aNamedVariable [
+
+	self
+		attributes: { BlTextForegroundAttribute color: Color blue muchDarker }
+		from: aNamedVariable name startPosition
+		to: aNamedVariable name stopPosition
+]
+
 { #category : #visiting }
 GtPharoStyler >> visitError: anError [
-	anError smaccError
-		nodesDo: [ :eachNode | self acceptNode: eachNode ]
-		andTokensDo: [ :eachToken | ]
-		includeErrors: true.
-
-	anError smaccError dismissedTokens do: [ :eachToken | self visitErrorToken: eachToken ]
+	anError smaccError acceptVisitor: self
 ]
 
 { #category : #visiting }
@@ -62,12 +71,23 @@ GtPharoStyler >> visitMethodSelectorPart: aSmaCCToken [
 		to: aSmaCCToken stopPosition
 ]
 
-{ #category : #visiting }
+{ #category : #'visiting - variables' }
 GtPharoStyler >> visitNamedVariable: aNamedVariable [
-	self
-		attributes: { BlTextForegroundAttribute color: Color blue muchDarker }
-		from: aNamedVariable name startPosition
-		to: aNamedVariable name stopPosition
+	| isDeclaredVariable |
+	
+	isDeclaredVariable := aNamedVariable isUndeclared not.
+	isDeclaredVariable
+		ifTrue: [ ^ self visitDeclaredVariable: aNamedVariable ].
+	
+	isDeclaredVariable := self coderViewModel hasDeclaredVariableNamed: aNamedVariable variableName.
+	isDeclaredVariable
+		ifTrue: [ ^ self visitDeclaredVariable: aNamedVariable ].
+	
+	isDeclaredVariable := self coderViewModel hasDeclaredGlobalNamed: aNamedVariable variableName.
+	isDeclaredVariable
+		ifTrue: [ ^ self visitDeclaredGlobalVariable: aNamedVariable ].
+
+	self visitUndeclaredVariable: aNamedVariable
 ]
 
 { #category : #visiting }
@@ -121,12 +141,21 @@ GtPharoStyler >> visitReturnUpArrow: aSmaCCToken [
 		to: aSmaCCToken stopPosition
 ]
 
-{ #category : #visiting }
+{ #category : #'visiting - variables' }
 GtPharoStyler >> visitSelfVariable: aSelfVariable [
 	self
 		attributes: { BlTextForegroundAttribute color: Color cyan muchDarker }
 		from: aSelfVariable name startPosition
 		to: aSelfVariable name stopPosition
+]
+
+{ #category : #visiting }
+GtPharoStyler >> visitSmaCCError: anErrorNode [
+	anErrorNode
+		nodesDo: [ :eachNode | self acceptNode: eachNode ]
+		andTokensDo: [ :eachToken | ]
+		includeErrors: true.
+	anErrorNode dismissedTokens do: [ :eachToken | self visitErrorToken: eachToken ]
 ]
 
 { #category : #visiting }
@@ -146,7 +175,7 @@ GtPharoStyler >> visitStringLiteral: aStringLiteral [
 		to: aStringLiteral value stopPosition
 ]
 
-{ #category : #visiting }
+{ #category : #'visiting - variables' }
 GtPharoStyler >> visitSuperVariable: aSuperVariable [
 	self
 		attributes: { BlTextForegroundAttribute color: Color cyan muchDarker }
@@ -162,10 +191,18 @@ GtPharoStyler >> visitSymbolLiteral: aSymbolLiteral [
 		to: aSymbolLiteral value stopPosition
 ]
 
-{ #category : #visiting }
+{ #category : #'visiting - variables' }
 GtPharoStyler >> visitThisContextVariable: aThisContextVariable [
 	self
 		attributes: { BlTextForegroundAttribute color: Color cyan muchDarker }
 		from: aThisContextVariable name startPosition
 		to: aThisContextVariable name stopPosition
+]
+
+{ #category : #'visiting - variables' }
+GtPharoStyler >> visitUndeclaredVariable: aVariableNode [
+	self
+		attributes: { BlTextForegroundAttribute color: Color red }
+		from: aVariableNode name startPosition
+		to: aVariableNode name stopPosition
 ]

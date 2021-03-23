@@ -44,9 +44,7 @@ GtPharoSourceCoder >> browseImplementorsAt: aTextPosition [
 
 	self
 		detectSelectorAt: aTextPosition
-		ifFound: [ :aSelector |
-			self
-				notifyObjectSpawn: (GtSearchImplementorsFilter selector: aSelector)  ]
+		ifFound: [ :aSelector | self notifyObjectSpawn: (GtSearchImplementorsFilter selector: aSelector)  ]
 		ifNone: [  ]
 ]
 
@@ -56,9 +54,7 @@ GtPharoSourceCoder >> browseImplementorsIn: aSourceString [
 
 	self
 		detectSelectorIn: aSourceString
-		ifFound: [ :aSelector |
-			self
-				notifyObjectSpawn: (GtSearchImplementorsFilter selector: aSelector) ]
+		ifFound: [ :aSelector | self notifyObjectSpawn: (GtSearchImplementorsFilter selector: aSelector) ]
 		ifNone: [  ]
 ]
 
@@ -66,20 +62,20 @@ GtPharoSourceCoder >> browseImplementorsIn: aSourceString [
 GtPharoSourceCoder >> browseReferencesAt: aTextPosition [
 	"Try to create a references filter for an entity at the given text position and request to browse it"
 
-	self
-		notifyObjectSpawn: (self detectReferencesFilterAt: aTextPosition
-			ifFound: [ :aReferencesFilter | aReferencesFilter ]
-			ifNone: [ GtSearchNullFilter new ])
+	self notifyObjectSpawn: (self
+		detectReferencesFilterAt: aTextPosition
+		ifFound: [ :aReferencesFilter | aReferencesFilter ]
+		ifNone: [ GtSearchNullFilter new ])
 ]
 
 { #category : #'*GToolkit-Coder-Pharo-UI' }
 GtPharoSourceCoder >> browseReferencesIn: aSourceString [
 	"Try to create a references filter for an entity within a given source string and request to browse it"
 
-	self
-		notifyObjectSpawn: (self detectReferencesFilterIn: aSourceString
-			ifFound: [ :aReferencesFilter | aReferencesFilter ]
-			ifNone: [ GtSearchNullFilter new ])
+	self notifyObjectSpawn: (self
+		detectReferencesFilterIn: aSourceString
+		ifFound: [ :aReferencesFilter | aReferencesFilter ]
+		ifNone: [ GtSearchNullFilter new ])
 ]
 
 { #category : #'*GToolkit-Coder-Pharo-UI' }

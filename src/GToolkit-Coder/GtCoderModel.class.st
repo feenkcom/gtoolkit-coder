@@ -113,11 +113,6 @@ GtCoderModel >> coders: aCoders [
 	^ self attributeNamed: #coders put: aCoders
 ]
 
-{ #category : #private }
-GtCoderModel >> context [
-	^ nil
-]
-
 { #category : #'api - actions' }
 GtCoderModel >> contextActions [
 	"Return a collection of contextual actions in the coder. They are renderred separately from mainActions"

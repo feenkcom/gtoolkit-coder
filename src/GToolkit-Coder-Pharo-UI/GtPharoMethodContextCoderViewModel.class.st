@@ -4,6 +4,17 @@ Class {
 	#category : #'GToolkit-Coder-Pharo-UI-! View Models'
 }
 
+{ #category : #accessing }
+GtPharoMethodContextCoderViewModel >> context [
+	^ self coderModel context
+]
+
+{ #category : #'private - evaluation' }
+GtPharoMethodContextCoderViewModel >> evaluationContext [
+	^ super evaluationContext
+		runtimeContext: self context
+]
+
 { #category : #initialization }
 GtPharoMethodContextCoderViewModel >> initialize [
 	super initialize.
@@ -20,8 +31,7 @@ GtPharoMethodContextCoderViewModel >> notifyContextPCRangeChangedTo: anInterval 
 
 { #category : #accessing }
 GtPharoMethodContextCoderViewModel >> programCounterRange [
-	^ self coder 
-		ifNotNil: [ :aCoder | aCoder programCounterRange ]
+	^ self coderModel programCounterRange
 ]
 
 { #category : #updating }

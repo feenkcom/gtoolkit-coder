@@ -95,25 +95,21 @@ GtPharoBlockClosureCoder >> computeAst: theSourceString [
 ]
 
 { #category : #'api - actions' }
-GtPharoBlockClosureCoder >> doItAllThenDo: aBlock requestedBy: aRequesterObject [
+GtPharoBlockClosureCoder >> doItAndGoInContext: aGtSourceCoderEvaluationContext [
 	^ self
 		evaluate: [ :thisCoder | thisCoder blockSource ]
-		requestedBy: aRequesterObject
-		thenDo: aBlock
-]
-
-{ #category : #'api - actions' }
-GtPharoBlockClosureCoder >> doItAndGoAll [
-	^ self
-		evaluate: [ :thisCoder | thisCoder blockSource ]
+		inContext: aGtSourceCoderEvaluationContext
 		thenDo: [ :anEvaluationResult |
 			self notifyEvaluatedWithResult: anEvaluationResult.
 			self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
 { #category : #'api - actions' }
-GtPharoBlockClosureCoder >> evaluationRequesterForEditor: aTextEditor [
-	^ GtBlockCoderEvaluationRequester on: self editor: aTextEditor
+GtPharoBlockClosureCoder >> doItInContext: aGtSourceCoderEvaluationContext thenDo: aBlock [
+	^ self
+		evaluate: [ :thisCoder | thisCoder blockSource ]
+		inContext: aGtSourceCoderEvaluationContext
+		thenDo: aBlock
 ]
 
 { #category : #'initialize-release' }
@@ -150,6 +146,7 @@ GtPharoBlockClosureCoder >> initializeAddOns: addOns [
 	super initializeAddOns: addOns.
 	
 	addOns addStyler: GtPharoStyler new.
+	addOns addStyler: GtPharoDeprecationStyler new.
 ]
 
 { #category : #private }
@@ -164,7 +161,7 @@ GtPharoBlockClosureCoder >> newRbAST: aString [
 	| ast |
 	ast := self
 		parseExpression: (self blockSourceFromText: aString)
-		requestor: self highlightBindingsStrategy.
+		requestor: GtHighlightingBindingStrategy new.
 	ast doSemanticAnalysis.
 	ast gtMoveAllBy: 1 - ast body start.
 	^ ast body
