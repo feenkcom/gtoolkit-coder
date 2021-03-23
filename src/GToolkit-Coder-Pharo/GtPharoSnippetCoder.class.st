@@ -24,15 +24,6 @@ GtPharoSnippetCoder >> forSource: aString [
 	self sourceCode: (GtCoderExplicitSourceCode new source: aString)
 ]
 
-{ #category : #private }
-GtPharoSnippetCoder >> highlightBindingsStrategy [
-	^ self context 
-		ifNil:  [ GtHighlightingBindingStrategy new "bindings: bindingStrategy bindings" ]
-		ifNotNil: [ GtContextHighlightingBindingStrategy new
-			"bindings: bindingStrategy bindings;"
-			context: self context ]
-]
-
 { #category : #initialization }
 GtPharoSnippetCoder >> initialize [	
 	super initialize.
@@ -50,12 +41,12 @@ GtPharoSnippetCoder >> newCompletionStrategy [
 	^ strategy
 ]
 
-{ #category : #updating }
+{ #category : #'private - ast rb' }
 GtPharoSnippetCoder >> newRbAST: aString [
 	| ast |
 	ast := self
 		parseExpression: aString
-		requestor: self highlightBindingsStrategy.
+		requestor: GtHighlightingBindingStrategy new.
 	ast doSemanticAnalysis.
 	^ ast
 ]
@@ -78,17 +69,7 @@ GtPharoSnippetCoder >> profileWithMessageTally [
 		thenDo: [ :anEvaluationResult | self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
-{ #category : #accessing }
-GtPharoSnippetCoder >> variableBindings [
-	self deprecated: 'Use GtPharoSourceViewModel>>#bindingStrategy instead'
-]
-
-{ #category : #accessing }
-GtPharoSnippetCoder >> variableBindings: aGtPlaygroundBindings [
-	self deprecated: 'Use GtPharoSourceViewModel>>#bindingStrategy: instead'
-]
-
-{ #category : #store }
+{ #category : #xdoc }
 GtPharoSnippetCoder >> xDocFilenameForReceiverObject: anObject [
 	"Answer the filename containing the receiver's source.
 	If no action has been performed, use the last saved code.
@@ -100,7 +81,7 @@ GtPharoSnippetCoder >> xDocFilenameForReceiverObject: anObject [
 			ifFalse: [ nil ] ]
 ]
 
-{ #category : #store }
+{ #category : #xdoc }
 GtPharoSnippetCoder >> xDocLoadSavedContentForReceiverObject: anObject [
 	"The receiver's object has been changed under us, reload the default code (if not empty)"
 
@@ -109,7 +90,7 @@ GtPharoSnippetCoder >> xDocLoadSavedContentForReceiverObject: anObject [
 	self forSource: (self xDocSourceStringForReceiverObject: anObject)
 ]
 
-{ #category : #store }
+{ #category : #xdoc }
 GtPharoSnippetCoder >> xDocSaveSource: aString receiverObject: anObject [
 	"Save the supplied source code"
 
@@ -129,7 +110,7 @@ GtPharoSnippetCoder >> xDocSaveSource: aString receiverObject: anObject [
 				write
 ]
 
-{ #category : #store }
+{ #category : #xdoc }
 GtPharoSnippetCoder >> xDocSourceStringForReceiverObject: anObject [
 	"Answer the string to be initially displayed in the snippet"
 	| sourceFile xDoc |
@@ -146,14 +127,14 @@ GtPharoSnippetCoder >> xDocSourceStringForReceiverObject: anObject [
 	^ (xDoc memberNamed: 'playground.source') contents utf8Decoded
 ]
 
-{ #category : #store }
+{ #category : #xdoc }
 GtPharoSnippetCoder >> xDocStoreForReceiverObject: anObject [
 	"Answer the XDoc store for the receiver."
 
 	^ XdKeyDocumentStore forKey: (self xDocStoreKeyForReceiverObject: anObject)
 ]
 
-{ #category : #store }
+{ #category : #xdoc }
 GtPharoSnippetCoder >> xDocStoreKeyForReceiverObject: anObject [
 	"Answer the key to be used for storing documents"
 

@@ -161,7 +161,7 @@ GtPharoBlockClosureCoder >> newRbAST: aString [
 	| ast |
 	ast := self
 		parseExpression: (self blockSourceFromText: aString)
-		requestor: self highlightBindingsStrategy.
+		requestor: GtHighlightingBindingStrategy new.
 	ast doSemanticAnalysis.
 	ast gtMoveAllBy: 1 - ast body start.
 	^ ast body
