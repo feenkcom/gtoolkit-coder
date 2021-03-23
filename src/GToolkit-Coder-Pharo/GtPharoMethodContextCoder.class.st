@@ -49,6 +49,8 @@ GtPharoMethodContextCoder >> compiledMethod [
 
 { #category : #accessing }
 GtPharoMethodContextCoder >> context [
+	<return: #Context>
+
 	^ context
 ]
 

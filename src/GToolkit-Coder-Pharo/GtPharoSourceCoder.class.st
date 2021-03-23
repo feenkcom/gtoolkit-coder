@@ -429,14 +429,11 @@ GtPharoSourceCoder >> parseMethod: aString [
 
 { #category : #'private - actions' }
 GtPharoSourceCoder >> primitiveEvaluate: aSourceString inContext: aGtPharoCoderEvaluationContext onFailDo: anEvaluationFailBlock [
-	| aContext |
-
-	self critical: [ aContext := self context ].
 
 	^ aGtPharoCoderEvaluationContext receiverObject class compiler
 		source: aSourceString;
 		receiver: aGtPharoCoderEvaluationContext receiverObject;
-		context: aContext;
+		context: aGtPharoCoderEvaluationContext runtimeContext;
 		requestor: aGtPharoCoderEvaluationContext;
 		failBlock: anEvaluationFailBlock;
 		evaluate

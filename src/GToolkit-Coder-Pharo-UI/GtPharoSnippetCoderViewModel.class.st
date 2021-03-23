@@ -1,12 +1,25 @@
 Class {
 	#name : #GtPharoSnippetCoderViewModel,
 	#superclass : #GtPharoSourceCoderViewModel,
+	#instVars : [
+		'context'
+	],
 	#category : #'GToolkit-Coder-Pharo-UI-! View Models'
 }
 
 { #category : #'api - coder model' }
 GtPharoSnippetCoderViewModel >> behavior [
 	^ self selfObject class
+]
+
+{ #category : #accessing }
+GtPharoSnippetCoderViewModel >> context [
+	^ context
+]
+
+{ #category : #accessing }
+GtPharoSnippetCoderViewModel >> context: anObject [
+	context := anObject
 ]
 
 { #category : #initialization }
@@ -17,6 +30,12 @@ GtPharoSnippetCoderViewModel >> defaultBindingStrategy [
 	defaultBindings sharedBindings: GtSnippetBindings new.
 
 	^ GtSnippetBindingStrategy new bindings: defaultBindings
+]
+
+{ #category : #'private - evaluation' }
+GtPharoSnippetCoderViewModel >> evaluationContext [
+	^ super evaluationContext
+		runtimeContext: self context
 ]
 
 { #category : #'api - coder model' }

@@ -2,7 +2,6 @@ Class {
 	#name : #GtPharoSnippetCoder,
 	#superclass : #GtPharoSourceCoder,
 	#instVars : [
-		'context',
 		'xdocFilename'
 	],
 	#category : #'GToolkit-Coder-Pharo-Coders'
@@ -18,16 +17,6 @@ GtPharoSnippetCoder >> computeAst: theSourceString [
 	^ GtPharoParser
 		parseWithErrors: theSourceString
 		startingAt: GtPharoParser startingStateForMethodSequence
-]
-
-{ #category : #accessing }
-GtPharoSnippetCoder >> context [
-	^ context
-]
-
-{ #category : #accessing }
-GtPharoSnippetCoder >> context: doItContext [
-	context := doItContext
 ]
 
 { #category : #initialization }

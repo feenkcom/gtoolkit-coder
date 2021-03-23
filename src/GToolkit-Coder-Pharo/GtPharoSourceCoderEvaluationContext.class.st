@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'notifications',
 		'bindingStrategy',
-		'receiverObject'
+		'receiverObject',
+		'runtimeContext'
 	],
 	#category : #'GToolkit-Coder-Pharo-Context'
 }
@@ -122,6 +123,21 @@ GtPharoSourceCoderEvaluationContext >> receiverObject: anObject [
 	"Assign an object that should be bound to self"
 
 	receiverObject := anObject
+]
+
+{ #category : #accessing }
+GtPharoSourceCoderEvaluationContext >> runtimeContext [
+	<return: #Context>
+
+	^ runtimeContext
+]
+
+{ #category : #accessing }
+GtPharoSourceCoderEvaluationContext >> runtimeContext: aContext [
+	"Assign an optional pharo runtime Context.
+	May be useful when evaluating pharo code in a presence of a running system (live debugger, code snippets in dedbugger) "
+
+	runtimeContext := aContext
 ]
 
 { #category : #hack }
