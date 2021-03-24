@@ -172,7 +172,8 @@ GtTextualCoderEditorElement >> onPostTextualCoderViewModelChanged [
 	I do nothing by default but allow users to perform update operations when a receiver object is already
 	subscribed to announcements."
 	
-	self textualCoderViewModel ensureAddOns
+	"the add-ons will not compute themselves unless we tell them to"
+	self textualCoderViewModel addOnsAsyncDo: [ :theAddOns | self onViewModelReadyToStyle ]
 ]
 
 { #category : #'private - event handling' }
