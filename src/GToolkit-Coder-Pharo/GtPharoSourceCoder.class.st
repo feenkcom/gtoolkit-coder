@@ -395,8 +395,9 @@ GtPharoSourceCoder >> parseMethod: aString [
 ]
 
 { #category : #'private - actions' }
-GtPharoSourceCoder >> primitiveDebug: aSourceString inContext: aGtPharoSourceCoderEvaluationContext onFailDo: anEvaluationFailBlock [
-	| isForMethod methodClass aCompiledMethodToDebug |
+GtPharoSourceCoder >> primitiveAnonymousCompile: aSourceString inContext: aGtPharoSourceCoderEvaluationContext onFailDo: anEvaluationFailBlock [
+	<return: #CompiledMethod>
+	| isForMethod methodClass |
 
 	isForMethod := self isForMethod and: [
 		aGtPharoSourceCoderEvaluationContext evaluatedInterval = (1 to: aGtPharoSourceCoderEvaluationContext sourceString size) ].
@@ -408,14 +409,24 @@ GtPharoSourceCoder >> primitiveDebug: aSourceString inContext: aGtPharoSourceCod
 		ifNil: [ aGtPharoSourceCoderEvaluationContext receiverObject class ]
 		ifNotNil: [ :aContext | aContext methodClass ].
 
-	aCompiledMethodToDebug := self class compiler
+	^ self class compiler
 		source: aSourceString;
 		class: methodClass newAnonymousSubclass;
 		context: aGtPharoSourceCoderEvaluationContext runtimeContext;
 		requestor: aGtPharoSourceCoderEvaluationContext;
 		noPattern: isForMethod not;
-		failBlock: [ ^ anEvaluationFailBlock value ];
-		compile.
+		failBlock: anEvaluationFailBlock;
+		compile
+]
+
+{ #category : #'private - actions' }
+GtPharoSourceCoder >> primitiveDebug: aSourceString inContext: aGtPharoSourceCoderEvaluationContext onFailDo: anEvaluationFailBlock [
+	| aCompiledMethodToDebug |
+
+	aCompiledMethodToDebug := self
+		primitiveAnonymousCompile: aSourceString
+		inContext: aGtPharoSourceCoderEvaluationContext
+		onFailDo: [ ^ anEvaluationFailBlock value ].
 
 	self class
 		debug: aCompiledMethodToDebug
@@ -424,15 +435,19 @@ GtPharoSourceCoder >> primitiveDebug: aSourceString inContext: aGtPharoSourceCod
 ]
 
 { #category : #'private - actions' }
-GtPharoSourceCoder >> primitiveEvaluate: aSourceString inContext: aGtPharoCoderEvaluationContext onFailDo: anEvaluationFailBlock [
+GtPharoSourceCoder >> primitiveEvaluate: aSourceString inContext: aGtPharoSourceCoderEvaluationContext onFailDo: anEvaluationFailBlock [
+	| aCompiledMethodToEvaluate |
 
-	^ aGtPharoCoderEvaluationContext receiverObject class compiler
-		source: aSourceString;
-		receiver: aGtPharoCoderEvaluationContext receiverObject;
-		context: aGtPharoCoderEvaluationContext runtimeContext;
-		requestor: aGtPharoCoderEvaluationContext;
-		failBlock: anEvaluationFailBlock;
-		evaluate
+	aCompiledMethodToEvaluate := self
+		primitiveAnonymousCompile: aSourceString
+		inContext: aGtPharoSourceCoderEvaluationContext
+		onFailDo: [ ^ anEvaluationFailBlock value ].
+
+	^ aGtPharoSourceCoderEvaluationContext receiverObject
+		withArgs: (aGtPharoSourceCoderEvaluationContext runtimeContext
+			ifNil: [ #() ]
+			ifNotNil: [ { aGtPharoSourceCoderEvaluationContext runtimeContext } ])
+		executeMethod: aCompiledMethodToEvaluate
 ]
 
 { #category : #accessing }

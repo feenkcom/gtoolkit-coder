@@ -28,7 +28,7 @@ GtPharoMethodCoderExamples >> b [
 	^ self a * self notAnExample
 ]
 
-{ #category : #'examples - debug' }
+{ #category : #'examples - instance creation' }
 GtPharoMethodCoderExamples >> coderOnClassUnaryMethodThatCreatesPoint [
 	<gtExample>
 	| aCoder |
@@ -391,10 +391,14 @@ GtPharoMethodCoderExamples >> debugClassUnaryMethodAll [
 	| aCoder aCoderViewModel aDummyDebugger |
 	
 	aCoder := self coderOnClassUnaryMethodThatCreatesPoint.
-	
+	self assert: aCoder isModified.
+
 	aCoderViewModel := aCoder asCoderViewModel.
-	
+
 	aDummyDebugger := GtPharoDummyDebugger useDuring: [ aCoderViewModel debug ].
+
+	"debugging does not save the method"
+	self assert: aCoder isModified.
 
 	self assert: aDummyDebugger sourceCode equals: aCoder currentSourceString.
 	self assert: aDummyDebugger method selector equals: aCoder selector.
@@ -410,11 +414,15 @@ GtPharoMethodCoderExamples >> debugClassUnaryMethodPointCreation [
 	| aCoder aCoderViewModel aDummyDebugger |
 
 	aCoder := self coderOnClassUnaryMethodThatCreatesPoint.
-
+	self assert: aCoder isModified.
+	
 	aCoderViewModel := aCoder asCoderViewModel.
-	aCoderViewModel select: 28 to: 46. 
+	aCoderViewModel select: 28 to: 46.
 
 	aDummyDebugger := GtPharoDummyDebugger useDuring: [ aCoderViewModel debug ].
+
+	"debugging does not save the method"
+	self assert: aCoder isModified.
 
 	self assert: aDummyDebugger sourceCode equals: 'DoIt
 	^ aPoint := 196 @ 400'.
@@ -568,6 +576,47 @@ GtPharoMethodCoderExamples >> emptyMethodCoder [
 	self assert: methodCoder currentSelector equals: #faulty.
 
 	^ methodCoder
+]
+
+{ #category : #'examples - evaluate' }
+GtPharoMethodCoderExamples >> evaluateClassUnaryMethodAll [
+	<gtExample>
+	| aCoder aCoderViewModel aResult |
+	
+	aCoder := self coderOnClassUnaryMethodThatCreatesPoint.
+	self assert: aCoder isModified.
+
+	aCoderViewModel := aCoder asCoderViewModel.
+
+	aResult := aCoderViewModel doIt.
+
+	"evaluating code does not save the method"
+	self assert: aCoder isModified.
+	self assert: aResult isSuccess. 
+	self assert: aResult value equals: 14@20.
+
+	^ aCoder
+]
+
+{ #category : #'examples - evaluate' }
+GtPharoMethodCoderExamples >> evaluateClassUnaryMethodMethodPointCreation [
+	<gtExample>
+	| aCoder aCoderViewModel aResult |
+	
+	aCoder := self coderOnClassUnaryMethodThatCreatesPoint.
+	self assert: aCoder isModified.
+
+	aCoderViewModel := aCoder asCoderViewModel.
+	aCoderViewModel select: 28 to: 46.
+
+	aResult := aCoderViewModel doIt.
+
+	"evaluating code does not save the method"
+	self assert: aCoder isModified.
+	self assert: aResult isSuccess. 
+	self assert: aResult value equals: 196@400.
+
+	^ aCoder
 ]
 
 { #category : #'sample methods' }
