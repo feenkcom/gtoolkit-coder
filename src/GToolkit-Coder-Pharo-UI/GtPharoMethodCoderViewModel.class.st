@@ -55,6 +55,12 @@ GtPharoMethodCoderViewModel >> elementClass [
 		ifFalse: [ GtExpandableMethodCoderElement ]
 ]
 
+{ #category : #'private - evaluation' }
+GtPharoMethodCoderViewModel >> evaluationContext [
+	^ super evaluationContext
+		receiverObject: (self selfObject ifNil: [ self behavior instanceSide ])
+]
+
 { #category : #'gt-extension' }
 GtPharoMethodCoderViewModel >> gtInfo [
 	^ super gtInfo, (Array streamContents: [ :aStream |

@@ -5,6 +5,7 @@ Class {
 		'coder',
 		'requesterObject',
 		'sourceInterval',
+		'sourceString',
 		'evaluatedInterval',
 		'evaluatedSourceString'
 	],
@@ -83,4 +84,16 @@ GtSourceCoderEvaluationContext >> sourceInterval [
 { #category : #accessing }
 GtSourceCoderEvaluationContext >> sourceInterval: aGtSourceCoderEvaluationSourceInterval [
 	sourceInterval := aGtSourceCoderEvaluationSourceInterval
+]
+
+{ #category : #accessing }
+GtSourceCoderEvaluationContext >> sourceString [
+	^ sourceString
+]
+
+{ #category : #accessing }
+GtSourceCoderEvaluationContext >> sourceString: anObject [
+	"Set the complete source string of the coder at the moment of the evaluation"
+
+	sourceString := anObject
 ]

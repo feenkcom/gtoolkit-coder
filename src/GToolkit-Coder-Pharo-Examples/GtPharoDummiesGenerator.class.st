@@ -36,6 +36,7 @@ GtPharoDummiesGenerator >> addDummyClassesToPackage: aDummyPackage [
 			className: eachClassName.
 		
 		self addDummyUnaryMethodsToClass: aDummyClass.
+		self addDummyUnaryClassMethodsToClass: aDummyClass.
 		self addDummyKeywordMethodsToClass: aDummyClass.
 
 		aDummyClass ].
@@ -67,9 +68,31 @@ GtPharoDummiesGenerator >> addDummyKeywordMethodsToClass: aDummyClass [
 ]
 
 { #category : #'private - generation' }
+GtPharoDummiesGenerator >> addDummyUnaryClassMethodsToClass: aDummyClass [
+	| theDummyMethods |
+	theDummyMethods := self dummyUnaryClassMethodNames collect: [ :eachMethodName |
+		| eachProtocol aDummyMethod |
+		
+		eachProtocol := self fakeCategoryForFakeMethodName: eachMethodName.
+		
+		aDummyClass realClass class
+			compile: eachMethodName
+			classified: eachProtocol.
+			
+		aDummyMethod := GtPharoDummyMethod new
+			realMethod: aDummyClass realClass class >> eachMethodName;
+			selector: eachMethodName;
+			protocol: eachProtocol.
+			
+		aDummyMethod ].
+	
+	aDummyClass addDummyClassMethods: theDummyMethods
+]
+
+{ #category : #'private - generation' }
 GtPharoDummiesGenerator >> addDummyUnaryMethodsToClass: aDummyClass [
 	| theDummyMethods |
-	theDummyMethods := self fakeUnaryMethodNames collect: [ :eachMethodName |
+	theDummyMethods := self dummyUnaryMethodNames collect: [ :eachMethodName |
 		| eachProtocol aDummyMethod |
 		
 		eachProtocol := self fakeCategoryForFakeMethodName: eachMethodName.
@@ -133,6 +156,20 @@ GtPharoDummiesGenerator >> dummyPackageNames [
 			ifFalse: [ thePackageNames add: aGeneratedPackageName ] ].
 
 	^ thePackageNames
+]
+
+{ #category : #'private - set up' }
+GtPharoDummiesGenerator >> dummyUnaryClassMethodNames [
+	<script: 'self new dummyUnaryClassMethodNames inspect'>
+	
+	^ (1 to: self fakeMethodCount) collect: [ :index | (#classMethod, index asString) asSymbol ]
+]
+
+{ #category : #'private - set up' }
+GtPharoDummiesGenerator >> dummyUnaryMethodNames [
+	<script: 'self new dummyUnaryMethodNames inspect'>
+	
+	^ (1 to: self fakeMethodCount) collect: [ :index | (#method, index asString) asSymbol ]
 ]
 
 { #category : #'private - set up' }
@@ -254,13 +291,6 @@ GtPharoDummiesGenerator >> fakeRegisteredPackage [
 		self addFakeClassesToPackage: aPackage ].
 	
 	^ aPackage
-]
-
-{ #category : #'private - set up' }
-GtPharoDummiesGenerator >> fakeUnaryMethodNames [
-	<script: 'self new fakeUnaryMethodNames inspect'>
-	
-	^ (1 to: self fakeMethodCount) collect: [ :index | (#method, index asString) asSymbol ]
 ]
 
 { #category : #'private - set up' }

@@ -297,8 +297,10 @@ GtPharoMethodCoder >> createCompileMethodChangeIn: aBehavior [
 	aSourceString := self currentSourceString.
 	aCompilationRequester := self compilationRequester.
 
-	aCompilationRequester evaluatedInterval: (1 to: aSourceString size).
-	aCompilationRequester evaluatedSourceString: aSourceString size.
+	aCompilationRequester
+		sourceString: aSourceString;
+		evaluatedInterval: (1 to: aSourceString size);
+		evaluatedSourceString: aSourceString size.
 
 	^ self protocol
 		ifNil: [
@@ -360,18 +362,6 @@ GtPharoMethodCoder >> currentSelector [
 	^ #faulty
 ]
 
-{ #category : #'api - actions' }
-GtPharoMethodCoder >> debug [
-	self isModified ifTrue: [
-		self save
-			ifFalse: [ ^ self ] ].
-
-	self class
-		debug: self compiledMethod
-		receiver: self object
-		in: self context
-]
-
 { #category : #'api - actions examples' }
 GtPharoMethodCoder >> debugExample [
 	self isModified
@@ -393,8 +383,10 @@ GtPharoMethodCoder >> evaluateSelector: aSymbol inContext: aGtPharoSourceCoderEv
 
 	aSourceString := self currentSourceString ].
 	
-	aGtPharoSourceCoderEvaluationContext evaluatedSourceString: aSourceString.
-	aGtPharoSourceCoderEvaluationContext evaluatedInterval: (1 to: aSourceString size).
+	aGtPharoSourceCoderEvaluationContext
+		sourceString: aSourceString;
+		evaluatedSourceString: aSourceString;
+		evaluatedInterval: (1 to: aSourceString size).
 
 	aResult := self
 		evaluateBlock: [ aReceiver perform: aSymbol ]
@@ -1261,7 +1253,7 @@ GtPharoMethodCoder >> unaryMessageAddOnFor: anAST into: coderAddOns [
 	coderAddOns
 		addContextAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action: [ :aCoderUIModel :anEvent | self debug ]
+		action: [ :aCoderUIModel :anEvent | aCoderUIModel debug ]
 ]
 
 { #category : #'private - subscriptions' }

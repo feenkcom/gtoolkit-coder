@@ -398,6 +398,11 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 ]
 
 { #category : #'api - selection' }
+GtTextualCoderViewModel >> select: aFromCursorIndex to: aToCursorIndex [
+	self selection: (self selection copy select: aFromCursorIndex to: aToCursorIndex)
+]
+
+{ #category : #'api - selection' }
 GtTextualCoderViewModel >> selection [
 	<return: #BlCompositeSelection>
 

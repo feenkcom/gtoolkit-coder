@@ -75,7 +75,7 @@ GtPharoSourceCoderEvaluationContext >> hasBindingOf: aSymbol [
 GtPharoSourceCoderEvaluationContext >> initialize [
 	super initialize.
 
-	bindingStrategy := GtNoBindings new.
+	bindingStrategy := GtHighlightingBindingStrategy new bindings: GtNoBindings uniqueInstance.
 	notifications := OrderedCollection new
 ]
 
@@ -152,4 +152,15 @@ GtPharoSourceCoderEvaluationContext >> textMorph [
 	"Hack to handle inserting local variables"
 
 	^ self
+]
+
+{ #category : #binding }
+GtPharoSourceCoderEvaluationContext >> withSnippetBindingStrategy [
+	| theExistingBindings |
+
+	theExistingBindings := bindingStrategy bindings.
+	theExistingBindings = GtNoBindings uniqueInstance
+		ifTrue: [ theExistingBindings := GtSnippetBindings new ].
+
+	bindingStrategy := GtSnippetBindingStrategy new bindings: theExistingBindings
 ]

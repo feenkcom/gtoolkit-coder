@@ -20,6 +20,13 @@ GtPharoDummyEnvironment >> anyDummyKeywordMethod [
 ]
 
 { #category : #'api - methods' }
+GtPharoDummyEnvironment >> anyDummyUnaryClassMethod [
+	<return: #GtPharoDummyMethod>
+
+	^ self dummyPackages anyOne anyDummyUnaryClassMethod
+]
+
+{ #category : #'api - methods' }
 GtPharoDummyEnvironment >> anyDummyUnaryMethod [
 	<return: #GtPharoDummyMethod>
 

@@ -30,7 +30,7 @@ GtPharoSnippetCoder >> initializeAddOns: addOns [
 	addOns
 		addMainAction: 'Debug' translated
 		icon: BrGlamorousVectorIcons debug
-		action: [ :aCoderUIModel :anEvent | self debug ]
+		action: [ :aCoderUIModel :anEvent | aCoderUIModel debug ]
 		id: GtSourceCoderDebugActionId.
 	addOns
 		addMainAction: 'Profile' translated

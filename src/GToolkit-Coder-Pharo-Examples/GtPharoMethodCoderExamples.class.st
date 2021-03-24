@@ -28,6 +28,21 @@ GtPharoMethodCoderExamples >> b [
 	^ self a * self notAnExample
 ]
 
+{ #category : #'examples - debug' }
+GtPharoMethodCoderExamples >> coderOnClassUnaryMethodThatCreatesPoint [
+	<gtExample>
+	| aCoder |
+	
+	aCoder := self forUnaryClassMethod.
+	aCoder appendString: '
+	| aPoint |
+	
+	aPoint := 196@400.
+	^ aPoint x sqrt @ aPoint y sqrt'.
+	
+	^ aCoder
+]
+
 { #category : #'examples - compile' }
 GtPharoMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSystem [
 	<gtExample>
@@ -35,7 +50,7 @@ GtPharoMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSyst
 	
 	anEventsRecoder := self eventsRecorder.
 	
-	aMethodCoder := self forUnaryMethodInPackagedClass.
+	aMethodCoder := self forUnaryInstanceMethod.
 	anOldMethod := (aMethodCoder attributeNamed: #dummyMethod) realMethod.
 	
 	aMethodCoder sourceText append: '"modified"' asRopedText.
@@ -84,7 +99,7 @@ GtPharoMethodCoderExamples >> compileMethodWithCoderWhenSubscribedToSystem [
 	
 	anEventsRecoder := self eventsRecorder.
 	
-	aMethodCoder := self forUnaryMethodInPackagedClass.
+	aMethodCoder := self forUnaryInstanceMethod.
 	anOldMethod := (aMethodCoder attributeNamed: #dummyMethod) realMethod.
 	
 	aMethodCoder subscribeToSystem.
@@ -163,7 +178,7 @@ GtPharoMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToS
 	
 	anEventsRecoder := self eventsRecorder.
 	
-	aMethodCoder := self forUnaryMethodInPackagedClass.
+	aMethodCoder := self forUnaryInstanceMethod.
 	anOldMethod := (aMethodCoder attributeNamed: #dummyMethod) realMethod.
 	
 	aMethodCoder sourceText append: '"modified"' asRopedText.
@@ -211,7 +226,7 @@ GtPharoMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribed
 	
 	anEventsRecoder := self eventsRecorder.
 	
-	aMethodCoder := self forUnaryMethodInPackagedClass.
+	aMethodCoder := self forUnaryInstanceMethod.
 	aMethodCoder subscribeToSystem.
 	
 	self assert: aMethodCoder isModified not.
@@ -368,6 +383,46 @@ GtPharoMethodCoderExamples >> compileRemovedMethodWithoutCoderWhenSubscribedToSy
 	self assert: anEventsRecoder first coder equals: aMethodCoder.
 	
 	^ aMethodCoder
+]
+
+{ #category : #'examples - debug' }
+GtPharoMethodCoderExamples >> debugClassUnaryMethodAll [
+	<gtExample>
+	| aCoder aCoderViewModel aDummyDebugger |
+	
+	aCoder := self coderOnClassUnaryMethodThatCreatesPoint.
+	
+	aCoderViewModel := aCoder asCoderViewModel.
+	
+	aDummyDebugger := GtPharoDummyDebugger useDuring: [ aCoderViewModel debug ].
+
+	self assert: aDummyDebugger sourceCode equals: aCoder currentSourceString.
+	self assert: aDummyDebugger method selector equals: aCoder selector.
+	self assert: (aDummyDebugger method methodClass inheritsFrom: aCoder behavior).
+	self assert: aDummyDebugger receiver equals: aCoder behavior instanceSide.
+
+	^ aCoder
+]
+
+{ #category : #'examples - debug' }
+GtPharoMethodCoderExamples >> debugClassUnaryMethodPointCreation [
+	<gtExample>
+	| aCoder aCoderViewModel aDummyDebugger |
+
+	aCoder := self coderOnClassUnaryMethodThatCreatesPoint.
+
+	aCoderViewModel := aCoder asCoderViewModel.
+	aCoderViewModel select: 28 to: 46. 
+
+	aDummyDebugger := GtPharoDummyDebugger useDuring: [ aCoderViewModel debug ].
+
+	self assert: aDummyDebugger sourceCode equals: 'DoIt
+	^ aPoint := 196 @ 400'.
+	self assert: aDummyDebugger method selector equals: #DoIt.
+	self assert: (aDummyDebugger method methodClass inheritsFrom: aCoder behavior).
+	self assert: aDummyDebugger receiver equals: aCoder behavior instanceSide.
+
+	^ aCoder
 ]
 
 { #category : #'examples - ast' }
@@ -718,7 +773,30 @@ GtPharoMethodCoderExamples >> forThisObjectMethodCoder [
 ]
 
 { #category : #'examples - instance creation' }
-GtPharoMethodCoderExamples >> forUnaryMethodInPackagedClass [
+GtPharoMethodCoderExamples >> forUnaryClassMethod [
+	<gtExample>
+	| anEnvironment aDummyMethod aMethodCoder |
+
+	anEnvironment := GtPharoDummyEnvironment withPackages: 2 classes: 2.
+	aDummyMethod := anEnvironment anyDummyUnaryClassMethod.
+
+	aMethodCoder := GtPharoMethodCoder forMethod: aDummyMethod realMethod.
+	aMethodCoder attributeNamed: #dummyEnvironment put: anEnvironment.
+	aMethodCoder attributeNamed: #dummyMethod put: aDummyMethod.
+
+	self assert: aMethodCoder behavior equals: aDummyMethod realClass class.
+	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior explicit: aDummyMethod realClass class).
+	self assert: aMethodCoder selector equals: aDummyMethod selector.
+	self assert: aMethodCoder compiledMethod equals: aDummyMethod realMethod.
+	self assert: aMethodCoder protocol equals: aDummyMethod protocol.
+	self assert: aMethodCoder sourceCode class equals: GtCoderCompiledMethodSourceCode.
+	self assert: aMethodCoder sourceCode compiledMethod equals: aDummyMethod realMethod.
+
+	^ aMethodCoder
+]
+
+{ #category : #'examples - instance creation' }
+GtPharoMethodCoderExamples >> forUnaryInstanceMethod [
 	<gtExample>
 	| anEnvironment aDummyMethod aMethod aClass aMethodCoder |
 
@@ -889,7 +967,7 @@ GtPharoMethodCoderExamples >> removeClassWhenSubscribedToSystem [
 
 	anEventsRecoder := self eventsRecorder.
 
-	aMethodCoder := self forUnaryMethodInPackagedClass.
+	aMethodCoder := self forUnaryInstanceMethod.
 	aMethodCoder subscribeToSystem.
 	
 	aMethod := aMethodCoder compiledMethod.
@@ -919,7 +997,7 @@ GtPharoMethodCoderExamples >> removeMethodWithCoderWhenSubscribedToSystem [
 
 	anEventsRecoder := self eventsRecorder.
 
-	aMethodCoder := self forUnaryMethodInPackagedClass.
+	aMethodCoder := self forUnaryInstanceMethod.
 	aMethodCoder subscribeToSystem.
 	aMethodCoder weak
 		when: GtCoderMethodRemoved
@@ -951,7 +1029,7 @@ GtPharoMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
 
 	anEventsRecoder := self eventsRecorder.
 
-	aMethodCoder := self forUnaryMethodInPackagedClass.
+	aMethodCoder := self forUnaryInstanceMethod.
 	aMethodCoder subscribeToSystem.
 
 	aMethod := aMethodCoder compiledMethod.
@@ -985,7 +1063,7 @@ GtPharoMethodCoderExamples >> removePackageWhenSubscribedToSystem [
 
 	anEventsRecoder := self eventsRecorder.
 
-	aMethodCoder := self forUnaryMethodInPackagedClass.
+	aMethodCoder := self forUnaryInstanceMethod.
 	aMethodCoder subscribeToSystem.
 	
 	aMethod := aMethodCoder compiledMethod.

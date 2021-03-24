@@ -16,22 +16,6 @@ Class {
 	#category : #'GToolkit-Coder-Pharo-Coders'
 }
 
-{ #category : #private }
-GtPharoSourceCoder class >> compile: aStream for: anObject in: evalContext withRequestor: requestor [
-	| methodClass |
-	methodClass := evalContext
-		ifNil: [ anObject class ]
-		ifNotNil: [ evalContext methodClass ].
-	^self class compiler
-		source: aStream;
-		class: methodClass;
-		context: evalContext;
-		requestor: requestor;
-		noPattern: true;
-		failBlock: [ ^ nil ];
-		compile
-]
-
 { #category : #'private - actions' }
 GtPharoSourceCoder class >> debug: aCompiledMethod receiver: anObject in: evalContext [
 	| guineaPig suspendedContext debugSession |
@@ -88,23 +72,6 @@ GtPharoSourceCoder >> classOrMetaClass [
 		transformWith: '`@receiver classOrMetaClass' -> '`@receiver behavior'.
 		
 	^ self behavior
-]
-
-{ #category : #'private - actions' }
-GtPharoSourceCoder >> debug: aString [
-	| currentReceiver currentContext anEvaluationRequester |
-	
-	self critical: [
-		currentReceiver := self object.
-		currentContext := self context.
-		anEvaluationRequester := self evaluationContext ].
-
-	(self class
-		compile: aString 
-		for: currentReceiver
-		in: currentContext
-		withRequestor: anEvaluationRequester) ifNotNil: [ :aMethodToDebug |
-			self class debug: aMethodToDebug receiver: currentReceiver in: currentContext ]
 ]
 
 { #category : #'private - ast' }
@@ -425,6 +392,35 @@ GtPharoSourceCoder >> parseExpression: aString requestor: aRequestor [
 { #category : #'private - ast rb' }
 GtPharoSourceCoder >> parseMethod: aString [
 	^ self parse: aString asExpression: false requestor: nil
+]
+
+{ #category : #'private - actions' }
+GtPharoSourceCoder >> primitiveDebug: aSourceString inContext: aGtPharoSourceCoderEvaluationContext onFailDo: anEvaluationFailBlock [
+	| isForMethod methodClass aCompiledMethodToDebug |
+
+	isForMethod := self isForMethod and: [
+		aGtPharoSourceCoderEvaluationContext evaluatedInterval = (1 to: aGtPharoSourceCoderEvaluationContext sourceString size) ].
+	
+	isForMethod
+		ifFalse: [ aGtPharoSourceCoderEvaluationContext withSnippetBindingStrategy ].
+
+	methodClass := aGtPharoSourceCoderEvaluationContext runtimeContext
+		ifNil: [ aGtPharoSourceCoderEvaluationContext receiverObject class ]
+		ifNotNil: [ :aContext | aContext methodClass ].
+
+	aCompiledMethodToDebug := self class compiler
+		source: aSourceString;
+		class: methodClass newAnonymousSubclass;
+		context: aGtPharoSourceCoderEvaluationContext runtimeContext;
+		requestor: aGtPharoSourceCoderEvaluationContext;
+		noPattern: isForMethod not;
+		failBlock: [ ^ anEvaluationFailBlock value ];
+		compile.
+
+	self class
+		debug: aCompiledMethodToDebug
+		receiver: aGtPharoSourceCoderEvaluationContext receiverObject
+		in: aGtPharoSourceCoderEvaluationContext runtimeContext
 ]
 
 { #category : #'private - actions' }

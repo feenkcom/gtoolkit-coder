@@ -650,7 +650,7 @@ GtPharoMethodCoderByScripterExamples >> fixitCreateClass_01_setup [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryMethodInPackagedClass ].
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod ].
 	aScripter do
 		label: 'type in a class that does not exist';
 		action: [ :aCoder | aCoder appendString: (String cr, String tab, '{1}New' format: { (aCoder attributeNamed: #dummyMethod) className }) ];
@@ -883,7 +883,7 @@ GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_01_setup [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryMethodInPackagedClass ].
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod ].
 	aScripter do
 		label: 'type in a method with argument';
 		action: [ :aCoder | aCoder appendString:
@@ -1169,7 +1169,7 @@ GtPharoMethodCoderByScripterExamples >> forUnaryRename_01_setup [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryMethodInPackagedClass ].
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod ].
 	aScripter click
 		label: 'Click on the coder editor to give it focus';
 		id: GtSourceCoderEditorId.

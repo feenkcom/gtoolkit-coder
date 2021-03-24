@@ -6,10 +6,17 @@ Class {
 		'realClass',
 		'className',
 		'dummyMethods',
+		'dummyClassMethods',
 		'instVarNames'
 	],
 	#category : #'GToolkit-Coder-Pharo-Examples-Dummies'
 }
+
+{ #category : #accessing }
+GtPharoDummyClass >> addDummyClassMethods: aCollectionOfDummyMethods [
+	dummyClassMethods addAll: aCollectionOfDummyMethods.
+	aCollectionOfDummyMethods do: [ :eachDummyMethod | eachDummyMethod dummyClass: self ]
+]
 
 { #category : #accessing }
 GtPharoDummyClass >> addDummyMethods: aCollectionOfDummyMethods [
@@ -22,6 +29,13 @@ GtPharoDummyClass >> anyDummyKeywordMethod [
 	<return: #GtPharoDummyMethod>
 
 	^ self dummyKeywordMethods anyOne
+]
+
+{ #category : #'api - methods' }
+GtPharoDummyClass >> anyDummyUnaryClassMethod [
+	<return: #GtPharoDummyMethod>
+
+	^ self dummyUnaryClassMethods anyOne
 ]
 
 { #category : #'api - methods' }
@@ -49,11 +63,16 @@ GtPharoDummyClass >> className: anObject [
 ]
 
 { #category : #'api - methods' }
+GtPharoDummyClass >> dummyClassMethods [
+	^ dummyClassMethods
+]
+
+{ #category : #'api - methods' }
 GtPharoDummyClass >> dummyKeywordMethods [
 	^ self dummyMethods select: [ :each | each isKeyword ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - methods' }
 GtPharoDummyClass >> dummyMethods [
 	^ dummyMethods
 ]
@@ -66,6 +85,11 @@ GtPharoDummyClass >> dummyPackage [
 { #category : #accessing }
 GtPharoDummyClass >> dummyPackage: anObject [
 	dummyPackage := anObject
+]
+
+{ #category : #'api - methods' }
+GtPharoDummyClass >> dummyUnaryClassMethods [
+	^ self dummyClassMethods select: [ :each | each isUnary ]
 ]
 
 { #category : #'api - methods' }
@@ -90,7 +114,8 @@ GtPharoDummyClass >> gtCoderFor: aView [
 GtPharoDummyClass >> initialize [
 	super initialize.
 	
-	dummyMethods := OrderedCollection new
+	dummyMethods := OrderedCollection new.
+	dummyClassMethods := OrderedCollection new
 ]
 
 { #category : #accessing }
