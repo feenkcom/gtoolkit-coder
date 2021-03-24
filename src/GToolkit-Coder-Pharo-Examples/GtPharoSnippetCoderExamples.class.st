@@ -131,7 +131,7 @@ GtPharoSnippetCoderExamples >> thisContextBinding [
 	aCoderViewModel := self snippetCoderViewModel.
 	aCoderViewModel coderModel forSource: 'thisContext'.
 
-	self assert: aCoderViewModel doIt value method methodClass equals: UndefinedObject.
+	self assert: (aCoderViewModel doIt value method methodClass inheritsFrom: UndefinedObject).
 
 	^ aCoderViewModel
 ]
