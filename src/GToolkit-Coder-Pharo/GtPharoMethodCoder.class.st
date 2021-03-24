@@ -211,13 +211,16 @@ GtPharoMethodCoder >> clearExample [
 	self removeAttributeNamed: #example.
 ]
 
-{ #category : #private }
-GtPharoMethodCoder >> compilationRequester [
-	^ self evaluationContext
+{ #category : #'api - actions' }
+GtPharoMethodCoder >> compile [
+	"Try to compile the current source code and return true if it was successful, false otherwise"
+	<return: #Boolean>
+
+	^ self compileInContext: self evaluationContext
 ]
 
 { #category : #'api - actions' }
-GtPharoMethodCoder >> compile [
+GtPharoMethodCoder >> compileInContext: aGtPharoSourceCoderEvaluationContext [
 	"Try to compile the current source code and return true if it was successful, false otherwise"
 	<return: #Boolean>
 
@@ -229,12 +232,12 @@ GtPharoMethodCoder >> compile [
 	^ self methodBehavior
 		realBehaviorDo: [ :aBehavior |
 			| aChange |
-			aChange := self createCompileMethodChangeIn: aBehavior.
+			aChange := self createCompileMethodChangeIn: aBehavior inContext: aGtPharoSourceCoderEvaluationContext.
 
 			selector := aChange selector.
 
 			(self
-				handleCompilerErrorsDuring: [ self changeManager performChange: aChange ])
+				handleCompilerErrorsDuring: [ RBRefactoryChangeManager instance performChange: aChange ])
 				ifFalse: [ ^ false ].
 
 			aChange definedSelector
@@ -285,19 +288,18 @@ GtPharoMethodCoder >> createCompileMethodChange [
 	<return: #RBAddMethodChange or: nil>
 
 	^ self methodBehavior
-		realBehaviorDo: [ :aBehavior | self createCompileMethodChangeIn: aBehavior ]
+		realBehaviorDo: [ :aBehavior | self createCompileMethodChangeIn: aBehavior inContext: self evaluationContext ]
 		ifAbsent: [ nil ]
 ]
 
 { #category : #private }
-GtPharoMethodCoder >> createCompileMethodChangeIn: aBehavior [
+GtPharoMethodCoder >> createCompileMethodChangeIn: aBehavior inContext: aGtPharoSourceCoderEvaluationContext [
 	<return: #RBAddMethodChange>
-	| aSourceString aCompilationRequester |
+	| aSourceString |
 	
 	aSourceString := self currentSourceString.
-	aCompilationRequester := self compilationRequester.
 
-	aCompilationRequester
+	aGtPharoSourceCoderEvaluationContext
 		sourceString: aSourceString;
 		evaluatedInterval: (1 to: aSourceString size);
 		evaluatedSourceString: aSourceString size.
@@ -307,13 +309,13 @@ GtPharoMethodCoder >> createCompileMethodChangeIn: aBehavior [
 			RBAddMethodChange
 				compile: aSourceString
 				in: aBehavior
-				for: aCompilationRequester ]
+				for: aGtPharoSourceCoderEvaluationContext ]
 		ifNotNil: [ :aCategory | 
 			RBAddMethodChange
 				compile: aSourceString
 				in: aBehavior
 				classified: aCategory
-				for: aCompilationRequester ]
+				for: aGtPharoSourceCoderEvaluationContext ]
 ]
 
 { #category : #'private - refactorings' }
@@ -1144,10 +1146,18 @@ GtPharoMethodCoder >> save [
 	"Try to save the current method validating syntax and return `true` if save was succesful, false otherwise"
 	<return: #Boolean>
 
+	^ self saveInContext: self evaluationContext
+]
+
+{ #category : #'api - actions' }
+GtPharoMethodCoder >> saveInContext: aGtPharoSourceCoderEvaluationContext [
+	"Try to save the current method validating syntax and return `true` if save was succesful, false otherwise"
+	<return: #Boolean>
+
 	self validateSyntax
 		ifFalse: [ ^ false ].
 
-	self compile
+	(self compileInContext: aGtPharoSourceCoderEvaluationContext)
 		ifFalse: [ ^ false ].
 
 	^ true

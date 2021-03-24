@@ -237,7 +237,7 @@ GtPharoMethodCoder >> initializeAddOns: addOns [
 			id: GtMethodCoderSaveActionId;
 			title: 'Save' translated;
 			icon: BrGlamorousVectorIcons accept;
-			action: [ :aCoderUIModel :anEvent | self save ];
+			action: [ :aCoderUIModel :anEvent | aCoderUIModel save ];
 			enabled: [ :aCoderUIModel | aCoderUIModel isSaveEnabled ];
 			updateWhen: GtMethodCoderSaveAbilityChanged).
 	addOns

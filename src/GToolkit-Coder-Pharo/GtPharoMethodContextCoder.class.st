@@ -29,13 +29,26 @@ GtPharoMethodContextCoder >> close [
 	self updateSelection"
 ]
 
-{ #category : #actions }
-GtPharoMethodContextCoder >> compile [
-	^ self
-		handleCompilerErrorsDuring: [ self session
-				gtRecompileMethodTo: self currentSourceString
-				inContext: self context
-				notifying: self compilationRequester ]
+{ #category : #'api - actions' }
+GtPharoMethodContextCoder >> compileInContext: aGtPharoSourceCoderEvaluationContext [
+	| withoutErrors compiledSuccesfully |
+	
+	compiledSuccesfully := false.
+	withoutErrors := self handleCompilerErrorsDuring: [
+		| aSourceString |
+		aSourceString := self currentSourceString.
+
+		aGtPharoSourceCoderEvaluationContext
+			sourceString: aSourceString;
+			evaluatedInterval: (1 to: aSourceString size);
+			evaluatedSourceString: aSourceString size.
+		
+		compiledSuccesfully := self session
+			gtRecompileMethodTo: aSourceString
+			inContext: aGtPharoSourceCoderEvaluationContext runtimeContext
+			notifying: aGtPharoSourceCoderEvaluationContext ].
+		
+	^ withoutErrors and: [ compiledSuccesfully ]
 ]
 
 { #category : #accessing }
@@ -59,7 +72,7 @@ GtPharoMethodContextCoder >> context: aContext [
 	context := aContext
 ]
 
-{ #category : #actions }
+{ #category : #'api - actions' }
 GtPharoMethodContextCoder >> contextActions [
 	<return: #Collection of: #GtCoderAction>
 
@@ -166,9 +179,9 @@ GtPharoMethodContextCoder >> receiver [
 	^ self context receiver
 ]
 
-{ #category : #actions }
-GtPharoMethodContextCoder >> save [
-	super save
+{ #category : #'api - actions' }
+GtPharoMethodContextCoder >> saveInContext: aGtPharoSourceCoderEvaluationContext [
+	(super saveInContext: aGtPharoSourceCoderEvaluationContext)
 		ifFalse: [ ^ false ].
 
 	"If compilation succedded notify the debugger. The current context is now in an 

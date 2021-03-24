@@ -110,9 +110,12 @@ GtTextualCoderEditorElement >> onCodeEvaluated: anEvaluationAnnouncement [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onCoderParseError: aGtCoderParseError [
-	self 
-		reportParseError: aGtCoderParseError errorMessage 
-		at: aGtCoderParseError location
+	"A parse error can be notifying from a non-UI thread"
+
+	self enqueueTask: (BlTaskAction new action: [
+		self 
+			reportParseError: aGtCoderParseError errorMessage 
+			at: aGtCoderParseError location ])
 ]
 
 { #category : #'private - event handling' }

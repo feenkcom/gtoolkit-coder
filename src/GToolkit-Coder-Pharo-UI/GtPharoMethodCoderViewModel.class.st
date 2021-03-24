@@ -32,6 +32,13 @@ GtPharoMethodCoderViewModel >> behavior [
 	^ self coderModel behavior
 ]
 
+{ #category : #'api - actions' }
+GtPharoMethodCoderViewModel >> compile [
+	<return: #Boolean>
+
+	^ self coderModel compileInContext: self evaluationContext
+]
+
 { #category : #'api - coder model' }
 GtPharoMethodCoderViewModel >> compiledMethod [
 	<return: #CompiledMethod>
@@ -150,4 +157,14 @@ GtPharoMethodCoderViewModel >> receiverObjectToPlay [
 			self isMeta
 				ifTrue: [ self behavior instanceSide ]
 				ifFalse: [ self behavior new ] ]
+]
+
+{ #category : #'api - actions' }
+GtPharoMethodCoderViewModel >> save [
+	<return: #Boolean>
+	
+	self isSaveEnabled
+		ifFalse: [ ^ self ].
+
+	^ self coderModel saveInContext: self evaluationContext
 ]
