@@ -1,6 +1,6 @@
 Class {
 	#name : #GtContextCoderVariableLook,
-	#superclass : #BrLook,
+	#superclass : #BrAptitude,
 	#instVars : [
 		'methodCoder'
 	],

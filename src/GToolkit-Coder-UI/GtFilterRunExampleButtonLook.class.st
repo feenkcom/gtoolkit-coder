@@ -6,7 +6,7 @@ Look at my ${class:GtFilterRunExampleButtonLook|show=#gtSubclassesFor:|expanded=
 "
 Class {
 	#name : #GtFilterRunExampleButtonLook,
-	#superclass : #BrLook,
+	#superclass : #BrAptitude,
 	#instVars : [
 		'coder',
 		'mutex',
