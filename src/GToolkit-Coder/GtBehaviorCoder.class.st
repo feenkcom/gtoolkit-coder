@@ -64,6 +64,7 @@ GtBehaviorCoder >> definitionCoder [
 GtBehaviorCoder >> forClass: aClass [
 	hasObject := false.
 	self initializeClass: aClass.
+
 	self methodsCoder: (GtClassMethodsCoder forClass: aClass)
 ]
 

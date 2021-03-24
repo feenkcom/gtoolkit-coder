@@ -152,7 +152,7 @@ GtPharoMethodCoderExamples >> compileMethodWithTempAndBlockArgsConflictWhenSubsc
 	self assert: anEventsRecoder second class equals: GtCoderParseError.
 	self assert: anEventsRecoder second coder equals: aMethodCoder.
 	self assert: anEventsRecoder second errorMessage equals: 'Temp shadows: each'.
-	
+
 	^ aMethodCoder
 ]
 

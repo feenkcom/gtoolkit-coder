@@ -50,7 +50,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			package: 'GToolkit-Coder-Pharo-AddOns' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-Pharo-UI') ];
 			package: 'GToolkit-Coder-Pharo-Examples' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-Pharo-UI' 'GToolkit-Coder-Pharo-AddOns') ];
+				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-Pharo-UI' 'GToolkit-Coder-Pharo-AddOns' 'GToolkit-Coder-Examples') ];
 			
 			package: 'GToolkit-Coder-AddOns' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-Pharo' 'GToolkit-Coder-Pharo-UI' 'GToolkit-Coder-Pharo-AddOns'). ];

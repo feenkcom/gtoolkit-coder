@@ -1,7 +1,7 @@
 Class {
 	#name : #GtExpandableCoderElementExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Examples-UI'
+	#category : #'GToolkit-Coder-Pharo-Examples'
 }
 
 { #category : #'as yet unclassified' }
