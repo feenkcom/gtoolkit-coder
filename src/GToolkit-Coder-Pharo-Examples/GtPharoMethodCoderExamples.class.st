@@ -44,7 +44,7 @@ GtPharoMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSyst
 	self assert: aMethodCoder isModified.
 	self assert: aMethodCoder currentSourceString equals: anOldMethod sourceCode, '"modified"'.
 	
-	aMethodCoder
+	aMethodCoder weak
 		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
 		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
 		when: GtCoderMethodModified send: #record: to: anEventsRecoder;
@@ -92,7 +92,7 @@ GtPharoMethodCoderExamples >> compileMethodWithCoderWhenSubscribedToSystem [
 	self assert: aMethodCoder isModified not.
 	self assert: aMethodCoder currentSourceString equals: anOldMethod sourceCode.
 	
-	aMethodCoder
+	aMethodCoder weak
 		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
 		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
 		when: GtCoderMethodModified send: #record: to: anEventsRecoder;
@@ -172,7 +172,7 @@ GtPharoMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToS
 	self assert: aMethodCoder isModified.
 	self assert: aMethodCoder currentSourceString equals: anOldMethod sourceCode, '"modified"'.
 	
-	aMethodCoder
+	aMethodCoder weak
 		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
 		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
 		when: GtCoderMethodModified send: #record: to: anEventsRecoder;
@@ -216,7 +216,7 @@ GtPharoMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribed
 	
 	self assert: aMethodCoder isModified not.
 	
-	aMethodCoder
+	aMethodCoder weak
 		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
 		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
 		when: GtCoderMethodModified send: #record: to: anEventsRecoder;
@@ -264,7 +264,7 @@ GtPharoMethodCoderExamples >> compileModifiedNewMethodWithCoderWhenSubscribedToS
 	self assert: aMethodCoder isModified.
 	aNewMethodSelector := (aMethodCoder attributeNamed: #dummyMethod) selector.
 	
-	aMethodCoder
+	aMethodCoder weak
 		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
 		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
 		when: GtCoderMethodModified send: #record: to: anEventsRecoder;
@@ -310,7 +310,7 @@ GtPharoMethodCoderExamples >> compileRemovedMethodWithCoderWhenSubscribedToSyste
 	aCompileChange := aMethodCoder createCompileMethodChange.
 	self assert: aCompileChange equals: nil.
 
-	aMethodCoder
+	aMethodCoder weak
 		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
 		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
 		when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
@@ -347,7 +347,7 @@ GtPharoMethodCoderExamples >> compileRemovedMethodWithoutCoderWhenSubscribedToSy
 	self assert: aCompileChange protocol equals: (aMethodCoder attributeNamed: #dummyMethod) protocol.
 	self assert: aCompileChange isMeta not.
 	
-	aMethodCoder
+	aMethodCoder weak
 		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
 		when: GtCoderMethodAdded send: #record: to: anEventsRecoder;
 		when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
@@ -921,7 +921,7 @@ GtPharoMethodCoderExamples >> removeMethodWithCoderWhenSubscribedToSystem [
 
 	aMethodCoder := self forUnaryMethodInPackagedClass.
 	aMethodCoder subscribeToSystem.
-	aMethodCoder
+	aMethodCoder weak
 		when: GtCoderMethodRemoved
 		send: #record:
 		to: anEventsRecoder.
@@ -956,7 +956,8 @@ GtPharoMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
 
 	aMethod := aMethodCoder compiledMethod.
 
-	aMethodCoder when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
+	aMethodCoder weak
+		when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
 
 	[ aMethod removeFromSystem ] ensure: [
 		aMethodCoder unsubscribeFromSystem ].
