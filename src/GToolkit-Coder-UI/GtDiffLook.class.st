@@ -1,6 +1,6 @@
 Class {
 	#name : #GtDiffLook,
-	#superclass : #BrLook,
+	#superclass : #BrAptitude,
 	#category : #'GToolkit-Coder-UI-Diff'
 }
 

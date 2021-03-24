@@ -1,6 +1,6 @@
 Class {
 	#name : #GtClassBreadcrumbToggleLook,
-	#superclass : #BrLook,
+	#superclass : #BrAptitude,
 	#category : #'GToolkit-Coder-UI-Looks'
 }
 

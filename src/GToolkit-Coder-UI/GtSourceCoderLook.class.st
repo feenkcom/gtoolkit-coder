@@ -1,6 +1,6 @@
 Class {
 	#name : #GtSourceCoderLook,
-	#superclass : #BrLook,
+	#superclass : #BrAptitude,
 	#category : #'GToolkit-Coder-UI-Coder - Source Look'
 }
 
