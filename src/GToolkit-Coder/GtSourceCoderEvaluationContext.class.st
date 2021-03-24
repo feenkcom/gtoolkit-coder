@@ -84,13 +84,3 @@ GtSourceCoderEvaluationContext >> sourceInterval [
 GtSourceCoderEvaluationContext >> sourceInterval: aGtSourceCoderEvaluationSourceInterval [
 	sourceInterval := aGtSourceCoderEvaluationSourceInterval
 ]
-
-{ #category : #accessing }
-GtSourceCoderEvaluationContext >> sourceString [
-	^ evaluatedSourceString
-]
-
-{ #category : #accessing }
-GtSourceCoderEvaluationContext >> sourceString: anObject [
-	evaluatedSourceString := anObject
-]

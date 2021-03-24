@@ -1,7 +1,9 @@
 Class {
 	#name : #GtPharoMethodCoderExamples,
-	#superclass : #GtCoderModelExamples,
-	#category : #'GToolkit-Coder-Examples-Pharo'
+	#superclass : #Object,
+	#traits : 'TGtPharoCoderExamplesWithDummies',
+	#classTraits : 'TGtPharoCoderExamplesWithDummies classTrait',
+	#category : #'GToolkit-Coder-Pharo-Examples-Coders'
 }
 
 { #category : #'sample methods' }
@@ -29,13 +31,12 @@ GtPharoMethodCoderExamples >> b [
 { #category : #'examples - compile' }
 GtPharoMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder wasSuccessful anEventsRecoder anOldMethod aNewMethod |
 	
 	anEventsRecoder := self eventsRecorder.
 	
 	aMethodCoder := self forUnaryMethodInPackagedClass.
-	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
+	anOldMethod := (aMethodCoder attributeNamed: #dummyMethod) realMethod.
 	
 	aMethodCoder sourceText append: '"modified"' asRopedText.
 	aMethodCoder subscribeToSystem.
@@ -53,9 +54,9 @@ GtPharoMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSyst
 		ensure: [ aMethodCoder unsubscribeFromSystem ].
 	
 	self assert: wasSuccessful.
-	aNewMethod := (aMethodCoder attributeNamed: #fakeClass) >> anOldMethod selector.
+	aNewMethod := (aMethodCoder attributeNamed: #dummyMethod) realClass >> anOldMethod selector.
 
-	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #fakeClass).
+	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #dummyMethod) realClass.
 	self assert: aMethodCoder selector equals: aNewMethod selector.
 	self assert: aMethodCoder selector equals: anOldMethod selector.
 	self assert: aMethodCoder compiledMethod equals: aNewMethod.
@@ -79,13 +80,12 @@ GtPharoMethodCoderExamples >> compileMethodWithCoderModifiedWhenSubscribedToSyst
 { #category : #'examples - compile' }
 GtPharoMethodCoderExamples >> compileMethodWithCoderWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder wasSuccessful anEventsRecoder anOldMethod aNewMethod |
 	
 	anEventsRecoder := self eventsRecorder.
 	
 	aMethodCoder := self forUnaryMethodInPackagedClass.
-	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
+	anOldMethod := (aMethodCoder attributeNamed: #dummyMethod) realMethod.
 	
 	aMethodCoder subscribeToSystem.
 	
@@ -102,9 +102,9 @@ GtPharoMethodCoderExamples >> compileMethodWithCoderWhenSubscribedToSystem [
 		ensure: [ aMethodCoder unsubscribeFromSystem ].
 	
 	self assert: wasSuccessful.
-	aNewMethod := (aMethodCoder attributeNamed: #fakeClass) >> anOldMethod selector.
+	aNewMethod := (aMethodCoder attributeNamed: #dummyMethod) realClass >> anOldMethod selector.
 
-	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #fakeClass).
+	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #dummyMethod) realClass.
 	self assert: aMethodCoder selector equals: aNewMethod selector.
 	self assert: aMethodCoder selector equals: anOldMethod selector.
 	self assert: aMethodCoder compiledMethod equals: aNewMethod.
@@ -128,7 +128,6 @@ GtPharoMethodCoderExamples >> compileMethodWithCoderWhenSubscribedToSystem [
 { #category : #'examples - compile' }
 GtPharoMethodCoderExamples >> compileMethodWithTempAndBlockArgsConflictWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder wasSuccessful anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -153,20 +152,19 @@ GtPharoMethodCoderExamples >> compileMethodWithTempAndBlockArgsConflictWhenSubsc
 	self assert: anEventsRecoder second class equals: GtCoderParseError.
 	self assert: anEventsRecoder second coder equals: aMethodCoder.
 	self assert: anEventsRecoder second errorMessage equals: 'Temp shadows: each'.
-	
+
 	^ aMethodCoder
 ]
 
 { #category : #'examples - compile' }
 GtPharoMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder aCompiledSelector anEventsRecoder anOldMethod aNewMethod |
 	
 	anEventsRecoder := self eventsRecorder.
 	
 	aMethodCoder := self forUnaryMethodInPackagedClass.
-	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
+	anOldMethod := (aMethodCoder attributeNamed: #dummyMethod) realMethod.
 	
 	aMethodCoder sourceText append: '"modified"' asRopedText.
 	aMethodCoder subscribeToSystem.
@@ -184,9 +182,9 @@ GtPharoMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToS
 		ensure: [ aMethodCoder unsubscribeFromSystem ].
 	
 	self assert: aCompiledSelector equals: anOldMethod selector.
-	aNewMethod := (aMethodCoder attributeNamed: #fakeClass) >> aCompiledSelector.
+	aNewMethod := (aMethodCoder attributeNamed: #dummyMethod) realClass >> aCompiledSelector.
 
-	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #fakeClass).
+	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #dummyMethod) realClass.
 	self assert: aMethodCoder selector equals: aNewMethod selector.
 	self assert: aMethodCoder compiledMethod equals: aNewMethod.
 	self assert: aMethodCoder protocol equals: aNewMethod protocol.
@@ -209,7 +207,6 @@ GtPharoMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToS
 { #category : #'examples - compile' }
 GtPharoMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder aCompiledSelector anEventsRecoder anOldMethod aNewMethod |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -225,15 +222,15 @@ GtPharoMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribed
 		when: GtCoderMethodModified send: #record: to: anEventsRecoder;
 		when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
 
-	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
+	anOldMethod := (aMethodCoder attributeNamed: #dummyMethod) realMethod.
 
 	aCompiledSelector := [ anOldMethod methodClass compile: anOldMethod sourceCode, '"new method"' classified: anOldMethod protocol ]
 		ensure: [ aMethodCoder unsubscribeFromSystem ].
 	
 	self assert: aCompiledSelector equals: anOldMethod selector.
-	aNewMethod := (aMethodCoder attributeNamed: #fakeClass) >> aCompiledSelector.
+	aNewMethod := (aMethodCoder attributeNamed: #dummyMethod) realClass >> aCompiledSelector.
 
-	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #fakeClass).
+	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #dummyMethod) realClass.
 	self assert: aMethodCoder selector equals: aNewMethod selector.
 	self assert: aMethodCoder compiledMethod equals: aNewMethod.
 	self assert: aMethodCoder protocol equals: aNewMethod protocol.
@@ -256,7 +253,6 @@ GtPharoMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribed
 { #category : #'examples - compile' }
 GtPharoMethodCoderExamples >> compileModifiedNewMethodWithCoderWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder wasSuccessful anEventsRecoder aNewMethodSelector aNewMethod |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -266,7 +262,7 @@ GtPharoMethodCoderExamples >> compileModifiedNewMethodWithCoderWhenSubscribedToS
 	aMethodCoder subscribeToSystem.
 	
 	self assert: aMethodCoder isModified.
-	aNewMethodSelector := aMethodCoder attributeNamed: #fakeMethodName.
+	aNewMethodSelector := (aMethodCoder attributeNamed: #dummyMethod) selector.
 	
 	aMethodCoder
 		when: GtCoderClassRemoved send: #record: to: anEventsRecoder;
@@ -276,11 +272,11 @@ GtPharoMethodCoderExamples >> compileModifiedNewMethodWithCoderWhenSubscribedToS
 
 	wasSuccessful := [ aMethodCoder compile ]
 		ensure: [ aMethodCoder unsubscribeFromSystem ].
-	
-	self assert: wasSuccessful.
-	aNewMethod := (aMethodCoder attributeNamed: #fakeClass) >> aNewMethodSelector.
 
-	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #fakeClass).
+	self assert: wasSuccessful.
+	aNewMethod := (aMethodCoder attributeNamed: #dummyMethod) realClass >> aNewMethodSelector.
+
+	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #dummyMethod) realClass.
 	self assert: aMethodCoder selector equals: aNewMethod selector.
 	self assert: aMethodCoder selector equals: aNewMethodSelector.
 	self assert: aMethodCoder compiledMethod equals: aNewMethod.
@@ -304,7 +300,6 @@ GtPharoMethodCoderExamples >> compileModifiedNewMethodWithCoderWhenSubscribedToS
 { #category : #'examples - compile' }
 GtPharoMethodCoderExamples >> compileRemovedMethodWithCoderWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder aCompileChange aCompilationResult anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -339,7 +334,6 @@ GtPharoMethodCoderExamples >> compileRemovedMethodWithCoderWhenSubscribedToSyste
 { #category : #'examples - compile' }
 GtPharoMethodCoderExamples >> compileRemovedMethodWithoutCoderWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder aCompileChange aCompilationResult anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -348,9 +342,9 @@ GtPharoMethodCoderExamples >> compileRemovedMethodWithoutCoderWhenSubscribedToSy
 	aMethodCoder subscribeToSystem.
 	
 	aCompileChange := aMethodCoder createCompileMethodChange.
-	self assert: aCompileChange changeClass equals: (aMethodCoder attributeNamed: #fakeClass).
-	self assert: aCompileChange selector equals: (aMethodCoder attributeNamed: #fakeMethod) selector.
-	self assert: aCompileChange protocol equals: (aMethodCoder attributeNamed: #fakeProtocol).
+	self assert: aCompileChange changeClass equals: (aMethodCoder attributeNamed: #dummyMethod) realClass.
+	self assert: aCompileChange selector equals: (aMethodCoder attributeNamed: #dummyMethod) selector.
+	self assert: aCompileChange protocol equals: (aMethodCoder attributeNamed: #dummyMethod) protocol.
 	self assert: aCompileChange isMeta not.
 	
 	aMethodCoder
@@ -363,10 +357,10 @@ GtPharoMethodCoderExamples >> compileRemovedMethodWithoutCoderWhenSubscribedToSy
 	
 	self assert: aCompilationResult.
 
-	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #fakeClass).
-	self assert: aMethodCoder selector equals: (aMethodCoder attributeNamed: #fakeMethod) selector.
-	self assert: aMethodCoder compiledMethod equals: (aMethodCoder attributeNamed: #fakeMethod).
-	self assert: aMethodCoder protocol equals: (aMethodCoder attributeNamed: #fakeProtocol).
+	self assert: aMethodCoder behavior equals: (aMethodCoder attributeNamed: #dummyMethod) realClass.
+	self assert: aMethodCoder selector equals: (aMethodCoder attributeNamed: #dummyMethod) selector.
+	self assert: aMethodCoder compiledMethod equals: (aMethodCoder attributeNamed: #dummyMethod) realMethod.
+	self assert: aMethodCoder protocol equals: (aMethodCoder attributeNamed: #dummyMethod) protocol.
 	self assert: aMethodCoder existsInTheSystem.
 
 	self assert: anEventsRecoder numberOfEvents equals: 1.
@@ -609,27 +603,23 @@ GtPharoMethodCoderExamples >> forExampleMethodCoder [
 { #category : #'examples - instance creation' }
 GtPharoMethodCoderExamples >> forKeywordMethodInPackagedClass [
 	<gtExample>
-	<after: #cleanUp>
-	| aPackage aClass aMethod aMethodCoder |
+	| anEnvironment aDummyMethod aMethod aClass aMethodCoder |
 
-	aPackage := self fakeRegisteredPackage.
-	aClass := (self fakeClassesInFakePackage: aPackage) first.
-	aMethod := (self fakeKeywordMethodsInFakeClass: aClass) first.
+	anEnvironment := GtPharoDummyEnvironment withPackages: 2 classes: 2.
+	aDummyMethod := anEnvironment anyDummyKeywordMethod.
 
+	aMethod := aDummyMethod realMethod.
+	aClass := aDummyMethod realClass.
+	
 	aMethodCoder := GtPharoMethodCoder forMethod: aMethod.
-	aMethodCoder attributeNamed: #fakePackage put: aPackage.
-	aMethodCoder attributeNamed: #fakeClass put: aClass.
-	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
-	aMethodCoder attributeNamed: #fakeMethod put: aMethod.
-	aMethodCoder attributeNamed: #fakeMethodName put: aMethod selector.
-	aMethodCoder attributeNamed: #fakeProtocol put: (self fakeCategoryForFakeMethod: aMethod).
-	aMethodCoder attributeNamed: #fakeInstVarNames put: aClass instVarNames.
+	aMethodCoder attributeNamed: #dummyEnvironment put: anEnvironment.
+	aMethodCoder attributeNamed: #dummyMethod put: aDummyMethod.
 
 	self assert: aMethodCoder behavior equals: aClass.
 	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior explicit: aClass).
 	self assert: aMethodCoder selector equals: aMethod selector.
 	self assert: aMethodCoder compiledMethod equals: aMethod.
-	self assert: aMethodCoder protocol equals: (self fakeCategoryForFakeMethod: aMethod).
+	self assert: aMethodCoder protocol equals: aDummyMethod protocol.
 	self assert: aMethodCoder sourceCode class equals: GtCoderCompiledMethodSourceCode.
 	self assert: aMethodCoder sourceCode compiledMethod equals: aMethod.
 
@@ -654,19 +644,17 @@ GtPharoMethodCoderExamples >> forKeywordSelectorMethodCoder [
 { #category : #'examples - instance creation' }
 GtPharoMethodCoderExamples >> forNewMethod [
 	<gtExample>
-	<after: #cleanUp>
-	| aMethodCoder aPackage aClass aMethod |
+	| anEnvironment aDummyMethod aMethodCoder aClass |
+	
+	anEnvironment := GtPharoDummyEnvironment withPackages: 2 classes: 2.
+	aDummyMethod := anEnvironment anyDummyUnaryMethod.
+	aDummyMethod realMethod removeFromSystem.
 
-	aPackage := self fakeRegisteredPackage.
-	aClass := (self fakeClassesInFakePackage: aPackage) first.
-	aMethod := (self fakeMethodsInFakeClass: aClass) first.
-
+	aClass := aDummyMethod realClass.
+	
 	aMethodCoder := GtPharoMethodCoder forNewMethod: aClass.
-	aMethodCoder attributeNamed: #fakePackage put: aPackage.
-	aMethodCoder attributeNamed: #fakeClass put: aClass.
-	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
-	aMethodCoder attributeNamed: #fakeMethodName put: (aMethod selector, 'New').
-	aMethodCoder attributeNamed: #fakeInstVarNames put: aClass instVarNames.
+	aMethodCoder attributeNamed: #dummyEnvironment put: anEnvironment.
+	aMethodCoder attributeNamed: #dummyMethod put: aDummyMethod.
 
 	self assert: aMethodCoder behavior equals: aClass.
 	self assert: aMethodCoder collapsedText asString equals: ''.
@@ -732,27 +720,23 @@ GtPharoMethodCoderExamples >> forThisObjectMethodCoder [
 { #category : #'examples - instance creation' }
 GtPharoMethodCoderExamples >> forUnaryMethodInPackagedClass [
 	<gtExample>
-	<after: #cleanUp>
-	| aPackage aClass aMethod aMethodCoder |
+	| anEnvironment aDummyMethod aMethod aClass aMethodCoder |
 
-	aPackage := self fakeRegisteredPackage.
-	aClass := (self fakeClassesInFakePackage: aPackage) first.
-	aMethod := (self fakeUnaryMethodsInFakeClass: aClass) first.
+	anEnvironment := GtPharoDummyEnvironment withPackages: 2 classes: 2.
+	aDummyMethod := anEnvironment anyDummyUnaryMethod.
 
+	aMethod := aDummyMethod realMethod.
+	aClass := aDummyMethod realClass.
+	
 	aMethodCoder := GtPharoMethodCoder forMethod: aMethod.
-	aMethodCoder attributeNamed: #fakePackage put: aPackage.
-	aMethodCoder attributeNamed: #fakeClass put: aClass.
-	aMethodCoder attributeNamed: #fakeClassName put: aClass name.
-	aMethodCoder attributeNamed: #fakeMethod put: aMethod.
-	aMethodCoder attributeNamed: #fakeMethodName put: aMethod selector.
-	aMethodCoder attributeNamed: #fakeProtocol put: (self fakeCategoryForFakeMethod: aMethod).
-	aMethodCoder attributeNamed: #fakeInstVarNames put: aClass instVarNames.
+	aMethodCoder attributeNamed: #dummyEnvironment put: anEnvironment.
+	aMethodCoder attributeNamed: #dummyMethod put: aDummyMethod.
 
 	self assert: aMethodCoder behavior equals: aClass.
 	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior explicit: aClass).
 	self assert: aMethodCoder selector equals: aMethod selector.
 	self assert: aMethodCoder compiledMethod equals: aMethod.
-	self assert: aMethodCoder protocol equals: (self fakeCategoryForFakeMethod: aMethod).
+	self assert: aMethodCoder protocol equals: aDummyMethod protocol.
 	self assert: aMethodCoder sourceCode class equals: GtCoderCompiledMethodSourceCode.
 	self assert: aMethodCoder sourceCode compiledMethod equals: aMethod.
 
@@ -776,11 +760,10 @@ GtPharoMethodCoderExamples >> methodSourceWithTempAndBlockArgsConflict [
 { #category : #'examples - modification' }
 GtPharoMethodCoderExamples >> modifyBackCompiledMethodWithoutCoderModifiedWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder anOldMethod aNewMethod |
 	
 	aMethodCoder := self compileMethodWithoutCoderModifiedWhenSubscribedToSystem.
-	anOldMethod := aMethodCoder attributeNamed: #fakeMethod.
+	anOldMethod := (aMethodCoder attributeNamed: #dummyMethod) realMethod.
 	aNewMethod := aMethodCoder compiledMethod.
 	
 	self assert: aMethodCoder isModified.
@@ -813,11 +796,10 @@ GtPharoMethodCoderExamples >> modifyBackCompiledMethodWithoutCoderModifiedWhenSu
 { #category : #'examples - modification' }
 GtPharoMethodCoderExamples >> modifyNewMethod [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder aMethodName anEventsRecoder |
 
 	aMethodCoder := self forNewMethod.
-	aMethodName := aMethodCoder attributeNamed: #fakeMethodName.
+	aMethodName := (aMethodCoder attributeNamed: #dummyMethod) selector.
 	
 	anEventsRecoder := self eventsRecorder.
 
@@ -847,7 +829,7 @@ GtPharoMethodCoderExamples >> modifyNewMethod [
 	^ aMethodCoder
 ]
 
-{ #category : #'examples - api' }
+{ #category : #'examples - ast' }
 GtPharoMethodCoderExamples >> nodeAtCursor [
 	<gtExample>
 	| coder node |
@@ -903,7 +885,6 @@ GtPharoMethodCoderExamples >> printStringReference [
 { #category : #'examples - remove class' }
 GtPharoMethodCoderExamples >> removeClassWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethod aMethodCoder anEventsRecoder |
 
 	anEventsRecoder := self eventsRecorder.
@@ -919,7 +900,7 @@ GtPharoMethodCoderExamples >> removeClassWhenSubscribedToSystem [
 		aMethodCoder unsubscribeFromSystem ].
 
 	self assert: aMethodCoder behavior equals: UndefinedObject.
-	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior named: (aMethodCoder attributeNamed: #fakeClassName)).
+	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior named: (aMethodCoder attributeNamed: #dummyMethod) className).
 	self assert: aMethodCoder selector equals: aMethod selector.
 	self assert: aMethodCoder compiledMethod equals: nil.
 	self assert: aMethodCoder existsInTheSystem not.
@@ -934,7 +915,6 @@ GtPharoMethodCoderExamples >> removeClassWhenSubscribedToSystem [
 { #category : #'examples - remove method' }
 GtPharoMethodCoderExamples >> removeMethodWithCoderWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder anEventsRecoder |
 
 	anEventsRecoder := self eventsRecorder.
@@ -967,7 +947,6 @@ GtPharoMethodCoderExamples >> removeMethodWithCoderWhenSubscribedToSystem [
 { #category : #'examples - remove method' }
 GtPharoMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethod aMethodCoder anEventsRecoder |
 
 	anEventsRecoder := self eventsRecorder.
@@ -985,9 +964,9 @@ GtPharoMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
 	"when the method is removed not via coder's api we do not reset the state of the coder,
 	allowing users to maybe re-install the method"
 	self assert: aMethodCoder behavior equals: aMethod methodClass.
-	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior explicit: (aMethodCoder attributeNamed: #fakeClass)).
+	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior explicit: (aMethodCoder attributeNamed: #dummyMethod) realClass).
 	self assert: aMethodCoder selector equals: aMethod selector.
-	self assert: aMethodCoder protocol equals: (aMethodCoder attributeNamed: #fakeProtocol).
+	self assert: aMethodCoder protocol equals: (aMethodCoder attributeNamed: #dummyMethod) protocol.
 	self assert: aMethodCoder compiledMethod equals: nil.
 	self assert: aMethodCoder existsInTheSystem not.
 
@@ -1001,7 +980,6 @@ GtPharoMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
 { #category : #'examples - remove package' }
 GtPharoMethodCoderExamples >> removePackageWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder aMethod aPackage anEventsRecoder |
 
 	anEventsRecoder := self eventsRecorder.
@@ -1018,7 +996,7 @@ GtPharoMethodCoderExamples >> removePackageWhenSubscribedToSystem [
 		aMethodCoder unsubscribeFromSystem ].
 
 	self assert: aMethodCoder behavior equals: UndefinedObject.
-	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior named: (aMethodCoder attributeNamed: #fakeClassName)).
+	self assert: aMethodCoder methodBehavior equals: (GtMethodCoderBehavior named: (aMethodCoder attributeNamed: #dummyMethod) className).
 	self assert: aMethodCoder selector equals: aMethod selector.
 	self assert: aMethodCoder compiledMethod equals: nil.
 	self assert: aMethodCoder existsInTheSystem not.
@@ -1057,7 +1035,6 @@ GtPharoMethodCoderExamples >> sumMethod [
 { #category : #'examples - validate syntax' }
 GtPharoMethodCoderExamples >> validateSyntaxTempArgAndBlockArgsConflict [
 	<gtExample>
-	<after: #cleanUp>
 	| aMethodCoder anEventsRecoder isSyntaxValid |
 
 	anEventsRecoder := self eventsRecorder.

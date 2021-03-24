@@ -1,9 +1,9 @@
 Class {
 	#name : #GtPharoMethodCoderByScripterExamples,
-	#superclass : #GtCoderModelExamples,
+	#superclass : #Object,
 	#traits : 'TCoderByScripterExamples',
 	#classTraits : 'TCoderByScripterExamples classTrait',
-	#category : #'GToolkit-Coder-Examples-Pharo'
+	#category : #'GToolkit-Coder-Pharo-Examples-Coders'
 }
 
 { #category : #'examples - basic' }
@@ -642,7 +642,7 @@ GtPharoMethodCoderByScripterExamples >> expandFromUI: aScripter method: aMethod 
 
 { #category : #utilities }
 GtPharoMethodCoderByScripterExamples >> extractedUnaryMethodNameFor: aMethodCoder [
-	^ 'sub', (aMethodCoder attributeNamed: #fakeMethodName) capitalized
+	^ 'sub', (aMethodCoder attributeNamed: #dummyMethod) selector capitalized
 ]
 
 { #category : #'examples - fixit class' }
@@ -653,7 +653,7 @@ GtPharoMethodCoderByScripterExamples >> fixitCreateClass_01_setup [
 	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryMethodInPackagedClass ].
 	aScripter do
 		label: 'type in a class that does not exist';
-		action: [ :aCoder | aCoder appendString: (String cr, String tab, '{1}ThatDoesNotExist' format: { (aCoder attributeNamed:  #fakeClassName) }) ];
+		action: [ :aCoder | aCoder appendString: (String cr, String tab, '{1}New' format: { (aCoder attributeNamed: #dummyMethod) className }) ];
 		onModel.
 		
 	aScripter wait forEmptySpaceTaskQueue.
@@ -770,7 +770,7 @@ GtPharoMethodCoderByScripterExamples >> forKeywordRename_02_shortcut [
 
 	aScripter check
 		label: 'Check rename editor all selected';
-		value: [ :anEditor | anEditor editor selectedText asString ] equals: [ aScripter model attributeNamed: #fakeMethodName ];
+		value: [ :anEditor | anEditor editor selectedText asString ] equals: [ (aScripter model attributeNamed: #dummyMethod) selector ];
 		id: GtSourceCoderEditorId;
 		onBreadthFirstChildOfClass: GtRenameEditor.
 
@@ -793,7 +793,7 @@ GtPharoMethodCoderByScripterExamples >> forKeywordRename_03_move_cursor [
 	
 	aScripter check
 		label: 'Check cursor position';
-		value: [ :anEditor | anEditor editor cursors positions ] equals: [ { (aScripter model attributeNamed: #fakeMethodName) size - 1 } ];
+		value: [ :anEditor | anEditor editor cursors positions ] equals: [ { (aScripter model attributeNamed: #dummyMethod) selector size - 1 } ];
 		id: GtSourceCoderEditorId;
 		onBreadthFirstChildOfClass: GtRenameEditor.
 
@@ -824,7 +824,7 @@ GtPharoMethodCoderByScripterExamples >> forKeywordRename_04_type [
 
 	aScripter check
 		label: 'Check text';
-		value: [ :anEditor | anEditor text asString ] equals: [ (aScripter model attributeNamed: #fakeMethodName) allButLast, 'New:' ];
+		value: [ :anEditor | anEditor text asString ] equals: [ (aScripter model attributeNamed: #dummyMethod) selector allButLast, 'New:' ];
 		id: GtSourceCoderEditorId;
 		onBreadthFirstChildOfClass: GtRenameEditor.
 
@@ -889,7 +889,7 @@ GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_01_setup [
 		action: [ :aCoder | aCoder appendString:
 (': anObject
 	{1} := anObject.
-	{1} := {1} + 42.' format: { (aCoder attributeNamed:  #fakeInstVarNames) first })
+	{1} := {1} + 42.' format: { (aCoder attributeNamed: #dummyMethod) anyInstVarName })
 		];
 		onModel.
 
@@ -922,7 +922,7 @@ GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_02_select [
 	aScripter check
 		label: 'Check selected text';
 		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ]
-			equals: [ '{1} := {1} + 42' format: { (aScripter model attributeNamed:  #fakeInstVarNames) first } ];
+			equals: [ '{1} := {1} + 42' format: { (aScripter model attributeNamed:  #dummyMethod) anyInstVarName } ];
 		onChildNamed: GtPharoSourceCoder sourceEditorName.
 
 	^ aScripter syncContinue
@@ -980,8 +980,8 @@ GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_05_click_extract_meth
 ('{1}: anObject
 	{2} := anObject.
 	self _' format: {
-		aCoder attributeNamed: #fakeMethodName.
-		(aCoder attributeNamed:  #fakeInstVarNames) first
+		(aCoder attributeNamed: #dummyMethod) selector.
+		(aCoder attributeNamed:  #dummyMethod) anyInstVarName
 	}) ];
 		onModel.
 		
@@ -1046,7 +1046,7 @@ GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_06_type_method_name [
 
 	aScripter := self forUnaryExtraction_05_click_extract_method.
 
-	aScripter type: 'sub', (aScripter model attributeNamed: #fakeMethodName) capitalized.
+	aScripter type: (self extractedUnaryMethodNameFor: aScripter model).
 	
 	aScripter wait forEmptySpaceTaskQueue.
 	
@@ -1079,8 +1079,8 @@ GtPharoMethodCoderByScripterExamples >> forUnaryExtraction_07_01_accept_with_ent
 ('{1}: anObject
 	{2} := anObject.
 	self {3}' format: {
-		aCoder attributeNamed: #fakeMethodName.
-		(aCoder attributeNamed:  #fakeInstVarNames) first.
+		(aCoder attributeNamed: #dummyMethod) selector.
+		(aCoder attributeNamed:  #dummyMethod) anyInstVarName.
 		self extractedUnaryMethodNameFor: aCoder
 	}) ];
 		onModel.
@@ -1214,7 +1214,7 @@ GtPharoMethodCoderByScripterExamples >> forUnaryRename_02_shortcut [
 
 	aScripter check
 		label: 'Check rename editor all selected';
-		value: [ :anEditor | anEditor editor selectedText asString ] equals: [ aScripter model attributeNamed: #fakeMethodName ];
+		value: [ :anEditor | anEditor editor selectedText asString ] equals: [ (aScripter model attributeNamed: #dummyMethod) selector ];
 		id: GtSourceCoderEditorId;
 		onBreadthFirstChildOfClass: GtRenameEditor.
 

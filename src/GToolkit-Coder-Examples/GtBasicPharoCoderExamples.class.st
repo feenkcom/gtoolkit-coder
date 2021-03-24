@@ -1,11 +1,11 @@
 Class {
-	#name : #GtCoderModelExamples,
+	#name : #GtBasicPharoCoderExamples,
 	#superclass : #Object,
 	#category : #'GToolkit-Coder-Examples-Coders'
 }
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> addFakeClassesToPackage: aPackage [
+GtBasicPharoCoderExamples >> addFakeClassesToPackage: aPackage [
 	self fakeClassNames do: [ :eachClassName |
 		| aNewClass |
 		aNewClass := Object subclass: eachClassName
@@ -23,7 +23,7 @@ GtCoderModelExamples >> addFakeClassesToPackage: aPackage [
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> cleanUp [
+GtBasicPharoCoderExamples >> cleanUp [
 	EpMonitor disableDuring: [
 		self fakeClassNames do: [ :eachClassName |
 			self class environment
@@ -40,32 +40,32 @@ GtCoderModelExamples >> cleanUp [
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> eventsRecorder [
+GtBasicPharoCoderExamples >> eventsRecorder [
 	^ GtCoderExamplesEventsRecorder new
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeCategoryForFakeMethod: aCompiledMethod [
+GtBasicPharoCoderExamples >> fakeCategoryForFakeMethod: aCompiledMethod [
 	^ 'api - ', aCompiledMethod selector
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeCategoryForFakeMethodName: aMethodName [
+GtBasicPharoCoderExamples >> fakeCategoryForFakeMethodName: aMethodName [
 	^ 'api - ', aMethodName
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeClassCount [
+GtBasicPharoCoderExamples >> fakeClassCount [
 	^ 2
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeClassNamed: aFakeClassName [
+GtBasicPharoCoderExamples >> fakeClassNamed: aFakeClassName [
 	^ self class environment at: aFakeClassName
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeClassNames [
+GtBasicPharoCoderExamples >> fakeClassNames [
 	<script: 'self new fakeClassNames inspect'>
 	| aPackageName |
 	
@@ -75,22 +75,22 @@ GtCoderModelExamples >> fakeClassNames [
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeClassNamesForPackage: aPackage [
+GtBasicPharoCoderExamples >> fakeClassNamesForPackage: aPackage [
 	^ self fakeClassNamesForPackageName: aPackage name
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeClassNamesForPackageName: aPackageName [	
+GtBasicPharoCoderExamples >> fakeClassNamesForPackageName: aPackageName [	
 	^ (1 to: self fakeClassCount) collect: [ :index | (aPackageName asCamelCase asValidSelector capitalized, 'Class', index asString) asSymbol ]
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeClassesInFakePackage: aPackage [
+GtBasicPharoCoderExamples >> fakeClassesInFakePackage: aPackage [
 	^ (self fakeClassNamesForPackage: aPackage) collect: [ :eachClassName | self fakeClassNamed: eachClassName ]
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeClassesInSystem [
+GtBasicPharoCoderExamples >> fakeClassesInSystem [
 	^ self fakeClassNames select: [ :eachClassName |
 		self class environment
 			at: eachClassName
@@ -99,58 +99,58 @@ GtCoderModelExamples >> fakeClassesInSystem [
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeClassesInSystemCount [
+GtBasicPharoCoderExamples >> fakeClassesInSystemCount [
 	^ self fakeClassesInSystem size
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeInstVarCount [
+GtBasicPharoCoderExamples >> fakeInstVarCount [
 	^ 2
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeInstVarNames [
+GtBasicPharoCoderExamples >> fakeInstVarNames [
 	<script: 'self new fakeInstVarNames inspect'>
 	
 	^ (1 to: self fakeInstVarCount) collect: [ :index | ('instVar', index asString) asSymbol ]
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeKeywordMethodNames [
+GtBasicPharoCoderExamples >> fakeKeywordMethodNames [
 	<script: 'self new fakeKeywordMethodNames inspect'>
 	
 	^ (1 to: self fakeMethodCount) collect: [ :index | (#method, index asString, ':') asSymbol ]
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeKeywordMethodsInFakeClass: aFakeClass [
+GtBasicPharoCoderExamples >> fakeKeywordMethodsInFakeClass: aFakeClass [
 	^ self fakeKeywordMethodNames collect: [ :each | aFakeClass >> each ]
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeMethodCount [
+GtBasicPharoCoderExamples >> fakeMethodCount [
 	^ 2
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeMethodNames [
+GtBasicPharoCoderExamples >> fakeMethodNames [
 	<script: 'self new fakeMethodNames inspect'>
 	
 	^ self fakeUnaryMethodNames, self fakeKeywordMethodNames
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeMethodsInFakeClass: aFakeClass [
+GtBasicPharoCoderExamples >> fakeMethodsInFakeClass: aFakeClass [
 	^ self fakeMethodNames collect: [ :each | aFakeClass >> each ]
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeMethodsInFakeClass: aFakeClass inFakePackage: aPackage [
+GtBasicPharoCoderExamples >> fakeMethodsInFakeClass: aFakeClass inFakePackage: aPackage [
 	^ self fakeMethodNames collect: [ :each | aFakeClass >> each ]
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeMethodsInFakeClassNamed: aFakeClassName inFakePackage: aPackage [
+GtBasicPharoCoderExamples >> fakeMethodsInFakeClassNamed: aFakeClassName inFakePackage: aPackage [
 	| aClass |
 
 	aClass := self fakeClassNamed: aFakeClassName.
@@ -158,12 +158,12 @@ GtCoderModelExamples >> fakeMethodsInFakeClassNamed: aFakeClassName inFakePackag
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakePackageName [
+GtBasicPharoCoderExamples >> fakePackageName [
 	^ 'PackageCoderTemporary' asSymbol
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeRegisteredPackage [
+GtBasicPharoCoderExamples >> fakeRegisteredPackage [
 	| aFakePackageName aPackage |
 	
 	EpMonitor disableDuring: [
@@ -179,19 +179,19 @@ GtCoderModelExamples >> fakeRegisteredPackage [
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeUnaryMethodNames [
+GtBasicPharoCoderExamples >> fakeUnaryMethodNames [
 	<script: 'self new fakeUnaryMethodNames inspect'>
 	
 	^ (1 to: self fakeMethodCount) collect: [ :index | (#method, index asString) asSymbol ]
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeUnaryMethodsInFakeClass: aFakeClass [
+GtBasicPharoCoderExamples >> fakeUnaryMethodsInFakeClass: aFakeClass [
 	^ self fakeUnaryMethodNames collect: [ :each | aFakeClass >> each ]
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> fakeUnregisteredPackage [
+GtBasicPharoCoderExamples >> fakeUnregisteredPackage [
 	| aFakePackageName aPackage |
 
 	self cleanUp.
@@ -206,6 +206,6 @@ GtCoderModelExamples >> fakeUnregisteredPackage [
 ]
 
 { #category : #'private - set up' }
-GtCoderModelExamples >> renamedFakePackageName [
+GtBasicPharoCoderExamples >> renamedFakePackageName [
 	^ (self fakePackageName, 'Renamed') asSymbol
 ]

@@ -1,6 +1,6 @@
 Class {
 	#name : #GtBehaviorCoderByScripterExamples,
-	#superclass : #GtCoderModelExamples,
+	#superclass : #GtBasicPharoCoderExamples,
 	#traits : 'TCoderByScripterExamples',
 	#classTraits : 'TCoderByScripterExamples classTrait',
 	#category : #'GToolkit-Coder-Examples-By scripter'
