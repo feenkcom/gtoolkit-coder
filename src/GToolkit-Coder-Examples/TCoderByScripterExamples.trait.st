@@ -3,6 +3,31 @@ Trait {
 	#category : #'GToolkit-Coder-Examples-By scripter'
 }
 
+{ #category : #utilities }
+TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id: aBlElementId [
+
+	aScripterOrStep secondaryClick
+		label: 'Open context menu';
+		onChildNamed: GtSourceCoderEditorId.
+
+	aScripterOrStep wait forEmptySpaceTaskQueue.
+	
+	aScripterOrStep mouseMoveOver
+		label: 'Hover ', aBlElementId asSymbol;
+		onSpaceRoot;
+		id: aBlElementId.
+
+	aScripterOrStep wait forEmptySpaceTaskQueue.
+	
+	aScripterOrStep click
+		label: 'Click ', aBlElementId asSymbol;
+		onSpaceRoot;
+		onChildNamed: aBlElementId.
+
+	aScripterOrStep wait forEmptySpaceTaskQueue.
+	aScripterOrStep syncContinue
+]
+
 { #category : #'examples - scripter' }
 TCoderByScripterExamples >> scripter [
 	| scripter |
@@ -29,4 +54,24 @@ TCoderByScripterExamples >> scripterForBlock: aBlock [
 		
 	aScripter wait forEmptySpaceTaskQueue.
 	^ aScripter syncContinue
+]
+
+{ #category : #utilities }
+TCoderByScripterExamples >> selectTextFor: aScripterOrStep from: aStartPosition to: aToPosition andCheck: aSelectedString [
+	aScripterOrStep do
+		label: 'Select part of the method';
+		action: [ :aSourceEditor |
+			aSourceEditor selecter
+				from: aStartPosition to: aToPosition;
+				select ];
+		onChildNamed: GtSourceCoderEditorId.
+
+	aScripterOrStep wait forEmptySpaceTaskQueue.
+	
+	aScripterOrStep check
+		label: 'Check selected text';
+		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ] equals: aSelectedString;
+		onChildNamed: GtSourceCoderEditorId.
+		
+	aScripterOrStep syncContinue
 ]

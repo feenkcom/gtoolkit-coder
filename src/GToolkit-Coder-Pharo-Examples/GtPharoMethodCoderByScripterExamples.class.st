@@ -557,7 +557,7 @@ GtPharoMethodCoderByScripterExamples >> collapseFromUI: aScripter method: aMetho
 	^ aScripter
 ]
 
-{ #category : #'examples - copy/cut/paste' }
+{ #category : #'examples - context menu' }
 GtPharoMethodCoderByScripterExamples >> contextMenuCopy [
 	<gtExample>
 	| aScripter |
@@ -572,7 +572,7 @@ GtPharoMethodCoderByScripterExamples >> contextMenuCopy [
 	^ aScripter
 ]
 
-{ #category : #'examples - copy/cut/paste' }
+{ #category : #'examples - context menu' }
 GtPharoMethodCoderByScripterExamples >> contextMenuCut [
 	<gtExample>
 	| aScripter |
@@ -590,7 +590,7 @@ GtPharoMethodCoderByScripterExamples >> contextMenuCut [
 	^ aScripter
 ]
 
-{ #category : #'examples - copy/cut/paste' }
+{ #category : #'examples - context menu' }
 GtPharoMethodCoderByScripterExamples >> contextMenuPaste [
 	<gtExample>
 	| aScripter |
@@ -1429,31 +1429,6 @@ GtPharoMethodCoderByScripterExamples >> openAndClickFixItActionFor: aScripter id
 	self clickFixItActionFor: aScripter id: aBlElementId
 ]
 
-{ #category : #utilities }
-GtPharoMethodCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id: aBlElementId [
-
-	aScripterOrStep secondaryClick
-		label: 'Open context menu';
-		onChildNamed: GtSourceCoderEditorId.
-
-	aScripterOrStep wait forEmptySpaceTaskQueue.
-	
-	aScripterOrStep mouseMoveOver
-		label: 'Hover ', aBlElementId asSymbol;
-		onSpaceRoot;
-		id: aBlElementId.
-
-	aScripterOrStep wait forEmptySpaceTaskQueue.
-	
-	aScripterOrStep click
-		label: 'Click ', aBlElementId asSymbol;
-		onSpaceRoot;
-		onChildNamed: aBlElementId.
-
-	aScripterOrStep wait forEmptySpaceTaskQueue.
-	aScripterOrStep syncContinue
-]
-
 { #category : #'examples - pattern highlighter' }
 GtPharoMethodCoderByScripterExamples >> patternHighlighterMethod [
 	<gtExample>
@@ -1657,24 +1632,4 @@ GtPharoMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExample
 		self checkFor: aStep textExampleStatusAttributeAt: 1. ].
 	aScripter syncContinue.
 	^ aScripter
-]
-
-{ #category : #utilities }
-GtPharoMethodCoderByScripterExamples >> selectTextFor: aScripterOrStep from: aStartPosition to: aToPosition andCheck: aSelectedString [
-	aScripterOrStep do
-		label: 'Select part of the method';
-		action: [ :aSourceEditor |
-			aSourceEditor selecter
-				from: aStartPosition to: aToPosition;
-				select ];
-		onChildNamed: GtSourceCoderEditorId.
-
-	aScripterOrStep wait forEmptySpaceTaskQueue.
-	
-	aScripterOrStep check
-		label: 'Check selected text';
-		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ] equals: aSelectedString;
-		onChildNamed: GtSourceCoderEditorId.
-		
-	aScripterOrStep syncContinue
 ]
