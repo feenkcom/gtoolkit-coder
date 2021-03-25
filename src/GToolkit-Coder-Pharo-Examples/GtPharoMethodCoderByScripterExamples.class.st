@@ -741,7 +741,7 @@ GtPharoMethodCoderByScripterExamples >> fixitCreateClass_01_setup [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod ].
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod  ].
 	aScripter do
 		label: 'type in a class that does not exist';
 		action: [ :aCoder | aCoder appendString: (String cr, String tab, '{1}New' format: { (aCoder attributeNamed: #dummyMethod) className }) ];
@@ -798,14 +798,14 @@ GtPharoMethodCoderByScripterExamples >> fixitCreateInstVar_01_setup [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod ].
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod asCoderViewModel ].
 	aScripter do
 		label: 'type in a variable that does not exist';
-		action: [ :aCoder | aCoder appendString: (String cr, String tab, 'instance') ];
+		action: [ :aCoderViewModel | aCoderViewModel coderModel appendString: (String cr, String tab, 'instance') ];
 		onModel.
-		
 	aScripter wait forEmptySpaceTaskQueue.
 	
+	self selectTextFor: aScripter from: 9 to: 17 andCheck: 'instance'.	
 	self clickFixItFor: aScripter.
 	
 	^ aScripter syncContinue
@@ -819,30 +819,35 @@ GtPharoMethodCoderByScripterExamples >> fixitCreateInstVar_02_add [
 	aScripter := self fixitCreateInstVar_01_setup.
 	
 	self clickFixItActionFor: aScripter id: (GtDefineInstanceVariableFixItActionElementId indexed: 1).
-	
+
 	aScripter check
-		value: [ :aCoder | aCoder currentSourceString ]
-		equals: [ :aCoder |
+		value: [ :aCoderViewModel | aCoderViewModel coderModel currentSourceString ]
+		equals: [ :aCoderViewModel |
 			String streamContents: [ :aStream |
 				aStream
-					nextPutAll: (aCoder attributeNamed: #dummyMethod) selector; cr;
+					nextPutAll: (aCoderViewModel coderModel attributeNamed: #dummyMethod) selector; cr;
 					tab; nextPutAll: 'instance' ] ];
 		onModel.
 
 	aScripter check
 		label: 'Make sure the instance variable was created';
-		satisfies: [ :aCoder | (aCoder attributeNamed: #dummyMethod) realClass hasSlotNamed: #instance ];
+		satisfies: [ :aCoderViewModel | (aCoderViewModel coderModel attributeNamed: #dummyMethod) realClass hasSlotNamed: #instance ];
 		onModel.
 
 	aScripter check
 		label: 'Make sure the method still mofied';
-		satisfies: [ :aCoder | aCoder isModified ];
+		satisfies: [ :aCoderViewModel | aCoderViewModel coderModel isModified ];
+		onModel.
+
+	aScripter check
+		label: 'Make sure the method is not saved/recompiled after adding a temporary variable';
+		value: [ :aCoderViewModel | (aCoderViewModel coderModel attributeNamed: #dummyMethod) systemMethod sourceCode ]
+		equals: [ :aCoderViewModel | (aCoderViewModel coderModel attributeNamed: #dummyMethod) realMethod sourceCode ];
 		onModel.
 		
 	aScripter check
-		label: 'Make sure the method is not saved/recompiled after adding a temporary variable';
-		value: [ :aCoder | (aCoder attributeNamed: #dummyMethod) systemMethod sourceCode ]
-		equals: [ :aCoder | (aCoder attributeNamed: #dummyMethod) realMethod sourceCode ];
+		label: 'Make sure the text was deselected';
+		satisfies: [ :aCoderViewModel | aCoderViewModel hasSelection not ];
 		onModel.
 
 	^ aScripter syncContinue
@@ -853,14 +858,14 @@ GtPharoMethodCoderByScripterExamples >> fixitCreateTempVar_01_setup [
 	<gtExample>
 	| aScripter |
 
-	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod ].
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod asCoderViewModel ].
 	aScripter do
 		label: 'type in a variable that does not exist';
-		action: [ :aCoder | aCoder appendString: (String cr, String tab, 'temporary') ];
+		action: [ :aCoderViewModel | aCoderViewModel coderModel appendString: (String cr, String tab, 'temporary') ];
 		onModel.
-		
 	aScripter wait forEmptySpaceTaskQueue.
-	
+
+	self selectTextFor: aScripter from: 9 to: 18 andCheck: 'temporary'.	
 	self clickFixItFor: aScripter.
 	
 	^ aScripter syncContinue
@@ -876,24 +881,29 @@ GtPharoMethodCoderByScripterExamples >> fixitCreateTempVar_02_add [
 	self clickFixItActionFor: aScripter id: (GtDefineTemporaryVariableFixItActionElementId indexed: 1).
 	
 	aScripter check
-		value: [ :aCoder | aCoder currentSourceString ]
-		equals: [ :aCoder |
+		value: [ :aCoderViewModel | aCoderViewModel coderModel currentSourceString ]
+		equals: [ :aCoderViewModel |
 			String streamContents: [ :aStream |
 				aStream
-					nextPutAll: (aCoder attributeNamed: #dummyMethod) selector; cr;
+					nextPutAll: (aCoderViewModel coderModel attributeNamed: #dummyMethod) selector; cr;
 					tab; nextPutAll: '| temporary |'; cr;
 					tab; nextPutAll: 'temporary' ] ];
 		onModel.
 		
 	aScripter check
 		label: 'Make sure the method still mofied';
-		satisfies: [ :aCoder | aCoder isModified ];
+		satisfies: [ :aCoderViewModel | aCoderViewModel coderModel isModified ];
 		onModel.
 		
 	aScripter check
 		label: 'Make sure the method is not saved/recompiled after adding a temporary variable';
-		value: [ :aCoder | (aCoder attributeNamed: #dummyMethod) systemMethod sourceCode ]
-		equals: [ :aCoder | (aCoder attributeNamed: #dummyMethod) realMethod sourceCode ];
+		value: [ :aCoderViewModel | (aCoderViewModel coderModel attributeNamed: #dummyMethod) systemMethod sourceCode ]
+		equals: [ :aCoderViewModel | (aCoderViewModel coderModel attributeNamed: #dummyMethod) realMethod sourceCode ];
+		onModel.
+		
+	aScripter check
+		label: 'Make sure the text was deselected';
+		satisfies: [ :aCoderViewModel | aCoderViewModel hasSelection not ];
 		onModel.
 
 	^ aScripter syncContinue

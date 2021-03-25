@@ -315,6 +315,11 @@ GtTextualCoderViewModel >> gtInfoFor: aView [
 		updateWhen: GtTextualCoderViewModelAnnouncement in: self announcer
 ]
 
+{ #category : #'api - selection' }
+GtTextualCoderViewModel >> hasSelection [
+	^ self selection isNotEmpty
+]
+
 { #category : #initialization }
 GtTextualCoderViewModel >> initialize [
 	super initialize.
@@ -400,6 +405,11 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 { #category : #'api - selection' }
 GtTextualCoderViewModel >> select: aFromCursorIndex to: aToCursorIndex [
 	self selection: (self selection copy select: aFromCursorIndex to: aToCursorIndex)
+]
+
+{ #category : #'api - selection' }
+GtTextualCoderViewModel >> selectNone [
+	self selection: BlCompositeSelection new
 ]
 
 { #category : #'api - selection' }
