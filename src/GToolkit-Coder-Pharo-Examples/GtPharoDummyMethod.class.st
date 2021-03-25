@@ -78,3 +78,8 @@ GtPharoDummyMethod >> selector [
 GtPharoDummyMethod >> selector: anObject [
 	selector := anObject
 ]
+
+{ #category : #accessing }
+GtPharoDummyMethod >> systemMethod [
+	^ self realClass >> self selector
+]

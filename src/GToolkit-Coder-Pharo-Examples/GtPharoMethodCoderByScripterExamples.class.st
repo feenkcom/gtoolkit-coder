@@ -484,6 +484,43 @@ GtPharoMethodCoderByScripterExamples >> checkFor: aScripterOrStep textExpandAttr
 	^ aScripterOrStep
 ]
 
+{ #category : #'examples - fixit class' }
+GtPharoMethodCoderByScripterExamples >> clickFixItActionFor: aScripter id: aBlElementId [
+	"An utility method to open and click on the fixIt action with id.
+	I assume that the fixit menu already exists"
+	
+	aScripter click
+		onSpaceRoot;
+		id: aBlElementId.
+
+	aScripter wait forEmptySpaceTaskQueue.
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - fixit class' }
+GtPharoMethodCoderByScripterExamples >> clickFixItFor: aScripter [
+	"An utility method to click on the fixIt button to open a context menu"
+
+	"there is no context menu before clicking on the fixit button"
+	aScripter check
+		onSpaceRoot;
+		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
+		notExists.
+	
+	aScripter click
+		onBreadthFirstChildOfClass: GtFixItButton.
+
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	"now it appeared"
+	aScripter check
+		onSpaceRoot;
+		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
+		exists.
+
+	^ aScripter syncContinue
+]
+
 { #category : #utilities }
 GtPharoMethodCoderByScripterExamples >> coderOnMethod: aMethod [
 	<gtExample>
@@ -720,24 +757,7 @@ GtPharoMethodCoderByScripterExamples >> fixitCreateClass_02_click_fixit [
 	| aScripter |
 
 	aScripter := self fixitCreateClass_01_setup.
-	
-	"there is no context menu before clicking on the fixit button"
-	aScripter check
-		onSpaceRoot;
-		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
-		notExists.
-	
-	aScripter click
-		onBreadthFirstChildOfClass: GtFixItButton.
-
-	aScripter wait forEmptySpaceTaskQueue.
-	
-	"now it appeared"
-	aScripter check
-		onSpaceRoot;
-		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
-		exists.
-
+	self clickFixItFor: aScripter.
 	^ aScripter syncContinue
 ]
 
@@ -769,6 +789,112 @@ GtPharoMethodCoderByScripterExamples >> fixitCreateClass_03_click_define_class [
 		onSpaceRoot;
 		onBreadthFirstChildOfClass: GtCoderContextMenuContent;
 		notExists.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - fixit class' }
+GtPharoMethodCoderByScripterExamples >> fixitCreateInstVar_01_setup [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod ].
+	aScripter do
+		label: 'type in a variable that does not exist';
+		action: [ :aCoder | aCoder appendString: (String cr, String tab, 'instance') ];
+		onModel.
+		
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	self clickFixItFor: aScripter.
+	
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - fixit class' }
+GtPharoMethodCoderByScripterExamples >> fixitCreateInstVar_02_add [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self fixitCreateInstVar_01_setup.
+	
+	self clickFixItActionFor: aScripter id: (GtDefineInstanceVariableFixItActionElementId indexed: 1).
+	
+	aScripter check
+		value: [ :aCoder | aCoder currentSourceString ]
+		equals: [ :aCoder |
+			String streamContents: [ :aStream |
+				aStream
+					nextPutAll: (aCoder attributeNamed: #dummyMethod) selector; cr;
+					tab; nextPutAll: 'instance' ] ];
+		onModel.
+
+	aScripter check
+		label: 'Make sure the instance variable was created';
+		satisfies: [ :aCoder | (aCoder attributeNamed: #dummyMethod) realClass hasSlotNamed: #instance ];
+		onModel.
+
+	aScripter check
+		label: 'Make sure the method still mofied';
+		satisfies: [ :aCoder | aCoder isModified ];
+		onModel.
+		
+	aScripter check
+		label: 'Make sure the method is not saved/recompiled after adding a temporary variable';
+		value: [ :aCoder | (aCoder attributeNamed: #dummyMethod) systemMethod sourceCode ]
+		equals: [ :aCoder | (aCoder attributeNamed: #dummyMethod) realMethod sourceCode ];
+		onModel.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - fixit class' }
+GtPharoMethodCoderByScripterExamples >> fixitCreateTempVar_01_setup [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new forUnaryInstanceMethod ].
+	aScripter do
+		label: 'type in a variable that does not exist';
+		action: [ :aCoder | aCoder appendString: (String cr, String tab, 'temporary') ];
+		onModel.
+		
+	aScripter wait forEmptySpaceTaskQueue.
+	
+	self clickFixItFor: aScripter.
+	
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - fixit class' }
+GtPharoMethodCoderByScripterExamples >> fixitCreateTempVar_02_add [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self fixitCreateTempVar_01_setup.
+	
+	self clickFixItActionFor: aScripter id: (GtDefineTemporaryVariableFixItActionElementId indexed: 1).
+	
+	aScripter check
+		value: [ :aCoder | aCoder currentSourceString ]
+		equals: [ :aCoder |
+			String streamContents: [ :aStream |
+				aStream
+					nextPutAll: (aCoder attributeNamed: #dummyMethod) selector; cr;
+					tab; nextPutAll: '| temporary |'; cr;
+					tab; nextPutAll: 'temporary' ] ];
+		onModel.
+		
+	aScripter check
+		label: 'Make sure the method still mofied';
+		satisfies: [ :aCoder | aCoder isModified ];
+		onModel.
+		
+	aScripter check
+		label: 'Make sure the method is not saved/recompiled after adding a temporary variable';
+		value: [ :aCoder | (aCoder attributeNamed: #dummyMethod) systemMethod sourceCode ]
+		equals: [ :aCoder | (aCoder attributeNamed: #dummyMethod) realMethod sourceCode ];
+		onModel.
 
 	^ aScripter syncContinue
 ]
@@ -1282,6 +1408,15 @@ GtPharoMethodCoderByScripterExamples >> methodCoder [
 	aScripter := self scripter.
 	aScripter set model: [ self basicMethodCoder ].
 	^ aScripter
+]
+
+{ #category : #'examples - fixit class' }
+GtPharoMethodCoderByScripterExamples >> openAndClickFixItActionFor: aScripter id: aBlElementId [
+	"An utility method to open and click on the fixIt action with id.
+	I assume that the fixit menu does not already exists"
+	
+	self clickFixItFor: aScripter.
+	self clickFixItActionFor: aScripter id: aBlElementId
 ]
 
 { #category : #utilities }
