@@ -158,6 +158,9 @@ GtTextualCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
 	anAnnouncement source == self
 		ifTrue: [ ^ self ].
 		
+	anAnnouncement source == self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
 	self onCoderViewModelFocused: anAnnouncement focused
 ]
 
@@ -297,6 +300,9 @@ GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnounc
 	aCursorsChangedAnnouncement source = self
 		ifTrue: [ ^ self ].
 
+	aCursorsChangedAnnouncement source == self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
 	"since it may be sent from a non-UI process make sure to wrap in the action"
 	self enqueueTask: (BlTaskAction new action: [
 		self navigator
@@ -319,6 +325,9 @@ GtTextualCoderEditorElement >> onViewModelSelectionChanged: aSelectionChangedAnn
 	"if the source of the announcement is myself, do nothing to break the change cycle"
 	aSelectionChangedAnnouncement source = self
 		ifTrue: [ ^ self ].
+		
+	aSelectionChangedAnnouncement source == self textualCoderViewModel
+		ifFalse: [ ^ self ].
 
 	"since it may be sent from a non-UI process make sure to wrap in the action"
 	self enqueueTask: (BlTaskAction new action: [

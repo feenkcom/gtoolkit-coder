@@ -18,11 +18,14 @@ GtTextualCoder >> addCopyCutPasteContextMenuAddOnsAst: anAst to: coderAddOns [
 	<gtCoderContextMenuAddOns: 10>
 	coderAddOns
 		addContextMenuItem: 'Cut'
-			action: [ :anEditorElement | anEditorElement editor cutSelected ];
+			action: [ :aCoderViewModel :aClickEvent :anEditorElement | anEditorElement editor cutSelected ]
+			id: GtTextualCoderCutContextMenuItemId;
 		addContextMenuItem: 'Copy'
-			action: [ :anEditorElement | anEditorElement editor copySelected ];
+			action: [ :aCoderViewModel :aClickEvent :anEditorElement | anEditorElement editor copySelected ]
+			id: GtTextualCoderCopyContextMenuItemId;
 		addContextMenuItem: 'Paste'
-			action: [ :anEditorElement | anEditorElement editor paste ]
+			action: [ :aCoderViewModel :aClickEvent :anEditorElement | anEditorElement editor paste ]
+			id: GtTextualCoderPasteContextMenuItemId
 ]
 
 { #category : #'private - addons' }

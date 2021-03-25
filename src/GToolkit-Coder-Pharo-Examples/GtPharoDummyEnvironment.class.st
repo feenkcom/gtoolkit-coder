@@ -52,7 +52,7 @@ GtPharoDummyEnvironment >> dummyPackages: anObject [
 
 { #category : #initialization }
 GtPharoDummyEnvironment >> finalize [
-	EpMonitor disableDuring: [ self dummyPackages do: [ :each | each removeFromSystem ] ]
+	self removeFromSystem
 ]
 
 { #category : #accessing }
@@ -73,4 +73,9 @@ GtPharoDummyEnvironment >> initialize [
 	
 	"the copy of myself will be used as a finalization executor"
 	self class finalizationRegistry add: self
+]
+
+{ #category : #initialization }
+GtPharoDummyEnvironment >> removeFromSystem [
+	EpMonitor disableDuring: [ self dummyPackages do: [ :each | each removeFromSystem ] ]
 ]

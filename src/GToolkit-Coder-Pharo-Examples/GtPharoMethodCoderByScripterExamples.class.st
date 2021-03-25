@@ -520,6 +520,60 @@ GtPharoMethodCoderByScripterExamples >> collapseFromUI: aScripter method: aMetho
 	^ aScripter
 ]
 
+{ #category : #'examples - copy/cut/paste' }
+GtPharoMethodCoderByScripterExamples >> contextMenuCopy [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new coderOnClassUnaryMethodThatCreatesPoint ].
+	self selectTextFor: aScripter from: 38 to: 45 andCheck: '196@400'.
+	
+	Clipboard clipboardText: ''.
+	self openAndClickOnContextMenuItemFor: aScripter id: GtTextualCoderCopyContextMenuItemId.
+	self assert: Clipboard clipboardText asString equals: '196@400'.
+	
+	^ aScripter
+]
+
+{ #category : #'examples - copy/cut/paste' }
+GtPharoMethodCoderByScripterExamples >> contextMenuCut [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new coderOnClassUnaryMethodThatCreatesPoint ].
+	self selectTextFor: aScripter from: 38 to: 45 andCheck: '196@400'.
+	
+	Clipboard clipboardText: ''.
+	self openAndClickOnContextMenuItemFor: aScripter id: GtTextualCoderCutContextMenuItemId.
+	self assert: Clipboard clipboardText asString equals: '196@400'.
+	aScripter check
+		satisfies: [ :aCoder | (aCoder currentSourceString includesSubstring: '196@400') not ];
+		onModel.
+	
+	^ aScripter
+]
+
+{ #category : #'examples - copy/cut/paste' }
+GtPharoMethodCoderByScripterExamples >> contextMenuPaste [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ GtPharoMethodCoderExamples new coderOnClassUnaryMethodThatCreatesPoint ].
+	self selectTextFor: aScripter from: 38 to: 45 andCheck: '196@400'.
+	
+	Clipboard clipboardText: '400@196'.
+	self openAndClickOnContextMenuItemFor: aScripter id: GtTextualCoderPasteContextMenuItemId.
+	self assert: Clipboard clipboardText asString equals: '400@196'.
+	aScripter check
+		satisfies: [ :aCoder | (aCoder currentSourceString includesSubstring: '196@400') not ];
+		onModel.
+	aScripter check
+		satisfies: [ :aCoder | (aCoder currentSourceString includesSubstring: '400@196') ];
+		onModel.
+	
+	^ aScripter
+]
+
 { #category : #'examples - example method' }
 GtPharoMethodCoderByScripterExamples >> exampleMethod [
 	<gtExample>
@@ -1230,6 +1284,31 @@ GtPharoMethodCoderByScripterExamples >> methodCoder [
 	^ aScripter
 ]
 
+{ #category : #utilities }
+GtPharoMethodCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id: aBlElementId [
+
+	aScripterOrStep secondaryClick
+		label: 'Open context menu';
+		onChildNamed: GtSourceCoderEditorId.
+
+	aScripterOrStep wait forEmptySpaceTaskQueue.
+	
+	aScripterOrStep mouseMoveOver
+		label: 'Hover ', aBlElementId asSymbol;
+		onSpaceRoot;
+		id: aBlElementId.
+
+	aScripterOrStep wait forEmptySpaceTaskQueue.
+	
+	aScripterOrStep click
+		label: 'Click ', aBlElementId asSymbol;
+		onSpaceRoot;
+		onChildNamed: aBlElementId.
+
+	aScripterOrStep wait forEmptySpaceTaskQueue.
+	aScripterOrStep syncContinue
+]
+
 { #category : #'examples - pattern highlighter' }
 GtPharoMethodCoderByScripterExamples >> patternHighlighterMethod [
 	<gtExample>
@@ -1433,4 +1512,24 @@ GtPharoMethodCoderByScripterExamples >> referencedExampleMethodCoderUI_NoExample
 		self checkFor: aStep textExampleStatusAttributeAt: 1. ].
 	aScripter syncContinue.
 	^ aScripter
+]
+
+{ #category : #utilities }
+GtPharoMethodCoderByScripterExamples >> selectTextFor: aScripterOrStep from: aStartPosition to: aToPosition andCheck: aSelectedString [
+	aScripterOrStep do
+		label: 'Select part of the method';
+		action: [ :aSourceEditor |
+			aSourceEditor selecter
+				from: aStartPosition to: aToPosition;
+				select ];
+		onChildNamed: GtSourceCoderEditorId.
+
+	aScripterOrStep wait forEmptySpaceTaskQueue.
+	
+	aScripterOrStep check
+		label: 'Check selected text';
+		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ] equals: aSelectedString;
+		onChildNamed: GtSourceCoderEditorId.
+		
+	aScripterOrStep syncContinue
 ]
