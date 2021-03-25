@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPharoMethodExpanderStylerExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-Pharo-Examples'
+	#category : #'GToolkit-Coder-Pharo-Examples-Stylers'
 }
 
 { #category : #examples }
