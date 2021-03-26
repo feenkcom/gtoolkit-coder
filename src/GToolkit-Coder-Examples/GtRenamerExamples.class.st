@@ -7,6 +7,8 @@ Class {
 { #category : #accessing }
 GtRenamerExamples >> applyRename [
 	<gtExample>
+	<noTest>
+
 	| scripter |
 	scripter := self startRename.
 	scripter
