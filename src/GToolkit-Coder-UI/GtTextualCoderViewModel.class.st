@@ -106,6 +106,11 @@ GtTextualCoderViewModel >> asEditorState [
 		addMemento: (BrTextEditorStylerMemento new styler: self compositeStyler)
 ]
 
+{ #category : #'api - expansion' }
+GtTextualCoderViewModel >> collapse [
+	self expanded: false
+]
+
 { #category : #'api - stylers' }
 GtTextualCoderViewModel >> compositeStyler [
 	^ GtCoderAstCompositeStyler new
@@ -247,13 +252,22 @@ GtTextualCoderViewModel >> ensureAddOns [
 ]
 
 { #category : #'api - expansion' }
+GtTextualCoderViewModel >> expand [
+	self expanded: true
+]
+
+{ #category : #'api - expansion' }
 GtTextualCoderViewModel >> expanded [
 	^ expanded
 ]
 
 { #category : #'api - expansion' }
 GtTextualCoderViewModel >> expanded: aBoolean [
-	expanded := aBoolean
+	expanded = aBoolean
+		ifTrue: [ ^ self ].
+
+	expanded := aBoolean.
+	self notifyExpansionChanged: expanded
 ]
 
 { #category : #'api - focus' }
@@ -356,6 +370,11 @@ GtTextualCoderViewModel >> mainActions: theMainActions [
 { #category : #'private - notifying' }
 GtTextualCoderViewModel >> notifyCursorsChanged: aBrTextEditorCursor from: aSourceObject [
 	self announce: (GtTextualCoderViewModelCursorsChanged new cursors: aBrTextEditorCursor; source: aSourceObject)
+]
+
+{ #category : #'private - notifying' }
+GtTextualCoderViewModel >> notifyExpansionChanged: aBoolean [
+	self announce: (GtTextualCoderViewModelExpansionChanged new expanded: aBoolean)
 ]
 
 { #category : #'private - notifying' }

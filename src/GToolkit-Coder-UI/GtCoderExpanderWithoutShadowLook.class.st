@@ -161,6 +161,7 @@ GtCoderExpanderWithoutShadowLook >> newSidebar [
 { #category : #'private - instance creation' }
 GtCoderExpanderWithoutShadowLook >> newToggle [
 	^ BlElement new
+		id: GtSourceCoderExpanderToggleId;
 		layout: BlLinearLayout horizontal;
 		padding: (BlInsets all: 4);
 		constraintsDo: [ :c | 

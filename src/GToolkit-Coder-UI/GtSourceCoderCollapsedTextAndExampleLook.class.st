@@ -64,6 +64,17 @@ GtSourceCoderCollapsedTextAndExampleLook >> initializeExampleElement [
 ]
 
 { #category : #initialization }
+GtSourceCoderCollapsedTextAndExampleLook >> initializeListeners [
+	super initializeListeners.
+	
+	self when: BlClickEvent do: [ :anEvent |
+		anEvent consumed: true.
+		self sourceCoderUIModel
+			expanded: true;
+			focused: true ]
+]
+
+{ #category : #initialization }
 GtSourceCoderCollapsedTextAndExampleLook >> initializeMethodLabel [
 	methodLabel := BrLabel new
 		look: BrGlamorousLabelLook new editorMeasurement bold glamorousCodeFont

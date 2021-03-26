@@ -15,6 +15,17 @@ GtSourceCoderCollapsedTextLook >> initialize [
 	self addChangeAddChildAs: { #content . GtSourceCoderCollapsedTextId } with: [ label ].
 ]
 
+{ #category : #accessing }
+GtSourceCoderCollapsedTextLook >> initializeListeners [
+	super initializeListeners.
+	
+	self when: BlClickEvent do: [ :anEvent |
+		anEvent consumed: true.
+		self sourceCoderUIModel
+			expanded: true;
+			focused: true ]
+]
+
 { #category : #'instance creation' }
 GtSourceCoderCollapsedTextLook >> newLabel [
 	^ BrLabel new

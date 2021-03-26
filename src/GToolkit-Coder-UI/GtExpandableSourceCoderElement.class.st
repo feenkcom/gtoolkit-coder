@@ -62,7 +62,9 @@ GtExpandableSourceCoderElement >> coderUIModel: aCoderUIModel [
 		ifTrue: [ ^ self ].
 
 	coderUIModel
-		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
+		ifNotNil: [ :aPreviousCoder |
+			aPreviousCoder unsubscribe: self.
+			aPreviousCoder coderModel unsubscribe: self ].
 
 	coderUIModel := aCoderUIModel.
 
@@ -85,7 +87,10 @@ GtExpandableSourceCoderElement >> coderUIModel: aCoderUIModel [
 	coderUIModel coder subscribeToSystem.
 	coderUIModel coder announcer weak
 		when: GtCoderRequestFocus send: #requestFocusAsyncronously to: self;
-		when: GtCoderMethodRemoved send: #onMethodRemoved: to: self
+		when: GtCoderMethodRemoved send: #onMethodRemoved: to: self.
+		
+	coderUIModel weak
+		when: GtTextualCoderViewModelExpansionChanged send: #onViewModelExpansionChanged: to: self
 ]
 
 { #category : #accessing }
@@ -178,6 +183,11 @@ GtExpandableSourceCoderElement >> onExpanded [
 
 { #category : #events }
 GtExpandableSourceCoderElement >> onMethodRemoved: anAnnouncement [
+]
+
+{ #category : #'private - event handling' }
+GtExpandableSourceCoderElement >> onViewModelExpansionChanged: anAnnouncement [
+	self expanded: anAnnouncement expanded
 ]
 
 { #category : #'focus requesting' }

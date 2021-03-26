@@ -521,6 +521,139 @@ GtPharoMethodCoderByScripterExamples >> clickFixItFor: aScripter [
 	^ aScripter syncContinue
 ]
 
+{ #category : #'examples - expansion' }
+GtPharoMethodCoderByScripterExamples >> coderCollapseProgrammatically [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self coderExpandedByDefault.
+	
+	aScripter do
+		action: [ :aCoderViewModel | aCoderViewModel collapse ];
+		onModel.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+		
+	aScripter check
+		satisfies: [ :aCoderViewModel | aCoderViewModel expanded not ];
+		onModel.
+		
+	aScripter check
+		satisfies: [ :aCoderViewModel | aCoderViewModel focused not ];
+		onModel.
+		
+	aScripter check
+		satisfies: [ :anExpandableCoderElement | anExpandableCoderElement isCollapsed ];
+		onSelf.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - expansion' }
+GtPharoMethodCoderByScripterExamples >> coderExpandClickingOnExpander [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self coderCollapseProgrammatically.
+	
+	aScripter click
+		id: GtSourceCoderExpanderToggleId.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+		
+	aScripter check
+		satisfies: [ :aCoderViewModel | aCoderViewModel expanded ];
+		onModel.
+		
+	aScripter check
+		satisfies: [ :aCoderViewModel | aCoderViewModel focused not ];
+		onModel.
+
+	aScripter check
+		satisfies: [ :anExpandableCoderElement | anExpandableCoderElement isExpanded ];
+		onSelf.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - expansion' }
+GtPharoMethodCoderByScripterExamples >> coderExpandClickingOnHeader [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self coderCollapseProgrammatically.
+	
+	aScripter click
+		onBreadthFirstChildOfClass: GtSourceCoderCollapsedContentElement.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+		
+	aScripter check
+		satisfies: [ :aCoderViewModel | aCoderViewModel expanded ];
+		onModel.
+		
+	aScripter check
+		satisfies: [ :aCoderViewModel | aCoderViewModel focused ];
+		onModel.
+		
+	aScripter check
+		satisfies: [ :anExpandableCoderElement | anExpandableCoderElement isExpanded ];
+		onSelf.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - expansion' }
+GtPharoMethodCoderByScripterExamples >> coderExpandProgrammatically [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self coderCollapseProgrammatically.
+	
+	aScripter do
+		action: [ :aCoderViewModel | aCoderViewModel expand ];
+		onModel.
+	
+	aScripter wait forEmptySpaceTaskQueue.
+		
+	aScripter check
+		satisfies: [ :aCoderViewModel | aCoderViewModel expanded ];
+		onModel.
+		
+	aScripter check
+		satisfies: [ :aCoderViewModel | aCoderViewModel focused not ];
+		onModel.
+		
+	aScripter check
+		satisfies: [ :anExpandableCoderElement | anExpandableCoderElement isExpanded ];
+		onSelf.
+
+	^ aScripter syncContinue
+]
+
+{ #category : #'examples - expansion' }
+GtPharoMethodCoderByScripterExamples >> coderExpandedByDefault [
+	<gtExample>
+	| aScripter |
+
+	aScripter := self scripterForBlock: [ self binaryMethodCoder asCoderViewModel ].
+	aScripter wait forEmptySpaceTaskQueue.
+		
+	aScripter check
+		satisfies: [ :aCoderViewModel | aCoderViewModel expanded ];
+		onModel.
+		
+	aScripter check
+		satisfies: [ :aCoderViewModel | aCoderViewModel focused not ];
+		onModel.
+
+	aScripter check
+		satisfies: [ :anExpandableCoderElement | anExpandableCoderElement isExpanded ];
+		onSelf.
+
+	^ aScripter syncContinue
+]
+
 { #category : #utilities }
 GtPharoMethodCoderByScripterExamples >> coderOnMethod: aMethod [
 	<gtExample>
