@@ -357,6 +357,18 @@ GtTextualCoderEditorElement >> onViewModelStylersChanged [
 ]
 
 { #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onViewModelTextAttributesAdded: anAnnouncement [
+	self enqueueTask: (BlTaskAction new action: [
+		anAnnouncement coderTextAttributes applyOnEditorText: self text ])
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onViewModelTextAttributesRemoved: anAnnouncement [
+	self enqueueTask: (BlTaskAction new action: [
+		anAnnouncement coderTextAttributes removeFromEditorText: self text ])
+]
+
+{ #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelTextChanged [
 
 	aGtTextualCoderViewModelTextChanged source == self
@@ -420,7 +432,13 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 			to: self;
 		when: GtTextualCoderViewModelReadyToRestyle
 			send: #onViewModelReadyToStyle
-			to: self
+			to: self;
+		when: GtTextualCoderViewModelTextAttributesAdded
+			send: #onViewModelTextAttributesAdded:
+			to: self;
+		when: GtTextualCoderViewModelTextAttributesRemoved
+			send: #onViewModelTextAttributesRemoved:
+			to: self.
 ]
 
 { #category : #private }

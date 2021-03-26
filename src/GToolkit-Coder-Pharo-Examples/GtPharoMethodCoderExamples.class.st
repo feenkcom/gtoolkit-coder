@@ -760,7 +760,8 @@ GtPharoMethodCoderExamples >> forNewMethod [
 	
 	anEnvironment := GtPharoDummyEnvironment withPackages: 2 classes: 2.
 	aDummyMethod := anEnvironment anyDummyUnaryMethod.
-	aDummyMethod realMethod removeFromSystem.
+	
+	GtPharoCodeModifier removeMethod: aDummyMethod realMethod.
 
 	aClass := aDummyMethod realClass.
 	

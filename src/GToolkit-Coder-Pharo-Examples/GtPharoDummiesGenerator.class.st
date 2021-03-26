@@ -212,20 +212,6 @@ GtPharoDummiesGenerator >> fakeClassesInFakePackage: aPackage [
 ]
 
 { #category : #'private - set up' }
-GtPharoDummiesGenerator >> fakeClassesInSystem [
-	^ self fakeClassNames select: [ :eachClassName |
-		self class environment
-			at: eachClassName
-			ifPresent: [ true ]
-			ifAbsent: [ false ] ]
-]
-
-{ #category : #'private - set up' }
-GtPharoDummiesGenerator >> fakeClassesInSystemCount [
-	^ self fakeClassesInSystem size
-]
-
-{ #category : #'private - set up' }
 GtPharoDummiesGenerator >> fakeInstVarCount [
 	^ 2
 ]

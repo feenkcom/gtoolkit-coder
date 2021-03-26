@@ -37,16 +37,9 @@ GtPharoMethodCoder >> addExtractMethodTo: coderAddOns from: aCoderViewModel [
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtPharoMethodCoder >> addExtractTempFor: aNode to: coderAddOns [
-	aNode isValue
+	aNode isMessageSend
 		ifFalse: [ ^ self ].
-	aNode isUsed
-		ifFalse: [ ^ self ].
-	aNode isVariable
-		ifTrue: [ ^ self ].
-	aNode isAssignment
-		ifTrue: [ ^ self ].
-	aNode parent isAssignment
-		ifTrue: [ ^ self ].
+
 	coderAddOns
 		addContextMenuItem:
 			(self
@@ -54,7 +47,7 @@ GtPharoMethodCoder >> addExtractTempFor: aNode to: coderAddOns [
 				description: (self nodeDescription: aNode))
 		hover: [ self highlightNode: aNode ]
 		leave: [ self removeHighlight ]
-		action: [ :element | self extractTemporaryVariable: aNode in: element ]
+		action: [ :aCoderViewModel :anEvent :anEditorElement | self extractTemporaryVariable: aNode in: anEditorElement ]
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }

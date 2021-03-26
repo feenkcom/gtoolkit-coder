@@ -474,16 +474,20 @@ GtPharoMethodCoder >> explanationLink: anExplanation [
 { #category : #'api - refactorings' }
 GtPharoMethodCoder >> extractTemporaryVariable: aNode in: anEditorElement [
 	| refactoring model tempName |
+
 	model := self createRefactoringModel.
 	tempName := self safeTemporaryName.
+
 	refactoring := RBExtractToTemporaryRefactoring
 		model: model
 		extract: aNode sourceInterval
 		to: tempName
 		from: self currentSelector
 		in: (model classFor: self behavior).
+
 	(self performMethodRefactoring: refactoring)
 		ifFalse: [ ^ self ].
+
 	(self findNodeAssigning: tempName)
 		ifNotNil: [ :node | 
 			anEditorElement editor moveCursorTo: node stop.
@@ -796,7 +800,7 @@ GtPharoMethodCoder >> newRbAST: aString [
 { #category : #'private - refactorings' }
 GtPharoMethodCoder >> nodeDescription: aNode [
 	| description |
-	description := aNode formattedCode.
+	description := aNode source asString.
 	description size > 40
 		ifTrue: [ description := (description first: 40) , '...' ].
 	^ ((description copyReplaceAll: String cr with: ' ')

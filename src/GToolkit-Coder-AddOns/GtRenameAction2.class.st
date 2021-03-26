@@ -1,25 +1,26 @@
 Class {
-	#name : #GtRenameAction,
+	#name : #GtRenameAction2,
 	#superclass : #Object,
 	#traits : 'TGtAnnouncer',
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'announcer',
-		'textElement',
+		'pharoSourceCoderViewModel',
 		'originalLocations',
 		'originalText',
-		'originalCursorPosition',
 		'isInstalled',
 		'renameAttributes',
 		'selectAll',
 		'validationBlock',
-		'filter'
+		'filter',
+		'originalCursors',
+		'coderAttributes'
 	],
 	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
 { #category : #'instance creation' }
-GtRenameAction class >> locations: aCollectionOfIntervals element: aTextEditorElement [
+GtRenameAction2 class >> locations: aCollectionOfIntervals element: aTextEditorElement [
 	^ self new
 		textElement: aTextEditorElement;
 		locations: aCollectionOfIntervals;
@@ -27,7 +28,7 @@ GtRenameAction class >> locations: aCollectionOfIntervals element: aTextEditorEl
 ]
 
 { #category : #pharo }
-GtRenameAction class >> pharoRenameLocalsOn: aTextEditorElement [
+GtRenameAction2 class >> pharoRenameLocalsOn: aTextEditorElement [
 	^ [
 		| editor text ast items action |
 	
@@ -59,7 +60,7 @@ GtRenameAction class >> pharoRenameLocalsOn: aTextEditorElement [
 ]
 
 { #category : #pharo }
-GtRenameAction class >> pharoRenameSnippetLocalsOn: aTextEditorElement [
+GtRenameAction2 class >> pharoRenameSnippetLocalsOn: aTextEditorElement [
 	^ [ | editor text ast items action |
 	editor := aTextEditorElement editor.
 	editor cursors cursorsCount = 1
@@ -87,7 +88,7 @@ GtRenameAction class >> pharoRenameSnippetLocalsOn: aTextEditorElement [
 ]
 
 { #category : #actions }
-GtRenameAction >> accept [
+GtRenameAction2 >> accept [
 	self updateSource.
 	self uninstall.
 	self allowSave.
@@ -95,48 +96,56 @@ GtRenameAction >> accept [
 ]
 
 { #category : #private }
-GtRenameAction >> addRenameAttributes [
+GtRenameAction2 >> addRenameAttributes [
 	| text cursorInLocation |
-	text := self text.
+
+	text := self pharoSourceCoderViewModel sourceText.
+
 	cursorInLocation := originalLocations
-		anySatisfy:
-			[ :each | originalCursorPosition between: each first - 1 and: each last ].
-	renameAttributes := originalLocations
+		anySatisfy: [ :each | originalCursors anySatisfy: [ :eachCursor | eachCursor position between: each first - 1 and: each last ] ].
+
+	coderAttributes := originalLocations
 		collect: [ :each | 
 			| attribute |
 			attribute := (cursorInLocation not
-				or: [ originalCursorPosition between: each first - 1 and: each last ])
-				ifTrue: [ GtRenameEditorAttribute new
+				or: [ originalCursors anySatisfy: [ :eachCursor | eachCursor position between: each first - 1 and: each last ] ])
+				ifTrue: [
+					GtRenameEditorAttribute new
 						action: self;
 						selectAll: selectAll;
 						filter: filter;
-						cursorLocation: originalCursorPosition - each first + 1;
 						text: (text from: each first to: each last) ]
-				ifFalse: [ GtRenamePreviewAttribute new
+				ifFalse: [
+					GtRenamePreviewAttribute new
 						action: self;
 						text: (text from: each first to: each last) ].
 			cursorInLocation := true.
-			(text from: each first to: each last) attributes: {attribute}.
-			attribute ]
+			
+			self pharoSourceCoderViewModel
+				addTextAttribute: attribute
+				from: each first
+				to: each last ].
+			
+	renameAttributes := coderAttributes flatCollect: [ :eachCoderAttribute | eachCoderAttribute textAttributes ]
 ]
 
 { #category : #'private - actions' }
-GtRenameAction >> allowSave [
-	textElement textualCoderViewModel allowSaveDueTo: self
+GtRenameAction2 >> allowSave [
+	pharoSourceCoderViewModel allowSaveDueTo: self
 ]
 
 { #category : #private }
-GtRenameAction >> announceEvent: aSymbol [
+GtRenameAction2 >> announceEvent: aSymbol [
 	^ self announce: (GtRenameActionAnnouncement for: self type: aSymbol)
 ]
 
 { #category : #announcer }
-GtRenameAction >> announcer [
+GtRenameAction2 >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
 { #category : #actions }
-GtRenameAction >> cancel [
+GtRenameAction2 >> cancel [
 	self uninstall.
 	self undoChanges.
 	self allowSave.
@@ -144,12 +153,12 @@ GtRenameAction >> cancel [
 ]
 
 { #category : #accessing }
-GtRenameAction >> editor [
+GtRenameAction2 >> editor [
 	^ self editorAttribute editor
 ]
 
 { #category : #accessing }
-GtRenameAction >> editorAttribute [
+GtRenameAction2 >> editorAttribute [
 	^ renameAttributes notNil
 		ifTrue: [ renameAttributes
 				detect: [ :attr | attr isKindOf: GtRenameEditorAttribute ]
@@ -157,97 +166,112 @@ GtRenameAction >> editorAttribute [
 ]
 
 { #category : #private }
-GtRenameAction >> filter: aTextEditorInputFilter [
+GtRenameAction2 >> filter: aTextEditorInputFilter [
 	filter := aTextEditorInputFilter.
 	self primaryRenameAttribute
 		ifNotNil: [ :attr | attr filter: aTextEditorInputFilter ]
 ]
 
 { #category : #'initialize-release' }
-GtRenameAction >> forBinaryOrKeyword [
+GtRenameAction2 >> forBinaryOrKeyword [
 	validationBlock := [ :str | (self validateKeyword: str) or: [ self validateBinary: str ] ]
 ]
 
 { #category : #'initialize-release' }
-GtRenameAction >> forKeyword [
+GtRenameAction2 >> forKeyword [
 	validationBlock := [ :str | self validateKeyword: str ]
 ]
 
 { #category : #'initialize-release' }
-GtRenameAction >> forVariableOrUnaryMessage [
+GtRenameAction2 >> forVariableOrUnaryMessage [
 	validationBlock := [ :str | self validateVariable: str ].
 	self filter: BrTextEditorAlphaNumericInputFilter new
 ]
 
 { #category : #'initialize-release' }
-GtRenameAction >> initialize [
+GtRenameAction2 >> initialize [
 	super initialize.
 	originalLocations := #().
 	isInstalled := false.
 	selectAll := false.
-	filter := BrTextEditorNoInputFilter new
+	filter := BrTextEditorNoInputFilter new.
+
+	coderAttributes := #().
 ]
 
 { #category : #installation }
-GtRenameAction >> install [
+GtRenameAction2 >> install [
 	originalLocations isEmpty
 		ifTrue: [ ^ self ].
+
 	self preventSave.
 	self saveOriginalState.
+
 	self addRenameAttributes.
 	isInstalled := true.
+
 	self announceEvent: #install
 ]
 
 { #category : #testing }
-GtRenameAction >> isInstalled [
+GtRenameAction2 >> isInstalled [
 	^ isInstalled
 ]
 
 { #category : #testing }
-GtRenameAction >> isRenameAttribute: anAttribute [
+GtRenameAction2 >> isRenameAttribute: anAttribute [
 	^ anAttribute isKindOf: GtRenamePreviewAttribute
 ]
 
 { #category : #'private-validation' }
-GtRenameAction >> isValid [
+GtRenameAction2 >> isValid [
 	validationBlock isNil
 		ifTrue: [ ^ true ].
 	^ validationBlock value: self newName
 ]
 
 { #category : #accessing }
-GtRenameAction >> locations: aCollectionOfIntervals [
+GtRenameAction2 >> locations: aCollectionOfIntervals [
 	originalLocations := aCollectionOfIntervals asSortedCollection: [ :a :b | a first < b first ].
 	self validateLocations
 ]
 
 { #category : #actions }
-GtRenameAction >> lostFocus [
+GtRenameAction2 >> lostFocus [
 	self isValid
 		ifTrue: [ self accept ]
 		ifFalse: [ self cancel ]
 ]
 
 { #category : #accessing }
-GtRenameAction >> newName [
+GtRenameAction2 >> newName [
 	^ renameAttributes first text asString
 ]
 
 { #category : #accessing }
-GtRenameAction >> originalName [
+GtRenameAction2 >> originalName [
 	^ (originalText
 		copyFrom: originalLocations first first
 		to: originalLocations first last) asString
 ]
 
+{ #category : #accessing }
+GtRenameAction2 >> pharoSourceCoderViewModel [
+	^ pharoSourceCoderViewModel
+]
+
+{ #category : #accessing }
+GtRenameAction2 >> pharoSourceCoderViewModel: anObject [
+	pharoSourceCoderViewModel := anObject
+]
+
 { #category : #'private - actions' }
-GtRenameAction >> preventSave [
-	textElement textualCoderViewModel preventSaveDueTo: self
+GtRenameAction2 >> preventSave [
+	pharoSourceCoderViewModel preventSaveDueTo: self
 ]
 
 { #category : #private }
-GtRenameAction >> primaryRenameAttribute [
+GtRenameAction2 >> primaryRenameAttribute [
 	renameAttributes isNil
 		ifTrue: [ ^ nil ].
 	^ renameAttributes
@@ -256,43 +280,41 @@ GtRenameAction >> primaryRenameAttribute [
 ]
 
 { #category : #private }
-GtRenameAction >> removeAttributeHandlers [
+GtRenameAction2 >> removeAttributeHandlers [
 	renameAttributes do: [ :each | each uninstallEventHandlers ]
 ]
 
 { #category : #private }
-GtRenameAction >> removeAttributes [
-	self text clearAttributes: [ :each | self isRenameAttribute: each ].
+GtRenameAction2 >> removeAttributes [	
+	self pharoSourceCoderViewModel removeAllCoderTextAttributes: coderAttributes.
 	self removeAttributeHandlers
 ]
 
 { #category : #actions }
-GtRenameAction >> returnAccept [
+GtRenameAction2 >> returnAccept [
 	self isValid
 		ifFalse: [ ^ self ].
 	self accept
 ]
 
 { #category : #private }
-GtRenameAction >> saveOriginalState [
-	| text |
-	text := self text.
-	originalText := text copy.
-	originalCursorPosition := self textEditor cursors first position
+GtRenameAction2 >> saveOriginalState [
+	originalText := self pharoSourceCoderViewModel sourceText copy.
+	originalCursors := self pharoSourceCoderViewModel cursors copy
 ]
 
 { #category : #accessing }
-GtRenameAction >> selectAll [
+GtRenameAction2 >> selectAll [
 	^ selectAll
 ]
 
 { #category : #accessing }
-GtRenameAction >> selectAll: anObject [
+GtRenameAction2 >> selectAll: anObject [
 	selectAll := anObject
 ]
 
 { #category : #actions }
-GtRenameAction >> tabAccept: forward [
+GtRenameAction2 >> tabAccept: forward [
 	self isValid
 		ifFalse: [ ^ self ].
 	self accept.
@@ -303,47 +325,27 @@ GtRenameAction >> tabAccept: forward [
 				ifFalse: [ #shiftTab ])
 ]
 
-{ #category : #accessing }
-GtRenameAction >> text [
-	^ self textEditor text
-]
-
-{ #category : #accessing }
-GtRenameAction >> textEditor [
-	^ self textElement editor
-]
-
-{ #category : #accessing }
-GtRenameAction >> textElement [
-	^ textElement
-]
-
-{ #category : #accessing }
-GtRenameAction >> textElement: aTextEditorElement [
-	textElement := aTextEditorElement
-]
-
 { #category : #private }
-GtRenameAction >> undoChanges [
+GtRenameAction2 >> undoChanges [
 	self textElement
 		text: originalText;
 		onTextModified.
 
-	self textEditor moveCursorTo: originalCursorPosition
+	self textEditor moveCursorTo: originalCursors
 ]
 
 { #category : #installation }
-GtRenameAction >> uninstall [
+GtRenameAction2 >> uninstall [
 	self removeAttributes.
 	isInstalled := false.
 	self allowSave.
 	self announceEvent: #uninstall.
-	textElement
-		enqueueTask: (BlTaskAction new action: [ textElement requestFocus ])
+	
+	pharoSourceCoderViewModel focused: true
 ]
 
 { #category : #private }
-GtRenameAction >> updateCursorLocation [
+GtRenameAction2 >> updateCursorLocation [
 	| sizeDifference offset |
 	sizeDifference := self newName size - self originalName size.
 	offset := 0.
@@ -351,22 +353,24 @@ GtRenameAction >> updateCursorLocation [
 		with: renameAttributes
 		do: [ :interval :attr | 
 			attr isEditorAttribute
-				ifTrue: [ textElement editor
-						moveCursorTo:
-							(interval first + offset + attr editorCursorLocation - 1
-								min: textElement editor text size).
+				ifTrue: [
+					| aNewCursorPosition |
+					
+					aNewCursorPosition := (interval first + offset + attr editorCursorLocation - 1 min: pharoSourceCoderViewModel sourceText size).
+					pharoSourceCoderViewModel moveCursorTo: aNewCursorPosition.
 					^ self ].
+
 			offset := offset + sizeDifference ]
 ]
 
 { #category : #actions }
-GtRenameAction >> updateName: blText [	
+GtRenameAction2 >> updateName: blText [	
 	renameAttributes do: [ :each | each updateText: blText ].
 	self announceEvent: #textUpdated
 ]
 
 { #category : #private }
-GtRenameAction >> updateSource [
+GtRenameAction2 >> updateSource [
 	self newName = self originalName
 		ifTrue: [ ^ self removeAttributes ].
 	self
@@ -377,7 +381,7 @@ GtRenameAction >> updateSource [
 ]
 
 { #category : #private }
-GtRenameAction >> updateSourceIn: editor at: intervals attributes: attributeCollection [
+GtRenameAction2 >> updateSourceIn: editor at: intervals attributes: attributeCollection [
 	self
 		updateText: editor text
 		at: intervals
@@ -385,7 +389,7 @@ GtRenameAction >> updateSourceIn: editor at: intervals attributes: attributeColl
 ]
 
 { #category : #private }
-GtRenameAction >> updateText: text at: intervals attributes: attributeCollection [
+GtRenameAction2 >> updateText: text at: intervals attributes: attributeCollection [
 	| newText index |
 	newText := '' asRopedText.
 	index := 1.
@@ -400,20 +404,20 @@ GtRenameAction >> updateText: text at: intervals attributes: attributeCollection
 	index > text size
 		ifFalse: [ newText := newText , (text copyFrom: index to: text size) ].
 
-	textElement
+	"textElement
 		text: newText;
-		onTextModified
+		onTextModified"
 ]
 
 { #category : #'private-validation' }
-GtRenameAction >> validateBinary: aString [
+GtRenameAction2 >> validateBinary: aString [
 	aString isEmpty
 		ifTrue: [ ^ false ].
 	^ (RBScanner isSelector: aString) and: [ aString asSymbol isBinary ]
 ]
 
 { #category : #'private-validation' }
-GtRenameAction >> validateKeyword: aString [
+GtRenameAction2 >> validateKeyword: aString [
 	aString isEmpty
 		ifTrue: [ ^ false ].
 	aString last = $:
@@ -423,7 +427,7 @@ GtRenameAction >> validateKeyword: aString [
 ]
 
 { #category : #private }
-GtRenameAction >> validateLocations [
+GtRenameAction2 >> validateLocations [
 	| lastLocation size |
 	originalLocations isEmpty
 		ifTrue: [ ^ self ].
@@ -439,6 +443,6 @@ GtRenameAction >> validateLocations [
 ]
 
 { #category : #'private-validation' }
-GtRenameAction >> validateVariable: aString [
+GtRenameAction2 >> validateVariable: aString [
 	^ RBScanner isVariable: aString
 ]
