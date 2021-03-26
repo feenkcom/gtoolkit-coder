@@ -143,6 +143,11 @@ GtTextualCoderViewModel >> asEditorState [
 		addMemento: (BrTextEditorStylerMemento new styler: self compositeStyler)
 ]
 
+{ #category : #'api - coder model' }
+GtTextualCoderViewModel >> astAwait [
+	^ self coderModel astAwait
+]
+
 { #category : #'api - expansion' }
 GtTextualCoderViewModel >> collapse [
 	self expanded: false
@@ -479,7 +484,7 @@ GtTextualCoderViewModel >> removeAllCoderTextAttributes: aCollectionOfGtTextualC
 { #category : #'api - text' }
 GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttributes [
 	| aCurrentText |
-	
+
 	self extraTextAttributes
 		remove: aGtTextualCoderTextAttributes
 		ifAbsent: [ ^ self ].

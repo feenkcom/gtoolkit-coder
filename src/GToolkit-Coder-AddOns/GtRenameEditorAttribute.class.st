@@ -87,9 +87,7 @@ GtRenameEditorAttribute >> initialize [
 	super initialize.
 	
 	filter := BrTextEditorNoInputFilter new.
-	selectAll := false.
-	
-	self shouldReplace
+	selectAll := false
 ]
 
 { #category : #testing }

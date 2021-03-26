@@ -20,10 +20,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtRenameAction2 class >> locations: aCollectionOfIntervals element: aTextEditorElement [
+GtRenameAction2 class >> locations: aCollectionOfIntervals textualCoderViewModel: aTextualCoderViewModel [
 	^ self new
-		textElement: aTextEditorElement;
 		locations: aCollectionOfIntervals;
+		pharoSourceCoderViewModel: aTextualCoderViewModel;
 		yourself
 ]
 
@@ -87,6 +87,34 @@ GtRenameAction2 class >> pharoRenameSnippetLocalsOn: aTextEditorElement [
 		do: [ :ex | ex return: nil ]
 ]
 
+{ #category : #pharo }
+GtRenameAction2 class >> pharoRenameTemporaryVariable: aVariableName textualCoderViewModel: aTextualCoderViewModel [
+	^ [
+		| ast items action |
+	
+		ast := aTextualCoderViewModel astAwait.
+		items := OrderedCollection new.
+		
+		ast
+			withAllNodesDo: [ :eachNode |
+				(eachNode isVariable
+					and: [ eachNode variableName = aVariableName
+						and: [ eachNode whoDefines isSequence ] ])
+					ifTrue: [ items add: (eachNode startPosition to: eachNode stopPosition) ] ]
+			andTokensDo: nil
+			includesErrors: true.
+
+		action := self locations: items textualCoderViewModel: aTextualCoderViewModel.
+		action forVariableOrUnaryMessage.
+		action install ]
+			on: Error
+			do: [ :ex |
+				NonInteractiveTranscript stdout
+					nextPutAll: ('[{1}] {2}' format: { self name . ex asString });
+					cr.
+				ex return: nil ]
+]
+
 { #category : #actions }
 GtRenameAction2 >> accept [
 	self updateSource.
@@ -95,7 +123,7 @@ GtRenameAction2 >> accept [
 	self announceEvent: #accept
 ]
 
-{ #category : #private }
+{ #category : #'private - attributes' }
 GtRenameAction2 >> addRenameAttributes [
 	| text cursorInLocation |
 
@@ -270,7 +298,7 @@ GtRenameAction2 >> preventSave [
 	pharoSourceCoderViewModel preventSaveDueTo: self
 ]
 
-{ #category : #private }
+{ #category : #'private - attributes' }
 GtRenameAction2 >> primaryRenameAttribute [
 	renameAttributes isNil
 		ifTrue: [ ^ nil ].
@@ -279,12 +307,12 @@ GtRenameAction2 >> primaryRenameAttribute [
 		ifNone: [ nil ]
 ]
 
-{ #category : #private }
+{ #category : #'private - attributes' }
 GtRenameAction2 >> removeAttributeHandlers [
 	renameAttributes do: [ :each | each uninstallEventHandlers ]
 ]
 
-{ #category : #private }
+{ #category : #'private - attributes' }
 GtRenameAction2 >> removeAttributes [	
 	self pharoSourceCoderViewModel removeAllCoderTextAttributes: coderAttributes.
 	self removeAttributeHandlers
@@ -327,11 +355,7 @@ GtRenameAction2 >> tabAccept: forward [
 
 { #category : #private }
 GtRenameAction2 >> undoChanges [
-	self textElement
-		text: originalText;
-		onTextModified.
-
-	self textEditor moveCursorTo: originalCursors
+	self pharoSourceCoderViewModel cursors: originalCursors
 ]
 
 { #category : #installation }
@@ -373,17 +397,19 @@ GtRenameAction2 >> updateName: blText [
 GtRenameAction2 >> updateSource [
 	self newName = self originalName
 		ifTrue: [ ^ self removeAttributes ].
+
 	self
-		updateSourceIn: self textEditor
+		updateSourceIn: self pharoSourceCoderViewModel
 		at: originalLocations
 		attributes: renameAttributes.
+
 	self updateCursorLocation
 ]
 
 { #category : #private }
-GtRenameAction2 >> updateSourceIn: editor at: intervals attributes: attributeCollection [
+GtRenameAction2 >> updateSourceIn: aTextualSourceCoderViewModel at: intervals attributes: attributeCollection [
 	self
-		updateText: editor text
+		updateText: aTextualSourceCoderViewModel sourceText
 		at: intervals
 		attributes: attributeCollection
 ]
@@ -404,9 +430,10 @@ GtRenameAction2 >> updateText: text at: intervals attributes: attributeCollectio
 	index > text size
 		ifFalse: [ newText := newText , (text copyFrom: index to: text size) ].
 
-	"textElement
-		text: newText;
-		onTextModified"
+	self pharoSourceCoderViewModel
+		sourceText: newText
+		from: self
+		synchronously: true
 ]
 
 { #category : #'private-validation' }
