@@ -1,5 +1,5 @@
 Class {
-	#name : #GtMethodsCoderUIModel,
+	#name : #GtMethodsCoderViewModel,
 	#superclass : #GtCodersUIModel,
 	#instVars : [
 		'focusedCoderUIModel'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'api - interations' }
-GtMethodsCoderUIModel >> addNewCoder [
+GtMethodsCoderViewModel >> addNewCoder [
 	| aNewCoder |
 	
 	aNewCoder := self coder addNewCoder.
@@ -19,33 +19,33 @@ GtMethodsCoderUIModel >> addNewCoder [
 ]
 
 { #category : #updating }
-GtMethodsCoderUIModel >> coderUIModelFor: aCoder [
+GtMethodsCoderViewModel >> coderUIModelFor: aCoder [
 	^ aCoder asCoderUIModel
 		expanded: false;
 		selfObject: self coder object
 ]
 
 { #category : #accessing }
-GtMethodsCoderUIModel >> elementClass [
+GtMethodsCoderViewModel >> elementClass [
 	^ GtMethodsCoderElement
 ]
 
 { #category : #'api - interations' }
-GtMethodsCoderUIModel >> expandCoder: aMethodCoder [
+GtMethodsCoderViewModel >> expandCoder: aMethodCoder [
 	coderUIModels
 		detect: [ :eachCoderUIModel | eachCoderUIModel coder = aMethodCoder ]
 		ifFound: [ :targetCoderUIModel | targetCoderUIModel expanded: true ]
 ]
 
 { #category : #'api - interations' }
-GtMethodsCoderUIModel >> focusCoder: aMethodCoder [
+GtMethodsCoderViewModel >> focusCoder: aMethodCoder [
 	coderUIModels
 		detect: [ :eachCoderUIModel | eachCoderUIModel coder = aMethodCoder ]
 		ifFound: [ :targetCoderUIModel | self focusCoderUIModel: targetCoderUIModel ]
 ]
 
 { #category : #'api - focus' }
-GtMethodsCoderUIModel >> focusCoderUIModel: aCoderUIModel [
+GtMethodsCoderViewModel >> focusCoderUIModel: aCoderUIModel [
 	(focusedCoderUIModel notNil
 		and: [ focusedCoderUIModel ~= aCoderUIModel ])
 		ifTrue: [ focusedCoderUIModel focused: false.
@@ -55,14 +55,14 @@ GtMethodsCoderUIModel >> focusCoderUIModel: aCoderUIModel [
 ]
 
 { #category : #accessing }
-GtMethodsCoderUIModel >> focusedCoderUIModel [
+GtMethodsCoderViewModel >> focusedCoderUIModel [
 	<return: #GtCoderUIModel>
 
 	^ focusedCoderUIModel
 ]
 
 { #category : #'api - focus' }
-GtMethodsCoderUIModel >> unfocusCoderUIModel: aCoderUIModel [
+GtMethodsCoderViewModel >> unfocusCoderUIModel: aCoderUIModel [
 	focusedCoderUIModel = aCoderUIModel
 		ifTrue: [ focusedCoderUIModel := nil ].
 

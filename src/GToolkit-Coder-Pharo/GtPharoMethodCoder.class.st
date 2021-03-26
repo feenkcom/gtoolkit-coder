@@ -108,7 +108,7 @@ GtPharoMethodCoder >> addInstanceVariable: aString [
 
 { #category : #'api - accessing' }
 GtPharoMethodCoder >> behavior [
-	<return: #GtMethodCoderBehavior>
+	<return: #Behavior>
 
 	self methodBehavior isClass
 		ifTrue: [ ^ self methodBehavior ].

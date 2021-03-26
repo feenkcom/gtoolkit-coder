@@ -150,6 +150,13 @@ GtPharoMethodCoderViewModel >> preventSaveDueTo: aSavePreventor [
 	self notifySaveDisabled
 ]
 
+{ #category : #'api - coder model' }
+GtPharoMethodCoderViewModel >> protocol [
+	<return: #String>
+
+	^ self coderModel protocol
+]
+
 { #category : #private }
 GtPharoMethodCoderViewModel >> receiverObjectToPlay [
 	^ self selfObject
@@ -167,4 +174,9 @@ GtPharoMethodCoderViewModel >> save [
 		ifFalse: [ ^ self ].
 
 	^ self coderModel saveInContext: self evaluationContext
+]
+
+{ #category : #'api - coder model' }
+GtPharoMethodCoderViewModel >> selector [
+	^ self coderModel selector
 ]

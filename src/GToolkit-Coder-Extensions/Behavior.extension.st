@@ -91,7 +91,7 @@ Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> methodsCoderFromContext: aPhlowContext [
-	<return: #GtMethodsCoderUIModel>
+	<return: #GtMethodsCoderViewModel>
 
 	^ aPhlowContext
 		optionAt: #behaviorCoder

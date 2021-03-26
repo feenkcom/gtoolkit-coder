@@ -48,7 +48,7 @@ GtBehaviorCoder >> asNewCoderModelWithSameSubject [
 
 { #category : #accessing }
 GtBehaviorCoder >> behavior [
-	<return: #Class>
+	<return: #Beehavior>
 
 	^ class
 ]

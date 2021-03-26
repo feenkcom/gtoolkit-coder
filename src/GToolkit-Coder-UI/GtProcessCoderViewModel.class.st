@@ -1,10 +1,10 @@
 Class {
-	#name : #GtProcessCoderUIModel,
-	#superclass : #GtMethodsCoderUIModel,
+	#name : #GtProcessCoderViewModel,
+	#superclass : #GtMethodsCoderViewModel,
 	#category : #'GToolkit-Coder-UI-Coder - Methods Model'
 }
 
 { #category : #accessing }
-GtProcessCoderUIModel >> elementClass [
+GtProcessCoderViewModel >> elementClass [
 	^ GtProcessCoderElement
 ]
