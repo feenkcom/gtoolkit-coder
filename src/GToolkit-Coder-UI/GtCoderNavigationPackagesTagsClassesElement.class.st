@@ -86,6 +86,7 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
 		matchParent.
 	
 	classAndMethodProtocolList := BrVerticalPane new
+		matchParent;
 		addChild: classesList;
 		addChild: (protocolLabel := BrLabel new
 			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);

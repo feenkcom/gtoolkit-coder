@@ -54,14 +54,15 @@ GtPharoBehaviorProtocolBubbleElement >> createProtocolMethodRowFor: aPharoMethod
 			anEvent consumed: true.
 			
 			aContainer := self.
-			aContainer removeChildNamed: #method.
+			aContainer removeChildNamed: #'bubble--editor'.
 			
 			aPharoMethodsCoderViewModel expanded: true.
 			aCoderElement := aPharoMethodsCoderViewModel asElement.
 			aCoderElement hExact: 500.
 			aCoderElement vFitContent.
 			
-			aContainer addChild: (aCoderElement id: #method) ]
+			aContainer addChild: (aCoderElement id: #'bubble--editor').
+			self requestStyle ]
 ]
 
 { #category : #initialization }
@@ -71,18 +72,41 @@ GtPharoBehaviorProtocolBubbleElement >> initialize [
 	self
 		background: (Color white);
 		addLook: BrShadowLook new beLarge;
-		addLook: BrGlamorousWithMaximizerLook new;
+		addLook: BrGlamorousWithMaximizerAptitude new;
 		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
 		beInSeparateCompositionLayer;
 		fitContent.
-		
+
 	protocolLabel := self createProtocolLabel.
 	protocolLabel constraintsDo: [ :c | c linear horizontal alignCenter ].
 	methodsContainer := self createMethodsContainer.
 
 	methodsContainer addChild: protocolLabel.
 	
-	self addChild: methodsContainer
+	self addChild: methodsContainer.
+	
+	self addLook: (BrLayoutResizerLook new
+		vFitContentToFitContent: [ :aBlock |
+			self
+				childWithId: #'bubble--editor'
+				ifFound: aBlock
+				ifNone: [  ] ];
+		hFitContent: [ :aBlock |
+			self
+				childWithId: #'bubble--editor'
+				ifFound: aBlock
+				ifNone: [  ] ]
+		toExact: 500;
+		exactToMatchParent: [ :aBlock |
+			self
+				childWithId: #'bubble--editor'
+				ifFound: aBlock
+				ifNone: [  ] ];
+		matchParentToMatchParent: [ :aBlock |
+			self
+				childWithId: #'bubble--editor'
+				ifFound: aBlock
+				ifNone: [  ] ])
 ]
 
 { #category : #'api - pharo behavior protocol coder view model' }

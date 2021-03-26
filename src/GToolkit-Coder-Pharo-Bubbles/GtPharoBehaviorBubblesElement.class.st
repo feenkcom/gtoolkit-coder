@@ -50,13 +50,14 @@ GtPharoBehaviorBubblesElement >> initialize [
 
 	self beInSeparateCompositionLayer.
 	self background: BrGlamorousColors backdropColor.
-	self addLook: BrGlamorousMaximizerFullscreenHostLook new. 
+	self addLook: BrGlamorousMaximizerFullscreenHostAptitude new. 
 
 	canvas := BlCanvassableElement new
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent ].
 	canvas addEventHandler: BlSlideHandler new.	
+	canvas addEventHandler: BlScrollSlideHandler new.
 	canvas layout: (BlOnceLayout on: (GtGraphGridLayout new gapSize: 30)).
 	
 	canvas
@@ -101,7 +102,7 @@ GtPharoBehaviorBubblesElement >> onPharoBehaviorCoderViewModelChanged [
 { #category : #private }
 GtPharoBehaviorBubblesElement >> startZoomAnimation: anAnimation [
 	anAnimation onFinishedDo: [
-		(self query // GtPharoBehaviorProtocolBubbleElement) all
+		(self query // BlElement) all
 			do: [ :eachCard | eachCard invalidate ] ].
 		
 	self addAnimation: anAnimation
