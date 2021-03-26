@@ -142,7 +142,7 @@ GtPharoDummyClass >> realClass: anObject [
 GtPharoDummyClass >> removeFromSystem [
 	realClass
 		ifNil: [ ^ self ].
-
-	realClass removeFromSystem.
+	
+	GtPharoCodeModifier current removeClass: realClass.
 	realClass := nil
 ]

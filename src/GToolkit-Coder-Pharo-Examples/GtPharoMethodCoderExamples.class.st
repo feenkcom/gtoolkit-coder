@@ -193,7 +193,11 @@ GtPharoMethodCoderExamples >> compileMethodWithoutCoderModifiedWhenSubscribedToS
 		when: GtCoderMethodModified send: #record: to: anEventsRecoder;
 		when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
 
-	aCompiledSelector := [ anOldMethod methodClass compile: anOldMethod sourceCode, '"new method"' classified: anOldMethod protocol ]
+	aCompiledSelector := [
+		GtPharoCodeModifier
+			compileMethodSource: anOldMethod sourceCode, '"new method"'
+			in: anOldMethod methodClass
+			protocol: anOldMethod protocol ]
 		ensure: [ aMethodCoder unsubscribeFromSystem ].
 	
 	self assert: aCompiledSelector equals: anOldMethod selector.
@@ -239,7 +243,11 @@ GtPharoMethodCoderExamples >> compileMethodWithoutCoderNotModifiedWhenSubscribed
 
 	anOldMethod := (aMethodCoder attributeNamed: #dummyMethod) realMethod.
 
-	aCompiledSelector := [ anOldMethod methodClass compile: anOldMethod sourceCode, '"new method"' classified: anOldMethod protocol ]
+	aCompiledSelector := [
+		GtPharoCodeModifier
+			compileMethodSource: anOldMethod sourceCode, '"new method"'
+			in: anOldMethod methodClass
+			protocol: anOldMethod protocol ]
 		ensure: [ aMethodCoder unsubscribeFromSystem ].
 	
 	self assert: aCompiledSelector equals: anOldMethod selector.
@@ -1023,7 +1031,7 @@ GtPharoMethodCoderExamples >> removeClassWhenSubscribedToSystem [
 	
 	aMethodCoder when: GtCoderClassRemoved send: #record: to: anEventsRecoder.
 
-	[ aMethodCoder behavior removeFromSystem ] ensure: [
+	[ GtPharoCodeModifier removeBehavior: aMethodCoder behavior ] ensure: [
 		aMethodCoder unsubscribeFromSystem ].
 
 	self assert: aMethodCoder behavior equals: UndefinedObject.
@@ -1086,7 +1094,7 @@ GtPharoMethodCoderExamples >> removeMethodWithoutCoderWhenSubscribedToSystem [
 	aMethodCoder weak
 		when: GtCoderMethodRemoved send: #record: to: anEventsRecoder.
 
-	[ aMethod removeFromSystem ] ensure: [
+	[ GtPharoCodeModifier removeMethod: aMethod ] ensure: [
 		aMethodCoder unsubscribeFromSystem ].
 
 	"when the method is removed not via coder's api we do not reset the state of the coder,
@@ -1120,7 +1128,7 @@ GtPharoMethodCoderExamples >> removePackageWhenSubscribedToSystem [
 
 	aMethodCoder when: GtCoderClassRemoved send: #record: to: anEventsRecoder.
 
-	[ aPackage removeFromSystem ] ensure: [
+	[ GtPharoCodeModifier removePackage: aPackage ] ensure: [
 		aMethodCoder unsubscribeFromSystem ].
 
 	self assert: aMethodCoder behavior equals: UndefinedObject.

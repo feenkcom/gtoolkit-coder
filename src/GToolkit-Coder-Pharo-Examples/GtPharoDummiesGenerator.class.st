@@ -22,14 +22,15 @@ GtPharoDummiesGenerator >> addDummyClassesToPackage: aDummyPackage [
 	theDummyClasses := (self dummyClassNamesForPackageName: aDummyPackage packageName) collect: [ :eachClassName |
 		| aNewClass aDummyClass |
 
-		aNewClass := Object subclass: eachClassName
+		aNewClass := GtPharoCodeModifier current
+			createSubclassOf: Object
+			named: eachClassName
 			instanceVariableNames: (String streamContents: [ :aStream |
 				self fakeInstVarNames
 					do: [ :each | aStream nextPutAll: each ]
 					separatedBy: [ aStream space ] ])
-			classVariableNames: ''
 			package: aDummyPackage packageName.
-		
+
 		aDummyClass := GtPharoDummyClass new
 			instVarNames: self fakeInstVarNames;
 			realClass: aNewClass;
@@ -53,9 +54,10 @@ GtPharoDummiesGenerator >> addDummyKeywordMethodsToClass: aDummyClass [
 		
 		eachProtocol := self fakeCategoryForFakeMethodName: eachMethodName.
 		
-		aDummyClass realClass
-			compile: (eachMethodName asString, ' anObject')
-			classified: eachProtocol.
+		GtPharoCodeModifier current
+			compileMethodSource: (eachMethodName asString, ' anObject')
+			in: aDummyClass realClass
+			protocol: eachProtocol.
 		
 		aDummyMethod := GtPharoDummyMethod new
 			realMethod: aDummyClass realClass >> eachMethodName;
@@ -75,10 +77,11 @@ GtPharoDummiesGenerator >> addDummyUnaryClassMethodsToClass: aDummyClass [
 		
 		eachProtocol := self fakeCategoryForFakeMethodName: eachMethodName.
 		
-		aDummyClass realClass class
-			compile: eachMethodName
-			classified: eachProtocol.
-			
+		GtPharoCodeModifier current
+			compileMethodSource: eachMethodName
+			in: aDummyClass realClass class
+			protocol: eachProtocol.
+		
 		aDummyMethod := GtPharoDummyMethod new
 			realMethod: aDummyClass realClass class >> eachMethodName;
 			selector: eachMethodName;
@@ -97,9 +100,10 @@ GtPharoDummiesGenerator >> addDummyUnaryMethodsToClass: aDummyClass [
 		
 		eachProtocol := self fakeCategoryForFakeMethodName: eachMethodName.
 		
-		aDummyClass realClass
-			compile: eachMethodName
-			classified: eachProtocol.
+		GtPharoCodeModifier current
+			compileMethodSource: eachMethodName
+			in: aDummyClass realClass
+			protocol: eachProtocol.
 			
 		aDummyMethod := GtPharoDummyMethod new
 			realMethod: aDummyClass realClass >> eachMethodName;
@@ -326,7 +330,7 @@ GtPharoDummiesGenerator >> generate [
 		theDummyPackages := self dummyPackageNames collect: [ :eachPackageName |
 			| eachPackage eachDummyPackage |
 			self assert: (RPackageOrganizer default includesPackageNamed: eachPackageName) not.
-			eachPackage := RPackageOrganizer default createPackageNamed: eachPackageName.
+			eachPackage := GtPharoCodeModifier createPackageNamed: eachPackageName.
 			eachDummyPackage := GtPharoDummyPackage new
 				packageName: eachPackageName;
 				realPackage: eachPackage.

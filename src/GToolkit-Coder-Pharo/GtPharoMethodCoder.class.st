@@ -237,7 +237,7 @@ GtPharoMethodCoder >> compileInContext: aGtPharoSourceCoderEvaluationContext [
 			selector := aChange selector.
 
 			(self
-				handleCompilerErrorsDuring: [ RBRefactoryChangeManager instance performChange: aChange ])
+				handleCompilerErrorsDuring: [ GtPharoCodeModifier current performRefactoryChange: aChange ])
 				ifFalse: [ ^ false ].
 
 			aChange definedSelector
@@ -1076,8 +1076,10 @@ GtPharoMethodCoder >> remove [
 
 	self announcer
 		suppress: GtCoderMethodRemoved
-		during: [ self methodBehavior realBehaviorDo: [ :aBehavior | aBehavior removeSelector: selector ] ].
-	
+		during: [ self methodBehavior realBehaviorDo: [ :aBehavior |
+				GtPharoCodeModifier current
+					removeMethodFrom: aBehavior selector: self selector ] ].
+
 	self reset.
 	
 	self notifyMethodRemoved

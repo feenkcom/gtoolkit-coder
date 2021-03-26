@@ -409,14 +409,15 @@ GtPharoSourceCoder >> primitiveAnonymousCompile: aSourceString inContext: aGtPha
 		ifNil: [ aGtPharoSourceCoderEvaluationContext receiverObject class ]
 		ifNotNil: [ :aContext | aContext methodClass ].
 
-	^ self class compiler
-		source: aSourceString;
-		class: methodClass newAnonymousSubclass;
-		context: aGtPharoSourceCoderEvaluationContext runtimeContext;
-		requestor: aGtPharoSourceCoderEvaluationContext;
-		noPattern: isForMethod not;
-		failBlock: anEvaluationFailBlock;
-		compile
+	^ GtPharoCodeModifier current critical: [
+		self class compiler
+			source: aSourceString;
+			class: methodClass newAnonymousSubclass;
+			context: aGtPharoSourceCoderEvaluationContext runtimeContext;
+			requestor: aGtPharoSourceCoderEvaluationContext;
+			noPattern: isForMethod not;
+			failBlock: anEvaluationFailBlock;
+			compile ]
 ]
 
 { #category : #'private - actions' }

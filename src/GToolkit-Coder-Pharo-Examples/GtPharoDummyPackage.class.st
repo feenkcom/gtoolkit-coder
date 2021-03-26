@@ -98,6 +98,6 @@ GtPharoDummyPackage >> removeFromSystem [
 		ifNil: [ ^ self ].
 		
 	dummyClasses do: [ :eachClass | eachClass removeFromSystem ].
-	realPackage removeFromSystem.
+	GtPharoCodeModifier removePackage: realPackage.
 	realPackage := nil
 ]
