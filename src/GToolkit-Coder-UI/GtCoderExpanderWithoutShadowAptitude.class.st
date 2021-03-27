@@ -1,6 +1,6 @@
 Class {
-	#name : #GtCoderExpanderWithoutShadowLook,
-	#superclass : #BrExpanderLook,
+	#name : #GtCoderExpanderWithoutShadowAptitude,
+	#superclass : #BrExpanderAptitude,
 	#instVars : [
 		'sidebar',
 		'toggle',
@@ -17,69 +17,69 @@ Class {
 }
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> borderFocusedPaint [
+GtCoderExpanderWithoutShadowAptitude >> borderFocusedPaint [
 	^ borderFocusedPaint
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> borderFocusedPaint: aPaintOrColor [
+GtCoderExpanderWithoutShadowAptitude >> borderFocusedPaint: aPaintOrColor [
 	borderFocusedPaint := aPaintOrColor
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> borderPaint [
+GtCoderExpanderWithoutShadowAptitude >> borderPaint [
 	^ borderPaint
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> borderPaint: aPaintOrColor [
+GtCoderExpanderWithoutShadowAptitude >> borderPaint: aPaintOrColor [
 	borderPaint := aPaintOrColor
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> borderWidth [
+GtCoderExpanderWithoutShadowAptitude >> borderWidth [
 	^ borderWidth
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> borderWidth: anInteger [
+GtCoderExpanderWithoutShadowAptitude >> borderWidth: anInteger [
 	borderWidth := anInteger
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> cornerRadius [
+GtCoderExpanderWithoutShadowAptitude >> cornerRadius [
 	^ cornerRadius
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> cornerRadius: aNumber [
+GtCoderExpanderWithoutShadowAptitude >> cornerRadius: aNumber [
 	cornerRadius := aNumber
 ]
 
 { #category : #initialization }
-GtCoderExpanderWithoutShadowLook >> defaultBorderPaint [
+GtCoderExpanderWithoutShadowAptitude >> defaultBorderPaint [
 	^ BrGlamorousColors lightBorderColor
 ]
 
 { #category : #initialization }
-GtCoderExpanderWithoutShadowLook >> defaultFocusedBorderPaint [
+GtCoderExpanderWithoutShadowAptitude >> defaultFocusedBorderPaint [
 	^ (BrGlamorousColors primaryBorderColor alpha: 0.4) gtOpaqueColorOnWhite
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> expandedBorderWidth [
+GtCoderExpanderWithoutShadowAptitude >> expandedBorderWidth [
 	<return: #Number>
 
 	^ expandedBorderWidth
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> expandedBorderWidth: aNumber [
+GtCoderExpanderWithoutShadowAptitude >> expandedBorderWidth: aNumber [
 	expandedBorderWidth := aNumber
 ]
 
 { #category : #initialization }
-GtCoderExpanderWithoutShadowLook >> initialize [
+GtCoderExpanderWithoutShadowAptitude >> initialize [
 	| aTriangle |
 	super initialize.
 
@@ -102,7 +102,7 @@ GtCoderExpanderWithoutShadowLook >> initialize [
 		padding: self padding;
 		layout: BlLinearLayout vertical.
 
-	self add: (BrStyleCommonLook new
+	self add: (BrStyleCommonAptitude new
 		collapsed: [ :aStyle |
 			aStyle border: (BlBorder paint: self borderPaint width: self borderWidth) ];
 		expanded: [ :aStyle |
@@ -110,12 +110,12 @@ GtCoderExpanderWithoutShadowLook >> initialize [
 			aStyle border: (BlBorder paint: self borderPaint width: self expandedBorderWidth) ];
 		focused: [ :aStyle | (BlBorder paint: self borderFocusedPaint width: self expandedBorderWidth) ]).
 
-	self add: (BrStyleCommonLook new
+	self add: (BrStyleCommonAptitude new
 		@ aTriangle;
 		collapsed: [ :aStyle | aStyle geometry: self newCollapsedTriangleGeometry ];
 		expanded: [ :aStyle | aStyle geometry: self newExpandedTriangleGeometry ]).
 
-	self add: (BrStyleCommonLook new
+	self add: (BrStyleCommonAptitude new
 		@ sidebar;
 		default: [ :aStyle | aStyle background: self borderPaint ];
 		focused: [ :aStyle | aStyle background: self borderFocusedPaint ]).
@@ -131,7 +131,7 @@ GtCoderExpanderWithoutShadowLook >> initialize [
 ]
 
 { #category : #'private - instance creation' }
-GtCoderExpanderWithoutShadowLook >> newCollapsedTriangleGeometry [
+GtCoderExpanderWithoutShadowAptitude >> newCollapsedTriangleGeometry [
 	^ BlPolygon vertices: {
 		(0 @ 0).
 		(8 @ 4).
@@ -140,7 +140,7 @@ GtCoderExpanderWithoutShadowLook >> newCollapsedTriangleGeometry [
 ]
 
 { #category : #'private - instance creation' }
-GtCoderExpanderWithoutShadowLook >> newExpandedTriangleGeometry [
+GtCoderExpanderWithoutShadowAptitude >> newExpandedTriangleGeometry [
 	^ BlPolygon vertices: {
 		(0 @ 0).
 		(8 @ 0).
@@ -149,7 +149,7 @@ GtCoderExpanderWithoutShadowLook >> newExpandedTriangleGeometry [
 ]
 
 { #category : #'private - instance creation' }
-GtCoderExpanderWithoutShadowLook >> newSidebar [
+GtCoderExpanderWithoutShadowAptitude >> newSidebar [
 	^ BlElement new
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c | 
@@ -159,7 +159,7 @@ GtCoderExpanderWithoutShadowLook >> newSidebar [
 ]
 
 { #category : #'private - instance creation' }
-GtCoderExpanderWithoutShadowLook >> newToggle [
+GtCoderExpanderWithoutShadowAptitude >> newToggle [
 	^ BlElement new
 		id: GtSourceCoderExpanderToggleId;
 		layout: BlLinearLayout horizontal;
@@ -175,7 +175,7 @@ GtCoderExpanderWithoutShadowLook >> newToggle [
 ]
 
 { #category : #'private - instance creation' }
-GtCoderExpanderWithoutShadowLook >> newTriangle [
+GtCoderExpanderWithoutShadowAptitude >> newTriangle [
 	^ BlElement new
 		size: 8 @ 8;
 		background: (Color white alpha: 0.9);
@@ -183,18 +183,18 @@ GtCoderExpanderWithoutShadowLook >> newTriangle [
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> padding [
+GtCoderExpanderWithoutShadowAptitude >> padding [
 	^ padding
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> padding: aBlInsets [
+GtCoderExpanderWithoutShadowAptitude >> padding: aBlInsets [
 	padding := aBlInsets.
 	container padding: aBlInsets
 ]
 
 { #category : #accessing }
-GtCoderExpanderWithoutShadowLook >> resizableElementsDo: aBlock [
+GtCoderExpanderWithoutShadowAptitude >> resizableElementsDo: aBlock [
 	super resizableElementsDo: aBlock.
 	aBlock value: container
 ]

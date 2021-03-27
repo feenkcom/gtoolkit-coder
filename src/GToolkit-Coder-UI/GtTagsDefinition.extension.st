@@ -21,6 +21,6 @@ GtTagsDefinition >> tagsEditor [
 		renameEvent: GtBehaviorTagRenamed;
 		separator: [
 			BrLabel new
-				look: (BrGlamorousLabelLook new glamorousCodeFontAndSmallSize foreground: BrGlamorousColors defaultButtonTextColor );
+				aptitude: (BrGlamorousLabelAptitude new glamorousCodeFontAndSmallSize foreground: BrGlamorousColors defaultButtonTextColor );
 				text: ',' ]
 ]

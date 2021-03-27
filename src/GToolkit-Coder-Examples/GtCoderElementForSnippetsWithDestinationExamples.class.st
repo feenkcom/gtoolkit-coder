@@ -180,7 +180,7 @@ GtCoderElementForSnippetsWithDestinationExamples >> snippetsCoderWithDestination
 	| coder |
 	coder := GtPharoSnippetCoder new
 		forSource: '1+1';
-		coderLook: [ GtSourceCoderSpawnDestinationLook ].
+		coderLook: [ GtSourceCoderSpawnDestinationAptitude ].
 	
 	self assert: coder spawnDestination isSpawnNextPane.
 	^ coder

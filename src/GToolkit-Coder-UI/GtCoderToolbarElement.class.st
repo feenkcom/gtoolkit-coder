@@ -17,7 +17,7 @@ Class {
 GtCoderToolbarElement >> addClassTab: look [
 	<gtCreateComponentTab: 10>
 	^ BrTab new
-		look: BrGlamorousTabLook new;
+		aptitude: BrGlamorousTabAptitude new;
 		label: 'Class';
 		stencil: [ | element |
 			element := GtCreateBehaviorElement new.
@@ -37,7 +37,7 @@ GtCoderToolbarElement >> addClassTab: look [
 GtCoderToolbarElement >> addPackageTab: look [
 	<gtCreateComponentTab: 30>
 	^ BrTab new
-		look: BrGlamorousTabLook new;
+		aptitude: BrGlamorousTabAptitude new;
 		label: 'Package';
 		stencil: [ | element |
 			element := GtCreatePackageElement new.
@@ -56,7 +56,7 @@ GtCoderToolbarElement >> addPackageTab: look [
 GtCoderToolbarElement >> addTraitTab: look [
 	<gtCreateComponentTab: 20>
 	^ BrTab new
-		look: BrGlamorousTabLook new;
+		aptitude: BrGlamorousTabAptitude new;
 		label: 'Trait';
 		stencil: [ | element |
 			element := GtCreateBehaviorElement new.
@@ -90,7 +90,7 @@ GtCoderToolbarElement >> initialize [
 
 	self addChild: self toolbarElement as: #toolbar.
 	
-	self addLook: (BrLayoutResizerLook new
+	self addAptitude: (BrLayoutResizerAptitude new
 		anyToFitContent;
 		anyToFitContent: self toolbarElement)
 ]
@@ -98,7 +98,7 @@ GtCoderToolbarElement >> initialize [
 { #category : #initialization }
 GtCoderToolbarElement >> initializeToolbarElement [
 	toolbarElement := BrToolbar new
-		look: BrGlamorousToolbarLook new;
+		aptitude: BrGlamorousToolbarAptitude new;
 		padding:
 			(BlInsets
 				top: 10
@@ -117,14 +117,14 @@ GtCoderToolbarElement >> newAddButton [
 	| look |
 	^ BrButton new
 		label: 'Add class or package';
-		look:
-			BrGlamorousButtonWithIconLook
+		aptitude:
+			BrGlamorousButtonWithIconAptitude
 				+
-					(look := BrGlamorousWithDropdownLook
+					(look := BrGlamorousWithDropdownAptitude
 						handle: [ BrButton new
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
+								aptitude:
+									BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
+										- BrGlamorousButtonExteriorAptitude;
 								icon: BrGlamorousVectorIcons add;
 								yourself ]
 						content: [ | element |
@@ -143,7 +143,7 @@ GtCoderToolbarElement >> newAddButton [
 GtCoderToolbarElement >> newAddInterface: look [
 	| contentTabs tabMethods |
 	contentTabs := BrTabGroup new.
-	contentTabs look: BrGlamorousTabGroupLook new.
+	contentTabs aptitude: BrGlamorousTabGroupAptitude new.
 	contentTabs
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
@@ -159,7 +159,7 @@ GtCoderToolbarElement >> newAddInterface: look [
 { #category : #'private - instance creation' }
 GtCoderToolbarElement >> newBrowseButton [
 	^ BrButton new
-		look: BrGlamorousButtonWithIconLook;
+		aptitude: BrGlamorousButtonWithIconAptitude;
 		label: 'Browse in another world tab';
 		icon: BrGlamorousVectorIcons emphasizedBrowse;
 		action: [ :aButton | self browseFrom: aButton ]
@@ -169,10 +169,10 @@ GtCoderToolbarElement >> newBrowseButton [
 GtCoderToolbarElement >> newHierarchyButton [
 	^ BrButton new
 		label: 'Show Package and Class Hierarchies';
-		look: BrGlamorousButtonWithIconLook + (BrGlamorousWithDropdownLook
+		aptitude: BrGlamorousButtonWithIconAptitude + (BrGlamorousWithDropdownAptitude
 			handle: [
 				BrButton new
-					look: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook - BrGlamorousButtonExteriorLook;
+					aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude - BrGlamorousButtonExteriorAptitude;
 					icon: BrGlamorousIcons tree;
 					yourself ]
 			content: [

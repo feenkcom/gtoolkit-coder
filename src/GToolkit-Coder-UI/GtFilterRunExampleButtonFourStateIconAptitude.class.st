@@ -15,8 +15,8 @@ ${example:GtFilterRunExampleButtonLookExamples>>#fourIconLookButton_SuccessAndNo
 
 "
 Class {
-	#name : #GtFilterRunExampleButtonFourStateIconLook,
-	#superclass : #GtFilterRunExampleButtonIconLook,
+	#name : #GtFilterRunExampleButtonFourStateIconAptitude,
+	#superclass : #GtFilterRunExampleButtonIconAptitude,
 	#instVars : [
 		'fourIconElement',
 		'failureIconElement',
@@ -28,22 +28,22 @@ Class {
 }
 
 { #category : #'private - accessing' }
-GtFilterRunExampleButtonFourStateIconLook >> errorIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> errorIconElement [
 	^ errorIconElement
 ]
 
 { #category : #'private - accessing' }
-GtFilterRunExampleButtonFourStateIconLook >> failureIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> failureIconElement [
 	^ failureIconElement
 ]
 
 { #category : #'private - accessing' }
-GtFilterRunExampleButtonFourStateIconLook >> fourIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> fourIconElement [
 	^ fourIconElement
 ]
 
 { #category : #initialization }
-GtFilterRunExampleButtonFourStateIconLook >> initialize [
+GtFilterRunExampleButtonFourStateIconAptitude >> initialize [
 	super initialize.
 	self initializeFourStateIconElement.
 	self initializeNeutralIconElement.
@@ -60,27 +60,27 @@ GtFilterRunExampleButtonFourStateIconLook >> initialize [
 ]
 
 { #category : #initialization }
-GtFilterRunExampleButtonFourStateIconLook >> initializeErrorIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> initializeErrorIconElement [
 	errorIconElement := BlElement new
 		background: self newErrorBackground.
 	self initializeIconElement: errorIconElement.
 ]
 
 { #category : #initialization }
-GtFilterRunExampleButtonFourStateIconLook >> initializeExampleElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> initializeExampleElement [
 	super initializeExampleElement.
 	self exampleElement visibility: BlVisibility gone.
 ]
 
 { #category : #initialization }
-GtFilterRunExampleButtonFourStateIconLook >> initializeFailureIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> initializeFailureIconElement [
 	failureIconElement := BlElement new
 		background: self newFailureBackground.
 	self initializeIconElement: failureIconElement
 ]
 
 { #category : #initialization }
-GtFilterRunExampleButtonFourStateIconLook >> initializeFourStateIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> initializeFourStateIconElement [
 	fourIconElement := BlElement new
 		layout: (BlGridLayout new
 			columnCount: 2;
@@ -92,31 +92,31 @@ GtFilterRunExampleButtonFourStateIconLook >> initializeFourStateIconElement [
 ]
 
 { #category : #initialization }
-GtFilterRunExampleButtonFourStateIconLook >> initializeNeutralIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> initializeNeutralIconElement [
 	neutralIconElement := BlElement new
 		background: self newNotExecutedBackground.
 	self initializeIconElement: neutralIconElement.
 ]
 
 { #category : #initialization }
-GtFilterRunExampleButtonFourStateIconLook >> initializeSuccessIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> initializeSuccessIconElement [
 	successIconElement := BlElement new
 		background: self newSuccessBackground.
 	self initializeIconElement: successIconElement
 ]
 
 { #category : #'private - accessing' }
-GtFilterRunExampleButtonFourStateIconLook >> neutralIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> neutralIconElement [
 	^ neutralIconElement
 ]
 
 { #category : #'private - accessing' }
-GtFilterRunExampleButtonFourStateIconLook >> successIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> successIconElement [
 	^ successIconElement
 ]
 
 { #category : #'private - updating' }
-GtFilterRunExampleButtonFourStateIconLook >> updateFourIconElement [
+GtFilterRunExampleButtonFourStateIconAptitude >> updateFourIconElement [
 	| isNeutralVisible isErrorVisible isFailureVisible isSuccessVisible |
 	self updateIconElement: self neutralIconElement status: (isNeutralVisible := self exampler hasNotExecutedExamples).
 	self updateIconElement: self errorIconElement status: (isErrorVisible := self exampler hasErrorExamples).
@@ -132,7 +132,7 @@ GtFilterRunExampleButtonFourStateIconLook >> updateFourIconElement [
 ]
 
 { #category : #'private - updating' }
-GtFilterRunExampleButtonFourStateIconLook >> updateIconElement: anElement status: aBoolean [
+GtFilterRunExampleButtonFourStateIconAptitude >> updateIconElement: anElement status: aBoolean [
 	aBoolean
 		ifTrue: [ 
 			anElement visibility: BlVisibility visible ]
@@ -141,7 +141,7 @@ GtFilterRunExampleButtonFourStateIconLook >> updateIconElement: anElement status
 ]
 
 { #category : #'private - updating' }
-GtFilterRunExampleButtonFourStateIconLook >> updateWidget [
+GtFilterRunExampleButtonFourStateIconAptitude >> updateWidget [
 	super updateWidget.
 	self updateFourIconElement.
 ]

@@ -15,10 +15,30 @@ GtCoderNavigationClassesListElement class >> fromClasses: aCollectionOfClasses [
 ]
 
 { #category : #'private - ui' }
+GtCoderNavigationClassesListElement >> buildClassLabel: aClass [
+	| aLook aText |
+	aLook := (BrGlamorousLabelAptitude new fontSize: 12).
+	aText := aClass name.
+
+	(self isAbstractClass: aClass)
+		ifTrue: [ aLook italic ].
+	
+	(self isDeprecatedClass: aClass)
+		ifTrue: [ 
+			aText := aText, ' (deprecated)'.
+			Transcript show: aText; cr.
+			aLook bold ].
+	
+	^ BrLabel new
+		aptitude: aLook;
+		text: aText.
+]
+
+{ #category : #'private - ui' }
 GtCoderNavigationClassesListElement >> buildClassRow: aClass index: aRowIndex list: aListElement [
 	^ BrWidgetContainer new
 		layout: BlLinearLayout horizontal;
-		look: BrHorizontalPaneLook new + (BrStyleCommonLook new
+		aptitude: BrHorizontalPaneAptitude new + (BrStyleCommonAptitude new
 			default: [ :aStyle | aStyle background: BrGlamorousColors deselectedListItemColor ];
 			hovered: [ :aStyle | aStyle background: BrGlamorousColors hoveredListItemColor ];
 			selected: [ :aStyle | aStyle background: BrGlamorousColors selectedListItemColor ];

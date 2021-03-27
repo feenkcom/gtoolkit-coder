@@ -49,18 +49,18 @@ GtBehaviorMethodCoderTagsElement >> methodCoderUIModel: aMethodCoderUIModel [
 GtBehaviorMethodCoderTagsElement >> newClassTag [
 	^ BrButton new
 		beTinySize;
-		look:
-			BrGlamorousButtonWithLabelLook
+		aptitude:
+			BrGlamorousButtonWithLabelAptitude
 				+
-					(BrGlamorousWithDropdownLook
+					(BrGlamorousWithDropdownAptitude
 						handle: [ BrButton new
 								beSmallSize;
 								disable;
-								look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
+								aptitude: BrGlamorousButtonRectangularAptitude + BrGlamorousButtonLabelAptitude;
 								label: self behaviorSideName ]
 						content: [ BrButton new
 								beSmallSize;
-								look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
+								aptitude: BrGlamorousButtonRectangularAptitude + BrGlamorousButtonLabelAptitude;
 								label: self behaviorOtherSideName;
 								action: [ :aButton | 
 									aButton fireEvent: BrDropdownHideWish new.

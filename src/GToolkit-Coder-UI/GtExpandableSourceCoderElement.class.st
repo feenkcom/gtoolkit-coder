@@ -12,7 +12,7 @@ Class {
 { #category : #private }
 GtExpandableSourceCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
 	aSourceCoder coderLook
-		ifNotNil: [ :aCoderLook | anElement addLook: aCoderLook ]
+		ifNotNil: [ :aCoderLook | anElement addAptitude: aCoderLook ]
 ]
 
 { #category : #converting }
@@ -25,10 +25,10 @@ GtExpandableSourceCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollap
 	aCollapsedElement coderUIModel: aSourceCoder.
 
 	"Initialize look just once"
-	aCollapsedElement look
+	aCollapsedElement aptitude
 		ifNil: [
 			self addCodersCoderLook: aSourceCoder to: aCollapsedElement.
-			aCollapsedElement addLook: GtSourceCoderCollapsedTextAndExampleLook ]
+			aCollapsedElement addAptitude: GtSourceCoderCollapsedTextAndExampleAptitude ]
 ]
 
 { #category : #private }
@@ -36,10 +36,10 @@ GtExpandableSourceCoderElement >> assignExpandedCoder: aSourceCoder to: anExpand
 	anExpandedElement coderUIModel: aSourceCoder.
 
 	"Initialize look just once"
-	anExpandedElement look
+	anExpandedElement aptitude
 		ifNil: [
 			self addCodersCoderLook: aSourceCoder to: anExpandedElement.
-			anExpandedElement addLook: GtSourceCoderEditorLook ]
+			anExpandedElement addAptitude: GtSourceCoderEditorAptitude ]
 ]
 
 { #category : #accessing }
@@ -114,7 +114,7 @@ GtExpandableSourceCoderElement >> initialize [
 		vFitContent;
 		hMatchParent;
 		margin: (BlInsets all: 4);
-		look: GtCoderExpanderLook;
+		aptitude: GtCoderExpanderAptitude;
 		beInSingleCompositionLayer.
 
 	self states withExpansion.

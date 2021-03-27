@@ -41,7 +41,7 @@ GtCreatePackageElement >> buildDefinitionEditor [
 	saveButton := BrButton new
 		icon: BrGlamorousVectorIcons accept;
 		beSmallSize;
-		look: BrGlamorousButtonWithIconLook new;
+		aptitude: BrGlamorousButtonWithIconAptitude new;
 		label: 'Save';
 		action: [ self createPackage ];
 		constraintsDo: [ :c | c grid horizontal span: 2 ];
@@ -60,7 +60,7 @@ GtCreatePackageElement >> buildDefinitionEditor [
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
-					look: [ self editableLabelLook ];
+					aptitude: [ self editableLabelLook ];
 					margin: self buttonMargin;
 					asElement) } ].
 
@@ -72,8 +72,8 @@ GtCreatePackageElement >> buildDefinitionEditor [
 { #category : #'private - ui' }
 GtCreatePackageElement >> buildPackageLabel [
 	^ definition package packageEditor asElement
-		look:
-			(BrGlamorousEditableLabelLook new
+		aptitude:
+			(BrGlamorousEditableLabelAptitude new
 				defaultBackground: Color transparent;
 				glamorousCodeFont;
 				bold;

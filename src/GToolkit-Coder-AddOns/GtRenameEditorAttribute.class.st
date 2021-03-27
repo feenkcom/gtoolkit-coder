@@ -24,7 +24,7 @@ GtRenameEditorAttribute >> cursorLocation: anInteger [
 GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	renameEditor := GtRenameEditor new
 		fitContent;
-		look: (BrGlamorousEditableLabelLook new defaultBackground: Color transparent; minWidth: 0);
+		aptitude: (BrGlamorousEditableLabelAptitude new defaultBackground: Color transparent; minWidth: 0);
 		padding: (BlInsets left: 2 right: 2);
 		margin: (BlInsets top: 0 left: -2 bottom: 0 right: -2);
 		inputFilter: filter;

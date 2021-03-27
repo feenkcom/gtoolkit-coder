@@ -1,6 +1,6 @@
 Class {
-	#name : #GtSourceCoderEditorLook,
-	#superclass : #GtSourceCoderLook,
+	#name : #GtSourceCoderEditorAptitude,
+	#superclass : #GtSourceCoderAptitude,
 	#instVars : [
 		'sourceCoderUIModel',
 		'editorElement',
@@ -12,14 +12,14 @@ Class {
 }
 
 { #category : #accessing }
-GtSourceCoderEditorLook >> editorElement [
+GtSourceCoderEditorAptitude >> editorElement [
 	<return: #GtSourceCoderEditorElement>
 
 	^ editorElement
 ]
 
 { #category : #initialization }
-GtSourceCoderEditorLook >> initialize [
+GtSourceCoderEditorAptitude >> initialize [
 	super initialize.
 	
 	editorElement := self newEditorElement.
@@ -28,23 +28,23 @@ GtSourceCoderEditorLook >> initialize [
 	self addChangeAddChildAs: { #content . GtSourceCoderEditorId uniqueInstance asSymbol } with: [ editorElement ].
 	self addChangeAddChildAs: #(content actions) with: [ actions ].
 	
-	self add: (BrLayoutResizerLook new inherit: editorElement)
+	self add: (BrLayoutResizerAptitude new inherit: editorElement)
 ]
 
 { #category : #'instance creation' }
-GtSourceCoderEditorLook >> newActionsElement [
+GtSourceCoderEditorAptitude >> newActionsElement [
 	^ GtCoderActionsElement new
 		margin: (BlInsets top: 5);
 		yourself
 ]
 
 { #category : #'instance creation' }
-GtSourceCoderEditorLook >> newEditorElement [
+GtSourceCoderEditorAptitude >> newEditorElement [
 	^ GtSourceCoderEditorElement new
 ]
 
 { #category : #hooks }
-GtSourceCoderEditorLook >> onCoderChanged: aGtSourceCoderUIModel [
+GtSourceCoderEditorAptitude >> onCoderChanged: aGtSourceCoderUIModel [
 	actions coderUIModel: aGtSourceCoderUIModel.
 	editorElement textualCoderViewModel: aGtSourceCoderUIModel
 ]

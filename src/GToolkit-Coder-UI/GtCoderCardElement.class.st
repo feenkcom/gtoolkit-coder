@@ -52,7 +52,7 @@ GtCoderCardElement >> detailsLabel [
 { #category : #initialization }
 GtCoderCardElement >> initialize [
 	super initialize.
-	self look: (BrGlamorousButtonExteriorLook new borderPaint: Color transparent).
+	self aptitude: (BrGlamorousButtonExteriorAptitude new borderPaint: Color transparent).
 	self layout: (BlLinearLayout vertical cellSpacing: 2).
 	self constraintsDo: [ :c | 
 		c horizontal matchParent.

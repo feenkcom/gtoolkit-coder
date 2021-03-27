@@ -1,6 +1,6 @@
 Class {
-	#name : #GtSourceCoderCollapsedTextLook,
-	#superclass : #GtSourceCoderLook,
+	#name : #GtSourceCoderCollapsedTextAptitude,
+	#superclass : #GtSourceCoderAptitude,
 	#instVars : [
 		'label'
 	],
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #initialization }
-GtSourceCoderCollapsedTextLook >> initialize [
+GtSourceCoderCollapsedTextAptitude >> initialize [
 	super initialize.
 	
 	label := self newLabel.
@@ -16,7 +16,7 @@ GtSourceCoderCollapsedTextLook >> initialize [
 ]
 
 { #category : #accessing }
-GtSourceCoderCollapsedTextLook >> initializeListeners [
+GtSourceCoderCollapsedTextAptitude >> initializeListeners [
 	super initializeListeners.
 	
 	self when: BlClickEvent do: [ :anEvent |
@@ -27,13 +27,13 @@ GtSourceCoderCollapsedTextLook >> initializeListeners [
 ]
 
 { #category : #'instance creation' }
-GtSourceCoderCollapsedTextLook >> newLabel [
+GtSourceCoderCollapsedTextAptitude >> newLabel [
 	^ BrLabel new
-		look: BrGlamorousLabelLook new editorMeasurement bold glamorousCodeFont
+		aptitude: BrGlamorousLabelAptitude new editorMeasurement bold glamorousCodeFont
 ]
 
 { #category : #initialization }
-GtSourceCoderCollapsedTextLook >> onCoderChanged: aGtSourceCoderUIModel [
+GtSourceCoderCollapsedTextAptitude >> onCoderChanged: aGtSourceCoderUIModel [
 	self widget coderUIModel
 		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
 	self updateLabelFor: aGtSourceCoderUIModel coder.
@@ -44,11 +44,11 @@ GtSourceCoderCollapsedTextLook >> onCoderChanged: aGtSourceCoderUIModel [
 ]
 
 { #category : #private }
-GtSourceCoderCollapsedTextLook >> updateLabel: anAnnouncement [
+GtSourceCoderCollapsedTextAptitude >> updateLabel: anAnnouncement [
 	self updateLabelFor: anAnnouncement coder
 ]
 
 { #category : #private }
-GtSourceCoderCollapsedTextLook >> updateLabelFor: aSourceCoder [
+GtSourceCoderCollapsedTextAptitude >> updateLabelFor: aSourceCoder [
 	label text: aSourceCoder collapsedText
 ]

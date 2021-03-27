@@ -44,11 +44,11 @@ GtFilterRunExampleButtonLookExamples >> assertFourIconVisibilityIn: anElement su
 { #category : #'private - asserting' }
 GtFilterRunExampleButtonLookExamples >> assertUpdateRequestedState: aBoolean for: anElement [
 	| isAttached |
-	self assert: anElement look isNotNil.
+	self assert: anElement aptitude isNotNil.
 
 	isAttached := false.	
-	anElement look withAllChildren do: [ :eachLook | 
-		(eachLook isKindOf: GtFilterRunExampleButtonLook) ifTrue: [ 
+	anElement aptitude withAllChildren do: [ :eachLook | 
+		(eachLook isKindOf: GtFilterRunExampleButtonAptitude) ifTrue: [ 
 			isAttached := true.
 			self assert: eachLook isUpdateRequested equals: aBoolean. ] ].
 	
@@ -72,11 +72,11 @@ GtFilterRunExampleButtonLookExamples >> assertVisibilityIn: anElement oneIcon: i
 GtFilterRunExampleButtonLookExamples >> attachCoder: aCoder toElementLooks: anElement [
 	<gtExample>
 	| isAttached |
-	self assert: anElement look isNotNil.
+	self assert: anElement aptitude isNotNil.
 
 	isAttached := false.	
-	anElement look withAllChildren do: [ :eachLook | 
-		(eachLook isKindOf: GtFilterRunExampleButtonLook) ifTrue: [ 
+	anElement aptitude withAllChildren do: [ :eachLook | 
+		(eachLook isKindOf: GtFilterRunExampleButtonAptitude) ifTrue: [ 
 			isAttached := true.
 			self assert: eachLook isUpdateRequested not description: 'Example button look should NOT be in update requested state'.
 			eachLook coder: aCoder.
@@ -91,7 +91,7 @@ GtFilterRunExampleButtonLookExamples >> attachCoder: aCoder toElementLooks: anEl
 GtFilterRunExampleButtonLookExamples >> basicFourIconLook [
 	<gtExample>
 	| aLook |
-	aLook := GtFilterRunExampleButtonFourStateIconLook new.
+	aLook := GtFilterRunExampleButtonFourStateIconAptitude new.
 	self assert: aLook exampleElement isNotNil.
 	self assert: aLook coder isNil.
 	^ aLook
@@ -101,7 +101,7 @@ GtFilterRunExampleButtonLookExamples >> basicFourIconLook [
 GtFilterRunExampleButtonLookExamples >> basicOneIconLook [
 	<gtExample>
 	| aLook |
-	aLook := GtFilterRunExampleButtonIconLook new.
+	aLook := GtFilterRunExampleButtonIconAptitude new.
 	self assert: aLook exampleElement isNotNil.
 	self assert: aLook coder isNil.
 	^ aLook
@@ -122,9 +122,9 @@ GtFilterRunExampleButtonLookExamples >> buttonWithFourIconLook [
 	aButton := self button.
 	aLook := self basicFourIconLook.
 	aButton
-		addLook: aLook;
-		addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
-		addLook: GtFilterRunExampleButtonTooltipLook.
+		addAptitude: aLook;
+		addAptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude;
+		addAptitude: GtFilterRunExampleButtonTooltipAptitude.
 	
 	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.
 	^ aButton
@@ -137,9 +137,9 @@ GtFilterRunExampleButtonLookExamples >> buttonWithOneIconLook [
 	aButton := self button.
 	aLook := self basicOneIconLook.
 	aButton
-		addLook: aLook;
-		addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
-		addLook: GtFilterRunExampleButtonTooltipLook.
+		addAptitude: aLook;
+		addAptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude;
+		addAptitude: GtFilterRunExampleButtonTooltipAptitude.
 		
 	self 
 		assert: (aButton childAt: 1) 
@@ -256,7 +256,7 @@ GtFilterRunExampleButtonLookExamples >> fourIconLookButton_WithoutCoder [
 	<gtExample>
 	| aButton |
 	aButton := self buttonWithFourIconLook.
-	aButton look - GtFilterRunExampleButtonTooltipLook.
+	aButton aptitude - GtFilterRunExampleButtonTooltipAptitude.
 
 	self assertUpdateRequestedState: false for: aButton.
 	self assertVisibilityIn: aButton oneIcon: false fourIcon: true.

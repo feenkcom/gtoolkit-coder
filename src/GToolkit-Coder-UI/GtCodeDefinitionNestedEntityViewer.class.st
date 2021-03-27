@@ -22,7 +22,7 @@ GtCodeDefinitionNestedEntityViewer >> create [
 
 	aContainer addChild: (editor
 		margin: margin;
-		look: lookStencil) asElement.
+		aptitude: lookStencil) asElement.
 	
 	theNestedEditors := BlElement new
 		layout: (BlGridLayout new columnCount: 2);
@@ -35,7 +35,7 @@ GtCodeDefinitionNestedEntityViewer >> create [
 		theNestedEditors addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
-					look: lookStencil;
+					aptitude: lookStencil;
 					margin: margin;
 					asElement) } ].
 

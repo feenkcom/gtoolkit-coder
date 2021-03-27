@@ -32,7 +32,7 @@ GtPharoMethodCoder >> buildRemoveMethodLabel: anElement [
 				or: [ (references := self selector gtReferences) isEmpty ] ])
 		ifTrue: [ ^ BrLabel new
 				margin: (BlInsets all: 10);
-				look: BrGlamorousLabelLook new glamorousRegularFont;
+				aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
 				text: 'Remove method?' asRopedText ].
 	labelText := selector asRopedText glamorousCodeFontAndSize bold.
 	labelText
@@ -51,7 +51,7 @@ GtPharoMethodCoder >> buildRemoveMethodLabel: anElement [
 						left: 10
 						bottom: 10
 						right: 0);
-				look: BrGlamorousLabelLook new;
+				aptitude: BrGlamorousLabelAptitude new;
 				text: labelText).
 	(labelText from: 1 to: selector size)
 		attributes:
@@ -60,7 +60,7 @@ GtPharoMethodCoder >> buildRemoveMethodLabel: anElement [
 	element
 		addChild:
 			(BrButton new
-				look: BrGlamorousLinkSquaredButtonWithLabelLook new;
+				aptitude: BrGlamorousLinkSquaredButtonWithLabelAptitude new;
 				beSmallSize;
 				margin: (BlInsets top: 10 left: 2 bottom: 10 right: 10);
 				label:

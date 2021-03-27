@@ -46,7 +46,7 @@ GtRefactoringsElement >> initialize [
 				ifTrue: [ (eachElement activatableRefactoring: eachUserActivatableRefactoring) ]
 				ifFalse: [ (eachElement activatableChange: eachUserActivatableRefactoring) ] ].	
 
-	self addLook: (BrLayoutResizerLook inherit inherit: refactoringsList).
+	self addAptitude: (BrLayoutResizerAptitude inherit inherit: refactoringsList).
 	
 	self addChild: refactoringsList
 ]

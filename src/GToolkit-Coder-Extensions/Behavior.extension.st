@@ -102,10 +102,10 @@ Behavior >> methodsCoderFromContext: aPhlowContext [
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> runAllExamplesButtonForMethodsCoder: aMethodsCoder [
 	^ BrButton new
-		addLook:
-			(GtFilterRunExampleButtonFourStateIconLook new coder: aMethodsCoder);
-		addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
-		addLook: (GtFilterRunExampleButtonTooltipLook new coder: aMethodsCoder);
+		addAptitude:
+			(GtFilterRunExampleButtonFourStateIconAptitude new coder: aMethodsCoder);
+		addAptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude;
+		addAptitude: (GtFilterRunExampleButtonTooltipAptitude new coder: aMethodsCoder);
 		icon: BrGlamorousVectorIcons play;
 		label: 'Run All Examples';
 		action: [ :element | aMethodsCoder exampler runExamplesFrom: element ]

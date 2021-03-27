@@ -79,8 +79,8 @@ GtMethodCoderTagsElement >> newProtocolEditor [
 	anEditor := BrEditableLabel new
 		text: (self protocolStringFor: self methodCoderUIModel);
 		constraintsDo: [ :c | c minWidth: 100 ];
-		look:
-			(BrGlamorousEditableLabelLook new
+		aptitude:
+			(BrGlamorousEditableLabelAptitude new
 				glamorousCodeFont;
 				defaultForeground: Color black;
 				fontSize: 13);
@@ -112,7 +112,7 @@ GtMethodCoderTagsElement >> newProtocolPickerList [
 		itemStencil: [
 			BrButton new
 				beSmallSize;
-				look: BrGlamorousButtonRectangularLook + BrGlamorousButtonLabelLook;
+				aptitude: BrGlamorousButtonRectangularAptitude + BrGlamorousButtonLabelAptitude;
 				action: [ :aButton :aButtonModel |
 					aButton fireEvent: (BrDropdownHideWish new).
 					self methodCoderUIModel coder renameProtocol: aButtonModel model asString.
@@ -127,7 +127,7 @@ GtMethodCoderTagsElement >> newProtocolPickerList [
 GtMethodCoderTagsElement >> newProtocolTag [
 	^ BrButton new
 		beTinySize;
-		look: BrGlamorousButtonWithLabelLook + (BrGlamorousWithDropdownLook
+		aptitude: BrGlamorousButtonWithLabelAptitude + (BrGlamorousWithDropdownAptitude
 			handle: [ self newProtocolEditor ]
 			content: [ self newProtocolPickerList ])
 ]

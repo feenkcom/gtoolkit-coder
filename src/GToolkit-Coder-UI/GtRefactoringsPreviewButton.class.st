@@ -26,7 +26,7 @@ GtRefactoringsPreviewButton >> buildRefactoringsPreview [
 		icon: BrGlamorousVectorIcons accept;
 		beSmallSize;
 		requestFocus;
-		look: BrGlamorousButtonWithIconLook new;
+		aptitude: BrGlamorousButtonWithIconAptitude new;
 		label: 'Save';
 		margin: (BlInsets top: 0 left: 10 bottom: 10 right: 0);
 		action: applyAction;
@@ -62,12 +62,12 @@ GtRefactoringsPreviewButton >> initialize [
 	self
 		icon: BrGlamorousVectorIcons accept;
 		beSmallSize;
-		look: BrGlamorousButtonWithIconLook new + (BrGlamorousWithDropdownLook
+		aptitude: BrGlamorousButtonWithIconAptitude new + (BrGlamorousWithDropdownAptitude
 			handle: [
 				BrButton new
 					icon: BrGlamorousIcons empty;
 					beSmallSize;
-					look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
+					aptitude: BrGlamorousButtonRectangularAptitude new + BrGlamorousButtonIconAptitude new ]
 			content: [
 				BlLazyElement new
 					layout: BlLinearLayout vertical;

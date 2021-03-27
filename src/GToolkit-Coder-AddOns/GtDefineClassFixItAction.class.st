@@ -22,7 +22,7 @@ GtDefineClassFixItAction >> addCreateClassAttributeInEditor: aBrTextEditor [
 		ifNotNil: [ :package | element forPackage: package ].
 	sourceCoder packageTag
 		ifNotNil: [ :tag | element forPackageTag: tag ].
-	element addLook: BrShadowLook.
+	element addAptitude: BrShadowAptitude.
 	element background: Color white.
 	element margin: (BlInsets all: 10).
 	element

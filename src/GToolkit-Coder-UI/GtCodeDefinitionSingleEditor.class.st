@@ -37,7 +37,7 @@ GtCodeDefinitionSingleEditor >> create [
 	theInitialName := aDefinition perform: getSelector withArguments: {}.
 
 	anEditableLabel := BrEditableLabel new
-		look: lookStencil create;
+		aptitude: lookStencil create;
 		margin: self margin;
 		text: theInitialName;
 		when: BrEditorAcceptWish do: [ :aWish |			

@@ -1,11 +1,11 @@
 Class {
-	#name : #GtCategoryToggleLook,
-	#superclass : #GtCoderToggleLook,
+	#name : #GtCategoryToggleAptitude,
+	#superclass : #GtCoderToggleAptitude,
 	#category : #'GToolkit-Coder-UI-Looks'
 }
 
 { #category : #accessing }
-GtCategoryToggleLook >> initialize [
+GtCategoryToggleAptitude >> initialize [
 	super initialize.
 	self
 		addChangeProperty: #(widget layout)

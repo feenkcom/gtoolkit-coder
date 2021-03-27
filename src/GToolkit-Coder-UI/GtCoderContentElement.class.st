@@ -21,7 +21,7 @@ GtCoderContentElement >> initialize [
 	super initialize.
 	self layout: BlFrameLayout new.
 	
-	self addLook: (BrLayoutResizerLook inherit).
+	self addAptitude: (BrLayoutResizerAptitude inherit).
 ]
 
 { #category : #'hooks - children' }

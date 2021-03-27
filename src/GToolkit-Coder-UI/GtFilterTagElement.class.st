@@ -48,7 +48,7 @@ GtFilterTagElement >> buildTagElements [
 GtFilterTagElement >> createDropDown [
 	| button dropDownLook |
 	button := self createDropDownButton.
-	dropDownLook := BrGlamorousWithDropdownLook
+	dropDownLook := BrGlamorousWithDropdownAptitude
 		handle: [ self createDropDownButton ]
 		content: [ BrSimpleList new
 				items: filterElement descriptors;
@@ -60,8 +60,8 @@ GtFilterTagElement >> createDropDown [
 							(BrInteractiveModel new
 								withHover;
 								yourself);
-						look:
-							(BrInteractiveCommonLook new
+						aptitude:
+							(BrInteractiveCommonAptitude new
 								default: [ :f | f background: Color transparent ];
 								hovered: [ :f | f background: BrGlamorousColors defaultButtonBorderColor ];
 								yourself);
@@ -76,16 +76,16 @@ GtFilterTagElement >> createDropDown [
 							self applyDescriptor: each ];
 						addChild:
 							(BrLabel new
-								look: BrGlamorousLabelLook new glamorousRegularFont glamorousCodeSmallSize;
+								aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize;
 								text: each name;
 								yourself).
 					element ];
 				hFitContent;
 				vFitContent ].
-	button addLook: dropDownLook.
+	button addAptitude: dropDownLook.
 	button
-		addLook:
-			(BrInteractiveCommonLook new
+		addAptitude:
+			(BrInteractiveCommonAptitude new
 				default: [ button background: Color transparent ];
 				hovered: [ button background: BrGlamorousColors neutralBackgroundColor darker ]).
 	^ button
@@ -96,9 +96,9 @@ GtFilterTagElement >> createDropDownButton [
 	| button |
 	button := BrButton new.
 	button
-		look:
-			BrTextLabelLook new glamorousRegularFont glamorousCodeSmallSize
-				+ BrGlamorousButtonIconLook + BrGlamorousButtonLayoutLook.
+		aptitude:
+			BrTextLabelAptitude new glamorousRegularFont glamorousCodeSmallSize
+				+ BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude.
 	button vExact: 20.
 	button padding: (BlInsets left: 4 right: 2).
 	button label: self descriptor name.
@@ -112,8 +112,8 @@ GtFilterTagElement >> createEditableLabel [
 	| label |
 	label := BrEditableLabel new.
 	label
-		look:
-			BrGlamorousEditableLabelLook new glamorousRegularFont
+		aptitude:
+			BrGlamorousEditableLabelAptitude new glamorousRegularFont
 				glamorousRegularSmallSize.
 	label text: (valueString ifNil: [ '' ]).
 	label
@@ -174,8 +174,8 @@ GtFilterTagElement >> initialize [
 	super initialize.
 	self fitContent.
 	self margin: (BlInsets all: 3).
-	self addLook:
-		(BrStyleCommonLook new
+	self addAptitude:
+		(BrStyleCommonAptitude new
 			default: [ :aStyle | 
 				aStyle geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
 				aStyle background: BrGlamorousColors neutralBackgroundColor.

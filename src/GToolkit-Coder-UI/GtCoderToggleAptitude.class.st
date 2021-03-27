@@ -1,21 +1,21 @@
 Class {
-	#name : #GtCoderToggleLook,
-	#superclass : #BrMaterialToggleBackgroundLook,
+	#name : #GtCoderToggleAptitude,
+	#superclass : #BrMaterialToggleBackgroundAptitude,
 	#category : #'GToolkit-Coder-UI-Looks'
 }
 
 { #category : #initialization }
-GtCoderToggleLook >> defaultNormalBackground [
+GtCoderToggleAptitude >> defaultNormalBackground [
 	^ Color transparent
 ]
 
 { #category : #initialization }
-GtCoderToggleLook >> initialize [
+GtCoderToggleAptitude >> initialize [
 	| interactiveLook |
 	super initialize.
 	self flag: 'Working around a toggled display issue'.
 	interactiveLook := self looks
-		detect: [ :each | each isKindOf: BrInteractiveLook ]
+		detect: [ :each | each isKindOf: BrInteractiveAptitude ]
 		ifNone: [ nil ].
 	interactiveLook notNil
 		ifTrue: [ interactiveLook
@@ -25,8 +25,8 @@ GtCoderToggleLook >> initialize [
 						pressed:
 							[ :aWidget | aWidget background: self defaultCheckedBackground slightlyLighter ] ] ].
 	self
-		add: BrMaterialRoundedLook new;
-		add: BrTextLabelLook new.
+		add: BrMaterialRoundedAptitude new;
+		add: BrTextLabelAptitude new.
 	self
 		addChange:
 			(BrLookChange new
@@ -38,7 +38,7 @@ GtCoderToggleLook >> initialize [
 ]
 
 { #category : #private }
-GtCoderToggleLook >> updateActivatedBackground [
+GtCoderToggleAptitude >> updateActivatedBackground [
 	self widget isActivated
 		ifTrue: [ self toggleActivated ]
 		ifFalse: [ self toggleDeactivated ]

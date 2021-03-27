@@ -73,7 +73,7 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 		icon: aGtCoderAction icon asElement;
 		beTinySize;
 		label: aGtCoderAction title;
-		look: BrGlamorousButtonWithIconLook;
+		aptitude: BrGlamorousButtonWithIconAptitude;
 		in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ];
 		action: [ :aButtonElement :aButtonModel :anEvent | 
 			GtCoderExecutionContextVariable
@@ -101,8 +101,8 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 
 	^ button
 		beTinySize;
-		look: BrGlamorousButtonWithIconLook +
-			(BrGlamorousWithDropdownLook
+		aptitude: BrGlamorousButtonWithIconAptitude +
+			(BrGlamorousWithDropdownAptitude
 				handle: [ | aButton |
 					aButton := BrButton new.
 					aGtCoderAction title
@@ -111,9 +111,9 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 						ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
 					aButton
 						beSmallSize;
-						look:
-							BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
-								- BrGlamorousButtonExteriorLook;
+						aptitude:
+							BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
+								- BrGlamorousButtonExteriorAptitude;
 						padding: BlInsets empty;
 						margin: BlInsets empty;
 						yourself ]
@@ -124,7 +124,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 							c horizontal exact: 200.
 							c vertical fitContent ].
 					titleElement := BrEditorElement new
-						look: BrGlamorousInputFieldSpacingLook;
+						aptitude: BrGlamorousInputFieldSpacingAptitude;
 						editor: (BrTextEditor new text: '' asRopedText);
 						requestFocus;
 						constraintsDo: [ :c | 
@@ -150,7 +150,7 @@ GtCoderActionsElement >> newToolbar [
 	<return: #BrToolbar>
 
 	^ BrToolbar new
-		look: (BrGlamorousToolbarLook new spacing: 4);
+		aptitude: (BrGlamorousToolbarAptitude new spacing: 4);
 		padding: (BlInsets left: -4)
 ]
 

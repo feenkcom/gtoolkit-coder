@@ -1,19 +1,19 @@
 Class {
-	#name : #GtDiffShadowLook,
-	#superclass : #GtDiffLook,
+	#name : #GtDiffShadowAptitude,
+	#superclass : #GtDiffAptitude,
 	#category : #'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #initialization }
-GtDiffShadowLook >> initialize [
+GtDiffShadowAptitude >> initialize [
 	super initialize.
 	
-	self add: (BrLayoutResizerLook new
+	self add: (BrLayoutResizerAptitude new
 		inherit;
 		inherit: GtDiffOldTextId;
 		inherit: GtDiffNewTextId).
 
-	self add: (BrSizeAdjustmentLook new
+	self add: (BrSizeAdjustmentAptitude new
 		normal: [ :aStyle | aStyle padding: (BlInsets all: 10) ];
 		small: [ :aStyle | aStyle padding: (BlInsets all: 8) ];
 		tiny: [ :aStyle | aStyle padding: (BlInsets all: 6) ];
@@ -29,8 +29,8 @@ GtDiffShadowLook >> initialize [
 ]
 
 { #category : #initialization }
-GtDiffShadowLook >> newSeparatorLook [
-	^ BrSizeAdjustmentLook new
+GtDiffShadowAptitude >> newSeparatorLook [
+	^ BrSizeAdjustmentAptitude new
 		normal: [ :aStyle | aStyle hExact: 40 ];
 		small: [ :aStyle | aStyle hExact: 25 ];
 		tiny: [ :aStyle | aStyle hExact: 20 ];
@@ -38,8 +38,8 @@ GtDiffShadowLook >> newSeparatorLook [
 ]
 
 { #category : #initialization }
-GtDiffShadowLook >> newShadowLook [
-	^ BrStyleCommonLook new
+GtDiffShadowAptitude >> newShadowLook [
+	^ BrStyleCommonAptitude new
 		default: [ :aStyle |
 			aStyle
 				background: Color white;
@@ -48,22 +48,22 @@ GtDiffShadowLook >> newShadowLook [
 ]
 
 { #category : #initialization }
-GtDiffShadowLook >> newTextLook [
-	^ BrSizeAdjustmentLook new
+GtDiffShadowAptitude >> newTextLook [
+	^ BrSizeAdjustmentAptitude new
 		normal: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 10);
-				do: [ :aWidget | aWidget look glamorousCodeSize ] ];
+				do: [ :aWidget | aWidget aptitude glamorousCodeSize ] ];
 		small: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 6);
-				do: [ :aWidget | aWidget look glamorousCodeSmallSize ] ];
+				do: [ :aWidget | aWidget aptitude glamorousCodeSmallSize ] ];
 		tiny: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 4);
-				do: [ :aWidget | aWidget look glamorousCodeTinySize ] ];
+				do: [ :aWidget | aWidget aptitude glamorousCodeTinySize ] ];
 		mini: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 2);
-				do: [ :aWidget | aWidget look glamorousCodeMiniSize ] ]
+				do: [ :aWidget | aWidget aptitude glamorousCodeMiniSize ] ]
 ]

@@ -35,7 +35,7 @@ GtPackageTagCoderElement >> buildPackageTagLabel [
 		vFitContent.
 	
 	tagNameEditor := BrEditableLabel new
-		look: (BrGlamorousEditableLabelLook new
+		aptitude: (BrGlamorousEditableLabelAptitude new
 			defaultBackground: Color transparent;
 			glamorousCodeFont;
 			bold;
@@ -84,16 +84,16 @@ GtPackageTagCoderElement >> buildParentLink [
 			(BrLabel new
 				margin: (BlInsets left: 4);
 				beSmallSize;
-				look:
-					(BrGlamorousLabelLook new glamorousRegularFont
+				aptitude:
+					(BrGlamorousLabelAptitude new glamorousRegularFont
 						foreground: BrGlamorousColors defaultButtonTextColor);
 				text: 'In: ').
 	element
 		addChild:
 			(BrButton new
-				look:
-					(BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
-						+ BrGlamorousLabelLook new glamorousRegularFont;
+				aptitude:
+					(BrGlamorousButtonExteriorAptitude new borderPaint: Color transparent)
+						+ BrGlamorousLabelAptitude new glamorousRegularFont;
 				label: packageTagCoder package name;
 				fitContent;
 				beSmallSize;
@@ -117,7 +117,7 @@ GtPackageTagCoderElement >> buildRemovePackageTagLabel [
 			(count = 1)}.
 	^ BrLabel new
 		margin: (BlInsets all: 10);
-		look: BrGlamorousLabelLook new glamorousRegularFont;
+		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
 		text: labelText asRopedText
 ]
 

@@ -32,7 +32,7 @@ GtCodeDefinitionCompositeEntityViewer >> create [
 						aCurrentIndex := aCurrentIndex + 1.
 						eachEditor
 							margin: margin;
-							look: lookStencil.
+							aptitude: lookStencil.
 						aStream nextPut: (eachEditor asElement) ]
 					separatedBy: [
 						separatorStencil ifNotNil: [ :aStencil |

@@ -15,15 +15,15 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	^ GtFixItButton new
 		beTinySize;
 		label: 'Fix it';
-		look:
-			BrGlamorousButtonWithIconLook - BrGlamorousButtonExteriorLook
+		aptitude:
+			BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude
 				+
-					(BrGlamorousWithDropdownLook
+					(BrGlamorousWithDropdownAptitude
 						handle: [ BrButton new
 								beTinySize;
-								look:
-									BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook
-										- BrGlamorousButtonExteriorLook;
+								aptitude:
+									BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
+										- BrGlamorousButtonExteriorAptitude;
 								icon: BrGlamorousVectorIcons repair;
 								yourself ]
 						content: [ GtCoderContextMenuContent new

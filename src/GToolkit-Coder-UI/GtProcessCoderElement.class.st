@@ -85,13 +85,13 @@ GtProcessCoderElement >> updateWatchExpressions [
 { #category : #ui }
 GtProcessCoderElement >> variablesElement [
 	^ BrTabGroup new
-		look: BrGlamorousTabGroupLook new;
+		aptitude: BrGlamorousTabGroupAptitude new;
 		addTab: (BrTab new
-			look: BrGlamorousTabLook new;
+			aptitude: BrGlamorousTabAptitude new;
 			label: 'Variables';
 			stencil: [ self contextVariablesElement ]);
 		addTab: (BrTab new
-			look: BrGlamorousTabLook new;
+			aptitude: BrGlamorousTabAptitude new;
 			label: 'Watches';
 			stencil: [ self watchVariablesElement ])
 ]
@@ -120,7 +120,7 @@ GtProcessCoderElement >> variablesListElement [
 		title: 'Variable';
 		stencil: [ :each | 
 			BrLabel new
-				look: (BrGlamorousLabelLook new foreground: Color black);
+				aptitude: (BrGlamorousLabelAptitude new foreground: Color black);
 				text: each first asString;
 				hMatchParent;
 				vMatchParent;
@@ -134,7 +134,7 @@ GtProcessCoderElement >> variablesListElement [
 		title: 'Value';
 		stencil: [ :each | 
 			BrLabel new
-				look: (BrGlamorousLabelLook new foreground: Color black);
+				aptitude: (BrGlamorousLabelAptitude new foreground: Color black);
 				text: (each last printStringLimitedTo: 50);
 				hMatchParent;
 				vMatchParent;
