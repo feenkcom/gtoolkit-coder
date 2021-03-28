@@ -70,6 +70,23 @@ GtPharoDummiesGenerator >> addDummyKeywordMethodsToClass: aDummyClass [
 ]
 
 { #category : #'private - generation' }
+GtPharoDummiesGenerator >> addDummyPackagesToEnvironment: aDummyEnvironment [
+	| theDummyPackages |
+
+	theDummyPackages := self dummyPackageNames collect: [ :eachPackageName |
+		| eachPackage eachDummyPackage |
+		self assert: (RPackageOrganizer default includesPackageNamed: eachPackageName) not.
+		eachPackage := GtPharoCodeModifier createPackageNamed: eachPackageName.
+		eachDummyPackage := GtPharoDummyPackage new
+			packageName: eachPackageName;
+			realPackage: eachPackage.
+		self addDummyClassesToPackage: eachDummyPackage.
+		eachDummyPackage ].
+	
+	aDummyEnvironment dummyPackages: theDummyPackages
+]
+
+{ #category : #'private - generation' }
 GtPharoDummiesGenerator >> addDummyUnaryClassMethodsToClass: aDummyClass [
 	| theDummyMethods |
 	theDummyMethods := self dummyUnaryClassMethodNames collect: [ :eachMethodName |
@@ -310,20 +327,9 @@ GtPharoDummiesGenerator >> generate [
 	
 	aDummyEnvironment := GtPharoDummyEnvironment new.
 	
-	EpMonitor disableDuring: [
-		| theDummyPackages |
-		
-		theDummyPackages := self dummyPackageNames collect: [ :eachPackageName |
-			| eachPackage eachDummyPackage |
-			self assert: (RPackageOrganizer default includesPackageNamed: eachPackageName) not.
-			eachPackage := GtPharoCodeModifier createPackageNamed: eachPackageName.
-			eachDummyPackage := GtPharoDummyPackage new
-				packageName: eachPackageName;
-				realPackage: eachPackage.
-			self addDummyClassesToPackage: eachDummyPackage.
-			eachDummyPackage ].
-		
-		aDummyEnvironment dummyPackages: theDummyPackages ].
+	SourceFiles deferFlushDuring: [
+		EpMonitor disableDuring: [
+			self addDummyPackagesToEnvironment: aDummyEnvironment ] ]. 
 
 	^ aDummyEnvironment
 ]

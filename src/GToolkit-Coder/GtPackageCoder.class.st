@@ -191,7 +191,7 @@ GtPackageCoder >> register [
 
 	self announcer
 		suppress: GtCoderPackageRegistered
-		during: [ self package register ].
+		during: [ GtPharoCodeModifier registerPackage: self package ].
 		
 	self notifyPackageRegistered
 ]
@@ -206,7 +206,7 @@ GtPackageCoder >> renameTo: aNewPackageName [
 
 	self announcer
 		suppress: GtCoderPackageRenamed
-		during: [ self package renameTo: aNewPackageName ].
+		during: [ GtPharoCodeModifier renamePackage: self package to: aNewPackageName ].
 
 	self notifyPackageRenamed
 ]
@@ -228,7 +228,7 @@ GtPackageCoder >> unload [
 
 	self announcer
 		suppress: GtCoderPackageUnregistered
-		during: [ self package removeFromSystem ].
+		during: [ GtPharoCodeModifier removePackage: self package ].
 
 	"only notify if it was registered and now it is not longer the case"
 	(wasRegistered and: [ self isRegistered not ])
@@ -244,7 +244,7 @@ GtPackageCoder >> unregister [
 
 	self announcer
 		suppress: GtCoderPackageUnregistered
-		during: [ self package unregister ].
+		during: [ GtPharoCodeModifier unregisterPackage: self package ].
 
 	self notifyPackageUnregistered
 ]

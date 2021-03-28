@@ -12,11 +12,21 @@ GtPharoDummyEnvironment class >> withPackages: anAmountOfPackages classes: anAmo
 	^ GtPharoDummiesGenerator withPackages: anAmountOfPackages classes: anAmountOfClasses
 ]
 
+{ #category : #'api - classes' }
+GtPharoDummyEnvironment >> anyDummyClass [
+	^ self anyDummyPackage anyDummyClass
+]
+
 { #category : #'api - methods' }
 GtPharoDummyEnvironment >> anyDummyKeywordMethod [
 	<return: #GtPharoDummyMethod>
 
 	^ self dummyPackages anyOne anyDummyKeywordMethod
+]
+
+{ #category : #'api - packages' }
+GtPharoDummyEnvironment >> anyDummyPackage [
+	^ self dummyPackages anyOne
 ]
 
 { #category : #'api - methods' }
@@ -77,5 +87,7 @@ GtPharoDummyEnvironment >> initialize [
 
 { #category : #initialization }
 GtPharoDummyEnvironment >> removeFromSystem [
-	EpMonitor disableDuring: [ self dummyPackages do: [ :each | each removeFromSystem ] ]
+	SourceFiles deferFlushDuring: [
+		EpMonitor disableDuring: [
+			self dummyPackages do: [ :each | each removeFromSystem ] ] ]
 ]

@@ -1,36 +1,44 @@
 Class {
-	#name : #GtPackageCoderExamples,
-	#superclass : #GtBasicPharoCoderExamples,
+	#name : #GtPharoPackageCoderExamples,
+	#superclass : #Object,
 	#category : #'GToolkit-Coder-Examples-Coders'
 }
 
 { #category : #'examples - instance creation' }
-GtPackageCoderExamples >> coderOnRegisteredPackage [
+GtPharoPackageCoderExamples >> coderOnRegisteredPackage [
 	<gtExample>
-	<after: #cleanUp>
-	| aPackage aPackageCoder |
+	| anEnvironment aDummyPackage aPackage aPackageCoder |
 
-	aPackage := self fakeRegisteredPackage.
+	anEnvironment := GtPharoDummyEnvironment withPackages: 1 classes: 1.
+	aDummyPackage := anEnvironment anyDummyPackage.
+	aPackage := aDummyPackage realPackage.
+
 	aPackageCoder := GtPackageCoder forPackage: aPackage.
+	aPackageCoder attributeNamed: #dummyEnvironment put: anEnvironment.
+	aPackageCoder attributeNamed: #dummyPackage put: aDummyPackage.
 
 	self assert: aPackageCoder package equals: aPackage.
 	self assert: aPackageCoder name equals: aPackage name.
 	self assert: aPackageCoder isRegistered.
-	self assert: aPackageCoder classes size equals: self fakeClassCount.
-	self assert: self fakeClassesInSystemCount equals: self fakeClassCount.
+	self assert: aPackageCoder classes size equals: aDummyPackage amountOfClasses.
 
 	^ aPackageCoder
 ]
 
 { #category : #'examples - instance creation' }
-GtPackageCoderExamples >> coderOnUnregisteredPackage [
+GtPharoPackageCoderExamples >> coderOnUnregisteredPackage [
 	<gtExample>
-	<after: #cleanUp>
-	| aPackage aPackageCoder |
+	| anEnvironment aDummyPackage aPackage aPackageCoder |
 
-	aPackage := self fakeUnregisteredPackage.
+	anEnvironment := GtPharoDummyEnvironment withPackages: 1 classes: 0.
+	aDummyPackage := anEnvironment anyDummyPackage.
+	aPackage := aDummyPackage realPackage.
+	GtPharoCodeModifier unregisterPackage: aPackage.
+
 	aPackageCoder := GtPackageCoder forPackage: aPackage.
-	
+	aPackageCoder attributeNamed: #dummyEnvironment put: anEnvironment.
+	aPackageCoder attributeNamed: #dummyPackage put: aDummyPackage.
+
 	self assert: aPackageCoder package equals: aPackage.
 	self assert: aPackageCoder name equals: aPackage name.
 	self assert: aPackageCoder isRegistered not.
@@ -39,10 +47,14 @@ GtPackageCoderExamples >> coderOnUnregisteredPackage [
 	^ aPackageCoder
 ]
 
+{ #category : #'private - set up' }
+GtPharoPackageCoderExamples >> eventsRecorder [
+	^ GtCoderExamplesEventsRecorder new
+]
+
 { #category : #'examples - package register' }
-GtPackageCoderExamples >> registerPreviouslyUnregisteredPackageWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> registerPreviouslyUnregisteredPackageWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -56,8 +68,7 @@ GtPackageCoderExamples >> registerPreviouslyUnregisteredPackageWhenSubscribedToS
 		aPackageCoder unsubscribeFromSystem ].
 
 	self assert: aPackageCoder isRegistered.
-	self assert: aPackageCoder classes size equals: self fakeClassCount.
-	self assert: self fakeClassesInSystemCount equals: self fakeClassCount.
+	self assert: aPackageCoder classes size equals: (aPackageCoder attributeNamed: #dummyPackage) amountOfClasses.
 	"When registering previously unregistered package, its classes are moved back from the unpackaged package to the package itself"
 	self assert: (aPackageCoder classes collect: [ :each | each package ]) asSet equals: {  aPackageCoder package } asSet. 
 
@@ -69,9 +80,8 @@ GtPackageCoderExamples >> registerPreviouslyUnregisteredPackageWhenSubscribedToS
 ]
 
 { #category : #'examples - package register' }
-GtPackageCoderExamples >> registerRegisteredPackageWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> registerRegisteredPackageWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -91,9 +101,8 @@ GtPackageCoderExamples >> registerRegisteredPackageWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - package register' }
-GtPackageCoderExamples >> registerRegisteredPackageWhenUnsubscribedToSystem [
+GtPharoPackageCoderExamples >> registerRegisteredPackageWhenUnsubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -111,9 +120,8 @@ GtPackageCoderExamples >> registerRegisteredPackageWhenUnsubscribedToSystem [
 ]
 
 { #category : #'examples - package register' }
-GtPackageCoderExamples >> registerUnregisteredPackageWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> registerUnregisteredPackageWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -128,7 +136,6 @@ GtPackageCoderExamples >> registerUnregisteredPackageWhenSubscribedToSystem [
 
 	self assert: aPackageCoder isRegistered.
 	self assert: aPackageCoder classes size equals: 0.
-	self assert: self fakeClassesInSystemCount equals: 0.
 
 	self assert: anEventsRecoder numberOfEvents equals: 1.
 	self assert: anEventsRecoder first class equals: GtCoderPackageRegistered.
@@ -138,9 +145,8 @@ GtPackageCoderExamples >> registerUnregisteredPackageWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - package register' }
-GtPackageCoderExamples >> registerUnregisteredPackageWhenUnsubscribedToSystem [
+GtPharoPackageCoderExamples >> registerUnregisteredPackageWhenUnsubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -160,9 +166,8 @@ GtPackageCoderExamples >> registerUnregisteredPackageWhenUnsubscribedToSystem [
 ]
 
 { #category : #'examples - package register' }
-GtPackageCoderExamples >> registerUnregisteredPackageWithoutCoderWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> registerUnregisteredPackageWithoutCoderWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -172,7 +177,7 @@ GtPackageCoderExamples >> registerUnregisteredPackageWithoutCoderWhenSubscribedT
 
 	aPackageCoder when: GtCoderPackageRegistered send: #record: to: anEventsRecoder.
 
-	[ aPackageCoder package register ] ensure: [
+	[ GtPharoCodeModifier registerPackage: aPackageCoder package ] ensure: [
 		aPackageCoder unsubscribeFromSystem ].
 
 	self assert: aPackageCoder isRegistered.
@@ -184,12 +189,11 @@ GtPackageCoderExamples >> registerUnregisteredPackageWithoutCoderWhenSubscribedT
 ]
 
 { #category : #'examples - package register' }
-GtPackageCoderExamples >> registerUnregisteredPackageWithoutCoderWhenUnsubscribedToSystem [
+GtPharoPackageCoderExamples >> registerUnregisteredPackageWithoutCoderWhenUnsubscribedToSystem [
 	"The only case when we can not send package registered notification
 	is when coder is not subscribed to the system and package is registered directly,
 	without coder being involved"
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -197,7 +201,7 @@ GtPackageCoderExamples >> registerUnregisteredPackageWithoutCoderWhenUnsubscribe
 	aPackageCoder := self coderOnUnregisteredPackage.
 	aPackageCoder when: GtCoderPackageRegistered send: #record: to: anEventsRecoder.
 
-	aPackageCoder package register.
+	GtPharoCodeModifier registerPackage: aPackageCoder package.
 
 	self assert: aPackageCoder isRegistered.
 	self assert: anEventsRecoder numberOfEvents equals: 0.
@@ -206,10 +210,9 @@ GtPackageCoderExamples >> registerUnregisteredPackageWithoutCoderWhenUnsubscribe
 ]
 
 { #category : #'examples - package rename' }
-GtPackageCoderExamples >> renameRegisteredPackageWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> renameRegisteredPackageWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
-	| aPackageCoder anEventsRecoder |
+	| aPackageCoder anEventsRecoder aNewName |
 
 	anEventsRecoder := self eventsRecorder.
 
@@ -218,13 +221,14 @@ GtPackageCoderExamples >> renameRegisteredPackageWhenSubscribedToSystem [
 
 	aPackageCoder when: GtCoderPackageRenamed send: #record: to: anEventsRecoder.
 
-	[ aPackageCoder renameTo: self renamedFakePackageName ] ensure: [
+	aNewName := aPackageCoder name, 'New'.
+
+	[ aPackageCoder renameTo: aNewName ] ensure: [
 		aPackageCoder unsubscribeFromSystem ].
 
 	self assert: aPackageCoder isRegistered.
-	self assert: aPackageCoder name equals: self renamedFakePackageName.
-	self assert: aPackageCoder classes size equals: self fakeClassCount.
-	self assert: self fakeClassesInSystemCount equals: self fakeClassCount.
+	self assert: aPackageCoder name equals: aNewName.
+	self assert: aPackageCoder classes size equals: (aPackageCoder attributeNamed: #dummyPackage) amountOfClasses.
 
 	self assert: anEventsRecoder numberOfEvents equals: 1.
 	self assert: anEventsRecoder first class equals: GtCoderPackageRenamed.
@@ -234,10 +238,9 @@ GtPackageCoderExamples >> renameRegisteredPackageWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - package rename' }
-GtPackageCoderExamples >> renameUnloadedPackageWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> renameUnloadedPackageWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
-	| aPackageCoder anEventsRecoder |
+	| aPackageCoder anEventsRecoder aNewName |
 
 	anEventsRecoder := self eventsRecorder.
 
@@ -245,14 +248,15 @@ GtPackageCoderExamples >> renameUnloadedPackageWhenSubscribedToSystem [
 	aPackageCoder subscribeToSystem.
 
 	aPackageCoder when: GtCoderPackageRenamed send: #record: to: anEventsRecoder.
-
-	[ aPackageCoder renameTo: self renamedFakePackageName ] ensure: [
+	
+	aNewName := aPackageCoder name, 'New'.
+	
+	[ aPackageCoder renameTo: aNewName ] ensure: [
 		aPackageCoder unsubscribeFromSystem ].
 
 	self assert: aPackageCoder isRegistered not.
-	self assert: aPackageCoder name equals: self renamedFakePackageName.
+	self assert: aPackageCoder name equals: aNewName.
 	self assert: aPackageCoder classes size equals: 0.
-	self assert: self fakeClassesInSystemCount equals: 0.
 	
 	self assert: anEventsRecoder numberOfEvents equals: 1.
 	self assert: anEventsRecoder first class equals: GtCoderPackageRenamed.
@@ -262,10 +266,9 @@ GtPackageCoderExamples >> renameUnloadedPackageWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - package rename' }
-GtPackageCoderExamples >> renameUnregisteredPackageWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> renameUnregisteredPackageWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
-	| aPackageCoder anEventsRecoder |
+	| aPackageCoder anEventsRecoder aNewName |
 
 	anEventsRecoder := self eventsRecorder.
 
@@ -273,14 +276,15 @@ GtPackageCoderExamples >> renameUnregisteredPackageWhenSubscribedToSystem [
 	aPackageCoder subscribeToSystem.
 
 	aPackageCoder when: GtCoderPackageRenamed send: #record: to: anEventsRecoder.
-
-	[ aPackageCoder renameTo: self renamedFakePackageName ] ensure: [
+	
+	aNewName := aPackageCoder name, 'New'.
+	
+	[ aPackageCoder renameTo: aNewName ] ensure: [
 		aPackageCoder unsubscribeFromSystem ].
 
 	self assert: aPackageCoder isRegistered not.
-	self assert: aPackageCoder name equals: self renamedFakePackageName.
+	self assert: aPackageCoder name equals: aNewName.
 	self assert: aPackageCoder classes size equals: 0.
-	self assert: self fakeClassesInSystemCount equals: 0.
 
 	self assert: anEventsRecoder numberOfEvents equals: 1.
 	self assert: anEventsRecoder first class equals: GtCoderPackageRenamed.
@@ -290,10 +294,9 @@ GtPackageCoderExamples >> renameUnregisteredPackageWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - package rename' }
-GtPackageCoderExamples >> renameUnregisteredRegisteredPackageWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> renameUnregisteredRegisteredPackageWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
-	| aPackageCoder anEventsRecoder |
+	| aPackageCoder anEventsRecoder aNewName |
 
 	anEventsRecoder := self eventsRecorder.
 
@@ -301,14 +304,15 @@ GtPackageCoderExamples >> renameUnregisteredRegisteredPackageWhenSubscribedToSys
 	aPackageCoder subscribeToSystem.
 
 	aPackageCoder when: GtCoderPackageRenamed send: #record: to: anEventsRecoder.
-
-	[ aPackageCoder renameTo: self renamedFakePackageName ] ensure: [
+	
+	aNewName := aPackageCoder name, 'New'.
+	
+	[ aPackageCoder renameTo: aNewName ] ensure: [
 		aPackageCoder unsubscribeFromSystem ].
 
 	self assert: aPackageCoder isRegistered not.
-	self assert: aPackageCoder name equals: self renamedFakePackageName.
-	self assert: aPackageCoder classes size equals: self fakeClassCount.
-	self assert: self fakeClassesInSystemCount equals: self fakeClassCount.
+	self assert: aPackageCoder name equals: aNewName.
+	self assert: aPackageCoder classes size equals: (aPackageCoder attributeNamed: #dummyPackage) amountOfClasses.
 	
 	self assert: anEventsRecoder numberOfEvents equals: 1.
 	self assert: anEventsRecoder first class equals: GtCoderPackageRenamed.
@@ -318,9 +322,8 @@ GtPackageCoderExamples >> renameUnregisteredRegisteredPackageWhenSubscribedToSys
 ]
 
 { #category : #'examples - package unload' }
-GtPackageCoderExamples >> unloadRegisteredPackageWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> unloadRegisteredPackageWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 
 	anEventsRecoder := self eventsRecorder.
@@ -336,7 +339,6 @@ GtPackageCoderExamples >> unloadRegisteredPackageWhenSubscribedToSystem [
 	self assert: aPackageCoder isRegistered not.
 	"classes are removed from the system when unloading a package"
 	self assert: aPackageCoder classes size equals: 0.
-	self assert: self fakeClassesInSystemCount equals: 0.
 	self assert: anEventsRecoder numberOfEvents equals: 1.
 	self assert: anEventsRecoder first class equals: GtCoderPackageUnregistered.
 	self assert: anEventsRecoder first coder equals: aPackageCoder.
@@ -345,9 +347,8 @@ GtPackageCoderExamples >> unloadRegisteredPackageWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - package unload' }
-GtPackageCoderExamples >> unloadRegisteredPackageWhenUnsubscribedToSystem [
+GtPharoPackageCoderExamples >> unloadRegisteredPackageWhenUnsubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 
 	anEventsRecoder := self eventsRecorder.
@@ -366,9 +367,8 @@ GtPackageCoderExamples >> unloadRegisteredPackageWhenUnsubscribedToSystem [
 ]
 
 { #category : #'examples - package unregister' }
-GtPackageCoderExamples >> unregisterRegisteredPackageWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> unregisterRegisteredPackageWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -383,8 +383,7 @@ GtPackageCoderExamples >> unregisterRegisteredPackageWhenSubscribedToSystem [
 
 	self assert: aPackageCoder isRegistered not.
 	"classes are not removed from the system when unregistering package"
-	self assert: aPackageCoder classes size equals: self fakeClassCount.
-	self assert: self fakeClassesInSystemCount equals: self fakeClassCount.
+	self assert: aPackageCoder classes size equals: (aPackageCoder attributeNamed: #dummyPackage) amountOfClasses.
 	
 	"When unregistering a package with classes, those classes are moved to unpackaged package"
 	self assert: (aPackageCoder classes collect: [ :each | each package name ]) asSet equals: { #'_UnpackagedPackage' } asSet. 
@@ -397,9 +396,8 @@ GtPackageCoderExamples >> unregisterRegisteredPackageWhenSubscribedToSystem [
 ]
 
 { #category : #'examples - package unregister' }
-GtPackageCoderExamples >> unregisterRegisteredPackageWhenUnsubscribedToSystem [
+GtPharoPackageCoderExamples >> unregisterRegisteredPackageWhenUnsubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -418,9 +416,8 @@ GtPackageCoderExamples >> unregisterRegisteredPackageWhenUnsubscribedToSystem [
 ]
 
 { #category : #'examples - package unregister' }
-GtPackageCoderExamples >> unregisterRegisteredPackageWithoutCoderWhenSubscribedToSystem [
+GtPharoPackageCoderExamples >> unregisterRegisteredPackageWithoutCoderWhenSubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -430,7 +427,7 @@ GtPackageCoderExamples >> unregisterRegisteredPackageWithoutCoderWhenSubscribedT
 
 	aPackageCoder when: GtCoderPackageUnregistered send: #record: to: anEventsRecoder.
 
-	[ aPackageCoder package unregister ] ensure: [
+	[ GtPharoCodeModifier unregisterPackage: aPackageCoder package ] ensure: [
 		aPackageCoder unsubscribeFromSystem ].
 
 	self assert: aPackageCoder isRegistered not.
@@ -442,9 +439,8 @@ GtPackageCoderExamples >> unregisterRegisteredPackageWithoutCoderWhenSubscribedT
 ]
 
 { #category : #'examples - package unregister' }
-GtPackageCoderExamples >> unregisterRegisteredPackageWithoutCoderWhenUnsubscribedToSystem [
+GtPharoPackageCoderExamples >> unregisterRegisteredPackageWithoutCoderWhenUnsubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.
@@ -461,9 +457,8 @@ GtPackageCoderExamples >> unregisterRegisteredPackageWithoutCoderWhenUnsubscribe
 ]
 
 { #category : #'examples - package unregister' }
-GtPackageCoderExamples >> unregisterUnregisteredPackageWhenUnsubscribedToSystem [
+GtPharoPackageCoderExamples >> unregisterUnregisteredPackageWhenUnsubscribedToSystem [
 	<gtExample>
-	<after: #cleanUp>
 	| aPackageCoder anEventsRecoder |
 	
 	anEventsRecoder := self eventsRecorder.

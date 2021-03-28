@@ -1,6 +1,6 @@
 Class {
 	#name : #GtBehaviorCoderByScripterExamples,
-	#superclass : #GtBasicPharoCoderExamples,
+	#superclass : #Object,
 	#traits : 'TCoderByScripterExamples',
 	#classTraits : 'TCoderByScripterExamples classTrait',
 	#category : #'GToolkit-Coder-Examples-By scripter'
@@ -9,17 +9,14 @@ Class {
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClass [
 	<gtExample>
-	<after: #cleanUp>
-	| aPackage aClass aBehaviorCoder |
+	| anEnvironment aDummyClass aBehaviorCoder |
 	
-	aPackage := self fakeRegisteredPackage.
-	aClass := (self fakeClassesInFakePackage: aPackage) first.
+	anEnvironment := GtPharoDummyEnvironment withPackages: 2 classes: 2.
+	aDummyClass := anEnvironment anyDummyClass.
 
-	aBehaviorCoder := GtBehaviorCoder forClass: aClass.
-
-	aBehaviorCoder attributeNamed: #fakePackage put: aPackage.
-	aBehaviorCoder attributeNamed: #fakeClass put: aClass.
-	aBehaviorCoder attributeNamed: #fakeClassName put: aClass name.
+	aBehaviorCoder := GtBehaviorCoder forClass: aDummyClass realClass.
+	aBehaviorCoder attributeNamed: #dummyEnvironment put: anEnvironment.
+	aBehaviorCoder attributeNamed: #dummyClass put: aDummyClass.
 
 	^ aBehaviorCoder
 ]
@@ -27,7 +24,6 @@ GtBehaviorCoderByScripterExamples >> classCoderForClass [
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClassUI [
 	<gtExample>
-	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self scripterForBlock: [ self classCoderForClass ].
@@ -37,7 +33,6 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI [
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClassUI_click_add_method [
 	<gtExample>
-	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self classCoderForClassUI.
@@ -59,7 +54,6 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_click_add_method [
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClassUI_copyClassName [
 	<gtExample>
-	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self classCoderForClassUI.
@@ -84,7 +78,7 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_copyClassName [
 				
 			aStep check
 				label: 'Check clipboard has class name';
-				value: [ Clipboard clipboardText ] equals: [ :aCoder | aCoder attributeNamed: #fakeClassName ];
+				value: [ Clipboard clipboardText ] equals: [ :aCoder | (aCoder attributeNamed: #dummyClass) className ];
 				onModel
 	].
 		
@@ -94,7 +88,6 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_copyClassName [
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_01_doubleClick [
 	<gtExample>
-	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self classCoderForClassUI.
@@ -126,7 +119,6 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_01_doubleC
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_01_shortcut [
 	<gtExample>
-	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self classCoderForClassUI.
@@ -165,7 +157,6 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_01_shortcu
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_02_type_new_class_name [
 	<gtExample>
-	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self classCoderForClassUI_renameClass_01_shortcut.
@@ -179,7 +170,7 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_02_type_ne
 				notExists;
 				id: GtBehaviorCoderBehaviorNameApplyPreviewId.
 			
-			(aStep type: (aScripter model attributeNamed: #fakeClassName), 'New')
+			(aStep type: (aScripter model attributeNamed: #dummyClass) className, 'New')
 				label: 'Click class name'.
 
 			aStep wait forEmptySpaceTaskQueue.
@@ -196,7 +187,7 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_02_type_ne
 
 			aStep check
 				label: 'Check entered name';
-				value: [ :aClassNameEditor | aClassNameEditor text asString ] equals: [  (aScripter model attributeNamed: #fakeClassName), 'New' ];
+				value: [ :aClassNameEditor | aClassNameEditor text asString ] equals: [  (aScripter model attributeNamed: #dummyClass) className, 'New' ];
 				id: GtBehaviorCoderBehaviorNameId.
 			
 			aStep check
@@ -212,7 +203,6 @@ GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_02_type_ne
 { #category : #'examples - for class' }
 GtBehaviorCoderByScripterExamples >> classCoderForClassUI_renameClass_03_click_rename_preview [
 	<gtExample>
-	<after: #cleanUp>
 	| aScripter |
 
 	aScripter := self classCoderForClassUI_renameClass_02_type_new_class_name.

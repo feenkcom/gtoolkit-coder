@@ -31,6 +31,11 @@ GtPharoCodeModifier class >> current [
 	^ current ifNil: [ current := self new ]
 ]
 
+{ #category : #'api - package' }
+GtPharoCodeModifier class >> registerPackage: aPackage [
+	^ self current registerPackage: aPackage
+]
+
 { #category : #'api - class' }
 GtPharoCodeModifier class >> removeBehavior: aBehavior [
 	^ self current removeBehavior: aBehavior
@@ -44,6 +49,16 @@ GtPharoCodeModifier class >> removeMethod: aCompiledMethod [
 { #category : #'api - package' }
 GtPharoCodeModifier class >> removePackage: aPackage [
 	^ self current removePackage: aPackage
+]
+
+{ #category : #'api - package' }
+GtPharoCodeModifier class >> renamePackage: aPackage to: aNewPackageName [
+	^ self current renamePackage: aPackage to: aNewPackageName
+]
+
+{ #category : #'api - package' }
+GtPharoCodeModifier class >> unregisterPackage: aPackage [
+	^ self current unregisterPackage: aPackage
 ]
 
 { #category : #'api - method' }
@@ -102,6 +117,11 @@ GtPharoCodeModifier >> performRefactoryChange: aRefactoryChange [
 	^ self critical: [ RBRefactoryChangeManager instance performChange: aRefactoryChange ]
 ]
 
+{ #category : #'api - package' }
+GtPharoCodeModifier >> registerPackage: aPackage [
+	^ self critical: [ aPackage register ]
+]
+
 { #category : #'api - class' }
 GtPharoCodeModifier >> removeBehavior: aBehavior [
 	^ self critical: [ aBehavior removeFromSystem ]
@@ -125,4 +145,14 @@ GtPharoCodeModifier >> removeMethodFrom: aBehavior selector: aSelector [
 { #category : #'api - package' }
 GtPharoCodeModifier >> removePackage: aPackage [
 	^ self critical: [ aPackage removeFromSystem ]
+]
+
+{ #category : #'api - package' }
+GtPharoCodeModifier >> renamePackage: aPackage to: aNewPackageName [
+	^ self critical: [ aPackage renameTo: aNewPackageName ]
+]
+
+{ #category : #'api - package' }
+GtPharoCodeModifier >> unregisterPackage: aPackage [
+	^ self critical: [ aPackage unregister ]
 ]

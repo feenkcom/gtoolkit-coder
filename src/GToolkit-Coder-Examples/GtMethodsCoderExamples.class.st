@@ -1,6 +1,6 @@
 Class {
 	#name : #GtMethodsCoderExamples,
-	#superclass : #GtBasicPharoCoderExamples,
+	#superclass : #Object,
 	#category : #'GToolkit-Coder-Examples-Coders'
 }
 

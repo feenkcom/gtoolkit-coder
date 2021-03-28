@@ -9,6 +9,16 @@ Class {
 	#category : #'GToolkit-Coder-Pharo-Examples-Dummies'
 }
 
+{ #category : #'api - classes' }
+GtPharoDummyPackage >> amountOfClasses [
+	^ self dummyClasses size
+]
+
+{ #category : #'api - classes' }
+GtPharoDummyPackage >> anyDummyClass [
+	^ self dummyClasses anyOne
+]
+
 { #category : #'api - methods' }
 GtPharoDummyPackage >> anyDummyKeywordMethod [
 	<return: #GtPharoDummyMethod>
