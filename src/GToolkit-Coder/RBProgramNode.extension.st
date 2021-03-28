@@ -1,11 +1,6 @@
 Extension { #name : #RBProgramNode }
 
 { #category : #'*GToolkit-Coder' }
-RBProgramNode >> gtASTMatches [
-	^ GtSearchRBASTFilter ast: self
-]
-
-{ #category : #'*GToolkit-Coder' }
 RBProgramNode >> gtMoveAllBy: anInteger [
 	self gtMoveBy: anInteger.
 	self children do: [ :e | e gtMoveAllBy: anInteger ]

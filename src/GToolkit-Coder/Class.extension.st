@@ -15,16 +15,6 @@ Class >> gtMetaFor: aView [
 ]
 
 { #category : #'*GToolkit-Coder' }
-Class >> gtReferences [
-	^ GtSearchReferencesFilter literal: self binding
-]
-
-{ #category : #'*GToolkit-Coder' }
-Class >> gtReferencesAndComments [
-	^ self gtReferences & (GtSearchCommentsFilter new text: self name)
-]
-
-{ #category : #'*GToolkit-Coder' }
 Class >> gtTraitUsages [
 	^ self traits collect: [ :each | GtPharoTraitUsage new baseBehavior: self; usedTrait: each ]
 ]
