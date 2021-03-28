@@ -6,7 +6,7 @@ Trait {
 { #category : #'private - ui' }
 TGtCoderNavigationClassesHelper >> buildClassLabel: aClass [
 	| aLook aText |
-	aLook := (BrGlamorousLabelLook new fontSize: 12).
+	aLook := (BrGlamorousLabelAptitude new fontSize: 12).
 	aText := aClass name.
 
 	(self isAbstractClass: aClass)
@@ -19,7 +19,7 @@ TGtCoderNavigationClassesHelper >> buildClassLabel: aClass [
 			aLook bold ].
 	
 	^ BrLabel new
-		look: aLook;
+		aptitude: aLook;
 		text: aText.
 ]
 

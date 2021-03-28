@@ -99,7 +99,7 @@ GtMethodsCoderElement >> scrollToEvent: anEvent [
 	coder := anEvent sourceCoder.
 	index := methodsCoderUIModel coder coders identityIndexOf: coder.
 	index > 0
-		ifTrue: [ (self childNamed: #codersList) look listElement
+		ifTrue: [ (self childNamed: #codersList) aptitude listElement
 				scrollToPosition: index ]
 ]
 

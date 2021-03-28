@@ -21,7 +21,7 @@ GtSearchFilter class >> gtHierarchyFor: aView [
 									fontSize: 18.
 					anExpander := BrExpander new.
 					anExpander vFitContent; hExact: 300.
-					anExpander look: GtCoderExpanderLook new.
+					anExpander aptitude: GtCoderExpanderAptitude new.
 					anExpander header: [ BlTextElement new 
 						padding: (BlInsets left: 5 right: 5);
 						text: text ].

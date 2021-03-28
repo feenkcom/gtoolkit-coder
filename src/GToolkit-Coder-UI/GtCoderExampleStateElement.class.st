@@ -87,19 +87,19 @@ GtCoderExampleStateElement >> initialize [
 		
 	self initializeInteractiveLook.
 	self initializeTooltipLook.
-	self addLook: BrLayoutResizerLook inherit.
+	self addAptitude: BrLayoutResizerAptitude inherit.
 ]
 
 { #category : #initialization }
 GtCoderExampleStateElement >> initializeInteractiveLook [
-	self addLook: (styleLook := BrStyleCommonLook new).
+	self addAptitude: (styleLook := BrStyleCommonAptitude new).
 	self updateStyleLook.
 ]
 
 { #category : #initialization }
 GtCoderExampleStateElement >> initializeTooltipLook [
-	self addLook:
-		(BrGlamorousWithTooltipLook2 content: [
+	self addAptitude:
+		(BrGlamorousWithTooltipAptitude2 content: [
 			self newTooltipContent ])
 ]
 
@@ -122,7 +122,7 @@ GtCoderExampleStateElement >> newInspectorWithExampleResult [
 { #category : #'private - instance creation' }
 GtCoderExampleStateElement >> newNotExecutedLabel [
 	^ BrLabel new
-		look: BrGlamorousLabelLook;
+		aptitude: BrGlamorousLabelAptitude;
 		text: 'Not Executed Example';
 		padding: (BlInsets all: 5)
 ]
@@ -130,21 +130,21 @@ GtCoderExampleStateElement >> newNotExecutedLabel [
 { #category : #'private - instance creation' }
 GtCoderExampleStateElement >> newNotExecutedToolbar [
 	^ BrToolbar new
-		look: BrGlamorousToolbarLook new;
+		aptitude: BrGlamorousToolbarAptitude new;
 		addItem: (BrButton new
-			look: BrGlamorousButtonWithIconLook;
+			aptitude: BrGlamorousButtonWithIconAptitude;
 			icon: BrGlamorousVectorIcons play;
 			label: 'Play';
 			action: [ :aButton | self playExampleFrom: aButton ];
 			beSmallSize);
 		addItem: (BrButton new
-			look: BrGlamorousButtonWithIconLook;
+			aptitude: BrGlamorousButtonWithIconAptitude;
 			icon: BrGlamorousVectorIcons playinspect;
 			label: 'Play and Inspect';
 			action: [ :aButton | self playAndInspectExampleFrom: aButton ];
 			beSmallSize);
 		addChild: (BrButton new
-			look: BrGlamorousButtonWithIconLook;
+			aptitude: BrGlamorousButtonWithIconAptitude;
 			icon: BrGlamorousVectorIcons debug;
 			label: 'Debug';
 			action: [ :aButton | self debugExampleFrom: aButton ];
@@ -158,7 +158,7 @@ GtCoderExampleStateElement >> newNotExecutedTooltipContent [
 		alignCenterLeft;
 		padding: (BlInsets all: 5);
 		addChild: (BrLabel new
-			look: BrGlamorousLabelLook;
+			aptitude: BrGlamorousLabelAptitude;
 			margin: (BlInsets left: 2);
 			text: 'Example not executed');
 		addChild: (self newNotExecutedToolbar
@@ -222,7 +222,7 @@ GtCoderExampleStateElement >> spawnExampleFrom: anElement [
 
 { #category : #'private - accessing' }
 GtCoderExampleStateElement >> styleLook [
-	<return: #BrStyleCommonLook>
+	<return: #BrStyleCommonAptitude>
 	^ styleLook
 ]
 

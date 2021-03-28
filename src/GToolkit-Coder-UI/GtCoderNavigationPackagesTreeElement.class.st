@@ -40,7 +40,7 @@ GtCoderNavigationPackagesTreeElement >> initialize [
 	self nodeStencil: [
 			BrLabel new
 				beSmallSize;
-				look: BrGlamorousListLabelLook ];
+				aptitude: BrGlamorousListLabelAptitude ];
 		nodeDataBinder: [ :aPackageElement :aPackage |
 			aPackageElement
 				text: (aPackage

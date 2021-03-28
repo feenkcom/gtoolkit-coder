@@ -1,6 +1,6 @@
 Class {
-	#name : #GtFilterRunExampleButtonTooltipLook,
-	#superclass : #GtFilterRunExampleButtonLook,
+	#name : #GtFilterRunExampleButtonTooltipAptitude,
+	#superclass : #GtFilterRunExampleButtonAptitude,
 	#instVars : [
 		'tooltipContent'
 	],
@@ -8,15 +8,15 @@ Class {
 }
 
 { #category : #initialization }
-GtFilterRunExampleButtonTooltipLook >> initialize [
+GtFilterRunExampleButtonTooltipAptitude >> initialize [
 	super initialize.
 	self initializeTooltipContent.
 
-	self add: (BrGlamorousWithTooltipLook content: [self initializeTooltipContent]).
+	self add: (BrGlamorousWithTooltipAptitude content: [self initializeTooltipContent]).
 ]
 
 { #category : #initialization }
-GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
+GtFilterRunExampleButtonTooltipAptitude >> initializeTooltipContent [
 	tooltipContent := BrColumnedList new.
 	tooltipContent 
 		items: GtFilterExampleState default allStates;
@@ -55,7 +55,7 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 		title: 'Name';
 		cellStencil: [ 
 			BrLabel new
-				look: BrGlamorousLabelLook ];
+				aptitude: BrGlamorousLabelAptitude ];
 		dataBinder: [ :anElement :anItem | 
 			anElement text: anItem label ];
 		width: 100.
@@ -64,7 +64,7 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 		title: 'Amount';
 		cellStencil: [ 
 			BrLabel new
-				look: BrGlamorousLabelLook;
+				aptitude: BrGlamorousLabelAptitude;
 				fitContent ];
 		dataBinder: [ :anElement :anItem | 
 			| aTotal aTotalString aTotalText |
@@ -78,7 +78,7 @@ GtFilterRunExampleButtonTooltipLook >> initializeTooltipContent [
 ]
 
 { #category : #'private - accessing' }
-GtFilterRunExampleButtonTooltipLook >> listItems [
+GtFilterRunExampleButtonTooltipAptitude >> listItems [
 	| states |
 	states := GtFilterExampleState default allStates.
 	^ states collect: [ :eachState |
@@ -86,13 +86,13 @@ GtFilterRunExampleButtonTooltipLook >> listItems [
 ]
 
 { #category : #'private - accessing' }
-GtFilterRunExampleButtonTooltipLook >> tooltipContent [
+GtFilterRunExampleButtonTooltipAptitude >> tooltipContent [
 	<return: #BlElement>
 	^ tooltipContent
 ]
 
 { #category : #'private - updating' }
-GtFilterRunExampleButtonTooltipLook >> updateList [
+GtFilterRunExampleButtonTooltipAptitude >> updateList [
 	| statusesToDisplay |
 	statusesToDisplay := GtFilterExampleState default allStates reject: [ :eachStatus | 
 		(eachStatus numberOfExamplesFor: self exampler) isZero ].
@@ -102,7 +102,7 @@ GtFilterRunExampleButtonTooltipLook >> updateList [
 ]
 
 { #category : #'private - updating' }
-GtFilterRunExampleButtonTooltipLook >> updateWidget [
+GtFilterRunExampleButtonTooltipAptitude >> updateWidget [
 	super updateWidget.
 	self updateList.
 ]

@@ -22,7 +22,7 @@ GtTraitsDefinition >> traitsEditor [
 		renameEvent: GtBehaviorTraitRenamed;
 		separator: [
 			BrLabel new
-				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
+				aptitude: (BrGlamorousLabelAptitude new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
 				text: '+' ];
 		completion: [ GtTraitsCompletionStrategy new ];
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];

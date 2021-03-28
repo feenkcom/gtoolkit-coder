@@ -20,7 +20,7 @@ GtPreviewChangeButton >> buildDropDownElement [
 		icon: self icon;
 		beSmallSize;
 		requestFocus;
-		look: BrGlamorousButtonWithIconLook new;
+		aptitude: BrGlamorousButtonWithIconAptitude new;
 		label: self label;
 		margin:
 			(BlInsets
@@ -63,12 +63,12 @@ GtPreviewChangeButton >> initialize [
 	self margin: (BlInsets left: 5).
 	self beTinySize.
 
-	self look: BrGlamorousButtonWithIconLook new +
-		(BrGlamorousWithDropdownLook
+	self aptitude: BrGlamorousButtonWithIconAptitude new +
+		(BrGlamorousWithDropdownAptitude
 			handle: [
 				BrButton new
 					icon: BrGlamorousIcons empty;
 					beTinySize;
-					look: BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new ]
+					aptitude: BrGlamorousButtonRectangularAptitude new + BrGlamorousButtonIconAptitude new ]
 			content: [ self buildDropDownElement ])
 ]

@@ -72,7 +72,7 @@ GtMethodCoderExplanationStylerExamples >> explanationLinkExample [
 		layout: BlLinearLayout horizontal;
 		background: Color white;
 		margin: (BlInsets all: 10);
-		look: BrShadowLook.
+		aptitude: BrShadowAptitude.
 	container := BlElement new
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
@@ -96,7 +96,7 @@ GtMethodCoderExplanationStylerExamples >> explanationLinkExample [
 	inspectorContainer addChild: coderElement.
 	
 	editor := BrEditor new
-		look: BrGlamorousRegularEditorLook;
+		aptitude: BrGlamorousRegularEditorAptitude;
 		text: self explanationLinkExampleText;
 		margin: (BlInsets all: 10);
 		constraintsDo: [ :c | 
@@ -223,7 +223,7 @@ GtMethodCoderExplanationStylerExamples >> inspectorOnViewMethod [
 				size: 5 @ 5;
 				elevation: (BlRelativeElevation elevation: 10);
 				geometry: BlCircle new;
-				look: (GtExplainerTargetLook new explanationModel: #title:);
+				aptitude: (GtExplainerTargetAptitude new explanationModel: #title:);
 				relocate: 10 @ titleTab extent y / 2).
 	avatarLabel
 		addChild:
@@ -232,7 +232,7 @@ GtMethodCoderExplanationStylerExamples >> inspectorOnViewMethod [
 				size: 5 @ 5;
 				elevation: (BlRelativeElevation elevation: 10);
 				geometry: BlCircle new;
-				look: (GtExplainerTargetLook new explanationModel: #columns);
+				aptitude: (GtExplainerTargetAptitude new explanationModel: #columns);
 				relocate: 5 @ avatarLabel extent y / 2).
 	nameLabel
 		addChild:
@@ -241,7 +241,7 @@ GtMethodCoderExplanationStylerExamples >> inspectorOnViewMethod [
 				size: 5 @ 5;
 				elevation: (BlRelativeElevation elevation: 10);
 				geometry: BlCircle new;
-				look: (GtExplainerTargetLook new explanationModel: #columns);
+				aptitude: (GtExplainerTargetAptitude new explanationModel: #columns);
 				relocate: 5 @ nameLabel extent y / 2).
 	phoneLabel
 		addChild:
@@ -250,7 +250,7 @@ GtMethodCoderExplanationStylerExamples >> inspectorOnViewMethod [
 				size: 5 @ 5;
 				elevation: (BlRelativeElevation elevation: 10);
 				geometry: BlCircle new;
-				look: (GtExplainerTargetLook new explanationModel: #columns);
+				aptitude: (GtExplainerTargetAptitude new explanationModel: #columns);
 				relocate: 5 @ phoneLabel extent y / 2).
 	avatarElementsCollection
 		do: [ :eachAvatar | 
@@ -261,7 +261,7 @@ GtMethodCoderExplanationStylerExamples >> inspectorOnViewMethod [
 						size: 5 @ 5;
 						elevation: (BlRelativeElevation elevation: 10);
 						geometry: BlCircle new;
-						look: (GtExplainerTargetLook new explanationModel: #avatar);
+						aptitude: (GtExplainerTargetAptitude new explanationModel: #avatar);
 						relocate: 0 @ eachAvatar extent y / 2) ].			
 	listLabelsCollection
 		do: [ :eachLabel | 
@@ -276,7 +276,7 @@ GtMethodCoderExplanationStylerExamples >> inspectorOnViewMethod [
 						size: 5 @ 5;
 						elevation: (BlRelativeElevation elevation: 10);
 						geometry: BlCircle new;
-						look: (GtExplainerTargetLook new explanationModel: modelName);
+						aptitude: (GtExplainerTargetAptitude new explanationModel: modelName);
 						relocate: -5 @ eachLabel extent y / 2) ].
 	
 	^ resultElement.
@@ -308,12 +308,12 @@ GtMethodCoderExplanationStylerExamples >> viewsExplanationWithLinks [
 			c vertical fitContent ];
 		margin: (BlInsets all: 30);
 		background: Color white;
-		look: BrShadowLook;
+		aptitude: BrShadowAptitude;
 		layout: BlLinearLayout horizontal.
 	container explainer isExplanationHolder: true.
 	
 	editor := BrEditor new
-		look: (BrGlamorousRegularEditorLook new fontSize: 16);
+		aptitude: (BrGlamorousRegularEditorAptitude new fontSize: 16);
 		text: self viewsExplanationWithLinksText;
 		margin: (BlInsets all: 10);
 		constraintsDo: [ :c | 
@@ -350,7 +350,7 @@ GtMethodCoderExplanationStylerExamples >> viewsExplanationWithLinksOnCoderAndIns
 			c horizontal matchParent.
 			c vertical matchParent ];
 		layout: BlLinearLayout horizontal;
-		look: BrShadowLook;
+		aptitude: BrShadowAptitude;
 		background: Color white;
 		margin: (BlInsets all: 10).
 	
@@ -362,7 +362,7 @@ GtMethodCoderExplanationStylerExamples >> viewsExplanationWithLinksOnCoderAndIns
 		addChild: inspectorContainer.
 	
 	editor := BrEditor new
-		look: (BrGlamorousRegularEditorLook new fontSize: 16);
+		aptitude: (BrGlamorousRegularEditorAptitude new fontSize: 16);
 		text: self viewsExplanationWithLinksText;
 		margin: (BlInsets all: 10);
 		constraintsDo: [ :c | 

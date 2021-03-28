@@ -12,7 +12,7 @@ GtCoderNavigationMethodProtocolListElement class >> fromClass: aClass [
 { #category : #'private - ui' }
 GtCoderNavigationMethodProtocolListElement >> buildProtocolLabel: aProtocol [
 	^ BrLabel new
-		look: BrGlamorousLabelLook; 
+		aptitude: BrGlamorousLabelAptitude; 
 		beSmallSize;
 		text: aProtocol name
 ]
@@ -21,7 +21,7 @@ GtCoderNavigationMethodProtocolListElement >> buildProtocolLabel: aProtocol [
 GtCoderNavigationMethodProtocolListElement >> buildProtocolRow: aProtocol index: aRowIndex list: aListElement [
 	^ BrWidgetContainer new
 		layout: BlLinearLayout horizontal;
-		look: BrHorizontalPaneLook new + (BrStyleCommonLook new
+		aptitude: BrHorizontalPaneAptitude new + (BrStyleCommonAptitude new
 			default: [ :aStyle | aStyle background: BrGlamorousColors deselectedListItemColor ];
 			hovered: [ :aStyle | aStyle background: BrGlamorousColors hoveredListItemColor ];
 			selected: [ :aStyle | aStyle background: BrGlamorousColors selectedListItemColor ];

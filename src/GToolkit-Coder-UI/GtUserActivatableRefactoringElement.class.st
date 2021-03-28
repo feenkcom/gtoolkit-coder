@@ -61,10 +61,10 @@ GtUserActivatableRefactoringElement >> initialize [
 		beReadOnlyWithSelection;
 		hMatchParent;
 		vFitContent;
-		look: BrGlamorousRegularEditorLook new.
+		aptitude: BrGlamorousRegularEditorAptitude new.
 
 	checkbox := BrCheckbox new
-		look: BrGlamorousCheckboxLook new;
+		aptitude: BrGlamorousCheckboxAptitude new;
 		margin: (BlInsets top: 0 left: 5 bottom: 0 right: 0);
 		whenCheckedDo: [ activatableRefactoring isEnabled: true ];
 		whenUncheckedDo: [ activatableRefactoring isEnabled: false ].

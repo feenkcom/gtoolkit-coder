@@ -63,7 +63,7 @@ RPackage >> gtDependenciesMapFor: aView [
 			shape: [ :each | 
 				BrLabel new 
 					text: each name asRopedText;
-					look: BrGlamorousLabelLook
+					aptitude: BrGlamorousLabelAptitude
 			];
 		  with: (self gtPackagesUsed, {self}).
 		mondrian edges 

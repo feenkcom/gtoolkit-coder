@@ -1,6 +1,6 @@
 Class {
-	#name : #GtMethodCoderHeaderLook,
-	#superclass : #GtSourceCoderLook,
+	#name : #GtMethodCoderHeaderAptitude,
+	#superclass : #GtSourceCoderAptitude,
 	#instVars : [
 		'header',
 		'breadcrumb'
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #initialization }
-GtMethodCoderHeaderLook >> initialize [
+GtMethodCoderHeaderAptitude >> initialize [
 	super initialize.
 	
 	breadcrumb := self newBreadcrumb.
@@ -21,7 +21,7 @@ GtMethodCoderHeaderLook >> initialize [
 ]
 
 { #category : #'instance creation' }
-GtMethodCoderHeaderLook >> newBreadcrumb [
+GtMethodCoderHeaderAptitude >> newBreadcrumb [
 	<return: #BrBreadcrumb>
 
 	^ GtMethodCoderBreadcrumbElement new
@@ -33,7 +33,7 @@ GtMethodCoderHeaderLook >> newBreadcrumb [
 ]
 
 { #category : #'instance creation' }
-GtMethodCoderHeaderLook >> newHeaderElement [
+GtMethodCoderHeaderAptitude >> newHeaderElement [
 	^ BlElement new
 		layout: BlFrameLayout new;
 		constraintsDo: [ :c | 
@@ -43,6 +43,6 @@ GtMethodCoderHeaderLook >> newHeaderElement [
 ]
 
 { #category : #initialization }
-GtMethodCoderHeaderLook >> onCoderChanged: aGtSourceCoderUIModel [
+GtMethodCoderHeaderAptitude >> onCoderChanged: aGtSourceCoderUIModel [
 	breadcrumb sourceCoderUIModel: aGtSourceCoderUIModel
 ]

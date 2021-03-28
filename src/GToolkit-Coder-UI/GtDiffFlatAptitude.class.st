@@ -1,14 +1,14 @@
 Class {
-	#name : #GtDiffFlatLook,
-	#superclass : #GtDiffLook,
+	#name : #GtDiffFlatAptitude,
+	#superclass : #GtDiffAptitude,
 	#category : #'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #initialization }
-GtDiffFlatLook >> initialize [
+GtDiffFlatAptitude >> initialize [
 	super initialize.
 	
-	self add: (BrLayoutResizerLook new
+	self add: (BrLayoutResizerAptitude new
 		inherit;
 		inherit: GtDiffOldTextId;
 		inherit: GtDiffNewTextId).
@@ -18,22 +18,22 @@ GtDiffFlatLook >> initialize [
 ]
 
 { #category : #'instance creation' }
-GtDiffFlatLook >> newTextLook [
-	^ BrSizeAdjustmentLook new
+GtDiffFlatAptitude >> newTextLook [
+	^ BrSizeAdjustmentAptitude new
 		normal: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 10);
-				do: [ :aWidget | aWidget look glamorousCodeSize ] ];
+				do: [ :aWidget | aWidget aptitude glamorousCodeSize ] ];
 		small: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 6);
-				do: [ :aWidget | aWidget look glamorousCodeSmallSize ] ];
+				do: [ :aWidget | aWidget aptitude glamorousCodeSmallSize ] ];
 		tiny: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 4);
-				do: [ :aWidget | aWidget look glamorousCodeTinySize ] ];
+				do: [ :aWidget | aWidget aptitude glamorousCodeTinySize ] ];
 		mini: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 2);
-				do: [ :aWidget | aWidget look glamorousCodeMiniSize ] ]
+				do: [ :aWidget | aWidget aptitude glamorousCodeMiniSize ] ]
 ]

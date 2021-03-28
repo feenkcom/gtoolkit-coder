@@ -80,7 +80,7 @@ GtPharoSourceCoder >> browseReferencesIn: aSourceString [
 
 { #category : #'*GToolkit-Coder-Pharo-UI' }
 GtPharoSourceCoder >> defaultCoderLook [
-	^ [ GtMethodCoderHeaderLook ]
+	^ [ GtMethodCoderHeaderAptitude ]
 ]
 
 { #category : #'*GToolkit-Coder-Pharo-UI' }
@@ -102,7 +102,7 @@ GtPharoSourceCoder >> removeRefactoringAttribute [
 
 { #category : #'*GToolkit-Coder-Pharo-UI' }
 GtPharoSourceCoder >> withHeader [
-	self coderLook: [ GtMethodCoderHeaderLook ]
+	self coderLook: [ GtMethodCoderHeaderAptitude ]
 ]
 
 { #category : #'*GToolkit-Coder-Pharo-UI' }

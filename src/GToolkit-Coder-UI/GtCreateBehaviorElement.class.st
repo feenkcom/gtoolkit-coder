@@ -20,7 +20,7 @@ GtCreateBehaviorElement >> behaviorBlock: aBlock [
 { #category : #'private - instance creation' }
 GtCreateBehaviorElement >> buildClassLabel [
 	^ definition nameEditor asElement
-		look: (BrGlamorousEditableLabelLook new
+		aptitude: (BrGlamorousEditableLabelAptitude new
 				defaultBackground: Color transparent;
 				glamorousCodeFont;
 				bold;
@@ -62,7 +62,7 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 	saveButton := BrButton new
 		icon: BrGlamorousVectorIcons accept;
 		beSmallSize;
-		look: BrGlamorousButtonWithIconLook new;
+		aptitude: BrGlamorousButtonWithIconAptitude new;
 		label: 'Save';
 		action: [ self compileBehavior ];
 		constraintsDo: [ :c | c grid horizontal span: 2 ];
@@ -79,7 +79,7 @@ GtCreateBehaviorElement >> buildDefinitionEditor [
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
-					look: [ self editableLabelLook ];
+					aptitude: [ self editableLabelLook ];
 					margin: self buttonMargin;
 					asElement) } ].
 

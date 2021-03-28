@@ -28,13 +28,13 @@ GtUserActivatableChangeWithExpanderElement >> activatableChange: aGtUserActivata
 		((activatableChange hasDiff)
 			ifTrue: [
 				(GtDiffElement on: activatableChange change gtDiff)
-					look: GtDiffFlatLook;
+					aptitude: GtDiffFlatAptitude;
 					vFitContent;
 					beSmallSize ]
 			ifFalse: [
 				BrLabel new
 					beSmallSize;
-					look: BrGlamorousLabelLook new;
+					aptitude: BrGlamorousLabelAptitude new;
 					text: activatableChange change displayString ]) ].
 			
 	activatableChange isExpanded
@@ -48,10 +48,10 @@ GtUserActivatableChangeWithExpanderElement >> initialize [
 	
 	expander := BrExpander new.
 	expander
-		look: (GtCoderExpanderLook new
+		aptitude: (GtCoderExpanderAptitude new
 			cornerRadius: 3;
 			padding: (BlInsets empty);
-			doNotReplaceHeader) + (BrStyleCommonLook new
+			doNotReplaceHeader) + (BrStyleCommonAptitude new
 				expanded: [ :aStyle |
 					aStyle margin: (BlInsets top: 5 left: 5 bottom: 5 right: 5) ];
 				collapsed: [ :aStyle |
@@ -67,7 +67,7 @@ GtUserActivatableChangeWithExpanderElement >> initialize [
 		alignCenterLeft.
 
 	description := BrLabel new
-		look: BrGlamorousLabelLook;
+		aptitude: BrGlamorousLabelAptitude;
 		padding: (BlInsets left: 5 right: 5);
 		hMatchParent;
 		vFitContent;
@@ -79,7 +79,7 @@ GtUserActivatableChangeWithExpanderElement >> initialize [
 
 	checkbox := BrCheckbox new
 		beSmallSize;
-		look: BrGlamorousCheckboxLook new;
+		aptitude: BrGlamorousCheckboxAptitude new;
 		margin: (BlInsets top: 6);
 		whenCheckedDo: [ activatableChange isEnabled: true ];
 		whenUncheckedDo: [ activatableChange isEnabled: false ].

@@ -36,7 +36,7 @@ GtPackageCoderElement >> buildPackageLabel [
 	
 	packageNameEditor := BrEditableLabel new
 		id: GtPackageCoderPackageNameId;
-		look: (BrGlamorousEditableLabelLook new
+		aptitude: (BrGlamorousEditableLabelAptitude new
 			defaultBackground: Color transparent;
 			glamorousCodeFont;
 			bold;
@@ -98,13 +98,13 @@ GtPackageCoderElement >> buildParentLink [
 		(BrLabel new
 			margin: (BlInsets left: 4);
 			beSmallSize;
-			look: (BrGlamorousLabelLook new glamorousRegularFont foreground: BrGlamorousColors defaultButtonTextColor);
+			aptitude: (BrGlamorousLabelAptitude new glamorousRegularFont foreground: BrGlamorousColors defaultButtonTextColor);
 			text: 'In: ').
 
 	aLinkContainer addChild:
 		(BrButton new 
-			look: (BrGlamorousButtonExteriorLook new borderPaint: Color transparent)
-				+ BrGlamorousLabelLook new glamorousRegularFont;
+			aptitude: (BrGlamorousButtonExteriorAptitude new borderPaint: Color transparent)
+				+ BrGlamorousLabelAptitude new glamorousRegularFont;
 			label: 'Pharo';
 			beSmallSize;
 			fitContent;
@@ -135,7 +135,7 @@ GtPackageCoderElement >> buildRemovePackageLabel [
 
 	^ BrLabel new
 		margin: (BlInsets all: 10);
-		look: BrGlamorousLabelLook new glamorousRegularFont;
+		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
 		text: labelText asRopedText
 ]
 

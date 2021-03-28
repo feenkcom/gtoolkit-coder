@@ -1,11 +1,11 @@
 Class {
-	#name : #GtCoderExpanderShadowLook,
-	#superclass : #BrStyleCommonLook,
+	#name : #GtCoderExpanderShadowAptitude,
+	#superclass : #BrStyleCommonAptitude,
 	#category : #'GToolkit-Coder-UI-Looks'
 }
 
 { #category : #initialization }
-GtCoderExpanderShadowLook >> initialize [
+GtCoderExpanderShadowAptitude >> initialize [
 	super initialize.
 
 	self

@@ -73,7 +73,7 @@ GtBehaviorCoderElement >> buildClassLabel [
 		vFitContent.
 	
 	aClassNameEditor := BrEditableLabel new
-		look: (BrGlamorousEditableLabelLook new
+		aptitude: (BrGlamorousEditableLabelAptitude new
 			defaultBackground: Color transparent;
 			glamorousCodeFont;
 			bold;
@@ -178,7 +178,7 @@ GtBehaviorCoderElement >> buildRemoveClassLabel [
 		expandMacrosWith: classCoder theClass name.
 	^ BrLabel new
 		margin: (BlInsets all: 10);
-		look: BrGlamorousLabelLook new glamorousRegularFont;
+		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
 		text: labelText asRopedText
 ]
 

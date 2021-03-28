@@ -81,7 +81,7 @@ GtCoder >> initialize [
 	self addChild: self contentElement as: #content.
 	self addChild: self toolbarElement as: #toolbar.
 	
-	self addLook: (BrLayoutResizerLook inherit).
+	self addAptitude: (BrLayoutResizerAptitude inherit).
 ]
 
 { #category : #initialization }
@@ -92,7 +92,7 @@ GtCoder >> initializeContentElement [
 { #category : #initialization }
 GtCoder >> initializeSidebarElement [
 	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
-	self addLook: (GtPhlowToolDetailLook new
+	self addAptitude: (GtPhlowToolDetailAptitude new
 		normal: [ :theInstance | sidebarElement hide ];
 		detailed: [ :theInstance | sidebarElement show ]).
 ]

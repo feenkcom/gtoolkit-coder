@@ -33,7 +33,7 @@ GtCoderFilterListItemElement >> item: anObject [
 { #category : #'private - instance creation' }
 GtCoderFilterListItemElement >> newLabelElement [
 	^ BrLabel new
-		look: BrGlamorousLabelLook
+		aptitude: BrGlamorousLabelAptitude
 ]
 
 { #category : #'private - hooks' }

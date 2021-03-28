@@ -52,5 +52,5 @@ GtReadyCoderTool >> name [
 
 { #category : #'private - accessing' }
 GtReadyCoderTool >> tabLook [
-	^ BrGlamorousTabSwitcherWithIconLook
+	^ BrGlamorousTabSwitcherWithIconAptitude
 ]

@@ -43,15 +43,15 @@ GtPackagesCoderElement >> buildPackagesElement [
 		addChild:
 			(BrLabel new
 				margin: (BlInsets left: 10);
-				look: (BrGlamorousLabelLook new bold glamorousRegularFont fontSize: 18);
+				aptitude: (BrGlamorousLabelAptitude new bold glamorousRegularFont fontSize: 18);
 				text: packagesCoder name).
 	element
 		addChild:
 			(BrLabel new
 				margin: (BlInsets left: 10);
 				beSmallSize;
-				look:
-					(BrGlamorousLabelLook new glamorousRegularFont
+				aptitude:
+					(BrGlamorousLabelAptitude new glamorousRegularFont
 						foreground: BrGlamorousColors defaultButtonTextColor);
 				text: packagesCoder coders size printString , ' Packages').
 	element addChild: self buildPackageList.

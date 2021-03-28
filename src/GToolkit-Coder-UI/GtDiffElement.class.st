@@ -31,14 +31,14 @@ GtDiffElement class >> exampleDiff [
 GtDiffElement class >> exampleFlat [
 	<gtExample>
 
-	^ (self on: self exampleDiff) look: GtDiffFlatLook
+	^ (self on: self exampleDiff) aptitude: GtDiffFlatAptitude
 ]
 
 { #category : #examples }
 GtDiffElement class >> exampleShadow [
 	<gtExample>
 
-	^ (self on: self exampleDiff) look: GtDiffShadowLook
+	^ (self on: self exampleDiff) aptitude: GtDiffShadowAptitude
 ]
 
 { #category : #examples }
@@ -120,7 +120,7 @@ GtDiffElement >> drawMeAndChildrenOnSpartaCanvas: aCanvas [
 
 { #category : #initialize }
 GtDiffElement >> editorLook [
-	^ BrGlamorousCodeEditorLook
+	^ BrGlamorousCodeEditorAptitude
 ]
 
 { #category : #initialize }
@@ -167,7 +167,7 @@ GtDiffElement >> leftBottomFor: anInteger [
 
 { #category : #accessing }
 GtDiffElement >> leftEditorLook: aLook [
-	leftElement look: aLook
+	leftElement aptitude: aLook
 ]
 
 { #category : #private }
@@ -232,7 +232,7 @@ GtDiffElement >> newTextElement [
 		focusability: BlFocusability none;
 		beReadOnlyWithSelection;
 		matchParent;
-		look: self editorLook
+		aptitude: self editorLook
 ]
 
 { #category : #'geometry hooks' }
@@ -285,7 +285,7 @@ GtDiffElement >> rightBottomFor: anInteger [
 
 { #category : #accessing }
 GtDiffElement >> rightEditorLook: aLook [
-	rightElement look: aLook
+	rightElement aptitude: aLook
 ]
 
 { #category : #private }

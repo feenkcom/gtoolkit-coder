@@ -12,7 +12,7 @@ GtCoderCollapsedContentElementExamples >> forExampleCoder [
 	aMethodCoder := GtPharoMethodCoder forMethod: self class >> #greenExample.
 	aContentElement := GtSourceCoderCollapsedContentElement new
 		coderUIModel: aMethodCoder asCoderUIModel.
-	aContentElement look: GtSourceCoderCollapsedTextAndExampleLook.
+	aContentElement aptitude: GtSourceCoderCollapsedTextAndExampleAptitude.
 
 	^ aContentElement
 ]
@@ -26,7 +26,7 @@ GtCoderCollapsedContentElementExamples >> forMethodCoder [
 	aContentElement := GtSourceCoderCollapsedContentElement new
 		coderUIModel: aMethodCoder asCoderUIModel.
 	
-	aContentElement look: GtMethodCoderHeaderLook + GtSourceCoderCollapsedTextLook.
+	aContentElement aptitude: GtMethodCoderHeaderAptitude + GtSourceCoderCollapsedTextAptitude.
 	
 	^ aContentElement
 ]
@@ -50,8 +50,8 @@ GtCoderCollapsedContentElementExamples >> textAndExampleLook_withExampleMethod [
 	aMethodCoder example run.
 	aContentElement := GtSourceCoderCollapsedContentElement new
 		coderUIModel: aMethodCoder asCoderUIModel.
-	aContentElement addLook: BrLayoutResizerLook inherit.
-	aContentElement look: GtSourceCoderCollapsedTextAndExampleLook.
+	aContentElement addAptitude: BrLayoutResizerAptitude inherit.
+	aContentElement aptitude: GtSourceCoderCollapsedTextAndExampleAptitude.
 	^ aContentElement
 ]
 
@@ -62,7 +62,7 @@ GtCoderCollapsedContentElementExamples >> textAndExampleLook_withRegularMethod [
 	aMethodCoder := GtPharoMethodCoder forMethod: self class >> #noExample.
 	aContentElement := GtSourceCoderCollapsedContentElement new
 		coderUIModel: aMethodCoder asCoderUIModel.
-	aContentElement addLook: BrLayoutResizerLook inherit.
-	aContentElement look: GtSourceCoderCollapsedTextAndExampleLook.
+	aContentElement addAptitude: BrLayoutResizerAptitude inherit.
+	aContentElement aptitude: GtSourceCoderCollapsedTextAndExampleAptitude.
 	^ aContentElement
 ]

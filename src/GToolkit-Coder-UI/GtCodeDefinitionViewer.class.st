@@ -9,11 +9,16 @@ Class {
 	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
+{ #category : #accessing }
+GtCodeDefinitionViewer >> aptitude: aStencil [
+	lookStencil := aStencil asStencil
+]
+
 { #category : #'private - instance creation' }
 GtCodeDefinitionViewer >> buildSectionLabel: aSectionName [
 	
 	^ BrLabel new
-		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
+		aptitude: (BrGlamorousLabelAptitude new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
 		text: aSectionName, ':';
 		margin: (BlInsets top: 5 right: 5);
 		focusability: BlFocusability none;
@@ -25,15 +30,10 @@ GtCodeDefinitionViewer >> initialize [
 	super initialize.
 	
 	margin := BlInsets top: 3 left: 0 bottom: 3 right: 5.
-	lookStencil := [ BrGlamorousEditableLabelLook new
+	lookStencil := [ BrGlamorousEditableLabelAptitude new
 		glamorousCodeFont;
 		defaultForeground: Color black;
 		fontSize: 10 ] asStencil.
-]
-
-{ #category : #accessing }
-GtCodeDefinitionViewer >> look: aStencil [
-	lookStencil := aStencil asStencil
 ]
 
 { #category : #accessing }

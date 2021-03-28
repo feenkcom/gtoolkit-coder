@@ -24,9 +24,9 @@ GtMethodCoderBreadcrumbElement >> coder: aCoder [
 GtMethodCoderBreadcrumbElement >> initialize [
 	super initialize.
 	
-	self look: (BrGlamorousBreadcrumbLook new
+	self aptitude: (BrGlamorousBreadcrumbAptitude new
 		separator: [ BrLabel new
-			look: (BrGlamorousLabelLook new thin foreground: BrGlamorousColors defaultButtonTextColor);
+			aptitude: (BrGlamorousLabelAptitude new thin foreground: BrGlamorousColors defaultButtonTextColor);
 			text: '>';
 			margin: (BlInsets left: 5 right: 5) ]).
 	
@@ -45,7 +45,7 @@ GtMethodCoderBreadcrumbElement >> newBreadcrumbItemElementsFor: aSourceCoder [
 { #category : #'instance creation' }
 GtMethodCoderBreadcrumbElement >> newBreadcrumbItemFor: aGtSourceCoderBreadcrumbAction [
 	^ BrButton new
-		look: (BrGlamorousLabelLook new
+		aptitude: (BrGlamorousLabelAptitude new
 			foreground: aGtSourceCoderBreadcrumbAction foreground;
 			fontSize: 12);
 		label: aGtSourceCoderBreadcrumbAction name;

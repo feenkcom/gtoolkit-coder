@@ -61,7 +61,7 @@ GtTextualCoderEditorElement >> initialize [
 	super initialize.
 	
 	self
-		look: BrGlamorousCodeEditorLook + (BrGlamorousWithContextMenuLook content: [ self createContextMenuContent ]);
+		aptitude: BrGlamorousCodeEditorAptitude + (BrGlamorousWithContextMenuAptitude content: [ self createContextMenuContent ]);
 		padding: BlInsets empty;
 		hMatchParent;
 		vFitContent.

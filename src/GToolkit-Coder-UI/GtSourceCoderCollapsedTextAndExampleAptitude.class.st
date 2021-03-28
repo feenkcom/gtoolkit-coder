@@ -9,8 +9,8 @@ If a method is an example, I display the method name and example result: ${examp
 If a method is """"not"""" an example, I omit displaying the example result: ${example:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withRegularMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}$ 
 "
 Class {
-	#name : #GtSourceCoderCollapsedTextAndExampleLook,
-	#superclass : #GtSourceCoderLook,
+	#name : #GtSourceCoderCollapsedTextAndExampleAptitude,
+	#superclass : #GtSourceCoderAptitude,
 	#instVars : [
 		'container',
 		'methodLabel',
@@ -20,24 +20,24 @@ Class {
 }
 
 { #category : #'private - accessing' }
-GtSourceCoderCollapsedTextAndExampleLook >> container [
+GtSourceCoderCollapsedTextAndExampleAptitude >> container [
 	<return: #BrHorizontalPane>
 	^ container
 ]
 
 { #category : #'private - accessing' }
-GtSourceCoderCollapsedTextAndExampleLook >> exampleElement [
+GtSourceCoderCollapsedTextAndExampleAptitude >> exampleElement [
 	<return: #BlElement>
 	^ exampleElement
 ]
 
 { #category : #'private - updating' }
-GtSourceCoderCollapsedTextAndExampleLook >> hide [
+GtSourceCoderCollapsedTextAndExampleAptitude >> hide [
 	self exampleElement visibility: BlVisibility hidden
 ]
 
 { #category : #initialization }
-GtSourceCoderCollapsedTextAndExampleLook >> initialize [
+GtSourceCoderCollapsedTextAndExampleAptitude >> initialize [
 	super initialize.
 	self initializeMethodLabel.
 	self initializeExampleElement.
@@ -51,20 +51,20 @@ GtSourceCoderCollapsedTextAndExampleLook >> initialize [
 ]
 
 { #category : #initialization }
-GtSourceCoderCollapsedTextAndExampleLook >> initializeContainer [
+GtSourceCoderCollapsedTextAndExampleAptitude >> initializeContainer [
 	container := BrHorizontalPane new
 		fitContent;
 		alignCenterLeft
 ]
 
 { #category : #initialization }
-GtSourceCoderCollapsedTextAndExampleLook >> initializeExampleElement [
+GtSourceCoderCollapsedTextAndExampleAptitude >> initializeExampleElement [
 	exampleElement := GtCoderExampleStateElement new
 		margin: (BlInsets top: 4 left: 1 bottom: 1 right: 1).
 ]
 
 { #category : #initialization }
-GtSourceCoderCollapsedTextAndExampleLook >> initializeListeners [
+GtSourceCoderCollapsedTextAndExampleAptitude >> initializeListeners [
 	super initializeListeners.
 	
 	self when: BlClickEvent do: [ :anEvent |
@@ -75,19 +75,19 @@ GtSourceCoderCollapsedTextAndExampleLook >> initializeListeners [
 ]
 
 { #category : #initialization }
-GtSourceCoderCollapsedTextAndExampleLook >> initializeMethodLabel [
+GtSourceCoderCollapsedTextAndExampleAptitude >> initializeMethodLabel [
 	methodLabel := BrLabel new
-		look: BrGlamorousLabelLook new editorMeasurement bold glamorousCodeFont
+		aptitude: BrGlamorousLabelAptitude new editorMeasurement bold glamorousCodeFont
 ]
 
 { #category : #'private - accessing' }
-GtSourceCoderCollapsedTextAndExampleLook >> methodLabel [
+GtSourceCoderCollapsedTextAndExampleAptitude >> methodLabel [
 	<return: #BrLabel>
 	^ methodLabel
 ]
 
 { #category : #hooks }
-GtSourceCoderCollapsedTextAndExampleLook >> onCoderChanged: aGtSourceCoderUIModel [
+GtSourceCoderCollapsedTextAndExampleAptitude >> onCoderChanged: aGtSourceCoderUIModel [
 	self widget coderUIModel
 		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
 	self updateLabelsFor: aGtSourceCoderUIModel coder.
@@ -102,22 +102,22 @@ GtSourceCoderCollapsedTextAndExampleLook >> onCoderChanged: aGtSourceCoderUIMode
 ]
 
 { #category : #'private - announcement handling' }
-GtSourceCoderCollapsedTextAndExampleLook >> onCollapsedLabelChanged: anAnnouncement [
+GtSourceCoderCollapsedTextAndExampleAptitude >> onCollapsedLabelChanged: anAnnouncement [
 	self updateLabelsFor: anAnnouncement coder
 ]
 
 { #category : #'private - announcement handling' }
-GtSourceCoderCollapsedTextAndExampleLook >> onExampleExecuted: anAnnouncement [
+GtSourceCoderCollapsedTextAndExampleAptitude >> onExampleExecuted: anAnnouncement [
 	self updateExampleElementFor: anAnnouncement coder
 ]
 
 { #category : #'private - updating' }
-GtSourceCoderCollapsedTextAndExampleLook >> show [
+GtSourceCoderCollapsedTextAndExampleAptitude >> show [
 	self exampleElement visibility: BlVisibility visible
 ]
 
 { #category : #'private - updating' }
-GtSourceCoderCollapsedTextAndExampleLook >> updateExampleElementFor: aSourceCoder [
+GtSourceCoderCollapsedTextAndExampleAptitude >> updateExampleElementFor: aSourceCoder [
 	aSourceCoder canExecuteExample
 		ifFalse: [ self hide.
 			^ self ].
@@ -127,12 +127,12 @@ GtSourceCoderCollapsedTextAndExampleLook >> updateExampleElementFor: aSourceCode
 ]
 
 { #category : #'private - updating' }
-GtSourceCoderCollapsedTextAndExampleLook >> updateLabelsFor: aSourceCoder [
+GtSourceCoderCollapsedTextAndExampleAptitude >> updateLabelsFor: aSourceCoder [
 	self updateMethodLabelFor: aSourceCoder.
 	self updateExampleElementFor: aSourceCoder.
 ]
 
 { #category : #'private - updating' }
-GtSourceCoderCollapsedTextAndExampleLook >> updateMethodLabelFor: aSourceCoder [
+GtSourceCoderCollapsedTextAndExampleAptitude >> updateMethodLabelFor: aSourceCoder [
 	self methodLabel text: aSourceCoder collapsedText
 ]

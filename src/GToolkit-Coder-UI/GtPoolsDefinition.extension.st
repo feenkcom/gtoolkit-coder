@@ -22,7 +22,7 @@ GtPoolsDefinition >> poolsEditor [
 		renameEvent: GtBehaviorPoolRenamed;
 		separator: [
 			BrLabel new
-				look: (BrGlamorousLabelLook new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
+				aptitude: (BrGlamorousLabelAptitude new glamorousCodeFont foreground: BrGlamorousColors darkBorderColor );
 				text: '+' ];
 		completion: [ GtPoolsCompletionStrategy new ];
 		whenKey: BlKeyCombination primaryB do: [ :anEvent :aDefinition  | aDefinition browseFrom: anEvent ];

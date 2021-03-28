@@ -4,8 +4,8 @@ I add to a coder a way to change the destination where inspected objects are sho
 Each coder holds to its destination. Available destinations are modeled as subclasses of ${class:GtPhlowSpawnDesiredDestination}$
 "
 Class {
-	#name : #GtSourceCoderSpawnDestinationLook,
-	#superclass : #GtSourceCoderLook,
+	#name : #GtSourceCoderSpawnDestinationAptitude,
+	#superclass : #GtSourceCoderAptitude,
 	#instVars : [
 		'switchButton'
 	],
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #initialization }
-GtSourceCoderSpawnDestinationLook >> initialize [
+GtSourceCoderSpawnDestinationAptitude >> initialize [
 	super initialize.
 
 	switchButton := self newSwitchButton.
@@ -22,9 +22,9 @@ GtSourceCoderSpawnDestinationLook >> initialize [
 ]
 
 { #category : #'instance creation' }
-GtSourceCoderSpawnDestinationLook >> newSwitchButton [
+GtSourceCoderSpawnDestinationAptitude >> newSwitchButton [
 	^ BrButton new 
-		look: BrGlamorousButtonWithIconLook - BrGlamorousButtonExteriorLook;
+		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude;
 		action: [ self switchSpawnDestination ];
 		label: 'Change the place where inspected objects are shown.';
 		constraintsDo: [ :c | 
@@ -35,18 +35,18 @@ GtSourceCoderSpawnDestinationLook >> newSwitchButton [
 ]
 
 { #category : #hooks }
-GtSourceCoderSpawnDestinationLook >> onCoderChanged: aGtSourceCoderUIModel [
+GtSourceCoderSpawnDestinationAptitude >> onCoderChanged: aGtSourceCoderUIModel [
 	self switchButton 
 		icon: aGtSourceCoderUIModel coder spawnDestination icon
 ]
 
 { #category : #accessing }
-GtSourceCoderSpawnDestinationLook >> switchButton [
+GtSourceCoderSpawnDestinationAptitude >> switchButton [
 	^ switchButton
 ]
 
 { #category : #'instance creation' }
-GtSourceCoderSpawnDestinationLook >> switchSpawnDestination [
+GtSourceCoderSpawnDestinationAptitude >> switchSpawnDestination [
 	| aSourceCoder |
 	
 	aSourceCoder := self sourceCoderUIModel coder.

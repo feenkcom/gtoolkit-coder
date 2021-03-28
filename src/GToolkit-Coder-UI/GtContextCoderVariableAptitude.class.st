@@ -1,5 +1,5 @@
 Class {
-	#name : #GtContextCoderVariableLook,
+	#name : #GtContextCoderVariableAptitude,
 	#superclass : #BrAptitude,
 	#instVars : [
 		'methodCoder'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #initialization }
-GtContextCoderVariableLook >> initialize [
+GtContextCoderVariableAptitude >> initialize [
 	super initialize.
 	self
 		addChange:
@@ -23,17 +23,17 @@ GtContextCoderVariableLook >> initialize [
 ]
 
 { #category : #accessing }
-GtContextCoderVariableLook >> methodCoder [
+GtContextCoderVariableAptitude >> methodCoder [
 	^ methodCoder
 ]
 
 { #category : #accessing }
-GtContextCoderVariableLook >> methodCoder: contextCoder [
+GtContextCoderVariableAptitude >> methodCoder: contextCoder [
 	methodCoder := contextCoder
 ]
 
 { #category : #private }
-GtContextCoderVariableLook >> variables [
+GtContextCoderVariableAptitude >> variables [
 	| vars |
 	vars := OrderedCollection new.
 	methodCoder tempNamesAndValuesDo: [ :name :value | vars add: {name. 'temporary'. value} ].
@@ -45,7 +45,7 @@ GtContextCoderVariableLook >> variables [
 ]
 
 { #category : #initialization }
-GtContextCoderVariableLook >> variablesElement [
+GtContextCoderVariableAptitude >> variablesElement [
 	| variablesElement |
 	variablesElement := BrColumnedList new.
 	variablesElement
@@ -56,7 +56,7 @@ GtContextCoderVariableLook >> variablesElement [
 		title: 'Variable';
 		stencil: [ :each | 
 			BrLabel new
-				look: (BrGlamorousLabelLook new foreground: Color black);
+				aptitude: (BrGlamorousLabelAptitude new foreground: Color black);
 				text: each first asString;
 				hMatchParent;
 				vMatchParent ].
@@ -64,7 +64,7 @@ GtContextCoderVariableLook >> variablesElement [
 		title: 'Value';
 		stencil: [ :each | 
 			BrLabel new
-				look: (BrGlamorousLabelLook new foreground: Color black);
+				aptitude: (BrGlamorousLabelAptitude new foreground: Color black);
 				text: (each last printStringLimitedTo: 50);
 				hMatchParent;
 				vMatchParent ].

@@ -1,11 +1,11 @@
 Class {
-	#name : #GtClassBreadcrumbToggleLook,
+	#name : #GtClassBreadcrumbToggleAptitude,
 	#superclass : #BrAptitude,
 	#category : #'GToolkit-Coder-UI-Looks'
 }
 
 { #category : #accessing }
-GtClassBreadcrumbToggleLook >> initialize [
+GtClassBreadcrumbToggleAptitude >> initialize [
 	super initialize.
 	self
 		addChangeProperty: #(widget layout)
@@ -14,11 +14,11 @@ GtClassBreadcrumbToggleLook >> initialize [
 		addChangeProperty: #(widget constraints horizontal resizer)
 		with: BlLayoutResizer fitContent.
 
-	self add: (BrGlamorousLabelLook new
+	self add: (BrGlamorousLabelAptitude new
 		foreground: Color black;
 		yourself).			
 							
-	self add: (BrToggleLook new
+	self add: (BrToggleAptitude new
 		// #label;
 		activated: [ :aStyle | aStyle foreground: Color black ];
 		deactivated: [ :aStyle | aStyle foreground: Color gray ])

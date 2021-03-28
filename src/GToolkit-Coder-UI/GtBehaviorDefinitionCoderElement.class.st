@@ -46,7 +46,7 @@ GtBehaviorDefinitionCoderElement >> buildDefinitionEditor [
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
-					look: [ self editableLabelLook ];
+					aptitude: [ self editableLabelLook ];
 					margin: self buttonMargin;
 					asElement) } ].
 
@@ -76,7 +76,7 @@ GtBehaviorDefinitionCoderElement >> buildDefinitionReader [
 		theProperties addChildren: { 
 				(self buildSectionLabel: eachEditor title).
 				(eachEditor
-					look: [ self readonlyLabelLook ];
+					aptitude: [ self readonlyLabelLook ];
 					margin: self buttonMargin;
 					asElement) } ].
 
@@ -87,7 +87,7 @@ GtBehaviorDefinitionCoderElement >> buildDefinitionReader [
 GtBehaviorDefinitionCoderElement >> buildSectionLabel: aSectionName [
 	
 	^ BrLabel new
-		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
+		aptitude: (BrGlamorousLabelAptitude new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
 		text: aSectionName, ':';
 		focusability: BlFocusability none;
 		margin: (BlInsets top: 5 right: 2);
@@ -112,7 +112,7 @@ GtBehaviorDefinitionCoderElement >> coderUIModel: aGtBehaviorDefinitionCoderUIMo
 
 { #category : #'private - ui' }
 GtBehaviorDefinitionCoderElement >> editableLabelLook [
-	^ BrGlamorousEditableLabelLook new
+	^ BrGlamorousEditableLabelAptitude new
 		glamorousCodeFont;
 		defaultForeground: Color black;
 		fontSize: 10
@@ -130,7 +130,7 @@ GtBehaviorDefinitionCoderElement >> initialize [
 	super initialize.	
 
 	self
-		look: GtCoderExpanderLook;
+		aptitude: GtCoderExpanderAptitude;
 		hMatchParent;
 		vFitContent
 ]
@@ -150,11 +150,11 @@ GtBehaviorDefinitionCoderElement >> readers [
 
 { #category : #'private - ui' }
 GtBehaviorDefinitionCoderElement >> readonlyLabelLook [
-	^ BrGlamorousEditorLook new
+	^ BrGlamorousEditorAptitude new
 		glamorousCodeFont;
 		fontSize: 10;
 		foreground: Color black;
-		add: (BrStyleCommonLook new
+		add: (BrStyleCommonAptitude new
 			default: [ :aStyle |
 				aStyle
 					geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
