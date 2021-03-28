@@ -16,13 +16,6 @@ GtCodeDefinition class >> classVariablesEditorName [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
-GtCodeDefinition >> editors [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-	
-	^ #()
-]
-
-{ #category : #'*GToolkit-Coder-UI' }
 GtCodeDefinition class >> packageEditorName [
 	^ #'editor--package-name'
 ]
@@ -30,13 +23,6 @@ GtCodeDefinition class >> packageEditorName [
 { #category : #'*GToolkit-Coder-UI' }
 GtCodeDefinition class >> poolsEditorName [
 	^ #'editor--pools'
-]
-
-{ #category : #'*GToolkit-Coder-UI' }
-GtCodeDefinition >> readers [
-	<return: #Collection of: #GtCodeDefinitionViewer>
-	
-	^ #()
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
