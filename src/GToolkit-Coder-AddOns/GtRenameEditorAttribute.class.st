@@ -21,7 +21,7 @@ GtRenameEditorAttribute >> cursorLocation: anInteger [
 ]
 
 { #category : #accessing }
-GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
+GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [	
 	renameEditor := GtRenameEditor new
 		fitContent;
 		look: (BrGlamorousEditableLabelLook new defaultBackground: Color transparent; minWidth: 0);
@@ -37,7 +37,7 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 		do: [ :event | renameAction updateName: renameEditor editor text ].
 	renameEditor
 		when: BlFocusOutEvent
-		do: [ :event | self updateFocus: event ].
+		do: [ :anEvent | self updateFocus: anEvent ].
 	
 	self flag: #TODO.
 	"renameEditor editor moveCursorTo: (cursorLocation min: renameEditor editor text size)."
@@ -87,7 +87,8 @@ GtRenameEditorAttribute >> initialize [
 	super initialize.
 	
 	filter := BrTextEditorNoInputFilter new.
-	selectAll := false
+	selectAll := false.
+	self cache: self newPooledCache
 ]
 
 { #category : #testing }

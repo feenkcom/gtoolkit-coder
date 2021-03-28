@@ -27,18 +27,15 @@ GtRenameAction2 class >> locations: aCollectionOfIntervals textualCoderViewModel
 		yourself
 ]
 
-{ #category : #pharo }
-GtRenameAction2 class >> pharoRenameLocalsOn: aTextEditorElement [
+{ #category : #'api - factory' }
+GtRenameAction2 class >> pharoRenameLocalVariableAt: aTextIndex textualCoderViewModel: aTextualCoderViewModel [
 	^ [
-		| editor text ast items action |
+		| ast items action |
 	
-		editor := aTextEditorElement editor.
-		editor cursors cursorsCount = 1
-			ifFalse: [ ^ nil ].
-		text := editor text.
-		ast := GtPharoParser parseWithErrors: text asString.
+		ast := aTextualCoderViewModel astAwait.
 		items := OrderedCollection new.
-		(ast findVariableNodeAt: editor cursors first position)
+
+		(ast findVariableNodeAt: aTextIndex)
 			ifNotNil: [ :node | 
 				node whoDefines
 					ifNotNil: [ :definer | 
@@ -48,7 +45,7 @@ GtRenameAction2 class >> pharoRenameLocalsOn: aTextEditorElement [
 									ifTrue: [ items add: (each startPosition to: each stopPosition) ] ]
 							andTokensDo: nil
 							includesErrors: true ] ].
-		action := self locations: items element: aTextEditorElement.
+		action := self locations: items textualCoderViewModel: aTextualCoderViewModel.
 		action forVariableOrUnaryMessage.
 		action install ]
 			on: Error
@@ -59,7 +56,7 @@ GtRenameAction2 class >> pharoRenameLocalsOn: aTextEditorElement [
 				ex return: nil ]
 ]
 
-{ #category : #pharo }
+{ #category : #'api - factory' }
 GtRenameAction2 class >> pharoRenameSnippetLocalsOn: aTextEditorElement [
 	^ [ | editor text ast items action |
 	editor := aTextEditorElement editor.
@@ -87,7 +84,7 @@ GtRenameAction2 class >> pharoRenameSnippetLocalsOn: aTextEditorElement [
 		do: [ :ex | ex return: nil ]
 ]
 
-{ #category : #pharo }
+{ #category : #'api - factory' }
 GtRenameAction2 class >> pharoRenameTemporaryVariable: aVariableName textualCoderViewModel: aTextualCoderViewModel [
 	^ [
 		| ast items action |
@@ -154,7 +151,11 @@ GtRenameAction2 >> addRenameAttributes [
 				from: each first
 				to: each last ].
 			
-	renameAttributes := coderAttributes flatCollect: [ :eachCoderAttribute | eachCoderAttribute textAttributes ]
+	renameAttributes := coderAttributes flatCollect: [ :eachCoderAttribute | eachCoderAttribute textAttributes ].
+
+	self
+		assert: [ (renameAttributes select: [ :each | each isKindOf: GtRenameEditorAttribute ]) size <= 1 ]
+		description: [ 'There must not be more than one editor attribute' ]
 ]
 
 { #category : #'private - actions' }

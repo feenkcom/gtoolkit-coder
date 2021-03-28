@@ -490,8 +490,9 @@ GtPharoMethodCoder >> extractTemporaryVariable: aNode in: anEditorElement [
 
 	(self findNodeAssigning: tempName)
 		ifNotNil: [ :node | 
-			anEditorElement editor moveCursorTo: node stop.
-			self renameLocalVariableIn: anEditorElement ]
+			anEditorElement textualCoderViewModel
+				moveCursorTo: node stop;
+				renameLocalVariableAt: node stop ]
 ]
 
 { #category : #'private - refactorings' }

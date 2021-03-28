@@ -112,7 +112,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: 
 	<return: #GtTextualCoderViewModel>
 	| aCurrentText aMarkerAttribute newCoderTextAttributes |
 	
-	aMarkerAttribute := BrTextInvisibleMarkerAttribute new.
+	aMarkerAttribute := BrTextInvisibleMarkerAttribute new beNotOverwritableByStyler.
 	
 	"we change the sourceText directly to not trigger the styler recomputation"
 	aCurrentText := self sourceText.
@@ -123,7 +123,11 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: 
 		textAttributes: aCollectionOfTextAttributes.
 	
 	extraTextAttributes add: newCoderTextAttributes.
-	self announce: (GtTextualCoderViewModelTextAttributesAdded new coderTextAttributes: newCoderTextAttributes).
+	self announce: (GtTextualCoderViewModelTextAttributesAdded new
+		coderTextAttributes: newCoderTextAttributes;
+		startPosition: aStartPosition;
+		stopPosition: anEndPosition).
+
 	^ newCoderTextAttributes
 ]
 

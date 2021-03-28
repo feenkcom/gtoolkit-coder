@@ -76,6 +76,21 @@ GtPharoSourceCoderViewModel >> onBindingsReplaced [
 	"Is sent when current variable bindings are replaced with new ones"
 ]
 
+{ #category : #'api - actions' }
+GtPharoSourceCoderViewModel >> renameLocalVariableAt: aTextIndex [
+	GtRenameAction2
+		pharoRenameLocalVariableAt: aTextIndex
+		textualCoderViewModel: self
+]
+
+{ #category : #'api - actions' }
+GtPharoSourceCoderViewModel >> renameLocalVariableAtCursor [
+	self cursors do: [ :aCursor |
+		^ GtRenameAction2
+			pharoRenameLocalVariableAt: aCursor position
+			textualCoderViewModel: self ]
+]
+
 { #category : #'api - accessing' }
 GtPharoSourceCoderViewModel >> selfObject [
 	"Return an object that should be bound to `self` during code evaluation"

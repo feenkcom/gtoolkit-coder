@@ -16,6 +16,16 @@ GtTextualCoderTextAttributes >> applyOnEditorText: aText [
 			aText attributes: textAttributes from: aStartPosition to: anEndPosition ]
 ]
 
+{ #category : #'api - attribute' }
+GtTextualCoderTextAttributes >> applyOnEditorText: aText from: aStartPosition to: anEndPosition [
+	aText
+		findAttribute: markerAttribute
+		indicesDo: [ :aMarkerStartPosition :aMarkerEndPosition |
+			^ aText attributes: textAttributes from: aMarkerStartPosition to: aMarkerEndPosition ].
+		
+	aText attributes: { markerAttribute }, textAttributes from: aStartPosition to: anEndPosition
+]
+
 { #category : #accessing }
 GtTextualCoderTextAttributes >> markerAttribute [
 	^ markerAttribute

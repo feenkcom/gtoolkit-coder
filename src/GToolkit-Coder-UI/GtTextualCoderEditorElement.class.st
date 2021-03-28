@@ -157,7 +157,7 @@ GtTextualCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
 
 	anAnnouncement source == self
 		ifTrue: [ ^ self ].
-		
+
 	anAnnouncement source == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
@@ -359,7 +359,10 @@ GtTextualCoderEditorElement >> onViewModelStylersChanged [
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextAttributesAdded: anAnnouncement [
 	self enqueueTask: (BlTaskAction new action: [
-		anAnnouncement coderTextAttributes applyOnEditorText: self text ])
+		anAnnouncement coderTextAttributes
+			applyOnEditorText: self text
+			from: anAnnouncement startPosition
+			to: anAnnouncement stopPosition ])
 ]
 
 { #category : #'private - event handling' }

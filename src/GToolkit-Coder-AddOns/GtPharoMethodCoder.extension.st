@@ -274,7 +274,7 @@ GtPharoMethodCoder >> renameAt: aTextPosition in: anEditorElement [
 				ifTrue: [ ^ self renameMethod: anEditorElement node: aNode ].
 			aNode isVariable
 				ifTrue: [ aNode isLocallyDefined
-						ifTrue: [ ^ self renameLocalVariableIn: anEditorElement ].
+						ifTrue: [ ^ anEditorElement textualCoderViewModel renameLocalVariableAt: aTextPosition ].
 					(self behavior allInstVarNames includes: aNode name value)
 						ifTrue: [ ^ self renameInstanceVariableIn: anEditorElement node: aNode ].
 					(self behavior classVariables
@@ -308,11 +308,6 @@ GtPharoMethodCoder >> renameInstanceVariableIn: editorElement node: aVariableNod
 		coder: self;
 		sourceElement: editorElement;
 		originalNode: aVariableNode) execute
-]
-
-{ #category : #'*GToolkit-Coder-AddOns' }
-GtPharoMethodCoder >> renameLocalVariableIn: editorElement [
-	GtRenameAction pharoRenameLocalsOn: editorElement
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
