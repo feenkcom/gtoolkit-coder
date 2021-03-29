@@ -97,8 +97,7 @@ GtCreateBehaviorElement >> compileBehavior [
 		ifTrue: [ definition category createPackageChange execute ].
 	
 	change := definition createBehaviorChange.
-	
-	change execute.
+	GtPharoCodeModifier current performRefactoryChange: change.
 	
 	behaviorBlock notNil
 		ifTrue: [ behaviorBlock cull: change definedClass ]

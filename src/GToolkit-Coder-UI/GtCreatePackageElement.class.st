@@ -85,7 +85,7 @@ GtCreatePackageElement >> buildPackageLabel [
 GtCreatePackageElement >> createPackage [
 	| change |
 	change := definition createPackageChange.
-	change execute.
+	GtPharoCodeModifier current performRefactoryChange: change.
 	packageBlock notNil
 		ifTrue: [ packageBlock cull: change package cull: change tag ]
 ]
