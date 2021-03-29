@@ -36,10 +36,11 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			baseline: 'GToolkitPager' with: [
 				spec repository: 'github://feenkcom/gtoolkit-pager/src' ].
 		spec 
+			package: 'GToolkit-VariableBindings';
 			package: 'GToolkit-Coder' with: [
 				spec requires: #( 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-UI' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkitBasicUtility' 'GToolkitPager' ). ];
+				spec requires: #('GToolkit-Coder' 'GToolkit-VariableBindings' 'GToolkitBasicUtility' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-AddOns' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI'). ];
 			package: 'GToolkit-Coder-Extensions' with: [
