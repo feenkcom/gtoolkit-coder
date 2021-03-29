@@ -20,7 +20,7 @@ GtCoderToolbarElement >> addClassTab: look [
 		aptitude: BrGlamorousTabAptitude new;
 		label: 'Class';
 		stencil: [ | element |
-			element := GtCreateBehaviorElement new.
+			element := GtPharoCreateBehaviorElement new.
 			element
 				behaviorBlock: [ :cls | 
 					look hide.
@@ -40,7 +40,7 @@ GtCoderToolbarElement >> addPackageTab: look [
 		aptitude: BrGlamorousTabAptitude new;
 		label: 'Package';
 		stencil: [ | element |
-			element := GtCreatePackageElement new.
+			element := GtPharoCreatePackageElement new.
 			element
 				packageBlock: [ :pkg :tag | 
 					look hide.
@@ -59,7 +59,7 @@ GtCoderToolbarElement >> addTraitTab: look [
 		aptitude: BrGlamorousTabAptitude new;
 		label: 'Trait';
 		stencil: [ | element |
-			element := GtCreateBehaviorElement new.
+			element := GtPharoCreateBehaviorElement new.
 			element
 				behaviorBlock: [ :cls | 
 					look hide.

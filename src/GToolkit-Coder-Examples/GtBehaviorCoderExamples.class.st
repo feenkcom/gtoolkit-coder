@@ -9,7 +9,7 @@ GtBehaviorCoderExamples >> forClass [
 	<gtExample>
 	| aCoder |
 
-	aCoder := GtBehaviorCoder forClass: GtBehaviorCoderDummyClass.
+	aCoder := GtPharoBehaviorCoder forClass: GtBehaviorCoderDummyClass.
 
 	self assert: aCoder theClass equals: GtBehaviorCoderDummyClass.
 	self assert: aCoder hasObject not.
@@ -30,7 +30,7 @@ GtBehaviorCoderExamples >> forObject [
 
 	anObject := GtBehaviorCoderDummyClass new.
 
-	aCoder := GtBehaviorCoder forObject: anObject.
+	aCoder := GtPharoBehaviorCoder forObject: anObject.
 
 	self assert: aCoder theClass equals: GtBehaviorCoderDummyClass.
 	self assert: aCoder hasObject.

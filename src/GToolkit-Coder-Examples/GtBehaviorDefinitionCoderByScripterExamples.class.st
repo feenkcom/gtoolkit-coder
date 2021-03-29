@@ -8,7 +8,7 @@ Class {
 GtBehaviorDefinitionCoderByScripterExamples >> behaviorDefinitionCoder [
 	<gtExample>
 
-	^ GtBehaviorDefinitionCoder forBehavior: self targetClass
+	^ GtPharoBehaviorDefinitionCoder forBehavior: self targetClass
 ]
 
 { #category : #'examples - setup' }

@@ -6,5 +6,5 @@ Class {
 
 { #category : #accessing }
 GtBehaviorDefinitionCoderUIModel >> elementClass [
-	^ GtBehaviorDefinitionCoderElement
+	^ GtPharoBehaviorDefinitionCoderElement
 ]

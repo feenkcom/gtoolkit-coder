@@ -9,7 +9,7 @@ GtBehaviorDefinitionCoderExamples >> forClass [
 	<gtExample>
 	| aCoder |
 
-	aCoder := GtBehaviorDefinitionCoder forBehavior: GtBehaviorCoderDummyClass.
+	aCoder := GtPharoBehaviorDefinitionCoder forBehavior: GtBehaviorCoderDummyClass.
 
 	self assert: aCoder behavior equals: GtBehaviorCoderDummyClass.
 	self assert: aCoder definition notNil.
@@ -22,7 +22,7 @@ GtBehaviorDefinitionCoderExamples >> forMetaclass [
 	<gtExample>
 	| aCoder |
 
-	aCoder := GtBehaviorDefinitionCoder forBehavior: GtBehaviorCoderDummyClass class.
+	aCoder := GtPharoBehaviorDefinitionCoder forBehavior: GtBehaviorCoderDummyClass class.
 
 	self assert: aCoder behavior equals: GtBehaviorCoderDummyClass class.
 	self assert: aCoder definition notNil.
@@ -35,7 +35,7 @@ GtBehaviorDefinitionCoderExamples >> forTrait [
 	<gtExample>
 	| aCoder |
 
-	aCoder := GtBehaviorDefinitionCoder forBehavior: TGtBehaviorCoderDummyTrait.
+	aCoder := GtPharoBehaviorDefinitionCoder forBehavior: TGtBehaviorCoderDummyTrait.
 
 	self assert: aCoder behavior equals: TGtBehaviorCoderDummyTrait.
 	self assert: aCoder definition notNil.

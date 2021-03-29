@@ -13,7 +13,7 @@ Class {
 		'event',
 		'action'
 	],
-	#category : #'GToolkit-Coder-Execution'
+	#category : #'GToolkit-Coder-UI-Execution'
 }
 
 { #category : #'api - instance creation' }

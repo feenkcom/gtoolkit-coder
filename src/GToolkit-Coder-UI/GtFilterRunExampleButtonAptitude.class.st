@@ -24,7 +24,7 @@ GtFilterRunExampleButtonAptitude >> beUpdateRequestedIfDoneEarlierDo: aBlock [
 
 { #category : #'api - accessing' }
 GtFilterRunExampleButtonAptitude >> coder [
-	<return: #GtMethodsCoder>
+	<return: #GtPharoMethodsCoder>
 	^ coder
 ]
 

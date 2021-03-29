@@ -10,7 +10,7 @@ GtDefineClassFixItAction >> addCreateClassAttributeInEditor: aBrTextEditor [
 	
 	text := aBrTextEditor text.
 	stencilBlock := [ | element |
-	element := GtCreateBehaviorElement new.
+	element := GtPharoCreateBehaviorElement new.
 	element
 		behaviorBlock: [ :cls | 
 			text

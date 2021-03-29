@@ -23,42 +23,6 @@ Class {
 	#category : #'GToolkit-Coder-UI-! Core'
 }
 
-{ #category : #'instance creation' }
-GtCoder class >> forClass: aClass [
-	^ self forCoder: (GtBehaviorCoder forClass: aClass)
-]
-
-{ #category : #'instance creation' }
-GtCoder class >> forCoder: aCoder [
-	^ self basicNew initialize
-		navigationModel: GtCoderNavigationModel default;
-		pushCoder: aCoder
-]
-
-{ #category : #'instance creation' }
-GtCoder class >> forMethod: aCompiledMethod [
-    | classCoder coder |
-    classCoder := GtBehaviorCoder forClass: aCompiledMethod methodClass instanceSide.
-    coder := self forCoder: classCoder.
-    classCoder withSelectedMethod: aCompiledMethod.
-    ^ coder
-]
-
-{ #category : #'instance creation' }
-GtCoder class >> forObject: anObject [
-	^ self forCoder: (GtBehaviorCoder forObject: anObject)
-]
-
-{ #category : #'instance creation' }
-GtCoder class >> forPackage: anRPackage [
-	^ self forCoder: (GtPackageCoder forPackage: anRPackage)
-]
-
-{ #category : #'instance creation' }
-GtCoder class >> new [
-	^ self forCoder: GtPackagesCoder new
-]
-
 { #category : #'private - accessing' }
 GtCoder >> contentElement [
 	<return: #GtCoderContentElement>
