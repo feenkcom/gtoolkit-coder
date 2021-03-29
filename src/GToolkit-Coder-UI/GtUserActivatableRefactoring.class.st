@@ -132,9 +132,9 @@ GtUserActivatableRefactoring >> execute [
 
 	aCompositeChange changes: theChanges.
 
-	RBRefactoryChangeManager instance
-		performChange: aCompositeChange;
-		addUndoPointer: 1
+	GtPharoCodeModifier current
+		performRefactoryChange: aCompositeChange
+		andAddUndoPointer: 1
 ]
 
 { #category : #initialization }
