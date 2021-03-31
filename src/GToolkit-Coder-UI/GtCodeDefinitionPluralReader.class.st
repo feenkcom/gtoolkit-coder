@@ -15,7 +15,7 @@ GtCodeDefinitionPluralReader >> create [
 	theInitialNames := aDefinition perform: getSelector withEnoughArguments: { anOwner }.
 
 	aTagger := BrTagger new
-		look: (BrGlamorousTaggerLook new
+		aptitude: (BrGlamorousTaggerAptitude new
 			margin: self margin;
 			tagLabel: [ :aTaggerTag |
 				| aLabel eachLabelDefinition |
@@ -31,7 +31,7 @@ GtCodeDefinitionPluralReader >> create [
 					text: aTaggerTag name;
 					fitContent;
 					styler: styler;
-					look: lookStencil create;
+					aptitude: lookStencil create;
 					focusability: BlFocusability none;
 					yourself.
 				

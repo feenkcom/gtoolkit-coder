@@ -49,7 +49,9 @@ GtFixItAction >> id [
 { #category : #private }
 GtFixItAction >> menuActionWithIndex: anIndex [
 	^ GtCoderContextMenuAction new
-		action: [ :aCoderViewModel :anEvent :anEditorElement | self executeOn: anEditorElement ];
+		action: [ :aCoderViewModel :anEvent :anEditorElement |
+			aCoderViewModel selectNone.
+			self executeOn: anEditorElement ];
 		title: self description;
 		id: (self id indexed: anIndex)
 ]

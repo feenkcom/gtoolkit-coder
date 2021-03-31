@@ -23,7 +23,7 @@ GtCoderPrintStringAttribute class >> forString: aString [
 
 { #category : #private }
 GtCoderPrintStringAttribute >> actionButtonLook [
-	^ BrGlamorousButtonIconLook + BrGlamorousButtonLayoutLook + (BrStyleCommonLook new
+	^ BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude + (BrStyleCommonAptitude new
 		default: [ :aStyle | aStyle geometry: BlCircle new ];
 		hovered: [ :aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker ];
 		pressed: [ :aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker darker ])
@@ -36,7 +36,7 @@ GtCoderPrintStringAttribute >> buildMenuFor: aHamburgerButton fromEditorElement:
 		fitContent;
 		addChildren: { 
 			BrButton new
-				look: self menuButtonLook;
+				aptitude: self menuButtonLook;
 				label: 'Copy';
 				icon: BrGlamorousVectorIcons clipboard;
 				beSmallSize;
@@ -46,7 +46,7 @@ GtCoderPrintStringAttribute >> buildMenuFor: aHamburgerButton fromEditorElement:
 					self closeMenuFromElement: aButtonElement.
 					self copyFromEditorElement: anEditorElement ].
 			BrButton new
-				look: self menuButtonLook;
+				aptitude: self menuButtonLook;
 				label: 'Inspect';
 				icon: BrGlamorousVectorIcons inspect;
 				beSmallSize;
@@ -56,7 +56,7 @@ GtCoderPrintStringAttribute >> buildMenuFor: aHamburgerButton fromEditorElement:
 					self closeMenuFromElement: aButtonElement.
 					self spawnFromElement: aHamburgerButton ].
 			BrButton new
-				look: self menuButtonLook;
+				aptitude: self menuButtonLook;
 				label: 'Insert';
 				icon: BrGlamorousVectorIcons accept;
 				beSmallSize;
@@ -66,7 +66,7 @@ GtCoderPrintStringAttribute >> buildMenuFor: aHamburgerButton fromEditorElement:
 					self closeMenuFromElement: aButtonElement.
 					self insertIntoTheEditorElement: anEditorElement ].
 			BrButton new
-				look: self menuButtonLook;
+				aptitude: self menuButtonLook;
 				label: 'Remove';
 				icon: BrGlamorousVectorIcons close;
 				beSmallSize;
@@ -81,7 +81,7 @@ GtCoderPrintStringAttribute >> buildMenuFor: aHamburgerButton fromEditorElement:
 { #category : #private }
 GtCoderPrintStringAttribute >> buildTooltip [
 	^ BrEditor new
-		look: BrGlamorousEditorLook new glamorousRegularSmallSize;
+		aptitude: BrGlamorousEditorAptitude new glamorousRegularSmallSize;
 		fitContentLimited;
 		beReadOnlyWithSelection;
 		text:
@@ -108,15 +108,15 @@ GtCoderPrintStringAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 	hamburgerButton := nil.
 	
 	^ BrLabel new
-		look: (BrGlamorousLabelLook new glamorousCodeFont labelDo: [ :aLabel |
-			aLabel addLook: (BrGlamorousWithTooltipLook new contentStencil: [ self buildTooltip ]) ]);
+		aptitude: (BrGlamorousLabelAptitude new glamorousCodeFont labelDo: [ :aLabel |
+			aLabel addAptitude: (BrGlamorousWithTooltipAptitude new contentStencil: [ self buildTooltip ]) ]);
 		beTinySize;
 		text: object printString;
 		background: BrGlamorousColors neutralBackgroundColor;
 		margin: (BlInsets top: 0 left: 4 bottom: 0 right: 4);
 		padding: (BlInsets top: 2 left: 4 bottom: 2 right: 4);
 		geometry: (BlRoundedRectangleGeometry cornerRadius: 2);
-		addLook: (BrStyleCommonLook new
+		addAptitude: (BrStyleCommonAptitude new
 			focused: [ :aStyle | aStyle border: (BlBorder paint: (BrGlamorousColors focusedEditorBorderColor alpha: 0.75) width: 1) ]);
 		requestFocus;
 		addShortcut: (BlShortcutWithAction new
@@ -137,9 +137,9 @@ GtCoderPrintStringAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 		when: BlElementRemovedFromParentEvent do: [ :anEvent |
 			anEditorElement requestFocus ];
 		addChild: (hamburgerButton := BrButton new
-			look: self actionButtonLook + (BrGlamorousWithDropdownLook
+			aptitude: self actionButtonLook + (BrGlamorousWithDropdownAptitude
 				handle: [ BrButton new
-					look: BrGlamorousButtonIconLook + BrGlamorousButtonLayoutLook;
+					aptitude: BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude;
 					icon: BrGlamorousVectorIcons hamburger;
 					beSmallSize;
 					exact: 16@16 ]
@@ -188,10 +188,10 @@ GtCoderPrintStringAttribute >> isFocusable [
 
 { #category : #private }
 GtCoderPrintStringAttribute >> menuButtonLook [
-	^ (BrGlamorousButtonRectangularLook new cornerRadius: 0)
-		+ BrGlamorousButtonIconLook
-		+ BrGlamorousLabelLook
-		+ BrGlamorousListItemLook
+	^ (BrGlamorousButtonRectangularAptitude new cornerRadius: 0)
+		+ BrGlamorousButtonIconAptitude
+		+ BrGlamorousLabelAptitude
+		+ BrGlamorousListItemAptitude
 ]
 
 { #category : #accessing }

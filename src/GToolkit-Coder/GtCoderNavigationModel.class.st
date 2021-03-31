@@ -5,11 +5,6 @@ Class {
 }
 
 { #category : #factory }
-GtCoderNavigationModel class >> default [
-	^ GtCoderNavigationPackagesTagsClassesModel new
-]
-
-{ #category : #factory }
 GtCoderNavigationModel class >> null [
 	^ GtCoderNullNavigationModel default
 ]

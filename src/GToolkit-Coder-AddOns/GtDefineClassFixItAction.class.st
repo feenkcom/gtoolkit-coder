@@ -10,7 +10,7 @@ GtDefineClassFixItAction >> addCreateClassAttributeInEditor: aBrTextEditor [
 	
 	text := aBrTextEditor text.
 	stencilBlock := [ | element |
-	element := GtCreateBehaviorElement new.
+	element := GtPharoCreateBehaviorElement new.
 	element
 		behaviorBlock: [ :cls | 
 			text
@@ -22,7 +22,7 @@ GtDefineClassFixItAction >> addCreateClassAttributeInEditor: aBrTextEditor [
 		ifNotNil: [ :package | element forPackage: package ].
 	sourceCoder packageTag
 		ifNotNil: [ :tag | element forPackageTag: tag ].
-	element addLook: BrShadowLook.
+	element addAptitude: BrShadowAptitude.
 	element background: Color white.
 	element margin: (BlInsets all: 10).
 	element

@@ -8,15 +8,3 @@ RBCommentChange >> gtChangesFor: aView [
 		priority: 10;
 		stencil: [ self gtDiff asElement ]
 ]
-
-{ #category : #'*GToolkit-Coder' }
-RBCommentChange >> gtDiff [
-	| oldSource newSource |
-	oldSource := (self changeClass ifNotNil: [ :cls | cls comment ])
-		ifNil: [ '' ].
-	newSource := comment.
-	^ TextDiffBuilder
-		from: oldSource
-		to: newSource
-		inClass: self changeClass
-]

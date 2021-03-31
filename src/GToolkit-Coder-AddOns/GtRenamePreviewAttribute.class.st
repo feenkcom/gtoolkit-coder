@@ -17,13 +17,15 @@ GtRenamePreviewAttribute >> action: aRenameAction [
 
 { #category : #accessing }
 GtRenamePreviewAttribute >> additionalAttributes [
-	^ {(BlTextUnderlineAttribute new
-		color: BrGlamorousColors textHighlightColor)}
+	^ {
+		BlTextDecorationAttribute new underline color: BrGlamorousColors textHighlightColor
+	}
 ]
 
 { #category : #accessing }
 GtRenamePreviewAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| editor |
+
 	renameEditor := BrEditorElement new.
 	renameEditor
 		constraintsDo: [ :c | 
@@ -32,6 +34,7 @@ GtRenamePreviewAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorEle
 	editor := BrTextEditor new
 		text: text;
 		yourself.
+
 	renameEditor editor: editor.
 	^ renameEditor
 ]
@@ -44,7 +47,9 @@ GtRenamePreviewAttribute >> editor [
 { #category : #initialization }
 GtRenamePreviewAttribute >> initialize [
 	super initialize.
-	self beNotOverwritableByStyler
+
+	self beNotOverwritableByStyler.
+	self beReplace
 ]
 
 { #category : #testing }

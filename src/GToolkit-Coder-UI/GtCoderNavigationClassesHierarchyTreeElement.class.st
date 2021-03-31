@@ -33,7 +33,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	self
 		nodeStencil: [ BrLabel new
 				beSmallSize;
-				look: BrGlamorousLabelLook ];
+				aptitude: BrGlamorousLabelAptitude ];
 		nodeDataBinder: [ :aClassElement :aClassHierarchyTree | 
 			aClassElement
 				text:

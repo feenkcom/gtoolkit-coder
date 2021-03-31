@@ -15,7 +15,8 @@ Class {
 		'hasFocus',
 		'expanded',
 		'cursors',
-		'selection'
+		'selection',
+		'extraTextAttributes'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -97,13 +98,63 @@ GtTextualCoderViewModel >> addStylers: aCollectionOfGtCoderStyler [
 	aCollectionOfGtCoderStyler do: [ :eachStyler | self addStyler: eachStyler ]
 ]
 
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition to: anEndPosition [
+	<return: #GtTextualCoderViewModel>
+	^ self
+		addTextAttributes: { aTextAttribute }
+		from: aStartPosition
+		to: anEndPosition
+]
+
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: aStartPosition to: anEndPosition [
+	<return: #GtTextualCoderViewModel>
+	| aCurrentText aMarkerAttribute newCoderTextAttributes |
+	
+	aMarkerAttribute := BrTextInvisibleMarkerAttribute new beNotOverwritableByStyler.
+	
+	"we change the sourceText directly to not trigger the styler recomputation"
+	aCurrentText := self sourceText.
+	aCurrentText attribute: aMarkerAttribute from: aStartPosition to: anEndPosition.
+	
+	newCoderTextAttributes := GtTextualCoderTextAttributes new
+		markerAttribute: aMarkerAttribute;
+		textAttributes: aCollectionOfTextAttributes.
+	
+	extraTextAttributes add: newCoderTextAttributes.
+	self announce: (GtTextualCoderViewModelTextAttributesAdded new
+		coderTextAttributes: newCoderTextAttributes;
+		startPosition: aStartPosition;
+		stopPosition: anEndPosition).
+
+	^ newCoderTextAttributes
+]
+
 { #category : #converting }
 GtTextualCoderViewModel >> asEditorState [
+	| anEditorText |
+
+	anEditorText := self coderModel sourceText copy.
+
+	self extraTextAttributes do: [ :eachCoderAttributes |
+		eachCoderAttributes applyOnEditorText: anEditorText ].
+
 	^ BrTextEditorCompositeMemento new
-		addMemento: (BrTextEditorTextMemento new text: self coderModel sourceText copy);
+		addMemento: (BrTextEditorTextMemento new text: anEditorText);
 		addMemento: (BrTextEditorCursorsMemento new cursors: cursors copy);
 		addMemento: (BrTextEditorSelectionMemento new selection: selection copy);
 		addMemento: (BrTextEditorStylerMemento new styler: self compositeStyler)
+]
+
+{ #category : #'api - coder model' }
+GtTextualCoderViewModel >> astAwait [
+	^ self coderModel astAwait
+]
+
+{ #category : #'api - expansion' }
+GtTextualCoderViewModel >> collapse [
+	self expanded: false
 ]
 
 { #category : #'api - stylers' }
@@ -247,13 +298,27 @@ GtTextualCoderViewModel >> ensureAddOns [
 ]
 
 { #category : #'api - expansion' }
+GtTextualCoderViewModel >> expand [
+	self expanded: true
+]
+
+{ #category : #'api - expansion' }
 GtTextualCoderViewModel >> expanded [
 	^ expanded
 ]
 
 { #category : #'api - expansion' }
 GtTextualCoderViewModel >> expanded: aBoolean [
-	expanded := aBoolean
+	expanded = aBoolean
+		ifTrue: [ ^ self ].
+
+	expanded := aBoolean.
+	self notifyExpansionChanged: expanded
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> extraTextAttributes [
+	^ extraTextAttributes
 ]
 
 { #category : #'api - focus' }
@@ -293,6 +358,7 @@ GtTextualCoderViewModel >> gtInfo [
 		aStream nextPut: (#contextActions -> self contextActions).
 		aStream nextPut: (#contextMenuActions -> self contextMenuActions).
 		aStream nextPut: (#shortcuts -> self shortcuts).
+		aStream nextPut: (#attributes -> self extraTextAttributes).
 		aStream nextPut: (#hasFocus -> self focused).
 		aStream nextPut: (#expanded -> self expanded) ]
 ]
@@ -315,6 +381,11 @@ GtTextualCoderViewModel >> gtInfoFor: aView [
 		updateWhen: GtTextualCoderViewModelAnnouncement in: self announcer
 ]
 
+{ #category : #'api - selection' }
+GtTextualCoderViewModel >> hasSelection [
+	^ self selection isNotEmpty
+]
+
 { #category : #initialization }
 GtTextualCoderViewModel >> initialize [
 	super initialize.
@@ -329,6 +400,7 @@ GtTextualCoderViewModel >> initialize [
 	
 	cursors := BrTextEditorMultipleCursor new.
 	selection := BlCompositeSelection new.
+	extraTextAttributes := OrderedCollection new.
 	
 	hasFocus := false.
 	expanded := true
@@ -348,9 +420,19 @@ GtTextualCoderViewModel >> mainActions: theMainActions [
 	self announce: GtTextualCoderViewModelMainActionsChanged new
 ]
 
+{ #category : #'api - cursors' }
+GtTextualCoderViewModel >> moveCursorTo: aCursorIndex [
+	self cursors: (BrTextEditorCursor at: aCursorIndex)
+]
+
 { #category : #'private - notifying' }
 GtTextualCoderViewModel >> notifyCursorsChanged: aBrTextEditorCursor from: aSourceObject [
 	self announce: (GtTextualCoderViewModelCursorsChanged new cursors: aBrTextEditorCursor; source: aSourceObject)
+]
+
+{ #category : #'private - notifying' }
+GtTextualCoderViewModel >> notifyExpansionChanged: aBoolean [
+	self announce: (GtTextualCoderViewModelExpansionChanged new expanded: aBoolean)
 ]
 
 { #category : #'private - notifying' }
@@ -395,6 +477,37 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 	self terminateAddOnsCommand.
 
 	self coderModel ensureAst
+]
+
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> removeAllCoderTextAttributes: aCollectionOfGtTextualCoderTextAttributes [
+	aCollectionOfGtTextualCoderTextAttributes do: [ :eachCoderTextAttribute |
+		self removeCoderTextAttributes: eachCoderTextAttribute ]
+]
+
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttributes [
+	| aCurrentText |
+
+	self extraTextAttributes
+		remove: aGtTextualCoderTextAttributes
+		ifAbsent: [ ^ self ].
+
+	"we change the sourceText directly to not trigger the styler recomputation"
+	aCurrentText := self sourceText.
+	aCurrentText removeAttributes: { aGtTextualCoderTextAttributes markerAttribute }, aGtTextualCoderTextAttributes textAttributes.
+
+	self announce: (GtTextualCoderViewModelTextAttributesRemoved new coderTextAttributes: aGtTextualCoderTextAttributes)
+]
+
+{ #category : #'api - selection' }
+GtTextualCoderViewModel >> select: aFromCursorIndex to: aToCursorIndex [
+	self selection: (self selection copy select: aFromCursorIndex to: aToCursorIndex)
+]
+
+{ #category : #'api - selection' }
+GtTextualCoderViewModel >> selectNone [
+	self selection: BlCompositeSelection new
 ]
 
 { #category : #'api - selection' }

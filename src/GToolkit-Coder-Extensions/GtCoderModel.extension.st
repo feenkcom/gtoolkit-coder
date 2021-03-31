@@ -21,25 +21,9 @@ GtCoderModel >> gtLiveFor: aView [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtCoderModel >> gtViewContextActionsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewContextActionsFor: aView ]
-]
-
-{ #category : #'*GToolkit-Coder-Extensions' }
 GtCoderModel >> gtViewKeybindingsFor: aView [
 	<gtView>
 	^ self addOns 
 		ifNil: [ aView ]
 		ifNotNil: [ :currentAddOns | currentAddOns gtViewKeybindingsFor: aView ]
-]
-
-{ #category : #'*GToolkit-Coder-Extensions' }
-GtCoderModel >> gtViewMainActionsFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewMainActionsFor: aView ]
 ]

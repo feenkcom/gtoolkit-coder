@@ -38,7 +38,7 @@ GtCoderPlaygroundElement >> initialize [
 	self addChild: self contentElement as: #content.
 	self addChild: self playPageElement as: #playPage.
 	
-	self addLook: (BrLayoutResizerLook inherit).
+	self addAptitude: (BrLayoutResizerAptitude inherit).
 ]
 
 { #category : #initialization }

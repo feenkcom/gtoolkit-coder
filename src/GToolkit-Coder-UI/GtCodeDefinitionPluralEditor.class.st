@@ -42,7 +42,7 @@ GtCodeDefinitionPluralEditor >> create [
 				aDefinition perform: renameSelector withEnoughArguments: { aTag name . aTrimmedName . anOwner } ] ].
 
 	aTagger := BrTagger new
-		look: (BrGlamorousTaggerEditableLook new
+		aptitude: (BrGlamorousTaggerEditableAptitude new
 			margin: self margin;
 			tagLabel: [ :aTaggerTag |
 				| anEditableLabel eachLabelDefinition |
@@ -57,7 +57,7 @@ GtCodeDefinitionPluralEditor >> create [
 					text: aTaggerTag name;
 					styler: styler;
 					inputFilter: inputFilter;
-					look: lookStencil create;
+					aptitude: lookStencil create;
 					yourself.
 				
 				interactions do: [ :eachAssociation |

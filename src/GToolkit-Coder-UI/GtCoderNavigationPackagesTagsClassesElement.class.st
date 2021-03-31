@@ -86,9 +86,10 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
 		matchParent.
 	
 	classAndMethodProtocolList := BrVerticalPane new
+		matchParent;
 		addChild: classesList;
 		addChild: (protocolLabel := BrLabel new
-			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);
+			aptitude: (BrGlamorousLabelAptitude new fontSize: 12; foreground: Color gray);
 			text: 'Categories');
 		addChild: methodProtocolsList.
 ]
@@ -98,11 +99,11 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 	super initializeElement.
 	self addChildren: {
 		BrLabel new
-			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);
+			aptitude: (BrGlamorousLabelAptitude new fontSize: 12; foreground: Color gray);
 			text: 'Packages'.
 			
 		classesLabel := BrLabel new
-			look: (BrGlamorousLabelLook new fontSize: 12; foreground: Color gray);
+			aptitude: (BrGlamorousLabelAptitude new fontSize: 12; foreground: Color gray);
 			text: 'Classes'.
 	
 		packagesList.

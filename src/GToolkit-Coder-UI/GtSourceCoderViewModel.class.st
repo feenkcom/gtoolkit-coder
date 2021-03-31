@@ -8,6 +8,24 @@ Class {
 }
 
 { #category : #'api - actions' }
+GtSourceCoderViewModel >> debug [
+	^ self selection isEmpty
+		ifTrue: [ self debugAll ]
+		ifFalse: [ self debugIt: self selectedTextInterval ]
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> debugAll [
+	^ self coderModel debugInContext: self evaluationContext all
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> debugIt: aTextInterval [
+	^ self coderModel debugInContext: (self evaluationContext
+		from: aTextInterval first to: aTextInterval last)
+]
+
+{ #category : #'api - actions' }
 GtSourceCoderViewModel >> discardChanges [
 	self coder discardChanges
 ]
@@ -34,7 +52,7 @@ GtSourceCoderViewModel >> doIt: aTextInterval [
 GtSourceCoderViewModel >> doIt: aTextInterval requestedBy: aRequesterObject [
 	"Evaluate source code within given text interval and return the result"
 
-	^ self coder doItInContext: (self evaluationContext
+	^ self coderModel doItInContext: (self evaluationContext
 		from: aTextInterval first to: aTextInterval last;
 		requesterObject: aRequesterObject)
 ]

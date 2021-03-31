@@ -11,7 +11,7 @@ Class {
 { #category : #adding }
 GtExpandedOnlyCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
 	aSourceCoder coderLook
-		ifNotNil: [ :aCoderLook | anElement addLook: aCoderLook ]
+		ifNotNil: [ :aCoderLook | anElement addAptitude: aCoderLook ]
 ]
 
 { #category : #converting }
@@ -51,7 +51,7 @@ GtExpandedOnlyCoderElement >> coderUIModel: aCoderUIModel [
 	coderUIModel := aCoderUIModel.
 	expandedElement := self newExpandedElement: aCoderUIModel.
 	self addChild: expandedElement.
-	self addLook: (BrLayoutResizerLook new inherit: expandedElement).
+	self addAptitude: (BrLayoutResizerAptitude new inherit: expandedElement).
 	aCoderUIModel expanded: true.
 	aCoderUIModel coder announcer weak
 		when: GtCoderRequestFocus
@@ -74,7 +74,7 @@ GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
 	^ GtSourceCoderExpandedContentElement new
 		coderUIModel: aCoderModel;
 		in: [ :anElement | self addCodersCoderLook: aCoderModel to: anElement ];
-		addLook: GtSourceCoderEditorLook;
+		addAptitude: GtSourceCoderEditorAptitude;
 		yourself
 ]
 

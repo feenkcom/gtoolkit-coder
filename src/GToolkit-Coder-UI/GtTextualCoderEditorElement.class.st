@@ -61,7 +61,7 @@ GtTextualCoderEditorElement >> initialize [
 	super initialize.
 	
 	self
-		look: BrGlamorousCodeEditorLook + (BrGlamorousWithContextMenuLook content: [ self createContextMenuContent ]);
+		aptitude: BrGlamorousCodeEditorAptitude + (BrGlamorousWithContextMenuAptitude content: [ self createContextMenuContent ]);
 		padding: BlInsets empty;
 		hMatchParent;
 		vFitContent.
@@ -110,9 +110,12 @@ GtTextualCoderEditorElement >> onCodeEvaluated: anEvaluationAnnouncement [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onCoderParseError: aGtCoderParseError [
-	self 
-		reportParseError: aGtCoderParseError errorMessage 
-		at: aGtCoderParseError location
+	"A parse error can be notifying from a non-UI thread"
+
+	self enqueueTask: (BlTaskAction new action: [
+		self 
+			reportParseError: aGtCoderParseError errorMessage 
+			at: aGtCoderParseError location ])
 ]
 
 { #category : #'private - event handling' }
@@ -154,7 +157,10 @@ GtTextualCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
 
 	anAnnouncement source == self
 		ifTrue: [ ^ self ].
-		
+
+	anAnnouncement source == self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
 	self onCoderViewModelFocused: anAnnouncement focused
 ]
 
@@ -172,7 +178,8 @@ GtTextualCoderEditorElement >> onPostTextualCoderViewModelChanged [
 	I do nothing by default but allow users to perform update operations when a receiver object is already
 	subscribed to announcements."
 	
-	self textualCoderViewModel ensureAddOns
+	"the add-ons will not compute themselves unless we tell them to"
+	self textualCoderViewModel addOnsAsyncDo: [ :theAddOns | self onViewModelReadyToStyle ]
 ]
 
 { #category : #'private - event handling' }
@@ -293,6 +300,9 @@ GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnounc
 	aCursorsChangedAnnouncement source = self
 		ifTrue: [ ^ self ].
 
+	aCursorsChangedAnnouncement source == self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
 	"since it may be sent from a non-UI process make sure to wrap in the action"
 	self enqueueTask: (BlTaskAction new action: [
 		self navigator
@@ -315,6 +325,9 @@ GtTextualCoderEditorElement >> onViewModelSelectionChanged: aSelectionChangedAnn
 	"if the source of the announcement is myself, do nothing to break the change cycle"
 	aSelectionChangedAnnouncement source = self
 		ifTrue: [ ^ self ].
+		
+	aSelectionChangedAnnouncement source == self textualCoderViewModel
+		ifFalse: [ ^ self ].
 
 	"since it may be sent from a non-UI process make sure to wrap in the action"
 	self enqueueTask: (BlTaskAction new action: [
@@ -341,6 +354,21 @@ GtTextualCoderEditorElement >> onViewModelShortcutsChanged [
 GtTextualCoderEditorElement >> onViewModelStylersChanged [
 	self enqueueTask: (BlTaskAction new
 		action: [ self styler: self textualCoderViewModel compositeStyler ])
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onViewModelTextAttributesAdded: anAnnouncement [
+	self enqueueTask: (BlTaskAction new action: [
+		anAnnouncement coderTextAttributes
+			applyOnEditorText: self text
+			from: anAnnouncement startPosition
+			to: anAnnouncement stopPosition ])
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onViewModelTextAttributesRemoved: anAnnouncement [
+	self enqueueTask: (BlTaskAction new action: [
+		anAnnouncement coderTextAttributes removeFromEditorText: self text ])
 ]
 
 { #category : #'private - event handling' }
@@ -407,7 +435,13 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 			to: self;
 		when: GtTextualCoderViewModelReadyToRestyle
 			send: #onViewModelReadyToStyle
-			to: self
+			to: self;
+		when: GtTextualCoderViewModelTextAttributesAdded
+			send: #onViewModelTextAttributesAdded:
+			to: self;
+		when: GtTextualCoderViewModelTextAttributesRemoved
+			send: #onViewModelTextAttributesRemoved:
+			to: self.
 ]
 
 { #category : #private }

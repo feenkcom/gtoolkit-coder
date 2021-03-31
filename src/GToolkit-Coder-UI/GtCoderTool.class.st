@@ -28,5 +28,5 @@ GtCoderTool >> newCoder [
 
 { #category : #'private - accessing' }
 GtCoderTool >> tabLook [
-	^ BrGlamorousTabSwitcherWithIconLook
+	^ BrGlamorousTabSwitcherWithIconAptitude
 ]

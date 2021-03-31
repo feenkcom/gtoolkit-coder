@@ -12,7 +12,7 @@ GtCodeDefinitionSectionLabelStencil >> create [
 	<return: #Object>
 
 	^ BrLabel new
-		look: (BrGlamorousLabelLook new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
+		aptitude: (BrGlamorousLabelAptitude new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
 		text: self name;
 		margin: (BlInsets top: 5 right: 2);
 		constraintsDo: [ :c | c grid horizontal alignLeft ]

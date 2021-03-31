@@ -52,5 +52,5 @@ GtPackagesCoder >> name [
 
 { #category : #private }
 GtPackagesCoder >> newCoderFor: aPackage [
-	^ GtPackageCoder forPackage: aPackage
+	^ self subclassResponsibility
 ]

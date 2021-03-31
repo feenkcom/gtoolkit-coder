@@ -40,7 +40,7 @@ GtCoderContextMenuContent >> initialize [
 			element := BrHorizontalPane new
 				hMatchParent;
 				vFitContent;
-				addLook: (BrStyleCommonLook new
+				addAptitude: (BrStyleCommonAptitude new
 					hovered: [ :aStyle | aStyle background: BrGlamorousColors defaultButtonBorderColor ]);
 				padding: (BlInsets all: 5);
 				when: BlClickEvent
@@ -51,7 +51,7 @@ GtCoderContextMenuContent >> initialize [
 						self fireEvent: BrContextMenuHideWish new ];
 				addChild:
 					(BrLabel new
-						look: BrGlamorousLabelLook;
+						aptitude: BrGlamorousLabelAptitude;
 						text: eachGtCoderContextMenuAction title;
 						yourself).
 			eachGtCoderContextMenuAction hoverAction

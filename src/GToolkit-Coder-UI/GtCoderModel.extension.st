@@ -26,7 +26,7 @@ GtCoderModel >> asExpandedOnlyElement [
 
 { #category : #'*GToolkit-Coder-UI' }
 GtCoderModel >> coderLook [
-	<return: #BrLook>
+	<return: #BrAptitude>
 
 	^ (self attributeNamed: #coderLook ifAbsent: [ nil ]) value
 ]

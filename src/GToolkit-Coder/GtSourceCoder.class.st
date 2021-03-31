@@ -20,12 +20,34 @@ Class {
 
 { #category : #'api - actions' }
 GtSourceCoder >> debug [
-	self debug: self currentSourceString
+	self debugInContext: self evaluationContext
 ]
 
 { #category : #'private - actions' }
-GtSourceCoder >> debug: aString [
-	self subclassResponsibility
+GtSourceCoder >> debug: aSourceStringOrBlock inContext: aGtSourceCoderEvaluationContext [
+	| aSourceString aSourceInterval aCompleteSourceString |
+
+	self critical: [
+		aCompleteSourceString := aSourceStringOrBlock isClosure
+			ifTrue: [ aSourceStringOrBlock cull: self ]
+			ifFalse: [ aSourceStringOrBlock ].
+		aSourceString := aGtSourceCoderEvaluationContext sourceInterval computeSourceString: aCompleteSourceString.
+		aSourceInterval := aGtSourceCoderEvaluationContext sourceInterval computeSourceInterval: aCompleteSourceString. ].
+
+	aGtSourceCoderEvaluationContext
+		sourceString: aCompleteSourceString;
+		evaluatedSourceString: aSourceString;
+		evaluatedInterval: aSourceInterval.
+
+	self
+		primitiveDebug: aSourceString
+		inContext: aGtSourceCoderEvaluationContext
+		onFailDo: [ self error: 'Failed to debug' ]
+]
+
+{ #category : #'api - actions' }
+GtSourceCoder >> debugInContext: aGtSourceCoderEvaluationContext [
+	self debug: self currentSourceString inContext: aGtSourceCoderEvaluationContext
 ]
 
 { #category : #'api - actions' }
@@ -94,13 +116,12 @@ GtSourceCoder >> evaluate: aSourceStringOrBlock [
 { #category : #'private - actions' }
 GtSourceCoder >> evaluate: aSourceStringOrBlock decorated: aSourceCodeDecorator inContext: aSourceCoderEvaluationContext thenDo: aThenBlock [
 	"Evaluate a given source code"
-	| aSourceString aSourceInterval aResult aDecoratedSourceString |
+	| aCompleteSourceString aSourceString aSourceInterval aResult aDecoratedSourceString |
 	
 	"we can not wrap everything in a critical: because if there is an exception while evaluating
 	the source code the current running process will be suspended, meaning that the very next evaluation
 	will indefinitely wait when trying to enter a critical section."
 	self critical: [
-		| aCompleteSourceString |
 		aCompleteSourceString := aSourceStringOrBlock isClosure
 			ifTrue: [ aSourceStringOrBlock cull: self ]
 			ifFalse: [ aSourceStringOrBlock ].
@@ -111,6 +132,7 @@ GtSourceCoder >> evaluate: aSourceStringOrBlock decorated: aSourceCodeDecorator 
 	aDecoratedSourceString := aSourceCodeDecorator value: aSourceString.
 	
 	aSourceCoderEvaluationContext
+		sourceString: aCompleteSourceString;
 		evaluatedSourceString: aSourceString;
 		evaluatedInterval: aSourceInterval.
 
@@ -260,6 +282,11 @@ GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sou
 		exception: anException;
 		sourceString: aSourceString;
 		sourceInterval: aSourceInterval)
+]
+
+{ #category : #'private - actions' }
+GtSourceCoder >> primitiveDebug: aSourceString inContext: aGtSourceCoderEvaluationContext onFailDo: anEvaluationFailBlock [
+	^ self subclassResponsibility
 ]
 
 { #category : #'private - actions' }

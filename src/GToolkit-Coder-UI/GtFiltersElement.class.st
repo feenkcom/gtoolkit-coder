@@ -106,11 +106,11 @@ GtFiltersElement >> initialize [
 { #category : #'private - instance creation' }
 GtFiltersElement >> newAddTagButton [
 	^ BrButton new
-		look:
-			BrGlamorousButtonRectangularLook new + BrGlamorousButtonIconLook new
-				+ BrGlamorousButtonWithLabelTooltipLook new
+		aptitude:
+			BrGlamorousButtonRectangularAptitude new + BrGlamorousButtonIconAptitude new
+				+ BrGlamorousButtonWithLabelTooltipAptitude new
 				+
-					(BrInteractiveCommonLook new
+					(BrInteractiveCommonAptitude new
 						default: [ :aWidget | 
 							aWidget
 								border: BlBorder empty;

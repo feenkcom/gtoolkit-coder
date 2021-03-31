@@ -16,7 +16,7 @@ GtCodeDefinitionSingleReader >> create [
 	aLabel := BrEditor new
 		beReadOnlyWithoutSelection;
 		fitContent;
-		look: lookStencil create;
+		aptitude: lookStencil create;
 		margin: self margin;
 		focusability: BlFocusability none;
 		text: theInitialName.

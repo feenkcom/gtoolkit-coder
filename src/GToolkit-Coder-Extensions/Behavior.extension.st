@@ -83,7 +83,7 @@ Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
 				icon: BrGlamorousVectorIcons add;
 				tooltip: 'Add new method';
 				action: [ aMethodsCoderUIModel addNewCoder ];
-				name: GtBehaviorCoder addNewMethodButtonName ];
+				name: GtPharoBehaviorCoder addNewMethodButtonName ];
 		actionStencil:
 				[ self runAllExamplesButtonForMethodsCoder: aMethodsCoder ];
 		stencil: [ aMethodsCoderUIModel asElement ]
@@ -91,7 +91,7 @@ Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> methodsCoderFromContext: aPhlowContext [
-	<return: #GtMethodsCoderUIModel>
+	<return: #GtPharoMethodsCoderViewModel>
 
 	^ aPhlowContext
 		optionAt: #behaviorCoder
@@ -102,10 +102,10 @@ Behavior >> methodsCoderFromContext: aPhlowContext [
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> runAllExamplesButtonForMethodsCoder: aMethodsCoder [
 	^ BrButton new
-		addLook:
-			(GtFilterRunExampleButtonFourStateIconLook new coder: aMethodsCoder);
-		addLook: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook;
-		addLook: (GtFilterRunExampleButtonTooltipLook new coder: aMethodsCoder);
+		addAptitude:
+			(GtFilterRunExampleButtonFourStateIconAptitude new coder: aMethodsCoder);
+		addAptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude;
+		addAptitude: (GtFilterRunExampleButtonTooltipAptitude new coder: aMethodsCoder);
 		icon: BrGlamorousVectorIcons play;
 		label: 'Run All Examples';
 		action: [ :element | aMethodsCoder exampler runExamplesFrom: element ]
