@@ -22,6 +22,6 @@ GtSourceCoderSaveShortcut >> name [
 ]
 
 { #category : #evaluation }
-GtSourceCoderSaveShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
-	aGtSourceCoder save
+GtSourceCoderSaveShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
+	aSourceCoderViewModel save
 ]
