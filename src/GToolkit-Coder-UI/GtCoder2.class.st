@@ -80,6 +80,11 @@ GtCoder2 >> initialize [
 	
 ]
 
+{ #category : #initialization }
+GtCoder2 >> navigationStencil: aStencil [
+	navigationSidebar contentStencil: aStencil
+]
+
 { #category : #'api - coder tool view model' }
 GtCoder2 >> onCoderToolViewModelChanged [
 	"Is sent when a new coderTool view model is assigned to the element.

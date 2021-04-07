@@ -91,6 +91,15 @@ GtCoderModel >> attributes [
 ]
 
 { #category : #accessing }
+GtCoderModel >> coderName [
+	"Return a short textual name of the coder.
+	For example, class coder would return a class name, package coder returns a package name."
+	<return: #String>
+
+	^ self class name
+]
+
+{ #category : #accessing }
 GtCoderModel >> coders [
 	^ self attributeNamed: #coders
 ]

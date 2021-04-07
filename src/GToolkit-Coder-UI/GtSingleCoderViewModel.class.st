@@ -3,7 +3,7 @@
 Wraps ${class:GtCoderModel}$ and optionally adds UI related api and state. Coder UI Model should be passed to any Coder UI element instead of the ${class:GtCoderModel}$
 "
 Class {
-	#name : #GtCoderUIModel,
+	#name : #GtSingleCoderViewModel,
 	#superclass : #Object,
 	#traits : 'TGtAnnouncer + TGtWithCoderModel',
 	#classTraits : 'TGtAnnouncer classTrait + TGtWithCoderModel classTrait',
@@ -15,64 +15,64 @@ Class {
 }
 
 { #category : #accessing }
-GtCoderUIModel >> announcer [
+GtSingleCoderViewModel >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> announcerUIModel [
+GtSingleCoderViewModel >> announcerUIModel [
 	^ self announcer
 ]
 
 { #category : #converting }
-GtCoderUIModel >> asCoderUIModel [
+GtSingleCoderViewModel >> asCoderUIModel [
 	^ self
 ]
 
 { #category : #converting }
-GtCoderUIModel >> asElement [
+GtSingleCoderViewModel >> asElement [
 	^ self elementClass new
 		coderUIModel: self;
 		yourself
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> coder [
+GtSingleCoderViewModel >> coder [
 	^ self coderModel
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> coder: anObject [
+GtSingleCoderViewModel >> coder: anObject [
 	self coderModel: anObject
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> coderLook [
+GtSingleCoderViewModel >> coderLook [
 	^ self coder coderLook
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> coders [
+GtSingleCoderViewModel >> coders [
 	^ self coder coders
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> codersUIModel [
+GtSingleCoderViewModel >> codersUIModel [
 	^ codersUIModel
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> codersUIModel: anObject [
+GtSingleCoderViewModel >> codersUIModel: anObject [
 	codersUIModel := anObject
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> elementClass [
+GtSingleCoderViewModel >> elementClass [
 	^ self subclassResponsibility
 ]
 
 { #category : #'gt-extension' }
-GtCoderUIModel >> gtLiveFor: aView [
+GtSingleCoderViewModel >> gtLiveFor: aView [
 	<gtView>
 
 	^ aView forward
@@ -83,7 +83,7 @@ GtCoderUIModel >> gtLiveFor: aView [
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> hasFocus [
+GtSingleCoderViewModel >> hasFocus [
 
 	self
 		deprecated: 'Please use #focused instead'
@@ -93,7 +93,7 @@ GtCoderUIModel >> hasFocus [
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> hasFocus: aBoolean [
+GtSingleCoderViewModel >> hasFocus: aBoolean [
 	self
 		deprecated: 'Please use #focused: instead.'
 		transformWith:
@@ -104,17 +104,17 @@ GtCoderUIModel >> hasFocus: aBoolean [
 ]
 
 { #category : #testing }
-GtCoderUIModel >> isModified [
+GtSingleCoderViewModel >> isModified [
 	^ self coder isModified
 ]
 
 { #category : #'api - coder model' }
-GtCoderUIModel >> onCoderModelChanged [
+GtSingleCoderViewModel >> onCoderModelChanged [
 	"Is sent when a new coder model is assigned to the view model"
 ]
 
 { #category : #accessing }
-GtCoderUIModel >> programCounterRange [
+GtSingleCoderViewModel >> programCounterRange [
 	"This is workwound util the method coder context had a dedicated element.
 	Now the element for displaying a coder is shared between all types of coders."
 

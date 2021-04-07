@@ -84,7 +84,7 @@ GtCoder >> onNavigationModelChanged [
 	self contentElement navigationModel: self navigationModel.
 	self toolbarElement navigationModel: self navigationModel.
 	self updateSidebarContent.
-	self updateTabLabel.
+	self updateTabLabel
 ]
 
 { #category : #'private - announcement handling' }

@@ -38,13 +38,6 @@ GtPackagesCoder >> icon [
 	^ BrGlamorousIcons packageicon asElement
 ]
 
-{ #category : #'initialize-release' }
-GtPackagesCoder >> initialize [
-	super initialize.
-
-	self forItems: (RPackageOrganizer default packages asSortedCollection: [ :a :b | a name < b name ])
-]
-
 { #category : #accessing }
 GtPackagesCoder >> name [
 	^ 'Pharo'

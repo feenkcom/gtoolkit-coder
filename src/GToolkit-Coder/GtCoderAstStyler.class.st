@@ -7,6 +7,34 @@ Class {
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
+{ #category : #'api - styling' }
+GtCoderAstStyler >> attribute: aTextAttribute from: aStart to: anEnd [
+	self attributes: { aTextAttribute } from: aStart to: anEnd
+]
+
+{ #category : #'api - styling' }
+GtCoderAstStyler >> attributes: anAttributesCollection from: aStart to: anEnd [
+	
+	[ text attributes: anAttributesCollection from: aStart to: anEnd. ]
+		on: Error
+		do: [ :anError |
+			anError emit.
+
+			NonInteractiveTranscript stdout
+				nextPutAll: '[';
+				nextPutAll: self class name;
+				nextPutAll: '] ';
+				nextPutAll: 'Was not able to apply attributes ';
+				print: (anAttributesCollection collect: [ :each | each class name ] as: Array);
+				nextPutAll: ' from ';
+				print: aStart;
+				nextPutAll: ' to ';
+				print: anEnd;
+				nextPutAll: ' on text of size ';
+				print: text size;
+				cr ].
+]
+
 { #category : #accessing }
 GtCoderAstStyler >> coderViewModel [
 	^ coderViewModel
