@@ -64,7 +64,7 @@ GtPackageCoder >> renameTo: aNewPackageName [
 
 	self isRegistered
 		ifFalse: [
-			self package name: aNewPackageName.
+			self primitiveRenamePackageTo: aNewPackageName.
 			^ self notifyPackageRenamed ].
 
 	self announcer

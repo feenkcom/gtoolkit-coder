@@ -24,8 +24,11 @@ GtPackagesCoderElement >> buildContentPane [
 GtPackagesCoderElement >> buildPackageList [
 	^ BrSimpleList new
 		itemStencil: [ GtPackageCardElement new ];
-		itemDataBinder: [ :eachPackageCard :eachPackageCoder | eachPackageCard coder: eachPackageCoder ];
-		items: (packagesCoder coders asSortedCollection: [:a :b | a name < b name ]);
+		itemDataBinder:
+				[ :eachPackageCard :eachPackageCoder | eachPackageCard coder: eachPackageCoder ];
+		items:
+			(packagesCoder coders
+				asSortedCollection: [ :a :b | a packageName < b packageName ]);
 		addEventFilterOn: BlClickEvent do: [ :anEvent | self requestFocus ]
 ]
 

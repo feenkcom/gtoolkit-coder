@@ -1,6 +1,6 @@
 Class {
 	#name : #GtTextualCoderViewModel,
-	#superclass : #GtCoderUIModel,
+	#superclass : #GtSingleCoderViewModel,
 	#instVars : [
 		'addOns',
 		'addOnMonitor',

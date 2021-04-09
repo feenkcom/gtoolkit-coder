@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCodersUIModel,
+	#name : #GtMultipleCodersViewModel,
 	#superclass : #Object,
 	#instVars : [
 		'coder',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #accessing }
-GtCodersUIModel >> announcer [
+GtMultipleCodersViewModel >> announcer [
 	self
 		deprecated: 'Use #coder announcer instead.'
 		transformWith: '`@receiver announcer' -> '`@receiver coder announcer'.
@@ -18,42 +18,42 @@ GtCodersUIModel >> announcer [
 ]
 
 { #category : #converting }
-GtCodersUIModel >> asCoderUIModel [
+GtMultipleCodersViewModel >> asCoderUIModel [
 	^ self
 ]
 
 { #category : #converting }
-GtCodersUIModel >> asElement [
+GtMultipleCodersViewModel >> asElement [
 	^ self elementClass new
 		codersUIModel: self;
 		yourself
 ]
 
 { #category : #accessing }
-GtCodersUIModel >> coder [
+GtMultipleCodersViewModel >> coder [
 	<return: #GtCodersModel>
 	
 	^ coder
 ]
 
 { #category : #accessing }
-GtCodersUIModel >> coder: aGtCodersModel [
+GtMultipleCodersViewModel >> coder: aGtCodersModel [
 	coder := aGtCodersModel.
 	self updateCoderUIModels
 ]
 
 { #category : #updating }
-GtCodersUIModel >> coderUIModelFor: aCoder [
+GtMultipleCodersViewModel >> coderUIModelFor: aCoder [
 	^ aCoder asCoderUIModel
 ]
 
 { #category : #accessing }
-GtCodersUIModel >> coderUIModels [
+GtMultipleCodersViewModel >> coderUIModels [
 	^ coderUIModels
 ]
 
 { #category : #accessing }
-GtCodersUIModel >> coders [
+GtMultipleCodersViewModel >> coders [
 	<return: #GtCodersModel>
 	
 	self
@@ -64,7 +64,7 @@ GtCodersUIModel >> coders [
 ]
 
 { #category : #accessing }
-GtCodersUIModel >> coders: aGtCodersModel [
+GtMultipleCodersViewModel >> coders: aGtCodersModel [
 	self
 		deprecated: 'Please use coder: instead.'
 		transformWith:
@@ -75,19 +75,19 @@ GtCodersUIModel >> coders: aGtCodersModel [
 ]
 
 { #category : #accessing }
-GtCodersUIModel >> elementClass [
+GtMultipleCodersViewModel >> elementClass [
 	^ self subclassResponsibility
 ]
 
 { #category : #initialization }
-GtCodersUIModel >> initialize [
+GtMultipleCodersViewModel >> initialize [
 	super initialize.
 	
 	coderUIModels := #()
 ]
 
 { #category : #updating }
-GtCodersUIModel >> updateCoderUIModels [
+GtMultipleCodersViewModel >> updateCoderUIModels [
 	| aMappingOfCoderToCoderUI |
 	
 	aMappingOfCoderToCoderUI := IdentityDictionary new.

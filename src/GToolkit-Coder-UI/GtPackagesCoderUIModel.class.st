@@ -1,6 +1,6 @@
 Class {
 	#name : #GtPackagesCoderUIModel,
-	#superclass : #GtCodersUIModel,
+	#superclass : #GtMultipleCodersViewModel,
 	#category : #'GToolkit-Coder-UI-Coder - Packages Model'
 }
 

@@ -23,7 +23,7 @@ GtCoderToolViewModel >> canGoBack [
 
 { #category : #'api - coder tool' }
 GtCoderToolViewModel >> currentCoderViewModel [
-	<return: #GtCoderUIModel>
+	<return: #GtSingleCoderViewModel>
 
 	^ coderViewModelsStack top
 ]

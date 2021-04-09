@@ -1,6 +1,6 @@
 Class {
 	#name : #GtBehaviorDefinitionCoderUIModel,
-	#superclass : #GtCoderUIModel,
+	#superclass : #GtSingleCoderViewModel,
 	#category : #'GToolkit-Coder-UI-Coder - Behavior-Definition Model'
 }
 

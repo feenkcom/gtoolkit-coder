@@ -1,5 +1,5 @@
 Class {
 	#name : #GtPackageCoderViewModel,
-	#superclass : #GtCoderUIModel,
+	#superclass : #GtSingleCoderViewModel,
 	#category : #'GToolkit-Coder-UI-Coder - Package Model'
 }

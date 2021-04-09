@@ -17,14 +17,12 @@ GtCoderCardElement >> coder [
 { #category : #accessing }
 GtCoderCardElement >> coder: anObject [
 	coder := anObject.
-	
-	coderNameLabel text: (self coderNameTextFrom: coder name).
-
+	coderNameLabel text: (self coderNameTextFrom: coder coderName).
 	self detailsLabel
 		ifEmpty: [ coderDetailsLabel visibility: BlVisibility gone ]
-		ifNotEmpty: [ :aDetailsString |
+		ifNotEmpty: [ :aDetailsString | 
 			coderDetailsLabel
-				visibility: (BlVisibility visible);
+				visibility: BlVisibility visible;
 				text: (self coderDetailsTextFrom: aDetailsString) ]
 ]
 

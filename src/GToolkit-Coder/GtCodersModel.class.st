@@ -1,8 +1,8 @@
 Class {
 	#name : #GtCodersModel,
 	#superclass : #Object,
-	#traits : 'TGtAnnouncer',
-	#classTraits : 'TGtAnnouncer classTrait',
+	#traits : 'TGtAnnouncer + TGtOptions',
+	#classTraits : 'TGtAnnouncer classTrait + TGtOptions classTrait',
 	#instVars : [
 		'announcer',
 		'items',
@@ -100,8 +100,18 @@ GtCodersModel >> subscribeToCoder: eachCoder [
 ]
 
 { #category : #'private - subscriptions' }
+GtCodersModel >> subscribeToSystem [
+	"do nothing"
+]
+
+{ #category : #'private - subscriptions' }
 GtCodersModel >> unsubscribeFromCoder: aCoder [
 	aCoder unsubscribe: self
+]
+
+{ #category : #'private - subscriptions' }
+GtCodersModel >> unsubscribeFromSystem [
+	SystemAnnouncer uniqueInstance unsubscribe: self
 ]
 
 { #category : #updating }
