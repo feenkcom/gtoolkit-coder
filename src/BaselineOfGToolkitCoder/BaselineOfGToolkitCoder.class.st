@@ -30,11 +30,11 @@ BaselineOfGToolkitCoder >> baseline: spec [
 	spec for: #'common' do: [
 		spec 
 			baseline: 'GToolkitBasicUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.28/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.29/src' ];
 			baseline: 'GToolkitAnnouncerUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.28/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.29/src' ];
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.314/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.315/src' ].
 		spec 
 			package: 'GToolkit-VariableBindings';
 			package: 'GToolkit-Coder' with: [
