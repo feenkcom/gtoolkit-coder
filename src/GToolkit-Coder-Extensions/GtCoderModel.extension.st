@@ -1,6 +1,11 @@
 Extension { #name : #GtCoderModel }
 
 { #category : #'*GToolkit-Coder-Extensions' }
+GtCoderModel >> canExecuteExample [
+	^ false
+]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
 GtCoderModel >> gtAttributesFor: aView [
 	<gtView>
 	attributes ifNil: [ ^ aView empty ].
