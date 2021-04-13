@@ -353,6 +353,7 @@ GtTextualCoderViewModel >> gtInfo [
 		aStream nextPut: (#coderModel -> self coderModel).
 		aStream nextPut: (#cursors -> self cursors).
 		aStream nextPut: (#selection -> self selection).
+		aStream nextPut: (#ast -> self astAwait).
 		aStream nextPut: (#stylers -> self stylers).
 		aStream nextPut: (#mainActions -> self mainActions).
 		aStream nextPut: (#contextActions -> self contextActions).
