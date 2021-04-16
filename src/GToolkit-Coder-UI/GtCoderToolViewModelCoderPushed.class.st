@@ -1,18 +1,5 @@
 Class {
 	#name : #GtCoderToolViewModelCoderPushed,
-	#superclass : #Announcement,
-	#instVars : [
-		'coderViewModel'
-	],
+	#superclass : #GtCoderToolViewModelCoderStackChanged,
 	#category : #'GToolkit-Coder-UI-! Core - View Models'
 }
-
-{ #category : #accessing }
-GtCoderToolViewModelCoderPushed >> coderViewModel [
-	^ coderViewModel
-]
-
-{ #category : #accessing }
-GtCoderToolViewModelCoderPushed >> coderViewModel: anObject [
-	coderViewModel := anObject
-]
