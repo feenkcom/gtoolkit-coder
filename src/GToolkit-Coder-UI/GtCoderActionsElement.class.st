@@ -91,33 +91,16 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 { #category : #'instance creation' }
 GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 	<return: #BrButton>
-	| button |
+	| button aContentStencil |
 	button := BrButton new.
 
 	aGtCoderAction title
 		ifNotNil: [ button label: aGtCoderAction title asRopedText ].
 	aGtCoderAction icon
 		ifNotNil: [ button icon: aGtCoderAction icon asElement ].
-
-	^ button
-		beTinySize;
-		aptitude: BrGlamorousButtonWithIconAptitude +
-			(BrGlamorousWithDropdownAptitude
-				handle: [ | aButton |
-					aButton := BrButton new.
-					aGtCoderAction title
-						ifNotNil: [ aButton label: aGtCoderAction title asRopedText ].
-					aGtCoderAction icon
-						ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
-					aButton
-						beSmallSize;
-						aptitude:
-							BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
-								- BrGlamorousButtonExteriorAptitude;
-						padding: BlInsets empty;
-						margin: BlInsets empty;
-						yourself ]
-				content: [ | classCompleter containerElement titleElement |
+		
+	aContentStencil := aGtCoderAction stencil
+		ifNil: [ | classCompleter containerElement titleElement |
 					containerElement := BlElement new
 						layout: BlLinearLayout vertical;
 						constraintsDo: [ :c | 
@@ -141,7 +124,27 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 							aGtCoderAction action value: titleElement editor text asString asClass.
 							titleElement fireEvent: BrDropdownHideWish new ].
 					containerElement addChild: titleElement.
-					containerElement ]);
+					containerElement ].
+
+	^ button
+		beTinySize;
+		aptitude: BrGlamorousButtonWithIconAptitude +
+			(BrGlamorousWithDropdownAptitude
+				handle: [ | aButton |
+					aButton := BrButton new.
+					aGtCoderAction title
+						ifNotNil: [ aButton label: aGtCoderAction title asRopedText ].
+					aGtCoderAction icon
+						ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
+					aButton
+						beSmallSize;
+						aptitude:
+							BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
+								- BrGlamorousButtonExteriorAptitude;
+						padding: BlInsets empty;
+						margin: BlInsets empty;
+						yourself ]
+				content: aContentStencil);
 		yourself
 ]
 

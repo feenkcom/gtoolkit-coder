@@ -1,6 +1,8 @@
 Class {
 	#name : #GtCreateElement,
 	#superclass : #BlElement,
+	#traits : 'TBrLayoutResizable',
+	#classTraits : 'TBrLayoutResizable classTrait',
 	#instVars : [
 		'definition'
 	],

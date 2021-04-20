@@ -110,7 +110,7 @@ GtCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
 	newAction := GtCoderDropDownAction new
 		title: aString;
 		icon: anIcon;
-		action: aBlock.
+		stencil: aBlock.
 	mainActions add: newAction
 ]
 

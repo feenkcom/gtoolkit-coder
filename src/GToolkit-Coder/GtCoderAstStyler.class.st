@@ -70,7 +70,7 @@ GtCoderAstStyler >> privateStyle: aText [
 					nextPutAll: self class name;
 					nextPutAll: '] ';
 					print: anError;
-					cr ].
+					cr. ].
 
 	^ aText
 ]

@@ -19,10 +19,12 @@ GtCoderAstCompositeStyler >> style: aText ast: theAst [
 			on: Error
 			do: [ :anError |
 				anError emit.
-	
+				
 				NonInteractiveTranscript stdout
 					nextPutAll: '[';
-					nextPutAll: eachStyler class name;
+					nextPutAll: ((anError signalerContext findContextSuchThat: [ :eachContext | eachContext contextClass = eachStyler class ])
+						ifNil: [ eachStyler class name ]
+						ifNotNil: [ :aContext | aContext method printString ]) ;
 					nextPutAll: '] ';
 					print: anError;
 					cr ] ]
