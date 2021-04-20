@@ -22,12 +22,22 @@ GtSnippetBindings >> = anObject [
 { #category : #converting }
 GtSnippetBindings >> asDictionary [
 	<return: #Dictionary>
-	^ bindings copy
+	| aDictionary |
+	
+	"bindings copy is not enough, because each value is a workspace variable which
+	is in fact an association of ket -> value. When converting to the dictionary we should
+	flatten the associations"
+	aDictionary := Dictionary new.
+	bindings keysAndValuesDo: [ :eachKey :eachWorkSpaceVariable |
+		aDictionary at: eachKey put: eachWorkSpaceVariable value ].
+	
+	^ aDictionary
 ]
 
 { #category : #adding }
 GtSnippetBindings >> at: aSymbol put: anObject [ 
 	self assert: [ aSymbol isSymbol ] description: [ 'Variable name should be a symbol' ].
+
 	bindings 
 		at: aSymbol 
 		put: ((WorkspaceVariable named: aSymbol) value: anObject)

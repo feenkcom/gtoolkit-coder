@@ -122,6 +122,12 @@ GtLocalSnippetBindings >> localNames [
 	^ localBindings keys
 ]
 
+{ #category : #copying }
+GtLocalSnippetBindings >> postCopy [
+	sharedBindings := sharedBindings copy.
+	localBindings := localBindings copy
+]
+
 { #category : #accessing }
 GtLocalSnippetBindings >> receiver [ 
 
