@@ -276,6 +276,12 @@ GtSourceCoder >> notifyPrintResult: anEvaluationResult [
 
 { #category : #'private - notifying' }
 GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
+	(self announcer subscriptionsForClass: GtCoderShowDebuggerRequest) size isZero
+		ifTrue: [
+			^ Smalltalk tools debugger
+				openOn: aDebugSession
+				withFullView: true ].
+
 	self announce: (GtCoderShowDebuggerRequest new
 		coder: self;
 		debugSession: aDebugSession;
