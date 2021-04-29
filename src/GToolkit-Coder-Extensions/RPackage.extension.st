@@ -22,6 +22,33 @@ RPackage >> gtBrowseFrom: anElement [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
+RPackage >> gtCommentFor: aView context: aPhlowContext [
+	<gtPackageView>
+	(aPhlowContext isKindOf: GtPhlowExecutionContext) ifFalse: [ ^ aView empty ].
+	aPhlowContext hasPackageCoder ifFalse: [ ^ aView empty ].
+	^ aView explicit
+		priority: 10.8;
+		title: 'Comment';
+		tooltip: 'Package comment';
+		disableAsync;
+		stencil: [ (GtDocumenter forPackage: self) ];
+		actionButtonIcon: BrGlamorousVectorIcons accept 
+			tooltip: 'Save document' 
+			action: [ :aToggle :aTab | aTab viewContentElement save ];
+		actionToggleIcon: BrGlamorousIcons edit 
+			tooltip: 'Show/Hide Markups'
+			activated: [ :aToggle :aTab | aTab viewContentElement showMarkup ] 
+			deactivated: [ :aToggle :aTab | aTab viewContentElement hideMarkup ];
+		actionButtonIcon: BrGlamorousVectorIcons remove
+			tooltip: 'Decrease font size'
+			action: [ :aToggle :aTab | aTab viewContentElement decreaseNormalFontSize ];
+		actionButtonIcon: BrGlamorousVectorIcons add
+			tooltip: 'Increase font size'
+			action: [ :aToggle :aTab | aTab viewContentElement increaseNormalFontSize ];
+		actionUpdateButtonTooltip: 'Update class comment'
+]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtDefinedClassesFor: aView context: aPhlowContext [
 	<gtPackageView>
 	(aPhlowContext isKindOf: GtPhlowExecutionContext) ifFalse: [ ^ aView empty ].
