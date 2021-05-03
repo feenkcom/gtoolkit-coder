@@ -12,6 +12,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Textual'
 }
 
+{ #category : #'api - textual coder view model' }
+GtTextualCoderEditorElement >> coderUIModel: aTextualCoderViewModel [
+	self textualCoderViewModel: aTextualCoderViewModel
+]
+
 { #category : #'instance creation' }
 GtTextualCoderEditorElement >> createContextMenuContent [
 	"wait for the addons to be computed"
@@ -269,13 +274,7 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	completion := GtCompletionController
 		on: self
 		strategy: self textualCoderViewModel coderModel completionStrategy.
-	completion install.
-
-	self textualCoderViewModel evaluationResult
-		ifNil: [ evaluationHighlighter hideResult ]
-		ifNotNil: [ :aResult | evaluationHighlighter displayResult: aResult ].
-	self textualCoderViewModel programCounterRange
-		ifNotNil: [ :aRange | self highlightPCRangeForInterval: aRange ]
+	completion install
 ]
 
 { #category : #'private - event handling' }

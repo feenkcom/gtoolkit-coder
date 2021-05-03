@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #'api - ast' }
+GtTextCoder >> computeAst: theSourceString [
+	^ theSourceString
+]
+
 { #category : #'instance creation' }
 GtTextCoder >> newCompletionStrategy [
 	^ GtCompletionStrategy new
