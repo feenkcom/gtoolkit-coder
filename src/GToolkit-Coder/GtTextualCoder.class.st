@@ -219,14 +219,6 @@ GtTextualCoder >> ensureAst [
 	self astAsyncDo: [ :theAst | ]
 ]
 
-{ #category : #'gt-extensions' }
-GtTextualCoder >> gtViewStylersFor: aView [
-	<gtView>
-	^ self addOns 
-		ifNil: [ aView ]
-		ifNotNil: [ :currentAddOns | currentAddOns gtViewStylersFor: aView ]
-]
-
 { #category : #initialize }
 GtTextualCoder >> initialize [
 	super initialize.
