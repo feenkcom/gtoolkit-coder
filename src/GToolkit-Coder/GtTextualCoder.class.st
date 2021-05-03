@@ -71,9 +71,13 @@ GtTextualCoder >> astAsyncDo: aBlock [
 
 			aComputedAst := isModified
 				ifTrue: [ self computeAst: theSourceString ]
-				ifFalse: [ GtAstCache default
-					cachedAstAt: astCacheKey
-					ifAbsentPut: [ self computeAst: theSourceString ] ].
+				ifFalse: [
+					self supportsAstCache
+						ifTrue: [
+							GtAstCache default
+								cachedAstAt: astCacheKey
+								ifAbsentPut: [ self computeAst: theSourceString ] ]
+						ifFalse: [ self computeAst: theSourceString ] ].
 
 			astMonitor critical: [
 				newAstCache := aComputedAst.
@@ -404,6 +408,13 @@ GtTextualCoder >> sourceTextDo: aBlock [
 { #category : #'api - addons' }
 GtTextualCoder >> stylers [
 	^ #()
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> supportsAstCache [
+	"Return true if ast cache should be used, false otherwise"
+
+	^ true
 ]
 
 { #category : #'api - ast' }
