@@ -12,6 +12,11 @@ GtTextCoder >> computeAst: theSourceString [
 	^ theSourceString
 ]
 
+{ #category : #initialization }
+GtTextCoder >> forString: aString [
+	self sourceCode: (GtCoderExplicitSourceCode new source: aString)
+]
+
 { #category : #'instance creation' }
 GtTextCoder >> newCompletionStrategy [
 	^ GtCompletionStrategy new
@@ -32,4 +37,9 @@ GtTextCoder >> styler [
 { #category : #accessing }
 GtTextCoder >> styler: anObject [
 	styler := anObject
+]
+
+{ #category : #'api - ast' }
+GtTextCoder >> supportsAstCache [
+	^ false
 ]
