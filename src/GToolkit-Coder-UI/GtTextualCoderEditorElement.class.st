@@ -56,7 +56,7 @@ GtTextualCoderEditorElement >> highlightPCRangeForInterval: aSelectionInterval [
 	(self text from: aSelectionInterval first to: aSelectionInterval last)
 		underlineDo: [ :anAttribute | 
 			anAttribute
-				color: BrGlamorousColors errorBackgroundColor;
+				color: self theme status errorBackgroundColor;
 				thickness: 1.5;
 				beNotOverwritableByStyler ]
 ]

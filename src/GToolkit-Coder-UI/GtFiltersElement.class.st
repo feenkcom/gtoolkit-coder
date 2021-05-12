@@ -107,22 +107,25 @@ GtFiltersElement >> initialize [
 GtFiltersElement >> newAddTagButton [
 	^ BrButton new
 		aptitude:
-			BrGlamorousButtonRectangularAptitude new + BrGlamorousButtonIconAptitude new
+			BrGlamorousButtonRectangularAptitude new
+				+ BrGlamorousButtonIconAptitude new
 				+ BrGlamorousButtonWithLabelTooltipAptitude new
 				+
 					(BrInteractiveCommonAptitude new
 						default: [ :aWidget | 
 							aWidget
 								border: BlBorder empty;
-								background: BrGlamorousColors neutralBackgroundColor ];
-						hovered:
-								[ :aWidget | aWidget background: BrGlamorousColors neutralBackgroundColor darker ];
+								background: self theme status neutralBackgroundColor ];
+						hovered: [ :aWidget | 
+							aWidget background:
+								self theme status neutralBackgroundColor darker ];
 						pressed: [ :aWidget | 
 							aWidget
-								background: BrGlamorousColors neutralBackgroundColor darker darker ];
+								background:
+									self theme status neutralBackgroundColor darker darker ];
 						focused: [ :aWidget | 
 							aWidget
-								border: (BlBorder paint: BrGlamorousColors focusedEditorBorderColor width: 1) ]);
+								border: (BlBorder paint: self theme editor focusedBorderColor width: 1) ]);
 		icon: BrGlamorousVectorIcons add;
 		label: 'Add Filter';
 		margin: (BlInsets all: 2);

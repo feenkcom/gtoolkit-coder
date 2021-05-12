@@ -29,9 +29,10 @@ GtCoderCardElement >> coder: anObject [
 { #category : #'private - instance creation' }
 GtCoderCardElement >> coderDetailsTextFrom: aString [
 	"Convert a coder's details to a styled text"
-	<return: #BlText>
 
-	^ aString asRopedText glamorousRegularFont foreground: BrGlamorousColors defaultButtonTextColor
+	<return: #BlText>
+	^ aString asRopedText glamorousRegularFont
+		foreground: self theme button defaultTextColor
 ]
 
 { #category : #'private - instance creation' }

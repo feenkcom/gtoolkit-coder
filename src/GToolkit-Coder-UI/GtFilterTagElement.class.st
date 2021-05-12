@@ -63,7 +63,7 @@ GtFilterTagElement >> createDropDown [
 						aptitude:
 							(BrInteractiveCommonAptitude new
 								default: [ :f | f background: Color transparent ];
-								hovered: [ :f | f background: BrGlamorousColors defaultButtonBorderColor ];
+								hovered: [ :f | f background: self theme button defaultBorderColor ];
 								yourself);
 						layout: BlLinearLayout horizontal;
 						constraintsDo: [ :c | 
@@ -76,7 +76,9 @@ GtFilterTagElement >> createDropDown [
 							self applyDescriptor: each ];
 						addChild:
 							(BrLabel new
-								aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize;
+								aptitude:
+									BrGlamorousLabelAptitude new glamorousRegularFont
+										glamorousCodeSmallSize;
 								text: each name;
 								yourself).
 					element ];
@@ -87,7 +89,8 @@ GtFilterTagElement >> createDropDown [
 		addAptitude:
 			(BrInteractiveCommonAptitude new
 				default: [ button background: Color transparent ];
-				hovered: [ button background: BrGlamorousColors neutralBackgroundColor darker ]).
+				hovered: [ button background:
+						self theme status neutralBackgroundColor darker ]).
 	^ button
 ]
 
@@ -174,13 +177,16 @@ GtFilterTagElement >> initialize [
 	super initialize.
 	self fitContent.
 	self margin: (BlInsets all: 3).
-	self addAptitude:
-		(BrStyleCommonAptitude new
-			default: [ :aStyle | 
-				aStyle geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
-				aStyle background: BrGlamorousColors neutralBackgroundColor.
-				aStyle border: BlBorder empty ];
-			hovered: [ :aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker ])
+	self
+		addAptitude:
+			(BrStyleCommonAptitude new
+				default: [ :aStyle | 
+					aStyle geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
+					aStyle background: self theme status neutralBackgroundColor.
+					aStyle border: BlBorder empty ];
+				hovered: [ :aStyle | 
+					aStyle background:
+						self theme status neutralBackgroundColor darker ])
 ]
 
 { #category : #testing }

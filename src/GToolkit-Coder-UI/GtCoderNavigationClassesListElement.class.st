@@ -38,13 +38,23 @@ GtCoderNavigationClassesListElement >> buildClassLabel: aClass [
 GtCoderNavigationClassesListElement >> buildClassRow: aClass index: aRowIndex list: aListElement [
 	^ BrWidgetContainer new
 		layout: BlLinearLayout horizontal;
-		aptitude: BrHorizontalPaneAptitude new + (BrStyleCommonAptitude new
-			default: [ :aStyle | aStyle background: BrGlamorousColors deselectedListItemColor ];
-			hovered: [ :aStyle | aStyle background: BrGlamorousColors hoveredListItemColor ];
-			selected: [ :aStyle | aStyle background: BrGlamorousColors selectedListItemColor ];
-			pressed: [ :aStyle | aStyle background: BrGlamorousColors pressedListItemColor ];
-			focused: [ :aStyle | aStyle border: (BlBorder paint: BrGlamorousColors focusedListItemBorder width: 1) ]);
-		when: BlMouseDownEvent do: [ :anEvent |
+		aptitude:
+			BrHorizontalPaneAptitude new
+				+
+					(BrStyleCommonAptitude new
+						default:
+								[ :aStyle | aStyle background: self theme item deselectedColor ];
+						hovered:
+								[ :aStyle | aStyle background: self theme item hoveredColor ];
+						selected:
+								[ :aStyle | aStyle background: self theme item selectedColor ];
+						pressed:
+								[ :aStyle | aStyle background: self theme item pressedColor ];
+						focused: [ :aStyle | 
+							aStyle
+								border: (BlBorder paint: self theme item focusedBorderColor width: 1) ]);
+		when: BlMouseDownEvent
+			do: [ :anEvent | 
 			anEvent consumed: true.
 			aListElement selectOne: aRowIndex dueTo: anEvent.
 			aListElement requestFocus ];

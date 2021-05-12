@@ -40,15 +40,20 @@ GtCoderContextMenuContent >> initialize [
 			element := BrHorizontalPane new
 				hMatchParent;
 				vFitContent;
-				addAptitude: (BrStyleCommonAptitude new
-					hovered: [ :aStyle | aStyle background: BrGlamorousColors defaultButtonBorderColor ]);
+				addAptitude:
+					(BrStyleCommonAptitude new
+						hovered:
+							[ :aStyle | aStyle background: self theme button defaultBorderColor ]);
 				padding: (BlInsets all: 5);
 				when: BlClickEvent
-					do: [ :anEvent |
-						anEvent consumed: true.
-						eachGtCoderContextMenuAction action cull: self editorElement textualCoderViewModel cull: anEvent cull: self editorElement.
-						self fireEvent: BrDropdownHideWish new.
-						self fireEvent: BrContextMenuHideWish new ];
+					do: [ :anEvent | 
+					anEvent consumed: true.
+					eachGtCoderContextMenuAction action
+						cull: self editorElement textualCoderViewModel
+						cull: anEvent
+						cull: self editorElement.
+					self fireEvent: BrDropdownHideWish new.
+					self fireEvent: BrContextMenuHideWish new ];
 				addChild:
 					(BrLabel new
 						aptitude: BrGlamorousLabelAptitude;
@@ -64,10 +69,8 @@ GtCoderContextMenuContent >> initialize [
 					element
 						when: BlMouseLeaveEvent
 						do: [ :anEvent | leave cull: self editorElement cull: anEvent ] ].
-			
 			eachGtCoderContextMenuAction name
 				ifNotNil: [ :anActionName | element containerName: anActionName ].
-			
 			element ];
 		hFitContent;
 		vFitContent
