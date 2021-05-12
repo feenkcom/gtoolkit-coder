@@ -56,8 +56,8 @@ GtCoderPlaygroundElement >> initializePlayPageElement [
 		beBottom;
 		show;
 		collapse;
-		background: BrGlamorousColors neutralBackgroundColor;
-		contentStencil: aStencil.
+		background: self theme status neutralBackgroundColor;
+		contentStencil: aStencil
 ]
 
 { #category : #'private - hooks' }

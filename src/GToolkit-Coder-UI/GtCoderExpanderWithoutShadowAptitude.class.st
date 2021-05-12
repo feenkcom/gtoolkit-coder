@@ -58,12 +58,13 @@ GtCoderExpanderWithoutShadowAptitude >> cornerRadius: aNumber [
 
 { #category : #initialization }
 GtCoderExpanderWithoutShadowAptitude >> defaultBorderPaint [
-	^ BrGlamorousColors lightBorderColor
+	^ self theme default lightBorderColor
 ]
 
 { #category : #initialization }
 GtCoderExpanderWithoutShadowAptitude >> defaultFocusedBorderPaint [
-	^ (BrGlamorousColors primaryBorderColor alpha: 0.4) gtOpaqueColorOnWhite
+	^ (self theme default primaryBorderColor alpha: 0.4)
+		gtOpaqueColorOnWhite
 ]
 
 { #category : #accessing }

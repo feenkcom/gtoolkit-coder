@@ -55,7 +55,7 @@ GtPackagesCoderElement >> buildPackagesElement [
 				beSmallSize;
 				aptitude:
 					(BrGlamorousLabelAptitude new glamorousRegularFont
-						foreground: BrGlamorousColors defaultButtonTextColor);
+						foreground: self theme button defaultTextColor);
 				text: packagesCoder coders size printString , ' Packages').
 	element addChild: self buildPackageList.
 	^ element
