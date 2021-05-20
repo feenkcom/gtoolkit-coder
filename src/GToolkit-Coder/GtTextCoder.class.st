@@ -2,14 +2,20 @@ Class {
 	#name : #GtTextCoder,
 	#superclass : #GtTextualCoder,
 	#instVars : [
-		'styler'
+		'parser',
+		'parserStartingState'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'api - ast' }
 GtTextCoder >> computeAst: theSourceString [
-	^ theSourceString
+	^ parser
+		ifNil: [ theSourceString ]
+		ifNotNil: [
+			parserStartingState
+				ifNil: [ parser parseWithErrors: theSourceString ]
+				ifNotNil: [ parser parseWithErrors: theSourceString startingAt: parserStartingState ] ]
 ]
 
 { #category : #initialization }
@@ -22,21 +28,24 @@ GtTextCoder >> newCompletionStrategy [
 	^ GtCompletionStrategy new
 ]
 
-{ #category : #'instance creation' }
-GtTextCoder >> newSourceStylerFrom: anEditorElement [
-	<return: #BlTextStyler>
-
-	^ styler
+{ #category : #accessing }
+GtTextCoder >> parser [
+	^ parser
 ]
 
 { #category : #accessing }
-GtTextCoder >> styler [
-	^ styler
+GtTextCoder >> parser: anObject [
+	parser := anObject
 ]
 
 { #category : #accessing }
-GtTextCoder >> styler: anObject [
-	styler := anObject
+GtTextCoder >> parserStartingState [
+	^ parserStartingState
+]
+
+{ #category : #accessing }
+GtTextCoder >> parserStartingState: anObject [
+	parserStartingState := anObject
 ]
 
 { #category : #'api - ast' }
