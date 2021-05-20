@@ -461,7 +461,7 @@ GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 
 { #category : #'private - event handling' }
 GtTextualCoderViewModel >> onAstChanged: anAstChangedAnnouncement [	
-	self announce: GtTextualCoderViewModelAstChanged new.
+	self announce: (GtTextualCoderViewModelAstChanged new ast: anAstChangedAnnouncement ast).
 
 	addOnMonitor critical: [ addOns := nil ].
 
