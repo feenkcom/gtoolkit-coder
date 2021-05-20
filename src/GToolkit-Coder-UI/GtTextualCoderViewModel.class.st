@@ -148,6 +148,11 @@ GtTextualCoderViewModel >> asEditorState [
 ]
 
 { #category : #'api - coder model' }
+GtTextualCoderViewModel >> astAsyncDo: aBlock [
+	^ self coderModel astAsyncDo: aBlock
+]
+
+{ #category : #'api - coder model' }
 GtTextualCoderViewModel >> astAwait [
 	^ self coderModel astAwait
 ]
