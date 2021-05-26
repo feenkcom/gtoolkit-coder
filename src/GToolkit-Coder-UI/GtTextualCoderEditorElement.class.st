@@ -76,7 +76,7 @@ GtTextualCoderEditorElement >> initialize [
 		disableStyleTextWhenModified.
 
 	shortcuts := #().
-	completion := nil.
+	completion := GtCompletionController on: self.
 
 	evaluationHighlighter := GtSourceCoderEvaluationHighlighter new editorElement: self.
 	evaluationPrinter := GtSourceCoderEvaluationPrinter new editorElement: self.
@@ -104,7 +104,11 @@ GtTextualCoderEditorElement >> initializeListeners [
 
 	self editor
 		when: BrTextEditorSelectionChangedEvent 
-		do: [ :anEvent | self textualCoderViewModel selection: anEvent selection from: self ]
+		do: [ :anEvent | self textualCoderViewModel selection: anEvent selection from: self ].
+
+	self editor
+		when: BrTextEditorTextStyledEvent
+		do: [ :anEvent | self textualCoderViewModel styledText: anEvent styledText ]
 ]
 
 { #category : #'private - event handling' }
@@ -182,6 +186,9 @@ GtTextualCoderEditorElement >> onPostTextualCoderViewModelChanged [
 	"I am an optional hook method that is sent after #subscribeToTextualCoderViewModel.
 	I do nothing by default but allow users to perform update operations when a receiver object is already
 	subscribed to announcements."
+	
+	self textualCoderViewModel hasStyledText
+		ifTrue: [ ^ self ].
 	
 	"the add-ons will not compute themselves unless we tell them to"
 	self textualCoderViewModel addOnsAsyncDo: [ :theAddOns | self onViewModelReadyToStyle ]
@@ -271,10 +278,7 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	shortcuts := self textualCoderViewModel shortcuts copy.
 	self editor addEditorShortcuts: shortcuts.
 	
-	completion := GtCompletionController
-		on: self
-		strategy: self textualCoderViewModel coderModel completionStrategy.
-	completion install
+	completion strategy: self textualCoderViewModel coderModel completionStrategy
 ]
 
 { #category : #'private - event handling' }
@@ -347,6 +351,10 @@ GtTextualCoderEditorElement >> onViewModelShortcutsChanged [
 		self editor removeEditorShortcuts: shortcuts.
 		shortcuts := self textualCoderViewModel shortcuts copy.
 		self editor addEditorShortcuts: shortcuts ])
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onViewModelStyledTextChanged: anAnnouncement [
 ]
 
 { #category : #'private - event handling' }
@@ -440,6 +448,9 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 			to: self;
 		when: GtTextualCoderViewModelTextAttributesRemoved
 			send: #onViewModelTextAttributesRemoved:
+			to: self;
+		when: GtTextualCoderViewModelStyledTextChanged
+			send: #onViewModelStyledTextChanged:
 			to: self.
 ]
 
@@ -477,7 +488,9 @@ GtTextualCoderEditorElement >> subscribeToTextualCoderViewModel [
 	#unsubscribeFromTextualCoderViewModel if elements subscribe to them"
 	
 	self registerCoderModelAnnouncementsFor: self textualCoderViewModel coderModel.
-	self registerCoderViewModelAnnouncementsFor: self textualCoderViewModel
+	self registerCoderViewModelAnnouncementsFor: self textualCoderViewModel.
+
+	completion install
 ]
 
 { #category : #'api - textual coder view model' }
@@ -488,7 +501,6 @@ GtTextualCoderEditorElement >> unsubscribeFromTextualCoderViewModel [
 	self textualCoderViewModel unsubscribe: self.
 	self textualCoderViewModel coderModel unsubscribe: self.
 	
-	completion
-		ifNotNil: [ :aPreviousCompletion | aPreviousCompletion uninstall ].
+	completion uninstall.
 	self editor removeEditorShortcuts: shortcuts
 ]
