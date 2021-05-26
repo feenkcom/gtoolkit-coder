@@ -16,7 +16,8 @@ Class {
 		'expanded',
 		'cursors',
 		'selection',
-		'extraTextAttributes'
+		'extraTextAttributes',
+		'styledText'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -133,18 +134,28 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: 
 
 { #category : #converting }
 GtTextualCoderViewModel >> asEditorState [
-	| anEditorText |
+	| anEditorText aMemento |
 
 	anEditorText := self coderModel sourceText copy.
 
 	self extraTextAttributes do: [ :eachCoderAttributes |
 		eachCoderAttributes applyOnEditorText: anEditorText ].
 
-	^ BrTextEditorCompositeMemento new
-		addMemento: (BrTextEditorTextMemento new text: anEditorText);
+	aMemento := BrTextEditorCompositeMemento new
 		addMemento: (BrTextEditorCursorsMemento new cursors: cursors copy);
-		addMemento: (BrTextEditorSelectionMemento new selection: selection copy);
-		addMemento: (BrTextEditorStylerMemento new styler: self compositeStyler)
+		addMemento: (BrTextEditorSelectionMemento new selection: selection copy).
+
+	self hasStyledText
+		ifTrue: [
+			aMemento addMemento: (BrTextEditorStyledTextMemento new
+				text: self styledText;
+				styler: self compositeStyler) ]
+		ifFalse: [
+		 	aMemento
+				addMemento: (BrTextEditorTextMemento new text: anEditorText);
+				addMemento: (BrTextEditorStylerMemento new styler: self compositeStyler) ].
+
+	^ aMemento
 ]
 
 { #category : #'api - coder model' }
@@ -392,6 +403,15 @@ GtTextualCoderViewModel >> hasSelection [
 	^ self selection isNotEmpty
 ]
 
+{ #category : #'api - styled text' }
+GtTextualCoderViewModel >> hasStyledText [
+	<return: #Boolean>
+	<propertyTester: #styledText>
+	<generatedFrom: #'TGtRobocoderWithPropertyTraitTemplate>>#propertyTesterTemplate'>
+
+	^ styledText notNil
+]
+
 { #category : #initialization }
 GtTextualCoderViewModel >> initialize [
 	super initialize.
@@ -453,6 +473,15 @@ GtTextualCoderViewModel >> notifySelectionChanged: aBlCompositeSelection from: a
 	self announce: (GtTextualCoderViewModelSelectionChanged new selection: aBlCompositeSelection; source: aSourceObject)
 ]
 
+{ #category : #'api - styled text' }
+GtTextualCoderViewModel >> notifyStyledTextChanged [
+	"Override this notify method to announce changes to the property"
+	<propertyChangeNotifier: #styledText>
+	<generatedFrom: #'TGtRobocoderWithPropertyTraitTemplate>>#notifyPropertyChangedTemplate'>
+	self announce: (GtTextualCoderViewModelStyledTextChanged new
+		styledText: self styledText).
+]
+
 { #category : #'private - addons' }
 GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 	"Is sent when new add-ons are computed"
@@ -465,7 +494,11 @@ GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 ]
 
 { #category : #'private - event handling' }
-GtTextualCoderViewModel >> onAstChanged: anAstChangedAnnouncement [	
+GtTextualCoderViewModel >> onAstChanged: anAstChangedAnnouncement [
+
+	"ast changed, the styled text may not be valid anymore"
+	self unsetStyledText.
+
 	self announce: (GtTextualCoderViewModelAstChanged new ast: anAstChangedAnnouncement ast).
 
 	addOnMonitor critical: [ addOns := nil ].
@@ -473,8 +506,26 @@ GtTextualCoderViewModel >> onAstChanged: anAstChangedAnnouncement [
 	self addOnsAsyncDo: [ :theAddOns | self announce: GtTextualCoderViewModelReadyToRestyle new ]
 ]
 
+{ #category : #'api - styled text' }
+GtTextualCoderViewModel >> onNewStyledTextSet: aNewStyledText [
+	"Is sent after a new value of the styledText is assigned"
+	<propertySetHook: #styledText>
+	<generatedFrom: #'TGtRobocoderWithPropertyTraitTemplate>>#onNewPropertySetHookTemplate'>
+]
+
+{ #category : #'api - styled text' }
+GtTextualCoderViewModel >> onPreviousStyledTextUnset: aPreviousStyledText [
+	"Is sent after a previous value of the styledText is de-assigned"
+	<propertyUnsetHook: #styledText>
+	<generatedFrom: #'TGtRobocoderWithPropertyTraitTemplate>>#onPreviousPropertyUnsetHookTemplate'>
+]
+
 { #category : #'private - event handling' }
 GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement [
+	
+	"source code changed, meaning that the styled text is no longer correct"
+	self unsetStyledText.
+
 	self announce: (GtTextualCoderViewModelTextChanged new
 		text: self coderModel sourceText;
 		updateStrategy: anSourceCodeChangedAnnouncement updateStrategy).
@@ -581,6 +632,36 @@ GtTextualCoderViewModel >> sourceText: aNewSourceText from: aSourceObject	 synch
 			isSynchronous: isSynchronous)
 ]
 
+{ #category : #'api - styled text' }
+GtTextualCoderViewModel >> styledText [
+	<return: #Object>
+	<propertyGetter: #styledText>
+	<generatedFrom: #'TGtRobocoderWithPropertyTraitTemplate>>#propertyGetterTemplate'>
+
+	^ styledText
+]
+
+{ #category : #'api - styled text' }
+GtTextualCoderViewModel >> styledText: aNewStyledText [
+	<propertySetter: #styledText>
+	<propertyAnnouncement: #GtTextualCoderViewModelStyledTextChanged>
+	<generatedFrom: #'TGtRobocoderWithPropertyTraitTemplate>>#propertySetterTemplate'>
+
+	(self hasStyledText
+		and: [ self styledText = aNewStyledText ])
+			ifTrue: [ ^ self ].
+	
+	self hasStyledText
+		ifTrue: [
+			| aPreviousStyledText |
+			aPreviousStyledText := styledText.
+			styledText := nil.
+			self onPreviousStyledTextUnset: aPreviousStyledText ].
+	styledText := aNewStyledText.
+	self onNewStyledTextSet: aNewStyledText.
+	self notifyStyledTextChanged
+]
+
 { #category : #'api - stylers' }
 GtTextualCoderViewModel >> stylers [
 	^ stylers
@@ -595,6 +676,9 @@ GtTextualCoderViewModel >> stylers: theStylers [
 	theStylers do: [ :eachStyler |
 		(eachStyler respondsTo: #coderViewModel:)
 			ifTrue: [ eachStyler coderViewModel: self ] ].
+	
+	"when stylers change we should reset the styled text, since there is no guarantee it will be a valid one"
+	self unsetStyledText.
 	self announce: GtTextualCoderViewModelStylersChanged new
 ]
 
@@ -619,6 +703,21 @@ GtTextualCoderViewModel >> terminateAddOnsCommand [
 		addOnCommand ifNotNil: [ :anAddOnsCommand | anAddOnsCommand terminate ].
 		addOnCommand := nil.
 		addOnCommandBlock := nil ]
+]
+
+{ #category : #'api - styled text' }
+GtTextualCoderViewModel >> unsetStyledText [
+	<propertyUnsetter: #styledText>
+	<generatedFrom: #'TGtRobocoderWithPropertyTraitTemplate>>#propertyUnsetterTemplate'>
+	| aPreviousStyledText |
+
+	self hasStyledText
+		ifFalse: [ ^ self ].
+
+	aPreviousStyledText := styledText.
+	styledText := nil.
+	self onPreviousStyledTextUnset: aPreviousStyledText.
+	self notifyStyledTextChanged
 ]
 
 { #category : #'api - coder model' }

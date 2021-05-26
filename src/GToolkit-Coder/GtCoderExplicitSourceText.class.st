@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #'api - accessing' }
+GtCoderExplicitSourceText >> asAstCacheKey [
+	^ text
+]
+
 { #category : #initialization }
 GtCoderExplicitSourceText >> buildCollapsedText [
 	<return: #BlText>
