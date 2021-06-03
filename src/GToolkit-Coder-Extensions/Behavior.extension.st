@@ -17,7 +17,7 @@ Behavior >> gtCoderCommentsFor: aView [
 	<gtClassView>
 
 	^ aView explicit
-		title: 'Comment';
+		title: 'Comment (Pillar)';
 		tooltip: 'Class comment';
 		priority: 30;
 		disableAsync;
