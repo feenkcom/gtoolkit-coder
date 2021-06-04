@@ -1,5 +1,7 @@
 "
 A context menu action to extract a method
+
+
 "
 Class {
 	#name : #GtMethodCoderExtractMethodContextMenuItemId,

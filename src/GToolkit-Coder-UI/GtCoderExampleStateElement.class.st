@@ -1,14 +1,20 @@
 "
-I am an ${class:BlElement}$.
-I am an icon that represents an ${class:GtExampleWithResult}$ result state.
-!! Not Executed State
-${example:GtCoderExampleStateElementExamples>>#exampleStateElement_NotExecuted|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
-!! Success State
-${example:GtCoderExampleStateElementExamples>>#exampleStateElement_Success|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
-!! Failure State
-${example:GtCoderExampleStateElementExamples>>#exampleStateElement_Failure|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
-!! Error State
-${example:GtCoderExampleStateElementExamples>>#exampleStateElement_Error|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}$
+I am an {{gtClass:BlElement}}.
+I am an icon that represents an {{gtClass:GtExampleWithResult}} result state.
+1. # Not Executed State
+
+{{gtExample:GtCoderExampleStateElementExamples>>#exampleStateElement_NotExecuted|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}}
+1. # Success State
+
+{{gtExample:GtCoderExampleStateElementExamples>>#exampleStateElement_Success|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}}
+1. # Failure State
+
+{{gtExample:GtCoderExampleStateElementExamples>>#exampleStateElement_Failure|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}}
+1. # Error State
+
+{{gtExample:GtCoderExampleStateElementExamples>>#exampleStateElement_Error|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}}
+
+
 "
 Class {
 	#name : #GtCoderExampleStateElement,

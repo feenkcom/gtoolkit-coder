@@ -1,11 +1,15 @@
 "
-I am a ${class:BlElement}$.
+I am a {{gtClass:BlElement}}.
 I display one filter in a chain of filters.
-I am used by ${class:GtFiltersElement}$.
-!! Element Example
-This is how I look like: ${example:GtFiltersElementExamples>>#filterTagElement|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=70}$
-!! Coder Example
-The following example shows a coder with default filters element that you can change: ${example:GtFiltersElementExamples>>#coderWithFiltersElement|codeExpanded=false|previewExpanded=true}$
+I am used by {{gtClass:GtFiltersElement}}.
+1. # Element Example
+
+This is how I look like: {{gtExample:GtFiltersElementExamples>>#filterTagElement|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=70}}
+1. # Coder Example
+
+The following example shows a coder with default filters element that you can change: {{gtExample:GtFiltersElementExamples>>#coderWithFiltersElement|codeExpanded=false|previewExpanded=true}}
+
+
 "
 Class {
 	#name : #GtFilterTagElement,

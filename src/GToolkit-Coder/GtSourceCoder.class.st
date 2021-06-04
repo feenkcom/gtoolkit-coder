@@ -1,15 +1,17 @@
 "
-!Source coder
+1. Source coder
 Is a language agnostic model of a source coder.
 My subclasses extend my by adding support for a specific language.
-!! Code execution
+1. # Code execution
+
 To add support for code execution the subclasses must implement
-- ${method:GtSourceCoder>>#evaluationRequester}$.
-- ${method:GtSourceCoder>>#evaluationRequesterWithInterval}$.
-- ${method:GtSourceCoder>>#primitiveEvaluate:requester:onFailDo:}$.
-!! Code debugging
+- {{gtMethod:GtSourceCoder>>#evaluationRequester}}.
+- {{gtMethod:GtSourceCoder>>#evaluationRequesterWithInterval}}.
+- {{gtMethod:GtSourceCoder>>#primitiveEvaluate:requester:onFailDo:}}.
+1. # Code debugging
+
 To add support for code debugging the subclasses must implement
-- ${method:GtSourceCoder>>#debug:}$
+- {{gtMethod:GtSourceCoder>>#debug:}}
 
 "
 Class {

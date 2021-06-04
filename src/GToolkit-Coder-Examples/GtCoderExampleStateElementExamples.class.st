@@ -1,5 +1,7 @@
 "
-I exemplify ${class:GtCoderExampleStateElement}$.
+I exemplify {{gtClass:GtCoderExampleStateElement}}.
+
+
 "
 Class {
 	#name : #GtCoderExampleStateElementExamples,

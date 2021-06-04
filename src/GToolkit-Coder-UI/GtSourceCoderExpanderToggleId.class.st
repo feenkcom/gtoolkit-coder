@@ -1,5 +1,7 @@
 "
 An element to toggle an expander's state on click
+
+
 "
 Class {
 	#name : #GtSourceCoderExpanderToggleId,

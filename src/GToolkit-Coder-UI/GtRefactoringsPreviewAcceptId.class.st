@@ -1,5 +1,7 @@
 "
 A button to apply refactorings from a preview dropdown
+
+
 "
 Class {
 	#name : #GtRefactoringsPreviewAcceptId,

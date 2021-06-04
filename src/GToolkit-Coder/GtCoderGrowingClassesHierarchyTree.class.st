@@ -2,7 +2,9 @@
 I am an inheritance hierachy tree that can be built from a collection of classes.
 I automatically compute subclasses on demand.
 
-${example:GtCoderClassesHierarchyTreeExamples>>#growingHierarchyForSequenceableCollectionClass}$
+{{gtExample:GtCoderClassesHierarchyTreeExamples>>#growingHierarchyForSequenceableCollectionClass}}
+
+
 "
 Class {
 	#name : #GtCoderGrowingClassesHierarchyTree,

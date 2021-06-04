@@ -1,5 +1,7 @@
 "
 An editable label with behavior's name
+
+
 "
 Class {
 	#name : #GtBehaviorCoderBehaviorNameId,

@@ -1,5 +1,7 @@
 "
 I represent an explicit source code that was provided as a string
+
+
 "
 Class {
 	#name : #GtCoderExplicitSourceCode,

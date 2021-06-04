@@ -1,7 +1,9 @@
 "
-I display ${class:GtCoderContentElement}$ and ${class:GtPageElement}$.
-!! Example
-${example:GtCoderElementExamples>>#playgroundElementWithClass|previewExpanded|codeExpanded=false|previewHeight=700}$
+I display {{gtClass:GtCoderContentElement}} and {{gtClass:GtPageElement}}.
+1. # Example
+
+{{gtExample:GtCoderElementExamples>>#playgroundElementWithClass|previewExpanded|codeExpanded=false|previewHeight=700}}
+
 
 "
 Class {

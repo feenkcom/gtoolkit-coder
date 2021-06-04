@@ -1,5 +1,7 @@
 "
 A context menu action to cut text
+
+
 "
 Class {
 	#name : #GtTextualCoderCutContextMenuItemId,

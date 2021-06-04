@@ -1,5 +1,7 @@
 "
 Is sent when coder's source code changes
+
+
 "
 Class {
 	#name : #GtCoderSourceCodeChanged,

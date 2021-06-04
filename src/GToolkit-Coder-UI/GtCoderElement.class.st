@@ -1,8 +1,10 @@
 "
 I am an abstract class.
-I am an ${class:BlElement}$.
-I provide basic ${class:TBrLayoutResizable}$ methods.
-See my ${class:GtCoderElement|expanded|show=#gtSubclassesFor:}$ for concrete implementations:
+I am an {{gtClass:BlElement}}.
+I provide basic {{gtClass:TBrLayoutResizable}} methods.
+See my {{gtClass:GtCoderElement|expanded|show=#gtSubclassesFor:}} for concrete implementations:
+
+
 "
 Class {
 	#name : #GtCoderElement,

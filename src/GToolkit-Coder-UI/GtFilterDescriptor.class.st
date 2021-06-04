@@ -1,10 +1,12 @@
 "
-I describe how a ${class:GtSearchMethodsFilter}$ should look and behave in a UI.
-I am used to build ${class:GtFilterTagElement}$ instances inside of ${class:GtFiltersElement}$.
+I describe how a {{gtClass:GtSearchMethodsFilter}} should look and behave in a UI.
+I am used to build {{gtClass:GtFilterTagElement}} instances inside of {{gtClass:GtFiltersElement}}.
 For more details:
-- ${method:GtMethodsCoderElement>>#buildFilter}$ is a code that inittialize ${class:GtFiltersElement}$ using instances of myself,
-- ${method:GtSearchMethodsFilter class>>#filterDescriptorFor:|show=#gtImplementorsFor:}$ displays a list of various definitions of myself.
-See ${class:GtFiltersElement}$ for an example.
+- {{gtMethod:GtMethodsCoderElement>>#buildFilter}} is a code that inittialize {{gtClass:GtFiltersElement}} using instances of myself,
+- {{gtMethod:GtSearchMethodsFilter class>>#filterDescriptorFor:|show=#gtImplementorsFor:}} displays a list of various definitions of myself.
+See {{gtClass:GtFiltersElement}} for an example.
+
+
 "
 Class {
 	#name : #GtFilterDescriptor,

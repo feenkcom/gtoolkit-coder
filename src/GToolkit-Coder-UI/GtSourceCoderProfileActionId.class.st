@@ -1,5 +1,7 @@
 "
 A button to profile a piece of code
+
+
 "
 Class {
 	#name : #GtSourceCoderProfileActionId,

@@ -1,12 +1,15 @@
 "
-I am a ${class:BrLook}$.
-I am a ${class:GtSourceCoderLook}$.
+I am a {{gtClass:BrLook}}.
+I am a {{gtClass:GtSourceCoderLook}}.
 I attach two labels:
-# a ${method:GtSourceCoderCollapsedTextAndExampleLook>>#methodLabel|label=method name}$, and
-# example ${method:GtSourceCoderCollapsedTextAndExampleLook>>#exampleElement|label=execution state}$.
-!! Examples
-If a method is an example, I display the method name and example result: ${example:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withExampleMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}$ 
-If a method is """"not"""" an example, I omit displaying the example result: ${example:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withRegularMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}$ 
+1. a {{gtMethod:GtSourceCoderCollapsedTextAndExampleLook>>#methodLabel|label=method name}}, and
+2. example {{gtMethod:GtSourceCoderCollapsedTextAndExampleLook>>#exampleElement|label=execution state}}.
+1. # Examples
+
+If a method is an example, I display the method name and example result: {{gtExample:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withExampleMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}} 
+If a method is ** an example, I omit displaying the example result: {{gtExample:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withRegularMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}} 
+
+
 "
 Class {
 	#name : #GtSourceCoderCollapsedTextAndExampleAptitude,

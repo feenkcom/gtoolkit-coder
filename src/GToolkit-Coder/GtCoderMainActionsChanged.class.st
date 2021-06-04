@@ -1,8 +1,10 @@
 "
-!Coder main actions changed event
-""""This is an asynchronous event""""
+1. Coder main actions changed event
+**
 
-Is announced by the ${class:GtCoderModel}$ when main actions change.
+Is announced by the {{gtClass:GtCoderModel}} when main actions change.
+
+
 "
 Class {
 	#name : #GtCoderMainActionsChanged,

@@ -1,7 +1,9 @@
 "
-I display a ${class:BrToolbar}$.
-!! Example
-${example:GtCoderElementExamples>>#toolbarElementWithClass|previewExpanded|codeExpanded=false|previewHeight=700}$
+I display a {{gtClass:BrToolbar}}.
+1. # Example
+
+{{gtExample:GtCoderElementExamples>>#toolbarElementWithClass|previewExpanded|codeExpanded=false|previewHeight=700}}
+
 
 "
 Class {

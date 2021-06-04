@@ -1,5 +1,7 @@
 "
 A button to play an example
+
+
 "
 Class {
 	#name : #GtMethodCoderPlayExampleActionId,

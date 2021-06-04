@@ -1,5 +1,7 @@
 "
 I show a simple list of packages sorting alphabetically
+
+
 "
 Class {
 	#name : #GtCoderNavigationPackagesTreeElement,

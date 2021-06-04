@@ -1,8 +1,10 @@
 "
-!Coder context actions changed event
-""""This is an asynchronous event""""
+1. Coder context actions changed event
+**
 
-Is announced by the ${class:GtCoderModel}$ when context actions change.
+Is announced by the {{gtClass:GtCoderModel}} when context actions change.
+
+
 "
 Class {
 	#name : #GtCoderContextActionsChanged,

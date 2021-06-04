@@ -1,5 +1,7 @@
 "
 A context menu action to paste a text
+
+
 "
 Class {
 	#name : #GtTextualCoderPasteContextMenuItemId,

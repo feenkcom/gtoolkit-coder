@@ -1,6 +1,8 @@
 "
-! Coder controller
+1. Coder controller
 Is applied on a specific instance of the source coder editor and plays a role of the glue between Coder UI and Coder model
+
+
 "
 Class {
 	#name : #GtSourceCoderRefactoringController,

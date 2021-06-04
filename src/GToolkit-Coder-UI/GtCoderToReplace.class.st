@@ -1,5 +1,7 @@
 "
-I am fired by inner coders to tell ${class:GtCoder}$ to replace its current coder with the one requested by me
+I am fired by inner coders to tell {{gtClass:GtCoder}} to replace its current coder with the one requested by me
+
+
 "
 Class {
 	#name : #GtCoderToReplace,

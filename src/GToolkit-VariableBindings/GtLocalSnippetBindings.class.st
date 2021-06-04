@@ -1,15 +1,19 @@
 "
-GtLocalSnippetBindings provide a multi-tier set of bindings, allowing snippets to have local variables, e.g.  ==thisSnippet==, and shared variables.
+GtLocalSnippetBindings provide a multi-tier set of bindings, allowing snippets to have local variables, e.g.  `thisSnippet`, and shared variables.
 
  
-!!Internal Representation and Key Implementation Points.
+1. # Internal Representation and Key Implementation Points.
 
-!!!Instance Variables
+
+1. ## Instance Variables
+
 	localBindings:		<IdentityDictionary> 	Bindings local to the user of these bindings
 	sharedBindings:		<GtSnippetBindings>	Bindings shared amongst muiltiple users
 
 
-!!!Implementation Points
+1. ## Implementation Points
+
+
 "
 Class {
 	#name : #GtLocalSnippetBindings,

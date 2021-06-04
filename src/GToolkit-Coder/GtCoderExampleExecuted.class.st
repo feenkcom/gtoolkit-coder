@@ -1,6 +1,7 @@
 "
 I am announced when a Coder example is executed.
-I am used by ${class:GtMethodCoder}$, see ${method:GtMethodCoder>>#handleExampleExecuted:|expanded}$.
+I am used by {{gtClass:GtMethodCoder}}, see {{gtMethod:GtMethodCoder>>#handleExampleExecuted:|expanded}}.
+
 
 "
 Class {

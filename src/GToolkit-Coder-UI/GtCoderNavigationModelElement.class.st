@@ -1,7 +1,9 @@
 "
 I am an abstract class.
-I provide basic ${method:GtCoderNavigationModelElement>>#navigationModel:|label=navigation}$ accessors, model ${method:GtCoderNavigationModelElement>>#subscribeToNavigationModel|label=subscriptons}$, and model ${method:GtCoderNavigationModelElement>>#onNavigationModelChanged|label=instance changes}$.
-See my ${class:GtCoderNavigationModelElement|expanded|show=#gtSubclassesFor:}$ for concrete implementations:
+I provide basic {{gtMethod:GtCoderNavigationModelElement>>#navigationModel:|label=navigation}} accessors, model {{gtMethod:GtCoderNavigationModelElement>>#subscribeToNavigationModel|label=subscriptons}}, and model {{gtMethod:GtCoderNavigationModelElement>>#onNavigationModelChanged|label=instance changes}}.
+See my {{gtClass:GtCoderNavigationModelElement|expanded|show=#gtSubclassesFor:}} for concrete implementations:
+
+
 "
 Class {
 	#name : #GtCoderNavigationModelElement,

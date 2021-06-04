@@ -1,5 +1,7 @@
 "
 A button that appears when behavior name is modified to open a popup with the refactoring preview
+
+
 "
 Class {
 	#name : #GtBehaviorCoderBehaviorNameApplyPreviewId,

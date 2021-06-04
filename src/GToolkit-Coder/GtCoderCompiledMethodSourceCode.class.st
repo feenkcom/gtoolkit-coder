@@ -1,5 +1,7 @@
 "
 I represent a source code of a method defined by a class and a selector
+
+
 "
 Class {
 	#name : #GtCoderCompiledMethodSourceCode,
