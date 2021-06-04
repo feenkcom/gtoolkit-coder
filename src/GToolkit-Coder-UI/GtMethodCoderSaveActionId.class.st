@@ -1,5 +1,7 @@
 "
 A button to save a method
+
+
 "
 Class {
 	#name : #GtMethodCoderSaveActionId,

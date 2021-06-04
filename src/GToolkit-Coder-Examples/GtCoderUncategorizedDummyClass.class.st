@@ -1,5 +1,7 @@
 "
 I must be uncategorized!
+
+
 "
 Class {
 	#name : #GtCoderUncategorizedDummyClass,

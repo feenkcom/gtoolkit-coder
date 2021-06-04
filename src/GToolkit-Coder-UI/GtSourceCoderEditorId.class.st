@@ -1,5 +1,7 @@
 "
 Text editor within the source coder
+
+
 "
 Class {
 	#name : #GtSourceCoderEditorId,

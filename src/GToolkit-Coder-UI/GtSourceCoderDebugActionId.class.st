@@ -1,5 +1,7 @@
 "
 A button to debug a piece of code
+
+
 "
 Class {
 	#name : #GtSourceCoderDebugActionId,

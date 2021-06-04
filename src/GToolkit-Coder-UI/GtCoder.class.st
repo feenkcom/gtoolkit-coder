@@ -1,12 +1,14 @@
 "
 I am the entrance point into the coder as a tool. To instantiate me, use one of the following class-side methods:
-- ${method:GtCoder class>>#forObject:|label=#selector}$,
-- ${method:GtCoder class>>#forClass:|label=#selector}$,
-- ${method:GtCoder class>>#forMethod:|label=#selector}$,
-- ${method:GtCoder class>>#forPackage:|label=#selector}$,
-- ${method:GtCoder class>>#new|label=#selector}$.
-!! Example
-${example:GtCoderElementExamples>>#coderElementWithObject|previewExpanded|codeExpanded=false|previewHeight=700}$
+- {{gtMethod:GtCoder class>>#forObject:|label=#selector}},
+- {{gtMethod:GtCoder class>>#forClass:|label=#selector}},
+- {{gtMethod:GtCoder class>>#forMethod:|label=#selector}},
+- {{gtMethod:GtCoder class>>#forPackage:|label=#selector}},
+- {{gtMethod:GtCoder class>>#new|label=#selector}}.
+1. # Example
+
+{{gtExample:GtCoderElementExamples>>#coderElementWithObject|previewExpanded|codeExpanded=false|previewHeight=700}}
+
 
 "
 Class {

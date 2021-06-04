@@ -1,5 +1,7 @@
 "
-I am fired by inner coders to tell ${class:GtCoder}$ to spawn a new coder using ${class:GtPhlowObjectToSpawn}$
+I am fired by inner coders to tell {{gtClass:GtCoder}} to spawn a new coder using {{gtClass:GtPhlowObjectToSpawn}}
+
+
 "
 Class {
 	#name : #GtCoderToSpawn,

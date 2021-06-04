@@ -1,5 +1,7 @@
 "
 I show a simple list of classes sorting alphabetically
+
+
 "
 Class {
 	#name : #GtCoderNavigationClassesListElement,

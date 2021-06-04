@@ -1,7 +1,9 @@
 "
 I am an inheritance hierachy tree that can be built from a collection of classes:
 
-${example:GtCoderClassesHierarchyTreeExamples>>#fromCollectionClasses}$
+{{gtExample:GtCoderClassesHierarchyTreeExamples>>#fromCollectionClasses}}
+
+
 "
 Class {
 	#name : #GtCoderClassesHierarchyTree,

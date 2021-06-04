@@ -1,7 +1,9 @@
 "
-I display a ${class:GtBehaviorCoder}$, ${class:GtPackageTagCoder}$, ${class:GtPackageCoder}$, and ${class:GtCodersModel}$ coders.
-!! Example
-${example:GtCoderElementExamples>>#contentElementWithClass|previewExpanded|codeExpanded=false|previewHeight=700}$
+I display a {{gtClass:GtBehaviorCoder}}, {{gtClass:GtPackageTagCoder}}, {{gtClass:GtPackageCoder}}, and {{gtClass:GtCodersModel}} coders.
+1. # Example
+
+{{gtExample:GtCoderElementExamples>>#contentElementWithClass|previewExpanded|codeExpanded=false|previewHeight=700}}
+
 
 "
 Class {

@@ -1,5 +1,7 @@
 "
 A button to debug an example
+
+
 "
 Class {
 	#name : #GtMethodCoderDebugExampleActionId,

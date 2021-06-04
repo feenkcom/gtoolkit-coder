@@ -1,8 +1,10 @@
 "
-!Coder styler changed event
-""""This is an asynchronous event""""
+1. Coder styler changed event
+**
 
-Is announced by the ${class:GtCoderModel}$ when stylers change.
+Is announced by the {{gtClass:GtCoderModel}} when stylers change.
+
+
 "
 Class {
 	#name : #GtCoderStylerChanged,

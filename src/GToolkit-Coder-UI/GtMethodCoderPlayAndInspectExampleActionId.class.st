@@ -1,5 +1,7 @@
 "
 A button to play and inspect an example
+
+
 "
 Class {
 	#name : #GtMethodCoderPlayAndInspectExampleActionId,

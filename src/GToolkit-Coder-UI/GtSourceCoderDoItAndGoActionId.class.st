@@ -1,5 +1,7 @@
 "
 A button to evaluate and inspect the result
+
+
 "
 Class {
 	#name : #GtSourceCoderDoItAndGoActionId,

@@ -1,6 +1,8 @@
 "
-!Coder UI Model
-Wraps ${class:GtCoderModel}$ and optionally adds UI related api and state. Coder UI Model should be passed to any Coder UI element instead of the ${class:GtCoderModel}$
+1. Coder UI Model
+Wraps {{gtClass:GtCoderModel}} and optionally adds UI related api and state. Coder UI Model should be passed to any Coder UI element instead of the {{gtClass:GtCoderModel}}
+
+
 "
 Class {
 	#name : #GtSingleCoderViewModel,

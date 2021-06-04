@@ -1,9 +1,11 @@
 "
-RBRenameClassWithCommentsRefactoringExamples -- test first character
-(RBRenameClassWithCommentsRefactoringExamples) -- should be renamed
-RBRenameClassWithCommentsRefactoringExamplesTest -- should not be renamed as it ends with Test
-TestRBRenameClassWithCommentsRefactoringExamples -- should not be renamed as it starts with Test
+RBRenameClassWithCommentsRefactoringExamples  test first character
+(RBRenameClassWithCommentsRefactoringExamples)  should be renamed
+RBRenameClassWithCommentsRefactoringExamplesTest  should not be renamed as it ends with Test
+TestRBRenameClassWithCommentsRefactoringExamples  should not be renamed as it starts with Test
 test last character -- RBRenameClassWithCommentsRefactoringExamples
+
+
 "
 Class {
 	#name : #RBRenameClassWithCommentsRefactoringExamples,

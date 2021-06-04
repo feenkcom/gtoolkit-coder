@@ -1,5 +1,7 @@
 "
 A button to discard changes
+
+
 "
 Class {
 	#name : #GtMethodCoderDiscardChangesActionId,

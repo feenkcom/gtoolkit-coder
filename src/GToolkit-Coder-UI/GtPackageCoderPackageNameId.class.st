@@ -1,5 +1,7 @@
 "
 An editable label with package name
+
+
 "
 Class {
 	#name : #GtPackageCoderPackageNameId,

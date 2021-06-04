@@ -1,5 +1,7 @@
 "
-Is sent by the ${class:GtSourceCoder}$ when it thinks that the collapsed text should be updated
+Is sent by the {{gtClass:GtSourceCoder}} when it thinks that the collapsed text should be updated
+
+
 "
 Class {
 	#name : #GtCoderCollapsedLabelChanged,

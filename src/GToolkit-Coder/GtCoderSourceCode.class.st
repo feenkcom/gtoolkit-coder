@@ -1,5 +1,7 @@
 "
-I represent a source code of the ${class:GtSourceCoder}$. For performance reasons the computation of the actual source code in the coder is done lazily. I am to provide a necessary abstraction to support it
+I represent a source code of the {{gtClass:GtSourceCoder}}. For performance reasons the computation of the actual source code in the coder is done lazily. I am to provide a necessary abstraction to support it
+
+
 "
 Class {
 	#name : #GtCoderSourceCode,

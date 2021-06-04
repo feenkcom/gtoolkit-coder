@@ -1,16 +1,22 @@
 "
-I am a ${class:GtFilterRunExampleButtonLook}$.
-I display a colored icon that represent an ${class:GtExampleWithResult}$ execution and result state.
-!! Examples
+I am a {{gtClass:GtFilterRunExampleButtonLook}}.
+I display a colored icon that represent an {{gtClass:GtExampleWithResult}} execution and result state.
+1. # Examples
+
 The following examples shows a colored icon as a part of a button in four possible states.
-!!! Not Executed Examples
-${example:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_SkipNoTest|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}$
-!!! Examples With Successful Execution
-${example:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_Success|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}$
-!!! Examples With Not Satisfying Assertions
-${example:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_Failure|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}$
-!!! Examples With Execution Errors
-${example:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_Error|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}$
+1. ## Not Executed Examples
+
+{{gtExample:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_SkipNoTest|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}}
+1. ## Examples With Successful Execution
+
+{{gtExample:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_Success|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}}
+1. ## Examples With Not Satisfying Assertions
+
+{{gtExample:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_Failure|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}}
+1. ## Examples With Execution Errors
+
+{{gtExample:GtFilterRunExampleButtonLookExamples>>#oneIconLookButton_Error|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}}
+
 
 "
 Class {

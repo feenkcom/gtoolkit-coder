@@ -2,6 +2,8 @@
 I contain properties for how a coder should send notifications when code changes.
 
 Currently I indicate if code should be changed syncronously or asyncronously.
+
+
 "
 Class {
 	#name : #GtCoderUpdateStrategy,

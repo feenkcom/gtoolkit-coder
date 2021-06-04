@@ -1,5 +1,7 @@
 "
 I show a list of classes grouping them based on the inheritance hierarchy and sorting alphabetically
+
+
 "
 Class {
 	#name : #GtCoderNavigationClassesHierarchyTreeElement,

@@ -1,7 +1,9 @@
 "
 I add to a coder a way to change the destination where inspected objects are shown. 
 
-Each coder holds to its destination. Available destinations are modeled as subclasses of ${class:GtPhlowSpawnDesiredDestination}$
+Each coder holds to its destination. Available destinations are modeled as subclasses of {{gtClass:GtPhlowSpawnDesiredDestination}}
+
+
 "
 Class {
 	#name : #GtSourceCoderSpawnDestinationAptitude,

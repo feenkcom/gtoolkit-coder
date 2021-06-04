@@ -1,12 +1,15 @@
 "
-I am a ${class:DynamicVariable}$.
-I hold a ${method:BlSpace>>id}$ as a ${class:Process}$ specific value.
+I am a {{gtClass:DynamicVariable}}.
+I hold a {{gtMethod:BlSpace>>id}} as a {{gtClass:Process}} specific value.
 I am used to pass an execution context information that can be requested, for example to display a user information.
-!! Usage
-!!! Initializing Execution Context
-To initialize execution context value using a ${class:BlElement}$, use ${method:GtCoderExecutionContextVariable class>>#element:do:|label=#selector|expanded=true}$ class-side method:
-!!! Obtaining Execution Context
-To obtain the execution context, use ${method:GtCoderExecutionContextVariable class>>#spaceDo:ifClosed:|label=#selector|expanded=true}$ class-side method:
+1. # Usage
+## Initializing Execution Context
+
+To initialize execution context value using a {{gtClass:BlElement}}, use {{gtMethod:GtCoderExecutionContextVariable class>>#element:do:|label=#selector|expanded=true}} class-side method:
+1. ## Obtaining Execution Context
+
+To obtain the execution context, use {{gtMethod:GtCoderExecutionContextVariable class>>#spaceDo:ifClosed:|label=#selector|expanded=true}} class-side method:
+
 
 "
 Class {

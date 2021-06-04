@@ -1,8 +1,8 @@
 "
-I ${method:GtCoderCodeExecutor>>#execute|label=#selector}$ a Pharo code provided by ${class:GtCoderUIModel}$.
+I {{gtMethod:GtCoderCodeExecutor>>#execute|label=#selector}} a Pharo code provided by {{gtClass:GtCoderUIModel}}.
 If a code is selected, I execute the selection. If there is no selection, I execute all code:
-- ${method:GtCoderCodeExecutor class>>#doIt}$
-- ${method:GtCoderCodeExecutor class>>#doIt}$
+- {{gtMethod:GtCoderCodeExecutor class>>#doIt}}
+- {{gtMethod:GtCoderCodeExecutor class>>#doIt}}
 
 "
 Class {

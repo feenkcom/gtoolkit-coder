@@ -1,16 +1,20 @@
 "
-! Coder
+1. Coder
 Is an abstract model of a moldable Coder - a tool for creating and manipulating code.
 
-As a root entity in the hierarchy of coders ${class:GtCoderModel}$ do not make any assumptions on the way code is represented. In fact in contrast to ${class:GtSourceCoder}$ , it does not know anything about code.
-!! Moldability
-Coder is designed to be easily adapted by the users in order to be used in various contexts through so called ==add-ons== ${class:GtCoderAddOns}$. Its subclasses can override ${method:GtCoderModel>>#addOnsClass}$ to allow coder to have extra kinds of addons or ${method:GtCoderModel>>#initializeAddOns}$ to customize the default add-ons.
-!! Add-ons
+As a root entity in the hierarchy of coders {{gtClass:GtCoderModel}} do not make any assumptions on the way code is represented. In fact in contrast to {{gtClass:GtSourceCoder}} , it does not know anything about code.
+1. # Moldability
+
+Coder is designed to be easily adapted by the users in order to be used in various contexts through so called `add-ons` {{gtClass:GtCoderAddOns}}. Its subclasses can override {{gtMethod:GtCoderModel>>#addOnsClass}} to allow coder to have extra kinds of addons or {{gtMethod:GtCoderModel>>#initializeAddOns}} to customize the default add-ons.
+1. # Add-ons
+
 By default there are the following types of add-ons:
-1) ${method:GtCoderAddOns>>#mainActions}$ that are typically added as a button at the bottom of a coder. One of such actions is usually ==Save==. Main actions are usually static and should not depend on the source code or context of the coder.
-2) ${method:GtCoderAddOns>>#contextActions}$ appear near main actions and are usually contextual, which means they depend on the source code. One example may be a ==Play== button that appears when a method is marked with ==<gtExample>== pragma.
-3) ${method:GtCoderAddOns>>#contextMenuActions}$is a set of actions that appear in a context menu usually triggered with a right mouse click. ==Copy / Cut / Paste== are typical examples of context menu actions.
-4) ${method:GtCoderAddOns>>#shortcuts}$are actions that are triggered due to a pressed key combination when a coder has focus.
+1) {{gtMethod:GtCoderAddOns>>#mainActions}} that are typically added as a button at the bottom of a coder. One of such actions is usually `Save`. Main actions are usually static and should not depend on the source code or context of the coder.
+2) {{gtMethod:GtCoderAddOns>>#contextActions}} appear near main actions and are usually contextual, which means they depend on the source code. One example may be a `Play` button that appears when a method is marked with `<gtExample>` pragma.
+3) {{gtMethod:GtCoderAddOns>>#contextMenuActions}}is a set of actions that appear in a context menu usually triggered with a right mouse click. `Copy / Cut / Paste` are typical examples of context menu actions.
+4) {{gtMethod:GtCoderAddOns>>#shortcuts}}are actions that are triggered due to a pressed key combination when a coder has focus.
+
+
 "
 Class {
 	#name : #GtCoderModel,

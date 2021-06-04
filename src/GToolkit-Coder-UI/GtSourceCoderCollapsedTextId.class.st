@@ -1,5 +1,7 @@
 "
 A label that shows a collapsed text of the source coder
+
+
 "
 Class {
 	#name : #GtSourceCoderCollapsedTextId,
