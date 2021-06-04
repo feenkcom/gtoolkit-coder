@@ -447,6 +447,20 @@ GtTextualCoderViewModel >> mainActions: theMainActions [
 ]
 
 { #category : #'api - cursors' }
+GtTextualCoderViewModel >> moveCursorAtEnd [
+	"Move the cursor at the end of the textual snippet"
+
+	self moveCursorTo: self sourceText size
+]
+
+{ #category : #'api - cursors' }
+GtTextualCoderViewModel >> moveCursorAtStart [
+	"Move the cursor at the end of the textual snippet"
+
+	self moveCursorTo: 0
+]
+
+{ #category : #'api - cursors' }
 GtTextualCoderViewModel >> moveCursorTo: aCursorIndex [
 	self cursors: (BrTextEditorCursor at: aCursorIndex)
 ]
