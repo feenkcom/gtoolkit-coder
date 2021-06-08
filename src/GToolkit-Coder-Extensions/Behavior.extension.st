@@ -13,32 +13,6 @@ Behavior >> gtBrowseFrom: anElement [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-Behavior >> gtCoderCommentsFor: aView [
-	<gtClassView>
-
-	^ aView explicit
-		title: 'Comment (Pillar)';
-		tooltip: 'Class comment';
-		priority: 30;
-		disableAsync;
-		stencil: [ (GtDocumenter forClass: self) ];
-		actionButtonIcon: BrGlamorousVectorIcons accept 
-			tooltip: 'Save document' 
-			action: [ :aToggle :aTab | aTab viewContentElement save ];
-		actionToggleIcon: BrGlamorousIcons edit 
-			tooltip: 'Show/Hide Markups'
-			activated: [ :aToggle :aTab | aTab viewContentElement showMarkup ] 
-			deactivated: [ :aToggle :aTab | aTab viewContentElement hideMarkup ];
-		actionButtonIcon: BrGlamorousVectorIcons remove
-			tooltip: 'Decrease font size'
-			action: [ :aToggle :aTab | aTab viewContentElement decreaseNormalFontSize ];
-		actionButtonIcon: BrGlamorousVectorIcons add
-			tooltip: 'Increase font size'
-			action: [ :aToggle :aTab | aTab viewContentElement increaseNormalFontSize ];
-		actionUpdateButtonTooltip: 'Update class comment'
-]
-
-{ #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> gtCoderExamplesFor: aView context: aDictionary [
 	<gtClassView>
 	| anExamplesClassName |
