@@ -606,6 +606,10 @@ GtTextualCoderViewModel >> selection: aBlCompositeSelection from: aSourceObject 
 
 { #category : #'api - shortcuts' }
 GtTextualCoderViewModel >> shortcuts [
+	"Return a collection of current editor shortcuts that are computed based on the coder add-ons and extra view-model add-ons.
+	Do not modify the returned collection as it will be recomputed when ast or add-ons change; instead use #addShortcut:"
+	<return: #Collection of: #BlBasicShortcut>
+	
 	^ shortcuts
 ]
 
