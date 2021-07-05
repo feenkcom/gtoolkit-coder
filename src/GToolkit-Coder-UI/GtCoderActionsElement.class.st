@@ -43,36 +43,39 @@ GtCoderActionsElement >> coderUIModel: aCoderUIModel [
 ]
 
 { #category : #'private - event handling' }
-GtCoderActionsElement >> handleButton: aButtonElement action: aGtCoderAction onEvent: anEvent [
-	"disable button"
+GtCoderActionsElement >> disableButton: aButtonElement action: aGtCoderAction [
 	aButtonElement
 		icon:
 			(aGtCoderAction icon asElement
 				background: BrGlamorousColors disabledButtonTextColor);
 		label: aGtCoderAction title asRopedText , '...' asRopedText;
-		disable.
-		
-	^ GtCoderExecutionContextVariable
+		disable
+]
+
+{ #category : #'private - event handling' }
+GtCoderActionsElement >> enqueueEnableButton: aButtonElement action: aGtCoderAction [
+	^ aButtonElement
+		enqueueTask:
+			(BlTaskAction new
+				action: [ aButtonElement
+						icon: aGtCoderAction icon asElement;
+						label: aGtCoderAction title;
+						enable ])
+]
+
+{ #category : #'private - event handling' }
+GtCoderActionsElement >> handleButton: aButtonElement action: aGtCoderAction onEvent: anEvent [
+	self disableButton: aButtonElement action: aGtCoderAction.
+	GtCoderExecutionContextVariable
 		element: aButtonElement
-		do: [
-			"execute action"
-			aButtonElement
+		do: [ aButtonElement
 				enqueueTask:
 					(BlTaskAction new
-						action: [ 
-							aGtCoderAction action
+						action: [ [ aGtCoderAction action
 								glamourValueWithArgs:
 									{self textualCoderViewModel.
-									aButtonElement } ]).
-
-			"enable button"
-			aButtonElement
-				enqueueTask:
-					(BlTaskAction new
-						action: [ aButtonElement
-								icon: aGtCoderAction icon asElement;
-								label: aGtCoderAction title;
-								enable ]) ]
+									aButtonElement} ]
+								ensure: [ self enqueueEnableButton: aButtonElement action: aGtCoderAction ] ]) ]
 ]
 
 { #category : #initialization }
