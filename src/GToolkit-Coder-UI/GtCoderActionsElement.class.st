@@ -42,6 +42,42 @@ GtCoderActionsElement >> coderUIModel: aCoderUIModel [
 	self textualCoderViewModel: aCoderUIModel
 ]
 
+{ #category : #'private - event handling' }
+GtCoderActionsElement >> disableButton: aButtonElement action: aGtCoderAction [
+	aButtonElement
+		icon:
+			(aGtCoderAction icon asElement
+				background: BrGlamorousColors disabledButtonTextColor);
+		label: aGtCoderAction title asRopedText , '...' asRopedText;
+		disable
+]
+
+{ #category : #'private - event handling' }
+GtCoderActionsElement >> enqueueEnableButton: aButtonElement action: aGtCoderAction [
+	^ aButtonElement
+		enqueueTask:
+			(BlTaskAction new
+				action: [ aButtonElement
+						icon: aGtCoderAction icon asElement;
+						label: aGtCoderAction title;
+						enable ])
+]
+
+{ #category : #'private - event handling' }
+GtCoderActionsElement >> handleButton: aButtonElement action: aGtCoderAction onEvent: anEvent [
+	self disableButton: aButtonElement action: aGtCoderAction.
+	GtCoderExecutionContextVariable
+		element: aButtonElement
+		do: [ aButtonElement
+				enqueueTask:
+					(BlTaskAction new
+						action: [ [ aGtCoderAction action
+								glamourValueWithArgs:
+									{self textualCoderViewModel.
+									aButtonElement} ]
+								ensure: [ self enqueueEnableButton: aButtonElement action: aGtCoderAction ] ]) ]
+]
+
 { #category : #initialization }
 GtCoderActionsElement >> initialize [
 	super initialize.
@@ -76,16 +112,10 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 		aptitude: BrGlamorousButtonWithIconAptitude;
 		in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ];
 		action: [ :aButtonElement :aButtonModel :anEvent | 
-			GtCoderExecutionContextVariable
-				element: aButtonElement
-				do: [ | aCurrentTarget |
-					aCurrentTarget := anEvent currentTarget.
-					[ anEvent forwardingTarget: aButtonElement.
-					aGtCoderAction action
-						glamourValueWithArgs:
-							{self textualCoderViewModel.
-							anEvent} ]
-						ensure: [ anEvent currentTarget: aCurrentTarget ] ] ]
+			self
+				handleButton: aButtonElement
+				action: aGtCoderAction
+				onEvent: anEvent ]
 ]
 
 { #category : #'instance creation' }

@@ -10,8 +10,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'coderUIModel',
-		'event',
-		'action'
+		'action',
+		'element'
 	],
 	#category : #'GToolkit-Coder-UI-Execution'
 }
@@ -69,19 +69,27 @@ GtCoderCodeExecutor >> doItAndGo [
 	action := #doItAndGo
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'api - accessing' }
 GtCoderCodeExecutor >> element [
-	^ self event currentTarget
+	^ element
+]
+
+{ #category : #accessing }
+GtCoderCodeExecutor >> element: anElement [
+	element := anElement
 ]
 
 { #category : #'api - accessing' }
 GtCoderCodeExecutor >> event [
-	^ event
+	self flag: 'I should not keep events, but rather #element'.
+	self halt.
+	^ nil
 ]
 
 { #category : #'api - accessing' }
 GtCoderCodeExecutor >> event: anObject [
-	event := anObject
+	self halt.
+	self flag: 'I should not receive events, but rather #element:'.
 ]
 
 { #category : #'api - execution' }
