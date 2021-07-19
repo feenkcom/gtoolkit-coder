@@ -7,7 +7,7 @@ RPackage >> gtClassExtensions [
 
 { #category : #'*GToolkit-Coder' }
 RPackage >> gtClassReferences [
-	^ self methodReferences flatCollectAsSet: [ :m | 
+	^ self gtMethodReferences flatCollectAsSet: [ :m | 
 		m method gtReferencedClasses collect: [ :each | 
 			GtPharoClassReference new 
 				referencingMethod: m; 
@@ -30,6 +30,11 @@ RPackage >> gtInheritances [
 	^ self definedClasses 
 		select: [ : each | each isClass and: [ each superclass notNil ] ]
 		thenCollect: [ :each | each gtInheritance ]
+]
+
+{ #category : #'*GToolkit-Coder' }
+RPackage >> gtMethodReferences [
+	^ self methods collect: [:each | each methodReference] thenSelect: [:each| each isValid and: [each isLocalSelector]].
 ]
 
 { #category : #'*GToolkit-Coder' }
