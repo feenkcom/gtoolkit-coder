@@ -1,7 +1,7 @@
-Extension { #name : #RBChangeSuperclassRefactoring }
+Extension { #name : #GtRBChangeSuperclassRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
-RBChangeSuperclassRefactoring >> gtDescription [
+GtRBChangeSuperclassRefactoring >> gtDescription [
 	<return: #String or: #BlRopedText>
 	
 	^ ('Change' asRopedText glamorousRoundedBackground)
