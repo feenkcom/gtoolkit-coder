@@ -1,12 +1,12 @@
-Extension { #name : #RBRemoveTraitUsageRefactoring }
+Extension { #name : #GtRBAddTraitUsageRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
-RBRemoveTraitUsageRefactoring >> gtDescription [
+GtRBAddTraitUsageRefactoring >> gtDescription [
 	<return: #String or: #BlRopedText>
 	
-	^ ('Remove' asRopedText glamorousRoundedBackground)
+	^ ('Add' asRopedText glamorousRoundedBackground)
 		append: ' trait usage ' asRopedText;
 		append: traitName asRopedText glamorousRoundedBackground;
-		append: ' from ' asRopedText;
+		append: ' to ' asRopedText;
 		append: class name asRopedText
 ]

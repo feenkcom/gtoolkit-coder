@@ -1,12 +1,12 @@
-Extension { #name : #RBRemovePoolVariableRefactoring }
+Extension { #name : #GtRBAddPoolVariableRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
-RBRemovePoolVariableRefactoring >> gtDescription [
+GtRBAddPoolVariableRefactoring >> gtDescription [
 	<return: #String or: #BlRopedText>
 	
-	^ ('Remove' asRopedText glamorousRoundedBackground)
+	^ ('Add' asRopedText glamorousRoundedBackground)
 		append: ' pool named ' asRopedText;
 		append: variableName asRopedText glamorousRoundedBackground;
-		append: ' from ' asRopedText;
+		append: ' to ' asRopedText;
 		append: class name asRopedText
 ]

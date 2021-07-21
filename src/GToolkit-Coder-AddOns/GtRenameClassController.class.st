@@ -13,7 +13,7 @@ GtRenameClassController >> refactoringName [
 GtRenameClassController >> rename: oldNameString to: newNameString [
 	| model |
 	model := self createModel.
-	^ RBRenameClassWithCommentsRefactoring
+	^ GtRBRenameClassWithCommentsRefactoring
 		model: model
 		rename: (Smalltalk at: oldNameString asSymbol)
 		to: newNameString
