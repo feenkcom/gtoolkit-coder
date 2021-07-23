@@ -33,7 +33,17 @@ GtBindingStrategy >> asDictionary [
 GtBindingStrategy >> bindingOf: aSymbol [
 	<return: #LiteralVariable or: nil>
 	| assocOrNil |
-	self assert: [ aSymbol isSymbol ] description: [ 'Bindings should be referenced by a symbol' ].
+	
+	self
+		assert: [ aSymbol isSymbol ]
+		description: [ 'Bindings should be referenced by a symbol' ].
+	
+	self
+		forPharo8: [ ]
+		forPharo9: [
+			(self class environment lookupVar: aSymbol)
+				ifNotNil: [ :aVariable | ^ aVariable ] ].
+		
 	assocOrNil := bindings bindingOf: aSymbol.
 	^ self treatBinding: assocOrNil of: aSymbol.
 	
