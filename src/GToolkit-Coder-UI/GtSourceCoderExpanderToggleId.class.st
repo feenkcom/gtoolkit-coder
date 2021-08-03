@@ -1,7 +1,6 @@
 "
-An element to toggle an expander's state on click
-
-
+An element to toggle  {{gtClass:BrExpander}}'s state on click. In a context of a coder, an expander is a sidebar element that allows to collapse/expand a coder.
+Do not confuse with an embedded expander within the text which is usually represented by a triangle.
 "
 Class {
 	#name : #GtSourceCoderExpanderToggleId,
