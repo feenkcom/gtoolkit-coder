@@ -23,34 +23,36 @@ See {{gtClass:GtSearchMethodFilterExamples}} for more details.
 
 "
 Class {
-	#name : #BaselineOfGToolkitCoder,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfGToolkitCoder
+	#name : 'BaselineOfGToolkitCoder',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfGToolkitCoder'
 }
 
-{ #category : #baseline }
+{ #category : 'baseline' }
 BaselineOfGToolkitCoder >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
-		spec 
+		spec
 			baseline: 'GToolkitBasicUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.64/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.64/src' ].
+		spec
 			baseline: 'GToolkitAnnouncerUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.64/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.64/src' ].
+		spec
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.397/src' ].
-		spec 
-			package: 'GToolkit-VariableBindings';
-			package: 'GToolkit-Coder' with: [
-				spec requires: #('GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitPager' ). ];
-			package: 'GToolkit-Coder-UI' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-VariableBindings' 'GToolkitBasicUtility' 'GToolkitPager' ). ];
-			package: 'GToolkit-Coder-AddOns' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' ). ];
-			package: 'GToolkit-Coder-Extensions' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' ). ];
-			package: 'GToolkit-Coder-Examples-SystemS1';
-			package: 'GToolkit-Coder-Examples' with: [
-				spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Examples-SystemS1' ). ]. ].
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.398/src' ].
 
+		spec package: 'GToolkit-VariableBindings'.
+		spec package: 'GToolkit-Coder' with: [
+			spec requires: #('GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitPager') ].
+		spec package: 'GToolkit-Coder-UI' with: [
+			spec requires: #('GToolkit-Coder' 'GToolkit-VariableBindings' 'GToolkitBasicUtility' 'GToolkitPager') ].
+		spec package: 'GToolkit-Coder-AddOns' with: [
+			spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI') ].
+		spec package: 'GToolkit-Coder-Extensions' with: [
+			spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns') ].
+		spec package: 'GToolkit-Coder-Examples-SystemS1'.
+		spec package: 'GToolkit-Coder-Examples' with: [
+			spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Examples-SystemS1') ].
+	]
 ]
