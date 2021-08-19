@@ -1,18 +1,18 @@
 Class {
-	#name : #GtCoderAnnouncement,
-	#superclass : #Announcement,
+	#name : 'GtCoderAnnouncement',
+	#superclass : 'Announcement',
 	#instVars : [
 		'coder'
 	],
-	#category : #'GToolkit-Coder-Event'
+	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderAnnouncement >> coder [
 	^ coder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderAnnouncement >> coder: methodCoder [
 	coder := methodCoder
 ]

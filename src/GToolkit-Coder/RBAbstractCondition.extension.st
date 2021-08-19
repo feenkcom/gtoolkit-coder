@@ -1,11 +1,11 @@
-Extension { #name : #RBAbstractCondition }
+Extension { #name : 'RBAbstractCondition' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBAbstractCondition >> gtChildren [
 	^ #()
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBAbstractCondition >> gtLeafChildren [
 	^ { self }
 ]

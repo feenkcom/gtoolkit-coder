@@ -1,42 +1,42 @@
 Class {
-	#name : #GtCoderExplicitSourceText,
-	#superclass : #GtCoderSourceCode,
+	#name : 'GtCoderExplicitSourceText',
+	#superclass : 'GtCoderSourceCode',
 	#instVars : [
 		'text'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : 'GToolkit-Coder-Coders'
 }
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtCoderExplicitSourceText >> asAstCacheKey [
 	^ text
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderExplicitSourceText >> buildCollapsedText [
 	<return: #BlText>
 
 	^ (self sourceString linesDo: [ :eachLine | eachLine trimmed ifNotEmpty: [ :aNonEmptyLine | ^ aNonEmptyLine ] ]) asRopedText
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderExplicitSourceText >> buildSourceText [
 	<return: #BlText>
 
 	^ text copy
 ]
 
-{ #category : #'api - testing' }
+{ #category : 'api - testing' }
 GtCoderExplicitSourceText >> isModified [
 	^ self text rope ~= self sourceText rope
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExplicitSourceText >> text [
 	^ text
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExplicitSourceText >> text: aStringOrText [
 	text := aStringOrText asRopedText
 ]

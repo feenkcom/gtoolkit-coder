@@ -1,6 +1,6 @@
 Class {
-	#name : #GtTextualCoder,
-	#superclass : #GtCoderModel,
+	#name : 'GtTextualCoder',
+	#superclass : 'GtCoderModel',
 	#instVars : [
 		'sourceCode',
 		'completionStrategy',
@@ -10,36 +10,36 @@ Class {
 		'astCommand',
 		'astCommandBlock'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : 'GToolkit-Coder-Coders'
 }
 
-{ #category : #'private - addons' }
+{ #category : 'private - addons' }
 GtTextualCoder >> addOnsClass [
 	^ GtTextualCoderAddOns
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> appendString: aString [
 	self critical: [
 		self sourceCode appendString: aString.
 		self sourceChanged ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> appendText: aText [
 	self critical: [
 		self sourceCode appendText: aText.
 		self sourceChanged ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> appendText: aText with: aGtCoderUpdateStragegy [
 	self critical: [
 		self sourceCode appendText: aText.
 		self sourceChangedWith: aGtCoderUpdateStragegy ]
 ]
 
-{ #category : #'api - converting' }
+{ #category : 'api - converting' }
 GtTextualCoder >> asNewCoderModelWithSameSubject [
 	"Return new coder model with same subject (e.g., package, class, method)"
 	<return: #GtCoderModel>
@@ -47,7 +47,7 @@ GtTextualCoder >> asNewCoderModelWithSameSubject [
 	^ self shouldNotImplement
 ]
 
-{ #category : #'api - ast' }
+{ #category : 'api - ast' }
 GtTextualCoder >> astAsyncDo: aBlock [
 	astMonitor critical: [
 		astCommand ifNotNil: [
@@ -92,7 +92,7 @@ GtTextualCoder >> astAsyncDo: aBlock [
 			otherwise: [ astCommand execute ] ]
 ]
 
-{ #category : #'api - ast' }
+{ #category : 'api - ast' }
 GtTextualCoder >> astAwait [
 	| theAst |
 	
@@ -101,7 +101,7 @@ GtTextualCoder >> astAwait [
 	^ theAst
 ]
 
-{ #category : #'api - ast' }
+{ #category : 'api - ast' }
 GtTextualCoder >> astAwaitDo: aBlock [
 	| aSemaphore anAst |
 	
@@ -115,25 +115,25 @@ GtTextualCoder >> astAwaitDo: aBlock [
 	aBlock value: anAst
 ]
 
-{ #category : #'private - ast' }
+{ #category : 'private - ast' }
 GtTextualCoder >> astCache [
 	^ astMonitor critical: [ astCache ]
 ]
 
-{ #category : #'private - ast' }
+{ #category : 'private - ast' }
 GtTextualCoder >> astCache: anAssociation [
 	astMonitor critical: [ astCache := anAssociation ].
 	self onAstChanged
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> collapsedText [
 	<return: #BlText>
 
 	^ self sourceCode collapsedText
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtTextualCoder >> completionStrategy [
 	<return: #GtCompletionStrategy>
 
@@ -141,22 +141,22 @@ GtTextualCoder >> completionStrategy [
 		ifNil: [ completionStrategy := self newCompletionStrategy ]
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtTextualCoder >> completionStrategy: aGtCompletionStrategy [
 	completionStrategy := aGtCompletionStrategy
 ]
 
-{ #category : #'api - ast' }
+{ #category : 'api - ast' }
 GtTextualCoder >> computeAst [
 	^ self computeAst: self currentSourceString
 ]
 
-{ #category : #'api - ast' }
+{ #category : 'api - ast' }
 GtTextualCoder >> computeAst: theSourceString [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> correctFrom: aFromIndex to: aToIndex with: aString [
 	self critical: [
 		self sourceCode
@@ -167,7 +167,7 @@ GtTextualCoder >> correctFrom: aFromIndex to: aToIndex with: aString [
 		self notifyCorrectionFrom: aFromIndex to: aToIndex with: aString ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> currentSourceString [
 	"Return a String representation of the current source text"
 	<return: #String>
@@ -175,7 +175,7 @@ GtTextualCoder >> currentSourceString [
 	^ self critical: [ self sourceCode sourceString ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> currentSourceString: aString [
 	"Set a new source text"
 
@@ -184,7 +184,7 @@ GtTextualCoder >> currentSourceString: aString [
 		self sourceChanged ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> currentSourceText: aText [
 	"Set a new source text"
 
@@ -193,7 +193,7 @@ GtTextualCoder >> currentSourceText: aText [
 		self sourceChanged ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> currentSourceText: aText with: aGtCoderUpdateStragegy [
 	"Set a new source text"
 
@@ -202,7 +202,7 @@ GtTextualCoder >> currentSourceText: aText with: aGtCoderUpdateStragegy [
 		self sourceChangedWith: aGtCoderUpdateStragegy ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> currentSourceTextSynchronously: aText [
 	"Set a new source text"
 
@@ -211,19 +211,19 @@ GtTextualCoder >> currentSourceTextSynchronously: aText [
 		self sourceChangedWith: GtCoderUpdateStrategy new makeSynchronous ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> deleteSourceTextFrom: aFromIndex to: aToIndex [
 	self critical: [
 		self sourceCode delete: aFromIndex to: aToIndex.
 		self sourceChanged ]
 ]
 
-{ #category : #'api - ast' }
+{ #category : 'api - ast' }
 GtTextualCoder >> ensureAst [
 	self astAsyncDo: [ :theAst | ]
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GtTextualCoder >> initialize [
 	super initialize.
 
@@ -231,19 +231,19 @@ GtTextualCoder >> initialize [
 	self reset
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtTextualCoder >> isModified [
 	<return: #Boolean>
 
 	^ self sourceCode isModified
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtTextualCoder >> newCompletionStrategy [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtTextualCoder >> notifyCorrectionFrom: aFromIndex to: aToIndex with: aString [
 	self announce: (GtCoderCorrectionRequest new
 		coder: self;
@@ -252,7 +252,7 @@ GtTextualCoder >> notifyCorrectionFrom: aFromIndex to: aToIndex with: aString [
 		correctionString: aString)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtTextualCoder >> notifySourceChangedWith: anUpdateStragegy [
 	"Notify the text editor that it should update the text (for example due to refactoring changes)"
 	
@@ -261,7 +261,7 @@ GtTextualCoder >> notifySourceChangedWith: anUpdateStragegy [
 		coder: self)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtTextualCoder >> notifyStylersUpdated [
 	"Is sent when AddOn stylers changed. It also means that the text editor should restyle the text"
 
@@ -270,11 +270,11 @@ GtTextualCoder >> notifyStylersUpdated [
 		stylers: self addOns stylers copy)
 ]
 
-{ #category : #'private - ast' }
+{ #category : 'private - ast' }
 GtTextualCoder >> onAstChanged [
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtTextualCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 	| actions |
 	actions := OrderedCollection new.
@@ -283,7 +283,7 @@ GtTextualCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 	^ actions
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> requestStyleSourceText [
 	"Request the text editor to restyle the text (for example due to environmental changes)"
 
@@ -291,7 +291,7 @@ GtTextualCoder >> requestStyleSourceText [
 	self announce: (GtCoderStyleTextRequest new coder: self)
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> requestStyleSourceTextAndAfterDo: aBlock [
 	"Request the text editor to restyle the text (for example due to environmental changes)"
 
@@ -303,7 +303,7 @@ GtTextualCoder >> requestStyleSourceTextAndAfterDo: aBlock [
 				afterAction: aBlock)
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> requestUpdateCollapsedText [
 	"Request to update the collapsed text, for example due to changes in the current source text.
 	It is not guaranteed that the collapsed text actually changes as for example in the method coder
@@ -313,7 +313,7 @@ GtTextualCoder >> requestUpdateCollapsedText [
 	self announce: (GtCoderCollapsedLabelChanged new coder: self)
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GtTextualCoder >> reset [
 	self resetASTCache.
 
@@ -322,17 +322,17 @@ GtTextualCoder >> reset [
 	completionStrategy := nil
 ]
 
-{ #category : #'private - ast' }
+{ #category : 'private - ast' }
 GtTextualCoder >> resetASTCache [
 	self astCache: (nil -> nil)
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtTextualCoder >> sourceChanged [
 	self sourceChangedWith: GtCoderUpdateStrategy new makeAsynchronous
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtTextualCoder >> sourceChangedWith: anUpdateStrategy [
 	"if there is an ast computation that was triggered before source code change we re-schedule
 	the computation. Any #astAsyncDo: caller will be waiting for the result with the new ast"
@@ -357,7 +357,7 @@ GtTextualCoder >> sourceChangedWith: anUpdateStrategy [
 	self requestUpdateCollapsedText
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtTextualCoder >> sourceCode [
 	<return: #GtCoderSourceCode>
 
@@ -365,7 +365,7 @@ GtTextualCoder >> sourceCode [
 	^ sourceCode
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtTextualCoder >> sourceCode: aGtCoderSourceCode [
 	"Set the source code of this coder to a given one and notify about the changes"
 	
@@ -374,7 +374,7 @@ GtTextualCoder >> sourceCode: aGtCoderSourceCode [
 		withStrategy: GtCoderUpdateStrategy new makeAsynchronous
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtTextualCoder >> sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy [
 	"Set the source code of this coder to a given one and notify about the changes"
 	
@@ -382,14 +382,14 @@ GtTextualCoder >> sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy 
 	self sourceChangedWith: anUpdateStragegy.
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtTextualCoder >> sourceCodeSynchronously: aGtCoderSourceCode [
 	self
 		sourceCode: aGtCoderSourceCode 
 		withStrategy: GtCoderUpdateStrategy new makeSynchronous
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> sourceText [
 	"Return the source text of this coder. The computation of the source text may be expensive, use me with caution.
 	If the operation you would like to perform on the source text is optional consider using #sourceTextDo:"
@@ -398,26 +398,26 @@ GtTextualCoder >> sourceText [
 	^ self sourceCode sourceText
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoder >> sourceTextDo: aBlock [
 	"Evaluate a given block with my source code text if present"
 
 	^ self sourceCode sourceTextDo: aBlock
 ]
 
-{ #category : #'api - addons' }
+{ #category : 'api - addons' }
 GtTextualCoder >> stylers [
 	^ #()
 ]
 
-{ #category : #'api - ast' }
+{ #category : 'api - ast' }
 GtTextualCoder >> supportsAstCache [
 	"Return true if ast cache should be used, false otherwise"
 
 	^ true
 ]
 
-{ #category : #'api - ast' }
+{ #category : 'api - ast' }
 GtTextualCoder >> terminateAstCommand [
 	astMonitor critical: [
 		astCommand ifNotNil: [ :anAstCommand | anAstCommand terminate ].

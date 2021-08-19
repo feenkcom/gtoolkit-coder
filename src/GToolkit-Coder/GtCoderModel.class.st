@@ -17,8 +17,8 @@ By default there are the following types of add-ons:
 
 "
 Class {
-	#name : #GtCoderModel,
-	#superclass : #Object,
+	#name : 'GtCoderModel',
+	#superclass : 'Object',
 	#traits : 'TGtAnnouncer',
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
@@ -32,69 +32,69 @@ Class {
 	#classVars : [
 		'UniqueIdGenerator'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : 'GToolkit-Coder-Coders'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 GtCoderModel class >> initialize [
 	UniqueIdGenerator := BlUniqueIdGenerator new
 ]
 
-{ #category : #'api - addons' }
+{ #category : 'api - addons' }
 GtCoderModel >> addOns [
 	^ extraAddOns ifNil: [ extraAddOns := self newAddOns ]
 ]
 
-{ #category : #'api - addons' }
+{ #category : 'api - addons' }
 GtCoderModel >> addOnsClass [
 	^ GtCoderAddOns
 ]
 
-{ #category : #'api - announcer' }
+{ #category : 'api - announcer' }
 GtCoderModel >> announcer [
 	<return: #Announcer>
 
 	^ announcer
 ]
 
-{ #category : #'api - converting' }
+{ #category : 'api - converting' }
 GtCoderModel >> asNewCoderModelWithSameSubject [
 	"Return new coder model with same subject (e.g., package, class, method)"
 	<return: #GtCoderModel>
 	^ self subclassResponsibility
 ]
 
-{ #category : #'api - attributes' }
+{ #category : 'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol [
 	^ attributes notNil
 		ifTrue: [ attributes at: aSymbol ifAbsent: [  ] ]
 ]
 
-{ #category : #'api - attributes' }
+{ #category : 'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol ifAbsent: aBlock [
 	^ attributes notNil
 		ifTrue: [ attributes at: aSymbol ifAbsent: aBlock ]
 		ifFalse: [ aBlock value ]
 ]
 
-{ #category : #'api - attributes' }
+{ #category : 'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock [
 	^ attributes notNil
 		ifTrue: [ attributes at: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock ]
 		ifFalse: [ anAbsentBlock value ]
 ]
 
-{ #category : #'api - attributes' }
+{ #category : 'api - attributes' }
 GtCoderModel >> attributeNamed: aSymbol put: anObject [
 	^ self attributes at: aSymbol put: anObject
 ]
 
-{ #category : #'api - attributes' }
+{ #category : 'api - attributes' }
 GtCoderModel >> attributes [
 	^ attributes ifNil: [ attributes := IdentityDictionary new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderModel >> coderName [
 	"Return a short textual name of the coder.
 	For example, class coder would return a class name, package coder returns a package name."
@@ -103,17 +103,17 @@ GtCoderModel >> coderName [
 	^ self class name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderModel >> coders [
 	^ self attributeNamed: #coders
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderModel >> coders: aCoders [
 	^ self attributeNamed: #coders put: aCoders
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtCoderModel >> contextActions [
 	"Return a collection of contextual actions in the coder. They are renderred separately from mainActions"
 	<return: #Collection of: #GtCoderAction>
@@ -121,34 +121,34 @@ GtCoderModel >> contextActions [
 	^ self addOns contextActions
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtCoderModel >> contextMenuActions [
 	<return: #Collection of: #GtCoderAction>
 
 	^ self addOns contextMenuActions
 ]
 
-{ #category : #'mutual exclusion' }
+{ #category : 'mutual exclusion' }
 GtCoderModel >> critical: aBlock [
 	^ monitor critical: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderModel >> expanded [
 	self deprecated: 'The expansion state was moved to the ViewModel'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderModel >> expanded: aBoolean [
 	self deprecated: 'The expansion state was moved to the ViewModel'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderModel >> id [
 	^ id
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderModel >> initialize [
 	super initialize.
 
@@ -159,15 +159,15 @@ GtCoderModel >> initialize [
 	self coderLook: self defaultCoderLook
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderModel >> initializeAddOns: addOns [
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderModel >> initializeShortcuts: addOns [
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtCoderModel >> mainActions [
 	"Return a collection of main actions in the coder, for example save"
 	<return: #Collection of: #GtCoderAction>
@@ -175,12 +175,12 @@ GtCoderModel >> mainActions [
 	^ self addOns mainActions
 ]
 
-{ #category : #'api - addons' }
+{ #category : 'api - addons' }
 GtCoderModel >> newAddOns [
 	^ self addOnsClass new
 ]
 
-{ #category : #elements }
+{ #category : 'elements' }
 GtCoderModel >> previewElement [
 	"Return a preview element for the Spotter"
 	<return: #BlElement>
@@ -188,19 +188,19 @@ GtCoderModel >> previewElement [
 	^ self asElement
 ]
 
-{ #category : #'api - attributes' }
+{ #category : 'api - attributes' }
 GtCoderModel >> removeAttributeNamed: aSymbol [
 	attributes isNil
 		ifTrue: [ ^ self ].
 	attributes removeKey: aSymbol ifAbsent: [  ]
 ]
 
-{ #category : #elements }
+{ #category : 'elements' }
 GtCoderModel >> requestFocus [
 	self announce: (GtCoderRequestFocus new coder: self)
 ]
 
-{ #category : #'api - addons' }
+{ #category : 'api - addons' }
 GtCoderModel >> requestUpdateAddOns [
 	"Request addons to update due to some environmental changes (similar to requesting text to restyle).
 	It is a responsibility of the Coder's Element to start the actual addon update (${method:GtCoderModel>>#updateAddOnsFrom:}$) which may happen in
@@ -212,12 +212,12 @@ GtCoderModel >> requestUpdateAddOns [
 	self announce: (GtCoderAddOnsUpdateRequest new coder: self)"
 ]
 
-{ #category : #subscriptions }
+{ #category : 'subscriptions' }
 GtCoderModel >> subscribeToSystem [
 	"do nothing"
 ]
 
-{ #category : #subscriptions }
+{ #category : 'subscriptions' }
 GtCoderModel >> unsubscribeFromSystem [
 	SystemAnnouncer uniqueInstance unsubscribe: self
 ]

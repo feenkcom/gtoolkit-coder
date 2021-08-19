@@ -4,20 +4,20 @@ I am sent by the {{gtClass:GtBehaviorCoder}} when the current package changes (m
 
 "
 Class {
-	#name : #GtCoderPackageUpdatedAnnouncement,
-	#superclass : #Announcement,
+	#name : 'GtCoderPackageUpdatedAnnouncement',
+	#superclass : 'Announcement',
 	#instVars : [
 		'package'
 	],
-	#category : #'GToolkit-Coder-Announcements'
+	#category : 'GToolkit-Coder-Announcements'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderPackageUpdatedAnnouncement >> package [
 	^ package
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderPackageUpdatedAnnouncement >> package: aRPackage [
 	package := aRPackage
 ]

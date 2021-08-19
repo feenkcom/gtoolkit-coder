@@ -1,12 +1,12 @@
 Class {
-	#name : #GtCoderCommentStyler,
-	#superclass : #GtRBASTStyler,
+	#name : 'GtCoderCommentStyler',
+	#superclass : 'GtRBASTStyler',
 	#traits : 'TRBProgramNodeVisitor',
 	#classTraits : 'TRBProgramNodeVisitor classTrait',
-	#category : #'GToolkit-Coder-Styler/Highlighter'
+	#category : 'GToolkit-Coder-Styler/Highlighter'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtCoderCommentStyler >> visitNode: aNode [
 	| comments |
 	comments := aNode comments.

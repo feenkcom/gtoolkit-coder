@@ -1,17 +1,17 @@
 Class {
-	#name : #GtSearchUnionFilter,
-	#superclass : #GtSearchBinaryFilter,
-	#category : #'GToolkit-Coder-Filters'
+	#name : 'GtSearchUnionFilter',
+	#superclass : 'GtSearchBinaryFilter',
+	#category : 'GToolkit-Coder-Filters'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSearchUnionFilter >> defaultFilterScope [
 	^ left defaultFilterScope = right defaultFilterScope
 		ifTrue: [ left defaultFilterScope ]
 		ifFalse: [ self ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 GtSearchUnionFilter >> gtDisplayOn: stream [
 	left gtDisplayOn: stream.
 	stream nextPutAll: ' | '.
@@ -19,7 +19,7 @@ GtSearchUnionFilter >> gtDisplayOn: stream [
 
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 GtSearchUnionFilter >> itemsDo: aBlock [
 	| seen |
 	seen := IdentitySet new.
@@ -33,12 +33,12 @@ GtSearchUnionFilter >> itemsDo: aBlock [
 				ifFalse: [ aBlock value: each ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtSearchUnionFilter >> matches: anObject [
 	^ (left matches: anObject) or: [ right matches: anObject ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 GtSearchUnionFilter >> printOn: stream [
 	left printOn: stream.
 	stream nextPutAll: ' | '.

@@ -1,6 +1,6 @@
-Extension { #name : #RBChangeMethodNameRefactoring }
+Extension { #name : 'RBChangeMethodNameRefactoring' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBChangeMethodNameRefactoring >> gtPreconditions [
 	"This refactoring only preserves behavior if all implementors are renamed."
 

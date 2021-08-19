@@ -1,6 +1,6 @@
-Extension { #name : #RBArrayNode }
+Extension { #name : 'RBArrayNode' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBArrayNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	periods

@@ -1,13 +1,13 @@
 Class {
-	#name : #GtPackageClassesCompletionStrategy,
-	#superclass : #GtCompletionStrategy,
+	#name : 'GtPackageClassesCompletionStrategy',
+	#superclass : 'GtCompletionStrategy',
 	#instVars : [
 		'packageSearchString'
 	],
-	#category : #'GToolkit-Coder-Completion'
+	#category : 'GToolkit-Coder-Completion'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPackageClassesCompletionStrategy >> classesMatching: aString [
 	| classNamePattern matchedClasses |
 	matchedClasses := Set new.
@@ -19,7 +19,7 @@ GtPackageClassesCompletionStrategy >> classesMatching: aString [
 	^ matchedClasses select: [ :each | classNamePattern match: each name ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPackageClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
 	| string |
 	string := aText asString.
@@ -28,28 +28,28 @@ GtPackageClassesCompletionStrategy >> completionActionsFor: aText at: positionIn
 			asSortedCollection: [ :a :b | a text < b text ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtPackageClassesCompletionStrategy >> hasCompletionEntryFor: aString [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtPackageClassesCompletionStrategy >> hasCompletionsAt: anInteger in: aText [
 	^ true
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtPackageClassesCompletionStrategy >> initialize [
 	super initialize.
 	packageSearchString := ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPackageClassesCompletionStrategy >> packageSearchString [
 	^ packageSearchString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPackageClassesCompletionStrategy >> packageSearchString: anObject [
 	packageSearchString := anObject
 ]

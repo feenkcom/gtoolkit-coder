@@ -1,30 +1,30 @@
 Class {
-	#name : #GtSearchBlockFilter,
-	#superclass : #GtSearchFilter,
+	#name : 'GtSearchBlockFilter',
+	#superclass : 'GtSearchFilter',
 	#instVars : [
 		'block'
 	],
-	#category : #'GToolkit-Coder-Filters'
+	#category : 'GToolkit-Coder-Filters'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtSearchBlockFilter class >> forBlock: aBlock [
 	^ self new
 		block: aBlock;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSearchBlockFilter >> block [
 	^ block
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSearchBlockFilter >> block: aBlock [
 	block := aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtSearchBlockFilter >> matches: anObject [
 	^ block value: anObject
 ]

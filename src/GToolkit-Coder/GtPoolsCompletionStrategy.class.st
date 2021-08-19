@@ -1,13 +1,13 @@
 Class {
-	#name : #GtPoolsCompletionStrategy,
-	#superclass : #GtCompletionStrategy,
+	#name : 'GtPoolsCompletionStrategy',
+	#superclass : 'GtCompletionStrategy',
 	#instVars : [
 		'candidatePools'
 	],
-	#category : #'GToolkit-Coder-Completion'
+	#category : 'GToolkit-Coder-Completion'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPoolsCompletionStrategy >> candidatePools [
 	^  candidatePools ifNil: [ 
 			| theInterestingPoolNames |
@@ -17,7 +17,7 @@ GtPoolsCompletionStrategy >> candidatePools [
 			candidatePools := GtPrefixTree withAll: theInterestingPoolNames ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPoolsCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
 	| currentInput completionActions |
 
@@ -32,12 +32,12 @@ GtPoolsCompletionStrategy >> completionActionsFor: aText at: positionInteger max
 	^ completionActions
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtPoolsCompletionStrategy >> hasCompletionEntryFor: aString [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtPoolsCompletionStrategy >> hasCompletionsAt: anInteger in: aText [
 	^ true
 ]

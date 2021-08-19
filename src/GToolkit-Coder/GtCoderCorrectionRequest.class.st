@@ -1,40 +1,40 @@
 Class {
-	#name : #GtCoderCorrectionRequest,
-	#superclass : #GtSourceCoderAnnouncement,
+	#name : 'GtCoderCorrectionRequest',
+	#superclass : 'GtSourceCoderAnnouncement',
 	#instVars : [
 		'fromIndex',
 		'toIndex',
 		'correctionString'
 	],
-	#category : #'GToolkit-Coder-Event'
+	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderCorrectionRequest >> correctionString [
 	^ correctionString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderCorrectionRequest >> correctionString: anObject [
 	correctionString := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderCorrectionRequest >> fromIndex [
 	^ fromIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderCorrectionRequest >> fromIndex: anObject [
 	fromIndex := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderCorrectionRequest >> toIndex [
 	^ toIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderCorrectionRequest >> toIndex: anObject [
 	toIndex := anObject
 ]

@@ -1,12 +1,12 @@
-Extension { #name : #DebugSession }
+Extension { #name : 'DebugSession' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 DebugSession >> gtCreateModelForContext: aContext [
 
 	^ (GtDebugContext forContext: aContext) topContext: interruptedContext
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 DebugSession >> gtRecompileMethodTo: text inContext: aContext notifying: aNotifyer [
 	"The retrieved information has changed and its source must now be updated.
 	 In this case, the retrieved information is the method of the given context."

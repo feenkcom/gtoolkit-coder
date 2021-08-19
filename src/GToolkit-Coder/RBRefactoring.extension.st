@@ -1,6 +1,6 @@
-Extension { #name : #RBRefactoring }
+Extension { #name : 'RBRefactoring' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBRefactoring >> gtDangers [
 	<return: #Collection of: #GtRefactoringDanger>
 
@@ -11,7 +11,7 @@ RBRefactoring >> gtDangers [
 			description: (eachCondition errorMacro expandMacrosWith: false) ]
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBRefactoring >> gtExecute: isForce [
 	isForce
 		ifTrue: [ self transform ]
@@ -19,12 +19,12 @@ RBRefactoring >> gtExecute: isForce [
 	RBRefactoryChangeManager instance performChange: self changes; addUndoPointer: 1
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBRefactoring >> gtPreconditions [
 	^ self preconditions
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBRefactoring >> gtTransform [
 	self transform
 ]

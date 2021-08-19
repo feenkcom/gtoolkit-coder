@@ -1,29 +1,29 @@
 Class {
-	#name : #GtClassCoderPackagesFilterStringChanged,
-	#superclass : #Announcement,
+	#name : 'GtClassCoderPackagesFilterStringChanged',
+	#superclass : 'Announcement',
 	#instVars : [
 		'navigationModel',
 		'packagesFilterString'
 	],
-	#category : #'GToolkit-Coder'
+	#category : 'GToolkit-Coder'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtClassCoderPackagesFilterStringChanged >> navigationModel [
 	^ navigationModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtClassCoderPackagesFilterStringChanged >> navigationModel: anObject [
 	navigationModel := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtClassCoderPackagesFilterStringChanged >> packagesFilterString [
 	^ packagesFilterString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtClassCoderPackagesFilterStringChanged >> packagesFilterString: anObject [
 	packagesFilterString := anObject
 ]

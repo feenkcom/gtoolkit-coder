@@ -1,6 +1,6 @@
 Class {
-	#name : #GtCoderAddOns,
-	#superclass : #Object,
+	#name : 'GtCoderAddOns',
+	#superclass : 'Object',
 	#instVars : [
 		'contextActions',
 		'mainActions',
@@ -8,10 +8,10 @@ Class {
 		'shortcuts',
 		'updateRequested'
 	],
-	#category : #'GToolkit-Coder-Coders - Addons'
+	#category : 'GToolkit-Coder-Coders - Addons'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderAddOns >> addAddOns: aGtCoderAddOns [
 	self addShortcuts: aGtCoderAddOns shortcuts.
 	self addMainActions: aGtCoderAddOns mainActions.
@@ -19,7 +19,7 @@ GtCoderAddOns >> addAddOns: aGtCoderAddOns [
 	self addContextMenuActions: aGtCoderAddOns contextMenuActions
 ]
 
-{ #category : #'api - context actions' }
+{ #category : 'api - context actions' }
 GtCoderAddOns >> addContextAction: aGtCoderAction [
 	self
 		updateActionList: #contextActions
@@ -27,7 +27,7 @@ GtCoderAddOns >> addContextAction: aGtCoderAction [
 		onlyNew: true
 ]
 
-{ #category : #'api - context actions' }
+{ #category : 'api - context actions' }
 GtCoderAddOns >> addContextAction: aTitleString icon: anIcon action: aBlock [
 	self
 		addContextAction: aTitleString
@@ -36,7 +36,7 @@ GtCoderAddOns >> addContextAction: aTitleString icon: anIcon action: aBlock [
 		id: nil
 ]
 
-{ #category : #'api - context actions' }
+{ #category : 'api - context actions' }
 GtCoderAddOns >> addContextAction: aTitleString icon: anIcon action: aBlock id: aBlElementId [
 	self
 		updateActionList: #contextActions
@@ -48,22 +48,22 @@ GtCoderAddOns >> addContextAction: aTitleString icon: anIcon action: aBlock id: 
 		onlyNew: true
 ]
 
-{ #category : #'api - context actions' }
+{ #category : 'api - context actions' }
 GtCoderAddOns >> addContextActions: aCollectionOfContextActions [
 	aCollectionOfContextActions do: [ :eachContextAction | self addContextAction: eachContextAction ]
 ]
 
-{ #category : #'api - context menu' }
+{ #category : 'api - context menu' }
 GtCoderAddOns >> addContextMenuAction: aContextMenuAction [
 	contextMenuActions add: aContextMenuAction
 ]
 
-{ #category : #'api - context menu' }
+{ #category : 'api - context menu' }
 GtCoderAddOns >> addContextMenuActions: aCollectionOfContextMenuActions [
 	aCollectionOfContextMenuActions do: [ :eachContextMenuAction | self addContextMenuAction: eachContextMenuAction ]
 ]
 
-{ #category : #'api - context menu' }
+{ #category : 'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString action: aBlock [
 	^ self
 		addContextMenuItem: aString
@@ -72,7 +72,7 @@ GtCoderAddOns >> addContextMenuItem: aString action: aBlock [
 		action: aBlock
 ]
 
-{ #category : #'api - context menu' }
+{ #category : 'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString action: aBlock id: aSymbol [
 	^ self
 		addContextMenuItem: aString
@@ -82,7 +82,7 @@ GtCoderAddOns >> addContextMenuItem: aString action: aBlock id: aSymbol [
 		id: aSymbol
 ]
 
-{ #category : #'api - context menu' }
+{ #category : 'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock [
 	self
 		addContextMenuItem: aString
@@ -92,7 +92,7 @@ GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock
 		id: nil
 ]
 
-{ #category : #'api - context menu' }
+{ #category : 'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock id: aSymbol [
 	| newAction |
 	newAction := GtCoderContextMenuAction new
@@ -104,7 +104,7 @@ GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock
 	self addContextMenuAction: newAction
 ]
 
-{ #category : #'api - main actions' }
+{ #category : 'api - main actions' }
 GtCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
 	| newAction |
 	newAction := GtCoderDropDownAction new
@@ -114,7 +114,7 @@ GtCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
 	mainActions add: newAction
 ]
 
-{ #category : #'api - main actions' }
+{ #category : 'api - main actions' }
 GtCoderAddOns >> addDropDownWithPreviewAction: aString icon: anIcon action: actionBlock stencil: stencilBlock [
 	| newAction |
 	newAction := GtCoderDropDownWithPreviewAction new
@@ -125,7 +125,7 @@ GtCoderAddOns >> addDropDownWithPreviewAction: aString icon: anIcon action: acti
 	mainActions add: newAction
 ]
 
-{ #category : #'api - main actions' }
+{ #category : 'api - main actions' }
 GtCoderAddOns >> addMainAction: aGtCoderAction [
 	self
 		updateActionList: #mainActions
@@ -133,7 +133,7 @@ GtCoderAddOns >> addMainAction: aGtCoderAction [
 		onlyNew: true
 ]
 
-{ #category : #'api - main actions' }
+{ #category : 'api - main actions' }
 GtCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
 	self
 		updateActionList: #mainActions
@@ -143,7 +143,7 @@ GtCoderAddOns >> addMainAction: aString icon: anIcon action: aBlock [
 		onlyNew: true
 ]
 
-{ #category : #'api - main actions' }
+{ #category : 'api - main actions' }
 GtCoderAddOns >> addMainAction: aTitleString icon: anIcon action: aBlock id: aNameSymbol [
 	self
 		updateActionList: #mainActions
@@ -155,12 +155,12 @@ GtCoderAddOns >> addMainAction: aTitleString icon: anIcon action: aBlock id: aNa
 		onlyNew: true
 ]
 
-{ #category : #'api - main actions' }
+{ #category : 'api - main actions' }
 GtCoderAddOns >> addMainActions: aCollectionOfMainActions [
 	aCollectionOfMainActions do: [ :eachMainAction | self addMainAction: eachMainAction ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtCoderAddOns >> addOrUpdateShortcut: aBlShortcut to: aCollection [
 	1 to: aCollection size do: [ :i | 
 		(aCollection at: i) combination = aBlShortcut combination
@@ -168,32 +168,32 @@ GtCoderAddOns >> addOrUpdateShortcut: aBlShortcut to: aCollection [
 	aCollection add: aBlShortcut
 ]
 
-{ #category : #'api - shortcuts' }
+{ #category : 'api - shortcuts' }
 GtCoderAddOns >> addShortcut: aBlShortcut [
 	self addOrUpdateShortcut: aBlShortcut to: shortcuts
 ]
 
-{ #category : #'api - shortcuts' }
+{ #category : 'api - shortcuts' }
 GtCoderAddOns >> addShortcuts: aCollectionOfShortcuts [
 	aCollectionOfShortcuts do: [ :eachShortcut | self addShortcut: eachShortcut ]
 ]
 
-{ #category : #'api - context actions' }
+{ #category : 'api - context actions' }
 GtCoderAddOns >> contextActions [
 	^ contextActions
 ]
 
-{ #category : #'api - context menu' }
+{ #category : 'api - context menu' }
 GtCoderAddOns >> contextMenuActions [
 	^ contextMenuActions
 ]
 
-{ #category : #changes }
+{ #category : 'changes' }
 GtCoderAddOns >> differenceWith: aGtCoderAddOns [
 	^ Array streamContents: [ :aStream | self differenceWith: aGtCoderAddOns on: aStream ]
 ]
 
-{ #category : #changes }
+{ #category : 'changes' }
 GtCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
 	self
 		assert: [ self class = aGtCoderAddOns class ]
@@ -212,7 +212,7 @@ GtCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
 		ifFalse: [ aStream nextPut: GtCoderAddOnsShortcutsDifference new ].
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtCoderAddOns >> gtViewContextActionsFor: aView [
 	<gtView>
 	^ aView columnedList
@@ -225,7 +225,7 @@ GtCoderAddOns >> gtViewContextActionsFor: aView [
 		column: 'Action' item: [ :anAction | anAction action ]
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtCoderAddOns >> gtViewKeybindingsFor: aView [
 	<gtView>
 	self shortcuts ifEmpty: [ ^ aView empty ].
@@ -237,7 +237,7 @@ GtCoderAddOns >> gtViewKeybindingsFor: aView [
 		column: 'Combination' item: [ :each | each combination gtDisplayString ]
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtCoderAddOns >> gtViewMainActionsFor: aView [
 	<gtView>
 	^ aView columnedList
@@ -252,7 +252,7 @@ GtCoderAddOns >> gtViewMainActionsFor: aView [
 			weight: 3
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtCoderAddOns >> initialize [
 	super initialize.
 	contextActions := OrderedCollection new.
@@ -262,17 +262,17 @@ GtCoderAddOns >> initialize [
 	updateRequested := true
 ]
 
-{ #category : #'api - main actions' }
+{ #category : 'api - main actions' }
 GtCoderAddOns >> mainActions [
 	^ mainActions
 ]
 
-{ #category : #changes }
+{ #category : 'changes' }
 GtCoderAddOns >> markAsUpdated [
 	updateRequested := false
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 GtCoderAddOns >> postCopy [
 	super postCopy.
 	contextActions := contextActions copy.
@@ -281,19 +281,19 @@ GtCoderAddOns >> postCopy [
 	shortcuts := shortcuts copy
 ]
 
-{ #category : #changes }
+{ #category : 'changes' }
 GtCoderAddOns >> requestUpdate [
 	"Mark coder addons as potentially needed to be updated"
 	
 	updateRequested := true
 ]
 
-{ #category : #'api - shortcuts' }
+{ #category : 'api - shortcuts' }
 GtCoderAddOns >> shortcuts [
 	^ shortcuts
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtCoderAddOns >> shouldBeUpdated [
 	"Return true if addons should be updated, false otherwise"
 	<return: #Boolean>
@@ -301,7 +301,7 @@ GtCoderAddOns >> shouldBeUpdated [
 	^ updateRequested
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtCoderAddOns >> updateActionList: listSymbol title: aString icon: anIcon action: aBlock onlyNew: aBoolean [
 	self
 		updateActionList: listSymbol
@@ -312,7 +312,7 @@ GtCoderAddOns >> updateActionList: listSymbol title: aString icon: anIcon action
 		onlyNew: aBoolean
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtCoderAddOns >> updateActionList: listSymbol withAction: aGtCoderAction onlyNew: aBoolean [
 	| index actions |
 

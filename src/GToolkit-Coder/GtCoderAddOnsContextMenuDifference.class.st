@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderAddOnsContextMenuDifference,
-	#superclass : #GtCoderAddOnsDifference,
-	#category : #'GToolkit-Coder-Coders - Addons'
+	#name : 'GtCoderAddOnsContextMenuDifference',
+	#superclass : 'GtCoderAddOnsDifference',
+	#category : 'GToolkit-Coder-Coders - Addons'
 }

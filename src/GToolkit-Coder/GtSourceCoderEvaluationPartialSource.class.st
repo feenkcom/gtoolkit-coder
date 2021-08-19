@@ -1,14 +1,14 @@
 Class {
-	#name : #GtSourceCoderEvaluationPartialSource,
-	#superclass : #GtSourceCoderEvaluationSourceInterval,
+	#name : 'GtSourceCoderEvaluationPartialSource',
+	#superclass : 'GtSourceCoderEvaluationSourceInterval',
 	#instVars : [
 		'startPosition',
 		'stopPosition'
 	],
-	#category : #'GToolkit-Coder-Coders - Evaluation'
+	#category : 'GToolkit-Coder-Coders - Evaluation'
 }
 
-{ #category : #evaluation }
+{ #category : 'evaluation' }
 GtSourceCoderEvaluationPartialSource >> computeSourceInterval: aCompleteCoderSourceTextOrString [
 	<return: #Interval>
 
@@ -16,7 +16,7 @@ GtSourceCoderEvaluationPartialSource >> computeSourceInterval: aCompleteCoderSou
 		to: (self stopPosition min: aCompleteCoderSourceTextOrString size)
 ]
 
-{ #category : #evaluation }
+{ #category : 'evaluation' }
 GtSourceCoderEvaluationPartialSource >> computeSourceString: aCompleteCoderSourceTextOrString [
 	<return: #String>
 	| anInterval |
@@ -26,22 +26,22 @@ GtSourceCoderEvaluationPartialSource >> computeSourceString: aCompleteCoderSourc
 	^ (aCompleteCoderSourceTextOrString copyFrom: anInterval first to: anInterval last) asString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderEvaluationPartialSource >> startPosition [
 	^ startPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderEvaluationPartialSource >> startPosition: anObject [
 	startPosition := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderEvaluationPartialSource >> stopPosition [
 	^ stopPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderEvaluationPartialSource >> stopPosition: anObject [
 	stopPosition := anObject
 ]

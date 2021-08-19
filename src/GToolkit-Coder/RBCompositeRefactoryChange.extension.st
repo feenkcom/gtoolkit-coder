@@ -1,6 +1,6 @@
-Extension { #name : #RBCompositeRefactoryChange }
+Extension { #name : 'RBCompositeRefactoryChange' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBCompositeRefactoryChange >> gtWithoutChanges [
 	^ self shallowCopy
 		changes: #();

@@ -1,6 +1,6 @@
-Extension { #name : #RPackageTag }
+Extension { #name : 'RPackageTag' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RPackageTag >> gtClassesCoderFor: aView context: aPhlowContext [
 	<gtPackageTagView>
 	(aPhlowContext isKindOf: GtPhlowExecutionContext) ifFalse: [ ^ aView empty ].

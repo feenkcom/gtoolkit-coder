@@ -15,17 +15,17 @@ To add support for code debugging the subclasses must implement
 
 "
 Class {
-	#name : #GtSourceCoder,
-	#superclass : #GtTextualCoder,
-	#category : #'GToolkit-Coder-Coders'
+	#name : 'GtSourceCoder',
+	#superclass : 'GtTextualCoder',
+	#category : 'GToolkit-Coder-Coders'
 }
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSourceCoder >> debug [
 	self debugInContext: self evaluationContext
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtSourceCoder >> debug: aSourceStringOrBlock inContext: aGtSourceCoderEvaluationContext [
 	| aSourceString aSourceInterval aCompleteSourceString |
 
@@ -47,12 +47,12 @@ GtSourceCoder >> debug: aSourceStringOrBlock inContext: aGtSourceCoderEvaluation
 		onFailDo: [ self error: 'Failed to debug' ]
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSourceCoder >> debugInContext: aGtSourceCoderEvaluationContext [
 	self debug: self currentSourceString inContext: aGtSourceCoderEvaluationContext
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSourceCoder >> discardChanges [
 	"Discard not-accepted changes."
 
@@ -65,7 +65,7 @@ GtSourceCoder >> discardChanges [
 	self sourceChanged
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSourceCoder >> doItAll [
 	"Evaluate the whole source code in a default evaluation context and return the result.
 	See the implementation of #evaluationContext to find the default state"
@@ -73,7 +73,7 @@ GtSourceCoder >> doItAll [
 	^ self doItInContext: self evaluationContext
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSourceCoder >> doItAndGo [
 	"Evaluate and inspect the whole source code in a default evaluation context and return the result.
 	See the implementation of #evaluationContext to find the default state"
@@ -81,7 +81,7 @@ GtSourceCoder >> doItAndGo [
 	^ self doItAndGoInContext: self evaluationContext
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSourceCoder >> doItAndGoInContext: aGtSourceCoderEvaluationContext [
 	^ self
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
@@ -91,14 +91,14 @@ GtSourceCoder >> doItAndGoInContext: aGtSourceCoderEvaluationContext [
 			self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSourceCoder >> doItInContext: aGtSourceCoderEvaluationContext [
 	^ self
 		doItInContext: aGtSourceCoderEvaluationContext
 		thenDo: [ :aResult | self notifyEvaluatedWithResult: aResult ]
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSourceCoder >> doItInContext: aGtSourceCoderEvaluationContext thenDo: aBlock [
 	^ self
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
@@ -106,7 +106,7 @@ GtSourceCoder >> doItInContext: aGtSourceCoderEvaluationContext thenDo: aBlock [
 		thenDo: aBlock
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtSourceCoder >> evaluate: aSourceStringOrBlock [
 	"Evaluate a given source code and show the print string if needed"
 
@@ -115,7 +115,7 @@ GtSourceCoder >> evaluate: aSourceStringOrBlock [
 		thenDo: [  ]
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtSourceCoder >> evaluate: aSourceStringOrBlock decorated: aSourceCodeDecorator inContext: aSourceCoderEvaluationContext thenDo: aThenBlock [
 	"Evaluate a given source code"
 	| aCompleteSourceString aSourceString aSourceInterval aResult aDecoratedSourceString |
@@ -158,7 +158,7 @@ GtSourceCoder >> evaluate: aSourceStringOrBlock decorated: aSourceCodeDecorator 
 	^ aResult
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtSourceCoder >> evaluate: aSourceStringOrBlock inContext: aGtSourceCoderEvaluationContext thenDo: aThenBlock [
 	^ self
 		evaluate: aSourceStringOrBlock
@@ -167,7 +167,7 @@ GtSourceCoder >> evaluate: aSourceStringOrBlock inContext: aGtSourceCoderEvaluat
 		thenDo: aThenBlock
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtSourceCoder >> evaluate: aSourceStringOrBlock thenDo: aThenBlock [
 	"Evaluate a given source code and show the print string if needed"
 
@@ -177,7 +177,7 @@ GtSourceCoder >> evaluate: aSourceStringOrBlock thenDo: aThenBlock [
 		thenDo: aThenBlock
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtSourceCoder >> evaluateBlock: aBlock onErrorDo: anErrorBlock [
 	<return: #GtSourceCoderEvaluationResult>
 	| aResult wasErrorAlreadySignaled |
@@ -228,7 +228,7 @@ GtSourceCoder >> evaluateBlock: aBlock onErrorDo: anErrorBlock [
 	^ GtSourceCoderEvaluationResultWithValue new value: aResult
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtSourceCoder >> evaluationContext [
 	<return: #GtSourceCoderEvaluationContext>
 
@@ -237,21 +237,21 @@ GtSourceCoder >> evaluationContext [
 		coder: self
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtSourceCoder >> notifyEvaluatedWithResult: anEvaluationResult [
 	self announce: (GtCoderEvaluationAnnouncement new 
 		evaluationResult: anEvaluationResult;
 		coder: self)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtSourceCoder >> notifyObjectSpawn: anObject [
 	self
 		notifyObjectSpawn: anObject
 		withDestination: self spawnDestination
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtSourceCoder >> notifyObjectSpawn: anObject withDestination: aSpawnDestination [
 	self announce: (GtCoderObjectSpawnRequest new 
 		object: anObject;
@@ -259,7 +259,7 @@ GtSourceCoder >> notifyObjectSpawn: anObject withDestination: aSpawnDestination 
 		coder: self)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtSourceCoder >> notifyObjectSpawnFromEvaluationResult: anEvaluationResult [
 	
 	anEvaluationResult isSuccess
@@ -269,14 +269,14 @@ GtSourceCoder >> notifyObjectSpawnFromEvaluationResult: anEvaluationResult [
 		notifyObjectSpawn: anEvaluationResult value
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtSourceCoder >> notifyPrintResult: anEvaluationResult [
 	self announce: (GtCoderPrintAnnouncement new 
 		evaluationResult: anEvaluationResult;
 		coder: self)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
 	(self announcer subscriptionsForClass: GtCoderShowDebuggerRequest) size isZero
 		ifTrue: [
@@ -292,17 +292,17 @@ GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sou
 		sourceInterval: aSourceInterval)
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtSourceCoder >> primitiveDebug: aSourceString inContext: aGtSourceCoderEvaluationContext onFailDo: anEvaluationFailBlock [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtSourceCoder >> primitiveEvaluate: aSourceString inContext: aGtSourceCoderEvaluationContext onFailDo: anEvaluationFailBlock [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSourceCoder >> printItInContext: aGtSourceCoderEvaluationContext [
 	^ self
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
@@ -310,14 +310,14 @@ GtSourceCoder >> printItInContext: aGtSourceCoderEvaluationContext [
 		thenDo: [ :aResult | self notifyPrintResult: aResult ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoder >> spawnDestination [
 	^ self 
 		attributeNamed: #spawnDestination 
 		ifAbsent: [ GtPhlowSpawnDesiredDestination defaultDestination ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoder >> spawnDestination: aSpawnDestination [
 	self attributeNamed: #spawnDestination put: aSpawnDestination
 ]

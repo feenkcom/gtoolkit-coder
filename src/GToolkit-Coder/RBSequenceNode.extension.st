@@ -1,6 +1,6 @@
-Extension { #name : #RBSequenceNode }
+Extension { #name : 'RBSequenceNode' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBSequenceNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	periods ifNotNil: [ periods := periods collect: [ :f | f + anInteger ] ].

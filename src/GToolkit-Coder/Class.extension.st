@@ -1,11 +1,11 @@
-Extension { #name : #Class }
+Extension { #name : 'Class' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 Class >> gtInheritance [
 	^ GtPharoInheritance new subclass: self; superclass: self superclass
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 Class >> gtTraitUsages [
 	^ self traits collect: [ :each | GtPharoTraitUsage new baseBehavior: self; usedTrait: each ]
 ]

@@ -7,26 +7,26 @@ I automatically compute subclasses on demand.
 
 "
 Class {
-	#name : #GtCoderGrowingClassesHierarchyTree,
-	#superclass : #GtCoderClassesHierarchyTree,
-	#category : #'GToolkit-Coder-Navigation - Model'
+	#name : 'GtCoderGrowingClassesHierarchyTree',
+	#superclass : 'GtCoderClassesHierarchyTree',
+	#category : 'GToolkit-Coder-Navigation - Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderGrowingClassesHierarchyTree >> currentSize [
 	<return: #Number>
 
 	^ self currentSubclassTrees size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderGrowingClassesHierarchyTree >> currentSubclassTrees [
 	<return: #Collection of: #GtCoderClassesHierarchyTree>
 
 	^ subclassTrees
 ]
 
-{ #category : #'gt-extension' }
+{ #category : 'gt-extension' }
 GtCoderGrowingClassesHierarchyTree >> gtFixedTreeFor: aView [
 	<gtView>
 
@@ -38,7 +38,7 @@ GtCoderGrowingClassesHierarchyTree >> gtFixedTreeFor: aView [
 		expandUpTo: 1
 ]
 
-{ #category : #'gt-extension' }
+{ #category : 'gt-extension' }
 GtCoderGrowingClassesHierarchyTree >> gtTreeFor: aView [
 	<gtView>
 	^ (super gtTreeFor: aView)
@@ -46,7 +46,7 @@ GtCoderGrowingClassesHierarchyTree >> gtTreeFor: aView [
 		priority: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderGrowingClassesHierarchyTree >> size [
 	<return: #Number>
 
@@ -55,7 +55,7 @@ GtCoderGrowingClassesHierarchyTree >> size [
 		ifFalse: [ super size ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderGrowingClassesHierarchyTree >> subclassTrees [
 	<return: #Collection of: #GtCoderClassesHierarchyTree>
 
@@ -63,7 +63,7 @@ GtCoderGrowingClassesHierarchyTree >> subclassTrees [
 	^ super subclassTrees
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtCoderGrowingClassesHierarchyTree >> updateSubclasses [
 	self rootClass instanceSide hasSubclasses ifFalse: [ ^ self ].
 	subclassTrees := (self rootClass subclasses

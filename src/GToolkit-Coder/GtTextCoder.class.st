@@ -1,14 +1,14 @@
 Class {
-	#name : #GtTextCoder,
-	#superclass : #GtTextualCoder,
+	#name : 'GtTextCoder',
+	#superclass : 'GtTextualCoder',
 	#instVars : [
 		'parser',
 		'parserStartingState'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : 'GToolkit-Coder-Coders'
 }
 
-{ #category : #'api - ast' }
+{ #category : 'api - ast' }
 GtTextCoder >> computeAst: theSourceString [
 	^ parser
 		ifNil: [ theSourceString ]
@@ -18,37 +18,37 @@ GtTextCoder >> computeAst: theSourceString [
 				ifNotNil: [ parser parseWithErrors: theSourceString startingAt: parserStartingState ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtTextCoder >> forString: aString [
 	self sourceCode: (GtCoderExplicitSourceCode new source: aString)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtTextCoder >> newCompletionStrategy [
 	^ GtCompletionStrategy new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextCoder >> parser [
 	^ parser
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextCoder >> parser: anObject [
 	parser := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextCoder >> parserStartingState [
 	^ parserStartingState
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextCoder >> parserStartingState: anObject [
 	parserStartingState := anObject
 ]
 
-{ #category : #'api - ast' }
+{ #category : 'api - ast' }
 GtTextCoder >> supportsAstCache [
 	^ false
 ]

@@ -1,33 +1,33 @@
 Class {
-	#name : #GtAstCache,
-	#superclass : #Object,
+	#name : 'GtAstCache',
+	#superclass : 'Object',
 	#instVars : [
 		'dictionary'
 	],
 	#classInstVars : [
 		'default'
 	],
-	#category : #'GToolkit-Coder-Ast'
+	#category : 'GToolkit-Coder-Ast'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtAstCache class >> cleanUp [
 	default := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtAstCache class >> default [
 	^ default ifNil: [ default := self new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtAstCache >> cachedAstAt: anAstKey ifAbsentPut: anAbsentBlock [
 	^ dictionary 
 		at: anAstKey
 		ifAbsentPut: anAbsentBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtAstCache >> initialize [
 	super initialize.
 	

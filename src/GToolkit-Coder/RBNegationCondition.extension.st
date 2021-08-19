@@ -1,6 +1,6 @@
-Extension { #name : #RBNegationCondition }
+Extension { #name : 'RBNegationCondition' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBNegationCondition >> gtChildren [
 	^ condition gtChildren collect: [ :eachCondition | eachCondition not ]
 ]
