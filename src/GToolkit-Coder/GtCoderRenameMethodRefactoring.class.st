@@ -1,23 +1,23 @@
 Class {
-	#name : #GtCoderRenameMethodRefactoring,
-	#superclass : #RBRenameMethodRefactoring,
+	#name : 'GtCoderRenameMethodRefactoring',
+	#superclass : 'RBRenameMethodRefactoring',
 	#instVars : [
 		'methodCoder'
 	],
-	#category : #'GToolkit-Coder-Refactoring'
+	#category : 'GToolkit-Coder-Refactoring'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderRenameMethodRefactoring >> methodCoder [
 	^ methodCoder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderRenameMethodRefactoring >> methodCoder: anObject [
 	methodCoder := anObject
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 GtCoderRenameMethodRefactoring >> transform [
 	self changes addChange: (GtCoderRenameMethodChange new
 		methodCoder: self methodCoder;

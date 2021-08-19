@@ -1,10 +1,10 @@
 Class {
-	#name : #GtSourceCoderEvaluationResultWithSyntaxError,
-	#superclass : #GtSourceCoderEvaluationResult,
-	#category : #'GToolkit-Coder-Coders - Evaluation'
+	#name : 'GtSourceCoderEvaluationResultWithSyntaxError',
+	#superclass : 'GtSourceCoderEvaluationResult',
+	#category : 'GToolkit-Coder-Coders - Evaluation'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtSourceCoderEvaluationResultWithSyntaxError >> isSyntaxError [
 	^ true
 ]

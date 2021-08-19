@@ -1,60 +1,60 @@
 Class {
-	#name : #GtCoderPackageExtentionTag,
-	#superclass : #Object,
+	#name : 'GtCoderPackageExtentionTag',
+	#superclass : 'Object',
 	#traits : 'TBlDebug',
 	#classTraits : 'TBlDebug classTrait',
 	#instVars : [
 		'package',
 		'classes'
 	],
-	#category : #'GToolkit-Coder-Navigation - Model'
+	#category : 'GToolkit-Coder-Navigation - Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtCoderPackageExtentionTag class >> forPackage: aRPackage [
 	^ self new package: aRPackage.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderPackageExtentionTag >> classes [
 	<return: #Array>
 	^ classes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderPackageExtentionTag >> classes: anObject [
 	classes := anObject
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtCoderPackageExtentionTag >> hasExtendedClasses [
 	<return: #Boolean>
 	^ self classes isNotEmpty
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderPackageExtentionTag >> name [
 	^ 'Extensions'
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 GtCoderPackageExtentionTag >> onPackageChange [
 	self classes: self package extendedClasses asArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderPackageExtentionTag >> package [
 	<return: #RPackage>
 	^ package
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderPackageExtentionTag >> package: aRPackage [
 	package := aRPackage.
 	self onPackageChange.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderPackageExtentionTag >> packageName [
 	^ self package name.
 ]

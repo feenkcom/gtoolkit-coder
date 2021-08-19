@@ -1,29 +1,29 @@
 Class {
-	#name : #GtCoderToolSpawnRequest,
-	#superclass : #GtSourceCoderAnnouncement,
+	#name : 'GtCoderToolSpawnRequest',
+	#superclass : 'GtSourceCoderAnnouncement',
 	#instVars : [
 		'tool',
 		'spawnDestination'
 	],
-	#category : #'GToolkit-Coder-Event'
+	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderToolSpawnRequest >> spawnDestination [
 	^ spawnDestination
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderToolSpawnRequest >> spawnDestination: anObject [
 	spawnDestination := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderToolSpawnRequest >> tool [
 	^ tool
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderToolSpawnRequest >> tool: anObject [
 	tool := anObject
 ]

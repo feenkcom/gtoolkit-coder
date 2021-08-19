@@ -1,18 +1,18 @@
 Class {
-	#name : #GtCodersScrollToCoder,
-	#superclass : #GtCodersAnnouncement,
+	#name : 'GtCodersScrollToCoder',
+	#superclass : 'GtCodersAnnouncement',
 	#instVars : [
 		'sourceCoder'
 	],
-	#category : #'GToolkit-Coder-Event'
+	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodersScrollToCoder >> sourceCoder [
 	^ sourceCoder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodersScrollToCoder >> sourceCoder: anObject [
 	sourceCoder := anObject
 ]

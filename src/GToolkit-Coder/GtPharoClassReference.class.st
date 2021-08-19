@@ -1,19 +1,19 @@
 Class {
-	#name : #GtPharoClassReference,
-	#superclass : #GtPharoAssociation,
+	#name : 'GtPharoClassReference',
+	#superclass : 'GtPharoAssociation',
 	#instVars : [
 		'referencingMethod',
 		'referencedClass'
 	],
-	#category : #'GToolkit-Coder-Support-Pharo'
+	#category : 'GToolkit-Coder-Support-Pharo'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPharoClassReference >> from [
 	^ self referencingMethod 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPharoClassReference >> gtSourceFor: aView [
 	<gtView>
 	^ aView forward
@@ -22,27 +22,27 @@ GtPharoClassReference >> gtSourceFor: aView [
 		view: #gtSourceFor:
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPharoClassReference >> referencedClass [
 	^ referencedClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPharoClassReference >> referencedClass: anObject [
 	referencedClass := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPharoClassReference >> referencingMethod [
 	^ referencingMethod
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPharoClassReference >> referencingMethod: anObject [
 	referencingMethod := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPharoClassReference >> to [
 	^ self referencedClass 
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : #GtCodersModel,
-	#superclass : #Object,
+	#name : 'GtCodersModel',
+	#superclass : 'Object',
 	#traits : 'TGtAnnouncer + TGtOptions',
 	#classTraits : 'TGtAnnouncer classTrait + TGtOptions classTrait',
 	#instVars : [
@@ -8,52 +8,52 @@ Class {
 		'items',
 		'coders'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : 'GToolkit-Coder-Coders'
 }
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtCodersModel class >> forItems: aCollection [
 	^ self new
 		forItems: aCollection;
 		yourself
 ]
 
-{ #category : #'private - adding / removing' }
+{ #category : 'private - adding / removing' }
 GtCodersModel >> addCoder: aCoder [
 	coders add: aCoder.
 	self subscribeToCoder: aCoder.
 	self notifyCoderAdded: aCoder.
 ]
 
-{ #category : #'private - adding / removing' }
+{ #category : 'private - adding / removing' }
 GtCodersModel >> addFirstCoder: aCoder [
 	coders addFirst: aCoder.
 	self subscribeToCoder: aCoder.
 	self notifyCoderAdded: aCoder
 ]
 
-{ #category : #announcer }
+{ #category : 'announcer' }
 GtCodersModel >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtCodersModel >> canFilter [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodersModel >> coders [
 	^ coders
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtCodersModel >> forItems: aCollection [
 	items := aCollection.
 	coders := items collect: [ :each | self newCoderFor: each ]
 ]
 
-{ #category : #ui }
+{ #category : 'ui' }
 GtCodersModel >> gtLiveFor: aView [
 	<gtView>
 	^ aView explicit 
@@ -62,59 +62,59 @@ GtCodersModel >> gtLiveFor: aView [
 		stencil: [ self ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtCodersModel >> initialize [
 	super initialize.
 	coders := #().
 	items := #()
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtCodersModel >> newCoderFor: anObject [
 	self subclassResponsibility
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtCodersModel >> notifyCoderAdded: aCoder [
 	self announce: (GtCodersCoderAdded new
 		coders: self;
 		coder: aCoder)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtCodersModel >> notifyCoderRemoved: aCoder [
 	self announce: (GtCodersCoderRemoved new
 		coders: self;
 		coder: aCoder)
 ]
 
-{ #category : #'private - adding / removing' }
+{ #category : 'private - adding / removing' }
 GtCodersModel >> removeCoder: aCoder [
 	self unsubscribeFromCoder: aCoder.
 	coders remove: aCoder ifAbsent: [ ^ self ].
 	self notifyCoderRemoved: aCoder
 ]
 
-{ #category : #'private - subscriptions' }
+{ #category : 'private - subscriptions' }
 GtCodersModel >> subscribeToCoder: eachCoder [
 ]
 
-{ #category : #'private - subscriptions' }
+{ #category : 'private - subscriptions' }
 GtCodersModel >> subscribeToSystem [
 	"do nothing"
 ]
 
-{ #category : #'private - subscriptions' }
+{ #category : 'private - subscriptions' }
 GtCodersModel >> unsubscribeFromCoder: aCoder [
 	aCoder unsubscribe: self
 ]
 
-{ #category : #'private - subscriptions' }
+{ #category : 'private - subscriptions' }
 GtCodersModel >> unsubscribeFromSystem [
 	SystemAnnouncer uniqueInstance unsubscribe: self
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtCodersModel >> updateCoders [
 	coders := items collect: [ :each | self newCoderFor: each ].
 	self

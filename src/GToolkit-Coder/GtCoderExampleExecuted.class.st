@@ -5,21 +5,21 @@ I am used by {{gtClass:GtMethodCoder}}, see {{gtMethod:GtMethodCoder>>#handleExa
 
 "
 Class {
-	#name : #GtCoderExampleExecuted,
-	#superclass : #GtSourceCoderAnnouncement,
+	#name : 'GtCoderExampleExecuted',
+	#superclass : 'GtSourceCoderAnnouncement',
 	#instVars : [
 		'example'
 	],
-	#category : #'GToolkit-Coder-Event'
+	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExampleExecuted >> example [
 	<return: #GtExampleWithResult>
 	^ example
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExampleExecuted >> example: aGtExampleWithResult [
 	self 
 		assert: [ aGtExampleWithResult isNotNil ] 
@@ -27,19 +27,19 @@ GtCoderExampleExecuted >> example: aGtExampleWithResult [
 	example := aGtExampleWithResult
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtCoderExampleExecuted >> hasResult [
 	<return: #Boolean>
 	^ self example hasResult
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExampleExecuted >> result [
 	<return: #GtExampleResult>
 	^ self example result
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExampleExecuted >> returnValue [
 	^ self example returnValue
 ]

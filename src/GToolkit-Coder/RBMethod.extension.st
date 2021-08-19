@@ -1,6 +1,6 @@
-Extension { #name : #RBMethod }
+Extension { #name : 'RBMethod' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBMethod >> containsSubstring: aString [
 	^ (source
 		ifNil: [ (class realClass sourceCodeAt: selector) asString ])

@@ -1,16 +1,16 @@
 Class {
-	#name : #GtRBASTStyler,
-	#superclass : #BlTextStyler,
+	#name : 'GtRBASTStyler',
+	#superclass : 'BlTextStyler',
 	#classTraits : 'TRBProgramNodeVisitor classTrait',
-	#category : #'GToolkit-Coder-Styler/Highlighter'
+	#category : 'GToolkit-Coder-Styler/Highlighter'
 }
 
-{ #category : #styling }
+{ #category : 'styling' }
 GtRBASTStyler >> extraStyle: aText ast: ast [
 	
 ]
 
-{ #category : #'gt-extension' }
+{ #category : 'gt-extension' }
 GtRBASTStyler >> gtViewTextFor: aView [
 	<gtView>
 	text ifNil: [ ^ aView empty ].
@@ -20,14 +20,14 @@ GtRBASTStyler >> gtViewTextFor: aView [
 		text: [ text ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRBASTStyler >> parse: aText [
 	| code |
 	code := aText asString.
 	^ RBParser parseFaultyMethod: code
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRBASTStyler >> privateStyle: aText [
 	| ast |
 	ast := self parse: aText.
@@ -40,18 +40,18 @@ GtRBASTStyler >> privateStyle: aText [
 	^ aText
 ]
 
-{ #category : #styling }
+{ #category : 'styling' }
 GtRBASTStyler >> style: aText ast: ast [
 	text := aText.
 	self visitNode: ast
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRBASTStyler >> styleFrom: from to: to with: attributes [
 	(text from: from to: to) attributes: attributes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRBASTStyler >> typeOf: aNode in: aClass [
 	aNode isSelf
 		ifTrue: [ ^ aClass ].
@@ -78,13 +78,13 @@ GtRBASTStyler >> typeOf: aNode in: aClass [
 	^ nil
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtRBASTStyler >> visitArgumentNodes: aNodeCollection [ 
 	"Sent *once* when visiting method and block nodes"
 	^aNodeCollection do: [ :each | self visitNode: each ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtRBASTStyler >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
 	"| temp |
 	temp is a temporary node as we can find in the body of methods, but it can't be visited the same way.

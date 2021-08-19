@@ -1,6 +1,6 @@
-Extension { #name : #RBTransformation }
+Extension { #name : 'RBTransformation' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBTransformation >> gtDangers [
 	<return: #Collection of: #GtRefactoringDanger>
 
@@ -11,12 +11,12 @@ RBTransformation >> gtDangers [
 			description: (eachCondition errorMacro expandMacrosWith: false) ]
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBTransformation >> gtPreconditions [
 	^ self preconditions
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBTransformation >> gtTransform [
 	self privateTransform
 ]

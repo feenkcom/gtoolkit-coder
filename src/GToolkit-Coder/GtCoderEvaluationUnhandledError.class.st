@@ -1,15 +1,15 @@
 Class {
-	#name : #GtCoderEvaluationUnhandledError,
-	#superclass : #UnhandledError,
+	#name : 'GtCoderEvaluationUnhandledError',
+	#superclass : 'UnhandledError',
 	#instVars : [
 		'sourceCoder',
 		'sourceString',
 		'sourceInterval'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : 'GToolkit-Coder-Coders'
 }
 
-{ #category : #handling }
+{ #category : 'handling' }
 GtCoderEvaluationUnhandledError >> debug [
 	"Request a debugger on myself embedded in the given text editor"
 
@@ -22,38 +22,38 @@ GtCoderEvaluationUnhandledError >> debug [
 		forException: self exception
 ]
 
-{ #category : #'priv handling' }
+{ #category : 'priv handling' }
 GtCoderEvaluationUnhandledError >> defaultAction [
 	<reflective: #unhandledErrorDefaultAction:message:>
  	^ UIManager default unhandledErrorDefaultAction: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderEvaluationUnhandledError >> sourceCoder [
 	^ sourceCoder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderEvaluationUnhandledError >> sourceCoder: aSourceCoder [
 	sourceCoder := aSourceCoder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderEvaluationUnhandledError >> sourceInterval [
 	^ sourceInterval
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderEvaluationUnhandledError >> sourceInterval: anObject [
 	sourceInterval := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderEvaluationUnhandledError >> sourceString [
 	^ sourceString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderEvaluationUnhandledError >> sourceString: anObject [
 	sourceString := anObject
 ]

@@ -1,42 +1,42 @@
 Class {
-	#name : #GtSearchFilter,
-	#superclass : #Object,
-	#category : #'GToolkit-Coder-Filters'
+	#name : 'GtSearchFilter',
+	#superclass : 'Object',
+	#category : 'GToolkit-Coder-Filters'
 }
 
-{ #category : #'logical operations' }
+{ #category : 'logical operations' }
 GtSearchFilter >> & aFilter [
 	^ GtSearchIntersectionFilter forFilter: self filter: aFilter
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 GtSearchFilter >> applyInScope: aSearchScope [
 	^ self resultType new
 		scope: aSearchScope;
 		filter: self
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtSearchFilter >> asCoder [
 	^ self result asCoder
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtSearchFilter >> asElement [
 	^ self asCoder asElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSearchFilter >> defaultFilterScope [
 	^ GtSearchNullFilter new
 ]
 
-{ #category : #iterating }
+{ #category : 'iterating' }
 GtSearchFilter >> do: aBlock [
 	self result do: aBlock
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtSearchFilter >> gtExamples [
 	| examples |
 	examples := OrderedCollection new.
@@ -44,7 +44,7 @@ GtSearchFilter >> gtExamples [
 	^ GtExampleGroup withAll: examples
 ]
 
-{ #category : #ui }
+{ #category : 'ui' }
 GtSearchFilter >> gtItemsFor: aView [
 	"this is a view that is polymorphic with the one defined in ${method:Collection>>#gtItemsFor:}$"
 	<gtView>
@@ -55,52 +55,52 @@ GtSearchFilter >> gtItemsFor: aView [
 		view: #gtItemsFor:
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSearchFilter >> highlighter [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSearchFilter >> isEmpty [
 	^ self result isEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtSearchFilter >> matches: anObject [
 	self subclassResponsibility
 ]
 
-{ #category : #'logical operations' }
+{ #category : 'logical operations' }
 GtSearchFilter >> not [
 	^ GtSearchNegationFilter new originalFilter: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtSearchFilter >> notEmpty [
 	^ self isEmpty not
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtSearchFilter >> result [
 	^ self applyInScope: self defaultFilterScope
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSearchFilter >> resultType [
 	^ GtSearchNullGroupResult
 ]
 
-{ #category : #'logical operations' }
+{ #category : 'logical operations' }
 GtSearchFilter >> select: aBlock [
 	^ self & (GtSearchBlockFilter forBlock: aBlock)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSearchFilter >> size [
 	^ self result size
 ]
 
-{ #category : #'logical operations' }
+{ #category : 'logical operations' }
 GtSearchFilter >> | aFilter [
 	^ GtSearchUnionFilter forFilter: self filter: aFilter
 ]

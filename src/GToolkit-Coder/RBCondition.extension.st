@@ -1,6 +1,6 @@
-Extension { #name : #RBCondition }
+Extension { #name : 'RBCondition' }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBCondition class >> includesPoolDictionary: aString in: aClass [
 	^ self new
 		type: (Array with: #includesPool with: aString with: aClass)
@@ -8,7 +8,7 @@ RBCondition class >> includesPoolDictionary: aString in: aClass [
 		errorString: aString , ' is <1?:not >included in ' , aClass name
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : '*GToolkit-Coder' }
 RBCondition class >> isPoolDictionary: aString in: aRBSmalltalk [
 	^ self new
 		type: (Array with: #isPoolDictionary with: aString)
