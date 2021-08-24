@@ -1,16 +1,16 @@
 Class {
-	#name : #GtPharoBehaviorProtocolBubbleElement,
-	#superclass : #BrHorizontalPane,
+	#name : 'GtPharoBehaviorProtocolBubbleElement',
+	#superclass : 'BrHorizontalPane',
 	#traits : 'TGtWithPharoBehaviorProtocolCoderViewModel',
 	#classTraits : 'TGtWithPharoBehaviorProtocolCoderViewModel classTrait',
 	#instVars : [
 		'protocolLabel',
 		'methodsContainer'
 	],
-	#category : #'GToolkit-Coder-Pharo-Bubbles'
+	#category : 'GToolkit-Coder-Pharo-Bubbles'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtPharoBehaviorProtocolBubbleElement >> createMethodsContainer [
 	^ BrVerticalPane new
 		hExact: 200;
@@ -18,25 +18,26 @@ GtPharoBehaviorProtocolBubbleElement >> createMethodsContainer [
 		padding: (BlInsets all: 4)
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtPharoBehaviorProtocolBubbleElement >> createProtocolLabel [
+
 	^ BrLabel new
-		beLargeSize;
-		look: BrGlamorousLabelLook
+		  beLargeSize;
+		  aptitude: BrGlamorousLabelAptitude
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtPharoBehaviorProtocolBubbleElement >> createProtocolMethodRowFor: aPharoMethodsCoderViewModel index: anIndex [
-	| tooltipLook |
 
-	tooltipLook := BrGlamorousWithTooltipLook
-		content: [
-			aPharoMethodsCoderViewModel expanded: true.
-			GtSourceCoderEditorElement new
-				in: [ :anEditorElement | anEditorElement editor beParagraphBased ];
-				textualCoderViewModel: aPharoMethodsCoderViewModel;
-				vFitContent;
-				hExact: 400 ].
+	| tooltipLook |
+	tooltipLook := BrGlamorousWithTooltipAptitude content: [ 
+		               aPharoMethodsCoderViewModel expanded: true.
+		               GtSourceCoderEditorElement new
+			               in: [ :anEditorElement | 
+				               anEditorElement editor beParagraphBased ];
+			               textualCoderViewModel: aPharoMethodsCoderViewModel;
+			               vFitContent;
+			               hExact: 400 ].
 	tooltipLook
 		showDelay: 0 seconds;
 		hideDelay: 0 seconds;
@@ -44,35 +45,39 @@ GtPharoBehaviorProtocolBubbleElement >> createProtocolMethodRowFor: aPharoMethod
 		onPrimaryHover.
 
 	^ BrLabel new
-		hMatchParent;
-		id: (GtPharoBehaviorProtocolBubbleMethodHeaderElementId indexed: anIndex);
-		text: aPharoMethodsCoderViewModel selector;
-		look: BrGlamorousLabelLook + tooltipLook + (BrStyleCommonLook new
-			hovered: [ :s | s background: (Color gray alpha: 0.2) ]);
-		when: BlClickEvent do: [ :anEvent |
-			| aContainer aCoderElement |
-			anEvent consumed: true.
-			
-			aContainer := self.
-			aContainer removeChildNamed: #'bubble--editor'.
-			
-			aPharoMethodsCoderViewModel expanded: true.
-			aCoderElement := aPharoMethodsCoderViewModel asElement.
-			aCoderElement hExact: 500.
-			aCoderElement vFitContent.
-			
-			aContainer addChild: (aCoderElement id: #'bubble--editor').
-			self requestStyle ]
+		  hMatchParent;
+		  id:
+			  (GtPharoBehaviorProtocolBubbleMethodHeaderElementId indexed:
+					   anIndex);
+		  text: aPharoMethodsCoderViewModel selector;
+		  aptitude: BrGlamorousLabelAptitude + tooltipLook
+			  + (BrStyleCommonAptitude new hovered: [ :s | 
+						   s background: (Color gray alpha: 0.2) ]);
+		  when: BlClickEvent do: [ :anEvent | 
+			  | aContainer aCoderElement |
+			  anEvent consumed: true.
+
+			  aContainer := self.
+			  aContainer removeChildNamed: #'bubble--editor'.
+
+			  aPharoMethodsCoderViewModel expanded: true.
+			  aCoderElement := aPharoMethodsCoderViewModel asElement.
+			  aCoderElement hExact: 500.
+			  aCoderElement vFitContent.
+
+			  aContainer addChild: (aCoderElement id: #'bubble--editor').
+			  self requestStyle ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtPharoBehaviorProtocolBubbleElement >> initialize [
+
 	super initialize.
 
 	self
-		background: (Color white);
-		addLook: BrShadowLook new beLarge;
-		addLook: BrGlamorousWithMaximizerAptitude new;
+		background: Color white;
+		addAptitude: BrShadowLook new beLarge;
+		addAptitude: BrGlamorousWithMaximizerAptitude new;
 		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
 		beInSeparateCompositionLayer;
 		fitContent.
@@ -82,34 +87,22 @@ GtPharoBehaviorProtocolBubbleElement >> initialize [
 	methodsContainer := self createMethodsContainer.
 
 	methodsContainer addChild: protocolLabel.
-	
+
 	self addChild: methodsContainer.
-	
-	self addLook: (BrLayoutResizerLook new
-		vFitContentToFitContent: [ :aBlock |
-			self
-				childWithId: #'bubble--editor'
-				ifFound: aBlock
-				ifNone: [  ] ];
-		hFitContent: [ :aBlock |
-			self
-				childWithId: #'bubble--editor'
-				ifFound: aBlock
-				ifNone: [  ] ]
-		toExact: 500;
-		exactToMatchParent: [ :aBlock |
-			self
-				childWithId: #'bubble--editor'
-				ifFound: aBlock
-				ifNone: [  ] ];
-		matchParentToMatchParent: [ :aBlock |
-			self
-				childWithId: #'bubble--editor'
-				ifFound: aBlock
-				ifNone: [  ] ])
+
+	self addAptitude: (BrLayoutResizerAptitude new
+			 vFitContentToFitContent: [ :aBlock | 
+				 self childWithId: #'bubble--editor' ifFound: aBlock ifNone: [  ] ];
+			 hFitContent: [ :aBlock | 
+				 self childWithId: #'bubble--editor' ifFound: aBlock ifNone: [  ] ]
+			 toExact: 500;
+			 exactToMatchParent: [ :aBlock | 
+				 self childWithId: #'bubble--editor' ifFound: aBlock ifNone: [  ] ];
+			 matchParentToMatchParent: [ :aBlock | 
+				 self childWithId: #'bubble--editor' ifFound: aBlock ifNone: [  ] ])
 ]
 
-{ #category : #'api - pharo behavior protocol coder view model' }
+{ #category : 'api - pharo behavior protocol coder view model' }
 GtPharoBehaviorProtocolBubbleElement >> onPharoBehaviorProtocolCoderViewModelChanged [
 	"Is sent when a new pharoBehaviorProtocolCoder view model is assigned to the element.
 	Note: #onPharoBehaviorProtocolCoderViewModelChanged is sent before #subscribeToPharoBehaviorProtocolCoderViewModel

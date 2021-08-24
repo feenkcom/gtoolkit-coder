@@ -1,16 +1,16 @@
 Class {
-	#name : #GtPharoBehaviorBubblesElement,
-	#superclass : #BlElement,
+	#name : 'GtPharoBehaviorBubblesElement',
+	#superclass : 'BlElement',
 	#traits : 'TGtWithPharoBehaviorCoderViewModel',
 	#classTraits : 'TGtWithPharoBehaviorCoderViewModel classTrait',
 	#instVars : [
 		'canvas',
 		'zoomToProtocolHandler'
 	],
-	#category : #'GToolkit-Coder-Pharo-Bubbles'
+	#category : 'GToolkit-Coder-Pharo-Bubbles'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtPharoBehaviorBubblesElement >> canvasBoundingBox [
 	<return: #Rectangle>
 	| aBoundingBox |
@@ -28,7 +28,7 @@ GtPharoBehaviorBubblesElement >> canvasBoundingBox [
 	^ aBoundingBox expanded asRectangle
 ]
 
-{ #category : #'hooks - layout' }
+{ #category : 'hooks - layout' }
 GtPharoBehaviorBubblesElement >> dispatchLayoutDone [
 	super dispatchLayoutDone.
 	
@@ -40,40 +40,42 @@ GtPharoBehaviorBubblesElement >> dispatchLayoutDone [
 	self zoomToFit
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtPharoBehaviorBubblesElement >> initialize [
+
 	super initialize.
-	
-	self constraintsDo: [ :c |
+
+	self constraintsDo: [ :c | 
 		c horizontal matchParent.
 		c vertical matchParent ].
 
 	self beInSeparateCompositionLayer.
 	self background: BrGlamorousColors backdropColor.
-	self addLook: BrGlamorousMaximizerFullscreenHostAptitude new. 
+	self addAptitude: BrGlamorousMaximizerFullscreenHostAptitude new.
 
-	canvas := BlCanvassableElement new
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c vertical matchParent ].
-	canvas addEventHandler: BlSlideHandler new.	
+	canvas := BlCanvassableElement new constraintsDo: [ :c | 
+		          c horizontal matchParent.
+		          c vertical matchParent ].
+	canvas addEventHandler: BlSlideHandler new.
 	canvas addEventHandler: BlScrollSlideHandler new.
 	canvas layout: (BlOnceLayout on: (GtGraphGridLayout new gapSize: 30)).
-	
+
 	canvas
 		when: BlCanvassableZoomLevelChanged
-		do: [ :anEvent | self updateForZoomLevel: anEvent currentTarget zoomLevel ].
-		
+		do: [ :anEvent | 
+		self updateForZoomLevel: anEvent currentTarget zoomLevel ].
+
 	zoomToProtocolHandler := BlEventHandler
-		on: BlClickEvent
-		do: [ :anEvent |
-			anEvent consumed: true.
-			self zoomInTo: anEvent currentTarget parent ].
+		                         on: BlClickEvent
+		                         do: [ :anEvent | 
+			                         anEvent consumed: true.
+			                         self zoomInTo:
+				                         anEvent currentTarget parent ].
 
 	self addChild: canvas
 ]
 
-{ #category : #'api - pharo behavior coder view model' }
+{ #category : 'api - pharo behavior coder view model' }
 GtPharoBehaviorBubblesElement >> onPharoBehaviorCoderViewModelChanged [
 	"Is sent when a new pharoBehaviorCoder view model is assigned to the element.
 	Note: #onPharoBehaviorCoderViewModelChanged is sent before #subscribeToPharoBehaviorCoderViewModel
@@ -99,7 +101,7 @@ GtPharoBehaviorBubblesElement >> onPharoBehaviorCoderViewModelChanged [
 			addEventHandler: BlPullHandler new ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtPharoBehaviorBubblesElement >> startZoomAnimation: anAnimation [
 	anAnimation onFinishedDo: [
 		(self query // BlElement) all
@@ -108,39 +110,41 @@ GtPharoBehaviorBubblesElement >> startZoomAnimation: anAnimation [
 	self addAnimation: anAnimation
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtPharoBehaviorBubblesElement >> updateForZoomLevel: aZoomLevel [
-	(self query // GtPharoBehaviorProtocolBubbleElement) all
-		do: [ :eachCard |
-			eachCard childrenDo: [ :eachChild |
-				aZoomLevel > 0.5
-					ifTrue: [ eachChild visibility: BlVisibility visible ]
-					ifFalse: [ eachChild visibility: BlVisibility hidden ].
-				aZoomLevel > 0.5
-					ifTrue: [
-						eachCard
-							childWithId: #protocolLabelPreview
-							ifFound: [ :anElement |
-								anElement removeFromParent.
-								anElement removeEventHandler: zoomToProtocolHandler ]
-							ifNone: [  ] ]
-					ifFalse: [
-						eachCard
-							childWithId: #protocolLabelPreview
-							ifFound: [ :anElement | anElement visibility: BlVisibility visible ]
-							ifNone: [
-								eachCard addChild: ((BrLabel new
-									padding: (BlInsets all: 2);
-									look: BrGlamorousLabelLook;
-									text: eachCard pharoBehaviorProtocolCoderViewModel protocol) asScalableElement
-										id: #protocolLabelPreview;
-										fitAll;
-										addEventHandler: zoomToProtocolHandler;
-										constraintsDo: [ :c |
-											c ignoreByLayout ]) ] ] ] ]
+
+	(self query // GtPharoBehaviorProtocolBubbleElement) all do: [ 
+		:eachCard | 
+		eachCard childrenDo: [ :eachChild | 
+			aZoomLevel > 0.5
+				ifTrue: [ eachChild visibility: BlVisibility visible ]
+				ifFalse: [ eachChild visibility: BlVisibility hidden ].
+			aZoomLevel > 0.5
+				ifTrue: [ 
+					eachCard
+						childWithId: #protocolLabelPreview
+						ifFound: [ :anElement | 
+							anElement removeFromParent.
+							anElement removeEventHandler: zoomToProtocolHandler ]
+						ifNone: [  ] ]
+				ifFalse: [ 
+					eachCard
+						childWithId: #protocolLabelPreview
+						ifFound: [ :anElement | 
+						anElement visibility: BlVisibility visible ]
+						ifNone: [ 
+							eachCard addChild: ((BrLabel new
+									  padding: (BlInsets all: 2);
+									  aptitude: BrGlamorousLabelAptitude;
+									  text: eachCard pharoBehaviorProtocolCoderViewModel protocol)
+									 asScalableElement
+									 id: #protocolLabelPreview;
+									 fitAll;
+									 addEventHandler: zoomToProtocolHandler;
+									 constraintsDo: [ :c | c ignoreByLayout ]) ] ] ] ]
 ]
 
-{ #category : #'api - zooming' }
+{ #category : 'api - zooming' }
 GtPharoBehaviorBubblesElement >> zoomIn [
 	self startZoomAnimation: (BlNumberTransition new
 		onStepDo: [ :eachLevel | canvas zoomLevel: eachLevel ];
@@ -149,7 +153,7 @@ GtPharoBehaviorBubblesElement >> zoomIn [
 		duration: 200 milliSeconds)
 ]
 
-{ #category : #'api - zooming' }
+{ #category : 'api - zooming' }
 GtPharoBehaviorBubblesElement >> zoomInTo: anElement [
 	| anElementBounds anElementExtent aNewZoomLevel aMoveDelta zoomAnimation relocateAnimations |
 	
@@ -180,7 +184,7 @@ GtPharoBehaviorBubblesElement >> zoomInTo: anElement [
 	self startZoomAnimation: (BlSequentialAnimation with: { BlParallelAnimation with: relocateAnimations . zoomAnimation }).
 ]
 
-{ #category : #'api - zooming' }
+{ #category : 'api - zooming' }
 GtPharoBehaviorBubblesElement >> zoomOut [
 	self startZoomAnimation: (BlNumberTransition new
 		onStepDo: [ :eachLevel | canvas zoomLevel: eachLevel ];
@@ -189,7 +193,7 @@ GtPharoBehaviorBubblesElement >> zoomOut [
 		duration: 200 milliSeconds)
 ]
 
-{ #category : #'api - zooming' }
+{ #category : 'api - zooming' }
 GtPharoBehaviorBubblesElement >> zoomToFit [
 	| theChildrenBoundingBox theChildrenExtent aNewZoomLevel aMoveDelta zoomAnimation relocateAnimations |
 	

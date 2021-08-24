@@ -1,6 +1,6 @@
-Extension { #name : #Behavior }
+Extension { #name : 'Behavior' }
 
-{ #category : #'*GToolkit-Coder-Pharo-Bubbles' }
+{ #category : '*GToolkit-Coder-Pharo-Bubbles' }
 Behavior >> gtCoderProtocolsBubblesFor: aView context: aPhlowContext [
 	<gtClassView>
 	| aBehaviorCoderViewModel |
@@ -8,11 +8,11 @@ Behavior >> gtCoderProtocolsBubblesFor: aView context: aPhlowContext [
 	aBehaviorCoderViewModel := aPhlowContext
 		optionAt: #behaviorCoder
 		ifPresent: [ :aBehaviorCoderUIModel | aBehaviorCoderUIModel ]
-		ifAbsentPut: [ (GtBehaviorCoder forClass: self) asCoderUIModel ].
+		ifAbsentPut: [ (GtPharoBehaviorCoder forClass: self) asCoderUIModel ].
 	
 	^ aView explicit
 		priority: 11;
-		title: 'Protocols';
+		title: 'Bubbles';
 		disableAsync;
 		stencil: [ GtPharoBehaviorBubblesElement new
 				pharoBehaviorCoderViewModel: aBehaviorCoderViewModel ];
