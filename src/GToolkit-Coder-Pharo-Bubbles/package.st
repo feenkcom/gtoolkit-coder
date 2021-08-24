@@ -1,1 +1,1 @@
-Package { #name : #'GToolkit-Coder-Pharo-Bubbles' }
+Package { #name : 'GToolkit-Coder-Pharo-Bubbles' }
