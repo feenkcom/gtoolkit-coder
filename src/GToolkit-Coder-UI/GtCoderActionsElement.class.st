@@ -1,6 +1,6 @@
 Class {
-	#name : #GtCoderActionsElement,
-	#superclass : #BlElement,
+	#name : 'GtCoderActionsElement',
+	#superclass : 'BlElement',
 	#traits : 'TGtWithTextualCoderViewModel',
 	#classTraits : 'TGtWithTextualCoderViewModel classTrait',
 	#instVars : [
@@ -9,10 +9,10 @@ Class {
 		'separator',
 		'editor'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtCoderActionsElement >> addContextToolbarActions [
 	contextToolbar addItems: (self textualCoderViewModel contextActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
 	separator
@@ -22,7 +22,7 @@ GtCoderActionsElement >> addContextToolbarActions [
 				ifFalse: [ BlVisibility gone ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtCoderActionsElement >> addMainToolbarActions [
 	mainToolbar
 		addItems:
@@ -32,17 +32,17 @@ GtCoderActionsElement >> addMainToolbarActions [
 					aGtCoderAction buildElementIn: self ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderActionsElement >> coderUIModel [
 	^ self textualCoderViewModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderActionsElement >> coderUIModel: aCoderUIModel [
 	self textualCoderViewModel: aCoderUIModel
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtCoderActionsElement >> disableButton: aButtonElement action: aGtCoderAction [
 	aButtonElement
 		icon:
@@ -52,7 +52,7 @@ GtCoderActionsElement >> disableButton: aButtonElement action: aGtCoderAction [
 		disable
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtCoderActionsElement >> enqueueEnableButton: aButtonElement action: aGtCoderAction [
 	^ aButtonElement
 		enqueueTask:
@@ -63,7 +63,7 @@ GtCoderActionsElement >> enqueueEnableButton: aButtonElement action: aGtCoderAct
 						enable ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtCoderActionsElement >> handleButton: aButtonElement action: aGtCoderAction onEvent: anEvent [
 	self disableButton: aButtonElement action: aGtCoderAction.
 	GtCoderExecutionContextVariable
@@ -78,7 +78,7 @@ GtCoderActionsElement >> handleButton: aButtonElement action: aGtCoderAction onE
 								ensure: [ self enqueueEnableButton: aButtonElement action: aGtCoderAction ] ]) ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderActionsElement >> initialize [
 	super initialize.
 	
@@ -102,7 +102,7 @@ GtCoderActionsElement >> initialize [
 	self addChildren: { mainToolbar . separator . contextToolbar }
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 	<return: #BrButton>
 	^ BrButton new
@@ -118,7 +118,7 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 				onEvent: anEvent ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 	<return: #BrButton>
 	| button aContentStencil |
@@ -178,7 +178,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtCoderActionsElement >> newToolbar [
 	<return: #BrToolbar>
 
@@ -187,7 +187,7 @@ GtCoderActionsElement >> newToolbar [
 		padding: (BlInsets left: -4)
 ]
 
-{ #category : #'api - textual coder view model' }
+{ #category : 'api - textual coder view model' }
 GtCoderActionsElement >> onPostTextualCoderViewModelChanged [
 	"I am an optional hook method that is sent after #subscribeToTextualCoderViewModel.
 	I do nothing by default but allow users to perform update operations when a receiver object is already
@@ -196,7 +196,7 @@ GtCoderActionsElement >> onPostTextualCoderViewModelChanged [
 	self textualCoderViewModel ensureAddOns
 ]
 
-{ #category : #'api - textual coder view model' }
+{ #category : 'api - textual coder view model' }
 GtCoderActionsElement >> onTextualCoderViewModelChanged [
 	"Is sent when a new textualCoder view model is assigned to the element.
 	Note: #onTextualCoderViewModelChanged is sent before #subscribeToTextualCoderViewModel
@@ -210,17 +210,17 @@ GtCoderActionsElement >> onTextualCoderViewModelChanged [
 	self addContextToolbarActions
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtCoderActionsElement >> removeContextToolbarActions [
 	contextToolbar numberOfItems timesRepeat: [ contextToolbar removeItemAt: 1 ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtCoderActionsElement >> removeMainToolbarActions [
 	mainToolbar numberOfItems timesRepeat: [ mainToolbar removeItemAt: 1 ]
 ]
 
-{ #category : #'api - textual coder view model' }
+{ #category : 'api - textual coder view model' }
 GtCoderActionsElement >> subscribeToTextualCoderViewModel [
 	"Is sent after a new textualCoder view model is assigned to the element.
 	It is required to unsubscribe from the view model or domain model by implementing
@@ -231,7 +231,7 @@ GtCoderActionsElement >> subscribeToTextualCoderViewModel [
 		when: GtTextualCoderViewModelContextActionsChanged send: #updateContextToolbar to: self
 ]
 
-{ #category : #'api - textual coder view model' }
+{ #category : 'api - textual coder view model' }
 GtCoderActionsElement >> unsubscribeFromTextualCoderViewModel [
 	"Is sent before a new textualCoder view model is assigned to the element.
 	Elements that subscribe to textualCoder view model in domain model are required to implement this methods."
@@ -239,7 +239,7 @@ GtCoderActionsElement >> unsubscribeFromTextualCoderViewModel [
 	self textualCoderViewModel unsubscribe: self
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtCoderActionsElement >> updateContextToolbar [
 	self enqueueTask:
 		(BlTaskAction new
@@ -248,7 +248,7 @@ GtCoderActionsElement >> updateContextToolbar [
 				self addContextToolbarActions ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtCoderActionsElement >> updateMainToolbar [
 	self enqueueTask: (BlTaskAction new
 		action: [			

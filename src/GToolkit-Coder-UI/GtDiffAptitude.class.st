@@ -1,10 +1,10 @@
 Class {
-	#name : #GtDiffAptitude,
-	#superclass : #BrAptitude,
-	#category : #'GToolkit-Coder-UI-Diff'
+	#name : 'GtDiffAptitude',
+	#superclass : 'BrAptitude',
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDiffAptitude >> initialize [
 	super initialize.
 	

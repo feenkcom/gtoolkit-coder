@@ -1,20 +1,20 @@
 Class {
-	#name : #GtCoderCardElement,
-	#superclass : #BlElement,
+	#name : 'GtCoderCardElement',
+	#superclass : 'BlElement',
 	#instVars : [
 		'coder',
 		'coderNameLabel',
 		'coderDetailsLabel'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderCardElement >> coder [
 	^ coder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderCardElement >> coder: anObject [
 	coder := anObject.
 	coderNameLabel text: (self coderNameTextFrom: coder coderName).
@@ -26,7 +26,7 @@ GtCoderCardElement >> coder: anObject [
 				text: (self coderDetailsTextFrom: aDetailsString) ]
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderCardElement >> coderDetailsTextFrom: aString [
 	"Convert a coder's details to a styled text"
 
@@ -35,7 +35,7 @@ GtCoderCardElement >> coderDetailsTextFrom: aString [
 		foreground: self theme button defaultTextColor
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderCardElement >> coderNameTextFrom: aString [
 	"Convert a coder's name to a styled text"
 	<return: #BlText>
@@ -43,12 +43,12 @@ GtCoderCardElement >> coderNameTextFrom: aString [
 	^ aString asRopedText glamorousCodeFont bold
 ]
 
-{ #category : #'building ui' }
+{ #category : 'building ui' }
 GtCoderCardElement >> detailsLabel [
 	^ ''
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderCardElement >> initialize [
 	super initialize.
 	self aptitude: (BrGlamorousButtonExteriorAptitude new borderPaint: Color transparent).
@@ -81,7 +81,7 @@ GtCoderCardElement >> initialize [
 	self addChildren: { coderNameLabel . coderDetailsLabel }
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtCoderCardElement >> selectCoder [
 	| anEvent |
 

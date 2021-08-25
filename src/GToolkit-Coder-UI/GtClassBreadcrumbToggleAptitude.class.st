@@ -1,10 +1,10 @@
 Class {
-	#name : #GtClassBreadcrumbToggleAptitude,
-	#superclass : #BrAptitude,
-	#category : #'GToolkit-Coder-UI-Looks'
+	#name : 'GtClassBreadcrumbToggleAptitude',
+	#superclass : 'BrAptitude',
+	#category : 'GToolkit-Coder-UI-Looks'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtClassBreadcrumbToggleAptitude >> initialize [
 	super initialize.
 	self

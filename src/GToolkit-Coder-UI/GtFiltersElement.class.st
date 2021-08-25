@@ -11,15 +11,15 @@ The following example shows a coder with default filters element that you can ch
 
 "
 Class {
-	#name : #GtFiltersElement,
-	#superclass : #BrHorizontalFlow,
+	#name : 'GtFiltersElement',
+	#superclass : 'BrHorizontalFlow',
 	#instVars : [
 		'descriptors'
 	],
-	#category : #'GToolkit-Coder-UI-Filters'
+	#category : 'GToolkit-Coder-UI-Filters'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFiltersElement >> addEmptyDefault [
 	| filterElement defaultDescriptor |
 	self childrenCount = 1
@@ -34,7 +34,7 @@ GtFiltersElement >> addEmptyDefault [
 	self addChild: filterElement at: self childrenCount
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFiltersElement >> addFilterForDescriptor: aFilterDescriptor andValue: aString [
 	| element |
 	element := GtFilterTagElement new.
@@ -45,25 +45,25 @@ GtFiltersElement >> addFilterForDescriptor: aFilterDescriptor andValue: aString 
 	self addChild: element at: self childrenCount
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtFiltersElement >> applyFilters [
 	self fireEvent: (GtFiltersChangedEvent new filterElement: self).
 	self addEmptyDefault
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFiltersElement >> buildFilters: aBlock [
 	self clearFilters.
 	aBlock value.
 	self addEmptyDefault
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFiltersElement >> clearFilters [
 	[ self childrenCount > 1 ] whileTrue: [ self removeChildAt: 1 ]
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtFiltersElement >> createNewTag [
 	| tag |
 	self descriptors isEmptyOrNil ifTrue: [ ^ self ].
@@ -77,18 +77,18 @@ GtFiltersElement >> createNewTag [
 	tag activateEditor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFiltersElement >> descriptors [
 	^ descriptors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFiltersElement >> descriptors: aCollection [
 	descriptors := aCollection.
 	self addEmptyDefault
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFiltersElement >> filtersDo: aBlock [
 	1 to: self childrenCount - 1 do: [ :i | 
 		| filterTagElement |
@@ -99,7 +99,7 @@ GtFiltersElement >> filtersDo: aBlock [
 					value: filterTagElement valueString ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtFiltersElement >> initialize [
 	super initialize.
 	self hMatchParent.
@@ -107,7 +107,7 @@ GtFiltersElement >> initialize [
 	self addChild: self newAddTagButton as: #newButton
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtFiltersElement >> newAddTagButton [
 	^ BrButton new
 		aptitude:

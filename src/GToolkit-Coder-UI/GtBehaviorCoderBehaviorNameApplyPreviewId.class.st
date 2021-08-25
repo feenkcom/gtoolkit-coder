@@ -4,12 +4,12 @@ A button that appears when behavior name is modified to open a popup with the re
 
 "
 Class {
-	#name : #GtBehaviorCoderBehaviorNameApplyPreviewId,
-	#superclass : #GtCoderElementId,
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#name : 'GtBehaviorCoderBehaviorNameApplyPreviewId',
+	#superclass : 'GtCoderElementId',
+	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtBehaviorCoderBehaviorNameApplyPreviewId >> asSymbol [
 	^ #'behavior-coder--behavior-name-apply-preview'
 ]

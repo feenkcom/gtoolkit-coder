@@ -1,20 +1,20 @@
 Class {
-	#name : #GtDefineInstanceVariableFixItAction,
-	#superclass : #GtFixItVariableNodeAction,
-	#category : #'GToolkit-Coder-AddOns-FixIt'
+	#name : 'GtDefineInstanceVariableFixItAction',
+	#superclass : 'GtFixItVariableNodeAction',
+	#category : 'GToolkit-Coder-AddOns-FixIt'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDefineInstanceVariableFixItAction >> description [
 	^ 'Add slot ' , self nodeName , ' in ', sourceCoder behavior name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDefineInstanceVariableFixItAction >> executeOn: anEditorElement [
 	sourceCoder addInstanceVariable: self nodeName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDefineInstanceVariableFixItAction >> id [
 	<return: #BlElementId>
 

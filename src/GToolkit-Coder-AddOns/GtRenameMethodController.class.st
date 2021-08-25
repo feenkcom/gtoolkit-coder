@@ -1,6 +1,6 @@
 Class {
-	#name : #GtRenameMethodController,
-	#superclass : #GtRenameController,
+	#name : 'GtRenameMethodController',
+	#superclass : 'GtRenameController',
 	#instVars : [
 		'selector',
 		'someImplementor',
@@ -9,10 +9,10 @@ Class {
 		'startIndex',
 		'previewIndex'
 	],
-	#category : #'GToolkit-Coder-AddOns-Inline rename'
+	#category : 'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtRenameMethodController >> installRenamer [
 	self
 		cursorPositionDo: [ :position | 
@@ -32,7 +32,7 @@ GtRenameMethodController >> installRenamer [
 							self installRenamerOn: message ] ] ]
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtRenameMethodController >> installRenamerOn: aGtPharoMessageNode [
 	previewIndex := node selectorParts last stopPosition.
 	newName := newSelectorParts at: selectorIndex.
@@ -40,7 +40,7 @@ GtRenameMethodController >> installRenamerOn: aGtPharoMessageNode [
 	self installRenameAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameMethodController >> installValidation [
 	| argCount |
 	argCount := selector numArgs.
@@ -51,12 +51,12 @@ GtRenameMethodController >> installValidation [
 		ifFalse: [ renameAction forKeyword ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameMethodController >> newName [
 	^ self newSelectorName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameMethodController >> newNode [
 	coder astAwait nodesDo: [ :each | 
 		((each isMessage or: [ each isMethod or: [ each isMethodPattern ] ])
@@ -65,7 +65,7 @@ GtRenameMethodController >> newNode [
 	^ nil
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameMethodController >> newSelectorName [
 	selector numArgs = 0
 		ifTrue: [ ^ newName asSymbol ].
@@ -75,12 +75,12 @@ GtRenameMethodController >> newSelectorName [
 		asSymbol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameMethodController >> originalName [
 	^ selector
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameMethodController >> refactoring [
 	| implementor newSelector model |
 	implementor := self someImplementor.
@@ -99,12 +99,12 @@ GtRenameMethodController >> refactoring [
 			methodCoder: coder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameMethodController >> refactoringName [
 	^ 'Rename method'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameMethodController >> renamePosition [
 	self newNode
 		ifNotNil: [ :message | ^ message selectorParts last stopPosition ].
@@ -114,7 +114,7 @@ GtRenameMethodController >> renamePosition [
 				- self originalName size ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameMethodController >> someImplementor [
 	^ someImplementor
 		ifNil: [ (SystemNavigation default allImplementorsOf: selector)
@@ -122,7 +122,7 @@ GtRenameMethodController >> someImplementor [
 				ifNotEmpty: [ :impls | someImplementor := impls anyOne methodClass ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameMethodController >> tab: forward [
 	self originalNode arguments size < 2
 		ifTrue: [ ^ self ].
@@ -143,7 +143,7 @@ GtRenameMethodController >> tab: forward [
 				ifFalse: [ self addRefactoringChangesPreview ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameMethodController >> updateName: aString [
 
 	"we should update selector parts before updating the name, otherwise the refactoring will be canceled"

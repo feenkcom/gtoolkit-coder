@@ -1,34 +1,34 @@
 Class {
-	#name : #GtCoderNavigationTabsStencil,
-	#superclass : #BrStencil,
+	#name : 'GtCoderNavigationTabsStencil',
+	#superclass : 'BrStencil',
 	#instVars : [
 		'navigations',
 		'navigationModel'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 GtCoderNavigationTabsStencil >> addNavigation: aNavigationElement [
 	self assertNavigationView: aNavigationElement.
 	self navigations: (self navigations copyWith: aNavigationElement)
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 GtCoderNavigationTabsStencil >> assertNavigationModel: aGtCoderNavigationPackagesTagsClassesModel [
 	self 
 		assert: [ aGtCoderNavigationPackagesTagsClassesModel isNotNil ] 
 		description: [ 'Navigation model must be non-nil' ].
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 GtCoderNavigationTabsStencil >> assertNavigationView: aNavigationView [
 	self 
 		assert: [ aNavigationView isKindOf: GtPhlowProtoView ] 
 		description: [ 'Navigation must be kind of ', GtPhlowView name ].
 ]
 
-{ #category : #'api - instantiation' }
+{ #category : 'api - instantiation' }
 GtCoderNavigationTabsStencil >> create [
 	<return: #BrTabGroup>
 	^ GtPhlowCompositeView new
@@ -39,7 +39,7 @@ GtCoderNavigationTabsStencil >> create [
 				matchParent ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 GtCoderNavigationTabsStencil >> defaultNavigations [
 	<return: #Array of: #GtPhlowView>
 	^ GtPhlowViewsCollector new
@@ -48,7 +48,7 @@ GtCoderNavigationTabsStencil >> defaultNavigations [
 		collect
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 	<gtCoderNavigation>
 	self navigationModel ifNil: [ ^ aView empty ].
@@ -58,7 +58,7 @@ GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 		stencil: [ GtCoderNavigationClassHierachyElement new navigationModel: self navigationModel ]
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 	<gtCoderNavigation>
 	self navigationModel ifNil: [ ^ aView empty ].
@@ -69,25 +69,25 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 			navigationModel: self navigationModel ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderNavigationTabsStencil >> navigationModel [
 	<return: #GtCoderNavigationPackagesTagsClassesModel>
 
 	^ navigationModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderNavigationTabsStencil >> navigationModel: aGtCoderNavigationPackagesTagsClassesModel [
 	self assertNavigationModel: aGtCoderNavigationPackagesTagsClassesModel.
 	navigationModel := aGtCoderNavigationPackagesTagsClassesModel.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderNavigationTabsStencil >> navigations [
 	^ navigations ifNil: [ navigations := self defaultNavigations ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderNavigationTabsStencil >> navigations: anArrayOfPhlowViews [
 	navigations := anArrayOfPhlowViews
 ]

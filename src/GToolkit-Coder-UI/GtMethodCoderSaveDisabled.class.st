@@ -1,23 +1,23 @@
 Class {
-	#name : #GtMethodCoderSaveDisabled,
-	#superclass : #GtMethodCoderSaveAbilityChanged,
+	#name : 'GtMethodCoderSaveDisabled',
+	#superclass : 'GtMethodCoderSaveAbilityChanged',
 	#instVars : [
 		'preventors'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Method Events'
+	#category : 'GToolkit-Coder-UI-Coder - Method Events'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtMethodCoderSaveDisabled >> preventors [
 	^ preventors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtMethodCoderSaveDisabled >> preventors: anObject [
 	preventors := anObject
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 GtMethodCoderSaveDisabled >> value [
 	^ false
 ]

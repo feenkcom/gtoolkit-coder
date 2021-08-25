@@ -4,17 +4,17 @@ I show a simple list of packages sorting alphabetically
 
 "
 Class {
-	#name : #GtCoderNavigationPackagesTreeElement,
-	#superclass : #BrSimpleTree,
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#name : 'GtCoderNavigationPackagesTreeElement',
+	#superclass : 'BrSimpleTree',
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtCoderNavigationPackagesTreeElement class >> fromPackages: aCollectionOfPackages [
 	^ self new initializeWithPackages: aCollectionOfPackages
 ]
 
-{ #category : #'private - enumeration' }
+{ #category : 'private - enumeration' }
 GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 	| theTags anExtension |
 	(aPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
@@ -33,7 +33,7 @@ GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 	^ theTags
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderNavigationPackagesTreeElement >> initialize [
 	super initialize.
 
@@ -50,7 +50,7 @@ GtCoderNavigationPackagesTreeElement >> initialize [
 					ifNotNil: [ aPackage name ]) ]
 ]
 
-{ #category : #'api - initialization' }
+{ #category : 'api - initialization' }
 GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPackages [
 	| theSortedPackages |
 	theSortedPackages := aCollectionOfPackages asArray
@@ -62,7 +62,7 @@ GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPac
 			[ :eachPackageOrTag | self childrenForPackageOrTag: eachPackageOrTag ]
 ]
 
-{ #category : #'private - testing' }
+{ #category : 'private - testing' }
 GtCoderNavigationPackagesTreeElement >> isTag: tagA lessThan: tagB [
 	tagA class = GtCoderPackageUncategorizedTag ifTrue: [ ^ true ].
 	tagB class = GtCoderPackageUncategorizedTag ifTrue: [ ^ false ].
@@ -70,7 +70,7 @@ GtCoderNavigationPackagesTreeElement >> isTag: tagA lessThan: tagB [
 	
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtCoderNavigationPackagesTreeElement >> selectedIndice [
 	"Return selected indice or zero"
 	
@@ -81,26 +81,26 @@ GtCoderNavigationPackagesTreeElement >> selectedIndice [
 	^ 0
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtCoderNavigationPackagesTreeElement >> selectedPackage [
 	<return: #RPackage or: nil>
 	^ self selectedPackageNodeDo: #value
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtCoderNavigationPackagesTreeElement >> selectedPackageNodeDo: aBlock [
 	self selectedNodeDo: [ :aNode | aNode depth = 0
 		ifTrue: [ ^ aBlock cull: aNode ] ].
 	^ nil
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtCoderNavigationPackagesTreeElement >> selectedPackageTag [
 	<return: #RPackageTag or: nil>
 	^ self selectedPackageTagNodeDo: #value
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtCoderNavigationPackagesTreeElement >> selectedPackageTagNodeDo: aBlock [
 	self selectedNodeDo: [ :aNode | aNode depth = 1
 		ifTrue: [ ^ aBlock cull: aNode ] ].

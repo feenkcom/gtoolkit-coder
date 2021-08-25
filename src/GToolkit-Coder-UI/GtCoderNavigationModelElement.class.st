@@ -6,15 +6,15 @@ See my {{gtClass:GtCoderNavigationModelElement|expanded|show=#gtSubclassesFor:}}
 
 "
 Class {
-	#name : #GtCoderNavigationModelElement,
-	#superclass : #GtCoderElement,
+	#name : 'GtCoderNavigationModelElement',
+	#superclass : 'GtCoderElement',
 	#instVars : [
 		'navigationModel'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : #'private - asserting' }
+{ #category : 'private - asserting' }
 GtCoderNavigationModelElement >> assertNavigationModel: aGtCoderNavigationModel [
 	self 
 		assert: [ aGtCoderNavigationModel isNotNil ] 
@@ -25,12 +25,12 @@ GtCoderNavigationModelElement >> assertNavigationModel: aGtCoderNavigationModel 
 	
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 GtCoderNavigationModelElement >> defaultNavigationModel [
 	^ GtCoderNavigationModel null
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderNavigationModelElement >> initialize [
 	super initialize.
 	navigationModel := self defaultNavigationModel.
@@ -38,7 +38,7 @@ GtCoderNavigationModelElement >> initialize [
 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderNavigationModelElement >> initializeListeners [
 	self
 		when: GtCoderToReplace
@@ -53,13 +53,13 @@ GtCoderNavigationModelElement >> initializeListeners [
 		do: [ :anEvent | self spawnInSpaceFrom: anEvent ].
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtCoderNavigationModelElement >> navigationModel [
 	<return: #GtCoderNavigationModel>
 	^ navigationModel
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtCoderNavigationModelElement >> navigationModel: aGtCoderNavigationModel [
 	navigationModel = aGtCoderNavigationModel ifTrue: [  ^ self ].
 	self assertNavigationModel: aGtCoderNavigationModel.
@@ -69,42 +69,42 @@ GtCoderNavigationModelElement >> navigationModel: aGtCoderNavigationModel [
 	self onNavigationModelChanged.
 ]
 
-{ #category : #'private - hooks' }
+{ #category : 'private - hooks' }
 GtCoderNavigationModelElement >> onNavigationModelChanged [
 	"Subclasses can react to navigation model changes."
 ]
 
-{ #category : #'api - updating' }
+{ #category : 'api - updating' }
 GtCoderNavigationModelElement >> pushCoder: aCoderOrCoders [
 	self assertNavigationModel: self navigationModel.
 	self navigationModel selectCoder: aCoderOrCoders
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtCoderNavigationModelElement >> replaceFrom: aGtCoderToReplaceEvent [
 	aGtCoderToReplaceEvent consumed: true.
 	
 	self pushCoder: aGtCoderToReplaceEvent coder
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtCoderNavigationModelElement >> spawnFrom: aGtCoderToSpawnEvent [
 	aGtCoderToSpawnEvent consumed: true.
 	
 	self phlow spawnTool: (GtReadyCoderTool coder: (aGtCoderToSpawnEvent coder))
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtCoderNavigationModelElement >> spawnInSpaceFrom: aGtCoderToSpawnInSpaceEvent [
 	aGtCoderToSpawnInSpaceEvent consumed: true.
 ]
 
-{ #category : #'private - subscriptions' }
+{ #category : 'private - subscriptions' }
 GtCoderNavigationModelElement >> subscribeToNavigationModel [
 	"Subclasses can subscribe to the navigation model"
 ]
 
-{ #category : #'private - subscriptions' }
+{ #category : 'private - subscriptions' }
 GtCoderNavigationModelElement >> unsubscribeFromNavigationModel [
 	self navigationModel = GtCoderNavigationModel null ifTrue: [ ^ self ].
 	self navigationModel unsubscribe: self.

@@ -1,13 +1,13 @@
 Class {
-	#name : #GtSourceCoderErrorAttribute,
-	#superclass : #BrTextAdornmentAttribute,
+	#name : 'GtSourceCoderErrorAttribute',
+	#superclass : 'BrTextAdornmentAttribute',
 	#instVars : [
 		'string'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Attributes'
+	#category : 'GToolkit-Coder-UI-Coder - Source Attributes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtSourceCoderErrorAttribute class >> for: aString [
 	^ self new
 		for: aString;
@@ -16,7 +16,7 @@ GtSourceCoderErrorAttribute class >> for: aString [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| text |
 
@@ -33,7 +33,7 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 		yourself
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtSourceCoderErrorAttribute >> for: aString [
 	string := aString
 ]

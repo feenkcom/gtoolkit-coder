@@ -1,12 +1,12 @@
 Trait {
-	#name : #TGtWithCoderModel,
+	#name : 'TGtWithCoderModel',
 	#instVars : [
 		'coderModel'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
-{ #category : #'api - coder model' }
+{ #category : 'api - coder model' }
 TGtWithCoderModel >> coderModel [
 	"Return a not-null coder model assigned to the receiver view model"
 	self
@@ -16,7 +16,7 @@ TGtWithCoderModel >> coderModel [
 	^ coderModel
 ]
 
-{ #category : #'api - coder model' }
+{ #category : 'api - coder model' }
 TGtWithCoderModel >> coderModel: aCoderModel [
 	"Set a not-null coder domain model assigned to the receiver view model"
 	self
@@ -33,7 +33,7 @@ TGtWithCoderModel >> coderModel: aCoderModel [
 	self subscribeToCoderModel
 ]
 
-{ #category : #'api - coder model' }
+{ #category : 'api - coder model' }
 TGtWithCoderModel >> hasCoder [
 	"Return a true if coder model is assigned to the receiver, false otherwise"
 	<return: #Boolean>
@@ -41,21 +41,21 @@ TGtWithCoderModel >> hasCoder [
 	^ coderModel notNil
 ]
 
-{ #category : #'api - coder model' }
+{ #category : 'api - coder model' }
 TGtWithCoderModel >> onCoderModelChanged [
 	"Is sent when a new coder model is assigned to the view model"
 	
 	self explicitRequirement
 ]
 
-{ #category : #'api - coder model' }
+{ #category : 'api - coder model' }
 TGtWithCoderModel >> subscribeToCoderModel [
 	"Is sent after a new coder model is assigned to the view model.
 	It is required to unsubscribe from the domain model by implementing
 	#unsubscribeFromCoderModel if view model subscribes to them"
 ]
 
-{ #category : #'api - coder model' }
+{ #category : 'api - coder model' }
 TGtWithCoderModel >> unsubscribeFromCoderModel [
 	"Is sent before a new coder model is assigned to the view model.
 	View models that subscribe to coder model are required to implement this methods"

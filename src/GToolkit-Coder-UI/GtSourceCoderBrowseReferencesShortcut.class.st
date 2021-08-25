@@ -1,27 +1,27 @@
 Class {
-	#name : #GtSourceCoderBrowseReferencesShortcut,
-	#superclass : #GtSourceCoderShortcut,
-	#category : #'GToolkit-Coder-UI-Shortcuts'
+	#name : 'GtSourceCoderBrowseReferencesShortcut',
+	#superclass : 'GtSourceCoderShortcut',
+	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderBrowseReferencesShortcut >> description [
 	^ 'Browses references of the class or sender of the method near the cursor or selection.'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderBrowseReferencesShortcut >> initialize [
 	super initialize.
 	
 	combination := BlKeyCombination primaryN
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderBrowseReferencesShortcut >> name [
 	^ 'Browse references'
 ]
 
-{ #category : #evaluation }
+{ #category : 'evaluation' }
 GtSourceCoderBrowseReferencesShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
 	self
 		forEditor: aBrTextEditor

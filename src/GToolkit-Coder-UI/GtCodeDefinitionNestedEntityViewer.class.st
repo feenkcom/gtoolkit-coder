@@ -1,14 +1,14 @@
 Class {
-	#name : #GtCodeDefinitionNestedEntityViewer,
-	#superclass : #GtCodeDefinitionViewer,
+	#name : 'GtCodeDefinitionNestedEntityViewer',
+	#superclass : 'GtCodeDefinitionViewer',
 	#instVars : [
 		'editor',
 		'nestedEditors'
 	],
-	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : #'api - instantiation' }
+{ #category : 'api - instantiation' }
 GtCodeDefinitionNestedEntityViewer >> create [
 	<return: #Object>
 	| aContainer theNestedEditors |
@@ -44,23 +44,23 @@ GtCodeDefinitionNestedEntityViewer >> create [
 	^ aContainer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionNestedEntityViewer >> editor [
 	^ editor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionNestedEntityViewer >> editor: anObject [
 	editor := anObject.
 	self title: editor title
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionNestedEntityViewer >> nestedEditors [
 	^ nestedEditors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionNestedEntityViewer >> nestedEditors: anObject [
 	nestedEditors := anObject
 ]

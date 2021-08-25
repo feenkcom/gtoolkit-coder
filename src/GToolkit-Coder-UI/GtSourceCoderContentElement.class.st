@@ -1,12 +1,12 @@
 Class {
-	#name : #GtSourceCoderContentElement,
-	#superclass : #BlElement,
+	#name : 'GtSourceCoderContentElement',
+	#superclass : 'BlElement',
 	#traits : 'TBrLayoutResizable',
 	#classTraits : 'TBrLayoutResizable classTrait',
-	#category : #'GToolkit-Coder-UI-Coder - Source'
+	#category : 'GToolkit-Coder-UI-Coder - Source'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderContentElement >> coder [
 	self 
 		deprecated: 'Use #coderUIModel instead.'
@@ -15,7 +15,7 @@ GtSourceCoderContentElement >> coder [
 	^ self coderUIModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderContentElement >> coder: aCoder [
 
 	self 
@@ -25,14 +25,14 @@ GtSourceCoderContentElement >> coder: aCoder [
 	self coderUIModel: aCoder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderContentElement >> coderUIModel [
 	<return: #GtSourceCoderViewModel>
 
 	^ self viewModel sourceCoder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderContentElement >> coderUIModel: aGtSourceCoderUIModel [
 
 	self telemetry
@@ -40,7 +40,7 @@ GtSourceCoderContentElement >> coderUIModel: aGtSourceCoderUIModel [
 		during: [ self viewModel sourceCoder: aGtSourceCoderUIModel ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderContentElement >> gtAllShortcutsFor: aView [
 	<gtView>
 	self shortcuts ifEmpty: [ ^ aView empty ].
@@ -52,7 +52,7 @@ GtSourceCoderContentElement >> gtAllShortcutsFor: aView [
 		column: 'Action' item: [ :each | each action asString ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderContentElement >> initialize [
 	super initialize.
 	self

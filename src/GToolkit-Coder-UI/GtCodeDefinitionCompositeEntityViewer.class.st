@@ -1,20 +1,20 @@
 Class {
-	#name : #GtCodeDefinitionCompositeEntityViewer,
-	#superclass : #GtCodeDefinitionViewer,
+	#name : 'GtCodeDefinitionCompositeEntityViewer',
+	#superclass : 'GtCodeDefinitionViewer',
 	#instVars : [
 		'editors',
 		'separatorStencil',
 		'showSectionNames'
 	],
-	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtCodeDefinitionCompositeEntityViewer class >> withAll: aCollectionOfEditors [
 	^ self new editors: aCollectionOfEditors
 ]
 
-{ #category : #'api - instantiation' }
+{ #category : 'api - instantiation' }
 GtCodeDefinitionCompositeEntityViewer >> create [
 	<return: #Object>
 
@@ -45,18 +45,18 @@ GtCodeDefinitionCompositeEntityViewer >> create [
 							aStream nextPut: (self buildSectionLabel: (editors at: aCurrentIndex) title) ] ] ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionCompositeEntityViewer >> editors [
 	^ editors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionCompositeEntityViewer >> editors: anObject [
 	editors := anObject.
 	self title: editors first title
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCodeDefinitionCompositeEntityViewer >> initialize [
 	super initialize.
 	
@@ -64,17 +64,17 @@ GtCodeDefinitionCompositeEntityViewer >> initialize [
 	showSectionNames := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionCompositeEntityViewer >> separator: aStencil [
 	separatorStencil := aStencil asStencil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionCompositeEntityViewer >> withSectionNames [
 	showSectionNames := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionCompositeEntityViewer >> withoutSectionNames [
 	showSectionNames := false
 ]

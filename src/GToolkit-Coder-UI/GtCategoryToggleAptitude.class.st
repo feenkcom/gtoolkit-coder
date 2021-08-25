@@ -1,10 +1,10 @@
 Class {
-	#name : #GtCategoryToggleAptitude,
-	#superclass : #GtCoderToggleAptitude,
-	#category : #'GToolkit-Coder-UI-Looks'
+	#name : 'GtCategoryToggleAptitude',
+	#superclass : 'GtCoderToggleAptitude',
+	#category : 'GToolkit-Coder-UI-Looks'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCategoryToggleAptitude >> initialize [
 	super initialize.
 	self

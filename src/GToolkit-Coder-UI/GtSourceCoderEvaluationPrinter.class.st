@@ -1,10 +1,10 @@
 Class {
-	#name : #GtSourceCoderEvaluationPrinter,
-	#superclass : #GtSourceCoderEvaluationResultDisplayer,
-	#category : #'GToolkit-Coder-UI-Coder - Source'
+	#name : 'GtSourceCoderEvaluationPrinter',
+	#superclass : 'GtSourceCoderEvaluationResultDisplayer',
+	#category : 'GToolkit-Coder-UI-Coder - Source'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtSourceCoderEvaluationPrinter >> addAttributesFor: anEvaluationResult within: aTextInterval [
 	| theAttributes |
 	

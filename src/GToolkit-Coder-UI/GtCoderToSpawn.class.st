@@ -4,22 +4,22 @@ I am fired by inner coders to tell {{gtClass:GtCoder}} to spawn a new coder usin
 
 "
 Class {
-	#name : #GtCoderToSpawn,
-	#superclass : #BlEvent,
+	#name : 'GtCoderToSpawn',
+	#superclass : 'BlEvent',
 	#instVars : [
 		'coder'
 	],
-	#category : #'GToolkit-Coder-UI-! Core'
+	#category : 'GToolkit-Coder-UI-! Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderToSpawn >> coder [
 	<return: #GtCoderModel>
 
 	^ coder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderToSpawn >> coder: aGtCoderModel [
 	coder := aGtCoderModel
 ]

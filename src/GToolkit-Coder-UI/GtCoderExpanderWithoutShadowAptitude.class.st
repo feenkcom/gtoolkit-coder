@@ -1,6 +1,6 @@
 Class {
-	#name : #GtCoderExpanderWithoutShadowAptitude,
-	#superclass : #BrExpanderAptitude,
+	#name : 'GtCoderExpanderWithoutShadowAptitude',
+	#superclass : 'BrExpanderAptitude',
 	#instVars : [
 		'sidebar',
 		'toggle',
@@ -13,73 +13,73 @@ Class {
 		'styleLook',
 		'padding'
 	],
-	#category : #'GToolkit-Coder-UI-Looks'
+	#category : 'GToolkit-Coder-UI-Looks'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> borderFocusedPaint [
 	^ borderFocusedPaint
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> borderFocusedPaint: aPaintOrColor [
 	borderFocusedPaint := aPaintOrColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> borderPaint [
 	^ borderPaint
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> borderPaint: aPaintOrColor [
 	borderPaint := aPaintOrColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> borderWidth [
 	^ borderWidth
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> borderWidth: anInteger [
 	borderWidth := anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> cornerRadius [
 	^ cornerRadius
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> cornerRadius: aNumber [
 	cornerRadius := aNumber
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderExpanderWithoutShadowAptitude >> defaultBorderPaint [
 	^ self theme default lightBorderColor
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderExpanderWithoutShadowAptitude >> defaultFocusedBorderPaint [
 	^ (self theme default primaryBorderColor alpha: 0.4)
 		gtOpaqueColorOnWhite
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> expandedBorderWidth [
 	<return: #Number>
 
 	^ expandedBorderWidth
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> expandedBorderWidth: aNumber [
 	expandedBorderWidth := aNumber
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderExpanderWithoutShadowAptitude >> initialize [
 	| aTriangle |
 	super initialize.
@@ -131,7 +131,7 @@ GtCoderExpanderWithoutShadowAptitude >> initialize [
 		with: [ BlRoundedRectangleGeometry cornerRadius: self cornerRadius ]
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderExpanderWithoutShadowAptitude >> newCollapsedTriangleGeometry [
 	^ BlPolygon vertices: {
 		(0 @ 0).
@@ -140,7 +140,7 @@ GtCoderExpanderWithoutShadowAptitude >> newCollapsedTriangleGeometry [
 	}
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderExpanderWithoutShadowAptitude >> newExpandedTriangleGeometry [
 	^ BlPolygon vertices: {
 		(0 @ 0).
@@ -149,7 +149,7 @@ GtCoderExpanderWithoutShadowAptitude >> newExpandedTriangleGeometry [
 	}
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderExpanderWithoutShadowAptitude >> newSidebar [
 	^ BlElement new
 		layout: BlLinearLayout vertical;
@@ -159,7 +159,7 @@ GtCoderExpanderWithoutShadowAptitude >> newSidebar [
 		background: Color veryVeryLightGray
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderExpanderWithoutShadowAptitude >> newToggle [
 	^ BlElement new
 		id: GtSourceCoderExpanderToggleId;
@@ -175,7 +175,7 @@ GtCoderExpanderWithoutShadowAptitude >> newToggle [
 				self dispatchEvent: BrExpansionToggleWish new ]
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderExpanderWithoutShadowAptitude >> newTriangle [
 	^ BlElement new
 		size: 8 @ 8;
@@ -183,18 +183,18 @@ GtCoderExpanderWithoutShadowAptitude >> newTriangle [
 		constraintsDo: [ :c | c linear vertical alignTop ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> padding [
 	^ padding
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> padding: aBlInsets [
 	padding := aBlInsets.
 	container padding: aBlInsets
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderExpanderWithoutShadowAptitude >> resizableElementsDo: aBlock [
 	super resizableElementsDo: aBlock.
 	aBlock value: container

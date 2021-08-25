@@ -1,6 +1,6 @@
 Class {
-	#name : #GtTextualCoderViewModel,
-	#superclass : #GtSingleCoderViewModel,
+	#name : 'GtTextualCoderViewModel',
+	#superclass : 'GtSingleCoderViewModel',
 	#instVars : [
 		'addOns',
 		'addOnMonitor',
@@ -19,10 +19,10 @@ Class {
 		'extraTextAttributes',
 		'styledText'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
+	#category : 'GToolkit-Coder-UI-Coder - Textual Model'
 }
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> addOnsAsyncDo: aBlock [
 	addOnMonitor critical: [
 		addOnCommand ifNotNil: [
@@ -55,7 +55,7 @@ GtTextualCoderViewModel >> addOnsAsyncDo: aBlock [
 			otherwise: [ addOnCommand execute ] ]
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> addOnsAwait [
 	| theAddOns |
 	
@@ -64,7 +64,7 @@ GtTextualCoderViewModel >> addOnsAwait [
 	^ theAddOns
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> addOnsAwaitDo: aBlock [
 	| aSemaphore theAddOns |
 	
@@ -78,28 +78,28 @@ GtTextualCoderViewModel >> addOnsAwaitDo: aBlock [
 	aBlock value: theAddOns
 ]
 
-{ #category : #'api - shortcuts' }
+{ #category : 'api - shortcuts' }
 GtTextualCoderViewModel >> addShortcut: aShortcut [
 	"Add an extra shortcut add-on independent from the dynamically computed add-ons"
 
 	extraAddOns addShortcut: aShortcut
 ]
 
-{ #category : #'api - shortcuts' }
+{ #category : 'api - shortcuts' }
 GtTextualCoderViewModel >> addStyler: aGtCoderStyler [
 	"Add an extra styler add-on independent from the dynamically computed add-ons"
 
 	extraAddOns addStyler: aGtCoderStyler
 ]
 
-{ #category : #'api - shortcuts' }
+{ #category : 'api - shortcuts' }
 GtTextualCoderViewModel >> addStylers: aCollectionOfGtCoderStyler [
 	"Add extra styler add-ons independent from the dynamically computed add-ons"
 
 	aCollectionOfGtCoderStyler do: [ :eachStyler | self addStyler: eachStyler ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderViewModel>
 	^ self
@@ -108,7 +108,7 @@ GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition
 		to: anEndPosition
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderViewModel>
 	| aCurrentText aMarkerAttribute newCoderTextAttributes |
@@ -132,7 +132,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: 
 	^ newCoderTextAttributes
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtTextualCoderViewModel >> asEditorState [
 	| anEditorText aMemento |
 
@@ -158,22 +158,22 @@ GtTextualCoderViewModel >> asEditorState [
 	^ aMemento
 ]
 
-{ #category : #'api - coder model' }
+{ #category : 'api - coder model' }
 GtTextualCoderViewModel >> astAsyncDo: aBlock [
 	^ self coderModel astAsyncDo: aBlock
 ]
 
-{ #category : #'api - coder model' }
+{ #category : 'api - coder model' }
 GtTextualCoderViewModel >> astAwait [
 	^ self coderModel astAwait
 ]
 
-{ #category : #'api - expansion' }
+{ #category : 'api - expansion' }
 GtTextualCoderViewModel >> collapse [
 	self expanded: false
 ]
 
-{ #category : #'api - stylers' }
+{ #category : 'api - stylers' }
 GtTextualCoderViewModel >> compositeStyler [
 	^ GtCoderAstCompositeStyler new
 		coderViewModel: self;
@@ -181,7 +181,7 @@ GtTextualCoderViewModel >> compositeStyler [
 		yourself
 ]
 
-{ #category : #'private - addons' }
+{ #category : 'private - addons' }
 GtTextualCoderViewModel >> computeAddOns [
 	| aCoderModel newAddOns pragmas theAst |
 		
@@ -221,7 +221,7 @@ GtTextualCoderViewModel >> computeAddOns [
 	^ newAddOns
 ]
 
-{ #category : #'private - addons' }
+{ #category : 'private - addons' }
 GtTextualCoderViewModel >> computeContextMenuAstAddOns [
 	| aCoderModel newAddOns pragmas theAst |
 
@@ -254,12 +254,12 @@ GtTextualCoderViewModel >> computeContextMenuAstAddOns [
 	^ newAddOns
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> contextActions [
 	^ contextActions
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> contextActions: theContextActions [
 	contextActions = theContextActions
 		ifTrue: [ ^ self ].
@@ -268,12 +268,12 @@ GtTextualCoderViewModel >> contextActions: theContextActions [
 	self announce: GtTextualCoderViewModelContextActionsChanged new
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> contextMenuActions [
 	^ contextMenuActions
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> contextMenuActions: theContextMenuActions [
 	contextMenuActions = theContextMenuActions
 		ifTrue: [ ^ self ].
@@ -282,19 +282,19 @@ GtTextualCoderViewModel >> contextMenuActions: theContextMenuActions [
 	self announce: GtTextualCoderViewModelContextMenuActionsChanged new
 ]
 
-{ #category : #'api - cursors' }
+{ #category : 'api - cursors' }
 GtTextualCoderViewModel >> cursors [
 	<return: #BrTextEditorCursor>
 
 	^ cursors
 ]
 
-{ #category : #'api - cursors' }
+{ #category : 'api - cursors' }
 GtTextualCoderViewModel >> cursors: aBrTextEditorCursor [
 	self cursors: aBrTextEditorCursor from: self
 ]
 
-{ #category : #'api - cursors' }
+{ #category : 'api - cursors' }
 GtTextualCoderViewModel >> cursors: aBrTextEditorCursor from: aSourceObject [
 	cursors = aBrTextEditorCursor
 		ifTrue: [ ^ self ].
@@ -303,27 +303,27 @@ GtTextualCoderViewModel >> cursors: aBrTextEditorCursor from: aSourceObject [
 	self notifyCursorsChanged: cursors from: aSourceObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextualCoderViewModel >> elementClass [
 	^ GtTextualCoderEditorElement
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> ensureAddOns [
 	self addOnsAsyncDo: [ :theAddOns | ]
 ]
 
-{ #category : #'api - expansion' }
+{ #category : 'api - expansion' }
 GtTextualCoderViewModel >> expand [
 	self expanded: true
 ]
 
-{ #category : #'api - expansion' }
+{ #category : 'api - expansion' }
 GtTextualCoderViewModel >> expanded [
 	^ expanded
 ]
 
-{ #category : #'api - expansion' }
+{ #category : 'api - expansion' }
 GtTextualCoderViewModel >> expanded: aBoolean [
 	expanded = aBoolean
 		ifTrue: [ ^ self ].
@@ -332,24 +332,24 @@ GtTextualCoderViewModel >> expanded: aBoolean [
 	self notifyExpansionChanged: expanded
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextualCoderViewModel >> extraTextAttributes [
 	^ extraTextAttributes
 ]
 
-{ #category : #'api - focus' }
+{ #category : 'api - focus' }
 GtTextualCoderViewModel >> focused [
 	<return: #Boolean>
 
 	^ hasFocus
 ]
 
-{ #category : #'api - focus' }
+{ #category : 'api - focus' }
 GtTextualCoderViewModel >> focused: aBoolean [
 	self focused: aBoolean from: self
 ]
 
-{ #category : #'api - focus' }
+{ #category : 'api - focus' }
 GtTextualCoderViewModel >> focused: aBoolean from: aSourceObject [
 	hasFocus = aBoolean
 		ifTrue: [ ^ self ].
@@ -363,7 +363,7 @@ GtTextualCoderViewModel >> focused: aBoolean from: aSourceObject [
 			ifFalse: [ theCoders unfocusCoderUIModel: self ] ]
 ]
 
-{ #category : #'gt-extension' }
+{ #category : 'gt-extension' }
 GtTextualCoderViewModel >> gtInfo [
 	^ Array streamContents: [ :aStream |
 		aStream nextPut: (#coderModel -> self coderModel).
@@ -380,7 +380,7 @@ GtTextualCoderViewModel >> gtInfo [
 		aStream nextPut: (#expanded -> self expanded) ]
 ]
 
-{ #category : #'gt-extension' }
+{ #category : 'gt-extension' }
 GtTextualCoderViewModel >> gtInfoFor: aView [
 	<gtView>
 
@@ -398,12 +398,12 @@ GtTextualCoderViewModel >> gtInfoFor: aView [
 		updateWhen: GtTextualCoderViewModelAnnouncement in: self announcer
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtTextualCoderViewModel >> hasSelection [
 	^ self selection isNotEmpty
 ]
 
-{ #category : #'api - styled text' }
+{ #category : 'api - styled text' }
 GtTextualCoderViewModel >> hasStyledText [
 	<return: #Boolean>
 	<propertyTester: #styledText>
@@ -412,7 +412,7 @@ GtTextualCoderViewModel >> hasStyledText [
 	^ styledText notNil
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtTextualCoderViewModel >> initialize [
 	super initialize.
 	
@@ -432,12 +432,12 @@ GtTextualCoderViewModel >> initialize [
 	expanded := true
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> mainActions [
 	^ mainActions
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> mainActions: theMainActions [
 	mainActions = theMainActions
 		ifTrue: [ ^ self ].
@@ -446,48 +446,48 @@ GtTextualCoderViewModel >> mainActions: theMainActions [
 	self announce: GtTextualCoderViewModelMainActionsChanged new
 ]
 
-{ #category : #'api - cursors' }
+{ #category : 'api - cursors' }
 GtTextualCoderViewModel >> moveCursorAtEnd [
 	"Move the cursor at the end of the textual snippet"
 
 	self moveCursorTo: self sourceText size
 ]
 
-{ #category : #'api - cursors' }
+{ #category : 'api - cursors' }
 GtTextualCoderViewModel >> moveCursorAtStart [
 	"Move the cursor at the end of the textual snippet"
 
 	self moveCursorTo: 0
 ]
 
-{ #category : #'api - cursors' }
+{ #category : 'api - cursors' }
 GtTextualCoderViewModel >> moveCursorTo: aCursorIndex [
 	self cursors: (BrTextEditorCursor at: aCursorIndex)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtTextualCoderViewModel >> notifyCursorsChanged: aBrTextEditorCursor from: aSourceObject [
 	self announce: (GtTextualCoderViewModelCursorsChanged new cursors: aBrTextEditorCursor; source: aSourceObject)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtTextualCoderViewModel >> notifyExpansionChanged: aBoolean [
 	self announce: (GtTextualCoderViewModelExpansionChanged new expanded: aBoolean)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtTextualCoderViewModel >> notifyFocusChanged: aBoolean from: aSourceObject [
 	self announcerUIModel announce: (GtSourceCoderFocusChanged new 
 		focused: aBoolean; 
 		source: aSourceObject)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtTextualCoderViewModel >> notifySelectionChanged: aBlCompositeSelection from: aSourceObject [
 	self announce: (GtTextualCoderViewModelSelectionChanged new selection: aBlCompositeSelection; source: aSourceObject)
 ]
 
-{ #category : #'api - styled text' }
+{ #category : 'api - styled text' }
 GtTextualCoderViewModel >> notifyStyledTextChanged [
 	"Override this notify method to announce changes to the property"
 	<propertyChangeNotifier: #styledText>
@@ -496,7 +496,7 @@ GtTextualCoderViewModel >> notifyStyledTextChanged [
 		styledText: self styledText).
 ]
 
-{ #category : #'private - addons' }
+{ #category : 'private - addons' }
 GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 	"Is sent when new add-ons are computed"
 
@@ -507,7 +507,7 @@ GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 	self contextMenuActions: theAddOns contextMenuActions
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderViewModel >> onAstChanged: anAstChangedAnnouncement [
 
 	"ast changed, the styled text may not be valid anymore"
@@ -520,21 +520,21 @@ GtTextualCoderViewModel >> onAstChanged: anAstChangedAnnouncement [
 	self addOnsAsyncDo: [ :theAddOns | self announce: GtTextualCoderViewModelReadyToRestyle new ]
 ]
 
-{ #category : #'api - styled text' }
+{ #category : 'api - styled text' }
 GtTextualCoderViewModel >> onNewStyledTextSet: aNewStyledText [
 	"Is sent after a new value of the styledText is assigned"
 	<propertySetHook: #styledText>
 	<generatedFrom: #'TGtRobocoderWithPropertyTraitTemplate>>#onNewPropertySetHookTemplate'>
 ]
 
-{ #category : #'api - styled text' }
+{ #category : 'api - styled text' }
 GtTextualCoderViewModel >> onPreviousStyledTextUnset: aPreviousStyledText [
 	"Is sent after a previous value of the styledText is de-assigned"
 	<propertyUnsetHook: #styledText>
 	<generatedFrom: #'TGtRobocoderWithPropertyTraitTemplate>>#onPreviousPropertyUnsetHookTemplate'>
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement [
 	
 	"source code changed, meaning that the styled text is no longer correct"
@@ -550,13 +550,13 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 	self coderModel ensureAst
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoderViewModel >> removeAllCoderTextAttributes: aCollectionOfGtTextualCoderTextAttributes [
 	aCollectionOfGtTextualCoderTextAttributes do: [ :eachCoderTextAttribute |
 		self removeCoderTextAttributes: eachCoderTextAttribute ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttributes [
 	| aCurrentText |
 
@@ -571,31 +571,31 @@ GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttribu
 	self announce: (GtTextualCoderViewModelTextAttributesRemoved new coderTextAttributes: aGtTextualCoderTextAttributes)
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtTextualCoderViewModel >> select: aFromCursorIndex to: aToCursorIndex [
 	self selection: (self selection copy select: aFromCursorIndex to: aToCursorIndex)
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtTextualCoderViewModel >> selectNone [
 	self selection: BlCompositeSelection new
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtTextualCoderViewModel >> selection [
 	<return: #BlCompositeSelection>
 
 	^ selection
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtTextualCoderViewModel >> selection: aBlCompositeSelection [
 	self
 		selection: aBlCompositeSelection
 		from: self
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtTextualCoderViewModel >> selection: aBlCompositeSelection from: aSourceObject [
 	selection = aBlCompositeSelection
 		ifTrue: [ ^ self ].
@@ -604,7 +604,7 @@ GtTextualCoderViewModel >> selection: aBlCompositeSelection from: aSourceObject 
 	self notifySelectionChanged: selection from: aSourceObject
 ]
 
-{ #category : #'api - shortcuts' }
+{ #category : 'api - shortcuts' }
 GtTextualCoderViewModel >> shortcuts [
 	"Return a collection of current editor shortcuts that are computed based on the coder add-ons and extra view-model add-ons.
 	Do not modify the returned collection as it will be recomputed when ast or add-ons change; instead use #addShortcut:"
@@ -613,7 +613,7 @@ GtTextualCoderViewModel >> shortcuts [
 	^ shortcuts
 ]
 
-{ #category : #'api - shortcuts' }
+{ #category : 'api - shortcuts' }
 GtTextualCoderViewModel >> shortcuts: aCollectionOfShortcuts [
 	shortcuts = aCollectionOfShortcuts
 		ifTrue: [ ^ self ].
@@ -622,7 +622,7 @@ GtTextualCoderViewModel >> shortcuts: aCollectionOfShortcuts [
 	self announce: GtTextualCoderViewModelShortcutsChanged new
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> shouldAddOnsBeUpdated [
 	"Return true if addons should be updated, false otherwise. When a Coder Model is attached to the corresponding Element
 	that element should check if addons need to be updated and if it is the case start the update with the help of ${method:GtCoderModel>>#updateAddOnsFrom:}$"
@@ -634,14 +634,14 @@ GtTextualCoderViewModel >> shouldAddOnsBeUpdated [
 			ifNotNil: [ :theAddOns | theAddOns shouldBeUpdated ] ]
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoderViewModel >> sourceText [
 	<return: #BlText>
 
 	^ self coderModel sourceText
 ]
 
-{ #category : #'api - text' }
+{ #category : 'api - text' }
 GtTextualCoderViewModel >> sourceText: aNewSourceText from: aSourceObject	 synchronously: isSynchronous [
 	self coderModel
 		currentSourceText: aNewSourceText
@@ -650,7 +650,7 @@ GtTextualCoderViewModel >> sourceText: aNewSourceText from: aSourceObject	 synch
 			isSynchronous: isSynchronous)
 ]
 
-{ #category : #'api - styled text' }
+{ #category : 'api - styled text' }
 GtTextualCoderViewModel >> styledText [
 	<return: #Object>
 	<propertyGetter: #styledText>
@@ -659,7 +659,7 @@ GtTextualCoderViewModel >> styledText [
 	^ styledText
 ]
 
-{ #category : #'api - styled text' }
+{ #category : 'api - styled text' }
 GtTextualCoderViewModel >> styledText: aNewStyledText [
 	<propertySetter: #styledText>
 	<propertyAnnouncement: #GtTextualCoderViewModelStyledTextChanged>
@@ -680,12 +680,12 @@ GtTextualCoderViewModel >> styledText: aNewStyledText [
 	self notifyStyledTextChanged
 ]
 
-{ #category : #'api - stylers' }
+{ #category : 'api - stylers' }
 GtTextualCoderViewModel >> stylers [
 	^ stylers
 ]
 
-{ #category : #'api - stylers' }
+{ #category : 'api - stylers' }
 GtTextualCoderViewModel >> stylers: theStylers [
 	stylers = theStylers
 		ifTrue: [ ^ self ].
@@ -700,7 +700,7 @@ GtTextualCoderViewModel >> stylers: theStylers [
 	self announce: GtTextualCoderViewModelStylersChanged new
 ]
 
-{ #category : #'api - coder model' }
+{ #category : 'api - coder model' }
 GtTextualCoderViewModel >> subscribeToCoderModel [
 	super subscribeToCoderModel.
 	
@@ -715,7 +715,7 @@ GtTextualCoderViewModel >> subscribeToCoderModel [
 		to: self
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : 'api - add-ons' }
 GtTextualCoderViewModel >> terminateAddOnsCommand [
 	addOnMonitor critical: [
 		addOnCommand ifNotNil: [ :anAddOnsCommand | anAddOnsCommand terminate ].
@@ -723,7 +723,7 @@ GtTextualCoderViewModel >> terminateAddOnsCommand [
 		addOnCommandBlock := nil ]
 ]
 
-{ #category : #'api - styled text' }
+{ #category : 'api - styled text' }
 GtTextualCoderViewModel >> unsetStyledText [
 	<propertyUnsetter: #styledText>
 	<generatedFrom: #'TGtRobocoderWithPropertyTraitTemplate>>#propertyUnsetterTemplate'>
@@ -738,7 +738,7 @@ GtTextualCoderViewModel >> unsetStyledText [
 	self notifyStyledTextChanged
 ]
 
-{ #category : #'api - coder model' }
+{ #category : 'api - coder model' }
 GtTextualCoderViewModel >> unsubscribeFromCoderModel [
 	super unsubscribeFromCoderModel.
 	

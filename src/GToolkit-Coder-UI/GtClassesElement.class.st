@@ -1,13 +1,13 @@
 Class {
-	#name : #GtClassesElement,
-	#superclass : #BlElement,
+	#name : 'GtClassesElement',
+	#superclass : 'BlElement',
 	#instVars : [
 		'coder'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : #'building ui' }
+{ #category : 'building ui' }
 GtClassesElement >> buildContainer [
 	| aClassList |
 	self removeChildren.
@@ -21,19 +21,19 @@ GtClassesElement >> buildContainer [
 	self addChild: aClassList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtClassesElement >> coders: aCoder [
 	coder := aCoder.
 	self buildContainer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtClassesElement >> codersUIModel: aCoder [
 	coder := aCoder coder.
 	self buildContainer
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtClassesElement >> initialize [
 	super initialize.
 	self

@@ -1,10 +1,10 @@
 Class {
-	#name : #GtSourceCoderAptitude,
-	#superclass : #BrAptitude,
-	#category : #'GToolkit-Coder-UI-Coder - Source Look'
+	#name : 'GtSourceCoderAptitude',
+	#superclass : 'BrAptitude',
+	#category : 'GToolkit-Coder-UI-Coder - Source Look'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtSourceCoderAptitude >> coder [
 	self
 		deprecated: 'Please use #sourceCoderUIModel instead'
@@ -13,7 +13,7 @@ GtSourceCoderAptitude >> coder [
 	^ self sourceCoderUIModel
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderAptitude >> initializeListeners [
 	super initializeListeners.
 	
@@ -22,18 +22,18 @@ GtSourceCoderAptitude >> initializeListeners [
 			ifNotNil: [ :aSourceCoder | self onCoderChanged: aSourceCoder ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderAptitude >> initializeRequests [
 	super initializeRequests.
 	
 	self request: GtSourceCoderContentCoderRequest new
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 GtSourceCoderAptitude >> onCoderChanged: aGtSourceCoder [
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtSourceCoderAptitude >> sourceCoderUIModel [
 	<return: #GtSourceCoderViewModel>
 

@@ -4,19 +4,19 @@ I show a simple list of classes sorting alphabetically
 
 "
 Class {
-	#name : #GtCoderNavigationClassesListElement,
-	#superclass : #BrSimpleList,
+	#name : 'GtCoderNavigationClassesListElement',
+	#superclass : 'BrSimpleList',
 	#traits : 'TGtCoderNavigationClassesHelper',
 	#classTraits : 'TGtCoderNavigationClassesHelper classTrait',
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtCoderNavigationClassesListElement class >> fromClasses: aCollectionOfClasses [
 	^ self new initializeWithClasses: aCollectionOfClasses
 ]
 
-{ #category : #'private - ui' }
+{ #category : 'private - ui' }
 GtCoderNavigationClassesListElement >> buildClassLabel: aClass [
 	| aLook aText |
 	aLook := (BrGlamorousLabelAptitude new fontSize: 12).
@@ -36,7 +36,7 @@ GtCoderNavigationClassesListElement >> buildClassLabel: aClass [
 		text: aText.
 ]
 
-{ #category : #'private - ui' }
+{ #category : 'private - ui' }
 GtCoderNavigationClassesListElement >> buildClassRow: aClass index: aRowIndex list: aListElement [
 	^ BrWidgetContainer new
 		layout: BlLinearLayout horizontal;
@@ -66,14 +66,14 @@ GtCoderNavigationClassesListElement >> buildClassRow: aClass index: aRowIndex li
 		addChild: (self buildClassLabel: aClass)
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderNavigationClassesListElement >> initialize [
 	super initialize.
 	
 	self stencil: [ :eachClass :eachIndex :aListElement | self buildClassRow: eachClass index: eachIndex list: aListElement ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderNavigationClassesListElement >> initializeWithClasses: aCollectionOfClasses [	
 	self items: (aCollectionOfClasses sorted: [ :classA :classB | classA name < classB name ])
 ]

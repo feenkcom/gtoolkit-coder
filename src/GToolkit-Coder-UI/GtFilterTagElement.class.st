@@ -12,17 +12,17 @@ The following example shows a coder with default filters element that you can ch
 
 "
 Class {
-	#name : #GtFilterTagElement,
-	#superclass : #BrHorizontalPane,
+	#name : 'GtFilterTagElement',
+	#superclass : 'BrHorizontalPane',
 	#instVars : [
 		'descriptor',
 		'valueString',
 		'filterElement'
 	],
-	#category : #'GToolkit-Coder-UI-Filters'
+	#category : 'GToolkit-Coder-UI-Filters'
 }
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtFilterTagElement >> activateEditor [
 	self
 		childNamed: #editableLabel
@@ -33,14 +33,14 @@ GtFilterTagElement >> activateEditor [
 		ifNone: [ (self childNamed: #dropDown) requestFocus ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtFilterTagElement >> applyDescriptor: aDescriptor [
 	self descriptor: aDescriptor.
 	self activateEditor.
 	filterElement applyFilters
 ]
 
-{ #category : #elements }
+{ #category : 'elements' }
 GtFilterTagElement >> buildTagElements [
 	self removeChildren.
 	self addChild: self createDropDown as: #dropDown.
@@ -48,7 +48,7 @@ GtFilterTagElement >> buildTagElements [
 		ifTrue: [ self addChild: self createEditableLabel as: #editableLabel ]
 ]
 
-{ #category : #elements }
+{ #category : 'elements' }
 GtFilterTagElement >> createDropDown [
 	| button dropDownLook |
 	button := self createDropDownButton.
@@ -98,7 +98,7 @@ GtFilterTagElement >> createDropDown [
 	^ button
 ]
 
-{ #category : #elements }
+{ #category : 'elements' }
 GtFilterTagElement >> createDropDownButton [
 	| button |
 	button := BrButton new.
@@ -114,7 +114,7 @@ GtFilterTagElement >> createDropDownButton [
 	^ button
 ]
 
-{ #category : #elements }
+{ #category : 'elements' }
 GtFilterTagElement >> createEditableLabel [
 	| label |
 	label := BrEditableLabel new.
@@ -154,29 +154,29 @@ GtFilterTagElement >> createEditableLabel [
 	^ label
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFilterTagElement >> descriptor [
 	^ descriptor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFilterTagElement >> descriptor: aFilterDescriptor [
 	descriptor := aFilterDescriptor.
 	valueString := ''.
 	self buildTagElements
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtFilterTagElement >> emptyDefaultValueLabel [
 	^ descriptor emptyDefaultValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFilterTagElement >> filter: aGtMethodsFilter [
 	filterElement := aGtMethodsFilter
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtFilterTagElement >> initialize [
 	super initialize.
 	self fitContent.
@@ -193,7 +193,7 @@ GtFilterTagElement >> initialize [
 						self theme status neutralBackgroundColor darker ])
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtFilterTagElement >> isDefaultAllFilter [
 	^ self descriptor showAsDefaultWhenEmpty
 		and: [ valueString isEmpty
@@ -201,18 +201,18 @@ GtFilterTagElement >> isDefaultAllFilter [
 					[ (self childNamed: #editableLabel) text asString = self emptyDefaultValueLabel ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtFilterTagElement >> isValid [
 	^ descriptor valueIsRequired not or: [ self valueString notEmpty ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtFilterTagElement >> makeDefaultFilter [
 	valueString := ''.
 	self setLabelText: self emptyDefaultValueLabel
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtFilterTagElement >> setLabelText: aString [
 	self
 		childNamed: #editableLabel
@@ -223,12 +223,12 @@ GtFilterTagElement >> setLabelText: aString [
 						append: aString asRopedText glamorousRegularFont glamorousRegularSmallSize ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFilterTagElement >> valueString [
 	^ valueString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtFilterTagElement >> valueString: aString [
 	valueString := aString.
 	self setLabelText: aString

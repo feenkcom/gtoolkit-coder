@@ -1,10 +1,10 @@
 Class {
-	#name : #GtDiffShadowAptitude,
-	#superclass : #GtDiffAptitude,
-	#category : #'GToolkit-Coder-UI-Diff'
+	#name : 'GtDiffShadowAptitude',
+	#superclass : 'GtDiffAptitude',
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDiffShadowAptitude >> initialize [
 	super initialize.
 	
@@ -28,7 +28,7 @@ GtDiffShadowAptitude >> initialize [
 	self add: (self newShadowLook // GtDiffNewTextId)
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDiffShadowAptitude >> newSeparatorLook [
 	^ BrSizeAdjustmentAptitude new
 		normal: [ :aStyle | aStyle hExact: 40 ];
@@ -37,7 +37,7 @@ GtDiffShadowAptitude >> newSeparatorLook [
 		mini: [ :aStyle | aStyle hExact: 10 ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDiffShadowAptitude >> newShadowLook [
 	^ BrStyleCommonAptitude new
 		default: [ :aStyle |
@@ -47,7 +47,7 @@ GtDiffShadowAptitude >> newShadowLook [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDiffShadowAptitude >> newTextLook [
 	^ BrSizeAdjustmentAptitude new
 		normal: [ :aStyle |

@@ -1,18 +1,18 @@
 Class {
-	#name : #GtTextualCoderViewModelAddOnsChanged,
-	#superclass : #GtTextualCoderViewModelAnnouncement,
+	#name : 'GtTextualCoderViewModelAddOnsChanged',
+	#superclass : 'GtTextualCoderViewModelAnnouncement',
 	#instVars : [
 		'addOns'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Textual Model - Events'
+	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextualCoderViewModelAddOnsChanged >> addOns [
 	^ addOns
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextualCoderViewModelAddOnsChanged >> addOns: anObject [
 	addOns := anObject
 ]

@@ -1,13 +1,13 @@
 Class {
-	#name : #GtCoderSpotterStart,
-	#superclass : #Object,
+	#name : 'GtCoderSpotterStart',
+	#superclass : 'Object',
 	#instVars : [
 		'navigationModelBlock'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : #searching }
+{ #category : 'searching' }
 GtCoderSpotterStart >> gtSpotterForClassMethodsInCurrentClassFor: aStep [
 	<gtSearch>
 	self navigationModel hasSelectedClass
@@ -20,7 +20,7 @@ GtCoderSpotterStart >> gtSpotterForClassMethodsInCurrentClassFor: aStep [
 		wantsToDisplayOnEmptyQuery: true
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 GtCoderSpotterStart >> gtSpotterForClassesFor: aStep [
 	<gtSearch>
 	aStep listProcessor
@@ -33,7 +33,7 @@ GtCoderSpotterStart >> gtSpotterForClassesFor: aStep [
 		wantsToDisplayOnEmptyQuery: self navigationModel hasSelectedClass not
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 GtCoderSpotterStart >> gtSpotterForInstanceMethodsInCurrentClassFor: aStep [
 	<gtSearch>
 	self navigationModel hasSelectedClass
@@ -46,7 +46,7 @@ GtCoderSpotterStart >> gtSpotterForInstanceMethodsInCurrentClassFor: aStep [
 		wantsToDisplayOnEmptyQuery: true
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 GtCoderSpotterStart >> gtSpotterForMessagesFor: aStep [
 	<gtSearch>
 	aStep listProcessor
@@ -62,7 +62,7 @@ GtCoderSpotterStart >> gtSpotterForMessagesFor: aStep [
 		wantsToDisplayOnEmptyQuery: false
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 GtCoderSpotterStart >> gtSpotterForPackagesFor: aStep [
 	<gtSearch>
 	aStep listProcessor
@@ -75,7 +75,7 @@ GtCoderSpotterStart >> gtSpotterForPackagesFor: aStep [
 		wantsToDisplayOnEmptyQuery: self navigationModel hasSelectedPackage not
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 GtCoderSpotterStart >> gtSpotterImplementorsFor: aStep [
 	<gtSearch>
 	self flag: #specialFilter.
@@ -90,17 +90,17 @@ GtCoderSpotterStart >> gtSpotterImplementorsFor: aStep [
 		wantsToDisplayOnEmptyQuery: false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderSpotterStart >> navigationModel [
 	^ navigationModelBlock value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderSpotterStart >> navigationModelBlock: aBlock [
 	navigationModelBlock := aBlock
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 GtCoderSpotterStart >> printOn: aStream [
 	aStream nextPutAll: 'Spotter'
 ]

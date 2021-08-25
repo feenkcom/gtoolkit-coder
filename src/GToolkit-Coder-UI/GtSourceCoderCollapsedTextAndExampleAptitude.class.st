@@ -12,34 +12,34 @@ If a method is ** an example, I omit displaying the example result: {{gtExample:
 
 "
 Class {
-	#name : #GtSourceCoderCollapsedTextAndExampleAptitude,
-	#superclass : #GtSourceCoderAptitude,
+	#name : 'GtSourceCoderCollapsedTextAndExampleAptitude',
+	#superclass : 'GtSourceCoderAptitude',
 	#instVars : [
 		'container',
 		'methodLabel',
 		'exampleElement'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Look'
+	#category : 'GToolkit-Coder-UI-Coder - Source Look'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> container [
 	<return: #BrHorizontalPane>
 	^ container
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> exampleElement [
 	<return: #BlElement>
 	^ exampleElement
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> hide [
 	self exampleElement visibility: BlVisibility hidden
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> initialize [
 	super initialize.
 	self initializeMethodLabel.
@@ -53,20 +53,20 @@ GtSourceCoderCollapsedTextAndExampleAptitude >> initialize [
 	self addChangeAddChildAs: #(content label) with: [ self container ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> initializeContainer [
 	container := BrHorizontalPane new
 		fitContent;
 		alignCenterLeft
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> initializeExampleElement [
 	exampleElement := GtCoderExampleStateElement new
 		margin: (BlInsets top: 4 left: 1 bottom: 1 right: 1).
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> initializeListeners [
 	super initializeListeners.
 	
@@ -77,19 +77,19 @@ GtSourceCoderCollapsedTextAndExampleAptitude >> initializeListeners [
 			focused: true ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> initializeMethodLabel [
 	methodLabel := BrLabel new
 		aptitude: BrGlamorousLabelAptitude new editorMeasurement bold glamorousCodeFont
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> methodLabel [
 	<return: #BrLabel>
 	^ methodLabel
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> onCoderChanged: aGtSourceCoderUIModel [
 	self widget coderUIModel
 		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
@@ -104,22 +104,22 @@ GtSourceCoderCollapsedTextAndExampleAptitude >> onCoderChanged: aGtSourceCoderUI
 		to: self
 ]
 
-{ #category : #'private - announcement handling' }
+{ #category : 'private - announcement handling' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> onCollapsedLabelChanged: anAnnouncement [
 	self updateLabelsFor: anAnnouncement coder
 ]
 
-{ #category : #'private - announcement handling' }
+{ #category : 'private - announcement handling' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> onExampleExecuted: anAnnouncement [
 	self updateExampleElementFor: anAnnouncement coder
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> show [
 	self exampleElement visibility: BlVisibility visible
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> updateExampleElementFor: aSourceCoder [
 	aSourceCoder canExecuteExample
 		ifFalse: [ self hide.
@@ -129,13 +129,13 @@ GtSourceCoderCollapsedTextAndExampleAptitude >> updateExampleElementFor: aSource
 	self exampleElement example: aSourceCoder example
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> updateLabelsFor: aSourceCoder [
 	self updateMethodLabelFor: aSourceCoder.
 	self updateExampleElementFor: aSourceCoder.
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> updateMethodLabelFor: aSourceCoder [
 	self methodLabel text: aSourceCoder collapsedText
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : #GtCoder2,
-	#superclass : #BlElement,
+	#name : 'GtCoder2',
+	#superclass : 'BlElement',
 	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolDetailAdjustable + TGtWithCoderToolViewModel + TBrLayoutResizable',
 	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolDetailAdjustable classTrait + TGtWithCoderToolViewModel classTrait + TBrLayoutResizable classTrait',
 	#instVars : [
@@ -9,10 +9,10 @@ Class {
 		'navigationBreacrumb',
 		'navigationSidebar'
 	],
-	#category : #'GToolkit-Coder-UI-! Core'
+	#category : 'GToolkit-Coder-UI-! Core'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder2 >> createCoderContainer [
 	"A container that contains an actual current coder element. The content of the container
 	is replaced every time a coder is pushed or popped" 
@@ -21,7 +21,7 @@ GtCoder2 >> createCoderContainer [
 		matchParent
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder2 >> createGoBackButton [
 	^ BrButton new
 		aptitude: BrGlamorousButtonWithLabelAptitude;
@@ -29,19 +29,19 @@ GtCoder2 >> createGoBackButton [
 		action: [ self coderToolViewModel popCoderViewModel ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder2 >> createNavigationBreadcrumb [
 	^ BrHorizontalPane new
 		hMatchParent;
 		vFitContent
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder2 >> createNavigationSidebar [
 	^ GtPhlowHorizontalSidebarElement new beLeft
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder2 >> initialize [
 	super initialize.
 	
@@ -80,12 +80,12 @@ GtCoder2 >> initialize [
 	
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder2 >> navigationStencil: aStencil [
 	navigationSidebar contentStencil: aStencil
 ]
 
-{ #category : #'api - coder tool view model' }
+{ #category : 'api - coder tool view model' }
 GtCoder2 >> onCoderToolViewModelChanged [
 	"Is sent when a new coderTool view model is assigned to the element.
 	Note: #onCoderToolViewModelChanged is sent before #subscribeToCoderToolViewModel
@@ -97,25 +97,25 @@ GtCoder2 >> onCoderToolViewModelChanged [
 	self rebuildTopCoderElement
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtCoder2 >> onViewModelCoderPopped: anAnnouncement [
 	self updateGoBackButton.
 	self rebuildTopCoderElement.
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtCoder2 >> onViewModelCoderPushed: anAnnouncement [
 	self updateGoBackButton.
 	self rebuildTopCoderElement
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtCoder2 >> pagerWindowTitle [
 	<return: #String>
 	^ self shortTitle
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtCoder2 >> rebuildTopCoderElement [
 	coderContainer removeChildren.
 	
@@ -123,7 +123,7 @@ GtCoder2 >> rebuildTopCoderElement [
 		ifTrue: [ coderContainer addChild: self coderToolViewModel currentCoderViewModel asElement ]
 ]
 
-{ #category : #'api - coder tool view model' }
+{ #category : 'api - coder tool view model' }
 GtCoder2 >> subscribeToCoderToolViewModel [
 	"Is sent after a new coderTool view model is assigned to the element.
 	It is required to unsubscribe from the view model or domain model by implementing
@@ -134,7 +134,7 @@ GtCoder2 >> subscribeToCoderToolViewModel [
 		when: GtCoderToolViewModelCoderPopped send: #onViewModelCoderPopped: to: self
 ]
 
-{ #category : #'api - coder tool view model' }
+{ #category : 'api - coder tool view model' }
 GtCoder2 >> unsubscribeFromCoderToolViewModel [
 	"Is sent before a new coderTool view model is assigned to the element.
 	Elements that subscribe to coderTool view model in domain model are required to implement this methods."
@@ -142,7 +142,7 @@ GtCoder2 >> unsubscribeFromCoderToolViewModel [
 	self coderToolViewModel unsubscribe: self
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtCoder2 >> updateGoBackButton [
 	goBackButton enabled: self coderToolViewModel canGoBack
 ]

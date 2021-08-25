@@ -1,13 +1,13 @@
 Class {
-	#name : #GtSourceCoderCollapsedTextAptitude,
-	#superclass : #GtSourceCoderAptitude,
+	#name : 'GtSourceCoderCollapsedTextAptitude',
+	#superclass : 'GtSourceCoderAptitude',
 	#instVars : [
 		'label'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Look'
+	#category : 'GToolkit-Coder-UI-Coder - Source Look'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderCollapsedTextAptitude >> initialize [
 	super initialize.
 	
@@ -15,7 +15,7 @@ GtSourceCoderCollapsedTextAptitude >> initialize [
 	self addChangeAddChildAs: { #content . GtSourceCoderCollapsedTextId } with: [ label ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderCollapsedTextAptitude >> initializeListeners [
 	super initializeListeners.
 	
@@ -26,13 +26,13 @@ GtSourceCoderCollapsedTextAptitude >> initializeListeners [
 			focused: true ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtSourceCoderCollapsedTextAptitude >> newLabel [
 	^ BrLabel new
 		aptitude: BrGlamorousLabelAptitude new editorMeasurement bold glamorousCodeFont
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderCollapsedTextAptitude >> onCoderChanged: aGtSourceCoderUIModel [
 	self widget coderUIModel
 		ifNotNil: [ :aPreviousCoder | aPreviousCoder coder announcer unsubscribe: self ].
@@ -43,12 +43,12 @@ GtSourceCoderCollapsedTextAptitude >> onCoderChanged: aGtSourceCoderUIModel [
 		to: self
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtSourceCoderCollapsedTextAptitude >> updateLabel: anAnnouncement [
 	self updateLabelFor: anAnnouncement coder
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtSourceCoderCollapsedTextAptitude >> updateLabelFor: aSourceCoder [
 	label text: aSourceCoder collapsedText
 ]

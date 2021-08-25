@@ -7,28 +7,28 @@ I display {{gtClass:GtCoderContentElement}} and {{gtClass:GtPageElement}}.
 
 "
 Class {
-	#name : #GtCoderPlaygroundElement,
-	#superclass : #GtCoderNavigationModelElement,
+	#name : 'GtCoderPlaygroundElement',
+	#superclass : 'GtCoderNavigationModelElement',
 	#instVars : [
 		'contentElement',
 		'playPageElement',
 		'playPage'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtCoderPlaygroundElement >> contentElement [
 	<return: #GtCoderContentElement>
 	^ contentElement
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 GtCoderPlaygroundElement >> defaultPlayPage [
 	^ GtPlayPage newDefault.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderPlaygroundElement >> initialize [
 	super initialize.
 	playPage := self defaultPlayPage.
@@ -43,12 +43,12 @@ GtCoderPlaygroundElement >> initialize [
 	self addAptitude: (BrLayoutResizerAptitude inherit).
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderPlaygroundElement >> initializeContentElement [
 	contentElement := GtCoderContentElement new.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderPlaygroundElement >> initializePlayPageElement [
 	| aStencil |
 	aStencil := GtPlayPageStencil new
@@ -62,51 +62,51 @@ GtCoderPlaygroundElement >> initializePlayPageElement [
 		contentStencil: aStencil
 ]
 
-{ #category : #'private - hooks' }
+{ #category : 'private - hooks' }
 GtCoderPlaygroundElement >> onClassSelected: anEvent [
 	self playPage receiver: anEvent theClass.
 	self playPage xDocLoadSavedContent.
 
 ]
 
-{ #category : #'private - hooks' }
+{ #category : 'private - hooks' }
 GtCoderPlaygroundElement >> onNavigationModelChanged [
 	super onNavigationModelChanged.
 	self contentElement navigationModel: self navigationModel.
 	self updatePlayground.
 ]
 
-{ #category : #'private - hooks' }
+{ #category : 'private - hooks' }
 GtCoderPlaygroundElement >> onPackageSelected: anEvent [
 	self playPage receiver: anEvent package.
 	self playPage xDocLoadSavedContent.
 ]
 
-{ #category : #'private - hooks' }
+{ #category : 'private - hooks' }
 GtCoderPlaygroundElement >> onPackageTagSelected: anEvent [
 	self playPage receiver: anEvent tag.
 	self playPage xDocLoadSavedContent.
 ]
 
-{ #category : #'private - hooks' }
+{ #category : 'private - hooks' }
 GtCoderPlaygroundElement >> onPackagesSelected: anEvent [
 	self playPage receiver: Smalltalk.
 	self playPage xDocLoadSavedContent.
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtCoderPlaygroundElement >> playPage [
 	<return: #GtPlayPage>
 	^ playPage
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtCoderPlaygroundElement >> playPageElement [
 	<return: #GtPhlowVerticalSidebarElement>
 	^ playPageElement
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtCoderPlaygroundElement >> receiver [
 	self navigationModel selectedClassDo: [ :aClass | ^ aClass ].
 	self navigationModel selectedTagDo: [ :aPackageTag | ^ aPackageTag ].
@@ -114,7 +114,7 @@ GtCoderPlaygroundElement >> receiver [
 	^ Smalltalk
 ]
 
-{ #category : #'private - subscriptions' }
+{ #category : 'private - subscriptions' }
 GtCoderPlaygroundElement >> subscribeToNavigationModel [
 	super subscribeToNavigationModel.
 	self navigationModel weak
@@ -124,7 +124,7 @@ GtCoderPlaygroundElement >> subscribeToNavigationModel [
 		when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtCoderPlaygroundElement >> updatePlayground [
 	self playPage receiver: self receiver.
 	self playPage xDocLoadSavedContent.
