@@ -4,20 +4,20 @@ I show a list of classes grouping them based on the inheritance hierarchy and so
 
 "
 Class {
-	#name : #GtCoderNavigationClassesHierarchyTreeElement,
-	#superclass : #BrSimpleTree,
+	#name : 'GtCoderNavigationClassesHierarchyTreeElement',
+	#superclass : 'BrSimpleTree',
 	#instVars : [
 		'classesTree'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtCoderNavigationClassesHierarchyTreeElement class >> fromClasses: aCollectionOfClasses [
 	^ self new initializeWithClasses: aCollectionOfClasses
 ]
 
-{ #category : #'private - ui' }
+{ #category : 'private - ui' }
 GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
 	| aClassDepth |
 	aClassDepth := 0.
@@ -26,7 +26,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
 	self expandUpTo: aClassDepth + 1
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
 	
@@ -51,7 +51,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 							aText ]) ]
 ]
 
-{ #category : #'api - initialization' }
+{ #category : 'api - initialization' }
 GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollectionOfClasses [
 	classesTree := (GtCoderClassesHierarchyTree
 		fromClasses: aCollectionOfClasses) sortByClassName.
@@ -61,7 +61,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollecti
 	self expandAll
 ]
 
-{ #category : #'api - initialization' }
+{ #category : 'api - initialization' }
 GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: aClass [
 	classesTree := (GtCoderGrowingClassesHierarchyTree
 		hierarchyForClass: aClass) sortByClassName.
@@ -71,14 +71,14 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 	self expandAll
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtCoderNavigationClassesHierarchyTreeElement >> selectedClass [
 	<return: #Class or: nil>
 	self selectedNodeDo: [ :aNode | ^ aNode value rootClass ].
 	^ nil
 ]
 
-{ #category : #'api - selection' }
+{ #category : 'api - selection' }
 GtCoderNavigationClassesHierarchyTreeElement >> selectedIndice [
 	"Return selected indice or zero"
 	

@@ -1,15 +1,15 @@
 Class {
-	#name : #GtDefineTemporaryFixItAction,
-	#superclass : #GtFixItVariableNodeAction,
-	#category : #'GToolkit-Coder-AddOns-FixIt'
+	#name : 'GtDefineTemporaryFixItAction',
+	#superclass : 'GtFixItVariableNodeAction',
+	#category : 'GToolkit-Coder-AddOns-FixIt'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDefineTemporaryFixItAction >> description [
 	^ 'Add temporary variable ' , self nodeName
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtDefineTemporaryFixItAction >> executeOn: anEditorElement [
 	| ast newSource location declaration |
 
@@ -28,7 +28,7 @@ GtDefineTemporaryFixItAction >> executeOn: anEditorElement [
 	sourceCoder currentSourceString: newSource
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDefineTemporaryFixItAction >> id [
 	<return: #BlElementId>
 

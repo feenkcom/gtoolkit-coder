@@ -1,9 +1,9 @@
 Trait {
-	#name : #TGtCoderNavigationClassesHelper,
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#name : 'TGtCoderNavigationClassesHelper',
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
-{ #category : #'private - ui' }
+{ #category : 'private - ui' }
 TGtCoderNavigationClassesHelper >> buildClassLabel: aClass [
 	| aLook aText |
 	aLook := (BrGlamorousLabelAptitude new fontSize: 12).
@@ -23,12 +23,12 @@ TGtCoderNavigationClassesHelper >> buildClassLabel: aClass [
 		text: aText.
 ]
 
-{ #category : #'private - testing' }
+{ #category : 'private - testing' }
 TGtCoderNavigationClassesHelper >> isAbstractClass: aClass [
 	^ aClass isAbstract or: [ aClass hasAbstractMethods ]
 ]
 
-{ #category : #'private - testing' }
+{ #category : 'private - testing' }
 TGtCoderNavigationClassesHelper >> isDeprecatedClass: aClass [
 	^ aClass isDeprecated
 ]

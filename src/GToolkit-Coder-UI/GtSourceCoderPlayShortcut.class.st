@@ -1,27 +1,27 @@
 Class {
-	#name : #GtSourceCoderPlayShortcut,
-	#superclass : #GtSourceCoderShortcut,
-	#category : #'GToolkit-Coder-UI-Shortcuts'
+	#name : 'GtSourceCoderPlayShortcut',
+	#superclass : 'GtSourceCoderShortcut',
+	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderPlayShortcut >> description [
 	^ 'Compiles, saves and evaluates the whole source code (method) or just the selection.'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderPlayShortcut >> initialize [
 	super initialize.
 	
 	combination := BlKeyCombination primaryD
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderPlayShortcut >> name [
 	^ 'Save and play'
 ]
 
-{ #category : #evaluation }
+{ #category : 'evaluation' }
 GtSourceCoderPlayShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [	
 	GtCoderExecutionContextVariable
 		element: aBrEditorElement

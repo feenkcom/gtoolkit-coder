@@ -1,10 +1,10 @@
 Class {
-	#name : #GtCodeDefinitionSingleReader,
-	#superclass : #GtCodeDefinitionSingleViewer,
-	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#name : 'GtCodeDefinitionSingleReader',
+	#superclass : 'GtCodeDefinitionSingleViewer',
+	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : #'api - instantiation' }
+{ #category : 'api - instantiation' }
 GtCodeDefinitionSingleReader >> create [
 	<return: #Object>
 	| aDefinition theInitialName aLabel anOwner |

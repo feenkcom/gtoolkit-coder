@@ -1,6 +1,6 @@
 Class {
-	#name : #GtTextualCoderEditorElement,
-	#superclass : #BrEditor,
+	#name : 'GtTextualCoderEditorElement',
+	#superclass : 'BrEditor',
 	#traits : 'TBlAssertUIProcess + TGtWithTextualCoderViewModel',
 	#classTraits : 'TBlAssertUIProcess classTrait + TGtWithTextualCoderViewModel classTrait',
 	#instVars : [
@@ -9,15 +9,15 @@ Class {
 		'evaluationPrinter',
 		'shortcuts'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Textual'
+	#category : 'GToolkit-Coder-UI-Coder - Textual'
 }
 
-{ #category : #'api - textual coder view model' }
+{ #category : 'api - textual coder view model' }
 GtTextualCoderEditorElement >> coderUIModel: aTextualCoderViewModel [
 	self textualCoderViewModel: aTextualCoderViewModel
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtTextualCoderEditorElement >> createContextMenuContent [
 	"wait for the addons to be computed"
 	| theContextMenu |
@@ -39,7 +39,7 @@ GtTextualCoderEditorElement >> createContextMenuContent [
 	^ theContextMenu
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtTextualCoderEditorElement >> hideHighlighters [
 	self text clearAttributes: [ :eachAttribute | 
 		eachAttribute isKindOf: GtSourceCoderErrorAttribute ].
@@ -47,7 +47,7 @@ GtTextualCoderEditorElement >> hideHighlighters [
 	evaluationPrinter hideResultSynchronously.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtTextualCoderEditorElement >> highlightPCRangeForInterval: aSelectionInterval [
 	self textualCoderViewModel isModified
 		ifTrue: [ ^ self ].
@@ -61,7 +61,7 @@ GtTextualCoderEditorElement >> highlightPCRangeForInterval: aSelectionInterval [
 				beNotOverwritableByStyler ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtTextualCoderEditorElement >> initialize [
 	super initialize.
 	
@@ -84,7 +84,7 @@ GtTextualCoderEditorElement >> initialize [
 	self initializeListeners
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtTextualCoderEditorElement >> initializeListeners [
 	self when: BlFocusInEvent do: [ :anEvent |
 		self textualCoderViewModel focused: true from: self ].
@@ -111,13 +111,13 @@ GtTextualCoderEditorElement >> initializeListeners [
 		do: [ :anEvent | self textualCoderViewModel styledText: anEvent styledText ]
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onCodeEvaluated: anEvaluationAnnouncement [
 	evaluationHighlighter displayResult: anEvaluationAnnouncement evaluationResult.
 	evaluationPrinter hideResult
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onCoderParseError: aGtCoderParseError [
 	"A parse error can be notifying from a non-UI thread"
 
@@ -127,14 +127,14 @@ GtTextualCoderEditorElement >> onCoderParseError: aGtCoderParseError [
 			at: aGtCoderParseError location ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onCoderViewModelFocused: aBoolean [
 	aBoolean
 		ifTrue: [ self requestFocus ]
 		ifFalse: [ self loseFocus ]
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onContextPCRangeChanged: aContextPCRangeChangedAnnouncement [
 	| selectionInterval |
 	
@@ -142,7 +142,7 @@ GtTextualCoderEditorElement >> onContextPCRangeChanged: aContextPCRangeChangedAn
 	self highlightPCRangeForInterval: selectionInterval
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onCursorsChanged: aCursorsChangedAnnouncement [
 	"Is sent when the cursors change in the View Model.
 	May be sent from a non-UI thread"
@@ -160,7 +160,7 @@ GtTextualCoderEditorElement >> onCursorsChanged: aCursorsChangedAnnouncement [
 			apply ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
 	self assertUIProcess.
 
@@ -173,7 +173,7 @@ GtTextualCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
 	self onCoderViewModelFocused: anAnnouncement focused
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onObjectSpawnRequest: anAnnouncement [
 	self enqueueTask: (BlTaskAction new action: [
 		self phlow
@@ -181,7 +181,7 @@ GtTextualCoderEditorElement >> onObjectSpawnRequest: anAnnouncement [
 			withDestination: anAnnouncement spawnDestination ])
 ]
 
-{ #category : #'api - textual coder view model' }
+{ #category : 'api - textual coder view model' }
 GtTextualCoderEditorElement >> onPostTextualCoderViewModelChanged [
 	"I am an optional hook method that is sent after #subscribeToTextualCoderViewModel.
 	I do nothing by default but allow users to perform update operations when a receiver object is already
@@ -194,13 +194,13 @@ GtTextualCoderEditorElement >> onPostTextualCoderViewModelChanged [
 	self textualCoderViewModel addOnsAsyncDo: [ :theAddOns | self onViewModelReadyToStyle ]
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onPrintRequest: anEvaluationAnnouncement [
 	evaluationHighlighter hideResult.
 	evaluationPrinter displayResult: anEvaluationAnnouncement evaluationResult.
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onShowDebuggerRequest: aShowDebuggerAnnouncement [
 	| sharedDebugSession anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText |
 	
@@ -236,19 +236,19 @@ GtTextualCoderEditorElement >> onShowDebuggerRequest: aShowDebuggerAnnouncement 
 			debugSession: sharedDebugSession)
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onStyleTextRequest: anEvent [
 	"onStyleTextRequest: may be sent from a non-UI thread"
 
 	self enqueueTask: (BlTaskAction new action: [ self styleTextAndAfterDo: anEvent afterAction ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onStylersUpdated: anAnnouncement [
 	
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onTextModified [
 	"Is sent when the text changes in the editor. Here we should synchronise the UI and the model."
 
@@ -258,7 +258,7 @@ GtTextualCoderEditorElement >> onTextModified [
 		synchronously: true
 ]
 
-{ #category : #'api - textual coder view model' }
+{ #category : 'api - textual coder view model' }
 GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	"Is sent when a new textualCoder view model is assigned to the element.
 	Note: #onTextualCoderViewModelChanged is sent before #subscribeToTextualCoderViewModel
@@ -281,7 +281,7 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	completion strategy: self textualCoderViewModel coderModel completionStrategy
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onToolSpawnRequest: anAnnouncement [
 	self enqueueTask: (BlTaskAction new action: [
 		self phlow
@@ -289,12 +289,12 @@ GtTextualCoderEditorElement >> onToolSpawnRequest: anAnnouncement [
 			withDestination: anAnnouncement spawnDestination ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onUpdateAddOnsRequest: anAnnouncement [
 	
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnouncement [
 	"Is sent when the cursors changes in the View Model.
 	May be sent from a non-UI thread"
@@ -315,12 +315,12 @@ GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnounc
 			apply ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelReadyToStyle [
 	self enqueueTask: (BlTaskAction new action: [ self editor styleText ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelSelectionChanged: aSelectionChangedAnnouncement [
 	"Is sent when the selection changes in the View Model.
 	May be sent from a non-UI thread"
@@ -341,7 +341,7 @@ GtTextualCoderEditorElement >> onViewModelSelectionChanged: aSelectionChangedAnn
 			select ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelShortcutsChanged [
 	"Is sent when the shortcuts change in the View Model.
 	May be sent from a non-UI thread"
@@ -353,17 +353,17 @@ GtTextualCoderEditorElement >> onViewModelShortcutsChanged [
 		self editor addEditorShortcuts: shortcuts ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelStyledTextChanged: anAnnouncement [
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelStylersChanged [
 	self enqueueTask: (BlTaskAction new
 		action: [ self styler: self textualCoderViewModel compositeStyler ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextAttributesAdded: anAnnouncement [
 	self enqueueTask: (BlTaskAction new action: [
 		anAnnouncement coderTextAttributes
@@ -372,13 +372,13 @@ GtTextualCoderEditorElement >> onViewModelTextAttributesAdded: anAnnouncement [
 			to: anAnnouncement stopPosition ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextAttributesRemoved: anAnnouncement [
 	self enqueueTask: (BlTaskAction new action: [
 		anAnnouncement coderTextAttributes removeFromEditorText: self text ])
 ]
 
-{ #category : #'private - event handling' }
+{ #category : 'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelTextChanged [
 
 	aGtTextualCoderViewModelTextChanged source == self
@@ -393,7 +393,7 @@ GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelT
 			self hideHighlighters ]) ]
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 GtTextualCoderEditorElement >> registerCoderModelAnnouncementsFor: aCoderModel [
 	aCoderModel announcer weak
 		when: GtCoderAddOnsUpdateRequest
@@ -415,7 +415,7 @@ GtTextualCoderEditorElement >> registerCoderModelAnnouncementsFor: aCoderModel [
 			to: self
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel weak
 		when: GtMethodCoderContextPCRangeChanged
@@ -454,7 +454,7 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 			to: self.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtTextualCoderEditorElement >> reportParseError: aString at: anInteger [
 	| text position |
 
@@ -471,17 +471,17 @@ GtTextualCoderEditorElement >> reportParseError: aString at: anInteger [
 		to: position
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtTextualCoderEditorElement >> styleText [
 	self editor styleText
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtTextualCoderEditorElement >> styleTextAndAfterDo: aBlock [
 	self editor styleTextAndAfterDo: aBlock
 ]
 
-{ #category : #'api - textual coder view model' }
+{ #category : 'api - textual coder view model' }
 GtTextualCoderEditorElement >> subscribeToTextualCoderViewModel [
 	"Is sent after a new textualCoder view model is assigned to the element.
 	It is required to unsubscribe from the view model or domain model by implementing
@@ -493,7 +493,7 @@ GtTextualCoderEditorElement >> subscribeToTextualCoderViewModel [
 	completion install
 ]
 
-{ #category : #'api - textual coder view model' }
+{ #category : 'api - textual coder view model' }
 GtTextualCoderEditorElement >> unsubscribeFromTextualCoderViewModel [
 	"Is sent before a new textualCoder view model is assigned to the element.
 	Elements that subscribe to textualCoder view model in domain model are required to implement this methods."

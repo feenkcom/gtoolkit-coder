@@ -1,27 +1,27 @@
 Class {
-	#name : #GtSourceCoderExtractMethodShortcut,
-	#superclass : #GtSourceCoderShortcut,
-	#category : #'GToolkit-Coder-UI-Shortcuts'
+	#name : 'GtSourceCoderExtractMethodShortcut',
+	#superclass : 'GtSourceCoderShortcut',
+	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderExtractMethodShortcut >> description [
 	^ 'Extracts the selected code into a new method.'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderExtractMethodShortcut >> initialize [
 	super initialize.
 	
 	combination := BlKeyCombination primaryE
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderExtractMethodShortcut >> name [
 	^ 'Extract method'
 ]
 
-{ #category : #evaluation }
+{ #category : 'evaluation' }
 GtSourceCoderExtractMethodShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
 	aGtSourceCoder extractMethod: aBrEditorElement
 ]

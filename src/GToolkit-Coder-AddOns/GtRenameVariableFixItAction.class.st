@@ -1,18 +1,18 @@
 Class {
-	#name : #GtRenameVariableFixItAction,
-	#superclass : #GtFixItVariableNodeAction,
+	#name : 'GtRenameVariableFixItAction',
+	#superclass : 'GtFixItVariableNodeAction',
 	#instVars : [
 		'newName'
 	],
-	#category : #'GToolkit-Coder-AddOns-FixIt'
+	#category : 'GToolkit-Coder-AddOns-FixIt'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameVariableFixItAction >> description [
 	^ 'Use ' , newName , ' instead of ' , self nodeName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameVariableFixItAction >> executeOn: anEditorElement [
 	| newSource |
 	newSource := sourceCoder currentSourceString.
@@ -21,14 +21,14 @@ GtRenameVariableFixItAction >> executeOn: anEditorElement [
 	sourceCoder currentSourceString: newSource
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameVariableFixItAction >> id [
 	<return: #BlElementId>
 
 	^ GtRenameVariableFixItActionElementId
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtRenameVariableFixItAction >> newName: aString [
 	newName := aString
 ]

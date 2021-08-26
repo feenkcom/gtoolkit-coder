@@ -1,10 +1,10 @@
 Class {
-	#name : #GtSourceCoderEditorElement,
-	#superclass : #GtTextualCoderEditorElement,
-	#category : #'GToolkit-Coder-UI-Coder - Textual'
+	#name : 'GtSourceCoderEditorElement',
+	#superclass : 'GtTextualCoderEditorElement',
+	#category : 'GToolkit-Coder-UI-Coder - Textual'
 }
 
-{ #category : #'api - textual coder view model' }
+{ #category : 'api - textual coder view model' }
 GtSourceCoderEditorElement >> onTextualCoderViewModelChanged [
 	super onTextualCoderViewModelChanged.
 	

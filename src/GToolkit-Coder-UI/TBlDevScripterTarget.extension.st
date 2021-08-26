@@ -1,6 +1,6 @@
-Extension { #name : #TBlDevScripterTarget }
+Extension { #name : 'TBlDevScripterTarget' }
 
-{ #category : #'*GToolkit-Coder-UI' }
+{ #category : '*GToolkit-Coder-UI' }
 TBlDevScripterTarget >> onGtPharoSnippetDestinationButton [
 	self 
 		onChildNamed: #content;
@@ -8,7 +8,7 @@ TBlDevScripterTarget >> onGtPharoSnippetDestinationButton [
 		onChildNamed: #switchButton
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
+{ #category : '*GToolkit-Coder-UI' }
 TBlDevScripterTarget >> onGtPharoSnippetEvaluateButton [
 	self 
 		"onChildOfClass: GtExpandableCoderElement;"
@@ -20,7 +20,7 @@ TBlDevScripterTarget >> onGtPharoSnippetEvaluateButton [
 		onChildAt: 1
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
+{ #category : '*GToolkit-Coder-UI' }
 TBlDevScripterTarget >> onGtPharoSnippetPlayButton [
 	self 
 		onChildNamed: #content;

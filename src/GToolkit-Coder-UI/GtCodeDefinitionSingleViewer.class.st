@@ -1,31 +1,31 @@
 Class {
-	#name : #GtCodeDefinitionSingleViewer,
-	#superclass : #GtCodeDefinitionEntityViewer,
+	#name : 'GtCodeDefinitionSingleViewer',
+	#superclass : 'GtCodeDefinitionEntityViewer',
 	#instVars : [
 		'getSelector',
 		'renameAnnouncement'
 	],
-	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : #'api - instantiation' }
+{ #category : 'api - instantiation' }
 GtCodeDefinitionSingleViewer >> create [
 	<return: #Object>
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionSingleViewer >> getSelector [
 	^ getSelector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionSingleViewer >> getSelector: anObject [
 	getSelector := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionSingleViewer >> renameEvent: anObject [
 	renameAnnouncement := anObject
 ]

@@ -1,25 +1,25 @@
 Class {
-	#name : #GtReadyCoderTool,
-	#superclass : #GtPhlowTool,
+	#name : 'GtReadyCoderTool',
+	#superclass : 'GtPhlowTool',
 	#instVars : [
 		'coder'
 	],
-	#category : #'GToolkit-Coder-UI-Tools'
+	#category : 'GToolkit-Coder-UI-Tools'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtReadyCoderTool class >> coder: aCoder [
 	^ self new coder: aCoder
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtReadyCoderTool >> asElementDo: aOneArgBlock [
 	"Create a tool element and execute the block."
 
 	^ aOneArgBlock cull: (GtCoder forCoder: self coder) asPagerPageElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtReadyCoderTool >> assertCoder: aCoder [
 	self
 		assert: [ aCoder isNotNil ]
@@ -29,28 +29,28 @@ GtReadyCoderTool >> assertCoder: aCoder [
 		description: [ 'Coder cannot be an element because it may be added to a space graph several times' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtReadyCoderTool >> coder [
 	^ coder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtReadyCoderTool >> coder: aCoder [
 	self assertCoder: aCoder.
 	coder := aCoder
 ]
 
-{ #category : #'api - converting' }
+{ #category : 'api - converting' }
 GtReadyCoderTool >> icon [ 
 	^ BrGlamorousVectorIcons browse
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtReadyCoderTool >> name [
 	^ 'coder'
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtReadyCoderTool >> tabLook [
 	^ BrGlamorousTabSwitcherWithIconAptitude
 ]

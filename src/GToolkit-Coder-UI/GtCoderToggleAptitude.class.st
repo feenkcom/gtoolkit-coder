@@ -1,15 +1,15 @@
 Class {
-	#name : #GtCoderToggleAptitude,
-	#superclass : #BrMaterialToggleBackgroundAptitude,
-	#category : #'GToolkit-Coder-UI-Looks'
+	#name : 'GtCoderToggleAptitude',
+	#superclass : 'BrMaterialToggleBackgroundAptitude',
+	#category : 'GToolkit-Coder-UI-Looks'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderToggleAptitude >> defaultNormalBackground [
 	^ Color transparent
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderToggleAptitude >> initialize [
 	| interactiveLook |
 	super initialize.
@@ -37,7 +37,7 @@ GtCoderToggleAptitude >> initialize [
 				yourself)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtCoderToggleAptitude >> updateActivatedBackground [
 	self widget isActivated
 		ifTrue: [ self toggleActivated ]

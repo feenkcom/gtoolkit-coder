@@ -1,14 +1,14 @@
 Class {
-	#name : #GtPreviewChangeButton,
-	#superclass : #BrButton,
+	#name : 'GtPreviewChangeButton',
+	#superclass : 'BrButton',
 	#instVars : [
 		'changeAction',
 		'changeStencil'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : #ui }
+{ #category : 'ui' }
 GtPreviewChangeButton >> buildDropDownElement [
 	| element unloadButton |
 	element := BrVerticalPane new
@@ -36,27 +36,27 @@ GtPreviewChangeButton >> buildDropDownElement [
 	^ element
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPreviewChangeButton >> changeAction [
 	^ changeAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPreviewChangeButton >> changeAction: aBlock [
 	changeAction := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPreviewChangeButton >> changeStencil [
 	^ changeStencil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPreviewChangeButton >> changeStencil: aStencil [
 	changeStencil := aStencil asStencil
 ]
 
-{ #category : #ui }
+{ #category : 'ui' }
 GtPreviewChangeButton >> initialize [
 	super initialize.
 

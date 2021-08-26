@@ -1,33 +1,33 @@
 Class {
-	#name : #GtMethodCoderTool,
-	#superclass : #GtCoderTool,
+	#name : 'GtMethodCoderTool',
+	#superclass : 'GtCoderTool',
 	#instVars : [
 		'compiledMethod'
 	],
-	#category : #'GToolkit-Coder-UI-Tools'
+	#category : 'GToolkit-Coder-UI-Tools'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtMethodCoderTool class >> compiledMethod: aMethod [ 
 	^ self new compiledMethod: aMethod
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtMethodCoderTool >> compiledMethod [
 	^ compiledMethod
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtMethodCoderTool >> compiledMethod: anObject [
 	compiledMethod := anObject
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtMethodCoderTool >> newCoder [
 	^ GtCoder forMethod: self compiledMethod
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtMethodCoderTool >> object [
 	"compatibility method for ${GLMBlocObjectToSelect}$"
 	^ self compiledMethod

@@ -1,15 +1,15 @@
 Class {
-	#name : #GtRenameClassVariableController,
-	#superclass : #GtRenameVariableController,
-	#category : #'GToolkit-Coder-AddOns-Inline rename'
+	#name : 'GtRenameClassVariableController',
+	#superclass : 'GtRenameVariableController',
+	#category : 'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameClassVariableController >> refactoringName [
 	^ 'Rename class variable'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameClassVariableController >> rename: oldName to: newName [
 	| model class |
 	model := self createModel.

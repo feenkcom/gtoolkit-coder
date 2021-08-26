@@ -1,10 +1,10 @@
 Class {
-	#name : #GtRenameVariableFixItActionElementId,
-	#superclass : #GtFixItActionElementId,
-	#category : #'GToolkit-Coder-AddOns-FixIt'
+	#name : 'GtRenameVariableFixItActionElementId',
+	#superclass : 'GtFixItActionElementId',
+	#category : 'GToolkit-Coder-AddOns-FixIt'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtRenameVariableFixItActionElementId >> asSymbol [
 	^ #'fixit-action--rename-variable'
 ]

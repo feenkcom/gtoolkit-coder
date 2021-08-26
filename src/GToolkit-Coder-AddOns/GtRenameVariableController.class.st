@@ -1,16 +1,16 @@
 Class {
-	#name : #GtRenameVariableController,
-	#superclass : #GtRenameController,
-	#category : #'GToolkit-Coder-AddOns-Inline rename'
+	#name : 'GtRenameVariableController',
+	#superclass : 'GtRenameController',
+	#category : 'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameVariableController >> addRefactoringChangesPreview [
 	super addRefactoringChangesPreview.
 	self styleRenamedVariable
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtRenameVariableController >> installRenamer [
 	newName := self originalNode source.
 	renameInterval := self originalNode sourceInterval.
@@ -18,24 +18,24 @@ GtRenameVariableController >> installRenamer [
 	self installRenameAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameVariableController >> originalName [
 	^ self originalNode source
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameVariableController >> refactoring [
 	self originalName = self newName
 		ifTrue: [ ^ nil ].
 	^ self rename: self originalName to: self newName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameVariableController >> rename: oldName to: newName [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameVariableController >> styleRenamedVariable [
 	(self sourceText
 		from: renameInterval first

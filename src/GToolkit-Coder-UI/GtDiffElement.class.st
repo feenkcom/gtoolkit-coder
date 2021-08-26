@@ -1,6 +1,6 @@
 Class {
-	#name : #GtDiffElement,
-	#superclass : #BlElement,
+	#name : 'GtDiffElement',
+	#superclass : 'BlElement',
 	#traits : 'TBrLayoutResizable + TBrSizeAdjustable',
 	#classTraits : 'TBrLayoutResizable classTrait + TBrSizeAdjustable classTrait',
 	#instVars : [
@@ -11,37 +11,37 @@ Class {
 		'outlines',
 		'separatorElement'
 	],
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
-{ #category : #examples }
+{ #category : 'examples' }
 GtDiffElement class >> example [
 	<gtExample>
 
 	^ self on: self exampleDiff
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 GtDiffElement class >> exampleDiff [
 	<gtExample>
 	^ TextDiffBuilder from: self originalString to: self newString
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 GtDiffElement class >> exampleFlat [
 	<gtExample>
 
 	^ (self on: self exampleDiff) aptitude: GtDiffFlatAptitude
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 GtDiffElement class >> exampleShadow [
 	<gtExample>
 
 	^ (self on: self exampleDiff) aptitude: GtDiffShadowAptitude
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 GtDiffElement class >> newString [
 	<gtExample>
 	^ String
@@ -56,14 +56,14 @@ GtDiffElement class >> newString [
 					cr ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtDiffElement class >> on: aDiffBuilder [
 	^ self new
 		diff: aDiffBuilder;
 		yourself
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 GtDiffElement class >> originalString [
 	<gtExample>
 	^ String
@@ -78,7 +78,7 @@ GtDiffElement class >> originalString [
 					cr ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtDiffElement >> buildInterface [
 	syncScrollRanges := GtSyncScrollRanges createFromDiff: diff.
 
@@ -91,13 +91,13 @@ GtDiffElement >> buildInterface [
 	self updateOutlines
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GtDiffElement >> diff: aDiffBuilder [
 	diff := aDiffBuilder.
 	self buildInterface
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtDiffElement >> drawMeAndChildrenOnSpartaCanvas: aCanvas [
 	| stroke fill |
 	super drawMeAndChildrenOnSpartaCanvas: aCanvas.
@@ -118,12 +118,12 @@ GtDiffElement >> drawMeAndChildrenOnSpartaCanvas: aCanvas [
 				draw ]
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GtDiffElement >> editorLook [
 	^ BrGlamorousCodeEditorAptitude
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GtDiffElement >> initialize [
 	super initialize.
 	
@@ -152,7 +152,7 @@ GtDiffElement >> initialize [
 	}.
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtDiffElement >> leftBottomFor: anInteger [
 	| range element |
 	range := self leftRange.
@@ -165,12 +165,12 @@ GtDiffElement >> leftBottomFor: anInteger [
 		max: 0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDiffElement >> leftEditorLook: aLook [
 	leftElement aptitude: aLook
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtDiffElement >> leftRange [
 	| first |
 	first := (leftElement instVarNamed: 'layoutPositionsRange')
@@ -179,7 +179,7 @@ GtDiffElement >> leftRange [
 	^ first to: first + leftElement children size - 1
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtDiffElement >> leftScrolled [
 	| newPosition |
 	newPosition := syncScrollRanges rightLineFor: self leftRange first.
@@ -194,12 +194,12 @@ GtDiffElement >> leftScrolled [
 	self updateOutlines
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDiffElement >> leftStyler: aStyler [
 	leftElement editor styler: aStyler
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtDiffElement >> leftTopFor: anInteger [
 	| range element |
 	range := self leftRange.
@@ -212,12 +212,12 @@ GtDiffElement >> leftTopFor: anInteger [
 		max: 0
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtDiffElement >> newRopedText [
 	^ diff newRopedText
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GtDiffElement >> newSeparatorElement [
 	^ BlElement new
 		constraintsDo: [ :c |
@@ -226,7 +226,7 @@ GtDiffElement >> newSeparatorElement [
 		yourself
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GtDiffElement >> newTextElement [
 	^ BrEditor new
 		focusability: BlFocusability none;
@@ -235,14 +235,14 @@ GtDiffElement >> newTextElement [
 		aptitude: self editorLook
 ]
 
-{ #category : #'geometry hooks' }
+{ #category : 'geometry hooks' }
 GtDiffElement >> notifyExtentChanged [
 	super notifyExtentChanged.
 	outlines := #().
 	self updateOutlines
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtDiffElement >> outlineFor: aSyncScrollRange [
 	| leftTop leftBottom rightTop rightBottom vertices leftBounds rightBounds |
 	leftTop := self leftTopFor: aSyncScrollRange leftFirst + 1.
@@ -265,12 +265,12 @@ GtDiffElement >> outlineFor: aSyncScrollRange [
 	^ BlPolyline vertices: vertices
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtDiffElement >> previousRopedText [
 	^ diff previousRopedText
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtDiffElement >> rightBottomFor: anInteger [
 	| range element |
 	range := self rightRange.
@@ -283,12 +283,12 @@ GtDiffElement >> rightBottomFor: anInteger [
 		max: 0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDiffElement >> rightEditorLook: aLook [
 	rightElement aptitude: aLook
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtDiffElement >> rightRange [
 	| first |
 	first := (rightElement instVarNamed: 'layoutPositionsRange')
@@ -297,7 +297,7 @@ GtDiffElement >> rightRange [
 	^ first to: first + rightElement children size - 1
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtDiffElement >> rightScrolled [
 	| newPosition |
 	newPosition := syncScrollRanges leftLineFor: self rightRange first.
@@ -312,12 +312,12 @@ GtDiffElement >> rightScrolled [
 	self updateOutlines
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDiffElement >> rightStyler: aStyler [
 	rightElement editor styler: aStyler
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtDiffElement >> rightTopFor: anInteger [
 	| range element |
 	range := self rightRange.
@@ -330,7 +330,7 @@ GtDiffElement >> rightTopFor: anInteger [
 		max: 0
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 GtDiffElement >> updateOutlines [
 	| ranges |
 	outlines := OrderedCollection new.

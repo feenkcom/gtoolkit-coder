@@ -1,34 +1,34 @@
 Class {
-	#name : #GtPackageCoderTool,
-	#superclass : #GtCoderTool,
+	#name : 'GtPackageCoderTool',
+	#superclass : 'GtCoderTool',
 	#instVars : [
 		'package'
 	],
-	#category : #'GToolkit-Coder-UI-Tools'
+	#category : 'GToolkit-Coder-UI-Tools'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtPackageCoderTool class >> package: aPackage [
 	^ self new package: aPackage
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtPackageCoderTool >> newCoder [
 	^ GtCoder forPackage: self package
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPackageCoderTool >> object [
 	"compatibility method for ${GLMBlocObjectToSelect}$"
 	^ self package
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPackageCoderTool >> package [
 	^ package
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtPackageCoderTool >> package: aPackage [
 	package := aPackage
 ]

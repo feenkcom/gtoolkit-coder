@@ -7,15 +7,15 @@ I display a {{gtClass:BrToolbar}}.
 
 "
 Class {
-	#name : #GtCoderToolbarElement,
-	#superclass : #GtCoderNavigationModelElement,
+	#name : 'GtCoderToolbarElement',
+	#superclass : 'GtCoderNavigationModelElement',
 	#instVars : [
 		'toolbarElement'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtCoderToolbarElement >> addClassTab: look [
 	<gtCreateComponentTab: 10>
 	^ BrTab new
@@ -35,7 +35,7 @@ GtCoderToolbarElement >> addClassTab: look [
 			element ]
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtCoderToolbarElement >> addPackageTab: look [
 	<gtCreateComponentTab: 30>
 	^ BrTab new
@@ -54,7 +54,7 @@ GtCoderToolbarElement >> addPackageTab: look [
 			element ]
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtCoderToolbarElement >> addTraitTab: look [
 	<gtCreateComponentTab: 20>
 	^ BrTab new
@@ -74,7 +74,7 @@ GtCoderToolbarElement >> addTraitTab: look [
 			element ]
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtCoderToolbarElement >> browseFrom: anElement [
 	"Do we want to share the same coder model?"
 	self navigationModel coderDo: [ :aCoder | 
@@ -83,7 +83,7 @@ GtCoderToolbarElement >> browseFrom: anElement [
 				maximized ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderToolbarElement >> initialize [
 	super initialize.
 	self initializeToolbarElement.
@@ -97,7 +97,7 @@ GtCoderToolbarElement >> initialize [
 		anyToFitContent: self toolbarElement)
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoderToolbarElement >> initializeToolbarElement [
 	toolbarElement := BrToolbar new
 		aptitude: BrGlamorousToolbarAptitude new;
@@ -114,7 +114,7 @@ GtCoderToolbarElement >> initializeToolbarElement [
 		yourself
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderToolbarElement >> newAddButton [
 	| look |
 	^ BrButton new
@@ -141,7 +141,7 @@ GtCoderToolbarElement >> newAddButton [
 		yourself
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderToolbarElement >> newAddInterface: look [
 	| contentTabs tabMethods |
 	contentTabs := BrTabGroup new.
@@ -158,7 +158,7 @@ GtCoderToolbarElement >> newAddInterface: look [
 	^ contentTabs
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderToolbarElement >> newBrowseButton [
 	^ BrButton new
 		aptitude: BrGlamorousButtonWithIconAptitude;
@@ -167,7 +167,7 @@ GtCoderToolbarElement >> newBrowseButton [
 		action: [ :aButton | self browseFrom: aButton ]
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderToolbarElement >> newHierarchyButton [
 	^ BrButton new
 		label: 'Show Package and Class Hierarchies';
@@ -187,7 +187,7 @@ GtCoderToolbarElement >> newHierarchyButton [
 		yourself
 ]
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCoderToolbarElement >> newSpotterButton [
 	<return: #BrButton>
 	
@@ -207,7 +207,7 @@ GtCoderToolbarElement >> newSpotterButton [
 		asElement.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderToolbarElement >> toolbarElement [
 	<return: #BrToolbar>
 	^ toolbarElement

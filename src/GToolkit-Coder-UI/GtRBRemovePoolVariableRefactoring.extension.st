@@ -1,6 +1,6 @@
-Extension { #name : #GtRBRemovePoolVariableRefactoring }
+Extension { #name : 'GtRBRemovePoolVariableRefactoring' }
 
-{ #category : #'*GToolkit-Coder-UI' }
+{ #category : '*GToolkit-Coder-UI' }
 GtRBRemovePoolVariableRefactoring >> gtDescription [
 	<return: #String or: #BlRopedText>
 	

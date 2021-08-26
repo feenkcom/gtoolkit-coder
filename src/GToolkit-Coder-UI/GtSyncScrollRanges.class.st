@@ -1,13 +1,13 @@
 Class {
-	#name : #GtSyncScrollRanges,
-	#superclass : #Object,
+	#name : 'GtSyncScrollRanges',
+	#superclass : 'Object',
 	#instVars : [
 		'ranges'
 	],
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtSyncScrollRanges class >> createFromDiff: aDiffBuilder [
 	| syncScroll |
 	syncScroll := self new.
@@ -19,19 +19,19 @@ GtSyncScrollRanges class >> createFromDiff: aDiffBuilder [
 	^ syncScroll
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 GtSyncScrollRanges class >> example [
 	<gtExample>
 	^ self createFromDiff: self exampleDiff
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 GtSyncScrollRanges class >> exampleDiff [
 	<gtExample>
 	^ TextDiffBuilder from: self originalString to: self newString
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 GtSyncScrollRanges class >> newString [
 	<gtExample>
 	^ '1
@@ -43,7 +43,7 @@ GtSyncScrollRanges class >> newString [
 9'
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 GtSyncScrollRanges class >> originalString [
 	<gtExample>
 	^ '1
@@ -56,28 +56,28 @@ GtSyncScrollRanges class >> originalString [
 10'
 ]
 
-{ #category : #'private-creation' }
+{ #category : 'private-creation' }
 GtSyncScrollRanges >> advanceBoth [
 	ranges last advanceBoth ifNotNil: [ :range | ranges add: range ]
 ]
 
-{ #category : #'private-creation' }
+{ #category : 'private-creation' }
 GtSyncScrollRanges >> advanceLeft [
 	ranges last advanceLeft ifNotNil: [ :range | ranges add: range ]
 ]
 
-{ #category : #'private-creation' }
+{ #category : 'private-creation' }
 GtSyncScrollRanges >> advanceRight [
 	ranges last advanceRight ifNotNil: [ :range | ranges add: range ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtSyncScrollRanges >> initialize [
 	super initialize.
 	ranges := OrderedCollection with: GtSyncScrollRange new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSyncScrollRanges >> leftLineFor: rightIndex [
 	| range |
 	range := ranges
@@ -89,7 +89,7 @@ GtSyncScrollRanges >> leftLineFor: rightIndex [
 		* range leftSize + range leftFirst) rounded 
 ]
 
-{ #category : #'private-creation' }
+{ #category : 'private-creation' }
 GtSyncScrollRanges >> mergeDifferences [
 	| index current previous |
 	index := ranges size.
@@ -103,13 +103,13 @@ GtSyncScrollRanges >> mergeDifferences [
 			current := previous ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSyncScrollRanges >> rangesForLeft: leftInterval andRight: rightInterval [
 	^ ranges
 		select: [ :each | each overlapsLeft: leftInterval orRight: rightInterval ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSyncScrollRanges >> rightLineFor: leftIndex [
 	| range |
 	range := ranges

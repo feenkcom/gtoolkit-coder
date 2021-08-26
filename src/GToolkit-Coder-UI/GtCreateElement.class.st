@@ -1,15 +1,15 @@
 Class {
-	#name : #GtCreateElement,
-	#superclass : #BlElement,
+	#name : 'GtCreateElement',
+	#superclass : 'BlElement',
 	#traits : 'TBrLayoutResizable',
 	#classTraits : 'TBrLayoutResizable classTrait',
 	#instVars : [
 		'definition'
 	],
-	#category : #'GToolkit-Coder-UI-Behaviour'
+	#category : 'GToolkit-Coder-UI-Behaviour'
 }
 
-{ #category : #'private - instance creation' }
+{ #category : 'private - instance creation' }
 GtCreateElement >> buildSectionLabel: aSectionName [
 	
 	^ BrLabel new
@@ -20,12 +20,12 @@ GtCreateElement >> buildSectionLabel: aSectionName [
 		constraintsDo: [ :c | c grid horizontal alignLeft ]
 ]
 
-{ #category : #'private - ui' }
+{ #category : 'private - ui' }
 GtCreateElement >> buttonMargin [
 	^ BlInsets top: 3 left: 0 bottom: 3 right: 5
 ]
 
-{ #category : #'private - ui' }
+{ #category : 'private - ui' }
 GtCreateElement >> editableLabelLook [
 	^ BrGlamorousEditableLabelAptitude new
 		glamorousCodeFont;
@@ -33,7 +33,7 @@ GtCreateElement >> editableLabelLook [
 		fontSize: 10
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCreateElement >> initialize [
 	super initialize.
 	self layout: BlFlowLayout vertical.

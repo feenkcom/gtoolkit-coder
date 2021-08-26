@@ -1,6 +1,6 @@
 Class {
-	#name : #GtCodeDefinitionPluralViewer,
-	#superclass : #GtCodeDefinitionEntityViewer,
+	#name : 'GtCodeDefinitionPluralViewer',
+	#superclass : 'GtCodeDefinitionEntityViewer',
 	#instVars : [
 		'separatorStencil',
 		'getSelector',
@@ -8,32 +8,32 @@ Class {
 		'removeAnnouncement',
 		'renameAnnouncement'
 	],
-	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionPluralViewer >> addEvent: anObject [
 	addAnnouncement := anObject
 ]
 
-{ #category : #'api - instantiation' }
+{ #category : 'api - instantiation' }
 GtCodeDefinitionPluralViewer >> create [
 	<return: #Object>
 	
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionPluralViewer >> getSelector [
 	^ getSelector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionPluralViewer >> getSelector: anObject [
 	getSelector := anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCodeDefinitionPluralViewer >> initialize [
 	super initialize.
 	
@@ -41,17 +41,17 @@ GtCodeDefinitionPluralViewer >> initialize [
 	separatorStencil := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionPluralViewer >> removeEvent: anObject [
 	removeAnnouncement := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionPluralViewer >> renameEvent: anObject [
 	renameAnnouncement := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCodeDefinitionPluralViewer >> separator: aStencil [
 	separatorStencil := aStencil asStencil
 ]

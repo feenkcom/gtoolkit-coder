@@ -1,10 +1,10 @@
 Class {
-	#name : #GtDefineClassFixItAction,
-	#superclass : #GtFixItVariableNodeAction,
-	#category : #'GToolkit-Coder-AddOns-FixIt'
+	#name : 'GtDefineClassFixItAction',
+	#superclass : 'GtFixItVariableNodeAction',
+	#category : 'GToolkit-Coder-AddOns-FixIt'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtDefineClassFixItAction >> addCreateClassAttributeInEditor: aBrTextEditor [
 	| text stencilBlock attribute adornmentAttribute | 
 	
@@ -42,18 +42,18 @@ GtDefineClassFixItAction >> addCreateClassAttributeInEditor: aBrTextEditor [
 		to: self attributePosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDefineClassFixItAction >> description [
 	^ 'Create class ' , self nodeName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDefineClassFixItAction >> executeOn: anEditorElement [
 	self clearFixItAttributeInEditor: anEditorElement editor.
 	self addCreateClassAttributeInEditor: anEditorElement editor.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDefineClassFixItAction >> id [
 	<return: #BlElementId>
 

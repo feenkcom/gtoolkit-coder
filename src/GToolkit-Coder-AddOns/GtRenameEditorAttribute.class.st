@@ -1,26 +1,26 @@
 Class {
-	#name : #GtRenameEditorAttribute,
-	#superclass : #GtRenamePreviewAttribute,
+	#name : 'GtRenameEditorAttribute',
+	#superclass : 'GtRenamePreviewAttribute',
 	#instVars : [
 		'cursorLocation',
 		'selectAll',
 		'filter',
 		'editorShortcuts'
 	],
-	#category : #'GToolkit-Coder-AddOns-Inline rename'
+	#category : 'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameEditorAttribute >> additionalAttributes [
 	^ #()
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameEditorAttribute >> cursorLocation: anInteger [
 	cursorLocation := anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	renameEditor := GtRenameEditor new
 		fitContent;
@@ -50,14 +50,14 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 	^ renameEditor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameEditorAttribute >> editorCursorLocation [
 	renameEditor notNil
 		ifTrue: [ renameEditor editor cursors do: [ :cursor | ^ cursor position ] ].
 	^ text size
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameEditorAttribute >> editorShortcuts [
 	^ editorShortcuts
 		ifNil: [ editorShortcuts := {
@@ -75,14 +75,14 @@ GtRenameEditorAttribute >> editorShortcuts [
 				action: [ :aShortcutEvent | self renameAction accept ])} ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameEditorAttribute >> filter: aTextEditorInputFilter [
 	filter := aTextEditorInputFilter.
 	renameEditor notNil
 		ifTrue: [ renameEditor inputFilter: aTextEditorInputFilter ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtRenameEditorAttribute >> initialize [
 	super initialize.
 	
@@ -91,38 +91,38 @@ GtRenameEditorAttribute >> initialize [
 	self cache: self newPooledCache
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtRenameEditorAttribute >> isEditorAttribute [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtRenameEditorAttribute >> isFocusable [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameEditorAttribute >> renameAction [
 	^ renameAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameEditorAttribute >> selectAll [
 	^ selectAll
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameEditorAttribute >> selectAll: aBoolean [
 	selectAll := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameEditorAttribute >> uninstallEventHandlers [
 	renameEditor notNil
 		ifTrue: [ renameEditor editor removeEditorShortcuts: self editorShortcuts ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameEditorAttribute >> updateFocus: event [
 	renameAction isInstalled
 		ifTrue: [ renameAction lostFocus ]

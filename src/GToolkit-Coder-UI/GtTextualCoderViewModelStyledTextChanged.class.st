@@ -1,13 +1,13 @@
 Class {
-	#name : #GtTextualCoderViewModelStyledTextChanged,
-	#superclass : #GtTextualCoderViewModelAnnouncement,
+	#name : 'GtTextualCoderViewModelStyledTextChanged',
+	#superclass : 'GtTextualCoderViewModelAnnouncement',
 	#instVars : [
 		'styledText'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Textual Model - Events'
+	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
-{ #category : #generated }
+{ #category : 'generated' }
 GtTextualCoderViewModelStyledTextChanged >> styledText [
 	<objectGetter: #textualCoder>
 	<generatedFrom: #'GtRobocoderMetamodelAnnouncementTemplate>>#objectGetterTemplate'>
@@ -15,7 +15,7 @@ GtTextualCoderViewModelStyledTextChanged >> styledText [
 	^ styledText
 ]
 
-{ #category : #generated }
+{ #category : 'generated' }
 GtTextualCoderViewModelStyledTextChanged >> styledText: aStyledText [
 	<objectSetter: #textualCoder>
 	<generatedFrom: #'GtRobocoderMetamodelAnnouncementTemplate>>#objectSetterTemplate'>

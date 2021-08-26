@@ -1,28 +1,28 @@
 Class {
-	#name : #GtRenamePreviewAttribute,
-	#superclass : #BrTextAdornmentAttribute,
+	#name : 'GtRenamePreviewAttribute',
+	#superclass : 'BrTextAdornmentAttribute',
 	#instVars : [
 		'text',
 		'originalAttributes',
 		'renameAction',
 		'renameEditor'
 	],
-	#category : #'GToolkit-Coder-AddOns-Inline rename'
+	#category : 'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenamePreviewAttribute >> action: aRenameAction [
 	renameAction := aRenameAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenamePreviewAttribute >> additionalAttributes [
 	^ {
 		BlTextDecorationAttribute new underline color: BrGlamorousColors textHighlightColor
 	}
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenamePreviewAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| editor |
 
@@ -39,12 +39,12 @@ GtRenamePreviewAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorEle
 	^ renameEditor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenamePreviewAttribute >> editor [
 	^ renameEditor editor
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtRenamePreviewAttribute >> initialize [
 	super initialize.
 
@@ -52,17 +52,17 @@ GtRenamePreviewAttribute >> initialize [
 	self beReplace
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtRenamePreviewAttribute >> isEditorAttribute [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenamePreviewAttribute >> text [
 	^ text
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenamePreviewAttribute >> text: blText [
 	text := blText asString asRopedText.
 	originalAttributes isNil
@@ -72,11 +72,11 @@ GtRenamePreviewAttribute >> text: blText [
 	text attributes: originalAttributes , self additionalAttributes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenamePreviewAttribute >> uninstallEventHandlers [
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenamePreviewAttribute >> updateText: blText [
 	self text: blText.
 	renameEditor notNil

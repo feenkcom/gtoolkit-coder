@@ -1,10 +1,10 @@
 Class {
-	#name : #GtFixItVariableNodeAction,
-	#superclass : #GtFixItAction,
-	#category : #'GToolkit-Coder-AddOns-FixIt'
+	#name : 'GtFixItVariableNodeAction',
+	#superclass : 'GtFixItAction',
+	#category : 'GToolkit-Coder-AddOns-FixIt'
 }
 
-{ #category : #'api - node' }
+{ #category : 'api - node' }
 GtFixItVariableNodeAction >> nodeName [
 	^ node variableName
 ]

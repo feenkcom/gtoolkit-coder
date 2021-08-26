@@ -5,17 +5,17 @@ Is applied on a specific instance of the source coder editor and plays a role of
 
 "
 Class {
-	#name : #GtSourceCoderRefactoringController,
-	#superclass : #Object,
+	#name : 'GtSourceCoderRefactoringController',
+	#superclass : 'Object',
 	#instVars : [
 		'coder',
 		'sourceElement',
 		'originalSource'
 	],
-	#category : #'GToolkit-Coder-AddOns-! Core'
+	#category : 'GToolkit-Coder-AddOns-! Core'
 }
 
-{ #category : #'private - attributes' }
+{ #category : 'private - attributes' }
 GtSourceCoderRefactoringController >> addRefactoringChangesPreview: aRefactoring at: aTextPosition [
 	self
 		addRefactoringChangesPreview: aRefactoring
@@ -23,7 +23,7 @@ GtSourceCoderRefactoringController >> addRefactoringChangesPreview: aRefactoring
 		whenComplete: nil
 ]
 
-{ #category : #'private - attributes' }
+{ #category : 'private - attributes' }
 GtSourceCoderRefactoringController >> addRefactoringChangesPreview: aRefactoring at: aTextPosition whenComplete: aBlock [
 	self removeRefactoringAttribute.
 	aRefactoring isNil
@@ -36,22 +36,22 @@ GtSourceCoderRefactoringController >> addRefactoringChangesPreview: aRefactoring
 				completionAction: aBlock) }
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtSourceCoderRefactoringController >> allowSave [
 	self sourceElement textualCoderViewModel allowSaveDueTo: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderRefactoringController >> coder [
 	^ coder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderRefactoringController >> coder: methodCoder [
 	coder := methodCoder
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtSourceCoderRefactoringController >> execute [
 	[
 		self saveSource.
@@ -71,69 +71,73 @@ GtSourceCoderRefactoringController >> execute [
 				ex return ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtSourceCoderRefactoringController >> preventSave [
 	self sourceElement textualCoderViewModel preventSaveDueTo: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderRefactoringController >> refactoring [
 	^ self subclassResponsibility
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtSourceCoderRefactoringController >> refactoringFailed [
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderRefactoringController >> refactoringName [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'private - attributes' }
+{ #category : 'private - attributes' }
 GtSourceCoderRefactoringController >> removeRefactoringAttribute [
 	self sourceEditor text
 		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtSourceCoderRefactoringController >> restoreText [
 	self setText: originalSource
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtSourceCoderRefactoringController >> safelyExecute [
 	self subclassResponsibility
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtSourceCoderRefactoringController >> saveSource [
 	originalSource := self sourceText copy
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtSourceCoderRefactoringController >> setText: aStringOrText [
 	self sourceElement
 		text: aStringOrText asRopedText;
 		onTextModified
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderRefactoringController >> sourceEditor [
 	^ self sourceElement editor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderRefactoringController >> sourceElement [
 	^ sourceElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderRefactoringController >> sourceElement: textElement [
+	self
+		assert: [ textElement isKindOf: BlElement ]
+		description: [ 'A source must be an element' ].
+
 	sourceElement := textElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderRefactoringController >> sourceText [
 	^ self sourceEditor text
 ]

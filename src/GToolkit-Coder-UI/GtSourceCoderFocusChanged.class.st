@@ -1,29 +1,29 @@
 Class {
-	#name : #GtSourceCoderFocusChanged,
-	#superclass : #Announcement,
+	#name : 'GtSourceCoderFocusChanged',
+	#superclass : 'Announcement',
 	#instVars : [
 		'source',
 		'focused'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Events'
+	#category : 'GToolkit-Coder-UI-Coder - Source Events'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderFocusChanged >> focused [
 	^ focused
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderFocusChanged >> focused: anObject [
 	focused := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderFocusChanged >> source [
 	^ source
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderFocusChanged >> source: anObject [
 	source := anObject
 ]

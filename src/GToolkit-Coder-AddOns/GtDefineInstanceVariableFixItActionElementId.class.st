@@ -1,10 +1,10 @@
 Class {
-	#name : #GtDefineInstanceVariableFixItActionElementId,
-	#superclass : #GtFixItActionElementId,
-	#category : #'GToolkit-Coder-AddOns-FixIt'
+	#name : 'GtDefineInstanceVariableFixItActionElementId',
+	#superclass : 'GtFixItActionElementId',
+	#category : 'GToolkit-Coder-AddOns-FixIt'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtDefineInstanceVariableFixItActionElementId >> asSymbol [
 	^ #'fixit-action--define-instance-variable'
 ]

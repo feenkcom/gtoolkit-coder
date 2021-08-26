@@ -1,25 +1,25 @@
 Class {
-	#name : #GtExpandedOnlyCoderElement,
-	#superclass : #BrVerticalPane,
+	#name : 'GtExpandedOnlyCoderElement',
+	#superclass : 'BrVerticalPane',
 	#instVars : [
 		'coderUIModel',
 		'expandedElement'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source'
+	#category : 'GToolkit-Coder-UI-Coder - Source'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 GtExpandedOnlyCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
 	aSourceCoder coderLook
 		ifNotNil: [ :aCoderLook | anElement addAptitude: aCoderLook ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtExpandedOnlyCoderElement >> asVerticallyResizableDo: aBlock [
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtExpandedOnlyCoderElement >> coder: aCoderUIModel [
 
 	self 
@@ -29,12 +29,12 @@ GtExpandedOnlyCoderElement >> coder: aCoderUIModel [
 	^ self coderUIModel: aCoderUIModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtExpandedOnlyCoderElement >> coderUIModel [
 	^ coderUIModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtExpandedOnlyCoderElement >> coderUIModel: aCoderUIModel [
 
 	self
@@ -59,7 +59,7 @@ GtExpandedOnlyCoderElement >> coderUIModel: aCoderUIModel [
 		to: self
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtExpandedOnlyCoderElement >> initialize [
 	super initialize.
 	
@@ -69,7 +69,7 @@ GtExpandedOnlyCoderElement >> initialize [
 		margin: (BlInsets all: 10)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
 	^ GtSourceCoderExpandedContentElement new
 		coderUIModel: aCoderModel;
@@ -78,7 +78,7 @@ GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
 		yourself
 ]
 
-{ #category : #'focus requesting' }
+{ #category : 'focus requesting' }
 GtExpandedOnlyCoderElement >> requestFocus [
 	self
 		childNamed: #editor
@@ -86,7 +86,7 @@ GtExpandedOnlyCoderElement >> requestFocus [
 		ifNone: [ super requestFocus ] 
 ]
 
-{ #category : #'focus requesting' }
+{ #category : 'focus requesting' }
 GtExpandedOnlyCoderElement >> requestFocusAsyncronously [
 	^ self 
 		enqueueTask:

@@ -1,14 +1,14 @@
 Class {
-	#name : #GtPackagesCoderElement,
-	#superclass : #BlElement,
+	#name : 'GtPackagesCoderElement',
+	#superclass : 'BlElement',
 	#instVars : [
 		'packagesCoder',
 		'contentPane'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Packages'
+	#category : 'GToolkit-Coder-UI-Coder - Packages'
 }
 
-{ #category : #'private - ui' }
+{ #category : 'private - ui' }
 GtPackagesCoderElement >> buildContentPane [
 	contentPane := BlElement new.
 	contentPane layout: BlLinearLayout horizontal.
@@ -20,7 +20,7 @@ GtPackagesCoderElement >> buildContentPane [
 	^ contentPane
 ]
 
-{ #category : #'private - ui' }
+{ #category : 'private - ui' }
 GtPackagesCoderElement >> buildPackageList [
 	^ BrSimpleList new
 		itemStencil: [ GtPackageCardElement new ];
@@ -32,7 +32,7 @@ GtPackagesCoderElement >> buildPackageList [
 		addEventFilterOn: BlClickEvent do: [ :anEvent | self requestFocus ]
 ]
 
-{ #category : #'private - ui' }
+{ #category : 'private - ui' }
 GtPackagesCoderElement >> buildPackagesElement [
 	| element |
 	element := BlElement new.
@@ -61,7 +61,7 @@ GtPackagesCoderElement >> buildPackagesElement [
 	^ element
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtPackagesCoderElement >> coders: aPackagesCoder [
   | coderElement |
 
@@ -74,7 +74,7 @@ GtPackagesCoderElement >> coders: aPackagesCoder [
 		addChild: coderElement as: #coder.
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtPackagesCoderElement >> codersUIModel: aPackagesCoder [
   | coderElement |
 
@@ -87,7 +87,7 @@ GtPackagesCoderElement >> codersUIModel: aPackagesCoder [
 		addChild: coderElement as: #coder.
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 GtPackagesCoderElement >> initialize [
 	super initialize.
 	self

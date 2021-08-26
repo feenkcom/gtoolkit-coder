@@ -1,10 +1,10 @@
 Class {
-	#name : #GtPackageCardElement,
-	#superclass : #GtCoderCardElement,
-	#category : #'GToolkit-Coder-UI-Basic'
+	#name : 'GtPackageCardElement',
+	#superclass : 'GtCoderCardElement',
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : #'building ui' }
+{ #category : 'building ui' }
 GtPackageCardElement >> detailsLabel [
 	| extensionMethodsCount |
 	extensionMethodsCount := self extensionMethodsCount.
@@ -15,7 +15,7 @@ GtPackageCardElement >> detailsLabel [
 			   ifFalse: [ '' ])
 ]
 
-{ #category : #'building ui' }
+{ #category : 'building ui' }
 GtPackageCardElement >> extensionMethodsCount [
 	| count |
 	count := 0.

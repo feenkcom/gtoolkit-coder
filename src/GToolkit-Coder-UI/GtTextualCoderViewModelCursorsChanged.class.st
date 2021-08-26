@@ -1,29 +1,29 @@
 Class {
-	#name : #GtTextualCoderViewModelCursorsChanged,
-	#superclass : #GtTextualCoderViewModelAnnouncement,
+	#name : 'GtTextualCoderViewModelCursorsChanged',
+	#superclass : 'GtTextualCoderViewModelAnnouncement',
 	#instVars : [
 		'source',
 		'cursors'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Textual Model - Events'
+	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextualCoderViewModelCursorsChanged >> cursors [
 	^ cursors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextualCoderViewModelCursorsChanged >> cursors: anObject [
 	cursors := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextualCoderViewModelCursorsChanged >> source [
 	^ source
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtTextualCoderViewModelCursorsChanged >> source: anObject [
 	source := anObject
 ]

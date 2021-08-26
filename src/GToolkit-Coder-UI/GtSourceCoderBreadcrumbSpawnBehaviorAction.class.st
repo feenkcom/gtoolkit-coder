@@ -1,30 +1,30 @@
 Class {
-	#name : #GtSourceCoderBreadcrumbSpawnBehaviorAction,
-	#superclass : #GtSourceCoderBreadcrumbAction,
+	#name : 'GtSourceCoderBreadcrumbSpawnBehaviorAction',
+	#superclass : 'GtSourceCoderBreadcrumbAction',
 	#instVars : [
 		'methodBehavior'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Model'
+	#category : 'GToolkit-Coder-UI-Coder - Source Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderBreadcrumbSpawnBehaviorAction >> foreground [
 	^ self methodBehavior exists
 		ifTrue: [ BrGlamorousColors defaultButtonTextColor ]
 		ifFalse: [ BrGlamorousColors linkWithErrorColor ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderBreadcrumbSpawnBehaviorAction >> methodBehavior [
 	^ methodBehavior
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderBreadcrumbSpawnBehaviorAction >> methodBehavior: anObject [
 	methodBehavior := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderBreadcrumbSpawnBehaviorAction >> name [
 	<return: #String>
 
@@ -36,7 +36,7 @@ GtSourceCoderBreadcrumbSpawnBehaviorAction >> name [
 		ifAbsent: [ '(Unspecified)' ]
 ]
 
-{ #category : #action }
+{ #category : 'action' }
 GtSourceCoderBreadcrumbSpawnBehaviorAction >> performSourceCoderActionFrom: anElement [
 
 	self methodBehavior realBehaviorDo: [ :aBehavior |
@@ -46,7 +46,7 @@ GtSourceCoderBreadcrumbSpawnBehaviorAction >> performSourceCoderActionFrom: anEl
 	anElement phlow spawnTool: (GtInspectorTool forObject: self methodBehavior).
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 GtSourceCoderBreadcrumbSpawnBehaviorAction >> printOn: aStream [
 	aStream
 		nextPutAll: 'Spawn ';

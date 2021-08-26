@@ -1,6 +1,6 @@
 Class {
-	#name : #GtRenameController,
-	#superclass : #GtSourceCoderRefactoringController,
+	#name : 'GtRenameController',
+	#superclass : 'GtSourceCoderRefactoringController',
 	#instVars : [
 		'handlers',
 		'renameAction',
@@ -9,10 +9,10 @@ Class {
 		'renameInterval',
 		'completionAction'
 	],
-	#category : #'GToolkit-Coder-AddOns-Inline rename'
+	#category : 'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameController >> addRefactoringChangesPreview [
 	| aRefactoring aRenamePosition |
 	self removeRefactoringAttribute.
@@ -33,24 +33,24 @@ GtRenameController >> addRefactoringChangesPreview [
 			self allowSave ]
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtRenameController >> cancelRefactoring [
 	self removeRefactoringAttribute.
 	self restoreText.
 	self allowSave
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameController >> completionAction [
 	^ completionAction ifNil: [ [  ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameController >> completionAction: aBlock [
 	completionAction := aBlock
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtRenameController >> createModel [
 	| model |
 	model := RBClassModelFactory rbNamespace
@@ -65,13 +65,13 @@ GtRenameController >> createModel [
 	^ model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameController >> cursorPositionDo: aBlock [
 	self sourceEditor cursors
 		do: [ :eachCursor | ^ aBlock value: (eachCursor position + 1 min: self sourceEditor text size) ]
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtRenameController >> installRenameAction [
 	renameAction := GtRenameAction
 		locations: { renameInterval }
@@ -95,55 +95,55 @@ GtRenameController >> installRenameAction [
 	renameAction install
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtRenameController >> installRenamer [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameController >> installValidation [
 	renameAction forVariableOrUnaryMessage
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameController >> newName [
 	^ newName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameController >> originalName [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameController >> originalNode [
 	<return: #GtPharoProgramNode>
 
 	^ node
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtRenameController >> originalNode: aGtPharoProgramNode [
 	node := aGtPharoProgramNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameController >> renamePosition [
 	^ (renameAction isNil or: [ renameAction isInstalled ])
 		ifTrue: [ renameInterval last ]
 		ifFalse: [ renameInterval last + self newName size - self originalName size ]
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 GtRenameController >> safelyExecute [
 	self installRenamer
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameController >> tab: forward [
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtRenameController >> updateName: aString [
 	newName := aString.
 	self addRefactoringChangesPreview

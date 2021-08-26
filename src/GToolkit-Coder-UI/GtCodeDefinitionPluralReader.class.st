@@ -1,10 +1,10 @@
 Class {
-	#name : #GtCodeDefinitionPluralReader,
-	#superclass : #GtCodeDefinitionPluralViewer,
-	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#name : 'GtCodeDefinitionPluralReader',
+	#superclass : 'GtCodeDefinitionPluralViewer',
+	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : #'api - instantiation' }
+{ #category : 'api - instantiation' }
 GtCodeDefinitionPluralReader >> create [
 	<return: #Object>
 	| aDefinition anOwner theInitialNames aTagger |

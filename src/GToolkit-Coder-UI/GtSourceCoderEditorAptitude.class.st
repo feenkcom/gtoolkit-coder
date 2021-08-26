@@ -1,6 +1,6 @@
 Class {
-	#name : #GtSourceCoderEditorAptitude,
-	#superclass : #GtSourceCoderAptitude,
+	#name : 'GtSourceCoderEditorAptitude',
+	#superclass : 'GtSourceCoderAptitude',
 	#instVars : [
 		'sourceCoderUIModel',
 		'editorElement',
@@ -8,17 +8,17 @@ Class {
 		'completion',
 		'actions'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Look'
+	#category : 'GToolkit-Coder-UI-Coder - Source Look'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSourceCoderEditorAptitude >> editorElement [
 	<return: #GtSourceCoderEditorElement>
 
 	^ editorElement
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSourceCoderEditorAptitude >> initialize [
 	super initialize.
 	
@@ -31,19 +31,19 @@ GtSourceCoderEditorAptitude >> initialize [
 	self add: (BrLayoutResizerAptitude new inherit: editorElement)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtSourceCoderEditorAptitude >> newActionsElement [
 	^ GtCoderActionsElement new
 		margin: (BlInsets top: 5);
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtSourceCoderEditorAptitude >> newEditorElement [
 	^ GtSourceCoderEditorElement new
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 GtSourceCoderEditorAptitude >> onCoderChanged: aGtSourceCoderUIModel [
 	actions coderUIModel: aGtSourceCoderUIModel.
 	editorElement textualCoderViewModel: aGtSourceCoderUIModel

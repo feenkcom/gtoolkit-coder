@@ -12,8 +12,8 @@ I am the entrance point into the coder as a tool. To instantiate me, use one of 
 
 "
 Class {
-	#name : #GtCoder,
-	#superclass : #GtCoderNavigationModelElement,
+	#name : 'GtCoder',
+	#superclass : 'GtCoderNavigationModelElement',
 	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolDetailAdjustable',
 	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolDetailAdjustable classTrait',
 	#instVars : [
@@ -22,16 +22,16 @@ Class {
 		'toolbarElement',
 		'titleNotifier'
 	],
-	#category : #'GToolkit-Coder-UI-! Core'
+	#category : 'GToolkit-Coder-UI-! Core'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtCoder >> contentElement [
 	<return: #GtCoderContentElement>
 	^ contentElement
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder >> initialize [
 	super initialize.
 	self initializeTitleNotifier.
@@ -50,12 +50,12 @@ GtCoder >> initialize [
 	self addAptitude: (BrLayoutResizerAptitude inherit).
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder >> initializeContentElement [
 	contentElement := GtCoderPlaygroundElement new.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder >> initializeSidebarElement [
 	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
 	self addAptitude: (GtPhlowToolDetailAptitude new
@@ -63,7 +63,7 @@ GtCoder >> initializeSidebarElement [
 		detailed: [ :theInstance | sidebarElement show ]).
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder >> initializeTitleNotifier [
 	titleNotifier := GtPhlowTitleIconAndLabelNotifier new
 		shortLabel: [ self shortTitle ifEmpty: [ 'Coder' asRopedText ] ];
@@ -71,7 +71,7 @@ GtCoder >> initializeTitleNotifier [
 	self addEventHandler: titleNotifier.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtCoder >> initializeToolbarElement [
 	toolbarElement := GtCoderToolbarElement new
 		constraintsDo: [ :c | 
@@ -80,7 +80,7 @@ GtCoder >> initializeToolbarElement [
 			c ignored vertical alignTop ].
 ]
 
-{ #category : #'private - hooks' }
+{ #category : 'private - hooks' }
 GtCoder >> onNavigationModelChanged [
 	super onNavigationModelChanged.
 	self contentElement navigationModel: self navigationModel.
@@ -89,32 +89,32 @@ GtCoder >> onNavigationModelChanged [
 	self updateTabLabel
 ]
 
-{ #category : #'private - announcement handling' }
+{ #category : 'private - announcement handling' }
 GtCoder >> onNavigationModelSubjectChange [
 	self enqueueTask: (BlTaskAction new action: [
 		self updateTabLabel ])
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtCoder >> pagerWindowTitle [
 	<return: #String>
 	^ self shortTitle
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtCoder >> shortTitle [
 	^ (GtPhlowTitleLabelBuilder 
 		longLabel: self subjectTitle)
 			build
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtCoder >> sidebarElement [
 	<return: #GtPhlowHorizontalSidebarElement>
 	^ sidebarElement
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtCoder >> subjectTitle [
 	<return: #String or: nil>
 	self navigationModel selectedClassDo: [ :aClass | ^ aClass name ].
@@ -123,7 +123,7 @@ GtCoder >> subjectTitle [
 	^ nil
 ]
 
-{ #category : #'private - subscriptions' }
+{ #category : 'private - subscriptions' }
 GtCoder >> subscribeToNavigationModel [
 	super subscribeToNavigationModel.
 	self navigationModel weak 
@@ -137,26 +137,26 @@ GtCoder >> subscribeToNavigationModel [
 		send: #onNavigationModelSubjectChange to: self
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtCoder >> titleNotifier [
 	<return: #GtPhlowTitleNotifier>
 	^ titleNotifier
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtCoder >> toolbarElement [
 	<return: #GtCoderToolbarElement>
 	^ toolbarElement
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtCoder >> updateSidebarContent [
 	self sidebarElement
 		contentStencil: (GtCoderNavigationTabsStencil new 
 			navigationModel: self navigationModel)
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtCoder >> updateTabLabel [
 	self titleNotifier notifyIfFocused
 ]
