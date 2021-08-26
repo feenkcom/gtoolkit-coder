@@ -130,6 +130,10 @@ GtSourceCoderRefactoringController >> sourceElement [
 
 { #category : 'accessing' }
 GtSourceCoderRefactoringController >> sourceElement: textElement [
+	self
+		assert: [ textElement isKindOf: BlElement ]
+		description: [ 'A source must be an element' ].
+
 	sourceElement := textElement
 ]
 
