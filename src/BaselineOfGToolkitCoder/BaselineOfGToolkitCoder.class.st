@@ -23,16 +23,18 @@ See {{gtClass:GtSearchMethodFilterExamples}} for more details.
 
 "
 Class {
-	#name : #BaselineOfGToolkitCoder,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfGToolkitCoder
+	#name : 'BaselineOfGToolkitCoder',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfGToolkitCoder'
 }
 
-{ #category : #baseline }
+{ #category : 'baseline' }
 BaselineOfGToolkitCoder >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
 		spec 
+			baseline: 'Futures' with: [
+				spec repository: 'github://feenkcom/pharo-futures:main/src' ];
 			baseline: 'GToolkitBasicUtility' with: [
 				spec repository: 'github://feenkcom/gtoolkit-utility:main/src' ];
 			baseline: 'GToolkitAnnouncerUtility' with: [
@@ -42,7 +44,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 		spec 
 			package: 'GToolkit-VariableBindings';
 			package: 'GToolkit-Coder' with: [
-				spec requires: #('GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitPager' ). ];
+				spec requires: #('Futures' 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-UI' with: [
 				spec requires: #('GToolkit-Coder' 'GToolkit-VariableBindings' 'GToolkitBasicUtility' 'GToolkitPager' ). ];
 			package: 'GToolkit-Coder-AddOns' with: [

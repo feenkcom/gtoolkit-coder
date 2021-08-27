@@ -16,6 +16,13 @@ GtSearchFilter >> applyInScope: aSearchScope [
 		filter: self
 ]
 
+{ #category : 'evaluating' }
+GtSearchFilter >> applyInScopeStream: aStream [
+	^ self resultTypeStream new
+		forFilter: self
+		scope: aStream
+]
+
 { #category : 'converting' }
 GtSearchFilter >> asCoder [
 	^ self result asCoder
@@ -29,6 +36,11 @@ GtSearchFilter >> asElement [
 { #category : 'accessing' }
 GtSearchFilter >> defaultFilterScope [
 	^ GtSearchNullFilter new
+]
+
+{ #category : 'accessing' }
+GtSearchFilter >> defaultFilterScopeStream [
+	^ AsyncEmptyStream new
 ]
 
 { #category : 'iterating' }
@@ -52,6 +64,17 @@ GtSearchFilter >> gtItemsFor: aView [
 		title: 'Live';
 		priority: 10;
 		object: [ self result ];
+		view: #gtItemsFor:
+]
+
+{ #category : 'ui' }
+GtSearchFilter >> gtItemsStreamFor: aView [
+	"this is a view that is polymorphic with the one defined in ${method:Collection>>#gtItemsFor:}$"
+	<gtView>
+	^ aView forward
+		title: 'Live (Stream)';
+		priority: 11;
+		object: [ self resultStream ];
 		view: #gtItemsFor:
 ]
 
@@ -85,9 +108,19 @@ GtSearchFilter >> result [
 	^ self applyInScope: self defaultFilterScope
 ]
 
+{ #category : 'converting' }
+GtSearchFilter >> resultStream [
+	^ self applyInScopeStream: self defaultFilterScopeStream
+]
+
 { #category : 'accessing' }
 GtSearchFilter >> resultType [
 	^ GtSearchNullGroupResult
+]
+
+{ #category : 'accessing' }
+GtSearchFilter >> resultTypeStream [
+	^ GtAsyncSearchNullGroupStream
 ]
 
 { #category : 'logical operations' }
@@ -98,6 +131,13 @@ GtSearchFilter >> select: aBlock [
 { #category : 'accessing' }
 GtSearchFilter >> size [
 	^ self result size
+]
+
+{ #category : 'testing' }
+GtSearchFilter >> value: anObject [
+	"To be polymorphic with block closures"
+
+	^ self matches: anObject
 ]
 
 { #category : 'logical operations' }
