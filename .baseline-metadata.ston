@@ -1,1 +1,1 @@
-{	"repositories" : {		"github://feenkcom/gtoolkit-pager/src" : "v0.8.403",		"github://feenkcom/gtoolkit-utility/src" : "v0.8.65"	}}
+{	"repositories" : {		"github://feenkcom/gtoolkit-pager/src" : "v0.8.404",		"github://feenkcom/gtoolkit-utility/src" : "v0.8.65",		"github://feenkcom/pharo-futures/src" : "v0.6.0"	}}
