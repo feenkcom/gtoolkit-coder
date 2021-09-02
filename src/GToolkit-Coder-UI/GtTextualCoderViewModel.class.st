@@ -390,7 +390,7 @@ GtTextualCoderViewModel >> gtInfoFor: aView [
 		items: [ self gtInfo ];
 		actionUpdateButtonTooltip: 'Refresh';
 		column: 'Property' 
-			item: [ :eachItem :eachIndex | eachItem key asRopedText foreground: Color gray ]
+			text: [ :eachItem :eachIndex | eachItem key asRopedText foreground: Color gray ]
 			width: 150;
 		column: 'Value' 
 			text: [ :eachItem | eachItem value gtDisplayText ];
