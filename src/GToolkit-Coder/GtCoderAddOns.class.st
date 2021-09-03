@@ -219,10 +219,8 @@ GtCoderAddOns >> gtViewContextActionsFor: aView [
 		title: 'Context actions' translated;
 		priority: 25;
 		items: [ self contextActions ];
-		column: 'Title'
-			item: [ :anAction | anAction title ]
-			text: [ :title | title ifNil: [ '' ] ];
-		column: 'Action' item: [ :anAction | anAction action ]
+		column: 'Title' text: [ :anAction | anAction title ifNil: [ '' ] ];
+		column: 'Action' text: [ :anAction | anAction action ]
 ]
 
 { #category : 'gt-extensions' }
@@ -233,8 +231,8 @@ GtCoderAddOns >> gtViewKeybindingsFor: aView [
 		title: 'Shortcuts' translated;
 		priority: 10;
 		items: [ self shortcuts asArray ];
-		column: 'Name' item: [ :each | each name ifNil: [ each gtDisplayString ] ];
-		column: 'Combination' item: [ :each | each combination gtDisplayString ]
+		column: 'Name' text: [ :each | each name ifNil: [ each gtDisplayString ] ];
+		column: 'Combination' text: [ :each | each combination gtDisplayString ]
 ]
 
 { #category : 'gt-extensions' }
@@ -245,10 +243,9 @@ GtCoderAddOns >> gtViewMainActionsFor: aView [
 		priority: 20;
 		items: [ self mainActions ];
 		column: 'Title'
-			item: [ :anAction | anAction title ]
-			text: [ :title | title ifNil: [ '' ] ];
+			text: [ :anAction |  anAction title ifNil: [ '' ] ];
 		column: 'Action' 
-			item: [ :anAction | anAction action ]
+			text: [ :anAction | anAction action ]
 			weight: 3
 ]
 
