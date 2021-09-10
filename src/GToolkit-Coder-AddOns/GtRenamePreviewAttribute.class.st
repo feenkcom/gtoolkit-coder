@@ -66,9 +66,9 @@ GtRenamePreviewAttribute >> text [
 GtRenamePreviewAttribute >> text: blText [
 	text := blText asString asRopedText.
 	originalAttributes isNil
-		ifTrue: [ originalAttributes := blText isEmpty
-				ifTrue: [ #() ]
-				ifFalse: [ blText attributesAt: 1 ] ].
+		ifTrue:
+			[ originalAttributes := (blText isEmpty ifTrue: [ #() ] ifFalse: [ blText attributesAt: 1 ])
+				reject: [ :each | each isEventHandler ] ].
 	text attributes: originalAttributes , self additionalAttributes
 ]
 
