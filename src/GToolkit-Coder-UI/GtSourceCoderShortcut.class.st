@@ -12,7 +12,7 @@ GtSourceCoderShortcut >> forEditor: aBrTextEditor selectedStringDo: aSelectedTex
 				| aCursorPosition aTextPosition |
 				
 				aCursorPosition := aBrTextEditor cursors first position.
-				aTextPosition := (aCursorPosition + 1) min: aBrTextEditor text size.
+				aTextPosition := aCursorPosition min: aBrTextEditor text size max: 1.
 
 				aCursorTextPositionBlock value: aTextPosition ] ]
 		ifNotEmpty: [ :aSelectedText | aSelectedTextBlock value: aSelectedText asString ]
@@ -31,7 +31,7 @@ GtSourceCoderShortcut >> forEditor: aBrTextEditor selectionIntervalDo: aSelectio
 				| aCursorPosition aTextPosition |
 				
 				aCursorPosition := aBrTextEditor cursors first position.
-				aTextPosition := (aCursorPosition + 1) min: aBrTextEditor text size.
+				aTextPosition := aCursorPosition min: aBrTextEditor text size max: 1.
 
 				aCursorTextPositionBlock value: aTextPosition ] ]
 ]
