@@ -237,6 +237,19 @@ GtSourceCoder >> evaluationContext [
 		coder: self
 ]
 
+{ #category : 'testing' }
+GtSourceCoder >> hasImplicitVariableReferenceTo: aString [
+	self implicitVariableReferencesTo: aString do: [ :each | ^ true ].
+	^ false
+]
+
+{ #category : 'api - ast' }
+GtSourceCoder >> implicitVariableReferencesTo: aString do: aBlock [
+	"Evaluate aBlock for every ast node that is a variable reference to an implicitly defined variable named aString."
+
+	
+]
+
 { #category : 'private - notifying' }
 GtSourceCoder >> notifyEvaluatedWithResult: anEvaluationResult [
 	self announce: (GtCoderEvaluationAnnouncement new 
@@ -308,6 +321,21 @@ GtSourceCoder >> printItInContext: aGtSourceCoderEvaluationContext [
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
 		inContext: aGtSourceCoderEvaluationContext
 		thenDo: [ :aResult | self notifyPrintResult: aResult ]
+]
+
+{ #category : 'api - ast' }
+GtSourceCoder >> renameImplicitTemporary: oldName to: newName [
+	| source |
+	source := SmaCCString on: self currentSourceString.
+	self
+		implicitVariableReferencesTo: oldName
+		do:
+			[ :node | 
+			source
+				replaceFrom: node startPosition
+				to: node stopPosition
+				with: newName ].
+	self currentSourceString: source asString
 ]
 
 { #category : 'accessing' }
