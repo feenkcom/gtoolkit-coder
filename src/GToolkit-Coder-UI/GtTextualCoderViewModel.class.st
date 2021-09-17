@@ -78,6 +78,27 @@ GtTextualCoderViewModel >> addOnsAwaitDo: aBlock [
 	aBlock value: theAddOns
 ]
 
+{ #category : 'api - refactorings' }
+GtTextualCoderViewModel >> addRefactoringChangesPreview: aRefactoring at: position [
+	self
+		addRefactoringChangesPreview: aRefactoring
+		at: position
+		whenComplete: nil
+]
+
+{ #category : 'api - refactorings' }
+GtTextualCoderViewModel >> addRefactoringChangesPreview: aRefactoring at: aTextPosition whenComplete: aBlock [
+	self removeRefactoringAttribute.
+	aRefactoring isNil ifTrue: [ ^ self ].
+	self
+		addTextAttribute:
+			((GtRefactoringChangesAttribute new)
+				refactoring: aRefactoring;
+				completionAction: aBlock)
+		from: aTextPosition
+		to: aTextPosition
+]
+
 { #category : 'api - shortcuts' }
 GtTextualCoderViewModel >> addShortcut: aShortcut [
 	"Add an extra shortcut add-on independent from the dynamically computed add-ons"
@@ -569,6 +590,14 @@ GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttribu
 	aCurrentText removeAttributes: { aGtTextualCoderTextAttributes markerAttribute }, aGtTextualCoderTextAttributes textAttributes.
 
 	self announce: (GtTextualCoderViewModelTextAttributesRemoved new coderTextAttributes: aGtTextualCoderTextAttributes)
+]
+
+{ #category : 'api - refactorings' }
+GtTextualCoderViewModel >> removeRefactoringAttribute [
+	| attributes |
+	attributes := OrderedCollection new.
+	self sourceText attributesDo: [ :each | (each isKindOf: GtRefactoringChangesAttribute) ifTrue: [ attributes add: each ] ].
+	self removeAllCoderTextAttributes: attributes
 ]
 
 { #category : 'api - selection' }
