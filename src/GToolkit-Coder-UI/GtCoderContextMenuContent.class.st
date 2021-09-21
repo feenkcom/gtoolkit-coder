@@ -63,12 +63,12 @@ GtCoderContextMenuContent >> initialize [
 				ifNotNil: [ :hover | 
 					element
 						when: BlMouseEnterEvent
-						do: [ :anEvent | hover cull: self editorElement cull: anEvent ] ].
+						do: [ :anEvent | hover cull: self editorElement textualCoderViewModel cull: anEvent ] ].
 			eachGtCoderContextMenuAction leaveAction
 				ifNotNil: [ :leave | 
 					element
 						when: BlMouseLeaveEvent
-						do: [ :anEvent | leave cull: self editorElement cull: anEvent ] ].
+						do: [ :anEvent | leave cull: self editorElement textualCoderViewModel cull: anEvent ] ].
 			eachGtCoderContextMenuAction name
 				ifNotNil: [ :anActionName | element containerName: anActionName ].
 			element ];

@@ -556,6 +556,13 @@ GtTextualCoderViewModel >> removeAllCoderTextAttributes: aCollectionOfGtTextualC
 		self removeCoderTextAttributes: eachCoderTextAttribute ]
 ]
 
+{ #category : 'api - refactorings' }
+GtTextualCoderViewModel >> removeAttribute: anAttribute [
+	| attributes |
+	attributes := self extraTextAttributes select: [ :each | each textAttributes includes: anAttribute ].
+	self removeAllCoderTextAttributes: attributes
+]
+
 { #category : 'api - text' }
 GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttributes [
 	| aCurrentText |
