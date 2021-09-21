@@ -10,15 +10,16 @@ GtRenameClassVariableController >> refactoringName [
 ]
 
 { #category : 'accessing' }
-GtRenameClassVariableController >> rename: oldName to: newName [
+GtRenameClassVariableController >> rename: anOldName to: aNewName [
+	| aModel aClass |
 
-	| model class |
-	model := self createModel.
-	class := (model classFor: coder behavior) instanceSide 
-		         whoDefinesClassVariable: oldName.
+	aModel := self createModel.
+	aClass := (aModel classFor: sourceCoderViewModel behavior) instanceSide
+		whoDefinesClassVariable: anOldName.
+	
 	^ RBRenameClassVariableRefactoring
-		  model: model
-		  rename: oldName
-		  to: newName
-		  in: class
+		  model: aModel
+		  rename: anOldName
+		  to: aNewName
+		  in: aClass
 ]
