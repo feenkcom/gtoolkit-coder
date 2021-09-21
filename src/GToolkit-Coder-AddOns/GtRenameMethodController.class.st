@@ -58,7 +58,7 @@ GtRenameMethodController >> newName [
 
 { #category : 'private' }
 GtRenameMethodController >> newNode [
-	coder astAwait nodesDo: [ :each | 
+	sourceCoderViewModel astAwait nodesDo: [ :each | 
 		((each isMessage or: [ each isMethod or: [ each isMethodPattern ] ])
 			and: [ each selectorParts first startPosition = startIndex ])
 			ifTrue: [ ^ each ] ].
@@ -96,7 +96,7 @@ GtRenameMethodController >> refactoring [
 		in: (model classFor: implementor)
 		to: newSelector
 		permutation: (1 to: selector numArgs))
-			methodCoder: coder
+			methodCoder: sourceCoderViewModel coderModel
 ]
 
 { #category : 'accessing' }
@@ -136,8 +136,7 @@ GtRenameMethodController >> tab: forward [
 	self newNode
 		ifNotNil: [ :message | 
 			self removeRefactoringAttribute.
-			self sourceEditor
-				moveCursorTo: (message selectorParts at: selectorIndex) stopPosition.
+			self sourceCoderViewModel moveCursorTo: (message selectorParts at: selectorIndex) stopPosition.
 			self installRenamerOn: message.
 			newSelectorParts = selector keywords
 				ifFalse: [ self addRefactoringChangesPreview ] ]

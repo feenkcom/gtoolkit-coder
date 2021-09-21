@@ -29,7 +29,6 @@ GtRenameController >> addRefactoringChangesPreview [
 		whenComplete: [
 			self removeRefactoringAttribute.
 			self completionAction value.
-			coder requestStyleSourceText.
 			self allowSave ]
 ]
 
@@ -56,26 +55,26 @@ GtRenameController >> createModel [
 	model := RBClassModelFactory rbNamespace
 		onEnvironment: RBBrowserEnvironment new.
 	model name: self refactoringName.
-	coder isForMethod
-		ifTrue: [ ((model classFor: coder behavior) sourceCodeFor: coder selector)
+	sourceCoderViewModel coderModel isForMethod
+		ifTrue: [ ((model classFor: sourceCoderViewModel behavior) sourceCodeFor: sourceCoderViewModel selector)
 				~= originalSource asString
-				ifTrue: [ (model classFor: coder behavior)
+				ifTrue: [ (model classFor: sourceCoderViewModel behavior)
 						compile: originalSource asString
-						classified: coder protocol ] ].
+						classified: sourceCoderViewModel protocol ] ].
 	^ model
 ]
 
 { #category : 'accessing' }
 GtRenameController >> cursorPositionDo: aBlock [
-	self sourceEditor cursors
-		do: [ :eachCursor | ^ aBlock value: (eachCursor position + 1 min: self sourceEditor text size) ]
+	sourceCoderViewModel cursors
+		do: [ :eachCursor | ^ aBlock value: (eachCursor position + 1 min: self sourceText size) ]
 ]
 
 { #category : 'executing' }
 GtRenameController >> installRenameAction [
-	renameAction := GtRenameAction
+	renameAction := GtRenameAction2
 		locations: { renameInterval }
-		element: sourceElement.
+		textualCoderViewModel: sourceCoderViewModel.
 	
 	renameAction selectAll: true.	
 	
