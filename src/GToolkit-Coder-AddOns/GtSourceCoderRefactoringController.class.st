@@ -108,7 +108,7 @@ GtSourceCoderRefactoringController >> setText: aStringOrText [
 
 { #category : 'accessing' }
 GtSourceCoderRefactoringController >> sourceCoderViewModel [
-	<return: #GtCoderSourceCoderViewModel>
+	<return: #GtSourceCoderViewModel>
 
 	^ sourceCoderViewModel
 ]
