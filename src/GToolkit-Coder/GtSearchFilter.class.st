@@ -67,17 +67,6 @@ GtSearchFilter >> gtItemsFor: aView [
 		view: #gtItemsFor:
 ]
 
-{ #category : 'ui' }
-GtSearchFilter >> gtItemsStreamFor: aView [
-	"this is a view that is polymorphic with the one defined in ${method:Collection>>#gtItemsFor:}$"
-	<gtView>
-	^ aView forward
-		title: 'Live (Stream)';
-		priority: 11;
-		object: [ self resultStream ];
-		view: #gtItemsFor:
-]
-
 { #category : 'accessing' }
 GtSearchFilter >> highlighter [
 	^ nil
