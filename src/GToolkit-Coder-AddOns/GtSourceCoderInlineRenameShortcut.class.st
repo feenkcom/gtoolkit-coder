@@ -22,10 +22,9 @@ GtSourceCoderInlineRenameShortcut >> name [
 ]
 
 { #category : 'evaluation' }
-GtSourceCoderInlineRenameShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
-
+GtSourceCoderInlineRenameShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
 	self
 		forEditor: aBrTextEditor
-		selectionIntervalDo: [ :aSelectionInterval | aGtSourceCoder renameAt: aSelectionInterval last in: aBrEditorElement ]
-		orCursorStringPositionDo: [ :aCursorTextPosition | aGtSourceCoder renameAt: aCursorTextPosition in: aBrEditorElement ]
+		selectionIntervalDo: [ :aSelectionInterval | aSourceCoderViewModel coder renameAt: aSelectionInterval last in: aSourceCoderViewModel ]
+		orCursorStringPositionDo: [ :aCursorTextPosition | aSourceCoderViewModel coder renameAt: aCursorTextPosition in: aSourceCoderViewModel ]
 ]

@@ -8,47 +8,16 @@ Class {
 	#name : 'GtSourceCoderRefactoringController',
 	#superclass : 'Object',
 	#instVars : [
-		'coder',
-		'sourceElement',
-		'originalSource'
+		'originalSource',
+		'sourceCoderViewModel',
+		'refactoringPreviewAttributes'
 	],
 	#category : 'GToolkit-Coder-AddOns-! Core'
 }
 
-{ #category : 'private - attributes' }
-GtSourceCoderRefactoringController >> addRefactoringChangesPreview: aRefactoring at: aTextPosition [
-	self
-		addRefactoringChangesPreview: aRefactoring
-		at: aTextPosition
-		whenComplete: nil
-]
-
-{ #category : 'private - attributes' }
-GtSourceCoderRefactoringController >> addRefactoringChangesPreview: aRefactoring at: aTextPosition whenComplete: aBlock [
-	self removeRefactoringAttribute.
-	aRefactoring isNil
-		ifTrue: [ ^ self ].
-
-	(self sourceText from: aTextPosition to: aTextPosition)
-		attributes: {
-			(GtRefactoringChangesAttribute new
-				refactoring: aRefactoring;
-				completionAction: aBlock) }
-]
-
 { #category : 'private' }
 GtSourceCoderRefactoringController >> allowSave [
-	self sourceElement textualCoderViewModel allowSaveDueTo: self
-]
-
-{ #category : 'accessing' }
-GtSourceCoderRefactoringController >> coder [
-	^ coder
-]
-
-{ #category : 'accessing' }
-GtSourceCoderRefactoringController >> coder: methodCoder [
-	coder := methodCoder
+	self sourceCoderViewModel allowSaveDueTo: self
 ]
 
 { #category : 'executing' }
@@ -73,7 +42,7 @@ GtSourceCoderRefactoringController >> execute [
 
 { #category : 'private' }
 GtSourceCoderRefactoringController >> preventSave [
-	self sourceElement textualCoderViewModel preventSaveDueTo: self
+	self sourceCoderViewModel preventSaveDueTo: self
 ]
 
 { #category : 'accessing' }
@@ -92,8 +61,7 @@ GtSourceCoderRefactoringController >> refactoringName [
 
 { #category : 'private - attributes' }
 GtSourceCoderRefactoringController >> removeRefactoringAttribute [
-	self sourceEditor text
-		clearAttributes: [ :each | each class = GtRefactoringChangesAttribute ]
+	self sourceCoderViewModel removeCoderTextAttributes: refactoringPreviewAttributes
 ]
 
 { #category : 'private' }
@@ -112,32 +80,26 @@ GtSourceCoderRefactoringController >> saveSource [
 ]
 
 { #category : 'private' }
-GtSourceCoderRefactoringController >> setText: aStringOrText [
-	self sourceElement
-		text: aStringOrText asRopedText;
-		onTextModified
+GtSourceCoderRefactoringController >> setText: aStringOrText [	
+	self sourceCoderViewModel
+		sourceText: aStringOrText asRopedText
+		from: self
+		synchronously: true
 ]
 
 { #category : 'accessing' }
-GtSourceCoderRefactoringController >> sourceEditor [
-	^ self sourceElement editor
+GtSourceCoderRefactoringController >> sourceCoderViewModel [
+	<return: #GtSourceCoderViewModel>
+
+	^ sourceCoderViewModel
 ]
 
-{ #category : 'accessing' }
-GtSourceCoderRefactoringController >> sourceElement [
-	^ sourceElement
-]
-
-{ #category : 'accessing' }
-GtSourceCoderRefactoringController >> sourceElement: textElement [
-	self
-		assert: [ textElement isKindOf: BlElement ]
-		description: [ 'A source must be an element' ].
-
-	sourceElement := textElement
+{ #category : 'initialization' }
+GtSourceCoderRefactoringController >> sourceCoderViewModel: aSourceCoderViewModel [
+	sourceCoderViewModel := aSourceCoderViewModel
 ]
 
 { #category : 'accessing' }
 GtSourceCoderRefactoringController >> sourceText [
-	^ self sourceEditor text
+	^ self sourceCoderViewModel sourceText copy
 ]
