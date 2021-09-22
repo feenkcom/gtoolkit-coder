@@ -15,25 +15,6 @@ Class {
 	#category : 'GToolkit-Coder-AddOns-! Core'
 }
 
-{ #category : 'private - attributes' }
-GtSourceCoderRefactoringController >> addRefactoringChangesPreview: aRefactoring at: aTextPosition [
-	refactoringPreviewAttributes := self sourceCoderViewModel
-		addTextAttribute: (GtRefactoringChangesAttribute new refactoring: aRefactoring)
-		from: aTextPosition
-		to: aTextPosition
-]
-
-{ #category : 'private - attributes' }
-GtSourceCoderRefactoringController >> addRefactoringChangesPreview: aRefactoring at: aTextPosition whenComplete: aBlock [
-	refactoringPreviewAttributes := self sourceCoderViewModel
-		addTextAttribute:
-			(GtRefactoringChangesAttribute new
-				refactoring: aRefactoring;
-				completionAction: aBlock)
-		from: aTextPosition
-		to: aTextPosition
-]
-
 { #category : 'private' }
 GtSourceCoderRefactoringController >> allowSave [
 	self sourceCoderViewModel allowSaveDueTo: self
