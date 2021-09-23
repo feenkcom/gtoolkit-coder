@@ -21,7 +21,7 @@ GtSlotVariablesBindings >> = anObject [
 
 { #category : 'binding' }
 GtSlotVariablesBindings >> bindingNames [
-	^ object slotNames
+	^ object gtSlotNames
 ]
 
 { #category : 'binding' }
@@ -32,7 +32,7 @@ GtSlotVariablesBindings >> bindingOf: aSymbol [
 	<return: #Variable or: nil>
 
 	^ object class
-		slotNamed: aSymbol
+		gtSlotNamed: aSymbol
 		ifFound: [ :aSlot | aSlot ]
 		ifNone: [ nil ]
 ]
@@ -42,7 +42,7 @@ GtSlotVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
 	^ object class
-		slotNamed: aSymbol
+		gtSlotNamed: aSymbol
 		ifFound: [ :slot | true ]
 		ifNone: [ false ]
 ]
