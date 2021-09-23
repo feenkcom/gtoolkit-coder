@@ -1,5 +1,5 @@
 Class {
-	#name : 'GtReservedVariablesBindings',
+	#name : 'GtEmptyVariablesBindings',
 	#superclass : 'Object',
 	#traits : 'TGtVariablesBindings',
 	#classTraits : 'TGtVariablesBindings classTrait',
@@ -7,36 +7,34 @@ Class {
 }
 
 { #category : 'comparing' }
-GtReservedVariablesBindings >> = anObject [
+GtEmptyVariablesBindings >> = anObject [
 	self == anObject ifTrue: [ ^ true ].
 	^ self class = anObject class
 ]
 
 { #category : 'binding' }
-GtReservedVariablesBindings >> bindingNames [
-	^ self class environment reservedVariables keys collect: [ :each | each asSymbol ]
+GtEmptyVariablesBindings >> bindingNames [
+	^ #()
 ]
 
 { #category : 'binding' }
-GtReservedVariablesBindings >> bindingOf: aSymbol [
+GtEmptyVariablesBindings >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
 	Return nil, if the variable has no value assigned."
 	<return: #Variable or: nil>
 
-	^ self class environment reservedVariables
-		at: aSymbol
-		ifAbsent: [ nil ]
+	^ nil
 ]
 
 { #category : 'testing' }
-GtReservedVariablesBindings >> hasBindingOf: aSymbol [
+GtEmptyVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
-	^ self class environment reservedVariables includesKey: aSymbol
+	^ false
 ]
 
 { #category : 'comparing' }
-GtReservedVariablesBindings >> hash [
+GtEmptyVariablesBindings >> hash [
 	^ self class hash
 ]

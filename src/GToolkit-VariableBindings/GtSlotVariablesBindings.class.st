@@ -9,6 +9,16 @@ Class {
 	#category : 'GToolkit-VariableBindings-Bindings'
 }
 
+{ #category : 'comparing' }
+GtSlotVariablesBindings >> = anObject [
+
+	"Answer whether the receiver and anObject represent the same object."
+
+	self == anObject ifTrue: [ ^ true ].
+	self class = anObject class ifFalse: [ ^ false ].
+	^ object = anObject object
+]
+
 { #category : 'binding' }
 GtSlotVariablesBindings >> bindingNames [
 	^ object slotNames
@@ -35,6 +45,14 @@ GtSlotVariablesBindings >> hasBindingOf: aSymbol [
 		slotNamed: aSymbol
 		ifFound: [ :slot | true ]
 		ifNone: [ false ]
+]
+
+{ #category : 'comparing' }
+GtSlotVariablesBindings >> hash [
+
+	"Answer an integer value that is related to the identity of the receiver."
+
+	^ object hash
 ]
 
 { #category : 'accessing' }

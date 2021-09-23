@@ -6,6 +6,12 @@ Class {
 	#category : 'GToolkit-VariableBindings-Bindings'
 }
 
+{ #category : 'comparing' }
+GtGlobalVariablesBindings >> = anObject [
+	self == anObject ifTrue: [ ^ true ].
+	^ self class = anObject class
+]
+
 { #category : 'binding' }
 GtGlobalVariablesBindings >> bindingNames [
 	^ self class environment keys
@@ -26,4 +32,9 @@ GtGlobalVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
 	^ self class environment includesKey: aSymbol
+]
+
+{ #category : 'comparing' }
+GtGlobalVariablesBindings >> hash [
+	^ self class hash
 ]

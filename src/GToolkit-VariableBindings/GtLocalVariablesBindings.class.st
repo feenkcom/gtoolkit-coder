@@ -9,6 +9,16 @@ Class {
 	#category : 'GToolkit-VariableBindings-Bindings'
 }
 
+{ #category : 'comparing' }
+GtLocalVariablesBindings >> = anObject [
+
+	"Answer whether the receiver and anObject represent the same object."
+
+	self == anObject ifTrue: [ ^ true ].
+	self class = anObject class ifFalse: [ ^ false ].
+	^ bindings = anObject bindings
+]
+
 { #category : 'binding' }
 GtLocalVariablesBindings >> bindingNames [
 	^ bindings keys
@@ -26,11 +36,25 @@ GtLocalVariablesBindings >> bindingOf: aSymbol [
 		ifAbsent: [ nil ]
 ]
 
+{ #category : 'accessing' }
+GtLocalVariablesBindings >> bindings [
+
+	^ bindings
+]
+
 { #category : 'testing' }
 GtLocalVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
 	^ bindings includesKey: aSymbol
+]
+
+{ #category : 'comparing' }
+GtLocalVariablesBindings >> hash [
+
+	"Answer an integer value that is related to the identity of the receiver."
+
+	^ bindings hash
 ]
 
 { #category : 'initialization' }

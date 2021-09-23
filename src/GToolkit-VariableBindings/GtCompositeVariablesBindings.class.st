@@ -9,6 +9,16 @@ Class {
 	#category : 'GToolkit-VariableBindings-Bindings'
 }
 
+{ #category : 'comparing' }
+GtCompositeVariablesBindings >> = anObject [
+
+	"Answer whether the receiver and anObject represent the same object."
+
+	self == anObject ifTrue: [ ^ true ].
+	self class = anObject class ifFalse: [ ^ false ].
+	^ bindings = anObject bindings
+]
+
 { #category : 'adding' }
 GtCompositeVariablesBindings >> addBindings: aGtVariablesBindings [
 	bindings add: aGtVariablesBindings
@@ -33,11 +43,25 @@ GtCompositeVariablesBindings >> bindingOf: aSymbol [
 	^ nil
 ]
 
+{ #category : 'accessing' }
+GtCompositeVariablesBindings >> bindings [
+
+	^ bindings
+]
+
 { #category : 'testing' }
 GtCompositeVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
 	^ bindings anySatisfy: [ :eachVariableBindings | eachVariableBindings hasBindingOf: aSymbol ]
+]
+
+{ #category : 'comparing' }
+GtCompositeVariablesBindings >> hash [
+
+	"Answer an integer value that is related to the identity of the receiver."
+
+	^ bindings hash
 ]
 
 { #category : 'initialization' }
