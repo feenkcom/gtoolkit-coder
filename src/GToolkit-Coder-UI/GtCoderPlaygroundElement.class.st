@@ -43,9 +43,8 @@ GtCoderPlaygroundElement >> initializeContentElement [
 { #category : 'initialization' }
 GtCoderPlaygroundElement >> initializePlayPageElement [
 	playgroundElement := (GtInspector environment 
-		at: GtInspector embeddedPlaygroundName 
-		ifAbsent: [ GtInspectorPlaygroundElement ]) new.
-	
+		at: GtInspector embeddedPlaygroundName) new.
+
 	playgroundElement collapse.
 	playgroundElement objectHolder: self objectHolder
 ]
