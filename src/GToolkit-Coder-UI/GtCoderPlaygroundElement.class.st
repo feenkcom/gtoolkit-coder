@@ -1,5 +1,5 @@
 "
-I display {{gtClass:GtCoderContentElement}} and {{gtClass:GtPageElement}}.
+I display {{gtClass:GtCoderContentElement}} and an embedded playground.
 1. # Example
 
 {{gtExample:GtCoderElementExamples>>#playgroundElementWithClass|previewExpanded|codeExpanded=false|previewHeight=700}}
@@ -11,8 +11,7 @@ Class {
 	#superclass : 'GtCoderNavigationModelElement',
 	#instVars : [
 		'contentElement',
-		'playPageElement',
-		'playPage'
+		'playgroundElement'
 	],
 	#category : 'GToolkit-Coder-UI-Basic'
 }
@@ -23,24 +22,17 @@ GtCoderPlaygroundElement >> contentElement [
 	^ contentElement
 ]
 
-{ #category : 'defaults' }
-GtCoderPlaygroundElement >> defaultPlayPage [
-	^ GtPlayPage newDefault.
-]
-
 { #category : 'initialization' }
 GtCoderPlaygroundElement >> initialize [
 	super initialize.
-	playPage := self defaultPlayPage.
+	
 	self initializeContentElement.
 	self initializePlayPageElement.
 	
 	self layout: BlLinearLayout vertical.
 	
 	self addChild: self contentElement as: #content.
-	self addChild: self playPageElement as: #playPage.
-	
-	self addAptitude: (BrLayoutResizerAptitude inherit).
+	self addChild: self playPageElement as: #playPage
 ]
 
 { #category : 'initialization' }
@@ -50,23 +42,22 @@ GtCoderPlaygroundElement >> initializeContentElement [
 
 { #category : 'initialization' }
 GtCoderPlaygroundElement >> initializePlayPageElement [
-	| aStencil |
-	aStencil := GtPlayPageStencil new
-		playPage: self playPage;
-		receiver: self receiver.
-	playPageElement := GtPhlowVerticalSidebarElement new
-		beBottom;
-		show;
-		collapse;
-		background: self theme status neutralBackgroundColor;
-		contentStencil: aStencil
+	playgroundElement := (GtInspector environment 
+		at: GtInspector embeddedPlaygroundName 
+		ifAbsent: [ GtInspectorPlaygroundElement ]) new.
+	
+	playgroundElement collapse.
+	playgroundElement objectHolder: self objectHolder
+]
+
+{ #category : 'private - accessing' }
+GtCoderPlaygroundElement >> objectHolder [
+	^ GtInspectorObject new object: self receiver
 ]
 
 { #category : 'private - hooks' }
 GtCoderPlaygroundElement >> onClassSelected: anEvent [
-	self playPage receiver: anEvent theClass.
-	self playPage xDocLoadSavedContent.
-
+	self updatePlayground
 ]
 
 { #category : 'private - hooks' }
@@ -78,32 +69,23 @@ GtCoderPlaygroundElement >> onNavigationModelChanged [
 
 { #category : 'private - hooks' }
 GtCoderPlaygroundElement >> onPackageSelected: anEvent [
-	self playPage receiver: anEvent package.
-	self playPage xDocLoadSavedContent.
+	self updatePlayground
 ]
 
 { #category : 'private - hooks' }
 GtCoderPlaygroundElement >> onPackageTagSelected: anEvent [
-	self playPage receiver: anEvent tag.
-	self playPage xDocLoadSavedContent.
+	self updatePlayground
 ]
 
 { #category : 'private - hooks' }
 GtCoderPlaygroundElement >> onPackagesSelected: anEvent [
-	self playPage receiver: Smalltalk.
-	self playPage xDocLoadSavedContent.
-]
-
-{ #category : 'private - accessing' }
-GtCoderPlaygroundElement >> playPage [
-	<return: #GtPlayPage>
-	^ playPage
+	self updatePlayground
 ]
 
 { #category : 'private - accessing' }
 GtCoderPlaygroundElement >> playPageElement [
 	<return: #GtPhlowVerticalSidebarElement>
-	^ playPageElement
+	^ playgroundElement
 ]
 
 { #category : 'private - accessing' }
@@ -126,6 +108,5 @@ GtCoderPlaygroundElement >> subscribeToNavigationModel [
 
 { #category : 'private - updating' }
 GtCoderPlaygroundElement >> updatePlayground [
-	self playPage receiver: self receiver.
-	self playPage xDocLoadSavedContent.
+	self playPageElement objectHolder: self objectHolder
 ]
