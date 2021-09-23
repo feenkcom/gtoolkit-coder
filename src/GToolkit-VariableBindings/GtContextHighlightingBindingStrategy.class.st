@@ -1,13 +1,13 @@
 Class {
-	#name : #GtContextHighlightingBindingStrategy,
-	#superclass : #GtHighlightingBindingStrategy,
+	#name : 'GtContextHighlightingBindingStrategy',
+	#superclass : 'GtHighlightingBindingStrategy',
 	#instVars : [
 		'context'
 	],
-	#category : #'GToolkit-VariableBindings-Core'
+	#category : 'GToolkit-VariableBindings-Core'
 }
 
-{ #category : #binding }
+{ #category : 'binding' }
 GtContextHighlightingBindingStrategy >> bindingOf: aSymbol [
 	| value |
 	(super bindingOf: aSymbol) ifNotNil: [ :aBinding | aBinding ].
@@ -17,12 +17,12 @@ GtContextHighlightingBindingStrategy >> bindingOf: aSymbol [
 	^ WorkspaceVariable key: aSymbol value: value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtContextHighlightingBindingStrategy >> context: aContext [
 	context := aContext
 ]
 
-{ #category : #binding }
+{ #category : 'binding' }
 GtContextHighlightingBindingStrategy >> hasBindingOf: aSymbol [
 	^ (super hasBindingOf: aSymbol) or: [ 
 			context hasTemporaryVariableNamed: aSymbol ]

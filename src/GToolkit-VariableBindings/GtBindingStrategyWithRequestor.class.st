@@ -1,26 +1,26 @@
 Class {
-	#name : #GtBindingStrategyWithRequestor,
-	#superclass : #Object,
+	#name : 'GtBindingStrategyWithRequestor',
+	#superclass : 'Object',
 	#instVars : [
 		'requestor',
 		'bindingStrategy'
 	],
-	#category : #'GToolkit-VariableBindings-Commands'
+	#category : 'GToolkit-VariableBindings-Commands'
 }
 
-{ #category : #binding }
+{ #category : 'binding' }
 GtBindingStrategyWithRequestor >> bindingOf: aSymbol [
 	<return: #LiteralVariable or: nil>
 	^ self bindingStrategy bindingOf: aSymbol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBindingStrategyWithRequestor >> bindingStrategy [
 	<return: #GtBindingStrategy>
 	^ bindingStrategy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBindingStrategyWithRequestor >> bindingStrategy: aGtBindingStrategy [
 	self 
 		assert: [ aGtBindingStrategy notNil ] 
@@ -28,24 +28,24 @@ GtBindingStrategyWithRequestor >> bindingStrategy: aGtBindingStrategy [
 	bindingStrategy := aGtBindingStrategy
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtBindingStrategyWithRequestor >> initialize [
 	super initialize.
 	bindingStrategy := GtSnippetBindingStrategy new.
 	requestor := nil.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBindingStrategyWithRequestor >> requestor [
 	^ requestor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBindingStrategyWithRequestor >> requestor: anObject [
 	requestor := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBindingStrategyWithRequestor >> selection [
 	<return: #BlSelection or: #String>
 	^ self requestor 

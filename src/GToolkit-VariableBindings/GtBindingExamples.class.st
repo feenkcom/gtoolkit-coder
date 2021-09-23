@@ -1,24 +1,24 @@
 Class {
-	#name : #GtBindingExamples,
-	#superclass : #Object,
-	#category : #'GToolkit-VariableBindings-Examples'
+	#name : 'GtBindingExamples',
+	#superclass : 'Object',
+	#category : 'GToolkit-VariableBindings-Examples'
 }
 
-{ #category : #'binding strategy' }
+{ #category : 'binding strategy' }
 GtBindingExamples >> defaultHighlightingBindingStrategy [
 	<gtExample>
 	<label: 'Default highlighting binding strategy'>
 	^ GtHighlightingBindingStrategy new
 ]
 
-{ #category : #'binding strategy' }
+{ #category : 'binding strategy' }
 GtBindingExamples >> defaultSnippetBindingStrategy [
 	<gtExample>
 	<label: 'Default playground binding strategy'>
 	^ GtSnippetBindingStrategy new
 ]
 
-{ #category : #'binding strategy' }
+{ #category : 'binding strategy' }
 GtBindingExamples >> highlightingBindingStrategy [
 	<gtExample>
 	<label: 'Initialized playground bindings'>
@@ -26,7 +26,7 @@ GtBindingExamples >> highlightingBindingStrategy [
 		bindings: self snippetEmptyBindings
 ]
 
-{ #category : #'binding strategy' }
+{ #category : 'binding strategy' }
 GtBindingExamples >> queryDefaultHighlightingBindingStrategy [
 	<gtExample>
 	<label: 'Query default highlighting binding strategy'>
@@ -37,7 +37,7 @@ GtBindingExamples >> queryDefaultHighlightingBindingStrategy [
 	^ strategy
 ]
 
-{ #category : #'binding strategy' }
+{ #category : 'binding strategy' }
 GtBindingExamples >> queryDefaultSnippetBindingStrategy [
 	<gtExample>
 	<label: 'Query default playground binding strategy'>
@@ -48,7 +48,7 @@ GtBindingExamples >> queryDefaultSnippetBindingStrategy [
 	^ strategy
 ]
 
-{ #category : #'bindings - snippet' }
+{ #category : 'bindings - snippet' }
 GtBindingExamples >> queryEmptySnippetBindings [
 	<gtExample>
 	<label: 'Query empty bindings'>
@@ -60,7 +60,7 @@ GtBindingExamples >> queryEmptySnippetBindings [
 	^ emptyBindings
 ]
 
-{ #category : #'binding strategy' }
+{ #category : 'binding strategy' }
 GtBindingExamples >> queryHighlightingBindingStrategy [
 	<gtExample>
 	<label: 'Query highlighting binding strategy'>
@@ -71,7 +71,7 @@ GtBindingExamples >> queryHighlightingBindingStrategy [
 	^ strategy
 ]
 
-{ #category : #'binding strategy' }
+{ #category : 'binding strategy' }
 GtBindingExamples >> querySnippetBindingStrategy [
 	<gtExample>
 	<label: 'Query playground binding strategy'>
@@ -84,7 +84,7 @@ GtBindingExamples >> querySnippetBindingStrategy [
 	^ result
 ]
 
-{ #category : #'bindings - snippet' }
+{ #category : 'bindings - snippet' }
 GtBindingExamples >> querySnippetBindingsWithReceiver [
 	<gtExample>
 	<label: 'Set receiver'>
@@ -96,7 +96,7 @@ GtBindingExamples >> querySnippetBindingsWithReceiver [
 	^ bindings
 ]
 
-{ #category : #'bindings - snippet' }
+{ #category : 'bindings - snippet' }
 GtBindingExamples >> setSnippetBindings [
 	<gtExample>
 	<label: 'Set variable one'>
@@ -111,7 +111,7 @@ GtBindingExamples >> setSnippetBindings [
 	^ bindings
 ]
 
-{ #category : #'bindings - snippet' }
+{ #category : 'bindings - snippet' }
 GtBindingExamples >> setSnippetBindingsReceiver [
 	<gtExample>
 	<label: 'Set receiver'>
@@ -123,7 +123,7 @@ GtBindingExamples >> setSnippetBindingsReceiver [
 	^ bindings
 ]
 
-{ #category : #'bindings - snippet' }
+{ #category : 'bindings - snippet' }
 GtBindingExamples >> setSnippetBindingsWithReceiver [
 	<gtExample>
 	| bindings result receiver |
@@ -137,7 +137,7 @@ GtBindingExamples >> setSnippetBindingsWithReceiver [
 	^ bindings
 ]
 
-{ #category : #'binding strategy' }
+{ #category : 'binding strategy' }
 GtBindingExamples >> snippetBindingStrategy [
 	<gtExample>
 	<label: 'Initialized playground bindings'>
@@ -145,7 +145,7 @@ GtBindingExamples >> snippetBindingStrategy [
 		bindings: self snippetEmptyBindings
 ]
 
-{ #category : #'bindings - snippet' }
+{ #category : 'bindings - snippet' }
 GtBindingExamples >> snippetEmptyBindings [
 	<gtExample>
 	<label: 'Default object bindings'>
@@ -156,7 +156,7 @@ GtBindingExamples >> snippetEmptyBindings [
 	^ aBindings
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBindingExamples >> variableOneName [
 	<gtExample>
 	<label: 'Variable one name'>

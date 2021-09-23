@@ -1,10 +1,10 @@
 Class {
-	#name : #GtSnippetBindingStrategy,
-	#superclass : #GtBindingStrategy,
-	#category : #'GToolkit-VariableBindings-Core'
+	#name : 'GtSnippetBindingStrategy',
+	#superclass : 'GtBindingStrategy',
+	#category : 'GToolkit-VariableBindings-Core'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 GtSnippetBindingStrategy >> = anObject [
 	"Answer whether the receiver and anObject represent the same object."
 
@@ -13,7 +13,7 @@ GtSnippetBindingStrategy >> = anObject [
 	^ bindings = anObject bindings
 ]
 
-{ #category : #binding }
+{ #category : 'binding' }
 GtSnippetBindingStrategy >> bindingOf: aSymbol [
 	<return: #LiteralVariable or: nil>
 	(self isBindingInReceiverScope: aSymbol) ifTrue: [ 
@@ -22,14 +22,14 @@ GtSnippetBindingStrategy >> bindingOf: aSymbol [
 	
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 GtSnippetBindingStrategy >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ bindings hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtSnippetBindingStrategy >> isBindingInReceiverScope: aSymbol [
 	"If the requested binding is an instance variable of the receiver then return nil 
 	and allow the instance scope to return the binding. This needs to happen as currenty
@@ -42,7 +42,7 @@ GtSnippetBindingStrategy >> isBindingInReceiverScope: aSymbol [
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtSnippetBindingStrategy >> treatBinding: anAssocOrNil of: aSymbol [
 	"Subclasses can treat existing or missing bindings of a variable named aSymbol"
 	<return: #LiteralVariable or: nil>

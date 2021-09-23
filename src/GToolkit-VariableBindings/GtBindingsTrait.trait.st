@@ -1,26 +1,26 @@
 Trait {
-	#name : #GtBindingsTrait,
-	#category : #'GToolkit-VariableBindings-Core'
+	#name : 'GtBindingsTrait',
+	#category : 'GToolkit-VariableBindings-Core'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtBindingsTrait >> allNames [ 
 	^ self asDictionary keys
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtBindingsTrait >> asDictionary [
 	<return: #Dictionary>
 	^ self explicitRequirement
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 GtBindingsTrait >> at: aSymbol put: anObject [ 
 	"Set bindings for a variable named aSymbol and value anObject."
 	self explicitRequirement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBindingsTrait >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
@@ -29,7 +29,7 @@ GtBindingsTrait >> bindingOf: aSymbol [
 	^ self explicitRequirement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtBindingsTrait >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 	^ self explicitRequirement

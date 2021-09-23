@@ -1,10 +1,10 @@
 Class {
-	#name : #GtCommandExamples,
-	#superclass : #Object,
-	#category : #'GToolkit-VariableBindings-Examples'
+	#name : 'GtCommandExamples',
+	#superclass : 'Object',
+	#category : 'GToolkit-VariableBindings-Examples'
 }
 
-{ #category : #'code evaluation' }
+{ #category : 'code evaluation' }
 GtCommandExamples >> evaluateSourceCodeCommand [
 	<gtExample>
 	<label: 'Evaluate source code command'>
@@ -17,7 +17,7 @@ GtCommandExamples >> evaluateSourceCodeCommand [
 	^ aCommand
 ]
 
-{ #category : #'code evaluation' }
+{ #category : 'code evaluation' }
 GtCommandExamples >> executeDefaultSourceCode [
 	<gtExample>
 	<label: 'Evaluate a default source code command'>
@@ -28,7 +28,7 @@ GtCommandExamples >> executeDefaultSourceCode [
 	^ aCommand
 ]
 
-{ #category : #'code evaluation' }
+{ #category : 'code evaluation' }
 GtCommandExamples >> executeSourceCode [
 	<gtExample>
 	<label: 'Evaluate a source code'>
@@ -40,7 +40,7 @@ GtCommandExamples >> executeSourceCode [
 	^ aCommand
 ]
 
-{ #category : #'code evaluation' }
+{ #category : 'code evaluation' }
 GtCommandExamples >> executeSourceCodeWithUndefinedVariable [
 	<gtExample>
 	<label: 'Evaluate a source code with undefined variable'>
@@ -57,7 +57,7 @@ GtCommandExamples >> executeSourceCodeWithUndefinedVariable [
 	^ aCommand
 ]
 
-{ #category : #'code evaluation' }
+{ #category : 'code evaluation' }
 GtCommandExamples >> executeSourceCodeWithUndefinedVariableUsingPlaygroundBindings [
 	<gtExample>
 	<label: 'Evaluate a source code with undefined variable using playground bindings'>
@@ -72,7 +72,7 @@ GtCommandExamples >> executeSourceCodeWithUndefinedVariableUsingPlaygroundBindin
 	^ aCommand
 ]
 
-{ #category : #'code evaluation' }
+{ #category : 'code evaluation' }
 GtCommandExamples >> executeUndefinedVariable [
 	<gtExample>
 	<label: 'Evaluate a source code'>
@@ -89,7 +89,7 @@ GtCommandExamples >> executeUndefinedVariable [
 	^ aCommand
 ]
 
-{ #category : #'code evaluation' }
+{ #category : 'code evaluation' }
 GtCommandExamples >> playgroundBindings [
 	<gtExample>
 	^ GtSnippetBindings new

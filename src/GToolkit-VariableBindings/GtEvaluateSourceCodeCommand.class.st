@@ -1,33 +1,33 @@
 Class {
-	#name : #GtEvaluateSourceCodeCommand,
-	#superclass : #BlTktCommand,
+	#name : 'GtEvaluateSourceCodeCommand',
+	#superclass : 'BlTktCommand',
 	#instVars : [
 		'result',
 		'sourceCode',
 		'receiver',
 		'requestorAndBindings'
 	],
-	#category : #'GToolkit-VariableBindings-Commands'
+	#category : 'GToolkit-VariableBindings-Commands'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> bindingStrategy [
 	<return: #GtBindingStrategy>
 	^ requestorAndBindings bindingStrategy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> bindingStrategy: aGtBindingStrategy [
 	requestorAndBindings bindingStrategy: aGtBindingStrategy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> catchingErrors [
 	"Return an error or collections of errors to catch during a command execution"
 	^ Error, OCSemanticWarning
 ]
 
-{ #category : #execution }
+{ #category : 'execution' }
 GtEvaluateSourceCodeCommand >> execute [
 	| aCompiler |
 	aCompiler := self class compiler
@@ -49,7 +49,7 @@ GtEvaluateSourceCodeCommand >> execute [
 	^ result
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtEvaluateSourceCodeCommand >> initialize [
 	super initialize.
 	sourceCode := 'nil'.
@@ -57,39 +57,39 @@ GtEvaluateSourceCodeCommand >> initialize [
 	requestorAndBindings := GtBindingStrategyWithRequestor new.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> receiver [
 	^ receiver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> receiver: anObject [
 	receiver := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> requestor [
 	^ requestorAndBindings requestor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> requestor: anObject [
 	requestorAndBindings requestor: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> result [
 	"Return a source code evaluation result"
 	^ result
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> sourceCode [
 	<return: #String>
 	^ sourceCode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> sourceCode: aString [
 	self
 		assert: [ aString notNil ] 
@@ -97,13 +97,13 @@ GtEvaluateSourceCodeCommand >> sourceCode: aString [
 	sourceCode := aString asString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> variableBindings [
 	<return: #GtBindingsTrait>
 	^ requestorAndBindings bindingStrategy bindings
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtEvaluateSourceCodeCommand >> variableBindings: aGtBindingsTrait [
 	self 
 		assert: [ aGtBindingsTrait notNil ] 

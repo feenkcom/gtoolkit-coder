@@ -1,15 +1,15 @@
 Class {
-	#name : #GtBindingStrategy,
-	#superclass : #Object,
+	#name : 'GtBindingStrategy',
+	#superclass : 'Object',
 	#traits : 'TGtAssert',
 	#classTraits : 'TGtAssert classTrait',
 	#instVars : [
 		'bindings'
 	],
-	#category : #'GToolkit-VariableBindings-Core'
+	#category : 'GToolkit-VariableBindings-Core'
 }
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 GtBindingStrategy class >> assert: aBlock description: aStringOrBlock [
 	"Throw an assertion error if aBlock does not evaluates to true.
 	We check for true explicitly to make the assertion fail for non booleans."
@@ -19,17 +19,17 @@ GtBindingStrategy class >> assert: aBlock description: aStringOrBlock [
 				AssertionFailure signal: aStringOrBlock value ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtBindingStrategy class >> bindings: aGtBindings [
 	^ self new bindings: aGtBindings
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtBindingStrategy >> asDictionary [
 	^ self bindings asDictionary
 ]
 
-{ #category : #binding }
+{ #category : 'binding' }
 GtBindingStrategy >> bindingOf: aSymbol [
 	<return: #LiteralVariable or: nil>
 	| assocOrNil |
@@ -49,18 +49,18 @@ GtBindingStrategy >> bindingOf: aSymbol [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBindingStrategy >> bindings [
 	^ bindings
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBindingStrategy >> bindings: anObject [
 	self assert: [ anObject notNil ] description: [ 'Bindings should be an object' ].
 	bindings := anObject
 ]
 
-{ #category : #'gt-extension' }
+{ #category : 'gt-extension' }
 GtBindingStrategy >> gtBindingsFor: aView [
 	<gtView>
 	^ (self bindings respondsTo: #gtBindingsFor:)
@@ -68,23 +68,23 @@ GtBindingStrategy >> gtBindingsFor: aView [
 		ifFalse: [ aView empty ]
 ]
 
-{ #category : #binding }
+{ #category : 'binding' }
 GtBindingStrategy >> hasBindingOf: aSymbol [
 	^ self bindings hasBindingOf: aSymbol
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtBindingStrategy >> initialize [
 	super initialize.
 	self initializeBindings.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtBindingStrategy >> initializeBindings [
 	bindings := GtNoBindings uniqueInstance.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtBindingStrategy >> treatBinding: anAssocOrNil of: aSymbol [
 	self subclassResponsibility
 ]

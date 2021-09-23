@@ -1,1 +1,1 @@
-Package { #name : #'GToolkit-VariableBindings' }
+Package { #name : 'GToolkit-VariableBindings' }

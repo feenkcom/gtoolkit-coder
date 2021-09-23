@@ -16,18 +16,18 @@ GtLocalSnippetBindings provide a multi-tier set of bindings, allowing snippets t
 
 "
 Class {
-	#name : #GtLocalSnippetBindings,
-	#superclass : #Object,
+	#name : 'GtLocalSnippetBindings',
+	#superclass : 'Object',
 	#traits : 'GtBindingsTrait + TGtAssert',
 	#classTraits : 'GtBindingsTrait classTrait + TGtAssert classTrait',
 	#instVars : [
 		'sharedBindings',
 		'localBindings'
 	],
-	#category : #'GToolkit-VariableBindings-Core'
+	#category : 'GToolkit-VariableBindings-Core'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 GtLocalSnippetBindings >> = anObject [
 	"Answer whether the receiver and anObject represent the same object."
 
@@ -39,13 +39,13 @@ GtLocalSnippetBindings >> = anObject [
 		and: [ localBindings = anObject localBindings ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> allNames [ 
 
 	^ self localNames, self sharedNames 
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtLocalSnippetBindings >> asDictionary [
 	<return: #Dictionary>
 	| dictionary |
@@ -55,7 +55,7 @@ GtLocalSnippetBindings >> asDictionary [
 	^ dictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> at: aSymbol put: anObject [ 
 	"By default, bindings are global"
 
@@ -66,7 +66,7 @@ GtLocalSnippetBindings >> at: aSymbol put: anObject [
 
 ]
 
-{ #category : #binding }
+{ #category : 'binding' }
 GtLocalSnippetBindings >> bindingOf: aSymbol [
 
 	^ localBindings
@@ -75,32 +75,32 @@ GtLocalSnippetBindings >> bindingOf: aSymbol [
 		ifAbsent: [ sharedBindings bindingOf: aSymbol ]
 ]
 
-{ #category : #'gt-extension' }
+{ #category : 'gt-extension' }
 GtLocalSnippetBindings >> gtBindingsFor: aView [
 	<gtView>
 	^ self asDictionary gtItemsFor: aView
 ]
 
-{ #category : #binding }
+{ #category : 'binding' }
 GtLocalSnippetBindings >> hasBindingOf: aSymbol [
 	^ (sharedBindings hasBindingOf: aSymbol) or: [ localBindings includesKey: aSymbol ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 GtLocalSnippetBindings >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ sharedBindings hash bitXor: localBindings hash
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtLocalSnippetBindings >> initialize [ 
 
 	super initialize.
 	localBindings := IdentityDictionary new.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> localAt: aSymbol put: anObject [ 
 
 	self assert: [ aSymbol isSymbol ] description: [ 'Variable name should be a symbol' ].
@@ -109,47 +109,47 @@ GtLocalSnippetBindings >> localAt: aSymbol put: anObject [
 		put: ((WorkspaceVariable named: aSymbol) value: anObject)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> localBindings [
 	^ localBindings
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> localBindings: anObject [
 	localBindings := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> localNames [
 	"Answer the names of the local bindings"
 
 	^ localBindings keys
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 GtLocalSnippetBindings >> postCopy [
 	sharedBindings := sharedBindings copy.
 	localBindings := localBindings copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> receiver [ 
 
 	^ sharedBindings receiver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> receiver: anObject [
 
 	sharedBindings receiver: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> receiverClass [
 	^ sharedBindings receiver class
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 GtLocalSnippetBindings >> remove: aSymbol [
 	self assert: [ aSymbol isSymbol ] description: [ 'Variable name should be a symbol' ].
 	localBindings 
@@ -157,17 +157,17 @@ GtLocalSnippetBindings >> remove: aSymbol [
 		ifAbsent: [ sharedBindings remove: aSymbol ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> sharedBindings [
 	^ sharedBindings
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> sharedBindings: anObject [
 	sharedBindings := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtLocalSnippetBindings >> sharedNames [
 
 	^ sharedBindings names

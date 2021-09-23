@@ -1,16 +1,16 @@
 Class {
-	#name : #GtSnippetBindings,
-	#superclass : #Object,
+	#name : 'GtSnippetBindings',
+	#superclass : 'Object',
 	#traits : 'GtBindingsTrait + TGtAssert',
 	#classTraits : 'GtBindingsTrait classTrait + TGtAssert classTrait',
 	#instVars : [
 		'bindings',
 		'receiver'
 	],
-	#category : #'GToolkit-VariableBindings-Core'
+	#category : 'GToolkit-VariableBindings-Core'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 GtSnippetBindings >> = anObject [
 	"Answer whether the receiver and anObject represent the same object."
 
@@ -19,7 +19,7 @@ GtSnippetBindings >> = anObject [
 	^ receiver = anObject receiver and: [ bindings = anObject bindings ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 GtSnippetBindings >> asDictionary [
 	<return: #Dictionary>
 	| aDictionary |
@@ -34,7 +34,7 @@ GtSnippetBindings >> asDictionary [
 	^ aDictionary
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 GtSnippetBindings >> at: aSymbol put: anObject [ 
 	self assert: [ aSymbol isSymbol ] description: [ 'Variable name should be a symbol' ].
 
@@ -43,7 +43,7 @@ GtSnippetBindings >> at: aSymbol put: anObject [
 		put: ((WorkspaceVariable named: aSymbol) value: anObject)
 ]
 
-{ #category : #binding }
+{ #category : 'binding' }
 GtSnippetBindings >> bindingOf: aSymbol [
 	^ bindings
 		at: aSymbol 
@@ -51,58 +51,58 @@ GtSnippetBindings >> bindingOf: aSymbol [
 		ifAbsent: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSnippetBindings >> bindings [
 	^ bindings
 ]
 
-{ #category : #'gt-extension' }
+{ #category : 'gt-extension' }
 GtSnippetBindings >> gtBindingsFor: aView [
 	<gtView>
 	^ bindings gtItemsFor: aView
 ]
 
-{ #category : #binding }
+{ #category : 'binding' }
 GtSnippetBindings >> hasBindingOf: aSymbol [
 	^ bindings includesKey: aSymbol
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 GtSnippetBindings >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ receiver hash bitXor: bindings hash
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSnippetBindings >> initialize [
 	super initialize.
 	bindings := Dictionary new.
 	receiver := nil.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSnippetBindings >> names [ 
 
 	^ bindings keys
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSnippetBindings >> receiver [
 	^ receiver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSnippetBindings >> receiver: anObject [
 	receiver := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSnippetBindings >> receiverClass [
 	^ self receiver class
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 GtSnippetBindings >> remove: aSymbol [
 	self assert: [ aSymbol isSymbol ] description: [ 'Variable name should be a symbol' ].
 	bindings 
