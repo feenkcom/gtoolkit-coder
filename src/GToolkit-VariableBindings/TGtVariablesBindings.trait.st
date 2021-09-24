@@ -29,6 +29,16 @@ TGtVariablesBindings >> bindingOf: aSymbol [
 	^ self explicitRequirement
 ]
 
+{ #category : 'binding' }
+TGtVariablesBindings >> bindingValueOf: aSymbol [
+	"aSymbol is a variable name.
+	Return a value of the variable."
+	<return: #Variable or: nil>
+
+	^ (self bindingOf: aSymbol)
+		ifNotNil: [ :aBinding | aBinding value ]
+]
+
 { #category : 'testing' }
 TGtVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>

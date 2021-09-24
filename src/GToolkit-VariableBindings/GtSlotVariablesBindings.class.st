@@ -37,6 +37,15 @@ GtSlotVariablesBindings >> bindingOf: aSymbol [
 		ifNone: [ nil ]
 ]
 
+{ #category : 'binding' }
+GtSlotVariablesBindings >> bindingValueOf: aSymbol [
+	"aSymbol is a variable name.
+	Return a value of the variable."
+	<return: #Variable or: nil>
+
+	^ (self bindingOf: aSymbol) ifNotNil: [ :aSlot | aSlot read: self object ]
+]
+
 { #category : 'testing' }
 GtSlotVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>

@@ -43,6 +43,19 @@ GtCompositeVariablesBindings >> bindingOf: aSymbol [
 	^ nil
 ]
 
+{ #category : 'binding' }
+GtCompositeVariablesBindings >> bindingValueOf: aSymbol [
+	"aSymbol is a variable name.
+	Return a value of the variable."
+	<return: #Object or: nil>
+
+	bindings do: [ :eachVariableBindings |
+		(eachVariableBindings bindingValueOf: aSymbol)
+			ifNotNil: [ :aVariable | ^ aVariable ] ].
+
+	^ nil
+]
+
 { #category : 'accessing' }
 GtCompositeVariablesBindings >> bindings [
 
