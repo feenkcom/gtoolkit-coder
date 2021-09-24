@@ -21,7 +21,7 @@ GtSlotVariablesBindings >> = anObject [
 
 { #category : 'binding' }
 GtSlotVariablesBindings >> bindingNames [
-	^ object gtSlotNames
+	^ object class gtSlotNames
 ]
 
 { #category : 'binding' }
