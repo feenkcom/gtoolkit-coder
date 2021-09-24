@@ -31,7 +31,9 @@ GtContextVariablesBindings >> bindingOf: aSymbol [
 	Return nil, if the variable has no value assigned."
 	<return: #Variable or: nil>
 	| var |
-	var := context lookupVar: aSymbol.
+	var := [ context lookupVar: aSymbol ]
+		on: Error
+		do: [ nil ].
 	var
 		ifNil: [ ^ nil ].
 	var isLocalVariable
