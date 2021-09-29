@@ -1,9 +1,9 @@
 "
 I am a {{gtClass:BrLook}}.
-I am a {{gtClass:GtSourceCoderLook}}.
+I am a {{gtClass:GtSourceCoderAptitude}}.
 I attach two labels:
-1. a {{gtMethod:GtSourceCoderCollapsedTextAndExampleLook>>#methodLabel|label=method name}}, and
-2. example {{gtMethod:GtSourceCoderCollapsedTextAndExampleLook>>#exampleElement|label=execution state}}.
+1. a {{gtMethod:GtSourceCoderCollapsedTextAndExampleAptitude>>#methodLabel|label=method name}}, and
+2. example {{gtMethod:GtSourceCoderCollapsedTextAndExampleAptitude>>#exampleElement|label=execution state}}.
 1. # Examples
 
 If a method is an example, I display the method name and example result: {{gtExample:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withExampleMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}} 
