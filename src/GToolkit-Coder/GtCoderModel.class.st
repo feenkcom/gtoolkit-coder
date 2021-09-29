@@ -5,7 +5,7 @@ Is an abstract model of a moldable Coder - a tool for creating and manipulating 
 As a root entity in the hierarchy of coders {{gtClass:GtCoderModel}} do not make any assumptions on the way code is represented. In fact in contrast to {{gtClass:GtSourceCoder}} , it does not know anything about code.
 1. # Moldability
 
-Coder is designed to be easily adapted by the users in order to be used in various contexts through so called `add-ons` {{gtClass:GtCoderAddOns}}. Its subclasses can override {{gtMethod:GtCoderModel>>#addOnsClass}} to allow coder to have extra kinds of addons or {{gtMethod:GtCoderModel>>#initializeAddOns}} to customize the default add-ons.
+Coder is designed to be easily adapted by the users in order to be used in various contexts through so called `add-ons` {{gtClass:GtCoderAddOns}}. Its subclasses can override {{gtMethod:GtCoderModel>>#addOnsClass}} to allow coder to have extra kinds of addons or {{gtMethod:GtCoderModel>>#initializeAddOns:}} to customize the default add-ons.
 1. # Add-ons
 
 By default there are the following types of add-ons:

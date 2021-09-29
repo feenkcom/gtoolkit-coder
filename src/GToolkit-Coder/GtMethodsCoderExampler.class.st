@@ -1,6 +1,6 @@
 "
 I am an example executor.
-I am used by {{gtClass:GtMethodsCoder}}, see: {{gtMethod:Behavior>>#gtCoderMethodsFor:context:}} for a usage.
+I am used by {{gtClass:GtPharoMethodsCoder}}, see: {{gtMethod:Behavior>>#gtCoderMethodsFor:context:}} for a usage.
 
 
 "

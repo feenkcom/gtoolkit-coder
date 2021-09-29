@@ -1,6 +1,6 @@
 "
 I am announced when a Coder example is executed.
-I am used by {{gtClass:GtMethodCoder}}, see {{gtMethod:GtMethodCoder>>#handleExampleExecuted:|expanded}}.
+I am used by {{gtClass:GtPharoMethodCoder}}, see {{gtMethod:GtPharoMethodCoder>>#handleExampleExecuted:|expanded}}.
 
 
 "

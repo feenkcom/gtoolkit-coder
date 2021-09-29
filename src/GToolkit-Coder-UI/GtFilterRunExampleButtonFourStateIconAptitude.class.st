@@ -1,5 +1,5 @@
 "
-I am a {{gtClass:GtFilterRunExampleButtonIconLook}}.
+I am a {{gtClass:GtFilterRunExampleButtonIconAptitude}}.
 I display a colored icon that represents an {{gtClass:GtExampleWithResult}} execution and result state.
 If there are examples with different execution states, I display several colors.
 1. # Examples

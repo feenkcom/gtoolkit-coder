@@ -1,8 +1,8 @@
 "
 I am an abstract class.
 I am a {{gtClass:BrLook}}.
-I provide common behavior to update a {{gtClass:BrButton}} visual apperance based on {{gtClass:GtMethodsCoder}} and {{gtClass:GtExampleWithResult}} changes. See my {{gtMethod:GtFilterRunExampleButtonLook>>#subscribeToCoder|label=subscriptions}} for more details.
-Look at my {{gtClass:GtFilterRunExampleButtonLook|show=#gtSubclassesFor:|expanded=true|height=150}} for more details and examples:
+I provide common behavior to update a {{gtClass:BrButton}} visual apperance based on {{gtClass:GtPharoMethodsCoder}} and {{gtClass:GtExampleWithResult}} changes. See my {{gtMethod:GtFilterRunExampleButtonAptitude>>#subscribeToCoder|label=subscriptions}} for more details.
+Look at my {{gtClass:GtFilterRunExampleButtonAptitude|show=#gtSubclassesFor:|expanded=true|height=150}} for more details and examples:
 
 
 "
