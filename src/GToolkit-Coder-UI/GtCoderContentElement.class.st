@@ -1,5 +1,5 @@
 "
-I display a {{gtClass:GtBehaviorCoder}}, {{gtClass:GtPackageTagCoder}}, {{gtClass:GtPackageCoder}}, and {{gtClass:GtCodersModel}} coders.
+I display a {{gtClass:GtPharoBehaviorCoder}}, {{gtClass:GtPharoPackageTagCoder}}, {{gtClass:GtPackageCoder}}, and {{gtClass:GtCodersModel}} coders.
 1. # Example
 
 {{gtExample:GtCoderElementExamples>>#contentElementWithClass|previewExpanded|codeExpanded=false|previewHeight=700}}
