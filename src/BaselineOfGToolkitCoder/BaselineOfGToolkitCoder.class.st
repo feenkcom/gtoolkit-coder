@@ -23,12 +23,12 @@ See {{gtClass:GtSearchMethodFilterExamples}} for more details.
 
 "
 Class {
-	#name : 'BaselineOfGToolkitCoder',
-	#superclass : 'BaselineOf',
-	#category : 'BaselineOfGToolkitCoder'
+	#name : #BaselineOfGToolkitCoder,
+	#superclass : #BaselineOf,
+	#category : #BaselineOfGToolkitCoder
 }
 
-{ #category : 'baseline' }
+{ #category : #baseline }
 BaselineOfGToolkitCoder >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
@@ -37,13 +37,13 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec repository: 'github://feenkcom/pharo-futures:v0.6.3/src' ].
 		spec
 			baseline: 'GToolkitBasicUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.71/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.72/src' ].
 		spec
 			baseline: 'GToolkitAnnouncerUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.71/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.72/src' ].
 		spec
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.419/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.420/src' ].
 
 		spec package: 'GToolkit-VariableBindings'.
 		spec package: 'GToolkit-Coder' with: [
