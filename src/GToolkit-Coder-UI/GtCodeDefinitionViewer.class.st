@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCodeDefinitionViewer',
-	#superclass : 'BrStencil',
+	#name : #GtCodeDefinitionViewer,
+	#superclass : #BrStencil,
 	#instVars : [
 		'title',
 		'margin',
@@ -9,12 +9,12 @@ Class {
 	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionViewer >> aptitude: aStencil [
 	lookStencil := aStencil asStencil
 ]
 
-{ #category : 'private - instance creation' }
+{ #category : #'private - instance creation' }
 GtCodeDefinitionViewer >> buildSectionLabel: aSectionName [
 	
 	^ BrLabel new
@@ -25,7 +25,7 @@ GtCodeDefinitionViewer >> buildSectionLabel: aSectionName [
 		constraintsDo: [ :c | c grid horizontal alignLeft ]
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCodeDefinitionViewer >> initialize [
 	super initialize.
 	
@@ -36,27 +36,27 @@ GtCodeDefinitionViewer >> initialize [
 		fontSize: 10 ] asStencil.
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionViewer >> margin [
 	^ margin
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionViewer >> margin: anObject [
 	margin := anObject
 ]
 
-{ #category : 'printing' }
+{ #category : #printing }
 GtCodeDefinitionViewer >> printOn: aStream [
 	aStream print: self title
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionViewer >> title [
 	^ title
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionViewer >> title: anObject [
 	title := anObject
 ]

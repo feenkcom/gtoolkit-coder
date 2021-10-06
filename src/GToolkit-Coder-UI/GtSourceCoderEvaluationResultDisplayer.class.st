@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtSourceCoderEvaluationResultDisplayer',
-	#superclass : 'Object',
+	#name : #GtSourceCoderEvaluationResultDisplayer,
+	#superclass : #Object,
 	#instVars : [
 		'editorElement',
 		'updateRequester',
@@ -10,12 +10,12 @@ Class {
 	#category : 'GToolkit-Coder-UI-Coder - Source'
 }
 
-{ #category : 'private' }
+{ #category : #private }
 GtSourceCoderEvaluationResultDisplayer >> addAttributesFor: anEvaluationResult within: aTextInterval [
 	self subclassResponsibility
 ]
 
-{ #category : 'api - evaluation result' }
+{ #category : #'api - evaluation result' }
 GtSourceCoderEvaluationResultDisplayer >> displayResult: anEvaluationResult [
 	self
 		assert: [ anEvaluationResult notNil ]
@@ -27,7 +27,7 @@ GtSourceCoderEvaluationResultDisplayer >> displayResult: anEvaluationResult [
 	updateRequester requestUpdate
 ]
 
-{ #category : 'api - evaluation result' }
+{ #category : #'api - evaluation result' }
 GtSourceCoderEvaluationResultDisplayer >> displayResultSynchronously: anEvaluationResult [
 	self
 		assert: [ anEvaluationResult notNil ]
@@ -39,23 +39,23 @@ GtSourceCoderEvaluationResultDisplayer >> displayResultSynchronously: anEvaluati
 	self primitiveUpdateResult
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationResultDisplayer >> editorElement [
 	^ editorElement
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationResultDisplayer >> editorElement: anObject [
 	editorElement := anObject.
 	updateRequester element: editorElement
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationResultDisplayer >> evaluationResult [
 	^ evaluationResult
 ]
 
-{ #category : 'api - evaluation result' }
+{ #category : #'api - evaluation result' }
 GtSourceCoderEvaluationResultDisplayer >> hideResult [
 	evaluationResult
 		ifNil: [ ^ self ].
@@ -63,7 +63,7 @@ GtSourceCoderEvaluationResultDisplayer >> hideResult [
 	updateRequester requestUpdate
 ]
 
-{ #category : 'api - evaluation result' }
+{ #category : #'api - evaluation result' }
 GtSourceCoderEvaluationResultDisplayer >> hideResultSynchronously [
 	evaluationResult
 		ifNil: [ ^ self ].
@@ -71,7 +71,7 @@ GtSourceCoderEvaluationResultDisplayer >> hideResultSynchronously [
 	self primitiveUpdateResult
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSourceCoderEvaluationResultDisplayer >> initialize [
 	super initialize.
 	
@@ -83,7 +83,7 @@ GtSourceCoderEvaluationResultDisplayer >> initialize [
 	evaluationAttributes := #()
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtSourceCoderEvaluationResultDisplayer >> primitiveAddResult: anEvaluationResult [
 	| anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText |
 	
@@ -107,20 +107,20 @@ GtSourceCoderEvaluationResultDisplayer >> primitiveAddResult: anEvaluationResult
 		within: (theSourceStartInText to: theSourceEndInText)
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtSourceCoderEvaluationResultDisplayer >> primitiveRemoveResult [
 	self text removeAttributes: evaluationAttributes.
 	evaluationAttributes := #()
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtSourceCoderEvaluationResultDisplayer >> primitiveUpdateResult [
 	self primitiveRemoveResult.
 	evaluationResult
 		ifNotNil: [ :anEvaluationResult | self primitiveAddResult: anEvaluationResult ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationResultDisplayer >> text [
 	^ self editorElement text
 ]

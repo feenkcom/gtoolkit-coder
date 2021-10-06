@@ -4,22 +4,22 @@ I am fired by inner coders to tell {{gtClass:GtCoder}} to replace its current co
 
 "
 Class {
-	#name : 'GtCoderToReplace',
-	#superclass : 'BlEvent',
+	#name : #GtCoderToReplace,
+	#superclass : #BlEvent,
 	#instVars : [
 		'coder'
 	],
 	#category : 'GToolkit-Coder-UI-! Core'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderToReplace >> coder [
 	<return: #GtCoderModel>
 
 	^ coder
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderToReplace >> coder: aGtCoderModel [
 	coder := aGtCoderModel
 ]

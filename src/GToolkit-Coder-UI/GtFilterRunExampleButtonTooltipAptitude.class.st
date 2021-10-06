@@ -1,13 +1,13 @@
 Class {
-	#name : 'GtFilterRunExampleButtonTooltipAptitude',
-	#superclass : 'GtFilterRunExampleButtonAptitude',
+	#name : #GtFilterRunExampleButtonTooltipAptitude,
+	#superclass : #GtFilterRunExampleButtonAptitude,
 	#instVars : [
 		'tooltipContent'
 	],
 	#category : 'GToolkit-Coder-UI-Filters'
 }
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonTooltipAptitude >> initialize [
 	super initialize.
 	self initializeTooltipContent.
@@ -15,7 +15,7 @@ GtFilterRunExampleButtonTooltipAptitude >> initialize [
 	self add: (BrGlamorousWithTooltipAptitude content: [self initializeTooltipContent]).
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonTooltipAptitude >> initializeTooltipContent [
 	tooltipContent := BrColumnedList new.
 	tooltipContent 
@@ -77,7 +77,7 @@ GtFilterRunExampleButtonTooltipAptitude >> initializeTooltipContent [
 	^ tooltipContent
 ]
 
-{ #category : 'private - accessing' }
+{ #category : #'private - accessing' }
 GtFilterRunExampleButtonTooltipAptitude >> listItems [
 	| states |
 	states := GtFilterExampleState default allStates.
@@ -85,13 +85,13 @@ GtFilterRunExampleButtonTooltipAptitude >> listItems [
 		eachState labelWithAmountFor: self coder exampler ].
 ]
 
-{ #category : 'private - accessing' }
+{ #category : #'private - accessing' }
 GtFilterRunExampleButtonTooltipAptitude >> tooltipContent [
 	<return: #BlElement>
 	^ tooltipContent
 ]
 
-{ #category : 'private - updating' }
+{ #category : #'private - updating' }
 GtFilterRunExampleButtonTooltipAptitude >> updateList [
 	| statusesToDisplay |
 	statusesToDisplay := GtFilterExampleState default allStates reject: [ :eachStatus | 
@@ -101,7 +101,7 @@ GtFilterRunExampleButtonTooltipAptitude >> updateList [
 		items: statusesToDisplay
 ]
 
-{ #category : 'private - updating' }
+{ #category : #'private - updating' }
 GtFilterRunExampleButtonTooltipAptitude >> updateWidget [
 	super updateWidget.
 	self updateList.

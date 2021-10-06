@@ -1,6 +1,6 @@
-Extension { #name : 'GtCoderAction' }
+Extension { #name : #GtCoderAction }
 
-{ #category : '*GToolkit-Coder-UI' }
+{ #category : #'*GToolkit-Coder-UI' }
 GtCoderAction >> buildElementIn: aCoderActionsElement [
 	^ aCoderActionsElement newButtonForAction: self
 ]

@@ -1,13 +1,13 @@
 Class {
-	#name : 'GtContextCoderVariableAptitude',
-	#superclass : 'BrAptitude',
+	#name : #GtContextCoderVariableAptitude,
+	#superclass : #BrAptitude,
 	#instVars : [
 		'methodCoder'
 	],
 	#category : 'GToolkit-Coder-UI-Looks'
 }
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtContextCoderVariableAptitude >> initialize [
 	super initialize.
 	self
@@ -22,17 +22,17 @@ GtContextCoderVariableAptitude >> initialize [
 				yourself)
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtContextCoderVariableAptitude >> methodCoder [
 	^ methodCoder
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtContextCoderVariableAptitude >> methodCoder: contextCoder [
 	methodCoder := contextCoder
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtContextCoderVariableAptitude >> variables [
 	| vars |
 	vars := OrderedCollection new.
@@ -44,7 +44,7 @@ GtContextCoderVariableAptitude >> variables [
 	^ vars
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtContextCoderVariableAptitude >> variablesElement [
 	| variablesElement |
 	variablesElement := BrColumnedList new.

@@ -1,6 +1,6 @@
-Extension { #name : 'GtTextualCoder' }
+Extension { #name : #GtTextualCoder }
 
-{ #category : '*GToolkit-Coder-UI' }
+{ #category : #'*GToolkit-Coder-UI' }
 GtTextualCoder >> breadcrumbActions [
 	<return: #Array of: #GtSourceCoderBreadcrumbAction>
 

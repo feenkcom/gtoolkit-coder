@@ -1,25 +1,25 @@
 Class {
-	#name : 'GtSourceCoderBreadcrumbSpawnPackageAction',
-	#superclass : 'GtSourceCoderBreadcrumbAction',
+	#name : #GtSourceCoderBreadcrumbSpawnPackageAction,
+	#superclass : #GtSourceCoderBreadcrumbAction,
 	#instVars : [
 		'package'
 	],
 	#category : 'GToolkit-Coder-UI-Coder - Source Model'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderBreadcrumbSpawnPackageAction >> name [
 	<return: #String>
 
 	^ self package name
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderBreadcrumbSpawnPackageAction >> package [
 	^ package
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderBreadcrumbSpawnPackageAction >> package: aPackage [
 	self
 		assert: [ aPackage notNil ]
@@ -28,12 +28,12 @@ GtSourceCoderBreadcrumbSpawnPackageAction >> package: aPackage [
 	package := aPackage
 ]
 
-{ #category : 'action' }
+{ #category : #action }
 GtSourceCoderBreadcrumbSpawnPackageAction >> performSourceCoderActionFrom: anElement [
 	anElement phlow spawnTool: (GtPackageCoderTool package: self package)
 ]
 
-{ #category : 'printing' }
+{ #category : #printing }
 GtSourceCoderBreadcrumbSpawnPackageAction >> printOn: aStream [
 	aStream
 		nextPutAll: 'Spawn ';

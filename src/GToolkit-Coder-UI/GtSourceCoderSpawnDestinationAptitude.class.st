@@ -6,15 +6,15 @@ Each coder holds to its destination. Available destinations are modeled as subcl
 
 "
 Class {
-	#name : 'GtSourceCoderSpawnDestinationAptitude',
-	#superclass : 'GtSourceCoderAptitude',
+	#name : #GtSourceCoderSpawnDestinationAptitude,
+	#superclass : #GtSourceCoderAptitude,
 	#instVars : [
 		'switchButton'
 	],
 	#category : 'GToolkit-Coder-UI-Coder - Source Look'
 }
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSourceCoderSpawnDestinationAptitude >> initialize [
 	super initialize.
 
@@ -23,7 +23,7 @@ GtSourceCoderSpawnDestinationAptitude >> initialize [
 	self addChangeAddChildAs: #(content switchButton) with: [ switchButton ]
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtSourceCoderSpawnDestinationAptitude >> newSwitchButton [
 	^ BrButton new 
 		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude;
@@ -36,18 +36,18 @@ GtSourceCoderSpawnDestinationAptitude >> newSwitchButton [
 		zIndex: 10
 ]
 
-{ #category : 'hooks' }
+{ #category : #hooks }
 GtSourceCoderSpawnDestinationAptitude >> onCoderChanged: aGtSourceCoderUIModel [
 	self switchButton 
 		icon: aGtSourceCoderUIModel coder spawnDestination icon
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderSpawnDestinationAptitude >> switchButton [
 	^ switchButton
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtSourceCoderSpawnDestinationAptitude >> switchSpawnDestination [
 	| aSourceCoder |
 	

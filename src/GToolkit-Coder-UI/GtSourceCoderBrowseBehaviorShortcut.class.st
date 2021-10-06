@@ -1,27 +1,27 @@
 Class {
-	#name : 'GtSourceCoderBrowseBehaviorShortcut',
-	#superclass : 'GtSourceCoderShortcut',
+	#name : #GtSourceCoderBrowseBehaviorShortcut,
+	#superclass : #GtSourceCoderShortcut,
 	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderBrowseBehaviorShortcut >> description [
 	^ 'Browses behavior (class, method, pool etc) near the cursor or selection.'
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSourceCoderBrowseBehaviorShortcut >> initialize [
 	super initialize.
 	
 	combination := BlKeyCombination primaryB
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderBrowseBehaviorShortcut >> name [
 	^ 'Browse behavior'
 ]
 
-{ #category : 'evaluation' }
+{ #category : #evaluation }
 GtSourceCoderBrowseBehaviorShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
 
 	self

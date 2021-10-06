@@ -20,8 +20,8 @@ If all examples have same state, only one icon (color) is displayed: {{gtExample
 
 "
 Class {
-	#name : 'GtFilterRunExampleButtonFourStateIconAptitude',
-	#superclass : 'GtFilterRunExampleButtonIconAptitude',
+	#name : #GtFilterRunExampleButtonFourStateIconAptitude,
+	#superclass : #GtFilterRunExampleButtonIconAptitude,
 	#instVars : [
 		'fourIconElement',
 		'failureIconElement',
@@ -32,22 +32,22 @@ Class {
 	#category : 'GToolkit-Coder-UI-Filters'
 }
 
-{ #category : 'private - accessing' }
+{ #category : #'private - accessing' }
 GtFilterRunExampleButtonFourStateIconAptitude >> errorIconElement [
 	^ errorIconElement
 ]
 
-{ #category : 'private - accessing' }
+{ #category : #'private - accessing' }
 GtFilterRunExampleButtonFourStateIconAptitude >> failureIconElement [
 	^ failureIconElement
 ]
 
-{ #category : 'private - accessing' }
+{ #category : #'private - accessing' }
 GtFilterRunExampleButtonFourStateIconAptitude >> fourIconElement [
 	^ fourIconElement
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonFourStateIconAptitude >> initialize [
 	super initialize.
 	self initializeFourStateIconElement.
@@ -64,27 +64,27 @@ GtFilterRunExampleButtonFourStateIconAptitude >> initialize [
 	self addChangeAddChildAs: #(content fourStateExample) with: [ self fourIconElement ].
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonFourStateIconAptitude >> initializeErrorIconElement [
 	errorIconElement := BlElement new
 		background: self newErrorBackground.
 	self initializeIconElement: errorIconElement.
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonFourStateIconAptitude >> initializeExampleElement [
 	super initializeExampleElement.
 	self exampleElement visibility: BlVisibility gone.
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonFourStateIconAptitude >> initializeFailureIconElement [
 	failureIconElement := BlElement new
 		background: self newFailureBackground.
 	self initializeIconElement: failureIconElement
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonFourStateIconAptitude >> initializeFourStateIconElement [
 	fourIconElement := BlElement new
 		layout: (BlGridLayout new
@@ -96,31 +96,31 @@ GtFilterRunExampleButtonFourStateIconAptitude >> initializeFourStateIconElement 
 			c vertical fitContent ].
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonFourStateIconAptitude >> initializeNeutralIconElement [
 	neutralIconElement := BlElement new
 		background: self newNotExecutedBackground.
 	self initializeIconElement: neutralIconElement.
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonFourStateIconAptitude >> initializeSuccessIconElement [
 	successIconElement := BlElement new
 		background: self newSuccessBackground.
 	self initializeIconElement: successIconElement
 ]
 
-{ #category : 'private - accessing' }
+{ #category : #'private - accessing' }
 GtFilterRunExampleButtonFourStateIconAptitude >> neutralIconElement [
 	^ neutralIconElement
 ]
 
-{ #category : 'private - accessing' }
+{ #category : #'private - accessing' }
 GtFilterRunExampleButtonFourStateIconAptitude >> successIconElement [
 	^ successIconElement
 ]
 
-{ #category : 'private - updating' }
+{ #category : #'private - updating' }
 GtFilterRunExampleButtonFourStateIconAptitude >> updateFourIconElement [
 	| isNeutralVisible isErrorVisible isFailureVisible isSuccessVisible |
 	self updateIconElement: self neutralIconElement status: (isNeutralVisible := self exampler hasNotExecutedExamples).
@@ -136,7 +136,7 @@ GtFilterRunExampleButtonFourStateIconAptitude >> updateFourIconElement [
 			self exampleElement visibility: BlVisibility gone ]
 ]
 
-{ #category : 'private - updating' }
+{ #category : #'private - updating' }
 GtFilterRunExampleButtonFourStateIconAptitude >> updateIconElement: anElement status: aBoolean [
 	aBoolean
 		ifTrue: [ 
@@ -145,7 +145,7 @@ GtFilterRunExampleButtonFourStateIconAptitude >> updateIconElement: anElement st
 			anElement visibility: BlVisibility hidden ].
 ]
 
-{ #category : 'private - updating' }
+{ #category : #'private - updating' }
 GtFilterRunExampleButtonFourStateIconAptitude >> updateWidget [
 	super updateWidget.
 	self updateFourIconElement.

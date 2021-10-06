@@ -1,13 +1,13 @@
 Class {
-	#name : 'GtCodeDefinitionSingleEditor',
-	#superclass : 'GtCodeDefinitionSingleViewer',
+	#name : #GtCodeDefinitionSingleEditor,
+	#superclass : #GtCodeDefinitionSingleViewer,
 	#instVars : [
 		'setSelector'
 	],
 	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : 'private' }
+{ #category : #private }
 GtCodeDefinitionSingleEditor >> addErrorOverlayTo: aTagElement [
 	| anOverlay anAnimation |
 
@@ -27,7 +27,7 @@ GtCodeDefinitionSingleEditor >> addErrorOverlayTo: aTagElement [
 		ifTrue: [ aTagElement parent addChild: anOverlay ]
 ]
 
-{ #category : 'api - instantiation' }
+{ #category : #'api - instantiation' }
 GtCodeDefinitionSingleEditor >> create [
 	<return: #Object>
 	| aDefinition theInitialName anEditableLabel anOwner |
@@ -80,7 +80,7 @@ GtCodeDefinitionSingleEditor >> create [
 	^ anEditableLabel
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtCodeDefinitionSingleEditor >> handleRenameError: anError to: aNewName from: aTagElement [
 	anError description traceCr.
 
@@ -95,7 +95,7 @@ GtCodeDefinitionSingleEditor >> handleRenameError: anError to: aNewName from: aT
 	self addErrorOverlayTo: aTagElement
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtCodeDefinitionSingleEditor >> requestRename: aDefinition to: aNewName from: aTagElement [
 	setSelector
 		ifNil: [ ^ self ].
@@ -113,12 +113,12 @@ GtCodeDefinitionSingleEditor >> requestRename: aDefinition to: aNewName from: aT
 				from: aTagElement ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionSingleEditor >> setSelector [
 	^ setSelector
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionSingleEditor >> setSelector: anObject [
 	setSelector := anObject
 ]

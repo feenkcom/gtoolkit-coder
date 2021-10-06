@@ -1,6 +1,6 @@
-Extension { #name : 'GtCoderDropDownWithPreviewAction' }
+Extension { #name : #GtCoderDropDownWithPreviewAction }
 
-{ #category : '*GToolkit-Coder-UI' }
+{ #category : #'*GToolkit-Coder-UI' }
 GtCoderDropDownWithPreviewAction >> buildElementIn: aCoderActionsElement [
 	^ GtPreviewChangeButton new
 		icon: self icon;

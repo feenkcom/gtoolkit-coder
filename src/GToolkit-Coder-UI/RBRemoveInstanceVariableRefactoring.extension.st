@@ -1,6 +1,6 @@
-Extension { #name : 'RBRemoveInstanceVariableRefactoring' }
+Extension { #name : #RBRemoveInstanceVariableRefactoring }
 
-{ #category : '*GToolkit-Coder-UI' }
+{ #category : #'*GToolkit-Coder-UI' }
 RBRemoveInstanceVariableRefactoring >> gtDescription [
 	<return: #String or: #BlRopedText>
 	

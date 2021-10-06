@@ -1,29 +1,29 @@
 Class {
-	#name : 'GtCoderContextMenuContent',
-	#superclass : 'BrSimpleList',
+	#name : #GtCoderContextMenuContent,
+	#superclass : #BrSimpleList,
 	#instVars : [
 		'editorElement'
 	],
 	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : 'defaults' }
+{ #category : #defaults }
 GtCoderContextMenuContent >> defaultContextMenuActionName [
 	^ #contextMenuAction
 ]
 
-{ #category : 'defaults' }
+{ #category : #defaults }
 GtCoderContextMenuContent >> defaultLabelChildName [
 	^ #label
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderContextMenuContent >> editorElement [
 	<return: #BrEditorElement>
 	^ editorElement
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderContextMenuContent >> editorElement: anEditorElement [
 	self 
 		assert: [ anEditorElement isNotNil ] 
@@ -31,7 +31,7 @@ GtCoderContextMenuContent >> editorElement: anEditorElement [
 	editorElement := anEditorElement
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderContextMenuContent >> initialize [
 	super initialize.
 	self

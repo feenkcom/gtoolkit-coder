@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtSourceCoderShortcut',
-	#superclass : 'BrEditorShortcut',
+	#name : #GtSourceCoderShortcut,
+	#superclass : #BrEditorShortcut,
 	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
-{ #category : 'private' }
+{ #category : #private }
 GtSourceCoderShortcut >> forEditor: aBrTextEditor selectedStringDo: aSelectedTextBlock orCursorStringPositionDo: aCursorTextPositionBlock [
 	aBrTextEditor selectedText
 		ifEmpty: [ aBrTextEditor hasCursors 
@@ -18,7 +18,7 @@ GtSourceCoderShortcut >> forEditor: aBrTextEditor selectedStringDo: aSelectedTex
 		ifNotEmpty: [ :aSelectedText | aSelectedTextBlock value: aSelectedText asString ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtSourceCoderShortcut >> forEditor: aBrTextEditor selectionIntervalDo: aSelectionIntervalBlock orCursorStringPositionDo: aCursorTextPositionBlock [
 	aBrTextEditor hasSelection
 		ifTrue: [
@@ -36,12 +36,12 @@ GtSourceCoderShortcut >> forEditor: aBrTextEditor selectionIntervalDo: aSelectio
 				aCursorTextPositionBlock value: aTextPosition ] ]
 ]
 
-{ #category : 'evaluation' }
+{ #category : #evaluation }
 GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
 	self subclassResponsibility
 ]
 
-{ #category : 'evaluation' }
+{ #category : #evaluation }
 GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
 	self
 		performOnEditor: aBrTextEditor
@@ -50,13 +50,13 @@ GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElemen
 		dueTo: aShortcutEvent
 ]
 
-{ #category : 'evaluation' }
+{ #category : #evaluation }
 GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement dueTo: aShortcutEvent [
 	aBrTextEditor model ifNotNil: [ :aSourceCoderViewModel |
 		self performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtSourceCoderShortcut >> selectionIntervalIn: aBrTextEditor [
 	aBrTextEditor selection
 		do: [ :eachMonotoneSelection | ^ eachMonotoneSelection from + 1 to: eachMonotoneSelection to ].

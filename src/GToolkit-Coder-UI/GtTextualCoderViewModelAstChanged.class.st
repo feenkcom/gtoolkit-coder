@@ -1,18 +1,18 @@
 Class {
-	#name : 'GtTextualCoderViewModelAstChanged',
-	#superclass : 'GtTextualCoderViewModelAnnouncement',
+	#name : #GtTextualCoderViewModelAstChanged,
+	#superclass : #GtTextualCoderViewModelAnnouncement,
 	#instVars : [
 		'ast'
 	],
 	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelAstChanged >> ast [
 	^ ast
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelAstChanged >> ast: anObject [
 	ast := anObject
 ]

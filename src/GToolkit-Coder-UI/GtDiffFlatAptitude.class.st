@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtDiffFlatAptitude',
-	#superclass : 'GtDiffAptitude',
+	#name : #GtDiffFlatAptitude,
+	#superclass : #GtDiffAptitude,
 	#category : 'GToolkit-Coder-UI-Diff'
 }
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtDiffFlatAptitude >> initialize [
 	super initialize.
 	
@@ -17,7 +17,7 @@ GtDiffFlatAptitude >> initialize [
 	self add: (self newTextLook // GtDiffNewTextId)
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtDiffFlatAptitude >> newTextLook [
 	^ BrSizeAdjustmentAptitude new
 		normal: [ :aStyle |

@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtExpandableSourceCoderElement',
-	#superclass : 'BrExpander',
+	#name : #GtExpandableSourceCoderElement,
+	#superclass : #BrExpander,
 	#instVars : [
 		'collapsedElement',
 		'expandedElement',
@@ -9,18 +9,18 @@ Class {
 	#category : 'GToolkit-Coder-UI-Coder - Source'
 }
 
-{ #category : 'private' }
+{ #category : #private }
 GtExpandableSourceCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
 	aSourceCoder coderLook
 		ifNotNil: [ :aCoderLook | anElement addAptitude: aCoderLook ]
 ]
 
-{ #category : 'converting' }
+{ #category : #converting }
 GtExpandableSourceCoderElement >> asVerticallyResizableDo: aBlock [
 	^ self
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtExpandableSourceCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollapsedElement [
 	aCollapsedElement coderUIModel: aSourceCoder.
 
@@ -31,7 +31,7 @@ GtExpandableSourceCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollap
 			aCollapsedElement addAptitude: GtSourceCoderCollapsedTextAndExampleAptitude ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtExpandableSourceCoderElement >> assignExpandedCoder: aSourceCoder to: anExpandedElement [
 	anExpandedElement coderUIModel: aSourceCoder.
 
@@ -42,7 +42,7 @@ GtExpandableSourceCoderElement >> assignExpandedCoder: aSourceCoder to: anExpand
 			anExpandedElement addAptitude: GtSourceCoderEditorAptitude ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtExpandableSourceCoderElement >> coderUIModel [
 	<return: #GtPharoMethodCoder>
 	self
@@ -52,7 +52,7 @@ GtExpandableSourceCoderElement >> coderUIModel [
 	^ coderUIModel
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtExpandableSourceCoderElement >> coderUIModel: aCoderUIModel [
 	self
 		assert: [ aCoderUIModel isNotNil ]
@@ -93,7 +93,7 @@ GtExpandableSourceCoderElement >> coderUIModel: aCoderUIModel [
 		when: GtTextualCoderViewModelExpansionChanged send: #onViewModelExpansionChanged: to: self
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 	<gtView>
 	self shortcuts ifEmpty: [ ^ aView empty ].
@@ -106,7 +106,7 @@ GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 		column: 'Action' text: [ :each | each action asString ]
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtExpandableSourceCoderElement >> initialize [
 	super initialize.
 
@@ -127,19 +127,19 @@ GtExpandableSourceCoderElement >> initialize [
 		content: [ expandedElement := self newExpandedElement ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtExpandableSourceCoderElement >> isDirty: anElement [
 	^ anElement userData
 		at: #coderDirty
 		ifAbsent: [ false ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtExpandableSourceCoderElement >> markDirty: anElement as: aBoolean [
 	anElement userData at: #coderDirty put: aBoolean
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtExpandableSourceCoderElement >> newCollapsedElement [
 	| aCollapsedElement |
 	aCollapsedElement := GtSourceCoderCollapsedContentElement new.
@@ -150,7 +150,7 @@ GtExpandableSourceCoderElement >> newCollapsedElement [
 	^ aCollapsedElement
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtExpandableSourceCoderElement >> newExpandedElement [
 	| anExpandedElement |
 	anExpandedElement := GtSourceCoderExpandedContentElement new.
@@ -161,7 +161,7 @@ GtExpandableSourceCoderElement >> newExpandedElement [
 	^ anExpandedElement
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtExpandableSourceCoderElement >> onCollapsed [
 	self beInSingleCompositionLayer.
 	
@@ -171,7 +171,7 @@ GtExpandableSourceCoderElement >> onCollapsed [
 			ifTrue: [ self assignCollapsedCoder: aCoderUIModel to: collapsedElement ] ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtExpandableSourceCoderElement >> onExpanded [
 	self beInSeparateCompositionLayer.
 
@@ -181,16 +181,16 @@ GtExpandableSourceCoderElement >> onExpanded [
 			ifTrue: [ self assignExpandedCoder: aCoderUIModel to: expandedElement ] ]
 ]
 
-{ #category : 'events' }
+{ #category : #events }
 GtExpandableSourceCoderElement >> onMethodRemoved: anAnnouncement [
 ]
 
-{ #category : 'private - event handling' }
+{ #category : #'private - event handling' }
 GtExpandableSourceCoderElement >> onViewModelExpansionChanged: anAnnouncement [
 	self expanded: anAnnouncement expanded
 ]
 
-{ #category : 'focus requesting' }
+{ #category : #'focus requesting' }
 GtExpandableSourceCoderElement >> requestFocus [
 	self
 		childNamed: #editor
@@ -198,7 +198,7 @@ GtExpandableSourceCoderElement >> requestFocus [
 		ifNone: [ super requestFocus ] 
 ]
 
-{ #category : 'focus requesting' }
+{ #category : #'focus requesting' }
 GtExpandableSourceCoderElement >> requestFocusAsyncronously [
 	^ self
 		enqueueTask:

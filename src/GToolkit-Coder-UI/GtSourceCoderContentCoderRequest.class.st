@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtSourceCoderContentCoderRequest',
-	#superclass : 'BrRequest',
+	#name : #GtSourceCoderContentCoderRequest,
+	#superclass : #BrRequest,
 	#category : 'GToolkit-Coder-UI-Coder - Source Events'
 }
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSourceCoderContentCoderRequest >> responseClass [
 	^ GtSourceCoderContentCoderChanged
 ]

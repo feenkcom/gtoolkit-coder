@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtTextualCoderViewModelTextAttributesAdded',
-	#superclass : 'GtTextualCoderViewModelAnnouncement',
+	#name : #GtTextualCoderViewModelTextAttributesAdded,
+	#superclass : #GtTextualCoderViewModelAnnouncement,
 	#instVars : [
 		'coderTextAttributes',
 		'startPosition',
@@ -9,32 +9,32 @@ Class {
 	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextAttributesAdded >> coderTextAttributes [
 	^ coderTextAttributes
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextAttributesAdded >> coderTextAttributes: anObject [
 	coderTextAttributes := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextAttributesAdded >> startPosition [
 	^ startPosition
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextAttributesAdded >> startPosition: anObject [
 	startPosition := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextAttributesAdded >> stopPosition [
 	^ stopPosition
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextAttributesAdded >> stopPosition: anObject [
 	stopPosition := anObject
 ]

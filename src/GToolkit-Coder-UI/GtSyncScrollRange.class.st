@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtSyncScrollRange',
-	#superclass : 'Object',
+	#name : #GtSyncScrollRange,
+	#superclass : #Object,
 	#instVars : [
 		'leftFirst',
 		'leftLast',
@@ -11,14 +11,14 @@ Class {
 	#category : 'GToolkit-Coder-UI-Diff'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtSyncScrollRange class >> left: leftInteger right: rightInteger [
 	^ self new
 		initializeLeft: leftInteger right: rightInteger;
 		yourself
 ]
 
-{ #category : 'syncing' }
+{ #category : #syncing }
 GtSyncScrollRange >> advanceBoth [
 	self leftSize = self rightSize
 		ifTrue: [ leftLast := leftLast + 1.
@@ -29,7 +29,7 @@ GtSyncScrollRange >> advanceBoth [
 		yourself
 ]
 
-{ #category : 'syncing' }
+{ #category : #syncing }
 GtSyncScrollRange >> advanceLeft [
 	self rightSize = 0
 		ifTrue: [ isDifference := true.
@@ -40,7 +40,7 @@ GtSyncScrollRange >> advanceLeft [
 		yourself
 ]
 
-{ #category : 'syncing' }
+{ #category : #syncing }
 GtSyncScrollRange >> advanceRight [
 	self leftSize = 0
 		ifTrue: [ isDifference := true.
@@ -51,7 +51,7 @@ GtSyncScrollRange >> advanceRight [
 		yourself
 ]
 
-{ #category : 'initialize-release' }
+{ #category : #'initialize-release' }
 GtSyncScrollRange >> initialize [
 	super initialize.
 	isDifference := false.
@@ -61,7 +61,7 @@ GtSyncScrollRange >> initialize [
 	rightLast := 0
 ]
 
-{ #category : 'initialize-release' }
+{ #category : #'initialize-release' }
 GtSyncScrollRange >> initializeLeft: leftInteger right: rightInteger [
 	leftFirst := leftInteger.
 	leftLast := leftInteger.
@@ -69,27 +69,27 @@ GtSyncScrollRange >> initializeLeft: leftInteger right: rightInteger [
 	rightLast := rightInteger
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtSyncScrollRange >> isDifference [
 	^ isDifference
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSyncScrollRange >> leftFirst [
 	^ leftFirst
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSyncScrollRange >> leftLast [
 	^ leftLast
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSyncScrollRange >> leftSize [
 	^ leftLast - leftFirst
 ]
 
-{ #category : 'syncing' }
+{ #category : #syncing }
 GtSyncScrollRange >> mergeWith: aRange [
 	leftFirst := leftFirst min: aRange leftFirst.
 	leftLast := leftLast max: aRange leftLast.
@@ -97,7 +97,7 @@ GtSyncScrollRange >> mergeWith: aRange [
 	rightLast := rightLast max: aRange rightLast
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtSyncScrollRange >> overlapsLeft: leftInterval orRight: rightInterval [
 	^ ((self leftLast < leftInterval first
 		or: [ self leftFirst > leftInterval last ])
@@ -105,7 +105,7 @@ GtSyncScrollRange >> overlapsLeft: leftInterval orRight: rightInterval [
 				or: [ self rightFirst > rightInterval last ] ]) not
 ]
 
-{ #category : 'printing' }
+{ #category : #printing }
 GtSyncScrollRange >> printOn: aStream [
 	super printOn: aStream.
 	aStream
@@ -123,17 +123,17 @@ GtSyncScrollRange >> printOn: aStream [
 		nextPut: $]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSyncScrollRange >> rightFirst [
 	^ rightFirst
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSyncScrollRange >> rightLast [
 	^ rightLast
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSyncScrollRange >> rightSize [
 	^ rightLast - rightFirst
 ]
