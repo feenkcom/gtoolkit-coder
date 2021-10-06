@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtClassCardElement',
-	#superclass : 'GtCoderCardElement',
+	#name : #GtClassCardElement,
+	#superclass : #GtCoderCardElement,
 	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : 'building ui' }
+{ #category : #'building ui' }
 GtClassCardElement >> detailsLabel [
 	| comment |
 	comment := coder theClass organization comment.

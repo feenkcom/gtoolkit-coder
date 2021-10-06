@@ -1,6 +1,6 @@
-Extension { #name : 'GtCoderDropDownAction' }
+Extension { #name : #GtCoderDropDownAction }
 
-{ #category : '*GToolkit-Coder-UI' }
+{ #category : #'*GToolkit-Coder-UI' }
 GtCoderDropDownAction >> buildElementIn: aCoderActionsElement [
 	^ aCoderActionsElement newDropButtonForAction: self
 ]

@@ -1,18 +1,18 @@
 Class {
-	#name : 'GtTextualCoderViewModelTextAttributesRemoved',
-	#superclass : 'GtTextualCoderViewModelAnnouncement',
+	#name : #GtTextualCoderViewModelTextAttributesRemoved,
+	#superclass : #GtTextualCoderViewModelAnnouncement,
 	#instVars : [
 		'coderTextAttributes'
 	],
 	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextAttributesRemoved >> coderTextAttributes [
 	^ coderTextAttributes
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextAttributesRemoved >> coderTextAttributes: anObject [
 	coderTextAttributes := anObject
 ]

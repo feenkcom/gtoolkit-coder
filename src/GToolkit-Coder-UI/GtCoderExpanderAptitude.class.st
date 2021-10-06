@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtCoderExpanderAptitude',
-	#superclass : 'GtCoderExpanderWithoutShadowAptitude',
+	#name : #GtCoderExpanderAptitude,
+	#superclass : #GtCoderExpanderWithoutShadowAptitude,
 	#category : 'GToolkit-Coder-UI-Looks'
 }
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderExpanderAptitude >> initialize [
 	super initialize.
 	

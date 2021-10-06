@@ -13,12 +13,12 @@ To obtain the execution context, use {{gtMethod:GtCoderExecutionContextVariable 
 
 "
 Class {
-	#name : 'GtCoderExecutionContextVariable',
-	#superclass : 'DynamicVariable',
+	#name : #GtCoderExecutionContextVariable,
+	#superclass : #DynamicVariable,
 	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : 'api - execution' }
+{ #category : #'api - execution' }
 GtCoderExecutionContextVariable class >> element: anElement do: aBlock [
 	"Initialize a Space ID using the element and evaluate the block"
 	| aSpaceId |
@@ -28,19 +28,19 @@ GtCoderExecutionContextVariable class >> element: anElement do: aBlock [
 		during: aBlock
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtCoderExecutionContextVariable class >> isInheritable [
 	^true
 ]
 
-{ #category : 'private - instance creation' }
+{ #category : #'private - instance creation' }
 GtCoderExecutionContextVariable class >> newSpaceIdFromElement: anElement [
 	anElement spaceDo: [ :aSpace | 
 		^ aSpace id ].
 	^ nil
 ]
 
-{ #category : 'api - execution' }
+{ #category : #'api - execution' }
 GtCoderExecutionContextVariable class >> spaceDo: aSpaceBlock ifClosed: aClosedBlock [
 	self value ifNotNil: [ :aSpaceId |
 		BlSpace

@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtSourceCoderEvaluationHighlighter',
-	#superclass : 'GtSourceCoderEvaluationResultDisplayer',
+	#name : #GtSourceCoderEvaluationHighlighter,
+	#superclass : #GtSourceCoderEvaluationResultDisplayer,
 	#category : 'GToolkit-Coder-UI-Coder - Source'
 }
 
-{ #category : 'private - ui' }
+{ #category : #'private - ui' }
 GtSourceCoderEvaluationHighlighter >> addAttributesFor: anEvaluationResult within: aTextInterval [
 	| theAttributes |
 	

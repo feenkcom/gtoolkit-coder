@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtMultipleCodersViewModel',
-	#superclass : 'Object',
+	#name : #GtMultipleCodersViewModel,
+	#superclass : #Object,
 	#instVars : [
 		'coder',
 		'coderUIModels'
@@ -8,7 +8,7 @@ Class {
 	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtMultipleCodersViewModel >> announcer [
 	self
 		deprecated: 'Use #coder announcer instead.'
@@ -17,42 +17,42 @@ GtMultipleCodersViewModel >> announcer [
 	^ self coder announcer
 ]
 
-{ #category : 'converting' }
+{ #category : #converting }
 GtMultipleCodersViewModel >> asCoderUIModel [
 	^ self
 ]
 
-{ #category : 'converting' }
+{ #category : #converting }
 GtMultipleCodersViewModel >> asElement [
 	^ self elementClass new
 		codersUIModel: self;
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtMultipleCodersViewModel >> coder [
 	<return: #GtCodersModel>
 	
 	^ coder
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtMultipleCodersViewModel >> coder: aGtCodersModel [
 	coder := aGtCodersModel.
 	self updateCoderUIModels
 ]
 
-{ #category : 'updating' }
+{ #category : #updating }
 GtMultipleCodersViewModel >> coderUIModelFor: aCoder [
 	^ aCoder asCoderUIModel
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtMultipleCodersViewModel >> coderUIModels [
 	^ coderUIModels
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtMultipleCodersViewModel >> coders [
 	<return: #GtCodersModel>
 	
@@ -63,7 +63,7 @@ GtMultipleCodersViewModel >> coders [
 	^ coder
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtMultipleCodersViewModel >> coders: aGtCodersModel [
 	self
 		deprecated: 'Please use coder: instead.'
@@ -74,19 +74,19 @@ GtMultipleCodersViewModel >> coders: aGtCodersModel [
 	self coder: aGtCodersModel
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtMultipleCodersViewModel >> elementClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtMultipleCodersViewModel >> initialize [
 	super initialize.
 	
 	coderUIModels := #()
 ]
 
-{ #category : 'updating' }
+{ #category : #updating }
 GtMultipleCodersViewModel >> updateCoderUIModels [
 	| aMappingOfCoderToCoderUI |
 	

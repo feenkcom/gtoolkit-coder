@@ -1,15 +1,15 @@
 Class {
-	#name : 'GtCoderNavigationMethodProtocolListElement',
-	#superclass : 'BrSimpleList',
+	#name : #GtCoderNavigationMethodProtocolListElement,
+	#superclass : #BrSimpleList,
 	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtCoderNavigationMethodProtocolListElement class >> fromClass: aClass [
 	^ self new initializeWithClass: aClass
 ]
 
-{ #category : 'private - ui' }
+{ #category : #'private - ui' }
 GtCoderNavigationMethodProtocolListElement >> buildProtocolLabel: aProtocol [
 	^ BrLabel new
 		aptitude: BrGlamorousLabelAptitude; 
@@ -17,7 +17,7 @@ GtCoderNavigationMethodProtocolListElement >> buildProtocolLabel: aProtocol [
 		text: aProtocol name
 ]
 
-{ #category : 'private - ui' }
+{ #category : #'private - ui' }
 GtCoderNavigationMethodProtocolListElement >> buildProtocolRow: aProtocol index: aRowIndex list: aListElement [
 	^ BrWidgetContainer new
 		layout: BlLinearLayout horizontal;
@@ -47,19 +47,19 @@ GtCoderNavigationMethodProtocolListElement >> buildProtocolRow: aProtocol index:
 		addChild: (self buildProtocolLabel: aProtocol)
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderNavigationMethodProtocolListElement >> initialize [
 	super initialize.
 	
 	self stencil: [ :eachProtocol :eachIndex :aListElement | self buildProtocolRow: eachProtocol index: eachIndex list: aListElement ]
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderNavigationMethodProtocolListElement >> initializeWithClass: aClass [	
 	self initializeWithProtocols: aClass organization allProtocols
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderNavigationMethodProtocolListElement >> initializeWithProtocols: aCollection [	
 	self items: (aCollection sorted: [ :protocolA :protocolB | protocolA name < protocolB name ])
 ]

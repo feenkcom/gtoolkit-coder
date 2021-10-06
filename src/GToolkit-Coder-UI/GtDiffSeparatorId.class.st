@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtDiffSeparatorId',
-	#superclass : 'GtDiffElementId',
+	#name : #GtDiffSeparatorId,
+	#superclass : #GtDiffElementId,
 	#category : 'GToolkit-Coder-UI-Diff'
 }
 
-{ #category : 'converting' }
+{ #category : #converting }
 GtDiffSeparatorId >> asSymbol [
 	^ #'diff--separator'
 ]

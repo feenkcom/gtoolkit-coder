@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtTextualCoderViewModelSelectionChanged',
-	#superclass : 'GtTextualCoderViewModelAnnouncement',
+	#name : #GtTextualCoderViewModelSelectionChanged,
+	#superclass : #GtTextualCoderViewModelAnnouncement,
 	#instVars : [
 		'source',
 		'selection'
@@ -8,22 +8,22 @@ Class {
 	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelSelectionChanged >> selection [
 	^ selection
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelSelectionChanged >> selection: anObject [
 	selection := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelSelectionChanged >> source [
 	^ source
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelSelectionChanged >> source: anObject [
 	source := anObject
 ]

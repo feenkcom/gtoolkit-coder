@@ -1,5 +1,5 @@
 Class {
-	#name : 'GtTextualCoderViewModelAnnouncement',
-	#superclass : 'Announcement',
+	#name : #GtTextualCoderViewModelAnnouncement,
+	#superclass : #Announcement,
 	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }

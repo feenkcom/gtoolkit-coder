@@ -1,6 +1,6 @@
-Extension { #name : 'RBRenameClassVariableRefactoring' }
+Extension { #name : #RBRenameClassVariableRefactoring }
 
-{ #category : '*GToolkit-Coder-UI' }
+{ #category : #'*GToolkit-Coder-UI' }
 RBRenameClassVariableRefactoring >> gtDescription [
 	<return: #String or: #BlRopedText>
 	

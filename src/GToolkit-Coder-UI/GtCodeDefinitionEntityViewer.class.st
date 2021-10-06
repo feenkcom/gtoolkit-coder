@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCodeDefinitionEntityViewer',
-	#superclass : 'GtCodeDefinitionViewer',
+	#name : #GtCodeDefinitionEntityViewer,
+	#superclass : #GtCodeDefinitionViewer,
 	#instVars : [
 		'definition',
 		'owner',
@@ -15,32 +15,32 @@ Class {
 	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionEntityViewer >> completion: aStencil [
 	completionStencil := aStencil asStencil
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionEntityViewer >> containerName [
 	^ containerName
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionEntityViewer >> containerName: anObject [
 	containerName := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionEntityViewer >> definition [
 	^ definition
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionEntityViewer >> definition: anObject [
 	definition := anObject
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCodeDefinitionEntityViewer >> initialize [
 	super initialize.
 
@@ -59,34 +59,34 @@ GtCodeDefinitionEntityViewer >> initialize [
 	modelSelector := nil
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionEntityViewer >> modelSelector [
 	^ modelSelector
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionEntityViewer >> modelSelector: anObject [
 	modelSelector := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionEntityViewer >> owner [
 	^ owner
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionEntityViewer >> owner: anObject [
 	owner := anObject
 ]
 
-{ #category : 'interactions' }
+{ #category : #interactions }
 GtCodeDefinitionEntityViewer >> when: aBlEvent do: aBlock [
 	"aBlock is in form [ :anEvent :aCodeDefinition ]"
 	
 	eventHandlers add: (aBlEvent -> aBlock)
 ]
 
-{ #category : 'interactions' }
+{ #category : #interactions }
 GtCodeDefinitionEntityViewer >> whenClickDo: aBlock [
 	"I do not react to primary+click"
 	"aBlock is in form [ :anEvent :aCodeDefinition ]"
@@ -100,14 +100,14 @@ GtCodeDefinitionEntityViewer >> whenClickDo: aBlock [
 					aBlock cull: anEvent cull: aDefinition ] ]
 ]
 
-{ #category : 'interactions' }
+{ #category : #interactions }
 GtCodeDefinitionEntityViewer >> whenKey: aBlKeyCombination do: aBlock [
 	"aBlock is in form [ :anEvent :aCodeDefinition ]"
 	
 	interactions add: (aBlKeyCombination -> aBlock)
 ]
 
-{ #category : 'interactions' }
+{ #category : #interactions }
 GtCodeDefinitionEntityViewer >> whenPrimaryClickDo: aBlock [
 	"aBlock is in form [ :anEvent :aCodeDefinition ]"
 	

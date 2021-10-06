@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtCoderFilterList',
-	#superclass : 'BrSimpleList',
+	#name : #GtCoderFilterList,
+	#superclass : #BrSimpleList,
 	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderFilterList >> initialize [
 	super initialize.
 	self
@@ -22,7 +22,7 @@ GtCoderFilterList >> initialize [
 	self vFitContent.
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderFilterList >> items: anItemCollection title: aTitleBlock action: anActionBlock [
 	| anActionCollection |
 	anActionCollection := anItemCollection collect: [ :eachItem | 
@@ -33,7 +33,7 @@ GtCoderFilterList >> items: anItemCollection title: aTitleBlock action: anAction
 	self items: anActionCollection.
 ]
 
-{ #category : 'private - event handling' }
+{ #category : #'private - event handling' }
 GtCoderFilterList >> onSelectionChanged: anEvent [
 	self selectedItemDo: [ :anItem | 
 		anEvent consumed: true.

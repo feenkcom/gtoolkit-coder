@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderFilterListItemElement',
-	#superclass : 'BrHorizontalPane',
+	#name : #GtCoderFilterListItemElement,
+	#superclass : #BrHorizontalPane,
 	#instVars : [
 		'item',
 		'labelElement'
@@ -8,7 +8,7 @@ Class {
 	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderFilterListItemElement >> initialize [
 	super initialize.
 	
@@ -18,25 +18,25 @@ GtCoderFilterListItemElement >> initialize [
 	self vFitContent.
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderFilterListItemElement >> item [
 	^ item
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderFilterListItemElement >> item: anObject [
 	item == anObject ifTrue: [ ^ self ].
 	item := anObject.
 	self onItemChanged.
 ]
 
-{ #category : 'private - instance creation' }
+{ #category : #'private - instance creation' }
 GtCoderFilterListItemElement >> newLabelElement [
 	^ BrLabel new
 		aptitude: BrGlamorousLabelAptitude
 ]
 
-{ #category : 'private - hooks' }
+{ #category : #'private - hooks' }
 GtCoderFilterListItemElement >> onItemChanged [
 	labelElement text: self item title
 ]

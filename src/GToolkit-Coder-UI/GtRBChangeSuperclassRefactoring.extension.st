@@ -1,6 +1,6 @@
-Extension { #name : 'GtRBChangeSuperclassRefactoring' }
+Extension { #name : #GtRBChangeSuperclassRefactoring }
 
-{ #category : '*GToolkit-Coder-UI' }
+{ #category : #'*GToolkit-Coder-UI' }
 GtRBChangeSuperclassRefactoring >> gtDescription [
 	<return: #String or: #BlRopedText>
 	

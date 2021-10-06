@@ -1,27 +1,27 @@
 Class {
-	#name : 'GtSourceCoderSaveShortcut',
-	#superclass : 'GtSourceCoderShortcut',
+	#name : #GtSourceCoderSaveShortcut,
+	#superclass : #GtSourceCoderShortcut,
 	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderSaveShortcut >> description [
 	^ 'Apply changes and save the source code (compile).'
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSourceCoderSaveShortcut >> initialize [
 	super initialize.
 	
 	combination := BlKeyCombination primaryS
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderSaveShortcut >> name [
 	^ 'Save'
 ]
 
-{ #category : 'evaluation' }
+{ #category : #evaluation }
 GtSourceCoderSaveShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
 	aSourceCoderViewModel save
 ]
