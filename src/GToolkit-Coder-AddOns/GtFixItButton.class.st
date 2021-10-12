@@ -1,5 +1,5 @@
 Class {
-	#name : 'GtFixItButton',
-	#superclass : 'BrButton',
+	#name : #GtFixItButton,
+	#superclass : #BrButton,
 	#category : 'GToolkit-Coder-AddOns-FixIt'
 }

@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtRenameAction2',
-	#superclass : 'Object',
+	#name : #GtRenameAction2,
+	#superclass : #Object,
 	#traits : 'TGtAnnouncer',
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
@@ -16,10 +16,10 @@ Class {
 		'originalCursors',
 		'coderAttributes'
 	],
-	#category : 'GToolkit-Coder-AddOns-Inline rename'
+	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtRenameAction2 class >> locations: aCollectionOfIntervals textualCoderViewModel: aTextualCoderViewModel [
 	^ self new
 		locations: aCollectionOfIntervals;
@@ -27,7 +27,7 @@ GtRenameAction2 class >> locations: aCollectionOfIntervals textualCoderViewModel
 		yourself
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 GtRenameAction2 >> accept [
 	self updateSource.
 	self uninstall.
@@ -35,11 +35,11 @@ GtRenameAction2 >> accept [
 	self announceEvent: #accept
 ]
 
-{ #category : 'private - attributes' }
+{ #category : #'private - attributes' }
 GtRenameAction2 >> addRenameAttributes [
 	| text cursorInLocation |
 
-	text := self pharoSourceCoderViewModel sourceText.
+	text := self pharoSourceCoderViewModel styledText ifNil: [ self pharoSourceCoderViewModel sourceText ].
 
 	cursorInLocation := originalLocations
 		anySatisfy: [ :each | originalCursors anySatisfy: [ :eachCursor | eachCursor position between: each first - 1 and: each last ] ].
@@ -73,22 +73,22 @@ GtRenameAction2 >> addRenameAttributes [
 		description: [ 'There must not be more than one editor attribute' ]
 ]
 
-{ #category : 'private - actions' }
+{ #category : #'private - actions' }
 GtRenameAction2 >> allowSave [
 	pharoSourceCoderViewModel allowSaveDueTo: self
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtRenameAction2 >> announceEvent: aSymbol [
 	^ self announce: (GtRenameActionAnnouncement for: self type: aSymbol)
 ]
 
-{ #category : 'announcer' }
+{ #category : #announcer }
 GtRenameAction2 >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 GtRenameAction2 >> cancel [
 	self uninstall.
 	self undoChanges.
@@ -96,12 +96,12 @@ GtRenameAction2 >> cancel [
 	self announceEvent: #cancel
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameAction2 >> editor [
 	^ self editorAttribute editor
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameAction2 >> editorAttribute [
 	^ renameAttributes notNil
 		ifTrue: [ renameAttributes
@@ -109,30 +109,30 @@ GtRenameAction2 >> editorAttribute [
 				ifNone: [  ] ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtRenameAction2 >> filter: aTextEditorInputFilter [
 	filter := aTextEditorInputFilter.
 	self primaryRenameAttribute
 		ifNotNil: [ :attr | attr filter: aTextEditorInputFilter ]
 ]
 
-{ #category : 'initialize-release' }
+{ #category : #'initialize-release' }
 GtRenameAction2 >> forBinaryOrKeyword [
 	validationBlock := [ :str | (self validateKeyword: str) or: [ self validateBinary: str ] ]
 ]
 
-{ #category : 'initialize-release' }
+{ #category : #'initialize-release' }
 GtRenameAction2 >> forKeyword [
 	validationBlock := [ :str | self validateKeyword: str ]
 ]
 
-{ #category : 'initialize-release' }
+{ #category : #'initialize-release' }
 GtRenameAction2 >> forVariableOrUnaryMessage [
 	validationBlock := [ :str | self validateVariable: str ].
 	self filter: BrTextEditorAlphaNumericInputFilter new
 ]
 
-{ #category : 'initialize-release' }
+{ #category : #'initialize-release' }
 GtRenameAction2 >> initialize [
 	super initialize.
 	originalLocations := #().
@@ -143,7 +143,7 @@ GtRenameAction2 >> initialize [
 	coderAttributes := #().
 ]
 
-{ #category : 'installation' }
+{ #category : #installation }
 GtRenameAction2 >> install [
 	originalLocations isEmpty
 		ifTrue: [ ^ self ].
@@ -157,64 +157,64 @@ GtRenameAction2 >> install [
 	self announceEvent: #install
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtRenameAction2 >> isInstalled [
 	^ isInstalled
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtRenameAction2 >> isRenameAttribute: anAttribute [
 	^ anAttribute isKindOf: GtRenamePreviewAttribute
 ]
 
-{ #category : 'private-validation' }
+{ #category : #'private-validation' }
 GtRenameAction2 >> isValid [
 	validationBlock isNil
 		ifTrue: [ ^ true ].
 	^ validationBlock value: self newName
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameAction2 >> locations: aCollectionOfIntervals [
 	originalLocations := aCollectionOfIntervals asSortedCollection: [ :a :b | a first < b first ].
 	self validateLocations
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 GtRenameAction2 >> lostFocus [
 	self isValid
 		ifTrue: [ self accept ]
 		ifFalse: [ self cancel ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameAction2 >> newName [
 	^ renameAttributes first text asString
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameAction2 >> originalName [
 	^ (originalText
 		copyFrom: originalLocations first first
 		to: originalLocations first last) asString
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameAction2 >> pharoSourceCoderViewModel [
 	^ pharoSourceCoderViewModel
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameAction2 >> pharoSourceCoderViewModel: anObject [
 	pharoSourceCoderViewModel := anObject
 ]
 
-{ #category : 'private - actions' }
+{ #category : #'private - actions' }
 GtRenameAction2 >> preventSave [
 	pharoSourceCoderViewModel preventSaveDueTo: self
 ]
 
-{ #category : 'private - attributes' }
+{ #category : #'private - attributes' }
 GtRenameAction2 >> primaryRenameAttribute [
 	renameAttributes isNil
 		ifTrue: [ ^ nil ].
@@ -223,41 +223,41 @@ GtRenameAction2 >> primaryRenameAttribute [
 		ifNone: [ nil ]
 ]
 
-{ #category : 'private - attributes' }
+{ #category : #'private - attributes' }
 GtRenameAction2 >> removeAttributeHandlers [
 	renameAttributes do: [ :each | each uninstallEventHandlers ]
 ]
 
-{ #category : 'private - attributes' }
+{ #category : #'private - attributes' }
 GtRenameAction2 >> removeAttributes [	
 	self pharoSourceCoderViewModel removeAllCoderTextAttributes: coderAttributes.
 	self removeAttributeHandlers
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 GtRenameAction2 >> returnAccept [
 	self isValid
 		ifFalse: [ ^ self ].
 	self accept
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtRenameAction2 >> saveOriginalState [
 	originalText := self pharoSourceCoderViewModel sourceText copy.
 	originalCursors := self pharoSourceCoderViewModel cursors copy
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameAction2 >> selectAll [
 	^ selectAll
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameAction2 >> selectAll: anObject [
 	selectAll := anObject
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 GtRenameAction2 >> tabAccept: forward [
 	self isValid
 		ifFalse: [ ^ self ].
@@ -269,12 +269,12 @@ GtRenameAction2 >> tabAccept: forward [
 				ifFalse: [ #shiftTab ])
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtRenameAction2 >> undoChanges [
 	self pharoSourceCoderViewModel cursors: originalCursors
 ]
 
-{ #category : 'installation' }
+{ #category : #installation }
 GtRenameAction2 >> uninstall [
 	self removeAttributes.
 	isInstalled := false.
@@ -284,7 +284,7 @@ GtRenameAction2 >> uninstall [
 	pharoSourceCoderViewModel focused: true
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtRenameAction2 >> updateCursorLocation [
 	| sizeDifference offset |
 	sizeDifference := self newName size - self originalName size.
@@ -303,13 +303,13 @@ GtRenameAction2 >> updateCursorLocation [
 			offset := offset + sizeDifference ]
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 GtRenameAction2 >> updateName: blText [	
 	renameAttributes do: [ :each | each updateText: blText ].
 	self announceEvent: #textUpdated
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtRenameAction2 >> updateSource [
 	self newName = self originalName
 		ifTrue: [ ^ self removeAttributes ].
@@ -322,7 +322,7 @@ GtRenameAction2 >> updateSource [
 	self updateCursorLocation
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtRenameAction2 >> updateSourceIn: aTextualSourceCoderViewModel at: intervals attributes: attributeCollection [
 	self
 		updateText: aTextualSourceCoderViewModel sourceText
@@ -330,7 +330,7 @@ GtRenameAction2 >> updateSourceIn: aTextualSourceCoderViewModel at: intervals at
 		attributes: attributeCollection
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtRenameAction2 >> updateText: text at: intervals attributes: attributeCollection [
 	| newText index |
 	newText := '' asRopedText.
@@ -352,14 +352,14 @@ GtRenameAction2 >> updateText: text at: intervals attributes: attributeCollectio
 		synchronously: true
 ]
 
-{ #category : 'private-validation' }
+{ #category : #'private-validation' }
 GtRenameAction2 >> validateBinary: aString [
 	aString isEmpty
 		ifTrue: [ ^ false ].
 	^ (RBScanner isSelector: aString) and: [ aString asSymbol isBinary ]
 ]
 
-{ #category : 'private-validation' }
+{ #category : #'private-validation' }
 GtRenameAction2 >> validateKeyword: aString [
 	aString isEmpty
 		ifTrue: [ ^ false ].
@@ -369,7 +369,7 @@ GtRenameAction2 >> validateKeyword: aString [
 		and: [ aString asSymbol numArgs = 1 ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtRenameAction2 >> validateLocations [
 	| lastLocation size |
 	originalLocations isEmpty
@@ -385,7 +385,7 @@ GtRenameAction2 >> validateLocations [
 				ifTrue: [ self error: 'Cannot rename items of different sizes' ] ]
 ]
 
-{ #category : 'private-validation' }
+{ #category : #'private-validation' }
 GtRenameAction2 >> validateVariable: aString [
 	^ RBScanner isVariable: aString
 ]
