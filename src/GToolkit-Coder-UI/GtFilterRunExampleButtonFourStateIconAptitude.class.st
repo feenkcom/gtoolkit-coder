@@ -2,17 +2,17 @@
 I am a {{gtClass:GtFilterRunExampleButtonIconAptitude}}.
 I display a colored icon that represents an {{gtClass:GtExampleWithResult}} execution and result state.
 If there are examples with different execution states, I display several colors.
-1. # Examples
+#Examples
 
 The following examples show example status icons. 
-1. ## All States
+##All States
 
 I display all states at once as follows:
 {{gtExample:GtFilterRunExampleButtonLookExamples>>#fourIconLookButton_WithoutCoder|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}}
-1. ## Not Executed Examples
+##Not Executed Examples
 
 If all examples have same state, only one icon (color) is displayed: {{gtExample:GtFilterRunExampleButtonLookExamples>>#fourIconLookButton_NotExecuted|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}}
-1. ## Examples With Two Execution States
+##Examples With Two Execution States
 
 
 {{gtExample:GtFilterRunExampleButtonLookExamples>>#fourIconLookButton_SuccessAndNotExecutedStates|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=65}}
@@ -29,7 +29,7 @@ Class {
 		'successIconElement',
 		'neutralIconElement'
 	],
-	#category : 'GToolkit-Coder-UI-Filters'
+	#category : #'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #'private - accessing' }
