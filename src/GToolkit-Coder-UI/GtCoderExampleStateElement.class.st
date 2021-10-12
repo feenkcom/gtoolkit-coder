@@ -1,16 +1,16 @@
 "
 I am an {{gtClass:BlElement}}.
 I am an icon that represents an {{gtClass:GtExampleWithResult}} result state.
-1. # Not Executed State
+#Not Executed State
 
 {{gtExample:GtCoderExampleStateElementExamples>>#exampleStateElement_NotExecuted|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}}
-1. # Success State
+#Success State
 
 {{gtExample:GtCoderExampleStateElementExamples>>#exampleStateElement_Success|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}}
-1. # Failure State
+#Failure State
 
 {{gtExample:GtCoderExampleStateElementExamples>>#exampleStateElement_Failure|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}}
-1. # Error State
+#Error State
 
 {{gtExample:GtCoderExampleStateElementExamples>>#exampleStateElement_Error|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=50}}
 
@@ -25,7 +25,7 @@ Class {
 		'example',
 		'styleLook'
 	],
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #'private - asserting' }
