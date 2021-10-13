@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtSearchBinaryFilter',
-	#superclass : 'GtSearchFilter',
+	#name : #GtSearchBinaryFilter,
+	#superclass : #GtSearchFilter,
 	#instVars : [
 		'left',
 		'right'
@@ -8,20 +8,20 @@ Class {
 	#category : 'GToolkit-Coder-Filters'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtSearchBinaryFilter class >> forFilter: leftFilter filter: rightFilter [
 	^ self new
 		filter: leftFilter filter: rightFilter;
 		yourself
 ]
 
-{ #category : 'initialize-release' }
+{ #category : #'initialize-release' }
 GtSearchBinaryFilter >> filter: leftFilter filter: rightFilter [
 	left := leftFilter.
 	right := rightFilter
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSearchBinaryFilter >> highlighter [
 	^ left highlighter
 		ifNil: [ right highlighter ]
@@ -32,17 +32,17 @@ GtSearchBinaryFilter >> highlighter [
 					[ :rh | GtCompositeHighlighter forHighlighters: (Array with: lh with: rh) ] ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSearchBinaryFilter >> leftFilter [
 	^ left
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSearchBinaryFilter >> resultType [
 	^ left resultType mergeTypeWith: right resultType
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSearchBinaryFilter >> rightFilter [
 	^ right
 ]

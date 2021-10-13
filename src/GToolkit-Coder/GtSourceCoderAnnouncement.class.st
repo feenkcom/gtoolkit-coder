@@ -1,5 +1,5 @@
 Class {
-	#name : 'GtSourceCoderAnnouncement',
-	#superclass : 'GtCoderAnnouncement',
+	#name : #GtSourceCoderAnnouncement,
+	#superclass : #GtCoderAnnouncement,
 	#category : 'GToolkit-Coder-Event'
 }

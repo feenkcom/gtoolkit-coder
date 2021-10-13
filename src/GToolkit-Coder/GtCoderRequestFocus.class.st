@@ -1,5 +1,5 @@
 Class {
-	#name : 'GtCoderRequestFocus',
-	#superclass : 'GtCoderAnnouncement',
+	#name : #GtCoderRequestFocus,
+	#superclass : #GtCoderAnnouncement,
 	#category : 'GToolkit-Coder-Event'
 }

@@ -1,5 +1,5 @@
 Class {
-	#name : 'GtCoderAddOnsStylersDifference',
-	#superclass : 'GtCoderAddOnsDifference',
+	#name : #GtCoderAddOnsStylersDifference,
+	#superclass : #GtCoderAddOnsDifference,
 	#category : 'GToolkit-Coder-Coders - Addons'
 }

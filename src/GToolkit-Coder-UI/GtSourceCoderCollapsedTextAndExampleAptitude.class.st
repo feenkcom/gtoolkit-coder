@@ -4,10 +4,10 @@ I am a {{gtClass:GtSourceCoderAptitude}}.
 I attach two labels:
 1. a {{gtMethod:GtSourceCoderCollapsedTextAndExampleAptitude>>#methodLabel|label=method name}}, and
 2. example {{gtMethod:GtSourceCoderCollapsedTextAndExampleAptitude>>#exampleElement|label=execution state}}.
-1. # Examples
+#Examples
 
 If a method is an example, I display the method name and example result: {{gtExample:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withExampleMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}} 
-If a method is ** an example, I omit displaying the example result: {{gtExample:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withRegularMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}} 
+If a method is *not* an example, I omit displaying the example result: {{gtExample:GtCoderCollapsedContentElementExamples>>#textAndExampleLook_withRegularMethod|codeExpanded=false|previewExpanded=true|previewHeight=150}} 
 
 
 "
@@ -19,7 +19,7 @@ Class {
 		'methodLabel',
 		'exampleElement'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Source Look'
+	#category : #'GToolkit-Coder-UI-Coder - Source Look'
 }
 
 { #category : #'private - accessing' }
@@ -36,7 +36,7 @@ GtSourceCoderCollapsedTextAndExampleAptitude >> exampleElement [
 
 { #category : #'private - updating' }
 GtSourceCoderCollapsedTextAndExampleAptitude >> hide [
-	self exampleElement visibility: BlVisibility hidden
+	self exampleElement visibility: BlVisibility gone
 ]
 
 { #category : #initialization }

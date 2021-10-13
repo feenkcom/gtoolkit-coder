@@ -1,31 +1,31 @@
 Class {
-	#name : 'GtDebugContext',
-	#superclass : 'DebugContext',
+	#name : #GtDebugContext,
+	#superclass : #DebugContext,
 	#category : 'GToolkit-Coder'
 }
 
-{ #category : 'private' }
+{ #category : #private }
 GtDebugContext >> blockNotFoundDialog: aMethod with: aText [
 	aMethod selector isDoIt
 		ifTrue: [ "shouldn't edit doits" ^ self ].
 	self recompileCurrentMethodTo: aText notifying: nil
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtDebugContext >> checkSelectorUnchanged: aSelector [
 	^ aSelector == self selectedMessageName
 		or: [ self selectedMessageName isDoIt
 				and: [ aSelector numArgs = self selectedMessageName numArgs ] ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtDebugContext >> confirmOnTraitOverwrite: aSelector inClass: aClass [
 	| method |
 	method := aClass methodNamed: aSelector.
 	^ method origin
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtDebugContext >> locateClosureHomeWithContent: aText [
 	context isBlockContext
 		ifTrue: [ ^ context activeHome

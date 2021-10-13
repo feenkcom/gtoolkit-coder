@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtClassesCompletionStrategy',
-	#superclass : 'GtCompletionStrategy',
+	#name : #GtClassesCompletionStrategy,
+	#superclass : #GtCompletionStrategy,
 	#instVars : [
 		'excludedClasses',
 		'candidateClasses'
@@ -8,7 +8,7 @@ Class {
 	#category : 'GToolkit-Coder-Completion'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtClassesCompletionStrategy >> candidateClasses [
 	^  candidateClasses ifNil: [ 
 			| theInterestingClassNames |
@@ -16,7 +16,7 @@ GtClassesCompletionStrategy >> candidateClasses [
 			candidateClasses := GtPrefixTree withAll: theInterestingClassNames ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
 	| currentInput completionActions |
 	currentInput := aText asString.
@@ -46,22 +46,22 @@ GtClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger m
 	^ completionActions
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtClassesCompletionStrategy >> excludeClasses: aCollectionOfClasses [
 	excludedClasses := aCollectionOfClasses asSet
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtClassesCompletionStrategy >> hasCompletionEntryFor: aString [
 	^ true
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtClassesCompletionStrategy >> hasCompletionsAt: anInteger in: aText [
 	^ true
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtClassesCompletionStrategy >> initialize [
 	super initialize.
 	

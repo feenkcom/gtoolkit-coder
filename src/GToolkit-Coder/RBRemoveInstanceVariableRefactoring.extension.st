@@ -1,6 +1,6 @@
-Extension { #name : 'RBRemoveInstanceVariableRefactoring' }
+Extension { #name : #RBRemoveInstanceVariableRefactoring }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBRemoveInstanceVariableRefactoring >> gtPreconditions [
 	| references |
 

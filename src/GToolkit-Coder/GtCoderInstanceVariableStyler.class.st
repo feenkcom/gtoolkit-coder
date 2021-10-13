@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtCoderInstanceVariableStyler',
-	#superclass : 'BlTextStyler',
+	#name : #GtCoderInstanceVariableStyler,
+	#superclass : #BlTextStyler,
 	#category : 'GToolkit-Coder-Styler/Highlighter'
 }
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtCoderInstanceVariableStyler >> isValidVariableName: aText [
 	<return: #Boolean>
 
@@ -16,7 +16,7 @@ GtCoderInstanceVariableStyler >> isValidVariableName: aText [
 			do: [ :anError | false ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtCoderInstanceVariableStyler >> privateStyle: aText [ 
 	<return: #BlText>
 	

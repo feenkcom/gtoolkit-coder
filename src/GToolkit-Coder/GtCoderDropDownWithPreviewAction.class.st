@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderDropDownWithPreviewAction',
-	#superclass : 'GtCoderAction',
+	#name : #GtCoderDropDownWithPreviewAction,
+	#superclass : #GtCoderAction,
 	#instVars : [
 		'changeAction',
 		'changeStencil'
@@ -8,22 +8,22 @@ Class {
 	#category : 'GToolkit-Coder-GToolkit-Coder'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderDropDownWithPreviewAction >> changeAction [
 	^ changeAction
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderDropDownWithPreviewAction >> changeAction: aBlock [
 	changeAction := aBlock
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderDropDownWithPreviewAction >> changeStencil [
 	^ changeStencil
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderDropDownWithPreviewAction >> changeStencil: aBlock [
 	changeStencil := aBlock
 ]

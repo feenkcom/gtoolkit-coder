@@ -6,8 +6,8 @@ I am an inheritance hierachy tree that can be built from a collection of classes
 
 "
 Class {
-	#name : 'GtCoderClassesHierarchyTree',
-	#superclass : 'Object',
+	#name : #GtCoderClassesHierarchyTree,
+	#superclass : #Object,
 	#instVars : [
 		'rootClass',
 		'subclassTrees'
@@ -15,7 +15,7 @@ Class {
 	#category : 'GToolkit-Coder-Navigation - Model'
 }
 
-{ #category : 'factory' }
+{ #category : #factory }
 GtCoderClassesHierarchyTree class >> fromClasses: aCollectionOfClasses [
 	| aRootItem theSetOfClasses theRootTrees theSubclassTrees |
 	
@@ -32,7 +32,7 @@ GtCoderClassesHierarchyTree class >> fromClasses: aCollectionOfClasses [
 	^ aRootItem
 ]
 
-{ #category : 'factory' }
+{ #category : #factory }
 GtCoderClassesHierarchyTree class >> hierarchyForClass: aClass [
 	| aRootNode aCurrentNode |
 	aRootNode := self new.
@@ -47,28 +47,28 @@ GtCoderClassesHierarchyTree class >> hierarchyForClass: aClass [
 	^ aRootNode.
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassesHierarchyTree >> at: anIndex [
 	<return: #GtCoderClassesHierarchyTree>
 
 	^ self subclassTrees at: anIndex
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassesHierarchyTree >> classes [
 	<return: #Collection of: #Class>
 	
 	^ self subclassTrees collect: [ :eachTree | eachTree rootClass ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassesHierarchyTree >> first [
 	<return: #GtCoderClassesHierarchyTree>
 
 	^ self at: 1
 ]
 
-{ #category : 'gt-extension' }
+{ #category : #'gt-extension' }
 GtCoderClassesHierarchyTree >> gtTreeFor: aView [
 	<gtView>
 
@@ -80,20 +80,20 @@ GtCoderClassesHierarchyTree >> gtTreeFor: aView [
 		expandUpTo: 1
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtCoderClassesHierarchyTree >> hasRootClass [
 	<return: #Boolean>
 
 	^ rootClass isNotNil
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderClassesHierarchyTree >> initialize [
 	super initialize.
 	subclassTrees := Array empty.
 ]
 
-{ #category : 'printing' }
+{ #category : #printing }
 GtCoderClassesHierarchyTree >> printOn: aStream [
 	self hasRootClass
 		ifTrue: [ aStream print: self rootClass ]
@@ -108,43 +108,43 @@ GtCoderClassesHierarchyTree >> printOn: aStream [
 				nextPut: $) ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassesHierarchyTree >> rootClass [
 	<return: #Behavior>
 	^ rootClass
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassesHierarchyTree >> rootClass: aClass [
 	rootClass := aClass
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassesHierarchyTree >> size [
 	<return: #Number>
 
 	^ subclassTrees size
 ]
 
-{ #category : 'sorting' }
+{ #category : #sorting }
 GtCoderClassesHierarchyTree >> sort: aBlock [
 	subclassTrees := subclassTrees sorted: [ :treeA :treeB | aBlock value: treeA rootClass value: treeB rootClass ].
 	subclassTrees do: [ :eachTree | eachTree sort: aBlock ]
 ]
 
-{ #category : 'sorting' }
+{ #category : #sorting }
 GtCoderClassesHierarchyTree >> sortByClassName [
 	self sort: [ :classA :classB | classA name < classB name ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassesHierarchyTree >> subclassTrees [
 	<return: #Collection of: #GtCoderClassesHierarchyTree>
 
 	^ subclassTrees
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderClassesHierarchyTree >> subclassTrees: aCollection [
 	subclassTrees := aCollection
 ]

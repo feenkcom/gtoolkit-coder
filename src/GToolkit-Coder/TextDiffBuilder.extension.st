@@ -1,6 +1,6 @@
-Extension { #name : 'TextDiffBuilder' }
+Extension { #name : #TextDiffBuilder }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 TextDiffBuilder >> newRopedText [
 	| text |
 	text := '' asRopedText.
@@ -17,12 +17,12 @@ TextDiffBuilder >> newRopedText [
 	^ text
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 TextDiffBuilder >> newStyler [
 	^ nil
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 TextDiffBuilder >> previousRopedText [
 	| text |
 	text := '' asRopedText.

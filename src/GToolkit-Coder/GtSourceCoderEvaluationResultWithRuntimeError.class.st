@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtSourceCoderEvaluationResultWithRuntimeError',
-	#superclass : 'GtSourceCoderEvaluationResult',
+	#name : #GtSourceCoderEvaluationResultWithRuntimeError,
+	#superclass : #GtSourceCoderEvaluationResult,
 	#instVars : [
 		'error',
 		'isResignaled'
@@ -8,27 +8,27 @@ Class {
 	#category : 'GToolkit-Coder-Coders - Evaluation'
 }
 
-{ #category : 'error handling' }
+{ #category : #'error handling' }
 GtSourceCoderEvaluationResultWithRuntimeError >> error [
 	^ error
 ]
 
-{ #category : 'error handling' }
+{ #category : #'error handling' }
 GtSourceCoderEvaluationResultWithRuntimeError >> error: anError [
 	error := anError
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationResultWithRuntimeError >> isResignaled [
 	^ isResignaled
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationResultWithRuntimeError >> isResignaled: anObject [
 	isResignaled := anObject
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtSourceCoderEvaluationResultWithRuntimeError >> isRuntimeError [
 	^ true
 ]

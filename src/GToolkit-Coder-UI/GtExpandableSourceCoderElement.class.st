@@ -6,7 +6,7 @@ Class {
 		'expandedElement',
 		'coderUIModel'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Source'
+	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #private }
@@ -28,7 +28,7 @@ GtExpandableSourceCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollap
 	aCollapsedElement aptitude
 		ifNil: [
 			self addCodersCoderLook: aSourceCoder to: aCollapsedElement.
-			aCollapsedElement addAptitude: GtSourceCoderCollapsedTextAndExampleAptitude ]
+			aCollapsedElement addAptitude: GtSourceCoderCollapsedAddOnsAptitude ]
 ]
 
 { #category : #private }

@@ -1,6 +1,6 @@
-Extension { #name : 'BlTktWorkerProvider' }
+Extension { #name : #BlTktWorkerProvider }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 BlTktWorkerProvider class >> coderAddOnsPool [
 
 	^ self 
@@ -8,7 +8,7 @@ BlTktWorkerProvider class >> coderAddOnsPool [
 		ifMissing: [ self new coderAddOnsPool; service ]
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 BlTktWorkerProvider >> coderAddOnsPool [
 	"Coder addons computation: maxPoolSize: 2, priority: 30"
 	self
@@ -18,13 +18,13 @@ BlTktWorkerProvider >> coderAddOnsPool [
 		nonUIPriority
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 BlTktWorkerProvider class >> coderAddOnsPoolName [
 
 	^ 'Coder addons'
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 BlTktWorkerProvider class >> coderAstPool [
 
 	^ self 
@@ -32,7 +32,7 @@ BlTktWorkerProvider class >> coderAstPool [
 		ifMissing: [ self new coderAstPool; service ]
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 BlTktWorkerProvider >> coderAstPool [
 	"Coder computation processing: maxPoolSize: 2, priority: 30"
 	self
@@ -42,7 +42,7 @@ BlTktWorkerProvider >> coderAstPool [
 		nonUIPriority
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 BlTktWorkerProvider class >> coderAstPoolName [
 
 	^ 'Coder ast'

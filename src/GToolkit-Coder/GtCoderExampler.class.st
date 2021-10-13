@@ -5,57 +5,57 @@ I am used by {{gtClass:GtCodersModel}}, see: {{gtMethod:Behavior>>#gtCoderMethod
 
 "
 Class {
-	#name : 'GtCoderExampler',
-	#superclass : 'Object',
+	#name : #GtCoderExampler,
+	#superclass : #Object,
 	#instVars : [
 		'coder'
 	],
 	#category : 'GToolkit-Coder-Exampler'
 }
 
-{ #category : 'api - instance creation' }
+{ #category : #'api - instance creation' }
 GtCoderExampler class >> coder: aCoder [
 	^ self new coder: aCoder
 ]
 
-{ #category : 'api - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> allExampleCodersDo: aBlock [
 	"iterate all coders with examples"
 	self subclassResponsibility
 ]
 
-{ #category : 'api - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> allExecutableExampleCodersDo: aBlock [
 	self allExampleCodersDo: [ :aCoder :anExample | 
 		aCoder canExecuteExample ifTrue: [ 
 			aBlock cull: aCoder cull: anExample ] ]
 ]
 
-{ #category : 'api - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> allExecutableExampleCodersWithResultsDo: aBlock [
 	self allExecutableExampleCodersDo: [ :aCoder :anExample | 
 		aCoder exampleResult ifNotNil: [ :aResult |
 			aBlock cull: aCoder cull: anExample cull: aResult ] ]
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderExampler >> coder [
 	<return: #GtCoderModel or: #GtCodersModel>
 	^ coder
 ]
 
-{ #category : 'api - initialization' }
+{ #category : #'api - initialization' }
 GtCoderExampler >> coder: anObject [
 	coder := anObject
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderExampler >> coderFor: aCompiledMethod [
 	<return: #GtPharoMethodCoder>
 	^ self subclassResponsibility
 ]
 
-{ #category : 'api - testing' }
+{ #category : #'api - testing' }
 GtCoderExampler >> hasErrorExamples [
 	<return: #Boolean>
 	self allExecutableExampleCodersWithResultsDo: [ :eachCoder | 
@@ -64,13 +64,13 @@ GtCoderExampler >> hasErrorExamples [
 	^ false
 ]
 
-{ #category : 'api - testing' }
+{ #category : #'api - testing' }
 GtCoderExampler >> hasExamples [
 	self allExecutableExampleCodersDo: [ ^ true ].
 	^ false
 ]
 
-{ #category : 'api - testing' }
+{ #category : #'api - testing' }
 GtCoderExampler >> hasFailureExamples [
 	<return: #Boolean>
 	self allExecutableExampleCodersWithResultsDo: [ :eachCoder | 
@@ -79,7 +79,7 @@ GtCoderExampler >> hasFailureExamples [
 	^ false
 ]
 
-{ #category : 'api - testing' }
+{ #category : #'api - testing' }
 GtCoderExampler >> hasNotExecutedExamples [
 	<return: #Boolean>
 	self allExecutableExampleCodersDo: [ :eachCoder | 
@@ -88,13 +88,13 @@ GtCoderExampler >> hasNotExecutedExamples [
 	^ false
 ]
 
-{ #category : 'api - testing' }
+{ #category : #'api - testing' }
 GtCoderExampler >> hasSelectedExecutableExamples [
 	self selectedExecutableExampleCodersDo: [ ^ true ].
 	^ false
 ]
 
-{ #category : 'api - testing' }
+{ #category : #'api - testing' }
 GtCoderExampler >> hasSuccessExamples [
 	<return: #Boolean>
 	self allExecutableExampleCodersWithResultsDo: [ :eachCoder | 
@@ -103,7 +103,7 @@ GtCoderExampler >> hasSuccessExamples [
 	^ false
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderExampler >> numberOfAllExamples [
 	<return: #Integer>
 	| aTotal |
@@ -113,7 +113,7 @@ GtCoderExampler >> numberOfAllExamples [
 	^ aTotal
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderExampler >> numberOfErrorExamples [
 	<return: #Integer>
 	| aTotal |
@@ -124,7 +124,7 @@ GtCoderExampler >> numberOfErrorExamples [
 	^ aTotal
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderExampler >> numberOfFailureExamples [
 	<return: #Integer>
 	| aTotal |
@@ -135,7 +135,7 @@ GtCoderExampler >> numberOfFailureExamples [
 	^ aTotal
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderExampler >> numberOfNotExecutedExamples [
 	<return: #Integer>
 	| aTotal |
@@ -146,7 +146,7 @@ GtCoderExampler >> numberOfNotExecutedExamples [
 	^ aTotal
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderExampler >> numberOfSuccessExamples [
 	<return: #Integer>
 	| aTotal |
@@ -157,39 +157,39 @@ GtCoderExampler >> numberOfSuccessExamples [
 	^ aTotal
 ]
 
-{ #category : 'api - execution' }
+{ #category : #'api - execution' }
 GtCoderExampler >> runExamples [
 	self selectedExecutableExampleCodersDo: [ :eachCoder | 
 		(eachCoder isModified or: [ eachCoder example hasNoTestPragma ]) ifFalse: [ 
 			eachCoder example run ] ]
 ]
 
-{ #category : 'api - execution' }
+{ #category : #'api - execution' }
 GtCoderExampler >> runExamplesFrom: anElement [
 	self runExamples. 
 ]
 
-{ #category : 'api - execution' }
+{ #category : #'api - execution' }
 GtCoderExampler >> runNoTestExamples [
 	self selectedExecutableExampleCodersDo: [ :eachCoder | 
 		(eachCoder isModified not and: [ eachCoder example hasNoTestPragma ]) ifTrue: [ 
 			eachCoder example run ] ]
 ]
 
-{ #category : 'api - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> selectedExampleCodersDo: aBlock [
 	"iterate selected coders with examples"
 	self subclassResponsibility
 ]
 
-{ #category : 'api - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> selectedExecutableExampleCodersDo: aBlock [
 	self selectedExampleCodersDo: [ :aCoder :anExample | 
 		aCoder canExecuteExample ifTrue: [ 
 			aBlock cull: aCoder cull: anExample ] ]
 ]
 
-{ #category : 'api - enumeration' }
+{ #category : #'api - enumeration' }
 GtCoderExampler >> selectedExecutableExampleCodersWithResultsDo: aBlock [
 	self selectedExecutableExampleCodersDo: [ :aCoder :anExample | 
 		aCoder exampleResult ifNotNil: [ :aResult |

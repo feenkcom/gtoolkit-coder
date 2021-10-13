@@ -1,5 +1,5 @@
 Class {
-	#name : 'GtCoderMethodRemoved',
-	#superclass : 'GtCoderAnnouncement',
+	#name : #GtCoderMethodRemoved,
+	#superclass : #GtCoderAnnouncement,
 	#category : 'GToolkit-Coder-Event'
 }

@@ -1,18 +1,18 @@
 Class {
-	#name : 'GtClassCoderMethodNavigationAnnouncement',
-	#superclass : 'Announcement',
+	#name : #GtClassCoderMethodNavigationAnnouncement,
+	#superclass : #Announcement,
 	#instVars : [
 		'method'
 	],
 	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtClassCoderMethodNavigationAnnouncement >> method [
 	^ method
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtClassCoderMethodNavigationAnnouncement >> method: aMethod [
 	method := aMethod
 ]

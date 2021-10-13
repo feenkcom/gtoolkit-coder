@@ -1,17 +1,17 @@
-Extension { #name : 'RBNamespace' }
+Extension { #name : #RBNamespace }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBNamespace >> category: aString for: aClass [
 
 	^ changes addChange: (RBClassCategoryChange category: aString for: aClass)
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBNamespace >> changedClasses [
 	^ changedClasses
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBNamespace >> classObjectFor: anObject [
 
 	(anObject isBehavior or: [anObject isTrait])
@@ -21,12 +21,12 @@ RBNamespace >> classObjectFor: anObject [
 	^ anObject
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBNamespace >> newClasses [
 	^ newClasses
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBNamespace >> removePool: aString from: aRBClass [ 
 	^changes removePool: aString from: aRBClass
 ]

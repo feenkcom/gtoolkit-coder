@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderContextMenuAction',
-	#superclass : 'GtCoderAction',
+	#name : #GtCoderContextMenuAction,
+	#superclass : #GtCoderAction,
 	#instVars : [
 		'hoverAction',
 		'leaveAction'
@@ -8,22 +8,22 @@ Class {
 	#category : 'GToolkit-Coder'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderContextMenuAction >> hoverAction [
 	^ hoverAction
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderContextMenuAction >> hoverAction: aBlock [
 	hoverAction := aBlock
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderContextMenuAction >> leaveAction [
 	^ leaveAction
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderContextMenuAction >> leaveAction: aBlock [
 	leaveAction := aBlock
 ]

@@ -1,6 +1,6 @@
-Extension { #name : 'ClassDiffBuilder' }
+Extension { #name : #ClassDiffBuilder }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 ClassDiffBuilder >> attributedRopedFrom: aString do: aBlock [
 	| aTrimmedLeft aTrimmedRight aTrimmedString aTrimmedText |
 			
@@ -33,7 +33,7 @@ ClassDiffBuilder >> attributedRopedFrom: aString do: aBlock [
 		yourself
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 ClassDiffBuilder >> newRopedText [
 	| text |
 	text := '' asRopedText.
@@ -48,7 +48,7 @@ ClassDiffBuilder >> newRopedText [
 	^ text
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 ClassDiffBuilder >> previousRopedText [
 	| text |
 	text := '' asRopedText.

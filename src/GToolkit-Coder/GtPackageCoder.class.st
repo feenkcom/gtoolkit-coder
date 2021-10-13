@@ -1,52 +1,52 @@
 Class {
-	#name : 'GtPackageCoder',
-	#superclass : 'GtCoderModel',
+	#name : #GtPackageCoder,
+	#superclass : #GtCoderModel,
 	#traits : 'TGtCoderTrait',
 	#classTraits : 'TGtCoderTrait classTrait',
 	#category : 'GToolkit-Coder-Coders'
 }
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtPackageCoder >> isForPackage [
 	^ true
 ]
 
-{ #category : 'private - notifying' }
+{ #category : #'private - notifying' }
 GtPackageCoder >> notifyPackageRegistered [
 	self announce: (GtCoderPackageRegistered new coder: self)
 ]
 
-{ #category : 'private - notifying' }
+{ #category : #'private - notifying' }
 GtPackageCoder >> notifyPackageRenamed [
 	self announce: (GtCoderPackageRenamed new coder: self)
 ]
 
-{ #category : 'private - notifying' }
+{ #category : #'private - notifying' }
 GtPackageCoder >> notifyPackageUnregistered [
 	self announce: (GtCoderPackageUnregistered new coder: self)
 ]
 
-{ #category : 'private - actions' }
+{ #category : #'private - actions' }
 GtPackageCoder >> primitiveRegisterPackage [
 	self subclassResponsibility
 ]
 
-{ #category : 'private - actions' }
+{ #category : #'private - actions' }
 GtPackageCoder >> primitiveRemovePackage [
 	self subclassResponsibility
 ]
 
-{ #category : 'private - actions' }
+{ #category : #'private - actions' }
 GtPackageCoder >> primitiveRenamePackageTo: aNewPackageName [
 	self subclassResponsibility
 ]
 
-{ #category : 'private - actions' }
+{ #category : #'private - actions' }
 GtPackageCoder >> primitiveUnregisterPackage [
 	self subclassResponsibility
 ]
 
-{ #category : 'api - actions' }
+{ #category : #'api - actions' }
 GtPackageCoder >> register [
 	"Register a package in the system, and announce ${class:GtCoderPackageRegistered}$ if it was registered"	
 	self isRegistered
@@ -59,7 +59,7 @@ GtPackageCoder >> register [
 	self notifyPackageRegistered
 ]
 
-{ #category : 'api - actions' }
+{ #category : #'api - actions' }
 GtPackageCoder >> renameTo: aNewPackageName [
 
 	self isRegistered
@@ -74,7 +74,7 @@ GtPackageCoder >> renameTo: aNewPackageName [
 	self notifyPackageRenamed
 ]
 
-{ #category : 'api - actions' }
+{ #category : #'api - actions' }
 GtPackageCoder >> unload [
 	"Remove package from the system including all defined classes and extension methods"
 	| wasRegistered |
@@ -90,7 +90,7 @@ GtPackageCoder >> unload [
 		ifTrue: [ self notifyPackageUnregistered ]
 ]
 
-{ #category : 'api - actions' }
+{ #category : #'api - actions' }
 GtPackageCoder >> unregister [
 	"Register a package in the system, and announce ${class:GtCoderPackageUnregistered}$ if it was unregistered.
 	Unregistering a package does not remove its classes (quite dangerous!)"	

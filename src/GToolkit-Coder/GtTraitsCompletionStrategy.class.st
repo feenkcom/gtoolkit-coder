@@ -1,13 +1,13 @@
 Class {
-	#name : 'GtTraitsCompletionStrategy',
-	#superclass : 'GtCompletionStrategy',
+	#name : #GtTraitsCompletionStrategy,
+	#superclass : #GtCompletionStrategy,
 	#instVars : [
 		'candidateTraits'
 	],
 	#category : 'GToolkit-Coder-Completion'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTraitsCompletionStrategy >> candidateTraits [
 	^  candidateTraits ifNil: [ 
 			| theInterestingTraitNames |
@@ -15,7 +15,7 @@ GtTraitsCompletionStrategy >> candidateTraits [
 			candidateTraits := GtPrefixTree withAll: theInterestingTraitNames ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTraitsCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
 	| currentInput completionActions |
 
@@ -30,12 +30,12 @@ GtTraitsCompletionStrategy >> completionActionsFor: aText at: positionInteger ma
 	^ completionActions
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtTraitsCompletionStrategy >> hasCompletionEntryFor: aString [
 	^ true
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtTraitsCompletionStrategy >> hasCompletionsAt: anInteger in: aText [
 	^ true
 ]

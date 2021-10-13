@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtSearchGroupResult',
-	#superclass : 'Object',
+	#name : #GtSearchGroupResult,
+	#superclass : #Object,
 	#instVars : [
 		'items',
 		'filter',
@@ -10,59 +10,59 @@ Class {
 	#category : 'GToolkit-Coder-Filters'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtSearchGroupResult class >> mergeTypeWith: aGroupResultClass [
 	^ aGroupResultClass mergeTypeWithDefaultGroup
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtSearchGroupResult class >> mergeTypeWithDefaultGroup [
 	"The common type between the default group and any other group is the other group."
 	^ self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtSearchGroupResult class >> mergeTypeWithGenericGroup [
 	"The common type between a generic group and any other group is the other group."
 	^ self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtSearchGroupResult class >> mergeTypeWithTypedGroup: aGroupType [
 	^ self
 ]
 
-{ #category : 'adding' }
+{ #category : #adding }
 GtSearchGroupResult >> add: anObject [
 	self refreshItems.
 	^ items add: anObject
 ]
 
-{ #category : 'enumerating' }
+{ #category : #enumerating }
 GtSearchGroupResult >> collect: aBlock [
 	self refreshItems.
 	^ items collect: aBlock
 ]
 
-{ #category : 'enumerating' }
+{ #category : #enumerating }
 GtSearchGroupResult >> do: aBlock [
 	self refreshItems.
 	^ items do: aBlock
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSearchGroupResult >> filter [
 	^ filter
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSearchGroupResult >> filter: methodsFilter [
 	filtered := false.
 	items := OrderedCollection new.
 	filter := methodsFilter
 ]
 
-{ #category : 'enumerating' }
+{ #category : #enumerating }
 GtSearchGroupResult >> groupedBy: aBlockClosureOrSymbol [
 	"Group the filteres items using the given block. The returned groups are just a copy based on 
 	the current items at the time of the call. They are not updated if the filtered items change."
@@ -70,7 +70,7 @@ GtSearchGroupResult >> groupedBy: aBlockClosureOrSymbol [
 	^ items groupedBy: aBlockClosureOrSymbol
 ]
 
-{ #category : 'ui' }
+{ #category : #ui }
 GtSearchGroupResult >> gtItemsFor: aView [
 	<gtView>
 	self refreshItems.
@@ -80,33 +80,33 @@ GtSearchGroupResult >> gtItemsFor: aView [
 		items: [ items ifNil: [ #() ] ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSearchGroupResult >> highlighter [
 	^ filter notNil
 		ifTrue: [ filter highlighter ]
 		ifFalse: [ nil ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtSearchGroupResult >> includes: aCollection [ 
 	self refreshItems.
 	^ items includes: aCollection
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSearchGroupResult >> initialize [
 	super initialize.
 	filtered := false.
 	items := OrderedCollection new.
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtSearchGroupResult >> isEmpty [
 	"Answer whether the receiver contains any elements."
 	^ self size = 0
 ]
 
-{ #category : 'enumerating' }
+{ #category : #enumerating }
 GtSearchGroupResult >> refreshItems [
 	| filteredItems |
 	filtered
@@ -120,41 +120,41 @@ GtSearchGroupResult >> refreshItems [
 	filtered := true.
 ]
 
-{ #category : 'removing' }
+{ #category : #removing }
 GtSearchGroupResult >> remove: anItem ifAbsent: aBlock [
 	self refreshItems.
 	^ items remove: anItem ifAbsent: aBlock
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSearchGroupResult >> scope [
 	^ scope
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSearchGroupResult >> scope: aSearchScope [
 	scope := aSearchScope
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSearchGroupResult >> size [
 	self refreshItems.
 	^ items size
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtSearchGroupResult >> species [
 	self refreshItems.
 	^ items class
 ]
 
-{ #category : 'enumerating' }
+{ #category : #enumerating }
 GtSearchGroupResult >> sumNumbers: aBlock [
 	self refreshItems.
 	^ items sumNumbers: aBlock
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSearchGroupResult >> updateForFilter: aFilter [
 	self filter: aFilter.
 	self scope: (aFilter 

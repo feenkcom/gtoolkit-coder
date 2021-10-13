@@ -1,18 +1,18 @@
 Class {
-	#name : 'GtCoderAstChanged',
-	#superclass : 'GtCoderAnnouncement',
+	#name : #GtCoderAstChanged,
+	#superclass : #GtCoderAnnouncement,
 	#instVars : [
 		'ast'
 	],
 	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAstChanged >> ast [
 	^ ast
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAstChanged >> ast: anObject [
 	ast := anObject
 ]
