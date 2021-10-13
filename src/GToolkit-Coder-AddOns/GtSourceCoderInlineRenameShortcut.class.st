@@ -1,27 +1,27 @@
 Class {
-	#name : 'GtSourceCoderInlineRenameShortcut',
-	#superclass : 'GtSourceCoderShortcut',
+	#name : #GtSourceCoderInlineRenameShortcut,
+	#superclass : #GtSourceCoderShortcut,
 	#category : 'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderInlineRenameShortcut >> description [
 	^ 'Performs the rename refactoring of the selected variable/class/method.'
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSourceCoderInlineRenameShortcut >> initialize [
 	super initialize.
 	
 	combination := BlKeyCombination primaryR
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderInlineRenameShortcut >> name [
 	^ 'Rename'
 ]
 
-{ #category : 'evaluation' }
+{ #category : #evaluation }
 GtSourceCoderInlineRenameShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
 	self
 		forEditor: aBrTextEditor

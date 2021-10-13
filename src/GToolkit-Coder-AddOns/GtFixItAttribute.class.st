@@ -1,13 +1,13 @@
 Class {
-	#name : 'GtFixItAttribute',
-	#superclass : 'BrTextAdornmentAttribute',
+	#name : #GtFixItAttribute,
+	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
 		'fixItActionsBlock'
 	],
 	#category : 'GToolkit-Coder-AddOns-FixIt'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	"Return an element that should affect (either append or replace) a provided text piece"
 	<return: #SequenceableCollection of: #BlElement>
@@ -34,12 +34,12 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 		yourself
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFixItAttribute >> fixItActions: aCollection [
 	fixItActionsBlock := aCollection
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtFixItAttribute >> initialize [
 	super initialize.
 

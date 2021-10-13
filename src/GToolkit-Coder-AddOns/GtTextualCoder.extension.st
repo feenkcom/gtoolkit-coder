@@ -1,6 +1,6 @@
-Extension { #name : 'GtTextualCoder' }
+Extension { #name : #GtTextualCoder }
 
-{ #category : '*GToolkit-Coder-AddOns' }
+{ #category : #'*GToolkit-Coder-AddOns' }
 GtTextualCoder >> addCopyCutPasteContextMenuAddOnsAst: anAst to: coderAddOns [
 	<gtCoderContextMenuAddOns: 10>
 	coderAddOns
