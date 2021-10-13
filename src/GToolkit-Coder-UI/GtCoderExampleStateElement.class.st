@@ -105,7 +105,7 @@ GtCoderExampleStateElement >> initializeInteractiveLook [
 { #category : #initialization }
 GtCoderExampleStateElement >> initializeTooltipLook [
 	self addAptitude:
-		(BrGlamorousWithTooltipAptitude2 content: [
+		(BrGlamorousWithTooltipAptitude content: [
 			self newTooltipContent ])
 ]
 
