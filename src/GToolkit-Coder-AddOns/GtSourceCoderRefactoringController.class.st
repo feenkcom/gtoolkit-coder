@@ -12,7 +12,7 @@ Class {
 		'sourceCoderViewModel',
 		'refactoringPreviewAttributes'
 	],
-	#category : 'GToolkit-Coder-AddOns-! Core'
+	#category : #'GToolkit-Coder-AddOns-! Core'
 }
 
 { #category : #private }
@@ -61,6 +61,7 @@ GtSourceCoderRefactoringController >> refactoringName [
 
 { #category : #'private - attributes' }
 GtSourceCoderRefactoringController >> removeRefactoringAttribute [
+	refactoringPreviewAttributes ifNil: [ ^ self ].
 	self sourceCoderViewModel removeCoderTextAttributes: refactoringPreviewAttributes
 ]
 
