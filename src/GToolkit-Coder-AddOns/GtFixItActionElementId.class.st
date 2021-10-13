@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtFixItActionElementId',
-	#superclass : 'GtCoderElementId',
+	#name : #GtFixItActionElementId,
+	#superclass : #GtCoderElementId,
 	#category : 'GToolkit-Coder-AddOns-FixIt'
 }
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtFixItActionElementId class >> isAbstract [
 	^ self = GtFixItActionElementId
 ]

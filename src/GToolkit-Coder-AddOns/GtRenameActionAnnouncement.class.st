@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtRenameActionAnnouncement',
-	#superclass : 'Announcement',
+	#name : #GtRenameActionAnnouncement,
+	#superclass : #Announcement,
 	#instVars : [
 		'renameAction',
 		'eventType'
@@ -8,7 +8,7 @@ Class {
 	#category : 'GToolkit-Coder-AddOns-Inline rename'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtRenameActionAnnouncement class >> for: aRenameAction type: aSymbol [
 	^ self new
 		renameAction: aRenameAction;
@@ -16,22 +16,22 @@ GtRenameActionAnnouncement class >> for: aRenameAction type: aSymbol [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameActionAnnouncement >> eventType [
 	^ eventType
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameActionAnnouncement >> eventType: aSymbol [
 	eventType := aSymbol
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameActionAnnouncement >> renameAction [
 	^ renameAction
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRenameActionAnnouncement >> renameAction: aRenameAction [
 	renameAction := aRenameAction
 ]
