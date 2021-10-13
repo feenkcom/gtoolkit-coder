@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderRenameMethodChange',
-	#superclass : 'RBRefactoryChange',
+	#name : #GtCoderRenameMethodChange,
+	#superclass : #RBRefactoryChange,
 	#instVars : [
 		'methodCoder',
 		'newSelector',
@@ -9,7 +9,7 @@ Class {
 	#category : 'GToolkit-Coder-Refactoring'
 }
 
-{ #category : 'private' }
+{ #category : #private }
 GtCoderRenameMethodChange >> executeNotifying: aBlock [ 
 	| undo |
 	undo := self class new
@@ -25,42 +25,42 @@ GtCoderRenameMethodChange >> executeNotifying: aBlock [
 	^ undo
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderRenameMethodChange >> methodCoder [
 	^ methodCoder
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderRenameMethodChange >> methodCoder: anObject [
 	methodCoder := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderRenameMethodChange >> newSelector [
 	^ newSelector
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderRenameMethodChange >> newSelector: anObject [
 	newSelector := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderRenameMethodChange >> oldSelector [
 	^ oldSelector
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderRenameMethodChange >> oldSelector: anObject [
 	oldSelector := anObject
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtCoderRenameMethodChange >> primitiveExecute [
 	methodCoder selector: self newSelector
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderRenameMethodChange >> renameChangesForClass: oldClassName to: newClassName [
 	
 ]

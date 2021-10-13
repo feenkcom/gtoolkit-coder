@@ -1,6 +1,6 @@
-Extension { #name : 'Announcement' }
+Extension { #name : #Announcement }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 Announcement class >> gtAllKindOfReferencesFor: aView [
 	<gtClassView>
 	^ aView explicit

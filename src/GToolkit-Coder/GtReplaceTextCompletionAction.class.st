@@ -1,25 +1,25 @@
 Class {
-	#name : 'GtReplaceTextCompletionAction',
-	#superclass : 'GtCompletionAction',
+	#name : #GtReplaceTextCompletionAction,
+	#superclass : #GtCompletionAction,
 	#instVars : [
 		'text'
 	],
 	#category : 'GToolkit-Coder-Completion'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtReplaceTextCompletionAction class >> forText: aString [
 	^ (self labeled: aString)
 		text: aString;
 		yourself
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtReplaceTextCompletionAction >> = anObject [
 	^ super = anObject and: [ self text = anObject text ]
 ]
 
-{ #category : 'executing' }
+{ #category : #executing }
 GtReplaceTextCompletionAction >> finishCompletionOn: aCompletionController moveCursor: aBoolean [
 	aCompletionController textEditor deleter
 		from: 0 to: aCompletionController textEditor text size;
@@ -30,30 +30,30 @@ GtReplaceTextCompletionAction >> finishCompletionOn: aCompletionController moveC
 		insert
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtReplaceTextCompletionAction >> hash [
 	^ super hash bitXor: text hash
 ]
 
-{ #category : 'executing' }
+{ #category : #executing }
 GtReplaceTextCompletionAction >> previewOn: aCompletionController [
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtReplaceTextCompletionAction >> searchStartPosition [
 	^ 1
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtReplaceTextCompletionAction >> text [
 	^ text
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtReplaceTextCompletionAction >> text: anObject [
 	text := anObject
 ]
 
-{ #category : 'executing' }
+{ #category : #executing }
 GtReplaceTextCompletionAction >> undoPreviewOn: aCompletionController [
 ]

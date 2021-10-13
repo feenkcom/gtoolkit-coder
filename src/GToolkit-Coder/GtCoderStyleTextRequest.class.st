@@ -5,20 +5,20 @@ One of the usecases is to restyle the text after execution of a `gtExample`
 
 "
 Class {
-	#name : 'GtCoderStyleTextRequest',
-	#superclass : 'GtSourceCoderAnnouncement',
+	#name : #GtCoderStyleTextRequest,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'afterAction'
 	],
 	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderStyleTextRequest >> afterAction [
 	^ afterAction ifNil: [ [ :aStyleText | "do nothing" ] ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderStyleTextRequest >> afterAction: aBlock [
 	afterAction := aBlock
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderNavigationClassSelected',
-	#superclass : 'GtCoderNavigationSelectionAnnouncement',
+	#name : #GtCoderNavigationClassSelected,
+	#superclass : #GtCoderNavigationSelectionAnnouncement,
 	#instVars : [
 		'theClass',
 		'package',
@@ -9,34 +9,34 @@ Class {
 	#category : 'GToolkit-Coder-Navigation - Events'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassSelected >> package [
 	^ package
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassSelected >> package: anObject [
 	package := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassSelected >> tag [
 	^ tag
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassSelected >> tag: anObject [
 	tag := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassSelected >> theClass [
 	<return: #Class>
 
 	^ theClass
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassSelected >> theClass: anObject [
 	theClass := anObject
 ]

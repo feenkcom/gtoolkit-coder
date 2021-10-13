@@ -1,11 +1,11 @@
-Extension { #name : 'RBConjunctiveCondition' }
+Extension { #name : #RBConjunctiveCondition }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBConjunctiveCondition >> gtChildren [
 	^ { left . right }
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBConjunctiveCondition >> gtLeafChildren [
 	^ left gtLeafChildren, right gtLeafChildren
 ]

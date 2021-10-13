@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtMethodProtocolCompletionStrategy',
-	#superclass : 'GtStringsCompletionStrategy',
+	#name : #GtMethodProtocolCompletionStrategy,
+	#superclass : #GtStringsCompletionStrategy,
 	#category : 'GToolkit-Coder-Completion'
 }
 
-{ #category : 'private' }
+{ #category : #private }
 GtMethodProtocolCompletionStrategy >> buildCompletions [
 	| protocols |
 	protocols := GtPrefixTree new.
@@ -15,7 +15,7 @@ GtMethodProtocolCompletionStrategy >> buildCompletions [
 	^ protocols
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtMethodProtocolCompletionStrategy >> completionPrefixAt: anIndex in: blText [
 	anIndex < self minimumPrefixLength
 		ifTrue: [ ^ nil ].

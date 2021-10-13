@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderNavigationClassRenamed',
-	#superclass : 'GtCoderNavigationClassAnnoucement',
+	#name : #GtCoderNavigationClassRenamed,
+	#superclass : #GtCoderNavigationClassAnnoucement,
 	#instVars : [
 		'oldName',
 		'newName'
@@ -8,22 +8,22 @@ Class {
 	#category : 'GToolkit-Coder-Navigation - Events'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassRenamed >> newName [
 	^ newName
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassRenamed >> newName: anObject [
 	newName := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassRenamed >> oldName [
 	^ oldName
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassRenamed >> oldName: anObject [
 	oldName := anObject
 ]

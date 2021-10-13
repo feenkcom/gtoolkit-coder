@@ -1,36 +1,36 @@
 Class {
-	#name : 'GtFilterExampleNotExecutedState',
-	#superclass : 'GtFilterExampleState',
+	#name : #GtFilterExampleNotExecutedState,
+	#superclass : #GtFilterExampleState,
 	#category : 'GToolkit-Coder-Filters - Support'
 }
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleNotExecutedState >> color [
 	^ BrGlamorousColors neutralBackgroundColor
 ]
 
-{ #category : 'api - testing' }
+{ #category : #'api - testing' }
 GtFilterExampleNotExecutedState >> includesCoder: aCoder [
 	^ aCoder exampleResult isNil
 ]
 
-{ #category : 'api - testing' }
+{ #category : #'api - testing' }
 GtFilterExampleNotExecutedState >> isStatusFor: aGtExampleWithResult [
 	^ aGtExampleWithResult isNotNil and: [ 
 			aGtExampleWithResult hasResult not ]
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleNotExecutedState >> label [
 	^ 'Not Executed'
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleNotExecutedState >> numberOfExamplesFor: anExampler [
 	^ anExampler numberOfNotExecutedExamples
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleNotExecutedState >> order [
 	^ 5
 ]

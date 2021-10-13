@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderActivatableAction',
-	#superclass : 'GtCoderAction',
+	#name : #GtCoderActivatableAction,
+	#superclass : #GtCoderAction,
 	#instVars : [
 		'enabledBlock',
 		'updateAnnouncement'
@@ -8,12 +8,12 @@ Class {
 	#category : 'GToolkit-Coder'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderActivatableAction >> enabled: aBlock [
 	enabledBlock := aBlock
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderActivatableAction >> initialize [
 	super initialize.
 	
@@ -21,7 +21,7 @@ GtCoderActivatableAction >> initialize [
 	updateAnnouncement := nil
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderActivatableAction >> updateWhen: anAnnouncementClass [
 	updateAnnouncement := anAnnouncementClass
 ]

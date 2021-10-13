@@ -1,17 +1,17 @@
 Class {
-	#name : 'GtSourceCoderEvaluationSourceInterval',
-	#superclass : 'Object',
+	#name : #GtSourceCoderEvaluationSourceInterval,
+	#superclass : #Object,
 	#category : 'GToolkit-Coder-Coders - Evaluation'
 }
 
-{ #category : 'evaluation' }
+{ #category : #evaluation }
 GtSourceCoderEvaluationSourceInterval >> computeSourceInterval: aCompleteCoderSourceTextOrString [
 	<return: #Interval>
 
 	^ self subclassResponsibility
 ]
 
-{ #category : 'evaluation' }
+{ #category : #evaluation }
 GtSourceCoderEvaluationSourceInterval >> computeSourceString: aCompleteCoderSourceTextOrString [
 	<return: #String>
 

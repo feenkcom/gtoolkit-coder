@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderNavigationClassAnnoucement',
-	#superclass : 'GtCoderNavigationSystemChangesAnnouncement',
+	#name : #GtCoderNavigationClassAnnoucement,
+	#superclass : #GtCoderNavigationSystemChangesAnnouncement,
 	#instVars : [
 		'package',
 		'tag',
@@ -9,32 +9,32 @@ Class {
 	#category : 'GToolkit-Coder-Navigation - Events'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassAnnoucement >> package [
 	^ package
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassAnnoucement >> package: anObject [
 	package := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassAnnoucement >> tag [
 	^ tag
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassAnnoucement >> tag: anObject [
 	tag := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassAnnoucement >> theClass [
 	^ theClass
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationClassAnnoucement >> theClass: anObject [
 	theClass := anObject
 ]

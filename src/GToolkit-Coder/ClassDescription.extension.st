@@ -1,6 +1,6 @@
-Extension { #name : 'ClassDescription' }
+Extension { #name : #ClassDescription }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 ClassDescription >> gtPackageScope [
 	^ self package
 ]

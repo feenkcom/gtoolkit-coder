@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtSourceCoderEvaluationContext',
-	#superclass : 'Object',
+	#name : #GtSourceCoderEvaluationContext,
+	#superclass : #Object,
 	#instVars : [
 		'coder',
 		'requesterObject',
@@ -12,44 +12,44 @@ Class {
 	#category : 'GToolkit-Coder-Coders - Evaluation'
 }
 
-{ #category : 'api - context' }
+{ #category : #'api - context' }
 GtSourceCoderEvaluationContext >> all [
 	sourceInterval := GtSourceCoderEvaluationAllSource new
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> coder [
 	<return: #GtSourceCoder>
 
 	^ coder
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> coder: aGtSourceCoder [
 	coder := aGtSourceCoder
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> evaluatedInterval [
 	^ evaluatedInterval
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> evaluatedInterval: anObject [
 	evaluatedInterval := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> evaluatedSourceString [
 	^ evaluatedSourceString
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> evaluatedSourceString: anObject [
 	evaluatedSourceString := anObject
 ]
 
-{ #category : 'api - context' }
+{ #category : #'api - context' }
 GtSourceCoderEvaluationContext >> from: aStartPosition to: aStopPosition [
 	sourceInterval := GtSourceCoderEvaluationPartialSource new
 		startPosition: aStartPosition;
@@ -57,41 +57,41 @@ GtSourceCoderEvaluationContext >> from: aStartPosition to: aStopPosition [
 		yourself
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSourceCoderEvaluationContext >> initialize [
 	super initialize.
 	
 	sourceInterval := GtSourceCoderEvaluationAllSource new
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> requesterObject [
 	^ requesterObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> requesterObject: anObject [
 	requesterObject := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> sourceInterval [
 	<return: #GtSourceCoderEvaluationSourceInterval>
 
 	^ sourceInterval
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> sourceInterval: aGtSourceCoderEvaluationSourceInterval [
 	sourceInterval := aGtSourceCoderEvaluationSourceInterval
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> sourceString [
 	^ sourceString
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderEvaluationContext >> sourceString: anObject [
 	"Set the complete source string of the coder at the moment of the evaluation"
 

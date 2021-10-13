@@ -1,34 +1,34 @@
 Trait {
-	#name : 'TGtCoderTrait',
+	#name : #TGtCoderTrait,
 	#category : 'GToolkit-Coder-Coders'
 }
 
-{ #category : 'testing' }
+{ #category : #testing }
 TGtCoderTrait >> isForClass [
 	^ false
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 TGtCoderTrait >> isForPackage [
 	^ false
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 TGtCoderTrait >> isForPackageTag [
 	^ false
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 TGtCoderTrait >> package [
 	^ nil
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 TGtCoderTrait >> packageTag [
 	^ nil
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 TGtCoderTrait >> theClass [
 	^ nil
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCodersAnnouncement',
-	#superclass : 'Announcement',
+	#name : #GtCodersAnnouncement,
+	#superclass : #Announcement,
 	#instVars : [
 		'coders',
 		'source'
@@ -8,22 +8,22 @@ Class {
 	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodersAnnouncement >> coders [
 	^ coders
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodersAnnouncement >> coders: anObject [
 	coders := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodersAnnouncement >> source [
 	^ source
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodersAnnouncement >> source: anObject [
 	source := anObject
 ]

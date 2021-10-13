@@ -1,11 +1,11 @@
-Extension { #name : 'GtPhlowExecutionContext' }
+Extension { #name : #GtPhlowExecutionContext }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 GtPhlowExecutionContext >> hasPackageCoder [
 	^ false
 ]
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 GtPhlowExecutionContext >> hasPackageTagCoder [
 	^ false
 ]

@@ -1,6 +1,6 @@
-Extension { #name : 'Slot' }
+Extension { #name : #Slot }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 Slot class >> gtIsValidName: aSymbol [
 	<return: #Boolean>
 

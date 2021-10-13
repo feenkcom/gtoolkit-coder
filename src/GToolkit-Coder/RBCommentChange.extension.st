@@ -1,6 +1,6 @@
-Extension { #name : 'RBCommentChange' }
+Extension { #name : #RBCommentChange }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBCommentChange >> gtChangesFor: aView [
 	<gtView>
 	^ aView explicit
