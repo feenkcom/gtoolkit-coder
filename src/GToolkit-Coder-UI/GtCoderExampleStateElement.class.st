@@ -261,10 +261,6 @@ GtCoderExampleStateElement >> updateIcon [
 { #category : #'private - updating' }
 GtCoderExampleStateElement >> updateStyleLook [
 	
-	"the following nil check can be removed anytime later.
-	It is useful for a couple of days until the next image build (instead of update)."
-	self styleLook ifNil: [ ^ self ].
-	
 	self styleLook
 		default: [ :aStyle | aStyle background: self exampleState color ];
 		hovered: [ :aStyle | aStyle background: self exampleState color darker ].
