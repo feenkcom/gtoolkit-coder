@@ -1,6 +1,6 @@
-Extension { #name : 'GtRBRemoveTraitUsageRefactoring' }
+Extension { #name : #GtRBRemoveTraitUsageRefactoring }
 
-{ #category : '*GToolkit-Coder-UI' }
+{ #category : #'*GToolkit-Coder-UI' }
 GtRBRemoveTraitUsageRefactoring >> gtDescription [
 	<return: #String or: #BlRopedText>
 	

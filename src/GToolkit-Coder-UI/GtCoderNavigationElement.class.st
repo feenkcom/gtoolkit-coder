@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderNavigationElement',
-	#superclass : 'BlElement',
+	#name : #GtCoderNavigationElement,
+	#superclass : #BlElement,
 	#instVars : [
 		'navigationModel',
 		'supressNavigationChanges',
@@ -10,30 +10,30 @@ Class {
 	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
-{ #category : 'asserting' }
+{ #category : #asserting }
 GtCoderNavigationElement >> assertNavigationModel: aGtCoderNavigationPackagesTagsClassesModel [
 	self 
 		assert: [ aGtCoderNavigationPackagesTagsClassesModel isNotNil ] 
 		description: [ 'Navigation model must be non-nil' ].
 ]
 
-{ #category : 'api - class selections' }
+{ #category : #'api - class selections' }
 GtCoderNavigationElement >> deselectClasses [
 	classesList deselectAll
 ]
 
-{ #category : 'updating lists' }
+{ #category : #'updating lists' }
 GtCoderNavigationElement >> emptyClassList [
 	classesList initializeWithClasses: #().
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtCoderNavigationElement >> hasNavigationModel [
 	^ self navigationModel isNotNil and: [
 		self navigationModel isNavigationModel ]
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderNavigationElement >> initialize [
 	super initialize.
 	supressListChanges := false.
@@ -43,29 +43,29 @@ GtCoderNavigationElement >> initialize [
 	self initializeElement.
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderNavigationElement >> initializeContent [
 	classesList := GtCoderNavigationClassesHierarchyTreeElement new.
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderNavigationElement >> initializeElement [
 	"subclasses may initialize element"
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderNavigationElement >> initializeLayout [
 	"subclasses may define its layout"
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationElement >> navigationModel [
 	<return: #GtCoderNavigationPackagesTagsClassesModel>
 
 	^ navigationModel
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderNavigationElement >> navigationModel: aGtCoderNavigationPackagesTagsClassesModel [
 	self assertNavigationModel: aGtCoderNavigationPackagesTagsClassesModel.
 	self unsubscribeFromNavigationModel.
@@ -73,7 +73,7 @@ GtCoderNavigationElement >> navigationModel: aGtCoderNavigationPackagesTagsClass
 	self onNavigationModelChanged.
 ]
 
-{ #category : 'hooks - children' }
+{ #category : #'hooks - children' }
 GtCoderNavigationElement >> onAddedToSceneGraph [
 	super onAddedToSceneGraph.
 	self updateContent.
@@ -81,7 +81,7 @@ GtCoderNavigationElement >> onAddedToSceneGraph [
 	self subscribeToContent.
 ]
 
-{ #category : 'event handling' }
+{ #category : #'event handling' }
 GtCoderNavigationElement >> onClassListSelectionChanged [
 	| anIndex aSelectedItem theIndices |
 	supressListChanges ifTrue: [ ^ self ].
@@ -94,7 +94,7 @@ GtCoderNavigationElement >> onClassListSelectionChanged [
 	self navigationModel selectClass: aSelectedItem
 ]
 
-{ #category : 'event handling' }
+{ #category : #'event handling' }
 GtCoderNavigationElement >> onClassModified: anAnnouncement [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [
@@ -104,7 +104,7 @@ GtCoderNavigationElement >> onClassModified: anAnnouncement [
 			tag: anAnnouncement tag ]
 ]
 
-{ #category : 'event handling' }
+{ #category : #'event handling' }
 GtCoderNavigationElement >> onClassRenamed: anAnnouncement [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [
@@ -116,7 +116,7 @@ GtCoderNavigationElement >> onClassRenamed: anAnnouncement [
 			tag: anAnnouncement tag ]
 ]
 
-{ #category : 'event handling' }
+{ #category : #'event handling' }
 GtCoderNavigationElement >> onClassSelected: anAnnouncement [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [  
@@ -126,7 +126,7 @@ GtCoderNavigationElement >> onClassSelected: anAnnouncement [
 			tag: anAnnouncement tag ].
 ]
 
-{ #category : 'event handling' }
+{ #category : #'event handling' }
 GtCoderNavigationElement >> onNavigationModelChanged [
 	"subclasses may perform actions on navigation model changes"
 	self isAttachedToSceneGraph ifFalse: [ ^ self ].
@@ -134,14 +134,14 @@ GtCoderNavigationElement >> onNavigationModelChanged [
 	self updateContent.
 ]
 
-{ #category : 'hooks - children' }
+{ #category : #'hooks - children' }
 GtCoderNavigationElement >> onRemovedFromSceneGraph [
 	super onRemovedFromSceneGraph.
 	self unsuscribeFromContent.
 	self unsubscribeFromNavigationModel.
 ]
 
-{ #category : 'api - class updates' }
+{ #category : #'api - class updates' }
 GtCoderNavigationElement >> renameClass: aClass oldName: anOldName newName: aNewName inPackage: aPackage tag: aTag [
 	
 	classesList viewModel 
@@ -152,14 +152,14 @@ GtCoderNavigationElement >> renameClass: aClass oldName: anOldName newName: aNew
 			self updateSelectedClass ].
 ]
 
-{ #category : 'private - selection' }
+{ #category : #'private - selection' }
 GtCoderNavigationElement >> scrollIndexFrom: aNodeIndex [
 	<return: #Number>
 	"TODO: does not work if an index is at a bottom: aNodeIndex - 5 max: 1"
 	^ aNodeIndex 
 ]
 
-{ #category : 'private - selection' }
+{ #category : #'private - selection' }
 GtCoderNavigationElement >> scrollIndexFromPrevious: aPreviousIndex current: aNewIndex max: aNumberOfItems [
 	<return: #Number>
 	^ (aPreviousIndex isZero or: [ aPreviousIndex >= aNewIndex ])
@@ -167,7 +167,7 @@ GtCoderNavigationElement >> scrollIndexFromPrevious: aPreviousIndex current: aNe
 		ifFalse: [ aNewIndex + 5 min: aNumberOfItems ].
 ]
 
-{ #category : 'api - class selections' }
+{ #category : #'api - class selections' }
 GtCoderNavigationElement >> selectClass: aClass [
 	| aPreviousIndex |
 	aPreviousIndex := classesList selectedIndice.
@@ -183,18 +183,18 @@ GtCoderNavigationElement >> selectClass: aClass [
 						max: classesList viewModel itemCount) ]
 ]
 
-{ #category : 'subscriptions' }
+{ #category : #subscriptions }
 GtCoderNavigationElement >> subscribeToClassList [
 	classesList
 		when: BrSelectionChanged
 		do: [ :anEvent | self onClassListSelectionChanged ].
 ]
 
-{ #category : 'subscriptions' }
+{ #category : #subscriptions }
 GtCoderNavigationElement >> subscribeToContent [
 ]
 
-{ #category : 'subscriptions' }
+{ #category : #subscriptions }
 GtCoderNavigationElement >> subscribeToNavigationModel [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
@@ -202,7 +202,7 @@ GtCoderNavigationElement >> subscribeToNavigationModel [
 	navigationModel when: GtCoderNavigationClassModified send: #onClassModified: to: self.
 ]
 
-{ #category : 'subscriptions' }
+{ #category : #subscriptions }
 GtCoderNavigationElement >> suppressListChangeEventsDuring: aBlock [
 	| anOldValue |
 	anOldValue := supressListChanges.
@@ -210,7 +210,7 @@ GtCoderNavigationElement >> suppressListChangeEventsDuring: aBlock [
 	aBlock ensure: [ supressListChanges := anOldValue ].
 ]
 
-{ #category : 'subscriptions' }
+{ #category : #subscriptions }
 GtCoderNavigationElement >> suppressNavigationChangeEventsDuring: aBlock [
 	| anOldValue |
 	anOldValue := supressNavigationChanges.
@@ -218,17 +218,17 @@ GtCoderNavigationElement >> suppressNavigationChangeEventsDuring: aBlock [
 	aBlock ensure: [ supressNavigationChanges := anOldValue ].
 ]
 
-{ #category : 'subscriptions' }
+{ #category : #subscriptions }
 GtCoderNavigationElement >> unsubscribeFromNavigationModel [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel ifNotNil: [ :aModel | aModel unsubscribe: self ].
 ]
 
-{ #category : 'subscriptions' }
+{ #category : #subscriptions }
 GtCoderNavigationElement >> unsuscribeFromContent [
 ]
 
-{ #category : 'api - class updates' }
+{ #category : #'api - class updates' }
 GtCoderNavigationElement >> updateClass: aClass inPackage: aPackage tag: aTag [
 	
 	classesList viewModel 
@@ -239,16 +239,16 @@ GtCoderNavigationElement >> updateClass: aClass inPackage: aPackage tag: aTag [
 			self updateSelectedClass ].
 ]
 
-{ #category : 'updating lists' }
+{ #category : #'updating lists' }
 GtCoderNavigationElement >> updateClassLists [
 	"Update class list"
 ]
 
-{ #category : 'updating' }
+{ #category : #updating }
 GtCoderNavigationElement >> updateContent [
 ]
 
-{ #category : 'updating lists' }
+{ #category : #'updating lists' }
 GtCoderNavigationElement >> updateSelectedClass [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel selectedClassDo: [ :aClass |

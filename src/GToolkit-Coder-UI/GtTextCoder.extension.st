@@ -1,6 +1,6 @@
-Extension { #name : 'GtTextCoder' }
+Extension { #name : #GtTextCoder }
 
-{ #category : '*GToolkit-Coder-UI' }
+{ #category : #'*GToolkit-Coder-UI' }
 GtTextCoder >> asCoderUIModel [
 	^ GtTextualCoderViewModel new coder: self
 ]

@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtPackageTagCardElement',
-	#superclass : 'GtCoderCardElement',
+	#name : #GtPackageTagCardElement,
+	#superclass : #GtCoderCardElement,
 	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : 'building ui' }
+{ #category : #'building ui' }
 GtPackageTagCardElement >> detailsLabel [
 	^ coder packageTag classes size printString , ' Classes'
 ]

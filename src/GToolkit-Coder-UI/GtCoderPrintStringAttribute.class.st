@@ -1,27 +1,27 @@
 Class {
-	#name : 'GtCoderPrintStringAttribute',
-	#superclass : 'BrTextAdornmentAttribute',
+	#name : #GtCoderPrintStringAttribute,
+	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
 		'object'
 	],
 	#category : 'GToolkit-Coder-UI-Coder - Source Attributes'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtCoderPrintStringAttribute class >> forObject: anObject [
 	^ self new
 		object: anObject;
 		yourself
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtCoderPrintStringAttribute class >> forString: aString [
 	^ self new
 		object: aString;
 		yourself
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtCoderPrintStringAttribute >> actionButtonLook [
 	^ BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude + (BrStyleCommonAptitude new
 		default: [ :aStyle | aStyle geometry: BlCircle new ];
@@ -29,7 +29,7 @@ GtCoderPrintStringAttribute >> actionButtonLook [
 		pressed: [ :aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker darker ])
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtCoderPrintStringAttribute >> buildMenuFor: aHamburgerButton fromEditorElement: anEditorElement [
 
 	^ BrVerticalPane new
@@ -78,7 +78,7 @@ GtCoderPrintStringAttribute >> buildMenuFor: aHamburgerButton fromEditorElement:
 		}
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtCoderPrintStringAttribute >> buildTooltip [
 	^ BrEditor new
 		aptitude: BrGlamorousEditorAptitude new glamorousRegularSmallSize;
@@ -91,17 +91,17 @@ GtCoderPrintStringAttribute >> buildTooltip [
 			'Press ' asRopedText, 'backspace' asRopedText glamorousRoundedBackground, ' to remove this popup.' asRopedText
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtCoderPrintStringAttribute >> closeMenuFromElement: anElement [
 	anElement fireEvent: BrDropdownHideWish new
 ]
 
-{ #category : 'private - actions' }
+{ #category : #'private - actions' }
 GtCoderPrintStringAttribute >> copyFromEditorElement: anEditorElement [
 	Clipboard clipboardText: object printString
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderPrintStringAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| hamburgerButton |
 	
@@ -149,13 +149,13 @@ GtCoderPrintStringAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 			exact: 12@12)
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderPrintStringAttribute >> initialize [
 	super initialize.
 	self beAppend
 ]
 
-{ #category : 'private - actions' }
+{ #category : #'private - actions' }
 GtCoderPrintStringAttribute >> insertIntoTheEditorElement: anEditorElement [
 	anEditorElement text
 		findAttribute: self
@@ -181,12 +181,12 @@ GtCoderPrintStringAttribute >> insertIntoTheEditorElement: anEditorElement [
 	anEditorElement requestFocus
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtCoderPrintStringAttribute >> isFocusable [
 	^ true
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtCoderPrintStringAttribute >> menuButtonLook [
 	^ (BrGlamorousButtonRectangularAptitude new cornerRadius: 0)
 		+ BrGlamorousButtonIconAptitude
@@ -194,12 +194,12 @@ GtCoderPrintStringAttribute >> menuButtonLook [
 		+ BrGlamorousListItemAptitude
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderPrintStringAttribute >> object: anObject [
 	object := anObject
 ]
 
-{ #category : 'private - actions' }
+{ #category : #'private - actions' }
 GtCoderPrintStringAttribute >> removeFromEditorElement: anEditorElement [
 	anEditorElement text
 		findAttribute: self
@@ -211,7 +211,7 @@ GtCoderPrintStringAttribute >> removeFromEditorElement: anEditorElement [
 	anEditorElement requestFocus
 ]
 
-{ #category : 'private - actions' }
+{ #category : #'private - actions' }
 GtCoderPrintStringAttribute >> spawnFromElement: anElement [
 	anElement phlow spawnObject: object
 ]

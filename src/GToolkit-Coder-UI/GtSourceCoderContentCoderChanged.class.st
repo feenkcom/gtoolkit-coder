@@ -1,18 +1,18 @@
 Class {
-	#name : 'GtSourceCoderContentCoderChanged',
-	#superclass : 'BrChangeEvent',
+	#name : #GtSourceCoderContentCoderChanged,
+	#superclass : #BrChangeEvent,
 	#instVars : [
 		'sourceCoder'
 	],
 	#category : 'GToolkit-Coder-UI-Coder - Source Events'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderContentCoderChanged >> sourceCoder [
 	^ sourceCoder
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderContentCoderChanged >> sourceCoder: anObject [
 	sourceCoder := anObject
 ]

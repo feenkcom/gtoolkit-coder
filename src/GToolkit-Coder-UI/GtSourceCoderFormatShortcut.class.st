@@ -1,27 +1,27 @@
 Class {
-	#name : 'GtSourceCoderFormatShortcut',
-	#superclass : 'GtSourceCoderShortcut',
+	#name : #GtSourceCoderFormatShortcut,
+	#superclass : #GtSourceCoderShortcut,
 	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderFormatShortcut >> description [
 	^ 'Formats and saves the source code.'
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSourceCoderFormatShortcut >> initialize [
 	super initialize.
 	
 	combination := BlKeyCombination primaryShiftF
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderFormatShortcut >> name [
 	^ 'Format'
 ]
 
-{ #category : 'evaluation' }
+{ #category : #evaluation }
 GtSourceCoderFormatShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
 	aGtSourceCoder format
 ]

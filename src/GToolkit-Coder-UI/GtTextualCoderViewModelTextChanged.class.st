@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtTextualCoderViewModelTextChanged',
-	#superclass : 'GtTextualCoderViewModelAnnouncement',
+	#name : #GtTextualCoderViewModelTextChanged,
+	#superclass : #GtTextualCoderViewModelAnnouncement,
 	#instVars : [
 		'text',
 		'updateStrategy'
@@ -8,32 +8,32 @@ Class {
 	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextChanged >> isSynchronous [
 	^ self updateStrategy isSynchronous
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextChanged >> source [
 	^ self updateStrategy source
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextChanged >> text [
 	^ text
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextChanged >> text: anObject [
 	text := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextChanged >> updateStrategy [
 	^ updateStrategy
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtTextualCoderViewModelTextChanged >> updateStrategy: anObject [
 	updateStrategy := anObject
 ]

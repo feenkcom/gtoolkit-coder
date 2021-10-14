@@ -7,18 +7,18 @@ I display a {{gtClass:GtPharoBehaviorCoder}}, {{gtClass:GtPharoPackageTagCoder}}
 
 "
 Class {
-	#name : 'GtCoderContentElement',
-	#superclass : 'GtCoderNavigationModelElement',
+	#name : #GtCoderContentElement,
+	#superclass : #GtCoderNavigationModelElement,
 	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : 'factory' }
+{ #category : #factory }
 GtCoderContentElement class >> default [
 	^ self new
 		navigationModel: GtCoderNavigationModel default
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderContentElement >> initialize [
 	super initialize.
 	self layout: BlFrameLayout new.
@@ -26,26 +26,26 @@ GtCoderContentElement >> initialize [
 	self addAptitude: (BrLayoutResizerAptitude inherit).
 ]
 
-{ #category : 'hooks - children' }
+{ #category : #'hooks - children' }
 GtCoderContentElement >> onAddedToSceneGraph [
 	super onAddedToSceneGraph.
 	self navigationModel subscribeToSystem.
 ]
 
-{ #category : 'hooks - children' }
+{ #category : #'hooks - children' }
 GtCoderContentElement >> onRemovedFromSceneGraph [
 	super onRemovedFromSceneGraph.
 	self navigationModel unsubscribeFromSystem.
 ]
 
-{ #category : 'private - subscriptions' }
+{ #category : #'private - subscriptions' }
 GtCoderContentElement >> subscribeToNavigationModel [
 	super subscribeToNavigationModel.
 	self navigationModel weak
 		when: GtCoderNavigationSelectionAnnouncement send: #updateCoder: to: self.
 ]
 
-{ #category : 'private - event handling' }
+{ #category : #'private - event handling' }
 GtCoderContentElement >> updateCoder: anAnnouncement [
 	self removeChildren.
 	self addChild: anAnnouncement coder asElement.

@@ -20,21 +20,21 @@ The following examples shows a colored icon as a part of a button in four possib
 
 "
 Class {
-	#name : 'GtFilterRunExampleButtonIconAptitude',
-	#superclass : 'GtFilterRunExampleButtonAptitude',
+	#name : #GtFilterRunExampleButtonIconAptitude,
+	#superclass : #GtFilterRunExampleButtonAptitude,
 	#instVars : [
 		'exampleElement'
 	],
 	#category : 'GToolkit-Coder-UI-Filters'
 }
 
-{ #category : 'private - accessing' }
+{ #category : #'private - accessing' }
 GtFilterRunExampleButtonIconAptitude >> exampleElement [
 	<return: #BlElement>
 	^ exampleElement
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonIconAptitude >> initialize [
 	super initialize.
 	self initializeExampleElement.
@@ -42,14 +42,14 @@ GtFilterRunExampleButtonIconAptitude >> initialize [
 	self addChangeAddChildAs: #(content example) with: [ self exampleElement ].
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtFilterRunExampleButtonIconAptitude >> initializeExampleElement [
 	exampleElement := BlElement new
 		background: self newNotExecutedBackground.
 	self initializeIconElement: exampleElement.
 ]
 
-{ #category : 'private - instance creation' }
+{ #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconAptitude >> newBackground [
 	self coder exampler hasNotExecutedExamples ifTrue: [ 
 		^ self newNotExecutedBackground ].
@@ -62,27 +62,27 @@ GtFilterRunExampleButtonIconAptitude >> newBackground [
 	^ self newNotExecutedBackground.
 ]
 
-{ #category : 'private - instance creation' }
+{ #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconAptitude >> newErrorBackground [
 	^ GtFilterExampleErrorState default color
 ]
 
-{ #category : 'private - instance creation' }
+{ #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconAptitude >> newFailureBackground [
 	^ GtFilterExampleFailureState default color
 ]
 
-{ #category : 'private - instance creation' }
+{ #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconAptitude >> newNotExecutedBackground [
 	^ GtFilterExampleNotExecutedState default color
 ]
 
-{ #category : 'private - instance creation' }
+{ #category : #'private - instance creation' }
 GtFilterRunExampleButtonIconAptitude >> newSuccessBackground [
 	^ GtFilterExampleSuccessState default color
 ]
 
-{ #category : 'private - updating' }
+{ #category : #'private - updating' }
 GtFilterRunExampleButtonIconAptitude >> updateButtonStatus [
 	"I must be called in a UI process".
 	self widgetDo: [ :aWidget | 
@@ -95,14 +95,14 @@ GtFilterRunExampleButtonIconAptitude >> updateButtonStatus [
 				ifTrue: [ aWidget visibility: BlVisibility visible] ] ]
 ]
 
-{ #category : 'private - updating' }
+{ #category : #'private - updating' }
 GtFilterRunExampleButtonIconAptitude >> updateExampleStatus [
 	"I must be called in a UI process".
 	self exampleElement
 		background: self newBackground
 ]
 
-{ #category : 'private - updating' }
+{ #category : #'private - updating' }
 GtFilterRunExampleButtonIconAptitude >> updateWidget [
 	super updateWidget.
 	self updateExampleStatus.

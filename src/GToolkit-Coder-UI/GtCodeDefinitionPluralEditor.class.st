@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCodeDefinitionPluralEditor',
-	#superclass : 'GtCodeDefinitionPluralViewer',
+	#name : #GtCodeDefinitionPluralEditor,
+	#superclass : #GtCodeDefinitionPluralViewer,
 	#instVars : [
 		'addSelector',
 		'renameSelector',
@@ -9,17 +9,17 @@ Class {
 	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> addSelector [
 	^ addSelector
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> addSelector: anObject [
 	addSelector := anObject
 ]
 
-{ #category : 'api - instantiation' }
+{ #category : #'api - instantiation' }
 GtCodeDefinitionPluralEditor >> create [
 	<return: #Object>
 	| aDefinition anOwner theInitialNames addAction removeAction renameAction aTagger |
@@ -114,22 +114,22 @@ GtCodeDefinitionPluralEditor >> create [
 	^ aTagger
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> removeSelector [
 	^ removeSelector
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> removeSelector: anObject [
 	removeSelector := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> renameSelector [
 	^ renameSelector
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> renameSelector: anObject [
 	renameSelector := anObject
 ]

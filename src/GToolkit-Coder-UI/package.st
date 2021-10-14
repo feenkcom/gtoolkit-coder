@@ -1,1 +1,1 @@
-Package { #name : 'GToolkit-Coder-UI' }
+Package { #name : #'GToolkit-Coder-UI' }

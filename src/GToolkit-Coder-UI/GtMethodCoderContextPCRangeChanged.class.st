@@ -1,18 +1,18 @@
 Class {
-	#name : 'GtMethodCoderContextPCRangeChanged',
-	#superclass : 'Announcement',
+	#name : #GtMethodCoderContextPCRangeChanged,
+	#superclass : #Announcement,
 	#instVars : [
 		'pcRange'
 	],
 	#category : 'GToolkit-Coder-UI-Coder - Method Events'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtMethodCoderContextPCRangeChanged >> pcRange [
 	^ pcRange
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtMethodCoderContextPCRangeChanged >> pcRange: anObject [
 	pcRange := anObject
 ]

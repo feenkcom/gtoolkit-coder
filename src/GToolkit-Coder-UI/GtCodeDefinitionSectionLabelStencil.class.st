@@ -1,13 +1,13 @@
 Class {
-	#name : 'GtCodeDefinitionSectionLabelStencil',
-	#superclass : 'BrStencil',
+	#name : #GtCodeDefinitionSectionLabelStencil,
+	#superclass : #BrStencil,
 	#instVars : [
 		'name'
 	],
 	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
-{ #category : 'api - instantiation' }
+{ #category : #'api - instantiation' }
 GtCodeDefinitionSectionLabelStencil >> create [
 	<return: #Object>
 
@@ -18,12 +18,12 @@ GtCodeDefinitionSectionLabelStencil >> create [
 		constraintsDo: [ :c | c grid horizontal alignLeft ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionSectionLabelStencil >> name [
 	^ name
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCodeDefinitionSectionLabelStencil >> name: anObject [
 	name := anObject
 ]

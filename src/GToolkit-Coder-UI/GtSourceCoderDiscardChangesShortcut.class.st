@@ -1,27 +1,27 @@
 Class {
-	#name : 'GtSourceCoderDiscardChangesShortcut',
-	#superclass : 'GtSourceCoderShortcut',
+	#name : #GtSourceCoderDiscardChangesShortcut,
+	#superclass : #GtSourceCoderShortcut,
 	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderDiscardChangesShortcut >> description [
 	^ 'Discards changes done to the source code.'
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtSourceCoderDiscardChangesShortcut >> initialize [
 	super initialize.
 	
 	combination := BlKeyCombination primaryL
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSourceCoderDiscardChangesShortcut >> name [
 	^ 'Discard changes'
 ]
 
-{ #category : 'evaluation' }
+{ #category : #evaluation }
 GtSourceCoderDiscardChangesShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
 	aSourceCoderViewModel discardChanges
 ]

@@ -1,6 +1,6 @@
-Extension { #name : 'GtRBAddPoolVariableRefactoring' }
+Extension { #name : #GtRBAddPoolVariableRefactoring }
 
-{ #category : '*GToolkit-Coder-UI' }
+{ #category : #'*GToolkit-Coder-UI' }
 GtRBAddPoolVariableRefactoring >> gtDescription [
 	<return: #String or: #BlRopedText>
 	

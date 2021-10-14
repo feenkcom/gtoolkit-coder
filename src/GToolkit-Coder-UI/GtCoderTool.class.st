@@ -1,32 +1,32 @@
 Class {
-	#name : 'GtCoderTool',
-	#superclass : 'GtPhlowTool',
+	#name : #GtCoderTool,
+	#superclass : #GtPhlowTool,
 	#category : 'GToolkit-Coder-UI-Tools'
 }
 
-{ #category : 'converting' }
+{ #category : #converting }
 GtCoderTool >> asElementDo: aOneArgBlock [
 	"Create a tool element and execute the block."
 
 	^ aOneArgBlock cull: self newCoder asPagerPageElement
 ]
 
-{ #category : 'api - converting' }
+{ #category : #'api - converting' }
 GtCoderTool >> icon [
 	^ BrGlamorousVectorIcons browse
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtCoderTool >> name [
 	^ 'coder'
 ]
 
-{ #category : 'converting' }
+{ #category : #converting }
 GtCoderTool >> newCoder [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'private - accessing' }
+{ #category : #'private - accessing' }
 GtCoderTool >> tabLook [
 	^ BrGlamorousTabSwitcherWithIconAptitude
 ]
