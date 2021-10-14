@@ -5,25 +5,25 @@ I am used by {{gtClass:GtPharoMethodsCoder}}, see: {{gtMethod:Behavior>>#gtCoder
 
 "
 Class {
-	#name : 'GtMethodsCoderExampler',
-	#superclass : 'GtCoderExampler',
+	#name : #GtMethodsCoderExampler,
+	#superclass : #GtCoderExampler,
 	#category : 'GToolkit-Coder-Exampler'
 }
 
-{ #category : 'api - enumeration' }
+{ #category : #'api - enumeration' }
 GtMethodsCoderExampler >> allExampleCodersDo: aBlock [
 	self coder allCoders do: [ :eachCoder | 
 		eachCoder example ifNotNil: [ :anExample |
 			aBlock cull: eachCoder cull: anExample ] ]
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtMethodsCoderExampler >> coderFor: aCompiledMethod [
 	<return: #GtPharoMethodCoder>
 	^ self coder coderFor: aCompiledMethod
 ]
 
-{ #category : 'api - enumeration' }
+{ #category : #'api - enumeration' }
 GtMethodsCoderExampler >> selectedExampleCodersDo: aBlock [
 	self coder coders do: [ :eachCoder | 
 		eachCoder example ifNotNil: [ :anExample |

@@ -1,18 +1,18 @@
 Class {
-	#name : 'GtCoderAstStyler',
-	#superclass : 'BlTextStyler',
+	#name : #GtCoderAstStyler,
+	#superclass : #BlTextStyler,
 	#instVars : [
 		'coderViewModel'
 	],
 	#category : 'GToolkit-Coder-Styler/Highlighter'
 }
 
-{ #category : 'api - styling' }
+{ #category : #'api - styling' }
 GtCoderAstStyler >> attribute: aTextAttribute from: aStart to: anEnd [
 	self attributes: { aTextAttribute } from: aStart to: anEnd
 ]
 
-{ #category : 'api - styling' }
+{ #category : #'api - styling' }
 GtCoderAstStyler >> attributes: anAttributesCollection from: aStart to: anEnd [
 	
 	[ text attributes: anAttributesCollection from: aStart to: anEnd. ]
@@ -35,21 +35,21 @@ GtCoderAstStyler >> attributes: anAttributesCollection from: aStart to: anEnd [
 				cr ].
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAstStyler >> coderViewModel [
 	^ coderViewModel
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAstStyler >> coderViewModel: anObject [
 	coderViewModel := anObject
 ]
 
-{ #category : 'api - styling' }
+{ #category : #'api - styling' }
 GtCoderAstStyler >> extraStyle: aText ast: theAst [
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtCoderAstStyler >> privateStyle: aText [
 	| theAst |
 	
@@ -75,7 +75,7 @@ GtCoderAstStyler >> privateStyle: aText [
 	^ aText
 ]
 
-{ #category : 'api - styling' }
+{ #category : #'api - styling' }
 GtCoderAstStyler >> style: aText ast: theAst [
 	self subclassResponsibility
 ]

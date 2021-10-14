@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderRenameTemporaryRequestedAnnouncement',
-	#superclass : 'GtSourceCoderAnnouncement',
+	#name : #GtCoderRenameTemporaryRequestedAnnouncement,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'variableName',
 		'interestedCoders'
@@ -8,23 +8,23 @@ Class {
 	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCoderRenameTemporaryRequestedAnnouncement >> initialize [
 	super initialize.
 	interestedCoders := OrderedCollection new
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderRenameTemporaryRequestedAnnouncement >> interestedCoders [
 	^ interestedCoders
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderRenameTemporaryRequestedAnnouncement >> variableName [
 	^ variableName
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderRenameTemporaryRequestedAnnouncement >> variableName: aString [
 	variableName := aString
 ]

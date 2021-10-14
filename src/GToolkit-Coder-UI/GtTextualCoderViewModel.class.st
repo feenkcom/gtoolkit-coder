@@ -19,8 +19,15 @@ Class {
 		'extraTextAttributes',
 		'styledText'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Textual Model'
+	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
+
+{ #category : #'api - shortcuts' }
+GtTextualCoderViewModel >> addMainAction: aGtCoderAction [
+	"Add an extra main action add-on independent from the dynamically computed add-ons"
+
+	extraAddOns addMainAction: aGtCoderAction
+]
 
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> addOnsAsyncDo: aBlock [

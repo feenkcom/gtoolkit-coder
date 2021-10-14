@@ -4,7 +4,7 @@ Is sent by the {{gtClass:GtSourceCoder}} when it thinks that the collapsed text 
 
 "
 Class {
-	#name : 'GtCoderCollapsedLabelChanged',
-	#superclass : 'GtSourceCoderAnnouncement',
+	#name : #GtCoderCollapsedLabelChanged,
+	#superclass : #GtSourceCoderAnnouncement,
 	#category : 'GToolkit-Coder-Event'
 }

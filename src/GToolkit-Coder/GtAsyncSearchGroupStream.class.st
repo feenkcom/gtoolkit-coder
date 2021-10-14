@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtAsyncSearchGroupStream',
-	#superclass : 'Object',
+	#name : #GtAsyncSearchGroupStream,
+	#superclass : #Object,
 	#traits : 'TAsyncStream',
 	#classTraits : 'TAsyncStream classTrait',
 	#instVars : [
@@ -12,34 +12,34 @@ Class {
 	#category : 'GToolkit-Coder-Filters - Streams'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtAsyncSearchGroupStream class >> mergeTypeWith: aGroupResultClass [
 	^ aGroupResultClass mergeTypeWithDefaultGroup
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtAsyncSearchGroupStream class >> mergeTypeWithDefaultGroup [
 	"The common type between the default group and any other group is the other group."
 	^ self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtAsyncSearchGroupStream class >> mergeTypeWithGenericGroup [
 	"The common type between a generic group and any other group is the other group."
 	^ self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtAsyncSearchGroupStream class >> mergeTypeWithTypedGroup: aGroupType [
 	^ self
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtAsyncSearchGroupStream >> filter [
 	^ filter
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtAsyncSearchGroupStream >> forFilter: aFilter [
 	self
 		forFilter: aFilter
@@ -48,14 +48,14 @@ GtAsyncSearchGroupStream >> forFilter: aFilter [
 			ifNotNil: [ aFilter defaultFilterScopeStream ])
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtAsyncSearchGroupStream >> forFilter: aFilter scope: aScopeStream [
 	filter := aFilter.
 	scope := aScopeStream.
 	self updateItems
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtAsyncSearchGroupStream >> gtItemsFor: aView [
 	<gtView>
 	| anAnnouncer theItems aListView |
@@ -93,21 +93,21 @@ GtAsyncSearchGroupStream >> gtItemsFor: aView [
 		updateWhen: Announcement in: anAnnouncer
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtAsyncSearchGroupStream >> highlighter [
 	^ filter notNil
 		ifTrue: [ filter highlighter ]
 		ifFalse: [ nil ]
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtAsyncSearchGroupStream >> initialize [
 	super initialize.
 
 	itemsStream := AsyncEmptyStream new.
 ]
 
-{ #category : 'api - stream' }
+{ #category : #'api - stream' }
 GtAsyncSearchGroupStream >> pollNext: anAsynchronousContext [
 	"Attempt to pull out the next value of this stream, registering the current task for wakeup if the value is not yet available, and returning None if the stream is exhausted.
 	There are several possible return values, each indicating a distinct stream state:
@@ -119,24 +119,24 @@ GtAsyncSearchGroupStream >> pollNext: anAsynchronousContext [
 	^ itemsStream pollNext: anAsynchronousContext
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtAsyncSearchGroupStream >> refreshItems [
 	self forFilter: self filter
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtAsyncSearchGroupStream >> scope [
 	^ scope
 ]
 
-{ #category : 'api - stream' }
+{ #category : #'api - stream' }
 GtAsyncSearchGroupStream >> sizeHint [
 	<return: #AsyncStreamSizeHint>
 
 	^ itemsStream sizeHint
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtAsyncSearchGroupStream >> updateItems [
 	itemsStream := scope filter: filter
 ]

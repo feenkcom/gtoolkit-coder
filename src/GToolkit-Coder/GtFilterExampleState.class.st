@@ -1,19 +1,19 @@
 Class {
-	#name : 'GtFilterExampleState',
-	#superclass : 'Object',
+	#name : #GtFilterExampleState,
+	#superclass : #Object,
 	#traits : 'TBlDebug + TGtUniqueInstance',
 	#classTraits : 'TBlDebug classTrait + TGtUniqueInstance classTrait',
 	#category : 'GToolkit-Coder-Filters - Support'
 }
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleState >> allLabels [
 	"Return all available labels"
 	<return: #Array of: #String>
 	^ self allStates collect: #label
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleState >> allStates [
 	| allInstances |
 	allInstances := self class allSubclasses collect: #default.
@@ -21,28 +21,28 @@ GtFilterExampleState >> allStates [
 	^ allInstances
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleState >> color [
 	"Return a color that represents given state"
 	<return: #Color>
 	^ Color transparent
 ]
 
-{ #category : 'api - testing' }
+{ #category : #'api - testing' }
 GtFilterExampleState >> includesCoder: aCoder [
 	"Return true if a method filter should be displayed.
 	Return false otherwise."
 	^ true
 ]
 
-{ #category : 'api - testing' }
+{ #category : #'api - testing' }
 GtFilterExampleState >> isStatusFor: aGtExampleWithResult [
 	"Return true if the status is equal to the example result status"
 	<return: #Boolean>
 	^ self subclassResponsibility
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleState >> label [
 	"Return a name that is used by ${class:GtSearchExamplesFilter}$ 
 	to display available example filters in ${class:GtFiltersElement}$."
@@ -50,7 +50,7 @@ GtFilterExampleState >> label [
 	^ self className
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleState >> labelWithAmountFor: anExampler [
 	<return: #BlText>
 	| aTotal aTotalString aTotalText |
@@ -61,13 +61,13 @@ GtFilterExampleState >> labelWithAmountFor: anExampler [
 		append: aTotalText.
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleState >> numberOfExamplesFor: anExampler [
 	"Return number of examples with a given state"
 	^ 0
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleState >> order [
 	"Return a number that is used by ${class:GtSearchExamplesFilter}$ 
 	to display available example filters in ${class:GtFiltersElement}$
@@ -76,7 +76,7 @@ GtFilterExampleState >> order [
 	^ 50
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleState >> stateFromExample: aGtExampleWithResult [
 	aGtExampleWithResult ifNotNil: [ 
 		self allStates do: [ :eachStatus | 
@@ -85,7 +85,7 @@ GtFilterExampleState >> stateFromExample: aGtExampleWithResult [
 	^ GtFilterExampleNotExecutedState default
 ]
 
-{ #category : 'api - accessing' }
+{ #category : #'api - accessing' }
 GtFilterExampleState >> stateFromLabel: aLabel [
 	<return: #GtFilterExampleState>
 	| aString |

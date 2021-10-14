@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtPharoClassExtension',
-	#superclass : 'GtPharoAssociation',
+	#name : #GtPharoClassExtension,
+	#superclass : #GtPharoAssociation,
 	#instVars : [
 		'extendedClass',
 		'extendingMethod'
@@ -8,27 +8,27 @@ Class {
 	#category : 'GToolkit-Coder-Support-Pharo'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtPharoClassExtension >> extendedClass [
 	^ self extendingMethod methodClass
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtPharoClassExtension >> extendingMethod [
 	^ extendingMethod
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtPharoClassExtension >> extendingMethod: anObject [
 	extendingMethod := anObject
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtPharoClassExtension >> from [
 	^ self extendingMethod 
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtPharoClassExtension >> to [
 	^ self extendedClass  
 ]

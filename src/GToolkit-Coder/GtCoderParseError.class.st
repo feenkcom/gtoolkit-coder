@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderParseError',
-	#superclass : 'GtSourceCoderAnnouncement',
+	#name : #GtCoderParseError,
+	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'errorMessage',
 		'location'
@@ -8,22 +8,22 @@ Class {
 	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderParseError >> errorMessage [
 	^ errorMessage
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderParseError >> errorMessage: anObject [
 	errorMessage := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderParseError >> location [
 	^ location
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderParseError >> location: anObject [
 	location := anObject
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderAction',
-	#superclass : 'Object',
+	#name : #GtCoderAction,
+	#superclass : #Object,
 	#instVars : [
 		'title',
 		'icon',
@@ -10,7 +10,7 @@ Class {
 	#category : 'GToolkit-Coder'
 }
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtCoderAction >> = anObject [
 	"Answer whether the receiver and anObject represent the same object."
 
@@ -21,71 +21,71 @@ GtCoderAction >> = anObject [
 	^ id = anObject id and: [ title = anObject title ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> action [
 	^ action
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> action: anObject [
 	action := anObject
 ]
 
-{ #category : 'evaluating' }
+{ #category : #evaluating }
 GtCoderAction >> glamourValueWithArgs: aSequenceOfArguments [
 	^ self action glamourValueWithArgs: aSequenceOfArguments
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtCoderAction >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ id hash bitXor: title hash
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> hoverAction [
 	^ nil
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> icon [
 	^ icon
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> icon: anObject [
 	icon := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> id [
 	<return: #Object>
 	
 	^ id
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> id: anObject [
 	id := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> leaveAction [
 	^ nil
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> name [
 	^ id
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> name: anObject [
 	id := anObject
 ]
 
-{ #category : 'printing' }
+{ #category : #printing }
 GtCoderAction >> printOn: aStream [
 	super printOn: aStream.
 	aStream
@@ -94,17 +94,17 @@ GtCoderAction >> printOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> title [
 	^ title
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAction >> title: anObject [
 	title := anObject
 ]
 
-{ #category : 'evaluating' }
+{ #category : #evaluating }
 GtCoderAction >> valueWithArguments: aSequenceOfArguments [
 	^ self action valueWithArguments: aSequenceOfArguments
 ]

@@ -1,13 +1,13 @@
 Class {
-	#name : 'GtCoderAstCompositeStyler',
-	#superclass : 'GtCoderAstStyler',
+	#name : #GtCoderAstCompositeStyler,
+	#superclass : #GtCoderAstStyler,
 	#instVars : [
 		'stylers'
 	],
 	#category : 'GToolkit-Coder-Styler/Highlighter'
 }
 
-{ #category : 'api - styling' }
+{ #category : #'api - styling' }
 GtCoderAstCompositeStyler >> extraStyle: aText ast: theAst [
 	self stylers do: [ :eachStyler |
 		BlTextStylerTelemetry
@@ -15,7 +15,7 @@ GtCoderAstCompositeStyler >> extraStyle: aText ast: theAst [
 			during: [ eachStyler extraStyle: aText ast: theAst ] ]
 ]
 
-{ #category : 'api - styling' }
+{ #category : #'api - styling' }
 GtCoderAstCompositeStyler >> style: aText ast: theAst [
 	self stylers do: [ :eachStyler |
 		[
@@ -39,12 +39,12 @@ GtCoderAstCompositeStyler >> style: aText ast: theAst [
 							cr ] ] ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAstCompositeStyler >> stylers [
 	^ stylers ifNil: [ #() ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderAstCompositeStyler >> stylers: anObject [
 	stylers := anObject
 ]

@@ -1,6 +1,6 @@
-Extension { #name : 'PrettyTextDiffBuilder' }
+Extension { #name : #PrettyTextDiffBuilder }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 PrettyTextDiffBuilder >> newStyler [
 	^ BrRBTextStyler new classOrMetaClass: sourceClass
 ]

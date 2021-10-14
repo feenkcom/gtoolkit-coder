@@ -1,6 +1,6 @@
-Extension { #name : 'RBPragmaNode' }
+Extension { #name : #RBPragmaNode }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBPragmaNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	keywordsPositions

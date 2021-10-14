@@ -1,5 +1,5 @@
 Class {
-	#name : 'GtCoderNavigationClassModified',
-	#superclass : 'GtCoderNavigationClassAnnoucement',
+	#name : #GtCoderNavigationClassModified,
+	#superclass : #GtCoderNavigationClassAnnoucement,
 	#category : 'GToolkit-Coder-Navigation - Events'
 }

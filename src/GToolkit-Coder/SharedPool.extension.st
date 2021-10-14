@@ -1,6 +1,6 @@
-Extension { #name : 'SharedPool' }
+Extension { #name : #SharedPool }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 SharedPool class >> associationsDo: aBlock [
 	^ self bindingsDo: aBlock
 ]

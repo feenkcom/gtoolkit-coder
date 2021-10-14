@@ -1,6 +1,6 @@
-Extension { #name : 'RBRefactoryChange' }
+Extension { #name : #RBRefactoryChange }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBRefactoryChange >> gtWithoutChanges [
 	^ self
 ]

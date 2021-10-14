@@ -1,20 +1,20 @@
 Class {
-	#name : 'GtPackagesCompletionStrategy',
-	#superclass : 'GtCompletionStrategy',
+	#name : #GtPackagesCompletionStrategy,
+	#superclass : #GtCompletionStrategy,
 	#category : 'GToolkit-Coder-Completion'
 }
 
-{ #category : 'private' }
+{ #category : #private }
 GtPackagesCompletionStrategy class >> allPackages [
 	^ RPackageOrganizer default packages
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtPackagesCompletionStrategy class >> allPackagesDo: aBlock [
 	^ RPackageOrganizer default packagesDo: aBlock
 ]
 
-{ #category : 'querying' }
+{ #category : #querying }
 GtPackagesCompletionStrategy class >> findPackageTagsMatching: aString [
 	| searchString results |
 	searchString := '*' , aString , '*'.
@@ -27,7 +27,7 @@ GtPackagesCompletionStrategy class >> findPackageTagsMatching: aString [
 	^ results
 ]
 
-{ #category : 'querying' }
+{ #category : #querying }
 GtPackagesCompletionStrategy class >> findPackagesMatching: aString [
 	| searchString results |
 	searchString := '*' , aString , '*'.
@@ -38,7 +38,7 @@ GtPackagesCompletionStrategy class >> findPackagesMatching: aString [
 	^ results
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtPackagesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
 	| string completionActions |
 	string := aText asString.
@@ -53,12 +53,12 @@ GtPackagesCompletionStrategy >> completionActionsFor: aText at: positionInteger 
 		a text < b text ]
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtPackagesCompletionStrategy >> hasCompletionEntryFor: aString [
 	^ true
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtPackagesCompletionStrategy >> hasCompletionsAt: anInteger in: aText [
 	^ true
 ]

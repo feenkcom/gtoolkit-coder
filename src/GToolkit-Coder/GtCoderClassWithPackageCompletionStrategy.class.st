@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderClassWithPackageCompletionStrategy',
-	#superclass : 'GtCompletionStrategy',
+	#name : #GtCoderClassWithPackageCompletionStrategy,
+	#superclass : #GtCompletionStrategy,
 	#instVars : [
 		'allPackages',
 		'allClasses'
@@ -8,24 +8,24 @@ Class {
 	#category : 'GToolkit-Coder-Completion'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassWithPackageCompletionStrategy >> allClasses [
 	^  allClasses ifNil: [ 
 			allClasses := GtPrefixTree withAll: Smalltalk globals classNames ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassWithPackageCompletionStrategy >> allPackages [
 	^ allPackages ifNil: [ 
 		allPackages := GtPrefixTree withAll: RPackage organizer packageNames ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassWithPackageCompletionStrategy >> classesIn: aPackage [
 	^ GtPrefixTree withAll: aPackage definedClassNames 
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderClassWithPackageCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
 	| currentInput completionActions delimitedIndex |
 	currentInput := aText asString.
@@ -62,12 +62,12 @@ GtCoderClassWithPackageCompletionStrategy >> completionActionsFor: aText at: pos
 	
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtCoderClassWithPackageCompletionStrategy >> hasCompletionEntryFor: aString [
 	^ true
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtCoderClassWithPackageCompletionStrategy >> hasCompletionsAt: anInteger in: aText [
 	^ true
 ]

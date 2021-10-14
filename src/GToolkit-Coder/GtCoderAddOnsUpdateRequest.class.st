@@ -10,7 +10,7 @@ It works like this:
 
 "
 Class {
-	#name : 'GtCoderAddOnsUpdateRequest',
-	#superclass : 'GtCoderAnnouncement',
+	#name : #GtCoderAddOnsUpdateRequest,
+	#superclass : #GtCoderAnnouncement,
 	#category : 'GToolkit-Coder-Event'
 }

@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtRefactoringDanger',
-	#superclass : 'Object',
+	#name : #GtRefactoringDanger,
+	#superclass : #Object,
 	#instVars : [
 		'condition',
 		'description'
@@ -8,22 +8,22 @@ Class {
 	#category : 'GToolkit-Coder-Refactoring'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRefactoringDanger >> condition [
 	^ condition
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRefactoringDanger >> condition: anObject [
 	condition := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRefactoringDanger >> description [
 	^ description
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtRefactoringDanger >> description: anObject [
 	description := anObject
 ]

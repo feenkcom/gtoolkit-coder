@@ -1,5 +1,5 @@
 Class {
-	#name : 'GtCoderNavigationModelChangedAnnouncement',
-	#superclass : 'Announcement',
+	#name : #GtCoderNavigationModelChangedAnnouncement,
+	#superclass : #Announcement,
 	#category : 'GToolkit-Coder-Announcements'
 }

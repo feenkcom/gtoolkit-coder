@@ -1,6 +1,6 @@
-Extension { #name : 'RBMethodNode' }
+Extension { #name : #RBMethodNode }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBMethodNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	keywordsPositions

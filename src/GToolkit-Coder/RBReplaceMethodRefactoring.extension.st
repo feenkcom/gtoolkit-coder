@@ -1,6 +1,6 @@
-Extension { #name : 'RBReplaceMethodRefactoring' }
+Extension { #name : #RBReplaceMethodRefactoring }
 
-{ #category : '*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder' }
 RBReplaceMethodRefactoring >> gtPreconditions [
 	|conditions|
 	conditions := (RBCondition withBlock: [ self haveSameNumberOfArgs. true])

@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtPharoTraitUsage',
-	#superclass : 'GtPharoAssociation',
+	#name : #GtPharoTraitUsage,
+	#superclass : #GtPharoAssociation,
 	#instVars : [
 		'trait',
 		'baseBehavior'
@@ -8,32 +8,32 @@ Class {
 	#category : 'GToolkit-Coder-Support-Pharo'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtPharoTraitUsage >> baseBehavior [
 	^ baseBehavior
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtPharoTraitUsage >> baseBehavior: aBehavior [
 	baseBehavior := aBehavior
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtPharoTraitUsage >> from [
 	^ self baseBehavior
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtPharoTraitUsage >> to [
 	^ self usedTrait
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtPharoTraitUsage >> usedTrait [
 	^ trait
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtPharoTraitUsage >> usedTrait: aTrait [
 	trait := aTrait
 ]

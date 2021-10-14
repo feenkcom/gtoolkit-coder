@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtClassCoderMethodProtocolNavigationAnnouncement',
-	#superclass : 'Announcement',
+	#name : #GtClassCoderMethodProtocolNavigationAnnouncement,
+	#superclass : #Announcement,
 	#instVars : [
 		'methodProtocol',
 		'source'
@@ -8,22 +8,22 @@ Class {
 	#category : 'GToolkit-Coder-Event'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtClassCoderMethodProtocolNavigationAnnouncement >> methodProtocol [
 	^ methodProtocol
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtClassCoderMethodProtocolNavigationAnnouncement >> methodProtocol: anObject [
 	methodProtocol := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtClassCoderMethodProtocolNavigationAnnouncement >> source [
 	^ source
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtClassCoderMethodProtocolNavigationAnnouncement >> source: anObject [
 	source := anObject
 ]
