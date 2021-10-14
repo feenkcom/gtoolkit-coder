@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'sourceCoder'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Source'
+	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #initialization }
@@ -28,10 +28,6 @@ GtSourceCoderContentModel >> sourceCoder [
 
 { #category : #accessing }
 GtSourceCoderContentModel >> sourceCoder: aGtSourceCoderUIModel [
-	self
-		assert: [ aGtSourceCoderUIModel isKindOf: GtSourceCoderViewModel ]
-		description: [ 'Should be a Source Coder UI Model' ].
-
 	sourceCoder := aGtSourceCoderUIModel.
 	self notifySourceCoderChanged: aGtSourceCoderUIModel
 ]
