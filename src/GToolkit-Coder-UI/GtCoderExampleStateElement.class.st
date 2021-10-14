@@ -87,9 +87,9 @@ GtCoderExampleStateElement >> initialize [
 
 	self 
 		layout: BlLinearLayout horizontal;
-		geometry: BlCircle new;
+		geometry: BlSquare new;
 		margin: (BlInsets all: 1);
-		exact: 8@8.
+		exact: 12@12.
 		
 	self initializeInteractiveLook.
 	self initializeTooltipLook.
