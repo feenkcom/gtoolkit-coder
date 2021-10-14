@@ -28,12 +28,6 @@ GtSourceCoderContentModel >> sourceCoder [
 
 { #category : #accessing }
 GtSourceCoderContentModel >> sourceCoder: aGtSourceCoderUIModel [
-	self
-		assert: [
-			(aGtSourceCoderUIModel isKindOf: GtSourceCoderViewModel)
-				or: [aGtSourceCoderUIModel isKindOf: GtSourceCoderViewModelPromised] ]
-		description: [ 'Should be a Source Coder UI Model' ].
-
 	sourceCoder := aGtSourceCoderUIModel.
 	self notifySourceCoderChanged: aGtSourceCoderUIModel
 ]
