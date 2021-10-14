@@ -14,7 +14,7 @@ Class {
 		'mutex',
 		'isUpdateRequested'
 	],
-	#category : 'GToolkit-Coder-UI-Filters'
+	#category : #'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #'private - updating' }
@@ -73,7 +73,7 @@ GtFilterRunExampleButtonAptitude >> initialize [
 { #category : #initialization }
 GtFilterRunExampleButtonAptitude >> initializeIconElement: anElement [
 	anElement
-		geometry: BlCircle new;
+		geometry: BlSquare new;
 		margin: (BlInsets all: 1);
 		size: 8 @ 8.
 ]
