@@ -63,6 +63,8 @@ Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
 			content: [ :element | aMethodsCoder codeGeneratorsDropDown: element for: aMethodsCoderUIModel ];
 		actionStencil:
 				[ self runAllExamplesButtonForMethodsCoder: aMethodsCoder ];
+		actionStencil: 
+				[ self newTestSuiteButtonForMethodsCoder: aMethodsCoder ];
 		stencil: [ aMethodsCoderUIModel asElement ]
 ]
 
@@ -74,6 +76,18 @@ Behavior >> methodsCoderFromContext: aPhlowContext [
 		optionAt: #behaviorCoder
 		ifPresent: [ :aBehaviorCoderUIModel | aBehaviorCoderUIModel methodsCoderUIModel ]
 		ifAbsentPut: [ (GtClassMethodsCoder forClass: self) asCoderUIModel ]
+]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
+Behavior >> newTestSuiteButtonForMethodsCoder: aMethodsCoder [
+	^ BrButton new
+		addAptitude:
+			(GtPharoTestSuiteAptitude new coder: aMethodsCoder);
+		addAptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude;
+		"addAptitude: (GtFilterRunExampleButtonTooltipAptitude new coder: aMethodsCoder);"
+		icon: BrGlamorousVectorIcons play;
+		label: 'Run Test Cases';
+		action: [ :element | aMethodsCoder testSuite playSelectedFrom: element ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
