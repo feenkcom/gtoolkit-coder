@@ -8,7 +8,7 @@ Class {
 		'items',
 		'coders'
 	],
-	#category : 'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'initialize-release' }
@@ -116,10 +116,14 @@ GtCodersModel >> unsubscribeFromSystem [
 
 { #category : #updating }
 GtCodersModel >> updateCoders [
+	| oldCoders |
+	oldCoders := coders.
 	coders := items collect: [ :each | self newCoderFor: each ].
 	self
 		announce:
 			(GtCodersCodersChanged new
 				coders: self;
+				oldCoders: oldCoders;
+				newCoders: coders;
 				yourself)
 ]
