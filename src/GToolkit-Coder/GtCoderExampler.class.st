@@ -10,7 +10,7 @@ Class {
 	#instVars : [
 		'coder'
 	],
-	#category : 'GToolkit-Coder-Exampler'
+	#category : #'GToolkit-Coder-Exampler'
 }
 
 { #category : #'api - instance creation' }
@@ -171,8 +171,10 @@ GtCoderExampler >> runExamplesFrom: anElement [
 
 { #category : #'api - execution' }
 GtCoderExampler >> runNoTestExamples [
+
 	self selectedExecutableExampleCodersDo: [ :eachCoder | 
-		(eachCoder isModified not and: [ eachCoder example hasNoTestPragma ]) ifTrue: [ 
+		(eachCoder isModified not and: [ 
+			 eachCoder example hasNoTestPragma not ]) ifTrue: [ 
 			eachCoder example run ] ]
 ]
 
