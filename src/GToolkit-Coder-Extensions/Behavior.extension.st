@@ -80,14 +80,9 @@ Behavior >> methodsCoderFromContext: aPhlowContext [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> newTestSuiteButtonForMethodsCoder: aMethodsCoder [
-	^ BrButton new
-		addAptitude:
-			(GtPharoTestSuiteAptitude new coder: aMethodsCoder);
-		addAptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude;
-		"addAptitude: (GtFilterRunExampleButtonTooltipAptitude new coder: aMethodsCoder);"
-		icon: BrGlamorousVectorIcons play;
-		label: 'Run Test Cases';
-		action: [ :element | aMethodsCoder testSuite playSelectedFrom: element ]
+
+	^ GtCoderUIUtility newTestSuiteButtonForMethodsCoder:
+		  aMethodsCoder
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
