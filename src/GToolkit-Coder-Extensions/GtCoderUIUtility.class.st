@@ -11,9 +11,11 @@ GtCoderUIUtility class >> newTestSuiteButtonForMethodsCoder: aMethodsCoder [
 		  addAptitude: (GtPharoTestSuiteAptitude new coder: aMethodsCoder);
 		  addAptitude: BrGlamorousButtonWithIconAptitude
 			  - BrGlamorousButtonWithLabelTooltipAptitude;
-		  "addAptitude: (GtFilterRunExampleButtonTooltipAptitude new coder: aMethodsCoder);"
+		  addAptitude: (GtPharoStateTooltipAptitude new
+				   coder: aMethodsCoder;
+				   statesProvider: GtPharoTestCaseStateProvider new);
 		  icon: BrGlamorousVectorIcons play;
 		  label: 'Run Test Cases';
 		  action: [ :element | 
-			  aMethodsCoder testSuite playSelectedFrom: element ]
+		  aMethodsCoder testSuite playSelectedFrom: element ]
 ]
