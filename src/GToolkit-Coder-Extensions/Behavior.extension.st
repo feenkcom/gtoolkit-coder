@@ -87,12 +87,6 @@ Behavior >> newTestSuiteButtonForMethodsCoder: aMethodsCoder [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> runAllExamplesButtonForMethodsCoder: aMethodsCoder [
-	^ BrButton new
-		addAptitude:
-			(GtFilterRunExampleButtonFourStateIconAptitude new coder: aMethodsCoder);
-		addAptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude;
-		addAptitude: (GtFilterRunExampleButtonTooltipAptitude new coder: aMethodsCoder);
-		icon: BrGlamorousVectorIcons play;
-		label: 'Run All Examples';
-		action: [ :element | aMethodsCoder exampler runExamplesFrom: element ]
+
+	^ GtCoderUIUtility newExamplesButtonForMethodsCoder: aMethodsCoder
 ]
