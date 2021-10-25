@@ -38,37 +38,6 @@ Behavior >> gtCoderExamplesFor: aView context: aDictionary [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-Behavior >> gtCoderMethodsFor: aView context: aPhlowContext [
-	<gtClassView>
-	| aMethodsCoderUIModel aMethodsCoder |
-
-	aMethodsCoderUIModel := self methodsCoderFromContext: aPhlowContext.
-	aMethodsCoder := aMethodsCoderUIModel coder.
-
-	^ aView explicit
-		priority: 10;
-		title: 'Methods';
-		disableAsync;
-		actionDropdownButtonIcon: BrGlamorousVectorIcons filter
-			tooltip: 'Filter'
-			content: [ :element | aMethodsCoder filterDropDown: element ];
-		actionButtonDo: [ :aButtonAction |
-			aButtonAction
-				icon: BrGlamorousVectorIcons add;
-				tooltip: 'Add new method';
-				action: [ aMethodsCoderUIModel addNewCoder ];
-				name: GtPharoBehaviorCoder addNewMethodButtonName ];
-		actionDropdownButtonIcon: BrGlamorousVectorIcons robot
-			tooltip: 'Generate'
-			content: [ :element | aMethodsCoder codeGeneratorsDropDown: element for: aMethodsCoderUIModel ];
-		actionStencil:
-				[ self runAllExamplesButtonForMethodsCoder: aMethodsCoder ];
-		actionStencil: 
-				[ self newTestSuiteButtonForMethodsCoder: aMethodsCoder ];
-		stencil: [ aMethodsCoderUIModel asElement ]
-]
-
-{ #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> methodsCoderFromContext: aPhlowContext [
 	<return: #GtPharoMethodsCoderViewModel>
 
@@ -76,17 +45,4 @@ Behavior >> methodsCoderFromContext: aPhlowContext [
 		optionAt: #behaviorCoder
 		ifPresent: [ :aBehaviorCoderUIModel | aBehaviorCoderUIModel methodsCoderUIModel ]
 		ifAbsentPut: [ (GtClassMethodsCoder forClass: self) asCoderUIModel ]
-]
-
-{ #category : #'*GToolkit-Coder-Extensions' }
-Behavior >> newTestSuiteButtonForMethodsCoder: aMethodsCoder [
-
-	^ GtCoderUIUtility newTestSuiteButtonForMethodsCoder:
-		  aMethodsCoder
-]
-
-{ #category : #'*GToolkit-Coder-Extensions' }
-Behavior >> runAllExamplesButtonForMethodsCoder: aMethodsCoder [
-
-	^ GtCoderUIUtility newExamplesButtonForMethodsCoder: aMethodsCoder
 ]

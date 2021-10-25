@@ -24,6 +24,20 @@ GtCoderExampler >> allExampleCodersDo: aBlock [
 	self subclassResponsibility
 ]
 
+{ #category : #'api - accessing' }
+GtCoderExampler >> allExampleStates [
+
+	| aSet |
+	aSet := Set new.
+
+	self allExecutableExampleCodersDo: [ :aCoder :anExample | 
+		| aState |
+		aState := GtFilterExampleState default stateFromExample: anExample.
+		aSet add: aState ].
+
+	^ aSet
+]
+
 { #category : #'api - enumeration' }
 GtCoderExampler >> allExecutableExampleCodersDo: aBlock [
 	self allExampleCodersDo: [ :aCoder :anExample | 
