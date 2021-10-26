@@ -10,7 +10,7 @@ Class {
 	#instVars : [
 		'coder'
 	],
-	#category : 'GToolkit-Coder-Exampler'
+	#category : #'GToolkit-Coder-Exampler'
 }
 
 { #category : #'api - instance creation' }
@@ -22,6 +22,20 @@ GtCoderExampler class >> coder: aCoder [
 GtCoderExampler >> allExampleCodersDo: aBlock [
 	"iterate all coders with examples"
 	self subclassResponsibility
+]
+
+{ #category : #'api - accessing' }
+GtCoderExampler >> allExampleStates [
+
+	| aSet |
+	aSet := Set new.
+
+	self allExecutableExampleCodersDo: [ :aCoder :anExample | 
+		| aState |
+		aState := GtFilterExampleState default stateFromExample: anExample.
+		aSet add: aState ].
+
+	^ aSet
 ]
 
 { #category : #'api - enumeration' }

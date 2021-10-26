@@ -21,7 +21,7 @@ GtSourceCoderCollapsedAddOnsAptitude >> initialize [
 GtSourceCoderCollapsedAddOnsAptitude >> newAddOnsContainer [
 
 	^ BrHorizontalPane new fitContent
-		addChild: (BrGlamorousIcons inspect asElement)
+		margin: (BlInsets top: 4 left: 1 bottom: 1 right: 1)
 ]
 
 { #category : #'private - hooks' }
