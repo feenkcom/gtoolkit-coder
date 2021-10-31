@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'object'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Source Attributes'
+	#category : #'GToolkit-Coder-UI-Coder - Source Attributes'
 }
 
 { #category : #'instance creation' }
@@ -24,7 +24,7 @@ GtCoderPrintStringAttribute class >> forString: aString [
 { #category : #private }
 GtCoderPrintStringAttribute >> actionButtonLook [
 	^ BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude + (BrStyleCommonAptitude new
-		default: [ :aStyle | aStyle geometry: BlCircle new ];
+		default: [ :aStyle | aStyle geometry: BlCircleGeometry new ];
 		hovered: [ :aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker ];
 		pressed: [ :aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker darker ])
 ]
