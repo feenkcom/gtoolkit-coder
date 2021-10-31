@@ -1,5 +1,5 @@
 "
-I {{gtMethod:GtCoderCodeExecutor>>#execute|label=#selector}} a Pharo code provided by {{gtClass:GtCoderUIModel}}.
+I {{gtMethod:GtCoderCodeExecutor>>#execute|label=#selector}} a Pharo code provided by {{gtClass:GtPharoSourceCoderViewModel}}.
 If a code is selected, I execute the selection. If there is no selection, I execute all code:
 - {{gtMethod:GtCoderCodeExecutor class>>#doIt}}
 - {{gtMethod:GtCoderCodeExecutor class>>#doIt}}
@@ -13,7 +13,7 @@ Class {
 		'action',
 		'element'
 	],
-	#category : 'GToolkit-Coder-UI-Execution'
+	#category : #'GToolkit-Coder-UI-Execution'
 }
 
 { #category : #'api - instance creation' }
