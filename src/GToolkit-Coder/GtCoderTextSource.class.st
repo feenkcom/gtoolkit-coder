@@ -1,3 +1,6 @@
+"
+I represent a source code of the {{gtClass:GtTextualCoder}}. For performance reasons the computation of the actual source code in the coder is done lazily. I am to provide a necessary abstraction to support it
+"
 Class {
 	#name : #GtCoderTextSource,
 	#superclass : #Object,
@@ -6,13 +9,8 @@ Class {
 		'originalSourceTextPromise',
 		'currentSourceText'
 	],
-	#category : #'GToolkit-Coder-Promised'
+	#category : #'GToolkit-Coder-Coders - Source Text'
 }
-
-{ #category : #'api - accessing' }
-GtCoderTextSource >> asAstCacheKey [
-	^ self subclassResponsibility
-]
 
 { #category : #'api - converting' }
 GtCoderTextSource >> asCompiledMethodSourceCode: aCompiledMethod [

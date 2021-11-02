@@ -225,7 +225,7 @@ GtTextualCoderPromised >> sourceChangedWith: anUpdateStrategy [
 
 { #category : #'api - accessing' }
 GtTextualCoderPromised >> sourceCode [
-	<return: #GtCoderSourceCode>
+	<return: #GtCoderTextSource>
 
 	sourceCode ifNil: [ self sourceCode: (GtCoderExplicitSourceCode new source: '') ].
 	^ sourceCode

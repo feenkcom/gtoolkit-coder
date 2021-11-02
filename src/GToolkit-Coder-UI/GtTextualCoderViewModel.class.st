@@ -143,7 +143,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: 
 GtTextualCoderViewModel >> asEditorState [
 	| anEditorText aMemento |
 
-	anEditorText := self coderModel sourceText copy.
+	anEditorText := self coderModel currentSourceText copy.
 
 	self extraTextAttributes do: [ :eachCoderAttributes |
 		eachCoderAttributes applyOnEditorText: anEditorText ].

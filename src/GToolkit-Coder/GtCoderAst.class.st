@@ -5,7 +5,7 @@ Class {
 		'ast',
 		'epoch'
 	],
-	#category : #'GToolkit-Coder-Promised'
+	#category : #'GToolkit-Coder-Ast'
 }
 
 { #category : #accessing }

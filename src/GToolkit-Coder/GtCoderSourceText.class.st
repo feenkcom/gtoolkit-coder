@@ -5,7 +5,7 @@ Class {
 		'text',
 		'epoch'
 	],
-	#category : #'GToolkit-Coder-Promised'
+	#category : #'GToolkit-Coder-Coders - Source Text'
 }
 
 { #category : #converting }

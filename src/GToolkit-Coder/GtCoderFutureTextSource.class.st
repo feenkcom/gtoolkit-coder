@@ -4,13 +4,8 @@ Class {
 	#instVars : [
 		'futureBlock'
 	],
-	#category : #'GToolkit-Coder-Promised'
+	#category : #'GToolkit-Coder-Coders - Source Text'
 }
-
-{ #category : #'api - accessing' }
-GtCoderFutureTextSource >> asAstCacheKey [
-	^ nil
-]
 
 { #category : #accessing }
 GtCoderFutureTextSource >> future: aBlock [
