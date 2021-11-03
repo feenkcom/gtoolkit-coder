@@ -120,9 +120,15 @@ GtCoderExampleStateElement >> initializeViewModels [
 
 { #category : #'private - instance creation' }
 GtCoderExampleStateElement >> newInspectorWithExampleResult [
-	^ ((GtInspector forObject: self tooltipObject)
-			exact: 400@400)
-				asScalableElement size: 200@200.
+
+	| anElement |
+	anElement := self exampleResult
+		             ifNotNil: [ :aResult | 
+		             aResult asGtExampleResultPreviewElement ]
+		             ifNil: [ ((GtInspector forObject: self example)
+		             	exact: 400 @ 400) asScalableElement size: 200 @ 200 ].
+
+	^ anElement
 ]
 
 { #category : #'private - instance creation' }
@@ -239,13 +245,6 @@ GtCoderExampleStateElement >> subscribeToExample [
 		when: GtExampleExecuted
 		send: #onExampleExecuted:
 		to: self.
-]
-
-{ #category : #'private - accessing' }
-GtCoderExampleStateElement >> tooltipObject [
-
-	self exampleResult ifNotNil: [ :aResult | ^ aResult returnValue ].
-	^ self example
 ]
 
 { #category : #'private - subscriptions' }
