@@ -221,9 +221,10 @@ GtCoderExampleStateElement >> playExampleFrom: aButton [
 
 { #category : #'private - actions' }
 GtCoderExampleStateElement >> spawnExampleFrom: anElement [
-	self exampleDo: [ :anExample |
+
+	self exampleDo: [ :anExample | 
 		anExample hasResult ifTrue: [ 
-			anElement phlow spawnObject: anExample result returnValueOrExampleException ] ]
+			anElement phlow spawnObject: anExample result returnValue ] ]
 ]
 
 { #category : #'private - accessing' }
@@ -242,7 +243,8 @@ GtCoderExampleStateElement >> subscribeToExample [
 
 { #category : #'private - accessing' }
 GtCoderExampleStateElement >> tooltipObject [
-	self exampleResult ifNotNil: [ :aResult | ^ aResult returnValueOrExampleException ].
+
+	self exampleResult ifNotNil: [ :aResult | ^ aResult returnValue ].
 	^ self example
 ]
 
