@@ -123,10 +123,11 @@ GtCoderExampleStateElement >> newInspectorWithExampleResult [
 
 	| anElement |
 	anElement := self exampleResult
-		             ifNotNil: [ :aResult | 
-		             aResult asGtExampleResultPreviewElement ]
-		             ifNil: [ ((GtInspector forObject: self example)
-		             	exact: 400 @ 400) asScalableElement size: 200 @ 200 ].
+		             ifNotNil: [ :anExampleResult | 
+		             	self example asGtExampleResultPreviewElement ]
+		             ifNil: [ 
+			             ((GtInspector forObject: self example) exact:
+				              400 @ 400) asScalableElement size: 200 @ 200 ].
 
 	^ anElement
 ]
