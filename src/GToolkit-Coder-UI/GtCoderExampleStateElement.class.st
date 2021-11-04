@@ -120,9 +120,16 @@ GtCoderExampleStateElement >> initializeViewModels [
 
 { #category : #'private - instance creation' }
 GtCoderExampleStateElement >> newInspectorWithExampleResult [
-	^ ((GtInspector forObject: self tooltipObject)
-			exact: 400@400)
-				asScalableElement size: 200@200.
+
+	| anElement |
+	anElement := self exampleResult
+		             ifNotNil: [ :anExampleResult | 
+		             	self example asGtExampleResultPreviewElement ]
+		             ifNil: [ 
+			             ((GtInspector forObject: self example) exact:
+				              400 @ 400) asScalableElement size: 200 @ 200 ].
+
+	^ anElement
 ]
 
 { #category : #'private - instance creation' }
@@ -221,9 +228,10 @@ GtCoderExampleStateElement >> playExampleFrom: aButton [
 
 { #category : #'private - actions' }
 GtCoderExampleStateElement >> spawnExampleFrom: anElement [
-	self exampleDo: [ :anExample |
+
+	self exampleDo: [ :anExample | 
 		anExample hasResult ifTrue: [ 
-			anElement phlow spawnObject: anExample result returnValueOrExampleException ] ]
+			anElement phlow spawnObject: anExample result returnValue ] ]
 ]
 
 { #category : #'private - accessing' }
@@ -238,12 +246,6 @@ GtCoderExampleStateElement >> subscribeToExample [
 		when: GtExampleExecuted
 		send: #onExampleExecuted:
 		to: self.
-]
-
-{ #category : #'private - accessing' }
-GtCoderExampleStateElement >> tooltipObject [
-	self exampleResult ifNotNil: [ :aResult | ^ aResult returnValueOrExampleException ].
-	^ self example
 ]
 
 { #category : #'private - subscriptions' }
