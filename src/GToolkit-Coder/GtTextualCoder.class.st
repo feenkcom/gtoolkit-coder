@@ -17,21 +17,21 @@ GtTextualCoder >> addOnsClass [
 { #category : #'api - text' }
 GtTextualCoder >> appendString: aString [
 	self critical: [
-		self sourceCode appendString: aString.
+		self currentSourceText: (self currentSourceText copy appendString: aString).
 		self sourceChanged ]
 ]
 
 { #category : #'api - text' }
 GtTextualCoder >> appendText: aText [
 	self critical: [
-		self sourceCode appendText: aText.
+		self currentSourceText: (self currentSourceText copy append: aText).
 		self sourceChanged ]
 ]
 
 { #category : #'api - text' }
 GtTextualCoder >> appendText: aText with: aGtCoderUpdateStragegy [
 	self critical: [
-		self sourceCode appendText: aText.
+		self currentSourceText: (self currentSourceText copy append: aText).
 		self sourceChangedWith: aGtCoderUpdateStragegy ]
 ]
 

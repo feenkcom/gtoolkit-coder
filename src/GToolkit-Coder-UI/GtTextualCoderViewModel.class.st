@@ -552,15 +552,16 @@ GtTextualCoderViewModel >> onPreviousStyledTextUnset: aPreviousStyledText [
 
 { #category : #'private - event handling' }
 GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement [
-	
+
 	"source code changed, meaning that the styled text is no longer correct"
+
 	self unsetStyledText.
 
 	self announce: (GtTextualCoderViewModelTextChanged new
-		text: self coderModel sourceText;
-		updateStrategy: anSourceCodeChangedAnnouncement updateStrategy).
+			 text: self coderModel currentSourceText;
+			 updateStrategy: anSourceCodeChangedAnnouncement updateStrategy).
 
-	self coderModel terminateAstCommand.
+	"self coderModel terminateAstCommand."
 	self terminateAddOnsCommand.
 
 	self coderModel ensureAst
