@@ -7,15 +7,28 @@ Class {
 	#name : #GtCoderSourceCodeChanged,
 	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
-		'updateStragegy'
+		'updateStragegy',
+		'newText'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #testing }
 GtCoderSourceCodeChanged >> isSynchronous [
 	^ self updateStrategy notNil
 		and: [ self updateStrategy isSynchronous ]
+]
+
+{ #category : #accessing }
+GtCoderSourceCodeChanged >> newText [
+
+	^ newText
+]
+
+{ #category : #accessing }
+GtCoderSourceCodeChanged >> newText: anObject [
+
+	newText := anObject
 ]
 
 { #category : #accessing }

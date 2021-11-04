@@ -2,10 +2,7 @@ Class {
 	#name : #GtTextualCoderViewModel,
 	#superclass : #GtSingleCoderViewModel,
 	#instVars : [
-		'addOns',
-		'addOnMonitor',
-		'addOnCommand',
-		'addOnCommandBlock',
+		'addOnPromise',
 		'extraAddOns',
 		'stylers',
 		'mainActions',
@@ -30,59 +27,23 @@ GtTextualCoderViewModel >> addMainAction: aGtCoderAction [
 ]
 
 { #category : #'api - add-ons' }
+GtTextualCoderViewModel >> addOns [
+	^ self ensureAddOns
+]
+
+{ #category : #'api - add-ons' }
 GtTextualCoderViewModel >> addOnsAsyncDo: aBlock [
-	addOnMonitor critical: [
-		addOnCommand ifNotNil: [
-			| aUniqueSubscriber |
-			aUniqueSubscriber := Object new.
-			"the add-ons are being computed, subscribe to the ast changed announcement to wait until is finishes"
-			^ self
-				when: GtTextualCoderViewModelAddOnsChanged
-				doOnce: [ :anAnnouncement | aBlock value: anAnnouncement addOns ]
-				for: aUniqueSubscriber ].
-
-		"the add-ons are already computed, return it directly"
-		addOns ifNotNil: [ :theAddOns | ^ aBlock value: theAddOns ].
-
-		addOnCommandBlock := [
-			| theComputedAddOns |
-
-			theComputedAddOns := self computeAddOns.
-			addOnMonitor critical: [
-				addOns := theComputedAddOns.
-				addOnCommand := nil.
-				addOnCommandBlock := nil ].
-			self onAddOnsChanged: theComputedAddOns.
-			aBlock value: theComputedAddOns.
-			self announce: (GtTextualCoderViewModelAddOnsChanged new addOns: theComputedAddOns) ].
-		addOnCommand := addOnCommandBlock asBlTktTerminableCommand asBlTktLoggingCommand.
-
-		BlUseAsyncFeatures 
-			ifEnabledDo: [ BlTktWorkerProvider coderAddOnsPool schedule: addOnCommand ]
-			otherwise: [ addOnCommand execute ] ]
+	self addOns asyncThen: [ :theAddOns | aBlock value: theAddOns ]
 ]
 
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> addOnsAwait [
-	| theAddOns |
-	
-	theAddOns := nil.
-	self addOnsAwaitDo: [ :theComputedAddOns | theAddOns := theComputedAddOns ].
-	^ theAddOns
+	^ self addOns wait
 ]
 
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> addOnsAwaitDo: aBlock [
-	| aSemaphore theAddOns |
-	
-	aSemaphore := Semaphore new.
-	theAddOns := nil.
-	self addOnsAsyncDo: [ :theComputedAddOns |
-		theAddOns := theComputedAddOns.
-		aSemaphore signal ].
-	
-	aSemaphore wait: 5 seconds.
-	aBlock value: theAddOns
+	aBlock value: self addOns wait
 ]
 
 { #category : #'api - shortcuts' }
@@ -199,42 +160,46 @@ GtTextualCoderViewModel >> compositeStyler [
 
 { #category : #'private - addons' }
 GtTextualCoderViewModel >> computeAddOns [
-	| aCoderModel newAddOns pragmas theAst |
-		
+	| aCoderModel  |
+
 	aCoderModel := self coderModel.
-	
-	theAst := aCoderModel astAwait.
-	pragmas := aCoderModel
-		pragmasNamed: #gtAstCoderAddOns:
-		inHierarchy: aCoderModel class.
 
-	newAddOns := aCoderModel newAddOns.
-	"extra addons"
-	newAddOns addAddOns: aCoderModel addOns.
-	aCoderModel initializeShortcuts: newAddOns.
-	aCoderModel initializeAddOns: newAddOns.
-	theAst ifNotNil: [
-		pragmas reverseDo: [ :eachPragma |
-			[ aCoderModel
-				perform: eachPragma methodSelector
-				withEnoughArguments: { theAst . newAddOns . self } ]
-			on: Error
-			do: [ :anError |
-				"emit as a beacon signal"
-				anError emit.
-				
-				NonInteractiveTranscript stderr
-					nextPut: $[;
-					print: eachPragma method printString;
-					nextPut: $];
-					space;
-					print: anError;
-					cr ] ] ].
+	^ aCoderModel ast asyncThen: [ :aCoderAst |
+		| theAst newAddOns pragmas |
 
-	"view model add-ons override coder model add-ons"
-	newAddOns addAddOns: extraAddOns.
-	newAddOns markAsUpdated.
-	^ newAddOns
+		theAst := aCoderAst ast.
+
+		pragmas := aCoderModel
+			pragmasNamed: #gtAstCoderAddOns:
+			inHierarchy: aCoderModel class.
+
+		newAddOns := aCoderModel newAddOns.
+		"extra addons"
+		newAddOns addAddOns: aCoderModel addOns.
+		aCoderModel initializeShortcuts: newAddOns.
+		aCoderModel initializeAddOns: newAddOns.
+		theAst ifNotNil: [
+			pragmas reverseDo: [ :eachPragma |
+				[ aCoderModel
+					perform: eachPragma methodSelector
+					withEnoughArguments: { theAst . newAddOns . self } ]
+				on: Error
+				do: [ :anError |
+					"emit as a beacon signal"
+					anError emit.
+					
+					NonInteractiveTranscript stderr
+						nextPut: $[;
+						print: eachPragma method printString;
+						nextPut: $];
+						space;
+						print: anError;
+						cr ] ] ].
+
+		"view model add-ons override coder model add-ons"
+		newAddOns addAddOns: extraAddOns.
+		newAddOns markAsUpdated.
+		newAddOns ].
 ]
 
 { #category : #'private - addons' }
@@ -324,9 +289,9 @@ GtTextualCoderViewModel >> elementClass [
 	^ GtTextualCoderEditorElement
 ]
 
-{ #category : #'api - add-ons' }
+{ #category : #'private - addons' }
 GtTextualCoderViewModel >> ensureAddOns [
-	self addOnsAsyncDo: [ :theAddOns | ]
+	^ addOnPromise ifNil: [ addOnPromise := self computeAddOns then: [ :theAddOns | self onAddOnsChanged: theAddOns ]; yourself ]
 ]
 
 { #category : #'api - expansion' }
@@ -433,7 +398,6 @@ GtTextualCoderViewModel >> initialize [
 	super initialize.
 	
 	extraAddOns := GtTextualCoderAddOns new.
-	addOnMonitor := Monitor new.
 	stylers := #().
 	shortcuts := #().
 	mainActions := #().
@@ -512,7 +476,7 @@ GtTextualCoderViewModel >> notifyStyledTextChanged [
 		styledText: self styledText).
 ]
 
-{ #category : #'private - addons' }
+{ #category : #'private - event handling' }
 GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 	"Is sent when new add-ons are computed"
 
@@ -520,20 +484,9 @@ GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 	self shortcuts: theAddOns shortcuts.
 	self mainActions: theAddOns mainActions.
 	self contextActions: theAddOns contextActions.
-	self contextMenuActions: theAddOns contextMenuActions
-]
-
-{ #category : #'private - event handling' }
-GtTextualCoderViewModel >> onAstChanged: anAstChangedAnnouncement [
-
-	"ast changed, the styled text may not be valid anymore"
-	self unsetStyledText.
-
-	self announce: (GtTextualCoderViewModelAstChanged new ast: anAstChangedAnnouncement ast).
-
-	addOnMonitor critical: [ addOns := nil ].
-
-	self addOnsAsyncDo: [ :theAddOns | self announce: GtTextualCoderViewModelReadyToRestyle new ]
+	self contextMenuActions: theAddOns contextMenuActions.
+	
+	self announce: GtTextualCoderViewModelReadyToRestyle new
 ]
 
 { #category : #'api - styled text' }
@@ -552,19 +505,15 @@ GtTextualCoderViewModel >> onPreviousStyledTextUnset: aPreviousStyledText [
 
 { #category : #'private - event handling' }
 GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement [
-
 	"source code changed, meaning that the styled text is no longer correct"
-
 	self unsetStyledText.
+	
+	addOnPromise := nil.
+	self ensureAddOns.
 
 	self announce: (GtTextualCoderViewModelTextChanged new
-			 text: self coderModel currentSourceText;
-			 updateStrategy: anSourceCodeChangedAnnouncement updateStrategy).
-
-	"self coderModel terminateAstCommand."
-	self terminateAddOnsCommand.
-
-	self coderModel ensureAst
+		text: self coderModel currentSourceText;
+		updateStrategy: anSourceCodeChangedAnnouncement updateStrategy)
 ]
 
 { #category : #'api - text' }
@@ -652,17 +601,16 @@ GtTextualCoderViewModel >> shouldAddOnsBeUpdated [
 	that element should check if addons need to be updated and if it is the case start the update with the help of ${method:GtCoderModel>>#updateAddOnsFrom:}$"
 	<return: #Boolean>
 
-	^ addOnMonitor critical: [
-		addOns
-			ifNil: [ true ]
-			ifNotNil: [ :theAddOns | theAddOns shouldBeUpdated ] ]
+	^ addOnPromise
+		ifNil: [ true ]
+		ifNotNil: [ :theAddOns | theAddOns shouldBeUpdated ]
 ]
 
 { #category : #'api - text' }
 GtTextualCoderViewModel >> sourceText [
 	<return: #BlText>
 
-	^ self coderModel sourceText
+	^ self coderModel currentSourceText
 ]
 
 { #category : #'api - text' }
@@ -727,24 +675,11 @@ GtTextualCoderViewModel >> stylers: theStylers [
 { #category : #'api - coder model' }
 GtTextualCoderViewModel >> subscribeToCoderModel [
 	super subscribeToCoderModel.
-	
-	self coderModel weak
-		when: GtCoderAstChanged
-		send: #onAstChanged:
-		to: self.
 		
 	self coderModel weak
 		when: GtCoderSourceCodeChanged
 		send: #onSourceCodeChanged:
 		to: self
-]
-
-{ #category : #'api - add-ons' }
-GtTextualCoderViewModel >> terminateAddOnsCommand [
-	addOnMonitor critical: [
-		addOnCommand ifNotNil: [ :anAddOnsCommand | anAddOnsCommand terminate ].
-		addOnCommand := nil.
-		addOnCommandBlock := nil ]
 ]
 
 { #category : #'api - styled text' }

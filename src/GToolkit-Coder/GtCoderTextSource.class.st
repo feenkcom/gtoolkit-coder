@@ -14,7 +14,7 @@ Class {
 
 { #category : #'api - converting' }
 GtCoderTextSource >> asCompiledMethodSourceCode: aCompiledMethod [
-	^ (GtCoderCompiledMethodSourceCode new fromSourceCode: self) compiledMethod: aCompiledMethod
+	^ (GtCoderCompiledMethodTextSource new fromSourceCode: self) compiledMethod: aCompiledMethod
 ]
 
 { #category : #'mutual exclusion' }
@@ -55,8 +55,9 @@ GtCoderTextSource >> currentSourceText: aText [
 ]
 
 { #category : #initialization }
-GtCoderTextSource >> fromSourceCode: aGtCoderSourceCode [
-	originalSourceTextPromise := aGtCoderSourceCode sourceText
+GtCoderTextSource >> fromSourceCode: aGtCoderTextSource [
+	originalSourceTextPromise := aGtCoderTextSource privateGetOriginalSourceTextPromise.
+	currentSourceText := aGtCoderTextSource privateGetCurrentSourceText
 ]
 
 { #category : #'api - testing' }
@@ -77,21 +78,39 @@ GtCoderTextSource >> initialize [
 
 { #category : #'api - testing' }
 GtCoderTextSource >> isModified [
-	^ currentSourceText notNil
+	^ self isModifiedPromise wait
 ]
 
-{ #category : #'private - initialization' }
+{ #category : #'api - testing' }
+GtCoderTextSource >> isModifiedPromise [
+	currentSourceText
+		ifNil: [ ^ false asAsyncPromise ].
+	
+	^ self originalSourceTextPromise then: [ :anOriginalSourceText | self currentSourceText then: [ :aCurrentSourceText | anOriginalSourceText text characters ~= aCurrentSourceText text characters ] ]
+]
+
+{ #category : #initialization }
 GtCoderTextSource >> originalSourceTextFuture [
 	<return: #TAsyncFuture>
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'private - initialization' }
+{ #category : #initialization }
 GtCoderTextSource >> originalSourceTextPromise [
 	<return: #TAsyncPromise>
 
 	^ (self originalSourceTextFuture map: [ :aText | GtCoderSourceText new text: aText ]) asAsyncPromise
+]
+
+{ #category : #'private - accessing' }
+GtCoderTextSource >> privateGetCurrentSourceText [
+	^ currentSourceText
+]
+
+{ #category : #'private - accessing' }
+GtCoderTextSource >> privateGetOriginalSourceTextPromise [
+	^ originalSourceTextPromise
 ]
 
 { #category : #'api - accessing' }
