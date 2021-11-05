@@ -31,21 +31,6 @@ GtTextualCoderViewModel >> addOns [
 	^ self ensureAddOns
 ]
 
-{ #category : #'api - add-ons' }
-GtTextualCoderViewModel >> addOnsAsyncDo: aBlock [
-	self addOns asyncThen: [ :theAddOns | aBlock value: theAddOns ]
-]
-
-{ #category : #'api - add-ons' }
-GtTextualCoderViewModel >> addOnsAwait [
-	^ self addOns wait
-]
-
-{ #category : #'api - add-ons' }
-GtTextualCoderViewModel >> addOnsAwaitDo: aBlock [
-	aBlock value: self addOns wait
-]
-
 { #category : #'api - shortcuts' }
 GtTextualCoderViewModel >> addShortcut: aShortcut [
 	"Add an extra shortcut add-on independent from the dynamically computed add-ons"
@@ -102,28 +87,30 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: 
 
 { #category : #converting }
 GtTextualCoderViewModel >> asEditorState [
-	| anEditorText aMemento |
+	<return: #TAsyncPromise>
+	
+	^ self coderModel currentSourceTextPromise then: [ :aText |
+		| anEditorText aMemento |
+		
+		anEditorText := aText copy.
 
-	anEditorText := self coderModel currentSourceText copy.
+		self extraTextAttributes do: [ :eachCoderAttributes |
+			eachCoderAttributes applyOnEditorText: anEditorText ].
 
-	self extraTextAttributes do: [ :eachCoderAttributes |
-		eachCoderAttributes applyOnEditorText: anEditorText ].
+		aMemento := BrTextEditorCompositeMemento new
+			addMemento: (BrTextEditorCursorsMemento new cursors: cursors copy);
+			addMemento: (BrTextEditorSelectionMemento new selection: selection copy).
 
-	aMemento := BrTextEditorCompositeMemento new
-		addMemento: (BrTextEditorCursorsMemento new cursors: cursors copy);
-		addMemento: (BrTextEditorSelectionMemento new selection: selection copy).
-
-	self hasStyledText
-		ifTrue: [
-			aMemento addMemento: (BrTextEditorStyledTextMemento new
-				text: self styledText;
-				styler: self compositeStyler) ]
-		ifFalse: [
-		 	aMemento
-				addMemento: (BrTextEditorTextMemento new text: anEditorText);
-				addMemento: (BrTextEditorStylerMemento new styler: self compositeStyler) ].
-
-	^ aMemento
+		self hasStyledText
+			ifTrue: [
+				aMemento addMemento: (BrTextEditorStyledTextMemento new
+					text: self styledText;
+					styler: self compositeStyler) ]
+			ifFalse: [
+			 	aMemento
+					addMemento: (BrTextEditorTextMemento new text: anEditorText);
+					addMemento: (BrTextEditorStylerMemento new styler: self compositeStyler) ].
+		aMemento ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

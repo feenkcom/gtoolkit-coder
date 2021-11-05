@@ -9,7 +9,7 @@ Class {
 		'evaluationPrinter',
 		'shortcuts'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Textual'
+	#category : #'GToolkit-Coder-UI-Coder - Textual'
 }
 
 { #category : #'api - textual coder view model' }
@@ -20,12 +20,12 @@ GtTextualCoderEditorElement >> coderUIModel: aTextualCoderViewModel [
 { #category : #'instance creation' }
 GtTextualCoderEditorElement >> createContextMenuContent [
 	"wait for the addons to be computed"
-	| theContextMenu |
+	| theContextMenu aContextMenuPromise |
 	
 	theContextMenu := GtCoderContextMenuContent new
 		editorElement: self.	
 	
-	self textualCoderViewModel addOnsAsyncDo: [ :theAddOns |
+	aContextMenuPromise := self textualCoderViewModel addOns asyncThen: [ :theAddOns |
 		| theItems theContextMenuAstAddons |
 		
 		"extra context menu items that depend on ast and view model state such as selection"
@@ -35,6 +35,8 @@ GtTextualCoderEditorElement >> createContextMenuContent [
 		theItems := theItems reject: [ :e | e title isNil ]. 
 		
 		theContextMenu enqueueTask: (BlTaskAction new action: [ theContextMenu items: theItems ]) ].
+
+	self enqueueTask: (BlPromiseTask new promise: aContextMenuPromise).
 
 	^ theContextMenu
 ]
@@ -49,7 +51,7 @@ GtTextualCoderEditorElement >> hideHighlighters [
 
 { #category : #private }
 GtTextualCoderEditorElement >> highlightPCRangeForInterval: aSelectionInterval [
-	self textualCoderViewModel isModified
+	"self textualCoderViewModel isModified
 		ifTrue: [ ^ self ].
 	self text
 		clearAttributes: [ :each | each class = BlTextDecorationAttribute ].
@@ -58,7 +60,7 @@ GtTextualCoderEditorElement >> highlightPCRangeForInterval: aSelectionInterval [
 			anAttribute
 				color: self theme status errorBackgroundColor;
 				thickness: 1.5;
-				beNotOverwritableByStyler ]
+				beNotOverwritableByStyler ]"
 ]
 
 { #category : #initialization }
@@ -186,12 +188,15 @@ GtTextualCoderEditorElement >> onPostTextualCoderViewModelChanged [
 	"I am an optional hook method that is sent after #subscribeToTextualCoderViewModel.
 	I do nothing by default but allow users to perform update operations when a receiver object is already
 	subscribed to announcements."
+	| anAddOnsPromise |
 	
 	self textualCoderViewModel hasStyledText
 		ifTrue: [ ^ self ].
-	
+
 	"the add-ons will not compute themselves unless we tell them to"
-	self textualCoderViewModel addOnsAsyncDo: [ :theAddOns | self onViewModelReadyToStyle ]
+	anAddOnsPromise := self textualCoderViewModel addOns then: [ :theAddOns | self onViewModelReadyToStyle ].
+	"this works as a marker to indicate that we are waiting for the promise to finish"
+	self enqueueTask: (BlPromiseTask new promise: anAddOnsPromise)
 ]
 
 { #category : #'private - event handling' }
@@ -271,7 +276,10 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	"Setting text may change cursor and selection because text editor makes sure
 	that they have valid values. That is why we create a snaphot of the editor's state
 	which we will restore once new text is set"
-	self editor restoreState: self textualCoderViewModel asEditorState.
+	self textualCoderViewModel asEditorState then: [ :anEditorState :isSynchronous |
+		isSynchronous
+			ifTrue: [ self editor restoreState: anEditorState ]
+			ifFalse: [ self enqueueTask: (BlTaskAction new action: [ self editor restoreState: anEditorState ]) ] ].
 
 	self editor model: self textualCoderViewModel.
 	
