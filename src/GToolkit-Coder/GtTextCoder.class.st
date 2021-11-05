@@ -5,7 +5,7 @@ Class {
 		'parser',
 		'parserStartingState'
 	],
-	#category : 'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'api - ast' }
@@ -20,7 +20,7 @@ GtTextCoder >> computeAst: theSourceString [
 
 { #category : #initialization }
 GtTextCoder >> forString: aString [
-	self sourceCode: (GtCoderExplicitSourceCode new source: aString)
+	self sourceCode: (GtCoderExplicitStringSource new source: aString)
 ]
 
 { #category : #'instance creation' }

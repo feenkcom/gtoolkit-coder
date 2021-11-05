@@ -44,9 +44,9 @@ GtSourceCoderCollapsedAddOnsAptitude >> updateAddon: anAddOn coderUIModel: aGtSo
 
 { #category : #'private - updating' }
 GtSourceCoderCollapsedAddOnsAptitude >> updateAddonsFor: aGtSourceCoderUIModel [
-
-	self sourceCoderUIModel addOnsAsyncDo: [ :theComputedAddOns | 
-		addOnsContainer removeChildren.
-		theComputedAddOns previews do: [ :eachAddOn | 
-			self updateAddon: eachAddOn coderUIModel: aGtSourceCoderUIModel ] ]
+	self sourceCoderUIModel addOns then: [ :theComputedAddOns |
+		addOnsContainer enqueueTask: (BlTaskAction new action: [
+			addOnsContainer removeChildren.
+			theComputedAddOns previews do: [ :eachAddOn | 
+				self updateAddon: eachAddOn coderUIModel: aGtSourceCoderUIModel ] ])]
 ]

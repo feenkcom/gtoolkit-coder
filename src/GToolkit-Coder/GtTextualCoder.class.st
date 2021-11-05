@@ -4,13 +4,9 @@ Class {
 	#instVars : [
 		'sourceCode',
 		'completionStrategy',
-		'astCache',
-		'newAstCache',
-		'astMonitor',
-		'astCommand',
-		'astCommandBlock'
+		'astPromise'
 	],
-	#category : 'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'private - addons' }
@@ -19,24 +15,20 @@ GtTextualCoder >> addOnsClass [
 ]
 
 { #category : #'api - text' }
-GtTextualCoder >> appendString: aString [
-	self critical: [
-		self sourceCode appendString: aString.
-		self sourceChanged ]
+GtTextualCoder >> appendString: aString [	
+	self currentSourceText: (self currentSourceText copy appendString: aString)
 ]
 
 { #category : #'api - text' }
 GtTextualCoder >> appendText: aText [
-	self critical: [
-		self sourceCode appendText: aText.
-		self sourceChanged ]
+	self currentSourceText: (self currentSourceText copy append: aText)
 ]
 
 { #category : #'api - text' }
 GtTextualCoder >> appendText: aText with: aGtCoderUpdateStragegy [
-	self critical: [
-		self sourceCode appendText: aText.
-		self sourceChangedWith: aGtCoderUpdateStragegy ]
+	self
+		currentSourceText: (self currentSourceText copy append: aText)
+		with: aGtCoderUpdateStragegy
 ]
 
 { #category : #'api - converting' }
@@ -48,89 +40,45 @@ GtTextualCoder >> asNewCoderModelWithSameSubject [
 ]
 
 { #category : #'api - ast' }
+GtTextualCoder >> ast [
+	<return: #TAsyncPromise of: #GtCoderAst>
+
+	^ self critical: [ astPromise ifNil: [ astPromise := self sourceCode currentSourceString asyncThen: [ :aGtCoderSourceString |
+		GtCoderAst new
+			ast: (self computeAst: aGtCoderSourceString string);
+			epoch: aGtCoderSourceString epoch ] ] ]
+]
+
+{ #category : #'api - ast' }
 GtTextualCoder >> astAsyncDo: aBlock [
-	astMonitor critical: [
-		astCommand ifNotNil: [
-			"the ast is being computed, subscribe to the ast changed announcement to wait until is finishes"
-			^ self
-				when: GtCoderAstChanged
-				doOnce: [ :anAnnouncement |
-					aBlock value: anAnnouncement ast ]
-				for: #astChanged ].
-		
-		"the ast is already computed, return it directly"
-		newAstCache ifNotNil: [ :anAST | ^ aBlock value: anAST ].
-
-		astCommandBlock := [
-			|  theSourceString isModified astCacheKey aComputedAst |
-			
-			self critical: [
-				theSourceString := self currentSourceString.
-				isModified := self isModified.
-				astCacheKey := self sourceCode asAstCacheKey ].
-
-			aComputedAst := isModified
-				ifTrue: [ self computeAst: theSourceString ]
-				ifFalse: [
-					self supportsAstCache
-						ifTrue: [
-							GtAstCache default
-								cachedAstAt: astCacheKey
-								ifAbsentPut: [ self computeAst: theSourceString ] ]
-						ifFalse: [ self computeAst: theSourceString ] ].
-
-			astMonitor critical: [
-				newAstCache := aComputedAst.
-				astCommand := nil.
-				astCommandBlock := nil ].
-			self announce: (GtCoderAstChanged new coder: self; ast: aComputedAst).
-			aBlock value: aComputedAst ].
-		astCommand := astCommandBlock asBlTktTerminableCommand asBlTktLoggingCommand.
-		
-		BlUseAsyncFeatures 
-			ifEnabledDo: [ BlTktWorkerProvider coderAstPool schedule: astCommand ]
-			otherwise: [ astCommand execute ] ]
+	self ast asyncThen: [ :aGtCoderAst | aBlock value: aGtCoderAst ast ]
 ]
 
 { #category : #'api - ast' }
 GtTextualCoder >> astAwait [
-	| theAst |
-	
-	theAst := nil.
-	self astAwaitDo: [ :aComputedAst | theAst := aComputedAst ].
-	^ theAst
+	^ self ast wait ast
 ]
 
 { #category : #'api - ast' }
 GtTextualCoder >> astAwaitDo: aBlock [
-	| aSemaphore anAst |
-	
-	aSemaphore := Semaphore new.
-	anAst := nil.
-	self astAsyncDo: [ :aComputedAst |
-		anAst := aComputedAst.
-		aSemaphore signal ].
-	
-	aSemaphore wait: 5 seconds.
-	aBlock value: anAst
-]
-
-{ #category : #'private - ast' }
-GtTextualCoder >> astCache [
-	^ astMonitor critical: [ astCache ]
-]
-
-{ #category : #'private - ast' }
-GtTextualCoder >> astCache: anAssociation [
-	astMonitor critical: [ astCache := anAssociation ].
-	self onAstChanged
+	aBlock value: self astAwait
 ]
 
 { #category : #'api - text' }
 GtTextualCoder >> collapsedText [
 	<return: #BlText>
 
-	^ self sourceCode collapsedText
+	^ self collapsedTextPromise wait
+]
+
+{ #category : #'api - text' }
+GtTextualCoder >> collapsedTextPromise [
+	<return: #TAsyncPromise of: #BlText>
+
+	^ self currentSourceTextPromise asyncThen: [ :aCurrentText |
+		aCurrentText
+			ifEmpty: [ '' asRopedText ]
+			ifNotEmpty: [ aCurrentText iterator nextLine ] ]
 ]
 
 { #category : #'api - accessing' }
@@ -158,13 +106,14 @@ GtTextualCoder >> computeAst: theSourceString [
 
 { #category : #'api - text' }
 GtTextualCoder >> correctFrom: aFromIndex to: aToIndex with: aString [
-	self critical: [
+	self flag: #TODO.
+	"self critical: [
 		self sourceCode
 			replaceFrom: aFromIndex
 			to: aToIndex
 			withString: aString.
 		self sourceChanged.
-		self notifyCorrectionFrom: aFromIndex to: aToIndex with: aString ]
+		self notifyCorrectionFrom: aFromIndex to: aToIndex with: aString ]"
 ]
 
 { #category : #'api - text' }
@@ -172,16 +121,29 @@ GtTextualCoder >> currentSourceString [
 	"Return a String representation of the current source text"
 	<return: #String>
 
-	^ self critical: [ self sourceCode sourceString ]
+	^ self currentSourceStringPromise wait
 ]
 
 { #category : #'api - text' }
 GtTextualCoder >> currentSourceString: aString [
 	"Set a new source text"
 
-	self critical: [
-		self sourceCode currentSourceString: aString.
-		self sourceChanged ]
+	self currentSourceText: aString asRopedText
+]
+
+{ #category : #'api - text' }
+GtTextualCoder >> currentSourceStringPromise [
+	"Return a String representation of the current source text"
+	<return: #TAsyncPromise of: #String>
+
+	^ self critical: [ self sourceCode currentSourceString then: [ :aGtCoderSourceString | aGtCoderSourceString string ] ]
+]
+
+{ #category : #'api - text' }
+GtTextualCoder >> currentSourceText [
+	"Set a new source text"
+
+	^ self currentSourceTextPromise wait
 ]
 
 { #category : #'api - text' }
@@ -190,7 +152,7 @@ GtTextualCoder >> currentSourceText: aText [
 
 	self critical: [ 
 		self sourceCode currentSourceText: aText.
-		self sourceChanged ]
+		self sourceChangedTo: aText ]
 ]
 
 { #category : #'api - text' }
@@ -199,7 +161,14 @@ GtTextualCoder >> currentSourceText: aText with: aGtCoderUpdateStragegy [
 
 	self critical: [ 
 		self sourceCode currentSourceText: aText.
-		self sourceChangedWith: aGtCoderUpdateStragegy ]
+		self sourceChangedTo: aText with: aGtCoderUpdateStragegy ]
+]
+
+{ #category : #'api - text' }
+GtTextualCoder >> currentSourceTextPromise [
+	<return: #TAsyncPromise of: #BlText>
+
+	^ self critical: [ self sourceCode currentSourceText then: [ :aGtCoderSourceText | aGtCoderSourceText text ] ]
 ]
 
 { #category : #'api - text' }
@@ -208,14 +177,12 @@ GtTextualCoder >> currentSourceTextSynchronously: aText [
 
 	self critical: [
 		self sourceCode currentSourceText: aText.
-		self sourceChangedWith: GtCoderUpdateStrategy new makeSynchronous ]
+		self sourceChangedTo: aText with: GtCoderUpdateStrategy new makeSynchronous ]
 ]
 
 { #category : #'api - text' }
 GtTextualCoder >> deleteSourceTextFrom: aFromIndex to: aToIndex [
-	self critical: [
-		self sourceCode delete: aFromIndex to: aToIndex.
-		self sourceChanged ]
+	self currentSourceText: (self currentSourceText copy delete: aFromIndex to: aToIndex)
 ]
 
 { #category : #'api - ast' }
@@ -227,7 +194,6 @@ GtTextualCoder >> ensureAst [
 GtTextualCoder >> initialize [
 	super initialize.
 
-	astMonitor := Monitor new.
 	self reset
 ]
 
@@ -253,25 +219,13 @@ GtTextualCoder >> notifyCorrectionFrom: aFromIndex to: aToIndex with: aString [
 ]
 
 { #category : #'private - notifying' }
-GtTextualCoder >> notifySourceChangedWith: anUpdateStragegy [
+GtTextualCoder >> notifySourceChangedTo: aNewText with: anUpdateStragegy [
 	"Notify the text editor that it should update the text (for example due to refactoring changes)"
 	
 	self announce: (GtCoderSourceCodeChanged new 
 		updateStrategy: anUpdateStragegy;
+		newText: aNewText;
 		coder: self)
-]
-
-{ #category : #'private - notifying' }
-GtTextualCoder >> notifyStylersUpdated [
-	"Is sent when AddOn stylers changed. It also means that the text editor should restyle the text"
-
-	self announce: (GtCoderStylerChanged new
-		coder: self;
-		stylers: self addOns stylers copy)
-]
-
-{ #category : #'private - ast' }
-GtTextualCoder >> onAstChanged [
 ]
 
 { #category : #private }
@@ -287,35 +241,13 @@ GtTextualCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 GtTextualCoder >> requestStyleSourceText [
 	"Request the text editor to restyle the text (for example due to environmental changes)"
 
-	self resetASTCache.
+	self resetAstCache.
 	self announce: (GtCoderStyleTextRequest new coder: self)
-]
-
-{ #category : #'api - text' }
-GtTextualCoder >> requestStyleSourceTextAndAfterDo: aBlock [
-	"Request the text editor to restyle the text (for example due to environmental changes)"
-
-	self resetASTCache.
-	self
-		announce:
-			(GtCoderStyleTextRequest new
-				coder: self;
-				afterAction: aBlock)
-]
-
-{ #category : #'api - text' }
-GtTextualCoder >> requestUpdateCollapsedText [
-	"Request to update the collapsed text, for example due to changes in the current source text.
-	It is not guaranteed that the collapsed text actually changes as for example in the method coder
-	opened on a compiled method"
-
-	self sourceCode resetCollapsedText.
-	self announce: (GtCoderCollapsedLabelChanged new coder: self)
 ]
 
 { #category : #initialize }
 GtTextualCoder >> reset [
-	self resetASTCache.
+	self resetAstCache.
 
 	"initialized lazily in #sourceCode"
 	sourceCode := nil.
@@ -323,45 +255,28 @@ GtTextualCoder >> reset [
 ]
 
 { #category : #'private - ast' }
-GtTextualCoder >> resetASTCache [
-	self astCache: (nil -> nil)
+GtTextualCoder >> resetAstCache [
+	astPromise := nil
 ]
 
 { #category : #'event handling' }
-GtTextualCoder >> sourceChanged [
-	self sourceChangedWith: GtCoderUpdateStrategy new makeAsynchronous
+GtTextualCoder >> sourceChangedTo: aNewText [
+	self
+		sourceChangedTo: aNewText 
+		with: GtCoderUpdateStrategy new makeAsynchronous
 ]
 
 { #category : #'event handling' }
-GtTextualCoder >> sourceChangedWith: anUpdateStrategy [
-	"if there is an ast computation that was triggered before source code change we re-schedule
-	the computation. Any #astAsyncDo: caller will be waiting for the result with the new ast"
-
-	astMonitor critical: [
-		newAstCache := nil.
-		astCommand ifNotNil: [ :anAstCommand | 
-			anAstCommand terminate.
-			astCommand := astCommandBlock asBlTktTerminableCommand asBlTktLoggingCommand.
-			[ BlTktWorkerProvider coderAstPool schedule: astCommand ] on: Error do: [ :anError |
-				astCommand := nil.
-				anError emit.
-				NonInteractiveTranscript stderr
-					nextPut: $[;
-					nextPutAll: self class name;
-					nextPutAll: '#>>sourceChangedWith:';
-					nextPut: $];
-					nextPutAll: ' Failed to schedule an ast computation command' ] ] ].
-
-	self notifySourceChangedWith: anUpdateStrategy.
-
-	self requestUpdateCollapsedText
+GtTextualCoder >> sourceChangedTo: aNewText with: anUpdateStrategy [
+	astPromise := nil.
+	self notifySourceChangedTo: aNewText with: anUpdateStrategy
 ]
 
 { #category : #'api - accessing' }
 GtTextualCoder >> sourceCode [
-	<return: #GtCoderSourceCode>
+	<return: #GtCoderTextSource>
 
-	sourceCode ifNil: [ self sourceCode: (GtCoderExplicitSourceCode new source: '') ].
+	sourceCode ifNil: [ self sourceCode: (GtCoderExplicitStringSource new source: '') ].
 	^ sourceCode
 ]
 
@@ -379,7 +294,7 @@ GtTextualCoder >> sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy 
 	"Set the source code of this coder to a given one and notify about the changes"
 	
 	sourceCode := aGtCoderSourceCode.
-	self sourceChangedWith: anUpdateStragegy.
+	self sourceChangedTo: nil with: anUpdateStragegy
 ]
 
 { #category : #'api - accessing' }
@@ -391,11 +306,13 @@ GtTextualCoder >> sourceCodeSynchronously: aGtCoderSourceCode [
 
 { #category : #'api - text' }
 GtTextualCoder >> sourceText [
-	"Return the source text of this coder. The computation of the source text may be expensive, use me with caution.
-	If the operation you would like to perform on the source text is optional consider using #sourceTextDo:"
-	<return: #BlText>
+	<return: #TAsyncPromise>
 
-	^ self sourceCode sourceText
+	self
+		deprecated: 'Use #currentSourceText'
+		transformWith: '`@receiver sourceText' -> '`@receiver currentSourceText'.
+
+	^ self currentSourceText
 ]
 
 { #category : #'api - text' }
@@ -415,12 +332,4 @@ GtTextualCoder >> supportsAstCache [
 	"Return true if ast cache should be used, false otherwise"
 
 	^ true
-]
-
-{ #category : #'api - ast' }
-GtTextualCoder >> terminateAstCommand [
-	astMonitor critical: [
-		astCommand ifNotNil: [ :anAstCommand | anAstCommand terminate ].
-		astCommand := nil.
-		astCommandBlock := nil ]
 ]

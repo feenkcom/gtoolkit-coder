@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'timestamp'
 	],
-	#category : #'GToolkit-Coder-Promised'
+	#category : #'GToolkit-Coder-Coders - Source Text'
 }
 
 { #category : #accessing }

@@ -56,10 +56,9 @@ GtSourceCoder >> discardChanges [
 	self isModified
 		ifFalse: [ ^ self ].
 
-	self sourceCode resetCollapsedText.
 	self sourceCode resetSourceText.
 
-	self sourceChanged
+	self sourceChangedTo: nil
 ]
 
 { #category : #'api - actions' }

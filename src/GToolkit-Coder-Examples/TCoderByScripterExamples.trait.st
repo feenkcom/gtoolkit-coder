@@ -8,10 +8,9 @@ TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id
 
 	aScripterOrStep secondaryClick
 		label: 'Open context menu';
-		onChildNamed: GtSourceCoderEditorId.
+		onChildNamed: GtSourceCoderEditorId;
+		play.
 
-	aScripterOrStep wait forEmptySpaceTaskQueue.
-	
 	aScripterOrStep mouseMoveOver
 		label: 'Hover ', aBlElementId asSymbol;
 		onSpaceRoot;
@@ -46,14 +45,15 @@ TCoderByScripterExamples >> scripterForBlock: aBlock [
 	aScripter substep: 'Initialize Coder Model and UI' do: [ :aStep | 
 		aStep set 
 			label: 'Initialize Coder Model';
-			model: aBlock.
+			model: aBlock;
+			play.
 		aStep set 
 			label: 'Initialize Coder UI';
 			element: [ :aCoder | aCoder asElement ];
-			onModel ].
-		
-	aScripter wait forEmptySpaceTaskQueue.
-	^ aScripter syncContinue
+			onModel;
+			play ].
+
+	^ aScripter
 ]
 
 { #category : #utilities }
@@ -64,14 +64,12 @@ TCoderByScripterExamples >> selectTextFor: aScripterOrStep from: aStartPosition 
 			aSourceEditor selecter
 				from: aStartPosition to: aToPosition;
 				select ];
-		onChildNamed: GtSourceCoderEditorId.
-
-	aScripterOrStep wait forEmptySpaceTaskQueue.
+		onChildNamed: GtSourceCoderEditorId;
+		play.
 	
 	aScripterOrStep check
 		label: 'Check selected text';
 		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ] equals: aSelectedString;
-		onChildNamed: GtSourceCoderEditorId.
-		
-	aScripterOrStep syncContinue
+		onChildNamed: GtSourceCoderEditorId;
+		play
 ]
