@@ -1,15 +1,15 @@
 Class {
-	#name : 'GtSlotVariablesBindings',
-	#superclass : 'Object',
+	#name : #GtSlotVariablesBindings,
+	#superclass : #Object,
 	#traits : 'TGtVariablesBindings',
 	#classTraits : 'TGtVariablesBindings classTrait',
 	#instVars : [
 		'object'
 	],
-	#category : 'GToolkit-VariableBindings-Bindings'
+	#category : #'GToolkit-VariableBindings-Bindings'
 }
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtSlotVariablesBindings >> = anObject [
 
 	"Answer whether the receiver and anObject represent the same object."
@@ -19,12 +19,12 @@ GtSlotVariablesBindings >> = anObject [
 	^ object = anObject object
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtSlotVariablesBindings >> bindingNames [
 	^ object class gtSlotNames, object class classVarNames
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtSlotVariablesBindings >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
@@ -40,7 +40,7 @@ GtSlotVariablesBindings >> bindingOf: aSymbol [
 				ifAbsent: [ nil ] ]
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtSlotVariablesBindings >> bindingValueOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a value of the variable."
@@ -49,17 +49,19 @@ GtSlotVariablesBindings >> bindingValueOf: aSymbol [
 	^ (self bindingOf: aSymbol) ifNotNil: [ :aSlot | aSlot read: self object ]
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtSlotVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
 	^ object class
 		gtSlotNamed: aSymbol
 		ifFound: [ :slot | true ]
-		ifNone: [ object class hasClassVarNamed: aSymbol ]
+		ifNone: [ object class = object class instanceSide 
+			ifTrue: [ object class hasClassVarNamed: aSymbol ]
+			ifFalse: [ false ] ]
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtSlotVariablesBindings >> hash [
 
 	"Answer an integer value that is related to the identity of the receiver."
@@ -67,13 +69,13 @@ GtSlotVariablesBindings >> hash [
 	^ object hash
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSlotVariablesBindings >> object [
 
 	^ object
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtSlotVariablesBindings >> object: anObject [
 
 	object := anObject

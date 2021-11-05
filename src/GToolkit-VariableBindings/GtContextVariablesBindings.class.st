@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtContextVariablesBindings',
-	#superclass : 'Object',
+	#name : #GtContextVariablesBindings,
+	#superclass : #Object,
 	#traits : 'TGtVariablesBindings',
 	#classTraits : 'TGtVariablesBindings classTrait',
 	#instVars : [
@@ -9,7 +9,7 @@ Class {
 	#category : 'GToolkit-VariableBindings-Bindings'
 }
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtContextVariablesBindings >> = anObject [
 
 	"Answer whether the receiver and anObject represent the same object."
@@ -19,12 +19,12 @@ GtContextVariablesBindings >> = anObject [
 	^ context = anObject context
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtContextVariablesBindings >> bindingNames [
 	^ context tempNames
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtContextVariablesBindings >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
@@ -41,26 +41,26 @@ GtContextVariablesBindings >> bindingOf: aSymbol [
 	^ var
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtContextVariablesBindings >> context [
 
 	^ context
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtContextVariablesBindings >> context: anObject [
 
 	context := anObject
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtContextVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
 	^ (self bindingOf: aSymbol) notNil
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtContextVariablesBindings >> hash [
 
 	"Answer an integer value that is related to the identity of the receiver."

@@ -1,23 +1,23 @@
 Class {
-	#name : 'GtEmptyVariablesBindings',
-	#superclass : 'Object',
+	#name : #GtEmptyVariablesBindings,
+	#superclass : #Object,
 	#traits : 'TGtVariablesBindings',
 	#classTraits : 'TGtVariablesBindings classTrait',
 	#category : 'GToolkit-VariableBindings-Bindings'
 }
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtEmptyVariablesBindings >> = anObject [
 	self == anObject ifTrue: [ ^ true ].
 	^ self class = anObject class
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtEmptyVariablesBindings >> bindingNames [
 	^ #()
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtEmptyVariablesBindings >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
@@ -27,14 +27,14 @@ GtEmptyVariablesBindings >> bindingOf: aSymbol [
 	^ nil
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtEmptyVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
 	^ false
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtEmptyVariablesBindings >> hash [
 	^ self class hash
 ]
