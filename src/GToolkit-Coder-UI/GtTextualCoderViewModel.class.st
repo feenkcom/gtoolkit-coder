@@ -590,7 +590,7 @@ GtTextualCoderViewModel >> shouldAddOnsBeUpdated [
 
 	^ addOnPromise
 		ifNil: [ true ]
-		ifNotNil: [ :theAddOns | theAddOns shouldBeUpdated ]
+		ifNotNil: [ :theAddOns | theAddOns wait shouldBeUpdated ]
 ]
 
 { #category : #'api - text' }
