@@ -1,3 +1,6 @@
+"
+I represent a source code of the {{gtClass:GtTextualCoder}}. For performance reasons the computation of the actual source code in the coder is done lazily. I am to provide a necessary abstraction to support it
+"
 Class {
 	#name : #GtCoderTextSource,
 	#superclass : #Object,
@@ -6,17 +9,12 @@ Class {
 		'originalSourceTextPromise',
 		'currentSourceText'
 	],
-	#category : #'GToolkit-Coder-Promised'
+	#category : #'GToolkit-Coder-Coders - Source Text'
 }
-
-{ #category : #'api - accessing' }
-GtCoderTextSource >> asAstCacheKey [
-	^ self subclassResponsibility
-]
 
 { #category : #'api - converting' }
 GtCoderTextSource >> asCompiledMethodSourceCode: aCompiledMethod [
-	^ (GtCoderCompiledMethodSourceCode new fromSourceCode: self) compiledMethod: aCompiledMethod
+	^ (GtCoderCompiledMethodTextSource new fromSourceCode: self) compiledMethod: aCompiledMethod
 ]
 
 { #category : #'mutual exclusion' }
@@ -57,8 +55,9 @@ GtCoderTextSource >> currentSourceText: aText [
 ]
 
 { #category : #initialization }
-GtCoderTextSource >> fromSourceCode: aGtCoderSourceCode [
-	originalSourceTextPromise := aGtCoderSourceCode sourceText
+GtCoderTextSource >> fromSourceCode: aGtCoderTextSource [
+	originalSourceTextPromise := aGtCoderTextSource privateGetOriginalSourceTextPromise.
+	currentSourceText := aGtCoderTextSource privateGetCurrentSourceText
 ]
 
 { #category : #'api - testing' }
@@ -79,21 +78,39 @@ GtCoderTextSource >> initialize [
 
 { #category : #'api - testing' }
 GtCoderTextSource >> isModified [
-	^ currentSourceText notNil
+	^ self isModifiedPromise wait
 ]
 
-{ #category : #'private - initialization' }
+{ #category : #'api - testing' }
+GtCoderTextSource >> isModifiedPromise [
+	currentSourceText
+		ifNil: [ ^ false asAsyncPromise ].
+	
+	^ self originalSourceTextPromise then: [ :anOriginalSourceText | self currentSourceText then: [ :aCurrentSourceText | anOriginalSourceText text characters ~= aCurrentSourceText text characters ] ]
+]
+
+{ #category : #initialization }
 GtCoderTextSource >> originalSourceTextFuture [
 	<return: #TAsyncFuture>
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'private - initialization' }
+{ #category : #initialization }
 GtCoderTextSource >> originalSourceTextPromise [
 	<return: #TAsyncPromise>
 
 	^ (self originalSourceTextFuture map: [ :aText | GtCoderSourceText new text: aText ]) asAsyncPromise
+]
+
+{ #category : #'private - accessing' }
+GtCoderTextSource >> privateGetCurrentSourceText [
+	^ currentSourceText
+]
+
+{ #category : #'private - accessing' }
+GtCoderTextSource >> privateGetOriginalSourceTextPromise [
+	^ originalSourceTextPromise
 ]
 
 { #category : #'api - accessing' }

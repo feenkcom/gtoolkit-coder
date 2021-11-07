@@ -4,13 +4,8 @@ Class {
 	#instVars : [
 		'text'
 	],
-	#category : #'GToolkit-Coder-Promised'
+	#category : #'GToolkit-Coder-Coders - Source Text'
 }
-
-{ #category : #'api - accessing' }
-GtCoderExplicitTextSource >> asAstCacheKey [
-	^ text
-]
 
 { #category : #initialization }
 GtCoderExplicitTextSource >> originalSourceTextFuture [

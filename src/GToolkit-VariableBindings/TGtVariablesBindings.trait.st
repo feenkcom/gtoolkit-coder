@@ -1,9 +1,9 @@
 Trait {
-	#name : 'TGtVariablesBindings',
+	#name : #TGtVariablesBindings,
 	#category : 'GToolkit-VariableBindings-Bindings'
 }
 
-{ #category : 'converting' }
+{ #category : #converting }
 TGtVariablesBindings >> asDictionary [
 	| aDictionary |
 	
@@ -14,12 +14,12 @@ TGtVariablesBindings >> asDictionary [
 	^ aDictionary
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 TGtVariablesBindings >> bindingNames [
 	^ self explicitRequirement
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 TGtVariablesBindings >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
@@ -29,7 +29,7 @@ TGtVariablesBindings >> bindingOf: aSymbol [
 	^ self explicitRequirement
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 TGtVariablesBindings >> bindingValueOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a value of the variable."
@@ -39,7 +39,7 @@ TGtVariablesBindings >> bindingValueOf: aSymbol [
 		ifNotNil: [ :aBinding | aBinding value ]
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 TGtVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 

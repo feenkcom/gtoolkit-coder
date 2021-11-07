@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCompositeVariablesBindings',
-	#superclass : 'Object',
+	#name : #GtCompositeVariablesBindings,
+	#superclass : #Object,
 	#traits : 'TGtVariablesBindings',
 	#classTraits : 'TGtVariablesBindings classTrait',
 	#instVars : [
@@ -9,7 +9,7 @@ Class {
 	#category : 'GToolkit-VariableBindings-Bindings'
 }
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtCompositeVariablesBindings >> = anObject [
 
 	"Answer whether the receiver and anObject represent the same object."
@@ -19,17 +19,17 @@ GtCompositeVariablesBindings >> = anObject [
 	^ bindings = anObject bindings
 ]
 
-{ #category : 'adding' }
+{ #category : #adding }
 GtCompositeVariablesBindings >> addBindings: aGtVariablesBindings [
 	bindings add: aGtVariablesBindings
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtCompositeVariablesBindings >> bindingNames [
 	^ bindings flatCollect: [ :eachVariableBindings | eachVariableBindings bindingNames ]
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtCompositeVariablesBindings >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
@@ -43,7 +43,7 @@ GtCompositeVariablesBindings >> bindingOf: aSymbol [
 	^ nil
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtCompositeVariablesBindings >> bindingValueOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a value of the variable."
@@ -56,20 +56,20 @@ GtCompositeVariablesBindings >> bindingValueOf: aSymbol [
 	^ nil
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCompositeVariablesBindings >> bindings [
 
 	^ bindings
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtCompositeVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
 	^ bindings anySatisfy: [ :eachVariableBindings | eachVariableBindings hasBindingOf: aSymbol ]
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtCompositeVariablesBindings >> hash [
 
 	"Answer an integer value that is related to the identity of the receiver."
@@ -77,7 +77,7 @@ GtCompositeVariablesBindings >> hash [
 	^ bindings hash
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtCompositeVariablesBindings >> initialize [
 	super initialize.
 	

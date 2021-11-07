@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtLocalVariablesBindings',
-	#superclass : 'Object',
+	#name : #GtLocalVariablesBindings,
+	#superclass : #Object,
 	#traits : 'TGtVariablesBindings',
 	#classTraits : 'TGtVariablesBindings classTrait',
 	#instVars : [
@@ -9,7 +9,7 @@ Class {
 	#category : 'GToolkit-VariableBindings-Bindings'
 }
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtLocalVariablesBindings >> = anObject [
 
 	"Answer whether the receiver and anObject represent the same object."
@@ -19,12 +19,12 @@ GtLocalVariablesBindings >> = anObject [
 	^ bindings = anObject bindings
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtLocalVariablesBindings >> bindingNames [
 	^ bindings keys
 ]
 
-{ #category : 'binding' }
+{ #category : #binding }
 GtLocalVariablesBindings >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
@@ -36,20 +36,20 @@ GtLocalVariablesBindings >> bindingOf: aSymbol [
 		ifAbsent: [ nil ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtLocalVariablesBindings >> bindings [
 
 	^ bindings
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 GtLocalVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
 	^ bindings includesKey: aSymbol
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 GtLocalVariablesBindings >> hash [
 
 	"Answer an integer value that is related to the identity of the receiver."
@@ -57,14 +57,14 @@ GtLocalVariablesBindings >> hash [
 	^ bindings hash
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtLocalVariablesBindings >> initialize [
 	super initialize.
 	
 	bindings := Dictionary new
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtLocalVariablesBindings >> localAt: aSymbol put: anObject [ 
 	self
 		assert: [ aSymbol isSymbol ]
