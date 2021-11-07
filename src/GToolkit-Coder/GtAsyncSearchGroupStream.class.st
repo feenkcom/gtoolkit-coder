@@ -9,7 +9,7 @@ Class {
 		'filter',
 		'scope'
 	],
-	#category : 'GToolkit-Coder-Filters - Streams'
+	#category : #'GToolkit-Coder-Filters - Streams'
 }
 
 { #category : #'as yet unclassified' }
@@ -55,42 +55,16 @@ GtAsyncSearchGroupStream >> forFilter: aFilter scope: aScopeStream [
 	self updateItems
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'gt - extensions' }
 GtAsyncSearchGroupStream >> gtItemsFor: aView [
 	<gtView>
-	| anAnnouncer theItems aListView |
-	
-	anAnnouncer := Announcer new.
-	theItems := nil.
-	
-	aListView := aView list.
-	^ aListView
+
+	^ aView list
 		title: 'Items' translated;
 		priority: 10;
 		items: [
-			theItems ifNil: [
-				self refreshItems.
-				(itemsFuture map: [ :computedItems | computedItems collect: [ :each |  #item -> each ] ]) await
-					onSuccessDo: [ :theLoadedItems |
-						theItems := theLoadedItems.
-						anAnnouncer announce: Announcement new ];
-					onFailureDo: [ :anError | ] ].
-			theItems ifNil: [ { #loading -> 'Loading..' } ] ];
-		itemType: [ :anItemTypeFactory  :eachItem | eachItem key ];
-		itemStencil: [ :anItemType |
-			(anItemType = #item)
-				ifTrue: [ aListView newItemLabel ]
-				ifFalse: [
-					BrLabel new
-						alignCenter;
-						hMatchParent;
-						aptitude: (BrGlamorousLabelAptitude new italic; foreground: Color gray) ] ];
-		itemDataBinder: [ :aLabel :anItem :anItemNode |
-			| aText |
-			aText := anItem value.
-			aLabel text: aText gtDisplayText asRopedText. ];
-		disableAsync;
-		updateWhen: Announcement in: anAnnouncer
+			self updateItems.
+			itemsStream ]
 ]
 
 { #category : #accessing }
