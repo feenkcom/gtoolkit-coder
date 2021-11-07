@@ -299,7 +299,7 @@ GtTextualCoderEditorElement >> onToolSpawnRequest: anAnnouncement [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onUpdateAddOnsRequest: anAnnouncement [
-	
+	self enqueueTask: (BlPromiseTask new promise: self textualCoderViewModel requestUpdateAddOns)
 ]
 
 { #category : #'private - event handling' }
@@ -388,6 +388,9 @@ GtTextualCoderEditorElement >> onViewModelTextAttributesRemoved: anAnnouncement 
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelTextChanged [
+
+	"When text is modified, the view model starts to recompute addOns"
+	self enqueueTask: (BlPromiseTask new promise: self textualCoderViewModel addOns).
 
 	aGtTextualCoderViewModelTextChanged source == self
 		ifTrue: [ ^ self hideHighlighters ].

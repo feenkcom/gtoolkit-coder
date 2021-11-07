@@ -531,6 +531,14 @@ GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttribu
 	self announce: (GtTextualCoderViewModelTextAttributesRemoved new coderTextAttributes: aGtTextualCoderTextAttributes)
 ]
 
+{ #category : #'api - add-ons' }
+GtTextualCoderViewModel >> requestUpdateAddOns [
+	<return: #TAsyncPromise>
+
+	addOnPromise := nil.
+	^ self ensureAddOns
+]
+
 { #category : #'api - selection' }
 GtTextualCoderViewModel >> select: aFromCursorIndex to: aToCursorIndex [
 	self selection: (self selection copy select: aFromCursorIndex to: aToCursorIndex)

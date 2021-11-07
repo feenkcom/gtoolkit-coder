@@ -32,7 +32,7 @@ Class {
 	#classVars : [
 		'UniqueIdGenerator'
 	],
-	#category : 'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'class initialization' }
@@ -206,10 +206,7 @@ GtCoderModel >> requestUpdateAddOns [
 	It is a responsibility of the Coder's Element to start the actual addon update (${method:GtCoderModel>>#updateAddOnsFrom:}$) which may happen in
 	a background thread, that is why we can not start the update directly - we must have a reference to the element"
 
-	"addOns
-		ifNil: [ ^ self ].
-	self addOns requestUpdate.
-	self announce: (GtCoderAddOnsUpdateRequest new coder: self)"
+	self announce: (GtCoderAddOnsUpdateRequest new coder: self)
 ]
 
 { #category : #subscriptions }
