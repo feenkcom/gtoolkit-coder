@@ -228,6 +228,13 @@ GtTextualCoder >> notifySourceChangedTo: aNewText with: anUpdateStragegy [
 		coder: self)
 ]
 
+{ #category : #'private - notifying' }
+GtTextualCoder >> notifySourceCodeReplaced: aSourceCode [
+	self announce: (GtCoderSourceCodeReplaced new 
+		sourceCode: aSourceCode;
+		coder: self)
+]
+
 { #category : #private }
 GtTextualCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
 	| actions |
@@ -294,6 +301,7 @@ GtTextualCoder >> sourceCode: aGtCoderSourceCode withStrategy: anUpdateStragegy 
 	"Set the source code of this coder to a given one and notify about the changes"
 	
 	sourceCode := aGtCoderSourceCode.
+	self notifySourceCodeReplaced: aGtCoderSourceCode.
 	self sourceChangedTo: nil with: anUpdateStragegy
 ]
 

@@ -49,20 +49,6 @@ GtTextualCoderEditorElement >> hideHighlighters [
 	evaluationPrinter hideResultSynchronously.
 ]
 
-{ #category : #private }
-GtTextualCoderEditorElement >> highlightPCRangeForInterval: aSelectionInterval [
-	"self textualCoderViewModel isModified
-		ifTrue: [ ^ self ].
-	self text
-		clearAttributes: [ :each | each class = BlTextDecorationAttribute ].
-	(self text from: aSelectionInterval first to: aSelectionInterval last)
-		underlineDo: [ :anAttribute | 
-			anAttribute
-				color: self theme status errorBackgroundColor;
-				thickness: 1.5;
-				beNotOverwritableByStyler ]"
-]
-
 { #category : #initialization }
 GtTextualCoderEditorElement >> initialize [
 	super initialize.
@@ -134,14 +120,6 @@ GtTextualCoderEditorElement >> onCoderViewModelFocused: aBoolean [
 	aBoolean
 		ifTrue: [ self requestFocus ]
 		ifFalse: [ self loseFocus ]
-]
-
-{ #category : #'private - event handling' }
-GtTextualCoderEditorElement >> onContextPCRangeChanged: aContextPCRangeChangedAnnouncement [
-	| selectionInterval |
-	
-	selectionInterval := aContextPCRangeChangedAnnouncement pcRange.
-	self highlightPCRangeForInterval: selectionInterval
 ]
 
 { #category : #'private - event handling' }
@@ -374,10 +352,12 @@ GtTextualCoderEditorElement >> onViewModelStylersChanged [
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextAttributesAdded: anAnnouncement [
 	self enqueueTask: (BlTaskAction new action: [
-		anAnnouncement coderTextAttributes
-			applyOnEditorText: self text
-			from: anAnnouncement startPosition
-			to: anAnnouncement stopPosition ])
+		anAnnouncement text characters = self text characters
+			ifTrue: [
+				anAnnouncement coderTextAttributes
+					applyOnEditorText: self text
+					from: anAnnouncement startPosition
+					to: anAnnouncement stopPosition ] ])
 ]
 
 { #category : #'private - event handling' }
@@ -429,13 +409,9 @@ GtTextualCoderEditorElement >> registerCoderModelAnnouncementsFor: aCoderModel [
 { #category : #registration }
 GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel weak
-		when: GtMethodCoderContextPCRangeChanged
-			send: #onContextPCRangeChanged:
-			to: self;
 		when: GtSourceCoderFocusChanged
 			send: #onFocusChangedAnnouncement:
 			to: self;
-
 		when: GtTextualCoderViewModelTextChanged
 			send: #onViewModelTextChanged:
 			to: self;

@@ -4,9 +4,10 @@ Class {
 	#instVars : [
 		'coderTextAttributes',
 		'startPosition',
-		'stopPosition'
+		'stopPosition',
+		'text'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
+	#category : #'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
 { #category : #accessing }
@@ -37,4 +38,16 @@ GtTextualCoderViewModelTextAttributesAdded >> stopPosition [
 { #category : #accessing }
 GtTextualCoderViewModelTextAttributesAdded >> stopPosition: anObject [
 	stopPosition := anObject
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModelTextAttributesAdded >> text [
+
+	^ text
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModelTextAttributesAdded >> text: anObject [
+
+	text := anObject
 ]

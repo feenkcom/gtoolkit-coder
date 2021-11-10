@@ -13,7 +13,7 @@ Class {
 		'announcer',
 		'codersUIModel'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #accessing }
@@ -113,12 +113,4 @@ GtSingleCoderViewModel >> isModified [
 { #category : #'api - coder model' }
 GtSingleCoderViewModel >> onCoderModelChanged [
 	"Is sent when a new coder model is assigned to the view model"
-]
-
-{ #category : #accessing }
-GtSingleCoderViewModel >> programCounterRange [
-	"This is workwound util the method coder context had a dedicated element.
-	Now the element for displaying a coder is shared between all types of coders."
-
-	^ nil
 ]

@@ -62,15 +62,35 @@ GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition
 ]
 
 { #category : #'api - text' }
+GtTextualCoderViewModel >> addTextAttribute: aTextAttribute onText: aText from: aStartPosition to: anEndPosition [
+	<return: #GtTextualCoderTextAttributes>
+	^ self
+		addTextAttributes: { aTextAttribute }
+		onText: aText
+		from: aStartPosition
+		to: anEndPosition
+]
+
+{ #category : #'api - text' }
 GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderTextAttributes>
-	| aCurrentText aMarkerAttribute newCoderTextAttributes |
+	
+	^ self
+		addTextAttributes: aCollectionOfTextAttributes
+		onText: self sourceText
+		from: aStartPosition
+		to: anEndPosition
+]
+
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText: aText from: aStartPosition to: anEndPosition [
+	<return: #GtTextualCoderTextAttributes>
+	| aMarkerAttribute newCoderTextAttributes |
 	
 	aMarkerAttribute := BrTextInvisibleMarkerAttribute new beNotOverwritableByStyler.
 	
 	"we change the sourceText directly to not trigger the styler recomputation"
-	aCurrentText := self sourceText.
-	aCurrentText attribute: aMarkerAttribute from: aStartPosition to: anEndPosition.
+	aText attribute: aMarkerAttribute from: aStartPosition to: anEndPosition.
 	
 	newCoderTextAttributes := GtTextualCoderTextAttributes new
 		markerAttribute: aMarkerAttribute;
@@ -79,6 +99,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: 
 	extraTextAttributes add: newCoderTextAttributes.
 	self announce: (GtTextualCoderViewModelTextAttributesAdded new
 		coderTextAttributes: newCoderTextAttributes;
+		text: aText;
 		startPosition: aStartPosition;
 		stopPosition: anEndPosition).
 
