@@ -6,7 +6,7 @@ RPackage >> gtBaselinesFor: aView [
 	^ aView explicit
 		title: 'References';
 		priority: 30;
-		stencil: [ self name gtSubstringLiteralCaseSensitiveMatch ]
+		stencil: [ self name gtStringLiteralCaseSensitiveMatch ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
