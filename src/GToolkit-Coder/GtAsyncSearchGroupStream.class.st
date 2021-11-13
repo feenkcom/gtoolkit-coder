@@ -5,7 +5,6 @@ Class {
 	#classTraits : 'TAsyncStream classTrait',
 	#instVars : [
 		'itemsStream',
-		'itemsFuture',
 		'filter',
 		'scope'
 	],
@@ -39,13 +38,18 @@ GtAsyncSearchGroupStream >> filter [
 	^ filter
 ]
 
+{ #category : #'private - updating' }
+GtAsyncSearchGroupStream >> filteredItemsStream [
+	^ scope asyncSimilarCopy filter: filter
+]
+
 { #category : #initialization }
 GtAsyncSearchGroupStream >> forFilter: aFilter [
 	self
 		forFilter: aFilter
 		scope: (aFilter 
 			ifNil: [ AsyncEmptyStream new ]
-			ifNotNil: [ aFilter defaultFilterScopeStream ])
+			ifNotNil: [ aFilter defaultFilterScope ])
 ]
 
 { #category : #initialization }
@@ -62,9 +66,14 @@ GtAsyncSearchGroupStream >> gtItemsFor: aView [
 	^ aView list
 		title: 'Items' translated;
 		priority: 10;
-		items: [
-			self updateItems.
-			itemsStream ]
+		items: [ self asyncSimilarCopy ]
+]
+
+{ #category : #'gt - extensions' }
+GtAsyncSearchGroupStream >> gtMetricsFor: aView [
+	<gtView>
+
+	^ aView empty
 ]
 
 { #category : #accessing }
@@ -78,7 +87,7 @@ GtAsyncSearchGroupStream >> highlighter [
 GtAsyncSearchGroupStream >> initialize [
 	super initialize.
 
-	itemsStream := AsyncEmptyStream new.
+	itemsStream := AsyncEmptyStream new
 ]
 
 { #category : #'api - stream' }
@@ -93,14 +102,28 @@ GtAsyncSearchGroupStream >> pollNext: anAsynchronousContext [
 	^ itemsStream pollNext: anAsynchronousContext
 ]
 
-{ #category : #initialization }
+{ #category : #'api - stream copy' }
+GtAsyncSearchGroupStream >> postSimilarCopy [
+	"Is called by similarCopy. self is a shallow copy, implementors should set the fields as necessary to complete the similar copy"
+	scope := scope asyncSimilarCopy.
+	self updateItems
+]
+
+{ #category : #'private - updating' }
 GtAsyncSearchGroupStream >> refreshItems [
-	self forFilter: self filter
+	self updateItems
 ]
 
 { #category : #accessing }
 GtAsyncSearchGroupStream >> scope [
 	^ scope
+]
+
+{ #category : #'api - stream' }
+GtAsyncSearchGroupStream >> size [
+	<return: #TAsyncFuture>
+
+	^ self asyncSimilarCopy inject: 0 into: [ :counter :eachItem | counter + 1 ]
 ]
 
 { #category : #'api - stream' }
@@ -110,7 +133,7 @@ GtAsyncSearchGroupStream >> sizeHint [
 	^ itemsStream sizeHint
 ]
 
-{ #category : #initialization }
+{ #category : #'private - updating' }
 GtAsyncSearchGroupStream >> updateItems [
-	itemsStream := scope filter: filter
+	itemsStream := self filteredItemsStream
 ]

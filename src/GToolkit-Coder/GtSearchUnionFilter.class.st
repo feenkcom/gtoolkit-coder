@@ -1,14 +1,14 @@
 Class {
 	#name : #GtSearchUnionFilter,
 	#superclass : #GtSearchBinaryFilter,
-	#category : 'GToolkit-Coder-Filters'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #accessing }
 GtSearchUnionFilter >> defaultFilterScope [
 	^ left defaultFilterScope = right defaultFilterScope
 		ifTrue: [ left defaultFilterScope ]
-		ifFalse: [ self ]
+		ifFalse: [ left defaultFilterScope merge: right defaultFilterScope ]
 ]
 
 { #category : #printing }

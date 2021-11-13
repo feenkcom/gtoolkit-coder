@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchFilter,
 	#superclass : #Object,
-	#category : 'GToolkit-Coder-Filters'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #'logical operations' }
@@ -18,9 +18,14 @@ GtSearchFilter >> applyInScope: aSearchScope [
 
 { #category : #evaluating }
 GtSearchFilter >> applyInScopeStream: aStream [
-	^ self resultTypeStream new
+	^ self resultType new
 		forFilter: self
 		scope: aStream
+]
+
+{ #category : #converting }
+GtSearchFilter >> asAsyncStream [
+	^ self result
 ]
 
 { #category : #converting }
@@ -35,17 +40,14 @@ GtSearchFilter >> asElement [
 
 { #category : #accessing }
 GtSearchFilter >> defaultFilterScope [
-	^ GtSearchNullFilter new
-]
-
-{ #category : #accessing }
-GtSearchFilter >> defaultFilterScopeStream [
 	^ AsyncEmptyStream new
 ]
 
 { #category : #iterating }
 GtSearchFilter >> do: aBlock [
-	self result do: aBlock
+	((self result do: aBlock)
+		inject: 0 into: [ :total :each | total + 1 ])
+			wait
 ]
 
 { #category : #converting }
@@ -54,17 +56,6 @@ GtSearchFilter >> gtExamples [
 	examples := OrderedCollection new.
 	self result do: [ :each | examples addAll: each gtExamples ].
 	^ GtExampleGroup withAll: examples
-]
-
-{ #category : #ui }
-GtSearchFilter >> gtItemsFor: aView [
-	"this is a view that is polymorphic with the one defined in ${method:Collection>>#gtItemsFor:}$"
-	<gtView>
-	^ aView forward
-		title: 'Live';
-		priority: 10;
-		object: [ self result ];
-		view: #gtItemsFor:
 ]
 
 { #category : #accessing }
@@ -89,26 +80,16 @@ GtSearchFilter >> not [
 
 { #category : #testing }
 GtSearchFilter >> notEmpty [
-	^ self isEmpty not
+	^ self result hasNext wait
 ]
 
 { #category : #converting }
 GtSearchFilter >> result [
-	^ self applyInScope: self defaultFilterScope
-]
-
-{ #category : #converting }
-GtSearchFilter >> resultStream [
-	^ self applyInScopeStream: self defaultFilterScopeStream
+	^ self applyInScopeStream: self defaultFilterScope
 ]
 
 { #category : #accessing }
 GtSearchFilter >> resultType [
-	^ GtSearchNullGroupResult
-]
-
-{ #category : #accessing }
-GtSearchFilter >> resultTypeStream [
 	^ GtAsyncSearchNullGroupStream
 ]
 

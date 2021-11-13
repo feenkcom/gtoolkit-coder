@@ -16,7 +16,7 @@ GtAsyncSearchTypedGroupStream class >> mergeTypeWith: aGroupResultClass [
 GtAsyncSearchTypedGroupStream class >> mergeTypeWithTypedGroup: aGroupType [
 	^ aGroupType = self 
 		ifTrue: [ self ]
-		ifFalse: [ GtSearchGroupResult ]
+		ifFalse: [ GtAsyncSearchGroupStream ]
 ]
 
 { #category : #accessing }

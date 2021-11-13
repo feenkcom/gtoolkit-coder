@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchNullFilter,
 	#superclass : #GtSearchFilter,
-	#category : 'GToolkit-Coder-Filters'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #comparing }
@@ -13,7 +13,7 @@ GtSearchNullFilter >> = anObject [
 
 { #category : #accessing }
 GtSearchNullFilter >> defaultFilterScope [
-	^ self
+	^ AsyncEmptyStream new
 ]
 
 { #category : #enumerating }

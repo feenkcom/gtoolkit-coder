@@ -7,7 +7,7 @@ Class {
 		'filtered',
 		'scope'
 	],
-	#category : 'GToolkit-Coder-Filters'
+	#category : #'GToolkit-Coder-Filters'
 }
 
 { #category : #'as yet unclassified' }
@@ -158,6 +158,6 @@ GtSearchGroupResult >> sumNumbers: aBlock [
 GtSearchGroupResult >> updateForFilter: aFilter [
 	self filter: aFilter.
 	self scope: (aFilter 
-		ifNil: [ GtSearchNullFilter new ]
+		ifNil: [ AsyncEmptyStream new ]
 		ifNotNil: [  aFilter defaultFilterScope ])
 ]
