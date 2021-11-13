@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'block'
 	],
-	#category : 'GToolkit-Coder-Filters'
+	#category : #'GToolkit-SearchFilters-Filters'
 }
 
 { #category : #'instance creation' }

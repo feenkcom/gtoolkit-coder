@@ -8,7 +8,7 @@ Class {
 		'filter',
 		'scope'
 	],
-	#category : #'GToolkit-Coder-Filters - Streams'
+	#category : #'GToolkit-SearchFilters-Results'
 }
 
 { #category : #'as yet unclassified' }
@@ -117,13 +117,6 @@ GtAsyncSearchGroupStream >> refreshItems [
 { #category : #accessing }
 GtAsyncSearchGroupStream >> scope [
 	^ scope
-]
-
-{ #category : #'api - stream' }
-GtAsyncSearchGroupStream >> size [
-	<return: #TAsyncFuture>
-
-	^ self asyncSimilarCopy inject: 0 into: [ :counter :eachItem | counter + 1 ]
 ]
 
 { #category : #'api - stream' }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'originalFilter'
 	],
-	#category : 'GToolkit-Coder-Filters'
+	#category : #'GToolkit-SearchFilters-Filters'
 }
 
 { #category : #accessing }

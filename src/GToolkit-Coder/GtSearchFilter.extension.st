@@ -1,8 +1,4 @@
-Class {
-	#name : #GtSearchFilter,
-	#superclass : #Object,
-	#category : #'GToolkit-Coder-Filters'
-}
+Extension { #name : #GtSearchFilter }
 
 { #category : #'*GToolkit-Coder' }
 GtSearchFilter >> asCoder [

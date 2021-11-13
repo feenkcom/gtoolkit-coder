@@ -49,13 +49,15 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			baseline: 'GToolkitCompleter'
 			with: [ 
 				spec repository: 'github://feenkcom/gtoolkit-completer:main/src' ].
-				
+
 		spec
 			package: 'GToolkit-VariableBindings';
+			package: 'GToolkit-SearchFilters'
+			with: [ spec requires: #( 'Futures' 'GToolkitBasicUtility' ) ];
 			package: 'GToolkit-Coder' with: [ 
 				spec requires:
 						#( 'Futures' 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility'
-						   'GToolkitPager' 'GToolkitCompleter' ) ];
+						   'GToolkitPager' 'GToolkitCompleter' 'GToolkit-SearchFilters' ) ];
 			package: 'GToolkit-Coder-UI' with: [ 
 				spec requires: #( 'GToolkit-Coder' 'GToolkit-VariableBindings'
 						   'GToolkitBasicUtility' 'GToolkitPager' ) ];

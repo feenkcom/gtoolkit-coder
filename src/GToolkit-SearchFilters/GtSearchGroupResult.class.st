@@ -7,7 +7,7 @@ Class {
 		'filtered',
 		'scope'
 	],
-	#category : #'GToolkit-Coder-Filters'
+	#category : #'GToolkit-SearchFilters-Results'
 }
 
 { #category : #'as yet unclassified' }

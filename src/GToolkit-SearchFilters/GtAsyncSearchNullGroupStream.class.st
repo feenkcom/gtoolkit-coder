@@ -1,7 +1,7 @@
 Class {
 	#name : #GtAsyncSearchNullGroupStream,
 	#superclass : #GtAsyncSearchGroupStream,
-	#category : #'GToolkit-Coder-Filters - Streams'
+	#category : #'GToolkit-SearchFilters-Results'
 }
 
 { #category : #'as yet unclassified' }

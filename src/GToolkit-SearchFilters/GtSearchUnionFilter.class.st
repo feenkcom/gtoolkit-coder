@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchUnionFilter,
 	#superclass : #GtSearchBinaryFilter,
-	#category : #'GToolkit-Coder-Filters'
+	#category : #'GToolkit-SearchFilters-Filters'
 }
 
 { #category : #accessing }

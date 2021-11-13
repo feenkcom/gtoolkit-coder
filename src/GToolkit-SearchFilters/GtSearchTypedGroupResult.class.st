@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'announcer'
 	],
-	#category : 'GToolkit-Coder-Filters'
+	#category : #'GToolkit-SearchFilters-Results'
 }
 
 { #category : #'as yet unclassified' }
