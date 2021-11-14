@@ -154,9 +154,7 @@ GtCoderModel >> initialize [
 
 	id := UniqueIdGenerator generateUniqueId.
 	monitor := Monitor new.
-	announcer := GtCoderAnnouncer new.
-
-	self coderLook: self defaultCoderLook
+	announcer := GtCoderAnnouncer new
 ]
 
 { #category : #initialization }

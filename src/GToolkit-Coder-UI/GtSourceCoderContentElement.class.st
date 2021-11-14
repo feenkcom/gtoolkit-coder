@@ -3,6 +3,9 @@ Class {
 	#superclass : #BlElement,
 	#traits : 'TBrLayoutResizable + TGtWithTextualCoderViewModel',
 	#classTraits : 'TBrLayoutResizable classTrait + TGtWithTextualCoderViewModel classTrait',
+	#instVars : [
+		'header'
+	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
@@ -66,6 +69,16 @@ GtSourceCoderContentElement >> initialize [
 		vFitContentLimited
 ]
 
+{ #category : #initialization }
+GtSourceCoderContentElement >> newHeaderElement [
+	^ GtMethodCoderBreadcrumbElement new
+		constraintsDo: [ :c | 
+			c margin: (BlInsets top: 2).
+			c frame horizontal alignLeft.
+			c frame vertical alignCenter ];
+		yourself
+]
+
 { #category : #'api - textual coder view model' }
 GtSourceCoderContentElement >> onTextualCoderViewModelChanged [
 	"Is sent when a new textualCoder view model is assigned to the element.
@@ -74,5 +87,11 @@ GtSourceCoderContentElement >> onTextualCoderViewModelChanged [
 	didn't get a chance to subscribe to any announcement. Override #onPostTextualCoderViewModelChanged if you
 	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
 
-	
+	textualCoderViewModel coderModel wantsHeader
+		ifTrue: [
+			header ifNil: [
+				header := self newHeaderElement.
+				self addChildFirst: header ].
+			header visibility: BlVisibility visible ]
+		ifFalse: [ header ifNotNil: [ :aHeader | aHeader visibility: BlVisibility gone ] ]
 ]
