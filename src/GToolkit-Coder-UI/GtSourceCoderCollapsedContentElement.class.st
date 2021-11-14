@@ -3,24 +3,27 @@ Class {
 	#superclass : #GtSourceCoderContentElement,
 	#instVars : [
 		'label',
-		'addOns'
+		'addOns',
+		'content'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #initialization }
-GtSourceCoderCollapsedContentElement >> defaultLayout [
-	^ BlLinearLayout horizontal
-]
-
-{ #category : #initialization }
 GtSourceCoderCollapsedContentElement >> initialize [
 	super initialize.
+	
+	content := BlElement new
+		layout: BlLinearLayout horizontal;
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical fitContent ].
 
 	label := self newLabel.
 	addOns := self newAddOnsContainer.
 
-	self addChildren: { label. addOns }
+	content addChildren: { label. addOns }.
+	self addChild: content
 ]
 
 { #category : #'instance creation' }

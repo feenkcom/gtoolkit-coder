@@ -405,6 +405,11 @@ GtTextualCoderViewModel >> hasStyledText [
 	^ styledText notNil
 ]
 
+{ #category : #accessing }
+GtTextualCoderViewModel >> headerElementClass [
+	^ nil
+]
+
 { #category : #initialization }
 GtTextualCoderViewModel >> initialize [
 	super initialize.

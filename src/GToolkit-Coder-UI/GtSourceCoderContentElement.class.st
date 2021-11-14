@@ -71,7 +71,7 @@ GtSourceCoderContentElement >> initialize [
 
 { #category : #initialization }
 GtSourceCoderContentElement >> newHeaderElement [
-	^ GtMethodCoderBreadcrumbElement new
+	^ self textualCoderViewModel headerElementClass new
 		constraintsDo: [ :c | 
 			c margin: (BlInsets top: 2).
 			c frame horizontal alignLeft.
@@ -92,6 +92,7 @@ GtSourceCoderContentElement >> onTextualCoderViewModelChanged [
 			header ifNil: [
 				header := self newHeaderElement.
 				self addChildFirst: header ].
+			header textualCoderViewModel: textualCoderViewModel.
 			header visibility: BlVisibility visible ]
 		ifFalse: [ header ifNotNil: [ :aHeader | aHeader visibility: BlVisibility gone ] ]
 ]
