@@ -5,7 +5,7 @@ Class {
 		'coderUIModel',
 		'expandedElement'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Source'
+	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #adding }
@@ -52,11 +52,7 @@ GtExpandedOnlyCoderElement >> coderUIModel: aCoderUIModel [
 	expandedElement := self newExpandedElement: aCoderUIModel.
 	self addChild: expandedElement.
 	self addAptitude: (BrLayoutResizerAptitude new inherit: expandedElement).
-	aCoderUIModel expanded: true.
-	aCoderUIModel coder announcer weak
-		when: GtCoderRequestFocus
-		send: #requestFocusAsyncronously
-		to: self
+	aCoderUIModel expanded: true
 ]
 
 { #category : #initialization }
@@ -72,9 +68,8 @@ GtExpandedOnlyCoderElement >> initialize [
 { #category : #'instance creation' }
 GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
 	^ GtSourceCoderExpandedContentElement new
-		coderUIModel: aCoderModel;
+		textualCoderViewModel: aCoderModel;
 		in: [ :anElement | self addCodersCoderLook: aCoderModel to: anElement ];
-		addAptitude: GtSourceCoderEditorAptitude;
 		yourself
 ]
 
@@ -84,12 +79,4 @@ GtExpandedOnlyCoderElement >> requestFocus [
 		childNamed: #editor
 		ifFound: [ :anEditorElement | anEditorElement requestFocus ]
 		ifNone: [ super requestFocus ] 
-]
-
-{ #category : #'focus requesting' }
-GtExpandedOnlyCoderElement >> requestFocusAsyncronously [
-	^ self 
-		enqueueTask:
-			(BlTaskAction new
-				action: [ self requestFocus ])
 ]

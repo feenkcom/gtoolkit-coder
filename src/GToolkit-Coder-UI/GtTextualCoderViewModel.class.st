@@ -28,6 +28,8 @@ GtTextualCoderViewModel >> addMainAction: aGtCoderAction [
 
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> addOns [
+	<return: #TAsyncPromise>
+
 	^ self ensureAddOns
 ]
 
@@ -299,6 +301,8 @@ GtTextualCoderViewModel >> elementClass [
 
 { #category : #'private - addons' }
 GtTextualCoderViewModel >> ensureAddOns [
+	<return: #TAsyncPromise>
+
 	^ addOnPromise ifNil: [ addOnPromise := self computeAddOns then: [ :theAddOns | self onAddOnsChanged: theAddOns ]; yourself ]
 ]
 

@@ -195,11 +195,6 @@ GtCoderModel >> removeAttributeNamed: aSymbol [
 	attributes removeKey: aSymbol ifAbsent: [  ]
 ]
 
-{ #category : #elements }
-GtCoderModel >> requestFocus [
-	self announce: (GtCoderRequestFocus new coder: self)
-]
-
 { #category : #'api - addons' }
 GtCoderModel >> requestUpdateAddOns [
 	"Request addons to update due to some environmental changes (similar to requesting text to restyle).

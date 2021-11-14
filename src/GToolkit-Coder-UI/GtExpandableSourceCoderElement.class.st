@@ -1,10 +1,11 @@
 Class {
 	#name : #GtExpandableSourceCoderElement,
 	#superclass : #BrExpander,
+	#traits : 'TGtWithTextualCoderViewModel',
+	#classTraits : 'TGtWithTextualCoderViewModel classTrait',
 	#instVars : [
 		'collapsedElement',
-		'expandedElement',
-		'coderUIModel'
+		'expandedElement'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
@@ -21,76 +22,35 @@ GtExpandableSourceCoderElement >> asVerticallyResizableDo: aBlock [
 ]
 
 { #category : #private }
-GtExpandableSourceCoderElement >> assignCollapsedCoder: aSourceCoder to: aCollapsedElement [
-	aCollapsedElement coderUIModel: aSourceCoder.
+GtExpandableSourceCoderElement >> assignCollapsedCoder: aTextualCoderViewModel to: aCollapsedElement [
+	aCollapsedElement textualCoderViewModel: aTextualCoderViewModel.
 
 	"Initialize look just once"
 	aCollapsedElement aptitude
 		ifNil: [
-			self addCodersCoderLook: aSourceCoder to: aCollapsedElement.
-			aCollapsedElement addAptitude: GtSourceCoderCollapsedAddOnsAptitude ]
+			self addCodersCoderLook: aTextualCoderViewModel to: aCollapsedElement.
+			"aCollapsedElement addAptitude: GtSourceCoderCollapsedAddOnsAptitude" ]
 ]
 
 { #category : #private }
-GtExpandableSourceCoderElement >> assignExpandedCoder: aSourceCoder to: anExpandedElement [
-	anExpandedElement coderUIModel: aSourceCoder.
+GtExpandableSourceCoderElement >> assignExpandedCoder: aTextualCoderViewModel to: anExpandedElement [
+	anExpandedElement textualCoderViewModel: aTextualCoderViewModel.
 
 	"Initialize look just once"
 	anExpandedElement aptitude
 		ifNil: [
-			self addCodersCoderLook: aSourceCoder to: anExpandedElement.
-			anExpandedElement addAptitude: GtSourceCoderEditorAptitude ]
+			self addCodersCoderLook: aTextualCoderViewModel to: anExpandedElement ]
 ]
 
 { #category : #accessing }
 GtExpandableSourceCoderElement >> coderUIModel [
-	<return: #GtPharoMethodCoder>
-	self
-		assert: [ coderUIModel isNotNil ]
-		description: [ 'Coder is not set!' ].
-	
-	^ coderUIModel
+	<return: #GtPharoMethodCoder>	
+	^ self textualCoderViewModel
 ]
 
 { #category : #accessing }
 GtExpandableSourceCoderElement >> coderUIModel: aCoderUIModel [
-	self
-		assert: [ aCoderUIModel isNotNil ]
-		description: [ 'Coder must not be nil' ].
-
-	coderUIModel == aCoderUIModel
-		ifTrue: [ ^ self ].
-
-	coderUIModel
-		ifNotNil: [ :aPreviousCoder |
-			aPreviousCoder unsubscribe: self.
-			aPreviousCoder coderModel unsubscribe: self ].
-
-	coderUIModel := aCoderUIModel.
-
-	coderUIModel expanded
-		ifTrue: [ expandedElement
-				ifNotNil: [ :anElement | self assignExpandedCoder: aCoderUIModel to: anElement ].
-			collapsedElement
-				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ]
-		ifFalse: [ collapsedElement
-				ifNotNil:
-					[ :anElement | self assignCollapsedCoder: aCoderUIModel to: anElement ].
-			expandedElement
-				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ].
-
-	coderUIModel focused
-		ifFalse: [ self loseFocus ].
-
-	self expanded: coderUIModel expanded.
-
-	coderUIModel coder subscribeToSystem.
-	coderUIModel coder announcer weak
-		when: GtCoderRequestFocus send: #requestFocusAsyncronously to: self;
-		when: GtCoderMethodRemoved send: #onMethodRemoved: to: self.
-		
-	coderUIModel weak
-		when: GtTextualCoderViewModelExpansionChanged send: #onViewModelExpansionChanged: to: self
+	self textualCoderViewModel: aCoderUIModel
 ]
 
 { #category : #accessing }
@@ -101,7 +61,7 @@ GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 	^ aView columnedList
 		title: 'All shortcuts' translated;
 		priority: 10;
-		items: [ self shortcuts , coderUIModel addOns shortcuts ];
+		items: [ self shortcuts , textualCoderViewModel addOns wait shortcuts ];
 		column: 'Key' text: [ :each | each combination gtDisplayString ];
 		column: 'Action' text: [ :each | each action asString ]
 ]
@@ -144,7 +104,7 @@ GtExpandableSourceCoderElement >> newCollapsedElement [
 	| aCollapsedElement |
 	aCollapsedElement := GtSourceCoderCollapsedContentElement new.
 
-	coderUIModel
+	textualCoderViewModel
 		ifNotNil: [ :aCoder | self assignCollapsedCoder: aCoder to: aCollapsedElement ].
 
 	^ aCollapsedElement
@@ -155,7 +115,7 @@ GtExpandableSourceCoderElement >> newExpandedElement [
 	| anExpandedElement |
 	anExpandedElement := GtSourceCoderExpandedContentElement new.
 
-	coderUIModel
+	textualCoderViewModel
 		ifNotNil: [ :aCoder | self assignExpandedCoder: aCoder to: anExpandedElement ].
 
 	^ anExpandedElement
@@ -165,7 +125,7 @@ GtExpandableSourceCoderElement >> newExpandedElement [
 GtExpandableSourceCoderElement >> onCollapsed [
 	self beInSingleCompositionLayer.
 	
-	coderUIModel ifNotNil: [ :aCoderUIModel |
+	textualCoderViewModel ifNotNil: [ :aCoderUIModel |
 		aCoderUIModel expanded: false.
 		(collapsedElement notNil and: [ self isDirty: collapsedElement ])
 			ifTrue: [ self assignCollapsedCoder: aCoderUIModel to: collapsedElement ] ]
@@ -175,14 +135,35 @@ GtExpandableSourceCoderElement >> onCollapsed [
 GtExpandableSourceCoderElement >> onExpanded [
 	self beInSeparateCompositionLayer.
 
-	coderUIModel ifNotNil: [ :aCoderUIModel |			
+	textualCoderViewModel ifNotNil: [ :aCoderUIModel |			
 		aCoderUIModel expanded: true.
 		(expandedElement notNil and: [ self isDirty: expandedElement ])
 			ifTrue: [ self assignExpandedCoder: aCoderUIModel to: expandedElement ] ]
 ]
 
-{ #category : #events }
-GtExpandableSourceCoderElement >> onMethodRemoved: anAnnouncement [
+{ #category : #'api - textual coder view model' }
+GtExpandableSourceCoderElement >> onTextualCoderViewModelChanged [
+	"Is sent when a new textualCoder view model is assigned to the element.
+	Note: #onTextualCoderViewModelChanged is sent before #subscribeToTextualCoderViewModel
+	which means that if you perform any operation that triggers an announcement it will be ignored because the receiver
+	didn't get a chance to subscribe to any announcement. Override #onPostTextualCoderViewModelChanged if you
+	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
+
+	textualCoderViewModel expanded
+		ifTrue: [ expandedElement
+				ifNotNil: [ :anElement | self assignExpandedCoder: textualCoderViewModel to: anElement ].
+			collapsedElement
+				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ]
+		ifFalse: [ collapsedElement
+				ifNotNil:
+					[ :anElement | self assignCollapsedCoder: textualCoderViewModel to: anElement ].
+			expandedElement
+				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ].
+
+	textualCoderViewModel focused
+		ifFalse: [ self loseFocus ].
+
+	self expanded: textualCoderViewModel expanded.
 ]
 
 { #category : #'private - event handling' }
@@ -195,13 +176,27 @@ GtExpandableSourceCoderElement >> requestFocus [
 	self
 		childNamed: #editor
 		ifFound: [ :anEditorElement | anEditorElement requestFocus ]
-		ifNone: [ super requestFocus ] 
+		ifNone: [ super requestFocus ]
 ]
 
-{ #category : #'focus requesting' }
-GtExpandableSourceCoderElement >> requestFocusAsyncronously [
-	^ self
-		enqueueTask:
-			(BlTaskAction new
-				action: [ self requestFocus ])
+{ #category : #'api - textual coder view model' }
+GtExpandableSourceCoderElement >> subscribeToTextualCoderViewModel [
+	"Is sent after a new textualCoder view model is assigned to the element.
+	It is required to unsubscribe from the view model or domain model by implementing
+	#unsubscribeFromTextualCoderViewModel if elements subscribe to them"
+	
+	"textualCoderViewModel coder subscribeToSystem."
+	textualCoderViewModel weak
+		when: GtTextualCoderViewModelExpansionChanged
+		send: #onViewModelExpansionChanged:
+		to: self
+]
+
+{ #category : #'api - textual coder view model' }
+GtExpandableSourceCoderElement >> unsubscribeFromTextualCoderViewModel [
+	"Is sent before a new textualCoder view model is assigned to the element.
+	Elements that subscribe to textualCoder view model in domain model are required to implement this methods."
+	
+	"textualCoderViewModel coder unsubscribeFromSystem."
+	textualCoderViewModel unsubscribe: self
 ]

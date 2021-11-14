@@ -1,9 +1,9 @@
 Class {
 	#name : #GtSourceCoderContentElement,
 	#superclass : #BlElement,
-	#traits : 'TBrLayoutResizable',
-	#classTraits : 'TBrLayoutResizable classTrait',
-	#category : 'GToolkit-Coder-UI-Coder - Source'
+	#traits : 'TBrLayoutResizable + TGtWithTextualCoderViewModel',
+	#classTraits : 'TBrLayoutResizable classTrait + TGtWithTextualCoderViewModel classTrait',
+	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #accessing }
@@ -37,7 +37,12 @@ GtSourceCoderContentElement >> coderUIModel: aGtSourceCoderUIModel [
 
 	self telemetry
 		timeSync: [ 'Assign coder to {1}' format: { self class name } ]
-		during: [ self viewModel sourceCoder: aGtSourceCoderUIModel ]
+		during: [ self textualCoderViewModel: aGtSourceCoderUIModel ]
+]
+
+{ #category : #initialization }
+GtSourceCoderContentElement >> defaultLayout [
+	^ BlLinearLayout vertical
 ]
 
 { #category : #accessing }
@@ -56,10 +61,18 @@ GtSourceCoderContentElement >> gtAllShortcutsFor: aView [
 GtSourceCoderContentElement >> initialize [
 	super initialize.
 	self
-		layout: BlLinearLayout vertical;
 		margin: (BlInsets left: 5);
 		hMatchParent;
-		vFitContentLimited.
+		vFitContentLimited
+]
 
-	self viewModel: (GtSourceCoderContentModel new)
+{ #category : #'api - textual coder view model' }
+GtSourceCoderContentElement >> onTextualCoderViewModelChanged [
+	"Is sent when a new textualCoder view model is assigned to the element.
+	Note: #onTextualCoderViewModelChanged is sent before #subscribeToTextualCoderViewModel
+	which means that if you perform any operation that triggers an announcement it will be ignored because the receiver
+	didn't get a chance to subscribe to any announcement. Override #onPostTextualCoderViewModelChanged if you
+	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
+
+	
 ]
