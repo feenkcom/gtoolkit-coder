@@ -474,7 +474,7 @@ GtTextualCoderViewModel >> notifyExpansionChanged: aBoolean [
 
 { #category : #'private - notifying' }
 GtTextualCoderViewModel >> notifyFocusChanged: aBoolean from: aSourceObject [
-	self announcerUIModel announce: (GtSourceCoderFocusChanged new 
+	self announcerUIModel announce: (GtTextualCoderViewModelFocusChanged new 
 		focused: aBoolean; 
 		source: aSourceObject)
 ]
