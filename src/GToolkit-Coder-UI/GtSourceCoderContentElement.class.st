@@ -87,7 +87,7 @@ GtSourceCoderContentElement >> onTextualCoderViewModelChanged [
 	didn't get a chance to subscribe to any announcement. Override #onPostTextualCoderViewModelChanged if you
 	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
 
-	textualCoderViewModel coderModel wantsHeader
+	textualCoderViewModel wantsHeader
 		ifTrue: [
 			header ifNil: [
 				header := self newHeaderElement.

@@ -728,3 +728,10 @@ GtTextualCoderViewModel >> unsubscribeFromCoderModel [
 	
 	self coderModel unsubscribe: self
 ]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> wantsHeader [
+	<return: #Boolean>
+
+	^ self coderModel wantsHeader and: [ self headerElementClass notNil ]
+]
