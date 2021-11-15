@@ -129,5 +129,6 @@ GtSingleCoderViewModel >> unsubscribeFromCoderModel [
 	"Is sent before a new coder model is assigned to the view model.
 	View models that subscribe to coder model are required to implement this methods"
 	
-	self coderModel unsubscribeFromSystem
+	"unsubscribing here is not good, what if there are multiple view models on the same coder model?"
+	"self coderModel unsubscribeFromSystem"
 ]
