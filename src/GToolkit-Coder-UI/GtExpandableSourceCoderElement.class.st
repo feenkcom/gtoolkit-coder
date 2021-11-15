@@ -84,7 +84,16 @@ GtExpandableSourceCoderElement >> initialize [
 
 	self
 		header: [ collapsedElement := self newCollapsedElement ];
-		content: [ expandedElement := self newExpandedElement ]
+		content: [ expandedElement := self newExpandedElement ].
+		
+	self
+		when: BlClickEvent
+		do: [ :anEvent |
+			self isCollapsed
+				ifTrue: [
+					anEvent consumed: true.
+					self expand.
+					self textualCoderViewModel focused: true ] ]
 ]
 
 { #category : #private }
@@ -163,7 +172,7 @@ GtExpandableSourceCoderElement >> onTextualCoderViewModelChanged [
 	textualCoderViewModel focused
 		ifFalse: [ self loseFocus ].
 
-	self expanded: textualCoderViewModel expanded.
+	self expanded: textualCoderViewModel expanded
 ]
 
 { #category : #'private - event handling' }

@@ -114,3 +114,20 @@ GtSingleCoderViewModel >> isModified [
 GtSingleCoderViewModel >> onCoderModelChanged [
 	"Is sent when a new coder model is assigned to the view model"
 ]
+
+{ #category : #'api - coder model' }
+GtSingleCoderViewModel >> subscribeToCoderModel [
+	"Is sent after a new coder model is assigned to the view model.
+	It is required to unsubscribe from the domain model by implementing
+	#unsubscribeFromCoderModel if view model subscribes to them"
+	
+	self coderModel subscribeToSystem
+]
+
+{ #category : #'api - coder model' }
+GtSingleCoderViewModel >> unsubscribeFromCoderModel [
+	"Is sent before a new coder model is assigned to the view model.
+	View models that subscribe to coder model are required to implement this methods"
+	
+	self coderModel unsubscribeFromSystem
+]
