@@ -409,7 +409,7 @@ GtTextualCoderEditorElement >> registerCoderModelAnnouncementsFor: aCoderModel [
 { #category : #registration }
 GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel weak
-		when: GtSourceCoderFocusChanged
+		when: GtTextualCoderViewModelFocusChanged
 			send: #onFocusChangedAnnouncement:
 			to: self;
 		when: GtTextualCoderViewModelTextChanged

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'evaluationResult'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Source Model'
+	#category : #'GToolkit-Coder-UI-Coder - Source Model'
 }
 
 { #category : #'api - actions' }
@@ -105,7 +105,7 @@ GtSourceCoderViewModel >> doItRequestedBy: aRequesterObject [
 		ifFalse: [ self doIt: self selectedTextInterval requestedBy: aRequesterObject ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoderViewModel >> elementClass [
 	^ GtExpandableSourceCoderElement
 ]
@@ -118,12 +118,12 @@ GtSourceCoderViewModel >> evaluationContext [
 		requesterObject: self
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoderViewModel >> evaluationResult [
 	^ evaluationResult
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtSourceCoderViewModel >> evaluationResult: anObject [
 	evaluationResult := anObject
 ]

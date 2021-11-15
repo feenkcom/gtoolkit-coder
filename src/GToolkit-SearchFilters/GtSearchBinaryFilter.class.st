@@ -5,7 +5,7 @@ Class {
 		'left',
 		'right'
 	],
-	#category : 'GToolkit-Coder-Filters'
+	#category : #'GToolkit-SearchFilters-Filters'
 }
 
 { #category : #'instance creation' }
@@ -19,17 +19,6 @@ GtSearchBinaryFilter class >> forFilter: leftFilter filter: rightFilter [
 GtSearchBinaryFilter >> filter: leftFilter filter: rightFilter [
 	left := leftFilter.
 	right := rightFilter
-]
-
-{ #category : #accessing }
-GtSearchBinaryFilter >> highlighter [
-	^ left highlighter
-		ifNil: [ right highlighter ]
-		ifNotNil: [ :lh | 
-			right highlighter
-				ifNil: [ lh ]
-				ifNotNil:
-					[ :rh | GtCompositeHighlighter forHighlighters: (Array with: lh with: rh) ] ]
 ]
 
 { #category : #accessing }

@@ -1,9 +1,9 @@
 Class {
 	#name : #GtFilterExampleState,
 	#superclass : #Object,
-	#traits : 'TBlDebug + TGtUniqueInstance',
-	#classTraits : 'TBlDebug classTrait + TGtUniqueInstance classTrait',
-	#category : 'GToolkit-Coder-Filters - Support'
+	#traits : 'TGtUniqueInstance',
+	#classTraits : 'TGtUniqueInstance classTrait',
+	#category : #'GToolkit-SearchFilters-Support'
 }
 
 { #category : #'api - accessing' }

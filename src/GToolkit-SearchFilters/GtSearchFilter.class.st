@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchFilter,
 	#superclass : #Object,
-	#category : 'GToolkit-Coder-Filters'
+	#category : #'GToolkit-SearchFilters-Filters'
 }
 
 { #category : #'logical operations' }
@@ -10,71 +10,32 @@ GtSearchFilter >> & aFilter [
 ]
 
 { #category : #evaluating }
-GtSearchFilter >> applyInScope: aSearchScope [
+GtSearchFilter >> applyInScope: aStream [
 	^ self resultType new
-		scope: aSearchScope;
-		filter: self
-]
-
-{ #category : #evaluating }
-GtSearchFilter >> applyInScopeStream: aStream [
-	^ self resultTypeStream new
 		forFilter: self
 		scope: aStream
 ]
 
 { #category : #converting }
-GtSearchFilter >> asCoder [
-	^ self result asCoder
-]
-
-{ #category : #converting }
-GtSearchFilter >> asElement [
-	^ self asCoder asElement
+GtSearchFilter >> asAsyncStream [
+	^ self result
 ]
 
 { #category : #accessing }
 GtSearchFilter >> defaultFilterScope [
-	^ GtSearchNullFilter new
-]
-
-{ #category : #accessing }
-GtSearchFilter >> defaultFilterScopeStream [
 	^ AsyncEmptyStream new
 ]
 
 { #category : #iterating }
 GtSearchFilter >> do: aBlock [
-	self result do: aBlock
+	((self result do: aBlock)
+		inject: 0 into: [ :total :each | total + 1 ])
+			wait
 ]
 
-{ #category : #converting }
-GtSearchFilter >> gtExamples [
-	| examples |
-	examples := OrderedCollection new.
-	self result do: [ :each | examples addAll: each gtExamples ].
-	^ GtExampleGroup withAll: examples
-]
-
-{ #category : #ui }
-GtSearchFilter >> gtItemsFor: aView [
-	"this is a view that is polymorphic with the one defined in ${method:Collection>>#gtItemsFor:}$"
-	<gtView>
-	^ aView forward
-		title: 'Live';
-		priority: 10;
-		object: [ self result ];
-		view: #gtItemsFor:
-]
-
-{ #category : #accessing }
-GtSearchFilter >> highlighter [
-	^ nil
-]
-
-{ #category : #accessing }
+{ #category : #testing }
 GtSearchFilter >> isEmpty [
-	^ self result isEmpty
+	^ self notEmpty not
 ]
 
 { #category : #testing }
@@ -89,7 +50,7 @@ GtSearchFilter >> not [
 
 { #category : #testing }
 GtSearchFilter >> notEmpty [
-	^ self isEmpty not
+	^ self result hasNext wait
 ]
 
 { #category : #converting }
@@ -97,18 +58,8 @@ GtSearchFilter >> result [
 	^ self applyInScope: self defaultFilterScope
 ]
 
-{ #category : #converting }
-GtSearchFilter >> resultStream [
-	^ self applyInScopeStream: self defaultFilterScopeStream
-]
-
 { #category : #accessing }
 GtSearchFilter >> resultType [
-	^ GtSearchNullGroupResult
-]
-
-{ #category : #accessing }
-GtSearchFilter >> resultTypeStream [
 	^ GtAsyncSearchNullGroupStream
 ]
 
@@ -119,7 +70,7 @@ GtSearchFilter >> select: aBlock [
 
 { #category : #accessing }
 GtSearchFilter >> size [
-	^ self result size
+	^ (self result inject: 0 into: [ :counter :eachItem | counter + 1 ]) wait
 ]
 
 { #category : #testing }

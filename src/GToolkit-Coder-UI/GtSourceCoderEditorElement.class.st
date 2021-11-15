@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderEditorElement,
 	#superclass : #GtTextualCoderEditorElement,
-	#category : #'GToolkit-Coder-UI-Coder - Textual'
+	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #'api - textual coder view model' }

@@ -37,11 +37,6 @@ GtCoderModel >> coderLook: aLookOrBlock [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
-GtCoderModel >> defaultCoderLook [
-	^ nil
-]
-
-{ #category : #'*GToolkit-Coder-UI' }
 GtCoderModel >> elementClass [
 	^ GtExpandableSourceCoderElement
 ]

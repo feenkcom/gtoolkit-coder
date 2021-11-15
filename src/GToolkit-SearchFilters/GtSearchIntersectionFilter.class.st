@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchIntersectionFilter,
 	#superclass : #GtSearchBinaryFilter,
-	#category : 'GToolkit-Coder-Filters'
+	#category : #'GToolkit-SearchFilters-Filters'
 }
 
 { #category : #accessing }

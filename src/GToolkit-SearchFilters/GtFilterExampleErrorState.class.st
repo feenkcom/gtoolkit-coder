@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterExampleErrorState,
 	#superclass : #GtFilterExampleState,
-	#category : 'GToolkit-Coder-Filters - Support'
+	#category : #'GToolkit-SearchFilters-Support'
 }
 
 { #category : #'api - accessing' }
