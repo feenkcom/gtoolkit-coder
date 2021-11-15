@@ -53,7 +53,7 @@ GtSourceCoderCollapsedContentElement >> newLabel [
 		fitContent;
 		stencil: [
 			BlAttributedTextElement new
-				id: #label;
+				id: GtSourceCoderCollapsedTextId;
 				editorMeasurement;
 				bold;
 				glamorousCodeFont ];
