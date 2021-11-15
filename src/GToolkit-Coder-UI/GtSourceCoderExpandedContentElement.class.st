@@ -31,7 +31,7 @@ GtSourceCoderExpandedContentElement >> newActionsElement [
 { #category : #'instance creation' }
 GtSourceCoderExpandedContentElement >> newEditorElement [
 	^ GtSourceCoderEditorElement new
-		id: GtSourceCoderEditorId uniqueInstance
+		id: GtSourceCoderEditorId
 ]
 
 { #category : #'api - textual coder view model' }
