@@ -6,7 +6,7 @@ A button to play and inspect an example
 Class {
 	#name : #GtMethodCoderPlayAndInspectExampleActionId,
 	#superclass : #GtCoderElementId,
-	#category : 'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #converting }

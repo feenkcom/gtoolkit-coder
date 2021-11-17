@@ -5,7 +5,7 @@
 Class {
 	#name : #GtCoderElementId,
 	#superclass : #BlElementUniqueId,
-	#category : 'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #testing }

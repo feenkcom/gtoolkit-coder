@@ -6,7 +6,7 @@ An editable label with behavior's name
 Class {
 	#name : #GtBehaviorCoderBehaviorNameId,
 	#superclass : #GtCoderElementId,
-	#category : 'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #converting }

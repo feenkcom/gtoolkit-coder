@@ -3,7 +3,7 @@ Trait {
 	#instVars : [
 		'coderModel'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #'api - coder model' }
