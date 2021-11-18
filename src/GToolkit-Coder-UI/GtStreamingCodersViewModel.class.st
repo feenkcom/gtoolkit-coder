@@ -12,17 +12,6 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
 
-{ #category : #'api - commands' }
-GtStreamingCodersViewModel >> addNewCoder: aCoderModel [
-	| aCoderViewModel |
-	
-	codersModel addNewCoder: aCoderModel.
-	aCoderViewModel := self privateFetchCoderViewModelFor: aCoderModel.
-	aCoderViewModel expand; focused: true.
-	
-	^ aCoderViewModel
-]
-
 { #category : #'api - announcer' }
 GtStreamingCodersViewModel >> announce: anAnnouncement [
 	<generatedFrom: #'TGtRobocoderAnnouncerTemplate>>#announceTemplate'>
@@ -31,7 +20,7 @@ GtStreamingCodersViewModel >> announce: anAnnouncement [
 
 { #category : #'api - accessing' }
 GtStreamingCodersViewModel >> coderViewModelsStream [
-	^ codersModel codersStream asyncSimilarCopy
+	^ codersModel asAsyncStream
 		map: [ :eachCoder | self privateFetchCoderViewModelFor: eachCoder ]
 ]
 
@@ -68,7 +57,12 @@ GtStreamingCodersViewModel >> newCoderViewModelFor: aCoderModel [
 { #category : #'private - event handling' }
 GtStreamingCodersViewModel >> onCoderAdded: anAnnouncement [
 	self privateFetchCoderViewModelFor: anAnnouncement coder.
-	self announce: GtStreamingCodersChanged new
+	self announce: GtStreamingCodersViewModelChanged new
+]
+
+{ #category : #'private - event handling' }
+GtStreamingCodersViewModel >> onCodersChanged: anAnnouncement [
+	self announce: GtStreamingCodersViewModelChanged new
 ]
 
 { #category : #private }
@@ -95,10 +89,13 @@ GtStreamingCodersViewModel >> subscribeToCodersModel [
 	<modelSubscriber: #codersModel>
 	<generatedFrom: #'TGtRobocoderWithObjectTraitTemplate>>#subscribeToObjectTemplate'>
 	
-	codersModel weak
+	codersModel
 		when: GtCodersCoderAdded
-		send: #onCoderAdded:
-		to: self
+			send: #onCoderAdded:
+			to: self;
+		when: GtCodersCodersChanged
+			send: #onCodersChanged:
+			to: self
 ]
 
 { #category : #'api - announcer' }

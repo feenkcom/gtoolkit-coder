@@ -1,5 +1,5 @@
 Class {
-	#name : #GtStreamingCodersChanged,
+	#name : #GtStreamingCodersViewModelChanged,
 	#superclass : #Announcement,
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }

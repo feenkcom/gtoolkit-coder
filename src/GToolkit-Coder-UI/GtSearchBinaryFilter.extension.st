@@ -1,6 +1,6 @@
 Extension { #name : #GtSearchBinaryFilter }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder-UI' }
 GtSearchBinaryFilter >> highlighter [
 	^ left highlighter
 		ifNil: [ right highlighter ]

@@ -5,7 +5,7 @@ Class {
 		'left',
 		'right'
 	],
-	#category : #'GToolkit-SearchFilters-Filters'
+	#category : #'GToolkit-SearchFilters'
 }
 
 { #category : #'instance creation' }
