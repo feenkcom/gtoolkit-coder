@@ -3,11 +3,11 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'editorElement',
-		'updateRequester',
 		'evaluationResult',
-		'evaluationAttributes'
+		'evaluationAttributes',
+		'updater'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Source'
+	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #private }
@@ -24,7 +24,7 @@ GtSourceCoderEvaluationResultDisplayer >> displayResult: anEvaluationResult [
 	evaluationResult = anEvaluationResult
 		ifTrue: [ ^ self ].
 	evaluationResult := anEvaluationResult.
-	updateRequester requestUpdate
+	updater requestUpdate
 ]
 
 { #category : #'api - evaluation result' }
@@ -47,7 +47,7 @@ GtSourceCoderEvaluationResultDisplayer >> editorElement [
 { #category : #accessing }
 GtSourceCoderEvaluationResultDisplayer >> editorElement: anObject [
 	editorElement := anObject.
-	updateRequester element: editorElement
+	updater element: editorElement
 ]
 
 { #category : #accessing }
@@ -60,7 +60,7 @@ GtSourceCoderEvaluationResultDisplayer >> hideResult [
 	evaluationResult
 		ifNil: [ ^ self ].
 	evaluationResult := nil.
-	updateRequester requestUpdate
+	updater requestUpdate
 ]
 
 { #category : #'api - evaluation result' }
@@ -78,8 +78,8 @@ GtSourceCoderEvaluationResultDisplayer >> initialize [
 	editorElement := nil.
 	evaluationResult := nil.
 	
-	updateRequester := GtPhlowUpdateRequester new.
-	updateRequester action: [ self primitiveUpdateResult ].
+	updater := BrElementUpdater new.
+	updater action: [ self primitiveUpdateResult ].
 	evaluationAttributes := #()
 ]
 
