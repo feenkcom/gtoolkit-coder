@@ -64,12 +64,12 @@ TCoderByScripterExamples >> selectTextFor: aScripterOrStep from: aStartPosition 
 			aSourceEditor selecter
 				from: aStartPosition to: aToPosition;
 				select ];
-		onChildNamed: GtSourceCoderEditorId;
+		id: GtSourceCoderEditorId;
 		play.
 	
 	aScripterOrStep check
 		label: 'Check selected text';
 		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ] equals: aSelectedString;
-		onChildNamed: GtSourceCoderEditorId;
+		id: GtSourceCoderEditorId;
 		play
 ]

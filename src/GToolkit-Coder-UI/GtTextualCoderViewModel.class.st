@@ -28,6 +28,8 @@ GtTextualCoderViewModel >> addMainAction: aGtCoderAction [
 
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> addOns [
+	<return: #TAsyncPromise>
+
 	^ self ensureAddOns
 ]
 
@@ -299,6 +301,8 @@ GtTextualCoderViewModel >> elementClass [
 
 { #category : #'private - addons' }
 GtTextualCoderViewModel >> ensureAddOns [
+	<return: #TAsyncPromise>
+
 	^ addOnPromise ifNil: [ addOnPromise := self computeAddOns then: [ :theAddOns | self onAddOnsChanged: theAddOns ]; yourself ]
 ]
 
@@ -401,6 +405,11 @@ GtTextualCoderViewModel >> hasStyledText [
 	^ styledText notNil
 ]
 
+{ #category : #accessing }
+GtTextualCoderViewModel >> headerElementClass [
+	^ nil
+]
+
 { #category : #initialization }
 GtTextualCoderViewModel >> initialize [
 	super initialize.
@@ -465,7 +474,7 @@ GtTextualCoderViewModel >> notifyExpansionChanged: aBoolean [
 
 { #category : #'private - notifying' }
 GtTextualCoderViewModel >> notifyFocusChanged: aBoolean from: aSourceObject [
-	self announcerUIModel announce: (GtSourceCoderFocusChanged new 
+	self announcerUIModel announce: (GtTextualCoderViewModelFocusChanged new 
 		focused: aBoolean; 
 		source: aSourceObject)
 ]
@@ -718,4 +727,11 @@ GtTextualCoderViewModel >> unsubscribeFromCoderModel [
 	super unsubscribeFromCoderModel.
 	
 	self coderModel unsubscribe: self
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> wantsHeader [
+	<return: #Boolean>
+
+	^ self coderModel wantsHeader and: [ self headerElementClass notNil ]
 ]

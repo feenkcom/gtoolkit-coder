@@ -1,12 +1,4 @@
-Class {
-	#name : #GtSearchBinaryFilter,
-	#superclass : #GtSearchFilter,
-	#instVars : [
-		'left',
-		'right'
-	],
-	#category : 'GToolkit-Coder-Filters'
-}
+Extension { #name : #GtSearchBinaryFilter }
 
 { #category : #'*GToolkit-Coder' }
 GtSearchBinaryFilter >> highlighter [

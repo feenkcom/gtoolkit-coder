@@ -154,9 +154,7 @@ GtCoderModel >> initialize [
 
 	id := UniqueIdGenerator generateUniqueId.
 	monitor := Monitor new.
-	announcer := GtCoderAnnouncer new.
-
-	self coderLook: self defaultCoderLook
+	announcer := GtCoderAnnouncer new
 ]
 
 { #category : #initialization }
@@ -193,11 +191,6 @@ GtCoderModel >> removeAttributeNamed: aSymbol [
 	attributes isNil
 		ifTrue: [ ^ self ].
 	attributes removeKey: aSymbol ifAbsent: [  ]
-]
-
-{ #category : #elements }
-GtCoderModel >> requestFocus [
-	self announce: (GtCoderRequestFocus new coder: self)
 ]
 
 { #category : #'api - addons' }

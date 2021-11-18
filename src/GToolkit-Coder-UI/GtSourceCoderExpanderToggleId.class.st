@@ -5,7 +5,7 @@ Do not confuse with an embedded expander within the text which is usually repres
 Class {
 	#name : #GtSourceCoderExpanderToggleId,
 	#superclass : #GtCoderElementId,
-	#category : 'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #converting }

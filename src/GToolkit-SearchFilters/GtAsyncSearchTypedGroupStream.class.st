@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'announcer'
 	],
-	#category : 'GToolkit-Coder-Filters - Streams'
+	#category : #'GToolkit-SearchFilters-Results'
 }
 
 { #category : #'as yet unclassified' }
@@ -16,7 +16,7 @@ GtAsyncSearchTypedGroupStream class >> mergeTypeWith: aGroupResultClass [
 GtAsyncSearchTypedGroupStream class >> mergeTypeWithTypedGroup: aGroupType [
 	^ aGroupType = self 
 		ifTrue: [ self ]
-		ifFalse: [ GtSearchGroupResult ]
+		ifFalse: [ GtAsyncSearchGroupStream ]
 ]
 
 { #category : #accessing }

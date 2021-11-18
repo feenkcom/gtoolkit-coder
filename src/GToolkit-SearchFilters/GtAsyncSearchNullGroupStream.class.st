@@ -1,7 +1,7 @@
 Class {
 	#name : #GtAsyncSearchNullGroupStream,
-	#superclass : #GtSearchGroupResult,
-	#category : 'GToolkit-Coder-Filters - Streams'
+	#superclass : #GtAsyncSearchGroupStream,
+	#category : #'GToolkit-SearchFilters-Results'
 }
 
 { #category : #'as yet unclassified' }
@@ -14,10 +14,7 @@ GtAsyncSearchNullGroupStream class >> mergeTypeWithTypedGroup: aGroupType [
 	^ aGroupType
 ]
 
-{ #category : #enumerating }
-GtAsyncSearchNullGroupStream >> refreshItems [
-	filtered
-		ifTrue: [ ^ self ].	
-	items := OrderedCollection new.
-	filtered := true.
+{ #category : #'private - updating' }
+GtAsyncSearchNullGroupStream >> filteredItemsStream [
+	^ AsyncEmptyStream new
 ]
