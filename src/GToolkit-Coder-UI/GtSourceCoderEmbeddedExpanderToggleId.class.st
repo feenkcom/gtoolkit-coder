@@ -4,7 +4,7 @@ An element to toggle an embedded expandable element within the text of the sourc
 Class {
 	#name : #GtSourceCoderEmbeddedExpanderToggleId,
 	#superclass : #GtCoderElementId,
-	#category : 'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #converting }

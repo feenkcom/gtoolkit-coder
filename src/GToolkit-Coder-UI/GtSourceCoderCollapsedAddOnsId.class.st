@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderCollapsedAddOnsId,
 	#superclass : #GtCoderElementId,
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #accessing }

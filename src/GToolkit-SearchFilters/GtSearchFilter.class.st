@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSearchFilter,
 	#superclass : #Object,
-	#category : #'GToolkit-SearchFilters-Filters'
+	#category : #'GToolkit-SearchFilters'
 }
 
 { #category : #'logical operations' }
