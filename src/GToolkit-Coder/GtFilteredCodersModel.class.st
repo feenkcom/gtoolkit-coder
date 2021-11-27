@@ -23,17 +23,8 @@ GtFilteredCodersModel >> additionalFilters: aCollectionOfFilters [
 { #category : #'api - converting' }
 GtFilteredCodersModel >> asAsyncStream [
 	<return: #TAsyncStream>
-	| aCompositeFilter |
-	
-	aCompositeFilter := additionalFilters
-		inject: nil
-		into: [ :sum :each | sum ifNil: [ each ] ifNotNil: [ sum | each ] ].
-		
-	aCompositeFilter := aCompositeFilter
-		ifNil: [ filter ]
-		ifNotNil: [ filter & aCompositeFilter ].
 
-	^ aCompositeFilter asAsyncStream map: [ :eachItem | self privateFetchCoderFor: eachItem ]
+	^ self filteredItemsStream map: [ :eachItem | self privateFetchCoderFor: eachItem ]
 ]
 
 { #category : #'api - accessing' }
@@ -46,6 +37,21 @@ GtFilteredCodersModel >> filter: aGtSearchFilter [
 	monitor critical: [ 
 		filter := aGtSearchFilter.
 		self notifyChanged ]
+]
+
+{ #category : #'api - converting' }
+GtFilteredCodersModel >> filteredItemsStream [
+	| aCompositeFilter |
+	
+	aCompositeFilter := additionalFilters
+		inject: nil
+		into: [ :sum :each | sum ifNil: [ each ] ifNotNil: [ sum | each ] ].
+		
+	aCompositeFilter := aCompositeFilter
+		ifNil: [ filter ]
+		ifNotNil: [ filter & aCompositeFilter ].
+
+	^ aCompositeFilter asAsyncStream
 ]
 
 { #category : #initialization }

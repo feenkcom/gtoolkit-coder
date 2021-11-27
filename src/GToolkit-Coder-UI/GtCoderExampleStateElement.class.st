@@ -69,7 +69,7 @@ GtCoderExampleStateElement >> exampleResult [
 
 { #category : #'private - accessing' }
 GtCoderExampleStateElement >> exampleState [
-	^ GtFilterExampleState default stateFromExample: self example
+	^ GtExampleState default stateFromExample: self example
 ]
 
 { #category : #'private - testing' }

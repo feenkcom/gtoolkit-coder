@@ -158,21 +158,9 @@ GtExpandableSourceCoderElement >> onTextualCoderViewModelChanged [
 	didn't get a chance to subscribe to any announcement. Override #onPostTextualCoderViewModelChanged if you
 	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
 
-	textualCoderViewModel expanded
-		ifTrue: [ expandedElement
-				ifNotNil: [ :anElement | self assignExpandedCoder: textualCoderViewModel to: anElement ].
-			collapsedElement
-				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ]
-		ifFalse: [ collapsedElement
-				ifNotNil:
-					[ :anElement | self assignCollapsedCoder: textualCoderViewModel to: anElement ].
-			expandedElement
-				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ].
-
-	textualCoderViewModel focused
-		ifFalse: [ self loseFocus ].
-
-	self expanded: textualCoderViewModel expanded
+	BlFrameTelemetry
+		time: [ self class name, ' ', #onTextualCoderViewModelChanged ]
+		during: [ self updateElement ]
 ]
 
 { #category : #'private - event handling' }
@@ -208,4 +196,23 @@ GtExpandableSourceCoderElement >> unsubscribeFromTextualCoderViewModel [
 	
 	"textualCoderViewModel coder unsubscribeFromSystem."
 	textualCoderViewModel unsubscribe: self
+]
+
+{ #category : #'private - update' }
+GtExpandableSourceCoderElement >> updateElement [
+	textualCoderViewModel expanded
+		ifTrue: [ expandedElement
+				ifNotNil: [ :anElement | self assignExpandedCoder: textualCoderViewModel to: anElement ].
+			collapsedElement
+				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ]
+		ifFalse: [ collapsedElement
+				ifNotNil:
+					[ :anElement | self assignCollapsedCoder: textualCoderViewModel to: anElement ].
+			expandedElement
+				ifNotNil: [ :anElement | self markDirty: anElement as: true ] ].
+
+	textualCoderViewModel focused
+		ifFalse: [ self loseFocus ].
+
+	self expanded: textualCoderViewModel expanded
 ]

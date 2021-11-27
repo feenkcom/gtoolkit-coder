@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'tooltipContent'
 	],
-	#category : 'GToolkit-Coder-UI-Filters'
+	#category : #'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #initialization }
@@ -19,7 +19,7 @@ GtFilterRunExampleButtonTooltipAptitude >> initialize [
 GtFilterRunExampleButtonTooltipAptitude >> initializeTooltipContent [
 	tooltipContent := BrColumnedList new.
 	tooltipContent 
-		items: GtFilterExampleState default allStates;
+		items: GtExampleState default allStates;
 		padding: (BlInsets all: 10);
 		fitContent.
 		
@@ -33,7 +33,7 @@ GtFilterRunExampleButtonTooltipAptitude >> initializeTooltipContent [
 				
 				self coder 
 					setFilters: {
-						((GtSearchExamplesFilter new
+						((GtPharoExampleStateFilter new
 							resultState: aSelectedObject)
 							coder: self coder)}
 					source: self
@@ -80,7 +80,7 @@ GtFilterRunExampleButtonTooltipAptitude >> initializeTooltipContent [
 { #category : #'private - accessing' }
 GtFilterRunExampleButtonTooltipAptitude >> listItems [
 	| states |
-	states := GtFilterExampleState default allStates.
+	states := GtExampleState default allStates.
 	^ states collect: [ :eachState |
 		eachState labelWithAmountFor: self coder exampler ].
 ]
@@ -94,7 +94,7 @@ GtFilterRunExampleButtonTooltipAptitude >> tooltipContent [
 { #category : #'private - updating' }
 GtFilterRunExampleButtonTooltipAptitude >> updateList [
 	| statusesToDisplay |
-	statusesToDisplay := GtFilterExampleState default allStates reject: [ :eachStatus | 
+	statusesToDisplay := GtExampleState default allStates reject: [ :eachStatus | 
 		(eachStatus numberOfExamplesFor: self exampler) isZero ].
 
 	self tooltipContent

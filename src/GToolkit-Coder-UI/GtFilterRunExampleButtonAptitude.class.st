@@ -53,7 +53,7 @@ GtFilterRunExampleButtonAptitude >> enqueueUpdate [
 
 { #category : #'private - accessing' }
 GtFilterRunExampleButtonAptitude >> exampler [
-	<return: #GtCoderExampler>
+	<return: #GtPharoExampleSuite>
 	^ self coder exampler
 ]
 
