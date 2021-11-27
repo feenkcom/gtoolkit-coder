@@ -7,7 +7,8 @@ Class {
 		'announcer',
 		'monitor',
 		'coderViewModels',
-		'pendingCommands'
+		'pendingCommands',
+		'scrollTarget'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
@@ -38,6 +39,11 @@ GtStreamingCodersViewModel >> enqueueCommand: aViewModelCommand [
 		theApplicableCoderViewModels
 			ifEmpty: [ pendingCommands add: aViewModelCommand ]
 			ifNotEmpty: [ theApplicableCoderViewModels do: [ :eachCoderViewModel | aViewModelCommand applyOn: eachCoderViewModel ] ] ]
+]
+
+{ #category : #'api - scrolling' }
+GtStreamingCodersViewModel >> hasScrollTarget [
+	^ scrollTarget notNil
 ]
 
 { #category : #initialization }
@@ -79,6 +85,17 @@ GtStreamingCodersViewModel >> privateFetchCoderViewModelFor: aCoderModel [
 				theApplicableCommands do: [ :eachCommand | eachCommand applyOn: aCoderViewModel ].
 				
 				aCoderViewModel ] ]
+]
+
+{ #category : #'api - scrolling' }
+GtStreamingCodersViewModel >> scrollTarget [
+	^ scrollTarget
+]
+
+{ #category : #'api - scrolling' }
+GtStreamingCodersViewModel >> scrollToTarget: aGtStreamingCoderViewModelScrollTarget [
+	scrollTarget := aGtStreamingCoderViewModelScrollTarget.
+	self announce: (GtStreamingCodersViewModelScrollTargetChanged new scrollTarget: scrollTarget)
 ]
 
 { #category : #'api - coders model' }
