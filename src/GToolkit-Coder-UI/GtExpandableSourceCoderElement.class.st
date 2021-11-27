@@ -157,10 +157,8 @@ GtExpandableSourceCoderElement >> onTextualCoderViewModelChanged [
 	which means that if you perform any operation that triggers an announcement it will be ignored because the receiver
 	didn't get a chance to subscribe to any announcement. Override #onPostTextualCoderViewModelChanged if you
 	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
-
-	BlFrameTelemetry
-		time: [ self class name, ' ', #onTextualCoderViewModelChanged ]
-		during: [ self updateElement ]
+	
+	self updateElement
 ]
 
 { #category : #'private - event handling' }

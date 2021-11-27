@@ -6,7 +6,9 @@ Class {
 	#instVars : [
 		'announcer',
 		'monitor',
-		'coders'
+		'coders',
+		'itemsStream',
+		'codersStream'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -21,7 +23,15 @@ GtStreamingCodersModel >> announce: anAnnouncement [
 GtStreamingCodersModel >> asAsyncStream [
 	<return: #TAsyncStream>
 	
-	^ self subclassResponsibility
+	^ self codersStream
+]
+
+{ #category : #'api - accessing' }
+GtStreamingCodersModel >> codersStream [
+	"Return a stream of coders"
+	<return: #TAsyncStream>
+
+	^ codersStream asyncSimilarCopy
 ]
 
 { #category : #initialization }
@@ -29,7 +39,26 @@ GtStreamingCodersModel >> initialize [
 	super initialize.
 
 	monitor := Monitor new.
-	coders := Dictionary new
+	coders := Dictionary new.
+	itemsStream := AsyncEmptyStream new.
+	codersStream := AsyncEmptyStream new
+]
+
+{ #category : #'api - accessing' }
+GtStreamingCodersModel >> itemsStream [
+	"Return a stream of items backing the coder"
+	<return: #TAsyncStream>
+
+	^ itemsStream asyncSimilarCopy
+]
+
+{ #category : #'private - accessing' }
+GtStreamingCodersModel >> itemsStream: anAsyncStream [
+	monitor critical: [
+		itemsStream := anAsyncStream cached.
+		codersStream := itemsStream map: [ :eachItem | self newCoderFor: eachItem ] cache: coders ].
+
+	self notifyStreamChanged
 ]
 
 { #category : #'private - instance creation' }
@@ -40,6 +69,11 @@ GtStreamingCodersModel >> newCoderFor: anObject [
 { #category : #'private - notifying' }
 GtStreamingCodersModel >> notifyChanged [
 	self announce: (GtCodersCodersChanged new coders: self)
+]
+
+{ #category : #'private - notifying' }
+GtStreamingCodersModel >> notifyStreamChanged [
+	self announce: (GtCodersStreamChanged new coders: self)
 ]
 
 { #category : #'private - instance creation' }

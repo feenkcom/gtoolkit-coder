@@ -3,7 +3,7 @@ Trait {
 	#instVars : [
 		'textualCoderViewModel'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Textual'
+	#category : #'GToolkit-Coder-UI-Coder - Textual'
 }
 
 { #category : #'api - textual coder view model' }
@@ -58,13 +58,23 @@ TGtWithTextualCoderViewModel >> textualCoderViewModel: aTextualCoderViewModel [
 
 	textualCoderViewModel == aTextualCoderViewModel 
 		ifTrue: [ ^ self ].
-
-	textualCoderViewModel ifNotNil: [ self unsubscribeFromTextualCoderViewModel ].
+	
+	BlFrameTelemetry
+		time: [ self class name, ' #unsubscribeFromTextualCoderViewModel' ]
+		during: [ textualCoderViewModel ifNotNil: [ self unsubscribeFromTextualCoderViewModel ] ].
 	textualCoderViewModel := aTextualCoderViewModel.
 
-	self onTextualCoderViewModelChanged.
-	self subscribeToTextualCoderViewModel.
-	self onPostTextualCoderViewModelChanged
+	BlFrameTelemetry
+		time: [ self class name, ' ', #onTextualCoderViewModelChanged ]
+		during: [ self onTextualCoderViewModelChanged ].
+	
+	BlFrameTelemetry
+		time: [ self class name, ' ', #subscribeToTextualCoderViewModel ]
+		during: [ self subscribeToTextualCoderViewModel ].
+		
+	BlFrameTelemetry
+		time: [ self class name, ' ', #onPostTextualCoderViewModelChanged ]
+		during: [ self onPostTextualCoderViewModelChanged ].
 ]
 
 { #category : #'api - textual coder view model' }

@@ -7,10 +7,11 @@ Class {
 		'announcer',
 		'monitor',
 		'coderViewModels',
+		'coderViewModelsStream',
 		'pendingCommands',
 		'scrollTarget'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-StreamingCoders-View Model'
 }
 
 { #category : #'api - announcer' }
@@ -21,8 +22,9 @@ GtStreamingCodersViewModel >> announce: anAnnouncement [
 
 { #category : #'api - accessing' }
 GtStreamingCodersViewModel >> coderViewModelsStream [
-	^ codersModel asAsyncStream
-		map: [ :eachCoder | self privateFetchCoderViewModelFor: eachCoder ]
+	<return: #TAsyncStream>
+
+	^ coderViewModelsStream asyncSimilarCopy
 ]
 
 { #category : #'api - commands' }
@@ -52,7 +54,8 @@ GtStreamingCodersViewModel >> initialize [
 
 	monitor := Monitor new.
 	coderViewModels := Dictionary new.
-	pendingCommands := OrderedCollection new
+	pendingCommands := OrderedCollection new.
+	coderViewModelsStream := AsyncEmptyStream new
 ]
 
 { #category : #'instance creation' }
@@ -60,18 +63,41 @@ GtStreamingCodersViewModel >> newCoderViewModelFor: aCoderModel [
 	^ aCoderModel asCoderViewModel
 ]
 
+{ #category : #'private - notifying' }
+GtStreamingCodersViewModel >> notifyCoderViewModelsStreamChanged [
+	self announce: GtStreamingCodersViewModelStreamChanged new
+]
+
 { #category : #'private - event handling' }
 GtStreamingCodersViewModel >> onCoderAdded: anAnnouncement [
 	self privateFetchCoderViewModelFor: anAnnouncement coder.
-	self announce: GtStreamingCodersViewModelChanged new
+	self updateCoderViewModelsStream
+]
+
+{ #category : #'api - coders model' }
+GtStreamingCodersViewModel >> onCodersModelChanged [
+	"Is sent when a new codersModel is assigned to the receiver.
+	Note: #onCodersModelChanged is sent before #subscribeToCodersModel
+	which means that if you perform any operation that triggers an announcement it will be ignored because the receiver
+	didn't get a chance to subscribe to any announcement. Override #onPostCodersModelChanged if you
+	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
+	<generatedFrom: #'TGtRobocoderWithObjectTraitTemplate>>#onObjectChangedTemplate'>
+	
+	self updateCoderViewModelsStream
 ]
 
 { #category : #'private - event handling' }
-GtStreamingCodersViewModel >> onCodersChanged: anAnnouncement [
-	self announce: GtStreamingCodersViewModelChanged new
+GtStreamingCodersViewModel >> onCodersStreamChanged: anAnnouncement [
+	self notifyCoderViewModelsStreamChanged
 ]
 
-{ #category : #private }
+{ #category : #'private - accessing' }
+GtStreamingCodersViewModel >> privateCoderViewModelsStream: anAsyncStream [
+	coderViewModelsStream := anAsyncStream cached.
+	self notifyCoderViewModelsStreamChanged
+]
+
+{ #category : #'private - accessing' }
 GtStreamingCodersViewModel >> privateFetchCoderViewModelFor: aCoderModel [
 	^ monitor critical: [				
 		coderViewModels
@@ -110,8 +136,8 @@ GtStreamingCodersViewModel >> subscribeToCodersModel [
 		when: GtCodersCoderAdded
 			send: #onCoderAdded:
 			to: self;
-		when: GtCodersCodersChanged
-			send: #onCodersChanged:
+		when: GtCodersStreamChanged
+			send: #onCodersStreamChanged:
 			to: self
 ]
 
@@ -131,6 +157,12 @@ GtStreamingCodersViewModel >> unsubscribeFromCodersModel [
 	<generatedFrom: #'TGtRobocoderWithObjectTraitTemplate>>#unsubscribeFromObjectTemplate'>
 	
 	codersModel unsubscribe: self
+]
+
+{ #category : #'private - updating' }
+GtStreamingCodersViewModel >> updateCoderViewModelsStream [
+	monitor critical: [
+		self privateCoderViewModelsStream: (codersModel codersStream map: [ :eachCoder | self privateFetchCoderViewModelFor: eachCoder ]) ]
 ]
 
 { #category : #'api - announcer' }

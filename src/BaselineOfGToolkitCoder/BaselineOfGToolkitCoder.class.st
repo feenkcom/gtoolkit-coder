@@ -61,6 +61,8 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			package: 'GToolkit-Coder-UI' with: [ 
 				spec requires: #( 'GToolkit-Coder' 'GToolkit-VariableBindings'
 						   'GToolkitBasicUtility' 'GToolkitPager' ) ];
+			package: 'GToolkit-Coder-UI-StreamingCoders' with: [ 
+				spec requires: #( 'Futures' 'GToolkit-Coder' ) ];
 			package: 'GToolkit-Coder-AddOns'
 			with: [ spec requires: #( 'GToolkit-Coder' 'GToolkit-Coder-UI' ) ];
 			package: 'GToolkit-Coder-Extensions' with: [ 

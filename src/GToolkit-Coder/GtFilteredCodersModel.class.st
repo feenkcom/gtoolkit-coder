@@ -14,17 +14,33 @@ GtFilteredCodersModel class >> forFilter: aGtSearchFilter [
 ]
 
 { #category : #'api - accessing' }
+GtFilteredCodersModel >> additionalFilters [
+	^ additionalFilters
+]
+
+{ #category : #'api - accessing' }
 GtFilteredCodersModel >> additionalFilters: aCollectionOfFilters [
 	monitor critical: [ 
 		additionalFilters := aCollectionOfFilters asArray.
-		self notifyChanged ]
+		self itemsStream: (self createItemsStreamForFilter: filter andAdditionalFilters: additionalFilters) ]
 ]
 
-{ #category : #'api - converting' }
-GtFilteredCodersModel >> asAsyncStream [
+{ #category : #'private - instance creation' }
+GtFilteredCodersModel >> createItemsStreamForFilter: aMainSearchFilter andAdditionalFilters: aCollectionOfFilters [
+	"Given a main search filter and a potentially empty collection of additional filters,
+	create a stream over the results of a composition of those filters"
 	<return: #TAsyncStream>
+	| aCompositeFilter |
+	
+	aCompositeFilter := aCollectionOfFilters
+		inject: nil
+		into: [ :sum :each | sum ifNil: [ each ] ifNotNil: [ sum | each ] ].
 
-	^ self filteredItemsStream map: [ :eachItem | self privateFetchCoderFor: eachItem ]
+	aCompositeFilter := aCompositeFilter
+		ifNil: [ aMainSearchFilter ]
+		ifNotNil: [ aMainSearchFilter & aCompositeFilter ].
+
+	^ aCompositeFilter asAsyncStream
 ]
 
 { #category : #'api - accessing' }
@@ -36,22 +52,7 @@ GtFilteredCodersModel >> filter [
 GtFilteredCodersModel >> filter: aGtSearchFilter [
 	monitor critical: [ 
 		filter := aGtSearchFilter.
-		self notifyChanged ]
-]
-
-{ #category : #'api - converting' }
-GtFilteredCodersModel >> filteredItemsStream [
-	| aCompositeFilter |
-	
-	aCompositeFilter := additionalFilters
-		inject: nil
-		into: [ :sum :each | sum ifNil: [ each ] ifNotNil: [ sum | each ] ].
-		
-	aCompositeFilter := aCompositeFilter
-		ifNil: [ filter ]
-		ifNotNil: [ filter & aCompositeFilter ].
-
-	^ aCompositeFilter asAsyncStream
+		self itemsStream: (self createItemsStreamForFilter: filter andAdditionalFilters: additionalFilters) ]
 ]
 
 { #category : #initialization }

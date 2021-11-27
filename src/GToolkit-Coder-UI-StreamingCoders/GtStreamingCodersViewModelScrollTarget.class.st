@@ -1,7 +1,7 @@
 Class {
 	#name : #GtStreamingCodersViewModelScrollTarget,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-StreamingCoders-Utilities'
 }
 
 { #category : #'api - testing' }
