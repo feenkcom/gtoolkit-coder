@@ -1,8 +1,6 @@
 Class {
 	#name : #GtStreamingCodersModel,
 	#superclass : #Object,
-	#traits : 'TGtOptions',
-	#classTraits : 'TGtOptions classTrait',
 	#instVars : [
 		'announcer',
 		'monitor',
@@ -10,7 +8,7 @@ Class {
 		'itemsStream',
 		'codersStream'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-StreamingCoders-Coder'
 }
 
 { #category : #'api - announcer' }
@@ -53,12 +51,19 @@ GtStreamingCodersModel >> itemsStream [
 ]
 
 { #category : #'private - accessing' }
-GtStreamingCodersModel >> itemsStream: anAsyncStream [
+GtStreamingCodersModel >> itemsStream: anAsyncStream dueTo: aReasonObject [
+	"Change the items stream to a given one due to a provided reason.
+	Please not that the new stream must not be the same stream as an existing #itemsStream"
+
+	self
+		assert: [ itemsStream ~~ anAsyncStream ]
+		description: [ 'Must not pass the same stream as the current one' ]. 
+
 	monitor critical: [
 		itemsStream := anAsyncStream cached.
 		codersStream := itemsStream map: [ :eachItem | self newCoderFor: eachItem ] cache: coders ].
 
-	self notifyStreamChanged
+	self notifyStreamChangedDueTo: aReasonObject
 ]
 
 { #category : #'private - instance creation' }
@@ -67,13 +72,8 @@ GtStreamingCodersModel >> newCoderFor: anObject [
 ]
 
 { #category : #'private - notifying' }
-GtStreamingCodersModel >> notifyChanged [
-	self announce: (GtCodersCodersChanged new coders: self)
-]
-
-{ #category : #'private - notifying' }
-GtStreamingCodersModel >> notifyStreamChanged [
-	self announce: (GtCodersStreamChanged new coders: self)
+GtStreamingCodersModel >> notifyStreamChangedDueTo: aReasonObject [
+	self announce: (GtStreamingCodersStreamChanged new dueTo: aReasonObject)
 ]
 
 { #category : #'private - instance creation' }

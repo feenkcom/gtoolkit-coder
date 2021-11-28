@@ -52,8 +52,15 @@ BaselineOfGToolkitCoder >> baseline: spec [
 
 		spec
 			package: 'GToolkit-VariableBindings';
-			package: 'GToolkit-SearchFilters'
-			with: [ spec requires: #( 'Futures' 'GToolkitBasicUtility' ) ];
+
+			package: 'GToolkit-SearchFilters' with: [
+				spec requires: #('Futures') ];
+
+			package: 'GToolkit-Coder-StreamingCoders' with: [
+				spec requires: #('Futures' 'GToolkit-SearchFilters') ];
+			package: 'GToolkit-Coder-StreamingCoders-UI' with: [
+				spec requires: #('Futures' 'GToolkit-Coder-StreamingCoders') ];
+
 			package: 'GToolkit-Coder' with: [ 
 				spec requires:
 						#( 'Futures' 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility'

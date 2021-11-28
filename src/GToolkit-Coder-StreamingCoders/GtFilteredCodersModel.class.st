@@ -5,7 +5,7 @@ Class {
 		'filter',
 		'additionalFilters'
 	],
-	#category : #'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-StreamingCoders-Coder'
 }
 
 { #category : #'instance creation' }
@@ -22,7 +22,9 @@ GtFilteredCodersModel >> additionalFilters [
 GtFilteredCodersModel >> additionalFilters: aCollectionOfFilters [
 	monitor critical: [ 
 		additionalFilters := aCollectionOfFilters asArray.
-		self itemsStream: (self createItemsStreamForFilter: filter andAdditionalFilters: additionalFilters) ]
+		self
+			itemsStream: (self createItemsStreamForFilter: filter andAdditionalFilters: additionalFilters)
+			dueTo: GtFilteredCodersAdditionalFiltersReason new ]
 ]
 
 { #category : #'private - instance creation' }
@@ -52,12 +54,15 @@ GtFilteredCodersModel >> filter [
 GtFilteredCodersModel >> filter: aGtSearchFilter [
 	monitor critical: [ 
 		filter := aGtSearchFilter.
-		self itemsStream: (self createItemsStreamForFilter: filter andAdditionalFilters: additionalFilters) ]
+		self
+			itemsStream: (self createItemsStreamForFilter: filter andAdditionalFilters: additionalFilters)
+			dueTo: GtFilteredCodersFilterReason new ]
 ]
 
 { #category : #initialization }
 GtFilteredCodersModel >> initialize [
 	super initialize.
 	
+	filter := GtSearchNullFilter new.
 	additionalFilters := #()
 ]
