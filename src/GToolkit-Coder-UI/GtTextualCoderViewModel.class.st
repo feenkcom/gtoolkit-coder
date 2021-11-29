@@ -428,7 +428,7 @@ GtTextualCoderViewModel >> initialize [
 	
 	hasFocus := false.
 	expanded := true.
-	shouldHaveHeader := false
+	shouldHaveHeader := true
 ]
 
 { #category : #'api - add-ons' }
