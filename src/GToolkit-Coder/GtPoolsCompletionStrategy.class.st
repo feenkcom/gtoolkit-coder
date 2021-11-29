@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'candidatePools'
 	],
-	#category : 'GToolkit-Coder-Completion'
+	#category : #'GToolkit-Coder-Completion'
 }
 
 { #category : #accessing }
@@ -18,18 +18,22 @@ GtPoolsCompletionStrategy >> candidatePools [
 ]
 
 { #category : #accessing }
-GtPoolsCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
-	| currentInput completionActions |
-
+GtPoolsCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
+	| currentInput |
 	currentInput := aText asString.
-	completionActions := (self candidatePools first: maxInteger startingWith: currentInput) collect: [ :poolName | 
-		GtInsertTextCompletionAction
-			labeled: poolName
-			completion: (poolName allButFirst: currentInput size)
-			position: positionInteger
-			from: positionInteger - currentInput size + 1 ].
+	^ (self candidatePools asyncStreamStartingWith: currentInput)
+		collect:
+			[ :poolName | 
+			GtInsertTextCompletionAction
+				labeled: poolName
+				completion: (poolName allButFirst: currentInput size)
+				position: positionInteger
+				from: positionInteger - currentInput size + 1 ]
+]
 
-	^ completionActions
+{ #category : #accessing }
+GtPoolsCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
+	^ ((self completionActionStreamFor: aText at: positionInteger) take: maxInteger) toArray wait
 ]
 
 { #category : #testing }

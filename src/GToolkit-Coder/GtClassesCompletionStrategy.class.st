@@ -5,7 +5,7 @@ Class {
 		'excludedClasses',
 		'candidateClasses'
 	],
-	#category : 'GToolkit-Coder-Completion'
+	#category : #'GToolkit-Coder-Completion'
 }
 
 { #category : #accessing }
@@ -17,18 +17,17 @@ GtClassesCompletionStrategy >> candidateClasses [
 ]
 
 { #category : #accessing }
-GtClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
-	| currentInput completionActions |
+GtClassesCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
+	| currentInput |
 	currentInput := aText asString.
-	currentInput isEmpty
-		ifTrue: [ ^ #() ].
-	completionActions := (self candidateClasses
-		first: maxInteger
-		startingWith: currentInput)
-		collect: [ :className | 
+	currentInput isEmpty ifTrue: [ ^ #() ].
+	^ (self candidateClasses asyncStreamStartingWith: currentInput)
+		collect:
+			[ :className | 
 			| deletion insertion |
 			deletion := positionInteger < currentInput size
-				ifTrue: [ GtDeleteTextCompletionAction
+				ifTrue:
+					[ GtDeleteTextCompletionAction
 						labeled: className
 						from: positionInteger + 1
 						to: currentInput size ].
@@ -38,12 +37,17 @@ GtClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger m
 				position: positionInteger
 				from: 1.
 			deletion notNil
-				ifTrue: [ (GtCompositeCompletionAction labeled: className)
+				ifTrue:
+					[ (GtCompositeCompletionAction labeled: className)
 						addAction: deletion;
 						addAction: insertion;
 						yourself ]
-				ifFalse: [ insertion ] ].
-	^ completionActions
+				ifFalse: [ insertion ] ]
+]
+
+{ #category : #accessing }
+GtClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
+	^ ((self completionActionStreamFor: aText at: positionInteger) take: maxInteger) toArray wait
 ]
 
 { #category : #initialization }
