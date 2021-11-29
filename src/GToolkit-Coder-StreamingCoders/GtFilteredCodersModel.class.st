@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtStreamingCodersModel,
 	#instVars : [
 		'filter',
-		'additionalFilters'
+		'additionalFilters',
+		'compositeFilter'
 	],
 	#category : #'GToolkit-Coder-StreamingCoders-Coder'
 }
@@ -15,6 +16,8 @@ GtFilteredCodersModel class >> forFilter: aGtSearchFilter [
 
 { #category : #'api - accessing' }
 GtFilteredCodersModel >> additionalFilters [
+	<return: #Collection of: #GtSearchFilter>
+
 	^ additionalFilters
 ]
 
@@ -22,16 +25,26 @@ GtFilteredCodersModel >> additionalFilters [
 GtFilteredCodersModel >> additionalFilters: aCollectionOfFilters [
 	monitor critical: [ 
 		additionalFilters := aCollectionOfFilters asArray.
+		compositeFilter := self
+			createCombinedFilterFor: filter
+			andAdditionalFilters: additionalFilters.
 		self
-			itemsStream: (self createItemsStreamForFilter: filter andAdditionalFilters: additionalFilters)
+			itemsStream: compositeFilter asAsyncStream
 			dueTo: GtFilteredCodersAdditionalFiltersReason new ]
 ]
 
+{ #category : #'api - accessing' }
+GtFilteredCodersModel >> compositeFilter [
+	<return: #GtSearchFilter>
+
+	^ compositeFilter
+]
+
 { #category : #'private - instance creation' }
-GtFilteredCodersModel >> createItemsStreamForFilter: aMainSearchFilter andAdditionalFilters: aCollectionOfFilters [
+GtFilteredCodersModel >> createCombinedFilterFor: aMainSearchFilter andAdditionalFilters: aCollectionOfFilters [
 	"Given a main search filter and a potentially empty collection of additional filters,
-	create a stream over the results of a composition of those filters"
-	<return: #TAsyncStream>
+	create a composition of those filters"
+	<return: #GtSearchFilter>
 	| aCompositeFilter |
 	
 	aCompositeFilter := aCollectionOfFilters
@@ -42,11 +55,13 @@ GtFilteredCodersModel >> createItemsStreamForFilter: aMainSearchFilter andAdditi
 		ifNil: [ aMainSearchFilter ]
 		ifNotNil: [ aMainSearchFilter & aCompositeFilter ].
 
-	^ aCompositeFilter asAsyncStream
+	^ aCompositeFilter
 ]
 
 { #category : #'api - accessing' }
 GtFilteredCodersModel >> filter [
+	<return: #GtSearchFilter>
+
 	^ filter
 ]
 
@@ -54,8 +69,11 @@ GtFilteredCodersModel >> filter [
 GtFilteredCodersModel >> filter: aGtSearchFilter [
 	monitor critical: [ 
 		filter := aGtSearchFilter.
+		compositeFilter := self
+			createCombinedFilterFor: filter
+			andAdditionalFilters: additionalFilters.
 		self
-			itemsStream: (self createItemsStreamForFilter: filter andAdditionalFilters: additionalFilters)
+			itemsStream: compositeFilter asAsyncStream
 			dueTo: GtFilteredCodersFilterReason new ]
 ]
 
@@ -64,5 +82,6 @@ GtFilteredCodersModel >> initialize [
 	super initialize.
 	
 	filter := GtSearchNullFilter new.
-	additionalFilters := #()
+	additionalFilters := #().
+	compositeFilter := GtSearchNullFilter new.
 ]

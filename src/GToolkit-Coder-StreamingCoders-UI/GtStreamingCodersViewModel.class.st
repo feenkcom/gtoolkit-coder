@@ -53,7 +53,7 @@ GtStreamingCodersViewModel >> initialize [
 	super initialize.
 
 	monitor := Monitor new.
-	coderViewModels := Dictionary new.
+	coderViewModels := AsyncSharedDictionary new.
 	pendingCommands := OrderedCollection new.
 	coderViewModelsStream := AsyncEmptyStream new
 ]

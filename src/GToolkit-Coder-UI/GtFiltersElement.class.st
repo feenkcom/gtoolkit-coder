@@ -16,21 +16,32 @@ Class {
 	#instVars : [
 		'descriptors'
 	],
-	#category : 'GToolkit-Coder-UI-Filters'
+	#category : #'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #accessing }
 GtFiltersElement >> addEmptyDefault [
 	| filterElement defaultDescriptor |
+
 	self childrenCount = 1
 		ifFalse: [ ^ self ].
+
 	defaultDescriptor := self descriptors
-		detect: [ :each | each showAsDefaultWhenEmpty ]
+		detect: [ :each |
+			BlFrameTelemetry
+				time: [ 'Should show ', each name, ' as default when empty?' ]
+				during: [ each showAsDefaultWhenEmpty ] ]
 		ifNone: [ ^ self ].
+
 	filterElement := GtFilterTagElement new.
 	filterElement filter: self.
-	filterElement descriptor: defaultDescriptor.
+
+	BlFrameTelemetry
+		time: [ 'Assign default descriptor ', defaultDescriptor name, ' to the filter tag' ]
+		during: [ filterElement descriptor: defaultDescriptor ].
+
 	filterElement makeDefaultFilter.
+
 	self addChild: filterElement at: self childrenCount
 ]
 
@@ -85,7 +96,10 @@ GtFiltersElement >> descriptors [
 { #category : #accessing }
 GtFiltersElement >> descriptors: aCollection [
 	descriptors := aCollection.
-	self addEmptyDefault
+	
+	BlFrameTelemetry
+		time: [ 'Add default filter tag' ]
+		during: [ self addEmptyDefault ]
 ]
 
 { #category : #accessing }

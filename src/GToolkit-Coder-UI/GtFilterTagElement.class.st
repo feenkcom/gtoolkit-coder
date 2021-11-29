@@ -19,7 +19,7 @@ Class {
 		'valueString',
 		'filterElement'
 	],
-	#category : 'GToolkit-Coder-UI-Filters'
+	#category : #'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #actions }
@@ -43,9 +43,16 @@ GtFilterTagElement >> applyDescriptor: aDescriptor [
 { #category : #elements }
 GtFilterTagElement >> buildTagElements [
 	self removeChildren.
-	self addChild: self createDropDown as: #dropDown.
+	
+	BlFrameTelemetry
+		time: [ 'Create and add dropdown' ]
+		during: [ self addChild: self createDropDown as: #dropDown ].
+
 	descriptor valueIsRequired
-		ifTrue: [ self addChild: self createEditableLabel as: #editableLabel ]
+		ifTrue: [
+			BlFrameTelemetry
+				time: [ 'Create and add editable label' ]
+				during: [ self addChild: self createEditableLabel as: #editableLabel ] ]
 ]
 
 { #category : #elements }
@@ -117,19 +124,11 @@ GtFilterTagElement >> createDropDownButton [
 { #category : #elements }
 GtFilterTagElement >> createEditableLabel [
 	| label |
+
 	label := BrEditableLabel new.
-	label
-		aptitude:
-			BrGlamorousEditableLabelAptitude new glamorousRegularFont
-				glamorousRegularSmallSize.
+	label aptitude: BrGlamorousEditableLabelAptitude new glamorousRegularFont glamorousRegularSmallSize.
 	label text: (valueString ifNil: [ '' ]).
-	label
-		padding:
-			(BlInsets
-				top: 2
-				left: 4
-				bottom: 2
-				right: 4).
+	label padding: (BlInsets top: 2 left: 4 bottom: 2 right: 4).
 	label
 		when: BrEditorAcceptWish
 		do: [ :aWish | 
@@ -148,9 +147,11 @@ GtFilterTagElement >> createEditableLabel [
 		labelDo: [ :aShortcutEvent :aShortcut | 
 			self removeFromParent.
 			filterElement applyFilters ].
+
 	descriptor completion
 		ifNotNil:
 			[ :strategy | (GtCompletionController on: label strategy: strategy) install ].
+
 	^ label
 ]
 

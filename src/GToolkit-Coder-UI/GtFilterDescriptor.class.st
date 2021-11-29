@@ -14,13 +14,14 @@ Class {
 	#instVars : [
 		'name',
 		'order',
-		'completion',
 		'emptyDefaultValue',
 		'creationBlock',
 		'valueIsRequired',
-		'isDefault'
+		'isDefault',
+		'completionBlock',
+		'completion'
 	],
-	#category : 'GToolkit-Coder-UI-Filters'
+	#category : #'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #'instace creation' }
@@ -61,16 +62,21 @@ GtFilterDescriptor >> beNotDefault [
 
 { #category : #accessing }
 GtFilterDescriptor >> completion [
-	^ completion
+	^ completion ifNil: [ completion := completionBlock value ]
 ]
 
 { #category : #accessing }
-GtFilterDescriptor >> completion: completionStrategy [
-	completion := completionStrategy
+GtFilterDescriptor >> completion: completionStrategyBlock [
+	completionBlock := completionStrategyBlock
 ]
 
 { #category : #accessing }
 GtFilterDescriptor >> creationBlock: aBlock [
+	creationBlock := aBlock
+]
+
+{ #category : #accessing }
+GtFilterDescriptor >> creator: aBlock [
 	creationBlock := aBlock
 ]
 
@@ -110,6 +116,11 @@ GtFilterDescriptor >> name [
 
 { #category : #accessing }
 GtFilterDescriptor >> name: aString [
+	name := aString
+]
+
+{ #category : #accessing }
+GtFilterDescriptor >> named: aString [
 	name := aString
 ]
 
