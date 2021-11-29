@@ -3,7 +3,7 @@ I describe how a {{gtClass:GtSearchMethodsFilter}} should look and behave in a U
 I am used to build {{gtClass:GtFilterTagElement}} instances inside of {{gtClass:GtFiltersElement}}.
 For more details:
 - {{gtMethod:GtPharoMethodsCoderElement>>#buildFilter}} is a code that inittialize {{gtClass:GtFiltersElement}} using instances of myself,
-- {{gtMethod:GtSearchMethodsFilter class>>#filterDescriptorFor:|show=#gtImplementorsFor:}} displays a list of various definitions of myself.
+- {{gtMethod:GtSearchFilter class>>#filterDescriptorFor:|show=#gtImplementorsFor:}} displays a list of various definitions of myself.
 See {{gtClass:GtFiltersElement}} for an example.
 
 
