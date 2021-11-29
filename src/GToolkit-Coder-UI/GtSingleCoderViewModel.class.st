@@ -35,6 +35,7 @@ GtSingleCoderViewModel >> asCoderUIModel [
 GtSingleCoderViewModel >> asElement [
 	^ self elementClass new
 		coderUIModel: self;
+		id: GtSourceCoderId;
 		yourself
 ]
 

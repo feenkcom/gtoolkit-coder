@@ -31,6 +31,11 @@ GtSearchFilter >> do: aBlock [
 	(self result do: aBlock) wait
 ]
 
+{ #category : #accessing }
+GtSearchFilter >> filterValueString [
+	^ nil
+]
+
 { #category : #testing }
 GtSearchFilter >> isEmpty [
 	^ self notEmpty not
