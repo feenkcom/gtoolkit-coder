@@ -22,6 +22,12 @@ GtSearchBinaryFilter >> filter: leftFilter filter: rightFilter [
 ]
 
 { #category : #accessing }
+GtSearchBinaryFilter >> filterValueString [
+	^ left filterValueString
+		ifNil: [ right filterValueString ]
+]
+
+{ #category : #accessing }
 GtSearchBinaryFilter >> leftFilter [
 	^ left
 ]
