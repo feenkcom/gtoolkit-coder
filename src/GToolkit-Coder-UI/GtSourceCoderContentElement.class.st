@@ -38,8 +38,8 @@ GtSourceCoderContentElement >> coderUIModel [
 { #category : #accessing }
 GtSourceCoderContentElement >> coderUIModel: aGtSourceCoderUIModel [
 
-	self telemetry
-		timeSync: [ 'Assign coder to {1}' format: { self class name } ]
+	BlFrameTelemetry
+		time: [ 'Assign coder to {1}' format: { self class name } ]
 		during: [ self textualCoderViewModel: aGtSourceCoderUIModel ]
 ]
 

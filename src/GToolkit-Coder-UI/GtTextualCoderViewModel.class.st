@@ -14,7 +14,8 @@ Class {
 		'cursors',
 		'selection',
 		'extraTextAttributes',
-		'styledText'
+		'styledText',
+		'shouldHaveHeader'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -405,7 +406,7 @@ GtTextualCoderViewModel >> hasStyledText [
 	^ styledText notNil
 ]
 
-{ #category : #accessing }
+{ #category : #'api - header' }
 GtTextualCoderViewModel >> headerElementClass [
 	^ nil
 ]
@@ -426,7 +427,8 @@ GtTextualCoderViewModel >> initialize [
 	extraTextAttributes := OrderedCollection new.
 	
 	hasFocus := false.
-	expanded := true
+	expanded := true.
+	shouldHaveHeader := true
 ]
 
 { #category : #'api - add-ons' }
@@ -631,6 +633,11 @@ GtTextualCoderViewModel >> shouldAddOnsBeUpdated [
 		ifNotNil: [ :theAddOns | theAddOns wait shouldBeUpdated ]
 ]
 
+{ #category : #'api - header' }
+GtTextualCoderViewModel >> shouldHaveHeader: aBoolean [
+	shouldHaveHeader := aBoolean
+]
+
 { #category : #'api - text' }
 GtTextualCoderViewModel >> sourceText [
 	<return: #BlText>
@@ -729,9 +736,19 @@ GtTextualCoderViewModel >> unsubscribeFromCoderModel [
 	self coderModel unsubscribe: self
 ]
 
-{ #category : #accessing }
+{ #category : #'api - header' }
 GtTextualCoderViewModel >> wantsHeader [
 	<return: #Boolean>
 
-	^ self coderModel wantsHeader and: [ self headerElementClass notNil ]
+	^ shouldHaveHeader and: [ self headerElementClass notNil ]
+]
+
+{ #category : #'api - header' }
+GtTextualCoderViewModel >> withHeader [
+	self shouldHaveHeader: true
+]
+
+{ #category : #'api - header' }
+GtTextualCoderViewModel >> withoutHeader [
+	self shouldHaveHeader: false
 ]

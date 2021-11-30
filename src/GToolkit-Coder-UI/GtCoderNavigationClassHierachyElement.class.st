@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderNavigationClassHierachyElement,
 	#superclass : #GtCoderNavigationElement,
-	#category : 'GToolkit-Coder-UI-Navigation'
+	#category : #'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #initialization }
@@ -61,8 +61,12 @@ GtCoderNavigationClassHierachyElement >> onPackageSelected: anAnnouncer [
 GtCoderNavigationClassHierachyElement >> onPackageTagSelected: anAnnouncer [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [
-		self emptyClassList.
-		self deselectClasses. ].
+		BlFrameTelemetry
+			time: [ 'Empty class list' ]
+			during: [ self emptyClassList ].
+		BlFrameTelemetry
+			time: [ 'Deselect classes' ]
+			during: [ self deselectClasses ] ].
 ]
 
 { #category : #'event handling' }

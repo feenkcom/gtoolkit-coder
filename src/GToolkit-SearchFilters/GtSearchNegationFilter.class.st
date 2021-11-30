@@ -12,6 +12,11 @@ GtSearchNegationFilter >> defaultFilterScope [
 	^ originalFilter defaultFilterScope
 ]
 
+{ #category : #accessing }
+GtSearchNegationFilter >> filterValueString [
+	^ originalFilter filterValueString
+]
+
 { #category : #printing }
 GtSearchNegationFilter >> gtDisplayOn: stream [
 	self originalFilter gtDisplayOn: stream.

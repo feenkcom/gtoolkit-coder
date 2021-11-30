@@ -3,7 +3,7 @@ I describe how a {{gtClass:GtSearchMethodsFilter}} should look and behave in a U
 I am used to build {{gtClass:GtFilterTagElement}} instances inside of {{gtClass:GtFiltersElement}}.
 For more details:
 - {{gtMethod:GtPharoMethodsCoderElement>>#buildFilter}} is a code that inittialize {{gtClass:GtFiltersElement}} using instances of myself,
-- {{gtMethod:GtSearchMethodsFilter class>>#filterDescriptorFor:|show=#gtImplementorsFor:}} displays a list of various definitions of myself.
+- {{gtMethod:GtSearchFilter class>>#filterDescriptorFor:|show=#gtImplementorsFor:}} displays a list of various definitions of myself.
 See {{gtClass:GtFiltersElement}} for an example.
 
 
@@ -14,13 +14,14 @@ Class {
 	#instVars : [
 		'name',
 		'order',
-		'completion',
 		'emptyDefaultValue',
 		'creationBlock',
 		'valueIsRequired',
-		'isDefault'
+		'isDefault',
+		'completionBlock',
+		'completion'
 	],
-	#category : 'GToolkit-Coder-UI-Filters'
+	#category : #'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #'instace creation' }
@@ -61,16 +62,21 @@ GtFilterDescriptor >> beNotDefault [
 
 { #category : #accessing }
 GtFilterDescriptor >> completion [
-	^ completion
+	^ completion ifNil: [ completion := completionBlock value ]
 ]
 
 { #category : #accessing }
-GtFilterDescriptor >> completion: completionStrategy [
-	completion := completionStrategy
+GtFilterDescriptor >> completion: completionStrategyBlock [
+	completionBlock := completionStrategyBlock
 ]
 
 { #category : #accessing }
 GtFilterDescriptor >> creationBlock: aBlock [
+	creationBlock := aBlock
+]
+
+{ #category : #accessing }
+GtFilterDescriptor >> creator: aBlock [
 	creationBlock := aBlock
 ]
 
@@ -110,6 +116,11 @@ GtFilterDescriptor >> name [
 
 { #category : #accessing }
 GtFilterDescriptor >> name: aString [
+	name := aString
+]
+
+{ #category : #accessing }
+GtFilterDescriptor >> named: aString [
 	name := aString
 ]
 

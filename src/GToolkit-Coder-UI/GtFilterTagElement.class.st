@@ -19,7 +19,7 @@ Class {
 		'valueString',
 		'filterElement'
 	],
-	#category : 'GToolkit-Coder-UI-Filters'
+	#category : #'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #actions }
@@ -37,15 +37,24 @@ GtFilterTagElement >> activateEditor [
 GtFilterTagElement >> applyDescriptor: aDescriptor [
 	self descriptor: aDescriptor.
 	self activateEditor.
-	filterElement applyFilters
+	
+	aDescriptor valueIsRequired
+		ifFalse: [ filterElement applyFilters ]
 ]
 
 { #category : #elements }
 GtFilterTagElement >> buildTagElements [
 	self removeChildren.
-	self addChild: self createDropDown as: #dropDown.
+	
+	BlFrameTelemetry
+		time: [ 'Create and add dropdown' ]
+		during: [ self addChild: self createDropDown as: #dropDown ].
+
 	descriptor valueIsRequired
-		ifTrue: [ self addChild: self createEditableLabel as: #editableLabel ]
+		ifTrue: [
+			BlFrameTelemetry
+				time: [ 'Create and add editable label' ]
+				during: [ self addChild: self createEditableLabel as: #editableLabel ] ]
 ]
 
 { #category : #elements }
@@ -54,47 +63,35 @@ GtFilterTagElement >> createDropDown [
 	button := self createDropDownButton.
 	dropDownLook := BrGlamorousWithDropdownAptitude
 		handle: [ self createDropDownButton ]
-		content: [ BrSimpleList new
-				items: filterElement descriptors;
+		content: [
+			BrSimpleList new
+				fitContent;
 				stencil: [ :each | 
-					| element |
-					element := BlElement new.
-					element
-						viewModel:
-							(BrInteractiveModel new
-								withHover;
-								yourself);
-						aptitude:
-							(BrInteractiveCommonAptitude new
-								default: [ :f | f background: Color transparent ];
-								hovered: [ :f | f background: self theme button defaultBorderColor ];
-								yourself);
-						layout: BlLinearLayout horizontal;
-						constraintsDo: [ :c | 
-							c horizontal matchParent.
-							c vertical fitContent ];
+					BrHorizontalPane new
+						hMatchParent;
+						vFitContent;
 						padding: (BlInsets all: 5);
-						addEventHandlerOn: BlClickEvent
-							do: [ button label: each name.
-							dropDownLook hide.
-							self applyDescriptor: each ];
-						addChild:
-							(BrLabel new
-								aptitude:
-									BrGlamorousLabelAptitude new glamorousRegularFont
-										glamorousCodeSmallSize;
-								text: each name;
-								yourself).
-					element ];
-				hFitContent;
-				vFitContent ].
+						aptitude: (BrStyleCommonAptitude new
+							default: [ :s | s background: Color transparent ];
+							hovered: [ :s | s background: self theme button defaultBorderColor ];
+							yourself);
+						when: BlClickEvent
+							do: [ :anEvent |
+								anEvent consumed: true.
+								button label: each name.
+								anEvent currentTarget fireEvent: BrDropdownHideWish new.
+								self applyDescriptor: each ];
+						addChild: (BrLabel new
+							aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize;
+							text: each name;
+							yourself);
+						yourself ];
+				items: filterElement descriptors;
+				yourself ].
 	button addAptitude: dropDownLook.
-	button
-		addAptitude:
-			(BrInteractiveCommonAptitude new
-				default: [ button background: Color transparent ];
-				hovered: [ button background:
-						self theme status neutralBackgroundColor darker ]).
+	button addAptitude: (BrStyleCommonAptitude new
+			default: [ :s | s background: Color transparent ];
+			hovered: [ :s | s background: self theme status neutralBackgroundColor darker ]).
 	^ button
 ]
 
@@ -102,10 +99,7 @@ GtFilterTagElement >> createDropDown [
 GtFilterTagElement >> createDropDownButton [
 	| button |
 	button := BrButton new.
-	button
-		aptitude:
-			BrTextLabelAptitude new glamorousRegularFont glamorousCodeSmallSize
-				+ BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude.
+	button aptitude: BrTextLabelAptitude new glamorousRegularFont glamorousCodeSmallSize + BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude.
 	button vExact: 20.
 	button padding: (BlInsets left: 4 right: 2).
 	button label: self descriptor name.
@@ -117,19 +111,11 @@ GtFilterTagElement >> createDropDownButton [
 { #category : #elements }
 GtFilterTagElement >> createEditableLabel [
 	| label |
+
 	label := BrEditableLabel new.
-	label
-		aptitude:
-			BrGlamorousEditableLabelAptitude new glamorousRegularFont
-				glamorousRegularSmallSize.
+	label aptitude: BrGlamorousEditableLabelAptitude new glamorousRegularFont glamorousRegularSmallSize.
 	label text: (valueString ifNil: [ '' ]).
-	label
-		padding:
-			(BlInsets
-				top: 2
-				left: 4
-				bottom: 2
-				right: 4).
+	label padding: (BlInsets top: 2 left: 4 bottom: 2 right: 4).
 	label
 		when: BrEditorAcceptWish
 		do: [ :aWish | 
@@ -148,9 +134,11 @@ GtFilterTagElement >> createEditableLabel [
 		labelDo: [ :aShortcutEvent :aShortcut | 
 			self removeFromParent.
 			filterElement applyFilters ].
+
 	descriptor completion
 		ifNotNil:
 			[ :strategy | (GtCompletionController on: label strategy: strategy) install ].
+
 	^ label
 ]
 
@@ -179,18 +167,18 @@ GtFilterTagElement >> filter: aGtMethodsFilter [
 { #category : #'initialize-release' }
 GtFilterTagElement >> initialize [
 	super initialize.
+	
 	self fitContent.
 	self margin: (BlInsets all: 3).
-	self
-		addAptitude:
-			(BrStyleCommonAptitude new
-				default: [ :aStyle | 
-					aStyle geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
-					aStyle background: self theme status neutralBackgroundColor.
-					aStyle border: BlBorder empty ];
-				hovered: [ :aStyle | 
-					aStyle background:
-						self theme status neutralBackgroundColor darker ])
+	self addAptitude:
+		(BrStyleCommonAptitude new
+			default: [ :aStyle | 
+				aStyle geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
+				aStyle background: self theme status neutralBackgroundColor.
+				aStyle border: BlBorder empty ];
+			hovered: [ :aStyle | 
+				aStyle background:
+					self theme status neutralBackgroundColor darker ])
 ]
 
 { #category : #testing }

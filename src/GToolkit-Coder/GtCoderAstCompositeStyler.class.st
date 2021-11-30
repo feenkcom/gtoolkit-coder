@@ -4,14 +4,14 @@ Class {
 	#instVars : [
 		'stylers'
 	],
-	#category : 'GToolkit-Coder-Styler/Highlighter'
+	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #'api - styling' }
 GtCoderAstCompositeStyler >> extraStyle: aText ast: theAst [
 	self stylers do: [ :eachStyler |
 		BlTextStylerTelemetry
-			timeSync: [ 'Extra style using ', eachStyler class name ]
+			time: [ 'Extra style using ', eachStyler class name ]
 			during: [ eachStyler extraStyle: aText ast: theAst ] ]
 ]
 
@@ -20,12 +20,12 @@ GtCoderAstCompositeStyler >> style: aText ast: theAst [
 	self stylers do: [ :eachStyler |
 		[
 			BlTextStylerTelemetry
-				timeSync: [ 'Style using ', eachStyler class name ]
+				time: [ 'Style using ', eachStyler class name ]
 				during: [ eachStyler style: aText ast: theAst ] ]
 			on: Error
 			do: [ :anError |
 				BlTextStylerTelemetry
-					timeSync: [ 'Handle an error in ', eachStyler class name ]
+					time: [ 'Handle an error in ', eachStyler class name ]
 					during: [
 						anError emit.
 						

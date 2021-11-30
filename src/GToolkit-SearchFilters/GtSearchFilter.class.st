@@ -28,9 +28,12 @@ GtSearchFilter >> defaultFilterScope [
 
 { #category : #iterating }
 GtSearchFilter >> do: aBlock [
-	((self result do: aBlock)
-		inject: 0 into: [ :total :each | total + 1 ])
-			wait
+	(self result do: aBlock) wait
+]
+
+{ #category : #accessing }
+GtSearchFilter >> filterValueString [
+	^ nil
 ]
 
 { #category : #testing }

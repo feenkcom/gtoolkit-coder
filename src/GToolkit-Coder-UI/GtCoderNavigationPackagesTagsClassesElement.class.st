@@ -9,7 +9,7 @@ Class {
 		'protocolLabel',
 		'coderFilterChangesSubscription'
 	],
-	#category : 'GToolkit-Coder-UI-Navigation'
+	#category : #'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #'api - package updates' }
@@ -156,8 +156,14 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageListSelectionChanged [
 		ifFalse: [ ^ self ].
 	aSelectedItem := (packagesList viewModel itemAt: anIndex) value.
 	(aSelectedItem isKindOf: RPackage)
-		ifTrue: [ self navigationModel selectPackage: aSelectedItem ]
-		ifFalse: [ self navigationModel selectTag: aSelectedItem ]
+		ifTrue: [
+			BlFrameTelemetry
+				time: [ 'Select package ', aSelectedItem printString ]
+				during: [ self navigationModel selectPackage: aSelectedItem ] ]
+		ifFalse: [
+			BlFrameTelemetry
+				time: [ 'Select tag ', aSelectedItem printString ]
+				during: [ self navigationModel selectTag: aSelectedItem ] ]
 ]
 
 { #category : #'event handling' }
@@ -203,9 +209,11 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageTagRemoved: anAnnounceme
 GtCoderNavigationPackagesTagsClassesElement >> onPackageTagSelected: anAnnouncer [
 	supressNavigationChanges ifTrue: [ ^ self ].
 	self suppressListChangeEventsDuring: [  
-		self 
-			selectPackage: anAnnouncer package 
-			tag: anAnnouncer tag.
+		BlFrameTelemetry
+			time: [ 'Select package ', anAnnouncer package printString, ' tag ', anAnnouncer tag printString ]
+			during: [ self 
+				selectPackage: anAnnouncer package 
+				tag: anAnnouncer tag ].
 		self deselectClasses. ].
 ]
 
@@ -329,7 +337,9 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPac
 	(self hasPackageTagsIn: aPackage)
 		ifFalse: [ ^ self selectPackage: aPackage ].
 	self expandPackage: aPackage.
+
 	aPreviousIndex := packagesList selectedIndice.
+
 	packagesList viewModel
 		indexOf: aPackageTag
 		do: [ :aNewIndex | 
@@ -340,8 +350,14 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPac
 						scrollIndexFromPrevious: aPreviousIndex
 						current: aNewIndex
 						max: packagesList viewModel itemCount) ].
-	self updateClassLists.
-	self hideOrShowClassList
+	
+	BlFrameTelemetry
+		time: [ self class name, ' #updateClassLists' ]
+		during: [ self updateClassLists ].
+		
+	BlFrameTelemetry
+		time: [ self class name, ' #hideOrShowClassList' ]
+		during: [ self hideOrShowClassList ]
 ]
 
 { #category : #'api - package selections' }
@@ -413,7 +429,10 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToPackageList [
 	packagesList
 		when: BrSelectionChanged
-		do: [ :anEvent | self onPackageListSelectionChanged ].
+		do: [ :anEvent |
+			BlFrameTelemetry
+				time: [ self class name, ' #onPackageListSelectionChanged' ]
+				during: [ self onPackageListSelectionChanged ] ].
 ]
 
 { #category : #subscriptions }
