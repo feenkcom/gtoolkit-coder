@@ -29,11 +29,6 @@ GtTraitsCompletionStrategy >> completionActionStreamFor: aText at: positionInteg
 				from: positionInteger - currentInput size + 1 ]
 ]
 
-{ #category : #accessing }
-GtTraitsCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
-	^ ((self completionActionStreamFor: aText at: positionInteger) take: maxInteger) toArray wait
-]
-
 { #category : #testing }
 GtTraitsCompletionStrategy >> hasCompletionEntryFor: aString [
 	^ true

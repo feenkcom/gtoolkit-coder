@@ -31,11 +31,6 @@ GtPoolsCompletionStrategy >> completionActionStreamFor: aText at: positionIntege
 				from: positionInteger - currentInput size + 1 ]
 ]
 
-{ #category : #accessing }
-GtPoolsCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
-	^ ((self completionActionStreamFor: aText at: positionInteger) take: maxInteger) toArray wait
-]
-
 { #category : #testing }
 GtPoolsCompletionStrategy >> hasCompletionEntryFor: aString [
 	^ true
