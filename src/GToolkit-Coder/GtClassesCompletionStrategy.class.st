@@ -45,11 +45,6 @@ GtClassesCompletionStrategy >> completionActionStreamFor: aText at: positionInte
 				ifFalse: [ insertion ] ]
 ]
 
-{ #category : #accessing }
-GtClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
-	^ ((self completionActionStreamFor: aText at: positionInteger) take: maxInteger) toArray wait
-]
-
 { #category : #initialization }
 GtClassesCompletionStrategy >> excludeClasses: aCollectionOfClasses [
 	excludedClasses := aCollectionOfClasses asSet

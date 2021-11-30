@@ -4,28 +4,24 @@ Class {
 	#instVars : [
 		'packageSearchString'
 	],
-	#category : 'GToolkit-Coder-Completion'
+	#category : #'GToolkit-Coder-Completion'
 }
 
 { #category : #accessing }
-GtPackageClassesCompletionStrategy >> classesMatching: aString [
+GtPackageClassesCompletionStrategy >> classStreamMatching: aString [
 	| classNamePattern matchedClasses |
 	matchedClasses := Set new.
 	classNamePattern := '*' , aString , '*'.
-	(GtPackagesCompletionStrategy findPackagesMatching: packageSearchString) do: [ :each | 
-		matchedClasses addAll: each classes ].
-	(GtPackagesCompletionStrategy findPackageTagsMatching: packageSearchString) do: [ :each | 
-		matchedClasses addAll: each classes ].
-	^ matchedClasses select: [ :each | classNamePattern match: each name ]
+	^ (((GtPackagesCompletionStrategy packageAndTagStreamMatching: packageSearchString)
+		collect: [ :each | each classes asAsyncStream ]) flatten select: [ :each | classNamePattern match: each name ])
+		withoutDuplicates
 ]
 
 { #category : #accessing }
-GtPackageClassesCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
+GtPackageClassesCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
 	| string |
 	string := aText asString.
-	^ ((self classesMatching: string) collect: [ :each | 
-		GtReplaceTextCompletionAction forText: each name ])
-			asSortedCollection: [ :a :b | a text < b text ]
+	^ (self classStreamMatching: string) collect: [ :each | GtReplaceTextCompletionAction forText: each name ]
 ]
 
 { #category : #testing }
