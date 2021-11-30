@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'candidateTraits'
 	],
-	#category : 'GToolkit-Coder-Completion'
+	#category : #'GToolkit-Coder-Completion'
 }
 
 { #category : #accessing }
@@ -16,18 +16,22 @@ GtTraitsCompletionStrategy >> candidateTraits [
 ]
 
 { #category : #accessing }
-GtTraitsCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
-	| currentInput completionActions |
-
+GtTraitsCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
+	| currentInput |
 	currentInput := aText asString.
-	completionActions := (self candidateTraits first: maxInteger startingWith: currentInput) collect: [ :traitName | 
-		GtInsertTextCompletionAction
-			labeled: traitName
-			completion: (traitName allButFirst: currentInput size)
-			position: positionInteger
-			from: positionInteger - currentInput size + 1 ].
+	^ (self candidateTraits asyncStreamStartingWith: currentInput)
+		collect:
+			[ :traitName | 
+			GtInsertTextCompletionAction
+				labeled: traitName
+				completion: (traitName allButFirst: currentInput size)
+				position: positionInteger
+				from: positionInteger - currentInput size + 1 ]
+]
 
-	^ completionActions
+{ #category : #accessing }
+GtTraitsCompletionStrategy >> completionActionsFor: aText at: positionInteger max: maxInteger [
+	^ ((self completionActionStreamFor: aText at: positionInteger) take: maxInteger) toArray wait
 ]
 
 { #category : #testing }
