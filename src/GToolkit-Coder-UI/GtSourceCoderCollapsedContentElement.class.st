@@ -29,8 +29,9 @@ GtSourceCoderCollapsedContentElement >> initialize [
 { #category : #'instance creation' }
 GtSourceCoderCollapsedContentElement >> newAddOnsContainer [
 	^ BrHorizontalPane new
-		fitContent;
-		margin: (BlInsets top: 4 left: 1 bottom: 1 right: 1);
+		matchParent;
+		alignCenterLeft;
+		margin: (BlInsets left: 5);
 		withAsyncPromiseDo: [ :anElementPromise |
 			anElementPromise
 				whenSuccess: [ :aContainer :theAddOns |
@@ -65,5 +66,6 @@ GtSourceCoderCollapsedContentElement >> onTextualCoderViewModelChanged [
 	super onTextualCoderViewModelChanged.
 	
 	label asyncPromise promise: textualCoderViewModel collapsedTextPromise.
+	addOns removeChildren.
 	addOns asyncPromise promise: textualCoderViewModel addOns
 ]
