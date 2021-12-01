@@ -11,7 +11,7 @@ Class {
 		'outlines',
 		'separatorElement'
 	],
-	#category : 'GToolkit-Coder-UI-Diff'
+	#category : #'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #examples }
@@ -236,8 +236,17 @@ GtDiffElement >> newTextElement [
 ]
 
 { #category : #'geometry hooks' }
-GtDiffElement >> notifyExtentChanged [
-	super notifyExtentChanged.
+GtDiffElement >> onExtentChanged [ 
+	super onExtentChanged.
+
+	outlines := #().
+	self updateOutlines
+]
+
+{ #category : #'geometry hooks' }
+GtDiffElement >> onLayout: aBounds context: aBlElementBoundsUpdateContext [
+	super onLayout: aBounds context: aBlElementBoundsUpdateContext.
+	
 	outlines := #().
 	self updateOutlines
 ]
@@ -263,6 +272,33 @@ GtDiffElement >> outlineFor: aSyncScrollRange [
 		add: leftBounds left @ leftBottom;
 		add: leftBounds left @ leftTop.
 	^ BlPolyline vertices: vertices
+]
+
+{ #category : #'event handling' }
+GtDiffElement >> paintMeAndChildrenOn: aCompositorPainter offset: anOffset [
+	| aCanvas stroke fill |
+	super paintMeAndChildrenOn: aCompositorPainter offset: anOffset.
+	
+	aCanvas := aCompositorPainter canvas.
+	
+	aCanvas transform
+		by: [ :t | t translateBy: anOffset ]
+		during: [
+			stroke := aCanvas stroke
+				alpha: 0.2;
+				paint: Color black;
+				width: 1.
+			fill := aCanvas fill
+				alpha: 0.2;
+				paint: Color yellow.
+			outlines
+				do: [ :each | 
+					fill
+						path: (each pathOnSpartaCanvas: aCanvas of: self);
+						draw.
+					stroke
+						path: (each pathOnSpartaCanvas: aCanvas of: self);
+						draw ] ]
 ]
 
 { #category : #private }
