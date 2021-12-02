@@ -12,9 +12,16 @@ ManifestGToolkitCoderStreamingCodersUI class >> mustOnlyDependOn [
 	^ {
 		'Announcements-Core'.
 		'Collections-Sequenceable'.
-		'Collections-Unordered'.
 		'Futures'.
 		'GToolkit-Coder-StreamingCoders'.
 		'Kernel'
+	}
+]
+
+{ #category : #accessing }
+ManifestGToolkitCoderStreamingCodersUI class >> shouldDependOn [
+	^ {
+		'Futures'.
+		'GToolkit-Coder-StreamingCoders'.
 	}
 ]

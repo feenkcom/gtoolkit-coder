@@ -161,6 +161,14 @@ GtTextualCoderViewModel >> collapse [
 	self expanded: false
 ]
 
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> collapsedTextPromise [
+	"Return a text that should be displayed in the collapsed state"
+	<return: #TAsyncPromise of: #BlText>
+
+	^ coderModel collapsedTextPromise
+]
+
 { #category : #'api - stylers' }
 GtTextualCoderViewModel >> compositeStyler [
 	^ GtCoderAstCompositeStyler new
