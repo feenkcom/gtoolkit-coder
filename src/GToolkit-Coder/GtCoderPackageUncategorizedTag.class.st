@@ -1,8 +1,6 @@
 Class {
 	#name : #GtCoderPackageUncategorizedTag,
 	#superclass : #Object,
-	#traits : 'TBlDebug',
-	#classTraits : 'TBlDebug classTrait',
 	#instVars : [
 		'packageTag'
 	],

@@ -1,8 +1,6 @@
 Class {
 	#name : #GtCoderPackageExtentionTag,
 	#superclass : #Object,
-	#traits : 'TBlDebug',
-	#classTraits : 'TBlDebug classTrait',
 	#instVars : [
 		'package',
 		'classes'
