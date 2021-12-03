@@ -3,10 +3,12 @@ Extension { #name : #RPackage }
 { #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtBaselinesFor: aView [
 	<gtPackageView>
-	^ aView explicit
+	^ aView forward
 		title: 'References';
+		tooltip: 'References to the package name';
 		priority: 30;
-		stencil: [ self name gtStringLiteralCaseSensitiveMatch ]
+		object: [ self name gtStringLiteralCaseSensitiveMatch ];
+		view: #gtItemsFor:
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
