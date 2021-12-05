@@ -162,6 +162,11 @@ GtCoderModel >> initializeAddOns: addOns [
 ]
 
 { #category : #initialization }
+GtCoderModel >> initializeAddOns: addOns viewModel: aCoderViewModel [
+	self initializeAddOns: addOns
+]
+
+{ #category : #initialization }
 GtCoderModel >> initializeShortcuts: addOns [
 ]
 

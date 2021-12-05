@@ -196,7 +196,7 @@ GtTextualCoderViewModel >> computeAddOns [
 		"extra addons"
 		newAddOns addAddOns: aCoderModel addOns.
 		aCoderModel initializeShortcuts: newAddOns.
-		aCoderModel initializeAddOns: newAddOns.
+		aCoderModel initializeAddOns: newAddOns viewModel: self.
 		theAst ifNotNil: [
 			pragmas reverseDo: [ :eachPragma |
 				[ aCoderModel
