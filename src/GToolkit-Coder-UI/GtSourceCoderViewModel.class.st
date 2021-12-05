@@ -151,6 +151,30 @@ GtSourceCoderViewModel >> printItAll [
 	^ self coder printItInContext: self evaluationContext all
 ]
 
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> requestSave [
+	"Request the view model to start the saving process. We first send a corresponding announcement to
+	allow UI to intercept the saving request and show, for example, a confirmation dialog. If an announcement
+	was not consumed (= handled) proceed with the default save action"
+	| anAnnouncement |
+
+	anAnnouncement := GtSourceCoderViewModelSaveRequested new.
+	self announce: anAnnouncement.
+	
+	anAnnouncement consumed
+		ifFalse: [ self save ]
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> save [
+	"Attempt to save the source code in a default context. For example in terms of a method, the changes would
+	be saved in the origin class of the method (trait, interface or superclass).
+	Return true if the source code was succesfully saved"
+	<return: #Boolean>
+	
+	^ false
+]
+
 { #category : #'private - evaluation' }
 GtSourceCoderViewModel >> selectedTextInterval [
 	<return: #Interval>

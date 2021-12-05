@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderSaveShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }
@@ -23,5 +23,5 @@ GtSourceCoderSaveShortcut >> name [
 
 { #category : #evaluation }
 GtSourceCoderSaveShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
-	aSourceCoderViewModel save
+	aSourceCoderViewModel requestSave
 ]

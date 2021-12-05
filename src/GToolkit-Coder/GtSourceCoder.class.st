@@ -228,7 +228,7 @@ GtSourceCoder >> evaluateBlock: aBlock onErrorDo: anErrorBlock [
 GtSourceCoder >> evaluationContext [
 	<return: #GtSourceCoderEvaluationContext>
 
-	^ GtSourceCoderEvaluationContext new
+	^ self newEvaluationContext
 		requesterObject: self;
 		coder: self
 ]
@@ -244,6 +244,11 @@ GtSourceCoder >> implicitVariableReferencesTo: aString do: aBlock [
 	"Evaluate aBlock for every ast node that is a variable reference to an implicitly defined variable named aString."
 
 	
+]
+
+{ #category : #'private - actions' }
+GtSourceCoder >> newEvaluationContext [
+	^ GtSourceCoderEvaluationContext new
 ]
 
 { #category : #'private - notifying' }
