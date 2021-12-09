@@ -14,7 +14,7 @@ Behavior >> gtBrowseFrom: anElement [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> gtCoderExamplesFor: aView context: aDictionary [
-	<gtClassView>
+	"<gtClassView>"
 	| anExamplesClassName |
 
 	anExamplesClassName := (self name , 'Examples') asSymbol.
@@ -41,8 +41,5 @@ Behavior >> gtCoderExamplesFor: aView context: aDictionary [
 Behavior >> methodsCoderFromContext: aPhlowContext [
 	<return: #GtPharoMethodsCoderViewModel>
 
-	^ aPhlowContext
-		optionAt: #behaviorCoder
-		ifPresent: [ :aBehaviorCoderUIModel | aBehaviorCoderUIModel methodsCoderUIModel ]
-		ifAbsentPut: [ (GtClassMethodsCoder forClass: self) asCoderUIModel ]
+	^ (GtClassMethodsCoder forClass: self) asCoderUIModel
 ]
