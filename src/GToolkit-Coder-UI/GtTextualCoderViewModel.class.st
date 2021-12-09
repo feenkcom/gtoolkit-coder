@@ -416,6 +416,10 @@ GtTextualCoderViewModel >> hasStyledText [
 
 { #category : #'api - header' }
 GtTextualCoderViewModel >> headerElementClass [
+	"Return an class of an element that should represent a header of the coder.
+	The used element must implement {{gtClass:TGtWithTextualCoderViewModel}} trait."
+	<return: #TGtWithTextualCoderViewModel or: nil>
+
 	^ nil
 ]
 
