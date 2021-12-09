@@ -6,6 +6,6 @@ GtSourceCoderShortcut >> gtSourceCodeFor: aView [
 
 	^ aView forward
 		title: 'Source';
-		object: [ self class >> #performOnEditor:element:coder:dueTo: ];
+		object: [ self class >> #performOnEditor:element:coderViewModel:dueTo: ];
 		view: #gtSourceFor:
 ]
