@@ -61,13 +61,26 @@ GtStreamingCodersModel >> itemsStream: anAsyncStream dueTo: aReasonObject [
 
 	monitor critical: [
 		itemsStream := anAsyncStream cached.
-		codersStream := itemsStream map: [ :eachItem | self newCoderFor: eachItem ] cache: coders ].
+		codersStream := itemsStream
+			map: [ :eachItem | self newCoderFor: eachItem ]
+			key: [ :eachItem | self newCoderCacheKeyFor: eachItem ]
+			cache: coders ].
 
 	self notifyStreamChangedDueTo: aReasonObject
 ]
 
 { #category : #'private - instance creation' }
+GtStreamingCodersModel >> newCoderCacheKeyFor: anObject [
+	^ anObject
+]
+
+{ #category : #'private - instance creation' }
 GtStreamingCodersModel >> newCoderFor: anObject [
+	^ self subclassResponsibility
+]
+
+{ #category : #'private - instance creation' }
+GtStreamingCodersModel >> newItemsStream [
 	^ self subclassResponsibility
 ]
 
@@ -76,12 +89,71 @@ GtStreamingCodersModel >> notifyStreamChangedDueTo: aReasonObject [
 	self announce: (GtStreamingCodersStreamChanged new dueTo: aReasonObject)
 ]
 
+{ #category : #'private - actions' }
+GtStreamingCodersModel >> privateAddCoderFor: aNewItem [
+	| anAddedCoder |
+
+	anAddedCoder := self privateFetchCoderFor: aNewItem.
+	self refreshItemsStreamDueTo: (GtStreamingCodersAddedReason new coder: anAddedCoder)
+]
+
 { #category : #'private - instance creation' }
 GtStreamingCodersModel >> privateFetchCoderFor: anObject [
 	^ monitor critical: [
 		coders
-			at: anObject
+			at: (self newCoderCacheKeyFor: anObject)
 			ifAbsentPut: [ self newCoderFor: anObject ] ]
+]
+
+{ #category : #'private - actions' }
+GtStreamingCodersModel >> privateRemoveCoderFor: aRemovedItem [
+	| aRemovedCoder |
+
+	monitor critical: [
+		aRemovedCoder := coders
+			removeKey: (self newCoderCacheKeyFor: aRemovedItem)
+			ifAbsent: [ nil ] ].
+
+	self refreshItemsStreamDueTo: (GtStreamingCodersRemovedReason new coder: aRemovedCoder)
+]
+
+{ #category : #'private - actions' }
+GtStreamingCodersModel >> privateSwapCodersFor: aFirstItem and: aSecondItem [
+	| aFirstKey aSecondKey aFirstSwappedCoder aSecondSwappedCoder |
+
+	aFirstKey := self newCoderCacheKeyFor: aFirstItem.
+	aSecondKey := self newCoderCacheKeyFor: aSecondItem.
+
+	monitor critical: [		
+		coders
+			at: aFirstKey
+			ifPresent: [ :aFirstCoder |
+				aFirstSwappedCoder := aFirstCoder.
+				coders
+					at: aSecondKey
+					ifPresent: [ :aSecondCoder |
+						aSecondSwappedCoder := aSecondCoder.
+						coders at: aSecondKey put: aFirstCoder.
+						coders at: aFirstKey put: aSecondCoder ]
+					ifAbsent: [ coders at: aSecondKey put: aFirstCoder. ] ]
+			ifAbsent: [
+				coders
+					at: aSecondKey
+					ifPresent: [ :aSecondCoder | 
+						aSecondSwappedCoder := aSecondCoder.
+						coders at: aFirstKey put: aSecondCoder ] ] ].
+			
+	"the operation changes the order of coders, therefore we must update the stream".
+	self refreshItemsStreamDueTo: (GtStreamingCodersSwappedReason new
+		coderA: aFirstSwappedCoder;
+		coderB: aSecondSwappedCoder)
+]
+
+{ #category : #'private - accessing' }
+GtStreamingCodersModel >> refreshItemsStreamDueTo: aReasonObject [
+	self
+		itemsStream: self newItemsStream
+		dueTo: aReasonObject
 ]
 
 { #category : #'api - announcer' }

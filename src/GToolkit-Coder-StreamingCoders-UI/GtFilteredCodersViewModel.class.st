@@ -14,6 +14,13 @@ GtFilteredCodersViewModel >> additionalFilters [
 	^ streamingCodersModel additionalFilters
 ]
 
+{ #category : #accessing }
+GtFilteredCodersViewModel >> additionalFilters: aCollectionOfFilter [
+	"Change the additional filters of the coders model"
+
+	streamingCodersModel additionalFilters: aCollectionOfFilter
+]
+
 { #category : #'api - accessing' }
 GtFilteredCodersViewModel >> compositeFilter [
 	<return: #GtSearchFilter>

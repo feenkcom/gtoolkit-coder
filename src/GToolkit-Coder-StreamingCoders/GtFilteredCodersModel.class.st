@@ -28,9 +28,7 @@ GtFilteredCodersModel >> additionalFilters: aCollectionOfFilters [
 		compositeFilter := self
 			createCombinedFilterFor: filter
 			andAdditionalFilters: additionalFilters.
-		self
-			itemsStream: compositeFilter asAsyncStream
-			dueTo: GtFilteredCodersAdditionalFiltersReason new ]
+		self refreshItemsStreamDueTo: GtFilteredCodersAdditionalFiltersReason new ]
 ]
 
 { #category : #'api - accessing' }
@@ -72,9 +70,7 @@ GtFilteredCodersModel >> filter: aGtSearchFilter [
 		compositeFilter := self
 			createCombinedFilterFor: filter
 			andAdditionalFilters: additionalFilters.
-		self
-			itemsStream: compositeFilter asAsyncStream
-			dueTo: GtFilteredCodersFilterReason new ]
+		self refreshItemsStreamDueTo: GtFilteredCodersFilterReason new ]
 ]
 
 { #category : #initialization }
@@ -84,4 +80,9 @@ GtFilteredCodersModel >> initialize [
 	filter := GtSearchNullFilter new.
 	additionalFilters := #().
 	compositeFilter := GtSearchNullFilter new.
+]
+
+{ #category : #'private - instance creation' }
+GtFilteredCodersModel >> newItemsStream [
+	^ compositeFilter asAsyncStream
 ]
