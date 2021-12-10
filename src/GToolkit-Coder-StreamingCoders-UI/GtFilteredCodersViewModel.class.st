@@ -21,6 +21,11 @@ GtFilteredCodersViewModel >> compositeFilter [
 	^ streamingCodersModel compositeFilter
 ]
 
+{ #category : #'api - accessing' }
+GtFilteredCodersViewModel >> highlighter [
+	^ highlighter
+]
+
 { #category : #'private - notifying' }
 GtFilteredCodersViewModel >> notifyFilterChanged [
 	self announce: GtFilteredCodersViewModelFilterChanged new
