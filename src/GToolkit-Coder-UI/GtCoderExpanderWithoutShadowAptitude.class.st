@@ -13,7 +13,7 @@ Class {
 		'styleLook',
 		'padding'
 	],
-	#category : 'GToolkit-Coder-UI-Looks'
+	#category : #'GToolkit-Coder-UI-Looks'
 }
 
 { #category : #accessing }
@@ -81,7 +81,6 @@ GtCoderExpanderWithoutShadowAptitude >> expandedBorderWidth: aNumber [
 
 { #category : #initialization }
 GtCoderExpanderWithoutShadowAptitude >> initialize [
-	| aTriangle |
 	super initialize.
 
 	borderWidth := 0.
@@ -92,9 +91,7 @@ GtCoderExpanderWithoutShadowAptitude >> initialize [
 	borderPaint := self defaultBorderPaint.
 	borderFocusedPaint := self defaultFocusedBorderPaint.
 
-	aTriangle := self newTriangle.
 	toggle := self newToggle.
-	toggle addChild: aTriangle.
 
 	sidebar := self newSidebar.
 	sidebar addChild: toggle.
@@ -110,11 +107,6 @@ GtCoderExpanderWithoutShadowAptitude >> initialize [
 			aStyle background: Color white.
 			aStyle border: (BlBorder paint: self borderPaint width: self expandedBorderWidth) ];
 		focused: [ :aStyle | (BlBorder paint: self borderFocusedPaint width: self expandedBorderWidth) ]).
-
-	self add: (BrStyleCommonAptitude new
-		@ aTriangle;
-		collapsed: [ :aStyle | aStyle geometry: self newCollapsedTriangleGeometry ];
-		expanded: [ :aStyle | aStyle geometry: self newExpandedTriangleGeometry ]).
 
 	self add: (BrStyleCommonAptitude new
 		@ sidebar;
