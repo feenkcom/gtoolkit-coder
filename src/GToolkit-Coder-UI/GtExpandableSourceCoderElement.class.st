@@ -141,9 +141,9 @@ GtExpandableSourceCoderElement >> newModificationIndicator [
 		constraintsDo: [ :c |
 			c ignoreByLayout.
 			c ignored horizontal alignLeft.
-			c horizontal exact: 4.
+			c horizontal exact: 5.
 			c vertical matchParent.
-			c margin: (BlInsets left: 4) ];
+			c margin: (BlInsets left: 8) ];
 		preventMeAndChildrenMouseEvents;
 		background: self theme status changesBackgroundColor;
 		withAsyncPromiseDo: [ :anElementPromise |
