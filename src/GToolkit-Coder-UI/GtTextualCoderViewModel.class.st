@@ -15,7 +15,8 @@ Class {
 		'selection',
 		'extraTextAttributes',
 		'styledText',
-		'shouldHaveHeader'
+		'shouldHaveHeader',
+		'isTextModifiedPromise'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -443,6 +444,16 @@ GtTextualCoderViewModel >> initialize [
 	shouldHaveHeader := true
 ]
 
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> isTextModified [
+	"Return a promise which is resolved to true if the text is modified,
+	false otherwise. Should be used together with {{gtClass:GtTextualCoderViewModelTextChanged}} to update
+	the modification status in the UI"
+	<return: #TAsyncPromise of: #Boolean>
+	
+	^ isTextModifiedPromise ifNil: [ isTextModifiedPromise := self coderModel isModifiedPromise ]
+]
+
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> mainActions [
 	^ mainActions
@@ -540,6 +551,7 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 	self unsetStyledText.
 	
 	addOnPromise := nil.
+	isTextModifiedPromise := nil.
 	self ensureAddOns.
 
 	self announce: (GtTextualCoderViewModelTextChanged new
