@@ -146,6 +146,7 @@ GtExpandableSourceCoderElement >> newModificationIndicator [
 			c margin: (BlInsets left: 8) ];
 		preventMeAndChildrenMouseEvents;
 		background: self theme status changesBackgroundColor;
+		id: GtTextualCoderModificationIndicatorId;
 		withAsyncPromiseDo: [ :anElementPromise |
 			anElementPromise
 				whenSuccess: [ :anIndicator :isModified |
