@@ -5,7 +5,8 @@ Class {
 	#classTraits : 'TGtWithTextualCoderViewModel classTrait',
 	#instVars : [
 		'collapsedElement',
-		'expandedElement'
+		'expandedElement',
+		'modificationIndicator'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
@@ -74,7 +75,7 @@ GtExpandableSourceCoderElement >> initialize [
 		vFitContent;
 		hMatchParent;
 		margin: (BlInsets all: 4);
-		aptitude: GtCoderExpanderAptitude;
+		aptitude: (GtCoderExpanderAptitude new padding: BlInsets empty);
 		beInSingleCompositionLayer.
 
 	self states withExpansion.
@@ -85,7 +86,7 @@ GtExpandableSourceCoderElement >> initialize [
 	self
 		header: [ collapsedElement := self newCollapsedElement ];
 		content: [ expandedElement := self newExpandedElement ].
-		
+
 	self
 		when: BlClickEvent
 		do: [ :anEvent |
@@ -93,7 +94,11 @@ GtExpandableSourceCoderElement >> initialize [
 				ifTrue: [
 					anEvent consumed: true.
 					self expand.
-					self textualCoderViewModel focused: true ] ]
+					self textualCoderViewModel focused: true ] ].
+
+	modificationIndicator := self newModificationIndicator.
+	modificationIndicator visibility: BlVisibility gone.
+	self addChild: modificationIndicator
 ]
 
 { #category : #private }
@@ -108,7 +113,7 @@ GtExpandableSourceCoderElement >> markDirty: anElement as: aBoolean [
 	anElement userData at: #coderDirty put: aBoolean
 ]
 
-{ #category : #private }
+{ #category : #'private - instance creation' }
 GtExpandableSourceCoderElement >> newCollapsedElement [
 	| aCollapsedElement |
 	aCollapsedElement := GtSourceCoderCollapsedContentElement new.
@@ -119,7 +124,7 @@ GtExpandableSourceCoderElement >> newCollapsedElement [
 	^ aCollapsedElement
 ]
 
-{ #category : #private }
+{ #category : #'private - instance creation' }
 GtExpandableSourceCoderElement >> newExpandedElement [
 	| anExpandedElement |
 	anExpandedElement := GtSourceCoderExpandedContentElement new.
@@ -128,6 +133,26 @@ GtExpandableSourceCoderElement >> newExpandedElement [
 		ifNotNil: [ :aCoder | self assignExpandedCoder: aCoder to: anExpandedElement ].
 
 	^ anExpandedElement
+]
+
+{ #category : #'private - instance creation' }
+GtExpandableSourceCoderElement >> newModificationIndicator [
+	^ BlElement new
+		constraintsDo: [ :c |
+			c ignoreByLayout.
+			c ignored horizontal alignLeft.
+			c horizontal exact: 5.
+			c vertical matchParent.
+			c margin: (BlInsets left: 8) ];
+		preventMeAndChildrenMouseEvents;
+		background: self theme status changesBackgroundColor;
+		id: GtTextualCoderModificationIndicatorId;
+		withAsyncPromiseDo: [ :anElementPromise |
+			anElementPromise
+				whenSuccess: [ :anIndicator :isModified |
+					anIndicator visibility: (isModified
+						ifTrue: [ BlVisibility visible ]
+						ifFalse: [ BlVisibility gone ]) ] ]
 ]
 
 { #category : #private }
@@ -166,6 +191,11 @@ GtExpandableSourceCoderElement >> onViewModelExpansionChanged: anAnnouncement [
 	self expanded: anAnnouncement expanded
 ]
 
+{ #category : #'private - event handling' }
+GtExpandableSourceCoderElement >> onViewModelTextChanged: anAnnouncement [
+	self updateModificationIndicator
+]
+
 { #category : #'focus requesting' }
 GtExpandableSourceCoderElement >> requestFocus [
 	self
@@ -179,12 +209,14 @@ GtExpandableSourceCoderElement >> subscribeToTextualCoderViewModel [
 	"Is sent after a new textualCoder view model is assigned to the element.
 	It is required to unsubscribe from the view model or domain model by implementing
 	#unsubscribeFromTextualCoderViewModel if elements subscribe to them"
-	
-	"textualCoderViewModel coder subscribeToSystem."
+
 	textualCoderViewModel weak
 		when: GtTextualCoderViewModelExpansionChanged
-		send: #onViewModelExpansionChanged:
-		to: self
+			send: #onViewModelExpansionChanged:
+			to: self;
+		when: GtTextualCoderViewModelTextChanged
+			send: #onViewModelTextChanged:
+			to: self
 ]
 
 { #category : #'api - textual coder view model' }
@@ -212,5 +244,11 @@ GtExpandableSourceCoderElement >> updateElement [
 	textualCoderViewModel focused
 		ifFalse: [ self loseFocus ].
 
-	self expanded: textualCoderViewModel expanded
+	self expanded: textualCoderViewModel expanded.
+	self updateModificationIndicator
+]
+
+{ #category : #'private - update' }
+GtExpandableSourceCoderElement >> updateModificationIndicator [
+	modificationIndicator asyncPromise promise: textualCoderViewModel isTextModified
 ]

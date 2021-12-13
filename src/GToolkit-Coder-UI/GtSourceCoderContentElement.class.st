@@ -64,7 +64,7 @@ GtSourceCoderContentElement >> gtAllShortcutsFor: aView [
 GtSourceCoderContentElement >> initialize [
 	super initialize.
 	self
-		margin: (BlInsets left: 5);
+		padding: (BlInsets top: 4 right: 4 bottom: 4 left: 10);
 		hMatchParent;
 		vFitContentLimited
 ]

@@ -204,6 +204,13 @@ GtTextualCoder >> isModified [
 	^ self sourceCode isModified
 ]
 
+{ #category : #testing }
+GtTextualCoder >> isModifiedPromise [
+	<return: #TAsyncPromise of: #Boolean>
+
+	^ self sourceCode isModifiedPromise
+]
+
 { #category : #'instance creation' }
 GtTextualCoder >> newCompletionStrategy [
 	^ self subclassResponsibility

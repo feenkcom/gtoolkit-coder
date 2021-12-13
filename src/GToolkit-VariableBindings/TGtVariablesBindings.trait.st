@@ -1,6 +1,6 @@
 Trait {
 	#name : #TGtVariablesBindings,
-	#category : 'GToolkit-VariableBindings-Bindings'
+	#category : #'GToolkit-VariableBindings-Bindings'
 }
 
 { #category : #converting }
@@ -37,6 +37,18 @@ TGtVariablesBindings >> bindingValueOf: aSymbol [
 
 	^ (self bindingOf: aSymbol)
 		ifNotNil: [ :aBinding | aBinding value ]
+]
+
+{ #category : #binding }
+TGtVariablesBindings >> bindingValueOf: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock [
+	"aSymbol is a variable name.
+	Does not have side effects"
+	<return: #Object>
+
+	^ self bindings
+		at: aSymbol
+		ifPresent: [ :aBinding | aPresentBlock value: aBinding value ]
+		ifAbsent: anAbsentBlock
 ]
 
 { #category : #testing }
