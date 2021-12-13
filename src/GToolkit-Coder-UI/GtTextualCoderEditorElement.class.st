@@ -62,6 +62,8 @@ GtTextualCoderEditorElement >> initialize [
 	self editor
 		beEditableCode;
 		disableStyleTextWhenModified.
+		
+	self id: GtSourceCoderEditorId.
 
 	shortcuts := #().
 	completion := GtCompletionController on: self.

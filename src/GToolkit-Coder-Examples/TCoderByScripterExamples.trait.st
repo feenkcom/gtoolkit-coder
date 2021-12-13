@@ -8,7 +8,7 @@ TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id
 
 	aScripterOrStep secondaryClick
 		label: 'Open context menu';
-		onChildNamed: GtSourceCoderEditorId;
+		id: GtSourceCoderEditorId;
 		play.
 
 	aScripterOrStep mouseMoveOver
@@ -21,7 +21,7 @@ TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id
 	aScripterOrStep click
 		label: 'Click ', aBlElementId asSymbol;
 		onSpaceRoot;
-		onChildNamed: aBlElementId.
+		id: aBlElementId.
 
 	aScripterOrStep wait forEmptySpaceTaskQueue.
 	aScripterOrStep syncContinue
