@@ -9,7 +9,10 @@ Class {
 
 { #category : #accessing }
 GtCoderFutureTextSource >> future: aBlock [
-	futureBlock := aBlock
+
+	self critical: [ 
+		futureBlock := aBlock.
+		originalSourceTextPromise := nil ]
 ]
 
 { #category : #initialization }

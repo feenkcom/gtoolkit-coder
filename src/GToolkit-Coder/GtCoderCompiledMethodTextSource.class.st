@@ -16,7 +16,9 @@ GtCoderCompiledMethodTextSource >> compiledMethod [
 { #category : #accessing }
 GtCoderCompiledMethodTextSource >> compiledMethod: anObject [
 
-	compiledMethod := anObject
+	self critical: [ 
+		compiledMethod := anObject.
+		originalSourceTextPromise := nil ]
 ]
 
 { #category : #initialization }
