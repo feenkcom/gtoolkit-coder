@@ -44,7 +44,7 @@ GtCoderTextSource >> currentSourceText [
 	^ self critical: [
 		currentSourceText
 			ifNotNil: [ :aSourceText | aSourceText asAsyncPromise ]
-			ifNil: [ originalSourceTextPromise ifNil: [ originalSourceTextPromise := self originalSourceTextPromise ] ] ]
+			ifNil: [ self originalSourceTextPromise ] ]
 ]
 
 { #category : #'api - accessing' }
@@ -98,9 +98,13 @@ GtCoderTextSource >> originalSourceTextFuture [
 
 { #category : #initialization }
 GtCoderTextSource >> originalSourceTextPromise [
-	<return: #TAsyncPromise>
 
-	^ (self originalSourceTextFuture map: [ :aText | GtCoderSourceText new text: aText ]) asAsyncPromise
+	<return: #TAsyncPromise>
+	^ self critical: [ 
+		  originalSourceTextPromise ifNil: [ 
+			  originalSourceTextPromise := (
+			  	self originalSourceTextFuture map: [ :aText | 
+				  	GtCoderSourceText new text: aText ]) asAsyncPromise ] ]
 ]
 
 { #category : #'private - accessing' }
