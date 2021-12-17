@@ -23,5 +23,7 @@ GtCoderExplicitStringSource >> source [
 { #category : #accessing }
 GtCoderExplicitStringSource >> source: anObject [
 
-	source := anObject
+	self critical: [ 
+		source := anObject.
+		originalSourceTextPromise := nil ]
 ]

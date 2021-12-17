@@ -21,5 +21,8 @@ GtCoderExplicitTextSource >> text [
 
 { #category : #accessing }
 GtCoderExplicitTextSource >> text: aStringOrText [
-	text := aStringOrText asRopedText
+
+	self critical: [ 
+		text := aStringOrText asRopedText.
+		originalSourceTextPromise := nil ]
 ]

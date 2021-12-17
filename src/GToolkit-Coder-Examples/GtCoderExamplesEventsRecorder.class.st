@@ -17,6 +17,18 @@ GtCoderExamplesEventsRecorder >> first [
 	^ self events first
 ]
 
+{ #category : #'gt-extensions' }
+GtCoderExamplesEventsRecorder >> gtEventsFor: aView [
+
+	<gtView>
+	self events ifNil: [ ^ aView empty ].
+
+	^ aView list
+		  title: 'Events';
+		  priority: 1;
+		  items: [ self events ]
+]
+
 { #category : #initialization }
 GtCoderExamplesEventsRecorder >> initialize [
 	super initialize.
