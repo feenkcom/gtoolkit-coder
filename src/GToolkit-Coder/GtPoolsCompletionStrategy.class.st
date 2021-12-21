@@ -25,7 +25,7 @@ GtPoolsCompletionStrategy >> completionActionStreamFor: aText at: positionIntege
 		collect:
 			[ :poolName | 
 			GtInsertTextCompletionAction
-				labeled: poolName
+				labeled: (self labelFor: poolName withSearch: currentInput)
 				completion: (poolName allButFirst: currentInput size)
 				position: positionInteger
 				from: positionInteger - currentInput size + 1 ]
