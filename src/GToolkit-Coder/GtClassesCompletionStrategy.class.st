@@ -32,13 +32,13 @@ GtClassesCompletionStrategy >> completionActionStreamFor: aText at: positionInte
 						from: positionInteger + 1
 						to: currentInput size ].
 			insertion := GtInsertTextCompletionAction
-				labeled: className
+				labeled: (self labelFor: className withSearch: currentInput)
 				completion: (className allButFirst: positionInteger)
 				position: positionInteger
 				from: 1.
 			deletion notNil
 				ifTrue:
-					[ (GtCompositeCompletionAction labeled: className)
+					[ (GtCompositeCompletionAction labeled: insertion displayText)
 						addAction: deletion;
 						addAction: insertion;
 						yourself ]
