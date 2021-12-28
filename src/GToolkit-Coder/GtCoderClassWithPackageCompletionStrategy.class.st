@@ -40,7 +40,7 @@ GtCoderClassWithPackageCompletionStrategy >> completionActionStreamFor: aText at
 				collect:
 					[ :className | 
 					GtInsertTextCompletionAction
-						labeled: className
+						labeled: (self labelFor: className withSearch: partialClassName)
 						completion: (className allButFirst: partialClassName size)
 						position: positionInteger
 						from: positionInteger - partialClassName size + 1 ] ].
@@ -48,7 +48,7 @@ GtCoderClassWithPackageCompletionStrategy >> completionActionStreamFor: aText at
 		collect:
 			[ :className | 
 			GtInsertTextCompletionAction
-				labeled: className
+				labeled: (self labelFor: className withSearch: currentInput)
 				completion: (className allButFirst: currentInput size)
 				position: positionInteger
 				from: positionInteger - currentInput size + 1 ])
@@ -57,7 +57,7 @@ GtCoderClassWithPackageCompletionStrategy >> completionActionStreamFor: aText at
 				collect:
 					[ :packageName | 
 					GtInsertTextCompletionAction
-						labeled: packageName
+						labeled: (self labelFor: packageName withSearch: currentInput)
 						completion: (packageName allButFirst: currentInput size) , '>'
 						position: positionInteger
 						from: positionInteger - currentInput size + 1 ])
