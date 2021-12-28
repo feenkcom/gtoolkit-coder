@@ -12,8 +12,26 @@ Class {
 	#instVars : [
 		'toolbarElement'
 	],
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
+
+{ #category : #'gt-extensions' }
+GtCoderToolbarElement >> addBaselineTab: look [
+	<gtCreateComponentTab: 40>
+	^ BrTab new
+		aptitude: BrGlamorousTabAptitude new;
+		label: 'Baseline';
+		stencil: [ | element |
+			element := GtPharoCreateBaselineElement new.
+			element
+				behaviorBlock: [ :cls | 
+					look hide.
+					navigationModel selectClass: cls ].
+			element forBaselineDefinition.
+			navigationModel
+				selectedPackageDo: [ :package | element forPackageReference: package ].
+			element ]
+]
 
 { #category : #'gt-extensions' }
 GtCoderToolbarElement >> addClassTab: look [
