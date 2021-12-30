@@ -2,9 +2,10 @@ Class {
 	#name : #GtTextualCoderAddOns,
 	#superclass : #GtCoderAddOns,
 	#instVars : [
-		'stylers'
+		'stylers',
+		'ast'
 	],
-	#category : 'GToolkit-Coder-Coders - Addons'
+	#category : #'GToolkit-Coder-Coders - Addons'
 }
 
 { #category : #accessing }
@@ -27,21 +28,24 @@ GtTextualCoderAddOns >> addStylers: aCollectionOfStylers [
 	aCollectionOfStylers do: [ :eachStyler | self addStyler: eachStyler ]
 ]
 
+{ #category : #accessing }
+GtTextualCoderAddOns >> ast [
+	<return: #GtCoderAst>
+
+	^ ast
+]
+
+{ #category : #accessing }
+GtTextualCoderAddOns >> ast: aGtCoderAst [
+	ast := aGtCoderAst
+]
+
 { #category : #changes }
 GtTextualCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
 	super differenceWith: aGtCoderAddOns on: aStream.
 	
 	self stylers = aGtCoderAddOns stylers
 		ifFalse: [ aStream nextPut: GtCoderAddOnsStylersDifference new ]
-]
-
-{ #category : #'gt-extensions' }
-GtTextualCoderAddOns >> gtViewStylersFor: aView [
-	<gtView>
-	^ aView list
-		title: 'Stylers' translated;
-		priority: 30;
-		items: [ self stylers ]
 ]
 
 { #category : #'initialize-release' }

@@ -194,6 +194,7 @@ GtTextualCoderViewModel >> computeAddOns [
 			inHierarchy: aCoderModel class.
 
 		newAddOns := aCoderModel newAddOns.
+		newAddOns ast: aCoderAst.
 		"extra addons"
 		newAddOns addAddOns: aCoderModel addOns.
 		aCoderModel initializeShortcuts: newAddOns.
@@ -372,6 +373,7 @@ GtTextualCoderViewModel >> gtInfo [
 		aStream nextPut: (#coderModel -> self coderModel).
 		aStream nextPut: (#cursors -> self cursors).
 		aStream nextPut: (#selection -> self selection).
+		aStream nextPut: (#addOns -> self addOns wait).
 		aStream nextPut: (#ast -> self astAwait).
 		aStream nextPut: (#stylers -> self stylers).
 		aStream nextPut: (#mainActions -> self mainActions).

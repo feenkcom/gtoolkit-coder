@@ -2,6 +2,7 @@ Class {
 	#name : #GtCoderSourceString,
 	#superclass : #Object,
 	#instVars : [
+		'sourceText',
 		'string',
 		'epoch'
 	],
@@ -16,8 +17,20 @@ GtCoderSourceString >> epoch [
 
 { #category : #accessing }
 GtCoderSourceString >> epoch: anObject [
-
 	epoch := anObject
+]
+
+{ #category : #accessing }
+GtCoderSourceString >> sourceText [
+	<return: #GtCoderSourceText>
+
+	^ sourceText
+]
+
+{ #category : #accessing }
+GtCoderSourceString >> sourceText: aGtCoderSourceText [
+
+	sourceText := aGtCoderSourceText
 ]
 
 { #category : #accessing }
