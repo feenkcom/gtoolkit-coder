@@ -229,11 +229,6 @@ GtTextualCoderEditorElement >> onStyleTextRequest: anEvent [
 ]
 
 { #category : #'private - event handling' }
-GtTextualCoderEditorElement >> onStylersUpdated: anAnnouncement [
-	
-]
-
-{ #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onTextModified [
 	"Is sent when the text changes in the editor. Here we should synchronise the UI and the model."
 
@@ -392,7 +387,6 @@ GtTextualCoderEditorElement >> registerCoderModelAnnouncementsFor: aCoderModel [
 		when: GtCoderAddOnsUpdateRequest
 			send: #onUpdateAddOnsRequest:
 			to: self;
-		when: GtCoderStylerChanged send: #onStylersUpdated: to: self;
 		when: GtCoderStyleTextRequest send: #onStyleTextRequest: to: self;
 		when: GtCoderParseError send: #onCoderParseError: to: self;
 		when: GtCoderObjectSpawnRequest

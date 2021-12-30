@@ -46,6 +46,7 @@ GtTextualCoder >> ast [
 	^ self critical: [ astPromise ifNil: [ astPromise := self sourceCode currentSourceString asyncThen: [ :aGtCoderSourceString |
 		GtCoderAst new
 			ast: (self computeAst: aGtCoderSourceString string);
+			sourceString: aGtCoderSourceString;
 			epoch: aGtCoderSourceString epoch ] ] ]
 ]
 

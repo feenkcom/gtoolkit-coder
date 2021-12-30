@@ -13,6 +13,7 @@ GtCoderSourceText >> asSourceString [
 	<return: #GtCoderSourceString>
 
 	^ GtCoderSourceString new
+		sourceText: self;
 		string: text asString;
 		epoch: epoch
 ]
