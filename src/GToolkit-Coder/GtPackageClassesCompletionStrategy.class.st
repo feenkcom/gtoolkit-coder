@@ -1,6 +1,6 @@
 Class {
 	#name : #GtPackageClassesCompletionStrategy,
-	#superclass : #GtCompletionStrategy,
+	#superclass : #GtStreamedCompletionStrategy,
 	#instVars : [
 		'packageSearchString'
 	],
@@ -22,11 +22,6 @@ GtPackageClassesCompletionStrategy >> completionActionStreamFor: aText at: posit
 	| string |
 	string := aText asString.
 	^ (self classStreamMatching: string) collect: [ :each | GtReplaceTextCompletionAction forText: each name ]
-]
-
-{ #category : #testing }
-GtPackageClassesCompletionStrategy >> hasCompletionEntryFor: aString [
-	^ true
 ]
 
 { #category : #testing }

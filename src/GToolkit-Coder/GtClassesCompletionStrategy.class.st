@@ -1,6 +1,6 @@
 Class {
 	#name : #GtClassesCompletionStrategy,
-	#superclass : #GtCompletionStrategy,
+	#superclass : #GtStreamedCompletionStrategy,
 	#instVars : [
 		'excludedClasses',
 		'candidateClasses'
@@ -48,11 +48,6 @@ GtClassesCompletionStrategy >> completionActionStreamFor: aText at: positionInte
 { #category : #initialization }
 GtClassesCompletionStrategy >> excludeClasses: aCollectionOfClasses [
 	excludedClasses := aCollectionOfClasses asSet
-]
-
-{ #category : #testing }
-GtClassesCompletionStrategy >> hasCompletionEntryFor: aString [
-	^ true
 ]
 
 { #category : #testing }

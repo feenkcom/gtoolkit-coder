@@ -1,6 +1,6 @@
 Class {
 	#name : #GtCoderClassWithPackageCompletionStrategy,
-	#superclass : #GtCompletionStrategy,
+	#superclass : #GtStreamedCompletionStrategy,
 	#instVars : [
 		'allPackages',
 		'allClasses'
@@ -61,11 +61,6 @@ GtCoderClassWithPackageCompletionStrategy >> completionActionStreamFor: aText at
 						completion: (packageName allButFirst: currentInput size) , '>'
 						position: positionInteger
 						from: positionInteger - currentInput size + 1 ])
-]
-
-{ #category : #testing }
-GtCoderClassWithPackageCompletionStrategy >> hasCompletionEntryFor: aString [
-	^ true
 ]
 
 { #category : #testing }
