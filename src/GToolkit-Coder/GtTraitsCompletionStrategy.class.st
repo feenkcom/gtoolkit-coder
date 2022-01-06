@@ -1,6 +1,6 @@
 Class {
 	#name : #GtTraitsCompletionStrategy,
-	#superclass : #GtCompletionStrategy,
+	#superclass : #GtStreamedCompletionStrategy,
 	#instVars : [
 		'candidateTraits'
 	],
@@ -27,11 +27,6 @@ GtTraitsCompletionStrategy >> completionActionStreamFor: aText at: positionInteg
 				completion: (traitName allButFirst: currentInput size)
 				position: positionInteger
 				from: positionInteger - currentInput size + 1 ]
-]
-
-{ #category : #testing }
-GtTraitsCompletionStrategy >> hasCompletionEntryFor: aString [
-	^ true
 ]
 
 { #category : #testing }

@@ -1,6 +1,6 @@
 Class {
 	#name : #GtPackagesCompletionStrategy,
-	#superclass : #GtCompletionStrategy,
+	#superclass : #GtStreamedCompletionStrategy,
 	#category : #'GToolkit-Coder-Completion'
 }
 
@@ -59,11 +59,6 @@ GtPackagesCompletionStrategy >> completionActionStreamFor: aText at: positionInt
 	^ ((self class packageAndTagStreamMatching: searchString)
 		collect: [ :each | (each isKindOf: RPackage) ifTrue: [ each name ] ifFalse: [ each categoryName ] ]) withoutDuplicates
 		collect: [ :each | GtReplaceTextCompletionAction forText: each ]
-]
-
-{ #category : #testing }
-GtPackagesCompletionStrategy >> hasCompletionEntryFor: aString [
-	^ true
 ]
 
 { #category : #testing }

@@ -1,6 +1,6 @@
 Class {
 	#name : #GtPoolsCompletionStrategy,
-	#superclass : #GtCompletionStrategy,
+	#superclass : #GtStreamedCompletionStrategy,
 	#instVars : [
 		'candidatePools'
 	],
@@ -29,11 +29,6 @@ GtPoolsCompletionStrategy >> completionActionStreamFor: aText at: positionIntege
 				completion: (poolName allButFirst: currentInput size)
 				position: positionInteger
 				from: positionInteger - currentInput size + 1 ]
-]
-
-{ #category : #testing }
-GtPoolsCompletionStrategy >> hasCompletionEntryFor: aString [
-	^ true
 ]
 
 { #category : #testing }
