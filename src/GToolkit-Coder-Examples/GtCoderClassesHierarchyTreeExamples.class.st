@@ -27,9 +27,9 @@ GtCoderClassesHierarchyTreeExamples >> fromCollectionClasses [
 	aHierarchyTree := GtCoderClassesHierarchyTree
 		fromClasses: { Collection. Array . SequenceableCollection . OrderedCollection . Set . Dictionary . OrderedDictionary }.
 	
-	self assert: aHierarchyTree size equals: 1.
-	self assert: aHierarchyTree first classes asSet equals: { Set . SequenceableCollection . OrderedDictionary . Dictionary } asSet.
-	self assert: (((aHierarchyTree sort: [:a :b | a name < b name ]) first at: 3) classes asSet = { Array . OrderedCollection } asSet).
+	self assert: aHierarchyTree size equals: 4.
+	self assert: aHierarchyTree classes asSet equals: { Set . Array. Collection . Dictionary } asSet.
+	self assert: (((aHierarchyTree sort: [:a :b | a name < b name ]) at: 2) classes asSet = { OrderedDictionary . SequenceableCollection } asSet).
 	
 	^ aHierarchyTree
 ]
