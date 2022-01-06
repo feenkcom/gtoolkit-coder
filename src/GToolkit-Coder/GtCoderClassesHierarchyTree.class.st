@@ -12,23 +12,26 @@ Class {
 		'rootClass',
 		'subclassTrees'
 	],
-	#category : 'GToolkit-Coder-Navigation - Model'
+	#category : #'GToolkit-Coder-Navigation - Model'
 }
 
 { #category : #factory }
 GtCoderClassesHierarchyTree class >> fromClasses: aCollectionOfClasses [
-	| aRootItem theSetOfClasses theRootTrees theSubclassTrees |
-	
-	aRootItem := self new.
-	
+
+	| aRootItem theSetOfClasses classToTree |
+	aRootItem := GtCoderClassesHierarchyTree new.
 	theSetOfClasses := aCollectionOfClasses asSet.
-	
-	theRootTrees := theSetOfClasses
-		reject: [ :eachClass | theSetOfClasses anySatisfy: [ :eachSuperclass | eachClass inheritsFrom: eachSuperclass ] ]
-		thenCollect: [ :eachRootClass | eachRootClass -> (theSetOfClasses select: [ :eachClass | eachClass inheritsFrom: eachRootClass ]) ].
-	
-	theSubclassTrees := theRootTrees collect: [ :eachAssoc | (self fromClasses: eachAssoc value) rootClass: eachAssoc key ] as: Array.
-	aRootItem subclassTrees: theSubclassTrees.
+	classToTree := Dictionary new.
+	theSetOfClasses do: [ :each | 
+		classToTree
+			at: each
+			put: (GtCoderClassesHierarchyTree new rootClass: each) ].
+	theSetOfClasses do: [ :each | 
+		classToTree
+			at: each superclass
+			ifPresent: [ :superTree | 
+			superTree subclassTrees add: (classToTree at: each) ]
+			ifAbsent: [ aRootItem subclassTrees add: (classToTree at: each) ] ].
 	^ aRootItem
 ]
 
@@ -90,7 +93,7 @@ GtCoderClassesHierarchyTree >> hasRootClass [
 { #category : #initialization }
 GtCoderClassesHierarchyTree >> initialize [
 	super initialize.
-	subclassTrees := Array empty.
+	subclassTrees := OrderedCollection new
 ]
 
 { #category : #printing }
