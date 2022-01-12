@@ -42,16 +42,16 @@ GtCoderCodeExecutor class >> playAllAndInspect [
 
 { #category : #'private - accessing' }
 GtCoderCodeExecutor >> coder [
-	^ self coderUIModel coder
+	^ self coderViewModel coder
 ]
 
 { #category : #'api - accessing' }
-GtCoderCodeExecutor >> coderUIModel [
+GtCoderCodeExecutor >> coderViewModel [
 	^ coderUIModel
 ]
 
 { #category : #'api - accessing' }
-GtCoderCodeExecutor >> coderUIModel: anObject [
+GtCoderCodeExecutor >> coderViewModel: anObject [
 	coderUIModel := anObject
 ]
 
@@ -100,7 +100,7 @@ GtCoderCodeExecutor >> event: anObject [
 GtCoderCodeExecutor >> execute [
 	GtCoderExecutionContextVariable
 		element: self element
-		do: [ self coderUIModel perform: action ]
+		do: [ self coderViewModel perform: action ]
 ]
 
 { #category : #initialization }

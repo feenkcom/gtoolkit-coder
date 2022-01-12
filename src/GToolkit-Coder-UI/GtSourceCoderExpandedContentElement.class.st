@@ -37,6 +37,6 @@ GtSourceCoderExpandedContentElement >> newEditorElement [
 GtSourceCoderExpandedContentElement >> onTextualCoderViewModelChanged [
 	super onTextualCoderViewModelChanged.
 	
-	actions coderUIModel: textualCoderViewModel.
+	actions coderViewModel: textualCoderViewModel.
 	editorElement textualCoderViewModel: textualCoderViewModel
 ]

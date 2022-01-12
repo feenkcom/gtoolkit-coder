@@ -44,14 +44,14 @@ GtExpandableSourceCoderElement >> assignExpandedCoder: aTextualCoderViewModel to
 ]
 
 { #category : #accessing }
-GtExpandableSourceCoderElement >> coderUIModel [
+GtExpandableSourceCoderElement >> coderViewModel [
 	<return: #GtPharoMethodCoder>	
 	^ self textualCoderViewModel
 ]
 
 { #category : #accessing }
-GtExpandableSourceCoderElement >> coderUIModel: aCoderUIModel [
-	self textualCoderViewModel: aCoderUIModel
+GtExpandableSourceCoderElement >> coderViewModel: aCoderViewModel [
+	self textualCoderViewModel: aCoderViewModel
 ]
 
 { #category : #accessing }

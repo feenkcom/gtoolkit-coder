@@ -26,33 +26,33 @@ GtExpandedOnlyCoderElement >> coder: aCoderUIModel [
 		deprecated: 'Use #coderUIModel: instead.'
 		transformWith: '`@receiver coder: `@arg' -> '`@receiver coderUIModel: `@arg'.
 
-	^ self coderUIModel: aCoderUIModel
+	^ self coderViewModel: aCoderUIModel
 ]
 
 { #category : #accessing }
-GtExpandedOnlyCoderElement >> coderUIModel [
+GtExpandedOnlyCoderElement >> coderViewModel [
 	^ coderUIModel
 ]
 
 { #category : #accessing }
-GtExpandedOnlyCoderElement >> coderUIModel: aCoderUIModel [
+GtExpandedOnlyCoderElement >> coderViewModel: aCoderViewModel [
 
 	self
-		assert: [ aCoderUIModel isNotNil ]
+		assert: [ aCoderViewModel isNotNil ]
 		description: [ 'Coder must not be nil' ].
-	coderUIModel == aCoderUIModel ifTrue: [ ^ self ].
+	coderUIModel == aCoderViewModel ifTrue: [ ^ self ].
 
 	coderUIModel ifNotNil: 
 		[ coderUIModel coder announcer unsubscribe: self.
-		coderUIModel := aCoderUIModel.
-		expandedElement coderUIModel: aCoderUIModel.
+		coderUIModel := aCoderViewModel.
+		expandedElement coderViewModel: aCoderViewModel.
 		^ self ].
 
-	coderUIModel := aCoderUIModel.
-	expandedElement := self newExpandedElement: aCoderUIModel.
+	coderUIModel := aCoderViewModel.
+	expandedElement := self newExpandedElement: aCoderViewModel.
 	self addChild: expandedElement.
 	self addAptitude: (BrLayoutResizerAptitude new inherit: expandedElement).
-	aCoderUIModel expanded: true
+	aCoderViewModel expanded: true
 ]
 
 { #category : #initialization }
