@@ -1,11 +1,11 @@
 Extension { #name : #GtCodersModel }
 
 { #category : #'*GToolkit-Coder-UI' }
-GtCodersModel >> asCoderUIModel [
+GtCodersModel >> asCoderViewModel [
 	^ self subclassResponsibility
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
 GtCodersModel >> asElement [
-	^ self asCoderUIModel asElement
+	^ self asCoderViewModel asElement
 ]

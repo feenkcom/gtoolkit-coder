@@ -16,5 +16,5 @@ Behavior >> gtBrowseFrom: anElement [
 Behavior >> methodsCoderFromContext: aPhlowContext [
 	<return: #GtPharoMethodsCoderViewModel>
 
-	^ (GtClassMethodsCoder forClass: self) asCoderUIModel
+	^ (GtClassMethodsCoder forClass: self) asCoderViewModel
 ]

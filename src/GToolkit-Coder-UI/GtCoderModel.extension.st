@@ -1,13 +1,13 @@
 Extension { #name : #GtCoderModel }
 
 { #category : #'*GToolkit-Coder-UI' }
-GtCoderModel >> asCoderUIModel [
+GtCoderModel >> asCoderViewModel [
 	^ self subclassResponsibility
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
 GtCoderModel >> asElement [
-	^ self asCoderUIModel asElement
+	^ self asCoderViewModel asElement
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
@@ -15,7 +15,7 @@ GtCoderModel >> asExpandedOnlyElement [
 	"Create an element for just the expanded coder without expander"
 
 	^ GtExpandedOnlyCoderElement new
-		coderUIModel: self asCoderUIModel;
+		coderUIModel: self asCoderViewModel;
 		yourself
 ]
 
