@@ -34,7 +34,7 @@ GtSingleCoderViewModel >> asCoderViewModel [
 { #category : #converting }
 GtSingleCoderViewModel >> asElement [
 	^ self elementClass new
-		coderUIModel: self;
+		coderViewModel: self;
 		yourself
 ]
 

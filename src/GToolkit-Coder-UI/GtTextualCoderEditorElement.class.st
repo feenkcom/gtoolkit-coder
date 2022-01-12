@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #'api - textual coder view model' }
-GtTextualCoderEditorElement >> coderUIModel: aTextualCoderViewModel [
+GtTextualCoderEditorElement >> coderViewModel: aTextualCoderViewModel [
 	self textualCoderViewModel: aTextualCoderViewModel
 ]
 

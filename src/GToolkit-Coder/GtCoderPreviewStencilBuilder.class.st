@@ -15,20 +15,20 @@ GtCoderPreviewStencilBuilder >> buildDefault [
 ]
 
 { #category : #accessing }
-GtCoderPreviewStencilBuilder >> coderUIModel [
+GtCoderPreviewStencilBuilder >> coderViewModel [
 	^ coderUIModel
 ]
 
 { #category : #accessing }
-GtCoderPreviewStencilBuilder >> coderUIModel: aCoderUIModel [
-	coderUIModel := aCoderUIModel
+GtCoderPreviewStencilBuilder >> coderViewModel: aCoderViewModel [
+	coderUIModel := aCoderViewModel
 ]
 
 { #category : #'api - instantiation' }
 GtCoderPreviewStencilBuilder >> paramsOn: aStencilExecutor [
 	super paramsOn: aStencilExecutor.
 	aStencilExecutor
-		push: self coderUIModel
+		push: self coderViewModel
 ]
 
 { #category : #initialization }

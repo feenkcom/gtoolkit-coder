@@ -15,7 +15,7 @@ GtSourceCoderContentElement >> coder [
 		deprecated: 'Use #coderUIModel instead.'
 		transformWith: '`@receiver coder' -> '`@receiver coderUIModel'.
 		
-	^ self coderUIModel
+	^ self coderViewModel
 ]
 
 { #category : #accessing }
@@ -25,22 +25,22 @@ GtSourceCoderContentElement >> coder: aCoder [
 		deprecated: 'Use #coderUIModel: instead.'
 		transformWith: '`@receiver coder: `@arg' -> '`@receiver coderUIModel: `@arg'.
 		
-	self coderUIModel: aCoder
+	self coderViewModel: aCoder
 ]
 
 { #category : #accessing }
-GtSourceCoderContentElement >> coderUIModel [
+GtSourceCoderContentElement >> coderViewModel [
 	<return: #GtSourceCoderViewModel>
 
 	^ self viewModel sourceCoder
 ]
 
 { #category : #accessing }
-GtSourceCoderContentElement >> coderUIModel: aGtSourceCoderUIModel [
+GtSourceCoderContentElement >> coderViewModel: aGtSourceCoderViewModel [
 
 	BlFrameTelemetry
 		time: [ 'Assign coder to {1}' format: { self class name } ]
-		during: [ self textualCoderViewModel: aGtSourceCoderUIModel ]
+		during: [ self textualCoderViewModel: aGtSourceCoderViewModel ]
 ]
 
 { #category : #initialization }

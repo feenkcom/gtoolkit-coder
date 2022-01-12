@@ -38,7 +38,7 @@ GtSourceCoderCollapsedContentElement >> newAddOnsContainer [
 					aContainer removeChildren.
 					theAddOns previews do: [ :eachAddOn |
 						(eachAddOn stencilBuilder 
-							coderUIModel: textualCoderViewModel;
+							coderViewModel: textualCoderViewModel;
 							build) ifNotNil: [ :eachAddOnStencil |
 								aContainer addChild: eachAddOnStencil asElement ] ] ];
 				whenError: [ :aContainer :anError |

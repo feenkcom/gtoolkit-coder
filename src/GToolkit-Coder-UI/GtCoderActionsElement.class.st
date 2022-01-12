@@ -9,7 +9,7 @@ Class {
 		'separator',
 		'editor'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #private }
@@ -33,13 +33,13 @@ GtCoderActionsElement >> addMainToolbarActions [
 ]
 
 { #category : #accessing }
-GtCoderActionsElement >> coderUIModel [
+GtCoderActionsElement >> coderViewModel [
 	^ self textualCoderViewModel
 ]
 
 { #category : #accessing }
-GtCoderActionsElement >> coderUIModel: aCoderUIModel [
-	self textualCoderViewModel: aCoderUIModel
+GtCoderActionsElement >> coderViewModel: aCoderViewModel [
+	self textualCoderViewModel: aCoderViewModel
 ]
 
 { #category : #'private - event handling' }
