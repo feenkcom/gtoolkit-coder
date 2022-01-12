@@ -276,7 +276,6 @@ GtTextualCoder >> resetAstCache [
 
 { #category : #'event handling' }
 GtTextualCoder >> sourceChangedTo: aNewText [
- | x |
 	self
 		sourceChangedTo: aNewText 
 		with: GtCoderUpdateStrategy new makeAsynchronous
