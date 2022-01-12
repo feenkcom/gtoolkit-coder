@@ -5,7 +5,7 @@ Class {
 		'coder',
 		'coderUIModels'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Basic'
+	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #accessing }
@@ -18,7 +18,7 @@ GtMultipleCodersViewModel >> announcer [
 ]
 
 { #category : #converting }
-GtMultipleCodersViewModel >> asCoderUIModel [
+GtMultipleCodersViewModel >> asCoderViewModel [
 	^ self
 ]
 
@@ -44,7 +44,7 @@ GtMultipleCodersViewModel >> coder: aGtCodersModel [
 
 { #category : #updating }
 GtMultipleCodersViewModel >> coderUIModelFor: aCoder [
-	^ aCoder asCoderUIModel
+	^ aCoder asCoderViewModel
 ]
 
 { #category : #accessing }

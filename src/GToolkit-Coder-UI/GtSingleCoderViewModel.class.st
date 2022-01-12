@@ -27,7 +27,7 @@ GtSingleCoderViewModel >> announcerUIModel [
 ]
 
 { #category : #converting }
-GtSingleCoderViewModel >> asCoderUIModel [
+GtSingleCoderViewModel >> asCoderViewModel [
 	^ self
 ]
 

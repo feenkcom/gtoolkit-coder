@@ -75,7 +75,7 @@ GtCoder2 >> initialize [
 		when: GtCoderToReplace
 		do: [ :anEvent |
 			anEvent consumed: true.
-			self coderToolViewModel pushCoderViewModel: anEvent coder asCoderUIModel ].
+			self coderToolViewModel pushCoderViewModel: anEvent coder asCoderViewModel ].
 		
 	
 ]
