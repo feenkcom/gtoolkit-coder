@@ -60,9 +60,9 @@ GtTextualCoderEditorElement >> initialize [
 		vFitContent.
 
 	self editor
-		beEditableCode;
-		disableStyleTextWhenModified.
-		
+		beEditableCode";
+		disableStyleTextWhenModified".
+
 	self id: GtSourceCoderEditorId.
 
 	shortcuts := #().
@@ -303,7 +303,7 @@ GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnounc
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelReadyToStyle [
-	self enqueueTask: (BlTaskAction new action: [ self editor styleText ])
+	self styleText
 ]
 
 { #category : #'private - event handling' }
