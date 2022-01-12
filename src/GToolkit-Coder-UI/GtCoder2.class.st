@@ -9,7 +9,7 @@ Class {
 		'navigationBreacrumb',
 		'navigationSidebar'
 	],
-	#category : 'GToolkit-Coder-UI-! Core'
+	#category : #'GToolkit-Coder-UI-! Core'
 }
 
 { #category : #initialization }
@@ -75,7 +75,7 @@ GtCoder2 >> initialize [
 		when: GtCoderToReplace
 		do: [ :anEvent |
 			anEvent consumed: true.
-			self coderToolViewModel pushCoderViewModel: anEvent coder asCoderViewModel ].
+			self coderToolViewModel pushCoderViewModel: anEvent coder asCoderUIModel ].
 		
 	
 ]

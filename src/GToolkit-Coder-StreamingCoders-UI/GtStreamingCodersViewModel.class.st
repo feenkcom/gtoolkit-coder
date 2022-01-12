@@ -60,7 +60,7 @@ GtStreamingCodersViewModel >> initialize [
 
 { #category : #'instance creation' }
 GtStreamingCodersViewModel >> newCoderViewModelFor: aCoderModel [
-	^ aCoderModel asCoderViewModel
+	^ aCoderModel asCoderUIModel
 ]
 
 { #category : #'private - notifying' }
