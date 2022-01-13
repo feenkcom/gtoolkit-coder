@@ -177,6 +177,15 @@ GtCoderAddOns >> addPreview: aCoderPreview [
 ]
 
 { #category : #'api - previews' }
+GtCoderAddOns >> addPreview: aString stencil: aStencil [
+	self addPreview: (GtCoderPreview new
+		id: aString;
+		title: aString;
+		stencil: [ BrFrame new fitContent ];
+		dataBinder: [ :anElement :aViewModel | anElement removeChildren; addChild: aStencil asElement ])
+]
+
+{ #category : #'api - previews' }
 GtCoderAddOns >> addPreview: aString stencil: aStencil dataBinder: aCoderPreviewDataBinder [
 	self addPreview: (GtCoderPreview new
 		id: aString;
