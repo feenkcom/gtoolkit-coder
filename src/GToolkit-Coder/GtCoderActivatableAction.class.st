@@ -5,7 +5,7 @@ Class {
 		'enabledBlock',
 		'updateAnnouncement'
 	],
-	#category : 'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders - Addons'
 }
 
 { #category : #accessing }

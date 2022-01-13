@@ -172,17 +172,17 @@ GtCoderAddOns >> addOrUpdateShortcut: aBlShortcut to: aCollection [
 
 { #category : #'api - previews' }
 GtCoderAddOns >> addPreview: aCoderPreview [
-
 	self previews add: aCoderPreview
 		
 ]
 
 { #category : #'api - previews' }
-GtCoderAddOns >> addPreview: aString stencil: aStencilBuilder [
-
+GtCoderAddOns >> addPreview: aString stencil: aStencil dataBinder: aCoderPreviewDataBinder [
 	self addPreview: (GtCoderPreview new
+		id: aString;
 		title: aString;
-		stencil: aStencilBuilder).
+		stencil: aStencil;
+		dataBinder: aCoderPreviewDataBinder)
 ]
 
 { #category : #'api - previews' }
@@ -222,7 +222,7 @@ GtCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
 	self
 		assert: [ self class = aGtCoderAddOns class ]
 		description: [ 'Coder AddOns type must be identical to compute the difference' ].
-		
+
 	self mainActions = aGtCoderAddOns mainActions
 		ifFalse: [ aStream nextPut: GtCoderAddOnsMainActionsDifference new ].
 		

@@ -5,7 +5,7 @@ Class {
 		'hoverAction',
 		'leaveAction'
 	],
-	#category : 'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders - Addons'
 }
 
 { #category : #accessing }
