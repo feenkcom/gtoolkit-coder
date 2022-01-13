@@ -5,7 +5,7 @@ Class {
 		'changeAction',
 		'changeStencil'
 	],
-	#category : 'GToolkit-Coder-GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders - Addons'
 }
 
 { #category : #accessing }

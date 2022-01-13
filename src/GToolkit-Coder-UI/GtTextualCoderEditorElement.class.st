@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #'api - textual coder view model' }
-GtTextualCoderEditorElement >> coderUIModel: aTextualCoderViewModel [
+GtTextualCoderEditorElement >> coderViewModel: aTextualCoderViewModel [
 	self textualCoderViewModel: aTextualCoderViewModel
 ]
 
@@ -60,9 +60,9 @@ GtTextualCoderEditorElement >> initialize [
 		vFitContent.
 
 	self editor
-		beEditableCode;
-		disableStyleTextWhenModified.
-		
+		beEditableCode";
+		disableStyleTextWhenModified".
+
 	self id: GtSourceCoderEditorId.
 
 	shortcuts := #().
@@ -71,7 +71,13 @@ GtTextualCoderEditorElement >> initialize [
 	evaluationHighlighter := GtSourceCoderEvaluationHighlighter new editorElement: self.
 	evaluationPrinter := GtSourceCoderEvaluationPrinter new editorElement: self.
 
-	self initializeListeners
+	self initializeListeners.
+	
+	self withAsyncPromiseDo: [ :anElementPromise |
+			anElementPromise
+				whenSuccess: [ :anEditorElement :anEditorState | anEditorElement editor restoreState: anEditorState ];
+				whenError: [ :anEditorElement :anEditorState |  ];
+				whenPending: [ :anEditorElement | ] ]
 ]
 
 { #category : #initialization }
@@ -247,17 +253,14 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
 
 	self onCoderViewModelFocused: self textualCoderViewModel focused.
-	
+
 	"Setting text may change cursor and selection because text editor makes sure
 	that they have valid values. That is why we create a snaphot of the editor's state
 	which we will restore once new text is set"
-	self textualCoderViewModel asEditorState then: [ :anEditorState :isSynchronous |
-		isSynchronous
-			ifTrue: [ self editor restoreState: anEditorState ]
-			ifFalse: [ self enqueueTask: (BlTaskAction new action: [ self editor restoreState: anEditorState ]) ] ].
+	self asyncPromise promise: self textualCoderViewModel asEditorState.
 
 	self editor model: self textualCoderViewModel.
-	
+
 	shortcuts := self textualCoderViewModel shortcuts copy.
 	self editor addEditorShortcuts: shortcuts.
 	
@@ -300,7 +303,7 @@ GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnounc
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelReadyToStyle [
-	self enqueueTask: (BlTaskAction new action: [ self editor styleText ])
+	self styleText
 ]
 
 { #category : #'private - event handling' }

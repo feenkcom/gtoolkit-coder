@@ -27,14 +27,14 @@ GtSingleCoderViewModel >> announcerUIModel [
 ]
 
 { #category : #converting }
-GtSingleCoderViewModel >> asCoderUIModel [
+GtSingleCoderViewModel >> asCoderViewModel [
 	^ self
 ]
 
 { #category : #converting }
 GtSingleCoderViewModel >> asElement [
 	^ self elementClass new
-		coderUIModel: self;
+		coderViewModel: self;
 		yourself
 ]
 

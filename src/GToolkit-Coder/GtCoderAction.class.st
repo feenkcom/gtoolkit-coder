@@ -7,7 +7,7 @@ Class {
 		'action',
 		'id'
 	],
-	#category : 'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders - Addons'
 }
 
 { #category : #comparing }

@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'label',
 		'addOns',
-		'content'
+		'content',
+		'previews'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
@@ -22,8 +23,10 @@ GtSourceCoderCollapsedContentElement >> initialize [
 	label := self newLabel.
 	addOns := self newAddOnsContainer.
 
+	previews := Dictionary new.
+
 	content addChildren: { label. addOns }.
-	self addChild: content
+	self addChild: content.
 ]
 
 { #category : #'instance creation' }
@@ -37,10 +40,18 @@ GtSourceCoderCollapsedContentElement >> newAddOnsContainer [
 				whenSuccess: [ :aContainer :theAddOns |
 					aContainer removeChildren.
 					theAddOns previews do: [ :eachAddOn |
-						(eachAddOn stencilBuilder 
-							coderUIModel: textualCoderViewModel;
-							build) ifNotNil: [ :eachAddOnStencil |
-								aContainer addChild: eachAddOnStencil asElement ] ] ];
+						| eachAddOnElement |
+
+						eachAddOnElement := previews
+							at: eachAddOn id
+							ifAbsentPut: [ eachAddOn stencil asElement ].
+						
+						eachAddOn dataBinder
+							element: eachAddOnElement;
+							coderViewModel: textualCoderViewModel;
+							build.
+
+						aContainer addChild: eachAddOnElement ] ];
 				whenError: [ :aContainer :anError |
 					aContainer removeChildren.
 					aContainer addChild: (BrLabel new aptitude: BrGlamorousLabelAptitude; text: anError printString) ];

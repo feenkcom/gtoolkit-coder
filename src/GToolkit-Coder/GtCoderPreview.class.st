@@ -2,23 +2,69 @@ Class {
 	#name : #GtCoderPreview,
 	#superclass : #Object,
 	#instVars : [
+		'id',
 		'title',
-		'stencilBuilder'
+		'stencil',
+		'dataBinder'
 	],
-	#category : #'GToolkit-Coder'
+	#category : #'GToolkit-Coder-Coders - Addons'
 }
 
-{ #category : #accessing }
-GtCoderPreview >> stencil: aStencilBuilder [
+{ #category : #comparing }
+GtCoderPreview >> = anObject [
 
-	stencilBuilder := aStencilBuilder asStencilBuilder:
-		                  GtCoderPreviewStencilBuilder
+	"Answer whether the receiver and anObject represent the same object."
+
+	self == anObject ifTrue: [ ^ true ].
+	self class = anObject class ifFalse: [ ^ false ].
+	^ id = anObject id
+]
+
+{ #category : #accessing }
+GtCoderPreview >> dataBinder [
+
+	^ dataBinder
+]
+
+{ #category : #accessing }
+GtCoderPreview >> dataBinder: aStencil [
+	dataBinder := aStencil asStencilBuilder: GtCoderPreviewDataBinder
+]
+
+{ #category : #comparing }
+GtCoderPreview >> hash [
+
+	"Answer an integer value that is related to the identity of the receiver."
+
+	^ id hash
+]
+
+{ #category : #accessing }
+GtCoderPreview >> id [
+
+	^ id
+]
+
+{ #category : #accessing }
+GtCoderPreview >> id: anObject [
+	"Assign an action id which is used to uniquely identify an action"
+
+	id := anObject
+]
+
+{ #category : #accessing }
+GtCoderPreview >> stencil [
+	^ stencil
+]
+
+{ #category : #accessing }
+GtCoderPreview >> stencil: aStencil [
+	stencil := aStencil asStencil
 ]
 
 { #category : #accessing }
 GtCoderPreview >> stencilBuilder [
-
-	^ stencilBuilder
+	^ self stencil
 ]
 
 { #category : #accessing }
