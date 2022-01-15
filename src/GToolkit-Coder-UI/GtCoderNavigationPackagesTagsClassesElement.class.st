@@ -414,15 +414,15 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToContent [
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	super subscribeToNavigationModel.
-	navigationModel when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
-	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
-	navigationModel when: GtCoderNavigationPackageTagSelected send: #onPackageTagSelected: to: self.
-	navigationModel when: GtCoderNavigationPackageRegistered send: #onPackageRegistered: to: self.
-	navigationModel when: GtCoderNavigationPackageUnregistered send: #onPackageUnregistered: to: self.
-	navigationModel when: GtCoderNavigationPackageRenamed send: #onPackageRenamed: to: self.
-	navigationModel when: GtCoderNavigationPackageTagAdded send: #onPackageTagAdded: to: self.
-	navigationModel when: GtCoderNavigationPackageTagRemoved send: #onPackageTagRemoved: to: self.
-	navigationModel when: GtCodersFiltersChanged send: #onMethodsCoderFiltersChanged: to: self.
+	navigationModel weak when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
+	navigationModel weak when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
+	navigationModel weak when: GtCoderNavigationPackageTagSelected send: #onPackageTagSelected: to: self.
+	navigationModel weak when: GtCoderNavigationPackageRegistered send: #onPackageRegistered: to: self.
+	navigationModel weak when: GtCoderNavigationPackageUnregistered send: #onPackageUnregistered: to: self.
+	navigationModel weak when: GtCoderNavigationPackageRenamed send: #onPackageRenamed: to: self.
+	navigationModel weak when: GtCoderNavigationPackageTagAdded send: #onPackageTagAdded: to: self.
+	navigationModel weak when: GtCoderNavigationPackageTagRemoved send: #onPackageTagRemoved: to: self.
+	navigationModel weak when: GtCodersFiltersChanged send: #onMethodsCoderFiltersChanged: to: self.
 ]
 
 { #category : #subscriptions }

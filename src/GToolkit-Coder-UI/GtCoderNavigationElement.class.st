@@ -7,7 +7,7 @@ Class {
 		'supressListChanges',
 		'classesList'
 	],
-	#category : 'GToolkit-Coder-UI-Navigation'
+	#category : #'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #asserting }
@@ -197,9 +197,9 @@ GtCoderNavigationElement >> subscribeToContent [
 { #category : #subscriptions }
 GtCoderNavigationElement >> subscribeToNavigationModel [
 	self hasNavigationModel ifFalse: [ ^ self ].
-	navigationModel when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
-	navigationModel when: GtCoderNavigationClassRenamed send: #onClassRenamed: to: self.
-	navigationModel when: GtCoderNavigationClassModified send: #onClassModified: to: self.
+	navigationModel weak when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
+	navigationModel weak when: GtCoderNavigationClassRenamed send: #onClassRenamed: to: self.
+	navigationModel weak when: GtCoderNavigationClassModified send: #onClassModified: to: self.
 ]
 
 { #category : #subscriptions }
