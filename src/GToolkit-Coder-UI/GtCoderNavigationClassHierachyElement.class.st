@@ -87,9 +87,9 @@ GtCoderNavigationClassHierachyElement >> subscribeToContent [
 GtCoderNavigationClassHierachyElement >> subscribeToNavigationModel [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	super subscribeToNavigationModel.
-	navigationModel when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
-	navigationModel when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
-	navigationModel when: GtCoderNavigationPackageTagSelected send: #onPackageTagSelected: to: self.
+	navigationModel weak when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
+	navigationModel weak when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
+	navigationModel weak when: GtCoderNavigationPackageTagSelected send: #onPackageTagSelected: to: self.
 ]
 
 { #category : #'updating lists' }
