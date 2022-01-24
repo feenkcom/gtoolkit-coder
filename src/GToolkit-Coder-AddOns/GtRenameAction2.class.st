@@ -137,7 +137,7 @@ GtRenameAction2 >> initialize [
 	super initialize.
 	originalLocations := #().
 	isInstalled := false.
-	selectAll := false.
+	selectAll := true.
 	filter := BrTextEditorNoInputFilter new.
 
 	coderAttributes := #().
