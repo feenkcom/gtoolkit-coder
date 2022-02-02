@@ -14,17 +14,14 @@ TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id
 	aScripterOrStep mouseMoveOver
 		label: 'Hover ', aBlElementId asSymbol;
 		onSpaceRoot;
-		id: aBlElementId.
-
-	aScripterOrStep wait forEmptySpaceTaskQueue.
+		id: aBlElementId;
+		play.
 	
 	aScripterOrStep click
 		label: 'Click ', aBlElementId asSymbol;
 		onSpaceRoot;
-		id: aBlElementId.
-
-	aScripterOrStep wait forEmptySpaceTaskQueue.
-	aScripterOrStep syncContinue
+		id: aBlElementId;
+		play.
 ]
 
 { #category : #'examples - scripter' }
