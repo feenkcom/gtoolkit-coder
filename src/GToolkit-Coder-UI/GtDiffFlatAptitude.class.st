@@ -1,7 +1,7 @@
 Class {
 	#name : #GtDiffFlatAptitude,
 	#superclass : #GtDiffAptitude,
-	#category : 'GToolkit-Coder-UI-Diff'
+	#category : #'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #initialization }
@@ -23,17 +23,21 @@ GtDiffFlatAptitude >> newTextLook [
 		normal: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 10);
-				do: [ :aWidget | aWidget aptitude glamorousCodeSize ] ];
+				do: [ :aWidget | aWidget aptitude glamorousCodeSize ]
+				after: [  ] ];
 		small: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 6);
-				do: [ :aWidget | aWidget aptitude glamorousCodeSmallSize ] ];
+				do: [ :aWidget | aWidget aptitude glamorousCodeSmallSize ]
+				after: [  ] ];
 		tiny: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 4);
-				do: [ :aWidget | aWidget aptitude glamorousCodeTinySize ] ];
+				do: [ :aWidget | aWidget aptitude glamorousCodeTinySize ]
+				after: [  ] ];
 		mini: [ :aStyle |
 			aStyle
 				padding: (BlInsets all: 2);
-				do: [ :aWidget | aWidget aptitude glamorousCodeMiniSize ] ]
+				do: [ :aWidget | aWidget aptitude glamorousCodeMiniSize ]
+				after: [  ] ]
 ]
