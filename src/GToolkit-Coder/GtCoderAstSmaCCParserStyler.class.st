@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'smaccStyler'
 	],
-	#category : 'GToolkit-Coder-Styler/Highlighter'
+	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #accessing }
@@ -19,5 +19,5 @@ GtCoderAstSmaCCParserStyler >> smaccStyler: anObject [
 
 { #category : #'api - styling' }
 GtCoderAstSmaCCParserStyler >> style: aText ast: theAst [
-	self smaccStyler style: aText using: theAst
+	self smaccStyler style: aText ast: theAst
 ]
