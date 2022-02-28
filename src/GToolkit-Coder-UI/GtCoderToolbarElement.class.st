@@ -169,11 +169,22 @@ GtCoderToolbarElement >> newBrowseButton [
 
 { #category : #initialization }
 GtCoderToolbarElement >> newGitButton [
+
 	^ BrButton new
-		aptitude: BrGlamorousButtonWithIconAptitude;
-		label: 'Go to repository';
-		icon: BrGlamorousVectorIcons branching;
-		action: [ :_ | self phlow spawnTool: (GtGitElement new repository: self repository) ]
+		  aptitude: BrGlamorousButtonWithIconAptitude;
+		  label: 'Go to repository';
+		  icon: BrGlamorousVectorIcons branching;
+		  action: [ :_ | 
+		  	| repository |
+			  repository := self repository.
+			  repository
+				  ifNil: [ 
+					  self phlow spawnTool:
+							  (GtGitAddToRepositoryElement new package:
+									   self navigationModel selectedPackage) ]
+				  ifNotNil: [ 
+					  self phlow spawnTool:
+							  (GtGitElement new repository: self repository) ] ]
 ]
 
 { #category : #'private - instance creation' }
@@ -221,7 +232,9 @@ GtCoderToolbarElement >> repository [
 
 	self navigationModel hasSelectedClass ifTrue: [ 
 		^ self navigationModel selectedClass repository ].
-	^ self navigationModel selectedPackage repository
+	self navigationModel hasSelectedPackage ifTrue: [ 
+		^ self navigationModel selectedPackage repository ].
+	^ nil
 ]
 
 { #category : #accessing }
