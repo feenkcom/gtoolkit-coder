@@ -12,7 +12,7 @@ Class {
 	#instVars : [
 		'toolbarElement'
 	],
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #'gt-extensions' }
@@ -99,19 +99,19 @@ GtCoderToolbarElement >> initialize [
 
 { #category : #initialization }
 GtCoderToolbarElement >> initializeToolbarElement [
+
 	toolbarElement := BrToolbar new
-		aptitude: BrGlamorousToolbarAptitude new;
-		padding:
-			(BlInsets
-				top: 10
-				left: 0
-				bottom: 0
-				right: 5);
-		addItem: self newBrowseButton;
-		addItem: self newSpotterButton;
-		addItem: self newHierarchyButton;
-		addItem: self newAddButton;
-		yourself
+		                  aptitude: BrGlamorousToolbarAptitude new;
+		                  padding: (BlInsets
+				                   top: 10
+				                   left: 0
+				                   bottom: 0
+				                   right: 5);
+		                  addItem: self newBrowseButton;
+		                  addItem: self newSpotterButton;
+		                  addItem: self newHierarchyButton;
+		                  addItem: self newGitButton;
+		                  addItem: self newAddButton
 ]
 
 { #category : #'private - instance creation' }
@@ -167,6 +167,15 @@ GtCoderToolbarElement >> newBrowseButton [
 		action: [ :aButton | self browseFrom: aButton ]
 ]
 
+{ #category : #initialization }
+GtCoderToolbarElement >> newGitButton [
+	^ BrButton new
+		aptitude: BrGlamorousButtonWithIconAptitude;
+		label: 'Go to repository';
+		icon: BrGlamorousVectorIcons branching;
+		action: [ :_ | self phlow spawnTool: (GtGitElement new repository: self repository) ]
+]
+
 { #category : #'private - instance creation' }
 GtCoderToolbarElement >> newHierarchyButton [
 	^ BrButton new
@@ -205,6 +214,14 @@ GtCoderToolbarElement >> newSpotterButton [
 				self navigationModel selectMethod: anItem. acted := true ].
 			acted ifTrue: [ anActOnEvent beActed ] ];
 		asElement.
+]
+
+{ #category : #initialization }
+GtCoderToolbarElement >> repository [
+
+	self navigationModel hasSelectedClass ifTrue: [ 
+		^ self navigationModel selectedClass repository ].
+	^ self navigationModel selectedPackage repository
 ]
 
 { #category : #accessing }
