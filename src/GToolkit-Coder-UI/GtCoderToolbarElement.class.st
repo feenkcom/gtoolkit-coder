@@ -175,16 +175,16 @@ GtCoderToolbarElement >> newGitButton [
 		  label: 'Go to repository';
 		  icon: BrGlamorousVectorIcons branching;
 		  action: [ :_ | 
-		  	| repository |
+			  | repository |
 			  repository := self repository.
 			  repository
 				  ifNil: [ 
-					  self phlow spawnTool:
-							  (GtGitAddToRepositoryElement new package:
-									   self navigationModel selectedPackage) ]
+					  self phlow spawnTool: (GtPhlowValuableTool new valuable: [ 
+									   GtGitAddToRepositoryElement new package:
+											   self navigationModel selectedPackage ]) ]
 				  ifNotNil: [ 
-					  self phlow spawnTool:
-							  (GtGitElement new repository: self repository) ] ]
+					  self phlow spawnTool: (GtPhlowValuableTool new valuable: [ 
+									   GtGitElement new repository: self repository ]) ] ]
 ]
 
 { #category : #'private - instance creation' }
