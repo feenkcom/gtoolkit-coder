@@ -264,7 +264,7 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	shortcuts := self textualCoderViewModel shortcuts copy.
 	self editor addEditorShortcuts: shortcuts.
 	
-	completion strategy: self textualCoderViewModel coderModel completionStrategy
+	completion strategy: self textualCoderViewModel completionStrategy
 ]
 
 { #category : #'private - event handling' }
