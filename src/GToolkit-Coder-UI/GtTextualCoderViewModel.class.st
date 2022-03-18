@@ -16,7 +16,8 @@ Class {
 		'extraTextAttributes',
 		'styledText',
 		'shouldHaveHeader',
-		'isTextModifiedPromise'
+		'isTextModifiedPromise',
+		'completionStrategy'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -168,6 +169,19 @@ GtTextualCoderViewModel >> collapsedTextPromise [
 	<return: #TAsyncPromise of: #BlText>
 
 	^ coderModel collapsedTextPromise
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> completionStrategy [
+	<return: #GtCompletionStrategy>
+
+	^ completionStrategy
+		ifNil: [ completionStrategy := self newCompletionStrategy ]
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> completionStrategy: aGtCompletionStrategy [
+	completionStrategy := aGtCompletionStrategy
 ]
 
 { #category : #'api - stylers' }
@@ -487,6 +501,11 @@ GtTextualCoderViewModel >> moveCursorAtStart [
 { #category : #'api - cursors' }
 GtTextualCoderViewModel >> moveCursorTo: aCursorIndex [
 	self cursors: (BrTextEditorCursor at: aCursorIndex)
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> newCompletionStrategy [
+	^ GtCompletionStrategy new
 ]
 
 { #category : #'private - notifying' }

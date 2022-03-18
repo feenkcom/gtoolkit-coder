@@ -82,19 +82,6 @@ GtTextualCoder >> collapsedTextPromise [
 			ifNotEmpty: [ aCurrentText iterator nextLine ] ]
 ]
 
-{ #category : #'api - accessing' }
-GtTextualCoder >> completionStrategy [
-	<return: #GtCompletionStrategy>
-
-	^ completionStrategy
-		ifNil: [ completionStrategy := self newCompletionStrategy ]
-]
-
-{ #category : #'api - accessing' }
-GtTextualCoder >> completionStrategy: aGtCompletionStrategy [
-	completionStrategy := aGtCompletionStrategy
-]
-
 { #category : #'api - ast' }
 GtTextualCoder >> computeAst [
 	^ self computeAst: self currentSourceString
@@ -210,11 +197,6 @@ GtTextualCoder >> isModifiedPromise [
 	<return: #TAsyncPromise of: #Boolean>
 
 	^ self sourceCode isModifiedPromise
-]
-
-{ #category : #'instance creation' }
-GtTextualCoder >> newCompletionStrategy [
-	^ self subclassResponsibility
 ]
 
 { #category : #'private - notifying' }

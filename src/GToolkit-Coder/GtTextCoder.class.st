@@ -23,11 +23,6 @@ GtTextCoder >> forString: aString [
 	self sourceCode: (GtCoderExplicitStringSource new source: aString)
 ]
 
-{ #category : #'instance creation' }
-GtTextCoder >> newCompletionStrategy [
-	^ GtCompletionStrategy new
-]
-
 { #category : #accessing }
 GtTextCoder >> parser [
 	^ parser
