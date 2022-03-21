@@ -1,1 +1,1 @@
-{	"repositories" : {		"github://feenkcom/gtoolkit-utility/src" : "v0.8.99",		"github://feenkcom/gtoolkit-pager/src" : "v0.8.565",		"github://feenkcom/gtoolkit-completer/src" : "v0.8.557",		"github://feenkcom/pharo-futures/src" : "v0.6.36"	}}
+{	"repositories" : {		"github://feenkcom/gtoolkit-utility/src" : "v0.8.99",		"github://feenkcom/gtoolkit-pager/src" : "v0.8.566",		"github://feenkcom/gtoolkit-completer/src" : "v0.8.558",		"github://feenkcom/pharo-futures/src" : "v0.6.36"	}}
