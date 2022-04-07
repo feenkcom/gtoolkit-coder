@@ -543,13 +543,11 @@ GtTextualCoderViewModel >> notifyStyledTextChanged [
 GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 	"Is sent when new add-ons are computed"
 
-	self stylers: theAddOns stylers.
 	self shortcuts: theAddOns shortcuts.
 	self mainActions: theAddOns mainActions.
 	self contextActions: theAddOns contextActions.
 	self contextMenuActions: theAddOns contextMenuActions.
-	
-	self announce: GtTextualCoderViewModelReadyToRestyle new
+	self stylers: theAddOns stylers
 ]
 
 { #category : #'api - styled text' }
@@ -746,7 +744,8 @@ GtTextualCoderViewModel >> stylers: theStylers [
 	
 	"when stylers change we should reset the styled text, since there is no guarantee it will be a valid one"
 	self unsetStyledText.
-	self announce: GtTextualCoderViewModelStylersChanged new
+	self announce: GtTextualCoderViewModelStylersChanged new.
+	self announce: GtTextualCoderViewModelReadyToRestyle new
 ]
 
 { #category : #'api - coder model' }
