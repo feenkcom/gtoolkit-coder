@@ -22,6 +22,23 @@ GtSearchFilter >> asAsyncStream [
 ]
 
 { #category : #accessing }
+GtSearchFilter >> contents [
+
+	"Convenience method. By analogy with PositionableStream>>#contents.
+	Sometimes you really want the actual result, and not a future.
+	For example:
+		(#gtExample gtPragmas & #assert: gtSenders) contents
+			asOrderedCollection sort: [ :a :b | a size < b size ]
+	will return the actual result array so you can sort it.
+	The async way to do that would be:
+		((#gtExample gtPragmas & #assert: gtSenders) result toArray 
+			then: [ :anArray | anArray sorted: [ :a :b | a size < b size ] ]) await
+	"
+
+	^ self result toArray wait
+]
+
+{ #category : #accessing }
 GtSearchFilter >> defaultFilterScope [
 	^ AsyncEmptyStream new
 ]
