@@ -15,6 +15,13 @@ Class {
 	#category : #'GToolkit-Coder-UI-Basic'
 }
 
+{ #category : #accessing }
+GtCoderToolbarElement >> addButton [
+
+	<gtCoderAction: 5>
+	toolbarElement addItem: self newAddButton
+]
+
 { #category : #'gt-extensions' }
 GtCoderToolbarElement >> addClassTab: look [
 	<gtCreateComponentTab: 10>
@@ -38,10 +45,10 @@ GtCoderToolbarElement >> addClassTab: look [
 { #category : #initialization }
 GtCoderToolbarElement >> addCustomButtons [
 
-	| methods |
-	methods := (Pragma allNamed: #gtCoderAction in: self class) 
-		           collect: #methodSelector.
-	methods do: [ :aSelector | self perform: aSelector ]
+	| pragmas |
+	pragmas := Pragma allNamed: #gtCoderAction: in: self class.
+	pragmas sort: [ :a :b | (a argumentAt: 1) <= (b argumentAt: 1) ].
+	pragmas do: [ :aPragma | self perform: aPragma methodSelector ]
 ]
 
 { #category : #'gt-extensions' }
@@ -83,6 +90,13 @@ GtCoderToolbarElement >> addTraitTab: look [
 			element ]
 ]
 
+{ #category : #accessing }
+GtCoderToolbarElement >> browseButton [
+
+	<gtCoderAction: 1>
+	toolbarElement addItem: self newBrowseButton
+]
+
 { #category : #'private - actions' }
 GtCoderToolbarElement >> browseFrom: anElement [
 	"Do we want to share the same coder model?"
@@ -90,6 +104,26 @@ GtCoderToolbarElement >> browseFrom: anElement [
 		((GtCoder forCoder: aCoder asNewCoderModelWithSameSubject)
 			openInPagerFrom: anElement)
 				maximized ]
+]
+
+{ #category : #accessing }
+GtCoderToolbarElement >> createActionButton [
+
+	| button caller |
+	button := BrButton new.
+	caller := thisContext stack second method.
+	button viewModel when: BlClickEvent do: [ :anEvent | 
+		(GtPhlowUtility isDefinitionRequested: anEvent) ifTrue: [ 
+			anEvent consumed: true.
+			button phlow spawnObject: caller ] ].
+	^ button
+]
+
+{ #category : #accessing }
+GtCoderToolbarElement >> hierarchyButton [
+
+	<gtCoderAction: 3>
+	toolbarElement addItem: self newHierarchyButton
 ]
 
 { #category : #initialization }
@@ -115,18 +149,14 @@ GtCoderToolbarElement >> initializeToolbarElement [
 				                   top: 10
 				                   left: 0
 				                   bottom: 0
-				                   right: 5);
-		                  addItem: self newBrowseButton;
-		                  addItem: self newSpotterButton;
-		                  addItem: self newHierarchyButton;
-		                  addItem: self newAddButton.
+				                   right: 5).
 	self addCustomButtons
 ]
 
 { #category : #'private - instance creation' }
 GtCoderToolbarElement >> newAddButton [
 	| look |
-	^ BrButton new
+	^ self createActionButton
 		label: 'Add class or package';
 		aptitude:
 			BrGlamorousButtonWithIconAptitude
@@ -169,7 +199,7 @@ GtCoderToolbarElement >> newAddInterface: look [
 
 { #category : #'private - instance creation' }
 GtCoderToolbarElement >> newBrowseButton [
-	^ BrButton new
+	^ self createActionButton
 		aptitude: BrGlamorousButtonWithIconAptitude;
 		label: 'Browse in another world tab';
 		icon: BrGlamorousVectorIcons emphasizedBrowse;
@@ -178,7 +208,7 @@ GtCoderToolbarElement >> newBrowseButton [
 
 { #category : #'private - instance creation' }
 GtCoderToolbarElement >> newHierarchyButton [
-	^ BrButton new
+	^ self createActionButton
 		label: 'Show Package and Class Hierarchies';
 		aptitude: BrGlamorousButtonWithIconAptitude + (BrGlamorousWithDropdownAptitude
 			handle: [
@@ -224,6 +254,13 @@ GtCoderToolbarElement >> repository [
 	self navigationModel hasSelectedPackage ifTrue: [ 
 		^ self navigationModel selectedPackage repository ].
 	^ nil
+]
+
+{ #category : #accessing }
+GtCoderToolbarElement >> spotterButton [
+
+	<gtCoderAction: 2>
+	toolbarElement addItem: self newSpotterButton
 ]
 
 { #category : #accessing }
