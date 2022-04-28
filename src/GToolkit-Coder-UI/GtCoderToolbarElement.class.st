@@ -35,6 +35,15 @@ GtCoderToolbarElement >> addClassTab: look [
 			element ]
 ]
 
+{ #category : #initialization }
+GtCoderToolbarElement >> addCustomButtons [
+
+	| methods |
+	methods := (Pragma allNamed: #gtCoderAction in: self class) 
+		           collect: #methodSelector.
+	methods do: [ :aSelector | self perform: aSelector ]
+]
+
 { #category : #'gt-extensions' }
 GtCoderToolbarElement >> addPackageTab: look [
 	<gtCreateComponentTab: 30>
@@ -110,8 +119,8 @@ GtCoderToolbarElement >> initializeToolbarElement [
 		                  addItem: self newBrowseButton;
 		                  addItem: self newSpotterButton;
 		                  addItem: self newHierarchyButton;
-		                  addItem: self newGitButton;
-		                  addItem: self newAddButton
+		                  addItem: self newAddButton.
+	self addCustomButtons
 ]
 
 { #category : #'private - instance creation' }
@@ -165,26 +174,6 @@ GtCoderToolbarElement >> newBrowseButton [
 		label: 'Browse in another world tab';
 		icon: BrGlamorousVectorIcons emphasizedBrowse;
 		action: [ :aButton | self browseFrom: aButton ]
-]
-
-{ #category : #initialization }
-GtCoderToolbarElement >> newGitButton [
-
-	^ BrButton new
-		  aptitude: BrGlamorousButtonWithIconAptitude;
-		  label: 'Go to repository';
-		  icon: BrGlamorousVectorIcons branching;
-		  action: [ :_ | 
-			  | repository |
-			  repository := self repository.
-			  repository
-				  ifNil: [ 
-					  self phlow spawnTool: (GtPhlowValuableTool new valuable: [ 
-									   GtGitAddToRepositoryElement new package:
-											   self navigationModel selectedPackage ]) ]
-				  ifNotNil: [ 
-					  self phlow spawnTool: (GtPhlowValuableTool new valuable: [ 
-									   GtGitElement new repository: self repository ]) ] ]
 ]
 
 { #category : #'private - instance creation' }
