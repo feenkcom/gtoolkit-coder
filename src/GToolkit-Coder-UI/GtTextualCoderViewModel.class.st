@@ -550,6 +550,11 @@ GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 	self stylers: theAddOns stylers
 ]
 
+{ #category : #'api - coder model' }
+GtTextualCoderViewModel >> onCoderModelChanged [
+	super onCoderModelChanged
+]
+
 { #category : #'api - styled text' }
 GtTextualCoderViewModel >> onNewStyledTextSet: aNewStyledText [
 	"Is sent after a new value of the styledText is assigned"
@@ -576,6 +581,12 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 	self announce: (GtTextualCoderViewModelTextChanged new
 		text: self coderModel currentSourceText;
 		updateStrategy: anSourceCodeChangedAnnouncement updateStrategy)
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderViewModel >> onSourceCodeReplaced: aSourceCodeReplacedAnnouncement [
+	"source code replaced to a new one. It most likely means that the origin of
+	the source text has changed."
 ]
 
 { #category : #'api - text' }
@@ -751,7 +762,12 @@ GtTextualCoderViewModel >> stylers: theStylers [
 { #category : #'api - coder model' }
 GtTextualCoderViewModel >> subscribeToCoderModel [
 	super subscribeToCoderModel.
-		
+	
+	self coderModel weak
+		when: GtCoderSourceCodeReplaced
+		send: #onSourceCodeReplaced:
+		to: self.
+	
 	self coderModel weak
 		when: GtCoderSourceCodeChanged
 		send: #onSourceCodeChanged:
