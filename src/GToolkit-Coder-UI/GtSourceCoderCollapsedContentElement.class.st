@@ -76,7 +76,34 @@ GtSourceCoderCollapsedContentElement >> newLabel [
 GtSourceCoderCollapsedContentElement >> onTextualCoderViewModelChanged [
 	super onTextualCoderViewModelChanged.
 	
-	label asyncPromise promise: textualCoderViewModel collapsedTextPromise.
+	self updateCollapsedTextLabel.
 	addOns removeChildren.
 	addOns asyncPromise promise: textualCoderViewModel addOns
+]
+
+{ #category : #'private - event handling' }
+GtSourceCoderCollapsedContentElement >> onViewModelTextChanged: anAnnouncement [
+	self updateCollapsedTextLabel
+]
+
+{ #category : #'api - textual coder view model' }
+GtSourceCoderCollapsedContentElement >> subscribeToTextualCoderViewModel [
+	super subscribeToTextualCoderViewModel.
+	
+	textualCoderViewModel weak
+		when: GtTextualCoderViewModelTextChanged
+		send: #onViewModelTextChanged:
+		to: self
+]
+
+{ #category : #'api - textual coder view model' }
+GtSourceCoderCollapsedContentElement >> unsubscribeFromTextualCoderViewModel [
+	super unsubscribeFromTextualCoderViewModel.
+	
+	textualCoderViewModel unsubscribe: self
+]
+
+{ #category : #'private - update' }
+GtSourceCoderCollapsedContentElement >> updateCollapsedTextLabel [
+	label asyncPromise promise: textualCoderViewModel collapsedTextPromise
 ]
