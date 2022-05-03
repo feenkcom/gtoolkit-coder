@@ -1,20 +1,15 @@
 Class {
 	#name : #GtCoderNavigationMethodProtocolListElement,
 	#superclass : #BrSimpleList,
-	#category : 'GToolkit-Coder-UI-Navigation'
+	#category : #'GToolkit-Coder-UI-Navigation'
 }
-
-{ #category : #'instance creation' }
-GtCoderNavigationMethodProtocolListElement class >> fromClass: aClass [
-	^ self new initializeWithClass: aClass
-]
 
 { #category : #'private - ui' }
 GtCoderNavigationMethodProtocolListElement >> buildProtocolLabel: aProtocol [
 	^ BrLabel new
 		aptitude: BrGlamorousLabelAptitude; 
 		beSmallSize;
-		text: aProtocol name
+		text: aProtocol
 ]
 
 { #category : #'private - ui' }
@@ -50,16 +45,12 @@ GtCoderNavigationMethodProtocolListElement >> buildProtocolRow: aProtocol index:
 { #category : #initialization }
 GtCoderNavigationMethodProtocolListElement >> initialize [
 	super initialize.
-	
 	self stencil: [ :eachProtocol :eachIndex :aListElement | self buildProtocolRow: eachProtocol index: eachIndex list: aListElement ]
 ]
 
 { #category : #initialization }
-GtCoderNavigationMethodProtocolListElement >> initializeWithClass: aClass [	
-	self initializeWithProtocols: aClass organization allProtocols
-]
-
-{ #category : #initialization }
-GtCoderNavigationMethodProtocolListElement >> initializeWithProtocols: aCollection [	
-	self items: (aCollection sorted: [ :protocolA :protocolB | protocolA name < protocolB name ])
+GtCoderNavigationMethodProtocolListElement >> initializeWithProtocols: aCollection [
+	| names |
+	names := (aCollection collect: #name) asSet sorted.
+	self items: names
 ]

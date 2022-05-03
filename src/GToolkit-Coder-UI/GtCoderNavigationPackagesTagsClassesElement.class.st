@@ -126,7 +126,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onMethodsCoderFiltersChanged: aGt
 	
 	methodProtocolsList selectedItemDo: [ :aSelectedItem | 
 		| aCategoryFilter |
-		aCategoryFilter := GtSearchMethodCategoryFilter forCategory: aSelectedItem name.
+		aCategoryFilter := GtSearchMethodCategoryFilter forCategory: aSelectedItem.
 		
 		aGtCodersFiltersChanged filters do: [ :eachFilter | 
 			eachFilter = aCategoryFilter ifTrue: [ 
@@ -446,18 +446,18 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToProtocolList [
 GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	classesList initializeWithClasses: navigationModel classesToShow.
-
 	navigationModel hasSelectedClass
-		ifTrue: [ 
-			| methodProtocols |
-			methodProtocols := navigationModel selectedClass organization protocols.
+		ifTrue:
+			[ | methodProtocols |
+			methodProtocols := (navigationModel selectedClass organization protocols
+				, navigationModel selectedClass class organization protocols).
 			methodProtocolsList initializeWithProtocols: methodProtocols.
 			protocolLabel visibility: BlVisibility visible.
-			methodProtocolsList visibility: BlVisibility visible. ]
-		ifFalse: [ 
-			methodProtocolsList initializeWithProtocols: Array empty.
+			methodProtocolsList visibility: BlVisibility visible ]
+		ifFalse:
+			[ methodProtocolsList initializeWithProtocols: Array empty.
 			protocolLabel visibility: BlVisibility gone.
-			methodProtocolsList visibility: BlVisibility gone. ]
+			methodProtocolsList visibility: BlVisibility gone ]
 ]
 
 { #category : #'updating lists' }
