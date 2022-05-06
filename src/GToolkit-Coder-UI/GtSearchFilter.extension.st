@@ -14,7 +14,7 @@ GtSearchFilter >> asElement [
 GtSearchFilter >> gtExamples [
 	| examples |
 	examples := OrderedCollection new.
-	self result do: [ :each | examples addAll: each gtExamples ].
+	self contents do: [ :each | examples addAll: each gtExamples ].
 	^ GtExampleGroup withAll: examples
 ]
 
