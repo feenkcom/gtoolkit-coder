@@ -5,7 +5,7 @@ Class {
 		'node',
 		'sourceCoder'
 	],
-	#category : 'GToolkit-Coder-AddOns-FixIt'
+	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
 
 { #category : #'instance creation' }
@@ -25,8 +25,10 @@ GtFixItAction >> attributePosition [
 GtFixItAction >> clearFixItAttributeInEditor: aBrTextEditor [
 	| position |
 	position := self attributePosition.
-	(aBrTextEditor text from: position to: position)
-		clearAttributes: [ :each | each isKindOf: GtFixItAttribute ]
+	aBrTextEditor text
+		clearAttributes: position
+		to: position
+		if: [ :each | each isKindOf: GtFixItAttribute ]
 ]
 
 { #category : #'api - action' }
