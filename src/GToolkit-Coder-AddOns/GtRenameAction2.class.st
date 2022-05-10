@@ -349,7 +349,7 @@ GtRenameAction2 >> updateText: text at: intervals attributes: attributeCollectio
 	self pharoSourceCoderViewModel
 		sourceText: newText
 		from: self
-		synchronously: true
+		synchronously: false
 ]
 
 { #category : #'private-validation' }
