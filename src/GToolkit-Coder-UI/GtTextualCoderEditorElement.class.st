@@ -194,37 +194,28 @@ GtTextualCoderEditorElement >> onPrintRequest: anEvaluationAnnouncement [
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onShowDebuggerRequest: aShowDebuggerAnnouncement [
 	| sharedDebugSession anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText |
-	
 	evaluationHighlighter hideResult.
 	evaluationPrinter hideResult.
-	
-	sharedDebugSession := GtSharedDebugSession new
-		session: aShowDebuggerAnnouncement debugSession.
-	
+	sharedDebugSession := GtSharedDebugSession new session: aShowDebuggerAnnouncement debugSession.
 	self showNotification: (GtNotificationDebugSession new debugSession: sharedDebugSession).
-	
 	anEvaluatedSource := aShowDebuggerAnnouncement sourceString.
 	anEvaluatedInterval := aShowDebuggerAnnouncement sourceInterval.
-	
-	theSourceStartInText := self text finder
+	theSourceStartInText := (self text finder)
 		caseSensitiveSubstring: anEvaluatedSource;
 		startAtPosition: anEvaluatedInterval first;
-		searchClosest.
-	
+		searchClosest.	
+		
 	"what did we evaluate?"
-	theSourceStartInText isZero
-		ifTrue: [ ^ self ].
-
-	theSourceEndInText := (theSourceStartInText + anEvaluatedSource size - 1) min: self text size.
-	
+	theSourceStartInText isZero ifTrue: [ ^ self ].
+	theSourceEndInText := theSourceStartInText + anEvaluatedSource size - 1 min: self text size.
+	self text clearAttributes: [ :each | {GtEmbeddedDebuggerAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
 	self text
-		clearAttributes: [ :each | 
-			{ GtEmbeddedDebuggerAttribute } anySatisfy: [ :cls | each isKindOf: cls ] ].
-
-	(self text from: theSourceStartInText to: theSourceEndInText)
-		attribute: (GtEmbeddedDebuggerAttribute new 
-			signaledException: aShowDebuggerAnnouncement exception;
-			debugSession: sharedDebugSession)
+		attribute:
+			((GtEmbeddedDebuggerAttribute new)
+				signaledException: aShowDebuggerAnnouncement exception;
+				debugSession: sharedDebugSession)
+		from: theSourceStartInText
+		to: theSourceEndInText
 ]
 
 { #category : #'private - event handling' }
