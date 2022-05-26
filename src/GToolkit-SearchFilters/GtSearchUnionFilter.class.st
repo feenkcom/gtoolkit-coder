@@ -8,7 +8,7 @@ Class {
 GtSearchUnionFilter >> defaultFilterScope [
 	^ left defaultFilterScope = right defaultFilterScope
 		ifTrue: [ left defaultFilterScope ]
-		ifFalse: [ left defaultFilterScope merge: right defaultFilterScope ]
+		ifFalse: [ (left defaultFilterScope merge: right defaultFilterScope) withoutDuplicates ]
 ]
 
 { #category : #printing }
