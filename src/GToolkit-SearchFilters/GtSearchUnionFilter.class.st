@@ -1,14 +1,19 @@
 Class {
 	#name : #GtSearchUnionFilter,
 	#superclass : #GtSearchBinaryFilter,
+	#instVars : [
+		'defaultFilterScope'
+	],
 	#category : #'GToolkit-SearchFilters-Filters'
 }
 
 { #category : #accessing }
 GtSearchUnionFilter >> defaultFilterScope [
-	^ left defaultFilterScope = right defaultFilterScope
-		ifTrue: [ left defaultFilterScope ]
-		ifFalse: [ left defaultFilterScope merge: right defaultFilterScope ]
+	defaultFilterScope
+		ifNil: [ defaultFilterScope := left defaultFilterScope = right defaultFilterScope
+					ifTrue: [ left defaultFilterScope ]
+					ifFalse: [ (left defaultFilterScope merge: right defaultFilterScope) withoutDuplicates ] ].
+	^ defaultFilterScope asyncSimilarCopy
 ]
 
 { #category : #printing }

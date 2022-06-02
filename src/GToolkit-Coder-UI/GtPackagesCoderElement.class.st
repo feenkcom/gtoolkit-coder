@@ -5,19 +5,28 @@ Class {
 		'packagesCoder',
 		'contentPane'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Packages'
+	#category : #'GToolkit-Coder-UI-Coder - Packages'
 }
 
 { #category : #'private - ui' }
 GtPackagesCoderElement >> buildContentPane [
+	| container |
+	container := BlElement new
+			layout: BlLinearLayout vertical;
+			addChild: self makeLabel;
+			constraintsDo: [ :c | 
+				c horizontal matchParent.
+				c vertical matchParent ].
+
 	contentPane := BlElement new.
 	contentPane layout: BlLinearLayout horizontal.
-	contentPane padding: (BlInsets all: 5).
+	contentPane padding: (BlInsets top: 0 left: 5 bottom: 5 right: 5).
 	contentPane
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-	^ contentPane
+
+	^ container addChild: contentPane
 ]
 
 { #category : #'private - ui' }
@@ -97,4 +106,14 @@ GtPackagesCoderElement >> initialize [
 	
 	self when: BlClickEvent do: [ self requestFocus ].
 	self addChild: self buildContentPane.
+]
+
+{ #category : #'private - ui' }
+GtPackagesCoderElement >> makeLabel [
+	^ BrLabel new
+		aptitude: (BrGlamorousLabelAptitude new glamorousRegularFontAndSize
+				foreground: Color gray;
+				fontSize: 12);
+		text: 'Packages';
+		padding: (BlInsets top: 5 left: 20)
 ]
