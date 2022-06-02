@@ -48,6 +48,6 @@ GtCoderPreviewDataBinder >> paramsOn: aStencilExecutor [
 
 { #category : #initialization }
 GtCoderPreviewDataBinder >> reset [
-	super reset.
+	element := nil.
 	coderViewModel := nil.
 ]
