@@ -3,7 +3,6 @@ Class {
 	#superclass : #GtCoderModel,
 	#instVars : [
 		'sourceCode',
-		'completionStrategy',
 		'astPromise'
 	],
 	#category : #'GToolkit-Coder-Coders'
@@ -248,7 +247,6 @@ GtTextualCoder >> reset [
 
 	"initialized lazily in #sourceCode"
 	sourceCode := nil.
-	completionStrategy := nil
 ]
 
 { #category : #'private - ast' }
