@@ -156,13 +156,10 @@ GtDiffElement >> initialize [
 GtDiffElement >> leftBottomFor: anInteger [
 	| range element |
 	range := self leftRange.
-	anInteger < range first
-		ifTrue: [ ^ 0 ].
-	anInteger > range last
-		ifTrue: [ ^ self height ].
-	element := (leftElement children at: anInteger - range first + 1).
-	^ (element bounds bottom + leftElement padding top)
-		max: 0
+	anInteger < range first ifTrue: [ ^ 0 ].
+	anInteger > range last ifTrue: [ ^ self height ].
+	element := leftElement children at: anInteger - range first + 1.
+	^ element bounds bottom max: 0
 ]
 
 { #category : #accessing }
@@ -203,13 +200,10 @@ GtDiffElement >> leftStyler: aStyler [
 GtDiffElement >> leftTopFor: anInteger [
 	| range element |
 	range := self leftRange.
-	anInteger < range first
-		ifTrue: [ ^ 0 ].
-	anInteger > range last
-		ifTrue: [ ^ self height ].
-	element := (leftElement children at: anInteger - range first + 1).
-	^ (element bounds top + leftElement padding top)
-		max: 0
+	anInteger < range first ifTrue: [ ^ 0 ].
+	anInteger > range last ifTrue: [ ^ self height ].
+	element := leftElement children at: anInteger - range first + 1.
+	^ element bounds top max: 0
 ]
 
 { #category : #private }
@@ -310,13 +304,10 @@ GtDiffElement >> previousRopedText [
 GtDiffElement >> rightBottomFor: anInteger [
 	| range element |
 	range := self rightRange.
-	anInteger < range first
-		ifTrue: [ ^ 0 ].
-	anInteger > range last
-		ifTrue: [ ^ self height ].
-	element := (rightElement children at: anInteger - range first + 1).
-	^ (element bounds bottom + rightElement padding top)
-		max: 0
+	anInteger < range first ifTrue: [ ^ 0 ].
+	anInteger > range last ifTrue: [ ^ self height ].
+	element := rightElement children at: anInteger - range first + 1.
+	^ element bounds bottom max: 0
 ]
 
 { #category : #accessing }
@@ -357,13 +348,10 @@ GtDiffElement >> rightStyler: aStyler [
 GtDiffElement >> rightTopFor: anInteger [
 	| range element |
 	range := self rightRange.
-	anInteger < range first
-		ifTrue: [ ^ 0 ].
-	anInteger > range last
-		ifTrue: [ ^ self height ].
-	element := (rightElement children at: anInteger - range first + 1).
-	^ (element bounds top + rightElement padding top)
-		max: 0
+	anInteger < range first ifTrue: [ ^ 0 ].
+	anInteger > range last ifTrue: [ ^ self height ].
+	element := rightElement children at: anInteger - range first + 1.
+	^ element bounds top max: 0
 ]
 
 { #category : #'event handling' }

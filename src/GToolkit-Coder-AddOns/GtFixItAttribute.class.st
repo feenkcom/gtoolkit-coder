@@ -2,10 +2,16 @@ Class {
 	#name : #GtFixItAttribute,
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
-		'fixItActionsBlock'
+		'fixItActionsBlock',
+		'descriptionBlock'
 	],
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
+
+{ #category : #accessing }
+GtFixItAttribute >> description: aBlockReturningBlText [
+	descriptionBlock := aBlockReturningBlText
+]
 
 { #category : #accessing }
 GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
@@ -30,13 +36,30 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 
 { #category : #accessing }
 GtFixItAttribute >> dropDownElementFor: anEditorElement [
-	^ GtCoderContextMenuContent new
-		editorElement: anEditorElement;
-		items: ((fixItActionsBlock value groupedBy: [ :eachFixitAction | eachFixitAction id ])
-				values
-				flatCollect: [ :fixitActionsPerId | 
-					fixitActionsPerId
-						collectWithIndex: [ :eachFixItAction :eachIndex | eachFixItAction menuActionWithIndex: eachIndex ] ])
+	| pane label text menu menuItems |
+	pane := BrVerticalPane new.
+	pane fitContent.
+	menuItems := (fixItActionsBlock value
+			groupedBy: [ :eachFixitAction | eachFixitAction id ]) values
+			flatCollect: [ :fixitActionsPerId | 
+				fixitActionsPerId
+					collectWithIndex: [ :eachFixItAction :eachIndex | eachFixItAction menuActionWithIndex: eachIndex ] ].
+	descriptionBlock
+		ifNotNil: [ text := (descriptionBlock cull: anEditorElement) asRopedText
+					foreground: BrGlamorousColors disabledButtonTextColor.
+			label := BrEditor new
+					vFitContent;
+					aptitude: BrGlamorousRegularEditorAptitude new glamorousCodeSmallSize;
+					text: text.
+			menuItems isEmpty
+				ifTrue: [ label width: 200 ]
+				ifFalse: [ label hMatchParent ].
+			pane addChild: label ].
+	menu := GtCoderContextMenuContent new
+			editorElement: anEditorElement;
+			items: menuItems.
+	pane addChild: menu.
+	^ pane
 ]
 
 { #category : #initialization }
