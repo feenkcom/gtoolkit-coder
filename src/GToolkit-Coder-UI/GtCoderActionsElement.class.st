@@ -138,7 +138,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 							c vertical fitContent ].
 					titleElement := BrEditorElement new
 						aptitude: BrGlamorousInputFieldSpacingAptitude;
-						editor: (BrTextEditor new text: '' asRopedText);
+						editor: (BrTextEditorModel new text: '' asRopedText);
 						requestFocus;
 						constraintsDo: [ :c | 
 							c margin: (BlInsets top: 1).
