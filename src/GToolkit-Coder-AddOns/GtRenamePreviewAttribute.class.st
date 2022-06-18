@@ -7,7 +7,7 @@ Class {
 		'renameAction',
 		'renameEditor'
 	],
-	#category : 'GToolkit-Coder-AddOns-Inline rename'
+	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
 { #category : #accessing }
@@ -31,7 +31,7 @@ GtRenamePreviewAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorEle
 		constraintsDo: [ :c | 
 			c horizontal fitContent.
 			c vertical fitContent ].
-	editor := BrTextEditor new
+	editor := BrTextEditorModel new
 		text: text;
 		yourself.
 
