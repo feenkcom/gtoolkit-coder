@@ -12,6 +12,22 @@ Class {
 }
 
 { #category : #accessing }
+GtFixItAttribute >> addHoveringStylingFor: anEditorElement to: anElement [
+	hoverMarker ifNil: [ ^ self ].
+	anElement
+		when: BlMouseEnterEvent
+		do: [ :anEvent | 
+			anEditorElement editor text
+				findAttribute: hoverMarker
+				indicesDo: [ :aHighlightStart :aHighlightEnd | 
+					(anEditorElement text from: aHighlightStart to: aHighlightEnd)
+						attribute: hoverAttribute ] ].
+	anElement
+		when: BlMouseLeaveEvent
+		do: [ :anEvent | anEditorElement text clearAttributes: [ :each | each == hoverAttribute ] ]
+]
+
+{ #category : #accessing }
 GtFixItAttribute >> description: aBlockReturningBlText [
 	descriptionBlock := aBlockReturningBlText
 ]
@@ -25,26 +41,21 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	button
 		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude
 				+ (BrGlamorousWithDropdownAptitude
-						handle: [ BrButton new
-								beTinySize;
+						handle: [ | dropdownButton |
+							dropdownButton := BrButton new.
+							dropdownButton beTinySize.
+							dropdownButton
 								aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
-										- BrGlamorousButtonExteriorAptitude;
-								icon: BrGlamorousVectorIcons repair;
-								yourself ]
-						content: [ self dropDownElementFor: anEditorElement ]).
+										- BrGlamorousButtonExteriorAptitude.
+							dropdownButton icon: BrGlamorousVectorIcons repair.
+							self addHoveringStylingFor: anEditorElement to: dropdownButton.
+							dropdownButton ]
+						content: [ | element |
+							element := self dropDownElementFor: anEditorElement.
+							self addHoveringStylingFor: anEditorElement to: element.
+							element ]).
 	button icon: BrGlamorousVectorIcons repair.
-	hoverMarker
-		ifNotNil: [ button
-				when: BlMouseEnterEvent
-				do: [ :anEvent | 
-					anEditorElement editor text
-						findAttribute: hoverMarker
-						indicesDo: [ :aHighlightStart :aHighlightEnd | 
-							(anEditorElement text from: aHighlightStart to: aHighlightEnd)
-								attribute: hoverAttribute ] ].
-			button
-				when: BlMouseLeaveEvent
-				do: [ :anEvent | anEditorElement text clearAttributes: [ :each | each == hoverAttribute ] ] ].
+	self addHoveringStylingFor: anEditorElement to: button.
 	^ button
 ]
 
