@@ -3,7 +3,10 @@ Class {
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
 		'fixItActionsBlock',
-		'descriptionBlock'
+		'descriptionBlock',
+		'hoverMarker',
+		'hoverAttribute',
+		'label'
 	],
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
@@ -15,12 +18,11 @@ GtFixItAttribute >> description: aBlockReturningBlText [
 
 { #category : #accessing }
 GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
-	"Return an element that should affect (either append or replace) a provided text piece"
-
-	<return: #SequenceableCollection of: #BlElement>
-	^ GtFixItButton new
-		beTinySize;
-		label: 'Fix it';
+	| button |
+	button := GtFixItButton new.
+	button beTinySize.
+	button label: (label ifNil: [ 'Fix it' ]).
+	button
 		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude
 				+ (BrGlamorousWithDropdownAptitude
 						handle: [ BrButton new
@@ -29,9 +31,21 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 										- BrGlamorousButtonExteriorAptitude;
 								icon: BrGlamorousVectorIcons repair;
 								yourself ]
-						content: [ self dropDownElementFor: anEditorElement ]);
-		icon: BrGlamorousVectorIcons repair;
-		yourself
+						content: [ self dropDownElementFor: anEditorElement ]).
+	button icon: BrGlamorousVectorIcons repair.
+	hoverMarker
+		ifNotNil: [ button
+				when: BlMouseEnterEvent
+				do: [ :anEvent | 
+					anEditorElement editor text
+						findAttribute: hoverMarker
+						indicesDo: [ :aHighlightStart :aHighlightEnd | 
+							(anEditorElement text from: aHighlightStart to: aHighlightEnd)
+								attribute: hoverAttribute ] ].
+			button
+				when: BlMouseLeaveEvent
+				do: [ :anEvent | anEditorElement text clearAttributes: [ :each | each == hoverAttribute ] ] ].
+	^ button
 ]
 
 { #category : #accessing }
@@ -68,8 +82,38 @@ GtFixItAttribute >> fixItActions: aCollection [
 ]
 
 { #category : #accessing }
+GtFixItAttribute >> hoverAttribute [
+	^ hoverAttribute
+]
+
+{ #category : #accessing }
+GtFixItAttribute >> hoverAttribute: aTextAttribute [
+	hoverAttribute := aTextAttribute
+]
+
+{ #category : #accessing }
+GtFixItAttribute >> hoverMarker [
+	^ hoverMarker
+]
+
+{ #category : #accessing }
+GtFixItAttribute >> hoverMarker: aTextAttribute [
+	hoverMarker := aTextAttribute
+]
+
+{ #category : #accessing }
 GtFixItAttribute >> initialize [
 	super initialize.
 
 	self beAppend
+]
+
+{ #category : #accessing }
+GtFixItAttribute >> label [
+	^ label
+]
+
+{ #category : #accessing }
+GtFixItAttribute >> label: aString [
+	label := aString
 ]
