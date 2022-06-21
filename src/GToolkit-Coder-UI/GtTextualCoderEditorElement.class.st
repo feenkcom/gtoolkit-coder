@@ -250,6 +250,8 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	which we will restore once new text is set"
 	self asyncPromise promise: self textualCoderViewModel asEditorState.
 
+	self editor model: self textualCoderViewModel.
+
 	shortcuts := self textualCoderViewModel shortcuts copy.
 	self editor addEditorShortcuts: shortcuts.
 	
