@@ -680,11 +680,11 @@ GtTextualCoderViewModel >> shortcuts: aCollectionOfShortcuts [
 GtTextualCoderViewModel >> shouldAddOnsBeUpdated [
 	"Return true if addons should be updated, false otherwise. When a Coder Model is attached to the corresponding Element
 	that element should check if addons need to be updated and if it is the case start the update with the help of ${method:GtCoderModel>>#updateAddOnsFrom:}$"
-	<return: #Boolean>
+	<return: #AsyncPromise of: #Boolean>
 
 	^ addOnPromise
-		ifNil: [ true ]
-		ifNotNil: [ :theAddOns | theAddOns wait shouldBeUpdated ]
+		ifNil: [ true asAsyncPromise ]
+		ifNotNil: [ :theAddOnsPromise | theAddOnsPromise then: [ :theAddOns | theAddOns shouldBeUpdated ] ]
 ]
 
 { #category : #'api - header' }
