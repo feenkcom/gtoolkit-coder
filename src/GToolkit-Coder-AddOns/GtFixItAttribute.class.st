@@ -6,7 +6,8 @@ Class {
 		'descriptionBlock',
 		'hoverMarker',
 		'hoverAttribute',
-		'label'
+		'label',
+		'dropDownAptitude'
 	],
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
@@ -38,22 +39,23 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	button := GtFixItButton new.
 	button beTinySize.
 	button label: (label ifNil: [ 'Fix it' ]).
+	dropDownAptitude := BrGlamorousWithDropdownAptitude
+			handle: [ | dropdownButton |
+				dropdownButton := BrButton new.
+				dropdownButton beTinySize.
+				dropdownButton
+					aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
+							- BrGlamorousButtonExteriorAptitude.
+				dropdownButton icon: BrGlamorousVectorIcons repair.
+				self addHoveringStylingFor: anEditorElement to: dropdownButton.
+				dropdownButton ]
+			content: [ | element |
+				element := self dropDownElementFor: anEditorElement.
+				self addHoveringStylingFor: anEditorElement to: element.
+				element ].
 	button
 		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude
-				+ (BrGlamorousWithDropdownAptitude
-						handle: [ | dropdownButton |
-							dropdownButton := BrButton new.
-							dropdownButton beTinySize.
-							dropdownButton
-								aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
-										- BrGlamorousButtonExteriorAptitude.
-							dropdownButton icon: BrGlamorousVectorIcons repair.
-							self addHoveringStylingFor: anEditorElement to: dropdownButton.
-							dropdownButton ]
-						content: [ | element |
-							element := self dropDownElementFor: anEditorElement.
-							self addHoveringStylingFor: anEditorElement to: element.
-							element ]).
+				+ dropDownAptitude.
 	button icon: BrGlamorousVectorIcons repair.
 	self addHoveringStylingFor: anEditorElement to: button.
 	^ button
@@ -61,7 +63,7 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 
 { #category : #accessing }
 GtFixItAttribute >> dropDownElementFor: anEditorElement [
-	| pane label text menu menuItems |
+	| pane labelText text menu menuItems |
 	pane := BrVerticalPane new.
 	pane fitContent.
 	menuItems := (fixItActionsBlock value
@@ -72,14 +74,14 @@ GtFixItAttribute >> dropDownElementFor: anEditorElement [
 	descriptionBlock
 		ifNotNil: [ text := (descriptionBlock cull: anEditorElement) asRopedText
 					foreground: BrGlamorousColors disabledButtonTextColor.
-			label := BrEditor new
+			labelText := BrEditor new
 					vFitContent;
 					aptitude: BrGlamorousRegularEditorAptitude new glamorousCodeSmallSize;
 					text: text.
 			menuItems isEmpty
-				ifTrue: [ label width: 200 ]
-				ifFalse: [ label hMatchParent ].
-			pane addChild: label ].
+				ifTrue: [ labelText width: 200 ]
+				ifFalse: [ labelText hMatchParent ].
+			pane addChild: labelText ].
 	menu := GtCoderContextMenuContent new
 			editorElement: anEditorElement;
 			items: menuItems.
@@ -127,4 +129,14 @@ GtFixItAttribute >> label [
 { #category : #accessing }
 GtFixItAttribute >> label: aString [
 	label := aString
+]
+
+{ #category : #opening }
+GtFixItAttribute >> togglePopup [
+	| visible |
+	dropDownAptitude ifNil: [ ^ false ].
+	dropDownAptitude widgetDo: [ :aWidget | visible := aWidget isVisible ].
+	visible ifNil: [ ^ false ].
+	visible ifTrue: [ dropDownAptitude show ] ifFalse: [ dropDownAptitude hide ].
+	^ true
 ]
