@@ -12,7 +12,7 @@ Class {
 		'eventHandlers',
 		'containerName'
 	],
-	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
 { #category : #accessing }
@@ -84,6 +84,19 @@ GtCodeDefinitionEntityViewer >> when: aBlEvent do: aBlock [
 	"aBlock is in form [ :anEvent :aCodeDefinition ]"
 	
 	eventHandlers add: (aBlEvent -> aBlock)
+]
+
+{ #category : #interactions }
+GtCodeDefinitionEntityViewer >> whenAltClickDo: aBlock [
+	"aBlock is in form [ :anEvent :aCodeDefinition ]"
+	
+	self
+		when: BlClickEvent
+		do: [ :anEvent :aDefinition |
+				anEvent modifiers isAlt 
+					ifTrue: [
+						anEvent consumed: true.
+						aBlock cull: anEvent cull: aDefinition ] ]
 ]
 
 { #category : #interactions }
