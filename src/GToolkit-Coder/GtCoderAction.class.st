@@ -31,11 +31,6 @@ GtCoderAction >> action: anObject [
 	action := anObject
 ]
 
-{ #category : #evaluating }
-GtCoderAction >> glamourValueWithArgs: aSequenceOfArguments [
-	^ self action glamourValueWithArgs: aSequenceOfArguments
-]
-
 { #category : #comparing }
 GtCoderAction >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
