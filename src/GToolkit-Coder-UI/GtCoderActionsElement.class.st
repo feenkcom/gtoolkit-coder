@@ -72,7 +72,7 @@ GtCoderActionsElement >> handleButton: aButtonElement action: aGtCoderAction onE
 				enqueueTask:
 					(BlTaskAction new
 						action: [ [ aGtCoderAction action
-								glamourValueWithArgs:
+								gtValueWithArgs:
 									{self textualCoderViewModel.
 									aButtonElement} ]
 								ensure: [ self enqueueEnableButton: aButtonElement action: aGtCoderAction ] ]) ]
