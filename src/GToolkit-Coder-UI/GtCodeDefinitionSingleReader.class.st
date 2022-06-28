@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCodeDefinitionSingleReader,
 	#superclass : #GtCodeDefinitionSingleViewer,
-	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
 { #category : #'api - instantiation' }
@@ -18,7 +18,6 @@ GtCodeDefinitionSingleReader >> create [
 		fitContent;
 		aptitude: lookStencil create;
 		margin: self margin;
-		focusability: BlFocusability none;
 		text: theInitialName.
 
 	self containerName
