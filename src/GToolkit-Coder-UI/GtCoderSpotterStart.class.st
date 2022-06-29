@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'navigationModelBlock'
 	],
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #searching }
@@ -49,12 +49,13 @@ GtCoderSpotterStart >> gtSpotterForInstanceMethodsInCurrentClassFor: aStep [
 { #category : #searching }
 GtCoderSpotterStart >> gtSpotterForMessagesFor: aStep [
 	<gtSearch>
+	
 	aStep listProcessor
 		priority: 35;
 		title: 'Messages';
 		filter: GtNullFilter
 			item:
-				[ :filter :context | GTSelector substring: context textTrimmed filter: filter ];
+				[ :filter :context | GtSelector substring: context textTrimmed filter: filter ];
 		actLogic: [ :each :step :spotterElement | 
 			(each name asSymbol gtImplementors)
 				gtSpotterActDefault: step
