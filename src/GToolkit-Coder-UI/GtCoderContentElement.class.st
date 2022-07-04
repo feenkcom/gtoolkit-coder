@@ -9,7 +9,7 @@ I display a {{gtClass:GtPharoBehaviorCoder}}, {{gtClass:GtPharoPackageTagCoder}}
 Class {
 	#name : #GtCoderContentElement,
 	#superclass : #GtCoderNavigationModelElement,
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #factory }
@@ -48,5 +48,6 @@ GtCoderContentElement >> subscribeToNavigationModel [
 { #category : #'private - event handling' }
 GtCoderContentElement >> updateCoder: anAnnouncement [
 	self removeChildren.
-	self addChild: anAnnouncement coder asElement.
+	self
+		addChild: (anAnnouncement coder asElement navigationModelForToolbar: self navigationModel)
 ]
