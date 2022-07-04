@@ -19,10 +19,9 @@ Class {
 	#instVars : [
 		'sidebarElement',
 		'contentElement',
-		'toolbarElement',
 		'titleNotifier'
 	],
-	#category : 'GToolkit-Coder-UI-! Core'
+	#category : #'GToolkit-Coder-UI-! Core'
 }
 
 { #category : #'private - accessing' }
@@ -38,14 +37,12 @@ GtCoder >> initialize [
 	self addInteractiveModelState: GtPhlowToolDetailModel new.
 	self initializeContentElement.
 	self initializeSidebarElement.
-	self initializeToolbarElement.
 	self initializeListeners.
 	
 	self layout: BlLinearLayout horizontal.
 	
 	self addChild: self sidebarElement as: #sidebar.
 	self addChild: self contentElement as: #content.
-	self addChild: self toolbarElement as: #toolbar.
 	
 	self addAptitude: (BrLayoutResizerAptitude inherit).
 ]
@@ -71,20 +68,10 @@ GtCoder >> initializeTitleNotifier [
 	self addEventHandler: titleNotifier.
 ]
 
-{ #category : #initialization }
-GtCoder >> initializeToolbarElement [
-	toolbarElement := GtCoderToolbarElement new
-		constraintsDo: [ :c | 
-			c ignoreByLayout.
-			c ignored horizontal alignRight.
-			c ignored vertical alignTop ].
-]
-
 { #category : #'private - hooks' }
 GtCoder >> onNavigationModelChanged [
 	super onNavigationModelChanged.
 	self contentElement navigationModel: self navigationModel.
-	self toolbarElement navigationModel: self navigationModel.
 	self updateSidebarContent.
 	self updateTabLabel
 ]
@@ -141,12 +128,6 @@ GtCoder >> subscribeToNavigationModel [
 GtCoder >> titleNotifier [
 	<return: #GtPhlowTitleNotifier>
 	^ titleNotifier
-]
-
-{ #category : #'private - accessing' }
-GtCoder >> toolbarElement [
-	<return: #GtCoderToolbarElement>
-	^ toolbarElement
 ]
 
 { #category : #'private - updating' }
