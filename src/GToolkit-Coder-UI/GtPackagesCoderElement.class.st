@@ -1,6 +1,8 @@
 Class {
 	#name : #GtPackagesCoderElement,
 	#superclass : #BlElement,
+	#traits : 'TGtWithCoderToolbar',
+	#classTraits : 'TGtWithCoderToolbar classTrait',
 	#instVars : [
 		'packagesCoder',
 		'contentPane'
@@ -52,18 +54,20 @@ GtPackagesCoderElement >> buildPackagesElement [
 			c horizontal matchParent.
 			c vertical matchParent ].
 	element
-		addChild:
-			(BrLabel new
-				margin: (BlInsets left: 10);
-				aptitude: (BrGlamorousLabelAptitude new bold glamorousRegularFont fontSize: 18);
-				text: packagesCoder name).
+		addChild: (BrHorizontalPane new
+				constraintsDo: [ :c | 
+					c horizontal matchParent.
+					c vertical fitContent ];
+				addChild: (BrLabel new
+						margin: (BlInsets left: 10);
+						aptitude: (BrGlamorousLabelAptitude new bold glamorousRegularFont fontSize: 18);
+						text: packagesCoder name);
+				addChild: self toolbarElement).
 	element
-		addChild:
-			(BrLabel new
+		addChild: (BrLabel new
 				margin: (BlInsets left: 10);
 				beSmallSize;
-				aptitude:
-					(BrGlamorousLabelAptitude new glamorousRegularFont
+				aptitude: (BrGlamorousLabelAptitude new glamorousRegularFont
 						foreground: self theme button defaultTextColor);
 				text: packagesCoder coders size printString , ' Packages').
 	element addChild: self buildPackageList.
@@ -99,6 +103,7 @@ GtPackagesCoderElement >> codersUIModel: aPackagesCoder [
 { #category : #'initialize-release' }
 GtPackagesCoderElement >> initialize [
 	super initialize.
+	self initializeToolbarElement.
 	self
 		constraintsDo: [ :c | 
 			c horizontal matchParent.

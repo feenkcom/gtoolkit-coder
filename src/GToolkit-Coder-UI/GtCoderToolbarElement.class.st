@@ -142,14 +142,9 @@ GtCoderToolbarElement >> initialize [
 
 { #category : #initialization }
 GtCoderToolbarElement >> initializeToolbarElement [
-
 	toolbarElement := BrToolbar new
-		                  aptitude: BrGlamorousToolbarAptitude new;
-		                  padding: (BlInsets
-				                   top: 10
-				                   left: 0
-				                   bottom: 0
-				                   right: 5).
+			aptitude: BrGlamorousToolbarAptitude new;
+			padding: (BlInsets right: 5).
 	self addCustomButtons
 ]
 
