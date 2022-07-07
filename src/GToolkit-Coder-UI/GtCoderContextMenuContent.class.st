@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'editorElement'
 	],
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #defaults }
@@ -43,7 +43,7 @@ GtCoderContextMenuContent >> initialize [
 				addAptitude:
 					(BrStyleCommonAptitude new
 						hovered:
-							[ :aStyle | aStyle background: self theme button defaultBorderColor ]);
+							[ :aStyle | aStyle background: self theme item selectedColor ]);
 				padding: (BlInsets all: 5);
 				when: BlClickEvent
 					do: [ :anEvent | 
