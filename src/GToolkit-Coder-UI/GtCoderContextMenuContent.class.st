@@ -38,27 +38,24 @@ GtCoderContextMenuContent >> initialize [
 		stencil: [ :eachGtCoderContextMenuAction | 
 			| element |
 			element := BrHorizontalPane new
-				hMatchParent;
-				vFitContent;
-				addAptitude:
-					(BrStyleCommonAptitude new
-						hovered:
-							[ :aStyle | aStyle background: self theme item selectedColor ]);
-				padding: (BlInsets all: 5);
-				when: BlClickEvent
-					do: [ :anEvent | 
-					anEvent consumed: true.
-					eachGtCoderContextMenuAction action
-						cull: self editorElement textualCoderViewModel
-						cull: self editorElement
-						cull: anEvent.
-					self fireEvent: BrDropdownHideWish new.
-					self fireEvent: BrContextMenuHideWish new ];
-				addChild:
-					(BrLabel new
-						aptitude: BrGlamorousLabelAptitude;
-						text: eachGtCoderContextMenuAction title;
-						yourself).
+					hMatchParent;
+					vFitContent;
+					addAptitude: (BrStyleCommonAptitude new
+							hovered: [ :aStyle | aStyle background: self theme item selectedColor ]);
+					padding: (BlInsets top: 2 bottom: 2);
+					when: BlClickEvent
+						do: [ :anEvent | 
+							anEvent consumed: true.
+							eachGtCoderContextMenuAction action
+								cull: self editorElement textualCoderViewModel
+								cull: self editorElement
+								cull: anEvent.
+							self fireEvent: BrDropdownHideWish new.
+							self fireEvent: BrContextMenuHideWish new ];
+					addChild: (BrLabel new
+							aptitude: BrGlamorousLabelAptitude;
+							text: eachGtCoderContextMenuAction title;
+							yourself).
 			eachGtCoderContextMenuAction hoverAction
 				ifNotNil: [ :hover | 
 					element
@@ -72,6 +69,11 @@ GtCoderContextMenuContent >> initialize [
 			eachGtCoderContextMenuAction name
 				ifNotNil: [ :anActionName | element containerName: anActionName ].
 			element ];
+		padding: (BlInsets
+				top: 8
+				right: 10
+				bottom: 8
+				left: 10);
 		hFitContent;
 		vFitContent
 ]
