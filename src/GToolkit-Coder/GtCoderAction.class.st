@@ -5,7 +5,8 @@ Class {
 		'title',
 		'icon',
 		'action',
-		'id'
+		'id',
+		'shortcutKey'
 	],
 	#category : #'GToolkit-Coder-Coders - Addons'
 }
@@ -87,6 +88,18 @@ GtCoderAction >> printOn: aStream [
 		nextPut: $(;
 		nextPutAll: (self title ifNil: ['']);
 		nextPut: $)
+]
+
+{ #category : #accessing }
+GtCoderAction >> shortcutKey [
+
+	^ shortcutKey ifNil: [shortcutKey := '']
+]
+
+{ #category : #accessing }
+GtCoderAction >> shortcutKey: aString [
+
+	shortcutKey := aString
 ]
 
 { #category : #accessing }
