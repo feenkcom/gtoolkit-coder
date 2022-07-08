@@ -30,9 +30,15 @@ GtCoderContextMenuContent >> initialize [
 			element := BrHorizontalPane new
 					hMatchParent;
 					vFitContent;
+					alignCenter;
 					addAptitude: (BrStyleCommonAptitude new
 							hovered: [ :aStyle | aStyle background: self theme item selectedColor ]);
 					padding: (BlInsets top: 2 bottom: 2);
+					addChild: (BrLabel new
+							aptitude: BrGlamorousLabelAptitude;
+							text: eachGtCoderContextMenuAction title asRopedText;
+							hMatchParent;
+							yourself);
 					when: BlClickEvent
 						do: [ :anEvent | 
 							anEvent consumed: true.
@@ -41,18 +47,23 @@ GtCoderContextMenuContent >> initialize [
 								cull: self editorElement
 								cull: anEvent.
 							self fireEvent: BrDropdownHideWish new.
-							self fireEvent: BrContextMenuHideWish new ];
-					addChild: (BrLabel new
-							aptitude: BrGlamorousLabelAptitude;
-							text: (eachGtCoderContextMenuAction title asRopedText
-									attributes: {BlFontSizeAttribute size: 12});
-							hMatchParent;
-							yourself);
-					addChild: (BrLabel new
-							aptitude: BrGlamorousLabelAptitude;
-							text: (eachGtCoderContextMenuAction shortcutKey asRopedText attributes: {BlFontSizeAttribute size: 12});
-							hFitContent;
-							yourself).
+							self fireEvent: BrContextMenuHideWish new ].
+			eachGtCoderContextMenuAction shortcutKey isEmpty
+				ifFalse: [ element
+						addChild: (BrHorizontalPane new
+								fitContent;
+								geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
+								border: (BlBorder paint: Color gray width: 1);
+								padding: (BlInsets all: 1);
+								addChild: (BrLabel new
+										aptitude: BrGlamorousLabelAptitude;
+										text: (eachGtCoderContextMenuAction shortcutKey asRopedText
+												fontName: 'Source Code Pro';
+												foreground: Color gray;
+												fontSize: 10);
+										hFitContent;
+										yourself);
+								yourself) ].
 			eachGtCoderContextMenuAction hoverAction
 				ifNotNil: [ :hover | 
 					element
