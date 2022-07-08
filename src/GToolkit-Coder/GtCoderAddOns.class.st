@@ -85,6 +85,17 @@ GtCoderAddOns >> addContextMenuItem: aString action: aBlock id: aSymbol [
 ]
 
 { #category : #'api - context menu' }
+GtCoderAddOns >> addContextMenuItem: aString action: aBlock id: aSymbol shortcutKey: shortcutString [
+	^ self
+		addContextMenuItem: aString
+		hover: nil
+		leave: nil
+		action: aBlock
+		id: aSymbol
+		shortcutKey: shortcutString
+]
+
+{ #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock [
 	self
 		addContextMenuItem: aString
@@ -104,6 +115,30 @@ GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock
 		leaveAction: leaveBlock;
 		id: aSymbol.
 	self addContextMenuAction: newAction
+]
+
+{ #category : #'api - context menu' }
+GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock id: aSymbol shortcutKey: shortcutString [
+	| newAction |
+	newAction := GtCoderContextMenuAction new
+		title: aString;
+		action: aBlock;
+		hoverAction: hoverBlock;
+		leaveAction: leaveBlock;
+		id: aSymbol;
+		shortcutKey: shortcutString.
+	self addContextMenuAction: newAction
+]
+
+{ #category : #'api - context menu' }
+GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock shortcutKey: shortcutString [
+	self
+		addContextMenuItem: aString
+		hover: hoverBlock
+		leave: leaveBlock
+		action: aBlock
+		id: nil
+		shortcutKey: shortcutString
 ]
 
 { #category : #'api - main actions' }

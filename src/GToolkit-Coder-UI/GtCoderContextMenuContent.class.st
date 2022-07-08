@@ -7,16 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : #defaults }
-GtCoderContextMenuContent >> defaultContextMenuActionName [
-	^ #contextMenuAction
-]
-
-{ #category : #defaults }
-GtCoderContextMenuContent >> defaultLabelChildName [
-	^ #label
-]
-
 { #category : #'api - accessing' }
 GtCoderContextMenuContent >> editorElement [
 	<return: #BrEditorElement>
@@ -54,7 +44,14 @@ GtCoderContextMenuContent >> initialize [
 							self fireEvent: BrContextMenuHideWish new ];
 					addChild: (BrLabel new
 							aptitude: BrGlamorousLabelAptitude;
-							text: eachGtCoderContextMenuAction title;
+							text: (eachGtCoderContextMenuAction title asRopedText
+									attributes: {BlFontSizeAttribute size: 12});
+							hMatchParent;
+							yourself);
+					addChild: (BrLabel new
+							aptitude: BrGlamorousLabelAptitude;
+							text: (eachGtCoderContextMenuAction shortcutKey asRopedText attributes: {BlFontSizeAttribute size: 12});
+							hFitContent;
 							yourself).
 			eachGtCoderContextMenuAction hoverAction
 				ifNotNil: [ :hover | 

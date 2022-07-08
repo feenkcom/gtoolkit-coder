@@ -20,21 +20,22 @@ GtTextualCoderEditorElement >> coderViewModel: aTextualCoderViewModel [
 { #category : #'instance creation' }
 GtTextualCoderEditorElement >> createContextMenuContent [
 	"wait for the addons to be computed"
+
 	| theContextMenu aContextMenuPromise |
-	
-	theContextMenu := GtCoderContextMenuContent new
-		editorElement: self.	
-	
-	aContextMenuPromise := self textualCoderViewModel addOns asyncThen: [ :theAddOns |
-		| theItems theContextMenuAstAddons |
-		
-		"extra context menu items that depend on ast and view model state such as selection"
-		theContextMenuAstAddons := self textualCoderViewModel computeContextMenuAstAddOns.
-		
-		theItems := theAddOns contextMenuActions, theAddOns mainActions, theContextMenuAstAddons contextMenuActions.
-		theItems := theItems reject: [ :e | e title isNil ]. 
-		
-		theContextMenu enqueueTask: (BlTaskAction new action: [ theContextMenu items: theItems ]) ].
+	theContextMenu := GtCoderContextMenuContent new editorElement: self.
+
+	aContextMenuPromise := self textualCoderViewModel addOns
+			asyncThen: [ :theAddOns | 
+				| theItems theContextMenuAstAddons |
+				"extra context menu items that depend on ast and view model state such as selection"
+				theContextMenuAstAddons := self textualCoderViewModel
+						computeContextMenuAstAddOns.
+				theItems := theAddOns contextMenuActions , theAddOns mainActions
+						, theContextMenuAstAddons contextMenuActions.
+				theItems := theItems reject: [ :e | e title isNil ].
+
+				theContextMenu
+					enqueueTask: (BlTaskAction new action: [ theContextMenu items: theItems ]) ].
 
 	self enqueueTask: (BlPromiseTask new promise: aContextMenuPromise).
 
