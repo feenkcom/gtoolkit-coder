@@ -3,19 +3,17 @@ Extension { #name : #GtTextualCoder }
 { #category : #'*GToolkit-Coder-AddOns' }
 GtTextualCoder >> addCopyCutPasteContextMenuAddOnsAst: anAst to: coderAddOns [
 	<gtCoderContextMenuAddOns: 10>
-		| mod |
-	mod := OSPlatform current defaultModifier name.
 	coderAddOns
 		addContextMenuItem: 'Cut'
 			action: [ :aCoderViewModel :anEditorElement | anEditorElement editor cutSelected ]
 			id: GtTextualCoderCutContextMenuItemId
-			shortcutKey: mod, '-X';
+			shortcutKey: BrEditorShortcut cut combinationForPlatform userPrintString;
 		addContextMenuItem: 'Copy'
 			action: [ :aCoderViewModel :anEditorElement | anEditorElement editor copySelected ]
 			id: GtTextualCoderCopyContextMenuItemId
-			shortcutKey: mod, '-C';
+			shortcutKey: BrEditorShortcut copy combinationForPlatform userPrintString;
 		addContextMenuItem: 'Paste'
 			action: [ :aCoderViewModel :anEditorElement | anEditorElement editor paste ]
 			id: GtTextualCoderPasteContextMenuItemId
-			shortcutKey: mod, '-V'
+			shortcutKey: BrEditorShortcut paste combinationForPlatform userPrintString
 ]
