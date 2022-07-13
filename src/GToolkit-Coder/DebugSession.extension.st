@@ -17,11 +17,10 @@ DebugSession >> gtRecompileMethodTo: text inContext: aContext notifying: aNotify
 	aContext method isDoIt
 		ifTrue: [ ^ false ].
 	(recompilationContext := (self gtCreateModelForContext: aContext) locateClosureHomeWithContent: text) ifNil: [ ^ false ].
+	
 	newMethod := (self gtCreateModelForContext: recompilationContext) recompileCurrentMethodTo: text notifying: aNotifyer.
 	newMethod ifNil: [ ^ false ].
-	newMethod isQuick
-		ifTrue: [ recompilationContext := self downInContext: recompilationContext.
-			recompilationContext jump: recompilationContext previousPc - recompilationContext pc ].
+			
 	(self isContextPostMortem: self interruptedContext)
 		ifFalse: [ self rewindContextToMethod: newMethod fromContext: recompilationContext ].
 
