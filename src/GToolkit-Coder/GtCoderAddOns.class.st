@@ -96,6 +96,16 @@ GtCoderAddOns >> addContextMenuItem: aString action: aBlock id: aSymbol shortcut
 ]
 
 { #category : #'api - context menu' }
+GtCoderAddOns >> addContextMenuItem: aString action: aBlock shortcutKey: shortcut [
+	^ self
+		addContextMenuItem: aString
+		hover: nil
+		leave: nil
+		action: aBlock
+		shortcutKey: shortcut
+]
+
+{ #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock [
 	self
 		addContextMenuItem: aString
