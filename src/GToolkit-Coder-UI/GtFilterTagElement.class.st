@@ -92,6 +92,14 @@ GtFilterTagElement >> createDropDown [
 	button addAptitude: (BrStyleCommonAptitude new
 			default: [ :s | s background: Color transparent ];
 			hovered: [ :s | s background: self theme status neutralBackgroundColor darker ]).
+	
+	button
+		when: BlKeyUpEvent
+		do: [ :anEvent | 
+			anEvent key = BlKeyboardKey backspace ifTrue: [
+			self removeFromParent.
+			filterElement applyFilters ] ].
+
 	^ button
 ]
 
