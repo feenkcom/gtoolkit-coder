@@ -135,7 +135,6 @@ GtCoderExampleStateElement >> newInspectorWithExampleResult [
 { #category : #'private - instance creation' }
 GtCoderExampleStateElement >> newNotExecutedLabel [
 	^ BrLabel new
-		aptitude: BrGlamorousLabelAptitude;
 		text: 'Not Executed Example';
 		padding: (BlInsets all: 5)
 ]
@@ -171,11 +170,9 @@ GtCoderExampleStateElement >> newNotExecutedTooltipContent [
 		alignCenterLeft;
 		padding: (BlInsets all: 5);
 		addChild: (BrLabel new
-			aptitude: BrGlamorousLabelAptitude;
-			margin: (BlInsets left: 2);
-			text: 'Example not executed');
-		addChild: (self newNotExecutedToolbar
-			margin: (BlInsets top: 3)).
+				margin: (BlInsets left: 2);
+				text: 'Example not executed');
+		addChild: (self newNotExecutedToolbar margin: (BlInsets top: 3))
 ]
 
 { #category : #'private - instance creation' }

@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'classesTree'
 	],
-	#category : 'GToolkit-Coder-UI-Navigation'
+	#category : #'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #'instance creation' }
@@ -29,17 +29,14 @@ GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
-	
+
 	self rowStencil: BrGlamorousSimpleTreeSelectableRowElementStencilBuilder new.
-	
+
 	self
-		nodeStencil: [ BrLabel new
-				beSmallSize;
-				aptitude: BrGlamorousLabelAptitude ];
+		nodeStencil: [ BrLabel new beSmallSize ];
 		nodeDataBinder: [ :aClassElement :aClassHierarchyTree | 
 			aClassElement
-				text:
-					(aClassHierarchyTree
+				text: (aClassHierarchyTree
 						ifNil: [ '' asRopedText ]
 						ifNotNil: [ | aClass aText |
 							aClass := aClassHierarchyTree rootClass.
