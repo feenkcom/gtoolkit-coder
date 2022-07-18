@@ -7,7 +7,6 @@ Class {
 { #category : #'private - ui' }
 GtCoderNavigationMethodProtocolListElement >> buildProtocolLabel: aProtocol [
 	^ BrLabel new
-		aptitude: BrGlamorousLabelAptitude; 
 		beSmallSize;
 		text: aProtocol
 ]
