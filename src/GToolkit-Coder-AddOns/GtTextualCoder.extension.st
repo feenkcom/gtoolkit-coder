@@ -1,19 +1,29 @@
 Extension { #name : #GtTextualCoder }
 
 { #category : #'*GToolkit-Coder-AddOns' }
+GtTextualCoder >> addContextMenuItemFrom: shortcut withId: menuId to: coderAddOns [
+	coderAddOns
+		addContextMenuItem: shortcut name
+		action: [ :aCoderViewModel :anEditorElement | 
+			shortcut
+				performOnEditor: anEditorElement editor
+				element: anEditorElement
+				dueTo: nil ]
+		id: menuId
+		shortcutKey: shortcut combinationForPlatform userPrintString
+]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
 GtTextualCoder >> addCopyCutPasteContextMenuAddOnsAst: anAst to: coderAddOns [
 	<gtCoderContextMenuAddOns: 10>
-	coderAddOns
-		addContextMenuItem: 'Cut'
-			action: [ :aCoderViewModel :anEditorElement | anEditorElement editor cutSelected ]
-			id: GtTextualCoderCutContextMenuItemId
-			shortcutKey: BrEditorShortcut cut combinationForPlatform userPrintString;
-		addContextMenuItem: 'Copy'
-			action: [ :aCoderViewModel :anEditorElement | anEditorElement editor copySelected ]
-			id: GtTextualCoderCopyContextMenuItemId
-			shortcutKey: BrEditorShortcut copy combinationForPlatform userPrintString;
-		addContextMenuItem: 'Paste'
-			action: [ :aCoderViewModel :anEditorElement | anEditorElement editor paste ]
-			id: GtTextualCoderPasteContextMenuItemId
-			shortcutKey: BrEditorShortcut paste combinationForPlatform userPrintString
+	self
+		addContextMenuItemFrom: BrEditorShortcut cut
+			withId: GtTextualCoderCutContextMenuItemId
+			to: coderAddOns;
+		addContextMenuItemFrom: BrEditorShortcut copy
+			withId: GtTextualCoderCopyContextMenuItemId
+			to: coderAddOns;
+		addContextMenuItemFrom: BrEditorShortcut paste
+			withId: GtTextualCoderPasteContextMenuItemId
+			to: coderAddOns
 ]
