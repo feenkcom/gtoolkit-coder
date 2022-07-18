@@ -35,6 +35,7 @@ GtCoderContextMenuContent >> initialize [
 							hovered: [ :aStyle | aStyle background: self theme item selectedColor ]);
 					padding: (BlInsets top: 2 bottom: 2);
 					addChild: (BrLabel new
+							aptitude: BrGlamorousLabelAptitude;
 							text: eachGtCoderContextMenuAction title asRopedText;
 							hMatchParent;
 							yourself);
@@ -55,6 +56,7 @@ GtCoderContextMenuContent >> initialize [
 								border: (BlBorder paint: Color gray width: 1);
 								padding: (BlInsets all: 1);
 								addChild: (BrLabel new
+										aptitude: BrGlamorousLabelAptitude;
 										text: (eachGtCoderContextMenuAction shortcutKey asRopedText
 												fontName: 'Source Code Pro';
 												foreground: Color gray;
