@@ -5,7 +5,7 @@ Class {
 		'item',
 		'labelElement'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #initialization }
@@ -33,6 +33,7 @@ GtCoderFilterListItemElement >> item: anObject [
 { #category : #'private - instance creation' }
 GtCoderFilterListItemElement >> newLabelElement [
 	^ BrLabel new
+		aptitude: BrGlamorousLabelAptitude
 ]
 
 { #category : #'private - hooks' }

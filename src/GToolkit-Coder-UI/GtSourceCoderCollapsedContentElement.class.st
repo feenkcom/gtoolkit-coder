@@ -35,27 +35,27 @@ GtSourceCoderCollapsedContentElement >> newAddOnsContainer [
 		matchParent;
 		alignCenterLeft;
 		margin: (BlInsets left: 5);
-		withAsyncPromiseDo: [ :anElementPromise | 
+		withAsyncPromiseDo: [ :anElementPromise |
 			anElementPromise
-				whenSuccess: [ :aContainer :theAddOns | 
+				whenSuccess: [ :aContainer :theAddOns |
 					aContainer removeChildren.
-					theAddOns previews
-						do: [ :eachAddOn | 
-							| eachAddOnElement |
-							eachAddOnElement := previews
-									at: eachAddOn id
-									ifAbsentPut: [ eachAddOn stencil asElement ].
+					theAddOns previews do: [ :eachAddOn |
+						| eachAddOnElement |
 
-							eachAddOn dataBinder
-								element: eachAddOnElement;
-								coderViewModel: textualCoderViewModel;
-								build.
+						eachAddOnElement := previews
+							at: eachAddOn id
+							ifAbsentPut: [ eachAddOn stencil asElement ].
+						
+						eachAddOn dataBinder
+							element: eachAddOnElement;
+							coderViewModel: textualCoderViewModel;
+							build.
 
-							aContainer addChild: eachAddOnElement ] ];
-				whenError: [ :aContainer :anError | 
+						aContainer addChild: eachAddOnElement ] ];
+				whenError: [ :aContainer :anError |
 					aContainer removeChildren.
-					aContainer addChild: (BrLabel new text: anError printString) ];
-				whenPending: [ :aContainer |  ] ]
+					aContainer addChild: (BrLabel new aptitude: BrGlamorousLabelAptitude; text: anError printString) ];
+				whenPending: [ :aContainer | ] ]
 ]
 
 { #category : #'instance creation' }
