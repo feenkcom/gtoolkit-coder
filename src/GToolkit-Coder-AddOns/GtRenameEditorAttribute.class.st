@@ -7,12 +7,12 @@ Class {
 		'filter',
 		'editorShortcuts'
 	],
-	#category : 'GToolkit-Coder-AddOns-Inline rename'
+	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
 { #category : #accessing }
 GtRenameEditorAttribute >> additionalAttributes [
-	^ #()
+	^ {BlFontFamilyAttribute named: 'Source Code Pro'}
 ]
 
 { #category : #accessing }
