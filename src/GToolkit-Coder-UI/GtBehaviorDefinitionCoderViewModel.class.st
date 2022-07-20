@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #accessing }
+GtBehaviorDefinitionCoderViewModel >> discardChanges [
+	self coder definitionFrom: self coder behavior.
+	self coder announce: (GtCoderClassChanged new coder: self coder)
+]
+
+{ #category : #accessing }
 GtBehaviorDefinitionCoderViewModel >> elementClass [
 	^ GtPharoBehaviorDefinitionCoderElement
 ]
