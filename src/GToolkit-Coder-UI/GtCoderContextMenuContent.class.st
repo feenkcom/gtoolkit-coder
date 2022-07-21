@@ -55,6 +55,7 @@ GtCoderContextMenuContent >> initialize [
 								geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
 								border: (BlBorder paint: Color gray width: 1);
 								padding: (BlInsets all: 1);
+								margin: (BlInsets left: 10);
 								addChild: (BrLabel new
 										aptitude: BrGlamorousLabelAptitude;
 										text: (eachGtCoderContextMenuAction shortcutKey asRopedText
