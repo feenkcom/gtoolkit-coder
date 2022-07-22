@@ -20,7 +20,7 @@ GtClassesCompletionStrategy >> candidateClasses [
 GtClassesCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
 	| currentInput |
 	currentInput := aText asString.
-	currentInput isEmpty ifTrue: [ ^ #() ].
+	currentInput isEmpty ifTrue: [ ^ #() asAsyncStream ].
 	^ (self candidateClasses asyncStreamStartingWith: currentInput)
 		collect:
 			[ :className | 
