@@ -13,13 +13,18 @@ Class {
 		'contentElement',
 		'playgroundElement'
 	],
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #'private - accessing' }
 GtCoderPlaygroundElement >> contentElement [
 	<return: #GtCoderContentElement>
 	^ contentElement
+]
+
+{ #category : #accessing }
+GtCoderPlaygroundElement >> disablePlayPage [
+	self removeChild: self playPageElement
 ]
 
 { #category : #initialization }

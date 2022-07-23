@@ -30,6 +30,17 @@ GtCoder >> contentElement [
 	^ contentElement
 ]
 
+{ #category : #'private - accessing' }
+GtCoder >> contentElement: anElement [
+	<return: #GtCoderContentElement>
+	contentElement := anElement
+]
+
+{ #category : #initialization }
+GtCoder >> disablePlayPage [
+	contentElement disablePlayPage
+]
+
 { #category : #initialization }
 GtCoder >> initialize [
 	super initialize.
