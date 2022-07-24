@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'string'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Source Attributes'
+	#category : #'GToolkit-Coder-UI-Coder - Source Attributes'
 }
 
 { #category : #'instance creation' }
@@ -25,7 +25,7 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 		medium;
 		glamorousCodeFontAndSmallSize.
 
-	^ BlTextElement new
+	^ GtSourceErrorTextElement new
 		text: text;
 		background: (BrGlamorousColors errorBackgroundColor alpha: 0.4);
 		padding: (BlInsets top: 3 left: 0 bottom: 3 right: 0);
