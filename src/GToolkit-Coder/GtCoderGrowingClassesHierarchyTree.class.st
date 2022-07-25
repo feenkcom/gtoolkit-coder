@@ -9,7 +9,7 @@ I automatically compute subclasses on demand.
 Class {
 	#name : #GtCoderGrowingClassesHierarchyTree,
 	#superclass : #GtCoderClassesHierarchyTree,
-	#category : 'GToolkit-Coder-Navigation - Model'
+	#category : #'GToolkit-Coder-Navigation - Model'
 }
 
 { #category : #accessing }
@@ -71,4 +71,5 @@ GtCoderGrowingClassesHierarchyTree >> updateSubclasses [
 			collect: [ :eachClass |
 				self class new rootClass: eachClass ]
 			as: Array.
+	self sortByClassName
 ]
