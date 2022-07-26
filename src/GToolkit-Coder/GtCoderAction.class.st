@@ -32,6 +32,11 @@ GtCoderAction >> action: anObject [
 	action := anObject
 ]
 
+{ #category : #evaluating }
+GtCoderAction >> gtValueWithArgs: anArray [
+	^ self action valueWithPossibleArgs: anArray
+]
+
 { #category : #comparing }
 GtCoderAction >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
