@@ -16,10 +16,21 @@ Class {
 }
 
 { #category : #accessing }
-GtCoderToolbarElement >> addButton [
-
-	<gtCoderAction: 5>
-	toolbarElement addItem: self newAddButton
+GtCoderToolbarElement >> addButtonFor: anAction [
+	<gtAction>
+	^ anAction dropdown
+		icon: BrGlamorousVectorIcons add;
+		tooltip: 'Add class or package';
+		priority: 5;
+		content: [ :aDropdown | 
+			| element |
+			element := BlElement new.
+			element
+				constraintsDo: [ :c | 
+					c horizontal exact: 400.
+					c vertical exact: 300 ].
+			element addChild: (self newAddInterface: aDropdown).
+			element ]
 ]
 
 { #category : #'gt-extensions' }
@@ -32,7 +43,7 @@ GtCoderToolbarElement >> addClassTab: look [
 			element := GtPharoCreateBehaviorElement new.
 			element
 				behaviorBlock: [ :cls | 
-					look hide.
+					look fireEvent: BrDropdownHideWish new.
 					navigationModel selectClass: cls ].
 			element forClassDefinition.
 			navigationModel
@@ -44,11 +55,14 @@ GtCoderToolbarElement >> addClassTab: look [
 
 { #category : #initialization }
 GtCoderToolbarElement >> addCustomButtons [
-
-	| pragmas |
-	pragmas := Pragma allNamed: #gtCoderAction: in: self class.
-	pragmas sort: [ :a :b | (a argumentAt: 1) <= (b argumentAt: 1) ].
-	pragmas do: [ :aPragma | self perform: aPragma methodSelector ]
+	(GtPhlowActionsCollector new
+		pragmaName: #gtAction;
+		fromObject: self;
+		collect)
+		do: [ :each | 
+			each
+				asElement: [ :actionElement | self toolbarElement addItem: actionElement ]
+				withHostElement: self ]
 ]
 
 { #category : #'gt-extensions' }
@@ -61,7 +75,7 @@ GtCoderToolbarElement >> addPackageTab: look [
 			element := GtPharoCreatePackageElement new.
 			element
 				packageBlock: [ :pkg :tag | 
-					look hide.
+					look fireEvent: BrDropdownHideWish new.
 					tag isNil
 						ifTrue: [ self navigationModel selectPackage: pkg ]
 						ifFalse: [ self navigationModel selectPackageTag: tag ] ].
@@ -80,7 +94,7 @@ GtCoderToolbarElement >> addTraitTab: look [
 			element := GtPharoCreateBehaviorElement new.
 			element
 				behaviorBlock: [ :cls | 
-					look hide.
+					look fireEvent: BrDropdownHideWish new.
 					self navigationModel selectClass: cls ].
 			element forTraitDefinition.
 			self navigationModel
@@ -91,10 +105,13 @@ GtCoderToolbarElement >> addTraitTab: look [
 ]
 
 { #category : #accessing }
-GtCoderToolbarElement >> browseButton [
-
-	<gtCoderAction: 1>
-	toolbarElement addItem: self newBrowseButton
+GtCoderToolbarElement >> browseButtonFor: anAction [
+	<gtAction>
+	^ anAction button
+		tooltip: 'Browse in another world tab';
+		priority: 1;
+		icon: BrGlamorousVectorIcons emphasizedBrowse;
+		action: [ :aButton | self browseFrom: aButton ]
 ]
 
 { #category : #'private - actions' }
@@ -107,23 +124,18 @@ GtCoderToolbarElement >> browseFrom: anElement [
 ]
 
 { #category : #accessing }
-GtCoderToolbarElement >> createActionButton [
-
-	| button caller |
-	button := BrButton new.
-	caller := thisContext stack second method.
-	button viewModel when: BlClickEvent do: [ :anEvent | 
-		(GtPhlowUtility isDefinitionRequested: anEvent) ifTrue: [ 
-			anEvent consumed: true.
-			button phlow spawnObject: caller ] ].
-	^ button
-]
-
-{ #category : #accessing }
-GtCoderToolbarElement >> hierarchyButton [
-
-	<gtCoderAction: 3>
-	toolbarElement addItem: self newHierarchyButton
+GtCoderToolbarElement >> hierarchyButtonFor: anAction [
+	<gtAction>
+	^ anAction dropdown
+		tooltip: 'Show Package and Class Hierarchies';
+		icon: BrGlamorousIcons tree;
+		priority: 3;
+		content: [
+				BlElement new
+					size: 400@400;
+					addChild: ((GtCoderNavigationTabsStencil new 
+						navigationModel: navigationModel;
+						asElement) background: Color white) ]
 ]
 
 { #category : #initialization }
@@ -149,33 +161,6 @@ GtCoderToolbarElement >> initializeToolbarElement [
 ]
 
 { #category : #'private - instance creation' }
-GtCoderToolbarElement >> newAddButton [
-	| look |
-	^ self createActionButton
-		label: 'Add class or package';
-		aptitude:
-			BrGlamorousButtonWithIconAptitude
-				+
-					(look := BrGlamorousWithDropdownAptitude
-						handle: [ BrButton new
-								aptitude:
-									BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
-										- BrGlamorousButtonExteriorAptitude;
-								icon: BrGlamorousVectorIcons add;
-								yourself ]
-						content: [ | element |
-							element := BlElement new.
-							element
-								constraintsDo: [ :c | 
-									c horizontal exact: 400.
-									c vertical exact: 300 ].
-							element addChild: (self newAddInterface: look).
-							element ]);
-		icon: BrGlamorousVectorIcons add;
-		yourself
-]
-
-{ #category : #'private - instance creation' }
 GtCoderToolbarElement >> newAddInterface: look [
 	| contentTabs tabMethods |
 	contentTabs := BrTabGroup new.
@@ -192,55 +177,6 @@ GtCoderToolbarElement >> newAddInterface: look [
 	^ contentTabs
 ]
 
-{ #category : #'private - instance creation' }
-GtCoderToolbarElement >> newBrowseButton [
-	^ self createActionButton
-		aptitude: BrGlamorousButtonWithIconAptitude;
-		label: 'Browse in another world tab';
-		icon: BrGlamorousVectorIcons emphasizedBrowse;
-		action: [ :aButton | self browseFrom: aButton ]
-]
-
-{ #category : #'private - instance creation' }
-GtCoderToolbarElement >> newHierarchyButton [
-	^ self createActionButton
-		label: 'Show Package and Class Hierarchies';
-		aptitude: BrGlamorousButtonWithIconAptitude + (BrGlamorousWithDropdownAptitude
-			handle: [
-				BrButton new
-					aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude - BrGlamorousButtonExteriorAptitude;
-					icon: BrGlamorousIcons tree;
-					yourself ]
-			content: [
-				BlElement new
-					size: 400@400;
-					addChild: ((GtCoderNavigationTabsStencil new 
-						navigationModel: navigationModel;
-						asElement) background: Color white) ]);
-		icon: BrGlamorousIcons tree asElement;
-		yourself
-]
-
-{ #category : #'private - instance creation' }
-GtCoderToolbarElement >> newSpotterButton [
-	<return: #BrButton>
-	
-	^ GtSpotterDropdownButtonStencil new
-		valuable: (GtCoderSpotterStart new navigationModelBlock: [self navigationModel]);
-		tooltip: 'Search Code';
-		actOn: [ :anActOnEvent :anItem :theButton | 
-			| acted |
-			acted := false.
-			(anItem isKindOf: RPackage) ifTrue: [ 
-				self navigationModel selectPackage: anItem. acted := true ].
-			(anItem isKindOf: ClassDescription) ifTrue: [ 
-				self navigationModel selectClass: anItem. acted := true ].
-			(anItem isKindOf: CompiledMethod) ifTrue: [ 
-				self navigationModel selectMethod: anItem. acted := true ].
-			acted ifTrue: [ anActOnEvent beActed ] ];
-		asElement.
-]
-
 { #category : #initialization }
 GtCoderToolbarElement >> repository [
 
@@ -252,10 +188,27 @@ GtCoderToolbarElement >> repository [
 ]
 
 { #category : #accessing }
-GtCoderToolbarElement >> spotterButton [
-
-	<gtCoderAction: 2>
-	toolbarElement addItem: self newSpotterButton
+GtCoderToolbarElement >> spotterButtonFor: anAction [
+	<gtAction>
+	^ anAction explicit
+		priority: 2;
+		stencil: [ GtSpotterDropdownButtonStencil new
+				valuable: (GtCoderSpotterStart new navigationModelBlock: [ self navigationModel ]);
+				tooltip: 'Search Code';
+				actOn: [ :anActOnEvent :anItem :theButton | 
+					| acted |
+					acted := false.
+					(anItem isKindOf: RPackage)
+						ifTrue: [ self navigationModel selectPackage: anItem.
+							acted := true ].
+					(anItem isKindOf: ClassDescription)
+						ifTrue: [ self navigationModel selectClass: anItem.
+							acted := true ].
+					(anItem isKindOf: CompiledMethod)
+						ifTrue: [ self navigationModel selectMethod: anItem.
+							acted := true ].
+					acted ifTrue: [ anActOnEvent beActed ] ];
+				asElement ]
 ]
 
 { #category : #accessing }
