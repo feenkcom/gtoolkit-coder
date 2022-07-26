@@ -43,10 +43,10 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.127/src' ].
 		spec
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.681/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.682/src' ].
 		spec
 			baseline: 'GToolkitCompleter' with: [
-				spec repository: 'github://feenkcom/gtoolkit-completer:v0.8.677/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-completer:v0.8.678/src' ].
 
 		spec package: 'GToolkit-VariableBindings'.
 		spec package: 'GToolkit-SearchFilters' with: [
