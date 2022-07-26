@@ -58,6 +58,7 @@ GtCoderToolbarElement >> addCustomButtons [
 	(GtPhlowActionsCollector new
 		pragmaName: #gtAction;
 		fromObject: self;
+		to: self class;
 		collect)
 		do: [ :each | 
 			each
