@@ -7,9 +7,6 @@ Class {
 		'removeSelector',
 		'contextMenuBlock'
 	],
-	#classInstVars : [
-		'foo'
-	],
 	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
@@ -134,6 +131,12 @@ GtCodeDefinitionPluralEditor >> create [
 				ifTrue: [ aTagger renameTagNamed: anEvent oldName to: anEvent newName ] ].
 
 	^ aTagger
+]
+
+{ #category : #'api - instantiation' }
+GtCodeDefinitionPluralEditor >> initialize [
+	super initialize.
+	contextMenuBlock := [ :def :edit | GtCoderContextMenuContent new editorElement: edit ]
 ]
 
 { #category : #accessing }
