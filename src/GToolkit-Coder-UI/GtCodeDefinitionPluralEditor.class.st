@@ -136,7 +136,7 @@ GtCodeDefinitionPluralEditor >> create [
 { #category : #'api - instantiation' }
 GtCodeDefinitionPluralEditor >> initialize [
 	super initialize.
-	contextMenuBlock := [ :def :edit | GtCoderContextMenuContent new editorElement: edit ]
+	contextMenuBlock := [ :def :edit | [ GtCoderContextMenuContent new editorElement: edit ] ]
 ]
 
 { #category : #accessing }
