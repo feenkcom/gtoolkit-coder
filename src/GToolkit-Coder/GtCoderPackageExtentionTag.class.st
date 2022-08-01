@@ -5,7 +5,7 @@ Class {
 		'package',
 		'classes'
 	],
-	#category : 'GToolkit-Coder-Navigation - Model'
+	#category : #'GToolkit-Coder-Navigation - Model'
 }
 
 { #category : #'instance creation' }
@@ -22,6 +22,11 @@ GtCoderPackageExtentionTag >> classes [
 { #category : #accessing }
 GtCoderPackageExtentionTag >> classes: anObject [
 	classes := anObject
+]
+
+{ #category : #accessing }
+GtCoderPackageExtentionTag >> gtTagName [
+	^ self name
 ]
 
 { #category : #testing }

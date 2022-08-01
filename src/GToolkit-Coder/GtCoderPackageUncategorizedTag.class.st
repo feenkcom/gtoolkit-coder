@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'packageTag'
 	],
-	#category : 'GToolkit-Coder-Navigation - Model'
+	#category : #'GToolkit-Coder-Navigation - Model'
 }
 
 { #category : #'instance creation' }
@@ -21,6 +21,11 @@ GtCoderPackageUncategorizedTag >> = anObject [
 { #category : #accessing }
 GtCoderPackageUncategorizedTag >> classes [
 	^ self packageTag classes
+]
+
+{ #category : #accessing }
+GtCoderPackageUncategorizedTag >> gtTagName [
+	^ packageTag name
 ]
 
 { #category : #accessing }
