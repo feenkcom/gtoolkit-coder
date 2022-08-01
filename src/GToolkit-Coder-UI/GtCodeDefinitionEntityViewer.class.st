@@ -40,6 +40,11 @@ GtCodeDefinitionEntityViewer >> definition: anObject [
 	definition := anObject
 ]
 
+{ #category : #accessing }
+GtCodeDefinitionEntityViewer >> definitionsDo: aBlock [
+	aBlock cull: self definition
+]
+
 { #category : #initialization }
 GtCodeDefinitionEntityViewer >> initialize [
 	super initialize.

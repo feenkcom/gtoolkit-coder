@@ -6,7 +6,7 @@ Class {
 		'margin',
 		'lookStencil'
 	],
-	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
 { #category : #accessing }
@@ -23,6 +23,11 @@ GtCodeDefinitionViewer >> buildSectionLabel: aSectionName [
 		margin: (BlInsets top: 5 right: 5);
 		focusability: BlFocusability none;
 		constraintsDo: [ :c | c grid horizontal alignLeft ]
+]
+
+{ #category : #accessing }
+GtCodeDefinitionViewer >> definitionsDo: aBlock [
+	self subclassResponsibility
 ]
 
 { #category : #initialization }

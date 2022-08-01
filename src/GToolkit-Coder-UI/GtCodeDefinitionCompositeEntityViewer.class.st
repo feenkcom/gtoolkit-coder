@@ -6,7 +6,7 @@ Class {
 		'separatorStencil',
 		'showSectionNames'
 	],
-	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
 { #category : #'instance creation' }
@@ -43,6 +43,11 @@ GtCodeDefinitionCompositeEntityViewer >> create [
 						
 						showSectionNames ifTrue: [
 							aStream nextPut: (self buildSectionLabel: (editors at: aCurrentIndex) title) ] ] ])
+]
+
+{ #category : #accessing }
+GtCodeDefinitionCompositeEntityViewer >> definitionsDo: aBlock [
+	self editors do: [ :each | each definitionsDo: aBlock ]
 ]
 
 { #category : #accessing }
