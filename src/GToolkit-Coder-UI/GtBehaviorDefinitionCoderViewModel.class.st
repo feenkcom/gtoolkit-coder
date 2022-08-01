@@ -1,16 +1,12 @@
 Class {
 	#name : #GtBehaviorDefinitionCoderViewModel,
 	#superclass : #GtSingleCoderViewModel,
-	#instVars : [
-		'foo'
-	],
 	#category : #'GToolkit-Coder-UI-Coder - Behavior-Definition Model'
 }
 
 { #category : #accessing }
 GtBehaviorDefinitionCoderViewModel >> discardChanges [
-	self coder definitionFrom: self coder behavior.
-	self coder announce: (GtCoderClassChanged new coder: self coder)
+	self coder discardChanges
 ]
 
 { #category : #accessing }
