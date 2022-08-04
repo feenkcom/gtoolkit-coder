@@ -153,6 +153,6 @@ GtFiltersElement >> newAddTagButton [
 		action: [ :aButton | self createNewTag ];
 		addShortcut:
 			(BlShortcutWithAction new
-				combination: BlKeyCombination return;
+				combination: BlKeyCombination enter;
 				action: [ :anEvent | self createNewTag ])
 ]
