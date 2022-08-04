@@ -71,7 +71,7 @@ GtRenameEditorAttribute >> editorShortcuts [
 				combination: BlKeyCombination tab;
 				action: [ :aShortcutEvent | self renameAction tabAccept: true ]).
 			(BlShortcutWithAction new
-				combination: BlKeyCombination return;
+				combination: BlKeyCombination enter;
 				action: [ :aShortcutEvent | self renameAction accept ])} ]
 ]
 
