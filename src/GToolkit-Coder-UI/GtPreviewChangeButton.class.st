@@ -5,7 +5,7 @@ Class {
 		'changeAction',
 		'changeStencil'
 	],
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #ui }
@@ -32,7 +32,7 @@ GtPreviewChangeButton >> buildDropDownElement [
 			changeAction cull: aButtonElement cull: aButtonModel cull: anEvent.
 			aButtonElement fireEvent: BrDropdownHideWish new ];
 		yourself.
-	element addChild: unloadButton.
+	element addChild: unloadButton as: #'change-button-action'.
 	^ element
 ]
 
