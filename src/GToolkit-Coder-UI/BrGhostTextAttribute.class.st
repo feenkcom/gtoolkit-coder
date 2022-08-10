@@ -23,11 +23,22 @@ BrGhostTextAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement
 	element := BlTextElement new
 			text: text;
 			yourself.
-	anEditorElement text isEmpty ifFalse: [ element size: 0 @ 0 ].
+
+	self updateVisibilityOf: element in: anEditorElement.
+	element
+		when: BrTextEditorTextChangedRequest
+		do: [ :anEvent | self updateVisibilityOf: element in: anEditorElement ].
 	^ element
 ]
 
 { #category : #accessing }
 BrGhostTextAttribute >> for: aText [
 	text := aText
+]
+
+{ #category : #accessing }
+BrGhostTextAttribute >> updateVisibilityOf: element in: anEditorElement [
+	^ anEditorElement text isEmpty
+		ifTrue: [ element visibility: BlVisibility visible ]
+		ifFalse: [ element visibility: BlVisibility gone ]
 ]
