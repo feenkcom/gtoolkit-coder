@@ -159,7 +159,7 @@ GtDiffElement >> leftBottomFor: anInteger [
 	anInteger < range first ifTrue: [ ^ 0 ].
 	anInteger > range last ifTrue: [ ^ self height ].
 	element := leftElement children at: anInteger - range first + 1.
-	^ element bounds bottom max: 0
+	^ element bounds bottom + leftElement bounds top max: 0
 ]
 
 { #category : #accessing }
@@ -203,7 +203,7 @@ GtDiffElement >> leftTopFor: anInteger [
 	anInteger < range first ifTrue: [ ^ 0 ].
 	anInteger > range last ifTrue: [ ^ self height ].
 	element := leftElement children at: anInteger - range first + 1.
-	^ element bounds top max: 0
+	^ element bounds top + leftElement bounds top max: 0
 ]
 
 { #category : #private }
@@ -307,7 +307,7 @@ GtDiffElement >> rightBottomFor: anInteger [
 	anInteger < range first ifTrue: [ ^ 0 ].
 	anInteger > range last ifTrue: [ ^ self height ].
 	element := rightElement children at: anInteger - range first + 1.
-	^ element bounds bottom max: 0
+	^ element bounds bottom + rightElement bounds top max: 0
 ]
 
 { #category : #accessing }
@@ -351,7 +351,7 @@ GtDiffElement >> rightTopFor: anInteger [
 	anInteger < range first ifTrue: [ ^ 0 ].
 	anInteger > range last ifTrue: [ ^ self height ].
 	element := rightElement children at: anInteger - range first + 1.
-	^ element bounds top max: 0
+	^ element bounds top + rightElement bounds top max: 0
 ]
 
 { #category : #'event handling' }
