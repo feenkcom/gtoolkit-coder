@@ -7,7 +7,9 @@ Class {
 		'methodProtocolsList',
 		'classAndMethodProtocolList',
 		'protocolLabel',
-		'coderFilterChangesSubscription'
+		'coderFilterChangesSubscription',
+		'selectorList',
+		'selectorsLabel'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
@@ -81,40 +83,51 @@ GtCoderNavigationPackagesTagsClassesElement >> hideOrShowClassList [
 GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
 	super initializeContent.
 	packagesList := GtCoderNavigationPackagesTreeElement new.
-	
-	methodProtocolsList := GtCoderNavigationMethodProtocolListElement new 
-		matchParent.
-	
+
+	methodProtocolsList := GtCoderNavigationMethodProtocolListElement new
+			matchParent.
+
 	classAndMethodProtocolList := BrVerticalPane new
-		matchParent;
-		addChild: classesList;
-		addChild: (protocolLabel := BrLabel new
-			aptitude: (BrGlamorousLabelAptitude new fontSize: 12; foreground: Color gray);
-			text: 'Categories');
-		addChild: methodProtocolsList.
+			matchParent;
+			addChild: classesList;
+			addChild: (protocolLabel := BrLabel new
+						aptitude: (BrGlamorousLabelAptitude new
+								fontSize: 12;
+								foreground: Color gray);
+						text: 'Categories');
+			addChild: methodProtocolsList.
+
+	selectorList := GtCoderNavigationMethodListElement new
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 	super initializeElement.
-	self addChildren: {
-		BrLabel new
-			aptitude: (BrGlamorousLabelAptitude new fontSize: 12; foreground: Color gray);
-			text: 'Packages'.
-			
-		classesLabel := BrLabel new
-			aptitude: (BrGlamorousLabelAptitude new fontSize: 12; foreground: Color gray);
-			text: 'Classes'.
-	
-		packagesList.
-		classAndMethodProtocolList.
-	}
+	self
+		addChildren: {BrLabel new
+					aptitude: (BrGlamorousLabelAptitude new
+							fontSize: 12;
+							foreground: Color gray);
+					text: 'Packages'.
+				classesLabel := BrLabel new
+						aptitude: (BrGlamorousLabelAptitude new
+								fontSize: 12;
+								foreground: Color gray);
+						text: 'Classes'.
+				selectorsLabel := BrLabel new
+						aptitude: (BrGlamorousLabelAptitude new
+								fontSize: 12;
+								foreground: Color gray);
+						text: 'Selectors'.
+				packagesList.
+				classAndMethodProtocolList.
+				selectorList}
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 	super initializeLayout.
-	self layout: (BlGridLayout horizontal columnCount: 2; cellSpacing: 5).
+	self layout: (BlGridLayout horizontal columnCount: 3; cellSpacing: 5).
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical matchParent ].
@@ -399,7 +412,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock 
 GtCoderNavigationPackagesTagsClassesElement >> showClassList [
 	classAndMethodProtocolList visibility: BlVisibility visible.
 	classesLabel visibility: BlVisibility visible.
-	self layout columnCount: 2.
+	self layout columnCount: 3.
 ]
 
 { #category : #subscriptions }
@@ -447,17 +460,21 @@ GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	classesList initializeWithClasses: navigationModel classesToShow.
 	navigationModel hasSelectedClass
-		ifTrue:
-			[ | methodProtocols |
-			methodProtocols := (navigationModel selectedClass organization protocols
-				, navigationModel selectedClass class organization protocols).
+		ifTrue: [ | methodProtocols |
+			methodProtocols := navigationModel selectedClass organization protocols
+					, navigationModel selectedClass class organization protocols.
 			methodProtocolsList initializeWithProtocols: methodProtocols.
+			selectorList
+				initializeWithMethods: navigationModel selectedClass methods
+						, navigationModel selectedClass class methods.
 			protocolLabel visibility: BlVisibility visible.
-			methodProtocolsList visibility: BlVisibility visible ]
-		ifFalse:
-			[ methodProtocolsList initializeWithProtocols: Array empty.
+			methodProtocolsList visibility: BlVisibility visible.
+			selectorsLabel visibility: BlVisibility visible ]
+		ifFalse: [ methodProtocolsList initializeWithProtocols: Array empty.
+			selectorList initializeWithMethods: #().
 			protocolLabel visibility: BlVisibility gone.
-			methodProtocolsList visibility: BlVisibility gone ]
+			methodProtocolsList visibility: BlVisibility gone.
+			selectorsLabel visibility: BlVisibility gone ]
 ]
 
 { #category : #'updating lists' }
