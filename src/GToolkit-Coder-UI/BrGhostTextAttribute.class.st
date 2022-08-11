@@ -20,7 +20,6 @@ BrGhostTextAttribute class >> for: aText [
 { #category : #accessing }
 BrGhostTextAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| element |
-	self halt.
 	element := BlTextElement new
 			text: text;
 			yourself.
