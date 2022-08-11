@@ -7,7 +7,10 @@ Class {
 		'methodProtocolsList',
 		'classAndMethodProtocolList',
 		'protocolLabel',
-		'coderFilterChangesSubscription'
+		'coderFilterChangesSubscription',
+		'methodList',
+		'methodLabel',
+		'methodsLabel'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
@@ -81,43 +84,66 @@ GtCoderNavigationPackagesTagsClassesElement >> hideOrShowClassList [
 GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
 	super initializeContent.
 	packagesList := GtCoderNavigationPackagesTreeElement new.
-	
-	methodProtocolsList := GtCoderNavigationMethodProtocolListElement new 
-		matchParent.
-	
+
+	methodProtocolsList := GtCoderNavigationMethodProtocolListElement new
+			matchParent.
+
 	classAndMethodProtocolList := BrVerticalPane new
-		matchParent;
-		addChild: classesList;
-		addChild: (protocolLabel := BrLabel new
-			aptitude: (BrGlamorousLabelAptitude new fontSize: 12; foreground: Color gray);
-			text: 'Categories');
-		addChild: methodProtocolsList.
+			matchParent;
+			addChild: classesList;
+			addChild: (protocolLabel := BrLabel new
+						aptitude: (BrGlamorousLabelAptitude new
+								fontSize: 12;
+								foreground: Color gray);
+						text: 'Categories');
+			addChild: methodProtocolsList.
+
+	methodList := GtCoderNavigationMethodListElement new
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 	super initializeElement.
-	self addChildren: {
-		BrLabel new
-			aptitude: (BrGlamorousLabelAptitude new fontSize: 12; foreground: Color gray);
-			text: 'Packages'.
-			
-		classesLabel := BrLabel new
-			aptitude: (BrGlamorousLabelAptitude new fontSize: 12; foreground: Color gray);
-			text: 'Classes'.
-	
-		packagesList.
-		classAndMethodProtocolList.
-	}
+	self
+		addChildren: {BrLabel new
+					aptitude: (BrGlamorousLabelAptitude new
+							fontSize: 12;
+							foreground: Color gray);
+					text: 'Packages'.
+				classesLabel := BrLabel new
+						aptitude: (BrGlamorousLabelAptitude new
+								fontSize: 12;
+								foreground: Color gray);
+						text: 'Classes'.
+				methodsLabel := BrLabel new
+						aptitude: (BrGlamorousLabelAptitude new
+								fontSize: 12;
+								foreground: Color gray);
+						text: 'Methods'.
+				packagesList.
+				classAndMethodProtocolList.
+				methodList}
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 	super initializeLayout.
-	self layout: (BlGridLayout horizontal columnCount: 2; cellSpacing: 5).
+	self layout: (BlGridLayout horizontal columnCount: 3; cellSpacing: 5).
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical matchParent ].
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> onMethodListSelectionChanged [
+	| anIndex aSelectedItem theIndices |
+	supressListChanges ifTrue: [ ^ self ].
+	theIndices := methodList selectedIndices.
+	theIndices ifEmpty: [ ^ self ].
+	anIndex := theIndices first.
+	(anIndex between: 1 and: methodList viewModel itemCount) ifFalse: [ ^ self ].
+	aSelectedItem := (methodList viewModel itemAt: anIndex) value.
+	self navigationModel selectMethod: aSelectedItem
 ]
 
 { #category : #'event handling' }
@@ -234,7 +260,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
-	| anIndex aSelectedItem theIndices |
+	| anIndex aSelectedItem theIndices methods |
 	supressListChanges ifTrue: [ ^ self ].
 	theIndices := methodProtocolsList selectedIndices.
 	theIndices ifEmpty: [ ^ self ].
@@ -243,6 +269,15 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 		ifFalse: [ ^ self ].
 	aSelectedItem := (methodProtocolsList viewModel itemAt: anIndex) value.
 	self navigationModel selectMethodProtocol: aSelectedItem source: self.
+	methods := (self selectedClass organization protocolNamed: aSelectedItem)
+			ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass >> sel ] ]
+			ifNil: [ #() ].
+	methods := methods
+			, ((self selectedClass class organization protocolNamed: aSelectedItem)
+					ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass class >> sel ] ]
+					ifNil: [ #() ]).
+	methodList deselectAll.
+	methodList initializeWithMethods: methods
 ]
 
 { #category : #'api - package updates' }
@@ -399,7 +434,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock 
 GtCoderNavigationPackagesTagsClassesElement >> showClassList [
 	classAndMethodProtocolList visibility: BlVisibility visible.
 	classesLabel visibility: BlVisibility visible.
-	self layout columnCount: 2.
+	self layout columnCount: 3.
 ]
 
 { #category : #subscriptions }
@@ -408,21 +443,20 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToContent [
 	self subscribeToPackageList.
 	self subscribeToClassList.
 	self subscribeToProtocolList.
+	self subscribeToMethodList
 ]
 
 { #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> subscribeToMethodList [
+	methodList
+		when: BrSelectionChanged
+		do: [ :anEvent | self onMethodListSelectionChanged ].
+]
+
+{ #category : #'api - package updates' }
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 	self hasNavigationModel ifFalse: [ ^ self ].
-	super subscribeToNavigationModel.
-	navigationModel weak when: GtCoderNavigationPackagesSelected send: #onPackagesSelected: to: self.
-	navigationModel weak when: GtCoderNavigationPackageSelected send: #onPackageSelected: to: self.
-	navigationModel weak when: GtCoderNavigationPackageTagSelected send: #onPackageTagSelected: to: self.
-	navigationModel weak when: GtCoderNavigationPackageRegistered send: #onPackageRegistered: to: self.
-	navigationModel weak when: GtCoderNavigationPackageUnregistered send: #onPackageUnregistered: to: self.
-	navigationModel weak when: GtCoderNavigationPackageRenamed send: #onPackageRenamed: to: self.
-	navigationModel weak when: GtCoderNavigationPackageTagAdded send: #onPackageTagAdded: to: self.
-	navigationModel weak when: GtCoderNavigationPackageTagRemoved send: #onPackageTagRemoved: to: self.
-	navigationModel weak when: GtCodersFiltersChanged send: #onMethodsCoderFiltersChanged: to: self.
+	super subscribeToNavigationModel
 ]
 
 { #category : #subscriptions }
@@ -446,18 +480,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToProtocolList [
 GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	classesList initializeWithClasses: navigationModel classesToShow.
-	navigationModel hasSelectedClass
-		ifTrue:
-			[ | methodProtocols |
-			methodProtocols := (navigationModel selectedClass organization protocols
-				, navigationModel selectedClass class organization protocols).
-			methodProtocolsList initializeWithProtocols: methodProtocols.
-			protocolLabel visibility: BlVisibility visible.
-			methodProtocolsList visibility: BlVisibility visible ]
-		ifFalse:
-			[ methodProtocolsList initializeWithProtocols: Array empty.
-			protocolLabel visibility: BlVisibility gone.
-			methodProtocolsList visibility: BlVisibility gone ]
+	self updateProtocolList
 ]
 
 { #category : #'updating lists' }
@@ -478,6 +501,28 @@ GtCoderNavigationPackagesTagsClassesElement >> updatePackageAndClassLists [
 GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	packagesList initializeWithPackages: navigationModel packagesToShow.
+]
+
+{ #category : #'updating lists' }
+GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
+	| methodProtocols |
+	methodProtocolsList deselectAll.
+	methodList deselectAll.
+	navigationModel hasSelectedClass
+		ifTrue: [ methodProtocols := navigationModel selectedClass organization protocols
+					, navigationModel selectedClass class organization protocols.
+			methodProtocolsList initializeWithProtocols: methodProtocols.
+			methodProtocolsList visibility: BlVisibility visible.
+			methodList
+				initializeWithMethods: navigationModel selectedClass methods
+						, navigationModel selectedClass class methods.
+			methodsLabel visibility: BlVisibility visible.
+			protocolLabel visibility: BlVisibility visible ]
+		ifFalse: [ methodProtocolsList initializeWithProtocols: Array empty.
+			methodList initializeWithMethods: #().
+			protocolLabel visibility: BlVisibility hidden.
+			methodProtocolsList visibility: BlVisibility hidden.
+			methodsLabel visibility: BlVisibility hidden ]
 ]
 
 { #category : #'updating lists' }
