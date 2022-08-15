@@ -3,7 +3,6 @@ Class {
 	#superclass : #BlElement,
 	#instVars : [
 		'navigationModel',
-		'supressNavigationChanges',
 		'supressListChanges',
 		'classesList'
 	],
@@ -37,15 +36,14 @@ GtCoderNavigationElement >> hasNavigationModel [
 GtCoderNavigationElement >> initialize [
 	super initialize.
 	supressListChanges := false.
-	supressNavigationChanges := false.
 	self initializeLayout.
 	self initializeContent.
-	self initializeElement.
+	self initializeElement
 ]
 
 { #category : #initialization }
 GtCoderNavigationElement >> initializeContent [
-	classesList := GtCoderNavigationClassesHierarchyTreeElement new.
+	classesList := GtCoderNavigationClassesHierarchyTreeElement new. 
 ]
 
 { #category : #initialization }
@@ -96,34 +94,31 @@ GtCoderNavigationElement >> onClassListSelectionChanged [
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassModified: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		self 
-			updateClass: anAnnouncement theClass
-			inPackage: anAnnouncement package
-			tag: anAnnouncement tag ]
+	self
+		suppressListChangeEventsDuring: [ self
+				updateClass: anAnnouncement theClass
+				inPackage: anAnnouncement package
+				tag: anAnnouncement tag ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassRenamed: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		self 
-			renameClass: anAnnouncement theClass 
-			oldName: anAnnouncement oldName 
-			newName: anAnnouncement newName
-			inPackage: anAnnouncement package
-			tag: anAnnouncement tag ]
+	self
+		suppressListChangeEventsDuring: [ self
+				renameClass: anAnnouncement theClass
+				oldName: anAnnouncement oldName
+				newName: anAnnouncement newName
+				inPackage: anAnnouncement package
+				tag: anAnnouncement tag ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassSelected: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [  
-		self 
-			selectClass: anAnnouncement theClass
-			inPackage: anAnnouncement package 
-			tag: anAnnouncement tag ].
+	self
+		suppressListChangeEventsDuring: [ self
+				selectClass: anAnnouncement theClass
+				inPackage: anAnnouncement package
+				tag: anAnnouncement tag ]
 ]
 
 { #category : #'event handling' }
@@ -208,14 +203,6 @@ GtCoderNavigationElement >> suppressListChangeEventsDuring: aBlock [
 	anOldValue := supressListChanges.
 	supressListChanges := true.
 	aBlock ensure: [ supressListChanges := anOldValue ].
-]
-
-{ #category : #subscriptions }
-GtCoderNavigationElement >> suppressNavigationChangeEventsDuring: aBlock [
-	| anOldValue |
-	anOldValue := supressNavigationChanges.
-	supressNavigationChanges := true.
-	aBlock ensure: [ supressNavigationChanges := anOldValue ].
 ]
 
 { #category : #subscriptions }

@@ -68,9 +68,8 @@ GtCoderNavigationPackagesTagsClassesElement >> hasPackageTagsIn: aRPackage [
 
 { #category : #'showing / hiding' }
 GtCoderNavigationPackagesTagsClassesElement >> hideClassList [
-	classAndMethodProtocolList visibility: BlVisibility gone.
-	classesLabel visibility: BlVisibility gone.
-	self layout columnCount: 1.
+	classAndMethodProtocolList visibility: BlVisibility hidden.
+	classesLabel visibility: BlVisibility hidden.
 ]
 
 { #category : #'showing / hiding' }
@@ -81,7 +80,7 @@ GtCoderNavigationPackagesTagsClassesElement >> hideOrShowClassList [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
+GtCoderNavigationPackagesTagsClassesElement >> initializeContent [ 
 	super initializeContent.
 	packagesList := GtCoderNavigationPackagesTreeElement new.
 
@@ -178,84 +177,68 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageListSelectionChanged [
 	theIndices := packagesList selectedIndices.
 	theIndices ifEmpty: [ ^ self ].
 	anIndex := theIndices first.
-	(anIndex between: 1 and: packagesList viewModel itemCount)
-		ifFalse: [ ^ self ].
+	(anIndex between: 1 and: packagesList viewModel itemCount) ifFalse: [ ^ self ].
 	aSelectedItem := (packagesList viewModel itemAt: anIndex) value.
 	(aSelectedItem isKindOf: RPackage)
-		ifTrue: [
-			BlFrameTelemetry
-				time: [ 'Select package ', aSelectedItem printString ]
-				during: [ self navigationModel selectPackage: aSelectedItem ] ]
-		ifFalse: [
-			BlFrameTelemetry
-				time: [ 'Select tag ', aSelectedItem printString ]
-				during: [ self navigationModel selectTag: aSelectedItem ] ]
+		ifTrue: [ self navigationModel selectPackage: aSelectedItem ]
+		ifFalse: [ self navigationModel selectTag: aSelectedItem ].
+	self showClassList.
+	self deselectClasses
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageRegistered: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		self addPackage: anAnnouncement package ]
+	self
+		suppressListChangeEventsDuring: [ self addPackage: anAnnouncement package ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageRenamed: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		self 
-			renamePackage: anAnnouncement package 
-			oldName: anAnnouncement oldName 
-			newName: anAnnouncement newName ]
+	self
+		suppressListChangeEventsDuring: [ self
+				renamePackage: anAnnouncement package
+				oldName: anAnnouncement oldName
+				newName: anAnnouncement newName ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [  
-		self selectPackage: anAnnouncer package.
-		self deselectClasses. ]
+	self
+		suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package.
+			self showClassList.
+			self deselectClasses ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageTagAdded: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		self addPackage: anAnnouncement package tag: anAnnouncement tag ]
+	self
+		suppressListChangeEventsDuring: [ self addPackage: anAnnouncement package tag: anAnnouncement tag ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageTagRemoved: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		self removePackage: anAnnouncement package tag: anAnnouncement tag ]
+	self
+		suppressListChangeEventsDuring: [ self removePackage: anAnnouncement package tag: anAnnouncement tag ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageTagSelected: anAnnouncer [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [  
-		BlFrameTelemetry
-			time: [ 'Select package ', anAnnouncer package printString, ' tag ', anAnnouncer tag printString ]
-			during: [ self 
-				selectPackage: anAnnouncer package 
-				tag: anAnnouncer tag ].
-		self deselectClasses. ].
+	self
+		suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package tag: anAnnouncer tag.
+			self deselectClasses ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageUnregistered: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		self removePackage: anAnnouncement package ]
+	self
+		suppressListChangeEventsDuring: [ self removePackage: anAnnouncement package ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [  
-		self deselectPackages.
-		self deselectClasses. ]
+	self
+		suppressListChangeEventsDuring: [ self deselectPackages.
+			self deselectClasses ]
 ]
 
 { #category : #'event handling' }
@@ -369,8 +352,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPackageTag [
 	| aPreviousIndex |
-	(self hasPackageTagsIn: aPackage)
-		ifFalse: [ ^ self selectPackage: aPackage ].
+	(self hasPackageTagsIn: aPackage) ifFalse: [ ^ self selectPackage: aPackage ].
 	self expandPackage: aPackage.
 
 	aPreviousIndex := packagesList selectedIndice.
@@ -380,19 +362,12 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPac
 		do: [ :aNewIndex | 
 			packagesList
 				selectOne: aNewIndex;
-				scrollToIndex:
-					(self
+				scrollToIndex: (self
 						scrollIndexFromPrevious: aPreviousIndex
 						current: aNewIndex
 						max: packagesList viewModel itemCount) ].
-	
-	BlFrameTelemetry
-		time: [ self class name, ' #updateClassLists' ]
-		during: [ self updateClassLists ].
-		
-	BlFrameTelemetry
-		time: [ self class name, ' #hideOrShowClassList' ]
-		during: [ self hideOrShowClassList ]
+	self updateClassLists.
+	self hideOrShowClassList
 ]
 
 { #category : #'api - package selections' }
@@ -434,7 +409,6 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock 
 GtCoderNavigationPackagesTagsClassesElement >> showClassList [
 	classAndMethodProtocolList visibility: BlVisibility visible.
 	classesLabel visibility: BlVisibility visible.
-	self layout columnCount: 3.
 ]
 
 { #category : #subscriptions }
@@ -456,17 +430,50 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToMethodList [
 { #category : #'api - package updates' }
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 	self hasNavigationModel ifFalse: [ ^ self ].
-	super subscribeToNavigationModel
+	super subscribeToNavigationModel.
+	navigationModel weak
+		when: GtCoderNavigationPackagesSelected
+		send: #onPackagesSelected:
+		to: self.
+	navigationModel weak
+		when: GtCoderNavigationPackageSelected
+		send: #onPackageSelected:
+		to: self.
+	navigationModel weak
+		when: GtCoderNavigationPackageTagSelected
+		send: #onPackageTagSelected:
+		to: self.
+	navigationModel weak
+		when: GtCoderNavigationPackageRegistered
+		send: #onPackageRegistered:
+		to: self.
+	navigationModel weak
+		when: GtCoderNavigationPackageUnregistered
+		send: #onPackageUnregistered:
+		to: self.
+	navigationModel weak
+		when: GtCoderNavigationPackageRenamed
+		send: #onPackageRenamed:
+		to: self.
+	navigationModel weak
+		when: GtCoderNavigationPackageTagAdded
+		send: #onPackageTagAdded:
+		to: self.
+	navigationModel weak
+		when: GtCoderNavigationPackageTagRemoved
+		send: #onPackageTagRemoved:
+		to: self.
+	navigationModel weak
+		when: GtCodersFiltersChanged
+		send: #onMethodsCoderFiltersChanged:
+		to: self
 ]
 
 { #category : #subscriptions }
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToPackageList [
 	packagesList
 		when: BrSelectionChanged
-		do: [ :anEvent |
-			BlFrameTelemetry
-				time: [ self class name, ' #onPackageListSelectionChanged' ]
-				during: [ self onPackageListSelectionChanged ] ].
+		do: [ :anEvent | self onPackageListSelectionChanged ]
 ]
 
 { #category : #subscriptions }

@@ -21,60 +21,50 @@ GtCoderNavigationClassHierachyElement >> initializeLayout [
 
 { #category : #subscriptions }
 GtCoderNavigationClassHierachyElement >> onClassModified: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		self 
-			updateClass: anAnnouncement theClass
-			inPackage: anAnnouncement package
-			tag: anAnnouncement tag ]
+	self
+		suppressListChangeEventsDuring: [ self
+				updateClass: anAnnouncement theClass
+				inPackage: anAnnouncement package
+				tag: anAnnouncement tag ]
 ]
 
 { #category : #subscriptions }
 GtCoderNavigationClassHierachyElement >> onClassRenamed: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		self 
-			renameClass: anAnnouncement theClass 
-			oldName: anAnnouncement oldName 
-			newName: anAnnouncement newName
-			inPackage: anAnnouncement package
-			tag: anAnnouncement tag ]
+	self
+		suppressListChangeEventsDuring: [ self
+				renameClass: anAnnouncement theClass
+				oldName: anAnnouncement oldName
+				newName: anAnnouncement newName
+				inPackage: anAnnouncement package
+				tag: anAnnouncement tag ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationClassHierachyElement >> onClassSelected: anAnnouncement [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [  
-		self updateClassListsWith: anAnnouncement theClass.
-		self selectClass: anAnnouncement theClass ].
+	self
+		suppressListChangeEventsDuring: [ self updateClassListsWith: anAnnouncement theClass.
+			self selectClass: anAnnouncement theClass ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationClassHierachyElement >> onPackageSelected: anAnnouncer [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [ 
-		self emptyClassList.
-		self deselectClasses. ]
+	self
+		suppressListChangeEventsDuring: [ self emptyClassList.
+			self deselectClasses ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationClassHierachyElement >> onPackageTagSelected: anAnnouncer [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [
-		BlFrameTelemetry
-			time: [ 'Empty class list' ]
-			during: [ self emptyClassList ].
-		BlFrameTelemetry
-			time: [ 'Deselect classes' ]
-			during: [ self deselectClasses ] ].
+	self
+		suppressListChangeEventsDuring: [ self emptyClassList.
+			self deselectClasses ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationClassHierachyElement >> onPackagesSelected: anAnnouncer [
-	supressNavigationChanges ifTrue: [ ^ self ].
-	self suppressListChangeEventsDuring: [ 
-		self emptyClassList.
-		self deselectClasses. ]
+	self
+		suppressListChangeEventsDuring: [ self emptyClassList.
+			self deselectClasses ]
 ]
 
 { #category : #subscriptions }
