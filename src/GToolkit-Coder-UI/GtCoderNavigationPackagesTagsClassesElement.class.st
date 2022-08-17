@@ -253,11 +253,11 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 	aSelectedItem := (methodProtocolsList viewModel itemAt: anIndex) value.
 	self navigationModel selectMethodProtocol: aSelectedItem source: self.
 	methods := (self selectedClass organization protocolNamed: aSelectedItem)
-			ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass >> sel ] ]
+			ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass >> sel ] as:  Array ]
 			ifNil: [ #() ].
 	methods := methods
 			, ((self selectedClass class organization protocolNamed: aSelectedItem)
-					ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass class >> sel ] ]
+					ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass class >> sel ] as:  Array]
 					ifNil: [ #() ]).
 	methodList deselectAll.
 	methodList initializeWithMethods: methods
