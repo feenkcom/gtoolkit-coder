@@ -15,7 +15,7 @@ Class {
 		'validationBlock',
 		'filter'
 	],
-	#category : 'GToolkit-Coder-AddOns-Inline rename'
+	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
 { #category : #'instance creation' }
@@ -62,7 +62,8 @@ GtRenameAction >> addRenameAttributes [
 
 { #category : #'private - actions' }
 GtRenameAction >> allowSave [
-	textElement textualCoderViewModel allowSaveDueTo: self
+	(textElement respondsTo: #textualCoderViewModel)
+		ifTrue: [ textElement textualCoderViewModel allowSaveDueTo: self ]
 ]
 
 { #category : #private }
@@ -183,7 +184,8 @@ GtRenameAction >> originalName [
 
 { #category : #'private - actions' }
 GtRenameAction >> preventSave [
-	textElement textualCoderViewModel preventSaveDueTo: self
+	(textElement respondsTo: #textualCoderViewModel)
+		ifTrue: [ textElement textualCoderViewModel preventSaveDueTo: self ]
 ]
 
 { #category : #private }
@@ -265,9 +267,9 @@ GtRenameAction >> textElement: aTextEditorElement [
 
 { #category : #private }
 GtRenameAction >> undoChanges [
-	self textElement
-		text: originalText;
-		onTextModified.
+	textElement text: originalText.
+	(textElement respondsTo: #onTextModified)
+		ifTrue: [ textElement onTextModified ].
 
 	self textEditor moveCursorTo: originalCursorPosition
 ]
@@ -331,18 +333,17 @@ GtRenameAction >> updateText: text at: intervals attributes: attributeCollection
 	index := 1.
 	intervals
 		with: attributeCollection
-		do: [ :each :attr |
+		do: [ :each :attr | 
 			each first = 1
 				ifTrue: [ newText := newText , attr text ]
-				ifFalse: [ newText := newText , (text copyFrom: index to: each first - 1)
-						, attr text ].
+				ifFalse: [ newText := newText , (text copyFrom: index to: each first - 1) , attr text ].
 			index := each last + 1 ].
 	index > text size
 		ifFalse: [ newText := newText , (text copyFrom: index to: text size) ].
 
-	textElement
-		text: newText;
-		onTextModified
+	textElement text: newText.
+	(textElement respondsTo: #onTextModified)
+		ifTrue: [ textElement onTextModified ]
 ]
 
 { #category : #'private-validation' }
