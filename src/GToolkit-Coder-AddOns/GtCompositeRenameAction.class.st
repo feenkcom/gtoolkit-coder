@@ -5,18 +5,13 @@ Class {
 		'otherTextIntervals',
 		'otherTextAttributes'
 	],
-	#category : 'GToolkit-Coder-AddOns-Inline rename'
+	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
 { #category : #private }
 GtCompositeRenameAction >> addLocations: intervals to: anEditor [
-	self addLocations: intervals toText: anEditor text
-]
-
-{ #category : #private }
-GtCompositeRenameAction >> addLocations: intervals toText: ropedText [
 	otherTextIntervals
-		at: ropedText
+		at: anEditor
 		put: (intervals asSortedCollection: [ :a :b | a first < b first ])
 ]
 
@@ -30,21 +25,19 @@ GtCompositeRenameAction >> addRenameAttributes [
 GtCompositeRenameAction >> addRenameAttributesToOtherEditors [
 	| size |
 	size := self originalName size.
-	size < 1
-		ifTrue: [ ^ self ].
+	size < 1 ifTrue: [ ^ self ].
 	self removeOtherAttributes.
 	otherTextIntervals
-		keysAndValuesDo: [ :text :intervals | 
+		keysAndValuesDo: [ :editor :intervals | 
 			otherTextAttributes
-				at: text
-				put:
-					(intervals
+				at: editor
+				put: (intervals
 						collect: [ :each | 
 							| attribute |
 							attribute := GtRenamePreviewAttribute new
-								action: self;
-								text: (text from: each first to: each last).
-							(text from: each first to: each last) attributes: {attribute}.
+									action: self;
+									text: (editor text from: each first to: each last).
+							(editor text from: each first to: each last) attributes: {attribute}.
 							attribute ]) ]
 ]
 
@@ -64,8 +57,7 @@ GtCompositeRenameAction >> removeAttributes [
 { #category : #private }
 GtCompositeRenameAction >> removeOtherAttributes [
 	otherTextAttributes
-		keysDo:
-			[ :text | text clearAttributes: [ :each | self isRenameAttribute: each ] ]
+		keysDo: [ :editor | editor text clearAttributes: [ :each | self isRenameAttribute: each ] ]
 ]
 
 { #category : #private }
@@ -83,14 +75,23 @@ GtCompositeRenameAction >> updateName: blText [
 
 { #category : #private }
 GtCompositeRenameAction >> updateOtherEditors [
-	self newName = self originalName
-		ifTrue: [ ^ self ].
+	self newName = self originalName ifTrue: [ ^ self ].
 	otherTextIntervals
-		keysAndValuesDo: [ :text :intervals | 
-			self
-				updateText: text
-				at: intervals
-				attributes: (otherTextAttributes at: text) ]
+		keysAndValuesDo: [ :editor :intervals | 
+			| newText index |
+			newText := '' asRopedText.
+			index := 1.
+			intervals
+				with: (otherTextAttributes at: editor)
+				do: [ :each :attr | 
+					each first = 1
+						ifTrue: [ newText := newText , attr text ]
+						ifFalse: [ newText := newText , (editor text copyFrom: index to: each first - 1)
+									, attr text ].
+					index := each last + 1 ].
+			index > editor text size
+				ifFalse: [ newText := newText , (editor text copyFrom: index to: editor text size) ].
+			editor text: newText ]
 ]
 
 { #category : #private }
