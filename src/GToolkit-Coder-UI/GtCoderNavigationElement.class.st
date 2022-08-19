@@ -191,10 +191,19 @@ GtCoderNavigationElement >> subscribeToContent [
 
 { #category : #subscriptions }
 GtCoderNavigationElement >> subscribeToNavigationModel [
+	| subscriptions |
 	self hasNavigationModel ifFalse: [ ^ self ].
-	navigationModel weak when: GtCoderNavigationClassSelected send: #onClassSelected: to: self.
-	navigationModel weak when: GtCoderNavigationClassRenamed send: #onClassRenamed: to: self.
-	navigationModel weak when: GtCoderNavigationClassModified send: #onClassModified: to: self.
+
+	subscriptions := {GtCoderNavigationClassSelected -> #onClassSelected:.
+			GtCoderNavigationClassRenamed -> #onClassRenamed:.
+			GtCoderNavigationClassModified -> #onClassModified:}.
+
+	subscriptions
+		do: [ :sub | 
+			navigationModel weak
+				when: sub key
+				send: sub value
+				to: self ]
 ]
 
 { #category : #subscriptions }
