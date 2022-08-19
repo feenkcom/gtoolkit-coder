@@ -133,6 +133,11 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 		c vertical matchParent ].
 ]
 
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onMethodChanged: anAnnouncement [
+	self updateProtocolList
+]
+
 { #category : #subscriptions }
 GtCoderNavigationPackagesTagsClassesElement >> onMethodListSelectionChanged [
 	| anIndex aSelectedItem theIndices |
@@ -429,44 +434,25 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToMethodList [
 
 { #category : #'api - package updates' }
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
+	| subscriptions |
 	self hasNavigationModel ifFalse: [ ^ self ].
 	super subscribeToNavigationModel.
-	navigationModel weak
-		when: GtCoderNavigationPackagesSelected
-		send: #onPackagesSelected:
-		to: self.
-	navigationModel weak
-		when: GtCoderNavigationPackageSelected
-		send: #onPackageSelected:
-		to: self.
-	navigationModel weak
-		when: GtCoderNavigationPackageTagSelected
-		send: #onPackageTagSelected:
-		to: self.
-	navigationModel weak
-		when: GtCoderNavigationPackageRegistered
-		send: #onPackageRegistered:
-		to: self.
-	navigationModel weak
-		when: GtCoderNavigationPackageUnregistered
-		send: #onPackageUnregistered:
-		to: self.
-	navigationModel weak
-		when: GtCoderNavigationPackageRenamed
-		send: #onPackageRenamed:
-		to: self.
-	navigationModel weak
-		when: GtCoderNavigationPackageTagAdded
-		send: #onPackageTagAdded:
-		to: self.
-	navigationModel weak
-		when: GtCoderNavigationPackageTagRemoved
-		send: #onPackageTagRemoved:
-		to: self.
-	navigationModel weak
-		when: GtCodersFiltersChanged
-		send: #onMethodsCoderFiltersChanged:
-		to: self
+	subscriptions := {GtCoderNavigationPackagesSelected -> #onPackagesSelected:.
+			GtCoderNavigationPackageSelected -> #onPackageSelected:.
+			GtCoderNavigationPackageTagSelected -> #onPackageTagSelected:.
+			GtCoderNavigationPackageRegistered -> #onPackageRegistered:.
+			GtCoderNavigationPackageUnregistered -> #onPackageUnregistered:.
+			GtCoderNavigationPackageRenamed -> #onPackageRenamed:.
+			GtCoderNavigationPackageTagAdded -> #onPackageTagAdded:.
+			GtCoderNavigationPackageTagRemoved -> #onPackageTagRemoved:.
+			GtCodersFiltersChanged -> #onMethodsCoderFiltersChanged:.
+			GtCoderNavigationMethodModification -> #onMethodChanged:}.
+	subscriptions
+		do: [ :sub | 
+			navigationModel weak
+				when: sub key
+				send: sub value
+				to: self ]
 ]
 
 { #category : #subscriptions }

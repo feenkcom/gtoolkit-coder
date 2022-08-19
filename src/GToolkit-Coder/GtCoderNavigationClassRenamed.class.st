@@ -1,11 +1,11 @@
 Class {
 	#name : #GtCoderNavigationClassRenamed,
-	#superclass : #GtCoderNavigationClassAnnoucement,
+	#superclass : #GtCoderNavigationClassAnnouncement,
 	#instVars : [
 		'oldName',
 		'newName'
 	],
-	#category : 'GToolkit-Coder-Navigation - Events'
+	#category : #'GToolkit-Coder-Navigation - Events'
 }
 
 { #category : #accessing }
