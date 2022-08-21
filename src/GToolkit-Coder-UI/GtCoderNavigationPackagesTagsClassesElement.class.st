@@ -133,6 +133,16 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 		c vertical matchParent ].
 ]
 
+{ #category : #'as yet unclassified' }
+GtCoderNavigationPackagesTagsClassesElement >> methodList [
+	^ methodList
+]
+
+{ #category : #'as yet unclassified' }
+GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
+	^methodProtocolsList
+]
+
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onMethodChanged: anAnnouncement [
 	self updateProtocolList
@@ -509,10 +519,12 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 			methodList
 				initializeWithMethods: navigationModel selectedClass methods
 						, navigationModel selectedClass class methods.
+			methodList visibility: BlVisibility visible.
 			methodsLabel visibility: BlVisibility visible.
 			protocolLabel visibility: BlVisibility visible ]
 		ifFalse: [ methodProtocolsList initializeWithProtocols: Array empty.
 			methodList initializeWithMethods: #().
+			methodList visibility: BlVisibility hidden.
 			protocolLabel visibility: BlVisibility hidden.
 			methodProtocolsList visibility: BlVisibility hidden.
 			methodsLabel visibility: BlVisibility hidden ]

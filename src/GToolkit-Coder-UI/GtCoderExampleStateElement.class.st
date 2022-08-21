@@ -242,7 +242,7 @@ GtCoderExampleStateElement >> styleLook [
 
 { #category : #'private - subscriptions' }
 GtCoderExampleStateElement >> subscribeToExample [
-	self example announcer
+	self example announcer weak
 		when: GtExampleExecuted
 		send: #onExampleExecuted:
 		to: self.
