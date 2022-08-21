@@ -519,6 +519,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 			methodList
 				initializeWithMethods: navigationModel selectedClass methods
 						, navigationModel selectedClass class methods.
+			methodList visibility: BlVisibility visible.
 			methodsLabel visibility: BlVisibility visible.
 			protocolLabel visibility: BlVisibility visible ]
 		ifFalse: [ methodProtocolsList initializeWithProtocols: Array empty.
