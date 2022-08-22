@@ -8,9 +8,9 @@ Class {
 		'classAndMethodProtocolList',
 		'protocolLabel',
 		'coderFilterChangesSubscription',
-		'methodList',
-		'methodLabel',
-		'methodsLabel'
+		'methodsLabel',
+		'methodGroup',
+		'methodGroupList'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
@@ -37,6 +37,49 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 	self updatePackageLists.
 	aSelectedPackageOrTag ifNotNil: [
 		self selectPackageOrTag: aSelectedPackageOrTag ].
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
+	| menu instanceGroup classGroup |
+	menu := BrGroupedList new
+			padding: (BlInsets
+					top: 2
+					left: 10
+					bottom: 12
+					right: 10);
+			matchParent;
+			headerElementStencil: [ BrLabel new
+					beSmallSize;
+					aptitude: (BrGlamorousLabelAptitude new foreground: Color gray) ];
+			headerDataBinder: [ :label :each | label text: each domainObject asRopedText ].
+
+	instanceGroup := BrGroup new
+			domainObject: 'instance side';
+			stream: #() asAsyncStream;
+			itemStencil: [ | label |
+				label := BrLabel new
+						hMatchParent;
+						vFitContent;
+						beSmallSize;
+						aptitude: BrGlamorousLabelAptitude
+								+ (BrStyleCommonAptitude new
+										hovered: [ :aStyle | aStyle background: self theme item selectedColor ]);
+						when: BlClickEvent
+							do: [ :event | 
+								event consumed: true.
+								self onMethodListSelectionChanged: (label userData at: #method) ] ];
+			itemDataBinder: [ :label :item | 
+				label text: item selector asRopedText.
+				label userData at: #method put: item.
+				label ];
+			shouldShowWithoutItems: false.
+	classGroup := instanceGroup copy domainObject: 'class side'.
+	methodGroup := {instanceGroup.
+			classGroup}.
+	menu stream: methodGroup asAsyncStream.
+
+	^ menu
 ]
 
 { #category : #'api - package selections' }
@@ -97,7 +140,7 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
 						text: 'Categories');
 			addChild: methodProtocolsList.
 
-	methodList := GtCoderNavigationMethodListElement new
+	methodGroupList := self buildMethodGroupList.
 ]
 
 { #category : #initialization }
@@ -121,7 +164,7 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 						text: 'Methods'.
 				packagesList.
 				classAndMethodProtocolList.
-				methodList}
+				methodGroupList}
 ]
 
 { #category : #initialization }
@@ -134,11 +177,6 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 ]
 
 { #category : #'as yet unclassified' }
-GtCoderNavigationPackagesTagsClassesElement >> methodList [
-	^ methodList
-]
-
-{ #category : #'as yet unclassified' }
 GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
 	^methodProtocolsList
 ]
@@ -148,16 +186,10 @@ GtCoderNavigationPackagesTagsClassesElement >> onMethodChanged: anAnnouncement [
 	self updateProtocolList
 ]
 
-{ #category : #subscriptions }
-GtCoderNavigationPackagesTagsClassesElement >> onMethodListSelectionChanged [
-	| anIndex aSelectedItem theIndices |
+{ #category : #'updating lists' }
+GtCoderNavigationPackagesTagsClassesElement >> onMethodListSelectionChanged: aMethod [
 	supressListChanges ifTrue: [ ^ self ].
-	theIndices := methodList selectedIndices.
-	theIndices ifEmpty: [ ^ self ].
-	anIndex := theIndices first.
-	(anIndex between: 1 and: methodList viewModel itemCount) ifFalse: [ ^ self ].
-	aSelectedItem := (methodList viewModel itemAt: anIndex) value.
-	self navigationModel selectMethod: aSelectedItem
+	self navigationModel selectMethod: aMethod
 ]
 
 { #category : #'event handling' }
@@ -258,7 +290,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
-	| anIndex aSelectedItem theIndices methods |
+	| anIndex aSelectedItem theIndices instMeths classMeths |
 	supressListChanges ifTrue: [ ^ self ].
 	theIndices := methodProtocolsList selectedIndices.
 	theIndices ifEmpty: [ ^ self ].
@@ -267,15 +299,14 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 		ifFalse: [ ^ self ].
 	aSelectedItem := (methodProtocolsList viewModel itemAt: anIndex) value.
 	self navigationModel selectMethodProtocol: aSelectedItem source: self.
-	methods := (self selectedClass organization protocolNamed: aSelectedItem)
-			ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass >> sel ] as:  Array ]
+	instMeths := (self selectedClass organization protocolNamed: aSelectedItem)
+			ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass >> sel ] as: Array ]
 			ifNil: [ #() ].
-	methods := methods
-			, ((self selectedClass class organization protocolNamed: aSelectedItem)
-					ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass class >> sel ] as:  Array]
-					ifNil: [ #() ]).
-	methodList deselectAll.
-	methodList initializeWithMethods: methods
+	classMeths := (self selectedClass class organization
+			protocolNamed: aSelectedItem)
+			ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass class >> sel ] as: Array ]
+			ifNil: [ #() ].
+	self updateMethodListWith: instMeths and: classMeths
 ]
 
 { #category : #'api - package updates' }
@@ -431,15 +462,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToContent [
 	super subscribeToContent.
 	self subscribeToPackageList.
 	self subscribeToClassList.
-	self subscribeToProtocolList.
-	self subscribeToMethodList
-]
-
-{ #category : #subscriptions }
-GtCoderNavigationPackagesTagsClassesElement >> subscribeToMethodList [
-	methodList
-		when: BrSelectionChanged
-		do: [ :anEvent | self onMethodListSelectionChanged ].
+	self subscribeToProtocolList
 ]
 
 { #category : #'api - package updates' }
@@ -495,6 +518,23 @@ GtCoderNavigationPackagesTagsClassesElement >> updateContent [
 ]
 
 { #category : #'updating lists' }
+GtCoderNavigationPackagesTagsClassesElement >> updateMethodListWith: instanceMethods and: classMethods [
+	| instMethStream classMethStream |
+	instMethStream := (instanceMethods
+			asSortedCollection: [ :a :b | a selector < b selector ]) asAsyncStream.
+
+	classMethStream := (classMethods
+			asSortedCollection: [ :a :b | a selector < b selector ]) asAsyncStream.
+
+	methodGroup
+		with: {instMethStream.
+				classMethStream}
+		do: [ :grp :str | grp stream: str ].
+
+	methodGroupList stream: methodGroup asAsyncStream
+]
+
+{ #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updatePackageAndClassLists [
 	self updatePackageLists.
 	self updateClassLists.
@@ -510,21 +550,21 @@ GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
 GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 	| methodProtocols |
 	methodProtocolsList deselectAll.
-	methodList deselectAll.
+
 	navigationModel hasSelectedClass
 		ifTrue: [ methodProtocols := navigationModel selectedClass organization protocols
 					, navigationModel selectedClass class organization protocols.
 			methodProtocolsList initializeWithProtocols: methodProtocols.
 			methodProtocolsList visibility: BlVisibility visible.
-			methodList
-				initializeWithMethods: navigationModel selectedClass methods
-						, navigationModel selectedClass class methods.
-			methodList visibility: BlVisibility visible.
+			self
+				updateMethodListWith: navigationModel selectedClass methods
+				and: navigationModel selectedClass class methods.
+
 			methodsLabel visibility: BlVisibility visible.
 			protocolLabel visibility: BlVisibility visible ]
 		ifFalse: [ methodProtocolsList initializeWithProtocols: Array empty.
-			methodList initializeWithMethods: #().
-			methodList visibility: BlVisibility hidden.
+			self updateMethodListWith: #() and: #().
+
 			protocolLabel visibility: BlVisibility hidden.
 			methodProtocolsList visibility: BlVisibility hidden.
 			methodsLabel visibility: BlVisibility hidden ]
