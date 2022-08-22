@@ -39,8 +39,9 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 		when: BlFocusOutEvent
 		do: [ :event | self updateFocus: event ].
 	
-	self flag: #TODO.
-	"renameEditor editor moveCursorTo: (cursorLocation min: renameEditor editor text size)."
+	renameEditor editor
+		moveCursorTo: ((cursorLocation ifNil: [ SmallInteger maxVal ])
+				min: renameEditor editor text size).
 
 	selectAll
 		ifTrue: [ renameEditor editor selecter all select ].
