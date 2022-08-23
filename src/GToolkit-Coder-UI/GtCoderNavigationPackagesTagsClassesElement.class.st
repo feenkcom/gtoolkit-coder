@@ -62,7 +62,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
 						hMatchParent;
 						vFitContent;
 						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude
+						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude
 								+ (BrStyleCommonAptitude new
 										hovered: [ :aStyle | aStyle background: self theme item selectedColor ]);
 						when: BlClickEvent
@@ -306,6 +306,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 			protocolNamed: aSelectedItem)
 			ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass class >> sel ] as: Array ]
 			ifNil: [ #() ].
+	methodGroupList deselectAll.
 	self updateMethodListWith: instMeths and: classMeths
 ]
 
@@ -520,6 +521,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updateContent [
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateMethodListWith: instanceMethods and: classMethods [
 	| instMethStream classMethStream |
+	methodGroupList deselectAll.
 	instMethStream := (instanceMethods
 			asSortedCollection: [ :a :b | a selector < b selector ]) asAsyncStream.
 
