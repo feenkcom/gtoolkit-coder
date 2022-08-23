@@ -176,6 +176,11 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 		c vertical matchParent ].
 ]
 
+{ #category : #'api - package selections' }
+GtCoderNavigationPackagesTagsClassesElement >> methodList [
+	^methodGroup flatCollect: [:grp | grp itemsProvider currentItems]
+]
+
 { #category : #'as yet unclassified' }
 GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
 	^methodProtocolsList
