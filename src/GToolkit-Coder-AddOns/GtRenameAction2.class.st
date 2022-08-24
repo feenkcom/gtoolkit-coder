@@ -127,6 +127,12 @@ GtRenameAction2 >> forKeyword [
 ]
 
 { #category : #'initialize-release' }
+GtRenameAction2 >> forText [
+	validationBlock := [ :str | true ].
+	self filter: BrTextEditorNoInputFilter new
+]
+
+{ #category : #'initialize-release' }
 GtRenameAction2 >> forVariableOrUnaryMessage [
 	validationBlock := [ :str | self validateVariable: str ].
 	self filter: BrTextEditorAlphaNumericInputFilter new
