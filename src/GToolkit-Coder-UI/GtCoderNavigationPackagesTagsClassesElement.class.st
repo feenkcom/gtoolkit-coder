@@ -309,7 +309,10 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 			ifNil: [ #() ].
 	classMeths := (self selectedClass class organization
 			protocolNamed: aSelectedItem)
-			ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass class >> sel ] as: Array ]
+			ifNotNil: [ :s | 
+				(s methodSelectors
+					collect: [ :sel | self selectedClass class >> sel ]
+					thenReject: [ :meth | meth isFromTrait ]) asArray ]
 			ifNil: [ #() ].
 	methodGroupList deselectAll.
 	self updateMethodListWith: instMeths and: classMeths
@@ -560,12 +563,13 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 
 	navigationModel hasSelectedClass
 		ifTrue: [ methodProtocols := navigationModel selectedClass organization protocols
-					, navigationModel selectedClass class organization protocols.
+					, navigationModel selectedClass class organization protocols haltOnce.
 			methodProtocolsList initializeWithProtocols: methodProtocols.
 			methodProtocolsList visibility: BlVisibility visible.
 			self
 				updateMethodListWith: navigationModel selectedClass methods
-				and: navigationModel selectedClass class methods.
+				and: (navigationModel selectedClass class methods
+						reject: [ :meth | meth isFromTrait ]).
 
 			methodsLabel visibility: BlVisibility visible.
 			protocolLabel visibility: BlVisibility visible ]
