@@ -562,8 +562,14 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 	methodProtocolsList deselectAll.
 
 	navigationModel hasSelectedClass
-		ifTrue: [ methodProtocols := navigationModel selectedClass organization protocols
-					, navigationModel selectedClass class organization protocols.
+		ifTrue: [ | classProtocols |
+			classProtocols := navigationModel selectedClass class organization protocols
+					reject: [ :prot | 
+						(self selectedClass class methods
+							select: [ :meth | (prot includesSelector: meth selector) and: [ meth isFromTrait not ] ])
+							isEmpty ].
+			methodProtocols := navigationModel selectedClass organization protocols
+					, classProtocols.
 			methodProtocolsList initializeWithProtocols: methodProtocols.
 			methodProtocolsList visibility: BlVisibility visible.
 			self
