@@ -43,11 +43,7 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
 	| menu instanceGroup classGroup |
 	menu := BrGroupedList new
-			padding: (BlInsets
-					top: 2
-					left: 10
-					bottom: 12
-					right: 10);
+			padding: (BlInsets left: 5 right: 10);
 			matchParent;
 			headerElementStencil: [ BrLabel new
 					beSmallSize;
@@ -123,9 +119,10 @@ GtCoderNavigationPackagesTagsClassesElement >> hideOrShowClassList [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> initializeContent [ 
+GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
 	super initializeContent.
-	packagesList := GtCoderNavigationPackagesTreeElement new.
+	packagesList := GtCoderNavigationPackagesTreeElement new
+			padding: (BlInsets right: 10).
 
 	methodProtocolsList := GtCoderNavigationMethodProtocolListElement new
 			matchParent.
@@ -140,40 +137,53 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
 						text: 'Categories');
 			addChild: methodProtocolsList.
 
-	methodGroupList := self buildMethodGroupList.
+	methodGroupList := self buildMethodGroupList
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
+	| pane1 pane2 pane3 |
 	super initializeElement.
+	pane1 := BrVerticalPane new
+			addAptitude: BrGlamorousWithHorizontalResizerAptitude;
+			matchParent;
+			addChildren: {BrLabel new
+						aptitude: (BrGlamorousLabelAptitude new
+								fontSize: 12;
+								foreground: Color gray);
+						text: 'Packages'.
+					packagesList}.
+	pane2 := BrVerticalPane new
+			addAptitude: BrGlamorousWithHorizontalResizerAptitude;
+			matchParent;
+			addChildren: {classesLabel := BrLabel new
+							aptitude: (BrGlamorousLabelAptitude new
+									fontSize: 12;
+									foreground: Color gray);
+							text: 'Classes'.
+					classAndMethodProtocolList}.
+	pane3 := BrVerticalPane new
+			matchParent;
+			addChildren: {methodsLabel := BrLabel new
+							aptitude: (BrGlamorousLabelAptitude new
+									fontSize: 12;
+									foreground: Color gray);
+							text: 'Methods'.
+					methodGroupList}.
 	self
-		addChildren: {BrLabel new
-					aptitude: (BrGlamorousLabelAptitude new
-							fontSize: 12;
-							foreground: Color gray);
-					text: 'Packages'.
-				classesLabel := BrLabel new
-						aptitude: (BrGlamorousLabelAptitude new
-								fontSize: 12;
-								foreground: Color gray);
-						text: 'Classes'.
-				methodsLabel := BrLabel new
-						aptitude: (BrGlamorousLabelAptitude new
-								fontSize: 12;
-								foreground: Color gray);
-						text: 'Methods'.
-				packagesList.
-				classAndMethodProtocolList.
-				methodGroupList}
+		addChildren: {pane1.
+				pane2.
+				pane3}
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 	super initializeLayout.
-	self layout: (BlGridLayout horizontal columnCount: 3; cellSpacing: 5).
-	self constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
+	self layout: BlLinearLayout new beHorizontal.
+	self
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ]
 ]
 
 { #category : #'api - package selections' }
