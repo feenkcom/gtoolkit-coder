@@ -563,7 +563,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 
 	navigationModel hasSelectedClass
 		ifTrue: [ methodProtocols := navigationModel selectedClass organization protocols
-					, navigationModel selectedClass class organization protocols haltOnce.
+					, navigationModel selectedClass class organization protocols.
 			methodProtocolsList initializeWithProtocols: methodProtocols.
 			methodProtocolsList visibility: BlVisibility visible.
 			self
