@@ -1,6 +1,27 @@
 Extension { #name : #RPackage }
 
 { #category : #'*GToolkit-Coder-Extensions' }
+RPackage >> gtAllowedDependenciesFor: aView [
+	<gtPackageView>
+	(self packageManifestOrNil
+		ifNil: [ false ]
+		ifNotNil:  [ :aPackage | 
+			aPackage class canPerform: #mustOnlyDependOn ]) ifFalse: [ ^ aView empty ] .
+					
+	^ aView list
+		title: 'Allowed Dependencies';
+		priority: 50;
+		items: [ 
+			self packageManifestOrNil
+				ifNil: [ #() ]
+				ifNotNil:  [ :aPackage | 
+					(aPackage class canPerform: #mustOnlyDependOn)
+						ifTrue: [ aPackage mustOnlyDependOn collect: #asPackage ]
+						ifFalse: [ #() ] ] ];
+		itemText: [ :aPackage | aPackage name ]
+]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtBaselinesFor: aView [
 	<gtPackageView>
 	^ aView forward
