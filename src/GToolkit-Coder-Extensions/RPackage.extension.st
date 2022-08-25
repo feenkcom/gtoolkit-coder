@@ -7,7 +7,7 @@ RPackage >> gtBaselinesFor: aView [
 		title: 'References';
 		tooltip: 'References to the package name';
 		priority: 30;
-		object: [ self name gtStringLiteralCaseSensitiveMatch ];
+		object: [ self name gtStringLiteralCaseSensitiveMatch | self name gtReferences ];
 		view: #gtItemsFor:
 ]
 
