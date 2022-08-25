@@ -602,10 +602,8 @@ GtCoderNavigationPackagesTagsClassesElement >> updateSelectedPackageAndTag [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel hasSelectedPackage
 		ifTrue: [ navigationModel hasSelectedTag
-			ifTrue: [
-				self 
-					selectPackage: navigationModel selectedPackage 
-					tag: navigationModel selectedTag ] ]
-			ifFalse: [ 
-				self selectPackage: navigationModel selectedPackage ].
+				ifTrue: [ self
+						selectPackage: navigationModel selectedPackage
+						tag: navigationModel selectedTag ]
+				ifFalse: [ self selectPackage: navigationModel selectedPackage ] ]
 ]
