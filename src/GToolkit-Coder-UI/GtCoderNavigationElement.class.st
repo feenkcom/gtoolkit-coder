@@ -80,6 +80,12 @@ GtCoderNavigationElement >> onAddedToSceneGraph [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationElement >> onClassAdded: anAnnouncement [
+	self
+		suppressListChangeEventsDuring: [ self updateClassLists ]
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationElement >> onClassListSelectionChanged [
 	| anIndex aSelectedItem theIndices |
 	supressListChanges ifTrue: [ ^ self ].
@@ -196,7 +202,8 @@ GtCoderNavigationElement >> subscribeToNavigationModel [
 
 	subscriptions := {GtCoderNavigationClassSelected -> #onClassSelected:.
 			GtCoderNavigationClassRenamed -> #onClassRenamed:.
-			GtCoderNavigationClassModified -> #onClassModified:}.
+			GtCoderNavigationClassModified -> #onClassModified:.
+			GtCoderNavigationClassAdded-> #onClassAdded: }.
 
 	subscriptions
 		do: [ :sub | 
