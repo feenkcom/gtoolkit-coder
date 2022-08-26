@@ -61,10 +61,10 @@ GtStreamingCodersModel >> itemsStream: anAsyncStream dueTo: aReasonObject [
 
 	monitor critical: [
 		itemsStream := anAsyncStream cached.
-		codersStream := itemsStream
+		codersStream := (itemsStream
 			map: [ :eachItem | self newCoderFor: eachItem ]
 			key: [ :eachItem | self newCoderCacheKeyFor: eachItem ]
-			cache: coders ].
+			cache: coders) cached ].
 
 	self notifyStreamChangedDueTo: aReasonObject
 ]
