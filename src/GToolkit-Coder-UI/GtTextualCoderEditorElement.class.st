@@ -30,8 +30,7 @@ GtTextualCoderEditorElement >> createContextMenuContent [
 				"extra context menu items that depend on ast and view model state such as selection"
 				theContextMenuAstAddons := self textualCoderViewModel
 						computeContextMenuAstAddOns.
-				theItems := theAddOns contextMenuActions , theAddOns mainActions
-						, theContextMenuAstAddons contextMenuActions.
+				theItems := theAddOns contextMenuActions, theContextMenuAstAddons contextMenuActions.
 				theItems := theItems reject: [ :e | e title isNil ].
 
 				theContextMenu
@@ -61,8 +60,7 @@ GtTextualCoderEditorElement >> initialize [
 		vFitContent.
 
 	self editor
-		beEditableCode";
-		disableStyleTextWhenModified".
+		beEditableCode.
 
 	self id: GtSourceCoderEditorId.
 
