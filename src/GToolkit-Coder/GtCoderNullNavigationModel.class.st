@@ -3,7 +3,7 @@ Class {
 	#superclass : #GtCoderNavigationModel,
 	#traits : 'TGtUniqueInstance',
 	#classTraits : 'TGtUniqueInstance classTrait',
-	#category : 'GToolkit-Coder-Navigation - Model'
+	#category : #'GToolkit-Coder-Navigation - Model'
 }
 
 { #category : #'api - accessing' }
@@ -64,6 +64,11 @@ GtCoderNullNavigationModel >> selectPackage: aPackage [
 { #category : #'api - selection' }
 GtCoderNullNavigationModel >> selectedClassDo: aBlock [
 	"do nothing"
+]
+
+{ #category : #'as yet unclassified' }
+GtCoderNullNavigationModel >> selectedPackage [
+	"Do Nothing"
 ]
 
 { #category : #'api - selection' }
