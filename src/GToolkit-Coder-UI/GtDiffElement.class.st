@@ -170,9 +170,9 @@ GtDiffElement >> leftEditorLook: aLook [
 { #category : #private }
 GtDiffElement >> leftRange [
 	| first |
-	first := (leftElement instVarNamed: 'layoutPositionsRange')
-		ifNil: [ 1 ]
-		ifNotNil: [ :interval | interval first ].
+	first := ((leftElement instVarNamed: 'layoutPositionsRange')
+			ifNil: [ 1 ]
+			ifNotNil: [ :interval | interval first ]) max: 1.
 	^ first to: first + leftElement children size - 1
 ]
 
@@ -318,9 +318,9 @@ GtDiffElement >> rightEditorLook: aLook [
 { #category : #private }
 GtDiffElement >> rightRange [
 	| first |
-	first := (rightElement instVarNamed: 'layoutPositionsRange')
-		ifNil: [ 1 ]
-		ifNotNil: [ :interval | interval first ].
+	first := ((rightElement instVarNamed: 'layoutPositionsRange')
+			ifNil: [ 1 ]
+			ifNotNil: [ :interval | interval first ]) max: 1.
 	^ first to: first + rightElement children size - 1
 ]
 
