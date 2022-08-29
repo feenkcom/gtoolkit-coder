@@ -15,7 +15,7 @@ GtTextualCoder >> addContextMenuItemFrom: shortcut withId: menuId to: coderAddOn
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtTextualCoder >> addCopyCutPasteContextMenuAddOnsAst: anAst to: coderAddOns [
-	<gtCoderContextMenuAddOns: 10>
+	<gtCoderContextMenuAddOns: 2>
 	self
 		addContextMenuItemFrom: BrEditorShortcut cut
 			withId: GtTextualCoderCutContextMenuItemId
