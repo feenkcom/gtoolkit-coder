@@ -35,6 +35,43 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #addons }
+GtCoderModel class >> astExtensionsPragma [
+	^ #gtAstCoderAddOns:
+]
+
+{ #category : #addons }
+GtCoderModel class >> contextMenuAddOnsPragma [
+	^ #gtCoderContextMenuAddOns:
+]
+
+{ #category : #'private - addons' }
+GtCoderModel class >> gtAstCoderAddOnsFor: aView context: aPhlowContext [
+	<gtClassView>
+	^ aView forward
+		title: 'Coder Addons';
+		tooltip: 'The methods that extend the Coder with AddOns';
+		priority: 40;
+		object: [ (GtSearchMethodsInClassFilter new
+				forClass: self;
+				includeSuperclass: true) & self astExtensionsPragma gtPragmas ];
+		view: #gtItemsFor:
+]
+
+{ #category : #'private - addons' }
+GtCoderModel class >> gtContextMenuAddOnsFor: aView [
+	<gtView>
+	<gtClassView>
+	^ aView forward
+		title: 'Menu AddOns';
+		tooltip: 'The methods that extend the Coder with context menu items';
+		priority: 45;
+		object: [ (GtSearchMethodsInClassFilter new
+				forClass: self;
+				includeSuperclass: true) & self contextMenuAddOnsPragma gtPragmas ];
+		view: #gtItemsFor:
+]
+
 { #category : #'class initialization' }
 GtCoderModel class >> initialize [
 	UniqueIdGenerator := BlUniqueIdGenerator new
