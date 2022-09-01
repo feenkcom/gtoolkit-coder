@@ -73,7 +73,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
 	classGroup := instanceGroup copy domainObject: 'class side'.
 	methodGroup := {instanceGroup.
 			classGroup}.
-	menu stream: methodGroup asAsyncStream.
+	menu groups: methodGroup.
 
 	^ menu
 ]
@@ -540,18 +540,18 @@ GtCoderNavigationPackagesTagsClassesElement >> updateContent [
 GtCoderNavigationPackagesTagsClassesElement >> updateMethodListWith: instanceMethods and: classMethods [
 	| instMethStream classMethStream |
 	methodGroupList deselectAll.
-	instMethStream := (instanceMethods
-			asSortedCollection: [ :a :b | a selector < b selector ]) asAsyncStream.
+	instMethStream := instanceMethods
+			asSortedCollection: [ :a :b | a selector < b selector ].
 
-	classMethStream := (classMethods
-			asSortedCollection: [ :a :b | a selector < b selector ]) asAsyncStream.
+	classMethStream := classMethods
+			asSortedCollection: [ :a :b | a selector < b selector ].
 
 	methodGroup
 		with: {instMethStream.
 				classMethStream}
-		do: [ :grp :str | grp stream: str ].
+		do: [ :grp :str | grp items: str ].
 
-	methodGroupList stream: methodGroup asAsyncStream
+	methodGroupList groups: methodGroup
 ]
 
 { #category : #'updating lists' }
