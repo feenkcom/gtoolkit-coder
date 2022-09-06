@@ -48,8 +48,9 @@ GtCoderContextMenuContent >> initialize [
 								cull: anEvent.
 							self fireEvent: BrDropdownHideWish new.
 							self fireEvent: BrContextMenuHideWish new ].
-			eachGtCoderContextMenuAction shortcutKey isEmpty
-				ifFalse: [ element
+			((eachGtCoderContextMenuAction shortcutKey respondsTo: #isEmpty)
+				and: [ eachGtCoderContextMenuAction shortcutKey isEmpty not ])
+				ifTrue: [ element
 						addChild: (BrHorizontalPane new
 								fitContent;
 								geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
