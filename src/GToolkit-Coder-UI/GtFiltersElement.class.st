@@ -88,6 +88,17 @@ GtFiltersElement >> applyFilters [
 ]
 
 { #category : #accessing }
+GtFiltersElement >> asIntersectionFilter [
+	| compositeFilter |
+	self
+		filtersDo: [ :descriptor :value | 
+			compositeFilter
+				ifNil: [ compositeFilter := descriptor newFilterWithValue: value ]
+				ifNotNil: [ compositeFilter := compositeFilter & (descriptor newFilterWithValue: value) ] ].
+	^ compositeFilter
+]
+
+{ #category : #accessing }
 GtFiltersElement >> buildFilters: aBlock [
 	self clearFilters.
 	aBlock value.
