@@ -193,8 +193,10 @@ GtFilterTagElement >> initialize [
 GtFilterTagElement >> isDefaultAllFilter [
 	^ self descriptor showAsDefaultWhenEmpty
 		and: [ valueString isEmpty
-				and: [ self childNamed: #editableLabel
-						ifFound: [ :aLabel | aLabel text asString = self emptyDefaultValueLabel ] ] ]
+				and: [ self
+						childNamed: #editableLabel
+						ifFound: [ :aLabel | aLabel text asString = self emptyDefaultValueLabel ]
+						ifNone: [ true ] ] ]
 ]
 
 { #category : #testing }
