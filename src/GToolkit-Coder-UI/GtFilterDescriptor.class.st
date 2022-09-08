@@ -152,7 +152,7 @@ GtFilterDescriptor >> printOn: aStream [
 
 { #category : #testing }
 GtFilterDescriptor >> showAsDefaultWhenEmpty [
-	^ isDefault and: [ emptyDefaultValue notNil ]
+	^ isDefault and: [ valueIsRequired not or: [ emptyDefaultValue notNil ] ]
 ]
 
 { #category : #testing }

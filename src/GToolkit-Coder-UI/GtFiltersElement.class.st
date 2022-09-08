@@ -20,6 +20,31 @@ Class {
 }
 
 { #category : #accessing }
+GtFiltersElement >> addAllDefaults [
+	| filterElement defaultDescriptors |
+	self clearFilters.
+	
+	defaultDescriptors := self descriptors
+			select: [ :each | 
+				BlFrameTelemetry
+					time: [ 'Should show ' , each name , ' as default when empty?' ]
+					during: [ each showAsDefaultWhenEmpty ] ].
+
+	defaultDescriptors
+		do: [ :defaultDescriptor | 
+			filterElement := GtFilterTagElement new.
+			filterElement filter: self.
+
+			BlFrameTelemetry
+				time: [ 'Assign default descriptor ' , defaultDescriptor name , ' to the filter tag' ]
+				during: [ filterElement descriptor: defaultDescriptor ].
+
+			filterElement makeDefaultFilter.
+
+			self addChild: filterElement at: self childrenCount ]
+]
+
+{ #category : #accessing }
 GtFiltersElement >> addEmptyDefault [
 	| filterElement defaultDescriptor |
 
