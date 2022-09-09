@@ -22,7 +22,6 @@ Class {
 { #category : #accessing }
 GtFiltersElement >> addAllDefaults [
 	| filterElement defaultDescriptors |
-	self clearFilters.
 	
 	defaultDescriptors := self descriptors
 			select: [ :each | 
@@ -45,32 +44,6 @@ GtFiltersElement >> addAllDefaults [
 ]
 
 { #category : #accessing }
-GtFiltersElement >> addEmptyDefault [
-	| filterElement defaultDescriptor |
-
-	self childrenCount = 1
-		ifFalse: [ ^ self ].
-
-	defaultDescriptor := self descriptors
-		detect: [ :each |
-			BlFrameTelemetry
-				time: [ 'Should show ', each name, ' as default when empty?' ]
-				during: [ each showAsDefaultWhenEmpty ] ]
-		ifNone: [ ^ self ].
-
-	filterElement := GtFilterTagElement new.
-	filterElement filter: self.
-
-	BlFrameTelemetry
-		time: [ 'Assign default descriptor ', defaultDescriptor name, ' to the filter tag' ]
-		during: [ filterElement descriptor: defaultDescriptor ].
-
-	filterElement makeDefaultFilter.
-
-	self addChild: filterElement at: self childrenCount
-]
-
-{ #category : #accessing }
 GtFiltersElement >> addFilterForDescriptor: aFilterDescriptor andValue: aString [
 	| element |
 	element := GtFilterTagElement new.
@@ -83,8 +56,14 @@ GtFiltersElement >> addFilterForDescriptor: aFilterDescriptor andValue: aString 
 
 { #category : #'api - actions' }
 GtFiltersElement >> applyFilters [
-	self fireEvent: (GtFiltersChangedEvent new filterElement: self).
-	self addEmptyDefault
+	self fireEvent: (GtFiltersChangedEvent new filterElement: self)
+]
+
+{ #category : #'private - actions' }
+GtFiltersElement >> areAllDefaults [
+	^ self childrenCount > 1
+		and: [ (1 to: self childrenCount - 1)
+				allSatisfy: [ :index | (self childAt: index) isDefaultAllFilter ] ]
 ]
 
 { #category : #accessing }
@@ -101,8 +80,7 @@ GtFiltersElement >> asIntersectionFilter [
 { #category : #accessing }
 GtFiltersElement >> buildFilters: aBlock [
 	self clearFilters.
-	aBlock value.
-	self addEmptyDefault
+	aBlock value
 ]
 
 { #category : #accessing }
@@ -114,9 +92,8 @@ GtFiltersElement >> clearFilters [
 GtFiltersElement >> createNewTag [
 	| tag |
 	self descriptors isEmptyOrNil ifTrue: [ ^ self ].
-	(self childrenCount > 1
-		and: [ (self childAt: self childrenCount - 1) isDefaultAllFilter ])
-		ifTrue: [ self removeChildAt: self childrenCount - 1 ].
+	self areAllDefaults
+		ifTrue: [ self clearFilters ].
 	tag := GtFilterTagElement new.
 	tag filter: self.
 	tag descriptor: self descriptors first.
@@ -135,7 +112,7 @@ GtFiltersElement >> descriptors: aCollection [
 	
 	BlFrameTelemetry
 		time: [ 'Add default filter tag' ]
-		during: [ self addEmptyDefault ]
+		during: [ self addAllDefaults ]
 ]
 
 { #category : #accessing }
