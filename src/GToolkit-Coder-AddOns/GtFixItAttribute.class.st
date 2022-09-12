@@ -6,8 +6,7 @@ Class {
 		'descriptionBlock',
 		'hoverMarker',
 		'hoverAttribute',
-		'label',
-		'dropDownAptitude'
+		'label'
 	],
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
@@ -35,7 +34,7 @@ GtFixItAttribute >> description: aBlockReturningBlText [
 
 { #category : #accessing }
 GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
-	| button |
+	| button dropDownAptitude |
 	button := GtFixItButton new.
 	button beTinySize.
 	button label: (label ifNil: [ 'Fix it' ]).
@@ -56,6 +55,8 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	button
 		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude
 				+ dropDownAptitude.
+	button userData at: #fixItAttribute put: self.
+	button userData at: #dropDownAptitude put: dropDownAptitude.
 	button icon: BrGlamorousVectorIcons repair.
 	self addHoveringStylingFor: anEditorElement to: button.
 	^ button
@@ -129,14 +130,4 @@ GtFixItAttribute >> label [
 { #category : #accessing }
 GtFixItAttribute >> label: aString [
 	label := aString
-]
-
-{ #category : #opening }
-GtFixItAttribute >> togglePopup [
-	| visible |
-	dropDownAptitude ifNil: [ ^ false ].
-	dropDownAptitude widgetDo: [ :aWidget | visible := aWidget isVisible ].
-	visible ifNil: [ ^ false ].
-	visible ifTrue: [ dropDownAptitude show ] ifFalse: [ dropDownAptitude hide ].
-	^ true
 ]
