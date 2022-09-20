@@ -39,15 +39,11 @@ GtPackagesCompletionStrategy class >> findPackagesMatching: aString [
 ]
 
 { #category : #querying }
-GtPackagesCompletionStrategy class >> packageAndTagStreamMatching: searchString [
-	^ (self allPackages asAsyncStream
-		collect:
+GtPackagesCompletionStrategy class >> packageStreamMatching: searchString [
+	^ self allPackages asAsyncStream
+		select:
 			[ :each | 
-			(searchString match: each name)
-				ifTrue: [ ({each} , (each classTags asSortedCollection: [ :a :b | a name < b name ])) asAsyncStream ]
-				ifFalse:
-					[ ((each classTags select: [ :tag | searchString match: tag categoryName ]) asSortedCollection: [ :a :b | a name < b name ])
-						asAsyncStream ] ]) flatten
+			searchString match: each name]
 ]
 
 { #category : #accessing }
@@ -56,7 +52,7 @@ GtPackagesCompletionStrategy >> completionActionStreamFor: aText at: positionInt
 	string := aText asString.
 	string isEmpty ifTrue: [ ^ #() ].
 	searchString := '*' , string , '*'.
-	^ ((self class packageAndTagStreamMatching: searchString)
+	^ ((self class packageStreamMatching: searchString)
 		collect: [ :each | (each isKindOf: RPackage) ifTrue: [ each name ] ifFalse: [ each categoryName ] ]) withoutDuplicates
 		collect: [ :each | GtReplaceTextCompletionAction forText: each ]
 ]
