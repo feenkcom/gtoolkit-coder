@@ -239,6 +239,11 @@ GtSourceCoder >> hasImplicitVariableReferenceTo: aString [
 	^ false
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> implicitVariableNames [
+	^ #()
+]
+
 { #category : #'api - ast' }
 GtSourceCoder >> implicitVariableReferencesTo: aString do: aBlock [
 	"Evaluate aBlock for every ast node that is a variable reference to an implicitly defined variable named aString."
