@@ -2,7 +2,7 @@ Extension { #name : #GtRBRemovePoolVariableRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
 GtRBRemovePoolVariableRefactoring >> gtDescription [
-	<return: #String or: #BlRopedText>
+	<return: #String or: #BlRunRopedText>
 	
 	^ ('Remove' asRopedText glamorousRoundedBackground)
 		append: ' pool named ' asRopedText;

@@ -2,7 +2,7 @@ Extension { #name : #RBRemoveClassVariableRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
 RBRemoveClassVariableRefactoring >> gtDescription [
-	<return: #String or: #BlRopedText>
+	<return: #String or: #BlRunRopedText>
 	
 	^ ('Remove' asRopedText glamorousRoundedBackground)
 		append: ' class variable ' asRopedText;
