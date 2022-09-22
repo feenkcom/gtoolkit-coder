@@ -2,7 +2,7 @@ Extension { #name : #RBRenameClassRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
 RBRenameClassRefactoring >> gtDescription [
-	<return: #String or: #BlRopedText>
+	<return: #String or: #BlRunRopedText>
 	
 	^ ('Rename' asRopedText glamorousRoundedBackground)
 		append: ' class ' asRopedText;

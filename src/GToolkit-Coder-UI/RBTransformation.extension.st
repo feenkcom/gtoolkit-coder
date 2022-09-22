@@ -2,7 +2,7 @@ Extension { #name : #RBTransformation }
 
 { #category : #'*GToolkit-Coder-UI' }
 RBTransformation >> gtDescription [
-	<return: #String or: #BlRopedText>
+	<return: #String or: #BlRunRopedText>
 	
 	^ self class name
 ]

@@ -2,7 +2,7 @@ Extension { #name : #GtRBChangeSuperclassRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
 GtRBChangeSuperclassRefactoring >> gtDescription [
-	<return: #String or: #BlRopedText>
+	<return: #String or: #BlRunRopedText>
 	
 	^ ('Change' asRopedText glamorousRoundedBackground)
 		append: ' superclass of ' asRopedText;
