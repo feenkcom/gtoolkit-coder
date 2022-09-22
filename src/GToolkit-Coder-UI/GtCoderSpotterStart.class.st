@@ -43,23 +43,6 @@ GtCoderSpotterStart >> gtSpotterForInstanceMethodsInCurrentClassFor: aSearch [
 ]
 
 { #category : #searching }
-GtCoderSpotterStart >> gtSpotterForMessagesFor: aStep [
-	<gtSearch>
-	
-	^ aStep list
-		priority: 35;
-		title: 'Messages';
-		filter: GtNullFilter
-			item:
-				[ :filter :context | GtSelector substring: context textTrimmed filter: filter ];
-		itemActLogic: [ :each :step :spotterElement | 
-			(each name asSymbol gtImplementors)
-				gtSpotterActDefault: step
-				from: spotterElement ];
-		wantsToDisplayOnEmptyQuery: false
-]
-
-{ #category : #searching }
 GtCoderSpotterStart >> gtSpotterForPackagesFor: aSearch [
 	<gtSearch>
 	^ aSearch list
@@ -69,20 +52,6 @@ GtCoderSpotterStart >> gtSpotterForPackagesFor: aSearch [
 		itemName: [ :package | package name ];
 		filterBySubstring;
 		wantsToDisplayOnEmptyQuery: self navigationModel hasSelectedPackage not
-]
-
-{ #category : #searching }
-GtCoderSpotterStart >> gtSpotterImplementorsFor: aStep [
-	<gtSearch>
-	^ aStep list
-		priority: 30;
-		title: 'Implementors';
-		filter: GtFilterImplementor
-			item: [ :filter :context | 
-			SystemNavigation default
-				allBehaviorsDo: [ :class | class localMethods do: filter ] ];
-		"keyBinding: $m meta;"
-		wantsToDisplayOnEmptyQuery: false
 ]
 
 { #category : #accessing }
