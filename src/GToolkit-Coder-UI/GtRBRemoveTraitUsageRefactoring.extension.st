@@ -2,7 +2,7 @@ Extension { #name : #GtRBRemoveTraitUsageRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
 GtRBRemoveTraitUsageRefactoring >> gtDescription [
-	<return: #String or: #BlRopedText>
+	<return: #String or: #BlRunRopedText>
 	
 	^ ('Remove' asRopedText glamorousRoundedBackground)
 		append: ' trait usage ' asRopedText;

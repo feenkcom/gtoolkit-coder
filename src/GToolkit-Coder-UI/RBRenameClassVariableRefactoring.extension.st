@@ -2,7 +2,7 @@ Extension { #name : #RBRenameClassVariableRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
 RBRenameClassVariableRefactoring >> gtDescription [
-	<return: #String or: #BlRopedText>
+	<return: #String or: #BlRunRopedText>
 	
 	^ ('Rename' asRopedText glamorousRoundedBackground)
 		append: ' class variable ' asRopedText;
