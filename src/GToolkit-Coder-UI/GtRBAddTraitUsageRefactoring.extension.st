@@ -2,7 +2,7 @@ Extension { #name : #GtRBAddTraitUsageRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
 GtRBAddTraitUsageRefactoring >> gtDescription [
-	<return: #String or: #BlRopedText>
+	<return: #String or: #BlRunRopedText>
 	
 	^ ('Add' asRopedText glamorousRoundedBackground)
 		append: ' trait usage ' asRopedText;

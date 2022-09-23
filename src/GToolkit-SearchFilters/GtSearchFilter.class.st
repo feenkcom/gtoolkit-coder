@@ -49,6 +49,11 @@ GtSearchFilter >> do: aBlock [
 ]
 
 { #category : #accessing }
+GtSearchFilter >> filterLabel [
+	^ nil
+]
+
+{ #category : #accessing }
 GtSearchFilter >> filterValueString [
 	^ nil
 ]
@@ -56,6 +61,15 @@ GtSearchFilter >> filterValueString [
 { #category : #testing }
 GtSearchFilter >> isEmpty [
 	^ self notEmpty not
+]
+
+{ #category : #accessing }
+GtSearchFilter >> labeled: aString [
+	^ GtLabeledSearchFilter new
+		filter: self;
+		filterLabel: aString;
+		methodDefinition: thisContext sender method method;
+		yourself
 ]
 
 { #category : #testing }

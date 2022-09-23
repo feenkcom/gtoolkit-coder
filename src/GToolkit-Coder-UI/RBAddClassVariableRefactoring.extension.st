@@ -2,7 +2,7 @@ Extension { #name : #RBAddClassVariableRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
 RBAddClassVariableRefactoring >> gtDescription [
-	<return: #String or: #BlRopedText>
+	<return: #String or: #BlRunRopedText>
 	
 	^ ('Add' asRopedText glamorousRoundedBackground)
 		append: ' class variable ' asRopedText;

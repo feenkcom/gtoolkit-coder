@@ -2,7 +2,7 @@ Extension { #name : #RBRemoveInstanceVariableRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
 RBRemoveInstanceVariableRefactoring >> gtDescription [
-	<return: #String or: #BlRopedText>
+	<return: #String or: #BlRunRopedText>
 	
 	^ ('Remove' asRopedText glamorousRoundedBackground)
 		append: ' instance variable ' asRopedText;
