@@ -4,6 +4,31 @@ Class {
 	#category : #'GToolkit-SearchFilters'
 }
 
+{ #category : #accessing }
+GtSearchFilter class >> allSearchFilterMethods [
+	| methods |
+	methods := ((Pragma allNamed: 'gtSearchFilter')
+			select: [ :each | each method methodClass isClassSide and: [ each method numArgs = 0 ] ])
+			collect: [ :each | each method ].
+	^ methods
+]
+
+{ #category : #accessing }
+GtSearchFilter class >> allSearchFilters [
+	^ (self allSearchFilterMethods
+		collect: [ :each | 
+			([ each methodClass instanceSide perform: each selector ]
+				on: Error
+				do: [ :ex | ex return ])
+				ifNotNil: [ :filter | 
+					filter filterLabel
+						ifNil: [ (filter
+								labeled: each methodClass instanceSide name asString , ' ' , each selector)
+								methodDefinition: each;
+								yourself ]
+						ifNotNil: [ filter ] ] ]) reject: #isNil
+]
+
 { #category : #'logical operations' }
 GtSearchFilter >> & aFilter [
 	^ GtSearchIntersectionFilter forFilter: self filter: aFilter
