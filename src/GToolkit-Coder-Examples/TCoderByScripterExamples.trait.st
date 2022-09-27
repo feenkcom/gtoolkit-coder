@@ -27,7 +27,7 @@ TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id
 { #category : #'examples - scripter' }
 TCoderByScripterExamples >> scripter [
 	| scripter |
-	scripter := BlDevScripter new.
+	scripter := BlScripter new.
 	
 	self assert: scripter events isEmpty.
 	
