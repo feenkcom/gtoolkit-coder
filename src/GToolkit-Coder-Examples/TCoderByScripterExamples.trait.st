@@ -5,23 +5,23 @@ Trait {
 
 { #category : #utilities }
 TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id: aBlElementId [
-
+	<gtExample>
 	aScripterOrStep secondaryClick
 		label: 'Open context menu';
 		id: GtSourceCoderEditorId;
 		play.
 
 	aScripterOrStep mouseMoveOver
-		label: 'Hover ', aBlElementId asSymbol;
+		label: 'Hover ' , aBlElementId asSymbol;
 		onSpaceRoot;
 		id: aBlElementId;
 		play.
-	
+
 	aScripterOrStep click
-		label: 'Click ', aBlElementId asSymbol;
+		label: 'Click ' , aBlElementId asSymbol;
 		onSpaceRoot;
 		id: aBlElementId;
-		play.
+		play
 ]
 
 { #category : #'examples - scripter' }
@@ -55,6 +55,7 @@ TCoderByScripterExamples >> scripterForBlock: aBlock [
 
 { #category : #utilities }
 TCoderByScripterExamples >> selectTextFor: aScripterOrStep from: aStartPosition to: aToPosition andCheck: aSelectedString [
+	<gtExample>
 	aScripterOrStep do
 		label: 'Select part of the method';
 		action: [ :aSourceEditor |
