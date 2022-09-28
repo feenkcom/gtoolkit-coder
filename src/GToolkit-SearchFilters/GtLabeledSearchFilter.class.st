@@ -17,10 +17,10 @@ GtLabeledSearchFilter class >> gtSearchFilterPragmaDescriptor [
 				detect: [ :each | each filterLabel = value ]
 				ifNone: [ self allSearchFilters
 						detect: [ :each | each filterLabel beginsWith: value caseSensitive: false ]
-						ifNone: [ nil ] ]) ifNil: [ GtSearchImageMethodsFilter allMethods ] ];
+						ifNone: [ nil ] ]) ifNil: [ GtSearchImageMethodsFilter forAllMethods ] ];
 		named: 'Custom Filter';
 		order: 10;
-		emptyDefaultValue: GtSearchImageMethodsFilter allMethods filterLabel;
+		emptyDefaultValue: GtSearchImageMethodsFilter forAllMethods filterLabel;
 		completion: [ GtStringsCompletionStrategy new
 				completions: [ GtPrefixTree withAll: (self allSearchFilters collect: #filterLabel) ] ]
 ]
