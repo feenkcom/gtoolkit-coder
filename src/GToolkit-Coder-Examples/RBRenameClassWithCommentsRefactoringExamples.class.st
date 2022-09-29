@@ -25,7 +25,7 @@ RBRenameClassWithCommentsRefactoringExamples >> renameClassComment [
 	newName := #RenamedExample.
 	refactoring := GtRBRenameClassWithCommentsRefactoring
 			model: model
-			rename: cls
+			rename: cls name
 			to: newName.
 	refactoring primitiveExecute.
 	self assert: cls comment ~= self class comment.
