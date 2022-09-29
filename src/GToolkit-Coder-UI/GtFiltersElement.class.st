@@ -91,19 +91,20 @@ GtFiltersElement >> clearFilters [
 { #category : #'private - actions' }
 GtFiltersElement >> createNewTag [
 	| tag |
-	self descriptors isEmptyOrNil ifTrue: [ ^ self ].
-	self areAllDefaults
-		ifTrue: [ self clearFilters ].
-	tag := GtFilterTagElement new.
-	tag filter: self.
-	tag descriptor: self descriptors first.
-	self addChild: tag at: self childrenCount.
-	tag activateEditor
+	self descriptors
+		ifNotEmpty: [ :items | 
+			self areAllDefaults ifTrue: [ self clearFilters ].
+			tag := GtFilterTagElement new.
+			tag filter: self.
+			tag descriptor: items first.
+			self addChild: tag at: self childrenCount.
+			tag activateEditor ]
 ]
 
 { #category : #accessing }
 GtFiltersElement >> descriptors [
-	^ descriptors
+	^ (descriptors isBlock ifTrue: [ descriptors value ] ifFalse: [ descriptors ])
+		ifNil: [ #() ]
 ]
 
 { #category : #accessing }
