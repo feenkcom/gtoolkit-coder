@@ -58,16 +58,17 @@ TCoderByScripterExamples >> selectTextFor: aScripterOrStep from: aStartPosition 
 	<gtExample>
 	aScripterOrStep do
 		label: 'Select part of the method';
-		action: [ :aSourceEditor |
+		action: [ :aSourceEditor | 
 			aSourceEditor selecter
 				from: aStartPosition to: aToPosition;
 				select ];
 		id: GtSourceCoderEditorId;
 		play.
-	
-	aScripterOrStep check
-		label: 'Check selected text';
-		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ] equals: aSelectedString;
+
+	aScripterOrStep assert
+		label: 'Assert selected text';
+		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ]
+			equals: aSelectedString;
 		id: GtSourceCoderEditorId;
 		play
 ]
