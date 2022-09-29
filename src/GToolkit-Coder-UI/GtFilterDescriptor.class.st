@@ -54,6 +54,16 @@ GtFilterDescriptor class >> creator: aBlock named: aString order: anInteger comp
 		yourself
 ]
 
+{ #category : #comparing }
+GtFilterDescriptor >> = anObject [
+	self == anObject ifTrue: [ ^ true ].
+	^ self class = anObject class
+		and: [ self name = anObject name
+				and: [ self order = anObject order
+						and: [ self emptyDefaultValue = anObject emptyDefaultValue
+								and: [ self valueIsRequired = anObject valueIsRequired ] ] ] ]
+]
+
 { #category : #'initialize-release' }
 GtFilterDescriptor >> beNotDefault [
 	"Do not display this particular descriptor filter as a default filter"
@@ -100,6 +110,11 @@ GtFilterDescriptor >> gtCompletionsFor: aView [
 		title: 'Completions';
 		object: [ self completion ];
 		view: #gtCompletionsFor:
+]
+
+{ #category : #comparing }
+GtFilterDescriptor >> hash [
+	^ self class hash hashMultiply bitXor: self name hash
 ]
 
 { #category : #'initialize-release' }
