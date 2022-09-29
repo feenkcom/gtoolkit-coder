@@ -19,7 +19,6 @@ GtUnionFilterExamples >> unionDifferentMethods [
 { #category : #examples }
 GtUnionFilterExamples >> unionNullFilter [
 	<gtExample>
-	<noTest>
 	| filter union |
 	filter := thisContext method selector gtImplementors.
 	union := GtSearchNullFilter new | filter | filter.
