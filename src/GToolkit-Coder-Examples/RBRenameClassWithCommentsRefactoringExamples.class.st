@@ -17,7 +17,6 @@ Class {
 RBRenameClassWithCommentsRefactoringExamples >> renameClassComment [
 	"This comment with RBRenameClassWithCommentsRefactoringExamples should be renamed"
 
-	<noTest>
 	<gtExample>
 	| model refactoring cls newName |
 	model := RBNamespace new.
@@ -25,9 +24,9 @@ RBRenameClassWithCommentsRefactoringExamples >> renameClassComment [
 	self assert: cls comment = self class comment.
 	newName := #RenamedExample.
 	refactoring := GtRBRenameClassWithCommentsRefactoring
-		model: model
-		rename: cls
-		to: newName.
+			model: model
+			rename: cls
+			to: newName.
 	refactoring primitiveExecute.
 	self assert: cls comment ~= self class comment.
 	self class comment lines
@@ -35,14 +34,9 @@ RBRenameClassWithCommentsRefactoringExamples >> renameClassComment [
 		do: [ :orig :new | 
 			(orig includesSubstring: ' not ')
 				ifTrue: [ self assert: orig = new ]
-				ifFalse: [ self
-						assert: (orig copyReplaceAll: self class name with: newName) = new ] ].
+				ifFalse: [ self assert: (orig copyReplaceAll: self class name with: newName) = new ] ].
 	self
-		assert:
-			(cls methodFor: thisContext method selector) source
-				=
-					(thisContext method sourceCode
-						copyReplaceAll: self class name
-						with: newName).
+		assert: (cls methodFor: thisContext method selector) source
+				= (thisContext method sourceCode copyReplaceAll: self class name with: newName).
 	^ model	"This should also be renamed since it contains RBRenameClassWithCommentsRefactoringExamples"
 ]
