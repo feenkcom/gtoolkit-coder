@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+GtBehaviorDefinitionCoderViewModel >> acceptChanges [
+	self coder acceptChanges
+]
+
+{ #category : #accessing }
 GtBehaviorDefinitionCoderViewModel >> discardChanges [
 	self coder discardChanges
 ]
