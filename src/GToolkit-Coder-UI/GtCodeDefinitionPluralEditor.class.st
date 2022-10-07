@@ -11,13 +11,14 @@ Class {
 }
 
 { #category : #accessing }
-GtCodeDefinitionPluralEditor >> addSelector [
-	^ addSelector
+GtCodeDefinitionPluralEditor >> addSelector: aSelector [
+	addSelector := aSelector
 ]
 
-{ #category : #accessing }
-GtCodeDefinitionPluralEditor >> addSelector: anObject [
-	addSelector := anObject
+{ #category : #'api - instantiation' }
+GtCodeDefinitionPluralEditor >> addTag: aNewTag [
+	^ aNewTag name
+		ifNotEmpty: [ :name | self definition perform: addSelector withEnoughArguments: {name} ]
 ]
 
 { #category : #accessing }
@@ -30,101 +31,40 @@ GtCodeDefinitionPluralEditor >> contextMenuBlock: aBinaryBlock [
 { #category : #'api - instantiation' }
 GtCodeDefinitionPluralEditor >> create [
 	<return: #Object>
-	| aDefinition anOwner theInitialNames addAction removeAction renameAction aTagger |
-	aDefinition := self definition.
+	| anOwner theInitialNames aTagger |
 	anOwner := self owner.
 
-	theInitialNames := aDefinition
+	theInitialNames := self definition
 			perform: getSelector
 			withEnoughArguments: {anOwner}.
-
-	addAction := [ :aNewTag | 
-		aNewTag name
-			ifNotEmpty: [ aDefinition
-					perform: addSelector
-					withEnoughArguments: {aNewTag name.
-							anOwner} ] ].
-
-	removeAction := [ :aTag | 
-		aDefinition
-			perform: removeSelector
-			withEnoughArguments: {aTag name.
-					anOwner} ].
-
-	renameAction := [ :aTag :aNewName | 
-		aNewName trimmed
-			ifEmpty: [ removeAction value: aTag name ]
-			ifNotEmpty: [ :aTrimmedName | 
-				aDefinition
-					perform: renameSelector
-					withEnoughArguments: {aTag name.
-							aTrimmedName.
-							anOwner} ] ].
 
 	aTagger := BrTagger new
 			aptitude: (BrGlamorousTaggerEditableAptitude new
 					margin: self margin;
-					tagLabel: [ :aTaggerTag | 
-						| anEditableLabel eachLabelDefinition |
-						eachLabelDefinition := aTaggerTag
-								ifNotNil: [ modelSelector
-										ifNotNil: [ :aSelector | 
-											aTaggerTag name
-												ifEmpty: [ nil ]
-												ifNotEmpty: [ :aTagName | aDefinition perform: aSelector withEnoughArguments: {aTaggerTag name} ] ] ].
-						anEditableLabel := BrEditableLabel new
-								text: aTaggerTag name;
-								styler: styler;
-								inputFilter: inputFilter;
-								aptitude: lookStencil create
-										+ (BrGlamorousWithContextMenuAptitude
-												content: (contextMenuBlock value: eachLabelDefinition value: self));
-								yourself.
-						interactions
-							do: [ :eachAssociation | 
-								anEditableLabel
-									whenKey: eachAssociation key
-									labelDo: [ :aShortcutEvent :aShortcut | 
-										aShortcutEvent consumed: true.
-										eachLabelDefinition
-											ifNotNil: [ eachAssociation value cull: aShortcutEvent cull: eachLabelDefinition ] ] ].
-						eventHandlers
-							do: [ :eachAssociation | 
-								anEditableLabel
-									when: eachAssociation key
-									do: [ :anEvent | 
-										anEvent currentTarget isReadOnly
-											ifTrue: [ eachLabelDefinition
-													ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ] ] ].
-						completionStencil
-							ifNotNil: [ :aStencil | (GtCompletionController on: anEditableLabel strategy: aStencil create) install ].
-						anEditableLabel ];
+					tagLabel: [ :aTaggerTag | self createElementForTag: aTaggerTag ];
 					in: [ :aLook | separatorStencil ifNotNil: [ aLook separator: separatorStencil ] ];
 					yourself);
 			namedTags: theInitialNames;
-			when: BrTaggerAddTagRequest
-				do: [ :aRequest | addAction value: aRequest tag ];
+			when: BrTaggerAddTagRequest do: [ :aRequest | self addTag: aRequest tag ];
 			when: BrTaggerRemoveTagRequest
-				do: [ :aRequest | removeAction value: aRequest tag ];
+				do: [ :aRequest | self removeTag: aRequest tag ];
 			when: BrTaggerRenameTagRequest
-				do: [ :aRequest | renameAction value: aRequest tag value: aRequest newName ].
+				do: [ :aRequest | self renameTag: aRequest tag to: aRequest newName ].
 
 	self containerName
 		ifNotNil: [ :aContainerName | aTagger containerName: aContainerName ].
 
-	aDefinition
+	self definition
 		when: addAnnouncement
 		do: [ :anEvent | 
 			(anOwner isNil or: [ anEvent owner = anOwner ])
 				ifTrue: [ aTagger addTagNamed: anEvent name ] ].
-
-	aDefinition
+	self definition
 		when: removeAnnouncement
 		do: [ :anEvent | 
 			(anOwner isNil or: [ anEvent owner = anOwner ])
 				ifTrue: [ aTagger removeTagNamed: anEvent name ] ].
-
-	aDefinition
+	self definition
 		when: renameAnnouncement
 		do: [ :anEvent | 
 			(anOwner isNil or: [ anEvent owner = anOwner ])
@@ -134,29 +74,80 @@ GtCodeDefinitionPluralEditor >> create [
 ]
 
 { #category : #'api - instantiation' }
+GtCodeDefinitionPluralEditor >> createElementForTag: aTaggerTag [
+	| eachLabelDefinition anEditableLabel aContainer aPreviewButton |
+	aContainer := BrHorizontalPane new
+			hMatchParent;
+			alignCenterLeft;
+			vFitContent.
+
+	eachLabelDefinition := aTaggerTag
+			ifNotNil: [ modelSelector
+					ifNotNil: [ :aSelector | 
+						aTaggerTag name
+							ifEmpty: [ nil ]
+							ifNotEmpty: [ :aTagName | self definition perform: aSelector withEnoughArguments: {aTaggerTag name} ] ] ].
+	anEditableLabel := BrEditableLabel new
+			text: aTaggerTag name;
+			styler: styler;
+			inputFilter: inputFilter;
+			aptitude: lookStencil create
+					+ (BrGlamorousWithContextMenuAptitude
+							content: (contextMenuBlock value: eachLabelDefinition value: self));
+			yourself.
+
+	interactions
+		do: [ :eachAssociation | 
+			anEditableLabel
+				whenKey: eachAssociation key
+				labelDo: [ :aShortcutEvent :aShortcut | 
+					aShortcutEvent consumed: true.
+					eachLabelDefinition
+						ifNotNil: [ eachAssociation value cull: aShortcutEvent cull: eachLabelDefinition ] ] ].
+	eventHandlers
+		do: [ :eachAssociation | 
+			anEditableLabel
+				when: eachAssociation key
+				do: [ :anEvent | 
+					anEvent currentTarget isReadOnly
+						ifTrue: [ eachLabelDefinition
+								ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ] ] ].
+	completionStencil
+		ifNotNil: [ :aStencil | (GtCompletionController on: anEditableLabel strategy: aStencil create) install ].
+		
+	^ anEditableLabel
+]
+
+{ #category : #'api - instantiation' }
 GtCodeDefinitionPluralEditor >> initialize [
 	super initialize.
 	contextMenuBlock := [ :def :edit | [ GtCoderContextMenuContent new editorElement: edit ] ]
 ]
 
 { #category : #accessing }
-GtCodeDefinitionPluralEditor >> removeSelector [
-	^ removeSelector
+GtCodeDefinitionPluralEditor >> removeSelector: aSelector [
+	removeSelector := aSelector
+]
+
+{ #category : #'api - instantiation' }
+GtCodeDefinitionPluralEditor >> removeTag: aTag [
+	^ self definition perform: removeSelector withEnoughArguments: {aTag name}
 ]
 
 { #category : #accessing }
-GtCodeDefinitionPluralEditor >> removeSelector: anObject [
-	removeSelector := anObject
+GtCodeDefinitionPluralEditor >> renameSelector: aSelector [
+	renameSelector := aSelector
 ]
 
-{ #category : #accessing }
-GtCodeDefinitionPluralEditor >> renameSelector [
-	^ renameSelector
-]
-
-{ #category : #accessing }
-GtCodeDefinitionPluralEditor >> renameSelector: anObject [
-	renameSelector := anObject
+{ #category : #'api - instantiation' }
+GtCodeDefinitionPluralEditor >> renameTag: aTag to: aNewName [
+	^ aNewName trimmed
+		ifEmpty: [ self removeTag: aTag name ]
+		ifNotEmpty: [ :aTrimmedName | 
+			self definition
+				perform: renameSelector
+				withEnoughArguments: {aTag name.
+						aTrimmedName} ]
 ]
 
 { #category : #accessing }
