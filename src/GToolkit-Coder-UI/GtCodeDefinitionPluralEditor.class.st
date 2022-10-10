@@ -5,7 +5,11 @@ Class {
 		'addSelector',
 		'renameSelector',
 		'removeSelector',
-		'contextMenuBlock'
+		'contextMenuBlock',
+		'renameRefactoringBlock'
+	],
+	#classInstVars : [
+		'foo'
 	],
 	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
@@ -19,6 +23,19 @@ GtCodeDefinitionPluralEditor >> addSelector: aSelector [
 GtCodeDefinitionPluralEditor >> addTag: aNewTag [
 	^ aNewTag name
 		ifNotEmpty: [ :name | self definition perform: addSelector withEnoughArguments: {name} ]
+]
+
+{ #category : #'api - instantiation' }
+GtCodeDefinitionPluralEditor >> buildRenamePreviewFrom: aTag to: aNewName [
+	| oldName |
+	oldName := aTag name.
+	^ GtRefactoringsPreviewButton new
+		margin: (BlInsets
+				top: 5
+				left: -3
+				bottom: 0
+				right: 5);
+		refactorings: [ {renameRefactoringBlock value: oldName value: aNewName} ]
 ]
 
 { #category : #accessing }
@@ -49,7 +66,12 @@ GtCodeDefinitionPluralEditor >> create [
 			when: BrTaggerRemoveTagRequest
 				do: [ :aRequest | self removeTag: aRequest tag ];
 			when: BrTaggerRenameTagRequest
-				do: [ :aRequest | self renameTag: aRequest tag to: aRequest newName ].
+				do: [ :aRequest | 
+					self
+						renameTag: aRequest tag
+						to: aRequest newName
+						from: aRequest source.
+					aRequest currentTarget renameTag: aRequest tag to: aRequest newName ].
 
 	self containerName
 		ifNotNil: [ :aContainerName | aTagger containerName: aContainerName ].
@@ -75,12 +97,7 @@ GtCodeDefinitionPluralEditor >> create [
 
 { #category : #'api - instantiation' }
 GtCodeDefinitionPluralEditor >> createElementForTag: aTaggerTag [
-	| eachLabelDefinition anEditableLabel aContainer aPreviewButton |
-	aContainer := BrHorizontalPane new
-			hMatchParent;
-			alignCenterLeft;
-			vFitContent.
-
+	| eachLabelDefinition anEditableLabel |
 	eachLabelDefinition := aTaggerTag
 			ifNotNil: [ modelSelector
 					ifNotNil: [ :aSelector | 
@@ -114,7 +131,7 @@ GtCodeDefinitionPluralEditor >> createElementForTag: aTaggerTag [
 								ifNotNil: [ eachAssociation value cull: anEvent cull: eachLabelDefinition ] ] ] ].
 	completionStencil
 		ifNotNil: [ :aStencil | (GtCompletionController on: anEditableLabel strategy: aStencil create) install ].
-		
+
 	^ anEditableLabel
 ]
 
@@ -135,19 +152,35 @@ GtCodeDefinitionPluralEditor >> removeTag: aTag [
 ]
 
 { #category : #accessing }
+GtCodeDefinitionPluralEditor >> renameRefactoringBlock: aBlock [
+	"This block should return a refactoring that will rename all references from the old name to the old name.
+	It is evaluated when renaming existing variables in the class"
+	
+	renameRefactoringBlock := aBlock
+]
+
+{ #category : #accessing }
 GtCodeDefinitionPluralEditor >> renameSelector: aSelector [
 	renameSelector := aSelector
 ]
 
 { #category : #'api - instantiation' }
-GtCodeDefinitionPluralEditor >> renameTag: aTag to: aNewName [
-	^ aNewName trimmed
-		ifEmpty: [ self removeTag: aTag name ]
-		ifNotEmpty: [ :aTrimmedName | 
-			self definition
+GtCodeDefinitionPluralEditor >> renameTag: aTag to: aNewName from: aTaggerAptitude [
+	| newName aPreviewButton |
+	newName := aNewName trimmed.
+	newName = aTag name ifTrue: [ ^ self ].
+	newName
+		ifEmpty: [ self removeTag: aTag name.
+			^ self ].
+	renameRefactoringBlock notNil
+		ifTrue: [ aPreviewButton := self buildRenamePreviewFrom: aTag to: newName.
+			aTaggerAptitude
+				tagElementFor: aTag
+				ifFound: [ :elem | elem parent addChild: aPreviewButton after: elem ] ]
+		ifFalse: [ self definition
 				perform: renameSelector
 				withEnoughArguments: {aTag name.
-						aTrimmedName} ]
+						newName} ]
 ]
 
 { #category : #accessing }
