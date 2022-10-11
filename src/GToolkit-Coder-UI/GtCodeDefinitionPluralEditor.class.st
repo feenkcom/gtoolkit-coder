@@ -8,9 +8,6 @@ Class {
 		'contextMenuBlock',
 		'renameRefactoringBlock'
 	],
-	#classInstVars : [
-		'foo'
-	],
 	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
@@ -138,7 +135,10 @@ GtCodeDefinitionPluralEditor >> createElementForTag: aTaggerTag [
 { #category : #'api - instantiation' }
 GtCodeDefinitionPluralEditor >> initialize [
 	super initialize.
-	contextMenuBlock := [ :def :edit | [ GtCoderContextMenuContent new editorElement: edit ] ]
+	contextMenuBlock := [ :def :edit | [ GtCoderContextMenuContent new editorElement: edit ] ].
+	self
+		whenKey: BlKeyCombination primaryR
+		do: [ :anEvent :aDefinition | anEvent target switchToEditor ]
 ]
 
 { #category : #accessing }
