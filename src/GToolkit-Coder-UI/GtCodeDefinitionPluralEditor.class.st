@@ -23,7 +23,7 @@ GtCodeDefinitionPluralEditor >> addTag: aNewTag [
 ]
 
 { #category : #'api - instantiation' }
-GtCodeDefinitionPluralEditor >> buildRenamePreviewFrom: aTag to: aNewName [
+GtCodeDefinitionPluralEditor >> buildRenamePreviewFrom: aTag to: aNewName from: anAptitude [
 	| oldName |
 	oldName := aTag name.
 	^ GtRefactoringsPreviewButton new
@@ -32,7 +32,8 @@ GtCodeDefinitionPluralEditor >> buildRenamePreviewFrom: aTag to: aNewName [
 				left: -3
 				bottom: 0
 				right: 5);
-		refactorings: [ {renameRefactoringBlock value: oldName value: aNewName} ]
+		refactorings: [ {renameRefactoringBlock value: oldName value: aNewName} ];
+		cancelBlock: [ anAptitude widget viewModel renameTagNamed: aNewName to: oldName ]
 ]
 
 { #category : #accessing }
@@ -173,7 +174,7 @@ GtCodeDefinitionPluralEditor >> renameTag: aTag to: aNewName from: aTaggerAptitu
 		ifEmpty: [ self removeTag: aTag name.
 			^ self ].
 	renameRefactoringBlock notNil
-		ifTrue: [ aPreviewButton := self buildRenamePreviewFrom: aTag to: newName.
+		ifTrue: [ aPreviewButton := self buildRenamePreviewFrom: aTag to: newName from: aTaggerAptitude.
 			aTaggerAptitude
 				tagElementFor: aTag
 				ifFound: [ :elem | elem parent addChild: aPreviewButton after: elem ] ]
