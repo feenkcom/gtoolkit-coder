@@ -7,5 +7,9 @@ Class {
 { #category : #accessing }
 GtRenameEditor >> initialize [
 	super initialize.
-	self when: BlFocusEvent do: [ :anEvent | self switchToEditor ]
+	self
+		when: BlFocusEvent
+		do: [ :anEvent | 
+			self viewModel mode class = BrTextEditorReadonlyWithoutSelectionMode
+				ifTrue: [ self switchToEditor ] ]
 ]

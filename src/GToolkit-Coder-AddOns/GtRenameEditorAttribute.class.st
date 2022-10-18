@@ -69,6 +69,7 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 
 	requestInitialFocus
 		ifTrue: [ renameEditor editor
+				selectNone;
 				moveCursorTo: ((cursorLocation ifNil: [ SmallInteger maxVal ])
 						min: renameEditor editor text size) ].
 
