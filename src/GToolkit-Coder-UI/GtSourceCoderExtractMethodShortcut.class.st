@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderExtractMethodShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }
@@ -23,5 +23,5 @@ GtSourceCoderExtractMethodShortcut >> name [
 
 { #category : #evaluation }
 GtSourceCoderExtractMethodShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [		
-	(GtExtractMethodController new sourceCoderViewModel: aSourceCoderViewModel) execute
+	(GtExtractMethodToComponentController new sourceCoderViewModel: aSourceCoderViewModel) execute
 ]

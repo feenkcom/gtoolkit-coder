@@ -1,19 +1,9 @@
 Class {
 	#name : #GtRenameAction,
-	#superclass : #Object,
-	#traits : 'TGtAnnouncer',
-	#classTraits : 'TGtAnnouncer classTrait',
+	#superclass : #GtAbstractRenameAction,
 	#instVars : [
-		'announcer',
 		'textElement',
-		'originalLocations',
-		'originalText',
-		'originalCursorPosition',
-		'isInstalled',
-		'renameAttributes',
-		'selectAll',
-		'validationBlock',
-		'filter'
+		'originalCursorPosition'
 	],
 	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
@@ -24,14 +14,6 @@ GtRenameAction class >> locations: aCollectionOfIntervals element: aTextEditorEl
 		textElement: aTextEditorElement;
 		locations: aCollectionOfIntervals;
 		yourself
-]
-
-{ #category : #actions }
-GtRenameAction >> accept [
-	self updateSource.
-	self uninstall.
-	self allowSave.
-	self announceEvent: #accept
 ]
 
 { #category : #private }
@@ -66,122 +48,6 @@ GtRenameAction >> allowSave [
 		ifTrue: [ textElement textualCoderViewModel allowSaveDueTo: self ]
 ]
 
-{ #category : #private }
-GtRenameAction >> announceEvent: aSymbol [
-	^ self announce: (GtRenameActionAnnouncement for: self type: aSymbol)
-]
-
-{ #category : #announcer }
-GtRenameAction >> announcer [
-	^ announcer ifNil: [ announcer := Announcer new ]
-]
-
-{ #category : #actions }
-GtRenameAction >> cancel [
-	self uninstall.
-	self undoChanges.
-	self allowSave.
-	self announceEvent: #cancel
-]
-
-{ #category : #accessing }
-GtRenameAction >> editor [
-	^ self editorAttribute editor
-]
-
-{ #category : #accessing }
-GtRenameAction >> editorAttribute [
-	^ renameAttributes notNil
-		ifTrue: [ renameAttributes
-				detect: [ :attr | attr isKindOf: GtRenameEditorAttribute ]
-				ifNone: [  ] ]
-]
-
-{ #category : #private }
-GtRenameAction >> filter: aTextEditorInputFilter [
-	filter := aTextEditorInputFilter.
-	self primaryRenameAttribute
-		ifNotNil: [ :attr | attr filter: aTextEditorInputFilter ]
-]
-
-{ #category : #'initialize-release' }
-GtRenameAction >> forBinaryOrKeyword [
-	validationBlock := [ :str | (self validateKeyword: str) or: [ self validateBinary: str ] ]
-]
-
-{ #category : #'initialize-release' }
-GtRenameAction >> forKeyword [
-	validationBlock := [ :str | self validateKeyword: str ]
-]
-
-{ #category : #'initialize-release' }
-GtRenameAction >> forVariableOrUnaryMessage [
-	validationBlock := [ :str | self validateVariable: str ].
-	self filter: BrTextEditorAlphaNumericInputFilter new
-]
-
-{ #category : #'initialize-release' }
-GtRenameAction >> initialize [
-	super initialize.
-	originalLocations := #().
-	isInstalled := false.
-	selectAll := false.
-	filter := BrTextEditorNoInputFilter new
-]
-
-{ #category : #installation }
-GtRenameAction >> install [
-	originalLocations isEmpty
-		ifTrue: [ ^ self ].
-	self preventSave.
-	self saveOriginalState.
-	self addRenameAttributes.
-	isInstalled := true.
-	self announceEvent: #install
-]
-
-{ #category : #testing }
-GtRenameAction >> isInstalled [
-	^ isInstalled
-]
-
-{ #category : #testing }
-GtRenameAction >> isRenameAttribute: anAttribute [
-	^ anAttribute isKindOf: GtRenamePreviewAttribute
-]
-
-{ #category : #'private-validation' }
-GtRenameAction >> isValid [
-	validationBlock isNil
-		ifTrue: [ ^ true ].
-	^ validationBlock value: self newName
-]
-
-{ #category : #accessing }
-GtRenameAction >> locations: aCollectionOfIntervals [
-	originalLocations := aCollectionOfIntervals asSortedCollection: [ :a :b | a first < b first ].
-	self validateLocations
-]
-
-{ #category : #actions }
-GtRenameAction >> lostFocus [
-	self isValid
-		ifTrue: [ self accept ]
-		ifFalse: [ self cancel ]
-]
-
-{ #category : #accessing }
-GtRenameAction >> newName [
-	^ renameAttributes first text asString
-]
-
-{ #category : #accessing }
-GtRenameAction >> originalName [
-	^ (originalText
-		copyFrom: originalLocations first first
-		to: originalLocations first last) asString
-]
-
 { #category : #'private - actions' }
 GtRenameAction >> preventSave [
 	(textElement respondsTo: #textualCoderViewModel)
@@ -189,30 +55,8 @@ GtRenameAction >> preventSave [
 ]
 
 { #category : #private }
-GtRenameAction >> primaryRenameAttribute [
-	renameAttributes isNil
-		ifTrue: [ ^ nil ].
-	^ renameAttributes
-		detect: [ :each | each isEditorAttribute ]
-		ifNone: [ nil ]
-]
-
-{ #category : #private }
-GtRenameAction >> removeAttributeHandlers [
-	renameAttributes do: [ :each | each uninstallEventHandlers ]
-]
-
-{ #category : #private }
 GtRenameAction >> removeAttributes [
-	self text clearAttributes: [ :each | self isRenameAttribute: each ].
-	self removeAttributeHandlers
-]
-
-{ #category : #actions }
-GtRenameAction >> returnAccept [
-	self isValid
-		ifFalse: [ ^ self ].
-	self accept
+	self text clearAttributes: [ :each | self isRenameAttribute: each ]
 ]
 
 { #category : #private }
@@ -221,28 +65,6 @@ GtRenameAction >> saveOriginalState [
 	text := self text.
 	originalText := text copy.
 	originalCursorPosition := self textEditor cursors first position
-]
-
-{ #category : #accessing }
-GtRenameAction >> selectAll [
-	^ selectAll
-]
-
-{ #category : #accessing }
-GtRenameAction >> selectAll: anObject [
-	selectAll := anObject
-]
-
-{ #category : #actions }
-GtRenameAction >> tabAccept: forward [
-	self isValid
-		ifFalse: [ ^ self ].
-	self accept.
-	self
-		announceEvent:
-			(forward
-				ifTrue: [ #tab ]
-				ifFalse: [ #shiftTab ])
 ]
 
 { #category : #accessing }
@@ -276,10 +98,7 @@ GtRenameAction >> undoChanges [
 
 { #category : #installation }
 GtRenameAction >> uninstall [
-	self removeAttributes.
-	isInstalled := false.
-	self allowSave.
-	self announceEvent: #uninstall.
+	super uninstall.
 	textElement
 		enqueueTask: (BlTaskAction new action: [ textElement requestFocus ])
 ]
@@ -299,12 +118,6 @@ GtRenameAction >> updateCursorLocation [
 								min: textElement editor text size).
 					^ self ].
 			offset := offset + sizeDifference ]
-]
-
-{ #category : #actions }
-GtRenameAction >> updateName: blText [	
-	renameAttributes do: [ :each | each updateText: blText ].
-	self announceEvent: #textUpdated
 ]
 
 { #category : #private }
@@ -344,42 +157,4 @@ GtRenameAction >> updateText: text at: intervals attributes: attributeCollection
 	textElement text: newText.
 	(textElement respondsTo: #onTextModified)
 		ifTrue: [ textElement onTextModified ]
-]
-
-{ #category : #'private-validation' }
-GtRenameAction >> validateBinary: aString [
-	aString isEmpty
-		ifTrue: [ ^ false ].
-	^ (RBScanner isSelector: aString) and: [ aString asSymbol isBinary ]
-]
-
-{ #category : #'private-validation' }
-GtRenameAction >> validateKeyword: aString [
-	aString isEmpty
-		ifTrue: [ ^ false ].
-	aString last = $:
-		ifFalse: [ ^ false ].
-	^ (RBScanner isSelector: aString)
-		and: [ aString asSymbol numArgs = 1 ]
-]
-
-{ #category : #private }
-GtRenameAction >> validateLocations [
-	| lastLocation size |
-	originalLocations isEmpty
-		ifTrue: [ ^ self ].
-	lastLocation := 0.
-	size := originalLocations first size.
-	originalLocations
-		do: [ :each | 
-			each first <= lastLocation
-				ifTrue: [ self error: 'Cannot rename overlapping locations' ].
-			lastLocation := each last.
-			each size ~= size
-				ifTrue: [ self error: 'Cannot rename items of different sizes' ] ]
-]
-
-{ #category : #'private-validation' }
-GtRenameAction >> validateVariable: aString [
-	^ RBScanner isVariable: aString
 ]
