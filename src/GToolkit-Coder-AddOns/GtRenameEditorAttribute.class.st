@@ -7,7 +7,8 @@ Class {
 		'filter',
 		'editorShortcuts',
 		'requestInitialFocus',
-		'isForSelector'
+		'isForSelector',
+		'styler'
 	],
 	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
@@ -38,6 +39,7 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 					right: -2);
 			inputFilter: filter;
 			text: text.
+	styler ifNotNil: [ renameEditor styler: styler ].
 	requestInitialFocus
 		ifTrue: [ renameEditor
 				switchToEditor;
@@ -204,6 +206,16 @@ GtRenameEditorAttribute >> setupArrowKeysOn: anEditorElement [
 	renameEditor
 		whenKey: BlKeyCombination arrowUp
 		editorDo: [ :aShortcutEvent | aShortcutEvent consumed: (self focusNext: false in: anEditorElement) ]
+]
+
+{ #category : #accessing }
+GtRenameEditorAttribute >> styler [
+	^ styler
+]
+
+{ #category : #accessing }
+GtRenameEditorAttribute >> styler: aBlTextStyler [
+	styler := aBlTextStyler
 ]
 
 { #category : #accessing }
