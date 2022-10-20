@@ -20,6 +20,18 @@ GtSourceCoderRefactoringController >> allowSave [
 	self sourceCoderViewModel allowSaveDueTo: self
 ]
 
+{ #category : #accessing }
+GtSourceCoderRefactoringController >> cancelRefactoring [
+	self cleanUp.
+	self restoreText
+]
+
+{ #category : #accessing }
+GtSourceCoderRefactoringController >> cleanUp [
+	self removeRefactoringAttribute.
+	self allowSave
+]
+
 { #category : #executing }
 GtSourceCoderRefactoringController >> execute [
 	[
@@ -62,7 +74,9 @@ GtSourceCoderRefactoringController >> refactoringName [
 { #category : #'private - attributes' }
 GtSourceCoderRefactoringController >> removeRefactoringAttribute [
 	refactoringPreviewAttributes ifNil: [ ^ self ].
-	self sourceCoderViewModel removeCoderTextAttributes: refactoringPreviewAttributes
+	self sourceCoderViewModel
+		removeCoderTextAttributes: refactoringPreviewAttributes.
+	refactoringPreviewAttributes := nil
 ]
 
 { #category : #private }
