@@ -393,7 +393,8 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aP
 	(self selectedPackage ~= aPackage
 		or: [ self selectedPackageTag ~= aPackageTag ])
 		ifTrue: [ self selectPackage: aPackage tag: aPackageTag ].
-	self selectClass: aClass
+	self selectClass: aClass.
+	self updateProtocolList
 ]
 
 { #category : #'api - package selections' }
@@ -569,8 +570,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 	| methodProtocols |
-	methodProtocolsList deselectAll.
-
+	
 	navigationModel hasSelectedClass
 		ifTrue: [ | classProtocols |
 			classProtocols := navigationModel selectedClass class organization protocols
