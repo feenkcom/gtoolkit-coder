@@ -70,7 +70,7 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 				(self focusNext: true in: anEditorElement)
 					ifFalse: [ self renameAction tabAccept: true ] ];
 		whenKey: BlKeyCombination enter
-			editorDo: [ :aShortcutEvent | (self focusNext: true in: anEditorElement) ifFalse: [ self renameAction accept ] ].
+			editorDo: [ :aShortcutEvent | self renameAction processReturnFor: renameEditor in: anEditorElement ].
 
 	renameEditor when: BrEditorCancelWish do: [ :event | self renameAction cancel ].
 
