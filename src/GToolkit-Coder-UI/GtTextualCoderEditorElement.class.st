@@ -149,15 +149,11 @@ GtTextualCoderEditorElement >> onCursorsChanged: aCursorsChangedAnnouncement [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
-	self assertUIProcess.
+	anAnnouncement source == self ifTrue: [ ^ self ].
 
-	anAnnouncement source == self
-		ifTrue: [ ^ self ].
+	anAnnouncement source == self textualCoderViewModel ifFalse: [ ^ self ].
 
-	anAnnouncement source == self textualCoderViewModel
-		ifFalse: [ ^ self ].
-
-	self onCoderViewModelFocused: anAnnouncement focused
+	self inUIProcessDo: [ self onCoderViewModelFocused: anAnnouncement focused ]
 ]
 
 { #category : #'private - event handling' }
