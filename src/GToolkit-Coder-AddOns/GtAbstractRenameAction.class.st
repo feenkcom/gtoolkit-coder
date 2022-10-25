@@ -168,6 +168,11 @@ GtAbstractRenameAction >> primaryRenameAttribute [
 		ifNone: [ nil ]
 ]
 
+{ #category : #actions }
+GtAbstractRenameAction >> processReturnFor: renameEditor in: anEditorElement [
+	self accept
+]
+
 { #category : #private }
 GtAbstractRenameAction >> removeAttributes [
 	self subclassResponsibility
