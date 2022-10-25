@@ -25,6 +25,7 @@ GtRenameEditorAttribute >> cursorLocation: anInteger [
 
 { #category : #accessing }
 GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
+	| handlers |
 	renameEditor := GtRenameEditor new
 			fitContent;
 			aptitude: (BrGlamorousEditableLabelAptitude new
@@ -47,6 +48,15 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 		ifFalse: [ renameEditor switchToLabel ].
 
 	isForSelector ifTrue: [ self setupArrowKeysOn: anEditorElement ].
+
+	handlers := {BrTextEditorDeletedEvent.
+			BrTextEditorInsertedEvent}
+			collect: [ :each | BlEventHandler on: each do: [ :event | self renameAction cancel ] ].
+	renameEditor
+		when: BlElementAddedToSceneGraphEvent
+			do: [ :anEvent | handlers do: [ :each | anEditorElement editor addEventHandler: each ] ];
+		when: BlElementRemovedFromSceneGraphEvent
+			do: [ :anEvent | handlers do: [ :each | anEditorElement editor removeEventHandler: each ] ].
 
 	renameEditor
 		whenKey: BlKeyCombination escape
