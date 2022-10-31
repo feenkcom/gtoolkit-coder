@@ -570,12 +570,11 @@ GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 	| methodProtocols |
-	
 	navigationModel hasSelectedClass
 		ifTrue: [ | classProtocols |
 			classProtocols := navigationModel selectedClass class organization protocols
 					reject: [ :prot | 
-						(self selectedClass class methods
+						(navigationModel selectedClass class methods
 							select: [ :meth | (prot includesSelector: meth selector) and: [ meth isFromTrait not ] ])
 							isEmpty ].
 			methodProtocols := navigationModel selectedClass organization protocols
