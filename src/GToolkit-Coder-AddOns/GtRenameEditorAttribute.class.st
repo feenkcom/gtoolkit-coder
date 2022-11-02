@@ -7,8 +7,8 @@ Class {
 		'filter',
 		'editorShortcuts',
 		'requestInitialFocus',
-		'isForSelector',
-		'styler'
+		'styler',
+		'coordinateFocus'
 	],
 	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
@@ -16,6 +16,16 @@ Class {
 { #category : #accessing }
 GtRenameEditorAttribute >> additionalAttributes [
 	^ {BlFontFamilyAttribute named: 'Source Code Pro'}
+]
+
+{ #category : #accessing }
+GtRenameEditorAttribute >> coordinateFocus [
+	^ coordinateFocus
+]
+
+{ #category : #accessing }
+GtRenameEditorAttribute >> coordinateFocus: aBoolean [
+	coordinateFocus := aBoolean
 ]
 
 { #category : #accessing }
@@ -47,7 +57,7 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 				requestFocus ]
 		ifFalse: [ renameEditor switchToLabel ].
 
-	isForSelector ifTrue: [ self setupArrowKeysOn: anEditorElement ].
+	coordinateFocus ifTrue: [ self setupArrowKeysOn: anEditorElement ].
 
 	handlers := {BrTextEditorDeletedEvent.
 			BrTextEditorInsertedEvent}
@@ -107,7 +117,7 @@ GtRenameEditorAttribute >> filter: aTextEditorInputFilter [
 { #category : #accessing }
 GtRenameEditorAttribute >> focusNext: aBoolean in: anEditorElement [
 	| first last previous |
-	isForSelector ifFalse: [ ^ false ].
+	coordinateFocus ifFalse: [ ^ false ].
 	anEditorElement
 		allChildrenBreadthFirstDo: [ :each | 
 			(each isKindOf: GtRenameEditor)
@@ -138,7 +148,7 @@ GtRenameEditorAttribute >> initialize [
 	selectAll := false.
 	self cache: self newPooledCache.
 	requestInitialFocus  := true.
-	isForSelector  := false
+	coordinateFocus  := false
 ]
 
 { #category : #testing }
@@ -149,16 +159,6 @@ GtRenameEditorAttribute >> isEditorAttribute [
 { #category : #testing }
 GtRenameEditorAttribute >> isFocusable [
 	^ true
-]
-
-{ #category : #accessing }
-GtRenameEditorAttribute >> isForSelector [
-	^ isForSelector
-]
-
-{ #category : #accessing }
-GtRenameEditorAttribute >> isForSelector: aBoolean [
-	isForSelector := aBoolean
 ]
 
 { #category : #accessing }
