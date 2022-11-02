@@ -296,21 +296,20 @@ GtTextualCoderEditorElement >> onViewModelReadyToStyle [
 GtTextualCoderEditorElement >> onViewModelSelectionChanged: aSelectionChangedAnnouncement [
 	"Is sent when the selection changes in the View Model.
 	May be sent from a non-UI thread"
-	
+
 	"if the source of the announcement is myself, do nothing to break the change cycle"
-	aSelectionChangedAnnouncement source = self
-		ifTrue: [ ^ self ].
-		
+
+	aSelectionChangedAnnouncement source = self ifTrue: [ ^ self ].
+
 	aSelectionChangedAnnouncement source == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
-	"since it may be sent from a non-UI process make sure to wrap in the action"
-	self enqueueTask: (BlTaskAction new action: [
-		self deselecter all deselect.
-		self selecter
-			withoutCursorUpdate;
-			all: aSelectionChangedAnnouncement selection;
-			select ])
+	self
+		inUIProcessDo: [ self deselecter all deselect.
+			self selecter
+				withoutCursorUpdate;
+				all: aSelectionChangedAnnouncement selection;
+				select ]
 ]
 
 { #category : #'private - event handling' }
