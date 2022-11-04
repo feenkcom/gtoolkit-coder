@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'pharoSourceCoderViewModel',
 		'originalCursors',
-		'coderAttributes'
+		'coderAttributes',
+		'hasRefactoringPreview'
 	],
 	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
@@ -36,6 +37,7 @@ GtCoderViewModelRenameAction >> addRenameAttributes [
 						action: self;
 						selectAll: selectAll;
 						filter: filter;
+						coordinateFocus: hasRefactoringPreview;
 						text: (text from: each first to: each last) ]
 				ifFalse: [
 					GtRenamePreviewAttribute new
@@ -60,10 +62,27 @@ GtCoderViewModelRenameAction >> allowSave [
 	pharoSourceCoderViewModel allowSaveDueTo: self
 ]
 
+{ #category : #accessing }
+GtCoderViewModelRenameAction >> hasRefactoringPreview [
+	^ hasRefactoringPreview
+]
+
+{ #category : #accessing }
+GtCoderViewModelRenameAction >> hasRefactoringPreview: aBoolean [
+	hasRefactoringPreview := aBoolean
+]
+
 { #category : #'initialize-release' }
 GtCoderViewModelRenameAction >> initialize [
 	super initialize.
-	coderAttributes := #()
+	coderAttributes := #().
+	hasRefactoringPreview := false
+]
+
+{ #category : #accessing }
+GtCoderViewModelRenameAction >> lostFocus [
+	hasRefactoringPreview ifTrue: [ ^ self ].
+	^ super lostFocus
 ]
 
 { #category : #accessing }
