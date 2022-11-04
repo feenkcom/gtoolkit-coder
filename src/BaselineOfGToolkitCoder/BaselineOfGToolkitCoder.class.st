@@ -37,16 +37,16 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec repository: 'github://feenkcom/pharo-futures:v0.6.69/src' ].
 		spec
 			baseline: 'GToolkitBasicUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.152/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.153/src' ].
 		spec
 			baseline: 'GToolkitAnnouncerUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.152/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.153/src' ].
 		spec
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.802/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.803/src' ].
 		spec
 			baseline: 'GToolkitCompleter' with: [
-				spec repository: 'github://feenkcom/gtoolkit-completer:v0.8.800/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-completer:v0.8.801/src' ].
 
 		spec package: 'GToolkit-VariableBindings'.
 		spec package: 'GToolkit-SearchFilters' with: [
