@@ -127,6 +127,21 @@ GtFiltersElement >> filtersDo: aBlock [
 					value: filterTagElement valueString ] ]
 ]
 
+{ #category : #accessing }
+GtFiltersElement >> gtViewDefaultDescriptorsFor: aView [ 
+	<gtView>
+	
+	^ aView columnedList 
+		title: 'Descriptors';
+		items: [ self descriptors ];
+		column: 'Name' text: [ :aDescriptor | aDescriptor name ];
+		column: 'Order' text: [ :aDescriptor | aDescriptor order ];
+		column: 'Is Default' text: [ :aDescriptor | aDescriptor isDefault ];
+		column: 'Is Required' text: [ :aDescriptor | aDescriptor valueIsRequired ];
+		column: 'Empty Value' text: [ :aDescriptor | aDescriptor emptyDefaultValue ];
+		column: 'Show Empty Default' text: [ :aDescriptor | aDescriptor showAsDefaultWhenEmpty ]
+]
+
 { #category : #initialization }
 GtFiltersElement >> initialize [
 	super initialize.
