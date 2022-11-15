@@ -112,6 +112,18 @@ GtFilterDescriptor >> gtCompletionsFor: aView [
 		view: #gtCompletionsFor:
 ]
 
+{ #category : #'gt - extensions' }
+GtFilterDescriptor >> gtViewFilterBlockFor: aView [
+	<gtView>
+	
+	creationBlock ifNil: [ ^ aView empty ].
+	
+	^ aView forward 
+		title: 'Filter Creation Block';
+		object: [ creationBlock ];
+		view: #gtSourceCodeFor:
+]
+
 { #category : #comparing }
 GtFilterDescriptor >> hash [
 	^ self class hash hashMultiply bitXor: self name hash
@@ -122,6 +134,11 @@ GtFilterDescriptor >> initialize [
 	super initialize.
 	valueIsRequired := true.
 	isDefault := true.
+]
+
+{ #category : #testing }
+GtFilterDescriptor >> isDefault [
+	^ isDefault
 ]
 
 { #category : #accessing }
