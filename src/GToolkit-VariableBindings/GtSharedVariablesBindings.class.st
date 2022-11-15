@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'bindings'
 	],
-	#category : 'GToolkit-VariableBindings-Bindings'
+	#category : #'GToolkit-VariableBindings-Bindings'
 }
 
 { #category : #comparing }
@@ -62,4 +62,11 @@ GtSharedVariablesBindings >> initialize [
 	super initialize.
 	
 	bindings := Dictionary new
+]
+
+{ #category : #binding }
+GtSharedVariablesBindings >> removeBindingOf: aSymbol [
+	<return: #Boolean>
+
+	^ bindings removeKey: aSymbol ifAbsent: [ "ignore" ]
 ]
