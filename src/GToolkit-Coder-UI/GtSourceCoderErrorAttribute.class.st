@@ -3,7 +3,8 @@ Class {
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
 		'string',
-		'openOnFirstShow'
+		'openOnFirstShow',
+		'clickAction'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source Attributes'
 }
@@ -18,20 +19,46 @@ GtSourceCoderErrorAttribute class >> for: aString [
 ]
 
 { #category : #accessing }
+GtSourceCoderErrorAttribute >> clickAction [
+	^ clickAction
+]
+
+{ #category : #accessing }
+GtSourceCoderErrorAttribute >> clickAction: aBlock [
+	clickAction := aBlock
+]
+
+{ #category : #accessing }
 GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| text button aptitude |
 	button := self errorButton.
 	button
 		addAptitude: (aptitude := BrGlamorousWithDropdownAptitude
 					handle: [ self errorButton ]
-					content: [ text := string asRopedText
+					content: [ | textElement |
+						text := string asRopedText
 								medium;
 								glamorousCodeFontAndSmallSize.
-						BlTextElement new
-							text: text;
-							background: BrGlamorousColors errorBackgroundColor;
-							padding: (BlInsets all: 10);
-							yourself ]
+						textElement := BlTextElement new.
+						textElement text: text.
+						textElement background: BrGlamorousColors errorBackgroundColor.
+						textElement padding: (BlInsets all: 10).
+						textElement
+							when: BlClickEvent
+							do: [ :event | clickAction cull: anEditorElement cull: aptitude hide ].
+						{BlKeyCombination escape.
+							BlKeyCombination enter.
+							BlKeyCombination backspace}
+							do: [ :each | 
+								textElement
+									addShortcut: (BlShortcutWithAction new
+											combination: each;
+											repeatable: false;
+											action: [ :element | 
+												aptitude hide.
+												anEditorElement requestFocus ]) ].
+						textElement enqueueTask: [ textElement requestFocus ] asBlTask.
+						textElement ]
 					aptitudeDo: [ :look | 
 						look
 							allActorsDepthFirstDo: [ :each | 
@@ -40,7 +67,10 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 											addChangeProperty: #(widget border)
 											with: [ BlBorder paint: BrGlamorousColors errorBackgroundColor asBlPaint width: 1 ] ] ].
 						look background: BrGlamorousColors errorBackgroundColor ]).
-	openOnFirstShow ifTrue: [ button enqueueTask: [ aptitude show ] asBlTask ].
+	openOnFirstShow
+		ifTrue: [ button
+				enqueueTask: [ openOnFirstShow := false.
+					aptitude show ] asBlTask ].
 
 	^ button
 ]
@@ -64,7 +94,8 @@ GtSourceCoderErrorAttribute >> for: aString [
 { #category : #accessing }
 GtSourceCoderErrorAttribute >> initialize [
 	super initialize.
-	openOnFirstShow := true
+	openOnFirstShow := true.
+	clickAction := [ :textElement :dropDownAptitude |  ]
 ]
 
 { #category : #accessing }

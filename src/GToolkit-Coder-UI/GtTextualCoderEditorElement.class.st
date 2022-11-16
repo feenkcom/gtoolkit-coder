@@ -427,17 +427,18 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 
 { #category : #private }
 GtTextualCoderEditorElement >> reportParseError: aString at: anInteger [
-	| text position |
-
+	| text position error |
 	text := self editor text.
-	
+
 	position := anInteger - 1 max: 1.
-	text size < position
-		ifTrue: [ ^ self ].
-	
+	text size < position ifTrue: [ ^ self ].
+
 	text clearAttributesOfClass: GtSourceCoderErrorAttribute.
-	text 
-		attribute: (GtSourceCoderErrorAttribute for: aString)
+	error := (aString endsWith: '->')
+			ifTrue: [ aString allButLast: 2 ]
+			ifFalse: [ aString ].
+	text
+		attribute: (GtSourceCoderErrorAttribute for: error)
 		from: position
 		to: position
 ]
