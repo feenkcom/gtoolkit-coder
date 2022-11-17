@@ -81,6 +81,11 @@ GtFilterDescriptor >> completion: completionStrategyBlock [
 ]
 
 { #category : #accessing }
+GtFilterDescriptor >> creationBlock [
+	^ creationBlock
+]
+
+{ #category : #accessing }
 GtFilterDescriptor >> creationBlock: aBlock [
 	creationBlock := aBlock
 ]
