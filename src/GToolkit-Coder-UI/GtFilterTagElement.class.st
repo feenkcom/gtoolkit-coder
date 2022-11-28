@@ -15,219 +15,321 @@ Class {
 	#name : #GtFilterTagElement,
 	#superclass : #BrHorizontalPane,
 	#instVars : [
-		'descriptor',
+		'filterDescriptor',
+		'availableFilterDescriptors',
 		'valueString',
-		'filterElement'
+		'filterElement',
+		'filterPickerHandle',
+		'filterLabel'
 	],
 	#category : #'GToolkit-Coder-UI-Filters'
 }
 
-{ #category : #actions }
+{ #category : #'private - accessing' }
 GtFilterTagElement >> activateEditor [
 	self
 		childNamed: #editableLabel
-		ifFound: [ :label | 
-			label
-				requestFocus;
-				switchToEditor ]
-		ifNone: [ (self childNamed: #dropDown) requestFocus ]
+		ifFound: [ :label | label requestFocus ]
+		ifNone: [ filterLabel requestFocus ]
 ]
 
-{ #category : #private }
+{ #category : #'private - accessing' }
 GtFilterTagElement >> applyDescriptor: aDescriptor [
 	self descriptor: aDescriptor.
 	self activateEditor.
 	
 	aDescriptor valueIsRequired
-		ifFalse: [ filterElement applyFilters ]
+		ifFalse: [ self applyFilters ]
 ]
 
-{ #category : #elements }
-GtFilterTagElement >> buildTagElements [
-	self removeChildren.
-	
-	BlFrameTelemetry
-		time: [ 'Create and add dropdown' ]
-		during: [ self addChild: self createDropDown as: #dropDown ].
+{ #category : #'private - instance creation' }
+GtFilterTagElement >> applyFilters [
+	filterElement
+		ifNil: [ ^ self ].
 
-	descriptor valueIsRequired
-		ifTrue: [
-			BlFrameTelemetry
-				time: [ 'Create and add editable label' ]
-				during: [ self addChild: self createEditableLabel as: #editableLabel ] ]
+	filterElement applyFilters
 ]
 
-{ #category : #elements }
-GtFilterTagElement >> createDropDown [
-	| button dropDownLook |
-	button := self createDropDownButton.
-	dropDownLook := BrGlamorousWithDropdownAptitude
-		handle: [ self createDropDownButton ]
-		content: [
-			BrSimpleList new
-				fitContent;
-				stencil: [ :each | 
-					BrHorizontalPane new
-						hMatchParent;
-						vFitContent;
-						padding: (BlInsets all: 5);
-						aptitude: (BrStyleCommonAptitude new
-							default: [ :s | s background: Color transparent ];
-							hovered: [ :s | s background: self theme button defaultBorderColor ];
-							yourself);
-						when: BlClickEvent
-							do: [ :anEvent |
-								anEvent consumed: true.
-								button label: each name.
-								anEvent currentTarget fireEvent: BrDropdownHideWish new.
-								self applyDescriptor: each ];
-						addChild: (BrLabel new
-							aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize;
-							text: each name;
-							yourself);
-						yourself ];
-				items: filterElement descriptors;
-				yourself ].
-	button addAptitude: dropDownLook.
-	button addAptitude: (BrStyleCommonAptitude new
-			default: [ :s | s background: Color transparent ];
-			hovered: [ :s | s background: self theme status neutralBackgroundColor darker ]).
-	
-	button
-		when: BlKeyUpEvent
-		do: [ :anEvent | 
-			anEvent key = BlKeyboardKey backspace ifTrue: [
-			self removeFromParent.
-			filterElement applyFilters ] ].
+{ #category : #'api - accessing' }
+GtFilterTagElement >> availableFilterDescriptors [
+	"Tag element allows users to change the filter to another one.
+	Therefore each filter tag element should be able to get a list of all possible descriptors"
+	<return: #Collection of: #GtFilterDescriptor>
 
-	^ button
+	^ availableFilterDescriptors
 ]
 
-{ #category : #elements }
-GtFilterTagElement >> createDropDownButton [
-	| button |
-	button := BrButton new.
-	button aptitude: BrTextLabelAptitude new glamorousRegularFont glamorousCodeSmallSize + BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude.
-	button vExact: 20.
-	button padding: (BlInsets left: 4 right: 2).
-	button label: self descriptor name.
-	button icon: BrGlamorousVectorIcons downwards.
-	button beSmallSize.
-	^ button
+{ #category : #'api - accessing' }
+GtFilterTagElement >> availableFilterDescriptors: aCollectionOfFilterDescriptors [
+	availableFilterDescriptors := aCollectionOfFilterDescriptors
 ]
 
-{ #category : #elements }
+{ #category : #'private - instance creation' }
+GtFilterTagElement >> createDropdownContent [
+	^ BrSimpleList new
+		fitContent;
+		stencil: [ :eachFilterDescriptor :eachIndex | 
+			BrHorizontalPane new
+				id: (GtFilterTagPickerItemId indexed: eachIndex);
+				hMatchParent;
+				vFitContent;
+				padding: (BlInsets all: 5);
+				aptitude: (BrStyleCommonAptitude new
+					default: [ :s | s background: Color transparent ];
+					hovered: [ :s | s background: self theme button defaultBorderColor ];
+					yourself);
+				when: BlClickEvent
+					do: [ :anEvent |
+						anEvent consumed: true.
+						anEvent currentTarget fireEvent: BrDropdownHideWish new.
+						self
+							requestReplaceFilter: filterDescriptor
+							with: eachFilterDescriptor ];
+				addChild: (BrLabel new
+					aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize;
+					text: eachFilterDescriptor name;
+					yourself);
+				yourself ];
+		items: self availableFilterDescriptors;
+		yourself
+]
+
+{ #category : #'private - instance creation' }
 GtFilterTagElement >> createEditableLabel [
-	| label |
+	| anEditor |
 
-	label := BrEditableLabel new.
-	label aptitude: BrGlamorousEditableLabelAptitude new glamorousRegularFont glamorousRegularSmallSize.
-	label text: (valueString ifNil: [ '' ]).
-	label padding: (BlInsets top: 2 left: 4 bottom: 2 right: 4).
-	label
-		when: BrEditorAcceptWish
-		do: [ :aWish | 
-			valueString := aWish text asString trim.
-			(label parent == self and: [ valueString isEmpty ])
-				ifTrue: [ self removeFromParent ].
-			filterElement applyFilters ].
-	label
-		when: BrEditorCancelWish
-		do: [ :aWish | 
-			(label parent == self and: [ self isValid not ])
-				ifTrue: [ self removeFromParent ].
-			filterElement applyFilters ].
-	label
-		whenKey: BlKeyCombination backspace
-		labelDo: [ :aShortcutEvent :aShortcut | 
-			self removeFromParent.
-			filterElement applyFilters ].
+	anEditor := BrEditor new
+		beMode: BrTextEditorEditableSingleLineMode new;
+		fitContent;
+		id: GtFilterTagEditorId;
+		aptitude: BrGlamorousRegularEditorAptitude new glamorousRegularFont glamorousCodeSmallSize;
+		background: Color white;
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 2);
+		margin: (BlInsets top: 2 left: 0 bottom: 2 right: 3);
+		padding: (BlInsets top: 1 left: 2 bottom: 1 right: 2);
+		constraintsDo: [ :c | c minWidth: 16 ];
+		text: ''.
 
-	descriptor completion
-		ifNotNil:
-			[ :strategy | (GtCompletionController on: label strategy: strategy) install ].
+	anEditor addShortcut: (BlShortcutWithAction new
+		combination: BlKeyCombination enter;
+		action: [ :anEvent |
+			self
+				requestUpdateFilter: filterDescriptor
+				value: anEvent currentTarget text asString trimmed ]).
 
-	^ label
+	anEditor when: BlFocusOutEvent do: [ :anEvent |
+		self
+			requestUpdateFilter: filterDescriptor
+			value: anEvent currentTarget text asString trimmed ].
+
+	filterDescriptor completion
+		ifNotNil: [ :strategy | (GtCompletionController on: anEditor strategy: strategy) install ].
+
+	^ anEditor
 ]
 
-{ #category : #accessing }
+{ #category : #'private - instance creation' }
+GtFilterTagElement >> createFilterLabel [
+	^ BrLabel new
+		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize;
+		vFitContent;
+		beSmallSize
+]
+
+{ #category : #'private - instance creation' }
+GtFilterTagElement >> createFilterLabelHandle [
+	^ self createFilterLabel
+		id: GtFilterTagLabelId;
+		addAptitude: (BrGlamorousWithDropdownAptitude
+			handle: [
+				BrHorizontalPane new
+					fitContent;
+					addChildren: {
+						self createFilterLabel text: filterDescriptor name.
+						self createFilterPickerHandle
+					} ]
+			content: [ self createDropdownContent ]) doNotShowOnClick
+]
+
+{ #category : #'private - instance creation' }
+GtFilterTagElement >> createFilterPickerHandle [
+	^ BrButton new
+		id: GtFilterTagPickerId;
+		aptitude: (BrGlamorousButtonCircularAptitude paddingScale: 0 heightScale: 0.75)
+			+ BrGlamorousButtonFlatExteriorAptitude
+			+ BrGlamorousButtonIconAptitude;
+		icon: BrGlamorousVectorIcons downwards;
+		beNormalSize
+]
+
+{ #category : #'api - accessing' }
 GtFilterTagElement >> descriptor [
-	^ descriptor
+	^ filterDescriptor
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtFilterTagElement >> descriptor: aFilterDescriptor [
-	descriptor := aFilterDescriptor.
-	valueString := ''.
-	self buildTagElements
+	filterDescriptor := aFilterDescriptor.
+
+	filterLabel text: filterDescriptor name.
+
+	filterDescriptor valueIsRequired
+		ifTrue: [
+			| aDefaultValue |
+
+			aDefaultValue := aFilterDescriptor emptyDefaultValue
+				ifNil: [ '' ].
+
+			self
+				childWithId: GtFilterTagEditorId
+				ifFound: [ :anEditor | anEditor text: aDefaultValue ]
+				ifNone: [ self addChild: (self createEditableLabel text: aDefaultValue) ] ]
+		ifFalse: [
+			self
+				childWithId: GtFilterTagEditorId
+				ifFound: [ :anEditor | anEditor removeFromParent ] ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtFilterTagElement >> emptyDefaultValueLabel [
-	^ descriptor emptyDefaultValue
+	^ filterDescriptor emptyDefaultValue
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtFilterTagElement >> filter: aGtMethodsFilter [
-	filterElement := aGtMethodsFilter
+	filterElement := aGtMethodsFilter.
+	self availableFilterDescriptors: filterElement descriptors
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtFilterTagElement >> initialize [
 	super initialize.
 	
-	self fitContent.
-	self margin: (BlInsets all: 3).
+	availableFilterDescriptors := #().
+	
+	self
+		fitContent;
+		alignCenterLeft;
+		beInSingleCompositionLayer.
+	
 	self addAptitude:
 		(BrStyleCommonAptitude new
 			default: [ :aStyle | 
 				aStyle geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
-				aStyle background: self theme status neutralBackgroundColor.
-				aStyle border: BlBorder empty ];
+				aStyle background: self theme status neutralBackgroundColor ];
 			hovered: [ :aStyle | 
-				aStyle background:
-					self theme status neutralBackgroundColor darker ])
+				aStyle background: self theme status neutralBackgroundColor darker ];
+			focused: [ :aStyle |
+				aStyle background: self theme editor focusedBorderColor lighter lighter ]).
+
+	filterLabel := self createFilterLabelHandle.
+	filterLabel margin: (BlInsets top: 2 right: 0 bottom: 2 left: 4).
+	filterPickerHandle := self createFilterPickerHandle.
+	filterPickerHandle margin: (BlInsets top: 1 right: 4).
+
+	self addChildren:  {
+		filterLabel.
+		filterPickerHandle
+	}.
+
+	self addAptitude: (BrStyleCommonAptitude new
+		// #label;
+		default: [ :aStyle | aStyle foreground: Color black ];
+		focused: [ :aStyle | aStyle foreground: Color white ]).
+
+	self addAptitude: (BrStyleCommonAptitude new
+		// #icon;
+		default: [ :aStyle | aStyle background: Color black ];
+		focused: [ :aStyle | aStyle background: Color white ]).
+
+	self when: BlClickEvent do: [ :anEvent |
+		anEvent consumed: true.
+		self hasFocus
+			ifTrue: [
+				filterLabel dispatchEvent: (BrDropdownShowWish new) ].
+		self requestFocus ].
+
+	filterPickerHandle
+		when: BlClickEvent
+		do: [ :anEvent | filterLabel dispatchEvent: BrDropdownShowWish new ].
+
+	self addShortcut: (BlShortcutWithAction new
+		combination: (BlKeyCombination backspace);
+		action: [ self requestRemoveFilter: filterDescriptor ])
 ]
 
 { #category : #testing }
 GtFilterTagElement >> isDefaultAllFilter [
 	^ self descriptor showAsDefaultWhenEmpty
-		and: [ valueString isEmpty
-				and: [ self
-						childNamed: #editableLabel
-						ifFound: [ :aLabel | aLabel text asString = self emptyDefaultValueLabel ]
-						ifNone: [ true ] ] ]
+		and: [
+			self
+				childWithId: GtFilterTagEditorId
+				ifFound: [ :aLabel | aLabel text asString = self emptyDefaultValueLabel ]
+				ifNone: [ true ] ]
 ]
 
 { #category : #testing }
 GtFilterTagElement >> isValid [
-	^ descriptor valueIsRequired not or: [ self valueString notEmpty ]
+	^ filterDescriptor valueIsRequired not or: [ self valueString notEmpty ]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 GtFilterTagElement >> makeDefaultFilter [
-	valueString := ''.
 	self setLabelText: self emptyDefaultValueLabel
 ]
 
-{ #category : #private }
+{ #category : #'private - actions' }
+GtFilterTagElement >> requestRemoveFilter: aFilterDescriptor [
+	"Is sent by filter tag when it requests to remove a filter"
+	
+	self dispatchEvent: (GtFilterTagRemoveWish new
+		filterDescriptor: aFilterDescriptor).
+	
+	self removeFromParent.
+	self applyFilters
+]
+
+{ #category : #'private - actions' }
+GtFilterTagElement >> requestReplaceFilter: aFilterDescriptor with: aNewFilterDescriptor [
+	"Is sent by filter tag when it requests to replace itself with a new filter"
+	
+	self dispatchEvent: (GtFilterTagReplaceWish new
+		filterDescriptor: aFilterDescriptor;
+		newFilterDescriptor: aNewFilterDescriptor).
+		
+	self requestFocus.
+
+	self descriptor: aNewFilterDescriptor.
+	self applyFilters
+]
+
+{ #category : #'private - actions' }
+GtFilterTagElement >> requestUpdateFilter: aFilterDescriptor value: aString [
+	"Is sent by filter tag when it requests to update the filter with a new value"
+
+	self dispatchEvent: (GtFilterTagUpdateWish new
+		filterDescriptor: aFilterDescriptor;
+		newValue: aString).
+
+	self applyFilters
+]
+
+{ #category : #'private - accessing' }
 GtFilterTagElement >> setLabelText: aString [
 	self
-		childNamed: #editableLabel
-		ifFound: [ :label | 
-			label text deleteAll.
-			aString notEmpty
-				ifTrue: [ label text
-						append: aString asRopedText glamorousRegularFont glamorousRegularSmallSize ] ]
+		childWithId: GtFilterTagEditorId
+		ifFound: [ :label | label text: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtFilterTagElement >> valueString [
-	^ valueString
+	^ self
+		childWithId: GtFilterTagEditorId
+		ifFound: [ :anEditor | anEditor text asString ]
+		ifNone: [ '' ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtFilterTagElement >> valueString: aString [
-	valueString := aString.
 	self setLabelText: aString
 ]
