@@ -31,13 +31,7 @@ GtFiltersElement >> addAllDefaults [
 
 	defaultDescriptors
 		do: [ :defaultDescriptor | 
-			filterElement := GtFilterTagElement new.
-			filterElement filter: self.
-
-			BlFrameTelemetry
-				time: [ 'Assign default descriptor ' , defaultDescriptor name , ' to the filter tag' ]
-				during: [ filterElement descriptor: defaultDescriptor ].
-
+			filterElement := self createFilterTagFor: defaultDescriptor.
 			filterElement makeDefaultFilter.
 
 			self addChild: filterElement at: self childrenCount ]
@@ -46,9 +40,7 @@ GtFiltersElement >> addAllDefaults [
 { #category : #accessing }
 GtFiltersElement >> addFilterForDescriptor: aFilterDescriptor andValue: aString [
 	| element |
-	element := GtFilterTagElement new.
-	element filter: self.
-	element descriptor: aFilterDescriptor.
+	element := self createFilterTagFor: aFilterDescriptor.
 	aFilterDescriptor valueIsRequired
 		ifTrue: [ element valueString: aString ].
 	self addChild: element at: self childrenCount
@@ -88,15 +80,21 @@ GtFiltersElement >> clearFilters [
 	[ self childrenCount > 1 ] whileTrue: [ self removeChildAt: 1 ]
 ]
 
+{ #category : #'private - instance creation' }
+GtFiltersElement >> createFilterTagFor: aFilterDescription [
+	^ GtFilterTagElement new
+		descriptor: aFilterDescription;
+		margin: (BlInsets all: 2);
+		filter: self
+]
+
 { #category : #'private - actions' }
 GtFiltersElement >> createNewTag [
 	| tag |
 	self descriptors
 		ifNotEmpty: [ :items | 
 			self areAllDefaults ifTrue: [ self clearFilters ].
-			tag := GtFilterTagElement new.
-			tag filter: self.
-			tag descriptor: items first.
+			tag := self createFilterTagFor: items first.
 			self addChild: tag at: self childrenCount.
 			tag activateEditor ]
 ]
@@ -157,22 +155,17 @@ GtFiltersElement >> newAddTagButton [
 			BrGlamorousButtonRectangularAptitude new
 				+ BrGlamorousButtonIconAptitude new
 				+ BrGlamorousButtonWithLabelTooltipAptitude new
-				+
-					(BrInteractiveCommonAptitude new
-						default: [ :aWidget | 
-							aWidget
+				+ (BrStyleCommonAptitude new
+						default: [ :aStyle | 
+							aStyle
 								border: BlBorder empty;
 								background: self theme status neutralBackgroundColor ];
-						hovered: [ :aWidget | 
-							aWidget background:
-								self theme status neutralBackgroundColor darker ];
-						pressed: [ :aWidget | 
-							aWidget
-								background:
-									self theme status neutralBackgroundColor darker darker ];
-						focused: [ :aWidget | 
-							aWidget
-								border: (BlBorder paint: self theme editor focusedBorderColor width: 1) ]);
+						hovered: [ :aStyle | 
+							aStyle background: self theme status neutralBackgroundColor darker ];
+						pressed: [ :aStyle | 
+							aStyle background: self theme status neutralBackgroundColor darker darker ];
+						focused: [ :aStyle | 
+							aStyle border: (BlBorder paint: self theme editor focusedBorderColor width: 1) ]);
 		icon: BrGlamorousVectorIcons add;
 		label: 'Add Filter';
 		margin: (BlInsets all: 2);
