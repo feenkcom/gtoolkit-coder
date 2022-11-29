@@ -28,8 +28,8 @@ Class {
 { #category : #'private - accessing' }
 GtFilterTagElement >> activateEditor [
 	self
-		childNamed: GtFilterTagEditorId
-		ifFound: [ :label | label requestFocus ]
+		childWithId: GtFilterTagEditorId
+		ifFound: [ :anEditor | anEditor requestFocus ]
 		ifNone: [ filterLabel requestFocus ]
 ]
 
@@ -39,15 +39,15 @@ GtFilterTagElement >> applyDescriptor: aDescriptor [
 	self activateEditor.
 	
 	aDescriptor valueIsRequired
-		ifFalse: [ self applyFilters ]
+		ifFalse: [ self applyFiltersDueTo: #applyDescriptor ]
 ]
 
 { #category : #'private - instance creation' }
-GtFilterTagElement >> applyFilters [
+GtFilterTagElement >> applyFiltersDueTo: aReason [
 	filterElement
 		ifNil: [ ^ self ].
 
-	filterElement applyFilters
+	filterElement applyFiltersDueTo: aReason
 ]
 
 { #category : #'api - accessing' }
@@ -118,9 +118,11 @@ GtFilterTagElement >> createEditableLabel [
 				value: anEvent currentTarget text asString trimmed ]).
 
 	anEditor when: BlFocusOutEvent do: [ :anEvent |
-		self
-			requestUpdateFilter: filterDescriptor
-			value: anEvent currentTarget text asString trimmed ].
+		anEvent isDueToRemoval
+			ifFalse: [
+				self
+					requestUpdateFilter: filterDescriptor
+					value: anEvent currentTarget text asString trimmed ] ].
 
 	^ anEditor
 ]
@@ -273,8 +275,8 @@ GtFilterTagElement >> isDefaultAllFilter [
 ]
 
 { #category : #testing }
-GtFilterTagElement >> isValid [
-	^ filterDescriptor valueIsRequired not or: [ self valueString notEmpty ]
+GtFilterTagElement >> isValid [	
+	^ filterDescriptor isValueValid: self valueString
 ]
 
 { #category : #initialization }
@@ -285,37 +287,46 @@ GtFilterTagElement >> makeDefaultFilter [
 { #category : #'private - actions' }
 GtFilterTagElement >> requestRemoveFilter: aFilterDescriptor [
 	"Is sent by filter tag when it requests to remove a filter"
+	| aWish |
 	
-	self dispatchEvent: (GtFilterTagRemoveWish new
+	self dispatchEvent: (aWish := GtFilterTagRemoveWish new
 		filterDescriptor: aFilterDescriptor).
 	
 	self removeFromParent.
-	self applyFilters
+	self applyFiltersDueTo: aWish
 ]
 
 { #category : #'private - actions' }
 GtFilterTagElement >> requestReplaceFilter: aFilterDescriptor with: aNewFilterDescriptor [
-	"Is sent by filter tag when it requests to replace itself with a new filter"
-	
-	self dispatchEvent: (GtFilterTagReplaceWish new
-		filterDescriptor: aFilterDescriptor;
-		newFilterDescriptor: aNewFilterDescriptor).
-		
-	self requestFocus.
+	"Is sent by filter tag when it requests to replace itself with a new filter"	
+	| aWish |
+
+	aFilterDescriptor = aNewFilterDescriptor
+		ifTrue: [ ^ self ].
 
 	self descriptor: aNewFilterDescriptor.
-	self applyFilters
+	self activateEditor.
+	
+	self dispatchEvent: (aWish := GtFilterTagReplaceWish new
+		filterDescriptor: aFilterDescriptor;
+		newFilterDescriptor: aNewFilterDescriptor).
+
+	self applyFiltersDueTo: aWish
 ]
 
 { #category : #'private - actions' }
 GtFilterTagElement >> requestUpdateFilter: aFilterDescriptor value: aString [
 	"Is sent by filter tag when it requests to update the filter with a new value"
+	| aWish |
 
-	self dispatchEvent: (GtFilterTagUpdateWish new
+	(aFilterDescriptor isValueValid: aString)
+		ifFalse: [ ^ self ].
+
+	self dispatchEvent: (aWish := GtFilterTagUpdateWish new
 		filterDescriptor: aFilterDescriptor;
 		newValue: aString).
 
-	self applyFilters
+	self applyFiltersDueTo: aWish
 ]
 
 { #category : #'private - accessing' }

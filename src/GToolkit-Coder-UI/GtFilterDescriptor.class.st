@@ -157,7 +157,7 @@ GtFilterDescriptor >> gtInfoFor: aView [
 			'Name' -> (name ifNil: [ 'Unspecified (default: {1})' format: { self defaultName printString } ]).
 			'Order' -> (order ifNil: [ 'Unspecified (default: {1})' format: { self defaultOrder printString } ]).
 			'Filter creator' -> (creationBlock ifNil: [ 'Unspecified (default: {1})' format: { self defaultCreator } ]).
-			'Completion' -> (creationBlock ifNil: [ 'Unspecified (default: {1})' format: { self defaultCompletion } ]).
+			'Completion' -> (completionBlock ifNil: [ 'Unspecified (default: {1})' format: { self defaultCompletion } ]).
 			'Value required' -> valueIsRequired.
 			'Is default' -> isDefault.
 			'Default value when empty' -> (emptyDefaultValue
@@ -201,6 +201,17 @@ GtFilterDescriptor >> isDefault [
 	"Return true if the filter should be applied as a default"
 
 	^ isDefault
+]
+
+{ #category : #testing }
+GtFilterDescriptor >> isValueValid: aValueString [
+	"Return true if a given value is valid for this filter descriptor, false otherwise.
+	Empty values are valid only when the empty default value is empty too or is unspecified"
+	<return: #Boolean>
+	
+	^ self valueIsRequired not or: [
+		aValueString isNotEmpty or: [
+			aValueString = (self emptyDefaultValue ifNil: [ '' ]) ] ]
 ]
 
 { #category : #accessing }

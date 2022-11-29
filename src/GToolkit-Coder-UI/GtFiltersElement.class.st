@@ -19,16 +19,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Filters'
 }
 
-{ #category : #accessing }
+{ #category : #private }
 GtFiltersElement >> addAllDefaults [
 	| filterElement defaultDescriptors |
 	
-	defaultDescriptors := self descriptors
-			select: [ :each | 
-				BlFrameTelemetry
-					time: [ 'Should show ' , each name , ' as default when empty?' ]
-					during: [ each showAsDefaultWhenEmpty ] ].
-
+	defaultDescriptors := self descriptors select: [ :each | each showAsDefaultWhenEmpty ].
 	defaultDescriptors
 		do: [ :defaultDescriptor | 
 			filterElement := self createFilterTagFor: defaultDescriptor.
@@ -48,7 +43,12 @@ GtFiltersElement >> addFilterForDescriptor: aFilterDescriptor andValue: aString 
 
 { #category : #private }
 GtFiltersElement >> applyFilters [
-	self fireEvent: (GtFiltersChangedEvent new filterElement: self)
+	self applyFiltersDueTo: #unknown
+]
+
+{ #category : #private }
+GtFiltersElement >> applyFiltersDueTo: aReason [
+	self fireEvent: (GtFiltersChangedEvent new filterElement: self; reason: aReason)
 ]
 
 { #category : #private }
@@ -72,7 +72,7 @@ GtFiltersElement >> asIntersectionFilter [
 	^ compositeFilter
 ]
 
-{ #category : #accessing }
+{ #category : #'api - filters' }
 GtFiltersElement >> buildFilters: aBlock [
 	self clearFilters.
 	aBlock value
@@ -98,7 +98,7 @@ GtFiltersElement >> createNewTag [
 	| tag |
 	self descriptors
 		ifNotEmpty: [ :items | 
-			self areAllDefaults ifTrue: [ self clearFilters ].
+			"self areAllDefaults ifTrue: [ self clearFilters ]."
 			tag := self createFilterTagFor: items first.
 			self addChild: tag at: self childrenCount.
 			tag activateEditor ]
@@ -157,12 +157,13 @@ GtFiltersElement >> initialize [
 	super initialize.
 	self hMatchParent.
 	self vFitContent.
-	self addChild: self newAddTagButton as: #newButton
+	self addChild: self newAddTagButton
 ]
 
 { #category : #'private - instance creation' }
 GtFiltersElement >> newAddTagButton [
 	^ BrButton new
+		id: GtFiltersAddButtonId;
 		aptitude:
 			BrGlamorousButtonRectangularAptitude new
 				+ BrGlamorousButtonIconAptitude new
