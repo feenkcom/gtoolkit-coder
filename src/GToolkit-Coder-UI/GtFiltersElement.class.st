@@ -46,21 +46,24 @@ GtFiltersElement >> addFilterForDescriptor: aFilterDescriptor andValue: aString 
 	self addChild: element at: self childrenCount
 ]
 
-{ #category : #'api - actions' }
+{ #category : #private }
 GtFiltersElement >> applyFilters [
 	self fireEvent: (GtFiltersChangedEvent new filterElement: self)
 ]
 
-{ #category : #'private - actions' }
+{ #category : #private }
 GtFiltersElement >> areAllDefaults [
 	^ self childrenCount > 1
 		and: [ (1 to: self childrenCount - 1)
 				allSatisfy: [ :index | (self childAt: index) isDefaultAllFilter ] ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - filters' }
 GtFiltersElement >> asIntersectionFilter [
 	| compositeFilter |
+	
+	compositeFilter := nil.
+	
 	self
 		filtersDo: [ :descriptor :value | 
 			compositeFilter
@@ -75,8 +78,10 @@ GtFiltersElement >> buildFilters: aBlock [
 	aBlock value
 ]
 
-{ #category : #accessing }
+{ #category : #'api - filters' }
 GtFiltersElement >> clearFilters [
+	"Remove all filters"
+
 	[ self childrenCount > 1 ] whileTrue: [ self removeChildAt: 1 ]
 ]
 
@@ -88,7 +93,7 @@ GtFiltersElement >> createFilterTagFor: aFilterDescription [
 		filter: self
 ]
 
-{ #category : #'private - actions' }
+{ #category : #private }
 GtFiltersElement >> createNewTag [
 	| tag |
 	self descriptors
@@ -97,6 +102,11 @@ GtFiltersElement >> createNewTag [
 			tag := self createFilterTagFor: items first.
 			self addChild: tag at: self childrenCount.
 			tag activateEditor ]
+]
+
+{ #category : #'api - filters' }
+GtFiltersElement >> currentFilters [
+	^ Array streamContents: [ :aStream | self filtersDo: [ :eachFilter :eachValue | aStream nextPut: (eachFilter -> eachValue) ] ]
 ]
 
 { #category : #accessing }
@@ -114,8 +124,10 @@ GtFiltersElement >> descriptors: aCollection [
 		during: [ self addAllDefaults ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - filters' }
 GtFiltersElement >> filtersDo: aBlock [
+	"Iterate over all valid filters"
+
 	1 to: self childrenCount - 1 do: [ :i | 
 		| filterTagElement |
 		filterTagElement := self childAt: i.
@@ -125,7 +137,7 @@ GtFiltersElement >> filtersDo: aBlock [
 					value: filterTagElement valueString ] ]
 ]
 
-{ #category : #accessing }
+{ #category : #'gt - extensions' }
 GtFiltersElement >> gtViewDefaultDescriptorsFor: aView [ 
 	<gtView>
 	
