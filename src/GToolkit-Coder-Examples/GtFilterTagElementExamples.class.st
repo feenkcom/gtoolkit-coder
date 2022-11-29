@@ -47,6 +47,8 @@ GtFilterTagElementExamples >> filterTagValueNotRequired [
 
 	"there is no editor"
 	self assert: (tagElement query // GtFilterTagEditorId) isEmpty.
+	
+	self assert: tagElement isValid.
 
 	^ tagElement
 ]
@@ -137,7 +139,12 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripter [
 		element: self filterTagValueRequiredWithDefault.
 
 	scripter assert
-		satisfies: [ :anElement | anElement hasFocus not ].
+		satisfies: [ :anElement | anElement isValid ];
+		play.
+
+	scripter assert
+		satisfies: [ :anElement | anElement hasFocus not ];
+		play.
 
 	scripter assert
 		label: 'Check that the default value is set in the editor';
@@ -157,6 +164,51 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripter [
 ]
 
 { #category : #examples }
+GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterRemoveText [
+	<gtExample>
+	| scripter |
+
+	scripter := self filterTagValueRequiredWithDefaultByScripter.
+		
+	scripter click
+		id: GtFilterTagEditorId;
+		play.
+		
+	scripter shortcut
+		id: GtFilterTagEditorId;
+		combination: BlKeyCombination primaryA;
+		play.
+		
+	scripter type
+		id: GtFilterTagEditorId;
+		text: '';
+		play.
+		
+	scripter assert
+		label: 'Check that the new value is typed in the editor';
+		id: GtFilterTagEditorId;
+		value: [ :anEditor | anEditor text asString ]
+			equals: '';
+		play.
+
+	scripter assert
+		satisfies: [ :anEditor | anEditor isValid not ];
+		play.
+		
+	scripter shortcut
+		label: 'Accept changes with enter shortcut';
+		id: GtFilterTagEditorId;
+		combination: BlKeyCombination enter;
+		play.
+		
+	scripter assert
+		eventNotFired: GtFilterTagUpdateWish;
+		play.
+
+	^ scripter
+]
+
+{ #category : #examples }
 GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAndAcceptWithClickingAway [
 	<gtExample>
 	| scripter |
@@ -169,7 +221,8 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAnd
 		
 	scripter assert
 		id: GtFilterTagEditorId;
-		satisfies: [ :anEditor | anEditor hasFocus ].
+		satisfies: [ :anEditor | anEditor hasFocus ];
+		play.
 		
 	scripter shortcut
 		id: GtFilterTagEditorId;
@@ -191,15 +244,17 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAnd
 
 	scripter assert
 		id: GtFilterTagEditorId;
-		satisfies: [ :anEditor | anEditor hasFocus ].
-		
+		satisfies: [ :anEditor | anEditor hasFocus ];
+		play.
+
 	scripter click
 		id: GtFilterTagLabelId;
 		play.
-		
+
 	scripter assert
 		id: GtFilterTagEditorId;
-		satisfies: [ :anEditor | anEditor hasFocus not ].
+		satisfies: [ :anEditor | anEditor hasFocus not ];
+		play.
 
 	scripter assert
 		label: 'Check that update wish was fired';
@@ -226,7 +281,8 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAnd
 		
 	scripter assert
 		id: GtFilterTagEditorId;
-		satisfies: [ :anEditor | anEditor hasFocus ].
+		satisfies: [ :anEditor | anEditor hasFocus ];
+		play.
 		
 	scripter shortcut
 		id: GtFilterTagEditorId;
@@ -286,8 +342,13 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithoutDefaultByScripter [
 		element: self filterTagValueRequiredWithoutDefault.
 
 	scripter assert
+		satisfies: [ :anElement | anElement isValid ];
+		play.
+		
+	scripter assert
 		label: 'Does not have focus by default';
-		satisfies: [ :anElement | anElement hasFocus not ].
+		satisfies: [ :anElement | anElement hasFocus not ];
+		play.
 
 	scripter assert
 		id: GtFilterTagEditorId;

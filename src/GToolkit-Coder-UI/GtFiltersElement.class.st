@@ -1,14 +1,6 @@
 "
 I am a {{gtClass:BlElement}}.
 I build a filter in {{gtClass:GtCoderElement}}, see {{gtMethod:GtPharoMethodsCoderElement>>#buildFilter|label=#selector}}.
-1. # Element Example
-
-The following example shows how I look like: {{gtExample:GtFiltersElementExamples>>#filtersElement|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=70}}
-1. # Coder Example
-
-The following example shows a coder with default filters element that you can change: {{gtExample:GtFiltersElementExamples>>#coderWithFiltersElement|codeExpanded=false|previewExpanded=true}}
-
-
 "
 Class {
 	#name : #GtFiltersElement,
@@ -19,16 +11,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Filters'
 }
 
-{ #category : #accessing }
+{ #category : #private }
 GtFiltersElement >> addAllDefaults [
 	| filterElement defaultDescriptors |
 	
-	defaultDescriptors := self descriptors
-			select: [ :each | 
-				BlFrameTelemetry
-					time: [ 'Should show ' , each name , ' as default when empty?' ]
-					during: [ each showAsDefaultWhenEmpty ] ].
-
+	defaultDescriptors := self descriptors select: [ :each | each showAsDefaultWhenEmpty ].
 	defaultDescriptors
 		do: [ :defaultDescriptor | 
 			filterElement := self createFilterTagFor: defaultDescriptor.
@@ -48,7 +35,12 @@ GtFiltersElement >> addFilterForDescriptor: aFilterDescriptor andValue: aString 
 
 { #category : #private }
 GtFiltersElement >> applyFilters [
-	self fireEvent: (GtFiltersChangedEvent new filterElement: self)
+	self applyFiltersDueTo: #unknown
+]
+
+{ #category : #private }
+GtFiltersElement >> applyFiltersDueTo: aReason [
+	self fireEvent: (GtFiltersChangedEvent new filterElement: self; reason: aReason)
 ]
 
 { #category : #private }
@@ -72,7 +64,7 @@ GtFiltersElement >> asIntersectionFilter [
 	^ compositeFilter
 ]
 
-{ #category : #accessing }
+{ #category : #'api - filters' }
 GtFiltersElement >> buildFilters: aBlock [
 	self clearFilters.
 	aBlock value
@@ -98,7 +90,7 @@ GtFiltersElement >> createNewTag [
 	| tag |
 	self descriptors
 		ifNotEmpty: [ :items | 
-			self areAllDefaults ifTrue: [ self clearFilters ].
+			"self areAllDefaults ifTrue: [ self clearFilters ]."
 			tag := self createFilterTagFor: items first.
 			self addChild: tag at: self childrenCount.
 			tag activateEditor ]
@@ -157,12 +149,13 @@ GtFiltersElement >> initialize [
 	super initialize.
 	self hMatchParent.
 	self vFitContent.
-	self addChild: self newAddTagButton as: #newButton
+	self addChild: self newAddTagButton
 ]
 
 { #category : #'private - instance creation' }
 GtFiltersElement >> newAddTagButton [
 	^ BrButton new
+		id: GtFiltersAddButtonId;
 		aptitude:
 			BrGlamorousButtonRectangularAptitude new
 				+ BrGlamorousButtonIconAptitude new
