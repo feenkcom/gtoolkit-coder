@@ -28,7 +28,7 @@ Class {
 { #category : #'private - accessing' }
 GtFilterTagElement >> activateEditor [
 	self
-		childNamed: #editableLabel
+		childNamed: GtFilterTagEditorId
 		ifFound: [ :label | label requestFocus ]
 		ifNone: [ filterLabel requestFocus ]
 ]
@@ -122,9 +122,6 @@ GtFilterTagElement >> createEditableLabel [
 			requestUpdateFilter: filterDescriptor
 			value: anEvent currentTarget text asString trimmed ].
 
-	filterDescriptor completion
-		ifNotNil: [ :strategy | (GtCompletionController on: anEditor strategy: strategy) install ].
-
 	^ anEditor
 ]
 
@@ -183,7 +180,14 @@ GtFilterTagElement >> descriptor: aFilterDescriptor [
 			self
 				childWithId: GtFilterTagEditorId
 				ifFound: [ :anEditor | anEditor text: aDefaultValue ]
-				ifNone: [ self addChild: (self createEditableLabel text: aDefaultValue) ] ]
+				ifNone: [ self addChild: (self createEditableLabel text: aDefaultValue) ].
+
+			self
+				childWithId: GtFilterTagEditorId
+				ifFound: [ :anEditor |
+					filterDescriptor completion
+						ifNotNil: [ :strategy | (GtCompletionController on: anEditor strategy: strategy) install ]
+						ifNil: [ (GtCompletionController on: anEditor strategy: GtCompletionStrategy new) install ] ] ]
 		ifFalse: [
 			self
 				childWithId: GtFilterTagEditorId
