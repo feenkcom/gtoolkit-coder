@@ -45,20 +45,16 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildCategorySlotTabs [
 	| aTabGroup |
-	aTabGroup := BrTabGroup new.
-	aTabGroup aptitude: BrGlamorousTabGroupAptitude new.
-
-	aTabGroup
-		addTab: (BrTab new
-				aptitude: BrGlamorousTabAptitude new;
-				label: 'Categories';
-				stencil: [ methodProtocolsList ]).
-
-	aTabGroup
-		addTab: (BrTab new
-				aptitude: BrGlamorousTabAptitude new;
-				label: 'Slots';
-				stencil: [ slotsGroupList ]).
+	aTabGroup := BrTabGroup new
+			aptitude: BrGlamorousTabGroupAptitude new;
+			addTab: (BrTab new
+					aptitude: GtProtocolSlotTabAptitude new;
+					label: 'Categories' asRopedText glamorousCodeSmallSize;
+					stencil: [ methodProtocolsList ]);
+			addTab: (BrTab new
+					aptitude: GtProtocolSlotTabAptitude new;
+					label: 'Slots' asRopedText glamorousCodeSmallSize;
+					stencil: [ slotsGroupList ]).
 
 	^ aTabGroup
 ]
