@@ -1,14 +1,6 @@
 "
 I am a {{gtClass:BlElement}}.
 I build a filter in {{gtClass:GtCoderElement}}, see {{gtMethod:GtPharoMethodsCoderElement>>#buildFilter|label=#selector}}.
-1. # Element Example
-
-The following example shows how I look like: {{gtExample:GtFiltersElementExamples>>#filtersElement|codeExpanded=false|previewExpanded=true|previewShow=#gtLiveFor:|previewHeight=70}}
-1. # Coder Example
-
-The following example shows a coder with default filters element that you can change: {{gtExample:GtFiltersElementExamples>>#coderWithFiltersElement|codeExpanded=false|previewExpanded=true}}
-
-
 "
 Class {
 	#name : #GtFiltersElement,

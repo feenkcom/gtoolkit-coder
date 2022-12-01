@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderNavigationModel,
 	#superclass : #Object,
-	#category : 'GToolkit-Coder-Navigation - Model'
+	#category : #'GToolkit-Coder-Navigation - Model'
 }
 
 { #category : #factory }
@@ -30,6 +30,12 @@ GtCoderNavigationModel >> hasSelectedClass [
 GtCoderNavigationModel >> hasSelectedPackage [
 	<return: #Boolean>
 	^ self subclassResponsibility
+]
+
+{ #category : #'api - testing' }
+GtCoderNavigationModel >> hasSelectedPackageOrClass [
+	<return: #Boolean>
+	^ self hasSelectedPackage or: [ self hasSelectedClass ]
 ]
 
 { #category : #'api - testing' }
