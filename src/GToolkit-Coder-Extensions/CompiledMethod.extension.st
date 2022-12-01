@@ -9,7 +9,7 @@ CompiledMethod >> gtBrowse [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 CompiledMethod >> gtBrowseFrom: anElement [
-	^ ((GtCoder forMethod: self) 
+	^ ((GtPhlowCoderView new coder: (GtCoder forMethod: self)) asElement
 			openInPagerFrom: anElement)
 			maximized
 ]

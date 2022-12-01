@@ -40,7 +40,7 @@ RPackage >> gtBrowse [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtBrowseFrom: anElement [
-	^ ((GtCoder forPackage: self) 
+	^ ((GtPhlowCoderView new coder: (GtCoder forPackage: self)) asElement
 		openInPagerFrom: anElement) maximized
 ]
 
