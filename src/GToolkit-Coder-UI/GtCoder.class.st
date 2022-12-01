@@ -99,6 +99,16 @@ GtCoder >> pagerWindowTitle [
 	^ self shortTitle
 ]
 
+{ #category : #accessing }
+GtCoder >> repository [
+
+	self navigationModel hasSelectedClass ifTrue: [ 
+		^ self navigationModel selectedClass repository ].
+	self navigationModel hasSelectedPackage ifTrue: [ 
+		^ self navigationModel selectedPackage repository ].
+	^ nil
+]
+
 { #category : #'private - accessing' }
 GtCoder >> shortTitle [
 	^ (GtPhlowTitleLabelBuilder 
