@@ -299,12 +299,13 @@ GtFilterTagElement >> requestReplaceFilter: aFilterDescriptor with: aNewFilterDe
 
 	self descriptor: aNewFilterDescriptor.
 	self activateEditor.
-	
+
 	self dispatchEvent: (aWish := GtFilterTagReplaceWish new
 		filterDescriptor: aFilterDescriptor;
 		newFilterDescriptor: aNewFilterDescriptor).
 
-	self applyFiltersDueTo: aWish
+	aNewFilterDescriptor valueIsRequired
+		ifFalse: [ self applyFiltersDueTo: aWish ]
 ]
 
 { #category : #'private - actions' }

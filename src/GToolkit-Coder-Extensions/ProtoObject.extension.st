@@ -7,7 +7,6 @@ ProtoObject >> gtBrowse [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 ProtoObject >> gtBrowseFrom: anElement [
-	^ ((GtCoder forObject: self) 
-		openInPagerFrom: anElement)
-			maximized
+	^ ((GtPhlowCoderView new coder: (GtCoder forObject: self)) asElement
+		openInPagerFrom: anElement) maximized
 ]
