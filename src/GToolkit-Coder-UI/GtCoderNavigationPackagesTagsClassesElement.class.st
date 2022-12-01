@@ -11,7 +11,9 @@ Class {
 		'methodsLabel',
 		'methodGroup',
 		'methodGroupList',
-		'protocolGroup'
+		'protocolGroup',
+		'slotsGroup',
+		'slotsGroupList'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
@@ -38,6 +40,27 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 	self updatePackageLists.
 	aSelectedPackageOrTag ifNotNil: [
 		self selectPackageOrTag: aSelectedPackageOrTag ].
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> buildCategorySlotTabs [
+	| aTabGroup |
+	aTabGroup := BrTabGroup new.
+	aTabGroup aptitude: BrGlamorousTabGroupAptitude new.
+
+	aTabGroup
+		addTab: (BrTab new
+				aptitude: BrGlamorousTabAptitude new;
+				label: 'Categories';
+				stencil: [ methodProtocolsList ]).
+
+	aTabGroup
+		addTab: (BrTab new
+				aptitude: BrGlamorousTabAptitude new;
+				label: 'Slots';
+				stencil: [ slotsGroupList ]).
+
+	^ aTabGroup
 ]
 
 { #category : #initialization }
@@ -106,6 +129,42 @@ GtCoderNavigationPackagesTagsClassesElement >> buildProtocolGroupList [
 	^ list
 ]
 
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderBlock onClick: clickBlock [
+	| classGroup instanceGroup |
+	instanceGroup := BrGroup new
+			domainObject: 'instance slots';
+			stream: #() asAsyncStream;
+			itemStencil: [ | label |
+				label := BrLabel new
+						hMatchParent;
+						vFitContent;
+						beSmallSize;
+						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude
+								+ (BrStyleCommonAptitude new
+										hovered: [ :aStyle | aStyle background: self theme item selectedColor ]);
+						when: BlClickEvent do: clickBlock ];
+			itemDataBinder: binderBlock;
+			shouldShowWithoutItems: false.
+	^ {instanceGroup}
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
+	| list |
+	list := self buildGroupList.
+	slotsGroup := self
+			buildSlotGroupWithBinder: [ :label :item | 
+				label text: item name asRopedText.
+				label userData at: #slot put: item.
+				label ]
+			onClick: [ :event | 
+				event consumed: true.
+				self onSlotsListSelectionChanged ].
+	list groups: slotsGroup.
+	^ list
+]
+
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> deselectPackages [
 	packagesList deselectAll
@@ -151,25 +210,14 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
 	super initializeContent.
 	packagesList := GtCoderNavigationPackagesTreeElement new
 			padding: (BlInsets right: 10).
-
 	methodProtocolsList := self buildProtocolGroupList.
-
-	classAndMethodProtocolList := BrVerticalPane new
-			matchParent;
-			addChild: classesList;
-			addChild: (protocolLabel := BrLabel new
-						aptitude: (BrGlamorousLabelAptitude new
-								fontSize: 12;
-								foreground: Color gray);
-						text: 'Categories');
-			addChild: methodProtocolsList.
-
+	slotsGroupList := self buildSlotsGroupList.
 	methodGroupList := self buildMethodGroupList
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
-	| pane1 pane2 pane3 |
+	| pane1 pane2 pane3 pane4 |
 	super initializeElement.
 	pane1 := BrVerticalPane new
 			addAptitude: BrGlamorousWithHorizontalResizerAptitude;
@@ -188,8 +236,12 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 									fontSize: 12;
 									foreground: Color gray);
 							text: 'Classes'.
-					classAndMethodProtocolList}.
+					classesList}.
 	pane3 := BrVerticalPane new
+		matchParent;
+		addChildren: { self buildCategorySlotTabs }.
+
+	pane4 := BrVerticalPane new
 			matchParent;
 			addChildren: {methodsLabel := BrLabel new
 							aptitude: (BrGlamorousLabelAptitude new
@@ -200,7 +252,8 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 	self
 		addChildren: {pane1.
 				pane2.
-				pane3}
+				pane3.
+				pane4}
 ]
 
 { #category : #initialization }
@@ -334,8 +387,8 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 	| anIndex aSelectedItem theIndices instMeths classMeths |
 	supressListChanges ifTrue: [ ^ self ].
-	theIndices := methodProtocolsList selectedIndices.
-	theIndices ifEmpty: [ ^ self ].
+	slotsGroupList deselectAll.
+	theIndices := methodProtocolsList selectedIndices ifEmpty: [ ^ self ].
 	anIndex := theIndices first.
 	(anIndex between: 1 and: methodProtocolsList viewModel entityCount)
 		ifFalse: [ ^ self ].
@@ -353,6 +406,19 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 			ifNil: [ #() ].
 	methodGroupList deselectAll.
 	self updateMethodListWith: instMeths and: classMeths
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> onSlotsListSelectionChanged [
+	| theIndices anIndex aSelectedItem |
+	supressListChanges ifTrue: [ ^ self ].
+	methodProtocolsList deselectAll.
+	theIndices := slotsGroupList selectedIndices ifEmpty: [ ^ self ].
+	anIndex := theIndices first.
+	(anIndex between: 1 and: slotsGroupList viewModel entityCount)
+		ifFalse: [ ^ self ].
+	aSelectedItem := (slotsGroupList viewModel entityAt: anIndex) value object.
+	self navigationModel selectSlot: aSelectedItem source: self.
 ]
 
 { #category : #'api - package updates' }
@@ -421,7 +487,8 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aP
 		or: [ self selectedPackageTag ~= aPackageTag ])
 		ifTrue: [ self selectPackage: aPackage tag: aPackageTag ].
 	self selectClass: aClass.
-	self updateProtocolList
+	self updateProtocolList.
+	self updateSlotList
 ]
 
 { #category : #'api - package selections' }
@@ -500,8 +567,8 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock 
 
 { #category : #'showing / hiding' }
 GtCoderNavigationPackagesTagsClassesElement >> showClassList [
-	classAndMethodProtocolList visibility: BlVisibility visible.
-	classesLabel visibility: BlVisibility visible.
+	classesList visibility: BlVisibility visible.
+	classesLabel visibility: BlVisibility visible
 ]
 
 { #category : #subscriptions }
@@ -509,7 +576,8 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToContent [
 	super subscribeToContent.
 	self subscribeToPackageList.
 	self subscribeToClassList.
-	self subscribeToProtocolList
+	self subscribeToProtocolList.
+	self subscribeToSlotList.
 ]
 
 { #category : #'api - package updates' }
@@ -549,11 +617,19 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToProtocolList [
 		do: [ :anEvent | self onProtocolListSelectionChanged ]
 ]
 
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> subscribeToSlotList [
+	slotsGroupList
+		when: BrSelectionChanged
+		do: [ :anEvent | self onSlotsListSelectionChanged ]
+]
+
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	classesList initializeWithClasses: navigationModel classesToShow.
-	self updateProtocolList
+	self updateProtocolList.
+	self updateSlotList
 ]
 
 { #category : #'updating lists' }
@@ -611,13 +687,9 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 				updateMethodListWith: navigationModel selectedClass methods
 				and: (navigationModel selectedClass class methods
 						reject: [ :meth | meth isFromTrait ]).
-
-			methodsLabel visibility: BlVisibility visible.
-			protocolLabel visibility: BlVisibility visible ]
+			methodsLabel visibility: BlVisibility visible ]
 		ifFalse: [ self updateProtocolListWith: #() and: #().
 			self updateMethodListWith: #() and: #().
-
-			protocolLabel visibility: BlVisibility hidden.
 			methodProtocolsList visibility: BlVisibility hidden.
 			methodsLabel visibility: BlVisibility hidden ]
 ]
@@ -649,4 +721,16 @@ GtCoderNavigationPackagesTagsClassesElement >> updateSelectedPackageAndTag [
 						selectPackage: navigationModel selectedPackage
 						tag: navigationModel selectedTag ]
 				ifFalse: [ self selectPackage: navigationModel selectedPackage ] ]
+]
+
+{ #category : #'api - class selections' }
+GtCoderNavigationPackagesTagsClassesElement >> updateSlotList [
+	| slotStream slots |
+	slotsGroupList deselectAll.
+	navigationModel hasSelectedClass
+		ifTrue: [ slots := navigationModel selectedClass instanceVariables.
+			slotStream := slots asSortedCollection: [ :a :b | a name < b name ].
+			slotsGroup with: {slotStream} do: [ :grp :str | grp items: str ] ]
+		ifFalse: [ slotsGroup with: {#()} do: [ :grp :str | grp items: str ] ].
+	slotsGroupList groups: slotsGroup
 ]
