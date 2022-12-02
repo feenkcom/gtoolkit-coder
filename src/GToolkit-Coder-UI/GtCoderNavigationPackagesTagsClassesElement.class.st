@@ -407,7 +407,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> onSlotsListSelectionChanged [
-	| theIndices anIndex aSelectedItem |
+	| theIndices anIndex aSelectedItem instMeths classMeths |
 	supressListChanges ifTrue: [ ^ self ].
 	methodProtocolsList deselectAll.
 	theIndices := slotsGroupList selectedIndices ifEmpty: [ ^ self ].
@@ -416,6 +416,10 @@ GtCoderNavigationPackagesTagsClassesElement >> onSlotsListSelectionChanged [
 		ifFalse: [ ^ self ].
 	aSelectedItem := (slotsGroupList viewModel entityAt: anIndex) value object.
 	self navigationModel selectSlot: aSelectedItem source: self.
+	instMeths := self selectedClass methodsAccessingSlot: aSelectedItem.
+	classMeths := self selectedClass class methodsAccessingSlot: aSelectedItem.
+	methodGroupList deselectAll.
+	self updateMethodListWith: instMeths and: classMeths
 ]
 
 { #category : #'api - package updates' }
