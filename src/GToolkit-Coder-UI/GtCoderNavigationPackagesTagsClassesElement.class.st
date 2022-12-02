@@ -5,9 +5,6 @@ Class {
 		'packagesList',
 		'classesLabel',
 		'methodProtocolsList',
-		'classAndMethodProtocolList',
-		'protocolLabel',
-		'coderFilterChangesSubscription',
 		'methodsLabel',
 		'methodGroup',
 		'methodGroupList',
@@ -194,7 +191,6 @@ GtCoderNavigationPackagesTagsClassesElement >> hasPackageTagsIn: aRPackage [
 
 { #category : #'showing / hiding' }
 GtCoderNavigationPackagesTagsClassesElement >> hideClassList [
-	classAndMethodProtocolList visibility: BlVisibility hidden.
 	classesLabel visibility: BlVisibility hidden.
 ]
 
@@ -291,26 +287,26 @@ GtCoderNavigationPackagesTagsClassesElement >> onMethodListSelectionChanged: aMe
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onMethodsCoderFiltersChanged: aGtCodersFiltersChanged [
 	aGtCodersFiltersChanged source = self ifTrue: [ ^ self ].
-	
-	methodProtocolsList selectedItemDo: [ :aSelectedItem | 
-		| aCategoryFilter |
-		aCategoryFilter := GtSearchMethodCategoryFilter forCategory: aSelectedItem name.
-		
-		aGtCodersFiltersChanged filters do: [ :eachFilter | 
-			eachFilter = aCategoryFilter ifTrue: [ 
-				^ self ] ] ].
-			
-	aGtCodersFiltersChanged filters do: [ :eachFilter | 
-		eachFilter class = GtSearchMethodCategoryFilter ifTrue: [
-			methodProtocolsList items
-				doWithIndex: [ :aProtocol :anIndex | 
-					(aProtocol name = eachFilter category) ifTrue: [ 
-						self suppressListChangeEventsDuring: [
-							methodProtocolsList selectOne: anIndex ].
-						^ self ] ] ] ].
-	
-	self suppressListChangeEventsDuring: [
-		methodProtocolsList deselectAll ].
+	methodProtocolsList
+		selectedItemDo: [ :aSelectedItem | 
+			| aCategoryFilter |
+			aCategoryFilter := GtSearchMethodCategoryFilter
+					forCategory: aSelectedItem name.
+
+			aGtCodersFiltersChanged filters
+				do: [ :eachFilter | eachFilter = aCategoryFilter ifTrue: [ ^ self ] ] ].
+
+	aGtCodersFiltersChanged filters
+		do: [ :eachFilter | 
+			eachFilter class = GtSearchMethodCategoryFilter
+				ifTrue: [ methodProtocolsList items
+						doWithIndex: [ :aProtocol :anIndex | 
+							aProtocol name = eachFilter category
+								ifTrue: [ self
+										suppressListChangeEventsDuring: [ methodProtocolsList selectOne: anIndex ].
+									^ self ] ] ] ].
+
+	self suppressListChangeEventsDuring: [ methodProtocolsList deselectAll ]
 ]
 
 { #category : #'event handling' }
