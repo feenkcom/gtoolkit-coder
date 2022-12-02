@@ -20,7 +20,7 @@ GtProtocolSlotTabAptitude >> initialize [
 		constraintsDo: [ :c | 
 			c ignoreByLayout.
 			c ignored vertical alignBottom.
-			c vertical exact: 2.
+			c vertical exact: 1.
 			c horizontal matchParent ].
 	self
 		add:

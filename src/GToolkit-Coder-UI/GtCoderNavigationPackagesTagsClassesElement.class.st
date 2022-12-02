@@ -46,7 +46,7 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 GtCoderNavigationPackagesTagsClassesElement >> buildCategorySlotTabs [
 	| aTabGroup |
 	aTabGroup := BrTabGroup new
-			aptitude: BrGlamorousTabGroupAptitude new;
+			aptitude: BrGlamorousTabGroupAptitude - BrTabGroupSplitterAptitude;
 			addTab: (BrTab new
 					aptitude: GtProtocolSlotTabAptitude new;
 					label: 'Categories' asRopedText glamorousCodeSmallSize;
@@ -127,7 +127,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildProtocolGroupList [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderBlock onClick: clickBlock [
-	| classGroup instanceGroup |
+	| classSlotGroup instanceGroup classVarGroup |
 	instanceGroup := BrGroup new
 			domainObject: 'instance slots';
 			stream: #() asAsyncStream;
@@ -142,7 +142,11 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderB
 						when: BlClickEvent do: clickBlock ];
 			itemDataBinder: binderBlock;
 			shouldShowWithoutItems: false.
-	^ {instanceGroup}
+	classSlotGroup := instanceGroup copy domainObject: 'class slots'.
+	classVarGroup := instanceGroup copy domainObject: 'class variables'.
+	^ {instanceGroup.
+		classSlotGroup.
+		classVarGroup}
 ]
 
 { #category : #initialization }
@@ -234,8 +238,9 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 							text: 'Classes'.
 					classesList}.
 	pane3 := BrVerticalPane new
-		matchParent;
-		addChildren: { self buildCategorySlotTabs }.
+			addAptitude: BrGlamorousWithHorizontalResizerAptitude;
+			matchParent;
+			addChildren: {self buildCategorySlotTabs}.
 
 	pane4 := BrVerticalPane new
 			matchParent;
@@ -721,12 +726,19 @@ GtCoderNavigationPackagesTagsClassesElement >> updateSelectedPackageAndTag [
 
 { #category : #'api - class selections' }
 GtCoderNavigationPackagesTagsClassesElement >> updateSlotList [
-	| slotStream slots |
+	| slotStream classSlotStream classVarStream streams |
 	slotsGroupList deselectAll.
 	navigationModel hasSelectedClass
-		ifTrue: [ slots := navigationModel selectedClass instanceVariables.
-			slotStream := slots asSortedCollection: [ :a :b | a name < b name ].
-			slotsGroup with: {slotStream} do: [ :grp :str | grp items: str ] ]
-		ifFalse: [ slotsGroup with: {#()} do: [ :grp :str | grp items: str ] ].
+		ifTrue: [ slotStream := navigationModel selectedClass instanceVariables.
+			classSlotStream := navigationModel selectedClass class instanceVariables.
+			classVarStream := navigationModel selectedClass classVariables.
+			streams := {slotStream.
+					classSlotStream.
+					classVarStream}
+					collect: [ :each | each asSortedCollection: [ :a :b | a name < b name ] ] ]
+		ifFalse: [ streams := {#().
+					#().
+					#()} ].
+	slotsGroup with: streams do: [ :grp :str | grp items: str ].
 	slotsGroupList groups: slotsGroup
 ]
