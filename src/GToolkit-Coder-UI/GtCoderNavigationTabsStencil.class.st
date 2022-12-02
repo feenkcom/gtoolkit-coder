@@ -5,7 +5,7 @@ Class {
 		'navigations',
 		'navigationModel'
 	],
-	#category : 'GToolkit-Coder-UI-Navigation'
+	#category : #'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #adding }
@@ -65,8 +65,28 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 	^ aView explicit
 		title: 'Package Hierarchy';
 		priority: 1;
-		stencil: [ GtCoderNavigationPackagesTagsClassesElement new 
-			navigationModel: self navigationModel ]
+		stencil: [ GtCoderNavigationPackagesTagsClassesElement new
+				navigationModel: self navigationModel ];
+		actionStencil: [ :aButton | 
+				GtSpotterDropdownButtonStencil new
+					valuable: (GtCoderSpotterStart new
+							navigationModelBlock: [ self navigationModel ]);
+					tooltip: 'Search Code';
+					actOn: [ :anActOnEvent :anItem :theButton | 
+						| acted |
+						acted := false.
+						(anItem isKindOf: RPackage)
+							ifTrue: [ self navigationModel selectPackage: anItem.
+								acted := true ].
+						(anItem isKindOf: ClassDescription)
+							ifTrue: [ self navigationModel selectClass: anItem.
+								acted := true ].
+						(anItem isKindOf: CompiledMethod)
+							ifTrue: [ self navigationModel selectMethod: anItem.
+								acted := true ].
+						acted ifTrue: [ anActOnEvent beActed ] ];
+					asElement ]
+			tooltip: 'Search Code'
 ]
 
 { #category : #accessing }

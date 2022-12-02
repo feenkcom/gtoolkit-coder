@@ -127,30 +127,3 @@ Behavior >> gtHierarchyButtonFor: anAction [
 						navigationModel: coder navigationModel;
 						asElement) background: Color white) ]
 ]
-
-{ #category : #'*GToolkit-Coder' }
-Behavior >> gtSpotterButtonFor: anAction [
-	<gtClassAction>
-	^ anAction explicit
-		priority: 2;
-		stencil: [ :aButton | 
-			| aNavigationModel |
-			GtSpotterDropdownButtonStencil new
-				valuable: (GtCoderSpotterStart new
-						navigationModelBlock: [ aNavigationModel := aButton phlow firstParentWithView navigationModel ]);
-				tooltip: 'Search Code';
-				actOn: [ :anActOnEvent :anItem :theButton | 
-					| acted |
-					acted := false.
-					(anItem isKindOf: RPackage)
-						ifTrue: [ aNavigationModel selectPackage: anItem.
-							acted := true ].
-					(anItem isKindOf: ClassDescription)
-						ifTrue: [ aNavigationModel selectClass: anItem.
-							acted := true ].
-					(anItem isKindOf: CompiledMethod)
-						ifTrue: [ aNavigationModel selectMethod: anItem.
-							acted := true ].
-					acted ifTrue: [ anActOnEvent beActed ] ];
-				asElement ]
-]
