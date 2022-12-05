@@ -78,9 +78,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildGroupWithBinder: binderBlock
 						hMatchParent;
 						vFitContent;
 						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude
-								+ (BrStyleCommonAptitude new
-										hovered: [ :aStyle | aStyle background: self theme item selectedColor ]);
+						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude;
 						when: BlClickEvent do: clickBlock ];
 			itemDataBinder: binderBlock;
 			shouldShowWithoutItems: false.
@@ -133,9 +131,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderB
 						hMatchParent;
 						vFitContent;
 						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude
-								+ (BrStyleCommonAptitude new
-										hovered: [ :aStyle | aStyle background: self theme item selectedColor ]);
+						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude;
 						when: BlClickEvent do: clickBlock ];
 			itemDataBinder: binderBlock;
 			shouldShowWithoutItems: false.
