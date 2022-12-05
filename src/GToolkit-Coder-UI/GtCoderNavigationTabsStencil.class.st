@@ -48,6 +48,77 @@ GtCoderNavigationTabsStencil >> defaultNavigations [
 		collect
 ]
 
+{ #category : #accessing }
+GtCoderNavigationTabsStencil >> gtAddClassTab: look [
+	<gtCreateComponentTab: 10>
+	^ BrTab new
+		aptitude: BrGlamorousTabAptitude new;
+		label: 'Class';
+		stencil: [ | element |
+			element := GtPharoCreateBehaviorElement new.
+			element
+				behaviorBlock: [ :cls | 
+					look fireEvent: BrDropdownHideWish new.
+					navigationModel selectClass: cls ].
+			element forClassDefinition.
+			navigationModel selectedPackageDo: [ :package | element forPackage: package ].
+			navigationModel selectedTagDo: [ :tag | element forPackageTag: tag ].
+			element ]
+]
+
+{ #category : #accessing }
+GtCoderNavigationTabsStencil >> gtAddInterface: look [
+	| contentTabs tabMethods |
+	contentTabs := BrTabGroup new.
+	contentTabs aptitude: BrGlamorousTabGroupAptitude new.
+	contentTabs
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	tabMethods := (Pragma allNamed: #gtCreateComponentTab: from: self class to: Behavior)
+		asSortedCollection: [ :a :b | a arguments first < b arguments first ].
+	tabMethods
+		do:
+			[ :each | contentTabs addTab: (self perform: each method selector with: look) ].
+	^ contentTabs
+]
+
+{ #category : #accessing }
+GtCoderNavigationTabsStencil >> gtAddPackageTab: look [
+	<gtCreateComponentTab: 30>
+	^ BrTab new
+		aptitude: BrGlamorousTabAptitude new;
+		label: 'Package';
+		stencil: [ | element |
+			element := GtPharoCreatePackageElement new.
+			element
+				packageBlock: [ :pkg :tag | 
+					look fireEvent: BrDropdownHideWish new.
+					tag isNil
+						ifTrue: [ navigationModel selectPackage: pkg ]
+						ifFalse: [ navigationModel selectPackageTag: tag ] ].
+			navigationModel selectedPackageDo: [ :package | element forPackage: package ].
+			element ]
+]
+
+{ #category : #accessing }
+GtCoderNavigationTabsStencil >> gtAddTraitTab: look [
+	<gtCreateComponentTab: 20>
+	^ BrTab new
+		aptitude: BrGlamorousTabAptitude new;
+		label: 'Trait';
+		stencil: [ | element |
+			element := GtPharoCreateBehaviorElement new.
+			element
+				behaviorBlock: [ :cls | 
+					look fireEvent: BrDropdownHideWish new.
+					navigationModel selectClass: cls ].
+			element forTraitDefinition.
+			navigationModel selectedPackageDo: [ :package | element forPackage: package ].
+			navigationModel selectedTagDo: [ :tag | element forPackageTag: tag ].
+			element ]
+]
+
 { #category : #'gt-extensions' }
 GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 	<gtCoderNavigation>
