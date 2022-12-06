@@ -8,18 +8,6 @@ Class {
 }
 
 { #category : #searching }
-GtCoderSpotterStart >> gtSpotterForClassMethodsInCurrentClassFor: aSearch [
-	<gtSearch>
-	self navigationModel hasSelectedClass ifFalse: [ ^ aSearch empty ].
-	^ aSearch list
-		priority: 2;
-		title: 'Class methods';
-		items: [ self navigationModel selectedClass classSide methods ];
-		filterBySubstring;
-		wantsToDisplayOnEmptyQuery: true
-]
-
-{ #category : #searching }
 GtCoderSpotterStart >> gtSpotterForClassesFor: aSearch [
 	<gtSearch>
 	^ aSearch list
@@ -28,18 +16,6 @@ GtCoderSpotterStart >> gtSpotterForClassesFor: aSearch [
 		title: 'Classes';
 		filterBySubstring;
 		wantsToDisplayOnEmptyQuery: self navigationModel hasSelectedClass not
-]
-
-{ #category : #searching }
-GtCoderSpotterStart >> gtSpotterForInstanceMethodsInCurrentClassFor: aSearch [
-	<gtSearch>
-	self navigationModel hasSelectedClass ifFalse: [ ^ aSearch empty ].
-	^ aSearch list
-		priority: 1;
-		title: 'Instance methods';
-		items: [ self navigationModel selectedClass instanceSide methods ];
-		filterBySubstring;
-		wantsToDisplayOnEmptyQuery: true
 ]
 
 { #category : #searching }
