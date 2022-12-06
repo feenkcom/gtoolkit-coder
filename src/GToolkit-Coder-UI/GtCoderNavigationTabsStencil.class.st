@@ -157,7 +157,18 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 								acted := true ].
 						acted ifTrue: [ anActOnEvent beActed ] ];
 					asElement ]
-			tooltip: 'Search Code'
+			tooltip: 'Search Code';
+	actionDropdownButtonIcon: BrGlamorousVectorIcons add
+		tooltip: 'Add class or package'
+		content: [ :aDropdown | 
+			| element |
+			element := BlElement new.
+			element
+				constraintsDo: [ :c | 
+					c horizontal exact: 400.
+					c vertical exact: 300 ].
+			element addChild: (self gtAddInterface: aDropdown).
+			element ]
 ]
 
 { #category : #accessing }
