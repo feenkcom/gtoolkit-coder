@@ -23,11 +23,14 @@ GtSourceCoderMoveStatementDownShortcut >> name [
 
 { #category : #accessing }
 GtSourceCoderMoveStatementDownShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
-	| pos |
 	self
 		forEditor: aBrTextEditor
-		selectionIntervalDo: [ :aSelectionInterval | pos := aSelectionInterval last ]
-		orCursorStringPositionDo: [ :aCursorTextPosition | pos := aCursorTextPosition ].
-	pos
-		ifNotNil: [ aSourceCoderViewModel coder moveStatementDownAt: pos in: aSourceCoderViewModel ]
+		selectionIntervalDo: [ :aSelectionInterval | 
+			aSourceCoderViewModel coder
+				moveStatementsDownWithin: aSelectionInterval
+				in: aSourceCoderViewModel ]
+		orCursorStringPositionDo: [ :aCursorTextPosition | 
+			aSourceCoderViewModel coder
+				moveStatementDownAt: aCursorTextPosition
+				in: aSourceCoderViewModel ]
 ]
