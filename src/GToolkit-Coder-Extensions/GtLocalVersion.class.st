@@ -102,6 +102,7 @@ GtLocalVersion >> updateContent [
 	previousContent := compiledMethod sourceCode.
 	newContent := localVersion sourceCode.
 
+	content removeChildren.
 
 	content
 		addChild: (BrLabel new
@@ -122,6 +123,7 @@ GtLocalVersion >> updateContent [
 
 { #category : #accessing }
 GtLocalVersion >> updateHeader [
+	header removeChildren.
 	header
 		addChild: (BrLabel new
 				aptitude: BrGlamorousLabelAptitude;
