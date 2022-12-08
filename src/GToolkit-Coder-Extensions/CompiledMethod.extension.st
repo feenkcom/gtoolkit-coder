@@ -22,29 +22,16 @@ CompiledMethod >> gtDisplayOn: aStream [
 { #category : #'*GToolkit-Coder-Extensions' }
 CompiledMethod >> gtLocalVersionsFor: aView [
 	<gtView>
-	^ aView columnedList 
+	^ aView list
 		title: 'Local versions';
 		priority: 20;
-		items: [ 
-			SourceFiles
+		items: [ SourceFiles
 				changeRecordsFrom: self sourcePointer
 				className: self methodClass name
 				isMeta: self methodClass isMeta ];
-		column: 'Timestamp' text: #timeStamp width: 200;
-		column: 'Change' translated
-			icon: [ :eachItem |
-				BrExpander new
-					vFitContent;
-					hMatchParent;
-					collapse;
-					margin: (BlInsets all: 10);
-					aptitude: GtCoderExpanderAptitude new;
-					header: [ BrLabel new aptitude: BrGlamorousLabelAptitude; text: eachItem gtDisplayString ];
-					content: [ | container |
-						container := BrFrame new 
-							vExact: 400;
-							hMatchParent;
-							aptitude: BrGlamorousWithVerticalResizerAptitude;
-							addChild: ((eachItem gtSourceFor: GtPhlowEmptyView new) asElement) matchParent ] ]
-			weight: 1
+		itemStencil: [ GtLocalVersion new ];
+		itemDataBinder: [ :aLocalVersionElement :aLocalVersion | 
+				aLocalVersionElement
+					compiledMethod: self;
+					localVersion: aLocalVersion ]
 ]
