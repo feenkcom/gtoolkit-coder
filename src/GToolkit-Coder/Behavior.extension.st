@@ -20,6 +20,21 @@ Behavior >> gtBrowseFromButton: anElement [
 ]
 
 { #category : #'*GToolkit-Coder' }
+Behavior >> gtCopyButtonFor: anAction [
+	<gtClassAction>
+	^ anAction dropdown
+		tooltip: 'Copy Class';
+		icon: BrGlamorousVectorIcons changes;
+		priority: 4;
+		content: [ :aButton | 
+			((GtCopyClassForm for: self)
+				onAccept: [ :aClass | 
+					aButton phlow spawnTool: (GtClassCoderTool forClass: aClass).
+					aButton fireEvent: BrDropdownHideWish new ]) asElement
+				padding: (BlInsets all: 5) ]
+]
+
+{ #category : #'*GToolkit-Coder' }
 Behavior >> gtHierarchyButtonFor: anAction [
 	<gtClassAction>
 	^ anAction dropdown
