@@ -617,6 +617,11 @@ GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttribu
 	self announce: (GtTextualCoderViewModelTextAttributesRemoved new coderTextAttributes: aGtTextualCoderTextAttributes)
 ]
 
+{ #category : #'api - shortcuts' }
+GtTextualCoderViewModel >> removeStylersOfClass: aGtCoderStylerClass [
+	extraAddOns removeStylersOfClass: aGtCoderStylerClass
+]
+
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> requestUpdateAddOns [
 	<return: #TAsyncPromise>

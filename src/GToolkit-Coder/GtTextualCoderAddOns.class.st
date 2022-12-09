@@ -61,6 +61,11 @@ GtTextualCoderAddOns >> postCopy [
 ]
 
 { #category : #'api - stylers' }
+GtTextualCoderAddOns >> removeStylersOfClass: aStylerClass [
+	stylers removeAllSuchThat: [ :each | each class = aStylerClass ]
+]
+
+{ #category : #'api - stylers' }
 GtTextualCoderAddOns >> stylers [
 	^ stylers
 ]
