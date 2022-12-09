@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'coder'
 	],
-	#category : 'GToolkit-Coder-UI-Tools'
+	#category : #'GToolkit-Coder-UI-Tools'
 }
 
 { #category : #accessing }
@@ -16,7 +16,10 @@ GtReadyCoderTool class >> coder: aCoder [
 GtReadyCoderTool >> asElementDo: aOneArgBlock [
 	"Create a tool element and execute the block."
 
-	^ aOneArgBlock cull: (GtCoder forCoder: self coder) asPagerPageElement
+	| anElement |
+	anElement := (GtCoder forCoder: self coder) asElement.
+	anElement phlow beView.
+	^ aOneArgBlock cull: anElement asPagerPageElement
 ]
 
 { #category : #accessing }

@@ -8,8 +8,10 @@ Class {
 GtCoderTool >> asElementDo: aOneArgBlock [
 	"Create a tool element and execute the block."
 
-	^ aOneArgBlock
-		cull: (GtPhlowCoderView new coder: self newCoder) asElement asPagerPageElement
+	| anElement |
+	anElement := (GtPhlowCoderView new coder: self newCoder) asElement.
+	anElement phlow beView.
+	^ aOneArgBlock cull: anElement asPagerPageElement
 ]
 
 { #category : #'api - converting' }
