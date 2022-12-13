@@ -24,7 +24,7 @@ GtBaselineDescription >> baseline: anObject [
 	baseline := anObject
 ]
 
-{ #category : #accessing }
+{ #category : #magritte }
 GtBaselineDescription >> baselineDescription [
 	<magritteDescription>
 	^ MAStringDescription new
@@ -32,12 +32,16 @@ GtBaselineDescription >> baselineDescription [
 		priority: 1;
 		accessor: #baseline;
 		blocCompletion: [ GtStringsCompletionStrategy new
-				completions: (GtPrefixTree withAll: RPackageOrganizer default packageNames) ];
-		addCondition: [ :aValue | (RPackageOrganizer default packageNamed: aValue ifAbsent: [ nil ]) isNil ]
-			labelled: 'Baseline or package exists'
+				completions: (GtPrefixTree withAll: (Smalltalk allClasses collect: #name)) ];
+		addCondition: [ :aValue | (Smalltalk classNamed: aValue trim) isNil ]
+			labelled: 'Baseline name is already taken';
+		addCondition: [ :aValue | aValue first isUppercase ]
+			labelled: 'First character must be uppercase';
+		addCondition: [ :aValue | aValue isAllAlphaNumerics ]
+			labelled: 'Class name must be alphanumeric'
 ]
 
-{ #category : #accessing }
+{ #category : #'instance creation' }
 GtBaselineDescription >> forBaseline: aBaseline [
 	self baseline: aBaseline name
 ]

@@ -15,6 +15,11 @@ GtMagritteCreateForm class >> forBaseline: aBaseline [
 ]
 
 { #category : #'instance creation' }
+GtMagritteCreateForm class >> forClass [
+	^ self forDescription: GtClassDescription new
+]
+
+{ #category : #'instance creation' }
 GtMagritteCreateForm class >> forDescription: aDescription [
 	^ self new description: aDescription
 ]
@@ -22,6 +27,16 @@ GtMagritteCreateForm class >> forDescription: aDescription [
 { #category : #'instance creation' }
 GtMagritteCreateForm class >> forPackage: aPackage [
 	^ self forDescription: (GtPackageDescription forPackage: aPackage)
+]
+
+{ #category : #'instance creation' }
+GtMagritteCreateForm class >> forParser [
+	^ self forDescription: GtParserDescription new
+]
+
+{ #category : #'instance creation' }
+GtMagritteCreateForm class >> forTrait [
+	^ self forDescription: GtTraitDescription new
 ]
 
 { #category : #converting }
