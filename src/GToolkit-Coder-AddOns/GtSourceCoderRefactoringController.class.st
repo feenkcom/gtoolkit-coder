@@ -34,22 +34,26 @@ GtSourceCoderRefactoringController >> cleanUp [
 
 { #category : #executing }
 GtSourceCoderRefactoringController >> execute [
-	[
-		self saveSource.
-		self safelyExecute ]
-			on: Error
-			do: [ :ex |
-				self refactoringFailed.
-				NonInteractiveTranscript stderr
-					nextPutAll: ('[{1}] {2}' format: { self class name . ex asString });
-					cr.
-				
-				(ex signalerContext stack first: 20) do: [ :eachStackEntry |
-					NonInteractiveTranscript stderr
-						nextPutAll: eachStackEntry printString;
-						cr ].
-					
-				ex return ]
+	[ self saveSource.
+	self safelyExecute ]
+		on: Error
+		do: [ :ex | 
+			self refactoringFailed.
+			(ex isKindOf: RBRefactoringError)
+				ifTrue: [ self inform: self refactoringName , ': ' , ex messageText ]
+				ifFalse: [ NonInteractiveTranscript stderr
+						nextPutAll: ('[{1}] {2}'
+								format: {self class name.
+										ex asString});
+						cr.
+
+					(ex signalerContext stack first: 20)
+						do: [ :eachStackEntry | 
+							NonInteractiveTranscript stderr
+								nextPutAll: eachStackEntry printString;
+								cr ] ].
+
+			ex return ]
 ]
 
 { #category : #private }
