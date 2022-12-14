@@ -49,7 +49,7 @@ RPackage >> gtDefinedClassesFor: aView context: aPhlowContext [
 	(aPhlowContext isKindOf: GtPhlowExecutionContext) ifFalse: [ ^ aView empty ].
 	aPhlowContext hasPackageCoder ifFalse: [ ^ aView empty ].
 	^ aView explicit
-		priority: 10;
+		priority: 1;
 		title: 'Classes';
 		disableAsync;
 		stencil: [ aPhlowContext packageCoder classesCoder asElement ]
