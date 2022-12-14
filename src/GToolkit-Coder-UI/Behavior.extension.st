@@ -20,11 +20,11 @@ Behavior >> gtHierarchyButtonFor: anAction [
 		id: GtCoderClassHierarchyButtonId;
 		priority: 3;
 		content: [ :aButton | 
-			| coder |
-			coder := aButton phlow firstParentWithView.
+			| aNavigationModel |
+			aNavigationModel := aButton phlow firstParentCoderNavigationModel.
 			BlElement new
 				size: 400 @ 400;
 				addChild: ((GtCoderNavigationTabsStencil new
-						navigationModel: coder navigationModel;
+						navigationModel: aNavigationModel;
 						asElement) background: Color white) ]
 ]
