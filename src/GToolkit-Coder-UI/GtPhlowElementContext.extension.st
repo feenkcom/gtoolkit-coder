@@ -2,6 +2,22 @@ Extension { #name : #GtPhlowElementContext }
 
 { #category : #'*GToolkit-Coder-UI' }
 GtPhlowElementContext >> coder [
+	"Use #firstParentCoder instead"
+
+	<return: #GtCoder>
+	^ self firstParentCoder
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtPhlowElementContext >> coderNavigationModel [
+	"Use #firstParentCoderNavigationModel instead"
+
+	<return: #GtCoderNavigationModel>
+	^ self firstParentCoderNavigationModel
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtPhlowElementContext >> firstParentCoder [
 	<return: #GtCoder>
 	| anElement |
 	anElement := self firstParentWithView.
@@ -16,10 +32,10 @@ GtPhlowElementContext >> coder [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
-GtPhlowElementContext >> coderNavigationModel [
+GtPhlowElementContext >> firstParentCoderNavigationModel [
 	<return: #GtCoderNavigationModel>
 	| aCoder aNavigationModel |
-	aCoder := self coder.
+	aCoder := self firstParentCoder.
 	aNavigationModel := aCoder navigationModel.
 
 	self
