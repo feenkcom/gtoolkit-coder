@@ -43,6 +43,9 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			baseline: 'GToolkitAnnouncerUtility'
 			with: [ 
 				spec repository: 'github://feenkcom/gtoolkit-utility:main/src' ];
+			baseline: 'GToolkitNotifications'
+			with: [ 
+				spec repository: 'github://feenkcom/gtoolkit-notifications:main/src' ];
 			baseline: 'GToolkitPager'
 			with: [ 
 				spec repository: 'github://feenkcom/gtoolkit-pager:main/src' ];
@@ -67,7 +70,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 						   'GToolkitPager' 'GToolkitCompleter' 'GToolkit-SearchFilters' ) ];
 			package: 'GToolkit-Coder-UI' with: [ 
 				spec requires: #( 'GToolkit-Coder' 'GToolkit-VariableBindings'
-						   'GToolkitBasicUtility' 'GToolkitPager' ) ];
+						   'GToolkitBasicUtility' 'GToolkitPager' 'GToolkitNotifications') ];
 			package: 'GToolkit-Coder-AddOns'
 			with: [ spec requires: #( 'GToolkit-Coder' 'GToolkit-Coder-UI' ) ];
 			package: 'GToolkit-Coder-Extensions' with: [ 

@@ -5,7 +5,7 @@ Class {
 		'suppressedAnnouncements',
 		'monitor'
 	],
-	#category : 'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #announce }
@@ -29,6 +29,6 @@ GtCoderAnnouncer >> suppress: aCollectionOfAnnouncementClasses during: aBlock [
 	monitor critical: [
 		| aPreviousSuppressedAnnouncements |
 		aPreviousSuppressedAnnouncements := suppressedAnnouncements copy.
-		suppressedAnnouncements := (suppressedAnnouncements, aCollectionOfAnnouncementClasses asCollection) asSet.
+		suppressedAnnouncements := (suppressedAnnouncements, aCollectionOfAnnouncementClasses asOrderedCollection) asSet.
 		aBlock ensure: [ suppressedAnnouncements := aPreviousSuppressedAnnouncements ] ]
 ]
