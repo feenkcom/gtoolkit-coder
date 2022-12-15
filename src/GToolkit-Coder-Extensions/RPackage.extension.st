@@ -40,8 +40,7 @@ RPackage >> gtBrowse [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtBrowseFrom: anElement [
-	^ ((GtPhlowCoderView new coder: (GtCoder forPackage: self)) asElement
-		openInPagerFrom: anElement) maximized
+	^ ((GtCoder forPackage: self) asElement openInPagerFrom: anElement) maximized
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
@@ -50,7 +49,7 @@ RPackage >> gtDefinedClassesFor: aView context: aPhlowContext [
 	(aPhlowContext isKindOf: GtPhlowExecutionContext) ifFalse: [ ^ aView empty ].
 	aPhlowContext hasPackageCoder ifFalse: [ ^ aView empty ].
 	^ aView explicit
-		priority: 10;
+		priority: 1;
 		title: 'Classes';
 		disableAsync;
 		stencil: [ aPhlowContext packageCoder classesCoder asElement ]

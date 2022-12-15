@@ -18,7 +18,6 @@ GtReadyCoderTool >> asElementDo: aOneArgBlock [
 
 	| anElement |
 	anElement := (GtCoder forCoder: self coder) asElement.
-	anElement phlow beView.
 	^ aOneArgBlock cull: anElement asPagerPageElement
 ]
 
