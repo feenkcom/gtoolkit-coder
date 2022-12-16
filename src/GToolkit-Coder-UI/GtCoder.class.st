@@ -56,6 +56,8 @@ GtCoder >> initialize [
 	self addChild: self contentElement as: #content.
 	
 	self addAptitude: (BrLayoutResizerAptitude inherit).
+	
+	self phlow beView.
 ]
 
 { #category : #initialization }

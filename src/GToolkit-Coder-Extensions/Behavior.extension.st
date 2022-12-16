@@ -7,8 +7,7 @@ Behavior >> gtBrowse [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> gtBrowseFrom: anElement [
-	^ ((GtPhlowCoderView new coder: (GtCoder forClass: self)) asElement
-		openInPagerFrom: anElement) maximized
+	^ ((GtCoder forClass: self) asElement openInPagerFrom: anElement) maximized
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
