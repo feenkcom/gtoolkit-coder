@@ -180,7 +180,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 
 { #category : #'instance creation' }
 GtCoderActionsElement >> newToggleForAction: aGtCoderAction toggleModel: toggleModel [
-	<return: #BrBToggle>
+	<return: #BrToggle>
 	^ BrToggle new
 		"toggleModel: toggleModel;"
 		aptitude: BrGlamorousButtonWithIconAptitude + BrGlamorousToggleBackgroundAptitude;
