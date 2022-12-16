@@ -179,6 +179,18 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 ]
 
 { #category : #'instance creation' }
+GtCoderActionsElement >> newToggleForAction: aGtCoderAction toggleModel: toggleModel [
+	<return: #BrBToggle>
+	^ BrToggle new
+		"toggleModel: toggleModel;"
+		aptitude: BrGlamorousButtonWithIconAptitude + BrGlamorousToggleBackgroundAptitude;
+		icon: aGtCoderAction icon asElement;
+		beTinySize;
+		label: aGtCoderAction title;
+		in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ]
+]
+
+{ #category : #'instance creation' }
 GtCoderActionsElement >> newToolbar [
 	<return: #BrToolbar>
 
