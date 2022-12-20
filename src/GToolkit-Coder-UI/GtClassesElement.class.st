@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'coder'
 	],
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #'building ui' }
@@ -16,7 +16,7 @@ GtClassesElement >> buildContainer [
 		itemStencil: [ GtClassCardElement new ];
 		itemDataBinder: [ :eachClassCard :eachClassCoder | eachClassCard coder: eachClassCoder ];
 		items: (coder coders asSortedCollection: [ :a :b | a theClass name < b theClass name ]);
-		addEventFilterOn: BlClickEvent do: [ :anEvent | self requestFocus ].
+		addEventFilterOn: BlClickEvent do: [ :anEvent | anEvent currentTarget requestFocus ].
 
 	self addChild: aClassList
 ]
