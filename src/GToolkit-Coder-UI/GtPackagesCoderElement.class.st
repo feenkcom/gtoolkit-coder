@@ -40,7 +40,7 @@ GtPackagesCoderElement >> buildPackageList [
 		items:
 			(packagesCoder coders
 				asSortedCollection: [ :a :b | a packageName < b packageName ]);
-		addEventFilterOn: BlClickEvent do: [ :anEvent | self requestFocus ]
+		addEventFilterOn: BlClickEvent do: [ :anEvent | anEvent currentTarget requestFocus ]
 ]
 
 { #category : #'private - ui' }
