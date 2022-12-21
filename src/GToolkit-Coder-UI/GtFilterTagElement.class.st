@@ -209,7 +209,8 @@ GtFilterTagElement >> initialize [
 	self
 		fitContent;
 		alignCenterLeft;
-		beInSingleCompositionLayer.
+		beInSingleCompositionLayer;
+		beFocusable.
 	
 	self addAptitude:
 		(BrStyleCommonAptitude new
