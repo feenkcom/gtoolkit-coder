@@ -20,9 +20,10 @@ BrGhostTextAttribute class >> for: aText [
 { #category : #accessing }
 BrGhostTextAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| element |
-	element := BlTextElement new
-			text: text;
-			yourself.
+	element := BrFrame new fitContent preventMeAndChildrenMouseEvents
+			addChild: (BlTextElement new
+					text: text;
+					yourself).
 
 	self updateVisibilityOf: element in: anEditorElement.
 	element
