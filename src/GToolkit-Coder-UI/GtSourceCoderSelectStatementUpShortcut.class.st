@@ -31,6 +31,6 @@ GtSourceCoderSelectStatementUpShortcut >> performOnEditor: aBrTextEditor element
 				upIn: aSourceCoderViewModel ]
 		orCursorStringPositionDo: [ :aCursorTextPosition | 
 			aSourceCoderViewModel coder
-				selectStatementAt: aCursorTextPosition
+				selectStatementOrCascadeAt: aCursorTextPosition
 				in: aSourceCoderViewModel ]
 ]
