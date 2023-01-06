@@ -27,10 +27,10 @@ GtSourceCoderMoveStatementUpShortcut >> performOnEditor: aBrTextEditor element: 
 		forEditor: aBrTextEditor
 		selectionIntervalDo: [ :aSelectionInterval | 
 			aSourceCoderViewModel coder
-				moveStatementsUpWithin: aSelectionInterval
+				moveStatementsOrCascadesUpWithin: aSelectionInterval
 				in: aSourceCoderViewModel ]
 		orCursorStringPositionDo: [ :aCursorTextPosition | 
 			aSourceCoderViewModel coder
-				moveStatementUpAt: aCursorTextPosition
+				moveStatementOrCascadeUpAt: aCursorTextPosition
 				in: aSourceCoderViewModel ]
 ]
