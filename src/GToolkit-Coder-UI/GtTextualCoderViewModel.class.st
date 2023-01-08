@@ -250,7 +250,7 @@ GtTextualCoderViewModel >> computeContextMenuAstAddOns [
 
 	newAddOns := aCoderModel newAddOns.
 	theAst ifNotNil: [
-		pragmas reverseDo: [ :eachPragma |
+		pragmas do: [ :eachPragma |
 			[ aCoderModel
 				perform: eachPragma methodSelector
 				withEnoughArguments: { theAst . newAddOns . self } ]
