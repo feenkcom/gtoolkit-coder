@@ -10,7 +10,7 @@ GtTextualCoder >> addContextMenuItemFrom: shortcut withId: menuId to: coderAddOn
 				element: anEditorElement
 				dueTo: nil ]
 		id: menuId
-		shortcutKey: shortcut combinationForPlatform userPrintString
+		shortcutKey: shortcut combinationForPlatform gtDisplayString
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
