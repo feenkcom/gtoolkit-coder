@@ -28,6 +28,11 @@ GtCoderPackageUncategorizedTag >> gtTagName [
 	^ packageTag name
 ]
 
+{ #category : #testing }
+GtCoderPackageUncategorizedTag >> isRoot [
+	^ true
+]
+
 { #category : #accessing }
 GtCoderPackageUncategorizedTag >> name [
 	^ 'Uncategorized'
