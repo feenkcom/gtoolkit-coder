@@ -120,11 +120,7 @@ GtCoderNavigationElement >> onClassRenamed: anAnnouncement [
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassSelected: anAnnouncement [
-	self
-		suppressListChangeEventsDuring: [ self
-				selectClass: anAnnouncement theClass
-				inPackage: anAnnouncement package
-				tag: anAnnouncement tag ]
+	self subclassResponsibility
 ]
 
 { #category : #'event handling' }
