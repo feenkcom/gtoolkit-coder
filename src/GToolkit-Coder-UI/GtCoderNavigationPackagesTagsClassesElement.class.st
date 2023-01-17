@@ -185,6 +185,17 @@ GtCoderNavigationPackagesTagsClassesElement >> hasPackageTagsIn: aRPackage [
 	^ noTags not or: [ noExtensions not ]
 ]
 
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> headerLabel [
+	| label |
+	label := BrLabel new.
+	label
+		aptitude: (BrGlamorousLabelAptitude new
+				fontSize: 12;
+				foreground: Color gray).
+	^ label
+]
+
 { #category : #'showing / hiding' }
 GtCoderNavigationPackagesTagsClassesElement >> hideClassList [
 	classesLabel visibility: BlVisibility hidden.
@@ -214,20 +225,12 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 	pane1 := BrVerticalPane new
 			addAptitude: BrGlamorousWithHorizontalResizerAptitude;
 			matchParent;
-			addChildren: {BrLabel new
-						aptitude: (BrGlamorousLabelAptitude new
-								fontSize: 12;
-								foreground: Color gray);
-						text: 'Packages'.
+			addChildren: {self headerLabel text: 'Packages'.
 					packagesList}.
 	pane2 := BrVerticalPane new
 			addAptitude: BrGlamorousWithHorizontalResizerAptitude;
 			matchParent;
-			addChildren: {classesLabel := BrLabel new
-							aptitude: (BrGlamorousLabelAptitude new
-									fontSize: 12;
-									foreground: Color gray);
-							text: 'Classes'.
+			addChildren: {classesLabel := self headerLabel text: 'Classes'.
 					classesList}.
 	pane3 := BrVerticalPane new
 			addAptitude: BrGlamorousWithHorizontalResizerAptitude;
@@ -236,11 +239,7 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeElement [
 
 	pane4 := BrVerticalPane new
 			matchParent;
-			addChildren: {methodsLabel := BrLabel new
-							aptitude: (BrGlamorousLabelAptitude new
-									fontSize: 12;
-									foreground: Color gray);
-							text: 'Methods'.
+			addChildren: {methodsLabel := self headerLabel text: 'Methods'.
 					methodGroupList}.
 	self
 		addChildren: {pane1.
@@ -267,6 +266,15 @@ GtCoderNavigationPackagesTagsClassesElement >> methodList [
 { #category : #'as yet unclassified' }
 GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
 	^methodProtocolsList
+]
+
+{ #category : #accessing }
+GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
+	self
+		suppressListChangeEventsDuring: [ self
+				selectClass: anAnnouncement theClass
+				inPackage: anAnnouncement package
+				tag: anAnnouncement tag ]
 ]
 
 { #category : #'event handling' }
