@@ -8,7 +8,8 @@ Class {
 	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'updateStragegy',
-		'newText'
+		'newText',
+		'previousText'
 	],
 	#category : #'GToolkit-Coder-Event'
 }
@@ -26,9 +27,19 @@ GtCoderSourceCodeChanged >> newText [
 ]
 
 { #category : #accessing }
-GtCoderSourceCodeChanged >> newText: anObject [
+GtCoderSourceCodeChanged >> newText: aText [
 
-	newText := anObject
+	newText := aText
+]
+
+{ #category : #accessing }
+GtCoderSourceCodeChanged >> previousText [
+	^ previousText
+]
+
+{ #category : #accessing }
+GtCoderSourceCodeChanged >> previousText: aText [
+	previousText := aText
 ]
 
 { #category : #accessing }

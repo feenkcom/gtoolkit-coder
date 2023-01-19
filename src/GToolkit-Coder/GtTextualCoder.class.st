@@ -147,8 +147,13 @@ GtTextualCoder >> currentSourceText: aText with: aGtCoderUpdateStragegy [
 	"Set a new source text"
 
 	self critical: [ 
+		| previousSourceText|
+		previousSourceText := self sourceCode currentSourceText.
 		self sourceCode currentSourceText: aText.
-		self sourceChangedTo: aText with: aGtCoderUpdateStragegy ]
+		self 
+			sourceChangedTo: aText 
+			from: previousSourceText
+			with: aGtCoderUpdateStragegy ]
 ]
 
 { #category : #'api - text' }
@@ -208,12 +213,13 @@ GtTextualCoder >> notifyCorrectionFrom: aFromIndex to: aToIndex with: aString [
 ]
 
 { #category : #'private - notifying' }
-GtTextualCoder >> notifySourceChangedTo: aNewText with: anUpdateStragegy [
+GtTextualCoder >> notifySourceChangedTo: aNewText from: aPreviousText with: anUpdateStragegy [
 	"Notify the text editor that it should update the text (for example due to refactoring changes)"
 	
 	self announce: (GtCoderSourceCodeChanged new 
 		updateStrategy: anUpdateStragegy;
 		newText: aNewText;
+		previousText: aPreviousText;
 		coder: self)
 ]
 
@@ -262,9 +268,17 @@ GtTextualCoder >> sourceChangedTo: aNewText [
 ]
 
 { #category : #'event handling' }
-GtTextualCoder >> sourceChangedTo: aNewText with: anUpdateStrategy [
+GtTextualCoder >> sourceChangedTo: aNewText from: aPreviousText with: anUpdateStrategy [
 	astPromise := nil.
-	self notifySourceChangedTo: aNewText with: anUpdateStrategy
+	self 
+		notifySourceChangedTo: aNewText 
+		from: aPreviousText 
+		with: anUpdateStrategy
+]
+
+{ #category : #'event handling' }
+GtTextualCoder >> sourceChangedTo: aNewText with: anUpdateStrategy [
+	self sourceChangedTo: aNewText from: nil with: anUpdateStrategy
 ]
 
 { #category : #'api - accessing' }
