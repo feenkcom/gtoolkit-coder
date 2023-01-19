@@ -111,6 +111,17 @@ GtCoder >> repository [
 	^ nil
 ]
 
+{ #category : #filtering }
+GtCoder >> selectMethodProtocolNamed: aMethodProtocolName [
+	"(GtCoder forClass: GtPhlowProtoView) selectMethodProtocolNamed: #decorating"
+	| classProtocols |
+	classProtocols := navigationModel selectedClass organization protocols.
+	classProtocols
+		detect: [ :aProtocol | aProtocol name = aMethodProtocolName ]
+		ifFound: [ :aProtocol | self navigationModel selectMethodProtocol: aProtocol source: self ]
+		ifNone: [  "ignore" ]
+]
+
 { #category : #'private - accessing' }
 GtCoder >> shortTitle [
 	^ (GtPhlowTitleLabelBuilder 
