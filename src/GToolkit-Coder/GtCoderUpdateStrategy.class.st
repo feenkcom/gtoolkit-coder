@@ -10,10 +10,29 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'announcementSource',
-		'isSynchronous'
+		'isSynchronous',
+		'properties'
 	],
-	#category : 'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #'gt - extensions' }
+GtCoderUpdateStrategy >> gtViewPropertiesFor: aView [
+	<gtView>
+	
+	(properties isNil or: [ properties isEmpty ]) ifTrue: [ ^ aView empty ].
+	
+	^ aView forward
+		title: 'Properties';
+		priority: 100;
+		object: [ properties ];
+		view: #gtItemsFor:
+]
+
+{ #category : #'accessing - properties' }
+GtCoderUpdateStrategy >> hasPropertyNamed: aPropertyName [ 
+	^ self properties includesKey: aPropertyName 
+]
 
 { #category : #accessing }
 GtCoderUpdateStrategy >> isSynchronous [
@@ -33,6 +52,27 @@ GtCoderUpdateStrategy >> makeAsynchronous [
 { #category : #accessing }
 GtCoderUpdateStrategy >> makeSynchronous [
 	isSynchronous := true
+]
+
+{ #category : #'accessing - properties' }
+GtCoderUpdateStrategy >> properties [ 
+	^ properties ifNil: [
+	 	properties := OrderedDictionary new]
+]
+
+{ #category : #'accessing - properties' }
+GtCoderUpdateStrategy >> propertyNamed: aPropertyName [
+	^ self properties at: aPropertyName
+]
+
+{ #category : #'accessing - properties' }
+GtCoderUpdateStrategy >> propertyNamed: aPropertyName ifAbsent: anAbsentBlock [
+	^ self properties at: aPropertyName ifAbsent: anAbsentBlock
+]
+
+{ #category : #'accessing - properties' }
+GtCoderUpdateStrategy >> propertyNamed: aPropertyName put: aValue [
+	^ self properties at: aPropertyName put: aValue
 ]
 
 { #category : #accessing }
