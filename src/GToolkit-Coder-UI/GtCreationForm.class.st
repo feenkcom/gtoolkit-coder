@@ -32,7 +32,21 @@ GtCreationForm >> acceptAction [
 
 { #category : #converting }
 GtCreationForm >> asElement [
-	^ self asGtMagritteViewModel asElement
+	| viewModel |
+	viewModel := self asGtMagritteViewModel.
+	"save action should be available even if unchanged"
+	viewModel actions first
+		installOn: [ :aModel :aButton :aMemento | 
+			aButton
+				withAsyncSinkDo: [ :anElementSink | 
+					anElementSink
+						sink: AsyncPeekSink new;
+						whenUpdate: [ :theButton :aSink | 
+							| aStatus |
+							aStatus := aSink value.
+							theButton enabled: aStatus isValid ].
+					aMemento overallStatus observe: anElementSink ] ].
+	^ viewModel asElement
 ]
 
 { #category : #callbacks }
@@ -60,6 +74,11 @@ GtCreationForm >> commitPackage [
 GtCreationForm >> ghostTextFor: aString [
 	^ BrGhostTextAttribute
 		for: (aString asRopedText glamorousCodeFont foreground: Color lightGray)
+]
+
+{ #category : #accessing }
+GtCreationForm >> hasPackageAndTag [
+	^ true
 ]
 
 { #category : #initialization }
