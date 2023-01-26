@@ -4,7 +4,7 @@ Class {
 	#category : #'GToolkit-Coder-Examples-Diff'
 }
 
-{ #category : #accessing }
+{ #category : #examples }
 GtDiffBuilderExamples >> deletionsAtBeginningExample [
 	<gtExample>
 	| differences from to change |
@@ -22,7 +22,7 @@ GtDiffBuilderExamples >> deletionsAtBeginningExample [
 	^ change
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtDiffBuilderExamples >> deletionsAtEndExample [
 	<gtExample>
 	| differences from to change |
@@ -40,7 +40,7 @@ GtDiffBuilderExamples >> deletionsAtEndExample [
 	^ change
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtDiffBuilderExamples >> deletionsInMiddle [
 	<gtExample>
 	| differences from to change |
@@ -58,7 +58,7 @@ GtDiffBuilderExamples >> deletionsInMiddle [
 	^ change
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtDiffBuilderExamples >> insertionsAtBeginningExample [
 	<gtExample>
 	| differences from to change |
@@ -76,7 +76,7 @@ GtDiffBuilderExamples >> insertionsAtBeginningExample [
 	^ change
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtDiffBuilderExamples >> insertionsAtEndExample [
 	<gtExample>
 	| differences from to change |
@@ -94,7 +94,7 @@ GtDiffBuilderExamples >> insertionsAtEndExample [
 	^ change
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtDiffBuilderExamples >> insertionsInMiddle [
 	<gtExample>
 	| differences from to change |
@@ -112,7 +112,7 @@ GtDiffBuilderExamples >> insertionsInMiddle [
 	^ change
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtDiffBuilderExamples >> multipleChanges [
 	<gtExample>
 	| differences from to change |
@@ -128,7 +128,7 @@ GtDiffBuilderExamples >> multipleChanges [
 	^ change
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtDiffBuilderExamples >> multipleObjectChanges [
 	<gtExample>
 	| differences from to deletedObjects insertedObjects index change |
@@ -162,7 +162,7 @@ GtDiffBuilderExamples >> multipleObjectChanges [
 	^ change
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtDiffBuilderExamples >> noDifferencesExample [
 	<gtExample>
 	| differences from to change |
@@ -177,7 +177,7 @@ GtDiffBuilderExamples >> noDifferencesExample [
 	^ change
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 GtDiffBuilderExamples >> replacementInMiddle [
 	<gtExample>
 	| differences from to change |
@@ -194,5 +194,34 @@ GtDiffBuilderExamples >> replacementInMiddle [
 	self assert: differences first deletionChange stopIndex equals: 10.
 	self assert: differences first insertionChange startIndex equals: 9.
 	self assert: differences first insertionChange stopIndex equals: 10.
+	^ change
+]
+
+{ #category : #examples }
+GtDiffBuilderExamples >> tokenChanges [
+	<gtExample>
+	| differences from to change scannerClass |
+	scannerClass := self class environment at: #GtPharoScanner ifAbsent: [ ^ nil ].
+	from := 'method: arg ^self inject: arg into: [:sum :each | sum + each]'.
+	to := 'method: arg1
+		^ self 
+			inject: arg1 
+			into: [:sum :each | (sum + each)]'.
+	change := GtDiffBuilder
+			computeDifferencesFrom: from
+			to: to
+			using: (GtSmaCCDiffSplitter new scannerClass: scannerClass).
+	differences := change changes.
+	self assert: differences size equals: 4.
+	self assert: differences first isReplacement.
+	self assert: differences first deletionChange objects equals: 'arg'.
+	self assert: differences first insertionChange objects equals: 'arg1'.
+	self assert: differences second isReplacement.
+	self assert: differences second deletionChange objects equals: 'arg'.
+	self assert: differences second insertionChange objects equals: 'arg1'.
+	self assert: differences third isInsertion.
+	self assert: differences third objects equals: '('.
+	self assert: differences fourth isInsertion.
+	self assert: differences fourth objects equals: ')'.
 	^ change
 ]

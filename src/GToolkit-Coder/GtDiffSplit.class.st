@@ -24,6 +24,11 @@ GtDiffSplit >> object [
 ]
 
 { #category : #accessing }
+GtDiffSplit >> range [
+	^ self startIndex printString , '-' , self stopIndex printString
+]
+
+{ #category : #accessing }
 GtDiffSplit >> source [
 	^ source
 ]

@@ -5,9 +5,8 @@ Class {
 }
 
 { #category : #accessing }
-GtInsertionDiffChange >> gtObjectsText [
-	^ self objects asString asRopedText glamorousRegularFont
-		highlight: BrGlamorousColors successBackgroundColor
+GtInsertionDiffChange >> applyAttributesToOutput: aText [
+	(aText from: self startIndex to: self stopIndex) highlight: self highlightColor
 ]
 
 { #category : #accessing }

@@ -34,6 +34,12 @@ GtSourceDiffChange >> gtLiveFor: aView [
 ]
 
 { #category : #accessing }
+GtSourceDiffChange >> gtObjectsText [
+	^ self objects asString asRopedText glamorousRegularFont
+		highlight: self highlightColor
+]
+
+{ #category : #accessing }
 GtSourceDiffChange >> highlightColor [
 	^ self subclassResponsibility
 ]

@@ -16,6 +16,16 @@ GtReplacementDiffChange class >> delete: aDeletionChange andInsert: anInsertionC
 		yourself
 ]
 
+{ #category : #formatting }
+GtReplacementDiffChange >> applyAttributesToInput: aText [
+	deletionChange applyAttributesToInput: aText
+]
+
+{ #category : #formatting }
+GtReplacementDiffChange >> applyAttributesToOutput: aText [
+	insertionChange applyAttributesToOutput: aText
+]
+
 { #category : #accessing }
 GtReplacementDiffChange >> deletedObjects [
 	^ deletionChange objects

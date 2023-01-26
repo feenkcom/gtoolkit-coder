@@ -4,6 +4,14 @@ Class {
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
+{ #category : #formatting }
+GtDiffChange >> applyAttributesToInput: aText [
+]
+
+{ #category : #formatting }
+GtDiffChange >> applyAttributesToOutput: aText [
+]
+
 { #category : #accessing }
 GtDiffChange >> deletedObjects [
 	^ nil

@@ -112,7 +112,10 @@ GtDiffBuilder >> computeDifferences [
 	self skipEqualElementsAtStart.
 	self skipEqualElementsAtEnd.
 	self buildDifferencesList.
-	^ GtCompositeDiffChange forChanges: differences
+	^ GtCompositeDiffChange
+		from: from
+		to: to
+		changes: differences
 ]
 
 { #category : #private }

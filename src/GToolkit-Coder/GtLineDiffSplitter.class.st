@@ -24,15 +24,12 @@ GtLineDiffSplitter >> initialize [
 ]
 
 { #category : #actions }
-GtLineDiffSplitter >> split: aString [
-	| splits |
-	splits := OrderedCollection new.
+GtLineDiffSplitter >> split: aString into: aGtDiffSplits [
 	aString
 		lineIndicesDo: [ :start :end :endWithEOL | 
-			splits
-				add: (GtRangeDiffSplit
+			aGtDiffSplits
+				addSplit: (GtRangeDiffSplit
 						on: aString
 						from: start
-						to: (includeEOLChars ifTrue: [ endWithEOL ] ifFalse: [ end ])) ].
-	^ splits
+						to: (includeEOLChars ifTrue: [ endWithEOL ] ifFalse: [ end ])) ]
 ]

@@ -5,7 +5,8 @@ Class {
 }
 
 { #category : #actions }
-GtNullDiffSplitter >> split: aCollection [
-	^ (1 to: aCollection size)
-		collect: [ :i | GtSingleObjectDiffSplit on: aCollection at: i ]
+GtNullDiffSplitter >> split: aCollection into: aGtDiffSplits [
+	1
+		to: aCollection size
+		do: [ :i | aGtDiffSplits addSplit: (GtSingleObjectDiffSplit on: aCollection at: i) ]
 ]
