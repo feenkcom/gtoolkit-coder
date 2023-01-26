@@ -77,11 +77,20 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 						label: each componentName;
 						stencil: [ | form |
 							form := each new.
-							(GtCreationFormWidget forForm: form)
+							form hasPackageAndTag
+								ifTrue: [ navigationModel
+										selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
+									navigationModel
+										selectedTagDo: [ :aTag | form packageAndTagName tagName: aTag name ] ].
+							((GtCreationFormWidget forForm: form)
 								onAccept: [ :anInstance | 
 									look
 										inUIProcessDo: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
-											look fireEvent: BrDropdownHideWish new ] ] ]) ].
+											look fireEvent: BrDropdownHideWish new ] ]) asElement
+								addShortcut: (BlShortcutWithAction new
+										combination: BlKeyCombination escape;
+										overrideChildren: true;
+										action: [ :anEvent | look inUIProcessDo: [ look fireEvent: BrDropdownHideWish new ] ]) ]) ].
 	^ contentTabs
 ]
 
