@@ -76,6 +76,11 @@ GtCreationForm >> ghostTextFor: aString [
 		for: (aString asRopedText glamorousCodeFont foreground: Color lightGray)
 ]
 
+{ #category : #accessing }
+GtCreationForm >> hasPackageAndTag [
+	^ true
+]
+
 { #category : #initialization }
 GtCreationForm >> initialize [
 	packageAndTagName := GtPackageAndTagName new
