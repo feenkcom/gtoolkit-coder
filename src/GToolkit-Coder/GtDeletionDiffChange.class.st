@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+GtDeletionDiffChange class >> highlightColor [
+	^ BrGlamorousColors errorBackgroundColor
+]
+
+{ #category : #accessing }
 GtDeletionDiffChange >> applyAttributesToInput: aText [
 	(aText from: self startIndex to: self stopIndex) highlight: self highlightColor
 ]
@@ -17,11 +22,6 @@ GtDeletionDiffChange >> deletedObjects [
 { #category : #accessing }
 GtDeletionDiffChange >> deletionChange [
 	^ self
-]
-
-{ #category : #accessing }
-GtDeletionDiffChange >> highlightColor [
-	^ BrGlamorousColors errorBackgroundColor
 ]
 
 { #category : #testing }

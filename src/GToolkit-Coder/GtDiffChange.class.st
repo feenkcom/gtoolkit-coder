@@ -22,6 +22,11 @@ GtDiffChange >> deletionChange [
 	^ nil
 ]
 
+{ #category : #iterating }
+GtDiffChange >> deletionChangesDo: aBlock [
+	self deletionChange ifNotNil: aBlock
+]
+
 { #category : #accessing }
 GtDiffChange >> gtObjectsText [
 	^ '' asRopedText
@@ -35,6 +40,11 @@ GtDiffChange >> insertedObjects [
 { #category : #accessing }
 GtDiffChange >> insertionChange [
 	^ nil
+]
+
+{ #category : #iterating }
+GtDiffChange >> insertionChangesDo: aBlock [
+	self insertionChange ifNotNil: aBlock
 ]
 
 { #category : #testing }
