@@ -9,6 +9,11 @@ Class {
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
+{ #category : #accessing }
+GtSourceDiffChange class >> highlightColor [
+	^ self subclassResponsibility
+]
+
 { #category : #'instance creation' }
 GtSourceDiffChange class >> on: aCollection from: startIndex to: stopIndex [
 	^ self new
@@ -41,7 +46,7 @@ GtSourceDiffChange >> gtObjectsText [
 
 { #category : #accessing }
 GtSourceDiffChange >> highlightColor [
-	^ self subclassResponsibility
+	^ self class highlightColor
 ]
 
 { #category : #accessing }

@@ -146,6 +146,16 @@ GtTextualCoder >> currentSourceText: aText [
 GtTextualCoder >> currentSourceText: aText with: aGtCoderUpdateStragegy [
 	"Set a new source text"
 
+	self 
+		currentSourceText: aText 
+		with: aGtCoderUpdateStragegy 
+		dueTo: nil
+]
+
+{ #category : #'api - text' }
+GtTextualCoder >> currentSourceText: aText with: aGtCoderUpdateStragegy dueTo: aReason [
+	"Set a new source text, giving also a reason for the change"
+
 	self critical: [ 
 		| previousSourceText|
 		previousSourceText := self currentSourceText copy.
@@ -153,7 +163,8 @@ GtTextualCoder >> currentSourceText: aText with: aGtCoderUpdateStragegy [
 		self 
 			sourceChangedTo: aText 
 			from: previousSourceText
-			with: aGtCoderUpdateStragegy ]
+			with: aGtCoderUpdateStragegy
+			dueTo: aReason ]
 ]
 
 { #category : #'api - text' }
@@ -213,14 +224,15 @@ GtTextualCoder >> notifyCorrectionFrom: aFromIndex to: aToIndex with: aString [
 ]
 
 { #category : #'private - notifying' }
-GtTextualCoder >> notifySourceChangedTo: aNewText from: aPreviousText with: anUpdateStragegy [
+GtTextualCoder >> notifySourceChangedTo: aNewText from: aPreviousText with: anUpdateStragegy dueTo: aReason [
 	"Notify the text editor that it should update the text (for example due to refactoring changes)"
 	
 	self announce: (GtCoderSourceCodeChanged new 
 		updateStrategy: anUpdateStragegy;
 		newText: aNewText;
 		previousText: aPreviousText;
-		coder: self)
+		coder: self;
+		reason: aReason)
 ]
 
 { #category : #'private - notifying' }
@@ -268,17 +280,22 @@ GtTextualCoder >> sourceChangedTo: aNewText [
 ]
 
 { #category : #'event handling' }
-GtTextualCoder >> sourceChangedTo: aNewText from: aPreviousText with: anUpdateStrategy [
+GtTextualCoder >> sourceChangedTo: aNewText from: aPreviousText with: anUpdateStrategy dueTo: aReason [
 	astPromise := nil.
 	self 
 		notifySourceChangedTo: aNewText 
 		from: aPreviousText 
 		with: anUpdateStrategy
+		dueTo: aReason
 ]
 
 { #category : #'event handling' }
 GtTextualCoder >> sourceChangedTo: aNewText with: anUpdateStrategy [
-	self sourceChangedTo: aNewText from: nil with: anUpdateStrategy
+	self 
+		sourceChangedTo: aNewText 
+		from: nil 
+		with: anUpdateStrategy
+		dueTo: nil
 ]
 
 { #category : #'api - accessing' }

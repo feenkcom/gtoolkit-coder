@@ -5,13 +5,13 @@ Class {
 }
 
 { #category : #accessing }
-GtInsertionDiffChange >> applyAttributesToOutput: aText [
-	(aText from: self startIndex to: self stopIndex) highlight: self highlightColor
+GtInsertionDiffChange class >> highlightColor [
+	^ BrGlamorousColors successBackgroundColor
 ]
 
 { #category : #accessing }
-GtInsertionDiffChange >> highlightColor [
-	^ BrGlamorousColors successBackgroundColor
+GtInsertionDiffChange >> applyAttributesToOutput: aText [
+	(aText from: self startIndex to: self stopIndex) highlight: self highlightColor
 ]
 
 { #category : #accessing }
