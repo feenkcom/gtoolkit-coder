@@ -48,23 +48,6 @@ GtCoderNavigationTabsStencil >> defaultNavigations [
 		collect
 ]
 
-{ #category : #accessing }
-GtCoderNavigationTabsStencil >> gtAddInterface: look [
-	| contentTabs tabMethods |
-	contentTabs := BrTabGroup new.
-	contentTabs aptitude: BrGlamorousTabGroupAptitude new.
-	contentTabs
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	tabMethods := (Pragma allNamed: #gtCreateComponentTab: from: self class to: Behavior)
-		asSortedCollection: [ :a :b | a arguments first < b arguments first ].
-	tabMethods
-		do:
-			[ :each | contentTabs addTab: (self perform: each method selector with: look) ].
-	^ contentTabs
-]
-
 { #category : #'gt-extensions' }
 GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 	<gtCoderNavigation>
@@ -73,6 +56,42 @@ GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 		title: 'Class Hierarchy';
 		priority: 2;
 		stencil: [ GtCoderNavigationClassHierachyElement new navigationModel: self navigationModel ]
+]
+
+{ #category : #'gt-extensions' }
+GtCoderNavigationTabsStencil >> gtCreationInterface: look [
+	| contentTabs tabClasses |
+	contentTabs := BrTabGroup new.
+	contentTabs aptitude: BrGlamorousTabGroupAptitude new.
+	contentTabs
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	tabClasses := GtCreationForm allSubclasses
+			asSortedCollection: [ :a :b | a priority < b priority ].
+	tabClasses
+		do: [ :each | 
+			contentTabs
+				addTab: (BrTab new
+						aptitude: BrGlamorousTabAptitude new;
+						label: each componentName;
+						stencil: [ | form |
+							form := each new.
+							form hasPackageAndTag
+								ifTrue: [ navigationModel
+										selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
+									navigationModel
+										selectedTagDo: [ :aTag | form packageAndTagName tagName: aTag name ] ].
+							((GtCreationFormWidget forForm: form)
+								onAccept: [ :anInstance | 
+									look
+										inUIProcessDo: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
+											look fireEvent: BrDropdownHideWish new ] ]) asElement
+								addShortcut: (BlShortcutWithAction new
+										combination: BlKeyCombination escape;
+										overrideChildren: true;
+										action: [ :anEvent | look inUIProcessDo: [ look fireEvent: BrDropdownHideWish new ] ]) ]) ].
+	^ contentTabs
 ]
 
 { #category : #'gt-extensions' }
@@ -113,7 +132,7 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 				constraintsDo: [ :c | 
 					c horizontal exact: 400.
 					c vertical exact: 300 ].
-			element addChild: (self gtAddInterface: aDropdown).
+			element addChild: (self gtCreationInterface: aDropdown).
 			element ]
 ]
 
