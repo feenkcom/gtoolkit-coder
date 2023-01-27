@@ -91,7 +91,7 @@ GtTextualCoderEditorElement >> initializeListeners [
 
 	self editor
 		when: BrTextEditorModifiedEvent
-		do: [ :anEvent | self onTextModified ].
+		do: [ :anEvent | self onTextModifiedDueToEvent:  anEvent ].
 
 	self editor
 		when: BrTextEditorCursorChangedEvent 
@@ -228,6 +228,17 @@ GtTextualCoderEditorElement >> onTextModified [
 		sourceText: self text
 		from: self
 		synchronously: true
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onTextModifiedDueToEvent: aTextModifiedEvent [
+	"Is sent when the text changes in the editor. Here we should synchronise the UI and the model. We also receive the event, which can contain the type of change."
+
+	self textualCoderViewModel
+		sourceText: self text
+		from: self
+		synchronously: true
+		dueToEvent: aTextModifiedEvent
 ]
 
 { #category : #'api - textual coder view model' }
