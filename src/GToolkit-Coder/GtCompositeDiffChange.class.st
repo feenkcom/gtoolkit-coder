@@ -45,6 +45,11 @@ GtCompositeDiffChange >> changes: aCollection [
 	changes := aCollection
 ]
 
+{ #category : #iterating }
+GtCompositeDiffChange >> deletionChangesDo: aBlock [
+	changes do: [ :each | each deletionChangesDo: aBlock ]
+]
+
 { #category : #accessing }
 GtCompositeDiffChange >> from [
 	^ from
@@ -74,6 +79,69 @@ GtCompositeDiffChange >> gtChangeViewFor: aView [
 			text: [ :each | each range ]
 			width: 100;
 		column: 'Objects' text: [ :each | each gtObjectsText ]
+]
+
+{ #category : #inspecting }
+GtCompositeDiffChange >> gtListView: aView [
+	<gtView>
+	from isString ifTrue: [ ^ aView empty ].
+	^ aView explicit
+		priority: 10;
+		title: 'List';
+		stencil: [ | pane fromList toList deletedIndices insertedIndices |
+			deletedIndices := Set new.
+			self
+				deletionChangesDo: [ :each | deletedIndices addAll: (each startIndex to: each stopIndex) ].
+			insertedIndices := Set new.
+			self
+				insertionChangesDo: [ :each | insertedIndices addAll: (each startIndex to: each stopIndex) ].
+			pane := BrHorizontalPane new.
+			pane matchParent.
+			pane padding: (BlInsets all: 10).
+			fromList := BrColumnedList new.
+			fromList matchParent.
+			fromList column
+				width: 45;
+				title: 'Index';
+				stencil: [ :each :i | 
+					BrLabel new
+						aptitude: BrGlamorousLabelAptitude new;
+						text: (i asRopedText foreground: Color gray) ].
+			fromList column
+				title: 'Value';
+				stencil: [ :each :i | 
+					| text |
+					text := each gtDisplayText.
+					(deletedIndices includes: i)
+						ifTrue: [ text highlight: GtDeletionDiffChange highlightColor ].
+					BrLabel new
+						aptitude: BrGlamorousLabelAptitude new;
+						text: text ].
+			fromList items: from.
+			toList := BrColumnedList new.
+			toList matchParent.
+			toList column
+				width: 45;
+				title: 'Index';
+				stencil: [ :each :i | 
+					BrLabel new
+						aptitude: BrGlamorousLabelAptitude new;
+						text: (i asRopedText foreground: Color gray) ].
+			toList column
+				title: 'Value';
+				stencil: [ :each :i | 
+					| text |
+					text := each gtDisplayText.
+					(insertedIndices includes: i)
+						ifTrue: [ text highlight: GtInsertionDiffChange highlightColor ].
+					BrLabel new
+						aptitude: BrGlamorousLabelAptitude new;
+						text: text ].
+			toList items: to.
+			pane
+				addChild: fromList;
+				addChild: toList.
+			pane ]
 ]
 
 { #category : #inspecting }
@@ -113,6 +181,11 @@ GtCompositeDiffChange >> gtTextView: aView [
 GtCompositeDiffChange >> initialize [
 	super initialize.
 	changes := #()
+]
+
+{ #category : #iterating }
+GtCompositeDiffChange >> insertionChangesDo: aBlock [
+	changes do: [ :each | each insertionChangesDo: aBlock ]
 ]
 
 { #category : #accessing }

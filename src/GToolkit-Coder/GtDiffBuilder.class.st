@@ -59,11 +59,11 @@ GtDiffBuilder >> addInsertions [
 ]
 
 { #category : #private }
-GtDiffBuilder >> addInsertionsAndDeletionsIgnoring: commonElements [
+GtDiffBuilder >> addInsertionsAndDeletionsIgnoring [
 	[ fromStart <= fromEnd or: [ toStart <= toEnd ] ]
 		whileTrue: [ | deletion insertion start end split |
 			[ fromStart <= fromEnd
-				and: [ (commonElements includes: (split := fromSplits at: fromStart)) not ] ]
+				and: [ (split := fromSplits at: fromStart) hasMatch not ] ]
 				whileTrue: [ start ifNil: [ start := split startIndex ].
 					end := split stopIndex.
 					fromStart := fromStart + 1 ].
@@ -73,8 +73,7 @@ GtDiffBuilder >> addInsertionsAndDeletionsIgnoring: commonElements [
 							from: start
 							to: end ].
 			start := nil.
-			[ toStart <= toEnd
-				and: [ (commonElements includes: (split := toSplits at: toStart)) not ] ]
+			[ toStart <= toEnd and: [ (split := toSplits at: toStart) hasMatch not ] ]
 				whileTrue: [ start ifNil: [ start := split startIndex ].
 					end := split stopIndex.
 					toStart := toStart + 1 ].
@@ -89,10 +88,9 @@ GtDiffBuilder >> addInsertionsAndDeletionsIgnoring: commonElements [
 						ifNil: [ differences add: deletion ]
 						ifNotNil: [ differences
 								add: (GtReplacementDiffChange delete: deletion andInsert: insertion) ] ].
-			[ fromStart <= fromEnd
-				and: [ commonElements includes: (fromSplits at: fromStart) ] ]
+			[ fromStart <= fromEnd and: [ (fromSplits at: fromStart) hasMatch ] ]
 				whileTrue: [ fromStart := fromStart + 1 ].
-			[ toStart <= toEnd and: [ commonElements includes: (toSplits at: toStart) ] ]
+			[ toStart <= toEnd and: [ (toSplits at: toStart) hasMatch ] ]
 				whileTrue: [ toStart := toStart + 1 ] ]
 ]
 
@@ -139,15 +137,14 @@ GtDiffBuilder >> computeLCSElements [
 			| value |
 			(filter includes: (value := fromSplits at: i))
 				ifTrue: [ filteredFrom add: value ] ].
-	commonElements := self computeLCSElementsBetween: filteredFrom and: filteredTo.
-	self addInsertionsAndDeletionsIgnoring: commonElements
+	self computeLCSElementsBetween: filteredFrom and: filteredTo.
+	self addInsertionsAndDeletionsIgnoring
 ]
 
 { #category : #private }
 GtDiffBuilder >> computeLCSElementsBetween: filteredFrom and: filteredTo [
-	| map fromNumbers toNumbers common lcs |
-	common := IdentitySet new.
-	(filteredFrom isEmpty or: [ filteredTo isEmpty ]) ifTrue: [ ^ common ].
+	| map fromNumbers toNumbers lcs |
+	(filteredFrom isEmpty or: [ filteredTo isEmpty ]) ifTrue: [ ^ self ].
 	map := Dictionary new.
 	fromNumbers := filteredFrom
 			collect: [ :each | map at: each ifAbsentPut: [ map size ] ].
@@ -155,11 +152,9 @@ GtDiffBuilder >> computeLCSElementsBetween: filteredFrom and: filteredTo [
 			collect: [ :each | map at: each ifAbsentPut: [ map size ] ].
 	lcs := self lcsFor: fromNumbers and: toNumbers.
 	[ lcs notNil ]
-		whileTrue: [ common
-				add: (filteredFrom at: lcs first);
-				add: (filteredTo at: lcs second).
-			lcs := lcs last ].
-	^ common
+		whileTrue: [ (filteredFrom at: lcs first) match.
+			(filteredTo at: lcs second) match.
+			lcs := lcs last ]
 ]
 
 { #category : #accessing }
@@ -223,11 +218,16 @@ GtDiffBuilder >> skipEqualElementsAtEnd [
 
 { #category : #private }
 GtDiffBuilder >> skipEqualElementsAtStart [
+	| fromObject toObject |
 	fromStart := 1.
 	[ fromStart <= fromSplits size
 		and: [ fromStart <= toSplits size
-				and: [ (fromSplits at: fromStart) = (toSplits at: fromStart) ] ] ]
-		whileTrue: [ fromStart := fromStart + 1 ].
+				and: [ fromObject := fromSplits at: fromStart.
+					toObject := toSplits at: fromStart.
+					fromObject = toObject ] ] ]
+		whileTrue: [ fromObject match.
+			toObject match.
+			fromStart := fromStart + 1 ].
 	toStart := fromStart
 ]
 

@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'source',
-		'startIndex'
+		'startIndex',
+		'matched'
 	],
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
@@ -13,9 +14,25 @@ GtDiffSplit >> = anObject [
 	^ self class = anObject class ifTrue: [ self object = anObject object ]
 ]
 
+{ #category : #testing }
+GtDiffSplit >> hasMatch [
+	^ matched
+]
+
 { #category : #comparing }
 GtDiffSplit >> hash [
 	^ self object hash
+]
+
+{ #category : #initialization }
+GtDiffSplit >> initialize [
+	super initialize.
+	matched := false
+]
+
+{ #category : #accessing }
+GtDiffSplit >> match [
+	matched := true
 ]
 
 { #category : #accessing }
