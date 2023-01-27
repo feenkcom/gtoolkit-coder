@@ -86,7 +86,9 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 								onAccept: [ :anInstance | 
 									look
 										inUIProcessDo: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
-											look fireEvent: BrDropdownHideWish new ] ]) asElement
+											look fireEvent: BrDropdownHideWish new ] ];
+								onElementCreated: [ :aFrame | (aFrame childNamed: #field) requestFocus ])
+								asElement
 								addShortcut: (BlShortcutWithAction new
 										combination: BlKeyCombination escape;
 										overrideChildren: true;
