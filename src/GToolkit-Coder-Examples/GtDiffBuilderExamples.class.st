@@ -55,6 +55,7 @@ GtDiffBuilderExamples >> deletionsInMiddle [
 	self assert: differences first isDeletion.
 	self assert: differences first startIndex equals: 9.
 	self assert: differences first stopIndex equals: 12.
+	self assert: differences first newIndex equals: 9.
 	^ change
 ]
 
@@ -109,6 +110,7 @@ GtDiffBuilderExamples >> insertionsInMiddle [
 	self assert: differences first isInsertion.
 	self assert: differences first startIndex equals: 9.
 	self assert: differences first stopIndex equals: 12.
+	self assert: differences first originalIndex equals: 9.
 	^ change
 ]
 
@@ -194,6 +196,35 @@ GtDiffBuilderExamples >> replacementInMiddle [
 	self assert: differences first deletionChange stopIndex equals: 10.
 	self assert: differences first insertionChange startIndex equals: 9.
 	self assert: differences first insertionChange stopIndex equals: 10.
+	^ change
+]
+
+{ #category : #examples }
+GtDiffBuilderExamples >> reversedTokenChanges [
+	<gtExample>
+	| differences from to change scannerClass |
+	scannerClass := self class environment at: #GtPharoScanner ifAbsent: [ ^ nil ].
+	to := 'method: arg ^self inject: arg into: [:sum :each | sum + each]'.
+	from := 'method: arg1
+		^ self 
+			inject: arg1 
+			into: [:sum :each | (sum + each)]'.
+	change := GtDiffBuilder
+			computeDifferencesFrom: from
+			to: to
+			using: (GtSmaCCDiffSplitter new scannerClass: scannerClass).
+	differences := change changes.
+	self assert: differences size equals: 4.
+	self assert: differences first isReplacement.
+	self assert: differences first deletionChange objects equals: 'arg1'.
+	self assert: differences first insertionChange objects equals: 'arg'.
+	self assert: differences second isReplacement.
+	self assert: differences second deletionChange objects equals: 'arg1'.
+	self assert: differences second insertionChange objects equals: 'arg'.
+	self assert: differences third isDeletion.
+	self assert: differences third objects equals: '('.
+	self assert: differences fourth isDeletion.
+	self assert: differences fourth objects equals: ')'.
 	^ change
 ]
 

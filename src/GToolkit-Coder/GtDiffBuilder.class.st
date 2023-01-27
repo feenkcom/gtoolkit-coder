@@ -36,10 +36,13 @@ GtDiffBuilder >> addDeletions [
 			ifTrue: [ (fromSplits at: fromEnd) stopIndex ]
 			ifFalse: [ from size ].
 	differences
-		add: (GtDeletionDiffChange
+		add: ((GtDeletionDiffChange
 				on: from
 				from: startIndex
 				to: stopIndex)
+				newIndex: (toStart > toSplits size
+						ifTrue: [ to size + 1 ]
+						ifFalse: [ (toSplits at: toStart) startIndex ]))
 ]
 
 { #category : #private }
@@ -52,16 +55,20 @@ GtDiffBuilder >> addInsertions [
 			ifTrue: [ (toSplits at: toEnd) stopIndex ]
 			ifFalse: [ to size ].
 	differences
-		add: (GtInsertionDiffChange
+		add: ((GtInsertionDiffChange
 				on: to
 				from: startIndex
 				to: stopIndex)
+				originalIndex: (fromStart > fromSplits size
+						ifTrue: [ from size + 1 ]
+						ifFalse: [ (fromSplits at: fromStart) startIndex ]))
 ]
 
 { #category : #private }
 GtDiffBuilder >> addInsertionsAndDeletionsIgnoring [
 	[ fromStart <= fromEnd or: [ toStart <= toEnd ] ]
-		whileTrue: [ | deletion insertion start end split |
+		whileTrue: [ | deletion insertion start end split fromTop |
+			fromTop := fromStart.
 			[ fromStart <= fromEnd
 				and: [ (split := fromSplits at: fromStart) hasMatch not ] ]
 				whileTrue: [ start ifNil: [ start := split startIndex ].
@@ -71,7 +78,11 @@ GtDiffBuilder >> addInsertionsAndDeletionsIgnoring [
 				ifNotNil: [ deletion := GtDeletionDiffChange
 							on: from
 							from: start
-							to: end ].
+							to: end.
+					deletion
+						newIndex: (toStart > toSplits size
+								ifTrue: [ to size + 1 ]
+								ifFalse: [ (toSplits at: toStart) startIndex ]) ].
 			start := nil.
 			[ toStart <= toEnd and: [ (split := toSplits at: toStart) hasMatch not ] ]
 				whileTrue: [ start ifNil: [ start := split startIndex ].
@@ -81,17 +92,22 @@ GtDiffBuilder >> addInsertionsAndDeletionsIgnoring [
 				ifNotNil: [ insertion := GtInsertionDiffChange
 							on: to
 							from: start
-							to: end ].
+							to: end.
+					insertion
+						originalIndex: (fromTop > fromSplits size
+								ifTrue: [ from size + 1 ]
+								ifFalse: [ (fromSplits at: fromTop) startIndex ]) ].
 			deletion
 				ifNil: [ differences add: insertion ]
 				ifNotNil: [ insertion
 						ifNil: [ differences add: deletion ]
 						ifNotNil: [ differences
 								add: (GtReplacementDiffChange delete: deletion andInsert: insertion) ] ].
-			[ fromStart <= fromEnd and: [ (fromSplits at: fromStart) hasMatch ] ]
-				whileTrue: [ fromStart := fromStart + 1 ].
-			[ toStart <= toEnd and: [ (toSplits at: toStart) hasMatch ] ]
-				whileTrue: [ toStart := toStart + 1 ] ]
+			[ fromStart <= fromEnd
+				and: [ toStart <= toEnd
+						and: [ (fromSplits at: fromStart) hasMatch and: [ (toSplits at: toStart) hasMatch ] ] ] ]
+				whileTrue: [ fromStart := fromStart + 1.
+					toStart := toStart + 1 ] ]
 ]
 
 { #category : #private }
@@ -118,7 +134,7 @@ GtDiffBuilder >> computeDifferences [
 
 { #category : #private }
 GtDiffBuilder >> computeLCSElements [
-	| filter filteredFrom filteredTo commonElements |
+	| filter filteredFrom filteredTo |
 	filter := Set new.
 	fromStart to: fromEnd do: [ :i | filter add: (fromSplits at: i) ].
 	filteredTo := OrderedCollection new.

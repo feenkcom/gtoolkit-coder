@@ -8,13 +8,23 @@ Class {
 		'rightLast',
 		'isDifference'
 	],
-	#category : 'GToolkit-Coder-UI-Diff'
+	#category : #'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #'instance creation' }
 GtSyncScrollRange class >> left: leftInteger right: rightInteger [
 	^ self new
 		initializeLeft: leftInteger right: rightInteger;
+		yourself
+]
+
+{ #category : #'instance creation' }
+GtSyncScrollRange class >> leftFirst: leftFirst leftLast: leftLast rightFirst: rightFirst rightLast: rightLast [
+	^ self new
+		leftFirst: leftFirst;
+		leftLast: leftLast;
+		rightFirst: rightFirst;
+		rightLast: rightLast;
 		yourself
 ]
 
@@ -51,6 +61,11 @@ GtSyncScrollRange >> advanceRight [
 		yourself
 ]
 
+{ #category : #accessing }
+GtSyncScrollRange >> beDifferent [
+	isDifference := true
+]
+
 { #category : #'initialize-release' }
 GtSyncScrollRange >> initialize [
 	super initialize.
@@ -80,13 +95,38 @@ GtSyncScrollRange >> leftFirst [
 ]
 
 { #category : #accessing }
+GtSyncScrollRange >> leftFirst: anInteger [
+	leftFirst := anInteger
+]
+
+{ #category : #accessing }
 GtSyncScrollRange >> leftLast [
 	^ leftLast
 ]
 
 { #category : #accessing }
+GtSyncScrollRange >> leftLast: anInteger [
+	leftLast := anInteger
+]
+
+{ #category : #accessing }
+GtSyncScrollRange >> leftRangeDisplayString [
+	^ leftFirst printString , '-' , leftLast printString
+]
+
+{ #category : #accessing }
 GtSyncScrollRange >> leftSize [
 	^ leftLast - leftFirst
+]
+
+{ #category : #'initialize-release' }
+GtSyncScrollRange >> markDifferent [
+	isDifference := true
+]
+
+{ #category : #'initialize-release' }
+GtSyncScrollRange >> markSame [
+	isDifference := false
 ]
 
 { #category : #syncing }
@@ -129,8 +169,23 @@ GtSyncScrollRange >> rightFirst [
 ]
 
 { #category : #accessing }
+GtSyncScrollRange >> rightFirst: anInteger [
+	rightFirst := anInteger
+]
+
+{ #category : #accessing }
 GtSyncScrollRange >> rightLast [
 	^ rightLast
+]
+
+{ #category : #accessing }
+GtSyncScrollRange >> rightLast: anInteger [
+	rightLast := anInteger
+]
+
+{ #category : #accessing }
+GtSyncScrollRange >> rightRangeDisplayString [
+	^ rightFirst printString , '-' , rightLast printString
 ]
 
 { #category : #accessing }

@@ -1,6 +1,9 @@
 Class {
 	#name : #GtInsertionDiffChange,
 	#superclass : #GtSourceDiffChange,
+	#instVars : [
+		'originalIndex'
+	],
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
@@ -11,7 +14,11 @@ GtInsertionDiffChange class >> highlightColor [
 
 { #category : #accessing }
 GtInsertionDiffChange >> applyAttributesToOutput: aText [
-	(aText from: self startIndex to: self stopIndex) highlight: self highlightColor
+	aText
+		attribute: (BlTextHighlightAttribute paint: self highlightColor)
+				beNotOverwritableByStyler
+		from: self startIndex
+		to: self stopIndex.
 ]
 
 { #category : #accessing }
@@ -27,4 +34,14 @@ GtInsertionDiffChange >> insertionChange [
 { #category : #testing }
 GtInsertionDiffChange >> isInsertion [
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+GtInsertionDiffChange >> originalIndex [
+	^ originalIndex
+]
+
+{ #category : #accessing }
+GtInsertionDiffChange >> originalIndex: anInteger [
+	originalIndex := anInteger
 ]
