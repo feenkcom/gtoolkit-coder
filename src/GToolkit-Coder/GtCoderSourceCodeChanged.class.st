@@ -9,7 +9,8 @@ Class {
 	#instVars : [
 		'updateStragegy',
 		'newText',
-		'previousText'
+		'previousText',
+		'reason'
 	],
 	#category : #'GToolkit-Coder-Event'
 }
@@ -40,6 +41,16 @@ GtCoderSourceCodeChanged >> previousText [
 { #category : #accessing }
 GtCoderSourceCodeChanged >> previousText: aText [
 	previousText := aText
+]
+
+{ #category : #accessing }
+GtCoderSourceCodeChanged >> reason [
+	^ reason
+]
+
+{ #category : #accessing }
+GtCoderSourceCodeChanged >> reason: anObject [
+	reason := anObject
 ]
 
 { #category : #accessing }

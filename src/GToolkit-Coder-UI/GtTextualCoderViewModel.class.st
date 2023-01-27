@@ -705,12 +705,22 @@ GtTextualCoderViewModel >> sourceText [
 ]
 
 { #category : #'api - text' }
-GtTextualCoderViewModel >> sourceText: aNewSourceText from: aSourceObject	 synchronously: isSynchronous [
+GtTextualCoderViewModel >> sourceText: aNewSourceText from: aSourceObject synchronously: isSynchronous [
+	self 
+		sourceText: aNewSourceText 
+		from: aSourceObject 
+		synchronously: isSynchronous  
+		dueToEvent: nil
+]
+
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> sourceText: aNewSourceText from: aSourceObject synchronously: isSynchronous  dueToEvent: aTextModifiedEvent [
 	self coderModel
 		currentSourceText: aNewSourceText
 		with: (GtCoderUpdateStrategy new
 			source: aSourceObject;
 			isSynchronous: isSynchronous)
+		dueTo: aTextModifiedEvent
 ]
 
 { #category : #'api - styled text' }
