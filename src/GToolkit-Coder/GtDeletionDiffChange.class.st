@@ -1,6 +1,9 @@
 Class {
 	#name : #GtDeletionDiffChange,
 	#superclass : #GtSourceDiffChange,
+	#instVars : [
+		'newIndex'
+	],
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
@@ -11,7 +14,11 @@ GtDeletionDiffChange class >> highlightColor [
 
 { #category : #accessing }
 GtDeletionDiffChange >> applyAttributesToInput: aText [
-	(aText from: self startIndex to: self stopIndex) highlight: self highlightColor
+	aText
+		attribute: (BlTextHighlightAttribute paint: self highlightColor)
+				beNotOverwritableByStyler
+		from: self startIndex
+		to: self stopIndex
 ]
 
 { #category : #accessing }
@@ -27,4 +34,14 @@ GtDeletionDiffChange >> deletionChange [
 { #category : #testing }
 GtDeletionDiffChange >> isDeletion [
 	^ true
+]
+
+{ #category : #accessing }
+GtDeletionDiffChange >> newIndex [
+	^ newIndex
+]
+
+{ #category : #accessing }
+GtDeletionDiffChange >> newIndex: anInteger [
+	newIndex := anInteger
 ]
