@@ -151,30 +151,7 @@ GtCompositeDiffChange >> gtTextView: aView [
 	^ aView explicit
 		priority: 10;
 		title: 'Text';
-		stencil: [ | pane fromText toText fromEditor toEditor |
-			pane := BrHorizontalPane new.
-			pane matchParent.
-			pane padding: (BlInsets all: 10).
-			fromText := from asRopedText glamorousRegularFont.
-			toText := to asRopedText glamorousRegularFont.
-			self applyAttributesToInput: fromText.
-			self applyAttributesToOutput: toText.
-			fromEditor := BrEditor new
-					focusability: BlFocusability none;
-					beReadOnlyWithSelection;
-					matchParent;
-					aptitude: BrGlamorousCodeEditorAptitude.
-			fromEditor editor text: fromText.
-			toEditor := BrEditor new
-					focusability: BlFocusability none;
-					beReadOnlyWithSelection;
-					matchParent;
-					aptitude: BrGlamorousCodeEditorAptitude.
-			toEditor editor text: toText.
-			pane
-				addChild: fromEditor;
-				addChild: toEditor.
-			pane ]
+		stencil: [ (GtDiffElement1 on: self) addAptitude: GtDiffFlatAptitude ]
 ]
 
 { #category : #initialization }
