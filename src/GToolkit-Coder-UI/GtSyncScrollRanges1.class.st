@@ -77,7 +77,7 @@ GtSyncScrollRanges1 class >> reversedMultilineCode [
 
 { #category : #initialization }
 GtSyncScrollRanges1 >> addDestinationLineChangesFrom: aCompositeChange to: changedLines [
-	| lineNumber index |
+	| lineNumber index lineNumbers |
 	lineNumber := 0.
 	index := 1.
 	aCompositeChange to
@@ -102,7 +102,8 @@ GtSyncScrollRanges1 >> addDestinationLineChangesFrom: aCompositeChange to: chang
 			index > aCompositeChange changes size ifTrue: [ ^ self ].
 			previousIndex ~= index ] whileTrue.
 			lineNumber := lineNumber + 1 ].
-	(changedLines at: aCompositeChange changes last) add: lineNumber
+	lineNumbers := changedLines at: aCompositeChange changes last.
+	[ lineNumbers size < 4 ] whileTrue: [ lineNumbers add: lineNumber ]
 ]
 
 { #category : #initialization }
@@ -124,7 +125,7 @@ GtSyncScrollRanges1 >> addOriginalLineChangesFrom: aCompositeChange to: changedL
 										ifAbsentPut: [ OrderedCollection with: lineNumber with: lineNumber ].
 									index := index + 1 ] ] ]
 				ifNotNil: [ :change | 
-					change startIndex < endWithCR
+					change startIndex <= endWithCR
 						ifTrue: [ changedLines
 								at: currentChange
 								ifAbsentPut: [ OrderedCollection with: lineNumber ] ].
@@ -176,8 +177,9 @@ GtSyncScrollRanges1 >> addRanges: changedRanges fromChanges: aCompositeChange [
 GtSyncScrollRanges1 >> buildFromChanges: aCompositeChange [
 	| changedLines changedRanges |
 	changedLines := IdentityDictionary new.
-	self addOriginalLineChangesFrom: aCompositeChange to: changedLines.
-	self addDestinationLineChangesFrom: aCompositeChange to: changedLines.
+	aCompositeChange changes notEmpty
+		ifTrue: [ self addOriginalLineChangesFrom: aCompositeChange to: changedLines.
+			self addDestinationLineChangesFrom: aCompositeChange to: changedLines ].
 	changedRanges := changedLines values
 			asSortedCollection: [ :a :b | a first < b first or: [ a first = b first and: [ a third < b third ] ] ].
 	changedRanges := self mergeRanges: changedRanges.
