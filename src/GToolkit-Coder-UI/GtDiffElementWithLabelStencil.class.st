@@ -56,20 +56,19 @@ GtDiffElementWithLabelStencil >> createFromLabel [
 { #category : #'building - widgets' }
 GtDiffElementWithLabelStencil >> createPanesDiffElement [
 	| diffWrapper |
-	
 	diffWrapper := BrVerticalPane new.
 	diffWrapper margin: (BlInsets all: 3).
 	diffWrapper hMatchParent.
 	diffWrapper vFitContent.
-	
-	diffWrapper 
-		addChild: ((GtEpiceaDiffElement on: self diffBuilder) 
-			aptitude: GtDiffFlatAptitude;
-			vFitContent;
-			beSmallSize).
+
+	diffWrapper
+		addChild: ((GtEpiceaDiffElement onDiff: self diffBuilder)
+				aptitude: GtDiffFlatAptitude;
+				vFitContent;
+				beSmallSize).
 
 	diffWrapper addAptitude: (BrShadowAptitude new width: 1).
-	
+
 	^ diffWrapper
 ]
 
