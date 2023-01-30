@@ -151,7 +151,7 @@ GtCompositeDiffChange >> gtTextView: aView [
 	^ aView explicit
 		priority: 10;
 		title: 'Text';
-		stencil: [ (GtDiffElement1 on: self) addAptitude: GtDiffFlatAptitude ]
+		stencil: [ (GtDiffElement onChange: self) addAptitude: GtDiffFlatAptitude ]
 ]
 
 { #category : #initialization }

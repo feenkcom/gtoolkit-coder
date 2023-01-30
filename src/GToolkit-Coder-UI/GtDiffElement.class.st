@@ -7,94 +7,55 @@ Class {
 		'leftElement',
 		'rightElement',
 		'syncScrollRanges',
-		'diff',
 		'outlines',
-		'separatorElement'
+		'separatorElement',
+		'styler'
 	],
 	#category : #'GToolkit-Coder-UI-Diff'
 }
 
-{ #category : #examples }
-GtDiffElement class >> example [
-	<gtExample>
-
-	^ self on: self exampleDiff
-]
-
-{ #category : #examples }
-GtDiffElement class >> exampleDiff [
-	<gtExample>
-	^ TextDiffBuilder from: self originalString to: self newString
-]
-
-{ #category : #examples }
-GtDiffElement class >> exampleFlat [
-	<gtExample>
-
-	^ (self on: self exampleDiff) aptitude: GtDiffFlatAptitude
-]
-
-{ #category : #examples }
-GtDiffElement class >> exampleShadow [
-	<gtExample>
-
-	^ (self on: self exampleDiff) aptitude: GtDiffShadowAptitude
-]
-
-{ #category : #examples }
-GtDiffElement class >> newString [
-	<gtExample>
-	^ String
-		streamContents: [ :str | 
-			1 to: 1000 by: 6 do: [ :i | 
-				str
-					print: i;
-					cr;
-					print: i + 1;
-					cr;
-					print: i + 2;
-					cr ] ]
+{ #category : #'instance creation' }
+GtDiffElement class >> on: anObject [
+	self
+		deprecated: 'Please use onDiff: instead.'
+		transformWith: '`@receiver on: `@arg' -> '`@receiver onDiff: `@arg'.
+	^ self onDiff: anObject
 ]
 
 { #category : #'instance creation' }
-GtDiffElement class >> on: aDiffBuilder [
+GtDiffElement class >> onChange: aCompositeDiffChange [
+	^ self new
+		change: aCompositeDiffChange;
+		yourself
+]
+
+{ #category : #'instance creation' }
+GtDiffElement class >> onDiff: aDiffBuilder [
 	^ self new
 		diff: aDiffBuilder;
 		yourself
 ]
 
-{ #category : #examples }
-GtDiffElement class >> originalString [
-	<gtExample>
-	^ String
-		streamContents: [ :str | 
-			1 to: 1000 by: 5 do: [ :i | 
-				str
-					print: i;
-					cr;
-					print: i + 1;
-					cr;
-					print: i + 2;
-					cr ] ]
-]
-
-{ #category : #private }
-GtDiffElement >> buildInterface [
-	syncScrollRanges := GtSyncScrollRanges createFromDiff: diff.
-
-	leftElement text: self previousRopedText.
-	diff newStyler ifNotNil: [ :aStyler | leftElement styler: aStyler ].
-
-	rightElement text: self newRopedText.
-	diff newStyler ifNotNil: [ :aStyler | rightElement styler: aStyler ].
-
+{ #category : #initialize }
+GtDiffElement >> change: aCompositeDiffChange [
+	| text |
+	text := aCompositeDiffChange from asRopedText glamorousCodeFont.
+	aCompositeDiffChange applyAttributesToInput: text.
+	leftElement text: text.
+	text := aCompositeDiffChange to asRopedText glamorousCodeFont.
+	aCompositeDiffChange applyAttributesToOutput: text.
+	rightElement text: text.
+	syncScrollRanges := GtSyncScrollRanges createFromChange: aCompositeDiffChange.
 	self updateOutlines
 ]
 
 { #category : #initialize }
 GtDiffElement >> diff: aDiffBuilder [
-	diff := aDiffBuilder.
-	self buildInterface
+	syncScrollRanges := GtSyncScrollRanges createFromDiff: aDiffBuilder.
+	leftElement text: aDiffBuilder previousRopedText.
+	rightElement text: aDiffBuilder newRopedText.
+	aDiffBuilder newStyler ifNotNil: [ :aStyler | self styler: aStyler ].
+	self updateOutlines
 ]
 
 { #category : #'event handling' }
@@ -206,11 +167,6 @@ GtDiffElement >> leftTopFor: anInteger [
 	^ element bounds top + leftElement bounds top max: 0
 ]
 
-{ #category : #private }
-GtDiffElement >> newRopedText [
-	^ diff newRopedText
-]
-
 { #category : #initialize }
 GtDiffElement >> newSeparatorElement [
 	^ BlElement new
@@ -295,11 +251,6 @@ GtDiffElement >> paintMeAndChildrenOn: aCompositorPainter offset: anOffset [
 						draw ] ]
 ]
 
-{ #category : #private }
-GtDiffElement >> previousRopedText [
-	^ diff previousRopedText
-]
-
 { #category : #'event handling' }
 GtDiffElement >> rightBottomFor: anInteger [
 	| range element |
@@ -352,6 +303,19 @@ GtDiffElement >> rightTopFor: anInteger [
 	anInteger > range last ifTrue: [ ^ self height ].
 	element := rightElement children at: anInteger - range first + 1.
 	^ element bounds top + rightElement bounds top max: 0
+]
+
+{ #category : #accessing }
+GtDiffElement >> styler [
+	^ styler
+]
+
+{ #category : #accessing }
+GtDiffElement >> styler: anObject [
+	styler := anObject.
+	styler
+		ifNotNil: [ leftElement styler: styler.
+			rightElement styler: styler ]
 ]
 
 { #category : #'event handling' }
