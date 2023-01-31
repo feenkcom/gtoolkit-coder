@@ -4,11 +4,22 @@ Class {
 	#instVars : [
 		'fromLabelText',
 		'toLabelText',
-		'diffBuilder',
-		'shouldHideDiff'
+		'shouldHideDiff',
+		'change',
+		'styler'
 	],
 	#category : #'GToolkit-Coder-UI-Diff'
 }
+
+{ #category : #accessing }
+GtDiffElementWithLabelStencil >> change [
+	^ change
+]
+
+{ #category : #accessing }
+GtDiffElementWithLabelStencil >> change: aGtCompositeDiffChange [
+	change := aGtCompositeDiffChange
+]
 
 { #category : #'api - instantiation' }
 GtDiffElementWithLabelStencil >> create [
@@ -62,8 +73,9 @@ GtDiffElementWithLabelStencil >> createPanesDiffElement [
 	diffWrapper vFitContent.
 
 	diffWrapper
-		addChild: ((GtEpiceaDiffElement onDiff: self diffBuilder)
+		addChild: ((GtEpiceaDiffElement onChange: self change)
 				aptitude: GtDiffFlatAptitude;
+				styler: styler;
 				vFitContent;
 				beSmallSize).
 
@@ -79,17 +91,6 @@ GtDiffElementWithLabelStencil >> createToLabel [
 		text: (self toLabelText asRopedText glamorousCodeSmallSize
 				foreground: BrGlamorousColors defaultButtonTextColor);
 	 	hMatchParent 
-]
-
-{ #category : #accessing }
-GtDiffElementWithLabelStencil >> diffBuilder [
-	^ diffBuilder
-]
-
-{ #category : #accessing }
-GtDiffElementWithLabelStencil >> diffBuilder: anObject [
-
-	diffBuilder := anObject
 ]
 
 { #category : #accessing }
@@ -117,6 +118,16 @@ GtDiffElementWithLabelStencil >> shouldHideDiff [
 GtDiffElementWithLabelStencil >> shouldHideDiff: anObject [
 
 	shouldHideDiff := anObject
+]
+
+{ #category : #accessing }
+GtDiffElementWithLabelStencil >> styler [
+	^ styler
+]
+
+{ #category : #accessing }
+GtDiffElementWithLabelStencil >> styler: anObject [
+	styler := anObject
 ]
 
 { #category : #accessing }

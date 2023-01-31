@@ -98,11 +98,17 @@ GtLocalVersion >> localVersion: aLocalVersion [
 
 { #category : #accessing }
 GtLocalVersion >> updateContent [
-	| previousContent newContent |
+	| previousContent newContent change styler |
 	previousContent := compiledMethod sourceCode.
 	newContent := localVersion sourceCode.
 
 	content removeChildren.
+
+	change := GtDiffBuilder
+			computeDifferencesFrom: previousContent
+			to: newContent
+			using: GtSmaCCDiffSplitter forPharo.
+	styler := GtCodeDiffRBTextStyler new.
 
 	content
 		addChild: (BrLabel new
@@ -111,8 +117,8 @@ GtLocalVersion >> updateContent [
 		addChild: (GtDiffElementWithLabelStencil new
 				fromLabelText: 'Current';
 				toLabelText: 'Version';
-				diffBuilder: ((GtCodeDiffBuilder from: previousContent to: newContent) isMethod: true))
-				create;
+				change: change;
+				styler: styler) create;
 		addChild: (BrFrame new
 				addChild: (BrButton new
 						icon: BrGlamorousVectorIcons accept;
