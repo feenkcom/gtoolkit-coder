@@ -3,7 +3,8 @@ Class {
 	#superclass : #BrStencil,
 	#instVars : [
 		'navigations',
-		'navigationModel'
+		'navigationModel',
+		'formCache'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
@@ -48,6 +49,16 @@ GtCoderNavigationTabsStencil >> defaultNavigations [
 		collect
 ]
 
+{ #category : #accessing }
+GtCoderNavigationTabsStencil >> formCache [
+	^ formCache
+]
+
+{ #category : #accessing }
+GtCoderNavigationTabsStencil >> formCache: anObject [
+	formCache := anObject
+]
+
 { #category : #'gt-extensions' }
 GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 	<gtCoderNavigation>
@@ -75,24 +86,22 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 				addTab: (BrTab new
 						aptitude: BrGlamorousTabAptitude new;
 						label: each componentName;
-						stencil: [ | form |
-							form := each new.
-							form hasPackageAndTag
-								ifTrue: [ navigationModel
-										selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
-									navigationModel
-										selectedTagDo: [ :aTag | form packageAndTagName tagName: aTag name ] ].
-							((GtCreationFormWidget forForm: form)
-								onAccept: [ :anInstance | 
-									look
-										inUIProcessDo: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
-											look fireEvent: BrDropdownHideWish new ] ];
-								onElementCreated: [ :aFrame | (aFrame childNamed: #field) requestFocus ])
-								asElement
-								addShortcut: (BlShortcutWithAction new
-										combination: BlKeyCombination escape;
-										overrideChildren: true;
-										action: [ :anEvent | look inUIProcessDo: [ look fireEvent: BrDropdownHideWish new ] ]) ]) ].
+						stencil: [ (self formCache
+								at: each
+								ifAbsentPut: [ | form |
+									form := each new.
+									form hasPackageAndTag
+										ifTrue: [ navigationModel
+												selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
+											navigationModel
+												selectedTagDo: [ :aTag | form packageAndTagName tagName: aTag name ] ].
+									((GtCreationFormWidget forForm: form)
+										onAccept: [ :anInstance | 
+											look
+												inUIProcessDo: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
+													look fireEvent: BrDropdownHideWish new ] ];
+										onElementCreated: [ :aFrame | (aFrame childNamed: #field) requestFocus ])
+										asElement ]) removeFromParent ]) ].
 	^ contentTabs
 ]
 
@@ -136,6 +145,11 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 					c vertical exact: 300 ].
 			element addChild: (self gtCreationInterface: aDropdown).
 			element ]
+]
+
+{ #category : #accessing }
+GtCoderNavigationTabsStencil >> initialize [
+	formCache := Dictionary new.
 ]
 
 { #category : #accessing }
