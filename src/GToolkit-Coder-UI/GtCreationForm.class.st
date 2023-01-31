@@ -26,7 +26,7 @@ GtCreationForm >> acceptAction [
 		action: [ :aModel :aButton | 
 			[ | aValue |
 			aValue := self commit.
-			onAccept ifNotNil: [ onAccept value: aValue ] ] on: Error do: #inspect ];
+			onAccept ifNotNil: [ onAccept value: aValue ] ] on: Error do: #debug ];
 		beCommitAction
 ]
 
