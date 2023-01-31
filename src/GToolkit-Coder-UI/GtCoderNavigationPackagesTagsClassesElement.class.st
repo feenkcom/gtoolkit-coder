@@ -40,6 +40,26 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 ]
 
 { #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> addPreviewButtonFor: refactoring to: elem [
+	| button |
+	button := GtRefactoringsPreviewButton new.
+	button vMatchParent.
+	button refactorings: [ {refactoring} ].
+	button cancelBlock: [  ].
+	button
+		padding: (BlInsets
+				top: 1
+				right: 4
+				bottom: 0
+				left: 4).
+	button beMiniSize.
+	button
+		when: GtRefactoringsAppliedEvent
+		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
+	^ elem addChild: button as: #preview
+]
+
+{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildCategorySlotTabs [
 	| aTabGroup |
 	aTabGroup := BrTabGroup new
@@ -126,13 +146,10 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderB
 	instanceGroup := BrGroup new
 			domainObject: 'instance slots';
 			stream: #() asAsyncStream;
-			itemStencil: [ | label |
-				label := BrLabel new
-						hMatchParent;
-						vFitContent;
-						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude;
-						when: BlClickEvent do: clickBlock ];
+			itemStencil: [ BrHorizontalPane new
+					hMatchParent;
+					vFitContent;
+					when: BlClickEvent do: clickBlock ];
 			itemDataBinder: binderBlock;
 			shouldShowWithoutItems: false.
 	classSlotGroup := instanceGroup copy domainObject: 'class slots'.
@@ -147,10 +164,22 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
 	| list |
 	list := self buildGroupList.
 	slotsGroup := self
-			buildSlotGroupWithBinder: [ :label :item | 
+			buildSlotGroupWithBinder: [ :element :item | 
+				| label |
+				element removeChildren.
+				label := BrLabel new
+						hMatchParent;
+						vFitContent;
+						beSmallSize;
+						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude.
 				label text: item name asRopedText.
 				label userData at: #slot put: item.
-				label ]
+
+				label
+					addAptitude: (BrGlamorousWithContextMenuAptitude
+							content: [ BrGlamorousSimpleContextMenuContent new
+									items: (self slotListContextMenuItemsFor: item) ]).
+				element addChild: label ]
 			onClick: [ :event | 
 				event consumed: true.
 				self onSlotsListSelectionChanged ].
@@ -574,6 +603,45 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock 
 GtCoderNavigationPackagesTagsClassesElement >> showClassList [
 	classesList visibility: BlVisibility visible.
 	classesLabel visibility: BlVisibility visible
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item [
+	^ {('Push up ' , item name)
+			-> [ :elem | 
+				| refactoring |
+				refactoring := RBPullUpInstanceVariableRefactoring
+						variable: item name
+						class: self selectedClass superclass.
+				self addPreviewButtonFor: refactoring to: elem ].
+		('Push down ' , item name)
+			-> [ :elem | 
+				| refactoring |
+				refactoring := RBPushDownInstanceVariableRefactoring
+						variable: item name
+						class: self selectedClass.
+				self addPreviewButtonFor: refactoring to: elem ].
+		('Create accessors for ' , item name)
+			-> [ :elem | 
+				| refactoring |
+				refactoring := RBCreateAccessorsForVariableRefactoring
+						instanceVariable: item name
+						class: self selectedClass.
+				self addPreviewButtonFor: refactoring to: elem ].
+		('Abstract ' , item name)
+			-> [ :elem | 
+				| refactoring |
+				refactoring := RBAbstractInstanceVariableRefactoring
+						variable: item name
+						class: self selectedClass.
+				self addPreviewButtonFor: refactoring to: elem ].
+		('Protect ' , item name)
+			-> [ :elem | 
+				| refactoring |
+				refactoring := RBProtectInstanceVariableRefactoring
+						variable: item name
+						class: self selectedClass.
+				self addPreviewButtonFor: refactoring to: elem ]}
 ]
 
 { #category : #subscriptions }
