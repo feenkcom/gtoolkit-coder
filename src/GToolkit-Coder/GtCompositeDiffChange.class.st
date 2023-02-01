@@ -36,6 +36,11 @@ GtCompositeDiffChange >> applyAttributesToOutput: aText [
 ]
 
 { #category : #accessing }
+GtCompositeDiffChange >> asElement [
+	^ (GtDiffElement onChange: self) addAptitude: GtDiffFlatAptitude
+]
+
+{ #category : #accessing }
 GtCompositeDiffChange >> changes [
 	^ changes
 ]
@@ -151,7 +156,7 @@ GtCompositeDiffChange >> gtTextView: aView [
 	^ aView explicit
 		priority: 10;
 		title: 'Text';
-		stencil: [ (GtDiffElement onChange: self) addAptitude: GtDiffFlatAptitude ]
+		stencil: [ self asElement ]
 ]
 
 { #category : #initialization }
