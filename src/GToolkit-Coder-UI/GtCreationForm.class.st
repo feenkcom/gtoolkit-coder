@@ -34,7 +34,9 @@ GtCreationForm >> acceptAction [
 { #category : #converting }
 GtCreationForm >> asElement [
 	| viewModel |
-	viewModel := self asGtMagritteViewModel onElementCreated: self onElementCreated.
+	viewModel := self asGtMagritteViewModel.
+	self onElementCreated
+		ifNotNil: [ :aCallback | viewModel onElementCreated: aCallback ].
 	"save action should be available even if unchanged"
 	viewModel actions first
 		installOn: [ :aModel :aButton :aMemento | 
