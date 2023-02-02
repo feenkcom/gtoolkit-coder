@@ -112,16 +112,45 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
 	| list |
 	list := self buildGroupList.
 	methodGroup := self
-			buildGroupWithBinder: [ :label :item | 
+			buildMethodGroupWithBinder: [ :element :item | 
+				| label |
+				element removeChildren.
+				element userData at: #method put: item.
+				label := BrLabel new
+						hMatchParent;
+						vFitContent;
+						beSmallSize;
+						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude.
 				label text: item selector asRopedText.
-				label userData at: #method put: item.
-				label ]
+
+				label
+					addAptitude: (BrGlamorousWithContextMenuAptitude
+							content: [ BrGlamorousSimpleContextMenuContent new items: {} ]).
+				element addChild: label ]
 			onClick: [ :event | 
 				event consumed: true.
 				self
 					onMethodListSelectionChanged: (event currentTarget userData at: #method) ].
 	list groups: methodGroup.
 	^ list
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupWithBinder: binderBlock onClick: clickBlock [
+	| classGroup instanceGroup |
+	instanceGroup := BrGroup new
+			domainObject: 'instance side';
+			stream: #() asAsyncStream;
+			itemStencil: [ | label |
+				label := BrHorizontalPane new
+						hMatchParent;
+						vFitContent;
+						when: BlClickEvent do: clickBlock ];
+			itemDataBinder: binderBlock;
+			shouldShowWithoutItems: false.
+	classGroup := instanceGroup copy domainObject: 'class side'.
+	^ {instanceGroup.
+		classGroup}
 ]
 
 { #category : #initialization }
@@ -173,11 +202,9 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
 						beSmallSize;
 						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude.
 				label text: item name asRopedText.
-				label userData at: #slot put: item.
-
 				label
 					addAptitude: (BrGlamorousWithContextMenuAptitude
-							content: [ BrGlamorousSimpleContextMenuContent new
+							content: [ GtCoderNavigationContextMenuContent new
 									items: (self slotListContextMenuItemsFor: item) ]).
 				element addChild: label ]
 			onClick: [ :event | 
@@ -185,6 +212,15 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
 				self onSlotsListSelectionChanged ].
 	list groups: slotsGroup.
 	^ list
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> createLabel: aString description: description [
+	^ aString asRopedText glamorousRegularFont
+		, ((' ' , description) asRopedText
+				glamorousCodeFont;
+				foreground: Color gray;
+				glamorousCodeTinySize)
 ]
 
 { #category : #'api - package selections' }
@@ -607,38 +643,45 @@ GtCoderNavigationPackagesTagsClassesElement >> showClassList [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item [
-	^ {('Push up ' , item name)
+	^ {(self createLabel: 'Push up ' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBPullUpInstanceVariableRefactoring
 						variable: item name
 						class: self selectedClass superclass.
 				self addPreviewButtonFor: refactoring to: elem ].
-		('Push down ' , item name)
+		(self createLabel: 'Push down ' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBPushDownInstanceVariableRefactoring
 						variable: item name
 						class: self selectedClass.
 				self addPreviewButtonFor: refactoring to: elem ].
-		('Create accessors for ' , item name)
+		(self createLabel: 'Create accessors for ' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBCreateAccessorsForVariableRefactoring
 						instanceVariable: item name
 						class: self selectedClass.
 				self addPreviewButtonFor: refactoring to: elem ].
-		('Abstract ' , item name)
+		(self createLabel: 'Abstract ' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBAbstractInstanceVariableRefactoring
 						variable: item name
 						class: self selectedClass.
 				self addPreviewButtonFor: refactoring to: elem ].
-		('Protect ' , item name)
+		(self createLabel: 'Protect ' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBProtectInstanceVariableRefactoring
+						variable: item name
+						class: self selectedClass.
+				self addPreviewButtonFor: refactoring to: elem ].
+		(self createLabel: 'Remove ' description: item name)
+			-> [ :elem | 
+				| refactoring |
+				refactoring := RBRemoveInstanceVariableRefactoring
 						variable: item name
 						class: self selectedClass.
 				self addPreviewButtonFor: refactoring to: elem ]}
