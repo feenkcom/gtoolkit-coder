@@ -125,7 +125,8 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
 
 				label
 					addAptitude: (BrGlamorousWithContextMenuAptitude
-							content: [ BrGlamorousSimpleContextMenuContent new items: {} ]).
+							content: [ GtCoderNavigationContextMenuContent new
+									items: (self methodListContextMenuItemsFor: item) ]).
 				element addChild: label ]
 			onClick: [ :event | 
 				event consumed: true.
@@ -326,6 +327,31 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> methodList [
 	^methodGroup flatCollect: [:grp | grp itemsProvider currentItems]
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> methodListContextMenuItemsFor: item [
+	^ {(self createLabel: 'Push up method' description: item name)
+			-> [ :elem | 
+				| refactoring |
+				refactoring := RBPullUpMethodRefactoring
+						pullUp: {item selector}
+						from: self selectedClass.
+				self addPreviewButtonFor: refactoring to: elem ].
+		(self createLabel: 'Push down method' description: item name)
+			-> [ :elem | 
+				| refactoring |
+				refactoring := RBPushDownMethodRefactoring
+						pushDown: {item selector}
+						from: self selectedClass.
+				self addPreviewButtonFor: refactoring to: elem ].
+		(self createLabel: 'Remove method' description: item name)
+			-> [ :elem | 
+				| refactoring |
+				refactoring := RBRemoveMethodRefactoring
+						removeMethods: {item selector}
+						from: self selectedClass.
+				self addPreviewButtonFor: refactoring to: elem ]}
 ]
 
 { #category : #'as yet unclassified' }
