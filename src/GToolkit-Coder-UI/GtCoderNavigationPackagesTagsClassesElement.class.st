@@ -331,7 +331,9 @@ GtCoderNavigationPackagesTagsClassesElement >> methodList [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> methodListContextMenuItemsFor: item [
-	^ {(self createLabel: 'Push up method' description: item name)
+	^ {(self createLabel: 'Browse Implementors' description: item name)
+			-> [ :elem | self halt ].
+		(self createLabel: 'Push up method' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBPullUpMethodRefactoring
