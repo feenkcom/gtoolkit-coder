@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'onAccept',
-		'packageAndTagName'
+		'packageAndTagName',
+		'onElementCreated'
 	],
 	#category : #'GToolkit-Coder-UI-Forms - Models'
 }
@@ -34,6 +35,8 @@ GtCreationForm >> acceptAction [
 GtCreationForm >> asElement [
 	| viewModel |
 	viewModel := self asGtMagritteViewModel.
+	self onElementCreated
+		ifNotNil: [ :aCallback | viewModel onElementCreated: aCallback ].
 	"save action should be available even if unchanged"
 	viewModel actions first
 		installOn: [ :aModel :aButton :aMemento | 
@@ -96,6 +99,16 @@ GtCreationForm >> onAccept [
 GtCreationForm >> onAccept: anObject [
 
 	onAccept := anObject
+]
+
+{ #category : #accessing }
+GtCreationForm >> onElementCreated [
+	^ onElementCreated
+]
+
+{ #category : #accessing }
+GtCreationForm >> onElementCreated: anObject [
+	onElementCreated := anObject
 ]
 
 { #category : #accessing }
