@@ -60,6 +60,30 @@ GtCoderNavigationPackagesTagsClassesElement >> addPreviewButtonFor: refactoring 
 ]
 
 { #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> browseHierarchyImplementorsOf: aSymbol [
+	self phlow
+		spawnObject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
+				withSubclasses & aSymbol gtImplementors
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> browseHierarchyReferencesOf: aSymbol [
+	self phlow
+		spawnObject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
+				withSubclasses & aSymbol gtSenders
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> browseImplementorsOf: aSymbol [
+	self phlow spawnObject: (GtSearchImplementorsFilter selector: aSymbol)
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> browseReferencesOf: aSymbol [
+	self phlow spawnObject: (GtSearchReferencesFilter literal: aSymbol) 
+]
+
+{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildCategorySlotTabs [
 	| aTabGroup |
 	aTabGroup := BrTabGroup new
@@ -331,8 +355,14 @@ GtCoderNavigationPackagesTagsClassesElement >> methodList [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> methodListContextMenuItemsFor: item [
-	^ {(self createLabel: 'Browse Implementors' description: item name)
-			-> [ :elem | self halt ].
+	^ {(self createLabel: 'Browse implementors' description: item name)
+			-> [ :elem | self browseImplementorsOf: item selector ].
+		(self createLabel: 'Browse hierarachy implementors' description: item name)
+			-> [ :elem | self browseHierarchyImplementorsOf: item selector ].
+		(self createLabel: 'Browse references' description: item name)
+			-> [ :elem | self browseReferencesOf: item selector ].
+		(self createLabel: 'Browse hierarchy references' description: item name)
+			-> [ :elem | self browseHierarchyReferencesOf: item selector ].
 		(self createLabel: 'Push up method' description: item name)
 			-> [ :elem | 
 				| refactoring |
