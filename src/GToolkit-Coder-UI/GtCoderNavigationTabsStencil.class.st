@@ -99,7 +99,8 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 										onAccept: [ :anInstance | 
 											look
 												inUIProcessDo: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
-													look fireEvent: BrDropdownHideWish new ] ];
+													look fireEvent: BrDropdownHideWish new ].
+											self formCache removeKey: each ];
 										onElementCreated: [ :aFrame | (aFrame childNamed: #field) requestFocus ])
 										asElement ]) removeFromParent ]) ].
 	^ contentTabs
