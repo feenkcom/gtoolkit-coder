@@ -60,6 +60,30 @@ GtCoderNavigationPackagesTagsClassesElement >> addPreviewButtonFor: refactoring 
 ]
 
 { #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> browseHierarchyImplementorsOf: aSymbol [
+	self phlow
+		spawnObject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
+				withSubclasses & aSymbol gtImplementors
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> browseHierarchyReferencesOf: aSymbol [
+	self phlow
+		spawnObject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
+				withSubclasses & aSymbol gtSenders
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> browseImplementorsOf: aSymbol [
+	self phlow spawnObject: (GtSearchImplementorsFilter selector: aSymbol)
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> browseReferencesOf: aSymbol [
+	self phlow spawnObject: (GtSearchReferencesFilter literal: aSymbol) 
+]
+
+{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildCategorySlotTabs [
 	| aTabGroup |
 	aTabGroup := BrTabGroup new
@@ -331,23 +355,29 @@ GtCoderNavigationPackagesTagsClassesElement >> methodList [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> methodListContextMenuItemsFor: item [
-	^ {(self createLabel: 'Browse Implementors' description: item name)
-			-> [ :elem | self halt ].
-		(self createLabel: 'Push up method' description: item name)
+	^ {(self createLabel: 'Browse implementors' description: item selector)
+			-> [ :elem | self browseImplementorsOf: item selector ].
+		(self createLabel: 'Browse hierarachy implementors' description: item selector)
+			-> [ :elem | self browseHierarchyImplementorsOf: item selector ].
+		(self createLabel: 'Browse references' description: item selector)
+			-> [ :elem | self browseReferencesOf: item selector ].
+		(self createLabel: 'Browse hierarchy references' description: item selector)
+			-> [ :elem | self browseHierarchyReferencesOf: item selector ].
+		(self createLabel: 'Push up method' description: item selector)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBPullUpMethodRefactoring
 						pullUp: {item selector}
 						from: self selectedClass.
 				self addPreviewButtonFor: refactoring to: elem ].
-		(self createLabel: 'Push down method' description: item name)
+		(self createLabel: 'Push down method' description: item selector)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBPushDownMethodRefactoring
 						pushDown: {item selector}
 						from: self selectedClass.
 				self addPreviewButtonFor: refactoring to: elem ].
-		(self createLabel: 'Remove method' description: item name)
+		(self createLabel: 'Remove method' description: item selector)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBRemoveMethodRefactoring
@@ -356,7 +386,7 @@ GtCoderNavigationPackagesTagsClassesElement >> methodListContextMenuItemsFor: it
 				self addPreviewButtonFor: refactoring to: elem ]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #acccessing }
 GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
 	^methodProtocolsList
 ]
