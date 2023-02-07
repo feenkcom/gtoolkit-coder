@@ -144,7 +144,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
 						hMatchParent;
 						vFitContent;
 						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude.
+						aptitude: BrGlamorousLabelAptitude.
 				label text: item selector asRopedText.
 
 				label
@@ -168,6 +168,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupWithBinder: binde
 			stream: #() asAsyncStream;
 			itemStencil: [ | label |
 				label := BrHorizontalPane new
+						aptitude: BrGlamorousListItemAptitude;
 						hMatchParent;
 						vFitContent;
 						when: BlClickEvent do: clickBlock ];
