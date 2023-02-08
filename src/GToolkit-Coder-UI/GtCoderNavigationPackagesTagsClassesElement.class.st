@@ -42,6 +42,7 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> addPreviewButtonFor: refactoring to: elem [
 	| button |
+	elem removeChildNamed: #preview.
 	button := GtRefactoringsPreviewButton new.
 	button vMatchParent.
 	button refactorings: [ {refactoring} ].
@@ -365,7 +366,7 @@ GtCoderNavigationPackagesTagsClassesElement >> methodListContextMenuItemsFor: it
 		(self createLabel: 'Browse hierarchy references' description: item selector)
 			-> [ :elem | self browseHierarchyReferencesOf: item selector ].
 		(self createLabel: 'Push up method' description: item selector)
-			-> [ :elem | self renameMethod: item selector inElement: elem ].
+			-> [ :elem | self pushUpMethod: item selector inElement: elem ].
 		(self createLabel: 'Push down method' description: item selector)
 			-> [ :elem | self pushDownMethod: item selector inElement: elem ].
 		(self createLabel: 'Rename message' description: item selector)
@@ -547,6 +548,15 @@ GtCoderNavigationPackagesTagsClassesElement >> pushDownMethod: aSelector inEleme
 ]
 
 { #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> pushUpMethod: aSelector inElement: elem [
+	| refactoring |
+	refactoring := RBPullUpMethodRefactoring
+			pullUp: {aSelector}
+			from: self selectedClass.
+	^ self addPreviewButtonFor: refactoring to: elem
+]
+
+{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> removeMethod: aSelector inElement: elem [
 	| refactoring button |
 	refactoring := RBRemoveMethodChange remove: aSelector from: self selectedClass.
@@ -591,11 +601,26 @@ GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage tag: aPac
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> renameMethod: aSelector inElement: elem [
-	| refactoring |
-	refactoring := RBPullUpMethodRefactoring
-			pullUp: {aSelector}
-			from: self selectedClass.
-	^ self addPreviewButtonFor: refactoring to: elem
+	| refactoring edit |
+	edit := BrEditableLabel new.
+	edit
+		aptitude: (BrGlamorousEditableLabelAptitude new
+				glamorousCodeSmallSize;
+				background: Color transparent);
+		text: aSelector;
+		when: BrEditorAcceptWish
+			do: [ :aWish | 
+				refactoring := RBRenameMethodRefactoring
+						renameMethod: aSelector
+						in: self selectedClass
+						to: aWish text asString
+						permutation: (1 to: aSelector numArgs).
+				edit switchToLabel.
+				self addPreviewButtonFor: refactoring to: elem ];
+		switchToEditor.
+	edit requestFocus.
+	elem removeChildren.
+	elem addChild: edit
 ]
 
 { #category : #'api - package updates' }
