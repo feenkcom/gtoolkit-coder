@@ -350,6 +350,11 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 ]
 
 { #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> methodList [
+	^ methodGroup flatCollect: [ :grp | grp itemsProvider currentItems ]
+]
+
+{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> methodListContextMenuItemsFor: item [
 	^ {(self createLabel: 'Browse implementors' description: item selector)
 			-> [ :elem | self browseImplementorsOf: item selector ].
