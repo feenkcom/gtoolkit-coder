@@ -154,11 +154,7 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy [
 						aLabel := BrEditableLabel new
 								text: (aDescription displayStringFor: aTag name);
 								aptitude: (BrGlamorousEditableLabelAptitude new glamorousCodeFont
-										defaultForeground: Color black);
-								whenKey: BlKeyCombination arrowRight
-									editorDo: [ :anEvent | 
-										anEvent target acceptEdition.
-										aTaggerAptitude addTagCreatorElement ].
+										defaultForeground: Color black).
 						aCompletionStrategy
 							ifNotNil: [ (GtCompletionController on: aLabel strategy: aCompletionStrategy) install ].
 						aLabel ]).
