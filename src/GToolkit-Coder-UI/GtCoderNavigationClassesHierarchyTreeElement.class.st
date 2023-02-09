@@ -9,12 +9,44 @@ Class {
 	#instVars : [
 		'classesTree'
 	],
-	#category : 'GToolkit-Coder-UI-Navigation'
+	#category : #'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #'instance creation' }
 GtCoderNavigationClassesHierarchyTreeElement class >> fromClasses: aCollectionOfClasses [
 	^ self new initializeWithClasses: aCollectionOfClasses
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesHierarchyTreeElement >> buildRemoveClassLabelFor: aClass [
+	| labelText |
+	labelText := (aClass isReferenced
+			ifTrue: [ '<1s> is referenced. Remove anyway?' ]
+			ifFalse: [ aClass subclasses isEmpty
+					ifTrue: [ 'Remove class <1s>' ]
+					ifFalse: [ '<1s> has subclasses. Remove anyway?' ] ])
+			expandMacrosWith: aClass name.
+	^ BrLabel new
+		margin: (BlInsets all: 10);
+		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
+		text: labelText asRopedText
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesHierarchyTreeElement >> classListContextMenuItemsFor: aClass [ 
+	^{(self createLabel: 'Rename class' description: aClass name)
+			-> [ :elem | self renameClass: aClass inElement: elem ].
+		(self createLabel: 'Remove class' description: aClass name)
+			-> [ :elem | self removeClass: aClass inElement: elem ]}
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesHierarchyTreeElement >> createLabel: aString description: description [
+	^ aString asRopedText glamorousRegularFont
+		, ((' ' , description) asRopedText
+				glamorousCodeFont;
+				foreground: Color gray;
+				glamorousCodeTinySize)
 ]
 
 { #category : #'private - ui' }
@@ -29,18 +61,23 @@ GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
-	
+
 	self rowStencil: BrGlamorousSimpleTreeSelectableRowElementStencilBuilder new.
-	
+
 	self
-		nodeStencil: [ BrLabel new
-				beSmallSize;
-				aptitude: BrGlamorousLabelAptitude ];
+		nodeStencil: [ BrHorizontalPane new
+				aptitude: BrGlamorousListItemAptitude;
+				hMatchParent;
+				vFitContent ];
 		nodeDataBinder: [ :aClassElement :aClassHierarchyTree | 
-			aClassElement
-				text:
-					(aClassHierarchyTree
-						ifNil: [ '' asRopedText ]
+			| label |
+			aClassElement removeChildren.
+			label := BrLabel new
+					beSmallSize;
+					aptitude: BrGlamorousLabelAptitude.
+			aClassElement addChild: label.
+			aClassHierarchyTree
+						ifNil: [ label text: '' asRopedText]
 						ifNotNil: [ | aClass aText |
 							aClass := aClassHierarchyTree rootClass.
 							aText := aClass gtDisplayText asRopedText.
@@ -48,7 +85,12 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 								ifTrue: [ aText italic ].
 							aClass isDeprecated
 								ifTrue: [ aText append: ' (deprecated)' asRopedText italic ].
-							aText ]) ]
+							label text: aText.
+							 label
+					addAptitude: (BrGlamorousWithContextMenuAptitude
+							content: [ GtCoderNavigationContextMenuContent new
+									items: (self classListContextMenuItemsFor: aClass) ]).].
+		 ]
 ]
 
 { #category : #'api - initialization' }
@@ -69,6 +111,26 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 		items: classesTree subclassTrees
 		lazy: [ :eachTree | eachTree subclassTrees ].
 	self expandAll
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesHierarchyTreeElement >> removeClass: aClass inElement: elem [
+	| change button |
+	change := RBRemoveClassChange remove: aClass.
+	button := GtPreviewChangeButton new
+			icon: BrGlamorousVectorIcons remove;
+			label: 'Remove';
+			changeAction: [ change execute ];
+			changeStencil: [ self buildRemoveClassLabelFor: aClass ].
+	button
+		when: GtRefactoringsAppliedEvent
+		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
+	^ elem addChild: button as: #preview
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesHierarchyTreeElement >> renameClass: aClass inElement: elem [ 
+	self halt
 ]
 
 { #category : #'api - selection' }

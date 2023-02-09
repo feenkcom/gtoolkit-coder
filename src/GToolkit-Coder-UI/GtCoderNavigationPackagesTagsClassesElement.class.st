@@ -381,6 +381,14 @@ GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
 ]
 
 { #category : #accessing }
+GtCoderNavigationPackagesTagsClassesElement >> onClassRemoved: anAnnouncement [
+	| aPackageOrTag |
+	aPackageOrTag := self selectedPackageOrTag.
+	packagesList deselectAll.
+	self selectPackage: aPackageOrTag
+]
+
+{ #category : #accessing }
 GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
 	self
 		suppressListChangeEventsDuring: [ self
@@ -577,15 +585,14 @@ GtCoderNavigationPackagesTagsClassesElement >> removeMethod: aSelector inElement
 { #category : #'api - package updates' }
 GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage [
 	| aSelectedPackageOrTag anIndex |
-
 	anIndex := packagesList viewModel indexOf: aPackage.
 	anIndex > 0 ifFalse: [ ^ self ].
-		
-	packagesList selectedNodeDo: [ :aNode | 
-		aSelectedPackageOrTag := aNode value ].
+	aSelectedPackageOrTag := self selectedPackageOrTag.
 
 	self updatePackageLists.
-	self reselectPackageOrTag: aSelectedPackageOrTag afterRemovalOfPackageNamed: aPackage name.
+	self
+		reselectPackageOrTag: aSelectedPackageOrTag
+		afterRemovalOfPackageNamed: aPackage name
 ]
 
 { #category : #'api - package updates' }
@@ -729,6 +736,13 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackage [
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectedPackageNodeDo: aBlock [
 	^ packagesList selectedPackageNodeDo: aBlock
+]
+
+{ #category : #'api - package updates' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedPackageOrTag [
+	| aSelectedPackageOrTag |
+	packagesList selectedNodeDo: [ :aNode | aSelectedPackageOrTag := aNode value ].
+	^ aSelectedPackageOrTag
 ]
 
 { #category : #'api - package selections' }
