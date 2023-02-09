@@ -108,6 +108,11 @@ GtCoderNavigationElement >> onClassModified: anAnnouncement [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationElement >> onClassRemoved: anAnnouncement [
+	self subclassResponsibility
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationElement >> onClassRenamed: anAnnouncement [
 	self
 		suppressListChangeEventsDuring: [ self
@@ -199,7 +204,8 @@ GtCoderNavigationElement >> subscribeToNavigationModel [
 	subscriptions := {GtCoderNavigationClassSelected -> #onClassSelected:.
 			GtCoderNavigationClassRenamed -> #onClassRenamed:.
 			GtCoderNavigationClassModified -> #onClassModified:.
-			GtCoderNavigationClassAdded-> #onClassAdded: }.
+			GtCoderNavigationClassAdded-> #onClassAdded:.
+			GtCoderNavigationClassRemoved -> #onClassRemoved: }.
 
 	subscriptions
 		do: [ :sub | 
