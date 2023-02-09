@@ -59,6 +59,14 @@ GtCoderSourceCodeChanged >> source [
 ]
 
 { #category : #accessing }
+GtCoderSourceCodeChanged >> textEditCommand [
+	^ self reason ifNotNil: [ :aReason|
+		(aReason isKindOf: BrTextEditorModifiedEvent)
+			ifTrue: [ aReason editCommand ]
+			ifFalse: [ nil ] ]
+]
+
+{ #category : #accessing }
 GtCoderSourceCodeChanged >> updateStrategy [
 	^ updateStragegy
 ]
