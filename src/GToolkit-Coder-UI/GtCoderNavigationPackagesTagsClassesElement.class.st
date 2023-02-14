@@ -1,6 +1,8 @@
 Class {
 	#name : #GtCoderNavigationPackagesTagsClassesElement,
 	#superclass : #GtCoderNavigationElement,
+	#traits : 'TNavigationWithContextMenu',
+	#classTraits : 'TNavigationWithContextMenu classTrait',
 	#instVars : [
 		'packagesList',
 		'classesLabel',
@@ -239,15 +241,6 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
 				self onSlotsListSelectionChanged ].
 	list groups: slotsGroup.
 	^ list
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> createLabel: aString description: description [
-	^ aString asRopedText glamorousRegularFont
-		, ((' ' , description) asRopedText
-				glamorousCodeFont;
-				foreground: Color gray;
-				glamorousCodeTinySize)
 ]
 
 { #category : #'api - package selections' }

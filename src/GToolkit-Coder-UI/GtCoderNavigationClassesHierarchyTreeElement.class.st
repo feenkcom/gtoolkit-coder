@@ -6,6 +6,8 @@ I show a list of classes grouping them based on the inheritance hierarchy and so
 Class {
 	#name : #GtCoderNavigationClassesHierarchyTreeElement,
 	#superclass : #BrSimpleTree,
+	#traits : 'TNavigationWithContextMenu',
+	#classTraits : 'TNavigationWithContextMenu classTrait',
 	#instVars : [
 		'classesTree'
 	],
@@ -54,20 +56,13 @@ GtCoderNavigationClassesHierarchyTreeElement >> buildRemoveClassLabelFor: aClass
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyTreeElement >> classListContextMenuItemsFor: aClass [ 
-	^{(self createLabel: 'Rename class' description: aClass name)
+GtCoderNavigationClassesHierarchyTreeElement >> contextMenuItemsFor: aClass [
+	^ {"(self createLabel: 'New Subclass' description: aClass name)
+			-> [ :elem | self newSubclassOf: aClass ]."
+		(self createLabel: 'Rename class' description: aClass name)
 			-> [ :elem | self renameClass: aClass inElement: elem ].
 		(self createLabel: 'Remove class' description: aClass name)
 			-> [ :elem | self removeClass: aClass inElement: elem ]}
-]
-
-{ #category : #initialization }
-GtCoderNavigationClassesHierarchyTreeElement >> createLabel: aString description: description [
-	^ aString asRopedText glamorousRegularFont
-		, ((' ' , description) asRopedText
-				glamorousCodeFont;
-				foreground: Color gray;
-				glamorousCodeTinySize)
 ]
 
 { #category : #'private - ui' }
@@ -110,7 +105,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 							 label
 					addAptitude: (BrGlamorousWithContextMenuAptitude
 							content: [ GtCoderNavigationContextMenuContent new
-									items: (self classListContextMenuItemsFor: aClass) ]).].
+									items: (self contextMenuItemsFor: aClass) ]).].
 		 ]
 ]
 
@@ -132,6 +127,10 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 		items: classesTree subclassTrees
 		lazy: [ :eachTree | eachTree subclassTrees ].
 	self expandAll
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesHierarchyTreeElement >> newSubclassOf: aClass [ 
 ]
 
 { #category : #initialization }
