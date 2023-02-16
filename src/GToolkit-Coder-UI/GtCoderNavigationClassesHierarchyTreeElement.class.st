@@ -57,8 +57,8 @@ GtCoderNavigationClassesHierarchyTreeElement >> buildRemoveClassLabelFor: aClass
 
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> contextMenuItemsFor: aClass [
-	^ {"(self createLabel: 'New Subclass' description: aClass name)
-			-> [ :elem | self newSubclassOf: aClass ]."
+	^ {(self createLabel: 'New Subclass' description: aClass name)
+			-> [ :elem | self newSubclassOf: aClass ].
 		(self createLabel: 'Rename class' description: aClass name)
 			-> [ :elem | self renameClass: aClass inElement: elem ].
 		(self createLabel: 'Remove class' description: aClass name)
@@ -130,7 +130,14 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyTreeElement >> newSubclassOf: aClass [ 
+GtCoderNavigationClassesHierarchyTreeElement >> newSubclassOf: aClass [
+	| dropdown tabGroup |
+	tabGroup := self
+			withAllParentsDetect: [ :each | each class == BrTabGroup ]
+			ifFound: #yourself
+			ifNone: [ ^self ].
+	dropdown := tabGroup childWithId: GtNavigationNewDropdownId.
+	dropdown dispatchEvent: BrDropdownShowWish new.
 ]
 
 { #category : #initialization }

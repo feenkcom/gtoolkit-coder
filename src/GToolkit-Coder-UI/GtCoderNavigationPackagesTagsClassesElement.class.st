@@ -187,10 +187,21 @@ GtCoderNavigationPackagesTagsClassesElement >> buildProtocolGroupList [
 	| list |
 	list := self buildGroupList.
 	protocolGroup := self
-			buildGroupWithBinder: [ :label :item | 
+			buildGroupWithBinder: [ :element :item | 
+			| label |
+				element removeChildren.
+				element userData at: #protocol put: item.
+				label := BrLabel new
+						hMatchParent;
+						vFitContent;
+						beSmallSize;
+						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude.
 				label text: item name asRopedText.
-				label userData at: #protocol put: item.
-				label ]
+				label
+					addAptitude: (BrGlamorousWithContextMenuAptitude
+							content: [ GtCoderNavigationContextMenuContent new
+									items: (self protocolListContextMenuItemsFor: item) ]).
+				element addChild: label ]
 			onClick: [ :event | 
 				event consumed: true.
 				self onProtocolListSelectionChanged ].
@@ -540,6 +551,14 @@ GtCoderNavigationPackagesTagsClassesElement >> onSlotsListSelectionChanged [
 ]
 
 { #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> protocolListContextMenuItemsFor: item [
+	^ {(self createLabel: 'Remove ' description: item name)
+			-> [ :elem | self removeProtocol: item name in: elem ].
+		"(self createLabel: 'Rename ' description: item name)
+			-> [ :elem | self renameProtocol: item name in: elem ]"}
+]
+
+{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> pushDownMethod: aSelector inElement: elem [
 	| refactoring |
 	refactoring := RBPushDownMethodRefactoring
@@ -600,6 +619,15 @@ GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage tag: aPac
 ]
 
 { #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> removeProtocol: protocolName in: elem [
+	| refactoring |
+	refactoring := RBRemoveProtocolChange
+			removeProtocolNamed: protocolName
+			in: self selectedClass.
+	^ self addPreviewButtonFor: refactoring to: elem
+]
+
+{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> renameMethod: aSelector inElement: elem [
 	| refactoring edit |
 	edit := BrEditableLabel new.
@@ -633,6 +661,11 @@ GtCoderNavigationPackagesTagsClassesElement >> renamePackage: aPackage oldName: 
 	self updatePackageLists.
 	aSelectedPackageOrTag ifNotNil: [
 		self selectPackageOrTag: aSelectedPackageOrTag ].
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> renameProtocol: protocolName in: elem [
+	self notYetImplemented
 ]
 
 { #category : #'api - package reselections' }

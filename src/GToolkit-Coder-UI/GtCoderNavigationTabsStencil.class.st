@@ -90,6 +90,9 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 								at: each
 								ifAbsentPut: [ | form |
 									form := each new.
+									form class == GtClassCreationForm
+										ifTrue: [ navigationModel
+												selectedClassDo: [ :aClass | form superclassName: aClass name ] ].
 									form hasPackageAndTag
 										ifTrue: [ navigationModel
 												selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
@@ -151,6 +154,7 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 					c vertical exact: 300 ].
 			element addChild: (self gtCreationInterface: aDropdown).
 			element ]
+		id: GtNavigationNewDropdownId
 ]
 
 { #category : #accessing }
