@@ -87,26 +87,25 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 				vFitContent ];
 		nodeDataBinder: [ :aClassElement :aClassHierarchyTree | 
 			| label |
-			aClassElement removeChildren.
+			aClassElement
+				removeChildren;
+				addAptitude: (BrGlamorousWithContextMenuAptitude
+						content: [ GtCoderNavigationContextMenuContent new
+								items: (self contextMenuItemsFor: aClassHierarchyTree rootClass) ]).
 			label := BrLabel new
 					beSmallSize;
 					aptitude: BrGlamorousLabelAptitude.
 			aClassElement addChild: label.
 			aClassHierarchyTree
-						ifNil: [ label text: '' asRopedText]
-						ifNotNil: [ | aClass aText |
-							aClass := aClassHierarchyTree rootClass.
-							aText := aClass gtDisplayText asRopedText.
-							(aClass isAbstract or: [ aClass hasAbstractMethods ])
-								ifTrue: [ aText italic ].
-							aClass isDeprecated
-								ifTrue: [ aText append: ' (deprecated)' asRopedText italic ].
-							label text: aText.
-							 label
-					addAptitude: (BrGlamorousWithContextMenuAptitude
-							content: [ GtCoderNavigationContextMenuContent new
-									items: (self contextMenuItemsFor: aClass) ]).].
-		 ]
+				ifNil: [ label text: '' asRopedText ]
+				ifNotNil: [ | aClass aText |
+					aClass := aClassHierarchyTree rootClass.
+					aText := aClass gtDisplayText asRopedText.
+					(aClass isAbstract or: [ aClass hasAbstractMethods ])
+						ifTrue: [ aText italic ].
+					aClass isDeprecated
+						ifTrue: [ aText append: ' (deprecated)' asRopedText italic ].
+					label text: aText ] ]
 ]
 
 { #category : #'api - initialization' }
