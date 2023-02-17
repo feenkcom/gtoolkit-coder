@@ -144,8 +144,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
 				element removeChildren.
 				element userData at: #method put: item.
 				label := BrLabel new
-						hMatchParent;
-						vFitContent;
+						matchParent;
 						beSmallSize;
 						aptitude: BrGlamorousLabelAptitude.
 				label text: item selector asRopedText.
@@ -587,6 +586,7 @@ GtCoderNavigationPackagesTagsClassesElement >> removeMethod: aSelector inElement
 			changeStencil: [ GtPharoRemoveMethodPreviewStencil new
 					selectorToRemove: aSelector;
 					isEmptyMethod: false;
+					anElement: self;
 					create ].
 	button
 		when: GtRefactoringsAppliedEvent

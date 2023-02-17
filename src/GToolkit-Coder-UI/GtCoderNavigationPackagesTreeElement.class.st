@@ -104,6 +104,7 @@ GtCoderNavigationPackagesTreeElement >> initialize [
 						content: [ GtCoderNavigationContextMenuContent new
 								items: (self contextMenuItemsFor: aPackage) ]).
 			label := BrLabel new
+					matchParent;
 					beSmallSize;
 					aptitude: BrGlamorousLabelAptitude.
 			aPackageElement addChild: label.

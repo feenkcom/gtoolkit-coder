@@ -93,6 +93,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 						content: [ GtCoderNavigationContextMenuContent new
 								items: (self contextMenuItemsFor: aClassHierarchyTree rootClass) ]).
 			label := BrLabel new
+					matchParent;
 					beSmallSize;
 					aptitude: BrGlamorousLabelAptitude.
 			aClassElement addChild: label.
@@ -147,7 +148,10 @@ GtCoderNavigationClassesHierarchyTreeElement >> removeClass: aClass inElement: e
 			icon: BrGlamorousVectorIcons remove;
 			label: 'Remove';
 			changeAction: [ change execute ];
-			changeStencil: [ self buildRemoveClassLabelFor: aClass ].
+			changeStencil: [ GtPharoRemoveClassPreviewStencil new
+								classToRemove: aClass;
+								anElement: self;
+								create ].
 	button
 		when: GtRefactoringsAppliedEvent
 		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
