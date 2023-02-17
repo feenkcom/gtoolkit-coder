@@ -57,8 +57,8 @@ GtCoderNavigationClassesHierarchyTreeElement >> buildRemoveClassLabelFor: aClass
 
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> contextMenuItemsFor: aClass [
-	^ {"(self createLabel: 'New Subclass' description: aClass name)
-			-> [ :elem | self newSubclassOf: aClass ]."
+	^ {(self createLabel: 'New Subclass' description: aClass name)
+			-> [ :elem | self newSubclassOf: aClass ].
 		(self createLabel: 'Rename class' description: aClass name)
 			-> [ :elem | self renameClass: aClass inElement: elem ].
 		(self createLabel: 'Remove class' description: aClass name)
@@ -87,26 +87,26 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 				vFitContent ];
 		nodeDataBinder: [ :aClassElement :aClassHierarchyTree | 
 			| label |
-			aClassElement removeChildren.
+			aClassElement
+				removeChildren;
+				addAptitude: (BrGlamorousWithContextMenuAptitude
+						content: [ GtCoderNavigationContextMenuContent new
+								items: (self contextMenuItemsFor: aClassHierarchyTree rootClass) ]).
 			label := BrLabel new
+					matchParent;
 					beSmallSize;
 					aptitude: BrGlamorousLabelAptitude.
 			aClassElement addChild: label.
 			aClassHierarchyTree
-						ifNil: [ label text: '' asRopedText]
-						ifNotNil: [ | aClass aText |
-							aClass := aClassHierarchyTree rootClass.
-							aText := aClass gtDisplayText asRopedText.
-							(aClass isAbstract or: [ aClass hasAbstractMethods ])
-								ifTrue: [ aText italic ].
-							aClass isDeprecated
-								ifTrue: [ aText append: ' (deprecated)' asRopedText italic ].
-							label text: aText.
-							 label
-					addAptitude: (BrGlamorousWithContextMenuAptitude
-							content: [ GtCoderNavigationContextMenuContent new
-									items: (self contextMenuItemsFor: aClass) ]).].
-		 ]
+				ifNil: [ label text: '' asRopedText ]
+				ifNotNil: [ | aClass aText |
+					aClass := aClassHierarchyTree rootClass.
+					aText := aClass gtDisplayText asRopedText.
+					(aClass isAbstract or: [ aClass hasAbstractMethods ])
+						ifTrue: [ aText italic ].
+					aClass isDeprecated
+						ifTrue: [ aText append: ' (deprecated)' asRopedText italic ].
+					label text: aText ] ]
 ]
 
 { #category : #'api - initialization' }
@@ -130,7 +130,14 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyTreeElement >> newSubclassOf: aClass [ 
+GtCoderNavigationClassesHierarchyTreeElement >> newSubclassOf: aClass [
+	| dropdown tabGroup |
+	tabGroup := self
+			withAllParentsDetect: [ :each | each class == BrTabGroup ]
+			ifFound: #yourself
+			ifNone: [ ^self ].
+	dropdown := tabGroup childWithId: GtNavigationNewDropdownId.
+	dropdown dispatchEvent: BrDropdownShowWish new.
 ]
 
 { #category : #initialization }
@@ -141,7 +148,10 @@ GtCoderNavigationClassesHierarchyTreeElement >> removeClass: aClass inElement: e
 			icon: BrGlamorousVectorIcons remove;
 			label: 'Remove';
 			changeAction: [ change execute ];
-			changeStencil: [ self buildRemoveClassLabelFor: aClass ].
+			changeStencil: [ GtPharoRemoveClassPreviewStencil new
+								classToRemove: aClass;
+								anElement: self;
+								create ].
 	button
 		when: GtRefactoringsAppliedEvent
 		do: [ :anEvent | elem removeChild: anEvent currentTarget ].

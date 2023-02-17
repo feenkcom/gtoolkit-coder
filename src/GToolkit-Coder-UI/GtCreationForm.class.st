@@ -15,6 +15,11 @@ GtCreationForm class >> componentName [
 ]
 
 { #category : #accessing }
+GtCreationForm class >> isAdditionForm [
+	^ true
+]
+
+{ #category : #accessing }
 GtCreationForm class >> priority [
 	^ self subclassResponsibility
 ]

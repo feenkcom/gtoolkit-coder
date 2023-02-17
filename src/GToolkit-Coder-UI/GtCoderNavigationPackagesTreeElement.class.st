@@ -26,6 +26,16 @@ GtCoderNavigationPackagesTreeElement >> buildRemovePackageLabelFor: aPackage [
 		text: labelText asRopedText
 ]
 
+{ #category : #initialization }
+GtCoderNavigationPackagesTreeElement >> buildRemoveTagLabelFor: aTag [
+	| labelText |
+	labelText := 'Remove package <1s>' expandMacrosWith: aTag name.
+	^ BrLabel new
+		margin: (BlInsets all: 10);
+		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
+		text: labelText asRopedText
+]
+
 { #category : #'private - enumeration' }
 GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 	| theTags anExtension |
@@ -48,26 +58,24 @@ GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 { #category : #initialization }
 GtCoderNavigationPackagesTreeElement >> contextMenuItemsFor: aPackageOrTag [
 	| items |
-	items := {"(self createLabel: 'New package' description: '')
+	items := {(self createLabel: 'New package' description: '')
 				-> [ :elem | self newPackage ].
 			(self createLabel: 'New tag' description: aPackageOrTag name)
-				-> [ :elem | self newTagFor: aPackageOrTag inElement: elem ]"}
+				-> [ :elem | self newTagFor: aPackageOrTag inElement: elem ]}
 			asOrderedCollection.
 	aPackageOrTag class == RPackage
 		ifTrue: [ items
 				addAll: {(self createLabel: 'Rename package' description: aPackageOrTag name)
 							-> [ :elem | self renamePackage: aPackageOrTag inElement: elem ].
 						(self createLabel: 'Remove package' description: aPackageOrTag name)
-							-> [ :elem | self removePackage: aPackageOrTag inElement: elem ].
-						"(self createLabel: 'Demote package' description: aPackageOrTag name)
-							-> [ :elem | self demotePackage: aPackageOrTag inElement: elem ]"} ]
+							-> [ :elem | self removePackage: aPackageOrTag inElement: elem ]}	"(self createLabel: 'Demote package' description: aPackageOrTag name)
+							-> [ :elem | self demotePackage: aPackageOrTag inElement: elem ]" ]
 		ifFalse: [ items
 				addAll: {(self createLabel: 'Rename tag' description: aPackageOrTag name)
-							-> [ :elem | self renamePackage: aPackageOrTag inElement: elem ].
+							-> [ :elem | self renameTag: aPackageOrTag inElement: elem ].
 						(self createLabel: 'Remove tag' description: aPackageOrTag name)
-							-> [ :elem | self removePackage: aPackageOrTag inElement: elem ].
-						"(self createLabel: 'Promote tag' description: aPackageOrTag name)
-							-> [ :elem | self promoteTag: aPackageOrTag inElement: elem ]"} ].
+							-> [ :elem | self removeTag: aPackageOrTag inElement: elem ]}	"(self createLabel: 'Promote tag' description: aPackageOrTag name)
+							-> [ :elem | self promoteTag: aPackageOrTag inElement: elem ]" ].
 
 	^ items
 ]
@@ -90,18 +98,19 @@ GtCoderNavigationPackagesTreeElement >> initialize [
 				vFitContent ];
 		nodeDataBinder: [ :aPackageElement :aPackage | 
 			| label |
-			aPackageElement removeChildren.
+			aPackageElement
+				removeChildren;
+				addAptitude: (BrGlamorousWithContextMenuAptitude
+						content: [ GtCoderNavigationContextMenuContent new
+								items: (self contextMenuItemsFor: aPackage) ]).
 			label := BrLabel new
+					matchParent;
 					beSmallSize;
 					aptitude: BrGlamorousLabelAptitude.
 			aPackageElement addChild: label.
 			aPackage
 				ifNil: [ label text: '' asRopedText ]
-				ifNotNil: [ label text: aPackage name.
-					label
-						addAptitude: (BrGlamorousWithContextMenuAptitude
-								content: [ GtCoderNavigationContextMenuContent new
-										items: (self contextMenuItemsFor: aPackage) ]) ] ]
+				ifNotNil: [ label text: aPackage name ] ]
 ]
 
 { #category : #'api - initialization' }
@@ -126,7 +135,13 @@ GtCoderNavigationPackagesTreeElement >> isTag: tagA lessThan: tagB [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTreeElement >> newPackage [
-	self notYetImplemented
+	| dropdown tabGroup |
+	tabGroup := self
+			withAllParentsDetect: [ :each | each class == BrTabGroup ]
+			ifFound: #yourself
+			ifNone: [ ^self ].
+	dropdown := tabGroup childWithId: GtNavigationNewDropdownId.
+	dropdown dispatchEvent: BrDropdownShowWish new.
 ]
 
 { #category : #initialization }
@@ -155,6 +170,21 @@ GtCoderNavigationPackagesTreeElement >> removePackage: aPackage inElement: elem 
 ]
 
 { #category : #initialization }
+GtCoderNavigationPackagesTreeElement >> removeTag: aTag inElement: elem [ 
+	| change button |
+	change := GtRBRemovePackageTagChange packageName: aTag package name tagName: aTag name.
+	button := GtPreviewChangeButton new
+			icon: BrGlamorousVectorIcons remove;
+			label: 'Remove';
+			changeAction: [ change execute ];
+			changeStencil: [ self buildRemoveTagLabelFor: aTag ].
+	button
+		when: GtRefactoringsAppliedEvent
+		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
+	^ elem addChild: button as: #preview
+]
+
+{ #category : #initialization }
 GtCoderNavigationPackagesTreeElement >> renamePackage: aPackage inElement: elem [
 	| refactoring edit |
 	edit := BrEditableLabel new.
@@ -174,6 +204,10 @@ GtCoderNavigationPackagesTreeElement >> renamePackage: aPackage inElement: elem 
 	edit requestFocus.
 	elem removeChildren.
 	elem addChild: edit
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTreeElement >> renameTag: aPackageOrTag inElement: elem [ 
 ]
 
 { #category : #'api - selection' }
