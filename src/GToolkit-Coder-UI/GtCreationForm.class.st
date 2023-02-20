@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'onAccept',
 		'packageAndTagName',
-		'onElementCreated'
+		'onElementCreated',
+		'onReset'
 	],
 	#category : #'GToolkit-Coder-UI-Forms - Models'
 }
@@ -42,7 +43,7 @@ GtCreationForm >> asElement [
 	viewModel := self asGtMagritteViewModel.
 	self onElementCreated
 		ifNotNil: [ :aCallback | viewModel onElementCreated: aCallback ].
-	"save action should be available even if unchanged"
+	"save and cancel actions should be available even if unchanged"
 	viewModel actions first
 		installOn: [ :aModel :aButton :aMemento | 
 			aButton
@@ -54,7 +55,25 @@ GtCreationForm >> asElement [
 							aStatus := aSink value.
 							theButton enabled: aStatus isValid ].
 					aMemento overallStatus observe: anElementSink ] ].
+	viewModel actions second
+		installOn: [ :aModel :aButton :aMemento | 
+			aButton
+				withAsyncSinkDo: [ :anElementSink | 
+					anElementSink
+						sink: AsyncPeekSink new;
+						whenUpdate: [ :theButton :aSink | 
+							theButton enabled: true ].
+					aMemento overallStatus observe: anElementSink ] ].
 	^ viewModel asElement
+]
+
+{ #category : #magritte }
+GtCreationForm >> cancelAction [
+	<magritteActionDescription>
+	^ MAActionDescription new
+		label: 'Reset';
+		action: [ :aModel :aButton | [ onReset ifNotNil: [ onReset value ] ] on: Error do: #debug ];
+		beResetAction
 ]
 
 { #category : #callbacks }
@@ -81,7 +100,7 @@ GtCreationForm >> commitPackage [
 { #category : #accessing }
 GtCreationForm >> ghostTextFor: aString [
 	^ BrGhostTextAttribute
-		for: (aString asRopedText glamorousCodeFont foreground: Color lightGray)
+		for: (aString asRopedText glamorousFormEditorCodeFontAndSize foreground: Color lightGray)
 ]
 
 { #category : #accessing }
@@ -117,13 +136,24 @@ GtCreationForm >> onElementCreated: anObject [
 ]
 
 { #category : #accessing }
+GtCreationForm >> onReset [
+	^ onReset
+]
+
+{ #category : #accessing }
+GtCreationForm >> onReset: anObject [
+	onReset := anObject
+]
+
+{ #category : #accessing }
 GtCreationForm >> packageAndTagDescription [
 	<magritteDescription>
 	^ GtPackageAndTagDescription new
 		label: 'Package';
 		priority: 3;
 		accessor: #packageAndTagName;
-		textStyler: #glamorousCodeFont;
+		labelStyler: #glamorousFormLabelStyle;
+		textStyler: #glamorousFormEditorCodeFontAndSize;
 		beRequired
 ]
 
@@ -148,17 +178,20 @@ GtCreationForm >> selectInNavigationModel: aNavigationModel anInstance: anInstan
 GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy [
 	^ [ :aMemento :aDescription :aForm | 
 	| aTagger aTaggerAptitude |
-	aTagger := BrTagger new.
-	aTagger fitContent.
+	aTagger := BrTagger new hFitContentLimited.
 	aForm hMatchParent.
 	aTagger
 		aptitude: (aTaggerAptitude := GtCreationEditableTaggerAptitude new
-					margin: (BlInsets right: 5);
+					margin: (BlInsets
+							top: 3
+							bottom: 3
+							left: 0
+							right: 5);
 					tagLabel: [ :aTag | 
 						| aLabel |
 						aLabel := BrEditableLabel new
 								text: (aDescription displayStringFor: aTag name);
-								aptitude: (BrGlamorousEditableLabelAptitude new glamorousCodeFont
+								aptitude: (BrGlamorousEditableLabelAptitude new glamorousFormEditorCodeFontAndSize
 										defaultForeground: Color black).
 						aCompletionStrategy
 							ifNotNil: [ (GtCompletionController on: aLabel strategy: aCompletionStrategy) install ].
