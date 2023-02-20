@@ -154,7 +154,7 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 				element addChild: (self gtCreationInterface: aDropdown).
 				aDropdown
 					when: GtNavigationDropDownCreateWish
-					do: [ :aWish | element children first selectTabWithLabel: aWish tabName ].
+					do: [ :aWish | element children first selectTabWithLabelString: aWish tabName ].
 				element ]
 			id: GtNavigationNewDropdownId
 ]
