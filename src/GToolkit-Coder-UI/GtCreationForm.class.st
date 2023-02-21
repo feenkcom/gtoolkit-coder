@@ -175,7 +175,7 @@ GtCreationForm >> selectInNavigationModel: aNavigationModel anInstance: anInstan
 ]
 
 { #category : #accessing }
-GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy [
+GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMenuBlock: aContextMenuBlock [
 	^ [ :aMemento :aDescription :aForm | 
 	| aTagger aTaggerAptitude |
 	aTagger := BrTagger new hFitContentLimited.
@@ -195,6 +195,10 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy [
 										defaultForeground: Color black).
 						aCompletionStrategy
 							ifNotNil: [ (GtCompletionController on: aLabel strategy: aCompletionStrategy) install ].
+						aContextMenuBlock
+							ifNotNil: [ aLabel
+									addAptitude: (BrGlamorousWithContextMenuAptitude
+											content: (aContextMenuBlock value: aTag name value: aLabel)) ].
 						aLabel ]).
 	aTagger
 		when: BrTaggerAddTagRequest

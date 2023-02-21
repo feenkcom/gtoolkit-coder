@@ -150,7 +150,7 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 				element
 					constraintsDo: [ :c | 
 						c horizontal exact: 400.
-						c vertical exact: 300 ].
+						c vertical exact: 260 ].
 				element addChild: (self gtCreationInterface: aDropdown).
 				aDropdown
 					when: GtNavigationDropDownCreateWish
