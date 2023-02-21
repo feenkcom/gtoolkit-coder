@@ -215,6 +215,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderB
 			domainObject: 'instance slots';
 			stream: #() asAsyncStream;
 			itemStencil: [ BrHorizontalPane new
+					aptitude:  BrGlamorousListItemAptitude;
 					hMatchParent;
 					vFitContent;
 					when: BlClickEvent do: clickBlock ];
@@ -239,7 +240,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
 						hMatchParent;
 						vFitContent;
 						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude.
+						aptitude: BrGlamorousLabelAptitude.
 				label text: item name asRopedText.
 				label
 					addAptitude: (BrGlamorousWithContextMenuAptitude
