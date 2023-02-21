@@ -125,8 +125,7 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 				navigationModel: self navigationModel ];
 		actionStencil: [ :aButton | 
 				GtSpotterDropdownButtonStencil new
-					valuable: (GtCoderSpotterStart new
-							navigationModelBlock: [ self navigationModel ]);
+					valuable: (GtCoderSpotterStart new navigationModelBlock: [ self navigationModel ]);
 					tooltip: 'Search Code';
 					actOn: [ :anActOnEvent :anItem :theButton | 
 						| acted |
@@ -143,18 +142,21 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 						acted ifTrue: [ anActOnEvent beActed ] ];
 					asElement ]
 			tooltip: 'Search Code';
-	actionDropdownButtonIcon: BrGlamorousVectorIcons add
-		tooltip: 'Add class or package'
-		content: [ :aDropdown | 
-			| element |
-			element := BlElement new.
-			element
-				constraintsDo: [ :c | 
-					c horizontal exact: 400.
-					c vertical exact: 260 ].
-			element addChild: (self gtCreationInterface: aDropdown).
-			element ]
-		id: GtNavigationNewDropdownId
+		actionDropdownButtonIcon: BrGlamorousVectorIcons add
+			tooltip: 'Add class or package'
+			content: [ :aDropdown | 
+				| element |
+				element := BlElement new.
+				element
+					constraintsDo: [ :c | 
+						c horizontal exact: 400.
+						c vertical exact: 260 ].
+				element addChild: (self gtCreationInterface: aDropdown).
+				aDropdown
+					when: GtNavigationDropDownCreateWish
+					do: [ :aWish | element children first selectTabWithLabelString: aWish tabName ].
+				element ]
+			id: GtNavigationNewDropdownId
 ]
 
 { #category : #accessing }
