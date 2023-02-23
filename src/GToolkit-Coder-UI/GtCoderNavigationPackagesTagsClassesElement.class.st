@@ -477,6 +477,13 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
+	self
+		suppressListChangeEventsDuring: [ self deselectPackages.
+			self deselectClasses ]
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageTagAdded: anAnnouncement [
 	self
 		suppressListChangeEventsDuring: [ self addPackage: anAnnouncement package tag: anAnnouncement tag ]
@@ -499,13 +506,6 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageTagSelected: anAnnouncer
 GtCoderNavigationPackagesTagsClassesElement >> onPackageUnregistered: anAnnouncement [
 	self
 		suppressListChangeEventsDuring: [ self removePackage: anAnnouncement package ]
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
-	self
-		suppressListChangeEventsDuring: [ self deselectPackages.
-			self deselectClasses ]
 ]
 
 { #category : #'event handling' }
@@ -702,6 +702,41 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aP
 	self updateSlotList
 ]
 
+{ #category : #'api - class selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedClass [
+	<return: #Class or: nil>
+	^ classesList selectedClass
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedPackage [
+	<return: #RPackage or: nil>
+	^ packagesList selectedPackage
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedPackageNodeDo: aBlock [
+	^ packagesList selectedPackageNodeDo: aBlock
+]
+
+{ #category : #'api - package updates' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedPackageOrTag [
+	| aSelectedPackageOrTag |
+	packagesList selectedNodeDo: [ :aNode | aSelectedPackageOrTag := aNode value ].
+	^ aSelectedPackageOrTag
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTag [
+	<return: #RPackageTag or: nil>
+	^ packagesList selectedPackageTag
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock [
+	^ packagesList selectedPackageTagNodeDo: aBlock
+]
+
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 	| aPreviousIndex |
@@ -746,41 +781,6 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackageOrTag: aPackageOrTag
 	(aPackageOrTag isKindOf: RPackage)
 		ifTrue: [ self selectPackage: aPackageOrTag ] 
 		ifFalse: [ self selectPackage: aPackageOrTag package tag: aPackageOrTag ]
-]
-
-{ #category : #'api - class selections' }
-GtCoderNavigationPackagesTagsClassesElement >> selectedClass [
-	<return: #Class or: nil>
-	^ classesList selectedClass
-]
-
-{ #category : #'api - package selections' }
-GtCoderNavigationPackagesTagsClassesElement >> selectedPackage [
-	<return: #RPackage or: nil>
-	^ packagesList selectedPackage
-]
-
-{ #category : #'api - package selections' }
-GtCoderNavigationPackagesTagsClassesElement >> selectedPackageNodeDo: aBlock [
-	^ packagesList selectedPackageNodeDo: aBlock
-]
-
-{ #category : #'api - package updates' }
-GtCoderNavigationPackagesTagsClassesElement >> selectedPackageOrTag [
-	| aSelectedPackageOrTag |
-	packagesList selectedNodeDo: [ :aNode | aSelectedPackageOrTag := aNode value ].
-	^ aSelectedPackageOrTag
-]
-
-{ #category : #'api - package selections' }
-GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTag [
-	<return: #RPackageTag or: nil>
-	^ packagesList selectedPackageTag
-]
-
-{ #category : #'api - package selections' }
-GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock [
-	^ packagesList selectedPackageTagNodeDo: aBlock
 ]
 
 { #category : #'showing / hiding' }

@@ -47,17 +47,7 @@ GtCoderNullNavigationModel >> selectClass: aClass [
 ]
 
 { #category : #'api - selection' }
-GtCoderNullNavigationModel >> selectMethod: aCompiledMethod [
-	"do nothing"
-]
-
-{ #category : #'api - selection' }
-GtCoderNullNavigationModel >> selectMethodProtocol: aMethodProtocol [
-	"do nothing"
-]
-
-{ #category : #'api - selection' }
-GtCoderNullNavigationModel >> selectPackage: aPackage [
+GtCoderNullNavigationModel >> selectClass: aClass withViewReset: aBoolean [
 	"do nothing"
 ]
 
@@ -78,5 +68,20 @@ GtCoderNullNavigationModel >> selectedPackageDo: aBlock [
 
 { #category : #'api - selection' }
 GtCoderNullNavigationModel >> selectedTagDo: aBlock [
+	"do nothing"
+]
+
+{ #category : #'api - selection' }
+GtCoderNullNavigationModel >> selectMethod: aCompiledMethod [
+	"do nothing"
+]
+
+{ #category : #'api - selection' }
+GtCoderNullNavigationModel >> selectMethodProtocol: aMethodProtocol [
+	"do nothing"
+]
+
+{ #category : #'api - selection' }
+GtCoderNullNavigationModel >> selectPackage: aPackage [
 	"do nothing"
 ]

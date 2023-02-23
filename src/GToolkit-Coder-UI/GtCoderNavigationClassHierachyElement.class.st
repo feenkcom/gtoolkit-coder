@@ -41,9 +41,10 @@ GtCoderNavigationClassHierachyElement >> onClassRenamed: anAnnouncement [
 
 { #category : #'event handling' }
 GtCoderNavigationClassHierachyElement >> onClassSelected: anAnnouncement [
-	self
-		suppressListChangeEventsDuring: [ self updateClassListsWith: anAnnouncement theClass.
-			self selectClass: anAnnouncement theClass ]
+	self suppressListChangeEventsDuring: 
+			[anAnnouncement viewReset
+				ifTrue: [self updateClassListsWith: anAnnouncement theClass].
+			self selectClass: anAnnouncement theClass]
 ]
 
 { #category : #'event handling' }
@@ -54,14 +55,14 @@ GtCoderNavigationClassHierachyElement >> onPackageSelected: anAnnouncer [
 ]
 
 { #category : #'event handling' }
-GtCoderNavigationClassHierachyElement >> onPackageTagSelected: anAnnouncer [
+GtCoderNavigationClassHierachyElement >> onPackagesSelected: anAnnouncer [
 	self
 		suppressListChangeEventsDuring: [ self emptyClassList.
 			self deselectClasses ]
 ]
 
 { #category : #'event handling' }
-GtCoderNavigationClassHierachyElement >> onPackagesSelected: anAnnouncer [
+GtCoderNavigationClassHierachyElement >> onPackageTagSelected: anAnnouncer [
 	self
 		suppressListChangeEventsDuring: [ self emptyClassList.
 			self deselectClasses ]
@@ -92,7 +93,7 @@ GtCoderNavigationClassHierachyElement >> updateClassLists [
 
 { #category : #'updating lists' }
 GtCoderNavigationClassHierachyElement >> updateClassListsWith: aClass [
-	classesList initializeWithHierachyForClass: aClass.
+	classesList initializeWithHierachyForClass: aClass
 ]
 
 { #category : #'updating lists' }

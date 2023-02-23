@@ -77,12 +77,12 @@ GtCoderPlaygroundElement >> onPackageSelected: anEvent [
 ]
 
 { #category : #'private - hooks' }
-GtCoderPlaygroundElement >> onPackageTagSelected: anEvent [
+GtCoderPlaygroundElement >> onPackagesSelected: anEvent [
 	self updatePlayground
 ]
 
 { #category : #'private - hooks' }
-GtCoderPlaygroundElement >> onPackagesSelected: anEvent [
+GtCoderPlaygroundElement >> onPackageTagSelected: anEvent [
 	self updatePlayground
 ]
 

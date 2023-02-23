@@ -14,14 +14,14 @@ GtDiffSplit >> = anObject [
 	^ self class = anObject class ifTrue: [ self object = anObject object ]
 ]
 
-{ #category : #testing }
-GtDiffSplit >> hasMatch [
-	^ matched
-]
-
 { #category : #comparing }
 GtDiffSplit >> hash [
 	^ self object hash
+]
+
+{ #category : #testing }
+GtDiffSplit >> hasMatch [
+	^ matched
 ]
 
 { #category : #initialization }

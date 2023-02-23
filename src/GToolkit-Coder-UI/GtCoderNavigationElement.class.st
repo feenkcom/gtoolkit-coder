@@ -87,6 +87,11 @@ GtCoderNavigationElement >> onClassAdded: anAnnouncement [
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassListSelectionChanged [
+	self onClassListSelectionChangedWithViewReset: false
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationElement >> onClassListSelectionChangedWithViewReset: aBoolean [
 	| anIndex aSelectedItem theIndices |
 	supressListChanges ifTrue: [ ^ self ].
 	theIndices := classesList selectedIndices.
@@ -95,7 +100,7 @@ GtCoderNavigationElement >> onClassListSelectionChanged [
 	(anIndex between: 1 and: classesList viewModel itemCount)
 		ifFalse: [ ^ self ].
 	aSelectedItem := (classesList viewModel itemAt: anIndex) value rootClass.
-	self navigationModel selectClass: aSelectedItem
+	self navigationModel selectClass: aSelectedItem  withViewReset: aBoolean
 ]
 
 { #category : #'event handling' }
@@ -187,9 +192,10 @@ GtCoderNavigationElement >> selectClass: aClass [
 
 { #category : #subscriptions }
 GtCoderNavigationElement >> subscribeToClassList [
-	classesList
-		when: BrSelectionChanged
-		do: [ :anEvent | self onClassListSelectionChanged ].
+	classesList when: BrSelectionChanged
+		do: [:anEvent | self onClassListSelectionChanged].
+	classesList when: BrSelectionDoubleClicked
+		do: [:anEvent | self onClassListSelectionChangedWithViewReset: true]
 ]
 
 { #category : #subscriptions }

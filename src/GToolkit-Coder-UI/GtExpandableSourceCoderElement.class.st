@@ -17,11 +17,6 @@ GtExpandableSourceCoderElement >> addCodersCoderLook: aSourceCoder to: anElement
 		ifNotNil: [ :aCoderLook | anElement addAptitude: aCoderLook ]
 ]
 
-{ #category : #converting }
-GtExpandableSourceCoderElement >> asVerticallyResizableDo: aBlock [
-	^ self
-]
-
 { #category : #private }
 GtExpandableSourceCoderElement >> assignCollapsedCoder: aTextualCoderViewModel to: aCollapsedElement [
 	aCollapsedElement textualCoderViewModel: aTextualCoderViewModel.
@@ -41,6 +36,11 @@ GtExpandableSourceCoderElement >> assignExpandedCoder: aTextualCoderViewModel to
 	anExpandedElement aptitude
 		ifNil: [
 			self addCodersCoderLook: aTextualCoderViewModel to: anExpandedElement ]
+]
+
+{ #category : #converting }
+GtExpandableSourceCoderElement >> asVerticallyResizableDo: aBlock [
+	^ self
 ]
 
 { #category : #accessing }
