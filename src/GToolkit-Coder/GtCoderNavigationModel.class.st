@@ -61,12 +61,7 @@ GtCoderNavigationModel >> selectClass: aClass [
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationModel >> selectMethod: aCompiledMethod [
-	self subclassResponsibility
-]
-
-{ #category : #'api - selection' }
-GtCoderNavigationModel >> selectPackage: aPackage [
+GtCoderNavigationModel >> selectClass: aClass withViewReset: aBoolean [
 	self subclassResponsibility
 ]
 
@@ -82,6 +77,16 @@ GtCoderNavigationModel >> selectedPackageDo: aBlock [
 
 { #category : #'api - selection' }
 GtCoderNavigationModel >> selectedTagDo: aBlock [
+	self subclassResponsibility
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationModel >> selectMethod: aCompiledMethod [
+	self subclassResponsibility
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationModel >> selectPackage: aPackage [
 	self subclassResponsibility
 ]
 

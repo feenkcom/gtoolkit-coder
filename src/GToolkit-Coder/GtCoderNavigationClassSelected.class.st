@@ -4,10 +4,17 @@ Class {
 	#instVars : [
 		'theClass',
 		'package',
-		'tag'
+		'tag',
+		'viewReset'
 	],
-	#category : 'GToolkit-Coder-Navigation - Events'
+	#category : #'GToolkit-Coder-Navigation - Events'
 }
+
+{ #category : #accessing }
+GtCoderNavigationClassSelected >> initialize [
+	super initialize.
+	viewReset := false
+]
 
 { #category : #accessing }
 GtCoderNavigationClassSelected >> package [
@@ -39,4 +46,14 @@ GtCoderNavigationClassSelected >> theClass [
 { #category : #accessing }
 GtCoderNavigationClassSelected >> theClass: anObject [
 	theClass := anObject
+]
+
+{ #category : #'as yet unclassified' }
+GtCoderNavigationClassSelected >> viewReset [
+	^ viewReset
+]
+
+{ #category : #accessing }
+GtCoderNavigationClassSelected >> viewReset: aBoolean [ 
+	viewReset := aBoolean
 ]

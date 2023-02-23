@@ -9,11 +9,6 @@ Class {
 	#category : 'GToolkit-Coder-UI-Basic'
 }
 
-{ #category : #'api - actions' }
-GtCoderFilterListItem >> actOnEvent: anEvent [
-	self action cull: self item cull: self cull: anEvent
-]
-
 { #category : #'api - accessing' }
 GtCoderFilterListItem >> action [
 	^ action
@@ -22,6 +17,11 @@ GtCoderFilterListItem >> action [
 { #category : #'api - accessing' }
 GtCoderFilterListItem >> action: anObject [
 	action := anObject
+]
+
+{ #category : #'api - actions' }
+GtCoderFilterListItem >> actOnEvent: anEvent [
+	self action cull: self item cull: self cull: anEvent
 ]
 
 { #category : #'api - accessing' }

@@ -15,6 +15,17 @@ GtPackagesCompletionStrategy class >> allPackagesDo: aBlock [
 ]
 
 { #category : #querying }
+GtPackagesCompletionStrategy class >> findPackagesMatching: aString [
+	| searchString results |
+	searchString := '*' , aString , '*'.
+	results := OrderedCollection new.
+	self allPackagesDo: [ :each | 
+		(searchString match: each name)
+			ifTrue: [ results add: each ] ].
+	^ results
+]
+
+{ #category : #querying }
 GtPackagesCompletionStrategy class >> findPackageTagsMatching: aString [
 	| searchString results |
 	searchString := '*' , aString , '*'.
@@ -24,17 +35,6 @@ GtPackagesCompletionStrategy class >> findPackageTagsMatching: aString [
 			do: [ :tag | 
 				(searchString match: tag categoryName)
 					ifTrue: [ results add: tag ] ] ].
-	^ results
-]
-
-{ #category : #querying }
-GtPackagesCompletionStrategy class >> findPackagesMatching: aString [
-	| searchString results |
-	searchString := '*' , aString , '*'.
-	results := OrderedCollection new.
-	self allPackagesDo: [ :each | 
-		(searchString match: each name)
-			ifTrue: [ results add: each ] ].
 	^ results
 ]
 
