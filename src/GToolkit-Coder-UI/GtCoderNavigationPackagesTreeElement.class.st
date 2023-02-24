@@ -58,10 +58,8 @@ GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 { #category : #initialization }
 GtCoderNavigationPackagesTreeElement >> contextMenuItemsFor: aPackageOrTag [
 	| items |
-	items := {(self createLabel: 'New package' description: '')
-				-> [ :elem | self newPackage ].
-			(self createLabel: 'New tag' description: '')
-				-> [ :elem | self newTagFor: aPackageOrTag inElement: elem ]}
+	items := {(self createLabel: 'New package / tag' description: '')
+				-> [ :elem | self newPackage ]}
 			asOrderedCollection.
 	aPackageOrTag class == RPackage
 		ifTrue: [ items

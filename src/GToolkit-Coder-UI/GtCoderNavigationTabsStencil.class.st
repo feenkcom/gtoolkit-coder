@@ -93,6 +93,9 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 											onReset: [ look
 													inUIProcessDo: [ look fireEvent: BrDropdownHideWish new.
 														self formCache removeKey: each ] ].
+									form class == GtClassCreationForm
+										ifTrue: [ navigationModel
+												selectedClassDo: [ :aClass | form superclassName: aClass name ] ].
 									form hasPackageAndTag
 										ifTrue: [ navigationModel
 												selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
