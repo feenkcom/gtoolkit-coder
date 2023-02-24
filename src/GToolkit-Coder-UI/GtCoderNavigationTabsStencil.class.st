@@ -122,7 +122,10 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
-	tabClasses := (GtCreationForm allSubclasses select: #isAdditionForm)
+	tabClasses := (GtCreationForm allSubclasses
+			select: [ :aClass | 
+				(aClass isAbstract or: [ aClass hasAbstractMethods ]) not
+					and: [ aClass isAdditionForm ] ])
 			asSortedCollection: [ :a :b | a priority < b priority ].
 	tabClasses
 		do: [ :each | 
