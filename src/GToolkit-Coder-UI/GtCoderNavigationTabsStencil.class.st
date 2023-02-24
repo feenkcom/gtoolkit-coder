@@ -106,7 +106,7 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 											look
 												inUIProcessDo: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
 													look fireEvent: BrDropdownHideWish new ].
-											self formCache removeKey: each ];
+											self formCache removeKey: each ifAbsent: [  ] ];
 										onElementCreated: [ :aFrame | 
 											BlFocusFinder new
 												direction: BlFocusSearchDirectionForward new;
@@ -153,7 +153,7 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 				element
 					constraintsDo: [ :c | 
 						c horizontal exact: 400.
-						c vertical exact: 260 ].
+						c vertical exact: 280 ].
 				element addChild: (self gtCreationInterface: aDropdown).
 				aDropdown
 					when: GtNavigationDropDownCreateWish
