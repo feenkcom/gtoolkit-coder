@@ -31,9 +31,10 @@ GtCreationForm >> acceptAction [
 	^ MAActionDescription new
 		label: 'Accept';
 		action: [ :aModel :aButton | 
-			[ | aValue |
-			aValue := self commit.
-			onAccept ifNotNil: [ onAccept value: aValue ] ] on: Error do: #debug ];
+			aButton
+				inUIProcessDo: [ [ | aValue |
+					aValue := self commit.
+					onAccept ifNotNil: [ onAccept value: aValue ] ] on: Error do: #debug ] ];
 		beCommitAction
 ]
 
@@ -152,8 +153,8 @@ GtCreationForm >> packageAndTagDescription [
 		label: 'Package';
 		priority: 3;
 		accessor: #packageAndTagName;
-		labelStyler: #glamorousFormLabelStyle;
-		textStyler: #glamorousFormEditorCodeFontAndSize;
+		editorAptitude: [ BrGlamorousRegularEditorAptitude new glamorousFormEditorCodeFontAndSize ];
+		labelAptitude: [ BrGlamorousLabelAptitude new glamorousFormLabelStyle ];
 		beRequired
 ]
 
