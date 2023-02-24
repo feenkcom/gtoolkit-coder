@@ -9,6 +9,46 @@ Class {
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
 
+{ #category : #'gt-extensions' }
+GtCoderNavigationTabsStencil >> addButtonsTo: explicitView [
+	explicitView
+		actionStencil: [ :aButton | 
+			GtSpotterDropdownButtonStencil new
+				valuable: (GtCoderSpotterStart new navigationModelBlock: [ self navigationModel ]);
+				tooltip: 'Search Code';
+				actOn: [ :anActOnEvent :anItem :theButton | 
+					| acted |
+					acted := false.
+					(anItem isKindOf: RPackage)
+						ifTrue: [ self navigationModel selectPackage: anItem.
+							acted := true ].
+					(anItem isKindOf: ClassDescription)
+						ifTrue: [ self navigationModel selectClass: anItem.
+							acted := true ].
+					(anItem isKindOf: CompiledMethod)
+						ifTrue: [ self navigationModel selectMethod: anItem.
+							acted := true ].
+					acted ifTrue: [ anActOnEvent beActed ] ];
+				asElement ]
+		tooltip: 'Search Code'.
+	explicitView
+		actionDropdownButtonIcon: BrGlamorousVectorIcons add
+		tooltip: 'Add class or package'
+		content: [ :aDropdown | 
+			| element |
+			element := BlElement new.
+			element
+				constraintsDo: [ :c | 
+					c horizontal exact: 400.
+					c vertical exact: 260 ].
+			element addChild: (self gtCreationInterface: aDropdown).
+			aDropdown
+				when: GtNavigationDropDownCreateWish
+				do: [ :aWish | element children first selectTabWithLabelString: aWish tabName ].
+			element ]
+		id: GtNavigationNewDropdownId
+]
+
 { #category : #adding }
 GtCoderNavigationTabsStencil >> addNavigation: aNavigationElement [
 	self assertNavigationView: aNavigationElement.
@@ -62,11 +102,15 @@ GtCoderNavigationTabsStencil >> formCache: anObject [
 { #category : #'gt-extensions' }
 GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 	<gtCoderNavigation>
+	| explicitView |
 	self navigationModel ifNil: [ ^ aView empty ].
-	^ aView explicit
-		title: 'Class Hierarchy';
-		priority: 2;
-		stencil: [ GtCoderNavigationClassHierachyElement new navigationModel: self navigationModel ]
+	explicitView := aView explicit
+			title: 'Class Hierarchy';
+			priority: 2;
+			stencil: [ GtCoderNavigationClassHierachyElement new
+					navigationModel: self navigationModel ].
+	self addButtonsTo: explicitView.
+	^ explicitView
 ]
 
 { #category : #'gt-extensions' }
@@ -120,46 +164,15 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 { #category : #'gt-extensions' }
 GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 	<gtCoderNavigation>
+	| explicitView |
 	self navigationModel ifNil: [ ^ aView empty ].
-	^ aView explicit
-		title: 'Package Hierarchy';
-		priority: 1;
-		stencil: [ GtCoderNavigationPackagesTagsClassesElement new
-				navigationModel: self navigationModel ];
-		actionStencil: [ :aButton | 
-				GtSpotterDropdownButtonStencil new
-					valuable: (GtCoderSpotterStart new navigationModelBlock: [ self navigationModel ]);
-					tooltip: 'Search Code';
-					actOn: [ :anActOnEvent :anItem :theButton | 
-						| acted |
-						acted := false.
-						(anItem isKindOf: RPackage)
-							ifTrue: [ self navigationModel selectPackage: anItem.
-								acted := true ].
-						(anItem isKindOf: ClassDescription)
-							ifTrue: [ self navigationModel selectClass: anItem.
-								acted := true ].
-						(anItem isKindOf: CompiledMethod)
-							ifTrue: [ self navigationModel selectMethod: anItem.
-								acted := true ].
-						acted ifTrue: [ anActOnEvent beActed ] ];
-					asElement ]
-			tooltip: 'Search Code';
-		actionDropdownButtonIcon: BrGlamorousVectorIcons add
-			tooltip: 'Add class or package'
-			content: [ :aDropdown | 
-				| element |
-				element := BlElement new.
-				element
-					constraintsDo: [ :c | 
-						c horizontal exact: 400.
-						c vertical exact: 260 ].
-				element addChild: (self gtCreationInterface: aDropdown).
-				aDropdown
-					when: GtNavigationDropDownCreateWish
-					do: [ :aWish | element children first selectTabWithLabelString: aWish tabName ].
-				element ]
-			id: GtNavigationNewDropdownId
+	explicitView := aView explicit
+			title: 'Package Hierarchy';
+			priority: 1;
+			stencil: [ GtCoderNavigationPackagesTagsClassesElement new
+					navigationModel: self navigationModel ].
+	self addButtonsTo: explicitView.
+	^ explicitView
 ]
 
 { #category : #accessing }
