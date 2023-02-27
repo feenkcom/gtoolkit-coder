@@ -684,24 +684,16 @@ GtCoderNavigationPackagesTagsClassesElement >> renameProtocol: protocolName in: 
 		text: protocolName;
 		when: BrEditorAcceptWish
 			do: [ :aWish | 
-				refactoring := self renameProtocolFrom: protocolName to: aWish text asString.
-				refactoring halt.
+				refactoring := GtRBRenameProtocolRefactoring
+					renameProtocol: protocolName
+					in: self selectedClass
+					to: aWish text asString.
 				edit switchToLabel.
 				self addPreviewButtonFor: refactoring to: elem ];
 		switchToEditor.
 	edit requestFocus.
 	elem removeChildren.
 	elem addChild: edit
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> renameProtocolFrom: oldName to: newName [
-	| model modelClass |
-	model := RBNamespace new.
-	modelClass := model classFor: self selectedClass.
-	(self selectedClass organization protocolNamed: oldName)
-			methodSelectors do: [:each | model selector: each in: modelClass classified: newName].
-	^model changes
 ]
 
 { #category : #'api - package reselections' }
