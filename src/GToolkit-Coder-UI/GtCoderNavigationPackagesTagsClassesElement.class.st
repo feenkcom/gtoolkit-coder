@@ -254,6 +254,16 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
 	^ list
 ]
 
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> classMethodsForAProtocol: aSelectedItem [
+	^ (self selectedClass class organization protocolNamed: aSelectedItem name)
+		ifNotNil: [ :s | 
+			(s methodSelectors
+				collect: [ :sel | self selectedClass class >> sel ]
+				thenReject: [ :meth | meth isFromTrait ]) asArray ]
+		ifNil: [ #() ]
+]
+
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> deselectPackages [
 	packagesList deselectAll
@@ -352,6 +362,13 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ]
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> instanceMethodsForAProtocol: aSelectedItem [
+	^ (self selectedClass organization protocolNamed: aSelectedItem name)
+		ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass >> sel ] as: Array ]
+		ifNil: [ #() ]
 ]
 
 { #category : #initialization }
@@ -519,16 +536,8 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 		ifFalse: [ ^ self ].
 	aSelectedItem := (methodProtocolsList viewModel entityAt: anIndex) value object.
 	self navigationModel selectMethodProtocol: aSelectedItem source: self.
-	instMeths := (self selectedClass organization protocolNamed: aSelectedItem name)
-			ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass >> sel ] as: Array ]
-			ifNil: [ #() ].
-	classMeths := (self selectedClass class organization
-			protocolNamed: aSelectedItem name)
-			ifNotNil: [ :s | 
-				(s methodSelectors
-					collect: [ :sel | self selectedClass class >> sel ]
-					thenReject: [ :meth | meth isFromTrait ]) asArray ]
-			ifNil: [ #() ].
+	instMeths := self instanceMethodsForAProtocol: aSelectedItem.
+	classMeths := self classMethodsForAProtocol: aSelectedItem.
 	methodGroupList deselectAll.
 	self updateMethodListWith: instMeths and: classMeths
 ]
@@ -554,8 +563,8 @@ GtCoderNavigationPackagesTagsClassesElement >> onSlotsListSelectionChanged [
 GtCoderNavigationPackagesTagsClassesElement >> protocolListContextMenuItemsFor: item [
 	^ {(self createLabel: 'Remove ' description: item name)
 			-> [ :elem | self removeProtocol: item name in: elem ].
-		"(self createLabel: 'Rename ' description: item name)
-			-> [ :elem | self renameProtocol: item name in: elem ]"}
+		(self createLabel: 'Rename ' description: item name)
+			-> [ :elem | self renameProtocol: item name in: elem ]}
 ]
 
 { #category : #initialization }
@@ -666,7 +675,33 @@ GtCoderNavigationPackagesTagsClassesElement >> renamePackage: aPackage oldName: 
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> renameProtocol: protocolName in: elem [
-	self notYetImplemented
+	| refactoring edit |
+	edit := BrEditableLabel new.
+	edit
+		aptitude: (BrGlamorousEditableLabelAptitude new
+				glamorousCodeSmallSize;
+				background: Color transparent);
+		text: protocolName;
+		when: BrEditorAcceptWish
+			do: [ :aWish | 
+				refactoring := self renameProtocolFrom: protocolName to: aWish text asString.
+				refactoring halt.
+				edit switchToLabel.
+				self addPreviewButtonFor: refactoring to: elem ];
+		switchToEditor.
+	edit requestFocus.
+	elem removeChildren.
+	elem addChild: edit
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> renameProtocolFrom: oldName to: newName [
+	| model modelClass |
+	model := RBNamespace new.
+	modelClass := model classFor: self selectedClass.
+	(self selectedClass organization protocolNamed: oldName)
+			methodSelectors do: [:each | model selector: each in: modelClass classified: newName].
+	^model changes
 ]
 
 { #category : #'api - package reselections' }
