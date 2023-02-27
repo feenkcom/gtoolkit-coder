@@ -88,16 +88,16 @@ GtCoderNavigationPackagesTreeElement >> initialize [
 
 	self
 		nodeStencil: [ BrHorizontalPane new
-				aptitude: BrGlamorousListItemAptitude;
 				hMatchParent;
 				vFitContent ];
 		nodeDataBinder: [ :aPackageElement :aPackage | 
 			| label |
 			aPackageElement
 				removeChildren;
-				addAptitude: (BrGlamorousWithContextMenuAptitude
-						content: [ GtCoderNavigationContextMenuContent new
-								items: (self contextMenuItemsFor: aPackage) ]).
+				aptitude: BrGlamorousListItemAptitude new
+						+ (BrGlamorousWithContextMenuAptitude
+								content: [ GtCoderNavigationContextMenuContent new
+										items: (self contextMenuItemsFor: aPackage) ]).
 			label := BrLabel new
 					matchParent;
 					beSmallSize;
