@@ -59,23 +59,18 @@ GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 GtCoderNavigationPackagesTreeElement >> contextMenuItemsFor: aPackageOrTag [
 	| items |
 	items := {(self createLabel: 'New package / tag' description: '')
-				-> [ :elem | self newPackage ]}
-			asOrderedCollection.
+				-> [ :elem | self newPackage ]} asOrderedCollection.
 	aPackageOrTag class == RPackage
 		ifTrue: [ items
 				addAll: {(self createLabel: 'Rename package' description: aPackageOrTag name)
 							-> [ :elem | self renamePackage: aPackageOrTag inElement: elem ].
 						(self createLabel: 'Remove package' description: aPackageOrTag name)
-							-> [ :elem | self removePackage: aPackageOrTag inElement: elem ]	
-					   "(self createLabel: 'Demote package' description: aPackageOrTag name)
-							-> [ :elem | self demotePackage: aPackageOrTag inElement: elem ]" }]
+							-> [ :elem | self removePackage: aPackageOrTag inElement: elem ]} ]
 		ifFalse: [ items
 				addAll: {(self createLabel: 'Rename tag' description: aPackageOrTag name)
 							-> [ :elem | self renameTag: aPackageOrTag inElement: elem ].
 						(self createLabel: 'Remove tag' description: aPackageOrTag name)
-							-> [ :elem | self removeTag: aPackageOrTag inElement: elem ]	
-					   "(self createLabel: 'Promote tag' description: aPackageOrTag name)
-							-> [ :elem | self promoteTag: aPackageOrTag inElement: elem ]" } ].
+							-> [ :elem | self removeTag: aPackageOrTag inElement: elem ]} ].
 
 	^ items
 ]
