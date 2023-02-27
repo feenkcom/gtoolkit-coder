@@ -199,7 +199,7 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 						aContextMenuBlock
 							ifNotNil: [ aLabel
 									addAptitude: (BrGlamorousWithContextMenuAptitude
-											content: (aContextMenuBlock value: aTag name value: aLabel)) ].
+											content: [ aContextMenuBlock value: aTag name value: aLabel ]) ].
 						aLabel ]).
 	aTagger
 		when: BrTaggerAddTagRequest
