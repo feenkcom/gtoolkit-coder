@@ -42,27 +42,6 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> addPreviewButtonFor: refactoring to: elem [
-	| button |
-	elem removeChildNamed: #preview.
-	button := GtRefactoringsPreviewButton new.
-	button vMatchParent.
-	button refactorings: [ {refactoring} ].
-	button cancelBlock: [  ].
-	button
-		padding: (BlInsets
-				top: 1
-				right: 4
-				bottom: 0
-				left: 4).
-	button beMiniSize.
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
-	^ elem addChild: button as: #preview
-]
-
-{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> browseHierarchyImplementorsOf: aSymbol [
 	self phlow
 		spawnObject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
@@ -573,7 +552,10 @@ GtCoderNavigationPackagesTagsClassesElement >> pushDownMethod: aSelector inEleme
 	refactoring := RBPushDownMethodRefactoring
 			pushDown: {aSelector}
 			from: self selectedClass.
-	^ self addPreviewButtonFor: refactoring to: elem
+	^ self
+		addPreviewButtonFor: refactoring
+		to: elem
+		cancelSelector: #updateProtocolList
 ]
 
 { #category : #initialization }
@@ -582,7 +564,10 @@ GtCoderNavigationPackagesTagsClassesElement >> pushUpMethod: aSelector inElement
 	refactoring := RBPullUpMethodRefactoring
 			pullUp: {aSelector}
 			from: self selectedClass.
-	^ self addPreviewButtonFor: refactoring to: elem
+	^ self
+		addPreviewButtonFor: refactoring
+		to: elem
+		cancelSelector: #updateProtocolList
 ]
 
 { #category : #initialization }
@@ -634,7 +619,10 @@ GtCoderNavigationPackagesTagsClassesElement >> removeProtocol: protocolName in: 
 	refactoring := RBRemoveProtocolChange
 			removeProtocolNamed: protocolName
 			in: self selectedClass.
-	^ self addPreviewButtonFor: refactoring to: elem
+	^ self
+		addPreviewButtonFor: refactoring
+		to: elem
+		cancelSelector: #updateProtocolList
 ]
 
 { #category : #initialization }
@@ -654,7 +642,10 @@ GtCoderNavigationPackagesTagsClassesElement >> renameMethod: aSelector inElement
 						to: aWish text asString
 						permutation: (1 to: aSelector numArgs).
 				edit switchToLabel.
-				self addPreviewButtonFor: refactoring to: elem ];
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelSelector: #updateProtocolList ];
 		switchToEditor.
 	edit requestFocus.
 	elem removeChildren.
@@ -685,11 +676,14 @@ GtCoderNavigationPackagesTagsClassesElement >> renameProtocol: protocolName in: 
 		when: BrEditorAcceptWish
 			do: [ :aWish | 
 				refactoring := GtRBRenameProtocolRefactoring
-					renameProtocol: protocolName
-					in: self selectedClass
-					to: aWish text asString.
+						renameProtocol: protocolName
+						in: self selectedClass
+						to: aWish text asString.
 				edit switchToLabel.
-				self addPreviewButtonFor: refactoring to: elem ];
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelSelector: #updateProtocolList ];
 		switchToEditor.
 	edit requestFocus.
 	elem removeChildren.
@@ -824,42 +818,60 @@ GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item
 				refactoring := RBPullUpInstanceVariableRefactoring
 						variable: item name
 						class: self selectedClass superclass.
-				self addPreviewButtonFor: refactoring to: elem ].
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelSelector: #updateProtocolList ].
 		(self createLabel: 'Push down ' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBPushDownInstanceVariableRefactoring
 						variable: item name
 						class: self selectedClass.
-				self addPreviewButtonFor: refactoring to: elem ].
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelSelector: #updateProtocolList ].
 		(self createLabel: 'Create accessors for ' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBCreateAccessorsForVariableRefactoring
 						instanceVariable: item name
 						class: self selectedClass.
-				self addPreviewButtonFor: refactoring to: elem ].
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelSelector: #updateProtocolList ].
 		(self createLabel: 'Abstract ' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBAbstractInstanceVariableRefactoring
 						variable: item name
 						class: self selectedClass.
-				self addPreviewButtonFor: refactoring to: elem ].
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelSelector: #updateProtocolList ].
 		(self createLabel: 'Protect ' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBProtectInstanceVariableRefactoring
 						variable: item name
 						class: self selectedClass.
-				self addPreviewButtonFor: refactoring to: elem ].
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelSelector: #updateProtocolList ].
 		(self createLabel: 'Remove ' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBRemoveInstanceVariableRefactoring
 						variable: item name
 						class: self selectedClass.
-				self addPreviewButtonFor: refactoring to: elem ]}
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelSelector: #updateProtocolList ]}
 ]
 
 { #category : #subscriptions }
