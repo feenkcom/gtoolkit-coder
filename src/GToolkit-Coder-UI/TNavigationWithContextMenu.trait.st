@@ -4,13 +4,13 @@ Trait {
 }
 
 { #category : #accessing }
-TNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem [
+TNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem cancelBlock: aBlock [
 	| button |
 	elem removeChildNamed: #preview.
 	button := GtRefactoringsPreviewButton new.
 	button vMatchParent.
 	button refactorings: [ {refactoring} ].
-	button cancelBlock: [  ].
+	button cancelBlock: aBlock.
 	button
 		padding: (BlInsets
 				top: 1
