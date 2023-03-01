@@ -127,12 +127,14 @@ GtDiffElement >> initialize [
 
 { #category : #'event handling' }
 GtDiffElement >> leftBottomFor: anInteger [
-	| range element |
+	| range element index |
 	range := self leftRange.
-	anInteger < range first ifTrue: [ ^ 0 ].
-	anInteger > range last ifTrue: [ ^ self height ].
-	element := leftElement children at: anInteger - range first + 1.
-	^ element bounds bottom + leftElement bounds top max: 0
+	range isEmpty ifTrue: [ ^ leftElement bounds top + leftElement padding top ].
+	index := (anInteger max: range first) min: range last.
+	element := leftElement children at: index - range first + 1.
+	^ (anInteger < range first
+		ifTrue: [ element bounds top ]
+		ifFalse: [ element bounds bottom ]) + leftElement bounds top max: 0
 ]
 
 { #category : #'event handling' }
@@ -177,12 +179,14 @@ GtDiffElement >> leftStyler: aStyler [
 
 { #category : #'event handling' }
 GtDiffElement >> leftTopFor: anInteger [
-	| range element |
+	| range element index |
 	range := self leftRange.
-	anInteger < range first ifTrue: [ ^ 0 ].
-	anInteger > range last ifTrue: [ ^ self height ].
-	element := leftElement children at: anInteger - range first + 1.
-	^ element bounds top + leftElement bounds top max: 0
+	range isEmpty ifTrue: [ ^ leftElement bounds top + leftElement padding top ].
+	index := (anInteger max: range first) min: range last.
+	element := leftElement children at: index - range first + 1.
+	^ (anInteger > range last
+		ifTrue: [ element bounds bottom ]
+		ifFalse: [ element bounds top ]) + leftElement bounds top max: 0
 ]
 
 { #category : #initialize }
@@ -270,12 +274,14 @@ GtDiffElement >> paintMeAndChildrenOn: aCompositorPainter offset: anOffset [
 
 { #category : #'event handling' }
 GtDiffElement >> rightBottomFor: anInteger [
-	| range element |
+	| range element index |
 	range := self rightRange.
-	anInteger < range first ifTrue: [ ^ 0 ].
-	anInteger > range last ifTrue: [ ^ self height ].
-	element := rightElement children at: anInteger - range first + 1.
-	^ element bounds bottom + rightElement bounds top max: 0
+	range isEmpty ifTrue: [ ^ rightElement bounds top + rightElement padding top ].
+	index := (anInteger max: range first) min: range last.
+	element := rightElement children at: index - range first + 1.
+	^ (anInteger < range first
+		ifTrue: [ element bounds top ]
+		ifFalse: [ element bounds bottom ]) + rightElement bounds top max: 0
 ]
 
 { #category : #'event handling' }
@@ -320,12 +326,14 @@ GtDiffElement >> rightStyler: aStyler [
 
 { #category : #'event handling' }
 GtDiffElement >> rightTopFor: anInteger [
-	| range element |
+	| range element index |
 	range := self rightRange.
-	anInteger < range first ifTrue: [ ^ 0 ].
-	anInteger > range last ifTrue: [ ^ self height ].
-	element := rightElement children at: anInteger - range first + 1.
-	^ element bounds top + rightElement bounds top max: 0
+	range isEmpty ifTrue: [ ^ rightElement bounds top + rightElement padding top ].
+	index := (anInteger max: range first) min: range last.
+	element := rightElement children at: index - range first + 1.
+	^ (anInteger > range last
+		ifTrue: [ element bounds bottom ]
+		ifFalse: [ element bounds top ]) + rightElement bounds top max: 0
 ]
 
 { #category : #accessing }

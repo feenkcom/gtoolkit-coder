@@ -182,10 +182,11 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 	aTagger := BrTagger new hFitContentLimited.
 	aForm hMatchParent.
 	aTagger
+		padding: (BlInsets bottom: 6);
 		aptitude: (aTaggerAptitude := GtCreationEditableTaggerAptitude new
 					margin: (BlInsets
-							top: 3
-							bottom: 3
+							top: 0
+							bottom: 0
 							left: 0
 							right: 5);
 					tagLabel: [ :aTag | 
@@ -194,6 +195,14 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 								text: (aDescription displayStringFor: aTag name);
 								aptitude: (BrGlamorousEditableLabelAptitude new glamorousFormEditorCodeFontAndSize
 										defaultForeground: Color black).
+
+						aDescription blocShortcuts
+							ifNotNil: [ :aBlockReturningCollection | 
+								aBlockReturningCollection value
+									do: [ :aShortcut | aLabel addShortcut: aShortcut ] ].
+
+						aLabel when: BlClickEvent do: [ :anEvent | aLabel switchToEditor ].
+
 						aCompletionStrategy
 							ifNotNil: [ (GtCompletionController on: aLabel strategy: aCompletionStrategy) install ].
 						aContextMenuBlock
