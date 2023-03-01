@@ -194,6 +194,14 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 								text: (aDescription displayStringFor: aTag name);
 								aptitude: (BrGlamorousEditableLabelAptitude new glamorousFormEditorCodeFontAndSize
 										defaultForeground: Color black).
+
+						aDescription blocShortcuts
+							ifNotNil: [ :aBlockReturningCollection | 
+								aBlockReturningCollection value
+									do: [ :aShortcut | aLabel addShortcut: aShortcut ] ].
+
+						aLabel when: BlClickEvent do: [ :anEvent | aLabel switchToEditor ].
+
 						aCompletionStrategy
 							ifNotNil: [ (GtCompletionController on: aLabel strategy: aCompletionStrategy) install ].
 						aContextMenuBlock
