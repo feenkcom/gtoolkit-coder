@@ -182,11 +182,12 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 	aTagger := BrTagger new hFitContentLimited.
 	aForm hMatchParent.
 	aTagger
-		padding: (BlInsets bottom: 6);
+		padding: (BlInsets top: -2 bottom: 5);
+		clipChildren: false;
 		aptitude: (aTaggerAptitude := GtCreationEditableTaggerAptitude new
 					margin: (BlInsets
 							top: 0
-							bottom: 0
+							bottom: 3
 							left: 0
 							right: 5);
 					tagLabel: [ :aTag | 
