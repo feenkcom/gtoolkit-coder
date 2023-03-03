@@ -15,7 +15,7 @@ GtAbstractCoderContextMenuContent >> initialize [
 				bottom: 8
 				left: 10);
 		hFitContentLimited;
-		vFitContent
+		vFitContentLimited
 ]
 
 { #category : #accessing }
