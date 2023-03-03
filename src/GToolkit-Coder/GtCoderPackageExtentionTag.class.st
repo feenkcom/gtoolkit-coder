@@ -35,6 +35,11 @@ GtCoderPackageExtentionTag >> hasExtendedClasses [
 	^ self classes isNotEmpty
 ]
 
+{ #category : #testing }
+GtCoderPackageExtentionTag >> isRoot [
+	^true
+]
+
 { #category : #accessing }
 GtCoderPackageExtentionTag >> name [
 	^ 'Extensions'

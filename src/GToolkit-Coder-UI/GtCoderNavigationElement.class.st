@@ -171,7 +171,7 @@ GtCoderNavigationElement >> scrollIndexFromPrevious: aPreviousIndex current: aNe
 
 { #category : #'api - class selections' }
 GtCoderNavigationElement >> selectClass: aClass [
-	| aPreviousIndex |
+	| aPreviousIndex | 
 	aPreviousIndex := classesList selectedIndice.
 	classesList viewModel
 		indexOfSuchThat: [ :each | each rootClass = aClass ]
