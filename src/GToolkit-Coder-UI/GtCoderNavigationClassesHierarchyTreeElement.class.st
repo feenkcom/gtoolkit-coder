@@ -19,27 +19,6 @@ GtCoderNavigationClassesHierarchyTreeElement class >> fromClasses: aCollectionOf
 	^ self new initializeWithClasses: aCollectionOfClasses
 ]
 
-{ #category : #accessing }
-GtCoderNavigationClassesHierarchyTreeElement >> addPreviewButtonFor: refactoring to: elem [
-	| button |
-	elem removeChildNamed: #preview.
-	button := GtRefactoringsPreviewButton new.
-	button vMatchParent.
-	button refactorings: [ {refactoring} ].
-	button cancelBlock: [  ].
-	button
-		padding: (BlInsets
-				top: 1
-				right: 4
-				bottom: 0
-				left: 4).
-	button beMiniSize.
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
-	^ elem addChild: button as: #preview
-]
-
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> buildRemoveClassLabelFor: aClass [
 	| labelText |
@@ -159,9 +138,10 @@ GtCoderNavigationClassesHierarchyTreeElement >> removeClass: aClass inElement: e
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyTreeElement >> renameClass: aClass inElement: elem [ 
-	| refactoring edit |
+GtCoderNavigationClassesHierarchyTreeElement >> renameClass: aClass inElement: elem [
+	| refactoring edit childs |
 	edit := BrEditableLabel new.
+	childs := elem children.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
 				glamorousCodeSmallSize;
@@ -173,7 +153,11 @@ GtCoderNavigationClassesHierarchyTreeElement >> renameClass: aClass inElement: e
 						rename: aClass name
 						to: aWish text asString.
 				edit switchToLabel.
-				self addPreviewButtonFor: refactoring to: elem ];
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelBlock: [ elem removeChildren.
+						elem addChildren: childs ] ];
 		switchToEditor.
 	edit requestFocus.
 	elem removeChildren.

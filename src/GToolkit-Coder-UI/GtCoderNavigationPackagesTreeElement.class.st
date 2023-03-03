@@ -182,7 +182,8 @@ GtCoderNavigationPackagesTreeElement >> removeTag: aTag inElement: elem [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTreeElement >> renamePackage: aPackage inElement: elem [
-	| refactoring edit |
+	| refactoring edit childs |
+	childs := elem children.
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
@@ -195,7 +196,11 @@ GtCoderNavigationPackagesTreeElement >> renamePackage: aPackage inElement: elem 
 						from: aPackage name
 						to: aWish text asString.
 				edit switchToLabel.
-				self addPreviewButtonFor: refactoring to: elem ];
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelBlock: [ elem removeChildren.
+						elem addChildren: childs ] ];
 		switchToEditor.
 	edit requestFocus.
 	elem removeChildren.
