@@ -467,7 +467,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageRenamed: anAnnouncement 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 	self
-		suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package. self haltOnce.
+		suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package.
 			self showClassList.
 			self deselectClasses ]
 ]
