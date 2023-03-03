@@ -23,9 +23,10 @@ GtCoderContextMenuContent >> editorElement: anEditorElement [
 
 { #category : #initialization }
 GtCoderContextMenuContent >> menuItemStencil [
-	^ [ :eachGtCoderContextMenuAction | 
+	^ [ :eachGtCoderContextMenuAction :aRowIndex | 
 	| element |
 	element := BrHorizontalPane new
+			id: (GtCoderContextMenuItemId indexed: aRowIndex);
 			hMatchParent;
 			vFitContent;
 			alignCenter;
