@@ -1,3 +1,9 @@
+"
+I represent a Coder context menu. 
+#Examples
+The following example shows a case during which a context menu height does not fit and a scrollbar is displayed: {{gtExample:GtPharoCoderByScripterExamples>>#displayPharoMethodContextMenuExtentIn800x300Space | previewExpanded=true | codeExpanded=false | previewHeight=500}} 
+ 
+"
 Class {
 	#name : #GtCoderContextMenuContent,
 	#superclass : #GtAbstractCoderContextMenuContent,
@@ -23,9 +29,10 @@ GtCoderContextMenuContent >> editorElement: anEditorElement [
 
 { #category : #initialization }
 GtCoderContextMenuContent >> menuItemStencil [
-	^ [ :eachGtCoderContextMenuAction | 
+	^ [ :eachGtCoderContextMenuAction :aRowIndex | 
 	| element |
 	element := BrHorizontalPane new
+			id: (GtCoderContextMenuItemId indexed: aRowIndex);
 			hMatchParent;
 			vFitContent;
 			alignCenter;

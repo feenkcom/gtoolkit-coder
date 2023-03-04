@@ -444,7 +444,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageListSelectionChanged [
 	aSelectedItem := (packagesList viewModel itemAt: anIndex) value.
 	(aSelectedItem isKindOf: RPackage)
 		ifTrue: [ self navigationModel selectPackage: aSelectedItem ]
-		ifFalse: [ self navigationModel selectTag: aSelectedItem ].
+		ifFalse: [ self navigationModel selectPackageTag: aSelectedItem ].
 	self showClassList.
 	self deselectClasses
 ]
@@ -743,12 +743,11 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPackageTag [
-	| aPreviousIndex |
+	| aPreviousIndex | 
 	(self hasPackageTagsIn: aPackage) ifFalse: [ ^ self selectPackage: aPackage ].
 	self expandPackage: aPackage.
 
 	aPreviousIndex := packagesList selectedIndice.
-
 	packagesList viewModel
 		indexOf: aPackageTag
 		do: [ :aNewIndex | 
