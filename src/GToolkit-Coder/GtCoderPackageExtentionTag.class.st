@@ -41,6 +41,11 @@ GtCoderPackageExtentionTag >> isRoot [
 ]
 
 { #category : #accessing }
+GtCoderPackageExtentionTag >> isUncategorized [
+	^ false
+]
+
+{ #category : #accessing }
 GtCoderPackageExtentionTag >> name [
 	^ 'Extensions'
 ]
