@@ -16,6 +16,11 @@ GtCoderNavigationElement >> assertNavigationModel: aGtCoderNavigationPackagesTag
 		description: [ 'Navigation model must be non-nil' ].
 ]
 
+{ #category : #'private-accessing' }
+GtCoderNavigationElement >> classesList [
+	^classesList
+]
+
 { #category : #'api - class selections' }
 GtCoderNavigationElement >> deselectClasses [
 	classesList deselectAll

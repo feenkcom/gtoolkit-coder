@@ -45,7 +45,7 @@ GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 		theTags at: eachIndex put: (GtCoderPackageUncategorizedTag forPackageTag: eachTag) ] ].
 	theTags sort: [ :tagA :tagB | self isTag: tagA lessThan: tagB ].
 
-	anExtension := GtCoderPackageExtentionTag forPackage: aPackageOrTag.
+	anExtension := GtCoderPackageExtensionTag forPackage: aPackageOrTag.
 	anExtension hasExtendedClasses ifTrue: [ 
 		theTags addLast: anExtension ].
 	"Do not return an only tag of the same name as the package"
