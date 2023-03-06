@@ -34,6 +34,11 @@ GtCoderPackageUncategorizedTag >> isRoot [
 ]
 
 { #category : #accessing }
+GtCoderPackageUncategorizedTag >> isUncategorized [
+	^ true
+]
+
+{ #category : #accessing }
 GtCoderPackageUncategorizedTag >> name [
 	^ 'Uncategorized'
 ]
