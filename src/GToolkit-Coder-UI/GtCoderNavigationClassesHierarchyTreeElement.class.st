@@ -63,9 +63,10 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 		nodeStencil: [ BrHorizontalPane new
 				hMatchParent;
 				vFitContent ];
-		nodeDataBinder: [ :aClassElement :aClassHierarchyTree | 
+		nodeDataBinder: [ :aClassElement :aClassHierarchyTree :aTreeNode | 
 			| label |
 			aClassElement
+				id: (GtCoderNavigationClassesHierarchyTreeElementId indexed: aTreeNode indexInTree);
 				removeChildren;
 				aptitude: BrGlamorousListItemAptitude new
 						+ (BrGlamorousWithContextMenuAptitude
