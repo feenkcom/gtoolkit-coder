@@ -147,7 +147,9 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 										ifTrue: [ navigationModel
 												selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
 											navigationModel
-												selectedTagDo: [ :aTag | aTag isUncategorized ifFalse: [ form packageAndTagName tagName: aTag name ] ] ].
+												selectedTagDo: [ :aTag | 
+													((aTag isKindOf: RPackageTag) or: [ aTag isUncategorized ])
+														ifFalse: [ form packageAndTagName tagName: aTag name ] ] ].
 									((GtCreationFormWidget forForm: form)
 										onAccept: [ :anInstance | 
 											look
