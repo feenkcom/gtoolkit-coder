@@ -107,7 +107,7 @@ GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 	explicitView := aView explicit
 			title: 'Class Hierarchy';
 			priority: 2;
-			stencil: [ GtCoderNavigationClassHierachyElement new
+			stencil: [ GtCoderNavigationClassHierarchyElement new
 					navigationModel: self navigationModel ].
 	self addButtonsTo: explicitView.
 	^ explicitView
@@ -148,8 +148,8 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 												selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
 											navigationModel
 												selectedTagDo: [ :aTag | 
-													((aTag isKindOf: RPackageTag) or: [ aTag isUncategorized ])
-														ifFalse: [ form packageAndTagName tagName: aTag name ] ] ].
+													((aTag isKindOf: RPackageTag) or: [ aTag isUncategorized not ])
+														ifTrue: [ form packageAndTagName tagName: aTag name ] ] ].
 									((GtCreationFormWidget forForm: form)
 										onAccept: [ :anInstance | 
 											look
