@@ -345,6 +345,7 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> instanceMethodsForAProtocol: aSelectedItem [
+	self selectedClass ifNil: [ ^ #() ].
 	^ (self selectedClass organization protocolNamed: aSelectedItem name)
 		ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass >> sel ] as: Array ]
 		ifNil: [ #() ]
