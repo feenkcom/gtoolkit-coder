@@ -107,7 +107,7 @@ GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 	explicitView := aView explicit
 			title: 'Class Hierarchy';
 			priority: 2;
-			stencil: [ GtCoderNavigationClassHierachyElement new
+			stencil: [ GtCoderNavigationClassHierarchyElement new
 					navigationModel: self navigationModel ].
 	self addButtonsTo: explicitView.
 	^ explicitView
