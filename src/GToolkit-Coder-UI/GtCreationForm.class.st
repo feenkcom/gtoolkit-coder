@@ -214,19 +214,23 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 	aTagger
 		when: BrTaggerAddTagRequest
 		do: [ :aRequest | 
-			aMemento
-				write: ((aTagger tags collect: #name)
-						add: aRequest tag name;
-						yourself)
-				using: aDescription ].
+			aTagger
+				enqueueTask: (BlPromiseTask new
+						promise: (aMemento
+								write: ((aTagger tags collect: #name)
+										add: aRequest tag name;
+										yourself)
+								using: aDescription) asAsyncPromise) ].
 	aTagger
 		when: BrTaggerRemoveTagRequest
 		do: [ :aRequest | 
-			aMemento
-				write: ((aTagger tags collect: #name)
-						remove: aRequest tag name;
-						yourself)
-				using: aDescription.
+			aTagger
+				enqueueTask: (BlPromiseTask new
+						promise: (aMemento
+								write: ((aTagger tags collect: #name)
+										remove: aRequest tag name;
+										yourself)
+								using: aDescription) asAsyncPromise).
 			aTaggerAptitude addTagCreatorElement ].
 	aTagger
 		withAsyncSinkDo: [ :anElementSink | 
