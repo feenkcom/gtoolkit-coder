@@ -345,6 +345,7 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> instanceMethodsForAProtocol: aSelectedItem [
+	self selectedClass ifNil: [ ^ #() ].
 	^ (self selectedClass organization protocolNamed: aSelectedItem name)
 		ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass >> sel ] as: Array ]
 		ifNil: [ #() ]
@@ -506,14 +507,10 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
-	| anIndex aSelectedItem theIndices instMeths classMeths |
-	supressListChanges ifTrue: [ ^ self ].
+	| aSelectedItem instMeths classMeths |
 	slotsGroupList deselectAll.
-	theIndices := methodProtocolsList selectedIndices ifEmpty: [ ^ self ].
-	anIndex := theIndices first.
-	(anIndex between: 1 and: methodProtocolsList viewModel entityCount)
-		ifFalse: [ ^ self ].
-	aSelectedItem := (methodProtocolsList viewModel entityAt: anIndex) value object.
+	aSelectedItem := self selectedProtocol.
+	aSelectedItem ifNil: [^self].
 	self navigationModel selectMethodProtocol: aSelectedItem source: self.
 	instMeths := self instanceMethodsForAProtocol: aSelectedItem.
 	classMeths := self classMethodsForAProtocol: aSelectedItem.
@@ -803,6 +800,16 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock 
 	^ packagesList selectedPackageTagNodeDo: aBlock
 ]
 
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> selectedProtocol [
+	| theIndices anIndex |
+	theIndices := methodProtocolsList selectedIndices ifEmpty: [ ^nil].
+	anIndex := theIndices first.
+	(anIndex between: 1 and: methodProtocolsList viewModel entityCount)
+		ifFalse: [ ^nil ].
+	^ (methodProtocolsList viewModel entityAt: anIndex) value object
+]
+
 { #category : #'showing / hiding' }
 GtCoderNavigationPackagesTagsClassesElement >> showClassList [
 	classesList visibility: BlVisibility visible.
@@ -974,26 +981,40 @@ GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
-	| methodProtocols |
+	| methodProtocols classProtocols extension |
 	navigationModel hasSelectedClass
-		ifTrue: [ | classProtocols |
-			classProtocols := navigationModel selectedClass class organization protocols
-					reject: [ :prot | 
-						(navigationModel selectedClass class methods
-							select: [ :meth | (prot includesSelector: meth selector) and: [ meth isFromTrait not ] ])
-							isEmpty ].
-			methodProtocols := navigationModel selectedClass organization protocols.
-			self updateProtocolListWith: methodProtocols and: classProtocols.
-			methodProtocolsList visibility: BlVisibility visible.
-			self
-				updateMethodListWith: navigationModel selectedClass methods
-				and: (navigationModel selectedClass class methods
-						reject: [ :meth | meth isFromTrait ]).
-			methodsLabel visibility: BlVisibility visible ]
 		ifFalse: [ self updateProtocolListWith: #() and: #().
 			self updateMethodListWith: #() and: #().
 			methodProtocolsList visibility: BlVisibility hidden.
-			methodsLabel visibility: BlVisibility hidden ]
+			methodsLabel visibility: BlVisibility hidden.
+			^ self ].
+	classProtocols := navigationModel selectedClass class organization protocols
+			reject: [ :prot | 
+				(navigationModel selectedClass class methods
+					select: [ :meth | (prot includesSelector: meth selector) and: [ meth isFromTrait not ] ])
+					isEmpty ].
+	methodProtocols := navigationModel selectedClass organization protocols.
+	extension := false.
+	navigationModel
+		selectedPackageDo: [ :pkg | 
+			pkg ~= navigationModel selectedClass package
+				ifTrue: [ | protocolName |
+					extension := true.
+					protocolName := '*' , pkg name.
+					methodProtocols := methodProtocols
+							select: [ :each | each name beginsWith: protocolName ].
+					classProtocols := classProtocols
+							select: [ :each | each name beginsWith: protocolName ] ] ].
+	self updateProtocolListWith: methodProtocols and: classProtocols.
+	extension
+		ifTrue: [ methodProtocolsList selectOne: 2.
+			self onProtocolListSelectionChanged ]
+		ifFalse: [ self
+				updateMethodListWith: navigationModel selectedClass methods
+				and: (navigationModel selectedClass class methods
+						reject: [ :meth | meth isFromTrait ]) ].
+	methodProtocolsList visibility: BlVisibility visible.
+	methodsLabel visibility: BlVisibility visible
 ]
 
 { #category : #'updating lists' }
