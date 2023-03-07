@@ -375,9 +375,9 @@ GtCoderNavigationPackagesTagsClassesElement >> methodListContextMenuItemsFor: it
 			-> [ :elem | self removeMethod: item selector inElement: elem ]}
 ]
 
-{ #category : #acccessing }
+{ #category : #'private-accessing' }
 GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
-	^methodProtocolsList
+	^ methodProtocolsList
 ]
 
 { #category : #accessing }
