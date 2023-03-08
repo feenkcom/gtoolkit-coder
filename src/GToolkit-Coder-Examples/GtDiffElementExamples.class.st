@@ -7,8 +7,7 @@ Class {
 { #category : #examples }
 GtDiffElementExamples >> changeElementExample [
 	<gtExample>
-
-	^ GtDiffElement onChange: self exampleChange
+	^ (GtDiffElement onChange: self exampleChange) showButtons
 ]
 
 { #category : #examples }
@@ -78,7 +77,9 @@ GtDiffElementExamples >> textDiffElementExample [
 { #category : #examples }
 GtDiffElementExamples >> textDiffExampleFlat [
 	<gtExample>
-	^ self textDiffElementExample aptitude: GtDiffFlatAptitude
+	^ self textDiffElementExample
+		aptitude: GtDiffFlatAptitude;
+		showButtons
 ]
 
 { #category : #examples }

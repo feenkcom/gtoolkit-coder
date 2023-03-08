@@ -37,7 +37,9 @@ GtCompositeDiffChange >> applyAttributesToOutput: aText [
 
 { #category : #accessing }
 GtCompositeDiffChange >> asElement [
-	^ (GtDiffElement onChange: self) addAptitude: GtDiffFlatAptitude
+	^ (GtDiffElement onChange: self)
+		addAptitude: GtDiffFlatAptitude;
+		showButtons
 ]
 
 { #category : #accessing }
