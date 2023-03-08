@@ -6,7 +6,8 @@ Class {
 		'leftLast',
 		'rightFirst',
 		'rightLast',
-		'isDifference'
+		'isDifference',
+		'isSelected'
 	],
 	#category : #'GToolkit-Coder-UI-Diff'
 }
@@ -66,10 +67,21 @@ GtSyncScrollRange >> beDifferent [
 	isDifference := true
 ]
 
+{ #category : #testing }
+GtSyncScrollRange >> includesLeftLine: anInteger [
+	^ self leftFirst < anInteger and: [ anInteger <= self leftLast ]
+]
+
+{ #category : #testing }
+GtSyncScrollRange >> includesRightLine: anInteger [
+	^ self rightFirst < anInteger and: [ anInteger <= self rightLast ]
+]
+
 { #category : #'initialize-release' }
 GtSyncScrollRange >> initialize [
 	super initialize.
 	isDifference := false.
+	isSelected := false.
 	leftFirst := 0.
 	leftLast := 0.
 	rightFirst := 0.
@@ -87,6 +99,21 @@ GtSyncScrollRange >> initializeLeft: leftInteger right: rightInteger [
 { #category : #testing }
 GtSyncScrollRange >> isDifference [
 	^ isDifference
+]
+
+{ #category : #testing }
+GtSyncScrollRange >> isLeftEmpty [
+	^ self leftSize = 0
+]
+
+{ #category : #testing }
+GtSyncScrollRange >> isRightEmpty [
+	^ self rightSize = 0
+]
+
+{ #category : #testing }
+GtSyncScrollRange >> isSelected [
+	^ isSelected
 ]
 
 { #category : #accessing }
@@ -191,4 +218,14 @@ GtSyncScrollRange >> rightRangeDisplayString [
 { #category : #accessing }
 GtSyncScrollRange >> rightSize [
 	^ rightLast - rightFirst
+]
+
+{ #category : #accessing }
+GtSyncScrollRange >> select [
+	isSelected := true
+]
+
+{ #category : #accessing }
+GtSyncScrollRange >> unselect [
+	isSelected := false
 ]

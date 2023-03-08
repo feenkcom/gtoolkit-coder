@@ -9,7 +9,9 @@ Class {
 		'syncScrollRanges',
 		'outlines',
 		'separatorElement',
-		'styler'
+		'styler',
+		'buttonsElement',
+		'progressLabel'
 	],
 	#category : #'GToolkit-Coder-UI-Diff'
 }
@@ -46,7 +48,8 @@ GtDiffElement >> change: aCompositeDiffChange [
 	aCompositeDiffChange applyAttributesToOutput: text.
 	rightElement text: text.
 	syncScrollRanges := GtSyncScrollRanges createFromChange: aCompositeDiffChange.
-	self updateOutlines
+	self updateOutlines.
+	self updateProgressLabel
 ]
 
 { #category : #initialize }
@@ -55,28 +58,14 @@ GtDiffElement >> diff: aDiffBuilder [
 	leftElement text: aDiffBuilder previousRopedText.
 	rightElement text: aDiffBuilder newRopedText.
 	aDiffBuilder newStyler ifNotNil: [ :aStyler | self styler: aStyler ].
-	self updateOutlines
+	self updateOutlines.
+	self updateProgressLabel
 ]
 
 { #category : #'event handling' }
 GtDiffElement >> drawMeAndChildrenOnSpartaCanvas: aCanvas [
-	| stroke fill |
 	super drawMeAndChildrenOnSpartaCanvas: aCanvas.
-	stroke := aCanvas stroke
-		alpha: 0.2;
-		paint: Color black;
-		width: 1.
-	fill := aCanvas fill
-		alpha: 0.2;
-		paint: Color yellow.
-	outlines
-		do: [ :each | 
-			fill
-				path: (each pathOnSpartaCanvas: aCanvas of: self);
-				draw.
-			stroke
-				path: (each pathOnSpartaCanvas: aCanvas of: self);
-				draw ]
+	self paintOnCanvas: aCanvas
 ]
 
 { #category : #initialize }
@@ -84,16 +73,40 @@ GtDiffElement >> editorLook [
 	^ BrGlamorousCodeEditorAptitude
 ]
 
+{ #category : #accessing }
+GtDiffElement >> hideButtons [
+	buttonsElement visibility: BlVisibility visible
+]
+
 { #category : #initialize }
 GtDiffElement >> initialize [
+	| gridLayout |
 	super initialize.
 
-	self layout: BlLinearLayout horizontal.
+	gridLayout := BlGridLayout new columnCount: 3.
+	self layout: gridLayout.
 	self matchParent.
 
 	self beNormalSize.
 
-	outlines := #().
+	self
+		addShortcut: (BlShortcutWithAction new
+				combination: BlKeyCombination builder primary arrowDown build;
+				action: [ self scrollNext ]).
+	self
+		addShortcut: (BlShortcutWithAction new
+				combination: BlKeyCombination builder primary arrowUp build;
+				action: [ self scrollPrevious ]).
+
+	outlines := Dictionary new.
+
+	buttonsElement := self newButtonsElement.
+	buttonsElement id: GtDiffButtonsId.
+	buttonsElement visibility: BlVisibility gone.
+	buttonsElement
+		addChildren: {self newPreviousChangeButton.
+				self newProgressLabel.
+				self newNextChangeButton}.
 
 	leftElement := self newTextElement
 			id: GtDiffOldTextId;
@@ -120,7 +133,8 @@ GtDiffElement >> initialize [
 	separatorElement := self newSeparatorElement id: GtDiffSeparatorId.
 
 	self
-		addChildren: {leftElement.
+		addChildren: {buttonsElement.
+				leftElement.
 				separatorElement.
 				rightElement}
 ]
@@ -134,16 +148,20 @@ GtDiffElement >> leftBottomFor: anInteger [
 	element := leftElement children at: index - range first + 1.
 	^ (anInteger < range first
 		ifTrue: [ element bounds top ]
-		ifFalse: [ element bounds bottom ]) + leftElement bounds top max: 0
+		ifFalse: [ element bounds bottom ]) + leftElement bounds top max: leftElement bounds top
 ]
 
 { #category : #'event handling' }
 GtDiffElement >> leftCursorChanged [
-	| newPosition |
-	newPosition := syncScrollRanges
-			rightLineFor: (self leftLineForCursor ifNil: [ self leftRange first ]).
+	| newPosition leftLine range |
+	leftLine := self leftLineForCursor ifNil: [ self leftRange first ].
+	range := syncScrollRanges rangeForLeft: leftLine.
+	syncScrollRanges selectRange: range.
+	newPosition := syncScrollRanges rightLineFor: leftLine.
 	(self rightRange includes: newPosition)
-		ifFalse: [ rightElement scrollToPosition: newPosition ]
+		ifFalse: [ rightElement scrollToPosition: newPosition ].
+	self updateProgressLabel.
+	self invalidate
 ]
 
 { #category : #accessing }
@@ -154,7 +172,7 @@ GtDiffElement >> leftEditorLook: aLook [
 { #category : #'event handling' }
 GtDiffElement >> leftLineForCursor [
 	leftElement editor cursors
-		do: [ :each | ^ leftElement text asString lineNumberCorrespondingToIndex: each position ].
+		do: [ :each | ^ leftElement text asString lineNumberCorrespondingToIndex: each position + 1 ].
 	^ nil
 ]
 
@@ -186,7 +204,63 @@ GtDiffElement >> leftTopFor: anInteger [
 	element := leftElement children at: index - range first + 1.
 	^ (anInteger > range last
 		ifTrue: [ element bounds bottom ]
-		ifFalse: [ element bounds top ]) + leftElement bounds top max: 0
+		ifFalse: [ element bounds top ]) + leftElement bounds top max: leftElement bounds top
+]
+
+{ #category : #'event handling' }
+GtDiffElement >> moveCursorIn: textEditor toLine: anInteger [
+	| string index |
+	string := textEditor text asString.
+	index := (string intervalOfLine: anInteger) first - 1.
+	index < 0
+		ifTrue: [ index := anInteger <= 0 ifTrue: [ 0 ] ifFalse: [ string size ] ].
+	textEditor editor moveCursorTo: index
+]
+
+{ #category : #initialize }
+GtDiffElement >> newButtonsElement [
+	^ BrHorizontalPane new
+		vFitContent;
+		hMatchParent;
+		alignCenter;
+		constraintsDo: [ :c | c grid horizontal span: 3 ]
+]
+
+{ #category : #initialize }
+GtDiffElement >> newNextChangeButton [
+	^ BrButton new
+		aptitude: BrGlamorousButtonWithIconAptitude;
+		fitContent;
+		beTinySize;
+		margin: (BlInsets top: 0 bottom: 5 left: 5 right: 0);
+		icon: BrGlamorousVectorIcons down;
+		label: 'Next change';
+		action: [ :aButton | self scrollNext ]
+]
+
+{ #category : #initialize }
+GtDiffElement >> newPreviousChangeButton [
+	^ BrButton new
+		aptitude: BrGlamorousButtonWithIconAptitude;
+		fitContent;
+		beTinySize;
+		margin: (BlInsets bottom: 5);
+		icon: BrGlamorousVectorIcons up;
+		label: 'Previous change';
+		action: [ :aButton | self scrollPrevious ]
+]
+
+{ #category : #initialize }
+GtDiffElement >> newProgressLabel [
+	^ progressLabel := BrLabel new
+			fitContent;
+			alignCenter;
+			margin: (BlInsets
+					top: 0
+					bottom: 5
+					left: 5
+					right: 0);
+			aptitude: BrGlamorousLabelAptitude
 ]
 
 { #category : #initialize }
@@ -210,7 +284,7 @@ GtDiffElement >> newTextElement [
 GtDiffElement >> onExtentChanged [ 
 	super onExtentChanged.
 
-	outlines := #().
+	outlines := Dictionary new.
 	self updateOutlines
 ]
 
@@ -218,7 +292,7 @@ GtDiffElement >> onExtentChanged [
 GtDiffElement >> onLayout: aBounds context: aBlElementBoundsUpdateContext [
 	super onLayout: aBounds context: aBlElementBoundsUpdateContext.
 	
-	outlines := #().
+	outlines := Dictionary new.
 	self updateOutlines
 ]
 
@@ -247,29 +321,38 @@ GtDiffElement >> outlineFor: aSyncScrollRange [
 
 { #category : #'event handling' }
 GtDiffElement >> paintMeAndChildrenOn: aCompositorPainter offset: anOffset [
-	| aCanvas stroke fill |
+	| aCanvas |
 	super paintMeAndChildrenOn: aCompositorPainter offset: anOffset.
-	
+
 	aCanvas := aCompositorPainter canvas.
-	
+
 	aCanvas transform
 		by: [ :t | t translateBy: anOffset ]
-		during: [
-			stroke := aCanvas stroke
-				alpha: 0.2;
-				paint: Color black;
-				width: 1.
-			fill := aCanvas fill
-				alpha: 0.2;
-				paint: Color yellow.
-			outlines
-				do: [ :each | 
-					fill
-						path: (each pathOnSpartaCanvas: aCanvas of: self);
-						draw.
-					stroke
-						path: (each pathOnSpartaCanvas: aCanvas of: self);
-						draw ] ]
+		during: [ self paintOnCanvas: aCanvas ]
+]
+
+{ #category : #'event handling' }
+GtDiffElement >> paintOnCanvas: aCanvas [
+	| stroke selectedStroke fill |
+	stroke := aCanvas stroke
+			alpha: 0.2;
+			paint: Color black;
+			width: 1.
+	selectedStroke := aCanvas stroke
+			alpha: 0.6;
+			paint: BrGlamorousColors primaryBorderColor;
+			width: 2.
+	fill := aCanvas fill
+			alpha: 0.2;
+			paint: Color yellow.
+	^ outlines
+		keysAndValuesDo: [ :range :each | 
+			fill
+				path: (each pathOnSpartaCanvas: aCanvas of: self);
+				draw.
+			(range isSelected ifTrue: [ selectedStroke ] ifFalse: [ stroke ])
+				path: (each pathOnSpartaCanvas: aCanvas of: self);
+				draw ]
 ]
 
 { #category : #'event handling' }
@@ -281,16 +364,21 @@ GtDiffElement >> rightBottomFor: anInteger [
 	element := rightElement children at: index - range first + 1.
 	^ (anInteger < range first
 		ifTrue: [ element bounds top ]
-		ifFalse: [ element bounds bottom ]) + rightElement bounds top max: 0
+		ifFalse: [ element bounds bottom ]) + rightElement bounds top
+		max: rightElement bounds top
 ]
 
 { #category : #'event handling' }
 GtDiffElement >> rightCursorChanged [
-	| newPosition |
-	newPosition := syncScrollRanges
-			leftLineFor: (self rightLineForCursor ifNil: [ self rightRange first ]).
+	| newPosition rightLine range |
+	rightLine := self rightLineForCursor ifNil: [ self rightRange first ].
+	range := syncScrollRanges rangeForRight: rightLine.
+	syncScrollRanges selectRange: range.
+	newPosition := syncScrollRanges leftLineFor: rightLine.
 	(self leftRange includes: newPosition)
-		ifFalse: [ leftElement scrollToPosition: newPosition ]
+		ifFalse: [ leftElement scrollToPosition: newPosition ].
+	self updateProgressLabel.
+	self invalidate
 ]
 
 { #category : #accessing }
@@ -301,7 +389,7 @@ GtDiffElement >> rightEditorLook: aLook [
 { #category : #'event handling' }
 GtDiffElement >> rightLineForCursor [
 	rightElement editor cursors
-		do: [ :each | ^ rightElement text asString lineNumberCorrespondingToIndex: each position ].
+		do: [ :each | ^ rightElement text asString lineNumberCorrespondingToIndex: each position + 1 ].
 	^ nil
 ]
 
@@ -333,7 +421,33 @@ GtDiffElement >> rightTopFor: anInteger [
 	element := rightElement children at: index - range first + 1.
 	^ (anInteger > range last
 		ifTrue: [ element bounds bottom ]
-		ifFalse: [ element bounds top ]) + rightElement bounds top max: 0
+		ifFalse: [ element bounds top ]) + rightElement bounds top
+		max: rightElement bounds top
+]
+
+{ #category : #'event handling' }
+GtDiffElement >> scrollNext [
+	| range |
+	range := syncScrollRanges selectNext.
+	range ifNil: [ ^ self ].
+	leftElement scrollToPosition: range leftFirst + 1.
+	rightElement scrollToPosition: range rightFirst + 1.
+	self updateProgressLabel
+]
+
+{ #category : #'event handling' }
+GtDiffElement >> scrollPrevious [
+	| range |
+	range := syncScrollRanges selectPrevious.
+	range ifNil: [ ^ self ].
+	leftElement scrollToPosition: range leftFirst + 1.
+	rightElement scrollToPosition: range rightFirst + 1.
+	self updateProgressLabel
+]
+
+{ #category : #accessing }
+GtDiffElement >> showButtons [
+	buttonsElement visibility: BlVisibility visible
 ]
 
 { #category : #accessing }
@@ -352,13 +466,22 @@ GtDiffElement >> styler: anObject [
 { #category : #'event handling' }
 GtDiffElement >> updateOutlines [
 	| ranges |
-	outlines := OrderedCollection new.
+	outlines := Dictionary new.
 	ranges := syncScrollRanges
 		rangesForLeft: self leftRange
 		andRight: self rightRange.
 	ranges
 		do: [ :each | 
 			each isDifference
-				ifTrue: [ outlines add: (self outlineFor: each) ] ].
+				ifTrue: [ outlines at: each put: (self outlineFor: each) ] ].
 	self invalidate
+]
+
+{ #category : #initialize }
+GtDiffElement >> updateProgressLabel [
+	| progress |
+	progress := syncScrollRanges selectedProgress.
+	progressLabel
+		text: (progress first printString , '/' , progress last printString) asRopedText
+				glamorousRegularFont
 ]

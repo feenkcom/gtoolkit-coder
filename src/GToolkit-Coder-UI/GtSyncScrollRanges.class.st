@@ -101,18 +101,18 @@ GtSyncScrollRanges >> addRanges: changedRanges fromChanges: aCompositeChange [
 				ifFalse: [ ranges
 						add: (GtSyncScrollRange
 								leftFirst: fromStart
-								leftLast: each first - 1
+								leftLast: each first
 								rightFirst: toStart
-								rightLast: each third - 1) ].
+								rightLast: each third) ].
 			ranges
 				add: (GtSyncScrollRange
 						leftFirst: each first
 						leftLast: each second
 						rightFirst: each third
 						rightLast: each fourth) beDifferent.
-			fromStart := each second + 1.
-			toStart := each fourth + 1 ].
-	(fromStart > fromEnd and: [ toStart > toEnd ])
+			fromStart := each second.
+			toStart := each fourth ].
+	(fromStart + 1 > fromEnd and: [ toStart + 1 > toEnd ])
 		ifFalse: [ ranges
 				add: (GtSyncScrollRange
 						leftFirst: fromStart
@@ -175,8 +175,11 @@ GtSyncScrollRanges >> gtRangesViewFor: aView [
 ]
 
 { #category : #accessing }
-GtSyncScrollRanges >> leftLineFor: rightIndex [
-	| range |
+GtSyncScrollRanges >> leftLineFor: anInteger [
+	| range rightIndex |
+	rightIndex := self ranges notEmpty
+			ifTrue: [ (self ranges last rightLast min: anInteger) max: self ranges first rightFirst ]
+			ifFalse: [ anInteger ].
 	range := self ranges
 			detect: [ :each | rightIndex between: each rightFirst and: each rightLast ]
 			ifNone: [ ^ 0 ].
@@ -218,6 +221,20 @@ GtSyncScrollRanges >> mergeRanges: changedRanges [
 ]
 
 { #category : #accessing }
+GtSyncScrollRanges >> rangeForLeft: anInteger [
+	^ self ranges
+		detect: [ :each | each includesLeftLine: anInteger ]
+		ifNone: [  ]
+]
+
+{ #category : #accessing }
+GtSyncScrollRanges >> rangeForRight: anInteger [
+	^ self ranges
+		detect: [ :each | each includesRightLine: anInteger ]
+		ifNone: [  ]
+]
+
+{ #category : #accessing }
 GtSyncScrollRanges >> ranges [
 	^ ranges ifNil: [ #() ]
 ]
@@ -229,8 +246,11 @@ GtSyncScrollRanges >> rangesForLeft: leftInterval andRight: rightInterval [
 ]
 
 { #category : #accessing }
-GtSyncScrollRanges >> rightLineFor: leftIndex [
-	| range |
+GtSyncScrollRanges >> rightLineFor: anInteger [
+	| range leftIndex |
+	leftIndex := self ranges notEmpty
+			ifTrue: [ (self ranges last leftLast min: anInteger) max: self ranges first leftFirst ]
+			ifFalse: [ anInteger ].
 	range := self ranges
 			detect: [ :each | leftIndex between: each leftFirst and: each leftLast ]
 			ifNone: [ ^ 0 ].
@@ -238,4 +258,59 @@ GtSyncScrollRanges >> rightLineFor: leftIndex [
 		ifTrue: [ 0 ]
 		ifFalse: [ (leftIndex asFloat - range leftFirst) / range leftSize ])
 		* range rightSize + range rightFirst) rounded
+]
+
+{ #category : #accessing }
+GtSyncScrollRanges >> selectNext [
+	| found |
+	found := false.
+	self ranges isEmpty ifTrue: [ ^ self ].
+	self ranges
+		do: [ :each | 
+			found
+				ifTrue: [ each isDifference ifTrue: [ ^ each select ] ]
+				ifFalse: [ found := each isSelected ].
+			each unselect ].
+	^ (self ranges
+		detect: [ :each | each isDifference ]
+		ifNone: [ self ranges first ]) select
+]
+
+{ #category : #accessing }
+GtSyncScrollRanges >> selectPrevious [
+	| found |
+	found := false.
+	self ranges isEmpty ifTrue: [ ^ self ].
+	self ranges
+		reverseDo: [ :each | 
+			found
+				ifTrue: [ each isDifference ifTrue: [ ^ each select ] ]
+				ifFalse: [ found := each isSelected ].
+			each unselect ].
+	self ranges size
+		to: 1
+		by: -1
+		do: [ :i | 
+			| range |
+			range := self ranges at: i.
+			range isDifference ifTrue: [ ^ range select ] ].
+	^ self ranges last select
+]
+
+{ #category : #accessing }
+GtSyncScrollRanges >> selectRange: aRange [
+	self ranges do: [ :each | each unselect ].
+	aRange ifNotNil: [ aRange select ]
+]
+
+{ #category : #accessing }
+GtSyncScrollRanges >> selectedProgress [
+	| index |
+	index := {0. 0}.
+	self ranges
+		do: [ :each | 
+			each isDifference
+				ifTrue: [ index at: 2 put: index last + 1.
+					each isSelected ifTrue: [ index at: 1 put: index last ] ] ].
+	^ index
 ]
