@@ -207,6 +207,14 @@ GtDiffElement >> leftTopFor: anInteger [
 		ifFalse: [ element bounds top ]) + leftElement bounds top max: leftElement bounds top
 ]
 
+{ #category : #accessing }
+GtDiffElement >> moveButtonsToBottom [
+	buttonsElement removeFromParent.
+	buttonsElement margin: (BlInsets top: 5).
+	self addChild: buttonsElement.
+	self showButtons
+]
+
 { #category : #'event handling' }
 GtDiffElement >> moveCursorIn: textEditor toLine: anInteger [
 	| string index |
@@ -222,6 +230,7 @@ GtDiffElement >> newButtonsElement [
 	^ BrHorizontalPane new
 		vFitContent;
 		hMatchParent;
+		margin: (BlInsets bottom: 5);
 		alignCenter;
 		constraintsDo: [ :c | c grid horizontal span: 3 ]
 ]
@@ -232,7 +241,7 @@ GtDiffElement >> newNextChangeButton [
 		aptitude: BrGlamorousButtonWithIconAptitude;
 		fitContent;
 		beTinySize;
-		margin: (BlInsets top: 0 bottom: 5 left: 5 right: 0);
+		margin: (BlInsets left: 5);
 		icon: BrGlamorousVectorIcons down;
 		label: 'Next change';
 		action: [ :aButton | self scrollNext ]
@@ -244,7 +253,6 @@ GtDiffElement >> newPreviousChangeButton [
 		aptitude: BrGlamorousButtonWithIconAptitude;
 		fitContent;
 		beTinySize;
-		margin: (BlInsets bottom: 5);
 		icon: BrGlamorousVectorIcons up;
 		label: 'Previous change';
 		action: [ :aButton | self scrollPrevious ]
@@ -255,11 +263,7 @@ GtDiffElement >> newProgressLabel [
 	^ progressLabel := BrLabel new
 			fitContent;
 			alignCenter;
-			margin: (BlInsets
-					top: 0
-					bottom: 5
-					left: 5
-					right: 0);
+			margin: (BlInsets left: 5);
 			aptitude: BrGlamorousLabelAptitude
 ]
 
@@ -267,7 +271,7 @@ GtDiffElement >> newProgressLabel [
 GtDiffElement >> newSeparatorElement [
 	^ BlElement new
 		constraintsDo: [ :c |
-			c vertical matchParent.
+			c vertical exact: 1.
 			c horizontal exact: 0 ]
 		yourself
 ]
