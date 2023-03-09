@@ -47,7 +47,7 @@ GtDiffElementWithLabelStencil >> createDiffContainer [
 	| diffContainer |
 	diffContainer := BrVerticalPane new
 		hMatchParent;
-		vFitContent.
+		vFitContentLimited.
 
 	self shouldHideDiff ifFalse: [
 		diffContainer addChild: self createPanesDiffElement ].
@@ -70,13 +70,13 @@ GtDiffElementWithLabelStencil >> createPanesDiffElement [
 	diffWrapper := BrVerticalPane new."
 	diffWrapper margin: (BlInsets all: 3)."
 	diffWrapper hMatchParent.
-	diffWrapper vFitContent.
+	diffWrapper vFitContentLimited.
 
 	diffWrapper
 		addChild: ((GtEpiceaDiffElement onChange: self change)
 				aptitude: GtDiffFlatAptitude;
 				styler: styler;
-				vFitContent;
+				vFitContentLimited;
 				beSmallSize).
 
 	^ diffWrapper
