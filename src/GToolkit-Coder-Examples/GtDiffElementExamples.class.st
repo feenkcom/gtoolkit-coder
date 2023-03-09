@@ -70,16 +70,13 @@ GtDiffElementExamples >> originalString [
 { #category : #examples }
 GtDiffElementExamples >> textDiffElementExample [
 	<gtExample>
-
-	^ GtDiffElement onDiff: self exampleTextDiff
+	^ (GtDiffElement onDiff: self exampleTextDiff) showButtons
 ]
 
 { #category : #examples }
 GtDiffElementExamples >> textDiffExampleFlat [
 	<gtExample>
-	^ self textDiffElementExample
-		aptitude: GtDiffFlatAptitude;
-		showButtons
+	^ self textDiffElementExample aptitude: GtDiffFlatAptitude
 ]
 
 { #category : #examples }
