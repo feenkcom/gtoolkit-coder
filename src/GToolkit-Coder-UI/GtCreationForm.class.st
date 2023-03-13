@@ -202,7 +202,26 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 								aBlockReturningCollection value
 									do: [ :aShortcut | aLabel addShortcut: aShortcut ] ].
 
-						aLabel when: BlClickEvent do: [ :anEvent | aLabel switchToEditor ].
+						aLabel
+							when: BlClickEvent
+							do: [ :aClickEvent | 
+								aLabel switchToEditor
+									addShortcut: (BlShortcutWithAction new
+											combination: BlKeyCombination shiftTab;
+											action: [ :anEvent | 
+												BlFocusFinder new
+													direction: BlFocusSearchDirectionBackward new;
+													root: aForm;
+													referenceElement: anEvent currentTarget;
+													nextFocusDo: #requestFocus ifNone: [  ] ]);
+									addShortcut: (BlShortcutWithAction new
+											combination: BlKeyCombination tab;
+											action: [ :anEvent | 
+												BlFocusFinder new
+													direction: BlFocusSearchDirectionForward new;
+													root: aForm;
+													referenceElement: anEvent currentTarget;
+													nextFocusDo: #requestFocus ifNone: [  ] ]) ].
 
 						aCompletionStrategy
 							ifNotNil: [ (GtCompletionController on: aLabel strategy: aCompletionStrategy) install ].
@@ -230,8 +249,7 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 								write: ((aTagger tags collect: #name)
 										remove: aRequest tag name;
 										yourself)
-								using: aDescription) asAsyncPromise).
-			aTaggerAptitude addTagCreatorElement ].
+								using: aDescription) asAsyncPromise) ].
 	aTagger
 		withAsyncSinkDo: [ :anElementSink | 
 			anElementSink

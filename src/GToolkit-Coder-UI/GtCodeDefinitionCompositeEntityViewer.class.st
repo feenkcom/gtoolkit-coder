@@ -46,11 +46,6 @@ GtCodeDefinitionCompositeEntityViewer >> create [
 ]
 
 { #category : #accessing }
-GtCodeDefinitionCompositeEntityViewer >> definitionsDo: aBlock [
-	self editors do: [ :each | each definitionsDo: aBlock ]
-]
-
-{ #category : #accessing }
 GtCodeDefinitionCompositeEntityViewer >> editors [
 	^ editors
 ]
