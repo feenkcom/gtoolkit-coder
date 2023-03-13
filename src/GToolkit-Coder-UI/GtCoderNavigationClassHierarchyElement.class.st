@@ -29,6 +29,14 @@ GtCoderNavigationClassHierarchyElement >> onClassModified: anAnnouncement [
 ]
 
 { #category : #subscriptions }
+GtCoderNavigationClassHierarchyElement >> onClassRemoved: anAnnouncement [
+	| newSelection |
+	newSelection := anAnnouncement theClass superclass.
+	self updateClassListsWith: newSelection.
+	self selectClass: newSelection
+]
+
+{ #category : #subscriptions }
 GtCoderNavigationClassHierarchyElement >> onClassRenamed: anAnnouncement [
 	self
 		suppressListChangeEventsDuring: [ self
