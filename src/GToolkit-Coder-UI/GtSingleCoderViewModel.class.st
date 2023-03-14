@@ -7,11 +7,12 @@ Wraps {{gtClass:GtCoderModel}} and optionally adds UI related api and state. Cod
 Class {
 	#name : #GtSingleCoderViewModel,
 	#superclass : #Object,
-	#traits : 'TGtAnnouncer + TGtWithCoderModel',
-	#classTraits : 'TGtAnnouncer classTrait + TGtWithCoderModel classTrait',
+	#traits : 'TGtAnnouncer',
+	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'announcer',
-		'codersUIModel'
+		'codersUIModel',
+		'coderModel'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
@@ -53,6 +54,33 @@ GtSingleCoderViewModel >> coderLook [
 	^ self coder coderLook
 ]
 
+{ #category : #'api - coder model' }
+GtSingleCoderViewModel >> coderModel [
+	"Return a not-null coder model assigned to the receiver view model"
+	self
+		assert: [ coderModel notNil ]
+		description: [ 'coder model should be initialized' ].
+
+	^ coderModel
+]
+
+{ #category : #'api - coder model' }
+GtSingleCoderViewModel >> coderModel: aCoderModel [
+	"Set a not-null coder domain model assigned to the receiver view model"
+	self
+		assert: [ aCoderModel notNil ]
+		description: [ 'coder model must not be nil' ].
+
+	coderModel == aCoderModel 
+		ifTrue: [ ^ self ].
+
+	coderModel ifNotNil: [ self unsubscribeFromCoderModel ].
+	coderModel := aCoderModel.
+
+	self onCoderModelChanged.
+	self subscribeToCoderModel
+]
+
 { #category : #accessing }
 GtSingleCoderViewModel >> coders [
 	^ self coder coders
@@ -82,6 +110,14 @@ GtSingleCoderViewModel >> gtLiveFor: aView [
 		priority: 1;
 		object: [ self asElement ];
 		view: #gtLiveFor:
+]
+
+{ #category : #'api - coder model' }
+GtSingleCoderViewModel >> hasCoder [
+	"Return a true if coder model is assigned to the receiver, false otherwise"
+	<return: #Boolean>
+
+	^ coderModel notNil 
 ]
 
 { #category : #accessing }
