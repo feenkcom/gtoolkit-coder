@@ -243,6 +243,17 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 										yourself)
 								using: aDescription) asAsyncPromise) ].
 	aTagger
+		when: BrTaggerRenameTagRequest
+		do: [ :aRequest | 
+			(aRequest tag name = aRequest newName) not
+				ifTrue: [ aTagger
+						enqueueTask: (BlPromiseTask new
+								promise: (aMemento
+										write: ((aTagger tags collect: #name)
+												replaceAll: aRequest tag name with: aRequest newName;
+												yourself)
+										using: aDescription) asAsyncPromise) ] ].
+	aTagger
 		when: BrTaggerRemoveTagRequest
 		do: [ :aRequest | 
 			aTagger
