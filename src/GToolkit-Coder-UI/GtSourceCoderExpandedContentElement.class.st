@@ -17,7 +17,8 @@ GtSourceCoderExpandedContentElement >> initialize [
 	actions := self newActionsElement.
 	tags := self newTagsElement. 
 
-	self addChildren: { editorElement . actions . tags }.
+	"self addChildren: { editorElement . actions . tags }."
+	self addChildren: { editorElement . actions }.
 	self addAptitude: (BrLayoutResizerAptitude new inherit: editorElement)
 ]
 
