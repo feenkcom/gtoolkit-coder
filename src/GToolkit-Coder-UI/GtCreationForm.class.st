@@ -172,7 +172,9 @@ GtCreationForm >> packageAndTagName: anObject [
 
 { #category : #accessing }
 GtCreationForm >> selectInNavigationModel: aNavigationModel anInstance: anInstance [
-	^ aNavigationModel selectClass: anInstance
+	aNavigationModel selectPackage: anInstance package.
+	aNavigationModel selectPackageTag: (anInstance package classTagNamed: anInstance tags first).
+	aNavigationModel selectClass: anInstance
 ]
 
 { #category : #accessing }
