@@ -56,5 +56,5 @@ GtSourceCoderExpandedContentElement >> onTextualCoderViewModelChanged [
 
 	actions coderViewModel: textualCoderViewModel.
 	editorElement textualCoderViewModel: textualCoderViewModel.
-	tags pharoMethodCoderViewModel: textualCoderViewModel
+	"tags pharoMethodCoderViewModel: textualCoderViewModel"
 ]
