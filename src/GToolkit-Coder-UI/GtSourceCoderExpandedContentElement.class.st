@@ -15,9 +15,7 @@ GtSourceCoderExpandedContentElement >> initialize [
 
 	editorElement := self newEditorElement.
 	actions := self newActionsElement.
-	tags := self newTagsElement. 
 
-	"self addChildren: { editorElement . actions . tags }."
 	self addChildren: { editorElement . actions }.
 	self addAptitude: (BrLayoutResizerAptitude new inherit: editorElement)
 ]
@@ -35,26 +33,10 @@ GtSourceCoderExpandedContentElement >> newEditorElement [
 	^ GtSourceCoderEditorElement new
 ]
 
-{ #category : #initialization }
-GtSourceCoderExpandedContentElement >> newTagsElement [
-	^ GtPharoMethodCoderTagsElement new
-		constraintsDo: [ :c | 
-			c ignoreByLayout.
-			c ignored horizontal alignRight.
-			c ignored vertical alignBottom.
-			c
-				margin: (BlInsets
-						top: 5
-						left: 5
-						bottom: 2
-						right: 5) ]
-]
-
 { #category : #'api - textual coder view model' }
 GtSourceCoderExpandedContentElement >> onTextualCoderViewModelChanged [
 	super onTextualCoderViewModelChanged.
 
 	actions coderViewModel: textualCoderViewModel.
-	editorElement textualCoderViewModel: textualCoderViewModel.
-	"tags pharoMethodCoderViewModel: textualCoderViewModel"
+	editorElement textualCoderViewModel: textualCoderViewModel
 ]
