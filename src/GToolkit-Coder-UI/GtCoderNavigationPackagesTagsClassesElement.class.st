@@ -714,8 +714,7 @@ GtCoderNavigationPackagesTagsClassesElement >> reselectPackageOrTag: aSelectedPa
 GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aPackage tag: aPackageTag [
 	(self selectedPackage ~= aPackage
 		or: [ self selectedPackageTag ~= aPackageTag ])
-		ifTrue: [ self selectPackage: aPackage.
-			self selectPackage: aPackage tag: aPackageTag ].
+		ifTrue: [ self selectPackage: aPackage tag: aPackageTag ].
 	self selectClass: aClass.
 	self updateProtocolList.
 	self updateSlotList
@@ -741,8 +740,9 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPackageTag [
-	| aPreviousIndex | 
+	| aPreviousIndex |
 	(self hasPackageTagsIn: aPackage) ifFalse: [ ^ self selectPackage: aPackage ].
+	aPackageTag isNil ifTrue: [ ^ self selectPackage: aPackage ].
 	self expandPackage: aPackage.
 
 	aPreviousIndex := packagesList selectedIndice.
