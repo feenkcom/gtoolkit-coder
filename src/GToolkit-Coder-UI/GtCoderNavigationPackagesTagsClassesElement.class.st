@@ -714,8 +714,7 @@ GtCoderNavigationPackagesTagsClassesElement >> reselectPackageOrTag: aSelectedPa
 GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aPackage tag: aPackageTag [
 	(self selectedPackage ~= aPackage
 		or: [ self selectedPackageTag ~= aPackageTag ])
-		ifTrue: [ self selectPackage: aPackage.
-			self selectPackage: aPackage tag: aPackageTag ].
+		ifTrue: [ self selectPackage: aPackage tag: aPackageTag ].
 	self selectClass: aClass.
 	self updateProtocolList.
 	self updateSlotList
@@ -741,8 +740,9 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPackageTag [
-	| aPreviousIndex | 
+	| aPreviousIndex |
 	(self hasPackageTagsIn: aPackage) ifFalse: [ ^ self selectPackage: aPackage ].
+	aPackageTag isNil ifTrue: [ ^ self selectPackage: aPackage ].
 	self expandPackage: aPackage.
 
 	aPreviousIndex := packagesList selectedIndice.
@@ -945,8 +945,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateContent [
 	self updatePackageAndClassLists.
-	self updateSelectedPackageAndTag.
-	self updateSelectedClass.
+	self updateSelections.
 	self hideOrShowClassList
 ]
 
@@ -1037,13 +1036,18 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolListWith: instanceP
 ]
 
 { #category : #'updating lists' }
-GtCoderNavigationPackagesTagsClassesElement >> updateSelectedPackageAndTag [
+GtCoderNavigationPackagesTagsClassesElement >> updateSelections [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel hasSelectedPackage
 		ifTrue: [ navigationModel hasSelectedTag
-				ifTrue: [ self
-						selectPackage: navigationModel selectedPackage
-						tag: navigationModel selectedTag ]
+				ifTrue: [ navigationModel hasSelectedClass
+						ifTrue: [ self
+								selectClass: navigationModel selectedClass
+								inPackage: navigationModel selectedPackage
+								tag: navigationModel selectedTag ]
+						ifFalse: [ self
+								selectPackage: navigationModel selectedPackage
+								tag: navigationModel selectedTag ] ]
 				ifFalse: [ self selectPackage: navigationModel selectedPackage ] ]
 ]
 

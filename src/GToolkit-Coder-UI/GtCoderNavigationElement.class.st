@@ -261,6 +261,5 @@ GtCoderNavigationElement >> updateContent [
 { #category : #'updating lists' }
 GtCoderNavigationElement >> updateSelectedClass [
 	self hasNavigationModel ifFalse: [ ^ self ].
-	navigationModel selectedClassDo: [ :aClass |
-		self selectClass: aClass ].
+	navigationModel selectedClassDo: [ :aClass | self selectClass: aClass ]
 ]
