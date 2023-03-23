@@ -54,6 +54,11 @@ GtCoderUpdateStrategy >> makeSynchronous [
 	isSynchronous := true
 ]
 
+{ #category : #copying }
+GtCoderUpdateStrategy >> postCopy [
+	properties := properties copy
+]
+
 { #category : #'accessing - properties' }
 GtCoderUpdateStrategy >> properties [ 
 	^ properties ifNil: [

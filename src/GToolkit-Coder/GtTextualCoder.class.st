@@ -226,7 +226,11 @@ GtTextualCoder >> notifyCorrectionFrom: aFromIndex to: aToIndex with: aString [
 { #category : #'private - notifying' }
 GtTextualCoder >> notifySourceChangedTo: aNewText from: aPreviousText with: anUpdateStragegy dueTo: aReason [
 	"Notify the text editor that it should update the text (for example due to refactoring changes)"
-	
+
+	"If user didn't specify the source, we assume that the coder model plays a role of the source"
+	anUpdateStragegy source ifNil: [
+		anUpdateStragegy source: self ].
+
 	self announce: (GtCoderSourceCodeChanged new 
 		updateStrategy: anUpdateStragegy;
 		newText: aNewText;
@@ -293,7 +297,7 @@ GtTextualCoder >> sourceChangedTo: aNewText from: aPreviousText with: anUpdateSt
 GtTextualCoder >> sourceChangedTo: aNewText with: anUpdateStrategy [
 	self 
 		sourceChangedTo: aNewText 
-		from: nil 
+		from: self
 		with: anUpdateStrategy
 		dueTo: nil
 ]

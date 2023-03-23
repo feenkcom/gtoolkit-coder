@@ -7,7 +7,9 @@ Class {
 		'completion',
 		'evaluationHighlighter',
 		'evaluationPrinter',
-		'shortcuts'
+		'shortcuts',
+		'cursorsUpdater',
+		'textUpdater'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual'
 }
@@ -69,12 +71,20 @@ GtTextualCoderEditorElement >> initialize [
 
 	evaluationHighlighter := GtSourceCoderEvaluationHighlighter new editorElement: self.
 	evaluationPrinter := GtSourceCoderEvaluationPrinter new editorElement: self.
+	
+	cursorsUpdater := BrElementUpdater new
+		element: self;
+		action: (MessageSend receiver: self selector: #privateUpdateCursors:announcement:).
+
+	textUpdater := BrElementUpdater new
+		element: self;
+		action: (MessageSend receiver: self selector: #privateUpdateText:announcement:).
 
 	self initializeListeners.
 	
 	self withAsyncPromiseDo: [ :anElementPromise |
 			anElementPromise
-				whenSuccess: [ :anEditorElement :anEditorState | anEditorElement editor restoreState: anEditorState ];
+				whenSuccess: [ :anEditorElement :anEditorState | anEditorElement privateUpdateEditorState: anEditorState ];
 				whenError: [ :anEditorElement :anEditorState |  ];
 				whenPending: [ :anEditorElement | ] ]
 ]
@@ -127,24 +137,6 @@ GtTextualCoderEditorElement >> onCoderViewModelFocused: aBoolean [
 	aBoolean
 		ifTrue: [ self requestFocus ]
 		ifFalse: [ self loseFocus ]
-]
-
-{ #category : #'private - event handling' }
-GtTextualCoderEditorElement >> onCursorsChanged: aCursorsChangedAnnouncement [
-	"Is sent when the cursors change in the View Model.
-	May be sent from a non-UI thread"
-	
-	"if the source of the announcement is myself, do nothing to break the change cycle"
-	aCursorsChangedAnnouncement source = self
-		ifTrue: [ ^ self ].
-
-	"since it may be sent from a non-UI process make sure to wrap in the action"
-	self enqueueTask: (BlTaskAction new action: [
-		self navigator
-			withoutResettingDesiredCoordinate;
-			removeAll;
-			addAll: aCursorsChangedAnnouncement cursors;
-			apply ])
 ]
 
 { #category : #'private - event handling' }
@@ -286,16 +278,12 @@ GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnounc
 	aCursorsChangedAnnouncement source = self
 		ifTrue: [ ^ self ].
 
+	"do nothing if it comes from a different view model"
 	aCursorsChangedAnnouncement source == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
 	"since it may be sent from a non-UI process make sure to wrap in the action"
-	self enqueueTask: (BlTaskAction new action: [
-		self navigator
-			withoutResettingDesiredCoordinate;
-			removeAll;
-			addAll: aCursorsChangedAnnouncement cursors;
-			apply ])
+	cursorsUpdater requestUpdate: aCursorsChangedAnnouncement
 ]
 
 { #category : #'private - event handling' }
@@ -372,12 +360,45 @@ GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelT
 		ifTrue: [ ^ self hideHighlighters ].
 
 	aGtTextualCoderViewModelTextChanged isSynchronous
-		ifTrue: [ 
-			self text: aGtTextualCoderViewModelTextChanged text copy.
-			self hideHighlighters ] 
-		ifFalse: [ self enqueueTask: (BlTaskAction new action: [ 
-			self text: aGtTextualCoderViewModelTextChanged text copy.
-			self hideHighlighters ]) ]
+		ifTrue: [ self privateUpdateText: self announcement: aGtTextualCoderViewModelTextChanged ] 
+		ifFalse: [ textUpdater requestUpdate: aGtTextualCoderViewModelTextChanged ]
+]
+
+{ #category : #'private - updating' }
+GtTextualCoderEditorElement >> privateUpdateCursors: anEditorElement announcement: aCursorsChangedAnnouncement [
+
+	"do nothing if it comes from a different view model"
+	aCursorsChangedAnnouncement source == self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
+	GtTextualCoderEditorElementUpdateCursorsSignal emit.
+
+	self navigator
+		withoutResettingDesiredCoordinate;
+		removeAll;
+		addAll: aCursorsChangedAnnouncement cursors;
+		apply
+]
+
+{ #category : #'private - updating' }
+GtTextualCoderEditorElement >> privateUpdateEditorState: anEditorState [
+	GtTextualCoderEditorElementUpdateStateSignal emit.
+
+	self editor restoreState: anEditorState
+]
+
+{ #category : #'private - updating' }
+GtTextualCoderEditorElement >> privateUpdateText: anEditorElement announcement: aGtTextualCoderViewModelTextChanged [
+	"Executed in a UI thread as a result of text being changed in the view model"
+
+	"do nothing if it comes from a different view model"
+	aGtTextualCoderViewModelTextChanged textualCoderViewModel == self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
+	GtTextualCoderEditorElementUpdateTextSignal emit.
+
+	self text: aGtTextualCoderViewModelTextChanged text copy.
+	self hideHighlighters
 ]
 
 { #category : #registration }
