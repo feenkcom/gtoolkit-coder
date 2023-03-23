@@ -579,6 +579,7 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 	self ensureAddOns.
 
 	self announce: (GtTextualCoderViewModelTextChanged new
+		textualCoderViewModel: self;
 		text: self coderModel currentSourceText;
 		updateStrategy: anSourceCodeChangedAnnouncement updateStrategy)
 ]
