@@ -48,7 +48,7 @@ GtCoderPackageExtensionTag >> hash [
 
 { #category : #testing }
 GtCoderPackageExtensionTag >> isRoot [
-	^true
+	^false
 ]
 
 { #category : #testing }

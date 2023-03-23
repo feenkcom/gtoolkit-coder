@@ -121,9 +121,9 @@ GtCreationForm >> onAccept [
 ]
 
 { #category : #accessing }
-GtCreationForm >> onAccept: anObject [
+GtCreationForm >> onAccept: aBlock [
 
-	onAccept := anObject
+	onAccept := aBlock
 ]
 
 { #category : #accessing }
@@ -132,8 +132,8 @@ GtCreationForm >> onElementCreated [
 ]
 
 { #category : #accessing }
-GtCreationForm >> onElementCreated: anObject [
-	onElementCreated := anObject
+GtCreationForm >> onElementCreated: aBlock [
+	onElementCreated := aBlock
 ]
 
 { #category : #accessing }
@@ -142,8 +142,8 @@ GtCreationForm >> onReset [
 ]
 
 { #category : #accessing }
-GtCreationForm >> onReset: anObject [
-	onReset := anObject
+GtCreationForm >> onReset: aBlock [
+	onReset := aBlock
 ]
 
 { #category : #accessing }
@@ -234,7 +234,7 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 						aContextMenuBlock
 							ifNotNil: [ aLabel
 									addAptitude: (BrGlamorousWithContextMenuAptitude
-											content: [ aContextMenuBlock value: aTag name value: aLabel ]) ].
+											content: [ aContextMenuBlock value: aTag name value: aLabel value: aMemento]) ].
 						aLabel ]).
 	aTagger
 		when: BrTaggerAddTagRequest

@@ -80,10 +80,10 @@ GtDiffElement >> hideButtons [
 
 { #category : #initialize }
 GtDiffElement >> initialize [
-	| gridLayout |
+	| gridLayout comparisonElement |
 	super initialize.
 
-	gridLayout := BlGridLayout new columnCount: 3.
+	gridLayout := BlLinearLayout vertical.
 	self layout: gridLayout.
 	self matchParent.
 
@@ -130,25 +130,27 @@ GtDiffElement >> initialize [
 				on: BrTextEditorCursorAddedEvent
 				do: [ :e | self rightCursorChanged ]).
 
-	separatorElement := self newSeparatorElement id: GtDiffSeparatorId.
+	comparisonElement := BrHorizontalPane new
+			hMatchParent;
+			vFitContentLimited;
+			addChildren: {leftElement. self newSeparatorElement id: GtDiffSeparatorId. rightElement}.
 
 	self
-		addChildren: {buttonsElement.
-				leftElement.
-				separatorElement.
-				rightElement}
+		addChildren: {buttonsElement . comparisonElement}
 ]
 
 { #category : #'event handling' }
 GtDiffElement >> leftBottomFor: anInteger [
 	| range element index |
 	range := self leftRange.
-	range isEmpty ifTrue: [ ^ leftElement bounds top + leftElement padding top ].
+	range isEmpty
+		ifTrue: [ ^ leftElement bounds inParent inParent top + leftElement padding top ].
 	index := (anInteger max: range first) min: range last.
 	element := leftElement children at: index - range first + 1.
 	^ (anInteger < range first
 		ifTrue: [ element bounds top ]
-		ifFalse: [ element bounds bottom ]) + leftElement bounds top max: leftElement bounds top
+		ifFalse: [ element bounds bottom ]) + leftElement bounds inParent inParent top
+		max: leftElement bounds inParent inParent top
 ]
 
 { #category : #'event handling' }
@@ -199,12 +201,14 @@ GtDiffElement >> leftStyler: aStyler [
 GtDiffElement >> leftTopFor: anInteger [
 	| range element index |
 	range := self leftRange.
-	range isEmpty ifTrue: [ ^ leftElement bounds top + leftElement padding top ].
+	range isEmpty
+		ifTrue: [ ^ leftElement bounds inParent inParent top + leftElement padding top ].
 	index := (anInteger max: range first) min: range last.
 	element := leftElement children at: index - range first + 1.
 	^ (anInteger > range last
 		ifTrue: [ element bounds bottom ]
-		ifFalse: [ element bounds top ]) + leftElement bounds top max: leftElement bounds top
+		ifFalse: [ element bounds top ]) + leftElement bounds inParent inParent top
+		max: leftElement bounds inParent inParent top
 ]
 
 { #category : #accessing }
@@ -280,7 +284,8 @@ GtDiffElement >> newSeparatorElement [
 GtDiffElement >> newTextElement [
 	^ BrEditor new
 		beReadOnlyWithSelection;
-		matchParent;
+		hMatchParent;
+		vFitContentLimited;
 		aptitude: self editorLook
 ]
 
@@ -307,8 +312,8 @@ GtDiffElement >> outlineFor: aSyncScrollRange [
 	leftBottom := self leftBottomFor: aSyncScrollRange leftLast.
 	rightTop := self rightTopFor: aSyncScrollRange rightFirst + 1.
 	rightBottom := self rightBottomFor: aSyncScrollRange rightLast.
-	leftBounds := leftElement bounds.
-	rightBounds := rightElement bounds.
+	leftBounds := leftElement bounds inParent inParent.
+	rightBounds := rightElement bounds inParent inParent.
 	vertices := OrderedCollection new: 9.
 	vertices
 		add: leftBounds left @ leftTop;
@@ -363,13 +368,13 @@ GtDiffElement >> paintOnCanvas: aCanvas [
 GtDiffElement >> rightBottomFor: anInteger [
 	| range element index |
 	range := self rightRange.
-	range isEmpty ifTrue: [ ^ rightElement bounds top + rightElement padding top ].
+	range isEmpty ifTrue: [ ^ rightElement bounds inParent inParent top + rightElement padding top ].
 	index := (anInteger max: range first) min: range last.
 	element := rightElement children at: index - range first + 1.
 	^ (anInteger < range first
 		ifTrue: [ element bounds top ]
-		ifFalse: [ element bounds bottom ]) + rightElement bounds top
-		max: rightElement bounds top
+		ifFalse: [ element bounds bottom ]) + rightElement bounds inParent inParent top
+		max: rightElement bounds inParent inParent top
 ]
 
 { #category : #'event handling' }
@@ -420,13 +425,13 @@ GtDiffElement >> rightStyler: aStyler [
 GtDiffElement >> rightTopFor: anInteger [
 	| range element index |
 	range := self rightRange.
-	range isEmpty ifTrue: [ ^ rightElement bounds top + rightElement padding top ].
+	range isEmpty ifTrue: [ ^ rightElement bounds inParent inParent top + rightElement padding top ].
 	index := (anInteger max: range first) min: range last.
 	element := rightElement children at: index - range first + 1.
 	^ (anInteger > range last
 		ifTrue: [ element bounds bottom ]
-		ifFalse: [ element bounds top ]) + rightElement bounds top
-		max: rightElement bounds top
+		ifFalse: [ element bounds top ]) + rightElement bounds inParent inParent top
+		max: rightElement bounds inParent inParent top
 ]
 
 { #category : #'event handling' }
