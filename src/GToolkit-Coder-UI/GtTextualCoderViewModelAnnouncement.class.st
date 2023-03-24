@@ -1,5 +1,18 @@
 Class {
 	#name : #GtTextualCoderViewModelAnnouncement,
 	#superclass : #Announcement,
-	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
+	#instVars : [
+		'textualCoderViewModel'
+	],
+	#category : #'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
+
+{ #category : #accessing }
+GtTextualCoderViewModelAnnouncement >> textualCoderViewModel [
+	^ textualCoderViewModel
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModelAnnouncement >> textualCoderViewModel: anObject [
+	textualCoderViewModel := anObject
+]
