@@ -111,6 +111,14 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 	^ newCoderTextAttributes
 ]
 
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> applyTextEditCommand: aTextEditCommand [
+	self announce: (GtTextualCoderViewModelTextEditCommandRequestAnnouncement new
+		textualCoderViewModel: self;
+		textEditCommand: aTextEditCommand"; 
+		updateStrategy: GtCoderUpdateStrategy new makeAsynchronous")
+]
+
 { #category : #converting }
 GtTextualCoderViewModel >> asEditorState [
 	<return: #TAsyncPromise>
