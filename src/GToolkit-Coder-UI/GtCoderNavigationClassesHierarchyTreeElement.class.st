@@ -145,7 +145,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> renameClass: aClass inElement: e
 	childs := elem children.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				glamorousCodeSmallSize;
+				fontSize: 11.9;   "Force the font to match the label font"
 				background: Color transparent);
 		text: aClass name;
 		when: BrEditorAcceptWish

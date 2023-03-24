@@ -11,7 +11,8 @@ Class {
 	#instVars : [
 		'announcementSource',
 		'isSynchronous',
-		'properties'
+		'properties',
+		'textEditCommand'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -32,6 +33,11 @@ GtCoderUpdateStrategy >> gtViewPropertiesFor: aView [
 { #category : #'accessing - properties' }
 GtCoderUpdateStrategy >> hasPropertyNamed: aPropertyName [ 
 	^ self properties includesKey: aPropertyName 
+]
+
+{ #category : #testing }
+GtCoderUpdateStrategy >> hasTextEditCommand [
+	^ self textEditCommand notNil
 ]
 
 { #category : #accessing }
@@ -88,4 +94,14 @@ GtCoderUpdateStrategy >> source [
 { #category : #accessing }
 GtCoderUpdateStrategy >> source: anObject [
 	announcementSource := anObject
+]
+
+{ #category : #accessing }
+GtCoderUpdateStrategy >> textEditCommand [
+	^ textEditCommand
+]
+
+{ #category : #accessing }
+GtCoderUpdateStrategy >> textEditCommand: anObject [
+	textEditCommand := anObject
 ]
