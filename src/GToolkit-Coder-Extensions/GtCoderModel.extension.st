@@ -22,7 +22,7 @@ GtCoderModel >> gtLiveFor: aView [
 	^ aView explicit
 		title: 'Live';
 		priority: 5;
-		stencil: [ self asElement matchParent ]
+		stencil: [ self asElement vFitContentLimited ]
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
