@@ -168,6 +168,15 @@ GtTextualCoder >> currentSourceText: aText with: aGtCoderUpdateStragegy dueTo: a
 ]
 
 { #category : #'api - text' }
+GtTextualCoder >> currentSourceText: aText withEditCommand: anEditCommand [
+	"Set a new source text, together with a command used to edit the text."
+
+	self critical: [ 
+		self sourceCode currentSourceText: aText.
+		self sourceChangedTo: aText withEditCommand: anEditCommand ]
+]
+
+{ #category : #'api - text' }
 GtTextualCoder >> currentSourceTextPromise [
 	<return: #TAsyncPromise of: #BlText>
 
@@ -180,7 +189,10 @@ GtTextualCoder >> currentSourceTextSynchronously: aText [
 
 	self critical: [
 		self sourceCode currentSourceText: aText.
-		self sourceChangedTo: aText with: GtCoderUpdateStrategy new makeSynchronous ]
+		self 
+			sourceChangedTo: aText 
+			with: GtCoderUpdateStrategy new 
+				makeSynchronous ]
 ]
 
 { #category : #'api - text' }
@@ -278,9 +290,9 @@ GtTextualCoder >> resetAstCache [
 
 { #category : #'event handling' }
 GtTextualCoder >> sourceChangedTo: aNewText [
-	self
+	self 
 		sourceChangedTo: aNewText 
-		with: GtCoderUpdateStrategy new makeAsynchronous
+		withEditCommand: nil
 ]
 
 { #category : #'event handling' }
@@ -300,6 +312,15 @@ GtTextualCoder >> sourceChangedTo: aNewText with: anUpdateStrategy [
 		from: self
 		with: anUpdateStrategy
 		dueTo: nil
+]
+
+{ #category : #'event handling' }
+GtTextualCoder >> sourceChangedTo: aNewText withEditCommand: anEditCommand [
+	self
+		sourceChangedTo: aNewText 
+		with: (GtCoderUpdateStrategy new 
+			makeAsynchronous;
+			textEditCommand: anEditCommand)
 ]
 
 { #category : #'api - accessing' }

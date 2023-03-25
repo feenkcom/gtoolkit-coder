@@ -628,7 +628,7 @@ GtCoderNavigationPackagesTagsClassesElement >> renameMethod: aSelector inElement
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				glamorousCodeSmallSize;
+				fontSize: 11.9;   "Force the font to match the label font"
 				background: Color transparent);
 		text: aSelector;
 		when: BrEditorAcceptWish
@@ -667,7 +667,7 @@ GtCoderNavigationPackagesTagsClassesElement >> renameProtocol: protocolName in: 
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				glamorousCodeSmallSize;
+				fontSize: 11.9;   "Force the font to match the label font"
 				background: Color transparent);
 		text: protocolName;
 		when: BrEditorAcceptWish
@@ -693,7 +693,7 @@ GtCoderNavigationPackagesTagsClassesElement >> renameSlot: slotName inElement: e
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				glamorousCodeSmallSize;
+				fontSize: 11.9;   "Force the font to match the label font"
 				background: Color transparent);
 		text: slotName;
 		when: BrEditorAcceptWish

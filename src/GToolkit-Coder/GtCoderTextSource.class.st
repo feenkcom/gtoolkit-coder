@@ -51,7 +51,9 @@ GtCoderTextSource >> currentSourceText [
 GtCoderTextSource >> currentSourceText: aText [
 	"Set a new source text"
 
-	self critical: [ currentSourceText := GtCoderSourceText new text: aText copyWithoutExternalReferences ]
+	self critical: [ 
+		currentSourceText := GtCoderSourceText new 
+			text: aText copyWithoutExternalReferences ]
 ]
 
 { #category : #initialization }

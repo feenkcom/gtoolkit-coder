@@ -187,7 +187,7 @@ GtCoderNavigationPackagesTreeElement >> renamePackage: aPackage inElement: elem 
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				glamorousCodeSmallSize;
+				fontSize: 11.9;   "Force the font to match the label font"
 				background: Color transparent);
 		text: aPackage name;
 		when: BrEditorAcceptWish
