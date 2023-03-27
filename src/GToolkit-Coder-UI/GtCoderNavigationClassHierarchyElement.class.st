@@ -32,19 +32,21 @@ GtCoderNavigationClassHierarchyElement >> onClassModified: anAnnouncement [
 GtCoderNavigationClassHierarchyElement >> onClassRemoved: anAnnouncement [
 	| newSelection |
 	newSelection := anAnnouncement theClass superclass.
-	self updateClassListsWith: newSelection.
-	self selectClass: newSelection
+	self
+		inUIProcessDo: [ self updateClassListsWith: newSelection.
+			self selectClass: newSelection ]
 ]
 
 { #category : #subscriptions }
 GtCoderNavigationClassHierarchyElement >> onClassRenamed: anAnnouncement [
 	self
-		suppressListChangeEventsDuring: [ self
-				renameClass: anAnnouncement theClass
-				oldName: anAnnouncement oldName
-				newName: anAnnouncement newName
-				inPackage: anAnnouncement package
-				tag: anAnnouncement tag ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self
+						renameClass: anAnnouncement theClass
+						oldName: anAnnouncement oldName
+						newName: anAnnouncement newName
+						inPackage: anAnnouncement package
+						tag: anAnnouncement tag ] ]
 ]
 
 { #category : #'event handling' }
@@ -56,22 +58,25 @@ GtCoderNavigationClassHierarchyElement >> onClassSelected: anAnnouncement [
 { #category : #'event handling' }
 GtCoderNavigationClassHierarchyElement >> onPackageSelected: anAnnouncer [
 	self
-		suppressListChangeEventsDuring: [ self emptyClassList.
-			self deselectClasses ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self emptyClassList.
+					self deselectClasses ] ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationClassHierarchyElement >> onPackageTagSelected: anAnnouncer [
 	self
-		suppressListChangeEventsDuring: [ self emptyClassList.
-			self deselectClasses ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self emptyClassList.
+					self deselectClasses ] ]
 ]
 
 { #category : #'event handling' }
 GtCoderNavigationClassHierarchyElement >> onPackagesSelected: anAnnouncer [
 	self
-		suppressListChangeEventsDuring: [ self emptyClassList.
-			self deselectClasses ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self emptyClassList.
+					self deselectClasses ] ]
 ]
 
 { #category : #subscriptions }
