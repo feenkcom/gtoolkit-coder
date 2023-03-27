@@ -76,8 +76,7 @@ GtCreationForm >> magritteAcceptAction [
 	<magritteActionDescription>
 	^ super magritteAcceptAction
 		label: 'Create';
-		onSuccessCallback: (GtMagritteActionExecutor new
-				beInUIProcess;
+		onSuccessCallback: (GtMagritteCallback new
 				action: [ :aModel :aButton :aMemento :aDescription | 
 					[ | aClass |
 					aClass := self commit.
@@ -90,8 +89,7 @@ GtCreationForm >> magritteAcceptAction [
 GtCreationForm >> magritteCancelAction [
 	<magritteActionDescription>
 	^ super magritteCancelAction
-		onSuccessCallback: (GtMagritteActionExecutor new
-				beInUIProcess;
+		onSuccessCallback: (GtMagritteCallback new
 				action: [ :aModel :aButton :aMemento :aDescription | 
 					[ onReset ifNotNil: [ onReset value ] ] 
 						on: Error do: #debug ]);
