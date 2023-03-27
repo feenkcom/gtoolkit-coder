@@ -73,17 +73,17 @@ GtCoderPlaygroundElement >> onNavigationModelChanged [
 
 { #category : #'private - hooks' }
 GtCoderPlaygroundElement >> onPackageSelected: anEvent [
-	self updatePlayground
+	self inUIProcessDo: [ self updatePlayground ]
 ]
 
 { #category : #'private - hooks' }
 GtCoderPlaygroundElement >> onPackageTagSelected: anEvent [
-	self updatePlayground
+	self inUIProcessDo: [ self updatePlayground ]
 ]
 
 { #category : #'private - hooks' }
 GtCoderPlaygroundElement >> onPackagesSelected: anEvent [
-	self updatePlayground
+	self inUIProcessDo: [ self updatePlayground ]
 ]
 
 { #category : #'private - accessing' }
