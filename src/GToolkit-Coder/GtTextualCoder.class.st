@@ -307,9 +307,10 @@ GtTextualCoder >> sourceChangedTo: aNewText from: aPreviousText with: anUpdateSt
 
 { #category : #'event handling' }
 GtTextualCoder >> sourceChangedTo: aNewText with: anUpdateStrategy [
+
 	self 
 		sourceChangedTo: aNewText 
-		from: self
+		from: nil
 		with: anUpdateStrategy
 		dueTo: nil
 ]

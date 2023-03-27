@@ -120,12 +120,13 @@ GtCoderNavigationElement >> onClassRemoved: anAnnouncement [
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassRenamed: anAnnouncement [
 	self
-		suppressListChangeEventsDuring: [ self
-				renameClass: anAnnouncement theClass
-				oldName: anAnnouncement oldName
-				newName: anAnnouncement newName
-				inPackage: anAnnouncement package
-				tag: anAnnouncement tag ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self
+						renameClass: anAnnouncement theClass
+						oldName: anAnnouncement oldName
+						newName: anAnnouncement newName
+						inPackage: anAnnouncement package
+						tag: anAnnouncement tag ] ]
 ]
 
 { #category : #'event handling' }
