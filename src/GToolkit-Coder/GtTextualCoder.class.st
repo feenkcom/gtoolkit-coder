@@ -309,7 +309,7 @@ GtTextualCoder >> sourceChangedTo: aNewText from: aPreviousText with: anUpdateSt
 GtTextualCoder >> sourceChangedTo: aNewText with: anUpdateStrategy [
 	self 
 		sourceChangedTo: aNewText 
-		from: self
+		from: nil
 		with: anUpdateStrategy
 		dueTo: nil
 ]
