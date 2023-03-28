@@ -510,7 +510,10 @@ GtTextualCoderViewModel >> newCompletionStrategy [
 
 { #category : #'private - notifying' }
 GtTextualCoderViewModel >> notifyCursorsChanged: aBrTextEditorCursor from: aSourceObject [
-	self announce: (GtTextualCoderViewModelCursorsChanged new cursors: aBrTextEditorCursor; source: aSourceObject)
+	self announce: (GtTextualCoderViewModelCursorsChanged new
+		textualCoderViewModel: self;
+		cursors: aBrTextEditorCursor;
+		source: aSourceObject)
 ]
 
 { #category : #'private - notifying' }

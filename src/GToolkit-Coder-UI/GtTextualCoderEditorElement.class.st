@@ -279,7 +279,7 @@ GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnounc
 		ifTrue: [ ^ self ].
 
 	"do nothing if it comes from a different view model"
-	aCursorsChangedAnnouncement source == self textualCoderViewModel
+	aCursorsChangedAnnouncement textualCoderViewModel == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
 	"since it may be sent from a non-UI process make sure to wrap in the action"
@@ -358,6 +358,10 @@ GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelT
 
 	aGtTextualCoderViewModelTextChanged source == self
 		ifTrue: [ ^ self hideHighlighters ].
+		
+	"do nothing if it comes from a different view model"
+	aGtTextualCoderViewModelTextChanged textualCoderViewModel == self textualCoderViewModel
+		ifFalse: [ ^ self ].
 
 	aGtTextualCoderViewModelTextChanged isSynchronous
 		ifTrue: [ self privateUpdateText: self announcement: aGtTextualCoderViewModelTextChanged ] 
