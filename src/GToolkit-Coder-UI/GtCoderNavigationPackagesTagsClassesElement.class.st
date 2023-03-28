@@ -384,9 +384,10 @@ GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
 { #category : #accessing }
 GtCoderNavigationPackagesTagsClassesElement >> onClassRemoved: anAnnouncement [
 	| aPackageOrTag |
-	aPackageOrTag := self selectedPackageOrTag.
-	packagesList deselectAll.
-	self selectPackage: aPackageOrTag
+	self
+		inUIProcessDo: [ aPackageOrTag := self selectedPackageOrTag.
+			packagesList deselectAll.
+			self selectPackage: aPackageOrTag ]
 ]
 
 { #category : #accessing }
@@ -468,9 +469,10 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageRenamed: anAnnouncement 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 	self
-		suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package.
-			self showClassList.
-			self deselectClasses ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package.
+					self showClassList.
+					self deselectClasses ] ]
 ]
 
 { #category : #'event handling' }
@@ -488,8 +490,9 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageTagRemoved: anAnnounceme
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageTagSelected: anAnnouncer [
 	self
-		suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package tag: anAnnouncer tag.
-			self deselectClasses ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package tag: anAnnouncer tag.
+					self deselectClasses ] ]
 ]
 
 { #category : #'event handling' }
@@ -501,8 +504,9 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageUnregistered: anAnnounce
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 	self
-		suppressListChangeEventsDuring: [ self deselectPackages.
-			self deselectClasses ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self deselectPackages.
+					self deselectClasses ] ]
 ]
 
 { #category : #'event handling' }
