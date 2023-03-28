@@ -5,10 +5,16 @@ Class {
 		'text',
 		'updateStrategy'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
+	#category : #'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
-{ #category : #accessing }
+{ #category : #testing }
+GtTextualCoderViewModelTextChanged >> hasTextEditCommand [ 
+	^ self updateStrategy notNil and: [ 
+			self updateStrategy hasTextEditCommand ]
+]
+
+{ #category : #testing }
 GtTextualCoderViewModelTextChanged >> isSynchronous [
 	^ self updateStrategy isSynchronous
 ]
@@ -26,6 +32,12 @@ GtTextualCoderViewModelTextChanged >> text [
 { #category : #accessing }
 GtTextualCoderViewModelTextChanged >> text: anObject [
 	text := anObject
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModelTextChanged >> textEditCommand [ 
+	^ self updateStrategy ifNotNil: [ :anUpdateStrategy |
+		anUpdateStrategy textEditCommand ]
 ]
 
 { #category : #accessing }

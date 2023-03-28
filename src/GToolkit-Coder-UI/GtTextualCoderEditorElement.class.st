@@ -19,6 +19,24 @@ GtTextualCoderEditorElement >> coderViewModel: aTextualCoderViewModel [
 	self textualCoderViewModel: aTextualCoderViewModel
 ]
 
+{ #category : #'private - updating' }
+GtTextualCoderEditorElement >> computeTextForUpdateForTextChangedEvent: aGtTextualCoderViewModelTextChanged [ 
+	"In case the editor has a text edit command we determine 
+	the updated text by editing the text currently in the
+	editor. If no edit command is present in the event,
+	we take the text from the event. We use the edit command
+	to avoid setting the text from the event which is not 
+	styled, and can cause flickerings."
+	
+	^ aGtTextualCoderViewModelTextChanged hasTextEditCommand
+		ifTrue: [ 
+			| editCommand|
+			editCommand :=  aGtTextualCoderViewModelTextChanged textEditCommand.
+			self editedTextBasedOnEditCommand: editCommand.  ]
+		ifFalse: [ 
+			aGtTextualCoderViewModelTextChanged text copy ]
+]
+
 { #category : #'instance creation' }
 GtTextualCoderEditorElement >> createContextMenuContent [
 	"wait for the addons to be computed"
@@ -41,6 +59,16 @@ GtTextualCoderEditorElement >> createContextMenuContent [
 	self enqueueTask: (BlPromiseTask new promise: aContextMenuPromise).
 
 	^ theContextMenu
+]
+
+{ #category : #'private - updating' }
+GtTextualCoderEditorElement >> editedTextBasedOnEditCommand: aTextEditCommand [
+	| modifiedText|
+	"self haltOnce."
+
+	modifiedText := self text copy.
+	aTextEditCommand applyTextChangeOn: modifiedText. 
+	^ modifiedText  
 ]
 
 { #category : #private }
@@ -368,6 +396,15 @@ GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelT
 		ifFalse: [ textUpdater requestUpdate: aGtTextualCoderViewModelTextChanged ]
 ]
 
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onViewModelTextEditCommandRequest: aGtTextualCoderViewModelTextEditCommandRequest [
+	"This is sent by the view model on requests to change the text 
+	in the editor by executing a command."
+	
+	aGtTextualCoderViewModelTextEditCommandRequest textEditCommand
+		applyOn: self editor 
+]
+
 { #category : #'private - updating' }
 GtTextualCoderEditorElement >> privateUpdateCursors: anEditorElement announcement: aCursorsChangedAnnouncement [
 
@@ -393,6 +430,7 @@ GtTextualCoderEditorElement >> privateUpdateEditorState: anEditorState [
 
 { #category : #'private - updating' }
 GtTextualCoderEditorElement >> privateUpdateText: anEditorElement announcement: aGtTextualCoderViewModelTextChanged [
+	| textForUpdate |
 	"Executed in a UI thread as a result of text being changed in the view model"
 
 	"do nothing if it comes from a different view model"
@@ -401,7 +439,10 @@ GtTextualCoderEditorElement >> privateUpdateText: anEditorElement announcement: 
 
 	GtTextualCoderEditorElementUpdateTextSignal emit.
 
-	self text: aGtTextualCoderViewModelTextChanged text copy.
+	"Determine the text that we should use to update the editor."
+	textForUpdate := self computeTextForUpdateForTextChangedEvent: aGtTextualCoderViewModelTextChanged.
+	
+	self text: textForUpdate.
 	self hideHighlighters
 ]
 
@@ -434,6 +475,9 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 			to: self;
 		when: GtTextualCoderViewModelTextChanged
 			send: #onViewModelTextChanged:
+			to: self;
+		when: GtTextualCoderViewModelTextEditCommandRequestAnnouncement
+			send: #onViewModelTextEditCommandRequest:
 			to: self;
 		when: GtTextualCoderViewModelCursorsChanged
 			send: #onViewModelCursorsChanged:

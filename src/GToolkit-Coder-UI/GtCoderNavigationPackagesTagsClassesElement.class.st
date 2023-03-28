@@ -384,9 +384,10 @@ GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
 { #category : #accessing }
 GtCoderNavigationPackagesTagsClassesElement >> onClassRemoved: anAnnouncement [
 	| aPackageOrTag |
-	aPackageOrTag := self selectedPackageOrTag.
-	packagesList deselectAll.
-	self selectPackage: aPackageOrTag
+	self
+		inUIProcessDo: [ aPackageOrTag := self selectedPackageOrTag.
+			packagesList deselectAll.
+			self selectPackage: aPackageOrTag ]
 ]
 
 { #category : #accessing }
@@ -468,9 +469,10 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageRenamed: anAnnouncement 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
 	self
-		suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package.
-			self showClassList.
-			self deselectClasses ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package.
+					self showClassList.
+					self deselectClasses ] ]
 ]
 
 { #category : #'event handling' }
@@ -488,8 +490,9 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageTagRemoved: anAnnounceme
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageTagSelected: anAnnouncer [
 	self
-		suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package tag: anAnnouncer tag.
-			self deselectClasses ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package tag: anAnnouncer tag.
+					self deselectClasses ] ]
 ]
 
 { #category : #'event handling' }
@@ -501,8 +504,9 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageUnregistered: anAnnounce
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 	self
-		suppressListChangeEventsDuring: [ self deselectPackages.
-			self deselectClasses ]
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self deselectPackages.
+					self deselectClasses ] ]
 ]
 
 { #category : #'event handling' }
@@ -628,7 +632,7 @@ GtCoderNavigationPackagesTagsClassesElement >> renameMethod: aSelector inElement
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				glamorousCodeSmallSize;
+				fontSize: 11.9;   "Force the font to match the label font"
 				background: Color transparent);
 		text: aSelector;
 		when: BrEditorAcceptWish
@@ -667,7 +671,7 @@ GtCoderNavigationPackagesTagsClassesElement >> renameProtocol: protocolName in: 
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				glamorousCodeSmallSize;
+				fontSize: 11.9;   "Force the font to match the label font"
 				background: Color transparent);
 		text: protocolName;
 		when: BrEditorAcceptWish
@@ -693,7 +697,7 @@ GtCoderNavigationPackagesTagsClassesElement >> renameSlot: slotName inElement: e
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				glamorousCodeSmallSize;
+				fontSize: 11.9;   "Force the font to match the label font"
 				background: Color transparent);
 		text: slotName;
 		when: BrEditorAcceptWish

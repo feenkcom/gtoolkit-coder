@@ -9,6 +9,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
+{ #category : #accessing }
+GtSourceCoderExpandedContentElement >> actions [
+	^ actions
+]
+
 { #category : #initialization }
 GtSourceCoderExpandedContentElement >> initialize [
 	super initialize.

@@ -25,56 +25,13 @@ GtCreationForm class >> priority [
 	^ self subclassResponsibility
 ]
 
-{ #category : #magritte }
-GtCreationForm >> acceptAction [
-	<magritteActionDescription>
-	^ MAActionDescription new
-		label: 'Accept';
-		action: [ :aModel :aButton | 
-			aButton
-				inUIProcessDo: [ [ | aValue |
-					aValue := self commit.
-					onAccept ifNotNil: [ onAccept value: aValue ] ] on: Error do: #debug ] ];
-		beCommitAction
-]
-
 { #category : #converting }
 GtCreationForm >> asElement [
 	| viewModel |
 	viewModel := self asGtMagritteViewModel.
 	self onElementCreated
 		ifNotNil: [ :aCallback | viewModel onElementCreated: aCallback ].
-	"save and cancel actions should be available even if unchanged"
-	viewModel actions first
-		installOn: [ :aModel :aButton :aMemento | 
-			aButton
-				withAsyncSinkDo: [ :anElementSink | 
-					anElementSink
-						sink: AsyncPeekSink new;
-						whenUpdate: [ :theButton :aSink | 
-							| aStatus |
-							aStatus := aSink value.
-							theButton enabled: aStatus isValid ].
-					aMemento overallStatus observe: anElementSink ] ].
-	viewModel actions second
-		installOn: [ :aModel :aButton :aMemento | 
-			aButton
-				withAsyncSinkDo: [ :anElementSink | 
-					anElementSink
-						sink: AsyncPeekSink new;
-						whenUpdate: [ :theButton :aSink | 
-							theButton enabled: true ].
-					aMemento overallStatus observe: anElementSink ] ].
 	^ viewModel asElement
-]
-
-{ #category : #magritte }
-GtCreationForm >> cancelAction [
-	<magritteActionDescription>
-	^ MAActionDescription new
-		label: 'Reset';
-		action: [ :aModel :aButton | [ onReset ifNotNil: [ onReset value ] ] on: Error do: #debug ];
-		beResetAction
 ]
 
 { #category : #callbacks }
@@ -112,6 +69,31 @@ GtCreationForm >> hasPackageAndTag [
 { #category : #initialization }
 GtCreationForm >> initialize [
 	packageAndTagName := GtPackageAndTagName new
+]
+
+{ #category : #magritte }
+GtCreationForm >> magritteAcceptAction [
+	<magritteActionDescription>
+	^ super magritteAcceptAction
+		label: 'Create';
+		onSuccessCallback: (GtMagritteCallback new
+				action: [ :aModel :aButton :aMemento :aDescription | 
+					[ | aClass |
+					aClass := self commit.
+					onAccept ifNotNil: [ onAccept value: aClass ] ] 
+						on: Error do: #debug ]);
+		beEnabledOnValidOverallStatus
+]
+
+{ #category : #magritte }
+GtCreationForm >> magritteCancelAction [
+	<magritteActionDescription>
+	^ super magritteCancelAction
+		onSuccessCallback: (GtMagritteCallback new
+				action: [ :aModel :aButton :aMemento :aDescription | 
+					[ onReset ifNotNil: [ onReset value ] ] 
+						on: Error do: #debug ]);
+		beAlwaysEnabled
 ]
 
 { #category : #accessing }
@@ -239,34 +221,44 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 	aTagger
 		when: BrTaggerAddTagRequest
 		do: [ :aRequest | 
-			aTagger
-				enqueueTask: (BlPromiseTask new
-						promise: (aMemento
-								write: ((aTagger tags collect: #name)
-										add: aRequest tag name;
-										yourself)
-								using: aDescription) asAsyncPromise) ].
+			| aValue |
+			aValue := (aTagger tags collect: #name)
+						add: aRequest tag name;
+						yourself.
+			
+			GtMagritteBuilderUtility
+				write: aValue 
+				using: aDescription 
+				memento: aMemento 
+				element: aTagger ].
 	aTagger
 		when: BrTaggerRenameTagRequest
 		do: [ :aRequest | 
 			(aRequest tag name = aRequest newName) not
-				ifTrue: [ aTagger
-						enqueueTask: (BlPromiseTask new
-								promise: (aMemento
-										write: ((aTagger tags collect: #name)
-												replaceAll: aRequest tag name with: aRequest newName;
-												yourself)
-										using: aDescription) asAsyncPromise) ] ].
+				ifTrue: [ 
+					| aValue |
+					aValue := (aTagger tags collect: #name)
+								replaceAll: aRequest tag name with: aRequest newName;
+								yourself.
+					
+					GtMagritteBuilderUtility
+						write: aValue 
+						using: aDescription 
+						memento: aMemento 
+						element: aTagger ] ].
 	aTagger
 		when: BrTaggerRemoveTagRequest
 		do: [ :aRequest | 
-			aTagger
-				enqueueTask: (BlPromiseTask new
-						promise: (aMemento
-								write: ((aTagger tags collect: #name)
-										remove: aRequest tag name;
-										yourself)
-								using: aDescription) asAsyncPromise) ].
+			| aValue |
+			aValue := (aTagger tags collect: #name)
+						remove: aRequest tag name;
+						yourself.
+			
+			GtMagritteBuilderUtility
+				write: aValue 
+				using: aDescription 
+				memento: aMemento 
+				element: aTagger ].
 	aTagger
 		withAsyncSinkDo: [ :anElementSink | 
 			anElementSink
