@@ -183,7 +183,27 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 						aLabel := BrEditor new
 								text: (aDescription displayStringFor: aTag name);
 								aptitude: (BrGlamorousEditableLabelAptitude new glamorousFormEditorCodeFontAndSize
-										defaultForeground: Color black).
+										defaultForeground: Color black);
+								addShortcut: (BlShortcutWithAction new
+										name: 'Move to previous form item';
+										description: 'Moves to the previous form item. If none is found, we cycle back to the last.';
+										combination: BlKeyCombination shiftTab;
+										action: [ :anEvent | 
+											BlFocusFinder new
+												direction: BlFocusSearchDirectionBackward new;
+												root: aForm;
+												referenceElement: anEvent currentTarget;
+												nextFocusDo: #requestFocus ifNone: [  ] ]);
+								addShortcut: (BlShortcutWithAction new
+										name: 'Move to next form item';
+										description: 'Moves to the next form item. If none is found, we cycle back to the first.';
+										combination: BlKeyCombination tab;
+										action: [ :anEvent | 
+											BlFocusFinder new
+												direction: BlFocusSearchDirectionForward new;
+												root: aForm;
+												referenceElement: anEvent currentTarget;
+												nextFocusDo: #requestFocus ifNone: [  ] ]).
 
 						aDescription blocShortcuts
 							ifNotNil: [ :aBlockReturningCollection | 
