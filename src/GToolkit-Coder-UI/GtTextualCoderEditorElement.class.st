@@ -307,7 +307,7 @@ GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnounc
 		ifTrue: [ ^ self ].
 
 	"do nothing if it comes from a different view model"
-	aCursorsChangedAnnouncement source == self textualCoderViewModel
+	aCursorsChangedAnnouncement textualCoderViewModel == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
 	"since it may be sent from a non-UI process make sure to wrap in the action"
@@ -382,17 +382,17 @@ GtTextualCoderEditorElement >> onViewModelTextAttributesRemoved: anAnnouncement 
 GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelTextChanged [
 
 	"When text is modified, the view model starts to recompute addOns"
-	self enqueueTask: (BlPromiseTask new 
-		promise: self textualCoderViewModel addOns).
+	self enqueueTask: (BlPromiseTask new promise: self textualCoderViewModel addOns).
 
 	aGtTextualCoderViewModelTextChanged source == self
 		ifTrue: [ ^ self hideHighlighters ].
+		
+	"do nothing if it comes from a different view model"
+	aGtTextualCoderViewModelTextChanged textualCoderViewModel == self textualCoderViewModel
+		ifFalse: [ ^ self ].
 
 	aGtTextualCoderViewModelTextChanged isSynchronous
-		ifTrue: [ 
-			self 
-				privateUpdateText: self 
-				announcement: aGtTextualCoderViewModelTextChanged ] 
+		ifTrue: [ self privateUpdateText: self announcement: aGtTextualCoderViewModelTextChanged ] 
 		ifFalse: [ textUpdater requestUpdate: aGtTextualCoderViewModelTextChanged ]
 ]
 
