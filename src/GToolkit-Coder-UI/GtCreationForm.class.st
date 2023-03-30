@@ -180,84 +180,88 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 							right: 5);
 					tagLabel: [ :aTag | 
 						| aLabel |
-						aLabel := BrEditableLabel new
+						aLabel := BrEditor new fitContent
 								text: (aDescription displayStringFor: aTag name);
 								aptitude: (BrGlamorousEditableLabelAptitude new glamorousFormEditorCodeFontAndSize
-										defaultForeground: Color black).
+										defaultForeground: Color black);
+								addShortcut: (BlShortcutWithAction new
+										name: 'Move to previous form item';
+										description: 'Moves to the previous form item. If none is found, we cycle back to the last.';
+										combination: BlKeyCombination shiftTab;
+										action: [ :anEvent | 
+											BlFocusFinder new
+												direction: BlFocusSearchDirectionBackward new;
+												root: aForm;
+												referenceElement: anEvent currentTarget;
+												nextFocusDo: #requestFocus ifNone: [  ] ]);
+								addShortcut: (BlShortcutWithAction new
+										name: 'Move to next form item';
+										description: 'Moves to the next form item. If none is found, we cycle back to the first.';
+										combination: BlKeyCombination tab;
+										action: [ :anEvent | 
+											BlFocusFinder new
+												direction: BlFocusSearchDirectionForward new;
+												root: aForm;
+												referenceElement: anEvent currentTarget;
+												nextFocusDo: #requestFocus ifNone: [  ] ]).
 
 						aDescription blocShortcuts
 							ifNotNil: [ :aBlockReturningCollection | 
 								aBlockReturningCollection value
 									do: [ :aShortcut | aLabel addShortcut: aShortcut ] ].
 
-						aLabel
-							when: BlClickEvent
-							do: [ :aClickEvent | 
-								aLabel switchToEditor
-									addShortcut: (BlShortcutWithAction new
-											combination: BlKeyCombination shiftTab;
-											action: [ :anEvent | 
-												BlFocusFinder new
-													direction: BlFocusSearchDirectionBackward new;
-													root: aForm;
-													referenceElement: anEvent currentTarget;
-													nextFocusDo: #requestFocus ifNone: [  ] ]);
-									addShortcut: (BlShortcutWithAction new
-											combination: BlKeyCombination tab;
-											action: [ :anEvent | 
-												BlFocusFinder new
-													direction: BlFocusSearchDirectionForward new;
-													root: aForm;
-													referenceElement: anEvent currentTarget;
-													nextFocusDo: #requestFocus ifNone: [  ] ]) ].
-
 						aCompletionStrategy
 							ifNotNil: [ (GtCompletionController on: aLabel strategy: aCompletionStrategy) install ].
 						aContextMenuBlock
 							ifNotNil: [ aLabel
 									addAptitude: (BrGlamorousWithContextMenuAptitude
-											content: [ aContextMenuBlock value: aTag name value: aLabel value: aMemento]) ].
+											content: [ aContextMenuBlock
+													value: aTag name
+													value: aLabel
+													value: aMemento ]) ].
 						aLabel ]).
 	aTagger
 		when: BrTaggerAddTagRequest
 		do: [ :aRequest | 
 			| aValue |
+			aRequest currentTarget addTag: aRequest tag.
 			aValue := (aTagger tags collect: #name)
-						add: aRequest tag name;
-						yourself.
-			
+					add: aRequest tag name;
+					yourself.
+
 			GtMagritteBuilderUtility
-				write: aValue 
-				using: aDescription 
-				memento: aMemento 
+				write: aValue
+				using: aDescription
+				memento: aMemento
 				element: aTagger ].
 	aTagger
 		when: BrTaggerRenameTagRequest
 		do: [ :aRequest | 
 			(aRequest tag name = aRequest newName) not
-				ifTrue: [ 
-					| aValue |
+				ifTrue: [ | aValue |
+					aRequest currentTarget renameTag: aRequest tag to: aRequest newName.
 					aValue := (aTagger tags collect: #name)
-								replaceAll: aRequest tag name with: aRequest newName;
-								yourself.
-					
+							replaceAll: aRequest tag name with: aRequest newName;
+							yourself.
+
 					GtMagritteBuilderUtility
-						write: aValue 
-						using: aDescription 
-						memento: aMemento 
+						write: aValue
+						using: aDescription
+						memento: aMemento
 						element: aTagger ] ].
 	aTagger
 		when: BrTaggerRemoveTagRequest
 		do: [ :aRequest | 
 			| aValue |
 			aValue := (aTagger tags collect: #name)
-						remove: aRequest tag name;
-						yourself.
-			
+					remove: aRequest tag name;
+					yourself.
+			aRequest currentTarget removeTag: aRequest tag.
+
 			GtMagritteBuilderUtility
-				write: aValue 
-				using: aDescription 
-				memento: aMemento 
+				write: aValue
+				using: aDescription
+				memento: aMemento
 				element: aTagger ].
 	aTagger
 		withAsyncSinkDo: [ :anElementSink | 
@@ -265,8 +269,9 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 				sink: AsyncPeekSink new;
 				whenUpdate: [ :theTagger :aSink | 
 					| theValues |
-					theValues := aSink value currentValue.
-					theTagger namedTags: theValues ].
+					(theTagger tags isEmpty or: [ aSink value isChanged not ])
+						ifTrue: [ theValues := aSink value currentValue.
+							theTagger namedTags: theValues ] ].
 			(aMemento readObservableValueUsing: aDescription) observe: anElementSink ].
 	GtMagritteBuilderUtility
 		newValidationContainerWith: aTagger
