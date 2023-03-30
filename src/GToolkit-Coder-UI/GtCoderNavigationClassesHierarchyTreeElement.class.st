@@ -20,6 +20,11 @@ GtCoderNavigationClassesHierarchyTreeElement class >> fromClasses: aCollectionOf
 ]
 
 { #category : #initialization }
+GtCoderNavigationClassesHierarchyTreeElement >> browseReferencesTo: aClass [
+	self phlow spawnObject: (aClass gtReferences) 
+]
+
+{ #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> buildRemoveClassLabelFor: aClass [
 	| labelText |
 	labelText := (aClass isReferenced
@@ -36,7 +41,9 @@ GtCoderNavigationClassesHierarchyTreeElement >> buildRemoveClassLabelFor: aClass
 
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> contextMenuItemsFor: aClass [
-	^ {(self createLabel: 'New Subclass' description: aClass name)
+	^ {(self createLabel: 'Browse references' description: aClass name)
+			-> [ :elem | self browseReferencesTo: aClass ].
+		(self createLabel: 'New Subclass' description: aClass name)
 			-> [ :elem | self newSubclassOf: aClass ].
 		(self createLabel: 'Rename class' description: aClass name)
 			-> [ :elem | self renameClass: aClass inElement: elem ].
