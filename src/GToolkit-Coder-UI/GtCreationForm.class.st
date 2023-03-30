@@ -225,12 +225,10 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 		do: [ :aRequest | 
 			| aValue |
 			aRequest currentTarget addTag: aRequest tag.
-			aValue := (aTagger tags collect: #name)
-					add: aRequest tag name;
-					yourself.
+			aValue := aTagger tags collect: #name.
 
 			GtMagritteBuilderUtility
-				write: aValue
+				write: aValue asArray
 				using: aDescription
 				memento: aMemento
 				element: aTagger ].
@@ -240,12 +238,10 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 			(aRequest tag name = aRequest newName) not
 				ifTrue: [ | aValue |
 					aRequest currentTarget renameTag: aRequest tag to: aRequest newName.
-					aValue := (aTagger tags collect: #name)
-							replaceAll: aRequest tag name with: aRequest newName;
-							yourself.
+					aValue := aTagger tags collect: #name.
 
 					GtMagritteBuilderUtility
-						write: aValue
+						write: aValue asArray
 						using: aDescription
 						memento: aMemento
 						element: aTagger ] ].
@@ -253,13 +249,11 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 		when: BrTaggerRemoveTagRequest
 		do: [ :aRequest | 
 			| aValue |
-			aValue := (aTagger tags collect: #name)
-					remove: aRequest tag name;
-					yourself.
 			aRequest currentTarget removeTag: aRequest tag.
+			aValue := aTagger tags collect: #name.
 
 			GtMagritteBuilderUtility
-				write: aValue
+				write: aValue asArray
 				using: aDescription
 				memento: aMemento
 				element: aTagger ].
