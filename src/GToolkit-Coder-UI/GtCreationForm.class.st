@@ -180,7 +180,7 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 							right: 5);
 					tagLabel: [ :aTag | 
 						| aLabel |
-						aLabel := BrEditor new
+						aLabel := BrEditor new fitContent
 								text: (aDescription displayStringFor: aTag name);
 								aptitude: (BrGlamorousEditableLabelAptitude new glamorousFormEditorCodeFontAndSize
 										defaultForeground: Color black);
