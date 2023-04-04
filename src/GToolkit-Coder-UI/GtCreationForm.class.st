@@ -197,7 +197,7 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 								addShortcut: (BlShortcutWithAction new
 										name: 'Move to next form item';
 										description: 'Moves to the next form item. If none is found, we cycle back to the first.';
-										combination: BlKeyCombination tab;
+										combination: (BlKeyCombination tab or: BlKeyCombination enter);
 										action: [ :anEvent | 
 											BlFocusFinder new
 												direction: BlFocusSearchDirectionForward new;

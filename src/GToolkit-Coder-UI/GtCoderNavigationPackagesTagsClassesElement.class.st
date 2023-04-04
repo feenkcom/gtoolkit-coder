@@ -66,6 +66,14 @@ GtCoderNavigationPackagesTagsClassesElement >> browseReferencesOf: aSymbol [
 ]
 
 { #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> browseSlotReferencesFor: aString [
+	self phlow
+		spawnObject: (GtSearchInstanceSlotReferenceFilter
+				forClassAndSubclasses: self selectedClass
+				andVariable: aString)
+]
+
+{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildCategorySlotTabs [
 	| aTabGroup |
 	aTabGroup := BrTabGroup new
@@ -850,7 +858,9 @@ GtCoderNavigationPackagesTagsClassesElement >> showClassList [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item [
-	^ {(self createLabel: 'Push up ' description: item name)
+	^ {(self createLabel: 'Browse references' description: item name)
+			-> [ :elem | self browseSlotReferencesFor: item name ].
+		(self createLabel: 'Push up' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBPullUpInstanceVariableRefactoring
@@ -860,7 +870,7 @@ GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item
 					addPreviewButtonFor: refactoring
 					to: elem
 					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Push down ' description: item name)
+		(self createLabel: 'Push down' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBPushDownInstanceVariableRefactoring
@@ -870,7 +880,7 @@ GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item
 					addPreviewButtonFor: refactoring
 					to: elem
 					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Create accessors for ' description: item name)
+		(self createLabel: 'Create accessors' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBCreateAccessorsForVariableRefactoring
@@ -880,7 +890,7 @@ GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item
 					addPreviewButtonFor: refactoring
 					to: elem
 					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Abstract ' description: item name)
+		(self createLabel: 'Abstract' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBAbstractInstanceVariableRefactoring
@@ -890,7 +900,7 @@ GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item
 					addPreviewButtonFor: refactoring
 					to: elem
 					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Protect ' description: item name)
+		(self createLabel: 'Protect' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBProtectInstanceVariableRefactoring
@@ -900,7 +910,7 @@ GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item
 					addPreviewButtonFor: refactoring
 					to: elem
 					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Remove ' description: item name)
+		(self createLabel: 'Remove' description: item name)
 			-> [ :elem | 
 				| refactoring |
 				refactoring := RBRemoveInstanceVariableRefactoring
