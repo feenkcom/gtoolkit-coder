@@ -981,7 +981,6 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToSlotList [
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 	self hasNavigationModel ifFalse: [ ^ self ].
-	self haltOnce.
 	classesList initializeWithClasses: navigationModel classesToShow.
 	self updateProtocolList.
 	self updateSlotList
