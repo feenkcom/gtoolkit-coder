@@ -754,6 +754,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aP
 	(self selectedPackage ~= aPackage
 		or: [ self selectedPackageTag ~= aPackageTag ])
 		ifTrue: [ self selectPackage: aPackage tag: aPackageTag ].
+
 	self selectClass: aClass.
 	self updateProtocolList.
 	self updateSlotList
@@ -980,6 +981,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToSlotList [
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
 	self hasNavigationModel ifFalse: [ ^ self ].
+	self haltOnce.
 	classesList initializeWithClasses: navigationModel classesToShow.
 	self updateProtocolList.
 	self updateSlotList
