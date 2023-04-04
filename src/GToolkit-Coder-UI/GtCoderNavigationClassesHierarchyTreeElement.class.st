@@ -51,15 +51,6 @@ GtCoderNavigationClassesHierarchyTreeElement >> contextMenuItemsFor: aClass [
 			-> [ :elem | self removeClass: aClass inElement: elem ]}
 ]
 
-{ #category : #'private - ui' }
-GtCoderNavigationClassesHierarchyTreeElement >> expandClass: aClass [
-	| aClassDepth |
-	aClassDepth := 0.
-	aClass
-		allSuperclassesDo: [ :eachClass | aClassDepth := aClassDepth + 1 ].
-	self expandUpTo: aClassDepth + 1
-]
-
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
@@ -98,8 +89,11 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 
 { #category : #'api - initialization' }
 GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollectionOfClasses [
-	classesTree := (GtCoderClassesHierarchyTree
-		fromClasses: aCollectionOfClasses) sortByClassName.
+	| newTree |
+	newTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses)
+			sortByClassName.
+	newTree = classesTree ifTrue: [ ^ self ].
+	classesTree := newTree.
 	self
 		items: classesTree subclassTrees
 		lazy: [ :eachTree | eachTree subclassTrees ].

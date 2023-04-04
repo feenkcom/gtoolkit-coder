@@ -754,6 +754,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aP
 	(self selectedPackage ~= aPackage
 		or: [ self selectedPackageTag ~= aPackageTag ])
 		ifTrue: [ self selectPackage: aPackage tag: aPackageTag ].
+
 	self selectClass: aClass.
 	self updateProtocolList.
 	self updateSlotList

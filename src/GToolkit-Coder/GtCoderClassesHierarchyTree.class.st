@@ -19,13 +19,13 @@ Class {
 GtCoderClassesHierarchyTree class >> fromClasses: aCollectionOfClasses [
 
 	| aRootItem theSetOfClasses classToTree |
-	aRootItem := GtCoderClassesHierarchyTree new.
+	aRootItem := self new.
 	theSetOfClasses := aCollectionOfClasses asSet.
 	classToTree := Dictionary new.
 	theSetOfClasses do: [ :each | 
 		classToTree
 			at: each
-			put: (GtCoderClassesHierarchyTree new rootClass: each) ].
+			put: (self new rootClass: each) ].
 	theSetOfClasses do: [ :each | 
 		classToTree
 			at: each superclass
@@ -48,6 +48,13 @@ GtCoderClassesHierarchyTree class >> hierarchyForClass: aClass [
 		aCurrentNode := aNewNode. ].
 
 	^ aRootNode.
+]
+
+{ #category : #comparing }
+GtCoderClassesHierarchyTree >> = anObject [
+	^ anObject class = self class
+		and: [ self rootClass = anObject rootClass
+				and: [ self subclassTrees = anObject subclassTrees ] ]
 ]
 
 { #category : #accessing }
@@ -88,6 +95,11 @@ GtCoderClassesHierarchyTree >> hasRootClass [
 	<return: #Boolean>
 
 	^ rootClass isNotNil
+]
+
+{ #category : #comparing }
+GtCoderClassesHierarchyTree >> hash [
+	^ self rootClass hash bitXor: self subclassTrees hash
 ]
 
 { #category : #initialization }
