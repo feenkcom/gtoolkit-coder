@@ -14,6 +14,13 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Textual'
 }
 
+{ #category : #'hooks - children' }
+GtTextualCoderEditorElement >> attachSpace [
+	super attachSpace.
+	
+	GtTextualCoderEditorElementAttachedSpaceSignal emit
+]
+
 { #category : #'api - textual coder view model' }
 GtTextualCoderEditorElement >> coderViewModel: aTextualCoderViewModel [
 	self textualCoderViewModel: aTextualCoderViewModel
@@ -59,6 +66,13 @@ GtTextualCoderEditorElement >> createContextMenuContent [
 	self enqueueTask: (BlPromiseTask new promise: aContextMenuPromise).
 
 	^ theContextMenu
+]
+
+{ #category : #'hooks - children' }
+GtTextualCoderEditorElement >> detachSpace [
+	super detachSpace.
+	
+	GtTextualCoderEditorElementDetachedSpaceSignal emit
 ]
 
 { #category : #'private - updating' }
@@ -144,6 +158,13 @@ GtTextualCoderEditorElement >> initializeListeners [
 		do: [ :anEvent | self textualCoderViewModel styledText: anEvent styledText ]
 ]
 
+{ #category : #'hooks - children' }
+GtTextualCoderEditorElement >> onAddedToSceneGraph [
+	super onAddedToSceneGraph.
+	
+	GtTextualCoderEditorElementAddedToSceneGraphSignal emit
+]
+
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onCodeEvaluated: anEvaluationAnnouncement [
 	evaluationHighlighter displayResult: anEvaluationAnnouncement evaluationResult.
@@ -204,6 +225,13 @@ GtTextualCoderEditorElement >> onPostTextualCoderViewModelChanged [
 GtTextualCoderEditorElement >> onPrintRequest: anEvaluationAnnouncement [
 	evaluationHighlighter hideResult.
 	evaluationPrinter displayResult: anEvaluationAnnouncement evaluationResult.
+]
+
+{ #category : #'hooks - children' }
+GtTextualCoderEditorElement >> onRemovedFromSceneGraph [
+	super onRemovedFromSceneGraph.
+	
+	GtTextualCoderEditorElementRemovedFromSceneGraphSignal emit
 ]
 
 { #category : #'private - event handling' }

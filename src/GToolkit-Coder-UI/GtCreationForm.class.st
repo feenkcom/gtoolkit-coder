@@ -225,7 +225,7 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 		do: [ :aRequest | 
 			| aValue |
 			aRequest currentTarget addTag: aRequest tag.
-			aValue := aTagger tags collect: #name.
+			aValue := aTagger tags collect: #name thenSelect: #isNotEmpty.
 
 			GtMagritteBuilderUtility
 				write: aValue asArray
