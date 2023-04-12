@@ -8,3 +8,8 @@ Class {
 GtStreamingCodersViewModelScrollTarget >> applicableTo: aCoderViewModel [
 	^ false
 ]
+
+{ #category : #printing }
+GtStreamingCodersViewModelScrollTarget >> printTargetNameOn: aStream [
+	aStream nextPutAll: '<no target>'
+]
