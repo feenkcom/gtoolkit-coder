@@ -300,11 +300,6 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
 
 	self onCoderViewModelFocused: self textualCoderViewModel focused.
-	
-	"In order to properly layout the element in an infinite list,
-	we set the text. See https://github.com/feenkcom/gtoolkit/issues/3168"
-	self isAddedToSceneGraph ifFalse: [
-		self text: self textualCoderViewModel sourceText copy ].
 
 	"Setting text may change cursor and selection because text editor makes sure
 	that they have valid values. That is why we create a snaphot of the editor's state
