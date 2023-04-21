@@ -68,6 +68,11 @@ GtTextualCoderEditorElement >> createContextMenuContent [
 	^ theContextMenu
 ]
 
+{ #category : #initialization }
+GtTextualCoderEditorElement >> defaultTextEditorMode [
+	^ BrTextEditorEditableCodeMode new
+]
+
 { #category : #'hooks - children' }
 GtTextualCoderEditorElement >> detachSpace [
 	super detachSpace.
@@ -102,9 +107,6 @@ GtTextualCoderEditorElement >> initialize [
 		padding: BlInsets empty;
 		hMatchParent;
 		vFitContent.
-
-	self editor
-		beEditableCode.
 
 	self id: GtSourceCoderEditorId.
 
