@@ -141,16 +141,16 @@ GtDiffElement >> initialize [
 
 { #category : #'event handling' }
 GtDiffElement >> leftBottomFor: anInteger [
-	| range element index |
+	| range element index parentBounds |
 	range := self leftRange.
-	range isEmpty
-		ifTrue: [ ^ leftElement bounds inParent inParent top + leftElement padding top ].
+	parentBounds := leftElement bounds inParent inParent.
+	range isEmpty ifTrue: [ ^ parentBounds top + leftElement padding top ].
 	index := (anInteger max: range first) min: range last.
 	element := leftElement children at: index - range first + 1.
-	^ (anInteger < range first
+	^ ((anInteger < range first
 		ifTrue: [ element bounds top ]
 		ifFalse: [ element bounds bottom ]) + leftElement bounds inParent inParent top
-		max: leftElement bounds inParent inParent top
+		max: parentBounds top) min: parentBounds bottom
 ]
 
 { #category : #'event handling' }
@@ -181,7 +181,7 @@ GtDiffElement >> leftLineForCursor [
 { #category : #private }
 GtDiffElement >> leftRange [
 	| first |
-	first := ((leftElement instVarNamed: 'layoutPositionsRange')
+	first := (leftElement findMinMaxChildLayoutPositions
 			ifNil: [ 1 ]
 			ifNotNil: [ :interval | interval first ]) max: 1.
 	^ first to: first + leftElement children size - 1
@@ -366,15 +366,17 @@ GtDiffElement >> paintOnCanvas: aCanvas [
 
 { #category : #'event handling' }
 GtDiffElement >> rightBottomFor: anInteger [
-	| range element index |
+	| range element index parentBounds |
 	range := self rightRange.
-	range isEmpty ifTrue: [ ^ rightElement bounds inParent inParent top + rightElement padding top ].
+	parentBounds := rightElement bounds inParent inParent.
+	range isEmpty ifTrue: [ ^ parentBounds top + rightElement padding top ].
 	index := (anInteger max: range first) min: range last.
 	element := rightElement children at: index - range first + 1.
-	^ (anInteger < range first
+	^ ((anInteger < range first
 		ifTrue: [ element bounds top ]
-		ifFalse: [ element bounds bottom ]) + rightElement bounds inParent inParent top
-		max: rightElement bounds inParent inParent top
+		ifFalse: [ element bounds bottom ])
+		+ rightElement bounds inParent inParent top max: parentBounds top)
+		min: parentBounds bottom
 ]
 
 { #category : #'event handling' }
@@ -405,7 +407,7 @@ GtDiffElement >> rightLineForCursor [
 { #category : #private }
 GtDiffElement >> rightRange [
 	| first |
-	first := ((rightElement instVarNamed: 'layoutPositionsRange')
+	first := (rightElement findMinMaxChildLayoutPositions
 			ifNil: [ 1 ]
 			ifNotNil: [ :interval | interval first ]) max: 1.
 	^ first to: first + rightElement children size - 1
