@@ -1083,16 +1083,14 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolListWith: instanceP
 GtCoderNavigationPackagesTagsClassesElement >> updateSelections [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel hasSelectedPackage
-		ifTrue: [ navigationModel hasSelectedTag
-				ifTrue: [ navigationModel hasSelectedClass
-						ifTrue: [ self
-								selectClass: navigationModel selectedClass
-								inPackage: navigationModel selectedPackage
-								tag: navigationModel selectedTag ]
-						ifFalse: [ self
-								selectPackage: navigationModel selectedPackage
-								tag: navigationModel selectedTag ] ]
-				ifFalse: [ self selectPackage: navigationModel selectedPackage ] ]
+		ifTrue: [ navigationModel hasSelectedClass
+				ifTrue: [ self
+						selectClass: navigationModel selectedClass
+						inPackage: navigationModel selectedPackage
+						tag: navigationModel selectedTag ]
+				ifFalse: [ self
+						selectPackage: navigationModel selectedPackage
+						tag: navigationModel selectedTag ] ]
 ]
 
 { #category : #'api - class selections' }
