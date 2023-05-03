@@ -13,7 +13,10 @@ GtProtocolSlotTabAptitude >> initialize [
 	self add: (BrGlamorousTextLabelAptitude new foreground: Color gray).
 	self add: BrGlamorousTabActionbarAptitude new.
 	self add: BrLayoutResizerAptitude inherit.
-	self add: BrLayoutAlignmentAptitude forHorizontalLinearLayout.
+	self add: BrLayoutAlignmentAptitude new.
+	self
+		addChangeProperty: #(widget layout)
+		with: [ BlLinearLayout horizontal ].
 	bar := BlElement new
 		visibility: BlVisibility hidden;
 		background: self theme default primaryBorderColor;
