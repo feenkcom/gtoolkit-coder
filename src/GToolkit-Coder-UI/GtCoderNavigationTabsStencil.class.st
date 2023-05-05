@@ -142,7 +142,8 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 														self formCache removeKey: each ] ].
 									form class == GtClassCreationForm
 										ifTrue: [ navigationModel
-												selectedClassDo: [ :aClass | form superclassName: aClass name ] ].
+												selectedClassDo: [ :aClass | 
+													aClass isClass ifTrue: [ form superclassName: aClass name ] ] ].
 									form hasPackageAndTag
 										ifTrue: [ navigationModel
 												selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
