@@ -58,6 +58,8 @@ BaselineOfGToolkitCoder >> baseline: spec [
 
 			package: 'GToolkit-SearchFilters' with: [
 				spec requires: #('Futures') ];
+			package: 'GToolkit-SearchFilters-PhlowTool' with: [
+				spec requires: #('GToolkit-SearchFilters' 'GToolkitPager') ];
 
 			package: 'GToolkit-Coder-StreamingCoders' with: [
 				spec requires: #('Futures' 'GToolkit-SearchFilters') ];
