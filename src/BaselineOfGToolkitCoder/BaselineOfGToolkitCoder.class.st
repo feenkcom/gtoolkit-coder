@@ -54,6 +54,8 @@ BaselineOfGToolkitCoder >> baseline: spec [
 		spec package: 'GToolkit-VariableBindings'.
 		spec package: 'GToolkit-SearchFilters' with: [
 			spec requires: #('Futures') ].
+		spec package: 'GToolkit-SearchFilters-PhlowTool' with: [
+			spec requires: #('GToolkit-SearchFilters' 'GToolkitPager') ].
 		spec package: 'GToolkit-Coder-StreamingCoders' with: [
 			spec requires: #('Futures' 'GToolkit-SearchFilters') ].
 		spec package: 'GToolkit-Coder-StreamingCoders-UI' with: [
