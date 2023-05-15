@@ -55,8 +55,6 @@ GtCoder >> initialize [
 	self addChild: self sidebarElement as: #sidebar.
 	self addChild: self contentElement as: #content.
 	
-	self addAptitude: (BrLayoutResizerAptitude inherit).
-	
 	self phlow beView.
 ]
 
