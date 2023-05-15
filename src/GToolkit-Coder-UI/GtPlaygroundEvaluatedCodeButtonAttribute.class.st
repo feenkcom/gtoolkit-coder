@@ -6,7 +6,7 @@ Class {
 		'action',
 		'coder'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Source Attributes'
+	#category : #'GToolkit-Coder-UI-Coder - Source Attributes'
 }
 
 { #category : #accessing }
@@ -28,12 +28,12 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> affect: aTBrTextEditorTextualPiece i
 
 	^ aButton
 		aptitude: (
-			(BrInteractiveCommonAptitude new
-				default: [ :aWidget | aWidget background: BrGlamorousColors defaultButtonBorderColor ];
-				hovered: [ :aWidget | aWidget background: BrGlamorousColors hoveredButtonBorderColor ])
+			(BrLazyStyleCommonAptitude new
+				default: [ :aStyle | aStyle background: BrGlamorousColors defaultButtonBorderColor ];
+				hovered: [ :aStyle | aStyle background: BrGlamorousColors hoveredButtonBorderColor ])
 			+ 
 		
-		((BrGlamorousWithTooltipAptitude2 content: [
+		((BrGlamorousWithTooltipAptitude content: [
 			| aContainer |
 			aContainer := BlElement new
 				layout: BlFrameLayout new;
