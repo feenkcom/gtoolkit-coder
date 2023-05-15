@@ -9,7 +9,6 @@ GtDiffFlatAptitude >> initialize [
 	super initialize.
 	
 	self add: (BrLayoutResizerAptitude new
-		inherit;
 		inherit: GtDiffOldTextId;
 		inherit: GtDiffNewTextId).
 
