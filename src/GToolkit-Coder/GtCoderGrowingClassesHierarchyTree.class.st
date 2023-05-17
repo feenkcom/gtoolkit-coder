@@ -31,7 +31,7 @@ GtCoderGrowingClassesHierarchyTree >> gtFixedTreeFor: aView [
 	<gtView>
 
 	^ aView tree
-		title: 'Fixed Classes';
+		title: 'Fixed classes';
 		priority: 1;
 		items: [ { self } ];
 		children: [ :anItem | anItem currentSubclassTrees ];
@@ -42,7 +42,7 @@ GtCoderGrowingClassesHierarchyTree >> gtFixedTreeFor: aView [
 GtCoderGrowingClassesHierarchyTree >> gtTreeFor: aView [
 	<gtView>
 	^ (super gtTreeFor: aView)
-		title: 'Growing Classes';
+		title: 'Growing classes';
 		priority: 2
 ]
 

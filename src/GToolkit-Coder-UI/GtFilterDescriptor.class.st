@@ -178,7 +178,7 @@ GtFilterDescriptor >> gtViewFilterBlockFor: aView [
 	creationBlock ifNil: [ ^ aView empty ].
 	
 	^ aView forward 
-		title: 'Filter Creation Block';
+		title: 'Filter creation block';
 		object: [ creationBlock ];
 		view: #gtSourceCodeFor:
 ]

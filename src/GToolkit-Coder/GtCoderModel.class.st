@@ -63,7 +63,7 @@ GtCoderModel class >> gtContextMenuAddOnsFor: aView [
 	<gtView>
 	<gtClassView>
 	^ aView forward
-		title: 'Menu AddOns';
+		title: 'Menu addons';
 		tooltip: 'The methods that extend the Coder with context menu items';
 		priority: 45;
 		object: [ (GtSearchMethodsInClassFilter new
