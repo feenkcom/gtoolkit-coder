@@ -23,32 +23,29 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> action: aBlock [
 GtPlaygroundEvaluatedCodeButtonAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 	<return: #BlElement>
 	| aButton |
-	
 	aButton := BrButton new.
 
 	^ aButton
-		aptitude: (
-			(BrLazyStyleCommonAptitude new
+		aptitude: (BrLazyStyleCommonAptitude new
 				default: [ :aStyle | aStyle background: BrGlamorousColors defaultButtonBorderColor ];
 				hovered: [ :aStyle | aStyle background: BrGlamorousColors hoveredButtonBorderColor ])
-			+ 
-		
-		((BrGlamorousWithTooltipAptitude content: [
-			| aContainer |
-			aContainer := BlElement new
-				layout: BlFrameLayout new;
-				constraintsDo: [ :c |
-					c horizontal fitContent.
-					c vertical fitContent ];
-				when: GtPhlowObjectToSpawn do: [ :anEvent | aButton fireEvent: (GtPhlowObjectToSpawn new
-					previousSpawnEvent: anEvent;
-					tool: anEvent tool;
-					sourceElement: aButton;
-					spawnDestination: self spawnDestination) ].
-			(self result gtViewsFor: GtPhlowEmptyView new) asElementDo: [ :anInspectorElement |
-				aContainer addChild: ((anInspectorElement exact: 400@400) asScalableElement size: 200@200)
-			] ]) showDelay: 200 milliSeconds));
-		size: 8@8;
+				+ ((BrGlamorousWithTooltipAptitude
+						content: [ | aContainer |
+							aContainer := BlElement new
+									layout: BlFrameLayout new;
+									constraintsDo: [ :c | 
+										c horizontal fitContent.
+										c vertical fitContent ];
+									when: GtPhlowObjectToSpawn
+										do: [ :anEvent | 
+											aButton
+												fireEvent: (GtPhlowObjectToSpawn new
+														previousSpawnEvent: anEvent;
+														tool: anEvent tool;
+														sourceElement: aButton;
+														spawnDestination: self spawnDestination) ].
+							self playgroundElementIn: aContainer ]) showDelay: 200 milliSeconds);
+		size: 8 @ 8;
 		geometry: BlEllipseGeometry new;
 		margin: (BlInsets left: 2 right: 2);
 		action: [ :aButtonElement :aButtonModel :anEvent | self clickEvent: anEvent from: aButtonElement ];
@@ -85,14 +82,22 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> mayHaveExternalReferences [
 	^ true
 ]
 
+{ #category : #initialization }
+GtPlaygroundEvaluatedCodeButtonAttribute >> playgroundElementIn: aContainer [
+	^ (self result value gtViewsFor: GtPhlowEmptyView new)
+		asElementDo: [ :anInspectorElement | 
+			aContainer
+				addChild: ((anInspectorElement exact: 400 @ 400) asScalableElement size: 200 @ 200) ]
+]
+
 { #category : #accessing }
 GtPlaygroundEvaluatedCodeButtonAttribute >> result [
 	^ result
 ]
 
 { #category : #accessing }
-GtPlaygroundEvaluatedCodeButtonAttribute >> result: anObject [
-	result := anObject
+GtPlaygroundEvaluatedCodeButtonAttribute >> result: anObjectOrBlock [
+	result := anObjectOrBlock
 ]
 
 { #category : #accessing }
