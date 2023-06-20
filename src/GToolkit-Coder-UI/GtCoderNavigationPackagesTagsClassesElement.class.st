@@ -389,6 +389,13 @@ GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
 	^ methodProtocolsList
 ]
 
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> onClassListSelectionDoubleClicked [
+	| tabGroup |
+	tabGroup := self withAllParentsDetect: [:each | each class == BrTabGroup] ifFound: [:each | each] ifNone: [^self].
+	tabGroup selectTabWithLabelString: 'Class Hierarchy'
+]
+
 { #category : #accessing }
 GtCoderNavigationPackagesTagsClassesElement >> onClassRemoved: anAnnouncement [
 	| aPackageOrTag |
@@ -923,6 +930,14 @@ GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item
 					cancelSelector: #updateProtocolList ].
 		(self createLabel: 'Rename slot' description: item name)
 			-> [ :elem | self renameSlot: item name inElement: elem ]}
+]
+
+{ #category : #subscriptions }
+GtCoderNavigationPackagesTagsClassesElement >> subscribeToClassList [
+	super subscribeToClassList.
+	classesList
+		when: BrSelectionDoubleClicked
+		do: [ :anEvent | self onClassListSelectionDoubleClicked ].
 ]
 
 { #category : #subscriptions }

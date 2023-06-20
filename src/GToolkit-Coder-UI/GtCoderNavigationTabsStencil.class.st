@@ -56,13 +56,6 @@ GtCoderNavigationTabsStencil >> addNavigation: aNavigationElement [
 ]
 
 { #category : #asserting }
-GtCoderNavigationTabsStencil >> assertNavigationModel: aGtCoderNavigationPackagesTagsClassesModel [
-	self 
-		assert: [ aGtCoderNavigationPackagesTagsClassesModel isNotNil ] 
-		description: [ 'Navigation model must be non-nil' ].
-]
-
-{ #category : #asserting }
 GtCoderNavigationTabsStencil >> assertNavigationView: aNavigationView [
 	self 
 		assert: [ aNavigationView isKindOf: GtPhlowProtoView ] 
@@ -195,7 +188,6 @@ GtCoderNavigationTabsStencil >> navigationModel [
 
 { #category : #accessing }
 GtCoderNavigationTabsStencil >> navigationModel: aGtCoderNavigationPackagesTagsClassesModel [
-	self assertNavigationModel: aGtCoderNavigationPackagesTagsClassesModel.
 	navigationModel := aGtCoderNavigationPackagesTagsClassesModel.
 ]
 

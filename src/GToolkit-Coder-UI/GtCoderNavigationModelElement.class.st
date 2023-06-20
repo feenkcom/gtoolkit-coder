@@ -11,7 +11,7 @@ Class {
 	#instVars : [
 		'navigationModel'
 	],
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #'private - asserting' }
@@ -62,7 +62,6 @@ GtCoderNavigationModelElement >> navigationModel [
 { #category : #'api - accessing' }
 GtCoderNavigationModelElement >> navigationModel: aGtCoderNavigationModel [
 	navigationModel = aGtCoderNavigationModel ifTrue: [  ^ self ].
-	self assertNavigationModel: aGtCoderNavigationModel.
 	self unsubscribeFromNavigationModel.
 	navigationModel := aGtCoderNavigationModel.
 	self subscribeToNavigationModel.
@@ -76,7 +75,6 @@ GtCoderNavigationModelElement >> onNavigationModelChanged [
 
 { #category : #'api - updating' }
 GtCoderNavigationModelElement >> pushCoder: aCoderOrCoders [
-	self assertNavigationModel: self navigationModel.
 	self navigationModel selectCoder: aCoderOrCoders
 ]
 
