@@ -84,7 +84,10 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 						ifTrue: [ aText italic ].
 					aClass isDeprecated
 						ifTrue: [ aText append: ' (deprecated)' asRopedText italic ].
-					label text: aText ] ]
+					label text: aText ] ].
+	self
+		when: BrSelectionDoubleClicked
+		do: [ :evt | self initializeWithHierachyForClass: self selectedClass ]
 ]
 
 { #category : #'api - initialization' }
