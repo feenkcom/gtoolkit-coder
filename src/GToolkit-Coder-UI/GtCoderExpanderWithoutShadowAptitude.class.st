@@ -63,8 +63,7 @@ GtCoderExpanderWithoutShadowAptitude >> defaultBorderPaint [
 
 { #category : #initialization }
 GtCoderExpanderWithoutShadowAptitude >> defaultFocusedBorderPaint [
-	^ (self theme default primaryBorderColor alpha: 0.4)
-		gtOpaqueColorOnWhite
+	^ self theme default primaryBorderColor
 ]
 
 { #category : #accessing }
