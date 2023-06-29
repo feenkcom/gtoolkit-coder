@@ -70,7 +70,6 @@ GtCoderNavigationElement >> navigationModel [
 
 { #category : #accessing }
 GtCoderNavigationElement >> navigationModel: aGtCoderNavigationPackagesTagsClassesModel [
-	self assertNavigationModel: aGtCoderNavigationPackagesTagsClassesModel.
 	self unsubscribeFromNavigationModel.
 	navigationModel := aGtCoderNavigationPackagesTagsClassesModel.
 	self onNavigationModelChanged.

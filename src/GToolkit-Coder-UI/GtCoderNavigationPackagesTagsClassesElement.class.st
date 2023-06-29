@@ -751,8 +751,7 @@ GtCoderNavigationPackagesTagsClassesElement >> reselectPackageOrTag: aSelectedPa
 
 { #category : #'api - class selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aPackage tag: aPackageTag [
-	(self selectedPackage ~= aPackage
-		or: [ self selectedPackageTag ~= aPackageTag ])
+	self selectedPackage ~= aPackage
 		ifTrue: [ self selectPackage: aPackage tag: aPackageTag ].
 
 	self selectClass: aClass.
