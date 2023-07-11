@@ -16,7 +16,7 @@ GtCoderNavigationTabsStencil >> addButtonsTo: explicitView [
 			GtSpotterDropdownButtonStencil new
 				valuable: (GtCoderSpotterStart new navigationModelBlock: [ self navigationModel ]);
 				tooltip: 'Search Code';
-				actOn: [ :anActOnEvent :anItem :theButton | 
+				objectActOn: [ :anActOnEvent :anItem :theButton | 
 					| acted |
 					acted := false.
 					(anItem isKindOf: RPackage)
