@@ -181,7 +181,7 @@ GtDiffElement >> leftLineForCursor [
 { #category : #private }
 GtDiffElement >> leftRange [
 	| first |
-	first := (leftElement editorElement findMinMaxChildLayoutPositions
+	first := (leftElement findMinMaxChildLayoutPositions
 			ifNil: [ 1 ]
 			ifNotNil: [ :interval | interval first ]) max: 1.
 	^ first to: first + leftElement children size - 1
@@ -407,7 +407,7 @@ GtDiffElement >> rightLineForCursor [
 { #category : #private }
 GtDiffElement >> rightRange [
 	| first |
-	first := (rightElement editorElement findMinMaxChildLayoutPositions
+	first := (rightElement findMinMaxChildLayoutPositions
 			ifNil: [ 1 ]
 			ifNotNil: [ :interval | interval first ]) max: 1.
 	^ first to: first + rightElement children size - 1
