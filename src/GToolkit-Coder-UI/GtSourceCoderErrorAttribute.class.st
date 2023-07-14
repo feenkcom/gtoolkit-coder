@@ -78,8 +78,7 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 { #category : #accessing }
 GtSourceCoderErrorAttribute >> errorButton [
 	^ BrButton new
-		aptitude: (BrInteractiveCommonAptitude new
-				default: [ :aWidget | aWidget background: BrGlamorousColors errorBackgroundColor ]);
+		background: BrGlamorousColors errorBackgroundColor;
 		size: 8 @ 8;
 		geometry: BlEllipseGeometry new;
 		padding: (BlInsets left: 2 right: 2);
