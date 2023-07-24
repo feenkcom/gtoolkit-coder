@@ -35,30 +35,35 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 	button
 		addAptitude: (aptitude := BrGlamorousWithDropdownAptitude
 					handle: [ self errorButton ]
-					content: [ | textElement |
-						text := string asRopedText
-								medium;
-								glamorousCodeFontAndSmallSize.
-						textElement := BlTextElement new.
-						textElement text: text.
-						textElement background: BrGlamorousColors errorBackgroundColor.
-						textElement padding: (BlInsets all: 10).
-						textElement
-							when: BlClickEvent
-							do: [ :event | clickAction cull: anEditorElement cull: aptitude hide ].
-						{BlKeyCombination escape.
-							BlKeyCombination enter.
-							BlKeyCombination backspace}
-							do: [ :each | 
+					content: [ | textElement pane |
+						pane := BrVerticalPane new.
+						pane matchParent.
+						pane background: BrGlamorousColors errorBackgroundColor.
+						string lines
+							do: [ :line | 
+								text := line asRopedText
+										medium;
+										glamorousCodeFontAndSmallSize.
+								textElement := BlTextElement new.
+								textElement text: text.
+								textElement padding: (BlInsets all: 10).
 								textElement
-									addShortcut: (BlShortcutWithAction new
-											combination: each;
-											repeatable: false;
-											action: [ :element | 
-												aptitude hide.
-												anEditorElement requestFocus ]) ].
-						textElement enqueueTask: [ textElement requestFocus ] asBlTask.
-						textElement ]
+									when: BlClickEvent
+									do: [ :event | clickAction cull: anEditorElement cull: aptitude hide ].
+								{BlKeyCombination escape.
+									BlKeyCombination enter.
+									BlKeyCombination backspace}
+									do: [ :each | 
+										textElement
+											addShortcut: (BlShortcutWithAction new
+													combination: each;
+													repeatable: false;
+													action: [ :element | 
+														aptitude hide.
+														anEditorElement requestFocus ]) ].
+								textElement enqueueTask: [ textElement requestFocus ] asBlTask.
+								pane addChild: textElement ].
+						pane ]
 					aptitudeDo: [ :look | 
 						look
 							allActorsDepthFirstDo: [ :each | 
