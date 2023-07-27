@@ -6,6 +6,6 @@ Behavior >> gtBrowseFromButton: anElement [
 
 	anElement phlow firstParentCoderNavigationModel
 		coderDo: [ :aCoder | 
-			((GtCoder forCoder: aCoder asNewCoderModelWithSameSubject)
+			((GtCoderElement forCoder: aCoder asNewCoderModelWithSameSubject)
 				openInPagerFrom: anElement) maximized ]
 ]

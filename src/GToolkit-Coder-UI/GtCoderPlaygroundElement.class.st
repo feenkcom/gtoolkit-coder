@@ -8,7 +8,7 @@ I display {{gtClass:GtCoderContentElement}} and an embedded playground.
 "
 Class {
 	#name : #GtCoderPlaygroundElement,
-	#superclass : #GtCoderNavigationModelElement,
+	#superclass : #GtAbstractCoderElement,
 	#instVars : [
 		'contentElement',
 		'playgroundElement'

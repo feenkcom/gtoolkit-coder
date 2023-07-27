@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'package'
 	],
-	#category : 'GToolkit-Coder-UI-Tools'
+	#category : #'GToolkit-Coder-UI-Tools'
 }
 
 { #category : #'instance creation' }
@@ -14,7 +14,7 @@ GtPackageCoderTool class >> package: aPackage [
 
 { #category : #converting }
 GtPackageCoderTool >> newCoder [
-	^ GtCoder forPackage: self package
+	^ GtCoderElement forPackage: self package
 ]
 
 { #category : #accessing }

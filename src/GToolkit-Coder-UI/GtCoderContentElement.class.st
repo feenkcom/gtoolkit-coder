@@ -8,7 +8,7 @@ I display a {{gtClass:GtPharoBehaviorCoder}}, {{gtClass:GtPharoPackageTagCoder}}
 "
 Class {
 	#name : #GtCoderContentElement,
-	#superclass : #GtCoderNavigationModelElement,
+	#superclass : #GtAbstractCoderElement,
 	#category : #'GToolkit-Coder-UI-Basic'
 }
 

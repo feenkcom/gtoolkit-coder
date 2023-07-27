@@ -1,13 +1,16 @@
 "
 I am an abstract class.
-I provide basic {{gtMethod:GtCoderNavigationModelElement>>#navigationModel:|label=navigation}} accessors, model {{gtMethod:GtCoderNavigationModelElement>>#subscribeToNavigationModel|label=subscriptons}}, and model {{gtMethod:GtCoderNavigationModelElement>>#onNavigationModelChanged|label=instance changes}}.
-See my {{gtClass:GtCoderNavigationModelElement|expanded|show=#gtSubclassesFor:}} for concrete implementations:
+I am an {{gtClass:BlElement}}.
+I provide basic {{gtClass:TBrLayoutResizable}} methods.
+See my {{gtClass:GtCoderElement|expanded|show=#gtSubclassesFor:}} for concrete implementations:
 
 
 "
 Class {
-	#name : #GtCoderNavigationModelElement,
-	#superclass : #GtCoderElement,
+	#name : #GtAbstractCoderElement,
+	#superclass : #BlElement,
+	#traits : 'TBrLayoutResizable',
+	#classTraits : 'TBrLayoutResizable classTrait',
 	#instVars : [
 		'navigationModel'
 	],
@@ -15,7 +18,7 @@ Class {
 }
 
 { #category : #'private - asserting' }
-GtCoderNavigationModelElement >> assertNavigationModel: aGtCoderNavigationModel [
+GtAbstractCoderElement >> assertNavigationModel: aGtCoderNavigationModel [
 	self 
 		assert: [ aGtCoderNavigationModel isNotNil ] 
 		description: [ 'Navigation model must be non-nil' ].
@@ -26,20 +29,20 @@ GtCoderNavigationModelElement >> assertNavigationModel: aGtCoderNavigationModel 
 ]
 
 { #category : #defaults }
-GtCoderNavigationModelElement >> defaultNavigationModel [
+GtAbstractCoderElement >> defaultNavigationModel [
 	^ GtCoderNavigationModel null
 ]
 
 { #category : #initialization }
-GtCoderNavigationModelElement >> initialize [
+GtAbstractCoderElement >> initialize [
 	super initialize.
+	self matchParent.
 	navigationModel := self defaultNavigationModel.
-	self initializeListeners.
-
+	self initializeListeners
 ]
 
 { #category : #initialization }
-GtCoderNavigationModelElement >> initializeListeners [
+GtAbstractCoderElement >> initializeListeners [
 	self
 		when: GtCoderToReplace
 		do: [ :anEvent | self replaceFrom: anEvent ].
@@ -54,13 +57,13 @@ GtCoderNavigationModelElement >> initializeListeners [
 ]
 
 { #category : #'api - accessing' }
-GtCoderNavigationModelElement >> navigationModel [
+GtAbstractCoderElement >> navigationModel [
 	<return: #GtCoderNavigationModel>
 	^ navigationModel
 ]
 
 { #category : #'api - accessing' }
-GtCoderNavigationModelElement >> navigationModel: aGtCoderNavigationModel [
+GtAbstractCoderElement >> navigationModel: aGtCoderNavigationModel [
 	navigationModel = aGtCoderNavigationModel ifTrue: [  ^ self ].
 	self unsubscribeFromNavigationModel.
 	navigationModel := aGtCoderNavigationModel.
@@ -69,41 +72,41 @@ GtCoderNavigationModelElement >> navigationModel: aGtCoderNavigationModel [
 ]
 
 { #category : #'private - hooks' }
-GtCoderNavigationModelElement >> onNavigationModelChanged [
+GtAbstractCoderElement >> onNavigationModelChanged [
 	"Subclasses can react to navigation model changes."
 ]
 
 { #category : #'api - updating' }
-GtCoderNavigationModelElement >> pushCoder: aCoderOrCoders [
+GtAbstractCoderElement >> pushCoder: aCoderOrCoders [
 	self navigationModel selectCoder: aCoderOrCoders
 ]
 
 { #category : #'private - event handling' }
-GtCoderNavigationModelElement >> replaceFrom: aGtCoderToReplaceEvent [
+GtAbstractCoderElement >> replaceFrom: aGtCoderToReplaceEvent [
 	aGtCoderToReplaceEvent consumed: true.
 	
 	self pushCoder: aGtCoderToReplaceEvent coder
 ]
 
 { #category : #'private - event handling' }
-GtCoderNavigationModelElement >> spawnFrom: aGtCoderToSpawnEvent [
+GtAbstractCoderElement >> spawnFrom: aGtCoderToSpawnEvent [
 	aGtCoderToSpawnEvent consumed: true.
 	
 	self phlow spawnTool: (GtReadyCoderTool coder: (aGtCoderToSpawnEvent coder))
 ]
 
 { #category : #'private - event handling' }
-GtCoderNavigationModelElement >> spawnInSpaceFrom: aGtCoderToSpawnInSpaceEvent [
+GtAbstractCoderElement >> spawnInSpaceFrom: aGtCoderToSpawnInSpaceEvent [
 	aGtCoderToSpawnInSpaceEvent consumed: true.
 ]
 
 { #category : #'private - subscriptions' }
-GtCoderNavigationModelElement >> subscribeToNavigationModel [
+GtAbstractCoderElement >> subscribeToNavigationModel [
 	"Subclasses can subscribe to the navigation model"
 ]
 
 { #category : #'private - subscriptions' }
-GtCoderNavigationModelElement >> unsubscribeFromNavigationModel [
+GtAbstractCoderElement >> unsubscribeFromNavigationModel [
 	self navigationModel = GtCoderNavigationModel null ifTrue: [ ^ self ].
 	self navigationModel unsubscribe: self.
 ]

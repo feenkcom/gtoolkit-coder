@@ -19,7 +19,7 @@ Behavior >> gtBrowseButtonFor: anAction [
 											name: self gtDisplayString;
 											valuable: [ | aCoder |
 												aButton phlow firstParentCoderNavigationModel
-													coderDo: [ :oldCoder | aCoder := GtCoder forCoder: oldCoder asNewCoderModelWithSameSubject ].
+													coderDo: [ :oldCoder | aCoder := GtCoderElement forCoder: oldCoder asNewCoderModelWithSameSubject ].
 												aCoder ]) ] ].
 			button viewModel
 				when: BlClickEvent

@@ -34,13 +34,13 @@ RPackage >> gtBaselinesFor: aView [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtBrowse [
-	^ ((GtCoder forPackage: self) 
+	^ ((GtCoderElement forPackage: self) 
 		openInPager) maximized
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtBrowseFrom: anElement [
-	^ ((GtCoder forPackage: self) asElement openInPagerFrom: anElement) maximized
+	^ ((GtCoderElement forPackage: self) asElement openInPagerFrom: anElement) maximized
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'observedClass'
 	],
-	#category : 'GToolkit-Coder-UI-Tools'
+	#category : #'GToolkit-Coder-UI-Tools'
 }
 
 { #category : #'instance creation' }
@@ -19,7 +19,7 @@ GtClassCoderTool class >> observedClass: aClass [
 
 { #category : #converting }
 GtClassCoderTool >> newCoder [
-	^ GtCoder forClass: self observedClass instanceSide
+	^ GtCoderElement forClass: self observedClass instanceSide
 ]
 
 { #category : #accessing }
