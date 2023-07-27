@@ -4,7 +4,7 @@ Extension { #name : #GtPhlowElementContext }
 GtPhlowElementContext >> coder [
 	"Use #firstParentCoder instead"
 
-	<return: #GtCoder>
+	<return: #GtCoderElement>
 	^ self firstParentCoder
 ]
 
@@ -18,15 +18,15 @@ GtPhlowElementContext >> coderNavigationModel [
 
 { #category : #'*GToolkit-Coder-UI' }
 GtPhlowElementContext >> firstParentCoder [
-	<return: #GtCoder>
+	<return: #GtCoderElement>
 	| anElement |
 	anElement := self firstParentWithView.
 	self
 		assert: [ anElement isNotNil ]
 		description: [ 'Coder (element) must be non-nil' ].
 	self
-		assert: [ anElement isKindOf: GtCoder ]
-		description: [ 'Coder (element) must be a kind of ' , GtCoder name ].
+		assert: [ anElement isKindOf: GtCoderElement ]
+		description: [ 'Coder (element) must be a kind of ' , GtCoderElement name ].
 
 	^ anElement
 ]

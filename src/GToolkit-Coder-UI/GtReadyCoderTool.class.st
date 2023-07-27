@@ -17,7 +17,7 @@ GtReadyCoderTool >> asElementDo: aOneArgBlock [
 	"Create a tool element and execute the block."
 
 	| anElement |
-	anElement := (GtCoder forCoder: self coder) asElement.
+	anElement := (GtCoderElement forCoder: self coder) asElement.
 	^ aOneArgBlock cull: anElement asPagerPageElement
 ]
 

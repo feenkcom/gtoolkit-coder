@@ -14,7 +14,7 @@ GtPackageTagCoderTool class >> packageTag: aPackageTag [
 
 { #category : #accessing }
 GtPackageTagCoderTool >> newCoder [
-	^ GtCoder forPackageTag: self packageTag
+	^ GtCoderElement forPackageTag: self packageTag
 ]
 
 { #category : #accessing }

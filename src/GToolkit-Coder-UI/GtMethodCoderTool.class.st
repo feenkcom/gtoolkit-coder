@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'compiledMethod'
 	],
-	#category : 'GToolkit-Coder-UI-Tools'
+	#category : #'GToolkit-Coder-UI-Tools'
 }
 
 { #category : #'instance creation' }
@@ -24,7 +24,7 @@ GtMethodCoderTool >> compiledMethod: anObject [
 
 { #category : #converting }
 GtMethodCoderTool >> newCoder [
-	^ GtCoder forMethod: self compiledMethod
+	^ GtCoderElement forMethod: self compiledMethod
 ]
 
 { #category : #accessing }

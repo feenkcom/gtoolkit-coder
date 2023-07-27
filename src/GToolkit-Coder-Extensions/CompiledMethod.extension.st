@@ -2,14 +2,14 @@ Extension { #name : #CompiledMethod }
 
 { #category : #'*GToolkit-Coder-Extensions' }
 CompiledMethod >> gtBrowse [
-	^ (GtCoder forMethod: self) 
+	^ (GtCoderElement forMethod: self) 
 			openInPager
 			maximized
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
 CompiledMethod >> gtBrowseFrom: anElement [
-	^ ((GtCoder forMethod: self) asElement openInPagerFrom: anElement) maximized
+	^ ((GtCoderElement forMethod: self) asElement openInPagerFrom: anElement) maximized
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
