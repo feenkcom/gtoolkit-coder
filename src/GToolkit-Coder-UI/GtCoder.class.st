@@ -13,7 +13,7 @@ I am the entrance point into the coder as a tool. To instantiate me, use one of 
 "
 Class {
 	#name : #GtCoder,
-	#superclass : #AnObsoleteGtCoderNavigationModelElement,
+	#superclass : #GtAbstractCoderElement,
 	#traits : 'TGtPagerPageInstantiator + TGtPhlowToolDetailAdjustable',
 	#classTraits : 'TGtPagerPageInstantiator classTrait + TGtPhlowToolDetailAdjustable classTrait',
 	#instVars : [
