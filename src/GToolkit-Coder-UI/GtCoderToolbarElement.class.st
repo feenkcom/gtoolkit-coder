@@ -8,7 +8,7 @@ I display a {{gtClass:BrToolbar}}.
 "
 Class {
 	#name : #GtCoderToolbarElement,
-	#superclass : #GtCoderNavigationModelElement,
+	#superclass : #GtAbstractCoderElement,
 	#instVars : [
 		'toolbarElement'
 	],
