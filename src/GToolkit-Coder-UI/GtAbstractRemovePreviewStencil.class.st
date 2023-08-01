@@ -62,7 +62,7 @@ GtAbstractRemovePreviewStencil >> createPreviewContainerForItemNamed: itemName w
 										aStream
 											print: aSink count;
 											space;
-											nextPutAll: ('method' asPluralBasedOn: aSink count) ]) ] ].
+											nextPutAll: ('place' asPluralBasedOn: aSink count) ]) ] ].
 
 	container asyncSink forwardStream: references asAsyncStream.
 
