@@ -16,6 +16,11 @@ GtSearchNullFilter >> defaultFilterScope [
 	^ AsyncEmptyStream new
 ]
 
+{ #category : #comparing }
+GtSearchNullFilter >> hash [
+	^self class hash
+]
+
 { #category : #enumerating }
 GtSearchNullFilter >> itemsDo: aBloc [
 ]
