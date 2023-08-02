@@ -33,6 +33,11 @@ GtAsyncSearchGroupStream class >> mergeTypeWithTypedGroup: aGroupType [
 	^ self
 ]
 
+{ #category : #'as yet unclassified' }
+GtAsyncSearchGroupStream >> asCoder [
+	^ GtFilteredMethodsCoder forFilter: self filter
+]
+
 { #category : #accessing }
 GtAsyncSearchGroupStream >> filter [
 	^ filter
