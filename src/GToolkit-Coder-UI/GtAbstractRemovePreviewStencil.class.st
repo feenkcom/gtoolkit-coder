@@ -44,7 +44,7 @@ GtAbstractRemovePreviewStencil >> createPreviewContainerForItemNamed: itemName w
 										aStream
 											print: aSink count;
 											space;
-											nextPutAll: ('method' asPluralBasedOn: aSink count);
+											nextPutAll: ('place' asPluralBasedOn: aSink count);
 											nextPutAll: '...' ]) ];
 					whenSuccess: [ :aContainer :aSink | 
 						waitingLabel visibility: BlVisibility gone.

@@ -21,5 +21,5 @@ GtPharoRemoveClassPreviewStencil >> classToRemove: aClass [
 GtPharoRemoveClassPreviewStencil >> create [
 	^ self
 		createPreviewContainerForItemNamed: classToRemove name
-		withReferences: classToRemove gtReferences
+		withReferences: classToRemove gtReferences | (GtSearchSubclassesFilter forClass: classToRemove)
 ]
