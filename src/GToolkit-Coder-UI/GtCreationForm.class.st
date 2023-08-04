@@ -154,12 +154,12 @@ GtCreationForm >> packageAndTagName: anObject [
 
 { #category : #accessing }
 GtCreationForm >> selectInNavigationModel: aNavigationModel anInstance: anInstance [
-	| aTag |
 	aNavigationModel selectPackage: anInstance package.
-	aTag := anInstance tags
-			ifEmpty: [ nil ]
-			ifNotEmpty: [ anInstance package classTagNamed: anInstance tags first ].
-	aNavigationModel selectPackageTag: aTag.
+
+	anInstance tags
+		ifNotEmpty: [ aNavigationModel
+				selectPackageTag: (anInstance package classTagNamed: anInstance tags first) ].
+
 	aNavigationModel selectClass: anInstance
 ]
 

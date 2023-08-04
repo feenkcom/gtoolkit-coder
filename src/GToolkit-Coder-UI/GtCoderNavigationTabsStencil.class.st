@@ -135,15 +135,15 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 														self formCache removeKey: each ] ].
 									form class == GtClassCreationForm
 										ifTrue: [ navigationModel
-												selectedClassDo: [ :aClass | 
-													aClass isClass ifTrue: [ form superclassName: aClass name ] ] ].
+												selectedClassDo: [ :aClass | aClass isClass ifTrue: [ form superclassName: aClass name ] ] ].
 									form hasPackageAndTag
 										ifTrue: [ navigationModel
 												selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
 											navigationModel
 												selectedTagDo: [ :aTag | 
-													((aTag isKindOf: RPackageTag) or: [ aTag isUncategorized not ])
-														ifTrue: [ form packageAndTagName tagName: aTag name ] ] ].
+													(aTag isKindOf: RPackageTag)
+														ifTrue: [ aTag isRoot ifFalse: [ form packageAndTagName tagName: aTag name ] ]
+														ifFalse: [ aTag isUncategorized ifFalse: [ form packageAndTagName tagName: aTag name ] ] ] ].
 									((GtCreationFormWidget forForm: form)
 										onAccept: [ :anInstance | 
 											look
