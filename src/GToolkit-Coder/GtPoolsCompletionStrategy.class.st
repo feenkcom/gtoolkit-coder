@@ -18,7 +18,7 @@ GtPoolsCompletionStrategy >> candidatePools [
 ]
 
 { #category : #accessing }
-GtPoolsCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
+GtPoolsCompletionStrategy >> completionActionStreamFor: aText at: positionInteger requested: aBoolean [
 	| currentInput |
 	currentInput := aText asString.
 	^ (self candidatePools asyncStreamStartingWith: currentInput)

@@ -57,6 +57,84 @@ GtFilterTagElement >> availableFilterDescriptors: aCollectionOfFilterDescriptors
 	availableFilterDescriptors := aCollectionOfFilterDescriptors
 ]
 
+{ #category : #'api - accessing' }
+GtFilterTagElement >> createAndAddCompletionValuesDropdown [
+	| aDefaultValue |
+	
+	aDefaultValue := filterDescriptor emptyDefaultValue ifNil: [ '' ].
+	
+	self addChild: (self createFilterLabel
+		id: GtFilterTagLabelId;
+		text: aDefaultValue;
+		addAptitude: (BrGlamorousWithDropdownAptitude
+			handle: [
+				BrHorizontalPane new
+					fitContent;
+					addChildren: {
+						self createFilterLabel text: aDefaultValue.
+						self createFilterPickerHandle.
+					} ]
+			content: [ self createCompletionValuesDropdownContent ])).
+	self addChild: self createFilterPickerHandle.
+	
+]
+
+{ #category : #'api - accessing' }
+GtFilterTagElement >> createAndAddFilterValueEditor [
+	| aDefaultValue |
+	aDefaultValue := filterDescriptor emptyDefaultValue ifNil: [ '' ].
+
+	self
+		childWithId: GtFilterTagEditorId
+		ifFound: [ :anEditor | anEditor text: aDefaultValue ]
+		ifNone: [ self addChild: (self createEditableLabel text: aDefaultValue) ].
+
+	self
+		childWithId: GtFilterTagEditorId
+		ifFound: [ :anEditor | 
+			filterDescriptor completion
+				ifNotNil: [ :strategy |
+					(GtCompletionController on: anEditor strategy: strategy) install ]
+				ifNil: [
+					(GtCompletionController on: anEditor strategy: GtCompletionStrategy new) install ] ]
+]
+
+{ #category : #'private - instance creation' }
+GtFilterTagElement >> createCompletionValuesDropdownContent [
+	^ BrSimpleList new
+		fitContent;
+		stencil: [ :eachCompletionAction :eachIndex | 
+			BrHorizontalPane new
+				id: (GtFilterTagPickerItemId indexed: eachIndex);
+				hMatchParent;
+				vFitContent;
+				padding: (BlInsets all: 5);
+				aptitude: (BrStyleCommonAptitude new
+					default: [ :s | s background: Color transparent ];
+					hovered: [ :s | s background: self theme button defaultBorderColor ];
+					yourself);
+				when: BlClickEvent
+					do: [ :anEvent |
+						anEvent consumed: true.
+						anEvent currentTarget fireEvent: BrDropdownHideWish new.
+						self
+							requestUpdateFilter: filterDescriptor
+							value: eachCompletionAction displayText asString trimmed ];
+				addChild: (BrLabel new
+					aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize;
+					text: eachCompletionAction displayText;
+					yourself);
+				yourself ];
+		stream: (filterDescriptor completion
+			ifNil: [ AsyncEmptyStream new ]
+			ifNotNil: [ :aCompletion |
+				(aCompletion
+					completionResultFor: ''
+					at: 0
+					requested: true) asAsyncStream ]);
+		yourself
+]
+
 { #category : #'private - instance creation' }
 GtFilterTagElement >> createDropdownContent [
 	^ BrSimpleList new
@@ -167,22 +245,9 @@ GtFilterTagElement >> descriptor: aFilterDescriptor [
 
 	filterDescriptor valueIsRequired
 		ifTrue: [
-			| aDefaultValue |
-
-			aDefaultValue := aFilterDescriptor emptyDefaultValue
-				ifNil: [ '' ].
-
-			self
-				childWithId: GtFilterTagEditorId
-				ifFound: [ :anEditor | anEditor text: aDefaultValue ]
-				ifNone: [ self addChild: (self createEditableLabel text: aDefaultValue) ].
-
-			self
-				childWithId: GtFilterTagEditorId
-				ifFound: [ :anEditor |
-					filterDescriptor completion
-						ifNotNil: [ :strategy | (GtCompletionController on: anEditor strategy: strategy) install ]
-						ifNil: [ (GtCompletionController on: anEditor strategy: GtCompletionStrategy new) install ] ] ]
+			filterDescriptor shouldOfferCompletionValues
+				ifTrue: [ self createAndAddCompletionValuesDropdown ]
+				ifFalse: [ self createAndAddFilterValueEditor ] ]
 		ifFalse: [
 			self
 				childWithId: GtFilterTagEditorId
