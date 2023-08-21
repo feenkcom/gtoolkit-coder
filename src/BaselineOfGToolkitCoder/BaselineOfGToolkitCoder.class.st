@@ -51,7 +51,10 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec repository: 'github://feenkcom/gtoolkit-pager:main/src' ];
 			baseline: 'GToolkitCompleter'
 			with: [ 
-				spec repository: 'github://feenkcom/gtoolkit-completer:main/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-completer:main/src' ];
+			baseline: 'GToolkit4Magritte'
+			with: [ 
+				spec repository: 'github://feenkcom/gt4magritte:main/src' ].
 
 		spec
 			package: 'GToolkit-VariableBindings';
@@ -72,7 +75,8 @@ BaselineOfGToolkitCoder >> baseline: spec [
 						   'GToolkitPager' 'GToolkitCompleter' 'GToolkit-SearchFilters' ) ];
 			package: 'GToolkit-Coder-UI' with: [ 
 				spec requires: #( 'GToolkit-Coder' 'GToolkit-VariableBindings'
-						   'GToolkitBasicUtility' 'GToolkitPager' 'GToolkitNotifications') ];
+						   'GToolkitBasicUtility' 'GToolkitPager' 'GToolkitNotifications' 
+						   'GToolkit4Magritte' ) ];
 			package: 'GToolkit-Coder-AddOns'
 			with: [ spec requires: #( 'GToolkit-Coder' 'GToolkit-Coder-UI' ) ];
 			package: 'GToolkit-Coder-Extensions' with: [ 
@@ -82,5 +86,5 @@ BaselineOfGToolkitCoder >> baseline: spec [
 			package: 'GToolkit-Coder-Examples' with: [ 
 				spec requires:
 						#( 'GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns'
-						   'GToolkit-Coder-Examples-SystemS1' ) ] ]
+						   'GToolkit-Coder-Examples-SystemS1' 'GToolkit4Magritte' ) ] ]
 ]

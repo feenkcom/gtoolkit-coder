@@ -3,7 +3,7 @@ Extension { #name : #DebugSession }
 { #category : #'*GToolkit-Coder' }
 DebugSession >> gtCreateModelForContext: aContext [
 
-	^ (GtDebugContext forContext: aContext) topContext: interruptedContext
+	^ (GtDebugContext forContext: aContext) "topContext: interruptedContext"
 ]
 
 { #category : #'*GToolkit-Coder' }
