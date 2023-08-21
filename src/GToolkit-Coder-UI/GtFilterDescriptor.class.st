@@ -19,7 +19,8 @@ Class {
 		'completionBlock',
 		'completion',
 		'emptyDefaultValue',
-		'valueIsRequired'
+		'valueIsRequired',
+		'offerCompletionValues'
 	],
 	#category : #'GToolkit-Coder-UI-Filters'
 }
@@ -163,7 +164,8 @@ GtFilterDescriptor >> gtInfoFor: aView [
 			'Default value when empty' -> (emptyDefaultValue
 				ifNotNil: [ :aValue | aValue printString ]
 				ifNil: [ 'Unspecified (default: {1})' format: { nil } ]). 
-			'Show default value when empty' -> self showAsDefaultWhenEmpty
+			'Show default value when empty' -> self showAsDefaultWhenEmpty.
+			'Offers user completion items' -> self shouldOfferCompletionValues
 		} ];
 	column: 'Property' text: #key;
 	column: 'Value' text: #value;
@@ -193,7 +195,8 @@ GtFilterDescriptor >> initialize [
 	super initialize.
 
 	valueIsRequired := true.
-	isDefault := true
+	isDefault := true.
+	offerCompletionValues := false
 ]
 
 { #category : #testing }
@@ -244,6 +247,11 @@ GtFilterDescriptor >> newFilterWithValue: aString [
 	^ self creationBlock cull: aString
 ]
 
+{ #category : #'api - configuration' }
+GtFilterDescriptor >> offerCompletionValues: aBoolean [
+	offerCompletionValues := aBoolean
+]
+
 { #category : #accessing }
 GtFilterDescriptor >> order [
 	"The order of the filter in the list of all filters."
@@ -266,6 +274,11 @@ GtFilterDescriptor >> printOn: aStream [
 		nextPutAll: ' (order: ';
 		print: self order;
 		nextPutAll: ')'
+]
+
+{ #category : #testing }
+GtFilterDescriptor >> shouldOfferCompletionValues [
+	^ offerCompletionValues
 ]
 
 { #category : #testing }

@@ -16,7 +16,7 @@ GtTraitsCompletionStrategy >> candidateTraits [
 ]
 
 { #category : #accessing }
-GtTraitsCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
+GtTraitsCompletionStrategy >> completionActionStreamFor: aText at: positionInteger requested: aBoolean [
 	| currentInput |
 	currentInput := aText asString.
 	^ (self candidateTraits asyncStreamStartingWith: currentInput)

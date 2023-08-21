@@ -26,7 +26,7 @@ GtCoderClassWithPackageCompletionStrategy >> classesIn: aPackage [
 ]
 
 { #category : #accessing }
-GtCoderClassWithPackageCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
+GtCoderClassWithPackageCompletionStrategy >> completionActionStreamFor: aText at: positionInteger requested: aBoolean [
 	| currentInput delimitedIndex |
 	currentInput := aText asString.
 	delimitedIndex := currentInput indexOf: $>.

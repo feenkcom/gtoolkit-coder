@@ -18,7 +18,7 @@ GtPackageClassesCompletionStrategy >> classStreamMatching: aString [
 ]
 
 { #category : #accessing }
-GtPackageClassesCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
+GtPackageClassesCompletionStrategy >> completionActionStreamFor: aText at: positionInteger requested: aBoolean [
 	| string |
 	string := aText asString.
 	^ (self classStreamMatching: string) collect: [ :each | GtReplaceTextCompletionAction forText: each name ]

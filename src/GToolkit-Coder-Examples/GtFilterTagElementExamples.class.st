@@ -31,6 +31,36 @@ GtFilterTagElementExamples >> availableFilterDescriptors [
 ]
 
 { #category : #examples }
+GtFilterTagElementExamples >> filterOffersCompletionValues [
+	<gtExample>
+	^ GtFilterDescriptorExamples new filterDescriptorOffersCompletionValues
+		named: 'Words'
+]
+
+{ #category : #examples }
+GtFilterTagElementExamples >> filterTagCompletionOffersValues [
+	<gtExample>
+	| tagElement filterDescriptor |
+	
+	filterDescriptor := self filterOffersCompletionValues.
+	
+	tagElement := GtFilterTagElement new
+		descriptor: filterDescriptor;
+		availableFilterDescriptors: self availableFilterDescriptors.
+
+	self
+		assert: (tagElement query // GtFilterTagLabelId) anyOne text asString
+		equals: 'Words'.
+
+	"there is no editor"
+	"self assert: (tagElement query // GtFilterTagEditorId) isEmpty.
+	
+	self assert: tagElement isValid."
+
+	^ tagElement
+]
+
+{ #category : #examples }
 GtFilterTagElementExamples >> filterTagValueNotRequired [
 	<gtExample>
 	| tagElement filterDescriptor |

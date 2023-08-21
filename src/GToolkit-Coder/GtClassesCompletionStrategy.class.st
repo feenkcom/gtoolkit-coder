@@ -17,7 +17,7 @@ GtClassesCompletionStrategy >> candidateClasses [
 ]
 
 { #category : #accessing }
-GtClassesCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
+GtClassesCompletionStrategy >> completionActionStreamFor: aText at: positionInteger requested: aBoolean [
 	| currentInput |
 	currentInput := aText asString.
 	currentInput isEmpty ifTrue: [ ^ #() asAsyncStream ].

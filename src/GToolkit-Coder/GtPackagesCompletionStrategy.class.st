@@ -47,7 +47,7 @@ GtPackagesCompletionStrategy class >> packageStreamMatching: searchString [
 ]
 
 { #category : #accessing }
-GtPackagesCompletionStrategy >> completionActionStreamFor: aText at: positionInteger [
+GtPackagesCompletionStrategy >> completionActionStreamFor: aText at: positionInteger requested: aBoolean [
 	| string searchString |
 	string := aText asString.
 	string isEmpty ifTrue: [ ^ #() ].
