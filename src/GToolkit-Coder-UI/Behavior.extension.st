@@ -45,6 +45,7 @@ Behavior >> gtHierarchyButtonFor: anAction [
 		icon: BrGlamorousIcons tree;
 		id: GtCoderClassHierarchyButtonId;
 		priority: 3;
+		preferredExtent: 400 @ 400;
 		content: [ :aButton | 
 			| aNavigationModel |
 			aNavigationModel := aButton phlow firstParentCoderNavigationModel.
