@@ -120,7 +120,7 @@ GtRenameEditorAttribute >> focusNext: aBoolean in: anEditorElement [
 	coordinateFocus ifFalse: [ ^ false ].
 	anEditorElement
 		allChildrenBreadthFirstDo: [ :each | 
-			(each isKindOf: GtRenameEditor)
+			(each userData at: #isRefactoringEditor ifAbsent: [ false ])
 				ifTrue: [ first ifNil: [ first := each ].
 					last := each.
 					(aBoolean not and: [ each == renameEditor and: [ previous notNil ] ])

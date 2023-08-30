@@ -7,6 +7,7 @@ Class {
 { #category : #accessing }
 GtRenameEditor >> initialize [
 	super initialize.
+	self userData at: #isRefactoringEditor put: true.
 	self
 		when: BlFocusEvent
 		do: [ :anEvent | 
