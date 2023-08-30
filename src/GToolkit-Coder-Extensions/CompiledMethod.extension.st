@@ -25,7 +25,7 @@ CompiledMethod >> gtLocalVersionsFor: aView [
 		priority: 20;
 		items: [ SourceFiles
 				changeRecordsFrom: self sourcePointer
-				className: self methodClass name
+				className: self methodClass instanceSide name
 				isMeta: self methodClass isMeta ];
 		itemStencil: [ GtLocalVersion new ];
 		itemDataBinder: [ :aLocalVersionElement :aLocalVersion | 
