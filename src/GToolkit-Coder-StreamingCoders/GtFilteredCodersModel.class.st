@@ -47,7 +47,7 @@ GtFilteredCodersModel >> createCombinedFilterFor: aMainSearchFilter andAdditiona
 	
 	aCompositeFilter := aCollectionOfFilters
 		inject: nil
-		into: [ :sum :each | sum ifNil: [ each ] ifNotNil: [ sum | each ] ].
+		into: [ :sum :each | sum ifNil: [ each ] ifNotNil: [ sum & each ] ].
 
 	aCompositeFilter := aCompositeFilter
 		ifNil: [ aMainSearchFilter ]
