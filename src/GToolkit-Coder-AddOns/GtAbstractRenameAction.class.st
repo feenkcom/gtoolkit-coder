@@ -11,13 +11,15 @@ Class {
 		'renameAttributes',
 		'isInstalled',
 		'originalLocations',
-		'originalText'
+		'originalText',
+		'allowAccept'
 	],
 	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
 { #category : #actions }
 GtAbstractRenameAction >> accept [
+	self allowAccept ifFalse: [ ^ self ].
 	self updateSource.
 	self uninstall.
 	self allowSave.
@@ -27,6 +29,16 @@ GtAbstractRenameAction >> accept [
 { #category : #private }
 GtAbstractRenameAction >> addRenameAttributes [
 	self subclassResponsibility
+]
+
+{ #category : #accessing }
+GtAbstractRenameAction >> allowAccept [
+	^ allowAccept ifNil: [ true ]
+]
+
+{ #category : #accessing }
+GtAbstractRenameAction >> allowAccept: anObject [
+	allowAccept := anObject
 ]
 
 { #category : #private }
