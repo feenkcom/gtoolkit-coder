@@ -97,6 +97,31 @@ GtSourceCoderViewModel >> doItAndGoAll [
 ]
 
 { #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAndGoAllSerialized [
+	"Evaluate the whole source code and inspect the result"
+
+	^ self coder doItAndGoInContext: (self evaluationContext all
+		serializationStrategy: #GtRsrStonSerializationStrategy)
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAndGoSerialized [
+	"Evaluate selected source code or everything if there is nothing selected and inspect the result"
+
+	^ self selection isEmpty
+		ifTrue: [ self doItAndGoAllSerialized ]
+		ifFalse: [ self doItAndGoSerialized: self selectedTextInterval ]
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAndGoSerialized: aTextInterval [
+	"Evaluate a piece of source code within an interval and inspect a result."
+
+	^ self coder doItAndGoInContext: ((self evaluationContext from: aTextInterval first to: aTextInterval last)
+		serializationStrategy: #GtRsrStonSerializationStrategy)
+]
+
+{ #category : #'api - actions' }
 GtSourceCoderViewModel >> doItRequestedBy: aRequesterObject [
 	"Evaluate selected source code or everything if there is nothing selected and return the result"
 
