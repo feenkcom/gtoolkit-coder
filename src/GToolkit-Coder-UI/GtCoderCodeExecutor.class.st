@@ -29,6 +29,12 @@ GtCoderCodeExecutor class >> doItAndGo [
 ]
 
 { #category : #'api - instance creation' }
+GtCoderCodeExecutor class >> doItAndGoSerialized [
+	"Execute a code and display the execution result"
+	^ self new doItAndGoSerialized
+]
+
+{ #category : #'api - instance creation' }
 GtCoderCodeExecutor class >> playAll [
 	"Execute a method code (and do not display the execution result)"
 	^ self new playAll
@@ -67,6 +73,13 @@ GtCoderCodeExecutor >> doItAndGo [
 	"Execute a code and display the execution result"
 
 	action := #doItAndGo
+]
+
+{ #category : #initialization }
+GtCoderCodeExecutor >> doItAndGoSerialized [
+	"Execute a code and display the execution result"
+
+	action := #doItAndGoSerialized
 ]
 
 { #category : #'api - accessing' }
