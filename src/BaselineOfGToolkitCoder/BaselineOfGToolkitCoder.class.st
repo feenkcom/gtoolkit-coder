@@ -37,22 +37,22 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec repository: 'github://feenkcom/pharo-futures:v0.6.93/src' ].
 		spec
 			baseline: 'GToolkitBasicUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.224/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.225/src' ].
 		spec
 			baseline: 'GToolkitAnnouncerUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.224/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.225/src' ].
 		spec
 			baseline: 'GToolkitNotifications' with: [
-				spec repository: 'github://feenkcom/gtoolkit-notifications:v0.6.749/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-notifications:v0.6.750/src' ].
 		spec
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.1107/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.1108/src' ].
 		spec
 			baseline: 'GToolkitCompleter' with: [
-				spec repository: 'github://feenkcom/gtoolkit-completer:v0.8.1083/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-completer:v0.8.1084/src' ].
 		spec
 			baseline: 'GToolkit4Magritte' with: [
-				spec repository: 'github://feenkcom/gt4magritte:v0.6.794/src' ].
+				spec repository: 'github://feenkcom/gt4magritte:v0.6.795/src' ].
 
 		spec package: 'GToolkit-VariableBindings'.
 		spec package: 'GToolkit-SearchFilters' with: [
