@@ -540,7 +540,7 @@ GtTextualCoderEditorElement >> reportParseError: aString at: anInteger [
 	| text position error |
 	text := self editor text.
 
-	position := anInteger - 1 max: 1.
+	position := anInteger - 1 max: 0.
 	text size < position ifTrue: [ ^ self ].
 
 	text clearAttributesOfClass: GtSourceCoderErrorAttribute.

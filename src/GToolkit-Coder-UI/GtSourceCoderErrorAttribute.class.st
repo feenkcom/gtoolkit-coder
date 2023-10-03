@@ -84,9 +84,9 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 GtSourceCoderErrorAttribute >> errorButton [
 	^ BrButton new
 		background: BrGlamorousColors errorBackgroundColor;
-		size: 8 @ 8;
+		size: 12 @ 12;
+		border: (BlBorder paint: Color transparent width: 2);
 		geometry: BlEllipseGeometry new;
-		padding: (BlInsets left: 2 right: 2);
 		yourself
 ]
 
