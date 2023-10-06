@@ -6,22 +6,19 @@ Trait {
 { #category : #utilities }
 TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id: aBlElementId [
 	<gtExample>
-	aScripterOrStep secondaryClick
-		label: 'Open context menu';
-		id: GtSourceCoderEditorId;
-		play.
+	aScripterOrStep secondaryClickStep: [:s | 
+		s label: 'Open context menu';
+		// GtSourceCoderEditorId].
 
-	aScripterOrStep mouseMoveOver
-		label: 'Hover ' , aBlElementId asSymbol;
+	aScripterOrStep mouseMoveOverStep: [:s | 
+		s label: 'Hover ' , aBlElementId asSymbol;
 		onSpaceRoot;
-		id: aBlElementId;
-		play.
+		// aBlElementId].
 
-	aScripterOrStep click
-		label: 'Click ' , aBlElementId asSymbol;
+	aScripterOrStep clickStep: [:s | 
+		s label: 'Click ' , aBlElementId asSymbol;
 		onSpaceRoot;
-		id: aBlElementId;
-		play
+		// aBlElementId]
 ]
 
 { #category : #'examples - scripter' }
@@ -56,19 +53,17 @@ TCoderByScripterExamples >> scripterForBlock: aBlock [
 { #category : #utilities }
 TCoderByScripterExamples >> selectTextFor: aScripterOrStep from: aStartPosition to: aToPosition andCheck: aSelectedString [
 	<gtExample>
-	aScripterOrStep do
-		label: 'Select part of the method';
+	aScripterOrStep doStep: [:s | 
+		s label: 'Select part of the method';
+		// GtSourceCoderEditorId;
 		action: [ :aSourceEditor | 
 			aSourceEditor selecter
 				from: aStartPosition to: aToPosition;
-				select ];
-		id: GtSourceCoderEditorId;
-		play.
+				select ]].
 
-	aScripterOrStep assert
-		label: 'Assert selected text';
+	aScripterOrStep assertStep: [:s | 
+		s label: 'Assert selected text';
+		// GtSourceCoderEditorId;
 		value: [ :aSourceEditor | aSourceEditor editor selectedText asString ]
-			equals: aSelectedString;
-		id: GtSourceCoderEditorId;
-		play
+			equals: aSelectedString]
 ]
