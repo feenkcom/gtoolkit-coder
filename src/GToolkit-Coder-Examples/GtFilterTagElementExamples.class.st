@@ -87,62 +87,69 @@ GtFilterTagElementExamples >> filterTagValueNotRequired [
 GtFilterTagElementExamples >> filterTagValueNotRequiredByScripter [
 	<gtExample>
 	| scripter |
-	
 	scripter := BlScripter new
-		extent: 500@400;
-		element: self filterTagValueNotRequired.
+			extent: 500 @ 400;
+			element: self filterTagValueNotRequired.
 
-	scripter assert
-		label: 'Does not have focus by default';
-		satisfies: [ :anElement | anElement hasFocus not ];
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Does not have focus by default';
+				satisfies: [ :anElement | anElement hasFocus not ] ].
 
-	scripter click
-		label: 'Click on label to request focus';
-		id: GtFilterTagLabelId;
-		play.
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click on label to request focus';
+				id: GtFilterTagLabelId ].
 
-	scripter assert
-		label: 'Has focus after clicking on label';
-		satisfies: [ :anElement | anElement hasFocus ];
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Has focus after clicking on label';
+				satisfies: [ :anElement | anElement hasFocus ] ].
 
-	scripter click
-		label: 'Click again on the label to open a dropdown';
-		id: GtFilterTagLabelId;
-		play.
-		
-	scripter click
-		label: 'Select filter without value';
-		onSpaceRoot;
-		id: (GtFilterTagPickerItemId indexed: 2);
-		play.
-	
-	scripter assert
-		label: 'Check that replace wish was fired';
-		event: GtFilterTagReplaceWish;
-		value: [ :anEvent | anEvent filterDescriptor name ]
-			equals: [ 'Default without value' ];
-		value: [ :anEvent | anEvent newFilterDescriptor name ]
-			equals: [ 'Filter without value' ];
-		play.
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click again on the label to open a dropdown';
+				id: GtFilterTagLabelId ].
 
-	scripter assert
-		label: 'Tag still has focus';
-		satisfies: [ :anElement | anElement hasFocus ];
-		play.
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Select filter without value';
+				onSpaceRoot;
+				id: (GtFilterTagPickerItemId indexed: 2) ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Check that replace wish was fired';
+				event: GtFilterTagReplaceWish;
+				value: [ :anEvent | anEvent filterDescriptor name ]
+					equals: [ 'Default without value' ];
+				value: [ :anEvent | anEvent newFilterDescriptor name ]
+					equals: [ 'Filter without value' ] ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Tag still has focus';
+				satisfies: [ :anElement | anElement hasFocus ] ].
 
 	scripter shortcut
 		label: 'Press backspace to remove the tag';
 		combination: BlKeyCombination backspace;
 		play.
 
-	scripter assert
-		label: 'Check that remove wish was fired';
-		event: GtFilterTagRemoveWish;
-		value: [ :anEvent | anEvent filterDescriptor name ]
-			equals: [ 'Filter without value' ];
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Check that remove wish was fired';
+				event: GtFilterTagRemoveWish;
+				value: [ :anEvent | anEvent filterDescriptor name ]
+					equals: [ 'Filter without value' ] ].
 
 	^ scripter
 ]
@@ -163,32 +170,33 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefault [
 GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripter [
 	<gtExample>
 	| scripter |
-
 	scripter := BlScripter new
-		extent: 500@400;
-		element: self filterTagValueRequiredWithDefault.
+			extent: 500 @ 400;
+			element: self filterTagValueRequiredWithDefault.
 
-	scripter assert
-		satisfies: [ :anElement | anElement isValid ];
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				satisfies: [ :anElement | anElement isValid ] ].
 
-	scripter assert
-		satisfies: [ :anElement | anElement hasFocus not ];
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				satisfies: [ :anElement | anElement hasFocus not ] ].
 
-	scripter assert
-		label: 'Check that the default value is set in the editor';
-		id: GtFilterTagEditorId;
-		value: [ :anEditor | anEditor text asString ]
-			equals: 'Default';
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Check that the default value is set in the editor';
+				id: GtFilterTagEditorId;
+				value: [ :anEditor | anEditor text asString ] equals: 'Default' ].
 
-	scripter assert
-		label: 'Check that name of the filter is correct in the label';
-		id: GtFilterTagLabelId;
-		value: [ :aLabel | aLabel text asString ]
-			equals: 'Default with value';
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Check that name of the filter is correct in the label';
+				id: GtFilterTagLabelId;
+				value: [ :aLabel | aLabel text asString ] equals: 'Default with value' ].
 
 	^ scripter
 ]
@@ -197,43 +205,46 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripter [
 GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterRemoveText [
 	<gtExample>
 	| scripter |
-
 	scripter := self filterTagValueRequiredWithDefaultByScripter.
-		
-	scripter click
-		id: GtFilterTagEditorId;
-		play.
-		
+
+	scripter
+		clickStep: [ :s | 
+			s
+				id: GtFilterTagEditorId ].
+
 	scripter shortcut
 		id: GtFilterTagEditorId;
 		combination: BlKeyCombination primaryA;
 		play.
-		
-	scripter type
-		id: GtFilterTagEditorId;
-		text: '';
-		play.
-		
-	scripter assert
-		label: 'Check that the new value is typed in the editor';
-		id: GtFilterTagEditorId;
-		value: [ :anEditor | anEditor text asString ]
-			equals: '';
-		play.
 
-	scripter assert
-		satisfies: [ :anEditor | anEditor isValid not ];
-		play.
-		
+	scripter
+		typeStep: [ :s | 
+			s
+				id: GtFilterTagEditorId;
+				text: '' ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Check that the new value is typed in the editor';
+				id: GtFilterTagEditorId;
+				value: [ :anEditor | anEditor text asString ] equals: '' ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				satisfies: [ :anEditor | anEditor isValid not ] ].
+
 	scripter shortcut
 		label: 'Accept changes with enter shortcut';
 		id: GtFilterTagEditorId;
 		combination: BlKeyCombination enter;
 		play.
-		
-	scripter assert
-		eventNotFired: GtFilterTagUpdateWish;
-		play.
+
+	scripter
+		assertStep: [ :s | 
+			s
+				eventNotFired: GtFilterTagUpdateWish ].
 
 	^ scripter
 ]
@@ -242,58 +253,63 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterRemoveT
 GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAndAcceptWithClickingAway [
 	<gtExample>
 	| scripter |
-
 	scripter := self filterTagValueRequiredWithDefaultByScripter.
-		
-	scripter click
-		id: GtFilterTagEditorId;
-		play.
-		
-	scripter assert
-		id: GtFilterTagEditorId;
-		satisfies: [ :anEditor | anEditor hasFocus ];
-		play.
-		
+
+	scripter
+		clickStep: [ :s | 
+			s
+				id: GtFilterTagEditorId ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtFilterTagEditorId;
+				satisfies: [ :anEditor | anEditor hasFocus ] ].
+
 	scripter shortcut
 		id: GtFilterTagEditorId;
 		combination: BlKeyCombination primaryA;
 		play.
-		
-	scripter type
-		id: GtFilterTagEditorId;
-		text: ' New value ';
-		play.
-		
-	scripter assert
-		label: 'Check that the new value is typed in the editor';
-		id: GtFilterTagEditorId;
-		value: [ :anEditor | anEditor text asString ]
-			"intentionally added spaces to test trimming"
-			equals: ' New value ';
-		play.
 
-	scripter assert
-		id: GtFilterTagEditorId;
-		satisfies: [ :anEditor | anEditor hasFocus ];
-		play.
+	scripter
+		typeStep: [ :s | 
+			s
+				id: GtFilterTagEditorId;
+				text: ' New value ' ].
 
-	scripter click
-		id: GtFilterTagLabelId;
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Check that the new value is typed in the editor';
+				id: GtFilterTagEditorId;
+				value: [  "intentionally added spaces to test trimming":anEditor | anEditor text asString ]
+					equals: ' New value ' ].
 
-	scripter assert
-		id: GtFilterTagEditorId;
-		satisfies: [ :anEditor | anEditor hasFocus not ];
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtFilterTagEditorId;
+				satisfies: [ :anEditor | anEditor hasFocus ] ].
 
-	scripter assert
-		label: 'Check that update wish was fired';
-		event: GtFilterTagUpdateWish;
-		value: [ :anEvent | anEvent filterDescriptor name ]
-			equals: [ 'Default with value' ];
-		value: [ :anEvent | anEvent newValue ]
-			equals: [ 'New value' ];
-		play.
+	scripter
+		clickStep: [ :s | 
+			s
+				id: GtFilterTagLabelId ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtFilterTagEditorId;
+				satisfies: [ :anEditor | anEditor hasFocus not ] ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Check that update wish was fired';
+				event: GtFilterTagUpdateWish;
+				value: [ :anEvent | anEvent filterDescriptor name ]
+					equals: [ 'Default with value' ];
+				value: [ :anEvent | anEvent newValue ] equals: [ 'New value' ] ].
 
 	^ scripter
 ]
@@ -302,50 +318,52 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAnd
 GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAndAcceptWithShortcut [
 	<gtExample>
 	| scripter |
-
 	scripter := self filterTagValueRequiredWithDefaultByScripter.
-		
-	scripter click
-		id: GtFilterTagEditorId;
-		play.
-		
-	scripter assert
-		id: GtFilterTagEditorId;
-		satisfies: [ :anEditor | anEditor hasFocus ];
-		play.
-		
+
+	scripter
+		clickStep: [ :s | 
+			s
+				id: GtFilterTagEditorId ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtFilterTagEditorId;
+				satisfies: [ :anEditor | anEditor hasFocus ] ].
+
 	scripter shortcut
 		id: GtFilterTagEditorId;
 		combination: BlKeyCombination primaryA;
 		play.
-		
-	scripter type
-		id: GtFilterTagEditorId;
-		text: ' New value ';
-		play.
-		
-	scripter assert
-		label: 'Check that the new value is typed in the editor';
-		id: GtFilterTagEditorId;
-		value: [ :anEditor | anEditor text asString ]
-			"intentionally added spaces to test trimming"
-			equals: ' New value ';
-		play.
+
+	scripter
+		typeStep: [ :s | 
+			s
+				id: GtFilterTagEditorId;
+				text: ' New value ' ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Check that the new value is typed in the editor';
+				id: GtFilterTagEditorId;
+				value: [  "intentionally added spaces to test trimming":anEditor | anEditor text asString ]
+					equals: ' New value ' ].
 
 	scripter shortcut
 		label: 'Accept changes with enter shortcut';
 		id: GtFilterTagEditorId;
 		combination: BlKeyCombination enter;
 		play.
-		
-	scripter assert
-		label: 'Check that update wish was fired';
-		event: GtFilterTagUpdateWish;
-		value: [ :anEvent | anEvent filterDescriptor name ]
-			equals: [ 'Default with value' ];
-		value: [ :anEvent | anEvent newValue ]
-			equals: [ 'New value' ];
-		play.
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Check that update wish was fired';
+				event: GtFilterTagUpdateWish;
+				value: [ :anEvent | anEvent filterDescriptor name ]
+					equals: [ 'Default with value' ];
+				value: [ :anEvent | anEvent newValue ] equals: [ 'New value' ] ].
 
 	^ scripter
 ]
@@ -366,29 +384,32 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithoutDefault [
 GtFilterTagElementExamples >> filterTagValueRequiredWithoutDefaultByScripter [
 	<gtExample>
 	| scripter |
-
 	scripter := BlScripter new
-		extent: 500@400;
-		element: self filterTagValueRequiredWithoutDefault.
+			extent: 500 @ 400;
+			element: self filterTagValueRequiredWithoutDefault.
 
-	scripter assert
-		satisfies: [ :anElement | anElement isValid ];
-		play.
-		
-	scripter assert
-		label: 'Does not have focus by default';
-		satisfies: [ :anElement | anElement hasFocus not ];
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				satisfies: [ :anElement | anElement isValid ] ].
 
-	scripter assert
-		id: GtFilterTagEditorId;
-		satisfies: [ :anEditor | anEditor text isEmpty ];
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Does not have focus by default';
+				satisfies: [ :anElement | anElement hasFocus not ] ].
 
-	scripter assert
-		id: GtFilterTagLabelId;
-		value: [ :aLabel | aLabel text asString ] equals: 'Default with value';
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtFilterTagEditorId;
+				satisfies: [ :anEditor | anEditor text isEmpty ] ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtFilterTagLabelId;
+				value: [ :aLabel | aLabel text asString ] equals: 'Default with value' ].
 
 	^ scripter
 ]
