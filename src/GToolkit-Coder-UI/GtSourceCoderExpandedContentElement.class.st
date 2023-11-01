@@ -27,7 +27,7 @@ GtSourceCoderExpandedContentElement >> initialize [
 
 { #category : #'instance creation' }
 GtSourceCoderExpandedContentElement >> newActionsElement [
-	^ GtCoderActionsElement new
+	^ GtSourceCoderActionsElement new
 		margin: (BlInsets top: 5);
 		id: #actions;
 		yourself

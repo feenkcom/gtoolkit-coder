@@ -2,8 +2,6 @@ Class {
 	#name : #GtTextualCoderViewModel,
 	#superclass : #GtSingleCoderViewModel,
 	#instVars : [
-		'addOnPromise',
-		'extraAddOns',
 		'stylers',
 		'mainActions',
 		'contextActions',
@@ -21,20 +19,6 @@ Class {
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
-
-{ #category : #'api - shortcuts' }
-GtTextualCoderViewModel >> addMainAction: aGtCoderAction [
-	"Add an extra main action add-on independent from the dynamically computed add-ons"
-
-	extraAddOns addMainAction: aGtCoderAction
-]
-
-{ #category : #'api - add-ons' }
-GtTextualCoderViewModel >> addOns [
-	<return: #TAsyncPromise>
-
-	^ self ensureAddOns
-]
 
 { #category : #'api - shortcuts' }
 GtTextualCoderViewModel >> addShortcut: aShortcut [
@@ -200,7 +184,7 @@ GtTextualCoderViewModel >> compositeStyler [
 		yourself
 ]
 
-{ #category : #'private - addons' }
+{ #category : #'api - add-ons' }
 GtTextualCoderViewModel >> computeAddOns [
 	| aCoderModel  |
 
@@ -330,13 +314,6 @@ GtTextualCoderViewModel >> cursors: aBrTextEditorCursor from: aSourceObject [
 { #category : #accessing }
 GtTextualCoderViewModel >> elementClass [
 	^ GtTextualCoderEditorElement
-]
-
-{ #category : #'private - addons' }
-GtTextualCoderViewModel >> ensureAddOns [
-	<return: #TAsyncPromise>
-
-	^ addOnPromise ifNil: [ addOnPromise := self computeAddOns then: [ :theAddOns | self onAddOnsChanged: theAddOns ]; yourself ]
 ]
 
 { #category : #'api - expansion' }
@@ -632,14 +609,6 @@ GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttribu
 { #category : #'api - shortcuts' }
 GtTextualCoderViewModel >> removeStylersOfClass: aGtCoderStylerClass [
 	extraAddOns removeStylersOfClass: aGtCoderStylerClass
-]
-
-{ #category : #'api - add-ons' }
-GtTextualCoderViewModel >> requestUpdateAddOns [
-	<return: #TAsyncPromise>
-
-	addOnPromise := nil.
-	^ self ensureAddOns
 ]
 
 { #category : #'api - selection' }
