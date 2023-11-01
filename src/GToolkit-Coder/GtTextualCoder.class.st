@@ -258,15 +258,6 @@ GtTextualCoder >> notifySourceCodeReplaced: aSourceCode [
 		coder: self)
 ]
 
-{ #category : #private }
-GtTextualCoder >> pragmasNamed: aSymbol inHierarchy: aClass [
-	| actions |
-	actions := OrderedCollection new.
-	aClass withAllSuperclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
-	actions sort: [ :a :b | a arguments first < b arguments first ].
-	^ actions
-]
-
 { #category : #'api - text' }
 GtTextualCoder >> requestStyleSourceText [
 	"Request the text editor to restyle the text (for example due to environmental changes)"

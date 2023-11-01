@@ -12,10 +12,26 @@ Class {
 	#instVars : [
 		'announcer',
 		'codersUIModel',
-		'coderModel'
+		'coderModel',
+		'extraAddOns',
+		'addOnPromise'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
+
+{ #category : #'api - shortcuts' }
+GtSingleCoderViewModel >> addMainAction: aGtCoderAction [
+	"Add an extra main action add-on independent from the dynamically computed add-ons"
+
+	extraAddOns addMainAction: aGtCoderAction
+]
+
+{ #category : #'api - add-ons' }
+GtSingleCoderViewModel >> addOns [
+	<return: #TAsyncPromise>
+
+	^ self ensureAddOns
+]
 
 { #category : #accessing }
 GtSingleCoderViewModel >> announcer [
@@ -96,9 +112,25 @@ GtSingleCoderViewModel >> codersUIModel: anObject [
 	codersUIModel := anObject
 ]
 
+{ #category : #'private - addons' }
+GtSingleCoderViewModel >> computeAddOns [
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 GtSingleCoderViewModel >> elementClass [
 	^ self subclassResponsibility
+]
+
+{ #category : #'private - addons' }
+GtSingleCoderViewModel >> ensureAddOns [
+	<return: #TAsyncPromise>
+
+	^ addOnPromise ifNil: [ 
+		addOnPromise := self computeAddOns 
+			then: [ :theAddOns | 
+				self onAddOnsChanged: theAddOns ]; 
+			yourself ]
 ]
 
 { #category : #'gt-extension' }
@@ -146,9 +178,22 @@ GtSingleCoderViewModel >> isModified [
 	^ self coder isModified
 ]
 
+{ #category : #'private - event handling' }
+GtSingleCoderViewModel >> onAddOnsChanged: theAddOns [
+	
+]
+
 { #category : #'api - coder model' }
 GtSingleCoderViewModel >> onCoderModelChanged [
 	"Is sent when a new coder model is assigned to the view model"
+]
+
+{ #category : #'api - add-ons' }
+GtSingleCoderViewModel >> requestUpdateAddOns [
+	<return: #TAsyncPromise>
+
+	addOnPromise := nil.
+	^ self ensureAddOns
 ]
 
 { #category : #'api - coder model' }

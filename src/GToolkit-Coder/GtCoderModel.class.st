@@ -220,6 +220,15 @@ GtCoderModel >> newAddOns [
 	^ self addOnsClass new
 ]
 
+{ #category : #private }
+GtCoderModel >> pragmasNamed: aSymbol inHierarchy: aClass [
+	| actions |
+	actions := OrderedCollection new.
+	aClass withAllSuperclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
+	actions sort: [ :a :b | a arguments first < b arguments first ].
+	^ actions
+]
+
 { #category : #elements }
 GtCoderModel >> previewElement [
 	"Return a preview element for the Spotter"
