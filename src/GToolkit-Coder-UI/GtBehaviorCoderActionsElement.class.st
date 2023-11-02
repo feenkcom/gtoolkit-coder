@@ -66,7 +66,7 @@ GtBehaviorCoderActionsElement >> initialize [
 	self layout: BlLinearLayout horizontal.
 	self padding: (BlInsets empty).
 	self constraintsDo: [ :c |
-		c horizontal matchParent.
+		c horizontal fitContent.
 		c vertical fitContent ].
 
 	previewsElement := BrHorizontalPane new
