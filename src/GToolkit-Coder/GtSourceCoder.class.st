@@ -289,6 +289,14 @@ GtSourceCoder >> notifyObjectSpawnFromEvaluationResult: anEvaluationResult [
 ]
 
 { #category : #'private - notifying' }
+GtSourceCoder >> notifyParseError: aString at: anInteger [
+	self announce: (GtCoderParseError new
+		coder: self;
+		errorMessage: aString;
+		location: anInteger)
+]
+
+{ #category : #'private - notifying' }
 GtSourceCoder >> notifyPrintResult: anEvaluationResult [
 	self announce: (GtCoderPrintAnnouncement new 
 		evaluationResult: anEvaluationResult;
@@ -354,4 +362,16 @@ GtSourceCoder >> spawnDestination [
 { #category : #accessing }
 GtSourceCoder >> spawnDestination: aSpawnDestination [
 	self attributeNamed: #spawnDestination put: aSpawnDestination
+]
+
+{ #category : #accessing }
+GtSourceCoder >> validateSyntax [
+	<return: #Boolean>
+	
+	[ self computeAst ]
+		on: SmaCCParserError
+		do: [ :ex | 
+			self notifyParseError: ex messageText at: ex tag position.
+			^ false ].
+	^ true
 ]
