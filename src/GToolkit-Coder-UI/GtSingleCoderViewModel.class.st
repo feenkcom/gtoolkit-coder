@@ -129,7 +129,15 @@ GtSingleCoderViewModel >> ensureAddOns [
 	^ addOnPromise ifNil: [ 
 		addOnPromise := self computeAddOns 
 			then: [ :theAddOns | 
-				self onAddOnsChanged: theAddOns ]; 
+				self onAddOnsChanged: theAddOns ]
+			otherwise: [ :anError |
+				anError emit.
+					
+				NonInteractiveTranscript stderr
+					nextPutAll: 'Error computing addons: ';
+					space;
+					print: anError;
+					cr ];
 			yourself ]
 ]
 
