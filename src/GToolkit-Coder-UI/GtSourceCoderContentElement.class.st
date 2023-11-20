@@ -71,7 +71,19 @@ GtSourceCoderContentElement >> initialize [
 
 { #category : #initialization }
 GtSourceCoderContentElement >> newHeaderElement [
-	^ self textualCoderViewModel headerElementClass new
+	| pragmas headerClass |
+	pragmas := Pragma
+		allNamed: #coderBreadcrumb:
+		from: self textualCoderViewModel class
+		to: Object.
+	
+	pragmas sorted: [ :aPragma | aPragma arguments first ].
+	headerClass := pragmas
+		ifEmpty: [ self textualCoderViewModel headerElementClass ]
+		ifNotEmpty: [ 
+			self textualCoderViewModel perform: pragmas first methodSelector ].
+	
+	^ headerClass new
 		constraintsDo: [ :c | 
 			c margin: (BlInsets top: 2).
 			c frame horizontal alignLeft.
