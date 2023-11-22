@@ -1,6 +1,10 @@
 Class {
 	#name : #GtPhlowSearchFilterToolElement,
 	#superclass : #BrVerticalPane,
+	#instVars : [
+		'titleNotifier',
+		'searchFilter'
+	],
 	#category : #'GToolkit-SearchFilters-PhlowTool'
 }
 
@@ -47,8 +51,8 @@ GtPhlowSearchFilterToolElement >> buildTitleLabel [
 GtPhlowSearchFilterToolElement >> buildToolLabel [
 	^ BrLabel new
 		aptitude: (BrGlamorousLabelAptitude new glamorousRegularFontAndSize
-				foreground: Color gray;
-				fontSize: 12);
+			foreground: Color gray;
+			fontSize: 12);
 		text: 'Search Filter'.
 ]
 
@@ -77,6 +81,16 @@ GtPhlowSearchFilterToolElement >> initialize [
 		padding: (BlInsets top: 5)) as: #content.
 	self addChild: (self buildPlaygroundPageElement
 		padding: (BlInsets top: 5)) as: #playgroundPage.
+		
+	self initializeTitleNotifier.
+]
+
+{ #category : #accessing }
+GtPhlowSearchFilterToolElement >> initializeTitleNotifier [
+	titleNotifier := GtPhlowTitleIconAndLabelNotifier new
+		longLabel: [ self searchFilterDescription ];
+		icon: BrGlamorousVectorIcons emphasizedBrowse.
+	self addEventHandler: titleNotifier.
 ]
 
 { #category : #'accessing - elements' }
@@ -86,7 +100,17 @@ GtPhlowSearchFilterToolElement >> playgroundElement [
 
 { #category : #accessing }
 GtPhlowSearchFilterToolElement >> searchFilter: aSearchFilter [
-	self updateForSearchFilter: aSearchFilter 
+	searchFilter := aSearchFilter.
+	
+	self updateContent.
+]
+
+{ #category : #accessing }
+GtPhlowSearchFilterToolElement >> searchFilterDescription [
+	^ searchFilter 
+		ifNil: [ 'Search Filter' ] 
+		ifNotNil: [ :aSearchFilter | 
+			'Filter: ', aSearchFilter gtDisplayString ]
 ]
 
 { #category : #'accessing - elements' }
@@ -94,10 +118,15 @@ GtPhlowSearchFilterToolElement >> titleLabel [
 	^ self headerElement childNamed: #titleLabel
 ]
 
+{ #category : #accessing }
+GtPhlowSearchFilterToolElement >> titleNotifier [
+	^ titleNotifier
+]
+
 { #category : #updating }
-GtPhlowSearchFilterToolElement >> updateContentForSearchFilter: aSearchFilter [ 
+GtPhlowSearchFilterToolElement >> updateContainedView [
 	| viewElement |
-	viewElement := (aSearchFilter gtItemsFor: GtPhlowEmptyView new)
+	viewElement := (searchFilter gtItemsFor: GtPhlowEmptyView new)
 		asElementDo: [ :e | e ].
 	self contentElement
 		removeChildren;
@@ -105,10 +134,14 @@ GtPhlowSearchFilterToolElement >> updateContentForSearchFilter: aSearchFilter [
 ]
 
 { #category : #updating }
-GtPhlowSearchFilterToolElement >> updateForSearchFilter: aSearchFilter [ 
-	self titleLabel 
-		text: aSearchFilter gtDisplayString.
-	self updateContentForSearchFilter: aSearchFilter.
+GtPhlowSearchFilterToolElement >> updateContent [
+	self titleLabel text: self searchFilterDescription.
+	self updateContainedView.
 	self playgroundElement objectHolder: (GtInspectorObject new 
-		object: aSearchFilter)
+		object: searchFilter)
+]
+
+{ #category : #updating }
+GtPhlowSearchFilterToolElement >> updateTabLabel [
+	self titleNotifier notify
 ]
