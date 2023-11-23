@@ -34,7 +34,6 @@ GtSourceCoderCollapsedContentElement >> newAddOnsContainer [
 	^ BrHorizontalPane new
 		matchParent;
 		alignCenterLeft;
-		margin: (BlInsets left: 5);
 		withAsyncPromiseDo: [ :anElementPromise |
 			anElementPromise
 				whenSuccess: [ :aContainer :theAddOns |
