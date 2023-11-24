@@ -51,6 +51,19 @@ GtCoderAddOns >> addContextAction: aTitleString icon: anIcon action: aBlock id: 
 ]
 
 { #category : #'api - context actions' }
+GtCoderAddOns >> addContextAction: aTitleString icon: anIcon action: aBlock id: aBlElementId allowPrimaryClick: aBoolean [
+	self
+		updateActionList: #contextActions
+		withAction: (GtCoderAction new
+				title: aTitleString;
+				icon: anIcon;
+				action: aBlock;
+				id: aBlElementId;
+				allowPrimaryClick: aBoolean)
+		onlyNew: true
+]
+
+{ #category : #'api - context actions' }
 GtCoderAddOns >> addContextActions: aCollectionOfContextActions [
 	aCollectionOfContextActions do: [ :eachContextAction | self addContextAction: eachContextAction ]
 ]

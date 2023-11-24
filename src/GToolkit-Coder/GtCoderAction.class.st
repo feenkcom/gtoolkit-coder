@@ -6,7 +6,8 @@ Class {
 		'icon',
 		'action',
 		'id',
-		'shortcutKey'
+		'shortcutKey',
+		'allowPrimaryClick'
 	],
 	#category : #'GToolkit-Coder-Coders - Addons'
 }
@@ -30,6 +31,16 @@ GtCoderAction >> action [
 { #category : #accessing }
 GtCoderAction >> action: anObject [
 	action := anObject
+]
+
+{ #category : #accessing }
+GtCoderAction >> allowPrimaryClick [
+	^ allowPrimaryClick ifNil: [ false ]
+]
+
+{ #category : #accessing }
+GtCoderAction >> allowPrimaryClick: anObject [
+	allowPrimaryClick := anObject
 ]
 
 { #category : #evaluating }

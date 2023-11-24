@@ -41,29 +41,44 @@ GtCoderActionsElement >> handleButton: aButtonElement action: aGtCoderAction onE
 	GtCoderExecutionContextVariable
 		element: aButtonElement
 		do: [ aButtonElement
-				enqueueTask:
-					(BlTaskAction new
+				enqueueTask: (BlTaskAction new
 						action: [ [ aGtCoderAction action
-								gtValueWithArgs:
-									{self coderViewModel.
-									aButtonElement} ]
+								gtValueWithArgs: {self coderViewModel.
+										aButtonElement.
+										anEvent} ]
 								ensure: [ self enqueueEnableButton: aButtonElement action: aGtCoderAction ] ]) ]
 ]
 
 { #category : #'instance creation' }
 GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 	<return: #BrButton>
-	^ BrButton new
-		icon: aGtCoderAction icon asElement;
-		beTinySize;
-		label: aGtCoderAction title;
-		aptitude: BrGlamorousButtonWithIconAptitude;
-		in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ];
-		action: [ :aButtonElement :aButtonModel :anEvent | 
-			self
-				handleButton: aButtonElement
-				action: aGtCoderAction
-				onEvent: anEvent ]
+	| button |
+	button := BrButton new
+			icon: aGtCoderAction icon asElement;
+			beTinySize;
+			label: aGtCoderAction title;
+			aptitude: BrGlamorousButtonWithIconAptitude;
+			in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ];
+			action: [ :aButtonElement :aButtonModel :anEvent | 
+				self
+					handleButton: aButtonElement
+					action: aGtCoderAction
+					onEvent: anEvent ].
+	aGtCoderAction allowPrimaryClick
+		ifTrue: [ button viewModel
+				when: BlClickEvent
+				do: [ :anEvent | 
+					anEvent modifiers isPrimaryModifier
+						ifTrue: [ button viewModel clickEvent: anEvent ] ].
+			button viewModel
+				when: BlMouseEnterEvent
+				do: [ :anEvent | 
+					anEvent consumed: true.
+					anEvent modifiers isPrimaryModifier
+						ifTrue: [ anEvent target mouseCursor: BlCopyCursor new ]
+						ifFalse: [ anEvent target mouseCursor: nil ].
+					anEvent target requestFocus ] ].
+	^ button
 ]
 
 { #category : #'instance creation' }
