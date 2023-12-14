@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderBrowseImplementorsShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }
@@ -25,6 +25,8 @@ GtSourceCoderBrowseImplementorsShortcut >> name [
 GtSourceCoderBrowseImplementorsShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
 	self
 		forEditor: aBrTextEditor
-		selectedStringDo: [ :aSelectedString | aGtSourceCoder browseImplementorsIn: aSelectedString ]
-		orCursorStringPositionDo: [ :aStringPosition | aGtSourceCoder browseImplementorsAt: aStringPosition ]
+		selectedStringDo: [ :aSelectedString | 
+			aGtSourceCoder browseImplementorsIn: aSelectedString ]
+		orCursorStringPositionDo: [ :aStringPosition | 
+			aGtSourceCoder browseImplementorsAt: aStringPosition ]
 ]

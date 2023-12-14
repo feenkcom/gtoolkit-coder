@@ -138,7 +138,7 @@ GtPhlowSearchFilterToolElement >> updateContent [
 	self titleLabel text: self searchFilterDescription.
 	self updateContainedView.
 	self playgroundElement objectHolder: (GtInspectorObject new 
-		object: searchFilter)
+		 object: searchFilter)
 ]
 
 { #category : #updating }
