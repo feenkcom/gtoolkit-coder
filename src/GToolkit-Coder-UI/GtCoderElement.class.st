@@ -36,47 +36,55 @@ GtCoderElement >> contentElement: anElement [
 	contentElement := anElement
 ]
 
-{ #category : #initialization }
+{ #category : #'instance creation' }
+GtCoderElement >> createPlaygroundElement [
+	^ GtCoderPlaygroundElement new
+]
+
+{ #category : #'instance creation' }
+GtCoderElement >> createSidebarElement [
+	^ GtPhlowHorizontalSidebarElement new
+		beLeft;
+		contentStencil: (GtCoderNavigationTabsStencil new navigationModel: self navigationModel)
+]
+
+{ #category : #'instance creation' }
+GtCoderElement >> createTitleNotifier [
+	^ GtPhlowTitleIconAndLabelNotifier new
+		shortLabel: [ self shortTitle ifEmpty: [ 'Coder' asRopedText ] ];
+		icon: BrGlamorousVectorIcons emphasizedBrowse
+]
+
+{ #category : #accessing }
 GtCoderElement >> disablePlayPage [
 	contentElement disablePlayPage
+]
+
+{ #category : #'private - updating' }
+GtCoderElement >> hideSidebar [
+	sidebarElement ifNil: [ ^ self ].
+	sidebarElement
+		hide;
+		removeFromParent
 ]
 
 { #category : #initialization }
 GtCoderElement >> initialize [
 	super initialize.
-	self initializeTitleNotifier.
-	self addInteractiveModelState: GtPhlowToolDetailModel new.
-	self initializeContentElement.
-	self initializeSidebarElement.
-	self initializeListeners.
-	
-	self layout: BlLinearLayout horizontal.
-	
-	self addChild: self sidebarElement as: #sidebar.
-	self addChild: self contentElement as: #content.
-	
-	self phlow beView.
-]
 
-{ #category : #initialization }
-GtCoderElement >> initializeContentElement [
-	contentElement := GtCoderPlaygroundElement new.
-]
+	contentElement := self createPlaygroundElement.
+	titleNotifier := self createTitleNotifier.
 
-{ #category : #initialization }
-GtCoderElement >> initializeSidebarElement [
-	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
-	self addAptitude: (GtPhlowToolDetailAptitude new
-		normal: [ :theInstance | sidebarElement hide ];
-		detailed: [ :theInstance | sidebarElement show ]).
-]
+	self
+		layout: BlLinearLayout horizontal;
+		addEventHandler: titleNotifier;
+		addAptitude: (GtPhlowToolDetailAptitude new
+			normal: [ :aStyle | aStyle do: [ self hideSidebar ] ];
+			detailed: [ :aStyle | aStyle do: [ self showSidebar ] ]).
 
-{ #category : #initialization }
-GtCoderElement >> initializeTitleNotifier [
-	titleNotifier := GtPhlowTitleIconAndLabelNotifier new
-		shortLabel: [ self shortTitle ifEmpty: [ 'Coder' asRopedText ] ];
-		icon: BrGlamorousVectorIcons emphasizedBrowse.
-	self addEventHandler: titleNotifier.
+	self addChild: contentElement as: #content.
+
+	self phlow beView
 ]
 
 { #category : #'private - hooks' }
@@ -101,11 +109,11 @@ GtCoderElement >> pagerWindowTitle [
 
 { #category : #accessing }
 GtCoderElement >> repository [
-
 	self navigationModel hasSelectedClass ifTrue: [ 
 		^ self navigationModel selectedClass repository ].
 	self navigationModel hasSelectedPackage ifTrue: [ 
 		^ self navigationModel selectedPackage repository ].
+
 	^ nil
 ]
 
@@ -127,10 +135,15 @@ GtCoderElement >> shortTitle [
 			build
 ]
 
-{ #category : #'private - accessing' }
-GtCoderElement >> sidebarElement [
-	<return: #GtPhlowHorizontalSidebarElement>
-	^ sidebarElement
+{ #category : #'private - updating' }
+GtCoderElement >> showSidebar [
+	sidebarElement ifNil: [ sidebarElement := self createSidebarElement ].
+	sidebarElement show.
+
+	(sidebarElement hasParent: self)
+		ifTrue: [ ^ self ].
+		
+	self addChildFirst: sidebarElement
 ]
 
 { #category : #'private - accessing' }
@@ -164,9 +177,8 @@ GtCoderElement >> titleNotifier [
 
 { #category : #'private - updating' }
 GtCoderElement >> updateSidebarContent [
-	self sidebarElement
-		contentStencil: (GtCoderNavigationTabsStencil new 
-			navigationModel: self navigationModel)
+	sidebarElement ifNil: [ ^ self ].
+	sidebarElement contentStencil: (GtCoderNavigationTabsStencil new navigationModel: self navigationModel)
 ]
 
 { #category : #'private - updating' }

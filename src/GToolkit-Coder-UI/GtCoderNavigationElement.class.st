@@ -75,14 +75,6 @@ GtCoderNavigationElement >> navigationModel: aGtCoderNavigationPackagesTagsClass
 	self onNavigationModelChanged.
 ]
 
-{ #category : #'hooks - children' }
-GtCoderNavigationElement >> onAddedToSceneGraph [
-	super onAddedToSceneGraph.
-	self updateContent.
-	self subscribeToNavigationModel.
-	self subscribeToContent.
-]
-
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassAdded: anAnnouncement [
 	self
@@ -136,16 +128,9 @@ GtCoderNavigationElement >> onClassSelected: anAnnouncement [
 { #category : #'event handling' }
 GtCoderNavigationElement >> onNavigationModelChanged [
 	"subclasses may perform actions on navigation model changes"
-	self isAttachedToSceneGraph ifFalse: [ ^ self ].
-	self subscribeToNavigationModel.
 	self updateContent.
-]
-
-{ #category : #'hooks - children' }
-GtCoderNavigationElement >> onRemovedFromSceneGraph [
-	super onRemovedFromSceneGraph.
-	self unsuscribeFromContent.
-	self unsubscribeFromNavigationModel.
+	self subscribeToNavigationModel.
+	self subscribeToContent.
 ]
 
 { #category : #'api - class updates' }
