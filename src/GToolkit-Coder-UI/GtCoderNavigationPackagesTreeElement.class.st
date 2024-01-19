@@ -87,25 +87,17 @@ GtCoderNavigationPackagesTreeElement >> initialize [
 	self rowStencil: BrGlamorousSimpleTreeSelectableRowElementStencilBuilder new.
 
 	self
-		nodeStencil: [ BrHorizontalPane new
+		nodeStencil: [
+			| anItemElement |
+			anItemElement := GtCoderNavigationPackagesTreeItemElement new.
+			anItemElement
 				hMatchParent;
-				vFitContent ];
-		nodeDataBinder: [ :aPackageElement :aPackage | 
-			| label |
-			aPackageElement
-				removeChildren;
-				aptitude: BrGlamorousListItemAptitude new
-						+ (BrGlamorousWithContextMenuAptitude
+				vFitContent;
+				addAptitude: (BrGlamorousWithContextMenuAptitude
 								content: [ GtCoderNavigationContextMenuContent new
-										items: (self contextMenuItemsFor: aPackage) ]).
-			label := BrLabel new
-					matchParent;
-					beSmallSize;
-					aptitude: BrGlamorousLabelAptitude.
-			aPackageElement addChild: label.
-			aPackage
-				ifNil: [ label text: '' asRopedText ]
-				ifNotNil: [ label text: aPackage name ] ]
+										items: (self contextMenuItemsFor: anItemElement packageOrTag) ]) ];
+		nodeDataBinder: [ :aPackageElement :aPackage | 
+			aPackageElement packageOrTag: aPackage ]
 ]
 
 { #category : #'api - initialization' }
