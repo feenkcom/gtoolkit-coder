@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderExpanderShadowAptitude,
-	#superclass : #BrStyleCommonAptitude,
-	#category : 'GToolkit-Coder-UI-Looks'
+	#superclass : #BrLazyStyleCommonAptitude,
+	#category : #'GToolkit-Coder-UI-Looks'
 }
 
 { #category : #initialization }
@@ -9,8 +9,8 @@ GtCoderExpanderShadowAptitude >> initialize [
 	super initialize.
 
 	self
-		when: (self state expanded & self state focused)
+		when: (self state focused)
 			style: [ :aStyle | aStyle effect: BrGlamorousFocusedShadowEffect new ];
-		when: (self state expanded & self state unfocused)
+		when: (self state hovered or: (self state expanded & self state unfocused))
 			style: [ :aStyle | aStyle effect: BrGlamorousShadowEffect new ]
 ]

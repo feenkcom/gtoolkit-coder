@@ -99,15 +99,17 @@ GtCoderExpanderWithoutShadowAptitude >> initialize [
 		padding: self padding;
 		layout: BlLinearLayout vertical.
 
-	self add: (BrStyleCommonAptitude new
+	self add: (BrLazyStyleCommonAptitude new
+		default: [ :aStyle |
+			aStyle background: Color white];
 		collapsed: [ :aStyle |
 			aStyle border: (BlBorder paint: self borderPaint width: self borderWidth) ];
 		expanded: [ :aStyle |
-			aStyle background: Color white.
 			aStyle border: (BlBorder paint: self borderPaint width: self expandedBorderWidth) ];
-		focused: [ :aStyle | (BlBorder paint: self borderFocusedPaint width: self expandedBorderWidth) ]).
+		focused: [ :aStyle |
+			aStyle border: (BlBorder paint: self borderFocusedPaint width: self expandedBorderWidth) ]).
 
-	self add: (BrStyleCommonAptitude new
+	self add: (BrLazyStyleCommonAptitude new
 		@ sidebar;
 		default: [ :aStyle | aStyle background: self borderPaint ];
 		focused: [ :aStyle | aStyle background: self borderFocusedPaint ]).
