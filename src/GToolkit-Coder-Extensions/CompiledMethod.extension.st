@@ -22,7 +22,7 @@ CompiledMethod >> gtLocalVersionsFor: aView [
 	<gtView>
 	^ aView list
 		title: 'Local versions';
-		priority: 20;
+		priority: 10;
 		items: [ SourceFiles
 				changeRecordsFrom: self sourcePointer
 				className: self methodClass instanceSide name
