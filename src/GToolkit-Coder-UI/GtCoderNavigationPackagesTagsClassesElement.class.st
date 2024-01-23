@@ -107,13 +107,19 @@ GtCoderNavigationPackagesTagsClassesElement >> buildGroupWithBinder: binderBlock
 	instanceGroup := BrGroup new
 			domainObject: 'instance side';
 			stream: #() asAsyncStream;
-			itemStencil: [ | label |
-				label := BrLabel new
-						hMatchParent;
-						vFitContent;
-						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude;
-						when: BlClickEvent do: clickBlock ];
+			itemStencil: [
+				| aLabel |
+				aLabel := BrLabel new.
+				aLabel
+					hMatchParent;
+					vFitContent;
+					beSmallSize;
+					aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude +
+						(BrGlamorousWithContextMenuAptitude
+							content: [ GtCoderNavigationContextMenuContent new
+									items: (self protocolListContextMenuItemsFor: (aLabel userData at: #protocol)) ]);
+					when: BlClickEvent do: clickBlock.
+				aLabel ];
 			itemDataBinder: binderBlock;
 			shouldShowWithoutItems: false.
 	classGroup := instanceGroup copy domainObject: 'class side'.
@@ -127,20 +133,8 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
 	list := self buildGroupList.
 	methodGroup := self
 			buildMethodGroupWithBinder: [ :element :item | 
-				| label |
-				element removeChildren.
 				element userData at: #method put: item.
-				label := BrLabel new
-						matchParent;
-						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude.
-				label text: item selector asRopedText.
-
-				label
-					addAptitude: (BrGlamorousWithContextMenuAptitude
-							content: [ GtCoderNavigationContextMenuContent new
-									items: (self methodListContextMenuItemsFor: item) ]).
-				element addChild: label ]
+				element text: item selector asRopedText. ]
 			onClick: [ :event | 
 				event consumed: true.
 				self
@@ -155,12 +149,18 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupWithBinder: binde
 	instanceGroup := BrGroup new
 			domainObject: 'instance side';
 			stream: #() asAsyncStream;
-			itemStencil: [ | label |
-				label := BrHorizontalPane new
-						aptitude: BrGlamorousListItemAptitude;
-						hMatchParent;
-						vFitContent;
-						when: BlClickEvent do: clickBlock ];
+			itemStencil: [ | aLabel |
+				aLabel := BrLabel new.
+				aLabel
+					hMatchParent;
+					vFitContent;
+					beSmallSize;
+					aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude +
+						(BrGlamorousWithContextMenuAptitude
+							content: [ GtCoderNavigationContextMenuContent new
+									items: (self methodListContextMenuItemsFor: (aLabel userData at: #method)) ]);
+					when: BlClickEvent do: clickBlock.
+				aLabel ];
 			itemDataBinder: binderBlock;
 			shouldShowWithoutItems: false.
 	classGroup := instanceGroup copy domainObject: 'class side'.
@@ -174,20 +174,8 @@ GtCoderNavigationPackagesTagsClassesElement >> buildProtocolGroupList [
 	list := self buildGroupList.
 	protocolGroup := self
 			buildGroupWithBinder: [ :element :item | 
-			| label |
-				element removeChildren.
 				element userData at: #protocol put: item.
-				label := BrLabel new
-						hMatchParent;
-						vFitContent;
-						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude.
-				label text: item name asRopedText.
-				label
-					addAptitude: (BrGlamorousWithContextMenuAptitude
-							content: [ GtCoderNavigationContextMenuContent new
-									items: (self protocolListContextMenuItemsFor: item) ]).
-				element addChild: label ]
+				element text: item name asRopedText ]
 			onClick: [ :event | 
 				event consumed: true.
 				self onProtocolListSelectionChanged ].
