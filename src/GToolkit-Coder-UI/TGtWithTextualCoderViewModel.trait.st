@@ -59,22 +59,12 @@ TGtWithTextualCoderViewModel >> textualCoderViewModel: aTextualCoderViewModel [
 	textualCoderViewModel == aTextualCoderViewModel 
 		ifTrue: [ ^ self ].
 	
-	BlFrameTelemetry
-		time: [ self class name, ' #unsubscribeFromTextualCoderViewModel' ]
-		during: [ textualCoderViewModel ifNotNil: [ self unsubscribeFromTextualCoderViewModel ] ].
+	textualCoderViewModel ifNotNil: [ self unsubscribeFromTextualCoderViewModel ].
 	textualCoderViewModel := aTextualCoderViewModel.
 
-	BlFrameTelemetry
-		time: [ self class name, ' ', #onTextualCoderViewModelChanged ]
-		during: [ self onTextualCoderViewModelChanged ].
-	
-	BlFrameTelemetry
-		time: [ self class name, ' ', #subscribeToTextualCoderViewModel ]
-		during: [ self subscribeToTextualCoderViewModel ].
-		
-	BlFrameTelemetry
-		time: [ self class name, ' ', #onPostTextualCoderViewModelChanged ]
-		during: [ self onPostTextualCoderViewModelChanged ].
+	self onTextualCoderViewModelChanged.
+	self subscribeToTextualCoderViewModel.
+	self onPostTextualCoderViewModelChanged.
 ]
 
 { #category : #'api - textual coder view model' }
