@@ -25,7 +25,6 @@ Class {
 		'monitor',
 		'announcer',
 		'id',
-		'suppressedAnnouncements',
 		'attributes',
 		'extraAddOns'
 	],
