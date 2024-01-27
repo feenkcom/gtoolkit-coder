@@ -3,9 +3,10 @@ Class {
 	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'object',
-		'spawnDestination'
+		'spawnDestination',
+		'requesterObject'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }
@@ -16,6 +17,16 @@ GtCoderObjectSpawnRequest >> object [
 { #category : #accessing }
 GtCoderObjectSpawnRequest >> object: anObject [
 	object := anObject
+]
+
+{ #category : #accessing }
+GtCoderObjectSpawnRequest >> requesterObject [
+	^ requesterObject
+]
+
+{ #category : #accessing }
+GtCoderObjectSpawnRequest >> requesterObject: anObject [
+	requesterObject := anObject
 ]
 
 { #category : #accessing }

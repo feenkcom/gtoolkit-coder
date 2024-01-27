@@ -169,6 +169,9 @@ GtTextualCoderEditorElement >> onAddedToSceneGraph [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onCodeEvaluated: anEvaluationAnnouncement [
+	anEvaluationAnnouncement requesterObject = self textualCoderViewModel 
+		ifFalse: [ ^ self ].
+
 	evaluationHighlighter displayResult: anEvaluationAnnouncement evaluationResult.
 	evaluationPrinter hideResult
 ]
@@ -201,6 +204,8 @@ GtTextualCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onObjectSpawnRequest: anAnnouncement [
+	anAnnouncement requesterObject = self textualCoderViewModel ifFalse: [ ^ self ].
+
 	self enqueueTask: (BlTaskAction new action: [
 		self phlow
 			spawnObject: anAnnouncement object
@@ -225,6 +230,9 @@ GtTextualCoderEditorElement >> onPostTextualCoderViewModelChanged [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onPrintRequest: anEvaluationAnnouncement [
+	anEvaluationAnnouncement requesterObject = self textualCoderViewModel 
+		ifFalse: [ ^ self ].
+
 	evaluationHighlighter hideResult.
 	evaluationPrinter displayResult: anEvaluationAnnouncement evaluationResult.
 ]

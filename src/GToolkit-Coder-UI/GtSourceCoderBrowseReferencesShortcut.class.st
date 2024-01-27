@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderBrowseReferencesShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }
@@ -22,9 +22,9 @@ GtSourceCoderBrowseReferencesShortcut >> name [
 ]
 
 { #category : #evaluation }
-GtSourceCoderBrowseReferencesShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
+GtSourceCoderBrowseReferencesShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aReceiver [
 	self
 		forEditor: aBrTextEditor
-		selectedStringDo: [ :aSelectedString | aGtSourceCoder browseReferencesIn: aSelectedString ]
-		orCursorStringPositionDo: [ :aStringPosition | aGtSourceCoder browseReferencesAt: aStringPosition ]
+		selectedStringDo: [ :aSelectedString | aGtSourceCoder browseReferencesIn: aSelectedString requesterObject: aReceiver ]
+		orCursorStringPositionDo: [ :aStringPosition | aGtSourceCoder browseReferencesAt: aStringPosition requesterObject: aReceiver ]
 ]

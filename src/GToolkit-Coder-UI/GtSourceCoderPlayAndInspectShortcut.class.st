@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderPlayAndInspectShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }
@@ -22,7 +22,7 @@ GtSourceCoderPlayAndInspectShortcut >> name [
 ]
 
 { #category : #evaluation }
-GtSourceCoderPlayAndInspectShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
+GtSourceCoderPlayAndInspectShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aReceiver [
 	GtCoderExecutionContextVariable
 		element: aBrEditorElement
 		do: [ 
