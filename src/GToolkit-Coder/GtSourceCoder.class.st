@@ -82,9 +82,11 @@ GtSourceCoder >> doItAndGoInContext: aGtSourceCoderEvaluationContext [
 	^ self
 		evaluate: [ :thisCoder | thisCoder currentSourceString ]
 		inContext: aGtSourceCoderEvaluationContext
-		thenDo: [ :anEvaluationResult |
+		thenDo: [ :anEvaluationResult | 
 			self notifyEvaluatedWithResult: anEvaluationResult.
-			self notifyObjectSpawnFromEvaluationResult: anEvaluationResult ]
+			self
+				notifyObjectSpawnFromEvaluationResult: anEvaluationResult
+				requesterObject: aGtSourceCoderEvaluationContext requesterObject ]
 ]
 
 { #category : #'api - actions' }
@@ -264,28 +266,27 @@ GtSourceCoder >> notifyEvaluatedWithResult: anEvaluationResult [
 ]
 
 { #category : #'private - notifying' }
-GtSourceCoder >> notifyObjectSpawn: anObject [
+GtSourceCoder >> notifyObjectSpawn: anObject requesterObject: aRequester [
 	self
 		notifyObjectSpawn: anObject
 		withDestination: self spawnDestination
+		requesterObject: aRequester
 ]
 
 { #category : #'private - notifying' }
-GtSourceCoder >> notifyObjectSpawn: anObject withDestination: aSpawnDestination [
+GtSourceCoder >> notifyObjectSpawn: anObject withDestination: aSpawnDestination requesterObject: aRequester [
 	self announce: (GtCoderObjectSpawnRequest new 
 		object: anObject;
 		spawnDestination: aSpawnDestination;
-		coder: self)
+		coder: self;
+		requesterObject: aRequester)
 ]
 
 { #category : #'private - notifying' }
-GtSourceCoder >> notifyObjectSpawnFromEvaluationResult: anEvaluationResult [
-	
-	anEvaluationResult isSuccess
-		ifFalse: [ ^ self ].
-	
-	self
-		notifyObjectSpawn: anEvaluationResult value
+GtSourceCoder >> notifyObjectSpawnFromEvaluationResult: anEvaluationResult requesterObject: aRequester [
+	anEvaluationResult isSuccess ifFalse: [ ^ self ].
+
+	self notifyObjectSpawn: anEvaluationResult value requesterObject: aRequester
 ]
 
 { #category : #'private - notifying' }

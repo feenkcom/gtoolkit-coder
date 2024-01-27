@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'evaluationResult'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }
@@ -17,4 +17,9 @@ GtCoderPrintAnnouncement >> evaluationResult [
 { #category : #accessing }
 GtCoderPrintAnnouncement >> evaluationResult: aGtSourceCoderEvaluationResult [
 	evaluationResult := aGtSourceCoderEvaluationResult
+]
+
+{ #category : #accessing }
+GtCoderPrintAnnouncement >> requesterObject [
+	^ self evaluationResult requesterObject
 ]

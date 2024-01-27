@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderBrowseBehaviorShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }
@@ -22,7 +22,7 @@ GtSourceCoderBrowseBehaviorShortcut >> name [
 ]
 
 { #category : #evaluation }
-GtSourceCoderBrowseBehaviorShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
+GtSourceCoderBrowseBehaviorShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aReceiver [
 
 	self
 		forEditor: aBrTextEditor

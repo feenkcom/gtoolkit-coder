@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderFormatShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }
@@ -22,6 +22,6 @@ GtSourceCoderFormatShortcut >> name [
 ]
 
 { #category : #evaluation }
-GtSourceCoderFormatShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
+GtSourceCoderFormatShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aReceiver [
 	aGtSourceCoder format
 ]

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderShortcut,
 	#superclass : #BrEditorShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #private }
@@ -37,7 +37,7 @@ GtSourceCoderShortcut >> forEditor: aBrTextEditor selectionIntervalDo: aSelectio
 ]
 
 { #category : #evaluation }
-GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent [
+GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aReceiver [
 	self subclassResponsibility
 ]
 
@@ -48,6 +48,7 @@ GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElemen
 		element: aBrEditorElement
 		coder: aSourceCoderViewModel coder
 		dueTo: aShortcutEvent
+		requesterObject: aSourceCoderViewModel
 ]
 
 { #category : #evaluation }
