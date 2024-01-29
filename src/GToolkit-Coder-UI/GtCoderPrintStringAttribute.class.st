@@ -111,6 +111,7 @@ GtCoderPrintStringAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 		aptitude: (BrGlamorousLabelAptitude new glamorousCodeFont labelDo: [ :aLabel |
 			aLabel addAptitude: (BrGlamorousWithTooltipAptitude new contentStencil: [ self buildTooltip ]) ]);
 		beTinySize;
+		id: GtCoderPrintStringElementId;
 		text: object printString;
 		background: BrGlamorousColors neutralBackgroundColor;
 		margin: (BlInsets top: 0 left: 4 bottom: 0 right: 4);
