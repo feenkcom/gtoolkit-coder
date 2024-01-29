@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Source Model'
 }
 
+{ #category : #converting }
+GtSourceCoderViewModel >> asCoderRequesterObject [
+	^ GtCoderViewModelRequester new coderViewModel: self
+]
+
 { #category : #'api - actions' }
 GtSourceCoderViewModel >> debug [
 	^ self selection isEmpty
@@ -138,9 +143,8 @@ GtSourceCoderViewModel >> elementClass [
 { #category : #'private - evaluation' }
 GtSourceCoderViewModel >> evaluationContext [
 	<return: #GtSourceCoderEvaluationContext>
-
 	^ self coderModel evaluationContext
-		requesterObject: self
+		requesterObject: self asCoderRequesterObject
 ]
 
 { #category : #'api - accessing' }

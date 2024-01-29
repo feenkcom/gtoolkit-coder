@@ -21,5 +21,6 @@ GtCoderPrintAnnouncement >> evaluationResult: aGtSourceCoderEvaluationResult [
 
 { #category : #accessing }
 GtCoderPrintAnnouncement >> requesterObject [
+	<return: #TGtCoderRequesterObject>
 	^ self evaluationResult requesterObject
 ]

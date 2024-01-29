@@ -9,7 +9,7 @@ Class {
 		'evaluatedInterval',
 		'evaluatedSourceString'
 	],
-	#category : 'GToolkit-Coder-Coders - Evaluation'
+	#category : #'GToolkit-Coder-Coders - Evaluation'
 }
 
 { #category : #'api - context' }
@@ -66,12 +66,13 @@ GtSourceCoderEvaluationContext >> initialize [
 
 { #category : #accessing }
 GtSourceCoderEvaluationContext >> requesterObject [
-	^ requesterObject
+	<return: #TGtCoderRequesterObject>
+	^ requesterObject ifNil: [ GtNoCoderRequester uniqueInstance ]
 ]
 
 { #category : #accessing }
 GtSourceCoderEvaluationContext >> requesterObject: anObject [
-	requesterObject := anObject
+	requesterObject := anObject asCoderRequesterObject
 ]
 
 { #category : #accessing }

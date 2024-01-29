@@ -231,7 +231,7 @@ GtSourceCoder >> evaluationContext [
 	<return: #GtSourceCoderEvaluationContext>
 
 	^ self newEvaluationContext
-		requesterObject: self;
+		requesterObject: (GtSourceCoderRequester new coder: self);
 		coder: self
 ]
 
