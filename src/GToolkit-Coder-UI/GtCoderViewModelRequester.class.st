@@ -23,3 +23,8 @@ GtCoderViewModelRequester >> coderViewModel: anObject [
 GtCoderViewModelRequester >> isCoderViewModel: aCoderViewModel [
 	^ aCoderViewModel = self coderViewModel 
 ]
+
+{ #category : #accessing }
+GtCoderViewModelRequester >> selfObject [
+	^ self coderViewModel selfObject
+]

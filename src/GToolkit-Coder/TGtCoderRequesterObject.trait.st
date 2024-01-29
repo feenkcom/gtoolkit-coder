@@ -7,3 +7,10 @@ Trait {
 TGtCoderRequesterObject >> asCoderRequesterObject [
 	^ self
 ]
+
+{ #category : #accessing }
+TGtCoderRequesterObject >> selfObject [
+	"Return an object that is represented by `self` (or `super`) key"
+
+	^ nil
+]

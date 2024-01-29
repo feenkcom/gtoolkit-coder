@@ -3,9 +3,10 @@ Class {
 	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'tool',
-		'spawnDestination'
+		'spawnDestination',
+		'requesterObject'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }
