@@ -10,6 +10,17 @@ Class {
 }
 
 { #category : #accessing }
+GtCoderToolSpawnRequest >> requesterObject [
+	<return: #TGtCoderRequesterObject>
+	^ requesterObject ifNil: [ GtNoCoderRequester uniqueInstance ]
+]
+
+{ #category : #accessing }
+GtCoderToolSpawnRequest >> requesterObject: anObject [
+	requesterObject := anObject
+]
+
+{ #category : #accessing }
 GtCoderToolSpawnRequest >> spawnDestination [
 	^ spawnDestination
 ]
