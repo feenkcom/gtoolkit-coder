@@ -231,7 +231,7 @@ GtTextualCoderEditorElement >> onPostTextualCoderViewModelChanged [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onPrintRequest: anEvaluationAnnouncement [
-	anEvaluationAnnouncement requesterObject = self textualCoderViewModel 
+	(anEvaluationAnnouncement requesterObject isCoderViewModel: self textualCoderViewModel) 
 		ifFalse: [ ^ self ].
 
 	evaluationHighlighter hideResult.
