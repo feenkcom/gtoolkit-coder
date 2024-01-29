@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'evaluationContext'
 	],
-	#category : 'GToolkit-Coder-Coders - Evaluation'
+	#category : #'GToolkit-Coder-Coders - Evaluation'
 }
 
 { #category : #accessing }
@@ -39,6 +39,7 @@ GtSourceCoderEvaluationResult >> isSyntaxError [
 
 { #category : #accessing }
 GtSourceCoderEvaluationResult >> requesterObject [
+	<return: #TGtCoderRequesterObject>
 	^ self evaluationContext requesterObject
 ]
 

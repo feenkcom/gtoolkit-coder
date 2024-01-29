@@ -21,12 +21,13 @@ GtCoderObjectSpawnRequest >> object: anObject [
 
 { #category : #accessing }
 GtCoderObjectSpawnRequest >> requesterObject [
-	^ requesterObject
+	<return: #TGtCoderRequesterObject>
+	^ requesterObject ifNil: [ GtNoCoderRequester uniqueInstance ]
 ]
 
 { #category : #accessing }
 GtCoderObjectSpawnRequest >> requesterObject: anObject [
-	requesterObject := anObject
+	requesterObject := anObject asCoderRequesterObject
 ]
 
 { #category : #accessing }

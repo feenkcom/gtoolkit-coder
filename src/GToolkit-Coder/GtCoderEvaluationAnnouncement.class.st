@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'evaluationResult'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }
@@ -21,7 +21,7 @@ GtCoderEvaluationAnnouncement >> evaluationResult: aGtSourceCoderEvaluationResul
 
 { #category : #testing }
 GtCoderEvaluationAnnouncement >> isRequestedByElementOrItsChild: anElement [
-	"Return true if the evaluation ws requested by a given visual element or any of its children"
+	"Return true if the evaluation was requested by a given visual element or any of its children"
 	<return: #Boolean>
 
 	self requesterObject == anElement
@@ -35,5 +35,6 @@ GtCoderEvaluationAnnouncement >> isRequestedByElementOrItsChild: anElement [
 
 { #category : #accessing }
 GtCoderEvaluationAnnouncement >> requesterObject [
+	<return: #TGtCoderRequesterObject>
 	^ self evaluationResult requesterObject
 ]
