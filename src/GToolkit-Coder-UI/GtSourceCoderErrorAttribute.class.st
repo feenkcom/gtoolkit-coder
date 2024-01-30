@@ -32,11 +32,13 @@ GtSourceCoderErrorAttribute >> clickAction: aBlock [
 GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| text button aptitude |
 	button := self errorButton.
+	button id: GtSourceCoderErrorButtonElementId.
 	button
 		addAptitude: (aptitude := BrGlamorousWithDropdownAptitude
 					handle: [ self errorButton ]
 					content: [ | textElement pane |
 						pane := BrVerticalPane new.
+						pane id: GtSourceCoderErrorContentElementId.
 						pane matchParent.
 						pane background: BrGlamorousColors errorBackgroundColor.
 						string lines

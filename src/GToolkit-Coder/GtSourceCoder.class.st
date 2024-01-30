@@ -290,11 +290,12 @@ GtSourceCoder >> notifyObjectSpawnFromEvaluationResult: anEvaluationResult reque
 ]
 
 { #category : #'private - notifying' }
-GtSourceCoder >> notifyParseError: aString at: anInteger [
+GtSourceCoder >> notifyParseError: aString at: anInteger requesterObject: aRequester [
 	self announce: (GtCoderParseError new
 		coder: self;
 		errorMessage: aString;
-		location: anInteger)
+		location: anInteger;
+		requesterObject: aRequester)
 ]
 
 { #category : #'private - notifying' }
@@ -365,14 +366,22 @@ GtSourceCoder >> spawnDestination: aSpawnDestination [
 	self attributeNamed: #spawnDestination put: aSpawnDestination
 ]
 
-{ #category : #accessing }
+{ #category : #'private - actions' }
 GtSourceCoder >> validateSyntax [
 	<return: #Boolean>
-	
+	^ self validateSyntaxInContext: self evaluationContext
+]
+
+{ #category : #'private - actions' }
+GtSourceCoder >> validateSyntaxInContext: aGtPharoSourceCoderEvaluationContext [
+	<return: #Boolean>
 	[ self computeAst ]
 		on: SmaCCParserError
 		do: [ :ex | 
-			self notifyParseError: ex messageText at: ex tag position.
+			self
+				notifyParseError: ex messageText
+				at: ex tag position
+				requesterObject: aGtPharoSourceCoderEvaluationContext requesterObject.
 			^ false ].
 	^ true
 ]

@@ -4,3 +4,8 @@ Extension { #name : #TGtCoderRequesterObject }
 TGtCoderRequesterObject >> isCoderViewModel: aCoderViewModel [
 	^ false
 ]
+
+{ #category : #'*GToolkit-Coder-UI' }
+TGtCoderRequesterObject >> isUndefinedOrCoderViewModel: aCoderViewModel [
+	^ false
+]

@@ -24,6 +24,11 @@ GtCoderViewModelRequester >> isCoderViewModel: aCoderViewModel [
 	^ aCoderViewModel = self coderViewModel 
 ]
 
+{ #category : #testing }
+GtCoderViewModelRequester >> isUndefinedOrCoderViewModel: aCoderViewModel [
+	^ self isCoderViewModel: aCoderViewModel
+]
+
 { #category : #accessing }
 GtCoderViewModelRequester >> selfObject [
 	^ self coderViewModel selfObject

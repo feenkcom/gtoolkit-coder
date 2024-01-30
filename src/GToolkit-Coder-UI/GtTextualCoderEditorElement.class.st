@@ -178,8 +178,11 @@ GtTextualCoderEditorElement >> onCodeEvaluated: anEvaluationAnnouncement [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onCoderParseError: aGtCoderParseError [
-	"A parse error can be notifying from a non-UI thread"
+	(aGtCoderParseError requesterObject 
+		isUndefinedOrCoderViewModel: self textualCoderViewModel) 
+			ifFalse: [ ^ self ].
 
+	"A parse error can be notifying from a non-UI thread"
 	self enqueueTask: (BlTaskAction new action: [
 		self 
 			reportParseError: aGtCoderParseError errorMessage 
