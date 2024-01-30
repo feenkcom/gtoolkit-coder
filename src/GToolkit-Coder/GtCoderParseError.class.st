@@ -3,9 +3,10 @@ Class {
 	#superclass : #GtSourceCoderAnnouncement,
 	#instVars : [
 		'errorMessage',
-		'location'
+		'location',
+		'requesterObject'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }
@@ -26,4 +27,15 @@ GtCoderParseError >> location [
 { #category : #accessing }
 GtCoderParseError >> location: anObject [
 	location := anObject
+]
+
+{ #category : #accessing }
+GtCoderParseError >> requesterObject [
+	<return: #TGtCoderRequesterObject>
+	^ requesterObject
+]
+
+{ #category : #accessing }
+GtCoderParseError >> requesterObject: anObject [
+	requesterObject := anObject asCoderRequesterObject
 ]
