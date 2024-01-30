@@ -37,7 +37,7 @@ GtSourceCoderShortcut >> forEditor: aBrTextEditor selectionIntervalDo: aSelectio
 ]
 
 { #category : #evaluation }
-GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aReceiver [
+GtSourceCoderShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aRequester [
 	self subclassResponsibility
 ]
 

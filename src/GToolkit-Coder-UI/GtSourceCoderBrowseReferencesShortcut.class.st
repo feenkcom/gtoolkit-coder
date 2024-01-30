@@ -22,9 +22,9 @@ GtSourceCoderBrowseReferencesShortcut >> name [
 ]
 
 { #category : #evaluation }
-GtSourceCoderBrowseReferencesShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aReceiver [
+GtSourceCoderBrowseReferencesShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aRequester [
 	self
 		forEditor: aBrTextEditor
-		selectedStringDo: [ :aSelectedString | aGtSourceCoder browseReferencesIn: aSelectedString requesterObject: aReceiver ]
-		orCursorStringPositionDo: [ :aStringPosition | aGtSourceCoder browseReferencesAt: aStringPosition requesterObject: aReceiver ]
+		selectedStringDo: [ :aSelectedString | aGtSourceCoder browseReferencesIn: aSelectedString requesterObject: aRequester ]
+		orCursorStringPositionDo: [ :aStringPosition | aGtSourceCoder browseReferencesAt: aStringPosition requesterObject: aRequester ]
 ]

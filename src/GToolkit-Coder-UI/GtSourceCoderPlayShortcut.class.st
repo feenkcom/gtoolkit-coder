@@ -22,7 +22,7 @@ GtSourceCoderPlayShortcut >> name [
 ]
 
 { #category : #evaluation }
-GtSourceCoderPlayShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aReceiver [	
+GtSourceCoderPlayShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aRequester [	
 	GtCoderExecutionContextVariable
 		element: aBrEditorElement
 		do: [
