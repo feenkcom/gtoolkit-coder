@@ -22,7 +22,7 @@ GtSourceCoderPlayAndInspectShortcut >> name [
 ]
 
 { #category : #evaluation }
-GtSourceCoderPlayAndInspectShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aReceiver [
+GtSourceCoderPlayAndInspectShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aRequester [
 	GtCoderExecutionContextVariable
 		element: aBrEditorElement
 		do: [ 

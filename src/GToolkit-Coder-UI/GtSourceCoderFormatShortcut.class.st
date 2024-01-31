@@ -22,6 +22,6 @@ GtSourceCoderFormatShortcut >> name [
 ]
 
 { #category : #evaluation }
-GtSourceCoderFormatShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aReceiver [
-	aGtSourceCoder format
+GtSourceCoderFormatShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aRequester [
+	aGtSourceCoder formatWithRequesterObject: aRequester
 ]
