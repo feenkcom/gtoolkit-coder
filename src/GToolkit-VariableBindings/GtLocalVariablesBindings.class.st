@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'bindings'
 	],
-	#category : 'GToolkit-VariableBindings-Bindings'
+	#category : #'GToolkit-VariableBindings-Bindings'
 }
 
 { #category : #comparing }
@@ -22,6 +22,12 @@ GtLocalVariablesBindings >> = anObject [
 { #category : #binding }
 GtLocalVariablesBindings >> bindingNames [
 	^ bindings keys
+]
+
+{ #category : #enumerating }
+GtLocalVariablesBindings >> bindingNamesAndValuesDo: aBlock [
+	bindings
+		keysAndValuesDo: [ :aName :aVariable | aBlock cull: aName cull: aVariable ]
 ]
 
 { #category : #binding }
@@ -73,4 +79,18 @@ GtLocalVariablesBindings >> localAt: aSymbol put: anObject [
 	bindings 
 		at: aSymbol 
 		put: (WorkspaceVariable key: aSymbol value: anObject)
+]
+
+{ #category : #accessing }
+GtLocalVariablesBindings >> localAt: aSymbol putVariable: aVariable [ 
+	self
+		assert: [ aSymbol isSymbol ]
+		description: [ 'Variable name should be a symbol' ].
+	self
+		assert: [ aVariable isKindOf: Variable ]
+		description: [ 'Variable must be kind of Variable: {1}' format: { aVariable } ].
+	
+	bindings 
+		at: aSymbol 
+		put: aVariable
 ]
