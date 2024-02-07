@@ -42,7 +42,7 @@ TGtVariablesBindings >> bindingValueOf: aSymbol ifPresent: aPresentBlock ifAbsen
 	"aSymbol is a variable name.
 	Return a value of variable name"
 
-	(self hasBindingOf: aSymbol)
+	^ (self hasBindingOf: aSymbol)
 		ifTrue: [ aPresentBlock cull: (self bindingValueOf: aSymbol) ]
 		ifFalse: [ anAbsentBlock value ]
 ]
