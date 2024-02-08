@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'context'
 	],
-	#category : 'GToolkit-VariableBindings-Bindings'
+	#category : #'GToolkit-VariableBindings-Bindings'
 }
 
 { #category : #comparing }
@@ -39,6 +39,15 @@ GtContextVariablesBindings >> bindingOf: aSymbol [
 	var isLocalVariable
 		ifFalse: [ ^ nil ].
 	^ var
+]
+
+{ #category : #binding }
+GtContextVariablesBindings >> bindingValueOf: aSymbol [
+	"aSymbol is a variable name.
+	Return a value of the variable."
+
+	^ (self bindingOf: aSymbol)
+		ifNotNil: [ :aBinding | aBinding readInContext: context ]
 ]
 
 { #category : #accessing }

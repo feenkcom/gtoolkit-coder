@@ -33,22 +33,18 @@ TGtVariablesBindings >> bindingOf: aSymbol [
 TGtVariablesBindings >> bindingValueOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a value of the variable."
-	<return: #Variable or: nil>
 
-	^ (self bindingOf: aSymbol)
-		ifNotNil: [ :aBinding | aBinding value ]
+	^ (self bindingOf: aSymbol) ifNotNil: [ :aBinding | aBinding value ]
 ]
 
 { #category : #binding }
 TGtVariablesBindings >> bindingValueOf: aSymbol ifPresent: aPresentBlock ifAbsent: anAbsentBlock [
 	"aSymbol is a variable name.
-	Does not have side effects"
-	<return: #Object>
+	Return a value of variable name"
 
-	^ self bindings
-		at: aSymbol
-		ifPresent: [ :aBinding | aPresentBlock value: aBinding value ]
-		ifAbsent: anAbsentBlock
+	^ (self hasBindingOf: aSymbol)
+		ifTrue: [ aPresentBlock cull: (self bindingValueOf: aSymbol) ]
+		ifFalse: [ anAbsentBlock value ]
 ]
 
 { #category : #testing }
