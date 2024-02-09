@@ -49,6 +49,51 @@ GtCoderNavigationClassesHierarchyTreeElement >> contextMenuItemsFor: aClass [
 			-> [ :elem | self renameClass: aClass inElement: elem ].
 		(self createLabel: 'Remove class' description: aClass name)
 			-> [ :elem | self removeClass: aClass inElement: elem ]}
+		, (aClass subclasses isEmpty
+				ifTrue: [ #() ]
+				ifFalse: [ {(self createLabel: 'Convert to sibling' description: aClass name)
+							-> [ :elem | self convertToSibling: aClass inElement: elem ]} ])
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesHierarchyTreeElement >> convertToSibling: aClass inElement: elem [
+	| refactoring label refactoringButton edit |
+	refactoringButton := GtRefactoringsWithInputPreviewElement new.
+	refactoringButton cancelBlock: [  ].
+	edit := BrHorizontalPane new.
+	edit padding: (BlInsets all: 10).
+	edit fitContent.
+	edit
+		addChild: (BrLabel new
+				fitContent;
+				aptitude: BrGlamorousLabelAptitude;
+				text: 'Superclass:').
+	label := BrEditableLabel new.
+	label
+		aptitude: (BrGlamorousEditableLabelAptitude new
+				fontSize: 11.9;
+				background: Color transparent);
+		text: 'NewClass';
+		focused: true;
+		when: BrEditorAcceptWish
+			do: [ :aWish | 
+				edit
+					padding: (BlInsets
+							top: 10
+							bottom: 0
+							left: 10
+							right: 10).
+				refactoring := RBChildrenToSiblingsRefactoring
+						name: aWish text asString
+						class: aClass
+						subclasses: aClass subclasses.
+				refactoringButton refactorings: [ {refactoring} ].
+				label switchToLabel ];
+		switchToEditor.
+	edit addChild: label.
+	refactoringButton editorElement: edit.
+	refactoringButton enqueueTask: [ refactoringButton openPreview ] asBlTask.
+	elem addChild: refactoringButton as: #refactoringButton
 ]
 
 { #category : #initialization }
