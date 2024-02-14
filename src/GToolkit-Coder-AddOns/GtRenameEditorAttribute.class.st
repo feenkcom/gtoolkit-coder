@@ -8,7 +8,9 @@ Class {
 		'editorShortcuts',
 		'requestInitialFocus',
 		'styler',
-		'coordinateFocus'
+		'coordinateFocus',
+		'completionStrategy',
+		'completionController'
 	],
 	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
@@ -16,6 +18,16 @@ Class {
 { #category : #accessing }
 GtRenameEditorAttribute >> additionalAttributes [
 	^ {BlFontFamilyAttribute named: 'Source Code Pro'}
+]
+
+{ #category : #accessing }
+GtRenameEditorAttribute >> completionStrategy [
+	^ completionStrategy
+]
+
+{ #category : #accessing }
+GtRenameEditorAttribute >> completionStrategy: anObject [
+	completionStrategy := anObject
 ]
 
 { #category : #accessing }
@@ -51,6 +63,12 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 			inputFilter: filter;
 			text: text.
 	styler ifNotNil: [ renameEditor styler: styler ].
+	completionStrategy
+		ifNotNil: [ completionController := GtCompletionController
+					on: renameEditor
+					strategy: completionStrategy.
+			completionController closeOnEmptyCompletion: false.
+			completionController install ].
 	requestInitialFocus
 		ifTrue: [ renameEditor
 				switchToEditor;
