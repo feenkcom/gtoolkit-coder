@@ -149,13 +149,7 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 											look
 												inUIProcessDo: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
 													look fireEvent: BrDropdownHideWish new ].
-											self formCache removeKey: each ifAbsent: [  ] ];
-										onElementCreated: [ :aFrame | 
-											BlFocusFinder new
-												direction: BlFocusSearchDirectionForward new;
-												root: aFrame;
-												referenceElement: nil;
-												nextFocusDo: #requestFocus ifNone: [  ] ]) asElement ])
+											self formCache removeKey: each ifAbsent: [  ] ]) asElement ])
 								removeFromParent ]) ].
 	^ contentTabs
 ]
