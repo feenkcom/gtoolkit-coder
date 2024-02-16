@@ -28,7 +28,7 @@ GtCreationForm class >> priority [
 { #category : #converting }
 GtCreationForm >> asElement [
 	| viewModel |
-	viewModel := self asGtMagritteViewModel.
+	viewModel := self asGtMagritteViewModel focusFirstInputField.
 	self onElementCreated
 		ifNotNil: [ :aCallback | viewModel onElementCreated: aCallback ].
 	^ viewModel asElement
