@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderInlineRenameShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-AddOns-Inline rename'
+	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
 { #category : #accessing }
@@ -25,6 +25,14 @@ GtSourceCoderInlineRenameShortcut >> name [
 GtSourceCoderInlineRenameShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
 	self
 		forEditor: aBrTextEditor
-		selectionIntervalDo: [ :aSelectionInterval | aSourceCoderViewModel coder renameAt: aSelectionInterval last in: aSourceCoderViewModel ]
-		orCursorStringPositionDo: [ :aCursorTextPosition | aSourceCoderViewModel coder renameAt: aCursorTextPosition in: aSourceCoderViewModel ]
+		selectionIntervalDo: [ :aSelectionInterval | 
+			aSourceCoderViewModel coder
+				renameAt: aSelectionInterval last
+				in: aSourceCoderViewModel
+				for: aBrEditorElement ]
+		orCursorStringPositionDo: [ :aCursorTextPosition | 
+			aSourceCoderViewModel coder
+				renameAt: aCursorTextPosition
+				in: aSourceCoderViewModel
+				for: aBrEditorElement ]
 ]

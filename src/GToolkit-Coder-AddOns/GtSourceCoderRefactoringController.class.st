@@ -10,7 +10,8 @@ Class {
 	#instVars : [
 		'originalSource',
 		'sourceCoderViewModel',
-		'refactoringPreviewAttributes'
+		'refactoringPreviewAttributes',
+		'element'
 	],
 	#category : #'GToolkit-Coder-AddOns-! Core'
 }
@@ -41,7 +42,8 @@ GtSourceCoderRefactoringController >> execute [
 			self refactoringFailed.
 			(ex isKindOf: RBRefactoringError)
 				ifTrue: [ self inform: self refactoringName , ': ' , ex messageText ]
-				ifFalse: [ NonInteractiveTranscript stderr
+				ifFalse: [ self informException: ex.
+					NonInteractiveTranscript stderr
 						nextPutAll: ('[{1}] {2}'
 								format: {self class name.
 										ex asString});
@@ -52,8 +54,34 @@ GtSourceCoderRefactoringController >> execute [
 							NonInteractiveTranscript stderr
 								nextPutAll: eachStackEntry printString;
 								cr ] ].
-
+			self cancelRefactoring.
 			ex return ]
+]
+
+{ #category : #executing }
+GtSourceCoderRefactoringController >> executeIn: anElement [
+	element := anElement.
+	^ self execute
+]
+
+{ #category : #accessing }
+GtSourceCoderRefactoringController >> inform: aString [
+	element ifNil: [ ^ super inform: aString ].
+	element
+		showNotification: (GtNotificationMessage new
+				showNotifications;
+				message: aString)
+]
+
+{ #category : #accessing }
+GtSourceCoderRefactoringController >> informException: anException [
+	element
+		showNotification: (GtObjectNotificationMessage new
+				message: ('[{1}] {2}'
+						format: {anException class name.
+								anException messageText});
+				object: anException copy freeze;
+				showNotifications)
 ]
 
 { #category : #private }
