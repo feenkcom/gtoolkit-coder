@@ -861,7 +861,7 @@ GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item
 		(self createLabel: 'Push down' description: item name)
 			-> [ :elem | 
 				| refactoring |
-				refactoring := RBPushDownInstanceVariableRefactoring
+				refactoring := GtPushDownInstanceVariableRefactoring
 						variable: item name
 						class: self selectedClass.
 				self

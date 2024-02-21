@@ -202,7 +202,9 @@ GtTextualCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
 
 	anAnnouncement source == self textualCoderViewModel ifFalse: [ ^ self ].
 
-	self inUIProcessDo: [ self onCoderViewModelFocused: anAnnouncement focused ]
+	self
+		enqueueTask: (BlTaskAction new
+				action: [ self onCoderViewModelFocused: anAnnouncement focused ])
 ]
 
 { #category : #'private - event handling' }
