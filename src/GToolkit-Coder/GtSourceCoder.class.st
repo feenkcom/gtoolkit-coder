@@ -258,6 +258,47 @@ GtSourceCoder >> newEvaluationContext [
 	^ GtSourceCoderEvaluationContext new
 ]
 
+{ #category : #'private - ast' }
+GtSourceCoder >> nodeAt: anIndex [
+	^ self
+		nodeAt: anIndex
+		ifFound: [ :aNode | 
+			aNode isSequence
+				ifTrue: [ aNode statements
+						detect: [ :eachNode | eachNode intersectsInterval: (anIndex to: anIndex) ] ]
+				ifFalse: [ aNode ] ]
+		ifNone: [ nil ]
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> nodeAt: aTextPosition ifFound: aFoundBlock ifNone: aNoneBlock [
+	<return: #Object>
+	[
+		| theAST innerNode |
+		theAST := self astAwait.
+		theAST
+			withAllNodesDo: [ :node | 
+				(aTextPosition between: node startPosition - 1 and: node stopPosition)
+					ifTrue: [ innerNode := node ] ].
+		
+		^ innerNode ifNil: aNoneBlock ifNotNil: aFoundBlock ]
+			on: Error
+			do: [ :ex | ex return ].
+
+	^ aNoneBlock value
+]
+
+{ #category : #accessing }
+GtSourceCoder >> nodeFrom: aCoderViewModel [
+	| allSelections allCursors |
+	allSelections := aCoderViewModel selection allSelections.
+	allCursors := aCoderViewModel cursors allCursors.
+
+	^ allSelections size = 1
+		ifTrue: [ self nodeWithin: allSelections first interval ]
+		ifFalse: [ allCursors size = 1 ifTrue: [ self nodeAt: allCursors first position ] ]
+]
+
 { #category : #'private - notifying' }
 GtSourceCoder >> notifyEvaluatedWithResult: anEvaluationResult [
 	self announce: (GtCoderEvaluationAnnouncement new 
