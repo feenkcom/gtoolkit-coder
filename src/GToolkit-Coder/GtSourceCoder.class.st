@@ -391,6 +391,14 @@ GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sou
 		sourceInterval: aSourceInterval)
 ]
 
+{ #category : #'private - notifying' }
+GtSourceCoder >> notifyToolSpawn: aTool withDestination: aSpawnDestination requesterObject: aRequester [
+	self announce: (GtCoderToolSpawnRequest new 
+		tool: aTool;
+		spawnDestination: aSpawnDestination;
+		coder: self)
+]
+
 { #category : #'private - actions' }
 GtSourceCoder >> primitiveDebug: aSourceString inContext: aGtSourceCoderEvaluationContext onFailDo: anEvaluationFailBlock [
 	^ self subclassResponsibility
