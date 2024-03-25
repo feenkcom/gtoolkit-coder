@@ -299,6 +299,35 @@ GtSourceCoder >> nodeFrom: aCoderViewModel [
 		ifFalse: [ allCursors size = 1 ifTrue: [ self nodeAt: allCursors first position ] ]
 ]
 
+{ #category : #accessing }
+GtSourceCoder >> nodeWithin: anInterval [
+	^ self
+		nodeWithin: anInterval
+		ifFound: [ :aNode | 
+			aNode isSequence
+				ifTrue: [ aNode statements
+						detect: [ :eachNode | eachNode intersectsInterval: anInterval ] ]
+				ifFalse: [ aNode ] ]
+		ifNone: [  ]
+]
+
+{ #category : #'private - ast' }
+GtSourceCoder >> nodeWithin: anInterval ifFound: aFoundBlock ifNone: aNoneBlock [
+	<return: #Object>
+
+	[
+		| theAST |
+		theAST := self astAwait.
+		^ theAST
+			bestNodeFor: anInterval
+			ifFound: aFoundBlock
+			ifNone: aNoneBlock ]
+				on: Error
+				do: [ :ex | ex return ].
+
+	^ aNoneBlock value
+]
+
 { #category : #'private - notifying' }
 GtSourceCoder >> notifyEvaluatedWithResult: anEvaluationResult [
 	self announce: (GtCoderEvaluationAnnouncement new 
@@ -360,6 +389,14 @@ GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sou
 		exception: anException;
 		sourceString: aSourceString;
 		sourceInterval: aSourceInterval)
+]
+
+{ #category : #'private - notifying' }
+GtSourceCoder >> notifyToolSpawn: aTool withDestination: aSpawnDestination requesterObject: aRequester [
+	self announce: (GtCoderToolSpawnRequest new 
+		tool: aTool;
+		spawnDestination: aSpawnDestination;
+		coder: self)
 ]
 
 { #category : #'private - actions' }
