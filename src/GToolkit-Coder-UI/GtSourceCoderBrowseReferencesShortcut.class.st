@@ -25,6 +25,12 @@ GtSourceCoderBrowseReferencesShortcut >> name [
 GtSourceCoderBrowseReferencesShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aRequester [
 	self
 		forEditor: aBrTextEditor
-		selectedStringDo: [ :aSelectedString | aGtSourceCoder browseReferencesIn: aSelectedString requesterObject: aRequester ]
-		orCursorStringPositionDo: [ :aStringPosition | aGtSourceCoder browseReferencesAt: aStringPosition requesterObject: aRequester ]
+		selectedStringDo: [ :aSelectedString | 
+			aGtSourceCoder 
+				browseReferencesIn: aSelectedString 
+				requesterObject: aRequester ]
+		orCursorStringPositionDo: [ :aStringPosition | 
+			aGtSourceCoder 
+				browseReferencesAt: aStringPosition 
+				requesterObject: aRequester ]
 ]
