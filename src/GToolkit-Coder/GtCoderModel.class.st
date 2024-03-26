@@ -223,8 +223,12 @@ GtCoderModel >> newAddOns [
 GtCoderModel >> pragmasNamed: aSymbol inHierarchy: aClass [
 	| actions |
 	actions := OrderedCollection new.
-	aClass withAllSuperclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
-	actions sort: [ :a :b | a arguments first < b arguments first ].
+	aClass withAllSuperclassesDo: [ :each | 
+		actions addAll: (Pragma allNamed: aSymbol in: each) ].
+	actions 
+		sort: (
+			[ :aPragma | aPragma arguments first ] ascending,
+			[ :aPragma | aPragma methodSelector ] ascending).
 	^ actions
 ]
 
