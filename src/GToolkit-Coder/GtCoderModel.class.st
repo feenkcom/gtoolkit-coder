@@ -47,6 +47,7 @@ GtCoderModel class >> contextMenuAddOnsPragma [
 { #category : #'private - addons' }
 GtCoderModel class >> gtAstCoderAddOnsFor: aView context: aPhlowContext [
 	<gtClassView>
+	
 	^ aView forward
 		title: 'Coder Addons';
 		tooltip: 'The methods that extend the Coder with AddOns';
@@ -54,7 +55,13 @@ GtCoderModel class >> gtAstCoderAddOnsFor: aView context: aPhlowContext [
 		object: [ (GtSearchMethodsInClassFilter new
 				forClass: self;
 				includeSuperclass: true) & self astExtensionsPragma gtPragmas ];
-		view: #gtItemsFor:
+		view: #gtItemsFor:;
+		actionButtonIcon: BrGlamorousVectorIcons inspect 
+			tooltip: 'Inspect Addons'
+			action: [ :aButton |
+				aButton phlow spawnObject: (GtSearchMethodsInClassFilter new
+					forClass: self;
+					includeSuperclass: true) & self astExtensionsPragma gtPragmas ]
 ]
 
 { #category : #'private - addons' }
@@ -68,7 +75,13 @@ GtCoderModel class >> gtContextMenuAddOnsFor: aView [
 		object: [ (GtSearchMethodsInClassFilter new
 				forClass: self;
 				includeSuperclass: true) & self contextMenuAddOnsPragma gtPragmas ];
-		view: #gtItemsFor:
+		view: #gtItemsFor:;
+		actionButtonIcon: BrGlamorousVectorIcons inspect 
+			tooltip: 'Inspect Addons'
+			action: [ :aButton |
+				aButton phlow spawnObject: (GtSearchMethodsInClassFilter new
+					forClass: self;
+					includeSuperclass: true) & self contextMenuAddOnsPragma gtPragmas  ]
 ]
 
 { #category : #'class initialization' }
@@ -223,8 +236,12 @@ GtCoderModel >> newAddOns [
 GtCoderModel >> pragmasNamed: aSymbol inHierarchy: aClass [
 	| actions |
 	actions := OrderedCollection new.
-	aClass withAllSuperclassesDo: [ :each | actions addAll: (Pragma allNamed: aSymbol in: each) ].
-	actions sort: [ :a :b | a arguments first < b arguments first ].
+	aClass withAllSuperclassesDo: [ :each | 
+		actions addAll: (Pragma allNamed: aSymbol in: each) ].
+	actions 
+		sort: (
+			[ :aPragma | aPragma arguments first ] ascending,
+			[ :aPragma | aPragma methodSelector ] ascending).
 	^ actions
 ]
 
