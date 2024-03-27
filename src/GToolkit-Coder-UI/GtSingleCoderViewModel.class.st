@@ -19,6 +19,13 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
 
+{ #category : #accessing }
+GtSingleCoderViewModel class >> addOnsExecutionConfiguration [
+	^ AsyncFutureExecutionConfiguration new
+		customGroup: #CoderAddOn;
+		lowPriority
+]
+
 { #category : #'api - shortcuts' }
 GtSingleCoderViewModel >> addMainAction: aGtCoderAction [
 	"Add an extra main action add-on independent from the dynamically computed add-ons"
