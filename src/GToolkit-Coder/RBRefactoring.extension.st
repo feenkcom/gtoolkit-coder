@@ -12,14 +12,6 @@ RBRefactoring >> gtDangers [
 ]
 
 { #category : #'*GToolkit-Coder' }
-RBRefactoring >> gtExecute: isForce [
-	isForce
-		ifTrue: [ self transform ]
-		ifFalse: [ self primitiveExecute ].
-	RBRefactoryChangeManager instance performChange: self changes; addUndoPointer: 1
-]
-
-{ #category : #'*GToolkit-Coder' }
 RBRefactoring >> gtPreconditions [
 	^ self preconditions
 ]
