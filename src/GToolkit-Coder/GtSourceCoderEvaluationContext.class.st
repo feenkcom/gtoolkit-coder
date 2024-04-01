@@ -98,3 +98,12 @@ GtSourceCoderEvaluationContext >> sourceString: anObject [
 
 	sourceString := anObject
 ]
+
+{ #category : #accessing }
+GtSourceCoderEvaluationContext >> targetBehavior [
+	"Return a target behavior in which the method should be compiled. The target behavior can differ from
+	the method's behavior if for example the method originates from the trait"
+
+	<return: #Behavior>
+	^ nil
+]
