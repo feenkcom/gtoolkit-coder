@@ -29,6 +29,7 @@ GtCoderNavigationTabsStencil >> addButtonsTo: explicitView [
 						ifTrue: [ self navigationModel selectMethod: anItem.
 							acted := true ].
 					acted ifTrue: [ anActOnEvent beActed ] ];
+				id: GtNavigationSpotterDropdownId;
 				asElement ]
 		tooltip: 'Search Code'.
 	explicitView
