@@ -52,7 +52,7 @@ GtRefactoryChangeManager class >> unload [
 
 { #category : #'undo/redo' }
 GtRefactoryChangeManager >> addUndo: aChange [
-	undo addLast: aChange.
+	undo addLast: (GtPerformedChange onChange: aChange).
 	self checkUndoStackLimit.
 	redo removeAll.
 	self announceUndoChanged
@@ -107,24 +107,68 @@ GtRefactoryChangeManager >> disconnectFromChanges [
 ]
 
 { #category : #accessing }
-GtRefactoryChangeManager >> gtRedoFor: aView [
-	<gtView>
-	redo isEmpty ifTrue: [ ^ aView empty ].
-	^ aView list
-		title: 'Redo';
-		priority: 15;
-		items: [ redo reversed ];
-		itemText: #gtDescription
-]
-
-{ #category : #accessing }
 GtRefactoryChangeManager >> gtUndoFor: aView [
 	<gtView>
-	^ aView list
+	| update |
+	update := [ :element | 
+		element
+			allParentsDetect: [ :each | each phlow isViewContent ]
+			ifFound: [ :each | each phlow syncUpdate ]
+			ifNone: [  ] ].
+	^ aView columnedList
 		title: 'Undo';
 		priority: 10;
-		items: [ undo reversed ];
-		itemText: #gtDescription
+		items: [ redo , undo reversed ];
+		column: 'Timestamp'
+			text: [ :each | 
+				| text |
+				text := each timestamp printToSeconds asRopedText.
+				(redo identityIncludes: each)
+					ifTrue: [ text foreground: BrGlamorousColors disabledHeaderTextColor ].
+				text ]
+			width: 130;
+		column: 'Change'
+			text: [ :each | 
+				| text |
+				text := each change gtDescription asRopedText.
+				(redo identityIncludes: each)
+					ifTrue: [ text foreground: BrGlamorousColors disabledHeaderTextColor ].
+				text ];
+		contextItemLabel: 'Undo'
+			action: [ :element :each | 
+				self undoChange.
+				update value: element ]
+			if: [ :each | (undo at: undo size ifAbsent: [  ]) == each ];
+		contextItemLabel: 'Undo up to here'
+			action: [ :element :each | 
+				| found |
+				found := false.
+				[ self hasUndoableOperations and: [ found not ] ]
+					whileTrue: [ found := undo last == each.
+						self undoChange ].
+				update value: element ]
+			if: [ :each | (undo at: undo size ifAbsent: [  ]) ~~ each and: [ undo identityIncludes: each ] ];
+		contextItemLabel: 'Redo'
+			action: [ :element :each | 
+				self redoChange.
+				update value: element ]
+			if: [ :each | (redo at: redo size ifAbsent: [  ]) == each ];
+		contextItemLabel: 'Redo back to here'
+			action: [ :element :each | 
+				| found |
+				found := false.
+				[ self hasRedoableOperations and: [ found not ] ]
+					whileTrue: [ found := redo last == each.
+						self redoChange ].
+				update value: element ]
+			if: [ :each | (redo at: redo size ifAbsent: [  ]) ~~ each and: [ redo identityIncludes: each ] ];
+		actionButtonIcon: BrGlamorousVectorIcons refresh
+			tooltip: 'Update undo/redo stacks'
+			action: [ :aButton :aTab | 
+				aButton disable.
+				[ aTab viewContentElement phlow syncUpdate ] asAsyncPromise
+					then: [ :aResult | aButton enable ]
+					otherwise: [ :anError | aButton enable ] ]
 ]
 
 { #category : #testing }
@@ -160,7 +204,8 @@ GtRefactoryChangeManager >> performChange: aRefactoringChange [
 { #category : #executing }
 GtRefactoryChangeManager >> redoChange [
 	redo isEmpty ifTrue: [ ^ self ].
-	self ignoreChangesWhile: [ undo add: redo removeLast execute ].
+	self
+		ignoreChangesWhile: [ undo add: (GtPerformedChange onChange: redo removeLast change execute) ].
 	self announceUndoChanged
 ]
 
@@ -173,7 +218,8 @@ GtRefactoryChangeManager >> release [
 { #category : #executing }
 GtRefactoryChangeManager >> undoChange [
 	undo isEmpty ifTrue: [ ^ self ].
-	self ignoreChangesWhile: [ redo add: undo removeLast execute ].
+	self
+		ignoreChangesWhile: [ redo add: (GtPerformedChange onChange: undo removeLast change execute) ].
 	self announceUndoChanged
 ]
 
