@@ -193,7 +193,8 @@ GtRefactoryChangeManager >> initialize [
 	super initialize.
 	undo := OrderedCollection new.
 	redo := OrderedCollection new.
-	isPerformingChanges := false
+	isPerformingChanges := false.
+	self connectToChanges
 ]
 
 { #category : #executing }
