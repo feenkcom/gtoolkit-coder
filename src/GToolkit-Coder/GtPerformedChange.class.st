@@ -42,6 +42,16 @@ GtPerformedChange >> gtChangesFor: aView [
 ]
 
 { #category : #accessing }
+GtPerformedChange >> gtViewDefinitionFor: aView [
+	<gtView>
+	(change respondsTo: #gtViewDefinitionFor:) ifFalse: [ ^ aView empty ].
+	^ aView forward
+		title: 'Definition';
+		object: [ change ];
+		view: #gtViewDefinitionFor:
+]
+
+{ #category : #accessing }
 GtPerformedChange >> renameChangesForClass: oldClassName to: newClassName [
 	^ change renameChangesForClass: oldClassName to: newClassName
 ]
