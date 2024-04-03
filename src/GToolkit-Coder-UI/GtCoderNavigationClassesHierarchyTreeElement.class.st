@@ -205,7 +205,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> removeClass: aClass inElement: e
 	button := GtPreviewChangeButton new
 			icon: BrGlamorousVectorIcons remove;
 			label: 'Remove';
-			changeAction: [ change execute ];
+			changeAction: [ change gtExecuteWithUndo ];
 			changeStencil: [ GtPharoRemoveClassPreviewStencil new
 								classToRemove: aClass;
 								anElement: self;
