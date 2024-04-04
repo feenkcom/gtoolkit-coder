@@ -569,12 +569,12 @@ GtCoderNavigationPackagesTagsClassesElement >> pushUpMethod: aSelector inElement
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> removeMethod: aSelector inElement: elem [
-	| refactoring button |
-	refactoring := RBRemoveMethodChange remove: aSelector from: self selectedClass.
+	| change button |
+	change := RBRemoveMethodChange remove: aSelector from: self selectedClass.
 	button := GtPreviewChangeButton new
 			icon: BrGlamorousVectorIcons remove;
 			label: 'Remove';
-			changeAction: [ refactoring execute ];
+			changeAction: [ change gtExecuteWithUndo ];
 			changeStencil: [ GtPharoRemoveMethodPreviewStencil new
 					selectorToRemove: aSelector;
 					isEmptyMethod: false;
