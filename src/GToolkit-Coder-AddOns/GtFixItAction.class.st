@@ -63,6 +63,14 @@ GtFixItAction >> node: aRBProgramNode [
 	node := aRBProgramNode
 ]
 
+{ #category : #printing }
+GtFixItAction >> printOn: aStream [
+	super printOn: aStream.
+	
+	aStream parenthesize: [
+		aStream << self description ]
+]
+
 { #category : #initialization }
 GtFixItAction >> sourceCoder: aCoder [
 	sourceCoder := aCoder
