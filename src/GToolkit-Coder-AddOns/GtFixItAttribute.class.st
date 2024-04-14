@@ -28,10 +28,12 @@ GtFixItAttribute >> addHoveringStylingFor: anEditorElement to: anElement [
 ]
 
 { #category : #accessing }
-GtFixItAttribute >> computeDescriptionTextInEditorElement: anEditorElement [
+GtFixItAttribute >> computeDescriptionTextInEditorElement: anEditorElement forFixItActions: aCollectionOfFixItActions [ 
 	| text |
 	
-	text := (descriptionBlock cull: anEditorElement) asRopedText
+	text := (descriptionBlock 
+			cull: anEditorElement 
+			cull: aCollectionOfFixItActions) asRopedText
 		foreground: BrGlamorousColors disabledButtonTextColor.
 		
 	^ BrEditor new
@@ -42,9 +44,9 @@ GtFixItAttribute >> computeDescriptionTextInEditorElement: anEditorElement [
 ]
 
 { #category : #accessing }
-GtFixItAttribute >> computeMenuItemsForFixItActions [
+GtFixItAttribute >> computeMenuItemsForFixItActions: aCollectionOfFixItActions [
 	| actionsGroupedById |
-	actionsGroupedById := fixItActionsBlock value
+	actionsGroupedById := aCollectionOfFixItActions
 		groupedBy: [ :eachFixitAction | eachFixitAction id ].
 		
 	^ actionsGroupedById values
@@ -96,16 +98,19 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 
 { #category : #accessing }
 GtFixItAttribute >> dropDownElementFor: anEditorElement [
-	| pane menuElement menuItems |
+	| pane menuElement computedFixItActions menuItems |
 	
+	computedFixItActions := fixItActionsBlock value.
+	menuItems := self computeMenuItemsForFixItActions: computedFixItActions.
+					
 	pane := BrVerticalPane new.
 	pane fitContent.
 	
-	menuItems := self computeMenuItemsForFixItActions.
-					
 	descriptionBlock ifNotNil: [ 
 		| labelText  |
-		labelText := self computeDescriptionTextInEditorElement: anEditorElement.
+		labelText := self 
+			computeDescriptionTextInEditorElement: anEditorElement 
+			forFixItActions: computedFixItActions.
 		
 		menuItems isEmpty
 			ifTrue: [ labelText width: 200 ]
