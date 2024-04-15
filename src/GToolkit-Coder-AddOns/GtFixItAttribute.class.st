@@ -28,6 +28,34 @@ GtFixItAttribute >> addHoveringStylingFor: anEditorElement to: anElement [
 ]
 
 { #category : #accessing }
+GtFixItAttribute >> computeDescriptionTextInEditorElement: anEditorElement forFixItActions: aCollectionOfFixItActions [ 
+	| text |
+	
+	text := (descriptionBlock 
+			cull: anEditorElement 
+			cull: aCollectionOfFixItActions) asRopedText
+		foreground: BrGlamorousColors disabledButtonTextColor.
+		
+	^ BrEditor new
+		vFitContent;
+		aptitude: BrGlamorousRegularEditorAptitude new 
+			glamorousCodeSmallSize;
+		text: text.
+]
+
+{ #category : #accessing }
+GtFixItAttribute >> computeMenuItemsForFixItActions: aCollectionOfFixItActions [
+	| actionsGroupedById |
+	actionsGroupedById := aCollectionOfFixItActions
+		groupedBy: [ :eachFixitAction | eachFixitAction id ].
+		
+	^ actionsGroupedById values
+		flatCollect: [ :fixitActionsPerId | 
+			fixitActionsPerId collectWithIndex: [ :eachFixItAction :eachIndex | 
+				eachFixItAction menuActionWithIndex: eachIndex ] ]
+]
+
+{ #category : #accessing }
 GtFixItAttribute >> description: aBlockReturningBlText [
 	descriptionBlock := aBlockReturningBlText
 ]
@@ -38,8 +66,10 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	button := GtFixItButton new.
 	button beTinySize.
 	button label: (label ifNil: [ 'Fix it' ]).
+	
 	dropDownAptitude := BrGlamorousWithDropdownAptitude
-			handle: [ | dropdownButton |
+			handle: [ 
+				| dropdownButton |
 				dropdownButton := BrButton new.
 				dropdownButton beTinySize.
 				dropdownButton
@@ -48,45 +78,51 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 				dropdownButton icon: BrGlamorousVectorIcons repair.
 				self addHoveringStylingFor: anEditorElement to: dropdownButton.
 				dropdownButton ]
-			content: [ | element |
+			content: [ 
+				| element |
 				element := self dropDownElementFor: anEditorElement.
 				self addHoveringStylingFor: anEditorElement to: element.
 				element ].
+				
 	button
-		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude
-				+ dropDownAptitude.
+		aptitude: BrGlamorousButtonWithIconAptitude 
+			- BrGlamorousButtonExteriorAptitude
+			+ dropDownAptitude.
 	button userData at: #fixItAttribute put: self.
 	button userData at: #dropDownAptitude put: dropDownAptitude.
 	button icon: BrGlamorousVectorIcons repair.
+	
 	self addHoveringStylingFor: anEditorElement to: button.
 	^ button
 ]
 
 { #category : #accessing }
 GtFixItAttribute >> dropDownElementFor: anEditorElement [
-	| pane labelText text menu menuItems |
+	| pane menuElement computedFixItActions menuItems |
+	
+	computedFixItActions := fixItActionsBlock value.
+	menuItems := self computeMenuItemsForFixItActions: computedFixItActions.
+					
 	pane := BrVerticalPane new.
 	pane fitContent.
-	menuItems := (fixItActionsBlock value
-			groupedBy: [ :eachFixitAction | eachFixitAction id ]) values
-			flatCollect: [ :fixitActionsPerId | 
-				fixitActionsPerId
-					collectWithIndex: [ :eachFixItAction :eachIndex | eachFixItAction menuActionWithIndex: eachIndex ] ].
-	descriptionBlock
-		ifNotNil: [ text := (descriptionBlock cull: anEditorElement) asRopedText
-					foreground: BrGlamorousColors disabledButtonTextColor.
-			labelText := BrEditor new
-					vFitContent;
-					aptitude: BrGlamorousRegularEditorAptitude new glamorousCodeSmallSize;
-					text: text.
-			menuItems isEmpty
-				ifTrue: [ labelText width: 200 ]
-				ifFalse: [ labelText hMatchParent ].
-			pane addChild: labelText ].
-	menu := GtCoderContextMenuContent new
-			editorElement: anEditorElement;
-			items: menuItems.
-	pane addChild: menu.
+	
+	descriptionBlock ifNotNil: [ 
+		| labelText  |
+		labelText := self 
+			computeDescriptionTextInEditorElement: anEditorElement 
+			forFixItActions: computedFixItActions.
+		
+		menuItems isEmpty
+			ifTrue: [ labelText width: 200 ]
+			ifFalse: [ labelText hMatchParent ].
+				
+		pane addChild: labelText ].
+	
+	menuElement := GtCoderContextMenuContent new
+		editorElement: anEditorElement;
+		items: menuItems.
+			
+	pane addChild: menuElement.
 	^ pane
 ]
 
@@ -115,7 +151,7 @@ GtFixItAttribute >> hoverMarker: aTextAttribute [
 	hoverMarker := aTextAttribute
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 GtFixItAttribute >> initialize [
 	super initialize.
 
