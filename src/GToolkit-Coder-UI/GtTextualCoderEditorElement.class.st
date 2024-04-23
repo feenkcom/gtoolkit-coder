@@ -318,9 +318,13 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	"Setting text may change cursor and selection because text editor makes sure
 	that they have valid values. That is why we create a snaphot of the editor's state
 	which we will restore once new text is set"
-	self asyncPromise promise: self textualCoderViewModel asEditorState.
 
-	self editor model: self textualCoderViewModel.
+	"Related to: https://github.com/feenkcom/gtoolkit/issues/3727"
+	self privateUpdateEditorState: self textualCoderViewModel asEditorState wait.
+	"self asyncPromise  
+		promise: self textualCoderViewModel asEditorState."
+ 
+	self editor model:  self textualCoderViewModel.
 
 	shortcuts := self textualCoderViewModel shortcuts copy.
 	self editor addEditorShortcuts: shortcuts.
