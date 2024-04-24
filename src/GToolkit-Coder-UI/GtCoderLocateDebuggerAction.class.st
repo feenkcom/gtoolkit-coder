@@ -35,7 +35,12 @@ GtCoderLocateDebuggerAction >> initialize [
 
 { #category : #'private - event handling' }
 GtCoderLocateDebuggerAction >> locateDebuggerInSpace [
-	^ self space ifNotNil: [ :theSpace | theSpace position: 0 @ 0 ]
+	^ self space ifNotNil: [ :theSpace | 
+		| anArray xRandom yRandom |
+		anArray := #(-10 -5 5 10).
+		xRandom := anArray atRandom.
+		yRandom := anArray atRandom.
+		theSpace position: (theSpace position + (xRandom @ yRandom)) ]
 ]
 
 { #category : #accessing }
