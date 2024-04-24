@@ -57,9 +57,11 @@ GtSourceCoderViewModel >> doIt: aTextInterval [
 GtSourceCoderViewModel >> doIt: aTextInterval requestedBy: aRequesterObject [
 	"Evaluate source code within given text interval and return the result"
 
-	^ self coderModel doItInContext: (self evaluationContext
-		from: aTextInterval first to: aTextInterval last;
-		requesterObject: aRequesterObject)
+	^ self handleCoderEvaluationUnhandledErrorDuring: [ 
+		self coderModel doItInContext: (
+			self evaluationContext
+				from: aTextInterval first to: aTextInterval last;
+				requesterObject: aRequesterObject) ]
 ]
 
 { #category : #'api - actions' }
@@ -73,9 +75,10 @@ GtSourceCoderViewModel >> doItAll [
 GtSourceCoderViewModel >> doItAllRequestedBy: aRequesterObject [
 	"Evaluate the whole source code independent from the selection and return the result"
 
-	^ self coder doItInContext: (self evaluationContext
-		all;
-		requesterObject: aRequesterObject)
+	^ self handleCoderEvaluationUnhandledErrorDuring: [ 
+		self coder doItInContext: (self evaluationContext
+			all;
+			requesterObject: aRequesterObject) ]
 ]
 
 { #category : #'api - actions' }
@@ -91,14 +94,19 @@ GtSourceCoderViewModel >> doItAndGo [
 GtSourceCoderViewModel >> doItAndGo: aTextInterval [
 	"Evaluate a piece of source code within an interval and inspect a result."
 
-	^ self coder doItAndGoInContext: (self evaluationContext from: aTextInterval first to: aTextInterval last)
+	^ self handleCoderEvaluationUnhandledErrorDuring: [ 
+		self coder doItAndGoInContext: (
+			self evaluationContext 
+				from: aTextInterval first 
+				to: aTextInterval last) ]
 ]
 
 { #category : #'api - actions' }
 GtSourceCoderViewModel >> doItAndGoAll [
 	"Evaluate the whole source code and inspect the result"
 
-	^ self coder doItAndGoInContext: self evaluationContext all
+	^ self handleCoderEvaluationUnhandledErrorDuring: [ 
+		self coder doItAndGoInContext: self evaluationContext all ]
 ]
 
 { #category : #'api - actions' }
@@ -155,6 +163,25 @@ GtSourceCoderViewModel >> evaluationResult [
 { #category : #'api - accessing' }
 GtSourceCoderViewModel >> evaluationResult: anObject [
 	evaluationResult := anObject
+]
+
+{ #category : #'private - event handling' }
+GtSourceCoderViewModel >> handleCoderEvaluationUnhandledErrorDuring: aBlock [
+	^ aBlock
+		on: GtCoderEvaluationUnhandledError , Halt
+		do: [ :anError | 
+			self
+				notifyCoderEvaluationUnhandledError: anError
+				inProcess: Processor activeProcess.
+			anError pass ]
+]
+
+{ #category : #'private - notifying' }
+GtSourceCoderViewModel >> notifyCoderEvaluationUnhandledError: anError inProcess: aProcess [
+	self
+		announce: (GtSourceCoderViewModelAboutToOpenDebuggerAnnouncement new
+				process: aProcess;
+				exception: anError)
 ]
 
 { #category : #'api - actions' }

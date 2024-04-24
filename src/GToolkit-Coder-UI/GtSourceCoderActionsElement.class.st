@@ -14,7 +14,8 @@ Class {
 
 { #category : #private }
 GtSourceCoderActionsElement >> addContextToolbarActions [
-	contextToolbar addItems: (self textualCoderViewModel contextActions collect: [ :aGtCoderAction | self newButtonForAction: aGtCoderAction ]).
+	contextToolbar addItems: (self textualCoderViewModel contextActions collect: [ :aGtCoderAction | 
+		aGtCoderAction buildElementIn: self ]).
 	separator
 		visibility:
 			(contextToolbar hasItems
@@ -75,6 +76,13 @@ GtSourceCoderActionsElement >> newToolbar [
 		padding: (BlInsets left: -4)
 ]
 
+{ #category : #'private - announcement handling' }
+GtSourceCoderActionsElement >> onAboutToOpenDebugger: anAnnouncement [
+	BlTaskAction
+		enqueueElement: self
+		action: [ self updateDebuggerIndicatorForProcess: anAnnouncement process ]
+]
+
 { #category : #'api - textual coder view model' }
 GtSourceCoderActionsElement >> onPostTextualCoderViewModelChanged [
 	"I am an optional hook method that is sent after #subscribeToTextualCoderViewModel.
@@ -116,7 +124,8 @@ GtSourceCoderActionsElement >> subscribeToTextualCoderViewModel [
 
 	self textualCoderViewModel weak
 		when: GtTextualCoderViewModelMainActionsChanged send: #updateMainToolbar to: self;
-		when: GtTextualCoderViewModelContextActionsChanged send: #updateContextToolbar to: self
+		when: GtTextualCoderViewModelContextActionsChanged send: #updateContextToolbar to: self;
+		when: GtSourceCoderViewModelAboutToOpenDebuggerAnnouncement send: #onAboutToOpenDebugger: to: self.
 ]
 
 { #category : #'api - textual coder view model' }
@@ -134,6 +143,29 @@ GtSourceCoderActionsElement >> updateContextToolbar [
 			action: [
 				self removeContextToolbarActions.
 				self addContextToolbarActions ])
+]
+
+{ #category : #'private - updating' }
+GtSourceCoderActionsElement >> updateDebuggerIndicatorForProcess: aProcess [
+	| aSpace |
+	aSpace := nil.
+	BlParallelUniverse all
+		do: [ :eachUniverse | 
+			eachUniverse spaces
+				do: [ :eachSpace | 
+					| aQuery |
+					aQuery := eachSpace root query // GtMoldableDebugger.
+					aQuery isEmpty
+						ifFalse: [ aQuery anyOne debugSession interruptedProcess == aProcess
+								ifTrue: [ aSpace := eachSpace ] ] ] ].
+	
+	GtSourceCoderProcessInDebuggerSignal new 
+		process: aProcess;
+		space: aSpace;
+		emit.
+	
+	aSpace ifNil: [ ^ self ].
+	self textualCoderViewModel addLocateDebuggerInSpaceAction: aSpace
 ]
 
 { #category : #'private - event handling' }
