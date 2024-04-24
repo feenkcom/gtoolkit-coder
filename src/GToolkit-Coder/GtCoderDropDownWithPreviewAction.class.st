@@ -27,3 +27,12 @@ GtCoderDropDownWithPreviewAction >> changeStencil [
 GtCoderDropDownWithPreviewAction >> changeStencil: aBlock [
 	changeStencil := aBlock
 ]
+
+{ #category : #initialization }
+GtCoderDropDownWithPreviewAction >> computeActionDefinition [
+	self changeAction isClosure
+		ifTrue: [ ^ GtCoderActionClosureDefinition new closure: self changeAction ].
+	self changeStencil isClosure
+		ifTrue: [ ^ GtCoderActionClosureDefinition new closure: self changeStencil ].
+	^ nil
+]

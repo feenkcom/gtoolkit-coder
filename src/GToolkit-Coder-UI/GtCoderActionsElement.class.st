@@ -50,6 +50,18 @@ GtCoderActionsElement >> handleButton: aButtonElement action: aGtCoderAction onE
 ]
 
 { #category : #'instance creation' }
+GtCoderActionsElement >> initializeAltClick: aGtCoderAction element: anElement [
+	aGtCoderAction allowAltClick ifFalse: [ ^ self ].
+
+	anElement viewModel
+		when: BlClickEvent
+		do: [ :anEvent | 
+			anEvent modifiers isAlt
+				ifTrue: [ anEvent consumed: true.
+					anEvent target phlow spawnObject: aGtCoderAction actionDefinition ] ]
+]
+
+{ #category : #'instance creation' }
 GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 	<return: #BrButton>
 	| button |
@@ -64,6 +76,8 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 					handleButton: aButtonElement
 					action: aGtCoderAction
 					onEvent: anEvent ].
+	self initializeAltClick: aGtCoderAction element: button.
+
 	aGtCoderAction allowPrimaryClick
 		ifTrue: [ button viewModel
 				when: BlClickEvent
@@ -119,6 +133,8 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 					containerElement addChild: titleElement.
 					containerElement ].
 
+	self initializeAltClick: aGtCoderAction element: button.
+					
 	^ button
 		beTinySize;
 		aptitude: BrGlamorousButtonWithIconAptitude +
@@ -149,5 +165,7 @@ GtCoderActionsElement >> newToggleForAction: aGtCoderAction [
 		icon: aGtCoderAction icon asElement;
 		beTinySize;
 		label: aGtCoderAction title;
-		in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ]
+		in: [ :aToggle | self initializeAltClick: aGtCoderAction element: aToggle ];
+		id: aGtCoderAction id;
+		yourself
 ]
