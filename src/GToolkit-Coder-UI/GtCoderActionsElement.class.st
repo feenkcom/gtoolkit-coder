@@ -50,6 +50,36 @@ GtCoderActionsElement >> handleButton: aButtonElement action: aGtCoderAction onE
 ]
 
 { #category : #'instance creation' }
+GtCoderActionsElement >> initializeAltClick: aGtCoderAction element: anElement [
+	aGtCoderAction allowAltClick ifFalse: [ ^ self ].
+
+	anElement viewModel
+		when: BlClickEvent
+		do: [ :anEvent | 
+			anEvent modifiers isAlt
+				ifTrue: [ anEvent consumed: true.
+					anEvent target phlow spawnObject: aGtCoderAction actionDefinition ] ]
+]
+
+{ #category : #'instance creation' }
+GtCoderActionsElement >> initializePrimaryClick: aGtCoderAction element: button [
+	aGtCoderAction allowPrimaryClick
+		ifTrue: [ button viewModel
+				when: BlClickEvent
+				do: [ :anEvent | 
+					anEvent modifiers isPrimaryModifier
+						ifTrue: [ button viewModel clickEvent: anEvent ] ].
+			button viewModel
+				when: BlMouseEnterEvent
+				do: [ :anEvent | 
+					anEvent consumed: true.
+					anEvent modifiers isPrimaryModifier
+						ifTrue: [ anEvent target mouseCursor: BlCopyCursor new ]
+						ifFalse: [ anEvent target mouseCursor: nil ].
+					anEvent target requestFocus ] ]
+]
+
+{ #category : #'instance creation' }
 GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 	<return: #BrButton>
 	| button |
@@ -64,20 +94,8 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 					handleButton: aButtonElement
 					action: aGtCoderAction
 					onEvent: anEvent ].
-	aGtCoderAction allowPrimaryClick
-		ifTrue: [ button viewModel
-				when: BlClickEvent
-				do: [ :anEvent | 
-					anEvent modifiers isPrimaryModifier
-						ifTrue: [ button viewModel clickEvent: anEvent ] ].
-			button viewModel
-				when: BlMouseEnterEvent
-				do: [ :anEvent | 
-					anEvent consumed: true.
-					anEvent modifiers isPrimaryModifier
-						ifTrue: [ anEvent target mouseCursor: BlCopyCursor new ]
-						ifFalse: [ anEvent target mouseCursor: nil ].
-					anEvent target requestFocus ] ].
+	self initializeAltClick: aGtCoderAction element: button.
+	self initializePrimaryClick: aGtCoderAction element: button.
 	^ button
 ]
 
@@ -119,6 +137,8 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 					containerElement addChild: titleElement.
 					containerElement ].
 
+	self initializeAltClick: aGtCoderAction element: button.
+					
 	^ button
 		beTinySize;
 		aptitude: BrGlamorousButtonWithIconAptitude +
@@ -142,6 +162,45 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 ]
 
 { #category : #'instance creation' }
+GtCoderActionsElement >> newLocateDebuggerButtonForAction: aGtCoderAction [
+	<return: #BrButton>
+	| button anAptitude |
+	button := BrButton new
+			icon: aGtCoderAction icon asElement;
+			beTinySize;
+			label: aGtCoderAction title;
+			id: aGtCoderAction id;
+			action: [ :aButtonElement :aButtonModel :anEvent | 
+				self
+					handleButton: aButtonElement
+					action: aGtCoderAction
+					onEvent: anEvent ].
+
+	anAptitude := BrGlamorousButtonWithIconAndLabelAptitude new.
+	anAptitude
+		findActor: BrGlamorousButtonExteriorAptitude
+		ifFound: [ :anExteriorAptitude | 
+			anExteriorAptitude
+				"backgroundPaint: BrGlamorousColors errorBackgroundColor;"
+				"borderPaint: BrGlamorousColors errorBorderColor" ]
+		ifNone: [  ].
+	anAptitude
+		findActor: BrGlamorousButtonLabelAptitude
+		ifFound: [ :aLabelAptitude | 
+			"aLabelAptitude
+				defaultColor: BrGlamorousColors errorBackgroundColor;
+				hoveredColor: BrGlamorousColors errorBorderColor;
+				pressedColor: BrGlamorousColors errorBorderColor;
+				selectedColor: BrGlamorousColors errorBackgroundColor" ]
+		ifNone: [  "ignore" ].
+	button aptitude: anAptitude.
+
+	self initializeAltClick: aGtCoderAction element: button.
+	self initializePrimaryClick: aGtCoderAction element: button.
+	^ button
+]
+
+{ #category : #'instance creation' }
 GtCoderActionsElement >> newToggleForAction: aGtCoderAction [
 	<return: #BrToggle>
 	^ BrToggle new
@@ -149,5 +208,7 @@ GtCoderActionsElement >> newToggleForAction: aGtCoderAction [
 		icon: aGtCoderAction icon asElement;
 		beTinySize;
 		label: aGtCoderAction title;
-		in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ]
+		in: [ :aToggle | self initializeAltClick: aGtCoderAction element: aToggle ];
+		id: aGtCoderAction id;
+		yourself
 ]

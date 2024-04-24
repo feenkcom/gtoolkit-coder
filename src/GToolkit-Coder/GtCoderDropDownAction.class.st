@@ -7,6 +7,13 @@ Class {
 	#category : #'GToolkit-Coder-Coders - Addons'
 }
 
+{ #category : #initialization }
+GtCoderDropDownAction >> computeActionDefinition [
+	self stencil isClosure
+		ifTrue: [ ^ GtCoderActionClosureDefinition new closure: self stencil ].
+	^ nil
+]
+
 { #category : #accessing }
 GtCoderDropDownAction >> stencil [
 	^ stencil
