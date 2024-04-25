@@ -15,10 +15,22 @@ Class {
 		'styledText',
 		'shouldHaveHeader',
 		'isTextModifiedPromise',
-		'completionStrategy'
+		'completionStrategy',
+		'debuggerInSpace'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
+
+{ #category : #'api - add-ons' }
+GtTextualCoderViewModel >> addLocateDebuggerInSpaceAction: aSpace [
+	debuggerInSpace := aSpace asWeakReference.
+
+	aSpace
+		addEventHandlerOn: BlSpaceClosedEvent
+		do: [ :anEvent | self onDebuggerSpaceCloseEvent: anEvent ].
+
+	self requestUpdateAddOns
+]
 
 { #category : #'api - shortcuts' }
 GtTextualCoderViewModel >> addShortcut: aShortcut [
@@ -456,6 +468,16 @@ GtTextualCoderViewModel >> isTextModified [
 ]
 
 { #category : #'api - add-ons' }
+GtTextualCoderViewModel >> locateDebuggerInSpaceAction [
+	| aSpace |
+	debuggerInSpace ifNil: [ ^ nil ].
+	aSpace := debuggerInSpace at: 1.
+	aSpace ifNil: [ ^ nil ].
+
+	^ GtCoderLocateDebuggerAction new weakSpace: debuggerInSpace
+]
+
+{ #category : #'api - add-ons' }
 GtTextualCoderViewModel >> mainActions [
 	^ mainActions
 ]
@@ -531,9 +553,15 @@ GtTextualCoderViewModel >> notifyStyledTextChanged [
 GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 	"Is sent when new add-ons are computed"
 
+	| someContextActions |
 	self shortcuts: theAddOns shortcuts.
 	self mainActions: theAddOns mainActions.
-	self contextActions: theAddOns contextActions.
+
+	someContextActions := theAddOns contextActions.
+	self locateDebuggerInSpaceAction ifNotNil: [ :anAction | 
+		someContextActions := someContextActions copyWith: anAction ].
+	self contextActions: someContextActions.
+
 	self contextMenuActions: theAddOns contextMenuActions.
 	self stylers: theAddOns stylers
 ]
@@ -541,6 +569,18 @@ GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
 { #category : #'api - coder model' }
 GtTextualCoderViewModel >> onCoderModelChanged [
 	super onCoderModelChanged
+]
+
+{ #category : #'api - add-ons' }
+GtTextualCoderViewModel >> onDebuggerSpaceCloseEvent: anEvent [
+	| aCurrentSpace |
+	debuggerInSpace ifNil: [ ^ self ].
+	aCurrentSpace := debuggerInSpace at: 1.
+	aCurrentSpace ifNil: [ ^ self ].
+
+	aCurrentSpace = anEvent space ifFalse: [ ^ self ].
+	debuggerInSpace := nil.
+	self requestUpdateAddOns
 ]
 
 { #category : #'api - styled text' }

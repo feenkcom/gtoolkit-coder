@@ -148,6 +148,11 @@ GtSingleCoderViewModel >> ensureAddOns [
 			yourself ]
 ]
 
+{ #category : #accessing }
+GtSingleCoderViewModel >> evaluationResult [
+	^ nil
+]
+
 { #category : #'gt-extension' }
 GtSingleCoderViewModel >> gtLiveFor: aView [
 	<gtView>

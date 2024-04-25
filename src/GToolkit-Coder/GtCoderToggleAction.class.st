@@ -14,6 +14,15 @@ GtCoderToggleAction >> activateBlock: aBlock [
 	activateBlock := aBlock
 ]
 
+{ #category : #initialization }
+GtCoderToggleAction >> computeActionDefinition [
+	activateBlock isClosure
+		ifTrue: [ ^ GtCoderActionClosureDefinition new closure: activateBlock ].
+	deactivateBlock isClosure
+		ifTrue: [ ^ GtCoderActionClosureDefinition new closure: deactivateBlock ].
+	^ nil
+]
+
 { #category : #accessing }
 GtCoderToggleAction >> deactivateBlock: aBlock [
 	deactivateBlock := aBlock

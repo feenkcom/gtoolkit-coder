@@ -7,7 +7,9 @@ Class {
 		'action',
 		'id',
 		'shortcutKey',
-		'allowPrimaryClick'
+		'allowPrimaryClick',
+		'allowAltClick',
+		'actionDefinition'
 	],
 	#category : #'GToolkit-Coder-Coders - Addons'
 }
@@ -34,6 +36,21 @@ GtCoderAction >> action: anObject [
 ]
 
 { #category : #accessing }
+GtCoderAction >> actionDefinition [
+	"Return a method definition that defines the action"
+
+	<return: #RBNode>
+	^ actionDefinition
+		ifNil: [ actionDefinition := self computeActionDefinition
+					ifNil: [ GtCoderActionNoDefinition default ] ]
+]
+
+{ #category : #testing }
+GtCoderAction >> allowAltClick [
+	^ (allowAltClick ifNil: [ true ]) and: [ self actionDefinition isDefined ]
+]
+
+{ #category : #accessing }
 GtCoderAction >> allowPrimaryClick [
 	^ allowPrimaryClick ifNil: [ false ]
 ]
@@ -41,6 +58,13 @@ GtCoderAction >> allowPrimaryClick [
 { #category : #accessing }
 GtCoderAction >> allowPrimaryClick: anObject [
 	allowPrimaryClick := anObject
+]
+
+{ #category : #initialization }
+GtCoderAction >> computeActionDefinition [
+	^ self action isClosure
+		ifTrue: [ GtCoderActionClosureDefinition new closure: self action ]
+		ifFalse: [ nil ]
 ]
 
 { #category : #evaluating }
