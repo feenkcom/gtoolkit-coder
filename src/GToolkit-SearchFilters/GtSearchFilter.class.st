@@ -34,6 +34,11 @@ GtSearchFilter >> & aFilter [
 	^ GtSearchIntersectionFilter forFilter: self filter: aFilter
 ]
 
+{ #category : #'logical operations' }
+GtSearchFilter >> - aFilter [
+	^ GtSearchDisjunctionFilter forFilter: self filter: aFilter
+]
+
 { #category : #evaluating }
 GtSearchFilter >> applyInScope: aStream [
 	^ self resultType new
