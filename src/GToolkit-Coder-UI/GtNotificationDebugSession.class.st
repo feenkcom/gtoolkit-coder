@@ -10,7 +10,7 @@ Class {
 { #category : #'api - notification' }
 GtNotificationDebugSession >> addedTo: aGtNotifications [
 	| aSubscription |
-	aSubscription := self debugSession weak
+	aSubscription := self debugSession
 			when: GtSharedDebugSessionAnnouncement
 			do: [ :anAnnouncement | 
 				self removeFrom: aGtNotifications.
