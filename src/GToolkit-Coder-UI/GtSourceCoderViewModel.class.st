@@ -167,9 +167,12 @@ GtSourceCoderViewModel >> evaluationResult: anObject [
 
 { #category : #'private - event handling' }
 GtSourceCoderViewModel >> handleCoderEvaluationUnhandledErrorDuring: aBlock [
-	^ aBlock
+	^ [ GtCoderUserSnippetDynamicVariable
+			value: GtCoderUserSnippetEvaluationRunningState default
+			during: aBlock ]
 		on: GtCoderEvaluationUnhandledError , Halt
 		do: [ :anError | 
+			GtCoderUserSnippetDynamicVariable value: GtCoderUserSnippetEvaluationExceptionState default .
 			self
 				notifyCoderEvaluationUnhandledError: anError
 				inProcess: Processor activeProcess.
