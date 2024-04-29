@@ -10,6 +10,11 @@ GtCoderUserSnippetDynamicVariable class >> value: aSnippetEvaluationState [
 ]
 
 { #category : #accessing }
+GtCoderUserSnippetDynamicVariable class >> valueAtProcess: aProcess [
+	^ self soleInstance valueAtProcess: aProcess
+]
+
+{ #category : #accessing }
 GtCoderUserSnippetDynamicVariable >> default [
 	^ GtCoderUserNotUserSnippetState default
 ]
@@ -19,4 +24,9 @@ GtCoderUserSnippetDynamicVariable >> value: aSnippetEvaluationState [
 	| activeProcess |
 	activeProcess := Processor activeProcess.
 	^ activeProcess psValueAt: index put: aSnippetEvaluationState
+]
+
+{ #category : #accessing }
+GtCoderUserSnippetDynamicVariable >> valueAtProcess: aProcess [
+	^ (aProcess psValueAt: index) ifNil: [ self default ]
 ]
