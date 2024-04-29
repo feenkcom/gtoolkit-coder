@@ -273,7 +273,7 @@ GtTextualCoderEditorElement >> onShowDebuggerRequest: aShowDebuggerAnnouncement 
 			((GtEmbeddedDebuggerAttribute new)
 				signaledException: aShowDebuggerAnnouncement exception;
 				debugSession: sharedDebugSession)
-		from: theSourceStartInText
+		from: theSourceEndInText
 		to: theSourceEndInText
 ]
 
