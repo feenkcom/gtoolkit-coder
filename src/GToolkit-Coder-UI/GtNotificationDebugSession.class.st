@@ -10,11 +10,11 @@ Class {
 { #category : #'api - notification' }
 GtNotificationDebugSession >> addedTo: aGtNotifications [
 	| aSubscription |
-	aSubscription := self debugSession
-		when: GtSharedDebugSessionAnnouncement
-		do: [ :anAnnouncement | 
-			self removeFrom: aGtNotifications.
-			self debugSession removeSubscription: aSubscription ]
+	aSubscription := self debugSession weak
+			when: GtSharedDebugSessionAnnouncement
+			do: [ :anAnnouncement | 
+				self removeFrom: aGtNotifications.
+				self debugSession removeSubscription: aSubscription ]
 ]
 
 { #category : #'private - asserting' }

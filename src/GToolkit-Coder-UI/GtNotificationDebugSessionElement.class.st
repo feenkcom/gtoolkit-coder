@@ -26,7 +26,7 @@ GtNotificationDebugSessionElement >> debug [
 { #category : #'private - accessing' }
 GtNotificationDebugSessionElement >> debugSessionDo: aBlock [
 	self
-		notificationDo: [ :anEvent | anEvent debugSession ifNotNil: aBlock ]
+		notificationDo: [ :aNotification | aNotification debugSession ifNotNil: aBlock ]
 ]
 
 { #category : #initialization }
@@ -163,7 +163,7 @@ GtNotificationDebugSessionElement >> stackListElement [
 GtNotificationDebugSessionElement >> subscribeToNotification [
 	super subscribeToNotification.
 	self debugSessionDo: [ :aSession | 
-		aSession 
+		aSession weak
 			when: GtSharedDebugSessionDebuggedAnnouncement
 			send: #onDebugSessionDebugged:
 			to: self; 

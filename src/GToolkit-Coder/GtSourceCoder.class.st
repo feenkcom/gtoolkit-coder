@@ -377,18 +377,20 @@ GtSourceCoder >> notifyPrintResult: anEvaluationResult [
 
 { #category : #'private - notifying' }
 GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
-	(self announcer subscriptionsForClass: GtCoderShowDebuggerRequest) size isZero
-		ifTrue: [
-			^ Smalltalk tools debugger
-				openOn: aDebugSession
-				withFullView: true ].
+	"Return true if announcement was handled (and debugger displayed in some way).
+	Return false otherwise."
 
-	self announce: (GtCoderShowDebuggerRequest new
-		coder: self;
-		debugSession: aDebugSession;
-		exception: anException;
-		sourceString: aSourceString;
-		sourceInterval: aSourceInterval)
+	<return: #Boolean>
+	| anAnnouncement |
+	anAnnouncement := GtCoderShowDebuggerRequest new
+			coder: self;
+			debugSession: aDebugSession;
+			exception: anException;
+			sourceString: aSourceString;
+			sourceInterval: aSourceInterval.
+	self announce: anAnnouncement.
+
+	^ anAnnouncement isDelivered
 ]
 
 { #category : #'private - notifying' }
