@@ -16,7 +16,7 @@ GtCoderUserSnippetDynamicVariable class >> valueAtProcess: aProcess [
 
 { #category : #accessing }
 GtCoderUserSnippetDynamicVariable >> default [
-	^ GtCoderUserNotUserSnippetState default
+	^ GtCoderNotUserSnippetState default
 ]
 
 { #category : #accessing }
