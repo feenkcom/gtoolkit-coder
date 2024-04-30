@@ -12,3 +12,21 @@ GtSourceCoderEditorElement >> onTextualCoderViewModelChanged [
 		ifNil: [ evaluationHighlighter hideResult ]
 		ifNotNil: [ :aResult | evaluationHighlighter displayResult: aResult ]
 ]
+
+{ #category : #registration }
+GtSourceCoderEditorElement >> onViewModelEvaluationStatusChanged: anAnnouncement [
+	BlTaskAction
+		enqueueElement: self
+		action: [ 
+			anAnnouncement evaluationStatus onSourceCoderElement: self.
+			self styleText ]
+]
+
+{ #category : #registration }
+GtSourceCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSourceCoderUIModel [
+	super registerCoderViewModelAnnouncementsFor: aGtSourceCoderUIModel.
+	aGtSourceCoderUIModel weak
+		when: GtSourceCoderViewModelEvaluationStatusChanged
+		send: #onViewModelEvaluationStatusChanged:
+		to: self
+]
