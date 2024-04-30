@@ -208,7 +208,7 @@ GtTextualCoderViewModel >> computeAddOns [
 		theAst := aCoderAst ast.
 
 		pragmas := aCoderModel
-			pragmasNamed: #gtAstCoderAddOns:
+			pragmasNamed: GtCoderModel astExtensionsPragma
 			inHierarchy: aCoderModel class.
 
 		newAddOns := aCoderModel newAddOns.
