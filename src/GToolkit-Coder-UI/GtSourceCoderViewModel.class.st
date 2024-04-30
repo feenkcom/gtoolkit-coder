@@ -2,7 +2,8 @@ Class {
 	#name : #GtSourceCoderViewModel,
 	#superclass : #GtTextualCoderViewModel,
 	#instVars : [
-		'evaluationResult'
+		'evaluationResult',
+		'evaluationStatus'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source Model'
 }
@@ -165,11 +166,28 @@ GtSourceCoderViewModel >> evaluationResult: anObject [
 	evaluationResult := anObject
 ]
 
+{ #category : #accessing }
+GtSourceCoderViewModel >> evaluationStatus [
+	<return: #GtCoderEvaluationStatus>
+	^ evaluationStatus
+		ifNil: [ evaluationStatus := GtCoderNoEvaluationStatus default ]
+]
+
+{ #category : #'api - accessing' }
+GtSourceCoderViewModel >> evaluationStatus: aStatus [
+	evaluationStatus = aStatus ifTrue: [ ^ self ].
+	evaluationStatus := aStatus.
+	self onEvaluationStatusChanged
+]
+
 { #category : #'private - event handling' }
 GtSourceCoderViewModel >> handleCoderEvaluationUnhandledErrorDuring: aBlock [
-	^ aBlock
+	^ [ GtCoderUserSnippetDynamicVariable
+			value: GtCoderUserSnippetEvaluationRunningState default
+			during: aBlock ]
 		on: GtCoderEvaluationUnhandledError , Halt
 		do: [ :anError | 
+			GtCoderUserSnippetDynamicVariable value: GtCoderUserSnippetEvaluationExceptionState default .
 			self
 				notifyCoderEvaluationUnhandledError: anError
 				inProcess: Processor activeProcess.
@@ -182,6 +200,54 @@ GtSourceCoderViewModel >> notifyCoderEvaluationUnhandledError: anError inProcess
 		announce: (GtSourceCoderViewModelAboutToOpenDebuggerAnnouncement new
 				process: aProcess;
 				exception: anError)
+]
+
+{ #category : #'private - notifying' }
+GtSourceCoderViewModel >> notifyEvaluationStatusChanged [
+	self
+		announce: (GtSourceCoderViewModelEvaluationStatusChanged new
+				textualCoderViewModel: self;
+				evaluationStatus: self evaluationStatus)
+]
+
+{ #category : #'private - announcement handling' }
+GtSourceCoderViewModel >> onDebugSessionDebuggedAnnouncement: anAnnouncement [
+	anAnnouncement session unsubscribe: self.
+	self evaluationStatus: GtCoderNoEvaluationStatus default
+]
+
+{ #category : #'private - announcement handling' }
+GtSourceCoderViewModel >> onDebugSessionTerminatedAnnouncement: anAnnouncement [
+	anAnnouncement session unsubscribe: self.
+	self evaluationStatus: GtCoderNoEvaluationStatus default
+]
+
+{ #category : #'private - hooks' }
+GtSourceCoderViewModel >> onEvaluationStatusChanged [
+	self notifyEvaluationStatusChanged.
+]
+
+{ #category : #'private - announcement handling' }
+GtSourceCoderViewModel >> onShowDebuggerRequest: anAnnouncement [
+	| aSharedDebugSession aStatus |
+	aSharedDebugSession := GtSharedDebugSession new
+			session: anAnnouncement debugSession.
+	aStatus := GtCoderDebugSessionEvaluationStatus new
+			debugSession: anAnnouncement debugSession;
+			sharedDebugSession: aSharedDebugSession;
+			exception: anAnnouncement exception;
+			sourceInterval: anAnnouncement sourceInterval;
+			sourceString: anAnnouncement sourceString.
+
+	aSharedDebugSession weak
+		when: GtSharedDebugSessionDebuggedAnnouncement
+			send: #onDebugSessionDebuggedAnnouncement:
+			to: self;
+		when: GtSharedDebugSessionTerminatedAnnouncement
+			send: #onDebugSessionTerminatedAnnouncement:
+			to: self.
+
+	self evaluationStatus: aStatus
 ]
 
 { #category : #'api - actions' }
@@ -239,4 +305,14 @@ GtSourceCoderViewModel >> selectedTextInterval [
 	self selection do: [ :eachMonotoneSelection | 
 		anInterval := eachMonotoneSelection from + 1 to: eachMonotoneSelection to ].
 	^ anInterval
+]
+
+{ #category : #'api - coder model' }
+GtSourceCoderViewModel >> subscribeToCoderModel [
+	super subscribeToCoderModel.
+
+	self coderModel weak
+		when: GtCoderShowDebuggerRequest
+		send: #onShowDebuggerRequest:
+		to: self
 ]

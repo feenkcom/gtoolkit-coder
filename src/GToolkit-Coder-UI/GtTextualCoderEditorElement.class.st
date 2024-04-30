@@ -253,27 +253,30 @@ GtTextualCoderEditorElement >> onRemovedFromSceneGraph [
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onShowDebuggerRequest: aShowDebuggerAnnouncement [
 	| sharedDebugSession anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText |
+	self flag: #delete.
 	evaluationHighlighter hideResult.
 	evaluationPrinter hideResult.
-	sharedDebugSession := GtSharedDebugSession new session: aShowDebuggerAnnouncement debugSession.
-	self showNotification: (GtNotificationDebugSession new debugSession: sharedDebugSession).
+	true ifTrue: [ ^ self ].
+	sharedDebugSession := GtSharedDebugSession new
+			session: aShowDebuggerAnnouncement debugSession.
+	self
+		showNotification: (GtNotificationDebugSession new debugSession: sharedDebugSession).
 	anEvaluatedSource := aShowDebuggerAnnouncement sourceString.
 	anEvaluatedInterval := aShowDebuggerAnnouncement sourceInterval.
-	theSourceStartInText := (self text finder)
-		caseSensitiveSubstring: anEvaluatedSource;
-		startAtPosition: anEvaluatedInterval first;
-		searchClosest.	
-		
-	"what did we evaluate?"
+	theSourceStartInText := self text finder
+			caseSensitiveSubstring: anEvaluatedSource;
+			startAtPosition: anEvaluatedInterval first;
+			searchClosest.	"what did we evaluate?"
 	theSourceStartInText isZero ifTrue: [ ^ self ].
-	theSourceEndInText := theSourceStartInText + anEvaluatedSource size - 1 min: self text size.
-	self text clearAttributes: [ :each | {GtEmbeddedDebuggerAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
+	theSourceEndInText := theSourceStartInText + anEvaluatedSource size - 1
+			min: self text size.
 	self text
-		attribute:
-			((GtEmbeddedDebuggerAttribute new)
+		clearAttributes: [ :each | {GtEmbeddedDebuggerAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
+	self text
+		attribute: (GtEmbeddedDebuggerAttribute new
 				signaledException: aShowDebuggerAnnouncement exception;
 				debugSession: sharedDebugSession)
-		from: theSourceStartInText
+		from: theSourceEndInText
 		to: theSourceEndInText
 ]
 
@@ -510,10 +513,7 @@ GtTextualCoderEditorElement >> registerCoderModelAnnouncementsFor: aCoderModel [
 		when: GtCoderEvaluationAnnouncement
 			send: #onCodeEvaluated:
 			to: self;
-		when: GtCoderPrintAnnouncement send: #onPrintRequest: to: self;
-		when: GtCoderShowDebuggerRequest
-			send: #onShowDebuggerRequest:
-			to: self
+		when: GtCoderPrintAnnouncement send: #onPrintRequest: to: self
 ]
 
 { #category : #registration }
@@ -551,7 +551,7 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 			to: self;
 		when: GtTextualCoderViewModelStyledTextChanged
 			send: #onViewModelStyledTextChanged:
-			to: self.
+			to: self
 ]
 
 { #category : #private }

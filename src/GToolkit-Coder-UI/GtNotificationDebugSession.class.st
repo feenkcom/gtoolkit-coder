@@ -9,12 +9,10 @@ Class {
 
 { #category : #'api - notification' }
 GtNotificationDebugSession >> addedTo: aGtNotifications [
-	| aSubscription |
-	aSubscription := self debugSession
+	self debugSession weak
 		when: GtSharedDebugSessionAnnouncement
-		do: [ :anAnnouncement | 
-			self removeFrom: aGtNotifications.
-			self debugSession removeSubscription: aSubscription ]
+		send: #onSharedDebugSessionAnnouncement:
+		to: self
 ]
 
 { #category : #'private - asserting' }
@@ -44,6 +42,12 @@ GtNotificationDebugSession >> debugSession: aDebugSession [
 { #category : #'api - accessing' }
 GtNotificationDebugSession >> elementClass [
 	^ GtNotificationDebugSessionElement
+]
+
+{ #category : #'private - announcement handling' }
+GtNotificationDebugSession >> onSharedDebugSessionAnnouncement: anAnnouncement [
+	self requestRemoval.
+	self debugSession unsubscribe: self
 ]
 
 { #category : #'private - adding / removing' }
