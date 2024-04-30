@@ -148,22 +148,16 @@ GtSourceCoderActionsElement >> updateContextToolbar [
 { #category : #'private - updating' }
 GtSourceCoderActionsElement >> updateDebuggerIndicatorForProcess: aProcess [
 	| aSpace |
-	aSpace := nil.
-	BlParallelUniverse all
-		do: [ :eachUniverse | 
-			eachUniverse spaces
-				do: [ :eachSpace | 
-					| aQuery |
-					aQuery := eachSpace root query // GtMoldableDebugger.
-					aQuery isEmpty
-						ifFalse: [ aQuery anyOne debugSession interruptedProcess == aProcess
-								ifTrue: [ aSpace := eachSpace ] ] ] ].
-	
-	GtSourceCoderProcessInDebuggerSignal new 
+	aSpace := GtCoderDebuggerSpaceFinder new
+			process: aProcess;
+			find;
+			space.
+
+	GtSourceCoderProcessInDebuggerSignal new
 		process: aProcess;
 		space: aSpace;
 		emit.
-	
+
 	aSpace ifNil: [ ^ self ].
 	self textualCoderViewModel addLocateDebuggerInSpaceAction: aSpace
 ]
