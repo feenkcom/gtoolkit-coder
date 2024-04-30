@@ -170,12 +170,15 @@ GtSourceCoderViewModel >> evaluationResult: anObject [
 GtSourceCoderViewModel >> evaluationStatus [
 	<return: #GtCoderEvaluationStatus>
 	^ evaluationStatus
-		ifNil: [ evaluationStatus := GtCoderNoEvaluationStatus default ]
 ]
 
 { #category : #'api - accessing' }
 GtSourceCoderViewModel >> evaluationStatus: aStatus [
 	evaluationStatus = aStatus ifTrue: [ ^ self ].
+	evaluationStatus ifNotNil: [ :oldStatus | 
+		oldStatus 
+			onSourceCoderViewModel: self 
+			aboutToChangeToStatus: aStatus ].
 	evaluationStatus := aStatus.
 	self onEvaluationStatusChanged
 ]
@@ -192,6 +195,12 @@ GtSourceCoderViewModel >> handleCoderEvaluationUnhandledErrorDuring: aBlock [
 				notifyCoderEvaluationUnhandledError: anError
 				inProcess: Processor activeProcess.
 			anError pass ]
+]
+
+{ #category : #initialization }
+GtSourceCoderViewModel >> initialize [
+	super initialize.
+	evaluationStatus := GtCoderNoEvaluationStatus default
 ]
 
 { #category : #'private - notifying' }
@@ -251,6 +260,18 @@ GtSourceCoderViewModel >> onShowDebuggerRequest: anAnnouncement [
 			to: self.
 
 	self evaluationStatus: aStatus
+]
+
+{ #category : #'private - event handling' }
+GtSourceCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement [
+	super onSourceCodeChanged: anSourceCodeChangedAnnouncement.
+	self evaluationStatus: GtCoderNoEvaluationStatus default
+]
+
+{ #category : #'private - event handling' }
+GtSourceCoderViewModel >> onSourceCodeReplaced: aSourceCodeReplacedAnnouncement [
+	super onSourceCodeReplaced: aSourceCodeReplacedAnnouncement.
+	self evaluationStatus: GtCoderNoEvaluationStatus default
 ]
 
 { #category : #'api - actions' }

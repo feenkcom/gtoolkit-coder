@@ -31,6 +31,19 @@ GtCoderEvaluationStatus >> hasSharedDebugSession [
 ]
 
 { #category : #'api - hooks' }
+GtCoderEvaluationStatus >> mayTerminateDebugSession: aDebugSession [
+]
+
+{ #category : #'api - hooks' }
+GtCoderEvaluationStatus >> mayTerminateSharedDebugSession: aSharedDebugSession [
+]
+
+{ #category : #'api - hooks' }
 GtCoderEvaluationStatus >> onSourceCoderElement: anElement [
+	
+]
+
+{ #category : #'api - hooks' }
+GtCoderEvaluationStatus >> onSourceCoderViewModel: aViewModel aboutToChangeToStatus: aNewStatus [
 	
 ]

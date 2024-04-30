@@ -49,6 +49,11 @@ GtCoderDebugSessionInSpaceEvaluationStatus >> hasDebugSessionInSpace [
 	^ true
 ]
 
+{ #category : #'api - hooks' }
+GtCoderDebugSessionInSpaceEvaluationStatus >> onSourceCoderViewModel: aViewModel aboutToChangeToStatus: aNewStatus [
+	aNewStatus mayTerminateDebugSession: self debugSession
+]
+
 { #category : #accessing }
 GtCoderDebugSessionInSpaceEvaluationStatus >> sourceInterval [
 	^ sourceInterval
