@@ -15,6 +15,16 @@ GtCoderEvaluationStatus class >> isAbstract [
 	^ self name = #GtCoderEvaluationStatus
 ]
 
+{ #category : #converting }
+GtCoderEvaluationStatus >> asDebugSessionInSpaceEvaluationStatusFromAnnouncement: anAnnouncement [
+	^ GtCoderNoEvaluationStatus default
+]
+
+{ #category : #testing }
+GtCoderEvaluationStatus >> hasDebugSessionInSpace [
+	^ false
+]
+
 { #category : #testing }
 GtCoderEvaluationStatus >> hasSharedDebugSession [
 	^ false

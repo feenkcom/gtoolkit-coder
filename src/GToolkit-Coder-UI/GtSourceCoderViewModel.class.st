@@ -212,8 +212,11 @@ GtSourceCoderViewModel >> notifyEvaluationStatusChanged [
 
 { #category : #'private - announcement handling' }
 GtSourceCoderViewModel >> onDebugSessionDebuggedAnnouncement: anAnnouncement [
+	| aStatus |
 	anAnnouncement session unsubscribe: self.
-	self evaluationStatus: GtCoderNoEvaluationStatus default
+	aStatus := self evaluationStatus
+			asDebugSessionInSpaceEvaluationStatusFromAnnouncement: anAnnouncement.
+	self evaluationStatus: aStatus
 ]
 
 { #category : #'private - announcement handling' }
@@ -232,7 +235,7 @@ GtSourceCoderViewModel >> onShowDebuggerRequest: anAnnouncement [
 	| aSharedDebugSession aStatus |
 	aSharedDebugSession := GtSharedDebugSession new
 			session: anAnnouncement debugSession.
-	aStatus := GtCoderDebugSessionEvaluationStatus new
+	aStatus := GtCoderEmbeddedDebugSessionEvaluationStatus new
 			debugSession: anAnnouncement debugSession;
 			sharedDebugSession: aSharedDebugSession;
 			exception: anAnnouncement exception;

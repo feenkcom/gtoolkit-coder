@@ -10,11 +10,16 @@ Class {
 	#name : #GtCoderDebuggerSpaceFinder,
 	#superclass : #Object,
 	#instVars : [
-		'process',
-		'space'
+		'space',
+		'debuggerMatcher'
 	],
 	#category : #'GToolkit-Coder-UI-Coders - Evaluation'
 }
+
+{ #category : #accessing }
+GtCoderDebuggerSpaceFinder >> debugSession: aDebugSession [
+	debuggerMatcher := GtCoderDebugSessionMatcher new debugSession: aDebugSession
+]
 
 { #category : #finding }
 GtCoderDebuggerSpaceFinder >> find [
@@ -26,20 +31,21 @@ GtCoderDebuggerSpaceFinder >> find [
 					| aQuery |
 					aQuery := eachSpace root query // GtMoldableDebugger.
 					aQuery isEmpty
-						ifFalse: [ aQuery anyOne debugSession interruptedProcess == process
+						ifFalse: [ (debuggerMatcher isMoldableDebugger: aQuery anyOne)
 								ifTrue: [ ^ space := eachSpace ] ] ] ].
 
 	^ space
 ]
 
-{ #category : #accessing }
-GtCoderDebuggerSpaceFinder >> process [
-	^ process
+{ #category : #initialization }
+GtCoderDebuggerSpaceFinder >> initialize [
+	super initialize.
+	debuggerMatcher := GtCoderDebuggerMatcher new
 ]
 
 { #category : #accessing }
-GtCoderDebuggerSpaceFinder >> process: anObject [
-	process := anObject
+GtCoderDebuggerSpaceFinder >> process: aProcess [
+	debuggerMatcher := GtCoderDebuggerInterruptedProcessMatcher new process: aProcess
 ]
 
 { #category : #accessing }
