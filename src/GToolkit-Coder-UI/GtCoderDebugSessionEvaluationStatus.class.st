@@ -1,3 +1,8 @@
+"
+I am a {{gtClass:GtCoderEvaluationStatus}}.
+I represent an evaluation status for a source code that was was executed and resulted to an unhandled exception.
+
+"
 Class {
 	#name : #GtCoderDebugSessionEvaluationStatus,
 	#superclass : #GtCoderEvaluationStatus,
