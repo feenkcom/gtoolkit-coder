@@ -9,7 +9,10 @@ Class {
 
 { #category : #testing }
 GtCoderDebuggerInterruptedProcessMatcher >> isMoldableDebugger: anElement [
-	^ anElement debugSession interruptedProcess == process
+	| anElementDebugSession |
+	anElementDebugSession := anElement debugSession.
+	^ anElementDebugSession isNotNil
+		and: [ anElementDebugSession interruptedProcess == process ]
 ]
 
 { #category : #accessing }
