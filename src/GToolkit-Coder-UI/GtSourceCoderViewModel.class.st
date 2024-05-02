@@ -273,17 +273,18 @@ GtSourceCoderViewModel >> onEvaluationStatusChanged [
 
 { #category : #'private - announcement handling' }
 GtSourceCoderViewModel >> onShowDebuggerRequest: anAnnouncement [
-	| aSharedDebugSession aStatus |
-	aSharedDebugSession := GtSharedDebugSession new
-			session: anAnnouncement debugSession.
+	| aStatus |
+	anAnnouncement isDelivered ifTrue: [ ^ self ].
+	anAnnouncement beDelivered.
+	
 	aStatus := GtCoderEmbeddedDebugSessionEvaluationStatus new
 			debugSession: anAnnouncement debugSession;
-			sharedDebugSession: aSharedDebugSession;
+			sharedDebugSession: anAnnouncement sharedDebugSession;
 			exception: anAnnouncement exception;
 			sourceInterval: anAnnouncement sourceInterval;
 			sourceString: anAnnouncement sourceString.
 
-	aSharedDebugSession weak
+	anAnnouncement sharedDebugSession weak
 		when: GtSharedDebugSessionDebuggedAnnouncement
 			send: #onDebugSessionDebuggedAnnouncement:
 			to: self;
@@ -367,7 +368,14 @@ GtSourceCoderViewModel >> selectedTextInterval [
 GtSourceCoderViewModel >> subscribeToCoderModel [
 	super subscribeToCoderModel.
 
-	true ifTrue: [ ^ self ].
+	true ifTrue: [ 
+		"Currently, we dispatch the show debugger request using TGtCoderRequesterObject.
+		We likely do not want to handle it listening to GtCoder models as we observed
+		unresponsive images if a debug session was terminated twice. This may be solved
+		by sharing same GtSharedDebugSession instances among all subscribers. It was not
+		tested as dispaching the request throught TGtCoderRequesterObject seems to be
+		better solution."
+		^ self ].
 	self coderModel weak
 		when: GtCoderShowDebuggerRequest
 		send: #onShowDebuggerRequest:

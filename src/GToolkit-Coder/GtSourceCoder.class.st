@@ -382,10 +382,13 @@ GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sou
 	Return false otherwise."
 
 	<return: #Boolean>
-	| anAnnouncement |
+	| anAnnouncement aSharedDebugSession |
+	aSharedDebugSession := GtSharedDebugSession new
+			session: aDebugSession.
 	anAnnouncement := GtCoderShowDebuggerRequest new
 			coder: self;
 			debugSession: aDebugSession;
+			sharedDebugSession: aSharedDebugSession;
 			exception: anException;
 			sourceString: aSourceString;
 			sourceInterval: aSourceInterval.
