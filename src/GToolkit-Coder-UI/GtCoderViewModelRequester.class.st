@@ -29,6 +29,18 @@ GtCoderViewModelRequester >> isUndefinedOrCoderViewModel: aCoderViewModel [
 	^ self isCoderViewModel: aCoderViewModel
 ]
 
+{ #category : #'api - notifying' }
+GtCoderViewModelRequester >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
+	"Return true if announcement was handled (and debugger displayed in some way).
+	Return false otherwise."
+
+	^ self coderViewModel
+		notifyShowDebuggerRequest: aDebugSession
+		dueTo: anException
+		sourceString: aSourceString
+		sourceInterval: aSourceInterval
+]
+
 { #category : #accessing }
 GtCoderViewModelRequester >> selfObject [
 	^ self coderViewModel selfObject

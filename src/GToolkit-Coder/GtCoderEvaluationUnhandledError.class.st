@@ -4,9 +4,10 @@ Class {
 	#instVars : [
 		'sourceCoder',
 		'sourceString',
-		'sourceInterval'
+		'sourceInterval',
+		'requesterObject'
 	],
-	#category : 'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #handling }
@@ -16,7 +17,7 @@ GtCoderEvaluationUnhandledError >> debug [
 	UIManager default
 		gtDebugProcess: Processor activeProcess
 		context: self exception signalerContext
-		withEmbeddedDebuggerIn: sourceCoder
+		withEmbeddedDebuggerIn: requesterObject
 		withSourceString: self sourceString
 		withSourceInterval: self sourceInterval
 		forException: self exception
@@ -26,6 +27,16 @@ GtCoderEvaluationUnhandledError >> debug [
 GtCoderEvaluationUnhandledError >> defaultAction [
 	<reflective: #unhandledErrorDefaultAction:message:>
  	^ UIManager default unhandledErrorDefaultAction: self
+]
+
+{ #category : #accessing }
+GtCoderEvaluationUnhandledError >> requesterObject [
+	^ requesterObject
+]
+
+{ #category : #accessing }
+GtCoderEvaluationUnhandledError >> requesterObject: anObject [
+	requesterObject := anObject
 ]
 
 { #category : #accessing }

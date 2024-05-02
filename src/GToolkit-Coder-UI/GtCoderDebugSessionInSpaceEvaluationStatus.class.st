@@ -44,14 +44,28 @@ GtCoderDebugSessionInSpaceEvaluationStatus >> debugger: anObject [
 	debugger := anObject
 ]
 
+{ #category : #accessing }
+GtCoderDebugSessionInSpaceEvaluationStatus >> debuggerSpace [
+	<return: #BlSpace or: nil>
+	^ GtCoderDebuggerSpaceFinder new
+		debugSession: self debugSession;
+		find;
+		space
+]
+
 { #category : #testing }
 GtCoderDebugSessionInSpaceEvaluationStatus >> hasDebugSessionInSpace [
 	^ true
 ]
 
+{ #category : #actions }
+GtCoderDebugSessionInSpaceEvaluationStatus >> requestDebuggerSpaceClose [
+	^ self debuggerSpace ifNotNil: #requestClose
+]
+
 { #category : #'api - hooks' }
-GtCoderDebugSessionInSpaceEvaluationStatus >> onSourceCoderViewModel: aViewModel aboutToChangeToStatus: aNewStatus [
-	aNewStatus mayTerminateDebugSession: self debugSession
+GtCoderDebugSessionInSpaceEvaluationStatus >> sourceCoderViewModel: aViewModel evaluationStatusChangedTo: aNewStatus [
+	aNewStatus mayCloseSourceCoderViewModel: aViewModel debuggerSpaceOfStatus: self
 ]
 
 { #category : #accessing }

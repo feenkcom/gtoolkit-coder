@@ -214,7 +214,8 @@ GtSourceCoder >> evaluateBlock: aBlock onErrorDo: anErrorBlock [
 							exception: anError;
 							sourceCoder: self;
 							sourceString: aResultWithError sourceString;
-							sourceInterval: aResultWithError sourceInterval).
+							sourceInterval: aResultWithError sourceInterval;
+							requesterObject: aResultWithError requesterObject).
 					
 					anError resignalAs: aResultWithError error.
 					^ nil ].
@@ -375,7 +376,7 @@ GtSourceCoder >> notifyPrintResult: anEvaluationResult [
 		coder: self)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : #'api - notifying' }
 GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
 	"Return true if announcement was handled (and debugger displayed in some way).
 	Return false otherwise."

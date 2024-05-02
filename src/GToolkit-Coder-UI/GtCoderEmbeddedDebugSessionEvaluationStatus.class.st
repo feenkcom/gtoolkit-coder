@@ -45,6 +45,13 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> exception: anObject [
 	exception := anObject
 ]
 
+{ #category : #printing }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> gtDisplayOn: stream [
+	stream nextPutAll: 'Embedded debugger('.
+	stream print: exception.
+	stream nextPut: $)
+]
+
 { #category : #testing }
 GtCoderEmbeddedDebugSessionEvaluationStatus >> hasSharedDebugSession [
 	^ true
@@ -57,11 +64,6 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> onSourceCoderElement: anElement [
 		showNotification: (GtNotificationDebugSession new debugSession: self sharedDebugSession)
 ]
 
-{ #category : #'api - hooks' }
-GtCoderEmbeddedDebugSessionEvaluationStatus >> onSourceCoderViewModel: aViewModel aboutToChangeToStatus: aNewStatus [
-	aNewStatus mayTerminateSharedDebugSession: self sharedDebugSession
-]
-
 { #category : #accessing }
 GtCoderEmbeddedDebugSessionEvaluationStatus >> sharedDebugSession [
 	^ sharedDebugSession
@@ -70,6 +72,13 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> sharedDebugSession [
 { #category : #'private - announcement handling' }
 GtCoderEmbeddedDebugSessionEvaluationStatus >> sharedDebugSession: aSharedDebugSession [
 	sharedDebugSession := aSharedDebugSession
+]
+
+{ #category : #'api - hooks' }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> sourceCoderViewModel: aViewModel evaluationStatusChangedTo: aNewStatus [
+	aNewStatus
+		mayTerminateSourceCoderViewModel: aViewModel
+		sharedDebugSessionOfStatus: self
 ]
 
 { #category : #accessing }
