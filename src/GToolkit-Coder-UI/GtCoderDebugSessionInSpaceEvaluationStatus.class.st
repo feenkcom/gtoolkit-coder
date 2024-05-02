@@ -58,14 +58,14 @@ GtCoderDebugSessionInSpaceEvaluationStatus >> hasDebugSessionInSpace [
 	^ true
 ]
 
-{ #category : #'api - hooks' }
-GtCoderDebugSessionInSpaceEvaluationStatus >> onSourceCoderViewModel: aViewModel changedToStatus: aNewStatus [
-	aNewStatus mayCloseDebuggerOfStatus: self
-]
-
 { #category : #actions }
 GtCoderDebugSessionInSpaceEvaluationStatus >> requestDebuggerSpaceClose [
 	^ self debuggerSpace ifNotNil: #requestClose
+]
+
+{ #category : #'api - hooks' }
+GtCoderDebugSessionInSpaceEvaluationStatus >> sourceCoderViewModel: aViewModel evaluationStatusChangedTo: aNewStatus [
+	aNewStatus mayCloseSourceCoderViewModel: aViewModel debuggerSpaceOfStatus: self
 ]
 
 { #category : #accessing }

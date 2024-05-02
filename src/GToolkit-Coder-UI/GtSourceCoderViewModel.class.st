@@ -178,7 +178,12 @@ GtSourceCoderViewModel >> evaluationStatus: aStatus [
 	evaluationStatus = aStatus ifTrue: [ ^ self ].
 	anOldStatus := evaluationStatus.
 	evaluationStatus := aStatus.
-	anOldStatus onSourceCoderViewModel: self changedToStatus: aStatus.
+	GtCoderEvaluationStatusChangedSignal new
+		oldStatus: anOldStatus;
+		newStatus: aStatus;
+		viewModel: self;
+		emit.
+	anOldStatus sourceCoderViewModel: self evaluationStatusChangedTo: aStatus.
 	self onEvaluationStatusChanged
 ]
 
@@ -216,6 +221,34 @@ GtSourceCoderViewModel >> notifyEvaluationStatusChanged [
 		announce: (GtSourceCoderViewModelEvaluationStatusChanged new
 				textualCoderViewModel: self;
 				evaluationStatus: self evaluationStatus)
+]
+
+{ #category : #'api - notifying' }
+GtSourceCoderViewModel >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
+	"Return true if announcement was handled (and debugger displayed in some way).
+	Return false otherwise."
+
+	<return: #Boolean>
+	| aSharedDebugSession aStatus |
+	aSharedDebugSession := GtSharedDebugSession new session: aDebugSession.
+	aStatus := GtCoderEmbeddedDebugSessionEvaluationStatus new
+			debugSession: aDebugSession;
+			sharedDebugSession: aSharedDebugSession;
+			exception: anException;
+			sourceInterval: aSourceInterval;
+			sourceString: aSourceString.
+
+	aSharedDebugSession weak
+		when: GtSharedDebugSessionDebuggedAnnouncement
+			send: #onDebugSessionDebuggedAnnouncement:
+			to: self;
+		when: GtSharedDebugSessionTerminatedAnnouncement
+			send: #onDebugSessionTerminatedAnnouncement:
+			to: self.
+			
+	self evaluationStatus: aStatus.
+
+	^ true
 ]
 
 { #category : #'private - announcement handling' }
@@ -334,6 +367,7 @@ GtSourceCoderViewModel >> selectedTextInterval [
 GtSourceCoderViewModel >> subscribeToCoderModel [
 	super subscribeToCoderModel.
 
+	true ifTrue: [ ^ self ].
 	self coderModel weak
 		when: GtCoderShowDebuggerRequest
 		send: #onShowDebuggerRequest:
