@@ -174,12 +174,11 @@ GtSourceCoderViewModel >> evaluationStatus [
 
 { #category : #'api - accessing' }
 GtSourceCoderViewModel >> evaluationStatus: aStatus [
+	| anOldStatus |
 	evaluationStatus = aStatus ifTrue: [ ^ self ].
-	evaluationStatus ifNotNil: [ :oldStatus | 
-		oldStatus 
-			onSourceCoderViewModel: self 
-			aboutToChangeToStatus: aStatus ].
+	anOldStatus := evaluationStatus.
 	evaluationStatus := aStatus.
+	anOldStatus onSourceCoderViewModel: self changedToStatus: aStatus.
 	self onEvaluationStatusChanged
 ]
 

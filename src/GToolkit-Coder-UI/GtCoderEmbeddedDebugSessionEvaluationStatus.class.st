@@ -58,8 +58,8 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> onSourceCoderElement: anElement [
 ]
 
 { #category : #'api - hooks' }
-GtCoderEmbeddedDebugSessionEvaluationStatus >> onSourceCoderViewModel: aViewModel aboutToChangeToStatus: aNewStatus [
-	aNewStatus mayTerminateSharedDebugSession: self sharedDebugSession
+GtCoderEmbeddedDebugSessionEvaluationStatus >> onSourceCoderViewModel: aViewModel changedToStatus: aNewStatus [
+	aNewStatus mayTerminateSharedDebugSessionOfStatus: self
 ]
 
 { #category : #accessing }

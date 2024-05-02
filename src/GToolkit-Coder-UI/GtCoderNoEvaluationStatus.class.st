@@ -12,11 +12,11 @@ Class {
 }
 
 { #category : #'api - hooks' }
-GtCoderNoEvaluationStatus >> mayTerminateDebugSession: aDebugSession [
-	aDebugSession terminate
+GtCoderNoEvaluationStatus >> mayCloseDebuggerOfStatus: anEvaluationStatus [
+	
 ]
 
 { #category : #'api - hooks' }
-GtCoderNoEvaluationStatus >> mayTerminateSharedDebugSession: aSharedDebugSession [
-	aSharedDebugSession terminate
+GtCoderNoEvaluationStatus >> mayTerminateSharedDebugSessionOfStatus: anEvaluationStatus [
+	anEvaluationStatus sharedDebugSession terminate
 ]
