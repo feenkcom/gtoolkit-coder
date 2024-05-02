@@ -46,8 +46,8 @@ GtNotificationDebugSession >> elementClass [
 
 { #category : #'private - announcement handling' }
 GtNotificationDebugSession >> onSharedDebugSessionAnnouncement: anAnnouncement [
-	self requestRemoval.
-	self debugSession unsubscribe: self
+	self debugSession unsubscribe: self.
+	self requestRemoval
 ]
 
 { #category : #'private - adding / removing' }
