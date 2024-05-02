@@ -6,10 +6,19 @@ Class {
 		'exception',
 		'sourceString',
 		'sourceInterval',
-		'isDelivered'
+		'isDelivered',
+		'sharedDebugSession'
 	],
 	#category : #'GToolkit-Coder-Event'
 }
+
+{ #category : #accessing }
+GtCoderShowDebuggerRequest >> beDelivered [
+	self
+		assert: [ isDelivered not ]
+		description: [ 'I can be delivered only once' ].
+	isDelivered := true
+]
 
 { #category : #accessing }
 GtCoderShowDebuggerRequest >> debugSession [
@@ -46,14 +55,14 @@ GtCoderShowDebuggerRequest >> isDelivered [
 ]
 
 { #category : #accessing }
-GtCoderShowDebuggerRequest >> isDelivered: aBoolean [
-	isDelivered := aBoolean
+GtCoderShowDebuggerRequest >> sharedDebugSession [
+	<return: #GtSharedDebugSession>
+	^ sharedDebugSession
 ]
 
-{ #category : #initialization }
-GtCoderShowDebuggerRequest >> prepareForDelivery [
-	super prepareForDelivery.
-	isDelivered := true
+{ #category : #accessing }
+GtCoderShowDebuggerRequest >> sharedDebugSession: aGtSharedDebugSession [
+	sharedDebugSession := aGtSharedDebugSession
 ]
 
 { #category : #accessing }
