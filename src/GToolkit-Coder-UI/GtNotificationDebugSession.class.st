@@ -7,14 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-UI-DebugSession'
 }
 
-{ #category : #'api - notification' }
-GtNotificationDebugSession >> addedTo: aGtNotifications [
-	self debugSession weak
-		when: GtSharedDebugSessionAnnouncement
-		send: #onSharedDebugSessionAnnouncement:
-		to: self
-]
-
 { #category : #'private - asserting' }
 GtNotificationDebugSession >> assertDebugSession: aDebugSession [
 	self 
@@ -36,7 +28,12 @@ GtNotificationDebugSession >> debugSession [
 { #category : #accessing }
 GtNotificationDebugSession >> debugSession: aDebugSession [
 	self assertDebugSession: aDebugSession.
-	debugSession := aDebugSession
+	debugSession ifNotNil: [ debugSession unsubscribe: self ].
+	debugSession := aDebugSession.
+	aDebugSession weak
+		when: GtSharedDebugSessionAnnouncement
+		send: #onSharedDebugSessionAnnouncement:
+		to: self
 ]
 
 { #category : #'api - accessing' }
