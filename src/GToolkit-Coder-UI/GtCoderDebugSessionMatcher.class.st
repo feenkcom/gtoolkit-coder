@@ -19,5 +19,8 @@ GtCoderDebugSessionMatcher >> debugSession: anObject [
 
 { #category : #testing }
 GtCoderDebugSessionMatcher >> isMoldableDebugger: anElement [
-	^ anElement debugSession interruptedProcess == debugSession interruptedProcess
+	| anElementDebugSession |
+	anElementDebugSession := anElement debugSession.
+	^ anElementDebugSession isNotNil
+		and: [ anElementDebugSession interruptedProcess == debugSession interruptedProcess ]
 ]
