@@ -28,12 +28,9 @@ GtNotificationDebugSession >> debugSession [
 { #category : #accessing }
 GtNotificationDebugSession >> debugSession: aDebugSession [
 	self assertDebugSession: aDebugSession.
-	debugSession ifNotNil: [ debugSession unsubscribe: self ].
+	debugSession ifNotNil: [ self unsubscribeFromDebugSession ].
 	debugSession := aDebugSession.
-	aDebugSession weak
-		when: GtSharedDebugSessionAnnouncement
-		send: #onSharedDebugSessionAnnouncement:
-		to: self
+	self subscribeToDebugSession
 ]
 
 { #category : #'api - accessing' }
@@ -47,7 +44,24 @@ GtNotificationDebugSession >> onSharedDebugSessionAnnouncement: anAnnouncement [
 	self requestRemoval
 ]
 
-{ #category : #'private - adding / removing' }
-GtNotificationDebugSession >> removeFrom: aGtNotifications [
-	aGtNotifications removeNotification: self
+{ #category : #'api - hooks' }
+GtNotificationDebugSession >> removedFrom: aNotifications [
+	"Subclasses can react to notification removal"
+
+	super removedFrom: aNotifications.
+	self unsubscribeFromDebugSession.
+	debugSession terminate
+]
+
+{ #category : #'private - subscriptions' }
+GtNotificationDebugSession >> subscribeToDebugSession [
+	debugSession weak
+		when: GtSharedDebugSessionAnnouncement
+		send: #onSharedDebugSessionAnnouncement:
+		to: self
+]
+
+{ #category : #'private - subscriptions' }
+GtNotificationDebugSession >> unsubscribeFromDebugSession [
+	debugSession unsubscribe: self
 ]
