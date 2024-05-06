@@ -68,6 +68,18 @@ GtCoderAddOns >> addContextActions: aCollectionOfContextActions [
 	aCollectionOfContextActions do: [ :eachContextAction | self addContextAction: eachContextAction ]
 ]
 
+{ #category : #'api - main actions' }
+GtCoderAddOns >> addContextDropDownWithPreviewAction: aString icon: anIcon action: actionBlock stencil: stencilBlock [
+	self
+		updateActionList: #contextActions
+		withAction: (GtCoderDropDownWithPreviewAction new
+			title: aString;
+			icon: anIcon;
+			changeAction: actionBlock;
+			changeStencil: stencilBlock)
+		onlyNew: true
+]
+
 { #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuAction: aContextMenuAction [
 	contextMenuActions add: aContextMenuAction
