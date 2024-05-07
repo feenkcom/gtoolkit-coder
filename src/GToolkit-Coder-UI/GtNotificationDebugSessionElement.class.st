@@ -131,8 +131,12 @@ GtNotificationDebugSessionElement >> initializeToolbarElement [
 
 { #category : #'private - instance creation' }
 GtNotificationDebugSessionElement >> newTextDescribingSession: aSession [
-	^ String streamContents: [ :aStream |
-		aStream nextPutAll: aSession name asString ]
+	^ String
+		streamContents: [ :aStream | 
+			| aString |
+			aString := aSession name asString.
+			aString size > 72 ifTrue: [ aString := aString first: 72 ].
+			aStream nextPutAll: aString ]
 ]
 
 { #category : #'private - announcement handling' }
