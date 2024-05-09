@@ -87,6 +87,7 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 			icon: aGtCoderAction icon asElement;
 			beTinySize;
 			label: aGtCoderAction title;
+			constraintsDo: [ :c | c linear vertical alignCenter ];
 			aptitude: BrGlamorousButtonWithIconAptitude;
 			in: [ :aButtonElement | aButtonElement id: aGtCoderAction id ];
 			action: [ :aButtonElement :aButtonModel :anEvent | 

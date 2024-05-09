@@ -70,10 +70,10 @@ GtSourceCoderActionsElement >> initialize [
 { #category : #'instance creation' }
 GtSourceCoderActionsElement >> newToolbar [
 	<return: #BrToolbar>
-
 	^ BrToolbar new
 		aptitude: (BrGlamorousToolbarAptitude new spacing: 4);
-		padding: (BlInsets left: -4)
+		padding: (BlInsets left: -4);
+		constraintsDo: [ :c | c linear vertical alignCenter ]
 ]
 
 { #category : #'private - announcement handling' }
