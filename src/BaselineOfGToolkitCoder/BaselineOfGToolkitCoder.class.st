@@ -46,7 +46,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec repository: 'github://feenkcom/gtoolkit-notifications:v0.6.918/src' ].
 		spec
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.1288/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.1289/src' ].
 		spec
 			baseline: 'GToolkitCompleter' with: [
 				spec repository: 'github://feenkcom/gtoolkit-completer:v0.8.1251/src' ].
