@@ -10,3 +10,11 @@ TGtSourceCoderEvaluatedCode >> findRelevantContextInStack: aStack [
 	<return: #Context or: nil>
 	^ nil
 ]
+
+{ #category : #accessing }
+TGtSourceCoderEvaluatedCode >> findSourceAstForContext: aContext [
+	"Return an AST node that corresponds to a given executed code."
+
+	<return: #RBMessageNode>
+	^ nil
+]

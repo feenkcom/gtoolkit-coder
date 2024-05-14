@@ -66,7 +66,18 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> evaluatedCodeInterval [
 	| aContext |
 	aContext := self evaluatedCodeContext.
 	aContext ifNil: [ ^ nil ].
-	^ aContext pcRangeContextIsActive: false
+
+	(self debugSession process isNil or: [ aContext isDead ]) ifTrue: [ ^ nil ].
+
+	^ self
+		forPharo11OrNewer: [ self debugSession pcRangeForContext: aContext ]
+		forPharo10: [ | aUsedAst anInterval |
+			aUsedAst := self evaluatedCode findSourceAstForContext: aContext.
+			anInterval := GtPharoMethodNodeSourceIntervalFinder new
+					methodNode: aUsedAst;
+					sourceString: self sourceString;
+					find.
+			anInterval last isZero ifTrue: [ nil ] ifFalse: [ anInterval ] ]
 ]
 
 { #category : #accessing }
