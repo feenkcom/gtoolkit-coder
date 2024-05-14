@@ -224,7 +224,7 @@ GtSourceCoderViewModel >> notifyEvaluationStatusChanged [
 ]
 
 { #category : #'api - notifying' }
-GtSourceCoderViewModel >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
+GtSourceCoderViewModel >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval evaluationInfo: anEvaluationInfo [
 	"Return true if announcement was handled (and debugger displayed in some way).
 	Return false otherwise."
 
@@ -235,6 +235,7 @@ GtSourceCoderViewModel >> notifyShowDebuggerRequest: aDebugSession dueTo: anExce
 			debugSession: aDebugSession;
 			sharedDebugSession: aSharedDebugSession;
 			exception: anException;
+			evaluatedCode: anEvaluationInfo evaluatedCode;
 			sourceInterval: aSourceInterval;
 			sourceString: aSourceString.
 

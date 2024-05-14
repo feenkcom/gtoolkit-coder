@@ -7,7 +7,8 @@ Class {
 		'sourceInterval',
 		'sourceString',
 		'evaluatedInterval',
-		'evaluatedSourceString'
+		'evaluatedSourceString',
+		'evaluatedCode'
 	],
 	#category : #'GToolkit-Coder-Coders - Evaluation'
 }
@@ -27,6 +28,22 @@ GtSourceCoderEvaluationContext >> coder [
 { #category : #accessing }
 GtSourceCoderEvaluationContext >> coder: aGtSourceCoder [
 	coder := aGtSourceCoder
+]
+
+{ #category : #'api - context' }
+GtSourceCoderEvaluationContext >> evaluatedCode [
+	"Return an object, representing the evaluated source string.
+	For example in case of Pharo, it is a reference to a compiled method."
+
+	<return: #TGtSourceCoderEvaluatedCode>
+	^ evaluatedCode ifNil: [ evaluatedCode := GtSourceCoderNoEvaluatedCode default ]
+]
+
+{ #category : #'api - context' }
+GtSourceCoderEvaluationContext >> evaluatedCode: aContextReference [
+	"Set a {{gtClass:TGtSourceCoderEvaluatedCode}}"
+
+	evaluatedCode := aContextReference
 ]
 
 { #category : #accessing }

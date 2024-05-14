@@ -9,7 +9,7 @@ TGtCoderRequesterObject >> asCoderRequesterObject [
 ]
 
 { #category : #'api - notifying' }
-TGtCoderRequesterObject >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
+TGtCoderRequesterObject >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval evaluationInfo: anEvaluationInfo [
 	"Return true if announcement was handled (and debugger displayed in some way).
 	Return false otherwise."
 

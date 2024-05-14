@@ -11,7 +11,8 @@ Class {
 		'exception',
 		'sourceInterval',
 		'sourceString',
-		'sharedDebugSession'
+		'sharedDebugSession',
+		'evaluatedCode'
 	],
 	#category : #'GToolkit-Coder-UI-Coders - Evaluation'
 }
@@ -36,6 +37,39 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> debugSession: anObject [
 ]
 
 { #category : #accessing }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> evaluatedCode [
+	<return: #TGtSourceCoderEvaluatedCode>
+	^ evaluatedCode ifNil: [
+		evaluatedCode := GtSourceCoderNoEvaluatedCode default ]
+]
+
+{ #category : #accessing }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> evaluatedCode: anObject [
+	evaluatedCode := anObject
+]
+
+{ #category : #accessing }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> evaluatedCodeContext [
+	"Return a stack context that corresponds to a given evaluated code."
+
+	<return: #Context or: nil>
+	self sharedDebugSession
+		sessionDo: [ :aSession | ^ self evaluatedCode findRelevantContextInStack: aSession context stack ].
+	^ nil
+]
+
+{ #category : #accessing }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> evaluatedCodeInterval [
+	"Return an interval that corresponds to a given evaluated code."
+
+	<return: #Interval or: nil>
+	| aContext |
+	aContext := self evaluatedCodeContext.
+	aContext ifNil: [ ^ nil ].
+	^ aContext pcRangeContextIsActive: false
+]
+
+{ #category : #accessing }
 GtCoderEmbeddedDebugSessionEvaluationStatus >> exception [
 	^ exception
 ]
@@ -50,6 +84,32 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> gtDisplayOn: stream [
 	stream nextPutAll: 'Embedded debugger('.
 	stream print: exception.
 	stream nextPut: $)
+]
+
+{ #category : #'gt - extensions' }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> gtEvaluatedSource [
+	| aText |
+	aText := self sourceString asRopedText glamorousCodeFontAndSize.
+
+	self evaluatedCodeInterval
+		ifNotNil: [ :aContextInterval | 
+			| aContextMin aContextMax |
+			aContextMin := aContextInterval first min: aText size.
+			aContextMax := aContextInterval last min: aText size.
+			(aText from: aContextMin to: aContextMax)
+				highlight: BrGlamorousColors debuggerTextHighlightColor ].
+
+	^ aText
+]
+
+{ #category : #'gt - extensions' }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> gtEvaluatedSourceFor: aView [
+	<gtView>
+	sourceString ifNil: [ ^ aView empty ].
+
+	^ aView text
+		title: 'Evaluated source';
+		text: [ self gtEvaluatedSource ]
 ]
 
 { #category : #testing }
