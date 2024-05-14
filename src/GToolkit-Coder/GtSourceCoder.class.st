@@ -213,6 +213,7 @@ GtSourceCoder >> evaluateBlock: aBlock onErrorDo: anErrorBlock [
 					aResultWithError error: (GtCoderEvaluationUnhandledError new
 							exception: anError;
 							sourceCoder: self;
+							evaluatedCode: aResultWithError evaluatedCode;
 							sourceString: aResultWithError sourceString;
 							sourceInterval: aResultWithError sourceInterval;
 							requesterObject: aResultWithError requesterObject).
@@ -377,7 +378,7 @@ GtSourceCoder >> notifyPrintResult: anEvaluationResult [
 ]
 
 { #category : #'api - notifying' }
-GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
+GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval evaluationInfo: anEvaluationInfo [
 	"Return true if announcement was handled (and debugger displayed in some way).
 	Return false otherwise."
 
@@ -391,7 +392,8 @@ GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sou
 			sharedDebugSession: aSharedDebugSession;
 			exception: anException;
 			sourceString: aSourceString;
-			sourceInterval: aSourceInterval.
+			sourceInterval: aSourceInterval;
+			evaluationInfo: anEvaluationInfo.
 	self announce: anAnnouncement.
 
 	^ anAnnouncement isDelivered

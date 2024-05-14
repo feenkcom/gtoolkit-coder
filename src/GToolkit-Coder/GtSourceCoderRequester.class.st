@@ -20,7 +20,7 @@ GtSourceCoderRequester >> coder: anObject [
 ]
 
 { #category : #'api - notifying' }
-GtSourceCoderRequester >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
+GtSourceCoderRequester >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval evaluationInfo: anEvaluationInfo [
 	"Return true if announcement was handled (and debugger displayed in some way).
 	Return false otherwise."
 
@@ -29,4 +29,5 @@ GtSourceCoderRequester >> notifyShowDebuggerRequest: aDebugSession dueTo: anExce
 		dueTo: anException
 		sourceString: aSourceString
 		sourceInterval: aSourceInterval
+		evaluationInfo: anEvaluationInfo
 ]

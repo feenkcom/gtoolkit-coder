@@ -8,6 +8,15 @@ Class {
 }
 
 { #category : #accessing }
+GtSourceCoderEvaluationResult >> evaluatedCode [
+	"Return an object, representing the evaluated source string.
+	For example in case of Pharo, it is a reference to a compiled method."
+
+	<return: #TGtSourceCoderEvaluatedCode>
+	^ self evaluationContext evaluatedCode
+]
+
+{ #category : #accessing }
 GtSourceCoderEvaluationResult >> evaluationContext [
 	^ evaluationContext
 ]

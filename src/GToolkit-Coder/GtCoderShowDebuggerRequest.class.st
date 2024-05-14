@@ -7,7 +7,8 @@ Class {
 		'sourceString',
 		'sourceInterval',
 		'isDelivered',
-		'sharedDebugSession'
+		'sharedDebugSession',
+		'evaluationInfo'
 	],
 	#category : #'GToolkit-Coder-Event'
 }
@@ -28,6 +29,17 @@ GtCoderShowDebuggerRequest >> debugSession [
 { #category : #accessing }
 GtCoderShowDebuggerRequest >> debugSession: anObject [
 	debugSession := anObject
+]
+
+{ #category : #accessing }
+GtCoderShowDebuggerRequest >> evaluationInfo [
+	<return: #GtCoderEvaluationUnhandledErrorInformation>
+	^ evaluationInfo
+]
+
+{ #category : #accessing }
+GtCoderShowDebuggerRequest >> evaluationInfo: anObject [
+	evaluationInfo := anObject
 ]
 
 { #category : #accessing }

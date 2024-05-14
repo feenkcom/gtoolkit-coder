@@ -30,7 +30,7 @@ GtCoderViewModelRequester >> isUndefinedOrCoderViewModel: aCoderViewModel [
 ]
 
 { #category : #'api - notifying' }
-GtCoderViewModelRequester >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval [
+GtCoderViewModelRequester >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval evaluationInfo: anEvaluationInfo [
 	"Return true if announcement was handled (and debugger displayed in some way).
 	Return false otherwise."
 
@@ -39,6 +39,7 @@ GtCoderViewModelRequester >> notifyShowDebuggerRequest: aDebugSession dueTo: anE
 		dueTo: anException
 		sourceString: aSourceString
 		sourceInterval: aSourceInterval
+		evaluationInfo: anEvaluationInfo
 ]
 
 { #category : #accessing }

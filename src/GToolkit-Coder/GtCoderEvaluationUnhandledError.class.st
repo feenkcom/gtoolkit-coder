@@ -5,7 +5,8 @@ Class {
 		'sourceCoder',
 		'sourceString',
 		'sourceInterval',
-		'requesterObject'
+		'requesterObject',
+		'evaluatedCode'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -21,6 +22,12 @@ GtCoderEvaluationUnhandledError >> debug [
 		withSourceString: self sourceString
 		withSourceInterval: self sourceInterval
 		forException: self exception
+		evaluationInfo: (GtCoderEvaluationUnhandledErrorInformation new
+			requesterObject: self requesterObject;
+			evaluatedCode: self evaluatedCode;
+			sourceString: self sourceString;
+			sourceInterval: self sourceInterval;
+			sourceCoder: self sourceCoder)
 ]
 
 { #category : #'priv handling' }
@@ -30,7 +37,22 @@ GtCoderEvaluationUnhandledError >> defaultAction [
 ]
 
 { #category : #accessing }
+GtCoderEvaluationUnhandledError >> evaluatedCode [
+	<return: #TGtSourceCoderEvaluatedCode>
+	^ evaluatedCode ifNil: [ 
+		evaluatedCode := GtSourceCoderNoEvaluatedCode default ]
+]
+
+{ #category : #accessing }
+GtCoderEvaluationUnhandledError >> evaluatedCode: aSourceCode [
+	evaluatedCode := aSourceCode
+]
+
+{ #category : #accessing }
 GtCoderEvaluationUnhandledError >> requesterObject [
+	"Return an object that requested evaluation."
+
+	<return: #TGtCoderRequesterObject>
 	^ requesterObject
 ]
 
@@ -41,6 +63,7 @@ GtCoderEvaluationUnhandledError >> requesterObject: anObject [
 
 { #category : #accessing }
 GtCoderEvaluationUnhandledError >> sourceCoder [
+	<return: #GtSourceCoder>
 	^ sourceCoder
 ]
 
