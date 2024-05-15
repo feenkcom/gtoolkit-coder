@@ -23,7 +23,8 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> asDebugSessionInSpaceEvaluationSt
 		debugSession: anAnnouncement releasedSession;
 		debugger: anAnnouncement debugger;
 		sourceInterval: self sourceInterval;
-		sourceString: self sourceString
+		sourceString: self sourceString;
+		evaluatedCode: self evaluatedCode
 ]
 
 { #category : #accessing }
@@ -63,17 +64,12 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> evaluatedCodeInterval [
 	"Return an interval that corresponds to a given evaluated code."
 
 	<return: #Interval or: nil>
-	| aContext |
-	aContext := self evaluatedCodeContext.
-	aContext ifNil: [ ^ nil ].
-
-	(self debugSession process isNil or: [ aContext isDead ]) ifTrue: [ ^ nil ].
-
-	^ self
-		forPharo11OrNewer: [ self debugSession pcRangeForContext: aContext ]
-		forPharo10: [ self evaluatedCode
-				findSourceIntervalForContext: aContext
-				sourceString: self sourceString ]
+	^ GtCoderEvaluatedCodeIntervalFinder new
+		debugSession: self debugSession;
+		context: self evaluatedCodeContext;
+		evaluatedCode: self evaluatedCode;
+		sourceString: self sourceString;
+		find
 ]
 
 { #category : #accessing }
