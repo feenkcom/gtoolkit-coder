@@ -12,9 +12,9 @@ TGtSourceCoderEvaluatedCode >> findRelevantContextInStack: aStack [
 ]
 
 { #category : #accessing }
-TGtSourceCoderEvaluatedCode >> findSourceAstForContext: aContext [
-	"Return an AST node that corresponds to a given executed code."
+TGtSourceCoderEvaluatedCode >> findSourceIntervalForContext: aContext sourceString: aSourceString [
+	"Return source code interval that corresponds to a given executed code."
 
-	<return: #RBMessageNode>
+	<return: #Interval or: nil>
 	^ nil
 ]
