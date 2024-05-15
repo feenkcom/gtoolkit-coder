@@ -10,7 +10,8 @@ Class {
 		'debugSession',
 		'debugger',
 		'sourceInterval',
-		'sourceString'
+		'sourceString',
+		'evaluatedCode'
 	],
 	#category : #'GToolkit-Coder-UI-Coders - Evaluation'
 }
@@ -51,6 +52,41 @@ GtCoderDebugSessionInSpaceEvaluationStatus >> debuggerSpace [
 		debugSession: self debugSession;
 		find;
 		space
+]
+
+{ #category : #accessing }
+GtCoderDebugSessionInSpaceEvaluationStatus >> evaluatedCode [
+	<return: #TGtSourceCoderEvaluatedCode>
+	^ evaluatedCode ifNil: [
+		evaluatedCode := GtSourceCoderNoEvaluatedCode default ]
+]
+
+{ #category : #accessing }
+GtCoderDebugSessionInSpaceEvaluationStatus >> evaluatedCode: anObject [
+	evaluatedCode := anObject
+]
+
+{ #category : #accessing }
+GtCoderDebugSessionInSpaceEvaluationStatus >> evaluatedCodeContext [
+	"Return a stack context that corresponds to a given evaluated code."
+
+	<return: #Context or: nil>
+	self debugSession process ifNil: [ ^ nil ].
+
+	^ self evaluatedCode findRelevantContextInStack: self debugSession context stack
+]
+
+{ #category : #accessing }
+GtCoderDebugSessionInSpaceEvaluationStatus >> evaluatedCodeInterval [
+	"Return an interval that corresponds to a given evaluated code."
+
+	<return: #Interval or: nil>
+	^ GtCoderEvaluatedCodeIntervalFinder new
+		debugSession: self debugSession;
+		context: self evaluatedCodeContext;
+		evaluatedCode: self evaluatedCode;
+		sourceString: self sourceString;
+		find
 ]
 
 { #category : #testing }
