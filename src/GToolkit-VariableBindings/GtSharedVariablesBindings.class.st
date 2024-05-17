@@ -64,6 +64,11 @@ GtSharedVariablesBindings >> initialize [
 	bindings := Dictionary new
 ]
 
+{ #category : #accessing }
+GtSharedVariablesBindings >> interactive [
+	^ false
+]
+
 { #category : #binding }
 GtSharedVariablesBindings >> removeBindingOf: aSymbol [
 	<return: #Boolean>
