@@ -2,7 +2,8 @@ Extension { #name : #RBNamespace }
 
 { #category : #'*GToolkit-Coder' }
 RBNamespace >> category: aString for: aClass [
-
+	<gtPharoPatch: #Pharo>
+	
 	^ changes addChange: (RBClassCategoryChange category: aString for: aClass)
 ]
 
@@ -13,7 +14,8 @@ RBNamespace >> changedClasses [
 
 { #category : #'*GToolkit-Coder' }
 RBNamespace >> classObjectFor: anObject [
-
+	<gtPharoPatch: #Pharo>
+	
 	(anObject isBehavior or: [anObject isTrait])
 		ifTrue: [ ^ self classFor: anObject ].
 	anObject isSymbol
