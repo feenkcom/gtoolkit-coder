@@ -1,143 +1,112 @@
 Class {
 	#name : #GtLocalVersion,
-	#superclass : #BrVerticalFlow,
+	#superclass : #Object,
 	#instVars : [
-		'localVersion',
-		'compiledMethod',
-		'expander',
-		'header',
-		'content'
+		'previousChangeRecord',
+		'currentMethod',
+		'changeRecord'
 	],
 	#category : #'GToolkit-Coder-Extensions'
 }
 
-{ #category : #accessing }
-GtLocalVersion >> compiledMethod [
-
-	^ compiledMethod
+{ #category : #'instance creation' }
+GtLocalVersion class >> change: aChangeRecord previousChange: aPreviousChangeRecord currentMethod: aMethod [
+	^ self new
+		initializeWithChange: aChangeRecord
+		previousChange: aPreviousChangeRecord
+		currentMethod: aMethod
 ]
 
 { #category : #accessing }
-GtLocalVersion >> compiledMethod: anObject [
-
-	compiledMethod := anObject
+GtLocalVersion >> currentSourceCodeInImage [
+	^ currentMethod 
+		ifNil: [ '' ]
+		ifNotNil: [ :aMethod |
+			aMethod sourceCode ]
 ]
 
-{ #category : #accessing }
-GtLocalVersion >> content [
+{ #category : #'gt - extensions' }
+GtLocalVersion >> gtViewDiffWithInImageCodeFor: aView [
+	<gtView>
+	
+	^ aView explicit 
+		title: 'Diff (current)';
+		priority: 10;
+		stencil: [ 
+			| change styler |
 
-	^ content
-]
+			change := GtDiffBuilder
+				computeDifferencesFrom: self sourceCode 
+				to: self currentSourceCodeInImage
+				using: GtSmaCCDiffSplitter forPharo.
+				
+			styler := GtCodeDiffRBTextStyler new.
 
-{ #category : #accessing }
-GtLocalVersion >> content: anObject [
-
-	content := anObject
-]
-
-{ #category : #accessing }
-GtLocalVersion >> expander [
-
-	^ expander
-]
-
-{ #category : #accessing }
-GtLocalVersion >> expander: anObject [
-
-	expander := anObject
-]
-
-{ #category : #accessing }
-GtLocalVersion >> header [
-
-	^ header
-]
-
-{ #category : #accessing }
-GtLocalVersion >> header: anObject [
-
-	header := anObject
-]
-
-{ #category : #accessing }
-GtLocalVersion >> initialize [
-	super initialize.
-
-	self hMatchParent vFitContent padding: (BlInsets all: 2).
-
-	self initializeHeader.
-	self initializeContent.
-	self initializeExpander.
-
-	self addChild: self expander
-]
-
-{ #category : #accessing }
-GtLocalVersion >> initializeContent [
-	content := BrVerticalFlow new matchParent
-]
-
-{ #category : #accessing }
-GtLocalVersion >> initializeExpander [
-	expander := BrExpander new hMatchParent vFitContent
-			aptitude: GtCoderExpanderAptitude new;
-			header: [ self header ];
-			content: [ self content ]
-]
-
-{ #category : #accessing }
-GtLocalVersion >> initializeHeader [
-	header := BrHorizontalFlow new matchParent
-]
-
-{ #category : #accessing }
-GtLocalVersion >> localVersion: aLocalVersion [
-	localVersion := aLocalVersion.
-	self updateView
-]
-
-{ #category : #accessing }
-GtLocalVersion >> updateContent [
-	| previousContent newContent change styler |
-	previousContent := compiledMethod sourceCode.
-	newContent := localVersion sourceCode.
-
-	content removeChildren.
-
-	change := GtDiffBuilder
-			computeDifferencesFrom: previousContent
-			to: newContent
-			using: GtSmaCCDiffSplitter forPharo.
-	styler := GtCodeDiffRBTextStyler new.
-
-	content
-		addChild: (BrLabel new
-				aptitude: BrGlamorousLabelAptitude;
-				text: 'Version at ' , localVersion timeStamp printToSeconds);
-		addChild: (GtDiffElementWithLabelStencil new
-				fromLabelText: 'Current';
-				toLabelText: 'Version';
+			GtDiffElementWithLabelStencil new
+				fromLabelText: 'Version';
+				toLabelText: 'Image';
 				change: change;
-				styler: styler) create;
-		addChild: (BrFrame new
-				addChild: (BrButton new
-						icon: BrGlamorousVectorIcons accept;
-						label: 'Use this version';
-						aptitude: BrGlamorousButtonWithIconAptitude;
-						action: [ :aButton | localVersion asMCMethodDefinition load ]))
+				styler: styler ] 
+]
+
+{ #category : #'gt - extensions' }
+GtLocalVersion >> gtViewDiffWithPreviousFor: aView [
+	<gtView>
+	
+	^ aView explicit 
+		title: 'Diff';
+		priority: 5;
+		stencil: [ 
+			| change styler |
+
+			change := GtDiffBuilder
+				computeDifferencesFrom: self previousSourceCode 
+				to: self sourceCode
+				using: GtSmaCCDiffSplitter forPharo.
+				
+			styler := GtCodeDiffRBTextStyler new.
+
+			GtDiffElementWithLabelStencil new
+				fromLabelText: 'Previous';
+				toLabelText: 'Changed';
+				change: change;
+				styler: styler ] 
+]
+
+{ #category : #initialization }
+GtLocalVersion >> initializeWithChange: aChangeRecord previousChange: aPreviousChangeRecord currentMethod: aMethod [ 
+	changeRecord := aChangeRecord.
+	previousChangeRecord := aPreviousChangeRecord.
+	currentMethod := aMethod.
+]
+
+{ #category : #actions }
+GtLocalVersion >> loadChange [ 
+	^ changeRecord asMCMethodDefinition load
 ]
 
 { #category : #accessing }
-GtLocalVersion >> updateHeader [
-	header removeChildren.
-	header
-		addChild: (BrLabel new
-				aptitude: BrGlamorousLabelAptitude;
-				text: 'Version at ' , localVersion timeStamp printToSeconds)
+GtLocalVersion >> previousSourceCode [
+	^ previousChangeRecord
+		ifNil: [ '' ] 
+		ifNotNil: [ :aChangeRecord |
+			aChangeRecord sourceCode ]
 ]
 
 { #category : #accessing }
-GtLocalVersion >> updateView [
-	self updateHeader.
-	self updateContent.
+GtLocalVersion >> printOn: aStream [ 
+	super printOn: aStream .
+	
+	aStream parenthesize: [
+		changeRecord printOn: aStream ]
+]
+
+{ #category : #accessing }
+GtLocalVersion >> sourceCode [
+	^ changeRecord sourceCode
+]
+
+{ #category : #accessing }
+GtLocalVersion >> timeStamp [
+	^ changeRecord timeStamp
 ]

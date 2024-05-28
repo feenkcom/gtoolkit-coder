@@ -20,16 +20,25 @@ CompiledMethod >> gtDisplayOn: aStream [
 { #category : #'*GToolkit-Coder-Extensions' }
 CompiledMethod >> gtLocalVersionsFor: aView [
 	<gtView>
+	
+	self sourcePointer ifNil: [ ^ aView empty ].
+	
 	^ aView list
 		title: 'Local versions';
 		priority: 10;
-		items: [ SourceFiles
+		items: [ 
+			| changeRecords |
+			changeRecords := SourceFiles
 				changeRecordsFrom: self sourcePointer
 				className: self methodClass instanceSide name
-				isMeta: self methodClass isMeta ];
-		itemStencil: [ GtLocalVersion new ];
+				isMeta: self methodClass isMeta.
+			changeRecords withIndexCollect: [ :aChange :anIndex |
+				 GtLocalVersion 
+					change: aChange 
+					previousChange: (changeRecords at: anIndex + 1 ifAbsent: [nil])
+					currentMethod: self ] ];
+		itemStencil: [ GtLocalVersionElement new ];
 		itemDataBinder: [ :aLocalVersionElement :aLocalVersion | 
 				aLocalVersionElement
-					compiledMethod: self;
 					localVersion: aLocalVersion ]
 ]
