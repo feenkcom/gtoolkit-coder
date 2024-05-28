@@ -26,6 +26,13 @@ GtLocalVersion >> currentSourceCodeInImage [
 ]
 
 { #category : #'gt - extensions' }
+GtLocalVersion >> gtActionLoadVersionFor: anAction [
+	<gtAction>
+	
+	^ changeRecord gtActionLoadVersionFor: anAction
+]
+
+{ #category : #'gt - extensions' }
 GtLocalVersion >> gtViewDiffWithInImageCodeFor: aView [
 	<gtView>
 	
