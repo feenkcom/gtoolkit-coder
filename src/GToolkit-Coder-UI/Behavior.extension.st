@@ -45,12 +45,12 @@ Behavior >> gtHierarchyButtonFor: anAction [
 		icon: BrGlamorousIcons tree;
 		id: GtCoderClassHierarchyButtonId;
 		priority: 3;
-		preferredExtent: 400 @ 400;
+		preferredExtentFrom: GtPharoCoderHierarchyDropdownConfiguration;
 		content: [ :aButton | 
 			| aNavigationModel |
 			aNavigationModel := aButton phlow firstParentCoderNavigationModel.
 			BlElement new
-				size: 400 @ 400;
+				size: GtPharoCoderHierarchyDropdownConfiguration preferredExtent;
 				addChild: ((GtCoderNavigationTabsStencil new
 						navigationModel: aNavigationModel;
 						asElement) background: Color white) ]
