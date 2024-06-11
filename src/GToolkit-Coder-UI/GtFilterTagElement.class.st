@@ -138,7 +138,8 @@ GtFilterTagElement >> createCompletionValuesDropdownContent [
 { #category : #'private - instance creation' }
 GtFilterTagElement >> createDropdownContent [
 	^ BrSimpleList new
-		fitContent;
+		vFitContentLimited;
+		hFitContent;
 		stencil: [ :eachFilterDescriptor :eachIndex | 
 			BrHorizontalPane new
 				id: (GtFilterTagPickerItemId indexed: eachIndex);
