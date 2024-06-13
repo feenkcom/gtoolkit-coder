@@ -21,25 +21,25 @@ GtRenameAction >> addRenameAttributes [
 	| text cursorInLocation |
 	text := self text.
 	cursorInLocation := originalLocations
-		anySatisfy:
-			[ :each | originalCursorPosition between: each first - 1 and: each last ].
+			anySatisfy: [ :each | originalCursorPosition between: each first - 1 and: each last ].
 	renameAttributes := originalLocations
-		collect: [ :each | 
-			| attribute |
-			attribute := (cursorInLocation not
-				or: [ originalCursorPosition between: each first - 1 and: each last ])
-				ifTrue: [ GtRenameEditorAttribute new
-						action: self;
-						selectAll: selectAll;
-						filter: filter;
-						cursorLocation: originalCursorPosition - each first + 1;
-						text: (text from: each first to: each last) ]
-				ifFalse: [ GtRenamePreviewAttribute new
-						action: self;
-						text: (text from: each first to: each last) ].
-			cursorInLocation := true.
-			(text from: each first to: each last) attributes: {attribute}.
-			attribute ]
+			collect: [ :each | 
+				| attribute |
+				attribute := (cursorInLocation not
+						or: [ originalCursorPosition between: each first - 1 and: each last ])
+						ifTrue: [ GtRenameEditorAttribute new
+								action: self;
+								selectAll: selectAll;
+								filter: filter;
+								coordinateFocus: self shouldCoordinateFocus;
+								cursorLocation: originalCursorPosition - each first + 1;
+								text: (text from: each first to: each last) ]
+						ifFalse: [ GtRenamePreviewAttribute new
+								action: self;
+								text: (text from: each first to: each last) ].
+				cursorInLocation := true.
+				(text from: each first to: each last) attributes: {attribute}.
+				attribute ]
 ]
 
 { #category : #'private - actions' }
@@ -65,6 +65,11 @@ GtRenameAction >> saveOriginalState [
 	text := self text.
 	originalText := text copy.
 	originalCursorPosition := self textEditor cursors first position
+]
+
+{ #category : #private }
+GtRenameAction >> shouldCoordinateFocus [
+	^ false
 ]
 
 { #category : #accessing }
