@@ -47,21 +47,23 @@ GtCoderModel class >> contextMenuAddOnsPragma [
 { #category : #'private - addons' }
 GtCoderModel class >> gtAstCoderAddOnsFor: aView context: aPhlowContext [
 	<gtClassView>
-	
 	^ aView forward
 		title: 'Coder Addons';
 		tooltip: 'The methods that extend the Coder with AddOns';
 		priority: 40;
 		object: [ (GtSearchMethodsInClassFilter new
 				forClass: self;
-				includeSuperclass: true) & self astExtensionsPragma gtPragmas ];
+				includeSuperclass: true)
+				& (self astExtensionsPragma gtPragmas | #initializeAddOns: gtImplementors
+						| #initializeAddOns:viewModel: gtImplementors) ];
 		view: #gtItemsFor:;
-		actionButtonIcon: BrGlamorousVectorIcons inspect 
+		actionButtonIcon: BrGlamorousVectorIcons inspect
 			tooltip: 'Inspect Addons'
-			action: [ :aButton |
-				aButton phlow spawnObject: (GtSearchMethodsInClassFilter new
-					forClass: self;
-					includeSuperclass: true) & self astExtensionsPragma gtPragmas ]
+			action: [ :aButton | 
+				aButton phlow
+					spawnObject: (GtSearchMethodsInClassFilter new
+							forClass: self;
+							includeSuperclass: true) & self astExtensionsPragma gtPragmas ]
 ]
 
 { #category : #'private - addons' }
