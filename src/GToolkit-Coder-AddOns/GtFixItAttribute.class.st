@@ -6,7 +6,8 @@ Class {
 		'descriptionBlock',
 		'hoverMarker',
 		'hoverAttribute',
-		'label'
+		'label',
+		'elementId'
 	],
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
@@ -64,6 +65,7 @@ GtFixItAttribute >> description: aBlockReturningBlText [
 GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| button dropDownAptitude |
 	button := GtFixItButton new.
+	elementId ifNotNil: [ button id: elementId ].
 	button beTinySize.
 	button label: (label ifNil: [ 'Fix it' ]).
 	
@@ -124,6 +126,16 @@ GtFixItAttribute >> dropDownElementFor: anEditorElement [
 			
 	pane addChild: menuElement.
 	^ pane
+]
+
+{ #category : #accessing }
+GtFixItAttribute >> elementId [
+	^ elementId
+]
+
+{ #category : #accessing }
+GtFixItAttribute >> elementId: anObject [
+	elementId := anObject
 ]
 
 { #category : #initialization }
