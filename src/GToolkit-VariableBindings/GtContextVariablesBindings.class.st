@@ -38,7 +38,7 @@ GtContextVariablesBindings >> bindingOf: aSymbol [
 		ifNil: [ ^ nil ].
 	var isLocalVariable
 		ifFalse: [ ^ nil ].
-	^ var
+	^ var asDoItVariableFrom: context.
 ]
 
 { #category : #binding }
