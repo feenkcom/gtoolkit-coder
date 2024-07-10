@@ -7,8 +7,8 @@ Wraps {{gtClass:GtCoderModel}} and optionally adds UI related api and state. Cod
 Class {
 	#name : #GtSingleCoderViewModel,
 	#superclass : #Object,
-	#traits : 'TGtAnnouncer',
-	#classTraits : 'TGtAnnouncer classTrait',
+	#traits : 'TGtAnnouncer + TGtOptions',
+	#classTraits : 'TGtAnnouncer classTrait + TGtOptions classTrait',
 	#instVars : [
 		'announcer',
 		'codersUIModel',
