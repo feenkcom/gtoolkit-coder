@@ -369,14 +369,6 @@ GtSourceCoderViewModel >> selectedTextInterval [
 GtSourceCoderViewModel >> subscribeToCoderModel [
 	super subscribeToCoderModel.
 
-	true ifTrue: [ 
-		"Currently, we dispatch the show debugger request using TGtCoderRequesterObject.
-		We likely do not want to handle it listening to GtCoder models as we observed
-		unresponsive images if a debug session was terminated twice. This may be solved
-		by sharing same GtSharedDebugSession instances among all subscribers. It was not
-		tested as dispaching the request throught TGtCoderRequesterObject seems to be
-		better solution."
-		^ self ].
 	self coderModel weak
 		when: GtCoderShowDebuggerRequest
 		send: #onShowDebuggerRequest:

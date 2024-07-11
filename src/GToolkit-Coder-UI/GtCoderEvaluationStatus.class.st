@@ -7,6 +7,8 @@ See my subclasses for concrete evaluation statuses: {{gtClass:GtCoderEvaluationS
 Class {
 	#name : #GtCoderEvaluationStatus,
 	#superclass : #Object,
+	#traits : 'TGtOptions',
+	#classTraits : 'TGtOptions classTrait',
 	#category : #'GToolkit-Coder-UI-Coders - Evaluation'
 }
 
