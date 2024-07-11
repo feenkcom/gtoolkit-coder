@@ -15,14 +15,3 @@ Class {
 GtCoderNoEvaluationStatus >> gtDisplayOn: stream [
 	stream nextPutAll: 'No evaluation'
 ]
-
-{ #category : #'api - hooks' }
-GtCoderNoEvaluationStatus >> mayCloseSourceCoderViewModel: aViewModel debuggerSpaceOfStatus: anEvaluationStatus [
-	
-]
-
-{ #category : #'api - hooks' }
-GtCoderNoEvaluationStatus >> mayTerminateSourceCoderViewModel: aViewModel sharedDebugSessionOfStatus: anEvaluationStatus [
-	anEvaluationStatus sharedDebugSession unsubscribe: aViewModel.
-	anEvaluationStatus sharedDebugSession terminate
-]

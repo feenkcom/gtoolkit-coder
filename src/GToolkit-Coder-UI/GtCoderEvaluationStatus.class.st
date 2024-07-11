@@ -22,6 +22,11 @@ GtCoderEvaluationStatus >> asDebugSessionInSpaceEvaluationStatusFromAnnouncement
 	^ GtCoderNoEvaluationStatus default
 ]
 
+{ #category : #'api - hooks' }
+GtCoderEvaluationStatus >> handleStatusChangedAnnouncement: anAnnouncement sourceCoderElement: anElement [
+	
+]
+
 { #category : #testing }
 GtCoderEvaluationStatus >> hasDebugSessionInSpace [
 	^ false
@@ -38,11 +43,10 @@ GtCoderEvaluationStatus >> mayCloseSourceCoderViewModel: aViewModel debuggerSpac
 
 { #category : #'api - hooks' }
 GtCoderEvaluationStatus >> mayTerminateSourceCoderViewModel: aViewModel sharedDebugSessionOfStatus: anEvaluationStatus [
-]
+	"Usually, we want to terminate a debug session of a previous evaluation status."
 
-{ #category : #'api - hooks' }
-GtCoderEvaluationStatus >> onSourceCoderElement: anElement [
-	
+	anEvaluationStatus sharedDebugSession unsubscribe: aViewModel.
+	anEvaluationStatus sharedDebugSession terminate
 ]
 
 { #category : #'api - hooks' }

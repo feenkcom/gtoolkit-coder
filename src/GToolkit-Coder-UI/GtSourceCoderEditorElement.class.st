@@ -17,8 +17,9 @@ GtSourceCoderEditorElement >> onTextualCoderViewModelChanged [
 GtSourceCoderEditorElement >> onViewModelEvaluationStatusChanged: anAnnouncement [
 	BlTaskAction
 		enqueueElement: self
-		action: [ 
-			anAnnouncement evaluationStatus onSourceCoderElement: self.
+		action: [ anAnnouncement evaluationStatus
+				handleStatusChangedAnnouncement: anAnnouncement
+				sourceCoderElement: self.
 			self styleText ]
 ]
 
