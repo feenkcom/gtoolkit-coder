@@ -17,6 +17,20 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coders - Evaluation'
 }
 
+{ #category : #comparing }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> = anObject [
+	self == anObject ifTrue: [ ^ true ].
+
+	self class = anObject class ifFalse: [ ^ false ].
+
+	^ self debugSession = anObject debugSession
+		and: [ self sharedDebugSession = anObject sharedDebugSession
+		and: [ self exception = anObject exception
+		and: [ self evaluatedCode = anObject evaluatedCode
+		and: [ self sourceInterval = anObject sourceInterval
+		and: [ self sourceString = anObject sourceString ] ] ] ] ]
+]
+
 { #category : #converting }
 GtCoderEmbeddedDebugSessionEvaluationStatus >> asDebugSessionInSpaceEvaluationStatusFromAnnouncement: anAnnouncement [
 	^ GtCoderDebugSessionInSpaceEvaluationStatus new
@@ -112,7 +126,27 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> gtEvaluatedSourceFor: aView [
 
 	^ aView text
 		title: 'Evaluated source';
+		priority: 20;
 		text: [ self gtEvaluatedSource ]
+]
+
+{ #category : #'api - hooks' }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> handleStatusChangedAnnouncement: anAnnouncement sourceCoderElement: anElement [
+	"I request to display a debug session notification. This method must be called 
+	from an element, listening to GtSourceCoderViewModelEvaluationStatusChanged."
+
+	<return: #Boolean>
+	anAnnouncement isNotificationHandled ifTrue: [ ^ self ].
+	anAnnouncement isNotificationHandled: true.
+	
+	GtCoderEvaluationStatusShowNotificationSignal new
+		evaluationStatus: self;
+		announcement: anAnnouncement;
+		sourceCoderElement: anElement;
+		emit.
+	
+	anElement
+		showNotification: (GtNotificationDebugSession new debugSession: self sharedDebugSession)
 ]
 
 { #category : #testing }
@@ -120,11 +154,15 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> hasSharedDebugSession [
 	^ true
 ]
 
-{ #category : #'api - hooks' }
-GtCoderEmbeddedDebugSessionEvaluationStatus >> onSourceCoderElement: anElement [
-	"This code must be called from a coder element (or moved to an element), listening to GtSourceCoderViewModelEvaluationStatusChanged."
-	anElement
-		showNotification: (GtNotificationDebugSession new debugSession: self sharedDebugSession)
+{ #category : #comparing }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> hash [
+	^ self class hash
+		bitXor: (self debugSession hash
+		bitXor: (self sharedDebugSession hash
+		bitXor: (self exception hash
+		bitXor: (self evaluatedCode hash
+		bitXor: (self sourceInterval hash
+		bitXor: (self sourceString hash ))))))
 ]
 
 { #category : #accessing }

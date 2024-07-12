@@ -173,17 +173,22 @@ GtSourceCoderViewModel >> evaluationStatus [
 ]
 
 { #category : #'api - accessing' }
-GtSourceCoderViewModel >> evaluationStatus: aStatus [
+GtSourceCoderViewModel >> evaluationStatus: aNewStatus [
 	| anOldStatus |
-	evaluationStatus = aStatus ifTrue: [ ^ self ].
-	anOldStatus := evaluationStatus.
-	evaluationStatus := aStatus.
-	GtCoderEvaluationStatusChangedSignal new
-		oldStatus: anOldStatus;
-		newStatus: aStatus;
+	GtCoderIncomingEvaluationStatusSignal new
+		existingStatus: evaluationStatus;
+		newStatus: aNewStatus;
 		viewModel: self;
 		emit.
-	anOldStatus sourceCoderViewModel: self evaluationStatusChangedTo: aStatus.
+	evaluationStatus = aNewStatus ifTrue: [ ^ self ].
+	anOldStatus := evaluationStatus.
+	evaluationStatus := aNewStatus.
+	GtCoderEvaluationStatusChangedSignal new
+		oldStatus: anOldStatus;
+		newStatus: aNewStatus;
+		viewModel: self;
+		emit.
+	anOldStatus sourceCoderViewModel: self evaluationStatusChangedTo: aNewStatus.
 	self onEvaluationStatusChanged
 ]
 

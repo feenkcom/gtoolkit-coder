@@ -94,6 +94,13 @@ GtCoderDebugSessionInSpaceEvaluationStatus >> hasDebugSessionInSpace [
 	^ true
 ]
 
+{ #category : #'api - hooks' }
+GtCoderDebugSessionInSpaceEvaluationStatus >> mayTerminateSourceCoderViewModel: aViewModel sharedDebugSessionOfStatus: anEvaluationStatus [
+	"We want to keep the debug session, since we are about to open it in a full window."
+
+	
+]
+
 { #category : #actions }
 GtCoderDebugSessionInSpaceEvaluationStatus >> requestDebuggerSpaceClose [
 	^ self debuggerSpace ifNotNil: #requestClose
