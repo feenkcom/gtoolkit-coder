@@ -35,9 +35,13 @@ GtSlotVariablesBindings >> bindingOf: aSymbol [
 		gtSlotNamed: aSymbol
 		ifFound: [ :aSlot | aSlot ]
 		ifNone: [
-			object class
-				classVariableNamed: aSymbol
-				ifAbsent: [ nil ] ]
+			object class isInstanceSide
+				ifTrue: [ object class
+					classVariableNamed: aSymbol
+					ifAbsent: [ nil ] ]
+				ifFalse: [ object
+					classVariableNamed: aSymbol
+					ifAbsent: [ nil ] ] ]
 ]
 
 { #category : #binding }
@@ -45,7 +49,10 @@ GtSlotVariablesBindings >> bindingValueOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a value of the variable."
 
-	^ (self bindingOf: aSymbol) ifNotNil: [ :aSlot | aSlot read: self object ]
+	^ (self bindingOf: aSymbol) ifNotNil: [ :aSlot | 
+		aSlot isClassVariable
+			ifTrue: [ aSlot value ]
+			ifFalse: [ aSlot read: self object ] ]
 ]
 
 { #category : #testing }
@@ -55,9 +62,9 @@ GtSlotVariablesBindings >> hasBindingOf: aSymbol [
 	^ object class
 		gtSlotNamed: aSymbol
 		ifFound: [ :slot | true ]
-		ifNone: [ object class = object class instanceSide 
+		ifNone: [ object class isInstanceSide
 			ifTrue: [ object class hasClassVarNamed: aSymbol ]
-			ifFalse: [ false ] ]
+			ifFalse: [ object hasClassVarNamed: aSymbol ] ]
 ]
 
 { #category : #comparing }
@@ -78,4 +85,14 @@ GtSlotVariablesBindings >> object [
 GtSlotVariablesBindings >> object: anObject [
 
 	object := anObject
+]
+
+{ #category : #printing }
+GtSlotVariablesBindings >> printOn: aStream [
+	super printOn: aStream.
+
+	aStream
+		nextPut: $(;
+		print: object;
+		nextPut: $)
 ]
