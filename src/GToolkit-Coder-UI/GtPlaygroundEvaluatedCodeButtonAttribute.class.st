@@ -84,7 +84,7 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> mayHaveExternalReferences [
 
 { #category : #initialization }
 GtPlaygroundEvaluatedCodeButtonAttribute >> playgroundElementIn: aContainer [
-	^ (self result value gtViewsFor: GtPhlowEmptyView new)
+	^ (self result gtViewsFor: GtPhlowEmptyView new)
 		asElementDo: [ :anInspectorElement | 
 			aContainer
 				addChild: ((anInspectorElement exact: 400 @ 400) asScalableElement size: 200 @ 200) ]

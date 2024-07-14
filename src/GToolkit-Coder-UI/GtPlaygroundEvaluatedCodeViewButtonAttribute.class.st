@@ -21,7 +21,7 @@ GtPlaygroundEvaluatedCodeViewButtonAttribute >> initialize [
 
 { #category : #accessing }
 GtPlaygroundEvaluatedCodeViewButtonAttribute >> playgroundElementIn: aContainer [
-	^ (self result value perform: self view withArguments: {GtPhlowEmptyView new})
+	^ (self result perform: self view withArguments: {GtPhlowEmptyView new})
 		asElementDo: [ :anInspectorElement | aContainer addChild: (anInspectorElement asScalableElement size: 200 @ 200) ]
 ]
 
