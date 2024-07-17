@@ -484,6 +484,15 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageTagRemoved: anAnnounceme
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onPackageTagRenamed: anAnnouncement [
+	self
+		suppressListChangeEventsDuring: [ self
+				renamePackageTag: anAnnouncement package
+				oldName: anAnnouncement oldName
+				newName: anAnnouncement newName ]
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageTagSelected: anAnnouncer [
 	self
 		inUIProcessDo: [ self
@@ -651,6 +660,18 @@ GtCoderNavigationPackagesTagsClassesElement >> renameMethod: aSelector inElement
 
 { #category : #'api - package updates' }
 GtCoderNavigationPackagesTagsClassesElement >> renamePackage: aPackage oldName: anOldName newName: aNewName [
+	| aSelectedPackageOrTag |
+
+	packagesList selectedNodeDo: [ :aNode | 
+		aSelectedPackageOrTag := aNode value ].
+
+	self updatePackageLists.
+	aSelectedPackageOrTag ifNotNil: [
+		self selectPackageOrTag: aSelectedPackageOrTag ].
+]
+
+{ #category : #'api - package updates' }
+GtCoderNavigationPackagesTagsClassesElement >> renamePackageTag: aPackageTag oldName: anOldName newName: aNewName [
 	| aSelectedPackageOrTag |
 
 	packagesList selectedNodeDo: [ :aNode | 
@@ -934,6 +955,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 			GtCoderNavigationPackageRenamed -> #onPackageRenamed:.
 			GtCoderNavigationPackageTagAdded -> #onPackageTagAdded:.
 			GtCoderNavigationPackageTagRemoved -> #onPackageTagRemoved:.
+			GtCoderNavigationPackageTagRenamed -> #onPackageTagRenamed:.
 			GtCodersFiltersChanged -> #onMethodsCoderFiltersChanged:.
 			GtCoderNavigationMethodModification -> #onMethodChanged:}.
 	subscriptions

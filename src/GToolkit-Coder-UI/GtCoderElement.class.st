@@ -163,6 +163,7 @@ GtCoderElement >> subscribeToNavigationModel [
 			GtCoderNavigationPackageSelected,
 			GtCoderNavigationPackageRenamed,
 			GtCoderNavigationPackageTagSelected,
+			GtCoderNavigationPackageTagRenamed,
 			GtCoderNavigationClassSelected,
 			GtCoderNavigationClassRenamed,
 			GtCoderNavigationClassModified
