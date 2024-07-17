@@ -200,7 +200,31 @@ GtCoderNavigationPackagesTreeElement >> renamePackage: aPackage inElement: elem 
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> renameTag: aPackageOrTag inElement: elem [ 
+GtCoderNavigationPackagesTreeElement >> renameTag: aPackageOrTag inElement: elem [
+	| refactoring edit childs |
+	childs := elem children.
+	edit := BrEditableLabel new.
+	edit
+		aptitude: (BrGlamorousEditableLabelAptitude new
+				fontSize: 11.9;
+				background: Color transparent);
+		text: aPackageOrTag name;
+		when: BrEditorAcceptWish
+			do: [ :aWish | 
+				refactoring := GtRBRenamePackageTagRefactoring
+						packageName: aPackageOrTag package name
+						from: aPackageOrTag name
+						to: aWish text asString.
+				edit switchToLabel.
+				self
+					addPreviewButtonFor: refactoring
+					to: elem
+					cancelBlock: [ elem removeChildren.
+						elem addChildren: childs ] ];
+		switchToEditor.	"Force the font to match the label font"
+	edit requestFocus.
+	elem removeChildren.
+	elem addChild: edit
 ]
 
 { #category : #'api - selection' }

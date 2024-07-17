@@ -11,3 +11,8 @@ RPackageTag >> gtClassesCoderFor: aView context: aPhlowContext [
 		disableAsync;
 		stencil: [ aPhlowContext packageTagCoder classesCoder asElement ]
 ]
+
+{ #category : #'*GToolkit-Coder' }
+RPackageTag >> gtTagName [
+	^ self name
+]
