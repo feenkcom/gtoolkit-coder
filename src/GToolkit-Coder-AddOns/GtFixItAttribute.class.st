@@ -179,3 +179,8 @@ GtFixItAttribute >> label [
 GtFixItAttribute >> label: aString [
 	label := aString
 ]
+
+{ #category : #testing }
+GtFixItAttribute >> mayHaveExternalReferences [
+	^ true
+]
