@@ -197,7 +197,7 @@ GtSourceCoderViewModel >> handleCoderEvaluationUnhandledErrorDuring: aBlock [
 	^ [ GtCoderUserSnippetDynamicVariable
 			value: GtCoderUserSnippetEvaluationRunningState default
 			during: aBlock ]
-		on: GtCoderEvaluationUnhandledError , Halt
+		on: GtCoderUserSnippetEvaluationConfiguration handledErrors
 		do: [ :anError | 
 			GtCoderUserSnippetDynamicVariable value: GtCoderUserSnippetEvaluationExceptionState default .
 			self
