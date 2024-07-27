@@ -18,7 +18,9 @@ Class {
 GtTextualCoderEditorElement >> attachSpace [
 	super attachSpace.
 	
-	GtTextualCoderEditorElementAttachedSpaceSignal emit
+	GtTextualCoderEditorElementAttachedSpaceSignal new 
+		element: self;
+		emit
 ]
 
 { #category : #'api - textual coder view model' }
@@ -77,7 +79,9 @@ GtTextualCoderEditorElement >> defaultTextEditorMode [
 GtTextualCoderEditorElement >> detachSpace [
 	super detachSpace.
 	
-	GtTextualCoderEditorElementDetachedSpaceSignal emit
+	GtTextualCoderEditorElementDetachedSpaceSignal new 
+		element: self;
+		emit
 ]
 
 { #category : #'private - updating' }
@@ -164,7 +168,9 @@ GtTextualCoderEditorElement >> initializeListeners [
 GtTextualCoderEditorElement >> onAddedToSceneGraph [
 	super onAddedToSceneGraph.
 	
-	GtTextualCoderEditorElementAddedToSceneGraphSignal emit
+	GtTextualCoderEditorElementAddedToSceneGraphSignal new 
+		element: self;
+		emit
 ]
 
 { #category : #'private - event handling' }
@@ -247,7 +253,9 @@ GtTextualCoderEditorElement >> onPrintRequest: anEvaluationAnnouncement [
 GtTextualCoderEditorElement >> onRemovedFromSceneGraph [
 	super onRemovedFromSceneGraph.
 	
-	GtTextualCoderEditorElementRemovedFromSceneGraphSignal emit
+	GtTextualCoderEditorElementRemovedFromSceneGraphSignal new 
+		element: self;
+		emit
 ]
 
 { #category : #'private - event handling' }
@@ -434,7 +442,9 @@ GtTextualCoderEditorElement >> privateUpdateCursors: anEditorElement announcemen
 	aCursorsChangedAnnouncement source == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
-	GtTextualCoderEditorElementUpdateCursorsSignal emit.
+	GtTextualCoderEditorElementUpdateCursorsSignal new 
+		element: self;
+		emit.
 
 	self navigator
 		withoutResettingDesiredCoordinate;
@@ -445,7 +455,9 @@ GtTextualCoderEditorElement >> privateUpdateCursors: anEditorElement announcemen
 
 { #category : #'private - updating' }
 GtTextualCoderEditorElement >> privateUpdateEditorState: anEditorState [
-	GtTextualCoderEditorElementUpdateStateSignal emit.
+	GtTextualCoderEditorElementUpdateStateSignal new 
+		element: self;
+		emit.
 
 	self editor restoreState: anEditorState
 ]
@@ -459,7 +471,9 @@ GtTextualCoderEditorElement >> privateUpdateText: anEditorElement announcement: 
 	aGtTextualCoderViewModelTextChanged textualCoderViewModel == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
-	GtTextualCoderEditorElementUpdateTextSignal emit.
+	GtTextualCoderEditorElementUpdateTextSignal new 
+		element: self;
+		emit.
 
 	"Determine the text that we should use to update the editor."
 	textForUpdate := self computeTextForUpdateForTextChangedEvent: aGtTextualCoderViewModelTextChanged.
