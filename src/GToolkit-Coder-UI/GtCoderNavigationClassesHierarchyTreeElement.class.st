@@ -228,7 +228,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> renameClass: aClass inElement: e
 		text: aClass name;
 		when: BrEditorAcceptWish
 			do: [ :aWish | 
-				refactoring := RBRenameClassRefactoring
+				refactoring := GtRBRenameClassRefactoring
 						rename: aClass name
 						to: aWish text asString.
 				edit switchToLabel.
