@@ -642,7 +642,7 @@ GtCoderNavigationPackagesTagsClassesElement >> renameMethod: aSelector inElement
 		text: aSelector;
 		when: BrEditorAcceptWish
 			do: [ :aWish | 
-				refactoring := RBRenameMethodRefactoring
+				refactoring := GtRBRenameMethodRefactoring
 						renameMethod: aSelector
 						in: self selectedClass
 						to: aWish text asString
