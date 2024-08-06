@@ -1,10 +1,10 @@
 Class {
 	#name : #GtCoderRenameMethodRefactoring,
-	#superclass : #RBRenameMethodRefactoring,
+	#superclass : #GtRBRenameMethodRefactoring,
 	#instVars : [
 		'methodCoder'
 	],
-	#category : 'GToolkit-Coder-Refactoring'
+	#category : #'GToolkit-Coder-Refactoring'
 }
 
 { #category : #accessing }
