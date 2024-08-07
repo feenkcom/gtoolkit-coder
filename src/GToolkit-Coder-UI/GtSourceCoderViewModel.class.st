@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtTextualCoderViewModel,
 	#instVars : [
 		'evaluationResult',
-		'evaluationStatus'
+		'evaluationStatus',
+		'executionStrategy'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source Model'
 }
@@ -119,6 +120,17 @@ GtSourceCoderViewModel >> doItAndGoAllSerialized [
 ]
 
 { #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAndGoAsynchronous: aTextInterval [
+	"Evaluate a piece of source code within an interval and inspect a result."
+
+	^ self handleCoderEvaluationUnhandledErrorDuring: [ 
+		self coder doItAndGoAsynchronousInContext: (
+			self evaluationContext 
+				from: aTextInterval first 
+				to: aTextInterval last) ]
+]
+
+{ #category : #'api - actions' }
 GtSourceCoderViewModel >> doItAndGoSerialized [
 	"Evaluate selected source code or everything if there is nothing selected and inspect the result"
 
@@ -190,6 +202,18 @@ GtSourceCoderViewModel >> evaluationStatus: aNewStatus [
 		emit.
 	anOldStatus sourceCoderViewModel: self evaluationStatusChangedTo: aNewStatus.
 	self onEvaluationStatusChanged
+]
+
+{ #category : #accessing }
+GtSourceCoderViewModel >> executionStrategy [
+
+	^ executionStrategy
+]
+
+{ #category : #accessing }
+GtSourceCoderViewModel >> executionStrategy: anObject [
+
+	executionStrategy := anObject
 ]
 
 { #category : #'private - event handling' }

@@ -11,7 +11,8 @@ Class {
 	#instVars : [
 		'coderUIModel',
 		'action',
-		'element'
+		'element',
+		'executionStrategy'
 	],
 	#category : #'GToolkit-Coder-UI-Execution'
 }
@@ -113,7 +114,20 @@ GtCoderCodeExecutor >> event: anObject [
 GtCoderCodeExecutor >> execute [
 	GtCoderExecutionContextVariable
 		element: self element
-		do: [ self coderViewModel perform: action ]
+		do: [ | coderViewModel |
+			coderViewModel := self coderViewModel.
+			coderViewModel executionStrategy: executionStrategy.
+			coderViewModel perform: action ]
+]
+
+{ #category : #accessing }
+GtCoderCodeExecutor >> executionStrategy [
+	^ executionStrategy
+]
+
+{ #category : #accessing }
+GtCoderCodeExecutor >> executionStrategy: anObject [
+	executionStrategy := anObject
 ]
 
 { #category : #initialization }

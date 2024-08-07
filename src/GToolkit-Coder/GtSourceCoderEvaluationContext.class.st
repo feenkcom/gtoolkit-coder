@@ -8,7 +8,8 @@ Class {
 		'sourceString',
 		'evaluatedInterval',
 		'evaluatedSourceString',
-		'evaluatedCode'
+		'evaluatedCode',
+		'executionStrategy'
 	],
 	#category : #'GToolkit-Coder-Coders - Evaluation'
 }
@@ -64,6 +65,16 @@ GtSourceCoderEvaluationContext >> evaluatedSourceString [
 { #category : #accessing }
 GtSourceCoderEvaluationContext >> evaluatedSourceString: anObject [
 	evaluatedSourceString := anObject
+]
+
+{ #category : #accessing }
+GtSourceCoderEvaluationContext >> executionStrategy [
+	^ executionStrategy
+]
+
+{ #category : #accessing }
+GtSourceCoderEvaluationContext >> executionStrategy: anObject [
+	executionStrategy := anObject
 ]
 
 { #category : #'api - context' }
