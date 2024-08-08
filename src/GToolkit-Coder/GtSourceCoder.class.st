@@ -404,6 +404,7 @@ GtSourceCoder >> notifyToolSpawn: aTool withDestination: aSpawnDestination reque
 	self announce: (GtCoderToolSpawnRequest new 
 		tool: aTool;
 		spawnDestination: aSpawnDestination;
+		requesterObject: aRequester;
 		coder: self)
 ]
 

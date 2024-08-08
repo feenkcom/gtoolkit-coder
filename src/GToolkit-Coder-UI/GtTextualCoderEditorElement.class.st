@@ -317,9 +317,10 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onToolSpawnRequest: anAnnouncement [
 	self enqueueTask: (BlTaskAction new action: [
-		self phlow
-			spawnTool: anAnnouncement tool
-			withDestination: anAnnouncement spawnDestination ])
+		anAnnouncement requesterObject = self textualCoderViewModel ifTrue: [
+			self phlow
+				spawnTool: anAnnouncement tool
+				withDestination: anAnnouncement spawnDestination ] ])
 ]
 
 { #category : #'private - event handling' }
