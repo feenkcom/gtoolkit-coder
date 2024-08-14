@@ -89,7 +89,7 @@ GtPhlowSearchFilterToolElement >> initialize [
 GtPhlowSearchFilterToolElement >> initializeTitleNotifier [
 	titleNotifier := GtPhlowTitleIconAndLabelNotifier new
 		longLabel: [ self searchFilterDescription ];
-		icon: BrGlamorousVectorIcons emphasizedBrowse.
+		icon: BrGlamorousVectorIcons search.
 	self addEventHandler: titleNotifier.
 ]
 
