@@ -9,12 +9,6 @@ Class {
 }
 
 { #category : #'building - widgets' }
-GtPhlowSearchFilterToolElement >> buildContentElement [
-	^ BrFrame new
-		matchParent
-]
-
-{ #category : #'building - widgets' }
 GtPhlowSearchFilterToolElement >> buildHeaderElement [
 	| headerElement titleLabel |
 	
@@ -56,9 +50,18 @@ GtPhlowSearchFilterToolElement >> buildToolLabel [
 		text: 'Search Filter'.
 ]
 
-{ #category : #'accessing - elements' }
-GtPhlowSearchFilterToolElement >> contentElement [
-	^ self childNamed: #content
+{ #category : #'building - widgets' }
+GtPhlowSearchFilterToolElement >> buildViewsContainerElement [
+	^ BrFrame new
+		matchParent
+]
+
+{ #category : #accessing }
+GtPhlowSearchFilterToolElement >> collectToolViews [ 
+	^ GtPhlowViewsCollector new
+		pragmaName: #gtToolView;
+		fromObject: searchFilter;
+		collect
 ]
 
 { #category : #'accessing - elements' }
@@ -73,16 +76,21 @@ GtPhlowSearchFilterToolElement >> initialize [
 	self matchParent.
 	self padding: (BlInsets top: 5 left: 6 bottom: 0 right: 6).
 	
+	self initializeContent.
+	self initializeTitleNotifier.
+]
+
+{ #category : #initialization }
+GtPhlowSearchFilterToolElement >> initializeContent [
 	self addChild: (self buildToolLabel
 		padding: (BlInsets left: 5)) as: #toolLabel.
 	self addChild: (self buildHeaderElement
 		padding: (BlInsets left: 5)) as: #header.
-	self addChild: (self buildContentElement
-		padding: (BlInsets top: 5)) as: #content.
+		
+	self addChild: (self buildViewsContainerElement
+		padding: (BlInsets top: 5)) as: #viewsContainer.
 	self addChild: (self buildPlaygroundPageElement
 		padding: (BlInsets top: 5)) as: #playgroundPage.
-		
-	self initializeTitleNotifier.
 ]
 
 { #category : #accessing }
@@ -124,24 +132,49 @@ GtPhlowSearchFilterToolElement >> titleNotifier [
 ]
 
 { #category : #updating }
-GtPhlowSearchFilterToolElement >> updateContainedView [
-	| viewElement |
-	viewElement := (searchFilter gtItemsFor: GtPhlowEmptyView new)
-		asElementDo: [ :e | e ].
-	self contentElement
+GtPhlowSearchFilterToolElement >> updateContainedViews [
+	| tabGroup compositeView |
+			
+	compositeView := GtPhlowCompositeView new
+		views:self collectToolViews.
+	
+	"This particular views do not update"
+	"compositeView views do: [ :aView |
+	 	aView autoUpdates definitions removeAll ]."
+	
+	tabGroup := compositeView asElementDo: [ :e | e ].
+		
+	self viewsContainerElement
 		removeChildren;
-		addChild: viewElement
+		addChild: tabGroup
 ]
 
 { #category : #updating }
 GtPhlowSearchFilterToolElement >> updateContent [
-	self titleLabel text: self searchFilterDescription.
-	self updateContainedView.
-	self playgroundElement objectHolder: (GtInspectorObject new 
-		 object: searchFilter)
+	self updateHeader.
+	self updateContainedViews.
+	self updatePlayground.
+]
+
+{ #category : #updating }
+GtPhlowSearchFilterToolElement >> updateHeader [
+	self titleLabel 
+		text: self searchFilterDescription.
+]
+
+{ #category : #updating }
+GtPhlowSearchFilterToolElement >> updatePlayground [
+	self playgroundElement 
+		objectHolder: (GtInspectorObject new 
+			object: searchFilter)
 ]
 
 { #category : #updating }
 GtPhlowSearchFilterToolElement >> updateTabLabel [
 	self titleNotifier notify
+]
+
+{ #category : #'accessing - elements' }
+GtPhlowSearchFilterToolElement >> viewsContainerElement [
+	^ self childNamed: #viewsContainer
 ]
