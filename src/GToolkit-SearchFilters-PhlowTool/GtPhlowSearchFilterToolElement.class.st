@@ -9,23 +9,11 @@ Class {
 }
 
 { #category : #'building - widgets' }
-GtPhlowSearchFilterToolElement >> buildContentElement [
-	^ BrFrame new
-		matchParent
-]
-
-{ #category : #'building - widgets' }
 GtPhlowSearchFilterToolElement >> buildHeaderElement [
-	| headerElement titleLabel |
-	
-	headerElement := BrHorizontalPane new
+	^ BrVerticalPane new 
+		padding: (BlInsets left: 5);
 		vFitContent;
-		hMatchParent.
-
-	titleLabel := self buildTitleLabel.
-
-	headerElement addChild: titleLabel as: #titleLabel.
-	^ headerElement
+		hMatchParent
 ]
 
 { #category : #'building - widgets' }
@@ -36,6 +24,13 @@ GtPhlowSearchFilterToolElement >> buildPlaygroundPageElement [
 
 	playgroundElement collapse.
 	^ playgroundElement
+]
+
+{ #category : #'building - widgets' }
+GtPhlowSearchFilterToolElement >> buildTitleContainer [
+	^ BrHorizontalPane new 
+		vFitContent;
+		hMatchParent
 ]
 
 { #category : #'building - widgets' }
@@ -56,9 +51,37 @@ GtPhlowSearchFilterToolElement >> buildToolLabel [
 		text: 'Search Filter'.
 ]
 
-{ #category : #'accessing - elements' }
-GtPhlowSearchFilterToolElement >> contentElement [
-	^ self childNamed: #content
+{ #category : #'building - widgets' }
+GtPhlowSearchFilterToolElement >> buildToolbar [
+	^ BrToolbar new
+		aptitude: BrGlamorousToolbarAptitude new;
+		fitContent;
+		constraintsDo: [ :c | 
+			c ignoreByLayout.
+			c ignored horizontal alignRight.
+			c ignored vertical alignTop ]
+]
+
+{ #category : #'building - widgets' }
+GtPhlowSearchFilterToolElement >> buildViewsContainerElement [
+	^ BrFrame new
+		matchParent
+]
+
+{ #category : #accessing }
+GtPhlowSearchFilterToolElement >> collectToolActions [ 
+	^ GtPhlowActionsCollector new
+		pragmaName: #gtToolAction;
+		fromObject: searchFilter;
+		collect
+]
+
+{ #category : #accessing }
+GtPhlowSearchFilterToolElement >> collectToolViews [ 
+	^ GtPhlowViewsCollector new
+		pragmaName: #gtToolView;
+		fromObject: searchFilter;
+		collect
 ]
 
 { #category : #'accessing - elements' }
@@ -71,18 +94,34 @@ GtPhlowSearchFilterToolElement >> initialize [
 	super initialize.
 	
 	self matchParent.
-	self padding: (BlInsets top: 5 left: 6 bottom: 0 right: 6).
+	self padding: (BlInsets top: 5 left: 5 bottom: 0 right: 5).
 	
-	self addChild: (self buildToolLabel
-		padding: (BlInsets left: 5)) as: #toolLabel.
-	self addChild: (self buildHeaderElement
-		padding: (BlInsets left: 5)) as: #header.
-	self addChild: (self buildContentElement
-		padding: (BlInsets top: 5)) as: #content.
-	self addChild: (self buildPlaygroundPageElement
-		padding: (BlInsets top: 5)) as: #playgroundPage.
-		
+	self initializeContent.
 	self initializeTitleNotifier.
+]
+
+{ #category : #initialization }
+GtPhlowSearchFilterToolElement >> initializeContent [
+	self initializeHeaderElement.
+		
+	self addChild: self buildViewsContainerElement as: #viewsContainer.
+	self addChild: self buildPlaygroundPageElement as: #playgroundPage.
+]
+
+{ #category : #initialization }
+GtPhlowSearchFilterToolElement >> initializeHeaderElement [
+	| headerElement titleContainer |
+	
+	headerElement := self buildHeaderElement.
+	
+	titleContainer := self buildTitleContainer.
+	titleContainer addChild: self buildTitleLabel as: #titleLabel.
+	titleContainer addChild: self buildToolbar as: #headerToolbar.
+
+	headerElement addChild: self buildToolLabel as: #toolLabel.
+	headerElement addChild: titleContainer as: #titleContainer.
+	
+	self addChild: headerElement as: #header.
 ]
 
 { #category : #accessing }
@@ -123,25 +162,74 @@ GtPhlowSearchFilterToolElement >> titleNotifier [
 	^ titleNotifier
 ]
 
+{ #category : #'accessing - elements' }
+GtPhlowSearchFilterToolElement >> toolbarElement [
+	^ self headerElement childNamed: #headerToolbar
+]
+
 { #category : #updating }
-GtPhlowSearchFilterToolElement >> updateContainedView [
-	| viewElement |
-	viewElement := (searchFilter gtItemsFor: GtPhlowEmptyView new)
-		asElementDo: [ :e | e ].
-	self contentElement
+GtPhlowSearchFilterToolElement >> updateContainedViews [
+	| tabGroup compositeView |
+			
+	compositeView := GtPhlowCompositeView new
+		views:self collectToolViews.
+	
+	"This particular views do not update"
+	"compositeView views do: [ :aView |
+	 	aView autoUpdates definitions removeAll ]."
+	
+	tabGroup := compositeView asElementDo: [ :e | e ].
+		
+	self viewsContainerElement
 		removeChildren;
-		addChild: viewElement
+		addChild: tabGroup
 ]
 
 { #category : #updating }
 GtPhlowSearchFilterToolElement >> updateContent [
-	self titleLabel text: self searchFilterDescription.
-	self updateContainedView.
-	self playgroundElement objectHolder: (GtInspectorObject new 
-		 object: searchFilter)
+	self updateHeader.
+	self updateContainedViews.
+	self updatePlayground.
+]
+
+{ #category : #updating }
+GtPhlowSearchFilterToolElement >> updateHeader [
+	self updateTitle.
+	self updateToolbarActions.
+]
+
+{ #category : #updating }
+GtPhlowSearchFilterToolElement >> updatePlayground [
+	self playgroundElement 
+		objectHolder: (GtInspectorObject new 
+			object: searchFilter)
 ]
 
 { #category : #updating }
 GtPhlowSearchFilterToolElement >> updateTabLabel [
 	self titleNotifier notify
+]
+
+{ #category : #updating }
+GtPhlowSearchFilterToolElement >> updateTitle [
+	self titleLabel 
+		text: self searchFilterDescription.
+]
+
+{ #category : #updating }
+GtPhlowSearchFilterToolElement >> updateToolbarActions [
+	| toolbarElement|
+	toolbarElement := self toolbarElement.
+	toolbarElement removeAllItems.
+	
+	self collectToolActions do: [ :aPhlowAction | 
+		aPhlowAction asElement: [ :actionElement | 
+			toolbarElement 
+				addItem: actionElement ]
+				withHostElement: self ] 
+]
+
+{ #category : #'accessing - elements' }
+GtPhlowSearchFilterToolElement >> viewsContainerElement [
+	^ self childNamed: #viewsContainer
 ]
