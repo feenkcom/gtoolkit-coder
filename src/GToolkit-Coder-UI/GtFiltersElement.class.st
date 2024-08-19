@@ -164,21 +164,6 @@ GtFiltersElement >> descriptors: aCollection [
 	self updateAdditionalFilters
 ]
 
-{ #category : #accessing }
-GtFiltersElement >> filterButtonFor: descriptor icon: icon label: label [
-	^ BrButton new
-		aptitude: self defaultAptitude;
-		icon: icon;
-		label: label;
-		margin: (BlInsets all: 2);
-		beSmallSize;
-		hExact: 20;
-		constraintsDo: [ :c | c flow vertical alignCenter ];
-		action: [ :aButton | 
-			self addFilterForDescriptor: descriptor andValue: ''.
-			self applyFilters ]
-]
-
 { #category : #'api - filters' }
 GtFiltersElement >> filtersDo: aBlock [
 	"Iterate over all valid filters"
