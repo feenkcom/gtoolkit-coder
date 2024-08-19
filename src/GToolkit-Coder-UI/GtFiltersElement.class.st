@@ -20,7 +20,24 @@ GtFiltersElement >> addAllDefaults [
 			[:defaultDescriptor |
 			filterElement := self createFilterTagFor: defaultDescriptor.
 			filterElement makeDefaultFilter.
-			self addChild: filterElement at: self myChildrenCount]
+			self addChild: filterElement at: self nextTagPosition]
+]
+
+{ #category : #accessing }
+GtFiltersElement >> addFilterButtonFor: descriptor label: label icon: icon [
+	^ BrButton new
+		aptitude: self defaultAptitude;
+		icon: icon;
+		label: label;
+		margin: (BlInsets all: 2);
+		beSmallSize;
+		hExact: 20;
+		constraintsDo: [ :c | c flow vertical alignCenter ];
+		action: [ :aButton | 
+			(self filtersWithDescriptor: descriptor)
+				ifEmpty: [ self addFilterForDescriptor: descriptor andValue: '' ]
+				ifNotEmpty: [ :coll | coll do: [ :e | self removeChild: e ] ].
+			self applyFilters ]
 ]
 
 { #category : #accessing }
@@ -28,7 +45,17 @@ GtFiltersElement >> addFilterForDescriptor: aFilterDescriptor andValue: aString 
 	| element |
 	element := self createFilterTagFor: aFilterDescriptor.
 	aFilterDescriptor valueIsRequired ifTrue: [element valueString: aString].
-	self addChild: element at: self myChildrenCount
+	self addChild: element at: self nextTagPosition
+]
+
+{ #category : #accessing }
+GtFiltersElement >> additionalDefaultButtons [
+	| sortedPragmas |
+	sortedPragmas := (Pragma allNamed: #gtFilterElement: in: self class)
+			sort: [ :aPragma | aPragma arguments first ] ascending
+					, [ :aPragma | aPragma methodSelector ] ascending.
+	^ (sortedPragmas collect: [ :e | self perform: e methodSelector ])
+		reject: [ :e | e isNil ]
 ]
 
 { #category : #private }
@@ -90,7 +117,7 @@ GtFiltersElement >> createNewTag [
 			[:items |
 			"self areAllDefaults ifTrue: [ self clearFilters ]."
 			tag := self createFilterTagFor: items first.
-			self addChild: tag at: self myChildrenCount.
+			self addChild: tag at: self nextTagPosition.
 			tag activateEditor]
 ]
 
@@ -115,7 +142,9 @@ GtFiltersElement >> defaultAptitude [
 
 { #category : #accessing }
 GtFiltersElement >> defaultButtonCount [
-	^1 + self myFilterButtons size
+	| addButton |
+	addButton := self childWithId: GtFiltersAddButtonId.
+	^ self childrenCount - (self childIndexOf: addButton) + 1
 ]
 
 { #category : #accessing }
@@ -127,10 +156,27 @@ GtFiltersElement >> descriptors [
 { #category : #accessing }
 GtFiltersElement >> descriptors: aCollection [
 	descriptors := aCollection.
-	
+
 	BlFrameTelemetry
 		time: [ 'Add default filter tag' ]
-		during: [ self addAllDefaults ]
+		during: [ self addAllDefaults ].
+
+	self updateAdditionalFilters
+]
+
+{ #category : #accessing }
+GtFiltersElement >> filterButtonFor: descriptor icon: icon label: label [
+	^ BrButton new
+		aptitude: self defaultAptitude;
+		icon: icon;
+		label: label;
+		margin: (BlInsets all: 2);
+		beSmallSize;
+		hExact: 20;
+		constraintsDo: [ :c | c flow vertical alignCenter ];
+		action: [ :aButton | 
+			self addFilterForDescriptor: descriptor andValue: ''.
+			self applyFilters ]
 ]
 
 { #category : #'api - filters' }
@@ -148,21 +194,30 @@ GtFiltersElement >> filtersDo: aBlock [
 ]
 
 { #category : #accessing }
+GtFiltersElement >> filtersWithDescriptor: aDescriptor [
+	| result |
+	result := OrderedCollection new.
+	1
+		to: self childrenCount - self defaultButtonCount
+		do: [ :i | 
+			| filterTagElement |
+			filterTagElement := self childAt: i.
+			filterTagElement descriptor = aDescriptor
+				ifTrue: [ result add: filterTagElement ] ].
+	^ result
+]
+
+{ #category : #accessing }
 GtFiltersElement >> gtTestFilter [
 	<gtFilterElement: 10>
-	^ BrButton new
-		id: GtFiltersAddButtonId;
-		aptitude: self defaultAptitude;
-		icon: BrGlamorousVectorIcons down;
-		label: 'Add Filter';
-		margin: (BlInsets all: 2);
-		beSmallSize;
-		hExact: 20;
-		constraintsDo: [ :c | c flow vertical alignCenter ];
-		action: [ :aButton | self createNewTag ];
-		addShortcut: (BlShortcutWithAction new
-				combination: BlKeyCombination enter;
-				action: [ :anEvent | self createNewTag ])
+	| descriptor |
+	descriptor := self descriptors
+			detect: [ :e | e name = 'Instance methods' ]
+			ifNone: [ ^ nil ].
+	^ self
+		addFilterButtonFor: descriptor
+		label: 'Add instance methods filter'
+		icon: BrGlamorousVectorIcons emphasizedInspect
 ]
 
 { #category : #'gt - extensions' }
@@ -186,20 +241,7 @@ GtFiltersElement >> initialize [
 	self hMatchParent.
 	self vFitContent.
 	self addChild: self newAddTagButton.
-	self myFilterButtons do: [:e | self addChild: e]
-]
-
-{ #category : #accessing }
-GtFiltersElement >> myChildrenCount [
-	^self childrenCount - self defaultButtonCount + 1
-]
-
-{ #category : #accessing }
-GtFiltersElement >> myFilterButtons [
-	^ (Pragma allNamed: #gtFilterElement: in: self class)
-		sort: [ :aPragma | aPragma arguments first ] ascending
-				, [ :aPragma | aPragma methodSelector ] ascending;
-		collect: [ :e | self perform: e methodSelector ]
+	self updateAdditionalFilters
 ]
 
 { #category : #'private - instance creation' }
@@ -217,4 +259,17 @@ GtFiltersElement >> newAddTagButton [
 		addShortcut: (BlShortcutWithAction new
 				combination: BlKeyCombination enter;
 				action: [ :anEvent | self createNewTag ])
+]
+
+{ #category : #accessing }
+GtFiltersElement >> nextTagPosition [
+	^self childrenCount - self defaultButtonCount + 1
+]
+
+{ #category : #accessing }
+GtFiltersElement >> updateAdditionalFilters [
+	[ self defaultButtonCount > 1 ]
+		whileTrue: [ self removeChildAt: self childrenCount - 1 ].
+
+	self additionalDefaultButtons do: [ :e | self addChild: e ]
 ]
