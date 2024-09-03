@@ -9,7 +9,9 @@ Class {
 		'shortcutKey',
 		'allowPrimaryClick',
 		'allowAltClick',
-		'actionDefinition'
+		'actionDefinition',
+		'isEnabled',
+		'properties'
 	],
 	#category : #'GToolkit-Coder-Coders - Addons'
 }
@@ -67,6 +69,16 @@ GtCoderAction >> computeActionDefinition [
 		ifFalse: [ nil ]
 ]
 
+{ #category : #accessing }
+GtCoderAction >> disableAction [
+	isEnabled := false
+]
+
+{ #category : #accessing }
+GtCoderAction >> enableAction [
+	isEnabled := true
+]
+
 { #category : #evaluating }
 GtCoderAction >> gtValueWithArgs: anArray [
 	^ self action valueWithPossibleArgs: anArray
@@ -106,6 +118,16 @@ GtCoderAction >> id: anObject [
 	id := anObject
 ]
 
+{ #category : #testing }
+GtCoderAction >> isDisabled [
+	^ self isEnabled not 
+]
+
+{ #category : #testing }
+GtCoderAction >> isEnabled [
+	^ isEnabled ifNil: [ true ]
+]
+
 { #category : #accessing }
 GtCoderAction >> leaveAction [
 	^ nil
@@ -128,6 +150,27 @@ GtCoderAction >> printOn: aStream [
 		nextPut: $(;
 		nextPutAll: (self title ifNil: ['']);
 		nextPut: $)
+]
+
+{ #category : #'accessing properties' }
+GtCoderAction >> properties [
+	^ properties ifNil: [
+		properties := Dictionary new ]
+]
+
+{ #category : #'accessing properties' }
+GtCoderAction >> propertyAt: propName ifAbsent: aBlock [
+	properties ifNil: [ ^aBlock value ].
+	^ self properties
+		at: propName
+		ifAbsent: aBlock
+]
+
+{ #category : #'accessing properties' }
+GtCoderAction >> propertyAt: propName put: propValue [
+	^ self properties 
+		at: propName
+		ifAbsentPut: propValue
 ]
 
 { #category : #accessing }
