@@ -112,7 +112,7 @@ GtCoderCodeExecutor >> event: anObject [
 
 { #category : #'api - execution' }
 GtCoderCodeExecutor >> execute [
-	GtCoderExecutionContextVariable
+	^ GtCoderExecutionContextVariable
 		element: self element
 		do: [ | coderViewModel |
 			coderViewModel := self coderViewModel.
