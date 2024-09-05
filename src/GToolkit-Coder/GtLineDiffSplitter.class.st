@@ -7,6 +7,13 @@ Class {
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
+{ #category : #'instance creation' }
+GtLineDiffSplitter class >> ignoringEOLChars [
+	^ self new
+		includeEOLChars: false;
+		yourself
+]
+
 { #category : #accessing }
 GtLineDiffSplitter >> includeEOLChars [
 	^ includeEOLChars

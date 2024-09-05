@@ -5,6 +5,28 @@ Class {
 }
 
 { #category : #examples }
+GtDiffBuilderExamples >> changeInMiddleAndDeletionAtEnd [
+	<gtExample>
+	| differences from to change |
+	from := String cr join: ((1 to: 10) collect: #asWords).
+	to := String cr join: (((1 to: 10) collect: #asWords) 
+									at: 2 put: 'two plus'; 
+									allButLast).
+	change := GtDiffBuilder
+				computeDifferencesFrom: from
+				to: to
+				using: GtLineDiffSplitter ignoringEOLChars.
+	differences := change changes.
+	self assert: differences size equals: 2.
+	self assert: differences first isReplacement.
+	self assert: differences first deletedObjects equals: 'two'.
+	self assert: differences first insertedObjects equals: 'two plus'.
+	self assert: differences second isDeletion.
+	self assert: differences second deletedObjects equals: 'ten'.
+	^ change
+]
+
+{ #category : #examples }
 GtDiffBuilderExamples >> deletionsAtBeginningExample [
 	<gtExample>
 	| differences from to change |
