@@ -40,6 +40,19 @@ GtDiffSplitterExamples >> javascriptDiffSplitter [
 ]
 
 { #category : #lines }
+GtDiffSplitterExamples >> lineIgnoringEOLSplitterExample [
+	<gtExample>
+	| splitter splits string |
+	string := '1' , String crlf , '2' , String cr , '3' , String lf , '4'.
+	splitter := GtLineDiffSplitter ignoringEOLChars.
+	splits := splitter split: string.
+	self assert: splits size = 4.
+	self assert: (splits at: 1) object equals: '1'.
+	self assert: (splits at: 4) object equals: '4'.
+	^ splits
+]
+
+{ #category : #lines }
 GtDiffSplitterExamples >> lineWithEOLSplitterExample [
 	<gtExample>
 	| splitter splits string |
