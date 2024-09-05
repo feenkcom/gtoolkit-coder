@@ -30,16 +30,25 @@ GtCoderContextMenuContent >> editorElement: anEditorElement [
 { #category : #initialization }
 GtCoderContextMenuContent >> menuItemStencil [
 	^ [ :eachGtCoderContextMenuAction :aRowIndex | 
-	| element |
+	| element labelText |
 	element := BrHorizontalPane new
 			id: (GtCoderContextMenuItemId indexed: aRowIndex);
 			hMatchParent;
 			vFitContent;
 			alignCenter;
 			addAptitude: self selectionAptitude;
-			padding: self itemPadding;
-			addChild: (self itemLabelFor: eachGtCoderContextMenuAction title asRopedText);
-			when: BlClickEvent
+			padding: self itemPadding.
+	
+	labelText := eachGtCoderContextMenuAction title asRopedText .
+	eachGtCoderContextMenuAction isEnabled 
+		ifFalse: [ labelText := labelText 
+			foreground: BrGlamorousColors disabledButtonTextColor  ].
+	element addChild: (self itemLabelFor: labelText).
+	
+	eachGtCoderContextMenuAction isEnabled 
+		ifTrue: [
+			element 
+				when: BlClickEvent
 				do: [ :anEvent | 
 					anEvent consumed: true.
 					eachGtCoderContextMenuAction action
@@ -47,7 +56,7 @@ GtCoderContextMenuContent >> menuItemStencil [
 						cull: self editorElement
 						cull: anEvent.
 					self fireEvent: BrDropdownHideWish new.
-					self fireEvent: BrContextMenuHideWish new ].
+					self fireEvent: BrContextMenuHideWish new ] ].
 	((eachGtCoderContextMenuAction shortcutKey respondsTo: #isEmpty)
 		and: [ eachGtCoderContextMenuAction shortcutKey isEmpty not ])
 		ifTrue: [ element
@@ -70,12 +79,14 @@ GtCoderContextMenuContent >> menuItemStencil [
 		ifNotNil: [ :hover | 
 			element
 				when: BlMouseEnterEvent
-				do: [ :anEvent | hover cull: self editorElement textualCoderViewModel cull: anEvent ] ].
+				do: [ :anEvent | 
+					hover cull: self editorElement textualCoderViewModel cull: anEvent ] ].
 	eachGtCoderContextMenuAction leaveAction
 		ifNotNil: [ :leave | 
 			element
 				when: BlMouseLeaveEvent
-				do: [ :anEvent | leave cull: self editorElement textualCoderViewModel cull: anEvent ] ].
+				do: [ :anEvent | 
+					leave cull: self editorElement textualCoderViewModel cull: anEvent ] ].
 	eachGtCoderContextMenuAction name
 		ifNotNil: [ :anActionName | element containerName: anActionName ].
 	element ]
