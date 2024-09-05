@@ -95,6 +95,9 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 					handleButton: aButtonElement
 					action: aGtCoderAction
 					onEvent: anEvent ].
+	aGtCoderAction isDisabled ifTrue: [
+		self disableButton: button action: aGtCoderAction ].
+	
 	self initializeAltClick: aGtCoderAction element: button.
 	self initializePrimaryClick: aGtCoderAction element: button.
 	^ button
