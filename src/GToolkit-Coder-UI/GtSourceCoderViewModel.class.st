@@ -3,8 +3,7 @@ Class {
 	#superclass : #GtTextualCoderViewModel,
 	#instVars : [
 		'evaluationResult',
-		'evaluationStatus',
-		'executionStrategy'
+		'evaluationStatus'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source Model'
 }
@@ -12,6 +11,11 @@ Class {
 { #category : #converting }
 GtSourceCoderViewModel >> asCoderRequesterObject [
 	^ GtCoderViewModelRequester new coderViewModel: self
+]
+
+{ #category : #accessing }
+GtSourceCoderViewModel >> asynchronusExecutionStrategy [
+	^ nil
 ]
 
 { #category : #'api - actions' }
@@ -112,6 +116,16 @@ GtSourceCoderViewModel >> doItAndGoAll [
 ]
 
 { #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAndGoAllAsynchronous [
+	"Evaluate the whole source code and inspect the result"
+
+	^ self handleCoderEvaluationUnhandledErrorDuring: [ 
+		self doItAndGoAsynchronousInContext: (self evaluationContext 
+			all;
+			yourself) ]
+]
+
+{ #category : #'api - actions' }
 GtSourceCoderViewModel >> doItAndGoAllSerialized [
 	"Evaluate the whole source code and inspect the result"
 
@@ -120,14 +134,35 @@ GtSourceCoderViewModel >> doItAndGoAllSerialized [
 ]
 
 { #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAndGoAsynchronous [
+
+	^ self selection isEmpty
+		ifTrue: [ self doItAndGoAllAsynchronous ]
+		ifFalse: [ self doItAndGoAsynchronous: self selectedTextInterval ]
+]
+
+{ #category : #'api - actions' }
 GtSourceCoderViewModel >> doItAndGoAsynchronous: aTextInterval [
 	"Evaluate a piece of source code within an interval and inspect a result."
 
 	^ self handleCoderEvaluationUnhandledErrorDuring: [ 
-		self coder doItAndGoAsynchronousInContext: (
+		self doItAndGoAsynchronousInContext: (
 			self evaluationContext 
-				from: aTextInterval first 
-				to: aTextInterval last) ]
+				from: aTextInterval first to: aTextInterval last;
+				yourself) ]
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAndGoAsynchronousInContext: aGtSourceCoderEvaluationContext [
+	| executionResult |
+	
+	aGtSourceCoderEvaluationContext 
+		executionStrategy:  self asynchronusExecutionStrategy.
+	executionResult := self coder 
+		doItAndGoInContext: aGtSourceCoderEvaluationContext.
+	self updatWithAsyncExecution: executionResult value.
+	
+	^ executionResult
 ]
 
 { #category : #'api - actions' }
@@ -202,18 +237,6 @@ GtSourceCoderViewModel >> evaluationStatus: aNewStatus [
 		emit.
 	anOldStatus sourceCoderViewModel: self evaluationStatusChangedTo: aNewStatus.
 	self onEvaluationStatusChanged
-]
-
-{ #category : #accessing }
-GtSourceCoderViewModel >> executionStrategy [
-
-	^ executionStrategy
-]
-
-{ #category : #accessing }
-GtSourceCoderViewModel >> executionStrategy: anObject [
-
-	executionStrategy := anObject
 ]
 
 { #category : #'private - event handling' }
@@ -402,4 +425,8 @@ GtSourceCoderViewModel >> subscribeToCoderModel [
 		when: GtCoderShowDebuggerRequest
 		send: #onShowDebuggerRequest:
 		to: self
+]
+
+{ #category : #updating }
+GtSourceCoderViewModel >> updatWithAsyncExecution: aCoderExecutionResult [ 
 ]
