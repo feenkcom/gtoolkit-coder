@@ -2,7 +2,7 @@ Extension { #name : #GtTextualCoder }
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtTextualCoder >> addContextMenuItemFrom: shortcut withId: menuId to: coderAddOns [
-	coderAddOns
+	^ coderAddOns
 		addContextMenuItem: shortcut name
 		action: [ :aCoderViewModel :anEditorElement | 
 			shortcut
