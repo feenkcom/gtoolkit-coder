@@ -78,6 +78,16 @@ GtSourceCoderViewModel >> doItAll [
 ]
 
 { #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAllAsynchronousRequestedBy: aRequesterObject [
+	"Evaluate the whole source code independent from the selection and return the result"
+
+	^ self handleCoderEvaluationUnhandledErrorDuring: [ 
+		self doItAsynchronousInContext: (self evaluationContext
+			all;
+			requesterObject: aRequesterObject) ]
+]
+
+{ #category : #'api - actions' }
 GtSourceCoderViewModel >> doItAllRequestedBy: aRequesterObject [
 	"Evaluate the whole source code independent from the selection and return the result"
 
@@ -160,6 +170,7 @@ GtSourceCoderViewModel >> doItAndGoAsynchronousInContext: aGtSourceCoderEvaluati
 		executionStrategy:  self asynchronusExecutionStrategy.
 	executionResult := self coder 
 		doItAndGoInContext: aGtSourceCoderEvaluationContext.
+		
 	self updatWithAsyncExecution: executionResult value.
 	
 	^ executionResult
@@ -180,6 +191,48 @@ GtSourceCoderViewModel >> doItAndGoSerialized: aTextInterval [
 
 	^ self coder doItAndGoInContext: ((self evaluationContext from: aTextInterval first to: aTextInterval last)
 		serializationStrategy: #GtRsrStonSerializationStrategy)
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAsynchronous [
+	"Evaluate a piece of source code within a selection interval or everything if nothing is selected and return a result"
+	<return: #Object>
+	
+	^ self doItAsynchronousRequestedBy: self
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAsynchronous: aTextInterval requestedBy: aRequesterObject [
+	"Evaluate source code within given text interval and return the result"
+
+	^ self handleCoderEvaluationUnhandledErrorDuring: [ 
+		self doItAsynchronousInContext: (
+			self evaluationContext
+				from: aTextInterval first to: aTextInterval last;
+				requesterObject: aRequesterObject) ]
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAsynchronousInContext: aGtSourceCoderEvaluationContext [
+	| executionResult |
+	
+	aGtSourceCoderEvaluationContext 
+		executionStrategy:  self asynchronusExecutionStrategy.
+	executionResult := self coder 
+		doItInContext: aGtSourceCoderEvaluationContext.
+	
+	self updatWithAsyncExecution: executionResult value.
+	
+	^ executionResult
+]
+
+{ #category : #'api - actions' }
+GtSourceCoderViewModel >> doItAsynchronousRequestedBy: aRequesterObject [
+	"Evaluate selected source code or everything if there is nothing selected and return the result"
+
+	^ self selection isEmpty
+		ifTrue: [ self doItAllAsynchronousRequestedBy: aRequesterObject ]
+		ifFalse: [ self doItAsynchronous: self selectedTextInterval requestedBy: aRequesterObject ]
 ]
 
 { #category : #'api - actions' }
