@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderPrintItShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }
@@ -13,12 +13,8 @@ GtSourceCoderPrintItShortcut >> description [
 GtSourceCoderPrintItShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryP
-]
-
-{ #category : #accessing }
-GtSourceCoderPrintItShortcut >> name [
-	^ 'Print'
+	combination := BlKeyCombination primaryP.
+	name := 'Print'.
 ]
 
 { #category : #evaluation }

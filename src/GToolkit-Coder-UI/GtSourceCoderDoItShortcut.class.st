@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderDoItShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }
@@ -13,12 +13,8 @@ GtSourceCoderDoItShortcut >> description [
 GtSourceCoderDoItShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryD
-]
-
-{ #category : #accessing }
-GtSourceCoderDoItShortcut >> name [
-	^ 'Do it'
+	combination := BlKeyCombination primaryD.
+	name := 'Do it'.
 ]
 
 { #category : #evaluation }

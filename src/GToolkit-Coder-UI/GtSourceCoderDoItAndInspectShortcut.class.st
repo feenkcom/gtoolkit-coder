@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderDoItAndInspectShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : 'GToolkit-Coder-UI-Shortcuts'
+	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }
@@ -13,12 +13,8 @@ GtSourceCoderDoItAndInspectShortcut >> description [
 GtSourceCoderDoItAndInspectShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryG
-]
-
-{ #category : #accessing }
-GtSourceCoderDoItAndInspectShortcut >> name [
-	^ 'Do it and inspect'
+	combination := BlKeyCombination primaryG.
+	name := 'Do it and inspect'.
 ]
 
 { #category : #evaluation }
