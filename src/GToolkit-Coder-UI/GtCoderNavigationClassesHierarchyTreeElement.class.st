@@ -19,6 +19,48 @@ GtCoderNavigationClassesHierarchyTreeElement class >> fromClasses: aCollectionOf
 	^ self new initializeWithClasses: aCollectionOfClasses
 ]
 
+{ #category : #'private - context menu' }
+GtCoderNavigationClassesHierarchyTreeElement >> addPreviewButtonFor: refactoring to: elem cancelBlock: aBlock [
+	| button |
+	elem removeChildNamed: #preview.
+	button := GtRefactoringsPreviewButton new.
+	button vMatchParent.
+	button refactorings: [ {refactoring} ].
+	button cancelBlock: aBlock.
+	button
+		padding: (BlInsets
+				top: 1
+				right: 4
+				bottom: 0
+				left: 4).
+	button beMiniSize.
+	button
+		when: GtRefactoringsAppliedEvent
+		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
+	^ elem addChild: button as: #preview
+]
+
+{ #category : #'private - context menu' }
+GtCoderNavigationClassesHierarchyTreeElement >> addPreviewButtonFor: refactoring to: elem cancelSelector: cancelSelector [
+	| button |
+	elem removeChildNamed: #preview.
+	button := GtRefactoringsPreviewButton new.
+	button vMatchParent.
+	button refactorings: [ {refactoring} ].
+	button cancelBlock: [ self perform: cancelSelector  ].
+	button
+		padding: (BlInsets
+				top: 1
+				right: 4
+				bottom: 0
+				left: 4).
+	button beMiniSize.
+	button
+		when: GtRefactoringsAppliedEvent
+		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
+	^ elem addChild: button as: #preview
+]
+
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> browseReferencesTo: aClass [
 	self phlow spawnObject: (aClass gtReferences) 
@@ -55,7 +97,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> contextMenuItemsFor: aClass [
 							-> [ :elem | self convertToSibling: aClass inElement: elem ]} ])
 ]
 
-{ #category : #initialization }
+{ #category : #'private - context menu' }
 GtCoderNavigationClassesHierarchyTreeElement >> convertToSibling: aClass inElement: elem [
 	| refactoring label refactoringButton edit acceptButton |
 	refactoringButton := GtRefactoringsWithInputPreviewElement new.
@@ -125,6 +167,46 @@ GtCoderNavigationClassesHierarchyTreeElement >> convertToSibling: aClass inEleme
 	elem addChild: refactoringButton as: #refactoringButton
 ]
 
+{ #category : #'private - drag and drop' }
+GtCoderNavigationClassesHierarchyTreeElement >> createClassDropHandler [
+	^ BlDropHandler new
+		acceptDomainObjectsSuchThat: [ :anObject | anObject isCompiledMethod ];
+		whenDroppedDo: [ :anItemsDroppedEvent | self onDropCompiledMethodsOnClass: anItemsDroppedEvent  ];
+		whenDragEnteredDo: [ :anItemsDraggedOverEvent | 
+			anItemsDraggedOverEvent currentTarget
+				effect: (BlOverlayAboveEffect new paint: (Color gray alpha: 0.2)) ];
+		whenDragLeftDo: [ :anItemsLeftEvent | anItemsLeftEvent currentTarget effect: BlNullEffect new ]
+]
+
+{ #category : #'private - context menu' }
+GtCoderNavigationClassesHierarchyTreeElement >> createLabel: aString description: description [
+	^ aString asRopedText glamorousRegularFont
+		, ((' ' , description) asRopedText
+				glamorousCodeFont;
+				foreground: Color gray;
+				glamorousCodeTinySize)
+]
+
+{ #category : #initialization }
+GtCoderNavigationClassesHierarchyTreeElement >> createNodeElement [
+	| aLabelAptitude |
+
+	aLabelAptitude := BrGlamorousLabelAptitude new.
+	aLabelAptitude add: BrGlamorousListItemAptitude.
+	aLabelAptitude
+		add: (BrGlamorousWithContextMenuAptitude
+				content: [ :aWidget | 
+					GtCoderNavigationContextMenuContent new
+						items: (self contextMenuItemsFor: (aWidget userData at: #'coder-class')) ]).
+
+	^ BrLabel new
+		hMatchParent;
+		vFitContent;
+		beSmallSize;
+		aptitude: aLabelAptitude;
+		addEventHandler: self createClassDropHandler
+]
+
 { #category : #initialization }
 GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	super initialize.
@@ -132,25 +214,15 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 	self rowStencil: BrGlamorousSimpleTreeSelectableRowElementStencilBuilder new.
 
 	self
-		nodeStencil: [ BrHorizontalPane new
-				hMatchParent;
-				vFitContent ];
+		nodeStencil: [ self createNodeElement ];
 		nodeDataBinder: [ :aClassElement :aClassHierarchyTree :aTreeNode | 
-			| label |
 			aClassElement
-				id: (GtCoderNavigationClassesHierarchyTreeElementId indexed: aTreeNode indexInTree);
-				removeChildren;
-				aptitude: BrGlamorousListItemAptitude new
-						+ (BrGlamorousWithContextMenuAptitude
-								content: [ GtCoderNavigationContextMenuContent new
-										items: (self contextMenuItemsFor: aClassHierarchyTree rootClass) ]).
-			label := BrLabel new
-					matchParent;
-					beSmallSize;
-					aptitude: BrGlamorousLabelAptitude.
-			aClassElement addChild: label.
+				id: (GtCoderNavigationClassesHierarchyTreeElementId indexed: aTreeNode indexInTree).
+
+			aClassElement userData at: #'coder-class' put: aClassHierarchyTree rootClass.
+
 			aClassHierarchyTree
-				ifNil: [ label text: '' asRopedText ]
+				ifNil: [ aClassElement text: '' asRopedText ]
 				ifNotNil: [ | aClass aText |
 					aClass := aClassHierarchyTree rootClass.
 					aText := aClass gtDisplayText asRopedText.
@@ -158,7 +230,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 						ifTrue: [ aText italic ].
 					aClass isDeprecated
 						ifTrue: [ aText append: ' (deprecated)' asRopedText italic ].
-					label text: aText ] ].
+					aClassElement text: aText ] ].
 	self
 		when: BrSelectionDoubleClicked
 		do: [ :evt | self initializeWithHierachyForClass: self selectedClass ]
@@ -187,7 +259,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 	self expandAll
 ]
 
-{ #category : #initialization }
+{ #category : #'private - context menu' }
 GtCoderNavigationClassesHierarchyTreeElement >> newSubclassOf: aClass [
 	| dropdown tabGroup |
 	tabGroup := self
@@ -198,7 +270,41 @@ GtCoderNavigationClassesHierarchyTreeElement >> newSubclassOf: aClass [
 	dropdown dispatchEvent: BrDropdownShowWish new.
 ]
 
-{ #category : #initialization }
+{ #category : #'private - drag and drop' }
+GtCoderNavigationClassesHierarchyTreeElement >> onDropCompiledMethodsOnClass: anItemsDroppedEvent [
+	| aClass aModel compositeChange|
+	
+	aClass := anItemsDroppedEvent currentTarget userData at: #'coder-class'.
+	
+	aModel := RBNamespace new.
+	
+	anItemsDroppedEvent items do: [ :eachDragItem |
+		| eachCompiledMethod aTargetClass |
+		
+		eachCompiledMethod := eachDragItem domainObject.
+		
+		aTargetClass := eachCompiledMethod isClassSide
+			ifTrue: [ aClass classSide ]
+			ifFalse: [ aClass instanceSide ].
+		
+		eachCompiledMethod methodClass = aTargetClass
+			ifFalse: [
+				eachDragItem shouldCopy
+					ifFalse: [
+						aModel
+							removeMethod: eachCompiledMethod selector
+							from: eachCompiledMethod methodClass ].
+
+				aModel
+					compile: eachCompiledMethod sourceCode
+					in: aTargetClass
+					classified: eachCompiledMethod protocol ] ].
+
+	compositeChange := aModel changes.
+	compositeChange execute
+]
+
+{ #category : #'private - context menu' }
 GtCoderNavigationClassesHierarchyTreeElement >> removeClass: aClass inElement: elem [
 	| change button |
 	change := RBRemoveClassChange remove: aClass.
@@ -216,7 +322,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> removeClass: aClass inElement: e
 	^ elem addChild: button as: #preview
 ]
 
-{ #category : #initialization }
+{ #category : #'private - context menu' }
 GtCoderNavigationClassesHierarchyTreeElement >> renameClass: aClass inElement: elem [
 	| refactoring edit childs |
 	edit := BrEditableLabel new.
