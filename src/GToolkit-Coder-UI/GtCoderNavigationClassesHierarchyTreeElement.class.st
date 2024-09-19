@@ -6,8 +6,8 @@ I show a list of classes grouping them based on the inheritance hierarchy and so
 Class {
 	#name : #GtCoderNavigationClassesHierarchyTreeElement,
 	#superclass : #BrSimpleTree,
-	#traits : 'TNavigationWithContextMenu',
-	#classTraits : 'TNavigationWithContextMenu classTrait',
+	#traits : 'TGtCoderNavigationWithContextMenu',
+	#classTraits : 'TGtCoderNavigationWithContextMenu classTrait',
 	#instVars : [
 		'classesTree'
 	],
