@@ -50,7 +50,7 @@ GtCoderModel class >> gtAstCoderAddOnsFor: aView context: aPhlowContext [
 	^ aView forward
 		title: 'Coder Addons';
 		tooltip: 'The methods that extend the Coder with AddOns';
-		priority: 40;
+		priority: 45;
 		object: [ (GtSearchMethodsInClassFilter new
 				forClass: self;
 				includeSuperclass: true)
@@ -73,7 +73,7 @@ GtCoderModel class >> gtContextMenuAddOnsFor: aView [
 	^ aView forward
 		title: 'Menu addons';
 		tooltip: 'The methods that extend the Coder with context menu items';
-		priority: 45;
+		priority: 45.1;
 		object: [ (GtSearchMethodsInClassFilter new
 				forClass: self;
 				includeSuperclass: true) & self contextMenuAddOnsPragma gtPragmas ];
