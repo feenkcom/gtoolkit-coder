@@ -1,10 +1,10 @@
 Trait {
-	#name : #TNavigationWithContextMenu,
+	#name : #TGtCoderNavigationWithContextMenu,
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
 
-{ #category : #accessing }
-TNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem cancelBlock: aBlock [
+{ #category : #'private - context menu' }
+TGtCoderNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem cancelBlock: aBlock [
 	| button |
 	elem removeChildNamed: #preview.
 	button := GtRefactoringsPreviewButton new.
@@ -24,8 +24,8 @@ TNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem cancelBl
 	^ elem addChild: button as: #preview
 ]
 
-{ #category : #accessing }
-TNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem cancelSelector: cancelSelector [
+{ #category : #'private - context menu' }
+TGtCoderNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem cancelSelector: cancelSelector [
 	| button |
 	elem removeChildNamed: #preview.
 	button := GtRefactoringsPreviewButton new.
@@ -45,8 +45,8 @@ TNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem cancelSe
 	^ elem addChild: button as: #preview
 ]
 
-{ #category : #accessing }
-TNavigationWithContextMenu >> createLabel: aString description: description [
+{ #category : #'private - context menu' }
+TGtCoderNavigationWithContextMenu >> createLabel: aString description: description [
 	^ aString asRopedText glamorousRegularFont
 		, ((' ' , description) asRopedText
 				glamorousCodeFont;

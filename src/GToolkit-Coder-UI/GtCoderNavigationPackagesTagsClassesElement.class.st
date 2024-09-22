@@ -1,15 +1,14 @@
 Class {
 	#name : #GtCoderNavigationPackagesTagsClassesElement,
 	#superclass : #GtCoderNavigationElement,
-	#traits : 'TNavigationWithContextMenu',
-	#classTraits : 'TNavigationWithContextMenu classTrait',
+	#traits : 'TGtCoderNavigationWithContextMenu',
+	#classTraits : 'TGtCoderNavigationWithContextMenu classTrait',
 	#instVars : [
 		'packagesList',
 		'methodProtocolsList',
 		'methodsLabel',
 		'methodGroup',
 		'methodGroupList',
-		'protocolGroup',
 		'slotsGroup',
 		'slotsGroupList',
 		'classesLabel'
@@ -77,12 +76,14 @@ GtCoderNavigationPackagesTagsClassesElement >> browseSlotReferencesFor: aString 
 GtCoderNavigationPackagesTagsClassesElement >> buildCategorySlotTabs [
 	| aTabGroup |
 	aTabGroup := BrTabGroup new
-			aptitude: BrGlamorousTabGroupAptitude - BrTabGroupSplitterAptitude;
+			aptitude: BrGlamorousTabGroupProportionalAptitude - BrTabGroupSplitterAptitude;
 			addTab: (BrTab new
+					hMatchParent;
 					aptitude: GtProtocolSlotTabAptitude new;
 					label: 'Categories' asRopedText glamorousCodeSmallSize;
 					stencil: [ methodProtocolsList ]);
 			addTab: (BrTab new
+					hMatchParent;
 					aptitude: GtProtocolSlotTabAptitude new;
 					label: 'Slots' asRopedText glamorousCodeSmallSize;
 					stencil: [ slotsGroupList ]).
@@ -99,32 +100,6 @@ GtCoderNavigationPackagesTagsClassesElement >> buildGroupList [
 				beSmallSize;
 				aptitude: (BrGlamorousLabelAptitude new foreground: Color gray) ];
 		headerDataBinder: [ :label :each | label text: each domainObject asRopedText ]
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> buildGroupWithBinder: binderBlock onClick: clickBlock [
-	| classGroup instanceGroup |
-	instanceGroup := BrGroup new
-			domainObject: 'instance side';
-			stream: #() asAsyncStream;
-			itemStencil: [
-				| aLabel |
-				aLabel := BrLabel new.
-				aLabel
-					hMatchParent;
-					vFitContent;
-					beSmallSize;
-					aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude +
-						(BrGlamorousWithContextMenuAptitude
-							content: [ GtCoderNavigationContextMenuContent new
-									items: (self protocolListContextMenuItemsFor: (aLabel userData at: #protocol)) ]);
-					when: BlClickEvent do: clickBlock.
-				aLabel ];
-			itemDataBinder: binderBlock;
-			shouldShowWithoutItems: false.
-	classGroup := instanceGroup copy domainObject: 'class side'.
-	^ {instanceGroup.
-		classGroup}
 ]
 
 { #category : #initialization }
@@ -149,18 +124,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupWithBinder: binde
 	instanceGroup := BrGroup new
 			domainObject: 'instance side';
 			stream: #() asAsyncStream;
-			itemStencil: [ | aLabel |
-				aLabel := BrLabel new.
-				aLabel
-					hMatchParent;
-					vFitContent;
-					beSmallSize;
-					aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude +
-						(BrGlamorousWithContextMenuAptitude
-							content: [ GtCoderNavigationContextMenuContent new
-									items: (self methodListContextMenuItemsFor: (aLabel userData at: #method)) ]);
-					when: BlClickEvent do: clickBlock.
-				aLabel ];
+			itemStencil: [ self buildMethodItemWithOnClick: clickBlock ];
 			itemDataBinder: binderBlock;
 			shouldShowWithoutItems: false.
 	classGroup := instanceGroup copy domainObject: 'class side'.
@@ -169,18 +133,28 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupWithBinder: binde
 ]
 
 { #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> buildMethodItemWithOnClick: clickBlock [
+	<return: #BlElement>
+	| aLabel |
+	aLabel := BrLabel new.
+	aLabel
+		hMatchParent;
+		vFitContent;
+		beSmallSize;
+		aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude
+				+ (BrGlamorousWithContextMenuAptitude
+						content: [ GtCoderNavigationContextMenuContent new
+								items: (self methodListContextMenuItemsFor: (aLabel userData at: #method)) ]);
+		when: BlClickEvent do: clickBlock.
+
+	aLabel addEventHandler: self createMethodDragHandler.
+
+	^ aLabel
+]
+
+{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildProtocolGroupList [
-	| list |
-	list := self buildGroupList.
-	protocolGroup := self
-			buildGroupWithBinder: [ :element :item | 
-				element userData at: #protocol put: item.
-				element text: item name asRopedText ]
-			onClick: [ :event | 
-				event consumed: true.
-				self onProtocolListSelectionChanged ].
-	list groups: protocolGroup.
-	^ list
+	^ GtCoderNavigationProtocolsGroupedList new
 ]
 
 { #category : #initialization }
@@ -237,6 +211,33 @@ GtCoderNavigationPackagesTagsClassesElement >> classMethodsForAProtocol: aSelect
 				collect: [ :sel | self selectedClass class >> sel ]
 				thenReject: [ :meth | meth isFromTrait ]) asArray ]
 		ifNil: [ #() ]
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> createDraggedMethodItem: aDragItem [
+
+	^ BrLabel new
+		aptitude: (BrGlamorousLabelAptitude new padding: (BlInsets all: 5)) + BrShadowAptitude;
+		beSmallSize;
+		opacity: 0.85;
+		margin: (BlInsets all: 5);
+		background: Color white;
+		beFocusable;
+		requestFocus;
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
+		fitContent;
+		text: aDragItem domainObject printString
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> createMethodDragHandler [
+	^ BlDragHandler new
+		enableCopy;
+		liftItem: [ :aLabelElement | 
+			BlDragItem new
+				sourceElement: aLabelElement;
+				domainObject: (aLabelElement userData at: #method);
+				stencil: [ :aDragItem | self createDraggedMethodItem: aDragItem ] ]
 ]
 
 { #category : #'api - package selections' }
@@ -545,14 +546,6 @@ GtCoderNavigationPackagesTagsClassesElement >> onSlotsListSelectionChanged [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> protocolListContextMenuItemsFor: item [
-	^ {(self createLabel: 'Remove ' description: item name)
-			-> [ :elem | self removeProtocol: item name in: elem ].
-		(self createLabel: 'Rename ' description: item name)
-			-> [ :elem | self renameProtocol: item name in: elem ]}
-]
-
-{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> pushDownMethod: aSelector inElement: elem [
 	| refactoring |
 	refactoring := RBPushDownMethodRefactoring
@@ -620,18 +613,6 @@ GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage tag: aPac
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> removeProtocol: protocolName in: elem [
-	| refactoring |
-	refactoring := RBRemoveProtocolChange
-			removeProtocolNamed: protocolName
-			in: self selectedClass.
-	^ self
-		addPreviewButtonFor: refactoring
-		to: elem
-		cancelSelector: #updateProtocolList
-]
-
-{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> renameMethod: aSelector inElement: elem [
 	| refactoring edit |
 	edit := BrEditableLabel new.
@@ -680,32 +661,6 @@ GtCoderNavigationPackagesTagsClassesElement >> renamePackageTag: aPackageTag old
 	self updatePackageLists.
 	aSelectedPackageOrTag ifNotNil: [
 		self selectPackageOrTag: aSelectedPackageOrTag ].
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> renameProtocol: protocolName in: elem [
-	| refactoring edit |
-	edit := BrEditableLabel new.
-	edit
-		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;   "Force the font to match the label font"
-				background: Color transparent);
-		text: protocolName;
-		when: BrEditorAcceptWish
-			do: [ :aWish | 
-				refactoring := GtRBRenameProtocolRefactoring
-						renameProtocol: protocolName
-						in: self selectedClass
-						to: aWish text asString.
-				edit switchToLabel.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					cancelSelector: #updateProtocolList ];
-		switchToEditor.
-	edit requestFocus.
-	elem removeChildren.
-	elem addChild: edit
 ]
 
 { #category : #initialization }
@@ -851,12 +806,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock 
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> selectedProtocol [
-	| theIndices anIndex |
-	theIndices := methodProtocolsList selectedIndices ifEmpty: [ ^nil].
-	anIndex := theIndices first.
-	(anIndex between: 1 and: methodProtocolsList viewModel entityCount)
-		ifFalse: [ ^nil ].
-	^ (methodProtocolsList viewModel entityAt: anIndex) value object
+	^ methodProtocolsList selectedProtocol
 ]
 
 { #category : #'showing / hiding' }
@@ -1034,23 +984,26 @@ GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
-	| methodProtocols classProtocols extension |
+	| methodProtocols currentClass classProtocols extension |
 	navigationModel hasSelectedClass
 		ifFalse: [ self updateProtocolListWith: #() and: #().
 			self updateMethodListWith: #() and: #().
 			methodProtocolsList visibility: BlVisibility hidden.
 			methodsLabel visibility: BlVisibility hidden.
 			^ self ].
-	classProtocols := navigationModel selectedClass class organization protocols
+			
+	currentClass := navigationModel selectedClass.
+	
+	classProtocols := currentClass class organization protocols
 			reject: [ :prot | 
 				(navigationModel selectedClass class methods
 					select: [ :meth | (prot includesSelector: meth selector) and: [ meth isFromTrait not ] ])
 					isEmpty ].
-	methodProtocols := navigationModel selectedClass organization protocols.
+	methodProtocols := currentClass organization protocols.
 	extension := false.
 	navigationModel
 		selectedPackageDo: [ :pkg | 
-			pkg ~= navigationModel selectedClass package
+			pkg ~= currentClass package
 				ifTrue: [ | protocolName |
 					extension := true.
 					protocolName := '*' , pkg name.
@@ -1058,6 +1011,17 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 							select: [ :each | each name beginsWith: protocolName ].
 					classProtocols := classProtocols
 							select: [ :each | each name beginsWith: protocolName ] ] ].
+							
+	methodProtocols := methodProtocols collect: [ :eachProtocol |
+		GtPharoProtocol
+			protocol: eachProtocol
+			class: currentClass ].
+			
+	classProtocols := classProtocols collect: [ :eachProtocol |
+		GtPharoProtocol
+			protocol: eachProtocol
+			class: currentClass ].
+
 	self updateProtocolListWith: methodProtocols and: classProtocols.
 	extension
 		ifTrue: [ methodProtocolsList selectOne: 2.
@@ -1072,20 +1036,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateProtocolListWith: instanceProtocols and: classProtocols [
-	| instStream classStream |
-	methodProtocolsList deselectAll.
-	instStream := instanceProtocols
-			asSortedCollection: [ :a :b | a name < b name ].
-
-	classStream := classProtocols
-			asSortedCollection: [ :a :b | a name < b name ].
-
-	protocolGroup
-		with: {instStream.
-				classStream}
-		do: [ :grp :str | grp items: str ].
-
-	methodProtocolsList groups: protocolGroup
+	methodProtocolsList updateProtocolListWith: instanceProtocols and: classProtocols
 ]
 
 { #category : #'updating lists' }
