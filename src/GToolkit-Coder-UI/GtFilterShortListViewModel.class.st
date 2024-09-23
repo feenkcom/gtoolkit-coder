@@ -68,9 +68,3 @@ GtFilterShortListViewModel >> subscribeToFilterModel [
 			send: #onSelectedItemChanged:
 			to: self
 ]
-
-{ #category : #'api - filter model' }
-GtFilterShortListViewModel >> unsubscribeFromFilterModel [
-	super unsubscribeFromFilterModel.
-	self filterModel unsubscribe: self
-]

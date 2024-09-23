@@ -26,3 +26,8 @@ GtFilterViewModel >> filterElementClass [
 	<return: #'GtFilterSettingsElement class'>
 	^ self subclassResponsibility
 ]
+
+{ #category : #'api - filter model' }
+GtFilterViewModel >> unsubscribeFromFilterModel [
+	self filterModel unsubscribe: self
+]

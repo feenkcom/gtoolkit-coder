@@ -36,5 +36,13 @@ GtFilterElementByScripterExamples >> textElement [
 			scripterWithModel: [ GtFilterModelExamples new textModel ]
 			element: [ :aModel | GtFilterNameElement new filterViewModel: aModel asFilterViewModel ].
 
+	aScripter editor
+		click;
+		selectAll;
+		typeText: 'Class';
+		assertTextEqualsTo: 'Class';
+		// GtFilterSettingsId;
+		play.
+
 	^ aScripter
 ]
