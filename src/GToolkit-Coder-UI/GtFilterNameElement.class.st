@@ -12,7 +12,7 @@ Class {
 
 { #category : #'private - updating' }
 GtFilterNameElement >> addSettingsElement: anElement [
-	settingsContainer addChild: anElement as: #settings
+	settingsContainer addChild: anElement as: GtFilterSettingsId
 ]
 
 { #category : #initialization }

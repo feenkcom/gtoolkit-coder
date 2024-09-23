@@ -32,9 +32,3 @@ GtFilterBooleanViewModel >> subscribeToFilterModel [
 		send: #onSwitchChanged:
 		to: self
 ]
-
-{ #category : #'api - filter model' }
-GtFilterBooleanViewModel >> unsubscribeFromFilterModel [
-	super unsubscribeFromFilterModel.
-	self filterModel unsubscribe: self
-]
