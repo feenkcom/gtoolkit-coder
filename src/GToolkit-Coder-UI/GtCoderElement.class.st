@@ -24,6 +24,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-! Core'
 }
 
+{ #category : #'instance creation' }
+GtCoderElement class >> defaultSidebarWidth [
+	^ 1.0
+]
+
 { #category : #'private - accessing' }
 GtCoderElement >> contentElement [
 	<return: #GtCoderContentElement>
@@ -45,6 +50,7 @@ GtCoderElement >> createPlaygroundElement [
 GtCoderElement >> createSidebarElement [
 	^ GtPhlowHorizontalSidebarElement new
 		beLeft;
+		resizerStrategy: (BrResizerElementLength weight: self class defaultSidebarWidth);
 		contentStencil: (GtCoderNavigationTabsStencil new navigationModel: self navigationModel)
 ]
 

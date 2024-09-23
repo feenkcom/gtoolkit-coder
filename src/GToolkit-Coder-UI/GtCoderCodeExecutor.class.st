@@ -11,8 +11,7 @@ Class {
 	#instVars : [
 		'coderUIModel',
 		'action',
-		'element',
-		'executionStrategy'
+		'element'
 	],
 	#category : #'GToolkit-Coder-UI-Execution'
 }
@@ -30,9 +29,22 @@ GtCoderCodeExecutor class >> doItAndGo [
 ]
 
 { #category : #'api - instance creation' }
+GtCoderCodeExecutor class >> doItAndGoAsynchronous [
+	"Execute a code block asynchronously and display the execution result"
+	
+	^ self new doItAndGoAsynchronous
+]
+
+{ #category : #'api - instance creation' }
 GtCoderCodeExecutor class >> doItAndGoSerialized [
 	"Execute a code and display the execution result"
 	^ self new doItAndGoSerialized
+]
+
+{ #category : #'api - instance creation' }
+GtCoderCodeExecutor class >> doItAsynchronous [
+	"Execute code asynchronously (and do not display the execution result)"
+	^ self new doItAsynchronous
 ]
 
 { #category : #'api - instance creation' }
@@ -77,10 +89,24 @@ GtCoderCodeExecutor >> doItAndGo [
 ]
 
 { #category : #initialization }
+GtCoderCodeExecutor >> doItAndGoAsynchronous [
+	"Execute a code block asynchronously and display the execution result"
+
+	action := #doItAndGoAsynchronous
+]
+
+{ #category : #initialization }
 GtCoderCodeExecutor >> doItAndGoSerialized [
 	"Execute a code and display the execution result"
 
 	action := #doItAndGoSerialized
+]
+
+{ #category : #initialization }
+GtCoderCodeExecutor >> doItAsynchronous [
+	"Execute code asynchronously (and do not display the execution result)"
+
+	action := #doItAsynchronous
 ]
 
 { #category : #'api - accessing' }
@@ -112,22 +138,10 @@ GtCoderCodeExecutor >> event: anObject [
 
 { #category : #'api - execution' }
 GtCoderCodeExecutor >> execute [
-	GtCoderExecutionContextVariable
+	^ GtCoderExecutionContextVariable
 		element: self element
-		do: [ | coderViewModel |
-			coderViewModel := self coderViewModel.
-			coderViewModel executionStrategy: executionStrategy.
-			coderViewModel perform: action ]
-]
-
-{ #category : #accessing }
-GtCoderCodeExecutor >> executionStrategy [
-	^ executionStrategy
-]
-
-{ #category : #accessing }
-GtCoderCodeExecutor >> executionStrategy: anObject [
-	executionStrategy := anObject
+		do: [
+			self coderViewModel perform: action ]
 ]
 
 { #category : #initialization }

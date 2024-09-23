@@ -149,7 +149,8 @@ GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock
 		hoverAction: hoverBlock;
 		leaveAction: leaveBlock;
 		id: aSymbol.
-	self addContextMenuAction: newAction
+	self addContextMenuAction: newAction.
+	^ newAction
 ]
 
 { #category : #'api - context menu' }
@@ -162,7 +163,8 @@ GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock
 		leaveAction: leaveBlock;
 		id: aSymbol;
 		shortcutKey: shortcutString.
-	self addContextMenuAction: newAction
+	self addContextMenuAction: newAction.
+	^ newAction
 ]
 
 { #category : #'api - context menu' }

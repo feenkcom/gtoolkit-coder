@@ -6,8 +6,8 @@ I show a simple list of packages sorting alphabetically
 Class {
 	#name : #GtCoderNavigationPackagesTreeElement,
 	#superclass : #BrSimpleTree,
-	#traits : 'TNavigationWithContextMenu',
-	#classTraits : 'TNavigationWithContextMenu classTrait',
+	#traits : 'TGtCoderNavigationWithContextMenu',
+	#classTraits : 'TGtCoderNavigationWithContextMenu classTrait',
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
 

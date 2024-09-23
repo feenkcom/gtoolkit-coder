@@ -31,9 +31,9 @@ GtProtocolSlotTabAptitude >> initialize [
 					aStyle
 						padding:
 							(BlInsets
-								top: 0
+								top: 2
 								left: 12
-								bottom: 0
+								bottom: 2
 								right: 12) ]).
 	self
 		add:
