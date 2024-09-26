@@ -64,16 +64,20 @@ GtCoderNavigationProtocolsGroupedList >> createProtocolElement [
 
 { #category : #'private - instance creation' }
 GtCoderNavigationProtocolsGroupedList >> createProtocolGroups [
-	| classGroup instanceGroup |
-	instanceGroup := BrGroup new
-			domainObject: 'instance side';
+	| virtualGroup instanceGroup classGroup  |
+	virtualGroup := BrGroup new
+			domainObject: 'virtual';
 			stream: #() asAsyncStream;
 			itemStencil: [ self createProtocolElement ];
 			itemDataBinder: [ :element :item | self bindProtocol: item toElement: element ];
 			shouldShowWithoutItems: false.
-	classGroup := instanceGroup copy domainObject: 'class side'.
-	^ {instanceGroup.
-		classGroup}
+	
+	instanceGroup := virtualGroup copy domainObject: 'instance side'.
+	classGroup := virtualGroup copy domainObject: 'class side'.
+	^ {
+		virtualGroup.
+		instanceGroup.
+		classGroup }
 ]
 
 { #category : #'private - instance creation' }
@@ -189,9 +193,22 @@ GtCoderNavigationProtocolsGroupedList >> selectedProtocol [
 ]
 
 { #category : #'api - list' }
-GtCoderNavigationProtocolsGroupedList >> updateProtocolListWith: instanceGtPharoProtocols and: classGtPharoProtocols [
-	| instStream classStream |
+GtCoderNavigationProtocolsGroupedList >> updateProtocolListWith: theGtPharoProtocols [
+	| virtualStream instStream classStream virtualGtPharoProtocols instanceGtPharoProtocols classGtPharoProtocols |
 	self deselectAll.
+	
+	virtualGtPharoProtocols := theGtPharoProtocols
+		select: [ :eachPharoProtocol | eachPharoProtocol isVirtualProtocol ].
+	
+	instanceGtPharoProtocols := theGtPharoProtocols
+		select: [ :eachPharoProtocol | eachPharoProtocol isVirtualProtocol not and: [ eachPharoProtocol isClassSide not ] ].
+
+	classGtPharoProtocols := theGtPharoProtocols
+		select: [ :eachPharoProtocol | eachPharoProtocol isVirtualProtocol not and: [ eachPharoProtocol isClassSide ] ].
+	
+	virtualStream := virtualGtPharoProtocols
+			asSortedCollection: [ :a :b | a name < b name ].
+	
 	instStream := instanceGtPharoProtocols
 			asSortedCollection: [ :a :b | a name < b name ].
 
@@ -199,8 +216,10 @@ GtCoderNavigationProtocolsGroupedList >> updateProtocolListWith: instanceGtPharo
 			asSortedCollection: [ :a :b | a name < b name ].
 
 	protocolGroups
-		with: {instStream.
-				classStream}
+		with: {
+			virtualStream.
+			instStream.
+			classStream}
 		do: [ :grp :str | grp items: str ].
 
 	self groups: protocolGroups
