@@ -26,7 +26,7 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 	anElement 
 		addShortcut: (BlShortcutWithAction new
 			name: 'Move to next filter';
-			description: 'Moves to the next form item. If none is found, we cycle back to the first.';
+			description: 'Moves to the next filter. If none is found, we cycle back to the first.';
 			combination: (BlKeyCombination tab or: BlKeyCombination arrowRight);
 			overrideChildren: false;
 			action: [ :anEvent | 
@@ -37,7 +37,7 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 					nextFocusDo: #requestFocus ifNone: [  ] ]);
 		addShortcut: (BlShortcutWithAction new
 				name: 'Move to previous form item';
-				description: 'Moves to the previous form item. If none is found, we cycle back to the last.';
+				description: 'Moves to the previous filter. If none is found, we cycle back to the last.';
 				combination: (BlKeyCombination shiftTab or: BlKeyCombination arrowLeft);
 				overrideChildren: false;
 				action: [ :anEvent | 
