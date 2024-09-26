@@ -22,10 +22,11 @@ GtFilterTextSettingsElement >> initializeEditorElement [
 			background: self theme default contentBackgroundColor;
 			aptitude: BrGlamorousRegularEditorAptitude new 
 				glamorousRegularSmallSize;
-			text: ''
+			text: '';
+			padding: (BlInsets top: 1 right: 2 bottom: 1 left: 2)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - filter view model' }
 GtFilterTextSettingsElement >> onFilterViewModelChanged [
 	super onFilterViewModelChanged.
 
@@ -33,10 +34,17 @@ GtFilterTextSettingsElement >> onFilterViewModelChanged [
 ]
 
 { #category : #'event handling' }
+GtFilterTextSettingsElement >> onInputFilterChanged: anAnnouncement [
+	BlTaskAction 
+		enqueueElement: self 
+		action: [ self updateEditorElementInputFilter ]
+]
+
+{ #category : #'event handling' }
 GtFilterTextSettingsElement >> onTextChanged: anAnnouncement [
 	BlTaskAction 
 		enqueueElement: self 
-		action: [ self updateEditorElement ]
+		action: [ self updateEditorElementText ]
 ]
 
 { #category : #'api - filter view model' }
@@ -44,12 +52,32 @@ GtFilterTextSettingsElement >> subscribeToFilterViewModel [
 	super subscribeToFilterViewModel.
 
 	self filterViewModel weak
-		when: GtFilterTextModelTextChanged
-		send: #onTextChanged:
-		to: self
+		when: GtFilterTextViewModelTextChanged
+			send: #onTextChanged:
+			to: self;
+		when: GtFilterTextViewModelInputFilterChanged
+			send: #onInputFilterChanged:
+			to: self
 ]
 
 { #category : #'private - updating' }
 GtFilterTextSettingsElement >> updateEditorElement [
+	self updateEditorElementInputFilter.
+	self updateEditorElementText.
+]
+
+{ #category : #'private - updating' }
+GtFilterTextSettingsElement >> updateEditorElementInputFilter [
+	(editorElement editor inputFilter = self filterViewModel inputFilter)
+		ifTrue: [ ^ self ].
+	
+	editorElement inputFilter: self filterViewModel inputFilter
+]
+
+{ #category : #'private - updating' }
+GtFilterTextSettingsElement >> updateEditorElementText [
+	(editorElement text equals: self filterViewModel text)
+		ifTrue: [ ^ self ].
+	
 	editorElement text: self filterViewModel text copy
 ]

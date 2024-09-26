@@ -2,7 +2,8 @@ Class {
 	#name : #GtFilterTextModel,
 	#superclass : #GtFilterModel,
 	#instVars : [
-		'text'
+		'text',
+		'inputFilter'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
@@ -15,10 +16,33 @@ GtFilterTextModel >> filterViewModelClass [
 { #category : #initialization }
 GtFilterTextModel >> initialize [
 	super initialize.
-	text := BlText empty
+	text := BlText empty.
+	inputFilter := BrTextEditorNoLineBreakInputFilter new.
 ]
 
 { #category : #accessing }
+GtFilterTextModel >> inputFilter [
+	<return: #BrTextEditorInputFilter>
+	^ inputFilter
+]
+
+{ #category : #accessing }
+GtFilterTextModel >> inputFilter: anInputFilter [
+	inputFilter = anInputFilter ifTrue: [ ^ self ].
+	
+	inputFilter := anInputFilter.
+	self notifyInputFilterChanged.
+]
+
+{ #category : #'private - notifying' }
+GtFilterTextModel >> notifyInputFilterChanged [
+	self
+		announce: (GtFilterTextModelInputFilterChanged new
+				model: self;
+				inputFilter: self inputFilter)
+]
+
+{ #category : #'private - notifying' }
 GtFilterTextModel >> notifyTextChanged [
 	self
 		announce: (GtFilterTextModelTextChanged new
