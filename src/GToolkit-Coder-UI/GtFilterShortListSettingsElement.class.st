@@ -34,7 +34,7 @@ GtFilterShortListSettingsElement >> initialize [
 { #category : #initialization }
 GtFilterShortListSettingsElement >> initializeButtonElement [
 	buttonElement := self newButtonElement
-			aptitude: BrGlamorousButtonWithLabelAptitude
+			aptitude: BrGlamorousButtonWithLabelAndIconAptitude
 ]
 
 { #category : #initialization }
@@ -55,6 +55,7 @@ GtFilterShortListSettingsElement >> newButtonElement [
 	^ BrButton new
 		beSmallSize;
 		label: self defaultItemLabel;
+		icon: BrGlamorousVectorIcons downwards;
 		fitContent
 ]
 
@@ -93,7 +94,8 @@ GtFilterShortListSettingsElement >> newHandleElement [
 	aHandle := self newButtonElement
 		disable;
 		aptitude: BrGlamorousButtonRectangularAptitude;
-		addAptitude: BrGlamorousButtonLabelAptitude.
+		addAptitude: BrGlamorousButtonLabelAptitude;
+		addAptitude: BrGlamorousButtonIconAptitude.
 		
 	self updateHandleElement: aHandle.
 	handleElement at: 1 put: aHandle.
