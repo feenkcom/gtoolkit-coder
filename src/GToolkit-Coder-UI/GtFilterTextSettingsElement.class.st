@@ -30,9 +30,12 @@ GtFilterTextSettingsElement >> initializeEditorElement [
 				combination: BlKeyCombination enter;
 				action: [ :anEvent |
 					self onTextEditorModificationAccepted: anEvent ]);
+			when: BlFocusInEvent do: [ :anEvent | 
+				anEvent currentTarget selecter all select ]; 
 			when: BlFocusOutEvent do: [ :anEvent |
+					anEvent currentTarget deselecter all deselect.
 				anEvent isDueToRemoval ifFalse: [
-					self onTextEditorModificationAccepted: anEvent ] ].
+					self onTextEditorModificationAccepted: anEvent ] ]
 ]
 
 { #category : #'api - filter view model' }

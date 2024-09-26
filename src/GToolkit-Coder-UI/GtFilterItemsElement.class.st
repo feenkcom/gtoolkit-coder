@@ -15,7 +15,37 @@ GtFilterItemsElement >> addElementForFilterViewModel: aFilterViewModel [
 		constraintsDo: [ :c | 
 			c flow vertical alignCenter.
 			c flow horizontal alignLeft ].
+			
+	self addNavigationShortcutsTo: anElement.
+
 	self addChild: anElement
+]
+
+{ #category : #'private - updating' }
+GtFilterItemsElement >> addNavigationShortcutsTo: anElement [ 
+	anElement 
+		addShortcut: (BlShortcutWithAction new
+			name: 'Move to next filter';
+			description: 'Moves to the next form item. If none is found, we cycle back to the first.';
+			combination: (BlKeyCombination tab or: BlKeyCombination arrowRight);
+			overrideChildren: false;
+			action: [ :anEvent | 
+				BlFocusFinder new
+					direction: BlFocusSearchDirectionForward new;
+					root: self;
+					referenceElement: anEvent currentTarget;
+					nextFocusDo: #requestFocus ifNone: [  ] ]);
+		addShortcut: (BlShortcutWithAction new
+				name: 'Move to previous form item';
+				description: 'Moves to the previous form item. If none is found, we cycle back to the last.';
+				combination: (BlKeyCombination shiftTab or: BlKeyCombination arrowLeft);
+				overrideChildren: false;
+				action: [ :anEvent | 
+					BlFocusFinder new
+						direction: BlFocusSearchDirectionBackward new;
+						root: self;
+						referenceElement: anEvent currentTarget;
+						nextFocusDo: #requestFocus ifNone: [  ] ]).
 ]
 
 { #category : #'private - updating' }
@@ -98,6 +128,8 @@ GtFilterItemsElement >> newAddFilterButton [
 			content: [ self createDropdownContent ]);
 		margin: (BlInsets left: 2);
 		constraintsDo: [ :c | c flow vertical alignCenter ];
+		beFocusable;
+		in: [ :anElement | self addNavigationShortcutsTo: anElement ];
 		addShortcut:
 			(BlShortcutWithAction new
 				combination: BlKeyCombination enter;
