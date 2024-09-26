@@ -2,7 +2,8 @@ Class {
 	#name : #GtFilterTextSettingsElement,
 	#superclass : #GtFilterSettingsElement,
 	#instVars : [
-		'editorElement'
+		'editorElement',
+		'completionController'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Widgets'
 }
@@ -25,12 +26,13 @@ GtFilterTextSettingsElement >> initializeEditorElement [
 			text: '';
 			padding: (BlInsets top: 1 right: 2 bottom: 1 left: 2);
 			constraintsDo: [ :c | c minWidth: 20 ];
-			when: BrTextEditorModifiedEvent do: [ :anEvent |
-				self onTextEditorModified: anEvent ];
 			addShortcut: (BlShortcutWithAction new
 				combination: BlKeyCombination enter;
 				action: [ :anEvent |
-					self onTextEditorModificationAccepted: anEvent ]).
+					self onTextEditorModificationAccepted: anEvent ]);
+			when: BlFocusOutEvent do: [ :anEvent |
+				anEvent isDueToRemoval ifFalse: [
+					self onTextEditorModificationAccepted: anEvent ] ].
 ]
 
 { #category : #'api - filter view model' }
@@ -63,13 +65,6 @@ GtFilterTextSettingsElement >> onTextEditorModificationAccepted: anEvent [
 				trimmed)
 ]
 
-{ #category : #'event handling' }
-GtFilterTextSettingsElement >> onTextEditorModified: anEvent [ 
-	true ifTrue: [ ^ self ].
-	self hasFilterViewModel ifFalse: [ ^ self ].
-	self filterViewModel text: editorElement text
-]
-
 { #category : #'api - filter view model' }
 GtFilterTextSettingsElement >> subscribeToFilterViewModel [
 	super subscribeToFilterViewModel.
@@ -84,9 +79,21 @@ GtFilterTextSettingsElement >> subscribeToFilterViewModel [
 ]
 
 { #category : #'private - updating' }
+GtFilterTextSettingsElement >> updateEditorCompletionController [
+	completionController ifNotNil: [ :aController |
+		completionController := nil.
+		aController uninstall ].
+
+	self filterViewModel completionDo: [ :aStrategy | 
+		completionController := GtCompletionController on: editorElement strategy: aStrategy.
+		completionController install ]
+]
+
+{ #category : #'private - updating' }
 GtFilterTextSettingsElement >> updateEditorElement [
 	self updateEditorElementInputFilter.
 	self updateEditorElementText.
+	self updateEditorCompletionController.
 ]
 
 { #category : #'private - updating' }
