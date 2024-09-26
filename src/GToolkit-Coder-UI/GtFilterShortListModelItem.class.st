@@ -24,6 +24,21 @@ GtFilterShortListModelItem >> hash [
 ]
 
 { #category : #accessing }
+GtFilterShortListModelItem >> ifSome: aBlock [
+	^ self ifSome: aBlock ifNone: [ nil ]
+]
+
+{ #category : #accessing }
+GtFilterShortListModelItem >> ifSome: aBlock ifNone: aNoneBlock [
+	^ aBlock cull: self itemValue cull: self
+]
+
+{ #category : #accessing }
+GtFilterShortListModelItem >> itemValue [
+	^ self
+]
+
+{ #category : #accessing }
 GtFilterShortListModelItem >> label [
 	<return: #String or: #BlText>
 	^ self subclassResponsibility

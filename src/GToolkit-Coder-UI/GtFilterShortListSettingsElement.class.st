@@ -67,7 +67,7 @@ GtFilterShortListSettingsElement >> newContentElement [
 			^ anElement ].
 
 	aListElement := BrSimpleList new
-			fitContent;
+			fitContentLimited;
 			itemStencil: [ :anItemType :aListWidget | self newItemElement ];
 			itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
 				anItemElement
@@ -174,11 +174,12 @@ GtFilterShortListSettingsElement >> updateHandleElement: anElement [
 GtFilterShortListSettingsElement >> updateListElement [
 	| aHeight aWidth |
 	aHeight := self filterViewModel itemsCount * 12.
-	aWidth := (self filterViewModel items detectMax: #labelSize) labelSize * 12.
+	aWidth := (self filterViewModel items detectMax: #labelSize)
+			ifNotNil: [ :anItem | anItem labelSize * 12 ]
+			ifNil: [ 30 ].
 	buttonAptitude preferredExtent: aHeight @ aWidth.
-	
-	self listElementDo: [ :anElement | 
-		self updateListElement: anElement ].
+
+	self listElementDo: [ :anElement | self updateListElement: anElement ]
 ]
 
 { #category : #'private - updating' }

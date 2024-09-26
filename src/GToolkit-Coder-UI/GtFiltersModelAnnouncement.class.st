@@ -1,5 +1,5 @@
 Class {
-	#name : #GtFiltersAnnouncement,
+	#name : #GtFiltersModelAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
 		'model'
@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #accessing }
-GtFiltersAnnouncement >> model [
+GtFiltersModelAnnouncement >> model [
 	^ model
 ]
 
 { #category : #accessing }
-GtFiltersAnnouncement >> model: anObject [
+GtFiltersModelAnnouncement >> model: anObject [
 	model := anObject
 ]

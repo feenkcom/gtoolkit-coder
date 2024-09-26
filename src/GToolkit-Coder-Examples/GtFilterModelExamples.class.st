@@ -10,8 +10,23 @@ GtFilterModelExamples >> booleanModel [
 	| aModel |
 	aModel := GtFilterBooleanModel new.
 	aModel switchedOn: true.
+	aModel label: 'Trait methods'.
 	self assert: aModel isSwitchedOn.
 	
+	^ aModel
+]
+
+{ #category : #examples }
+GtFilterModelExamples >> itemsModel [
+	<gtExample>
+	| aModel |
+	aModel := GtFilterItemsModel new.
+	aModel
+		items: {self textModel.
+				self shortListModel.
+				self booleanModel}.
+	self assert: aModel items size equals: 3.
+
 	^ aModel
 ]
 
@@ -24,6 +39,7 @@ GtFilterModelExamples >> shortListModel [
 		items: {'instance'.
 				'class'}.
 	aModel selectedItem: 'class'.
+	aModel label: 'Side'.
 	self
 		assert: aModel items
 		equals: ({'instance'.
@@ -39,6 +55,7 @@ GtFilterModelExamples >> textModel [
 	| aModel |
 	aModel := GtFilterTextModel new.
 	aModel text: 'Object'.
+	aModel label: 'Methods up to'.
 	self assert: (aModel text equals: 'Object' asRopedText).
 
 	^ aModel

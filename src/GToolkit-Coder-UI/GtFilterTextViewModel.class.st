@@ -47,3 +47,8 @@ GtFilterTextViewModel >> subscribeToFilterModel [
 GtFilterTextViewModel >> text [
 	^ self filterModel text
 ]
+
+{ #category : #testing }
+GtFilterTextViewModel >> text: aText [
+	self filterModel text: aText
+]

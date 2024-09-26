@@ -18,6 +18,19 @@ GtFilterElementByScripterExamples >> booleanElement [
 ]
 
 { #category : #examples }
+GtFilterElementByScripterExamples >> itemsModel [
+	<gtExample>
+	| aScripter |
+	aScripter := self
+			scripterWithModel: [ GtFilterModelExamples new itemsModel ]
+			element: [ :aModel | GtFilterItemsElement new filtersViewModel: aModel asFiltersViewModel ].
+
+	
+
+	^ aScripter
+]
+
+{ #category : #examples }
 GtFilterElementByScripterExamples >> shortListElement [
 	<gtExample>
 	| aScripter |
