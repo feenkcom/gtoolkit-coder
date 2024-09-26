@@ -51,9 +51,21 @@ GtFilterShortListModel >> notifySelectedItemChanged [
 				selectedItem: self selectedItem)
 ]
 
+{ #category : #initialization }
+GtFilterShortListModel >> selectFirstItem [
+	self items ifEmpty: [ ^ self ].
+	self selectedItem: self items first
+]
+
+{ #category : #initialization }
+GtFilterShortListModel >> selectLastItem [
+	self items ifEmpty: [ ^ self ].
+	self selectedItem: self items last
+]
+
 { #category : #accessing }
 GtFilterShortListModel >> selectedItem [
-	^ selectedItem
+	^ selectedItem ifNil: [ selectedItem := GtFilterShortListModelNoItem default ]
 ]
 
 { #category : #accessing }
@@ -64,4 +76,11 @@ GtFilterShortListModel >> selectedItem: anItem [
 
 	selectedItem := aNewItem.
 	self notifySelectedItemChanged
+]
+
+{ #category : #accessing }
+GtFilterShortListModel >> selectedValue [
+	"Return a filter value, e.g., selected item, input text."
+
+	^ self selectedItem
 ]

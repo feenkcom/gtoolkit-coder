@@ -27,6 +27,28 @@ GtFilterViewModel >> filterElementClass [
 	^ self subclassResponsibility
 ]
 
+{ #category : #accessing }
+GtFilterViewModel >> label [
+	<return: #String>
+	^ self filterModel label
+]
+
+{ #category : #'event handling' }
+GtFilterViewModel >> onLabelChanged: anAnnouncement [
+	self
+		announce: (GtFilterViewModelLabelChanged new
+				viewModel: self;
+				label: anAnnouncement label)
+]
+
+{ #category : #'api - filter model' }
+GtFilterViewModel >> subscribeToFilterModel [
+	self filterModel weak
+		when: GtFilterModelLabelChanged
+		send: #onLabelChanged:
+		to: self
+]
+
 { #category : #'api - filter model' }
 GtFilterViewModel >> unsubscribeFromFilterModel [
 	self filterModel unsubscribe: self

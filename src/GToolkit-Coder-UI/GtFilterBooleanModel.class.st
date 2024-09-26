@@ -1,6 +1,9 @@
 Class {
 	#name : #GtFilterBooleanModel,
 	#superclass : #GtFilterModel,
+	#instVars : [
+		'switchedOn'
+	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
@@ -31,6 +34,13 @@ GtFilterBooleanModel >> notifySwitchChanged [
 		announce: (GtFilterBooleanModelSwitchChanged new
 				model: self;
 				switchedOn: self isSwitchedOn)
+]
+
+{ #category : #accessing }
+GtFilterBooleanModel >> selectedValue [
+	"Return a filter value, e.g., selected item, input text."
+
+	^ self switchedOn
 ]
 
 { #category : #accessing }

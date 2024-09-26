@@ -23,7 +23,14 @@ GtFilterTextSettingsElement >> initializeEditorElement [
 			aptitude: BrGlamorousRegularEditorAptitude new 
 				glamorousRegularSmallSize;
 			text: '';
-			padding: (BlInsets top: 1 right: 2 bottom: 1 left: 2)
+			padding: (BlInsets top: 1 right: 2 bottom: 1 left: 2);
+			constraintsDo: [ :c | c minWidth: 20 ];
+			when: BrTextEditorModifiedEvent do: [ :anEvent |
+				self onTextEditorModified: anEvent ];
+			addShortcut: (BlShortcutWithAction new
+				combination: BlKeyCombination enter;
+				action: [ :anEvent |
+					self onTextEditorModificationAccepted: anEvent ]).
 ]
 
 { #category : #'api - filter view model' }
@@ -45,6 +52,22 @@ GtFilterTextSettingsElement >> onTextChanged: anAnnouncement [
 	BlTaskAction 
 		enqueueElement: self 
 		action: [ self updateEditorElementText ]
+]
+
+{ #category : #'event handling' }
+GtFilterTextSettingsElement >> onTextEditorModificationAccepted: anEvent [
+	self hasFilterViewModel ifFalse: [ ^ self ].
+	self filterViewModel
+		text: (editorElement text copy trimmer
+				bothSeparators;
+				trimmed)
+]
+
+{ #category : #'event handling' }
+GtFilterTextSettingsElement >> onTextEditorModified: anEvent [ 
+	true ifTrue: [ ^ self ].
+	self hasFilterViewModel ifFalse: [ ^ self ].
+	self filterViewModel text: editorElement text
 ]
 
 { #category : #'api - filter view model' }
@@ -76,8 +99,12 @@ GtFilterTextSettingsElement >> updateEditorElementInputFilter [
 
 { #category : #'private - updating' }
 GtFilterTextSettingsElement >> updateEditorElementText [
-	(editorElement text equals: self filterViewModel text)
-		ifTrue: [ ^ self ].
+	| aText aTrimmedText |
+	aText := self filterViewModel text.
+	(editorElement text equals: aText) ifTrue: [ ^ self ].
 	
-	editorElement text: self filterViewModel text copy
+	aTrimmedText := aText trimmer
+			bothSeparators;
+			trimmed.
+	editorElement text: aTrimmedText
 ]
