@@ -189,9 +189,16 @@ GtCoderNavigationProtocolsGroupedList >> selectedProtocol [
 ]
 
 { #category : #'api - list' }
-GtCoderNavigationProtocolsGroupedList >> updateProtocolListWith: instanceGtPharoProtocols and: classGtPharoProtocols [
-	| instStream classStream |
+GtCoderNavigationProtocolsGroupedList >> updateProtocolListWith: theGtPharoProtocols [
+	| instStream classStream instanceGtPharoProtocols classGtPharoProtocols |
 	self deselectAll.
+	
+	instanceGtPharoProtocols := theGtPharoProtocols
+		reject: [ :eachPharoProtocol | eachPharoProtocol isClassSide ].
+
+	classGtPharoProtocols := theGtPharoProtocols
+		select: [ :eachPharoProtocol | eachPharoProtocol isClassSide ].
+	
 	instStream := instanceGtPharoProtocols
 			asSortedCollection: [ :a :b | a name < b name ].
 
