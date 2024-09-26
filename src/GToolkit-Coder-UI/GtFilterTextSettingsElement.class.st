@@ -2,7 +2,8 @@ Class {
 	#name : #GtFilterTextSettingsElement,
 	#superclass : #GtFilterSettingsElement,
 	#instVars : [
-		'editorElement'
+		'editorElement',
+		'completionController'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Widgets'
 }
@@ -84,9 +85,21 @@ GtFilterTextSettingsElement >> subscribeToFilterViewModel [
 ]
 
 { #category : #'private - updating' }
+GtFilterTextSettingsElement >> updateEditorCompletionController [
+	completionController ifNotNil: [ :aController |
+		completionController := nil.
+		aController uninstall ].
+
+	self filterViewModel completionDo: [ :aStrategy | 
+		completionController := GtCompletionController on: editorElement strategy: aStrategy.
+		completionController install ]
+]
+
+{ #category : #'private - updating' }
 GtFilterTextSettingsElement >> updateEditorElement [
 	self updateEditorElementInputFilter.
 	self updateEditorElementText.
+	self updateEditorCompletionController.
 ]
 
 { #category : #'private - updating' }

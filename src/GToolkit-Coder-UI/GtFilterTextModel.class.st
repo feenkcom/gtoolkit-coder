@@ -4,19 +4,25 @@ Class {
 	#instVars : [
 		'text',
 		'inputFilter',
-		'completion'
+		'completionBuilder'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #accessing }
 GtFilterTextModel >> completion [
-	^ completion
+	<return: #GtCompletionStrategy or: nil>
+	^ completionBuilder value
 ]
 
 { #category : #accessing }
 GtFilterTextModel >> completion: aCompletionBuilder [
-	completion := aCompletionBuilder
+	completionBuilder := aCompletionBuilder
+]
+
+{ #category : #accessing }
+GtFilterTextModel >> completionDo: aBlock [
+	self completion ifNotNil: aBlock
 ]
 
 { #category : #accessing }

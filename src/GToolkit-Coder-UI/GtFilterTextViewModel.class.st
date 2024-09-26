@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #accessing }
+GtFilterTextViewModel >> completionDo: aBlock [
+	self hasFilterModel ifFalse: [ ^ self ].
+	self filterModel completionDo: aBlock
+]
+
+{ #category : #accessing }
 GtFilterTextViewModel >> filterElementClass [
 	^ GtFilterTextSettingsElement
 ]
