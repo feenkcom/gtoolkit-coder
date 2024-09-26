@@ -203,16 +203,6 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
 	^ list
 ]
 
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> classMethodsForAProtocol: aSelectedItem [
-	^ (self selectedClass class organization protocolNamed: aSelectedItem name)
-		ifNotNil: [ :s | 
-			(s methodSelectors
-				collect: [ :sel | self selectedClass class >> sel ]
-				thenReject: [ :meth | meth isFromTrait ]) asArray ]
-		ifNil: [ #() ]
-]
-
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> createDraggedMethodItem: aDragItem [
 
@@ -338,14 +328,6 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ]
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> instanceMethodsForAProtocol: aSelectedItem [
-	self selectedClass ifNil: [ ^ #() ].
-	^ (self selectedClass organization protocolNamed: aSelectedItem name)
-		ifNotNil: [ :s | s methodSelectors collect: [ :sel | self selectedClass >> sel ] as: Array ]
-		ifNil: [ #() ]
 ]
 
 { #category : #initialization }
@@ -517,20 +499,18 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
-	| aSelectedItem instMeths classMeths |
+	| aSelectedItem |
 	slotsGroupList deselectAll.
-	aSelectedItem := self selectedProtocol.
+	aSelectedItem := methodProtocolsList selectedProtocol.
 	aSelectedItem ifNil: [^self].
-	self navigationModel selectMethodProtocol: aSelectedItem source: self.
-	instMeths := self instanceMethodsForAProtocol: aSelectedItem.
-	classMeths := self classMethodsForAProtocol: aSelectedItem.
+	self navigationModel selectProtocol: aSelectedItem source: self.
 	methodGroupList deselectAll.
-	self updateMethodListWith: instMeths and: classMeths
+	self updateMethodListWith: self navigationModel methodsToShow.
 ]
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> onSlotsListSelectionChanged [
-	| theIndices anIndex aSelectedItem instMeths classMeths |
+	| theIndices anIndex aSelectedItem |
 	supressListChanges ifTrue: [ ^ self ].
 	methodProtocolsList deselectAll.
 	theIndices := slotsGroupList selectedIndices ifEmpty: [ ^ self ].
@@ -539,10 +519,8 @@ GtCoderNavigationPackagesTagsClassesElement >> onSlotsListSelectionChanged [
 		ifFalse: [ ^ self ].
 	aSelectedItem := (slotsGroupList viewModel entityAt: anIndex) value object.
 	self navigationModel selectSlot: aSelectedItem source: self.
-	instMeths := self selectedClass methodsAccessingSlot: aSelectedItem.
-	classMeths := self selectedClass class methodsAccessingSlot: aSelectedItem.
 	methodGroupList deselectAll.
-	self updateMethodListWith: instMeths and: classMeths
+	self updateMethodListWith: self navigationModel methodsToShow.
 ]
 
 { #category : #initialization }
@@ -806,7 +784,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock 
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> selectedProtocol [
-	^ methodProtocolsList selectedProtocol
+	^ self navigationModel selectedProtocol
 ]
 
 { #category : #'showing / hiding' }
@@ -953,14 +931,19 @@ GtCoderNavigationPackagesTagsClassesElement >> updateContent [
 ]
 
 { #category : #'updating lists' }
-GtCoderNavigationPackagesTagsClassesElement >> updateMethodListWith: instanceMethods and: classMethods [
-	| instMethStream classMethStream |
+GtCoderNavigationPackagesTagsClassesElement >> updateMethodListWith: aCollectionOfCompiledMethods [
+	| instMethStream classMethStream instanceMethods classMethods |
 	methodGroupList deselectAll.
-	instMethStream := instanceMethods
-			asSortedCollection: [ :a :b | a selector < b selector ].
 
-	classMethStream := classMethods
-			asSortedCollection: [ :a :b | a selector < b selector ].
+	instanceMethods := aCollectionOfCompiledMethods
+			select: [ :each | each methodClass isInstanceSide ].
+
+	classMethods := aCollectionOfCompiledMethods
+			select: [ :each | each methodClass isClassSide ].
+
+	instMethStream := instanceMethods asSortedCollection: GtMethodsSortFunction new.
+
+	classMethStream := classMethods asSortedCollection: GtMethodsSortFunction new.
 
 	methodGroup
 		with: {instMethStream.
@@ -984,22 +967,18 @@ GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
-	| methodProtocols currentClass classProtocols extension |
+	| currentClass extension protocolsToShow |
 	navigationModel hasSelectedClass
-		ifFalse: [ self updateProtocolListWith: #() and: #().
-			self updateMethodListWith: #() and: #().
+		ifFalse: [
+			self updateProtocolListWith: #().
+			self updateMethodListWith: #().
 			methodProtocolsList visibility: BlVisibility hidden.
 			methodsLabel visibility: BlVisibility hidden.
 			^ self ].
 			
 	currentClass := navigationModel selectedClass.
 	
-	classProtocols := currentClass class organization protocols
-			reject: [ :prot | 
-				(navigationModel selectedClass class methods
-					select: [ :meth | (prot includesSelector: meth selector) and: [ meth isFromTrait not ] ])
-					isEmpty ].
-	methodProtocols := currentClass organization protocols.
+	protocolsToShow := navigationModel protocolsToShow.
 	extension := false.
 	navigationModel
 		selectedPackageDo: [ :pkg | 
@@ -1007,36 +986,28 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 				ifTrue: [ | protocolName |
 					extension := true.
 					protocolName := '*' , pkg name.
-					methodProtocols := methodProtocols
-							select: [ :each | each name beginsWith: protocolName ].
-					classProtocols := classProtocols
+					protocolsToShow := protocolsToShow
 							select: [ :each | each name beginsWith: protocolName ] ] ].
-							
-	methodProtocols := methodProtocols collect: [ :eachProtocol |
-		GtPharoProtocol
-			protocol: eachProtocol
-			class: currentClass ].
-			
-	classProtocols := classProtocols collect: [ :eachProtocol |
-		GtPharoProtocol
-			protocol: eachProtocol
-			class: currentClass ].
-
-	self updateProtocolListWith: methodProtocols and: classProtocols.
+	
+	self updateProtocolListWith: protocolsToShow.
 	extension
-		ifTrue: [ methodProtocolsList selectOne: 2.
+		ifTrue: [
+			methodProtocolsList selectOne: 2.
 			self onProtocolListSelectionChanged ]
-		ifFalse: [ self
+		ifFalse: [
+			self updateMethodListWith: self navigationModel methodsToShow.
+			self flag: #TODO.
+			"self
 				updateMethodListWith: navigationModel selectedClass methods
 				and: (navigationModel selectedClass class methods
-						reject: [ :meth | meth isFromTrait ]) ].
+						reject: [ :meth | meth isFromTrait ])" ].
 	methodProtocolsList visibility: BlVisibility visible.
 	methodsLabel visibility: BlVisibility visible
 ]
 
 { #category : #'updating lists' }
-GtCoderNavigationPackagesTagsClassesElement >> updateProtocolListWith: instanceProtocols and: classProtocols [
-	methodProtocolsList updateProtocolListWith: instanceProtocols and: classProtocols
+GtCoderNavigationPackagesTagsClassesElement >> updateProtocolListWith: pharoProtocols [
+	methodProtocolsList updateProtocolListWith: pharoProtocols
 ]
 
 { #category : #'updating lists' }
