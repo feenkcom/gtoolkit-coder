@@ -68,7 +68,7 @@ GtFilterNameElement >> initializeSettingsContainer [
 GtFilterNameElement >> initializeShortcuts [
 	self
 		addShortcut: (BlShortcutWithAction new
-				combination: BlKeyCombination backspace;
+				combination: (BlKeyCombination backspace or: BlKeyCombination delete);
 				action: [ self requestRemoveFilter ])
 ]
 
