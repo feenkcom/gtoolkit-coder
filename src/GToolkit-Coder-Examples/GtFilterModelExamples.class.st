@@ -17,6 +17,16 @@ GtFilterModelExamples >> booleanModel [
 ]
 
 { #category : #examples }
+GtFilterModelExamples >> invariableModel [
+	<gtExample>
+	| aModel |
+	aModel := GtFilterInvariableModel new.
+	aModel label: 'Stable tests'.
+	
+	^ aModel
+]
+
+{ #category : #examples }
 GtFilterModelExamples >> itemsModel [
 	<gtExample>
 	| aModel |
@@ -43,8 +53,8 @@ GtFilterModelExamples >> shortListModel [
 	self
 		assert: aModel items
 		equals: ({'instance'.
-				'class'} collect: #asFilterShortListModelItem).
-	self assert: aModel selectedItem equals: 'class' asFilterShortListModelItem.
+				'class'} collect: #asFilterModelItem).
+	self assert: aModel selectedItem equals: 'class' asFilterModelItem.
 
 	^ aModel
 ]
@@ -57,6 +67,20 @@ GtFilterModelExamples >> textModel [
 	aModel text: 'Object'.
 	aModel label: 'Methods up to'.
 	self assert: (aModel text equals: 'Object' asRopedText).
+
+	^ aModel
+]
+
+{ #category : #examples }
+GtFilterModelExamples >> toggleModel [
+	<gtExample>
+	| aModel |
+	aModel := GtFilterToggleModel new.
+	aModel label: 'Side'.
+	aModel
+		items: {GtFilterShortListInstanceSideItem new.
+				GtFilterShortListClassSideItem new}.
+	aModel selectFirstItem.
 
 	^ aModel
 ]

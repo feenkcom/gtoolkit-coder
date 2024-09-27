@@ -131,7 +131,7 @@ GtFilterShortListSettingsElement >> onItemsChanged: anAnnouncement [
 ]
 
 { #category : #'event handling' }
-GtFilterShortListSettingsElement >> onSelectedItemChanged: anAnnouncement [.
+GtFilterShortListSettingsElement >> onSelectedItemChanged: anAnnouncement [
 	BlTaskAction enqueueElement: self action: [ self updateElement ]
 ]
 
@@ -139,10 +139,10 @@ GtFilterShortListSettingsElement >> onSelectedItemChanged: anAnnouncement [.
 GtFilterShortListSettingsElement >> subscribeToFilterViewModel [
 	super subscribeToFilterViewModel.
 	self filterViewModel weak
-		when: GtFilterShortListViewModelItemsChanged
+		when: GtFilterViewModelItemsChanged
 			send: #onItemsChanged:
 			to: self;
-		when: GtFilterShortListViewModelSelectedItemChanged
+		when: GtFilterViewModelSelectedItemChanged
 			send: #onSelectedItemChanged:
 			to: self
 ]

@@ -12,6 +12,15 @@ Class {
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
+{ #category : #comparing }
+GtFilterModel >> = anObject [
+	self == anObject ifTrue: [ ^ true ].
+
+	^ self class = anObject class
+		and: [ self label = anObject label 
+		and: [ self order = anObject order ] ]
+]
+
 { #category : #announcer }
 GtFilterModel >> announcer [
 	<return: #Announcer>
@@ -69,6 +78,13 @@ GtFilterModel >> gtLiveFor: aView [
 		title: 'Live';
 		stencil: [ (GtFilterNameElement new filterViewModel: self asFilterViewModel)
 				margin: (BlInsets all: 10) ]
+]
+
+{ #category : #comparing }
+GtFilterModel >> hash [
+	^ self class hash 
+		bitXor: (self label hash 
+		bitXor: self order hash)
 ]
 
 { #category : #accessing }

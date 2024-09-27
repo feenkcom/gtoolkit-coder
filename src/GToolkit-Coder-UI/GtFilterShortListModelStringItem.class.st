@@ -1,6 +1,6 @@
 Class {
 	#name : #GtFilterShortListModelStringItem,
-	#superclass : #GtFilterShortListModelItem,
+	#superclass : #GtFilterModelItem,
 	#instVars : [
 		'string'
 	],
