@@ -58,6 +58,7 @@ GtFilterNameElement >> initializeLabelElement [
 { #category : #initialization }
 GtFilterNameElement >> initializeSettingsContainer [
 	settingsContainer := BrFrame new
+			background: self theme default contentBackgroundColor;
 			hFitContentLimited;
 			vFitContent;
 			margin: (BlInsets all: 2);

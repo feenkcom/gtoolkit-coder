@@ -1,6 +1,6 @@
 Class {
 	#name : #GtFilterShortListSideItem,
-	#superclass : #GtFilterShortListModelItem,
+	#superclass : #GtFilterModelItem,
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
