@@ -17,6 +17,7 @@ GtFilterItemsElement >> addElementForFilterViewModel: aFilterViewModel [
 			c flow horizontal alignLeft ].
 			
 	self addNavigationShortcutsTo: anElement.
+	self addRemoveButtonIconTo: anElement.
 
 	self addChild: anElement
 ]
@@ -26,7 +27,7 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 	anElement 
 		addShortcut: (BlShortcutWithAction new
 			name: 'Move to next filter';
-			description: 'Moves to the next form item. If none is found, we cycle back to the first.';
+			description: 'Moves to the next filter. If none is found, we cycle back to the first.';
 			combination: (BlKeyCombination tab or: BlKeyCombination arrowRight);
 			overrideChildren: false;
 			action: [ :anEvent | 
@@ -37,7 +38,7 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 					nextFocusDo: #requestFocus ifNone: [  ] ]);
 		addShortcut: (BlShortcutWithAction new
 				name: 'Move to previous form item';
-				description: 'Moves to the previous form item. If none is found, we cycle back to the last.';
+				description: 'Moves to the previous filter. If none is found, we cycle back to the last.';
 				combination: (BlKeyCombination shiftTab or: BlKeyCombination arrowLeft);
 				overrideChildren: false;
 				action: [ :anEvent | 
@@ -51,6 +52,27 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 { #category : #'private - updating' }
 GtFilterItemsElement >> addNewFilterElement [
 	self addChild: self newAddFilterButton as: #add
+]
+
+{ #category : #'private - updating' }
+GtFilterItemsElement >> addRemoveButtonIconTo: anElement [
+	| aRemoveButton aKeyMap |
+	aKeyMap := 'Backspace | Delete'.
+	anElement clipChildren: false.
+	aRemoveButton := self newRemoveButton.
+	aRemoveButton visibility: BlVisibility gone.
+	aRemoveButton addAptitude: (BrGlamorousWithLabelTooltipAptitude 
+		text: 'Remove' 
+		keymap: aKeyMap).
+	aRemoveButton action: [ :aButton |
+		self onRemoveFilterViewModelOfElement: anElement from: aButton ].
+	anElement
+		when: BlMouseEnterEvent
+		do: [ :anEvent | aRemoveButton visibility: BlVisibility visible ].
+	anElement
+		when: BlMouseLeaveEvent
+		do: [ :anEvent | aRemoveButton visibility: BlVisibility gone ].
+	anElement addChild: aRemoveButton
 ]
 
 { #category : #'private - updating' }
@@ -97,6 +119,7 @@ GtFilterItemsElement >> initialize [
 	self hFitContentLimited.
 	self vFitContent.
 	self padding: (BlInsets all: 2).
+	self clipChildren: false.
 	self initializeEventHandlers.
 ]
 
@@ -147,6 +170,18 @@ GtFilterItemsElement >> newAddFilterHandleElement [
 		hExact: 20
 ]
 
+{ #category : #'private - updating' }
+GtFilterItemsElement >> newRemoveButton [
+	^ GtInspectorRoundButtonStencil mini asElement
+		icon: (BrPlusIconStencil close radius: 3) asElement;
+		zIndex: 10;
+		id: GtPagerClosePageButtonElementId;
+		constraintsDo: [ :c | 
+			c ignoreByLayout.
+			c ignored horizontal alignCenterAt: 1.0.
+			c ignored vertical alignCenterAt: 0.0 ]
+]
+
 { #category : #'api - filter view model' }
 GtFilterItemsElement >> onFiltersViewModelChanged [
 	self updateItemsElement
@@ -155,6 +190,14 @@ GtFilterItemsElement >> onFiltersViewModelChanged [
 { #category : #'event handling' }
 GtFilterItemsElement >> onItemsChanged: anAnnouncement [
 	BlTaskAction enqueueElement: self action: [ self updateItemsElement ]
+]
+
+{ #category : #'private - updating' }
+GtFilterItemsElement >> onRemoveFilterViewModelOfElement: anElement from: aButton [ 
+	anElement hasFilterViewModel ifFalse: [ ^ self ].
+	self hasFiltersViewModel ifFalse: [ ^ self ].
+	
+	self filtersViewModel removeFilterViewModel: anElement filterViewModel
 ]
 
 { #category : #'event handling' }
