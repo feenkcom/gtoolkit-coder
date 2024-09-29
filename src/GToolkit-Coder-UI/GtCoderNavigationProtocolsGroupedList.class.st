@@ -81,11 +81,18 @@ GtCoderNavigationProtocolsGroupedList >> createProtocolGroups [
 ]
 
 { #category : #'private - instance creation' }
-GtCoderNavigationProtocolsGroupedList >> createProtocolListContextMenuItemsFor: item [
-	^ {(self createLabel: 'Remove ' description: item name)
-			-> [ :elem | self removeProtocol: item name in: elem ].
-		(self createLabel: 'Rename ' description: item name)
-			-> [ :elem | self renameProtocol: item name in: elem ]}
+GtCoderNavigationProtocolsGroupedList >> createProtocolListContextMenuItemsFor: aPharoProtocol [
+	^ Array
+		streamContents: [ :aStream | 
+			aPharoProtocol canBeRemoved
+				ifTrue: [ aStream
+						nextPut: (self createLabel: 'Remove ' description: aPharoProtocol name)
+								-> [ :elem | self removeProtocol: aPharoProtocol in: elem ] ].
+
+			aPharoProtocol canBeRenamed
+				ifTrue: [ aStream
+						nextPut: (self createLabel: 'Rename ' description: aPharoProtocol name)
+								-> [ :elem | self renameProtocol: aPharoProtocol name in: elem ] ] ]
 ]
 
 { #category : #initialization }
@@ -143,11 +150,11 @@ GtCoderNavigationProtocolsGroupedList >> onDropCompiledMethodsOnProtocol: anItem
 ]
 
 { #category : #'private - refactorings' }
-GtCoderNavigationProtocolsGroupedList >> removeProtocol: protocolName in: elem [
+GtCoderNavigationProtocolsGroupedList >> removeProtocol: aGtPharoProtocol in: elem [
 	| refactoring |
 	refactoring := RBRemoveProtocolChange
-			removeProtocolNamed: protocolName
-			in: self selectedClass.
+			removeProtocolNamed: aGtPharoProtocol name
+			in: aGtPharoProtocol protocolClass.
 	^ self
 		addPreviewButtonFor: refactoring
 		to: elem
@@ -155,19 +162,19 @@ GtCoderNavigationProtocolsGroupedList >> removeProtocol: protocolName in: elem [
 ]
 
 { #category : #'private - refactorings' }
-GtCoderNavigationProtocolsGroupedList >> renameProtocol: protocolName in: elem [
+GtCoderNavigationProtocolsGroupedList >> renameProtocol: aGtPharoProtocol in: elem [
 	| refactoring edit |
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
 				fontSize: 11.9;   "Force the font to match the label font"
 				background: Color transparent);
-		text: protocolName;
+		text: aGtPharoProtocol name;
 		when: BrEditorAcceptWish
 			do: [ :aWish | 
 				refactoring := GtRBRenameProtocolRefactoring
-						renameProtocol: protocolName
-						in: self selectedClass
+						renameProtocol: aGtPharoProtocol name
+						in: aGtPharoProtocol protocolClass
 						to: aWish text asString.
 				edit switchToLabel.
 				self
