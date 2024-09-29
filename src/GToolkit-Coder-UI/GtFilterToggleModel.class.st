@@ -1,5 +1,5 @@
 Class {
-	#name : #GtFilterShortListModel,
+	#name : #GtFilterToggleModel,
 	#superclass : #GtFilterModel,
 	#instVars : [
 		'items',
@@ -9,24 +9,25 @@ Class {
 }
 
 { #category : #accessing }
-GtFilterShortListModel >> filterViewModelClass [
-	^ GtFilterShortListViewModel
+GtFilterToggleModel >> filterViewModelClass [
+	<return: #'GtFilterViewModel class'>
+	^ GtFilterToggleViewModel
 ]
 
 { #category : #initialization }
-GtFilterShortListModel >> initialize [
+GtFilterToggleModel >> initialize [
 	super initialize.
 	items := #()
 ]
 
 { #category : #accessing }
-GtFilterShortListModel >> items [
+GtFilterToggleModel >> items [
 	<return: #OrderedCollection>
 	^ items
 ]
 
 { #category : #accessing }
-GtFilterShortListModel >> items: aCollection [
+GtFilterToggleModel >> items: aCollection [
 	| aNewCollection |
 	aNewCollection := aCollection collect: #asFilterModelItem.
 	self items = aNewCollection ifTrue: [ ^ self ].
@@ -36,7 +37,7 @@ GtFilterShortListModel >> items: aCollection [
 ]
 
 { #category : #'private - notifying' }
-GtFilterShortListModel >> notifyItemsChanged [
+GtFilterToggleModel >> notifyItemsChanged [
 	self
 		announce: (GtFilterModelItemsChanged new
 				model: self;
@@ -44,7 +45,7 @@ GtFilterShortListModel >> notifyItemsChanged [
 ]
 
 { #category : #'private - notifying' }
-GtFilterShortListModel >> notifySelectedItemChanged [
+GtFilterToggleModel >> notifySelectedItemChanged [
 	self
 		announce: (GtFilterModelSelectedItemChanged new
 				model: self;
@@ -52,24 +53,24 @@ GtFilterShortListModel >> notifySelectedItemChanged [
 ]
 
 { #category : #initialization }
-GtFilterShortListModel >> selectFirstItem [
+GtFilterToggleModel >> selectFirstItem [
 	self items ifEmpty: [ ^ self ].
 	self selectedItem: self items first
 ]
 
 { #category : #initialization }
-GtFilterShortListModel >> selectLastItem [
+GtFilterToggleModel >> selectLastItem [
 	self items ifEmpty: [ ^ self ].
 	self selectedItem: self items last
 ]
 
 { #category : #accessing }
-GtFilterShortListModel >> selectedItem [
+GtFilterToggleModel >> selectedItem [
 	^ selectedItem ifNil: [ selectedItem := GtFilterModelNoItem default ]
 ]
 
 { #category : #accessing }
-GtFilterShortListModel >> selectedItem: anItem [
+GtFilterToggleModel >> selectedItem: anItem [
 	| aNewItem |
 	aNewItem := anItem asFilterModelItem.
 	self selectedItem = aNewItem ifTrue: [ ^ self ].
@@ -79,7 +80,7 @@ GtFilterShortListModel >> selectedItem: anItem [
 ]
 
 { #category : #accessing }
-GtFilterShortListModel >> selectedValue [
+GtFilterToggleModel >> selectedValue [
 	"Return a filter value, e.g., selected item, input text."
 
 	^ self selectedItem

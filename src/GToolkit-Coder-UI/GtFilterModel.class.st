@@ -4,10 +4,22 @@ Class {
 	#traits : 'TGtAnnouncer',
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
-		'announcer'
+		'announcer',
+		'label',
+		'order',
+		'creator'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
+
+{ #category : #comparing }
+GtFilterModel >> = anObject [
+	self == anObject ifTrue: [ ^ true ].
+
+	^ self class = anObject class
+		and: [ self label = anObject label 
+		and: [ self order = anObject order ] ]
+]
 
 { #category : #announcer }
 GtFilterModel >> announcer [
@@ -22,13 +34,113 @@ GtFilterModel >> asFilterViewModel [
 ]
 
 { #category : #converting }
+GtFilterModel >> asSearchFilter [
+	<return: #GtSearchFilter or: nil>
+	^ creator cull: self selectedValue cull: self
+]
+
+{ #category : #converting }
 GtFilterModel >> asUserSettingsElement [
 	<return: #GtFilterSettingsElement>
 	^ self asFilterViewModel asUserSettingsElement
 ]
 
 { #category : #accessing }
+GtFilterModel >> creator [
+	^ creator
+]
+
+{ #category : #accessing }
+GtFilterModel >> creator: anObject [
+	creator := anObject
+]
+
+{ #category : #initialization }
+GtFilterModel >> defaultFilterLabel [
+	^ self class name copyFrom: 9 to: self class name size - 5
+]
+
+{ #category : #initialization }
+GtFilterModel >> defaultFilterOrder [
+	^ 50
+]
+
+{ #category : #accessing }
 GtFilterModel >> filterViewModelClass [
 	<return: #'GtFilterViewModel class'>
 	^ self subclassResponsibility
+]
+
+{ #category : #'gt - extensions' }
+GtFilterModel >> gtLiveFor: aView [
+	<gtView>
+	^ aView explicit
+		title: 'Live';
+		stencil: [ (GtFilterNameElement new filterViewModel: self asFilterViewModel)
+				margin: (BlInsets all: 10) ]
+]
+
+{ #category : #comparing }
+GtFilterModel >> hash [
+	^ self class hash 
+		bitXor: (self label hash 
+		bitXor: self order hash)
+]
+
+{ #category : #accessing }
+GtFilterModel >> label [
+	"Return filter label"
+
+	<return: #String>
+	^ label ifNil: [ label := self defaultFilterLabel ]
+]
+
+{ #category : #accessing }
+GtFilterModel >> label: aString [
+	label = aString ifTrue: [ ^ self ].
+	
+	label := aString.
+	self notifyLabelChanged.
+]
+
+{ #category : #accessing }
+GtFilterModel >> named: aString [
+	self label: aString
+]
+
+{ #category : #'private - notifying' }
+GtFilterModel >> notifyLabelChanged [
+	self
+		announce: (GtFilterModelLabelChanged new
+				model: self;
+				label: self label)
+]
+
+{ #category : #accessing }
+GtFilterModel >> order [
+	^ order ifNil: [ order := self defaultFilterOrder ]
+]
+
+{ #category : #accessing }
+GtFilterModel >> order: anObject [
+	order := anObject
+]
+
+{ #category : #printing }
+GtFilterModel >> printOn: aStream [
+	super printOn: aStream.
+
+	aStream
+		nextPut: $(;
+		nextPutAll: self label asString;
+		nextPutAll: ', order: ';
+		print: self order;
+		nextPut: $)
+]
+
+{ #category : #accessing }
+GtFilterModel >> selectedValue [
+	"Return a filter value, e.g., selected item, input text."
+
+	^ nil
 ]

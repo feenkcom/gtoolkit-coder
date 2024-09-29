@@ -1,46 +1,40 @@
 Class {
-	#name : #GtFilterShortListViewModel,
+	#name : #GtFilterToggleViewModel,
 	#superclass : #GtFilterViewModel,
 	#category : #'GToolkit-Coder-UI-Filters - View Models'
 }
 
 { #category : #accessing }
-GtFilterShortListViewModel >> filterElementClass [
-	^ GtFilterShortListSettingsElement
+GtFilterToggleViewModel >> filterElementClass [
+	<return: #'GtFilterSettingsElement class'>
+	^ GtFilterToggleSettingsElement
 ]
 
 { #category : #accessing }
-GtFilterShortListViewModel >> items [
+GtFilterToggleViewModel >> items [
 	^ self filterModel items
 ]
 
 { #category : #accessing }
-GtFilterShortListViewModel >> items: aCollection [
+GtFilterToggleViewModel >> items: aCollection [
 	self filterModel items: aCollection
 ]
 
 { #category : #accessing }
-GtFilterShortListViewModel >> itemsCount [
+GtFilterToggleViewModel >> itemsCount [
 	^ self filterModel items size
 ]
 
-{ #category : #accessing }
-GtFilterShortListViewModel >> itemsWithoutSelection [
-	| aSelectedItem |
-	aSelectedItem := self selectedItem.
-	^ self filterModel items reject: [ :each | aSelectedItem = each ]
-]
-
 { #category : #'event handling' }
-GtFilterShortListViewModel >> onItemsChanged: anAnnouncement [
+GtFilterToggleViewModel >> onItemsChanged: anAnnouncement [
 	self
 		announce: (GtFilterViewModelItemsChanged new
 				viewModel: self;
 				items: anAnnouncement items)
 ]
 
-{ #category : #'api - filter model' }
-GtFilterShortListViewModel >> onSelectedItemChanged: anAnnouncement [
+{ #category : #'event handling' }
+GtFilterToggleViewModel >> onSelectedItemChanged: anAnnouncement [
 	self
 		announce: (GtFilterViewModelSelectedItemChanged new
 				viewModel: self;
@@ -48,17 +42,17 @@ GtFilterShortListViewModel >> onSelectedItemChanged: anAnnouncement [
 ]
 
 { #category : #accessing }
-GtFilterShortListViewModel >> selectedItem [
+GtFilterToggleViewModel >> selectedItem [
 	^ self filterModel selectedItem
 ]
 
 { #category : #accessing }
-GtFilterShortListViewModel >> selectedItem: anItem [
+GtFilterToggleViewModel >> selectedItem: anItem [
 	self filterModel selectedItem: anItem
 ]
 
 { #category : #'api - filter model' }
-GtFilterShortListViewModel >> subscribeToFilterModel [
+GtFilterToggleViewModel >> subscribeToFilterModel [
 	super subscribeToFilterModel.
 	self filterModel weak
 		when: GtFilterModelItemsChanged

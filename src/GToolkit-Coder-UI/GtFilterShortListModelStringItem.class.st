@@ -1,6 +1,6 @@
 Class {
 	#name : #GtFilterShortListModelStringItem,
-	#superclass : #GtFilterShortListModelItem,
+	#superclass : #GtFilterModelItem,
 	#instVars : [
 		'string'
 	],
@@ -22,9 +22,24 @@ GtFilterShortListModelStringItem >> hash [
 ]
 
 { #category : #accessing }
+GtFilterShortListModelStringItem >> itemValue [
+	^ self string
+]
+
+{ #category : #accessing }
 GtFilterShortListModelStringItem >> label [
 	<return: #String or: #BlText>
 	^ self string
+]
+
+{ #category : #printing }
+GtFilterShortListModelStringItem >> printOn: aStream [
+	super printOn: aStream.
+
+	aStream
+		nextPut: $(;
+		nextPutAll: self string asString;
+		nextPut: $)
 ]
 
 { #category : #accessing }

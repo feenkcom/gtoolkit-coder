@@ -40,7 +40,8 @@ GtFilterNameElement >> initialize [
 
 { #category : #initialization }
 GtFilterNameElement >> initializeEventHandlers [
-	self when: BlClickEvent do: [ :anEvent | self onClickEvent: anEvent ]
+	self when: BlClickEvent do: [ :anEvent | self onClickEvent: anEvent ].
+	self when: GtFilterRemoveWish do: [ :anEvent | self requestRemoveFilter ].
 ]
 
 { #category : #initialization }
@@ -57,6 +58,7 @@ GtFilterNameElement >> initializeLabelElement [
 { #category : #initialization }
 GtFilterNameElement >> initializeSettingsContainer [
 	settingsContainer := BrFrame new
+			background: self theme default contentBackgroundColor;
 			hFitContentLimited;
 			vFitContent;
 			margin: (BlInsets all: 2);
@@ -67,7 +69,7 @@ GtFilterNameElement >> initializeSettingsContainer [
 GtFilterNameElement >> initializeShortcuts [
 	self
 		addShortcut: (BlShortcutWithAction new
-				combination: BlKeyCombination backspace;
+				combination: (BlKeyCombination backspace or: BlKeyCombination delete);
 				action: [ self requestRemoveFilter ])
 ]
 
@@ -96,7 +98,12 @@ GtFilterNameElement >> onClickEvent: anEvent [
 
 { #category : #'api - filter view model' }
 GtFilterNameElement >> onFilterViewModelChanged [
-	self updateSettingsContainer
+	self updateElement
+]
+
+{ #category : #'event handling' }
+GtFilterNameElement >> onLabelChanged: anAnnouncement [
+	BlTaskAction enqueueElement: self action: [ self updateLabelElement ]
 ]
 
 { #category : #'private - updating' }
@@ -106,6 +113,33 @@ GtFilterNameElement >> removeSettingsElement [
 
 { #category : #'event handling' }
 GtFilterNameElement >> requestRemoveFilter [
+	self hasFilterViewModel ifFalse: [ ^ self ].
+	self fireEvent: (GtFilterRemoveFilterViewModelWish new 
+		filterViewModel: self filterViewModel)
+]
+
+{ #category : #'api - filter view model' }
+GtFilterNameElement >> subscribeToFilterViewModel [
+	self filterViewModel weak
+		when: GtFilterViewModelLabelChanged
+		send: #onLabelChanged:
+		to: self
+]
+
+{ #category : #'api - filter view model' }
+GtFilterNameElement >> unsubscribeFromFilterViewModel [
+	self filterViewModel unsubscribe: self
+]
+
+{ #category : #'private - updating' }
+GtFilterNameElement >> updateElement [
+	self updateLabelElement.
+	self updateSettingsContainer.
+]
+
+{ #category : #'private - updating' }
+GtFilterNameElement >> updateLabelElement [
+	labelElement text: self filterViewModel label
 ]
 
 { #category : #'private - updating' }

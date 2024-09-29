@@ -1,6 +1,6 @@
 Extension { #name : #String }
 
 { #category : #'*GToolkit-Coder-UI' }
-String >> asFilterShortListModelItem [
+String >> asFilterModelItem [
 	^ GtFilterShortListModelStringItem new string: self
 ]

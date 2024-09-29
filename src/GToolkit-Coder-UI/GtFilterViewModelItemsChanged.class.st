@@ -1,5 +1,5 @@
 Class {
-	#name : #GtFilterShortListViewModelItemsChanged,
+	#name : #GtFilterViewModelItemsChanged,
 	#superclass : #GtFilterViewModelAnnouncement,
 	#instVars : [
 		'items'
@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #accessing }
-GtFilterShortListViewModelItemsChanged >> items [
+GtFilterViewModelItemsChanged >> items [
 	^ items
 ]
 
 { #category : #accessing }
-GtFilterShortListViewModelItemsChanged >> items: anObject [
+GtFilterViewModelItemsChanged >> items: anObject [
 	items := anObject
 ]

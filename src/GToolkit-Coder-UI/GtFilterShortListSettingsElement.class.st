@@ -34,7 +34,7 @@ GtFilterShortListSettingsElement >> initialize [
 { #category : #initialization }
 GtFilterShortListSettingsElement >> initializeButtonElement [
 	buttonElement := self newButtonElement
-			aptitude: BrGlamorousButtonWithLabelAptitude
+			aptitude: BrGlamorousButtonWithLabelAndIconAptitude
 ]
 
 { #category : #initialization }
@@ -55,6 +55,7 @@ GtFilterShortListSettingsElement >> newButtonElement [
 	^ BrButton new
 		beSmallSize;
 		label: self defaultItemLabel;
+		icon: BrGlamorousVectorIcons downwards;
 		fitContent
 ]
 
@@ -67,7 +68,7 @@ GtFilterShortListSettingsElement >> newContentElement [
 			^ anElement ].
 
 	aListElement := BrSimpleList new
-			fitContent;
+			fitContentLimited;
 			itemStencil: [ :anItemType :aListWidget | self newItemElement ];
 			itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
 				anItemElement
@@ -93,7 +94,8 @@ GtFilterShortListSettingsElement >> newHandleElement [
 	aHandle := self newButtonElement
 		disable;
 		aptitude: BrGlamorousButtonRectangularAptitude;
-		addAptitude: BrGlamorousButtonLabelAptitude.
+		addAptitude: BrGlamorousButtonLabelAptitude;
+		addAptitude: BrGlamorousButtonIconAptitude.
 		
 	self updateHandleElement: aHandle.
 	handleElement at: 1 put: aHandle.
@@ -129,7 +131,7 @@ GtFilterShortListSettingsElement >> onItemsChanged: anAnnouncement [
 ]
 
 { #category : #'event handling' }
-GtFilterShortListSettingsElement >> onSelectedItemChanged: anAnnouncement [.
+GtFilterShortListSettingsElement >> onSelectedItemChanged: anAnnouncement [
 	BlTaskAction enqueueElement: self action: [ self updateElement ]
 ]
 
@@ -137,10 +139,10 @@ GtFilterShortListSettingsElement >> onSelectedItemChanged: anAnnouncement [.
 GtFilterShortListSettingsElement >> subscribeToFilterViewModel [
 	super subscribeToFilterViewModel.
 	self filterViewModel weak
-		when: GtFilterShortListViewModelItemsChanged
+		when: GtFilterViewModelItemsChanged
 			send: #onItemsChanged:
 			to: self;
-		when: GtFilterShortListViewModelSelectedItemChanged
+		when: GtFilterViewModelSelectedItemChanged
 			send: #onSelectedItemChanged:
 			to: self
 ]
@@ -174,11 +176,12 @@ GtFilterShortListSettingsElement >> updateHandleElement: anElement [
 GtFilterShortListSettingsElement >> updateListElement [
 	| aHeight aWidth |
 	aHeight := self filterViewModel itemsCount * 12.
-	aWidth := (self filterViewModel items detectMax: #labelSize) labelSize * 12.
+	aWidth := (self filterViewModel items detectMax: #labelSize)
+			ifNotNil: [ :anItem | anItem labelSize * 12 ]
+			ifNil: [ 30 ].
 	buttonAptitude preferredExtent: aHeight @ aWidth.
-	
-	self listElementDo: [ :anElement | 
-		self updateListElement: anElement ].
+
+	self listElementDo: [ :anElement | self updateListElement: anElement ]
 ]
 
 { #category : #'private - updating' }

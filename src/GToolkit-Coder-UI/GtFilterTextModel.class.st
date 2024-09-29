@@ -3,10 +3,27 @@ Class {
 	#superclass : #GtFilterModel,
 	#instVars : [
 		'text',
-		'inputFilter'
+		'inputFilter',
+		'completionBuilder'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
+
+{ #category : #accessing }
+GtFilterTextModel >> completion [
+	<return: #GtCompletionStrategy or: nil>
+	^ completionBuilder value
+]
+
+{ #category : #accessing }
+GtFilterTextModel >> completion: aCompletionBuilder [
+	completionBuilder := aCompletionBuilder
+]
+
+{ #category : #accessing }
+GtFilterTextModel >> completionDo: aBlock [
+	self completion ifNotNil: aBlock
+]
 
 { #category : #accessing }
 GtFilterTextModel >> filterViewModelClass [
@@ -48,6 +65,13 @@ GtFilterTextModel >> notifyTextChanged [
 		announce: (GtFilterTextModelTextChanged new
 				model: self;
 				text: self text)
+]
+
+{ #category : #accessing }
+GtFilterTextModel >> selectedValue [
+	"Return a filter value, e.g., selected item, input text."
+
+	^ self text asString
 ]
 
 { #category : #accessing }

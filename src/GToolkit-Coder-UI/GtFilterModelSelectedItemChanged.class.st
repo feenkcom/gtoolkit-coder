@@ -1,5 +1,5 @@
 Class {
-	#name : #GtFilterShortListModelSelectedItemChanged,
+	#name : #GtFilterModelSelectedItemChanged,
 	#superclass : #GtFilterModelAnnouncement,
 	#instVars : [
 		'selectedItem'
@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #accessing }
-GtFilterShortListModelSelectedItemChanged >> selectedItem [
+GtFilterModelSelectedItemChanged >> selectedItem [
 	^ selectedItem
 ]
 
 { #category : #accessing }
-GtFilterShortListModelSelectedItemChanged >> selectedItem: anObject [
+GtFilterModelSelectedItemChanged >> selectedItem: anObject [
 	selectedItem := anObject
 ]

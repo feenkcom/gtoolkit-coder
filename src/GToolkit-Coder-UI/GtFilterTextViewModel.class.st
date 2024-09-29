@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #accessing }
+GtFilterTextViewModel >> completionDo: aBlock [
+	self hasFilterModel ifFalse: [ ^ self ].
+	self filterModel completionDo: aBlock
+]
+
+{ #category : #accessing }
 GtFilterTextViewModel >> filterElementClass [
 	^ GtFilterTextSettingsElement
 ]
@@ -46,4 +52,9 @@ GtFilterTextViewModel >> subscribeToFilterModel [
 { #category : #testing }
 GtFilterTextViewModel >> text [
 	^ self filterModel text
+]
+
+{ #category : #testing }
+GtFilterTextViewModel >> text: aText [
+	self filterModel text: aText
 ]
