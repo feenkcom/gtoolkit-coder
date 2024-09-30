@@ -62,6 +62,33 @@ GtFilterModelExamples >> shortListModel [
 ]
 
 { #category : #examples }
+GtFilterModelExamples >> shortListModelWithIcons [
+	<gtExample>
+	| aModel |
+	aModel := GtFilterShortListModel new.
+	aModel
+		items: {GtFilterModelClassItem new itemClass: Array.
+				GtFilterModelClassItem new itemClass: OrderedCollection.
+				GtFilterModelClassItem new itemClass: TGtAnnouncer.
+				GtFilterModelClassItem new itemClass: Object.
+				GtFilterModelClassItem new itemClass: ProtoObject}.
+	aModel selectFirstItem.
+	aModel label: 'Classes'.
+	self
+		assert: aModel items
+		equals: {GtFilterModelClassItem new itemClass: Array.
+				GtFilterModelClassItem new itemClass: OrderedCollection.
+				GtFilterModelClassItem new itemClass: TGtAnnouncer.
+				GtFilterModelClassItem new itemClass: Object.
+				GtFilterModelClassItem new itemClass: ProtoObject}.
+	self
+		assert: aModel selectedItem
+		equals: (GtFilterModelClassItem new itemClass: Array).
+
+	^ aModel
+]
+
+{ #category : #examples }
 GtFilterModelExamples >> textModel [
 	<gtExample>
 	| aModel |

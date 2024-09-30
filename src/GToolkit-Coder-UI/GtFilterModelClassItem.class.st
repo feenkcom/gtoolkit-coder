@@ -8,6 +8,17 @@ Class {
 }
 
 { #category : #accessing }
+GtFilterModelClassItem >> icon [
+	| anIconName |
+	self itemClass ifNil: [ ^ nil ].
+
+	anIconName := self itemClass gtSystemIconName.
+	anIconName ifNil: [ ^ nil ].
+
+	^ self itemClass gtSafeIconNamed: anIconName
+]
+
+{ #category : #accessing }
 GtFilterModelClassItem >> itemClass [
 	^ itemClass
 ]
