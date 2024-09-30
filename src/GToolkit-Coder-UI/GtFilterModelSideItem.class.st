@@ -1,10 +1,10 @@
 Class {
-	#name : #GtFilterShortListSideItem,
+	#name : #GtFilterModelSideItem,
 	#superclass : #GtFilterModelItem,
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #testing }
-GtFilterShortListSideItem >> isInstanceSideMethod [
+GtFilterModelSideItem >> isInstanceSideMethod [
 	^ false
 ]

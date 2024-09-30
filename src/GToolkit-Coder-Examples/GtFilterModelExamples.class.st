@@ -34,8 +34,10 @@ GtFilterModelExamples >> itemsModel [
 	aModel
 		items: {self textModel.
 				self shortListModel.
-				self booleanModel}.
-	self assert: aModel items size equals: 3.
+				self booleanModel.
+				self invariableModel.
+				self toggleModel.}.
+	self assert: aModel items size equals: 5.
 
 	^ aModel
 ]
@@ -78,8 +80,8 @@ GtFilterModelExamples >> toggleModel [
 	aModel := GtFilterToggleModel new.
 	aModel label: 'Side'.
 	aModel
-		items: {GtFilterShortListInstanceSideItem new.
-				GtFilterShortListClassSideItem new}.
+		items: {GtFilterModelInstanceSideItem new.
+				GtFilterModelClassSideItem new}.
 	aModel selectFirstItem.
 
 	^ aModel
