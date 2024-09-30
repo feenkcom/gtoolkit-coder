@@ -2,7 +2,8 @@ Class {
 	#name : #GtFilterModelStringItem,
 	#superclass : #GtFilterModelItem,
 	#instVars : [
-		'string'
+		'string',
+		'iconStencil'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
@@ -19,6 +20,17 @@ GtFilterModelStringItem >> = anObject [
 { #category : #comparing }
 GtFilterModelStringItem >> hash [
 	^ self class hash bitXor: self string hash
+]
+
+{ #category : #accessing }
+GtFilterModelStringItem >> icon [
+	<return: #BlElement or: nil>
+	^ iconStencil ifNotNil: #asElement
+]
+
+{ #category : #accessing }
+GtFilterModelStringItem >> icon: anElementStencil [
+	iconStencil := anElementStencil
 ]
 
 { #category : #accessing }
