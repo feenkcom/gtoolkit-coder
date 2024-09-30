@@ -113,3 +113,17 @@ GtFilterModelExamples >> toggleModel [
 
 	^ aModel
 ]
+
+{ #category : #examples }
+GtFilterModelExamples >> toggleModelWithIcons [
+	<gtExample>
+	| aModel |
+	aModel := GtFilterToggleModel new.
+	aModel label: 'Origin'.
+	aModel
+		items: {GtFilterModelTraitOriginItem new.
+				GtFilterModelClassOriginItem new}.
+	aModel selectFirstItem.
+
+	^ aModel
+]

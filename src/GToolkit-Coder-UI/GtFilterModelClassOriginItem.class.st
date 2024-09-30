@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+GtFilterModelClassOriginItem >> icon [
+	^ self iconNamed: #class
+]
+
+{ #category : #accessing }
 GtFilterModelClassOriginItem >> label [
 	^ 'non-trait'
 ]

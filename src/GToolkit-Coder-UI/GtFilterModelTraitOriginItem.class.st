@@ -4,6 +4,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
+{ #category : #accessing }
+GtFilterModelTraitOriginItem >> icon [
+	^ self iconNamed: #trait
+]
+
 { #category : #testing }
 GtFilterModelTraitOriginItem >> isTraitOrigin [
 	^ true
