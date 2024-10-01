@@ -1,10 +1,10 @@
 Class {
-	#name : #GtFilterShortListModelMethodOriginItem,
+	#name : #GtFilterModelMethodDefinitionItem,
 	#superclass : #GtFilterModelItem,
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #testing }
-GtFilterShortListModelMethodOriginItem >> isTraitOrigin [
+GtFilterModelMethodDefinitionItem >> isSubclassResponsibilityMethod [
 	^ false
 ]

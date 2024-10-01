@@ -1,5 +1,5 @@
 Class {
-	#name : #GtFilterShortListModelClassItem,
+	#name : #GtFilterModelClassItem,
 	#superclass : #GtFilterModelItem,
 	#instVars : [
 		'itemClass'
@@ -8,28 +8,39 @@ Class {
 }
 
 { #category : #accessing }
-GtFilterShortListModelClassItem >> itemClass [
+GtFilterModelClassItem >> icon [
+	| anIconName |
+	self itemClass ifNil: [ ^ nil ].
+
+	anIconName := self itemClass gtSystemIconName.
+	anIconName ifNil: [ ^ nil ].
+
+	^ self itemClass gtSafeIconNamed: anIconName
+]
+
+{ #category : #accessing }
+GtFilterModelClassItem >> itemClass [
 	^ itemClass
 ]
 
 { #category : #accessing }
-GtFilterShortListModelClassItem >> itemClass: anObject [
+GtFilterModelClassItem >> itemClass: anObject [
 	itemClass := anObject
 ]
 
 { #category : #accessing }
-GtFilterShortListModelClassItem >> itemSymbol [
+GtFilterModelClassItem >> itemSymbol [
 	^ self itemClass instanceSide name asSymbol
 ]
 
 { #category : #accessing }
-GtFilterShortListModelClassItem >> label [
+GtFilterModelClassItem >> label [
 	<return: #String>
 	^ self itemClass name
 ]
 
 { #category : #printing }
-GtFilterShortListModelClassItem >> printOn: aStream [
+GtFilterModelClassItem >> printOn: aStream [
 	super printOn: aStream.
 
 	aStream
