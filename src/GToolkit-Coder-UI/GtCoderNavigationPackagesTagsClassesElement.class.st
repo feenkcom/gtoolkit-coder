@@ -381,7 +381,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onClassesToShowChanged: anAnnounc
 	self updateClassList
 ]
 
-{ #category : #'updating lists' }
+{ #category : #'event handling - selection' }
 GtCoderNavigationPackagesTagsClassesElement >> onMethodListSelectionChanged: aMethod [
 	supressListChanges ifTrue: [ ^ self ].
 	self navigationModel selectMethod: aMethod
@@ -503,7 +503,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 
 { #category : #'event handling - selection' }
 GtCoderNavigationPackagesTagsClassesElement >> onProtocolDeselected: anAnnouncement [
-	methodProtocolsList deselectProtocol: anAnnouncement protocol
+	methodProtocolsList deselectProtocol
 ]
 
 { #category : #'event handling' }
@@ -524,8 +524,14 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolSelected: anAnnouncemen
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onProtocolsToShowChanged: anAnnouncement [
-	self hasNavigationModel ifFalse: [ ^ self ].
-	methodProtocolsList updateProtocolListWith: self navigationModel protocolsToShow
+	self hasNavigationModel
+		ifFalse: [ ^ self ].
+	
+	methodProtocolsList updateProtocolListWith: self navigationModel protocolsToShow.
+
+	self navigationModel selectedProtocol
+		ifNil: [ methodProtocolsList deselectProtocol ]
+		ifNotNil: [ :aProtocol | methodProtocolsList selectProtocol: aProtocol ]
 ]
 
 { #category : #'event handling - selection' }

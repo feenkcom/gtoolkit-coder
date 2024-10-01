@@ -117,7 +117,7 @@ GtCoderNavigationProtocolsGroupedList >> createProtocolListContextMenuItemsFor: 
 ]
 
 { #category : #'api - list' }
-GtCoderNavigationProtocolsGroupedList >> deselectProtocol: aGtPharoProtocol [
+GtCoderNavigationProtocolsGroupedList >> deselectProtocol [
 	self deselectAll
 ]
 
