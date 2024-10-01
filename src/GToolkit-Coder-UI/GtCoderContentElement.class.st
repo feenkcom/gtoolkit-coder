@@ -40,7 +40,7 @@ GtCoderContentElement >> onRemovedFromSceneGraph [
 GtCoderContentElement >> subscribeToNavigationModel [
 	super subscribeToNavigationModel.
 	self navigationModel weak
-		when: GtCoderNavigationSelectionAnnouncement send: #updateCoder: to: self.
+		when: GtCoderNavigationCoderChanged send: #updateCoder: to: self.
 ]
 
 { #category : #'private - event handling' }

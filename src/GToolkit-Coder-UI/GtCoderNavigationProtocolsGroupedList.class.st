@@ -67,7 +67,7 @@ GtCoderNavigationProtocolsGroupedList >> createProtocolGroups [
 	| virtualGroup instanceGroup classGroup  |
 	virtualGroup := BrGroup new
 			domainObject: 'virtual';
-			stream: #() asAsyncStream;
+			items: #();
 			itemStencil: [ self createProtocolElement ];
 			itemDataBinder: [ :element :item | self bindProtocol: item toElement: element ];
 			shouldShowWithoutItems: false.
@@ -93,6 +93,45 @@ GtCoderNavigationProtocolsGroupedList >> createProtocolListContextMenuItemsFor: 
 				ifTrue: [ aStream
 						nextPut: (self createLabel: 'Rename ' description: aPharoProtocol name)
 								-> [ :elem | self renameProtocol: aPharoProtocol name in: elem ] ] ]
+]
+
+{ #category : #'api - list' }
+GtCoderNavigationProtocolsGroupedList >> deselectProtocol: aGtPharoProtocol [
+	self deselectAll
+]
+
+{ #category : #'private - selection' }
+GtCoderNavigationProtocolsGroupedList >> detectProtocolIndex: aGtPharoProtocol inGroups: aCollectionOfArrayOfProtocols [
+	| aSelectionIndex |
+	
+	aGtPharoProtocol ifNil: [ ^ 0 ].
+	
+	aSelectionIndex := 0.
+	
+	aCollectionOfArrayOfProtocols detect: [ :eachGroup |
+		eachGroup
+			ifEmpty: [ false ]
+			ifNotEmpty: [
+				| anIndexInGroup |
+				"add 1 for the header"
+				aSelectionIndex := aSelectionIndex + 1.
+				anIndexInGroup := eachGroup
+					detectIndex: [ :eachProtocol | eachProtocol = aGtPharoProtocol ]
+					ifNone:  [ 0 ].
+				
+				anIndexInGroup > 0
+					ifTrue: [
+						aSelectionIndex := aSelectionIndex + anIndexInGroup.
+						true ]
+					ifFalse: [
+						aSelectionIndex := aSelectionIndex + eachGroup size.
+						false
+					]
+			].
+	]
+	ifNone: [ ^ 0 ].
+	
+	^ aSelectionIndex
 ]
 
 { #category : #initialization }
@@ -188,6 +227,19 @@ GtCoderNavigationProtocolsGroupedList >> renameProtocol: aGtPharoProtocol in: el
 ]
 
 { #category : #'api - list' }
+GtCoderNavigationProtocolsGroupedList >> selectProtocol: aGtPharoProtocol [
+	| selectionIndex |
+
+	selectionIndex := self
+		detectProtocolIndex: aGtPharoProtocol
+		inGroups: (protocolGroups collect: [ :eachGroup | eachGroup itemsProvider currentItems ]).
+
+	selectionIndex > 0
+		ifTrue: [ self selectOne: selectionIndex ]
+		ifFalse: [ self deselectAll ]
+]
+
+{ #category : #'api - list' }
 GtCoderNavigationProtocolsGroupedList >> selectedProtocol [
 	<return: #GtPharoProtocol or: nil>
 	| theIndices anIndex |
@@ -201,8 +253,7 @@ GtCoderNavigationProtocolsGroupedList >> selectedProtocol [
 
 { #category : #'api - list' }
 GtCoderNavigationProtocolsGroupedList >> updateProtocolListWith: theGtPharoProtocols [
-	| virtualStream instStream classStream virtualGtPharoProtocols instanceGtPharoProtocols classGtPharoProtocols |
-	self deselectAll.
+	| virtualStream instStream classStream virtualGtPharoProtocols instanceGtPharoProtocols classGtPharoProtocols groupItems |
 	
 	virtualGtPharoProtocols := theGtPharoProtocols
 		select: [ :eachPharoProtocol | eachPharoProtocol isVirtualProtocol ].
@@ -221,6 +272,11 @@ GtCoderNavigationProtocolsGroupedList >> updateProtocolListWith: theGtPharoProto
 
 	classStream := classGtPharoProtocols
 			asSortedCollection: [ :a :b | a name < b name ].
+
+	groupItems := {
+			virtualStream.
+			instStream.
+			classStream}.
 
 	protocolGroups
 		with: {

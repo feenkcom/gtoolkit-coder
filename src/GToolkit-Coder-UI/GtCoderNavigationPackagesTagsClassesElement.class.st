@@ -235,11 +235,6 @@ GtCoderNavigationPackagesTagsClassesElement >> deselectPackages [
 	packagesList deselectAll
 ]
 
-{ #category : #'updating lists' }
-GtCoderNavigationPackagesTagsClassesElement >> emptyMethodProtocolList [
-	methodProtocolsList initializeWithProtocols: #().
-]
-
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> expandPackage: aRPackage [
 	packagesList viewModel root
@@ -360,6 +355,12 @@ GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
 	^ methodProtocolsList
 ]
 
+{ #category : #'event handling - selection' }
+GtCoderNavigationPackagesTagsClassesElement >> onClassDeselected: anAnnouncement [
+	self
+		suppressListChangeEventsDuring: [ self deselectClass: anAnnouncement theClass ]
+]
+
 { #category : #accessing }
 GtCoderNavigationPackagesTagsClassesElement >> onClassRemoved: anAnnouncement [
 	| aPackageOrTag |
@@ -369,13 +370,15 @@ GtCoderNavigationPackagesTagsClassesElement >> onClassRemoved: anAnnouncement [
 			self selectPackage: aPackageOrTag ]
 ]
 
-{ #category : #accessing }
+{ #category : #'event handling - selection' }
 GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
 	self
-		suppressListChangeEventsDuring: [ self
-				selectClass: anAnnouncement theClass
-				inPackage: anAnnouncement package
-				tag: anAnnouncement tag ]
+		suppressListChangeEventsDuring: [ self selectClass: anAnnouncement theClass ]
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onClassesToShowChanged: anAnnouncement [
+	self updateClassList
 ]
 
 { #category : #'event handling' }
@@ -387,6 +390,11 @@ GtCoderNavigationPackagesTagsClassesElement >> onMethodChanged: anAnnouncement [
 GtCoderNavigationPackagesTagsClassesElement >> onMethodListSelectionChanged: aMethod [
 	supressListChanges ifTrue: [ ^ self ].
 	self navigationModel selectMethod: aMethod
+]
+
+{ #category : #'event handling - selection' }
+GtCoderNavigationPackagesTagsClassesElement >> onMethodSelected: anAnnouncement [
+	
 ]
 
 { #category : #'event handling' }
@@ -412,6 +420,11 @@ GtCoderNavigationPackagesTagsClassesElement >> onMethodsCoderFiltersChanged: aGt
 									^ self ] ] ] ].
 
 	self suppressListChangeEventsDuring: [ methodProtocolsList deselectAll ]
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onMethodsToShowChanged: anAnnouncement [
+	self updateMethodListWith: self navigationModel methodsToShow
 ]
 
 { #category : #'event handling' }
@@ -447,11 +460,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageRenamed: anAnnouncement 
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageSelected: anAnnouncer [
-	self
-		inUIProcessDo: [ self
-				suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package.
-					self showClassList.
-					self deselectClasses ] ]
+	self inUIProcessDo: [ self suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package ] ]
 ]
 
 { #category : #'event handling' }
@@ -475,12 +484,12 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageTagRenamed: anAnnounceme
 				newName: anAnnouncement newName ]
 ]
 
-{ #category : #'event handling' }
+{ #category : #'event handling - selection' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackageTagSelected: anAnnouncer [
 	self
 		inUIProcessDo: [ self
 				suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package tag: anAnnouncer tag.
-					self deselectClasses ] ]
+					"self deselectClasses" ] ]
 ]
 
 { #category : #'event handling' }
@@ -489,12 +498,17 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackageUnregistered: anAnnounce
 		suppressListChangeEventsDuring: [ self removePackage: anAnnouncement package ]
 ]
 
-{ #category : #'event handling' }
+{ #category : #'event handling - selection' }
 GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 	self
 		inUIProcessDo: [ self
 				suppressListChangeEventsDuring: [ self deselectPackages.
 					self deselectClasses ] ]
+]
+
+{ #category : #'event handling - selection' }
+GtCoderNavigationPackagesTagsClassesElement >> onProtocolDeselected: anAnnouncement [
+	methodProtocolsList deselectProtocol: anAnnouncement protocol
 ]
 
 { #category : #'event handling' }
@@ -504,8 +518,24 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
 	aSelectedItem := methodProtocolsList selectedProtocol.
 	aSelectedItem ifNil: [^self].
 	self navigationModel selectProtocol: aSelectedItem source: self.
-	methodGroupList deselectAll.
-	self updateMethodListWith: self navigationModel methodsToShow.
+	"methodGroupList deselectAll.
+	self updateMethodListWith: self navigationModel methodsToShow."
+]
+
+{ #category : #'event handling - selection' }
+GtCoderNavigationPackagesTagsClassesElement >> onProtocolSelected: anAnnouncement [
+	methodProtocolsList selectProtocol: anAnnouncement protocol
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onProtocolsToShowChanged: anAnnouncement [
+	self hasNavigationModel ifFalse: [ ^ self ].
+	methodProtocolsList updateProtocolListWith: self navigationModel protocolsToShow
+]
+
+{ #category : #'event handling - selection' }
+GtCoderNavigationPackagesTagsClassesElement >> onSlotSelected: anAnnouncement [
+	
 ]
 
 { #category : #initialization }
@@ -704,6 +734,8 @@ GtCoderNavigationPackagesTagsClassesElement >> selectClass: aClass inPackage: aP
 { #category : #'api - package selections' }
 GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 	| aPreviousIndex |
+
+	self expandPackage: aPackage.
 	aPreviousIndex := packagesList selectedIndice.
 	packagesList viewModel
 		indexOf: aPackage
@@ -714,9 +746,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage [
 					(self
 						scrollIndexFromPrevious: aPreviousIndex
 						current: aNewIndex
-						max: packagesList viewModel itemCount) ].
-	self updateClassLists.
-	self hideOrShowClassList
+						max: packagesList viewModel itemCount) ]
 ]
 
 { #category : #'api - package selections' }
@@ -735,9 +765,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectPackage: aPackage tag: aPac
 				scrollToIndex: (self
 						scrollIndexFromPrevious: aPreviousIndex
 						current: aNewIndex
-						max: packagesList viewModel itemCount) ].
-	self updateClassLists.
-	self hideOrShowClassList
+						max: packagesList viewModel itemCount) ]
 ]
 
 { #category : #'api - package selections' }
@@ -870,12 +898,13 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToContent [
 	self subscribeToSlotList.
 ]
 
-{ #category : #'api - package updates' }
+{ #category : #subscriptions }
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 	| subscriptions |
 	self hasNavigationModel ifFalse: [ ^ self ].
 	super subscribeToNavigationModel.
-	subscriptions := {GtCoderNavigationPackagesSelected -> #onPackagesSelected:.
+	subscriptions := {
+			GtCoderNavigationPackagesSelected -> #onPackagesSelected:.
 			GtCoderNavigationPackageSelected -> #onPackageSelected:.
 			GtCoderNavigationPackageTagSelected -> #onPackageTagSelected:.
 			GtCoderNavigationPackageRegistered -> #onPackageRegistered:.
@@ -884,8 +913,20 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 			GtCoderNavigationPackageTagAdded -> #onPackageTagAdded:.
 			GtCoderNavigationPackageTagRemoved -> #onPackageTagRemoved:.
 			GtCoderNavigationPackageTagRenamed -> #onPackageTagRenamed:.
+			"Announcement when items selected"
+			"GtCoderNavigationClassSelected -> #onClassSelected:. <--- defined in the superclass"
+			GtCoderNavigationProtocolSelected -> #onProtocolSelected:.
+			GtCoderNavigationProtocolDeselected -> #onProtocolDeselected:.
+			GtCoderNavigationSlotSelected -> #onSlotSelected:.
+			GtCoderNavigationMethodSelected -> #onMethodSelected:.
+			"Announcements when we need to update items in the lists"
+			GtCoderNavigationClassesToShowChanged -> #onClassesToShowChanged:.
+			GtCoderNavigationProtocolsToShowChanged -> #onProtocolsToShowChanged:.
+			GtCoderNavigationMethodsToShowChanged -> #onMethodsToShowChanged:.
+			
 			GtCodersFiltersChanged -> #onMethodsCoderFiltersChanged:.
-			GtCoderNavigationMethodModification -> #onMethodChanged:}.
+			GtCoderNavigationMethodModification -> #onMethodChanged:
+	}.
 	subscriptions
 		do: [ :sub | 
 			navigationModel weak
@@ -916,18 +957,32 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToSlotList [
 ]
 
 { #category : #'updating lists' }
-GtCoderNavigationPackagesTagsClassesElement >> updateClassLists [
-	self hasNavigationModel ifFalse: [ ^ self ].
+GtCoderNavigationPackagesTagsClassesElement >> updateClassList [
+	self hasNavigationModel
+		ifFalse: [ ^ self ].
+	
 	classesList initializeWithClasses: navigationModel classesToShow.
-	self updateProtocolList.
-	self updateSlotList
+	
+	navigationModel selectedClass
+		ifNotNil: [ :aClass | self selectClass: aClass ]
 ]
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateContent [
-	self updatePackageAndClassLists.
+	"self updatePackageAndClassLists.
 	self updateSelections.
-	self hideOrShowClassList
+	self hideOrShowClassList"
+	
+	self updatePackageLists.
+	self updateClassList.
+	self updateProtocolList.
+	self updateMethodList
+]
+
+{ #category : #'updating lists' }
+GtCoderNavigationPackagesTagsClassesElement >> updateMethodList [
+	self hasNavigationModel ifFalse: [ ^ self ].
+	self updateMethodListWith: self navigationModel methodsToShow
 ]
 
 { #category : #'updating lists' }
@@ -954,20 +1009,27 @@ GtCoderNavigationPackagesTagsClassesElement >> updateMethodListWith: aCollection
 ]
 
 { #category : #'updating lists' }
-GtCoderNavigationPackagesTagsClassesElement >> updatePackageAndClassLists [
-	self updatePackageLists.
-	self updateClassLists.
-]
-
-{ #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
-	self hasNavigationModel ifFalse: [ ^ self ].
+	self hasNavigationModel
+		ifFalse: [ ^ self ].
+	
 	packagesList initializeWithPackages: navigationModel packagesToShow.
+
+	navigationModel selectedPackage
+		ifNotNil: [ :aPackage | self selectPackage: aPackage tag: navigationModel selectedTag ]
 ]
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
-	| currentClass extension protocolsToShow |
+	self hasNavigationModel
+		ifFalse: [ ^ self ].
+	
+	methodProtocolsList updateProtocolListWith: self navigationModel protocolsToShow.
+	
+	self navigationModel selectedProtocol
+		ifNotNil: [ :aProtocol | methodProtocolsList selectProtocol: aProtocol ]
+
+	"| currentClass extension protocolsToShow |
 	navigationModel hasSelectedClass
 		ifFalse: [
 			self updateProtocolListWith: #().
@@ -997,17 +1059,12 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 		ifFalse: [
 			self updateMethodListWith: self navigationModel methodsToShow.
 			self flag: #TODO.
-			"self
+			""self
 				updateMethodListWith: navigationModel selectedClass methods
 				and: (navigationModel selectedClass class methods
-						reject: [ :meth | meth isFromTrait ])" ].
+						reject: [ :meth | meth isFromTrait ])"" ].
 	methodProtocolsList visibility: BlVisibility visible.
-	methodsLabel visibility: BlVisibility visible
-]
-
-{ #category : #'updating lists' }
-GtCoderNavigationPackagesTagsClassesElement >> updateProtocolListWith: pharoProtocols [
-	methodProtocolsList updateProtocolListWith: pharoProtocols
+	methodsLabel visibility: BlVisibility visible"
 ]
 
 { #category : #'updating lists' }
