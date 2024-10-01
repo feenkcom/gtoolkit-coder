@@ -62,6 +62,27 @@ GtCoderNavigationProtocolsGroupedList >> createProtocolElement [
 		addEventHandler: self createProtocolDropHandler
 ]
 
+{ #category : #initialization }
+GtCoderNavigationProtocolsGroupedList >> createProtocolGroupHeader [
+	^ BrHorizontalPane new
+		alignCenterLeft;
+		hMatchParent;
+		vFitContent;
+		addChild: (BrLabel new beSmallSize
+				padding: (BlInsets top: 2 bottom: 2);
+				aptitude: (BrGlamorousLabelAptitude new foreground: Color gray));
+		addChild: (BrButton new
+				beTinySize;
+				aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0)
+						+ (BrGlamorousButtonFlatExteriorAptitude new
+								backgroundPaint: (Color gray alpha: 0.1))
+						+ BrGlamorousButtonIconAptitude
+						+ BrGlamorousButtonWithLabelTooltipAptitude;
+				icon: BrGlamorousVectorIcons add;
+				label: 'Add new protocol');
+		yourself
+]
+
 { #category : #'private - instance creation' }
 GtCoderNavigationProtocolsGroupedList >> createProtocolGroups [
 	| virtualGroup instanceGroup classGroup  |
@@ -137,15 +158,17 @@ GtCoderNavigationProtocolsGroupedList >> detectProtocolIndex: aGtPharoProtocol i
 { #category : #initialization }
 GtCoderNavigationProtocolsGroupedList >> initialize [
 	super initialize.
-	
+
 	self
 		padding: (BlInsets left: 5 right: 10);
 		matchParent;
-		headerElementStencil: [ BrLabel new
-				beSmallSize;
-				aptitude: (BrGlamorousLabelAptitude new foreground: Color gray) ];
-		headerDataBinder: [ :label :each | label text: each domainObject asRopedText ].
-	
+		headerElementStencil: [ self createProtocolGroupHeader ];
+		headerDataBinder: [ :header :each | 
+			each domainObject = 'virtual'
+				ifTrue: [ header children second visibility: BlVisibility gone ]
+				ifFalse: [ header children second visibility: BlVisibility visible ].
+			header children first text: each domainObject asRopedText ].
+
 	protocolGroups := self createProtocolGroups.
 	self groups: protocolGroups
 ]

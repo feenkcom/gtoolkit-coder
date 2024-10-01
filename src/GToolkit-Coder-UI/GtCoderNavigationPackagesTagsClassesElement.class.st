@@ -381,11 +381,6 @@ GtCoderNavigationPackagesTagsClassesElement >> onClassesToShowChanged: anAnnounc
 	self updateClassList
 ]
 
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onMethodChanged: anAnnouncement [
-	self updateProtocolList
-]
-
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> onMethodListSelectionChanged: aMethod [
 	supressListChanges ifTrue: [ ^ self ].
@@ -925,7 +920,6 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 			GtCoderNavigationMethodsToShowChanged -> #onMethodsToShowChanged:.
 			
 			GtCodersFiltersChanged -> #onMethodsCoderFiltersChanged:.
-			GtCoderNavigationMethodModification -> #onMethodChanged:
 	}.
 	subscriptions
 		do: [ :sub | 

@@ -19,6 +19,11 @@ GtCoderNavigationClassHierarchyElement >> initializeLayout [
 		c vertical matchParent ].
 ]
 
+{ #category : #'event handling' }
+GtCoderNavigationClassHierarchyElement >> onClassDeselected: aGtCoderNavigationClassDeselected [ 
+	self deselectClass: aGtCoderNavigationClassDeselected theClass
+]
+
 { #category : #subscriptions }
 GtCoderNavigationClassHierarchyElement >> onClassModified: anAnnouncement [
 	self
