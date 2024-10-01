@@ -1,14 +1,15 @@
 Class {
-	#name : #GtFilterShortListModelStringItem,
+	#name : #GtFilterModelStringItem,
 	#superclass : #GtFilterModelItem,
 	#instVars : [
-		'string'
+		'string',
+		'iconStencil'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #comparing }
-GtFilterShortListModelStringItem >> = anObject [
+GtFilterModelStringItem >> = anObject [
 	self == anObject ifTrue: [ ^ true ].
 
 	self class = anObject class ifFalse: [ ^ false ].
@@ -17,23 +18,34 @@ GtFilterShortListModelStringItem >> = anObject [
 ]
 
 { #category : #comparing }
-GtFilterShortListModelStringItem >> hash [
+GtFilterModelStringItem >> hash [
 	^ self class hash bitXor: self string hash
 ]
 
 { #category : #accessing }
-GtFilterShortListModelStringItem >> itemValue [
+GtFilterModelStringItem >> icon [
+	<return: #BlElement or: nil>
+	^ iconStencil ifNotNil: #asElement
+]
+
+{ #category : #accessing }
+GtFilterModelStringItem >> icon: anElementStencil [
+	iconStencil := anElementStencil
+]
+
+{ #category : #accessing }
+GtFilterModelStringItem >> itemValue [
 	^ self string
 ]
 
 { #category : #accessing }
-GtFilterShortListModelStringItem >> label [
+GtFilterModelStringItem >> label [
 	<return: #String or: #BlText>
 	^ self string
 ]
 
 { #category : #printing }
-GtFilterShortListModelStringItem >> printOn: aStream [
+GtFilterModelStringItem >> printOn: aStream [
 	super printOn: aStream.
 
 	aStream
@@ -43,11 +55,11 @@ GtFilterShortListModelStringItem >> printOn: aStream [
 ]
 
 { #category : #accessing }
-GtFilterShortListModelStringItem >> string [
+GtFilterModelStringItem >> string [
 	^ string
 ]
 
 { #category : #accessing }
-GtFilterShortListModelStringItem >> string: aString [
+GtFilterModelStringItem >> string: aString [
 	string := aString
 ]

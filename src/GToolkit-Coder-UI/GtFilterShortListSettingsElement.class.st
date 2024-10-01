@@ -11,8 +11,13 @@ Class {
 }
 
 { #category : #initialization }
+GtFilterShortListSettingsElement >> defaultItemIcon [
+	^ BrFrame new exact: 0 @ 0
+]
+
+{ #category : #initialization }
 GtFilterShortListSettingsElement >> defaultItemLabel [
-	^ 'item'
+	^ ''
 ]
 
 { #category : #initialization }
@@ -34,7 +39,8 @@ GtFilterShortListSettingsElement >> initialize [
 { #category : #initialization }
 GtFilterShortListSettingsElement >> initializeButtonElement [
 	buttonElement := self newButtonElement
-			aptitude: BrGlamorousButtonWithLabelAndIconAptitude
+			aptitude: BrGlamorousButtonWithIconAndLabelAptitude;
+			addAptitude: BrGlamorousButtonIconDropdownAptitude
 ]
 
 { #category : #initialization }
@@ -55,7 +61,7 @@ GtFilterShortListSettingsElement >> newButtonElement [
 	^ BrButton new
 		beSmallSize;
 		label: self defaultItemLabel;
-		icon: BrGlamorousVectorIcons downwards;
+		icon: self defaultItemIcon;
 		fitContent
 ]
 
@@ -72,11 +78,13 @@ GtFilterShortListSettingsElement >> newContentElement [
 			itemStencil: [ :anItemType :aListWidget | self newItemElement ];
 			itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
 				anItemElement
-					label: anItemObject label;
+					label: (anItemObject label ifNil: [ self defaultItemLabel ]);
+					icon: (anItemObject icon ifNil: [ self defaultItemIcon ]);
 					model: anItemObject ];
 			itemDataUnbinder: [ :anItemElement :anItemObject :anItemIndex | 
 				anItemElement
 					label: self defaultItemLabel;
+					icon: self defaultItemIcon;
 					model: nil ].
 
 	self updateListElement: aListElement.
@@ -94,8 +102,9 @@ GtFilterShortListSettingsElement >> newHandleElement [
 	aHandle := self newButtonElement
 		disable;
 		aptitude: BrGlamorousButtonRectangularAptitude;
+		addAptitude: BrGlamorousButtonIconAptitude;
 		addAptitude: BrGlamorousButtonLabelAptitude;
-		addAptitude: BrGlamorousButtonIconAptitude.
+		addAptitude: BrGlamorousButtonIconDropdownAptitude.
 		
 	self updateHandleElement: aHandle.
 	handleElement at: 1 put: aHandle.
@@ -106,6 +115,7 @@ GtFilterShortListSettingsElement >> newHandleElement [
 GtFilterShortListSettingsElement >> newItemElement [
 	^ self newButtonElement
 		aptitude: BrGlamorousButtonRectangularAptitude;
+		addAptitude: BrGlamorousButtonIconAptitude;
 		addAptitude: BrGlamorousButtonLabelAptitude;
 		label: 'item';
 		action: [ :aButton | self onItemClick: aButton ]
@@ -149,7 +159,7 @@ GtFilterShortListSettingsElement >> subscribeToFilterViewModel [
 
 { #category : #'private - updating' }
 GtFilterShortListSettingsElement >> updateButtonElement [
-	buttonElement label: self filterViewModel selectedItem label
+	self updateHandleElement: buttonElement
 ]
 
 { #category : #'private - updating' }
@@ -169,7 +179,16 @@ GtFilterShortListSettingsElement >> updateHandleElement [
 GtFilterShortListSettingsElement >> updateHandleElement: anElement [
 	self hasFilterViewModel ifFalse: [ ^ self ].
 
-	anElement label: self filterViewModel selectedItem label
+	self filterViewModel selectedItem
+		ifIconAndLabel: [ :anIcon :aLabel | 
+			anElement icon: anIcon.
+			anElement label: aLabel ]
+		ifIcon: [ :anIcon | 
+			anElement icon: anIcon.
+			anElement label: self defaultItemLabel ]
+		ifLabel: [ :aLabel | 
+			anElement icon: self defaultItemIcon.
+			anElement label: aLabel ]
 ]
 
 { #category : #'private - updating' }

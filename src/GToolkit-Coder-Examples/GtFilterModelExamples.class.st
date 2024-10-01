@@ -34,8 +34,10 @@ GtFilterModelExamples >> itemsModel [
 	aModel
 		items: {self textModel.
 				self shortListModel.
-				self booleanModel}.
-	self assert: aModel items size equals: 3.
+				self booleanModel.
+				self invariableModel.
+				self toggleModel.}.
+	self assert: aModel items size equals: 5.
 
 	^ aModel
 ]
@@ -60,6 +62,33 @@ GtFilterModelExamples >> shortListModel [
 ]
 
 { #category : #examples }
+GtFilterModelExamples >> shortListModelWithIcons [
+	<gtExample>
+	| aModel |
+	aModel := GtFilterShortListModel new.
+	aModel
+		items: {GtFilterModelClassItem new itemClass: Array.
+				GtFilterModelClassItem new itemClass: OrderedCollection.
+				GtFilterModelClassItem new itemClass: TGtAnnouncer.
+				GtFilterModelClassItem new itemClass: Object.
+				GtFilterModelClassItem new itemClass: ProtoObject}.
+	aModel selectFirstItem.
+	aModel label: 'Classes'.
+	self
+		assert: aModel items
+		equals: {GtFilterModelClassItem new itemClass: Array.
+				GtFilterModelClassItem new itemClass: OrderedCollection.
+				GtFilterModelClassItem new itemClass: TGtAnnouncer.
+				GtFilterModelClassItem new itemClass: Object.
+				GtFilterModelClassItem new itemClass: ProtoObject}.
+	self
+		assert: aModel selectedItem
+		equals: (GtFilterModelClassItem new itemClass: Array).
+
+	^ aModel
+]
+
+{ #category : #examples }
 GtFilterModelExamples >> textModel [
 	<gtExample>
 	| aModel |
@@ -78,8 +107,22 @@ GtFilterModelExamples >> toggleModel [
 	aModel := GtFilterToggleModel new.
 	aModel label: 'Side'.
 	aModel
-		items: {GtFilterShortListInstanceSideItem new.
-				GtFilterShortListClassSideItem new}.
+		items: {GtFilterModelInstanceSideItem new.
+				GtFilterModelClassSideItem new}.
+	aModel selectFirstItem.
+
+	^ aModel
+]
+
+{ #category : #examples }
+GtFilterModelExamples >> toggleModelWithIcons [
+	<gtExample>
+	| aModel |
+	aModel := GtFilterToggleModel new.
+	aModel label: 'Origin'.
+	aModel
+		items: {GtFilterModelTraitOriginItem new.
+				GtFilterModelClassOriginItem new}.
 	aModel selectFirstItem.
 
 	^ aModel
