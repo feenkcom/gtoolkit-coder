@@ -7,15 +7,16 @@ Class {
 }
 
 { #category : #'private - updating' }
-GtFilterItemsElement >> addElementForFilterViewModel: aFilterViewModel [
+GtFilterItemsElement >> addElementForFilterViewModel: aFilterViewModel index: anIndex [
 	| anElement |
-	anElement := GtFilterNameElement new filterViewModel: aFilterViewModel.
-	anElement margin: (BlInsets left: 3 right: 3).
-	anElement
-		constraintsDo: [ :c | 
-			c flow vertical alignCenter.
-			c flow horizontal alignLeft ].
-			
+	anElement := GtFilterNameElement new
+			filterViewModel: aFilterViewModel;
+			id: (GtFilterNameId indexed: anIndex);
+			margin: (BlInsets left: 3 right: 3);
+			constraintsDo: [ :c | 
+				c flow vertical alignCenter.
+				c flow horizontal alignLeft ].
+
 	self addNavigationShortcutsTo: anElement.
 	self addRemoveButtonIconTo: anElement.
 
@@ -51,7 +52,7 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 
 { #category : #'private - updating' }
 GtFilterItemsElement >> addNewFilterElement [
-	self addChild: self newAddFilterButton as: #add
+	self addChild: self newAddFilterButton as: GtFiltersAddId
 ]
 
 { #category : #'private - updating' }
@@ -84,7 +85,7 @@ GtFilterItemsElement >> createDropdownContent [
 			c maxHeight: 200 ];
 		stencil: [ :eachFilterModel :eachIndex | 
 			BrHorizontalPane new
-				id: (GtFilterTagPickerItemId indexed: eachIndex);
+				id: (GtFilterItemId indexed: eachIndex);
 				hMatchParent;
 				vFitContent;
 				padding: (BlInsets all: 5);
@@ -231,7 +232,7 @@ GtFilterItemsElement >> unsubscribeFromFiltersViewModel [
 { #category : #'private - updating' }
 GtFilterItemsElement >> updateItemsElement [
 	self removeChildren.
-	self filtersViewModel items do: [ :eachFilterViewModel | 
-		self addElementForFilterViewModel: eachFilterViewModel ].
+	self filtersViewModel items withIndexDo: [ :eachFilterViewModel :anIndex | 
+		self addElementForFilterViewModel: eachFilterViewModel index: anIndex ].
 	self addNewFilterElement
 ]

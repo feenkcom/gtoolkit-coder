@@ -11,6 +11,7 @@ GtFilterShortListViewModel >> filterElementClass [
 
 { #category : #accessing }
 GtFilterShortListViewModel >> items [
+	<return: #Collection of: #GtFilterModelItem>
 	^ self filterModel items
 ]
 
@@ -21,14 +22,14 @@ GtFilterShortListViewModel >> items: aCollection [
 
 { #category : #accessing }
 GtFilterShortListViewModel >> itemsCount [
+	<return: #TAsyncStream of: #Integer>
 	^ self filterModel items size
 ]
 
 { #category : #accessing }
 GtFilterShortListViewModel >> itemsWithoutSelection [
-	| aSelectedItem |
-	aSelectedItem := self selectedItem.
-	^ self filterModel items reject: [ :each | aSelectedItem = each ]
+	<return: #Collection of: #GtFilterModelItem>
+	^ self filterModel items select: [ :each | self selectedItem ~= each ]
 ]
 
 { #category : #'event handling' }
@@ -36,7 +37,7 @@ GtFilterShortListViewModel >> onItemsChanged: anAnnouncement [
 	self
 		announce: (GtFilterViewModelItemsChanged new
 				viewModel: self;
-				items: anAnnouncement items)
+				itemsBuilder: anAnnouncement itemsBuilder)
 ]
 
 { #category : #'api - filter model' }
@@ -49,6 +50,7 @@ GtFilterShortListViewModel >> onSelectedItemChanged: anAnnouncement [
 
 { #category : #accessing }
 GtFilterShortListViewModel >> selectedItem [
+	<return: #GtFilterModelItem>
 	^ self filterModel selectedItem
 ]
 

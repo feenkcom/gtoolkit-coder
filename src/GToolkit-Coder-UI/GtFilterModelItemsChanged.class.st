@@ -2,17 +2,22 @@ Class {
 	#name : #GtFilterModelItemsChanged,
 	#superclass : #GtFilterModelAnnouncement,
 	#instVars : [
-		'items'
+		'itemsBuilder'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Events'
 }
 
 { #category : #accessing }
 GtFilterModelItemsChanged >> items [
-	^ items
+	^ itemsBuilder create
 ]
 
 { #category : #accessing }
-GtFilterModelItemsChanged >> items: anObject [
-	items := anObject
+GtFilterModelItemsChanged >> itemsBuilder [
+	^ itemsBuilder
+]
+
+{ #category : #accessing }
+GtFilterModelItemsChanged >> itemsBuilder: aBuilder [
+	itemsBuilder := aBuilder
 ]

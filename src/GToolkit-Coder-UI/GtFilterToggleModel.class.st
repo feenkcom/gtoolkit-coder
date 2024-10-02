@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtFilterModel,
 	#instVars : [
 		'items',
-		'selectedItem'
+		'selectedItem',
+		'itemsBuilder'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
@@ -17,23 +18,35 @@ GtFilterToggleModel >> filterViewModelClass [
 { #category : #initialization }
 GtFilterToggleModel >> initialize [
 	super initialize.
-	items := #()
+	itemsBuilder := GtFilterModelEmptyItemsBuilder default.
 ]
 
 { #category : #accessing }
 GtFilterToggleModel >> items [
-	<return: #OrderedCollection>
-	^ items
+	<return: #Collection of: #GtFilterModelItem>
+	^ itemsBuilder create
 ]
 
 { #category : #accessing }
-GtFilterToggleModel >> items: aCollection [
-	| aNewCollection |
-	aNewCollection := aCollection collect: #asFilterModelItem.
-	self items = aNewCollection ifTrue: [ ^ self ].
+GtFilterToggleModel >> items: anObject [
+	self itemsBuilder: anObject
+]
 
-	items := aNewCollection.
-	self notifyItemsChanged.
+{ #category : #accessing }
+GtFilterToggleModel >> itemsBuilder [
+	<return: #GtFilterModelItemsBuilder>
+	^ itemsBuilder
+]
+
+{ #category : #accessing }
+GtFilterToggleModel >> itemsBuilder: anObject [
+	| aNewItemsBuilder |
+	aNewItemsBuilder := anObject asFilterModelItemsBuilder.
+	self itemsBuilder = aNewItemsBuilder ifTrue: [ ^ self ].
+	itemsBuilder := aNewItemsBuilder.
+	aNewItemsBuilder filterModel: self.
+
+	self notifyItemsChanged
 ]
 
 { #category : #'private - notifying' }
@@ -41,7 +54,7 @@ GtFilterToggleModel >> notifyItemsChanged [
 	self
 		announce: (GtFilterModelItemsChanged new
 				model: self;
-				items: self items)
+				itemsBuilder: self itemsBuilder)
 ]
 
 { #category : #'private - notifying' }
@@ -54,14 +67,12 @@ GtFilterToggleModel >> notifySelectedItemChanged [
 
 { #category : #initialization }
 GtFilterToggleModel >> selectFirstItem [
-	self items ifEmpty: [ ^ self ].
-	self selectedItem: self items first
+	self itemsBuilder firstItemDo: [ :anItem | self selectedItem: anItem ]
 ]
 
 { #category : #initialization }
 GtFilterToggleModel >> selectLastItem [
-	self items ifEmpty: [ ^ self ].
-	self selectedItem: self items last
+	self itemsBuilder lastItemDo: [ :anItem | self selectedItem: anItem ]
 ]
 
 { #category : #accessing }

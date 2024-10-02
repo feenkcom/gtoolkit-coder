@@ -69,6 +69,7 @@ GtFilterItemsModel >> notifyItemsChanged [
 
 { #category : #'event handling' }
 GtFilterItemsModel >> onFilterModelAnnouncement: anAnnouncement [
+	anAnnouncement changesFilteredResult ifFalse: [ ^ self ].
 	self notifyFiltersUpdated
 ]
 

@@ -80,11 +80,13 @@ GtFilterShortListSettingsElement >> newContentElement [
 				anItemElement
 					label: (anItemObject label ifNil: [ self defaultItemLabel ]);
 					icon: (anItemObject icon ifNil: [ self defaultItemIcon ]);
+					id: (GtFilterItemId indexed: anItemIndex);
 					model: anItemObject ];
 			itemDataUnbinder: [ :anItemElement :anItemObject :anItemIndex | 
 				anItemElement
 					label: self defaultItemLabel;
 					icon: self defaultItemIcon;
+					id: nil;
 					model: nil ].
 
 	self updateListElement: aListElement.
@@ -193,12 +195,17 @@ GtFilterShortListSettingsElement >> updateHandleElement: anElement [
 
 { #category : #'private - updating' }
 GtFilterShortListSettingsElement >> updateListElement [
-	| aHeight aWidth |
-	aHeight := self filterViewModel itemsCount * 12.
-	aWidth := (self filterViewModel items detectMax: #labelSize)
-			ifNotNil: [ :anItem | anItem labelSize * 12 ]
-			ifNil: [ 30 ].
-	buttonAptitude preferredExtent: aHeight @ aWidth.
+	| aHeight aWidth anExtent |
+	aHeight := self filterViewModel items size.
+	aWidth := self filterViewModel items
+		inject: 3
+		into: [ :aMax :each | 
+			aMax > each labelSize 
+				ifTrue: [ aMax ] 
+				ifFalse: [ each labelSize ] ].
+	anExtent := (aWidth * 12) @ (aHeight * 12).
+	
+	buttonAptitude preferredExtent: anExtent.
 
 	self listElementDo: [ :anElement | self updateListElement: anElement ]
 ]
