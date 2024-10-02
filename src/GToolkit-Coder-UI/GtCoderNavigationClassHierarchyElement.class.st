@@ -19,6 +19,11 @@ GtCoderNavigationClassHierarchyElement >> initializeLayout [
 		c vertical matchParent ].
 ]
 
+{ #category : #'event handling' }
+GtCoderNavigationClassHierarchyElement >> onClassDeselected: aGtCoderNavigationClassDeselected [ 
+	self deselectClass: aGtCoderNavigationClassDeselected theClass
+]
+
 { #category : #subscriptions }
 GtCoderNavigationClassHierarchyElement >> onClassModified: anAnnouncement [
 	self
@@ -95,7 +100,7 @@ GtCoderNavigationClassHierarchyElement >> subscribeToNavigationModel [
 ]
 
 { #category : #'updating lists' }
-GtCoderNavigationClassHierarchyElement >> updateClassLists [
+GtCoderNavigationClassHierarchyElement >> updateClassList [
 	self hasNavigationModel ifFalse: [ ^ self ].
 	navigationModel hasSelectedClass 
 		ifTrue: [ self updateClassListsWith: navigationModel selectedClass ]
@@ -109,6 +114,6 @@ GtCoderNavigationClassHierarchyElement >> updateClassListsWith: aClass [
 
 { #category : #'updating lists' }
 GtCoderNavigationClassHierarchyElement >> updateContent [
-	self updateClassLists.
+	self updateClassList.
 	self updateSelectedClass
 ]

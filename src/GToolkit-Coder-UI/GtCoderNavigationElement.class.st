@@ -22,6 +22,11 @@ GtCoderNavigationElement >> classesList [
 ]
 
 { #category : #'api - class selections' }
+GtCoderNavigationElement >> deselectClass: aClass [
+	classesList deselectAll
+]
+
+{ #category : #'api - class selections' }
 GtCoderNavigationElement >> deselectClasses [
 	classesList deselectAll
 ]
@@ -78,7 +83,12 @@ GtCoderNavigationElement >> navigationModel: aGtCoderNavigationPackagesTagsClass
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassAdded: anAnnouncement [
 	self
-		suppressListChangeEventsDuring: [ self updateClassLists ]
+		suppressListChangeEventsDuring: [ self updateClassList ]
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationElement >> onClassDeselected: anAnnouncement [
+	self subclassResponsibility
 ]
 
 { #category : #'event handling' }
@@ -140,7 +150,7 @@ GtCoderNavigationElement >> renameClass: aClass oldName: anOldName newName: aNew
 		indexOfSuchThat: [ :aTree | 
 			aTree rootClass = aClass ] 
 		do: [ :aTree | 
-			self updateClassLists.
+			self updateClassList.
 			self updateSelectedClass ].
 ]
 
@@ -191,11 +201,12 @@ GtCoderNavigationElement >> subscribeToNavigationModel [
 	| subscriptions |
 	self hasNavigationModel ifFalse: [ ^ self ].
 
-	subscriptions := {GtCoderNavigationClassSelected -> #onClassSelected:.
-			GtCoderNavigationClassRenamed -> #onClassRenamed:.
-			GtCoderNavigationClassModified -> #onClassModified:.
-			GtCoderNavigationClassAdded-> #onClassAdded:.
-			GtCoderNavigationClassRemoved -> #onClassRemoved: }.
+	subscriptions := {
+		GtCoderNavigationClassSelected -> #onClassSelected:.
+		GtCoderNavigationClassDeselected -> #onClassDeselected:.
+		GtCoderNavigationClassRenamed -> #onClassRenamed:.
+		GtCoderNavigationClassModified -> #onClassModified:
+	}.
 
 	subscriptions
 		do: [ :sub | 
@@ -230,12 +241,12 @@ GtCoderNavigationElement >> updateClass: aClass inPackage: aPackage tag: aTag [
 		indexOfSuchThat: [ :aTree | 
 			aTree rootClass = aClass ] 
 		do: [ :aTree | 
-			self updateClassLists.
+			self updateClassList.
 			self updateSelectedClass ].
 ]
 
 { #category : #'updating lists' }
-GtCoderNavigationElement >> updateClassLists [
+GtCoderNavigationElement >> updateClassList [
 	"Update class list"
 ]
 
