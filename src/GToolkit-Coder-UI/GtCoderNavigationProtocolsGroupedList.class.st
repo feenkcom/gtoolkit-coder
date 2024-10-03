@@ -62,12 +62,33 @@ GtCoderNavigationProtocolsGroupedList >> createProtocolElement [
 		addEventHandler: self createProtocolDropHandler
 ]
 
+{ #category : #initialization }
+GtCoderNavigationProtocolsGroupedList >> createProtocolGroupHeader [
+	^ BrHorizontalPane new
+		alignCenterLeft;
+		hMatchParent;
+		vFitContent;
+		addChild: (BrLabel new beSmallSize
+				padding: (BlInsets top: 2 bottom: 2);
+				aptitude: (BrGlamorousLabelAptitude new foreground: Color gray));
+		addChild: (BrButton new
+				beTinySize;
+				aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0)
+						+ (BrGlamorousButtonFlatExteriorAptitude new
+								backgroundPaint: (Color gray alpha: 0.1))
+						+ BrGlamorousButtonIconAptitude
+						+ BrGlamorousButtonWithLabelTooltipAptitude;
+				icon: BrGlamorousVectorIcons add;
+				label: 'Add new protocol');
+		yourself
+]
+
 { #category : #'private - instance creation' }
 GtCoderNavigationProtocolsGroupedList >> createProtocolGroups [
 	| virtualGroup instanceGroup classGroup  |
 	virtualGroup := BrGroup new
 			domainObject: 'virtual';
-			stream: #() asAsyncStream;
+			items: #();
 			itemStencil: [ self createProtocolElement ];
 			itemDataBinder: [ :element :item | self bindProtocol: item toElement: element ];
 			shouldShowWithoutItems: false.
@@ -95,18 +116,59 @@ GtCoderNavigationProtocolsGroupedList >> createProtocolListContextMenuItemsFor: 
 								-> [ :elem | self renameProtocol: aPharoProtocol name in: elem ] ] ]
 ]
 
+{ #category : #'api - list' }
+GtCoderNavigationProtocolsGroupedList >> deselectProtocol [
+	self deselectAll
+]
+
+{ #category : #'private - selection' }
+GtCoderNavigationProtocolsGroupedList >> detectProtocolIndex: aGtPharoProtocol inGroups: aCollectionOfArrayOfProtocols [
+	| aSelectionIndex |
+	
+	aGtPharoProtocol ifNil: [ ^ 0 ].
+	
+	aSelectionIndex := 0.
+	
+	aCollectionOfArrayOfProtocols detect: [ :eachGroup |
+		eachGroup
+			ifEmpty: [ false ]
+			ifNotEmpty: [
+				| anIndexInGroup |
+				"add 1 for the header"
+				aSelectionIndex := aSelectionIndex + 1.
+				anIndexInGroup := eachGroup
+					detectIndex: [ :eachProtocol | eachProtocol = aGtPharoProtocol ]
+					ifNone:  [ 0 ].
+				
+				anIndexInGroup > 0
+					ifTrue: [
+						aSelectionIndex := aSelectionIndex + anIndexInGroup.
+						true ]
+					ifFalse: [
+						aSelectionIndex := aSelectionIndex + eachGroup size.
+						false
+					]
+			].
+	]
+	ifNone: [ ^ 0 ].
+	
+	^ aSelectionIndex
+]
+
 { #category : #initialization }
 GtCoderNavigationProtocolsGroupedList >> initialize [
 	super initialize.
-	
+
 	self
 		padding: (BlInsets left: 5 right: 10);
 		matchParent;
-		headerElementStencil: [ BrLabel new
-				beSmallSize;
-				aptitude: (BrGlamorousLabelAptitude new foreground: Color gray) ];
-		headerDataBinder: [ :label :each | label text: each domainObject asRopedText ].
-	
+		headerElementStencil: [ self createProtocolGroupHeader ];
+		headerDataBinder: [ :header :each | 
+			each domainObject = 'virtual'
+				ifTrue: [ header children second visibility: BlVisibility gone ]
+				ifFalse: [ header children second visibility: BlVisibility visible ].
+			header children first text: each domainObject asRopedText ].
+
 	protocolGroups := self createProtocolGroups.
 	self groups: protocolGroups
 ]
@@ -188,6 +250,19 @@ GtCoderNavigationProtocolsGroupedList >> renameProtocol: aGtPharoProtocol in: el
 ]
 
 { #category : #'api - list' }
+GtCoderNavigationProtocolsGroupedList >> selectProtocol: aGtPharoProtocol [
+	| selectionIndex |
+
+	selectionIndex := self
+		detectProtocolIndex: aGtPharoProtocol
+		inGroups: (protocolGroups collect: [ :eachGroup | eachGroup itemsProvider currentItems ]).
+
+	selectionIndex > 0
+		ifTrue: [ self selectOne: selectionIndex ]
+		ifFalse: [ self deselectAll ]
+]
+
+{ #category : #'api - list' }
 GtCoderNavigationProtocolsGroupedList >> selectedProtocol [
 	<return: #GtPharoProtocol or: nil>
 	| theIndices anIndex |
@@ -201,8 +276,7 @@ GtCoderNavigationProtocolsGroupedList >> selectedProtocol [
 
 { #category : #'api - list' }
 GtCoderNavigationProtocolsGroupedList >> updateProtocolListWith: theGtPharoProtocols [
-	| virtualStream instStream classStream virtualGtPharoProtocols instanceGtPharoProtocols classGtPharoProtocols |
-	self deselectAll.
+	| virtualStream instStream classStream virtualGtPharoProtocols instanceGtPharoProtocols classGtPharoProtocols groupItems |
 	
 	virtualGtPharoProtocols := theGtPharoProtocols
 		select: [ :eachPharoProtocol | eachPharoProtocol isVirtualProtocol ].
@@ -221,6 +295,11 @@ GtCoderNavigationProtocolsGroupedList >> updateProtocolListWith: theGtPharoProto
 
 	classStream := classGtPharoProtocols
 			asSortedCollection: [ :a :b | a name < b name ].
+
+	groupItems := {
+			virtualStream.
+			instStream.
+			classStream}.
 
 	protocolGroups
 		with: {

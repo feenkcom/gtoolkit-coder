@@ -2,8 +2,8 @@ Class {
 	#name : #GtFilterShortListModel,
 	#superclass : #GtFilterModel,
 	#instVars : [
-		'items',
-		'selectedItem'
+		'selectedItem',
+		'itemsBuilder'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
@@ -16,23 +16,35 @@ GtFilterShortListModel >> filterViewModelClass [
 { #category : #initialization }
 GtFilterShortListModel >> initialize [
 	super initialize.
-	items := #()
+	itemsBuilder := GtFilterModelEmptyItemsBuilder default.
 ]
 
 { #category : #accessing }
 GtFilterShortListModel >> items [
-	<return: #OrderedCollection>
-	^ items
+	<return: #Collection of: #GtFilterModelItem>
+	^ itemsBuilder create
 ]
 
 { #category : #accessing }
-GtFilterShortListModel >> items: aCollection [
-	| aNewCollection |
-	aNewCollection := aCollection collect: #asFilterModelItem.
-	self items = aNewCollection ifTrue: [ ^ self ].
+GtFilterShortListModel >> items: anObject [
+	self itemsBuilder: anObject
+]
 
-	items := aNewCollection.
-	self notifyItemsChanged.
+{ #category : #accessing }
+GtFilterShortListModel >> itemsBuilder [
+	<return: #GtFilterModelItemsBuilder>
+	^ itemsBuilder
+]
+
+{ #category : #accessing }
+GtFilterShortListModel >> itemsBuilder: anObject [
+	| aNewItemsBuilder |
+	aNewItemsBuilder := anObject asFilterModelItemsBuilder.
+	self itemsBuilder = aNewItemsBuilder ifTrue: [ ^ self ].
+	itemsBuilder := aNewItemsBuilder.
+	aNewItemsBuilder filterModel: self.
+
+	self notifyItemsChanged
 ]
 
 { #category : #'private - notifying' }
@@ -40,7 +52,7 @@ GtFilterShortListModel >> notifyItemsChanged [
 	self
 		announce: (GtFilterModelItemsChanged new
 				model: self;
-				items: self items)
+				itemsBuilder: self itemsBuilder)
 ]
 
 { #category : #'private - notifying' }
@@ -53,14 +65,12 @@ GtFilterShortListModel >> notifySelectedItemChanged [
 
 { #category : #initialization }
 GtFilterShortListModel >> selectFirstItem [
-	self items ifEmpty: [ ^ self ].
-	self selectedItem: self items first
+	self itemsBuilder firstItemDo: [ :anItem | self selectedItem: anItem ]
 ]
 
 { #category : #initialization }
 GtFilterShortListModel >> selectLastItem [
-	self items ifEmpty: [ ^ self ].
-	self selectedItem: self items last
+	self itemsBuilder lastItemDo: [ :anItem | self selectedItem: anItem ]
 ]
 
 { #category : #accessing }

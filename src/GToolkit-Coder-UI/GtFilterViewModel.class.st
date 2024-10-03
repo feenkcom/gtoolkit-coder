@@ -41,6 +41,11 @@ GtFilterViewModel >> onLabelChanged: anAnnouncement [
 				label: anAnnouncement label)
 ]
 
+{ #category : #accessing }
+GtFilterViewModel >> selectedValue [
+	^ self filterModel selectedValue
+]
+
 { #category : #'api - filter model' }
 GtFilterViewModel >> subscribeToFilterModel [
 	self filterModel weak

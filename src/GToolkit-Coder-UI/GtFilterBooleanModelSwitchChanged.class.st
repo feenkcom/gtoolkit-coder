@@ -8,6 +8,13 @@ Class {
 }
 
 { #category : #testing }
+GtFilterBooleanModelSwitchChanged >> changesFilteredResult [
+	"Indicates whether it changes a result of filtered items, e.g., list of method coders."
+
+	^ true
+]
+
+{ #category : #testing }
 GtFilterBooleanModelSwitchChanged >> isOff [
 	^ self switchedOn not
 ]

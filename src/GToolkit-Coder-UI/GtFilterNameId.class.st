@@ -1,10 +1,10 @@
 Class {
-	#name : #GtFilterSettingsId,
+	#name : #GtFilterNameId,
 	#superclass : #GtFilterElementId,
 	#category : #'GToolkit-Coder-UI-Filters - Widgets'
 }
 
 { #category : #converting }
-GtFilterSettingsId >> asSymbol [
-	^ #'filter--settings'
+GtFilterNameId >> asSymbol [
+	^ #'filter--name'
 ]

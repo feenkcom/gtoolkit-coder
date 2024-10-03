@@ -33,8 +33,12 @@ GtFilteredCodersModel >> additionalFilters: aCollectionOfFilters [
 
 { #category : #'api - accessing' }
 GtFilteredCodersModel >> compositeFilter [
-	<return: #GtSearchFilter>
+	"I am combination of:
+	- the main filter (see the `filter` method), and
+	- additional filters (see the `additionalFilters` method).
+	If `filter` is kind of input filter, `compositeFilter` is kind of output filter."
 
+	<return: #GtSearchFilter>
 	^ compositeFilter
 ]
 
@@ -58,8 +62,9 @@ GtFilteredCodersModel >> createCombinedFilterFor: aMainSearchFilter andAdditiona
 
 { #category : #'api - accessing' }
 GtFilteredCodersModel >> filter [
-	<return: #GtSearchFilter>
+	"I am a main filter whose items may be futher filtered using additional filters"
 
+	<return: #GtSearchFilter>
 	^ filter
 ]
 
