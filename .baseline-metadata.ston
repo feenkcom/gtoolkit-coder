@@ -4,7 +4,7 @@
 		"github://feenkcom/gtoolkit-utility/src" : "v0.8.332",
 		"github://feenkcom/pharo-futures/src" : "v0.6.116",
 		"github://feenkcom/gtoolkit-pager/src" : "v0.8.1418",
-		"github://feenkcom/gt4magritte/src" : "v0.6.1078",
+		"github://feenkcom/gt4magritte/src" : "v0.6.1079",
 		"github://feenkcom/gtoolkit-completer/src" : "v0.8.1361"
 	}
 }
