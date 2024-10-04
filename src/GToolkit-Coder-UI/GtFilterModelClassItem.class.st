@@ -34,6 +34,11 @@ GtFilterModelClassItem >> itemSymbol [
 ]
 
 { #category : #accessing }
+GtFilterModelClassItem >> itemValue [
+	^ self itemClass
+]
+
+{ #category : #accessing }
 GtFilterModelClassItem >> label [
 	<return: #String>
 	^ self itemClass name
