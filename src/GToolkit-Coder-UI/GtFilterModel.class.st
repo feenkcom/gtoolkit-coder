@@ -133,6 +133,8 @@ GtFilterModel >> printOn: aStream [
 	aStream
 		nextPut: $(;
 		nextPutAll: self label asString;
+		nextPutAll: ': ';
+		print: (self selectedValue ifNotNil: #itemValue);
 		nextPutAll: ', order: ';
 		print: self order;
 		nextPut: $)
