@@ -25,6 +25,25 @@ GtCoderNavigationProtocolsGroupedList >> bindProtocol: item toElement: element [
 	^ element text: itemText
 ]
 
+{ #category : #initialization }
+GtCoderNavigationProtocolsGroupedList >> createAddProtocolButton [
+	| aPopUp |
+	
+	aPopUp := BrGlamorousWithDropdownAptitude
+		content:  [ :aButton |
+			
+		].
+
+	^ BrButton new
+		beTinySize;
+		aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0)
+				+ (BrGlamorousButtonFlatExteriorAptitude new
+						backgroundPaint: (Color gray alpha: 0.1)) + BrGlamorousButtonIconAptitude
+				+ BrGlamorousButtonWithLabelTooltipAptitude;
+		icon: BrGlamorousVectorIcons add;
+		label: 'Add new protocol'
+]
+
 { #category : #'private - instance creation' }
 GtCoderNavigationProtocolsGroupedList >> createProtocolDropHandler [
 	^ BlDropHandler new
@@ -71,15 +90,7 @@ GtCoderNavigationProtocolsGroupedList >> createProtocolGroupHeader [
 		addChild: (BrLabel new beSmallSize
 				padding: (BlInsets top: 2 bottom: 2);
 				aptitude: (BrGlamorousLabelAptitude new foreground: Color gray));
-		addChild: (BrButton new
-				beTinySize;
-				aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0)
-						+ (BrGlamorousButtonFlatExteriorAptitude new
-								backgroundPaint: (Color gray alpha: 0.1))
-						+ BrGlamorousButtonIconAptitude
-						+ BrGlamorousButtonWithLabelTooltipAptitude;
-				icon: BrGlamorousVectorIcons add;
-				label: 'Add new protocol');
+		addChild: self createAddProtocolButton;
 		yourself
 ]
 
