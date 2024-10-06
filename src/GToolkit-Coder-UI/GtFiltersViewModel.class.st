@@ -57,7 +57,7 @@ GtFiltersViewModel >> filtersElementClass [
 { #category : #initialization }
 GtFiltersViewModel >> initialize [
 	super initialize.
-	filterViewModels := Dictionary new
+	filterViewModels := IdentityDictionary new
 ]
 
 { #category : #'add / remove' }

@@ -48,6 +48,7 @@ GtFilterItemsModel >> items [
 GtFilterItemsModel >> items: aCollection [
 	self items = aCollection ifTrue: [ ^ self ].
 
+	self unsubscribeFromItems.
 	items := aCollection.
 	self subscribeToItems.
 	self notifyItemsChanged.
@@ -69,12 +70,15 @@ GtFilterItemsModel >> notifyItemsChanged [
 
 { #category : #'event handling' }
 GtFilterItemsModel >> onFilterModelAnnouncement: anAnnouncement [
+	self assert: [ (self items identityIncludes: anAnnouncement model) ].
+	
 	anAnnouncement changesFilteredResult ifFalse: [ ^ self ].
 	self notifyFiltersUpdated
 ]
 
 { #category : #'add / remove' }
 GtFilterItemsModel >> removeFilterModel: aFilterModel [
+	self unsubscribeFromItem: aFilterModel.
 	self items: (self items copyWithout: aFilterModel)
 ]
 
@@ -92,4 +96,15 @@ GtFilterItemsModel >> subscribeToItem: aFilterModel [
 GtFilterItemsModel >> subscribeToItems [
 	self items do: [ :eachItem |
 		self subscribeToItem: eachItem ]
+]
+
+{ #category : #private }
+GtFilterItemsModel >> unsubscribeFromItem: aFilterModel [
+	aFilterModel unsubscribe: self
+]
+
+{ #category : #private }
+GtFilterItemsModel >> unsubscribeFromItems [
+	self items do: [ :eachItem |
+		self unsubscribeFromItem: eachItem ]
 ]
