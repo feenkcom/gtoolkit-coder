@@ -973,10 +973,6 @@ GtCoderNavigationPackagesTagsClassesElement >> updateClassList [
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateContent [
-	"self updatePackageAndClassLists.
-	self updateSelections.
-	self hideOrShowClassList"
-	
 	self updatePackageLists.
 	self updateClassList.
 	self updateProtocolList.
@@ -1028,6 +1024,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 	self hasNavigationModel
 		ifFalse: [ ^ self ].
 	
+	methodProtocolsList navigationModel: self navigationModel.
 	methodProtocolsList updateProtocolListWith: self navigationModel protocolsToShow.
 	
 	self navigationModel selectedProtocol
