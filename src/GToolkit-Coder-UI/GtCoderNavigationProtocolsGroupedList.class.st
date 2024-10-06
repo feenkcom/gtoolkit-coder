@@ -9,10 +9,30 @@ Class {
 	#traits : 'TGtCoderNavigationWithContextMenu',
 	#classTraits : 'TGtCoderNavigationWithContextMenu classTrait',
 	#instVars : [
-		'protocolGroups'
+		'protocolGroups',
+		'navigationModel'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
+
+{ #category : #'private - refactorings' }
+GtCoderNavigationProtocolsGroupedList >> addProtocolFrom: aProtocolEditor [
+	self navigationModel
+		selectedClassDo: [ :aClass | self addProtocolNamed: aProtocolEditor text asString trimmed in: aClass ].
+
+	^ aProtocolEditor fireEvent: BrDropdownHideWish new
+]
+
+{ #category : #'private - refactorings' }
+GtCoderNavigationProtocolsGroupedList >> addProtocolNamed: aProtocolName in: aClass [
+	| refactoring |
+	
+	refactoring := RBAddProtocolChange
+		addProtocolNamed: aProtocolName
+		in: aClass.
+	
+	refactoring execute
+]
 
 { #category : #'private - instance creation' }
 GtCoderNavigationProtocolsGroupedList >> bindProtocol: item toElement: element [
@@ -27,21 +47,86 @@ GtCoderNavigationProtocolsGroupedList >> bindProtocol: item toElement: element [
 
 { #category : #initialization }
 GtCoderNavigationProtocolsGroupedList >> createAddProtocolButton [
-	| aPopUp |
-	
-	aPopUp := BrGlamorousWithDropdownAptitude
-		content:  [ :aButton |
-			
-		].
+	| aButtonStencil aPopUp |
+	aButtonStencil := [
+		BrButton new
+			beTinySize;
+			aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0) + BrGlamorousButtonIconAptitude;
+			icon: BrGlamorousVectorIcons add ] asStencil.
 
-	^ BrButton new
-		beTinySize;
-		aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0)
-				+ (BrGlamorousButtonFlatExteriorAptitude new
-						backgroundPaint: (Color gray alpha: 0.1)) + BrGlamorousButtonIconAptitude
-				+ BrGlamorousButtonWithLabelTooltipAptitude;
-		icon: BrGlamorousVectorIcons add;
+	aPopUp := BrGlamorousWithDropdownAptitude
+			handle: aButtonStencil
+			content: [ :aButton | self createNewProtocolForm ].
+
+	^ aButtonStencil asElement
+		addAptitude: (BrGlamorousButtonFlatExteriorAptitude new
+			backgroundPaint: (Color gray alpha: 0.1));
+		addAptitude: BrGlamorousButtonWithLabelTooltipAptitude;
+		addAptitude: aPopUp;
 		label: 'Add new protocol'
+]
+
+{ #category : #initialization }
+GtCoderNavigationProtocolsGroupedList >> createNewProtocolForm [
+	| aContainer aProtocolEditor aDefaultText aProtocolCompleter anAcceptButton |
+	aDefaultText := '' asRopedText
+			attribute: (BrGhostTextAttribute
+					for: ('new protocol name' asRopedText glamorousFormEditorCodeFontAndSize
+							foreground: Color lightGray)).
+
+	aContainer := BrHorizontalPane new
+			padding: (BlInsets
+					top: 6
+					right: 2
+					bottom: 6
+					left: 2);
+			cellSpacing: 6;
+			alignCenterLeft;
+			fitContent.
+
+	aProtocolEditor := BrEditor new
+			aptitude: BrGlamorousRegularEditorAptitude new glamorousRegularSmallSize
+					+ BrGlamorousInputFieldSpacingAptitude;
+			beMode: BrTextEditorEditableSingleLineMode new;
+			geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
+			vFitContent;
+			hFitContent;
+			constraintsDo: [ :c | c minWidth: 150 ];
+			text: aDefaultText;
+			requestFocus.
+
+	aProtocolCompleter := GtCompletionController
+			on: aProtocolEditor
+			strategy: GtMethodProtocolCompletionStrategy new.
+
+	aProtocolCompleter install.
+
+	aProtocolEditor
+		addEditorShortcut: (BlShortcutWithAction new
+				combination: BlKeyCombination escape;
+				action: [ :anEvent | anEvent currentTarget fireEvent: BrDropdownHideWish new ]).
+
+	aProtocolEditor
+		addEditorShortcut: (BlShortcutWithAction new
+				combination: BlKeyCombination enter;
+				action: [ :anEvent | self addProtocolFrom: aProtocolEditor ]).
+
+	aContainer addChild: aProtocolEditor.
+
+	anAcceptButton := BrButton new
+			beSmallSize;
+			aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0.5)
+					+ BrGlamorousButtonIconAptitude
+					+ (BrGlamorousButtonFlatExteriorAptitude new
+							backgroundPaint: (Color gray alpha: 0.1))
+					+ BrGlamorousButtonWithLabelTooltipAptitude;
+			icon: BrGlamorousVectorIcons accept;
+			label: 'Add protocol';
+			action: [ self addProtocolFrom: aProtocolEditor ].
+
+	aContainer addChild: anAcceptButton.
+
+	^ aContainer
 ]
 
 { #category : #'private - instance creation' }
@@ -182,6 +267,16 @@ GtCoderNavigationProtocolsGroupedList >> initialize [
 
 	protocolGroups := self createProtocolGroups.
 	self groups: protocolGroups
+]
+
+{ #category : #accessing }
+GtCoderNavigationProtocolsGroupedList >> navigationModel [
+	^ navigationModel
+]
+
+{ #category : #accessing }
+GtCoderNavigationProtocolsGroupedList >> navigationModel: anObject [
+	navigationModel := anObject
 ]
 
 { #category : #'private - refactorings' }
