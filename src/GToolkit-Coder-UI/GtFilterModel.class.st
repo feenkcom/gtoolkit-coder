@@ -127,17 +127,22 @@ GtFilterModel >> order: anObject [
 ]
 
 { #category : #printing }
-GtFilterModel >> printOn: aStream [
-	super printOn: aStream.
-
+GtFilterModel >> printDetailsOn: aStream [
 	aStream
-		nextPut: $(;
 		nextPutAll: self label asString;
 		nextPutAll: ': ';
 		print: (self selectedValue ifNotNil: #itemValue);
 		nextPutAll: ', order: ';
-		print: self order;
-		nextPut: $)
+		print: self order
+]
+
+{ #category : #printing }
+GtFilterModel >> printOn: aStream [
+	super printOn: aStream.
+
+	aStream nextPut: $(.
+	self printDetailsOn: aStream.
+	aStream nextPut: $)
 ]
 
 { #category : #accessing }
