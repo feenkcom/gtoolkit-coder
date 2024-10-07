@@ -73,16 +73,6 @@ GtFilterStep >> assertFilterModelsCountIs: anItemsCount [
 			equals: anItemsCount
 ]
 
-{ #category : #'steps - checks' }
-GtFilterStep >> assertMethodProtocolFilterModel [
-	^ self assertFilterModelLabeled: GtSearchMethodCategoryFilter filterName
-]
-
-{ #category : #'steps - checks' }
-GtFilterStep >> assertMethodsUpToFilterModel [
-	^ self assertFilterModelLabeled: GtSearchMethodCategoryFilter filterName
-]
-
 { #category : #'steps - interactions' }
 GtFilterStep >> clickOnAddFilter [
 	^ self click
@@ -109,12 +99,6 @@ GtFilterStep >> clickOnDropdownFilterItemLabeled: aLabel [
 		// BrAnchoredOuterContainer;
 		// #scrollable;
 		onChildFromBlock: [ :anElement | anElement children detect: [ :each | each children last text asString = aLabel ] ]
-]
-
-{ #category : #'steps - interactions' }
-GtFilterStep >> clickOnDropdownMethodProtocolItem [
-	^ self
-		clickOnDropdownFilterItemLabeled: GtSearchMethodCategoryFilter filterName
 ]
 
 { #category : #'steps - interactions' }
