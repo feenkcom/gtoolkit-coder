@@ -41,6 +41,16 @@ GtFilterViewModel >> onLabelChanged: anAnnouncement [
 				label: anAnnouncement label)
 ]
 
+{ #category : #printing }
+GtFilterViewModel >> printOn: aStream [
+	super printOn: aStream.
+
+	self hasFilterModel ifFalse: [ ^ self ].
+	aStream nextPut: $(.
+	self filterModel printDetailsOn: aStream.
+	aStream nextPut: $)
+]
+
 { #category : #accessing }
 GtFilterViewModel >> selectedValue [
 	^ self filterModel selectedValue

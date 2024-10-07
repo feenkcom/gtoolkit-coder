@@ -15,6 +15,27 @@ GtFilteredCodersModel class >> forFilter: aGtSearchFilter [
 ]
 
 { #category : #'api - accessing' }
+GtFilteredCodersModel >> addOrReplaceFilter: aFilter [
+	"Add or replace one additional filter.
+	A filter of the same class is replaced by the given filter."
+
+	| newFilters isChanged |
+	isChanged := false.
+	newFilters := self additionalFilters
+			collect: [ :eachFilter | 
+				eachFilter class = aFilter class
+					ifTrue: [ 
+						isChanged := true.
+						aFilter ]
+					ifFalse: [ 
+						eachFilter ] ].
+						
+	isChanged ifFalse: [ 
+		newFilters := newFilters , {aFilter} ].
+	self additionalFilters: newFilters
+]
+
+{ #category : #'api - accessing' }
 GtFilteredCodersModel >> additionalFilters [
 	<return: #Collection of: #GtSearchFilter>
 
