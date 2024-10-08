@@ -71,6 +71,14 @@ GtCoderClassesHierarchyTree >> classes [
 	^ self subclassTrees collect: [ :eachTree | eachTree rootClass ]
 ]
 
+{ #category : #testing }
+GtCoderClassesHierarchyTree >> containsClass: aClass [
+	rootClass = aClass
+		ifTrue: [ ^ true ].
+
+	^ self subclassTrees anySatisfy: [ :eachTree | eachTree containsClass: aClass ]
+]
+
 { #category : #accessing }
 GtCoderClassesHierarchyTree >> first [
 	<return: #GtCoderClassesHierarchyTree>

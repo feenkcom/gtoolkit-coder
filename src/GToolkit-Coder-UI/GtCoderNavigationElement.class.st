@@ -53,7 +53,7 @@ GtCoderNavigationElement >> initialize [
 
 { #category : #initialization }
 GtCoderNavigationElement >> initializeContent [
-	classesList := GtCoderNavigationClassesHierarchyTreeElement new. 
+	classesList := GtCoderClassesTreeElement new. 
 ]
 
 { #category : #initialization }
@@ -136,6 +136,11 @@ GtCoderNavigationElement >> onClassSelected: anAnnouncement [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationElement >> onClassesToShowChanged: anAnnouncement [
+	self updateClassList
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationElement >> onNavigationModelChanged [
 	"subclasses may perform actions on navigation model changes"
 	self updateContent.
@@ -205,7 +210,8 @@ GtCoderNavigationElement >> subscribeToNavigationModel [
 		GtCoderNavigationClassSelected -> #onClassSelected:.
 		GtCoderNavigationClassDeselected -> #onClassDeselected:.
 		GtCoderNavigationClassRenamed -> #onClassRenamed:.
-		GtCoderNavigationClassModified -> #onClassModified:
+		GtCoderNavigationClassModified -> #onClassModified:.
+		GtCoderNavigationClassesToShowChanged -> #onClassesToShowChanged:.
 	}.
 
 	subscriptions
