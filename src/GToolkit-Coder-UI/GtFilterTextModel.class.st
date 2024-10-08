@@ -83,6 +83,7 @@ GtFilterTextModel >> text [
 { #category : #accessing }
 GtFilterTextModel >> text: aText [
 	| aNewText |
+	aText ifNil: [ ^ self ].
 	aNewText := aText asRopedText.
 	(self text equals: aNewText) ifTrue: [ ^ self ].
 	

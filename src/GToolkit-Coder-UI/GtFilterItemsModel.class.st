@@ -46,8 +46,16 @@ GtFilterItemsModel >> items [
 
 { #category : #accessing }
 GtFilterItemsModel >> items: aCollection [
-	self items = aCollection ifTrue: [ ^ self ].
+	GtFilterItemsModelComparator new
+		incomingItems: aCollection;
+		existingItems: items;
+		ifEqual: [ ^ self ].
 
+	GtFilterItemsChangedSignal new
+		incomingItems: aCollection;
+		previousItems: items;
+		emit.
+	
 	self unsubscribeFromItems.
 	items := aCollection.
 	self subscribeToItems.
