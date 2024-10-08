@@ -154,7 +154,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodItemWithOnClick: click
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildProtocolGroupList [
-	^ GtCoderNavigationProtocolsGroupedList new
+	^ GtCoderProtocolsGroupedListElement new
 ]
 
 { #category : #initialization }
@@ -374,11 +374,6 @@ GtCoderNavigationPackagesTagsClassesElement >> onClassRemoved: anAnnouncement [
 GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
 	self
 		suppressListChangeEventsDuring: [ self selectClass: anAnnouncement theClass ]
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onClassesToShowChanged: anAnnouncement [
-	self updateClassList
 ]
 
 { #category : #'event handling - selection' }
@@ -925,7 +920,6 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 			GtCoderNavigationSlotSelected -> #onSlotSelected:.
 			GtCoderNavigationMethodSelected -> #onMethodSelected:.
 			"Announcements when we need to update items in the lists"
-			GtCoderNavigationClassesToShowChanged -> #onClassesToShowChanged:.
 			GtCoderNavigationProtocolsToShowChanged -> #onProtocolsToShowChanged:.
 			GtCoderNavigationMethodsToShowChanged -> #onMethodsToShowChanged:.
 			

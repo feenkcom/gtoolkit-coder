@@ -1,26 +1,29 @@
 "
-I show a list of classes grouping them based on the inheritance hierarchy and sorting alphabetically
+#Classes tree element
 
+I show a list of classes grouping them based on the inheritance hierarchy and sorting alphabetically.
+It is a building block of the navigation UI in Coder.
 
+{{gtExample:GtCoderNavigationClassesHierarchyListElementExamples>>#fromCollectionClasses|previewShow=#gtLiveFor:|noCode|previewHeight=180}}
 "
 Class {
-	#name : #GtCoderNavigationClassesHierarchyTreeElement,
+	#name : #GtCoderClassesTreeElement,
 	#superclass : #BrSimpleTree,
 	#traits : 'TGtCoderNavigationWithContextMenu',
 	#classTraits : 'TGtCoderNavigationWithContextMenu classTrait',
 	#instVars : [
 		'classesTree'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #'instance creation' }
-GtCoderNavigationClassesHierarchyTreeElement class >> fromClasses: aCollectionOfClasses [
+GtCoderClassesTreeElement class >> fromClasses: aCollectionOfClasses [
 	^ self new initializeWithClasses: aCollectionOfClasses
 ]
 
 { #category : #'private - context menu' }
-GtCoderNavigationClassesHierarchyTreeElement >> addPreviewButtonFor: refactoring to: elem cancelBlock: aBlock [
+GtCoderClassesTreeElement >> addPreviewButtonFor: refactoring to: elem cancelBlock: aBlock [
 	| button |
 	elem removeChildNamed: #preview.
 	button := GtRefactoringsPreviewButton new.
@@ -41,7 +44,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> addPreviewButtonFor: refactoring
 ]
 
 { #category : #'private - context menu' }
-GtCoderNavigationClassesHierarchyTreeElement >> addPreviewButtonFor: refactoring to: elem cancelSelector: cancelSelector [
+GtCoderClassesTreeElement >> addPreviewButtonFor: refactoring to: elem cancelSelector: cancelSelector [
 	| button |
 	elem removeChildNamed: #preview.
 	button := GtRefactoringsPreviewButton new.
@@ -62,12 +65,12 @@ GtCoderNavigationClassesHierarchyTreeElement >> addPreviewButtonFor: refactoring
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyTreeElement >> browseReferencesTo: aClass [
+GtCoderClassesTreeElement >> browseReferencesTo: aClass [
 	self phlow spawnObject: (aClass gtReferences) 
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyTreeElement >> buildRemoveClassLabelFor: aClass [
+GtCoderClassesTreeElement >> buildRemoveClassLabelFor: aClass [
 	| labelText |
 	labelText := (aClass isReferenced
 			ifTrue: [ '<1s> is referenced. Remove anyway?' ]
@@ -81,8 +84,14 @@ GtCoderNavigationClassesHierarchyTreeElement >> buildRemoveClassLabelFor: aClass
 		text: labelText asRopedText
 ]
 
+{ #category : #'as yet unclassified' }
+GtCoderClassesTreeElement >> containsClass: aClass [
+	"Return true if the classes tree contains a given class, false otherwise"
+	^ classesTree containsClass: aClass
+]
+
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyTreeElement >> contextMenuItemsFor: aClass [
+GtCoderClassesTreeElement >> contextMenuItemsFor: aClass [
 	^ {(self createLabel: 'Browse references' description: aClass name)
 			-> [ :elem | self browseReferencesTo: aClass ].
 		(self createLabel: 'New Subclass' description: aClass name)
@@ -98,7 +107,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> contextMenuItemsFor: aClass [
 ]
 
 { #category : #'private - context menu' }
-GtCoderNavigationClassesHierarchyTreeElement >> convertToSibling: aClass inElement: elem [
+GtCoderClassesTreeElement >> convertToSibling: aClass inElement: elem [
 	| refactoring label refactoringButton edit acceptButton |
 	refactoringButton := GtRefactoringsWithInputPreviewElement new.
 	refactoringButton cancelBlock: [  ].
@@ -168,7 +177,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> convertToSibling: aClass inEleme
 ]
 
 { #category : #'private - drag and drop' }
-GtCoderNavigationClassesHierarchyTreeElement >> createClassDropHandler [
+GtCoderClassesTreeElement >> createClassDropHandler [
 	^ BlDropHandler new
 		acceptDomainObjectsSuchThat: [ :anObject | anObject isCompiledMethod ];
 		whenDroppedDo: [ :anItemsDroppedEvent | self onDropCompiledMethodsOnClass: anItemsDroppedEvent  ];
@@ -179,7 +188,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> createClassDropHandler [
 ]
 
 { #category : #'private - context menu' }
-GtCoderNavigationClassesHierarchyTreeElement >> createLabel: aString description: description [
+GtCoderClassesTreeElement >> createLabel: aString description: description [
 	^ aString asRopedText glamorousRegularFont
 		, ((' ' , description) asRopedText
 				glamorousCodeFont;
@@ -188,7 +197,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> createLabel: aString description
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyTreeElement >> createNodeElement [
+GtCoderClassesTreeElement >> createNodeElement [
 	| aLabelAptitude |
 
 	aLabelAptitude := BrGlamorousLabelAptitude new.
@@ -208,7 +217,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> createNodeElement [
 ]
 
 { #category : #initialization }
-GtCoderNavigationClassesHierarchyTreeElement >> initialize [
+GtCoderClassesTreeElement >> initialize [
 	super initialize.
 
 	self rowStencil: BrGlamorousSimpleTreeSelectableRowElementStencilBuilder new.
@@ -217,7 +226,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 		nodeStencil: [ self createNodeElement ];
 		nodeDataBinder: [ :aClassElement :aClassHierarchyTree :aTreeNode | 
 			aClassElement
-				id: (GtCoderNavigationClassesHierarchyTreeElementId indexed: aTreeNode indexInTree).
+				id: (GtCoderNavigationClassesTreeElementId indexed: aTreeNode indexInTree).
 
 			aClassElement userData at: #'coder-class' put: aClassHierarchyTree rootClass.
 
@@ -237,7 +246,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initialize [
 ]
 
 { #category : #'api - initialization' }
-GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollectionOfClasses [
+GtCoderClassesTreeElement >> initializeWithClasses: aCollectionOfClasses [
 	| newTree |
 	newTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses)
 			sortByClassName.
@@ -250,7 +259,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithClasses: aCollecti
 ]
 
 { #category : #'api - initialization' }
-GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: aClass [
+GtCoderClassesTreeElement >> initializeWithHierachyForClass: aClass [
 	classesTree := (GtCoderGrowingClassesHierarchyTree
 		hierarchyForClass: aClass) sortByClassName.
 	self
@@ -260,7 +269,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> initializeWithHierachyForClass: 
 ]
 
 { #category : #'private - context menu' }
-GtCoderNavigationClassesHierarchyTreeElement >> newSubclassOf: aClass [
+GtCoderClassesTreeElement >> newSubclassOf: aClass [
 	| dropdown tabGroup |
 	tabGroup := self
 			withAllParentsDetect: [ :each | each class == BrTabGroup ]
@@ -271,7 +280,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> newSubclassOf: aClass [
 ]
 
 { #category : #'private - drag and drop' }
-GtCoderNavigationClassesHierarchyTreeElement >> onDropCompiledMethodsOnClass: anItemsDroppedEvent [
+GtCoderClassesTreeElement >> onDropCompiledMethodsOnClass: anItemsDroppedEvent [
 	| aClass aModel compositeChange|
 	
 	aClass := anItemsDroppedEvent currentTarget userData at: #'coder-class'.
@@ -305,7 +314,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> onDropCompiledMethodsOnClass: an
 ]
 
 { #category : #'private - context menu' }
-GtCoderNavigationClassesHierarchyTreeElement >> removeClass: aClass inElement: elem [
+GtCoderClassesTreeElement >> removeClass: aClass inElement: elem [
 	| change button |
 	change := RBRemoveClassChange remove: aClass.
 	button := GtPreviewChangeButton new
@@ -323,7 +332,7 @@ GtCoderNavigationClassesHierarchyTreeElement >> removeClass: aClass inElement: e
 ]
 
 { #category : #'private - context menu' }
-GtCoderNavigationClassesHierarchyTreeElement >> renameClass: aClass inElement: elem [
+GtCoderClassesTreeElement >> renameClass: aClass inElement: elem [
 	| refactoring edit childs |
 	edit := BrEditableLabel new.
 	childs := elem children.
@@ -350,14 +359,14 @@ GtCoderNavigationClassesHierarchyTreeElement >> renameClass: aClass inElement: e
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationClassesHierarchyTreeElement >> selectedClass [
+GtCoderClassesTreeElement >> selectedClass [
 	<return: #Class or: nil>
 	self selectedNodeDo: [ :aNode | ^ aNode value rootClass ].
 	^ nil
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationClassesHierarchyTreeElement >> selectedIndice [
+GtCoderClassesTreeElement >> selectedIndice [
 	"Return selected indice or zero"
 	
 	self selectedIndices
