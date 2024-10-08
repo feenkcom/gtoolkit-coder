@@ -43,7 +43,7 @@ GtCoderNavigationProtocolsGroupedList >> bindProtocol: item toElement: element [
 	| itemText |
 	
 	itemText := item name asRopedText , ' ' asRopedText
-			, (item methodSelectors size asRopedText
+			, (item allMethods size asRopedText
 					foreground: self theme button disabledTextColor).
 
 	element userData at: #protocol put: item.
