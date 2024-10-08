@@ -8,13 +8,18 @@ Class {
 }
 
 { #category : #'api - accessing' }
+GtFilteredCodersViewModel >> addOrReplaceFilter: aFilter [
+	streamingCodersModel addOrReplaceFilter: aFilter
+]
+
+{ #category : #'api - accessing' }
 GtFilteredCodersViewModel >> additionalFilters [
 	<return: #Collection of: #GtSearchFilter>
 
 	^ streamingCodersModel additionalFilters
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 GtFilteredCodersViewModel >> additionalFilters: aCollectionOfFilter [
 	"Change the additional filters of the coders model"
 

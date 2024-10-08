@@ -49,6 +49,30 @@ GtFilterStep >> assertFilterModelAtIndex: anIndex selectedValueIs: aValue [
 			equals: aValue
 ]
 
+{ #category : #'steps - checks' }
+GtFilterStep >> assertFilterModelLabeled: aLabel [
+	^ self assert
+		label: ('Assert filter model with label {1} exists' format: {aLabel});
+		referenceSender;
+		onParentStepTarget: self;
+		onChildFromBlock: [ :aFilterItemsElement | aFilterItemsElement filtersViewModel items ];
+		anySatisfy: [ :aFilterViewModel | aFilterViewModel label = aLabel ]
+			description: [ :someFilterViewModels | 
+				'Filter with label {1} is missing: {2}'
+					format: {aLabel.
+							someFilterViewModels} ]
+]
+
+{ #category : #'steps - checks' }
+GtFilterStep >> assertFilterModelsCountIs: anItemsCount [
+	^ self assert
+		label: ('Assert filter models count is {1}' format: {anItemsCount});
+		referenceSender;
+		onParentStepTarget: self;
+		value: [ :aFilterItemsElement | (aFilterItemsElement filtersViewModel items size) ]
+			equals: anItemsCount
+]
+
 { #category : #'steps - interactions' }
 GtFilterStep >> clickOnAddFilter [
 	^ self click
@@ -64,6 +88,17 @@ GtFilterStep >> clickOnDropdownFilterItemAtIndex: anIndex [
 		onSpaceRoot;
 		// BrAnchoredOuterContainer;
 		// (GtFilterItemId indexed: anIndex)
+]
+
+{ #category : #'steps - interactions' }
+GtFilterStep >> clickOnDropdownFilterItemLabeled: aLabel [
+	^ self click
+		label: ('Click on dropdown item with label {1}' format: {aLabel});
+		referenceSender;
+		onSpaceRoot;
+		// BrAnchoredOuterContainer;
+		// #scrollable;
+		onChildFromBlock: [ :anElement | anElement children detect: [ :each | each children last text asString = aLabel ] ]
 ]
 
 { #category : #'steps - interactions' }
