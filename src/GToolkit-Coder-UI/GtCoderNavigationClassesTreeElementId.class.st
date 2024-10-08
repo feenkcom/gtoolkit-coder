@@ -1,10 +1,10 @@
 Class {
-	#name : #GtCoderNavigationClassesHierarchyTreeElementId,
+	#name : #GtCoderNavigationClassesTreeElementId,
 	#superclass : #BlElementUniqueId,
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #accessing }
-GtCoderNavigationClassesHierarchyTreeElementId >> asSymbol [
+GtCoderNavigationClassesTreeElementId >> asSymbol [
 	^ #'coder-sidebar--classes-hierarchy-tree-item'
 ]
