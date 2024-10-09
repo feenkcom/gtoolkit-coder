@@ -87,7 +87,8 @@ GtFilterItemsModel >> onFilterModelAnnouncement: anAnnouncement [
 { #category : #'add / remove' }
 GtFilterItemsModel >> removeFilterModel: aFilterModel [
 	self unsubscribeFromItem: aFilterModel.
-	self items: (self items copyWithout: aFilterModel)
+	
+	self items: (self items reject: [ :each | each == aFilterModel ])
 ]
 
 { #category : #private }
