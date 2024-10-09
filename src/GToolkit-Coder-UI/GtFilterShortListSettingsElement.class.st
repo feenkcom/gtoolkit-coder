@@ -119,6 +119,8 @@ GtFilterShortListSettingsElement >> newItemElement [
 		aptitude: BrGlamorousButtonRectangularAptitude;
 		addAptitude: BrGlamorousButtonIconAptitude;
 		addAptitude: BrGlamorousButtonLabelAptitude;
+		hMatchParent;
+		alignCenterLeft;
 		label: 'item';
 		action: [ :aButton | self onItemClick: aButton ]
 ]
@@ -132,9 +134,12 @@ GtFilterShortListSettingsElement >> onFilterViewModelChanged [
 { #category : #'event handling' }
 GtFilterShortListSettingsElement >> onItemClick: aButton [
 	self hasFilterViewModel ifFalse: [ ^ self ].
-	aButton fireEvent: BrDropdownHideWish new.
-
-	self filterViewModel selectedItem: aButton model
+	BlTaskAction
+		enqueueElement: self
+		action: [ aButton fireEvent: BrDropdownHideWish new ].
+	BlTaskAction
+		enqueueElement: self
+		action: [ self filterViewModel selectedItem: aButton model ]
 ]
 
 { #category : #'event handling' }

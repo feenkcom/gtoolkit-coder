@@ -14,6 +14,9 @@ Class {
 
 { #category : #comparing }
 GtFilterModel >> = anObject [
+	"I compare similarity of two filter models.
+	I must not compare selected items. For such cases, use #equals:."
+	
 	self == anObject ifTrue: [ ^ true ].
 
 	^ self class = anObject class
@@ -63,6 +66,13 @@ GtFilterModel >> defaultFilterLabel [
 { #category : #initialization }
 GtFilterModel >> defaultFilterOrder [
 	^ 50
+]
+
+{ #category : #comparing }
+GtFilterModel >> equals: anObject [
+	self = anObject ifFalse: [ ^ false ].
+
+	^ self selectedValue = anObject selectedValue
 ]
 
 { #category : #accessing }
@@ -131,7 +141,7 @@ GtFilterModel >> printDetailsOn: aStream [
 	aStream
 		nextPutAll: self label asString;
 		nextPutAll: ': ';
-		print: (self selectedValue ifNotNil: #itemValue);
+		print: (self selectedValue ifNotNil: [ :aValue | aValue asFilterModelItem itemValue ]);
 		nextPutAll: ', order: ';
 		print: self order
 ]
