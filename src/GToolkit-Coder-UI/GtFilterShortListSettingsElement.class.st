@@ -136,7 +136,9 @@ GtFilterShortListSettingsElement >> newItemElement [
 		hMatchParent;
 		alignCenterLeft;
 		label: 'item';
-		action: [ :aButton | self onItemClick: aButton ]
+		action: [ :aButton | self onItemClick: aButton ];
+		when: BlMouseEnterEvent
+			do: [ :anEvent | self onItemMouseEnterEvent: anEvent ]
 ]
 
 { #category : #'api - filter view model' }
@@ -154,6 +156,21 @@ GtFilterShortListSettingsElement >> onItemClick: aButton [
 	BlTaskAction
 		enqueueElement: self
 		action: [ self filterViewModel selectedItem: aButton model ]
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onItemMouseEnterEvent: anEvent [
+	"Select the hovered item"
+
+	| aButton aFilterItem |
+	aButton := anEvent currentTarget.
+	aFilterItem := aButton model.
+	aFilterItem ifNil: [ ^ self ].
+	self
+		listElementDo: [ :aListElement | 
+			aListElement
+				itemSuchThat: [ :eachItem | eachItem == aFilterItem ]
+				do: [ :anIndex | aListElement selectOne: anIndex ] ]
 ]
 
 { #category : #'event handling' }
