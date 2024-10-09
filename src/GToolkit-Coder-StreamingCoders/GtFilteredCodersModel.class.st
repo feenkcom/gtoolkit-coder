@@ -44,20 +44,15 @@ GtFilteredCodersModel >> additionalFilters [
 
 { #category : #'api - accessing' }
 GtFilteredCodersModel >> additionalFilters: aCollectionOfFilters [
-	| aSignal aNewCollection |
+	| aNewCollection |
 	aNewCollection := aCollectionOfFilters asArray.
 	additionalFilters = aNewCollection ifTrue: [ ^ self ].
-	aSignal := GtFilteredCodersModelAdditionalFiltersSignal new
-		incomingAdditionalFilters: aCollectionOfFilters;
-		existingAdditionalFilters: additionalFilters;
-		emit.
 	monitor critical: [ 
 		additionalFilters := aNewCollection.
 		compositeFilter := self
 			createCombinedFilterFor: filter
 			andAdditionalFilters: additionalFilters.
 		self refreshItemsStreamDueTo: GtFilteredCodersAdditionalFiltersReason new ].
-	aSignal usedAdditionalFilters: additionalFilters.
 ]
 
 { #category : #'api - accessing' }
