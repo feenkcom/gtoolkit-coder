@@ -78,11 +78,13 @@ GtFilterItemsElement >> addRemoveButtonIconTo: anElement [
 
 { #category : #'private - updating' }
 GtFilterItemsElement >> createDropdownContent [
-	^ BrSimpleList new
+	| aListElement |
+	aListElement := BrSimpleList new.
+	^ aListElement
 		vFitContentLimited;
 		hFitContentLimited;
-		constraintsDo: [ :c | c maxHeight: 200 ];
-		itemStencil: [ self createItemElement ];
+		constraintsDo: [ :c | c maxHeight: 100 ];
+		itemStencil: [ :anItemType | self createItemElementForListElement: aListElement ];
 		itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
 			anItemElement id: (GtFilterItemId indexed: anItemIndex).
 			anItemElement userData at: GtFilterModel put: anItemObject.
@@ -95,32 +97,47 @@ GtFilterItemsElement >> createDropdownContent [
 			anItemElement ];
 		items: (self hasFiltersViewModel
 				ifTrue: [ self filtersViewModel availableFilters ]
-				ifFalse: [ #() ])
+				ifFalse: [ #() ]);
+		when: BlElementAddedToSceneGraphEvent
+			do: [ :anEvent | self onListElementAddedToSceneGraph: anEvent ];
+		addShortcut: (BlShortcutWithAction new
+				name: 'Add selected filter';
+				description: 'Add selected filter';
+				combination: BlKeyCombination builder enter build;
+				action: [ :aShortcutEvent :aShortcut | self onAddSelectedItemEvent: aShortcutEvent ])
 ]
 
 { #category : #'private - updating' }
-GtFilterItemsElement >> createItemElement [
+GtFilterItemsElement >> createItemElementForListElement: aListElement [
+	self
+		assert: [ aListElement isNotNil ]
+		description: [ 'List element must be non-nil' ].
+		
 	^ BrHorizontalPane new
 		hMatchParent;
 		vFitContent;
 		padding: (BlInsets all: 5);
 		addAptitude: (BrStyleCommonAptitude new
 				default: [ :s | s background: Color transparent ];
-				hovered: [ :s | s background: self theme button defaultBorderColor ]);
-		when: BlClickEvent
-			do: [ :anEvent | 
-				| aModel |
-				anEvent consumed: true.
-				anEvent currentTarget fireEvent: BrDropdownHideWish new.
-				aModel := anEvent currentTarget userData at: GtFilterModel ifAbsent: [ nil ].
-				self requestAddFilterModel: aModel ];
+				hovered: [ :s | s background: self theme button defaultBorderColor ];
+				selected: [ :s | s background: self theme button defaultBorderColor ]);
 		addChild: (BrLabel new
-				aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize)
+				aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize);
+		when: BlClickEvent do: [ :anEvent | self onItemMouseClickEvent: anEvent ];
+		when: BlMouseEnterEvent
+			do: [ :anEvent | self onItemMouseEnterEvent: anEvent listElement: aListElement ]
 ]
 
 { #category : #initialization }
 GtFilterItemsElement >> defaultLayout [
 	^ BlFlowLayout horizontal
+]
+
+{ #category : #'event handling' }
+GtFilterItemsElement >> focusFirstItemElementInList: aListElement [
+	aListElement requestFocus.
+	aListElement selectFirst.
+	aListElement scrollToSelection
 ]
 
 { #category : #initialization }
@@ -193,14 +210,55 @@ GtFilterItemsElement >> newRemoveButton [
 			c ignored vertical alignCenterAt: 0.0 ]
 ]
 
+{ #category : #'event handling' }
+GtFilterItemsElement >> onAddSelectedItemEvent: aShortcutEvent [
+	| anElementList |
+	anElementList := aShortcutEvent currentTarget.
+	anElementList
+		selectedItemDo: [ :aFilterModel :anIndex | 
+			BlTaskAction
+				enqueueElement: self
+				action: [ anElementList fireEvent: BrDropdownHideWish new ].
+			BlTaskAction
+				enqueueElement: self
+				action: [ self requestAddFilterModel: aFilterModel ] ] 
+]
+
 { #category : #'api - filter view model' }
 GtFilterItemsElement >> onFiltersViewModelChanged [
 	self updateItemsElement
 ]
 
 { #category : #'event handling' }
+GtFilterItemsElement >> onItemMouseClickEvent: anEvent [
+	| aModel |
+	anEvent consumed: true.
+	anEvent currentTarget fireEvent: BrDropdownHideWish new.
+	aModel := anEvent currentTarget userData at: GtFilterModel ifAbsent: [ nil ].
+	self requestAddFilterModel: aModel
+]
+
+{ #category : #'event handling' }
+GtFilterItemsElement >> onItemMouseEnterEvent: anEvent listElement: aListElement [
+	"Select the hovered item"
+
+	| anItemElement aFilter |
+	anItemElement := anEvent currentTarget.
+	aFilter := anItemElement userData at: GtFilterModel ifAbsent: [ nil ].
+	aFilter ifNil: [ ^ self ].
+	aListElement
+		itemSuchThat: [ :eachItem | eachItem == aFilter ]
+		do: [ :anIndex | aListElement selectOne: anIndex ]
+]
+
+{ #category : #'event handling' }
 GtFilterItemsElement >> onItemsChanged: anAnnouncement [
 	BlTaskAction enqueueElement: self action: [ self updateItemsElement ]
+]
+
+{ #category : #'event handling' }
+GtFilterItemsElement >> onListElementAddedToSceneGraph: anEvent [
+	self focusFirstItemElementInList: anEvent currentTarget
 ]
 
 { #category : #'private - updating' }

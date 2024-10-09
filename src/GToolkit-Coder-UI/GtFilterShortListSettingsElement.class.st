@@ -58,7 +58,7 @@ GtFilterShortListSettingsElement >> initializeDropdownAptitude [
 	buttonAptitude beNotResizable.
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 GtFilterShortListSettingsElement >> listElementDo: aBlock [
 	(listElement at: 1) ifNotNil: aBlock
 ]
@@ -101,7 +101,7 @@ GtFilterShortListSettingsElement >> newContentElement [
 					name: 'Pick selected filter item';
 					description: 'Pick selected item as the filter selected item';
 					combination: BlKeyCombination builder enter build;
-					action: [ :aShortcutEvent :aShortcut | self pickSelectedItem: aShortcutEvent ]).
+					action: [ :aShortcutEvent :aShortcut | self onPickSelectedItemEvent: aShortcutEvent ]).
 
 	self updateListElement: aListElement.
 	listElement at: 1 put: aListElement.
@@ -180,18 +180,11 @@ GtFilterShortListSettingsElement >> onItemsChanged: anAnnouncement [
 
 { #category : #'event handling' }
 GtFilterShortListSettingsElement >> onListElementAddedToSceneGraph: anEvent [
-	BlTaskAction
-		enqueueElement: anEvent currentTarget
-		action: [ self focusFirstItemElementInList: anEvent currentTarget ]
+	self focusFirstItemElementInList: anEvent currentTarget
 ]
 
 { #category : #'event handling' }
-GtFilterShortListSettingsElement >> onSelectedItemChanged: anAnnouncement [
-	BlTaskAction enqueueElement: self action: [ self updateElement ]
-]
-
-{ #category : #'event handling' }
-GtFilterShortListSettingsElement >> pickSelectedItem: aShortcutEvent [
+GtFilterShortListSettingsElement >> onPickSelectedItemEvent: aShortcutEvent [
 	| anElementList |
 	anElementList := aShortcutEvent currentTarget.
 	anElementList
@@ -202,6 +195,11 @@ GtFilterShortListSettingsElement >> pickSelectedItem: aShortcutEvent [
 			BlTaskAction
 				enqueueElement: self
 				action: [ self filterViewModel selectedItem: anItem ] ]
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onSelectedItemChanged: anAnnouncement [
+	BlTaskAction enqueueElement: self action: [ self updateElement ]
 ]
 
 { #category : #'api - filter view model' }
