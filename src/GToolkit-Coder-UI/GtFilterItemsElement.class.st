@@ -20,7 +20,20 @@ GtFilterItemsElement >> addElementForFilterViewModel: aFilterViewModel index: an
 	self addNavigationShortcutsTo: anElement.
 	self addRemoveButtonIconTo: anElement.
 
-	self addChild: anElement
+	self addChild: anElement at: anIndex.
+	
+	^ anElement
+]
+
+{ #category : #'private - updating' }
+GtFilterItemsElement >> addItemElementForViewModel: aFilterViewModel [
+	| anIndex anElement |
+	anIndex := self filtersViewModel items
+			detectIndex: [ :each | each == aFilterViewModel ]
+			ifNone: [ ^ self ].
+
+	anElement := self addElementForFilterViewModel: aFilterViewModel index: anIndex.
+	anElement requestFocus
 ]
 
 { #category : #'private - updating' }
@@ -230,6 +243,13 @@ GtFilterItemsElement >> onFiltersViewModelChanged [
 ]
 
 { #category : #'event handling' }
+GtFilterItemsElement >> onItemAdded: anAnnouncement [
+	BlTaskAction
+		enqueueElement: self
+		action: [ self addItemElementForViewModel: anAnnouncement item ]
+]
+
+{ #category : #'event handling' }
 GtFilterItemsElement >> onItemMouseClickEvent: anEvent [
 	| aModel |
 	anEvent consumed: true.
@@ -249,6 +269,13 @@ GtFilterItemsElement >> onItemMouseEnterEvent: anEvent listElement: aListElement
 	aListElement
 		itemSuchThat: [ :eachItem | eachItem == aFilter ]
 		do: [ :anIndex | aListElement selectOne: anIndex ]
+]
+
+{ #category : #'event handling' }
+GtFilterItemsElement >> onItemRemoved: anAnnouncement [
+	BlTaskAction
+		enqueueElement: self
+		action: [ self removeItemElementForViewModel: anAnnouncement item ]
 ]
 
 { #category : #'event handling' }
@@ -277,6 +304,28 @@ GtFilterItemsElement >> onRemoveFilterViewModelWish: anEvent [
 	self filtersViewModel removeFilterViewModel: anEvent filterViewModel
 ]
 
+{ #category : #'private - updating' }
+GtFilterItemsElement >> removeItemElementForViewModel: aFilterViewModel [
+	| aChildToFocus |
+	aChildToFocus := nil.
+	self
+		childrenDo: [ :aChild | 
+			((aChild id = GtFiltersAddButtonId uniqueInstance) not
+				and: [ aChild filterViewModel == aFilterViewModel ])
+				ifTrue: [ | isChildFocused |
+					isChildFocused := aChild isFocused.
+					aChild removeFromParent.
+					isChildFocused
+						ifTrue: [ aChildToFocus
+								ifNotNil: [ aChildToFocus requestFocus ]
+								ifNil: [ self
+										childrenDo: [ :anotherChild | 
+											anotherChild requestFocus.
+											^ self ] ] ].
+					^ self ].
+			aChildToFocus := aChild ]
+]
+
 { #category : #'event handling' }
 GtFilterItemsElement >> requestAddFilterModel: aFilterModel [
 	aFilterModel ifNil: [ ^ self ].
@@ -289,8 +338,14 @@ GtFilterItemsElement >> requestAddFilterModel: aFilterModel [
 GtFilterItemsElement >> subscribeToFiltersViewModel [
 	self filtersViewModel weak
 		when: GtFiltersViewModelItemsChanged
-		send: #onItemsChanged:
-		to: self
+			send: #onItemsChanged:
+			to: self;
+		when: GtFiltersViewModelItemAdded
+			send: #onItemAdded:
+			to: self;
+		when: GtFiltersViewModelItemRemoved
+			send: #onItemRemoved:
+			to: self
 ]
 
 { #category : #'api - filter view model' }
@@ -300,6 +355,14 @@ GtFilterItemsElement >> unsubscribeFromFiltersViewModel [
 
 { #category : #'private - updating' }
 GtFilterItemsElement >> updateItemsElement [
+	self removeChildren.
+	self filtersViewModel items withIndexDo: [ :eachFilterViewModel :anIndex | 
+		self addElementForFilterViewModel: eachFilterViewModel index: anIndex ].
+	self addNewFilterElement
+]
+
+{ #category : #'private - updating' }
+GtFilterItemsElement >> updateItemsElementDueTo: aReason [
 	self removeChildren.
 	self filtersViewModel items withIndexDo: [ :eachFilterViewModel :anIndex | 
 		self addElementForFilterViewModel: eachFilterViewModel index: anIndex ].
