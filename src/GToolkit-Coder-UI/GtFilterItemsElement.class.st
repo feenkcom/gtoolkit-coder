@@ -81,32 +81,41 @@ GtFilterItemsElement >> createDropdownContent [
 	^ BrSimpleList new
 		vFitContentLimited;
 		hFitContentLimited;
-		constraintsDo: [ :c | 
-			c maxHeight: 200 ];
-		stencil: [ :eachFilterModel :eachIndex | 
-			BrHorizontalPane new
-				id: (GtFilterItemId indexed: eachIndex);
-				hMatchParent;
-				vFitContent;
-				padding: (BlInsets all: 5);
-				addAptitude: (BrStyleCommonAptitude new
-					default: [ :s | s background: Color transparent ];
-					hovered: [ :s | s background: self theme button defaultBorderColor ];
-					yourself);
-				when: BlClickEvent
-					do: [ :anEvent |
-						anEvent consumed: true.
-						anEvent currentTarget fireEvent: BrDropdownHideWish new.
-						self requestAddFilterModel: eachFilterModel ];
-				addChild: (BrLabel new
-					aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize;
-					text: eachFilterModel label;
-					yourself);
-				yourself ];
-		items: (self hasFiltersViewModel 
-			ifTrue: [ self filtersViewModel availableFilters ] 
-			ifFalse: [ #() ]);
-		yourself
+		constraintsDo: [ :c | c maxHeight: 200 ];
+		itemStencil: [ self createItemElement ];
+		itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
+			anItemElement id: (GtFilterItemId indexed: anItemIndex).
+			anItemElement userData at: GtFilterModel put: anItemObject.
+			(anItemElement childAt: 1) text: anItemObject label.
+			anItemElement ];
+		itemDataUnbinder: [ :anItemElement :anItemObject :anItemIndex | 
+			anItemElement id: nil.
+			anItemElement userData removeKey: GtFilterModel ifAbsent: [ "ignore" ].
+			(anItemElement childAt: 1) text: ''.
+			anItemElement ];
+		items: (self hasFiltersViewModel
+				ifTrue: [ self filtersViewModel availableFilters ]
+				ifFalse: [ #() ])
+]
+
+{ #category : #'private - updating' }
+GtFilterItemsElement >> createItemElement [
+	^ BrHorizontalPane new
+		hMatchParent;
+		vFitContent;
+		padding: (BlInsets all: 5);
+		addAptitude: (BrStyleCommonAptitude new
+				default: [ :s | s background: Color transparent ];
+				hovered: [ :s | s background: self theme button defaultBorderColor ]);
+		when: BlClickEvent
+			do: [ :anEvent | 
+				| aModel |
+				anEvent consumed: true.
+				anEvent currentTarget fireEvent: BrDropdownHideWish new.
+				aModel := anEvent currentTarget userData at: GtFilterModel ifAbsent: [ nil ].
+				self requestAddFilterModel: aModel ];
+		addChild: (BrLabel new
+				aptitude: BrGlamorousLabelAptitude new glamorousRegularFont glamorousCodeSmallSize)
 ]
 
 { #category : #initialization }
@@ -149,7 +158,8 @@ GtFilterItemsElement >> newAddFilterButton [
 				aStyle border: (BlBorder paint: self theme editor focusedBorderColor width: 1) ]);
 		addAptitude: (BrGlamorousWithDropdownAptitude
 			handle: [ self newAddFilterHandleElement ]
-			content: [ self createDropdownContent ]);
+			content: [ self createDropdownContent ])
+				beNotResizable;
 		margin: (BlInsets left: 2);
 		constraintsDo: [ :c | c flow vertical alignCenter ];
 		beFocusable;
@@ -211,6 +221,7 @@ GtFilterItemsElement >> onRemoveFilterViewModelWish: anEvent [
 
 { #category : #'event handling' }
 GtFilterItemsElement >> requestAddFilterModel: aFilterModel [
+	aFilterModel ifNil: [ ^ self ].
 	self hasFiltersViewModel ifFalse: [ ^ self ].
 
 	self filtersViewModel addFilterModel: aFilterModel

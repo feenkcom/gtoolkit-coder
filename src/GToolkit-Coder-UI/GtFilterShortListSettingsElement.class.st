@@ -20,6 +20,13 @@ GtFilterShortListSettingsElement >> defaultItemLabel [
 	^ ''
 ]
 
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> focusFirstItemElementInList: aListElement [
+	aListElement requestFocus.
+	aListElement selectFirst.
+	aListElement scrollToSelection
+]
+
 { #category : #initialization }
 GtFilterShortListSettingsElement >> handleElementDo: aBlock [
 	(handleElement at: 1) ifNotNil: aBlock
@@ -87,7 +94,14 @@ GtFilterShortListSettingsElement >> newContentElement [
 					label: self defaultItemLabel;
 					icon: self defaultItemIcon;
 					id: nil;
-					model: nil ].
+					model: nil ];
+			when: BlElementAddedToSceneGraphEvent
+				do: [ :anEvent | self onListElementAddedToSceneGraph: anEvent ];
+			addShortcut: (BlShortcutWithAction new
+					name: 'Pick selected filter item';
+					description: 'Pick selected item as the filter selected item';
+					combination: BlKeyCombination builder enter build;
+					action: [ :aShortcutEvent :aShortcut | self pickSelectedItem: aShortcutEvent ]).
 
 	self updateListElement: aListElement.
 	listElement at: 1 put: aListElement.
@@ -148,8 +162,29 @@ GtFilterShortListSettingsElement >> onItemsChanged: anAnnouncement [
 ]
 
 { #category : #'event handling' }
+GtFilterShortListSettingsElement >> onListElementAddedToSceneGraph: anEvent [
+	BlTaskAction
+		enqueueElement: anEvent currentTarget
+		action: [ self focusFirstItemElementInList: anEvent currentTarget ]
+]
+
+{ #category : #'event handling' }
 GtFilterShortListSettingsElement >> onSelectedItemChanged: anAnnouncement [
 	BlTaskAction enqueueElement: self action: [ self updateElement ]
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> pickSelectedItem: aShortcutEvent [
+	| anElementList |
+	anElementList := aShortcutEvent currentTarget.
+	anElementList
+		selectedItemDo: [ :anItem :anIndex | 
+			BlTaskAction
+				enqueueElement: self
+				action: [ anElementList fireEvent: BrDropdownHideWish new ].
+			BlTaskAction
+				enqueueElement: self
+				action: [ self filterViewModel selectedItem: anItem ] ]
 ]
 
 { #category : #'api - filter view model' }
