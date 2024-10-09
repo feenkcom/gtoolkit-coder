@@ -9,7 +9,22 @@ Class {
 
 { #category : #'add / remove' }
 GtFilterItemsModel >> addFilterModel: aFilterModel [
-	self items: (self items copyWith: aFilterModel)
+	| aCollection |
+	self
+		assert: [ (self items identityIncludes: aFilterModel) not ]
+		description: [ 'Filter model can be added only once: {1}' format: {aFilterModel} ].
+	
+	aCollection := (self items copyWith: aFilterModel).
+	
+	GtFilterItemsChangedSignal new
+		incomingItems: aCollection;
+		previousItems: items;
+		emit.
+		
+	items := aCollection.
+	self subscribeToItem: aFilterModel.
+	self notifyItemAdded: aFilterModel.
+	self notifyFiltersUpdated.
 ]
 
 { #category : #accessing }
@@ -69,6 +84,22 @@ GtFilterItemsModel >> notifyFiltersUpdated [
 ]
 
 { #category : #'private - notifying' }
+GtFilterItemsModel >> notifyItemAdded: aFilterModel [
+	self
+		announce: (GtFiltersModelItemAdded new
+				model: self;
+				item: aFilterModel)
+]
+
+{ #category : #'private - notifying' }
+GtFilterItemsModel >> notifyItemRemoved: aFilterModel [
+	self
+		announce: (GtFiltersModelItemRemoved new
+				model: self;
+				item: aFilterModel)
+]
+
+{ #category : #'private - notifying' }
 GtFilterItemsModel >> notifyItemsChanged [
 	self
 		announce: (GtFiltersModelItemsChanged new
@@ -86,9 +117,23 @@ GtFilterItemsModel >> onFilterModelAnnouncement: anAnnouncement [
 
 { #category : #'add / remove' }
 GtFilterItemsModel >> removeFilterModel: aFilterModel [
-	self unsubscribeFromItem: aFilterModel.
+	| aCollection |
+	self
+		assert: [ self items identityIncludes: aFilterModel ]
+		description: [ 'Filter model is missing and therefore cannot be removed: {1}'
+				format: {aFilterModel} ].
+
+	aCollection := self items reject: [ :each | each == aFilterModel ].
 	
-	self items: (self items reject: [ :each | each == aFilterModel ])
+	GtFilterItemsChangedSignal new
+		incomingItems: aCollection;
+		previousItems: items;
+		emit.
+		
+	self unsubscribeFromItem: aFilterModel.
+	items := aCollection.
+	self notifyItemRemoved: aFilterModel.
+	self notifyFiltersUpdated.
 ]
 
 { #category : #private }
