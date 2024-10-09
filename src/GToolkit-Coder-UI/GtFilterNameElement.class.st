@@ -41,7 +41,6 @@ GtFilterNameElement >> initialize [
 { #category : #initialization }
 GtFilterNameElement >> initializeEventHandlers [
 	self when: BlClickEvent do: [ :anEvent | self onClickEvent: anEvent ].
-	self when: GtFilterRemoveWish do: [ :anEvent | self requestRemoveFilter ].
 ]
 
 { #category : #initialization }
@@ -66,10 +65,7 @@ GtFilterNameElement >> initializeSettingsContainer [
 
 { #category : #initialization }
 GtFilterNameElement >> initializeShortcuts [
-	self
-		addShortcut: (BlShortcutWithAction new
-				combination: (BlKeyCombination backspace or: BlKeyCombination delete);
-				action: [ self requestRemoveFilter ])
+	
 ]
 
 { #category : #initialization }
@@ -108,13 +104,6 @@ GtFilterNameElement >> onLabelChanged: anAnnouncement [
 { #category : #'private - updating' }
 GtFilterNameElement >> removeSettingsElement [
 	settingsContainer removeChildren
-]
-
-{ #category : #'event handling' }
-GtFilterNameElement >> requestRemoveFilter [
-	self hasFilterViewModel ifFalse: [ ^ self ].
-	self fireEvent: (GtFilterRemoveFilterViewModelWish new 
-		filterViewModel: self filterViewModel)
 ]
 
 { #category : #'api - filter view model' }

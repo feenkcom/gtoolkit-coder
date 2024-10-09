@@ -37,19 +37,19 @@ GtFilterItemsElement >> addItemElementForViewModel: aFilterViewModel [
 ]
 
 { #category : #'private - updating' }
-GtFilterItemsElement >> addNavigationShortcutsTo: anElement [ 
-	anElement 
+GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
+	anElement
 		addShortcut: (BlShortcutWithAction new
-			name: 'Move to next filter';
-			description: 'Moves to the next filter. If none is found, we cycle back to the first.';
-			combination: (BlKeyCombination tab or: BlKeyCombination arrowRight);
-			overrideChildren: false;
-			action: [ :anEvent | 
-				BlFocusFinder new
-					direction: BlFocusSearchDirectionForward new;
-					root: self;
-					referenceElement: anEvent currentTarget;
-					nextFocusDo: #requestFocus ifNone: [  ] ]);
+				name: 'Move to next filter';
+				description: 'Moves to the next filter. If none is found, we cycle back to the first.';
+				combination: (BlKeyCombination tab or: BlKeyCombination arrowRight);
+				overrideChildren: false;
+				action: [ :anEvent | 
+					BlFocusFinder new
+						direction: BlFocusSearchDirectionForward new;
+						root: self;
+						referenceElement: anEvent currentTarget;
+						nextFocusDo: #requestFocus ifNone: [  ] ]);
 		addShortcut: (BlShortcutWithAction new
 				name: 'Move to previous form item';
 				description: 'Moves to the previous filter. If none is found, we cycle back to the last.';
@@ -60,7 +60,15 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 						direction: BlFocusSearchDirectionBackward new;
 						root: self;
 						referenceElement: anEvent currentTarget;
-						nextFocusDo: #requestFocus ifNone: [  ] ]).
+						nextFocusDo: #requestFocus ifNone: [  ] ]);
+		addShortcut: (BlShortcutWithAction new
+				name: 'Remove filter';
+				combination: (BlKeyCombination backspace or: BlKeyCombination delete);
+				overrideChildren: false;
+				action: [ :anEvent | 
+					self
+						onRemoveFilterViewModelOfElement: anEvent currentTarget
+						from: anEvent currentTarget ])
 ]
 
 { #category : #'private - updating' }
@@ -165,9 +173,7 @@ GtFilterItemsElement >> initialize [
 
 { #category : #initialization }
 GtFilterItemsElement >> initializeEventHandlers [
-	self
-		when: GtFilterRemoveFilterViewModelWish
-		do: [ :anEvent | self onRemoveFilterViewModelWish: anEvent ]
+	
 ]
 
 { #category : #'private - updating' }
