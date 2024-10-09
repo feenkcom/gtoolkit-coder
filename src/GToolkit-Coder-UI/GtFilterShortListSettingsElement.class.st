@@ -119,6 +119,8 @@ GtFilterShortListSettingsElement >> newItemElement [
 		aptitude: BrGlamorousButtonRectangularAptitude;
 		addAptitude: BrGlamorousButtonIconAptitude;
 		addAptitude: BrGlamorousButtonLabelAptitude;
+		hMatchParent;
+		alignCenterLeft;
 		label: 'item';
 		action: [ :aButton | self onItemClick: aButton ]
 ]

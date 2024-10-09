@@ -119,7 +119,7 @@ GtFilterItemsElement >> initialize [
 	super initialize.
 	self hFitContentLimited.
 	self vFitContent.
-	self padding: (BlInsets all: 2).
+	self padding: (BlInsets  top: 5 right: 2 bottom: 2 left: 1).
 	self clipChildren: false.
 	self initializeEventHandlers.
 ]
