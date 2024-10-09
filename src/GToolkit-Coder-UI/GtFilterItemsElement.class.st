@@ -68,7 +68,12 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 				action: [ :anEvent | 
 					self
 						onRemoveFilterViewModelOfElement: anEvent currentTarget
-						from: anEvent currentTarget ])
+						from: anEvent currentTarget ]);
+		addShortcut: (BlShortcutWithAction new
+				name: 'Edit filter';
+				combination: (BlKeyCombination space or: BlKeyCombination enter);
+				overrideChildren: false;
+				action: [ :anEvent | self onEditItemsEvent: anEvent ])
 ]
 
 { #category : #'private - updating' }
@@ -241,6 +246,11 @@ GtFilterItemsElement >> onAddSelectedItemEvent: aShortcutEvent [
 			BlTaskAction
 				enqueueElement: self
 				action: [ self requestAddFilterModel: aFilterModel ] ] 
+]
+
+{ #category : #'event handling' }
+GtFilterItemsElement >> onEditItemsEvent: anEvent [ 
+	anEvent currentTarget dispatchEvent: GtFilterEditWish new
 ]
 
 { #category : #'api - filter view model' }
