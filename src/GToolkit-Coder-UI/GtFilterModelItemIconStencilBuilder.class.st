@@ -9,7 +9,12 @@ Class {
 
 { #category : #'api - instantiation' }
 GtFilterModelItemIconStencilBuilder >> buildDefault [
-	^ nil
+	<return: #BlElement or: nil>
+	| anIconName |
+	anIconName := self object gtIconName.
+	(anIconName isNil or: [ anIconName = Object gtIconName ]) ifTrue: [ ^ nil ].
+
+	^ (self object gtSafeIconNamed: anIconName) ifNotNil: #asElement
 ]
 
 { #category : #accessing }

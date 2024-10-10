@@ -24,7 +24,7 @@ GtFilterModelObjectItem >> itemValue [
 { #category : #accessing }
 GtFilterModelObjectItem >> label [
 	<return: #String>
-	^ self object asString
+	^ self object gtDisplayString
 ]
 
 { #category : #accessing }

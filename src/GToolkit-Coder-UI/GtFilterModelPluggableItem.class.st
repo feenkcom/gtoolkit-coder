@@ -108,3 +108,13 @@ GtFilterModelPluggableItem >> object [
 GtFilterModelPluggableItem >> object: anObject [
 	object := anObject
 ]
+
+{ #category : #printing }
+GtFilterModelPluggableItem >> printOn: aStream [
+	super printOn: aStream.
+
+	aStream
+		nextPut: $(;
+		print: self object;
+		nextPut: $)
+]
