@@ -109,6 +109,7 @@ GtFilterShortListSettingsElement >> newContentElement [
 			fitContentLimited;
 			itemStencil: [ :anItemType :aListWidget | self newItemElement ];
 			itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
+				anItemElement disabled: anItemObject isVirtualFilterModelItem.
 				anItemElement
 					label: (anItemObject label ifNil: [ self defaultItemLabel ]);
 					icon: (anItemObject icon ifNil: [ self defaultItemIcon ]);
@@ -192,12 +193,7 @@ GtFilterShortListSettingsElement >> onFilterViewModelChanged [
 { #category : #'event handling' }
 GtFilterShortListSettingsElement >> onItemClick: aButton [
 	self hasFilterViewModel ifFalse: [ ^ self ].
-	BlTaskAction
-		enqueueElement: self
-		action: [ aButton fireEvent: BrDropdownHideWish new ].
-	BlTaskAction
-		enqueueElement: self
-		action: [ self filterViewModel selectedItem: aButton model ]
+	self updateSelectedItem: aButton model from: aButton.
 ]
 
 { #category : #'event handling' }
@@ -229,14 +225,8 @@ GtFilterShortListSettingsElement >> onListElementAddedToSceneGraph: anEvent [
 GtFilterShortListSettingsElement >> onPickSelectedItemEvent: aShortcutEvent [
 	| anElementList |
 	anElementList := aShortcutEvent currentTarget.
-	anElementList
-		selectedItemDo: [ :anItem :anIndex | 
-			BlTaskAction
-				enqueueElement: self
-				action: [ anElementList fireEvent: BrDropdownHideWish new ].
-			BlTaskAction
-				enqueueElement: self
-				action: [ self filterViewModel selectedItem: anItem ] ]
+	anElementList selectedItemDo: [ :anItem :anIndex | 
+		self updateSelectedItem: anItem from: anElementList ]
 ]
 
 { #category : #'event handling' }
@@ -309,7 +299,23 @@ GtFilterShortListSettingsElement >> updateListElement [
 
 { #category : #'private - updating' }
 GtFilterShortListSettingsElement >> updateListElement: anElement [
+	| aCollection |
 	self hasFilterViewModel ifFalse: [ ^ self ].
+	aCollection := self filterViewModel itemsWithoutSelection.
+	aCollection
+		ifEmpty: [ anElement items: {GtFilterModelEmptyItem default} ]
+		ifNotEmpty: [ anElement items: aCollection ]
+]
 
-	anElement items: self filterViewModel itemsWithoutSelection
+{ #category : #'private - updating' }
+GtFilterShortListSettingsElement >> updateSelectedItem: aFilterModelItem from: anElement [
+	aFilterModelItem ifNil: [ ^ self ].
+	aFilterModelItem isVirtualFilterModelItem ifTrue: [ ^ self ].
+	self hasFilterViewModel ifFalse: [ ^ self ].
+	BlTaskAction
+		enqueueElement: self
+		action: [ anElement fireEvent: BrDropdownHideWish new ].
+	BlTaskAction
+		enqueueElement: self
+		action: [ self filterViewModel selectedItem: aFilterModelItem ]
 ]
