@@ -41,6 +41,8 @@ GtFilterNameElement >> initialize [
 { #category : #initialization }
 GtFilterNameElement >> initializeEventHandlers [
 	self when: BlClickEvent do: [ :anEvent | self onClickEvent: anEvent ].
+	self when: GtFilterEditWish do: [ :anEvent | self onEditWish: anEvent ].
+	self when: GtFilterFocusWish do: [ :anEvent | self onFocusWish: anEvent ]
 ]
 
 { #category : #initialization }
@@ -91,9 +93,23 @@ GtFilterNameElement >> onClickEvent: anEvent [
 	self requestFocus
 ]
 
+{ #category : #'event handling' }
+GtFilterNameElement >> onEditWish: anEvent [
+	settingsContainer
+		childWithId: GtFilterSettingsId
+		ifFound: [ :anElement | anElement dispatchEvent: GtFilterEditWish new ]
+		ifNone: [  ]
+]
+
 { #category : #'api - filter view model' }
 GtFilterNameElement >> onFilterViewModelChanged [
 	self updateElement
+]
+
+{ #category : #'event handling' }
+GtFilterNameElement >> onFocusWish: anEvent [
+	anEvent consumed: true.
+	self requestFocus
 ]
 
 { #category : #'event handling' }

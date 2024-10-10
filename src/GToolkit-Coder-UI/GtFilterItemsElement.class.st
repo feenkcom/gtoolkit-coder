@@ -62,13 +62,40 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 						referenceElement: anEvent currentTarget;
 						nextFocusDo: #requestFocus ifNone: [  ] ]);
 		addShortcut: (BlShortcutWithAction new
+				name: 'Move to upper filter';
+				description: 'Moves to the upper filter. If none is found, we stay in the current.';
+				combination: (BlKeyCombination arrowUp);
+				overrideChildren: false;
+				action: [ :anEvent | 
+					BlFocusFinder new
+						up;
+						root: self;
+						referenceElement: anEvent currentTarget;
+						nextFocusDo: #requestFocus ifNone: [  ] ]);
+		addShortcut: (BlShortcutWithAction new
+				name: 'Move to lower filter';
+				description: 'Moves to the lower filter. If none is found, we stay in the current.';
+				combination: (BlKeyCombination arrowDown);
+				overrideChildren: false;
+				action: [ :anEvent | 
+					BlFocusFinder new
+						down;
+						root: self;
+						referenceElement: anEvent currentTarget;
+						nextFocusDo: #requestFocus ifNone: [  ] ]);
+		addShortcut: (BlShortcutWithAction new
 				name: 'Remove filter';
 				combination: (BlKeyCombination backspace or: BlKeyCombination delete);
 				overrideChildren: false;
 				action: [ :anEvent | 
 					self
 						onRemoveFilterViewModelOfElement: anEvent currentTarget
-						from: anEvent currentTarget ])
+						from: anEvent currentTarget ]);
+		addShortcut: (BlShortcutWithAction new
+				name: 'Edit filter';
+				combination: (BlKeyCombination space or: BlKeyCombination enter);
+				overrideChildren: false;
+				action: [ :anEvent | self onEditItemsEvent: anEvent ])
 ]
 
 { #category : #'private - updating' }
@@ -241,6 +268,11 @@ GtFilterItemsElement >> onAddSelectedItemEvent: aShortcutEvent [
 			BlTaskAction
 				enqueueElement: self
 				action: [ self requestAddFilterModel: aFilterModel ] ] 
+]
+
+{ #category : #'event handling' }
+GtFilterItemsElement >> onEditItemsEvent: anEvent [ 
+	anEvent currentTarget dispatchEvent: GtFilterEditWish new
 ]
 
 { #category : #'api - filter view model' }

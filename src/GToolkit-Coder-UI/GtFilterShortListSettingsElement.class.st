@@ -20,6 +20,11 @@ GtFilterShortListSettingsElement >> defaultItemLabel [
 	^ ''
 ]
 
+{ #category : #'private - updating' }
+GtFilterShortListSettingsElement >> dispatchShowItemsWish [
+	buttonElement dispatchEvent: BrDropdownShowWish new
+]
+
 { #category : #'event handling' }
 GtFilterShortListSettingsElement >> focusFirstItemElementInList: aListElement [
 	aListElement requestFocus.
@@ -40,7 +45,9 @@ GtFilterShortListSettingsElement >> initialize [
 	self initializeButtonElement.
 	self initializeDropdownAptitude.
 	buttonElement addAptitude: buttonAptitude.
-	self addChild: buttonElement as: #button
+	self addChild: buttonElement as: #button.
+	self initializeEventHandlers.
+	self initializeShortcuts.
 ]
 
 { #category : #initialization }
@@ -56,6 +63,24 @@ GtFilterShortListSettingsElement >> initializeDropdownAptitude [
 			handle: [ self newHandleElement ]
 			content: [ self newContentElement ].
 	buttonAptitude beNotResizable.
+	buttonAptitude
+		when: BrDropdownIsHidden
+		do: [ :anEvent | self onDropdownIsHiddenEvent: anEvent ]
+]
+
+{ #category : #initialization }
+GtFilterShortListSettingsElement >> initializeEventHandlers [
+	self when: GtFilterEditWish do: [ :anEvent | self onEditWish: anEvent ]
+]
+
+{ #category : #initialization }
+GtFilterShortListSettingsElement >> initializeShortcuts [
+	self
+		addShortcut: (BlShortcutWithAction new
+				name: 'Display items';
+				combination: (BlKeyCombination space or: BlKeyCombination enter);
+				overrideChildren: false;
+				action: [ :anEvent | self onDisplayItemsEvent: anEvent ])
 ]
 
 { #category : #accessing }
@@ -139,6 +164,23 @@ GtFilterShortListSettingsElement >> newItemElement [
 		action: [ :aButton | self onItemClick: aButton ];
 		when: BlMouseEnterEvent
 			do: [ :anEvent | self onItemMouseEnterEvent: anEvent ]
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onDisplayItemsEvent: anEvent [
+	anEvent consumed: true.
+	self dispatchShowItemsWish
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onDropdownIsHiddenEvent: anEvent [
+	self fireEvent: GtFilterFocusWish new
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onEditWish: anEvent [
+	anEvent consumed: true.
+	self dispatchShowItemsWish
 ]
 
 { #category : #'api - filter view model' }
