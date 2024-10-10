@@ -15,13 +15,15 @@ GtFilterItemsElement >> addElementForFilterViewModel: aFilterViewModel index: an
 			margin: (BlInsets left: 3 right: 3);
 			constraintsDo: [ :c | 
 				c flow vertical alignCenter.
-				c flow horizontal alignLeft ].
+				c flow horizontal alignLeft ];
+			when: GtFilterFocusNextFilterWish
+				do: [ :anEvent | self onFocusNextFilterWish: anEvent ].
 
 	self addNavigationShortcutsTo: anElement.
 	self addRemoveButtonIconTo: anElement.
 
 	self addChild: anElement at: anIndex.
-	
+
 	^ anElement
 ]
 
@@ -33,7 +35,7 @@ GtFilterItemsElement >> addItemElementForViewModel: aFilterViewModel [
 			ifNone: [ ^ self ].
 
 	anElement := self addElementForFilterViewModel: aFilterViewModel index: anIndex.
-	anElement requestFocus
+	anElement fireEvent: GtFilterFocusFirstPartWish new
 ]
 
 { #category : #'private - updating' }
@@ -230,7 +232,9 @@ GtFilterItemsElement >> newAddFilterButton [
 		addShortcut:
 			(BlShortcutWithAction new
 				combination: BlKeyCombination enter;
-				action: [ :anEvent | anEvent currentTarget dispatchEvent: BrDropdownShowWish new ])
+				action: [ :anEvent | anEvent currentTarget dispatchEvent: BrDropdownShowWish new ]);
+		when: BrDropdownIsHidden
+			do: [ :anEvent | self onAddFilterDropdownIsHiddenEvent: anEvent ]
 ]
 
 { #category : #'private - updating' }
@@ -256,6 +260,11 @@ GtFilterItemsElement >> newRemoveButton [
 			c ignored vertical alignCenterAt: 0.0 ]
 ]
 
+{ #category : #'private - updating' }
+GtFilterItemsElement >> onAddFilterDropdownIsHiddenEvent: anEvent [
+	anEvent currentTarget requestFocus
+]
+
 { #category : #'event handling' }
 GtFilterItemsElement >> onAddSelectedItemEvent: aShortcutEvent [
 	| anElementList |
@@ -278,6 +287,19 @@ GtFilterItemsElement >> onEditItemsEvent: anEvent [
 { #category : #'api - filter view model' }
 GtFilterItemsElement >> onFiltersViewModelChanged [
 	self updateItemsElement
+]
+
+{ #category : #'event handling' }
+GtFilterItemsElement >> onFocusNextFilterWish: anEvent [
+	anEvent consumed: true.
+	BlTaskAction enqueueElement: self action: [
+		GtFilterExcludingFocusFinder new
+			direction: BlFocusSearchDirectionForward new;
+			root: self;
+			referenceElement: anEvent currentTarget;
+			excludedElement: anEvent currentTarget;
+			nextFocusDo: [ :anElement | 
+				anElement requestFocus ] ifNone: [  ] ]
 ]
 
 { #category : #'event handling' }

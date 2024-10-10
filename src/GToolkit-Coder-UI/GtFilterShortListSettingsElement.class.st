@@ -174,7 +174,7 @@ GtFilterShortListSettingsElement >> onDisplayItemsEvent: anEvent [
 
 { #category : #'event handling' }
 GtFilterShortListSettingsElement >> onDropdownIsHiddenEvent: anEvent [
-	self fireEvent: GtFilterFocusWish new
+	self fireEvent: GtFilterFocusWholeWish new
 ]
 
 { #category : #'event handling' }
