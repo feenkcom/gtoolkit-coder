@@ -9,9 +9,7 @@ Class {
 
 { #category : #'api - instantiation' }
 GtFilterModelItemIconStencilBuilder >> buildDefault [
-	^ BlElement new
-		size: 8 @ 8;
-		background: BlBackground transparent
+	^ nil
 ]
 
 { #category : #accessing }

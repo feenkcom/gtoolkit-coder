@@ -9,7 +9,7 @@ Class {
 
 { #category : #'api - instantiation' }
 GtFilterModelItemLabelStencilBuilder >> buildDefault [
-	^ 'none'
+	^ object gtDisplayString
 ]
 
 { #category : #accessing }

@@ -10,6 +10,15 @@ Class {
 }
 
 { #category : #'instance creation' }
+GtFilterModelPluggableItem class >> forCollection: aCollection icon: anIconStencilBuilder [
+	^ aCollection
+		collect: [ :eachObject | 
+			self new
+				object: eachObject;
+				icon: anIconStencilBuilder ]
+]
+
+{ #category : #'instance creation' }
 GtFilterModelPluggableItem class >> forCollection: aCollection icon: anIconStencilBuilder label: aLabelStencilBuilder [
 	^ aCollection
 		collect: [ :eachObject | 
@@ -20,6 +29,22 @@ GtFilterModelPluggableItem class >> forCollection: aCollection icon: anIconStenc
 ]
 
 { #category : #'instance creation' }
+GtFilterModelPluggableItem class >> forCollection: aCollection label: aLabelStencilBuilder [
+	^ aCollection
+		collect: [ :eachObject | 
+			self new
+				object: eachObject;
+				label: aLabelStencilBuilder ]
+]
+
+{ #category : #'instance creation' }
+GtFilterModelPluggableItem class >> forObject: anObject icon: anIconStencilBuilder [
+	^ self new
+		object: anObject;
+		icon: anIconStencilBuilder
+]
+
+{ #category : #'instance creation' }
 GtFilterModelPluggableItem class >> forObject: anObject icon: anIconStencilBuilder label: aLabelStencilBuilder [
 	^ self new
 		object: anObject;
@@ -27,18 +52,25 @@ GtFilterModelPluggableItem class >> forObject: anObject icon: anIconStencilBuild
 		label: aLabelStencilBuilder
 ]
 
+{ #category : #'instance creation' }
+GtFilterModelPluggableItem class >> forObject: anObject label: aLabelStencilBuilder [
+	^ self new
+		object: anObject;
+		label: aLabelStencilBuilder
+]
+
 { #category : #accessing }
 GtFilterModelPluggableItem >> icon [
-	<return: #BlElement>
+	<return: #BlElement or: nil>
 	^ iconStencilBuilder
 		object: self object;
-		asElement
+		build
 ]
 
 { #category : #accessing }
 GtFilterModelPluggableItem >> icon: aStencilBuilder [
 	iconStencilBuilder := aStencilBuilder
-			asStencilBuilder: GtFilterModelItemIconStencilBuilder new
+			asStencilBuilder: GtFilterModelItemIconStencilBuilder
 ]
 
 { #category : #initialization }
@@ -58,13 +90,13 @@ GtFilterModelPluggableItem >> label [
 	<return: #String>
 	^ labelStencilBuilder
 		object: self object;
-		create
+		build
 ]
 
 { #category : #accessing }
 GtFilterModelPluggableItem >> label: aStencilBuilder [
 	labelStencilBuilder := aStencilBuilder
-			asStencilBuilder: GtFilterModelItemLabelStencilBuilder new
+			asStencilBuilder: GtFilterModelItemLabelStencilBuilder
 ]
 
 { #category : #accessing }

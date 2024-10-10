@@ -62,6 +62,131 @@ GtFilterModelExamples >> shortListModel [
 ]
 
 { #category : #examples }
+GtFilterModelExamples >> shortListModelPluggableItems [
+	<gtExample>
+	| aModel allItems aCollection anIconBuilder aLabelBuilder |
+	aModel := GtFilterShortListModel new.
+
+	aCollection := {Array.
+			OrderedCollection.
+			TGtAnnouncer.
+			Object.
+			ProtoObject}.
+	anIconBuilder := [ :aClass | 
+		aClass gtSystemIconName
+			ifNotNil: [ :anIconName | aClass gtSafeIconNamed: anIconName ] ].
+	aLabelBuilder := [ :aClass | aClass name ].
+	allItems := GtFilterModelPluggableItem
+			forCollection: aCollection
+			icon: anIconBuilder
+			label: aLabelBuilder.
+	
+	aModel items: allItems.
+	aModel selectFirstItem.
+	aModel label: 'Classes'.
+	
+	self
+		assert: aModel selectedItem
+		equals: (GtFilterModelPluggableItem new
+				object: Array;
+				icon: anIconBuilder;
+				label: aLabelBuilder).
+	self assert: aModel selectedItem icon isNotNil.
+
+	^ aModel
+]
+
+{ #category : #examples }
+GtFilterModelExamples >> shortListModelPluggableItemsWithIconAndLabelBuilders [
+	<gtExample>
+	| aModel aCollection anIconBuilder aLabelBuilder |
+	aModel := GtFilterShortListModel new.
+
+	aCollection := {Array.
+			OrderedCollection.
+			TGtAnnouncer.
+			Object.
+			ProtoObject}.
+	anIconBuilder := [ :aClass | 
+		aClass gtSystemIconName
+			ifNotNil: [ :anIconName | aClass gtSafeIconNamed: anIconName ] ].
+	aLabelBuilder := [ :aClass | aClass name ].
+	
+	aModel items: aCollection icon: anIconBuilder label: aLabelBuilder.
+	aModel selectFirstItem.
+	aModel label: 'Classes'.
+	
+	self
+		assert: aModel selectedItem
+		equals: (GtFilterModelPluggableItem new
+				object: Array;
+				icon: anIconBuilder;
+				label: aLabelBuilder).
+	self assert: aModel selectedItem icon isNotNil.
+	self assert: aModel selectedItem label equals: 'Array'.
+
+	^ aModel
+]
+
+{ #category : #examples }
+GtFilterModelExamples >> shortListModelPluggableItemsWithoutIconBuilder [
+	<gtExample>
+	| aModel aCollection aLabelBuilder |
+	aModel := GtFilterShortListModel new.
+
+	aCollection := {Array.
+			OrderedCollection.
+			TGtAnnouncer.
+			Object.
+			ProtoObject}.
+	aLabelBuilder := [ :aClass | '+ ', aClass name ].
+	
+	aModel items: aCollection label: aLabelBuilder.
+	aModel selectFirstItem.
+	aModel label: 'Classes'.
+	
+	self
+		assert: aModel selectedItem
+		equals: (GtFilterModelPluggableItem new
+				object: Array;
+				label: aLabelBuilder).
+	self assert: aModel selectedItem icon isNil.
+	self assert: aModel selectedItem label equals: '+ Array'.
+
+	^ aModel
+]
+
+{ #category : #examples }
+GtFilterModelExamples >> shortListModelPluggableItemsWithoutLabelBuilder [
+	<gtExample>
+	| aModel aCollection anIconBuilder |
+	aModel := GtFilterShortListModel new.
+
+	aCollection := {Array.
+			OrderedCollection.
+			TGtAnnouncer.
+			Object.
+			ProtoObject}.
+	anIconBuilder := [ :aClass | 
+		aClass gtSystemIconName
+			ifNotNil: [ :anIconName | aClass gtSafeIconNamed: anIconName ] ].
+
+	aModel items: aCollection icon: anIconBuilder.
+	aModel selectFirstItem.
+	aModel label: 'Classes'.
+	
+	self
+		assert: aModel selectedItem
+		equals: (GtFilterModelPluggableItem new
+				object: Array;
+				icon: anIconBuilder).
+	self assert: aModel selectedItem icon isNotNil.
+	self assert: aModel selectedItem label equals: 'Array'.
+
+	^ aModel
+]
+
+{ #category : #examples }
 GtFilterModelExamples >> shortListModelWithIcons [
 	<gtExample>
 	| aModel |

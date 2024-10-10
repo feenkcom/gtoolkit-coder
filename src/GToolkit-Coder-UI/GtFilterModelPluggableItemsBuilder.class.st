@@ -28,7 +28,7 @@ GtFilterModelPluggableItemsBuilder >> iconStencilBuilder [
 { #category : #accessing }
 GtFilterModelPluggableItemsBuilder >> iconStencilBuilder: aStencilBuilder [
 	iconStencilBuilder := aStencilBuilder
-			asStencilBuilder: GtFilterModelItemIconStencilBuilder new
+			asStencilBuilder: GtFilterModelItemIconStencilBuilder
 ]
 
 { #category : #initialization }
@@ -57,5 +57,5 @@ GtFilterModelPluggableItemsBuilder >> labelStencilBuilder [
 { #category : #accessing }
 GtFilterModelPluggableItemsBuilder >> labelStencilBuilder: aStencilBuilder [
 	labelStencilBuilder := aStencilBuilder
-			asStencilBuilder: GtFilterModelItemLabelStencilBuilder new
+			asStencilBuilder: GtFilterModelItemLabelStencilBuilder
 ]
