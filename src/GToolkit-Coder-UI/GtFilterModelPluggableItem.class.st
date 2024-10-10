@@ -19,6 +19,14 @@ GtFilterModelPluggableItem class >> forCollection: aCollection icon: anIconStenc
 				label: aLabelStencilBuilder ]
 ]
 
+{ #category : #'instance creation' }
+GtFilterModelPluggableItem class >> forObject: anObject icon: anIconStencilBuilder label: aLabelStencilBuilder [
+	^ self new
+		object: anObject;
+		icon: anIconStencilBuilder;
+		label: aLabelStencilBuilder
+]
+
 { #category : #accessing }
 GtFilterModelPluggableItem >> icon [
 	<return: #BlElement>
