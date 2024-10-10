@@ -12,7 +12,8 @@ Class {
 GtFilterTextSettingsElement >> initialize [
 	super initialize.
 	self initializeEditorElement.
-	self addChild: editorElement as: #editor
+	self addChild: editorElement as: #editor.
+	self initializeEventHandlers.
 ]
 
 { #category : #initialization }
@@ -64,6 +65,17 @@ GtFilterTextSettingsElement >> initializeEditorElement [
 					anEvent currentTarget deselecter all deselect.
 				anEvent isDueToRemoval ifFalse: [
 					self onTextEditorModificationAccepted: anEvent ] ]
+]
+
+{ #category : #initialization }
+GtFilterTextSettingsElement >> initializeEventHandlers [
+	self when: GtFilterEditWish do: [ :anEvent | self onEditWish: anEvent ]
+]
+
+{ #category : #'event handling' }
+GtFilterTextSettingsElement >> onEditWish: anEvent [
+	anEvent consumed: true.
+	editorElement requestFocus
 ]
 
 { #category : #'api - filter view model' }
