@@ -15,13 +15,15 @@ GtFilterItemsElement >> addElementForFilterViewModel: aFilterViewModel index: an
 			margin: (BlInsets left: 3 right: 3);
 			constraintsDo: [ :c | 
 				c flow vertical alignCenter.
-				c flow horizontal alignLeft ].
+				c flow horizontal alignLeft ];
+			when: GtFilterFocusNextFilterWish
+				do: [ :anEvent | self onFocusNextFilterWish: anEvent ].
 
 	self addNavigationShortcutsTo: anElement.
 	self addRemoveButtonIconTo: anElement.
 
 	self addChild: anElement at: anIndex.
-	
+
 	^ anElement
 ]
 
@@ -33,7 +35,7 @@ GtFilterItemsElement >> addItemElementForViewModel: aFilterViewModel [
 			ifNone: [ ^ self ].
 
 	anElement := self addElementForFilterViewModel: aFilterViewModel index: anIndex.
-	anElement requestFocus
+	anElement fireEvent: GtFilterFocusFirstPartWish new
 ]
 
 { #category : #'private - updating' }
@@ -278,6 +280,19 @@ GtFilterItemsElement >> onEditItemsEvent: anEvent [
 { #category : #'api - filter view model' }
 GtFilterItemsElement >> onFiltersViewModelChanged [
 	self updateItemsElement
+]
+
+{ #category : #'event handling' }
+GtFilterItemsElement >> onFocusNextFilterWish: anEvent [
+	anEvent consumed: true.
+	BlTaskAction enqueueElement: self action: [
+		GtFilterExcludingFocusFinder new
+			direction: BlFocusSearchDirectionForward new;
+			root: self;
+			referenceElement: anEvent currentTarget;
+			excludedElement: anEvent currentTarget;
+			nextFocusDo: [ :anElement | 
+				anElement requestFocus ] ifNone: [  ] ]
 ]
 
 { #category : #'event handling' }

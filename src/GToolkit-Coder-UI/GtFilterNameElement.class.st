@@ -42,7 +42,9 @@ GtFilterNameElement >> initialize [
 GtFilterNameElement >> initializeEventHandlers [
 	self when: BlClickEvent do: [ :anEvent | self onClickEvent: anEvent ].
 	self when: GtFilterEditWish do: [ :anEvent | self onEditWish: anEvent ].
-	self when: GtFilterFocusWish do: [ :anEvent | self onFocusWish: anEvent ]
+	self when: GtFilterFocusFirstPartWish do: [ :anEvent | self onFocusFirstPartWish: anEvent ].
+	self when: GtFilterFocusWholeWish do: [ :anEvent | self onFocusWholeWish: anEvent ].
+	self when: GtFilterFocusNextPartWish do: [ :anEvent | self onFocusNextPartdWish: anEvent ]
 ]
 
 { #category : #initialization }
@@ -107,7 +109,25 @@ GtFilterNameElement >> onFilterViewModelChanged [
 ]
 
 { #category : #'event handling' }
-GtFilterNameElement >> onFocusWish: anEvent [
+GtFilterNameElement >> onFocusFirstPartWish: anEvent [
+	anEvent consumed: true.
+	BlFocusFinder new
+		right;
+		root: settingsContainer;
+		referenceElement: settingsContainer;
+		nextFocusDo: [ :anElement | anElement requestFocus ]
+			ifNone: [ self requestFocus ]
+]
+
+{ #category : #'event handling' }
+GtFilterNameElement >> onFocusNextPartdWish: anEvent [
+	anEvent consumed: true.
+	self requestFocus.
+	self fireEvent: GtFilterFocusNextFilterWish new
+]
+
+{ #category : #'event handling' }
+GtFilterNameElement >> onFocusWholeWish: anEvent [
 	anEvent consumed: true.
 	self requestFocus
 ]
