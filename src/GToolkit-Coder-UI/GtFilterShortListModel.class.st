@@ -31,6 +31,17 @@ GtFilterShortListModel >> items: anObject [
 ]
 
 { #category : #accessing }
+GtFilterShortListModel >> items: anObject icon: anIconStencilBuilder label: aLabelStencilBuilder [
+	| aNewItemsBuilder aPluggableItemsBuilder |
+	aNewItemsBuilder := anObject asFilterModelItemsBuilder.
+	aPluggableItemsBuilder := GtFilterModelPluggableItemsBuilder new
+			itemsBuilder: aNewItemsBuilder;
+			iconStencilBuilder: anIconStencilBuilder;
+			labelStencilBuilder: aLabelStencilBuilder.
+	self itemsBuilder: aPluggableItemsBuilder
+]
+
+{ #category : #accessing }
 GtFilterShortListModel >> itemsBuilder [
 	<return: #GtFilterModelItemsBuilder>
 	^ itemsBuilder

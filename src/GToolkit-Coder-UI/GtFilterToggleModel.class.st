@@ -33,6 +33,17 @@ GtFilterToggleModel >> items: anObject [
 ]
 
 { #category : #accessing }
+GtFilterToggleModel >> items: anObject icon: anIconStencilBuilder label: aLabelStencilBuilder [
+	| aNewItemsBuilder aPluggableItemsBuilder |
+	aNewItemsBuilder := anObject asFilterModelItemsBuilder.
+	aPluggableItemsBuilder := GtFilterModelPluggableItemsBuilder new
+			itemsBuilder: aNewItemsBuilder;
+			iconStencilBuilder: anIconStencilBuilder;
+			labelStencilBuilder: aLabelStencilBuilder.
+	self itemsBuilder: aPluggableItemsBuilder
+]
+
+{ #category : #accessing }
 GtFilterToggleModel >> itemsBuilder [
 	<return: #GtFilterModelItemsBuilder>
 	^ itemsBuilder
