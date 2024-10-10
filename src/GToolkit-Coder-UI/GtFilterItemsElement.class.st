@@ -232,7 +232,9 @@ GtFilterItemsElement >> newAddFilterButton [
 		addShortcut:
 			(BlShortcutWithAction new
 				combination: BlKeyCombination enter;
-				action: [ :anEvent | anEvent currentTarget dispatchEvent: BrDropdownShowWish new ])
+				action: [ :anEvent | anEvent currentTarget dispatchEvent: BrDropdownShowWish new ]);
+		when: BrDropdownIsHidden
+			do: [ :anEvent | self onAddFilterDropdownIsHiddenEvent: anEvent ]
 ]
 
 { #category : #'private - updating' }
@@ -256,6 +258,11 @@ GtFilterItemsElement >> newRemoveButton [
 			c ignoreByLayout.
 			c ignored horizontal alignCenterAt: 1.0.
 			c ignored vertical alignCenterAt: 0.0 ]
+]
+
+{ #category : #'private - updating' }
+GtFilterItemsElement >> onAddFilterDropdownIsHiddenEvent: anEvent [
+	anEvent currentTarget requestFocus
 ]
 
 { #category : #'event handling' }
