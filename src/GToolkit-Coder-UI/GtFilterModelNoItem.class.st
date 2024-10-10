@@ -13,5 +13,5 @@ GtFilterModelNoItem >> ifSome: aBlock ifNone: aNoneBlock [
 
 { #category : #accessing }
 GtFilterModelNoItem >> label [
-	^ ''
+	^ 'none'
 ]
