@@ -22,6 +22,16 @@ GtFilterItemsElement >> addElementForFilterViewModel: aFilterViewModel index: an
 	self addNavigationShortcutsTo: anElement.
 	self addRemoveButtonIconTo: anElement.
 
+	anElement
+		addShortcut: (BlShortcutWithAction new
+				name: 'Remove filter';
+				combination: (BlKeyCombination backspace or: BlKeyCombination delete);
+				overrideChildren: false;
+				action: [ :anEvent | 
+					self
+						onRemoveFilterViewModelOfElement: anEvent currentTarget
+						from: anEvent currentTarget ]).
+
 	self addChild: anElement at: anIndex.
 
 	^ anElement
@@ -85,14 +95,6 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 						root: self;
 						referenceElement: anEvent currentTarget;
 						nextFocusDo: #requestFocus ifNone: [  ] ]);
-		addShortcut: (BlShortcutWithAction new
-				name: 'Remove filter';
-				combination: (BlKeyCombination backspace or: BlKeyCombination delete);
-				overrideChildren: false;
-				action: [ :anEvent | 
-					self
-						onRemoveFilterViewModelOfElement: anEvent currentTarget
-						from: anEvent currentTarget ]);
 		addShortcut: (BlShortcutWithAction new
 				name: 'Edit filter';
 				combination: (BlKeyCombination space or: BlKeyCombination enter);
