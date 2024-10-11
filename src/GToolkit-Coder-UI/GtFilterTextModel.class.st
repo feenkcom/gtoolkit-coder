@@ -9,6 +9,14 @@ Class {
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
+{ #category : #testing }
+GtFilterTextModel >> changesFilteredResult [
+	"Indicates whether it changes a result of filtered items, e.g., list of method coders."
+
+	<return: #Boolean>
+	^ self text isEmpty ifFalse: [ true ] ifTrue: [ false ]
+]
+
 { #category : #accessing }
 GtFilterTextModel >> completion [
 	<return: #GtCompletionStrategy or: nil>

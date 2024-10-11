@@ -24,6 +24,8 @@ GtFilterItemsModel >> addFilterModel: aFilterModel [
 	items := aCollection.
 	self subscribeToItem: aFilterModel.
 	self notifyItemAdded: aFilterModel.
+	
+	aFilterModel changesFilteredResult ifFalse: [ ^ self ].
 	self notifyFiltersUpdated.
 ]
 
@@ -80,6 +82,10 @@ GtFilterItemsModel >> items: aCollection [
 
 { #category : #'private - notifying' }
 GtFilterItemsModel >> notifyFiltersUpdated [
+	"This announcement must be delivered only if the update changes search filter results.
+	For example, we do not want to announce it if an added or removed filter model 
+	does not have a selected value."
+
 	self announce: (GtFiltersModelUpdated new model: self)
 ]
 
@@ -133,6 +139,8 @@ GtFilterItemsModel >> removeFilterModel: aFilterModel [
 	self unsubscribeFromItem: aFilterModel.
 	items := aCollection.
 	self notifyItemRemoved: aFilterModel.
+	
+	aFilterModel changesFilteredResult ifFalse: [ ^ self ].
 	self notifyFiltersUpdated.
 ]
 
