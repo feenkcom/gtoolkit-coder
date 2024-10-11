@@ -35,7 +35,7 @@ GtFilterItemsElement >> addItemElementForViewModel: aFilterViewModel [
 			ifNone: [ ^ self ].
 
 	anElement := self addElementForFilterViewModel: aFilterViewModel index: anIndex.
-	anElement fireEvent: GtFilterFocusFirstPartWish new
+	anElement fireEvent: GtFilterFocusIntendedPartAfterAddingWish new
 ]
 
 { #category : #'private - updating' }

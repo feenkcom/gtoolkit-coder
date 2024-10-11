@@ -42,7 +42,8 @@ GtFilterNameElement >> initialize [
 GtFilterNameElement >> initializeEventHandlers [
 	self when: BlClickEvent do: [ :anEvent | self onClickEvent: anEvent ].
 	self when: GtFilterEditWish do: [ :anEvent | self onEditWish: anEvent ].
-	self when: GtFilterFocusFirstPartWish do: [ :anEvent | self onFocusFirstPartWish: anEvent ].
+	self when: GtFilterFocusIntendedPartAfterAddingWish do: [ :anEvent | 
+		self onFocusFirstPartWish: anEvent ].
 	self when: GtFilterFocusWholeWish do: [ :anEvent | self onFocusWholeWish: anEvent ].
 	self when: GtFilterFocusNextPartWish do: [ :anEvent | self onFocusNextPartdWish: anEvent ]
 ]
@@ -97,10 +98,8 @@ GtFilterNameElement >> onClickEvent: anEvent [
 
 { #category : #'event handling' }
 GtFilterNameElement >> onEditWish: anEvent [
-	settingsContainer
-		childWithId: GtFilterSettingsId
-		ifFound: [ :anElement | anElement dispatchEvent: GtFilterEditWish new ]
-		ifNone: [  ]
+	self
+		settingsElementDo: [ :anElement | anElement dispatchEvent: GtFilterEditWish new ]
 ]
 
 { #category : #'api - filter view model' }
@@ -111,12 +110,23 @@ GtFilterNameElement >> onFilterViewModelChanged [
 { #category : #'event handling' }
 GtFilterNameElement >> onFocusFirstPartWish: anEvent [
 	anEvent consumed: true.
-	BlFocusFinder new
-		right;
-		root: settingsContainer;
-		referenceElement: settingsContainer;
-		nextFocusDo: [ :anElement | anElement requestFocus ]
-			ifNone: [ self requestFocus ]
+	self
+		settingsElementDo: [ :aSettingsElement | 
+			| aWish |
+			aWish := GtFilterFocusFirstPartWish new.
+			aSettingsElement dispatchEvent: aWish.
+			aWish isConsumed ifFalse: [ self requestFocus ] ].
+
+	true ifTrue: [ ^ self ].
+	self requestFocus.
+	BlTaskAction
+		enqueueElement: self
+		action: [ BlFocusFinder new
+				right;
+				root: settingsContainer;
+				referenceElement: settingsContainer;
+				nextFocusDo: [ :anElement | anElement requestFocus ]
+					ifNone: [ self requestFocus ] ]
 ]
 
 { #category : #'event handling' }
@@ -140,6 +150,13 @@ GtFilterNameElement >> onLabelChanged: anAnnouncement [
 { #category : #'private - updating' }
 GtFilterNameElement >> removeSettingsElement [
 	settingsContainer removeChildren
+]
+
+{ #category : #accessing }
+GtFilterNameElement >> settingsElementDo: aBlock [
+	| aChild |
+	aChild := settingsContainer children at: 1 ifAbsent: [ ^ self ].
+	aBlock cull: aChild
 ]
 
 { #category : #'api - filter view model' }
