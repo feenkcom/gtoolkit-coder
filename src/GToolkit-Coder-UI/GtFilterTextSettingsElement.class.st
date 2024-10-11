@@ -69,7 +69,10 @@ GtFilterTextSettingsElement >> initializeEditorElement [
 
 { #category : #initialization }
 GtFilterTextSettingsElement >> initializeEventHandlers [
-	self when: GtFilterEditWish do: [ :anEvent | self onEditWish: anEvent ]
+	self when: GtFilterEditWish do: [ :anEvent | self onEditWish: anEvent ].
+	self
+		when: GtFilterFocusFirstPartWish
+		do: [ :anEvent | self onFocusFirstPartWish: anEvent ]
 ]
 
 { #category : #'event handling' }
@@ -83,6 +86,12 @@ GtFilterTextSettingsElement >> onFilterViewModelChanged [
 	super onFilterViewModelChanged.
 
 	self updateEditorElement
+]
+
+{ #category : #'event handling' }
+GtFilterTextSettingsElement >> onFocusFirstPartWish: anEvent [
+	anEvent consumed: true.
+	editorElement requestFocus
 ]
 
 { #category : #'event handling' }
