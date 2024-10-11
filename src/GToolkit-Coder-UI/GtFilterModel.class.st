@@ -48,6 +48,14 @@ GtFilterModel >> asUserSettingsElement [
 	^ self asFilterViewModel asUserSettingsElement
 ]
 
+{ #category : #testing }
+GtFilterModel >> changesFilteredResult [
+	"Indicates whether it changes a result of filtered items, e.g., list of method coders."
+
+	<return: #Boolean>
+	^ true
+]
+
 { #category : #accessing }
 GtFilterModel >> creator [
 	^ creator

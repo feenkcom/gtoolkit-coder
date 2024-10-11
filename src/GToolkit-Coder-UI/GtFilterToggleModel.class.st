@@ -9,6 +9,14 @@ Class {
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
+{ #category : #testing }
+GtFilterToggleModel >> changesFilteredResult [
+	"Indicates whether it changes a result of filtered items, e.g., list of method coders."
+
+	<return: #Boolean>
+	^ self selectedItem ifSome: [ true ] ifNone: [ false ]
+]
+
 { #category : #accessing }
 GtFilterToggleModel >> filterViewModelClass [
 	<return: #'GtFilterViewModel class'>
