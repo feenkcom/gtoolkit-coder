@@ -135,7 +135,8 @@ GtFilterItemsElement >> createDropdownContent [
 	^ aListElement
 		vFitContentLimited;
 		hFitContentLimited;
-		constraintsDo: [ :c | c maxHeight: 100 ];
+		constraintsDo: [ :c | 
+			c maxHeight: 100 ];
 		itemStencil: [ :anItemType | self createItemElementForListElement: aListElement ];
 		itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
 			anItemElement id: (GtFilterItemId indexed: anItemIndex).
@@ -148,8 +149,8 @@ GtFilterItemsElement >> createDropdownContent [
 			(anItemElement childAt: 1) text: ''.
 			anItemElement ];
 		items: (self hasFiltersViewModel
-				ifTrue: [ self filtersViewModel availableFilters ]
-				ifFalse: [ #() ]);
+				ifTrue: [ self filtersViewModel availableFilters ifEmpty: [ {GtFilterVirtualEmptyModel default} ] ]
+				ifFalse: [ {GtFilterVirtualEmptyModel default} ]);
 		when: BlElementAddedToSceneGraphEvent
 			do: [ :anEvent | self onListElementAddedToSceneGraph: anEvent ];
 		addShortcut: (BlShortcutWithAction new
@@ -342,6 +343,7 @@ GtFilterItemsElement >> onItemMouseClickEvent: anEvent [
 	anEvent consumed: true.
 	anEvent currentTarget fireEvent: BrDropdownHideWish new.
 	aModel := anEvent currentTarget userData at: GtFilterModel ifAbsent: [ nil ].
+	aModel isVirtualFilterModel ifTrue: [ ^ self ].
 	self requestAddFilterModel: aModel
 ]
 
@@ -416,6 +418,7 @@ GtFilterItemsElement >> removeItemElementForViewModel: aFilterViewModel [
 { #category : #'event handling' }
 GtFilterItemsElement >> requestAddFilterModel: aFilterModel [
 	aFilterModel ifNil: [ ^ self ].
+	aFilterModel isVirtualFilterModel ifTrue: [ ^ self ].
 	self hasFiltersViewModel ifFalse: [ ^ self ].
 
 	self filtersViewModel addFilterModel: aFilterModel

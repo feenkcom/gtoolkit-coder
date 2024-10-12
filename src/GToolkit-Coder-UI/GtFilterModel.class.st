@@ -105,6 +105,11 @@ GtFilterModel >> hash [
 		bitXor: self order hash)
 ]
 
+{ #category : #testing }
+GtFilterModel >> isVirtualFilterModel [
+	^ false
+]
+
 { #category : #accessing }
 GtFilterModel >> label [
 	"Return filter label"
