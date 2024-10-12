@@ -200,11 +200,25 @@ GtFilterItemsElement >> initialize [
 	self padding: (BlInsets  top: 5 right: 2 bottom: 2 left: 1).
 	self clipChildren: false.
 	self initializeEventHandlers.
+	self initializeShortcuts.
 ]
 
 { #category : #initialization }
 GtFilterItemsElement >> initializeEventHandlers [
 	
+]
+
+{ #category : #initialization }
+GtFilterItemsElement >> initializeShortcuts [
+	self
+		addShortcut: (BlShortcutWithAction new
+				name: 'Add new filter';
+				combination: (BlKeyCombination builder
+						shift;
+						primary;
+						s;
+						build);
+				action: [ :anEvent | self onAddNewFilterShortcutEvent: anEvent ])
 ]
 
 { #category : #'private - updating' }
@@ -236,7 +250,9 @@ GtFilterItemsElement >> newAddFilterButton [
 				combination: BlKeyCombination enter;
 				action: [ :anEvent | anEvent currentTarget dispatchEvent: BrDropdownShowWish new ]);
 		when: BrDropdownIsHidden
-			do: [ :anEvent | self onAddFilterDropdownIsHiddenEvent: anEvent ]
+			do: [ :anEvent | self onAddFilterDropdownIsHiddenEvent: anEvent ];
+		when: GtFilterEditWish
+			do: [ :anEvent | anEvent currentTarget dispatchEvent: BrDropdownShowWish new ]
 ]
 
 { #category : #'private - updating' }
@@ -265,6 +281,15 @@ GtFilterItemsElement >> newRemoveButton [
 { #category : #'private - updating' }
 GtFilterItemsElement >> onAddFilterDropdownIsHiddenEvent: anEvent [
 	anEvent currentTarget requestFocus
+]
+
+{ #category : #'event handling' }
+GtFilterItemsElement >> onAddNewFilterShortcutEvent: anEvent [
+	self hasChildren ifFalse: [ ^ self ].
+	anEvent consumed: true.
+	self children last
+		requestFocus;
+		dispatchEvent: GtFilterEditWish new
 ]
 
 { #category : #'event handling' }
