@@ -39,6 +39,13 @@ GtSearchFilter >> - aFilter [
 	^ GtSearchDisjunctionFilter forFilter: self filter: aFilter
 ]
 
+{ #category : #comparing }
+GtSearchFilter >> = anObject [
+	self == anObject ifTrue: [ ^ true ].
+
+	^ self class = anObject class
+]
+
 { #category : #evaluating }
 GtSearchFilter >> applyInScope: aStream [
 	^ self resultType new
@@ -86,6 +93,11 @@ GtSearchFilter >> filterLabel [
 { #category : #accessing }
 GtSearchFilter >> filterValueString [
 	^ nil
+]
+
+{ #category : #comparing }
+GtSearchFilter >> hash [
+	^ self class hash
 ]
 
 { #category : #testing }

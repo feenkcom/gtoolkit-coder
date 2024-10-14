@@ -9,7 +9,24 @@ Class {
 
 { #category : #'add / remove' }
 GtFilterItemsModel >> addFilterModel: aFilterModel [
-	self items: (self items copyWith: aFilterModel)
+	| aCollection |
+	self
+		assert: [ (self items identityIncludes: aFilterModel) not ]
+		description: [ 'Filter model can be added only once: {1}' format: {aFilterModel} ].
+	
+	aCollection := (self items copyWith: aFilterModel).
+	
+	GtFilterItemsChangedSignal new
+		incomingItems: aCollection;
+		previousItems: items;
+		emit.
+		
+	items := aCollection.
+	self subscribeToItem: aFilterModel.
+	self notifyItemAdded: aFilterModel.
+	
+	aFilterModel changesFilteredResult ifFalse: [ ^ self ].
+	self notifyFiltersUpdated.
 ]
 
 { #category : #accessing }
@@ -46,8 +63,16 @@ GtFilterItemsModel >> items [
 
 { #category : #accessing }
 GtFilterItemsModel >> items: aCollection [
-	self items = aCollection ifTrue: [ ^ self ].
+	GtFilterItemsModelComparator new
+		incomingItems: aCollection;
+		existingItems: items;
+		ifEqual: [ ^ self ].
 
+	GtFilterItemsChangedSignal new
+		incomingItems: aCollection;
+		previousItems: items;
+		emit.
+	
 	self unsubscribeFromItems.
 	items := aCollection.
 	self subscribeToItems.
@@ -57,7 +82,27 @@ GtFilterItemsModel >> items: aCollection [
 
 { #category : #'private - notifying' }
 GtFilterItemsModel >> notifyFiltersUpdated [
+	"This announcement must be delivered only if the update changes search filter results.
+	For example, we do not want to announce it if an added or removed filter model 
+	does not have a selected value."
+
 	self announce: (GtFiltersModelUpdated new model: self)
+]
+
+{ #category : #'private - notifying' }
+GtFilterItemsModel >> notifyItemAdded: aFilterModel [
+	self
+		announce: (GtFiltersModelItemAdded new
+				model: self;
+				item: aFilterModel)
+]
+
+{ #category : #'private - notifying' }
+GtFilterItemsModel >> notifyItemRemoved: aFilterModel [
+	self
+		announce: (GtFiltersModelItemRemoved new
+				model: self;
+				item: aFilterModel)
 ]
 
 { #category : #'private - notifying' }
@@ -78,8 +123,25 @@ GtFilterItemsModel >> onFilterModelAnnouncement: anAnnouncement [
 
 { #category : #'add / remove' }
 GtFilterItemsModel >> removeFilterModel: aFilterModel [
+	| aCollection |
+	self
+		assert: [ self items identityIncludes: aFilterModel ]
+		description: [ 'Filter model is missing and therefore cannot be removed: {1}'
+				format: {aFilterModel} ].
+
+	aCollection := self items reject: [ :each | each == aFilterModel ].
+	
+	GtFilterItemsChangedSignal new
+		incomingItems: aCollection;
+		previousItems: items;
+		emit.
+		
 	self unsubscribeFromItem: aFilterModel.
-	self items: (self items copyWithout: aFilterModel)
+	items := aCollection.
+	self notifyItemRemoved: aFilterModel.
+	
+	aFilterModel changesFilteredResult ifFalse: [ ^ self ].
+	self notifyFiltersUpdated.
 ]
 
 { #category : #private }

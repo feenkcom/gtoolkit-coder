@@ -41,7 +41,11 @@ GtFilterNameElement >> initialize [
 { #category : #initialization }
 GtFilterNameElement >> initializeEventHandlers [
 	self when: BlClickEvent do: [ :anEvent | self onClickEvent: anEvent ].
-	self when: GtFilterRemoveWish do: [ :anEvent | self requestRemoveFilter ].
+	self when: GtFilterEditWish do: [ :anEvent | self onEditWish: anEvent ].
+	self when: GtFilterFocusIntendedPartAfterAddingWish do: [ :anEvent | 
+		self onFocusFirstPartWish: anEvent ].
+	self when: GtFilterFocusWholeWish do: [ :anEvent | self onFocusWholeWish: anEvent ].
+	self when: GtFilterFocusNextPartWish do: [ :anEvent | self onFocusNextPartdWish: anEvent ]
 ]
 
 { #category : #initialization }
@@ -58,7 +62,6 @@ GtFilterNameElement >> initializeLabelElement [
 { #category : #initialization }
 GtFilterNameElement >> initializeSettingsContainer [
 	settingsContainer := BrFrame new
-			background: self theme default contentBackgroundColor;
 			hFitContentLimited;
 			vFitContent;
 			margin: (BlInsets all: 2);
@@ -67,10 +70,7 @@ GtFilterNameElement >> initializeSettingsContainer [
 
 { #category : #initialization }
 GtFilterNameElement >> initializeShortcuts [
-	self
-		addShortcut: (BlShortcutWithAction new
-				combination: (BlKeyCombination backspace or: BlKeyCombination delete);
-				action: [ self requestRemoveFilter ])
+	
 ]
 
 { #category : #initialization }
@@ -96,9 +96,50 @@ GtFilterNameElement >> onClickEvent: anEvent [
 	self requestFocus
 ]
 
+{ #category : #'event handling' }
+GtFilterNameElement >> onEditWish: anEvent [
+	self
+		settingsElementDo: [ :anElement | anElement dispatchEvent: GtFilterEditWish new ]
+]
+
 { #category : #'api - filter view model' }
 GtFilterNameElement >> onFilterViewModelChanged [
 	self updateElement
+]
+
+{ #category : #'event handling' }
+GtFilterNameElement >> onFocusFirstPartWish: anEvent [
+	anEvent consumed: true.
+	self
+		settingsElementDo: [ :aSettingsElement | 
+			| aWish |
+			aWish := GtFilterFocusFirstPartWish new.
+			aSettingsElement dispatchEvent: aWish.
+			aWish isConsumed ifFalse: [ self requestFocus ] ].
+
+	true ifTrue: [ ^ self ].
+	self requestFocus.
+	BlTaskAction
+		enqueueElement: self
+		action: [ BlFocusFinder new
+				right;
+				root: settingsContainer;
+				referenceElement: settingsContainer;
+				nextFocusDo: [ :anElement | anElement requestFocus ]
+					ifNone: [ self requestFocus ] ]
+]
+
+{ #category : #'event handling' }
+GtFilterNameElement >> onFocusNextPartdWish: anEvent [
+	anEvent consumed: true.
+	self requestFocus.
+	self fireEvent: GtFilterFocusNextFilterWish new
+]
+
+{ #category : #'event handling' }
+GtFilterNameElement >> onFocusWholeWish: anEvent [
+	anEvent consumed: true.
+	self requestFocus
 ]
 
 { #category : #'event handling' }
@@ -111,11 +152,11 @@ GtFilterNameElement >> removeSettingsElement [
 	settingsContainer removeChildren
 ]
 
-{ #category : #'event handling' }
-GtFilterNameElement >> requestRemoveFilter [
-	self hasFilterViewModel ifFalse: [ ^ self ].
-	self fireEvent: (GtFilterRemoveFilterViewModelWish new 
-		filterViewModel: self filterViewModel)
+{ #category : #accessing }
+GtFilterNameElement >> settingsElementDo: aBlock [
+	| aChild |
+	aChild := settingsContainer children at: 1 ifAbsent: [ ^ self ].
+	aBlock cull: aChild
 ]
 
 { #category : #'api - filter view model' }

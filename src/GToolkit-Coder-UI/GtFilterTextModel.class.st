@@ -9,6 +9,14 @@ Class {
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
+{ #category : #testing }
+GtFilterTextModel >> changesFilteredResult [
+	"Indicates whether it changes a result of filtered items, e.g., list of method coders."
+
+	<return: #Boolean>
+	^ self text isEmpty ifFalse: [ true ] ifTrue: [ false ]
+]
+
 { #category : #accessing }
 GtFilterTextModel >> completion [
 	<return: #GtCompletionStrategy or: nil>
@@ -83,6 +91,7 @@ GtFilterTextModel >> text [
 { #category : #accessing }
 GtFilterTextModel >> text: aText [
 	| aNewText |
+	aText ifNil: [ ^ self ].
 	aNewText := aText asRopedText.
 	(self text equals: aNewText) ifTrue: [ ^ self ].
 	

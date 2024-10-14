@@ -63,7 +63,6 @@ GtFiltersViewModel >> initialize [
 { #category : #'add / remove' }
 GtFiltersViewModel >> removeFilterViewModel: aFilterViewModel [
 	aFilterViewModel hasFilterModel ifFalse: [ ^ self ].
-	filterViewModels removeKey: aFilterViewModel filterModel ifAbsent: [ "ignore" ].
 	
 	self hasFiltersModel ifFalse: [ ^ self ].
 	self filtersModel removeFilterModel: aFilterViewModel filterModel

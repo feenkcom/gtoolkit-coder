@@ -68,6 +68,11 @@ GtFilterModelItem >> ifSome: aBlock ifNone: aNoneBlock [
 	^ aBlock cull: self itemValue cull: self
 ]
 
+{ #category : #testing }
+GtFilterModelItem >> isVirtualFilterModelItem [
+	^ false
+]
+
 { #category : #accessing }
 GtFilterModelItem >> itemValue [
 	^ self

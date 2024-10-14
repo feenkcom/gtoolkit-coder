@@ -20,6 +20,18 @@ GtFilterShortListSettingsElement >> defaultItemLabel [
 	^ ''
 ]
 
+{ #category : #'private - updating' }
+GtFilterShortListSettingsElement >> dispatchShowItemsWish [
+	buttonElement dispatchEvent: BrDropdownShowWish new
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> focusFirstItemElementInList: aListElement [
+	aListElement requestFocus.
+	aListElement selectFirst.
+	aListElement scrollToSelection
+]
+
 { #category : #initialization }
 GtFilterShortListSettingsElement >> handleElementDo: aBlock [
 	(handleElement at: 1) ifNotNil: aBlock
@@ -33,7 +45,9 @@ GtFilterShortListSettingsElement >> initialize [
 	self initializeButtonElement.
 	self initializeDropdownAptitude.
 	buttonElement addAptitude: buttonAptitude.
-	self addChild: buttonElement as: #button
+	self addChild: buttonElement as: #button.
+	self initializeEventHandlers.
+	self initializeShortcuts.
 ]
 
 { #category : #initialization }
@@ -49,9 +63,27 @@ GtFilterShortListSettingsElement >> initializeDropdownAptitude [
 			handle: [ self newHandleElement ]
 			content: [ self newContentElement ].
 	buttonAptitude beNotResizable.
+	buttonAptitude
+		when: BrDropdownIsHidden
+		do: [ :anEvent | self onDropdownIsHiddenEvent: anEvent ]
 ]
 
 { #category : #initialization }
+GtFilterShortListSettingsElement >> initializeEventHandlers [
+	self when: GtFilterEditWish do: [ :anEvent | self onEditWish: anEvent ]
+]
+
+{ #category : #initialization }
+GtFilterShortListSettingsElement >> initializeShortcuts [
+	self
+		addShortcut: (BlShortcutWithAction new
+				name: 'Display items';
+				combination: (BlKeyCombination space or: BlKeyCombination enter);
+				overrideChildren: false;
+				action: [ :anEvent | self onDisplayItemsEvent: anEvent ])
+]
+
+{ #category : #accessing }
 GtFilterShortListSettingsElement >> listElementDo: aBlock [
 	(listElement at: 1) ifNotNil: aBlock
 ]
@@ -77,6 +109,7 @@ GtFilterShortListSettingsElement >> newContentElement [
 			fitContentLimited;
 			itemStencil: [ :anItemType :aListWidget | self newItemElement ];
 			itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
+				anItemElement disabled: anItemObject isVirtualFilterModelItem.
 				anItemElement
 					label: (anItemObject label ifNil: [ self defaultItemLabel ]);
 					icon: (anItemObject icon ifNil: [ self defaultItemIcon ]);
@@ -87,7 +120,14 @@ GtFilterShortListSettingsElement >> newContentElement [
 					label: self defaultItemLabel;
 					icon: self defaultItemIcon;
 					id: nil;
-					model: nil ].
+					model: nil ];
+			when: BlElementAddedToSceneGraphEvent
+				do: [ :anEvent | self onListElementAddedToSceneGraph: anEvent ];
+			addShortcut: (BlShortcutWithAction new
+					name: 'Pick selected filter item';
+					description: 'Pick selected item as the filter selected item';
+					combination: BlKeyCombination builder enter build;
+					action: [ :aShortcutEvent :aShortcut | self onPickSelectedItemEvent: aShortcutEvent ]).
 
 	self updateListElement: aListElement.
 	listElement at: 1 put: aListElement.
@@ -119,8 +159,29 @@ GtFilterShortListSettingsElement >> newItemElement [
 		aptitude: BrGlamorousButtonRectangularAptitude;
 		addAptitude: BrGlamorousButtonIconAptitude;
 		addAptitude: BrGlamorousButtonLabelAptitude;
+		hMatchParent;
+		alignCenterLeft;
 		label: 'item';
-		action: [ :aButton | self onItemClick: aButton ]
+		action: [ :aButton | self onItemClick: aButton ];
+		when: BlMouseEnterEvent
+			do: [ :anEvent | self onItemMouseEnterEvent: anEvent ]
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onDisplayItemsEvent: anEvent [
+	anEvent consumed: true.
+	self dispatchShowItemsWish
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onDropdownIsHiddenEvent: anEvent [
+	self fireEvent: GtFilterFocusWholeWish new
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onEditWish: anEvent [
+	anEvent consumed: true.
+	self dispatchShowItemsWish
 ]
 
 { #category : #'api - filter view model' }
@@ -132,14 +193,40 @@ GtFilterShortListSettingsElement >> onFilterViewModelChanged [
 { #category : #'event handling' }
 GtFilterShortListSettingsElement >> onItemClick: aButton [
 	self hasFilterViewModel ifFalse: [ ^ self ].
-	aButton fireEvent: BrDropdownHideWish new.
+	self updateSelectedItem: aButton model from: aButton.
+]
 
-	self filterViewModel selectedItem: aButton model
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onItemMouseEnterEvent: anEvent [
+	"Select the hovered item"
+
+	| aButton aFilterItem |
+	aButton := anEvent currentTarget.
+	aFilterItem := aButton model.
+	aFilterItem ifNil: [ ^ self ].
+	self
+		listElementDo: [ :aListElement | 
+			aListElement
+				itemSuchThat: [ :eachItem | eachItem == aFilterItem ]
+				do: [ :anIndex | aListElement selectOne: anIndex ] ]
 ]
 
 { #category : #'event handling' }
 GtFilterShortListSettingsElement >> onItemsChanged: anAnnouncement [
 	BlTaskAction enqueueElement: self action: [ self updateElement ]
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onListElementAddedToSceneGraph: anEvent [
+	self focusFirstItemElementInList: anEvent currentTarget
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onPickSelectedItemEvent: aShortcutEvent [
+	| anElementList |
+	anElementList := aShortcutEvent currentTarget.
+	anElementList selectedItemDo: [ :anItem :anIndex | 
+		self updateSelectedItem: anItem from: anElementList ]
 ]
 
 { #category : #'event handling' }
@@ -212,7 +299,23 @@ GtFilterShortListSettingsElement >> updateListElement [
 
 { #category : #'private - updating' }
 GtFilterShortListSettingsElement >> updateListElement: anElement [
+	| aCollection |
 	self hasFilterViewModel ifFalse: [ ^ self ].
+	aCollection := self filterViewModel itemsWithoutSelection.
+	aCollection
+		ifEmpty: [ anElement items: {GtFilterModelEmptyItem default} ]
+		ifNotEmpty: [ anElement items: aCollection ]
+]
 
-	anElement items: self filterViewModel itemsWithoutSelection
+{ #category : #'private - updating' }
+GtFilterShortListSettingsElement >> updateSelectedItem: aFilterModelItem from: anElement [
+	aFilterModelItem ifNil: [ ^ self ].
+	aFilterModelItem isVirtualFilterModelItem ifTrue: [ ^ self ].
+	self hasFilterViewModel ifFalse: [ ^ self ].
+	BlTaskAction
+		enqueueElement: self
+		action: [ anElement fireEvent: BrDropdownHideWish new ].
+	BlTaskAction
+		enqueueElement: self
+		action: [ self filterViewModel selectedItem: aFilterModelItem ]
 ]
