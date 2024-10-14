@@ -20,24 +20,13 @@ Class {
 }
 
 { #category : #'private - refactorings' }
-GtCoderProtocolsGroupedListElement >> addProtocolFrom: aProtocolEditor [
-	self navigationModel
-		selectedClassDo: [ :aClass | self addProtocolNamed: aProtocolEditor text asString trimmed in: aClass ].
+GtCoderProtocolsGroupedListElement >> autoCategorizeProtocol: aPharoProtocol [
+	| classifier |
 
-	^ aProtocolEditor fireEvent: BrDropdownHideWish new
-]
+	classifier := MethodClassifier new.
 
-{ #category : #'private - refactorings' }
-GtCoderProtocolsGroupedListElement >> addProtocolNamed: aProtocolName in: aClass [
-	| refactoring |
-	
-	aProtocolName ifEmpty: [ ^ self ].
-	
-	refactoring := RBAddProtocolChange
-		addProtocolNamed: aProtocolName
-		in: aClass.
-	
-	refactoring execute
+	aPharoProtocol methodSelectors do: [ :selector|
+		classifier classify: aPharoProtocol protocolClass >> selector ]
 ]
 
 { #category : #'private - instance creation' }
@@ -53,90 +42,6 @@ GtCoderProtocolsGroupedListElement >> bindProtocol: item toElement: element [
 ]
 
 { #category : #'private - instance creation' }
-GtCoderProtocolsGroupedListElement >> createAddProtocolButton [
-	| aButtonStencil aPopUp |
-	aButtonStencil := [
-		BrButton new
-			beTinySize;
-			aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0) + BrGlamorousButtonIconAptitude;
-			icon: BrGlamorousVectorIcons add ] asStencil.
-
-	aPopUp := BrGlamorousWithDropdownAptitude
-			handle: aButtonStencil
-			content: [ :aButton | self createNewProtocolForm ].
-
-	^ aButtonStencil asElement
-		addAptitude: (BrGlamorousButtonFlatExteriorAptitude new
-			backgroundPaint: (Color gray alpha: 0.1));
-		addAptitude: BrGlamorousButtonWithLabelTooltipAptitude;
-		addAptitude: aPopUp;
-		label: 'Add new protocol'
-]
-
-{ #category : #'private - instance creation' }
-GtCoderProtocolsGroupedListElement >> createNewProtocolForm [
-	| aContainer aProtocolEditor aDefaultText aProtocolCompleter anAcceptButton |
-	aDefaultText := '' asRopedText
-			attribute: (BrGhostTextAttribute
-					for: ('new protocol name' asRopedText glamorousFormEditorCodeFontAndSize
-							foreground: Color lightGray)).
-
-	aContainer := BrHorizontalPane new
-			padding: (BlInsets
-					top: 6
-					right: 2
-					bottom: 6
-					left: 2);
-			cellSpacing: 6;
-			alignCenterLeft;
-			fitContent.
-
-	aProtocolEditor := BrEditor new
-			aptitude: BrGlamorousRegularEditorAptitude new glamorousRegularSmallSize
-					+ BrGlamorousInputFieldSpacingAptitude;
-			beMode: BrTextEditorEditableSingleLineMode new;
-			geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
-			vFitContent;
-			hFitContent;
-			constraintsDo: [ :c | c minWidth: 150 ];
-			text: aDefaultText;
-			requestFocus.
-
-	aProtocolCompleter := GtCompletionController
-			on: aProtocolEditor
-			strategy: GtMethodProtocolCompletionStrategy new.
-
-	aProtocolCompleter install.
-
-	aProtocolEditor
-		addEditorShortcut: (BlShortcutWithAction new
-				combination: BlKeyCombination escape;
-				action: [ :anEvent | aProtocolEditor fireEvent: BrDropdownHideWish new ]).
-
-	aProtocolEditor
-		addEditorShortcut: (BlShortcutWithAction new
-				combination: BlKeyCombination enter;
-				action: [ :anEvent | self addProtocolFrom: aProtocolEditor ]).
-
-	aContainer addChild: aProtocolEditor.
-
-	anAcceptButton := BrButton new
-			beSmallSize;
-			aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0.5)
-					+ BrGlamorousButtonIconAptitude
-					+ (BrGlamorousButtonFlatExteriorAptitude new
-							backgroundPaint: (Color gray alpha: 0.1))
-					+ BrGlamorousButtonWithLabelTooltipAptitude;
-			icon: BrGlamorousVectorIcons accept;
-			label: 'Add protocol';
-			action: [ self addProtocolFrom: aProtocolEditor ].
-
-	aContainer addChild: anAcceptButton.
-
-	^ aContainer
-]
-
-{ #category : #'private - instance creation' }
 GtCoderProtocolsGroupedListElement >> createProtocolDropHandler [
 	^ BlDropHandler new
 		acceptDomainObjectsSuchThat: [ :anObject | anObject isCompiledMethod ];
@@ -145,19 +50,6 @@ GtCoderProtocolsGroupedListElement >> createProtocolDropHandler [
 			anItemsDraggedOverEvent currentTarget
 				effect: (BlOverlayAboveEffect new paint: (Color gray alpha: 0.2)) ];
 		whenDragLeftDo: [ :anItemsLeftEvent | anItemsLeftEvent currentTarget effect: BlNullEffect new ]
-]
-
-{ #category : #'private - instance creation' }
-GtCoderProtocolsGroupedListElement >> createProtocolGroupHeader [
-	^ BrHorizontalPane new
-		alignCenterLeft;
-		hMatchParent;
-		vFitContent;
-		addChild: (BrLabel new beSmallSize
-				padding: (BlInsets top: 2 bottom: 2);
-				aptitude: (BrGlamorousLabelAptitude new foreground: Color gray));
-		addChild: self createAddProtocolButton;
-		yourself
 ]
 
 { #category : #'private - instance creation' }
@@ -227,15 +119,23 @@ GtCoderProtocolsGroupedListElement >> createProtocolLabelElement [
 GtCoderProtocolsGroupedListElement >> createProtocolListContextMenuItemsFor: aPharoProtocol [
 	^ Array
 		streamContents: [ :aStream | 
-			"aPharoProtocol canBeRemoved
-				ifTrue: [ aStream
-						nextPut: (self createLabel: 'Remove ' description: aPharoProtocol name)
-								-> [ :elem | self removeProtocol: aPharoProtocol in: elem ] ]."
-
+			aPharoProtocol name = Protocol unclassified
+				ifTrue: [
+					aStream
+						nextPut: (self createLabel: 'Auto-categorize methods' description: '')
+								-> [ :elem | self autoCategorizeProtocol: aPharoProtocol ] ].
+								
 			aPharoProtocol canBeRenamed
 				ifTrue: [ aStream
 						nextPut: (self createLabel: 'Rename ' description: aPharoProtocol name)
-								-> [ :elem | self requestRenameProtocol: aPharoProtocol ] ] ]
+								-> [ :elem | self requestRenameProtocol: aPharoProtocol ] ].
+			
+			aPharoProtocol canBeRemoved
+				ifTrue: [ aStream
+						nextPut: (self createLabel: 'Remove ' description: aPharoProtocol name)
+								-> [ :elem | self removeProtocol: aPharoProtocol in: elem ] ].
+		
+		]
 ]
 
 { #category : #'private - instance creation' }
@@ -360,12 +260,11 @@ GtCoderProtocolsGroupedListElement >> initialize [
 	self
 		padding: (BlInsets left: 5 right: 10);
 		matchParent;
-		headerElementStencil: [ self createProtocolGroupHeader ];
-		headerDataBinder: [ :header :each | 
-			each domainObject = 'virtual'
-				ifTrue: [ header children second visibility: BlVisibility gone ]
-				ifFalse: [ header children second visibility: BlVisibility visible ].
-			header children first text: each domainObject asRopedText ].
+		headerElementStencil: [ GtCoderProtocolsGroupHeaderElement new ];
+		headerDataBinder: [ :header :each |
+			header
+				protocolsGroupName: each domainObject
+				targetClass: self navigationModel selectedClass ].
 
 	self when: BrSelectionChanged do: [ self privateEndRenameProtocol ].
 
@@ -452,10 +351,7 @@ GtCoderProtocolsGroupedListElement >> removeProtocol: aGtPharoProtocol in: elem 
 	refactoring := RBRemoveProtocolChange
 			removeProtocolNamed: aGtPharoProtocol name
 			in: aGtPharoProtocol protocolClass.
-	^ self
-		addPreviewButtonFor: refactoring
-		to: elem
-		cancelSelector: #updateProtocolList
+	refactoring execute
 ]
 
 { #category : #'private - refactorings' }

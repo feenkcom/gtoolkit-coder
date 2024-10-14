@@ -135,7 +135,8 @@ GtFilterItemsElement >> createDropdownContent [
 	^ aListElement
 		vFitContentLimited;
 		hFitContentLimited;
-		constraintsDo: [ :c | c maxHeight: 100 ];
+		constraintsDo: [ :c | 
+			c maxHeight: 100 ];
 		itemStencil: [ :anItemType | self createItemElementForListElement: aListElement ];
 		itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
 			anItemElement id: (GtFilterItemId indexed: anItemIndex).
@@ -148,8 +149,8 @@ GtFilterItemsElement >> createDropdownContent [
 			(anItemElement childAt: 1) text: ''.
 			anItemElement ];
 		items: (self hasFiltersViewModel
-				ifTrue: [ self filtersViewModel availableFilters ]
-				ifFalse: [ #() ]);
+				ifTrue: [ self filtersViewModel availableFilters ifEmpty: [ {GtFilterVirtualEmptyModel default} ] ]
+				ifFalse: [ {GtFilterVirtualEmptyModel default} ]);
 		when: BlElementAddedToSceneGraphEvent
 			do: [ :anEvent | self onListElementAddedToSceneGraph: anEvent ];
 		addShortcut: (BlShortcutWithAction new
@@ -200,11 +201,25 @@ GtFilterItemsElement >> initialize [
 	self padding: (BlInsets  top: 5 right: 2 bottom: 2 left: 1).
 	self clipChildren: false.
 	self initializeEventHandlers.
+	self initializeShortcuts.
 ]
 
 { #category : #initialization }
 GtFilterItemsElement >> initializeEventHandlers [
 	
+]
+
+{ #category : #initialization }
+GtFilterItemsElement >> initializeShortcuts [
+	self
+		addShortcut: (BlShortcutWithAction new
+				name: 'Add new filter';
+				combination: (BlKeyCombination builder
+						shift;
+						primary;
+						s;
+						build);
+				action: [ :anEvent | self onAddNewFilterShortcutEvent: anEvent ])
 ]
 
 { #category : #'private - updating' }
@@ -236,7 +251,9 @@ GtFilterItemsElement >> newAddFilterButton [
 				combination: BlKeyCombination enter;
 				action: [ :anEvent | anEvent currentTarget dispatchEvent: BrDropdownShowWish new ]);
 		when: BrDropdownIsHidden
-			do: [ :anEvent | self onAddFilterDropdownIsHiddenEvent: anEvent ]
+			do: [ :anEvent | self onAddFilterDropdownIsHiddenEvent: anEvent ];
+		when: GtFilterEditWish
+			do: [ :anEvent | anEvent currentTarget dispatchEvent: BrDropdownShowWish new ]
 ]
 
 { #category : #'private - updating' }
@@ -265,6 +282,15 @@ GtFilterItemsElement >> newRemoveButton [
 { #category : #'private - updating' }
 GtFilterItemsElement >> onAddFilterDropdownIsHiddenEvent: anEvent [
 	anEvent currentTarget requestFocus
+]
+
+{ #category : #'event handling' }
+GtFilterItemsElement >> onAddNewFilterShortcutEvent: anEvent [
+	self hasChildren ifFalse: [ ^ self ].
+	anEvent consumed: true.
+	self children last
+		requestFocus;
+		dispatchEvent: GtFilterEditWish new
 ]
 
 { #category : #'event handling' }
@@ -317,6 +343,7 @@ GtFilterItemsElement >> onItemMouseClickEvent: anEvent [
 	anEvent consumed: true.
 	anEvent currentTarget fireEvent: BrDropdownHideWish new.
 	aModel := anEvent currentTarget userData at: GtFilterModel ifAbsent: [ nil ].
+	aModel isVirtualFilterModel ifTrue: [ ^ self ].
 	self requestAddFilterModel: aModel
 ]
 
@@ -391,6 +418,7 @@ GtFilterItemsElement >> removeItemElementForViewModel: aFilterViewModel [
 { #category : #'event handling' }
 GtFilterItemsElement >> requestAddFilterModel: aFilterModel [
 	aFilterModel ifNil: [ ^ self ].
+	aFilterModel isVirtualFilterModel ifTrue: [ ^ self ].
 	self hasFiltersViewModel ifFalse: [ ^ self ].
 
 	self filtersViewModel addFilterModel: aFilterModel
