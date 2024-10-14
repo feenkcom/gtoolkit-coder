@@ -19,6 +19,16 @@ Class {
 	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
+{ #category : #'private - refactorings' }
+GtCoderProtocolsGroupedListElement >> autoCategorizeProtocol: aPharoProtocol [
+	| classifier |
+
+	classifier := MethodClassifier new.
+
+	aPharoProtocol methodSelectors do: [ :selector|
+		classifier classify: aPharoProtocol protocolClass >> selector ]
+]
+
 { #category : #'private - instance creation' }
 GtCoderProtocolsGroupedListElement >> bindProtocol: item toElement: element [
 	| itemText |
@@ -109,15 +119,23 @@ GtCoderProtocolsGroupedListElement >> createProtocolLabelElement [
 GtCoderProtocolsGroupedListElement >> createProtocolListContextMenuItemsFor: aPharoProtocol [
 	^ Array
 		streamContents: [ :aStream | 
-			"aPharoProtocol canBeRemoved
-				ifTrue: [ aStream
-						nextPut: (self createLabel: 'Remove ' description: aPharoProtocol name)
-								-> [ :elem | self removeProtocol: aPharoProtocol in: elem ] ]."
-
+			aPharoProtocol name = Protocol unclassified
+				ifTrue: [
+					aStream
+						nextPut: (self createLabel: 'Auto-categorize methods' description: '')
+								-> [ :elem | self autoCategorizeProtocol: aPharoProtocol ] ].
+								
 			aPharoProtocol canBeRenamed
 				ifTrue: [ aStream
 						nextPut: (self createLabel: 'Rename ' description: aPharoProtocol name)
-								-> [ :elem | self requestRenameProtocol: aPharoProtocol ] ] ]
+								-> [ :elem | self requestRenameProtocol: aPharoProtocol ] ].
+			
+			aPharoProtocol canBeRemoved
+				ifTrue: [ aStream
+						nextPut: (self createLabel: 'Remove ' description: aPharoProtocol name)
+								-> [ :elem | self removeProtocol: aPharoProtocol in: elem ] ].
+		
+		]
 ]
 
 { #category : #'private - instance creation' }
@@ -333,10 +351,7 @@ GtCoderProtocolsGroupedListElement >> removeProtocol: aGtPharoProtocol in: elem 
 	refactoring := RBRemoveProtocolChange
 			removeProtocolNamed: aGtPharoProtocol name
 			in: aGtPharoProtocol protocolClass.
-	^ self
-		addPreviewButtonFor: refactoring
-		to: elem
-		cancelSelector: #updateProtocolList
+	refactoring execute
 ]
 
 { #category : #'private - refactorings' }
