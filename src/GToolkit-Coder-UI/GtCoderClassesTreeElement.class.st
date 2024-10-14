@@ -65,6 +65,14 @@ GtCoderClassesTreeElement >> addPreviewButtonFor: refactoring to: elem cancelSel
 ]
 
 { #category : #initialization }
+GtCoderClassesTreeElement >> bind: aClassHierarchyTree element: aClassElement index: anIndexInTree [
+	aClassElement
+		id: (GtCoderNavigationClassesTreeElementId indexed: anIndexInTree).
+		
+	aClassElement classHierarchyTree: aClassHierarchyTree
+]
+
+{ #category : #initialization }
 GtCoderClassesTreeElement >> browseReferencesTo: aClass [
 	self phlow spawnObject: (aClass gtReferences) 
 ]
@@ -198,22 +206,12 @@ GtCoderClassesTreeElement >> createLabel: aString description: description [
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> createNodeElement [
-	| aLabelAptitude |
-
-	aLabelAptitude := BrGlamorousLabelAptitude new.
-	aLabelAptitude add: BrGlamorousListItemAptitude.
-	aLabelAptitude
-		add: (BrGlamorousWithContextMenuAptitude
+	^ GtCoderClassesTreeItemElement new
+		addEventHandler: self createClassDropHandler;
+		addAptitude: (BrGlamorousWithContextMenuAptitude
 				content: [ :aWidget | 
 					GtCoderNavigationContextMenuContent new
-						items: (self contextMenuItemsFor: (aWidget userData at: #'coder-class')) ]).
-
-	^ BrLabel new
-		hMatchParent;
-		vFitContent;
-		beSmallSize;
-		aptitude: aLabelAptitude;
-		addEventHandler: self createClassDropHandler
+						items: (self contextMenuItemsFor: aWidget theClass) ])
 ]
 
 { #category : #initialization }
@@ -225,21 +223,10 @@ GtCoderClassesTreeElement >> initialize [
 	self
 		nodeStencil: [ self createNodeElement ];
 		nodeDataBinder: [ :aClassElement :aClassHierarchyTree :aTreeNode | 
-			aClassElement
-				id: (GtCoderNavigationClassesTreeElementId indexed: aTreeNode indexInTree).
-
-			aClassElement userData at: #'coder-class' put: aClassHierarchyTree rootClass.
-
-			aClassHierarchyTree
-				ifNil: [ aClassElement text: '' asRopedText ]
-				ifNotNil: [ | aClass aText |
-					aClass := aClassHierarchyTree rootClass.
-					aText := aClass gtDisplayText asRopedText.
-					(aClass isAbstract or: [ aClass hasAbstractMethods ])
-						ifTrue: [ aText italic ].
-					aClass isDeprecated
-						ifTrue: [ aText append: ' (deprecated)' asRopedText italic ].
-					aClassElement text: aText ] ].
+			self
+				bind: aClassHierarchyTree
+				element: aClassElement
+				index: aTreeNode indexInTree ].
 	self
 		when: BrSelectionDoubleClicked
 		do: [ :evt | self initializeWithHierachyForClass: self selectedClass ]
