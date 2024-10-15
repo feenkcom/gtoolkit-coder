@@ -707,14 +707,12 @@ GtCoderNavigationPackagesTagsClassesElement >> reselectPackageOrTag: aSelectedPa
 
 { #category : #'api - package reselections' }
 GtCoderNavigationPackagesTagsClassesElement >> reselectPackageOrTag: aSelectedPackageOrTag afterRemovalOfTagNamed: aRemovedTagName [
-	aSelectedPackageOrTag ifNotNil: [ 
-		self deselectPackages.
-		aSelectedPackageOrTag name = aRemovedTagName
-			ifTrue: [ 
-				self expandPackage: aSelectedPackageOrTag package.
-				self hideClassList. ]
-			ifFalse: [ 
-				self selectPackageOrTag: aSelectedPackageOrTag ] ]
+	aSelectedPackageOrTag
+		ifNotNil: [ self deselectPackages.
+			(aSelectedPackageOrTag name sameContentAs: aRemovedTagName)
+				ifTrue: [ self expandPackage: aSelectedPackageOrTag package.
+					self hideClassList ]
+				ifFalse: [ self selectPackageOrTag: aSelectedPackageOrTag ] ]
 ]
 
 { #category : #'api - class selections' }
