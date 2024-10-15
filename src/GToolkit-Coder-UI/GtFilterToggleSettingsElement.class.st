@@ -177,8 +177,9 @@ GtFilterToggleSettingsElement >> registerNavigationShortcutsForToggle: aToggle [
 GtFilterToggleSettingsElement >> requestToggleFocus [
 	toggleGroupElement viewModel hasActivatedToggle
 		ifTrue: [ toggleGroupElement activatedToggle requestFocus ]
-		ifFalse: [ toggleGroupElement toggles
-				ifNotEmpty: [ :aCollection | aCollection first requestFocus ] ]
+		ifFalse: [ toggleGroupElement viewModel toggles
+				ifNotEmpty: [ :aCollection | aCollection first widgetDo: [ :aWidget |
+					aWidget requestFocus ] ] ]
 ]
 
 { #category : #'api - filter view model' }
