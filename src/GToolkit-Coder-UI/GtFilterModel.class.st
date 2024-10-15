@@ -21,7 +21,7 @@ GtFilterModel >> = anObject [
 	self == anObject ifTrue: [ ^ true ].
 
 	^ self class = anObject class
-		and: [ self label = anObject label 
+		and: [ self name = anObject name 
 		and: [ self order = anObject order ] ]
 ]
 
@@ -116,7 +116,7 @@ GtFilterModel >> gtLiveFor: aView [
 { #category : #comparing }
 GtFilterModel >> hash [
 	^ self class hash 
-		bitXor: (self label hash 
+		bitXor: (self name hash 
 		bitXor: self order hash)
 ]
 
