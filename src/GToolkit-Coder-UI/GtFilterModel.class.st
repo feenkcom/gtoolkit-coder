@@ -5,9 +5,10 @@ Class {
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'announcer',
-		'label',
 		'order',
-		'creator'
+		'creator',
+		'name',
+		'labelBuilder'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
@@ -28,6 +29,12 @@ GtFilterModel >> = anObject [
 GtFilterModel >> announcer [
 	<return: #Announcer>
 	^ announcer ifNil: [ announcer := Announcer new ]
+]
+
+{ #category : #converting }
+GtFilterModel >> asFilterLabeledElement [
+	<return: #GtFilterSettingsElement>
+	^ self filterLabelElementClass new filterViewModel: self asFilterViewModel
 ]
 
 { #category : #converting }
@@ -67,8 +74,11 @@ GtFilterModel >> creator: anObject [
 ]
 
 { #category : #initialization }
-GtFilterModel >> defaultFilterLabel [
-	^ self class name copyFrom: 9 to: self class name size - 5
+GtFilterModel >> defaultFilterName [
+	| aToIndex aFromIndex |
+	aToIndex := (self class name size - 5 max: 1).
+	aFromIndex := 9 min: aToIndex.
+	^ self class name copyFrom: aFromIndex to: aToIndex
 ]
 
 { #category : #initialization }
@@ -84,9 +94,15 @@ GtFilterModel >> equals: anObject [
 ]
 
 { #category : #accessing }
+GtFilterModel >> filterLabelElementClass [
+	<return: #'GtFilterLabelElement class'>
+	^ labelBuilder labelElementClass
+]
+
+{ #category : #accessing }
 GtFilterModel >> filterViewModelClass [
 	<return: #'GtFilterViewModel class'>
-	^ self subclassResponsibility
+	^ labelBuilder labelElementClass
 ]
 
 { #category : #'gt - extensions' }
@@ -94,8 +110,7 @@ GtFilterModel >> gtLiveFor: aView [
 	<gtView>
 	^ aView explicit
 		title: 'Live';
-		stencil: [ (GtFilterNameElement new filterViewModel: self asFilterViewModel)
-				margin: (BlInsets all: 10) ]
+		stencil: [ self asFilterLabeledElement margin: (BlInsets all: 10) ]
 ]
 
 { #category : #comparing }
@@ -103,6 +118,12 @@ GtFilterModel >> hash [
 	^ self class hash 
 		bitXor: (self label hash 
 		bitXor: self order hash)
+]
+
+{ #category : #initialization }
+GtFilterModel >> initialize [
+	super initialize.
+	labelBuilder := GtFilterModelImplicitPrefixLabel new model: self
 ]
 
 { #category : #testing }
@@ -115,20 +136,39 @@ GtFilterModel >> label [
 	"Return filter label"
 
 	<return: #String>
-	^ label ifNil: [ label := self defaultFilterLabel ]
+	^ labelBuilder label
 ]
 
 { #category : #accessing }
 GtFilterModel >> label: aString [
-	label = aString ifTrue: [ ^ self ].
-	
-	label := aString.
-	self notifyLabelChanged.
+	self
+		deprecated: 'Use name: instead'
+		transformWith: '`@receiver label: `@argument' -> '`@receiver name: `@argument'.
+	self name: aString
+]
+
+{ #category : #accessing }
+GtFilterModel >> name [
+	"Return filter name"
+
+	<return: #String>
+	^ name ifNil: [ name := self defaultFilterName ]
+]
+
+{ #category : #accessing }
+GtFilterModel >> name: aString [
+	"Set filter name. 
+	The name is used in a filter selection (dropdown) list."
+
+	name = aString ifTrue: [ ^ self ].
+
+	name := aString.
+	self notifyLabelChanged
 ]
 
 { #category : #accessing }
 GtFilterModel >> named: aString [
-	self label: aString
+	self name: aString
 ]
 
 { #category : #'private - notifying' }
@@ -149,10 +189,22 @@ GtFilterModel >> order: anObject [
 	order := anObject
 ]
 
+{ #category : #accessing }
+GtFilterModel >> prefixLabel: aString [
+	"Display a filter label before a setting widget."
+
+	| aLabel |
+	aLabel := GtFilterModelExplicitPrefixLabel new label: aString.
+	labelBuilder = aLabel ifTrue: [ ^ self ].
+
+	labelBuilder := aLabel.
+	self notifyLabelChanged
+]
+
 { #category : #printing }
 GtFilterModel >> printDetailsOn: aStream [
 	aStream
-		nextPutAll: self label asString;
+		nextPutAll: self name asString;
 		nextPutAll: ': ';
 		print: (self selectedValue ifNotNil: [ :aValue | aValue asFilterModelItem itemValue ]);
 		nextPutAll: ', order: ';
@@ -173,4 +225,16 @@ GtFilterModel >> selectedValue [
 	"Return a filter value, e.g., selected item, input text."
 
 	^ nil
+]
+
+{ #category : #accessing }
+GtFilterModel >> suffixLabel: aString [
+	"Display a filter label after a setting widget."
+
+	| aLabel |
+	aLabel := GtFilterModelExplicitSuffixLabel new label: aString.
+	labelBuilder = aLabel ifTrue: [ ^ self ].
+
+	labelBuilder := aLabel.
+	self notifyLabelChanged
 ]

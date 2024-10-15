@@ -9,8 +9,7 @@ Class {
 { #category : #'private - updating' }
 GtFilterItemsElement >> addElementForFilterViewModel: aFilterViewModel index: anIndex [
 	| anElement |
-	anElement := GtFilterNameElement new
-			filterViewModel: aFilterViewModel;
+	anElement := aFilterViewModel asFilterLabeledElement
 			id: (GtFilterNameId indexed: anIndex);
 			margin: (BlInsets left: 3 right: 3);
 			constraintsDo: [ :c | 
@@ -141,7 +140,7 @@ GtFilterItemsElement >> createDropdownContent [
 		itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
 			anItemElement id: (GtFilterItemId indexed: anItemIndex).
 			anItemElement userData at: GtFilterModel put: anItemObject.
-			(anItemElement childAt: 1) text: anItemObject label.
+			(anItemElement childAt: 1) text: anItemObject name.
 			anItemElement ];
 		itemDataUnbinder: [ :anItemElement :anItemObject :anItemIndex | 
 			anItemElement id: nil.

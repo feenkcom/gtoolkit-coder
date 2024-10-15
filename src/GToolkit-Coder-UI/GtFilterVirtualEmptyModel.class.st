@@ -15,3 +15,8 @@ GtFilterVirtualEmptyModel >> isVirtualFilterModel [
 GtFilterVirtualEmptyModel >> label [
 	^ 'empty'
 ]
+
+{ #category : #accessing }
+GtFilterVirtualEmptyModel >> name [
+	^ 'empty'
+]
