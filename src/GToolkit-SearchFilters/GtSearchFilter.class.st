@@ -129,6 +129,13 @@ GtSearchFilter >> notEmpty [
 	^ self result hasNext wait
 ]
 
+{ #category : #'api - accessing' }
+GtSearchFilter >> requesterContextDo: aBlock [
+	"Pass a requester context to aBlock if the  context is available"
+
+	^ nil
+]
+
 { #category : #converting }
 GtSearchFilter >> result [
 	^ self applyInScope: self defaultFilterScope
