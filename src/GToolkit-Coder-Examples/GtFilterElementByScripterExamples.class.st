@@ -12,7 +12,7 @@ GtFilterElementByScripterExamples >> booleanElement [
 	| aScripter |
 	aScripter := self
 			scripterWithModel: [ GtFilterModelExamples new booleanModel ]
-			element: [ :aModel | GtFilterNameElement new filterViewModel: aModel asFilterViewModel ].
+			element: [ :aModel | aModel asFilterLabeledElement ].
 
 	^ aScripter
 ]
@@ -36,7 +36,7 @@ GtFilterElementByScripterExamples >> shortListElement [
 	| aScripter |
 	aScripter := self
 			scripterWithModel: [ GtFilterModelExamples new shortListModel ]
-			element: [ :aModel | GtFilterNameElement new filterViewModel: aModel asFilterViewModel ].
+			element: [ :aModel | aModel asFilterLabeledElement ].
 
 	^ aScripter
 ]
@@ -47,7 +47,7 @@ GtFilterElementByScripterExamples >> textElement [
 	| aScripter |
 	aScripter := self
 			scripterWithModel: [ GtFilterModelExamples new textModel ]
-			element: [ :aModel | GtFilterNameElement new filterViewModel: aModel asFilterViewModel ].
+			element: [ :aModel | aModel asFilterLabeledElement ].
 
 	aScripter editor
 		click;

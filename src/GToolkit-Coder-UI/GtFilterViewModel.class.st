@@ -16,6 +16,12 @@ GtFilterViewModel >> announcer [
 ]
 
 { #category : #converting }
+GtFilterViewModel >> asFilterLabeledElement [
+	<return: #GtFilterSettingsElement>
+	^ self filterLabelElementClass new filterViewModel: self
+]
+
+{ #category : #converting }
 GtFilterViewModel >> asUserSettingsElement [
 	<return: #GtFilterSettingsElement>
 	^ self filterElementClass new filterViewModel: self
@@ -25,6 +31,14 @@ GtFilterViewModel >> asUserSettingsElement [
 GtFilterViewModel >> filterElementClass [
 	<return: #'GtFilterSettingsElement class'>
 	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+GtFilterViewModel >> filterLabelElementClass [
+	<return: #'GtFilterLabelElement class'>
+	^ self hasFilterModel
+		ifTrue: [ self filterModel filterLabelElementClass ]
+		ifFalse: [ GtFilterPrefixLabelElement ]
 ]
 
 { #category : #accessing }

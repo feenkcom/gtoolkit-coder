@@ -16,3 +16,13 @@ GtFilterModelLabelChanged >> label [
 GtFilterModelLabelChanged >> label: anObject [
 	label := anObject
 ]
+
+{ #category : #accessing }
+GtFilterModelLabelChanged >> name [
+	^ label
+]
+
+{ #category : #accessing }
+GtFilterModelLabelChanged >> name: aString [
+	label := aString
+]

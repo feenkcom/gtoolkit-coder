@@ -1,5 +1,5 @@
 Class {
-	#name : #GtFilterNameElement,
+	#name : #GtFilterLabelElement,
 	#superclass : #BlElement,
 	#traits : 'TBrLayoutResizable + TGtWithFilterViewModel',
 	#classTraits : 'TBrLayoutResizable classTrait + TGtWithFilterViewModel classTrait',
@@ -11,27 +11,24 @@ Class {
 }
 
 { #category : #'private - updating' }
-GtFilterNameElement >> addSettingsElement: anElement [
+GtFilterLabelElement >> addSettingsElement: anElement [
 	settingsContainer addChild: anElement as: GtFilterSettingsId
 ]
 
 { #category : #initialization }
-GtFilterNameElement >> defaultLayout [
+GtFilterLabelElement >> defaultLayout [
 	^ BlLinearLayout horizontal
 ]
 
 { #category : #initialization }
-GtFilterNameElement >> initialize [
+GtFilterLabelElement >> initialize [
 	super initialize.
 	self fitContent.
 	self beFocusable.
 	self beInSingleCompositionLayer.
-	self padding: (BlInsets top: 0 right: 0 bottom: 0 left: 2).
 
 	self initializeLabelElement.
 	self initializeSettingsContainer.
-	self addChild: labelElement.
-	self addChild: settingsContainer as: #container.
 
 	self initializeStyling.
 	self initializeEventHandlers.
@@ -39,7 +36,7 @@ GtFilterNameElement >> initialize [
 ]
 
 { #category : #initialization }
-GtFilterNameElement >> initializeEventHandlers [
+GtFilterLabelElement >> initializeEventHandlers [
 	self when: BlClickEvent do: [ :anEvent | self onClickEvent: anEvent ].
 	self when: GtFilterEditWish do: [ :anEvent | self onEditWish: anEvent ].
 	self when: GtFilterFocusIntendedPartAfterAddingWish do: [ :anEvent | 
@@ -49,7 +46,7 @@ GtFilterNameElement >> initializeEventHandlers [
 ]
 
 { #category : #initialization }
-GtFilterNameElement >> initializeLabelElement [
+GtFilterLabelElement >> initializeLabelElement [
 	labelElement := BrLabel new
 			id: GtFilterTagLabelId;
 			text: 'Filter';
@@ -60,21 +57,23 @@ GtFilterNameElement >> initializeLabelElement [
 ]
 
 { #category : #initialization }
-GtFilterNameElement >> initializeSettingsContainer [
+GtFilterLabelElement >> initializeSettingsContainer [
 	settingsContainer := BrFrame new
 			hFitContentLimited;
 			vFitContent;
 			margin: (BlInsets all: 2);
-			constraintsDo: [ :c | c linear vertical alignCenter ]
+			constraintsDo: [ :c | 
+				c linear vertical alignCenter.
+				c minHeight: 20 ]
 ]
 
 { #category : #initialization }
-GtFilterNameElement >> initializeShortcuts [
+GtFilterLabelElement >> initializeShortcuts [
 	
 ]
 
 { #category : #initialization }
-GtFilterNameElement >> initializeStyling [
+GtFilterLabelElement >> initializeStyling [
 	self
 		addAptitude: (BrStyleCommonAptitude new
 				default: [ :aStyle | 
@@ -91,24 +90,24 @@ GtFilterNameElement >> initializeStyling [
 ]
 
 { #category : #'event handling' }
-GtFilterNameElement >> onClickEvent: anEvent [
+GtFilterLabelElement >> onClickEvent: anEvent [
 	anEvent consumed: true.
 	self requestFocus
 ]
 
 { #category : #'event handling' }
-GtFilterNameElement >> onEditWish: anEvent [
+GtFilterLabelElement >> onEditWish: anEvent [
 	self
 		settingsElementDo: [ :anElement | anElement dispatchEvent: GtFilterEditWish new ]
 ]
 
 { #category : #'api - filter view model' }
-GtFilterNameElement >> onFilterViewModelChanged [
+GtFilterLabelElement >> onFilterViewModelChanged [
 	self updateElement
 ]
 
 { #category : #'event handling' }
-GtFilterNameElement >> onFocusFirstPartWish: anEvent [
+GtFilterLabelElement >> onFocusFirstPartWish: anEvent [
 	anEvent consumed: true.
 	self
 		settingsElementDo: [ :aSettingsElement | 
@@ -130,37 +129,37 @@ GtFilterNameElement >> onFocusFirstPartWish: anEvent [
 ]
 
 { #category : #'event handling' }
-GtFilterNameElement >> onFocusNextPartdWish: anEvent [
+GtFilterLabelElement >> onFocusNextPartdWish: anEvent [
 	anEvent consumed: true.
 	self requestFocus.
 	self fireEvent: GtFilterFocusNextFilterWish new
 ]
 
 { #category : #'event handling' }
-GtFilterNameElement >> onFocusWholeWish: anEvent [
+GtFilterLabelElement >> onFocusWholeWish: anEvent [
 	anEvent consumed: true.
 	self requestFocus
 ]
 
 { #category : #'event handling' }
-GtFilterNameElement >> onLabelChanged: anAnnouncement [
+GtFilterLabelElement >> onLabelChanged: anAnnouncement [
 	BlTaskAction enqueueElement: self action: [ self updateLabelElement ]
 ]
 
 { #category : #'private - updating' }
-GtFilterNameElement >> removeSettingsElement [
+GtFilterLabelElement >> removeSettingsElement [
 	settingsContainer removeChildren
 ]
 
 { #category : #accessing }
-GtFilterNameElement >> settingsElementDo: aBlock [
+GtFilterLabelElement >> settingsElementDo: aBlock [
 	| aChild |
 	aChild := settingsContainer children at: 1 ifAbsent: [ ^ self ].
 	aBlock cull: aChild
 ]
 
 { #category : #'api - filter view model' }
-GtFilterNameElement >> subscribeToFilterViewModel [
+GtFilterLabelElement >> subscribeToFilterViewModel [
 	self filterViewModel weak
 		when: GtFilterViewModelLabelChanged
 		send: #onLabelChanged:
@@ -168,26 +167,27 @@ GtFilterNameElement >> subscribeToFilterViewModel [
 ]
 
 { #category : #'api - filter view model' }
-GtFilterNameElement >> unsubscribeFromFilterViewModel [
+GtFilterLabelElement >> unsubscribeFromFilterViewModel [
 	self filterViewModel unsubscribe: self
 ]
 
 { #category : #'private - updating' }
-GtFilterNameElement >> updateElement [
+GtFilterLabelElement >> updateElement [
 	self updateLabelElement.
 	self updateSettingsContainer.
 ]
 
 { #category : #'private - updating' }
-GtFilterNameElement >> updateLabelElement [
+GtFilterLabelElement >> updateLabelElement [
 	labelElement text: self filterViewModel label
 ]
 
 { #category : #'private - updating' }
-GtFilterNameElement >> updateSettingsContainer [
+GtFilterLabelElement >> updateSettingsContainer [
 	| anElement |
 	self removeSettingsElement.
 	anElement := self filterViewModel asUserSettingsElement.
 	anElement ifNil: [ ^ self ].
+	anElement constraintsDo: [ :c | c frame vertical alignCenter ].
 	self addSettingsElement: anElement
 ]
