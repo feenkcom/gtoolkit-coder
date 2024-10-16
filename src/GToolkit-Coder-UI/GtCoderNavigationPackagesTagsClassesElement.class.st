@@ -107,9 +107,15 @@ GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
 	| list |
 	list := self buildGroupList.
 	methodGroup := self
-			buildMethodGroupWithBinder: [ :element :item | 
-				element userData at: #method put: item.
-				element text: item selector asRopedText. ]
+			buildMethodGroupWithBinder: [ :element :eachCompiledMethod |
+				| aSelector |
+				element userData at: #method put: eachCompiledMethod.
+				
+				aSelector := eachCompiledMethod selector asRopedText.
+				eachCompiledMethod isDeprecated
+					ifTrue: [ aSelector lineThrough ].
+				
+				element text: aSelector ]
 			onClick: [ :event | 
 				event consumed: true.
 				self
