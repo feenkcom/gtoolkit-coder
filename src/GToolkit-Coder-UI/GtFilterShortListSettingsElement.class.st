@@ -29,6 +29,9 @@ GtFilterShortListSettingsElement >> dispatchShowItemsWish [
 GtFilterShortListSettingsElement >> focusFirstItemElementInList: aListElement [
 	aListElement requestFocus.
 	aListElement selectFirst.
+	aListElement selectedItemDo: [ :anItem | 
+		(self filterViewModel selectedItem = anItem)
+			ifTrue: [ aListElement selectNext ] ].
 	aListElement scrollToSelection
 ]
 
@@ -109,7 +112,8 @@ GtFilterShortListSettingsElement >> newContentElement [
 			fitContentLimited;
 			itemStencil: [ :anItemType :aListWidget | self newItemElement ];
 			itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
-				anItemElement disabled: anItemObject isVirtualFilterModelItem.
+				anItemElement disabled: (anItemObject isVirtualFilterModelItem or: [ 
+					anItemObject = self filterViewModel selectedItem ]).
 				anItemElement
 					label: (anItemObject label ifNil: [ self defaultItemLabel ]);
 					icon: (anItemObject icon ifNil: [ self defaultItemIcon ]);
@@ -127,7 +131,19 @@ GtFilterShortListSettingsElement >> newContentElement [
 					name: 'Pick selected filter item';
 					description: 'Pick selected item as the filter selected item';
 					combination: BlKeyCombination builder enter build;
-					action: [ :aShortcutEvent :aShortcut | self onPickSelectedItemEvent: aShortcutEvent ]).
+					action: [ :aShortcutEvent :aShortcut | self onPickSelectedItemEvent: aShortcutEvent ]);
+			addShortcut: (BlShortcutWithAction new
+				combination: BlKeyCombination builder arrowDown build;
+				action: [ self selectNextItemInList: aListElement ]);
+			addShortcut: (BlShortcutWithAction new
+				combination: BlKeyCombination builder arrowUp build;
+				action: [ self selectPreviousItemInList: aListElement ])";
+			addShortcut: (BlShortcutWithAction new
+				combination: BlKeyCombination builder primary home build;
+				action: [ self selectFirst; scrollToSelection ]);
+			addShortcut: (BlShortcutWithAction new
+				combination: BlKeyCombination builder primary end build;
+				action: [ self selectLast; scrollToSelection ] )".
 
 	self updateListElement: aListElement.
 	listElement at: 1 put: aListElement.
@@ -234,6 +250,40 @@ GtFilterShortListSettingsElement >> onSelectedItemChanged: anAnnouncement [
 	BlTaskAction enqueueElement: self action: [ self updateElement ]
 ]
 
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> selectNextItemInList: aListElement [ 
+	| aCurrentSelection |
+	aCurrentSelection := aListElement selectedIndices.
+	aListElement selectNext.
+	aListElement selectedItemDo: [ :anItem | 
+		(self filterViewModel selectedItem = anItem)
+			ifTrue: [ aListElement selectNext ] ].
+	aListElement selectedItemDo: [ :anItem | 
+		(self filterViewModel selectedItem = anItem)
+			ifTrue: [ 
+				aListElement selectPrevious. 
+				^ self ] ].
+	
+	aListElement scrollToSelection 
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> selectPreviousItemInList: aListElement [ 
+	| aCurrentSelection |
+	aCurrentSelection := aListElement selectedIndices.
+	aListElement selectPrevious.
+	aListElement selectedItemDo: [ :anItem | 
+		(self filterViewModel selectedItem = anItem)
+			ifTrue: [ aListElement selectPrevious ] ].
+	aListElement selectedItemDo: [ :anItem | 
+		(self filterViewModel selectedItem = anItem)
+			ifTrue: [ 
+				aListElement selectNext. 
+				^ self ] ].
+	
+	aListElement scrollToSelection 
+]
+
 { #category : #'api - filter view model' }
 GtFilterShortListSettingsElement >> subscribeToFilterViewModel [
 	super subscribeToFilterViewModel.
@@ -301,7 +351,7 @@ GtFilterShortListSettingsElement >> updateListElement [
 GtFilterShortListSettingsElement >> updateListElement: anElement [
 	| aCollection |
 	self hasFilterViewModel ifFalse: [ ^ self ].
-	aCollection := self filterViewModel itemsWithoutSelection.
+	aCollection := self filterViewModel someItems.
 	aCollection
 		ifEmpty: [ anElement items: {GtFilterModelEmptyItem default} ]
 		ifNotEmpty: [ anElement items: aCollection ]
@@ -312,6 +362,7 @@ GtFilterShortListSettingsElement >> updateSelectedItem: aFilterModelItem from: a
 	aFilterModelItem ifNil: [ ^ self ].
 	aFilterModelItem isVirtualFilterModelItem ifTrue: [ ^ self ].
 	self hasFilterViewModel ifFalse: [ ^ self ].
+	aFilterModelItem = self filterViewModel selectedItem ifTrue: [ ^ self ].
 	BlTaskAction
 		enqueueElement: self
 		action: [ anElement fireEvent: BrDropdownHideWish new ].

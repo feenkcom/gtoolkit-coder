@@ -10,7 +10,7 @@ GtFilterShortListViewModel >> filterElementClass [
 ]
 
 { #category : #accessing }
-GtFilterShortListViewModel >> itemsWithoutSelection [
+GtFilterShortListViewModel >> someItems [
 	<return: #Collection of: #GtFilterModelItem>
-	^ self filterModel items select: [ :each | self selectedItem ~= each ]
+	^ self filterModel someItems
 ]
