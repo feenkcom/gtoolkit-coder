@@ -1,20 +1,17 @@
 Class {
-	#name : #GtFilterVirtualEmptyModel,
+	#name : #GtFilterVirtualWaitingModel,
 	#superclass : #GtFilterModel,
 	#traits : 'TGtUniqueInstance',
 	#classTraits : 'TGtUniqueInstance classTrait',
-	#classInstVars : [
-		'uniqueInstance'
-	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #testing }
-GtFilterVirtualEmptyModel >> isVirtualFilterModel [
+GtFilterVirtualWaitingModel >> isVirtualFilterModel [
 	^ true
 ]
 
 { #category : #accessing }
-GtFilterVirtualEmptyModel >> name [
-	^ 'empty'
+GtFilterVirtualWaitingModel >> name [
+	^ 'rendering...'
 ]

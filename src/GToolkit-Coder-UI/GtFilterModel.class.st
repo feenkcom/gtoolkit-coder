@@ -8,7 +8,8 @@ Class {
 		'order',
 		'creator',
 		'name',
-		'labelBuilder'
+		'labelBuilder',
+		'isDefault'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
@@ -53,6 +54,16 @@ GtFilterModel >> asSearchFilter [
 GtFilterModel >> asUserSettingsElement [
 	<return: #GtFilterSettingsElement>
 	^ self asFilterViewModel asUserSettingsElement
+]
+
+{ #category : #initialization }
+GtFilterModel >> beDefault [
+	isDefault := true
+]
+
+{ #category : #initialization }
+GtFilterModel >> beNotDefault [
+	isDefault := false
 ]
 
 { #category : #testing }
@@ -123,7 +134,18 @@ GtFilterModel >> hash [
 { #category : #initialization }
 GtFilterModel >> initialize [
 	super initialize.
-	labelBuilder := GtFilterModelImplicitPrefixLabel new model: self
+	labelBuilder := GtFilterModelImplicitPrefixLabel new model: self.
+	isDefault := false.
+]
+
+{ #category : #testing }
+GtFilterModel >> isDefaultFilterModel [
+	^ isDefault
+]
+
+{ #category : #testing }
+GtFilterModel >> isExceptionFilterModel [
+	^ false
 ]
 
 { #category : #testing }

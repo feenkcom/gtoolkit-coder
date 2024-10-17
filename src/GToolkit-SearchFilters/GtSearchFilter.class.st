@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 GtSearchFilter class >> allSearchFilterMethods [
 	| methods |
-	methods := ((Pragma allNamed: 'gtSearchFilter')
+	methods := ((Pragma allNamed: #gtSearchFilter)
 			select: [ :each | each method methodClass isClassSide and: [ each method numArgs = 0 ] ])
 			collect: [ :each | each method ].
 	^ methods
@@ -127,6 +127,13 @@ GtSearchFilter >> not [
 { #category : #testing }
 GtSearchFilter >> notEmpty [
 	^ self result hasNext wait
+]
+
+{ #category : #'api - accessing' }
+GtSearchFilter >> requesterContextDo: aBlock [
+	"Pass a requester context to aBlock if the  context is available"
+
+	^ nil
 ]
 
 { #category : #converting }
