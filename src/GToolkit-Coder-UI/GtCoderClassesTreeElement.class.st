@@ -270,7 +270,7 @@ GtCoderClassesTreeElement >> newSubclassOf: aClass [
 GtCoderClassesTreeElement >> onDropCompiledMethodsOnClass: anItemsDroppedEvent [
 	| aClass aModel compositeChange|
 	
-	aClass := anItemsDroppedEvent currentTarget userData at: #'coder-class'.
+	aClass := anItemsDroppedEvent currentTarget theClass.
 	
 	aModel := RBNamespace new.
 	
