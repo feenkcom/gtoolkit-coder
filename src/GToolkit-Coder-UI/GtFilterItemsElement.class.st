@@ -128,6 +128,14 @@ GtFilterItemsElement >> addRemoveButtonIconTo: anElement [
 ]
 
 { #category : #'private - updating' }
+GtFilterItemsElement >> availableFilters [
+	^ self hasFiltersViewModel
+		ifTrue: [ self filtersViewModel availableFilters
+				ifEmpty: [ {GtFilterVirtualEmptyModel default} ] ]
+		ifFalse: [ {GtFilterVirtualEmptyModel default} ]
+]
+
+{ #category : #'private - updating' }
 GtFilterItemsElement >> createDropdownContent [
 	| aListElement |
 	aListElement := BrSimpleList new.
@@ -147,16 +155,22 @@ GtFilterItemsElement >> createDropdownContent [
 			anItemElement userData removeKey: GtFilterModel ifAbsent: [ "ignore" ].
 			(anItemElement childAt: 1) text: ''.
 			anItemElement ];
-		items: (self hasFiltersViewModel
-				ifTrue: [ self filtersViewModel availableFilters ifEmpty: [ {GtFilterVirtualEmptyModel default} ] ]
-				ifFalse: [ {GtFilterVirtualEmptyModel default} ]);
 		when: BlElementAddedToSceneGraphEvent
 			do: [ :anEvent | self onListElementAddedToSceneGraph: anEvent ];
 		addShortcut: (BlShortcutWithAction new
 				name: 'Add selected filter';
 				description: 'Add selected filter';
 				combination: BlKeyCombination builder enter build;
-				action: [ :aShortcutEvent :aShortcut | self onAddSelectedItemEvent: aShortcutEvent ])
+				action: [ :aShortcutEvent :aShortcut | self onAddSelectedItemEvent: aShortcutEvent ]);
+		withAsyncFutureDo: [ :anElementFuture |
+			anElementFuture
+				whenPending: [ :theListElement | 
+					theListElement items: { GtFilterVirtualWaitingModel default }  ];
+				whenError: [ :theListElement :anError |
+					theListElement items: { GtFilterVirtualExceptionModel new exception: anError } ];
+				whenSuccess: [ :theListElement :aCollection |
+					theListElement items: aCollection ];
+				future: [ self availableFilters ] asAsyncFuture ] 
 ]
 
 { #category : #'private - updating' }
@@ -342,7 +356,6 @@ GtFilterItemsElement >> onItemMouseClickEvent: anEvent [
 	anEvent consumed: true.
 	anEvent currentTarget fireEvent: BrDropdownHideWish new.
 	aModel := anEvent currentTarget userData at: GtFilterModel ifAbsent: [ nil ].
-	aModel isVirtualFilterModel ifTrue: [ ^ self ].
 	self requestAddFilterModel: aModel
 ]
 
@@ -417,6 +430,9 @@ GtFilterItemsElement >> removeItemElementForViewModel: aFilterViewModel [
 { #category : #'event handling' }
 GtFilterItemsElement >> requestAddFilterModel: aFilterModel [
 	aFilterModel ifNil: [ ^ self ].
+	aFilterModel isExceptionFilterModel ifTrue: [
+		self phlow spawnObject: aFilterModel exception.
+		^ self ].
 	aFilterModel isVirtualFilterModel ifTrue: [ ^ self ].
 	self hasFiltersViewModel ifFalse: [ ^ self ].
 

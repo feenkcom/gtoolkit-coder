@@ -144,6 +144,11 @@ GtFilterModel >> isDefaultFilterModel [
 ]
 
 { #category : #testing }
+GtFilterModel >> isExceptionFilterModel [
+	^ false
+]
+
+{ #category : #testing }
 GtFilterModel >> isVirtualFilterModel [
 	^ false
 ]
