@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 GtSearchFilter class >> allSearchFilterMethods [
 	| methods |
-	methods := ((Pragma allNamed: 'gtSearchFilter')
+	methods := ((Pragma allNamed: #gtSearchFilter)
 			select: [ :each | each method methodClass isClassSide and: [ each method numArgs = 0 ] ])
 			collect: [ :each | each method ].
 	^ methods
