@@ -115,3 +115,8 @@ GtFilteredCodersModel >> initialize [
 GtFilteredCodersModel >> newItemsStream [
 	^ compositeFilter asAsyncStream
 ]
+
+{ #category : #'api - accessing' }
+GtFilteredCodersModel >> requesterContextDo: aBlock [
+	^ filter requesterContextDo: aBlock
+]

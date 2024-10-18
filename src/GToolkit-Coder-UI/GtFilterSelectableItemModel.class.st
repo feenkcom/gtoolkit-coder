@@ -2,7 +2,6 @@ Class {
 	#name : #GtFilterSelectableItemModel,
 	#superclass : #GtFilterModel,
 	#instVars : [
-		'items',
 		'selectedItem',
 		'itemsBuilder'
 	],
