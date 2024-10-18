@@ -1,7 +1,7 @@
 Extension { #name : #GtCoderAction }
 
 { #category : #'*GToolkit-Coder-Extensions' }
-GtCoderAction >> gtViewActionSourceCodeFor: aView [
+GtCoderAction >> gtSourceCodeFor: aView [
 	<gtView>
 	^ self action 
 		ifNil: [ aView ]
