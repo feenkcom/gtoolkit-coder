@@ -350,7 +350,7 @@ GtFilterModelExamples >> shortListModelPluggableItems [
 	
 	aModel items: allItems.
 	aModel selectFirstItem.
-	aModel label: 'Classes'.
+	aModel name: 'Classes'.
 	
 	self
 		assert: aModel selectedItem
@@ -378,11 +378,14 @@ GtFilterModelExamples >> shortListModelPluggableItemsWithIconAndLabelBuilders [
 		aClass gtSystemIconName
 			ifNotNil: [ :anIconName | aClass gtSafeIconNamed: anIconName ] ].
 	aLabelBuilder := [ :aClass | aClass name ].
-	
-	aModel items: aCollection icon: anIconBuilder label: aLabelBuilder.
+
+	aModel
+		items: aCollection
+		icon: anIconBuilder
+		label: aLabelBuilder.
 	aModel selectFirstItem.
-	aModel label: 'Classes'.
-	
+	aModel name: 'Classes'.
+
 	self
 		assert: aModel selectedItem
 		equals: (GtFilterModelPluggableItem new
@@ -406,12 +409,12 @@ GtFilterModelExamples >> shortListModelPluggableItemsWithoutIconBuilder [
 			TGtAnnouncer.
 			Object.
 			ProtoObject}.
-	aLabelBuilder := [ :aClass | '+ ', aClass name ].
-	
+	aLabelBuilder := [ :aClass | '+ ' , aClass name ].
+
 	aModel items: aCollection label: aLabelBuilder.
 	aModel selectFirstItem.
-	aModel label: 'Classes'.
-	
+	aModel name: 'Classes'.
+
 	self
 		assert: aModel selectedItem
 		equals: (GtFilterModelPluggableItem new
@@ -440,8 +443,8 @@ GtFilterModelExamples >> shortListModelPluggableItemsWithoutLabelBuilder [
 
 	aModel items: aCollection icon: anIconBuilder.
 	aModel selectFirstItem.
-	aModel label: 'Classes'.
-	
+	aModel name: 'Classes'.
+
 	self
 		assert: aModel selectedItem
 		equals: (GtFilterModelPluggableItem new
@@ -465,7 +468,7 @@ GtFilterModelExamples >> shortListModelWithIcons [
 				GtFilterModelClassItem new itemClass: Object.
 				GtFilterModelClassItem new itemClass: ProtoObject}.
 	aModel selectFirstItem.
-	aModel label: 'Classes'.
+	aModel name: 'Classes'.
 	self
 		assert: aModel items
 		equals: {GtFilterModelClassItem new itemClass: Array.
@@ -511,7 +514,7 @@ GtFilterModelExamples >> toggleModelWithIcons [
 	<gtExample>
 	| aModel |
 	aModel := GtFilterToggleModel new.
-	aModel label: 'Origin'.
+	aModel name: 'Origin'.
 	aModel
 		items: {GtFilterModelTraitOriginItem new.
 				GtFilterModelClassOriginItem new}.
