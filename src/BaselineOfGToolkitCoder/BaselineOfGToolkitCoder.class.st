@@ -37,42 +37,42 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec repository: 'github://feenkcom/pharo-futures:v0.6.118/src' ].
 		spec
 			baseline: 'GToolkitBasicUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.334/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.335/src' ].
 		spec
 			baseline: 'GToolkitAnnouncerUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.334/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.8.335/src' ].
 		spec
 			baseline: 'GToolkitNotifications' with: [
-				spec repository: 'github://feenkcom/gtoolkit-notifications:v0.6.1042/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-notifications:v0.6.1043/src' ].
 		spec
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.1434/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.8.1435/src' ].
 		spec
 			baseline: 'GToolkitCompleter' with: [
-				spec repository: 'github://feenkcom/gtoolkit-completer:v0.8.1374/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-completer:v0.8.1375/src' ].
 		spec
 			baseline: 'GToolkit4Magritte' with: [
-				spec repository: 'github://feenkcom/gt4magritte:v0.6.1092/src' ].
+				spec repository: 'github://feenkcom/gt4magritte:v0.6.1093/src' ].
 
 		spec package: 'GToolkit-VariableBindings'.
 		spec package: 'GToolkit-SearchFilters' with: [
-			spec requires: #('Futures') ].
+			spec requires: #(#Futures) ].
 		spec package: 'GToolkit-SearchFilters-PhlowTool' with: [
-			spec requires: #('GToolkit-SearchFilters' 'GToolkitPager') ].
+			spec requires: #(#'GToolkit-SearchFilters' #GToolkitPager) ].
 		spec package: 'GToolkit-Coder-StreamingCoders' with: [
-			spec requires: #('Futures' 'GToolkit-SearchFilters') ].
+			spec requires: #(#Futures #'GToolkit-SearchFilters') ].
 		spec package: 'GToolkit-Coder-StreamingCoders-UI' with: [
-			spec requires: #('Futures' 'GToolkit-Coder-StreamingCoders') ].
+			spec requires: #(#Futures #'GToolkit-Coder-StreamingCoders') ].
 		spec package: 'GToolkit-Coder' with: [
-			spec requires: #('Futures' 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility' 'GToolkitPager' 'GToolkitCompleter' 'GToolkit-SearchFilters') ].
+			spec requires: #(#Futures #GToolkitBasicUtility #GToolkitAnnouncerUtility #GToolkitPager #GToolkitCompleter #'GToolkit-SearchFilters') ].
 		spec package: 'GToolkit-Coder-UI' with: [
-			spec requires: #('GToolkit-Coder' 'GToolkit-VariableBindings' 'GToolkitBasicUtility' 'GToolkitPager' 'GToolkitNotifications' 'GToolkit4Magritte') ].
+			spec requires: #(#'GToolkit-Coder' #'GToolkit-VariableBindings' #GToolkitBasicUtility #GToolkitPager #GToolkitNotifications #GToolkit4Magritte) ].
 		spec package: 'GToolkit-Coder-AddOns' with: [
-			spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI') ].
+			spec requires: #(#'GToolkit-Coder' #'GToolkit-Coder-UI') ].
 		spec package: 'GToolkit-Coder-Extensions' with: [
-			spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns') ].
+			spec requires: #(#'GToolkit-Coder' #'GToolkit-Coder-UI' #'GToolkit-Coder-AddOns') ].
 		spec package: 'GToolkit-Coder-Examples-SystemS1'.
 		spec package: 'GToolkit-Coder-Examples' with: [
-			spec requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Examples-SystemS1' 'GToolkit4Magritte') ].
+			spec requires: #(#'GToolkit-Coder' #'GToolkit-Coder-UI' #'GToolkit-Coder-AddOns' #'GToolkit-Coder-Examples-SystemS1' #GToolkit4Magritte) ].
 	]
 ]
