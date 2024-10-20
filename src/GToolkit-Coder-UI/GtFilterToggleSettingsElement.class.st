@@ -32,8 +32,7 @@ GtFilterToggleSettingsElement >> initializeShortcuts [
 { #category : #initialization }
 GtFilterToggleSettingsElement >> initializeToggleGroupElement [
 	toggleGroupElement := BrToggleGroup new
-			aptitude: BrGlamorousToggleGroupAptitude new;
-			background: self theme default contentBackgroundColor;
+			aptitude: GtFilterToggleGroupAptitude new;
 			when: BrToggleActivatedEvent
 				do: [ :anEvent | self onToggleActivatedEvent: anEvent ]
 ]
@@ -46,6 +45,9 @@ GtFilterToggleSettingsElement >> newAptitudeForItem: anItem [
 			ifIcon: [ BrGlamorousToggleWithIconAptitude new ]
 			ifLabel: [ BrGlamorousToggleWithLabelAptitude new ].
 
+	anAptitude - BrGlamorousToggleBackgroundAptitude.
+	anAptitude + GtFilterToggleBackgroundAptitude.
+			
 	^ anAptitude
 ]
 
