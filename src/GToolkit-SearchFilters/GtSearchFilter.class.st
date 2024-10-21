@@ -91,6 +91,13 @@ GtSearchFilter >> filterLabel [
 ]
 
 { #category : #accessing }
+GtSearchFilter >> filterType [
+	"Filter type is used to compare whether two filters are of a same type."
+
+	^ self class
+]
+
+{ #category : #accessing }
 GtSearchFilter >> filterValueString [
 	^ nil
 ]

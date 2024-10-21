@@ -23,7 +23,7 @@ GtFilteredCodersModel >> addOrReplaceFilter: aFilter [
 	isChanged := false.
 	newFilters := self additionalFilters
 			collect: [ :eachFilter | 
-				eachFilter class = aFilter class
+				eachFilter filterType = aFilter filterType
 					ifTrue: [ 
 						isChanged := true.
 						aFilter ]
