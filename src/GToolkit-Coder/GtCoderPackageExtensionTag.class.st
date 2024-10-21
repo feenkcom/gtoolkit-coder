@@ -2,8 +2,7 @@ Class {
 	#name : #GtCoderPackageExtensionTag,
 	#superclass : #Object,
 	#instVars : [
-		'package',
-		'classes'
+		'package'
 	],
 	#category : #'GToolkit-Coder-Navigation - Model'
 }
@@ -15,19 +14,14 @@ GtCoderPackageExtensionTag class >> forPackage: aRPackage [
 
 { #category : #testing }
 GtCoderPackageExtensionTag >> = anObject [
-	^ self class == anObject class
-		and: [ package = anObject package and: [ classes = anObject classes ] ]
+	^ self class = anObject class
+		and: [ package = anObject package ]
 ]
 
 { #category : #accessing }
 GtCoderPackageExtensionTag >> classes [
 	<return: #Array>
-	^ classes
-]
-
-{ #category : #accessing }
-GtCoderPackageExtensionTag >> classes: anObject [
-	classes := anObject
+	^ self package extendedClasses asArray
 ]
 
 { #category : #accessing }
@@ -38,12 +32,12 @@ GtCoderPackageExtensionTag >> gtTagName [
 { #category : #testing }
 GtCoderPackageExtensionTag >> hasExtendedClasses [
 	<return: #Boolean>
-	^ self classes isNotEmpty
+	^ self package gtDoesExtendClasses
 ]
 
 { #category : #testing }
 GtCoderPackageExtensionTag >> hash [
-	^ package hash bitXor: classes hash
+	^ package hash
 ]
 
 { #category : #testing }
@@ -61,11 +55,6 @@ GtCoderPackageExtensionTag >> name [
 	^ 'Extensions'
 ]
 
-{ #category : #hooks }
-GtCoderPackageExtensionTag >> onPackageChange [
-	self classes: self package extendedClasses asArray
-]
-
 { #category : #accessing }
 GtCoderPackageExtensionTag >> package [
 	<return: #RPackage>
@@ -74,11 +63,10 @@ GtCoderPackageExtensionTag >> package [
 
 { #category : #accessing }
 GtCoderPackageExtensionTag >> package: aRPackage [
-	package := aRPackage.
-	self onPackageChange.
+	package := aRPackage
 ]
 
 { #category : #accessing }
 GtCoderPackageExtensionTag >> packageName [
-	^ self package name.
+	^ self package name
 ]
