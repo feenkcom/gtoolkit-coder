@@ -46,6 +46,15 @@ GtFilterDefaultSearchFilters >> collectSearchFilters [
 ]
 
 { #category : #accessing }
+GtFilterDefaultSearchFilters >> pragmaSearchFilters [
+	^ Pragma
+		allNamed: #gtDefaultSearchFilter:
+		from: self class
+		to: GtFilterDefaultSearchFilters
+		sortedByArgument: 1
+]
+
+{ #category : #accessing }
 GtFilterDefaultSearchFilters >> searchFilters [
 	^ searchFilters ifNil: [ searchFilters := self collectSearchFilters ]
 ]
