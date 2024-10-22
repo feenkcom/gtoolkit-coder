@@ -63,9 +63,3 @@ GtFilterDefaultSearchFilters >> searchFilters [
 GtFilterDefaultSearchFilters >> searchFilters: aCollectionOfSearchFilters [
 	searchFilters := aCollectionOfSearchFilters
 ]
-
-{ #category : #default }
-GtFilterDefaultSearchFilters >> traitSearchFilter [
-	<gtDefaultSearchFilter: 1>
-	^ GtSearchNonTraitMethodsFilter new
-]
