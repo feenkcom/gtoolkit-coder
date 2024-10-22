@@ -137,6 +137,13 @@ GtSearchFilter >> notEmpty [
 ]
 
 { #category : #'api - accessing' }
+GtSearchFilter >> requesterContext: aRequesterContext [
+	"Set a requester context"
+
+	
+]
+
+{ #category : #'api - accessing' }
 GtSearchFilter >> requesterContextDo: aBlock [
 	"Pass a requester context to aBlock if the  context is available"
 
