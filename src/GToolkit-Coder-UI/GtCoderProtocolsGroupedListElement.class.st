@@ -294,9 +294,7 @@ GtCoderProtocolsGroupedListElement >> onDropCompiledMethodsOnProtocol: anItemsDr
 		do: [ :eachDragItem | 
 			| aTargetProtocolClass eachCompiledMethod |
 			eachCompiledMethod := eachDragItem domainObject.
-			aTargetProtocolClass := eachCompiledMethod isClassSide
-				ifTrue: [ aProtocolClass classSide ]
-				ifFalse: [ aProtocolClass instanceSide ].
+			aTargetProtocolClass := aProtocolClass.
 
 			eachCompiledMethod methodClass = aTargetProtocolClass
 				ifTrue: [
