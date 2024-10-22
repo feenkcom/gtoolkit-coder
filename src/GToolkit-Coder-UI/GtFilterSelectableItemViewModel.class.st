@@ -19,6 +19,11 @@ GtFilterSelectableItemViewModel >> itemsCount [
 	^ self filterModel items size
 ]
 
+{ #category : #accessing }
+GtFilterSelectableItemViewModel >> name [
+	^ self filterModel name
+]
+
 { #category : #'event handling' }
 GtFilterSelectableItemViewModel >> onItemsChanged: anAnnouncement [
 	self
