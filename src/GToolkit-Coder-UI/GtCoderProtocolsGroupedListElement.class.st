@@ -284,39 +284,53 @@ GtCoderProtocolsGroupedListElement >> navigationModel: anObject [
 
 { #category : #'private - refactorings' }
 GtCoderProtocolsGroupedListElement >> onDropCompiledMethodsOnProtocol: anItemsDroppedEvent [
-	| aProtocol aProtocolClass aModel compositeChange|
-	
+	| aProtocol aProtocolClass aModel compositeChange |
 	aProtocol := anItemsDroppedEvent currentTarget userData at: #protocol.
 	aProtocolClass := aProtocol protocolClass.
-	
+
 	aModel := RBNamespace new.
-	
-	anItemsDroppedEvent items do: [ :eachDragItem |
-		| aTargetProtocolClass eachCompiledMethod |
-		
-		eachCompiledMethod := eachDragItem domainObject.
-		aTargetProtocolClass := eachCompiledMethod isClassSide
-			ifTrue: [ aProtocolClass classSide ]
-			ifFalse: [ aProtocolClass instanceSide ].
-		
-		eachCompiledMethod methodClass = aTargetProtocolClass
-			ifTrue: [
-				aModel
-					selector: eachCompiledMethod selector
-					in: aTargetProtocolClass
-					classified: aProtocol name ]
-			ifFalse: [
-				eachDragItem shouldCopy
-					ifFalse: [
-						aModel
-							removeMethod: eachCompiledMethod selector
-							from: eachCompiledMethod methodClass ].
-				aModel
-					compile: eachCompiledMethod sourceCode
-					in: aTargetProtocolClass
-					classified: aProtocol name ] ].
-	
+
+	anItemsDroppedEvent items
+		do: [ :eachDragItem | 
+			| aTargetProtocolClass eachCompiledMethod |
+			eachCompiledMethod := eachDragItem domainObject.
+			aTargetProtocolClass := aProtocolClass.
+
+			eachCompiledMethod methodClass = aTargetProtocolClass
+				ifTrue: [
+					aProtocol name = Protocol unclassified
+						ifTrue: [
+							"To circumvent Pharo's behavior we first
+							remove a method and then add it as unclassified back"
+							aModel
+								removeMethod: eachCompiledMethod selector
+								from: eachCompiledMethod methodClass.
+
+							aModel
+								compile: eachCompiledMethod sourceCode
+								in: aTargetProtocolClass
+								classified: aProtocol name ]
+						ifFalse: [
+							"Pharo doesn't allow to change method's protocol
+							to `as yet unclassified` if that method's was
+							already classified"
+							aModel
+								selector: eachCompiledMethod selector
+								in: aTargetProtocolClass
+								classified: aProtocol name ] ]
+				ifFalse: [
+					eachDragItem shouldCopy
+						ifFalse: [
+							aModel
+								removeMethod: eachCompiledMethod selector
+								from: eachCompiledMethod methodClass ].
+					aModel
+						compile: eachCompiledMethod sourceCode
+						in: aTargetProtocolClass
+						classified: aProtocol name ] ].
+
 	compositeChange := aModel changes.
+
 	compositeChange execute
 ]
 
