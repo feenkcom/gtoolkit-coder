@@ -14,7 +14,7 @@ GtFilterModelStringItem >> = anObject [
 
 	self class = anObject class ifFalse: [ ^ false ].
 
-	^ self string = anObject string
+	^ self string sameContentAs: anObject string
 ]
 
 { #category : #comparing }
