@@ -50,17 +50,32 @@ GtFilterStep >> assertFilterModelAtIndex: anIndex selectedValueIs: aValue [
 ]
 
 { #category : #'steps - checks' }
-GtFilterStep >> assertFilterModelLabeled: aLabel [
+GtFilterStep >> assertFilterModelNamed: aFilterName [
 	^ self assert
-		label: ('Assert filter model with label {1} exists' format: {aLabel});
+		label: ('Assert filter model with name {1} exists' format: {aFilterName});
 		referenceSender;
 		onParentStepTarget: self;
 		onChildFromBlock: [ :aFilterItemsElement | aFilterItemsElement filtersViewModel items ];
-		anySatisfy: [ :aFilterViewModel | aFilterViewModel label = aLabel ]
+		anySatisfy: [ :aFilterViewModel | aFilterViewModel name = aFilterName ]
 			description: [ :someFilterViewModels | 
-				'Filter with label {1} is missing: {2}'
-					format: {aLabel.
+				'Filter with name {1} is missing: {2}'
+					format: {aFilterName.
 							someFilterViewModels} ]
+]
+
+{ #category : #'steps - checks' }
+GtFilterStep >> assertFilterModelNamed: aFilterName selectedValueIs: aValue [
+	^ self assert
+		label: ('Assert filter model with name {1} has selected item: {2}'
+				format: {aFilterName. aValue});
+		referenceSender;
+		onParentStepTarget: self;
+		onChildFromBlock: [ :aFilterItemsElement | aFilterItemsElement filtersViewModel items ];
+		anySatisfy: [ :aFilterViewModel | aFilterViewModel name = aFilterName and: [
+			aFilterViewModel selectedValue = aValue ] ]
+			description: [ :someFilterViewModels | 
+				'Filter with name {1} and {2} selected value is missing: {3}.'
+					format: {aFilterName. aValue. someFilterViewModels} ]
 ]
 
 { #category : #'steps - checks' }
