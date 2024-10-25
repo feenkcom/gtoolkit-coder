@@ -167,7 +167,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildProtocolGroupList [
 GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderBlock onClick: clickBlock [
 	| classSlotGroup instanceGroup classVarGroup |
 	instanceGroup := BrGroup new
-			domainObject: 'instance slots';
+			domainObject: 'instance-side vars';
 			stream: #() asAsyncStream;
 			itemStencil: [ BrHorizontalPane new
 					aptitude:  BrGlamorousListItemAptitude;
@@ -176,8 +176,8 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderB
 					when: BlClickEvent do: clickBlock ];
 			itemDataBinder: binderBlock;
 			shouldShowWithoutItems: false.
-	classSlotGroup := instanceGroup copy domainObject: 'class slots'.
-	classVarGroup := instanceGroup copy domainObject: 'class variables'.
+	classSlotGroup := instanceGroup copy domainObject: 'class-side vars'.
+	classVarGroup := instanceGroup copy domainObject: 'static vars'.
 	^ {instanceGroup.
 		classSlotGroup.
 		classVarGroup}
@@ -544,15 +544,20 @@ GtCoderNavigationPackagesTagsClassesElement >> onSlotSelected: anAnnouncement [
 GtCoderNavigationPackagesTagsClassesElement >> onSlotsListSelectionChanged [
 	| theIndices anIndex aSelectedItem |
 	supressListChanges ifTrue: [ ^ self ].
-	methodProtocolsList deselectAll.
 	theIndices := slotsGroupList selectedIndices ifEmpty: [ ^ self ].
 	anIndex := theIndices first.
 	(anIndex between: 1 and: slotsGroupList viewModel entityCount)
 		ifFalse: [ ^ self ].
 	aSelectedItem := (slotsGroupList viewModel entityAt: anIndex) value object.
-	self navigationModel selectSlot: aSelectedItem source: self.
-	methodGroupList deselectAll.
-	self updateMethodListWith: self navigationModel methodsToShow.
+	self navigationModel selectSlot: aSelectedItem source: self
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationPackagesTagsClassesElement >> onSlotsToShowChanged: anAnnouncement [
+	self hasNavigationModel
+		ifFalse: [ ^ self ].
+	
+	self updateSlotList
 ]
 
 { #category : #initialization }
@@ -925,6 +930,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 			GtCoderNavigationMethodSelected -> #onMethodSelected:.
 			"Announcements when we need to update items in the lists"
 			GtCoderNavigationProtocolsToShowChanged -> #onProtocolsToShowChanged:.
+			GtCoderNavigationSlotsToShowChanged -> #onSlotsToShowChanged:.
 			GtCoderNavigationMethodsToShowChanged -> #onMethodsToShowChanged:.
 			
 			GtCodersFiltersChanged -> #onMethodsCoderFiltersChanged:.
@@ -974,6 +980,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updateContent [
 	self updatePackageLists.
 	self updateClassList.
 	self updateProtocolList.
+	self updateSlotList.
 	self updateMethodList
 ]
 
@@ -1027,43 +1034,6 @@ GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
 	
 	self navigationModel selectedProtocol
 		ifNotNil: [ :aProtocol | methodProtocolsList selectProtocol: aProtocol ]
-
-	"| currentClass extension protocolsToShow |
-	navigationModel hasSelectedClass
-		ifFalse: [
-			self updateProtocolListWith: #().
-			self updateMethodListWith: #().
-			methodProtocolsList visibility: BlVisibility hidden.
-			methodsLabel visibility: BlVisibility hidden.
-			^ self ].
-			
-	currentClass := navigationModel selectedClass.
-	
-	protocolsToShow := navigationModel protocolsToShow.
-	extension := false.
-	navigationModel
-		selectedPackageDo: [ :pkg | 
-			pkg ~= currentClass package
-				ifTrue: [ | protocolName |
-					extension := true.
-					protocolName := '*' , pkg name.
-					protocolsToShow := protocolsToShow
-							select: [ :each | each name beginsWith: protocolName ] ] ].
-	
-	self updateProtocolListWith: protocolsToShow.
-	extension
-		ifTrue: [
-			methodProtocolsList selectOne: 2.
-			self onProtocolListSelectionChanged ]
-		ifFalse: [
-			self updateMethodListWith: self navigationModel methodsToShow.
-			self flag: #TODO.
-			""self
-				updateMethodListWith: navigationModel selectedClass methods
-				and: (navigationModel selectedClass class methods
-						reject: [ :meth | meth isFromTrait ])"" ].
-	methodProtocolsList visibility: BlVisibility visible.
-	methodsLabel visibility: BlVisibility visible"
 ]
 
 { #category : #'updating lists' }
@@ -1080,21 +1050,27 @@ GtCoderNavigationPackagesTagsClassesElement >> updateSelections [
 						tag: navigationModel selectedTag ] ]
 ]
 
-{ #category : #'api - class selections' }
+{ #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateSlotList [
-	| slotStream classSlotStream classVarStream streams |
+	| slotsToShow newSlotGroups instanceSideSlots classSideSlots staticVars |
+	self hasNavigationModel ifFalse: [ ^ self ].
+
 	slotsGroupList deselectAll.
-	navigationModel hasSelectedClass
-		ifTrue: [ slotStream := navigationModel selectedClass instanceVariables.
-			classSlotStream := navigationModel selectedClass class instanceVariables.
-			classVarStream := navigationModel selectedClass classVariables.
-			streams := {slotStream.
-					classSlotStream.
-					classVarStream}
-					collect: [ :each | each asSortedCollection: [ :a :b | a name < b name ] ] ]
-		ifFalse: [ streams := {#().
-					#().
-					#()} ].
-	slotsGroup with: streams do: [ :grp :str | grp items: str ].
+
+	slotsToShow := self navigationModel slotsToShow.
+	instanceSideSlots := slotsToShow
+			select: [ :eachSlot | eachSlot isInstanceVariable and: [ eachSlot owningClass isClassSide not ] ].
+
+	classSideSlots := slotsToShow
+			select: [ :eachSlot | eachSlot isInstanceVariable and: [ eachSlot owningClass isClassSide ] ].
+
+	staticVars := slotsToShow select: [ :eachSlot | eachSlot isClassVariable ].
+
+	newSlotGroups := {instanceSideSlots.
+			classSideSlots.
+			staticVars}
+			collect: [ :each | each asSortedCollection: [ :a :b | a name < b name ] ].
+
+	slotsGroup with: newSlotGroups do: [ :grp :str | grp items: str ].
 	slotsGroupList groups: slotsGroup
 ]
