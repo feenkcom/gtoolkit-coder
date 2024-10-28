@@ -218,7 +218,7 @@ GtCoderNavigationPackagesTagsClassesElement >> computeSlotItemText: aSlot [
 	
 	slotText := aSlot name asRopedText.
 	self navigationModel selectedClass = aSlot definingClass instanceSide
-		ifFalse: [ slotText, (' ({1})' format: { aSlot definingClass name }) asRopedText italic ].
+		ifFalse: [ slotText, ((' ({1})' format: { aSlot definingClass name }) asRopedText foreground: Color gray) ].
 
 	^ slotText
 ]
