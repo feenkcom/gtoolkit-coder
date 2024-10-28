@@ -189,14 +189,17 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
 	list := self buildGroupList.
 	slotsGroup := self
 			buildSlotGroupWithBinder: [ :element :item | 
-				| label |
+				| label slotText|
 				element removeChildren.
 				label := BrLabel new
 						hMatchParent;
 						vFitContent;
 						beSmallSize;
 						aptitude: BrGlamorousLabelAptitude.
-				label text: item name asRopedText.
+						
+				slotText := self computeSlotItemText: item.
+				
+				label text: slotText.
 				label
 					addAptitude: (BrGlamorousWithContextMenuAptitude
 							content: [ GtCoderNavigationContextMenuContent new
@@ -207,6 +210,17 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
 				self onSlotsListSelectionChanged ].
 	list groups: slotsGroup.
 	^ list
+]
+
+{ #category : #initialization }
+GtCoderNavigationPackagesTagsClassesElement >> computeSlotItemText: aSlot [
+	| slotText |
+	
+	slotText := aSlot name asRopedText.
+	self navigationModel selectedClass = aSlot definingClass instanceSide
+		ifFalse: [ slotText, (' ({1})' format: { aSlot definingClass name }) asRopedText italic ].
+
+	^ slotText
 ]
 
 { #category : #initialization }
