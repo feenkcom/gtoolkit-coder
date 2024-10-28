@@ -167,7 +167,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildProtocolGroupList [
 GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderBlock onClick: clickBlock [
 	| classSlotGroup instanceGroup classVarGroup |
 	instanceGroup := BrGroup new
-			domainObject: 'instance-side vars';
+			domainObject: 'instance-side slots';
 			stream: #() asAsyncStream;
 			itemStencil: [ BrHorizontalPane new
 					aptitude:  BrGlamorousListItemAptitude;
@@ -176,8 +176,8 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderB
 					when: BlClickEvent do: clickBlock ];
 			itemDataBinder: binderBlock;
 			shouldShowWithoutItems: false.
-	classSlotGroup := instanceGroup copy domainObject: 'class-side vars'.
-	classVarGroup := instanceGroup copy domainObject: 'static vars'.
+	classSlotGroup := instanceGroup copy domainObject: 'class-side slots'.
+	classVarGroup := instanceGroup copy domainObject: 'class vars'.
 	^ {instanceGroup.
 		classSlotGroup.
 		classVarGroup}
