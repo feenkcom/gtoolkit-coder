@@ -7,11 +7,6 @@ Announcement class >> gtAllKindOfReferencesFor: aView [
 		title: 'Announcement references';
 		tooltip: 'Class and subclass references';
 		priority: 41;
-		stencil: [ 
-			| aFilter |
-			aFilter := self gtReferences.
-			self allSubclassesDo: [ :eachClass | 
-				aFilter := aFilter | eachClass gtReferences ].
-			aFilter ];
+		stencil: [ self gtReferencesWithSubclasses ];
 		actionUpdateButtonTooltip: 'Update reference list'
 ]
