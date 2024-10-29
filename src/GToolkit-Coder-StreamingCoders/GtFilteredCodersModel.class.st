@@ -36,6 +36,30 @@ GtFilteredCodersModel >> addOrReplaceFilter: aFilter [
 ]
 
 { #category : #'api - accessing' }
+GtFilteredCodersModel >> addOrReplaceFilters: aCollectionOfFilters [
+	"Add or replace given additional filters.
+	Each filter of the same filter type (class) is replaced by the given filters."
+
+	| newFilters isChanged usedFilters |
+	isChanged := false.
+	usedFilters := OrderedCollection new.
+	newFilters := self additionalFilters
+			collect: [ :existingFilter | 
+				aCollectionOfFilters
+					detect: [ :givenFilter | 
+						existingFilter filterType = givenFilter filterType ] 
+					ifFound: [ :givenFilter |
+						isChanged := true.
+						usedFilters add: givenFilter.
+						givenFilter ] 
+					ifNone: [
+						existingFilter ] ].
+						
+	newFilters := newFilters , (aCollectionOfFilters copyWithoutAll: usedFilters).
+	self additionalFilters: newFilters
+]
+
+{ #category : #'api - accessing' }
 GtFilteredCodersModel >> additionalFilters [
 	<return: #Collection of: #GtSearchFilter>
 
