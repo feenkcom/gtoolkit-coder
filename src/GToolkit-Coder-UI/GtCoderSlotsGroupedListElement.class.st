@@ -155,7 +155,7 @@ GtCoderSlotsGroupedListElement >> selectedClass [
 	^ navigationModel selectedClass
 ]
 
-{ #category : #'private - actions' }
+{ #category : #'private - context menu' }
 GtCoderSlotsGroupedListElement >> slotListContextMenuItemsFor: item [
 	^ {(self createLabel: 'Browse references' description: item name)
 			-> [ :elem | self browseSlotReferencesFor: item name ].
@@ -168,7 +168,7 @@ GtCoderSlotsGroupedListElement >> slotListContextMenuItemsFor: item [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
-					cancelSelector: #updateProtocolList ].
+					cancelSelector: #updateSlotList ].
 		(self createLabel: 'Push down' description: item name)
 			-> [ :elem | 
 				| refactoring |
@@ -178,7 +178,7 @@ GtCoderSlotsGroupedListElement >> slotListContextMenuItemsFor: item [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
-					cancelSelector: #updateProtocolList ].
+					cancelSelector: #updateSlotList ].
 		(self createLabel: 'Create accessors' description: item name)
 			-> [ :elem | 
 				| refactoring |
@@ -188,7 +188,7 @@ GtCoderSlotsGroupedListElement >> slotListContextMenuItemsFor: item [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
-					cancelSelector: #updateProtocolList ].
+					cancelSelector: #updateSlotList ].
 		(self createLabel: 'Abstract' description: item name)
 			-> [ :elem | 
 				| refactoring |
@@ -198,7 +198,7 @@ GtCoderSlotsGroupedListElement >> slotListContextMenuItemsFor: item [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
-					cancelSelector: #updateProtocolList ].
+					cancelSelector: #updateSlotList ].
 		(self createLabel: 'Protect' description: item name)
 			-> [ :elem | 
 				| refactoring |
@@ -208,7 +208,7 @@ GtCoderSlotsGroupedListElement >> slotListContextMenuItemsFor: item [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
-					cancelSelector: #updateProtocolList ].
+					cancelSelector: #updateSlotList ].
 		(self createLabel: 'Remove' description: item name)
 			-> [ :elem | 
 				| refactoring |
@@ -218,7 +218,7 @@ GtCoderSlotsGroupedListElement >> slotListContextMenuItemsFor: item [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
-					cancelSelector: #updateProtocolList ].
+					cancelSelector: #updateSlotList ].
 		"(self createLabel: 'Rename slot' description: item name)
 			-> [ :elem | self renameSlot: item name inElement: elem ]"}
 ]
