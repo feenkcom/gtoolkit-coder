@@ -13,6 +13,11 @@ GtFilteredCodersViewModel >> addOrReplaceFilter: aFilter [
 ]
 
 { #category : #'api - accessing' }
+GtFilteredCodersViewModel >> addOrReplaceFilters: aCollectionOfFilters [
+	streamingCodersModel addOrReplaceFilters: aCollectionOfFilters
+]
+
+{ #category : #'api - accessing' }
 GtFilteredCodersViewModel >> additionalFilters [
 	<return: #Collection of: #GtSearchFilter>
 

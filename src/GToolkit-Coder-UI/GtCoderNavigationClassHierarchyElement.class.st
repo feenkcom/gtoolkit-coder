@@ -9,7 +9,10 @@ Class {
 	#instVars : [
 		'supressListChanges',
 		'classesList',
-		'navigationModel'
+		'navigationModel',
+		'methodsList',
+		'protocolsList',
+		'slotsList'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
@@ -35,18 +38,68 @@ GtCoderNavigationClassHierarchyElement >> hasNavigationModel [
 		self navigationModel isNavigationModel ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
+GtCoderNavigationClassHierarchyElement >> headerLabel [
+	| label |
+	label := BrLabel new.
+	label
+		aptitude: (BrGlamorousLabelAptitude new
+				fontSize: 12;
+				foreground: Color gray).
+	^ label
+]
+
+{ #category : #initialization }
 GtCoderNavigationClassHierarchyElement >> initialize [
+	| protocolsSlotsTabGroup pane1 pane2 pane3 |
 	super initialize.
 	
-	self layout: BlLinearLayout vertical.
+	self layout: BlLinearLayout horizontal.
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical matchParent ].
 
-	classesList := GtCoderClassesTreeElement new. 
+	classesList := GtCoderClassesTreeElement new.
+	protocolsList := GtCoderProtocolsGroupedListElement new.
+	slotsList := GtCoderSlotsGroupedListElement new.
+	methodsList := GtCoderMethodsGroupedListElement new.
+	
+	protocolsSlotsTabGroup := BrTabGroup new
+		aptitude: BrGlamorousTabGroupProportionalAptitude - BrTabGroupSplitterAptitude;
+		addTab: (BrTab new
+				hMatchParent;
+				aptitude: GtProtocolSlotTabAptitude new;
+				label: 'Categories' asRopedText glamorousCodeSmallSize;
+				stencil: [ protocolsList ]);
+		addTab: (BrTab new
+				hMatchParent;
+				aptitude: GtProtocolSlotTabAptitude new;
+				label: 'Slots' asRopedText glamorousCodeSmallSize;
+				stencil: [ slotsList ]).
 
-	self addChild: classesList
+	pane1 := BrVerticalPane new
+			addAptitude: BrGlamorousWithHorizontalResizerAptitude;
+			matchParent;
+			addChildren: {
+				self headerLabel text: 'Classes'.
+				classesList }.
+	pane2 := BrVerticalPane new
+			addAptitude: BrGlamorousWithHorizontalResizerAptitude;
+			matchParent;
+			addChildren: {
+				protocolsSlotsTabGroup }.
+
+	pane3 := BrVerticalPane new
+					matchParent;
+					addChildren: {
+						self headerLabel text: 'Methods'.
+						methodsList}.
+
+	self
+		addChildren: {pane1.
+				pane2.
+				pane3}
+
 ]
 
 { #category : #accessing }
@@ -97,6 +150,14 @@ GtCoderNavigationClassHierarchyElement >> onNavigationModelChanged [
 	self updateContent.
 	self subscribeToNavigationModel.
 	self subscribeToClassList.
+	
+	protocolsList navigationModel: self navigationModel.
+	protocolsList updateProtocolListWith: self navigationModel protocolsToShow.
+	self navigationModel selectedProtocol
+		ifNotNil: [ :aProtocol | protocolsList selectProtocol: aProtocol ].
+
+	slotsList navigationModel: self navigationModel.
+	methodsList navigationModel: self navigationModel
 ]
 
 { #category : #'private - selection' }
