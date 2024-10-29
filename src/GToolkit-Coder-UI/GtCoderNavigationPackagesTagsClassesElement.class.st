@@ -7,7 +7,6 @@ Class {
 		'packagesList',
 		'methodProtocolsList',
 		'methodsLabel',
-		'methodGroup',
 		'methodGroupList',
 		'slotsGroup',
 		'slotsGroupList',
@@ -38,38 +37,6 @@ GtCoderNavigationPackagesTagsClassesElement >> addPackage: aPackage tag: aPackag
 	self updatePackageLists.
 	aSelectedPackageOrTag ifNotNil: [
 		self selectPackageOrTag: aSelectedPackageOrTag ].
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> browseHierarchyImplementorsOf: aSymbol [
-	self phlow
-		spawnObject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
-				withSubclasses & aSymbol gtImplementors
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> browseHierarchyReferencesOf: aSymbol [
-	self phlow
-		spawnObject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
-				withSubclasses & aSymbol gtSenders
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> browseImplementorsOf: aSymbol [
-	self phlow spawnObject: (GtSearchImplementorsFilter selector: aSymbol)
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> browseReferencesOf: aSymbol [
-	self phlow spawnObject: (GtSearchReferencesFilter literal: aSymbol) 
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> browseSlotReferencesFor: aString [
-	self phlow
-		spawnObject: (GtSearchInstanceSlotReferenceFilter
-				forClassAndSubclasses: self selectedClass
-				andVariable: aString)
 ]
 
 { #category : #initialization }
@@ -104,58 +71,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildGroupList [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
-	| list |
-	list := self buildGroupList.
-	methodGroup := self
-			buildMethodGroupWithBinder: [ :element :eachCompiledMethod |
-				| aSelector |
-				element userData at: #method put: eachCompiledMethod.
-				
-				aSelector := eachCompiledMethod selector asRopedText.
-				eachCompiledMethod isDeprecated
-					ifTrue: [ aSelector lineThrough ].
-				
-				element text: aSelector ]
-			onClick: [ :event | 
-				event consumed: true.
-				self
-					onMethodListSelectionChanged: (event currentTarget userData at: #method) ].
-	list groups: methodGroup.
-	^ list
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupWithBinder: binderBlock onClick: clickBlock [
-	| classGroup instanceGroup |
-	instanceGroup := BrGroup new
-			domainObject: 'instance side';
-			stream: #() asAsyncStream;
-			itemStencil: [ self buildMethodItemWithOnClick: clickBlock ];
-			itemDataBinder: binderBlock;
-			shouldShowWithoutItems: false.
-	classGroup := instanceGroup copy domainObject: 'class side'.
-	^ {instanceGroup.
-		classGroup}
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> buildMethodItemWithOnClick: clickBlock [
-	<return: #BlElement>
-	| aLabel |
-	aLabel := BrLabel new.
-	aLabel
-		hMatchParent;
-		vFitContent;
-		beSmallSize;
-		aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude
-				+ (BrGlamorousWithContextMenuAptitude
-						content: [ GtCoderNavigationContextMenuContent new
-								items: (self methodListContextMenuItemsFor: (aLabel userData at: #method)) ]);
-		when: BlClickEvent do: clickBlock.
-
-	aLabel addEventHandler: self createMethodDragHandler.
-
-	^ aLabel
+	^ GtCoderMethodsGroupedListElement new
 ]
 
 { #category : #initialization }
@@ -164,90 +80,8 @@ GtCoderNavigationPackagesTagsClassesElement >> buildProtocolGroupList [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> buildSlotGroupWithBinder: binderBlock onClick: clickBlock [
-	| classSlotGroup instanceGroup classVarGroup |
-	instanceGroup := BrGroup new
-			domainObject: 'instance-side slots';
-			stream: #() asAsyncStream;
-			itemStencil: [ BrHorizontalPane new
-					aptitude:  BrGlamorousListItemAptitude;
-					hMatchParent;
-					vFitContent;
-					when: BlClickEvent do: clickBlock ];
-			itemDataBinder: binderBlock;
-			shouldShowWithoutItems: false.
-	classSlotGroup := instanceGroup copy domainObject: 'class-side slots'.
-	classVarGroup := instanceGroup copy domainObject: 'class vars'.
-	^ {instanceGroup.
-		classSlotGroup.
-		classVarGroup}
-]
-
-{ #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
-	| list |
-	list := self buildGroupList.
-	slotsGroup := self
-			buildSlotGroupWithBinder: [ :element :item | 
-				| label slotText|
-				element removeChildren.
-				label := BrLabel new
-						hMatchParent;
-						vFitContent;
-						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude.
-						
-				slotText := self computeSlotItemText: item.
-				
-				label text: slotText.
-				label
-					addAptitude: (BrGlamorousWithContextMenuAptitude
-							content: [ GtCoderNavigationContextMenuContent new
-									items: (self slotListContextMenuItemsFor: item) ]).
-				element addChild: label ]
-			onClick: [ :event | 
-				event consumed: true.
-				self onSlotsListSelectionChanged ].
-	list groups: slotsGroup.
-	^ list
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> computeSlotItemText: aSlot [
-	| slotText |
-	
-	slotText := aSlot name asRopedText.
-	self navigationModel selectedClass = aSlot definingClass instanceSide
-		ifFalse: [ slotText, ((' ({1})' format: { aSlot definingClass name }) asRopedText foreground: Color gray) ].
-
-	^ slotText
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> createDraggedMethodItem: aDragItem [
-
-	^ BrLabel new
-		aptitude: (BrGlamorousLabelAptitude new padding: (BlInsets all: 5)) + BrShadowAptitude;
-		beSmallSize;
-		opacity: 0.85;
-		margin: (BlInsets all: 5);
-		background: Color white;
-		beFocusable;
-		requestFocus;
-		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
-		fitContent;
-		text: aDragItem domainObject printString
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> createMethodDragHandler [
-	^ BlDragHandler new
-		enableCopy;
-		liftItem: [ :aLabelElement | 
-			BlDragItem new
-				sourceElement: aLabelElement;
-				domainObject: (aLabelElement userData at: #method);
-				stencil: [ :aDragItem | self createDraggedMethodItem: aDragItem ] ]
+	^ GtCoderSlotsGroupedListElement new
 ]
 
 { #category : #'api - package selections' }
@@ -345,32 +179,7 @@ GtCoderNavigationPackagesTagsClassesElement >> initializeLayout [
 			c vertical matchParent ]
 ]
 
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> methodList [
-	^ methodGroup flatCollect: [ :grp | grp itemsProvider currentItems ]
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> methodListContextMenuItemsFor: item [
-	^ {(self createLabel: 'Browse implementors' description: item selector)
-			-> [ :elem | self browseImplementorsOf: item selector ].
-		(self createLabel: 'Browse hierarachy implementors' description: item selector)
-			-> [ :elem | self browseHierarchyImplementorsOf: item selector ].
-		(self createLabel: 'Browse references' description: item selector)
-			-> [ :elem | self browseReferencesOf: item selector ].
-		(self createLabel: 'Browse hierarchy references' description: item selector)
-			-> [ :elem | self browseHierarchyReferencesOf: item selector ].
-		(self createLabel: 'Push up method' description: item selector)
-			-> [ :elem | self pushUpMethod: item selector inElement: elem ].
-		(self createLabel: 'Push down method' description: item selector)
-			-> [ :elem | self pushDownMethod: item selector inElement: elem ].
-		(self createLabel: 'Rename message' description: item selector)
-			-> [ :elem | self renameMethod: item selector inElement: elem ].
-		(self createLabel: 'Remove method' description: item selector)
-			-> [ :elem | self removeMethod: item selector inElement: elem ]}
-]
-
-{ #category : #'private-accessing' }
+{ #category : #'private - accessing' }
 GtCoderNavigationPackagesTagsClassesElement >> methodProtocolsList [
 	^ methodProtocolsList
 ]
@@ -381,7 +190,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onClassDeselected: anAnnouncement
 		suppressListChangeEventsDuring: [ self deselectClass: anAnnouncement theClass ]
 ]
 
-{ #category : #accessing }
+{ #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onClassRemoved: anAnnouncement [
 	| aPackageOrTag |
 	self
@@ -394,17 +203,6 @@ GtCoderNavigationPackagesTagsClassesElement >> onClassRemoved: anAnnouncement [
 GtCoderNavigationPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
 	self
 		suppressListChangeEventsDuring: [ self selectClass: anAnnouncement theClass ]
-]
-
-{ #category : #'event handling - selection' }
-GtCoderNavigationPackagesTagsClassesElement >> onMethodListSelectionChanged: aMethod [
-	supressListChanges ifTrue: [ ^ self ].
-	self navigationModel selectMethod: aMethod
-]
-
-{ #category : #'event handling - selection' }
-GtCoderNavigationPackagesTagsClassesElement >> onMethodSelected: anAnnouncement [
-	
 ]
 
 { #category : #'event handling' }
@@ -433,8 +231,11 @@ GtCoderNavigationPackagesTagsClassesElement >> onMethodsCoderFiltersChanged: aGt
 ]
 
 { #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onMethodsToShowChanged: anAnnouncement [
-	self updateMethodListWith: self navigationModel methodsToShow
+GtCoderNavigationPackagesTagsClassesElement >> onNavigationModelChanged [
+	slotsGroupList navigationModel: self navigationModel.
+	methodGroupList navigationModel: self navigationModel.
+
+	super onNavigationModelChanged
 ]
 
 { #category : #'event handling' }
@@ -549,74 +350,6 @@ GtCoderNavigationPackagesTagsClassesElement >> onProtocolsToShowChanged: anAnnou
 		ifNotNil: [ :aProtocol | methodProtocolsList selectProtocol: aProtocol ]
 ]
 
-{ #category : #'event handling - selection' }
-GtCoderNavigationPackagesTagsClassesElement >> onSlotSelected: anAnnouncement [
-	
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> onSlotsListSelectionChanged [
-	| theIndices anIndex aSelectedItem |
-	supressListChanges ifTrue: [ ^ self ].
-	theIndices := slotsGroupList selectedIndices ifEmpty: [ ^ self ].
-	anIndex := theIndices first.
-	(anIndex between: 1 and: slotsGroupList viewModel entityCount)
-		ifFalse: [ ^ self ].
-	aSelectedItem := (slotsGroupList viewModel entityAt: anIndex) value object.
-	self navigationModel selectSlot: aSelectedItem source: self
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onSlotsToShowChanged: anAnnouncement [
-	self hasNavigationModel
-		ifFalse: [ ^ self ].
-	
-	self updateSlotList
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> pushDownMethod: aSelector inElement: elem [
-	| refactoring |
-	refactoring := RBPushDownMethodRefactoring
-			pushDown: {aSelector}
-			from: self selectedClass.
-	^ self
-		addPreviewButtonFor: refactoring
-		to: elem
-		cancelSelector: #updateProtocolList
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> pushUpMethod: aSelector inElement: elem [
-	| refactoring |
-	refactoring := RBPullUpMethodRefactoring
-			pullUp: {aSelector}
-			from: self selectedClass.
-	^ self
-		addPreviewButtonFor: refactoring
-		to: elem
-		cancelSelector: #updateProtocolList
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> removeMethod: aSelector inElement: elem [
-	| change button |
-	change := RBRemoveMethodChange remove: aSelector from: self selectedClass.
-	button := GtPreviewChangeButton new
-			icon: BrGlamorousVectorIcons remove;
-			label: 'Remove';
-			changeAction: [ change gtExecuteWithUndo ];
-			changeStencil: [ GtPharoRemoveMethodPreviewStencil new
-					selectorToRemove: aSelector;
-					isEmptyMethod: false;
-					anElement: self;
-					create ].
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
-	^ elem addChild: button as: #preview
-]
-
 { #category : #'api - package updates' }
 GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage [
 	| aSelectedPackageOrTag anIndex |
@@ -641,33 +374,6 @@ GtCoderNavigationPackagesTagsClassesElement >> removePackage: aPackage tag: aPac
 	self reselectPackageOrTag: aSelectedPackageOrTag afterRemovalOfTagNamed: aPackageTagName.
 ]
 
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> renameMethod: aSelector inElement: elem [
-	| refactoring edit |
-	edit := BrEditableLabel new.
-	edit
-		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;   "Force the font to match the label font"
-				background: Color transparent);
-		text: aSelector;
-		when: BrEditorAcceptWish
-			do: [ :aWish | 
-				refactoring := GtRBRenameMethodRefactoring
-						renameMethod: aSelector
-						in: self selectedClass
-						to: aWish text asString
-						permutation: (1 to: aSelector numArgs).
-				edit switchToLabel.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					cancelSelector: #updateProtocolList ];
-		switchToEditor.
-	edit requestFocus.
-	elem removeChildren.
-	elem addChild: edit
-]
-
 { #category : #'api - package updates' }
 GtCoderNavigationPackagesTagsClassesElement >> renamePackage: aPackage oldName: anOldName newName: aNewName [
 	| aSelectedPackageOrTag |
@@ -690,33 +396,6 @@ GtCoderNavigationPackagesTagsClassesElement >> renamePackageTag: aPackageTag old
 	self updatePackageLists.
 	aSelectedPackageOrTag ifNotNil: [
 		self selectPackageOrTag: aSelectedPackageOrTag ].
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> renameSlot: slotName inElement: elem [
-	| edit |
-	edit := BrEditableLabel new.
-	edit
-		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;   "Force the font to match the label font"
-				background: Color transparent);
-		text: slotName;
-		when: BrEditorAcceptWish
-			do: [ :aWish | 
-				| refactoring |
-				refactoring := RBRenameInstanceVariableRefactoring
-						rename: slotName
-						to: aWish text asString
-						in: self selectedClass.
-				edit switchToLabel.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					cancelSelector: #updateSlotList ];
-		switchToEditor.
-	edit requestFocus.
-	elem removeChildren.
-	elem addChild: edit
 ]
 
 { #category : #'api - package reselections' }
@@ -833,7 +512,7 @@ GtCoderNavigationPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock 
 	^ packagesList selectedPackageTagNodeDo: aBlock
 ]
 
-{ #category : #'event handling' }
+{ #category : #'private - accessing' }
 GtCoderNavigationPackagesTagsClassesElement >> selectedProtocol [
 	^ self navigationModel selectedProtocol
 ]
@@ -844,81 +523,12 @@ GtCoderNavigationPackagesTagsClassesElement >> showClassList [
 	classesLabel visibility: BlVisibility visible
 ]
 
-{ #category : #initialization }
-GtCoderNavigationPackagesTagsClassesElement >> slotListContextMenuItemsFor: item [
-	^ {(self createLabel: 'Browse references' description: item name)
-			-> [ :elem | self browseSlotReferencesFor: item name ].
-		(self createLabel: 'Push up' description: item name)
-			-> [ :elem | 
-				| refactoring |
-				refactoring := RBPullUpInstanceVariableRefactoring
-						variable: item name
-						class: self selectedClass superclass.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Push down' description: item name)
-			-> [ :elem | 
-				| refactoring |
-				refactoring := GtPushDownInstanceVariableRefactoring
-						variable: item name
-						class: self selectedClass.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Create accessors' description: item name)
-			-> [ :elem | 
-				| refactoring |
-				refactoring := RBCreateAccessorsForVariableRefactoring
-						instanceVariable: item name
-						class: self selectedClass.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Abstract' description: item name)
-			-> [ :elem | 
-				| refactoring |
-				refactoring := RBAbstractInstanceVariableRefactoring
-						variable: item name
-						class: self selectedClass.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Protect' description: item name)
-			-> [ :elem | 
-				| refactoring |
-				refactoring := RBProtectInstanceVariableRefactoring
-						variable: item name
-						class: self selectedClass.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Remove' description: item name)
-			-> [ :elem | 
-				| refactoring |
-				refactoring := RBRemoveInstanceVariableRefactoring
-						variable: item name
-						class: self selectedClass.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					cancelSelector: #updateProtocolList ].
-		(self createLabel: 'Rename slot' description: item name)
-			-> [ :elem | self renameSlot: item name inElement: elem ]}
-]
-
 { #category : #subscriptions }
 GtCoderNavigationPackagesTagsClassesElement >> subscribeToContent [
 	super subscribeToContent.
 	self subscribeToPackageList.
 	self subscribeToClassList.
 	self subscribeToProtocolList.
-	self subscribeToSlotList.
 ]
 
 { #category : #subscriptions }
@@ -940,13 +550,8 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 			"GtCoderNavigationClassSelected -> #onClassSelected:. <--- defined in the superclass"
 			GtCoderNavigationProtocolSelected -> #onProtocolSelected:.
 			GtCoderNavigationProtocolDeselected -> #onProtocolDeselected:.
-			GtCoderNavigationSlotSelected -> #onSlotSelected:.
-			GtCoderNavigationMethodSelected -> #onMethodSelected:.
 			"Announcements when we need to update items in the lists"
 			GtCoderNavigationProtocolsToShowChanged -> #onProtocolsToShowChanged:.
-			GtCoderNavigationSlotsToShowChanged -> #onSlotsToShowChanged:.
-			GtCoderNavigationMethodsToShowChanged -> #onMethodsToShowChanged:.
-			
 			GtCodersFiltersChanged -> #onMethodsCoderFiltersChanged:.
 	}.
 	subscriptions
@@ -971,13 +576,6 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToProtocolList [
 		do: [ :anEvent | self onProtocolListSelectionChanged ]
 ]
 
-{ #category : #subscriptions }
-GtCoderNavigationPackagesTagsClassesElement >> subscribeToSlotList [
-	slotsGroupList
-		when: BrSelectionChanged
-		do: [ :anEvent | self onSlotsListSelectionChanged ]
-]
-
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateClassList [
 	self hasNavigationModel
@@ -994,37 +592,6 @@ GtCoderNavigationPackagesTagsClassesElement >> updateContent [
 	self updatePackageLists.
 	self updateClassList.
 	self updateProtocolList.
-	self updateSlotList.
-	self updateMethodList
-]
-
-{ #category : #'updating lists' }
-GtCoderNavigationPackagesTagsClassesElement >> updateMethodList [
-	self hasNavigationModel ifFalse: [ ^ self ].
-	self updateMethodListWith: self navigationModel methodsToShow
-]
-
-{ #category : #'updating lists' }
-GtCoderNavigationPackagesTagsClassesElement >> updateMethodListWith: aCollectionOfCompiledMethods [
-	| instMethStream classMethStream instanceMethods classMethods |
-	methodGroupList deselectAll.
-
-	instanceMethods := aCollectionOfCompiledMethods
-			select: [ :each | each methodClass isInstanceSide ].
-
-	classMethods := aCollectionOfCompiledMethods
-			select: [ :each | each methodClass isClassSide ].
-
-	instMethStream := instanceMethods asSortedCollection: GtMethodsSortFunction new.
-
-	classMethStream := classMethods asSortedCollection: GtMethodsSortFunction new.
-
-	methodGroup
-		with: {instMethStream.
-				classMethStream}
-		do: [ :grp :str | grp items: str ].
-
-	methodGroupList groups: methodGroup
 ]
 
 { #category : #'updating lists' }
@@ -1066,25 +633,5 @@ GtCoderNavigationPackagesTagsClassesElement >> updateSelections [
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateSlotList [
-	| slotsToShow newSlotGroups instanceSideSlots classSideSlots staticVars |
-	self hasNavigationModel ifFalse: [ ^ self ].
-
-	slotsGroupList deselectAll.
-
-	slotsToShow := self navigationModel slotsToShow.
-	instanceSideSlots := slotsToShow
-			select: [ :eachSlot | eachSlot isInstanceVariable and: [ eachSlot owningClass isClassSide not ] ].
-
-	classSideSlots := slotsToShow
-			select: [ :eachSlot | eachSlot isInstanceVariable and: [ eachSlot owningClass isClassSide ] ].
-
-	staticVars := slotsToShow select: [ :eachSlot | eachSlot isClassVariable ].
-
-	newSlotGroups := {instanceSideSlots.
-			classSideSlots.
-			staticVars}
-			collect: [ :each | each asSortedCollection: [ :a :b | a name < b name ] ].
-
-	slotsGroup with: newSlotGroups do: [ :grp :str | grp items: str ].
-	slotsGroupList groups: slotsGroup
+	slotsGroupList updateSlotList
 ]
