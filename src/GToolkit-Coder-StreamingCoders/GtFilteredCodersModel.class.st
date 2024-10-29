@@ -41,7 +41,6 @@ GtFilteredCodersModel >> addOrReplaceFilters: aCollectionOfFilters [
 	Each filter of the same filter type (class) is replaced by the given filters."
 
 	| newFilters isChanged usedFilters |
-	
 	isChanged := false.
 	usedFilters := OrderedCollection new.
 	newFilters := self additionalFilters
@@ -56,8 +55,7 @@ GtFilteredCodersModel >> addOrReplaceFilters: aCollectionOfFilters [
 					ifNone: [
 						existingFilter ] ].
 						
-	isChanged ifFalse: [
-		newFilters := newFilters , (aCollectionOfFilters copyWithoutAll: usedFilters) ].
+	newFilters := newFilters , (aCollectionOfFilters copyWithoutAll: usedFilters).
 	self additionalFilters: newFilters
 ]
 
