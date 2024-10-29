@@ -21,12 +21,13 @@ Class {
 
 { #category : #'private - refactorings' }
 GtCoderProtocolsGroupedListElement >> autoCategorizeProtocol: aPharoProtocol [
-	| classifier |
-
+	| classifier allMethods|
+	
+	allMethods := aPharoProtocol methodSelectors collect: [ :selector|
+		aPharoProtocol protocolClass >> selector ].
+	
 	classifier := MethodClassifier new.
-
-	aPharoProtocol methodSelectors do: [ :selector|
-		classifier classify: aPharoProtocol protocolClass >> selector ]
+	classifier classifyAll: allMethods
 ]
 
 { #category : #'private - instance creation' }
