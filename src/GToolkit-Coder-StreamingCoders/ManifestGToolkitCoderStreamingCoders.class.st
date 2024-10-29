@@ -12,6 +12,7 @@ ManifestGToolkitCoderStreamingCoders class >> mustOnlyDependOn [
 	^ {
 		'Announcements-Core'.
 		'Collections-Unordered'.
+		'Collections-Sequenceable'.
 		'Futures'.
 		'GToolkit-SearchFilters'.
 		'Kernel'
