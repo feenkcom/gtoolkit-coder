@@ -232,6 +232,7 @@ GtCoderNavigationPackagesTagsClassesElement >> onMethodsCoderFiltersChanged: aGt
 
 { #category : #'event handling' }
 GtCoderNavigationPackagesTagsClassesElement >> onNavigationModelChanged [
+	methodProtocolsList navigationModel: self navigationModel.
 	slotsGroupList navigationModel: self navigationModel.
 	methodGroupList navigationModel: self navigationModel.
 
@@ -315,39 +316,6 @@ GtCoderNavigationPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
 		inUIProcessDo: [ self
 				suppressListChangeEventsDuring: [ self deselectPackages.
 					self deselectClasses ] ]
-]
-
-{ #category : #'event handling - selection' }
-GtCoderNavigationPackagesTagsClassesElement >> onProtocolDeselected: anAnnouncement [
-	methodProtocolsList deselectProtocol
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onProtocolListSelectionChanged [
-	| aSelectedItem |
-	slotsGroupList deselectAll.
-	aSelectedItem := methodProtocolsList selectedProtocol.
-	aSelectedItem ifNil: [^self].
-	self navigationModel selectProtocol: aSelectedItem source: self.
-	"methodGroupList deselectAll.
-	self updateMethodListWith: self navigationModel methodsToShow."
-]
-
-{ #category : #'event handling - selection' }
-GtCoderNavigationPackagesTagsClassesElement >> onProtocolSelected: anAnnouncement [
-	methodProtocolsList selectProtocol: anAnnouncement protocol
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationPackagesTagsClassesElement >> onProtocolsToShowChanged: anAnnouncement [
-	self hasNavigationModel
-		ifFalse: [ ^ self ].
-	
-	methodProtocolsList updateProtocolListWith: self navigationModel protocolsToShow.
-
-	self navigationModel selectedProtocol
-		ifNil: [ methodProtocolsList deselectProtocol ]
-		ifNotNil: [ :aProtocol | methodProtocolsList selectProtocol: aProtocol ]
 ]
 
 { #category : #'api - package updates' }
@@ -528,7 +496,6 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToContent [
 	super subscribeToContent.
 	self subscribeToPackageList.
 	self subscribeToClassList.
-	self subscribeToProtocolList.
 ]
 
 { #category : #subscriptions }
@@ -548,10 +515,7 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToNavigationModel [
 			GtCoderNavigationPackageTagRenamed -> #onPackageTagRenamed:.
 			"Announcement when items selected"
 			"GtCoderNavigationClassSelected -> #onClassSelected:. <--- defined in the superclass"
-			GtCoderNavigationProtocolSelected -> #onProtocolSelected:.
-			GtCoderNavigationProtocolDeselected -> #onProtocolDeselected:.
 			"Announcements when we need to update items in the lists"
-			GtCoderNavigationProtocolsToShowChanged -> #onProtocolsToShowChanged:.
 			GtCodersFiltersChanged -> #onMethodsCoderFiltersChanged:.
 	}.
 	subscriptions
@@ -569,13 +533,6 @@ GtCoderNavigationPackagesTagsClassesElement >> subscribeToPackageList [
 		do: [ :anEvent | self onPackageListSelectionChanged ]
 ]
 
-{ #category : #subscriptions }
-GtCoderNavigationPackagesTagsClassesElement >> subscribeToProtocolList [
-	methodProtocolsList
-		when: BrSelectionChanged
-		do: [ :anEvent | self onProtocolListSelectionChanged ]
-]
-
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateClassList [
 	self hasNavigationModel
@@ -591,7 +548,6 @@ GtCoderNavigationPackagesTagsClassesElement >> updateClassList [
 GtCoderNavigationPackagesTagsClassesElement >> updateContent [
 	self updatePackageLists.
 	self updateClassList.
-	self updateProtocolList.
 ]
 
 { #category : #'updating lists' }
@@ -607,14 +563,7 @@ GtCoderNavigationPackagesTagsClassesElement >> updatePackageLists [
 
 { #category : #'updating lists' }
 GtCoderNavigationPackagesTagsClassesElement >> updateProtocolList [
-	self hasNavigationModel
-		ifFalse: [ ^ self ].
-	
-	methodProtocolsList navigationModel: self navigationModel.
-	methodProtocolsList updateProtocolListWith: self navigationModel protocolsToShow.
-	
-	self navigationModel selectedProtocol
-		ifNotNil: [ :aProtocol | methodProtocolsList selectProtocol: aProtocol ]
+	methodProtocolsList updateProtocolsList
 ]
 
 { #category : #'updating lists' }

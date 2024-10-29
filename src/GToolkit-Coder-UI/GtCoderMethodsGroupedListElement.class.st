@@ -195,7 +195,7 @@ GtCoderMethodsGroupedListElement >> pushDownMethod: aSelector inElement: elem [
 	^ self
 		addPreviewButtonFor: refactoring
 		to: elem
-		cancelSelector: #updateProtocolList
+		cancelSelector: #updateProtocolsList
 ]
 
 { #category : #'private - actions' }
@@ -207,7 +207,7 @@ GtCoderMethodsGroupedListElement >> pushUpMethod: aSelector inElement: elem [
 	^ self
 		addPreviewButtonFor: refactoring
 		to: elem
-		cancelSelector: #updateProtocolList
+		cancelSelector: #updateProtocolsList
 ]
 
 { #category : #'private - actions' }
@@ -249,7 +249,7 @@ GtCoderMethodsGroupedListElement >> renameMethod: aSelector inElement: elem [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
-					cancelSelector: #updateProtocolList ];
+					cancelSelector: #updateProtocolsList ];
 		switchToEditor.
 	edit requestFocus.
 	elem removeChildren.

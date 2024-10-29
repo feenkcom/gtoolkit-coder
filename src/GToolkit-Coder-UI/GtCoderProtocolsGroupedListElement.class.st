@@ -267,7 +267,9 @@ GtCoderProtocolsGroupedListElement >> initialize [
 				protocolsGroupName: each domainObject
 				targetClass: self navigationModel selectedClass ].
 
-	self when: BrSelectionChanged do: [ self privateEndRenameProtocol ].
+	self when: BrSelectionChanged do: [
+		self privateEndRenameProtocol.
+		self onProtocolListSelectionChanged ].
 
 	protocolGroups := self createProtocolGroups.
 	self groups: protocolGroups
@@ -280,7 +282,14 @@ GtCoderProtocolsGroupedListElement >> navigationModel [
 
 { #category : #accessing }
 GtCoderProtocolsGroupedListElement >> navigationModel: anObject [
-	navigationModel := anObject
+	navigationModel == anObject
+		ifTrue: [ ^ self ].
+
+	self unsubscribeFromNavigationModel.
+	navigationModel := anObject.
+	self subscribeToNavigationModel.
+	
+	self updateProtocolsList
 ]
 
 { #category : #'private - refactorings' }
@@ -333,6 +342,31 @@ GtCoderProtocolsGroupedListElement >> onDropCompiledMethodsOnProtocol: anItemsDr
 	compositeChange := aModel changes.
 
 	compositeChange execute
+]
+
+{ #category : #'event handling' }
+GtCoderProtocolsGroupedListElement >> onProtocolDeselected: anAnnouncement [
+	self deselectProtocol
+]
+
+{ #category : #'event handling' }
+GtCoderProtocolsGroupedListElement >> onProtocolListSelectionChanged [
+	| aSelectedItem |
+	aSelectedItem := self selectedProtocol.
+	aSelectedItem ifNil: [ ^ self ].
+	
+	self navigationModel
+		ifNotNil: [ :aModel | aModel selectProtocol: aSelectedItem source: self ]
+]
+
+{ #category : #'event handling' }
+GtCoderProtocolsGroupedListElement >> onProtocolSelected: anAnnouncement [
+	self selectProtocol: anAnnouncement protocol
+]
+
+{ #category : #'event handling' }
+GtCoderProtocolsGroupedListElement >> onProtocolsToShowChanged: anAnnouncement [
+	self updateProtocolsList
 ]
 
 { #category : #'private - refactorings' }
@@ -406,7 +440,30 @@ GtCoderProtocolsGroupedListElement >> selectedProtocol [
 	^ (self viewModel entityAt: anIndex) value object
 ]
 
-{ #category : #'api - list' }
+{ #category : #'private - subscriptions' }
+GtCoderProtocolsGroupedListElement >> subscribeToNavigationModel [
+	| subscriptions |
+
+	subscriptions := {
+		GtCoderNavigationProtocolsToShowChanged -> #onProtocolsToShowChanged:.
+		GtCoderNavigationProtocolSelected -> #onProtocolSelected:.
+		GtCoderNavigationProtocolDeselected -> #onProtocolDeselected:.
+	}.
+
+	subscriptions
+		do: [ :sub | 
+			navigationModel weak
+				when: sub key
+				send: sub value
+				to: self ]
+]
+
+{ #category : #subscriptions }
+GtCoderProtocolsGroupedListElement >> unsubscribeFromNavigationModel [
+	navigationModel ifNotNil: [ :aModel | aModel unsubscribe: self ]
+]
+
+{ #category : #'private - updating' }
 GtCoderProtocolsGroupedListElement >> updateProtocolListWith: theGtPharoProtocols [
 	| virtualStream instStream classStream virtualGtPharoProtocols instanceGtPharoProtocols classGtPharoProtocols groupItems |
 	
@@ -441,4 +498,13 @@ GtCoderProtocolsGroupedListElement >> updateProtocolListWith: theGtPharoProtocol
 		do: [ :grp :str | grp items: str ].
 
 	self groups: protocolGroups
+]
+
+{ #category : #'private - updating' }
+GtCoderProtocolsGroupedListElement >> updateProtocolsList [
+	self updateProtocolListWith: self navigationModel protocolsToShow.
+
+	self navigationModel selectedProtocol
+		ifNil: [ self deselectProtocol ]
+		ifNotNil: [ :aProtocol | self selectProtocol: aProtocol ]
 ]
