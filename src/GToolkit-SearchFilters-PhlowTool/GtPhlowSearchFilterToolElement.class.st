@@ -98,6 +98,11 @@ GtPhlowSearchFilterToolElement >> initialize [
 	
 	self initializeContent.
 	self initializeTitleNotifier.
+	
+	self phlow 
+		accessTool: (GtPhlowToolClassType forClass: GtSearchFilter) 
+		viewModel: #searchFilter 
+		object: #searchFilter
 ]
 
 { #category : #initialization }
@@ -135,6 +140,12 @@ GtPhlowSearchFilterToolElement >> initializeTitleNotifier [
 { #category : #'accessing - elements' }
 GtPhlowSearchFilterToolElement >> playgroundElement [
 	^ self childNamed: #playgroundPage
+]
+
+{ #category : #accessing }
+GtPhlowSearchFilterToolElement >> searchFilter [
+	<return: #GtSearchFilter>
+	^ searchFilter
 ]
 
 { #category : #accessing }
