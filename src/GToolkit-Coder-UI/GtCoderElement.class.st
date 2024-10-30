@@ -90,7 +90,11 @@ GtCoderElement >> initialize [
 
 	self addChild: contentElement as: #content.
 
-	self phlow beView
+	self phlow beView.
+	self phlow 
+		accessTool: (GtPhlowToolClassType forClass: GtCoderElement) 
+		viewModel: #navigationModel 
+		object: #navigationModel
 ]
 
 { #category : #'private - hooks' }
