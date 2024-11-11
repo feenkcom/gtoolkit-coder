@@ -15,9 +15,9 @@ Behavior >> gtBrowseButtonFor: anAction [
 						anEvent modifiers isPrimaryModifier
 							ifTrue: [ self gtBrowseFromButton: aButton ]
 							ifFalse: [ aButton phlow
-									spawnTool: (GtPhlowValuableTool new
+									spawnTool: (GtPhlowExplicitTool new
 											name: self gtDisplayString;
-											valuable: [ | aCoder |
+											stencil: [ | aCoder |
 												aButton phlow firstParentCoderNavigationModel
 													coderDo: [ :oldCoder | aCoder := GtCoderElement forCoder: oldCoder asNewCoderModelWithSameSubject ].
 												aCoder ]) ] ].
