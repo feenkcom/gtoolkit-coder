@@ -23,6 +23,7 @@ RPackage >> gtAllowedDependenciesFor: aView [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtBaselinesFor: aView [
+	<gtView>
 	<gtPackageView>
 	^ aView forward
 		title: 'References';
