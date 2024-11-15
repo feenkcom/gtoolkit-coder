@@ -90,7 +90,7 @@ GtCoderElement >> initialize [
 
 	self addChild: contentElement as: #content.
 
-	self phlow beView.
+	self phlow beViewContent.
 	self phlow 
 		accessTool: (GtPhlowToolClassType forClass: GtCoderElement) 
 		viewModel: #navigationModel 
