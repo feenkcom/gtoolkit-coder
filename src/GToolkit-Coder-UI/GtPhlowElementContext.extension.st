@@ -20,7 +20,7 @@ GtPhlowElementContext >> coderNavigationModel [
 GtPhlowElementContext >> firstParentCoder [
 	<return: #GtCoderElement>
 	| anElement |
-	anElement := self firstParentWithView.
+	anElement := self firstParentWithViewContent.
 	self
 		assert: [ anElement isNotNil ]
 		description: [ 'Coder (element) must be non-nil' ].
