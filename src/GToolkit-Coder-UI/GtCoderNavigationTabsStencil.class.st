@@ -176,9 +176,22 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 ]
 
 { #category : #'gt-extensions' }
+GtCoderNavigationTabsStencil >> gtPackagesTagsClassesDropdownFor: aView [
+	<gtCoderDropdownNavigation>
+	| explicitView |
+	self navigationModel ifNil: [ ^ aView empty ].
+	explicitView := aView explicit
+			title: 'Package Hierarchy';
+			priority: 1;
+			stencil: [ GtCoderNavigationBasicPackagesTagsClassesElement new
+					navigationModel: self navigationModel ].
+	self addButtonsTo: explicitView.
+	^ explicitView
+]
+
+{ #category : #'gt-extensions' }
 GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 	<gtCoderNavigation>
-	<gtCoderDropdownNavigation>
 	| explicitView |
 	self navigationModel ifNil: [ ^ aView empty ].
 	explicitView := aView explicit
