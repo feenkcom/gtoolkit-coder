@@ -52,6 +52,7 @@ Behavior >> gtHierarchyButtonFor: anAction [
 			BlElement new
 				size: GtPharoCoderHierarchyDropdownConfiguration preferredExtent;
 				addChild: ((GtCoderNavigationTabsStencil new
+						pragmaName: #gtCoderDropdownNavigation;
 						navigationModel: aNavigationModel;
 						asElement) background: Color white) ]
 ]

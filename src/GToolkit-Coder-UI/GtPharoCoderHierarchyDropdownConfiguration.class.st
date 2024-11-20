@@ -30,7 +30,7 @@ GtPharoCoderHierarchyDropdownConfiguration class >> gtConfigurationFor: aView [
 
 { #category : #accessing }
 GtPharoCoderHierarchyDropdownConfiguration class >> preferredExtent [
-	^ preferredExtent ifNil: [ preferredExtent := 400 @ 400 ]
+	^ preferredExtent ifNil: [ preferredExtent := 800 @ 400 ]
 ]
 
 { #category : #accessing }
