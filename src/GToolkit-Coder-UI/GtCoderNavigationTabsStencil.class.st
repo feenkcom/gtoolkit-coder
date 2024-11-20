@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'navigations',
 		'navigationModel',
-		'formCache'
+		'formCache',
+		'pragmaName'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
@@ -79,8 +80,13 @@ GtCoderNavigationTabsStencil >> defaultNavigations [
 	<return: #Array of: #GtPhlowView>
 	^ GtPhlowViewsCollector new
 		fromObject: self;
-		pragmaName: #gtCoderNavigation;
+		pragmaName: self pragmaName;
 		collect
+]
+
+{ #category : #defaults }
+GtCoderNavigationTabsStencil >> defaultPragmaName [
+	^ #gtCoderNavigation
 ]
 
 { #category : #accessing }
@@ -91,6 +97,20 @@ GtCoderNavigationTabsStencil >> formCache [
 { #category : #accessing }
 GtCoderNavigationTabsStencil >> formCache: anObject [
 	formCache := anObject
+]
+
+{ #category : #'gt-extensions' }
+GtCoderNavigationTabsStencil >> gtClassDropdownHierarchyFor: aView [
+	<gtCoderDropdownNavigation>
+	| explicitView |
+	self navigationModel ifNil: [ ^ aView empty ].
+	explicitView := aView explicit
+			title: 'Class Hierarchy';
+			priority: 2;
+			stencil: [ GtCoderNavigationBasicClassHierarchyElement new
+					navigationModel: self navigationModel ].
+	self addButtonsTo: explicitView.
+	^ explicitView
 ]
 
 { #category : #'gt-extensions' }
@@ -158,6 +178,7 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 { #category : #'gt-extensions' }
 GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 	<gtCoderNavigation>
+	<gtCoderDropdownNavigation>
 	| explicitView |
 	self navigationModel ifNil: [ ^ aView empty ].
 	explicitView := aView explicit
@@ -194,4 +215,14 @@ GtCoderNavigationTabsStencil >> navigations [
 { #category : #accessing }
 GtCoderNavigationTabsStencil >> navigations: anArrayOfPhlowViews [
 	navigations := anArrayOfPhlowViews
+]
+
+{ #category : #accessing }
+GtCoderNavigationTabsStencil >> pragmaName [
+	^ pragmaName ifNil: [ pragmaName := self defaultPragmaName ]
+]
+
+{ #category : #accessing }
+GtCoderNavigationTabsStencil >> pragmaName: anObject [
+	pragmaName := anObject
 ]
