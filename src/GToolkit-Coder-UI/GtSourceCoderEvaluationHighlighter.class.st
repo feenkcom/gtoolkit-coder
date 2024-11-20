@@ -14,6 +14,7 @@ GtSourceCoderEvaluationHighlighter >> addAttributesFor: anEvaluationResult withi
 			aResultButtonAttribute := GtPlaygroundEvaluatedCodeButtonAttribute new
 					result: anEvaluationResult value;
 					coder: anEvaluationResult sourceCoder;
+					evaluationInterval: aTextInterval;
 					beNotOverwritableByStyler.	"Pass the coder to get the spawn destination"
 
 			(self text from: aTextInterval last to: aTextInterval last)

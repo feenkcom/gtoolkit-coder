@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'result',
 		'action',
-		'coder'
+		'coder',
+		'evaluationInterval'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source Attributes'
 }
@@ -65,6 +66,16 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> coder [
 { #category : #accessing }
 GtPlaygroundEvaluatedCodeButtonAttribute >> coder: anObject [
 	coder := anObject
+]
+
+{ #category : #accessing }
+GtPlaygroundEvaluatedCodeButtonAttribute >> evaluationInterval [
+	^ evaluationInterval
+]
+
+{ #category : #accessing }
+GtPlaygroundEvaluatedCodeButtonAttribute >> evaluationInterval: anObject [
+	evaluationInterval := anObject
 ]
 
 { #category : #initialization }
