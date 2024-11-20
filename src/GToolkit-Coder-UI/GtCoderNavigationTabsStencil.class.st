@@ -7,8 +7,31 @@ Class {
 		'formCache',
 		'pragmaName'
 	],
+	#classVars : [
+		'DisplayFullDropdownNavigation'
+	],
 	#category : #'GToolkit-Coder-UI-Navigation'
 }
+
+{ #category : #configuration }
+GtCoderNavigationTabsStencil class >> beBasicDropdownNavigation [
+	DisplayFullDropdownNavigation := false
+]
+
+{ #category : #configuration }
+GtCoderNavigationTabsStencil class >> beFullDropdownNavigation [
+	DisplayFullDropdownNavigation := true
+]
+
+{ #category : #initialization }
+GtCoderNavigationTabsStencil class >> initialize [
+	self beFullDropdownNavigation
+]
+
+{ #category : #testing }
+GtCoderNavigationTabsStencil class >> isFullDropdownNavigation [
+	^ DisplayFullDropdownNavigation ifNil: [ true ]
+]
 
 { #category : #'gt-extensions' }
 GtCoderNavigationTabsStencil >> addButtonsTo: explicitView [
@@ -107,8 +130,11 @@ GtCoderNavigationTabsStencil >> gtClassDropdownHierarchyFor: aView [
 	explicitView := aView explicit
 			title: 'Class Hierarchy';
 			priority: 2;
-			stencil: [ GtCoderNavigationBasicClassHierarchyElement new
-					navigationModel: self navigationModel ].
+			stencil: [ self isFullDropdownNavigation
+					ifTrue: [ GtCoderNavigationClassHierarchyElement new
+							navigationModel: self navigationModel ]
+					ifFalse: [ GtCoderNavigationBasicClassHierarchyElement new
+							navigationModel: self navigationModel ] ].
 	self addButtonsTo: explicitView.
 	^ explicitView
 ]
@@ -183,8 +209,11 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesDropdownFor: aView [
 	explicitView := aView explicit
 			title: 'Package Hierarchy';
 			priority: 1;
-			stencil: [ GtCoderNavigationBasicPackagesTagsClassesElement new
-					navigationModel: self navigationModel ].
+			stencil: [ self isFullDropdownNavigation
+					ifTrue: [ GtCoderNavigationPackagesTagsClassesElement new
+							navigationModel: self navigationModel ]
+					ifFalse: [ GtCoderNavigationBasicPackagesTagsClassesElement new
+							navigationModel: self navigationModel ] ].
 	self addButtonsTo: explicitView.
 	^ explicitView
 ]
@@ -206,6 +235,11 @@ GtCoderNavigationTabsStencil >> gtPackagesTagsClassesFor: aView [
 { #category : #accessing }
 GtCoderNavigationTabsStencil >> initialize [
 	formCache := Dictionary new.
+]
+
+{ #category : #testing }
+GtCoderNavigationTabsStencil >> isFullDropdownNavigation [
+	^ self class isFullDropdownNavigation
 ]
 
 { #category : #accessing }
