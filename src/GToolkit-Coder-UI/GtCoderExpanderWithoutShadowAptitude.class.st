@@ -126,7 +126,7 @@ GtCoderExpanderWithoutShadowAptitude >> initialize [
 
 { #category : #'private - instance creation' }
 GtCoderExpanderWithoutShadowAptitude >> newCollapsedTriangleGeometry [
-	^ BlPolygon vertices: {
+	^ BlPolygonGeometry vertices: {
 		(0 @ 0).
 		(8 @ 4).
 		(0 @ 8)
@@ -135,7 +135,7 @@ GtCoderExpanderWithoutShadowAptitude >> newCollapsedTriangleGeometry [
 
 { #category : #'private - instance creation' }
 GtCoderExpanderWithoutShadowAptitude >> newExpandedTriangleGeometry [
-	^ BlPolygon vertices: {
+	^ BlPolygonGeometry vertices: {
 		(0 @ 0).
 		(8 @ 0).
 		(4 @ 8)
