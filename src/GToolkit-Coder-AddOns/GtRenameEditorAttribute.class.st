@@ -5,7 +5,6 @@ Class {
 		'cursorLocation',
 		'selectAll',
 		'filter',
-		'editorShortcuts',
 		'requestInitialFocus',
 		'styler',
 		'coordinateFocus',
