@@ -23,9 +23,10 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> action: aBlock [
 { #category : #initialization }
 GtPlaygroundEvaluatedCodeButtonAttribute >> affect: aTBrTextEditorTextualPiece in: anEditorElement [
 	<return: #BlElement>
-	| aButton |
+	| aButton hoverAttribute |
 	aButton := BrButton new.
-
+	hoverAttribute := BlTextHighlightAttribute
+			paint: BrGlamorousColors textHighlightColor.
 	^ aButton
 		aptitude: (BrLazyStyleCommonAptitude new
 				default: [ :aStyle | aStyle background: BrGlamorousColors defaultButtonBorderColor ];
@@ -50,6 +51,15 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> affect: aTBrTextEditorTextualPiece i
 		geometry: BlEllipseGeometry new;
 		margin: (BlInsets left: 2 right: 2);
 		action: [ :aButtonElement :aButtonModel :anEvent | self clickEvent: anEvent from: aButtonElement ];
+		when: BlMouseEnterEvent
+			do: [ :anEvent | 
+				evaluationInterval
+					ifNotNil: [ (anEditorElement text
+							from: (evaluationInterval first min: anEditorElement text size)
+							to: (evaluationInterval last min: anEditorElement text size))
+							attribute: hoverAttribute ] ];
+		when: BlMouseLeaveEvent
+			do: [ :anEvent | anEditorElement text clearAttributes: [ :each | each == hoverAttribute ] ];
 		yourself
 ]
 
