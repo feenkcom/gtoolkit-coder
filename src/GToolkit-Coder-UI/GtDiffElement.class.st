@@ -325,7 +325,7 @@ GtDiffElement >> outlineFor: aSyncScrollRange [
 		add: leftBounds right @ leftBottom;
 		add: leftBounds left @ leftBottom;
 		add: leftBounds left @ leftTop.
-	^ BlPolyline vertices: vertices
+	^ BlPolylineGeometry vertices: vertices
 ]
 
 { #category : #'event handling' }

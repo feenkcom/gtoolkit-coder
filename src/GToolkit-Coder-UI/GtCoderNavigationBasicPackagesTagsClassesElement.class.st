@@ -80,7 +80,7 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> hideOrShowClassList [
 { #category : #initialization }
 GtCoderNavigationBasicPackagesTagsClassesElement >> initializeContent [
 	super initializeContent.
-	packagesList := GtCoderNavigationPackagesTreeElement new
+	packagesList := GtCoderPackagesTreeElement new
 			padding: (BlInsets right: 10).
 ]
 

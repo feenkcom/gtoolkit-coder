@@ -301,7 +301,7 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	which we will restore once new text is set"
 
 	"Related to: https://github.com/feenkcom/gtoolkit/issues/3727"
-	self privateUpdateEditorState: self textualCoderViewModel asEditorState wait.
+	self privateUpdateEditorState: self textualCoderViewModel asEditorState.
 	
 	"self asyncPromise  
 		promise: self textualCoderViewModel asEditorState."

@@ -120,14 +120,14 @@ GtCoderNavigationElement >> onClassRemoved: anAnnouncement [
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassRenamed: anAnnouncement [
-	self
+	"self
 		inUIProcessDo: [ self
 				suppressListChangeEventsDuring: [ self
 						renameClass: anAnnouncement theClass
 						oldName: anAnnouncement oldName
 						newName: anAnnouncement newName
 						inPackage: anAnnouncement package
-						tag: anAnnouncement tag ] ]
+						tag: anAnnouncement tag ] ]"
 ]
 
 { #category : #'event handling' }
@@ -137,7 +137,8 @@ GtCoderNavigationElement >> onClassSelected: anAnnouncement [
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassesToShowChanged: anAnnouncement [
-	self updateClassList
+	"Refactorings that are executed from a non-UI process should schedule an update task"
+	self inUIProcessDo: [ self updateClassList ]
 ]
 
 { #category : #'event handling' }

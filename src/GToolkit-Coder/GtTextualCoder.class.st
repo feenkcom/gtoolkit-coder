@@ -42,11 +42,13 @@ GtTextualCoder >> asNewCoderModelWithSameSubject [
 GtTextualCoder >> ast [
 	<return: #TAsyncPromise of: #GtCoderAst>
 
-	^ self critical: [ astPromise ifNil: [ astPromise := self sourceCode currentSourceString asyncThen: [ :aGtCoderSourceString |
+	^ self critical: [ astPromise ifNil: [ astPromise := [
+		| aGtCoderSourceString |
+		aGtCoderSourceString := self sourceCode currentSourceString.
 		GtCoderAst new
 			ast: (self computeAst: aGtCoderSourceString string);
 			sourceString: aGtCoderSourceString;
-			epoch: aGtCoderSourceString epoch ] ] ]
+			epoch: aGtCoderSourceString epoch ] asAsyncPromise ] ]
 ]
 
 { #category : #'api - ast' }
@@ -67,18 +69,19 @@ GtTextualCoder >> astAwaitDo: aBlock [
 { #category : #'api - text' }
 GtTextualCoder >> collapsedText [
 	<return: #BlText>
+	| aCurrentText |
 
-	^ self collapsedTextPromise wait
+	aCurrentText := self currentSourceText.
+	^ aCurrentText
+			ifEmpty: [ '' asRopedText ]
+			ifNotEmpty: [ aCurrentText iterator nextLine ]
 ]
 
 { #category : #'api - text' }
 GtTextualCoder >> collapsedTextPromise [
 	<return: #TAsyncPromise of: #BlText>
 
-	^ self currentSourceTextPromise asyncThen: [ :aCurrentText |
-		aCurrentText
-			ifEmpty: [ '' asRopedText ]
-			ifNotEmpty: [ aCurrentText iterator nextLine ] ]
+	^ [ self collapsedText ] asAsyncPromise
 ]
 
 { #category : #'api - ast' }
@@ -108,7 +111,7 @@ GtTextualCoder >> currentSourceString [
 	"Return a String representation of the current source text"
 	<return: #String>
 
-	^ self currentSourceStringPromise wait
+	^ self sourceCode currentSourceString string
 ]
 
 { #category : #'api - text' }
@@ -119,18 +122,11 @@ GtTextualCoder >> currentSourceString: aString [
 ]
 
 { #category : #'api - text' }
-GtTextualCoder >> currentSourceStringPromise [
-	"Return a String representation of the current source text"
-	<return: #TAsyncPromise of: #String>
-
-	^ self critical: [ self sourceCode currentSourceString then: [ :aGtCoderSourceString | aGtCoderSourceString string ] ]
-]
-
-{ #category : #'api - text' }
 GtTextualCoder >> currentSourceText [
+	<return: #BlText>
 	"Set a new source text"
 
-	^ self currentSourceTextPromise wait
+	^ self sourceCode currentSourceText text
 ]
 
 { #category : #'api - text' }
@@ -180,7 +176,7 @@ GtTextualCoder >> currentSourceText: aText withEditCommand: anEditCommand [
 GtTextualCoder >> currentSourceTextPromise [
 	<return: #TAsyncPromise of: #BlText>
 
-	^ self critical: [ self sourceCode currentSourceText then: [ :aGtCoderSourceText | aGtCoderSourceText text ] ]
+	^ [ self currentSourceText ] asAsyncPromise
 ]
 
 { #category : #'api - text' }
@@ -223,7 +219,7 @@ GtTextualCoder >> isModified [
 GtTextualCoder >> isModifiedPromise [
 	<return: #TAsyncPromise of: #Boolean>
 
-	^ self sourceCode isModifiedPromise
+	^ [ self sourceCode isModified ] asAsyncPromise
 ]
 
 { #category : #'private - notifying' }

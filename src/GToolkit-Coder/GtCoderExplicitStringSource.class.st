@@ -8,10 +8,8 @@ Class {
 }
 
 { #category : #initialization }
-GtCoderExplicitStringSource >> originalSourceTextFuture [
-	<return: #TAsyncFuture>
-
-	^ [ source asRopedText ] asAsyncFuture
+GtCoderExplicitStringSource >> computeOriginalSourceText [
+	^ source asRopedText
 ]
 
 { #category : #accessing }
@@ -25,5 +23,5 @@ GtCoderExplicitStringSource >> source: anObject [
 
 	self critical: [ 
 		source := anObject.
-		originalSourceTextPromise := nil ]
+		originalSourceText := nil ]
 ]

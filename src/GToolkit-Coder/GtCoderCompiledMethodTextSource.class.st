@@ -18,12 +18,10 @@ GtCoderCompiledMethodTextSource >> compiledMethod: anObject [
 
 	self critical: [ 
 		compiledMethod := anObject.
-		originalSourceTextPromise := nil ]
+		originalSourceText := nil ]
 ]
 
 { #category : #initialization }
-GtCoderCompiledMethodTextSource >> originalSourceTextFuture [
-	<return: #TAsyncFuture>
-
-	^ [ compiledMethod sourceCode asRopedText ] asAsyncFuture
+GtCoderCompiledMethodTextSource >> computeOriginalSourceText [
+	^ compiledMethod sourceCode asRopedText
 ]
