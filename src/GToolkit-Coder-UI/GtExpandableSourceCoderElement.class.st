@@ -250,5 +250,5 @@ GtExpandableSourceCoderElement >> updateElement [
 
 { #category : #'private - update' }
 GtExpandableSourceCoderElement >> updateModificationIndicator [
-	modificationIndicator asyncPromise promise: textualCoderViewModel isTextModified
+	modificationIndicator asyncPromise promise: textualCoderViewModel isTextModifiedPromise
 ]

@@ -6,8 +6,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'monitor',
-		'originalSourceTextPromise',
-		'currentSourceText'
+		'currentSourceText',
+		'originalSourceText'
 	],
 	#category : #'GToolkit-Coder-Coders - Source Text'
 }
@@ -15,6 +15,11 @@ Class {
 { #category : #'api - converting' }
 GtCoderTextSource >> asCompiledMethodSourceCode: aCompiledMethod [
 	^ (GtCoderCompiledMethodTextSource new fromSourceCode: self) compiledMethod: aCompiledMethod
+]
+
+{ #category : #initialization }
+GtCoderTextSource >> computeOriginalSourceText [
+	^ self subclassResponsibility
 ]
 
 { #category : #'mutual exclusion' }
@@ -25,26 +30,25 @@ GtCoderTextSource >> critical: aBlock [
 { #category : #'api - accessing' }
 GtCoderTextSource >> currentSourceString [
 	"Return a string representation of the current source text"
-	<return: #TAsyncPromise of: #GtCoderSourceString>
-	
-	^ self critical: [ self currentSourceText then: [ :aGtCoderSourceText | aGtCoderSourceText asSourceString ] ]
+	<return: #GtCoderSourceString>
+
+	^ self critical: [ self currentSourceText asSourceString ]
 ]
 
 { #category : #'api - accessing' }
 GtCoderTextSource >> currentSourceString: aString [
 	"Set a new source text"
 
-	self critical: [ currentSourceText := GtCoderSourceText new text: aString asRopedText ]
+	self critical: [ currentSourceText := GtCoderSourceText new
+		text: aString asRopedText;
+		yourself ]
 ]
 
 { #category : #'api - accessing' }
 GtCoderTextSource >> currentSourceText [
-	<return: #TAsyncPromise of: #GtCoderSourceText>
+	<return: #GtCoderSourceText>
 
-	^ self critical: [
-		currentSourceText
-			ifNotNil: [ :aSourceText | aSourceText asAsyncPromise ]
-			ifNil: [ self originalSourceTextPromise ] ]
+	^ self critical: [ currentSourceText ifNil: [ self originalSourceText ] ]
 ]
 
 { #category : #'api - accessing' }
@@ -53,12 +57,13 @@ GtCoderTextSource >> currentSourceText: aText [
 
 	self critical: [ 
 		currentSourceText := GtCoderSourceText new 
-			text: aText copyWithoutExternalReferences ]
+			text: aText copyWithoutExternalReferences;
+			yourself ]
 ]
 
 { #category : #initialization }
 GtCoderTextSource >> fromSourceCode: aGtCoderTextSource [
-	originalSourceTextPromise := aGtCoderTextSource privateGetOriginalSourceTextPromise.
+	originalSourceText := aGtCoderTextSource privateGetOriginalSourceText.
 	currentSourceText := aGtCoderTextSource privateGetCurrentSourceText
 ]
 
@@ -66,7 +71,7 @@ GtCoderTextSource >> fromSourceCode: aGtCoderTextSource [
 GtCoderTextSource >> hasSourceText [
 	<return: #Boolean>
 
-	^ self critical: [ originalSourceTextPromise notNil ]
+	^ originalSourceText notNil
 ]
 
 { #category : #initialization }
@@ -75,38 +80,23 @@ GtCoderTextSource >> initialize [
 	
 	monitor := Monitor new.
 	currentSourceText := nil.
-	originalSourceTextPromise := nil
+	originalSourceText := nil
 ]
 
 { #category : #'api - testing' }
 GtCoderTextSource >> isModified [
-	^ self isModifiedPromise wait
+	^ self critical: [
+		currentSourceText
+			ifNil: [ ^ false ].
+		self originalSourceText text characters ~= self currentSourceText text characters ]
 ]
 
-{ #category : #'api - testing' }
-GtCoderTextSource >> isModifiedPromise [
-	currentSourceText
-		ifNil: [ ^ false asAsyncPromise ].
-	
-	^ self originalSourceTextPromise then: [ :anOriginalSourceText | self currentSourceText then: [ :aCurrentSourceText | anOriginalSourceText text characters ~= aCurrentSourceText text characters ] ]
-]
-
-{ #category : #initialization }
-GtCoderTextSource >> originalSourceTextFuture [
-	<return: #TAsyncFuture>
-
-	^ self subclassResponsibility
-]
-
-{ #category : #initialization }
-GtCoderTextSource >> originalSourceTextPromise [
-
-	<return: #TAsyncPromise>
-	^ self critical: [ 
-		  originalSourceTextPromise ifNil: [ 
-			  originalSourceTextPromise := (
-			  	self originalSourceTextFuture map: [ :aText | 
-				  	GtCoderSourceText new text: aText ]) asAsyncPromise ] ]
+{ #category : #'api - accessing' }
+GtCoderTextSource >> originalSourceText [
+	^ self
+		critical: [ originalSourceText
+				ifNil: [ originalSourceText := GtCoderSourceText new
+							text: self computeOriginalSourceText ] ]
 ]
 
 { #category : #'private - accessing' }
@@ -115,8 +105,8 @@ GtCoderTextSource >> privateGetCurrentSourceText [
 ]
 
 { #category : #'private - accessing' }
-GtCoderTextSource >> privateGetOriginalSourceTextPromise [
-	^ originalSourceTextPromise
+GtCoderTextSource >> privateGetOriginalSourceText [
+	^ originalSourceText
 ]
 
 { #category : #'api - accessing' }
@@ -124,7 +114,7 @@ GtCoderTextSource >> resetSourceText [
 	"Remove the cached source text forcing it to be recomputed next time it is accessed"
 	
 	self critical: [
-		originalSourceTextPromise := nil.
+		originalSourceText := nil.
 		currentSourceText := nil ]
 ]
 

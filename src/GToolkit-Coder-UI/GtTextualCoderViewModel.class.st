@@ -117,30 +117,29 @@ GtTextualCoderViewModel >> applyTextEditCommand: aTextEditCommand [
 
 { #category : #converting }
 GtTextualCoderViewModel >> asEditorState [
-	<return: #TAsyncPromise>
+	<return: #BrTextEditorCompositeMemento>
+	| anEditorText aMemento |
 	
-	^ self coderModel currentSourceTextPromise then: [ :aText |
-		| anEditorText aMemento |
-		
-		anEditorText := aText copy.
+	anEditorText := self coderModel currentSourceText copy.
 
-		self extraTextAttributes do: [ :eachCoderAttributes |
-			eachCoderAttributes applyOnEditorText: anEditorText ].
+	self extraTextAttributes do: [ :eachCoderAttributes |
+		eachCoderAttributes applyOnEditorText: anEditorText ].
 
-		aMemento := BrTextEditorCompositeMemento new
-			addMemento: (BrTextEditorCursorsMemento new cursors: cursors copy);
-			addMemento: (BrTextEditorSelectionMemento new selection: selection copy).
+	aMemento := BrTextEditorCompositeMemento new
+		addMemento: (BrTextEditorCursorsMemento new cursors: cursors copy);
+		addMemento: (BrTextEditorSelectionMemento new selection: selection copy).
 
-		self hasStyledText
-			ifTrue: [
-				aMemento addMemento: (BrTextEditorStyledTextMemento new
-					text: self styledText;
-					styler: self compositeStyler) ]
-			ifFalse: [
-			 	aMemento
-					addMemento: (BrTextEditorTextMemento new text: anEditorText);
-					addMemento: (BrTextEditorStylerMemento new styler: self compositeStyler) ].
-		aMemento ]
+	self hasStyledText
+		ifTrue: [
+			aMemento addMemento: (BrTextEditorStyledTextMemento new
+				text: self styledText;
+				styler: self compositeStyler) ]
+		ifFalse: [
+		 	aMemento
+				addMemento: (BrTextEditorTextMemento new text: anEditorText);
+				addMemento: (BrTextEditorStylerMemento new styler: self compositeStyler) ].
+
+	^ aMemento
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
@@ -458,7 +457,7 @@ GtTextualCoderViewModel >> initialize [
 ]
 
 { #category : #'api - text' }
-GtTextualCoderViewModel >> isTextModified [
+GtTextualCoderViewModel >> isTextModifiedPromise [
 	"Return a promise which is resolved to true if the text is modified,
 	false otherwise. Should be used together with {{gtClass:GtTextualCoderViewModelTextChanged}} to update
 	the modification status in the UI"

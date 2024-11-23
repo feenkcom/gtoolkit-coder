@@ -1,35 +1,37 @@
 Class {
-	#name : #GtCoderNavigationPackagesTreeItemElement,
+	#name : #GtCoderPackagesTreeItemElement,
 	#superclass : #BrHorizontalPane,
 	#instVars : [
 		'packageOrTag',
 		'label'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeItemElement >> initialize [
+GtCoderPackagesTreeItemElement >> initialize [
 	super initialize.
-	
-	self addAptitude: BrGlamorousListItemAptitude new.
 	
 	label := BrLabel new
 		matchParent;
 		text: '';
 		beSmallSize;
-		aptitude: BrGlamorousLabelAptitude.
+		aptitude: (BrGlamorousLabelAptitude new padding: (BlInsets
+					top: 2
+					bottom: 2
+					left: 1
+					right: 1)).
 
 	self addChild: label
 ]
 
 { #category : #accessing }
-GtCoderNavigationPackagesTreeItemElement >> packageOrTag [
+GtCoderPackagesTreeItemElement >> packageOrTag [
 	^ packageOrTag
 ]
 
 { #category : #accessing }
-GtCoderNavigationPackagesTreeItemElement >> packageOrTag: aPackageOrTag [
+GtCoderPackagesTreeItemElement >> packageOrTag: aPackageOrTag [
 	packageOrTag = aPackageOrTag
 		ifTrue: [ ^ self ].
 

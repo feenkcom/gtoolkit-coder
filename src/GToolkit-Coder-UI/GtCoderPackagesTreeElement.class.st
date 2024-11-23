@@ -4,20 +4,24 @@ I show a simple list of packages sorting alphabetically
 
 "
 Class {
-	#name : #GtCoderNavigationPackagesTreeElement,
+	#name : #GtCoderPackagesTreeElement,
 	#superclass : #BrSimpleTree,
 	#traits : 'TGtCoderNavigationWithContextMenu',
 	#classTraits : 'TGtCoderNavigationWithContextMenu classTrait',
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#instVars : [
+		'packageToRename',
+		'renamingEditor'
+	],
+	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #'instance creation' }
-GtCoderNavigationPackagesTreeElement class >> fromPackages: aCollectionOfPackages [
+GtCoderPackagesTreeElement class >> fromPackages: aCollectionOfPackages [
 	^ self new initializeWithPackages: aCollectionOfPackages
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> buildRemovePackageLabelFor: aPackage [
+GtCoderPackagesTreeElement >> buildRemovePackageLabelFor: aPackage [
 	| labelText |
 	labelText := 'Remove package <1s>' expandMacrosWith: aPackage name.
 	^ BrLabel new
@@ -27,7 +31,7 @@ GtCoderNavigationPackagesTreeElement >> buildRemovePackageLabelFor: aPackage [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> buildRemoveTagLabelFor: aTag [
+GtCoderPackagesTreeElement >> buildRemoveTagLabelFor: aTag [
 	| labelText |
 	labelText := 'Remove package <1s>' expandMacrosWith: aTag name.
 	^ BrLabel new
@@ -37,7 +41,7 @@ GtCoderNavigationPackagesTreeElement >> buildRemoveTagLabelFor: aTag [
 ]
 
 { #category : #'private - enumeration' }
-GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
+GtCoderPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 	| theTags anExtension |
 	(aPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
 	theTags := aPackageOrTag classTags asOrderedCollection.
@@ -56,52 +60,84 @@ GtCoderNavigationPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> contextMenuItemsFor: aPackageOrTag [
+GtCoderPackagesTreeElement >> contextMenuItemsFor: aPackageOrTag [
 	| items |
 	items := {(self createLabel: 'New package / tag' description: '')
 				-> [ :elem | self newPackage ]} asOrderedCollection.
 	aPackageOrTag class == RPackage
 		ifTrue: [ items
 				addAll: {(self createLabel: 'Rename package' description: aPackageOrTag name)
-							-> [ :elem | self renamePackage: aPackageOrTag inElement: elem ].
+							-> [ :elem | self requestRenamePackage: aPackageOrTag ].
 						(self createLabel: 'Remove package' description: aPackageOrTag name)
 							-> [ :elem | self removePackage: aPackageOrTag inElement: elem ]} ]
 		ifFalse: [ items
 				addAll: {(self createLabel: 'Rename tag' description: aPackageOrTag name)
-							-> [ :elem | self renameTag: aPackageOrTag inElement: elem ].
+							-> [ :elem | self requestRenamePackage: aPackageOrTag ].
 						(self createLabel: 'Remove tag' description: aPackageOrTag name)
 							-> [ :elem | self removeTag: aPackageOrTag inElement: elem ]} ].
 
 	^ items
 ]
 
+{ #category : #'as yet unclassified' }
+GtCoderPackagesTreeElement >> createRenamePackageForm: aPackageOrTag [
+	^ GtCoderPackagesTreeRenameEditor new
+		itemToRename: aPackageOrTag;
+		renameAction: [ :anItemToRename :aNewName |
+			(anItemToRename isKindOf: RPackage)
+				ifTrue: [
+					(GtRBRenamePackageRefactoring
+						from: anItemToRename name
+						to: aNewName)
+							execute ].
+			(anItemToRename isKindOf: RPackageTag)
+				ifTrue: [
+					(GtRBRenamePackageTagRefactoring
+						packageName: anItemToRename package name
+						from: anItemToRename name
+						to: aNewName)
+							execute ] ];
+		endRenameAction: [ self privateEndRenamePackage ]
+]
+
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> demotePackage: aPackageOrTag inElement: elem [ 
+GtCoderPackagesTreeElement >> demotePackage: aPackageOrTag inElement: elem [ 
 	self notYetImplemented
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> initialize [
+GtCoderPackagesTreeElement >> initialize [
 	super initialize.
 
 	self rowStencil: BrGlamorousSimpleTreeSelectableRowElementStencilBuilder new.
 
 	self
-		nodeStencil: [
-			| anItemElement |
-			anItemElement := GtCoderNavigationPackagesTreeItemElement new.
-			anItemElement
-				hMatchParent;
-				vFitContent;
-				addAptitude: (BrGlamorousWithContextMenuAptitude
+		nodeType: [ :aTypeFactory :aTreeNode | aTreeNode value = packageToRename ifTrue: [ #rename ] ifFalse: [ #display ] ];
+		nodeStencil: [ :anItemType | 
+			anItemType = #rename
+				ifTrue: [ BrFrame new
+						id: #'coder--package-rename';
+						hMatchParent;
+						vFitContent ]
+				ifFalse: [ | anItemElement |
+					anItemElement := GtCoderPackagesTreeItemElement new.
+					anItemElement
+						hMatchParent;
+						vFitContent;
+						addAptitude: (BrGlamorousWithContextMenuAptitude
 								content: [ GtCoderNavigationContextMenuContent new
-										items: (self contextMenuItemsFor: anItemElement packageOrTag) ]) ];
+										items: (self contextMenuItemsFor: anItemElement packageOrTag) ]) ] ];
 		nodeDataBinder: [ :aPackageElement :aPackage | 
-			aPackageElement packageOrTag: aPackage ]
+			aPackageElement id asSymbol = #'coder--package-rename'
+				ifTrue: [ aPackageElement removeChildren.
+					renamingEditor
+						ifNil: [ renamingEditor := self createRenamePackageForm: aPackage ].
+					aPackageElement addChild: renamingEditor ]
+				ifFalse: [ aPackageElement packageOrTag: aPackage ] ]
 ]
 
 { #category : #'api - initialization' }
-GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPackages [
+GtCoderPackagesTreeElement >> initializeWithPackages: aCollectionOfPackages [
 	| theSortedPackages |
 	theSortedPackages := aCollectionOfPackages asArray
 		sorted:
@@ -113,7 +149,7 @@ GtCoderNavigationPackagesTreeElement >> initializeWithPackages: aCollectionOfPac
 ]
 
 { #category : #'private - testing' }
-GtCoderNavigationPackagesTreeElement >> isTag: tagA lessThan: tagB [
+GtCoderPackagesTreeElement >> isTag: tagA lessThan: tagB [
 	tagA class = GtCoderPackageUncategorizedTag ifTrue: [ ^ true ].
 	tagB class = GtCoderPackageUncategorizedTag ifTrue: [ ^ false ].
 	^ tagA name < tagB name
@@ -121,7 +157,7 @@ GtCoderNavigationPackagesTreeElement >> isTag: tagA lessThan: tagB [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> newPackage [
+GtCoderPackagesTreeElement >> newPackage [
 	| dropdown tabGroup |
 	tabGroup := self
 			withAllParentsDetect: [ :each | each class == BrTabGroup ]
@@ -133,17 +169,26 @@ GtCoderNavigationPackagesTreeElement >> newPackage [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> newTagFor: aPackage inElement: elem [
+GtCoderPackagesTreeElement >> newTagFor: aPackage inElement: elem [
+	self notYetImplemented
+]
+
+{ #category : #'as yet unclassified' }
+GtCoderPackagesTreeElement >> privateEndRenamePackage [
+	"Removes package editing UI"
+
+	packageToRename := nil.
+	renamingEditor := nil.
+	self viewModel notifyChildrenChanged
+]
+
+{ #category : #initialization }
+GtCoderPackagesTreeElement >> promoteTag: aPackageOrTag inElement: elem [
 	self notYetImplemented
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> promoteTag: aPackageOrTag inElement: elem [
-	self notYetImplemented
-]
-
-{ #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> removePackage: aPackage inElement: elem [
+GtCoderPackagesTreeElement >> removePackage: aPackage inElement: elem [
 	| change button |
 	change := RBRemovePackageChange removePackageNamed: aPackage name.
 	button := GtPreviewChangeButton new
@@ -158,7 +203,7 @@ GtCoderNavigationPackagesTreeElement >> removePackage: aPackage inElement: elem 
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> removeTag: aTag inElement: elem [ 
+GtCoderPackagesTreeElement >> removeTag: aTag inElement: elem [ 
 	| change button |
 	change := GtRBRemovePackageTagChange packageName: aTag package name tagName: aTag name.
 	button := GtPreviewChangeButton new
@@ -173,7 +218,7 @@ GtCoderNavigationPackagesTreeElement >> removeTag: aTag inElement: elem [
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> renamePackage: aPackage inElement: elem [
+GtCoderPackagesTreeElement >> renamePackage: aPackage inElement: elem [
 	| refactoring edit childs |
 	childs := elem children.
 	edit := BrEditableLabel new.
@@ -200,7 +245,7 @@ GtCoderNavigationPackagesTreeElement >> renamePackage: aPackage inElement: elem 
 ]
 
 { #category : #initialization }
-GtCoderNavigationPackagesTreeElement >> renameTag: aPackageOrTag inElement: elem [
+GtCoderPackagesTreeElement >> renameTag: aPackageOrTag inElement: elem [
 	| refactoring edit childs |
 	childs := elem children.
 	edit := BrEditableLabel new.
@@ -227,8 +272,18 @@ GtCoderNavigationPackagesTreeElement >> renameTag: aPackageOrTag inElement: elem
 	elem addChild: edit
 ]
 
+{ #category : #'as yet unclassified' }
+GtCoderPackagesTreeElement >> requestRenamePackage: aPackageOrTag [
+	"An entrance point to the rename package action.
+	Presents a UI to rename a given package"
+
+	packageToRename := aPackageOrTag.
+	renamingEditor := nil.
+	self viewModel notifyChildrenChanged
+]
+
 { #category : #'api - selection' }
-GtCoderNavigationPackagesTreeElement >> selectedIndice [
+GtCoderPackagesTreeElement >> selectedIndice [
 	"Return selected indice or zero"
 	
 	self selectedIndices
@@ -239,26 +294,26 @@ GtCoderNavigationPackagesTreeElement >> selectedIndice [
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationPackagesTreeElement >> selectedPackage [
+GtCoderPackagesTreeElement >> selectedPackage [
 	<return: #RPackage or: nil>
 	^ self selectedPackageNodeDo: #value
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationPackagesTreeElement >> selectedPackageNodeDo: aBlock [
+GtCoderPackagesTreeElement >> selectedPackageNodeDo: aBlock [
 	self selectedNodeDo: [ :aNode | aNode depth = 0
 		ifTrue: [ ^ aBlock cull: aNode ] ].
 	^ nil
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationPackagesTreeElement >> selectedPackageTag [
+GtCoderPackagesTreeElement >> selectedPackageTag [
 	<return: #RPackageTag or: nil>
 	^ self selectedPackageTagNodeDo: #value
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationPackagesTreeElement >> selectedPackageTagNodeDo: aBlock [
+GtCoderPackagesTreeElement >> selectedPackageTagNodeDo: aBlock [
 	self selectedNodeDo: [ :aNode | aNode depth = 1
 		ifTrue: [ ^ aBlock cull: aNode ] ].
 	^ nil
