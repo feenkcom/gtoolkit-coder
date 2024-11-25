@@ -96,6 +96,17 @@ GtFilterStep >> clickOnAddFilter [
 ]
 
 { #category : #'steps - interactions' }
+GtFilterStep >> clickOnDropdownFilterItem: aFilterItem [
+	^ self click
+		label: ('Click on dropdown item: {1}' format: { aFilterItem });
+		referenceSender;
+		onSpaceRoot;
+		// BrAnchoredOuterContainer;
+		// #scrollable;
+		onChildFromBlock: [ :anElement | anElement children detect: [ :each | each viewModel model = aFilterItem ] ]
+]
+
+{ #category : #'steps - interactions' }
 GtFilterStep >> clickOnDropdownFilterItemAtIndex: anIndex [
 	^ self click
 		label: ('Click on dropdown item at index {1}' format: { anIndex });
