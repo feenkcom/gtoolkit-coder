@@ -96,7 +96,7 @@ GtFilterItemsElement >> addNavigationShortcutsTo: anElement [
 						nextFocusDo: #requestFocus ifNone: [  ] ]);
 		addShortcut: (BlShortcutWithAction new
 				name: 'Edit filter';
-				combination: (BlKeyCombination space or: BlKeyCombination enter);
+				combination: BlKeyCombination enter;
 				overrideChildren: false;
 				action: [ :anEvent | self onEditItemsEvent: anEvent ])
 ]
