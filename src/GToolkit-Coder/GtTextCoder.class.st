@@ -42,8 +42,3 @@ GtTextCoder >> parserStartingState [
 GtTextCoder >> parserStartingState: anObject [
 	parserStartingState := anObject
 ]
-
-{ #category : #'api - ast' }
-GtTextCoder >> supportsAstCache [
-	^ false
-]

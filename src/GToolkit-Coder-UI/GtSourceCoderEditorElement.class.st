@@ -13,14 +13,19 @@ GtSourceCoderEditorElement >> onTextualCoderViewModelChanged [
 		ifNotNil: [ :aResult | evaluationHighlighter displayResult: aResult ]
 ]
 
+{ #category : #'as yet unclassified' }
+GtSourceCoderEditorElement >> onUpdateAddOnsRequest: aGtCoderAddOnsUpdateRequest [ 
+	"To be deleted"
+]
+
 { #category : #registration }
 GtSourceCoderEditorElement >> onViewModelEvaluationStatusChanged: anAnnouncement [
-	BlTaskAction
-		enqueueElement: self
-		action: [ anAnnouncement evaluationStatus
-				handleStatusChangedAnnouncement: anAnnouncement
-				sourceCoderElement: self.
-			self styleText ]
+	self
+		enqueueTask: (BlTaskAction new
+				action: [ anAnnouncement evaluationStatus
+						handleStatusChangedAnnouncement: anAnnouncement
+						sourceCoderElement: self.
+					self styleText ])
 ]
 
 { #category : #registration }

@@ -185,7 +185,8 @@ GtCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
 		title: aString;
 		icon: anIcon;
 		stencil: aBlock.
-	mainActions add: newAction
+	mainActions add: newAction.
+	^ newAction
 ]
 
 { #category : #'api - main actions' }
@@ -196,7 +197,8 @@ GtCoderAddOns >> addDropDownWithPreviewAction: aString icon: anIcon action: acti
 		icon: anIcon;
 		changeAction: actionBlock;
 		changeStencil: stencilBlock.
-	mainActions add: newAction
+	mainActions add: newAction.
+	^ newAction
 ]
 
 { #category : #'api - main actions' }
