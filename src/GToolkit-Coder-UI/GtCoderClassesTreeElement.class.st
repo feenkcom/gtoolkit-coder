@@ -237,6 +237,8 @@ GtCoderClassesTreeElement >> initializeWithClasses: aCollectionOfClasses [
 	| newTree |
 	newTree := (GtCoderClassesHierarchyTree fromClasses: aCollectionOfClasses)
 			sortByClassName.
+
+	newTree = classesTree ifTrue: [ ^ self ].
 	classesTree := newTree.
 	self
 		items: classesTree subclassTrees
