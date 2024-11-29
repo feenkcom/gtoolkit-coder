@@ -4,6 +4,6 @@ Extension { #name : #GtCoderAction }
 GtCoderAction >> gtSourceCodeFor: aView [
 	<gtView>
 	^ self action 
-		ifNil: [ aView ]
+		ifNil: [ aView empty ]
 		ifNotNil: [ self action gtSourceCodeFor: aView ]
 ]
