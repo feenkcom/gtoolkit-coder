@@ -3,6 +3,7 @@ Extension { #name : #GtCoderDropDownWithPreviewAction }
 { #category : #'*GToolkit-Coder-UI' }
 GtCoderDropDownWithPreviewAction >> buildElementIn: aCoderActionsElement [
 	^ GtPreviewChangeButton new
+		id: self id;
 		icon: self icon;
 		label: self title;
 		changeAction: self changeAction;
