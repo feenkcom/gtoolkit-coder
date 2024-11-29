@@ -9,7 +9,8 @@ Class {
 		'evaluationPrinter',
 		'shortcuts',
 		'cursorsUpdater',
-		'textUpdater'
+		'textUpdater',
+		'addOnsElementFuture'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual'
 }
@@ -128,8 +129,13 @@ GtTextualCoderEditorElement >> initialize [
 		element: self;
 		action: (MessageSend receiver: self selector: #privateUpdateText:announcement:).
 
+	addOnsElementFuture := (BrAsyncElementFuture on: self)
+		executionConfiguration: (GtSingleCoderViewModel addOnsExecutionConfiguration);
+		whenSuccess: [ :anEditorElement :theAddOns |
+			self textualCoderViewModel onAddOnsChanged: theAddOns ].
+
 	self initializeListeners.
-	
+
 	self withAsyncPromiseDo: [ :anElementPromise |
 			anElementPromise
 				whenSuccess: [ :anEditorElement :anEditorState | anEditorElement privateUpdateEditorState: anEditorState ];
@@ -161,7 +167,7 @@ GtTextualCoderEditorElement >> initializeListeners [
 
 	self editor
 		when: BrTextEditorTextStyledEvent
-		do: [ :anEvent | self textualCoderViewModel styledText: anEvent styledText ]
+		do: [ :anEvent | self onTextStyled: anEvent ]
 ]
 
 { #category : #'hooks - children' }
@@ -229,15 +235,8 @@ GtTextualCoderEditorElement >> onPostTextualCoderViewModelChanged [
 	"I am an optional hook method that is sent after #subscribeToTextualCoderViewModel.
 	I do nothing by default but allow users to perform update operations when a receiver object is already
 	subscribed to announcements."
-	| anAddOnsPromise |
 	
-	self textualCoderViewModel hasStyledText
-		ifTrue: [ ^ self ].
-
-	"the add-ons will not compute themselves unless we tell them to"
-	anAddOnsPromise := self textualCoderViewModel addOns then: [ :theAddOns | self onViewModelReadyToStyle ].
-	"this works as a marker to indicate that we are waiting for the promise to finish"
-	self enqueueTask: (BlPromiseTask new promise: anAddOnsPromise)
+	self textualCoderViewModel requestUpdateAddOns
 ]
 
 { #category : #'private - event handling' }
@@ -286,6 +285,13 @@ GtTextualCoderEditorElement >> onTextModifiedDueToEvent: aTextModifiedEvent [
 		dueToEvent: aTextModifiedEvent
 ]
 
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onTextStyled: anEvent [
+	"An underlying editor styled the text"
+	
+	self textualCoderViewModel styledText: anEvent styledText
+]
+
 { #category : #'api - textual coder view model' }
 GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	"Is sent when a new textualCoder view model is assigned to the element.
@@ -302,9 +308,6 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 
 	"Related to: https://github.com/feenkcom/gtoolkit/issues/3727"
 	self privateUpdateEditorState: self textualCoderViewModel asEditorState.
-	
-	"self asyncPromise  
-		promise: self textualCoderViewModel asEditorState."
  
 	self editor model:  self textualCoderViewModel.
 
@@ -321,11 +324,6 @@ GtTextualCoderEditorElement >> onToolSpawnRequest: anAnnouncement [
 			self phlow
 				spawnTool: anAnnouncement tool
 				withDestination: anAnnouncement spawnDestination ] ])
-]
-
-{ #category : #'private - event handling' }
-GtTextualCoderEditorElement >> onUpdateAddOnsRequest: anAnnouncement [
-	self enqueueTask: (BlPromiseTask new promise: self textualCoderViewModel requestUpdateAddOns)
 ]
 
 { #category : #'private - event handling' }
@@ -347,7 +345,15 @@ GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnounc
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelReadyToStyle [
-	self styleText
+	self enqueueTask: (BlTaskAction new action: [ self styleText ])
+]
+
+{ #category : #registration }
+GtTextualCoderEditorElement >> onViewModelRecomputeAddOns: aRecomputeAddOnRequest [
+	aRecomputeAddOnRequest coderViewModel == self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
+	addOnsElementFuture future: self textualCoderViewModel addOnsFuture
 ]
 
 { #category : #'private - event handling' }
@@ -411,17 +417,22 @@ GtTextualCoderEditorElement >> onViewModelTextAttributesRemoved: anAnnouncement 
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelTextChanged [
+	"Text changed in a view model and should be synchronised on the UI side.
+	There can be multiple sources of the text change:
+	 - an editor element itself
+	 - other sources that changed text through coder model api.
+	 
+	 When the source is a text editor element (`self`) we don't reset the text in the editor.
+	 If an announcement comes from a different view model, we skip it."
 
-	"When text is modified, the view model starts to recompute addOns"
-	self enqueueTask: (BlPromiseTask new promise: self textualCoderViewModel addOns).
 
-	aGtTextualCoderViewModelTextChanged source == self
-		ifTrue: [ ^ self hideHighlighters ].
-		
-	"do nothing if it comes from a different view model"
+	"Do nothing if it comes from a different view model"
 	aGtTextualCoderViewModelTextChanged textualCoderViewModel == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
+	aGtTextualCoderViewModelTextChanged source == self
+		ifTrue: [ ^ self hideHighlighters ].
+	
 	aGtTextualCoderViewModelTextChanged isSynchronous
 		ifTrue: [ self privateUpdateText: self announcement: aGtTextualCoderViewModelTextChanged ] 
 		ifFalse: [ textUpdater requestUpdate: aGtTextualCoderViewModelTextChanged ]
@@ -480,15 +491,12 @@ GtTextualCoderEditorElement >> privateUpdateText: anEditorElement announcement: 
 	textForUpdate := self computeTextForUpdateForTextChangedEvent: aGtTextualCoderViewModelTextChanged.
 	
 	self text: textForUpdate.
-	self hideHighlighters
+	self hideHighlighters.
 ]
 
 { #category : #registration }
 GtTextualCoderEditorElement >> registerCoderModelAnnouncementsFor: aCoderModel [
 	aCoderModel announcer weak
-		when: GtCoderAddOnsUpdateRequest
-			send: #onUpdateAddOnsRequest:
-			to: self;
 		when: GtCoderStyleTextRequest send: #onStyleTextRequest: to: self;
 		when: GtCoderParseError send: #onCoderParseError: to: self;
 		when: GtCoderObjectSpawnRequest
@@ -504,6 +512,9 @@ GtTextualCoderEditorElement >> registerCoderModelAnnouncementsFor: aCoderModel [
 { #category : #registration }
 GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel weak
+		when: GtCoderViewModelRecomputeAddOnRequest
+			send: #onViewModelRecomputeAddOns:
+			to: self;
 		when: GtTextualCoderViewModelFocusChanged
 			send: #onFocusChangedAnnouncement:
 			to: self;

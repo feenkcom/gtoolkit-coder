@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'coderViewModel'
 	],
-	#category : 'GToolkit-Coder-Styler/Highlighter'
+	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #'api - styling' }
@@ -54,7 +54,7 @@ GtCoderAstStyler >> privateStyle: aText [
 	| theAst |
 	
 	"Styling happens in a non-UI process, therefore it is fine to wait until AST is computed in a blocking way"
-	theAst := self coderViewModel coderModel astAwait.
+	theAst := self coderViewModel coderModel astSync.
 	theAst
 		ifNil: [ ^ aText ].
 

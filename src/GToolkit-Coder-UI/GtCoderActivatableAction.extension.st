@@ -8,7 +8,7 @@ GtCoderActivatableAction >> buildElementIn: aCoderActionsElement [
 	aButton enabled: (enabledBlock cull: aCoderActionsElement coderViewModel).
 	
 	updateAnnouncement ifNotNil: [
-		aCoderActionsElement coderViewModel announcerUIModel weak
+		aCoderActionsElement coderViewModel announcer weak
 			when: updateAnnouncement send: #enabled: to: aButton ].
 	
 	^ aButton

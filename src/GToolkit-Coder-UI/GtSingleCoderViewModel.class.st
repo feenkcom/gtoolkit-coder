@@ -2,7 +2,8 @@
 1. Coder UI Model
 Wraps {{gtClass:GtCoderModel}} and optionally adds UI related api and state. Coder UI Model should be passed to any Coder UI element instead of the {{gtClass:GtCoderModel}}
 
-
+##Add-ons
+Coders are extensible using a concept of an add-on. 
 "
 Class {
 	#name : #GtSingleCoderViewModel,
@@ -14,7 +15,9 @@ Class {
 		'codersUIModel',
 		'coderModel',
 		'extraAddOns',
-		'addOnPromise'
+		'addOnPromise',
+		'currentAddOns',
+		'addOnsCache'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
@@ -37,7 +40,17 @@ GtSingleCoderViewModel >> addMainAction: aGtCoderAction [
 GtSingleCoderViewModel >> addOns [
 	<return: #TAsyncPromise>
 
-	^ self ensureAddOns
+	^ self addOnsFuture await: self class addOnsExecutionConfiguration
+]
+
+{ #category : #'api - add-ons' }
+GtSingleCoderViewModel >> addOnsFuture [
+	"Return a future that will be resolved to coder addons"
+	<return: #TAsyncFuture>
+
+	^ AsyncCachedFuture
+		forFuture: self computeAddOnsFuture
+		cache: addOnsCache
 ]
 
 { #category : #accessing }
@@ -47,6 +60,10 @@ GtSingleCoderViewModel >> announcer [
 
 { #category : #accessing }
 GtSingleCoderViewModel >> announcerUIModel [
+	self
+		deprecated: 'Use #announcer instead'
+		transformWith: '`@receiver announcerUIModel' -> '`@receiver announcer'.
+
 	^ self announcer
 ]
 
@@ -124,28 +141,16 @@ GtSingleCoderViewModel >> computeAddOns [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
-GtSingleCoderViewModel >> elementClass [
+{ #category : #'private - addons' }
+GtSingleCoderViewModel >> computeAddOnsFuture [
+	<return: #TAsyncFuture>
+
 	^ self subclassResponsibility
 ]
 
-{ #category : #'private - addons' }
-GtSingleCoderViewModel >> ensureAddOns [
-	<return: #TAsyncPromise>
-
-	^ addOnPromise ifNil: [ 
-		addOnPromise := self computeAddOns 
-			then: [ :theAddOns | 
-				self onAddOnsChanged: theAddOns ]
-			otherwise: [ :anError |
-				anError emit.
-					
-				NonInteractiveTranscript stderr
-					nextPutAll: 'Error computing addons: ';
-					space;
-					print: anError;
-					cr ];
-			yourself ]
+{ #category : #accessing }
+GtSingleCoderViewModel >> elementClass [
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -193,6 +198,13 @@ GtSingleCoderViewModel >> hasFocus: aBoolean [
 	self focused: aBoolean
 ]
 
+{ #category : #initialization }
+GtSingleCoderViewModel >> initialize [
+	super initialize.
+	
+	addOnsCache := AsyncFutureCache new
+]
+
 { #category : #testing }
 GtSingleCoderViewModel >> isModified [
 	^ self coder isModified
@@ -200,7 +212,9 @@ GtSingleCoderViewModel >> isModified [
 
 { #category : #'private - event handling' }
 GtSingleCoderViewModel >> onAddOnsChanged: theAddOns [
-	
+	"Is sent by Coder Element from a UI thread when new add-ons are computed"
+
+	currentAddOns := theAddOns
 ]
 
 { #category : #'api - coder model' }
@@ -208,12 +222,15 @@ GtSingleCoderViewModel >> onCoderModelChanged [
 	"Is sent when a new coder model is assigned to the view model"
 ]
 
+{ #category : #'api - coder model' }
+GtSingleCoderViewModel >> onCoderRecomputeAddOnsRequest: aCoderAddOnsUpdateRequest [
+	self requestUpdateAddOns
+]
+
 { #category : #'api - add-ons' }
 GtSingleCoderViewModel >> requestUpdateAddOns [
-	<return: #TAsyncPromise>
-
-	addOnPromise := nil.
-	^ self ensureAddOns
+	addOnsCache resetCache.
+	self announcer announce: (GtCoderViewModelRecomputeAddOnRequest new coderViewModel: self)
 ]
 
 { #category : #'api - coder model' }
@@ -222,7 +239,12 @@ GtSingleCoderViewModel >> subscribeToCoderModel [
 	It is required to unsubscribe from the domain model by implementing
 	#unsubscribeFromCoderModel if view model subscribes to them"
 	
-	self coderModel subscribeToSystem
+	self coderModel subscribeToSystem.
+	
+	self coderModel announcer weak
+		when: GtCoderAddOnsUpdateRequest
+		send: #onCoderRecomputeAddOnsRequest:
+		to: self
 ]
 
 { #category : #'api - coder model' }
@@ -230,6 +252,8 @@ GtSingleCoderViewModel >> unsubscribeFromCoderModel [
 	"Is sent before a new coder model is assigned to the view model.
 	View models that subscribe to coder model are required to implement this methods"
 	
-	"unsubscribing here is not good, what if there are multiple view models on the same coder model?"
+	self coderModel announcer unsubscribe: self
+	
+	"unsubscribing from system here is not good, what if there are multiple view models on the same coder model?"
 	"self coderModel unsubscribeFromSystem"
 ]

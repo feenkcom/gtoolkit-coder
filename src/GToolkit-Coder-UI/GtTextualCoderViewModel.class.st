@@ -32,6 +32,13 @@ GtTextualCoderViewModel >> addLocateDebuggerInSpaceAction: aSpace [
 	self requestUpdateAddOns
 ]
 
+{ #category : #'api - add-ons' }
+GtTextualCoderViewModel >> addOnsFuture [
+	"Return a future that will be resolved to coder addons"
+	<return: #TAsyncFuture>
+	^ self computeAddOnsFuture
+]
+
 { #category : #'api - shortcuts' }
 GtTextualCoderViewModel >> addShortcut: aShortcut [
 	"Add an extra shortcut add-on independent from the dynamically computed add-ons"
@@ -158,7 +165,16 @@ GtTextualCoderViewModel >> astAsyncDo: aBlock [
 
 { #category : #'api - coder model' }
 GtTextualCoderViewModel >> astAwait [
-	^ self coderModel astAwait
+	self
+		deprecated: 'Please use #astSync instead.'
+		transformWith: '`@receiver astAwait' -> '`@receiver astSync'.
+
+	^ self astSync
+]
+
+{ #category : #'api - coder model' }
+GtTextualCoderViewModel >> astSync [
+	^ self coderModel astSync
 ]
 
 { #category : #'api - expansion' }
@@ -197,11 +213,17 @@ GtTextualCoderViewModel >> compositeStyler [
 
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> computeAddOns [
-	| aCoderModel  |
+	^ self addOnsFuture await
+]
+
+{ #category : #'api - add-ons' }
+GtTextualCoderViewModel >> computeAddOnsFuture [
+	"Return a future that will be resolved to coder addons"
+	<return: #TAsyncFuture>
+	| aCoderModel |
 
 	aCoderModel := self coderModel.
-
-	^ aCoderModel ast asyncThen: [ :aCoderAst |
+	^ aCoderModel coderAstFuture map: [ :aCoderAst |
 		| theAst newAddOns pragmas |
 
 		theAst := aCoderAst ast.
@@ -237,7 +259,7 @@ GtTextualCoderViewModel >> computeAddOns [
 		"view model add-ons override coder model add-ons"
 		newAddOns addAddOns: extraAddOns.
 		newAddOns markAsUpdated.
-		newAddOns ].
+		newAddOns ]
 ]
 
 { #category : #'private - addons' }
@@ -246,7 +268,7 @@ GtTextualCoderViewModel >> computeContextMenuAstAddOns [
 
 	aCoderModel := self coderModel.
 
-	theAst := aCoderModel astAwait.
+	theAst := aCoderModel astSync.
 	pragmas := aCoderModel
 		pragmasNamed: #gtCoderContextMenuAddOns:
 		inHierarchy: aCoderModel class.
@@ -384,7 +406,7 @@ GtTextualCoderViewModel >> gtInfo [
 		aStream nextPut: (#cursors -> self cursors).
 		aStream nextPut: (#selection -> self selection).
 		aStream nextPut: (#addOns -> self addOns wait).
-		aStream nextPut: (#ast -> self astAwait).
+		aStream nextPut: (#ast -> self astSync).
 		aStream nextPut: (#stylers -> self stylers).
 		aStream nextPut: (#mainActions -> self mainActions).
 		aStream nextPut: (#contextActions -> self contextActions).
@@ -529,7 +551,7 @@ GtTextualCoderViewModel >> notifyExpansionChanged: aBoolean [
 
 { #category : #'private - notifying' }
 GtTextualCoderViewModel >> notifyFocusChanged: aBoolean from: aSourceObject [
-	self announcerUIModel announce: (GtTextualCoderViewModelFocusChanged new 
+	self announcer announce: (GtTextualCoderViewModelFocusChanged new 
 		focused: aBoolean; 
 		source: aSourceObject)
 ]
@@ -550,9 +572,10 @@ GtTextualCoderViewModel >> notifyStyledTextChanged [
 
 { #category : #'private - event handling' }
 GtTextualCoderViewModel >> onAddOnsChanged: theAddOns [
-	"Is sent when new add-ons are computed"
-
+	"Is sent by Coder Element from a UI thread when new add-ons are computed"
 	| someContextActions |
+	super onAddOnsChanged: theAddOns.
+
 	self shortcuts: theAddOns shortcuts.
 	self mainActions: theAddOns mainActions.
 
@@ -603,7 +626,6 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 	
 	addOnPromise := nil.
 	isTextModifiedPromise := nil.
-	self ensureAddOns.
 
 	self announce: (GtTextualCoderViewModelTextChanged new
 		textualCoderViewModel: self;

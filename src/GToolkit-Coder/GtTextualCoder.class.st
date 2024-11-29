@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtCoderModel,
 	#instVars : [
 		'sourceCode',
-		'astPromise'
+		'astPromise',
+		'astCache'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
@@ -42,28 +43,59 @@ GtTextualCoder >> asNewCoderModelWithSameSubject [
 GtTextualCoder >> ast [
 	<return: #TAsyncPromise of: #GtCoderAst>
 
-	^ self critical: [ astPromise ifNil: [ astPromise := [
-		| aGtCoderSourceString |
-		aGtCoderSourceString := self sourceCode currentSourceString.
-		GtCoderAst new
-			ast: (self computeAst: aGtCoderSourceString string);
-			sourceString: aGtCoderSourceString;
-			epoch: aGtCoderSourceString epoch ] asAsyncPromise ] ]
+	^ self coderAst
 ]
 
 { #category : #'api - ast' }
 GtTextualCoder >> astAsyncDo: aBlock [
-	self ast asyncThen: [ :aGtCoderAst | aBlock value: aGtCoderAst ast ]
+	self coderAst asyncThen: [ :aGtCoderAst | aBlock value: aGtCoderAst ast ]
 ]
 
 { #category : #'api - ast' }
 GtTextualCoder >> astAwait [
-	^ self ast wait ast
+	self
+		deprecated: 'Please use #astSync instead.'
+		transformWith: '`@receiver astAwait' -> '`@receiver astSync'.
+
+	^ self astSync
 ]
 
 { #category : #'api - ast' }
-GtTextualCoder >> astAwaitDo: aBlock [
-	aBlock value: self astAwait
+GtTextualCoder >> astFuture [
+	<return: #TAsyncFuture>
+
+	^ self coderAstFuture map: [ :aCoderAst | aCoderAst ast ]
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> astSync [
+	^ self coderAstSync ast
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> coderAst [
+	<return: #TAsyncPromise of: #GtCoderAst>
+
+	^ self coderAstFuture await
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> coderAstFuture [
+	<return: #TAsyncFuture>
+
+	^ AsyncCachedFuture new
+		future: [ self computeCoderAst ] asAsyncFuture
+		cache: astCache
+]
+
+{ #category : #'api - ast' }
+GtTextualCoder >> coderAstSync [
+	"Attempt to take a Coder AST from cache, otherwise compute it synchronously"
+	<return: #GtCoderAst>
+
+	^ astCache
+		ifSome: [ :aValue | aValue ]
+		ifNonePut: [ self computeCoderAst]
 ]
 
 { #category : #'api - text' }
@@ -85,13 +117,22 @@ GtTextualCoder >> collapsedTextPromise [
 ]
 
 { #category : #'api - ast' }
-GtTextualCoder >> computeAst [
-	^ self computeAst: self currentSourceString
+GtTextualCoder >> computeAst: theSourceString [
+	"Given a string, compute and return a domain specific AST"
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'api - ast' }
-GtTextualCoder >> computeAst: theSourceString [
-	^ self subclassResponsibility
+GtTextualCoder >> computeCoderAst [
+	<return: #GtCoderAst>
+	| aGtCoderSourceString |
+
+	aGtCoderSourceString := self sourceCode currentSourceString.
+	^ GtCoderAst new
+		ast: (self computeAst: aGtCoderSourceString string);
+		sourceString: aGtCoderSourceString;
+		epoch: aGtCoderSourceString epoch
 ]
 
 { #category : #'api - text' }
@@ -204,7 +245,8 @@ GtTextualCoder >> ensureAst [
 { #category : #initialize }
 GtTextualCoder >> initialize [
 	super initialize.
-
+	
+	astCache := AsyncFutureCache new.
 	self reset
 ]
 
@@ -272,7 +314,9 @@ GtTextualCoder >> reset [
 
 { #category : #'private - ast' }
 GtTextualCoder >> resetAstCache [
-	astPromise := nil
+	self critical: [
+		astPromise := nil.
+		astCache resetCache ]
 ]
 
 { #category : #'event handling' }
@@ -284,12 +328,13 @@ GtTextualCoder >> sourceChangedTo: aNewText [
 
 { #category : #'event handling' }
 GtTextualCoder >> sourceChangedTo: aNewText from: aPreviousText with: anUpdateStrategy dueTo: aReason [
-	astPromise := nil.
+	self resetAstCache.
 	self 
 		notifySourceChangedTo: aNewText 
 		from: aPreviousText 
 		with: anUpdateStrategy
-		dueTo: aReason
+		dueTo: aReason.
+	self requestUpdateAddOns
 ]
 
 { #category : #'event handling' }
@@ -365,11 +410,4 @@ GtTextualCoder >> sourceTextDo: aBlock [
 { #category : #'api - addons' }
 GtTextualCoder >> stylers [
 	^ #()
-]
-
-{ #category : #'api - ast' }
-GtTextualCoder >> supportsAstCache [
-	"Return true if ast cache should be used, false otherwise"
-
-	^ true
 ]

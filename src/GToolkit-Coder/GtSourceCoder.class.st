@@ -277,7 +277,7 @@ GtSourceCoder >> nodeAt: aTextPosition ifFound: aFoundBlock ifNone: aNoneBlock [
 	<return: #Object>
 	[
 		| theAST innerNode |
-		theAST := self astAwait.
+		theAST := self astSync.
 		theAST
 			withAllNodesDo: [ :node | 
 				(aTextPosition between: node startPosition - 1 and: node stopPosition)
@@ -319,7 +319,7 @@ GtSourceCoder >> nodeWithin: anInterval ifFound: aFoundBlock ifNone: aNoneBlock 
 
 	[
 		| theAST |
-		theAST := self astAwait.
+		theAST := self astSync.
 		^ theAST
 			bestNodeFor: anInterval
 			ifFound: aFoundBlock
@@ -462,7 +462,7 @@ GtSourceCoder >> validateSyntax [
 { #category : #'private - actions' }
 GtSourceCoder >> validateSyntaxInContext: aGtPharoSourceCoderEvaluationContext [
 	<return: #Boolean>
-	[ self computeAst ]
+	[ self computeCoderAst ]
 		on: SmaCCParserError
 		do: [ :ex | 
 			self

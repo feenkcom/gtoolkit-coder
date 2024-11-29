@@ -88,8 +88,6 @@ GtSourceCoderActionsElement >> onPostTextualCoderViewModelChanged [
 	"I am an optional hook method that is sent after #subscribeToTextualCoderViewModel.
 	I do nothing by default but allow users to perform update operations when a receiver object is already
 	subscribed to announcements."
-	
-	self textualCoderViewModel ensureAddOns
 ]
 
 { #category : #'api - textual coder view model' }

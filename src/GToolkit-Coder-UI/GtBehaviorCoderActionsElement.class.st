@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'behaviorCoderViewModel',
 		'toolbarElement',
-		'previewsElement'
+		'previewsElement',
+		'addOnsElementFuture'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
@@ -76,6 +77,11 @@ GtBehaviorCoderActionsElement >> initialize [
 		
 	toolbarElement := self newToolbarElement 
 		labeled: 'Main toolbar'.
+		
+	addOnsElementFuture := (BrAsyncElementFuture on: self)
+		executionConfiguration: (GtSingleCoderViewModel addOnsExecutionConfiguration);
+		whenSuccess: [ :anEditorElement :theAddOns |
+			self behaviorCoderViewModel onAddOnsChanged: theAddOns ].
 
 	self addChildren: { previewsElement. toolbarElement }
 ]
@@ -94,7 +100,16 @@ GtBehaviorCoderActionsElement >> newToolbarElement [
 { #category : #callbacks }
 GtBehaviorCoderActionsElement >> onBehaviourCoderViewModelChanged [
 	self updatePreviews.
-	self updateToolbarActions
+	self updateToolbarActions.
+	addOnsElementFuture future: self behaviorCoderViewModel addOnsFuture
+]
+
+{ #category : #'event handling' }
+GtBehaviorCoderActionsElement >> onViewModelRecomputeAddOns: aRecomputeAddOnRequest [
+	aRecomputeAddOnRequest coderViewModel == self behaviorCoderViewModel
+		ifFalse: [ ^ self ].
+
+	addOnsElementFuture future: self behaviorCoderViewModel addOnsFuture
 ]
 
 { #category : #updating }
@@ -110,11 +125,13 @@ GtBehaviorCoderActionsElement >> removeToolbarActions [
 
 { #category : #subscriptions }
 GtBehaviorCoderActionsElement >> subscribeToBehaviorCoderViewModel [
-
 	self behaviorCoderViewModel weak
-		when: GtPharoBehaviorCoderViewModelAddonsChangedAnnouncement 
-		send: #updateContent 
-		to: self
+		when: GtPharoBehaviorCoderViewModelAddonsChangedAnnouncement
+			send: #updateContent
+			to: self;
+		when: GtCoderViewModelRecomputeAddOnRequest
+			send: #onViewModelRecomputeAddOns:
+			to: self
 ]
 
 { #category : #subscriptions }
