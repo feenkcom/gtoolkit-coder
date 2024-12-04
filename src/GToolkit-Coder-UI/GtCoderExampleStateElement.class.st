@@ -182,9 +182,8 @@ GtCoderExampleStateElement >> newTooltipContent [
 	| aContainer |
 	aContainer := BrFrame new
 		fitContent;
-		when: GtPhlowObjectToSpawn do: [ :anEvent | self fireEvent: (GtPhlowObjectToSpawn new
-				object: anEvent object;
-				sourceElement: anEvent target) ].
+		when: GtPhlowObjectToSpawn do: [ :anEvent | 
+			self phlow spawnPreviousEvent: anEvent ].
 	aContainer addChild: (self example hasResult
 			ifTrue: [ self newInspectorWithExampleResult ]
 			ifFalse: [ self newNotExecutedTooltipContent ]).

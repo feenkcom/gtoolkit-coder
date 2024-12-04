@@ -40,12 +40,7 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> affect: aTBrTextEditorTextualPiece i
 										c vertical fitContent ];
 									when: GtPhlowObjectToSpawn
 										do: [ :anEvent | 
-											aButton
-												fireEvent: (GtPhlowObjectToSpawn new
-														previousSpawnEvent: anEvent;
-														tool: anEvent tool;
-														sourceElement: aButton;
-														spawnDestination: self spawnDestination) ].
+											aButton phlow spawnPreviousEvent: anEvent ].
 							self playgroundElementIn: aContainer ]) showDelay: 200 milliSeconds);
 		size: 8 @ 8;
 		geometry: BlEllipseGeometry new;
