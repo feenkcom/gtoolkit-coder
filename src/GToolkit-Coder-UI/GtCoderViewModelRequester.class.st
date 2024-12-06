@@ -46,3 +46,8 @@ GtCoderViewModelRequester >> notifyShowDebuggerRequest: aDebugSession dueTo: anE
 GtCoderViewModelRequester >> selfObject [
 	^ self coderViewModel selfObject
 ]
+
+{ #category : #accessing }
+GtCoderViewModelRequester >> selfObjectHolder [
+	^ self coderViewModel selfObjectHolder
+]
