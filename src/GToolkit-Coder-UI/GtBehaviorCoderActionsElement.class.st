@@ -79,7 +79,7 @@ GtBehaviorCoderActionsElement >> initialize [
 		labeled: 'Main toolbar'.
 		
 	addOnsElementFuture := (BrAsyncElementFuture on: self)
-		executionConfiguration: (GtSingleCoderViewModel addOnsExecutionConfiguration);
+		executionConfiguration: (GtSingleCoderViewModel behaviourAddOnsExecutionConfiguration);
 		whenSuccess: [ :anEditorElement :theAddOns |
 			self behaviorCoderViewModel onAddOnsChanged: theAddOns ].
 

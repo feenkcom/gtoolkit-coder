@@ -24,8 +24,29 @@ Class {
 
 { #category : #accessing }
 GtSingleCoderViewModel class >> addOnsExecutionConfiguration [
+	^ self methodAddOnsExecutionConfiguration
+]
+
+{ #category : #accessing }
+GtSingleCoderViewModel class >> behaviourAddOnsExecutionConfiguration [
 	^ AsyncFutureExecutionConfiguration new
-		customGroup: #CoderAddOn;
+		customGroup: #ClassCoderAddOn;
+		lowPriority
+]
+
+{ #category : #accessing }
+GtSingleCoderViewModel class >> methodAddOnsExecutionConfiguration [
+	^ AsyncFutureExecutionConfiguration new
+		customGroup: #MethodCoderAddOn;
+		maxAmountOfWorkers: 2;
+		defaultPriority
+]
+
+{ #category : #accessing }
+GtSingleCoderViewModel class >> secondaryMethodAddOnsExecutionConfiguration [
+	^ AsyncFutureExecutionConfiguration new
+		customGroup: #SecondaryMethodCoderAddOn;
+		maxAmountOfWorkers: 1;
 		lowPriority
 ]
 
@@ -40,7 +61,7 @@ GtSingleCoderViewModel >> addMainAction: aGtCoderAction [
 GtSingleCoderViewModel >> addOns [
 	<return: #TAsyncPromise>
 
-	^ self addOnsFuture await: self class addOnsExecutionConfiguration
+	^ self addOnsFuture await: self class methodAddOnsExecutionConfiguration
 ]
 
 { #category : #'api - add-ons' }
