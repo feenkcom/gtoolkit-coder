@@ -130,7 +130,7 @@ GtTextualCoderEditorElement >> initialize [
 		action: (MessageSend receiver: self selector: #privateUpdateText:announcement:).
 
 	addOnsElementFuture := (BrAsyncElementFuture on: self)
-		executionConfiguration: (GtSingleCoderViewModel addOnsExecutionConfiguration);
+		executionConfiguration: (GtSingleCoderViewModel methodAddOnsExecutionConfiguration);
 		whenSuccess: [ :anEditorElement :theAddOns |
 			self textualCoderViewModel onAddOnsChanged: theAddOns ].
 
