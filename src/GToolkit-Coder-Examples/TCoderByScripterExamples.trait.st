@@ -51,6 +51,26 @@ TCoderByScripterExamples >> scripterForBlock: aBlock [
 ]
 
 { #category : #utilities }
+TCoderByScripterExamples >> scripterInPagerForBlock: aBlock [
+	<gtExample>
+	| aScripter |
+	aScripter := self scripter.
+	aScripter substep: 'Initialize Coder Model and UI' do: [ :aStep | 
+		aStep set 
+			label: 'Initialize Coder Model';
+			model: aBlock;
+			play.
+		aStep set 
+			label: 'Initialize Coder UI';
+			element: [ :aCoder |
+				GtPager createWrappedOn: aCoder asElement ];
+			onModel;
+			play ].
+
+	^ aScripter
+]
+
+{ #category : #utilities }
 TCoderByScripterExamples >> selectTextFor: aScripterOrStep from: aStartPosition to: aToPosition andCheck: aSelectedString [
 	<gtExample>
 	aScripterOrStep doStep: [:s | 
