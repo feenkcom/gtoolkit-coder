@@ -18,10 +18,10 @@ GtTextualCoderMenu >> asElement [
 	aCoderElement := aCoderViewModel asExpandedOnlyElement.
 	aCoderElement
 		hExact: 500;
-		vExact: 400;
-		geometry: (BlChildrenWrappingGeometry cornerRadius: 4);
-		background: aCoderElement theme default contentBackgroundColor;
-		addAptitude: BrMenuPinnableAptitude new.
+		vFitContentLimited;
+		addAptitude: BrGlamorousFocusableShadowAptitude new;
+		addAptitude: BrMenuPinnableAptitude new;
+		addAptitude: BrMenuCommonAptitude new.
 		
 	self announcer weak
 		when: BrMenuHideRequest
