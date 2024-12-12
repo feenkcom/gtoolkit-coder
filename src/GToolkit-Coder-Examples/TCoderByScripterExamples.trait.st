@@ -9,6 +9,15 @@ TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id
 	aScripterOrStep secondaryClickStep: [:s | 
 		s label: 'Open context menu';
 		// GtSourceCoderEditorId].
+		
+	aScripterOrStep do
+		label: 'Scroll to ', aBlElementId asSymbol;
+		block: [ :aList | aList scrollToItemSuchThat: [ :each | 
+			each id asBlocElementId = aBlElementId asBlocElementId ] ];
+		onSpaceRoot;
+		// BrAnchoredOuterContainer;
+		onThisOrBreadthFirstChildOfKind: BrList;
+		play.
 
 	aScripterOrStep mouseMoveOverStep: [:s | 
 		s label: 'Hover ' , aBlElementId asSymbol;
