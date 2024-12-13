@@ -37,17 +37,6 @@ GtCoderMenuActionItem >> leaveAction [
 	^ self coderContextMenuAction leaveAction
 ]
 
-{ #category : #'event handling' }
-GtCoderMenuActionItem >> onClick: anEvent element: anElement model: aButtonModel [
-	self coderContextMenuAction ifNil: [ ^ self ].	
-	self coderContextMenuAction action ifNotNil: [ :anAction |
-		anAction gtValueWithArgs: { 
-			textualCoderEditorElement textualCoderViewModel. 
-			textualCoderEditorElement.
-			anEvent } ].
-	self hideOnClick ifTrue: [ self hideAll ]
-]
-
 { #category : #accessing }
 GtCoderMenuActionItem >> textualCoderEditorElement [
 	<return: #GtTextualCoderEditorElement>
