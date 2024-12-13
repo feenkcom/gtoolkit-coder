@@ -292,6 +292,7 @@ GtCoderAddOns >> contextActions [
 
 { #category : #'api - context menu' }
 GtCoderAddOns >> contextMenuActions [
+	<return: #Collection of: #GtCoderContextMenuAction>
 	^ contextMenuActions
 ]
 

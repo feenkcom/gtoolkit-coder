@@ -48,6 +48,36 @@ GtTextualCoderEditorElement >> computeTextForUpdateForTextChangedEvent: aGtTextu
 ]
 
 { #category : #'instance creation' }
+GtTextualCoderEditorElement >> createContextMenu [
+	"wait for the addons to be computed"
+	<return: #BrMenuItems>
+
+	| aMenu aMenuItemsPromise |
+	aMenu := BrMenuItems new.
+
+	aMenuItemsPromise := self textualCoderViewModel addOns
+			asyncThen: [ :theAddOns | 
+				| theItems theContextMenuAstAddons theMenuItems |
+				"extra context menu items that depend on ast and view model state such as selection"
+				theContextMenuAstAddons := self textualCoderViewModel
+						computeContextMenuAstAddOns.
+				theItems := theAddOns contextMenuActions, theContextMenuAstAddons contextMenuActions.
+				theItems := theItems reject: [ :e | e title isNil ].
+				
+				theMenuItems := theItems 
+					collect: [ :eachAction | eachAction asBrMenuItemForCoderElement: self ]
+					thenReject: #isNil.
+				
+				self enqueueTask: (BlTaskAction new 
+					action: [ 
+						aMenu items: theMenuItems ]) ].
+
+	self enqueueTask: (BlPromiseTask new promise: aMenuItemsPromise).
+
+	^ aMenu 
+]
+
+{ #category : #'instance creation' }
 GtTextualCoderEditorElement >> createContextMenuContent [
 	"wait for the addons to be computed"
 
@@ -108,7 +138,9 @@ GtTextualCoderEditorElement >> initialize [
 	super initialize.
 	
 	self
-		aptitude: BrGlamorousCodeEditorAptitude + (BrGlamorousWithContextMenuAptitude content: [ self createContextMenuContent ]);
+		aptitude: BrGlamorousCodeEditorAptitude;
+		"addAptitude: (BrGlamorousWithContextMenuAptitude content: [ self createContextMenuContent ]);"
+		addAptitude: (BrWithExplicitMenuAptitude new stencil: [ self createContextMenu ]);
 		padding: BlInsets empty;
 		hMatchParent;
 		vFitContent.

@@ -264,6 +264,7 @@ GtTextualCoderViewModel >> computeAddOnsFuture [
 
 { #category : #'private - addons' }
 GtTextualCoderViewModel >> computeContextMenuAstAddOns [
+	<return: #GtCoderAddOns>
 	| aCoderModel newAddOns pragmas theAst |
 
 	aCoderModel := self coderModel.
@@ -311,6 +312,7 @@ GtTextualCoderViewModel >> contextActions: theContextActions [
 
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> contextMenuActions [
+	<return: #Collection of: #GtCoderContextMenuAction>
 	^ contextMenuActions
 ]
 

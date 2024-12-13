@@ -132,7 +132,7 @@ GtCoderModel >> contextActions [
 
 { #category : #'api - actions' }
 GtCoderModel >> contextMenuActions [
-	<return: #Collection of: #GtCoderAction>
+	<return: #Collection of: #GtCoderContextMenuAction>
 
 	^ self addOns contextMenuActions
 ]
