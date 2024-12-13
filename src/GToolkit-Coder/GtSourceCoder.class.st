@@ -377,28 +377,6 @@ GtSourceCoder >> notifyPrintResult: anEvaluationResult [
 		coder: self)
 ]
 
-{ #category : #'api - notifying' }
-GtSourceCoder >> notifyShowDebuggerRequest: aDebugSession dueTo: anException sourceString: aSourceString sourceInterval: aSourceInterval evaluationInfo: anEvaluationInfo [
-	"Return true if announcement was handled (and debugger displayed in some way).
-	Return false otherwise."
-
-	<return: #Boolean>
-	| anAnnouncement aSharedDebugSession |
-	aSharedDebugSession := GtSharedDebugSession new
-			session: aDebugSession.
-	anAnnouncement := GtCoderShowDebuggerRequest new
-			coder: self;
-			debugSession: aDebugSession;
-			sharedDebugSession: aSharedDebugSession;
-			exception: anException;
-			sourceString: aSourceString;
-			sourceInterval: aSourceInterval;
-			evaluationInfo: anEvaluationInfo.
-	self announce: anAnnouncement.
-
-	^ anAnnouncement isDelivered
-]
-
 { #category : #'private - notifying' }
 GtSourceCoder >> notifyToolSpawn: aTool withDestination: aSpawnDestination requesterObject: aRequester [
 	self announce: (GtCoderToolSpawnRequest new 
