@@ -17,6 +17,8 @@ GtCoderMenuActionItem >> coderContextMenuAction [
 GtCoderMenuActionItem >> coderContextMenuAction: anAction [
 	self action: anAction.
 	self id: anAction id.
+	anAction group ifNotNil: [ :aGroup | 
+		self group: aGroup ].
 	anAction shortcutKey
 		ifNotEmpty: [ self label: anAction title shortcut: anAction shortcutKey ]
 		ifEmpty: [ self label: anAction title ]

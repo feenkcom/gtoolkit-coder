@@ -54,6 +54,7 @@ GtTextualCoderEditorElement >> createContextMenu [
 
 	| aMenu aMenuItemsPromise |
 	aMenu := BrMenuItems new.
+	aMenu beGroupedElementType.
 
 	aMenuItemsPromise := self textualCoderViewModel addOns
 			asyncThen: [ :theAddOns | 
