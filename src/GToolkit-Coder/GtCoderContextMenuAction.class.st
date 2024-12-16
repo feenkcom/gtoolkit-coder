@@ -3,10 +3,22 @@ Class {
 	#superclass : #GtCoderAction,
 	#instVars : [
 		'hoverAction',
-		'leaveAction'
+		'leaveAction',
+		'group'
 	],
 	#category : #'GToolkit-Coder-Coders - Addons'
 }
+
+{ #category : #accessing }
+GtCoderContextMenuAction >> group [
+	<return: #BrMenuItemGroupConfiguration or: nil>
+	^ group
+]
+
+{ #category : #accessing }
+GtCoderContextMenuAction >> group: aMenuItemGroupConfiguration [
+	group := aMenuItemGroupConfiguration
+]
 
 { #category : #accessing }
 GtCoderContextMenuAction >> hoverAction [

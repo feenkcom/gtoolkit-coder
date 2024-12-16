@@ -9,6 +9,36 @@ TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id
 	aScripterOrStep secondaryClickStep: [:s | 
 		s label: 'Open context menu';
 		// GtSourceCoderEditorId].
+		
+	aScripterOrStep do
+		label: 'Scroll to ', aBlElementId asSymbol;
+		block: [ :aList | 
+			(aList isKindOf: BrUngroupedList) 
+				ifTrue: [
+					aList scrollToItemSuchThat: [ :each | 
+						each id asBlocElementId = aBlElementId asBlocElementId ] ]
+				ifFalse: [ 
+					| aQuery anAttemptCount |
+					anAttemptCount := 0.
+					[
+						| isVisible |
+						aQuery := aList query // aBlElementId asBlocElementId.
+						isVisible := aQuery isEmpty not and: [
+							aQuery anyOne isVisibleFullyInParent: aList ].
+						anAttemptCount < 5 and: [ isVisible not ]
+					] whileTrue: [ 
+						aList scrollBy: 0 @ 100.
+						anAttemptCount := anAttemptCount + 1.
+					].
+					self 
+						assert: aQuery isEmpty not 
+						description: [ 'Grouped list {2} does not include {2} element id'
+							format: { aList. aBlElementId } ]
+					 ] ];
+		onSpaceRoot;
+		// BrMenuSteppedElement;
+		onThisOrBreadthFirstChildOfKind: BrList;
+		play.
 
 	aScripterOrStep mouseMoveOverStep: [:s | 
 		s label: 'Hover ' , aBlElementId asSymbol;

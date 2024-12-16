@@ -1,6 +1,6 @@
 Extension { #name : #RPackage }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder-UI' }
 RPackage >> gtSpawnCoder [
 	^ GtPackageCoderTool package: self
 ]
