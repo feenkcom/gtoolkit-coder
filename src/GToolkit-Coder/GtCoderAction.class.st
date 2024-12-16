@@ -62,6 +62,11 @@ GtCoderAction >> allowPrimaryClick: anObject [
 	allowPrimaryClick := anObject
 ]
 
+{ #category : #converting }
+GtCoderAction >> asBrMenuItemForCoderElement: aTextualCoderEditorElement [
+	^ nil
+]
+
 { #category : #initialization }
 GtCoderAction >> computeActionDefinition [
 	^ self action isClosure

@@ -225,6 +225,10 @@ GtTextualCoderViewModel >> computeAddOnsFuture [
 	aCoderModel := self coderModel.
 	^ aCoderModel coderAstFuture map: [ :aCoderAst |
 		| theAst newAddOns pragmas |
+		
+		GtCoderAddOnsComputationStartedSignal new
+			coderViewModel: self;
+			emit.
 
 		theAst := aCoderAst ast.
 
@@ -240,9 +244,16 @@ GtTextualCoderViewModel >> computeAddOnsFuture [
 		aCoderModel initializeAddOns: newAddOns viewModel: self.
 		theAst ifNotNil: [
 			pragmas reverseDo: [ :eachPragma |
-				[ aCoderModel
+				[ 
+				aCoderModel
 					perform: eachPragma methodSelector
-					withEnoughArguments: { theAst . newAddOns . self } ]
+					withEnoughArguments: { theAst . newAddOns . self }.
+
+				GtCoderAddOnCreatedSignal new
+					coderViewModel: self;
+					addOnClass: eachPragma methodClass;
+					addOnSelector: eachPragma methodSelector;
+					emit. ]
 				on: Error
 				do: [ :anError |
 					"emit as a beacon signal"
@@ -259,11 +270,17 @@ GtTextualCoderViewModel >> computeAddOnsFuture [
 		"view model add-ons override coder model add-ons"
 		newAddOns addAddOns: extraAddOns.
 		newAddOns markAsUpdated.
+		
+		GtCoderAddOnsComputationFinishedSignal new
+			coderViewModel: self;
+			emit.
+		
 		newAddOns ]
 ]
 
 { #category : #'private - addons' }
 GtTextualCoderViewModel >> computeContextMenuAstAddOns [
+	<return: #GtCoderAddOns>
 	| aCoderModel newAddOns pragmas theAst |
 
 	aCoderModel := self coderModel.
@@ -311,6 +328,7 @@ GtTextualCoderViewModel >> contextActions: theContextActions [
 
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> contextMenuActions [
+	<return: #Collection of: #GtCoderContextMenuAction>
 	^ contextMenuActions
 ]
 
