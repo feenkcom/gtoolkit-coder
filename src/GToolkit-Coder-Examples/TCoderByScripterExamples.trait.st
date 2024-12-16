@@ -43,11 +43,13 @@ TCoderByScripterExamples >> openAndClickOnContextMenuItemFor: aScripterOrStep id
 	aScripterOrStep mouseMoveOverStep: [:s | 
 		s label: 'Hover ' , aBlElementId asSymbol;
 		onSpaceRoot;
+		// BrMenuSteppedElement;
 		// aBlElementId].
 
 	aScripterOrStep clickStep: [:s | 
 		s label: 'Click ' , aBlElementId asSymbol;
 		onSpaceRoot;
+		// BrMenuSteppedElement;
 		// aBlElementId]
 ]
 
