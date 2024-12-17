@@ -47,7 +47,7 @@ TGtCoderWithBehaviorHolder >> behaviorHolder: aTGtCoderObject [
 
 { #category : #'api - object' }
 TGtCoderWithBehaviorHolder >> behaviorIfNone: noneBlock [
-	^ self ifBehavior: #yourself ifNone: noneBlock
+	^ self ifBehavior: [ :anObject | anObject ] ifNone: noneBlock
 ]
 
 { #category : #'api - object' }

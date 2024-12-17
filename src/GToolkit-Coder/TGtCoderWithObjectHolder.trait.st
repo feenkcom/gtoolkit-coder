@@ -51,7 +51,7 @@ TGtCoderWithObjectHolder >> objectHolder: aTGtCoderObject [
 
 { #category : #'api - object' }
 TGtCoderWithObjectHolder >> objectIfNone: noneBlock [
-	^ self ifObject: #yourself ifNone: noneBlock
+	^ self ifObject: [ :anObject | anObject ] ifNone: noneBlock
 ]
 
 { #category : #'api - object' }
