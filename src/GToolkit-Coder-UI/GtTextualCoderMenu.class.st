@@ -20,13 +20,10 @@ GtTextualCoderMenu >> asElement [
 		hExact: 500;
 		vFitContentLimited;
 		addAptitude: BrGlamorousFocusableShadowAptitude new;
-		addAptitude: BrMenuPinnableAptitude new;
+		addAptitude: (BrMenuPinnableAptitude new menuModel: self);
+		addAptitude: (BrMenuHideableAptitude new menuModel: self);
 		addAptitude: BrMenuCommonAptitude new.
-		
-	self announcer weak
-		when: BrMenuHideRequest
-		send: #removeFromParent
-		to: aCoderElement.
+	
 	^ aCoderElement
 ]
 
