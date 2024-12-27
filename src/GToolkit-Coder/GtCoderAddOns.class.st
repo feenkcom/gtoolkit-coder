@@ -278,6 +278,16 @@ GtCoderAddOns >> addDropDownWithPreviewAction: aString icon: anIcon action: acti
 	^ newAction
 ]
 
+{ #category : #'api - context menu' }
+GtCoderAddOns >> addExplicitContextMenu: aString block: aBlock [
+	| newAction |
+	newAction := GtCoderExplicitContextMenuItemAction new
+		title: aString;
+		menuItem: aBlock.
+	self addContextMenuAction: newAction.
+	^ newAction
+]
+
 { #category : #'api - main actions' }
 GtCoderAddOns >> addMainAction: aGtCoderAction [
 	self
