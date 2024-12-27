@@ -14,14 +14,14 @@ GtCoderMenuActionItem >> coderContextMenuAction [
 ]
 
 { #category : #accessing }
-GtCoderMenuActionItem >> coderContextMenuAction: anAction [
-	self action: anAction.
-	self id: anAction id.
-	anAction group ifNotNil: [ :aGroup | 
+GtCoderMenuActionItem >> coderContextMenuAction: aCoderContextMenuAction [
+	self action: aCoderContextMenuAction.
+	self id: aCoderContextMenuAction id.
+	aCoderContextMenuAction group ifNotNil: [ :aGroup | 
 		self group: aGroup ].
-	anAction shortcutKey
-		ifNotEmpty: [ self label: anAction title shortcut: anAction shortcutKey ]
-		ifEmpty: [ self label: anAction title ]
+	aCoderContextMenuAction shortcutKey
+		ifNotEmpty: [ self label: aCoderContextMenuAction title shortcut: aCoderContextMenuAction shortcutKey ]
+		ifEmpty: [ self label: aCoderContextMenuAction title ]
 ]
 
 { #category : #'api - converting' }

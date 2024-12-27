@@ -80,7 +80,8 @@ GtTextualCoderEditorElement >> createContextMenu [
 
 { #category : #'instance creation' }
 GtTextualCoderEditorElement >> createContextMenuContent [
-	"wait for the addons to be computed"
+	"wait for the addons to be computed.
+	Deprected: Use #createContextMenu instead."
 
 	| theContextMenu aContextMenuPromise |
 	theContextMenu := GtCoderContextMenuContent new editorElement: self.

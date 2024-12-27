@@ -66,3 +66,8 @@ GtTextualCoder >> addCopyCutPasteContextMenuAddOnsAst: anAst to: coderAddOns [
 			withId: GtTextualCoderPasteContextMenuItemId
 			to: coderAddOns
 ]
+
+{ #category : #'*GToolkit-Coder-AddOns' }
+GtTextualCoder >> addExplicitContextMenu: aString block: aBlock to: coderAddOns [
+	^ coderAddOns addExplicitContextMenu: aString block: aBlock
+]
