@@ -21,8 +21,12 @@ GtSourceCoderExpandedContentElement >> initialize [
 	editorElement := self newEditorElement.
 	actions := self newActionsElement.
 
-	self addChildren: { editorElement . actions }.
-	self addAptitude: (BrLayoutResizerAptitude new inherit: editorElement)
+	self
+		addChildren: {editorElement.
+				actions}.
+	self addAptitude: (BrLayoutResizerAptitude new inherit: editorElement).
+	self
+		addAptitude: (BrGlamorousWithVerticalScrollbarAptitude new scrollableName: editorElement id)
 ]
 
 { #category : #'instance creation' }
