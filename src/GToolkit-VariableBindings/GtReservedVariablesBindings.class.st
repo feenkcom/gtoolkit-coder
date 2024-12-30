@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#traits : 'TGtVariablesBindings',
 	#classTraits : 'TGtVariablesBindings classTrait',
-	#category : 'GToolkit-VariableBindings-Bindings'
+	#category : #'GToolkit-VariableBindings-Bindings'
 }
 
 { #category : #comparing }
@@ -14,7 +14,7 @@ GtReservedVariablesBindings >> = anObject [
 
 { #category : #binding }
 GtReservedVariablesBindings >> bindingNames [
-	^ self class environment reservedVariables keys collect: [ :each | each asSymbol ]
+	^ self pseudoVariables keys collect: [ :each | each asSymbol ]
 ]
 
 { #category : #binding }
@@ -24,19 +24,27 @@ GtReservedVariablesBindings >> bindingOf: aSymbol [
 	Return nil, if the variable has no value assigned."
 	<return: #Variable or: nil>
 
-	^ self class environment reservedVariables
-		at: aSymbol
-		ifAbsent: [ nil ]
+	^ self pseudoVariables 
+			at: aSymbol
+			ifAbsent: [ nil ]
 ]
 
 { #category : #testing }
 GtReservedVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
-	^ self class environment reservedVariables includesKey: aSymbol
+	^ self pseudoVariables
+			includesKey: aSymbol
 ]
 
 { #category : #comparing }
 GtReservedVariablesBindings >> hash [
 	^ self class hash
+]
+
+{ #category : #binding }
+GtReservedVariablesBindings >> pseudoVariables [
+	^ self
+		forPharo12: [ self class environment pseudoVariables ]
+		forPharo11AndPharo10: [ self class environment reservedVariables ]
 ]
