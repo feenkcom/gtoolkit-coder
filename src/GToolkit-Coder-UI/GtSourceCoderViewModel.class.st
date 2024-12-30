@@ -292,6 +292,15 @@ GtSourceCoderViewModel >> evaluationStatus: aNewStatus [
 	self onEvaluationStatusChanged
 ]
 
+{ #category : #'gt-extension' }
+GtSourceCoderViewModel >> gtInfo [
+	^ super gtInfo, (Array streamContents: [ :aStream |
+		aStream nextPut: #evaluationContext -> self evaluationContext.
+		aStream nextPut: #evaluationResult -> self evaluationResult.
+		aStream nextPut: #evaluationStatus -> self evaluationStatus.
+		aStream nextPut: #selectedTextInterval -> self selectedTextInterval ])
+]
+
 { #category : #'private - event handling' }
 GtSourceCoderViewModel >> handleCoderEvaluationUnhandledErrorDuring: aBlock [
 	^ [ GtCoderUserSnippetDynamicVariable
