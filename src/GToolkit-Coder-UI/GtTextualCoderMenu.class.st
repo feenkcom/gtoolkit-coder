@@ -22,7 +22,8 @@ GtTextualCoderMenu >> asElement [
 		addAptitude: BrGlamorousFocusableShadowAptitude new;
 		addAptitude: (BrMenuPinnableAptitude new 
 			menuModel: self;
-			withAllExtraEventHandlers);
+			withResizers;
+			withAllPinActions);
 		addAptitude: (BrMenuHideableAptitude new menuModel: self);
 		addAptitude: BrMenuCommonAptitude new.
 	
