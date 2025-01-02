@@ -9,6 +9,7 @@ Class {
 
 { #category : #accessing }
 GtCoderBehaviorChanged >> newBehavior [
+	<return: #GtPharoCoderBehavior>
 	^ newBehavior
 ]
 

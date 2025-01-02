@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #accessing }
+GtTextualCoderViewModelBehaviorChanged >> newBehavior [
+	<return: #GtPharoCoderBehavior>
+	^ newBehavior
+]
+
+{ #category : #accessing }
 GtTextualCoderViewModelBehaviorChanged >> newBehavior: aBehavior [
 	newBehavior := aBehavior
 ]
