@@ -432,7 +432,8 @@ GtTextualCoderViewModel >> gtInfo [
 		aStream nextPut: (#shortcuts -> self shortcuts).
 		aStream nextPut: (#attributes -> self extraTextAttributes).
 		aStream nextPut: (#hasFocus -> self focused).
-		aStream nextPut: (#expanded -> self expanded) ]
+		aStream nextPut: (#expanded -> self expanded).
+		aStream nextPut: (#wantsHeader -> self wantsHeader) ]
 ]
 
 { #category : #'gt-extension' }
