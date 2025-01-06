@@ -7,6 +7,16 @@ Class {
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
+{ #category : #'as yet unclassified' }
+GtSmaCCDiffSplitter >> printOn: aStream [
+	super printOn: aStream.
+
+	aStream
+		nextPut: $(;
+		nextPutAll: scannerClass asString;
+		nextPut: $)
+]
+
 { #category : #accessing }
 GtSmaCCDiffSplitter >> scannerClass [
 	^ scannerClass

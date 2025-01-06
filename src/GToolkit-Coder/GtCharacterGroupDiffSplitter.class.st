@@ -46,6 +46,16 @@ GtCharacterGroupDiffSplitter >> initialize [
 	groups := OrderedCollection new
 ]
 
+{ #category : #'as yet unclassified' }
+GtCharacterGroupDiffSplitter >> printOn: aStream [
+	super printOn: aStream.
+
+	aStream
+		nextPut: $(;
+		nextPutAll: (', ' join: groups);
+		nextPut: $)
+]
+
 { #category : #accessing }
 GtCharacterGroupDiffSplitter >> split: aString into: aGtDiffSplits [
 	| stream start groupId nextGroupId |
