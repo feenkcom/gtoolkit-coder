@@ -29,6 +29,11 @@ GtCharacterGroupDiffSplitter >> classify: aCharacter [
 		ifNone: [ groups size + 1 ]
 ]
 
+{ #category : #'as yet unclassified' }
+GtCharacterGroupDiffSplitter >> descriptionString [
+	^ 'split by character groups (' , (', ' join: groups) , ')'
+]
+
 { #category : #initialization }
 GtCharacterGroupDiffSplitter >> ignoreWhitespace [
 	shouldIgnoreWhitespace := true
@@ -44,6 +49,16 @@ GtCharacterGroupDiffSplitter >> initialize [
 	super initialize.
 	shouldIgnoreWhitespace := false.
 	groups := OrderedCollection new
+]
+
+{ #category : #'as yet unclassified' }
+GtCharacterGroupDiffSplitter >> printOn: aStream [
+	super printOn: aStream.
+
+	aStream
+		nextPut: $(;
+		nextPutAll: (', ' join: groups);
+		nextPut: $)
 ]
 
 { #category : #accessing }

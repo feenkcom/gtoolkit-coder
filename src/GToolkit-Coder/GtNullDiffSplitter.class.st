@@ -4,6 +4,11 @@ Class {
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
+{ #category : #'as yet unclassified' }
+GtNullDiffSplitter >> descriptionString [
+	^ 'do not split'
+]
+
 { #category : #actions }
 GtNullDiffSplitter >> split: aCollection into: aGtDiffSplits [
 	1
