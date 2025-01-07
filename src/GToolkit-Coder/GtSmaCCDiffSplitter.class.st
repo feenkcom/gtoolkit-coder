@@ -9,7 +9,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 GtSmaCCDiffSplitter >> descriptionString [
-	^ 'split using ' , self scannerClass asString
+	^ 'using ' , self scannerClass asString
 ]
 
 { #category : #'as yet unclassified' }

@@ -31,7 +31,7 @@ GtCharacterGroupDiffSplitter >> classify: aCharacter [
 
 { #category : #'as yet unclassified' }
 GtCharacterGroupDiffSplitter >> descriptionString [
-	^ 'split by character groups (' , (', ' join: groups) , ')'
+	^ 'by character groups (' , (', ' join: groups) , ')'
 ]
 
 { #category : #initialization }
