@@ -14,6 +14,11 @@ GtLineDiffSplitter class >> ignoringEOLChars [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+GtLineDiffSplitter >> descriptionString [
+	^ 'split by lines'
+]
+
 { #category : #accessing }
 GtLineDiffSplitter >> includeEOLChars [
 	^ includeEOLChars

@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
+{ #category : #'as yet unclassified' }
+GtDiffSplitter >> descriptionString [
+	^ self subclassResponsibility
+]
+
 { #category : #actions }
 GtDiffSplitter >> split: aCollection [
 	| splits |

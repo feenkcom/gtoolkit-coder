@@ -29,6 +29,11 @@ GtCharacterGroupDiffSplitter >> classify: aCharacter [
 		ifNone: [ groups size + 1 ]
 ]
 
+{ #category : #'as yet unclassified' }
+GtCharacterGroupDiffSplitter >> descriptionString [
+	^ 'split by character groups (' , (', ' join: groups) , ')'
+]
+
 { #category : #initialization }
 GtCharacterGroupDiffSplitter >> ignoreWhitespace [
 	shouldIgnoreWhitespace := true
