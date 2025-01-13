@@ -305,7 +305,7 @@ GtFilterShortListSettingsElement >> updateButtonElement [
 GtFilterShortListSettingsElement >> updateElement [
 	self updateButtonElement.
 	self updateHandleElement.
-	self updateListElement
+	self updateListElement.
 ]
 
 { #category : #'private - updating' }

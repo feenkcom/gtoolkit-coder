@@ -51,6 +51,12 @@ GtFilterModel >> asSearchFilter [
 ]
 
 { #category : #converting }
+GtFilterModel >> asUserParametersElement [
+	<return: #GtFilterSettingsElement>
+	^ self asFilterViewModel asUserParametersElement
+]
+
+{ #category : #converting }
 GtFilterModel >> asUserSettingsElement [
 	<return: #GtFilterSettingsElement>
 	^ self asFilterViewModel asUserSettingsElement

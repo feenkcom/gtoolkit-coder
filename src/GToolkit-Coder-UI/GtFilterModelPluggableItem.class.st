@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'object',
 		'iconStencilBuilder',
-		'labelStencilBuilder'
+		'labelStencilBuilder',
+		'filterUpdater'
 	],
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
@@ -60,6 +61,19 @@ GtFilterModelPluggableItem class >> forObject: anObject label: aLabelStencilBuil
 ]
 
 { #category : #accessing }
+GtFilterModelPluggableItem >> filterUpdater [
+	^ filterUpdater
+]
+
+{ #category : #accessing }
+GtFilterModelPluggableItem >> filterUpdater: aBlock [
+	"Set a filter block that is called when a filter model is updated and new filter created.
+	It receives two arguments: [ :aFilter :anItem | ]."
+
+	filterUpdater := aBlock
+]
+
+{ #category : #accessing }
 GtFilterModelPluggableItem >> icon [
 	<return: #BlElement or: nil>
 	^ iconStencilBuilder
@@ -77,7 +91,8 @@ GtFilterModelPluggableItem >> icon: aStencilBuilder [
 GtFilterModelPluggableItem >> initialize [
 	super initialize.
 	iconStencilBuilder := GtFilterModelItemIconStencilBuilder new.
-	labelStencilBuilder := GtFilterModelItemLabelStencilBuilder new
+	labelStencilBuilder := GtFilterModelItemLabelStencilBuilder new.
+	filterUpdater := [ :aFilter :anItem | "do nothing" ]
 ]
 
 { #category : #accessing }
@@ -107,6 +122,12 @@ GtFilterModelPluggableItem >> object [
 { #category : #accessing }
 GtFilterModelPluggableItem >> object: anObject [
 	object := anObject
+]
+
+{ #category : #converting }
+GtFilterModelPluggableItem >> onCreateFilter: aFilter [
+	filterUpdater ifNil: [ ^ self ].
+	filterUpdater cull: aFilter cull: self
 ]
 
 { #category : #printing }
