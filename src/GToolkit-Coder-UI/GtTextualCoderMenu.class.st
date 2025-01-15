@@ -19,6 +19,7 @@ GtTextualCoderMenu >> asElement [
 	aCoderElement
 		hExact: 500;
 		vFitContentLimited;
+		background: aCoderElement theme default contentBackgroundColor;
 		addAptitude: BrGlamorousFocusableShadowAptitude new;
 		addAptitude: (BrMenuPinnableAptitude new 
 			menuModel: self;
