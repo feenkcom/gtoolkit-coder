@@ -1,7 +1,7 @@
 "
 I represent a Coder context menu. 
 #Examples
-The following example shows a case during which a context menu height does not fit and a scrollbar is displayed: {{gtExample:GtPharoCoderByScripterExamples>>#displayPharoMethodContextMenuExtentIn800x300Space | previewExpanded=true | codeExpanded=false | previewHeight=500}} 
+The following example shows a case during which a context menu height does not fit and a scrollbar is displayed: {{gtExample:GtPharoCoderByScripterExamples>>#displayPharoMethodContextMenuExtentIn800x330Space | previewExpanded=true | codeExpanded=false | previewHeight=500}} 
  
 "
 Class {
