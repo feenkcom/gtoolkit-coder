@@ -91,3 +91,8 @@ GtFilterModelItem >> labelSize [
 	<return: #Integer>
 	^ self label ifNotNil: #size ifNil: [ 0 ]
 ]
+
+{ #category : #converting }
+GtFilterModelItem >> onCreateFilter: aFilter [
+	^ self
+]
