@@ -142,7 +142,7 @@ GtTextualCoderEditorElement >> initialize [
 	self
 		aptitude: BrGlamorousCodeEditorAptitude;
 		"addAptitude: (BrGlamorousWithContextMenuAptitude content: [ self createContextMenuContent ]);"
-		addAptitude: (BrWithExplicitMenuAptitude new withHandleSubmenu: [ self createContextMenu ]);
+		addAptitude: (BrWithExplicitMenuAptitude new handleSubmenu: [ self createContextMenu ]);
 		padding: BlInsets empty;
 		hMatchParent;
 		vFitContent.
