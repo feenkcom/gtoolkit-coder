@@ -25,8 +25,6 @@ GtSourceCoderExpandedContentElement >> initialize [
 		addChildren: {editorElement.
 				actions}.
 	self addAptitude: (BrLayoutResizerAptitude new inherit: editorElement).
-	"self
-		addAptitude: (BrGlamorousWithVerticalScrollbarAptitude new scrollableName: editorElement id)"
 ]
 
 { #category : #'instance creation' }
@@ -48,4 +46,10 @@ GtSourceCoderExpandedContentElement >> onTextualCoderViewModelChanged [
 
 	actions coderViewModel: textualCoderViewModel.
 	editorElement textualCoderViewModel: textualCoderViewModel
+]
+
+{ #category : #initialization }
+GtSourceCoderExpandedContentElement >> showScrollbars [
+	self
+		addAptitude: (BrGlamorousWithVerticalScrollbarAptitude new scrollableName: editorElement id)
 ]
