@@ -70,6 +70,7 @@ GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
 	^ GtSourceCoderExpandedContentElement new
 		textualCoderViewModel: aCoderModel;
 		in: [ :anElement | self addCodersCoderLook: aCoderModel to: anElement ];
+		showScrollbars;
 		yourself
 ]
 
