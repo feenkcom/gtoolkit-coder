@@ -5,6 +5,22 @@ Class {
 }
 
 { #category : #examples }
+GtDiffBuilderExamples >> byteArrayDiff [
+	<gtExample>
+	| originalByteArray modifiedByteArray |
+	originalByteArray := (1 to: 64)
+			collect: [ :_ | 256 atRandom - 1 ]
+			as: ByteArray.
+	modifiedByteArray := originalByteArray copy.
+	8 timesRepeat: [
+		modifiedByteArray at: modifiedByteArray size atRandom put: 256 atRandom - 1 ].
+	^ GtDiffBuilder
+		computeDifferencesFrom: originalByteArray
+		to: modifiedByteArray
+		using: GtNullDiffSplitter new
+]
+
+{ #category : #examples }
 GtDiffBuilderExamples >> changeInMiddleAndDeletionAtEnd [
 	<gtExample>
 	| differences from to change |
