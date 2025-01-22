@@ -24,8 +24,8 @@ GtExpandedOnlyCoderElement >> coder: aCoderUIModel [
 
 	self 
 		deprecated: 'Use #coderUIModel: instead.'
-		transformWith: '`@receiver coder: `@arg' -> '`@receiver coderUIModel: `@arg'.
-
+		transformWith: '`@receiver coder: `@arg' -> '`@receiver coderViewModel: `@arg'.
+		
 	^ self coderViewModel: aCoderUIModel
 ]
 
@@ -70,6 +70,7 @@ GtExpandedOnlyCoderElement >> newExpandedElement: aCoderModel [
 	^ GtSourceCoderExpandedContentElement new
 		textualCoderViewModel: aCoderModel;
 		in: [ :anElement | self addCodersCoderLook: aCoderModel to: anElement ];
+		showScrollbars;
 		yourself
 ]
 

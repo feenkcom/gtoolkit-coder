@@ -58,7 +58,7 @@ GtFilterLabelElement >> initializeLabelElement [
 
 { #category : #initialization }
 GtFilterLabelElement >> initializeSettingsContainer [
-	settingsContainer := BrFrame new
+	settingsContainer := BrHorizontalPane new
 			hFitContentLimited;
 			vFitContent;
 			margin: (BlInsets all: 2);
@@ -188,6 +188,8 @@ GtFilterLabelElement >> updateSettingsContainer [
 	self removeSettingsElement.
 	anElement := self filterViewModel asUserSettingsElement.
 	anElement ifNil: [ ^ self ].
-	anElement constraintsDo: [ :c | c frame vertical alignCenter ].
+	anElement constraintsDo: [ :c | 
+		c linear vertical alignCenter.
+		c frame vertical alignCenter ].
 	self addSettingsElement: anElement
 ]

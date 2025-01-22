@@ -1,12 +1,12 @@
 Class {
-	#name : #GtFilterShortListModel,
-	#superclass : #GtFilterSelectableItemModel,
+	#name : #GtFilterShortListModelParameter,
+	#superclass : #GtFilterSelectableItemModelParameter,
 	#traits : 'TGtWithItemsSelector',
 	#classTraits : 'TGtWithItemsSelector classTrait',
 	#category : #'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #accessing }
-GtFilterShortListModel >> filterViewModelClass [
+GtFilterShortListModelParameter >> filterViewModelClass [
 	^ GtFilterShortListViewModel
 ]

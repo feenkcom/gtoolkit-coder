@@ -31,6 +31,15 @@ GtFilterModelItemsBuilder >> firstItemDo: aBlock [
 ]
 
 { #category : #accessing }
+GtFilterModelItemsBuilder >> itemAt: anIndex do: aBlock [
+	| aCollection |
+	aCollection := self create.
+	aCollection ifEmpty: [ ^ self ].
+	aCollection size < anIndex ifTrue: [ ^ self ].
+	aBlock cull: (aCollection at: anIndex)
+]
+
+{ #category : #accessing }
 GtFilterModelItemsBuilder >> lastItemDo: aBlock [
 	| aCollection |
 	aCollection := self create.

@@ -22,6 +22,12 @@ GtFilterViewModel >> asFilterLabeledElement [
 ]
 
 { #category : #converting }
+GtFilterViewModel >> asUserParametersElement [
+	<return: #GtFilterSettingsElement>
+	^ self filterElementClass new filterViewModel: self
+]
+
+{ #category : #converting }
 GtFilterViewModel >> asUserSettingsElement [
 	<return: #GtFilterSettingsElement>
 	^ self filterElementClass new filterViewModel: self
@@ -53,6 +59,12 @@ GtFilterViewModel >> onLabelChanged: anAnnouncement [
 		announce: (GtFilterViewModelLabelChanged new
 				viewModel: self;
 				label: anAnnouncement label)
+]
+
+{ #category : #accessing }
+GtFilterViewModel >> parameters [
+	<return: #Collection of: #GtFilterModelParameter>
+	^ #()
 ]
 
 { #category : #printing }

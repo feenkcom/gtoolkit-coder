@@ -329,6 +329,39 @@ GtFilterModelExamples >> shortListModel [
 ]
 
 { #category : #examples }
+GtFilterModelExamples >> shortListModelParameter [
+	<gtExample>
+	| aModel |
+	aModel := GtFilterShortListModelParameter new
+			updater: [ :aFilter :anItem |
+				anItem
+					ifSome: [ :aValue |
+						anItem onCreateFilter: aFilter ]
+					ifNone: [  ] ];
+			items: [ { 
+				GtFilterModelPluggableItem new
+					label: 'readers and writers';
+					filterUpdater: [ :aFilter | 
+						aFilter includeReaders: true.
+						aFilter includeWriters: true ].
+				GtFilterModelPluggableItem new
+					label: 'readers only';
+					filterUpdater: [ :aFilter | 
+						aFilter includeReaders: true.
+						aFilter includeWriters: false ].
+				GtFilterModelPluggableItem new
+					label: 'writers only';
+					filterUpdater: [ :aFilter | 
+						aFilter includeReaders: false.
+						aFilter includeWriters: true ] } ];
+			selectFirstItem;
+			displayAllItems.
+	self assert: aModel items size equals: 3.
+
+	^ aModel
+]
+
+{ #category : #examples }
 GtFilterModelExamples >> shortListModelPluggableItems [
 	<gtExample>
 	| aModel allItems aCollection anIconBuilder aLabelBuilder |
@@ -479,6 +512,39 @@ GtFilterModelExamples >> shortListModelWithIcons [
 	self
 		assert: aModel selectedItem
 		equals: (GtFilterModelClassItem new itemClass: Array).
+
+	^ aModel
+]
+
+{ #category : #examples }
+GtFilterModelExamples >> shortListModelWithParameter [
+	<gtExample>
+	| aModel |
+	aModel := self shortListModel.
+	aModel parameter: self shortListModelParameter.
+	self assert: aModel parameters size equals: 1.
+
+	^ aModel
+]
+
+{ #category : #examples }
+GtFilterModelExamples >> shortListModelWithParameter_changeParameterValue [
+	<gtExample>
+	| aModel aCollection aParameter anAnnouncement |
+	aModel := self shortListModelWithParameter.
+
+	aCollection := OrderedCollection new.
+	aModel weak
+		when: GtFilterModelAnnouncement
+		send: #add:
+		to: aCollection.
+
+	aParameter := aModel parameters first.
+	aParameter selectedItem: aParameter items second.
+	self assert: aCollection size equals: 1.
+	anAnnouncement := aCollection first.
+	self assert: anAnnouncement class equals: GtFilterModelParameterUpdated.
+	self assert: anAnnouncement changesFilteredResult.
 
 	^ aModel
 ]
