@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Addons'
 }
 
+{ #category : #visiting }
+GtCoderMenuActionItem >> acceptVisitor: aVisitor [
+	^ aVisitor visitCoderMenuActionItem: self
+]
+
 { #category : #accessing }
 GtCoderMenuActionItem >> coderContextMenuAction [
 	<return: #GtCoderContextMenuAction>

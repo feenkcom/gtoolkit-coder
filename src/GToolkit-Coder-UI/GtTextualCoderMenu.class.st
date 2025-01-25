@@ -8,6 +8,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Menu'
 }
 
+{ #category : #visiting }
+GtTextualCoderMenu >> acceptVisitor: aVisitor [
+	^ aVisitor visitTextualCoderMenu: self
+]
+
 { #category : #'api - converting' }
 GtTextualCoderMenu >> asElement [
 	| aCoderViewModel aCoderElement |
@@ -44,6 +49,11 @@ GtTextualCoderMenu >> coderStencil: aCoderStencil [
 { #category : #'api - initialization' }
 GtTextualCoderMenu >> coderViewModel: aCoderViewModel [
 	self coderViewModelStencil: [ aCoderViewModel ] asStencil
+]
+
+{ #category : #accessing }
+GtTextualCoderMenu >> coderViewModelStencil [
+	^ coderViewModelStencil
 ]
 
 { #category : #'api - initialization' }
