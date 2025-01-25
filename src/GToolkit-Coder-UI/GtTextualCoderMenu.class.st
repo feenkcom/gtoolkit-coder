@@ -13,29 +13,6 @@ GtTextualCoderMenu >> acceptVisitor: aVisitor [
 	^ aVisitor visitTextualCoderMenu: self
 ]
 
-{ #category : #'api - converting' }
-GtTextualCoderMenu >> asElement [
-	| aCoderViewModel aCoderElement |
-	coderViewModelStencil ifNil: [ ^ nil ].
-	aCoderViewModel := coderViewModelStencil create.
-	aCoderViewModel ifNil: [ ^ nil ].
-	
-	aCoderElement := aCoderViewModel asExpandedOnlyElement.
-	aCoderElement
-		hExact: 500;
-		vFitContentLimited;
-		background: aCoderElement theme default contentBackgroundColor;
-		addAptitude: BrGlamorousFocusableShadowAptitude new;
-		addAptitude: (BrMenuPinnableAptitude new 
-			menuModel: self;
-			withResizers;
-			withAllPinActions);
-		addAptitude: (BrMenuHideableAptitude new menuModel: self);
-		addAptitude: BrMenuCommonAptitude new.
-	
-	^ aCoderElement
-]
-
 { #category : #'api - initialization' }
 GtTextualCoderMenu >> coder: aCoder [
 	self coderViewModelStencil: [ aCoder asCoderViewModel ] asStencil

@@ -29,11 +29,6 @@ GtCoderMenuActionItem >> coderContextMenuAction: aCoderContextMenuAction [
 		ifEmpty: [ self label: aCoderContextMenuAction title ]
 ]
 
-{ #category : #'api - converting' }
-GtCoderMenuActionItem >> elementType [
-	^ GtCoderMenuActionItemElement
-]
-
 { #category : #'as yet unclassified' }
 GtCoderMenuActionItem >> hoverAction [
 	^ self coderContextMenuAction hoverAction

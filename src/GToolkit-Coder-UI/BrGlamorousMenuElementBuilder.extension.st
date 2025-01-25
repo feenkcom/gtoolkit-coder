@@ -12,7 +12,7 @@ BrGlamorousMenuElementBuilder >> visitTextualCoderMenu: aMenuModel [
 		hExact: 500;
 		vFitContentLimited;
 		background: aCoderElement theme default contentBackgroundColor;
-		addAptitude: (BrMenuPinnableAptitude new 
+		addAptitude: (BrGlamorousMenuPinnableAptitude new 
 			menuModel: aMenuModel;
 			withResizers;
 			withAllPinActions);
