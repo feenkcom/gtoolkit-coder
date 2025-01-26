@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Addons'
 }
 
+{ #category : #visiting }
+GtCoderMenuActionItem >> acceptVisitor: aVisitor [
+	^ aVisitor visitCoderMenuActionItem: self
+]
+
 { #category : #accessing }
 GtCoderMenuActionItem >> coderContextMenuAction [
 	<return: #GtCoderContextMenuAction>
@@ -22,11 +27,6 @@ GtCoderMenuActionItem >> coderContextMenuAction: aCoderContextMenuAction [
 	aCoderContextMenuAction shortcutKey
 		ifNotEmpty: [ self label: aCoderContextMenuAction title shortcut: aCoderContextMenuAction shortcutKey ]
 		ifEmpty: [ self label: aCoderContextMenuAction title ]
-]
-
-{ #category : #'api - converting' }
-GtCoderMenuActionItem >> elementType [
-	^ GtCoderMenuActionItemElement
 ]
 
 { #category : #'as yet unclassified' }

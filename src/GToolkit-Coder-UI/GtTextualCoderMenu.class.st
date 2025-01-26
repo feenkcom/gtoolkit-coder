@@ -8,27 +8,9 @@ Class {
 	#category : #'GToolkit-Coder-UI-Menu'
 }
 
-{ #category : #'api - converting' }
-GtTextualCoderMenu >> asElement [
-	| aCoderViewModel aCoderElement |
-	coderViewModelStencil ifNil: [ ^ nil ].
-	aCoderViewModel := coderViewModelStencil create.
-	aCoderViewModel ifNil: [ ^ nil ].
-	
-	aCoderElement := aCoderViewModel asExpandedOnlyElement.
-	aCoderElement
-		hExact: 500;
-		vFitContentLimited;
-		background: aCoderElement theme default contentBackgroundColor;
-		addAptitude: BrGlamorousFocusableShadowAptitude new;
-		addAptitude: (BrMenuPinnableAptitude new 
-			menuModel: self;
-			withResizers;
-			withAllPinActions);
-		addAptitude: (BrMenuHideableAptitude new menuModel: self);
-		addAptitude: BrMenuCommonAptitude new.
-	
-	^ aCoderElement
+{ #category : #visiting }
+GtTextualCoderMenu >> acceptVisitor: aVisitor [
+	^ aVisitor visitTextualCoderMenu: self
 ]
 
 { #category : #'api - initialization' }
@@ -44,6 +26,11 @@ GtTextualCoderMenu >> coderStencil: aCoderStencil [
 { #category : #'api - initialization' }
 GtTextualCoderMenu >> coderViewModel: aCoderViewModel [
 	self coderViewModelStencil: [ aCoderViewModel ] asStencil
+]
+
+{ #category : #accessing }
+GtTextualCoderMenu >> coderViewModelStencil [
+	^ coderViewModelStencil
 ]
 
 { #category : #'api - initialization' }
