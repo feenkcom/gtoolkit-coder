@@ -24,6 +24,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildCategorySlotTabs [
 					label: 'Categories' asRopedText glamorousCodeSmallSize;
 					stencil: [ methodProtocolsList ]);
 			addTab: (BrTab new
+					id: #slots;
 					hMatchParent;
 					aptitude: GtProtocolSlotTabAptitude new;
 					label: 'Slots' asRopedText glamorousCodeSmallSize;
