@@ -49,9 +49,11 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 								textElement := BlTextElement new.
 								textElement text: text.
 								textElement padding: (BlInsets all: 10).
+								textElement beFocusable.
 								textElement
 									when: BlClickEvent
 									do: [ :event | clickAction cull: anEditorElement cull: aptitude hide ].
+
 								{BlKeyCombination escape.
 									BlKeyCombination enter.
 									BlKeyCombination backspace}
