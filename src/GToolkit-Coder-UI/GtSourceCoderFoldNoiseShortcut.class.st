@@ -32,5 +32,5 @@ GtSourceCoderFoldNoiseShortcut >> performOnEditor: aBrTextEditor element: aBrEdi
 				ifFound: [ :att | 
 					folding ifNil: [ folding := att isExpanded ].
 					att isExpanded: folding not.
-					att applyExpandedOrCollapsedAttributesOn: nil in: aBrTextEditor ] ]
+					att applyExpandedOrCollapsedAttributesOnText: aBrTextEditor text ] ]
 ]
