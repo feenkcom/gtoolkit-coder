@@ -7,6 +7,12 @@ Class {
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
+{ #category : #'as yet unclassified' }
+GtCoderAstStyler >> anyCursorsInRange: textRange [
+	^ self coderViewModel cursors positions
+		noneSatisfy: [ :each | textRange includes: each ]
+]
+
 { #category : #'api - styling' }
 GtCoderAstStyler >> attribute: aTextAttribute from: aStart to: anEnd [
 	self attributes: { aTextAttribute } from: aStart to: anEnd
