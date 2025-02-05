@@ -10,7 +10,7 @@ Class {
 { #category : #'as yet unclassified' }
 GtCoderAstStyler >> anyCursorsInRange: textRange [
 	^ self coderViewModel cursors positions
-		noneSatisfy: [ :each | textRange includes: each ]
+		anySatisfy: [ :each | textRange includes: each ]
 ]
 
 { #category : #'api - styling' }
