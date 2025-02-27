@@ -61,6 +61,7 @@ GtFilterShortListSettingsElement >> initializeButtonElement [
 				content: [ self newContentElement ]
 				do: [ :theAptitude |
 					theAptitude
+						withContainerDownUpDropdown;
 						when: BrDropdownIsHidden
 						do: [ :anEvent | self onDropdownIsHiddenEvent: anEvent ] ])
 ]
@@ -119,6 +120,16 @@ GtFilterShortListSettingsElement >> newContentElement [
 					icon: self defaultItemIcon;
 					id: nil;
 					model: nil ];
+			withAsyncFutureDo: [ :anElementFuture |
+				anElementFuture
+					whenPending: [ :theListElement |
+						theListElement items: { GtFilterModelComputingItem default } ];
+					whenError: [ :theListElement :anError | 
+						theListElement items: { (GtFilterModelExceptionItem freeze: anError) } ];
+					whenSuccess: [ :theListElement :aCollection |
+						aCollection
+							ifEmpty: [ theListElement items: {GtFilterModelEmptyItem default} ]
+							ifNotEmpty: [ theListElement items: aCollection ] ] ];
 			when: BlElementAddedToSceneGraphEvent
 				do: [ :anEvent | self onListElementAddedToSceneGraph: anEvent ];
 			addShortcut: (BlShortcutWithAction new
@@ -331,18 +342,20 @@ GtFilterShortListSettingsElement >> updateListElement [
 
 { #category : #'private - updating' }
 GtFilterShortListSettingsElement >> updateListElement: anElement [
-	| aCollection |
 	self hasFilterViewModel ifFalse: [ ^ self ].
-	aCollection := self filterViewModel someItems.
-	aCollection
-		ifEmpty: [ anElement items: {GtFilterModelEmptyItem default} ]
-		ifNotEmpty: [ anElement items: aCollection ]
+	
+	anElement withAsyncFutureDo: [ :anElementFuture |
+		anElementFuture future: self filterViewModel someItemsFuture asAsyncFuture ].
 ]
 
 { #category : #'private - updating' }
 GtFilterShortListSettingsElement >> updateSelectedItem: aFilterModelItem from: anElement [
 	aFilterModelItem ifNil: [ ^ self ].
 	aFilterModelItem isVirtualFilterModelItem ifTrue: [ ^ self ].
+	aFilterModelItem isExceptionFilterModelItem ifTrue: [
+		anElement phlow spawnObject: aFilterModelItem.
+		^ self ].
+	
 	self hasFilterViewModel ifFalse: [ ^ self ].
 	aFilterModelItem = self filterViewModel selectedItem ifTrue: [ ^ self ].
 	BlTaskAction

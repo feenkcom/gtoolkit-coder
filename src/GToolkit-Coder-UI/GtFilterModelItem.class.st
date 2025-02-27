@@ -20,7 +20,7 @@ GtFilterModelItem >> asFilterModelItem [
 
 { #category : #comparing }
 GtFilterModelItem >> hash [
-	^ self class hash bitXor: self label hash
+	^ self label hash
 ]
 
 { #category : #accessing }
@@ -66,6 +66,11 @@ GtFilterModelItem >> ifSome: aBlock [
 { #category : #accessing }
 GtFilterModelItem >> ifSome: aBlock ifNone: aNoneBlock [
 	^ aBlock cull: self itemValue cull: self
+]
+
+{ #category : #testing }
+GtFilterModelItem >> isExceptionFilterModelItem [
+	^ false
 ]
 
 { #category : #testing }
