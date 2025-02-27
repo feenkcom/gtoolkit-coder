@@ -122,6 +122,9 @@ GtFilterShortListSettingsElement >> newContentElement [
 					model: nil ];
 			withAsyncFutureDo: [ :anElementFuture |
 				anElementFuture
+					executionConfiguration: (AsyncFutureExecutionConfiguration new 
+						customGroup: #CoderFilter;
+						lowPriority);
 					whenPending: [ :theListElement |
 						theListElement items: { GtFilterModelComputingItem default } ];
 					whenError: [ :theListElement :anError | 
