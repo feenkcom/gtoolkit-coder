@@ -46,8 +46,6 @@ GtFilterShortListSettingsElement >> initialize [
 	handleElement := nil asWeakReference.
 	listElement := nil asWeakReference.
 	self initializeButtonElement.
-	self initializeDropdownAptitude.
-	buttonElement addAptitude: buttonAptitude.
 	self addChild: buttonElement as: #button.
 	self initializeEventHandlers.
 	self initializeShortcuts.
@@ -57,18 +55,14 @@ GtFilterShortListSettingsElement >> initialize [
 GtFilterShortListSettingsElement >> initializeButtonElement [
 	buttonElement := self newButtonElement
 			aptitude: BrGlamorousButtonWithIconAndLabelAptitude;
-			addAptitude: BrGlamorousButtonIconDropdownAptitude
-]
-
-{ #category : #initialization }
-GtFilterShortListSettingsElement >> initializeDropdownAptitude [
-	buttonAptitude := BrGlamorousWithDropdownAptitude
-			handle: [ self newHandleElement ]
-			content: [ self newContentElement ].
-	buttonAptitude beNotResizable.
-	buttonAptitude
-		when: BrDropdownIsHidden
-		do: [ :anEvent | self onDropdownIsHiddenEvent: anEvent ]
+			addAptitude: BrGlamorousButtonIconDropdownAptitude;
+			addAptitude: (BrGlamorousWithExplicitDropdownAptitude
+				handle: [ self newHandleElement ]
+				content: [ self newContentElement ]
+				do: [ :theAptitude |
+					theAptitude
+						when: BrDropdownIsHidden
+						do: [ :anEvent | self onDropdownIsHiddenEvent: anEvent ] ])
 ]
 
 { #category : #initialization }
@@ -332,18 +326,6 @@ GtFilterShortListSettingsElement >> updateHandleElement: anElement [
 
 { #category : #'private - updating' }
 GtFilterShortListSettingsElement >> updateListElement [
-	| aHeight aWidth anExtent |
-	aHeight := self filterViewModel items size.
-	aWidth := self filterViewModel items
-		inject: 3
-		into: [ :aMax :each | 
-			aMax > each labelSize 
-				ifTrue: [ aMax ] 
-				ifFalse: [ each labelSize ] ].
-	anExtent := (aWidth * 12) @ (aHeight * 12).
-	
-	buttonAptitude preferredExtent: anExtent.
-
 	self listElementDo: [ :anElement | self updateListElement: anElement ]
 ]
 
