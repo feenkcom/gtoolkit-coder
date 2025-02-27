@@ -101,7 +101,7 @@ GtFilterStep >> clickOnDropdownFilterItem: aFilterItem [
 		label: ('Click on dropdown item: {1}' format: { aFilterItem });
 		referenceSender;
 		onSpaceRoot;
-		// BrAnchoredOuterContainer;
+		onDropdown: true;
 		// #scrollable;
 		onChildFromBlock: [ :anElement | anElement children detect: [ :each | each viewModel model = aFilterItem ] ]
 ]
