@@ -130,9 +130,7 @@ GtFilterShortListSettingsElement >> newContentElement [
 					whenError: [ :theListElement :anError | 
 						theListElement items: { (GtFilterModelExceptionItem freeze: anError) } ];
 					whenSuccess: [ :theListElement :aCollection |
-						aCollection
-							ifEmpty: [ theListElement items: {GtFilterModelEmptyItem default} ]
-							ifNotEmpty: [ theListElement items: aCollection ] ] ];
+						self updateListElement: theListElement items: aCollection ] ];
 			when: BlElementAddedToSceneGraphEvent
 				do: [ :anEvent | self onListElementAddedToSceneGraph: anEvent ];
 			addShortcut: (BlShortcutWithAction new
@@ -349,6 +347,25 @@ GtFilterShortListSettingsElement >> updateListElement: anElement [
 	
 	anElement withAsyncFutureDo: [ :anElementFuture |
 		anElementFuture future: self filterViewModel someItemsFuture asAsyncFuture ].
+]
+
+{ #category : #'private - updating' }
+GtFilterShortListSettingsElement >> updateListElement: theListElement items: aCollection [
+	aCollection
+		ifEmpty: [ theListElement items: {GtFilterModelEmptyItem default} ]
+		ifNotEmpty: [ theListElement items: aCollection ]
+]
+
+{ #category : #'private - updating' }
+GtFilterShortListSettingsElement >> updateListElementOldWay: anElement [
+	"We use this method to demo a UI blocking issue.
+	See https://github.com/feenkcom/gtoolkit/issues/4327"
+
+	| aCollection |
+	self hasFilterViewModel ifFalse: [ ^ self ].
+
+	aCollection := self filterViewModel someItems.
+	self updateListElement: anElement items: aCollection
 ]
 
 { #category : #'private - updating' }
