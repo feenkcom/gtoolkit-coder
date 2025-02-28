@@ -34,7 +34,22 @@ GtFilterToggleSettingsElement >> initializeToggleGroupElement [
 	toggleGroupElement := BrToggleGroup new
 			aptitude: GtFilterToggleGroupAptitude new;
 			when: BrToggleActivatedEvent
-				do: [ :anEvent | self onToggleActivatedEvent: anEvent ]
+				do: [ :anEvent | self onToggleActivatedEvent: anEvent ];
+			withAsyncFutureDo: [ :anElementFuture |
+				anElementFuture
+					executionConfiguration: (AsyncFutureExecutionConfiguration new 
+						customGroup: #CoderFilter;
+						lowPriority);
+					whenPending: [ :theToggleGroup |
+						self 
+							updateToggleElement: theToggleGroup 
+							items: { GtFilterModelComputingItem default } ];
+					whenError: [ :theToggleGroup :anError |
+						self 
+							updateToggleElement: theToggleGroup 
+							items: { GtFilterModelExceptionItem freeze: anError } ];
+					whenSuccess: [ :theToggleGroup :aCollection |
+						self updateToggleElement: theToggleGroup items: aCollection ] ]
 ]
 
 { #category : #'private - updating' }
@@ -213,13 +228,20 @@ GtFilterToggleSettingsElement >> updateElement [
 	self updateToggles
 ]
 
+{ #category : #initialization }
+GtFilterToggleSettingsElement >> updateToggleElement: aToggleGroup items: aCollection [ 
+	aToggleGroup removeToggles.
+
+	aCollection doWithIndex: [ :eachItem :anIndex | 
+		| aToggle |
+		aToggle := self newToggleForItem: eachItem index: anIndex.
+		aToggleGroup addToggle: aToggle ]
+]
+
 { #category : #'private - updating' }
 GtFilterToggleSettingsElement >> updateToggles [
-	toggleGroupElement removeToggles.
-
-	self filterViewModel items
-		doWithIndex: [ :eachItem :anIndex | 
-			| aToggle |
-			aToggle := self newToggleForItem: eachItem index: anIndex.
-			toggleGroupElement addToggle: aToggle ]
+	self hasFilterViewModel ifFalse: [ ^ self ].
+	
+	toggleGroupElement withAsyncFutureDo: [ :anElementFuture |
+		anElementFuture future: self filterViewModel itemsFuture asAsyncFuture ].
 ]

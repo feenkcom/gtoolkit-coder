@@ -320,7 +320,7 @@ GtFilterModelExamples >> shortListModel [
 	aModel selectedItem: 'class'.
 	aModel name: 'Side'.
 	self
-		assert: aModel items
+		assert: aModel itemsFuture wait
 		equals: ({'instance'.
 				'class'} collect: #asFilterModelItem).
 	self assert: aModel selectedItem equals: 'class' asFilterModelItem.
@@ -356,7 +356,7 @@ GtFilterModelExamples >> shortListModelParameter [
 						aFilter includeWriters: true ] } ];
 			selectFirstItem;
 			displayAllItems.
-	self assert: aModel items size equals: 3.
+	self assert: aModel itemsFuture wait size equals: 3.
 
 	^ aModel
 ]
@@ -503,7 +503,7 @@ GtFilterModelExamples >> shortListModelWithIcons [
 	aModel selectFirstItem.
 	aModel name: 'Classes'.
 	self
-		assert: aModel items
+		assert: aModel itemsFuture wait
 		equals: {GtFilterModelClassItem new itemClass: Array.
 				GtFilterModelClassItem new itemClass: OrderedCollection.
 				GtFilterModelClassItem new itemClass: TGtAnnouncer.
@@ -540,7 +540,7 @@ GtFilterModelExamples >> shortListModelWithParameter_changeParameterValue [
 		to: aCollection.
 
 	aParameter := aModel parameters first.
-	aParameter selectedItem: aParameter items second.
+	aParameter selectedItem: aParameter itemsFuture wait second.
 	self assert: aCollection size equals: 1.
 	anAnnouncement := aCollection first.
 	self assert: anAnnouncement class equals: GtFilterModelParameterUpdated.
