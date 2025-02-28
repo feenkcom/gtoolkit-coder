@@ -22,7 +22,7 @@ GtFilterModelPluggableItemsBuilder >> create [
 
 { #category : #'api - instantiation' }
 GtFilterModelPluggableItemsBuilder >> createFuture [
-	^ self itemsBuilder createFuture
+	^ self itemsBuilder createFuture flatten
 		map: [ :anArray | 
 			anArray collect: [ :eachItem | 
 				GtFilterModelPluggableItem new

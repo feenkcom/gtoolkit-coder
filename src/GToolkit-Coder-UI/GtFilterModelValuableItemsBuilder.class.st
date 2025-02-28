@@ -21,7 +21,8 @@ GtFilterModelValuableItemsBuilder >> create [
 
 { #category : #'api - instantiation' }
 GtFilterModelValuableItemsBuilder >> createFuture [
-	^ [ self create ] asAsyncFuture
+	^ self valuable asAsyncFuture flatten 
+		map: [ :anArray | anArray collect: #asFilterModelItem ]
 ]
 
 { #category : #comparing }
