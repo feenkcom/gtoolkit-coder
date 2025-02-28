@@ -20,6 +20,17 @@ GtFilterModelPluggableItemsBuilder >> create [
 				label: self labelStencilBuilder ]
 ]
 
+{ #category : #'api - instantiation' }
+GtFilterModelPluggableItemsBuilder >> createFuture [
+	^ self itemsBuilder createFuture
+		map: [ :anArray | 
+			anArray collect: [ :eachItem | 
+				GtFilterModelPluggableItem new
+					object: eachItem itemValue;
+					icon: self iconStencilBuilder;
+					label: self labelStencilBuilder ] ]
+]
+
 { #category : #accessing }
 GtFilterModelPluggableItemsBuilder >> iconStencilBuilder [
 	^ iconStencilBuilder

@@ -11,6 +11,11 @@ GtFilterModelEmptyItemsBuilder >> create [
 	^ Array empty
 ]
 
+{ #category : #'api - instantiation' }
+GtFilterModelEmptyItemsBuilder >> createFuture [
+	^ Array empty asAsyncFuture
+]
+
 { #category : #accessing }
 GtFilterModelEmptyItemsBuilder >> firstItemDo: aBlock [
 	"do nothing"

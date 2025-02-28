@@ -47,5 +47,5 @@ TGtWithItemsSelector >> someItemsFuture [
 	"Return an async future that computes list items"
 
 	<return: #TAsyncFuture>
-	^ [ self someItems ] asAsyncFuture
+	^ self itemsSelector itemsFuture asAsyncFuture
 ]

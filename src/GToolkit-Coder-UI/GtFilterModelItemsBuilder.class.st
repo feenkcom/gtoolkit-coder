@@ -12,6 +12,14 @@ GtFilterModelItemsBuilder >> asFilterModelItemsBuilder [
 { #category : #'api - instantiation' }
 GtFilterModelItemsBuilder >> create [
 	<return: #Collection of: #GtFilterModelItem>
+	self deprecated: 'Use #createFuture instead'.
+	
+	^ self subclassResponsibility
+]
+
+{ #category : #'api - instantiation' }
+GtFilterModelItemsBuilder >> createFuture [
+	<return: #TAsyncFuture of: #Collection of: #GtFilterModelItem>
 	^ self subclassResponsibility
 ]
 
