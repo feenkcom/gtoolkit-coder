@@ -231,7 +231,7 @@ GtFilterShortListSettingsElement >> onFilterViewModelChanged [
 
 { #category : #'event handling' }
 GtFilterShortListSettingsElement >> onFiltersViewModelItemRemoved: anAnnouncement [
-	BlTaskAction enqueueElement: self action: [ self interruptListElementFuture ]
+	self interruptListElementFuture
 ]
 
 { #category : #'event handling' }
