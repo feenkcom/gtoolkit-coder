@@ -23,6 +23,10 @@ GtFiltersItemsViewModel >> onItemAdded: anAnnouncement [
 	self
 		announce: (GtFiltersViewModelItemAdded new
 				viewModel: self;
+				item: aViewModel).
+	aViewModel
+		announce: (GtFiltersViewModelItemAdded new
+				viewModel: self;
 				item: aViewModel)
 ]
 
@@ -32,6 +36,10 @@ GtFiltersItemsViewModel >> onItemRemoved: anAnnouncement [
 	aViewModel := self removeOldFilterViewModelFor: anAnnouncement item.
 	aViewModel ifNil: [ ^ self ].
 	self
+		announce: (GtFiltersViewModelItemRemoved new
+				viewModel: self;
+				item: aViewModel).
+	aViewModel
 		announce: (GtFiltersViewModelItemRemoved new
 				viewModel: self;
 				item: aViewModel)

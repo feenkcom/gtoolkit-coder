@@ -81,6 +81,15 @@ GtFilterShortListSettingsElement >> initializeShortcuts [
 				action: [ :anEvent | self onDisplayItemsEvent: anEvent ])
 ]
 
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> interruptListElementFuture [
+	self listElementDo: [ :anElement | 
+		anElement withAsyncFutureDo: [ :anElementFuture | 
+			anElementFuture 
+				cancelHard;
+				interrupt ] ]
+]
+
 { #category : #accessing }
 GtFilterShortListSettingsElement >> listElementDo: aBlock [
 	(listElement at: 1) ifNotNil: aBlock
@@ -151,6 +160,14 @@ GtFilterShortListSettingsElement >> newContentElement [
 				combination: BlKeyCombination builder primary end build;
 				action: [ self selectLast; scrollToSelection ] )".
 
+				
+	aListElement finalizationRegistry
+		add: aListElement
+		finalizer: (ObjectFinalizer new
+			receiver: self;
+			selector: #onListElementFinalization;
+			arguments: #()).
+				
 	self updateListElement: aListElement.
 	listElement at: 1 put: aListElement.
 	^ aListElement
@@ -213,6 +230,11 @@ GtFilterShortListSettingsElement >> onFilterViewModelChanged [
 ]
 
 { #category : #'event handling' }
+GtFilterShortListSettingsElement >> onFiltersViewModelItemRemoved: anAnnouncement [
+	BlTaskAction enqueueElement: self action: [ self interruptListElementFuture ]
+]
+
+{ #category : #'event handling' }
 GtFilterShortListSettingsElement >> onItemClick: aButton [
 	self hasFilterViewModel ifFalse: [ ^ self ].
 	self updateSelectedItem: aButton model from: aButton.
@@ -241,6 +263,11 @@ GtFilterShortListSettingsElement >> onItemsChanged: anAnnouncement [
 { #category : #'event handling' }
 GtFilterShortListSettingsElement >> onListElementAddedToSceneGraph: anEvent [
 	self focusFirstItemElementInList: anEvent currentTarget
+]
+
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onListElementFinalization [
+	self interruptListElementFuture
 ]
 
 { #category : #'event handling' }
@@ -299,7 +326,10 @@ GtFilterShortListSettingsElement >> subscribeToFilterViewModel [
 			to: self;
 		when: GtFilterViewModelSelectedItemChanged
 			send: #onSelectedItemChanged:
-			to: self
+			to: self;
+		when: GtFiltersViewModelItemRemoved
+			send: #onFiltersViewModelItemRemoved:
+			to: self.
 ]
 
 { #category : #'private - updating' }
