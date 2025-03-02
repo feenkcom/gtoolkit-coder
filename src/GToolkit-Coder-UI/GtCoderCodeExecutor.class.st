@@ -123,19 +123,6 @@ GtCoderCodeExecutor >> element: anElement [
 	element := anElement
 ]
 
-{ #category : #'api - accessing' }
-GtCoderCodeExecutor >> event [
-	self flag: 'I should not keep events, but rather #element'.
-	self halt.
-	^ nil
-]
-
-{ #category : #'api - accessing' }
-GtCoderCodeExecutor >> event: anObject [
-	self halt.
-	self flag: 'I should not receive events, but rather #element:'.
-]
-
 { #category : #'api - execution' }
 GtCoderCodeExecutor >> execute [
 	^ GtCoderExecutionContextVariable

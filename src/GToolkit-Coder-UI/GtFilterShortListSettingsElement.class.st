@@ -46,8 +46,6 @@ GtFilterShortListSettingsElement >> initialize [
 	handleElement := nil asWeakReference.
 	listElement := nil asWeakReference.
 	self initializeButtonElement.
-	self initializeDropdownAptitude.
-	buttonElement addAptitude: buttonAptitude.
 	self addChild: buttonElement as: #button.
 	self initializeEventHandlers.
 	self initializeShortcuts.
@@ -57,18 +55,15 @@ GtFilterShortListSettingsElement >> initialize [
 GtFilterShortListSettingsElement >> initializeButtonElement [
 	buttonElement := self newButtonElement
 			aptitude: BrGlamorousButtonWithIconAndLabelAptitude;
-			addAptitude: BrGlamorousButtonIconDropdownAptitude
-]
-
-{ #category : #initialization }
-GtFilterShortListSettingsElement >> initializeDropdownAptitude [
-	buttonAptitude := BrGlamorousWithDropdownAptitude
-			handle: [ self newHandleElement ]
-			content: [ self newContentElement ].
-	buttonAptitude beNotResizable.
-	buttonAptitude
-		when: BrDropdownIsHidden
-		do: [ :anEvent | self onDropdownIsHiddenEvent: anEvent ]
+			addAptitude: BrGlamorousButtonIconDropdownAptitude;
+			addAptitude: (BrGlamorousWithExplicitDropdownAptitude
+				handle: [ self newHandleElement ]
+				content: [ self newContentElement ]
+				do: [ :theAptitude |
+					theAptitude
+						withContainerDownUpDropdown;
+						when: BrDropdownIsHidden
+						do: [ :anEvent | self onDropdownIsHiddenEvent: anEvent ] ])
 ]
 
 { #category : #initialization }
@@ -125,6 +120,17 @@ GtFilterShortListSettingsElement >> newContentElement [
 					icon: self defaultItemIcon;
 					id: nil;
 					model: nil ];
+			withAsyncFutureDo: [ :anElementFuture |
+				anElementFuture
+					executionConfiguration: (AsyncFutureExecutionConfiguration new 
+						customGroup: #CoderFilter;
+						lowPriority);
+					whenPending: [ :theListElement |
+						theListElement items: { GtFilterModelComputingItem default } ];
+					whenError: [ :theListElement :anError | 
+						theListElement items: { (GtFilterModelExceptionItem freeze: anError) } ];
+					whenSuccess: [ :theListElement :aCollection |
+						self updateListElement: theListElement items: aCollection ] ];
 			when: BlElementAddedToSceneGraphEvent
 				do: [ :anEvent | self onListElementAddedToSceneGraph: anEvent ];
 			addShortcut: (BlShortcutWithAction new
@@ -332,35 +338,44 @@ GtFilterShortListSettingsElement >> updateHandleElement: anElement [
 
 { #category : #'private - updating' }
 GtFilterShortListSettingsElement >> updateListElement [
-	| aHeight aWidth anExtent |
-	aHeight := self filterViewModel items size.
-	aWidth := self filterViewModel items
-		inject: 3
-		into: [ :aMax :each | 
-			aMax > each labelSize 
-				ifTrue: [ aMax ] 
-				ifFalse: [ each labelSize ] ].
-	anExtent := (aWidth * 12) @ (aHeight * 12).
-	
-	buttonAptitude preferredExtent: anExtent.
-
 	self listElementDo: [ :anElement | self updateListElement: anElement ]
 ]
 
 { #category : #'private - updating' }
 GtFilterShortListSettingsElement >> updateListElement: anElement [
+	self hasFilterViewModel ifFalse: [ ^ self ].
+	
+	anElement withAsyncFutureDo: [ :anElementFuture |
+		anElementFuture future: self filterViewModel someItemsFuture asAsyncFuture ].
+]
+
+{ #category : #'private - updating' }
+GtFilterShortListSettingsElement >> updateListElement: theListElement items: aCollection [
+	aCollection
+		ifEmpty: [ theListElement items: {GtFilterModelEmptyItem default} ]
+		ifNotEmpty: [ theListElement items: aCollection ]
+]
+
+{ #category : #'private - updating' }
+GtFilterShortListSettingsElement >> updateListElementOldWay: anElement [
+	"We use this method to demo a UI blocking issue.
+	See https://github.com/feenkcom/gtoolkit/issues/4327"
+
 	| aCollection |
 	self hasFilterViewModel ifFalse: [ ^ self ].
+
 	aCollection := self filterViewModel someItems.
-	aCollection
-		ifEmpty: [ anElement items: {GtFilterModelEmptyItem default} ]
-		ifNotEmpty: [ anElement items: aCollection ]
+	self updateListElement: anElement items: aCollection
 ]
 
 { #category : #'private - updating' }
 GtFilterShortListSettingsElement >> updateSelectedItem: aFilterModelItem from: anElement [
 	aFilterModelItem ifNil: [ ^ self ].
 	aFilterModelItem isVirtualFilterModelItem ifTrue: [ ^ self ].
+	aFilterModelItem isExceptionFilterModelItem ifTrue: [
+		anElement phlow spawnObject: aFilterModelItem.
+		^ self ].
+	
 	self hasFilterViewModel ifFalse: [ ^ self ].
 	aFilterModelItem = self filterViewModel selectedItem ifTrue: [ ^ self ].
 	BlTaskAction

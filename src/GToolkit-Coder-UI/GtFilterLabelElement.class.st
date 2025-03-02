@@ -92,7 +92,13 @@ GtFilterLabelElement >> initializeStyling [
 { #category : #'event handling' }
 GtFilterLabelElement >> onClickEvent: anEvent [
 	anEvent consumed: true.
-	self requestFocus
+	anEvent modifiers isSoftAltOnly ifFalse: [
+		self requestFocus.
+		^ self ].
+	
+	GtFilterMethodDefinitionSpawner new
+		filterElement: self;
+		spawn
 ]
 
 { #category : #'event handling' }

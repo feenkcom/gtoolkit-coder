@@ -19,6 +19,12 @@ GtFilterModelValuableItemsBuilder >> create [
 	^ self valuable value collect: #asFilterModelItem
 ]
 
+{ #category : #'api - instantiation' }
+GtFilterModelValuableItemsBuilder >> createFuture [
+	^ self valuable asAsyncFuture flatten 
+		map: [ :anArray | anArray collect: #asFilterModelItem ]
+]
+
 { #category : #comparing }
 GtFilterModelValuableItemsBuilder >> hash [
 	^ self class hash bitXor: self valuable hash

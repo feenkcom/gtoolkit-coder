@@ -13,7 +13,7 @@ GtFilterStep >> assertFilterModelAtIndex: anIndex itemsCountIs: anItemsCount [
 						'item' asPluralBasedOn: anItemsCount});
 		referenceSender;
 		onParentStepTarget: self;
-		value: [ :aFilterItemsElement | (aFilterItemsElement filtersViewModel items at: anIndex) items size ]
+		value: [ :aFilterItemsElement | (aFilterItemsElement filtersViewModel items at: anIndex) itemsFuture wait size ]
 			equals: anItemsCount
 ]
 
@@ -27,14 +27,14 @@ GtFilterStep >> assertFilterModelAtIndex: anIndex itemsCountIsAtLeast: anItemsCo
 		referenceSender;
 		onParentStepTarget: self;
 		satisfies: [ :aFilterItemsElement | 
-				(aFilterItemsElement filtersViewModel items at: anIndex) items size
+				(aFilterItemsElement filtersViewModel items at: anIndex) itemsFuture wait size
 					>= anItemsCount ]
 			description: [ :aFilterItemsElement | 
 				'Filter at position {1} must have at least {2} {3}, but have {4}'
 					format: {anIndex.
 							anItemsCount.
 							'item' asPluralBasedOn: anItemsCount.
-							(aFilterItemsElement filtersViewModel items at: anIndex) items size} ]
+							(aFilterItemsElement filtersViewModel items at: anIndex) itemsFuture wait size} ]
 ]
 
 { #category : #'steps - checks' }
@@ -101,7 +101,7 @@ GtFilterStep >> clickOnDropdownFilterItem: aFilterItem [
 		label: ('Click on dropdown item: {1}' format: { aFilterItem });
 		referenceSender;
 		onSpaceRoot;
-		// BrAnchoredOuterContainer;
+		onDropdown: true;
 		// #scrollable;
 		onChildFromBlock: [ :anElement | anElement children detect: [ :each | each viewModel model = aFilterItem ] ]
 ]

@@ -7,18 +7,14 @@ Class {
 }
 
 { #category : #accessing }
-GtFilterSelectableItemViewModel >> items [
-	^ self filterModel items
-]
-
-{ #category : #accessing }
 GtFilterSelectableItemViewModel >> items: aCollection [
 	self filterModel items: aCollection
 ]
 
 { #category : #accessing }
-GtFilterSelectableItemViewModel >> itemsCount [
-	^ self filterModel items size
+GtFilterSelectableItemViewModel >> itemsFuture [
+	<return: #TAsyncFuture of: #Collection of: #GtFilterModelItem>
+	^ self filterModel itemsFuture
 ]
 
 { #category : #accessing }

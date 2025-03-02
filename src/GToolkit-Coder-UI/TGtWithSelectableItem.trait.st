@@ -10,6 +10,8 @@ Trait {
 { #category : #accessing }
 TGtWithSelectableItem >> items [
 	<return: #Collection of: #GtFilterModelItem>
+	self deprecated: 'Use #itemsFuture instead'.
+	
 	^ itemsBuilder create
 ]
 
@@ -65,6 +67,12 @@ TGtWithSelectableItem >> itemsBuilder: anObject [
 	aNewItemsBuilder filterModel: self.
 
 	self notifyItemsChanged
+]
+
+{ #category : #accessing }
+TGtWithSelectableItem >> itemsFuture [
+	<return: #TAsyncFuture of: #Collection of: #GtFilterModelItem>
+	^ itemsBuilder createFuture
 ]
 
 { #category : #'private - notifying' }

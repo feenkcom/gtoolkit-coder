@@ -41,3 +41,11 @@ TGtWithItemsSelector >> someItems [
 	<return: #Collection of: #GtFilterModelItem>
 	^ self itemsSelector items
 ]
+
+{ #category : #accessing }
+TGtWithItemsSelector >> someItemsFuture [
+	"Return an async future that computes list items"
+
+	<return: #TAsyncFuture>
+	^ self itemsSelector itemsFuture asAsyncFuture
+]

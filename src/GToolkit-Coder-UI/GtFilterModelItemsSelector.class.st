@@ -20,6 +20,14 @@ GtFilterModelItemsSelector >> filterModel: anObject [
 { #category : #accessing }
 GtFilterModelItemsSelector >> items [
 	<return: #Collection of: #GtFilterModelItem>
+	self deprecated: 'Use #createFuture instead'.
+	
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+GtFilterModelItemsSelector >> itemsFuture [
+	<return: #TAsyncFuture of: #Collection of: #GtFilterModelItem>
 	^ self subclassResponsibility
 ]
 

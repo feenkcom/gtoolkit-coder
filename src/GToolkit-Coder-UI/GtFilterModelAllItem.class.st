@@ -17,6 +17,11 @@ GtFilterModelAllItem class >> methodsLabel [
 	^ self new label: 'All methods'
 ]
 
+{ #category : #factory }
+GtFilterModelAllItem class >> pragmasLabel [
+	^ self new label: 'All pragmas'
+]
+
 { #category : #accessing }
 GtFilterModelAllItem >> ifSome: aBlock ifNone: aNoneBlock [
 	^ aNoneBlock value
@@ -30,11 +35,12 @@ GtFilterModelAllItem >> initialize [
 
 { #category : #accessing }
 GtFilterModelAllItem >> label [
-	^ 'All'
+	^ label
 ]
 
 { #category : #factory }
-GtFilterModelAllItem >> label: aString [ 
+GtFilterModelAllItem >> label: aString [
+	label := aString
 ]
 
 { #category : #convenience }
