@@ -52,6 +52,14 @@ GtFilterToggleSettingsElement >> initializeToggleGroupElement [
 						self updateToggleElement: theToggleGroup items: aCollection ] ]
 ]
 
+{ #category : #'event handling' }
+GtFilterToggleSettingsElement >> interruptToggleGroupFuture [
+	toggleGroupElement withAsyncFutureDo: [ :anElementFuture | 
+			anElementFuture 
+				cancelHard;
+				interrupt ]
+]
+
 { #category : #'private - updating' }
 GtFilterToggleSettingsElement >> newAptitudeForItem: anItem [
 	| anAptitude |
@@ -100,6 +108,11 @@ GtFilterToggleSettingsElement >> onEditWish: anEvent [
 GtFilterToggleSettingsElement >> onFilterViewModelChanged [
 	super onFilterViewModelChanged.
 	self updateElement
+]
+
+{ #category : #'event handling' }
+GtFilterToggleSettingsElement >> onFiltersViewModelItemRemoved: anAnnouncement [
+	BlTaskAction enqueueElement: self action: [ self interruptToggleGroupFuture ]
 ]
 
 { #category : #'event handling' }
@@ -208,7 +221,10 @@ GtFilterToggleSettingsElement >> subscribeToFilterViewModel [
 			to: self;
 		when: GtFilterViewModelSelectedItemChanged
 			send: #onSelectedItemChanged:
-			to: self
+			to: self;
+		when: GtFiltersViewModelItemRemoved
+			send: #onFiltersViewModelItemRemoved:
+			to: self.
 ]
 
 { #category : #'private - updating' }
