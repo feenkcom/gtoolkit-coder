@@ -708,12 +708,12 @@ GtTextualCoderViewModel >> removeStylersOfClass: aGtCoderStylerClass [
 	extraAddOns removeStylersOfClass: aGtCoderStylerClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - attribute state' }
 GtTextualCoderViewModel >> resetNodeAttributeMap [
 	nodeAttributeMap := Dictionary new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - attribute state' }
 GtTextualCoderViewModel >> saveAttribute: folder forNode: aNode [
 	self nodeAttributeMap at: aNode put: folder
 ]
