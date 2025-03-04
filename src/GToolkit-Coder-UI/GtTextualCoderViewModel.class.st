@@ -16,7 +16,8 @@ Class {
 		'shouldHaveHeader',
 		'isTextModifiedPromise',
 		'completionStrategy',
-		'debuggerInSpace'
+		'debuggerInSpace',
+		'nodeAttributeMap'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -112,6 +113,11 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 		stopPosition: anEndPosition).
 
 	^ newCoderTextAttributes
+]
+
+{ #category : #'api - styling' }
+GtTextualCoderViewModel >> allSavedAttributes [
+	^ self nodeAttributeMap values
 ]
 
 { #category : #'api - text' }
@@ -480,21 +486,22 @@ GtTextualCoderViewModel >> headerElementClass [
 { #category : #initialization }
 GtTextualCoderViewModel >> initialize [
 	super initialize.
-	
+
 	extraAddOns := GtTextualCoderAddOns new.
 	stylers := #().
 	shortcuts := #().
 	mainActions := #().
 	contextActions := #().
 	contextMenuActions := #().
-	
+
 	cursors := BrTextEditorMultipleCursor new.
 	selection := BlCompositeSelection new.
 	extraTextAttributes := OrderedCollection new.
-	
+
 	hasFocus := false.
 	expanded := true.
-	shouldHaveHeader := true
+	shouldHaveHeader := true.
+	self resetNodeAttributeMap
 ]
 
 { #category : #'api - text' }
@@ -553,6 +560,16 @@ GtTextualCoderViewModel >> moveCursorTo: aCursorIndex [
 { #category : #accessing }
 GtTextualCoderViewModel >> newCompletionStrategy [
 	^ GtCompletionStrategy new
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> nodeAttributeMap [
+	^ nodeAttributeMap
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> nodeAttributeMap: anObject [
+	nodeAttributeMap := anObject
 ]
 
 { #category : #'private - notifying' }
@@ -689,6 +706,16 @@ GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttribu
 { #category : #'api - shortcuts' }
 GtTextualCoderViewModel >> removeStylersOfClass: aGtCoderStylerClass [
 	extraAddOns removeStylersOfClass: aGtCoderStylerClass
+]
+
+{ #category : #'as yet unclassified' }
+GtTextualCoderViewModel >> resetNodeAttributeMap [
+	nodeAttributeMap := Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
+GtTextualCoderViewModel >> saveAttribute: folder forNode: aNode [
+	self nodeAttributeMap at: aNode put: folder
 ]
 
 { #category : #'api - selection' }
