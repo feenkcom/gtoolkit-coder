@@ -64,7 +64,7 @@ GtPreviewChangeButton >> initialize [
 	self beTinySize.
 
 	self aptitude: BrGlamorousButtonWithIconAptitude new +
-		(BrGlamorousWithDropdownAptitude
+		(BrGlamorousWithExplicitDropdownAptitude
 			handle: [
 				BrButton new
 					icon: BrGlamorousIcons empty;

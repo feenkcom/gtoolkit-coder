@@ -69,7 +69,7 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	button beTinySize.
 	button label: (label ifNil: [ 'Fix it' ]).
 	
-	dropDownAptitude := BrGlamorousWithDropdownAptitude
+	dropDownAptitude := BrGlamorousWithExplicitDropdownAptitude
 			handle: [ 
 				| dropdownButton |
 				dropdownButton := BrButton new.
