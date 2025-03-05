@@ -218,11 +218,6 @@ GtTextualCoderViewModel >> compositeStyler [
 ]
 
 { #category : #'api - add-ons' }
-GtTextualCoderViewModel >> computeAddOns [
-	^ self addOnsFuture await
-]
-
-{ #category : #'api - add-ons' }
 GtTextualCoderViewModel >> computeAddOnsFuture [
 	"Return a future that will be resolved to coder addons"
 	<return: #TAsyncFuture>
