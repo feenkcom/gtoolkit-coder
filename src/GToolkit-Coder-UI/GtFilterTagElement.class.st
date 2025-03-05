@@ -66,7 +66,7 @@ GtFilterTagElement >> createAndAddCompletionValuesDropdown [
 	self addChild: (self createFilterLabel
 		id: GtFilterTagLabelId;
 		text: aDefaultValue;
-		addAptitude: (BrGlamorousWithDropdownAptitude
+		addAptitude: (BrGlamorousWithExplicitDropdownAptitude
 			handle: [
 				BrHorizontalPane new
 					fitContent;
@@ -211,7 +211,7 @@ GtFilterTagElement >> createFilterLabel [
 GtFilterTagElement >> createFilterLabelHandle [
 	^ self createFilterLabel
 		id: GtFilterTagLabelId;
-		addAptitude: (BrGlamorousWithDropdownAptitude
+		addAptitude: (BrGlamorousWithExplicitDropdownAptitude
 			handle: [
 				BrHorizontalPane new
 					fitContent;

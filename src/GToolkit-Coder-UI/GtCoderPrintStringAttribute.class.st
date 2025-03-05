@@ -138,7 +138,7 @@ GtCoderPrintStringAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 		when: BlElementRemovedFromParentEvent do: [ :anEvent |
 			anEditorElement requestFocus ];
 		addChild: (hamburgerButton := BrButton new
-			aptitude: self actionButtonLook + (BrGlamorousWithDropdownAptitude
+			aptitude: self actionButtonLook + (BrGlamorousWithExplicitDropdownAptitude
 				handle: [ BrButton new
 					aptitude: BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude;
 					icon: BrGlamorousVectorIcons hamburger;

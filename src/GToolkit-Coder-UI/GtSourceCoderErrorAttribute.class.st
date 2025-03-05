@@ -34,7 +34,7 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 	button := self errorButton.
 	button id: GtSourceCoderErrorButtonElementId.
 	button
-		addAptitude: (aptitude := BrGlamorousWithDropdownAptitude
+		addAptitude: (aptitude := BrGlamorousWithExplicitDropdownAptitude
 					handle: [ self errorButton ]
 					content: [ | textElement pane |
 						pane := BrVerticalPane new.
@@ -52,7 +52,9 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 								textElement beFocusable.
 								textElement
 									when: BlClickEvent
-									do: [ :event | clickAction cull: anEditorElement cull: aptitude hide ].
+									do: [ :event | 
+										event currentTarget fireEvent: BrDropdownHideWish new.
+										clickAction cull: anEditorElement cull: aptitude ].
 
 								{BlKeyCombination escape.
 									BlKeyCombination enter.
@@ -63,23 +65,19 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 													combination: each;
 													repeatable: false;
 													action: [ :element | 
-														aptitude hide.
+														element fireEvent: BrDropdownHideWish new.
 														anEditorElement requestFocus ]) ].
 								textElement enqueueTask: [ textElement requestFocus ] asBlTask.
 								pane addChild: textElement ].
 						pane ]
-					aptitudeDo: [ :look | 
-						look
-							allActorsDepthFirstDo: [ :each | 
-								(each isKindOf: BrGlamorousAnchoredAptitude)
-									ifTrue: [ each
-											addChangeProperty: #(widget border)
-											with: [ BlBorder paint: BrGlamorousColors errorBackgroundColor asBlPaint width: 1 ] ] ].
-						look background: BrGlamorousColors errorBackgroundColor ]).
+					containerDo: [ :aMenuContainer | 
+						aMenuContainer 
+							border: (BlBorder paint: BrGlamorousColors errorBackgroundColor);
+							background: BrGlamorousColors errorBackgroundColor ]).
 	openOnFirstShow
 		ifTrue: [ button
 				enqueueTask: [ openOnFirstShow := false.
-					aptitude show ] asBlTask ].
+					button dispatchEvent: BrDropdownShowWish new ] asBlTask ].
 
 	^ button
 ]
