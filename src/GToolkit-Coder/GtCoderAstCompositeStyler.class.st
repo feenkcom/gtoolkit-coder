@@ -19,11 +19,18 @@ GtCoderAstCompositeStyler >> extraStyle: aText ast: theAst [
 GtCoderAstCompositeStyler >> style: aText ast: theAst [
 	self stylers do: [ :eachStyler |
 		[
+			GtCoderAstStyler telemetryComputationStartSignal: eachStyler.
+		
 			BlTextStylerTelemetry
 				time: [ 'Style using ', eachStyler class name ]
-				during: [ eachStyler style: aText ast: theAst ] ]
+				during: [ eachStyler style: aText ast: theAst ].
+				
+			GtCoderAstStyler telemetryComputationEndSignal: eachStyler.
+		]
 			on: Error
 			do: [ :anError |
+				GtCoderAstStyler telemetryComputationEndSignal: eachStyler.
+			
 				BlTextStylerTelemetry
 					time: [ 'Handle an error in ', eachStyler class name ]
 					during: [

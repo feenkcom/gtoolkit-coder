@@ -8,6 +8,27 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+GtCoderAstStyler class >> primitiveTelemetryComputationSignal: isStart object: anObject process: aProcess [
+	<primitive: 'primitiveTelemetryObjectSignal'>
+]
+
+{ #category : #'as yet unclassified' }
+GtCoderAstStyler class >> telemetryComputationEndSignal: anObject [
+	self
+		primitiveTelemetryComputationSignal: false
+		object: anObject
+		process: Processor activeProcess
+]
+
+{ #category : #'as yet unclassified' }
+GtCoderAstStyler class >> telemetryComputationStartSignal: anObject [
+	self
+		primitiveTelemetryComputationSignal: true
+		object: anObject
+		process: Processor activeProcess
+]
+
+{ #category : #'as yet unclassified' }
 GtCoderAstStyler >> anyCursorsInRange: textRange [
 	^ self coderViewModel cursors positions
 		anySatisfy: [ :each | textRange includes: each ]
