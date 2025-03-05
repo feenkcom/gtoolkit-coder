@@ -122,7 +122,7 @@ GtFilterStep >> clickOnDropdownFilterItemLabeled: aLabel [
 		label: ('Click on dropdown item with label {1}' format: {aLabel});
 		referenceSender;
 		onSpaceRoot;
-		// BrAnchoredOuterContainer;
+		onDropdown: true;
 		// #scrollable;
 		onChildFromBlock: [ :anElement | anElement children detect: [ :each | each children last text asString = aLabel ] ]
 ]
