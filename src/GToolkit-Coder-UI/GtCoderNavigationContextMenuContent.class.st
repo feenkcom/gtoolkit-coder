@@ -15,8 +15,10 @@ GtCoderNavigationContextMenuContent >> menuItemStencil [
 		padding: self itemPadding;
 		when: BlClickEvent
 			do: [ e value cull: self anchor.
-				self anchor
-					dispatchEvent: (BrContextMenuHideWish new
+				self fireEvent: (BrContextMenuHideWish new
+							anchor: self anchor;
+							yourself).
+				self fireEvent: (BrDropdownHideWish new
 							anchor: self anchor;
 							yourself) ];
 		addChild: (self itemLabelFor: e key);
