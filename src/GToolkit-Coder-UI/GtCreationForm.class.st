@@ -214,7 +214,7 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 							ifNotNil: [ (GtCompletionController on: aLabel strategy: aCompletionStrategy) install ].
 						aContextMenuBlock
 							ifNotNil: [ aLabel
-									addAptitude: (BrGlamorousWithContextMenuAptitude
+									addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
 											content: [ aContextMenuBlock
 													value: aTag name
 													value: aLabel

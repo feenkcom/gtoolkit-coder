@@ -208,10 +208,10 @@ GtCoderClassesTreeElement >> createLabel: aString description: description [
 GtCoderClassesTreeElement >> createNodeElement [
 	^ GtCoderClassesTreeItemElement new
 		addEventHandler: self createClassDropHandler;
-		addAptitude: (BrGlamorousWithContextMenuAptitude
-				content: [ :aWidget | 
-					GtCoderNavigationContextMenuContent new
-						items: (self contextMenuItemsFor: aWidget theClass) ])
+		in: [ :aWidget | 
+			aWidget addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
+				itemsWithAnchorActions: [ (self contextMenuItemsFor: aWidget theClass) ]) ];
+		yourself.
 ]
 
 { #category : #initialization }

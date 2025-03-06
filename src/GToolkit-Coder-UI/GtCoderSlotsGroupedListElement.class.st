@@ -52,9 +52,8 @@ GtCoderSlotsGroupedListElement >> createSlotGroups [
 				
 				label text: slotText.
 				label
-					addAptitude: (BrGlamorousWithContextMenuAptitude
-							content: [ GtCoderNavigationContextMenuContent new
-									items: (self slotListContextMenuItemsFor: item) ]).
+					addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
+							itemsWithAnchorActions: [ (self slotListContextMenuItemsFor: item) ]).
 				element addChild: label ];
 			shouldShowWithoutItems: false.
 	classSlotGroup := instanceGroup copy domainObject: 'class-side slots'.
