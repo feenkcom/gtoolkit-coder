@@ -146,7 +146,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 	^ button
 		beTinySize;
 		aptitude: BrGlamorousButtonWithIconAptitude +
-			(BrGlamorousWithDropdownAptitude
+			(BrGlamorousWithExplicitDropdownAptitude
 				handle: [ | aButton |
 					aButton := BrButton new.
 					aGtCoderAction title

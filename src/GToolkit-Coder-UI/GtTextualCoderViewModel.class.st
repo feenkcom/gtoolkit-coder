@@ -218,11 +218,6 @@ GtTextualCoderViewModel >> compositeStyler [
 ]
 
 { #category : #'api - add-ons' }
-GtTextualCoderViewModel >> computeAddOns [
-	^ self addOnsFuture await
-]
-
-{ #category : #'api - add-ons' }
 GtTextualCoderViewModel >> computeAddOnsFuture [
 	"Return a future that will be resolved to coder addons"
 	<return: #TAsyncFuture>
@@ -251,9 +246,14 @@ GtTextualCoderViewModel >> computeAddOnsFuture [
 		theAst ifNotNil: [
 			pragmas reverseDo: [ :eachPragma |
 				[ 
+				
+				BlFrameTelemetry telemetryComputationStartSignal: eachPragma.
+				
 				aCoderModel
 					perform: eachPragma methodSelector
 					withEnoughArguments: { theAst . newAddOns . self }.
+					
+				BlFrameTelemetry telemetryComputationEndSignal: eachPragma.
 
 				GtCoderAddOnCreatedSignal new
 					coderViewModel: self;
@@ -262,6 +262,8 @@ GtTextualCoderViewModel >> computeAddOnsFuture [
 					emit. ]
 				on: Error
 				do: [ :anError |
+					BlFrameTelemetry telemetryComputationEndSignal: eachPragma.
+				
 					"emit as a beacon signal"
 					anError emit.
 					

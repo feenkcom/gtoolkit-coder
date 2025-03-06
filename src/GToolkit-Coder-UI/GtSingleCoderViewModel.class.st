@@ -158,11 +158,6 @@ GtSingleCoderViewModel >> codersUIModel: anObject [
 ]
 
 { #category : #'private - addons' }
-GtSingleCoderViewModel >> computeAddOns [
-	self subclassResponsibility
-]
-
-{ #category : #'private - addons' }
 GtSingleCoderViewModel >> computeAddOnsFuture [
 	<return: #TAsyncFuture>
 

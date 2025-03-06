@@ -251,10 +251,9 @@ GtFilterItemsElement >> newAddFilterButton [
 				aStyle background: self theme status neutralBackgroundColor darker darker ];
 			focused: [ :aStyle | 
 				aStyle border: (BlBorder paint: self theme editor focusedBorderColor width: 1) ]);
-		addAptitude: (BrGlamorousWithDropdownAptitude
+		addAptitude: (BrGlamorousWithExplicitDropdownAptitude
 			handle: [ self newAddFilterHandleElement ]
-			content: [ self createDropdownContent ])
-				beNotResizable;
+			content: [ self createDropdownContent ]);
 		margin: (BlInsets left: 2);
 		constraintsDo: [ :c | c flow vertical alignCenter ];
 		beFocusable;

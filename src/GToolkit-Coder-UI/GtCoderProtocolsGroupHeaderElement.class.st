@@ -41,7 +41,7 @@ GtCoderProtocolsGroupHeaderElement >> createAddProtocolButton [
 			aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0) + BrGlamorousButtonIconAptitude;
 			icon: BrGlamorousVectorIcons add ] asStencil.
 
-	aPopUp := BrGlamorousWithDropdownAptitude
+	aPopUp := BrGlamorousWithExplicitDropdownAptitude
 			handle: aButtonStencil
 			content: [ :aButton | self createNewProtocolForm ].
 
