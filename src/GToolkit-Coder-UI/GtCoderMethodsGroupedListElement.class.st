@@ -44,9 +44,8 @@ GtCoderMethodsGroupedListElement >> buildMethodItem [
 		vFitContent;
 		beSmallSize;
 		aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude
-				+ (BrGlamorousWithContextMenuAptitude
-						content: [ GtCoderNavigationContextMenuContent new
-								items: (self methodListContextMenuItemsFor: (aLabel userData at: #method)) ]).
+				+ (BrGlamorousWithExplicitContextMenuAptitude
+						itemsWithAnchorActions: [ (self methodListContextMenuItemsFor: (aLabel userData at: #method)) ]).
 
 	aLabel addEventHandler: self createMethodDragHandler.
 

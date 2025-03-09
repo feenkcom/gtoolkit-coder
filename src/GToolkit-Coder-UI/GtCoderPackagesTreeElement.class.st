@@ -124,9 +124,8 @@ GtCoderPackagesTreeElement >> initialize [
 					anItemElement
 						hMatchParent;
 						vFitContent;
-						addAptitude: (BrGlamorousWithContextMenuAptitude
-								content: [ GtCoderNavigationContextMenuContent new
-										items: (self contextMenuItemsFor: anItemElement packageOrTag) ]) ] ];
+						addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
+								itemsWithAnchorActions: [ (self contextMenuItemsFor: anItemElement packageOrTag) ]) ] ];
 		nodeDataBinder: [ :aPackageElement :aPackage | 
 			aPackageElement id asSymbol = #'coder--package-rename'
 				ifTrue: [ aPackageElement removeChildren.

@@ -93,7 +93,8 @@ GtCoderProtocolsGroupedListElement >> createProtocolGroups [
 GtCoderProtocolsGroupedListElement >> createProtocolLabelElement [
 	"An element that represents a protocol within a list of protocols"
 	<return: #BlElement>
-	| aLabelAptitude |
+	| aLabel aLabelAptitude |
+	aLabel := BrLabel new.
 
 	aLabelAptitude := BrGlamorousLabelAptitude new
 			padding: (BlInsets
@@ -102,12 +103,10 @@ GtCoderProtocolsGroupedListElement >> createProtocolLabelElement [
 					left: 1
 					right: 1);
 			add: BrGlamorousListItemAptitude;
-			add: (BrGlamorousWithContextMenuAptitude
-					content: [ :aWidget | 
-						GtCoderNavigationContextMenuContent new
-							items: (self createProtocolListContextMenuItemsFor: (aWidget userData at: #protocol)) ]).
+			add: (BrGlamorousWithExplicitContextMenuAptitude
+					itemsWithAnchorActions: [ (self createProtocolListContextMenuItemsFor: (aLabel userData at: #protocol)) ]).
 
-	^ BrLabel new
+	^ aLabel
 		hMatchParent;
 		vFitContent;
 		beSmallSize;
