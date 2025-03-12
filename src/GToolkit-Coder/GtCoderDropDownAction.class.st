@@ -1,3 +1,6 @@
+"
+Use {{gtClass:GtCoderDropDownMenuAction}} instead.
+"
 Class {
 	#name : #GtCoderDropDownAction,
 	#superclass : #GtCoderAction,

@@ -256,12 +256,47 @@ GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock
 ]
 
 { #category : #'api - main actions' }
-GtCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
+GtCoderAddOns >> addDropDownAction: aString icon: anIcon content: aBlock [
 	| newAction |
-	newAction := GtCoderDropDownAction new
+	newAction := GtCoderDropDownMenuAction new
 		title: aString;
 		icon: anIcon;
-		stencil: aBlock.
+		content: aBlock.
+	mainActions add: newAction.
+	^ newAction
+]
+
+{ #category : #'api - main actions' }
+GtCoderAddOns >> addDropDownAction: aString icon: anIcon items: aBlock [
+	| newAction |
+	newAction := GtCoderDropDownMenuAction new
+		title: aString;
+		icon: anIcon;
+		items: aBlock.
+	mainActions add: newAction.
+	^ newAction
+]
+
+{ #category : #'api - main actions' }
+GtCoderAddOns >> addDropDownAction: aString icon: anIcon menu: aBlock [
+	| newAction |
+	newAction := GtCoderDropDownMenuAction new
+		title: aString;
+		icon: anIcon;
+		menu: aBlock.
+	mainActions add: newAction.
+	^ newAction
+]
+
+{ #category : #'api - main actions' }
+GtCoderAddOns >> addDropDownAction: aString icon: anIcon stencil: aBlock [
+	"Use #GtCoderAddOns>>#addDropDownAction:icon:content: instead."
+
+	| newAction |
+	newAction := GtCoderDropDownAction new
+			title: aString;
+			icon: anIcon;
+			stencil: aBlock.
 	mainActions add: newAction.
 	^ newAction
 ]
