@@ -47,6 +47,12 @@ GtCoderAction >> actionDefinition [
 					ifNil: [ GtCoderActionNoDefinition default ] ]
 ]
 
+{ #category : #accessing }
+GtCoderAction >> actionDefinitionFromBlock: aBlock [
+	aBlock isClosure ifFalse: [ ^ self ].
+	actionDefinition := GtCoderActionClosureDefinition new closure: aBlock
+]
+
 { #category : #testing }
 GtCoderAction >> allowAltClick [
 	^ (allowAltClick ifNil: [ true ]) and: [ self actionDefinition isDefined ]

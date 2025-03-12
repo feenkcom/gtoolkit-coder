@@ -104,6 +104,35 @@ GtCoderActionsElement >> newButtonForAction: aGtCoderAction [
 ]
 
 { #category : #'instance creation' }
+GtCoderActionsElement >> newDropButtonDefaultMenuForAction: aGtCoderAction [
+	| titleElement containerElement classCompleter |
+	containerElement := BlElement new
+			layout: BlLinearLayout vertical;
+			constraintsDo: [ :c | 
+				c horizontal exact: 200.
+				c vertical fitContent ].
+	titleElement := BrEditorElement new
+			aptitude: BrGlamorousInputFieldSpacingAptitude;
+			editor: (BrTextEditorModel new text: '' asRopedText);
+			requestFocus;
+			constraintsDo: [ :c | 
+				c margin: (BlInsets top: 1).
+				c horizontal matchParent.
+				c vertical fitContent ].
+	classCompleter := GtCompletionController
+			on: titleElement
+			strategy: GtCoderClassWithPackageCompletionStrategy new.
+	classCompleter install.
+	classCompleter announcer
+		when: GtCompleterCompletionAccepted
+		do: [ :event | 
+			aGtCoderAction action value: titleElement editor text asString asClass.
+			titleElement fireEvent: BrDropdownHideWish new ].
+	containerElement addChild: titleElement.
+	^ containerElement
+]
+
+{ #category : #'instance creation' }
 GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 	<return: #BrButton>
 	| button aContentStencil |
@@ -111,57 +140,68 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 
 	aGtCoderAction title
 		ifNotNil: [ button label: aGtCoderAction title asRopedText ].
-	aGtCoderAction icon
-		ifNotNil: [ button icon: aGtCoderAction icon asElement ].
-		
+	aGtCoderAction icon ifNotNil: [ button icon: aGtCoderAction icon asElement ].
+
 	aContentStencil := aGtCoderAction stencil
-		ifNil: [ | classCompleter containerElement titleElement |
-					containerElement := BlElement new
-						layout: BlLinearLayout vertical;
-						constraintsDo: [ :c | 
-							c horizontal exact: 200.
-							c vertical fitContent ].
-					titleElement := BrEditorElement new
-						aptitude: BrGlamorousInputFieldSpacingAptitude;
-						editor: (BrTextEditorModel new text: '' asRopedText);
-						requestFocus;
-						constraintsDo: [ :c | 
-							c margin: (BlInsets top: 1).
-							c horizontal matchParent.
-							c vertical fitContent ].
-					classCompleter := GtCompletionController
-						on: titleElement
-						strategy: GtCoderClassWithPackageCompletionStrategy new.
-					classCompleter install.
-					classCompleter announcer
-						when: GtCompleterCompletionAccepted
-						do: [ :event | 
-							aGtCoderAction action value: titleElement editor text asString asClass.
-							titleElement fireEvent: BrDropdownHideWish new ].
-					containerElement addChild: titleElement.
-					containerElement ].
+			ifNil: [ self newDropButtonDefaultMenuForAction: aGtCoderAction ].
 
 	self initializeAltClick: aGtCoderAction element: button.
-					
+
 	^ button
 		beTinySize;
-		aptitude: BrGlamorousButtonWithIconAptitude +
-			(BrGlamorousWithExplicitDropdownAptitude
-				handle: [ | aButton |
-					aButton := BrButton new.
-					aGtCoderAction title
-						ifNotNil: [ aButton label: aGtCoderAction title asRopedText ].
-					aGtCoderAction icon
-						ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
-					aButton
-						beSmallSize;
-						aptitude:
-							BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
-								- BrGlamorousButtonExteriorAptitude;
-						padding: BlInsets empty;
-						margin: BlInsets empty;
-						yourself ]
-				content: aContentStencil);
+		aptitude: BrGlamorousButtonWithIconAptitude
+				+ (BrGlamorousWithExplicitDropdownAptitude
+						handle: [ | aButton |
+							aButton := BrButton new.
+							aGtCoderAction title
+								ifNotNil: [ aButton label: aGtCoderAction title asRopedText ].
+							aGtCoderAction icon
+								ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
+							aButton
+								beSmallSize;
+								aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
+										- BrGlamorousButtonExteriorAptitude;
+								padding: BlInsets empty;
+								margin: BlInsets empty;
+								yourself ]
+						content: aContentStencil);
+		yourself
+]
+
+{ #category : #'instance creation' }
+GtCoderActionsElement >> newDropButtonMenuForAction: aGtCoderAction [
+	<return: #BrButton>
+	| button aMenuStencil |
+	button := BrButton new.
+
+	aGtCoderAction title
+		ifNotNil: [ button label: aGtCoderAction title asRopedText ].
+	aGtCoderAction icon ifNotNil: [ button icon: aGtCoderAction icon asElement ].
+
+	aMenuStencil := aGtCoderAction menuStencil
+			ifNil: [ [ BrMenuExplicit new
+					stencil: [ self newDropButtonDefaultMenuForAction: aGtCoderAction ] ] ].
+
+	self initializeAltClick: aGtCoderAction element: button.
+
+	^ button
+		beTinySize;
+		aptitude: BrGlamorousButtonWithIconAptitude
+				+ (BrGlamorousWithExplicitDropdownAptitude
+						handle: [ | aButton |
+							aButton := BrButton new.
+							aGtCoderAction title
+								ifNotNil: [ aButton label: aGtCoderAction title asRopedText ].
+							aGtCoderAction icon
+								ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
+							aButton
+								beSmallSize;
+								aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
+										- BrGlamorousButtonExteriorAptitude;
+								padding: BlInsets empty;
+								margin: BlInsets empty;
+								yourself ]
+						menu: aMenuStencil);
 		yourself
 ]
 
