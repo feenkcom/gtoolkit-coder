@@ -4,5 +4,6 @@ Extension { #name : #GtSearchFilter }
 GtSearchFilter >> gtDefaultInspectorTool [
 	^ GtPhlowCompositeTool new
 		addTool: (GtPhlowSearchFilterTool forSearchFilter: self);
-		addTool: (super gtDefaultInspectorTool)
+		addTool: (super gtDefaultInspectorTool);
+		name: 'Filter: ', self gtDisplayString
 ]
