@@ -145,7 +145,7 @@ GtTextualCoderEditorElement >> initialize [
 		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude menu: [ self createContextMenu ]);
 		padding: BlInsets empty;
 		hMatchParent;
-		vFitContent.
+		vFitContentLimited.
 
 	self id: GtSourceCoderEditorId.
 
