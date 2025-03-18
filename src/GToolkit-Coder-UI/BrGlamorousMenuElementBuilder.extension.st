@@ -18,6 +18,9 @@ BrGlamorousMenuElementBuilder >> visitTextualCoderMenu: aMenuModel [
 			withAllPinActions);
 		addAptitude: (BrMenuHideableAptitude new menuModel: aMenuModel);
 		addAptitude: BrMenuCommonAptitude new.
+		
+	aMenuModel id ifNotNil: [ :anId |
+		aCoderElement id: anId ].
 	
 	^ aCoderElement
 ]
