@@ -116,8 +116,8 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 ]
 
 { #category : #'api - styling' }
-GtTextualCoderViewModel >> allSavedAttributes [
-	^ self nodeAttributeMap values
+GtTextualCoderViewModel >> allSavedAttributesForStyler: aStyler [
+	^ (self nodeAttributeMapForStyler: aStyler) values
 ]
 
 { #category : #'api - text' }
@@ -503,7 +503,7 @@ GtTextualCoderViewModel >> initialize [
 	hasFocus := false.
 	expanded := true.
 	shouldHaveHeader := true.
-	self resetNodeAttributeMap
+	nodeAttributeMap := Dictionary new
 ]
 
 { #category : #'api - text' }
@@ -565,13 +565,8 @@ GtTextualCoderViewModel >> newCompletionStrategy [
 ]
 
 { #category : #accessing }
-GtTextualCoderViewModel >> nodeAttributeMap [
-	^ nodeAttributeMap
-]
-
-{ #category : #accessing }
-GtTextualCoderViewModel >> nodeAttributeMap: anObject [
-	nodeAttributeMap := anObject
+GtTextualCoderViewModel >> nodeAttributeMapForStyler: aStyler [
+	^ nodeAttributeMap at: aStyler class ifAbsentPut: [Dictionary new]
 ]
 
 { #category : #'private - notifying' }
@@ -711,13 +706,13 @@ GtTextualCoderViewModel >> removeStylersOfClass: aGtCoderStylerClass [
 ]
 
 { #category : #'api - attribute state' }
-GtTextualCoderViewModel >> resetNodeAttributeMap [
-	nodeAttributeMap := Dictionary new
+GtTextualCoderViewModel >> resetNodeAttributeMapForStyler: aStyler [
+	nodeAttributeMap at: aStyler class put: Dictionary new
 ]
 
 { #category : #'api - attribute state' }
-GtTextualCoderViewModel >> saveAttribute: folder forNode: aNode [
-	self nodeAttributeMap at: aNode put: folder
+GtTextualCoderViewModel >> saveAttribute: folder forNode: aNode andStyler: aStyler [
+	(self nodeAttributeMapForStyler: aStyler) at: aNode put: folder
 ]
 
 { #category : #'api - selection' }

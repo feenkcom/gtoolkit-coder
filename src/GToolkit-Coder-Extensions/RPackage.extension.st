@@ -57,6 +57,14 @@ RPackage >> gtDefinedClassesFor: aView context: aPhlowContext [
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
+RPackage >> gtDefinedClassesWithPossibleDuplicatesDo: aBlock [
+	classes do: [:each |
+		Smalltalk globals
+			at: each
+			ifPresent: [:aClass| aBlock value: aClass ]].
+]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtDefinedTagsFor: aView context: aPhlowContext [
 	<gtPackageView>
 	(aPhlowContext isKindOf: GtPhlowExecutionContext) ifFalse: [ ^ aView empty ].
