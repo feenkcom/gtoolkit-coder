@@ -7,6 +7,16 @@ Class {
 	#category : #'GToolkit-Coder-UI'
 }
 
+{ #category : #cleanup }
+GtPharoCoderHierarchyDropdownConfiguration class >> cleanUp: aggressive [
+	aggressive ifTrue: [ preferredExtent := nil ]
+]
+
+{ #category : #accessing }
+GtPharoCoderHierarchyDropdownConfiguration class >> defaultPreferredExtent [
+	^ 800 @ 400
+]
+
 { #category : #accessing }
 GtPharoCoderHierarchyDropdownConfiguration class >> gtConfiguration [
 	^ {GtPhlowOverviewItem new
@@ -30,10 +40,17 @@ GtPharoCoderHierarchyDropdownConfiguration class >> gtConfigurationFor: aView [
 
 { #category : #accessing }
 GtPharoCoderHierarchyDropdownConfiguration class >> preferredExtent [
-	^ preferredExtent ifNil: [ preferredExtent := 800 @ 400 ]
+	^ preferredExtent ifNil: [ preferredExtent := self defaultPreferredExtent ]
 ]
 
 { #category : #accessing }
 GtPharoCoderHierarchyDropdownConfiguration class >> preferredExtent: anObject [
 	preferredExtent := anObject
+]
+
+{ #category : #accessing }
+GtPharoCoderHierarchyDropdownConfiguration class >> preferredExtentOrNil [
+	"Just for testing purposes."
+
+	^ preferredExtent
 ]
