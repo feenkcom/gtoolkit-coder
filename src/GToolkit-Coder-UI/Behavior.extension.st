@@ -31,7 +31,7 @@ Behavior >> gtHierarchyButtonFor: anAction [
 		id: GtCoderClassHierarchyButtonId;
 		priority: 3;
 		preferredExtentFrom: GtPharoCoderHierarchyDropdownConfiguration;
-		content: [ :aButton | 
+		content: [ :aButton :aTargetElement :anExplicitMenu | 
 			| aNavigationModel |
 			aNavigationModel := aButton phlow firstParentCoderNavigationModel.
 			BlElement new
@@ -39,5 +39,8 @@ Behavior >> gtHierarchyButtonFor: anAction [
 				addChild: ((GtCoderNavigationTabsStencil new
 						pragmaName: #gtCoderDropdownNavigation;
 						navigationModel: aNavigationModel;
-						asElement) background: Color white) ]
+						asElement) background: Color white);
+				addAptitude: (BrGlamorousMenuPinnableAptitude new
+					withAllPinActions;
+					menuModel: anExplicitMenu) ]
 ]
