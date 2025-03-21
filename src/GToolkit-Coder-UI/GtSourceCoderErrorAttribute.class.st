@@ -64,8 +64,8 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 											addShortcut: (BlShortcutWithAction new
 													combination: each;
 													repeatable: false;
-													action: [ :element | 
-														element fireEvent: BrDropdownHideWish new.
+													action: [ :aShortcutEvent :aShortcutAction | 
+														aShortcutEvent currentTarget fireEvent: BrDropdownHideWish new.
 														anEditorElement requestFocus ]) ].
 								textElement enqueueTask: [ textElement requestFocus ] asBlTask.
 								pane addChild: textElement ].
