@@ -7,12 +7,22 @@ Class {
 	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
+{ #category : #'as yet unclassified' }
+GtCoderAstCompositeStyler >> = anObject [
+	^self class == anObject class and: [self stylers = anObject stylers]
+]
+
 { #category : #'api - styling' }
 GtCoderAstCompositeStyler >> extraStyle: aText ast: theAst [
 	self stylers do: [ :eachStyler |
 		BlTextStylerTelemetry
 			time: [ 'Extra style using ', eachStyler class name ]
 			during: [ eachStyler extraStyle: aText ast: theAst ] ]
+]
+
+{ #category : #'as yet unclassified' }
+GtCoderAstCompositeStyler >> hash [
+	^ self class hash xor: self stylers hash
 ]
 
 { #category : #'api - styling' }
