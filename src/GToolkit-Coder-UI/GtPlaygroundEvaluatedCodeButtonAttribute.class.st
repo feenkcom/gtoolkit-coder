@@ -31,7 +31,7 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> affect: aTBrTextEditorTextualPiece i
 		aptitude: (BrLazyStyleCommonAptitude new
 				default: [ :aStyle | aStyle background: BrGlamorousColors defaultButtonBorderColor ];
 				hovered: [ :aStyle | aStyle background: BrGlamorousColors hoveredButtonBorderColor ])
-				+ ((BrGlamorousWithTooltipAptitude
+				+ ((BrGlamorousWithExplicitTooltipAptitude
 						content: [ | aContainer |
 							aContainer := BlElement new
 									layout: BlFrameLayout new;

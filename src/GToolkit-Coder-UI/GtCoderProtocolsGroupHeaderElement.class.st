@@ -35,10 +35,10 @@ GtCoderProtocolsGroupHeaderElement >> addProtocolNamed: aProtocolName in: aClass
 { #category : #'as yet unclassified' }
 GtCoderProtocolsGroupHeaderElement >> createAddProtocolButton [
 	| aButtonStencil aPopUp |
-	aButtonStencil := [
-		BrButton new
+	aButtonStencil := [ BrButton new
 			beTinySize;
-			aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0) + BrGlamorousButtonIconAptitude;
+			aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0)
+					+ BrGlamorousButtonIconAptitude;
 			icon: BrGlamorousVectorIcons add ] asStencil.
 
 	aPopUp := BrGlamorousWithExplicitDropdownAptitude
@@ -47,8 +47,8 @@ GtCoderProtocolsGroupHeaderElement >> createAddProtocolButton [
 
 	^ aButtonStencil asElement
 		addAptitude: (BrGlamorousButtonFlatExteriorAptitude new
-			backgroundPaint: (Color gray alpha: 0.1));
-		addAptitude: BrGlamorousButtonWithLabelTooltipAptitude;
+				backgroundPaint: (Color gray alpha: 0.1));
+		addAptitude: BrGlamorousButtonWithLabelTooltipAptitude2;
 		addAptitude: aPopUp;
 		label: 'Add new protocol'
 ]
@@ -106,7 +106,7 @@ GtCoderProtocolsGroupHeaderElement >> createNewProtocolForm [
 					+ BrGlamorousButtonIconAptitude
 					+ (BrGlamorousButtonFlatExteriorAptitude new
 							backgroundPaint: (Color gray alpha: 0.1))
-					+ BrGlamorousButtonWithLabelTooltipAptitude;
+					+ BrGlamorousButtonWithLabelTooltipAptitude2;
 			icon: BrGlamorousVectorIcons accept;
 			label: 'Add protocol';
 			action: [ self addProtocolFrom: aProtocolEditor ].

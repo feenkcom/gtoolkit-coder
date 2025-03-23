@@ -159,7 +159,7 @@ GtCoderActionsElement >> newDropButtonForAction: aGtCoderAction [
 								ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
 							aButton
 								beSmallSize;
-								aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
+								aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude2
 										- BrGlamorousButtonExteriorAptitude;
 								padding: BlInsets empty;
 								margin: BlInsets empty;
@@ -196,7 +196,7 @@ GtCoderActionsElement >> newDropButtonMenuForAction: aGtCoderAction [
 								ifNotNil: [ aButton icon: aGtCoderAction icon asElement ].
 							aButton
 								beSmallSize;
-								aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
+								aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude2
 										- BrGlamorousButtonExteriorAptitude;
 								padding: BlInsets empty;
 								margin: BlInsets empty;

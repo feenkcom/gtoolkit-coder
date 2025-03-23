@@ -113,9 +113,9 @@ GtFilterItemsElement >> addRemoveButtonIconTo: anElement [
 	anElement clipChildren: false.
 	aRemoveButton := self newRemoveButton.
 	aRemoveButton visibility: BlVisibility gone.
-	aRemoveButton addAptitude: (BrGlamorousWithLabelTooltipAptitude 
+	aRemoveButton addAptitude: (BrGlamorousWithExplicitTooltipAptitude 
 		text: 'Remove' 
-		keymap: aKeyMap).
+		shortcut: aKeyMap).
 	aRemoveButton action: [ :aButton |
 		self onRemoveFilterViewModelOfElement: anElement from: aButton ].
 	anElement
@@ -239,27 +239,23 @@ GtFilterItemsElement >> initializeShortcuts [
 GtFilterItemsElement >> newAddFilterButton [
 	^ self newAddFilterHandleElement
 		id: GtFiltersAddButtonId;
-		addAptitude: BrGlamorousButtonWithLabelTooltipAptitude new;
+		addAptitude: BrGlamorousButtonWithLabelTooltipAptitude2 new;
 		addAptitude: (BrStyleCommonAptitude new
-			default: [ :aStyle | 
-				aStyle
-					border: BlBorder empty;
-					background: self theme status neutralBackgroundColor ];
-			hovered: [ :aStyle | 
-				aStyle background: self theme status neutralBackgroundColor darker ];
-			pressed: [ :aStyle | 
-				aStyle background: self theme status neutralBackgroundColor darker darker ];
-			focused: [ :aStyle | 
-				aStyle border: (BlBorder paint: self theme editor focusedBorderColor width: 1) ]);
+				default: [ :aStyle | 
+					aStyle
+						border: BlBorder empty;
+						background: self theme status neutralBackgroundColor ];
+				hovered: [ :aStyle | aStyle background: self theme status neutralBackgroundColor darker ];
+				pressed: [ :aStyle | aStyle background: self theme status neutralBackgroundColor darker darker ];
+				focused: [ :aStyle | aStyle border: (BlBorder paint: self theme editor focusedBorderColor width: 1) ]);
 		addAptitude: (BrGlamorousWithExplicitDropdownAptitude
-			handle: [ self newAddFilterHandleElement ]
-			content: [ self createDropdownContent ]);
+				handle: [ self newAddFilterHandleElement ]
+				content: [ self createDropdownContent ]);
 		margin: (BlInsets left: 2);
 		constraintsDo: [ :c | c flow vertical alignCenter ];
 		beFocusable;
 		in: [ :anElement | self addNavigationShortcutsTo: anElement ];
-		addShortcut:
-			(BlShortcutWithAction new
+		addShortcut: (BlShortcutWithAction new
 				combination: BlKeyCombination enter;
 				action: [ :anEvent | anEvent currentTarget dispatchEvent: BrDropdownShowWish new ]);
 		when: BrDropdownIsHidden

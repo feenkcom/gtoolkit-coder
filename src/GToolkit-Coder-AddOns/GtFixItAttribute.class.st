@@ -68,32 +68,29 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	elementId ifNotNil: [ button id: elementId ].
 	button beTinySize.
 	button label: (label ifNil: [ 'Fix it' ]).
-	
+
 	dropDownAptitude := BrGlamorousWithExplicitDropdownAptitude
-			handle: [ 
-				| dropdownButton |
+			handle: [ | dropdownButton |
 				dropdownButton := BrButton new.
 				dropdownButton beTinySize.
 				dropdownButton
-					aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude
+					aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude2
 							- BrGlamorousButtonExteriorAptitude.
 				dropdownButton icon: BrGlamorousVectorIcons repair.
 				self addHoveringStylingFor: anEditorElement to: dropdownButton.
 				dropdownButton ]
-			content: [ 
-				| element |
+			content: [ | element |
 				element := self dropDownElementFor: anEditorElement.
 				self addHoveringStylingFor: anEditorElement to: element.
 				element ].
-				
+
 	button
-		aptitude: BrGlamorousButtonWithIconAptitude 
-			- BrGlamorousButtonExteriorAptitude
-			+ dropDownAptitude.
+		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude
+				+ dropDownAptitude.
 	button userData at: #fixItAttribute put: self.
 	button userData at: #dropDownAptitude put: dropDownAptitude.
 	button icon: BrGlamorousVectorIcons repair.
-	
+
 	self addHoveringStylingFor: anEditorElement to: button.
 	^ button
 ]

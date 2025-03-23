@@ -19,9 +19,9 @@ GtCoderListEmbeddedRenameEditorElement >> createAcceptButton [
 		aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0.5)
 				+ BrGlamorousButtonIconAptitude
 				+ (BrGlamorousButtonFlatExteriorAptitude new
-						backgroundPaint: (BrGlamorousColors neutralBackgroundColor);
-						hoveredBackgroundPaint: (BrGlamorousColors secondaryHeaderBackgroundColor))
-				+ BrGlamorousButtonWithLabelTooltipAptitude;
+						backgroundPaint: BrGlamorousColors neutralBackgroundColor;
+						hoveredBackgroundPaint: BrGlamorousColors secondaryHeaderBackgroundColor)
+				+ BrGlamorousButtonWithLabelTooltipAptitude2;
 		icon: BrGlamorousVectorIcons accept;
 		label: 'Rename protocol';
 		action: [ self privatePerformRename ]
@@ -35,9 +35,9 @@ GtCoderListEmbeddedRenameEditorElement >> createCancelButton [
 		aptitude: (BrGlamorousButtonRectangularAptitude paddingScale: 0.5)
 				+ BrGlamorousButtonIconAptitude
 				+ (BrGlamorousButtonFlatExteriorAptitude new
-						backgroundPaint: (BrGlamorousColors neutralBackgroundColor);
-						hoveredBackgroundPaint: (BrGlamorousColors secondaryHeaderBackgroundColor))
-				+ BrGlamorousButtonWithLabelTooltipAptitude;
+						backgroundPaint: BrGlamorousColors neutralBackgroundColor;
+						hoveredBackgroundPaint: BrGlamorousColors secondaryHeaderBackgroundColor)
+				+ BrGlamorousButtonWithLabelTooltipAptitude2;
 		icon: BrGlamorousVectorIcons cancel;
 		label: 'Cancel';
 		action: [ self privateEndRename ]
