@@ -5,5 +5,6 @@ GtCoderContextMenuAction >> asBrMenuItemForCoderElement: aTextualCoderEditorElem
 	^ GtCoderMenuActionItem new
 		textualCoderEditorElement: aTextualCoderEditorElement;
 		coderContextMenuAction: self;
+		disableIf: [ self isDisabled ];
 		yourself
 ]
