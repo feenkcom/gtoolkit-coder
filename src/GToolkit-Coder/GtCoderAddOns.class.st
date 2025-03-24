@@ -418,30 +418,6 @@ GtCoderAddOns >> contextMenuActions [
 	^ contextMenuActions
 ]
 
-{ #category : #changes }
-GtCoderAddOns >> differenceWith: aGtCoderAddOns [
-	^ Array streamContents: [ :aStream | self differenceWith: aGtCoderAddOns on: aStream ]
-]
-
-{ #category : #changes }
-GtCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
-	self
-		assert: [ self class = aGtCoderAddOns class ]
-		description: [ 'Coder AddOns type must be identical to compute the difference' ].
-
-	self mainActions = aGtCoderAddOns mainActions
-		ifFalse: [ aStream nextPut: GtCoderAddOnsMainActionsDifference new ].
-		
-	self contextActions = aGtCoderAddOns contextActions
-		ifFalse: [ aStream nextPut: GtCoderAddOnsContextActionsDifference new ].
-		
-	self contextMenuActions = aGtCoderAddOns contextMenuActions
-		ifFalse: [ aStream nextPut: GtCoderAddOnsContextMenuDifference new ].
-		
-	self shortcuts = aGtCoderAddOns shortcuts
-		ifFalse: [ aStream nextPut: GtCoderAddOnsShortcutsDifference new ].
-]
-
 { #category : #'initialize-release' }
 GtCoderAddOns >> initialize [
 	super initialize.
