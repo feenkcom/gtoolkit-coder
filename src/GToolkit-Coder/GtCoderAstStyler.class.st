@@ -28,6 +28,13 @@ GtCoderAstStyler class >> telemetryComputationStartSignal: anObject [
 		process: Processor activeProcess
 ]
 
+{ #category : #comparing }
+GtCoderAstStyler >> = anObject [
+	self class == anObject class ifFalse: [^false].
+	(self coderViewModel isNil or: [anObject coderViewModel isNil]) ifTrue: [^true].
+	^self coderViewModel = anObject coderViewModel
+]
+
 { #category : #'as yet unclassified' }
 GtCoderAstStyler >> anyCursorsInRange: textRange [
 	^ self coderViewModel cursors positions
@@ -74,6 +81,11 @@ GtCoderAstStyler >> coderViewModel: anObject [
 
 { #category : #'api - styling' }
 GtCoderAstStyler >> extraStyle: aText ast: theAst [
+]
+
+{ #category : #comparing }
+GtCoderAstStyler >> hash [
+	^self class hash
 ]
 
 { #category : #private }

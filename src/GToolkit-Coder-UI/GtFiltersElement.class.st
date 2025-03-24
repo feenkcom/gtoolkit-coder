@@ -156,21 +156,16 @@ GtFiltersElement >> initialize [
 GtFiltersElement >> newAddTagButton [
 	^ BrButton new
 		id: GtFiltersAddButtonId;
-		aptitude:
-			BrGlamorousButtonRectangularAptitude new
-				+ BrGlamorousButtonIconAptitude new
-				+ BrGlamorousButtonWithLabelTooltipAptitude new
+		aptitude: BrGlamorousButtonRectangularAptitude new + BrGlamorousButtonIconAptitude new
+				+ BrGlamorousButtonWithLabelTooltipAptitude2 new
 				+ (BrStyleCommonAptitude new
 						default: [ :aStyle | 
 							aStyle
 								border: BlBorder empty;
 								background: self theme status neutralBackgroundColor ];
-						hovered: [ :aStyle | 
-							aStyle background: self theme status neutralBackgroundColor darker ];
-						pressed: [ :aStyle | 
-							aStyle background: self theme status neutralBackgroundColor darker darker ];
-						focused: [ :aStyle | 
-							aStyle border: (BlBorder paint: self theme editor focusedBorderColor width: 1) ]);
+						hovered: [ :aStyle | aStyle background: self theme status neutralBackgroundColor darker ];
+						pressed: [ :aStyle | aStyle background: self theme status neutralBackgroundColor darker darker ];
+						focused: [ :aStyle | aStyle border: (BlBorder paint: self theme editor focusedBorderColor width: 1) ]);
 		icon: BrGlamorousVectorIcons add;
 		label: 'Add Filter';
 		margin: (BlInsets all: 2);
@@ -178,8 +173,7 @@ GtFiltersElement >> newAddTagButton [
 		hExact: 20;
 		constraintsDo: [ :c | c flow vertical alignCenter ];
 		action: [ :aButton | self createNewTag ];
-		addShortcut:
-			(BlShortcutWithAction new
+		addShortcut: (BlShortcutWithAction new
 				combination: BlKeyCombination enter;
 				action: [ :anEvent | self createNewTag ])
 ]

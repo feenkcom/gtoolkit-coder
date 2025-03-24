@@ -40,14 +40,6 @@ GtTextualCoderAddOns >> ast: aGtCoderAst [
 	ast := aGtCoderAst
 ]
 
-{ #category : #changes }
-GtTextualCoderAddOns >> differenceWith: aGtCoderAddOns on: aStream [
-	super differenceWith: aGtCoderAddOns on: aStream.
-	
-	self stylers = aGtCoderAddOns stylers
-		ifFalse: [ aStream nextPut: GtCoderAddOnsStylersDifference new ]
-]
-
 { #category : #'initialize-release' }
 GtTextualCoderAddOns >> initialize [
 	super initialize.

@@ -104,50 +104,67 @@ GtCoderPrintStringAttribute >> copyFromEditorElement: anEditorElement [
 { #category : #accessing }
 GtCoderPrintStringAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| hamburgerButton |
-	
 	hamburgerButton := nil.
-	
+
 	^ BrLabel new
-		aptitude: (BrGlamorousLabelAptitude new glamorousCodeFont labelDo: [ :aLabel |
-			aLabel addAptitude: (BrGlamorousWithTooltipAptitude new contentStencil: [ self buildTooltip ]) ]);
+		aptitude: (BrGlamorousLabelAptitude new glamorousCodeFont
+				labelDo: [ :aLabel | 
+					aLabel
+						addAptitude: (BrGlamorousWithExplicitTooltipAptitude content: [ self buildTooltip ]) ]);
 		beTinySize;
 		id: GtCoderPrintStringElementId;
 		text: object printString;
 		background: BrGlamorousColors neutralBackgroundColor;
-		margin: (BlInsets top: 0 left: 4 bottom: 0 right: 4);
-		padding: (BlInsets top: 2 left: 4 bottom: 2 right: 4);
+		margin: (BlInsets
+				top: 0
+				left: 4
+				bottom: 0
+				right: 4);
+		padding: (BlInsets
+				top: 2
+				left: 4
+				bottom: 2
+				right: 4);
 		geometry: (BlRoundedRectangleGeometry cornerRadius: 2);
 		addAptitude: (BrStyleCommonAptitude new
-			focused: [ :aStyle | aStyle border: (BlBorder paint: (BrGlamorousColors focusedEditorBorderColor alpha: 0.75) width: 1) ]);
+				focused: [ :aStyle | 
+					aStyle
+						border: (BlBorder
+								paint: (BrGlamorousColors focusedEditorBorderColor alpha: 0.75)
+								width: 1) ]);
 		requestFocus;
 		addShortcut: (BlShortcutWithAction new
-			combination: BlKeyCombination primaryC;
-			action: [ self copyFromEditorElement: anEditorElement ]);
+				combination: BlKeyCombination primaryC;
+				action: [ self copyFromEditorElement: anEditorElement ]);
 		addShortcut: (BlShortcutWithAction new
-			combination: BlKeyCombination primaryI;
-			action: [ :aShortcutEvent | self spawnFromElement: aShortcutEvent currentTarget ]);
+				combination: BlKeyCombination primaryI;
+				action: [ :aShortcutEvent | self spawnFromElement: aShortcutEvent currentTarget ]);
 		addShortcut: (BlShortcutWithAction new
-			combination: BlKeyCombination return;
-			action: [ self insertIntoTheEditorElement: anEditorElement ]);
+				combination: BlKeyCombination return;
+				action: [ self insertIntoTheEditorElement: anEditorElement ]);
 		addShortcut: (BlShortcutWithAction new
-			combination: BlKeyCombination backspace;
-			action: [ self removeFromEditorElement: anEditorElement ]);
-		when: BlMouseDownEvent do: [ :anEvent |
-			anEvent consumed: true.
-			anEvent currentTarget requestFocus ];
-		when: BlElementRemovedFromParentEvent do: [ :anEvent |
-			anEditorElement requestFocus ];
+				combination: BlKeyCombination backspace;
+				action: [ self removeFromEditorElement: anEditorElement ]);
+		when: BlMouseDownEvent
+			do: [ :anEvent | 
+				anEvent consumed: true.
+				anEvent currentTarget requestFocus ];
+		when: BlElementRemovedFromParentEvent
+			do: [ :anEvent | anEditorElement requestFocus ];
 		addChild: (hamburgerButton := BrButton new
-			aptitude: self actionButtonLook + (BrGlamorousWithExplicitDropdownAptitude
-				handle: [ BrButton new
-					aptitude: BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude;
+					aptitude: self actionButtonLook
+							+ (BrGlamorousWithExplicitDropdownAptitude
+									handle: [ BrButton new
+											aptitude: BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude;
+											icon: BrGlamorousVectorIcons hamburger;
+											beSmallSize;
+											exact: 16 @ 16 ]
+									content: [ self
+											buildMenuFor: hamburgerButton
+											fromEditorElement: anEditorElement ]);
 					icon: BrGlamorousVectorIcons hamburger;
-					beSmallSize;
-					exact: 16@16 ]
-				content: [ self buildMenuFor: hamburgerButton fromEditorElement: anEditorElement ]);
-			icon: BrGlamorousVectorIcons hamburger;
-			beTinySize;
-			exact: 12@12)
+					beTinySize;
+					exact: 12 @ 12)
 ]
 
 { #category : #initialization }
