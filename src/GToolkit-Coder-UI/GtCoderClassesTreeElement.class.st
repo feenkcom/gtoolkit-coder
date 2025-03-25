@@ -23,27 +23,6 @@ GtCoderClassesTreeElement class >> fromClasses: aCollectionOfClasses [
 ]
 
 { #category : #'private - context menu' }
-GtCoderClassesTreeElement >> addPreviewButtonFor: refactoring to: elem cancelBlock: aBlock [
-	| button |
-	elem removeChildNamed: #preview.
-	button := GtRefactoringsPreviewButton new.
-	button vMatchParent.
-	button refactorings: [ {refactoring} ].
-	button cancelBlock: aBlock.
-	button
-		padding: (BlInsets
-				top: 1
-				right: 4
-				bottom: 0
-				left: 4).
-	button beMiniSize.
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
-	^ elem addChild: button as: #preview
-]
-
-{ #category : #'private - context menu' }
 GtCoderClassesTreeElement >> addPreviewButtonFor: refactoring to: elem cancelSelector: cancelSelector [
 	| button |
 	elem removeChildNamed: #preview.
@@ -321,14 +300,19 @@ GtCoderClassesTreeElement >> removeClass: aClass inElement: elem [
 
 { #category : #'private - context menu' }
 GtCoderClassesTreeElement >> renameClass: aClass inElement: elem [
-	| refactoring edit childs |
+	| refactoring edit childs restoreBlock |
 	edit := BrEditableLabel new.
 	childs := elem children.
+	restoreBlock := [ (edit parent notNil
+			and: [ edit parent children identityIncludes: edit ])
+			ifTrue: [ elem removeChildren.
+				elem addChildren: childs ] ].
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;   "Force the font to match the label font"
+				fontSize: 11.9;	"Force the font to match the label font"
 				background: Color transparent);
 		text: aClass name;
+		when: BrEditorCancelWish do: [ :wish | restoreBlock value ];
 		when: BrEditorAcceptWish
 			do: [ :aWish | 
 				refactoring := GtRBRenameClassRefactoring
@@ -338,12 +322,12 @@ GtCoderClassesTreeElement >> renameClass: aClass inElement: elem [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
-					cancelBlock: [ elem removeChildren.
-						elem addChildren: childs ] ];
+					appliedBlock: restoreBlock
+					cancelBlock: restoreBlock ];
 		switchToEditor.
 	edit requestFocus.
 	elem removeChildren.
-	elem addChild: edit
+	elem addChild: edit as: #renameClassEditor
 ]
 
 { #category : #'api - selection' }
