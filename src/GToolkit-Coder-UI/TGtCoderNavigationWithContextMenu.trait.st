@@ -4,13 +4,13 @@ Trait {
 }
 
 { #category : #'private - context menu' }
-TGtCoderNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem cancelBlock: aBlock [
+TGtCoderNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem appliedBlock: appliedBlock cancelBlock: cancelBlock [
 	| button |
 	elem removeChildNamed: #preview.
 	button := GtRefactoringsPreviewButton new.
 	button vMatchParent.
 	button refactorings: [ {refactoring} ].
-	button cancelBlock: aBlock.
+	button cancelBlock: cancelBlock.
 	button
 		padding: (BlInsets
 				top: 1
@@ -20,7 +20,9 @@ TGtCoderNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem c
 	button beMiniSize.
 	button
 		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
+		do: [ :anEvent | 
+			elem removeChild: anEvent currentTarget.
+			appliedBlock value ].
 	^ elem addChild: button as: #preview
 ]
 

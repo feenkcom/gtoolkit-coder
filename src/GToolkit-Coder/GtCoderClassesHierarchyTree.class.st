@@ -10,7 +10,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'rootClass',
-		'subclassTrees'
+		'subclassTrees',
+		'rootClassName'
 	],
 	#category : #'GToolkit-Coder-Navigation - Model'
 }
@@ -54,7 +55,8 @@ GtCoderClassesHierarchyTree class >> hierarchyForClass: aClass [
 GtCoderClassesHierarchyTree >> = anObject [
 	^ anObject class = self class
 		and: [ self rootClass = anObject rootClass
-				and: [ self subclassTrees = anObject subclassTrees ] ]
+				and: [ self rootClassName = anObject rootClassName
+						and: [ self subclassTrees = anObject subclassTrees ] ] ]
 ]
 
 { #category : #accessing }
@@ -139,7 +141,13 @@ GtCoderClassesHierarchyTree >> rootClass [
 
 { #category : #accessing }
 GtCoderClassesHierarchyTree >> rootClass: aClass [
-	rootClass := aClass
+	rootClass := aClass.
+	rootClassName := rootClass name
+]
+
+{ #category : #accessing }
+GtCoderClassesHierarchyTree >> rootClassName [
+	^ rootClassName
 ]
 
 { #category : #accessing }

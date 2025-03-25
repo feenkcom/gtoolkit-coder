@@ -219,11 +219,11 @@ GtCoderPackagesTreeElement >> removeTag: aTag inElement: elem [
 { #category : #initialization }
 GtCoderPackagesTreeElement >> renamePackage: aPackage inElement: elem [
 	| refactoring edit childs |
-	childs := elem children.
+	childs := elem children copy.
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;   "Force the font to match the label font"
+				fontSize: 11.9;	"Force the font to match the label font"
 				background: Color transparent);
 		text: aPackage name;
 		when: BrEditorAcceptWish
@@ -235,6 +235,7 @@ GtCoderPackagesTreeElement >> renamePackage: aPackage inElement: elem [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
+					appliedBlock: [  ]
 					cancelBlock: [ elem removeChildren.
 						elem addChildren: childs ] ];
 		switchToEditor.
@@ -246,11 +247,11 @@ GtCoderPackagesTreeElement >> renamePackage: aPackage inElement: elem [
 { #category : #initialization }
 GtCoderPackagesTreeElement >> renameTag: aPackageOrTag inElement: elem [
 	| refactoring edit childs |
-	childs := elem children.
+	childs := elem children copy.
 	edit := BrEditableLabel new.
 	edit
 		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;
+				fontSize: 11.9;	"Force the font to match the label font"
 				background: Color transparent);
 		text: aPackageOrTag name;
 		when: BrEditorAcceptWish
@@ -263,9 +264,10 @@ GtCoderPackagesTreeElement >> renameTag: aPackageOrTag inElement: elem [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
+					appliedBlock: [  ]
 					cancelBlock: [ elem removeChildren.
 						elem addChildren: childs ] ];
-		switchToEditor.	"Force the font to match the label font"
+		switchToEditor.
 	edit requestFocus.
 	elem removeChildren.
 	elem addChild: edit
