@@ -13,30 +13,34 @@ Class {
 { #category : #accessing }
 GtCoderClassesTreeItemElement >> classHierarchyTree: aClassHierarchyTree [
 	| aNewIconName anIcon anIconForm |
+	(self children size = 2
+		and: [ self children first = classIconContainer
+				and: [ self children last = classNameLabel ] ])
+		ifFalse: [ self removeChildren.
+			self
+				addChildren: {classIconContainer.
+						classNameLabel} ].
 
 	theClass := aClassHierarchyTree ifNotNil: #rootClass.
 
 	theClass
 		ifNil: [ classNameLabel text: '' asRopedText ]
-		ifNotNil: [
-			| aText |
+		ifNotNil: [ | aText |
 			aText := theClass gtDisplayText asRopedText.
 			(theClass isAbstract or: [ theClass hasAbstractMethods ])
 				ifTrue: [ aText italic ].
 			theClass isDeprecated
-				ifTrue: [
-					aText append: ' (deprecated)' asRopedText italic.
+				ifTrue: [ aText append: ' (deprecated)' asRopedText italic.
 					aText lineThrough ].
 			classNameLabel text: aText ].
-	
+
 	aNewIconName := theClass gtSystemIconName.
-	aNewIconName = currentIconName
-		ifTrue: [ ^ self ].
+	aNewIconName = currentIconName ifTrue: [ ^ self ].
 
 	aNewIconName ifNil: [ classIconContainer visibility: BlVisibility hidden ].
 	anIconForm := theClass gtSafeIconNamed: aNewIconName.
 	anIcon := anIconForm asElement.
-	
+
 	classIconContainer removeChildren.
 	classIconContainer addChild: anIcon.
 	currentIconName := aNewIconName
