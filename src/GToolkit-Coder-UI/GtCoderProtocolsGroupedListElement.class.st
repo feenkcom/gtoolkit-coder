@@ -422,9 +422,10 @@ GtCoderProtocolsGroupedListElement >> updateProtocolListWith: theGtPharoProtocol
 
 { #category : #'private - updating' }
 GtCoderProtocolsGroupedListElement >> updateProtocolsList [
-	self updateProtocolListWith: self navigationModel protocolsToShow.
+	self
+		inUIProcessDo: [ self updateProtocolListWith: self navigationModel protocolsToShow.
 
-	self navigationModel selectedProtocol
-		ifNil: [ self deselectProtocol ]
-		ifNotNil: [ :aProtocol | self selectProtocol: aProtocol ]
+			self navigationModel selectedProtocol
+				ifNil: [ self deselectProtocol ]
+				ifNotNil: [ :aProtocol | self selectProtocol: aProtocol ] ]
 ]
