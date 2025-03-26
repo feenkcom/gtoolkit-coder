@@ -284,8 +284,9 @@ GtCoderMethodsGroupedListElement >> unsubscribeFromNavigationModel [
 
 { #category : #'updating lists' }
 GtCoderMethodsGroupedListElement >> updateMethodList [
-	self navigationModel ifNil: [ ^ self ].
-	self updateMethodListWith: self navigationModel methodsToShow
+	self
+		inUIProcessDo: [ self navigationModel
+				ifNotNil: [ self updateMethodListWith: self navigationModel methodsToShow ] ]
 ]
 
 { #category : #'updating lists' }
