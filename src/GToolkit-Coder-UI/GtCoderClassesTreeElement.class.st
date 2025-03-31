@@ -227,12 +227,20 @@ GtCoderClassesTreeElement >> initializeWithClasses: aCollectionOfClasses [
 
 { #category : #'api - initialization' }
 GtCoderClassesTreeElement >> initializeWithHierachyForClass: aClass [
-	classesTree := (GtCoderGrowingClassesHierarchyTree
-		hierarchyForClass: aClass) sortByClassName.
+	classesTree := (GtCoderGrowingClassesHierarchyTree hierarchyForClass: aClass)
+			sortByClassName.
 	self
 		items: classesTree subclassTrees
 		lazy: [ :eachTree | eachTree subclassTrees ].
-	self expandAll
+	self expandAll.
+
+	self viewModel root
+		allChildrenNodesBreadthFirstDo: [ :treeNode | 
+			treeNode ensureChildrenNodes.
+			aClass = treeNode value rootClass
+				ifTrue: [ self selectOne: treeNode indexInTree.
+					self scrollToIndex: treeNode indexInTree.
+					^ self ] ]
 ]
 
 { #category : #'private - context menu' }
