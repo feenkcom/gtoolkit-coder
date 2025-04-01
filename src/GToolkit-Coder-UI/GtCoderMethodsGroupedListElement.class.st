@@ -45,11 +45,43 @@ GtCoderMethodsGroupedListElement >> buildMethodItem [
 		beSmallSize;
 		aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude
 				+ (BrGlamorousWithExplicitContextMenuAptitude
-						itemsWithAnchorActions: [ (self methodListContextMenuItemsFor: (aLabel userData at: #method)) ]).
+						menu: [ self contextMenuFor: (aLabel userData at: #method) in: aLabel ]).
 
 	aLabel addEventHandler: self createMethodDragHandler.
 
 	^ aLabel
+]
+
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> contextMenuFor: item in: anElement [
+	| menu |
+	menu := BrMenuItems new.
+	menu
+		addItemLabel: (self createLabel: 'Browse implementors' description: item selector)
+		action: [ self browseImplementorsOf: item selector ].
+	menu
+		addItemLabel: (self createLabel: 'Browse hierarachy implementors' description: item selector)
+		action: [ self browseHierarchyImplementorsOf: item selector ].
+	menu
+		addItemLabel: (self createLabel: 'Browse references' description: item selector)
+		action: [ self browseReferencesOf: item selector ].
+	menu
+		addItemLabel: (self createLabel: 'Browse hierarchy references' description: item selector)
+		action: [ self browseHierarchyReferencesOf: item selector ].
+	menu
+		addItemLabel: (self createLabel: 'Push up method' description: item selector)
+		action: [ self pushUpMethod: item selector inElement: anElement ].
+	menu
+		addItemLabel: (self createLabel: 'Push down method' description: item selector)
+		action: [ self pushDownMethod: item selector inElement: anElement ].
+	menu
+		addItemLabel: (self createLabel: 'Rename message' description: item selector)
+		action: [ self renameMethod: item selector inElement: anElement ].
+	menu
+		addItem: (BrMenuSubmenuItem new
+				label: (self createLabel: 'Remove method' description: item selector);
+				submenu: (BrMenuExplicit new stencil: [ self removeMethodFor: item selector ])).
+	^ menu
 ]
 
 { #category : #'private - insance creation' }
@@ -126,26 +158,6 @@ GtCoderMethodsGroupedListElement >> methodList [
 	^ methodGroups flatCollect: [ :grp | grp itemsProvider currentItems ]
 ]
 
-{ #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> methodListContextMenuItemsFor: item [
-	^ {(self createLabel: 'Browse implementors' description: item selector)
-			-> [ :elem | self browseImplementorsOf: item selector ].
-		(self createLabel: 'Browse hierarachy implementors' description: item selector)
-			-> [ :elem | self browseHierarchyImplementorsOf: item selector ].
-		(self createLabel: 'Browse references' description: item selector)
-			-> [ :elem | self browseReferencesOf: item selector ].
-		(self createLabel: 'Browse hierarchy references' description: item selector)
-			-> [ :elem | self browseHierarchyReferencesOf: item selector ].
-		(self createLabel: 'Push up method' description: item selector)
-			-> [ :elem | self pushUpMethod: item selector inElement: elem ].
-		(self createLabel: 'Push down method' description: item selector)
-			-> [ :elem | self pushDownMethod: item selector inElement: elem ].
-		(self createLabel: 'Rename message' description: item selector)
-			-> [ :elem | self renameMethod: item selector inElement: elem ].
-		(self createLabel: 'Remove method' description: item selector)
-			-> [ :elem | self removeMethod: item selector inElement: elem ]}
-]
-
 { #category : #accessing }
 GtCoderMethodsGroupedListElement >> navigationModel [
 	^ navigationModel
@@ -194,7 +206,7 @@ GtCoderMethodsGroupedListElement >> pushDownMethod: aSelector inElement: elem [
 	^ self
 		addPreviewButtonFor: refactoring
 		to: elem
-		cancelSelector: #updateProtocolsList
+		cancelSelector: #updateMethodList
 ]
 
 { #category : #'private - actions' }
@@ -206,26 +218,44 @@ GtCoderMethodsGroupedListElement >> pushUpMethod: aSelector inElement: elem [
 	^ self
 		addPreviewButtonFor: refactoring
 		to: elem
-		cancelSelector: #updateProtocolsList
+		cancelSelector: #updateMethodList
 ]
 
-{ #category : #'private - actions' }
-GtCoderMethodsGroupedListElement >> removeMethod: aSelector inElement: elem [
-	| change button |
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> removeMethodFor: aSelector [
+	| element references change button |
+	element := BrVerticalPane new fitContent.
+	references := (GtPharoIndex current sendersOf: aSelector) size.
+	element
+		addChild: (BrLabel new
+				margin: (BlInsets
+						top: 10
+						bottom: 0
+						left: 10
+						right: 10);
+				aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
+				text: ('Remove ' , aSelector) asRopedText).
+	references > 0
+		ifTrue: [ element
+				addChild: (BrLabel new
+						margin: (BlInsets left: 10 right: 10);
+						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+						text: (references printString , ' reference'
+								, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
 	change := RBRemoveMethodChange remove: aSelector from: self selectedClass.
-	button := GtPreviewChangeButton new
+	button := BrButton new
+			aptitude: BrGlamorousButtonWithIconAptitude;
+			beSmallSize;
+			margin: (BlInsets
+					top: 10
+					bottom: 10
+					left: 10
+					right: 10);
 			icon: BrGlamorousVectorIcons remove;
 			label: 'Remove';
-			changeAction: [ change gtExecuteWithUndo ];
-			changeStencil: [ GtPharoRemoveMethodPreviewStencil new
-					selectorToRemove: aSelector;
-					isEmptyMethod: false;
-					anElement: self;
-					create ].
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
-	^ elem addChild: button as: #preview
+			action: [ change execute ].
+	element addChild: button as: #removeButton.
+	^ element
 ]
 
 { #category : #'private - actions' }
@@ -248,7 +278,7 @@ GtCoderMethodsGroupedListElement >> renameMethod: aSelector inElement: elem [
 				self
 					addPreviewButtonFor: refactoring
 					to: elem
-					cancelSelector: #updateProtocolsList ];
+					cancelSelector: #updateMethodList ];
 		switchToEditor.
 	edit requestFocus.
 	elem removeChildren.
