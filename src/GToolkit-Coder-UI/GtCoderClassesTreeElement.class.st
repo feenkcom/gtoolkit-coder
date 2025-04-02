@@ -85,7 +85,7 @@ GtCoderClassesTreeElement >> contextMenuFor: aClass in: anElement [
 		addItemLabel: (self createLabel: 'Browse references' description: aClass name)
 		action: [ self browseReferencesTo: aClass ].
 	menu
-		addItemLabel: (self createLabel: 'New Subclass' description: aClass name)
+		addItemLabel: (self createLabel: 'New subclass' description: aClass name)
 		action: [ self newSubclassOf: aClass ].
 	menu
 		addItemLabel: (self createLabel: 'Rename class' description: aClass name)
