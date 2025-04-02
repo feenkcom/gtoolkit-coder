@@ -25,7 +25,6 @@ GtCoderPackagesTreeElement >> buildRemovePackageLabelFor: aPackage [
 	| labelText |
 	labelText := 'Remove package <1s>' expandMacrosWith: aPackage name.
 	^ BrLabel new
-		margin: (BlInsets all: 10);
 		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
 		text: labelText asRopedText
 ]
@@ -33,9 +32,8 @@ GtCoderPackagesTreeElement >> buildRemovePackageLabelFor: aPackage [
 { #category : #initialization }
 GtCoderPackagesTreeElement >> buildRemoveTagLabelFor: aTag [
 	| labelText |
-	labelText := 'Remove package <1s>' expandMacrosWith: aTag name.
+	labelText := 'Remove package tag <1s>' expandMacrosWith: aTag name.
 	^ BrLabel new
-		margin: (BlInsets all: 10);
 		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
 		text: labelText asRopedText
 ]
@@ -60,23 +58,29 @@ GtCoderPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 ]
 
 { #category : #initialization }
-GtCoderPackagesTreeElement >> contextMenuItemsFor: aPackageOrTag [
-	| items |
-	items := {(self createLabel: 'New package / tag' description: '')
-				-> [ :elem | self newPackage ]} asOrderedCollection.
+GtCoderPackagesTreeElement >> contextMenuFor: aPackageOrTag [
+	| menu |
+	menu := BrMenuItems new.
+	menu
+		addItemLabel: (self createLabel: 'New package / tag' description: '')
+		action: [ self newPackage ].
 	aPackageOrTag class == RPackage
-		ifTrue: [ items
-				addAll: {(self createLabel: 'Rename package' description: aPackageOrTag name)
-							-> [ :elem | self requestRenamePackage: aPackageOrTag ].
-						(self createLabel: 'Remove package' description: aPackageOrTag name)
-							-> [ :elem | self removePackage: aPackageOrTag inElement: elem ]} ]
-		ifFalse: [ items
-				addAll: {(self createLabel: 'Rename tag' description: aPackageOrTag name)
-							-> [ :elem | self requestRenamePackage: aPackageOrTag ].
-						(self createLabel: 'Remove tag' description: aPackageOrTag name)
-							-> [ :elem | self removeTag: aPackageOrTag inElement: elem ]} ].
+		ifTrue: [ menu
+				addItemLabel: (self createLabel: 'Rename package' description: aPackageOrTag name)
+				action: [ self requestRenamePackage: aPackageOrTag ].
+			menu
+				addItem: (BrMenuSubmenuItem new
+						label: (self createLabel: 'Remove package' description: aPackageOrTag name);
+						submenu: (BrMenuExplicit new stencil: [ self removePackageSubmenuFor: aPackageOrTag ])) ]
+		ifFalse: [ menu
+				addItemLabel: (self createLabel: 'Rename tag' description: aPackageOrTag name)
+				action: [ self requestRenamePackage: aPackageOrTag ].
+			menu
+				addItem: (BrMenuSubmenuItem new
+						label: (self createLabel: 'Remove tag' description: aPackageOrTag name);
+						submenu: (BrMenuExplicit new stencil: [ self removePackageTagSubmenuFor: aPackageOrTag ])) ].
 
-	^ items
+	^ menu
 ]
 
 { #category : #'as yet unclassified' }
@@ -125,7 +129,7 @@ GtCoderPackagesTreeElement >> initialize [
 						hMatchParent;
 						vFitContent;
 						addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
-								itemsWithAnchorActions: [ (self contextMenuItemsFor: anItemElement packageOrTag) ]) ] ];
+								menu: [ self contextMenuFor: anItemElement packageOrTag ]) ] ];
 		nodeDataBinder: [ :aPackageElement :aPackage | 
 			aPackageElement id asSymbol = #'coder--package-rename'
 				ifTrue: [ aPackageElement removeChildren.
@@ -187,33 +191,75 @@ GtCoderPackagesTreeElement >> promoteTag: aPackageOrTag inElement: elem [
 ]
 
 { #category : #initialization }
-GtCoderPackagesTreeElement >> removePackage: aPackage inElement: elem [
-	| change button |
+GtCoderPackagesTreeElement >> removePackageSubmenuFor: aPackage [
+	| element definedClasses extendedClasses change button |
+	element := BrVerticalPane new fitContent.
+	definedClasses := aPackage definedClassNames size.
+	extendedClasses := aPackage extendedClassNames size.
+	element
+		addChild: ((self buildRemovePackageLabelFor: aPackage)
+				margin: (BlInsets
+						top: 10
+						bottom: 0
+						left: 10
+						right: 10)).
+	definedClasses > 0
+		ifTrue: [ element
+				addChild: (BrLabel new
+						margin: (BlInsets left: 10 right: 10);
+						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+						text: (definedClasses printString , ' defined class'
+								, (definedClasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
+	extendedClasses > 0
+		ifTrue: [ element
+				addChild: (BrLabel new
+						margin: (BlInsets left: 10 right: 10);
+						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+						text: (extendedClasses printString , ' extended class'
+								, (extendedClasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
 	change := RBRemovePackageChange removePackageNamed: aPackage name.
-	button := GtPreviewChangeButton new
+	button := BrButton new
+			aptitude: BrGlamorousButtonWithIconAptitude;
+			beSmallSize;
+			margin: (BlInsets
+					top: 10
+					bottom: 10
+					left: 10
+					right: 10);
 			icon: BrGlamorousVectorIcons remove;
 			label: 'Remove';
-			changeAction: [ change execute ];
-			changeStencil: [ self buildRemovePackageLabelFor: aPackage ].
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
-	^ elem addChild: button as: #preview
+			action: [ change execute ].
+	element addChild: button as: #removeButton.
+	^ element
 ]
 
 { #category : #initialization }
-GtCoderPackagesTreeElement >> removeTag: aTag inElement: elem [ 
-	| change button |
-	change := GtRBRemovePackageTagChange packageName: aTag package name tagName: aTag name.
-	button := GtPreviewChangeButton new
+GtCoderPackagesTreeElement >> removePackageTagSubmenuFor: aPackageTag [
+	| element change button |
+	element := BrVerticalPane new fitContent.
+	element
+		addChild: ((self buildRemoveTagLabelFor: aPackageTag)
+				margin: (BlInsets
+						top: 10
+						bottom: 0
+						left: 10
+						right: 10)).
+	change := GtRBRemovePackageTagChange
+			packageName: aPackageTag package name
+			tagName: aPackageTag name.
+	button := BrButton new
+			aptitude: BrGlamorousButtonWithIconAptitude;
+			beSmallSize;
+			margin: (BlInsets
+					top: 10
+					bottom: 10
+					left: 10
+					right: 10);
 			icon: BrGlamorousVectorIcons remove;
 			label: 'Remove';
-			changeAction: [ change execute ];
-			changeStencil: [ self buildRemoveTagLabelFor: aTag ].
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
-	^ elem addChild: button as: #preview
+			action: [ change execute ].
+	element addChild: button as: #removeButton.
+	^ element
 ]
 
 { #category : #initialization }

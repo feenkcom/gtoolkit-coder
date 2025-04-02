@@ -78,19 +78,27 @@ GtCoderClassesTreeElement >> containsClass: aClass [
 ]
 
 { #category : #initialization }
-GtCoderClassesTreeElement >> contextMenuItemsFor: aClass [
-	^ {(self createLabel: 'Browse references' description: aClass name)
-			-> [ :elem | self browseReferencesTo: aClass ].
-		(self createLabel: 'New Subclass' description: aClass name)
-			-> [ :elem | self newSubclassOf: aClass ].
-		(self createLabel: 'Rename class' description: aClass name)
-			-> [ :elem | self renameClass: aClass inElement: elem ].
-		(self createLabel: 'Remove class' description: aClass name)
-			-> [ :elem | self removeClass: aClass inElement: elem ]}
-		, (aClass subclasses isEmpty
-				ifTrue: [ #() ]
-				ifFalse: [ {(self createLabel: 'Convert to sibling' description: aClass name)
-							-> [ :elem | self convertToSibling: aClass inElement: elem ]} ])
+GtCoderClassesTreeElement >> contextMenuFor: aClass in: anElement [
+	| menu |
+	menu := BrMenuItems new.
+	menu
+		addItemLabel: (self createLabel: 'Browse references' description: aClass name)
+		action: [ self browseReferencesTo: aClass ].
+	menu
+		addItemLabel: (self createLabel: 'New subclass' description: aClass name)
+		action: [ self newSubclassOf: aClass ].
+	menu
+		addItemLabel: (self createLabel: 'Rename class' description: aClass name)
+		action: [ self renameClass: aClass inElement: anElement ].
+	menu
+		addItem: (BrMenuSubmenuItem new
+				label: (self createLabel: 'Remove class' description: aClass name);
+				submenu: (BrMenuExplicit new stencil: [ self removeClassSubmenuFor: aClass ])).
+	aClass subclasses notEmpty
+		ifTrue: [ menu
+				addItemLabel: (self createLabel: 'Convert to sibling' description: aClass name)
+				action: [ self convertToSibling: aClass inElement: anElement ] ].
+	^ menu
 ]
 
 { #category : #'private - context menu' }
@@ -188,9 +196,10 @@ GtCoderClassesTreeElement >> createNodeElement [
 	^ GtCoderClassesTreeItemElement new
 		addEventHandler: self createClassDropHandler;
 		in: [ :aWidget | 
-			aWidget addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
-				itemsWithAnchorActions: [ (self contextMenuItemsFor: aWidget theClass) ]) ];
-		yourself.
+			aWidget
+				addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
+						menu: [ self contextMenuFor: aWidget theClass in: aWidget ]) ];
+		yourself
 ]
 
 { #category : #initialization }
@@ -288,22 +297,48 @@ GtCoderClassesTreeElement >> onDropCompiledMethodsOnClass: anItemsDroppedEvent [
 	compositeChange execute
 ]
 
-{ #category : #'private - context menu' }
-GtCoderClassesTreeElement >> removeClass: aClass inElement: elem [
-	| change button |
+{ #category : #initialization }
+GtCoderClassesTreeElement >> removeClassSubmenuFor: aClass [
+	| element references subclasses change button |
+	element := BrVerticalPane new fitContent.
+	references := (GtPharoIndex current globalVariableReferencesTo: aClass binding)
+			size.
+	subclasses := aClass allSubclasses size.
+	element
+		addChild: ((self buildRemoveClassLabelFor: aClass)
+				margin: (BlInsets
+						top: 10
+						bottom: 0
+						left: 10
+						right: 10)).
+	references > 0
+		ifTrue: [ element
+				addChild: (BrLabel new
+						margin: (BlInsets left: 10 right: 10);
+						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+						text: (references printString , ' reference'
+								, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
+	subclasses > 0
+		ifTrue: [ element
+				addChild: (BrLabel new
+						margin: (BlInsets left: 10 right: 10);
+						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+						text: (subclasses printString , ' subclass'
+								, (subclasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
 	change := RBRemoveClassChange remove: aClass.
-	button := GtPreviewChangeButton new
+	button := BrButton new
+			aptitude: BrGlamorousButtonWithIconAptitude;
+			beSmallSize;
+			margin: (BlInsets
+					top: 10
+					bottom: 10
+					left: 10
+					right: 10);
 			icon: BrGlamorousVectorIcons remove;
 			label: 'Remove';
-			changeAction: [ change gtExecuteWithUndo ];
-			changeStencil: [ GtPharoRemoveClassPreviewStencil new
-								classToRemove: aClass;
-								anElement: self;
-								create ].
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
-	^ elem addChild: button as: #preview
+			action: [ change execute ].
+	element addChild: button as: #removeButton.
+	^ element
 ]
 
 { #category : #'private - context menu' }
