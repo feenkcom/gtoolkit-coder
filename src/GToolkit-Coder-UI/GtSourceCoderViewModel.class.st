@@ -171,6 +171,10 @@ GtSourceCoderViewModel >> doItAndGoAsynchronousInContext: aGtSourceCoderEvaluati
 	executionResult := self coder 
 		doItAndGoInContext: aGtSourceCoderEvaluationContext.
 		
+	executionResult isSyntaxError ifTrue: [
+		"No update needed in case the result is a syntax error."
+		^ executionResult ].
+		
 	self updatWithAsyncExecution: executionResult value.
 	
 	^ executionResult
@@ -220,6 +224,10 @@ GtSourceCoderViewModel >> doItAsynchronousInContext: aGtSourceCoderEvaluationCon
 		executionStrategy:  self asynchronusExecutionStrategy.
 	executionResult := self coder 
 		doItInContext: aGtSourceCoderEvaluationContext.
+	
+	executionResult isSyntaxError ifTrue: [
+		"No update needed in case the result is a syntax error."
+		^ executionResult ].
 	
 	self updatWithAsyncExecution: executionResult value.
 	
