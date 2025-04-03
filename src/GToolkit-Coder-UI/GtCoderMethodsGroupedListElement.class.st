@@ -80,7 +80,7 @@ GtCoderMethodsGroupedListElement >> contextMenuFor: item in: anElement [
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Remove method' description: item selector);
-				submenu: (BrMenuExplicit new stencil: [ self removeMethodFor: item selector ])).
+				submenu: (self removeMethodSubmenuFor: item selector)).
 	^ menu
 ]
 
@@ -222,40 +222,41 @@ GtCoderMethodsGroupedListElement >> pushUpMethod: aSelector inElement: elem [
 ]
 
 { #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> removeMethodFor: aSelector [
-	| element references change button |
-	element := BrVerticalPane new fitContent.
-	references := (GtPharoIndex current sendersOf: aSelector) size.
-	element
-		addChild: (BrLabel new
-				margin: (BlInsets
-						top: 10
-						bottom: 0
-						left: 10
-						right: 10);
-				aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
-				text: ('Remove ' , aSelector) asRopedText).
-	references > 0
-		ifTrue: [ element
+GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
+	^ BrMenuExplicit new
+		stencil: [ | element references change button |
+			element := BrVerticalPane new fitContent.
+			references := (GtPharoIndex current sendersOf: aSelector) size.
+			element
 				addChild: (BrLabel new
-						margin: (BlInsets left: 10 right: 10);
-						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-						text: (references printString , ' reference'
-								, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
-	change := RBRemoveMethodChange remove: aSelector from: self selectedClass.
-	button := BrButton new
-			aptitude: BrGlamorousButtonWithIconAptitude;
-			beSmallSize;
-			margin: (BlInsets
-					top: 10
-					bottom: 10
-					left: 10
-					right: 10);
-			icon: BrGlamorousVectorIcons remove;
-			label: 'Remove';
-			action: [ change execute ].
-	element addChild: button as: #removeButton.
-	^ element
+						margin: (BlInsets
+								top: 10
+								bottom: 0
+								left: 10
+								right: 10);
+						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
+						text: ('Remove ' , aSelector) asRopedText).
+			references > 0
+				ifTrue: [ element
+						addChild: (BrLabel new
+								margin: (BlInsets left: 10 right: 10);
+								aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+								text: (references printString , ' reference'
+										, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
+			change := RBRemoveMethodChange remove: aSelector from: self selectedClass.
+			button := BrButton new
+					aptitude: BrGlamorousButtonWithIconAptitude;
+					beSmallSize;
+					margin: (BlInsets
+							top: 10
+							bottom: 10
+							left: 10
+							right: 10);
+					icon: BrGlamorousVectorIcons remove;
+					label: 'Remove';
+					action: [ change execute ].
+			element addChild: button as: #removeButton.
+			element ]
 ]
 
 { #category : #'private - actions' }

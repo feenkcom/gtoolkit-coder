@@ -78,7 +78,7 @@ GtCoderClassesTreeElement >> containsClass: aClass [
 ]
 
 { #category : #initialization }
-GtCoderClassesTreeElement >> contextMenuFor: aClass in: anElement [
+GtCoderClassesTreeElement >> contextMenuFor: aClass [
 	| menu |
 	menu := BrMenuItems new.
 	menu
@@ -88,87 +88,40 @@ GtCoderClassesTreeElement >> contextMenuFor: aClass in: anElement [
 		addItemLabel: (self createLabel: 'New subclass' description: aClass name)
 		action: [ self newSubclassOf: aClass ].
 	menu
-		addItemLabel: (self createLabel: 'Rename class' description: aClass name)
-		action: [ self renameClass: aClass inElement: anElement ].
+		addItem: (BrMenuSubmenuItem new
+				label: (self createLabel: 'Rename class' description: aClass name);
+				submenu: (self renameClassSubmenuFor: aClass)).
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Remove class' description: aClass name);
-				submenu: (BrMenuExplicit new stencil: [ self removeClassSubmenuFor: aClass ])).
-	aClass subclasses notEmpty
-		ifTrue: [ menu
-				addItemLabel: (self createLabel: 'Convert to sibling' description: aClass name)
-				action: [ self convertToSibling: aClass inElement: anElement ] ].
+				submenu: (self removeClassSubmenuFor: aClass)).
+	menu
+		addItem: (BrMenuSubmenuItem new
+				label: (self
+						createLabel: (aClass subclasses notEmpty
+								ifTrue: [ 'Convert to sibling' ]
+								ifFalse: [ 'Extract superclass' ])
+						description: aClass name);
+				submenu: (self convertToSiblingSubmenuFor: aClass)).
 	^ menu
 ]
 
-{ #category : #'private - context menu' }
-GtCoderClassesTreeElement >> convertToSibling: aClass inElement: elem [
-	| refactoring label refactoringButton edit acceptButton |
-	refactoringButton := GtRefactoringsWithInputPreviewElement new.
-	refactoringButton cancelBlock: [  ].
-	edit := BrHorizontalPane new.
-	edit padding: (BlInsets all: 10).
-	edit fitContent.
-	edit
-		addChild: (BrLabel new
-				fitContent;
-				aptitude: BrGlamorousLabelAptitude;
-				text: 'Superclass:').
-	label := BrEditableLabel new.
-	label
-		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;
-				background: Color transparent);
-		text: 'NewClass';
-		focused: true;
-		when: BrEditorCancelWish
-			do: [ :wish | 
-				refactoringButton previewButton fireEvent: BrDropdownHideWish new.
-				refactoringButton removeFromParent ];
-		when: BrEditorAcceptWish
-			do: [ :aWish | 
-				acceptButton removeFromParent.
-				edit
-					padding: (BlInsets
-							top: 10
-							bottom: 0
-							left: 10
-							right: 10).
-				refactoring := RBChildrenToSiblingsRefactoring
-						name: aWish text asString
+{ #category : #initialization }
+GtCoderClassesTreeElement >> convertToSiblingSubmenuFor: aClass [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ GtRefactoringsWithInputPreviewElement
+				elementForRefactoring: [ :each | 
+					GtChildrenToSiblingsRefactoring
+						name: each
 						class: aClass
-						subclasses: aClass subclasses.
-				refactoringButton refactorings: [ {refactoring} ].
-				label switchToLabel ];
-		switchToEditor.
-	label viewModel
-		when: BrEditorModeChanged
-		do: [ :event | 
-			event mode isEditable
-				ifTrue: [ edit padding: (BlInsets all: 10).
-					refactoringButton refactorings: [ #() ].
-					edit addChild: acceptButton ]
-				ifFalse: [ refactoring
-						ifNotNil: [ refactoringButton refactorings: [ {refactoring} ].
-							acceptButton removeFromParent ] ] ].
-	edit addChild: label.
-	acceptButton := BrButton new
-			aptitude: BrGlamorousButtonWithIconAptitude new;
-			id: GtRefactoringsPreviewAcceptId;
-			icon: BrGlamorousVectorIcons accept;
-			beSmallSize;
-			requestFocus;
-			label: 'Save';
-			margin: (BlInsets
-					top: 0
-					left: 10
-					bottom: 10
-					right: 0);
-			action: [ label acceptEdition ].
-	edit addChild: acceptButton.
-	refactoringButton editorElement: edit.
-	refactoringButton enqueueTask: [ refactoringButton openPreview ] asBlTask.
-	elem addChild: refactoringButton as: #refactoringButton
+						subclasses: aClass subclasses ]
+				labeled: 'Superclass: '
+				initialValue: 'NewClass'
+				from: self
+				whenFinished: [ submenu hideAll ] ].
+	^ submenu
 ]
 
 { #category : #'private - drag and drop' }
@@ -198,7 +151,7 @@ GtCoderClassesTreeElement >> createNodeElement [
 		in: [ :aWidget | 
 			aWidget
 				addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
-						menu: [ self contextMenuFor: aWidget theClass in: aWidget ]) ];
+						menu: [ self contextMenuFor: aWidget theClass ]) ];
 		yourself
 ]
 
@@ -299,78 +252,61 @@ GtCoderClassesTreeElement >> onDropCompiledMethodsOnClass: anItemsDroppedEvent [
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> removeClassSubmenuFor: aClass [
-	| element references subclasses change button |
-	element := BrVerticalPane new fitContent.
-	references := (GtPharoIndex current globalVariableReferencesTo: aClass binding)
-			size.
-	subclasses := aClass allSubclasses size.
-	element
-		addChild: ((self buildRemoveClassLabelFor: aClass)
-				margin: (BlInsets
-						top: 10
-						bottom: 0
-						left: 10
-						right: 10)).
-	references > 0
-		ifTrue: [ element
-				addChild: (BrLabel new
-						margin: (BlInsets left: 10 right: 10);
-						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-						text: (references printString , ' reference'
-								, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
-	subclasses > 0
-		ifTrue: [ element
-				addChild: (BrLabel new
-						margin: (BlInsets left: 10 right: 10);
-						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-						text: (subclasses printString , ' subclass'
-								, (subclasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
-	change := RBRemoveClassChange remove: aClass.
-	button := BrButton new
-			aptitude: BrGlamorousButtonWithIconAptitude;
-			beSmallSize;
-			margin: (BlInsets
-					top: 10
-					bottom: 10
-					left: 10
-					right: 10);
-			icon: BrGlamorousVectorIcons remove;
-			label: 'Remove';
-			action: [ change execute ].
-	element addChild: button as: #removeButton.
-	^ element
+	^ BrMenuExplicit new
+		stencil: [ | element references subclasses change button |
+			element := BrVerticalPane new fitContent.
+			references := (GtPharoIndex current
+					globalVariableReferencesTo: aClass binding) size.
+			subclasses := aClass allSubclasses size.
+			element
+				addChild: ((self buildRemoveClassLabelFor: aClass)
+						margin: (BlInsets
+								top: 10
+								bottom: 0
+								left: 10
+								right: 10)).
+			references > 0
+				ifTrue: [ element
+						addChild: (BrLabel new
+								margin: (BlInsets left: 10 right: 10);
+								aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+								text: (references printString , ' reference'
+										, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
+			subclasses > 0
+				ifTrue: [ element
+						addChild: (BrLabel new
+								margin: (BlInsets left: 10 right: 10);
+								aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+								text: (subclasses printString , ' subclass'
+										, (subclasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
+			change := RBRemoveClassChange remove: aClass.
+			button := BrButton new
+					aptitude: BrGlamorousButtonWithIconAptitude;
+					beSmallSize;
+					margin: (BlInsets
+							top: 10
+							bottom: 10
+							left: 10
+							right: 10);
+					icon: BrGlamorousVectorIcons remove;
+					label: 'Remove';
+					action: [ change execute ].
+			element addChild: button as: #removeButton.
+			element ]
 ]
 
-{ #category : #'private - context menu' }
-GtCoderClassesTreeElement >> renameClass: aClass inElement: elem [
-	| refactoring edit childs restoreBlock |
-	edit := BrEditableLabel new.
-	childs := elem children.
-	restoreBlock := [ (edit parent notNil
-			and: [ edit parent children identityIncludes: edit ])
-			ifTrue: [ elem removeChildren.
-				elem addChildren: childs ] ].
-	edit
-		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;	"Force the font to match the label font"
-				background: Color transparent);
-		text: aClass name;
-		when: BrEditorCancelWish do: [ :wish | restoreBlock value ];
-		when: BrEditorAcceptWish
-			do: [ :aWish | 
-				refactoring := GtRBRenameClassRefactoring
-						rename: aClass name
-						to: aWish text asString.
-				edit switchToLabel.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					appliedBlock: restoreBlock
-					cancelBlock: restoreBlock ];
-		switchToEditor.
-	edit requestFocus.
-	elem removeChildren.
-	elem addChild: edit as: #renameClassEditor
+{ #category : #initialization }
+GtCoderClassesTreeElement >> renameClassSubmenuFor: aClass [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ GtRefactoringsWithInputPreviewElement
+				elementForRefactoring: [ :each | GtRBRenameClassRefactoring rename: aClass name to: each ]
+				labeled: 'Rename class: '
+				initialValue: aClass name
+				from: self
+				whenFinished: [ submenu hideAll ] ].
+	^ submenu
 ]
 
 { #category : #'api - selection' }
