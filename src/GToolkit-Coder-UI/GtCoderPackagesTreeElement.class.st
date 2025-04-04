@@ -194,7 +194,9 @@ GtCoderPackagesTreeElement >> promoteTag: aPackageOrTag inElement: elem [
 
 { #category : #initialization }
 GtCoderPackagesTreeElement >> removePackageSubmenuFor: aPackage [
-	^ BrMenuExplicit new
+	| submenu |
+	submenu := BrMenuExplicit new.
+	^ submenu
 		stencil: [ | element change button |
 			element := BrVerticalPane new fitContent.
 			element
@@ -240,14 +242,17 @@ GtCoderPackagesTreeElement >> removePackageSubmenuFor: aPackage [
 							right: 10);
 					icon: BrGlamorousVectorIcons remove;
 					label: 'Remove';
-					action: [ change execute ].
+					action: [ submenu hideAll.
+						change execute ].
 			element addChild: button as: #removeButton.
 			element ]
 ]
 
 { #category : #initialization }
 GtCoderPackagesTreeElement >> removePackageTagSubmenuFor: aPackageTag [
-	^ BrMenuExplicit new
+	| submenu |
+	submenu := BrMenuExplicit new.
+	^ submenu
 		stencil: [ | element change button |
 			element := BrVerticalPane new fitContent.
 			element
@@ -270,7 +275,8 @@ GtCoderPackagesTreeElement >> removePackageTagSubmenuFor: aPackageTag [
 							right: 10);
 					icon: BrGlamorousVectorIcons remove;
 					label: 'Remove';
-					action: [ change execute ].
+					action: [ submenu hideAll.
+						change execute ].
 			element addChild: button as: #removeButton.
 			element ]
 ]

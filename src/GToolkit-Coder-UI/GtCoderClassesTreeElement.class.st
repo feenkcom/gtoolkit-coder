@@ -252,7 +252,9 @@ GtCoderClassesTreeElement >> onDropCompiledMethodsOnClass: anItemsDroppedEvent [
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> removeClassSubmenuFor: aClass [
-	^ BrMenuExplicit new
+	| submenu |
+	submenu := BrMenuExplicit new.
+	^ submenu
 		stencil: [ | element change button |
 			element := BrVerticalPane new fitContent.
 			element
@@ -297,7 +299,8 @@ GtCoderClassesTreeElement >> removeClassSubmenuFor: aClass [
 							right: 10);
 					icon: BrGlamorousVectorIcons remove;
 					label: 'Remove';
-					action: [ change execute ].
+					action: [ submenu hideAll.
+						change execute ].
 			element addChild: button as: #removeButton.
 			element ]
 ]

@@ -223,7 +223,9 @@ GtCoderMethodsGroupedListElement >> pushUpMethod: aSelector inElement: elem [
 
 { #category : #'private - context menu' }
 GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
-	^ BrMenuExplicit new
+	| submenu |
+	submenu := BrMenuExplicit new.
+	^ submenu
 		stencil: [ | element change button |
 			element := BrVerticalPane new fitContent.
 			element
@@ -261,7 +263,8 @@ GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
 							right: 10);
 					icon: BrGlamorousVectorIcons remove;
 					label: 'Remove';
-					action: [ change execute ].
+					action: [ submenu hideAll.
+						change execute ].
 			element addChild: button as: #removeButton.
 			element ]
 ]
