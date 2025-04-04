@@ -253,11 +253,8 @@ GtCoderClassesTreeElement >> onDropCompiledMethodsOnClass: anItemsDroppedEvent [
 { #category : #initialization }
 GtCoderClassesTreeElement >> removeClassSubmenuFor: aClass [
 	^ BrMenuExplicit new
-		stencil: [ | element references subclasses change button |
+		stencil: [ | element change button |
 			element := BrVerticalPane new fitContent.
-			references := (GtPharoIndex current
-					globalVariableReferencesTo: aClass binding) size.
-			subclasses := aClass allSubclasses size.
 			element
 				addChild: ((self buildRemoveClassLabelFor: aClass)
 						margin: (BlInsets
@@ -265,20 +262,30 @@ GtCoderClassesTreeElement >> removeClassSubmenuFor: aClass [
 								bottom: 0
 								left: 10
 								right: 10)).
-			references > 0
-				ifTrue: [ element
-						addChild: (BrLabel new
-								margin: (BlInsets left: 10 right: 10);
-								aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-								text: (references printString , ' reference'
-										, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
-			subclasses > 0
-				ifTrue: [ element
-						addChild: (BrLabel new
-								margin: (BlInsets left: 10 right: 10);
-								aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-								text: (subclasses printString , ' subclass'
-										, (subclasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
+			element
+				addChild: (BrAsyncWidget new
+						fitContent;
+						stencil: [ | pane references subclasses |
+							references := (GtPharoIndex current
+									globalVariableReferencesTo: aClass binding) size.
+							subclasses := aClass allSubclasses size.
+							pane := BrVerticalPane new.
+							pane fitContent.
+							references > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (references printString , ' reference'
+														, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
+							subclasses > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (subclasses printString , ' subclass'
+														, (subclasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
+							pane ]).
 			change := RBRemoveClassChange remove: aClass.
 			button := BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;

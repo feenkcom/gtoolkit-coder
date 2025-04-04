@@ -224,9 +224,8 @@ GtCoderMethodsGroupedListElement >> pushUpMethod: aSelector inElement: elem [
 { #category : #'private - context menu' }
 GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
 	^ BrMenuExplicit new
-		stencil: [ | element references change button |
+		stencil: [ | element change button |
 			element := BrVerticalPane new fitContent.
-			references := (GtPharoIndex current sendersOf: aSelector) size.
 			element
 				addChild: (BrLabel new
 						margin: (BlInsets
@@ -236,13 +235,21 @@ GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
 								right: 10);
 						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
 						text: ('Remove ' , aSelector) asRopedText).
-			references > 0
-				ifTrue: [ element
-						addChild: (BrLabel new
-								margin: (BlInsets left: 10 right: 10);
-								aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-								text: (references printString , ' reference'
-										, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
+			element
+				addChild: (BrAsyncWidget new
+						fitContent;
+						stencil: [ | pane references |
+							pane := BrVerticalPane new.
+							pane fitContent.
+							references := (GtPharoIndex current sendersOf: aSelector) size.
+							references > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (references printString , ' reference'
+														, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
+							pane ]).
 			change := RBRemoveMethodChange remove: aSelector from: self selectedClass.
 			button := BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;

@@ -195,10 +195,8 @@ GtCoderPackagesTreeElement >> promoteTag: aPackageOrTag inElement: elem [
 { #category : #initialization }
 GtCoderPackagesTreeElement >> removePackageSubmenuFor: aPackage [
 	^ BrMenuExplicit new
-		stencil: [ | element definedClasses extendedClasses change button |
+		stencil: [ | element change button |
 			element := BrVerticalPane new fitContent.
-			definedClasses := aPackage definedClassNames size.
-			extendedClasses := aPackage extendedClassNames size.
 			element
 				addChild: ((self buildRemovePackageLabelFor: aPackage)
 						margin: (BlInsets
@@ -206,20 +204,31 @@ GtCoderPackagesTreeElement >> removePackageSubmenuFor: aPackage [
 								bottom: 0
 								left: 10
 								right: 10)).
-			definedClasses > 0
-				ifTrue: [ element
-						addChild: (BrLabel new
-								margin: (BlInsets left: 10 right: 10);
-								aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-								text: (definedClasses printString , ' defined class'
-										, (definedClasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
-			extendedClasses > 0
-				ifTrue: [ element
-						addChild: (BrLabel new
-								margin: (BlInsets left: 10 right: 10);
-								aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-								text: (extendedClasses printString , ' extended class'
-										, (extendedClasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
+			element
+				addChild: (BrAsyncWidget new
+						fitContent;
+						stencil: [ | pane definedClasses extendedClasses |
+							pane := BrVerticalPane new.
+							pane fitContent.
+							definedClasses := aPackage definedClassNames size.
+							extendedClasses := aPackage extendedClassNames size.
+							definedClasses > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (definedClasses printString , ' defined class'
+														, (definedClasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ]))
+														asRopedText) ].
+							extendedClasses > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (extendedClasses printString , ' extended class'
+														, (extendedClasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ]))
+														asRopedText) ].
+							pane ]).
 			change := RBRemovePackageChange removePackageNamed: aPackage name.
 			button := BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;
