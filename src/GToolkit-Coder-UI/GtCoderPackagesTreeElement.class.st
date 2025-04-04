@@ -66,24 +66,26 @@ GtCoderPackagesTreeElement >> contextMenuFor: aPackageOrTag [
 		action: [ self newPackage ].
 	aPackageOrTag class == RPackage
 		ifTrue: [ menu
-				addItemLabel: (self createLabel: 'Rename package' description: aPackageOrTag name)
-				action: [ self requestRenamePackage: aPackageOrTag ].
+				addItem: (BrMenuSubmenuItem new
+						label: (self createLabel: 'Rename package' description: aPackageOrTag name);
+						submenu: (self renamePackageSubmenuFor: aPackageOrTag)).
 			menu
 				addItem: (BrMenuSubmenuItem new
 						label: (self createLabel: 'Remove package' description: aPackageOrTag name);
-						submenu: (BrMenuExplicit new stencil: [ self removePackageSubmenuFor: aPackageOrTag ])) ]
+						submenu: (self removePackageSubmenuFor: aPackageOrTag)) ]
 		ifFalse: [ menu
-				addItemLabel: (self createLabel: 'Rename tag' description: aPackageOrTag name)
-				action: [ self requestRenamePackage: aPackageOrTag ].
+				addItem: (BrMenuSubmenuItem new
+						label: (self createLabel: 'Rename tag' description: aPackageOrTag name);
+						submenu: (self renamePackageTagSubmenuFor: aPackageOrTag)).
 			menu
 				addItem: (BrMenuSubmenuItem new
 						label: (self createLabel: 'Remove tag' description: aPackageOrTag name);
-						submenu: (BrMenuExplicit new stencil: [ self removePackageTagSubmenuFor: aPackageOrTag ])) ].
+						submenu: (self removePackageTagSubmenuFor: aPackageOrTag)) ].
 
 	^ menu
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - context menu' }
 GtCoderPackagesTreeElement >> createRenamePackageForm: aPackageOrTag [
 	^ GtCoderPackagesTreeRenameEditor new
 		itemToRename: aPackageOrTag;
@@ -176,7 +178,7 @@ GtCoderPackagesTreeElement >> newTagFor: aPackage inElement: elem [
 	self notYetImplemented
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - context menu' }
 GtCoderPackagesTreeElement >> privateEndRenamePackage [
 	"Removes package editing UI"
 
@@ -192,74 +194,91 @@ GtCoderPackagesTreeElement >> promoteTag: aPackageOrTag inElement: elem [
 
 { #category : #initialization }
 GtCoderPackagesTreeElement >> removePackageSubmenuFor: aPackage [
-	| element definedClasses extendedClasses change button |
-	element := BrVerticalPane new fitContent.
-	definedClasses := aPackage definedClassNames size.
-	extendedClasses := aPackage extendedClassNames size.
-	element
-		addChild: ((self buildRemovePackageLabelFor: aPackage)
-				margin: (BlInsets
-						top: 10
-						bottom: 0
-						left: 10
-						right: 10)).
-	definedClasses > 0
-		ifTrue: [ element
-				addChild: (BrLabel new
-						margin: (BlInsets left: 10 right: 10);
-						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-						text: (definedClasses printString , ' defined class'
-								, (definedClasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
-	extendedClasses > 0
-		ifTrue: [ element
-				addChild: (BrLabel new
-						margin: (BlInsets left: 10 right: 10);
-						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-						text: (extendedClasses printString , ' extended class'
-								, (extendedClasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
-	change := RBRemovePackageChange removePackageNamed: aPackage name.
-	button := BrButton new
-			aptitude: BrGlamorousButtonWithIconAptitude;
-			beSmallSize;
-			margin: (BlInsets
-					top: 10
-					bottom: 10
-					left: 10
-					right: 10);
-			icon: BrGlamorousVectorIcons remove;
-			label: 'Remove';
-			action: [ change execute ].
-	element addChild: button as: #removeButton.
-	^ element
+	| submenu |
+	submenu := BrMenuExplicit new.
+	^ submenu
+		stencil: [ | element change button |
+			element := BrVerticalPane new fitContent.
+			element
+				addChild: ((self buildRemovePackageLabelFor: aPackage)
+						margin: (BlInsets
+								top: 10
+								bottom: 0
+								left: 10
+								right: 10)).
+			element
+				addChild: (BrAsyncWidget new
+						fitContent;
+						stencil: [ | pane definedClasses extendedClasses |
+							pane := BrVerticalPane new.
+							pane fitContent.
+							definedClasses := aPackage definedClassNames size.
+							extendedClasses := aPackage extendedClassNames size.
+							definedClasses > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (definedClasses printString , ' defined class'
+														, (definedClasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ]))
+														asRopedText) ].
+							extendedClasses > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (extendedClasses printString , ' extended class'
+														, (extendedClasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ]))
+														asRopedText) ].
+							pane ]).
+			change := RBRemovePackageChange removePackageNamed: aPackage name.
+			button := BrButton new
+					aptitude: BrGlamorousButtonWithIconAptitude;
+					beSmallSize;
+					margin: (BlInsets
+							top: 10
+							bottom: 10
+							left: 10
+							right: 10);
+					icon: BrGlamorousVectorIcons remove;
+					label: 'Remove';
+					action: [ submenu hideAll.
+						change execute ].
+			element addChild: button as: #removeButton.
+			element ]
 ]
 
 { #category : #initialization }
 GtCoderPackagesTreeElement >> removePackageTagSubmenuFor: aPackageTag [
-	| element change button |
-	element := BrVerticalPane new fitContent.
-	element
-		addChild: ((self buildRemoveTagLabelFor: aPackageTag)
-				margin: (BlInsets
-						top: 10
-						bottom: 0
-						left: 10
-						right: 10)).
-	change := GtRBRemovePackageTagChange
-			packageName: aPackageTag package name
-			tagName: aPackageTag name.
-	button := BrButton new
-			aptitude: BrGlamorousButtonWithIconAptitude;
-			beSmallSize;
-			margin: (BlInsets
-					top: 10
-					bottom: 10
-					left: 10
-					right: 10);
-			icon: BrGlamorousVectorIcons remove;
-			label: 'Remove';
-			action: [ change execute ].
-	element addChild: button as: #removeButton.
-	^ element
+	| submenu |
+	submenu := BrMenuExplicit new.
+	^ submenu
+		stencil: [ | element change button |
+			element := BrVerticalPane new fitContent.
+			element
+				addChild: ((self buildRemoveTagLabelFor: aPackageTag)
+						margin: (BlInsets
+								top: 10
+								bottom: 0
+								left: 10
+								right: 10)).
+			change := GtRBRemovePackageTagChange
+					packageName: aPackageTag package name
+					tagName: aPackageTag name.
+			button := BrButton new
+					aptitude: BrGlamorousButtonWithIconAptitude;
+					beSmallSize;
+					margin: (BlInsets
+							top: 10
+							bottom: 10
+							left: 10
+							right: 10);
+					icon: BrGlamorousVectorIcons remove;
+					label: 'Remove';
+					action: [ submenu hideAll.
+						change execute ].
+			element addChild: button as: #removeButton.
+			element ]
 ]
 
 { #category : #initialization }
@@ -288,6 +307,38 @@ GtCoderPackagesTreeElement >> renamePackage: aPackage inElement: elem [
 	edit requestFocus.
 	elem removeChildren.
 	elem addChild: edit
+]
+
+{ #category : #'private - context menu' }
+GtCoderPackagesTreeElement >> renamePackageSubmenuFor: aPackage [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ GtRefactoringsWithInputPreviewElement
+				elementForRefactoring: [ :each | GtRBRenamePackageRefactoring from: aPackage name to: each ]
+				labeled: 'Rename package: '
+				initialValue: aPackage name
+				from: self
+				beforeApplyingDo: [ submenu hideAll ] ].
+	^ submenu
+]
+
+{ #category : #'private - context menu' }
+GtCoderPackagesTreeElement >> renamePackageTagSubmenuFor: aPackageTag [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ GtRefactoringsWithInputPreviewElement
+				elementForRefactoring: [ :each | 
+					GtRBRenamePackageTagRefactoring
+						packageName: aPackageTag packageName
+						from: aPackageTag name
+						to: each ]
+				labeled: 'Rename tag: '
+				initialValue: aPackageTag name
+				from: self
+				beforeApplyingDo: [ submenu hideAll ] ].
+	^ submenu
 ]
 
 { #category : #initialization }
@@ -319,7 +370,7 @@ GtCoderPackagesTreeElement >> renameTag: aPackageOrTag inElement: elem [
 	elem addChild: edit
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - context menu' }
 GtCoderPackagesTreeElement >> requestRenamePackage: aPackageOrTag [
 	"An entrance point to the rename package action.
 	Presents a UI to rename a given package"
