@@ -319,7 +319,7 @@ GtCoderPackagesTreeElement >> renamePackageSubmenuFor: aPackage [
 				labeled: 'Rename package: '
 				initialValue: aPackage name
 				from: self
-				whenFinished: [ submenu hideAll ] ].
+				beforeApplyingDo: [ submenu hideAll ] ].
 	^ submenu
 ]
 
@@ -337,7 +337,7 @@ GtCoderPackagesTreeElement >> renamePackageTagSubmenuFor: aPackageTag [
 				labeled: 'Rename tag: '
 				initialValue: aPackageTag name
 				from: self
-				whenFinished: [ submenu hideAll ] ].
+				beforeApplyingDo: [ submenu hideAll ] ].
 	^ submenu
 ]
 

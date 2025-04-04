@@ -120,7 +120,7 @@ GtCoderClassesTreeElement >> convertToSiblingSubmenuFor: aClass [
 				labeled: 'Superclass: '
 				initialValue: 'NewClass'
 				from: self
-				whenFinished: [ submenu hideAll ] ].
+				beforeApplyingDo: [ submenu hideAll ] ].
 	^ submenu
 ]
 
@@ -315,7 +315,7 @@ GtCoderClassesTreeElement >> renameClassSubmenuFor: aClass [
 				labeled: 'Rename class: '
 				initialValue: aClass name
 				from: self
-				whenFinished: [ submenu hideAll ] ].
+				beforeApplyingDo: [ submenu hideAll ] ].
 	^ submenu
 ]
 
