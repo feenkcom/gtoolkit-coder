@@ -42,6 +42,19 @@ GtCoderNavigationBasicClassHierarchyElement >> onClassDeselected: aGtCoderNaviga
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationBasicClassHierarchyElement >> onClassListSelectionChanged [
+	| anIndex aSelectedItem theIndices |
+	supressListChanges ifTrue: [ ^ self ].
+	theIndices := classesList selectedIndices.
+	theIndices ifEmpty: [ ^ self ].
+	anIndex := theIndices first.
+	(anIndex between: 1 and: classesList viewModel itemCount) ifFalse: [ ^ self ].
+	aSelectedItem := (classesList viewModel itemAt: anIndex) value rootClass.
+	self
+		suppressListChangeEventsDuring: [ self navigationModel selectClass: aSelectedItem ]
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationBasicClassHierarchyElement >> onClassSelected: anAnnouncement [
 	| aSelectedClass |
 	
@@ -49,6 +62,12 @@ GtCoderNavigationBasicClassHierarchyElement >> onClassSelected: anAnnouncement [
 	(classesList containsClass: aSelectedClass)
 		ifFalse: [ self updateClassList ].
 	self selectClass: aSelectedClass
+]
+
+{ #category : #'event handling' }
+GtCoderNavigationBasicClassHierarchyElement >> onClassesToShowChanged: anAnnouncement [
+	supressListChanges ifTrue: [ ^ self ].
+	self inUIProcessDo: [ self updateClassList ]
 ]
 
 { #category : #'event handling' }
