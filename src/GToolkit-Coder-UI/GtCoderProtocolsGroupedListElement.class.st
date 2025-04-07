@@ -43,6 +43,27 @@ GtCoderProtocolsGroupedListElement >> bindProtocol: item toElement: element [
 ]
 
 { #category : #'private - instance creation' }
+GtCoderProtocolsGroupedListElement >> contextMenuFor: aPharoProtocol [
+	| menu |
+	menu := BrMenuItems new.
+	aPharoProtocol name = Protocol unclassified
+		ifTrue: [ menu
+				addItemLabel: (self createLabel: 'Auto-categorize methods' description: '')
+				action: [ self autoCategorizeProtocol: aPharoProtocol ] ].
+	aPharoProtocol canBeRenamed
+		ifTrue: [ menu
+				addItem: (BrMenuSubmenuItem new
+						label: (self createLabel: 'Rename' description: aPharoProtocol name);
+						submenu: (self renameProtocolSubmenuFor: aPharoProtocol)) ].
+	aPharoProtocol canBeRemoved
+		ifTrue: [ menu
+				addItem: (BrMenuSubmenuItem new
+						label: (self createLabel: 'Remove' description: aPharoProtocol name);
+						submenu: (self removeProtocolSubmenuFor: aPharoProtocol)) ].
+	^ menu
+]
+
+{ #category : #'private - instance creation' }
 GtCoderProtocolsGroupedListElement >> createProtocolDropHandler [
 	^ BlDropHandler new
 		acceptDomainObjectsSuchThat: [ :anObject | anObject isCompiledMethod ];
@@ -92,6 +113,7 @@ GtCoderProtocolsGroupedListElement >> createProtocolGroups [
 { #category : #'private - instance creation' }
 GtCoderProtocolsGroupedListElement >> createProtocolLabelElement [
 	"An element that represents a protocol within a list of protocols"
+
 	<return: #BlElement>
 	| aLabel aLabelAptitude |
 	aLabel := BrLabel new.
@@ -104,7 +126,7 @@ GtCoderProtocolsGroupedListElement >> createProtocolLabelElement [
 					right: 1);
 			add: BrGlamorousListItemAptitude;
 			add: (BrGlamorousWithExplicitContextMenuAptitude
-					itemsWithAnchorActions: [ (self createProtocolListContextMenuItemsFor: (aLabel userData at: #protocol)) ]).
+					menu: [ self contextMenuFor: (aLabel userData at: #protocol) ]).
 
 	^ aLabel
 		hMatchParent;
@@ -113,29 +135,6 @@ GtCoderProtocolsGroupedListElement >> createProtocolLabelElement [
 		beFocusable;
 		aptitude: aLabelAptitude;
 		addEventHandler: self createProtocolDropHandler
-]
-
-{ #category : #'private - instance creation' }
-GtCoderProtocolsGroupedListElement >> createProtocolListContextMenuItemsFor: aPharoProtocol [
-	^ Array
-		streamContents: [ :aStream | 
-			aPharoProtocol name = Protocol unclassified
-				ifTrue: [
-					aStream
-						nextPut: (self createLabel: 'Auto-categorize methods' description: '')
-								-> [ :elem | self autoCategorizeProtocol: aPharoProtocol ] ].
-								
-			aPharoProtocol canBeRenamed
-				ifTrue: [ aStream
-						nextPut: (self createLabel: 'Rename ' description: aPharoProtocol name)
-								-> [ :elem | self requestRenameProtocol: aPharoProtocol ] ].
-			
-			aPharoProtocol canBeRemoved
-				ifTrue: [ aStream
-						nextPut: (self createLabel: 'Remove ' description: aPharoProtocol name)
-								-> [ :elem | self removeProtocol: aPharoProtocol in: elem ] ].
-		
-		]
 ]
 
 { #category : #'private - instance creation' }
@@ -315,24 +314,71 @@ GtCoderProtocolsGroupedListElement >> privateEndRenameProtocol [
 ]
 
 { #category : #'private - refactorings' }
-GtCoderProtocolsGroupedListElement >> removeProtocol: aGtPharoProtocol in: elem [
-	| refactoring |
-	refactoring := RBRemoveProtocolChange
-			removeProtocolNamed: aGtPharoProtocol name
-			in: aGtPharoProtocol protocolClass.
-	refactoring execute
+GtCoderProtocolsGroupedListElement >> removeProtocolSubmenuFor: aGtPharoProtocol [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	^ submenu
+		stencil: [ | element change button |
+			element := BrVerticalPane new fitContent.
+			element
+				addChild: (BrLabel new
+						aptitude: BrGlamorousLabelAptitude new glamorousRegularFontAndSize;
+						text: (self createLabel: 'Remove ' description: aGtPharoProtocol name);
+						margin: (BlInsets
+								top: 10
+								bottom: 0
+								left: 10
+								right: 10)).
+			element
+				addChild: (BrAsyncWidget new
+						fitContent;
+						stencil: [ | pane methods |
+							pane := BrVerticalPane new.
+							pane fitContent.
+							methods := aGtPharoProtocol methodSelectors size.
+							methods > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (methods printString , ' defined class'
+														, (methods > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
+							pane ]).
+			change := RBRemoveProtocolChange
+					removeProtocolNamed: aGtPharoProtocol name
+					in: aGtPharoProtocol protocolClass.
+			button := BrButton new
+					aptitude: BrGlamorousButtonWithIconAptitude;
+					beSmallSize;
+					margin: (BlInsets
+							top: 10
+							bottom: 10
+							left: 10
+							right: 10);
+					icon: BrGlamorousVectorIcons remove;
+					label: 'Remove';
+					action: [ submenu hideAll.
+						change execute ].
+			element addChild: button as: #removeButton.
+			element ]
 ]
 
 { #category : #'private - refactorings' }
-GtCoderProtocolsGroupedListElement >> requestRenameProtocol: aGtPharoProtocol [
-	"An entrance point to the rename protocol action.
-	Presents a UI to rename a given protocol"
-
-	protocolToRename := aGtPharoProtocol.
-	renamingEditor := nil.
-	self dispatchEvent: ((BrItemsProviderItemsChangedEvent new
-			viewModel: self viewModel;
-			isSynchronous: true))
+GtCoderProtocolsGroupedListElement >> renameProtocolSubmenuFor: aGtPharoProtocol [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ GtRefactoringsWithInputPreviewElement
+				elementForRefactoring: [ :each | 
+					GtRBRenameProtocolRefactoring
+						renameProtocol: aGtPharoProtocol name
+						in: aGtPharoProtocol protocolClass
+						to: each ]
+				labeled: 'Rename protocol: '
+				initialValue: aGtPharoProtocol name
+				from: self
+				beforeApplyingDo: [ submenu hideAll ] ].
+	^ submenu
 ]
 
 { #category : #'api - list' }
