@@ -69,14 +69,17 @@ GtCoderMethodsGroupedListElement >> contextMenuFor: item in: anElement [
 		addItemLabel: (self createLabel: 'Browse hierarchy references' description: item selector)
 		action: [ self browseHierarchyReferencesOf: item selector ].
 	menu
-		addItemLabel: (self createLabel: 'Push up method' description: item selector)
-		action: [ self pushUpMethod: item selector inElement: anElement ].
+		addItem: (BrMenuSubmenuItem new
+				label: (self createLabel: 'Push up method' description: item selector);
+				submenu: (self pushUpMethodSubmenuFor: item selector)).
 	menu
-		addItemLabel: (self createLabel: 'Push down method' description: item selector)
-		action: [ self pushDownMethod: item selector inElement: anElement ].
+		addItem: (BrMenuSubmenuItem new
+				label: (self createLabel: 'Push down method' description: item selector);
+				submenu: (self pushDownMethodSubmenuFor: item selector)).
 	menu
-		addItemLabel: (self createLabel: 'Rename message' description: item selector)
-		action: [ self renameMethod: item selector inElement: anElement ].
+		addItem: (BrMenuSubmenuItem new
+				label: (self createLabel: 'Rename message' description: item selector);
+				submenu: (self renameMethodSubmenuFor: item selector)).
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Remove method' description: item selector);
@@ -197,28 +200,34 @@ GtCoderMethodsGroupedListElement >> onMethodsToShowChanged: anAnnouncement [
 	self updateMethodList
 ]
 
-{ #category : #'private - actions' }
-GtCoderMethodsGroupedListElement >> pushDownMethod: aSelector inElement: elem [
-	| refactoring |
-	refactoring := RBPushDownMethodRefactoring
-			pushDown: {aSelector}
-			from: self selectedClass.
-	^ self
-		addPreviewButtonFor: refactoring
-		to: elem
-		cancelSelector: #updateMethodList
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aSelector [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ GtRefactoringsWithInputPreviewElement
+				elementForRefactoring: [ RBPushDownMethodRefactoring
+						pushDown: {aSelector}
+						from: self selectedClass ]
+				confirmationLabeled: 'Push down ' , aSelector
+				from: self
+				beforeApplyingDo: [ submenu hideAll ] ].
+	^ submenu
 ]
 
-{ #category : #'private - actions' }
-GtCoderMethodsGroupedListElement >> pushUpMethod: aSelector inElement: elem [
-	| refactoring |
-	refactoring := RBPullUpMethodRefactoring
-			pullUp: {aSelector}
-			from: self selectedClass.
-	^ self
-		addPreviewButtonFor: refactoring
-		to: elem
-		cancelSelector: #updateMethodList
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> pushUpMethodSubmenuFor: aSelector [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ GtRefactoringsWithInputPreviewElement
+				elementForRefactoring: [ RBPullUpMethodRefactoring
+						pullUp: {aSelector}
+						from: self selectedClass ]
+				confirmationLabeled: 'Pull up ' , aSelector
+				from: self
+				beforeApplyingDo: [ submenu hideAll ] ].
+	^ submenu
 ]
 
 { #category : #'private - context menu' }
@@ -269,31 +278,23 @@ GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
 			element ]
 ]
 
-{ #category : #'private - actions' }
-GtCoderMethodsGroupedListElement >> renameMethod: aSelector inElement: elem [
-	| refactoring edit |
-	edit := BrEditableLabel new.
-	edit
-		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;   "Force the font to match the label font"
-				background: Color transparent);
-		text: aSelector;
-		when: BrEditorAcceptWish
-			do: [ :aWish | 
-				refactoring := GtRBRenameMethodRefactoring
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> renameMethodSubmenuFor: aSelector [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ GtRefactoringsWithInputPreviewElement
+				elementForRefactoring: [ :each | 
+					GtRBRenameMethodRefactoring
 						renameMethod: aSelector
 						in: self selectedClass
-						to: aWish text asString
-						permutation: (1 to: aSelector numArgs).
-				edit switchToLabel.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					cancelSelector: #updateMethodList ];
-		switchToEditor.
-	edit requestFocus.
-	elem removeChildren.
-	elem addChild: edit
+						to: each
+						permutation: (1 to: aSelector numArgs) ]
+				labeled: 'Rename method: '
+				initialValue: aSelector
+				from: self
+				beforeApplyingDo: [ submenu hideAll ] ].
+	^ submenu
 ]
 
 { #category : #accessing }
