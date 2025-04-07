@@ -95,19 +95,20 @@ GtCoderClassesTreeElement >> contextMenuFor: aClass [
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Remove class' description: aClass name);
 				submenu: (self removeClassSubmenuFor: aClass)).
+	aClass subclasses notEmpty
+		ifTrue: [ menu
+				addItem: (BrMenuSubmenuItem new
+						label: (self createLabel: 'Convert to sibling' description: aClass name);
+						submenu: (self convertToSiblingSubmenuFor: aClass siblings: aClass subclasses)) ].
 	menu
 		addItem: (BrMenuSubmenuItem new
-				label: (self
-						createLabel: (aClass subclasses notEmpty
-								ifTrue: [ 'Convert to sibling' ]
-								ifFalse: [ 'Extract superclass' ])
-						description: aClass name);
-				submenu: (self convertToSiblingSubmenuFor: aClass)).
+				label: (self createLabel: 'Extract superclass' description: aClass name);
+				submenu: (self convertToSiblingSubmenuFor: aClass siblings: #())).
 	^ menu
 ]
 
 { #category : #initialization }
-GtCoderClassesTreeElement >> convertToSiblingSubmenuFor: aClass [
+GtCoderClassesTreeElement >> convertToSiblingSubmenuFor: aClass siblings: aCollection [
 	| submenu |
 	submenu := BrMenuExplicit new.
 	submenu
@@ -116,7 +117,7 @@ GtCoderClassesTreeElement >> convertToSiblingSubmenuFor: aClass [
 					GtChildrenToSiblingsRefactoring
 						name: each
 						class: aClass
-						subclasses: aClass subclasses ]
+						subclasses: aCollection ]
 				labeled: 'Superclass: '
 				initialValue: 'NewClass'
 				from: self
