@@ -59,12 +59,7 @@ GtCoderClassesTreeElement >> browseReferencesTo: aClass [
 { #category : #initialization }
 GtCoderClassesTreeElement >> buildRemoveClassLabelFor: aClass [
 	| labelText |
-	labelText := (aClass isReferenced
-			ifTrue: [ '<1s> is referenced. Remove anyway?' ]
-			ifFalse: [ aClass subclasses isEmpty
-					ifTrue: [ 'Remove class <1s>' ]
-					ifFalse: [ '<1s> has subclasses. Remove anyway?' ] ])
-			expandMacrosWith: aClass name.
+	labelText := 'Remove class ' , aClass name.
 	^ BrLabel new
 		margin: (BlInsets all: 10);
 		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
