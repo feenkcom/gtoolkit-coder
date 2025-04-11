@@ -17,6 +17,13 @@ GtClassCoderTool class >> observedClass: aClass [
 	^ self new observedClass: aClass
 ]
 
+{ #category : #'as yet unclassified' }
+GtClassCoderTool >> name [
+	^ observedClass 
+		ifNil: [super name] 
+		ifNotNil: [ :aClass | aClass name ]
+]
+
 { #category : #converting }
 GtClassCoderTool >> newCoder [
 	^ GtCoderElement forClass: self observedClass instanceSide
