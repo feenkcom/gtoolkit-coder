@@ -364,7 +364,7 @@ GtFilterItemsElement >> onItemMouseEnterEvent: anEvent listElement: aListElement
 	aFilter ifNil: [ ^ self ].
 	aListElement
 		itemSuchThat: [ :eachItem | eachItem == aFilter ]
-		do: [ :anIndex | aListElement selectOne: anIndex ]
+		ifFound: [ :anIndex | aListElement selectOne: anIndex ]
 ]
 
 { #category : #'event handling' }
