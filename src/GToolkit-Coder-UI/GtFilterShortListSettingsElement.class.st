@@ -252,7 +252,7 @@ GtFilterShortListSettingsElement >> onItemMouseEnterEvent: anEvent [
 		listElementDo: [ :aListElement | 
 			aListElement
 				itemSuchThat: [ :eachItem | eachItem == aFilterItem ]
-				do: [ :anIndex | aListElement selectOne: anIndex ] ]
+				ifFound: [ :anIndex | aListElement selectOne: anIndex ] ]
 ]
 
 { #category : #'event handling' }
