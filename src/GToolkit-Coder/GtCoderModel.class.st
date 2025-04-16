@@ -162,7 +162,7 @@ GtCoderModel >> initialize [
 	super initialize.
 
 	id := UniqueIdGenerator generateUniqueId.
-	monitor := Monitor new.
+	monitor := Mutex new.
 	announcer := GtCoderAnnouncer new
 ]
 

@@ -71,7 +71,7 @@ GtFilteredCodersModel >> additionalFilters: aCollectionOfFilters [
 	| aNewCollection |
 	aNewCollection := aCollectionOfFilters asArray.
 	additionalFilters = aNewCollection ifTrue: [ ^ self ].
-	monitor critical: [ 
+	mutex critical: [ 
 		additionalFilters := aNewCollection.
 		compositeFilter := self
 			createCombinedFilterFor: filter
@@ -118,7 +118,7 @@ GtFilteredCodersModel >> filter [
 
 { #category : #'api - accessing' }
 GtFilteredCodersModel >> filter: aGtSearchFilter [
-	monitor critical: [ 
+	mutex critical: [ 
 		filter := aGtSearchFilter.
 		compositeFilter := self
 			createCombinedFilterFor: filter

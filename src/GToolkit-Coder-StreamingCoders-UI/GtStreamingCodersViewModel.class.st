@@ -5,11 +5,11 @@ Class {
 	#classTraits : 'TGtWithStreamingCodersModel classTrait',
 	#instVars : [
 		'announcer',
-		'monitor',
 		'coderViewModels',
 		'coderViewModelsStream',
 		'pendingCommands',
-		'scrollTarget'
+		'scrollTarget',
+		'mutex'
 	],
 	#category : #'GToolkit-Coder-StreamingCoders-UI-Coder'
 }
@@ -29,7 +29,7 @@ GtStreamingCodersViewModel >> coderViewModelsStream [
 
 { #category : #'api - commands' }
 GtStreamingCodersViewModel >> enqueueCommand: aViewModelCommand [
-	monitor critical: [ 
+	mutex critical: [ 
 		| theApplicableCoderViewModels |
 		
 		theApplicableCoderViewModels := OrderedCollection new.
@@ -52,7 +52,7 @@ GtStreamingCodersViewModel >> hasScrollTarget [
 GtStreamingCodersViewModel >> initialize [
 	super initialize.
 
-	monitor := Monitor new.
+	mutex := Mutex new.
 	coderViewModels := AsyncSharedDictionary new.
 	pendingCommands := OrderedCollection new.
 	coderViewModelsStream := AsyncEmptyStream new
@@ -96,7 +96,7 @@ GtStreamingCodersViewModel >> privateCoderViewModelsStream: anAsyncStream [
 
 { #category : #'private - accessing' }
 GtStreamingCodersViewModel >> privateFetchCoderViewModelFor: aCoderModel [
-	^ monitor critical: [				
+	^ mutex critical: [				
 		coderViewModels
 			at: aCoderModel
 			ifAbsentPut: [
@@ -155,7 +155,7 @@ GtStreamingCodersViewModel >> unsubscribeFromStreamingCodersModel [
 
 { #category : #'private - updating' }
 GtStreamingCodersViewModel >> updateCoderViewModelsStream [
-	monitor critical: [
+	mutex critical: [
 		self privateCoderViewModelsStream: (streamingCodersModel codersStream map: [ :eachCoder | self privateFetchCoderViewModelFor: eachCoder ]) ]
 ]
 
