@@ -102,7 +102,7 @@ GtAbstractRenameAction >> forText [
 { #category : #'initialize-release' }
 GtAbstractRenameAction >> forVariableOrUnaryMessage [
 	validationBlock := [ :str | self validateVariable: str ].
-	self filter: BrTextEditorAlphaNumericInputFilter new
+	self filter: GtVariableInputFilter new
 ]
 
 { #category : #initialization }
