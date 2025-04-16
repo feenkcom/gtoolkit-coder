@@ -40,7 +40,7 @@ Behavior >> gtHierarchyButtonFor: anAction [
 						pragmaName: #gtCoderDropdownNavigation;
 						navigationModel: aNavigationModel;
 						asElement) background: Color white);
-				addAptitude: (BrGlamorousMenuPinnableAptitude new
+				addAptitude: (BrGlamorousPopoverPinnableAptitude new
 					withAllPinActions;
 					menuModel: anExplicitMenu) ]
 ]
