@@ -3,10 +3,10 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'announcer',
-		'monitor',
 		'coders',
 		'itemsStream',
-		'codersStream'
+		'codersStream',
+		'mutex'
 	],
 	#category : #'GToolkit-Coder-StreamingCoders-Coder'
 }
@@ -36,7 +36,7 @@ GtStreamingCodersModel >> codersStream [
 GtStreamingCodersModel >> initialize [
 	super initialize.
 
-	monitor := Monitor new.
+	mutex := Mutex new.
 	coders := Dictionary new.
 	itemsStream := AsyncEmptyStream new.
 	codersStream := AsyncEmptyStream new
@@ -59,7 +59,7 @@ GtStreamingCodersModel >> itemsStream: anAsyncStream dueTo: aReasonObject [
 		assert: [ itemsStream ~~ anAsyncStream ]
 		description: [ 'Must not pass the same stream as the current one' ]. 
 
-	monitor critical: [
+	mutex critical: [
 		itemsStream := anAsyncStream cached.
 		codersStream := itemsStream
 			map: [ :eachItem | self newCoderFor: eachItem ]
@@ -99,7 +99,7 @@ GtStreamingCodersModel >> privateAddCoderFor: aNewItem [
 
 { #category : #'private - instance creation' }
 GtStreamingCodersModel >> privateFetchCoderFor: anObject [
-	^ monitor critical: [
+	^ mutex critical: [
 		coders
 			at: (self newCoderCacheKeyFor: anObject)
 			ifAbsentPut: [ self newCoderFor: anObject ] ]
@@ -109,7 +109,7 @@ GtStreamingCodersModel >> privateFetchCoderFor: anObject [
 GtStreamingCodersModel >> privateRemoveCoderFor: aRemovedItem [
 	| aRemovedCoder |
 
-	monitor critical: [
+	mutex critical: [
 		aRemovedCoder := coders
 			removeKey: (self newCoderCacheKeyFor: aRemovedItem)
 			ifAbsent: [ nil ] ].
@@ -124,7 +124,7 @@ GtStreamingCodersModel >> privateSwapCodersFor: aFirstItem and: aSecondItem [
 	aFirstKey := self newCoderCacheKeyFor: aFirstItem.
 	aSecondKey := self newCoderCacheKeyFor: aSecondItem.
 
-	monitor critical: [		
+	mutex critical: [		
 		coders
 			at: aFirstKey
 			ifPresent: [ :aFirstCoder |

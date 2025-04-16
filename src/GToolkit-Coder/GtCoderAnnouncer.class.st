@@ -20,7 +20,7 @@ GtCoderAnnouncer >> announce: anAnnouncement [
 GtCoderAnnouncer >> initialize [
 	super initialize.
 	
-	monitor := Monitor new.
+	monitor := Mutex new.
 	suppressedAnnouncements := #()
 ]
 

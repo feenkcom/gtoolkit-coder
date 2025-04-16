@@ -78,7 +78,7 @@ GtCoderTextSource >> hasSourceText [
 GtCoderTextSource >> initialize [
 	super initialize.
 	
-	monitor := Monitor new.
+	monitor := Mutex new.
 	currentSourceText := nil.
 	originalSourceText := nil
 ]
