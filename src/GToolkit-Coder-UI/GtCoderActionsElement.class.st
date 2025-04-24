@@ -205,6 +205,27 @@ GtCoderActionsElement >> newDropButtonMenuForAction: aGtCoderAction [
 		yourself
 ]
 
+{ #category : #'instace creation' }
+GtCoderActionsElement >> newErrorButtonForAction: aGtCoderAction exception: anException [
+	| aFrozenException aButton |
+	aFrozenException := GtSystemUtility freeze: anException.
+
+	aButton := BrButton new
+			beTinySize;
+			aptitude: BrGlamorousButtonWithIconAndLabelAptitude;
+			addAptitude: (BrGlamorousWithExplicitTooltipAptitude text: anException printString);
+			label: 'Exception';
+			icon: BrGlamorousVectorIcons debug;
+			action: [ :theButton | 
+				theButton phlow
+					spawnObject: {aGtCoderAction.
+							aFrozenException} ].
+
+	self initializeAltClick: aGtCoderAction element: aButton.
+
+	^ aButton
+]
+
 { #category : #'instance creation' }
 GtCoderActionsElement >> newLocateDebuggerButtonForAction: aGtCoderAction [
 	<return: #BrButton>

@@ -715,6 +715,15 @@ GtTextualCoderViewModel >> saveAttribute: folder forNode: aNode andStyler: aStyl
 	(self nodeAttributeMapForStyler: aStyler) at: aNode put: folder
 ]
 
+{ #category : #'api - scrolling' }
+GtTextualCoderViewModel >> scrollToLine: aLineIndex withCharacterPosition: aCharacterPosition [
+	self
+		announce: (GtTextualCoderViewModelScrollToCharacterPositionAnnouncement new
+				textualCoderViewModel: self;
+				lineIndex: aLineIndex;
+				characterPosition: aCharacterPosition)
+]
+
 { #category : #'api - selection' }
 GtTextualCoderViewModel >> select: aFromCursorIndex to: aToCursorIndex [
 	self selection: (self selection copy select: aFromCursorIndex to: aToCursorIndex)

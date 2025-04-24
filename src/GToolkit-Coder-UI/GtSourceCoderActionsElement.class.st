@@ -15,7 +15,9 @@ Class {
 { #category : #private }
 GtSourceCoderActionsElement >> addContextToolbarActions [
 	contextToolbar addItems: (self textualCoderViewModel contextActions collect: [ :aGtCoderAction | 
-		aGtCoderAction buildElementIn: self ]).
+		[ aGtCoderAction buildElementIn: self ]
+			on: Error
+			do: [ :anException | self newErrorButtonForAction: aGtCoderAction exception: anException ] ]).
 	separator
 		visibility:
 			(contextToolbar hasItems
@@ -26,11 +28,12 @@ GtSourceCoderActionsElement >> addContextToolbarActions [
 { #category : #private }
 GtSourceCoderActionsElement >> addMainToolbarActions [
 	mainToolbar
-		addItems:
-			(self coderViewModel mainActions
+		addItems: (self coderViewModel mainActions
 				collect: [ :aGtCoderAction | 
 					self flag: 'Temporary hack. Coder should to Phlow actions'.
-					aGtCoderAction buildElementIn: self ])
+					[ aGtCoderAction buildElementIn: self ]
+						on: Error
+						do: [ :anException | self newErrorButtonForAction: aGtCoderAction exception: anException ] ])
 ]
 
 { #category : #accessing }
