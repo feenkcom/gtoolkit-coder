@@ -468,6 +468,17 @@ GtSourceCoderViewModel >> requestSave [
 ]
 
 { #category : #'api - actions' }
+GtSourceCoderViewModel >> requestSearch [
+	"Request the view model to start the saving process. We first send a corresponding announcement to
+	allow UI to intercept the saving request and show, for example, a confirmation dialog. If an announcement
+	was not consumed (= handled) proceed with the default save action"
+	| anAnnouncement |
+
+	anAnnouncement := GtSourceCoderViewModelSearchTextRequested new textualCoderViewModel: self.
+	self announce: anAnnouncement.
+]
+
+{ #category : #'api - actions' }
 GtSourceCoderViewModel >> save [
 	"Attempt to save the source code in a default context. For example in terms of a method, the changes would
 	be saved in the origin class of the method (trait, interface or superclass).

@@ -3,9 +3,10 @@ Class {
 	#superclass : #GtTextualCoderViewModelAnnouncement,
 	#instVars : [
 		'source',
-		'selection'
+		'selection',
+		'shouldUpdateCursor'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
+	#category : #'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
 { #category : #accessing }
@@ -16,6 +17,16 @@ GtTextualCoderViewModelSelectionChanged >> selection [
 { #category : #accessing }
 GtTextualCoderViewModelSelectionChanged >> selection: anObject [
 	selection := anObject
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModelSelectionChanged >> shouldUpdateCursor [
+	^ shouldUpdateCursor ifNil: [ false ]
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModelSelectionChanged >> shouldUpdateCursor: aBoolean [
+	shouldUpdateCursor := aBoolean
 ]
 
 { #category : #accessing }
