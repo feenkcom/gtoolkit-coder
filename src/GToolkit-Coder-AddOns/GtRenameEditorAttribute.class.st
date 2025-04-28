@@ -111,8 +111,7 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 				selectNone;
 				moveCursorTo: ((cursorLocation ifNil: [ SmallInteger maxVal ])
 						min: renameEditor editor text size) ].
-
-	selectAll ifTrue: [ renameEditor editor selecter all select ].
+	self selectAllOnCreate ifTrue: [ renameEditor editor selecter all select ].
 
 	^ renameEditor
 ]
@@ -201,6 +200,11 @@ GtRenameEditorAttribute >> selectAll [
 { #category : #accessing }
 GtRenameEditorAttribute >> selectAll: aBoolean [
 	selectAll := aBoolean
+]
+
+{ #category : #accessing }
+GtRenameEditorAttribute >> selectAllOnCreate [
+	^self selectAll
 ]
 
 { #category : #private }
