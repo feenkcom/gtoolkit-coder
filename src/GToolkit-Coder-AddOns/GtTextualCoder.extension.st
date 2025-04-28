@@ -100,6 +100,18 @@ GtTextualCoder >> initializeAddOns: addOns viewModel: aCoderViewModel [
 								when: GtSourceCoderViewModelSearchTextRequested 
 									send: #show 
 									to: theAptitude ];
+						withVisibleWidgetBoundsRelocator;
+						withContainerPermanentVisibilityUpdater;
+						menuContainerDo: [ :aContainer |
+							aContainer layout areaBuilders: {
+								BlSteppedLayoutAreaBuilder dropdownBottomRight.
+								BlSteppedLayoutAreaBuilder dropdownBottomLeft.
+								BlSteppedLayoutAreaBuilder allToBottom.
+								BlSteppedLayoutAreaBuilder allToRight.
+								BlSteppedLayoutAreaBuilder allToLeft.
+								BlSteppedLayoutAreaBuilder dropdownUpRight.
+								BlSteppedLayoutAreaBuilder dropdownUpLeft.
+								BlSteppedLayoutAreaBuilder allToUp.} ];
 						handle: [ BrButton new
 							aptitude: BrGlamorousButtonWithIconAptitude 
 								- BrGlamorousButtonExteriorAptitude
