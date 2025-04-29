@@ -19,8 +19,6 @@ GtSourceCoderExpandedContentElement >> initialize [
 	super initialize.
 
 	editorElement := self newEditorElement.
-	editorElement editor doubleClickWordClassifier: editorElement editor smalltalkWordClassifier.
-	editorElement editor movementWordClassifier: editorElement editor smalltalkWordClassifier.
 	actions := self newActionsElement.
 
 	self

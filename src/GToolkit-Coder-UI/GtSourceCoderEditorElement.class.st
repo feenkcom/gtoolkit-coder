@@ -4,6 +4,13 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
+{ #category : #initalization }
+GtSourceCoderEditorElement >> initialize [
+	super initialize.
+	self editor doubleClickWordClassifier: BrTextEditorModel smalltalkWordClassifier.
+	self editor movementWordClassifier: BrTextEditorModel smalltalkWordClassifier.
+]
+
 { #category : #'api - textual coder view model' }
 GtSourceCoderEditorElement >> onTextualCoderViewModelChanged [
 	super onTextualCoderViewModelChanged.
