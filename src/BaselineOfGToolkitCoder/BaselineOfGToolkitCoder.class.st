@@ -71,7 +71,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 
 			package: 'GToolkit-Coder' with: [ 
 				spec requires:
-						#( 'Futures' 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility'
+						#('Futures' 'GToolkitBasicUtility' 'GToolkitAnnouncerUtility'
 						   'GToolkitPager' 'GToolkitCompleter' 'GToolkit-SearchFilters' ) ];
 			package: 'GToolkit-Coder-UI' with: [ 
 				spec requires: #( 'GToolkit-Coder' 'GToolkit-VariableBindings'
