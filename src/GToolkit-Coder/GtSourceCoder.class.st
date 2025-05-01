@@ -371,6 +371,17 @@ GtSourceCoder >> notifyParseError: aString at: anInteger requesterObject: aReque
 ]
 
 { #category : #'private - notifying' }
+GtSourceCoder >> notifyParseError: aSemanticWarning requesterObject: aRequester [
+	self
+		announce: (GtCoderParseError new
+				coder: self;
+				exception: aSemanticWarning;
+				errorMessage: aSemanticWarning errorMessage;
+				location: aSemanticWarning location;
+				requesterObject: aRequester)
+]
+
+{ #category : #'private - notifying' }
 GtSourceCoder >> notifyPrintResult: anEvaluationResult [
 	self announce: (GtCoderPrintAnnouncement new 
 		evaluationResult: anEvaluationResult;

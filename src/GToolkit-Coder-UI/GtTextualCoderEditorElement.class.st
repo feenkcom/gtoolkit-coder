@@ -15,6 +15,19 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Textual'
 }
 
+{ #category : #private }
+GtTextualCoderEditorElement >> addErrorAttribute: errorAttribute at: anInteger [
+	| text position |
+	text := self editor text.
+	position := anInteger - 1 max: 0.
+	text size < position ifTrue: [ ^ self ].
+	text clearAttributesOfClass: GtSourceCoderErrorAttribute.
+	text
+		attribute: errorAttribute
+		from: position
+		to: position
+]
+
 { #category : #'hooks - children' }
 GtTextualCoderEditorElement >> attachSpace [
 	super attachSpace.
@@ -224,15 +237,14 @@ GtTextualCoderEditorElement >> onCodeEvaluated: anEvaluationAnnouncement [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onCoderParseError: aGtCoderParseError [
-	(aGtCoderParseError requesterObject 
-		isUndefinedOrCoderViewModel: self textualCoderViewModel) 
-			ifFalse: [ ^ self ].
-
-	"A parse error can be notifying from a non-UI thread"
-	self enqueueTask: (BlTaskAction new action: [
-		self 
-			reportParseError: aGtCoderParseError errorMessage 
-			at: aGtCoderParseError location ])
+	(aGtCoderParseError requesterObject
+		isUndefinedOrCoderViewModel: self textualCoderViewModel) ifFalse: [ ^ self ].	"A parse error can be notifying from a non-UI thread"
+	self
+		enqueueTask: [ aGtCoderParseError isUndeclaredError
+				ifTrue: [ self reportUndeclaredError: aGtCoderParseError ]
+				ifFalse: [ self
+						reportParseError: aGtCoderParseError errorMessage
+						at: aGtCoderParseError location ] ] asBlTask
 ]
 
 { #category : #'private - event handling' }
@@ -625,20 +637,28 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 
 { #category : #private }
 GtTextualCoderEditorElement >> reportParseError: aString at: anInteger [
-	| text position error |
-	text := self editor text.
-
-	position := anInteger - 1 max: 0.
-	text size < position ifTrue: [ ^ self ].
-
-	text clearAttributesOfClass: GtSourceCoderErrorAttribute.
+	| error |
 	error := (aString endsWith: '->')
 			ifTrue: [ aString allButLast: 2 ]
 			ifFalse: [ aString ].
-	text
-		attribute: (GtSourceCoderErrorAttribute for: error)
-		from: position
-		to: position
+	self addErrorAttribute: (GtSourceCoderErrorAttribute for: error) at: anInteger
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> reportUndeclaredError: aGtCoderParseError [
+	| rbNode interval gtNode ast errorAttribute |
+	rbNode := aGtCoderParseError exception node.
+	interval := rbNode sourceInterval.
+	ast := GtPharoParser
+			parse: rbNode methodNode source
+			startingAt: (rbNode methodNode isDoIt
+					ifTrue: [ GtPharoParser startingStateForDoItMethod ]
+					ifFalse: [ GtPharoParser startingStateForMethod ]).
+	gtNode := ast nodeForInterval: interval.
+	errorAttribute := GtUndeclaredVariableAdvice new
+			errorAttribute: gtNode
+			coderModel: aGtCoderParseError coder.
+	self addErrorAttribute: errorAttribute at: aGtCoderParseError location
 ]
 
 { #category : #private }

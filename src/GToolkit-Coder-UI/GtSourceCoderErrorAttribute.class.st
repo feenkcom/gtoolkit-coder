@@ -19,6 +19,43 @@ GtSourceCoderErrorAttribute class >> for: aString [
 ]
 
 { #category : #accessing }
+GtSourceCoderErrorAttribute >> buildPopupIn: anEditorElement aptitude: aptitude [
+	| pane text textElement |
+	pane := BrVerticalPane new.
+	pane id: GtSourceCoderErrorContentElementId.
+	pane matchParent.
+	pane background: BrGlamorousColors errorBackgroundColor.
+	string lines
+		do: [ :line | 
+			text := line asRopedText
+					medium;
+					glamorousCodeFontAndSmallSize.
+			textElement := BlTextElement new.
+			textElement text: text.
+			textElement padding: (BlInsets all: 10).
+			textElement beFocusable.
+			textElement
+				when: BlClickEvent
+				do: [ :event | 
+					event currentTarget fireEvent: BrDropdownHideWish new.
+					clickAction cull: anEditorElement cull: aptitude ].
+			{BlKeyCombination escape.
+				BlKeyCombination enter.
+				BlKeyCombination backspace}
+				do: [ :each | 
+					textElement
+						addShortcut: (BlShortcutWithAction new
+								combination: each;
+								repeatable: false;
+								action: [ :aShortcutEvent :aShortcutAction | 
+									aShortcutEvent currentTarget fireEvent: BrDropdownHideWish new.
+									anEditorElement requestFocus ]) ].
+			textElement enqueueTask: [ textElement requestFocus ] asBlTask.
+			pane addChild: textElement ].
+	^ pane
+]
+
+{ #category : #accessing }
 GtSourceCoderErrorAttribute >> clickAction [
 	^ clickAction
 ]
@@ -30,50 +67,17 @@ GtSourceCoderErrorAttribute >> clickAction: aBlock [
 
 { #category : #accessing }
 GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
-	| text button aptitude |
+	| button aptitude |
 	button := self errorButton.
 	button id: GtSourceCoderErrorButtonElementId.
 	button
 		addAptitude: (aptitude := BrGlamorousWithExplicitDropdownAptitude
 					handle: [ self errorButton ]
-					content: [ | textElement pane |
-						pane := BrVerticalPane new.
-						pane id: GtSourceCoderErrorContentElementId.
-						pane matchParent.
-						pane background: BrGlamorousColors errorBackgroundColor.
-						string lines
-							do: [ :line | 
-								text := line asRopedText
-										medium;
-										glamorousCodeFontAndSmallSize.
-								textElement := BlTextElement new.
-								textElement text: text.
-								textElement padding: (BlInsets all: 10).
-								textElement beFocusable.
-								textElement
-									when: BlClickEvent
-									do: [ :event | 
-										event currentTarget fireEvent: BrDropdownHideWish new.
-										clickAction cull: anEditorElement cull: aptitude ].
-
-								{BlKeyCombination escape.
-									BlKeyCombination enter.
-									BlKeyCombination backspace}
-									do: [ :each | 
-										textElement
-											addShortcut: (BlShortcutWithAction new
-													combination: each;
-													repeatable: false;
-													action: [ :aShortcutEvent :aShortcutAction | 
-														aShortcutEvent currentTarget fireEvent: BrDropdownHideWish new.
-														anEditorElement requestFocus ]) ].
-								textElement enqueueTask: [ textElement requestFocus ] asBlTask.
-								pane addChild: textElement ].
-						pane ]
+					content: [ self buildPopupIn: anEditorElement aptitude: aptitude ]
 					containerDo: [ :aMenuContainer | 
-						aMenuContainer 
-							border: (BlBorder paint: BrGlamorousColors errorBackgroundColor);
-							background: BrGlamorousColors errorBackgroundColor ]).
+						aMenuContainer border: (BlBorder paint: BrGlamorousColors errorBackgroundColor).
+						self showErrorBackground
+							ifTrue: [ aMenuContainer background: BrGlamorousColors errorBackgroundColor ] ]).
 	openOnFirstShow
 		ifTrue: [ button
 				enqueueTask: [ openOnFirstShow := false.
@@ -86,7 +90,7 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 GtSourceCoderErrorAttribute >> errorButton [
 	^ BrButton new
 		background: BrGlamorousColors errorBackgroundColor;
-		size: 12 @ 12;
+		size: 16 @ 16;
 		border: (BlBorder paint: Color transparent width: 2);
 		geometry: BlEllipseGeometry new;
 		yourself
@@ -112,4 +116,9 @@ GtSourceCoderErrorAttribute >> openOnFirstShow [
 { #category : #accessing }
 GtSourceCoderErrorAttribute >> openOnFirstShow: aBoolean [
 	openOnFirstShow := aBoolean
+]
+
+{ #category : #accessing }
+GtSourceCoderErrorAttribute >> showErrorBackground [
+	^ true
 ]

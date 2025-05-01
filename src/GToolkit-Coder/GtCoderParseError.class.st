@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'errorMessage',
 		'location',
-		'requesterObject'
+		'requesterObject',
+		'exception'
 	],
 	#category : #'GToolkit-Coder-Event'
 }
@@ -17,6 +18,21 @@ GtCoderParseError >> errorMessage [
 { #category : #accessing }
 GtCoderParseError >> errorMessage: anObject [
 	errorMessage := anObject
+]
+
+{ #category : #accessing }
+GtCoderParseError >> exception [
+	^ exception
+]
+
+{ #category : #accessing }
+GtCoderParseError >> exception: anException [
+	exception := anException
+]
+
+{ #category : #testing }
+GtCoderParseError >> isUndeclaredError [
+	^ exception isKindOf: OCUndeclaredVariableWarning
 ]
 
 { #category : #accessing }
