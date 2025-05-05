@@ -38,7 +38,7 @@ GtFixItAttribute >> computeDescriptionTextInEditorElement: anEditorElement forFi
 		foreground: BrGlamorousColors disabledButtonTextColor.
 		
 	^ BrEditor new
-		vFitContent;
+		fitContent;
 		aptitude: BrGlamorousRegularEditorAptitude new 
 			glamorousCodeSmallSize;
 		text: text.
@@ -110,10 +110,6 @@ GtFixItAttribute >> dropDownElementFor: anEditorElement [
 		labelText := self 
 			computeDescriptionTextInEditorElement: anEditorElement 
 			forFixItActions: computedFixItActions.
-		
-		menuItems isEmpty
-			ifTrue: [ labelText width: 200 ]
-			ifFalse: [ labelText hMatchParent ].
 				
 		pane addChild: labelText ].
 	
