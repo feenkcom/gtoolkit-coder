@@ -7,7 +7,7 @@ Class {
 { #category : #'instance creation' }
 GtCoderNavigationClassesHierarchyListElementExamples >> fromCollectionClasses [
 	<gtExample>
-
+	<return: #GtCoderClassesTreeElement>
 	^ GtCoderClassesTreeElement
 		fromClasses: #'Collections-Abstract' asPackage definedClasses
 ]

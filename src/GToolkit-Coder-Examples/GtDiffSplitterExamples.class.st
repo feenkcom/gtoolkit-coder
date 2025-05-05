@@ -7,6 +7,7 @@ Class {
 { #category : #'null splitter' }
 GtDiffSplitterExamples >> characterSplitterExample [
 	<gtExample>
+	<return: #GtDiffSplitCollection>
 	^ self compareNullSplits: '1234'
 ]
 
@@ -30,6 +31,7 @@ GtDiffSplitterExamples >> compareNullSplits: aCollection [
 { #category : #'token splitter' }
 GtDiffSplitterExamples >> javascriptDiffSplitter [
 	<gtExample>
+	<return: #GtDiffSplitCollection>
 	| splits scannerClass splitter |
 	scannerClass := self class environment at: #JSScanner ifAbsent: [ ^ nil ].
 	splitter := GtSmaCCDiffSplitter new scannerClass: scannerClass.
@@ -42,6 +44,7 @@ GtDiffSplitterExamples >> javascriptDiffSplitter [
 { #category : #lines }
 GtDiffSplitterExamples >> lineIgnoringEOLSplitterExample [
 	<gtExample>
+	<return: #GtDiffSplitCollection>
 	| splitter splits string |
 	string := '1' , String crlf , '2' , String cr , '3' , String lf , '4'.
 	splitter := GtLineDiffSplitter ignoringEOLChars.
@@ -55,6 +58,7 @@ GtDiffSplitterExamples >> lineIgnoringEOLSplitterExample [
 { #category : #lines }
 GtDiffSplitterExamples >> lineWithEOLSplitterExample [
 	<gtExample>
+	<return: #GtDiffSplitCollection>
 	| splitter splits string |
 	string := '1' , String crlf , '2' , String cr , '3' , String lf , '4'.
 	splitter := GtLineDiffSplitter new
@@ -72,6 +76,7 @@ GtDiffSplitterExamples >> lineWithEOLSplitterExample [
 { #category : #lines }
 GtDiffSplitterExamples >> lineWithoutEOLSplitterExample [
 	<gtExample>
+	<return: #GtDiffSplitCollection>
 	| splitter splits string |
 	string := '1' , String crlf , '1' , String cr , '1' , String lf , '1'.
 	splitter := GtLineDiffSplitter new
@@ -87,6 +92,7 @@ GtDiffSplitterExamples >> lineWithoutEOLSplitterExample [
 { #category : #'null splitter' }
 GtDiffSplitterExamples >> objectSplitterExample [
 	<gtExample>
+	<return: #GtDiffSplitCollection>
 	^ self
 		compareNullSplits: {1.
 				'foo'.
@@ -98,6 +104,7 @@ GtDiffSplitterExamples >> objectSplitterExample [
 { #category : #'character groups' }
 GtDiffSplitterExamples >> wordIgnoreWhitespaceSplitter [
 	<gtExample>
+	<return: #GtDiffSplitCollection>
 	| splits words |
 	words := #('This ' 'is ' 'a ' 'test' '.
 	' '123' ',' '45').
@@ -113,6 +120,7 @@ GtDiffSplitterExamples >> wordIgnoreWhitespaceSplitter [
 { #category : #'character groups' }
 GtDiffSplitterExamples >> wordSplitter [
 	<gtExample>
+	<return: #GtDiffSplitCollection>
 	| splits words |
 	words := #('This' 'is' 'a' 'test').
 	splits := GtCharacterGroupDiffSplitter words split: ('	' join: words).

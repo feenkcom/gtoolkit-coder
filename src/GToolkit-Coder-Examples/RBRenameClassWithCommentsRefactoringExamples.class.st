@@ -18,6 +18,7 @@ RBRenameClassWithCommentsRefactoringExamples >> renameClassComment [
 	"This comment with RBRenameClassWithCommentsRefactoringExamples should be renamed"
 
 	<gtExample>
+	<return: #RBNamespace>
 	| model refactoring cls newName |
 	model := RBNamespace new.
 	cls := model classFor: RBRenameClassWithCommentsRefactoringExamples.

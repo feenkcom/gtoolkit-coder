@@ -7,6 +7,7 @@ Class {
 { #category : #examples }
 GtUnionFilterExamples >> unionDifferentMethods [
 	<gtExample>
+	<return: #GtSearchUnionFilter>
 	| filter1 filter2 union |
 	filter1 := thisContext method selector gtImplementors.
 	filter2 := #foo gtImplementors.
@@ -19,6 +20,7 @@ GtUnionFilterExamples >> unionDifferentMethods [
 { #category : #examples }
 GtUnionFilterExamples >> unionNullFilter [
 	<gtExample>
+	<return: #GtSearchUnionFilter>
 	| filter union |
 	filter := thisContext method selector gtImplementors.
 	union := GtSearchNullFilter new | filter | filter.
@@ -30,6 +32,7 @@ GtUnionFilterExamples >> unionNullFilter [
 { #category : #examples }
 GtUnionFilterExamples >> unionSameFilters [
 	<gtExample>
+	<return: #GtSearchUnionFilter>
 	| filter union |
 	filter := thisContext method selector gtImplementors.
 	union := filter | filter.

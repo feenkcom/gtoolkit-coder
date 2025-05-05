@@ -7,6 +7,7 @@ Class {
 { #category : #examples }
 GtFilterModelExamples >> booleanModel [
 	<gtExample>
+	<return: #GtFilterBooleanModel>
 	| aModel |
 	aModel := GtFilterBooleanModel new.
 	aModel switchedOn: true.
@@ -19,6 +20,7 @@ GtFilterModelExamples >> booleanModel [
 { #category : #examples }
 GtFilterModelExamples >> invariableModel [
 	<gtExample>
+	<return: #GtFilterInvariableModel>
 	| aModel |
 	aModel := GtFilterInvariableModel new.
 	aModel name: 'Stable tests'.
@@ -29,6 +31,7 @@ GtFilterModelExamples >> invariableModel [
 { #category : #examples }
 GtFilterModelExamples >> itemsModel [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aModel |
 	aModel := GtFilterItemsModel new.
 	aModel
@@ -36,7 +39,7 @@ GtFilterModelExamples >> itemsModel [
 				self shortListModel.
 				self booleanModel.
 				self invariableModel.
-				self toggleModel.}.
+				self toggleModel}.
 	self assert: aModel items size equals: 5.
 
 	^ aModel
@@ -45,6 +48,7 @@ GtFilterModelExamples >> itemsModel [
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithAddingShortListModelWithSelectedValue [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := GtFilterItemsModel new.
@@ -55,7 +59,7 @@ GtFilterModelExamples >> itemsModelWithAddingShortListModelWithSelectedValue [
 
 	aFilterModel := self shortListModel.
 	self assert: (aFilterModel selectedItem ifSome: [ true ] ifNone: [ false ]).
-	
+
 	aFiltersModel addFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 1.
@@ -67,6 +71,7 @@ GtFilterModelExamples >> itemsModelWithAddingShortListModelWithSelectedValue [
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithAddingShortListModelWithoutSelectedValue [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := GtFilterItemsModel new.
@@ -78,7 +83,7 @@ GtFilterModelExamples >> itemsModelWithAddingShortListModelWithoutSelectedValue 
 	aFilterModel := self shortListModel.
 	aFilterModel selectedItem: GtFilterModelNoItem default.
 	self assert: (aFilterModel selectedItem ifSome: [ false ] ifNone: [ true ]).
-	
+
 	aFiltersModel addFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 1.
@@ -90,6 +95,7 @@ GtFilterModelExamples >> itemsModelWithAddingShortListModelWithoutSelectedValue 
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithAddingTextModelWithEmptyText [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := GtFilterItemsModel new.
@@ -101,7 +107,7 @@ GtFilterModelExamples >> itemsModelWithAddingTextModelWithEmptyText [
 	aFilterModel := self textModel.
 	aFilterModel text: ''.
 	self assert: aFilterModel text isEmpty.
-	
+
 	aFiltersModel addFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 1.
@@ -113,6 +119,7 @@ GtFilterModelExamples >> itemsModelWithAddingTextModelWithEmptyText [
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithAddingTextModelWithNonEmptyText [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := GtFilterItemsModel new.
@@ -123,7 +130,7 @@ GtFilterModelExamples >> itemsModelWithAddingTextModelWithNonEmptyText [
 
 	aFilterModel := self textModel.
 	self assert: aFilterModel text isEmpty not.
-	
+
 	aFiltersModel addFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 1.
@@ -135,6 +142,7 @@ GtFilterModelExamples >> itemsModelWithAddingTextModelWithNonEmptyText [
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithAddingToggleModelWithSelectedValue [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := GtFilterItemsModel new.
@@ -145,7 +153,7 @@ GtFilterModelExamples >> itemsModelWithAddingToggleModelWithSelectedValue [
 
 	aFilterModel := self toggleModel.
 	self assert: (aFilterModel selectedItem ifSome: [ true ] ifNone: [ false ]).
-	
+
 	aFiltersModel addFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 1.
@@ -157,6 +165,7 @@ GtFilterModelExamples >> itemsModelWithAddingToggleModelWithSelectedValue [
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithAddingToggleModelWithoutSelectedValue [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := GtFilterItemsModel new.
@@ -168,7 +177,7 @@ GtFilterModelExamples >> itemsModelWithAddingToggleModelWithoutSelectedValue [
 	aFilterModel := self toggleModel.
 	aFilterModel selectedItem: GtFilterModelNoItem default.
 	self assert: (aFilterModel selectedItem ifSome: [ false ] ifNone: [ true ]).
-	
+
 	aFiltersModel addFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 1.
@@ -180,6 +189,7 @@ GtFilterModelExamples >> itemsModelWithAddingToggleModelWithoutSelectedValue [
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithRemovingShortListModelWithSelectedValue [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := self itemsModelWithAddingShortListModelWithSelectedValue.
@@ -190,7 +200,7 @@ GtFilterModelExamples >> itemsModelWithRemovingShortListModelWithSelectedValue [
 
 	aFilterModel := aFiltersModel items first.
 	self assert: (aFilterModel selectedItem ifSome: [ true ] ifNone: [ false ]).
-	
+
 	aFiltersModel removeFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 0.
@@ -202,6 +212,7 @@ GtFilterModelExamples >> itemsModelWithRemovingShortListModelWithSelectedValue [
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithRemovingShortListModelWithoutSelectedValue [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := self itemsModelWithAddingShortListModelWithoutSelectedValue.
@@ -212,7 +223,7 @@ GtFilterModelExamples >> itemsModelWithRemovingShortListModelWithoutSelectedValu
 
 	aFilterModel := aFiltersModel items first.
 	self assert: (aFilterModel selectedItem ifSome: [ false ] ifNone: [ true ]).
-	
+
 	aFiltersModel removeFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 0.
@@ -224,6 +235,7 @@ GtFilterModelExamples >> itemsModelWithRemovingShortListModelWithoutSelectedValu
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithRemovingTextModelWithEmptyText [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := self itemsModelWithAddingTextModelWithEmptyText.
@@ -234,7 +246,7 @@ GtFilterModelExamples >> itemsModelWithRemovingTextModelWithEmptyText [
 
 	aFilterModel := aFiltersModel items first.
 	self assert: aFilterModel text isEmpty.
-	
+
 	aFiltersModel removeFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 0.
@@ -246,6 +258,7 @@ GtFilterModelExamples >> itemsModelWithRemovingTextModelWithEmptyText [
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithRemovingTextModelWithNonEmptyText [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := self itemsModelWithAddingTextModelWithNonEmptyText.
@@ -256,7 +269,7 @@ GtFilterModelExamples >> itemsModelWithRemovingTextModelWithNonEmptyText [
 
 	aFilterModel := aFiltersModel items first.
 	self assert: aFilterModel text isEmpty not.
-	
+
 	aFiltersModel removeFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 0.
@@ -268,6 +281,7 @@ GtFilterModelExamples >> itemsModelWithRemovingTextModelWithNonEmptyText [
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithRemovingToggleModelWithSelectedValue [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := self itemsModelWithAddingToggleModelWithSelectedValue.
@@ -278,7 +292,7 @@ GtFilterModelExamples >> itemsModelWithRemovingToggleModelWithSelectedValue [
 
 	aFilterModel := aFiltersModel items first.
 	self assert: (aFilterModel selectedItem ifSome: [ true ] ifNone: [ false ]).
-	
+
 	aFiltersModel removeFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 0.
@@ -290,6 +304,7 @@ GtFilterModelExamples >> itemsModelWithRemovingToggleModelWithSelectedValue [
 { #category : #examples }
 GtFilterModelExamples >> itemsModelWithRemovingToggleModelWithoutSelectedValue [
 	<gtExample>
+	<return: #GtFilterItemsModel>
 	| aFiltersModel aFilterModel someAnnouncements |
 	someAnnouncements := OrderedCollection new.
 	aFiltersModel := self itemsModelWithAddingToggleModelWithoutSelectedValue.
@@ -300,7 +315,7 @@ GtFilterModelExamples >> itemsModelWithRemovingToggleModelWithoutSelectedValue [
 
 	aFilterModel := aFiltersModel items first.
 	self assert: (aFilterModel selectedItem ifSome: [ false ] ifNone: [ true ]).
-	
+
 	aFiltersModel removeFilterModel: aFilterModel.
 
 	self assert: aFiltersModel items size equals: 0.
@@ -312,6 +327,7 @@ GtFilterModelExamples >> itemsModelWithRemovingToggleModelWithoutSelectedValue [
 { #category : #examples }
 GtFilterModelExamples >> shortListModel [
 	<gtExample>
+	<return: #GtFilterShortListModel>
 	| aModel |
 	aModel := GtFilterShortListModel new.
 	aModel
@@ -331,29 +347,25 @@ GtFilterModelExamples >> shortListModel [
 { #category : #examples }
 GtFilterModelExamples >> shortListModelParameter [
 	<gtExample>
+	<return: #GtFilterShortListModelParameter>
 	| aModel |
 	aModel := GtFilterShortListModelParameter new
-			updater: [ :aFilter :anItem |
-				anItem
-					ifSome: [ :aValue |
-						anItem onCreateFilter: aFilter ]
-					ifNone: [  ] ];
-			items: [ { 
-				GtFilterModelPluggableItem new
-					label: 'readers and writers';
-					filterUpdater: [ :aFilter | 
-						aFilter includeReaders: true.
-						aFilter includeWriters: true ].
-				GtFilterModelPluggableItem new
-					label: 'readers only';
-					filterUpdater: [ :aFilter | 
-						aFilter includeReaders: true.
-						aFilter includeWriters: false ].
-				GtFilterModelPluggableItem new
-					label: 'writers only';
-					filterUpdater: [ :aFilter | 
-						aFilter includeReaders: false.
-						aFilter includeWriters: true ] } ];
+			updater: [ :aFilter :anItem | anItem ifSome: [ :aValue | anItem onCreateFilter: aFilter ] ifNone: [  ] ];
+			items: [ {GtFilterModelPluggableItem new
+						label: 'readers and writers';
+						filterUpdater: [ :aFilter | 
+							aFilter includeReaders: true.
+							aFilter includeWriters: true ].
+					GtFilterModelPluggableItem new
+						label: 'readers only';
+						filterUpdater: [ :aFilter | 
+							aFilter includeReaders: true.
+							aFilter includeWriters: false ].
+					GtFilterModelPluggableItem new
+						label: 'writers only';
+						filterUpdater: [ :aFilter | 
+							aFilter includeReaders: false.
+							aFilter includeWriters: true ]} ];
 			selectFirstItem;
 			displayAllItems.
 	self assert: aModel itemsFuture wait size equals: 3.
@@ -364,6 +376,7 @@ GtFilterModelExamples >> shortListModelParameter [
 { #category : #examples }
 GtFilterModelExamples >> shortListModelPluggableItems [
 	<gtExample>
+	<return: #GtFilterShortListModel>
 	| aModel allItems aCollection anIconBuilder aLabelBuilder |
 	aModel := GtFilterShortListModel new.
 
@@ -380,11 +393,11 @@ GtFilterModelExamples >> shortListModelPluggableItems [
 			forCollection: aCollection
 			icon: anIconBuilder
 			label: aLabelBuilder.
-	
+
 	aModel items: allItems.
 	aModel selectFirstItem.
 	aModel name: 'Classes'.
-	
+
 	self
 		assert: aModel selectedItem
 		equals: (GtFilterModelPluggableItem new
@@ -399,6 +412,7 @@ GtFilterModelExamples >> shortListModelPluggableItems [
 { #category : #examples }
 GtFilterModelExamples >> shortListModelPluggableItemsWithIconAndLabelBuilders [
 	<gtExample>
+	<return: #GtFilterShortListModel>
 	| aModel aCollection anIconBuilder aLabelBuilder |
 	aModel := GtFilterShortListModel new.
 
@@ -434,6 +448,7 @@ GtFilterModelExamples >> shortListModelPluggableItemsWithIconAndLabelBuilders [
 { #category : #examples }
 GtFilterModelExamples >> shortListModelPluggableItemsWithoutIconBuilder [
 	<gtExample>
+	<return: #GtFilterShortListModel>
 	| aModel aCollection aLabelBuilder |
 	aModel := GtFilterShortListModel new.
 
@@ -462,6 +477,7 @@ GtFilterModelExamples >> shortListModelPluggableItemsWithoutIconBuilder [
 { #category : #examples }
 GtFilterModelExamples >> shortListModelPluggableItemsWithoutLabelBuilder [
 	<gtExample>
+	<return: #GtFilterShortListModel>
 	| aModel aCollection anIconBuilder |
 	aModel := GtFilterShortListModel new.
 
@@ -492,6 +508,7 @@ GtFilterModelExamples >> shortListModelPluggableItemsWithoutLabelBuilder [
 { #category : #examples }
 GtFilterModelExamples >> shortListModelWithIcons [
 	<gtExample>
+	<return: #GtFilterShortListModel>
 	| aModel |
 	aModel := GtFilterShortListModel new.
 	aModel
@@ -519,6 +536,7 @@ GtFilterModelExamples >> shortListModelWithIcons [
 { #category : #examples }
 GtFilterModelExamples >> shortListModelWithParameter [
 	<gtExample>
+	<return: #GtFilterShortListModel>
 	| aModel |
 	aModel := self shortListModel.
 	aModel parameter: self shortListModelParameter.
@@ -530,6 +548,7 @@ GtFilterModelExamples >> shortListModelWithParameter [
 { #category : #examples }
 GtFilterModelExamples >> shortListModelWithParameter_changeParameterValue [
 	<gtExample>
+	<return: #GtFilterShortListModel>
 	| aModel aCollection aParameter anAnnouncement |
 	aModel := self shortListModelWithParameter.
 
@@ -552,6 +571,7 @@ GtFilterModelExamples >> shortListModelWithParameter_changeParameterValue [
 { #category : #examples }
 GtFilterModelExamples >> textModel [
 	<gtExample>
+	<return: #GtFilterTextModel>
 	| aModel |
 	aModel := GtFilterTextModel new.
 	aModel text: 'Object'.
@@ -564,6 +584,7 @@ GtFilterModelExamples >> textModel [
 { #category : #examples }
 GtFilterModelExamples >> toggleModel [
 	<gtExample>
+	<return: #GtFilterToggleModel>
 	| aModel |
 	aModel := GtFilterToggleModel new.
 	aModel name: 'Side'.
@@ -578,6 +599,7 @@ GtFilterModelExamples >> toggleModel [
 { #category : #examples }
 GtFilterModelExamples >> toggleModelWithIcons [
 	<gtExample>
+	<return: #GtFilterToggleModel>
 	| aModel |
 	aModel := GtFilterToggleModel new.
 	aModel name: 'Origin'.

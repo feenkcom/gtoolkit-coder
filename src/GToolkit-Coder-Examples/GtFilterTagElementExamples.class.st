@@ -33,6 +33,7 @@ GtFilterTagElementExamples >> availableFilterDescriptors [
 { #category : #examples }
 GtFilterTagElementExamples >> filterOffersCompletionValues [
 	<gtExample>
+	<return: #GtFilterDescriptor>
 	^ GtFilterDescriptorExamples new filterDescriptorOffersCompletionValues
 		named: 'Words'
 ]
@@ -40,20 +41,17 @@ GtFilterTagElementExamples >> filterOffersCompletionValues [
 { #category : #examples }
 GtFilterTagElementExamples >> filterTagCompletionOffersValues [
 	<gtExample>
+	<return: #GtFilterTagElement>
 	| tagElement filterDescriptor |
-	
 	filterDescriptor := self filterOffersCompletionValues.
-	
+
 	tagElement := GtFilterTagElement new
-		descriptor: filterDescriptor;
-		availableFilterDescriptors: self availableFilterDescriptors.
+			descriptor: filterDescriptor;
+			availableFilterDescriptors: self availableFilterDescriptors.
 
 	self
 		assert: (tagElement query // GtFilterTagLabelId) anyOne text asString
-		equals: 'Words'.
-
-	"there is no editor"
-	"self assert: (tagElement query // GtFilterTagEditorId) isEmpty.
+		equals: 'Words'.	"there is no editor"	"self assert: (tagElement query // GtFilterTagEditorId) isEmpty.
 	
 	self assert: tagElement isValid."
 
@@ -63,21 +61,19 @@ GtFilterTagElementExamples >> filterTagCompletionOffersValues [
 { #category : #examples }
 GtFilterTagElementExamples >> filterTagValueNotRequired [
 	<gtExample>
+	<return: #GtFilterTagElement>
 	| tagElement filterDescriptor |
-	
 	filterDescriptor := self filterValueNotRequired.
-	
+
 	tagElement := GtFilterTagElement new
-		descriptor: filterDescriptor;
-		availableFilterDescriptors: self availableFilterDescriptors.
+			descriptor: filterDescriptor;
+			availableFilterDescriptors: self availableFilterDescriptors.
 
 	self
 		assert: (tagElement query // GtFilterTagLabelId) anyOne text asString
-		equals: 'Default without value'.
-
-	"there is no editor"
+		equals: 'Default without value'.	"there is no editor"
 	self assert: (tagElement query // GtFilterTagEditorId) isEmpty.
-	
+
 	self assert: tagElement isValid.
 
 	^ tagElement
@@ -86,6 +82,7 @@ GtFilterTagElementExamples >> filterTagValueNotRequired [
 { #category : #examples }
 GtFilterTagElementExamples >> filterTagValueNotRequiredByScripter [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := BlScripter new
 			extent: 500 @ 400;
@@ -157,11 +154,11 @@ GtFilterTagElementExamples >> filterTagValueNotRequiredByScripter [
 { #category : #examples }
 GtFilterTagElementExamples >> filterTagValueRequiredWithDefault [
 	<gtExample>
+	<return: #GtFilterTagElement>
 	| aTagElement |
-
 	aTagElement := GtFilterTagElement new
-		descriptor: self filterValueRequiredWithDefault;
-		availableFilterDescriptors: self availableFilterDescriptors.
+			descriptor: self filterValueRequiredWithDefault;
+			availableFilterDescriptors: self availableFilterDescriptors.
 
 	^ aTagElement
 ]
@@ -169,20 +166,16 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefault [
 { #category : #examples }
 GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripter [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := BlScripter new
 			extent: 500 @ 400;
 			element: self filterTagValueRequiredWithDefault.
 
-	scripter
-		assertStep: [ :s | 
-			s
-				satisfies: [ :anElement | anElement isValid ] ].
+	scripter assertStep: [ :s | s satisfies: [ :anElement | anElement isValid ] ].
 
 	scripter
-		assertStep: [ :s | 
-			s
-				satisfies: [ :anElement | anElement hasFocus not ] ].
+		assertStep: [ :s | s satisfies: [ :anElement | anElement hasFocus not ] ].
 
 	scripter
 		assertStep: [ :s | 
@@ -204,13 +197,11 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripter [
 { #category : #examples }
 GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterRemoveText [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self filterTagValueRequiredWithDefaultByScripter.
 
-	scripter
-		clickStep: [ :s | 
-			s
-				id: GtFilterTagEditorId ].
+	scripter clickStep: [ :s | s id: GtFilterTagEditorId ].
 
 	scripter shortcut
 		id: GtFilterTagEditorId;
@@ -230,10 +221,7 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterRemoveT
 				id: GtFilterTagEditorId;
 				value: [ :anEditor | anEditor text asString ] equals: '' ].
 
-	scripter
-		assertStep: [ :s | 
-			s
-				satisfies: [ :anEditor | anEditor isValid not ] ].
+	scripter assertStep: [ :s | s satisfies: [ :anEditor | anEditor isValid not ] ].
 
 	scripter shortcut
 		label: 'Accept changes with enter shortcut';
@@ -241,10 +229,7 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterRemoveT
 		combination: BlKeyCombination enter;
 		play.
 
-	scripter
-		assertStep: [ :s | 
-			s
-				eventNotFired: GtFilterTagUpdateWish ].
+	scripter assertStep: [ :s | s eventNotFired: GtFilterTagUpdateWish ].
 
 	^ scripter
 ]
@@ -252,13 +237,11 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterRemoveT
 { #category : #examples }
 GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAndAcceptWithClickingAway [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self filterTagValueRequiredWithDefaultByScripter.
 
-	scripter
-		clickStep: [ :s | 
-			s
-				id: GtFilterTagEditorId ].
+	scripter clickStep: [ :s | s id: GtFilterTagEditorId ].
 
 	scripter
 		assertStep: [ :s | 
@@ -282,7 +265,7 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAnd
 			s
 				label: 'Check that the new value is typed in the editor';
 				id: GtFilterTagEditorId;
-				value: [  "intentionally added spaces to test trimming":anEditor | anEditor text asString ]
+				value: [ :anEditor "intentionally added spaces to test trimming" | anEditor text asString ]
 					equals: ' New value ' ].
 
 	scripter
@@ -291,10 +274,7 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAnd
 				id: GtFilterTagEditorId;
 				satisfies: [ :anEditor | anEditor hasFocus ] ].
 
-	scripter
-		clickStep: [ :s | 
-			s
-				id: GtFilterTagLabelId ].
+	scripter clickStep: [ :s | s id: GtFilterTagLabelId ].
 
 	scripter
 		assertStep: [ :s | 
@@ -317,13 +297,11 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAnd
 { #category : #examples }
 GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAndAcceptWithShortcut [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self filterTagValueRequiredWithDefaultByScripter.
 
-	scripter
-		clickStep: [ :s | 
-			s
-				id: GtFilterTagEditorId ].
+	scripter clickStep: [ :s | s id: GtFilterTagEditorId ].
 
 	scripter
 		assertStep: [ :s | 
@@ -347,7 +325,7 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAnd
 			s
 				label: 'Check that the new value is typed in the editor';
 				id: GtFilterTagEditorId;
-				value: [  "intentionally added spaces to test trimming":anEditor | anEditor text asString ]
+				value: [ :anEditor "intentionally added spaces to test trimming" | anEditor text asString ]
 					equals: ' New value ' ].
 
 	scripter shortcut
@@ -371,11 +349,11 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithDefaultByScripterTypeAnd
 { #category : #examples }
 GtFilterTagElementExamples >> filterTagValueRequiredWithoutDefault [
 	<gtExample>
+	<return: #GtFilterTagElement>
 	| aTagElement |
-
 	aTagElement := GtFilterTagElement new
-		descriptor: self filterValueRequiredWithoutDefault;
-		availableFilterDescriptors: self availableFilterDescriptors.
+			descriptor: self filterValueRequiredWithoutDefault;
+			availableFilterDescriptors: self availableFilterDescriptors.
 
 	^ aTagElement
 ]
@@ -383,15 +361,13 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithoutDefault [
 { #category : #examples }
 GtFilterTagElementExamples >> filterTagValueRequiredWithoutDefaultByScripter [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := BlScripter new
 			extent: 500 @ 400;
 			element: self filterTagValueRequiredWithoutDefault.
 
-	scripter
-		assertStep: [ :s | 
-			s
-				satisfies: [ :anElement | anElement isValid ] ].
+	scripter assertStep: [ :s | s satisfies: [ :anElement | anElement isValid ] ].
 
 	scripter
 		assertStep: [ :s | 
@@ -417,6 +393,7 @@ GtFilterTagElementExamples >> filterTagValueRequiredWithoutDefaultByScripter [
 { #category : #examples }
 GtFilterTagElementExamples >> filterValueNotRequired [
 	<gtExample>
+	<return: #GtFilterDescriptor>
 	^ GtFilterDescriptorExamples new filterDescriptorValueNotRequired
 		named: 'Default without value'
 ]
@@ -424,18 +401,16 @@ GtFilterTagElementExamples >> filterValueNotRequired [
 { #category : #examples }
 GtFilterTagElementExamples >> filterValueRequiredWithDefault [
 	<gtExample>
-
-	^ (GtFilterDescriptorExamples new
-		newFilterDescriptor)
-			named: 'Default with value';
-			emptyDefaultValue: 'Default'
+	<return: #GtFilterDescriptor>
+	^ GtFilterDescriptorExamples new newFilterDescriptor
+		named: 'Default with value';
+		emptyDefaultValue: 'Default'
 ]
 
 { #category : #examples }
 GtFilterTagElementExamples >> filterValueRequiredWithoutDefault [
 	<gtExample>
-
-	^ (GtFilterDescriptorExamples new
-		newFilterDescriptor)
-			named: 'Default with value'
+	<return: #GtFilterDescriptor>
+	^ GtFilterDescriptorExamples new newFilterDescriptor
+		named: 'Default with value'
 ]
