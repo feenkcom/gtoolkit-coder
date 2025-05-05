@@ -9,6 +9,7 @@ Class {
 { #category : #examples }
 GtFilterElementByScripterExamples >> booleanElement [
 	<gtExample>
+	<return: #BlScripter>
 	| aScripter |
 	aScripter := self
 			scripterWithModel: [ GtFilterModelExamples new booleanModel ]
@@ -20,12 +21,13 @@ GtFilterElementByScripterExamples >> booleanElement [
 { #category : #examples }
 GtFilterElementByScripterExamples >> itemsModel [
 	<gtExample>
+	<return: #BlScripter>
 	| aScripter |
 	aScripter := self
 			scripterWithModel: [ GtFilterModelExamples new itemsModel ]
 			element: [ :aModel | GtFilterItemsElement new filtersViewModel: aModel asFiltersViewModel ].
 
-	
+
 
 	^ aScripter
 ]
@@ -33,6 +35,7 @@ GtFilterElementByScripterExamples >> itemsModel [
 { #category : #examples }
 GtFilterElementByScripterExamples >> shortListElement [
 	<gtExample>
+	<return: #BlScripter>
 	| aScripter |
 	aScripter := self
 			scripterWithModel: [ GtFilterModelExamples new shortListModel ]
@@ -44,6 +47,7 @@ GtFilterElementByScripterExamples >> shortListElement [
 { #category : #examples }
 GtFilterElementByScripterExamples >> textElement [
 	<gtExample>
+	<return: #BlScripter>
 	| aScripter |
 	aScripter := self
 			scripterWithModel: [ GtFilterModelExamples new textModel ]

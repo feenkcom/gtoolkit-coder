@@ -7,13 +7,14 @@ Class {
 { #category : #examples }
 GtDiffBuilderExamples >> byteArrayDiff [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| originalByteArray modifiedByteArray |
 	originalByteArray := (1 to: 64)
 			collect: [ :_ | 256 atRandom - 1 ]
 			as: ByteArray.
 	modifiedByteArray := originalByteArray copy.
-	8 timesRepeat: [
-		modifiedByteArray at: modifiedByteArray size atRandom put: 256 atRandom - 1 ].
+	8
+		timesRepeat: [ modifiedByteArray at: modifiedByteArray size atRandom put: 256 atRandom - 1 ].
 	^ GtDiffBuilder
 		computeDifferencesFrom: originalByteArray
 		to: modifiedByteArray
@@ -23,15 +24,17 @@ GtDiffBuilderExamples >> byteArrayDiff [
 { #category : #examples }
 GtDiffBuilderExamples >> changeInMiddleAndDeletionAtEnd [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change |
 	from := String cr join: ((1 to: 10) collect: #asWords).
-	to := String cr join: (((1 to: 10) collect: #asWords) 
-									at: 2 put: 'two plus'; 
-									allButLast).
+	to := String cr
+			join: (((1 to: 10) collect: #asWords)
+					at: 2 put: 'two plus';
+					allButLast).
 	change := GtDiffBuilder
-				computeDifferencesFrom: from
-				to: to
-				using: GtLineDiffSplitter ignoringEOLChars.
+			computeDifferencesFrom: from
+			to: to
+			using: GtLineDiffSplitter ignoringEOLChars.
 	differences := change changes.
 	self assert: differences size equals: 2.
 	self assert: differences first isReplacement.
@@ -45,6 +48,7 @@ GtDiffBuilderExamples >> changeInMiddleAndDeletionAtEnd [
 { #category : #examples }
 GtDiffBuilderExamples >> deletionsAtBeginningExample [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change |
 	from := '1' , String cr , '2' , String lf , '3'.
 	to := from allButFirst: 2.
@@ -63,6 +67,7 @@ GtDiffBuilderExamples >> deletionsAtBeginningExample [
 { #category : #examples }
 GtDiffBuilderExamples >> deletionsAtEndExample [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change |
 	from := '1' , String cr , '2' , String lf , '3'.
 	to := from allButLast.
@@ -81,6 +86,7 @@ GtDiffBuilderExamples >> deletionsAtEndExample [
 { #category : #examples }
 GtDiffBuilderExamples >> deletionsInMiddle [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change |
 	from := String cr join: ((1 to: 9) collect: #printString).
 	to := String cr join: ((1 to: 4) , (7 to: 9) collect: #printString).
@@ -100,6 +106,7 @@ GtDiffBuilderExamples >> deletionsInMiddle [
 { #category : #examples }
 GtDiffBuilderExamples >> insertionsAtBeginningExample [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change |
 	to := '1' , String cr , '2' , String lf , '3'.
 	from := to allButFirst: 2.
@@ -118,6 +125,7 @@ GtDiffBuilderExamples >> insertionsAtBeginningExample [
 { #category : #examples }
 GtDiffBuilderExamples >> insertionsAtEndExample [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change |
 	to := '1' , String cr , '2' , String lf , '3'.
 	from := to allButLast.
@@ -136,6 +144,7 @@ GtDiffBuilderExamples >> insertionsAtEndExample [
 { #category : #examples }
 GtDiffBuilderExamples >> insertionsInMiddle [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change |
 	to := String cr join: ((1 to: 9) collect: #printString).
 	from := String cr join: ((1 to: 4) , (7 to: 9) collect: #printString).
@@ -155,6 +164,7 @@ GtDiffBuilderExamples >> insertionsInMiddle [
 { #category : #examples }
 GtDiffBuilderExamples >> multipleChanges [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change |
 	from := String cr join: ((0 to: 9 by: 3) collect: #printString).
 	to := String cr join: ((0 to: 9 by: 2) collect: #printString).
@@ -171,6 +181,7 @@ GtDiffBuilderExamples >> multipleChanges [
 { #category : #examples }
 GtDiffBuilderExamples >> multipleObjectChanges [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to deletedObjects insertedObjects index change |
 	from := 0 to: 1000 by: 2.
 	to := 0 to: 1000 by: 7.
@@ -205,6 +216,7 @@ GtDiffBuilderExamples >> multipleObjectChanges [
 { #category : #examples }
 GtDiffBuilderExamples >> noDifferencesExample [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change |
 	from := '1' , String cr , '2' , String lf , '3'.
 	to := from copy.
@@ -220,6 +232,7 @@ GtDiffBuilderExamples >> noDifferencesExample [
 { #category : #examples }
 GtDiffBuilderExamples >> replacementInMiddle [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change |
 	from := String cr join: ((1 to: 4) , (6 to: 9) collect: #printString).
 	to := String cr join: ((1 to: 5) , (7 to: 9) collect: #printString).
@@ -240,6 +253,7 @@ GtDiffBuilderExamples >> replacementInMiddle [
 { #category : #examples }
 GtDiffBuilderExamples >> reversedTokenChanges [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change scannerClass |
 	scannerClass := self class environment at: #GtPharoScanner ifAbsent: [ ^ nil ].
 	to := 'method: arg ^self inject: arg into: [:sum :each | sum + each]'.
@@ -269,6 +283,7 @@ GtDiffBuilderExamples >> reversedTokenChanges [
 { #category : #examples }
 GtDiffBuilderExamples >> tokenChanges [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	| differences from to change scannerClass |
 	scannerClass := self class environment at: #GtPharoScanner ifAbsent: [ ^ nil ].
 	from := 'method: arg ^self inject: arg into: [:sum :each | sum + each]'.

@@ -38,7 +38,7 @@ GtFixItAttribute >> computeDescriptionTextInEditorElement: anEditorElement forFi
 		foreground: BrGlamorousColors disabledButtonTextColor.
 		
 	^ BrEditor new
-		vFitContent;
+		fitContent;
 		aptitude: BrGlamorousRegularEditorAptitude new 
 			glamorousCodeSmallSize;
 		text: text.

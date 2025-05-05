@@ -12,12 +12,13 @@ Class {
 { #category : #examples }
 GtCoderUncategorizedDummyClass >> checkUncategorized [
 	<gtExample>
+	<return: #RPackageTag>
 	| aPackage aPackageTag |
-
 	aPackage := self class package.
-	aPackageTag := aPackage classTags detect: [ :eachTag | eachTag name = aPackage name ].
-	
+	aPackageTag := aPackage classTags
+			detect: [ :eachTag | eachTag name = aPackage name ].
+
 	self assert: aPackage name equals: aPackageTag name.
-	
+
 	^ aPackageTag
 ]

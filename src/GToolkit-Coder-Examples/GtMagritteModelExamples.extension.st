@@ -2,24 +2,25 @@ Extension { #name : #GtMagritteModelExamples }
 
 { #category : #'*GToolkit-Coder-Examples' }
 GtMagritteModelExamples >> simpleBaselineDescription [
-
 	<gtExample>
-	^ MAPriorityContainer withAll: { (MAStringDescription new
-			   accessor: (MADictionaryAccessor key: #baseline);
-			   beAlwaysEditable;
-			   blocCompletion: [ GtClassesCompletionStrategy new ];
-			   beRequired;
-			   addCondition: [ :aValue | aValue beginsWith: 'BaselineOf' ]
-			   labelled: 'Baseline name must begin with BaselineOf';
-			   addCondition: [ :aValue | 
-				   (Smalltalk globals includesKey: aValue asSymbol) not ]
-			   labelled: 'Baseline name must be a non-existent class';
-			   comment: 'Baseline name') }
+	<return: #MAPriorityContainer>
+	^ MAPriorityContainer
+		withAll: {MAStringDescription new
+					accessor: (MADictionaryAccessor key: #baseline);
+					beAlwaysEditable;
+					blocCompletion: [ GtClassesCompletionStrategy new ];
+					beRequired;
+					addCondition: [ :aValue | aValue beginsWith: 'BaselineOf' ]
+						labelled: 'Baseline name must begin with BaselineOf';
+					addCondition: [ :aValue | (Smalltalk globals includesKey: aValue asSymbol) not ]
+						labelled: 'Baseline name must be a non-existent class';
+					comment: 'Baseline name'}
 ]
 
 { #category : #'*GToolkit-Coder-Examples' }
 GtMagritteModelExamples >> simpleBaselinesDescription [
 	<gtExample>
+	<return: #MAPriorityContainer>
 	^ MAPriorityContainer
 		withAll: {MAToManyRelationDescription new
 					label: 'Baselines';
@@ -53,24 +54,24 @@ GtMagritteModelExamples >> simpleBaselinesDescription [
 							do: [ :aRequest | 
 								| aValue |
 								aValue := (aTagger tags collect: #name)
-											add: aRequest tag name;
-											yourself.
+										add: aRequest tag name;
+										yourself.
 								GtMagritteBuilderUtility
-									write: aValue 
-									using: aDescription 
-									memento: aMemento 
+									write: aValue
+									using: aDescription
+									memento: aMemento
 									element: aTagger ].
 						aTagger
 							when: BrTaggerRemoveTagRequest
 							do: [ :aRequest | 
 								| aValue |
 								aValue := (aTagger tags collect: #name)
-											remove: aRequest tag name;
-											yourself.
+										remove: aRequest tag name;
+										yourself.
 								GtMagritteBuilderUtility
-									write: aValue 
-									using: aDescription 
-									memento: aMemento 
+									write: aValue
+									using: aDescription
+									memento: aMemento
 									element: aTagger ].
 						aTagger
 							withAsyncSinkDo: [ :anElementSink | 
