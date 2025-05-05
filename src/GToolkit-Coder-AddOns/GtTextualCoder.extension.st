@@ -73,9 +73,8 @@ GtTextualCoder >> addExplicitContextMenu: aString block: aBlock to: coderAddOns 
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtTextualCoder >> initializeAddOns: addOns viewModel: aCoderViewModel [
+GtTextualCoder >> initializeSearchTextAddOns: addOns viewModel: aCoderViewModel [
 	| aStyler aWeakElement |
-	super initializeAddOns: addOns viewModel: aCoderViewModel.
 	
 	GtTextualCoderSearchTextSettings isEnabledInCoder ifFalse: [ ^ self ].
 	
