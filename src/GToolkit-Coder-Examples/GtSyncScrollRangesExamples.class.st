@@ -7,12 +7,14 @@ Class {
 { #category : #examples }
 GtSyncScrollRangesExamples >> example [
 	<gtExample>
+	<return: #GtSyncScrollRanges>
 	^ GtSyncScrollRanges createFromChange: self exampleDiff
 ]
 
 { #category : #examples }
 GtSyncScrollRangesExamples >> exampleDiff [
 	<gtExample>
+	<return: #GtCompositeDiffChange>
 	^ GtDiffBuilder
 		computeDifferencesFrom: self originalString
 		to: self newString
@@ -22,6 +24,7 @@ GtSyncScrollRangesExamples >> exampleDiff [
 { #category : #examples }
 GtSyncScrollRangesExamples >> multilineCode [
 	<gtExample>
+	<return: #GtSyncScrollRanges>
 	| change ranges |
 	change := GtDiffBuilderExamples new tokenChanges.
 	ranges := GtSyncScrollRanges createFromChange: change.
@@ -32,6 +35,7 @@ GtSyncScrollRangesExamples >> multilineCode [
 { #category : #accessing }
 GtSyncScrollRangesExamples >> multipleChanges [
 	<gtExample>
+	<return: #GtSyncScrollRanges>
 	| diff ranges |
 	diff := GtDiffBuilderExamples new multipleChanges.
 	ranges := GtSyncScrollRanges createFromChange: diff.
@@ -49,6 +53,7 @@ GtSyncScrollRangesExamples >> multipleChanges [
 { #category : #private }
 GtSyncScrollRangesExamples >> newString [
 	<gtExample>
+	<return: #ByteString>
 	^ '1
 4
 5
@@ -61,6 +66,7 @@ GtSyncScrollRangesExamples >> newString [
 { #category : #accessing }
 GtSyncScrollRangesExamples >> nextPreviousLeftChange [
 	<gtExample>
+	<return: #GtSyncScrollRanges>
 	| diff ranges |
 	diff := GtDiffBuilderExamples new deletionsInMiddle.
 	ranges := GtSyncScrollRanges createFromChange: diff.
@@ -72,6 +78,7 @@ GtSyncScrollRangesExamples >> nextPreviousLeftChange [
 { #category : #accessing }
 GtSyncScrollRangesExamples >> nextPreviousMultipleChanges [
 	<gtExample>
+	<return: #GtSyncScrollRanges>
 	| ranges |
 	ranges := self multipleChanges.
 	self validateNextLeftChangeIn: ranges equals: #(1 2 4).
@@ -82,6 +89,7 @@ GtSyncScrollRangesExamples >> nextPreviousMultipleChanges [
 { #category : #accessing }
 GtSyncScrollRangesExamples >> nextPreviousRightChange [
 	<gtExample>
+	<return: #GtSyncScrollRanges>
 	| diff ranges |
 	diff := GtDiffBuilderExamples new insertionsInMiddle.
 	ranges := GtSyncScrollRanges createFromChange: diff.
@@ -93,6 +101,7 @@ GtSyncScrollRangesExamples >> nextPreviousRightChange [
 { #category : #private }
 GtSyncScrollRangesExamples >> originalString [
 	<gtExample>
+	<return: #ByteString>
 	^ '1
 2
 3
@@ -106,6 +115,7 @@ GtSyncScrollRangesExamples >> originalString [
 { #category : #examples }
 GtSyncScrollRangesExamples >> reversedMultilineCode [
 	<gtExample>
+	<return: #GtSyncScrollRanges>
 	| change ranges |
 	change := GtDiffBuilderExamples new reversedTokenChanges.
 	ranges := GtSyncScrollRanges createFromChange: change.
@@ -116,6 +126,7 @@ GtSyncScrollRangesExamples >> reversedMultilineCode [
 { #category : #examples }
 GtSyncScrollRangesExamples >> textDiffExample [
 	<gtExample>
+	<return: #GtSyncScrollRanges>
 	^ GtSyncScrollRanges
 		createFromDiff: (TextDiffBuilder from: self originalString to: self newString)
 ]
@@ -123,6 +134,7 @@ GtSyncScrollRangesExamples >> textDiffExample [
 { #category : #examples }
 GtSyncScrollRangesExamples >> textDiffNextChange [
 	<gtExample>
+	<return: #GtSyncScrollRanges>
 	| ranges |
 	ranges := self textDiffExample.
 	self validateNextLeftChangeIn: ranges equals: #(1 2 7 8 2).

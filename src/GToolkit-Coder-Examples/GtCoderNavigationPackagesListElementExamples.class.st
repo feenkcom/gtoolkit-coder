@@ -7,6 +7,6 @@ Class {
 { #category : #'instance creation' }
 GtCoderNavigationPackagesListElementExamples >> fromAllPackages [
 	<gtExample>
-	
+	<return: #GtCoderPackagesTreeElement>
 	^ GtCoderPackagesTreeElement fromPackages: RPackageOrganizer default packages
 ]

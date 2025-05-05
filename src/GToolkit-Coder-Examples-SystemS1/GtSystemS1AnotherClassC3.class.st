@@ -15,6 +15,7 @@ GtSystemS1AnotherClassC3 class >> isDeprecated [
 { #category : #example }
 GtSystemS1AnotherClassC3 >> methodWithExample [
 	<gtExample>
+	<return: #GtSystemS1AnotherClassC3>
 	^ self class new
 ]
 

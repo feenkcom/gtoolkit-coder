@@ -38,7 +38,7 @@ GtFixItAttribute >> computeDescriptionTextInEditorElement: anEditorElement forFi
 		foreground: BrGlamorousColors disabledButtonTextColor.
 		
 	^ BrEditor new
-		vFitContent;
+		fitContent;
 		aptitude: BrGlamorousRegularEditorAptitude new 
 			glamorousCodeSmallSize;
 		text: text.
@@ -84,9 +84,12 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 				self addHoveringStylingFor: anEditorElement to: element.
 				element ].
 
+	dropDownAptitude withGainFocusOnShow.
+				
 	button
-		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude
-				+ dropDownAptitude.
+		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude - BrGlamorousButtonWithLabelTooltipAptitude2;
+		addAptitude: dropDownAptitude;
+		addAptitude: (BrGlamorousWithExplicitTooltipAptitude text: (label ifNil: [ 'Fix it' ]) shortcut: BlKeyCombination primaryT).
 	button userData at: #fixItAttribute put: self.
 	button userData at: #dropDownAptitude put: dropDownAptitude.
 	button icon: BrGlamorousVectorIcons repair.
@@ -98,30 +101,51 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 { #category : #accessing }
 GtFixItAttribute >> dropDownElementFor: anEditorElement [
 	| pane menuElement computedFixItActions menuItems |
-	
 	computedFixItActions := fixItActionsBlock value.
 	menuItems := self computeMenuItemsForFixItActions: computedFixItActions.
-					
+
 	pane := BrVerticalPane new.
 	pane fitContent.
-	
-	descriptionBlock ifNotNil: [ 
-		| labelText  |
-		labelText := self 
-			computeDescriptionTextInEditorElement: anEditorElement 
-			forFixItActions: computedFixItActions.
-		
-		menuItems isEmpty
-			ifTrue: [ labelText width: 200 ]
-			ifFalse: [ labelText hMatchParent ].
-				
-		pane addChild: labelText ].
-	
-	menuElement := GtCoderContextMenuContent new
-		editorElement: anEditorElement;
-		items: menuItems.
+
+	descriptionBlock
+		ifNotNil: [ | labelText |
+			labelText := self
+					computeDescriptionTextInEditorElement: anEditorElement
+					forFixItActions: computedFixItActions.
+
+			menuItems isEmpty
+				ifTrue: [ labelText width: 200 ]
+				ifFalse: [ labelText hMatchParent ].
+
+			pane addChild: labelText ].
+
+	menuItems ifNotEmpty: [
+		menuElement := GtCoderContextMenuContent new
+				beFocusable;
+				editorElement: anEditorElement;
+				items: menuItems;
+				addShortcut: (BlShortcutWithAction new
+					combination: BlKeyCombination enter;
+					name: 'Perform fix';
+					description: 'Perform a fix-it action';
+					action: [ :aShortcutEvent :aShortcut | 
+							aShortcutEvent consumed: true.
+							menuElement selectedItemDo: [ :eachGtCoderContextMenuAction |
+								eachGtCoderContextMenuAction action
+									cull: anEditorElement textualCoderViewModel
+									cull: anEditorElement
+									cull: aShortcutEvent.
+								menuElement fireEvent: BrDropdownHideWish new.
+								menuElement fireEvent: BrContextMenuHideWish new ] ]).
 			
-	pane addChild: menuElement.
+		pane
+			when: BrPopoverGainFocusWish
+			do: [ :anEvent | 
+				menuElement
+					requestFocus;
+					selectOne: 1 ].
+
+		pane addChild: menuElement ].
 	^ pane
 ]
 

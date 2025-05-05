@@ -7,8 +7,8 @@ Class {
 { #category : #examples }
 GtFiltersElementExamples >> emptyFiltersElement [
 	<gtExample>
+	<return: #GtFiltersElement>
 	| aFiltersElement |
-	
 	aFiltersElement := GtFiltersElement new.
 
 	self assert: (aFiltersElement query // GtFiltersAddButtonId) isNotEmpty.
@@ -46,6 +46,7 @@ GtFiltersElementExamples >> filterDescriptors [
 { #category : #examples }
 GtFiltersElementExamples >> filtersElementWithDescriptors [
 	<gtExample>
+	<return: #BlScripter>
 	| filtersElement scripter |
 	filtersElement := self emptyFiltersElement.
 	filtersElement descriptors: self filterDescriptors.
@@ -65,6 +66,7 @@ GtFiltersElementExamples >> filtersElementWithDescriptors [
 { #category : #examples }
 GtFiltersElementExamples >> filtersElementWithDescriptorsBuildFilters [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self filtersElementWithDescriptors.
 	scripter element
@@ -81,10 +83,7 @@ GtFiltersElementExamples >> filtersElementWithDescriptorsBuildFilters [
 								addFilterForDescriptor: eachFilterAndValue key
 								andValue: eachFilterAndValue value ] ] ].
 
-	scripter
-		clickStep: [ :s | 
-			s
-				id: GtFiltersAddButtonId ].
+	scripter clickStep: [ :s | s id: GtFiltersAddButtonId ].
 
 	scripter
 		assertStep: [ :s | 
@@ -93,10 +92,7 @@ GtFiltersElementExamples >> filtersElementWithDescriptorsBuildFilters [
 				@ 3;
 				satisfies: [ :aTagElement | aTagElement hasFocus ] ].
 
-	scripter
-		assertStep: [ :s | 
-			s
-				eventNotFired: GtFiltersChangedEvent ].
+	scripter assertStep: [ :s | s eventNotFired: GtFiltersChangedEvent ].
 
 	scripter shortcut
 		// GtFilterTagElement;
@@ -117,6 +113,7 @@ GtFiltersElementExamples >> filtersElementWithDescriptorsBuildFilters [
 { #category : #examples }
 GtFiltersElementExamples >> filtersElementWithDescriptorsReplaceFilterWithTheSameFilter [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self filtersElementWithDescriptors.
 

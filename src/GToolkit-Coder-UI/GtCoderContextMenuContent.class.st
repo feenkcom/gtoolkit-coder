@@ -89,5 +89,13 @@ GtCoderContextMenuContent >> menuItemStencil [
 					leave cull: self editorElement textualCoderViewModel cull: anEvent ] ].
 	eachGtCoderContextMenuAction name
 		ifNotNil: [ :anActionName | element containerName: anActionName ].
+		
+	eachGtCoderContextMenuAction isEnabled ifTrue: [
+		element
+			when: BlMouseEnterEvent
+				do: [ :anEvent | self selectOne: aRowIndex ];
+			when: BlMouseLeaveEvent
+				do: [ :anEvent | self deselectOne: aRowIndex ] ].
+		
 	element ]
 ]
