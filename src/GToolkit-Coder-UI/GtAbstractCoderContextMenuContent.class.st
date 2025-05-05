@@ -40,5 +40,6 @@ GtAbstractCoderContextMenuContent >> menuItemStencil [
 { #category : #accessing }
 GtAbstractCoderContextMenuContent >> selectionAptitude [
 	^ BrStyleCommonAptitude new
+		selected: [ :aStyle | aStyle background: self theme item selectedColor ];
 		hovered: [ :aStyle | aStyle background: self theme item selectedColor ]
 ]
