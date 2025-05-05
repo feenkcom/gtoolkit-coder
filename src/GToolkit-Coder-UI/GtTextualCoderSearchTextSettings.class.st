@@ -19,5 +19,5 @@ GtTextualCoderSearchTextSettings class >> enableInCoder [
 
 { #category : #settings }
 GtTextualCoderSearchTextSettings class >> isEnabledInCoder [
-	^ IsEnabledInCoder ifNil: [ false ]
+	^ IsEnabledInCoder ifNil: [ true ]
 ]
