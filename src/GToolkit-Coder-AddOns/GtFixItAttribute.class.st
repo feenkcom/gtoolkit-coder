@@ -87,8 +87,9 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	dropDownAptitude withGainFocusOnShow.
 				
 	button
-		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude
-				+ dropDownAptitude.
+		aptitude: BrGlamorousButtonWithIconAptitude - BrGlamorousButtonExteriorAptitude - BrGlamorousButtonWithLabelTooltipAptitude2;
+		addAptitude: dropDownAptitude;
+		addAptitude: (BrGlamorousWithExplicitTooltipAptitude text: (label ifNil: [ 'Fix it' ]) shortcut: BlKeyCombination primaryT).
 	button userData at: #fixItAttribute put: self.
 	button userData at: #dropDownAptitude put: dropDownAptitude.
 	button icon: BrGlamorousVectorIcons repair.
