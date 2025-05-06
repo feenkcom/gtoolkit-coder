@@ -73,9 +73,8 @@ GtTextualCoder >> addExplicitContextMenu: aString block: aBlock to: coderAddOns 
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
-GtTextualCoder >> initializeAddOns: addOns viewModel: aCoderViewModel [
+GtTextualCoder >> initializeSearchTextAddOns: addOns viewModel: aCoderViewModel [
 	| aStyler aWeakElement |
-	super initializeAddOns: addOns viewModel: aCoderViewModel.
 	
 	GtTextualCoderSearchTextSettings isEnabledInCoder ifFalse: [ ^ self ].
 	
@@ -87,7 +86,7 @@ GtTextualCoder >> initializeAddOns: addOns viewModel: aCoderViewModel [
 				stencil: [ BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;
 					icon: BrGlamorousVectorIcons search;
-					id: GtMethodCoderSaveActionId;
+					id: GtCoderSearchActionId;
 					label: 'Search';
 					beTinySize;
 					when: BrDropdownIsHidden
