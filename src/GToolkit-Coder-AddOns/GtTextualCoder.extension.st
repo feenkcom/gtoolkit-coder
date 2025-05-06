@@ -86,7 +86,7 @@ GtTextualCoder >> initializeSearchTextAddOns: addOns viewModel: aCoderViewModel 
 				stencil: [ BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;
 					icon: BrGlamorousVectorIcons search;
-					id: GtMethodCoderSaveActionId;
+					id: GtCoderSearchActionId;
 					label: 'Search';
 					beTinySize;
 					when: BrDropdownIsHidden
