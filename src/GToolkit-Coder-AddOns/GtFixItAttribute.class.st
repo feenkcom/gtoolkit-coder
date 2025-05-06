@@ -113,10 +113,6 @@ GtFixItAttribute >> dropDownElementFor: anEditorElement [
 					computeDescriptionTextInEditorElement: anEditorElement
 					forFixItActions: computedFixItActions.
 
-			menuItems isEmpty
-				ifTrue: [ labelText width: 200 ]
-				ifFalse: [ labelText hMatchParent ].
-
 			pane addChild: labelText ].
 
 	menuItems ifNotEmpty: [
