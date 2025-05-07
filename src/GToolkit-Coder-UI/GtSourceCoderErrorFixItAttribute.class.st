@@ -41,8 +41,3 @@ GtSourceCoderErrorFixItAttribute >> fixItAttribute [
 GtSourceCoderErrorFixItAttribute >> fixItAttribute: anObject [
 	fixItAttribute := anObject
 ]
-
-{ #category : #testing }
-GtSourceCoderErrorFixItAttribute >> showErrorBackground [
-	^ false
-]

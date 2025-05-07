@@ -24,12 +24,10 @@ GtSourceCoderErrorAttribute >> buildPopupIn: anEditorElement aptitude: aptitude 
 	pane := BrVerticalPane new.
 	pane id: GtSourceCoderErrorContentElementId.
 	pane matchParent.
-	pane background: BrGlamorousColors errorBackgroundColor.
 	string lines
 		do: [ :line | 
 			text := line asRopedText
-					medium;
-					glamorousCodeFontAndSmallSize.
+					glamorousCodeSmallSize.
 			textElement := BlTextElement new.
 			textElement text: text.
 			textElement padding: (BlInsets all: 10).
@@ -74,10 +72,7 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 		addAptitude: (aptitude := BrGlamorousWithExplicitDropdownAptitude
 					handle: [ self errorButton ]
 					content: [ self buildPopupIn: anEditorElement aptitude: aptitude ]
-					containerDo: [ :aMenuContainer | 
-						aMenuContainer border: (BlBorder paint: BrGlamorousColors errorBackgroundColor).
-						self showErrorBackground
-							ifTrue: [ aMenuContainer background: BrGlamorousColors errorBackgroundColor ] ]).
+					containerDo: [ :aMenuContainer | aMenuContainer border: (BlBorder paint: BrGlamorousColors errorBackgroundColor) ]).
 	openOnFirstShow
 		ifTrue: [ button
 				enqueueTask: [ openOnFirstShow := false.
@@ -116,9 +111,4 @@ GtSourceCoderErrorAttribute >> openOnFirstShow [
 { #category : #accessing }
 GtSourceCoderErrorAttribute >> openOnFirstShow: aBoolean [
 	openOnFirstShow := aBoolean
-]
-
-{ #category : #accessing }
-GtSourceCoderErrorAttribute >> showErrorBackground [
-	^ true
 ]
