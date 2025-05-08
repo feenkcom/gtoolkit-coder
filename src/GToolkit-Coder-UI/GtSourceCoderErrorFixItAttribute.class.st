@@ -24,7 +24,11 @@ GtSourceCoderErrorFixItAttribute >> buildPopupIn: anEditorElement aptitude: apti
 						action: [ :aShortcutEvent :aShortcutAction | 
 							aShortcutEvent currentTarget fireEvent: BrDropdownHideWish new.
 							anEditorElement requestFocus ]) ].
-	element enqueueTask: [ element requestFocus ] asBlTask.
+	element
+		enqueueTask: [ (element
+				allChildrenBreadthFirstDetect: [ :each | each isKindOf: GtCoderContextMenuContent ]
+				ifFound: [ :each | each ]
+				ifNone: [ element ]) requestFocus ] asBlTask.
 	^ element
 ]
 
@@ -36,9 +40,4 @@ GtSourceCoderErrorFixItAttribute >> fixItAttribute [
 { #category : #accessing }
 GtSourceCoderErrorFixItAttribute >> fixItAttribute: anObject [
 	fixItAttribute := anObject
-]
-
-{ #category : #testing }
-GtSourceCoderErrorFixItAttribute >> showErrorBackground [
-	^ false
 ]

@@ -7,8 +7,8 @@ Class {
 { #category : #initalization }
 GtSourceCoderEditorElement >> initialize [
 	super initialize.
-	self editor doubleClickWordClassifier: BrSmalltalkWordClassifier new.
-	self editor movementWordClassifier: BrCamelCaseWordClassifier new.
+	self editor doubleClickWordClassifier: GtSmalltalkSourceCoder doubleClickClassifier.
+	self editor movementWordClassifier: GtSmalltalkSourceCoder wordMovementClassifier.
 ]
 
 { #category : #'api - textual coder view model' }
