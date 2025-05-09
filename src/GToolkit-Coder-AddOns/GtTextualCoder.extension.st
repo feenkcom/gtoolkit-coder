@@ -78,7 +78,7 @@ GtTextualCoder >> initializeSearchTextAddOns: addOns viewModel: aCoderViewModel 
 	
 	GtTextualCoderSearchTextSettings isEnabledInCoder ifFalse: [ ^ self ].
 	
-	addOns addStyler: (aStyler := BrEditorSearchTextStyler new).
+	aCoderViewModel addStyler: (aStyler := BrEditorSearchTextStyler new).
 
 	addOns
 		addMainAction: (GtCoderCustomAction new
