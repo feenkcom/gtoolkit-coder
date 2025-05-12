@@ -338,6 +338,31 @@ GtTextualCoderEditorElement >> onScrollToCharacterPositionAnnouncement: anAnnoun
 ]
 
 { #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onSearchTextGetTextAndVisibleTextAnnouncement: anAnnouncement [
+	self assertUIProcess.
+	anAnnouncement consumed ifTrue: [ ^ self ].
+	anAnnouncement consumed: true.
+	
+	anAnnouncement text: self text.
+	anAnnouncement visibleText: self visibleText
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onSearchTextUpdateTextAnnouncement: anAnnouncement [
+	| aResult |
+	self assertUIProcess.
+	anAnnouncement consumed ifTrue: [ ^ self ].
+	anAnnouncement consumed: true.
+
+	aResult := BrEditorSearchTextUpdater new
+		editorModel: self editor;
+		styledText: anAnnouncement styledText;
+		update.
+		
+	anAnnouncement isUpdated: aResult
+]
+
+{ #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onStyleTextRequest: anEvent [
 	"onStyleTextRequest: may be sent from a non-UI thread"
 
@@ -632,6 +657,12 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 			to: self;
 		when: GtTextualCoderViewModelScrollToCharacterPositionAnnouncement
 			send: #onScrollToCharacterPositionAnnouncement:
+			to: self;
+		when: GtTextualCoderViewModelSearchTextGetTextAndVisibleTextAnnouncement
+			send: #onSearchTextGetTextAndVisibleTextAnnouncement:
+			to: self;
+		when: GtTextualCoderViewModelSearchTextUpdateTextAnnouncement
+			send: #onSearchTextUpdateTextAnnouncement:
 			to: self
 ]
 
