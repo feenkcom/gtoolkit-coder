@@ -305,36 +305,12 @@ GtTextualCoderEditorElement >> onRemovedFromSceneGraph [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onScrollToCharacterPositionAnnouncement: anAnnouncement [
-	| aStartPosition aFirstSegment aLastSegment aLineIndex aLineDistance |
-	aStartPosition := anAnnouncement characterPosition.
-	aLineIndex := anAnnouncement lineIndex.
-	
-	"Get range of visible lines and characters"
-	aFirstSegment := (self layout
-			findFirstVisibleChildClosestToStartCompletelyVisible: true
-			acceptPartiallyVisible: false) ifNotNil: #segment.
-	aLastSegment := (self layout
-			findFirstVisibleChildClosestToEndCompletelyVisible: true
-			acceptPartiallyVisible: false) ifNotNil: #segment.
-			
-	"Scroll only if the character is not visible"
-	(aFirstSegment isNotNil and: [ 
-		aLastSegment isNotNil and: [
-			aFirstSegment textStart >= aStartPosition and: [ 
-				aLastSegment textEnd <= aStartPosition ] ] ]) 
-					ifTrue: [ ^ self ].
-	
-	"Check the distance"
-	(aFirstSegment isNotNil and: [
-		aLastSegment isNotNil ]) 
-			ifTrue: [ 
-				aLineDistance := (aFirstSegment index - aLineIndex) abs 
-					min: (aLastSegment index - aLineIndex) abs ].
-	
-	"Scroll smoothly or jump to the position, depending on the distance."
-	(aLineDistance isNotNil and: [ aLineDistance < 100 ])
-		ifTrue: [ self smoothScrollToPosition: aLineIndex ]
-		ifFalse: [ self scrollToPosition: aLineIndex ]
+	BrEditorSearchTextScroller new
+		editorElement: self;
+		lineIndex: anAnnouncement lineIndex;
+		characterStartPosition: anAnnouncement characterPosition;
+		characterStopPosition: anAnnouncement characterPosition;
+		scroll
 ]
 
 { #category : #'private - event handling' }

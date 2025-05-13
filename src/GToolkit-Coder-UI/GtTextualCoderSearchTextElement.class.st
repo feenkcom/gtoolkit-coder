@@ -25,6 +25,9 @@ GtTextualCoderSearchTextElement >> initializeEventHandlers [
 		when: BrSearchTextPatternWish
 		do: [ :anEvent | self onBrSearchTextPatternWish: anEvent ].
 	self
+		when: BrSearchTextNoPatternWish
+		do: [ :anEvent | self onBrSearchTextNoPatternWish: anEvent ].
+	self
 		when: BrSearchTextNextOccurenceWish
 		do: [ :anEvent | self onBrSearchTextNextOccurenceWish: anEvent ].
 	self
@@ -32,7 +35,7 @@ GtTextualCoderSearchTextElement >> initializeEventHandlers [
 		do: [ :anEvent | self onBrSearchTextPreviousOccurenceWish: anEvent ].
 	self
 		when: BrSearchTextEndWish
-		do: [ :anEvent | self onBrSearchTextEndWish: anEvent ].
+		do: [ :anEvent | self onBrSearchTextEndWish: anEvent ]
 ]
 
 { #category : #initialization }
@@ -71,7 +74,9 @@ GtTextualCoderSearchTextElement >> onBrSearchTextEndWish: anEvent [
 	anEvent consumed: true.
 	self hasTextualCoderViewModel ifFalse: [ ^ self ].
 	aContext := context ifNil: [ ^ self ].
+	context := nil.
 
+	marker unmark: aContext.
 	aRange := aContext selectedRange.
 	aRange ifNil: [ ^ self ].
 
@@ -101,18 +106,26 @@ GtTextualCoderSearchTextElement >> onBrSearchTextNextOccurenceWish: anEvent [
 ]
 
 { #category : #'private - event management' }
+GtTextualCoderSearchTextElement >> onBrSearchTextNoPatternWish: anEvent [
+	| aContext |
+	anEvent consumed: true.
+
+	aContext := context.
+	context := nil.
+	aContext ifNil: [ ^ self ].
+
+	marker unmark: aContext
+]
+
+{ #category : #'private - event management' }
 GtTextualCoderSearchTextElement >> onBrSearchTextPatternWish: anEvent [
 	| aContext |
 	anEvent consumed: true.
 
-	anEvent text size isZero
-		ifTrue: [ marker unmark: (context ifNil: [ ^ self ]).
-			^ self ].
-
 	aContext := self newMarkerContext.
 	aContext ifNil: [ ^ self ].
 
-	aContext subtext: anEvent text copy.
+	aContext pattern: anEvent pattern.
 	context := aContext.
 	marker mark: aContext
 ]
