@@ -26,7 +26,12 @@ GtTextualCoderViewModelSearchTextSource >> element [
 { #category : #testing }
 GtTextualCoderViewModelSearchTextSource >> hasText [
 	<return: #Boolean>
-	^' self subclassResponsibility'
+	^ self text isNotNil
+]
+
+{ #category : #testing }
+GtTextualCoderViewModelSearchTextSource >> hasVisibleText [
+	^ self visibleText isNotNil
 ]
 
 { #category : #accessing }
@@ -63,7 +68,7 @@ GtTextualCoderViewModelSearchTextSource >> updateText: aStyledText [
 			textualCoderViewModel: textualCoderViewModel;
 			styledText: aStyledText.
 	textualCoderViewModel announce: anAnnouncement.
-	^ anAnnouncement visibleText
+	^ anAnnouncement isUpdated
 ]
 
 { #category : #accessing }
