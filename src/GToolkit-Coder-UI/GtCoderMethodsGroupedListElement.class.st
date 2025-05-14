@@ -207,8 +207,8 @@ GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aSelector [
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
 				elementForRefactoring: [ RBPushDownMethodRefactoring
-						pushDown: {aSelector}
-						from: self selectedClass ]
+						pushDown: {self selectedMethod selector}
+						from: self selectedMethod methodClass ]
 				confirmationLabeled: 'Push down ' , aSelector
 				from: self
 				beforeApplyingDo: [ submenu hideAll ] ].
@@ -222,8 +222,8 @@ GtCoderMethodsGroupedListElement >> pushUpMethodSubmenuFor: aSelector [
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
 				elementForRefactoring: [ RBPullUpMethodRefactoring
-						pullUp: {aSelector}
-						from: self selectedClass ]
+						pullUp: {self selectedMethod selector}
+						from: self selectedMethod methodClass ]
 				confirmationLabeled: 'Pull up ' , aSelector
 				from: self
 				beforeApplyingDo: [ submenu hideAll ] ].
@@ -261,7 +261,9 @@ GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
 												text: (references printString , ' reference'
 														, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
 							pane ]).
-			change := RBRemoveMethodChange remove: aSelector from: self selectedClass.
+			change := RBRemoveMethodChange
+					remove: self selectedMethod selector
+					from: self selectedMethod methodClass.
 			button := BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;
 					beSmallSize;
@@ -286,8 +288,8 @@ GtCoderMethodsGroupedListElement >> renameMethodSubmenuFor: aSelector [
 		stencil: [ GtRefactoringsWithInputPreviewElement
 				elementForRefactoring: [ :each | 
 					GtRBRenameMethodRefactoring
-						renameMethod: aSelector
-						in: self selectedClass
+						renameMethod: self selectedMethod selector
+						in: self selectedMethod methodClass
 						to: each
 						permutation: (1 to: aSelector numArgs) ]
 				labeled: 'Rename method: '
@@ -300,6 +302,11 @@ GtCoderMethodsGroupedListElement >> renameMethodSubmenuFor: aSelector [
 { #category : #accessing }
 GtCoderMethodsGroupedListElement >> selectedClass [
 	^ navigationModel selectedClass
+]
+
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> selectedMethod [
+	^ navigationModel selectedMethod
 ]
 
 { #category : #'private - subscriptions' }
