@@ -1,6 +1,6 @@
 Class {
 	#name : #GtTextualCoderSearchTextElement,
-	#superclass : #BrSearchTextElement,
+	#superclass : #BrEditorSearchTextElement,
 	#traits : 'TGtWithTextualCoderViewModel',
 	#classTraits : 'TGtWithTextualCoderViewModel classTrait',
 	#instVars : [
@@ -22,29 +22,26 @@ GtTextualCoderSearchTextElement >> initialize [
 { #category : #initialization }
 GtTextualCoderSearchTextElement >> initializeEventHandlers [
 	self
-		when: BrSearchTextPatternWish
+		when: BrEditorSearchTextPatternWish
 		do: [ :anEvent | self onBrSearchTextPatternWish: anEvent ].
 	self
-		when: BrSearchTextNoPatternWish
+		when: BrEditorSearchTextNoPatternWish
 		do: [ :anEvent | self onBrSearchTextNoPatternWish: anEvent ].
 	self
-		when: BrSearchTextNextOccurenceWish
+		when: BrEditorSearchTextNextOccurenceWish
 		do: [ :anEvent | self onBrSearchTextNextOccurenceWish: anEvent ].
 	self
-		when: BrSearchTextPreviousOccurenceWish
+		when: BrEditorSearchTextPreviousOccurenceWish
 		do: [ :anEvent | self onBrSearchTextPreviousOccurenceWish: anEvent ].
 	self
-		when: BrSearchTextEndWish
+		when: BrEditorSearchTextEndWish
 		do: [ :anEvent | self onBrSearchTextEndWish: anEvent ]
 ]
 
 { #category : #initialization }
 GtTextualCoderSearchTextElement >> initializeMarker [
 	marker := BrEditorSearchTextMarker new
-			computation: (BrEditorSearchTextAsyncFutureComputation new
-					executionConfiguration: (AsyncFutureExecutionConfiguration new
-							customGroup: #SearchText;
-							defaultPriority)).
+			computation: BrEditorSearchTextAsyncFutureComputation newDefault.
 
 	marker
 		when: BrEditorSearchTextFinishedAnnouncement
