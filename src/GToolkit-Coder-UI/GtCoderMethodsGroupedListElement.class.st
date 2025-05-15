@@ -71,19 +71,19 @@ GtCoderMethodsGroupedListElement >> contextMenuFor: item in: anElement [
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Push up method' description: item selector);
-				submenu: (self pushUpMethodSubmenuFor: item selector)).
+				submenu: (self pushUpMethodSubmenuFor: item)).
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Push down method' description: item selector);
-				submenu: (self pushDownMethodSubmenuFor: item selector)).
+				submenu: (self pushDownMethodSubmenuFor: item)).
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Rename message' description: item selector);
-				submenu: (self renameMethodSubmenuFor: item selector)).
+				submenu: (self renameMethodSubmenuFor: item)).
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Remove method' description: item selector);
-				submenu: (self removeMethodSubmenuFor: item selector)).
+				submenu: (self removeMethodSubmenuFor: item)).
 	^ menu
 ]
 
@@ -201,37 +201,37 @@ GtCoderMethodsGroupedListElement >> onMethodsToShowChanged: anAnnouncement [
 ]
 
 { #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aSelector [
+GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
 				elementForRefactoring: [ RBPushDownMethodRefactoring
-						pushDown: {aSelector}
-						from: self selectedClass ]
-				confirmationLabeled: 'Push down ' , aSelector
+						pushDown: {aMethod selector}
+						from: aMethod methodClass ]
+				confirmationLabeled: 'Push down ' , aMethod selector
 				from: self
 				beforeApplyingDo: [ submenu hideAll ] ].
 	^ submenu
 ]
 
 { #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> pushUpMethodSubmenuFor: aSelector [
+GtCoderMethodsGroupedListElement >> pushUpMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
 				elementForRefactoring: [ RBPullUpMethodRefactoring
-						pullUp: {aSelector}
-						from: self selectedClass ]
-				confirmationLabeled: 'Pull up ' , aSelector
+						pullUp: {aMethod selector}
+						from: aMethod methodClass ]
+				confirmationLabeled: 'Pull up ' , aMethod selector
 				from: self
 				beforeApplyingDo: [ submenu hideAll ] ].
 	^ submenu
 ]
 
 { #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
+GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
 	^ submenu
@@ -245,14 +245,14 @@ GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
 								left: 10
 								right: 10);
 						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
-						text: ('Remove ' , aSelector) asRopedText).
+						text: ('Remove ' , aMethod selector) asRopedText).
 			element
 				addChild: (BrAsyncWidget new
 						fitContent;
 						stencil: [ | pane references |
 							pane := BrVerticalPane new.
 							pane fitContent.
-							references := (GtPharoIndex current sendersOf: aSelector) size.
+							references := (GtPharoIndex current sendersOf: aMethod size) size.
 							references > 0
 								ifTrue: [ pane
 										addChild: (BrLabel new
@@ -261,7 +261,9 @@ GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
 												text: (references printString , ' reference'
 														, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
 							pane ]).
-			change := RBRemoveMethodChange remove: aSelector from: self selectedClass.
+			change := RBRemoveMethodChange
+					remove: aMethod selector
+					from: aMethod methodClass.
 			button := BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;
 					beSmallSize;
@@ -279,19 +281,19 @@ GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aSelector [
 ]
 
 { #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> renameMethodSubmenuFor: aSelector [
+GtCoderMethodsGroupedListElement >> renameMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
 				elementForRefactoring: [ :each | 
 					GtRBRenameMethodRefactoring
-						renameMethod: aSelector
-						in: self selectedClass
+						renameMethod: aMethod selector
+						in: aMethod methodClass
 						to: each
-						permutation: (1 to: aSelector numArgs) ]
+						permutation: (1 to: aMethod selector numArgs) ]
 				labeled: 'Rename method: '
-				initialValue: aSelector
+				initialValue: aMethod selector
 				from: self
 				beforeApplyingDo: [ submenu hideAll ] ].
 	^ submenu
@@ -300,6 +302,11 @@ GtCoderMethodsGroupedListElement >> renameMethodSubmenuFor: aSelector [
 { #category : #accessing }
 GtCoderMethodsGroupedListElement >> selectedClass [
 	^ navigationModel selectedClass
+]
+
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> selectedMethod [
+	^ navigationModel selectedMethod
 ]
 
 { #category : #'private - subscriptions' }
