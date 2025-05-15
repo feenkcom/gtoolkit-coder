@@ -728,6 +728,9 @@ GtTextualCoderViewModel >> saveAttribute: folder forNode: aNode andStyler: aStyl
 
 { #category : #'api - scrolling' }
 GtTextualCoderViewModel >> scrollToLine: aLineIndex withCharacterPosition: aCharacterPosition [
+	aLineIndex ifNil: [ ^ self ].
+	aCharacterPosition ifNil: [ ^ self ].
+
 	self
 		announce: (GtTextualCoderViewModelScrollToCharacterPositionAnnouncement new
 				textualCoderViewModel: self;
