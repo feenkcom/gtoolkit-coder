@@ -41,10 +41,7 @@ GtTextualCoderSearchTextElement >> initializeEventHandlers [
 { #category : #initialization }
 GtTextualCoderSearchTextElement >> initializeMarker [
 	marker := BrEditorSearchTextMarker new
-			computation: (BrEditorSearchTextAsyncFutureComputation new
-					executionConfiguration: (AsyncFutureExecutionConfiguration new
-							customGroup: #SearchText;
-							defaultPriority)).
+			computation: BrEditorSearchTextAsyncFutureComputation newDefault.
 
 	marker
 		when: BrEditorSearchTextFinishedAnnouncement
