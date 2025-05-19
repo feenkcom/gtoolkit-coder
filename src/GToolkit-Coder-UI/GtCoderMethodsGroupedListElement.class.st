@@ -167,7 +167,7 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 				description: ('{1} methods' format: {someItems size}))
 		action: [ self browseSeveralHierarchyReferencesOf: (someItems collect: #selector) ].
 		
-	true ifTrue: [ ^ menu ].
+	true ifFalse: [ 
 		
 	menu
 		addItem: (BrMenuSubmenuItem new
@@ -181,6 +181,9 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 						createLabel: 'Push down methods'
 						description: ('{1} methods' format: {someItems size}));
 				submenu: (self pushDownSeveralMethodsSubmenuFor: someItems)).
+				
+	].
+				
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self
@@ -456,7 +459,7 @@ GtCoderMethodsGroupedListElement >> removeSeveralMethodsSubmenuFor: aCollectionO
 	| submenu |
 	submenu := BrMenuExplicit new.
 	^ submenu
-		stencil: [ | element change button |
+		stencil: [ | element changes change button |
 			element := BrVerticalPane new fitContent.
 			element
 				addChild: (BrLabel new
@@ -484,9 +487,18 @@ GtCoderMethodsGroupedListElement >> removeSeveralMethodsSubmenuFor: aCollectionO
 												text: (references printString , ' reference'
 														, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
 							pane ]).
-			change := RBRemoveMethodChange
-					remove: aCollectionOfMethods first selector
-					from: aCollectionOfMethods first methodClass.
+		
+							
+			changes := aCollectionOfMethods collect: [ :eachMethod | 
+				RBRemoveMethodChange
+					remove: eachMethod selector
+					from: eachMethod methodClass ].
+					
+			change := RBCompositeRefactoryChange new
+				name: ('Remove {1} methods' format: { aCollectionOfMethods size });
+				changes: changes;
+				yourself.
+					
 			button := BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;
 					beSmallSize;
