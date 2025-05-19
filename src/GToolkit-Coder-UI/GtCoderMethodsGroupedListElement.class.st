@@ -397,7 +397,7 @@ GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aMethod [
 						stencil: [ | pane references |
 							pane := BrVerticalPane new.
 							pane fitContent.
-							references := (GtPharoIndex current sendersOf: aMethod size) size.
+							references := (GtPharoIndex current sendersOf: aMethod selector) size.
 							references > 0
 								ifTrue: [ pane
 										addChild: (BrLabel new
