@@ -34,6 +34,54 @@ GtCoderMethodsGroupedListElement >> browseReferencesOf: aSymbol [
 	self phlow spawnObject: (GtSearchReferencesFilter literal: aSymbol) 
 ]
 
+{ #category : #'private - actions' }
+GtCoderMethodsGroupedListElement >> browseSeveralHierarchyImplementorsOf: aCollectionOfSymbols [
+	| aFilter |
+	aFilter := aCollectionOfSymbols allButFirst
+			inject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
+					withSubclasses & aCollectionOfSymbols first gtImplementors
+			into: [ :filter :symbol | 
+				filter
+					| ((GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
+							withSubclasses & symbol gtImplementors) ].
+
+	self phlow spawnObject: aFilter
+]
+
+{ #category : #'private - actions' }
+GtCoderMethodsGroupedListElement >> browseSeveralHierarchyReferencesOf: aCollectionOfSymbols [
+	| aFilter |
+	aFilter := aCollectionOfSymbols allButFirst
+			inject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
+					withSubclasses & aCollectionOfSymbols first gtSenders
+			into: [ :filter :symbol | 
+				filter
+					| ((GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
+							withSubclasses & symbol gtSenders) ].
+
+	self phlow spawnObject: aFilter
+]
+
+{ #category : #'private - actions' }
+GtCoderMethodsGroupedListElement >> browseSeveralImplementorsOf: aCollectionOfSymbols [
+	| aFilter |
+	aFilter := aCollectionOfSymbols allButFirst
+			inject: (GtSearchImplementorsFilter selector: aCollectionOfSymbols first)
+			into: [ :filter :symbol | filter | (GtSearchImplementorsFilter selector: symbol) ].
+
+	self phlow spawnObject: aFilter
+]
+
+{ #category : #'private - actions' }
+GtCoderMethodsGroupedListElement >> browseSeveralReferencesOf: aCollectionOfSymbols [
+	| aFilter |
+	aFilter := aCollectionOfSymbols allButFirst
+			inject: (GtSearchReferencesFilter literal: aCollectionOfSymbols first)
+			into: [ :filter :symbol | filter | (GtSearchReferencesFilter literal: symbol) ].
+
+	self phlow spawnObject: aFilter.
+]
+
 { #category : #'private - insance creation' }
 GtCoderMethodsGroupedListElement >> buildMethodItem [
 	<return: #BlElement>
@@ -44,8 +92,14 @@ GtCoderMethodsGroupedListElement >> buildMethodItem [
 		vFitContent;
 		beSmallSize;
 		aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude
-				+ (BrGlamorousWithExplicitContextMenuAptitude
-						menu: [ self contextMenuFor: (aLabel userData at: #method) in: aLabel ]).
+				+ (BrGlamorousWithExplicitContextMenuAptitude new
+						withGainFocusOnShow;
+						handleSubmenu: [ | someItems currentMethod |
+							currentMethod := aLabel userData at: #method.
+							someItems := self selectedItems.
+							(someItems size > 1 and: [ someItems identityIncludes: currentMethod ])
+								ifTrue: [ self contextMenuForSeveralItems: someItems in: aLabel ]
+								ifFalse: [ self contextMenuForOneItem: currentMethod in: aLabel ] ]).
 
 	aLabel addEventHandler: self createMethodDragHandler.
 
@@ -53,7 +107,7 @@ GtCoderMethodsGroupedListElement >> buildMethodItem [
 ]
 
 { #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> contextMenuFor: item in: anElement [
+GtCoderMethodsGroupedListElement >> contextMenuForOneItem: item in: anElement [
 	| menu |
 	menu := BrMenuItems new.
 	menu
@@ -87,6 +141,55 @@ GtCoderMethodsGroupedListElement >> contextMenuFor: item in: anElement [
 	^ menu
 ]
 
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: anElement [
+	| menu |
+	menu := BrMenuItems new.
+	menu
+		addItemLabel: (self
+				createLabel: 'Browse implementors'
+				description: ('{1} methods' format: {someItems size}))
+		action: [ self browseSeveralImplementorsOf: (someItems collect: #selector) ].
+	menu
+		addItemLabel: (self
+				createLabel: 'Browse hierarachy implementors'
+				description: ('{1} methods' format: {someItems size}))
+		action: [ self
+				browseSeveralHierarchyImplementorsOf: (someItems collect: #selector) ].
+	menu
+		addItemLabel: (self
+				createLabel: 'Browse references'
+				description: ('{1} methods' format: {someItems size}))
+		action: [ self browseSeveralReferencesOf: (someItems collect: #selector) ].
+	menu
+		addItemLabel: (self
+				createLabel: 'Browse hierarchy references'
+				description: ('{1} methods' format: {someItems size}))
+		action: [ self browseSeveralHierarchyReferencesOf: (someItems collect: #selector) ].
+		
+	true ifTrue: [ ^ menu ].
+		
+	menu
+		addItem: (BrMenuSubmenuItem new
+				label: (self
+						createLabel: 'Push up methods'
+						description: ('{1} methods' format: {someItems size}));
+				submenu: (self pushUpSeveralMethodsSubmenuFor: someItems)).
+	menu
+		addItem: (BrMenuSubmenuItem new
+				label: (self
+						createLabel: 'Push down methods'
+						description: ('{1} methods' format: {someItems size}));
+				submenu: (self pushDownSeveralMethodsSubmenuFor: someItems)).
+	menu
+		addItem: (BrMenuSubmenuItem new
+				label: (self
+						createLabel: 'Remove methods'
+						description: ('{1} methods' format: {someItems size}));
+				submenu: (self removeSeveralMethodsSubmenuFor: someItems)).
+	^ menu
+]
+
 { #category : #'private - insance creation' }
 GtCoderMethodsGroupedListElement >> createDraggedMethodItem: aDragItem [
 
@@ -108,10 +211,21 @@ GtCoderMethodsGroupedListElement >> createMethodDragHandler [
 	^ BlDragHandler new
 		enableCopy;
 		liftItem: [ :aLabelElement | 
-			BlDragItem new
-				sourceElement: aLabelElement;
-				domainObject: (aLabelElement userData at: #method);
-				stencil: [ :aDragItem | self createDraggedMethodItem: aDragItem ] ]
+			| someItems currentMethod |
+			currentMethod := aLabelElement userData at: #method.
+			someItems := self selectedItems.
+			(someItems size > 1 and: [ someItems identityIncludes: currentMethod ])
+				ifTrue: [ 
+					someItems collect: [ :each |
+						BlDragItem new
+							sourceElement: aLabelElement;
+							domainObject: each;
+							stencil: [ :aDragItem | self createSeveralDraggedMethodsItem: someItems ] ] ]
+				ifFalse: [ 
+					BlDragItem new
+						sourceElement: aLabelElement;
+						domainObject: (aLabelElement userData at: #method);
+						stencil: [ :aDragItem | self createDraggedMethodItem: aDragItem ] ] ]
 ]
 
 { #category : #'private - insance creation' }
@@ -134,6 +248,21 @@ GtCoderMethodsGroupedListElement >> createMethodGroups [
 	classGroup := instanceGroup copy domainObject: 'class side'.
 	^ {instanceGroup.
 		classGroup}
+]
+
+{ #category : #'private - insance creation' }
+GtCoderMethodsGroupedListElement >> createSeveralDraggedMethodsItem: aCollection [
+	^ BrLabel new
+		aptitude: (BrGlamorousLabelAptitude new padding: (BlInsets all: 5)) + BrShadowAptitude;
+		beSmallSize;
+		opacity: 0.85;
+		margin: (BlInsets all: 5);
+		background: Color white;
+		beFocusable;
+		requestFocus;
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
+		fitContent;
+		text: ('{1} methods' format: {aCollection  size})
 ]
 
 { #category : #initialization }
@@ -185,14 +314,23 @@ GtCoderMethodsGroupedListElement >> onMethodSelected: anAnnouncement [
 
 { #category : #'event handling - selection' }
 GtCoderMethodsGroupedListElement >> onMethodsListSelectionChanged [
-	| theIndices anIndex aSelectedItem |
-
+	| theIndices allSelectedItems |
 	theIndices := self selectedIndices ifEmpty: [ ^ self ].
-	anIndex := theIndices first.
-	(anIndex between: 1 and: self viewModel entityCount)
+	(theIndices first between: 1 and: self viewModel entityCount)
 		ifFalse: [ ^ self ].
-	aSelectedItem := (self viewModel entityAt: anIndex) value object.
-	self navigationModel selectMethod: aSelectedItem
+	(theIndices last between: 1 and: self viewModel entityCount)
+		ifFalse: [ ^ self ].
+
+	allSelectedItems := self selectedItems.
+	allSelectedItems ifEmpty: [ ^ self ].
+	allSelectedItems size = 1
+		ifTrue: [ self navigationModel selectMethod: allSelectedItems anyOne ]
+		ifFalse: [ self navigationModel selectMethods: allSelectedItems ]
+]
+
+{ #category : #'event handling - selection' }
+GtCoderMethodsGroupedListElement >> onMethodsSelected: anAnnouncement [
+	
 ]
 
 { #category : #'event handling' }
@@ -216,6 +354,24 @@ GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aMethod [
 ]
 
 { #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectionOfMethods [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ GtRefactoringsWithInputPreviewElement
+				elementForRefactoring: [ aCollectionOfMethods
+						collect: [ :aMethod | 
+							RBPushDownMethodRefactoring
+								pushDown: {aMethod selector}
+								from: aMethod methodClass ] ]
+				confirmationLabeled: ('Push down {1} methods'
+						format: {aCollectionOfMethods size})
+				from: self
+				beforeApplyingDo: [ submenu hideAll ] ].
+	^ submenu
+]
+
+{ #category : #'private - context menu' }
 GtCoderMethodsGroupedListElement >> pushUpMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
@@ -225,6 +381,21 @@ GtCoderMethodsGroupedListElement >> pushUpMethodSubmenuFor: aMethod [
 						pullUp: {aMethod selector}
 						from: aMethod methodClass ]
 				confirmationLabeled: 'Pull up ' , aMethod selector
+				from: self
+				beforeApplyingDo: [ submenu hideAll ] ].
+	^ submenu
+]
+
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> pushUpSeveralMethodsSubmenuFor: aCollectionOfMethods [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ GtRefactoringsWithInputPreviewElement
+				elementForRefactoring: [ aCollectionOfMethods
+						collect: [ :aMethod | RBPullUpMethodRefactoring pullUp: {aMethod selector} from: aMethod methodClass ] ]
+				confirmationLabeled: ('Pull up {1} methods'
+						format: {aCollectionOfMethods size})
 				from: self
 				beforeApplyingDo: [ submenu hideAll ] ].
 	^ submenu
@@ -252,7 +423,7 @@ GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aMethod [
 						stencil: [ | pane references |
 							pane := BrVerticalPane new.
 							pane fitContent.
-							references := (GtPharoIndex current sendersOf: aMethod size) size.
+							references := (GtPharoIndex current sendersOf: aMethod selector) size.
 							references > 0
 								ifTrue: [ pane
 										addChild: (BrLabel new
@@ -264,6 +435,58 @@ GtCoderMethodsGroupedListElement >> removeMethodSubmenuFor: aMethod [
 			change := RBRemoveMethodChange
 					remove: aMethod selector
 					from: aMethod methodClass.
+			button := BrButton new
+					aptitude: BrGlamorousButtonWithIconAptitude;
+					beSmallSize;
+					margin: (BlInsets
+							top: 10
+							bottom: 10
+							left: 10
+							right: 10);
+					icon: BrGlamorousVectorIcons remove;
+					label: 'Remove';
+					action: [ submenu hideAll.
+						change execute ].
+			element addChild: button as: #removeButton.
+			element ]
+]
+
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> removeSeveralMethodsSubmenuFor: aCollectionOfMethods [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	^ submenu
+		stencil: [ | element change button |
+			element := BrVerticalPane new fitContent.
+			element
+				addChild: (BrLabel new
+						margin: (BlInsets
+								top: 10
+								bottom: 0
+								left: 10
+								right: 10);
+						aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
+						text: ('Remove {1} methods' format: {aCollectionOfMethods size}) asRopedText).
+			element
+				addChild: (BrAsyncWidget new
+						fitContent;
+						stencil: [ | pane references |
+							pane := BrVerticalPane new.
+							pane fitContent.
+							references := aCollectionOfMethods
+									inject: 0
+									into: [ :sum :method | sum + (GtPharoIndex current sendersOf: method selector) size ].
+							references > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (references printString , ' reference'
+														, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
+							pane ]).
+			change := RBRemoveMethodChange
+					remove: aCollectionOfMethods first selector
+					from: aCollectionOfMethods first methodClass.
 			button := BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;
 					beSmallSize;
@@ -316,6 +539,7 @@ GtCoderMethodsGroupedListElement >> subscribeToNavigationModel [
 	subscriptions := {
 		GtCoderNavigationMethodsToShowChanged -> #onMethodsToShowChanged:.
 		GtCoderNavigationMethodSelected -> #onMethodSelected:.
+		GtCoderNavigationMethodsSelected -> #onMethodsSelected:.
 	}.
 
 	subscriptions

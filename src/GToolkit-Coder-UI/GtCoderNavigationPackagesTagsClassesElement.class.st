@@ -46,7 +46,7 @@ GtCoderNavigationPackagesTagsClassesElement >> buildGroupList [
 
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> buildMethodGroupList [
-	^ GtCoderMethodsGroupedListElement new
+	^ GtCoderMethodsGroupedListElement multiSelection
 ]
 
 { #category : #initialization }
