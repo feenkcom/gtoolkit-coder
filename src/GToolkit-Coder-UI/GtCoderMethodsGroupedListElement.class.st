@@ -124,7 +124,7 @@ GtCoderMethodsGroupedListElement >> contextMenuForOneItem: item in: anElement [
 		action: [ self browseHierarchyReferencesOf: item selector ].
 	menu
 		addItem: (BrMenuSubmenuItem new
-				label: (self createLabel: 'Push up method' description: item selector);
+				label: (self createLabel: 'Pull up method' description: item selector);
 				submenu: (self pushUpMethodSubmenuFor: item)).
 	menu
 		addItem: (BrMenuSubmenuItem new
@@ -170,7 +170,7 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self
-						createLabel: 'Push up methods'
+						createLabel: 'Pull up methods'
 						description: ('{1} methods' format: {someItems size}));
 				submenu: (self pushUpSeveralMethodsSubmenuFor: someItems)).
 	menu
