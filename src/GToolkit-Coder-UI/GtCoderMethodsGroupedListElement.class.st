@@ -167,8 +167,6 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 				description: ('{1} methods' format: {someItems size}))
 		action: [ self browseSeveralHierarchyReferencesOf: (someItems collect: #selector) ].
 		
-	true ifFalse: [ 
-		
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self
@@ -181,8 +179,6 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 						createLabel: 'Push down methods'
 						description: ('{1} methods' format: {someItems size}));
 				submenu: (self pushDownSeveralMethodsSubmenuFor: someItems)).
-				
-	].
 				
 	menu
 		addItem: (BrMenuSubmenuItem new
@@ -362,11 +358,16 @@ GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectio
 	submenu := BrMenuExplicit new.
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ aCollectionOfMethods
-						collect: [ :aMethod | 
-							RBPushDownMethodRefactoring
-								pushDown: {aMethod selector}
-								from: aMethod methodClass ] ]
+				elementForRefactoring: [ | aModel aCollectionOfRefactorings |
+					aModel := RBClassModelFactory rbNamespace
+							onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
+					aCollectionOfRefactorings := aCollectionOfMethods
+							collect: [ :aMethod | 
+								RBPushDownMethodRefactoring new
+									model: aModel;
+									pushDown: {aMethod selector} from: aMethod methodClass ].
+					aModel name: ('Push down {1} methods' format: {aCollectionOfMethods size}).
+					aCollectionOfRefactorings ]
 				confirmationLabeled: ('Push down {1} methods'
 						format: {aCollectionOfMethods size})
 				from: self
@@ -395,8 +396,16 @@ GtCoderMethodsGroupedListElement >> pushUpSeveralMethodsSubmenuFor: aCollectionO
 	submenu := BrMenuExplicit new.
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ aCollectionOfMethods
-						collect: [ :aMethod | RBPullUpMethodRefactoring pullUp: {aMethod selector} from: aMethod methodClass ] ]
+				elementForRefactoring: [ | aModel aCollectionOfRefactorings |
+					aModel := RBClassModelFactory rbNamespace
+							onEnvironment: RBPullUpMethodRefactoring new defaultEnvironment.
+					aCollectionOfRefactorings := aCollectionOfMethods
+							collect: [ :aMethod | 
+								RBPullUpMethodRefactoring new
+									model: aModel;
+									pullUp: {aMethod selector} from: aMethod methodClass ].
+					aModel name: ('Pull up {1} methods' format: {aCollectionOfMethods size}).
+					aCollectionOfRefactorings ]
 				confirmationLabeled: ('Pull up {1} methods'
 						format: {aCollectionOfMethods size})
 				from: self
