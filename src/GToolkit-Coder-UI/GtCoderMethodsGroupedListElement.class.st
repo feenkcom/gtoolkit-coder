@@ -449,7 +449,7 @@ GtCoderMethodsGroupedListElement >> removeSeveralMethodsSubmenuFor: aCollectionO
 							pane fitContent.
 							references := aCollectionOfMethods
 									inject: 0
-									into: [ :sum :method | sum + (GtPharoIndex current sendersOf: method) size ].
+									into: [ :sum :method | sum + (GtPharoIndex current sendersOf: method selector) size ].
 							references > 0
 								ifTrue: [ pane
 										addChild: (BrLabel new
