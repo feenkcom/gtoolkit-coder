@@ -185,14 +185,23 @@ GtCoderMethodsGroupedListElement >> onMethodSelected: anAnnouncement [
 
 { #category : #'event handling - selection' }
 GtCoderMethodsGroupedListElement >> onMethodsListSelectionChanged [
-	| theIndices anIndex aSelectedItem |
-
+	| theIndices allSelectedItems |
 	theIndices := self selectedIndices ifEmpty: [ ^ self ].
-	anIndex := theIndices first.
-	(anIndex between: 1 and: self viewModel entityCount)
+	(theIndices first between: 1 and: self viewModel entityCount)
 		ifFalse: [ ^ self ].
-	aSelectedItem := (self viewModel entityAt: anIndex) value object.
-	self navigationModel selectMethod: aSelectedItem
+	(theIndices last between: 1 and: self viewModel entityCount)
+		ifFalse: [ ^ self ].
+
+	allSelectedItems := self selectedItems.
+	allSelectedItems ifEmpty: [ ^ self ].
+	allSelectedItems size = 1
+		ifTrue: [ self navigationModel selectMethod: allSelectedItems anyOne ]
+		ifFalse: [ self navigationModel selectMethods: allSelectedItems ]
+]
+
+{ #category : #'event handling - selection' }
+GtCoderMethodsGroupedListElement >> onMethodsSelected: anAnnouncement [
+	
 ]
 
 { #category : #'event handling' }
@@ -316,6 +325,7 @@ GtCoderMethodsGroupedListElement >> subscribeToNavigationModel [
 	subscriptions := {
 		GtCoderNavigationMethodsToShowChanged -> #onMethodsToShowChanged:.
 		GtCoderNavigationMethodSelected -> #onMethodSelected:.
+		GtCoderNavigationMethodsSelected -> #onMethodsSelected:.
 	}.
 
 	subscriptions
