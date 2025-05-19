@@ -211,10 +211,21 @@ GtCoderMethodsGroupedListElement >> createMethodDragHandler [
 	^ BlDragHandler new
 		enableCopy;
 		liftItem: [ :aLabelElement | 
-			BlDragItem new
-				sourceElement: aLabelElement;
-				domainObject: (aLabelElement userData at: #method);
-				stencil: [ :aDragItem | self createDraggedMethodItem: aDragItem ] ]
+			| someItems currentMethod |
+			currentMethod := aLabelElement userData at: #method.
+			someItems := self selectedItems.
+			(someItems size > 1 and: [ someItems identityIncludes: currentMethod ])
+				ifTrue: [ 
+					someItems collect: [ :each |
+						BlDragItem new
+							sourceElement: aLabelElement;
+							domainObject: each;
+							stencil: [ :aDragItem | self createSeveralDraggedMethodsItem: someItems ] ] ]
+				ifFalse: [ 
+					BlDragItem new
+						sourceElement: aLabelElement;
+						domainObject: (aLabelElement userData at: #method);
+						stencil: [ :aDragItem | self createDraggedMethodItem: aDragItem ] ] ]
 ]
 
 { #category : #'private - insance creation' }
@@ -237,6 +248,21 @@ GtCoderMethodsGroupedListElement >> createMethodGroups [
 	classGroup := instanceGroup copy domainObject: 'class side'.
 	^ {instanceGroup.
 		classGroup}
+]
+
+{ #category : #'private - insance creation' }
+GtCoderMethodsGroupedListElement >> createSeveralDraggedMethodsItem: aCollection [
+	^ BrLabel new
+		aptitude: (BrGlamorousLabelAptitude new padding: (BlInsets all: 5)) + BrShadowAptitude;
+		beSmallSize;
+		opacity: 0.85;
+		margin: (BlInsets all: 5);
+		background: Color white;
+		beFocusable;
+		requestFocus;
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
+		fitContent;
+		text: ('{1} methods' format: {aCollection  size})
 ]
 
 { #category : #initialization }
