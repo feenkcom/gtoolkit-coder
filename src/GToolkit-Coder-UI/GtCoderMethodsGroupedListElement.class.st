@@ -124,7 +124,7 @@ GtCoderMethodsGroupedListElement >> contextMenuForOneItem: item in: anElement [
 		action: [ self browseHierarchyReferencesOf: item selector ].
 	menu
 		addItem: (BrMenuSubmenuItem new
-				label: (self createLabel: 'Push up method' description: item selector);
+				label: (self createLabel: 'Pull up method' description: item selector);
 				submenu: (self pushUpMethodSubmenuFor: item)).
 	menu
 		addItem: (BrMenuSubmenuItem new
@@ -167,12 +167,10 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 				description: ('{1} methods' format: {someItems size}))
 		action: [ self browseSeveralHierarchyReferencesOf: (someItems collect: #selector) ].
 		
-	true ifTrue: [ ^ menu ].
-		
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self
-						createLabel: 'Push up methods'
+						createLabel: 'Pull up methods'
 						description: ('{1} methods' format: {someItems size}));
 				submenu: (self pushUpSeveralMethodsSubmenuFor: someItems)).
 	menu
@@ -181,6 +179,7 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 						createLabel: 'Push down methods'
 						description: ('{1} methods' format: {someItems size}));
 				submenu: (self pushDownSeveralMethodsSubmenuFor: someItems)).
+				
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self
@@ -359,11 +358,18 @@ GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectio
 	submenu := BrMenuExplicit new.
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ aCollectionOfMethods
-						collect: [ :aMethod | 
-							RBPushDownMethodRefactoring
-								pushDown: {aMethod selector}
-								from: aMethod methodClass ] ]
+				elementForRefactoring: [ | aGroupByClass aModel aCollectionOfRefactorings |
+					aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
+					aModel := RBClassModelFactory rbNamespace
+							onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
+					aCollectionOfRefactorings := aGroupByClass
+							collect: [ :someMethods | 
+								RBPushDownMethodRefactoring new
+									model: aModel;
+									pushDown: (someMethods collect: #selector)
+										from: someMethods anyOne methodClass ] as: Array.
+					aModel name: ('Push down {1} methods' format: {aCollectionOfMethods size}).
+					aCollectionOfRefactorings ]
 				confirmationLabeled: ('Push down {1} methods'
 						format: {aCollectionOfMethods size})
 				from: self
@@ -392,8 +398,18 @@ GtCoderMethodsGroupedListElement >> pushUpSeveralMethodsSubmenuFor: aCollectionO
 	submenu := BrMenuExplicit new.
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ aCollectionOfMethods
-						collect: [ :aMethod | RBPullUpMethodRefactoring pullUp: {aMethod selector} from: aMethod methodClass ] ]
+				elementForRefactoring: [ | aGroupByClass aModel aCollectionOfRefactorings |
+					aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
+					aModel := RBClassModelFactory rbNamespace
+							onEnvironment: RBPullUpMethodRefactoring new defaultEnvironment.
+					aCollectionOfRefactorings := aGroupByClass
+							collect: [ :someMethods | 
+								RBPullUpMethodRefactoring new
+									model: aModel;
+									pullUp: (someMethods collect: #selector)
+										from: someMethods anyOne methodClass ] as: Array.
+					aModel name: ('Pull up {1} methods' format: {aCollectionOfMethods size}).
+					aCollectionOfRefactorings ]
 				confirmationLabeled: ('Pull up {1} methods'
 						format: {aCollectionOfMethods size})
 				from: self
@@ -456,7 +472,7 @@ GtCoderMethodsGroupedListElement >> removeSeveralMethodsSubmenuFor: aCollectionO
 	| submenu |
 	submenu := BrMenuExplicit new.
 	^ submenu
-		stencil: [ | element change button |
+		stencil: [ | element changes change button |
 			element := BrVerticalPane new fitContent.
 			element
 				addChild: (BrLabel new
@@ -484,9 +500,18 @@ GtCoderMethodsGroupedListElement >> removeSeveralMethodsSubmenuFor: aCollectionO
 												text: (references printString , ' reference'
 														, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
 							pane ]).
-			change := RBRemoveMethodChange
-					remove: aCollectionOfMethods first selector
-					from: aCollectionOfMethods first methodClass.
+		
+							
+			changes := aCollectionOfMethods collect: [ :eachMethod | 
+				RBRemoveMethodChange
+					remove: eachMethod selector
+					from: eachMethod methodClass ].
+					
+			change := RBCompositeRefactoryChange new
+				name: ('Remove {1} methods' format: { aCollectionOfMethods size });
+				changes: changes;
+				yourself.
+					
 			button := BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;
 					beSmallSize;
