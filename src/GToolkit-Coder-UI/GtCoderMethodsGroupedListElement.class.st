@@ -358,14 +358,16 @@ GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectio
 	submenu := BrMenuExplicit new.
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ | aModel aCollectionOfRefactorings |
+				elementForRefactoring: [ | aGroupByClass aModel aCollectionOfRefactorings |
+					aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
 					aModel := RBClassModelFactory rbNamespace
 							onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
-					aCollectionOfRefactorings := aCollectionOfMethods
-							collect: [ :aMethod | 
+					aCollectionOfRefactorings := aGroupByClass
+							collect: [ :someMethods | 
 								RBPushDownMethodRefactoring new
 									model: aModel;
-									pushDown: {aMethod selector} from: aMethod methodClass ].
+									pushDown: (someMethods collect: #selector)
+										from: someMethods anyOne methodClass ] as: Array.
 					aModel name: ('Push down {1} methods' format: {aCollectionOfMethods size}).
 					aCollectionOfRefactorings ]
 				confirmationLabeled: ('Push down {1} methods'
@@ -396,14 +398,16 @@ GtCoderMethodsGroupedListElement >> pushUpSeveralMethodsSubmenuFor: aCollectionO
 	submenu := BrMenuExplicit new.
 	submenu
 		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ | aModel aCollectionOfRefactorings |
+				elementForRefactoring: [ | aGroupByClass aModel aCollectionOfRefactorings |
+					aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
 					aModel := RBClassModelFactory rbNamespace
 							onEnvironment: RBPullUpMethodRefactoring new defaultEnvironment.
-					aCollectionOfRefactorings := aCollectionOfMethods
-							collect: [ :aMethod | 
+					aCollectionOfRefactorings := aGroupByClass
+							collect: [ :someMethods | 
 								RBPullUpMethodRefactoring new
 									model: aModel;
-									pullUp: {aMethod selector} from: aMethod methodClass ].
+									pullUp: (someMethods collect: #selector)
+										from: someMethods anyOne methodClass ] as: Array.
 					aModel name: ('Pull up {1} methods' format: {aCollectionOfMethods size}).
 					aCollectionOfRefactorings ]
 				confirmationLabeled: ('Pull up {1} methods'
