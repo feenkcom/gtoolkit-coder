@@ -4,9 +4,10 @@ Class {
 	#instVars : [
 		'theClass',
 		'package',
-		'tag'
+		'tag',
+		'selectedClasses'
 	],
-	#category : 'GToolkit-Coder-Navigation - Events'
+	#category : #'GToolkit-Coder-Navigation - Events'
 }
 
 { #category : #accessing }
@@ -17,6 +18,16 @@ GtCoderNavigationClassSelected >> package [
 { #category : #accessing }
 GtCoderNavigationClassSelected >> package: anObject [
 	package := anObject
+]
+
+{ #category : #accessing }
+GtCoderNavigationClassSelected >> selectedClasses [
+	^ selectedClasses
+]
+
+{ #category : #accessing }
+GtCoderNavigationClassSelected >> selectedClasses: anObject [
+	selectedClasses := anObject
 ]
 
 { #category : #accessing }

@@ -57,9 +57,29 @@ GtCoderClassesTreeElement >> browseReferencesTo: aClass [
 ]
 
 { #category : #initialization }
+GtCoderClassesTreeElement >> browseSeveralReferencesTo: someClasses [
+	| aFilter |
+	aFilter := someClasses allButFirst
+			inject: someClasses first gtReferences
+			into: [ :aSumFilter :aClass | aSumFilter | aClass gtReferences ].
+
+	self phlow spawnObject: aFilter
+]
+
+{ #category : #initialization }
 GtCoderClassesTreeElement >> buildRemoveClassLabelFor: aClass [
 	| labelText |
 	labelText := 'Remove class ' , aClass name.
+	^ BrLabel new
+		margin: (BlInsets all: 10);
+		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
+		text: labelText asRopedText
+]
+
+{ #category : #initialization }
+GtCoderClassesTreeElement >> buildRemoveSeveralClassesLabelFor: someClasses [
+	| labelText |
+	labelText := 'Remove {1} classes' format: { someClasses size }.
 	^ BrLabel new
 		margin: (BlInsets all: 10);
 		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
@@ -74,6 +94,16 @@ GtCoderClassesTreeElement >> containsClass: aClass [
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuFor: aClass [
+	| someClasses |
+	someClasses := self selectedItems collect: #rootClass.
+
+	^ (someClasses size < 2 or: [ (someClasses includes: aClass) not ])
+		ifTrue: [ self contextMenuForOneItem: aClass ]
+		ifFalse: [ self contextMenuForSeveralItems: someClasses ]
+]
+
+{ #category : #initialization }
+GtCoderClassesTreeElement >> contextMenuForOneItem: aClass [
 	| menu |
 	menu := BrMenuItems new.
 	menu
@@ -99,6 +129,21 @@ GtCoderClassesTreeElement >> contextMenuFor: aClass [
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Extract superclass' description: aClass name);
 				submenu: (self convertToSiblingSubmenuFor: aClass siblings: #())).
+	^ menu
+]
+
+{ #category : #initialization }
+GtCoderClassesTreeElement >> contextMenuForSeveralItems: someClasses [
+	| menu countLabel |
+	menu := BrMenuItems new.
+	countLabel := '{1} classes' format: { someClasses size }.
+	menu
+		addItemLabel: (self createLabel: 'Browse references' description: countLabel)
+		action: [ self browseSeveralReferencesTo: someClasses ].
+	menu
+		addItem: (BrMenuSubmenuItem new
+				label: (self createLabel: 'Remove classes' description: countLabel);
+				submenu: (self removeSeveralClassesSubmenuFor: someClasses)).
 	^ menu
 ]
 
@@ -285,6 +330,63 @@ GtCoderClassesTreeElement >> removeClassSubmenuFor: aClass [
 														, (subclasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
 							pane ]).
 			change := RBRemoveClassChange remove: aClass.
+			button := BrButton new
+					aptitude: BrGlamorousButtonWithIconAptitude;
+					beSmallSize;
+					margin: (BlInsets
+							top: 10
+							bottom: 10
+							left: 10
+							right: 10);
+					icon: BrGlamorousVectorIcons remove;
+					label: 'Remove';
+					action: [ submenu hideAll.
+						change execute ].
+			element addChild: button as: #removeButton.
+			element ]
+]
+
+{ #category : #initialization }
+GtCoderClassesTreeElement >> removeSeveralClassesSubmenuFor: someClasses [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	^ submenu
+		stencil: [ | element change button |
+			element := BrVerticalPane new fitContent.
+			element
+				addChild: ((self buildRemoveSeveralClassesLabelFor: someClasses)
+						margin: (BlInsets
+								top: 10
+								bottom: 0
+								left: 10
+								right: 10)).
+			element
+				addChild: (BrAsyncWidget new
+						fitContent;
+						stencil: [ | pane references subclasses |
+							references := someClasses sum: [ :eachClass | (GtPharoIndex current
+									globalVariableReferencesTo: eachClass binding) size ].
+							subclasses := someClasses sum: [ :eachClass | eachClass allSubclasses size ].
+							pane := BrVerticalPane new.
+							pane fitContent.
+							references > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (references printString , ' reference'
+														, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
+							subclasses > 0
+								ifTrue: [ pane
+										addChild: (BrLabel new
+												margin: (BlInsets left: 10 right: 10);
+												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
+												text: (subclasses printString , ' subclass'
+														, (subclasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
+							pane ]).
+			change := RBCompositeRefactoryChange new
+				name: ('Remove {1} classes' format: { someClasses size });
+				changes: (someClasses collect: [ :eachClass | RBRemoveClassChange remove: eachClass ]).
 			button := BrButton new
 					aptitude: BrGlamorousButtonWithIconAptitude;
 					beSmallSize;

@@ -47,6 +47,11 @@ GtCoderNullNavigationModel >> selectClass: aClass [
 ]
 
 { #category : #'api - selection' }
+GtCoderNullNavigationModel >> selectClasses: aCollectionOfClasses [
+	"do nothing"
+]
+
+{ #category : #'api - selection' }
 GtCoderNullNavigationModel >> selectMethod: aCompiledMethod [
 	"do nothing"
 ]
