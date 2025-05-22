@@ -93,15 +93,20 @@ GtCoderNavigationElement >> onClassDeselected: anAnnouncement [
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassListSelectionChanged [
-	| anIndex aSelectedItem theIndices |
+	| theIndices someClasses |
 	supressListChanges ifTrue: [ ^ self ].
 	theIndices := classesList selectedIndices.
 	theIndices ifEmpty: [ ^ self ].
-	anIndex := theIndices first.
-	(anIndex between: 1 and: classesList viewModel itemCount)
+	(theIndices first between: 1 and: classesList viewModel itemCount)
 		ifFalse: [ ^ self ].
-	aSelectedItem := (classesList viewModel itemAt: anIndex) value rootClass.
-	self navigationModel selectClass: aSelectedItem
+	(theIndices last between: 1 and: classesList viewModel itemCount)
+		ifFalse: [ ^ self ].
+	someClasses := classesList selectedNodes
+			collect: [ :each | each value rootClass ].
+	someClasses ifEmpty: [ ^ self ].
+	someClasses size = 1
+		ifTrue: [ self navigationModel selectClass: someClasses anyOne ]
+		ifFalse: [ self navigationModel selectClasses: someClasses ]
 ]
 
 { #category : #'event handling' }

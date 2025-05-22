@@ -61,6 +61,11 @@ GtCoderNavigationModel >> selectClass: aClass [
 ]
 
 { #category : #'api - selection' }
+GtCoderNavigationModel >> selectClasses: aCollectionOfClasses [
+	self subclassResponsibility
+]
+
+{ #category : #'api - selection' }
 GtCoderNavigationModel >> selectMethod: aCompiledMethod [
 	self subclassResponsibility
 ]
