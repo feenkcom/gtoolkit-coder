@@ -53,7 +53,7 @@ GtCoderNavigationElement >> initialize [
 
 { #category : #initialization }
 GtCoderNavigationElement >> initializeContent [
-	classesList := GtCoderClassesTreeElement new. 
+	classesList := GtCoderClassesTreeElement multiSelection. 
 ]
 
 { #category : #initialization }
