@@ -166,6 +166,27 @@ GtCoderClassesTreeElement >> convertToSiblingSubmenuFor: aClass siblings: aColle
 ]
 
 { #category : #'private - drag and drop' }
+GtCoderClassesTreeElement >> createClassDragHandler [
+	^ BlDragHandler new
+		enableCopy;
+		liftItem: [ :aGtCoderClassesTreeItemElement | 
+			| someClasses currentClass |
+			currentClass := aGtCoderClassesTreeItemElement theClass.
+			someClasses := self selectedItems collect: #rootClass.
+			(someClasses size > 1 and: [ someClasses includes: currentClass ])
+				ifTrue: [ someClasses
+						collect: [ :each | 
+							BlDragItem new
+								sourceElement: aGtCoderClassesTreeItemElement;
+								domainObject: each;
+								stencil: [ :aDragItem | self createSeveralDraggedClassesItem: someClasses ] ] ]
+				ifFalse: [ BlDragItem new
+						sourceElement: aGtCoderClassesTreeItemElement;
+						domainObject: currentClass;
+						stencil: [ :aDragItem | self createDraggedMethodItem: aDragItem ] ] ]
+]
+
+{ #category : #'private - drag and drop' }
 GtCoderClassesTreeElement >> createClassDropHandler [
 	^ BlDropHandler new
 		acceptDomainObjectsSuchThat: [ :anObject | anObject isCompiledMethod ];
@@ -174,6 +195,21 @@ GtCoderClassesTreeElement >> createClassDropHandler [
 			anItemsDraggedOverEvent currentTarget
 				effect: (BlOverlayAboveEffect new paint: (Color gray alpha: 0.2)) ];
 		whenDragLeftDo: [ :anItemsLeftEvent | anItemsLeftEvent currentTarget effect: BlNullEffect new ]
+]
+
+{ #category : #'private - drag and drop' }
+GtCoderClassesTreeElement >> createDraggedMethodItem: aDragItem [
+	^ BrLabel new
+		aptitude: (BrGlamorousLabelAptitude new padding: (BlInsets all: 5)) + BrShadowAptitude;
+		beSmallSize;
+		opacity: 0.85;
+		margin: (BlInsets all: 5);
+		background: Color white;
+		beFocusable;
+		requestFocus;
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
+		fitContent;
+		text: aDragItem domainObject printString
 ]
 
 { #category : #'private - context menu' }
@@ -189,11 +225,27 @@ GtCoderClassesTreeElement >> createLabel: aString description: description [
 GtCoderClassesTreeElement >> createNodeElement [
 	^ GtCoderClassesTreeItemElement new
 		addEventHandler: self createClassDropHandler;
+		addEventHandler: self createClassDragHandler;
 		in: [ :aWidget | 
 			aWidget
 				addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
 						menu: [ self contextMenuFor: aWidget theClass ]) ];
 		yourself
+]
+
+{ #category : #'private - drag and drop' }
+GtCoderClassesTreeElement >> createSeveralDraggedClassesItem: someClassHierarchyTrees [
+	^ BrLabel new
+		aptitude: (BrGlamorousLabelAptitude new padding: (BlInsets all: 5)) + BrShadowAptitude;
+		beSmallSize;
+		opacity: 0.85;
+		margin: (BlInsets all: 5);
+		background: Color white;
+		beFocusable;
+		requestFocus;
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
+		fitContent;
+		text: ('{1} classes' format: {someClassHierarchyTrees size})
 ]
 
 { #category : #initialization }

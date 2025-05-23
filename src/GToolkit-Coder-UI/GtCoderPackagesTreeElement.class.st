@@ -85,6 +85,17 @@ GtCoderPackagesTreeElement >> contextMenuFor: aPackageOrTag [
 	^ menu
 ]
 
+{ #category : #initialization }
+GtCoderPackagesTreeElement >> createPackageOrTagDropHandler [
+	^ BlDropHandler new
+		acceptDomainObjectsSuchThat: [ :anObject | anObject isClassOrTrait ];
+		whenDroppedDo: [ :anItemsDroppedEvent | self onDropClassesOnPackageOrTag: anItemsDroppedEvent ];
+		whenDragEnteredDo: [ :anItemsDraggedOverEvent | 
+			anItemsDraggedOverEvent currentTarget
+				effect: (BlOverlayAboveEffect new paint: (Color gray alpha: 0.2)) ];
+		whenDragLeftDo: [ :anItemsLeftEvent | anItemsLeftEvent currentTarget effect: BlNullEffect new ]
+]
+
 { #category : #'private - context menu' }
 GtCoderPackagesTreeElement >> createRenamePackageForm: aPackageOrTag [
 	^ GtCoderPackagesTreeRenameEditor new
@@ -130,6 +141,7 @@ GtCoderPackagesTreeElement >> initialize [
 					anItemElement
 						hMatchParent;
 						vFitContent;
+						addEventHandler: self createPackageOrTagDropHandler;
 						addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
 								menu: [ self contextMenuFor: anItemElement packageOrTag ]) ] ];
 		nodeDataBinder: [ :aPackageElement :aPackage | 
@@ -176,6 +188,28 @@ GtCoderPackagesTreeElement >> newPackage [
 { #category : #initialization }
 GtCoderPackagesTreeElement >> newTagFor: aPackage inElement: elem [
 	self notYetImplemented
+]
+
+{ #category : #initialization }
+GtCoderPackagesTreeElement >> onDropClassesOnPackageOrTag: anItemsDroppedEvent [
+	| aPackageOrTag aModel compositeChange someRefactorings |
+	aPackageOrTag := anItemsDroppedEvent currentTarget packageOrTag.
+	aModel := RBClassModelFactory rbNamespace
+			onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
+
+	someRefactorings := anItemsDroppedEvent items
+			collect: [ :eachDragItem | 
+				| eachClass |
+				eachClass := eachDragItem domainObject.
+
+				GtRBMoveClassToPackageRefactoring
+					model: aModel
+					move: eachClass name
+					to: aPackageOrTag name ].
+
+	someRefactorings do: #primitiveExecute.
+	compositeChange := aModel changes.
+	compositeChange execute
 ]
 
 { #category : #'private - context menu' }
