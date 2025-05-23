@@ -66,11 +66,19 @@ GtCoderProtocolsGroupedListElement >> contextMenuFor: aPharoProtocol [
 { #category : #'private - instance creation' }
 GtCoderProtocolsGroupedListElement >> createProtocolDropHandler [
 	^ BlDropHandler new
-		acceptDomainObjectsSuchThat: [ :anObject | anObject isCompiledMethod ];
+		acceptItemsSuchThat: [ :aDragItem :aBrLabel | 
+			aDragItem domainObject isCompiledMethod
+				and: [ aBrLabel userData
+						at: #protocol
+						ifPresent: [ :aProtocol | 
+							aProtocol isVirtualProtocol not
+								and: [ aProtocol name ~= aDragItem domainObject protocol ] ]
+						ifAbsent: [ false ] ] ];
 		whenDroppedDo: [ :anItemsDroppedEvent | self onDropCompiledMethodsOnProtocol: anItemsDroppedEvent ];
 		whenDragEnteredDo: [ :anItemsDraggedOverEvent | 
-			anItemsDraggedOverEvent currentTarget
-				effect: (BlOverlayAboveEffect new paint: (Color gray alpha: 0.2)) ];
+			anItemsDraggedOverEvent mayAcceptItems
+				ifTrue: [ anItemsDraggedOverEvent currentTarget
+						effect: (BlOverlayAboveEffect new paint: (Color gray alpha: 0.2)) ] ];
 		whenDragLeftDo: [ :anItemsLeftEvent | anItemsLeftEvent currentTarget effect: BlNullEffect new ]
 ]
 

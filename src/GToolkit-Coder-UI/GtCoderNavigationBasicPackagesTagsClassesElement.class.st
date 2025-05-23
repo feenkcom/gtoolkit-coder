@@ -428,8 +428,8 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> updateClassList [
 	
 	classesList initializeWithClasses: navigationModel classesToShow.
 	
-	navigationModel selectedClass
-		ifNotNil: [ :aClass | self selectClass: aClass ]
+	navigationModel selectedClasses
+		ifNotNil: [ :aCollectionOfClasses | self selectClasses: aCollectionOfClasses ]
 ]
 
 { #category : #'updating lists' }

@@ -88,11 +88,14 @@ GtCoderPackagesTreeElement >> contextMenuFor: aPackageOrTag [
 { #category : #initialization }
 GtCoderPackagesTreeElement >> createPackageOrTagDropHandler [
 	^ BlDropHandler new
-		acceptDomainObjectsSuchThat: [ :anObject | anObject isClassOrTrait ];
+		acceptItemsSuchThat: [ :aDragItem :aGtCoderPackagesTreeItemElement | 
+			aDragItem domainObject isClassOrTrait
+				and: [ aGtCoderPackagesTreeItemElement packageOrTag ~= aDragItem domainObject package ] ];
 		whenDroppedDo: [ :anItemsDroppedEvent | self onDropClassesOnPackageOrTag: anItemsDroppedEvent ];
 		whenDragEnteredDo: [ :anItemsDraggedOverEvent | 
-			anItemsDraggedOverEvent currentTarget
-				effect: (BlOverlayAboveEffect new paint: (Color gray alpha: 0.2)) ];
+			anItemsDraggedOverEvent mayAcceptItems
+				ifTrue: [ anItemsDraggedOverEvent currentTarget
+						effect: (BlOverlayAboveEffect new paint: (Color gray alpha: 0.2)) ] ];
 		whenDragLeftDo: [ :anItemsLeftEvent | anItemsLeftEvent currentTarget effect: BlNullEffect new ]
 ]
 
