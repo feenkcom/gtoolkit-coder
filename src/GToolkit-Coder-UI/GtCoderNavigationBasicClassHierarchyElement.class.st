@@ -86,7 +86,31 @@ GtCoderNavigationBasicClassHierarchyElement >> updateClassList [
 
 { #category : #'updating lists' }
 GtCoderNavigationBasicClassHierarchyElement >> updateClassListsWith: aClass [
-	classesList initializeWithHierachyForClass: aClass.
+	| withRootClasses lastIndex isWithAllSuperclasses |
+	"Check that all its root classes are in the classesList (and therefore visible)."
+	lastIndex := nil.
+	withRootClasses := aClass withAllSuperclasses.
+	isWithAllSuperclasses := withRootClasses
+			allSatisfy: [ :eachClass | 
+				| currentIndex newIndex |
+				currentIndex := lastIndex.
+				newIndex := nil.
+				classesList viewModel
+					indexOfSuchThat: [ :eachTree | eachTree rootClass = eachClass ]
+					do: [ :eachIndex | newIndex := eachIndex ].
+				lastIndex := newIndex.
+				currentIndex
+					ifNil: [ newIndex isNotNil ]
+					ifNotNil: [ newIndex isNotNil and: [ currentIndex > newIndex ] ] ].
+
+	"If a selected item is the same as the requested class, we keep the existing hierarchy items. 
+	Like this, for example, we do not lose siblings when we drag-and-drop methods arround."
+	(isWithAllSuperclasses
+		and: [ classesList selectedItems
+				anySatisfy: [ :eachClassTree | eachClassTree rootClass = aClass ] ])
+		ifTrue: [ ^ self ].
+
+	classesList initializeWithHierachyForClass: aClass
 ]
 
 { #category : #'updating lists' }

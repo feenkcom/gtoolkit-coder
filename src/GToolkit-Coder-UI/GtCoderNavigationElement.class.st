@@ -111,11 +111,13 @@ GtCoderNavigationElement >> onClassListSelectionChanged [
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassModified: anAnnouncement [
-	self
-		suppressListChangeEventsDuring: [ self
-				updateClass: anAnnouncement theClass
-				inPackage: anAnnouncement package
-				tag: anAnnouncement tag ]
+	BlTaskAction
+		enqueueElement: self
+		action: [ self
+				suppressListChangeEventsDuring: [ self
+						updateClass: anAnnouncement theClass
+						inPackage: anAnnouncement package
+						tag: anAnnouncement tag ] ]
 ]
 
 { #category : #'event handling' }
