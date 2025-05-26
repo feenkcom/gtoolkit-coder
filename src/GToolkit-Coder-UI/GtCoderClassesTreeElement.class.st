@@ -86,7 +86,7 @@ GtCoderClassesTreeElement >> buildRemoveSeveralClassesLabelFor: someClasses [
 		text: labelText asRopedText
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 GtCoderClassesTreeElement >> containsClass: aClass [
 	"Return true if the classes tree contains a given class, false otherwise"
 	^ classesTree containsClass: aClass
@@ -168,7 +168,6 @@ GtCoderClassesTreeElement >> convertToSiblingSubmenuFor: aClass siblings: aColle
 { #category : #'private - drag and drop' }
 GtCoderClassesTreeElement >> createClassDragHandler [
 	^ BlDragHandler new
-		enableCopy;
 		liftItem: [ :aGtCoderClassesTreeItemElement | 
 			| someClasses currentClass |
 			currentClass := aGtCoderClassesTreeItemElement theClass.
@@ -189,11 +188,14 @@ GtCoderClassesTreeElement >> createClassDragHandler [
 { #category : #'private - drag and drop' }
 GtCoderClassesTreeElement >> createClassDropHandler [
 	^ BlDropHandler new
-		acceptDomainObjectsSuchThat: [ :anObject | anObject isCompiledMethod ];
+		acceptItemsSuchThat: [ :aDragItem :aGtCoderClassesTreeItemElement | 
+			aDragItem domainObject isCompiledMethod
+				and: [ aGtCoderClassesTreeItemElement theClass ~= aDragItem domainObject methodClass ] ];
 		whenDroppedDo: [ :anItemsDroppedEvent | self onDropCompiledMethodsOnClass: anItemsDroppedEvent  ];
 		whenDragEnteredDo: [ :anItemsDraggedOverEvent | 
-			anItemsDraggedOverEvent currentTarget
-				effect: (BlOverlayAboveEffect new paint: (Color gray alpha: 0.2)) ];
+			anItemsDraggedOverEvent mayAcceptItems
+				ifTrue: [ anItemsDraggedOverEvent currentTarget
+					effect: (BlOverlayAboveEffect new paint: (Color gray alpha: 0.2)) ] ];
 		whenDragLeftDo: [ :anItemsLeftEvent | anItemsLeftEvent currentTarget effect: BlNullEffect new ]
 ]
 
@@ -418,7 +420,7 @@ GtCoderClassesTreeElement >> removeSeveralClassesSubmenuFor: someClasses [
 						stencil: [ | pane references subclasses |
 							references := someClasses sum: [ :eachClass | (GtPharoIndex current
 									globalVariableReferencesTo: eachClass binding) size ].
-							subclasses := someClasses sum: [ :eachClass | eachClass allSubclasses size ].
+							subclasses := someClasses sum: [ :eachClass | (eachClass allSubclasses difference: someClasses) size ].
 							pane := BrVerticalPane new.
 							pane fitContent.
 							references > 0

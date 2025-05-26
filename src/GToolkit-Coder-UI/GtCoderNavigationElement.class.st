@@ -111,11 +111,13 @@ GtCoderNavigationElement >> onClassListSelectionChanged [
 
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassModified: anAnnouncement [
-	self
-		suppressListChangeEventsDuring: [ self
-				updateClass: anAnnouncement theClass
-				inPackage: anAnnouncement package
-				tag: anAnnouncement tag ]
+	BlTaskAction
+		enqueueElement: self
+		action: [ self
+				suppressListChangeEventsDuring: [ self
+						updateClass: anAnnouncement theClass
+						inPackage: anAnnouncement package
+						tag: anAnnouncement tag ] ]
 ]
 
 { #category : #'event handling' }
@@ -194,6 +196,44 @@ GtCoderNavigationElement >> selectClass: aClass [
 						scrollIndexFromPrevious: aPreviousIndex
 						current: aNewIndex
 						max: classesList viewModel itemCount) ]
+]
+
+{ #category : #'api - class selections' }
+GtCoderNavigationElement >> selectClasses: aCollectionOfClasses [
+	| aPreviousIndex newIndexes |
+	aPreviousIndex := classesList selectedIndice.
+
+	newIndexes := Array
+			new: aCollectionOfClasses size
+			streamContents: [ :aStream | 
+				aCollectionOfClasses
+					do: [ :eachClass | 
+						classesList viewModel
+							indexOfSuchThat: [ :each | each rootClass = eachClass ]
+							do: [ :aNewIndex | aStream nextPut: aNewIndex ] ] ].
+
+	newIndexes
+		ifEmpty: [ classesList deselectAll.
+			^ self ].
+
+	newIndexes size = 1
+		ifTrue: [ classesList
+				selectOne: newIndexes anyOne;
+				scrollToIndex: (self
+						scrollIndexFromPrevious: aPreviousIndex
+						current: newIndexes anyOne
+						max: classesList viewModel itemCount).
+			^ self ].
+
+	newIndexes sort: [ :a :b | a < b ].
+	classesList deselectAll.
+	newIndexes
+		do: [ :aNewIndex | classesList addToSelection: aNewIndex dueTo: nil ].
+	classesList
+		scrollToIndex: (self
+				scrollIndexFromPrevious: aPreviousIndex
+				current: newIndexes anyOne
+				max: classesList viewModel itemCount)
 ]
 
 { #category : #subscriptions }
