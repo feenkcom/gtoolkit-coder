@@ -195,7 +195,7 @@ GtCoderPackagesTreeElement >> newTagFor: aPackage inElement: elem [
 
 { #category : #initialization }
 GtCoderPackagesTreeElement >> onDropClassesOnPackageOrTag: anItemsDroppedEvent [
-	| aPackageOrTag aModel compositeChange someRefactorings |
+	| aPackageOrTag aModel compositeChange someRefactorings aPromise |
 	aPackageOrTag := anItemsDroppedEvent currentTarget packageOrTag.
 	aModel := RBClassModelFactory rbNamespace
 			onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
@@ -212,7 +212,10 @@ GtCoderPackagesTreeElement >> onDropClassesOnPackageOrTag: anItemsDroppedEvent [
 
 	someRefactorings do: #primitiveExecute.
 	compositeChange := aModel changes.
-	compositeChange execute
+
+	"We use 1 threshold to keep coders with the same selected package."
+	aPromise := compositeChange gtExecuteWithNotificationThreshold: 1.
+	self enqueueTask: (BlPromiseTask new promise: aPromise).
 ]
 
 { #category : #'private - context menu' }

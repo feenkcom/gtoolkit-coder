@@ -21,7 +21,7 @@ GtCoderNavigationClassHierarchyElement >> initialize [
 	
 	protocolsList := GtCoderProtocolsGroupedListElement new.
 	slotsList := GtCoderSlotsGroupedListElement new.
-	methodsList := GtCoderMethodsGroupedListElement new.
+	methodsList := GtCoderMethodsGroupedListElement multiSelection.
 	
 	protocolsSlotsTabGroup := BrTabGroup new
 		aptitude: BrGlamorousTabGroupProportionalAptitude - BrTabGroupSplitterAptitude;
