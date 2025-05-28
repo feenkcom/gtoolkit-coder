@@ -16,5 +16,5 @@ GtFilterToggleGroupAptitude >> initialize [
 	self
 		addChangeProperty: #(widget background)
 		with:
-			[ self theme default contentBackgroundColor ].
+			[ self theme default contentBackground ].
 ]
