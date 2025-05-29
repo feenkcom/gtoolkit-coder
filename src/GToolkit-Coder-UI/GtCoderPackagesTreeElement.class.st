@@ -90,7 +90,18 @@ GtCoderPackagesTreeElement >> createPackageOrTagDropHandler [
 	^ BlDropHandler new
 		acceptItemsSuchThat: [ :aDragItem :aGtCoderPackagesTreeItemElement | 
 			aDragItem domainObject isClassOrTrait
-				and: [ aGtCoderPackagesTreeItemElement packageOrTag ~= aDragItem domainObject package ] ];
+				and: [ (aGtCoderPackagesTreeItemElement packageOrTag
+						isKindOf: GtCoderPackageExtensionTag) not
+						and: [ | aPackageOrTag |
+							aPackageOrTag := aDragItem domainObject package
+									classTagForClass: aDragItem domainObject.
+							aPackageOrTag isRoot
+								ifTrue: [ aPackageOrTag := GtCoderPackageUncategorizedTag forPackageTag: aPackageOrTag ].
+
+							aPackageOrTag isRoot
+								ifFalse: [ aGtCoderPackagesTreeItemElement packageOrTag ~= aPackageOrTag ]
+								ifTrue: [ aGtCoderPackagesTreeItemElement packageOrTag ~= aPackageOrTag
+										and: [ aPackageOrTag package ~= aGtCoderPackagesTreeItemElement packageOrTag ] ] ] ] ];
 		whenDroppedDo: [ :anItemsDroppedEvent | self onDropClassesOnPackageOrTag: anItemsDroppedEvent ];
 		whenDragEnteredDo: [ :anItemsDraggedOverEvent | 
 			anItemsDraggedOverEvent mayAcceptItems
@@ -208,7 +219,7 @@ GtCoderPackagesTreeElement >> onDropClassesOnPackageOrTag: anItemsDroppedEvent [
 				GtRBMoveClassToPackageRefactoring
 					model: aModel
 					move: eachClass name
-					to: aPackageOrTag name ].
+					to: aPackageOrTag categoryName ].
 
 	someRefactorings do: #primitiveExecute.
 	compositeChange := aModel changes.

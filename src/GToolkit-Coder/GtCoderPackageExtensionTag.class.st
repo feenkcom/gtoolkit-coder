@@ -19,6 +19,11 @@ GtCoderPackageExtensionTag >> = anObject [
 ]
 
 { #category : #accessing }
+GtCoderPackageExtensionTag >> categoryName [
+	^ self package categoryName
+]
+
+{ #category : #accessing }
 GtCoderPackageExtensionTag >> classes [
 	<return: #Array>
 	^ self package extendedClasses asArray
