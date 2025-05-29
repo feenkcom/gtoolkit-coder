@@ -64,6 +64,7 @@ GtSourceCoderCollapsedContentElement >> newLabel [
 		editorMeasurement;
 		bold;
 		glamorousCodeFont;
+		foreground: self theme label defaultTextForeground;
 		withAsyncPromiseDo: [ :anElementPromise |
 			anElementPromise
 				whenSuccess: [ :aLabel :aText | aLabel text: aText asRopedText ];
