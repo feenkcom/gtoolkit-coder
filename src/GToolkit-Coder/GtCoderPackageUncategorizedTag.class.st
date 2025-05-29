@@ -19,6 +19,11 @@ GtCoderPackageUncategorizedTag >> = anObject [
 ]
 
 { #category : #accessing }
+GtCoderPackageUncategorizedTag >> categoryName [
+	^ packageTag categoryName
+]
+
+{ #category : #accessing }
 GtCoderPackageUncategorizedTag >> classes [
 	^ self packageTag classes
 ]

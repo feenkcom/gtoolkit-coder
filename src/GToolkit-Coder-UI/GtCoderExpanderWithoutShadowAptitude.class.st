@@ -100,8 +100,8 @@ GtCoderExpanderWithoutShadowAptitude >> initialize [
 		layout: BlLinearLayout vertical.
 
 	self add: (BrLazyStyleCommonAptitude new
-		default: [ :aStyle |
-			aStyle background: Color white];
+		default: [ :aStyle :aTheme |
+			aStyle background: aTheme default contentBackground ];
 		collapsed: [ :aStyle |
 			aStyle border: (BlBorder paint: self borderPaint width: self borderWidth) ];
 		expanded: [ :aStyle |
