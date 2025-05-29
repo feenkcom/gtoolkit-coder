@@ -94,7 +94,7 @@ GtCoderNavigationTabsStencil >> create [
 		views: self navigations;
 		asElementDo: [ :aTabGroup | 
 			aTabGroup 
-				background: BrGlamorousColors neutralBackgroundColor;
+				background: BlTheme default default navigationBackground;
 				matchParent ]
 ]
 

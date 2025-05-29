@@ -22,7 +22,7 @@ GtFilterTextSettingsElement >> initializeEditorElement [
 			hFitContentLimited;
 			vFitContent;
 			beMode: BrTextEditorEditableSingleLineMode new;
-			background: self theme default contentBackgroundColor;
+			background: self theme default contentBackground;
 			aptitude: BrGlamorousRegularEditorAptitude new 
 				glamorousRegularSmallSize;
 			text: '';
