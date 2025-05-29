@@ -114,7 +114,7 @@ GtCoderSlotsGroupedListElement >> createSlotGroups [
 						hMatchParent;
 						vFitContent;
 						beSmallSize;
-						aptitude: BrGlamorousLabelAptitude.
+						aptitude: GtCoderNavigationTreeLabelAptitude.
 
 				slotText := self computeSlotItemText: item.
 

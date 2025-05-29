@@ -16,7 +16,7 @@ GtCoderPackagesTreeItemElement >> initialize [
 		matchParent;
 		text: '';
 		beSmallSize;
-		aptitude: (BrGlamorousLabelAptitude new padding: (BlInsets
+		aptitude: (GtCoderNavigationTreeLabelAptitude new padding: (BlInsets
 					top: 2
 					bottom: 2
 					left: 1

@@ -91,7 +91,7 @@ GtCoderMethodsGroupedListElement >> buildMethodItem [
 		hMatchParent;
 		vFitContent;
 		beSmallSize;
-		aptitude: BrGlamorousLabelAptitude + BrGlamorousListItemAptitude
+		aptitude: GtCoderNavigationTreeLabelAptitude + BrGlamorousListItemAptitude
 				+ (BrGlamorousWithExplicitContextMenuAptitude new
 						withGainFocusOnShow;
 						handleSubmenu: [ | someItems currentMethod |
