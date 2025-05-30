@@ -73,3 +73,8 @@ GtBehaviorCoderDummyClass >> instVarC: anObject [
 GtBehaviorCoderDummyClass >> newMethod [
 	^ 4
 ]
+
+{ #category : #'tests - some' }
+GtBehaviorCoderDummyClass >> overwrittenMethodFromTrait [
+	"overwritten"
+]

@@ -126,7 +126,7 @@ GtCoderProtocolsGroupedListElement >> createProtocolLabelElement [
 	| aLabel aLabelAptitude |
 	aLabel := BrLabel new.
 
-	aLabelAptitude := BrGlamorousLabelAptitude new
+	aLabelAptitude := GtCoderNavigationTreeLabelAptitude new
 			padding: (BlInsets
 					top: 2
 					bottom: 2

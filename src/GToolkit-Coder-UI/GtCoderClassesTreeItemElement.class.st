@@ -52,7 +52,7 @@ GtCoderClassesTreeItemElement >> createClassNameLabel [
 		hMatchParent;
 		vFitContent;
 		beSmallSize;
-		aptitude: BrGlamorousLabelAptitude
+		aptitude: GtCoderNavigationTreeLabelAptitude
 ]
 
 { #category : #initialization }
