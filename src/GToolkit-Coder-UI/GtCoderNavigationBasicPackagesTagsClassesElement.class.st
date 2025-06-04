@@ -129,7 +129,7 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> onClassRemoved: anAnnounceme
 { #category : #'event handling - selection' }
 GtCoderNavigationBasicPackagesTagsClassesElement >> onClassSelected: anAnnouncement [
 	self
-		suppressListChangeEventsDuring: [ self selectClass: anAnnouncement theClass ]
+		suppressListChangeEventsDuring: [ self selectClasses: anAnnouncement selectedClasses ]
 ]
 
 { #category : #'event handling' }
