@@ -3,7 +3,7 @@ Extension { #name : #GtCoderCustomAction }
 { #category : #'*GToolkit-Coder-UI' }
 GtCoderCustomAction >> buildElementIn: aCoderActionsElement [
 	| anElement |
-	anElement := (stencil cull: aCoderActionsElement) asElement.
+	anElement := stencil asStencil asElement.
 	
 	aCoderActionsElement initializeAltClick: self element: anElement.
 	
