@@ -11,5 +11,5 @@ GtFilterToggleBackgroundAptitude >> initialize [
 		activated: [ :aStyle | 
 			aStyle background: self theme button defaultBorderColor lighter.
 			aStyle
-				border: (BlBorder paint: self theme button defaultBackgroundColor width: 1) ]
+				border: (BlBorder paint: Color white width: 1) ]
 ]
