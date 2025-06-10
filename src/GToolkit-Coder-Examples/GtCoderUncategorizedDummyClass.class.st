@@ -15,7 +15,7 @@ GtCoderUncategorizedDummyClass >> checkUncategorized [
 	<return: #RPackageTag>
 	| aPackage aPackageTag |
 	aPackage := self class package.
-	aPackageTag := aPackage classTags
+	aPackageTag := aPackage tags
 			detect: [ :eachTag | eachTag name = aPackage name ].
 
 	self assert: aPackage name equals: aPackageTag name.
