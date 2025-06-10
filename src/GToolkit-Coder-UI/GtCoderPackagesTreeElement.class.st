@@ -42,7 +42,7 @@ GtCoderPackagesTreeElement >> buildRemoveTagLabelFor: aTag [
 GtCoderPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 	| theTags anExtension |
 	(aPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
-	theTags := aPackageOrTag classTags asOrderedCollection.
+	theTags := aPackageOrTag tags asOrderedCollection.
 	theTags withIndexDo: [ :eachTag :eachIndex | eachTag name = aPackageOrTag name ifTrue: [ 
 		theTags at: eachIndex put: (GtCoderPackageUncategorizedTag forPackageTag: eachTag) ] ].
 	theTags sort: [ :tagA :tagB | self isTag: tagA lessThan: tagB ].

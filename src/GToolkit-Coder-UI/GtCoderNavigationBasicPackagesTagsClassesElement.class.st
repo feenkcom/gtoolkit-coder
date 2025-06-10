@@ -49,7 +49,7 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> expandPackage: aRPackage [
 GtCoderNavigationBasicPackagesTagsClassesElement >> hasPackageTagsIn: aRPackage [
 	<return: #Boolean>
 	| noTags noExtensions |
-	noTags := (aRPackage classTags size = 1 and: [ aRPackage classTags anyOne name = aRPackage name ]).
+	noTags := (aRPackage tags size = 1 and: [ aRPackage tags anyOne name = aRPackage name ]).
 	noExtensions := aRPackage extendedClasses isEmpty.
 	^ noTags not or: [ noExtensions not ]
 ]
