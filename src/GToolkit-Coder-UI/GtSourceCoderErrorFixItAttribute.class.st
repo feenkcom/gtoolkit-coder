@@ -25,10 +25,7 @@ GtSourceCoderErrorFixItAttribute >> buildPopupIn: anEditorElement aptitude: apti
 							aShortcutEvent currentTarget fireEvent: BrDropdownHideWish new.
 							anEditorElement requestFocus ]) ].
 	element
-		enqueueTask: [ (element
-				allChildrenBreadthFirstDetect: [ :each | each isKindOf: GtCoderContextMenuContent ]
-				ifFound: [ :each | each ]
-				ifNone: [ element ]) requestFocus ] asBlTask.
+		enqueueTask: [ element dispatchEvent: BrPopoverGainFocusWish new ] asBlTask.
 	^ element
 ]
 
