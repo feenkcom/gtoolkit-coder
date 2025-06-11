@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'setSelector'
 	],
-	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
 { #category : #private }
@@ -75,7 +75,8 @@ GtCodeDefinitionSingleEditor >> create [
 				when: renameAnnouncement
 				do: [ :anEvent |
 					(anOwner isNil or: [ anEvent owner = anOwner ])
-						ifTrue: [ anEditableLabel text: anEvent newName ] ] ].
+						ifTrue: [ anEditableLabel text: anEvent newName ] ]
+				for: self  ].
 
 	^ anEditableLabel
 ]

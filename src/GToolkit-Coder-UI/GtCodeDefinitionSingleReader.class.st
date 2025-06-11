@@ -41,7 +41,8 @@ GtCodeDefinitionSingleReader >> create [
 				when: renameAnnouncement
 				do: [ :anEvent |
 					(anOwner isNil or: [ anEvent owner = anOwner ])
-						ifTrue: [ aLabel text: anEvent newName ] ] ].
+						ifTrue: [ aLabel text: anEvent newName ] ]
+				for: self ].
 
 	^ aLabel
 ]

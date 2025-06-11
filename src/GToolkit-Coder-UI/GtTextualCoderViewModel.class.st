@@ -155,7 +155,7 @@ GtTextualCoderViewModel >> asEditorState [
 	^ aMemento
 ]
 
-{ #category : #'*GToolkit-Coder-UI' }
+{ #category : #converting }
 GtTextualCoderViewModel >> asExpandedOnlyElement [
 	"Create an element for just the expanded coder without expander"
 
