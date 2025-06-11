@@ -12,16 +12,12 @@ Class {
 
 { #category : #'private - actions' }
 GtCoderMethodsGroupedListElement >> browseHierarchyImplementorsOf: aSymbol [
-	self phlow
-		spawnObject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
-				withSubclasses & aSymbol gtImplementors
+	self phlow spawnObject: aSymbol gtImplementors & self hierarchyFilter
 ]
 
 { #category : #'private - actions' }
 GtCoderMethodsGroupedListElement >> browseHierarchyReferencesOf: aSymbol [
-	self phlow
-		spawnObject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
-				withSubclasses & aSymbol gtSenders
+	self phlow spawnObject: aSymbol gtSenders & self hierarchyFilter
 ]
 
 { #category : #'private - actions' }
@@ -38,12 +34,8 @@ GtCoderMethodsGroupedListElement >> browseReferencesOf: aSymbol [
 GtCoderMethodsGroupedListElement >> browseSeveralHierarchyImplementorsOf: aCollectionOfSymbols [
 	| aFilter |
 	aFilter := aCollectionOfSymbols allButFirst
-			inject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
-					withSubclasses & aCollectionOfSymbols first gtImplementors
-			into: [ :filter :symbol | 
-				filter
-					| ((GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
-							withSubclasses & symbol gtImplementors) ].
+			inject: aCollectionOfSymbols first gtImplementors & self hierarchyFilter
+			into: [ :filter :symbol | filter | (symbol gtImplementors & self hierarchyFilter) ].
 
 	self phlow spawnObject: aFilter
 ]
@@ -52,12 +44,8 @@ GtCoderMethodsGroupedListElement >> browseSeveralHierarchyImplementorsOf: aColle
 GtCoderMethodsGroupedListElement >> browseSeveralHierarchyReferencesOf: aCollectionOfSymbols [
 	| aFilter |
 	aFilter := aCollectionOfSymbols allButFirst
-			inject: (GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
-					withSubclasses & aCollectionOfSymbols first gtSenders
-			into: [ :filter :symbol | 
-				filter
-					| ((GtSearchMethodsInClassFilter forClass: self selectedClass) withSuperclasses
-							withSubclasses & symbol gtSenders) ].
+			inject: aCollectionOfSymbols first gtSenders & self hierarchyFilter
+			into: [ :filter :symbol | filter | (symbol gtSenders & self hierarchyFilter) ].
 
 	self phlow spawnObject: aFilter
 ]
@@ -114,7 +102,7 @@ GtCoderMethodsGroupedListElement >> contextMenuForOneItem: item in: anElement [
 		addItemLabel: (self createLabel: 'Browse implementors' description: item selector)
 		action: [ self browseImplementorsOf: item selector ].
 	menu
-		addItemLabel: (self createLabel: 'Browse hierarachy implementors' description: item selector)
+		addItemLabel: (self createLabel: 'Browse hierarchy implementors' description: item selector)
 		action: [ self browseHierarchyImplementorsOf: item selector ].
 	menu
 		addItemLabel: (self createLabel: 'Browse references' description: item selector)
@@ -262,6 +250,12 @@ GtCoderMethodsGroupedListElement >> createSeveralDraggedMethodsItem: aCollection
 		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
 		fitContent;
 		text: ('{1} methods' format: {aCollection  size})
+]
+
+{ #category : #'private - actions' }
+GtCoderMethodsGroupedListElement >> hierarchyFilter [
+	^ (GtSearchInheritedMethodsFilter forClass: self selectedClass) withSuperclasses
+		withSubclasses
 ]
 
 { #category : #initialization }
