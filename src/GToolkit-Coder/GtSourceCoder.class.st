@@ -376,7 +376,7 @@ GtSourceCoder >> notifyParseError: aSemanticWarning requesterObject: aRequester 
 		announce: (GtCoderParseError new
 				coder: self;
 				exception: aSemanticWarning;
-				errorMessage: aSemanticWarning errorMessage;
+				errorMessage: aSemanticWarning messageText;
 				location: aSemanticWarning location;
 				requesterObject: aRequester)
 ]
