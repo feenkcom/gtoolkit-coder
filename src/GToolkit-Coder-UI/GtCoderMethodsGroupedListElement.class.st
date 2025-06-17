@@ -354,7 +354,7 @@ GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectio
 		stencil: [ GtRefactoringsWithInputPreviewElement
 				elementForRefactoring: [ | aGroupByClass aModel aCollectionOfRefactorings |
 					aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
-					aModel := RBClassModelFactory rbNamespace
+					aModel := Smalltalk createRbNamespace
 							onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
 					aCollectionOfRefactorings := aGroupByClass
 							collect: [ :someMethods | 
@@ -394,7 +394,7 @@ GtCoderMethodsGroupedListElement >> pushUpSeveralMethodsSubmenuFor: aCollectionO
 		stencil: [ GtRefactoringsWithInputPreviewElement
 				elementForRefactoring: [ | aGroupByClass aModel aCollectionOfRefactorings |
 					aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
-					aModel := RBClassModelFactory rbNamespace
+					aModel := Smalltalk createRbNamespace
 							onEnvironment: RBPullUpMethodRefactoring new defaultEnvironment.
 					aCollectionOfRefactorings := aGroupByClass
 							collect: [ :someMethods | 
