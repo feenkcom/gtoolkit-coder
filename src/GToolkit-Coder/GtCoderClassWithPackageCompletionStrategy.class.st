@@ -17,7 +17,7 @@ GtCoderClassWithPackageCompletionStrategy >> allClasses [
 { #category : #accessing }
 GtCoderClassWithPackageCompletionStrategy >> allPackages [
 	^ allPackages ifNil: [ 
-		allPackages := GtPrefixTree withAll: RPackage organizer packageNames ]
+		allPackages := GtPrefixTree withAll: self packageOrganizer packageNames ]
 ]
 
 { #category : #accessing }
@@ -35,7 +35,7 @@ GtCoderClassWithPackageCompletionStrategy >> completionActionStreamFor: aText at
 			[ | extractedPackageName partialClassName package |
 			extractedPackageName := currentInput copyFrom: 1 to: delimitedIndex - 1.
 			partialClassName := currentInput copyFrom: delimitedIndex + 1 to: currentInput size.
-			package := RPackage organizer packageNamed: extractedPackageName ifAbsent: [ ^ #() ].
+			package := self packageOrganizer packageNamed: extractedPackageName ifAbsent: [ ^ #() ].
 			^ ((self classesIn: package) asyncStreamStartingWith: partialClassName)
 				collect:
 					[ :className | 
