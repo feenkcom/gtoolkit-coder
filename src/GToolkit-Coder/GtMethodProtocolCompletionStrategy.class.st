@@ -1,7 +1,7 @@
 Class {
 	#name : #GtMethodProtocolCompletionStrategy,
 	#superclass : #GtStringsCompletionStrategy,
-	#category : 'GToolkit-Coder-Completion'
+	#category : #'GToolkit-Coder-Completion'
 }
 
 { #category : #private }
@@ -10,7 +10,7 @@ GtMethodProtocolCompletionStrategy >> buildCompletions [
 	protocols := GtPrefixTree new.
 	Smalltalk globals
 		allBehaviorsDo: [ :cls | protocols addAll: cls organization categories ].
-	RPackage organizer packages
+	self packageOrganizer packages
 		do: [ :each | protocols add: '*' , each name ].
 	^ protocols
 ]
