@@ -339,11 +339,14 @@ GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aMethod [
 		stencil: [ GtRefactoringsWithInputPreviewElement
 				elementForRefactoring: [ RBPushDownMethodRefactoring
 						pushDown: {aMethod selector}
-						from: aMethod methodClass ]
+						from: (self
+								forPharo12: [ aMethod methodClass name ]
+								forPharo11AndPharo10: [ aMethod methodClass ]) ]
 				confirmationLabeled: 'Push down ' , aMethod selector
 				from: self
 				beforeApplyingDo: [ submenu hideAll ] ].
 	^ submenu
+
 ]
 
 { #category : #'private - context menu' }
@@ -361,7 +364,10 @@ GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectio
 								RBPushDownMethodRefactoring new
 									model: aModel;
 									pushDown: (someMethods collect: #selector)
-										from: someMethods anyOne methodClass ] as: Array.
+										from: (self
+												forPharo12: [ someMethods anyOne methodClass name ]
+												forPharo11AndPharo10: [ someMethods anyOne methodClass ]) ]
+							as: Array.
 					aModel name: ('Push down {1} methods' format: {aCollectionOfMethods size}).
 					aCollectionOfRefactorings ]
 				confirmationLabeled: ('Push down {1} methods'
