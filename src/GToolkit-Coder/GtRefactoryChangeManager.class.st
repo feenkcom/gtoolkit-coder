@@ -58,17 +58,17 @@ GtRefactoryChangeManager >> addUndo: aChange [
 	self announceUndoChanged
 ]
 
+{ #category : #announcer }
+GtRefactoryChangeManager >> announcer [
+	^ announcer ifNil: [ announcer := Announcer new ]
+]
+
 { #category : #executing }
 GtRefactoryChangeManager >> announceUndoChanged [
 	self
 		announce: (GtRefactoryChangeManagerUndoChangedEvent new
 				changeManager: self;
 				yourself)
-]
-
-{ #category : #announcer }
-GtRefactoryChangeManager >> announcer [
-	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
 { #category : #accessing }

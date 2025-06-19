@@ -66,21 +66,6 @@ GtCoderNavigationModel >> selectClasses: aCollectionOfClasses [
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationModel >> selectMethod: aCompiledMethod [
-	self subclassResponsibility
-]
-
-{ #category : #'api - selection' }
-GtCoderNavigationModel >> selectMethods: aCollectionOfCompiledMethods [
-	self subclassResponsibility
-]
-
-{ #category : #'api - selection' }
-GtCoderNavigationModel >> selectPackage: aPackage [
-	self subclassResponsibility
-]
-
-{ #category : #'api - selection' }
 GtCoderNavigationModel >> selectedClassDo: aBlock [
 	self subclassResponsibility
 ]
@@ -92,6 +77,21 @@ GtCoderNavigationModel >> selectedPackageDo: aBlock [
 
 { #category : #'api - selection' }
 GtCoderNavigationModel >> selectedTagDo: aBlock [
+	self subclassResponsibility
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationModel >> selectMethod: aCompiledMethod [
+	self subclassResponsibility
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationModel >> selectMethods: aCollectionOfCompiledMethods [
+	self subclassResponsibility
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationModel >> selectPackage: aPackage [
 	self subclassResponsibility
 ]
 
