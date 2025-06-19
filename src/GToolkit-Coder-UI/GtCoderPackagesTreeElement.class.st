@@ -42,15 +42,20 @@ GtCoderPackagesTreeElement >> buildRemoveTagLabelFor: aTag [
 GtCoderPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 	| theTags anExtension |
 	(aPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
+	
 	theTags := aPackageOrTag tags asOrderedCollection.
-	theTags withIndexDo: [ :eachTag :eachIndex | eachTag name = aPackageOrTag name ifTrue: [ 
-		theTags at: eachIndex put: (GtCoderPackageUncategorizedTag forPackageTag: eachTag) ] ].
+	theTags withIndexDo: [ :eachTag :eachIndex | 
+		eachTag isRoot ifTrue: [ 
+			theTags 
+				at: eachIndex 
+				put: (GtCoderPackageUncategorizedTag forPackageTag: eachTag) ] ].
 	theTags sort: [ :tagA :tagB | self isTag: tagA lessThan: tagB ].
 
 	anExtension := GtCoderPackageExtensionTag forPackage: aPackageOrTag.
 	anExtension hasExtendedClasses ifTrue: [ 
 		theTags addLast: anExtension ].
-	"Do not return an only tag of the same name as the package"
+		
+	"Do not return an only root tag that contains all classes"
 	(theTags size = 1 and: [ 
 		theTags anyOne class = GtCoderPackageUncategorizedTag ]) ifTrue: [ ^ #() ].
 	
