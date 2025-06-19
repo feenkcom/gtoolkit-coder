@@ -20,7 +20,7 @@ GtPackagesCompletionStrategy class >> findPackageTagsMatching: aString [
 	searchString := '*' , aString , '*'.
 	results := OrderedCollection new.
 	self allPackagesDo: [ :each | 
-		each classTags
+		each tags
 			do: [ :tag | 
 				(searchString match: tag categoryName)
 					ifTrue: [ results add: tag ] ] ].
