@@ -100,16 +100,16 @@ GtCoderClassesHierarchyTree >> gtTreeFor: aView [
 		expandUpTo: 1
 ]
 
+{ #category : #comparing }
+GtCoderClassesHierarchyTree >> hash [
+	^ self rootClass hash bitXor: self subclassTrees hash
+]
+
 { #category : #testing }
 GtCoderClassesHierarchyTree >> hasRootClass [
 	<return: #Boolean>
 
 	^ rootClass isNotNil
-]
-
-{ #category : #comparing }
-GtCoderClassesHierarchyTree >> hash [
-	^ self rootClass hash bitXor: self subclassTrees hash
 ]
 
 { #category : #initialization }
