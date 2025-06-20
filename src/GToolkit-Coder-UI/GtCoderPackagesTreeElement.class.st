@@ -99,7 +99,7 @@ GtCoderPackagesTreeElement >> createPackageOrTagDropHandler [
 						isKindOf: GtCoderPackageExtensionTag) not
 						and: [ | aPackageOrTag |
 							aPackageOrTag := aDragItem domainObject package
-									classTagForClass: aDragItem domainObject.
+									tagOf: aDragItem domainObject.
 							aPackageOrTag isRoot
 								ifTrue: [ aPackageOrTag := GtCoderPackageUncategorizedTag forPackageTag: aPackageOrTag ].
 
