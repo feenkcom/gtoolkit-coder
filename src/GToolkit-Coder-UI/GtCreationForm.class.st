@@ -47,7 +47,7 @@ GtCreationForm >> commitPackage [
 					packageNamed: packageAndTagName packageName.
 			^ packageAndTagName tagName
 				ifEmpty: [ aPackage ]
-				ifNotEmpty: [ :aTagName | aPackage classTagNamed: aTagName ifAbsent: [ aPackage addClassTag: aTagName ] ] ]
+				ifNotEmpty: [ :aTagName | aPackage tagNamed: aTagName ifAbsent: [ aPackage addClassTag: aTagName ] ] ]
 		ifFalse: [ aPackage := (RPackage named: packageAndTagName packageName)
 					register.
 			^ packageAndTagName tagName
