@@ -295,10 +295,12 @@ GtSourceCoder >> nodeFrom: aCoderViewModel [
 	| allSelections allCursors |
 	allSelections := aCoderViewModel selection allSelections.
 	allCursors := aCoderViewModel cursors allCursors.
-
+ 
 	^ allSelections size = 1
-		ifTrue: [ self nodeWithin: allSelections first interval ]
-		ifFalse: [ allCursors size = 1 ifTrue: [ self nodeAt: allCursors first position ] ]
+		ifTrue: [ self nodeWithin: (allSelections first from + 1
+			to: allSelections first to)  ]
+		ifFalse: [ allCursors size = 1 ifTrue: [ 
+			self nodeAt: allCursors first position ] ]
 ]
 
 { #category : #accessing }

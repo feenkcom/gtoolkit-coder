@@ -29,9 +29,10 @@ GtSourceCoder >> extractableNodesFrom: aCoderViewModel [
 
 	allSelections := aCoderViewModel selection allSelections.
 	allCursors := aCoderViewModel cursors allCursors.
-
+ 
 	^ allSelections size = 1
-		ifTrue: [ self extractableNodesWithin: allSelections first interval ]
+		ifTrue: [ self extractableNodesWithin: (allSelections first from + 1
+			to: allSelections first to) ]
 		ifFalse: [ allCursors size = 1
 			ifTrue: [ self extractableNodesAt: allCursors first position ]
 			ifFalse: [ #() ] ]
