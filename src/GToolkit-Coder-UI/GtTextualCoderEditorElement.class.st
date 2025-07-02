@@ -654,7 +654,7 @@ GtTextualCoderEditorElement >> reportParseError: aString at: anInteger [
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> reportUndeclaredError: aGtCoderParseError [
 	| rbNode interval gtNode ast errorAttribute |
-	rbNode := aGtCoderParseError exception node.
+	rbNode := aGtCoderParseError node.
 	interval := rbNode sourceInterval.
 	ast := GtPharoParser
 			parse: rbNode methodNode source
