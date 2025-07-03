@@ -1,6 +1,6 @@
 Class {
 	#name : #GtMethodProtocolCompletionStrategy,
-	#superclass : #GtStringsCompletionStrategy,
+	#superclass : #GtWeightedStringsCompletionStrategy,
 	#category : #'GToolkit-Coder-Completion'
 }
 
