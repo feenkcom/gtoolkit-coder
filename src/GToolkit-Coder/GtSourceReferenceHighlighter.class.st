@@ -4,8 +4,13 @@ Class {
 	#classVars : [
 		'HighlightAttributes'
 	],
-	#category : 'GToolkit-Coder-Styler/Highlighter'
+	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
+
+{ #category : #accessing }
+GtSourceReferenceHighlighter class >> highlightAttribute [
+	^ HighlightAttributes first
+]
 
 { #category : #'class initialization' }
 GtSourceReferenceHighlighter class >> initialize [

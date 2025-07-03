@@ -32,7 +32,10 @@ GtCoderParseError >> exception: anException [
 
 { #category : #testing }
 GtCoderParseError >> isUndeclaredError [
-	^ exception isKindOf: OCUndeclaredVariableWarning
+	^ self
+		forPharo12: [ (errorMessage beginsWith: 'Undeclared variable')
+				or: [ errorMessage beginsWith: 'Undeclared temp' ] ]
+		forPharo11AndPharo10: [ exception isKindOf: OCUndeclaredVariableWarning ]
 ]
 
 { #category : #accessing }
@@ -43,6 +46,15 @@ GtCoderParseError >> location [
 { #category : #accessing }
 GtCoderParseError >> location: anObject [
 	location := anObject
+]
+
+{ #category : #accessing }
+GtCoderParseError >> node [
+	"The node in the exception is an RB node (Pharo 11)"
+
+	^ (self exception notNil and: [ self exception respondsTo: #node ])
+		ifTrue: [ self exception node ]
+		ifFalse: [ coder rbAST ifNotNil: [ :node | node nodeForOffset: location ] ]
 ]
 
 { #category : #accessing }
