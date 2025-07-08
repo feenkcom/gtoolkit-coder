@@ -43,13 +43,22 @@ GtCreationForm >> commit [
 GtCreationForm >> commitPackage [
 	| aPackage |
 	(RPackageOrganizer default includesPackageNamed: packageAndTagName packageName)
-		ifTrue: [ aPackage := RPackageOrganizer default
-					packageNamed: packageAndTagName packageName.
+		ifTrue: [ 
+			aPackage := RPackageOrganizer default
+				packageNamed: packageAndTagName packageName.
 			^ packageAndTagName tagName
 				ifEmpty: [ aPackage ]
-				ifNotEmpty: [ :aTagName | aPackage tagNamed: aTagName ifAbsent: [ aPackage addClassTag: aTagName ] ] ]
-		ifFalse: [ aPackage := (RPackage named: packageAndTagName packageName)
-					register.
+				ifNotEmpty: [ :aTagName | 
+					aPackage 
+						tagNamed: aTagName 
+						ifAbsent: [ aPackage addClassTag: aTagName ] ] ]
+		ifFalse: [ 
+			aPackage := (RPackage named: packageAndTagName packageName).
+			self 
+				forPharo12: [
+					self class packageOrganizer addPackage: aPackage] 
+				forPharo11AndPharo10: [
+					aPackage register ].
 			^ packageAndTagName tagName
 				ifEmpty: [ aPackage ]
 				ifNotEmpty: [ :aTagName | aPackage addClassTag: aTagName ] ]
