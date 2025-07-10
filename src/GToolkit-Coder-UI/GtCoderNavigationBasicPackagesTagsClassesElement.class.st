@@ -346,7 +346,7 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> selectedClass [
 
 { #category : #'api - package selections' }
 GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackage [
-	<return: #RPackage or: nil>
+	<return: #Package or: nil>
 	^ packagesList selectedPackage
 ]
 

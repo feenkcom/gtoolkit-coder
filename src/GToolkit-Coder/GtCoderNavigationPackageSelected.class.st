@@ -4,12 +4,12 @@ Class {
 	#instVars : [
 		'package'
 	],
-	#category : 'GToolkit-Coder-Navigation - Events'
+	#category : #'GToolkit-Coder-Navigation - Events'
 }
 
 { #category : #accessing }
 GtCoderNavigationPackageSelected >> package [
-	<return: #RPackage>
+	<return: #Package>
 
 	^ package
 ]

@@ -449,7 +449,7 @@ GtCoderPackagesTreeElement >> selectedIndice [
 
 { #category : #'api - selection' }
 GtCoderPackagesTreeElement >> selectedPackage [
-	<return: #RPackage or: nil>
+	<return: #Package or: nil>
 	^ self selectedPackageNodeDo: #value
 ]
 
