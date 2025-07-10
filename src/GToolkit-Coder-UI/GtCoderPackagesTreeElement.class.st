@@ -41,7 +41,7 @@ GtCoderPackagesTreeElement >> buildRemoveTagLabelFor: aTag [
 { #category : #'private - enumeration' }
 GtCoderPackagesTreeElement >> childrenForPackageOrTag: aPackageOrTag [
 	| theTags anExtension |
-	(aPackageOrTag isKindOf: RPackage) ifFalse: [ ^ #() ].
+	(aPackageOrTag isPharoPackageModel) ifFalse: [ ^ #() ].
 	
 	theTags := aPackageOrTag tags asOrderedCollection.
 	theTags withIndexDo: [ :eachTag :eachIndex | 
@@ -69,7 +69,7 @@ GtCoderPackagesTreeElement >> contextMenuFor: aPackageOrTag [
 	menu
 		addItemLabel: (self createLabel: 'New package / tag' description: '')
 		action: [ self newPackage ].
-	aPackageOrTag class == RPackage
+	aPackageOrTag isPharoPackageModel
 		ifTrue: [ menu
 				addItem: (BrMenuSubmenuItem new
 						label: (self createLabel: 'Rename package' description: aPackageOrTag name);
@@ -120,7 +120,7 @@ GtCoderPackagesTreeElement >> createRenamePackageForm: aPackageOrTag [
 	^ GtCoderPackagesTreeRenameEditor new
 		itemToRename: aPackageOrTag;
 		renameAction: [ :anItemToRename :aNewName |
-			(anItemToRename isKindOf: RPackage)
+			(anItemToRename isPharoPackageModel)
 				ifTrue: [
 					(GtRBRenamePackageRefactoring
 						from: anItemToRename name
