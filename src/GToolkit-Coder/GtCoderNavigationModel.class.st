@@ -51,7 +51,7 @@ GtCoderNavigationModel >> isNavigationModel [
 
 { #category : #'api - accessing' }
 GtCoderNavigationModel >> packagesToShow [
-	<return: #Collection of: #RPackage>
+	<return: #Collection of: #Package>
 	^ self subclassResponsibility
 ]
 

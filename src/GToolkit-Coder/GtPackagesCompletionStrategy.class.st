@@ -53,7 +53,7 @@ GtPackagesCompletionStrategy >> completionActionStreamFor: aText at: positionInt
 	string isEmpty ifTrue: [ ^ #() ].
 	searchString := '*' , string , '*'.
 	^ ((self class packageStreamMatching: searchString)
-		collect: [ :each | (each isKindOf: RPackage) ifTrue: [ each name ] ifFalse: [ each categoryName ] ]) withoutDuplicates
+		collect: [ :each | (each isPharoPackageModel) ifTrue: [ each name ] ifFalse: [ each categoryName ] ]) withoutDuplicates
 		collect: [ :each | GtReplaceTextCompletionAction forText: each ]
 ]
 

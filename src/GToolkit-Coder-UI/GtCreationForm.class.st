@@ -53,7 +53,7 @@ GtCreationForm >> commitPackage [
 						tagNamed: aTagName 
 						ifAbsent: [ aPackage addClassTag: aTagName ] ] ]
 		ifFalse: [ 
-			aPackage := (RPackage named: packageAndTagName packageName).
+			aPackage := (Package named: packageAndTagName packageName).
 			self 
 				forPharo12: [
 					self class packageOrganizer addPackage: aPackage] 

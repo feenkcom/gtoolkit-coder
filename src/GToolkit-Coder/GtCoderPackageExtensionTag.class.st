@@ -62,7 +62,7 @@ GtCoderPackageExtensionTag >> name [
 
 { #category : #accessing }
 GtCoderPackageExtensionTag >> package [
-	<return: #RPackage>
+	<return: #Package>
 	^ package
 ]
 

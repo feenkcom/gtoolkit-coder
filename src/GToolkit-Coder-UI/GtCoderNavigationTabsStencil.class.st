@@ -43,7 +43,7 @@ GtCoderNavigationTabsStencil >> addButtonsTo: explicitView [
 				objectActOn: [ :anActOnEvent :anItem :theButton | 
 					| acted |
 					acted := false.
-					(anItem isKindOf: RPackage)
+					(anItem isPharoPackageModel)
 						ifTrue: [ self navigationModel selectPackage: anItem.
 							acted := true ].
 					(anItem isKindOf: ClassDescription)

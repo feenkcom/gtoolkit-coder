@@ -141,7 +141,7 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> onPackageListSelectionChange
 	anIndex := theIndices first.
 	(anIndex between: 1 and: packagesList viewModel itemCount) ifFalse: [ ^ self ].
 	aSelectedItem := (packagesList viewModel itemAt: anIndex) value.
-	(aSelectedItem isKindOf: RPackage)
+	(aSelectedItem isPharoPackageModel)
 		ifTrue: [ self navigationModel selectPackage: aSelectedItem ]
 		ifFalse: [ self navigationModel selectPackageTag: aSelectedItem ].
 	self showClassList.
@@ -333,7 +333,7 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> selectPackage: aPackage tag:
 
 { #category : #'api - package selections' }
 GtCoderNavigationBasicPackagesTagsClassesElement >> selectPackageOrTag: aPackageOrTag [
-	(aPackageOrTag isKindOf: RPackage)
+	(aPackageOrTag isPharoPackageModel)
 		ifTrue: [ self selectPackage: aPackageOrTag ] 
 		ifFalse: [ self selectPackage: aPackageOrTag package tag: aPackageOrTag ]
 ]
@@ -346,7 +346,7 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> selectedClass [
 
 { #category : #'api - package selections' }
 GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackage [
-	<return: #RPackage or: nil>
+	<return: #Package or: nil>
 	^ packagesList selectedPackage
 ]
 
