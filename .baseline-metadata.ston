@@ -1,10 +1,10 @@
 {
 	"repositories" : {
-		"github://feenkcom/gtoolkit-notifications/src" : "v0.6.1334",
+		"github://feenkcom/gtoolkit-notifications/src" : "v0.6.1335",
 		"github://feenkcom/gtoolkit-utility/src" : "v0.8.382",
 		"github://feenkcom/pharo-futures/src" : "v0.6.143",
-		"github://feenkcom/gtoolkit-pager/src" : "v0.8.1763",
-		"github://feenkcom/gt4magritte/src" : "v0.6.1387",
-		"github://feenkcom/gtoolkit-completer/src" : "v0.8.1664"
+		"github://feenkcom/gtoolkit-pager/src" : "v0.8.1764",
+		"github://feenkcom/gt4magritte/src" : "v0.6.1388",
+		"github://feenkcom/gtoolkit-completer/src" : "v0.8.1665"
 	}
 }
