@@ -42,9 +42,9 @@ GtCreationForm >> commit [
 { #category : #callbacks }
 GtCreationForm >> commitPackage [
 	| aPackage |
-	(RPackageOrganizer default includesPackageNamed: packageAndTagName packageName)
+	(self packageOrganizer includesPackageNamed: packageAndTagName packageName)
 		ifTrue: [ 
-			aPackage := RPackageOrganizer default
+			aPackage := self packageOrganizer
 				packageNamed: packageAndTagName packageName.
 			^ packageAndTagName tagName
 				ifEmpty: [ aPackage ]

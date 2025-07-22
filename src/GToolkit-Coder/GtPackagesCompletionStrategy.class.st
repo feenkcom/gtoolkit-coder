@@ -6,12 +6,12 @@ Class {
 
 { #category : #private }
 GtPackagesCompletionStrategy class >> allPackages [
-	^ RPackageOrganizer default packages asSortedCollection: [ :a :b | a name < b name ]
+	^ self packageOrganizer packages asSortedCollection: [ :a :b | a name < b name ]
 ]
 
 { #category : #private }
 GtPackagesCompletionStrategy class >> allPackagesDo: aBlock [
-	^ RPackageOrganizer default packagesDo: aBlock
+	^ self packageOrganizer packagesDo: aBlock
 ]
 
 { #category : #querying }

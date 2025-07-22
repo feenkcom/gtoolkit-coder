@@ -126,7 +126,7 @@ GtCoderPackagesTreeElement >> createRenamePackageForm: aPackageOrTag [
 						from: anItemToRename name
 						to: aNewName)
 							execute ].
-			(anItemToRename isKindOf: RPackageTag)
+			(anItemToRename isPharoPackageTagModel)
 				ifTrue: [
 					(GtRBRenamePackageTagRefactoring
 						packageName: anItemToRename package name
@@ -462,7 +462,7 @@ GtCoderPackagesTreeElement >> selectedPackageNodeDo: aBlock [
 
 { #category : #'api - selection' }
 GtCoderPackagesTreeElement >> selectedPackageTag [
-	<return: #RPackageTag or: nil>
+	<return: #PackageTag or: nil>
 	^ self selectedPackageTagNodeDo: #value
 ]
 
