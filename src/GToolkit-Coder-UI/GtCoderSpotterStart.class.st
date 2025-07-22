@@ -23,7 +23,7 @@ GtCoderSpotterStart >> gtSpotterForPackagesFor: aSearch [
 	<gtSearch>
 	^ aSearch list
 		priority: 20;
-		items: [ RPackageOrganizer default packages ];
+		items: [ self packageOrganizer packages ];
 		title: 'Packages';
 		itemName: [ :package | package name ];
 		filterBySubstring;
