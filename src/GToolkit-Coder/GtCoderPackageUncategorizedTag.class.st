@@ -60,7 +60,7 @@ GtCoderPackageUncategorizedTag >> packageName [
 
 { #category : #accessing }
 GtCoderPackageUncategorizedTag >> packageTag [
-	<return: #RPackageTag>
+	<return: #PackageTag>
 	^ packageTag
 ]
 

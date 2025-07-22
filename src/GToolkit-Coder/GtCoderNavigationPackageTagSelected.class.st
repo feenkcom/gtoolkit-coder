@@ -5,7 +5,7 @@ Class {
 		'package',
 		'tag'
 	],
-	#category : 'GToolkit-Coder-Navigation - Events'
+	#category : #'GToolkit-Coder-Navigation - Events'
 }
 
 { #category : #accessing }
@@ -20,7 +20,7 @@ GtCoderNavigationPackageTagSelected >> package: anObject [
 
 { #category : #accessing }
 GtCoderNavigationPackageTagSelected >> tag [
-	<return: #RPackageTag>
+	<return: #PackageTag>
 
 	^ tag
 ]

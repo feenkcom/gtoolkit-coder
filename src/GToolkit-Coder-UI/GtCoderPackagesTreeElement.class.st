@@ -462,7 +462,7 @@ GtCoderPackagesTreeElement >> selectedPackageNodeDo: aBlock [
 
 { #category : #'api - selection' }
 GtCoderPackagesTreeElement >> selectedPackageTag [
-	<return: #RPackageTag or: nil>
+	<return: #PackageTag or: nil>
 	^ self selectedPackageTagNodeDo: #value
 ]
 

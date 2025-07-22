@@ -12,7 +12,7 @@ Class {
 { #category : #examples }
 GtCoderUncategorizedDummyClass >> checkUncategorized [
 	<gtExample>
-	<return: #RPackageTag>
+	<return: #PackageTag>
 	| aPackage aPackageTag |
 	aPackage := self class package.
 	aPackageTag := aPackage tags
