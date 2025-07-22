@@ -15,7 +15,7 @@ GtCoderPackageUncategorizedTag class >> forPackageTag: aRPackage [
 { #category : #comparing }
 GtCoderPackageUncategorizedTag >> = anObject [
 	^ (self class = anObject class and: [ self packageTagName = anObject packageTagName ]) or: [
-		(anObject isKindOf: RPackageTag) and: [ self packageTagName = anObject name ] ]
+		(anObject isPharoPackageTagModel) and: [ self packageTagName = anObject name ] ]
 ]
 
 { #category : #accessing }

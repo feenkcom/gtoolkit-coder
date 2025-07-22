@@ -126,7 +126,7 @@ GtCoderPackagesTreeElement >> createRenamePackageForm: aPackageOrTag [
 						from: anItemToRename name
 						to: aNewName)
 							execute ].
-			(anItemToRename isKindOf: RPackageTag)
+			(anItemToRename isPharoPackageTagModel)
 				ifTrue: [
 					(GtRBRenamePackageTagRefactoring
 						packageName: anItemToRename package name
