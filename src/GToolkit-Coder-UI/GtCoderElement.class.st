@@ -51,7 +51,21 @@ GtCoderElement >> createSidebarElement [
 	^ GtPhlowHorizontalSidebarElement new
 		beLeft;
 		resizerStrategy: (BrResizerElementLength weight: self class defaultSidebarWidth);
-		contentStencil: (GtCoderNavigationTabsStencil new navigationModel: self navigationModel)
+		contentStencil: (GtCoderNavigationTabsStencil new navigationModel: self navigationModel);
+		addAptitude: (GtPhlowToolDetailAptitude new
+				left: [ :aStyle | 
+					aStyle
+						do: [ :aWidget | 
+							aWidget beLeft.
+							(aWidget resizerStrategy isKindOf: BrResizerWeightedLength)
+								ifTrue: [ aWidget
+										resizerStrategy: (BrResizerElementLength weight: self class defaultSidebarWidth) ] ] ];
+				top: [ :aStyle | 
+					aStyle
+						do: [ :aWidget | 
+							aWidget beTop.
+							(aWidget resizerStrategy isKindOf: BrResizerWeightedLength)
+								ifTrue: [ aWidget resizerStrategy: (BrResizerElementLength weight: 0.5) ] ] ])
 ]
 
 { #category : #'instance creation' }
@@ -79,22 +93,30 @@ GtCoderElement >> initialize [
 	super initialize.
 
 	contentElement := self createPlaygroundElement.
+
 	titleNotifier := self createTitleNotifier.
 
 	self
 		layout: BlLinearLayout horizontal;
 		addEventHandler: titleNotifier;
 		addAptitude: (GtPhlowToolDetailAptitude new
-			normal: [ :aStyle | aStyle do: [ self hideSidebar ] ];
-			detailed: [ :aStyle | aStyle do: [ self showSidebar ] ]).
+				normal: [ :aStyle | aStyle do: [ self hideSidebar ] ];
+				detailed: [ :aStyle | aStyle do: [ self showSidebar ] ];
+				left: [ :aStyle | aStyle do: [ self layout: BlLinearLayout horizontal ] ];
+				top: [ :aStyle | aStyle do: [ self layout: BlLinearLayout vertical ] ]).
 
 	self addChild: contentElement as: #content.
 
 	self phlow beViewContent.
-	self phlow 
-		accessTool: (GtPhlowToolClassType forClass: GtCoderElement) 
-		viewModel: #navigationModel 
-		object: #navigationModel
+	self phlow
+		accessTool: (GtPhlowToolClassType forClass: GtCoderElement)
+		viewModel: #navigationModel
+		object: #navigationModel.
+
+	GtCoderSettings defaultDetailState
+		ifNotNil: [ :aState | self states addState: aState ].
+	GtCoderSettings defaultDetailPositionState
+		ifNotNil: [ :aState | self states addState: aState ]
 ]
 
 { #category : #'private - hooks' }
