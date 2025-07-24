@@ -56,16 +56,25 @@ GtCoderElement >> createSidebarElement [
 				left: [ :aStyle | 
 					aStyle
 						do: [ :aWidget | 
-							aWidget beLeft.
-							(aWidget resizerStrategy isKindOf: BrResizerWeightedLength)
-								ifTrue: [ aWidget
-										resizerStrategy: (BrResizerElementLength weight: self class defaultSidebarWidth) ] ] ];
+							aWidget userData
+								at: #leftSidebarResizerStrategy
+								ifPresent: [ :aResizerStrategy | aWidget resizerStrategy: aResizerStrategy ]
+								ifAbsentPut: [ aWidget
+										resizerStrategy: (BrResizerElementLength weight: self class defaultSidebarWidth) ].
+
+							aWidget beLeft ]
+						after: [ :aWidget | aWidget userData at: #leftSidebarResizerStrategy put: aWidget resizerStrategy ] ];
 				top: [ :aStyle | 
 					aStyle
 						do: [ :aWidget | 
-							aWidget beTop.
-							(aWidget resizerStrategy isKindOf: BrResizerWeightedLength)
-								ifTrue: [ aWidget resizerStrategy: (BrResizerElementLength weight: 0.5) ] ] ])
+							aWidget userData
+								at: #topSidebarResizerStrategy
+								ifPresent: [ :aResizerStrategy | aWidget resizerStrategy: aResizerStrategy ]
+								ifAbsentPut: [ aWidget
+										resizerStrategy: (BrResizerElementLength weight: 0.5) ].
+
+							aWidget beTop ]
+						after: [ :aWidget | aWidget userData at: #topSidebarResizerStrategy put: aWidget resizerStrategy ] ])
 ]
 
 { #category : #'instance creation' }
