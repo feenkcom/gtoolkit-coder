@@ -61,9 +61,14 @@ GtCoderElement >> createSidebarElement [
 								ifPresent: [ :aResizerStrategy | aWidget resizerStrategy: aResizerStrategy ]
 								ifAbsentPut: [ aWidget
 										resizerStrategy: (BrResizerElementLength weight: self class defaultSidebarWidth) ].
-
-							aWidget beLeft ]
-						after: [ :aWidget | aWidget userData at: #leftSidebarResizerStrategy put: aWidget resizerStrategy ] ];
+							aWidget beLeft.
+							aWidget userData
+								at: #leftSidebarIsCollapsed
+								ifPresent: [ :aBoolean | aBoolean ifTrue: [ aWidget collapse ] ]
+								ifAbsent: [  ] ]
+						after: [ :aWidget | 
+							aWidget userData at: #leftSidebarResizerStrategy put: aWidget resizerStrategy.
+							aWidget userData at: #leftSidebarIsCollapsed put: aWidget isCollapsed ] ];
 				top: [ :aStyle | 
 					aStyle
 						do: [ :aWidget | 
@@ -72,9 +77,14 @@ GtCoderElement >> createSidebarElement [
 								ifPresent: [ :aResizerStrategy | aWidget resizerStrategy: aResizerStrategy ]
 								ifAbsentPut: [ aWidget
 										resizerStrategy: (BrResizerElementLength weight: 0.5) ].
-
-							aWidget beTop ]
-						after: [ :aWidget | aWidget userData at: #topSidebarResizerStrategy put: aWidget resizerStrategy ] ])
+							aWidget beTop.
+							aWidget userData
+								at: #topSidebarIsCollapsed
+								ifPresent: [ :aBoolean | aBoolean ifTrue: [ aWidget collapse ] ]
+								ifAbsent: [  ] ]
+						after: [ :aWidget | 
+							aWidget userData at: #topSidebarResizerStrategy put: aWidget resizerStrategy.
+							aWidget userData at: #topSidebarIsCollapsed put: aWidget isCollapsed ] ])
 ]
 
 { #category : #'instance creation' }
