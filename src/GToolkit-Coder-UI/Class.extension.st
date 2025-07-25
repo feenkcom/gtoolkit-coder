@@ -9,7 +9,9 @@ Class >> asFilterModelItem [
 Class >> gtCoderSidebarIndexBrowseClassFrom: aGtCoderClassesTreeElement [
 	<gtCoderSidebarIndexOneSubjectContextMenuItem: 1>
 	^ BrMenuActionItem new
-		label: 'Browse class' preview: self name;
+		icon: BrGlamorousVectorIcons browse
+			label: 'Browse class'
+			preview: self name;
 		action: [ aGtCoderClassesTreeElement phlow spawnObject: self ]
 ]
 
@@ -17,17 +19,29 @@ Class >> gtCoderSidebarIndexBrowseClassFrom: aGtCoderClassesTreeElement [
 Class >> gtCoderSidebarIndexBrowseReferencesFrom: aGtCoderClassesTreeElement [
 	<gtCoderSidebarIndexOneSubjectContextMenuItem: 2>
 	^ BrMenuActionItem new
-		label: 'Browse references' preview: self name;
+		icon: BrGlamorousVectorIcons empty
+			label: 'Browse references'
+			preview: self name;
 		action: [ aGtCoderClassesTreeElement browseReferencesTo: self ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+Class >> gtCoderSidebarIndexCopyClassNameFrom: aGtCoderClassesTreeElement [
+	<gtCoderSidebarIndexOneSubjectContextMenuItem: 2.5>
+	^ BrMenuActionItem new
+		icon: BrGlamorousVectorIcons clipboard
+			label: 'Copy class name'
+			preview: self name;
+		action: [ Clipboard clipboardText: self name ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexExtractSuperclassFrom: aGtCoderClassesTreeElement [
 	<gtCoderSidebarIndexOneSubjectContextMenuItem: 7>
-	self subclasses notEmpty ifFalse: [ ^ nil ].
-
 	^ BrMenuSubmenuItem new
-		label: 'Extract superclass' preview: self name;
+		icon: BrGlamorousVectorIcons empty
+			label: 'Extract superclass'
+			preview: self name;
 		submenu: (aGtCoderClassesTreeElement convertToSiblingSubmenuFor: self siblings: #())
 ]
 
@@ -35,7 +49,9 @@ Class >> gtCoderSidebarIndexExtractSuperclassFrom: aGtCoderClassesTreeElement [
 Class >> gtCoderSidebarIndexNewSubclassFrom: aGtCoderClassesTreeElement [
 	<gtCoderSidebarIndexOneSubjectContextMenuItem: 3>
 	^ BrMenuActionItem new
-		label: 'New subclass' preview: self name;
+		icon: BrGlamorousVectorIcons add
+			label: 'New subclass'
+			preview: self name;
 		action: [ aGtCoderClassesTreeElement newSubclassOf: self ]
 ]
 
@@ -43,7 +59,9 @@ Class >> gtCoderSidebarIndexNewSubclassFrom: aGtCoderClassesTreeElement [
 Class >> gtCoderSidebarIndexRemoveClassFrom: aGtCoderClassesTreeElement [
 	<gtCoderSidebarIndexOneSubjectContextMenuItem: 5>
 	^ BrMenuSubmenuItem new
-		label: 'Remove class' preview: self name;
+		icon: BrGlamorousVectorIcons remove
+			label: 'Remove class'
+			preview: self name;
 		submenu: (aGtCoderClassesTreeElement removeClassSubmenuFor: self)
 ]
 
@@ -51,6 +69,8 @@ Class >> gtCoderSidebarIndexRemoveClassFrom: aGtCoderClassesTreeElement [
 Class >> gtCoderSidebarIndexRenameClassFrom: aGtCoderClassesTreeElement [
 	<gtCoderSidebarIndexOneSubjectContextMenuItem: 4>
 	^ BrMenuSubmenuItem new
-		label: 'Rename class' preview: self name;
+		icon: BrGlamorousVectorIcons empty
+			label: 'Rename class'
+			preview: self name;
 		submenu: (aGtCoderClassesTreeElement renameClassSubmenuFor: self)
 ]
