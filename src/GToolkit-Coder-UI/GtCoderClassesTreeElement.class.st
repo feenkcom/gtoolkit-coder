@@ -418,9 +418,9 @@ GtCoderClassesTreeElement >> removeSeveralClassesSubmenuFor: someClasses [
 				addChild: (BrAsyncWidget new
 						fitContent;
 						stencil: [ | pane references subclasses |
-							references := someClasses sum: [ :eachClass | (GtPharoIndex current
+							references := someClasses sumNumbers: [ :eachClass | (GtPharoIndex current
 									globalVariableReferencesTo: eachClass binding) size ].
-							subclasses := someClasses sum: [ :eachClass | (eachClass allSubclasses difference: someClasses) size ].
+							subclasses := someClasses sumNumbers: [ :eachClass | (eachClass allSubclasses difference: someClasses) size ].
 							pane := BrVerticalPane new.
 							pane fitContent.
 							references > 0
