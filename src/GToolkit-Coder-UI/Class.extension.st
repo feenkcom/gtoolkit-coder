@@ -27,7 +27,7 @@ Class >> gtCoderSidebarIndexBrowseReferencesFrom: aGtCoderClassesTreeElement [
 
 { #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexCopyClassNameFrom: aGtCoderClassesTreeElement [
-	<gtCoderSidebarIndexOneSubjectContextMenuItem: 2.5>
+	<gtCoderSidebarIndexOneSubjectContextMenuItem: 9>
 	^ BrMenuActionItem new
 		icon: BrGlamorousVectorIcons clipboard
 			label: 'Copy class name'
