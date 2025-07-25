@@ -32,25 +32,6 @@ Class >> gtCoderSidebarIndexExtractSuperclassFrom: aGtCoderClassesTreeElement [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
-Class >> gtCoderSidebarIndexGitFrom: aGtCoderClassesTreeElement [
-	<gtCoderSidebarIndexOneSubjectContextMenuItem: 7>
-	^ BrMenuActionItem new
-		id: GtCoderGitButtonId;
-		icon: BrGlamorousVectorIcons branching
-			label: 'Browse git repository'
-			preview: self;
-		action: [ :aButton | 
-			| coder repository |
-			repository := self repository.
-			repository
-				ifNil: [ aButton phlow
-						spawnTool: (GtPhlowExplicitTool new
-								stencil: [ GtGitAddToRepositoryElement new package: coder navigationModel selectedPackage ]) ]
-				ifNotNil: [ aButton phlow
-						spawnTool: (GtGitPhlowTool new repository: repository) ] ]
-]
-
-{ #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexNewSubclassFrom: aGtCoderClassesTreeElement [
 	<gtCoderSidebarIndexOneSubjectContextMenuItem: 3>
 	^ BrMenuActionItem new
