@@ -147,24 +147,6 @@ GtCoderClassesTreeElement >> contextMenuForSeveralItems: someClasses [
 	^ menu
 ]
 
-{ #category : #initialization }
-GtCoderClassesTreeElement >> convertToSiblingSubmenuFor: aClass siblings: aCollection [
-	| submenu |
-	submenu := BrMenuExplicit new.
-	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ :each | 
-					GtChildrenToSiblingsRefactoring
-						name: each
-						class: aClass
-						subclasses: aCollection ]
-				labeled: 'Superclass: '
-				initialValue: 'NewClass'
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
-	^ submenu
-]
-
 { #category : #'private - drag and drop' }
 GtCoderClassesTreeElement >> createClassDragHandler [
 	^ BlDragHandler new
