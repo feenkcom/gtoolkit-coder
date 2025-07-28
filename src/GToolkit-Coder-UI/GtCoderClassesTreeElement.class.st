@@ -128,17 +128,25 @@ GtCoderClassesTreeElement >> contextMenuForOneItem: aClass [
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForSeveralItems: someClasses [
-	| menu countLabel |
-	menu := BrMenuItems new.
-	countLabel := '{1} classes' format: { someClasses size }.
-	menu
-		addItemLabel: (self createLabel: 'Browse references' description: countLabel)
-		action: [ self browseSeveralReferencesTo: someClasses ].
-	menu
-		addItem: (BrMenuSubmenuItem new
-				label: (self createLabel: 'Remove classes' description: countLabel);
-				submenu: (self removeSeveralClassesSubmenuFor: someClasses)).
-	^ menu
+	| somePragmas someMenuItems |
+	somePragmas := Pragma
+			allNamed: #gtCoderSidebarIndexSeveralSubjectsContextMenuItem:
+			in: Class
+			sortedByArgument: 1.
+	someMenuItems := somePragmas
+			collect: [ :eachPragma | 
+				[ Class perform: eachPragma methodSelector with: someClasses with: self ]
+					onErrorDo: [ :anException | 
+						| frozenException |
+						frozenException := GtSystemUtility freeze: anException.
+						frozenException tag: eachPragma.
+						anException
+							return: (BrMenuActionItem new
+									label: 'Error' preview: frozenException messageText;
+									action: [ :anElement :aButtonModel :anEvent | anElement phlow spawnObject: frozenException ]) ] ]
+			thenSelect: #isNotNil.
+
+	^ BrMenuItems new addItems: someMenuItems
 ]
 
 { #category : #'private - drag and drop' }

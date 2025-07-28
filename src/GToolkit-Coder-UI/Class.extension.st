@@ -16,6 +16,16 @@ Class >> gtCoderSidebarIndexBrowseClassFrom: aGtCoderClassesTreeElement [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+Class >> gtCoderSidebarIndexBrowseClasses: someClasses referencesFrom: aGtCoderClassesTreeElement [
+	<gtCoderSidebarIndexSeveralSubjectsContextMenuItem: 2>
+	^ BrMenuActionItem new
+		icon: BrGlamorousVectorIcons empty
+			label: 'Browse references'
+			preview: ('{1} classes' format: { someClasses size });
+		action: [ aGtCoderClassesTreeElement browseSeveralReferencesTo: someClasses ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexBrowseReferencesFrom: aGtCoderClassesTreeElement [
 	<gtCoderSidebarIndexOneSubjectContextMenuItem: 2>
 	^ BrMenuActionItem new
@@ -63,6 +73,16 @@ Class >> gtCoderSidebarIndexRemoveClassFrom: aGtCoderClassesTreeElement [
 			label: 'Remove class'
 			preview: self name;
 		submenu: (aGtCoderClassesTreeElement removeClassSubmenuFor: self)
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+Class >> gtCoderSidebarIndexRemoveClasses: someClasses from: aGtCoderClassesTreeElement [
+	<gtCoderSidebarIndexSeveralSubjectsContextMenuItem: 5>
+	^ BrMenuSubmenuItem new
+		icon: BrGlamorousVectorIcons remove
+			label: 'Remove classes'
+			preview: ('{1} classes' format: { someClasses size });
+		submenu: (aGtCoderClassesTreeElement removeSeveralClassesSubmenuFor: someClasses)
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
