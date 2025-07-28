@@ -104,65 +104,49 @@ GtCoderClassesTreeElement >> contextMenuFor: aClass [
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForOneItem: aClass [
-	| menu |
-	menu := BrMenuItems new.
-	menu
-		addItemLabel: (self createLabel: 'Browse references' description: aClass name)
-		action: [ self browseReferencesTo: aClass ].
-	menu
-		addItemLabel: (self createLabel: 'New subclass' description: aClass name)
-		action: [ self newSubclassOf: aClass ].
-	menu
-		addItem: (BrMenuSubmenuItem new
-				label: (self createLabel: 'Rename class' description: aClass name);
-				submenu: (self renameClassSubmenuFor: aClass)).
-	menu
-		addItem: (BrMenuSubmenuItem new
-				label: (self createLabel: 'Remove class' description: aClass name);
-				submenu: (self removeClassSubmenuFor: aClass)).
-	aClass subclasses notEmpty
-		ifTrue: [ menu
-				addItem: (BrMenuSubmenuItem new
-						label: (self createLabel: 'Convert to sibling' description: aClass name);
-						submenu: (self convertToSiblingSubmenuFor: aClass siblings: aClass subclasses)) ].
-	menu
-		addItem: (BrMenuSubmenuItem new
-				label: (self createLabel: 'Extract superclass' description: aClass name);
-				submenu: (self convertToSiblingSubmenuFor: aClass siblings: #())).
-	^ menu
+	| somePragmas someMenuItems |
+	somePragmas := Pragma
+			allNamed: #gtCoderSidebarIndexOneSubjectContextMenuItem:
+			from: aClass class
+			to: Behavior
+			sortedByArgument: 1.
+	someMenuItems := somePragmas
+			collect: [ :eachPragma | 
+				[ aClass perform: eachPragma methodSelector with: self ]
+					onErrorDo: [ :anException | 
+						| frozenException |
+						frozenException := GtSystemUtility freeze: anException.
+						frozenException tag: eachPragma.
+						anException
+							return: (BrMenuActionItem new
+									label: 'Error' preview: frozenException messageText;
+									action: [ :anElement :aButtonModel :anEvent | anElement phlow spawnObject: frozenException ]) ] ]
+			thenSelect: #isNotNil.
+
+	^ BrMenuItems new addItems: someMenuItems
 ]
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForSeveralItems: someClasses [
-	| menu countLabel |
-	menu := BrMenuItems new.
-	countLabel := '{1} classes' format: { someClasses size }.
-	menu
-		addItemLabel: (self createLabel: 'Browse references' description: countLabel)
-		action: [ self browseSeveralReferencesTo: someClasses ].
-	menu
-		addItem: (BrMenuSubmenuItem new
-				label: (self createLabel: 'Remove classes' description: countLabel);
-				submenu: (self removeSeveralClassesSubmenuFor: someClasses)).
-	^ menu
-]
+	| somePragmas someMenuItems |
+	somePragmas := Pragma
+			allNamed: #gtCoderSidebarIndexSeveralSubjectsContextMenuItem:
+			in: Class
+			sortedByArgument: 1.
+	someMenuItems := somePragmas
+			collect: [ :eachPragma | 
+				[ Class perform: eachPragma methodSelector with: someClasses with: self ]
+					onErrorDo: [ :anException | 
+						| frozenException |
+						frozenException := GtSystemUtility freeze: anException.
+						frozenException tag: eachPragma.
+						anException
+							return: (BrMenuActionItem new
+									label: 'Error' preview: frozenException messageText;
+									action: [ :anElement :aButtonModel :anEvent | anElement phlow spawnObject: frozenException ]) ] ]
+			thenSelect: #isNotNil.
 
-{ #category : #initialization }
-GtCoderClassesTreeElement >> convertToSiblingSubmenuFor: aClass siblings: aCollection [
-	| submenu |
-	submenu := BrMenuExplicit new.
-	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ :each | 
-					GtChildrenToSiblingsRefactoring
-						name: each
-						class: aClass
-						subclasses: aCollection ]
-				labeled: 'Superclass: '
-				initialValue: 'NewClass'
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
-	^ submenu
+	^ BrMenuItems new addItems: someMenuItems
 ]
 
 { #category : #'private - drag and drop' }
