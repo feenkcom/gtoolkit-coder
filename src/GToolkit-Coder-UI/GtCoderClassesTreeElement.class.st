@@ -112,7 +112,9 @@ GtCoderClassesTreeElement >> contextMenuForOneItem: aClass [
 			sortedByArgument: 1.
 	someMenuItems := somePragmas
 			collect: [ :eachPragma | 
-				[ aClass perform: eachPragma methodSelector with: self ]
+				[ | aMenuItem |  
+					aMenuItem := aClass perform: eachPragma methodSelector with: self.
+					aMenuItem definition: [ eachPragma method ]. ]
 					onErrorDo: [ :anException | 
 						| frozenException |
 						frozenException := GtSystemUtility freeze: anException.
@@ -135,7 +137,9 @@ GtCoderClassesTreeElement >> contextMenuForSeveralItems: someClasses [
 			sortedByArgument: 1.
 	someMenuItems := somePragmas
 			collect: [ :eachPragma | 
-				[ Class perform: eachPragma methodSelector with: someClasses with: self ]
+				[ | aMenuItem |  
+					aMenuItem := Class perform: eachPragma methodSelector with: someClasses with: self.
+					aMenuItem definition: [ eachPragma method ]. ]
 					onErrorDo: [ :anException | 
 						| frozenException |
 						frozenException := GtSystemUtility freeze: anException.
