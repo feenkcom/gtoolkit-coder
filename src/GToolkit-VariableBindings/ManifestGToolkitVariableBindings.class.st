@@ -13,5 +13,8 @@ ManifestGToolkitVariableBindings class >> mustOnlyDependOn [
 		'Collections-Sequenceable'.
 		'Collections-Unordered'.
 		'Kernel'
-	}
+	}, (self  
+		forPharo12: [{
+			'Kernel-CodeModel'.}] 
+		forPharo11AndPharo10: [{}])
 ]
