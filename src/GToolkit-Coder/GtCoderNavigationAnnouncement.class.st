@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'coder'
 	],
-	#category : 'GToolkit-Coder-Navigation - Events'
+	#category : #'GToolkit-Coder-Navigation - Events'
 }
 
 { #category : #accessing }

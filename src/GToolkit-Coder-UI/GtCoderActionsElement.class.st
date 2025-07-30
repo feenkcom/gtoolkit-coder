@@ -56,7 +56,7 @@ GtCoderActionsElement >> initializeAltClick: aGtCoderAction element: anElement [
 	anElement viewModel
 		when: BlClickEvent
 		do: [ :anEvent | 
-			anEvent modifiers isAlt
+			anEvent modifiers isSoftAltOnly
 				ifTrue: [ anEvent consumed: true.
 					anEvent target phlow spawnObject: aGtCoderAction actionDefinition ] ]
 ]

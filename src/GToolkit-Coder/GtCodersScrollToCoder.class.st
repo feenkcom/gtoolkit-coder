@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'sourceCoder'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }

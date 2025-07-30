@@ -5,7 +5,7 @@ Class {
 		'item',
 		'labelElement'
 	],
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #initialization }

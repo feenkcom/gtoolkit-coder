@@ -6,7 +6,7 @@ Class {
 		'newSelector',
 		'oldSelector'
 	],
-	#category : 'GToolkit-Coder-Refactoring'
+	#category : #'GToolkit-Coder-Refactoring'
 }
 
 { #category : #private }

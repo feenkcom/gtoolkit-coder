@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'coder'
 	],
-	#category : 'GToolkit-Coder-UI-! Core'
+	#category : #'GToolkit-Coder-UI-! Core'
 }
 
 { #category : #accessing }

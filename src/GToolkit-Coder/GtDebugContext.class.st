@@ -1,7 +1,7 @@
 Class {
 	#name : #GtDebugContext,
 	#superclass : #DebugContext,
-	#category : 'GToolkit-Coder'
+	#category : #'GToolkit-Coder'
 }
 
 { #category : #private }

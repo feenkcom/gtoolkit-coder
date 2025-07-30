@@ -18,6 +18,15 @@ GtCoderActionClosureDefinition >> closure: aBlock [
 ]
 
 { #category : #'gt - extensions' }
+GtCoderActionClosureDefinition >> gtClosureVariablesFor: aView [
+	<gtView>
+	^ aView forward
+		title: 'Variables';
+		object: [ closure ];
+		view: #gtVariablesFor:
+]
+
+{ #category : #'gt - extensions' }
 GtCoderActionClosureDefinition >> gtSourceCodeFor: aView [
 	<gtView>
 	^ aView forward

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderEvaluationAllSource,
 	#superclass : #GtSourceCoderEvaluationSourceInterval,
-	#category : 'GToolkit-Coder-Coders - Evaluation'
+	#category : #'GToolkit-Coder-Coders - Evaluation'
 }
 
 { #category : #evaluation }

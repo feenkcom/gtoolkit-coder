@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderFilterList,
 	#superclass : #BrSimpleList,
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #initialization }

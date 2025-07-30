@@ -9,5 +9,5 @@ Is announced by the {{gtClass:GtCoderModel}} when context actions change.
 Class {
 	#name : #GtCoderContextActionsChanged,
 	#superclass : #GtCoderAnnouncement,
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }

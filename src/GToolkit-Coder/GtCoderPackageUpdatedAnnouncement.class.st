@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'package'
 	],
-	#category : 'GToolkit-Coder-Announcements'
+	#category : #'GToolkit-Coder-Announcements'
 }
 
 { #category : #accessing }

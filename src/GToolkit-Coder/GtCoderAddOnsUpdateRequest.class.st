@@ -12,5 +12,5 @@ It works like this:
 Class {
 	#name : #GtCoderAddOnsUpdateRequest,
 	#superclass : #GtCoderAnnouncement,
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }

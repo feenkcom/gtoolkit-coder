@@ -5,7 +5,7 @@ Class {
 		'navigationModel',
 		'packagesFilterString'
 	],
-	#category : 'GToolkit-Coder'
+	#category : #'GToolkit-Coder'
 }
 
 { #category : #accessing }
