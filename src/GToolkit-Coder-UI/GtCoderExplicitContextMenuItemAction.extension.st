@@ -10,6 +10,8 @@ GtCoderExplicitContextMenuItemAction >> asBrMenuItemForCoderElement: aTextualCod
 			cull: self.
 
 	aMenuItem ifNotNil: [ 
-		menuItemBlock isClosure ifTrue: [ 
-			aMenuItem definition: [ menuItemBlock blocDefiningMethod ] ] ]
+		self allowAltClick ifTrue: [ aMenuItem definition: [ self actionDefinition ] ].
+		aMenuItem disableIf: [ self isDisabled ] ].
+
+	^ aMenuItem
 ]
