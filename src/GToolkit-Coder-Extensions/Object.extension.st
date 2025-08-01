@@ -1,19 +1,21 @@
-Extension { #name : #ProtoObject }
+Extension { #name : #Object }
 
 { #category : #'*GToolkit-Coder-Extensions' }
-ProtoObject >> gtBrowse [
+Object >> gtBrowse [
 	^ BlSpace new
 		withSceneDriller;
 		inPager: [ GtObjectCoderTool forObject: self ];
+		title: self gtDisplayString;
 		icon: BrGlamorousVectorIcons browse;
 		show
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
-ProtoObject >> gtBrowseFrom: anElement [
+Object >> gtBrowseFrom: anElement [
 	^ BlSpace new
 		withSceneDriller;
 		inPager: [ GtObjectCoderTool forObject: self ];
+		title: self gtDisplayString;
 		icon: BrGlamorousVectorIcons browse;
 		showFrom: anElement
 ]

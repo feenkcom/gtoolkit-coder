@@ -6,6 +6,10 @@ Behavior >> gtBrowseFromButton: anElement [
 
 	anElement phlow firstParentCoderNavigationModel
 		coderDo: [ :aCoder | 
-			((GtCoderElement forCoder: aCoder asNewCoderModelWithSameSubject)
-				openInPagerFrom: anElement) maximized ]
+			BlSpace new
+				withSceneDriller;
+				inPager: [ GtReadyCoderTool coder: aCoder asNewCoderModelWithSameSubject ];
+				title: self printString;
+				icon: BrGlamorousVectorIcons browse;
+				showFrom: anElement ]
 ]

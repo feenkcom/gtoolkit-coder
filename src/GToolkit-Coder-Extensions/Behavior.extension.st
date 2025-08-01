@@ -2,12 +2,22 @@ Extension { #name : #Behavior }
 
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> gtBrowse [
-	^ (GtCoderElement forClass: self) openInPager maximized
+	^ BlSpace new
+		withSceneDriller;
+		inPager: [ GtClassCoderTool forClass: self ];
+		title: self name;
+		icon: BrGlamorousVectorIcons browse;
+		show
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> gtBrowseFrom: anElement [
-	^ ((GtCoderElement forClass: self) asElement openInPagerFrom: anElement) maximized
+	^ BlSpace new
+		withSceneDriller;
+		inPager: [ GtClassCoderTool forClass: self ];
+		title: self name;
+		icon: BrGlamorousVectorIcons browse;
+		showFrom: anElement
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }

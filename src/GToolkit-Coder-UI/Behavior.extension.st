@@ -3,23 +3,17 @@ Extension { #name : #Behavior }
 { #category : #'*GToolkit-Coder-UI' }
 Behavior >> gtBrowseButtonFor: anAction [
 	<gtClassAction>
-	
 	^ anAction button
 		priority: 1;
 		tooltip: 'Browse class';
 		icon: BrGlamorousVectorIcons emphasizedBrowse;
 		action: [ :aButton | 
-			aButton phlow
-				spawnTool: (GtPhlowExplicitTool new
-					name: self gtDisplayString;
-					stencil: [ 
-						| aCoder |
-						aButton phlow firstParentCoderNavigationModel
-							coderDo: [ :oldCoder | 
-								aCoder := GtCoderElement forCoder: oldCoder asNewCoderModelWithSameSubject ].
-							aCoder ]) ];
+			aButton phlow firstParentCoderNavigationModel
+				coderDo: [ :oldCoder | 
+					aButton phlow
+						spawnTool: (GtReadyCoderTool coder: oldCoder asNewCoderModelWithSameSubject) ] ];
 		primaryModifierAction: [ :aButton | self gtBrowseFromButton: aButton ]
-			mouseCursor: BlCopyCursor new.
+			mouseCursor: BlCopyCursor new
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

@@ -2,14 +2,22 @@ Extension { #name : #CompiledMethod }
 
 { #category : #'*GToolkit-Coder-Extensions' }
 CompiledMethod >> gtBrowse [
-	^ (GtCoderElement forMethod: self) 
-			openInPager
-			maximized
+	^ BlSpace new
+		withSceneDriller;
+		inPager: [ GtMethodCoderTool compiledMethod: self ];
+		title: self methodClass name;
+		icon: BrGlamorousVectorIcons browse;
+		show
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
 CompiledMethod >> gtBrowseFrom: anElement [
-	^ ((GtCoderElement forMethod: self) asElement openInPagerFrom: anElement) maximized
+	^ BlSpace new
+		withSceneDriller;
+		inPager: [ GtMethodCoderTool compiledMethod: self ];
+		title: self methodClass name;
+		icon: BrGlamorousVectorIcons browse;
+		showFrom: anElement
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
