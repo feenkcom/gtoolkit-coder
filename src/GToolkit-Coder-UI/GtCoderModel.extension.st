@@ -20,6 +20,11 @@ GtCoderModel >> asExpandedOnlyElement [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+GtCoderModel >> asStencil [
+	^ self
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 GtCoderModel >> coderLook [
 	<return: #BrAptitude>
 
@@ -29,6 +34,11 @@ GtCoderModel >> coderLook [
 { #category : #'*GToolkit-Coder-UI' }
 GtCoderModel >> coderLook: aLookOrBlock [
 	self attributeNamed: #coderLook put: aLookOrBlock
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtCoderModel >> create [
+	^ self asElement
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
