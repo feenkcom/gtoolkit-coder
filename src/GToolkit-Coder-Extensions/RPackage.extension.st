@@ -35,13 +35,22 @@ RPackage >> gtBaselinesFor: aView [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtBrowse [
-	^ ((GtCoderElement forPackage: self) 
-		openInPager) maximized
+	^ BlSpace new
+		withSceneDriller;
+		inPager: [ GtPackageCoderTool package: self ];
+		title: self packageName;
+		icon: BrGlamorousVectorIcons browse;
+		show
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }
 RPackage >> gtBrowseFrom: anElement [
-	^ ((GtCoderElement forPackage: self) asElement openInPagerFrom: anElement) maximized
+	^ BlSpace new
+		withSceneDriller;
+		inPager: [ GtPackageCoderTool package: self ];
+		title: self packageName;
+		icon: BrGlamorousVectorIcons browse;
+		showFrom: anElement
 ]
 
 { #category : #'*GToolkit-Coder-Extensions' }

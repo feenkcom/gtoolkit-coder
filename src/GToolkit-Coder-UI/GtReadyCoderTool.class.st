@@ -17,8 +17,8 @@ GtReadyCoderTool >> asElementDo: aOneArgBlock [
 	"Create a tool element and execute the block."
 
 	| anElement |
-	anElement := (GtCoderElement forCoder: self coder) asElement.
-	^ aOneArgBlock cull: anElement asPagerPageElement
+	anElement := GtCoderElement forCoder: self coder asNewCoderModelWithSameSubject.
+	^ aOneArgBlock cull: anElement
 ]
 
 { #category : #accessing }
@@ -55,4 +55,10 @@ GtReadyCoderTool >> name [
 { #category : #'private - accessing' }
 GtReadyCoderTool >> tabLook [
 	^ BrGlamorousTabSwitcherWithIconAptitude
+]
+
+{ #category : #'api - accessing' }
+GtReadyCoderTool >> title [
+	<return: #String>
+	^ self coder ifNotNil: #coderName ifNil: [ super title ]
 ]
