@@ -211,7 +211,7 @@ GtExpandableSourceCoderElement >> subscribeToTextualCoderViewModel [
 	#unsubscribeFromTextualCoderViewModel if elements subscribe to them"
 
 	textualCoderViewModel weak
-		when: GtTextualCoderViewModelExpansionChanged
+		when: GtExpandableCoderViewModelExpansionChanged
 			send: #onViewModelExpansionChanged:
 			to: self;
 		when: GtTextualCoderViewModelTextChanged

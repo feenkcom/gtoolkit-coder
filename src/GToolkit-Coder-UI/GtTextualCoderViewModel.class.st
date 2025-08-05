@@ -1,6 +1,6 @@
 Class {
 	#name : #GtTextualCoderViewModel,
-	#superclass : #GtSingleCoderViewModel,
+	#superclass : #GtExpandableCoderViewModel,
 	#instVars : [
 		'stylers',
 		'mainActions',
@@ -8,12 +8,10 @@ Class {
 		'contextMenuActions',
 		'shortcuts',
 		'hasFocus',
-		'expanded',
 		'cursors',
 		'selection',
 		'extraTextAttributes',
 		'styledText',
-		'shouldHaveHeader',
 		'isTextModifiedPromise',
 		'completionStrategy',
 		'debuggerInSpace',
@@ -181,11 +179,6 @@ GtTextualCoderViewModel >> astAwait [
 { #category : #'api - coder model' }
 GtTextualCoderViewModel >> astSync [
 	^ self coderModel astSync
-]
-
-{ #category : #'api - expansion' }
-GtTextualCoderViewModel >> collapse [
-	self expanded: false
 ]
 
 { #category : #'api - text' }
@@ -375,25 +368,6 @@ GtTextualCoderViewModel >> elementClass [
 	^ GtTextualCoderEditorElement
 ]
 
-{ #category : #'api - expansion' }
-GtTextualCoderViewModel >> expand [
-	self expanded: true
-]
-
-{ #category : #'api - expansion' }
-GtTextualCoderViewModel >> expanded [
-	^ expanded
-]
-
-{ #category : #'api - expansion' }
-GtTextualCoderViewModel >> expanded: aBoolean [
-	expanded = aBoolean
-		ifTrue: [ ^ self ].
-
-	expanded := aBoolean.
-	self notifyExpansionChanged: expanded
-]
-
 { #category : #accessing }
 GtTextualCoderViewModel >> extraTextAttributes [
 	^ extraTextAttributes
@@ -476,15 +450,6 @@ GtTextualCoderViewModel >> hasStyledText [
 	^ styledText notNil
 ]
 
-{ #category : #'api - header' }
-GtTextualCoderViewModel >> headerElementClass [
-	"Return an class of an element that should represent a header of the coder.
-	The used element must implement {{gtClass:TGtWithTextualCoderViewModel}} trait."
-	<return: #TGtWithTextualCoderViewModel or: nil>
-
-	^ nil
-]
-
 { #category : #initialization }
 GtTextualCoderViewModel >> initialize [
 	super initialize.
@@ -499,10 +464,7 @@ GtTextualCoderViewModel >> initialize [
 	cursors := BrTextEditorMultipleCursor new.
 	selection := BlCompositeSelection new.
 	extraTextAttributes := OrderedCollection new.
-
 	hasFocus := false.
-	expanded := true.
-	shouldHaveHeader := true.
 	nodeAttributeMap := Dictionary new
 ]
 
@@ -575,11 +537,6 @@ GtTextualCoderViewModel >> notifyCursorsChanged: aBrTextEditorCursor from: aSour
 		textualCoderViewModel: self;
 		cursors: aBrTextEditorCursor;
 		source: aSourceObject)
-]
-
-{ #category : #'private - notifying' }
-GtTextualCoderViewModel >> notifyExpansionChanged: aBoolean [
-	self announce: (GtTextualCoderViewModelExpansionChanged new expanded: aBoolean)
 ]
 
 { #category : #'private - notifying' }
@@ -800,11 +757,6 @@ GtTextualCoderViewModel >> shouldAddOnsBeUpdated [
 		ifNotNil: [ :theAddOnsPromise | theAddOnsPromise then: [ :theAddOns | theAddOns shouldBeUpdated ] ]
 ]
 
-{ #category : #'api - header' }
-GtTextualCoderViewModel >> shouldHaveHeader: aBoolean [
-	shouldHaveHeader := aBoolean
-]
-
 { #category : #'api - text' }
 GtTextualCoderViewModel >> sourceText [
 	<return: #BlText>
@@ -917,21 +869,4 @@ GtTextualCoderViewModel >> unsubscribeFromCoderModel [
 	super unsubscribeFromCoderModel.
 	
 	self coderModel unsubscribe: self
-]
-
-{ #category : #'api - header' }
-GtTextualCoderViewModel >> wantsHeader [
-	<return: #Boolean>
-
-	^ shouldHaveHeader and: [ self headerElementClass notNil ]
-]
-
-{ #category : #'api - header' }
-GtTextualCoderViewModel >> withHeader [
-	self shouldHaveHeader: true
-]
-
-{ #category : #'api - header' }
-GtTextualCoderViewModel >> withoutHeader [
-	self shouldHaveHeader: false
 ]
