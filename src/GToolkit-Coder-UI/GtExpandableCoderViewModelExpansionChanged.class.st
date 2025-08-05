@@ -1,5 +1,5 @@
 Class {
-	#name : #GtTextualCoderViewModelExpansionChanged,
+	#name : #GtExpandableCoderViewModelExpansionChanged,
 	#superclass : #GtTextualCoderViewModelAnnouncement,
 	#instVars : [
 		'expanded'
@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #accessing }
-GtTextualCoderViewModelExpansionChanged >> expanded [
+GtExpandableCoderViewModelExpansionChanged >> expanded [
 	^ expanded
 ]
 
 { #category : #accessing }
-GtTextualCoderViewModelExpansionChanged >> expanded: aBoolean [
+GtExpandableCoderViewModelExpansionChanged >> expanded: aBoolean [
 	expanded := aBoolean
 ]
