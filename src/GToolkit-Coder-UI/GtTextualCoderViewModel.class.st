@@ -7,7 +7,6 @@ Class {
 		'contextActions',
 		'contextMenuActions',
 		'shortcuts',
-		'hasFocus',
 		'cursors',
 		'selection',
 		'extraTextAttributes',
@@ -153,15 +152,6 @@ GtTextualCoderViewModel >> asEditorState [
 	^ aMemento
 ]
 
-{ #category : #converting }
-GtTextualCoderViewModel >> asExpandedOnlyElement [
-	"Create an element for just the expanded coder without expander"
-
-	^ GtExpandedOnlyCoderElement new
-		coderViewModel: self asCoderViewModel;
-		yourself
-]
-
 { #category : #'api - coder model' }
 GtTextualCoderViewModel >> astAsyncDo: aBlock [
 	^ self coderModel astAsyncDo: aBlock
@@ -179,14 +169,6 @@ GtTextualCoderViewModel >> astAwait [
 { #category : #'api - coder model' }
 GtTextualCoderViewModel >> astSync [
 	^ self coderModel astSync
-]
-
-{ #category : #'api - text' }
-GtTextualCoderViewModel >> collapsedTextPromise [
-	"Return a text that should be displayed in the collapsed state"
-	<return: #TAsyncPromise of: #BlText>
-
-	^ coderModel collapsedTextPromise
 ]
 
 { #category : #accessing }
@@ -373,32 +355,6 @@ GtTextualCoderViewModel >> extraTextAttributes [
 	^ extraTextAttributes
 ]
 
-{ #category : #'api - focus' }
-GtTextualCoderViewModel >> focused [
-	<return: #Boolean>
-
-	^ hasFocus
-]
-
-{ #category : #'api - focus' }
-GtTextualCoderViewModel >> focused: aBoolean [
-	self focused: aBoolean from: self
-]
-
-{ #category : #'api - focus' }
-GtTextualCoderViewModel >> focused: aBoolean from: aSourceObject [
-	hasFocus = aBoolean
-		ifTrue: [ ^ self ].
-
-	hasFocus := aBoolean.
-	self notifyFocusChanged: hasFocus from: aSourceObject.
-
-	codersUIModel ifNotNil: [ :theCoders |
-		aBoolean
-			ifTrue: [ theCoders focusCoderUIModel: self  ]
-			ifFalse: [ theCoders unfocusCoderUIModel: self ] ]
-]
-
 { #category : #'gt-extension' }
 GtTextualCoderViewModel >> gtInfo [
 	^ Array streamContents: [ :aStream |
@@ -464,7 +420,6 @@ GtTextualCoderViewModel >> initialize [
 	cursors := BrTextEditorMultipleCursor new.
 	selection := BlCompositeSelection new.
 	extraTextAttributes := OrderedCollection new.
-	hasFocus := false.
 	nodeAttributeMap := Dictionary new
 ]
 
@@ -536,13 +491,6 @@ GtTextualCoderViewModel >> notifyCursorsChanged: aBrTextEditorCursor from: aSour
 	self announce: (GtTextualCoderViewModelCursorsChanged new
 		textualCoderViewModel: self;
 		cursors: aBrTextEditorCursor;
-		source: aSourceObject)
-]
-
-{ #category : #'private - notifying' }
-GtTextualCoderViewModel >> notifyFocusChanged: aBoolean from: aSourceObject [
-	self announcer announce: (GtTextualCoderViewModelFocusChanged new 
-		focused: aBoolean; 
 		source: aSourceObject)
 ]
 
