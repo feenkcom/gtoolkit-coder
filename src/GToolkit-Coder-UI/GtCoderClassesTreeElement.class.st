@@ -104,40 +104,24 @@ GtCoderClassesTreeElement >> contextMenuFor: aClass [
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForOneItem: aClass [
-	| somePragmas someMenuItems |
-	somePragmas := Pragma
-			allNamed: #gtCoderSidebarIndexOneSubjectContextMenuItem:
-			from: aClass class
-			to: Behavior
-			sortedByArgument: 1.
-	someMenuItems := somePragmas
-			collect: [ :eachPragma | 
-				[ (aClass perform: eachPragma methodSelector with: self)
-					ifNotNil: [ :aMenuItem | aMenuItem definition: [ eachPragma method ] ] ]
-					onErrorDo: [ :anException | self createExceptionItemFor: anException andPragma: eachPragma ] ]
-			thenSelect: #isNotNil.
-
-	^ BrMenuItems new addItems: someMenuItems
+	^ BrMenuItemsPragmaBuilder new
+		object: aClass;
+		upToSuperclass: Behavior;
+		pragma: #gtCoderSidebarIndexOneSubjectContextMenuItem:;
+		methodArguments: { self };
+		sortByFirstPragmaArgument;
+		build
 ]
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForSeveralItems: someClasses [
-	| somePragmas someMenuItems |
-	somePragmas := Pragma
-			allNamed: #gtCoderSidebarIndexSeveralSubjectsContextMenuItem:
-			in: Class
-			sortedByArgument: 1.
-	someMenuItems := somePragmas
-			collect: [ :eachPragma | 
-				[ (Class
-					perform: eachPragma methodSelector
-					with: someClasses
-					with: self)
-					ifNotNil: [ :aMenuItem | aMenuItem definition: [ eachPragma method ] ] ]
-					onErrorDo: [ :anException | self createExceptionItemFor: anException andPragma: eachPragma ] ]
-			thenSelect: #isNotNil.
-
-	^ BrMenuItems new addItems: someMenuItems
+	^ BrMenuItemsPragmaBuilder new
+		object: Class;
+		upToSuperclass: Behavior;
+		pragma: #gtCoderSidebarIndexSeveralSubjectsContextMenuItem:;
+		methodArguments: {someClasses. self};
+		sortByFirstPragmaArgument;
+		build
 ]
 
 { #category : #'private - drag and drop' }
@@ -187,18 +171,6 @@ GtCoderClassesTreeElement >> createDraggedMethodItem: aDragItem [
 		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
 		fitContent;
 		text: aDragItem domainObject printString
-]
-
-{ #category : #initialization }
-GtCoderClassesTreeElement >> createExceptionItemFor: anException andPragma: eachPragma [
-	| frozenException |
-	frozenException := (GtSystemUtility freeze: anException)
-			tag: eachPragma;
-			yourself.
-	^ anException
-		return: (BrMenuActionItem new
-				label: 'Error' preview: frozenException messageText;
-				action: [ :anElement :aButtonModel :anEvent | anElement phlow spawnObject: frozenException ])
 ]
 
 { #category : #'private - context menu' }
