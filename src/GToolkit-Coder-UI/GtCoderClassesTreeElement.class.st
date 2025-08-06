@@ -173,18 +173,6 @@ GtCoderClassesTreeElement >> createDraggedMethodItem: aDragItem [
 		text: aDragItem domainObject printString
 ]
 
-{ #category : #initialization }
-GtCoderClassesTreeElement >> createExceptionItemFor: anException andPragma: eachPragma [
-	| frozenException |
-	frozenException := (GtSystemUtility freeze: anException)
-			tag: eachPragma;
-			yourself.
-	^ anException
-		return: (BrMenuActionItem new
-				label: 'Error' preview: frozenException messageText;
-				action: [ :anElement :aButtonModel :anEvent | anElement phlow spawnObject: frozenException ])
-]
-
 { #category : #'private - context menu' }
 GtCoderClassesTreeElement >> createLabel: aString description: description [
 	^ aString asRopedText glamorousRegularFont
