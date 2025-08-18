@@ -139,7 +139,7 @@ GtCoderElement >> initialize [
 
 	self
 		when: GtCoderSidebarVisibilityWish
-		do: [ :anEvent | self onGtCoderDisplayTopSidebarWish: anEvent ].
+		do: [ :anEvent | self onGtCoderSidebarVisibilityWish: anEvent ].
 	self
 		when: GtCoderDisplayTopSidebarWish
 		do: [ :anEvent | self onGtCoderDisplayTopSidebarWish: anEvent ].
