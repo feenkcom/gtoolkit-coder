@@ -20,7 +20,7 @@ Behavior >> gtBrowseButtonFor: anAction [
 Behavior >> gtDisplayTopSidebarIndexToggleFor: anAction [
 	<gtClassAction>
 	^ anAction toggle
-		tooltip: 'Top sidebar';
+		tooltip: 'Show Package and Class Hierarchies';
 		icon: BrGlamorousIcons tree;
 		id: GtCoderClassHierarchyButtonId;
 		priority: 3;
