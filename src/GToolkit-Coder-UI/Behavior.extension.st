@@ -32,26 +32,3 @@ Behavior >> gtDisplayTopSidebarIndexToggleFor: anAction [
 		activatedAction: [ :aButton | aButton fireEvent: GtCoderDisplayTopSidebarWish new ];
 		deactivatedAction: [ :aButton | aButton fireEvent: GtCoderHideSidebarWish new ]
 ]
-
-{ #category : #'*GToolkit-Coder-UI' }
-Behavior >> gtHierarchyButtonFor: anAction [
-	<gtClassAction>
-	^ anAction dropdown
-		tooltip: 'Show Package and Class Hierarchies';
-		icon: BrGlamorousIcons tree;
-		id: GtCoderClassHierarchyButtonId;
-		priority: 3;
-		preferredExtentFrom: GtPharoCoderHierarchyDropdownConfiguration;
-		content: [ :aButton :aTargetElement :anExplicitMenu | 
-			| aNavigationModel |
-			aNavigationModel := aButton phlow firstParentCoderNavigationModel.
-			BlElement new
-				size: GtPharoCoderHierarchyDropdownConfiguration preferredExtent;
-				addChild: ((GtCoderNavigationTabsStencil new
-						pragmaName: #gtCoderDropdownNavigation;
-						navigationModel: aNavigationModel;
-						asElement) background: Color white);
-				addAptitude: (BrGlamorousPopoverPinnableAptitude new
-					withAllPinActions;
-					menuModel: anExplicitMenu) ]
-]
