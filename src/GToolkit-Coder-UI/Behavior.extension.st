@@ -17,6 +17,23 @@ Behavior >> gtBrowseButtonFor: anAction [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+Behavior >> gtDisplayTopSidebarIndexToggleFor: anAction [
+	<gtClassAction>
+	^ anAction toggle
+		tooltip: 'Top sidebar';
+		icon: BrGlamorousIcons tree;
+		id: GtCoderClassHierarchyButtonId;
+		priority: 3;
+		isActivated: [ :aTargetElement | 
+			| anEvent |
+			anEvent := GtCoderSidebarVisibilityWish new.
+			aTargetElement fireEvent: anEvent.
+			anEvent isVisible ];
+		activatedAction: [ :aButton | aButton fireEvent: GtCoderDisplayTopSidebarWish new ];
+		deactivatedAction: [ :aButton | aButton fireEvent: GtCoderHideSidebarWish new ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 Behavior >> gtHierarchyButtonFor: anAction [
 	<gtClassAction>
 	^ anAction dropdown

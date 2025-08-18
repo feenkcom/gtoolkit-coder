@@ -167,7 +167,7 @@ GtCreationForm >> selectInNavigationModel: aNavigationModel anInstance: anInstan
 
 	anInstance tags
 		ifNotEmpty: [ aNavigationModel
-				selectPackageTag: (anInstance package classTagNamed: anInstance tags first) ].
+				selectPackageTag: (anInstance package tagNamed: anInstance tags first) ].
 
 	aNavigationModel selectClass: anInstance
 ]

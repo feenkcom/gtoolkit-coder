@@ -135,7 +135,41 @@ GtCoderElement >> initialize [
 	GtCoderSettings defaultDetailState
 		ifNotNil: [ :aState | self states addState: aState ].
 	GtCoderSettings defaultDetailPositionState
-		ifNotNil: [ :aState | self states addState: aState ]
+		ifNotNil: [ :aState | self states addState: aState ].
+
+	self
+		when: GtCoderSidebarVisibilityWish
+		do: [ :anEvent | self onGtCoderDisplayTopSidebarWish: anEvent ].
+	self
+		when: GtCoderDisplayTopSidebarWish
+		do: [ :anEvent | self onGtCoderDisplayTopSidebarWish: anEvent ].
+	self
+		when: GtCoderHideSidebarWish
+		do: [ :anEvent | self onGtCoderHideSidebarWish: anEvent ]
+]
+
+{ #category : #'private - event handling' }
+GtCoderElement >> onGtCoderDisplayTopSidebarWish: anEvent [
+	anEvent consumed: true.
+	self states addState: GtPhlowToolDetailState detailed.
+	self states addState: GtPhlowToolDetailPositionState top
+]
+
+{ #category : #'private - event handling' }
+GtCoderElement >> onGtCoderHideSidebarWish: anEvent [
+	anEvent consumed: true.
+	self states removeState: GtPhlowToolDetailState normal.
+	self states removeState: GtPhlowToolDetailPositionState top
+]
+
+{ #category : #'private - event handling' }
+GtCoderElement >> onGtCoderSidebarVisibilityWish: anEvent [
+	anEvent consumed: true.
+
+	self states
+		stateLike: GtPhlowToolDetailState detailed
+		ifFound: [ :aState | anEvent isVisible: true ]
+		ifNone: [ anEvent isVisible: false ]
 ]
 
 { #category : #'private - hooks' }
