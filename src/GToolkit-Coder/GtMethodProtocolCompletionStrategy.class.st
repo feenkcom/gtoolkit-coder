@@ -9,7 +9,8 @@ GtMethodProtocolCompletionStrategy >> buildCompletions [
 	| protocols |
 	protocols := GtPrefixTree new.
 	Smalltalk globals
-		allBehaviorsDo: [ :cls | protocols addAll: cls organization protocolNames ].
+		allBehaviorsDo: [ :cls | protocols addAll: cls protocolNames ].
+		
 	self packageOrganizer packages do: [ :each | protocols add: '*' , each name ].
 	^ protocols
 ]
