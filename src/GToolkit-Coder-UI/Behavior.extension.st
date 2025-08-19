@@ -18,7 +18,9 @@ Behavior >> gtBrowseButtonFor: anAction [
 
 { #category : #'*GToolkit-Coder-UI' }
 Behavior >> gtDisplayTopSidebarIndexToggleFor: anAction [
-	"<gtClassAction>"
+	"Previous dropdown solution: Behavior>>#gtHierarchyButtonFor:"
+
+	<gtClassAction>
 	^ anAction toggle
 		tooltip: 'Show Package and Class Hierarchies';
 		icon: BrGlamorousIcons tree;
@@ -43,7 +45,9 @@ Behavior >> gtDisplayTopSidebarIndexToggleFor: anAction [
 
 { #category : #'*GToolkit-Coder-UI' }
 Behavior >> gtHierarchyButtonFor: anAction [
-	<gtClassAction>
+	"New implementation: Behavior>>#gtDisplayTopSidebarIndexToggleFor:"
+
+	"<gtClassAction>"
 	^ anAction dropdown
 		tooltip: 'Show Package and Class Hierarchies';
 		icon: BrGlamorousIcons tree;
