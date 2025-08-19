@@ -186,7 +186,8 @@ GtCoderElement >> onGtCoderSidebarVisibilityWish: anEvent [
 
 	self states
 		stateLike: GtPhlowToolDetailState detailed
-		ifFound: [ :aState | anEvent isVisible: true ]
+		ifFound: [ :aState | 
+			anEvent isVisible: GtPhlowToolDetailState detailed = aState ]
 		ifNone: [ anEvent isVisible: false ]
 ]
 

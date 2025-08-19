@@ -38,7 +38,7 @@ Behavior >> gtDisplayTopSidebarIndexToggleFor: anAction [
 							anEvent := GtCoderSidebarVisibilityWish new.
 							aToggle fireEvent: anEvent.
 							aToggle activated: anEvent isVisible ].
-					false ] ];
+					GtCoderSettings defaultDetailState = GtPhlowToolDetailState detailed ] ];
 		activatedAction: [ :aButton | aButton fireEvent: GtCoderDisplayTopSidebarWish new ];
 		deactivatedAction: [ :aButton | aButton fireEvent: GtCoderHideSidebarWish new ]
 ]
