@@ -29,5 +29,17 @@ GtObjectCoderTool >> object: anObject [
 
 { #category : #'api - accessing' }
 GtObjectCoderTool >> title [
-	^ object gtDisplayString
+	"Return an object name"
+
+	<return: #String>
+	^ [ self object gtDisplayString ]
+		onErrorDo: [ :anError | 
+			[ | anotherTitle |
+			anotherTitle := self object className.
+
+			'{1}{2}''s error: {3}'
+				format: {anotherTitle first isVowel ifTrue: [ 'an ' ] ifFalse: [ 'a ' ].
+						anotherTitle.
+						anError gtDisplayString} ]
+				onErrorDo: [ :anotherError | anError messageText ] ]
 ]
