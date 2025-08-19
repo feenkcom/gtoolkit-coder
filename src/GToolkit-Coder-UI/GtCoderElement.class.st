@@ -119,10 +119,26 @@ GtCoderElement >> initialize [
 		layout: BlLinearLayout horizontal;
 		addEventHandler: titleNotifier;
 		addAptitude: (GtPhlowToolDetailAptitude new
-				normal: [ :aStyle | aStyle do: [ self hideSidebar ] ];
-				detailed: [ :aStyle | aStyle do: [ self showSidebar ] ];
-				left: [ :aStyle | aStyle do: [ self layout: BlLinearLayout horizontal ] ];
-				top: [ :aStyle | aStyle do: [ self layout: BlLinearLayout vertical ] ]).
+				normal: [ :aStyle | aStyle do: [ :aWidget | aWidget hideSidebar ] ];
+				detailed: [ :aStyle | aStyle do: [ :aWidget | aWidget showSidebar ] ];
+				left: [ :aStyle | 
+					aStyle do: [ :aWidget | aWidget layout: BlLinearLayout horizontal ].
+					aStyle
+						do: [ :aWidget | 
+							aWidget sidebarElement
+								ifNotNil: [ :anElement | anElement states addState: GtPhlowToolDetailPositionState left ] ]
+						after: [ :aWidget | 
+							aWidget sidebarElement
+								ifNotNil: [ :anElement | anElement states removeState: GtPhlowToolDetailPositionState left ] ] ];
+				top: [ :aStyle | 
+					aStyle do: [ :aWidget | aWidget layout: BlLinearLayout vertical ].
+					aStyle
+						do: [ :aWidget | 
+							aWidget sidebarElement
+								ifNotNil: [ :anElement | anElement states addState: GtPhlowToolDetailPositionState top ] ]
+						after: [ :aWidget | 
+							aWidget sidebarElement
+								ifNotNil: [ :anElement | anElement states removeState: GtPhlowToolDetailPositionState top ] ] ]).
 
 	self addChild: contentElement as: #content.
 
@@ -151,15 +167,17 @@ GtCoderElement >> initialize [
 { #category : #'private - event handling' }
 GtCoderElement >> onGtCoderDisplayTopSidebarWish: anEvent [
 	anEvent consumed: true.
+	self states addState: GtPhlowToolDetailPositionState top.
 	self states addState: GtPhlowToolDetailState detailed.
-	self states addState: GtPhlowToolDetailPositionState top
+	self requestStyle
 ]
 
 { #category : #'private - event handling' }
 GtCoderElement >> onGtCoderHideSidebarWish: anEvent [
 	anEvent consumed: true.
+	self states removeState: GtPhlowToolDetailPositionState top.
 	self states removeState: GtPhlowToolDetailState normal.
-	self states removeState: GtPhlowToolDetailPositionState top
+	self requestStyle
 ]
 
 { #category : #'private - event handling' }
@@ -226,9 +244,17 @@ GtCoderElement >> showSidebar [
 	sidebarElement show.
 
 	(sidebarElement hasParent: self)
-		ifTrue: [ ^ self ].
+		ifTrue: [ 
+			^ self ].
 		
-	self addChildFirst: sidebarElement
+	self addChildFirst: sidebarElement.
+	sidebarElement requestStyle
+]
+
+{ #category : #accessing }
+GtCoderElement >> sidebarElement [
+	<return: #GtPhlowHorizontalSidebarElement or: nil>
+	^ sidebarElement
 ]
 
 { #category : #'private - accessing' }
