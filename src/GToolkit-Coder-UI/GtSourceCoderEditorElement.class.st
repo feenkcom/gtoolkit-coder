@@ -4,6 +4,36 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
+{ #category : #views }
+GtSourceCoderEditorElement >> gtEditorTextAttributesFor: aView [
+	<gtView>
+	^ aView forward
+		title: 'Text attributes';
+		priority: 41;
+		object: [ self editor ];
+		view: #gtTextAttributesFor:
+]
+
+{ #category : #views }
+GtSourceCoderEditorElement >> gtEditorTextIntervalsFor: aView [
+	<gtView>
+	^ aView forward
+		title: 'Text intervals';
+		priority: 42;
+		object: [ self editor ];
+		view: #gtTextIntervalsFor:
+]
+
+{ #category : #views }
+GtSourceCoderEditorElement >> gtView1For: aView [
+	<gtView>
+	^ aView forward
+		title: 'Text intervals';
+		priority: 42;
+		object: [ self editor ];
+		view: #gtTextIntervalsFor:
+]
+
 { #category : #initalization }
 GtSourceCoderEditorElement >> initialize [
 	super initialize.
