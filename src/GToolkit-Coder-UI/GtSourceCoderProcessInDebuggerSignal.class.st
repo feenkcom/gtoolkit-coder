@@ -8,6 +8,14 @@ Class {
 	#category : #'GToolkit-Coder-UI-Signals'
 }
 
+{ #category : #testing }
+GtSourceCoderProcessInDebuggerSignal class >> gtNormalOperationSignal [
+	"Answer a Boolean indicating whether this signal is generated as part of normal operations.
+	See {{gtMethod:BeaconSignal class>>gtNormalOperationSignal}} for a description"
+
+	^ true.
+]
+
 { #category : #printing }
 GtSourceCoderProcessInDebuggerSignal >> printOneLineContentsOn: aStream [
 	aStream print: space
