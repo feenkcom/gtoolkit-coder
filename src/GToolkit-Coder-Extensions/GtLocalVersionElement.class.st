@@ -111,6 +111,7 @@ GtLocalVersionElement >> updateContent [
 			padding: (BlInsets left: 5);
 			addChild: (BrButton new
 				icon: BrGlamorousVectorIcons accept;
+				id:BlLocalVersionAcceptVersionButtonId;
 				label: 'Use this version';
 				aptitude: BrGlamorousButtonWithIconAptitude;
 				action: [ :aButton | localVersion loadChange ]))
