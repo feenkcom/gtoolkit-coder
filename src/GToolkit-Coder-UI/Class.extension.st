@@ -52,7 +52,8 @@ Class >> gtCoderSidebarIndexExtractSuperclassFrom: aGtCoderClassesTreeElement [
 		icon: BrGlamorousVectorIcons empty
 			label: 'Extract superclass'
 			preview: self name;
-		submenu: (aGtCoderClassesTreeElement convertToSiblingSubmenuFor: self siblings: #())
+		submenu: (aGtCoderClassesTreeElement convertToSiblingSubmenuFor: self siblings: #());
+		bePinSubmenuAction
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
@@ -69,6 +70,7 @@ Class >> gtCoderSidebarIndexNewSubclassFrom: aGtCoderClassesTreeElement [
 Class >> gtCoderSidebarIndexRemoveClassFrom: aGtCoderClassesTreeElement [
 	<gtCoderSidebarIndexOneSubjectContextMenuItem: 5>
 	^ BrMenuSubmenuItem new
+		id: #'coder--context-menu-remove-class';
 		icon: BrGlamorousVectorIcons remove
 			label: 'Remove class'
 			preview: self name;
