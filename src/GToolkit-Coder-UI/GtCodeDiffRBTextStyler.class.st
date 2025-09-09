@@ -12,3 +12,12 @@ GtCodeDiffRBTextStyler >> resolveStyleFor: aVariableNode [
 		ifTrue: [ #default ]
 		ifFalse: [ value ]
 ]
+
+{ #category : #private }
+GtCodeDiffRBTextStyler >> resolveStyleOpenBracket: aVariableNode [
+	| value |
+	value := super resolveStyleOpenBracket: aVariableNode.
+	^ value = #invalid
+		ifTrue: [ #default ]
+		ifFalse: [ value ]
+]
