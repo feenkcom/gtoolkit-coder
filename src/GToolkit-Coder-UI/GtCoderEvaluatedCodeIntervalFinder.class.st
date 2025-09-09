@@ -53,13 +53,7 @@ GtCoderEvaluatedCodeIntervalFinder >> find [
 	context ifNil: [ ^ nil ].
 	context isDead ifTrue: [ ^ nil ].
 
-	^ self
-		forPharo11OrNewer: [ self debugSession pcRangeForContext: context ]
-		forPharo10: [ evaluatedCode ifNil: [ ^ nil ].
-			sourceString ifNil: [ ^ nil ].
-			self evaluatedCode
-				findSourceIntervalForContext: context
-				sourceString: sourceString ]
+	^ self debugSession pcRangeForContext: context 
 ]
 
 { #category : #accessing }
