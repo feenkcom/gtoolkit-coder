@@ -5,6 +5,6 @@ RPackage >> tags [
 	<gtPharoPatch: #Pharo12>
 	
 	^ self 
-		forPharo12: [ tags] 
-		forPharo11AndPharo10: [ self classTags ]
+		forPharo12AndNewer: [ tags] 
+		forPharo11: [ self classTags ]
 ]
