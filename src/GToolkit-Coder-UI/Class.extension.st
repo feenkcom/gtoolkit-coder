@@ -52,7 +52,10 @@ Class >> gtCoderSidebarIndexExtractSuperclassFrom: aGtCoderClassesTreeElement [
 		icon: BrGlamorousVectorIcons empty
 			label: 'Extract superclass'
 			preview: self name;
-		submenu: (aGtCoderClassesTreeElement convertToSiblingSubmenuFor: self siblings: #());
+		submenu: (aGtCoderClassesTreeElement
+				convertToSiblingSubmenuFor: self
+				siblings: #()
+				title: 'Extract superclass');
 		bePinSubmenuAction
 ]
 

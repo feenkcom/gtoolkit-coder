@@ -423,12 +423,12 @@ GtCoderClassesTreeElement >> renameClassSubmenuFor: aClass [
 	submenu
 		stencil: [ :anExplicitMenu | 
 			| aViewModel |
-			aViewModel := GtRefactoringsViewModel new
+			aViewModel := GtRefactoringsWithInputViewModel new
 					refactoringTitle: 'Rename class';
 					targetName: aClass name;
 					inputLabel: 'New class name:';
 					initialText: aClass name;
-					refactoringBlock: [ :anInput | 
+					refactoringWithInput: [ :anInput | 
 						GtRBRenameClassRefactoring 
 							rename: aClass name 
 							to: anInput ];
