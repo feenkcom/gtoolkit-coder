@@ -22,8 +22,6 @@ CompiledMethod >> gtBrowseFrom: anElement [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 CompiledMethod >> gtChangeRecords [
-	<gtView>
-	
 	self sourcePointer ifNil: [ ^ #() ].
 	
 	^ SourceFiles
