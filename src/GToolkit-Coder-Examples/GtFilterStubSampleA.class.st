@@ -13,3 +13,8 @@ GtFilterStubSampleA >> anotherMethodReferencingSampleBAndSendingNew [
 GtFilterStubSampleA >> methodReferencingSampleB [
 	^ GtFilterStubSampleB
 ]
+
+{ #category : #'as yet unclassified' }
+GtFilterStubSampleA >> uncategoriedMethodForFilter [
+	"This method should remain uncategoried"
+]
