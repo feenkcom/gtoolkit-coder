@@ -55,9 +55,9 @@ GtCreationForm >> commitPackage [
 		ifFalse: [ 
 			aPackage := (Package named: packageAndTagName packageName).
 			self 
-				forPharo12: [
+				forPharo12AndNewer: [
 					self class packageOrganizer addPackage: aPackage] 
-				forPharo11AndPharo10: [
+				forPharo11: [
 					aPackage register ].
 			^ packageAndTagName tagName
 				ifEmpty: [ aPackage ]
