@@ -88,7 +88,7 @@ GtCreationForm >> magritteAcceptAction [
 		onSuccessCallback: (GtMagritteCallback new
 				action: [ :aModel :aButton :aMemento :aDescription | 
 					[ | aClass |
-					aClass := self commit.
+					aClass := self secureCommit.
 					onAccept ifNotNil: [ onAccept value: aClass ] ] 
 						on: Error do: #debug ]);
 		beEnabledOnValidOverallStatus
@@ -159,6 +159,13 @@ GtCreationForm >> packageAndTagName [
 GtCreationForm >> packageAndTagName: anObject [
 
 	packageAndTagName := anObject
+]
+
+{ #category : #callbacks }
+GtCreationForm >> secureCommit [
+	"Subclasses may use a mutex to prevent race conditions."
+
+	^ self commit
 ]
 
 { #category : #accessing }
