@@ -14,14 +14,25 @@ Class {
 GtCoderSlotsGroupedListElement >> abstractSubmenuFor: aString [
 	| submenu |
 	submenu := BrMenuExplicit new.
+	
 	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ RBAbstractInstanceVariableRefactoring
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Abstract';
+					targetName: ('{1}''s {2} inst. variable' format: { self selectedClass name. aString });
+					confirmationLabel: ('Abstract {1}' format: { aString });
+					refactoringWithConfirmation: [ RBAbstractInstanceVariableRefactoring
 						variable: aString
-						class: self selectedClass ]
-				confirmationLabeled: 'Abstract ' , aString
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
+						class: self selectedClass ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new 
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+	
 	^ submenu  
 ]
 
@@ -59,19 +70,23 @@ GtCoderSlotsGroupedListElement >> contextMenuFor: item [
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Push down' description: item name);
-				submenu: (self pushDownSubmenuFor: item name)).
+				submenu: (self pushDownSubmenuFor: item name);
+				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Create accessors' description: item name);
-				submenu: (self createAccessorsSubmenuFor: item name)).
+				submenu: (self createAccessorsSubmenuFor: item name);
+				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Abstract' description: item name);
-				submenu: (self abstractSubmenuFor: item name)).
+				submenu: (self abstractSubmenuFor: item name);
+				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Protect' description: item name);
-				submenu: (self protectSubmenuFor: item name)).
+				submenu: (self protectSubmenuFor: item name);
+				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Remove' description: item name);
@@ -79,7 +94,8 @@ GtCoderSlotsGroupedListElement >> contextMenuFor: item [
 	menu
 		addItem: (BrMenuSubmenuItem new
 				label: (self createLabel: 'Rename' description: item name);
-				submenu: (self renameSubmenuFor: item name)).
+				submenu: (self renameSubmenuFor: item name);
+				bePinSubmenuAction).
 	^ menu
 ]
 
@@ -87,14 +103,25 @@ GtCoderSlotsGroupedListElement >> contextMenuFor: item [
 GtCoderSlotsGroupedListElement >> createAccessorsSubmenuFor: aString [
 	| submenu |
 	submenu := BrMenuExplicit new.
+	
 	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ RBCreateAccessorsForVariableRefactoring
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Create accessors';
+					targetName: ('{1}''s {2} inst. variable' format: { self selectedClass name. aString });
+					confirmationLabel: ('Create accessors {1}' format: { aString });
+					refactoringWithConfirmation: [ RBCreateAccessorsForVariableRefactoring
 						instanceVariable: aString
-						class: self selectedClass ]
-				confirmationLabeled: 'Create accessors ' , aString
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
+						class: self selectedClass ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new 
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+	
 	^ submenu 
 ]
 
@@ -194,14 +221,25 @@ GtCoderSlotsGroupedListElement >> onSlotsToShowChanged: anAnnouncement [
 GtCoderSlotsGroupedListElement >> protectSubmenuFor: aString [
 	| submenu |
 	submenu := BrMenuExplicit new.
+	
 	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ RBProtectInstanceVariableRefactoring
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Protect';
+					targetName: ('{1}''s {2} inst. variable' format: { self selectedClass name. aString });
+					confirmationLabel: ('Protect {1}' format: { aString });
+					refactoringWithConfirmation: [ RBProtectInstanceVariableRefactoring
 						variable: aString
-						class: self selectedClass ]
-				confirmationLabeled: 'Protect ' , aString
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
+						class: self selectedClass ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new 
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+	
 	^ submenu  
 ]
 
@@ -214,7 +252,7 @@ GtCoderSlotsGroupedListElement >> pullUpSubmenuFor: aString [
 			| aViewModel |
 			aViewModel := GtRefactoringsWithConfirmationViewModel new
 					refactoringTitle: 'Pull up';
-					targetName: ('{1}''s {2} instance variable' format: { self selectedClass name. aString });
+					targetName: ('{1}''s {2} inst. variable' format: { self selectedClass name. aString });
 					confirmationLabel: ('Pull up {1}' format: { aString });
 					refactoringWithConfirmation: [ RBPullUpInstanceVariableRefactoring
 						variable: aString
@@ -227,17 +265,6 @@ GtCoderSlotsGroupedListElement >> pullUpSubmenuFor: aString [
 				beContextMenuElement;
 				bePinnable: anExplicitMenu ].
 	
-	false ifTrue: [ 
-		submenu := BrMenuExplicit new.
-		submenu
-			stencil: [ GtRefactoringsWithInputPreviewElement
-					elementForRefactoring: [ RBPullUpInstanceVariableRefactoring
-							variable: aString
-							class: self selectedClass superclass ]
-					confirmationLabeled: 'Push up ' , aString
-					from: self
-					beforeApplyingDo: [ submenu hideAll ] ] ].
-	
 	^ submenu
 ]
 
@@ -245,14 +272,25 @@ GtCoderSlotsGroupedListElement >> pullUpSubmenuFor: aString [
 GtCoderSlotsGroupedListElement >> pushDownSubmenuFor: aString [
 	| submenu |
 	submenu := BrMenuExplicit new.
+	
 	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ GtPushDownInstanceVariableRefactoring
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Push down';
+					targetName: ('{1}''s {2} inst. variable' format: { self selectedClass name. aString });
+					confirmationLabel: ('Push down {1}' format: { aString });
+					refactoringWithConfirmation: [ GtPushDownInstanceVariableRefactoring
 						variable: aString
-						class: self selectedClass ]
-				confirmationLabeled: 'Push down ' , aString
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
+						class: self selectedClass ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new 
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+	
 	^ submenu
 ]
 
@@ -312,17 +350,27 @@ GtCoderSlotsGroupedListElement >> removeSubmenuFor: aString [
 GtCoderSlotsGroupedListElement >> renameSubmenuFor: aString [
 	| submenu |
 	submenu := BrMenuExplicit new.
+	
 	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ :each | 
-					RBRenameInstanceVariableRefactoring
-						rename: aString
-						to: each
-						in: self selectedClass ]
-				labeled: 'Rename slot: '
-				initialValue: aString
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithInputViewModel new
+					refactoringTitle: 'Rename slot';
+					targetName: ('{1}''s {2} inst. variable' format: { self selectedClass name. aString });
+					inputLabel: 'Rename slot:';
+					refactoringWithInput: [ :anInput | 
+						RBRenameInstanceVariableRefactoring
+							rename: aString
+							to: anInput
+							in: self selectedClass ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithInputElement new 
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+	
 	^ submenu
 ]
 
