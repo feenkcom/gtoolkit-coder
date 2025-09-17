@@ -59,40 +59,48 @@ GtCoderSlotsGroupedListElement >> computeSlotItemText: aSlot [
 GtCoderSlotsGroupedListElement >> contextMenuFor: item [
 	| menu |
 	menu := BrMenuItems new.
-	menu
-		addItemLabel: (self createLabel: 'Browse references' description: item name)
-		action: [ self browseSlotReferencesFor: item name ].
+	menu addItem: (BrMenuActionItem new
+		group: BrMenuItemGroupConfiguration navigation;
+		label: (self createLabel: 'Browse references' description: item name);
+		action: [ self browseSlotReferencesFor: item name ]).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Pull up' description: item name);
 				submenu: (self pullUpSubmenuFor: item name);
 				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Push down' description: item name);
 				submenu: (self pushDownSubmenuFor: item name);
 				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Create accessors' description: item name);
 				submenu: (self createAccessorsSubmenuFor: item name);
 				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Abstract' description: item name);
 				submenu: (self abstractSubmenuFor: item name);
 				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Protect' description: item name);
 				submenu: (self protectSubmenuFor: item name);
 				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Remove' description: item name);
 				submenu: (self removeSubmenuFor: item name)).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Rename' description: item name);
 				submenu: (self renameSubmenuFor: item name);
 				bePinSubmenuAction).
