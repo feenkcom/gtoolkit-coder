@@ -432,11 +432,13 @@ GtCoderClassesTreeElement >> renameClassSubmenuFor: aClass [
 						GtRBRenameClassRefactoring 
 							rename: aClass name 
 							to: anInput ];
-					beforeApplyBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
 			GtRefactoringsPreviewWithInputElement new 
-				refactoringsViewModel: aViewModel ].
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
 	^ submenu
 ]
 

@@ -97,5 +97,6 @@ Class >> gtCoderSidebarIndexRenameClassFrom: aGtCoderClassesTreeElement [
 		icon: BrGlamorousVectorIcons empty
 			label: 'Rename class'
 			preview: self name;
-		submenu: (aGtCoderClassesTreeElement renameClassSubmenuFor: self)
+		submenu: (aGtCoderClassesTreeElement renameClassSubmenuFor: self);
+		bePinSubmenuAction
 ]
