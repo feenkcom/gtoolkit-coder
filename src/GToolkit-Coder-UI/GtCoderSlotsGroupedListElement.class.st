@@ -367,7 +367,7 @@ GtCoderSlotsGroupedListElement >> renameSubmenuFor: aString [
 					targetName: ('{1}''s {2} inst. variable' format: { self selectedClass name. aString });
 					inputLabel: 'Rename slot:';
 					refactoringWithInput: [ :anInput | 
-						RBRenameInstanceVariableRefactoring
+						GtRenameInstanceVariableRefactoring
 							rename: aString
 							to: anInput
 							in: self selectedClass ];
