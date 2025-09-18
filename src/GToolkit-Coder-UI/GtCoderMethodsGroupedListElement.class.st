@@ -99,31 +99,46 @@ GtCoderMethodsGroupedListElement >> contextMenuForOneItem: item in: anElement [
 	| menu |
 	menu := BrMenuItems new.
 	menu
-		addItemLabel: (self createLabel: 'Browse implementors' description: item selector)
-		action: [ self browseImplementorsOf: item selector ].
+		addItem: (BrMenuActionItem new
+				group: BrMenuItemGroupConfiguration navigation;
+				label: (self createLabel: 'Browse implementors' description: item selector);
+				action: [ self browseImplementorsOf: item selector ]).
 	menu
-		addItemLabel: (self createLabel: 'Browse hierarchy implementors' description: item selector)
-		action: [ self browseHierarchyImplementorsOf: item selector ].
+		addItem: (BrMenuActionItem new
+				group: BrMenuItemGroupConfiguration navigation;
+				label: (self createLabel: 'Browse hierarchy implementors' description: item selector);
+				action: [ self browseHierarchyImplementorsOf: item selector ]).
 	menu
-		addItemLabel: (self createLabel: 'Browse references' description: item selector)
-		action: [ self browseReferencesOf: item selector ].
+		addItem: (BrMenuActionItem new
+				group: BrMenuItemGroupConfiguration navigation;
+				label: (self createLabel: 'Browse references' description: item selector);
+				action: [ self browseReferencesOf: item selector ]).
 	menu
-		addItemLabel: (self createLabel: 'Browse hierarchy references' description: item selector)
-		action: [ self browseHierarchyReferencesOf: item selector ].
+		addItem: (BrMenuActionItem new
+				group: BrMenuItemGroupConfiguration navigation;
+				label: (self createLabel: 'Browse hierarchy references' description: item selector);
+				action: [ self browseHierarchyReferencesOf: item selector ]).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Pull up method' description: item selector);
-				submenu: (self pushUpMethodSubmenuFor: item)).
+				submenu: (self pullUpMethodSubmenuFor: item);
+				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Push down method' description: item selector);
-				submenu: (self pushDownMethodSubmenuFor: item)).
+				submenu: (self pushDownMethodSubmenuFor: item);
+				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Rename message' description: item selector);
-				submenu: (self renameMethodSubmenuFor: item)).
+				submenu: (self renameMethodSubmenuFor: item);
+				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self createLabel: 'Remove method' description: item selector);
 				submenu: (self removeMethodSubmenuFor: item)).
 	^ menu
@@ -134,42 +149,54 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 	| menu |
 	menu := BrMenuItems new.
 	menu
-		addItemLabel: (self
-				createLabel: 'Browse implementors'
-				description: ('{1} methods' format: {someItems size}))
-		action: [ self browseSeveralImplementorsOf: (someItems collect: #selector) ].
+		addItem: (BrMenuActionItem new
+				group: BrMenuItemGroupConfiguration navigation;
+				label: (self
+						createLabel: 'Browse implementors'
+						description: ('{1} methods' format: {someItems size}));
+				action: [ self browseSeveralImplementorsOf: (someItems collect: #selector) ]).
 	menu
-		addItemLabel: (self
-				createLabel: 'Browse hierarachy implementors'
-				description: ('{1} methods' format: {someItems size}))
-		action: [ self
-				browseSeveralHierarchyImplementorsOf: (someItems collect: #selector) ].
+		addItem: (BrMenuActionItem new
+				group: BrMenuItemGroupConfiguration navigation;
+				label: (self
+						createLabel: 'Browse hierarachy implementors'
+						description: ('{1} methods' format: {someItems size}));
+				action: [ self browseSeveralHierarchyImplementorsOf: (someItems collect: #selector) ]).
 	menu
-		addItemLabel: (self
-				createLabel: 'Browse references'
-				description: ('{1} methods' format: {someItems size}))
-		action: [ self browseSeveralReferencesOf: (someItems collect: #selector) ].
+		addItem: (BrMenuActionItem new
+				group: BrMenuItemGroupConfiguration navigation;
+				label: (self
+						createLabel: 'Browse references'
+						description: ('{1} methods' format: {someItems size}));
+				action: [ self browseSeveralReferencesOf: (someItems collect: #selector) ]).
 	menu
-		addItemLabel: (self
-				createLabel: 'Browse hierarchy references'
-				description: ('{1} methods' format: {someItems size}))
-		action: [ self browseSeveralHierarchyReferencesOf: (someItems collect: #selector) ].
-		
+		addItem: (BrMenuActionItem new
+				group: BrMenuItemGroupConfiguration navigation;
+				label: (self
+						createLabel: 'Browse hierarchy references'
+						description: ('{1} methods' format: {someItems size}));
+				action: [ self browseSeveralHierarchyReferencesOf: (someItems collect: #selector) ]).
+
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self
 						createLabel: 'Pull up methods'
 						description: ('{1} methods' format: {someItems size}));
-				submenu: (self pushUpSeveralMethodsSubmenuFor: someItems)).
+				submenu: (self pullUpSeveralMethodsSubmenuFor: someItems);
+				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self
 						createLabel: 'Push down methods'
 						description: ('{1} methods' format: {someItems size}));
-				submenu: (self pushDownSeveralMethodsSubmenuFor: someItems)).
-				
+				submenu: (self pushDownSeveralMethodsSubmenuFor: someItems);
+				bePinSubmenuAction).
+
 	menu
 		addItem: (BrMenuSubmenuItem new
+				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self
 						createLabel: 'Remove methods'
 						description: ('{1} methods' format: {someItems size}));
@@ -332,88 +359,130 @@ GtCoderMethodsGroupedListElement >> onMethodsToShowChanged: anAnnouncement [
 ]
 
 { #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> pullUpMethodSubmenuFor: aMethod [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	
+	submenu
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Pull up';
+					targetName: ('{1}>>#{2}' format: { aMethod methodClass. aMethod selector });
+					confirmationLabel: ('Pull up {1}' format: { aMethod selector });
+					refactoringWithConfirmation: [ RBPullUpMethodRefactoring
+						pullUp: {aMethod selector}
+						from: aMethod methodClass ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new 
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+	
+	^ submenu
+]
+
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> pullUpSeveralMethodsSubmenuFor: aCollectionOfMethods [
+	| submenu |
+	submenu := BrMenuExplicit new.
+
+	submenu
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Pull up';
+					targetName: ('{1} methods' format: {aCollectionOfMethods size});
+					confirmationLabel: ('Pull up {1} methods' format: {aCollectionOfMethods size});
+					refactoringsWithConfirmation: [ | aGroupByClass aModel aCollectionOfRefactorings |
+						aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
+						aModel := Smalltalk createRbNamespace
+								onEnvironment: RBPullUpMethodRefactoring new defaultEnvironment.
+						aCollectionOfRefactorings := aGroupByClass
+								collect: [ :someMethods | 
+									RBPullUpMethodRefactoring new
+										model: aModel;
+										pullUp: (someMethods collect: #selector)
+											from: someMethods anyOne methodClass ]
+								as: Array.
+						aModel name: ('Pull up {1} methods' format: {aCollectionOfMethods size}).
+						aCollectionOfRefactorings ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+
+	^ submenu
+]
+
+{ #category : #'private - context menu' }
 GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
+	
 	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ RBPushDownMethodRefactoring
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Push down';
+					targetName: ('{1}>>#{2}' format: { aMethod methodClass. aMethod selector });
+					confirmationLabel: ('Push down {1}' format: { aMethod selector });
+					refactoringWithConfirmation: [ RBPushDownMethodRefactoring
 						pushDown: {aMethod selector}
 						from: (self
 								forPharo12AndNewer: [ aMethod methodClass name ]
-								forPharo11: [ aMethod methodClass ]) ]
-				confirmationLabeled: 'Push down ' , aMethod selector
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
+								forPharo11: [ aMethod methodClass ]) ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new 
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+	
 	^ submenu
-
 ]
 
 { #category : #'private - context menu' }
 GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectionOfMethods [
 	| submenu |
 	submenu := BrMenuExplicit new.
-	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ | aGroupByClass aModel aCollectionOfRefactorings |
-					aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
-					aModel := Smalltalk createRbNamespace
-							onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
-					aCollectionOfRefactorings := aGroupByClass
-							collect: [ :someMethods | 
-								RBPushDownMethodRefactoring new
-									model: aModel;
-									pushDown: (someMethods collect: #selector)
-										from: (self
-												forPharo12AndNewer: [ someMethods anyOne methodClass name ]
-												forPharo11: [ someMethods anyOne methodClass ]) ]
-							as: Array.
-					aModel name: ('Push down {1} methods' format: {aCollectionOfMethods size}).
-					aCollectionOfRefactorings ]
-				confirmationLabeled: ('Push down {1} methods'
-						format: {aCollectionOfMethods size})
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
-	^ submenu
-]
 
-{ #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> pushUpMethodSubmenuFor: aMethod [
-	| submenu |
-	submenu := BrMenuExplicit new.
 	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ RBPullUpMethodRefactoring
-						pullUp: {aMethod selector}
-						from: aMethod methodClass ]
-				confirmationLabeled: 'Pull up ' , aMethod selector
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
-	^ submenu
-]
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Push down';
+					targetName: ('{1} methods' format: {aCollectionOfMethods size});
+					confirmationLabel: ('Push down {1} methods' format: {aCollectionOfMethods size});
+					refactoringsWithConfirmation: [ | aGroupByClass aModel aCollectionOfRefactorings |
+						aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
+						aModel := Smalltalk createRbNamespace
+								onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
+						aCollectionOfRefactorings := aGroupByClass
+								collect: [ :someMethods | 
+									RBPushDownMethodRefactoring new
+										model: aModel;
+										pushDown: (someMethods collect: #selector)
+											from: (self
+													forPharo12AndNewer: [ someMethods anyOne methodClass name ]
+													forPharo11: [ someMethods anyOne methodClass ]) ]
+								as: Array.
+						aModel name: ('Push down {1} methods' format: {aCollectionOfMethods size}).
+						aCollectionOfRefactorings ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
 
-{ #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> pushUpSeveralMethodsSubmenuFor: aCollectionOfMethods [
-	| submenu |
-	submenu := BrMenuExplicit new.
-	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ | aGroupByClass aModel aCollectionOfRefactorings |
-					aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
-					aModel := Smalltalk createRbNamespace
-							onEnvironment: RBPullUpMethodRefactoring new defaultEnvironment.
-					aCollectionOfRefactorings := aGroupByClass
-							collect: [ :someMethods | 
-								RBPullUpMethodRefactoring new
-									model: aModel;
-									pullUp: (someMethods collect: #selector)
-										from: someMethods anyOne methodClass ] as: Array.
-					aModel name: ('Pull up {1} methods' format: {aCollectionOfMethods size}).
-					aCollectionOfRefactorings ]
-				confirmationLabeled: ('Pull up {1} methods'
-						format: {aCollectionOfMethods size})
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
 	^ submenu
 ]
 
@@ -532,18 +601,29 @@ GtCoderMethodsGroupedListElement >> removeSeveralMethodsSubmenuFor: aCollectionO
 GtCoderMethodsGroupedListElement >> renameMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
+	
 	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ :each | 
-					GtRBRenameMethodRefactoring
-						renameMethod: aMethod selector
-						in: aMethod methodClass
-						to: each
-						permutation: (1 to: aMethod selector numArgs) ]
-				labeled: 'Rename method: '
-				initialValue: aMethod selector
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithInputViewModel new
+					refactoringTitle: 'Rename method';
+					targetName: ('{1}>>#{2}' format: { aMethod methodClass. aMethod selector });
+					inputLabel: 'New method name:';
+					initialText: aMethod selector;
+					refactoringWithInput: [ :anInput | 
+						GtRBRenameMethodRefactoring
+							renameMethod: aMethod selector
+							in: aMethod methodClass
+							to: anInput
+							permutation: (1 to: aMethod selector numArgs) ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithInputElement new 
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+	
 	^ submenu
 ]
 
