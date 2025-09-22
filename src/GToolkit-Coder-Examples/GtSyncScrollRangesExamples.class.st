@@ -5,6 +5,21 @@ Class {
 }
 
 { #category : #examples }
+GtSyncScrollRangesExamples >> diffWithEmptyLines [
+	<gtExample>
+	<return: #GtSyncScrollRanges>
+	| ranges |
+	ranges := GtSyncScrollRanges
+			createFromChange: (GtDiffBuilder
+					computeDifferencesFrom: '1\\3\4\5\' withCRs
+					to: '1\2\3\\5\' withCRs
+					using: (GtLineDiffSplitter new includeEOLChars: false)).
+	self validateNextLeftChangeIn: ranges equals: #(2 4).
+	self validatePreviousRightChangeIn: ranges equals: #(2 4).
+	^ ranges
+]
+
+{ #category : #examples }
 GtSyncScrollRangesExamples >> example [
 	<gtExample>
 	<return: #GtSyncScrollRanges>
