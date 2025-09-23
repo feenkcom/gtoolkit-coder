@@ -268,7 +268,7 @@ GtSyncScrollRanges >> rightLineFor: anInteger [
 GtSyncScrollRanges >> selectNext [
 	| found |
 	found := false.
-	self ranges isEmpty ifTrue: [ ^ self ].
+	self ranges isEmpty ifTrue: [ ^ nil ].
 	self ranges
 		do: [ :each | 
 			found
@@ -284,7 +284,7 @@ GtSyncScrollRanges >> selectNext [
 GtSyncScrollRanges >> selectPrevious [
 	| found |
 	found := false.
-	self ranges isEmpty ifTrue: [ ^ self ].
+	self ranges isEmpty ifTrue: [ ^ nil ].
 	self ranges
 		reverseDo: [ :each | 
 			found
