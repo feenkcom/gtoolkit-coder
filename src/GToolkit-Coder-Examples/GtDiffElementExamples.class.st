@@ -12,6 +12,62 @@ GtDiffElementExamples >> changeElementExample [
 ]
 
 { #category : #examples }
+GtDiffElementExamples >> changeElementScrollsToFirstDiff [
+	<gtExample>
+	<return: #GtDiffElement>
+	| scripter |
+	scripter := BlScripter new.
+	scripter extent: 800 @ 800.
+	scripter
+		element: ((GtDiffElement onChange: self exampleChange)
+				matchParent;
+				showButtons;
+				yourself).
+	scripter
+		checkStep: [ :s | 
+			s
+				label: 'Check has scrolled';
+				// GtDiffButtonsId;
+				// #label;
+				do: [ :each | self assert: (each text asString beginsWith: '1/') ] ].
+	scripter
+		checkStep: [ :s | 
+			s
+				label: 'Can scroll text up';
+				// GtDiffOldTextId;
+				do: [ :each | self assert: each canScrollUp ] ].
+	^ scripter
+]
+
+{ #category : #examples }
+GtDiffElementExamples >> changeElementWithoutScroll [
+	<gtExample>
+	<return: #GtDiffElement>
+	| scripter |
+	scripter := BlScripter new.
+	scripter extent: 800 @ 800.
+	scripter
+		element: ((GtDiffElement onChangeWithoutScrolling: self exampleChange)
+				matchParent;
+				showButtons;
+				yourself).
+	scripter
+		checkStep: [ :s | 
+			s
+				label: 'Check has scrolled';
+				// GtDiffButtonsId;
+				// #label;
+				do: [ :each | self assert: (each text asString beginsWith: '0/') ] ].
+	scripter
+		checkStep: [ :s | 
+			s
+				label: 'Can scroll text up';
+				// GtDiffOldTextId;
+				do: [ :each | self assert: each canScrollUp not ] ].
+	^ scripter
+]
+
+{ #category : #examples }
 GtDiffElementExamples >> changeExampleFlat [
 	<gtExample>
 	<return: #GtDiffElement>

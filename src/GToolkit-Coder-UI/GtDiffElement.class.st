@@ -28,6 +28,14 @@ GtDiffElement class >> on: anObject [
 GtDiffElement class >> onChange: aCompositeDiffChange [
 	^ self new
 		change: aCompositeDiffChange;
+		scrollNext;
+		yourself
+]
+
+{ #category : #'instance creation' }
+GtDiffElement class >> onChangeWithoutScrolling: aCompositeDiffChange [
+	^ self new
+		change: aCompositeDiffChange;
 		yourself
 ]
 
@@ -35,6 +43,15 @@ GtDiffElement class >> onChange: aCompositeDiffChange [
 GtDiffElement class >> onDiff: aDiffBuilder [
 	^ self new
 		diff: aDiffBuilder;
+		scrollNext;
+		yourself
+]
+
+{ #category : #'instance creation' }
+GtDiffElement class >> onDiffWithoutScrolling: aDiffBuilder [
+	^ self new
+		diff: aDiffBuilder;
+		scrollNext;
 		yourself
 ]
 
