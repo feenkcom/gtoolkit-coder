@@ -104,11 +104,22 @@ GtCoderClassesTreeElement >> contextMenuFor: aClass [
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForOneItem: aClass [
+	| aMenuItems |
+	aMenuItems := BrMenuItems new.
+	GtCoderClassTarget
+		actionsForObject: aClass
+		collect: [ :eachAction | 
+			eachAction
+				asMenuItem: [ :aMenuItem | aMenuItems addItem: aMenuItem ]
+				withHostElement: self ].
+
+	true ifTrue: [ ^ aMenuItems ].
+
 	^ BrMenuItemsPragmaBuilder new
 		object: aClass;
 		upToSuperclass: Behavior;
 		pragma: #gtCoderSidebarIndexOneSubjectContextMenuItem:;
-		methodArguments: { self };
+		methodArguments: {self};
 		sortByFirstPragmaArgument;
 		build
 ]
@@ -306,57 +317,12 @@ GtCoderClassesTreeElement >> onDropCompiledMethodsOnClass: anItemsDroppedEvent [
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> removeClassSubmenuFor: aClass [
-	| submenu |
-	submenu := BrMenuExplicit new.
-	^ submenu
-		stencil: [ | element change button |
-			element := BrVerticalPane new fitContent.
-			element
-				addChild: ((self buildRemoveClassLabelFor: aClass)
-						margin: (BlInsets
-								top: 10
-								bottom: 0
-								left: 10
-								right: 10)).
-			element
-				addChild: (BrAsyncWidget new
-						fitContent;
-						stencil: [ | pane references subclasses |
-							references := (GtPharoIndex current
-									globalVariableReferencesTo: aClass binding) size.
-							subclasses := aClass allSubclasses size.
-							pane := BrVerticalPane new.
-							pane fitContent.
-							references > 0
-								ifTrue: [ pane
-										addChild: (BrLabel new
-												margin: (BlInsets left: 10 right: 10);
-												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-												text: (references printString , ' reference'
-														, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
-							subclasses > 0
-								ifTrue: [ pane
-										addChild: (BrLabel new
-												margin: (BlInsets left: 10 right: 10);
-												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-												text: (subclasses printString , ' subclass'
-														, (subclasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
-							pane ]).
-			change := RBRemoveClassChange remove: aClass.
-			button := BrButton new
-					aptitude: BrGlamorousButtonWithIconAptitude;
-					beSmallSize;
-					margin: (BlInsets
-							top: 10
-							bottom: 10
-							left: 10
-							right: 10);
-					icon: BrGlamorousVectorIcons remove;
-					label: 'Remove';
-					action: [ submenu hideAll.
-						change execute ].
-			element addChild: button as: #removeButton.
-			element ]
+	^ BrMenuExplicit new
+		stencil: [ :anExplicitMenu | 
+			GtCoderRemoveClassPreviewStencil new
+				classToRemove: self;
+				menuModel: anExplicitMenu;
+				asElement ]
 ]
 
 { #category : #initialization }
