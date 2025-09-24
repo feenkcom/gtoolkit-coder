@@ -14,12 +14,30 @@ Class {
 	#instVars : [
 		'classesTree'
 	],
+	#classVars : [
+		'UsePhlowActions'
+	],
 	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
 }
+
+{ #category : #settings }
+GtCoderClassesTreeElement class >> dontUsePhlowActions [
+	UsePhlowActions := false
+]
 
 { #category : #'instance creation' }
 GtCoderClassesTreeElement class >> fromClasses: aCollectionOfClasses [
 	^ self new initializeWithClasses: aCollectionOfClasses
+]
+
+{ #category : #settings }
+GtCoderClassesTreeElement class >> isUsePhlowAction [
+	^ UsePhlowActions ifNil: [ false ]
+]
+
+{ #category : #settings }
+GtCoderClassesTreeElement class >> usePhlowActions [
+	UsePhlowActions := true
 ]
 
 { #category : #'private - context menu' }
@@ -104,35 +122,38 @@ GtCoderClassesTreeElement >> contextMenuFor: aClass [
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForOneItem: aClass [
-	| aMenuItems |
-	aMenuItems := BrMenuItems new.
-	GtCoderClassTarget
-		actionsForObject: aClass
-		collect: [ :eachAction | 
-			eachAction
-				asMenuItem: [ :aMenuItem | aMenuItems addItem: aMenuItem ]
-				withHostElement: self ].
-
-	true ifTrue: [ ^ aMenuItems ].
-
-	^ BrMenuItemsPragmaBuilder new
-		object: aClass;
-		upToSuperclass: Behavior;
-		pragma: #gtCoderSidebarIndexOneSubjectContextMenuItem:;
-		methodArguments: {self};
-		sortByFirstPragmaArgument;
-		build
+	<return: #BrMenuItems>
+	^ self isContextMenuFromPhlowActions
+		ifTrue: [ GtCoderClassTarget menuItemsForObject: aClass hostElement: self ]
+		ifFalse: [ BrMenuItemsPragmaBuilder new
+				object: aClass;
+				upToSuperclass: Behavior;
+				pragma: #gtCoderSidebarIndexOneSubjectContextMenuItem:;
+				methodArguments: {self};
+				sortByFirstPragmaArgument;
+				build ]
 ]
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForSeveralItems: someClasses [
-	^ BrMenuItemsPragmaBuilder new
-		object: Class;
-		upToSuperclass: Behavior;
-		pragma: #gtCoderSidebarIndexSeveralSubjectsContextMenuItem:;
-		methodArguments: {someClasses. self};
-		sortByFirstPragmaArgument;
-		build
+	<return: #BrMenuItems>
+	^ self isContextMenuFromPhlowActions
+		ifTrue: [
+			| aPhlowContext |
+			aPhlowContext := GtPhlowContext new coderSelectedClasses: someClasses.
+			GtCoderClassesTarget
+					menuItemsForObject: someClasses anyOne
+					inContext: aPhlowContext
+					hostElement: self ]
+		ifFalse: [ 
+			BrMenuItemsPragmaBuilder new
+				object: Class;
+				upToSuperclass: Behavior;
+				pragma: #gtCoderSidebarIndexSeveralSubjectsContextMenuItem:;
+				methodArguments: {someClasses.
+						self};
+				sortByFirstPragmaArgument;
+				build ]
 ]
 
 { #category : #'private - drag and drop' }
@@ -270,6 +291,11 @@ GtCoderClassesTreeElement >> initializeWithHierachyForClass: aClass [
 					^ self ] ]
 ]
 
+{ #category : #testing }
+GtCoderClassesTreeElement >> isContextMenuFromPhlowActions [
+	^ self class isUsePhlowAction
+]
+
 { #category : #'private - context menu' }
 GtCoderClassesTreeElement >> newSubclassOf: aClass [
 	| dropdown tabGroup |
@@ -320,66 +346,19 @@ GtCoderClassesTreeElement >> removeClassSubmenuFor: aClass [
 	^ BrMenuExplicit new
 		stencil: [ :anExplicitMenu | 
 			GtCoderRemoveClassPreviewStencil new
-				classToRemove: self;
+				classToRemove: aClass;
 				menuModel: anExplicitMenu;
 				asElement ]
 ]
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> removeSeveralClassesSubmenuFor: someClasses [
-	| submenu |
-	submenu := BrMenuExplicit new.
-	^ submenu
-		stencil: [ | element change button |
-			element := BrVerticalPane new fitContent.
-			element
-				addChild: ((self buildRemoveSeveralClassesLabelFor: someClasses)
-						margin: (BlInsets
-								top: 10
-								bottom: 0
-								left: 10
-								right: 10)).
-			element
-				addChild: (BrAsyncWidget new
-						fitContent;
-						stencil: [ | pane references subclasses |
-							references := someClasses sumNumbers: [ :eachClass | (GtPharoIndex current
-									globalVariableReferencesTo: eachClass binding) size ].
-							subclasses := someClasses sumNumbers: [ :eachClass | (eachClass allSubclasses difference: someClasses) size ].
-							pane := BrVerticalPane new.
-							pane fitContent.
-							references > 0
-								ifTrue: [ pane
-										addChild: (BrLabel new
-												margin: (BlInsets left: 10 right: 10);
-												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-												text: (references printString , ' reference'
-														, (references > 1 ifTrue: [ 's' ] ifFalse: [ '' ])) asRopedText) ].
-							subclasses > 0
-								ifTrue: [ pane
-										addChild: (BrLabel new
-												margin: (BlInsets left: 10 right: 10);
-												aptitude: BrGlamorousLabelAptitude new glamorousRegularFont thin;
-												text: (subclasses printString , ' subclass'
-														, (subclasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
-							pane ]).
-			change := RBCompositeRefactoryChange new
-				name: ('Remove {1} classes' format: { someClasses size });
-				changes: (someClasses collect: [ :eachClass | RBRemoveClassChange remove: eachClass ]).
-			button := BrButton new
-					aptitude: BrGlamorousButtonWithIconAptitude;
-					beSmallSize;
-					margin: (BlInsets
-							top: 10
-							bottom: 10
-							left: 10
-							right: 10);
-					icon: BrGlamorousVectorIcons remove;
-					label: 'Remove';
-					action: [ submenu hideAll.
-						change execute ].
-			element addChild: button as: #removeButton.
-			element ]
+	^ BrMenuExplicit new
+		stencil: [ :aMenuExplicit | 
+			GtCoderRemoveClassesPreviewStencil new
+				classesToRemove: someClasses;
+				menuModel: aMenuExplicit;
+				asElement ]
 ]
 
 { #category : #initialization }

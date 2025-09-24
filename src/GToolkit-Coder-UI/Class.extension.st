@@ -39,6 +39,28 @@ Class >> gtCoderSidebarIndexBrowseClasses: someClasses referencesFrom: aGtCoderC
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+Class >> gtCoderSidebarIndexBrowseClassesReferencesFor: anAction context: aPhlowContext [
+	<gtAction>
+	aPhlowContext coderSelectedClasses ifEmpty: [ ^ anAction noAction ].
+
+	^ anAction button
+		priority: 2;
+		target: GtCoderClassesTarget;
+		icon: BrGlamorousVectorIcons empty;
+		label: 'Browse references';
+		menuItemPreview: ('{1} classes' format: {aPhlowContext coderSelectedClasses size});
+		menuItemGroup: BrMenuItemGroupConfiguration navigation;
+		action: [ :aButton | 
+			| someClasses aFilter |
+			someClasses := aPhlowContext coderSelectedClasses.
+			aFilter := someClasses allButFirst
+					inject: someClasses first gtReferences
+					into: [ :aSumFilter :aClass | aSumFilter | aClass gtReferences ].
+
+			aButton phlow spawnObject: aFilter ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexBrowseReferencesFor: anAction [
 	<gtAction>
 	^ anAction button 
@@ -128,7 +150,7 @@ Class >> gtCoderSidebarIndexNewSubclassFor: anAction [
 		icon: BrGlamorousVectorIcons add;
 		label: 'New subclass';
 		menuItemPreview: self name;
-		menuItemGroup: BrMenuItemGroupConfiguration default;
+		menuItemGroup: BrMenuItemGroupConfiguration modification;
 		action: [ :aButton :aHostElement | 
 			"TODO: We should replace this with a dedicated wish event."
 			aHostElement
@@ -163,11 +185,11 @@ Class >> gtCoderSidebarIndexRemoveClassFor: anAction [
 		icon: BrGlamorousVectorIcons remove;
 		label: 'Remove class';
 		menuItemPreview: self name;
-		menuItemGroup: BrMenuItemGroupConfiguration refactoring;
+		menuItemGroup: BrMenuItemGroupConfiguration removal;
 		menuItemPinSubmenu;
 		content: [ :anActionElement :aTargetElement :anExplicitMenu | 
 			GtCoderRemoveClassPreviewStencil new
-				classToRemove: self;
+				classToRemove: self instanceSide;
 				menuModel: anExplicitMenu;
 				asElement ]
 ]
@@ -191,6 +213,27 @@ Class >> gtCoderSidebarIndexRemoveClasses: someClasses from: aGtCoderClassesTree
 			label: 'Remove classes'
 			preview: ('{1} classes' format: { someClasses size });
 		submenu: (aGtCoderClassesTreeElement removeSeveralClassesSubmenuFor: someClasses)
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+Class >> gtCoderSidebarIndexRemoveClassesFor: anAction context: aPhlowContext [
+	<gtAction>
+	aPhlowContext coderSelectedClasses ifEmpty: [ ^ anAction noAction ].
+
+	^ anAction dropdown
+		priority: 5;
+		target: GtCoderClassesTarget;
+		icon: BrGlamorousVectorIcons empty;
+		label: 'Remove classes';
+		menuItemPreview: ('{1} classes' format: {aPhlowContext coderSelectedClasses size});
+		menuItemGroup: BrMenuItemGroupConfiguration removal;
+		content: [ :anActionElement :aTargetElement :anExplicitMenu | 
+			| someClasses  |
+			someClasses := aPhlowContext coderSelectedClasses.
+			GtCoderRemoveClassesPreviewStencil new
+				classesToRemove: someClasses;
+				menuModel: anExplicitMenu;
+				asElement ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
