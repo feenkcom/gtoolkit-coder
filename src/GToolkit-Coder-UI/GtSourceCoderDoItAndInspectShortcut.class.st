@@ -14,7 +14,7 @@ GtSourceCoderDoItAndInspectShortcut >> initialize [
 	super initialize.
 	
 	combination := BlKeyCombination primaryG.
-	name := 'Do it and inspect'.
+	name := 'Evaluate and inspect'.
 ]
 
 { #category : #evaluation }

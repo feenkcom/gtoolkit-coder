@@ -14,7 +14,7 @@ GtSourceCoderDoItShortcut >> initialize [
 	super initialize.
 	
 	combination := BlKeyCombination primaryD.
-	name := 'Do it'.
+	name := 'Evaluate'.
 ]
 
 { #category : #evaluation }
