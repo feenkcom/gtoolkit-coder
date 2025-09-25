@@ -11,7 +11,8 @@ Class {
 		'allowAltClick',
 		'actionDefinition',
 		'isEnabled',
-		'properties'
+		'properties',
+		'priority'
 	],
 	#category : #'GToolkit-Coder-Coders - Addons'
 }
@@ -161,6 +162,16 @@ GtCoderAction >> printOn: aStream [
 		nextPut: $(;
 		nextPutAll: (self title ifNil: ['']);
 		nextPut: $)
+]
+
+{ #category : #accessing }
+GtCoderAction >> priority [
+	^ priority ifNil: [ priority := 50 ]
+]
+
+{ #category : #accessing }
+GtCoderAction >> priority: aNumber [
+	priority := aNumber
 ]
 
 { #category : #'accessing properties' }

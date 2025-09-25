@@ -2,6 +2,7 @@ Extension { #name : #GtTextualCoder }
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtTextualCoder >> addContextMenuItemFrom: shortcut group: menuGroup withId: menuId to: coderAddOns [
+	<return: #GtCoderContextMenuAction>
 	^ coderAddOns
 		addContextMenuItem: shortcut name
 		group: menuGroup
@@ -16,6 +17,7 @@ GtTextualCoder >> addContextMenuItemFrom: shortcut group: menuGroup withId: menu
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtTextualCoder >> addContextMenuItemFrom: shortcut withId: menuId to: coderAddOns [
+	<return: #GtCoderContextMenuAction>
 	^ coderAddOns
 		addContextMenuItem: shortcut name
 		action: [ :aCoderViewModel :anEditorElement | 
@@ -55,20 +57,24 @@ GtTextualCoder >> addContextMenuItemWithNoShortcutFrom: shortcut withId: menuId 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtTextualCoder >> addCopyCutPasteContextMenuAddOnsAst: anAst to: coderAddOns [
 	<gtCoderContextMenuAddOns: 1000>
-	self
+	<gtCoderContextMenuAddOns>
+	(self
 		addContextMenuItemFrom: BrEditorShortcut cut
-			withId: GtTextualCoderCutContextMenuItemId
-			to: coderAddOns;
+		withId: GtTextualCoderCutContextMenuItemId
+		to: coderAddOns) ifNotNil: [ :anAction | anAction priority: 1000 ].
+	(self
 		addContextMenuItemFrom: BrEditorShortcut copy
-			withId: GtTextualCoderCopyContextMenuItemId
-			to: coderAddOns;
+		withId: GtTextualCoderCopyContextMenuItemId
+		to: coderAddOns) ifNotNil: [ :anAction | anAction priority: 1000 ].
+	(self
 		addContextMenuItemFrom: BrEditorShortcut paste
-			withId: GtTextualCoderPasteContextMenuItemId
-			to: coderAddOns
+		withId: GtTextualCoderPasteContextMenuItemId
+		to: coderAddOns) ifNotNil: [ :anAction | anAction priority: 1000 ]
 ]
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtTextualCoder >> addExplicitContextMenu: aString block: aBlock to: coderAddOns [
+	<return: #GtCoderExplicitContextMenuItemAction>
 	^ coderAddOns addExplicitContextMenu: aString block: aBlock
 ]
 

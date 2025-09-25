@@ -78,7 +78,8 @@ GtCoderModel class >> gtContextMenuAddOnsFor: aView [
 		priority: 45.1;
 		object: [ (GtSearchMethodsInClassFilter new
 				forClass: self;
-				includeSuperclass: true) & self contextMenuAddOnsPragma gtPragmas ];
+				includeSuperclass: true) & (self contextMenuAddOnsPragma gtPragmas 
+					| GtCoderModel contextMenuAddOnsPragma gtAsReader gtPragmas) ];
 		view: #gtItemsFor:;
 		actionButtonIcon: BrGlamorousVectorIcons inspect 
 			tooltip: 'Inspect Addons'
