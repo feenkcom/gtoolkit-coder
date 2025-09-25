@@ -171,10 +171,13 @@ GtCreationForm >> secureCommit [
 { #category : #accessing }
 GtCreationForm >> selectInNavigationModel: aNavigationModel anInstance: anInstance [
 	aNavigationModel selectPackage: anInstance package.
-
-	anInstance tags
-		ifNotEmpty: [ aNavigationModel
-				selectPackageTag: (anInstance package tagNamed: anInstance tags first) ].
+	
+	(anInstance package tags reject: [ :aTag | aTag isRoot])
+		ifNotEmpty: [
+			anInstance packageTag ifNotNil:  [ 
+				aNavigationModel
+					selectPackageTag: (anInstance package 
+						tagNamed: anInstance tags first) ] ].
 
 	aNavigationModel selectClass: anInstance
 ]
