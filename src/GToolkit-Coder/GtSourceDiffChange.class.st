@@ -49,6 +49,11 @@ GtSourceDiffChange >> highlightColor [
 	^ self class highlightColor
 ]
 
+{ #category : #testing }
+GtSourceDiffChange >> isEmpty [
+	^ startIndex > stopIndex
+]
+
 { #category : #accessing }
 GtSourceDiffChange >> objects [
 	^ source copyFrom: self startIndex to: self stopIndex

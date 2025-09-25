@@ -44,7 +44,7 @@ GtSyncScrollRanges >> addDestinationLineChangesFrom: aCompositeChange to: change
 				ifNotNil: [ :change | 
 					(change startIndex between: start and: endWithCR)
 						ifTrue: [ (changedLines at: currentChange) add: lineNumber ].
-					change stopIndex <= endWithCR
+					(change stopIndex max: change startIndex) <= endWithCR
 						ifTrue: [ (changedLines at: currentChange) add: lineNumber + 1.
 							index := index + 1 ] ].
 			index > aCompositeChange changes size ifTrue: [ ^ self ].
@@ -73,13 +73,17 @@ GtSyncScrollRanges >> addOriginalLineChangesFrom: aCompositeChange to: changedLi
 										ifAbsentPut: [ OrderedCollection with: lineNumber with: lineNumber ].
 									index := index + 1 ] ] ]
 				ifNotNil: [ :change | 
-					change startIndex <= endWithCR
-						ifTrue: [ changedLines
-								at: currentChange
-								ifAbsentPut: [ OrderedCollection with: lineNumber ] ].
-					change stopIndex <= endWithCR
-						ifTrue: [ (changedLines at: currentChange) add: lineNumber + 1.
-							index := index + 1 ] ].
+					(change isEmpty and: [ change startIndex > endWithCR ])
+						ifFalse: [ change startIndex <= endWithCR
+								ifTrue: [ changedLines
+										at: currentChange
+										ifAbsentPut: [ OrderedCollection with: lineNumber ] ].
+							change stopIndex <= endWithCR
+								ifTrue: [ (changedLines
+										at: currentChange
+										ifAbsentPut: [ OrderedCollection with: lineNumber + 1 ])
+										add: lineNumber + 1.
+									index := index + 1 ] ] ].
 			index > aCompositeChange changes size ifTrue: [ ^ self ].
 			previousIndex ~= index ] whileTrue.
 			lineNumber := lineNumber + 1 ].
@@ -264,7 +268,7 @@ GtSyncScrollRanges >> rightLineFor: anInteger [
 GtSyncScrollRanges >> selectNext [
 	| found |
 	found := false.
-	self ranges isEmpty ifTrue: [ ^ self ].
+	self ranges isEmpty ifTrue: [ ^ nil ].
 	self ranges
 		do: [ :each | 
 			found
@@ -280,7 +284,7 @@ GtSyncScrollRanges >> selectNext [
 GtSyncScrollRanges >> selectPrevious [
 	| found |
 	found := false.
-	self ranges isEmpty ifTrue: [ ^ self ].
+	self ranges isEmpty ifTrue: [ ^ nil ].
 	self ranges
 		reverseDo: [ :each | 
 			found
