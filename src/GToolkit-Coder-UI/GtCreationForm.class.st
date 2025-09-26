@@ -183,7 +183,10 @@ GtCreationForm >> selectInNavigationModel: aNavigationModel anInstance: anInstan
 ]
 
 { #category : #accessing }
-GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMenuBlock: aContextMenuBlock [
+GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy contextMenuContentBlock: aContextMenuContentBlock contextMenuBlock: aContextMenuBlock [
+	"aContextMenuContentBlock returns an element.
+	aContextMenuBlock returns a BrMenu or nil."
+
 	^ [ :aMemento :aDescription :aForm | 
 	| aTagger aTaggerAptitude |
 	aTagger := BrTagger new hFitContentLimited.
@@ -232,12 +235,19 @@ GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy andContextMen
 						aCompletionStrategy
 							ifNotNil: [ (GtCompletionController on: aLabel strategy: aCompletionStrategy) install ].
 						aContextMenuBlock
+							ifNil: [ aContextMenuContentBlock
+									ifNotNil: [ aLabel
+											addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
+													content: [ aContextMenuContentBlock
+															value: aTag name
+															value: aLabel
+															value: aMemento ]) ] ]
 							ifNotNil: [ aLabel
-									addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
-											content: [ aContextMenuBlock
-													value: aTag name
-													value: aLabel
-													value: aMemento ]) ].
+											addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
+													menu: [ aContextMenuBlock
+															value: aTag name
+															value: aLabel
+															value: aMemento ]) ].
 						aLabel ]).
 	aTagger
 		when: BrTaggerAddTagRequest
