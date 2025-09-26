@@ -7,7 +7,8 @@ Class {
 		'contextMenuActions',
 		'shortcuts',
 		'updateRequested',
-		'previews'
+		'previews',
+		'contextMenuActionsSortedArray'
 	],
 	#category : #'GToolkit-Coder-Coders - Addons'
 }
@@ -82,7 +83,8 @@ GtCoderAddOns >> addContextDropDownWithPreviewAction: aString icon: anIcon actio
 
 { #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuAction: aContextMenuAction [
-	contextMenuActions add: aContextMenuAction
+	contextMenuActions add: aContextMenuAction.
+	contextMenuActionsSortedArray := nil.
 ]
 
 { #category : #'api - context menu' }
@@ -102,6 +104,7 @@ GtCoderAddOns >> addContextMenuItem: aString action: aBlock [
 
 { #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString action: aBlock id: aSymbol [
+	<return: #GtCoderContextMenuAction>
 	^ self
 		addContextMenuItem: aString
 		hover: nil
@@ -124,6 +127,7 @@ GtCoderAddOns >> addContextMenuItem: aString action: aBlock id: aSymbol shortcut
 
 { #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString action: aBlock shortcutKey: shortcut [
+	<return: #GtCoderContextMenuAction>
 	^ self
 		addContextMenuItem: aString
 		hover: nil
@@ -134,6 +138,7 @@ GtCoderAddOns >> addContextMenuItem: aString action: aBlock shortcutKey: shortcu
 
 { #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString group: menuGroup action: aBlock id: aSymbol [
+	<return: #GtCoderContextMenuAction>
 	^ self
 		addContextMenuItem: aString
 		group: menuGroup
@@ -225,6 +230,7 @@ GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock
 
 { #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock id: aSymbol [
+	<return: #GtCoderContextMenuAction>
 	| newAction |
 	newAction := GtCoderContextMenuAction new
 		title: aString;
@@ -253,7 +259,8 @@ GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock
 
 { #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuItem: aString hover: hoverBlock leave: leaveBlock action: aBlock shortcutKey: shortcutString [
-	self
+	<return: #GtCoderContextMenuAction>
+	^ self
 		addContextMenuItem: aString
 		hover: hoverBlock
 		leave: leaveBlock
@@ -436,7 +443,9 @@ GtCoderAddOns >> contextActions [
 { #category : #'api - context menu' }
 GtCoderAddOns >> contextMenuActions [
 	<return: #Collection of: #GtCoderContextMenuAction>
-	^ contextMenuActions
+	^ contextMenuActionsSortedArray ifNil: [ 
+		contextMenuActionsSortedArray := contextMenuActions asArray 
+			sort: [ :a | a priority ] ascending ]
 ]
 
 { #category : #'initialize-release' }
@@ -445,6 +454,7 @@ GtCoderAddOns >> initialize [
 	contextActions := OrderedCollection new.
 	mainActions := OrderedCollection new.
 	contextMenuActions := OrderedCollection new.
+	contextMenuActionsSortedArray := nil.
 	shortcuts := OrderedCollection new.
 	previews := OrderedCollection new.
 	updateRequested := true

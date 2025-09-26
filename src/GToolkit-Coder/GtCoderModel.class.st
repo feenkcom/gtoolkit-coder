@@ -41,7 +41,7 @@ GtCoderModel class >> astExtensionsPragma [
 
 { #category : #addons }
 GtCoderModel class >> contextMenuAddOnsPragma [
-	^ #gtCoderContextMenuAddOns:
+	^ #gtCoderContextMenuAddOns
 ]
 
 { #category : #'class initialization' }
@@ -200,7 +200,9 @@ GtCoderModel >> pragmasNamed: aSymbol inHierarchy: aClass [
 		actions addAll: (Pragma allNamed: aSymbol in: each) ].
 	actions 
 		sort: (
-			[ :aPragma | aPragma arguments first ] ascending,
+			[ :aPragma | aPragma numArgs isZero 
+				ifFalse: [ aPragma arguments first ]
+				ifTrue: [ 50 ] ] ascending,
 			[ :aPragma | aPragma methodSelector ] ascending).
 	^ actions
 ]
