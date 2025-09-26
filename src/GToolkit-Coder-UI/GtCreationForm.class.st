@@ -183,6 +183,14 @@ GtCreationForm >> selectInNavigationModel: aNavigationModel anInstance: anInstan
 ]
 
 { #category : #accessing }
+GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy contextMenuContentBlock: aContextMenuContentBlock [
+	^ self
+		taggerStencilWithCompletion: aCompletionStrategy
+		contextMenuContentBlock: aContextMenuContentBlock
+		contextMenuBlock: nil
+]
+
+{ #category : #accessing }
 GtCreationForm >> taggerStencilWithCompletion: aCompletionStrategy contextMenuContentBlock: aContextMenuContentBlock contextMenuBlock: aContextMenuBlock [
 	"aContextMenuContentBlock returns an element.
 	aContextMenuBlock returns a BrMenu or nil."
