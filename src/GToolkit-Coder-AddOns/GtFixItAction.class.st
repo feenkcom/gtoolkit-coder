@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'node',
-		'sourceCoder'
+		'sourceCoder',
+		'autoSave'
 	],
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
@@ -19,6 +20,21 @@ GtFixItAction class >> forCoder: aSourceCoder node: aRBProgramNode [
 { #category : #'api - node' }
 GtFixItAction >> attributePosition [
 	^ node name stopPosition
+]
+
+{ #category : #accessing }
+GtFixItAction >> autoSave [
+	^ autoSave ifNil: [ false ]
+]
+
+{ #category : #accessing }
+GtFixItAction >> autoSave: aBoolean [
+	autoSave := aBoolean
+]
+
+{ #category : #executing }
+GtFixItAction >> basicExecuteOn: anEditorElement [
+	self subclassResponsibility
 ]
 
 { #category : #private }
@@ -38,7 +54,12 @@ GtFixItAction >> description [
 
 { #category : #executing }
 GtFixItAction >> executeOn: anEditorElement [
-	self subclassResponsibility
+	self basicExecuteOn: anEditorElement.
+	self finishExecuteOn: anEditorElement
+]
+
+{ #category : #executing }
+GtFixItAction >> finishExecuteOn: anEditorElement [
 ]
 
 { #category : #'api - action' }
