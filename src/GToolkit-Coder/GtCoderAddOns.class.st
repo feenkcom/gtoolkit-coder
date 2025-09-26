@@ -7,7 +7,8 @@ Class {
 		'contextMenuActions',
 		'shortcuts',
 		'updateRequested',
-		'previews'
+		'previews',
+		'contextMenuActionsSortedArray'
 	],
 	#category : #'GToolkit-Coder-Coders - Addons'
 }
@@ -82,7 +83,8 @@ GtCoderAddOns >> addContextDropDownWithPreviewAction: aString icon: anIcon actio
 
 { #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuAction: aContextMenuAction [
-	contextMenuActions add: aContextMenuAction
+	contextMenuActions add: aContextMenuAction.
+	contextMenuActionsSortedArray := nil.
 ]
 
 { #category : #'api - context menu' }
@@ -441,7 +443,9 @@ GtCoderAddOns >> contextActions [
 { #category : #'api - context menu' }
 GtCoderAddOns >> contextMenuActions [
 	<return: #Collection of: #GtCoderContextMenuAction>
-	^ contextMenuActions
+	^ contextMenuActionsSortedArray ifNil: [ 
+		contextMenuActionsSortedArray := contextMenuActions asArray 
+			sort: [ :a | a priority ] ascending ]
 ]
 
 { #category : #'initialize-release' }
@@ -450,6 +454,7 @@ GtCoderAddOns >> initialize [
 	contextActions := OrderedCollection new.
 	mainActions := OrderedCollection new.
 	contextMenuActions := OrderedCollection new.
+	contextMenuActionsSortedArray := nil.
 	shortcuts := OrderedCollection new.
 	previews := OrderedCollection new.
 	updateRequested := true

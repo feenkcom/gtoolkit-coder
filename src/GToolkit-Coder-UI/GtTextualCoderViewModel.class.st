@@ -270,7 +270,7 @@ GtTextualCoderViewModel >> computeContextMenuAstAddOns [
 
 	theAst := aCoderModel astSync.
 	pragmas := aCoderModel
-		pragmasNamed: #gtCoderContextMenuAddOns:
+		pragmasNamed: aCoderModel class contextMenuAddOnsPragma
 		inHierarchy: aCoderModel class.
 
 	newAddOns := aCoderModel newAddOns.
