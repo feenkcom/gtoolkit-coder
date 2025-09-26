@@ -31,6 +31,7 @@ GtTextualCoder >> addContextMenuItemFrom: shortcut withId: menuId to: coderAddOn
 
 { #category : #'*GToolkit-Coder-AddOns' }
 GtTextualCoder >> addContextMenuItemWithNoShortcutFrom: shortcut group: menuGroup withId: menuId to: coderAddOns [
+	<return: #GtCoderContextMenuAction>
 	^ coderAddOns
 		addContextMenuItem: shortcut name
 		group: menuGroup
