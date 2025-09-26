@@ -1,6 +1,6 @@
 Class {
-	#name : #GtCoderMenuActionItem,
-	#superclass : #BrMenuActionItem,
+	#name : #GtCoderMenuSubmenuItem,
+	#superclass : #BrMenuSubmenuItem,
 	#instVars : [
 		'textualCoderEditorElement'
 	],
@@ -8,18 +8,18 @@ Class {
 }
 
 { #category : #visiting }
-GtCoderMenuActionItem >> acceptVisitor: aVisitor [
-	^ aVisitor visitCoderMenuActionItem: self
+GtCoderMenuSubmenuItem >> acceptVisitor: aVisitor [
+	^ aVisitor visitCoderSubmenuItem: self
 ]
 
 { #category : #accessing }
-GtCoderMenuActionItem >> coderContextMenuAction [
+GtCoderMenuSubmenuItem >> coderContextMenuAction [
 	<return: #GtCoderContextMenuAction>
 	^ self action
 ]
 
 { #category : #accessing }
-GtCoderMenuActionItem >> coderContextMenuAction: aCoderContextMenuAction [
+GtCoderMenuSubmenuItem >> coderContextMenuAction: aCoderContextMenuAction [
 	self action: aCoderContextMenuAction.
 	self id: aCoderContextMenuAction id.
 	aCoderContextMenuAction group ifNotNil: [ :aGroup | 
@@ -30,27 +30,27 @@ GtCoderMenuActionItem >> coderContextMenuAction: aCoderContextMenuAction [
 ]
 
 { #category : #accessing }
-GtCoderMenuActionItem >> hoverAction [
+GtCoderMenuSubmenuItem >> hoverAction [
 	^ self coderContextMenuAction hoverAction
 ]
 
 { #category : #accessing }
-GtCoderMenuActionItem >> leaveAction [
+GtCoderMenuSubmenuItem >> leaveAction [
 	^ self coderContextMenuAction leaveAction
 ]
 
 { #category : #accessing }
-GtCoderMenuActionItem >> textualCoderEditorElement [
+GtCoderMenuSubmenuItem >> textualCoderEditorElement [
 	<return: #GtTextualCoderEditorElement>
 	^ textualCoderEditorElement
 ]
 
 { #category : #accessing }
-GtCoderMenuActionItem >> textualCoderEditorElement: aCoderElement [
+GtCoderMenuSubmenuItem >> textualCoderEditorElement: aCoderElement [
 	textualCoderEditorElement := aCoderElement
 ]
 
 { #category : #accessing }
-GtCoderMenuActionItem >> textualCoderViewModel [
+GtCoderMenuSubmenuItem >> textualCoderViewModel [
 	^ self textualCoderEditorElement textualCoderViewModel
 ]

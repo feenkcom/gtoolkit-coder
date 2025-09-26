@@ -5,6 +5,11 @@ GtPhlowContext >> coderSelectedClasses [
 	^ self optionAt: #coderSelectedClasses ifAbsent: [ #() ]
 ]
 
+{ #category : #'*GToolkit-Coder-UI\t' }
+GtPhlowContext >> coderSelectedClasses: aCollectionOfClasses [
+	^ self optionAt: #coderSelectedClasses put: aCollectionOfClasses
+]
+
 { #category : #'*GToolkit-Coder' }
 GtPhlowContext >> hasPackageCoder [
 	^ self hasOptionAt: #packageCoder

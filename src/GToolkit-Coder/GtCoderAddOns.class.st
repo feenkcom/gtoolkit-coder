@@ -81,6 +81,17 @@ GtCoderAddOns >> addContextDropDownWithPreviewAction: aString icon: anIcon actio
 		onlyNew: true
 ]
 
+{ #category : #'api - main actions' }
+GtCoderAddOns >> addContextMenu: aString icon: anIcon submenu: aBlock [
+	| newAction |
+	newAction := GtCoderDropDownMenuAction new
+		title: aString;
+		icon: anIcon;
+		menu: aBlock.
+	self addContextMenuAction: newAction.
+	^ newAction
+]
+
 { #category : #'api - context menu' }
 GtCoderAddOns >> addContextMenuAction: aContextMenuAction [
 	contextMenuActions add: aContextMenuAction.

@@ -178,7 +178,7 @@ GtCoderActionsElement >> newDropButtonMenuForAction: aGtCoderAction [
 		ifNotNil: [ button label: aGtCoderAction title asRopedText ].
 	aGtCoderAction icon ifNotNil: [ button icon: aGtCoderAction icon asElement ].
 
-	aMenuStencil := aGtCoderAction menuStencil
+	aMenuStencil := aGtCoderAction menuBlock
 			ifNil: [ [ BrMenuExplicit new
 					stencil: [ self newDropButtonDefaultMenuForAction: aGtCoderAction ] ] ].
 

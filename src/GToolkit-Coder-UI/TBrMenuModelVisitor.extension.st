@@ -6,6 +6,11 @@ TBrMenuModelVisitor >> visitCoderMenuActionItem: aMenuModel [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+TBrMenuModelVisitor >> visitCoderSubmenuItem: aMenuModel [
+	^ self visitMenuSubmenuItem: aMenuModel
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 TBrMenuModelVisitor >> visitTextualCoderMenu: aMenuModel [
 	^ self visitMenu: aMenuModel
 ]
