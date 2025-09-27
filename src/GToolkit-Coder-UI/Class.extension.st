@@ -8,11 +8,11 @@ Class >> asFilterModelItem [
 { #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexBrowseClassFor: anAction [
 	<gtAction>
-	^ anAction button 
+	^ anAction button
 		priority: 1;
 		target: GtCoderClassTarget;
 		icon: BrGlamorousVectorIcons browse;
-		label: 'Browse class';
+		label: ('Browse {1}' format: {self gtCoderTypeName});
 		menuItemPreview: self name;
 		menuItemGroup: BrMenuItemGroupConfiguration navigation;
 		action: [ :aButton | aButton phlow spawnObject: self instanceSide ]
@@ -90,7 +90,7 @@ Class >> gtCoderSidebarIndexCopyClassNameFor: anAction [
 		priority: 9;
 		target: GtCoderClassTarget;
 		icon: BrGlamorousVectorIcons clipboard;
-		label: 'Copy class name';
+		label: ('Copy {1} name' format: {self gtCoderTypeName});
 		menuItemPreview: self name;
 		menuItemGroup: BrMenuItemGroupConfiguration default;
 		action: [ Clipboard clipboardText: self name ]
@@ -132,7 +132,7 @@ Class >> gtCoderSidebarIndexLlmChatFor: anAction [
 		priority: 20;
 		target: GtCoderClassTarget;
 		icon: BrGlamorousVectorIcons chat;
-		label: 'Chat about this class';
+		label: ('Chat about this {1}' format: {self gtCoderTypeName});
 		menuItemPreview: self name;
 		menuItemGroup: BrMenuItemGroupConfiguration default;
 		action: [ :aButton | 
@@ -144,6 +144,8 @@ Class >> gtCoderSidebarIndexLlmChatFor: anAction [
 { #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexNewSubclassFor: anAction [
 	<gtAction>
+	self isTrait ifTrue: [ ^ anAction noAction ].
+	
 	^ anAction button 
 		priority: 3;
 		target: GtCoderClassTarget;
@@ -183,7 +185,7 @@ Class >> gtCoderSidebarIndexRemoveClassFor: anAction [
 		target: GtCoderClassTarget;
 		id: #'coder--context-menu-remove-class';
 		icon: BrGlamorousVectorIcons remove;
-		label: 'Remove class';
+		label: ('Remove {1}' format: {self gtCoderTypeName});
 		menuItemPreview: self name;
 		menuItemGroup: BrMenuItemGroupConfiguration removal;
 		menuItemPinSubmenu;
@@ -243,15 +245,15 @@ Class >> gtCoderSidebarIndexRenameClassFor: anAction [
 		priority: 4;
 		target: GtCoderClassTarget;
 		icon: BrGlamorousVectorIcons empty;
-		label: 'Rename class';
+		label: ('Rename {1}' format: {self gtCoderTypeName});
 		menuItemPreview: self name;
 		menuItemGroup: BrMenuItemGroupConfiguration refactoring;
 		content: [ :anActionElement :aTargetElement :anExplicitMenu | 
 			| aViewModel |
 			aViewModel := GtRefactoringsWithInputViewModel new
-					refactoringTitle: 'Rename class';
+					refactoringTitle: ('Rename {1}' format: {self gtCoderTypeName});
 					targetName: self name;
-					inputLabel: 'New class name:';
+					inputLabel: ('New {1} name:' format: { self gtCoderTypeName });
 					initialText: self name;
 					refactoringWithInput: [ :anInput | 
 						GtRBRenameClassRefactoring 
@@ -275,4 +277,9 @@ Class >> gtCoderSidebarIndexRenameClassFrom: aGtCoderClassesTreeElement [
 			preview: self name;
 		submenu: (aGtCoderClassesTreeElement renameClassSubmenuFor: self);
 		bePinSubmenuAction
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+Class >> gtCoderTypeName [
+	^ 'class'
 ]

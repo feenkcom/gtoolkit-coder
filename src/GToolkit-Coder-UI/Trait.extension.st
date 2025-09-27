@@ -14,3 +14,8 @@ Trait >> gtCoderSidebarIndexBrowseTraitUsersFor: anAction [
 		menuItemGroup: BrMenuItemGroupConfiguration navigation;
 		action: [ :aButton | aButton phlow spawnObject: (self instanceSide users asArray sort: [ :a | a name ] ascending) ]
 ]
+
+{ #category : #'*GToolkit-Coder-UI' }
+Trait >> gtCoderTypeName [
+	^ 'trait'
+]
