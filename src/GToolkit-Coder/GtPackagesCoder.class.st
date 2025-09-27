@@ -35,7 +35,7 @@ GtPackagesCoder >> hash [
 
 { #category : #accessing }
 GtPackagesCoder >> icon [
-	^ BrGlamorousIcons packageicon asElement
+	^ BrGlamorousVectorIcons packageicon asElement
 ]
 
 { #category : #accessing }
