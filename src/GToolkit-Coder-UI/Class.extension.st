@@ -144,27 +144,27 @@ Class >> gtCoderSidebarIndexLlmChatFor: anAction [
 { #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexNewSubclassFor: anAction [
 	<gtAction>
-	self isTrait ifTrue: [ ^ anAction noAction ].
-	
-	^ anAction button 
+	^ anAction dropdown
 		priority: 3;
 		target: GtCoderClassTarget;
 		icon: BrGlamorousVectorIcons add;
-		label: 'New subclass';
+		label: (self isTrait ifFalse: [ 'New subclass' ] ifTrue: [ 'New trait user' ]);
 		menuItemPreview: self name;
 		menuItemGroup: BrMenuItemGroupConfiguration modification;
-		action: [ :aButton :aHostElement | 
-			"TODO: We should replace this with a dedicated wish event."
-			aHostElement
-				withAllParentsDetect: [ :eachElement | eachElement class == BrTabGroup ]
-				ifFound: [ :aTabGroup |
-					aTabGroup 
-						childWithId: GtNavigationNewDropdownId
-						ifFound: [ :anElemet |
-							anElemet dispatchEvent: BrDropdownShowWish new ]
-						ifNone: [ ] ]
-				ifNone: [ "ignore" ].
-	 ]
+		menuItemPinSubmenu;
+		content: [ :aButton :aTargetElement :anExplicitMenu | 
+			| aNavigationModel |
+			aNavigationModel := aButton phlow firstParentCoderNavigationModel.
+			BrVerticalPane new
+				exact: 400 @ 300;
+				addChild: ((GtCoderNavigationTabsStencil new
+						pragmaName: #gtCoderDropdownNavigation;
+						navigationModel: aNavigationModel;
+						gtCreationInterface: aButton) background: Color white);
+				addAptitude: (BrGlamorousPopoverPinnableAptitude new
+						withResizers;
+						withAllPinActions;
+						menuModel: anExplicitMenu) ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

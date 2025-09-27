@@ -19,16 +19,10 @@ GtPhlowElementContext >> coderNavigationModel [
 { #category : #'*GToolkit-Coder-UI' }
 GtPhlowElementContext >> firstParentCoder [
 	<return: #GtCoderElement>
-	| anElement |
-	anElement := self firstParentWithViewContent.
-	self
-		assert: [ anElement isNotNil ]
-		description: [ 'Coder (element) must be non-nil' ].
-	self
-		assert: [ anElement isKindOf: GtCoderElement ]
-		description: [ 'Coder (element) must be a kind of ' , GtCoderElement name ].
-
-	^ anElement
+	^ self element
+		allParentsDetect: [ :parent | parent isKindOf: GtCoderElement ]
+		ifFound: [ :parent | parent ]
+		ifNone: [ self error: 'Couldn''t find a coder parent' ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
