@@ -64,6 +64,11 @@ GtCreationForm >> commitPackage [
 				ifNotEmpty: [ :aTagName | aPackage addClassTag: aTagName ] ]
 ]
 
+{ #category : #'api - initialization' }
+GtCreationForm >> fillFormWithClass: aClass [
+	
+]
+
 { #category : #accessing }
 GtCreationForm >> ghostTextFor: aString [
 	^ BrGhostTextAttribute

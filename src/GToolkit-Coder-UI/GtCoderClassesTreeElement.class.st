@@ -32,7 +32,7 @@ GtCoderClassesTreeElement class >> fromClasses: aCollectionOfClasses [
 
 { #category : #settings }
 GtCoderClassesTreeElement class >> isUsePhlowAction [
-	^ UsePhlowActions ifNil: [ false ]
+	^ UsePhlowActions ifNil: [ true ]
 ]
 
 { #category : #settings }

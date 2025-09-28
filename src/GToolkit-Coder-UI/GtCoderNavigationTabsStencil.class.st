@@ -154,7 +154,7 @@ GtCoderNavigationTabsStencil >> gtClassHierarchyFor: aView [
 ]
 
 { #category : #'gt-extensions' }
-GtCoderNavigationTabsStencil >> gtCreationInterface: look [
+GtCoderNavigationTabsStencil >> gtCreationInterface: anElement [
 	| contentTabs tabClasses |
 	contentTabs := BrTabGroup new.
 	contentTabs aptitude: BrGlamorousTabGroupAptitude new.
@@ -168,35 +168,34 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: look [
 					and: [ aClass isAdditionForm ] ])
 			asSortedCollection: [ :a :b | a priority < b priority ].
 	tabClasses
-		do: [ :each | 
+		do: [ :eachTabClass | 
 			contentTabs
 				addTab: (BrTab new
 						aptitude: BrGlamorousTabAptitude new;
-						label: each componentName;
+						label: eachTabClass componentName;
 						stencil: [ (self formCache
-								at: each
+								at: eachTabClass
 								ifAbsentPut: [ | form |
-									form := each new
-											onReset: [ look
-													inUIProcessDo: [ look fireEvent: BrDropdownHideWish new.
-														self formCache removeKey: each ] ].
-									form class == GtClassCreationForm
-										ifTrue: [ navigationModel
-												selectedClassDo: [ :aClass | aClass isClass ifTrue: [ form superclassName: aClass name ] ] ].
+									form := eachTabClass new
+											onReset: [ anElement
+													inUIProcessDo: [ anElement fireEvent: BrDropdownHideWish new.
+														self formCache removeKey: eachTabClass ] ].
+									navigationModel
+										selectedClassDo: [ :aClass | form fillFormWithClass: aClass ].
 									form hasPackageAndTag
 										ifTrue: [ navigationModel
 												selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
 											navigationModel
 												selectedTagDo: [ :aTag | 
-													(aTag isPharoPackageTagModel)
+													aTag isPharoPackageTagModel
 														ifTrue: [ aTag isRoot ifFalse: [ form packageAndTagName tagName: aTag name ] ]
 														ifFalse: [ aTag isUncategorized ifFalse: [ form packageAndTagName tagName: aTag name ] ] ] ].
 									((GtCreationFormWidget forForm: form)
 										onAccept: [ :anInstance | 
-											look
+											anElement
 												inUIProcessDo: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
-													look fireEvent: BrDropdownHideWish new ].
-											self formCache removeKey: each ifAbsent: [  ] ]) asElement ])
+													anElement fireEvent: BrDropdownHideWish new ].
+											self formCache removeKey: eachTabClass ifAbsent: [  ] ]) asElement ])
 								removeFromParent ]) ].
 	^ contentTabs
 ]

@@ -23,7 +23,7 @@ Behavior >> gtDisplayTopSidebarIndexToggleFor: anAction [
 	<gtClassAction>
 	^ anAction toggle
 		tooltip: 'Show Package and Class Hierarchies';
-		icon: BrGlamorousIcons tree;
+		icon: BrGlamorousVectorIcons tree;
 		id: GtCoderClassHierarchyButtonId;
 		priority: 3;
 		isActivated: [ :aToggle :aTargetElement | 
@@ -50,7 +50,7 @@ Behavior >> gtHierarchyButtonFor: anAction [
 	"<gtClassAction>"
 	^ anAction dropdown
 		tooltip: 'Show Package and Class Hierarchies';
-		icon: BrGlamorousIcons tree;
+		icon: BrGlamorousVectorIcons tree;
 		id: GtCoderClassHierarchyButtonId;
 		priority: 3;
 		preferredExtentFrom: GtPharoCoderHierarchyDropdownConfiguration;

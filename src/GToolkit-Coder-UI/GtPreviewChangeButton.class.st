@@ -67,7 +67,7 @@ GtPreviewChangeButton >> initialize [
 		(BrGlamorousWithExplicitDropdownAptitude
 			handle: [
 				BrButton new
-					icon: BrGlamorousIcons empty;
+					icon: BrGlamorousVectorIcons empty;
 					beTinySize;
 					aptitude: BrGlamorousButtonRectangularAptitude new + BrGlamorousButtonIconAptitude new ]
 			content: [ self buildDropDownElement ])
