@@ -60,17 +60,17 @@ GtTextualCoder >> addCopyCutPasteContextMenuAddOnsAst: anAst to: coderAddOns [
 	<gtCoderContextMenuAddOns>
 	(self
 		addContextMenuItemFrom: BrEditorShortcut cut
-		group: BrMenuItemGroupConfiguration text
+		group: BrMenuItemGroupConfiguration editing
 		withId: GtTextualCoderCutContextMenuItemId
 		to: coderAddOns) ifNotNil: [ :anAction | anAction priority: 1000.01 ].
 	(self
 		addContextMenuItemFrom: BrEditorShortcut copy
-		group: BrMenuItemGroupConfiguration text
+		group: BrMenuItemGroupConfiguration editing
 		withId: GtTextualCoderCopyContextMenuItemId
 		to: coderAddOns) ifNotNil: [ :anAction | anAction priority: 1000.02 ].
 	(self
 		addContextMenuItemFrom: BrEditorShortcut paste
-		group: BrMenuItemGroupConfiguration text
+		group: BrMenuItemGroupConfiguration editing
 		withId: GtTextualCoderPasteContextMenuItemId
 		to: coderAddOns) ifNotNil: [ :anAction | anAction priority: 1000.03 ]
 ]
