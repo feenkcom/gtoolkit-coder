@@ -133,14 +133,23 @@ Class >> gtCoderSidebarIndexNewSubclassFor: anAction [
 		menuItemGroup: BrMenuItemGroupConfiguration modification;
 		menuItemPinSubmenu;
 		content: [ :aButton :aTargetElement :anExplicitMenu | 
-			| aNavigationModel |
-			aNavigationModel := aButton phlow firstParentCoderNavigationModel.
+			| aChild |
+			aChild := aButton phlow
+					firstParentCoderNavigationModelIfPresent: [ :aNavigationModel | 
+						GtCoderNavigationTabsStencil new
+							pragmaName: #gtCoderDropdownNavigation;
+							navigationModel: aNavigationModel;
+							gtCreationInterface: aButton ]
+					ifAbsent: [ BrLabel new
+							aptitude: BrGlamorousLabelAptitude new;
+							text: 'Currently not available from lepiter';
+							constraintsDo: [ :c | 
+								c linear horizontal alignCenter.
+								c linear vertical alignCenter ] ].
+
 			BrVerticalPane new
 				exact: 400 @ 300;
-				addChild: (GtCoderNavigationTabsStencil new
-						pragmaName: #gtCoderDropdownNavigation;
-						navigationModel: aNavigationModel;
-						gtCreationInterface: aButton);
+				addChild: aChild;
 				background: aButton theme default contentBackground;
 				addAptitude: (BrGlamorousPopoverPinnableAptitude new
 						withLeftAndRightResizers;
