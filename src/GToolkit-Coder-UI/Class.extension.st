@@ -6,6 +6,40 @@ Class >> asFilterModelItem [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+Class >> gtCoderSidebarIndexBehaviorDefinitionFor: anAction [
+	<gtAction>
+	^ anAction dropdown
+		priority: 3;
+		target: GtCoderClassTarget;
+		icon: BrGlamorousVectorIcons edit;
+		label: ('{1} definition' format: {self gtCoderTypeName asCamelCase});
+		menuItemPreview: self name;
+		menuItemGroup: BrMenuItemGroupConfiguration modification;
+		menuItemPinSubmenu;
+		content: [ :aButton :aTargetElement :anExplicitMenu | 
+			| aForm aFormElement |
+			aForm := self isTrait
+					ifTrue: [ GtTraitUpdateForm onTrait: self ]
+					ifFalse: [ GtClassUpdateForm onClass: self ].
+			aFormElement := aForm asElement.
+			BrFrame new
+				addChild: aFormElement;
+				padding: (BlInsets all: GtRefactoringsConstants contextMenuPadding);
+				hExact: 400;
+				vFitContentLimited;
+				background: aButton theme default contentBackground;
+				addAptitude: (BrLayoutResizerAptitude new
+						exactToMatchParent: aFormElement;
+						matchParentToMatchParent: aFormElement;
+						fitContentToFitContent: aFormElement;
+						fitContentLimitedToFitContentLimited: aFormElement);
+				addAptitude: (BrGlamorousPopoverPinnableAptitude new
+						withLeftAndRightResizers;
+						withAllPinActions;
+						menuModel: anExplicitMenu) ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexBrowseClassFor: anAction [
 	<gtAction>
 	^ anAction button
@@ -103,12 +137,13 @@ Class >> gtCoderSidebarIndexNewSubclassFor: anAction [
 			aNavigationModel := aButton phlow firstParentCoderNavigationModel.
 			BrVerticalPane new
 				exact: 400 @ 300;
-				addChild: ((GtCoderNavigationTabsStencil new
+				addChild: (GtCoderNavigationTabsStencil new
 						pragmaName: #gtCoderDropdownNavigation;
 						navigationModel: aNavigationModel;
-						gtCreationInterface: aButton) background: Color white);
+						gtCreationInterface: aButton);
+				background: aButton theme default contentBackground;
 				addAptitude: (BrGlamorousPopoverPinnableAptitude new
-						withResizers;
+						withLeftAndRightResizers;
 						withAllPinActions;
 						menuModel: anExplicitMenu) ]
 ]
