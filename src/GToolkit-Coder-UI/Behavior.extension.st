@@ -1,6 +1,18 @@
 Extension { #name : #Behavior }
 
 { #category : #'*GToolkit-Coder-UI' }
+Behavior >> gtClassActionsDropdownFor: anAction [
+
+	<gtClassAction>
+	^ anAction dropdown
+		tooltip: 'Class actions';
+		icon: BrGlamorousVectorIcons hamburger;
+		id: GtCoderClassActionsDropdownButtonId;
+		priority: 100;
+		menuItemsForObject: self fromTarget: GtCoderClassTarget
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 Behavior >> gtDisplayTopSidebarIndexToggleFor: anAction [
 	"Previous dropdown solution: Behavior>>#gtHierarchyButtonFor:"
 
