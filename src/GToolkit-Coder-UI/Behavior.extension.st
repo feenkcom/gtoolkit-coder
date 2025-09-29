@@ -1,22 +1,6 @@
 Extension { #name : #Behavior }
 
 { #category : #'*GToolkit-Coder-UI' }
-Behavior >> gtBrowseButtonFor: anAction [
-	<gtClassAction>
-	^ anAction button
-		priority: 1;
-		tooltip: 'Browse class';
-		icon: BrGlamorousVectorIcons emphasizedBrowse;
-		action: [ :aButton | 
-			aButton phlow firstParentCoderNavigationModel
-				coderDo: [ :oldCoder | 
-					aButton phlow
-						spawnTool: (GtReadyCoderTool coder: oldCoder asNewCoderModelWithSameSubject) ] ];
-		primaryModifierAction: [ :aButton | self gtBrowseFromButton: aButton ]
-			mouseCursor: BlCopyCursor new
-]
-
-{ #category : #'*GToolkit-Coder-UI' }
 Behavior >> gtDisplayTopSidebarIndexToggleFor: anAction [
 	"Previous dropdown solution: Behavior>>#gtHierarchyButtonFor:"
 
