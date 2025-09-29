@@ -14,30 +14,12 @@ Class {
 	#instVars : [
 		'classesTree'
 	],
-	#classVars : [
-		'UsePhlowActions'
-	],
 	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
 }
-
-{ #category : #settings }
-GtCoderClassesTreeElement class >> dontUsePhlowActions [
-	UsePhlowActions := false
-]
 
 { #category : #'instance creation' }
 GtCoderClassesTreeElement class >> fromClasses: aCollectionOfClasses [
 	^ self new initializeWithClasses: aCollectionOfClasses
-]
-
-{ #category : #settings }
-GtCoderClassesTreeElement class >> isUsePhlowAction [
-	^ UsePhlowActions ifNil: [ true ]
-]
-
-{ #category : #settings }
-GtCoderClassesTreeElement class >> usePhlowActions [
-	UsePhlowActions := true
 ]
 
 { #category : #'private - context menu' }
@@ -123,37 +105,18 @@ GtCoderClassesTreeElement >> contextMenuFor: aClass [
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForOneItem: aClass [
 	<return: #BrMenuItems>
-	^ self isContextMenuFromPhlowActions
-		ifTrue: [ GtCoderClassTarget menuItemsForObject: aClass hostElement: self ]
-		ifFalse: [ BrMenuItemsPragmaBuilder new
-				object: aClass;
-				upToSuperclass: Behavior;
-				pragma: #gtCoderSidebarIndexOneSubjectContextMenuItem:;
-				methodArguments: {self};
-				sortByFirstPragmaArgument;
-				build ]
+	^ GtCoderClassTarget menuItemsForObject: aClass hostElement: self
 ]
 
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForSeveralItems: someClasses [
 	<return: #BrMenuItems>
-	^ self isContextMenuFromPhlowActions
-		ifTrue: [
-			| aPhlowContext |
-			aPhlowContext := GtPhlowContext new coderSelectedClasses: someClasses.
-			GtCoderClassesTarget
-					menuItemsForObject: someClasses anyOne
-					inContext: aPhlowContext
-					hostElement: self ]
-		ifFalse: [ 
-			BrMenuItemsPragmaBuilder new
-				object: Class;
-				upToSuperclass: Behavior;
-				pragma: #gtCoderSidebarIndexSeveralSubjectsContextMenuItem:;
-				methodArguments: {someClasses.
-						self};
-				sortByFirstPragmaArgument;
-				build ]
+	| aPhlowContext |
+	aPhlowContext := GtPhlowContext new coderSelectedClasses: someClasses.
+	^ GtCoderClassesTarget
+		menuItemsForObject: someClasses anyOne
+		inContext: aPhlowContext
+		hostElement: self
 ]
 
 { #category : #'private - drag and drop' }
@@ -289,11 +252,6 @@ GtCoderClassesTreeElement >> initializeWithHierachyForClass: aClass [
 				ifTrue: [ self selectOne: treeNode indexInTree.
 					self scrollToIndex: treeNode indexInTree.
 					^ self ] ]
-]
-
-{ #category : #testing }
-GtCoderClassesTreeElement >> isContextMenuFromPhlowActions [
-	^ self class isUsePhlowAction
 ]
 
 { #category : #'private - context menu' }

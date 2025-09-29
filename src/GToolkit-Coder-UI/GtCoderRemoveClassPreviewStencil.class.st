@@ -39,7 +39,7 @@ GtCoderRemoveClassPreviewStencil >> create [
 					bottom: 10
 					left: 10
 					right: 10);
-			icon: BrGlamorousVectorIcons remove;
+			icon: BrGlamorousVectorIcons bin;
 			label: 'Remove';
 			action: [ self menuModel ifNotNil: #hideAll.
 				change execute ].
