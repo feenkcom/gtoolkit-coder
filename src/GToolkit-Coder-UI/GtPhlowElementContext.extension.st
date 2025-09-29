@@ -59,6 +59,6 @@ GtPhlowElementContext >> firstParentCoderNavigationModelIfPresent: aPresentBlock
 				assert: [ aNavigationModel isNotNil ]
 				description: [ 'Coder navigation model must be non-nil' ].
 
-			^ aNavigationModel ]
+			aPresentBlock value: aNavigationModel ]
 		ifAbsent: anAbsentBlock
 ]

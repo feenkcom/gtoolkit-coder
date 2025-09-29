@@ -49,7 +49,8 @@ Class >> gtCoderSidebarIndexBrowseClassFor: anAction [
 		label: ('Browse {1}' format: {self gtCoderTypeName});
 		menuItemPreview: self name;
 		menuItemGroup: BrMenuItemGroupConfiguration navigation;
-		action: [ :aButton | aButton phlow spawnObject: self instanceSide ]
+		action: [ :aButton | aButton phlow spawnObject: self instanceSide ];
+		primaryModifierAction: [ :aButton | self gtBrowseFrom: aButton ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
