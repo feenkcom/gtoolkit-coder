@@ -201,6 +201,10 @@ GtTextualCoderEditorElement >> initializeListeners [
 			ifFalse: [ self textualCoderViewModel focused: false from: self ] ].
 
 	self editor
+		when: BrTextEditorHistoryChangedEvent
+		do: [ :anEvent | self textualCoderViewModel history: self editor history copy ].
+
+	self editor
 		when: BrTextEditorModifiedEvent
 		do: [ :anEvent | self onTextModifiedDueToEvent:  anEvent ].
 
@@ -688,6 +692,13 @@ GtTextualCoderEditorElement >> subscribeToTextualCoderViewModel [
 	self registerCoderViewModelAnnouncementsFor: self textualCoderViewModel.
 
 	completion install
+]
+
+{ #category : #'editor - accessing' }
+GtTextualCoderEditorElement >> text: aBlText [
+	(self text equalsIgnoringAttributes: aBlText)
+		ifTrue: [ ^ self dataSource history disableDuring: [ super text: aBlText ] ].
+	^ super text: aBlText
 ]
 
 { #category : #'api - textual coder view model' }

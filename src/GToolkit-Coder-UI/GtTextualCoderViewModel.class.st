@@ -14,7 +14,8 @@ Class {
 		'isTextModifiedPromise',
 		'completionStrategy',
 		'debuggerInSpace',
-		'nodeAttributeMap'
+		'nodeAttributeMap',
+		'history'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -137,7 +138,8 @@ GtTextualCoderViewModel >> asEditorState [
 
 	aMemento := BrTextEditorCompositeMemento new
 		addMemento: (BrTextEditorCursorsMemento new cursors: cursors copy);
-		addMemento: (BrTextEditorSelectionMemento new selection: selection copy).
+		addMemento: (BrTextEditorSelectionMemento new selection: selection copy);
+		addMemento: (BrTextEditorHistoryMemento new history: (history ifNil: [BrTextEditorHistory new]) copy).
 
 	self hasStyledText
 		ifTrue: [
@@ -406,6 +408,16 @@ GtTextualCoderViewModel >> hasStyledText [
 	^ styledText notNil
 ]
 
+{ #category : #accessing }
+GtTextualCoderViewModel >> history [
+	^ history
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> history: anObject [
+	history := anObject
+]
+
 { #category : #initialization }
 GtTextualCoderViewModel >> initialize [
 	super initialize.
@@ -420,7 +432,8 @@ GtTextualCoderViewModel >> initialize [
 	cursors := BrTextEditorMultipleCursor new.
 	selection := BlCompositeSelection new.
 	extraTextAttributes := OrderedCollection new.
-	nodeAttributeMap := Dictionary new
+	nodeAttributeMap := Dictionary new.
+	history := BrTextEditorHistory new
 ]
 
 { #category : #'api - text' }
