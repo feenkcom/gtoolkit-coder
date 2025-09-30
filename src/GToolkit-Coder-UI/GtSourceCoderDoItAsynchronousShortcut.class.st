@@ -18,7 +18,7 @@ GtSourceCoderDoItAsynchronousShortcut >> initialize [
 
 { #category : #accessing }
 GtSourceCoderDoItAsynchronousShortcut >> name [
-	^ 'Do it (asynchronous)'
+	^ 'Evaluate (asynchronous)'
 ]
 
 { #category : #evaluation }
