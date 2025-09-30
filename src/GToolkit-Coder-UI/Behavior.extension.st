@@ -1,19 +1,15 @@
 Extension { #name : #Behavior }
 
 { #category : #'*GToolkit-Coder-UI' }
-Behavior >> gtBrowseButtonFor: anAction [
+Behavior >> gtClassActionsDropdownFor: anAction [
+
 	<gtClassAction>
-	^ anAction button
-		priority: 1;
-		tooltip: 'Browse class';
-		icon: BrGlamorousVectorIcons emphasizedBrowse;
-		action: [ :aButton | 
-			aButton phlow firstParentCoderNavigationModel
-				coderDo: [ :oldCoder | 
-					aButton phlow
-						spawnTool: (GtReadyCoderTool coder: oldCoder asNewCoderModelWithSameSubject) ] ];
-		primaryModifierAction: [ :aButton | self gtBrowseFromButton: aButton ]
-			mouseCursor: BlCopyCursor new
+	^ anAction dropdown
+		tooltip: 'Class actions';
+		icon: BrGlamorousVectorIcons hamburger;
+		id: GtCoderClassActionsDropdownButtonId;
+		priority: 100;
+		menuItemsForObject: self fromTarget: GtCoderClassTarget
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

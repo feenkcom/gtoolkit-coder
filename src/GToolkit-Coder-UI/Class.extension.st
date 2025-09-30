@@ -6,6 +6,40 @@ Class >> asFilterModelItem [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+Class >> gtCoderSidebarIndexBehaviorDefinitionFor: anAction [
+	<gtAction>
+	^ anAction dropdown
+		priority: 3;
+		target: GtCoderClassTarget;
+		icon: BrGlamorousVectorIcons edit;
+		label: ('{1} definition' format: {self gtCoderTypeName asCamelCase});
+		menuItemPreview: self name;
+		menuItemGroup: BrMenuItemGroupConfiguration modification;
+		menuItemPinSubmenu;
+		content: [ :aButton :aTargetElement :anExplicitMenu | 
+			| aForm aFormElement |
+			aForm := self isTrait
+					ifTrue: [ GtTraitUpdateForm onTrait: self ]
+					ifFalse: [ GtClassUpdateForm onClass: self ].
+			aFormElement := aForm asElement.
+			BrFrame new
+				addChild: aFormElement;
+				padding: (BlInsets all: GtRefactoringsConstants contextMenuPadding);
+				hExact: 400;
+				vFitContentLimited;
+				background: aButton theme default contentBackground;
+				addAptitude: (BrLayoutResizerAptitude new
+						exactToMatchParent: aFormElement;
+						matchParentToMatchParent: aFormElement;
+						fitContentToFitContent: aFormElement;
+						fitContentLimitedToFitContentLimited: aFormElement);
+				addAptitude: (BrGlamorousPopoverPinnableAptitude new
+						withLeftAndRightResizers;
+						withAllPinActions;
+						menuModel: anExplicitMenu) ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexBrowseClassFor: anAction [
 	<gtAction>
 	^ anAction button
@@ -15,7 +49,8 @@ Class >> gtCoderSidebarIndexBrowseClassFor: anAction [
 		label: ('Browse {1}' format: {self gtCoderTypeName});
 		menuItemPreview: self name;
 		menuItemGroup: BrMenuItemGroupConfiguration navigation;
-		action: [ :aButton | aButton phlow spawnObject: self instanceSide ]
+		action: [ :aButton | aButton phlow spawnObject: self instanceSide ];
+		primaryModifierAction: [ :aButton | self gtBrowseFrom: aButton ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
@@ -99,16 +134,26 @@ Class >> gtCoderSidebarIndexNewSubclassFor: anAction [
 		menuItemGroup: BrMenuItemGroupConfiguration modification;
 		menuItemPinSubmenu;
 		content: [ :aButton :aTargetElement :anExplicitMenu | 
-			| aNavigationModel |
-			aNavigationModel := aButton phlow firstParentCoderNavigationModel.
+			| aChild |
+			aChild := aButton phlow
+					firstParentCoderNavigationModelIfPresent: [ :aNavigationModel | 
+						GtCoderNavigationTabsStencil new
+							pragmaName: #gtCoderDropdownNavigation;
+							navigationModel: aNavigationModel;
+							gtCreationInterface: aButton ]
+					ifAbsent: [ BrLabel new
+							aptitude: BrGlamorousLabelAptitude new;
+							text: 'Currently not available from lepiter';
+							constraintsDo: [ :c | 
+								c linear horizontal alignCenter.
+								c linear vertical alignCenter ] ].
+
 			BrVerticalPane new
 				exact: 400 @ 300;
-				addChild: ((GtCoderNavigationTabsStencil new
-						pragmaName: #gtCoderDropdownNavigation;
-						navigationModel: aNavigationModel;
-						gtCreationInterface: aButton) background: Color white);
+				addChild: aChild;
+				background: aButton theme default contentBackground;
 				addAptitude: (BrGlamorousPopoverPinnableAptitude new
-						withResizers;
+						withLeftAndRightResizers;
 						withAllPinActions;
 						menuModel: anExplicitMenu) ]
 ]
