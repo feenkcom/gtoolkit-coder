@@ -18,7 +18,7 @@ GtSourceCoderDoItAndInspectSerializedShortcut >> initialize [
 
 { #category : #accessing }
 GtSourceCoderDoItAndInspectSerializedShortcut >> name [
-	^ 'Do it and inspect serialized'
+	^ 'Evaluate and inspect serialized'
 ]
 
 { #category : #evaluation }
