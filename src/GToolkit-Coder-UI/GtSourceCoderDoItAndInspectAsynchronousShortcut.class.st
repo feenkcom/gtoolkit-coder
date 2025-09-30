@@ -18,7 +18,7 @@ GtSourceCoderDoItAndInspectAsynchronousShortcut >> initialize [
 
 { #category : #accessing }
 GtSourceCoderDoItAndInspectAsynchronousShortcut >> name [
-	^ 'Do it and inspect (asynchronous)'
+	^ 'Evaluate and inspect (asynchronous)'
 ]
 
 { #category : #evaluation }
