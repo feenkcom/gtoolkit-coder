@@ -71,7 +71,7 @@ GtCoderRemoveClassPreviewStencil >> newReferencesContentElement [
 			globalVariableReferencesTo: self classToRemove binding) size.
 	subclasses := self classToRemove allSubclasses size.
 	users := self classToRemove isTrait
-			ifFalse: [ #() ]
+			ifFalse: [ 0 ]
 			ifTrue: [ self classToRemove users size ].
 	pane := BrVerticalPane new.
 	pane fitContent.
