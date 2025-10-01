@@ -202,7 +202,9 @@ GtTextualCoderEditorElement >> initializeListeners [
 
 	self editor
 		when: BrTextEditorHistoryChangedEvent
-		do: [ :anEvent | self textualCoderViewModel history: self editor history copy ].
+		do: [ :anEvent | 
+			textualCoderViewModel
+				ifNotNil: [ textualCoderViewModel history: self editor history copy ] ].
 
 	self editor
 		when: BrTextEditorModifiedEvent
