@@ -14,8 +14,8 @@ GtCoderModel >> asElement [
 GtCoderModel >> asExpandedOnlyElement [
 	"Create an element for just the expanded coder without expander"
 
-	^ GtExpandedOnlyCoderElement new
-		coderViewModel: self asCoderViewModel;
+	^ GtSourceCoderExpandedOnlyElement new
+		textualCoderViewModel: self asCoderViewModel;
 		yourself
 ]
 

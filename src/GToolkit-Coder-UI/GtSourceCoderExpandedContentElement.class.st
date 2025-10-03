@@ -14,6 +14,11 @@ GtSourceCoderExpandedContentElement >> actions [
 	^ actions
 ]
 
+{ #category : #'focus requesting' }
+GtSourceCoderExpandedContentElement >> focusTarget [
+	^ editorElement focusTarget
+]
+
 { #category : #initialization }
 GtSourceCoderExpandedContentElement >> initialize [
 	super initialize.
