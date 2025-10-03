@@ -436,7 +436,7 @@ GtCoderMethodsGroupedListElement >> pushUpMethodSubmenuFor: aMethod [
 					refactoringTitle: 'Push up';
 					targetName: ('{1}>>#{2}' format: { aMethod methodClass. aMethod selector });
 					confirmationLabel: ('Push up {1}' format: { aMethod selector });
-					refactoringWithConfirmation: [ RBPullUpMethodRefactoring
+					refactoringWithConfirmation: [ GtPushUpMethodRefactoring
 						pullUp: {aMethod selector}
 						from: aMethod methodClass ];
 					afterAppliedBlock: [ anExplicitMenu hideAll ];
@@ -465,10 +465,10 @@ GtCoderMethodsGroupedListElement >> pushUpSeveralMethodsSubmenuFor: aCollectionO
 					refactoringsWithConfirmation: [ | aGroupByClass aModel aCollectionOfRefactorings |
 						aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
 						aModel := Smalltalk createRbNamespace
-								onEnvironment: RBPullUpMethodRefactoring new defaultEnvironment.
+								onEnvironment: GtPushUpMethodRefactoring new defaultEnvironment.
 						aCollectionOfRefactorings := aGroupByClass
 								collect: [ :someMethods | 
-									RBPullUpMethodRefactoring new
+									GtPushUpMethodRefactoring new
 										model: aModel;
 										pullUp: (someMethods collect: #selector)
 											from: someMethods anyOne methodClass ]
