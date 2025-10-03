@@ -66,8 +66,8 @@ GtCoderSlotsGroupedListElement >> contextMenuFor: item [
 	menu
 		addItem: (BrMenuSubmenuItem new
 				group: BrMenuItemGroupConfiguration refactoring;
-				label: (self createLabel: 'Pull up' description: item name);
-				submenu: (self pullUpSubmenuFor: item name);
+				label: (self createLabel: 'Push up' description: item name);
+				submenu: (self pushUpSubmenuFor: item name);
 				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
@@ -252,31 +252,6 @@ GtCoderSlotsGroupedListElement >> protectSubmenuFor: aString [
 ]
 
 { #category : #'private - context menu' }
-GtCoderSlotsGroupedListElement >> pullUpSubmenuFor: aString [
-	| submenu |
-	submenu := BrMenuExplicit new.
-	submenu
-		stencil: [ :anExplicitMenu | 
-			| aViewModel |
-			aViewModel := GtRefactoringsWithConfirmationViewModel new
-					refactoringTitle: 'Pull up';
-					targetName: ('{1}''s {2} inst. variable' format: { self selectedClass name. aString });
-					confirmationLabel: ('Pull up {1}' format: { aString });
-					refactoringWithConfirmation: [ RBPullUpInstanceVariableRefactoring
-						variable: aString
-						class: self selectedClass superclass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
-					menuModel: anExplicitMenu;
-					anchorElement: self.
-			GtRefactoringsPreviewWithConfirmationElement new 
-				refactoringsViewModel: aViewModel;
-				beContextMenuElement;
-				bePinnable: anExplicitMenu ].
-	
-	^ submenu
-]
-
-{ #category : #'private - context menu' }
 GtCoderSlotsGroupedListElement >> pushDownSubmenuFor: aString [
 	| submenu |
 	submenu := BrMenuExplicit new.
@@ -291,6 +266,31 @@ GtCoderSlotsGroupedListElement >> pushDownSubmenuFor: aString [
 					refactoringWithConfirmation: [ GtPushDownInstanceVariableRefactoring
 						variable: aString
 						class: self selectedClass ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new 
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+	
+	^ submenu
+]
+
+{ #category : #'private - context menu' }
+GtCoderSlotsGroupedListElement >> pushUpSubmenuFor: aString [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	submenu
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Push up';
+					targetName: ('{1}''s {2} inst. variable' format: { self selectedClass name. aString });
+					confirmationLabel: ('Push up {1}' format: { aString });
+					refactoringWithConfirmation: [ RBPullUpInstanceVariableRefactoring
+						variable: aString
+						class: self selectedClass superclass ];
 					afterAppliedBlock: [ anExplicitMenu hideAll ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
