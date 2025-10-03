@@ -258,10 +258,18 @@ GtTextualCoder >> isModified [
 ]
 
 { #category : #testing }
-GtTextualCoder >> isModifiedPromise [
-	<return: #TAsyncPromise of: #Boolean>
+GtTextualCoder >> isModifiedFuture [
+	<return: #TAsyncFuture of: #Boolean>
 
-	^ [ self sourceCode isModified ] asAsyncPromise
+	^ [ self sourceCode isModified ] asAsyncFuture
+]
+
+{ #category : #testing }
+GtTextualCoder >> isModifiedPromise [
+	"Deprecated: use `GtTextualCoderViewModel>>#isTextModifiedPromise` instead."
+
+	<return: #TAsyncPromise of: #Boolean>
+	^ self isModifiedFuture asAsyncPromise
 ]
 
 { #category : #'private - notifying' }
