@@ -91,31 +91,6 @@ GtTextualCoderEditorElement >> createContextMenu [
 	^ aMenu 
 ]
 
-{ #category : #'instance creation' }
-GtTextualCoderEditorElement >> createContextMenuContent [
-	"wait for the addons to be computed.
-	Deprected: Use #createContextMenu instead."
-
-	| theContextMenu aContextMenuPromise |
-	theContextMenu := GtCoderContextMenuContent new editorElement: self.
-
-	aContextMenuPromise := self textualCoderViewModel addOns
-			asyncThen: [ :theAddOns | 
-				| theItems theContextMenuAstAddons |
-				"extra context menu items that depend on ast and view model state such as selection"
-				theContextMenuAstAddons := self textualCoderViewModel
-						computeContextMenuAstAddOns.
-				theItems := theAddOns contextMenuActions, theContextMenuAstAddons contextMenuActions.
-				theItems := theItems reject: [ :e | e title isNil ].
-
-				theContextMenu
-					enqueueTask: (BlTaskAction new action: [ theContextMenu items: theItems ]) ].
-
-	self enqueueTask: (BlPromiseTask new promise: aContextMenuPromise).
-
-	^ theContextMenu
-]
-
 { #category : #initialization }
 GtTextualCoderEditorElement >> defaultTextEditorMode [
 	^ BrTextEditorEditableCodeMode new
@@ -154,7 +129,6 @@ GtTextualCoderEditorElement >> initialize [
 	
 	self
 		aptitude: BrGlamorousCodeEditorAptitude;
-		"addAptitude: (BrGlamorousWithContextMenuAptitude content: [ self createContextMenuContent ]);"
 		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude menu: [ self createContextMenu ]);
 		padding: BlInsets empty;
 		hMatchParent;
@@ -179,7 +153,9 @@ GtTextualCoderEditorElement >> initialize [
 	addOnsElementFuture := (BrAsyncElementFuture on: self)
 		executionConfiguration: (GtSingleCoderViewModel methodAddOnsExecutionConfiguration);
 		whenSuccess: [ :anEditorElement :theAddOns |
-			self textualCoderViewModel onAddOnsChanged: theAddOns ].
+			self textualCoderViewModel onAddOnsChanged: theAddOns ];
+		whenError: [ :anEditorElement :anError | 
+			self onAddOnsError: anError ].
 
 	self initializeListeners.
 
@@ -221,6 +197,15 @@ GtTextualCoderEditorElement >> initializeListeners [
 	self editor
 		when: BrTextEditorTextStyledEvent
 		do: [ :anEvent | self onTextStyled: anEvent ]
+]
+
+{ #category : #initialization }
+GtTextualCoderEditorElement >> onAddOnsError: anError [
+	anError emit.
+	NonInteractiveTranscript stderr
+		show: '[GtTextualCoderEditorElement>>#onAddOnsError:] ';
+		show: anError;
+		newLine
 ]
 
 { #category : #'hooks - children' }
@@ -401,7 +386,10 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	shortcuts := self textualCoderViewModel shortcuts copy.
 	self editor addEditorShortcuts: shortcuts.
 	
-	completion strategy: self textualCoderViewModel completionStrategy
+	completion strategy: self textualCoderViewModel completionStrategy.
+	
+	self textualCoderViewModel compositeStyler ifNotNil: [ :aStyler | 
+		self styler: aStyler ]
 ]
 
 { #category : #'private - event handling' }

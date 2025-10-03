@@ -23,7 +23,7 @@ GtExpandedOnlyCoderElement >> asVerticallyResizableDo: aBlock [
 GtExpandedOnlyCoderElement >> coder: aCoderUIModel [
 
 	self 
-		deprecated: 'Use #coderUIModel: instead.'
+		deprecated: 'Use #coderViewModel: instead.'
 		transformWith: '`@receiver coder: `@arg' -> '`@receiver coderViewModel: `@arg'.
 		
 	^ self coderViewModel: aCoderUIModel
