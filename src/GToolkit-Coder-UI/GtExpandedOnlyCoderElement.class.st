@@ -8,6 +8,13 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
+{ #category : #testing }
+GtExpandedOnlyCoderElement class >> isDeprecated [
+	"Use GtSourceCoderExpandedOnlyElement instead"
+
+	^ true
+]
+
 { #category : #adding }
 GtExpandedOnlyCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
 	aSourceCoder coderLook

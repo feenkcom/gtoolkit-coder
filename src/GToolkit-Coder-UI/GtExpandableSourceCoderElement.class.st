@@ -137,22 +137,7 @@ GtExpandableSourceCoderElement >> newExpandedElement [
 
 { #category : #'private - instance creation' }
 GtExpandableSourceCoderElement >> newModificationIndicator [
-	^ BlElement new
-		constraintsDo: [ :c |
-			c ignoreByLayout.
-			c ignored horizontal alignLeft.
-			c horizontal exact: 5.
-			c vertical matchParent.
-			c margin: (BlInsets left: 8) ];
-		preventMeAndChildrenMouseEvents;
-		background: self theme status changesBackgroundColor;
-		id: GtTextualCoderModificationIndicatorId;
-		withAsyncPromiseDo: [ :anElementPromise |
-			anElementPromise
-				whenSuccess: [ :anIndicator :isModified |
-					anIndicator visibility: (isModified
-						ifTrue: [ BlVisibility visible ]
-						ifFalse: [ BlVisibility gone ]) ] ]
+	^ GtSourceCoderModificationIndicator new withVerticalLeftIgnoredLayout
 ]
 
 { #category : #private }
@@ -182,6 +167,8 @@ GtExpandableSourceCoderElement >> onTextualCoderViewModelChanged [
 	which means that if you perform any operation that triggers an announcement it will be ignored because the receiver
 	didn't get a chance to subscribe to any announcement. Override #onPostTextualCoderViewModelChanged if you
 	wish to perform an operation that requires an announcement, but keep in mind that this is not the most efficient way"
+	
+	modificationIndicator textualCoderViewModel: self textualCoderViewModel.
 	
 	self updateElement
 ]
@@ -250,5 +237,7 @@ GtExpandableSourceCoderElement >> updateElement [
 
 { #category : #'private - update' }
 GtExpandableSourceCoderElement >> updateModificationIndicator [
+	true ifTrue: [ ^ self ].
+	
 	modificationIndicator asyncPromise promise: textualCoderViewModel isTextModifiedPromise
 ]
