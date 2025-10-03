@@ -6,6 +6,13 @@ Class {
 	#category : #'GToolkit-Coder-UI-Filters - Widgets'
 }
 
+{ #category : #accessing }
+GtFilterSettingsElement class >> futureExecutionConfiguration [
+	^ AsyncFutureExecutionConfiguration new
+		customGroup: #CoderFilter;
+		lowPriority
+]
+
 { #category : #initialization }
 GtFilterSettingsElement >> defaultLayout [
 	^ BlLinearLayout horizontal
