@@ -37,9 +37,7 @@ GtFilterToggleSettingsElement >> initializeToggleGroupElement [
 				do: [ :anEvent | self onToggleActivatedEvent: anEvent ];
 			withAsyncFutureDo: [ :anElementFuture |
 				anElementFuture
-					executionConfiguration: (AsyncFutureExecutionConfiguration new 
-						customGroup: #CoderFilter;
-						lowPriority);
+					executionConfiguration: (self class futureExecutionConfiguration);
 					whenPending: [ :theToggleGroup |
 						self 
 							updateToggleElement: theToggleGroup 

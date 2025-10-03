@@ -441,9 +441,11 @@ GtTextualCoderViewModel >> isTextModifiedPromise [
 	"Return a promise which is resolved to true if the text is modified,
 	false otherwise. Should be used together with {{gtClass:GtTextualCoderViewModelTextChanged}} to update
 	the modification status in the UI"
+
 	<return: #TAsyncPromise of: #Boolean>
-	
-	^ isTextModifiedPromise ifNil: [ isTextModifiedPromise := self coderModel isModifiedPromise ]
+	^ isTextModifiedPromise
+		ifNil: [ isTextModifiedPromise := self coderModel isModifiedFuture
+					await: self class commonExecutionConfiguration ]
 ]
 
 { #category : #'api - add-ons' }
