@@ -15,6 +15,16 @@ GtSourceCoderExpandedOnlyElement >> asVerticallyResizableDo: aBlock [
 	^ self
 ]
 
+{ #category : #'api - textual coder view model' }
+GtSourceCoderExpandedOnlyElement >> coderViewModel [
+	^ self textualCoderViewModel
+]
+
+{ #category : #'api - textual coder view model' }
+GtSourceCoderExpandedOnlyElement >> coderViewModel: aViewModel [
+	self textualCoderViewModel: aViewModel
+]
+
 { #category : #initialization }
 GtSourceCoderExpandedOnlyElement >> defaultLayout [
 	^ BlLinearLayout vertical
