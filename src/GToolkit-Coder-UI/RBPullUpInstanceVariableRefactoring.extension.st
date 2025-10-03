@@ -2,5 +2,5 @@ Extension { #name : #RBPullUpInstanceVariableRefactoring }
 
 { #category : #'*GToolkit-Coder-UI' }
 RBPullUpInstanceVariableRefactoring >> gtDescription [
-	^ 'Pull up instance variable ' , variableName
+	^ 'Push up instance variable ' , variableName
 ]

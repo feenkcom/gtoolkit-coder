@@ -121,8 +121,8 @@ GtCoderMethodsGroupedListElement >> contextMenuForOneItem: item in: anElement [
 	menu
 		addItem: (BrMenuSubmenuItem new
 				group: BrMenuItemGroupConfiguration refactoring;
-				label: (self createLabel: 'Pull up method' description: item selector);
-				submenu: (self pullUpMethodSubmenuFor: item);
+				label: (self createLabel: 'Push up method' description: item selector);
+				submenu: (self pushUpMethodSubmenuFor: item);
 				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
@@ -181,9 +181,9 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 		addItem: (BrMenuSubmenuItem new
 				group: BrMenuItemGroupConfiguration refactoring;
 				label: (self
-						createLabel: 'Pull up methods'
+						createLabel: 'Push up methods'
 						description: ('{1} methods' format: {someItems size}));
-				submenu: (self pullUpSeveralMethodsSubmenuFor: someItems);
+				submenu: (self pushUpSeveralMethodsSubmenuFor: someItems);
 				bePinSubmenuAction).
 	menu
 		addItem: (BrMenuSubmenuItem new
@@ -359,68 +359,6 @@ GtCoderMethodsGroupedListElement >> onMethodsToShowChanged: anAnnouncement [
 ]
 
 { #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> pullUpMethodSubmenuFor: aMethod [
-	| submenu |
-	submenu := BrMenuExplicit new.
-	
-	submenu
-		stencil: [ :anExplicitMenu | 
-			| aViewModel |
-			aViewModel := GtRefactoringsWithConfirmationViewModel new
-					refactoringTitle: 'Pull up';
-					targetName: ('{1}>>#{2}' format: { aMethod methodClass. aMethod selector });
-					confirmationLabel: ('Pull up {1}' format: { aMethod selector });
-					refactoringWithConfirmation: [ RBPullUpMethodRefactoring
-						pullUp: {aMethod selector}
-						from: aMethod methodClass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
-					menuModel: anExplicitMenu;
-					anchorElement: self.
-			GtRefactoringsPreviewWithConfirmationElement new 
-				refactoringsViewModel: aViewModel;
-				beContextMenuElement;
-				bePinnable: anExplicitMenu ].
-	
-	^ submenu
-]
-
-{ #category : #'private - context menu' }
-GtCoderMethodsGroupedListElement >> pullUpSeveralMethodsSubmenuFor: aCollectionOfMethods [
-	| submenu |
-	submenu := BrMenuExplicit new.
-
-	submenu
-		stencil: [ :anExplicitMenu | 
-			| aViewModel |
-			aViewModel := GtRefactoringsWithConfirmationViewModel new
-					refactoringTitle: 'Pull up';
-					targetName: ('{1} methods' format: {aCollectionOfMethods size});
-					confirmationLabel: ('Pull up {1} methods' format: {aCollectionOfMethods size});
-					refactoringsWithConfirmation: [ | aGroupByClass aModel aCollectionOfRefactorings |
-						aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
-						aModel := Smalltalk createRbNamespace
-								onEnvironment: RBPullUpMethodRefactoring new defaultEnvironment.
-						aCollectionOfRefactorings := aGroupByClass
-								collect: [ :someMethods | 
-									RBPullUpMethodRefactoring new
-										model: aModel;
-										pullUp: (someMethods collect: #selector)
-											from: someMethods anyOne methodClass ]
-								as: Array.
-						aModel name: ('Pull up {1} methods' format: {aCollectionOfMethods size}).
-						aCollectionOfRefactorings ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
-					menuModel: anExplicitMenu;
-					anchorElement: self.
-			GtRefactoringsPreviewWithConfirmationElement new
-				refactoringsViewModel: aViewModel;
-				beContextMenuElement;
-				bePinnable: anExplicitMenu ].
-
-	^ submenu
-]
-
-{ #category : #'private - context menu' }
 GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
@@ -474,6 +412,68 @@ GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectio
 													forPharo11: [ someMethods anyOne methodClass ]) ]
 								as: Array.
 						aModel name: ('Push down {1} methods' format: {aCollectionOfMethods size}).
+						aCollectionOfRefactorings ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+
+	^ submenu
+]
+
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> pushUpMethodSubmenuFor: aMethod [
+	| submenu |
+	submenu := BrMenuExplicit new.
+	
+	submenu
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Push up';
+					targetName: ('{1}>>#{2}' format: { aMethod methodClass. aMethod selector });
+					confirmationLabel: ('Push up {1}' format: { aMethod selector });
+					refactoringWithConfirmation: [ RBPullUpMethodRefactoring
+						pullUp: {aMethod selector}
+						from: aMethod methodClass ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithConfirmationElement new 
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ].
+	
+	^ submenu
+]
+
+{ #category : #'private - context menu' }
+GtCoderMethodsGroupedListElement >> pushUpSeveralMethodsSubmenuFor: aCollectionOfMethods [
+	| submenu |
+	submenu := BrMenuExplicit new.
+
+	submenu
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			aViewModel := GtRefactoringsWithConfirmationViewModel new
+					refactoringTitle: 'Push up';
+					targetName: ('{1} methods' format: {aCollectionOfMethods size});
+					confirmationLabel: ('Push up {1} methods' format: {aCollectionOfMethods size});
+					refactoringsWithConfirmation: [ | aGroupByClass aModel aCollectionOfRefactorings |
+						aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
+						aModel := Smalltalk createRbNamespace
+								onEnvironment: RBPullUpMethodRefactoring new defaultEnvironment.
+						aCollectionOfRefactorings := aGroupByClass
+								collect: [ :someMethods | 
+									RBPullUpMethodRefactoring new
+										model: aModel;
+										pullUp: (someMethods collect: #selector)
+											from: someMethods anyOne methodClass ]
+								as: Array.
+						aModel name: ('Push up {1} methods' format: {aCollectionOfMethods size}).
 						aCollectionOfRefactorings ];
 					afterAppliedBlock: [ anExplicitMenu hideAll ];
 					menuModel: anExplicitMenu;
