@@ -54,7 +54,8 @@ GtCoderProtocolsGroupedListElement >> contextMenuFor: aPharoProtocol [
 		ifTrue: [ menu
 				addItem: (BrMenuSubmenuItem new
 						label: (self createLabel: 'Rename' description: aPharoProtocol name);
-						submenu: (self renameProtocolSubmenuFor: aPharoProtocol)) ].
+						submenu: (self renameProtocolSubmenuFor: aPharoProtocol);
+						bePinSubmenuAction) ].
 	aPharoProtocol canBeRemoved
 		ifTrue: [ menu
 				addItem: (BrMenuSubmenuItem new
@@ -373,20 +374,28 @@ GtCoderProtocolsGroupedListElement >> removeProtocolSubmenuFor: aGtPharoProtocol
 
 { #category : #'private - refactorings' }
 GtCoderProtocolsGroupedListElement >> renameProtocolSubmenuFor: aGtPharoProtocol [
-	| submenu |
-	submenu := BrMenuExplicit new.
-	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ :each | 
-					GtRBRenameProtocolRefactoring
-						renameProtocol: aGtPharoProtocol name
-						in: aGtPharoProtocol protocolClass
-						to: each ]
-				labeled: 'Rename protocol: '
-				initialValue: aGtPharoProtocol name
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
-	^ submenu
+	^ BrMenuExplicit new
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			anExplicitMenu id: #'coder--context-menu-rename-protocol-form'.
+
+			aViewModel := GtRefactoringsWithInputViewModel new
+					refactoringTitle: 'Rename method protocol';
+					targetName: aGtPharoProtocol name;
+					inputLabel: 'New method protocol name:';
+					initialText: aGtPharoProtocol name;
+					refactoringWithInput: [ :anInput | 
+						GtRBRenameProtocolRefactoring
+							renameProtocol: aGtPharoProtocol name
+							in: aGtPharoProtocol protocolClass
+							to: anInput ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithInputElement new
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ]
 ]
 
 { #category : #'api - list' }

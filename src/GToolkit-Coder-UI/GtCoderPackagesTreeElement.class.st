@@ -73,7 +73,8 @@ GtCoderPackagesTreeElement >> contextMenuFor: aPackageOrTag [
 		ifTrue: [ menu
 				addItem: (BrMenuSubmenuItem new
 						label: (self createLabel: 'Rename package' description: aPackageOrTag name);
-						submenu: (self renamePackageSubmenuFor: aPackageOrTag)).
+						submenu: (self renamePackageSubmenuFor: aPackageOrTag);
+						bePinSubmenuAction).
 			menu
 				addItem: (BrMenuSubmenuItem new
 						label: (self createLabel: 'Remove package' description: aPackageOrTag name);
@@ -81,7 +82,8 @@ GtCoderPackagesTreeElement >> contextMenuFor: aPackageOrTag [
 		ifFalse: [ menu
 				addItem: (BrMenuSubmenuItem new
 						label: (self createLabel: 'Rename tag' description: aPackageOrTag name);
-						submenu: (self renamePackageTagSubmenuFor: aPackageOrTag)).
+						submenu: (self renamePackageTagSubmenuFor: aPackageOrTag);
+						bePinSubmenuAction).
 			menu
 				addItem: (BrMenuSubmenuItem new
 						label: (self createLabel: 'Remove tag' description: aPackageOrTag name);
@@ -214,7 +216,7 @@ GtCoderPackagesTreeElement >> onDropClassesOnPackageOrTag: anItemsDroppedEvent [
 	| aPackageOrTag aModel compositeChange someRefactorings aPromise |
 	aPackageOrTag := anItemsDroppedEvent currentTarget packageOrTag.
 	aModel := Smalltalk createRbNamespace
-			onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
+			onEnvironment: GtRBPushDownMethodRefactoring new defaultEnvironment.
 
 	someRefactorings := anItemsDroppedEvent items
 			collect: [ :eachDragItem | 
@@ -367,34 +369,51 @@ GtCoderPackagesTreeElement >> renamePackage: aPackage inElement: elem [
 
 { #category : #'private - context menu' }
 GtCoderPackagesTreeElement >> renamePackageSubmenuFor: aPackage [
-	| submenu |
-	submenu := BrMenuExplicit new.
-	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ :each | GtRBRenamePackageRefactoring from: aPackage name to: each ]
-				labeled: 'Rename package: '
-				initialValue: aPackage name
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
-	^ submenu
+	^ BrMenuExplicit new
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			anExplicitMenu id: #'coder--context-menu-rename-package-form'.
+
+			aViewModel := GtRefactoringsWithInputViewModel new
+					refactoringTitle: 'Rename package';
+					targetName: aPackage name;
+					inputLabel: 'New package name:';
+					initialText: aPackage name;
+					refactoringWithInput: [ :anInput | 
+						GtRBRenamePackageRefactoring from: aPackage name to: anInput ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithInputElement new
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ]
 ]
 
 { #category : #'private - context menu' }
 GtCoderPackagesTreeElement >> renamePackageTagSubmenuFor: aPackageTag [
-	| submenu |
-	submenu := BrMenuExplicit new.
-	submenu
-		stencil: [ GtRefactoringsWithInputPreviewElement
-				elementForRefactoring: [ :each | 
-					GtRBRenamePackageTagRefactoring
-						packageName: aPackageTag packageName
-						from: aPackageTag name
-						to: each ]
-				labeled: 'Rename tag: '
-				initialValue: aPackageTag name
-				from: self
-				beforeApplyingDo: [ submenu hideAll ] ].
-	^ submenu
+	^ BrMenuExplicit new
+		stencil: [ :anExplicitMenu | 
+			| aViewModel |
+			anExplicitMenu id: #'coder--context-menu-rename-package-tag-form'.
+
+			aViewModel := GtRefactoringsWithInputViewModel new
+					refactoringTitle: 'Rename package tag';
+					targetName: aPackageTag name;
+					inputLabel: 'New package tag name:';
+					initialText: aPackageTag name;
+					refactoringWithInput: [ :anInput | 
+						GtRBRenamePackageTagRefactoring
+							packageName: aPackageTag packageName
+							from: aPackageTag name
+							to: anInput ];
+					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					menuModel: anExplicitMenu;
+					anchorElement: self.
+			GtRefactoringsPreviewWithInputElement new
+				refactoringsViewModel: aViewModel;
+				beContextMenuElement;
+				bePinnable: anExplicitMenu ]
 ]
 
 { #category : #initialization }

@@ -124,12 +124,14 @@ GtCoderMethodsGroupedListElement >> contextMenuForOneItem: item in: anElement [
 				label: (self createLabel: 'Push up method' description: item selector);
 				submenu: (self pushUpMethodSubmenuFor: item);
 				bePinSubmenuAction).
-	menu
-		addItem: (BrMenuSubmenuItem new
-				group: BrMenuItemGroupConfiguration refactoring;
-				label: (self createLabel: 'Push down method' description: item selector);
-				submenu: (self pushDownMethodSubmenuFor: item);
-				bePinSubmenuAction).
+
+	item methodClass subclasses notEmpty
+		ifTrue: [ menu
+				addItem: (BrMenuSubmenuItem new
+						group: BrMenuItemGroupConfiguration refactoring;
+						label: (self createLabel: 'Push down method' description: item selector);
+						submenu: (self pushDownMethodSubmenuFor: item);
+						bePinSubmenuAction) ].
 	menu
 		addItem: (BrMenuSubmenuItem new
 				group: BrMenuItemGroupConfiguration refactoring;
@@ -185,14 +187,16 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 						description: ('{1} methods' format: {someItems size}));
 				submenu: (self pushUpSeveralMethodsSubmenuFor: someItems);
 				bePinSubmenuAction).
-	menu
-		addItem: (BrMenuSubmenuItem new
-				group: BrMenuItemGroupConfiguration refactoring;
-				label: (self
-						createLabel: 'Push down methods'
-						description: ('{1} methods' format: {someItems size}));
-				submenu: (self pushDownSeveralMethodsSubmenuFor: someItems);
-				bePinSubmenuAction).
+
+	someItems anyOne methodClass subclasses notEmpty
+		ifTrue: [ menu
+				addItem: (BrMenuSubmenuItem new
+						group: BrMenuItemGroupConfiguration refactoring;
+						label: (self
+								createLabel: 'Push down methods'
+								description: ('{1} methods' format: {someItems size}));
+						submenu: (self pushDownSeveralMethodsSubmenuFor: someItems);
+						bePinSubmenuAction) ].
 
 	menu
 		addItem: (BrMenuSubmenuItem new
@@ -370,7 +374,7 @@ GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aMethod [
 					refactoringTitle: 'Push down';
 					targetName: ('{1}>>#{2}' format: { aMethod methodClass. aMethod selector });
 					confirmationLabel: ('Push down {1}' format: { aMethod selector });
-					refactoringWithConfirmation: [ RBPushDownMethodRefactoring
+					refactoringWithConfirmation: [ GtRBPushDownMethodRefactoring
 						pushDown: {aMethod selector}
 						from: (self
 								forPharo12AndNewer: [ aMethod methodClass name ]
@@ -401,10 +405,10 @@ GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectio
 					refactoringsWithConfirmation: [ | aGroupByClass aModel aCollectionOfRefactorings |
 						aGroupByClass := aCollectionOfMethods groupedBy: #methodClass.
 						aModel := Smalltalk createRbNamespace
-								onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
+								onEnvironment: GtRBPushDownMethodRefactoring new defaultEnvironment.
 						aCollectionOfRefactorings := aGroupByClass
 								collect: [ :someMethods | 
-									RBPushDownMethodRefactoring new
+									GtRBPushDownMethodRefactoring new
 										model: aModel;
 										pushDown: (someMethods collect: #selector)
 											from: (self
