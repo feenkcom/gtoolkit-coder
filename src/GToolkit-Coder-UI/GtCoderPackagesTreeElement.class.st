@@ -214,7 +214,7 @@ GtCoderPackagesTreeElement >> onDropClassesOnPackageOrTag: anItemsDroppedEvent [
 	| aPackageOrTag aModel compositeChange someRefactorings aPromise |
 	aPackageOrTag := anItemsDroppedEvent currentTarget packageOrTag.
 	aModel := Smalltalk createRbNamespace
-			onEnvironment: RBPushDownMethodRefactoring new defaultEnvironment.
+			onEnvironment: GtRBPushDownMethodRefactoring new defaultEnvironment.
 
 	someRefactorings := anItemsDroppedEvent items
 			collect: [ :eachDragItem | 
