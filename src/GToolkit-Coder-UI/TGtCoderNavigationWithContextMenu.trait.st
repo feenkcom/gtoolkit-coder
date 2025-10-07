@@ -4,50 +4,6 @@ Trait {
 }
 
 { #category : #'private - context menu' }
-TGtCoderNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem appliedBlock: appliedBlock cancelBlock: cancelBlock [
-	| button |
-	elem removeChildNamed: #preview.
-	button := GtRefactoringsPreviewButton new.
-	button vMatchParent.
-	button refactorings: [ {refactoring} ].
-	button cancelBlock: cancelBlock.
-	button
-		padding: (BlInsets
-				top: 1
-				right: 4
-				bottom: 0
-				left: 4).
-	button beMiniSize.
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | 
-			elem removeChild: anEvent currentTarget.
-			appliedBlock value ].
-	^ elem addChild: button as: #preview
-]
-
-{ #category : #'private - context menu' }
-TGtCoderNavigationWithContextMenu >> addPreviewButtonFor: refactoring to: elem cancelSelector: cancelSelector [
-	| button |
-	elem removeChildNamed: #preview.
-	button := GtRefactoringsPreviewButton new.
-	button vMatchParent.
-	button refactorings: [ {refactoring} ].
-	button cancelBlock: [ self perform: cancelSelector  ].
-	button
-		padding: (BlInsets
-				top: 1
-				right: 4
-				bottom: 0
-				left: 4).
-	button beMiniSize.
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
-	^ elem addChild: button as: #preview
-]
-
-{ #category : #'private - context menu' }
 TGtCoderNavigationWithContextMenu >> createLabel: aString description: description [
 	^ aString asRopedText glamorousRegularFont
 		, ((' ' , description) asRopedText
