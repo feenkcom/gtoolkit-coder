@@ -22,27 +22,6 @@ GtCoderClassesTreeElement class >> fromClasses: aCollectionOfClasses [
 	^ self new initializeWithClasses: aCollectionOfClasses
 ]
 
-{ #category : #'private - context menu' }
-GtCoderClassesTreeElement >> addPreviewButtonFor: refactoring to: elem cancelSelector: cancelSelector [
-	| button |
-	elem removeChildNamed: #preview.
-	button := GtRefactoringsPreviewButton new.
-	button vMatchParent.
-	button refactorings: [ {refactoring} ].
-	button cancelBlock: [ self perform: cancelSelector  ].
-	button
-		padding: (BlInsets
-				top: 1
-				right: 4
-				bottom: 0
-				left: 4).
-	button beMiniSize.
-	button
-		when: GtRefactoringsAppliedEvent
-		do: [ :anEvent | elem removeChild: anEvent currentTarget ].
-	^ elem addChild: button as: #preview
-]
-
 { #category : #initialization }
 GtCoderClassesTreeElement >> bind: aClassHierarchyTree element: aClassElement index: anIndexInTree [
 	aClassElement

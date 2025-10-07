@@ -339,34 +339,6 @@ GtCoderPackagesTreeElement >> removePackageTagSubmenuFor: aPackageTag [
 			element ]
 ]
 
-{ #category : #initialization }
-GtCoderPackagesTreeElement >> renamePackage: aPackage inElement: elem [
-	| refactoring edit childs |
-	childs := elem children copy.
-	edit := BrEditableLabel new.
-	edit
-		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;	"Force the font to match the label font"
-				background: Color transparent);
-		text: aPackage name;
-		when: BrEditorAcceptWish
-			do: [ :aWish | 
-				refactoring := GtRBRenamePackageRefactoring
-						from: aPackage name
-						to: aWish text asString.
-				edit switchToLabel.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					appliedBlock: [  ]
-					cancelBlock: [ elem removeChildren.
-						elem addChildren: childs ] ];
-		switchToEditor.
-	edit requestFocus.
-	elem removeChildren.
-	elem addChild: edit
-]
-
 { #category : #'private - context menu' }
 GtCoderPackagesTreeElement >> renamePackageSubmenuFor: aPackage [
 	^ BrMenuExplicit new
@@ -414,35 +386,6 @@ GtCoderPackagesTreeElement >> renamePackageTagSubmenuFor: aPackageTag [
 				refactoringsViewModel: aViewModel;
 				beContextMenuElement;
 				bePinnable: anExplicitMenu ]
-]
-
-{ #category : #initialization }
-GtCoderPackagesTreeElement >> renameTag: aPackageOrTag inElement: elem [
-	| refactoring edit childs |
-	childs := elem children copy.
-	edit := BrEditableLabel new.
-	edit
-		aptitude: (BrGlamorousEditableLabelAptitude new
-				fontSize: 11.9;	"Force the font to match the label font"
-				background: Color transparent);
-		text: aPackageOrTag name;
-		when: BrEditorAcceptWish
-			do: [ :aWish | 
-				refactoring := GtRBRenamePackageTagRefactoring
-						packageName: aPackageOrTag package name
-						from: aPackageOrTag name
-						to: aWish text asString.
-				edit switchToLabel.
-				self
-					addPreviewButtonFor: refactoring
-					to: elem
-					appliedBlock: [  ]
-					cancelBlock: [ elem removeChildren.
-						elem addChildren: childs ] ];
-		switchToEditor.
-	edit requestFocus.
-	elem removeChildren.
-	elem addChild: edit
 ]
 
 { #category : #'private - context menu' }
