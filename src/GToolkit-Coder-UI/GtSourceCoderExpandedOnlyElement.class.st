@@ -49,7 +49,7 @@ GtSourceCoderExpandedOnlyElement >> initialize [
 	self addChild: expandedElement.
 	self addChild: modificationIndicator.
 
-	self addAptitude: (BrLayoutResizerAptitude new commonResizing: expandedElement)
+	self addAptitude: (BrLayoutResizerAptitude new common: expandedElement)
 ]
 
 { #category : #initialization }
