@@ -1,6 +1,6 @@
 Extension { #name : #InstanceVariableSlot }
 
-{ #category : #'*GToolkit-Coder-UI\t' }
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtAbstractActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	| aSelectedClass |
@@ -35,7 +35,7 @@ InstanceVariableSlot >> gtAbstractActionFor: anAction context: aPhlowContext [
 				bePinnable: anExplicitMenu ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI\t' }
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtBrowseReferencesActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	^ anAction button
@@ -56,7 +56,7 @@ InstanceVariableSlot >> gtBrowseReferencesActionFor: anAction context: aPhlowCon
 			aButton phlow spawnObject: aFilter ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI\t' }
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtCreateAccessorsActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	| aSelectedClass |
@@ -91,7 +91,7 @@ InstanceVariableSlot >> gtCreateAccessorsActionFor: anAction context: aPhlowCont
 				bePinnable: anExplicitMenu ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI\t' }
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtProtectSlotActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	| aSelectedClass |
@@ -124,7 +124,7 @@ InstanceVariableSlot >> gtProtectSlotActionFor: anAction context: aPhlowContext 
 				bePinnable: anExplicitMenu ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI\t' }
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtPushDownActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	| aSelectedClass |
@@ -159,7 +159,7 @@ InstanceVariableSlot >> gtPushDownActionFor: anAction context: aPhlowContext [
 				bePinnable: anExplicitMenu ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI\t' }
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtPushUpActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	| aSelectedClass |
@@ -194,7 +194,7 @@ InstanceVariableSlot >> gtPushUpActionFor: anAction context: aPhlowContext [
 				bePinnable: anExplicitMenu ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI\t' }
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtRemoveActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	| aSelectedClass |
@@ -257,7 +257,7 @@ InstanceVariableSlot >> gtRemoveActionFor: anAction context: aPhlowContext [
 			element ]
 ]
 
-{ #category : #'*GToolkit-Coder-UI\t' }
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtRenameActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	| aSelectedClass |
@@ -283,7 +283,7 @@ InstanceVariableSlot >> gtRenameActionFor: anAction context: aPhlowContext [
 						GtRenameInstanceVariableRefactoring
 							rename: self name
 							to: anInput
-							in: aSelectedClass ];
+							in:  aSelectedClass ];
 					afterAppliedBlock: [ anExplicitMenu hideAll ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
