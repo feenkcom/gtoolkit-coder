@@ -62,18 +62,32 @@ GtCharacterGroupDiffSplitter >> printOn: aStream [
 ]
 
 { #category : #accessing }
+GtCharacterGroupDiffSplitter >> split: aString from: start to: end into: aGtDiffSplits [
+	| stream |
+	stream := ReadStream
+			on: aString
+			from: start
+			to: end.
+	self splitStream: stream into: aGtDiffSplits
+]
+
+{ #category : #accessing }
 GtCharacterGroupDiffSplitter >> split: aString into: aGtDiffSplits [
-	| stream start groupId nextGroupId |
-	stream := aString readStream.
+	self splitStream: aString readStream into: aGtDiffSplits
+]
+
+{ #category : #accessing }
+GtCharacterGroupDiffSplitter >> splitStream: stream into: aGtDiffSplits [
+	| nextGroupId groupId start |
+	start := stream position + 1.
 	groupId := 0.
-	start := 1.
 	[ stream atEnd ]
 		whileFalse: [ nextGroupId := self classify: stream next.
 			nextGroupId ~= groupId
 				ifTrue: [ groupId = 0
 						ifFalse: [ aGtDiffSplits
 								addSplit: (GtRangeDiffSplit
-										on: aString
+										on: stream originalContents
 										from: start
 										to: stream position - 1) ].
 					start := stream position.
@@ -81,7 +95,7 @@ GtCharacterGroupDiffSplitter >> split: aString into: aGtDiffSplits [
 	groupId > 0
 		ifTrue: [ aGtDiffSplits
 				addSplit: (GtRangeDiffSplit
-						on: aString
+						on: stream originalContents
 						from: start
 						to: stream position) ]
 ]
