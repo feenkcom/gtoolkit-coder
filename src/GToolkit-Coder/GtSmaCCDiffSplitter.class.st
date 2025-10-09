@@ -2,10 +2,29 @@ Class {
 	#name : #GtSmaCCDiffSplitter,
 	#superclass : #GtDiffSplitter,
 	#instVars : [
-		'scannerClass'
+		'scannerClass',
+		'string'
 	],
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
+
+{ #category : #accessing }
+GtSmaCCDiffSplitter >> createCommentSplitFrom: start to: stop into: aGtDiffSplits [
+	aGtDiffSplits
+		addSplit: (GtRangeDiffSplit
+				on: string
+				from: start
+				to: stop)
+]
+
+{ #category : #accessing }
+GtSmaCCDiffSplitter >> createTokenSplitFrom: aToken into: aGtDiffSplits [
+	aGtDiffSplits
+		addSplit: (GtRangeDiffSplit
+				on: string
+				from: aToken startPosition
+				to: aToken stopPosition)
+]
 
 { #category : #'as yet unclassified' }
 GtSmaCCDiffSplitter >> descriptionString [
@@ -35,20 +54,16 @@ GtSmaCCDiffSplitter >> scannerClass: aSmaCCScannerClass [
 { #category : #accessing }
 GtSmaCCDiffSplitter >> split: aString into: aGtDiffSplits [
 	| scanner commentIndex token |
-	scanner := scannerClass on: aString readStream.
+	string := aString.
+	scanner := scannerClass on: string readStream.
 	commentIndex := 0.
 	[ token := scanner next.
 	[ commentIndex < scanner comments size ]
 		whileTrue: [ commentIndex := commentIndex + 1.
-			aGtDiffSplits
-				addSplit: (GtRangeDiffSplit
-						on: aString
-						from: (scanner comments at: commentIndex) first
-						to: (scanner comments at: commentIndex) last) ].
+			self
+				createCommentSplitFrom: (scanner comments at: commentIndex) first
+				to: (scanner comments at: commentIndex) last
+				into: aGtDiffSplits ].
 	token ids first ~= scanner emptySymbolTokenId ]
-		whileTrue: [ aGtDiffSplits
-				addSplit: (GtRangeDiffSplit
-						on: aString
-						from: token startPosition
-						to: token stopPosition) ]
+		whileTrue: [ self createTokenSplitFrom: token into: aGtDiffSplits ]
 ]
