@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'changes',
 		'from',
-		'to'
+		'to',
+		'isLineBased'
 	],
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
@@ -157,12 +158,23 @@ GtCompositeDiffChange >> gtTextView: aView [
 { #category : #initialization }
 GtCompositeDiffChange >> initialize [
 	super initialize.
-	changes := #()
+	changes := #().
+	isLineBased := false
 ]
 
 { #category : #iterating }
 GtCompositeDiffChange >> insertionChangesDo: aBlock [
 	changes do: [ :each | each insertionChangesDo: aBlock ]
+]
+
+{ #category : #accessing }
+GtCompositeDiffChange >> isLineBased [
+	^ isLineBased
+]
+
+{ #category : #accessing }
+GtCompositeDiffChange >> isLineBased: aBoolean [
+	isLineBased := aBoolean
 ]
 
 { #category : #accessing }

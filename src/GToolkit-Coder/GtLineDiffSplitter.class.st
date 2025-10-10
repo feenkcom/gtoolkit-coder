@@ -35,6 +35,11 @@ GtLineDiffSplitter >> initialize [
 	includeEOLChars := true
 ]
 
+{ #category : #testing }
+GtLineDiffSplitter >> isLineBased [
+	^ true
+]
+
 { #category : #actions }
 GtLineDiffSplitter >> split: aString into: aGtDiffSplits [
 	aString

@@ -46,6 +46,57 @@ GtDiffBuilderExamples >> changeInMiddleAndDeletionAtEnd [
 ]
 
 { #category : #examples }
+GtDiffBuilderExamples >> deletedLineChanges [
+	<gtExample>
+	<return: #GtCompositeDiffChange>
+	| differences from to change |
+	to := self exampleMethod.
+	from := self exampleMethodWithAdditions.
+	change := GtDiffBuilder
+			computeDifferencesFrom: from
+			to: to
+			using: GtLineDiffSplitter new.
+	differences := change changes.
+	self assert: differences size equals: 4.
+	self assert: (differences allSatisfy: #isReplacement).
+	^ change
+]
+
+{ #category : #examples }
+GtDiffBuilderExamples >> deletedPharoChanges [
+	<gtExample>
+	<return: #GtCompositeDiffChange>
+	| differences from to change |
+	to := self exampleMethod.
+	from := self exampleMethodWithAdditions.
+	change := GtDiffBuilder
+			computeDifferencesFrom: from
+			to: to
+			using: GtSmaCCDiffSplitter forPharo.
+	differences := change changes.
+	self assert: differences size equals: 6.
+	self assert: (differences allSatisfy: #isDeletion).
+	^ change
+]
+
+{ #category : #examples }
+GtDiffBuilderExamples >> deletedWordChanges [
+	<gtExample>
+	<return: #GtCompositeDiffChange>
+	| differences from to change |
+	to := self exampleMethod.
+	from := self exampleMethodWithAdditions.
+	change := GtDiffBuilder
+			computeDifferencesFrom: from
+			to: to
+			using: GtCharacterGroupDiffSplitter words.
+	differences := change changes.
+	self assert: differences size equals: 6.
+	self assert: (differences allSatisfy: #isDeletion).
+	^ change
+]
+
+{ #category : #examples }
 GtDiffBuilderExamples >> deletionsAtBeginningExample [
 	<gtExample>
 	<return: #GtCompositeDiffChange>
@@ -100,6 +151,68 @@ GtDiffBuilderExamples >> deletionsInMiddle [
 	self assert: differences first startIndex equals: 9.
 	self assert: differences first stopIndex equals: 12.
 	self assert: differences first newIndex equals: 9.
+	^ change
+]
+
+{ #category : #examples }
+GtDiffBuilderExamples >> exampleMethod [
+	^ '1 a.\2 a.\3 a.\4 a.\5 a.\6 a.\7 a.\8 a.\9 a.\10 a.' withCRs
+]
+
+{ #category : #examples }
+GtDiffBuilderExamples >> exampleMethodWithAdditions [
+	^ '1 a b.\2 a.\3 a.\4 a b.\5 a.\6 a b.\6.1 a.\7 b a.\8 a.\9 a.\10 a b.'
+		withCRs
+]
+
+{ #category : #examples }
+GtDiffBuilderExamples >> insertedLineChanges [
+	<gtExample>
+	<return: #GtCompositeDiffChange>
+	| differences from to change |
+	from := self exampleMethod.
+	to := self exampleMethodWithAdditions.
+	change := GtDiffBuilder
+			computeDifferencesFrom: from
+			to: to
+			using: GtLineDiffSplitter new.
+	differences := change changes.
+	self assert: differences size equals: 4.
+	self assert: (differences allSatisfy: #isReplacement).
+	^ change
+]
+
+{ #category : #examples }
+GtDiffBuilderExamples >> insertedPharoChanges [
+	<gtExample>
+	<return: #GtCompositeDiffChange>
+	| differences from to change |
+	from := self exampleMethod.
+	to := self exampleMethodWithAdditions.
+	change := GtDiffBuilder
+			computeDifferencesFrom: from
+			to: to
+			using: GtSmaCCDiffSplitter forPharo.
+	differences := change changes.
+	self assert: differences size equals: 6.
+	self assert: (differences allSatisfy: #isInsertion).
+	^ change
+]
+
+{ #category : #examples }
+GtDiffBuilderExamples >> insertedWordChanges [
+	<gtExample>
+	<return: #GtCompositeDiffChange>
+	| differences from to change |
+	from := self exampleMethod.
+	to := self exampleMethodWithAdditions.
+	change := GtDiffBuilder
+			computeDifferencesFrom: from
+			to: to
+			using: GtCharacterGroupDiffSplitter words.
+	differences := change changes.
+	self assert: differences size equals: 6.
+	self assert: (differences allSatisfy: #isInsertion).
 	^ change
 ]
 

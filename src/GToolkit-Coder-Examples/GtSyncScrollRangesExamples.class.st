@@ -4,6 +4,66 @@ Class {
 	#category : #'GToolkit-Coder-Examples-Diff'
 }
 
+{ #category : #accessing }
+GtSyncScrollRangesExamples >> deletedLineChanges [
+	<gtExample>
+	<return: #GtSyncScrollRanges>
+	| diff ranges fromLines toLines changes |
+	diff := GtDiffBuilderExamples new deletedLineChanges.
+	ranges := GtSyncScrollRanges createFromChange: diff.
+	toLines := #(#(1 1) #(4 1) #(6 2) #(10 1)).
+	fromLines := #(#(1 1) #(4 1) #(6 3) #(11 1)).
+	changes := ranges ranges select: #isDifference.
+	self assert: changes size equals: fromLines size.
+	changes
+		doWithIndex: [ :each :i | 
+			self assert: each leftFirst + 1 equals: (fromLines at: i) first.
+			self assert: each leftLast equals: each leftFirst + (fromLines at: i) last.
+			self assert: each rightFirst + 1 equals: (toLines at: i) first.
+			self assert: each rightLast equals: each rightFirst + (toLines at: i) last ].
+	^ ranges
+]
+
+{ #category : #accessing }
+GtSyncScrollRangesExamples >> deletedPharoChanges [
+	<gtExample>
+	<return: #GtSyncScrollRanges>
+	| diff ranges fromLines toLines changes |
+	diff := GtDiffBuilderExamples new deletedPharoChanges.
+	ranges := GtSyncScrollRanges createFromChange: diff.
+	toLines := #(#(1 1) #(4 1) #(6 2) #(10 1)).
+	fromLines := #(#(1 1) #(4 1) #(6 3) #(11 1)).
+	changes := ranges ranges select: #isDifference.
+	self assert: changes size equals: fromLines size.
+	changes
+		doWithIndex: [ :each :i | 
+			self assert: each leftFirst + 1 equals: (fromLines at: i) first.
+			self assert: each leftLast equals: each leftFirst + (fromLines at: i) last.
+			self assert: each rightFirst + 1 equals: (toLines at: i) first.
+			self assert: each rightLast equals: each rightFirst + (toLines at: i) last ].
+	^ ranges
+]
+
+{ #category : #accessing }
+GtSyncScrollRangesExamples >> deletedWordChanges [
+	<gtExample>
+	<return: #GtSyncScrollRanges>
+	| diff ranges fromLines toLines changes |
+	diff := GtDiffBuilderExamples new deletedWordChanges.
+	ranges := GtSyncScrollRanges createFromChange: diff.
+	toLines := #(#(1 1) #(4 1) #(6 2) #(10 1)).
+	fromLines := #(#(1 1) #(4 1) #(6 3) #(11 1)).
+	changes := ranges ranges select: #isDifference.
+	self assert: changes size equals: fromLines size.
+	changes
+		doWithIndex: [ :each :i | 
+			self assert: each leftFirst + 1 equals: (fromLines at: i) first.
+			self assert: each leftLast equals: each leftFirst + (fromLines at: i) last.
+			self assert: each rightFirst + 1 equals: (toLines at: i) first.
+			self assert: each rightLast equals: each rightFirst + (toLines at: i) last ].
+	^ ranges
+]
+
 { #category : #examples }
 GtSyncScrollRangesExamples >> diffWithEmptyLines [
 	<gtExample>
@@ -34,6 +94,66 @@ GtSyncScrollRangesExamples >> exampleDiff [
 		computeDifferencesFrom: self originalString
 		to: self newString
 		using: GtCharacterGroupDiffSplitter words
+]
+
+{ #category : #accessing }
+GtSyncScrollRangesExamples >> insertedLineChanges [
+	<gtExample>
+	<return: #GtSyncScrollRanges>
+	| diff ranges fromLines toLines changes |
+	diff := GtDiffBuilderExamples new insertedLineChanges.
+	ranges := GtSyncScrollRanges createFromChange: diff.
+	fromLines := #(#(1 1) #(4 1) #(6 2) #(10 1)).
+	toLines := #(#(1 1) #(4 1) #(6 3) #(11 1)).
+	changes := ranges ranges select: #isDifference.
+	self assert: changes size equals: fromLines size.
+	changes
+		doWithIndex: [ :each :i | 
+			self assert: each leftFirst + 1 equals: (fromLines at: i) first.
+			self assert: each leftLast equals: each leftFirst + (fromLines at: i) last.
+			self assert: each rightFirst + 1 equals: (toLines at: i) first.
+			self assert: each rightLast equals: each rightFirst + (toLines at: i) last ].
+	^ ranges
+]
+
+{ #category : #accessing }
+GtSyncScrollRangesExamples >> insertedPharoChanges [
+	<gtExample>
+	<return: #GtSyncScrollRanges>
+	| diff ranges fromLines toLines changes |
+	diff := GtDiffBuilderExamples new insertedPharoChanges.
+	ranges := GtSyncScrollRanges createFromChange: diff.
+	fromLines := #(#(1 1) #(4 1) #(6 2) #(10 1)).
+	toLines := #(#(1 1) #(4 1) #(6 3) #(11 1)).
+	changes := ranges ranges select: #isDifference.
+	self assert: changes size equals: fromLines size.
+	changes
+		doWithIndex: [ :each :i | 
+			self assert: each leftFirst + 1 equals: (fromLines at: i) first.
+			self assert: each leftLast equals: each leftFirst + (fromLines at: i) last.
+			self assert: each rightFirst + 1 equals: (toLines at: i) first.
+			self assert: each rightLast equals: each rightFirst + (toLines at: i) last ].
+	^ ranges
+]
+
+{ #category : #accessing }
+GtSyncScrollRangesExamples >> insertedWordChanges [
+	<gtExample>
+	<return: #GtSyncScrollRanges>
+	| diff ranges fromLines toLines changes |
+	diff := GtDiffBuilderExamples new insertedWordChanges.
+	ranges := GtSyncScrollRanges createFromChange: diff.
+	fromLines := #(#(1 1) #(4 1) #(6 2) #(10 1)).
+	toLines := #(#(1 1) #(4 1) #(6 3) #(11 1)).
+	changes := ranges ranges select: #isDifference.
+	self assert: changes size equals: fromLines size.
+	changes
+		doWithIndex: [ :each :i | 
+			self assert: each leftFirst + 1 equals: (fromLines at: i) first.
+			self assert: each leftLast equals: each leftFirst + (fromLines at: i) last.
+			self assert: each rightFirst + 1 equals: (toLines at: i) first.
+			self assert: each rightLast equals: each rightFirst + (toLines at: i) last ].
+	^ ranges
 ]
 
 { #category : #examples }
