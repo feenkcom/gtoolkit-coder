@@ -122,14 +122,17 @@ GtDiffBuilder >> buildDifferencesList [
 
 { #category : #computing }
 GtDiffBuilder >> computeDifferences [
+	| change |
 	self initializeSplits.
 	self skipEqualElementsAtStart.
 	self skipEqualElementsAtEnd.
 	self buildDifferencesList.
-	^ GtCompositeDiffChange
-		from: from
-		to: to
-		changes: differences
+	change := GtCompositeDiffChange
+			from: from
+			to: to
+			changes: differences.
+	change isLineBased: splitter isLineBased.
+	^ change
 ]
 
 { #category : #private }

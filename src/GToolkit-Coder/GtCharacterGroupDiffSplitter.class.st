@@ -12,6 +12,7 @@ Class {
 GtCharacterGroupDiffSplitter class >> words [
 	^ self new
 		addGroup: #tokenish;
+		addGroup: #isLineBreak;
 		addGroup: #isSeparator;
 		yourself
 ]

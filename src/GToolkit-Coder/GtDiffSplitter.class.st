@@ -12,6 +12,11 @@ GtDiffSplitter >> descriptionString [
 	^ self subclassResponsibility
 ]
 
+{ #category : #testing }
+GtDiffSplitter >> isLineBased [
+	^ false
+]
+
 { #category : #actions }
 GtDiffSplitter >> split: aCollection [
 	| splits |
