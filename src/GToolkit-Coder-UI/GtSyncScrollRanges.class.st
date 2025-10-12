@@ -142,16 +142,22 @@ GtSyncScrollRanges >> advanceRight [
 
 { #category : #'private-creation changes' }
 GtSyncScrollRanges >> buildFromChange: aCompositeChange [
-	| changedLines changedRanges |
+	| changedLines changedRanges change |
 	ranges := OrderedCollection new.
 	changedLines := IdentityDictionary new.
-	aCompositeChange changes notEmpty
-		ifTrue: [ self addOriginalLineChangesFrom: aCompositeChange to: changedLines.
-			self addDestinationLineChangesFrom: aCompositeChange to: changedLines ].
+	change := aCompositeChange isLineBased
+			ifTrue: [ aCompositeChange ]
+			ifFalse: [ GtDiffBuilder
+					computeDifferencesFrom: aCompositeChange from
+					to: aCompositeChange to
+					using: GtLineDiffSplitter ignoringEOLChars ].
+	change changes notEmpty
+		ifTrue: [ self addOriginalLineChangesFrom: change to: changedLines.
+			self addDestinationLineChangesFrom: change to: changedLines ].
 	changedRanges := changedLines values
 			asSortedCollection: [ :a :b | a first < b first or: [ a first = b first and: [ a third < b third ] ] ].
 	changedRanges := self mergeRanges: changedRanges.
-	self addRanges: changedRanges fromChanges: aCompositeChange
+	self addRanges: changedRanges fromChanges: change
 ]
 
 { #category : #'private-creation diff' }
