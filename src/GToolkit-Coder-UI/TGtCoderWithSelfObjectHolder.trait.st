@@ -6,6 +6,13 @@ Trait {
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
 
+{ #category : #testing }
+TGtCoderWithSelfObjectHolder classSide >> isDeprecated [
+	"Use my TGtPhlowWithSelfObjectHolder instead"
+
+	^ true
+]
+
 { #category : #'api - self object' }
 TGtCoderWithSelfObjectHolder >> hasSelfObject [
 	^ self ifSelfObject: [ :anObject | true ] ifNone: [ false ]
