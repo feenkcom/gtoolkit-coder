@@ -36,6 +36,40 @@ InstanceVariableSlot >> gtAbstractActionFor: anAction context: aPhlowContext [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+InstanceVariableSlot >> gtBrowseDefiningClassFor: anAction context: aPhlowContext [
+	<gtAction>
+	self definingClass = self owningClass ifTrue: [ ^ anAction noAction ].
+
+	^ anAction button
+		label: ('Browse defining {1}' format: {self definingClass gtCoderTypeName});
+		priority: 15;
+		target: GtCoderVariableTarget;
+		menuItemPreview: [ self definingClass name ];
+		menuItemGroup: BrMenuItemGroupConfiguration navigation;
+		action: [ :aButton | aButton phlow spawnObject: self definingClass ];
+		primaryModifierAction: [ :aButton | self definingClass gtBrowseFrom: aButton ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+InstanceVariableSlot >> gtBrowseDefiningSuperclassFor: anAction context: aPhlowContext [
+	<gtAction>
+	self definingClass = self owningClass ifFalse: [ ^ anAction noAction ].
+	aPhlowContext
+		ifBehavior: [ :aBehavior | 
+			aBehavior = self owningClass ifTrue: [ ^ anAction noAction ] ]
+		ifNone: [ ^ anAction noAction ].
+
+	^ anAction button
+		label: 'Browse defining superclass';
+		priority: 12;
+		target: GtCoderVariableTarget;
+		menuItemPreview: [ self owningClass name ];
+		menuItemGroup: BrMenuItemGroupConfiguration navigation;
+		action: [ :aButton | aButton phlow spawnObject: self owningClass ];
+		primaryModifierAction: [ :aButton | self owningClass gtBrowseFrom: aButton ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtBrowseReferencesActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	^ anAction button
@@ -89,6 +123,22 @@ InstanceVariableSlot >> gtCreateAccessorsActionFor: anAction context: aPhlowCont
 				refactoringsViewModel: aViewModel;
 				beContextMenuElement;
 				bePinnable: anExplicitMenu ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+InstanceVariableSlot >> gtInspectObjectActionFor: anAction context: aPhlowContext [
+	<gtAction>
+	| aSelfObject |
+	aSelfObject := aPhlowContext selfObjectIfNone: [ ^ anAction noAction ].
+
+	^ anAction button
+		label: 'Inspect object';
+		priority: 30;
+		target: GtCoderVariableTarget;
+		menuItemPreview: [ (aSelfObject readSlot: self) gtDisplayText ];
+		menuItemGroup: BrMenuItemGroupConfiguration navigation;
+		action: [ :aButton | 
+			aButton phlow spawnObject:  (aSelfObject readSlot: self) ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

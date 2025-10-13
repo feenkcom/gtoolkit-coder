@@ -6,6 +6,13 @@ Trait {
 	#category : #'GToolkit-Coder-UI-Coder - Basic'
 }
 
+{ #category : #testing }
+TGtCoderWithSelfObjectHolder classSide >> isDeprecated [
+	"Use my TGtPhlowWithSelfObjectHolder instead"
+
+	^ true
+]
+
 { #category : #'api - self object' }
 TGtCoderWithSelfObjectHolder >> hasSelfObject [
 	^ self ifSelfObject: [ :anObject | true ] ifNone: [ false ]
@@ -36,14 +43,14 @@ TGtCoderWithSelfObjectHolder >> selfObject [
 TGtCoderWithSelfObjectHolder >> selfObject: anObject [
 	"Assign an object that should be bound to `self` during code evaluation"
 	
-	self selfObjectHolder: (GtCoderObject forValue: anObject)
+	self selfObjectHolder: (GtPhlowObject forValue: anObject)
 ]
 
 { #category : #'api - self object' }
 TGtCoderWithSelfObjectHolder >> selfObjectHolder [
-	<return: #TGtCoderObject>
+	<return: #TGtPhlowObject>
 	^ selfObjectHolder ifNil: [ 
-		selfObjectHolder := GtCoderUndefinedObject default ]
+		selfObjectHolder := GtPhlowUndefinedObject default ]
 ]
 
 { #category : #'api - self object' }

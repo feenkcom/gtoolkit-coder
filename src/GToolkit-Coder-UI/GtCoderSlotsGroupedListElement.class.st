@@ -47,7 +47,12 @@ GtCoderSlotsGroupedListElement >> createSlotGroups [
 					addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
 							menu: [ | aPhlowContext |
 								aPhlowContext := GtPhlowContext new
-										coderSelectedClass: self selectedClass.
+										coderSelectedClass: self selectedClass;
+										behavior: self selectedClass.
+								navigationModel
+									coderDo: [ :aCoder | 
+										(aCoder isKindOf: GtPharoBehaviorCoder)
+											ifTrue: [ aPhlowContext selfObjectHolder: aCoder objectHolder ] ].
 								GtCoderVariableTarget
 									menuItemsForObject: item
 									inContext: aPhlowContext
