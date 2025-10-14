@@ -25,7 +25,8 @@ GtTextualCoderEditorElement >> addErrorAttribute: errorAttribute at: anInteger [
 	text
 		attribute: errorAttribute
 		from: position
-		to: position
+		to: position.
+	self scrollToPosition: (text asString lineNumberCorrespondingToIndex: position)
 ]
 
 { #category : #'hooks - children' }
