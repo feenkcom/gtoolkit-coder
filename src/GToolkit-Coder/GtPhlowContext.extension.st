@@ -1,28 +1,5 @@
 Extension { #name : #GtPhlowContext }
 
-{ #category : #'*GToolkit-Coder-UI\t' }
-GtPhlowContext >> coderSelectedClass: aClass [
-	^ self optionAt: #coderSelectedClass put: aClass
-]
-
-{ #category : #'*GToolkit-Coder-UI\t' }
-GtPhlowContext >> coderSelectedClassIfPresent: aPresentBlock ifAbsent: anAbsentBlock [
-	^ self
-		optionAt: #coderSelectedClass
-		ifPresent: aPresentBlock
-		ifAbsent: anAbsentBlock
-]
-
-{ #category : #'*GToolkit-Coder-UI\t' }
-GtPhlowContext >> coderSelectedClasses [
-	^ self optionAt: #coderSelectedClasses ifAbsent: [ #() ]
-]
-
-{ #category : #'*GToolkit-Coder-UI\t' }
-GtPhlowContext >> coderSelectedClasses: aCollectionOfClasses [
-	^ self optionAt: #coderSelectedClasses put: aCollectionOfClasses
-]
-
 { #category : #'*GToolkit-Coder' }
 GtPhlowContext >> hasPackageCoder [
 	^ self hasOptionAt: #packageCoder
