@@ -51,17 +51,18 @@ InstanceVariableSlot >> gtBrowseDefiningClassFor: anAction context: aPhlowContex
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
-InstanceVariableSlot >> gtBrowseDefiningSuperclassFor: anAction context: aPhlowContext [
+InstanceVariableSlot >> gtBrowseOwningClassFor: anAction context: aPhlowContext [
 	<gtAction>
+	| aHostBehavior |
 	self definingClass = self owningClass ifFalse: [ ^ anAction noAction ].
-	aPhlowContext
-		ifBehavior: [ :aBehavior | 
-			aBehavior = self owningClass ifTrue: [ ^ anAction noAction ] ]
-		ifNone: [ ^ anAction noAction ].
+	aHostBehavior := aPhlowContext behaviorIfNone: [ ^ self owningClass ].
 
 	^ anAction button
-		label: 'Browse defining superclass';
-		priority: 12;
+		label: ('Browse defining {1}'
+				format: {aHostBehavior = self owningClass 
+					ifTrue: [ 'class' ] 
+					ifFalse: [ 'superclass' ]});
+		priority: 5;
 		target: GtCoderVariableTarget;
 		menuItemPreview: [ self owningClass name ];
 		menuItemGroup: BrMenuItemGroupConfiguration navigation;
