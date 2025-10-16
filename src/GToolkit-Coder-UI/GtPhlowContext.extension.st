@@ -1,8 +1,21 @@
 Extension { #name : #GtPhlowContext }
 
 { #category : #'*GToolkit-Coder-UI' }
+GtPhlowContext >> coderCompiledMethod: aClass [
+	self optionAt: #coderCompiledMethod put: aClass
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtPhlowContext >> coderCompiledMethodIfPresent: aPresentBlock ifAbsent: anAbsentBlock [
+	^ self
+		optionAt: #coderCompiledMethod
+		ifPresent: aPresentBlock
+		ifAbsent: anAbsentBlock
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 GtPhlowContext >> coderSelectedClass: aClass [
-	^ self optionAt: #coderSelectedClass put: aClass
+	self optionAt: #coderSelectedClass put: aClass
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
@@ -20,5 +33,18 @@ GtPhlowContext >> coderSelectedClasses [
 
 { #category : #'*GToolkit-Coder-UI' }
 GtPhlowContext >> coderSelectedClasses: aCollectionOfClasses [
-	^ self optionAt: #coderSelectedClasses put: aCollectionOfClasses
+	self optionAt: #coderSelectedClasses put: aCollectionOfClasses
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtPhlowContext >> coderViewModel: aCoderViewModel [
+	self optionAt: #coderViewModel: put: aCoderViewModel
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtPhlowContext >> coderViewModelIfPresent: aPresentBlock ifAbsent: anAbsentBlock [
+	^ self
+		optionAt: #coderViewModel
+		ifPresent: aPresentBlock
+		ifAbsent: anAbsentBlock
 ]

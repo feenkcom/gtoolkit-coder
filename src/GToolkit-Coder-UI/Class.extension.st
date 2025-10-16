@@ -76,6 +76,29 @@ Class >> gtCoderSidebarIndexBrowseClassesReferencesFor: anAction context: aPhlow
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+Class >> gtCoderSidebarIndexBrowseDefiningClassFor: anAction context: aPhlowContext [
+	<gtAction>
+	| aCompiledMethod |
+	aCompiledMethod := aPhlowContext
+			coderCompiledMethodIfPresent: [ :theCompiledMethod | aCompiledMethod := theCompiledMethod ]
+			ifAbsent: [ nil ].
+	aCompiledMethod ifNil: [ ^ anAction noAction ].
+	aCompiledMethod methodClass = self ifTrue: [ ^ anAction noAction ].
+
+	^ anAction button
+		priority: 2;
+		target: GtCoderClassTarget;
+		icon: BrGlamorousVectorIcons browse;
+		label: ('Browse defining {1}' format: {aCompiledMethod methodClass gtCoderTypeName});
+		menuItemPreview: aCompiledMethod methodClass name;
+		menuItemGroup: BrMenuItemGroupConfiguration navigation;
+		action: [ :aButton | 
+			 aButton phlow spawnTool: (GtMethodCoderTool compiledMethod: aCompiledMethod)  ];
+		primaryModifierAction: [ :aButton | 
+			 aCompiledMethod gtBrowseFrom: aButton ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexBrowseReferencesFor: anAction [
 	<gtAction>
 	^ anAction button 
