@@ -172,6 +172,11 @@ GtSingleCoderViewModel >> computeAddOnsFuture [
 	^ self subclassResponsibility
 ]
 
+{ #category : #converting }
+GtSingleCoderViewModel >> createPhlowContext [
+	^ GtPhlowContext new coderViewModel: self
+]
+
 { #category : #accessing }
 GtSingleCoderViewModel >> elementClass [
 	^ self subclassResponsibility

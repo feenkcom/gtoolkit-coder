@@ -14,7 +14,7 @@ Behavior >> gtBrowse [
 Behavior >> gtBrowseFrom: anElement [
 	^ BlSpace new
 		withSceneDriller;
-		inPager: [ GtClassCoderTool forClass: self ];
+		inPager: [ self gtDefaultInspectorTool ];
 		title: self name;
 		icon: BrGlamorousVectorIcons browse;
 		showFrom: anElement
