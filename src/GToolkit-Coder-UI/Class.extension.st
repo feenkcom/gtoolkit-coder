@@ -203,7 +203,7 @@ Class >> gtCoderSidebarIndexRemoveClassesFor: anAction context: aPhlowContext [
 { #category : #'*GToolkit-Coder-UI' }
 Class >> gtCoderSidebarIndexRenameClassFor: anAction [
 	<gtAction>
-	^ anAction dropdown 
+	^ anAction dropdown
 		priority: 4;
 		target: GtCoderClassTarget;
 		icon: BrGlamorousVectorIcons empty;
@@ -215,16 +215,13 @@ Class >> gtCoderSidebarIndexRenameClassFor: anAction [
 			aViewModel := GtRefactoringsWithInputViewModel new
 					refactoringTitle: ('Rename {1}' format: {self gtCoderTypeName});
 					targetName: self name;
-					inputLabel: ('New {1} name:' format: { self gtCoderTypeName });
+					inputLabel: ('New {1} name:' format: {self gtCoderTypeName});
 					initialText: self name;
-					refactoringWithInput: [ :anInput | 
-						GtRBRenameClassRefactoring 
-							rename: self name 
-							to: anInput ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					refactoringWithInput: [ :anInput | GtRBRenameClassRefactoring rename: self name to: anInput ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
-					anchorElement: self.
-			GtRefactoringsPreviewWithInputElement new 
+					anchorElement: aTargetElement.
+			GtRefactoringsPreviewWithInputElement new
 				refactoringsViewModel: aViewModel;
 				beContextMenuElement;
 				bePinnable: anExplicitMenu ]

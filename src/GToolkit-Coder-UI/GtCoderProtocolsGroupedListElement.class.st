@@ -389,7 +389,7 @@ GtCoderProtocolsGroupedListElement >> renameProtocolSubmenuFor: aGtPharoProtocol
 							renameProtocol: aGtPharoProtocol name
 							in: aGtPharoProtocol protocolClass
 							to: anInput ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: self action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
 			GtRefactoringsPreviewWithInputElement new

@@ -26,7 +26,7 @@ InstanceVariableSlot >> gtAbstractActionFor: anAction context: aPhlowContext [
 					refactoringWithConfirmation: [ RBAbstractInstanceVariableRefactoring
 							variable: self name
 							class: aSelectedClass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
 			GtRefactoringsPreviewWithConfirmationElement new
@@ -111,7 +111,7 @@ InstanceVariableSlot >> gtCreateAccessorsActionFor: anAction context: aPhlowCont
 					refactoringWithConfirmation: [ RBCreateAccessorsForVariableRefactoring
 							instanceVariable: self name
 							class: aSelectedClass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
 			GtRefactoringsPreviewWithConfirmationElement new
@@ -160,7 +160,7 @@ InstanceVariableSlot >> gtProtectSlotActionFor: anAction context: aPhlowContext 
 									self name});
 					confirmationLabel: ('Protect {1}' format: {self name});
 					refactoringWithConfirmation: [ RBProtectInstanceVariableRefactoring variable: self name class: aSelectedClass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
 			GtRefactoringsPreviewWithConfirmationElement new
@@ -195,7 +195,7 @@ InstanceVariableSlot >> gtPushDownActionFor: anAction context: aPhlowContext [
 					refactoringWithConfirmation: [ GtPushDownInstanceVariableRefactoring
 							variable: self name
 							class: aSelectedClass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
 			GtRefactoringsPreviewWithConfirmationElement new
@@ -230,7 +230,7 @@ InstanceVariableSlot >> gtPushUpActionFor: anAction context: aPhlowContext [
 					refactoringWithConfirmation: [ RBPullUpInstanceVariableRefactoring
 							variable: self name
 							class: aSelectedClass superclass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
 			GtRefactoringsPreviewWithConfirmationElement new
@@ -328,8 +328,8 @@ InstanceVariableSlot >> gtRenameActionFor: anAction context: aPhlowContext [
 						GtRenameInstanceVariableRefactoring
 							rename: self name
 							to: anInput
-							in:  aSelectedClass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+							in: aSelectedClass ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
 			GtRefactoringsPreviewWithInputElement new
