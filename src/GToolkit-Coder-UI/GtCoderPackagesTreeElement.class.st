@@ -351,9 +351,8 @@ GtCoderPackagesTreeElement >> renamePackageSubmenuFor: aPackage [
 					targetName: aPackage name;
 					inputLabel: 'New package name:';
 					initialText: aPackage name;
-					refactoringWithInput: [ :anInput | 
-						GtRBRenamePackageRefactoring from: aPackage name to: anInput ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					refactoringWithInput: [ :anInput | GtRBRenamePackageRefactoring from: aPackage name to: anInput ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: self action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
 			GtRefactoringsPreviewWithInputElement new
@@ -379,7 +378,7 @@ GtCoderPackagesTreeElement >> renamePackageTagSubmenuFor: aPackageTag [
 							packageName: aPackageTag packageName
 							from: aPackageTag name
 							to: anInput ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: self action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
 			GtRefactoringsPreviewWithInputElement new

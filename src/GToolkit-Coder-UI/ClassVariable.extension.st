@@ -44,7 +44,7 @@ ClassVariable >> gtCreateAccessorsActionFor: anAction context: aPhlowContext [
 							variable: self name
 							class: aSelectedClass
 							classVariable: true ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
 			GtRefactoringsPreviewWithConfirmationElement new
@@ -76,10 +76,8 @@ ClassVariable >> gtPushDownActionFor: anAction context: aPhlowContext [
 							format: {aSelectedClass name.
 									self name});
 					confirmationLabel: ('Push down {1}' format: {self name});
-					refactoringWithConfirmation: [ RBPushDownClassVariableRefactoring
-							variable: self name
-							class: aSelectedClass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					refactoringWithConfirmation: [ RBPushDownClassVariableRefactoring variable: self name class: aSelectedClass ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
 			GtRefactoringsPreviewWithConfirmationElement new
@@ -114,7 +112,7 @@ ClassVariable >> gtPushUpActionFor: anAction context: aPhlowContext [
 					refactoringWithConfirmation: [ RBPullUpClassVariableRefactoring
 							variable: self name
 							class: aSelectedClass superclass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
 			GtRefactoringsPreviewWithConfirmationElement new
@@ -213,7 +211,7 @@ ClassVariable >> gtRenameActionFor: anAction context: aPhlowContext [
 							rename: self name
 							to: anInput
 							in: self owningClass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: aTargetElement.
 			GtRefactoringsPreviewWithInputElement new

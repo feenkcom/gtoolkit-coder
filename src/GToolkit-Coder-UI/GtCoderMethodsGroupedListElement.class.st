@@ -366,27 +366,29 @@ GtCoderMethodsGroupedListElement >> onMethodsToShowChanged: anAnnouncement [
 GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
-	
+
 	submenu
 		stencil: [ :anExplicitMenu | 
 			| aViewModel |
 			aViewModel := GtRefactoringsWithConfirmationViewModel new
 					refactoringTitle: 'Push down';
-					targetName: ('{1}>>#{2}' format: { aMethod methodClass. aMethod selector });
-					confirmationLabel: ('Push down {1}' format: { aMethod selector });
+					targetName: ('{1}>>#{2}'
+							format: {aMethod methodClass.
+									aMethod selector});
+					confirmationLabel: ('Push down {1}' format: {aMethod selector});
 					refactoringWithConfirmation: [ GtRBPushDownMethodRefactoring
-						pushDown: {aMethod selector}
-						from: (self
-								forPharo12AndNewer: [ aMethod methodClass name ]
-								forPharo11: [ aMethod methodClass ]) ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+							pushDown: {aMethod selector}
+							from: (self
+									forPharo12AndNewer: [ aMethod methodClass name ]
+									forPharo11: [ aMethod methodClass ]) ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: self action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
-			GtRefactoringsPreviewWithConfirmationElement new 
+			GtRefactoringsPreviewWithConfirmationElement new
 				refactoringsViewModel: aViewModel;
 				beContextMenuElement;
 				bePinnable: anExplicitMenu ].
-	
+
 	^ submenu
 ]
 
@@ -417,7 +419,7 @@ GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectio
 								as: Array.
 						aModel name: ('Push down {1} methods' format: {aCollectionOfMethods size}).
 						aCollectionOfRefactorings ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: self action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
 			GtRefactoringsPreviewWithConfirmationElement new
@@ -432,25 +434,25 @@ GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectio
 GtCoderMethodsGroupedListElement >> pushUpMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
-	
+
 	submenu
 		stencil: [ :anExplicitMenu | 
 			| aViewModel |
 			aViewModel := GtRefactoringsWithConfirmationViewModel new
 					refactoringTitle: 'Push up';
-					targetName: ('{1}>>#{2}' format: { aMethod methodClass. aMethod selector });
-					confirmationLabel: ('Push up {1}' format: { aMethod selector });
-					refactoringWithConfirmation: [ GtPushUpMethodRefactoring
-						pullUp: {aMethod selector}
-						from: aMethod methodClass ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					targetName: ('{1}>>#{2}'
+							format: {aMethod methodClass.
+									aMethod selector});
+					confirmationLabel: ('Push up {1}' format: {aMethod selector});
+					refactoringWithConfirmation: [ GtPushUpMethodRefactoring pullUp: {aMethod selector} from: aMethod methodClass ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: self action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
-			GtRefactoringsPreviewWithConfirmationElement new 
+			GtRefactoringsPreviewWithConfirmationElement new
 				refactoringsViewModel: aViewModel;
 				beContextMenuElement;
 				bePinnable: anExplicitMenu ].
-	
+
 	^ submenu
 ]
 
@@ -479,7 +481,7 @@ GtCoderMethodsGroupedListElement >> pushUpSeveralMethodsSubmenuFor: aCollectionO
 								as: Array.
 						aModel name: ('Push up {1} methods' format: {aCollectionOfMethods size}).
 						aCollectionOfRefactorings ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: self action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
 			GtRefactoringsPreviewWithConfirmationElement new
@@ -605,13 +607,15 @@ GtCoderMethodsGroupedListElement >> removeSeveralMethodsSubmenuFor: aCollectionO
 GtCoderMethodsGroupedListElement >> renameMethodSubmenuFor: aMethod [
 	| submenu |
 	submenu := BrMenuExplicit new.
-	
+
 	submenu
 		stencil: [ :anExplicitMenu | 
 			| aViewModel |
 			aViewModel := GtRefactoringsWithInputViewModel new
 					refactoringTitle: 'Rename method';
-					targetName: ('{1}>>#{2}' format: { aMethod methodClass. aMethod selector });
+					targetName: ('{1}>>#{2}'
+							format: {aMethod methodClass.
+									aMethod selector});
 					inputLabel: 'New method name:';
 					initialText: aMethod selector;
 					refactoringWithInput: [ :anInput | 
@@ -620,14 +624,14 @@ GtCoderMethodsGroupedListElement >> renameMethodSubmenuFor: aMethod [
 							in: aMethod methodClass
 							to: anInput
 							permutation: (1 to: aMethod selector numArgs) ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: self action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
-			GtRefactoringsPreviewWithInputElement new 
+			GtRefactoringsPreviewWithInputElement new
 				refactoringsViewModel: aViewModel;
 				beContextMenuElement;
 				bePinnable: anExplicitMenu ].
-	
+
 	^ submenu
 ]
 

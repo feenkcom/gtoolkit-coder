@@ -310,14 +310,11 @@ GtCoderClassesTreeElement >> renameClassSubmenuFor: aClass [
 					targetName: aClass name;
 					inputLabel: 'New class name:';
 					initialText: aClass name;
-					refactoringWithInput: [ :anInput | 
-						GtRBRenameClassRefactoring 
-							rename: aClass name 
-							to: anInput ];
-					afterAppliedBlock: [ anExplicitMenu hideAll ];
+					refactoringWithInput: [ :anInput | GtRBRenameClassRefactoring rename: aClass name to: anInput ];
+					afterAppliedBlock: [ BlTaskAction enqueueElement: self action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
-			GtRefactoringsPreviewWithInputElement new 
+			GtRefactoringsPreviewWithInputElement new
 				refactoringsViewModel: aViewModel;
 				beContextMenuElement;
 				bePinnable: anExplicitMenu ].
