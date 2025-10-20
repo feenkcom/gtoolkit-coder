@@ -90,6 +90,7 @@ GtSourceCoderViewModel >> doItAllAsynchronousRequestedBy: aRequesterObject [
 { #category : #'api - actions' }
 GtSourceCoderViewModel >> doItAllRequestedBy: aRequesterObject [
 	"Evaluate the whole source code independent from the selection and return the result"
+	<return: #GtSourceCoderEvaluationResult>
 
 	^ self handleCoderEvaluationUnhandledErrorDuring: [ 
 		self coder doItInContext: (self evaluationContext

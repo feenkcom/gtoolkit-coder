@@ -17,6 +17,13 @@ Class {
 }
 
 { #category : #'api - instance creation' }
+GtCoderCodeExecutor class >> compileIt [
+	"Execute a code that creates or updates a class"
+
+	^ self new compileIt
+]
+
+{ #category : #'api - instance creation' }
 GtCoderCodeExecutor class >> doIt [
 	"Execute a code (and do not display the execution result)"
 	^ self new doIt
@@ -72,6 +79,13 @@ GtCoderCodeExecutor >> coderViewModel [
 { #category : #'api - accessing' }
 GtCoderCodeExecutor >> coderViewModel: anObject [
 	coderUIModel := anObject
+]
+
+{ #category : #initialization }
+GtCoderCodeExecutor >> compileIt [
+	"Execute a code that creates or updates a class"
+
+	action := #compileIt
 ]
 
 { #category : #initialization }
