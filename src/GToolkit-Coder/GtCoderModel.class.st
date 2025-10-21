@@ -179,6 +179,11 @@ GtCoderModel >> initializeAddOns: addOns viewModel: aCoderViewModel [
 GtCoderModel >> initializeShortcuts: addOns [
 ]
 
+{ #category : #subscriptions }
+GtCoderModel >> isSubscribedToSystem [
+	^ SystemAnnouncer uniqueInstance hasSubscriber: self
+]
+
 { #category : #'api - actions' }
 GtCoderModel >> mainActions [
 	"Return a collection of main actions in the coder, for example save"
@@ -197,7 +202,9 @@ GtCoderModel >> pragmasNamed: aSymbol inHierarchy: aClass [
 	| actions |
 	actions := OrderedCollection new.
 	aClass withAllSuperclassesDo: [ :each | 
-		actions addAll: (Pragma allNamed: aSymbol in: each) ].
+		actions addAll: ((Pragma allNamed: aSymbol in: each) 
+			reject: [ :eachPragma | actions anySatisfy: [ :otherPragma | 
+				eachPragma methodSelector = otherPragma methodSelector ] ]) ].
 	actions 
 		sort: (
 			[ :aPragma | aPragma numArgs isZero 

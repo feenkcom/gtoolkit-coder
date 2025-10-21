@@ -507,13 +507,10 @@ GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelT
 	"Do nothing if it comes from a different view model"
 	aGtTextualCoderViewModelTextChanged textualCoderViewModel == self textualCoderViewModel
 		ifFalse: [ ^ self ].
-
-	aGtTextualCoderViewModelTextChanged source == self
-		ifTrue: [ ^ self hideHighlighters ].
-	
-	aGtTextualCoderViewModelTextChanged isSynchronous
-		ifTrue: [ self privateUpdateText: self announcement: aGtTextualCoderViewModelTextChanged ] 
-		ifFalse: [ textUpdater requestUpdate: aGtTextualCoderViewModelTextChanged ]
+		
+	BlTaskAction 
+		enqueueElement: self 
+		action: [ self processViewModelTextChanged: aGtTextualCoderViewModelTextChanged ].
 ]
 
 { #category : #'private - event handling' }
@@ -570,6 +567,16 @@ GtTextualCoderEditorElement >> privateUpdateText: anEditorElement announcement: 
 	
 	self text: textForUpdate.
 	self hideHighlighters.
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> processViewModelTextChanged: aGtTextualCoderViewModelTextChanged [ 
+	aGtTextualCoderViewModelTextChanged source == self
+		ifTrue: [ ^ self hideHighlighters ].
+	
+	aGtTextualCoderViewModelTextChanged isSynchronous
+		ifTrue: [ self privateUpdateText: self announcement: aGtTextualCoderViewModelTextChanged ] 
+		ifFalse: [ textUpdater requestUpdate: aGtTextualCoderViewModelTextChanged ]
 ]
 
 { #category : #registration }
