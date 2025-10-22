@@ -152,6 +152,18 @@ GtCoderModel >> expanded: aBoolean [
 	self deprecated: 'The expansion state was moved to the ViewModel'
 ]
 
+{ #category : #views }
+GtCoderModel >> gtSystemSubscriptionsViewFor: aView [
+	<gtView>
+	^ aView columnedList
+		title: 'System subscriptions';
+		items: [ self systemSubscriptions ];
+		column: 'Announcement' text: [ :each | each announcementClass ];
+		column: 'Action'
+			text: [ :each | each action ]
+			weight: 2
+]
+
 { #category : #accessing }
 GtCoderModel >> id [
 	^ id
@@ -241,6 +253,15 @@ GtCoderModel >> requestUpdateAddOns [
 { #category : #subscriptions }
 GtCoderModel >> subscribeToSystem [
 	"do nothing"
+]
+
+{ #category : #subscriptions }
+GtCoderModel >> systemSubscriptions [
+	^ Array
+		streamContents: [ :aStream | 
+			SystemAnnouncer uniqueInstance subscriptions
+				subscriptionsOf: self
+				do: [ :eachSubscription | aStream nextPut: eachSubscription ] ]
 ]
 
 { #category : #subscriptions }
