@@ -14,7 +14,7 @@ GtSourceCoderErrorFixItAttribute >> buildPopupIn: anEditorElement aptitude: apti
 	element id: #'error-fix-it'.
 	element beFocusable.
 	{BlKeyCombination escape.
-		BlKeyCombination enter.
+		"BlKeyCombination enter."
 		BlKeyCombination backspace}
 		do: [ :key | 
 			element

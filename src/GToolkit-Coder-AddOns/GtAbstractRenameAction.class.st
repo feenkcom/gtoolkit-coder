@@ -182,7 +182,8 @@ GtAbstractRenameAction >> primaryRenameAttribute [
 
 { #category : #actions }
 GtAbstractRenameAction >> processReturnFor: renameEditor in: anEditorElement [
-	self accept
+	self accept.
+	anEditorElement requestFocus
 ]
 
 { #category : #private }

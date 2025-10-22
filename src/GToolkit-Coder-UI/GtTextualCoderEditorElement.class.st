@@ -220,17 +220,22 @@ GtTextualCoderEditorElement >> onAddedToSceneGraph [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onCodeEvaluated: anEvaluationAnnouncement [
-	(anEvaluationAnnouncement requesterObject isCoderViewModel: self textualCoderViewModel) 
-		ifFalse: [ ^ self ].
+	(anEvaluationAnnouncement requesterObject
+		isCoderViewModel: self textualCoderViewModel) ifFalse: [ ^ self ].
 
-	evaluationHighlighter displayResult: anEvaluationAnnouncement evaluationResult.
-	evaluationPrinter hideResult
+	BlTaskAction
+		enqueueElement: self
+		action: [ 
+			evaluationHighlighter displayResult: anEvaluationAnnouncement evaluationResult.
+			evaluationPrinter hideResult ]
 ]
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onCoderParseError: aGtCoderParseError [
+	"A parse error can be notifying from a non-UI thread"
+
 	(aGtCoderParseError requesterObject
-		isUndefinedOrCoderViewModel: self textualCoderViewModel) ifFalse: [ ^ self ].	"A parse error can be notifying from a non-UI thread"
+		isUndefinedOrCoderViewModel: self textualCoderViewModel) ifFalse: [ ^ self ].
 	self
 		enqueueTask: [ aGtCoderParseError isUndeclaredError
 				ifTrue: [ self reportUndeclaredError: aGtCoderParseError ]
@@ -282,8 +287,9 @@ GtTextualCoderEditorElement >> onPrintRequest: anEvaluationAnnouncement [
 	(anEvaluationAnnouncement requesterObject isCoderViewModel: self textualCoderViewModel) 
 		ifFalse: [ ^ self ].
 
-	evaluationHighlighter hideResult.
-	evaluationPrinter displayResult: anEvaluationAnnouncement evaluationResult.
+	BlTaskAction enqueueElement: self action: [
+		evaluationHighlighter hideResult.
+		evaluationPrinter displayResult: anEvaluationAnnouncement evaluationResult ].
 ]
 
 { #category : #'hooks - children' }
@@ -297,6 +303,7 @@ GtTextualCoderEditorElement >> onRemovedFromSceneGraph [
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onScrollToCharacterPositionAnnouncement: anAnnouncement [
+	self assertUIProcess.
 	BrEditorSearchTextScroller new
 		editorElement: self;
 		lineIndex: anAnnouncement lineIndex;
@@ -429,7 +436,9 @@ GtTextualCoderEditorElement >> onViewModelRecomputeAddOns: aRecomputeAddOnReques
 	aRecomputeAddOnRequest coderViewModel == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
-	addOnsElementFuture future: self textualCoderViewModel addOnsFuture
+	BlTaskAction
+		enqueueElement: self
+		action: [ addOnsElementFuture future: self textualCoderViewModel addOnsFuture ]
 ]
 
 { #category : #'private - event handling' }
@@ -444,11 +453,12 @@ GtTextualCoderEditorElement >> onViewModelSelectionChanged: aSelectionChangedAnn
 	aSelectionChangedAnnouncement source == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
-	self
-		inUIProcessDo: [ self deselecter all deselect.
+	BlTaskAction
+		enqueueElement: self
+		action: [ self deselecter all deselect.
 			self selecter
 				in: [ :aSelecter | 
-					aSelectionChangedAnnouncement shouldUpdateCursor 
+					aSelectionChangedAnnouncement shouldUpdateCursor
 						ifFalse: [ aSelecter withoutCursorUpdate ] ];
 				all: aSelectionChangedAnnouncement selection;
 				select ]
@@ -507,22 +517,22 @@ GtTextualCoderEditorElement >> onViewModelTextChanged: aGtTextualCoderViewModelT
 	"Do nothing if it comes from a different view model"
 	aGtTextualCoderViewModelTextChanged textualCoderViewModel == self textualCoderViewModel
 		ifFalse: [ ^ self ].
-
-	aGtTextualCoderViewModelTextChanged source == self
-		ifTrue: [ ^ self hideHighlighters ].
-	
-	aGtTextualCoderViewModelTextChanged isSynchronous
-		ifTrue: [ self privateUpdateText: self announcement: aGtTextualCoderViewModelTextChanged ] 
-		ifFalse: [ textUpdater requestUpdate: aGtTextualCoderViewModelTextChanged ]
+		
+	BlTaskAction 
+		enqueueElement: self 
+		action: [ self processViewModelTextChanged: aGtTextualCoderViewModelTextChanged ].
 ]
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextEditCommandRequest: aGtTextualCoderViewModelTextEditCommandRequest [
 	"This is sent by the view model on requests to change the text 
 	in the editor by executing a command."
-	
-	aGtTextualCoderViewModelTextEditCommandRequest textEditCommand
-		applyOn: self editor 
+
+	BlTaskAction
+		enqueueElement: self
+		action: [
+			aGtTextualCoderViewModelTextEditCommandRequest textEditCommand
+				applyOn: self editor ]
 ]
 
 { #category : #'private - updating' }
@@ -570,6 +580,16 @@ GtTextualCoderEditorElement >> privateUpdateText: anEditorElement announcement: 
 	
 	self text: textForUpdate.
 	self hideHighlighters.
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> processViewModelTextChanged: aGtTextualCoderViewModelTextChanged [ 
+	aGtTextualCoderViewModelTextChanged source == self
+		ifTrue: [ ^ self hideHighlighters ].
+	
+	aGtTextualCoderViewModelTextChanged isSynchronous
+		ifTrue: [ self privateUpdateText: self announcement: aGtTextualCoderViewModelTextChanged ] 
+		ifFalse: [ textUpdater requestUpdate: aGtTextualCoderViewModelTextChanged ]
 ]
 
 { #category : #registration }

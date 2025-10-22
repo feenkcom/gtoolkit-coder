@@ -83,7 +83,11 @@ GtSourceCoderCollapsedContentElement >> onTextualCoderViewModelChanged [
 
 { #category : #'private - event handling' }
 GtSourceCoderCollapsedContentElement >> onViewModelTextChanged: anAnnouncement [
-	self updateCollapsedTextLabel
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+	anAnnouncement textualCoderViewModel = self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
+	BlTaskAction enqueueElement: self action: [ self updateCollapsedTextLabel ]
 ]
 
 { #category : #'api - textual coder view model' }

@@ -39,6 +39,14 @@ GtCoderModel class >> astExtensionsPragma [
 	^ #gtAstCoderAddOns:
 ]
 
+{ #category : #accessing }
+GtCoderModel class >> commonExecutionConfiguration [
+	^ AsyncFutureExecutionConfiguration new
+		customGroup: #Coder;
+		maxAmountOfWorkers: 2;
+		defaultPriority
+]
+
 { #category : #addons }
 GtCoderModel class >> contextMenuAddOnsPragma [
 	^ #gtCoderContextMenuAddOns
@@ -152,6 +160,18 @@ GtCoderModel >> expanded: aBoolean [
 	self deprecated: 'The expansion state was moved to the ViewModel'
 ]
 
+{ #category : #views }
+GtCoderModel >> gtSystemSubscriptionsViewFor: aView [
+	<gtView>
+	^ aView columnedList
+		title: 'System subscriptions';
+		items: [ self systemSubscriptions ];
+		column: 'Announcement' text: [ :each | each announcementClass ];
+		column: 'Action'
+			text: [ :each | each action ]
+			weight: 2
+]
+
 { #category : #accessing }
 GtCoderModel >> id [
 	^ id
@@ -179,6 +199,11 @@ GtCoderModel >> initializeAddOns: addOns viewModel: aCoderViewModel [
 GtCoderModel >> initializeShortcuts: addOns [
 ]
 
+{ #category : #subscriptions }
+GtCoderModel >> isSubscribedToSystem [
+	^ SystemAnnouncer uniqueInstance hasSubscriber: self
+]
+
 { #category : #'api - actions' }
 GtCoderModel >> mainActions [
 	"Return a collection of main actions in the coder, for example save"
@@ -197,7 +222,9 @@ GtCoderModel >> pragmasNamed: aSymbol inHierarchy: aClass [
 	| actions |
 	actions := OrderedCollection new.
 	aClass withAllSuperclassesDo: [ :each | 
-		actions addAll: (Pragma allNamed: aSymbol in: each) ].
+		actions addAll: ((Pragma allNamed: aSymbol in: each) 
+			reject: [ :eachPragma | actions anySatisfy: [ :otherPragma | 
+				eachPragma methodSelector = otherPragma methodSelector ] ]) ].
 	actions 
 		sort: (
 			[ :aPragma | aPragma numArgs isZero 
@@ -234,6 +261,15 @@ GtCoderModel >> requestUpdateAddOns [
 { #category : #subscriptions }
 GtCoderModel >> subscribeToSystem [
 	"do nothing"
+]
+
+{ #category : #subscriptions }
+GtCoderModel >> systemSubscriptions [
+	^ Array
+		streamContents: [ :aStream | 
+			SystemAnnouncer uniqueInstance subscriptions
+				subscriptionsOf: self
+				do: [ :eachSubscription | aStream nextPut: eachSubscription ] ]
 ]
 
 { #category : #subscriptions }

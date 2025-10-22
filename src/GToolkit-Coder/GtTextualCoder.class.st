@@ -76,7 +76,7 @@ GtTextualCoder >> astSync [
 GtTextualCoder >> coderAst [
 	<return: #TAsyncPromise of: #GtCoderAst>
 
-	^ self coderAstFuture await
+	^ self coderAstFuture await: self class commonExecutionConfiguration
 ]
 
 { #category : #'api - ast' }
@@ -113,7 +113,7 @@ GtTextualCoder >> collapsedText [
 GtTextualCoder >> collapsedTextPromise [
 	<return: #TAsyncPromise of: #BlText>
 
-	^ [ self collapsedText ] asAsyncPromise
+	^ [ self collapsedText ] asAsyncFuture await: self class commonExecutionConfiguration
 ]
 
 { #category : #'api - ast' }
@@ -217,7 +217,7 @@ GtTextualCoder >> currentSourceText: aText withEditCommand: anEditCommand [
 GtTextualCoder >> currentSourceTextPromise [
 	<return: #TAsyncPromise of: #BlText>
 
-	^ [ self currentSourceText ] asAsyncPromise
+	^ [ self currentSourceText ] asAsyncFuture await: self class commonExecutionConfiguration
 ]
 
 { #category : #'api - text' }
@@ -269,7 +269,7 @@ GtTextualCoder >> isModifiedPromise [
 	"Deprecated: use `GtTextualCoderViewModel>>#isTextModifiedPromise` instead."
 
 	<return: #TAsyncPromise of: #Boolean>
-	^ self isModifiedFuture asAsyncPromise
+	^ self isModifiedFuture asAsyncFuture await: self class commonExecutionConfiguration
 ]
 
 { #category : #'private - notifying' }
