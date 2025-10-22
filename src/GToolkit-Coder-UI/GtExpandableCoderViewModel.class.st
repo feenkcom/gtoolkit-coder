@@ -94,7 +94,10 @@ GtExpandableCoderViewModel >> initialize [
 
 { #category : #'private - notifying' }
 GtExpandableCoderViewModel >> notifyExpansionChanged: aBoolean [
-	self announce: (GtExpandableCoderViewModelExpansionChanged new expanded: aBoolean)
+	self
+		announce: (GtExpandableCoderViewModelExpansionChanged new
+				textualCoderViewModel: self;
+				expanded: aBoolean)
 ]
 
 { #category : #'private - notifying' }

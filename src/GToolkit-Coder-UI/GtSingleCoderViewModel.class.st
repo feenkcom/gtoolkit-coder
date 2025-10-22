@@ -36,10 +36,7 @@ GtSingleCoderViewModel class >> behaviourAddOnsExecutionConfiguration [
 
 { #category : #accessing }
 GtSingleCoderViewModel class >> commonExecutionConfiguration [
-	^ AsyncFutureExecutionConfiguration new
-		customGroup: #Coder;
-		maxAmountOfWorkers: 2;
-		defaultPriority
+	^ GtCoderModel commonExecutionConfiguration
 ]
 
 { #category : #accessing }

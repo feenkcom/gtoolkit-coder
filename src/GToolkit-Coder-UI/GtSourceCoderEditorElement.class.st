@@ -50,11 +50,6 @@ GtSourceCoderEditorElement >> onTextualCoderViewModelChanged [
 		ifNotNil: [ :aResult | evaluationHighlighter displayResult: aResult ]
 ]
 
-{ #category : #'as yet unclassified' }
-GtSourceCoderEditorElement >> onUpdateAddOnsRequest: aGtCoderAddOnsUpdateRequest [ 
-	"To be deleted"
-]
-
 { #category : #registration }
 GtSourceCoderEditorElement >> onViewModelEvaluationStatusChanged: anAnnouncement [
 	self

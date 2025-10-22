@@ -39,6 +39,14 @@ GtCoderModel class >> astExtensionsPragma [
 	^ #gtAstCoderAddOns:
 ]
 
+{ #category : #accessing }
+GtCoderModel class >> commonExecutionConfiguration [
+	^ AsyncFutureExecutionConfiguration new
+		customGroup: #Coder;
+		maxAmountOfWorkers: 2;
+		defaultPriority
+]
+
 { #category : #addons }
 GtCoderModel class >> contextMenuAddOnsPragma [
 	^ #gtCoderContextMenuAddOns

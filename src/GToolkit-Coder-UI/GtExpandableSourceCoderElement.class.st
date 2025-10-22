@@ -175,11 +175,18 @@ GtExpandableSourceCoderElement >> onTextualCoderViewModelChanged [
 
 { #category : #'private - event handling' }
 GtExpandableSourceCoderElement >> onViewModelExpansionChanged: anAnnouncement [
-	self expanded: anAnnouncement expanded
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+	anAnnouncement textualCoderViewModel = self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
+	BlTaskAction
+		enqueueElement: self
+		action: [ self expanded: anAnnouncement expanded ]
 ]
 
 { #category : #'private - event handling' }
 GtExpandableSourceCoderElement >> onViewModelTextChanged: anAnnouncement [
+	"Can be removed"
 	self updateModificationIndicator
 ]
 
@@ -200,9 +207,6 @@ GtExpandableSourceCoderElement >> subscribeToTextualCoderViewModel [
 	textualCoderViewModel weak
 		when: GtExpandableCoderViewModelExpansionChanged
 			send: #onViewModelExpansionChanged:
-			to: self;
-		when: GtTextualCoderViewModelTextChanged
-			send: #onViewModelTextChanged:
 			to: self
 ]
 
@@ -237,7 +241,5 @@ GtExpandableSourceCoderElement >> updateElement [
 
 { #category : #'private - update' }
 GtExpandableSourceCoderElement >> updateModificationIndicator [
-	true ifTrue: [ ^ self ].
-	
-	modificationIndicator asyncPromise promise: textualCoderViewModel isTextModifiedPromise
+	"can be removed"
 ]
