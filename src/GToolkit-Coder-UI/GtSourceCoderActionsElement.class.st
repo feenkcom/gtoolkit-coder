@@ -109,12 +109,18 @@ GtSourceCoderActionsElement >> onTextualCoderViewModelChanged [
 
 { #category : #private }
 GtSourceCoderActionsElement >> removeContextToolbarActions [
-	contextToolbar numberOfItems timesRepeat: [ contextToolbar removeItemAt: 1 ]
+	| aboutToRemoveElements |
+	aboutToRemoveElements := contextToolbar items.
+	contextToolbar removeAllItems.
+	BrWidgetPermanentlyRemovedEvent notifyElements: aboutToRemoveElements
 ]
 
 { #category : #private }
 GtSourceCoderActionsElement >> removeMainToolbarActions [
-	mainToolbar numberOfItems timesRepeat: [ mainToolbar removeItemAt: 1 ]
+	| aboutToRemoveElements |
+	aboutToRemoveElements := mainToolbar items.
+	mainToolbar removeAllItems.
+	BrWidgetPermanentlyRemovedEvent notifyElements: aboutToRemoveElements
 ]
 
 { #category : #'api - textual coder view model' }
