@@ -54,7 +54,8 @@ GtSourceCoderActionsElement >> initialize [
 	self padding: (BlInsets empty).
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
-		c vertical fitContent ].
+		c vertical fitContent.
+		c minWidth: GtCoderUIConstants actionsToolbarHeight ].
 
 	mainToolbar := self newToolbar labeled: 'Main toolbar'.
 	

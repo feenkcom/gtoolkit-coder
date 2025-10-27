@@ -26,10 +26,24 @@ GtSourceCoderExpandedContentElement >> initialize [
 	editorElement := self newEditorElement.
 	actions := self newActionsElement.
 
+	actions visibility: BlVisibility hidden.
+
+	self
+		addAptitude: (BrStyleCommonAptitude new
+				when: BlElementState hovered & BlElementState focused not
+					style: [ :aStyle | 
+						aStyle
+							do: [ :aWidget | actions visibility: BlVisibility visible ]
+							after: [ :aWidget | actions visibility: BlVisibility hidden ] ];
+				focused: [ :aStyle | 
+					aStyle
+						do: [ :aWidget | actions visibility: BlVisibility visible ]
+						after: [ :aWidget | actions visibility: BlVisibility hidden ] ]).
+
 	self
 		addChildren: {editorElement.
 				actions}.
-	self addAptitude: (BrLayoutResizerAptitude new inherit: editorElement).
+	self addAptitude: (BrLayoutResizerAptitude new inherit: editorElement)
 ]
 
 { #category : #'instance creation' }
