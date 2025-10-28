@@ -179,10 +179,12 @@ GtCreationForm >> selectInNavigationModel: aNavigationModel anInstance: anInstan
 	
 	(anInstance package tags reject: [ :aTag | aTag isRoot])
 		ifNotEmpty: [
-			anInstance packageTag ifNotNil:  [ 
-				aNavigationModel
-					selectPackageTag: (anInstance package 
-						tagNamed: anInstance tags first) ] ].
+			anInstance packageTag ifNotNil:  [ :aPackageTag |
+				aPackageTag isRoot ifFalse: [ 
+					anInstance tags ifNotEmpty: [ :anInstanceTags |
+						aNavigationModel
+							selectPackageTag: (anInstance package 
+								tagNamed: anInstanceTags first) ] ] ] ].
 
 	aNavigationModel selectClass: anInstance
 ]
