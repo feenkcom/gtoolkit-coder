@@ -361,7 +361,8 @@ GtTextualCoderEditorElement >> onTextModified [
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onTextModifiedDueToEvent: aTextModifiedEvent [
 	"Is sent when the text changes in the editor. Here we should synchronise the UI and the model. We also receive the event, which can contain the type of change."
-
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+	
 	self textualCoderViewModel
 		sourceText: self text
 		from: self
