@@ -169,35 +169,33 @@ GtTextualCoderEditorElement >> initialize [
 
 { #category : #initialization }
 GtTextualCoderEditorElement >> initializeListeners [
-	self when: BlFocusInEvent do: [ :anEvent |
-		self textualCoderViewModel focused: true from: self ].
-	self when: BlFocusOutEvent do: [ :anEvent |
-		"when elements are removed from the scene graph due to tab switching or scrolling they lose focus.
-		We are only interested when focus is lost explicitly via user interaction"
-		anEvent isDueToRemoval
-			ifFalse: [ self textualCoderViewModel focused: false from: self ] ].
-
+	self 
+		when: BlFocusInEvent 
+		do: [ :anEvent | self onFocusInEvent: anEvent ].
+		
+	self 
+		when: BlFocusOutEvent 
+		do: [ :anEvent | self onFocusOutEvent: anEvent ].
+	
 	self editor
 		when: BrTextEditorHistoryChangedEvent
-		do: [ :anEvent | 
-			textualCoderViewModel
-				ifNotNil: [ textualCoderViewModel history: self editor history copy ] ].
+		do: [ :anEvent | self onTextEditorHistoryChanged: anEvent ].
 
 	self editor
 		when: BrTextEditorModifiedEvent
-		do: [ :anEvent | self onTextModifiedDueToEvent:  anEvent ].
+		do: [ :anEvent | self onTextModifiedDueToEvent: anEvent ].
 
 	self editor
 		when: BlInfiniteDataSourceChanged
 		do: [ :anEvent | self onTextModifiedDueToEvent: anEvent ].
 
 	self editor
-		when: BrTextEditorCursorChangedEvent 
-		do: [ :anEvent | self textualCoderViewModel cursors: anEvent cursors from: self ].
+		when: BrTextEditorCursorChangedEvent
+		do: [ :anEvent | self onTextEditorCursorChanged: anEvent ].
 
 	self editor
-		when: BrTextEditorSelectionChangedEvent 
-		do: [ :anEvent | self textualCoderViewModel selection: anEvent selection from: self ].
+		when: BrTextEditorSelectionChangedEvent
+		do: [ :anEvent | self onTextEditorSelectionChanged: anEvent ].
 
 	self editor
 		when: BrTextEditorTextStyledEvent
@@ -264,6 +262,21 @@ GtTextualCoderEditorElement >> onFocusChangedAnnouncement: anAnnouncement [
 	self
 		enqueueTask: (BlTaskAction new
 				action: [ self onCoderViewModelFocused: anAnnouncement focused ])
+]
+
+{ #category : #initialization }
+GtTextualCoderEditorElement >> onFocusInEvent: anEvent [
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+
+	self textualCoderViewModel focused: true from: self
+]
+
+{ #category : #initialization }
+GtTextualCoderEditorElement >> onFocusOutEvent: anEvent [
+	anEvent isDueToRemoval ifTrue: [ ^ self ].
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+
+	self textualCoderViewModel focused: false from: self
 ]
 
 { #category : #'private - event handling' }
@@ -348,6 +361,27 @@ GtTextualCoderEditorElement >> onStyleTextRequest: anEvent [
 	self enqueueTask: (BlTaskAction new action: [ self styleTextAndAfterDo: anEvent afterAction ])
 ]
 
+{ #category : #initialization }
+GtTextualCoderEditorElement >> onTextEditorCursorChanged: anEvent [
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+	
+	self textualCoderViewModel cursors: anEvent cursors from: self
+]
+
+{ #category : #initialization }
+GtTextualCoderEditorElement >> onTextEditorHistoryChanged: anEvent [
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+
+	self textualCoderViewModel history: self editor history copy
+]
+
+{ #category : #initialization }
+GtTextualCoderEditorElement >> onTextEditorSelectionChanged: anEvent [
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+	
+	self textualCoderViewModel selection: anEvent selection from: self
+]
+
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onTextModified [
 	"Is sent when the text changes in the editor. Here we should synchronise the UI and the model."
@@ -373,6 +407,7 @@ GtTextualCoderEditorElement >> onTextModifiedDueToEvent: aTextModifiedEvent [
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onTextStyled: anEvent [
 	"An underlying editor styled the text"
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
 	
 	self textualCoderViewModel styledText: anEvent styledText
 ]
