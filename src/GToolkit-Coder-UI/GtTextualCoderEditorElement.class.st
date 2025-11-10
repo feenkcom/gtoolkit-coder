@@ -186,10 +186,6 @@ GtTextualCoderEditorElement >> initializeListeners [
 		do: [ :anEvent | self onTextModifiedDueToEvent: anEvent ].
 
 	self editor
-		when: BlInfiniteDataSourceChanged
-		do: [ :anEvent | self onTextModifiedDueToEvent: anEvent ].
-
-	self editor
 		when: BrTextEditorCursorChangedEvent
 		do: [ :anEvent | self onTextEditorCursorChanged: anEvent ].
 

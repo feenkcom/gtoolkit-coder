@@ -41,6 +41,15 @@ GtSourceCoderEditorElement >> initialize [
 	self editor movementWordClassifier: GtSmalltalkSourceCoder wordMovementClassifier.
 ]
 
+{ #category : #initalization }
+GtSourceCoderEditorElement >> initializeListeners [
+	super initializeListeners.
+
+	self editor
+		when: BlInfiniteDataSourceChanged
+		do: [ :anEvent | self onTextModifiedDueToEvent: anEvent ]
+]
+
 { #category : #'api - textual coder view model' }
 GtSourceCoderEditorElement >> onTextualCoderViewModelChanged [
 	super onTextualCoderViewModelChanged.
