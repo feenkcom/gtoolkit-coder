@@ -11,9 +11,21 @@ Class {
 }
 
 { #category : #'private - accessing' }
+GtNotificationDebugSessionElement >> actOnElementDetached [
+	super actOnElementDetached.
+	self clearContent. 
+]
+
+{ #category : #'private - accessing' }
 GtNotificationDebugSessionElement >> borderElement [
 	<return: #GtNotificationBorderElement>
 	^ borderElement
+]
+
+{ #category : #'private - hooks' }
+GtNotificationDebugSessionElement >> clearContent [
+	self stackListElement items: #().
+	self textEditor text: ''. 
 ]
 
 { #category : #'private - actions' }
@@ -68,7 +80,9 @@ GtNotificationDebugSessionElement >> initializeBorderElement [
 	borderElement := GtNotificationBorderElement new
 		borderDo: [ :anElement | 
 			anElement
-				border: (BlBorder paint: self theme status errorBackgroundColor width: 1);
+				border: (BlBorder 
+					paint: self theme status errorBackgroundColor 
+					width: 1);
 				padding: (BlInsets all: 0) ];
 		withCloseButtonAction: [ self terminate ]
 ]
