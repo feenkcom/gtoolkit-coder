@@ -419,3 +419,19 @@ GtTextualCoder >> sourceTextDo: aBlock [
 GtTextualCoder >> stylers [
 	^ #()
 ]
+
+{ #category : #'api - text' }
+GtTextualCoder >> textReplaced: aText with: aGtCoderUpdateStragegy dueTo: aReason [
+	"Set a new source text if the characters are different, giving also a reason for the change"
+
+	self
+		critical: [ | previousSourceText |
+			previousSourceText := self currentSourceText copy.
+			(previousSourceText equalsIgnoringAttributes: aText)
+				ifFalse: [ self sourceCode currentSourceText: aText.
+					self
+						sourceChangedTo: aText
+						from: previousSourceText
+						with: aGtCoderUpdateStragegy
+						dueTo: aReason ] ]
+]
