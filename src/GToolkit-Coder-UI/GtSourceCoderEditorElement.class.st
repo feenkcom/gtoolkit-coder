@@ -47,7 +47,17 @@ GtSourceCoderEditorElement >> initializeListeners [
 
 	self editor
 		when: BlInfiniteDataSourceChanged
-		do: [ :anEvent | self onTextModifiedDueToEvent: anEvent ]
+		do: [ :anEvent | self onInfiniteDataSourceChanged: anEvent ]
+]
+
+{ #category : #initalization }
+GtSourceCoderEditorElement >> onInfiniteDataSourceChanged: anEvent [
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+	self textualCoderViewModel
+		textReplaced: self text
+		from: self
+		synchronously: true
+		dueToEvent: anEvent
 ]
 
 { #category : #'api - textual coder view model' }
