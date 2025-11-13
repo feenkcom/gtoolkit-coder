@@ -95,7 +95,7 @@ TCoderByScripterExamples >> scripterInPagerForBlock: aBlock [
 		aStep set 
 			label: 'Initialize Coder UI';
 			element: [ :aCoder |
-				GtPager createWrappedOn: aCoder asElement ];
+				GtPagerSettings usedPager createWrappedOn: aCoder asElement ];
 			onModel;
 			play ].
 
