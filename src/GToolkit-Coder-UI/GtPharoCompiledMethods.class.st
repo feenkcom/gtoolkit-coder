@@ -111,7 +111,7 @@ GtPharoCompiledMethods >> removeSeveralMethodsSubmenuFor: aCollection [
 							right: 10);
 					icon: BrGlamorousVectorIcons remove;
 					label: 'Remove';
-					action: [ "submenu hideAll." self halt.
+					action: [ "submenu hideAll."
 						change execute ].
 			element addChild: button as: #removeButton.
 			^ element
