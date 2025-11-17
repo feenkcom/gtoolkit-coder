@@ -26,7 +26,6 @@ GtDiffElementWithLabelStencil >> create [
 	| headerElement diffContainer |
 	
 	headerElement := BrHorizontalPane new
-		padding: (BlInsets all: 0);
 		hMatchParent;
 		vFitContent.
 
@@ -58,6 +57,7 @@ GtDiffElementWithLabelStencil >> createDiffContainer [
 { #category : #'building - widgets' }
 GtDiffElementWithLabelStencil >> createFromLabel [
 	^ BrLabel new 
+		margin: (BlInsets left: 9);
 		aptitude: BrGlamorousLabelAptitude;
 		text: (self fromLabelText asRopedText glamorousCodeSmallSize
 			foreground: BrGlamorousColors defaultButtonTextColor);
@@ -85,11 +85,12 @@ GtDiffElementWithLabelStencil >> createPanesDiffElement [
 
 { #category : #'building - widgets' }
 GtDiffElementWithLabelStencil >> createToLabel [
-	^ BrLabel new 
+	^ BrLabel new
+		margin: (BlInsets left: 16);
 		aptitude: BrGlamorousLabelAptitude;
 		text: (self toLabelText asRopedText glamorousCodeSmallSize
 				foreground: BrGlamorousColors defaultButtonTextColor);
-	 	hMatchParent 
+		hMatchParent
 ]
 
 { #category : #accessing }
