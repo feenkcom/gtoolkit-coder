@@ -1,5 +1,5 @@
 Class {
-	#name : #GtPharoCompiledMethods,
+	#name : #GtPharoCompiledMethodGroup,
 	#superclass : #Object,
 	#traits : 'TGtGroupWithItems',
 	#classTraits : 'TGtGroupWithItems classTrait',
@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : #views }
-GtPharoCompiledMethods >> gtItemsFor: aView [
+GtPharoCompiledMethodGroup >> gtItemsFor: aView [
 	<gtView>
 	items ifNil: [ ^ aView empty ].
 	^ aView columnedList
@@ -23,6 +23,6 @@ GtPharoCompiledMethods >> gtItemsFor: aView [
 						menuItemsForObject: aCollection anyOne
 						hostElement: anElement ]
 				ifFalse: [ GtCoderMethodsTarget
-						menuItemsForObject: (GtPharoCompiledMethods withAll: aCollection)
+						menuItemsForObject: (GtPharoCompiledMethodGroup withAll: aCollection)
 						hostElement: anElement ] ]
 ]

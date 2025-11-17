@@ -102,7 +102,7 @@ GtCoderMethodsGroupedListElement >> contextMenuForOneItem: item in: anElement [
 { #category : #'private - context menu' }
 GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: anElement [
 	^ GtCoderMethodsTarget
-		menuItemsForObject: (GtPharoCompiledMethods withAll: someItems)
+		menuItemsForObject: (GtPharoCompiledMethodGroup withAll: someItems)
 		hostElement: anElement
 ]
 
