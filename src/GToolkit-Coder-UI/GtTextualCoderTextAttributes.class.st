@@ -5,7 +5,7 @@ Class {
 		'markerAttribute',
 		'textAttributes'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Textual Model'
+	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
 
 { #category : #'api - attribute' }

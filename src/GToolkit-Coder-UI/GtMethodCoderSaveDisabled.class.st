@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'preventors'
 	],
-	#category : 'GToolkit-Coder-UI-Coder - Method Events'
+	#category : #'GToolkit-Coder-UI-Coder - Method Events'
 }
 
 { #category : #accessing }

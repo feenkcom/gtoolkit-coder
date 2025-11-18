@@ -8,7 +8,7 @@ Class {
 		'removeAnnouncement',
 		'renameAnnouncement'
 	],
-	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
 { #category : #accessing }

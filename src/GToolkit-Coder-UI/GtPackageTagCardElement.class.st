@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPackageTagCardElement,
 	#superclass : #GtCoderCardElement,
-	#category : 'GToolkit-Coder-UI-Basic'
+	#category : #'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #'building ui' }
