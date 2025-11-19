@@ -90,11 +90,8 @@ GtCoderClassesTreeElement >> contextMenuForOneItem: aClass [
 { #category : #initialization }
 GtCoderClassesTreeElement >> contextMenuForSeveralItems: someClasses [
 	<return: #BrMenuItems>
-	| aPhlowContext |
-	aPhlowContext := GtPhlowContext new coderSelectedClasses: someClasses.
 	^ GtCoderClassesTarget
-		menuItemsForObject: someClasses anyOne
-		inContext: aPhlowContext
+		menuItemsForObject: (GtPharoClassGroup withAll: someClasses)
 		hostElement: self
 ]
 

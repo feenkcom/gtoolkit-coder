@@ -1,8 +1,8 @@
 Extension { #name : #GtPhlowContext }
 
 { #category : #'*GToolkit-Coder-UI' }
-GtPhlowContext >> coderCompiledMethod: aClass [
-	self optionAt: #coderCompiledMethod put: aClass
+GtPhlowContext >> coderCompiledMethod: aCompiledMethod [
+	self optionAt: #coderCompiledMethod put: aCompiledMethod
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
