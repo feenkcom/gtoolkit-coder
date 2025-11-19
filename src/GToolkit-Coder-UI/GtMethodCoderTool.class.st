@@ -1,6 +1,8 @@
 Class {
 	#name : #GtMethodCoderTool,
 	#superclass : #GtCoderTool,
+	#traits : 'TGtPhlowWithSelfObjectHolder',
+	#classTraits : 'TGtPhlowWithSelfObjectHolder classTrait',
 	#instVars : [
 		'compiledMethod'
 	],
@@ -24,7 +26,10 @@ GtMethodCoderTool >> compiledMethod: anObject [
 
 { #category : #converting }
 GtMethodCoderTool >> newCoder [
-	^ GtCoderElement forMethod: self compiledMethod
+	^ self
+		ifSelfObject: [ :aSelfObject | 
+			GtCoderElement forObject: aSelfObject method: self compiledMethod ]
+		ifNone: [ GtCoderElement forMethod: self compiledMethod ]
 ]
 
 { #category : #accessing }
