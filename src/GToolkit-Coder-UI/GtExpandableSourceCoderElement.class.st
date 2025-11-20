@@ -80,8 +80,8 @@ GtExpandableSourceCoderElement >> initialize [
 
 	self states withExpansion.
 
-	self when: BrExpandedEvent do: [ self onExpanded ].
-	self when: BrCollapsedEvent do: [ self onCollapsed ].
+	self when: BrExpandedEvent do: [ :anEvent | anEvent target onExpanded ].
+	self when: BrCollapsedEvent do: [ :anEvent | anEvent target onCollapsed ].
 
 	self
 		header: [ collapsedElement := self newCollapsedElement ];
@@ -145,7 +145,7 @@ GtExpandableSourceCoderElement >> onCollapsed [
 	self beInSingleCompositionLayer.
 	
 	textualCoderViewModel ifNotNil: [ :aCoderUIModel |
-		aCoderUIModel expanded: false.
+		aCoderUIModel expanded: false from: self.
 		(collapsedElement notNil and: [ self isDirty: collapsedElement ])
 			ifTrue: [ self assignCollapsedCoder: aCoderUIModel to: collapsedElement ] ]
 ]
@@ -155,7 +155,7 @@ GtExpandableSourceCoderElement >> onExpanded [
 	self beInSeparateCompositionLayer.
 
 	textualCoderViewModel ifNotNil: [ :aCoderUIModel |			
-		aCoderUIModel expanded: true.
+		aCoderUIModel expanded: true from: self.
 		(expandedElement notNil and: [ self isDirty: expandedElement ])
 			ifTrue: [ self assignExpandedCoder: aCoderUIModel to: expandedElement ] ]
 ]
@@ -175,10 +175,13 @@ GtExpandableSourceCoderElement >> onTextualCoderViewModelChanged [
 
 { #category : #'private - event handling' }
 GtExpandableSourceCoderElement >> onViewModelExpansionChanged: anAnnouncement [
-	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+	anAnnouncement source == self
+		ifTrue: [ ^ self ].
+	self hasTextualCoderViewModel
+		ifFalse: [ ^ self ].
 	anAnnouncement textualCoderViewModel = self textualCoderViewModel
 		ifFalse: [ ^ self ].
-
+		
 	BlTaskAction
 		enqueueElement: self
 		action: [ self expanded: anAnnouncement expanded ]

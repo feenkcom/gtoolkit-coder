@@ -43,10 +43,16 @@ GtExpandableCoderViewModel >> expanded [
 
 { #category : #'api - expansion' }
 GtExpandableCoderViewModel >> expanded: aBoolean [
-	expanded = aBoolean ifTrue: [ ^ self ].
+	self expanded: aBoolean from: self
+]
+
+{ #category : #'api - expansion' }
+GtExpandableCoderViewModel >> expanded: aBoolean from: aSourceObject [
+	expanded = aBoolean
+		ifTrue: [ ^ self ].
 
 	expanded := aBoolean.
-	self notifyExpansionChanged: expanded
+	self notifyExpansionChanged: expanded from: aSourceObject
 ]
 
 { #category : #'api - focus' }
@@ -93,11 +99,12 @@ GtExpandableCoderViewModel >> initialize [
 ]
 
 { #category : #'private - notifying' }
-GtExpandableCoderViewModel >> notifyExpansionChanged: aBoolean [
+GtExpandableCoderViewModel >> notifyExpansionChanged: aBoolean from: aSourceObject [
 	self
 		announce: (GtExpandableCoderViewModelExpansionChanged new
 				textualCoderViewModel: self;
-				expanded: aBoolean)
+				expanded: aBoolean;
+				source: aSourceObject)
 ]
 
 { #category : #'private - notifying' }
