@@ -812,6 +812,16 @@ GtTextualCoderViewModel >> subscribeToCoderModel [
 		to: self
 ]
 
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> textReplaced: aNewSourceText from: aSourceObject synchronously: isSynchronous dueToEvent: aTextModifiedEvent [
+	self coderModel
+		textReplaced: aNewSourceText
+		with: (GtCoderUpdateStrategy new
+				source: aSourceObject;
+				isSynchronous: isSynchronous)
+		dueTo: aTextModifiedEvent
+]
+
 { #category : #'api - styled text' }
 GtTextualCoderViewModel >> unsetStyledText [
 	<propertyUnsetter: #styledText>

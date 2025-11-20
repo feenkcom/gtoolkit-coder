@@ -96,116 +96,14 @@ GtCoderMethodsGroupedListElement >> buildMethodItem [
 
 { #category : #'private - context menu' }
 GtCoderMethodsGroupedListElement >> contextMenuForOneItem: item in: anElement [
-	| menu |
-	menu := BrMenuItems new.
-	menu
-		addItem: (BrMenuActionItem new
-				group: BrMenuItemGroupConfiguration navigation;
-				label: (self createLabel: 'Browse implementors' description: item selector);
-				action: [ self browseImplementorsOf: item selector ]).
-	menu
-		addItem: (BrMenuActionItem new
-				group: BrMenuItemGroupConfiguration navigation;
-				label: (self createLabel: 'Browse hierarchy implementors' description: item selector);
-				action: [ self browseHierarchyImplementorsOf: item selector ]).
-	menu
-		addItem: (BrMenuActionItem new
-				group: BrMenuItemGroupConfiguration navigation;
-				label: (self createLabel: 'Browse references' description: item selector);
-				action: [ self browseReferencesOf: item selector ]).
-	menu
-		addItem: (BrMenuActionItem new
-				group: BrMenuItemGroupConfiguration navigation;
-				label: (self createLabel: 'Browse hierarchy references' description: item selector);
-				action: [ self browseHierarchyReferencesOf: item selector ]).
-	menu
-		addItem: (BrMenuSubmenuItem new
-				group: BrMenuItemGroupConfiguration refactoring;
-				label: (self createLabel: 'Push up method' description: item selector);
-				submenu: (self pushUpMethodSubmenuFor: item);
-				bePinSubmenuAction).
-
-	item methodClass subclasses notEmpty
-		ifTrue: [ menu
-				addItem: (BrMenuSubmenuItem new
-						group: BrMenuItemGroupConfiguration refactoring;
-						label: (self createLabel: 'Push down method' description: item selector);
-						submenu: (self pushDownMethodSubmenuFor: item);
-						bePinSubmenuAction) ].
-	menu
-		addItem: (BrMenuSubmenuItem new
-				group: BrMenuItemGroupConfiguration refactoring;
-				label: (self createLabel: 'Rename message' description: item selector);
-				submenu: (self renameMethodSubmenuFor: item);
-				bePinSubmenuAction).
-	menu
-		addItem: (BrMenuSubmenuItem new
-				group: BrMenuItemGroupConfiguration refactoring;
-				label: (self createLabel: 'Remove method' description: item selector);
-				submenu: (self removeMethodSubmenuFor: item)).
-	^ menu
+	^ GtCoderMethodTarget menuItemsForObject: item hostElement: anElement
 ]
 
 { #category : #'private - context menu' }
 GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: anElement [
-	| menu |
-	menu := BrMenuItems new.
-	menu
-		addItem: (BrMenuActionItem new
-				group: BrMenuItemGroupConfiguration navigation;
-				label: (self
-						createLabel: 'Browse implementors'
-						description: ('{1} methods' format: {someItems size}));
-				action: [ self browseSeveralImplementorsOf: (someItems collect: #selector) ]).
-	menu
-		addItem: (BrMenuActionItem new
-				group: BrMenuItemGroupConfiguration navigation;
-				label: (self
-						createLabel: 'Browse hierarachy implementors'
-						description: ('{1} methods' format: {someItems size}));
-				action: [ self browseSeveralHierarchyImplementorsOf: (someItems collect: #selector) ]).
-	menu
-		addItem: (BrMenuActionItem new
-				group: BrMenuItemGroupConfiguration navigation;
-				label: (self
-						createLabel: 'Browse references'
-						description: ('{1} methods' format: {someItems size}));
-				action: [ self browseSeveralReferencesOf: (someItems collect: #selector) ]).
-	menu
-		addItem: (BrMenuActionItem new
-				group: BrMenuItemGroupConfiguration navigation;
-				label: (self
-						createLabel: 'Browse hierarchy references'
-						description: ('{1} methods' format: {someItems size}));
-				action: [ self browseSeveralHierarchyReferencesOf: (someItems collect: #selector) ]).
-
-	menu
-		addItem: (BrMenuSubmenuItem new
-				group: BrMenuItemGroupConfiguration refactoring;
-				label: (self
-						createLabel: 'Push up methods'
-						description: ('{1} methods' format: {someItems size}));
-				submenu: (self pushUpSeveralMethodsSubmenuFor: someItems);
-				bePinSubmenuAction).
-
-	someItems anyOne methodClass subclasses notEmpty
-		ifTrue: [ menu
-				addItem: (BrMenuSubmenuItem new
-						group: BrMenuItemGroupConfiguration refactoring;
-						label: (self
-								createLabel: 'Push down methods'
-								description: ('{1} methods' format: {someItems size}));
-						submenu: (self pushDownSeveralMethodsSubmenuFor: someItems);
-						bePinSubmenuAction) ].
-
-	menu
-		addItem: (BrMenuSubmenuItem new
-				group: BrMenuItemGroupConfiguration refactoring;
-				label: (self
-						createLabel: 'Remove methods'
-						description: ('{1} methods' format: {someItems size}));
-				submenu: (self removeSeveralMethodsSubmenuFor: someItems)).
-	^ menu
+	^ GtCoderMethodsTarget
+		menuItemsForObject: (GtPharoCompiledMethodGroup withAll: someItems)
+		hostElement: anElement
 ]
 
 { #category : #'private - insance creation' }
