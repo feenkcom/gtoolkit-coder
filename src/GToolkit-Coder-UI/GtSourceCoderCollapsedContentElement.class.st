@@ -34,6 +34,28 @@ GtSourceCoderCollapsedContentElement >> newAddOnsContainer [
 	^ BrHorizontalPane new
 		matchParent;
 		alignCenterLeft;
+		withAsyncFutureDo: [ :anElementFuture |
+			anElementFuture
+				executionConfiguration: GtSingleCoderViewModel methodAddOnsExecutionConfiguration;
+				whenSuccess: [ :aContainer :theAddOns |
+					aContainer removeChildren.
+					theAddOns previews do: [ :eachAddOn |
+						| eachAddOnElement |
+
+						eachAddOnElement := previews
+							at: eachAddOn id
+							ifAbsentPut: [ eachAddOn stencil asElement ].
+						
+						eachAddOn dataBinder
+							element: eachAddOnElement;
+							coderViewModel: textualCoderViewModel;
+							build.
+
+						aContainer addChild: eachAddOnElement ] ];
+				whenError: [ :aContainer :anError |
+					aContainer removeChildren.
+					aContainer addChild: (BrLabel new aptitude: BrGlamorousLabelAptitude; text: anError printString) ];
+				whenPending: [ :aContainer | ] ];
 		withAsyncPromiseDo: [ :anElementPromise |
 			anElementPromise
 				whenSuccess: [ :aContainer :theAddOns |
@@ -78,7 +100,7 @@ GtSourceCoderCollapsedContentElement >> onTextualCoderViewModelChanged [
 	
 	self updateCollapsedTextLabel.
 	addOns removeChildren.
-	addOns asyncPromise promise: textualCoderViewModel addOns
+	addOns asyncFuture future: textualCoderViewModel addOnsFuture
 ]
 
 { #category : #'private - event handling' }
