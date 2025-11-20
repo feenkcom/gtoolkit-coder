@@ -8,8 +8,17 @@ Class {
 }
 
 { #category : #'instace creation' }
-GtPackageTagCoderTool class >> packageTag: aPackageTag [
+GtPackageTagCoderTool class >> forPackageTag: aPackageTag [
 	^ self new packageTag: aPackageTag
+]
+
+{ #category : #'instace creation' }
+GtPackageTagCoderTool class >> packageTag: aPackageTag [
+	"Should be removed since it overrides core method."
+
+	self deprecated: 'Use #forPackageTag: instead'.
+	
+	^ self forPackageTag: aPackageTag
 ]
 
 { #category : #accessing }
