@@ -47,7 +47,7 @@ Package >> gtBrowse [
 Package >> gtBrowseFrom: anElement [
 	^ BlSpace new
 		withSceneDriller;
-		inPager: [ GtPackageCoderTool package: self ];
+		inPager: [ GtPackageCoderTool forPackage: self ];
 		title: self packageName;
 		icon: BrGlamorousVectorIcons browse;
 		showFrom: anElement

@@ -8,8 +8,17 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtPackageCoderTool class >> package: aPackage [
+GtPackageCoderTool class >> forPackage: aPackage [
 	^ self new package: aPackage
+]
+
+{ #category : #'instance creation' }
+GtPackageCoderTool class >> package: aPackage [
+	"Should be removed since it overrides core method."
+
+	self deprecated: 'Use #forPackage: instead'.
+
+	^ self forPackage: aPackage
 ]
 
 { #category : #converting }

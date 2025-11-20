@@ -37,7 +37,7 @@ RPackage >> gtBaselinesFor: aView [
 RPackage >> gtBrowse [
 	^ BlSpace new
 		withSceneDriller;
-		inPager: [ GtPackageCoderTool package: self ];
+		inPager: [ GtPackageCoderTool forPackage: self ];
 		title: self packageName;
 		icon: BrGlamorousVectorIcons browse;
 		show
@@ -47,7 +47,7 @@ RPackage >> gtBrowse [
 RPackage >> gtBrowseFrom: anElement [
 	^ BlSpace new
 		withSceneDriller;
-		inPager: [ GtPackageCoderTool package: self ];
+		inPager: [ GtPackageCoderTool forPackage: self ];
 		title: self packageName;
 		icon: BrGlamorousVectorIcons browse;
 		showFrom: anElement
