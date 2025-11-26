@@ -249,8 +249,6 @@ GtCoderMethodsGroupedListElement >> onMethodSelected: anAnnouncement [
 				source: self;
 				originalSource: anAnnouncement source) ]
 		ifNone: [  ].
-
-	GtJustContextStackSignal emit
 ]
 
 { #category : #'event handling - selection' }
