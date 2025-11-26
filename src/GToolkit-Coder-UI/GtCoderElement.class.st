@@ -161,7 +161,10 @@ GtCoderElement >> initialize [
 		do: [ :anEvent | self onGtCoderDisplayTopSidebarWish: anEvent ].
 	self
 		when: GtCoderHideSidebarWish
-		do: [ :anEvent | self onGtCoderHideSidebarWish: anEvent ]
+		do: [ :anEvent | self onGtCoderHideSidebarWish: anEvent ].
+	self 
+		when: GtNavigationMethodSelectionWish
+		do: [ :anEvent | self onGtNavigationMethodSelectionWish: anEvent ]
 ]
 
 { #category : #'private - event handling' }
@@ -189,6 +192,24 @@ GtCoderElement >> onGtCoderSidebarVisibilityWish: anEvent [
 		ifFound: [ :aState | 
 			anEvent isVisible: GtPhlowToolDetailState detailed = aState ]
 		ifNone: [ anEvent isVisible: false ]
+]
+
+{ #category : #initialization }
+GtCoderElement >> onGtNavigationMethodSelectionWish: anEvent [
+	"Another method is selected in a methods coder,
+	let's select the same method in the navigation model."
+
+	| aCompiledMethod |
+	anEvent consumed: true.
+
+	anEvent source == self ifTrue: [ ^ self ].
+	
+	aCompiledMethod := anEvent method.
+	self navigationModel ifNil: [ ^ self ].
+	
+	self navigationModel
+		selectedMethod: aCompiledMethod
+		source: (anEvent source ifNil: [ self ])
 ]
 
 { #category : #'private - hooks' }

@@ -66,12 +66,22 @@ GtCoderNavigationModel >> selectClasses: aCollectionOfClasses [
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationModel >> selectMethod: aCompiledMethod [
+GtCoderNavigationModel >> selectMethod: aMethod [
+	self selectMethod: aMethod source: self
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationModel >> selectMethod: aCompiledMethod source: aSource [
 	self subclassResponsibility
 ]
 
 { #category : #'api - selection' }
-GtCoderNavigationModel >> selectMethods: aCollectionOfCompiledMethods [
+GtCoderNavigationModel >> selectMethods: aCollectionOfMethods [
+	self selectMethods: aCollectionOfMethods source: self
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationModel >> selectMethods: aCollectionOfCompiledMethods source: aSource [
 	self subclassResponsibility
 ]
 
@@ -82,6 +92,13 @@ GtCoderNavigationModel >> selectPackage: aPackage [
 
 { #category : #'api - selection' }
 GtCoderNavigationModel >> selectedClassDo: aBlock [
+	self subclassResponsibility
+]
+
+{ #category : #'api - selection' }
+GtCoderNavigationModel >> selectedMethod: aCompiledMethod source: aSource [
+	"Inform that another method was selected and should be reflected in the navigation model."
+
 	self subclassResponsibility
 ]
 

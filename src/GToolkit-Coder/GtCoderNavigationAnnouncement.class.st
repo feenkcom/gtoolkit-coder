@@ -2,7 +2,8 @@ Class {
 	#name : #GtCoderNavigationAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
-		'coder'
+		'coder',
+		'source'
 	],
 	#category : #'GToolkit-Coder-Navigation - Events'
 }
@@ -15,4 +16,14 @@ GtCoderNavigationAnnouncement >> coder [
 { #category : #accessing }
 GtCoderNavigationAnnouncement >> coder: aCoder [
 	coder := aCoder
+]
+
+{ #category : #accessing }
+GtCoderNavigationAnnouncement >> source [
+	^ source
+]
+
+{ #category : #accessing }
+GtCoderNavigationAnnouncement >> source: anObject [
+	source := anObject
 ]
