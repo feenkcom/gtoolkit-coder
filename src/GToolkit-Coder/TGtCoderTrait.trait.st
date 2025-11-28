@@ -1,6 +1,6 @@
 Trait {
 	#name : #TGtCoderTrait,
-	#category : 'GToolkit-Coder-Coders'
+	#category : #'GToolkit-Coder-Coders'
 }
 
 { #category : #testing }

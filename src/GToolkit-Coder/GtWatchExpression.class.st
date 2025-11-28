@@ -7,7 +7,7 @@ Class {
 	#classVars : [
 		'MethodExpressions'
 	],
-	#category : 'GToolkit-Coder'
+	#category : #'GToolkit-Coder'
 }
 
 { #category : #accessing }

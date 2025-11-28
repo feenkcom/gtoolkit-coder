@@ -5,7 +5,7 @@ Class {
 		'methodProtocol',
 		'source'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }

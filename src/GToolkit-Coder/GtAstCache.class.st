@@ -7,7 +7,7 @@ Class {
 	#classInstVars : [
 		'default'
 	],
-	#category : 'GToolkit-Coder-Ast'
+	#category : #'GToolkit-Coder-Ast'
 }
 
 { #category : #accessing }

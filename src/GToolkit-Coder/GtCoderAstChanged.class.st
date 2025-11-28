@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'ast'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }

@@ -10,7 +10,7 @@ Class {
 	#instVars : [
 		'example'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #accessing }

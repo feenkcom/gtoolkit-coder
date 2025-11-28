@@ -5,7 +5,7 @@ Class {
 		'startPosition',
 		'stopPosition'
 	],
-	#category : 'GToolkit-Coder-Coders - Evaluation'
+	#category : #'GToolkit-Coder-Coders - Evaluation'
 }
 
 { #category : #evaluation }

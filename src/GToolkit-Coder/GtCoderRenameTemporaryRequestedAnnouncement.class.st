@@ -5,7 +5,7 @@ Class {
 		'variableName',
 		'interestedCoders'
 	],
-	#category : 'GToolkit-Coder-Event'
+	#category : #'GToolkit-Coder-Event'
 }
 
 { #category : #initialization }

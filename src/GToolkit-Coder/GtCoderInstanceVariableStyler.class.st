@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderInstanceVariableStyler,
 	#superclass : #BlTextStyler,
-	#category : 'GToolkit-Coder-Styler/Highlighter'
+	#category : #'GToolkit-Coder-Styler/Highlighter'
 }
 
 { #category : #testing }

@@ -52,13 +52,22 @@ GtCoderNullNavigationModel >> selectClasses: aCollectionOfClasses [
 ]
 
 { #category : #'api - selection' }
-GtCoderNullNavigationModel >> selectMethod: aCompiledMethod [
+GtCoderNullNavigationModel >> selectMethod: aCompiledMethod source: aSource [
 	"do nothing"
+
+	
 ]
 
 { #category : #'api - selection' }
 GtCoderNullNavigationModel >> selectMethodProtocol: aMethodProtocol [
 	"do nothing"
+]
+
+{ #category : #'api - selection' }
+GtCoderNullNavigationModel >> selectMethods: aCollectionOfCompiledMethods source: aSource [
+	"do nothing"
+
+	
 ]
 
 { #category : #'api - selection' }
@@ -69,6 +78,13 @@ GtCoderNullNavigationModel >> selectPackage: aPackage [
 { #category : #'api - selection' }
 GtCoderNullNavigationModel >> selectedClassDo: aBlock [
 	"do nothing"
+]
+
+{ #category : #'api - selection' }
+GtCoderNullNavigationModel >> selectedMethod: aCompiledMethod source: aSource [
+	"Inform that another method was selected and should be reflected in the navigation model.
+	
+	Do nothing."
 ]
 
 { #category : #'as yet unclassified' }

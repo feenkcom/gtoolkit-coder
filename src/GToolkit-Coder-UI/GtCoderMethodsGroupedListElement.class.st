@@ -204,7 +204,7 @@ GtCoderMethodsGroupedListElement >> initialize [
 	
 	self
 		when: BrSelectionChanged
-		do: [ :anEvent | self onMethodsListSelectionChanged ]
+		do: [ :anEvent | self onMethodsListSelectionChanged: anEvent ]
 ]
 
 { #category : #accessing }
@@ -231,12 +231,44 @@ GtCoderMethodsGroupedListElement >> navigationModel: anObject [
 
 { #category : #'event handling - selection' }
 GtCoderMethodsGroupedListElement >> onMethodSelected: anAnnouncement [
+	| aMethod aGroup |
+	anAnnouncement source = self ifTrue: [ ^ self ].
 	
+	aMethod := anAnnouncement method.
+	(self selectedItems includes: aMethod) ifTrue: [ ^ self ].
+
+	aGroup := aMethod methodClass isInstanceSide
+			ifTrue: [ methodGroups first ]
+			ifFalse: [ methodGroups second ].
+			
+	self
+		group: aGroup
+		itemSuchThat: [ :eachItem | eachItem = aMethod ]
+		ifFound: [ :anIndex :isSynchronous | 
+			self selectOne: anIndex dueTo: (GtCoderMethodSelectedSourceEvent new
+				source: self;
+				originalSource: anAnnouncement source) ]
+		ifNone: [  ].
 ]
 
 { #category : #'event handling - selection' }
 GtCoderMethodsGroupedListElement >> onMethodsListSelectionChanged [
-	| theIndices allSelectedItems |
+	"Can be removed."
+
+	self onMethodsListSelectionChanged: nil
+]
+
+{ #category : #'event handling - selection' }
+GtCoderMethodsGroupedListElement >> onMethodsListSelectionChanged: anEvent [
+	| theIndices allSelectedItems aSource |
+	(anEvent isNotNil and: [ anEvent sourceEvent isKindOf: GtCoderMethodSelectedSourceEvent ])
+		ifTrue: [ 
+			"This element triggered the selection change, ignore the event."
+			anEvent sourceEvent source == self ifTrue: [ ^ self ].
+			
+			aSource := anEvent sourceEvent originalSource ifNil: [ self ] ]
+		ifFalse: [ aSource := self ].
+
 	theIndices := self selectedIndices ifEmpty: [ ^ self ].
 	(theIndices first between: 1 and: self viewModel entityCount)
 		ifFalse: [ ^ self ].
@@ -246,8 +278,8 @@ GtCoderMethodsGroupedListElement >> onMethodsListSelectionChanged [
 	allSelectedItems := self selectedItems.
 	allSelectedItems ifEmpty: [ ^ self ].
 	allSelectedItems size = 1
-		ifTrue: [ self navigationModel selectMethod: allSelectedItems anyOne ]
-		ifFalse: [ self navigationModel selectMethods: allSelectedItems ]
+		ifTrue: [ self navigationModel selectMethod: allSelectedItems anyOne source: aSource ]
+		ifFalse: [ self navigationModel selectMethods: allSelectedItems source: aSource ]
 ]
 
 { #category : #'event handling - selection' }

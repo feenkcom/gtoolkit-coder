@@ -2,7 +2,8 @@ Class {
 	#name : #GtClassCoderMethodsNavigationAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
-		'methods'
+		'methods',
+		'source'
 	],
 	#category : #'GToolkit-Coder-Event'
 }
@@ -15,4 +16,14 @@ GtClassCoderMethodsNavigationAnnouncement >> methods [
 { #category : #accessing }
 GtClassCoderMethodsNavigationAnnouncement >> methods: anObject [
 	methods := anObject
+]
+
+{ #category : #accessing }
+GtClassCoderMethodsNavigationAnnouncement >> source [
+	^ source
+]
+
+{ #category : #accessing }
+GtClassCoderMethodsNavigationAnnouncement >> source: anObject [
+	source := anObject
 ]
