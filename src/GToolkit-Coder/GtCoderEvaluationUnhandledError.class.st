@@ -32,8 +32,16 @@ GtCoderEvaluationUnhandledError >> debug [
 
 { #category : #'priv handling' }
 GtCoderEvaluationUnhandledError >> defaultAction [
+	"We do not want to handle this exception if executed within a scripter.
+	The reason is that we do not want to open an embedded debuger as it stops
+	the Scripter's UI process and creates a new one. As a consequence,
+	an example execution is stopped and example runners (Jenkins, CI) is waiting
+	indefinitely."
+
 	<reflective: #unhandledErrorDefaultAction:message:>
- 	^ UIManager default unhandledErrorDefaultAction: self
+	^ BlDevScripterStepExecutionIndicator
+		ifScripter: [ super defaultAction ]
+		ifNone: [ UIManager default unhandledErrorDefaultAction: self ]
 ]
 
 { #category : #accessing }
