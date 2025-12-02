@@ -32,6 +32,8 @@ GtCoderMethodsGroupedListElement >> bindCompiledMethod: eachCompiledMethod withE
 
 	element text: aSelector.
 
+	GtCoderNavigationMethodTarget isEnabled ifFalse: [ ^ self ].
+	
 	aFuture := self addOnsForMethod: eachCompiledMethod hostElement: element.
 	element asyncFuture future: aFuture
 ]
