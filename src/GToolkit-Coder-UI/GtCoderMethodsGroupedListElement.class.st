@@ -5,10 +5,38 @@ Class {
 	#classTraits : 'TGtCoderNavigationWithContextMenu classTrait',
 	#instVars : [
 		'navigationModel',
-		'methodGroups'
+		'methodGroups',
+		'addOnsCache'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
 }
+
+{ #category : #'private - insance creation' }
+GtCoderMethodsGroupedListElement >> addOnsForMethod: aCompiledMethod hostElement: aHostElement [
+	<return: #TAsyncFuture of: #Collection of: #BlElement>
+	addOnsCache ifNil: [ 
+		addOnsCache := GtPharoNavigationCompiledMethodsAddOnsCache new subscribeToSystem ].
+	
+	^ addOnsCache
+		elementsForCompiledMethod: aCompiledMethod
+		hostElement: aHostElement
+]
+
+{ #category : #'private - insance creation' }
+GtCoderMethodsGroupedListElement >> bindCompiledMethod: eachCompiledMethod withElement: element [
+	| aFuture aSelector |
+	element userData at: #method put: eachCompiledMethod.
+
+	aSelector := eachCompiledMethod selector asRopedText.
+	eachCompiledMethod isDeprecated ifTrue: [ aSelector lineThrough ].
+
+	element text: aSelector.
+
+	GtCoderNavigationMethodTarget isEnabled ifFalse: [ ^ self ].
+	
+	aFuture := self addOnsForMethod: eachCompiledMethod hostElement: element.
+	element asyncFuture future: aFuture
+]
 
 { #category : #'private - actions' }
 GtCoderMethodsGroupedListElement >> browseHierarchyImplementorsOf: aSymbol [
@@ -89,6 +117,31 @@ GtCoderMethodsGroupedListElement >> buildMethodItem [
 								ifTrue: [ self contextMenuForSeveralItems: someItems in: aLabel ]
 								ifFalse: [ self contextMenuForOneItem: currentMethod in: aLabel ] ]).
 
+	aLabel
+		addChild: (BrHorizontalPane new
+				id: #addOnsContainer;
+				alignCenterLeft;
+				fitContent);
+		withAsyncFutureDo: [ :anElementFuture | 
+			anElementFuture
+				executionConfiguration: GtSingleCoderViewModel secondaryMethodAddOnsExecutionConfiguration;
+				whenPending: [ :theLabel | 
+						theLabel
+							childWithId: #addOnsContainer
+							ifFound: [ :aContainer | aContainer removeChildren ]
+							ifNone: [  ] ];
+					whenError: [ :theLabel :anError | 
+						theLabel
+							childWithId: #addOnsContainer
+							ifFound: [ :aContainer | 
+								aContainer
+									removeChildren;
+									addChildren: (anError asDebuggableElement
+											hFitContentLimited;
+											vFitContent) ]
+							ifNone: [  ] ];
+				whenSuccess: [ :theLabel :someElements | self updateLabel: theLabel addOnElements: someElements ] ].
+
 	aLabel addEventHandler: self createMethodDragHandler.
 
 	^ aLabel
@@ -151,15 +204,8 @@ GtCoderMethodsGroupedListElement >> createMethodGroups [
 			domainObject: 'instance side';
 			stream: #() asAsyncStream;
 			itemStencil: [ self buildMethodItem ];
-			itemDataBinder: [ :element :eachCompiledMethod |
-				| aSelector |
-				element userData at: #method put: eachCompiledMethod.
-				
-				aSelector := eachCompiledMethod selector asRopedText.
-				eachCompiledMethod isDeprecated
-					ifTrue: [ aSelector lineThrough ].
-				
-				element text: aSelector ];
+			itemDataBinder: [ :element :eachCompiledMethod | 
+				self bindCompiledMethod: eachCompiledMethod withElement: element ];
 			shouldShowWithoutItems: false.
 	classGroup := instanceGroup copy domainObject: 'class side'.
 	^ {instanceGroup.
@@ -190,6 +236,8 @@ GtCoderMethodsGroupedListElement >> hierarchyFilter [
 { #category : #initialization }
 GtCoderMethodsGroupedListElement >> initialize [
 	super initialize.
+	
+	addOnsCache := GtPharoNavigationCompiledMethodsAddOnsCache new subscribeToSystem.
 
 	self
 		padding: (BlInsets left: 5 right: 10);
@@ -204,7 +252,10 @@ GtCoderMethodsGroupedListElement >> initialize [
 	
 	self
 		when: BrSelectionChanged
-		do: [ :anEvent | self onMethodsListSelectionChanged: anEvent ]
+		do: [ :anEvent | self onMethodsListSelectionChanged: anEvent ].
+	self 
+		when: BrWidgetPermanentlyRemovedEvent
+		do: [ :anEvent | self onBrWidgetPermanentlyRemovedEvent: anEvent ].
 ]
 
 { #category : #accessing }
@@ -227,6 +278,11 @@ GtCoderMethodsGroupedListElement >> navigationModel: anObject [
 	self subscribeToNavigationModel.
 	
 	self updateMethodList
+]
+
+{ #category : #initialization }
+GtCoderMethodsGroupedListElement >> onBrWidgetPermanentlyRemovedEvent: anEvent [
+	addOnsCache ifNotNil: #unsubscribeFromSystem
 ]
 
 { #category : #'event handling - selection' }
@@ -596,6 +652,19 @@ GtCoderMethodsGroupedListElement >> subscribeToNavigationModel [
 { #category : #'private - subscriptions' }
 GtCoderMethodsGroupedListElement >> unsubscribeFromNavigationModel [
 	navigationModel ifNotNil: [ :aModel | aModel unsubscribe: self ]
+]
+
+{ #category : #'private - insance creation' }
+GtCoderMethodsGroupedListElement >> updateLabel: theLabel addOnElements: someElements [
+	^ theLabel
+		childWithId: #addOnsContainer
+		ifFound: [ :aContainer | 
+			(someElements allSatisfy: [ :eachElement | eachElement parent == aContainer ])
+				ifFalse: [ someElements do: #removeFromParent.
+					aContainer
+						removeChildren;
+						addChildren: someElements ] ]
+		ifNone: [  ]
 ]
 
 { #category : #'updating lists' }
