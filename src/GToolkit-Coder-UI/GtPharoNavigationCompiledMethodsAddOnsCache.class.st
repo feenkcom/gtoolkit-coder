@@ -2,10 +2,24 @@ Class {
 	#name : #GtPharoNavigationCompiledMethodsAddOnsCache,
 	#superclass : #Object,
 	#instVars : [
-		'cache'
+		'elementCache',
+		'coderViewModelCache'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
 }
+
+{ #category : #private }
+GtPharoNavigationCompiledMethodsAddOnsCache >> addOnsFutureForCompiledMethod: aCompiledMethod hostElement: aHostElement [
+	<return: #GtTextualCoderViewModel>
+	| coderViewModel |
+	coderViewModel := coderViewModelCache
+			at: aCompiledMethod
+			ifPresent: [ :aCoderViewModel | aCoderViewModel ]
+			ifAbsentPut: [ (GtPharoMethodCoder forMethod: aCompiledMethod)
+					asCoderViewModel ].
+
+	^ coderViewModel
+]
 
 { #category : #private }
 GtPharoNavigationCompiledMethodsAddOnsCache >> computeElementsForCompiledMethod: aCompiledMethod hostElement: aHostElement [
@@ -14,29 +28,49 @@ GtPharoNavigationCompiledMethodsAddOnsCache >> computeElementsForCompiledMethod:
 	someElements := GtCoderNavigationMethodTarget
 			actionsForObject: aCompiledMethod
 			collect: [ :eachAction | eachAction asNavigationElement: [ :e | e ] withHostElement: aHostElement ].
-	cache at: aCompiledMethod put: someElements.
+	elementCache at: aCompiledMethod put: someElements.
 	^ someElements
 ]
 
 { #category : #accessing }
 GtPharoNavigationCompiledMethodsAddOnsCache >> elementsForCompiledMethod: aCompiledMethod hostElement: aHostElement [
 	<return: #TAsyncFuture of: #Collection of: #BlElement>
-	^ cache
+	^ elementCache
 		at: aCompiledMethod
 		ifPresent: [ :someElements | someElements asAsyncFuture ]
-		ifAbsent: [ [ self computeElementsForCompiledMethod: aCompiledMethod hostElement: aHostElement ] asAsyncFuture ]
+		ifAbsent: [ | aCoderViewModel someElements |
+			aCoderViewModel := self
+					addOnsFutureForCompiledMethod: aCompiledMethod
+					hostElement: aHostElement.
+
+			aCoderViewModel addOnsFuture
+				map: [ :addOns | 
+					someElements := addOns previews
+							collect: [ :eachAddOn | 
+								| eachAddOnElement |
+								eachAddOnElement := eachAddOn stencil asElement.
+								eachAddOn dataBinder
+									element: eachAddOnElement;
+									coderViewModel: aCoderViewModel;
+									build.
+								eachAddOnElement ].
+
+					elementCache at: aCompiledMethod put: someElements.
+
+					someElements ] ]
 ]
 
 { #category : #initialization }
 GtPharoNavigationCompiledMethodsAddOnsCache >> initialize [
 	super initialize.
 
-	cache := AsyncSharedWeakIdentityKeyDictionary new.
+	elementCache := AsyncSharedWeakIdentityKeyDictionary new.
+	coderViewModelCache := AsyncSharedWeakIdentityKeyDictionary new.
 ]
 
 { #category : #'event handling' }
 GtPharoNavigationCompiledMethodsAddOnsCache >> onClassAddedOrRemoved: anAnnouncement [
-	cache
+	elementCache
 		keysAndValuesRemove: [ :eachCompiledMethod :someElements | 
 			(eachCompiledMethod methodClass inheritsFrom: anAnnouncement classAffected)
 				or: [ anAnnouncement classAffected inheritsFrom: eachCompiledMethod methodClass ] ]
@@ -44,7 +78,7 @@ GtPharoNavigationCompiledMethodsAddOnsCache >> onClassAddedOrRemoved: anAnnounce
 
 { #category : #'event handling' }
 GtPharoNavigationCompiledMethodsAddOnsCache >> onMethodAddedOrRemoved: anAnnouncement [
-	cache
+	elementCache
 		keysAndValuesRemove: [ :eachCompiledMethod :someElements | 
 			(eachCompiledMethod methodClass inheritsFrom: anAnnouncement classAffected)
 				or: [ anAnnouncement classAffected inheritsFrom: eachCompiledMethod methodClass ] ]
