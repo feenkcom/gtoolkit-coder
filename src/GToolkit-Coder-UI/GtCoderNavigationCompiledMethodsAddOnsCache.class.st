@@ -1,15 +1,33 @@
 Class {
-	#name : #GtPharoNavigationCompiledMethodsAddOnsCache,
+	#name : #GtCoderNavigationCompiledMethodsAddOnsCache,
 	#superclass : #Object,
 	#instVars : [
 		'elementCache',
 		'coderViewModelCache'
 	],
+	#classVars : [
+		'IsEnabled'
+	],
 	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
+{ #category : #settings }
+GtCoderNavigationCompiledMethodsAddOnsCache class >> disable [
+	IsEnabled := false
+]
+
+{ #category : #settings }
+GtCoderNavigationCompiledMethodsAddOnsCache class >> enable [
+	IsEnabled := true
+]
+
+{ #category : #settings }
+GtCoderNavigationCompiledMethodsAddOnsCache class >> isEnabled [
+	^ IsEnabled ifNil: [ IsEnabled := false ]
+]
+
 { #category : #private }
-GtPharoNavigationCompiledMethodsAddOnsCache >> addOnsFutureForCompiledMethod: aCompiledMethod hostElement: aHostElement [
+GtCoderNavigationCompiledMethodsAddOnsCache >> addOnsFutureForCompiledMethod: aCompiledMethod hostElement: aHostElement [
 	<return: #GtTextualCoderViewModel>
 	| coderViewModel |
 	coderViewModel := coderViewModelCache
@@ -21,19 +39,8 @@ GtPharoNavigationCompiledMethodsAddOnsCache >> addOnsFutureForCompiledMethod: aC
 	^ coderViewModel
 ]
 
-{ #category : #private }
-GtPharoNavigationCompiledMethodsAddOnsCache >> computeElementsForCompiledMethod: aCompiledMethod hostElement: aHostElement [
-	<return: #Collection of: #BlElement>
-	| someElements |
-	someElements := GtCoderNavigationMethodTarget
-			actionsForObject: aCompiledMethod
-			collect: [ :eachAction | eachAction asNavigationElement: [ :e | e ] withHostElement: aHostElement ].
-	elementCache at: aCompiledMethod put: someElements.
-	^ someElements
-]
-
 { #category : #accessing }
-GtPharoNavigationCompiledMethodsAddOnsCache >> elementsForCompiledMethod: aCompiledMethod hostElement: aHostElement [
+GtCoderNavigationCompiledMethodsAddOnsCache >> elementsForCompiledMethod: aCompiledMethod hostElement: aHostElement [
 	<return: #TAsyncFuture of: #Collection of: #BlElement>
 	^ elementCache
 		at: aCompiledMethod
@@ -61,7 +68,7 @@ GtPharoNavigationCompiledMethodsAddOnsCache >> elementsForCompiledMethod: aCompi
 ]
 
 { #category : #initialization }
-GtPharoNavigationCompiledMethodsAddOnsCache >> initialize [
+GtCoderNavigationCompiledMethodsAddOnsCache >> initialize [
 	super initialize.
 
 	elementCache := AsyncSharedWeakIdentityKeyDictionary new.
@@ -69,7 +76,7 @@ GtPharoNavigationCompiledMethodsAddOnsCache >> initialize [
 ]
 
 { #category : #'event handling' }
-GtPharoNavigationCompiledMethodsAddOnsCache >> onClassAddedOrRemoved: anAnnouncement [
+GtCoderNavigationCompiledMethodsAddOnsCache >> onClassAddedOrRemoved: anAnnouncement [
 	elementCache
 		keysAndValuesRemove: [ :eachCompiledMethod :someElements | 
 			(eachCompiledMethod methodClass inheritsFrom: anAnnouncement classAffected)
@@ -77,7 +84,7 @@ GtPharoNavigationCompiledMethodsAddOnsCache >> onClassAddedOrRemoved: anAnnounce
 ]
 
 { #category : #'event handling' }
-GtPharoNavigationCompiledMethodsAddOnsCache >> onMethodAddedOrRemoved: anAnnouncement [
+GtCoderNavigationCompiledMethodsAddOnsCache >> onMethodAddedOrRemoved: anAnnouncement [
 	elementCache
 		keysAndValuesRemove: [ :eachCompiledMethod :someElements | 
 			(eachCompiledMethod methodClass inheritsFrom: anAnnouncement classAffected)
@@ -85,9 +92,9 @@ GtPharoNavigationCompiledMethodsAddOnsCache >> onMethodAddedOrRemoved: anAnnounc
 ]
 
 { #category : #initialization }
-GtPharoNavigationCompiledMethodsAddOnsCache >> subscribeToSystem [
+GtCoderNavigationCompiledMethodsAddOnsCache >> subscribeToSystem [
 	SystemAnnouncer uniqueInstance weak
-		when: MethodAdded , MethodRemoved
+		when: MethodAdded , MethodRemoved, MethodModified
 			send: #onMethodAddedOrRemoved:
 			to: self;
 		when: ClassAdded , ClassRemoved
@@ -96,6 +103,6 @@ GtPharoNavigationCompiledMethodsAddOnsCache >> subscribeToSystem [
 ]
 
 { #category : #initialization }
-GtPharoNavigationCompiledMethodsAddOnsCache >> unsubscribeFromSystem [
+GtCoderNavigationCompiledMethodsAddOnsCache >> unsubscribeFromSystem [
 	SystemAnnouncer uniqueInstance unsubscribe: self
 ]
