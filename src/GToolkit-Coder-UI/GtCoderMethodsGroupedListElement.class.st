@@ -15,7 +15,7 @@ Class {
 GtCoderMethodsGroupedListElement >> addOnsForMethod: aCompiledMethod hostElement: aHostElement [
 	<return: #TAsyncFuture of: #Collection of: #BlElement>
 	addOnsCache ifNil: [ 
-		addOnsCache := GtPharoNavigationCompiledMethodsAddOnsCache new subscribeToSystem ].
+		addOnsCache := GtCoderNavigationCompiledMethodsAddOnsCache new subscribeToSystem ].
 	
 	^ addOnsCache
 		elementsForCompiledMethod: aCompiledMethod
@@ -32,7 +32,7 @@ GtCoderMethodsGroupedListElement >> bindCompiledMethod: eachCompiledMethod withE
 
 	element text: aSelector.
 
-	GtCoderNavigationMethodTarget isEnabled ifFalse: [ ^ self ].
+	GtCoderNavigationCompiledMethodsAddOnsCache isEnabled ifFalse: [ ^ self ].
 	
 	aFuture := self addOnsForMethod: eachCompiledMethod hostElement: element.
 	element asyncFuture future: aFuture
@@ -120,6 +120,7 @@ GtCoderMethodsGroupedListElement >> buildMethodItem [
 	aLabel
 		addChild: (BrHorizontalPane new
 				id: #addOnsContainer;
+				cellSpacing: 2;
 				alignCenterLeft;
 				fitContent);
 		withAsyncFutureDo: [ :anElementFuture | 
@@ -237,7 +238,7 @@ GtCoderMethodsGroupedListElement >> hierarchyFilter [
 GtCoderMethodsGroupedListElement >> initialize [
 	super initialize.
 	
-	addOnsCache := GtPharoNavigationCompiledMethodsAddOnsCache new subscribeToSystem.
+	addOnsCache := GtCoderNavigationCompiledMethodsAddOnsCache new subscribeToSystem.
 
 	self
 		padding: (BlInsets left: 5 right: 10);
@@ -305,13 +306,6 @@ GtCoderMethodsGroupedListElement >> onMethodSelected: anAnnouncement [
 				source: self;
 				originalSource: anAnnouncement source) ]
 		ifNone: [  ].
-]
-
-{ #category : #'event handling - selection' }
-GtCoderMethodsGroupedListElement >> onMethodsListSelectionChanged [
-	"Can be removed."
-
-	self onMethodsListSelectionChanged: nil
 ]
 
 { #category : #'event handling - selection' }
