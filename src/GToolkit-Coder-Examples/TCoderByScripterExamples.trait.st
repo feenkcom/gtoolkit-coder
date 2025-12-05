@@ -1,6 +1,6 @@
 Trait {
 	#name : #TCoderByScripterExamples,
-	#category : #'GToolkit-Coder-Examples-By scripter'
+	#category : #'GToolkit-Coder-Examples-Scripter'
 }
 
 { #category : #utilities }
