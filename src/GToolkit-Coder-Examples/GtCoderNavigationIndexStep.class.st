@@ -30,7 +30,7 @@ GtCoderNavigationIndexStep >> selectMethods: someCompiledMethods [
 				// BrLabel;
 				@ [ :eachLabel | eachLabel text asString = someCompiledMethods first selector ] ]
 		ifFalse: [ self
-				substeps2: ('Select {2} methods' format: {someCompiledMethods size})
+				substeps2: ('Select {1} methods' format: {someCompiledMethods size})
 				do: [ :aStep | 
 					self click
 						label: ('Select the first method: {1}' format: {someCompiledMethods first selector});
