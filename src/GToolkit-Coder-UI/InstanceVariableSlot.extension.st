@@ -86,6 +86,20 @@ InstanceVariableSlot >> gtBrowseReferencesActionFor: anAction context: aPhlowCon
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+InstanceVariableSlot >> gtCopySlotNameFor: anAction context: aPhlowContext [
+	<gtAction>
+
+	^ anAction button
+		label: 'Copy slot name';
+		icon: BrGlamorousVectorIcons clipboard;
+		priority: 5;
+		target: GtCoderVariableTarget;
+		menuItemPreview: [ self name ];
+		menuItemGroup: BrMenuItemGroupConfiguration editing;
+		action: [ :aButton | Clipboard default clipboardText: self name asString ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtCreateAccessorsActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	| aSelectedClass |
