@@ -32,7 +32,7 @@ GtCoderNavigationIndexStep >> selectMethods: someCompiledMethods [
 		ifFalse: [ self
 				substeps2: ('Select {1} methods' format: {someCompiledMethods size})
 				do: [ :aStep | 
-					self click
+					aStep click
 						label: ('Select the first method: {1}' format: {someCompiledMethods first selector});
 						onParentStepTarget: aStep;
 						onThisOrBreadthFirstChildOfKind: GtCoderMethodsGroupedListElement;
