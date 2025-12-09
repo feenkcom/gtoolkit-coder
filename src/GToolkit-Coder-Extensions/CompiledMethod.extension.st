@@ -13,7 +13,7 @@ CompiledMethod >> gtBrowse [
 { #category : #'*GToolkit-Coder-Extensions' }
 CompiledMethod >> gtBrowseFrom: anElement [
 	^ BlSpace new
-		withSceneDriller;
+		withCommonSettings;
 		inPager: [ GtMethodCoderTool compiledMethod: self ];
 		title: self methodClass name;
 		icon: BrGlamorousVectorIcons browse;
