@@ -13,7 +13,7 @@ Behavior >> gtBrowse [
 { #category : #'*GToolkit-Coder-Extensions' }
 Behavior >> gtBrowseFrom: anElement [
 	^ BlSpace new
-		withSceneDriller;
+		withCommonSettings;
 		inPager: [ self gtDefaultInspectorTool ];
 		title: self name;
 		icon: BrGlamorousVectorIcons browse;
