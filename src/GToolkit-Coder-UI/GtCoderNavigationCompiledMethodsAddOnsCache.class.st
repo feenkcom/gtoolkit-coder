@@ -27,7 +27,7 @@ GtCoderNavigationCompiledMethodsAddOnsCache class >> isEnabled [
 ]
 
 { #category : #private }
-GtCoderNavigationCompiledMethodsAddOnsCache >> addOnsFutureForCompiledMethod: aCompiledMethod hostElement: aHostElement [
+GtCoderNavigationCompiledMethodsAddOnsCache >> addOnsFutureForCompiledMethod: aCompiledMethod [
 	<return: #GtTextualCoderViewModel>
 	| coderViewModel |
 	coderViewModel := coderViewModelCache
@@ -40,15 +40,14 @@ GtCoderNavigationCompiledMethodsAddOnsCache >> addOnsFutureForCompiledMethod: aC
 ]
 
 { #category : #accessing }
-GtCoderNavigationCompiledMethodsAddOnsCache >> elementsForCompiledMethod: aCompiledMethod hostElement: aHostElement [
+GtCoderNavigationCompiledMethodsAddOnsCache >> elementsForCompiledMethod: aCompiledMethod [
 	<return: #TAsyncFuture of: #Collection of: #BlElement>
 	^ elementCache
 		at: aCompiledMethod
 		ifPresent: [ :someElements | someElements asAsyncFuture ]
 		ifAbsent: [ | aCoderViewModel someElements |
 			aCoderViewModel := self
-					addOnsFutureForCompiledMethod: aCompiledMethod
-					hostElement: aHostElement.
+					addOnsFutureForCompiledMethod: aCompiledMethod.
 
 			aCoderViewModel addOnsFuture
 				map: [ :addOns | 

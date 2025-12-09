@@ -12,30 +12,10 @@ Class {
 }
 
 { #category : #'private - insance creation' }
-GtCoderMethodsGroupedListElement >> addOnsForMethod: aCompiledMethod hostElement: aHostElement [
-	<return: #TAsyncFuture of: #Collection of: #BlElement>
-	addOnsCache ifNil: [ 
-		addOnsCache := GtCoderNavigationCompiledMethodsAddOnsCache new subscribeToSystem ].
-	
-	^ addOnsCache
-		elementsForCompiledMethod: aCompiledMethod
-		hostElement: aHostElement
-]
-
-{ #category : #'private - insance creation' }
 GtCoderMethodsGroupedListElement >> bindCompiledMethod: eachCompiledMethod withElement: element [
-	| aFuture aSelector |
 	element userData at: #method put: eachCompiledMethod.
 
-	aSelector := eachCompiledMethod selector asRopedText.
-	eachCompiledMethod isDeprecated ifTrue: [ aSelector lineThrough ].
-
-	element text: aSelector.
-
-	GtCoderNavigationCompiledMethodsAddOnsCache isEnabled ifFalse: [ ^ self ].
-	
-	aFuture := self addOnsForMethod: eachCompiledMethod hostElement: element.
-	element asyncFuture future: aFuture
+	element compiledMethod: eachCompiledMethod
 ]
 
 { #category : #'private - actions' }
@@ -102,46 +82,18 @@ GtCoderMethodsGroupedListElement >> browseSeveralReferencesOf: aCollectionOfSymb
 GtCoderMethodsGroupedListElement >> buildMethodItem [
 	<return: #BlElement>
 	| aLabel |
-	aLabel := BrLabel new.
+	aLabel := GtCoderNavigationCompiledMethodElement new.
+	aLabel addOnsCache: addOnsCache.
+	
 	aLabel
-		hMatchParent;
-		vFitContent;
-		beSmallSize;
-		aptitude: GtCoderNavigationTreeLabelAptitude + BrGlamorousListItemAptitude
-				+ (BrGlamorousWithExplicitContextMenuAptitude new
-						withGainFocusOnShow;
-						handleSubmenu: [ | someItems currentMethod |
-							currentMethod := aLabel userData at: #method.
-							someItems := self selectedItems.
-							(someItems size > 1 and: [ someItems identityIncludes: currentMethod ])
-								ifTrue: [ self contextMenuForSeveralItems: someItems in: aLabel ]
-								ifFalse: [ self contextMenuForOneItem: currentMethod in: aLabel ] ]).
-
-	aLabel
-		addChild: (BrHorizontalPane new
-				id: #addOnsContainer;
-				cellSpacing: 2;
-				alignCenterLeft;
-				fitContent);
-		withAsyncFutureDo: [ :anElementFuture | 
-			anElementFuture
-				executionConfiguration: GtSingleCoderViewModel secondaryMethodAddOnsExecutionConfiguration;
-				whenPending: [ :theLabel | 
-						theLabel
-							childWithId: #addOnsContainer
-							ifFound: [ :aContainer | aContainer removeChildren ]
-							ifNone: [  ] ];
-					whenError: [ :theLabel :anError | 
-						theLabel
-							childWithId: #addOnsContainer
-							ifFound: [ :aContainer | 
-								aContainer
-									removeChildren;
-									addChildren: (anError asDebuggableElement
-											hFitContentLimited;
-											vFitContent) ]
-							ifNone: [  ] ];
-				whenSuccess: [ :theLabel :someElements | self updateLabel: theLabel addOnElements: someElements ] ].
+		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude new
+				withGainFocusOnShow;
+				handleSubmenu: [ | someItems currentMethod |
+					currentMethod := aLabel userData at: #method.
+					someItems := self selectedItems.
+					(someItems size > 1 and: [ someItems identityIncludes: currentMethod ])
+						ifTrue: [ self contextMenuForSeveralItems: someItems in: aLabel ]
+						ifFalse: [ self contextMenuForOneItem: currentMethod in: aLabel ] ]).
 
 	aLabel addEventHandler: self createMethodDragHandler.
 
@@ -646,19 +598,6 @@ GtCoderMethodsGroupedListElement >> subscribeToNavigationModel [
 { #category : #'private - subscriptions' }
 GtCoderMethodsGroupedListElement >> unsubscribeFromNavigationModel [
 	navigationModel ifNotNil: [ :aModel | aModel unsubscribe: self ]
-]
-
-{ #category : #'private - insance creation' }
-GtCoderMethodsGroupedListElement >> updateLabel: theLabel addOnElements: someElements [
-	^ theLabel
-		childWithId: #addOnsContainer
-		ifFound: [ :aContainer | 
-			(someElements allSatisfy: [ :eachElement | eachElement parent == aContainer ])
-				ifFalse: [ someElements do: #removeFromParent.
-					aContainer
-						removeChildren;
-						addChildren: someElements ] ]
-		ifNone: [  ]
 ]
 
 { #category : #'updating lists' }

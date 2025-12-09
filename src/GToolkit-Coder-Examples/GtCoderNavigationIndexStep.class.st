@@ -11,8 +11,8 @@ GtCoderNavigationIndexStep >> assertSelectedMethod: aCompiledMethod [
 		satisfies: [ :aLabel | aLabel states isSelected ];
 		onParentStepTarget: self;
 		onThisOrBreadthFirstChildOfKind: GtCoderMethodsGroupedListElement;
-		// BrLabel;
-		@ [ :eachLabel | eachLabel text asString = aCompiledMethod selector ]
+		// GtCoderNavigationCompiledMethodElement;
+		@ [ :each | each compiledMethod = aCompiledMethod ]
 ]
 
 { #category : #accessing }
@@ -36,16 +36,16 @@ GtCoderNavigationIndexStep >> selectMethods: someCompiledMethods [
 						label: ('Select the first method: {1}' format: {someCompiledMethods first selector});
 						onParentStepTarget: aStep;
 						onThisOrBreadthFirstChildOfKind: GtCoderMethodsGroupedListElement;
-						// BrLabel;
-						@ [ :eachLabel | eachLabel text asString = someCompiledMethods first selector ].
+						// GtCoderNavigationCompiledMethodElement;
+						@ [ :eachLabel | eachLabel compiledMethod = someCompiledMethods first ].
 
 					aStep click
 						label: 'Select the other methods';
 						modifiers: (BlKeyModifiers primary shift: true);
 						onParentStepTarget: aStep;
 						onThisOrBreadthFirstChildOfKind: GtCoderMethodsGroupedListElement;
-						// BrLabel;
-						@ [ :each | each text asString = someCompiledMethods last selector ].
+						// GtCoderNavigationCompiledMethodElement;
+						@ [ :each | each compiledMethod = someCompiledMethods last ].
 
 					aStep assert
 						label: 'Assert list selection';
