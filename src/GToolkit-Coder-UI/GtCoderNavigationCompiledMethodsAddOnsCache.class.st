@@ -23,7 +23,7 @@ GtCoderNavigationCompiledMethodsAddOnsCache class >> enable [
 
 { #category : #settings }
 GtCoderNavigationCompiledMethodsAddOnsCache class >> isEnabled [
-	^ IsEnabled ifNil: [ IsEnabled := false ]
+	^ IsEnabled ifNil: [ IsEnabled := true ]
 ]
 
 { #category : #private }
