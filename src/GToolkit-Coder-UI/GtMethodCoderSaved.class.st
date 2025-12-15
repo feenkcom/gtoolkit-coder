@@ -5,7 +5,7 @@ Class {
 		'method',
 		'previousMethod'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Method Events'
+	#category : 'GToolkit-Coder-UI-Coder - Method Events'
 }
 
 { #category : #testing }

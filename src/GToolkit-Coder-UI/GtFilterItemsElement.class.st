@@ -3,7 +3,7 @@ Class {
 	#superclass : #BlElement,
 	#traits : 'TBrLayoutResizable + TGtWithFiltersViewModel',
 	#classTraits : 'TBrLayoutResizable classTrait + TGtWithFiltersViewModel classTrait',
-	#category : #'GToolkit-Coder-UI-Filters - Widgets'
+	#category : 'GToolkit-Coder-UI-Filters - Widgets'
 }
 
 { #category : #'private - updating' }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'isVisible'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #accessing }

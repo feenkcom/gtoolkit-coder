@@ -3,7 +3,7 @@ Class {
 	#superclass : #GtCoderUserSnippetEvaluationState,
 	#traits : 'TGtUniqueInstance',
 	#classTraits : 'TGtUniqueInstance classTrait',
-	#category : #'GToolkit-Coder-UI-Coder - Source Model'
+	#category : 'GToolkit-Coder-UI-Coder - Source Model'
 }
 
 { #category : #printing }

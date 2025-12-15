@@ -7,7 +7,7 @@ Class {
 		'coderViewModelsStack',
 		'announcer'
 	],
-	#category : #'GToolkit-Coder-UI-! Core - View Models'
+	#category : 'GToolkit-Coder-UI-! Core - View Models'
 }
 
 { #category : #announcer }

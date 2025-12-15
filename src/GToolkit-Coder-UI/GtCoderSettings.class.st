@@ -5,7 +5,7 @@ Class {
 		'DefaultDetailPositionState',
 		'DefaultDetailState'
 	],
-	#category : #'GToolkit-Coder-UI-! Core'
+	#category : 'GToolkit-Coder-UI-! Core'
 }
 
 { #category : #settings }

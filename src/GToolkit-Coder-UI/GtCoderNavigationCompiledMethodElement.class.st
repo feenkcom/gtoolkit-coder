@@ -10,7 +10,7 @@ Class {
 		'addOnsElement',
 		'addOnsCache'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
+	#category : 'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #'api - initialization' }

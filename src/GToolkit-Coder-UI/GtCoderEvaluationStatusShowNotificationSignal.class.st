@@ -6,7 +6,7 @@ Class {
 		'announcement',
 		'sourceCoderElement'
 	],
-	#category : #'GToolkit-Coder-UI-Signals'
+	#category : 'GToolkit-Coder-UI-Signals'
 }
 
 { #category : #testing }

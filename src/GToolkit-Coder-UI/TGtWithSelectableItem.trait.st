@@ -4,7 +4,7 @@ Trait {
 		'selectedItem',
 		'itemsBuilder'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #accessing }
@@ -85,21 +85,6 @@ TGtWithSelectableItem >> notifySelectedItemChanged [
 	self explicitRequirement
 ]
 
-{ #category : #initialization }
-TGtWithSelectableItem >> selectFirstItem [
-	self itemsBuilder firstItemDo: [ :anItem | self selectedItem: anItem ]
-]
-
-{ #category : #initialization }
-TGtWithSelectableItem >> selectItemAt: anIndex [
-	self itemsBuilder itemAt: anIndex do: [ :anItem | self selectedItem: anItem ]
-]
-
-{ #category : #initialization }
-TGtWithSelectableItem >> selectLastItem [
-	self itemsBuilder lastItemDo: [ :anItem | self selectedItem: anItem ]
-]
-
 { #category : #accessing }
 TGtWithSelectableItem >> selectedItem [
 	^ selectedItem ifNil: [ selectedItem := GtFilterModelNoItem default ]
@@ -120,4 +105,19 @@ TGtWithSelectableItem >> selectedValue [
 	"Return a filter value, e.g., selected item, input text."
 
 	^ self selectedItem
+]
+
+{ #category : #initialization }
+TGtWithSelectableItem >> selectFirstItem [
+	self itemsBuilder firstItemDo: [ :anItem | self selectedItem: anItem ]
+]
+
+{ #category : #initialization }
+TGtWithSelectableItem >> selectItemAt: anIndex [
+	self itemsBuilder itemAt: anIndex do: [ :anItem | self selectedItem: anItem ]
+]
+
+{ #category : #initialization }
+TGtWithSelectableItem >> selectLastItem [
+	self itemsBuilder lastItemDo: [ :anItem | self selectedItem: anItem ]
 ]

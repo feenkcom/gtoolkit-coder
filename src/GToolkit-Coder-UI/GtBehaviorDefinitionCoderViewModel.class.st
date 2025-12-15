@@ -1,7 +1,7 @@
 Class {
 	#name : #GtBehaviorDefinitionCoderViewModel,
 	#superclass : #GtSingleCoderViewModel,
-	#category : #'GToolkit-Coder-UI-Coder - Behavior-Definition Model'
+	#category : 'GToolkit-Coder-UI-Coder - Behavior-Definition Model'
 }
 
 { #category : #accessing }

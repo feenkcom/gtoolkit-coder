@@ -13,7 +13,7 @@ Class {
 		'sourceString',
 		'evaluatedCode'
 	],
-	#category : #'GToolkit-Coder-UI-Coders - Evaluation'
+	#category : 'GToolkit-Coder-UI-Coders - Evaluation'
 }
 
 { #category : #converting }
@@ -23,16 +23,6 @@ GtCoderDebugSessionInSpaceEvaluationStatus >> asDebugSessionInSpaceEvaluationSta
 		debugger: anAnnouncement debugger;
 		sourceInterval: self sourceInterval;
 		sourceString: self sourceString
-]
-
-{ #category : #accessing }
-GtCoderDebugSessionInSpaceEvaluationStatus >> debugSession [
-	^ debugSession
-]
-
-{ #category : #accessing }
-GtCoderDebugSessionInSpaceEvaluationStatus >> debugSession: anObject [
-	debugSession := anObject
 ]
 
 { #category : #accessing }
@@ -52,6 +42,16 @@ GtCoderDebugSessionInSpaceEvaluationStatus >> debuggerSpace [
 		debugSession: self debugSession;
 		find;
 		space
+]
+
+{ #category : #accessing }
+GtCoderDebugSessionInSpaceEvaluationStatus >> debugSession [
+	^ debugSession
+]
+
+{ #category : #accessing }
+GtCoderDebugSessionInSpaceEvaluationStatus >> debugSession: anObject [
+	debugSession := anObject
 ]
 
 { #category : #accessing }

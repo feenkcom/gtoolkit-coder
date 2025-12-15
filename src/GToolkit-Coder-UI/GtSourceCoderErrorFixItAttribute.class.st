@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'fixItAttribute'
 	],
-	#category : #'GToolkit-Coder-UI-FixIt'
+	#category : 'GToolkit-Coder-UI-FixIt'
 }
 
 { #category : #'as yet unclassified' }

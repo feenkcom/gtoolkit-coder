@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderExpanderAptitude,
 	#superclass : #GtCoderExpanderWithoutShadowAptitude,
-	#category : #'GToolkit-Coder-UI-Looks'
+	#category : 'GToolkit-Coder-UI-Looks'
 }
 
 { #category : #initialization }

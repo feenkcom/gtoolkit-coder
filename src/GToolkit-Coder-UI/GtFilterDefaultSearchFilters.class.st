@@ -10,7 +10,7 @@ Class {
 	#classInstVars : [
 		'uniqueInstance'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Support'
+	#category : 'GToolkit-Coder-UI-Filters - Support'
 }
 
 { #category : #'add / remove' }

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterTagEditorId,
 	#superclass : #BlElementUniqueId,
-	#category : #'GToolkit-Coder-UI-Filters'
+	#category : 'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #converting }

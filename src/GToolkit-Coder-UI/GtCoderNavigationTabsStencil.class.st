@@ -10,7 +10,7 @@ Class {
 	#classVars : [
 		'DisplayFullDropdownNavigation'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #configuration }

@@ -3,7 +3,7 @@ Trait {
 	#instVars : [
 		'toolbarElement'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #accessing }

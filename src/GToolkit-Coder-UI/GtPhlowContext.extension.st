@@ -19,14 +19,6 @@ GtPhlowContext >> coderSelectedClass: aClass [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
-GtPhlowContext >> coderSelectedClassIfPresent: aPresentBlock ifAbsent: anAbsentBlock [
-	^ self
-		optionAt: #coderSelectedClass
-		ifPresent: aPresentBlock
-		ifAbsent: anAbsentBlock
-]
-
-{ #category : #'*GToolkit-Coder-UI' }
 GtPhlowContext >> coderSelectedClasses [
 	^ self optionAt: #coderSelectedClasses ifAbsent: [ #() ]
 ]
@@ -34,6 +26,14 @@ GtPhlowContext >> coderSelectedClasses [
 { #category : #'*GToolkit-Coder-UI' }
 GtPhlowContext >> coderSelectedClasses: aCollectionOfClasses [
 	self optionAt: #coderSelectedClasses put: aCollectionOfClasses
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+GtPhlowContext >> coderSelectedClassIfPresent: aPresentBlock ifAbsent: anAbsentBlock [
+	^ self
+		optionAt: #coderSelectedClass
+		ifPresent: aPresentBlock
+		ifAbsent: anAbsentBlock
 ]
 
 { #category : #'*GToolkit-Coder-UI' }

@@ -12,7 +12,7 @@ Class {
 		'packageToRename',
 		'renamingEditor'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
+	#category : 'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #'instance creation' }

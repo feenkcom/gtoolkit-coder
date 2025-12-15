@@ -6,7 +6,7 @@ A button to debug an example
 Class {
 	#name : #GtMethodCoderDebugExampleActionId,
 	#superclass : #GtCoderElementId,
-	#category : #'GToolkit-Coder-UI-Coder - Ids'
+	#category : 'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #converting }

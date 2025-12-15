@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'valuable'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #comparing }

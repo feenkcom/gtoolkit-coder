@@ -9,7 +9,7 @@ I display a {{gtClass:GtPharoBehaviorCoder}}, {{gtClass:GtPharoPackageTagCoder}}
 Class {
 	#name : #GtCoderContentElement,
 	#superclass : #GtAbstractCoderElement,
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #factory }

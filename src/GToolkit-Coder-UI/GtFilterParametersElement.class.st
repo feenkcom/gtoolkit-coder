@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterParametersElement,
 	#superclass : #GtFilterSettingsElement,
-	#category : #'GToolkit-Coder-UI-Filters - Widgets'
+	#category : 'GToolkit-Coder-UI-Filters - Widgets'
 }
 
 { #category : #'api - filter view model' }

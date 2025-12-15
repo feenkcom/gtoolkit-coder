@@ -3,7 +3,7 @@ Class {
 	#superclass : #GtFilterViewModel,
 	#traits : 'TGtFilterViewModelParameters',
 	#classTraits : 'TGtFilterViewModelParameters classTrait',
-	#category : #'GToolkit-Coder-UI-Filters - View Models'
+	#category : 'GToolkit-Coder-UI-Filters - View Models'
 }
 
 { #category : #accessing }

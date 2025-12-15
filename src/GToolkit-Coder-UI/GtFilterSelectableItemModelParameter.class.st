@@ -3,7 +3,7 @@ Class {
 	#superclass : #GtFilterModelParameter,
 	#traits : 'TGtWithSelectableItem',
 	#classTraits : 'TGtWithSelectableItem classTrait',
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #'private - notifying' }

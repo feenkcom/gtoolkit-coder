@@ -1,7 +1,7 @@
 Class {
 	#name : #GtDiffElementId,
 	#superclass : #BlElementUniqueId,
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #testing }

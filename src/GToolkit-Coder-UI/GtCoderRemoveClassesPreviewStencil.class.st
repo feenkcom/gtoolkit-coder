@@ -5,7 +5,7 @@ Class {
 		'classesToRemove',
 		'menuModel'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
+	#category : 'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #accessing }

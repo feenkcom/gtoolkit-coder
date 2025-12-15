@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'coderViewModel'
 	],
-	#category : #'GToolkit-Coder-UI-! Core - View Models'
+	#category : 'GToolkit-Coder-UI-! Core - View Models'
 }
 
 { #category : #accessing }

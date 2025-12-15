@@ -8,7 +8,7 @@ Class {
 		'change',
 		'styler'
 	],
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #accessing }

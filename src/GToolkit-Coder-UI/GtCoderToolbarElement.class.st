@@ -12,7 +12,7 @@ Class {
 	#instVars : [
 		'toolbarElement'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #initialization }

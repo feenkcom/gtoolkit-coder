@@ -7,7 +7,7 @@ Class {
 		'expandedElement',
 		'modificationIndicator'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source'
+	#category : 'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #converting }

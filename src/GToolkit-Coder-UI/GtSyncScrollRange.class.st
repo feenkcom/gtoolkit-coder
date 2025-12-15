@@ -9,7 +9,7 @@ Class {
 		'isDifference',
 		'isSelected'
 	],
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #'instance creation' }

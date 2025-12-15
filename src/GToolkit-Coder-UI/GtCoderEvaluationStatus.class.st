@@ -9,7 +9,7 @@ Class {
 	#superclass : #Object,
 	#traits : 'TGtOptions',
 	#classTraits : 'TGtOptions classTrait',
-	#category : #'GToolkit-Coder-UI-Coders - Evaluation'
+	#category : 'GToolkit-Coder-UI-Coders - Evaluation'
 }
 
 { #category : #testing }

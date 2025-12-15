@@ -13,7 +13,7 @@ Class {
 		'buttonsElement',
 		'progressLabel'
 	],
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #'instance creation' }

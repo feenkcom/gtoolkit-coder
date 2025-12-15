@@ -7,7 +7,7 @@ Class {
 		'slotsGroup',
 		'navigationModel'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
+	#category : 'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #initialization }

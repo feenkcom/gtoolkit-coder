@@ -6,7 +6,7 @@ Class {
 		'shouldHaveHeader',
 		'hasFocus'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #converting }

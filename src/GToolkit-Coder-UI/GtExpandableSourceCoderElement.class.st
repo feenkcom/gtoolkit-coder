@@ -8,18 +8,13 @@ Class {
 		'expandedElement',
 		'modificationIndicator'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source'
+	#category : 'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #private }
 GtExpandableSourceCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
 	aSourceCoder coderLook
 		ifNotNil: [ :aCoderLook | anElement addAptitude: aCoderLook ]
-]
-
-{ #category : #converting }
-GtExpandableSourceCoderElement >> asVerticallyResizableDo: aBlock [
-	^ self
 ]
 
 { #category : #private }
@@ -41,6 +36,11 @@ GtExpandableSourceCoderElement >> assignExpandedCoder: aTextualCoderViewModel to
 	anExpandedElement aptitude
 		ifNil: [
 			self addCodersCoderLook: aTextualCoderViewModel to: anExpandedElement ]
+]
+
+{ #category : #converting }
+GtExpandableSourceCoderElement >> asVerticallyResizableDo: aBlock [
+	^ self
 ]
 
 { #category : #accessing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCodeDefinitionSingleReader,
 	#superclass : #GtCodeDefinitionSingleViewer,
-	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
 { #category : #'api - instantiation' }

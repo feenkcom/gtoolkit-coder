@@ -13,7 +13,7 @@ Class {
 		'styleLook',
 		'padding'
 	],
-	#category : #'GToolkit-Coder-UI-Looks'
+	#category : 'GToolkit-Coder-UI-Looks'
 }
 
 { #category : #accessing }

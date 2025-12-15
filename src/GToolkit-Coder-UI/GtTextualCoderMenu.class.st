@@ -5,7 +5,7 @@ Class {
 		'coder',
 		'coderViewModelStencil'
 	],
-	#category : #'GToolkit-Coder-UI-Menu'
+	#category : 'GToolkit-Coder-UI-Menu'
 }
 
 { #category : #visiting }

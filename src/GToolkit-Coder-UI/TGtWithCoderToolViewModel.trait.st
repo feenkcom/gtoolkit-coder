@@ -3,7 +3,7 @@ Trait {
 	#instVars : [
 		'coderToolViewModel'
 	],
-	#category : #'GToolkit-Coder-UI-! Core - View Models'
+	#category : 'GToolkit-Coder-UI-! Core - View Models'
 }
 
 { #category : #'api - coder tool view model' }

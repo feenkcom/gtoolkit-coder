@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterToggleGroupAptitude,
 	#superclass : #BrToggleGroupAptitude,
-	#category : #'GToolkit-Coder-UI-Filters - Support'
+	#category : 'GToolkit-Coder-UI-Filters - Support'
 }
 
 { #category : #initialization }

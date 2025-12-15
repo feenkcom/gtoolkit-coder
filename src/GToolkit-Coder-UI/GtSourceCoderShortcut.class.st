@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderShortcut,
 	#superclass : #BrEditorShortcut,
-	#category : #'GToolkit-Coder-UI-Shortcuts'
+	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #private }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'observedClass'
 	],
-	#category : #'GToolkit-Coder-UI-Tools'
+	#category : 'GToolkit-Coder-UI-Tools'
 }
 
 { #category : #'instance creation' }

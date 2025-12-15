@@ -5,7 +5,7 @@ Class {
 		'evaluationStatus',
 		'isNotificationHandled'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Model'
+	#category : 'GToolkit-Coder-UI-Coder - Source Model'
 }
 
 { #category : #accessing }

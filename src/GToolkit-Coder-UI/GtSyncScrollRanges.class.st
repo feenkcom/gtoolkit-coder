@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'ranges'
 	],
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #'instance creation' }
@@ -271,6 +271,18 @@ GtSyncScrollRanges >> rightLineFor: anInteger [
 ]
 
 { #category : #accessing }
+GtSyncScrollRanges >> selectedProgress [
+	| index |
+	index := {0. 0}.
+	self ranges
+		do: [ :each | 
+			each isDifference
+				ifTrue: [ index at: 2 put: index last + 1.
+					each isSelected ifTrue: [ index at: 1 put: index last ] ] ].
+	^ index
+]
+
+{ #category : #accessing }
 GtSyncScrollRanges >> selectNext [
 	| found |
 	found := false.
@@ -311,16 +323,4 @@ GtSyncScrollRanges >> selectPrevious [
 GtSyncScrollRanges >> selectRange: aRange [
 	self ranges do: [ :each | each unselect ].
 	aRange ifNotNil: [ aRange select ]
-]
-
-{ #category : #accessing }
-GtSyncScrollRanges >> selectedProgress [
-	| index |
-	index := {0. 0}.
-	self ranges
-		do: [ :each | 
-			each isDifference
-				ifTrue: [ index at: 2 put: index last + 1.
-					each isSelected ifTrue: [ index at: 1 put: index last ] ] ].
-	^ index
 ]

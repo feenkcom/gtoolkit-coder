@@ -1,6 +1,6 @@
 Trait {
 	#name : #TGtCoderNavigationWithContextMenu,
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #'private - context menu' }

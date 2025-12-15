@@ -25,7 +25,7 @@ Class {
 		'example',
 		'styleLook'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #'private - asserting' }

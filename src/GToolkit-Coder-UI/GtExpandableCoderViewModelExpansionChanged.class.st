@@ -5,7 +5,7 @@ Class {
 		'expanded',
 		'source'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Textual Model - Events'
+	#category : 'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
 
 { #category : #accessing }

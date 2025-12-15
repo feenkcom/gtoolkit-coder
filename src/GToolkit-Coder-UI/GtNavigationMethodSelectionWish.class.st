@@ -10,7 +10,7 @@ Class {
 	#instVars : [
 		'method'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
+	#category : 'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #accessing }

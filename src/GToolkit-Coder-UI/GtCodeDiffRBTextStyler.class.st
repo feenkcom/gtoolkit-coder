@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCodeDiffRBTextStyler,
 	#superclass : #BrRBTextStyler,
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #private }

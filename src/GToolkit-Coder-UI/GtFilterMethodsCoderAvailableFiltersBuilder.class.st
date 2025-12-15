@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'coders'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #building }

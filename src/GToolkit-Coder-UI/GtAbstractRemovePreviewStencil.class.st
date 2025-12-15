@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'anElement'
 	],
-	#category : #'GToolkit-Coder-UI-Utilities'
+	#category : 'GToolkit-Coder-UI-Utilities'
 }
 
 { #category : #accessing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtNavigationSpotterDropdownId,
 	#superclass : #GtCoderElementId,
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #accessing }

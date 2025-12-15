@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderPlayAndInspectShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : #'GToolkit-Coder-UI-Shortcuts'
+	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }

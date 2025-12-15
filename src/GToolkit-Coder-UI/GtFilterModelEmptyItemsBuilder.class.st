@@ -3,7 +3,7 @@ Class {
 	#superclass : #GtFilterModelItemsBuilder,
 	#traits : 'TGtUniqueInstance',
 	#classTraits : 'TGtUniqueInstance classTrait',
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #'api - instantiation' }

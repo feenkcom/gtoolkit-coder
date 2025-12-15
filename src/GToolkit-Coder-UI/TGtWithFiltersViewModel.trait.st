@@ -3,7 +3,7 @@ Trait {
 	#instVars : [
 		'filtersViewModel'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - View Models'
+	#category : 'GToolkit-Coder-UI-Filters - View Models'
 }
 
 { #category : #'api - filter view model' }

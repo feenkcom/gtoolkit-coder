@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'object'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Attributes'
+	#category : 'GToolkit-Coder-UI-Coder - Source Attributes'
 }
 
 { #category : #'instance creation' }

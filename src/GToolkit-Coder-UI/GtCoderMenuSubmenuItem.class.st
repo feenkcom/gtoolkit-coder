@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'textualCoderEditorElement'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Addons'
+	#category : 'GToolkit-Coder-UI-Coder - Addons'
 }
 
 { #category : #visiting }

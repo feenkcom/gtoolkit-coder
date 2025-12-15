@@ -13,7 +13,7 @@ Class {
 		'contentElement',
 		'playgroundElement'
 	],
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #'private - accessing' }
@@ -77,12 +77,12 @@ GtCoderPlaygroundElement >> onPackageSelected: anEvent [
 ]
 
 { #category : #'private - hooks' }
-GtCoderPlaygroundElement >> onPackageTagSelected: anEvent [
+GtCoderPlaygroundElement >> onPackagesSelected: anEvent [
 	self inUIProcessDo: [ self updatePlayground ]
 ]
 
 { #category : #'private - hooks' }
-GtCoderPlaygroundElement >> onPackagesSelected: anEvent [
+GtCoderPlaygroundElement >> onPackageTagSelected: anEvent [
 	self inUIProcessDo: [ self updatePlayground ]
 ]
 

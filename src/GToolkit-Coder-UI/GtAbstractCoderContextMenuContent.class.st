@@ -1,7 +1,7 @@
 Class {
 	#name : #GtAbstractCoderContextMenuContent,
 	#superclass : #BrSimpleList,
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #accessing }

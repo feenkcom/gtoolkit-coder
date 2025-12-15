@@ -5,7 +5,7 @@ Class {
 		'packagesList',
 		'classesLabel'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #'api - package updates' }
@@ -168,6 +168,14 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> onPackageSelected: anAnnounc
 	self inUIProcessDo: [ self suppressListChangeEventsDuring: [ self selectPackage: anAnnouncer package ] ]
 ]
 
+{ #category : #'event handling - selection' }
+GtCoderNavigationBasicPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
+	self
+		inUIProcessDo: [ self
+				suppressListChangeEventsDuring: [ self deselectPackages.
+					self deselectClasses ] ]
+]
+
 { #category : #'event handling' }
 GtCoderNavigationBasicPackagesTagsClassesElement >> onPackageTagAdded: anAnnouncement [
 	self
@@ -201,14 +209,6 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> onPackageTagSelected: anAnno
 GtCoderNavigationBasicPackagesTagsClassesElement >> onPackageUnregistered: anAnnouncement [
 	self
 		suppressListChangeEventsDuring: [ self removePackage: anAnnouncement package ]
-]
-
-{ #category : #'event handling - selection' }
-GtCoderNavigationBasicPackagesTagsClassesElement >> onPackagesSelected: anAnnouncer [
-	self
-		inUIProcessDo: [ self
-				suppressListChangeEventsDuring: [ self deselectPackages.
-					self deselectClasses ] ]
 ]
 
 { #category : #'api - package updates' }
@@ -290,6 +290,41 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> selectClass: aClass inPackag
 	self updateSlotList
 ]
 
+{ #category : #'api - class selections' }
+GtCoderNavigationBasicPackagesTagsClassesElement >> selectedClass [
+	<return: #Class or: nil>
+	^ classesList selectedClass
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackage [
+	<return: #Package or: nil>
+	^ packagesList selectedPackage
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackageNodeDo: aBlock [
+	^ packagesList selectedPackageNodeDo: aBlock
+]
+
+{ #category : #'api - package updates' }
+GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackageOrTag [
+	| aSelectedPackageOrTag |
+	packagesList selectedNodeDo: [ :aNode | aSelectedPackageOrTag := aNode value ].
+	^ aSelectedPackageOrTag
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackageTag [
+	<return: #PackageTag or: nil>
+	^ packagesList selectedPackageTag
+]
+
+{ #category : #'api - package selections' }
+GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock [
+	^ packagesList selectedPackageTagNodeDo: aBlock
+]
+
 { #category : #'api - package selections' }
 GtCoderNavigationBasicPackagesTagsClassesElement >> selectPackage: aPackage [
 	| aPreviousIndex |
@@ -336,41 +371,6 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> selectPackageOrTag: aPackage
 	(aPackageOrTag isPharoPackageModel)
 		ifTrue: [ self selectPackage: aPackageOrTag ] 
 		ifFalse: [ self selectPackage: aPackageOrTag package tag: aPackageOrTag ]
-]
-
-{ #category : #'api - class selections' }
-GtCoderNavigationBasicPackagesTagsClassesElement >> selectedClass [
-	<return: #Class or: nil>
-	^ classesList selectedClass
-]
-
-{ #category : #'api - package selections' }
-GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackage [
-	<return: #Package or: nil>
-	^ packagesList selectedPackage
-]
-
-{ #category : #'api - package selections' }
-GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackageNodeDo: aBlock [
-	^ packagesList selectedPackageNodeDo: aBlock
-]
-
-{ #category : #'api - package updates' }
-GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackageOrTag [
-	| aSelectedPackageOrTag |
-	packagesList selectedNodeDo: [ :aNode | aSelectedPackageOrTag := aNode value ].
-	^ aSelectedPackageOrTag
-]
-
-{ #category : #'api - package selections' }
-GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackageTag [
-	<return: #PackageTag or: nil>
-	^ packagesList selectedPackageTag
-]
-
-{ #category : #'api - package selections' }
-GtCoderNavigationBasicPackagesTagsClassesElement >> selectedPackageTagNodeDo: aBlock [
-	^ packagesList selectedPackageTagNodeDo: aBlock
 ]
 
 { #category : #'showing / hiding' }

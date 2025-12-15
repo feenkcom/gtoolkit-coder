@@ -7,7 +7,7 @@ Class {
 		'listElement',
 		'handleElement'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Widgets'
+	#category : 'GToolkit-Coder-UI-Filters - Widgets'
 }
 
 { #category : #initialization }
@@ -221,15 +221,15 @@ GtFilterShortListSettingsElement >> onEditWish: anEvent [
 	self dispatchShowItemsWish
 ]
 
+{ #category : #'event handling' }
+GtFilterShortListSettingsElement >> onFiltersViewModelItemRemoved: anAnnouncement [
+	self interruptListElementFuture
+]
+
 { #category : #'api - filter view model' }
 GtFilterShortListSettingsElement >> onFilterViewModelChanged [
 	super onFilterViewModelChanged.
 	self updateElement
-]
-
-{ #category : #'event handling' }
-GtFilterShortListSettingsElement >> onFiltersViewModelItemRemoved: anAnnouncement [
-	self interruptListElementFuture
 ]
 
 { #category : #'event handling' }

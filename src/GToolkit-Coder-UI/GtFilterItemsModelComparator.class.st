@@ -5,7 +5,7 @@ Class {
 		'incomingItems',
 		'existingItems'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Support'
+	#category : 'GToolkit-Coder-UI-Filters - Support'
 }
 
 { #category : #accessing }

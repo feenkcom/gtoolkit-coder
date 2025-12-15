@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPackagesCoderViewModel,
 	#superclass : #GtMultipleCodersViewModel,
-	#category : #'GToolkit-Coder-UI-Coder - Packages Model'
+	#category : 'GToolkit-Coder-UI-Coder - Packages Model'
 }
 
 { #category : #accessing }

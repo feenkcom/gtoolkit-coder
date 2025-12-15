@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'isMethod'
 	],
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #initialization }

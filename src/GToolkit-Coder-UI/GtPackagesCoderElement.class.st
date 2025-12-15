@@ -7,7 +7,7 @@ Class {
 		'packagesCoder',
 		'contentPane'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Packages'
+	#category : 'GToolkit-Coder-UI-Coder - Packages'
 }
 
 { #category : #'private - ui' }

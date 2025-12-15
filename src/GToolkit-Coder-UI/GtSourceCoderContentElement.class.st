@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'header'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source'
+	#category : 'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #accessing }

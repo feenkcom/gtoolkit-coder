@@ -13,7 +13,7 @@ Class {
 		'space',
 		'debuggerMatcher'
 	],
-	#category : #'GToolkit-Coder-UI-Coders - Evaluation'
+	#category : 'GToolkit-Coder-UI-Coders - Evaluation'
 }
 
 { #category : #accessing }

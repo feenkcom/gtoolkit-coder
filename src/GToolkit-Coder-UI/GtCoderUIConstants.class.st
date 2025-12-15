@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderUIConstants,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-UI-Utilities'
+	#category : 'GToolkit-Coder-UI-Utilities'
 }
 
 { #category : #initialization }

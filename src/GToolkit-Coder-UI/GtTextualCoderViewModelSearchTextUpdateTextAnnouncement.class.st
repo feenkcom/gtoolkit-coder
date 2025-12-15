@@ -6,7 +6,7 @@ Class {
 		'styledText',
 		'isUpdated'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Events'
+	#category : 'GToolkit-Coder-UI-Coder - Source Events'
 }
 
 { #category : #accessing }

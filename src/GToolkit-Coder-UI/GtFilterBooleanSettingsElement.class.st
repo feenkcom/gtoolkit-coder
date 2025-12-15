@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'switcherElement'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Widgets'
+	#category : 'GToolkit-Coder-UI-Filters - Widgets'
 }
 
 { #category : #initialization }

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderNavigationTreeLabelAptitude,
 	#superclass : #BrGlamorousLabelAptitude,
-	#category : #'GToolkit-Coder-UI-Looks'
+	#category : 'GToolkit-Coder-UI-Looks'
 }
 
 { #category : #initialization }

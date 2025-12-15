@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderNavigationBasicClassHierarchyElement,
 	#superclass : #GtCoderNavigationElement,
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #initialization }
@@ -42,6 +42,12 @@ GtCoderNavigationBasicClassHierarchyElement >> onClassDeselected: aGtCoderNaviga
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationBasicClassHierarchyElement >> onClassesToShowChanged: anAnnouncement [
+	supressListChanges ifTrue: [ ^ self ].
+	self inUIProcessDo: [ self updateClassList ]
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationBasicClassHierarchyElement >> onClassListSelectionChanged [
 	| anIndex aSelectedItem theIndices |
 	supressListChanges ifTrue: [ ^ self ].
@@ -62,12 +68,6 @@ GtCoderNavigationBasicClassHierarchyElement >> onClassSelected: anAnnouncement [
 	(classesList containsClass: aSelectedClass)
 		ifFalse: [ self updateClassList ].
 	self selectClass: aSelectedClass
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationBasicClassHierarchyElement >> onClassesToShowChanged: anAnnouncement [
-	supressListChanges ifTrue: [ ^ self ].
-	self inUIProcessDo: [ self updateClassList ]
 ]
 
 { #category : #'event handling' }

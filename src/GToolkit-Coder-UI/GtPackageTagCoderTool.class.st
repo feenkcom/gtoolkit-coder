@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'packageTag'
 	],
-	#category : #'GToolkit-Coder-UI-Tools'
+	#category : 'GToolkit-Coder-UI-Tools'
 }
 
 { #category : #'instace creation' }

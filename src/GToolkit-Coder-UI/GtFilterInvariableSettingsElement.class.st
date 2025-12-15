@@ -1,5 +1,5 @@
 Class {
 	#name : #GtFilterInvariableSettingsElement,
 	#superclass : #GtFilterSettingsElement,
-	#category : #'GToolkit-Coder-UI-Filters - Widgets'
+	#category : 'GToolkit-Coder-UI-Filters - Widgets'
 }

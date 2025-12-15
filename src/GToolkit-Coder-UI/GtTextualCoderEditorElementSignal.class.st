@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'element'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Textual'
+	#category : 'GToolkit-Coder-UI-Coder - Textual'
 }
 
 { #category : #testing }

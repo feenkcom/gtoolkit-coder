@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'toggleGroupElement'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Widgets'
+	#category : 'GToolkit-Coder-UI-Filters - Widgets'
 }
 
 { #category : #initialization }
@@ -102,15 +102,15 @@ GtFilterToggleSettingsElement >> onEditWish: anEvent [
 	self requestToggleFocus
 ]
 
+{ #category : #'event handling' }
+GtFilterToggleSettingsElement >> onFiltersViewModelItemRemoved: anAnnouncement [
+	BlTaskAction enqueueElement: self action: [ self interruptToggleGroupFuture ]
+]
+
 { #category : #'api - filter view model' }
 GtFilterToggleSettingsElement >> onFilterViewModelChanged [
 	super onFilterViewModelChanged.
 	self updateElement
-]
-
-{ #category : #'event handling' }
-GtFilterToggleSettingsElement >> onFiltersViewModelItemRemoved: anAnnouncement [
-	BlTaskAction enqueueElement: self action: [ self interruptToggleGroupFuture ]
 ]
 
 { #category : #'event handling' }

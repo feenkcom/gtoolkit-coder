@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterModelItemsWithoutSelectedItemSelector,
 	#superclass : #GtFilterModelItemsSelector,
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #'as yet unclassified' }

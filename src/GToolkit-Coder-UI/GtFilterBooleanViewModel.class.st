@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterBooleanViewModel,
 	#superclass : #GtFilterViewModel,
-	#category : #'GToolkit-Coder-UI-Filters - View Models'
+	#category : 'GToolkit-Coder-UI-Filters - View Models'
 }
 
 { #category : #accessing }

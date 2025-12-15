@@ -3,7 +3,7 @@ Trait {
 	#instVars : [
 		'selfObjectHolder'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #testing }

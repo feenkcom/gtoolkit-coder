@@ -6,7 +6,7 @@ Class {
 		'addProtocolButton',
 		'protocolLabel'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
+	#category : 'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #'as yet unclassified' }

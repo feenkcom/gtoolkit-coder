@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterModelTraitOriginItem,
 	#superclass : #GtFilterModelMethodOriginItem,
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #accessing }

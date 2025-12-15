@@ -4,7 +4,7 @@ Class {
 	#classVars : [
 		'IsEnabledInCoder'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
+	#category : 'GToolkit-Coder-UI-Coder - Textual Model'
 }
 
 { #category : #settings }

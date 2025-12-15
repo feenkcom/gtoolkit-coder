@@ -12,7 +12,7 @@ Class {
 		'textUpdater',
 		'addOnsElementFuture'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Textual'
+	#category : 'GToolkit-Coder-UI-Coder - Textual'
 }
 
 { #category : #private }
@@ -198,15 +198,6 @@ GtTextualCoderEditorElement >> initializeListeners [
 		do: [ :anEvent | self onTextStyled: anEvent ]
 ]
 
-{ #category : #initialization }
-GtTextualCoderEditorElement >> onAddOnsError: anError [
-	anError emit.
-	NonInteractiveTranscript stderr
-		show: '[GtTextualCoderEditorElement>>#onAddOnsError:] ';
-		show: anError;
-		newLine
-]
-
 { #category : #'hooks - children' }
 GtTextualCoderEditorElement >> onAddedToSceneGraph [
 	super onAddedToSceneGraph.
@@ -214,6 +205,15 @@ GtTextualCoderEditorElement >> onAddedToSceneGraph [
 	GtTextualCoderEditorElementAddedToSceneGraphSignal new 
 		element: self;
 		emit
+]
+
+{ #category : #initialization }
+GtTextualCoderEditorElement >> onAddOnsError: anError [
+	anError emit.
+	NonInteractiveTranscript stderr
+		show: '[GtTextualCoderEditorElement>>#onAddOnsError:] ';
+		show: anError;
+		newLine
 ]
 
 { #category : #'private - event handling' }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'weakSpace'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Addons'
+	#category : 'GToolkit-Coder-UI-Coder - Addons'
 }
 
 { #category : #comparing }

@@ -7,7 +7,7 @@ Class {
 		'announcer',
 		'filterViewModels'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - View Models'
+	#category : 'GToolkit-Coder-UI-Filters - View Models'
 }
 
 { #category : #'add / remove' }

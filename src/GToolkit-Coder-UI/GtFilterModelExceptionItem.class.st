@@ -8,7 +8,7 @@ Class {
 	#instVars : [
 		'exception'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #'instance creation' }

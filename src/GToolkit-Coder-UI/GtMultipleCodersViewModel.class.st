@@ -5,7 +5,7 @@ Class {
 		'coder',
 		'coderUIModels'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #accessing }
@@ -42,16 +42,6 @@ GtMultipleCodersViewModel >> coder: aGtCodersModel [
 	self updateCoderUIModels
 ]
 
-{ #category : #updating }
-GtMultipleCodersViewModel >> coderUIModelFor: aCoder [
-	^ aCoder asCoderViewModel
-]
-
-{ #category : #accessing }
-GtMultipleCodersViewModel >> coderUIModels [
-	^ coderUIModels
-]
-
 { #category : #accessing }
 GtMultipleCodersViewModel >> coders [
 	<return: #GtCodersModel>
@@ -72,6 +62,16 @@ GtMultipleCodersViewModel >> coders: aGtCodersModel [
 				-> '`@receiver coder: `@statements1'.
 				
 	self coder: aGtCodersModel
+]
+
+{ #category : #updating }
+GtMultipleCodersViewModel >> coderUIModelFor: aCoder [
+	^ aCoder asCoderViewModel
+]
+
+{ #category : #accessing }
+GtMultipleCodersViewModel >> coderUIModels [
+	^ coderUIModels
 ]
 
 { #category : #accessing }

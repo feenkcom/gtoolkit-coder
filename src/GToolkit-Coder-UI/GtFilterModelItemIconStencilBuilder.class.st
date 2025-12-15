@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'object'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Support'
+	#category : 'GToolkit-Coder-UI-Filters - Support'
 }
 
 { #category : #'api - instantiation' }

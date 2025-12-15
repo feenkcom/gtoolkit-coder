@@ -1,7 +1,7 @@
 Class {
 	#name : #GtDiffShadowAptitude,
 	#superclass : #GtDiffAptitude,
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #initialization }

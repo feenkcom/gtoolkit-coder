@@ -6,5 +6,5 @@ I represent a target for several selected classes, e.g., in the coder sidebar cl
 Class {
 	#name : #GtCoderClassesTarget,
 	#superclass : #GtPhlowActionUniqueTarget,
-	#category : #'GToolkit-Coder-UI-Phlow Targets'
+	#category : 'GToolkit-Coder-UI-Phlow Targets'
 }

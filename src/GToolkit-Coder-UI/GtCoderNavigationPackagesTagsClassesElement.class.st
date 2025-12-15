@@ -10,7 +10,7 @@ Class {
 		'slotsGroup',
 		'slotsGroupList'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #initialization }

@@ -14,7 +14,7 @@ Class {
 		'sharedDebugSession',
 		'evaluatedCode'
 	],
-	#category : #'GToolkit-Coder-UI-Coders - Evaluation'
+	#category : 'GToolkit-Coder-UI-Coders - Evaluation'
 }
 
 { #category : #comparing }
@@ -149,11 +149,6 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> handleStatusChangedAnnouncement: 
 		showNotification: (GtNotificationDebugSession new debugSession: self sharedDebugSession)
 ]
 
-{ #category : #testing }
-GtCoderEmbeddedDebugSessionEvaluationStatus >> hasSharedDebugSession [
-	^ true
-]
-
 { #category : #comparing }
 GtCoderEmbeddedDebugSessionEvaluationStatus >> hash [
 	^ self class hash
@@ -163,6 +158,11 @@ GtCoderEmbeddedDebugSessionEvaluationStatus >> hash [
 		bitXor: (self evaluatedCode hash
 		bitXor: (self sourceInterval hash
 		bitXor: (self sourceString hash ))))))
+]
+
+{ #category : #testing }
+GtCoderEmbeddedDebugSessionEvaluationStatus >> hasSharedDebugSession [
+	^ true
 ]
 
 { #category : #accessing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterSignal,
 	#superclass : #ContextStackSignal,
-	#category : #'GToolkit-Coder-UI-Filters - Events'
+	#category : 'GToolkit-Coder-UI-Filters - Events'
 }
 
 { #category : #testing }

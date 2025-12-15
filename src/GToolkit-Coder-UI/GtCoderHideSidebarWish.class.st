@@ -1,5 +1,5 @@
 Class {
 	#name : #GtCoderHideSidebarWish,
 	#superclass : #BrWish,
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }

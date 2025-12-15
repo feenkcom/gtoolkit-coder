@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'setSelector'
 	],
-	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
 { #category : #private }

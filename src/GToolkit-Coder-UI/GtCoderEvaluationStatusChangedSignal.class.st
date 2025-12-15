@@ -6,7 +6,7 @@ Class {
 		'oldStatus',
 		'newStatus'
 	],
-	#category : #'GToolkit-Coder-UI-Signals'
+	#category : 'GToolkit-Coder-UI-Signals'
 }
 
 { #category : #testing }

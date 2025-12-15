@@ -7,7 +7,7 @@ Class {
 		'announcer',
 		'availableFiltersBuilder'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #'add / remove' }

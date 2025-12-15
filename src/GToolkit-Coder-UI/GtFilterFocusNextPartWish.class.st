@@ -1,5 +1,5 @@
 Class {
 	#name : #GtFilterFocusNextPartWish,
 	#superclass : #BrWish,
-	#category : #'GToolkit-Coder-UI-Filters - Events'
+	#category : 'GToolkit-Coder-UI-Filters - Events'
 }

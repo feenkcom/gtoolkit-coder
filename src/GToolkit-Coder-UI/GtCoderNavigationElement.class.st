@@ -6,7 +6,7 @@ Class {
 		'supressListChanges',
 		'classesList'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #asserting }
@@ -92,6 +92,12 @@ GtCoderNavigationElement >> onClassDeselected: anAnnouncement [
 ]
 
 { #category : #'event handling' }
+GtCoderNavigationElement >> onClassesToShowChanged: anAnnouncement [
+	"Refactorings that are executed from a non-UI process should schedule an update task"
+	self inUIProcessDo: [ self updateClassList ]
+]
+
+{ #category : #'event handling' }
 GtCoderNavigationElement >> onClassListSelectionChanged [
 	| theIndices someClasses |
 	supressListChanges ifTrue: [ ^ self ].
@@ -140,12 +146,6 @@ GtCoderNavigationElement >> onClassRenamed: anAnnouncement [
 { #category : #'event handling' }
 GtCoderNavigationElement >> onClassSelected: anAnnouncement [
 	self subclassResponsibility
-]
-
-{ #category : #'event handling' }
-GtCoderNavigationElement >> onClassesToShowChanged: anAnnouncement [
-	"Refactorings that are executed from a non-UI process should schedule an update task"
-	self inUIProcessDo: [ self updateClassList ]
 ]
 
 { #category : #'event handling' }

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderBrowseCoderButtonId,
 	#superclass : #GtCoderElementId,
-	#category : #'GToolkit-Coder-UI-Coder - Ids'
+	#category : 'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #accessing }

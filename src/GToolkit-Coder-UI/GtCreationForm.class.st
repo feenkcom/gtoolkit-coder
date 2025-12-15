@@ -7,7 +7,7 @@ Class {
 		'onElementCreated',
 		'onReset'
 	],
-	#category : #'GToolkit-Coder-UI-Forms - Models'
+	#category : 'GToolkit-Coder-UI-Forms - Models'
 }
 
 { #category : #accessing }

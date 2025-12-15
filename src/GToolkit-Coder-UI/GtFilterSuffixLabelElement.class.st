@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterSuffixLabelElement,
 	#superclass : #GtFilterLabelElement,
-	#category : #'GToolkit-Coder-UI-Filters - Widgets'
+	#category : 'GToolkit-Coder-UI-Filters - Widgets'
 }
 
 { #category : #'as yet unclassified' }

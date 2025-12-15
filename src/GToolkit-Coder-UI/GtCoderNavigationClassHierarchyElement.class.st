@@ -11,7 +11,7 @@ Class {
 		'protocolsList',
 		'slotsList'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #initialization }

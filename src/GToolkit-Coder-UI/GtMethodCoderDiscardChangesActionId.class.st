@@ -6,7 +6,7 @@ A button to discard changes
 Class {
 	#name : #GtMethodCoderDiscardChangesActionId,
 	#superclass : #GtCoderElementId,
-	#category : #'GToolkit-Coder-UI-Coder - Ids'
+	#category : 'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #converting }

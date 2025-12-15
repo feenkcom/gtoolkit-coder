@@ -3,7 +3,7 @@ Class {
 	#superclass : #GtFilterSelectableItemModelParameter,
 	#traits : 'TGtWithItemsSelector',
 	#classTraits : 'TGtWithItemsSelector classTrait',
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #accessing }

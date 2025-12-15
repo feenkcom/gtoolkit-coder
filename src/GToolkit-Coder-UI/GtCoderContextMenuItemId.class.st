@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderContextMenuItemId,
 	#superclass : #BlElementUniqueId,
-	#category : #'GToolkit-Coder-UI-Basic'
+	#category : 'GToolkit-Coder-UI-Basic'
 }
 
 { #category : #converting }

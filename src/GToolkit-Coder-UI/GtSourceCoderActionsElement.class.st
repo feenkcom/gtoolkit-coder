@@ -9,7 +9,7 @@ Class {
 		'separator',
 		'editor'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #private }

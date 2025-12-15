@@ -3,7 +3,7 @@ Trait {
 	#instVars : [
 		'itemsSelector'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #initialization }

@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'announcer'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - View Models'
+	#category : 'GToolkit-Coder-UI-Filters - View Models'
 }
 
 { #category : #announcer }

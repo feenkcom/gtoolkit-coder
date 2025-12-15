@@ -22,7 +22,7 @@ Class {
 		'valueIsRequired',
 		'offerCompletionValues'
 	],
-	#category : #'GToolkit-Coder-UI-Filters'
+	#category : 'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #'instance creation' }

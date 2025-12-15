@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'originalAnnouncement'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Events'
+	#category : 'GToolkit-Coder-UI-Filters - Events'
 }
 
 { #category : #testing }

@@ -11,7 +11,7 @@ Class {
 	#instVars : [
 		'originalSource'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
+	#category : 'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #accessing }

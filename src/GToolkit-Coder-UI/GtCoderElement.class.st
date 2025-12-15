@@ -21,7 +21,7 @@ Class {
 		'contentElement',
 		'titleNotifier'
 	],
-	#category : #'GToolkit-Coder-UI-! Core'
+	#category : 'GToolkit-Coder-UI-! Core'
 }
 
 { #category : #'instance creation' }

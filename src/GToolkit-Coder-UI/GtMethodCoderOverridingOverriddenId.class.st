@@ -4,7 +4,7 @@ A buttonthat shows if a method is overriding one in the superclass or is overrid
 Class {
 	#name : #GtMethodCoderOverridingOverriddenId,
 	#superclass : #GtCoderElementId,
-	#category : #'GToolkit-Coder-UI-Coder - Ids'
+	#category : 'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #converting }

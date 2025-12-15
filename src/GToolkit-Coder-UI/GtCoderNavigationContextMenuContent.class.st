@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderNavigationContextMenuContent,
 	#superclass : #GtAbstractCoderContextMenuContent,
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #accessing }

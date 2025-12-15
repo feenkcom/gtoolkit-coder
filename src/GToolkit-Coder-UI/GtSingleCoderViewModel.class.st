@@ -19,7 +19,7 @@ Class {
 		'currentAddOns',
 		'addOnsCache'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #accessing }

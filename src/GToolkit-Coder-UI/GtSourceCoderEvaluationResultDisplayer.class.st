@@ -7,7 +7,7 @@ Class {
 		'evaluationAttributes',
 		'updater'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source'
+	#category : 'GToolkit-Coder-UI-Coder - Source'
 }
 
 { #category : #private }

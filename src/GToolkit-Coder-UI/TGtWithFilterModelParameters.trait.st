@@ -3,7 +3,7 @@ Trait {
 	#instVars : [
 		'parameters'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #parameters }

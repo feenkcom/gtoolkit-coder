@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'bar'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #accessing }

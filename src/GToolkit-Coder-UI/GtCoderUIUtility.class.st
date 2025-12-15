@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderUIUtility,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-UI-Utilities'
+	#category : 'GToolkit-Coder-UI-Utilities'
 }
 
 { #category : #'api - instance creation' }

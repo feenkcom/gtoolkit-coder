@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'itemsBuilder'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Events'
+	#category : 'GToolkit-Coder-UI-Filters - Events'
 }
 
 { #category : #accessing }

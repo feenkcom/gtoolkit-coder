@@ -7,7 +7,7 @@ Class {
 		'labelElement',
 		'settingsContainer'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Widgets'
+	#category : 'GToolkit-Coder-UI-Filters - Widgets'
 }
 
 { #category : #'private - updating' }

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderMenuActionItemElement,
 	#superclass : #BrMenuActionItemElement,
-	#category : #'GToolkit-Coder-UI-Coder - Addons'
+	#category : 'GToolkit-Coder-UI-Coder - Addons'
 }
 
 { #category : #'event handling' }

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtSourceCoderDiscardChangesShortcut,
 	#superclass : #GtSourceCoderShortcut,
-	#category : #'GToolkit-Coder-UI-Shortcuts'
+	#category : 'GToolkit-Coder-UI-Shortcuts'
 }
 
 { #category : #accessing }

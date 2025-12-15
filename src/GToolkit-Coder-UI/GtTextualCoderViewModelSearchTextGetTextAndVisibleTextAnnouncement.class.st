@@ -6,7 +6,7 @@ Class {
 		'text',
 		'visibleText'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Events'
+	#category : 'GToolkit-Coder-UI-Coder - Source Events'
 }
 
 { #category : #accessing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtDiffSeparatorId,
 	#superclass : #GtDiffElementId,
-	#category : #'GToolkit-Coder-UI-Diff'
+	#category : 'GToolkit-Coder-UI-Diff'
 }
 
 { #category : #converting }

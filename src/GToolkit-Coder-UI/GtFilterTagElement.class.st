@@ -15,7 +15,7 @@ Class {
 		'filterPickerHandle',
 		'filterLabel'
 	],
-	#category : #'GToolkit-Coder-UI-Filters'
+	#category : 'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #'private - accessing' }

@@ -16,7 +16,7 @@ Class {
 		'protocolToRename',
 		'renamingEditor'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
+	#category : 'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #'private - refactorings' }
@@ -399,6 +399,18 @@ GtCoderProtocolsGroupedListElement >> renameProtocolSubmenuFor: aGtPharoProtocol
 ]
 
 { #category : #'api - list' }
+GtCoderProtocolsGroupedListElement >> selectedProtocol [
+	<return: #GtPharoProtocol or: nil>
+	| theIndices anIndex |
+	
+	theIndices := self selectedIndices ifEmpty: [ ^nil].
+	anIndex := theIndices first.
+	(anIndex between: 1 and: self viewModel entityCount)
+		ifFalse: [ ^ nil ].
+	^ (self viewModel entityAt: anIndex) value object
+]
+
+{ #category : #'api - list' }
 GtCoderProtocolsGroupedListElement >> selectProtocol: aGtPharoProtocol [
 	| selectionIndex |
 
@@ -409,18 +421,6 @@ GtCoderProtocolsGroupedListElement >> selectProtocol: aGtPharoProtocol [
 	selectionIndex > 0
 		ifTrue: [ self selectOne: selectionIndex ]
 		ifFalse: [ self deselectAll ]
-]
-
-{ #category : #'api - list' }
-GtCoderProtocolsGroupedListElement >> selectedProtocol [
-	<return: #GtPharoProtocol or: nil>
-	| theIndices anIndex |
-	
-	theIndices := self selectedIndices ifEmpty: [ ^nil].
-	anIndex := theIndices first.
-	(anIndex between: 1 and: self viewModel entityCount)
-		ifFalse: [ ^ nil ].
-	^ (self viewModel entityAt: anIndex) value object
 ]
 
 { #category : #'private - subscriptions' }

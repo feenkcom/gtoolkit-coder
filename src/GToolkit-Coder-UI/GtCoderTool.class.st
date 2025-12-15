@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderTool,
 	#superclass : #GtPhlowTool,
-	#category : #'GToolkit-Coder-UI-Tools'
+	#category : 'GToolkit-Coder-UI-Tools'
 }
 
 { #category : #converting }

@@ -5,7 +5,7 @@ Class {
 		'filterElement',
 		'reason'
 	],
-	#category : #'GToolkit-Coder-UI-Filters'
+	#category : 'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #accessing }

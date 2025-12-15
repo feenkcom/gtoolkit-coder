@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderExpanderShadowAptitude,
 	#superclass : #BrLazyStyleCommonAptitude,
-	#category : #'GToolkit-Coder-UI-Looks'
+	#category : 'GToolkit-Coder-UI-Looks'
 }
 
 { #category : #initialization }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'filterDescriptor'
 	],
-	#category : #'GToolkit-Coder-UI-Filters'
+	#category : 'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #accessing }

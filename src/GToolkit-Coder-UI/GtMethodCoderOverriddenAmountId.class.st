@@ -4,7 +4,7 @@ A label or button that represents an amount of methods that override a given met
 Class {
 	#name : #GtMethodCoderOverriddenAmountId,
 	#superclass : #GtCoderElementId,
-	#category : #'GToolkit-Coder-UI-Coder - Ids'
+	#category : 'GToolkit-Coder-UI-Coder - Ids'
 }
 
 { #category : #converting }

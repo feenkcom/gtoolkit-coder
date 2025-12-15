@@ -6,7 +6,7 @@ Class {
 		'labelStencilBuilder',
 		'itemsBuilder'
 	],
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #'api - instantiation' }

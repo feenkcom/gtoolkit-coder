@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'process'
 	],
-	#category : #'GToolkit-Coder-UI-Coders - Evaluation'
+	#category : 'GToolkit-Coder-UI-Coders - Evaluation'
 }
 
 { #category : #testing }

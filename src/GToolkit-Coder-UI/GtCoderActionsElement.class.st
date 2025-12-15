@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderActionsElement,
 	#superclass : #BlElement,
-	#category : #'GToolkit-Coder-UI-Coder - Basic'
+	#category : 'GToolkit-Coder-UI-Coder - Basic'
 }
 
 { #category : #accessing }

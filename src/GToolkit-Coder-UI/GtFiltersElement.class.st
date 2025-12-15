@@ -8,7 +8,7 @@ Class {
 	#instVars : [
 		'descriptors'
 	],
-	#category : #'GToolkit-Coder-UI-Filters'
+	#category : 'GToolkit-Coder-UI-Filters'
 }
 
 { #category : #private }

@@ -17,7 +17,7 @@ Class {
 		'nodeAttributeMap',
 		'history'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
+	#category : 'GToolkit-Coder-UI-Coder - Textual Model'
 }
 
 { #category : #'api - add-ons' }
@@ -664,11 +664,6 @@ GtTextualCoderViewModel >> select: aFromCursorIndex to: aToCursorIndex [
 ]
 
 { #category : #'api - selection' }
-GtTextualCoderViewModel >> selectNone [
-	self selection: BlCompositeSelection new
-]
-
-{ #category : #'api - selection' }
 GtTextualCoderViewModel >> selection [
 	<return: #BlCompositeSelection>
 
@@ -689,6 +684,11 @@ GtTextualCoderViewModel >> selection: aBlCompositeSelection from: aSourceObject 
 	
 	selection := aBlCompositeSelection copy.
 	self notifySelectionChanged: selection from: aSourceObject
+]
+
+{ #category : #'api - selection' }
+GtTextualCoderViewModel >> selectNone [
+	self selection: BlCompositeSelection new
 ]
 
 { #category : #'api - shortcuts' }

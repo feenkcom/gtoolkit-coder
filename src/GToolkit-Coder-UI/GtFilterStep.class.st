@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterStep,
 	#superclass : #BlDevScripterToolActionStep,
-	#category : #'GToolkit-Coder-UI-Filters - Widgets'
+	#category : 'GToolkit-Coder-UI-Filters - Widgets'
 }
 
 { #category : #'steps - checks' }

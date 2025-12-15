@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'view'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Attributes'
+	#category : 'GToolkit-Coder-UI-Coder - Source Attributes'
 }
 
 { #category : #accessing }

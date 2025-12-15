@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'tabName'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation'
+	#category : 'GToolkit-Coder-UI-Navigation'
 }
 
 { #category : #accessing }

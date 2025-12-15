@@ -6,7 +6,7 @@ Class {
 		'openOnFirstShow',
 		'clickAction'
 	],
-	#category : #'GToolkit-Coder-UI-Coder - Source Attributes'
+	#category : 'GToolkit-Coder-UI-Coder - Source Attributes'
 }
 
 { #category : #'instance creation' }

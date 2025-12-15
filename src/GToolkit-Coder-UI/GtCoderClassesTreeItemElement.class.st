@@ -7,7 +7,7 @@ Class {
 		'classIconContainer',
 		'currentIconName'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
+	#category : 'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #accessing }

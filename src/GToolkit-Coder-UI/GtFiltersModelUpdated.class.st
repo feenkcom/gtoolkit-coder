@@ -6,5 +6,5 @@ In other words, I must not be announced if an added or removed filter model does
 Class {
 	#name : #GtFiltersModelUpdated,
 	#superclass : #GtFiltersModelAnnouncement,
-	#category : #'GToolkit-Coder-UI-Filters - Events'
+	#category : 'GToolkit-Coder-UI-Filters - Events'
 }

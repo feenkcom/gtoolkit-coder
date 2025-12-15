@@ -1,7 +1,7 @@
 Class {
 	#name : #GtCoderAddOnEventsCollector,
 	#superclass : #GtBeaconEventsCollector,
-	#category : #'GToolkit-Coder-UI-Signals'
+	#category : 'GToolkit-Coder-UI-Signals'
 }
 
 { #category : #'as yet unclassified' }

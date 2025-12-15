@@ -1,7 +1,7 @@
 Class {
 	#name : #GtFilterModelLabel,
 	#superclass : #Object,
-	#category : #'GToolkit-Coder-UI-Filters - Models'
+	#category : 'GToolkit-Coder-UI-Filters - Models'
 }
 
 { #category : #accessing }

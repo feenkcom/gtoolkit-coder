@@ -6,7 +6,7 @@ Class {
 		'separatorStencil',
 		'showSectionNames'
 	],
-	#category : #'GToolkit-Coder-UI-Behaviour - Editor / Reader'
+	#category : 'GToolkit-Coder-UI-Behaviour - Editor / Reader'
 }
 
 { #category : #'instance creation' }
@@ -70,11 +70,11 @@ GtCodeDefinitionCompositeEntityViewer >> separator: aStencil [
 ]
 
 { #category : #accessing }
-GtCodeDefinitionCompositeEntityViewer >> withSectionNames [
-	showSectionNames := true
+GtCodeDefinitionCompositeEntityViewer >> withoutSectionNames [
+	showSectionNames := false
 ]
 
 { #category : #accessing }
-GtCodeDefinitionCompositeEntityViewer >> withoutSectionNames [
-	showSectionNames := false
+GtCodeDefinitionCompositeEntityViewer >> withSectionNames [
+	showSectionNames := true
 ]

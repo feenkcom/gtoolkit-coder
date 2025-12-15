@@ -5,7 +5,7 @@ Class {
 		'addOnClass',
 		'addOnSelector'
 	],
-	#category : #'GToolkit-Coder-UI-Signals'
+	#category : 'GToolkit-Coder-UI-Signals'
 }
 
 { #category : #accessing }

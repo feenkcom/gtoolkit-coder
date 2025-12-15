@@ -8,7 +8,7 @@ Class {
 		'methodGroups',
 		'addOnsCache'
 	],
-	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
+	#category : 'GToolkit-Coder-UI-Navigation - Helpers'
 }
 
 { #category : #'private - insance creation' }
@@ -82,22 +82,24 @@ GtCoderMethodsGroupedListElement >> browseSeveralReferencesOf: aCollectionOfSymb
 GtCoderMethodsGroupedListElement >> buildMethodItem [
 	<return: #BlElement>
 	| aLabel |
-	aLabel := GtCoderNavigationCompiledMethodElement new.
+	aLabel := self coderNavigationCompiledMethodElement.
 	aLabel addOnsCache: addOnsCache.
-	
-	aLabel
-		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude new
+	aLabel addAptitude: ((BrGlamorousWithExplicitContextMenuAptitude new)
 				withGainFocusOnShow;
-				handleSubmenu: [ | someItems currentMethod |
-					currentMethod := aLabel userData at: #method.
-					someItems := self selectedItems.
-					(someItems size > 1 and: [ someItems identityIncludes: currentMethod ])
-						ifTrue: [ self contextMenuForSeveralItems: someItems in: aLabel ]
-						ifFalse: [ self contextMenuForOneItem: currentMethod in: aLabel ] ]).
-
+				handleSubmenu: 
+						[| someItems currentMethod |
+						currentMethod := aLabel userData at: #method.
+						someItems := self selectedItems.
+						(someItems size > 1 and: [someItems identityIncludes: currentMethod])
+							ifTrue: [self contextMenuForSeveralItems: someItems in: aLabel]
+							ifFalse: [self contextMenuForOneItem: currentMethod in: aLabel]]).
 	aLabel addEventHandler: self createMethodDragHandler.
+	^aLabel
+]
 
-	^ aLabel
+{ #category : #'private - insance creation' }
+GtCoderMethodsGroupedListElement >> coderNavigationCompiledMethodElement [
+	^GtCoderNavigationCompiledMethodElement new
 ]
 
 { #category : #'private - context menu' }

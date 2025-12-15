@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'debugSession'
 	],
-	#category : #'GToolkit-Coder-UI-DebugSession'
+	#category : 'GToolkit-Coder-UI-DebugSession'
 }
 
 { #category : #'private - asserting' }
