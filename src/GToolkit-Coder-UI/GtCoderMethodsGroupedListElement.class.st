@@ -82,9 +82,9 @@ GtCoderMethodsGroupedListElement >> browseSeveralReferencesOf: aCollectionOfSymb
 GtCoderMethodsGroupedListElement >> buildMethodItem [
 	<return: #BlElement>
 	| aLabel |
-	aLabel := GtCoderNavigationCompiledMethodElement new.
+	aLabel := self gtCoderNavigationCompiledMethodElementHook.
 	aLabel addOnsCache: addOnsCache.
-	
+
 	aLabel
 		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude new
 				withGainFocusOnShow;
@@ -178,6 +178,12 @@ GtCoderMethodsGroupedListElement >> createSeveralDraggedMethodsItem: aCollection
 		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
 		fitContent;
 		text: ('{1} methods' format: {aCollection  size})
+]
+
+{ #category : #'private - insance creation' }
+GtCoderMethodsGroupedListElement >> gtCoderNavigationCompiledMethodElementHook [
+	"HOOK FOR CUSTOMIZATION"
+	^ GtCoderNavigationCompiledMethodElement new
 ]
 
 { #category : #'private - actions' }
