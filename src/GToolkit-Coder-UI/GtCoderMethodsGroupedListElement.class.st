@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'navigationModel',
 		'methodGroups',
-		'addOnsCache'
+		'addOnsCache',
+		'methodItemElementStencil'
 	],
 	#category : #'GToolkit-Coder-UI-Navigation - Helpers'
 }
@@ -82,9 +83,9 @@ GtCoderMethodsGroupedListElement >> browseSeveralReferencesOf: aCollectionOfSymb
 GtCoderMethodsGroupedListElement >> buildMethodItem [
 	<return: #BlElement>
 	| aLabel |
-	aLabel := GtCoderNavigationCompiledMethodElement new.
+	aLabel := self createBasicMethodItemElement.
 	aLabel addOnsCache: addOnsCache.
-	
+
 	aLabel
 		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude new
 				withGainFocusOnShow;
@@ -110,6 +111,11 @@ GtCoderMethodsGroupedListElement >> contextMenuForSeveralItems: someItems in: an
 	^ GtCoderMethodsTarget
 		menuItemsForObject: (GtPharoCompiledMethodGroup withAll: someItems)
 		hostElement: anElement
+]
+
+{ #category : #'private - insance creation' }
+GtCoderMethodsGroupedListElement >> createBasicMethodItemElement [
+	^ methodItemElementStencil asElement
 ]
 
 { #category : #'private - insance creation' }
@@ -191,6 +197,7 @@ GtCoderMethodsGroupedListElement >> initialize [
 	super initialize.
 	
 	addOnsCache := GtCoderNavigationCompiledMethodsAddOnsCache new subscribeToSystem.
+	methodItemElementStencil := GtCoderNavigationMethodItemElementStencil new.
 
 	self
 		padding: (BlInsets left: 5 right: 10);
@@ -209,6 +216,11 @@ GtCoderMethodsGroupedListElement >> initialize [
 	self 
 		when: BrWidgetPermanentlyRemovedEvent
 		do: [ :anEvent | self onBrWidgetPermanentlyRemovedEvent: anEvent ].
+]
+
+{ #category : #accessing }
+GtCoderMethodsGroupedListElement >> methodItemElementStencil: aStencil [
+	methodItemElementStencil := aStencil asStencil
 ]
 
 { #category : #accessing }

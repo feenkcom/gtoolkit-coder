@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'collapsedElement',
 		'expandedElement',
-		'modificationIndicator'
+		'modificationIndicator',
+		'collapsedElementStencil'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
@@ -55,6 +56,16 @@ GtExpandableSourceCoderElement >> coderViewModel: aCoderViewModel [
 ]
 
 { #category : #accessing }
+GtExpandableSourceCoderElement >> collapsedElementStencil: anObject [
+	collapsedElementStencil := anObject
+]
+
+{ #category : #'private - instance creation' }
+GtExpandableSourceCoderElement >> createBasicCollapsedElement [
+	^ collapsedElementStencil asElement
+]
+
+{ #category : #accessing }
 GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 	<gtView>
 	self shortcuts ifEmpty: [ ^ aView empty ].
@@ -71,6 +82,8 @@ GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 GtExpandableSourceCoderElement >> initialize [
 	super initialize.
 
+	collapsedElementStencil := GtCollapsedCoderElementStencil new.
+	
 	self
 		vFitContent;
 		hMatchParent;
@@ -116,7 +129,7 @@ GtExpandableSourceCoderElement >> markDirty: anElement as: aBoolean [
 { #category : #'private - instance creation' }
 GtExpandableSourceCoderElement >> newCollapsedElement [
 	| aCollapsedElement |
-	aCollapsedElement := GtSourceCoderCollapsedContentElement new.
+	aCollapsedElement := self createBasicCollapsedElement.
 
 	textualCoderViewModel
 		ifNotNil: [ :aCoder | self assignCollapsedCoder: aCoder to: aCollapsedElement ].
