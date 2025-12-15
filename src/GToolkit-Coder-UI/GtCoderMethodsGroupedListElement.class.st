@@ -99,6 +99,7 @@ GtCoderMethodsGroupedListElement >> buildMethodItem [
 
 { #category : #'private - insance creation' }
 GtCoderMethodsGroupedListElement >> coderNavigationCompiledMethodElement [
+	"HOOK FOR EXTENSIONS"
 	^GtCoderNavigationCompiledMethodElement new
 ]
 
