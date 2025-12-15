@@ -116,7 +116,7 @@ GtExpandableSourceCoderElement >> markDirty: anElement as: aBoolean [
 { #category : #'private - instance creation' }
 GtExpandableSourceCoderElement >> newCollapsedElement [
 	| aCollapsedElement |
-	aCollapsedElement := GtSourceCoderCollapsedContentElement new.
+	aCollapsedElement := self sourceCoderCollapsedContentElement.
 
 	textualCoderViewModel
 		ifNotNil: [ :aCoder | self assignCollapsedCoder: aCoder to: aCollapsedElement ].
@@ -199,6 +199,12 @@ GtExpandableSourceCoderElement >> requestFocus [
 		childNamed: #editor
 		ifFound: [ :anEditorElement | anEditorElement requestFocus ]
 		ifNone: [ super requestFocus ]
+]
+
+{ #category : #'private - instance creation' }
+GtExpandableSourceCoderElement >> sourceCoderCollapsedContentElement [
+	"HOOK FOR CUSTOMIZATION"
+	^ GtSourceCoderCollapsedContentElement new
 ]
 
 { #category : #'api - textual coder view model' }
