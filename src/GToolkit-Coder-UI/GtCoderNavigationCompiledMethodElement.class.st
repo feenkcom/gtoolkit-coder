@@ -44,7 +44,7 @@ GtCoderNavigationCompiledMethodElement >> initialize [
 	super initialize.
 
 	self initializeLabelElement.
-	self initializeAddonsElement.
+	self initializeAddOnsElement.
 
 	self addChild: labelElement.
 	self addChild: addOnsElement.
@@ -57,7 +57,7 @@ GtCoderNavigationCompiledMethodElement >> initialize [
 ]
 
 { #category : #initialization }
-GtCoderNavigationCompiledMethodElement >> initializeAddonsElement [
+GtCoderNavigationCompiledMethodElement >> initializeAddOnsElement [
 	addOnsElement := BrHorizontalPane new
 			id: #addOnsContainer;
 			cellSpacing: 2;
