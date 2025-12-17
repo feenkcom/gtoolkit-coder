@@ -40,7 +40,9 @@ GtCoderEvaluationUnhandledError >> defaultAction [
 
 	<reflective: #unhandledErrorDefaultAction:message:>
 	^ BlDevScripterStepExecutionIndicator
-		ifScripter: [ super defaultAction ]
+		ifScripter: [ GtCoderCouldNotHandleEvalutionError new 
+			unhandledError: self;
+			signal  ]
 		ifNone: [ UIManager default unhandledErrorDefaultAction: self ]
 ]
 
