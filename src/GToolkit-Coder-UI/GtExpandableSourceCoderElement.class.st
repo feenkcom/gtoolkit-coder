@@ -7,7 +7,8 @@ Class {
 		'collapsedElement',
 		'expandedElement',
 		'modificationIndicator',
-		'collapsedElementStencil'
+		'collapsedElementStencil',
+		'expandedElementStencil'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
@@ -65,9 +66,19 @@ GtExpandableSourceCoderElement >> createBasicCollapsedElement [
 	^ collapsedElementStencil asElement
 ]
 
+{ #category : #'private - instance creation' }
+GtExpandableSourceCoderElement >> createBasicExpandedElement [
+	^ expandedElementStencil asElement
+]
+
 { #category : #initialization }
 GtExpandableSourceCoderElement >> defaultCollapsedElementStencil [
 	^ GtCollapsedCoderElementStencil new
+]
+
+{ #category : #initialization }
+GtExpandableSourceCoderElement >> defaultExpandedElementStencil [
+	^ GtExpandedCoderElementStencil new
 ]
 
 { #category : #accessing }
@@ -88,6 +99,7 @@ GtExpandableSourceCoderElement >> initialize [
 	super initialize.
 
 	collapsedElementStencil := self defaultCollapsedElementStencil.
+	expandedElementStencil := self defaultExpandedElementStencil.
 
 	self
 		vFitContent;
@@ -144,7 +156,7 @@ GtExpandableSourceCoderElement >> newCollapsedElement [
 { #category : #'private - instance creation' }
 GtExpandableSourceCoderElement >> newExpandedElement [
 	| anExpandedElement |
-	anExpandedElement := GtSourceCoderExpandedContentElement new.
+	anExpandedElement := self createBasicExpandedElement.
 
 	textualCoderViewModel
 		ifNotNil: [ :aCoder | self assignExpandedCoder: aCoder to: anExpandedElement ].
