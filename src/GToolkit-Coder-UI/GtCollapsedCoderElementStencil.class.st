@@ -6,26 +6,12 @@ Users can set their own stencil using {{gtMethod:GtCollapsedCoderElementStencil 
 "
 Class {
 	#name : #GtCollapsedCoderElementStencil,
-	#superclass : #BrStencil,
-	#classVars : [
-		'DefaultStencil'
-	],
+	#superclass : #GtCoderElementStencil,
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
 
-{ #category : #accessing }
-GtCollapsedCoderElementStencil class >> defaultStencil [
-	^ DefaultStencil
-]
-
-{ #category : #accessing }
-GtCollapsedCoderElementStencil class >> defaultStencil: aStencil [
-	DefaultStencil := aStencil asStencil
-]
-
 { #category : #'api - instantiation' }
-GtCollapsedCoderElementStencil >> create [
-	^ DefaultStencil
-		ifNil: [ GtSourceCoderCollapsedContentElement new ]
-		ifNotNil: [ :aStencil | aStencil create ]
+GtCollapsedCoderElementStencil >> defaultElement [
+	<return: #BlElement>
+	^ GtSourceCoderCollapsedContentElement new
 ]

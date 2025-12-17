@@ -65,6 +65,11 @@ GtExpandableSourceCoderElement >> createBasicCollapsedElement [
 	^ collapsedElementStencil asElement
 ]
 
+{ #category : #initialization }
+GtExpandableSourceCoderElement >> defaultCollapsedElementStencil [
+	^ GtCollapsedCoderElementStencil new
+]
+
 { #category : #accessing }
 GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 	<gtView>
@@ -82,8 +87,8 @@ GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 GtExpandableSourceCoderElement >> initialize [
 	super initialize.
 
-	collapsedElementStencil := GtCollapsedCoderElementStencil new.
-	
+	collapsedElementStencil := self defaultCollapsedElementStencil.
+
 	self
 		vFitContent;
 		hMatchParent;
@@ -102,10 +107,9 @@ GtExpandableSourceCoderElement >> initialize [
 
 	self
 		when: BlClickEvent
-		do: [ :anEvent |
+		do: [ :anEvent | 
 			self isCollapsed
-				ifTrue: [
-					anEvent consumed: true.
+				ifTrue: [ anEvent consumed: true.
 					self expand.
 					self textualCoderViewModel focused: true ] ].
 
