@@ -7,7 +7,8 @@ Class {
 		'collapsedElement',
 		'expandedElement',
 		'modificationIndicator',
-		'collapsedElementStencil'
+		'collapsedElementStencil',
+		'expandedElementStencil'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
@@ -65,6 +66,21 @@ GtExpandableSourceCoderElement >> createBasicCollapsedElement [
 	^ collapsedElementStencil asElement
 ]
 
+{ #category : #'private - instance creation' }
+GtExpandableSourceCoderElement >> createBasicExpandedElement [
+	^ expandedElementStencil asElement
+]
+
+{ #category : #initialization }
+GtExpandableSourceCoderElement >> defaultCollapsedElementStencil [
+	^ GtCollapsedCoderElementStencil new
+]
+
+{ #category : #initialization }
+GtExpandableSourceCoderElement >> defaultExpandedElementStencil [
+	^ GtExpandedCoderElementStencil new
+]
+
 { #category : #accessing }
 GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 	<gtView>
@@ -82,8 +98,9 @@ GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 GtExpandableSourceCoderElement >> initialize [
 	super initialize.
 
-	collapsedElementStencil := GtCollapsedCoderElementStencil new.
-	
+	collapsedElementStencil := self defaultCollapsedElementStencil.
+	expandedElementStencil := self defaultExpandedElementStencil.
+
 	self
 		vFitContent;
 		hMatchParent;
@@ -102,10 +119,9 @@ GtExpandableSourceCoderElement >> initialize [
 
 	self
 		when: BlClickEvent
-		do: [ :anEvent |
+		do: [ :anEvent | 
 			self isCollapsed
-				ifTrue: [
-					anEvent consumed: true.
+				ifTrue: [ anEvent consumed: true.
 					self expand.
 					self textualCoderViewModel focused: true ] ].
 
@@ -140,7 +156,7 @@ GtExpandableSourceCoderElement >> newCollapsedElement [
 { #category : #'private - instance creation' }
 GtExpandableSourceCoderElement >> newExpandedElement [
 	| anExpandedElement |
-	anExpandedElement := GtSourceCoderExpandedContentElement new.
+	anExpandedElement := self createBasicExpandedElement.
 
 	textualCoderViewModel
 		ifNotNil: [ :aCoder | self assignExpandedCoder: aCoder to: anExpandedElement ].
