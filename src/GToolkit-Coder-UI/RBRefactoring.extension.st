@@ -6,3 +6,8 @@ RBRefactoring >> gtDescription [
 	
 	^ self class name
 ]
+
+{ #category : #'*GToolkit-Coder-UI' }
+RBRefactoring >> gtDisplayOn: aStream [
+	aStream nextPutAll: self gtDescription
+]
