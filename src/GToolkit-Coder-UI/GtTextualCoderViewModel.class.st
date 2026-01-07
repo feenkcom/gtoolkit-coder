@@ -173,6 +173,12 @@ GtTextualCoderViewModel >> astSync [
 	^ self coderModel astSync
 ]
 
+{ #category : #'api - coder model' }
+GtTextualCoderViewModel >> coderAstFuture [
+	<return: #TAsyncFuture of: #GtCoderAst>
+	^ self coderModel coderAstFuture
+]
+
 { #category : #accessing }
 GtTextualCoderViewModel >> completionStrategy [
 	<return: #GtCompletionStrategy>

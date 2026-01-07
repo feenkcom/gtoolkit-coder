@@ -81,8 +81,7 @@ GtTextualCoder >> coderAst [
 
 { #category : #'api - ast' }
 GtTextualCoder >> coderAstFuture [
-	<return: #TAsyncFuture>
-
+	<return: #TAsyncFuture of: #GtCoderAst>
 	^ AsyncCachedFuture new
 		future: [ self computeCoderAst ] asAsyncFuture
 		cache: astCache

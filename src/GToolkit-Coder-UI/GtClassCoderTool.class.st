@@ -1,6 +1,8 @@
 Class {
 	#name : #GtClassCoderTool,
 	#superclass : #GtCoderTool,
+	#traits : 'TGtPhlowWithSelfObjectHolder',
+	#classTraits : 'TGtPhlowWithSelfObjectHolder classTrait',
 	#instVars : [
 		'observedClass'
 	],
@@ -13,13 +15,22 @@ GtClassCoderTool class >> forClass: aClass [
 ]
 
 { #category : #'instance creation' }
+GtClassCoderTool class >> forClass: aClass selfObjectHolder: aSelfObjectHolder [
+	^ self new
+		observedClass: aClass;
+		selfObjectHolder: aSelfObjectHolder
+]
+
+{ #category : #'instance creation' }
 GtClassCoderTool class >> observedClass: aClass [ 
 	^ self new observedClass: aClass
 ]
 
 { #category : #converting }
 GtClassCoderTool >> newCoder [
-	^ GtCoderElement forClass: self observedClass instanceSide
+	^ self
+		ifSelfObject: [ :aSelfObject | GtCoderElement forObject: aSelfObject ]
+		ifNone: [ GtCoderElement forClass: self observedClass instanceSide ]
 ]
 
 { #category : #accessing }

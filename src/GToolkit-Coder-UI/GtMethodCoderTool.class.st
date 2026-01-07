@@ -14,6 +14,13 @@ GtMethodCoderTool class >> compiledMethod: aMethod [
 	^ self new compiledMethod: aMethod
 ]
 
+{ #category : #'instance creation' }
+GtMethodCoderTool class >> compiledMethod: aMethod selfObjectHolder: aSelfObjectHolder [
+	^ self new
+		compiledMethod: aMethod;
+		selfObjectHolder: aSelfObjectHolder
+]
+
 { #category : #accessing }
 GtMethodCoderTool >> compiledMethod [
 	^ compiledMethod
