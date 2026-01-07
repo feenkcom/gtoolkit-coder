@@ -199,7 +199,12 @@ GtRefactoryChangeManager >> initialize [
 
 { #category : #executing }
 GtRefactoryChangeManager >> performChange: aRefactoringChange [
-	self ignoreChangesWhile: [ self addUndo: aRefactoringChange execute ]
+	self
+		ignoreChangesWhile: [ | now |
+			now := DateAndTime now.
+			self addUndo: aRefactoringChange execute.
+			aRefactoringChange
+				gtAllChangesDo: [ :each | each attributeNamed: #timestamp put: now ] ]
 ]
 
 { #category : #executing }
