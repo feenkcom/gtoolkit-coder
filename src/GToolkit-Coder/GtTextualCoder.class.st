@@ -251,6 +251,11 @@ GtTextualCoder >> initialize [
 ]
 
 { #category : #testing }
+GtTextualCoder >> isForMethod [
+	^ false
+]
+
+{ #category : #testing }
 GtTextualCoder >> isModified [
 	<return: #Boolean>
 

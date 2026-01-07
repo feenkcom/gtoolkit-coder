@@ -734,9 +734,14 @@ GtTextualCoderEditorElement >> subscribeToTextualCoderViewModel [
 	"Is sent after a new textualCoder view model is assigned to the element.
 	It is required to unsubscribe from the view model or domain model by implementing
 	#unsubscribeFromTextualCoderViewModel if elements subscribe to them"
-	
-	self registerCoderModelAnnouncementsFor: self textualCoderViewModel coderModel.
+	| coderModel |
+
+	coderModel := self textualCoderViewModel coderModel.
+	self registerCoderModelAnnouncementsFor: coderModel.
 	self registerCoderViewModelAnnouncementsFor: self textualCoderViewModel.
+	(coderModel isForMethod and: [ coderModel compiledMethod isNotNil ]) ifTrue: 
+		[ coderModel compiledMethod isBigMethod ifTrue:
+			[ self beReadOnlyWithSelection ] ].
 
 	completion install
 ]

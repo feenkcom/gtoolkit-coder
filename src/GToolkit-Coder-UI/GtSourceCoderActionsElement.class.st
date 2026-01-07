@@ -27,8 +27,15 @@ GtSourceCoderActionsElement >> addContextToolbarActions [
 
 { #category : #private }
 GtSourceCoderActionsElement >> addMainToolbarActions [
+	| mainActions coderModel |
+
+	mainActions := self coderViewModel mainActions.
+	coderModel := self coderViewModel coderModel.
+	(coderModel isForMethod and: [ coderModel compiledMethod isNotNil and: [ coderModel compiledMethod isBigMethod ] ]) ifTrue:
+		[ mainActions := mainActions reject: 
+			[ :action | action title = 'Save' ] ].
 	mainToolbar
-		addItems: (self coderViewModel mainActions
+		addItems: (mainActions
 				collect: [ :aGtCoderAction | 
 					self flag: 'Temporary hack. Coder should to Phlow actions'.
 					[ aGtCoderAction buildElementIn: self ]

@@ -23,5 +23,8 @@ GtCoderCompiledMethodTextSource >> compiledMethod: anObject [
 
 { #category : #initialization }
 GtCoderCompiledMethodTextSource >> computeOriginalSourceText [
-	^ compiledMethod sourceCode asRopedText
+
+	^ (compiledMethod isBigMethod
+		ifTrue: [ (compiledMethod sourceCode first: 10000), '...' ]
+		ifFalse: [ compiledMethod sourceCode ]) asRopedText
 ]
