@@ -81,8 +81,7 @@ GtTextualCoder >> coderAst [
 
 { #category : #'api - ast' }
 GtTextualCoder >> coderAstFuture [
-	<return: #TAsyncFuture>
-
+	<return: #TAsyncFuture of: #GtCoderAst>
 	^ AsyncCachedFuture new
 		future: [ self computeCoderAst ] asAsyncFuture
 		cache: astCache
@@ -248,6 +247,11 @@ GtTextualCoder >> initialize [
 	
 	astCache := AsyncFutureCache new.
 	self reset
+]
+
+{ #category : #testing }
+GtTextualCoder >> isForMethod [
+	^ false
 ]
 
 { #category : #testing }
