@@ -127,6 +127,11 @@ GtTextualCoderElement >> editor [
 	^ editorElement editor
 ]
 
+{ #category : #TODO }
+GtTextualCoderElement >> editorElement [
+	^ editorElement
+]
+
 { #category : #'focus requesting' }
 GtTextualCoderElement >> focusTarget [
 	^ editorElement
