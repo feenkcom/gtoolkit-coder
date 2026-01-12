@@ -52,7 +52,7 @@ GtCoderContextMenuContent >> menuItemStencil [
 				do: [ :anEvent | 
 					anEvent consumed: true.
 					eachGtCoderContextMenuAction action
-						cull: self editorElement textualCoderViewModel
+						cull: self textualCoderViewModel
 						cull: self editorElement
 						cull: anEvent.
 					self fireEvent: BrDropdownHideWish new.
@@ -80,13 +80,13 @@ GtCoderContextMenuContent >> menuItemStencil [
 			element
 				when: BlMouseEnterEvent
 				do: [ :anEvent | 
-					hover cull: self editorElement textualCoderViewModel cull: anEvent ] ].
+					hover cull: self textualCoderViewModel cull: anEvent ] ].
 	eachGtCoderContextMenuAction leaveAction
 		ifNotNil: [ :leave | 
 			element
 				when: BlMouseLeaveEvent
 				do: [ :anEvent | 
-					leave cull: self editorElement textualCoderViewModel cull: anEvent ] ].
+					leave cull: self textualCoderViewModel cull: anEvent ] ].
 	eachGtCoderContextMenuAction name
 		ifNotNil: [ :anActionName | element containerName: anActionName ].
 		
@@ -98,4 +98,12 @@ GtCoderContextMenuContent >> menuItemStencil [
 				do: [ :anEvent | self deselectOne: aRowIndex ] ].
 		
 	element ]
+]
+
+{ #category : #'api - accessing' }
+GtCoderContextMenuContent >> textualCoderViewModel [
+	"We add a context menu to the CoderElement, not to the editor element"
+	self flag: #TODO.
+
+	^ editorElement parent textualCoderViewModel
 ]
