@@ -100,6 +100,9 @@ GtTextualCoderElement >> defaultTextEditorMode [
 
 { #category : #TODO }
 GtTextualCoderElement >> deselecter [
+	"This method should be deprecated and removed, instead add higher-level api methods"
+	self flag: #TODO.
+	
 	^ editorElement deselecter
 ]
 
@@ -124,6 +127,9 @@ GtTextualCoderElement >> editedTextBasedOnEditCommand: aTextEditCommand [
 
 { #category : #TODO }
 GtTextualCoderElement >> editor [
+	"This method should be deprecated and removed, instead add fine grained api methods"
+	self flag: #TODO.
+	
 	^ editorElement editor
 ]
 
@@ -228,12 +234,18 @@ GtTextualCoderElement >> initializeListeners [
 ]
 
 { #category : #TODO }
-GtTextualCoderElement >> inserter [	
+GtTextualCoderElement >> inserter [
+	"This method should be deprecated and removed, instead add fine grained api methods"
+	self flag: #TODO.
+	
 	^ editorElement inserter
 ]
 
 { #category : #TODO }
 GtTextualCoderElement >> navigator [
+	"This method should be deprecated and removed, instead add fine grained api methods"
+	self flag: #TODO.
+	
 	^ editorElement navigator
 ]
 
@@ -765,6 +777,9 @@ GtTextualCoderElement >> scrollToPosition: anObject [
 
 { #category : #TODO }
 GtTextualCoderElement >> selecter [
+	"This method should be deprecated and removed, instead add higher-level api methods"
+	self flag: #TODO.
+	
 	^ editorElement selecter
 ]
 
