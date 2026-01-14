@@ -355,7 +355,7 @@ GtTextualCoderViewModel >> cursors: aBrTextEditorCursor from: aSourceObject [
 
 { #category : #accessing }
 GtTextualCoderViewModel >> elementClass [
-	^ GtTextualCoderEditorElement
+	^ GtTextualCoderElement
 ]
 
 { #category : #accessing }

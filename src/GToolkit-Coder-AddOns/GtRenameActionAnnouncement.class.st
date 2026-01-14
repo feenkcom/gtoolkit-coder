@@ -5,7 +5,7 @@ Class {
 		'renameAction',
 		'eventType'
 	],
-	#category : 'GToolkit-Coder-AddOns-Inline rename'
+	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
 
 { #category : #'instance creation' }

@@ -74,6 +74,8 @@ GtFixItAction >> menuActionWithIndex: anIndex [
 	^ GtCoderContextMenuAction new
 		action: [ :aCoderViewModel :anEditorElement |
 			aCoderViewModel selectNone.
+			"Pass coder view model alongside of the editor element"
+			self flag: #TODO.
 			self executeOn: anEditorElement ];
 		title: self description;
 		id: (self id indexed: anIndex)

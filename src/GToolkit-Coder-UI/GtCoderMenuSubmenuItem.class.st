@@ -41,7 +41,7 @@ GtCoderMenuSubmenuItem >> leaveAction [
 
 { #category : #accessing }
 GtCoderMenuSubmenuItem >> textualCoderEditorElement [
-	<return: #GtTextualCoderEditorElement>
+	<return: #GtTextualCoderElement>
 	^ textualCoderEditorElement
 ]
 
