@@ -128,7 +128,7 @@ GtFixItAttribute >> dropDownElementFor: anEditorElement [
 							aShortcutEvent consumed: true.
 							menuElement selectedItemDo: [ :eachGtCoderContextMenuAction |
 								eachGtCoderContextMenuAction action
-									cull: anEditorElement textualCoderViewModel
+									cull: anEditorElement parent textualCoderViewModel
 									cull: anEditorElement
 									cull: aShortcutEvent.
 								menuElement fireEvent: BrDropdownHideWish new.

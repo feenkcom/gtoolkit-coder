@@ -99,6 +99,14 @@ GtTextualCoderElement >> defaultTextEditorMode [
 ]
 
 { #category : #TODO }
+GtTextualCoderElement >> deleter [
+	"This method should be deprecated and removed, instead add higher-level api methods"
+	self flag: #TODO.
+	
+	^ editorElement deleter
+]
+
+{ #category : #TODO }
 GtTextualCoderElement >> deselecter [
 	"This method should be deprecated and removed, instead add higher-level api methods"
 	self flag: #TODO.
@@ -127,7 +135,7 @@ GtTextualCoderElement >> editedTextBasedOnEditCommand: aTextEditCommand [
 
 { #category : #TODO }
 GtTextualCoderElement >> editor [
-	"This method should be deprecated and removed, instead add fine grained api methods"
+	"This method should be deprecated and removed, instead add higher-level api methods"
 	self flag: #TODO.
 	
 	^ editorElement editor
@@ -235,7 +243,7 @@ GtTextualCoderElement >> initializeListeners [
 
 { #category : #TODO }
 GtTextualCoderElement >> inserter [
-	"This method should be deprecated and removed, instead add fine grained api methods"
+	"This method should be deprecated and removed, instead add higher-level api methods"
 	self flag: #TODO.
 	
 	^ editorElement inserter
@@ -243,7 +251,7 @@ GtTextualCoderElement >> inserter [
 
 { #category : #TODO }
 GtTextualCoderElement >> navigator [
-	"This method should be deprecated and removed, instead add fine grained api methods"
+	"This method should be deprecated and removed, instead add higher-level api methods"
 	self flag: #TODO.
 	
 	^ editorElement navigator
@@ -781,6 +789,14 @@ GtTextualCoderElement >> selecter [
 	self flag: #TODO.
 	
 	^ editorElement selecter
+]
+
+{ #category : #TODO }
+GtTextualCoderElement >> selection [
+	"This method should be deprecated and removed, instead add higher-level api methods"
+	self flag: #TODO.
+	
+	^ editorElement selection
 ]
 
 { #category : #private }
