@@ -13,20 +13,25 @@ Class {
 { #category : #initialization }
 GtSourceCoderCollapsedContentElement >> initialize [
 	super initialize.
-	
+
 	content := BlElement new
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c vertical fitContent ].
+			layout: BlLinearLayout horizontal;
+			constraintsDo: [ :c | 
+				c horizontal matchParent.
+				c vertical fitContent ].
 
 	label := self newLabel.
 	addOns := self newAddOnsContainer.
 
 	previews := Dictionary new.
 
-	content addChildren: { label. addOns }.
+	content
+		addChildren: {label.
+				addOns}.
 	self addChild: content.
+	self
+		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude
+				menu: [ self createHeaderContextMenu ])
 ]
 
 { #category : #'instance creation' }

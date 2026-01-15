@@ -17,6 +17,11 @@ Class {
 	#category : #'GToolkit-Coder-Coders'
 }
 
+{ #category : #addons }
+GtSourceCoder class >> contextHeaderMenuAddOnsPragma [
+	^#gtCoderHeaderContextMenuAddOns
+]
+
 { #category : #'api - actions' }
 GtSourceCoder >> debug [
 	self debugInContext: self evaluationContext

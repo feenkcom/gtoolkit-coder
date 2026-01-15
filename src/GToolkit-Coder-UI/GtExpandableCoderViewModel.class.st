@@ -31,6 +31,36 @@ GtExpandableCoderViewModel >> collapsedTextPromise [
 	^ coderModel collapsedTextPromise
 ]
 
+{ #category : #'private - addons' }
+GtExpandableCoderViewModel >> computeHeaderContextMenuAstAddOns [
+	<return: #GtCoderAddOns>
+	| aCoderModel newAddOns pragmas |
+	aCoderModel := self coderModel.
+	pragmas := aCoderModel
+			pragmasNamed: aCoderModel class contextHeaderMenuAddOnsPragma
+			inHierarchy: aCoderModel class.
+	newAddOns := aCoderModel newAddOns.
+	pragmas
+		do: [ :eachPragma | 
+			[ aCoderModel
+				perform: eachPragma methodSelector
+				withEnoughArguments: {aCoderModel selector.
+						newAddOns.
+						self} ]
+				on: Error
+				do: [ :anError | 
+				  "emit as a beacon signal"
+					anError emit.
+					NonInteractiveTranscript stderr
+						nextPut: $[;
+						print: eachPragma method printString;
+						nextPut: $];
+						space;
+						print: anError;
+						cr ] ].
+	^ newAddOns
+]
+
 { #category : #'api - expansion' }
 GtExpandableCoderViewModel >> expand [
 	self expanded: true
