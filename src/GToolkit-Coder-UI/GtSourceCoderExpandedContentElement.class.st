@@ -56,7 +56,7 @@ GtSourceCoderExpandedContentElement >> newActionsElement [
 
 { #category : #'instance creation' }
 GtSourceCoderExpandedContentElement >> newEditorElement [
-	^ GtSourceCoderEditorElement new
+	^ GtSourceCoderElement new
 ]
 
 { #category : #'api - textual coder view model' }
@@ -69,6 +69,5 @@ GtSourceCoderExpandedContentElement >> onTextualCoderViewModelChanged [
 
 { #category : #initialization }
 GtSourceCoderExpandedContentElement >> showScrollbars [
-	self
-		addAptitude: (BrGlamorousWithVerticalScrollbarAptitude new scrollableName: editorElement id)
+	editorElement showScrollbars
 ]
