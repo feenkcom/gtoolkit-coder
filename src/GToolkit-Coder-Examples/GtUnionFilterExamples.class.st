@@ -9,11 +9,11 @@ GtUnionFilterExamples >> unionDifferentMethods [
 	<gtExample>
 	<return: #GtSearchUnionFilter>
 	| filter1 filter2 union |
-	filter1 := thisContext method selector gtImplementors.
+	filter1 := #unionDifferentMethods gtImplementors.
 	filter2 := #foo gtImplementors.
 	union := filter1 | filter2.
 	self assert: union size = (filter1 size + filter2 size).
-	self assert: (union matches: thisContext method).
+	self assert: (union matches: GtUnionFilterExamples>>#unionDifferentMethods).
 	^ union
 ]
 
