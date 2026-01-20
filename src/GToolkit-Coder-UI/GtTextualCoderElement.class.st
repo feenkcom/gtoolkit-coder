@@ -857,3 +857,8 @@ GtTextualCoderElement >> unsubscribeFromTextualCoderViewModel [
 	completion uninstall.
 	self editor removeEditorShortcuts: shortcuts
 ]
+
+{ #category : #TODO }
+GtTextualCoderElement >> visibleText [
+	^ editorElement visibleText
+]
