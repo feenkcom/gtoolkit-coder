@@ -164,7 +164,12 @@ GtCoderElement >> initialize [
 		do: [ :anEvent | self onGtCoderHideSidebarWish: anEvent ].
 	self 
 		when: GtNavigationMethodSelectionWish
-		do: [ :anEvent | self onGtNavigationMethodSelectionWish: anEvent ]
+		do: [ :anEvent | self onGtNavigationMethodSelectionWish: anEvent ].
+		
+	self
+		addAptitude: (BrLayoutResizerAptitude new
+				common: [ contentElement ];
+				common: [ sidebarElement ifNil: [ #() ] ])
 ]
 
 { #category : #'private - event handling' }

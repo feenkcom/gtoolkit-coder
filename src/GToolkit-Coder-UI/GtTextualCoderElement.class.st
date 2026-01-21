@@ -373,7 +373,7 @@ GtTextualCoderElement >> onRemovedFromSceneGraph [
 GtTextualCoderElement >> onScrollToCharacterPositionAnnouncement: anAnnouncement [
 	self assertUIProcess.
 	BrEditorSearchTextScroller new
-		editorElement: self;
+		editorElement: editorElement;
 		lineIndex: anAnnouncement lineIndex;
 		characterStartPosition: anAnnouncement characterPosition;
 		characterStopPosition: anAnnouncement characterPosition;
