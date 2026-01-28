@@ -103,7 +103,25 @@ GtCoderContextMenuContent >> menuItemStencil [
 { #category : #'api - accessing' }
 GtCoderContextMenuContent >> textualCoderViewModel [
 	"We add a context menu to the CoderElement, not to the editor element"
-	self flag: #TODO.
 
-	^ editorElement parent textualCoderViewModel
+	self flag: #TODO.
+	
+	"There is a hack in:
+	- `GtSmaCCGrammarCoder>>#addMenuItemsElement` adds itself as an editor element, and
+	- implements `GtSmaCCGrammarCoder>>#textualCoderViewModel`.
+	- It is called from `SmaCCParser class>>#gtGrammarFor:context:`.
+	
+	It is not covered by any example.
+	
+	How to reproduce: 
+	- browse LineParser class, 
+	- in the `Grammar` tab click on the plus button,
+	- select Production from the dropdown menu.
+	
+	Note: it was causing DNU because the coder model does not understands parent.
+	See: https://github.com/feenkcom/gtoolkit/issues/4924"
+
+	^ (editorElement respondsTo: #textualCoderViewModel)
+		ifTrue: [ editorElement textualCoderViewModel ]
+		ifFalse: [ editorElement parent textualCoderViewModel ]
 ]
