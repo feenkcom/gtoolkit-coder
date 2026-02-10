@@ -37,7 +37,11 @@ GtCoderPlaygroundElement >> initialize [
 	self layout: BlLinearLayout vertical.
 	
 	self addChild: self contentElement as: #content.
-	self addChild: self playPageElement as: #playPage
+	self addChild: self playPageElement as: #playPage.
+	
+	self
+		addAptitude: (BrLayoutResizerAptitude new
+				common: [ contentElement ])
 ]
 
 { #category : #initialization }

@@ -49,6 +49,14 @@ GtTextualCoderSearchTextElement >> initializeMarker [
 		to: self
 ]
 
+{ #category : #accessing }
+GtTextualCoderSearchTextElement >> markerContext [
+	"For testing purposes only"
+
+	<return: #BrEditorSearchTextMarkerContext or: nil>
+	^ context
+]
+
 { #category : #private }
 GtTextualCoderSearchTextElement >> newMarkerContext [
 	self hasTextualCoderViewModel ifFalse: [ ^ nil ].

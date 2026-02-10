@@ -21,7 +21,11 @@ GtCoderContentElement class >> default [
 { #category : #initialization }
 GtCoderContentElement >> initialize [
 	super initialize.
-	self layout: BlFrameLayout new
+	self layout: BlFrameLayout new.
+	
+	self
+		addAptitude: (BrLayoutResizerAptitude new
+				common: [ self children ])
 ]
 
 { #category : #'hooks - children' }
@@ -47,5 +51,7 @@ GtCoderContentElement >> subscribeToNavigationModel [
 GtCoderContentElement >> updateCoder: anAnnouncement [
 	self removeChildren.
 	self
-		addChild: (anAnnouncement coder asElement navigationModelForToolbar: self navigationModel)
+		addChild: (anAnnouncement coder asElement navigationModelForToolbar: self navigationModel).
+	
+	self requestStyle
 ]
