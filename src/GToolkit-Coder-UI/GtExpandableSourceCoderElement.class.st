@@ -82,6 +82,11 @@ GtExpandableSourceCoderElement >> defaultExpandedElementStencil [
 ]
 
 { #category : #accessing }
+GtExpandableSourceCoderElement >> expandedElementStencil: anObject [
+	expandedElementStencil := anObject
+]
+
+{ #category : #accessing }
 GtExpandableSourceCoderElement >> gtAllShortcutsFor: aView [
 	<gtView>
 	self shortcuts ifEmpty: [ ^ aView empty ].
