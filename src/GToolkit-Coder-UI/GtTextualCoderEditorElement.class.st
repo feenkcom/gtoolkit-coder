@@ -726,11 +726,6 @@ GtTextualCoderEditorElement >> showScrollbars [
 ]
 
 { #category : #private }
-GtTextualCoderEditorElement >> styleText [
-	self editor styleText
-]
-
-{ #category : #private }
 GtTextualCoderEditorElement >> styleTextAndAfterDo: aBlock [
 	self editor styleTextAndAfterDo: aBlock
 ]
