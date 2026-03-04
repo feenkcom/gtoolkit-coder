@@ -9,7 +9,7 @@ Class {
 
 { #category : #settings }
 GtCoderExpanderShadowAptitude class >> isWithPermanentShadows [
-	^ IsWithPermanentShadows ifNil: [ IsWithPermanentShadows := true ]
+	^ IsWithPermanentShadows ifNil: [ IsWithPermanentShadows := false ]
 ]
 
 { #category : #settings }
