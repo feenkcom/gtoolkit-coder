@@ -12,7 +12,7 @@ ProtoObject >> gtBrowse [
 { #category : #'*GToolkit-Coder-Extensions' }
 ProtoObject >> gtBrowseFrom: anElement [
 	^ BlSpace new
-		withSceneDriller;
+		withCommonSettings;
 		inPager: [ GtObjectCoderTool forObject: self ];
 		icon: BrGlamorousVectorIcons browse;
 		showFrom: anElement
