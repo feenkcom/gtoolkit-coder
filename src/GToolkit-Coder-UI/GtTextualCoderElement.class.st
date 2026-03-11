@@ -13,8 +13,22 @@ Class {
 		'addOnsElementFuture',
 		'editorElement'
 	],
+	#classVars : [
+		'DefaultCompletionControllerClass'
+	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual'
 }
+
+{ #category : #accessing }
+GtTextualCoderElement class >> defaultCompletionControllerClass [
+	^ DefaultCompletionControllerClass
+		ifNil: [ DefaultCompletionControllerClass := GtCompletionController ]
+]
+
+{ #category : #accessing }
+GtTextualCoderElement class >> defaultCompletionControllerClass: aCompletionController [
+	DefaultCompletionControllerClass := aCompletionController
+]
 
 { #category : #private }
 GtTextualCoderElement >> addErrorAttribute: errorAttribute at: anInteger [
@@ -157,7 +171,7 @@ GtTextualCoderElement >> hideHighlighters [
 { #category : #initialization }
 GtTextualCoderElement >> initialize [
 	super initialize.
-	
+
 	editorElement := BrEditor new.
 	editorElement
 		beMode: BrTextEditorEditableCodeMode new;
@@ -165,9 +179,9 @@ GtTextualCoderElement >> initialize [
 		aptitude: BrGlamorousCodeEditorAptitude;
 		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude menu: [ self createContextMenu ]);
 		padding: BlInsets empty.
-	
+
 	self addChild: editorElement.
-	
+
 	self
 		layout: BlLinearLayout vertical;
 		addAptitude: (BrLayoutResizerAptitude new inherit: editorElement);
@@ -177,33 +191,33 @@ GtTextualCoderElement >> initialize [
 	self id: GtSourceCoderEditorId.
 
 	shortcuts := #().
-	completion := GtCompletionController on: editorElement.
+	completion := self class defaultCompletionControllerClass on: editorElement.
 
-	evaluationHighlighter := GtSourceCoderEvaluationHighlighter new editorElement: self.
+	evaluationHighlighter := GtSourceCoderEvaluationHighlighter new
+			editorElement: self.
 	evaluationPrinter := GtSourceCoderEvaluationPrinter new editorElement: self.
-	
+
 	cursorsUpdater := BrElementUpdater new
-		element: self;
-		action: (MessageSend receiver: self selector: #privateUpdateCursors:announcement:).
+			element: self;
+			action: (MessageSend receiver: self selector: #privateUpdateCursors:announcement:).
 
 	textUpdater := BrElementUpdater new
-		element: self;
-		action: (MessageSend receiver: self selector: #privateUpdateText:announcement:).
+			element: self;
+			action: (MessageSend receiver: self selector: #privateUpdateText:announcement:).
 
 	addOnsElementFuture := (BrAsyncElementFuture on: self)
-		executionConfiguration: (GtSingleCoderViewModel methodAddOnsExecutionConfiguration);
-		whenSuccess: [ :anEditorElement :theAddOns |
-			self textualCoderViewModel onAddOnsChanged: theAddOns ];
-		whenError: [ :anEditorElement :anError | 
-			self onAddOnsError: anError ].
+			executionConfiguration: GtSingleCoderViewModel methodAddOnsExecutionConfiguration;
+			whenSuccess: [ :anEditorElement :theAddOns | self textualCoderViewModel onAddOnsChanged: theAddOns ];
+			whenError: [ :anEditorElement :anError | self onAddOnsError: anError ].
 
 	self initializeListeners.
 
-	self withAsyncPromiseDo: [ :anElementPromise |
+	self
+		withAsyncPromiseDo: [ :anElementPromise | 
 			anElementPromise
 				whenSuccess: [ :anEditorElement :anEditorState | anEditorElement privateUpdateEditorState: anEditorState ];
 				whenError: [ :anEditorElement :anEditorState |  ];
-				whenPending: [ :anEditorElement | ] ]
+				whenPending: [ :anEditorElement |  ] ]
 ]
 
 { #category : #initialization }
