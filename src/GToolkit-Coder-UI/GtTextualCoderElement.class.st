@@ -235,7 +235,7 @@ GtTextualCoderElement >> initializeListeners [
 		do: [ :anEvent | self onTextEditorHistoryChanged: anEvent ].
 
 	self editor
-		when: BrTextEditorModifiedEvent
+		when: BrTextEditorModificationEvent
 		do: [ :anEvent | self onTextModifiedDueToEvent: anEvent ].
 
 	self editor

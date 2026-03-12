@@ -4,10 +4,24 @@ Class {
 	#instVars : [
 		'sourceCode',
 		'astPromise',
-		'astCache'
+		'astCache',
+		'previousAst'
+	],
+	#classVars : [
+		'UseIncrementalParsing'
 	],
 	#category : #'GToolkit-Coder-Coders'
 }
+
+{ #category : #accessing }
+GtTextualCoder class >> useIncrementalParsing [
+	^ UseIncrementalParsing ifNil: [ false ]
+]
+
+{ #category : #accessing }
+GtTextualCoder class >> useIncrementalParsing: aBoolean [
+	UseIncrementalParsing := aBoolean
+]
 
 { #category : #'private - addons' }
 GtTextualCoder >> addOnsClass [
@@ -326,9 +340,32 @@ GtTextualCoder >> reset [
 
 { #category : #'private - ast' }
 GtTextualCoder >> resetAstCache [
-	self critical: [
-		astPromise := nil.
-		astCache resetCache ]
+	^ self resetAstCache: nil
+]
+
+{ #category : #'private - ast' }
+GtTextualCoder >> resetAstCache: aReason [
+	self
+		critical: [ astPromise := nil.
+			self class useIncrementalParsing
+				ifTrue: [ (aReason notNil and: [ aReason isModification ])
+						ifTrue: [ astCache ifSome: [ :value | previousAst := value ast ] ifNone: [  ].
+							(previousAst isKindOf: SmaCCParseNode)
+								ifTrue: [ aReason isInsertion
+										ifTrue: [ aReason
+												indicesAndLengthsDo: [ :index :len | 
+													previousAst
+														invalidateFrom: index + 1
+														to: index
+														inserting: len ] ]
+										ifFalse: [ aReason
+												indicesAndLengthsDo: [ :index :len | 
+													previousAst
+														invalidateFrom: index
+														to: index + len - 1
+														inserting: 0 ] ] ] ]
+						ifFalse: [ previousAst := nil ] ].
+			astCache resetCache ]
 ]
 
 { #category : #'event handling' }
@@ -340,10 +377,10 @@ GtTextualCoder >> sourceChangedTo: aNewText [
 
 { #category : #'event handling' }
 GtTextualCoder >> sourceChangedTo: aNewText from: aPreviousText with: anUpdateStrategy dueTo: aReason [
-	self resetAstCache.
-	self 
-		notifySourceChangedTo: aNewText 
-		from: aPreviousText 
+	self resetAstCache: aReason.
+	self
+		notifySourceChangedTo: aNewText
+		from: aPreviousText
 		with: anUpdateStrategy
 		dueTo: aReason.
 	self requestUpdateAddOns
