@@ -142,8 +142,6 @@ GtFilterItemsElement >> createDropdownContent [
 	^ aListElement
 		vFitContentLimited;
 		hFitContentLimited;
-		constraintsDo: [ :c | 
-			c maxHeight: 100 ];
 		itemStencil: [ :anItemType | self createItemElementForListElement: aListElement ];
 		itemDataBinder: [ :anItemElement :anItemObject :anItemIndex | 
 			anItemElement id: (GtFilterItemId indexed: anItemIndex).
