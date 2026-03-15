@@ -19,7 +19,8 @@ Class {
 { #category : #'class initialization' }
 GtRefactoryChangeManager class >> initialize [
 	self nuke.
-	UndoSize := 200
+	UndoSize := 200.
+	SessionManager default registerUserClassNamed: self name
 ]
 
 { #category : #accessing }
@@ -31,6 +32,13 @@ GtRefactoryChangeManager class >> instance [
 GtRefactoryChangeManager class >> nuke [
 	Instance notNil ifTrue: [ Instance release ].
 	Instance := nil
+]
+
+{ #category : #'system startup' }
+GtRefactoryChangeManager class >> startUp: isImageStarting [
+	"Ensure the instance exists."
+
+	self instance
 ]
 
 { #category : #accessing }
