@@ -93,7 +93,7 @@ GtNotificationDebugSessionElement >> initializeStackList [
 		hMatchParent;
 		vExact: 50;
 		padding: (BlInsets top: 5 right: 9 bottom: 10 left: 9);
-		itemType: [ :anItemTypeFactory :anItemObject :anItemIndex | DebugSession ];
+		itemType: [ :anItemTypeFactory :anItemObject :anItemIndex | GtDebugSession ];
 		itemStencil: [ :anEventElementClass :aListWidget | 
 			BrLabel new
 				aptitude: (BrGlamorousLabelAptitude new

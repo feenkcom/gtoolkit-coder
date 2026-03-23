@@ -23,7 +23,7 @@ GtCoderEvaluatedCodeIntervalFinder >> context: aContext [
 
 { #category : #accessing }
 GtCoderEvaluatedCodeIntervalFinder >> debugSession [
-	<return: #DebugSession>
+	<return: #GtDebugSession>
 	^ debugSession
 ]
 
