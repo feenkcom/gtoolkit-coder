@@ -234,10 +234,15 @@ GtTextualCoderElement >> initializeEditorElement: aNewEditorElement [
 		aptitude: BrGlamorousCodeEditorAptitude;
 		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude menu: [ self createContextMenu ]);
 		padding: BlInsets empty.
-		
+
 	completion textElement: aNewEditorElement.
-	
+
 	self initializeEditorListeners.
+	
+	"I think this can be removed one  `BrTextEditorModificationEvent` works."
+	self editor
+		when: BrTextEditorModifiedEvent
+		do: [ :anEvent | self onTextModifiedDueToEvent: anEvent ].
 
 	self hasTextualCoderViewModel ifFalse: [ ^ self ].
 	self onTextualCoderViewModelChanged.
