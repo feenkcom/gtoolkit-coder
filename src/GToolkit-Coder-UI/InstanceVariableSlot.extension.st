@@ -100,6 +100,22 @@ InstanceVariableSlot >> gtCopySlotNameFor: anAction context: aPhlowContext [
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
+InstanceVariableSlot >> gtCopyValueTextFor: anAction context: aPhlowContext [
+	<gtAction>
+	| aSelfObject |
+	aSelfObject := aPhlowContext selfObjectIfNone: [ ^ anAction noAction ].
+	
+	^ anAction button
+		label: 'Copy value text';
+		icon: BrGlamorousVectorIcons clipboard;
+		priority: 6;
+		target: GtCoderVariableTarget;
+		menuItemPreview: [ (aSelfObject readSlot: self) gtDisplayText ];
+		menuItemGroup: BrMenuItemGroupConfiguration editing;
+		action: [ :aButton | Clipboard default clipboardText: (aSelfObject readSlot: self) gtDisplayText ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
 InstanceVariableSlot >> gtCreateAccessorsActionFor: anAction context: aPhlowContext [
 	<gtAction>
 	| aSelectedClass |
