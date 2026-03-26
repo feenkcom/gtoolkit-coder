@@ -504,7 +504,10 @@ GtTextualCoderElement >> onTextualCoderViewModelChanged [
 	shortcuts := self textualCoderViewModel shortcuts copy.
 	self editor addEditorShortcuts: shortcuts.
 	
-	completion strategy: self textualCoderViewModel completionStrategy.
+	completion 
+		ifNotNil: [ :aCompletion | 
+			aCompletion strategy: self textualCoderViewModel completionStrategy ]
+		ifNil: [ editorElement completionStrategy: self textualCoderViewModel completionStrategy ].
 	
 	self textualCoderViewModel compositeStyler ifNotNil: [ :aStyler | 
 		self styler: aStyler ]
@@ -844,7 +847,7 @@ GtTextualCoderElement >> subscribeToTextualCoderViewModel [
 	self registerCoderModelAnnouncementsFor: self textualCoderViewModel coderModel.
 	self registerCoderViewModelAnnouncementsFor: self textualCoderViewModel.
 
-	completion install
+	completion ifNotNil: #install
 ]
 
 { #category : #TODO }
@@ -867,7 +870,7 @@ GtTextualCoderElement >> unsubscribeFromTextualCoderViewModel [
 	self textualCoderViewModel unsubscribe: self.
 	self textualCoderViewModel coderModel unsubscribe: self.
 	
-	completion uninstall.
+	completion ifNotNil: #uninstall.
 	self editor removeEditorShortcuts: shortcuts
 ]
 
