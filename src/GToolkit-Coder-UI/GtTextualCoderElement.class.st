@@ -220,35 +220,6 @@ GtTextualCoderElement >> initialize [
 				whenPending: [ :anEditorElement |  ] ]
 ]
 
-{ #category : #'api - initialization' }
-GtTextualCoderElement >> initializeEditorElement: aNewEditorElement [
-	| anOldEditor |
-	anOldEditor := editorElement.
-	editorElement := aNewEditorElement.
-	self
-		replaceChild: anOldEditor
-		with: editorElement
-		as: GtSourceCoderEditorInnerId.
-
-	aNewEditorElement
-		aptitude: BrGlamorousCodeEditorAptitude;
-		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude menu: [ self createContextMenu ]);
-		padding: BlInsets empty.
-
-	completion textElement: aNewEditorElement.
-
-	self initializeEditorListeners.
-	
-	"I think this can be removed one  `BrTextEditorModificationEvent` works."
-	self editor
-		when: BrTextEditorModifiedEvent
-		do: [ :anEvent | self onTextModifiedDueToEvent: anEvent ].
-
-	self hasTextualCoderViewModel ifFalse: [ ^ self ].
-	self onTextualCoderViewModelChanged.
-	self onPostTextualCoderViewModelChanged
-]
-
 { #category : #initialization }
 GtTextualCoderElement >> initializeEditorListeners [
 	self editor
