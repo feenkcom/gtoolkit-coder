@@ -46,6 +46,11 @@ GtSourceCoderExpandedContentElement >> initialize [
 	self addAptitude: (BrLayoutResizerAptitude new inherit: editorElement)
 ]
 
+{ #category : #'api - initialization' }
+GtSourceCoderExpandedContentElement >> initializeEditorElement: anElement [ 
+	editorElement initializeEditorElement: anElement 
+]
+
 { #category : #'instance creation' }
 GtSourceCoderExpandedContentElement >> newActionsElement [
 	^ GtSourceCoderActionsElement new

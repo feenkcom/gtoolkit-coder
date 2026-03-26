@@ -184,7 +184,7 @@ GtTextualCoderElement >> initialize [
 
 	self
 		layout: BlLinearLayout vertical;
-		addAptitude: (BrLayoutResizerAptitude new inherit: editorElement);
+		addAptitude: (BrLayoutResizerAptitude new inherit: [ editorElement ]);
 		hMatchParent;
 		vFitContentLimited.
 
@@ -218,6 +218,21 @@ GtTextualCoderElement >> initialize [
 				whenSuccess: [ :anEditorElement :anEditorState | anEditorElement privateUpdateEditorState: anEditorState ];
 				whenError: [ :anEditorElement :anEditorState |  ];
 				whenPending: [ :anEditorElement |  ] ]
+]
+
+{ #category : #'api - initialization' }
+GtTextualCoderElement >> initializeEditorElement: aNewEditorElement [
+	| anOldEditor |
+	anOldEditor := editorElement.
+	editorElement := aNewEditorElement.
+	self
+		replaceChild: anOldEditor
+		with: editorElement
+		as: GtSourceCoderEditorInnerId.
+		
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+	self onTextualCoderViewModelChanged.
+	self onPostTextualCoderViewModelChanged.
 ]
 
 { #category : #initialization }
