@@ -123,7 +123,21 @@ GtTextualCoder >> initializeSearchTextAddOns: addOns viewModel: aCoderViewModel 
 										| anElement |
 										anElement := GtTextualCoderSearchTextElement new
 												textualCoderViewModel: aCoderViewModel;
-												editorDo: [ :anEditor | anEditor requestFocus ];
+												editorDo: [ :anEditor |
+													anEditor requestFocus.
+													aCoderViewModel selection isEmpty ifFalse: [
+														| text |
+														text := (aCoderViewModel sourceText
+															copyFrom: aCoderViewModel selection from + 1
+															to: aCoderViewModel selection to) asString.
+														anEditor doBlockSoon: [
+															(anEditor inserter)
+																atCursor;
+																string: text;
+																insert.
+															(anEditor selecter)
+																all;
+																select ] ] ];
 												hFitContentLimited;
 												constraintsDo: [ :c | 
 													c minWidth: 300.
