@@ -229,22 +229,23 @@ GtTextualCoderElement >> initializeEditorElement: aNewEditorElement [
 		replaceChild: anOldEditor
 		with: editorElement
 		as: GtSourceCoderEditorInnerId.
+
+	aNewEditorElement
+		aptitude: BrGlamorousCodeEditorAptitude;
+		addAptitude: (BrGlamorousWithExplicitContextMenuAptitude menu: [ self createContextMenu ]);
+		padding: BlInsets empty.
 		
+	completion textElement: aNewEditorElement.
+	
+	self initializeEditorListeners.
+
 	self hasTextualCoderViewModel ifFalse: [ ^ self ].
 	self onTextualCoderViewModelChanged.
-	self onPostTextualCoderViewModelChanged.
+	self onPostTextualCoderViewModelChanged
 ]
 
 { #category : #initialization }
-GtTextualCoderElement >> initializeListeners [
-	self 
-		when: BlFocusInEvent 
-		do: [ :anEvent | self onFocusInEvent: anEvent ].
-		
-	self 
-		when: BlFocusOutEvent 
-		do: [ :anEvent | self onFocusOutEvent: anEvent ].
-	
+GtTextualCoderElement >> initializeEditorListeners [
 	self editor
 		when: BrTextEditorHistoryChangedEvent
 		do: [ :anEvent | self onTextEditorHistoryChanged: anEvent ].
@@ -264,6 +265,13 @@ GtTextualCoderElement >> initializeListeners [
 	self editor
 		when: BrTextEditorTextStyledEvent
 		do: [ :anEvent | self onTextStyled: anEvent ]
+]
+
+{ #category : #initialization }
+GtTextualCoderElement >> initializeListeners [
+	self when: BlFocusInEvent do: [ :anEvent | self onFocusInEvent: anEvent ].
+	self when: BlFocusOutEvent do: [ :anEvent | self onFocusOutEvent: anEvent ].
+	self initializeEditorListeners
 ]
 
 { #category : #TODO }
