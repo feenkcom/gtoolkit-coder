@@ -220,31 +220,8 @@ GtTextualCoderElement >> initialize [
 				whenPending: [ :anEditorElement |  ] ]
 ]
 
-{ #category : #'api - initialization' }
-GtTextualCoderElement >> initializeEditorElement: aNewEditorElement [
-	| anOldEditor |
-	anOldEditor := editorElement.
-	editorElement := aNewEditorElement.
-	self
-		replaceChild: anOldEditor
-		with: editorElement
-		as: GtSourceCoderEditorInnerId.
-		
-	self hasTextualCoderViewModel ifFalse: [ ^ self ].
-	self onTextualCoderViewModelChanged.
-	self onPostTextualCoderViewModelChanged.
-]
-
 { #category : #initialization }
-GtTextualCoderElement >> initializeListeners [
-	self 
-		when: BlFocusInEvent 
-		do: [ :anEvent | self onFocusInEvent: anEvent ].
-		
-	self 
-		when: BlFocusOutEvent 
-		do: [ :anEvent | self onFocusOutEvent: anEvent ].
-	
+GtTextualCoderElement >> initializeEditorListeners [
 	self editor
 		when: BrTextEditorHistoryChangedEvent
 		do: [ :anEvent | self onTextEditorHistoryChanged: anEvent ].
@@ -264,6 +241,13 @@ GtTextualCoderElement >> initializeListeners [
 	self editor
 		when: BrTextEditorTextStyledEvent
 		do: [ :anEvent | self onTextStyled: anEvent ]
+]
+
+{ #category : #initialization }
+GtTextualCoderElement >> initializeListeners [
+	self when: BlFocusInEvent do: [ :anEvent | self onFocusInEvent: anEvent ].
+	self when: BlFocusOutEvent do: [ :anEvent | self onFocusOutEvent: anEvent ].
+	self initializeEditorListeners
 ]
 
 { #category : #TODO }
