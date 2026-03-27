@@ -195,7 +195,7 @@ GtTextualCoderElement >> initialize [
 
 	shortcuts := #().
 	self class defaultCompletionControllerClass ifNotNil: [ :aClass |
-		editorElement completionControllerClass: aClass ].
+		completion := aClass on: editorElement ].
 
 	evaluationHighlighter := GtSourceCoderEvaluationHighlighter new
 			editorElement: self.
