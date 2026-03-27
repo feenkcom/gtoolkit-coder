@@ -22,11 +22,14 @@ Class {
 { #category : #accessing }
 GtTextualCoderElement class >> defaultCompletionControllerClass [
 	^ DefaultCompletionControllerClass
-		ifNil: [ DefaultCompletionControllerClass := GtCompletionController ]
 ]
 
 { #category : #accessing }
 GtTextualCoderElement class >> defaultCompletionControllerClass: aCompletionController [
+	self
+		deprecated: 'It is not possible to set completion controller in the new editor element,
+therefore such settings will not be supported.'.
+
 	DefaultCompletionControllerClass := aCompletionController
 ]
 
@@ -191,7 +194,8 @@ GtTextualCoderElement >> initialize [
 	self id: GtSourceCoderEditorId.
 
 	shortcuts := #().
-	completion := self class defaultCompletionControllerClass on: editorElement.
+	self class defaultCompletionControllerClass ifNotNil: [ :aClass |
+		completion := aClass on: editorElement ].
 
 	evaluationHighlighter := GtSourceCoderEvaluationHighlighter new
 			editorElement: self.
@@ -870,7 +874,9 @@ GtTextualCoderElement >> unsubscribeFromTextualCoderViewModel [
 	self textualCoderViewModel unsubscribe: self.
 	self textualCoderViewModel coderModel unsubscribe: self.
 	
-	completion ifNotNil: #uninstall.
+	completion 
+		ifNotNil: #uninstall 
+		ifNil: [ editorElement resetCompletionStrategy ].
 	self editor removeEditorShortcuts: shortcuts
 ]
 
