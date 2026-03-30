@@ -23,7 +23,7 @@ GtSourceCoderErrorAttribute >> buildPopupIn: anEditorElement aptitude: aptitude 
 	| pane text textElement |
 	pane := BrVerticalPane new.
 	pane id: GtSourceCoderErrorContentElementId.
-	pane matchParent.
+	pane fitContentLimited.
 	string lines
 		do: [ :line | 
 			text := line asRopedText
