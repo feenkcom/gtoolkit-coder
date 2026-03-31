@@ -376,7 +376,7 @@ GtTextualCoderViewModel >> gtInfo [
 		aStream nextPut: (#contextActions -> self contextActions).
 		aStream nextPut: (#contextMenuActions -> self contextMenuActions).
 		aStream nextPut: (#shortcuts -> self shortcuts).
-		aStream nextPut: (#attributes -> self extraTextAttributes).
+		aStream nextPut: (#extraTextAttributes -> self extraTextAttributes).
 		aStream nextPut: (#hasFocus -> self focused).
 		aStream nextPut: (#expanded -> self expanded).
 		aStream nextPut: (#wantsHeader -> self wantsHeader) ]
