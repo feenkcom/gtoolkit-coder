@@ -105,6 +105,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 	
 	extraTextAttributes add: newCoderTextAttributes.
 	self announce: (GtTextualCoderViewModelTextAttributesAdded new
+		textualCoderViewModel: self;
 		coderTextAttributes: newCoderTextAttributes;
 		text: aText;
 		startPosition: aStartPosition;
@@ -623,7 +624,9 @@ GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttribu
 	aCurrentText := self sourceText.
 	aCurrentText removeAttributes: { aGtTextualCoderTextAttributes markerAttribute }, aGtTextualCoderTextAttributes textAttributes.
 
-	self announce: (GtTextualCoderViewModelTextAttributesRemoved new coderTextAttributes: aGtTextualCoderTextAttributes)
+	self announce: (GtTextualCoderViewModelTextAttributesRemoved new 
+		textualCoderViewModel: self;
+		coderTextAttributes: aGtTextualCoderTextAttributes)
 ]
 
 { #category : #'api - shortcuts' }
