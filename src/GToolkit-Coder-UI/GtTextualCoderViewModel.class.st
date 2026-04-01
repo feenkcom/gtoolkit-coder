@@ -15,7 +15,8 @@ Class {
 		'completionStrategy',
 		'debuggerInSpace',
 		'nodeAttributeMap',
-		'history'
+		'history',
+		'documentId'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -101,7 +102,8 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 	
 	newCoderTextAttributes := GtTextualCoderTextAttributes new
 		markerAttribute: aMarkerAttribute;
-		textAttributes: aCollectionOfTextAttributes.
+		textAttributes: aCollectionOfTextAttributes;
+		documentId: documentId.
 	
 	extraTextAttributes add: newCoderTextAttributes.
 	self announce: (GtTextualCoderViewModelTextAttributesAdded new
@@ -352,6 +354,16 @@ GtTextualCoderViewModel >> cursors: aBrTextEditorCursor from: aSourceObject [
 	
 	cursors := aBrTextEditorCursor copy.
 	self notifyCursorsChanged: cursors from: aSourceObject
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> documentId [
+	^ documentId
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> documentId: anObject [
+	documentId := anObject
 ]
 
 { #category : #accessing }
