@@ -466,6 +466,7 @@ GtTextualCoderElement >> onTextModifiedDueToEvent: aTextModifiedEvent [
 	self hasTextualCoderViewModel ifFalse: [ ^ self ].
 	
 	self textualCoderViewModel
+		documentId: aTextModifiedEvent documentId;
 		sourceText: self text
 		from: self
 		synchronously: true

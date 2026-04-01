@@ -3,7 +3,10 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'markerAttribute',
-		'textAttributes'
+		'textAttributes',
+		'textAttributeTags',
+		'markerAttributeTag',
+		'documentId'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -22,9 +25,23 @@ GtTextualCoderTextAttributes >> applyOnEditorElement: aTextEditorElement receive
 	I think the markerAttribute is simply ignored."
 	
 	self flag: #TODO.
-	aTextEditorElement addAttribute: markerAttribute from: aStartPosition to: anEndPosition.
-	textAttributes do: [ :eachAttribute |
-		aTextEditorElement addAttribute: eachAttribute from: aStartPosition to: anEndPosition ]
+	"Investigate what to do when documentId is nil. Can it even be nil here?"
+	self assert: [ documentId isNotNil ].
+	
+	"From where does (aStartPosition to: anEndPosition) come from?"
+	self flag: #TODO.
+	markerAttributeTag := aTextEditorElement
+		addAttribute: markerAttribute
+		from: aStartPosition
+		to: anEndPosition
+		documentId: documentId.
+	
+	textAttributeTags := textAttributes collect: [ :eachAttribute |
+		aTextEditorElement
+			addAttribute: eachAttribute
+			from: aStartPosition
+			to: anEndPosition
+			documentId: documentId ]
 ]
 
 { #category : #'api - attribute' }
@@ -51,6 +68,16 @@ GtTextualCoderTextAttributes >> applyOnEditorText: aText from: aStartPosition to
 ]
 
 { #category : #accessing }
+GtTextualCoderTextAttributes >> documentId [
+	^ documentId
+]
+
+{ #category : #accessing }
+GtTextualCoderTextAttributes >> documentId: anObject [
+	documentId := anObject
+]
+
+{ #category : #accessing }
 GtTextualCoderTextAttributes >> markerAttribute [
 	^ markerAttribute
 ]
@@ -69,9 +96,10 @@ GtTextualCoderTextAttributes >> removeFromEditorElement: aTextEditorElement [
 	"We assume it is a GtTextEditorElement element."
 	self flag: #TODO.
 	
-	aTextEditorElement removeTextAttribute: markerAttribute.
-	textAttributes do: [ :eachAttribute |
-		aTextEditorElement removeTextAttribute: eachAttribute ]
+	textAttributeTags do: [ :eachTagToRemove |
+		aTextEditorElement removeAttributeTagged: eachTagToRemove overAdornment: markerAttributeTag ].
+	
+	aTextEditorElement removeAttributeTagged: markerAttributeTag
 ]
 
 { #category : #'api - attribute' }
