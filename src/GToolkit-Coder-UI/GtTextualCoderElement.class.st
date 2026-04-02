@@ -11,7 +11,8 @@ Class {
 		'cursorsUpdater',
 		'textUpdater',
 		'addOnsElementFuture',
-		'editorElement'
+		'editorElement',
+		'menuItemsElementFuture'
 	],
 	#classVars : [
 		'DefaultCompletionControllerClass'
@@ -84,12 +85,12 @@ GtTextualCoderElement >> createContextMenu [
 	"wait for the addons to be computed"
 	<return: #BrMenuItems>
 
-	| aMenu aMenuItemsPromise |
+	| aMenu aMenuItemsFuture |
 	aMenu := BrMenuItems new.
 	aMenu beGroupedElementType.
 
-	aMenuItemsPromise := self textualCoderViewModel addOns
-			asyncThen: [ :theAddOns | 
+	aMenuItemsFuture := self textualCoderViewModel addOnsFuture
+			map: [ :theAddOns | 
 				| theItems theContextMenuAstAddons theMenuItems |
 				"extra context menu items that depend on ast and view model state such as selection"
 				theContextMenuAstAddons := self textualCoderViewModel
@@ -101,11 +102,9 @@ GtTextualCoderElement >> createContextMenu [
 					collect: [ :eachAction | eachAction asBrMenuItemForCoderElement: self ]
 					thenReject: #isNil.
 				
-				self enqueueTask: (BlTaskAction new 
-					action: [ 
-						aMenu items: theMenuItems ]) ].
+				aMenu -> theMenuItems ].
 
-	self enqueueTask: (BlPromiseTask new promise: aMenuItemsPromise).
+	menuItemsElementFuture future: aMenuItemsFuture.
 
 	^ aMenu 
 ]
@@ -214,6 +213,13 @@ GtTextualCoderElement >> initialize [
 			whenSuccess: [ :anEditorElement :theAddOns | self textualCoderViewModel onAddOnsChanged: theAddOns ];
 			whenError: [ :anEditorElement :anError | self onAddOnsError: anError ].
 
+	menuItemsElementFuture := (BrAsyncElementFuture on: self)
+		executionConfiguration: (GtSingleCoderViewModel methodAddOnsExecutionConfiguration);
+		whenSuccess: [ :anEditorElement :anAssoc |
+			anAssoc key items: anAssoc value ];
+		whenError: [ :anEditorElement :anError | 
+			self onContextMenuError: anError ].
+			
 	self initializeListeners.
 
 	self
@@ -352,6 +358,15 @@ GtTextualCoderElement >> onCoderViewModelFocused: aBoolean [
 	aBoolean
 		ifTrue: [ self requestFocus ]
 		ifFalse: [ self loseFocus ]
+]
+
+{ #category : #initialization }
+GtTextualCoderElement >> onContextMenuError: anError [
+	anError emit.
+	NonInteractiveTranscript stderr
+		show: '[GtTextualCoderElement>>#onContextMenuError:] ';
+		show: anError;
+		newLine
 ]
 
 { #category : #'private - event handling' }
