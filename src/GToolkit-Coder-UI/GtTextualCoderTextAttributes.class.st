@@ -77,6 +77,14 @@ GtTextualCoderTextAttributes >> documentId: anObject [
 	documentId := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+GtTextualCoderTextAttributes >> initialize [
+	super initialize.
+	
+	markerAttributeTag := 0.
+	textAttributeTags := #()
+]
+
 { #category : #accessing }
 GtTextualCoderTextAttributes >> markerAttribute [
 	^ markerAttribute
