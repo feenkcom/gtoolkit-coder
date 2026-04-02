@@ -11,7 +11,8 @@ Class {
 		'originalSource',
 		'sourceCoderViewModel',
 		'refactoringPreviewAttributes',
-		'element'
+		'element',
+		'documentId'
 	],
 	#category : #'GToolkit-Coder-AddOns-! Core'
 }
@@ -31,6 +32,16 @@ GtSourceCoderRefactoringController >> cancelRefactoring [
 GtSourceCoderRefactoringController >> cleanUp [
 	self removeRefactoringAttribute.
 	self allowSave
+]
+
+{ #category : #accessing }
+GtSourceCoderRefactoringController >> documentId [
+	^ documentId
+]
+
+{ #category : #accessing }
+GtSourceCoderRefactoringController >> documentId: anObject [
+	documentId := anObject
 ]
 
 { #category : #executing }

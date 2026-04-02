@@ -833,7 +833,7 @@ GtTextualCoderElement >> showScrollbars [
 
 { #category : #private }
 GtTextualCoderElement >> styleText [
-	self editor styleText
+	self editor requestManualStyling
 ]
 
 { #category : #private }
