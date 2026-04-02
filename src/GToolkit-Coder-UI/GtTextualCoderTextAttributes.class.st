@@ -80,6 +80,31 @@ GtTextualCoderTextAttributes >> documentId: anObject [
 	documentId := anObject
 ]
 
+{ #category : #'gt - extensions' }
+GtTextualCoderTextAttributes >> gtAttributes [
+	textAttributes ifNil: [ ^ #() ].
+	^ Array
+		new: textAttributes size + 1
+		streamContents: [ :aStream | 
+			aStream nextPut: markerAttributeTag -> markerAttribute.
+			textAttributes
+				withIndexDo: [ :anAttribute :anIndex | 
+					| aTag |
+					aTag := textAttributeTags at: anIndex ifAbsent: [ nil ].
+					aStream nextPut: aTag -> anAttribute ] ]
+]
+
+{ #category : #'gt - extensions' }
+GtTextualCoderTextAttributes >> gtAttributesFor: aView [
+	<gtView>
+	^ aView columnedList
+		title: 'Attributes';
+		items: [ self gtAttributes ];
+		column: 'Tag' text: #key width: 60;
+		column: 'Attribute' text: #value;
+		send: #value
+]
+
 { #category : #'as yet unclassified' }
 GtTextualCoderTextAttributes >> initialize [
 	super initialize.
@@ -96,6 +121,15 @@ GtTextualCoderTextAttributes >> markerAttribute [
 { #category : #accessing }
 GtTextualCoderTextAttributes >> markerAttribute: anObject [
 	markerAttribute := anObject
+]
+
+{ #category : #printing }
+GtTextualCoderTextAttributes >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: documentId;
+		nextPut: $)
 ]
 
 { #category : #'api - attribute' }
