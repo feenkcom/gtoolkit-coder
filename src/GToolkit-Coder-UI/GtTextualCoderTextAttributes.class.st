@@ -13,6 +13,7 @@ Class {
 
 { #category : #'api - attribute' }
 GtTextualCoderTextAttributes >> applyOnEditorElement: aTextEditorElement receivedText: aText from: aStartPosition to: anEndPosition [
+	| attributesRange |
 	(aTextEditorElement isKindOf: BrEditorElement)
 		ifTrue: [ aText characters = aTextEditorElement text characters
 				ifTrue: [ self
@@ -30,18 +31,20 @@ GtTextualCoderTextAttributes >> applyOnEditorElement: aTextEditorElement receive
 	
 	"From where does (aStartPosition to: anEndPosition) come from?"
 	self flag: #TODO.
+	
+	attributesRange := GtTextEditorCharacterRange
+		start: aStartPosition
+		end: anEndPosition
+		documentId: documentId.
+	
 	markerAttributeTag := aTextEditorElement
 		addAttribute: markerAttribute
-		from: aStartPosition
-		to: anEndPosition
-		documentId: documentId.
+		overRange: attributesRange.
 	
 	textAttributeTags := textAttributes collect: [ :eachAttribute |
 		aTextEditorElement
 			addAttribute: eachAttribute
-			from: aStartPosition
-			to: anEndPosition
-			documentId: documentId ]
+			overRange: attributesRange ]
 ]
 
 { #category : #'api - attribute' }
@@ -105,7 +108,7 @@ GtTextualCoderTextAttributes >> removeFromEditorElement: aTextEditorElement [
 	self flag: #TODO.
 	
 	textAttributeTags do: [ :eachTagToRemove |
-		aTextEditorElement removeAttributeTagged: eachTagToRemove overAdornment: markerAttributeTag ].
+		aTextEditorElement removeAttributeTagged: eachTagToRemove overMarker: markerAttribute ].
 	
 	aTextEditorElement removeAttributeTagged: markerAttributeTag
 ]
