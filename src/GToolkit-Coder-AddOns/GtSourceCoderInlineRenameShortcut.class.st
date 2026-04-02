@@ -29,10 +29,12 @@ GtSourceCoderInlineRenameShortcut >> performOnEditor: aBrTextEditor element: aBr
 			aSourceCoderViewModel coder
 				renameAt: aSelectionInterval last
 				in: aSourceCoderViewModel
+				documentId: aSourceCoderViewModel documentId
 				for: aBrEditorElement ]
 		orCursorStringPositionDo: [ :aCursorTextPosition | 
 			aSourceCoderViewModel coder
 				renameAt: aCursorTextPosition
 				in: aSourceCoderViewModel
+				documentId: aSourceCoderViewModel documentId
 				for: aBrEditorElement ]
 ]

@@ -3,6 +3,7 @@ Class {
 	#superclass : #GtAbstractRenameAction,
 	#instVars : [
 		'pharoSourceCoderViewModel',
+		'documentId',
 		'originalCursors',
 		'coderAttributes',
 		'hasRefactoringPreview',
@@ -22,46 +23,59 @@ GtCoderViewModelRenameAction class >> locations: aCollectionOfIntervals textualC
 { #category : #'private - attributes' }
 GtCoderViewModelRenameAction >> addRenameAttributes [
 	| text cursorInLocation |
-
-	text := self pharoSourceCoderViewModel styledText ifNil: [ self pharoSourceCoderViewModel sourceText ].
+	text := self pharoSourceCoderViewModel styledText
+			ifNil: [ self pharoSourceCoderViewModel sourceText ].
 
 	cursorInLocation := originalLocations
-		anySatisfy: [ :each | originalCursors anySatisfy: [ :eachCursor | eachCursor position between: each first - 1 and: each last ] ].
+			anySatisfy: [ :each | 
+				originalCursors
+					anySatisfy: [ :eachCursor | eachCursor position between: each first - 1 and: each last ] ].
 
 	coderAttributes := originalLocations
-		collect: [ :each | 
-			| attribute |
-			attribute := (cursorInLocation not
-				or: [ originalCursors anySatisfy: [ :eachCursor | eachCursor position between: each first - 1 and: each last ] ])
-				ifTrue: [
-					GtRenameEditorAttribute new
-						action: self;
-						selectAll: selectAll;
-						filter: filter;
-						coordinateFocus: hasRefactoringPreview;
-						requestInitialFocus: requestInitialFocus;
-						text: (text from: each first to: each last) ]
-				ifFalse: [
-					GtRenamePreviewAttribute new
-						action: self;
-						text: (text from: each first to: each last) ].
-			cursorInLocation := true.
-			
-			self pharoSourceCoderViewModel
-				addTextAttribute: attribute
-				from: each first
-				to: each last ].
-			
-	renameAttributes := coderAttributes flatCollect: [ :eachCoderAttribute | eachCoderAttribute textAttributes ].
+			collect: [ :each | 
+				| attribute |
+				attribute := (cursorInLocation not
+						or: [ originalCursors
+								anySatisfy: [ :eachCursor | eachCursor position between: each first - 1 and: each last ] ])
+						ifTrue: [ GtRenameEditorAttribute new
+								action: self;
+								selectAll: selectAll;
+								filter: filter;
+								coordinateFocus: hasRefactoringPreview;
+								requestInitialFocus: requestInitialFocus;
+								text: (text from: each first to: each last) ]
+						ifFalse: [ GtRenamePreviewAttribute new
+								action: self;
+								text: (text from: each first to: each last) ].
+				cursorInLocation := true.
+				self pharoSourceCoderViewModel
+					addTextAttribute: attribute
+					from: each first
+					to: each last
+					documentId: documentId ].
+
+	renameAttributes := coderAttributes
+			flatCollect: [ :eachCoderAttribute | eachCoderAttribute textAttributes ].
 
 	self
-		assert: [ (renameAttributes select: [ :each | each isKindOf: GtRenameEditorAttribute ]) size <= 1 ]
+		assert: [ (renameAttributes select: [ :each | each isKindOf: GtRenameEditorAttribute ])
+				size <= 1 ]
 		description: [ 'There must not be more than one editor attribute' ]
 ]
 
 { #category : #'private - actions' }
 GtCoderViewModelRenameAction >> allowSave [
 	pharoSourceCoderViewModel allowSaveDueTo: self
+]
+
+{ #category : #accessing }
+GtCoderViewModelRenameAction >> documentId [
+	^ documentId
+]
+
+{ #category : #accessing }
+GtCoderViewModelRenameAction >> documentId: anObject [
+	documentId := anObject
 ]
 
 { #category : #accessing }

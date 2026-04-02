@@ -63,43 +63,97 @@ GtTextualCoderViewModel >> addStylers: aCollectionOfGtCoderStyler [
 { #category : #'api - text' }
 GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderTextAttributes>
+	self deprecated: 'Use addTextAttribute:from:to:documentId: instead.'.
+	
 	^ self
-		addTextAttributes: { aTextAttribute }
+		addTextAttribute: aTextAttribute
 		from: aStartPosition
 		to: anEndPosition
+		documentId: documentId
+]
+
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition to: anEndPosition documentId: aDocumentId [
+	<return: #GtTextualCoderTextAttributes>
+	^ self
+		addTextAttributes: {aTextAttribute}
+		from: aStartPosition
+		to: anEndPosition
+		documentId: aDocumentId
 ]
 
 { #category : #'api - text' }
 GtTextualCoderViewModel >> addTextAttribute: aTextAttribute onText: aText from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderTextAttributes>
+	self deprecated: 'Use addTextAttribute:onText:from:to:documentId: instead'.
+
 	^ self
-		addTextAttributes: { aTextAttribute }
+		addTextAttribute: aTextAttribute
 		onText: aText
 		from: aStartPosition
 		to: anEndPosition
+		documentId: documentId
+]
+
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> addTextAttribute: aTextAttribute onText: aText from: aStartPosition to: anEndPosition documentId: aDocumentId [
+	<return: #GtTextualCoderTextAttributes>
+	^ self
+		addTextAttributes: {aTextAttribute}
+		onText: aText
+		from: aStartPosition
+		to: anEndPosition
+		documentId: aDocumentId
 ]
 
 { #category : #'api - text' }
 GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderTextAttributes>
 	
+	self deprecated: 'Use addTextAttributes:from:to:documentId: instead'.
+	
+	^ self
+		addTextAttributes: aCollectionOfTextAttributes
+		from: aStartPosition
+		to: anEndPosition
+		documentId: documentId
+]
+
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: aStartPosition to: anEndPosition documentId: aDocumentId [
+	<return: #GtTextualCoderTextAttributes>
 	^ self
 		addTextAttributes: aCollectionOfTextAttributes
 		onText: self sourceText
 		from: aStartPosition
 		to: anEndPosition
+		documentId: aDocumentId
 ]
 
 { #category : #'api - text' }
-GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText: aText from: aStartPosition to: anEndPosition [
+GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText: aText from: aStartPosition to: anEndPosition documentId: aDocumentId [
 	<return: #GtTextualCoderTextAttributes>
 	| aMarkerAttribute newCoderTextAttributes |
+	
+	"If documentId is different, do nothing."
+	self flag: #TODO.
+	aDocumentId ifNil: [ 
+		GtCoderDocumentIdIsNilSignal new 
+			originalDocumentId: documentId;
+			emit ].
+	aDocumentId = documentId ifFalse: [ 
+		GtCoderDocumentIdDifferentSignal new
+			originalDocumentId: documentId;
+			receivedDocumentId: aDocumentId;
+			emit ].
 	
 	aMarkerAttribute := BrTextInvisibleMarkerAttribute new beNotOverwritableByStyler.
 	
 	"we change the sourceText directly to not trigger the styler recomputation"
 	aText attribute: aMarkerAttribute from: aStartPosition to: anEndPosition.
 	
+	"Pass aDocumentId, once it circulates properly."
+	self flag: #TODO.
 	newCoderTextAttributes := GtTextualCoderTextAttributes new
 		markerAttribute: aMarkerAttribute;
 		textAttributes: aCollectionOfTextAttributes;
