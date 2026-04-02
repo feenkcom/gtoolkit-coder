@@ -108,7 +108,7 @@ GtTextualCoderTextAttributes >> removeFromEditorElement: aTextEditorElement [
 	self flag: #TODO.
 	
 	textAttributeTags do: [ :eachTagToRemove |
-		aTextEditorElement removeAttributeTagged: eachTagToRemove overMarker: markerAttributeTag ].
+		aTextEditorElement removeAttributeTagged: eachTagToRemove overMarker: markerAttribute ].
 	
 	aTextEditorElement removeAttributeTagged: markerAttributeTag
 ]
