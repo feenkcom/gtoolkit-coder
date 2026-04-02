@@ -53,6 +53,9 @@ BaselineOfGToolkitCoder >> baseline: spec [
 		spec
 			baseline: 'GToolkit4Magritte' with: [
 				spec repository: 'github://feenkcom/gt4magritte:v0.7.79/src' ].
+		spec
+			baseline: 'GToolkitEditor' with: [
+				spec repository: 'github://feenkcom/gtoolkit-editor:v0.6.15/src' ].
 
 		spec package: 'GToolkit-VariableBindings'.
 		spec package: 'GToolkit-SearchFilters' with: [
@@ -66,7 +69,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 		spec package: 'GToolkit-Coder' with: [
 			spec requires: #(#Futures #GToolkitBasicUtility #GToolkitAnnouncerUtility #GToolkitPager #GToolkitCompleter #'GToolkit-SearchFilters') ].
 		spec package: 'GToolkit-Coder-UI' with: [
-			spec requires: #(#'GToolkit-Coder' #'GToolkit-VariableBindings' #GToolkitBasicUtility #GToolkitPager #GToolkitNotifications #GToolkit4Magritte) ].
+			spec requires: #(#'GToolkit-Coder' #'GToolkit-VariableBindings' #GToolkitBasicUtility #GToolkitPager #GToolkitNotifications #GToolkit4Magritte #GToolkitEditor) ].
 		spec package: 'GToolkit-Coder-AddOns' with: [
 			spec requires: #(#'GToolkit-Coder' #'GToolkit-Coder-UI') ].
 		spec package: 'GToolkit-Coder-Extensions' with: [
