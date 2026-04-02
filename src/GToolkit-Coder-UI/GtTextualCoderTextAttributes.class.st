@@ -39,12 +39,12 @@ GtTextualCoderTextAttributes >> applyOnEditorElement: aTextEditorElement receive
 	
 	markerAttributeTag := aTextEditorElement
 		addAttribute: markerAttribute
-		range: attributesRange.
+		overRange: attributesRange.
 	
 	textAttributeTags := textAttributes collect: [ :eachAttribute |
 		aTextEditorElement
 			addAttribute: eachAttribute
-			range: attributesRange ]
+			overRange: attributesRange ]
 ]
 
 { #category : #'api - attribute' }
