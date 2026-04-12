@@ -120,8 +120,21 @@ Class >> gtCoderSidebarIndexCopyClassNameFor: anAction [
 		icon: BrGlamorousVectorIcons clipboard;
 		label: ('Copy {1} name' format: {self gtCoderTypeName});
 		menuItemPreview: self name;
-		menuItemGroup: BrMenuItemGroupConfiguration default;
+		menuItemGroup: BrMenuItemGroupConfiguration editing;
 		action: [ Clipboard clipboardText: self name ]
+]
+
+{ #category : #'*GToolkit-Coder-UI' }
+Class >> gtCoderSidebarIndexCopyClassNameForLepiterFor: anAction [
+	<gtAction>
+	^ anAction button
+		priority: 10;
+		target: GtCoderClassTarget;
+		icon: BrGlamorousVectorIcons clipboard;
+		label: 'Copy lepiter link';
+		menuItemPreview: [ '\{\{gtClass:{1}\}\}' format: {self name} ];
+		menuItemGroup: BrMenuItemGroupConfiguration editing;
+		action: [ Clipboard clipboardText: ('\{\{gtClass:{1}\}\}' format: {self name}) ]
 ]
 
 { #category : #'*GToolkit-Coder-UI' }
