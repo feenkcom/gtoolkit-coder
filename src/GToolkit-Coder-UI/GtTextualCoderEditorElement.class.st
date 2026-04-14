@@ -423,6 +423,18 @@ GtTextualCoderEditorElement >> onTextStyled: anEvent [
 	self textualCoderViewModel styledText: anEvent styledText
 ]
 
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onTextualCoderViewModelAddHighlightRequest: anAnnouncement [
+	anAnnouncement textualCoderViewModel = self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
+	BlTaskAction
+		enqueueElement: self
+		action: [ self
+				addHighlight: anAnnouncement textHighlight
+				overRange: anAnnouncement textRange ]
+]
+
 { #category : #'api - textual coder view model' }
 GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	"Is sent when a new textualCoder view model is assigned to the element.
@@ -449,6 +461,16 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	
 	self textualCoderViewModel compositeStyler ifNotNil: [ :aStyler | 
 		self styler: aStyler ]
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onTextualCoderViewModelRemoveHighlightsRequest: anAnnouncement [
+	anAnnouncement textualCoderViewModel = self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
+	BlTaskAction
+		enqueueElement: self
+		action: [ self removeHighlightsWithId: anAnnouncement id ]
 ]
 
 { #category : #'private - event handling' }
@@ -688,8 +710,14 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 		when: GtTextualCoderViewModelReadyToRestyle
 			send: #onViewModelReadyToStyle
 			to: self;
-		when: GtTextualCoderViewModelTextAttributesAdded
-			send: #onViewModelTextAttributesAdded:
+		when: GtTextualCoderViewModelAddHighlightRequest
+			send: #onTextualCoderViewModelAddHighlightRequest:
+			to: self;
+		when: GtTextualCoderViewModelRemoveHighlightsRequest
+			send: #onTextualCoderViewModelRemoveHighlightsRequest:
+			to: self;
+		when: GtTextualCoderViewModelTextAttributesRemoved
+			send: #onViewModelTextAttributesRemoved:
 			to: self;
 		when: GtTextualCoderViewModelTextAttributesRemoved
 			send: #onViewModelTextAttributesRemoved:

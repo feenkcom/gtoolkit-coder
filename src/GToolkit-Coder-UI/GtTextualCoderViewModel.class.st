@@ -21,6 +21,15 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
 
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> addHighlight: aBrTextHighlight overRange: aBrTextRange [
+	self
+		announce: (GtTextualCoderViewModelAddHighlightRequest new
+				textualCoderViewModel: self;
+				textHighlight: aBrTextHighlight;
+				textRange: aBrTextRange)
+]
+
 { #category : #'api - add-ons' }
 GtTextualCoderViewModel >> addLocateDebuggerInSpaceAction: aSpace [
 	debuggerInSpace := aSpace asWeakReference.
@@ -696,6 +705,14 @@ GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttribu
 	self announce: (GtTextualCoderViewModelTextAttributesRemoved new 
 		textualCoderViewModel: self;
 		coderTextAttributes: aGtTextualCoderTextAttributes)
+]
+
+{ #category : #'api - text' }
+GtTextualCoderViewModel >> removeHighlightsWithId: aStringId [
+	self
+		announce: (GtTextualCoderViewModelRemoveHighlightsRequest new
+				textualCoderViewModel: self;
+				id: aStringId)
 ]
 
 { #category : #'api - shortcuts' }
