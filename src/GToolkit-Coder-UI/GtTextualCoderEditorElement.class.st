@@ -710,17 +710,17 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 		when: GtTextualCoderViewModelReadyToRestyle
 			send: #onViewModelReadyToStyle
 			to: self;
+		when: GtTextualCoderViewModelTextAttributesAdded
+			send: #onViewModelTextAttributesAdded:
+			to: self;
+		when: GtTextualCoderViewModelTextAttributesRemoved
+			send: #onViewModelTextAttributesRemoved:
+			to: self;
 		when: GtTextualCoderViewModelAddHighlightRequest
 			send: #onTextualCoderViewModelAddHighlightRequest:
 			to: self;
 		when: GtTextualCoderViewModelRemoveHighlightsRequest
 			send: #onTextualCoderViewModelRemoveHighlightsRequest:
-			to: self;
-		when: GtTextualCoderViewModelTextAttributesRemoved
-			send: #onViewModelTextAttributesRemoved:
-			to: self;
-		when: GtTextualCoderViewModelTextAttributesRemoved
-			send: #onViewModelTextAttributesRemoved:
 			to: self;
 		when: GtTextualCoderViewModelStyledTextChanged
 			send: #onViewModelStyledTextChanged:

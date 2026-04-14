@@ -169,7 +169,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 	newCoderTextAttributes := GtTextualCoderTextAttributes new
 		markerAttribute: aMarkerAttribute;
 		textAttributes: aCollectionOfTextAttributes;
-		documentId: documentId.
+		documentId: (aDocumentId ifNil: [ documentId ]).
 	
 	extraTextAttributes add: newCoderTextAttributes.
 	self announce: (GtTextualCoderViewModelTextAttributesAdded new
