@@ -5,7 +5,10 @@ Class {
 		'navigations',
 		'navigationModel',
 		'formCache',
-		'pragmaName'
+		'pragmaName',
+		'classOfInterest',
+		'packageOfInterest',
+		'packageTagOfInterest'
 	],
 	#classVars : [
 		'DisplayFullDropdownNavigation'
@@ -85,6 +88,38 @@ GtCoderNavigationTabsStencil >> assertNavigationView: aNavigationView [
 	self 
 		assert: [ aNavigationView isKindOf: GtPhlowProtoView ] 
 		description: [ 'Navigation must be kind of ', GtPhlowView name ].
+]
+
+{ #category : #navigation }
+GtCoderNavigationTabsStencil >> classOfInterest [
+	^ classOfInterest
+]
+
+{ #category : #'as yet unclassified' }
+GtCoderNavigationTabsStencil >> classOfInterest: aClass [
+	"Consider this class instead of the navigation model selected class."
+
+	classOfInterest := aClass
+]
+
+{ #category : #navigation }
+GtCoderNavigationTabsStencil >> consideredClassDo: aBlock [
+	self classOfInterest ifNotNil: [ :aClass | ^ aBlock value: aClass ].
+	^ navigationModel selectedClassDo: aBlock
+]
+
+{ #category : #navigation }
+GtCoderNavigationTabsStencil >> consideredPackageDo: aBlock [
+	self packageOfInterest ifNotNil: [ :aPackage | ^ aBlock value: aPackage ].
+	self classOfInterest ifNotNil: [ :aClass | ^ aBlock value: aClass package ].
+	^ navigationModel selectedPackageDo: aBlock
+]
+
+{ #category : #navigation }
+GtCoderNavigationTabsStencil >> consideredPackageTagDo: aBlock [
+	self packageTagOfInterest ifNotNil: [ :aPackageTag | ^ aBlock value: aPackageTag ].
+	self classOfInterest ifNotNil: [ :aClass | ^ aBlock value: aClass packageTag ].
+	^ navigationModel selectedTagDo: aBlock
 ]
 
 { #category : #'api - instantiation' }
@@ -173,27 +208,29 @@ GtCoderNavigationTabsStencil >> gtCreationInterface: anElement [
 				addTab: (BrTab new
 						aptitude: BrGlamorousTabAptitude new;
 						label: eachTabClass componentName;
+						addAptitude: (GtPhlowBrowseDefinitionAptitude new definition: [ eachTabClass ]);
 						stencil: [ (self formCache
 								at: eachTabClass
 								ifAbsentPut: [ | form |
 									form := eachTabClass new
-											onReset: [ anElement
-													inUIProcessDo: [ anElement fireEvent: BrDropdownHideWish new.
+											onReset: [ BlTaskAction
+													enqueueElement: anElement
+													action: [ anElement fireEvent: BrDropdownHideWish new.
 														self formCache removeKey: eachTabClass ] ].
-									navigationModel
-										selectedClassDo: [ :aClass | form fillFormWithClass: aClass ].
+									self consideredClassDo: [ :aClass | form fillFormWithClass: aClass ].
 									form hasPackageAndTag
-										ifTrue: [ navigationModel
-												selectedPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
-											navigationModel
-												selectedTagDo: [ :aTag | 
+										ifTrue: [ self
+												consideredPackageDo: [ :aPackage | form packageAndTagName packageName: aPackage name ].
+											self
+												consideredPackageTagDo: [ :aTag | 
 													aTag isPharoPackageTagModel
 														ifTrue: [ aTag isRoot ifFalse: [ form packageAndTagName tagName: aTag name ] ]
 														ifFalse: [ aTag isUncategorized ifFalse: [ form packageAndTagName tagName: aTag name ] ] ] ].
 									((GtCreationFormWidget forForm: form)
 										onAccept: [ :anInstance | 
-											anElement
-												inUIProcessDo: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
+											BlTaskAction
+												enqueueElement: anElement
+												action: [ form selectInNavigationModel: navigationModel anInstance: anInstance.
 													anElement fireEvent: BrDropdownHideWish new ].
 											self formCache removeKey: eachTabClass ifAbsent: [  ] ]) asElement ])
 								removeFromParent ]) ].
@@ -261,6 +298,30 @@ GtCoderNavigationTabsStencil >> navigations [
 { #category : #accessing }
 GtCoderNavigationTabsStencil >> navigations: anArrayOfPhlowViews [
 	navigations := anArrayOfPhlowViews
+]
+
+{ #category : #navigation }
+GtCoderNavigationTabsStencil >> packageOfInterest [
+	^ packageOfInterest
+]
+
+{ #category : #navigation }
+GtCoderNavigationTabsStencil >> packageOfInterest: aPackage [
+	"Consider this package instead of the navigation model selected package."
+
+	packageOfInterest := aPackage
+]
+
+{ #category : #navigation }
+GtCoderNavigationTabsStencil >> packageTagOfInterest [
+	^ packageTagOfInterest
+]
+
+{ #category : #navigation }
+GtCoderNavigationTabsStencil >> packageTagOfInterest: aPackageTag [
+	"Consider this package tag instead of the navigation model selected package tag."
+
+	packageTagOfInterest := aPackageTag
 ]
 
 { #category : #accessing }

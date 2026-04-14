@@ -155,10 +155,11 @@ Class >> gtCoderSidebarIndexNewSubclassFor: anAction [
 						GtCoderNavigationTabsStencil new
 							pragmaName: #gtCoderDropdownNavigation;
 							navigationModel: aNavigationModel;
+							classOfInterest: self;
 							gtCreationInterface: aButton ]
 					ifAbsent: [ BrLabel new
 							aptitude: BrGlamorousLabelAptitude new;
-							text: 'Currently not available from lepiter';
+							text: 'Currently not available in this context menu';
 							constraintsDo: [ :c | 
 								c linear horizontal alignCenter.
 								c linear vertical alignCenter ] ].
