@@ -501,7 +501,7 @@ GtTextualCoderEditorElement >> onViewModelCursorsChanged: aCursorsChangedAnnounc
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelReadyToStyle [
-	self enqueueTask: (BlTaskAction new action: [ self styleText ])
+	self enqueueTask: (BlTaskAction new action: [ self requestManualStyling ])
 ]
 
 { #category : #registration }
