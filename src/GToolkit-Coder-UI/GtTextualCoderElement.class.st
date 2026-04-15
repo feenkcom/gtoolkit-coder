@@ -676,6 +676,8 @@ GtTextualCoderElement >> onViewModelStylersChanged [
 
 { #category : #'private - event handling' }
 GtTextualCoderElement >> onViewModelTextAttributesAdded: anAnnouncement [
+	self assert: [ anAnnouncement startPosition isZero not ].
+
 	self textualCoderViewModel = anAnnouncement textualCoderViewModel ifFalse: [ ^ self ].
 
 	self enqueueTask: (BlTaskAction new action: [ 

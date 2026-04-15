@@ -78,7 +78,7 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 
 	handlers := {BrTextEditorDeletedEvent.
 			BrTextEditorInsertedEvent}
-			collect: [ :each | BlEventHandler on: each do: [ :event | self renameAction cancel ] ].
+			collect: [ :each | BlEventHandler on: each do: [ :event | self renameAction cancelFrom: anEditorElement ] ].
 	renameEditor
 		when: BlElementAddedToSceneGraphEvent
 			do: [ :anEvent | handlers do: [ :each | anEditorElement editor addEventHandler: each ] ];
@@ -87,7 +87,7 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 
 	renameEditor
 		whenKey: BlKeyCombination escape
-			editorDo: [ :aShortcutEvent | self renameAction cancel ];
+			editorDo: [ :aShortcutEvent | self renameAction cancelFrom: anEditorElement ];
 		whenKey: BlKeyCombination builder shift tab build
 			editorDo: [ :aShortcutEvent | 
 				(self focusNext: false in: anEditorElement)
@@ -99,7 +99,7 @@ GtRenameEditorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElem
 		whenKey: BlKeyCombination enter
 			editorDo: [ :aShortcutEvent | self renameAction processReturnFor: renameEditor in: anEditorElement ].
 
-	renameEditor when: BrEditorCancelWish do: [ :event | self renameAction cancel ].
+	renameEditor when: BrEditorCancelWish do: [ :event | self renameAction cancelFrom: anEditorElement ].
 
 	renameEditor editor
 		when: BrTextEditorModifiedEvent

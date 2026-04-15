@@ -63,6 +63,13 @@ GtAbstractRenameAction >> cancel [
 	self announceEvent: #cancel
 ]
 
+{ #category : #actions }
+GtAbstractRenameAction >> cancelFrom: anEditorElement [
+	"Just announce cancel, because the controller then calls action cancel."
+
+	self announceEvent: #cancel
+]
+
 { #category : #accessing }
 GtAbstractRenameAction >> editor [
 	^ self editorAttribute editor
