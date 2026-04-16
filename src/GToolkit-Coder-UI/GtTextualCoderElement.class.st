@@ -529,6 +529,18 @@ GtTextualCoderElement >> onTextStyled: anEvent [
 	self textualCoderViewModel styledText: anEvent styledText
 ]
 
+{ #category : #'private - event handling' }
+GtTextualCoderElement >> onTextualCoderViewModelAddHighlightRequest: anAnnouncement [
+	anAnnouncement textualCoderViewModel = self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
+	BlTaskAction
+		enqueueElement: self
+		action: [ editorElement
+				addHighlight: anAnnouncement textHighlight
+				overRange: anAnnouncement textRange ]
+]
+
 { #category : #'api - textual coder view model' }
 GtTextualCoderElement >> onTextualCoderViewModelChanged [
 	"Is sent when a new textualCoder view model is assigned to the element.
@@ -564,6 +576,16 @@ GtTextualCoderElement >> onTextualCoderViewModelChanged [
 	
 	self textualCoderViewModel compositeStyler ifNotNil: [ :aStyler | 
 		self styler: aStyler ]
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderElement >> onTextualCoderViewModelRemoveHighlightsRequest: anAnnouncement [
+	anAnnouncement textualCoderViewModel = self textualCoderViewModel
+		ifFalse: [ ^ self ].
+
+	BlTaskAction
+		enqueueElement: self
+		action: [ editorElement removeHighlightsWithId: anAnnouncement id ]
 ]
 
 { #category : #'private - event handling' }
@@ -654,6 +676,8 @@ GtTextualCoderElement >> onViewModelStylersChanged [
 
 { #category : #'private - event handling' }
 GtTextualCoderElement >> onViewModelTextAttributesAdded: anAnnouncement [
+	self assert: [ anAnnouncement startPosition isZero not ].
+
 	self textualCoderViewModel = anAnnouncement textualCoderViewModel ifFalse: [ ^ self ].
 
 	self enqueueTask: (BlTaskAction new action: [ 
@@ -811,6 +835,12 @@ GtTextualCoderElement >> registerCoderViewModelAnnouncementsFor: aGtSourceCoderU
 			to: self;
 		when: GtTextualCoderViewModelTextAttributesRemoved
 			send: #onViewModelTextAttributesRemoved:
+			to: self;
+		when: GtTextualCoderViewModelAddHighlightRequest
+			send: #onTextualCoderViewModelAddHighlightRequest:
+			to: self;
+		when: GtTextualCoderViewModelRemoveHighlightsRequest
+			send: #onTextualCoderViewModelRemoveHighlightsRequest:
 			to: self;
 		when: GtTextualCoderViewModelStyledTextChanged
 			send: #onViewModelStyledTextChanged:

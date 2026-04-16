@@ -32,7 +32,7 @@ GtTextualCoderTextAttributes >> applyOnEditorElement: aTextEditorElement receive
 	"From where does (aStartPosition to: anEndPosition) come from?"
 	self flag: #TODO.
 	
-	attributesRange := GtTextEditorCharacterRange
+	attributesRange := BrTextCharacterRange
 		start: aStartPosition
 		end: anEndPosition
 		documentId: documentId.
