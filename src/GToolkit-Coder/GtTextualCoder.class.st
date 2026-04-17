@@ -208,6 +208,7 @@ GtTextualCoder >> currentSourceText: aText with: aGtCoderUpdateStragegy dueTo: a
 
 	self critical: [ 
 		| previousSourceText|
+		aText == self currentSourceText ifTrue: [ ^ self ].
 		previousSourceText := self currentSourceText copy.
 		self sourceCode currentSourceText: aText.
 		self 

@@ -664,6 +664,12 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 	
 	addOnPromise := nil.
 	isTextModifiedPromise := nil.
+	
+	GtTextualCoderViewModelTextChangedSignal new
+		documentId: documentId;
+		text: self coderModel currentSourceText;
+		textualCoderViewModel: self;
+		emit.
 
 	self announce: (GtTextualCoderViewModelTextChanged new
 		textualCoderViewModel: self;
