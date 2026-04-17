@@ -12,5 +12,6 @@ GtExpandedCoderElementWithRustTextEditorStencil >> defaultElement [
 			defaultFontName: 'Source Code Pro';
 			defaultFontSize: 14;
 			defaultForeground: Color black;
+			in: [ :anEditor | anEditor privateEditorHandle enableInMemoryCommandsRecorder ];
 			yourself)
 ]
