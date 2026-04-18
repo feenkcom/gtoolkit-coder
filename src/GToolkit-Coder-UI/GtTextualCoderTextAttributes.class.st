@@ -6,7 +6,9 @@ Class {
 		'textAttributes',
 		'textAttributeTags',
 		'markerAttributeTag',
-		'documentId'
+		'documentId',
+		'startPosition',
+		'stopPosition'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -152,6 +154,26 @@ GtTextualCoderTextAttributes >> removeFromEditorText: aText [
 	"Can be used only on the BrEditorElement kind of editors. Not on GtTextEditorElement."
 
 	aText removeAttributes: { self markerAttribute }, self textAttributes
+]
+
+{ #category : #accessing }
+GtTextualCoderTextAttributes >> startPosition [
+	^ startPosition
+]
+
+{ #category : #accessing }
+GtTextualCoderTextAttributes >> startPosition: anObject [
+	startPosition := anObject
+]
+
+{ #category : #accessing }
+GtTextualCoderTextAttributes >> stopPosition [
+	^ stopPosition
+]
+
+{ #category : #accessing }
+GtTextualCoderTextAttributes >> stopPosition: anObject [
+	stopPosition := anObject
 ]
 
 { #category : #accessing }
