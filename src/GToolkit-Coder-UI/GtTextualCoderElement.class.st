@@ -266,6 +266,10 @@ GtTextualCoderElement >> initializeEditorElement: aNewEditorElement [
 { #category : #initialization }
 GtTextualCoderElement >> initializeEditorListeners [
 	self editor
+		when: BrTextEditorTextReplacedEvent
+		do: [ :anEvent | self onTextEditorTextReplacedEvent: anEvent ].
+
+	self editor
 		when: BrTextEditorHistoryChangedEvent
 		do: [ :anEvent | self onTextEditorHistoryChanged: anEvent ].
 
@@ -496,6 +500,18 @@ GtTextualCoderElement >> onTextEditorSelectionChanged: anEvent [
 	self hasTextualCoderViewModel ifFalse: [ ^ self ].
 	
 	self textualCoderViewModel selection: anEvent selection from: self
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderElement >> onTextEditorTextReplacedEvent: aTextReplacedEvent [
+	"We assume that the text we have in the view model is same
+	as this event is a consequence that this element updated 
+	its editor element in GtTextualCoderElement>>#onTextualCoderViewModelChanged.
+	For that reason we just update the document ID."
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+	
+	self textualCoderViewModel
+		documentId: aTextReplacedEvent documentId
 ]
 
 { #category : #'private - event handling' }
@@ -943,9 +959,12 @@ GtTextualCoderElement >> text [
 
 { #category : #TODO }
 GtTextualCoderElement >> text: aBlText [
+	self text == aBlText ifTrue: [ ^ self ].
+
 	(self text equalsIgnoringAttributes: aBlText)
-		ifTrue: [ self editor history disableDuring: [ editorElement text: aBlText ] ].
-	editorElement text: aBlText
+		ifTrue: [ self editor history 
+			disableDuring: [ editorElement text: aBlText ] ]
+		ifFalse: [ editorElement text: aBlText ]
 ]
 
 { #category : #'api - textual coder view model' }

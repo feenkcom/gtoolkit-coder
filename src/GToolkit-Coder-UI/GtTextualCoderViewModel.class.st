@@ -169,7 +169,9 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 	newCoderTextAttributes := GtTextualCoderTextAttributes new
 		markerAttribute: aMarkerAttribute;
 		textAttributes: aCollectionOfTextAttributes;
-		documentId: (aDocumentId ifNil: [ documentId ]).
+		documentId: (aDocumentId ifNil: [ documentId ]);
+		startPosition: aStartPosition;
+		stopPosition: anEndPosition.
 	
 	extraTextAttributes add: newCoderTextAttributes.
 	self announce: (GtTextualCoderViewModelTextAttributesAdded new
@@ -664,6 +666,12 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 	
 	addOnPromise := nil.
 	isTextModifiedPromise := nil.
+	
+	GtTextualCoderViewModelTextChangedSignal new
+		documentId: documentId;
+		text: self coderModel currentSourceText;
+		textualCoderViewModel: self;
+		emit.
 
 	self announce: (GtTextualCoderViewModelTextChanged new
 		textualCoderViewModel: self;

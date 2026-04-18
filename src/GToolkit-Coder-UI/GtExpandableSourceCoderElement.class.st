@@ -10,8 +10,21 @@ Class {
 		'collapsedElementStencil',
 		'expandedElementStencil'
 	],
+	#classVars : [
+		'DefaultExpandedElementStencilClass'
+	],
 	#category : #'GToolkit-Coder-UI-Coder - Source'
 }
+
+{ #category : #accessing }
+GtExpandableSourceCoderElement class >> defaultExpandedElementStencilClass [
+	^ DefaultExpandedElementStencilClass
+]
+
+{ #category : #accessing }
+GtExpandableSourceCoderElement class >> defaultExpandedElementStencilClass: anObject [
+	DefaultExpandedElementStencilClass := anObject
+]
 
 { #category : #private }
 GtExpandableSourceCoderElement >> addCodersCoderLook: aSourceCoder to: anElement [	
@@ -78,7 +91,9 @@ GtExpandableSourceCoderElement >> defaultCollapsedElementStencil [
 
 { #category : #initialization }
 GtExpandableSourceCoderElement >> defaultExpandedElementStencil [
-	^ GtExpandedCoderElementStencil new
+	^ self class defaultExpandedElementStencilClass
+		ifNil: [ GtExpandedCoderElementStencil new ]
+		ifNotNil: [ :aClass | aClass new ]
 ]
 
 { #category : #accessing }
