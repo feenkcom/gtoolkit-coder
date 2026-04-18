@@ -726,6 +726,11 @@ GtTextualCoderElement >> onViewModelTextChanged: aGtTextualCoderViewModelTextCha
 	"Do nothing if it comes from a different view model"
 	aGtTextualCoderViewModelTextChanged textualCoderViewModel == self textualCoderViewModel
 		ifFalse: [ ^ self ].
+	
+	GtTextualCoderEditorElementUpdateTextRequestedSignal new
+		element: self;
+		text: aGtTextualCoderViewModelTextChanged text;
+		emit.
 		
 	BlTaskAction 
 		enqueueElement: self 
