@@ -118,7 +118,12 @@ GtCoderViewModelRenameAction >> preventSave [
 ]
 
 { #category : #'private - attributes' }
-GtCoderViewModelRenameAction >> removeAttributes [	
+GtCoderViewModelRenameAction >> removeAttributes [
+	GtCoderRenameActionRemoveAttributesSignal new
+		action: self;
+		coderAttributes: coderAttributes;
+		emit.
+
 	self pharoSourceCoderViewModel removeAllCoderTextAttributes: coderAttributes
 ]
 
