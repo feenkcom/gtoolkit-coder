@@ -685,6 +685,16 @@ GtTextualCoderViewModel >> onSourceCodeReplaced: aSourceCodeReplacedAnnouncement
 	the source text has changed."
 ]
 
+{ #category : #printing }
+GtTextualCoderViewModel >> printOn: aStream [
+	super printOn: aStream.
+
+	aStream
+		nextPut: $(;
+		print: documentId;
+		nextPut: $)
+]
+
 { #category : #'api - text' }
 GtTextualCoderViewModel >> removeAllCoderTextAttributes: aCollectionOfGtTextualCoderTextAttributes [
 	aCollectionOfGtTextualCoderTextAttributes do: [ :eachCoderTextAttribute |
