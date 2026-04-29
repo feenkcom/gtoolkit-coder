@@ -1,6 +1,6 @@
 Extension { #name : #RBArrayNode }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder-Pharo12Extensions' }
 RBArrayNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	periods

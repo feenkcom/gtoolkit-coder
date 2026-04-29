@@ -1,6 +1,6 @@
 Extension { #name : #RBLiteralNode }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder-Pharo12Extensions' }
 RBLiteralNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	start ifNotNil: [ start := start + anInteger ].

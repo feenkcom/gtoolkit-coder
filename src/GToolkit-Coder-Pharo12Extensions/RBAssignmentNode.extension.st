@@ -1,6 +1,6 @@
 Extension { #name : #RBAssignmentNode }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder-Pharo12Extensions' }
 RBAssignmentNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	assignment ifNotNil: [ assignment := assignment + anInteger ]

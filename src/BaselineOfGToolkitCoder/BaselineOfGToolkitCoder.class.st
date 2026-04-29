@@ -73,5 +73,13 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				package: 'GToolkit-Coder-Examples-SystemS1';
 				package: 'GToolkit-Coder-Examples'
 					with: [ spec
-							requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Examples-SystemS1' 'GToolkit4Magritte') ] ]
+							requires: #('GToolkit-Coder' 'GToolkit-Coder-UI' 'GToolkit-Coder-AddOns' 'GToolkit-Coder-Examples-SystemS1' 'GToolkit4Magritte') ].
+							
+			self 
+				forPharo13AndNewer: [] 
+				forOlder: [
+					spec package: 'GToolkit-Coder-Pharo12Extensions' with: [ 
+						spec requires: #('GToolkit-Coder-Extensions') ] ]
+							
+		]
 ]
