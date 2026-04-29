@@ -1,6 +1,6 @@
 Extension { #name : #RBBlockNode }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder-Pharo12Extensions' }
 RBBlockNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	colons ifNotNil: [ colons := colons collect: [ :f | f + anInteger ] ].

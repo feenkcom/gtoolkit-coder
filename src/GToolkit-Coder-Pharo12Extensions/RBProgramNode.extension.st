@@ -1,17 +1,17 @@
 Extension { #name : #RBProgramNode }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder-Pharo12Extensions' }
 RBProgramNode >> gtMoveAllBy: anInteger [
 	self gtMoveBy: anInteger.
 	self children do: [ :e | e gtMoveAllBy: anInteger ]
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder-Pharo12Extensions' }
 RBProgramNode >> gtMoveBy: anInteger [
 	self comments do: [ :f | f with: f contents at: f start + anInteger ]
 ]
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder-Pharo12Extensions' }
 RBProgramNode >> withAllParentsDo: aBlock [
 	| node |
 	node := self.

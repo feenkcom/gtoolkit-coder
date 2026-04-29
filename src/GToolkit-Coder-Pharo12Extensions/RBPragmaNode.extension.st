@@ -1,6 +1,6 @@
 Extension { #name : #RBPragmaNode }
 
-{ #category : #'*GToolkit-Coder' }
+{ #category : #'*GToolkit-Coder-Pharo12Extensions' }
 RBPragmaNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	keywordsPositions

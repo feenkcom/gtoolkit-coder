@@ -1,7 +1,7 @@
-Extension { #name : #RBMethodNode }
+Extension { #name : #RBMessageNode }
 
-{ #category : #'*GToolkit-Coder' }
-RBMethodNode >> gtMoveBy: anInteger [
+{ #category : #'*GToolkit-Coder-Pharo12Extensions' }
+RBMessageNode >> gtMoveBy: anInteger [
 	super gtMoveBy: anInteger.
 	keywordsPositions
 		ifNotNil: [ keywordsPositions := keywordsPositions
