@@ -257,7 +257,7 @@ InstanceVariableSlot >> gtPushUpActionFor: anAction context: aPhlowContext [
 							format: {aSelectedClass name.
 									self name});
 					confirmationLabel: ('Push up {1}' format: {self name});
-					refactoringWithConfirmation: [ RBPullUpInstanceVariableRefactoring
+					refactoringWithConfirmation: [ GtRBPullUpInstanceVariableRefactoring
 							variable: self name
 							class: aSelectedClass superclass ];
 					afterAppliedBlock: [ BlTaskAction enqueueElement: aTargetElement action: [ anExplicitMenu hideAll ] ];
