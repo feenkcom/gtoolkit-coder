@@ -83,6 +83,28 @@ GtCoderAstStyler >> coderViewModel: anObject [
 GtCoderAstStyler >> extraStyle: aText ast: theAst [
 ]
 
+{ #category : #'api - styling' }
+GtCoderAstStyler >> from: aStart to: anEnd [
+	^ [ text from: aStart to: anEnd ]
+		on: Error
+		do: [ :anError |
+			anError emit.
+
+			NonInteractiveTranscript stdout
+				nextPutAll: '[';
+				nextPutAll: self class name;
+				nextPutAll: '] ';
+				nextPutAll: 'Was not able to get subtext from ';
+				print: aStart;
+				nextPutAll: ' to ';
+				print: anEnd;
+				nextPutAll: ' on text of size ';
+				print: text size;
+				cr.
+				
+			'' asRopedText	 ].
+]
+
 { #category : #comparing }
 GtCoderAstStyler >> hash [
 	^self class hash

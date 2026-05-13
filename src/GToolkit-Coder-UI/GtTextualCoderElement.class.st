@@ -252,11 +252,6 @@ GtTextualCoderElement >> initializeEditorElement: aNewEditorElement [
 		completion := nil ].
 
 	self initializeEditorListeners.
-	
-	"I think this can be removed once  `BrTextEditorModificationEvent` works."
-	self editor
-		when: BrTextEditorModifiedEvent
-		do: [ :anEvent | self onTextModifiedDueToEvent: anEvent ].
 
 	self hasTextualCoderViewModel ifFalse: [ ^ self ].
 	self onTextualCoderViewModelChanged.
