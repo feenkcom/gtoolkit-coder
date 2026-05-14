@@ -34,10 +34,8 @@ GtCoderNavigationCompiledMethodsAddOnsCache >> addOnsFutureForCompiledMethod: aC
 			at: aCompiledMethod
 			ifPresent: [ :aCoderViewModel | aCoderViewModel ]
 			ifAbsentPut: [
-					| coderClass newCoder |
-					coderClass := aCompiledMethod gtSelectCoderClass.
-					newCoder := [ coderClass forMethod: aCompiledMethod ]
-						onErrorDo: [ aCompiledMethod gtMethodCoder forMethod: aCompiledMethod ].
+					| newCoder |
+					newCoder := GtSourceCoder forPharoMethod: aCompiledMethod.
 					newCoder asCoderViewModel ].
 
 	^ coderViewModel
