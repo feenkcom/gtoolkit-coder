@@ -25,6 +25,6 @@ GtCoderCompiledMethodTextSource >> compiledMethod: anObject [
 GtCoderCompiledMethodTextSource >> computeOriginalSourceText [
 
 	^ (compiledMethod isBigMethod
-		ifTrue: [ (compiledMethod sourceCode first: 10000), '...' ]
+		ifTrue: [ (compiledMethod limitedSourceCode), '...' ]
 		ifFalse: [ compiledMethod sourceCode ]) asRopedText
 ]
