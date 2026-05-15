@@ -6,6 +6,8 @@ Class {
 
 { #category : #private }
 GtSourceCoderShortcut >> forEditor: aBrTextEditor selectedStringDo: aSelectedTextBlock orCursorStringPositionDo: aCursorTextPositionBlock [
+	self deprecated: 'Use #selectedStringDo:orCursorStringPositionDo: text editor element API instead'.
+
 	aBrTextEditor selectedText
 		ifEmpty: [ aBrTextEditor hasCursors 
 			ifTrue: [
@@ -20,6 +22,8 @@ GtSourceCoderShortcut >> forEditor: aBrTextEditor selectedStringDo: aSelectedTex
 
 { #category : #private }
 GtSourceCoderShortcut >> forEditor: aBrTextEditor selectionIntervalDo: aSelectionIntervalBlock orCursorStringPositionDo: aCursorTextPositionBlock [
+	self deprecated: 'Use #selectedStringDo:orCursorStringPositionDo: text editor element API instead'.
+
 	aBrTextEditor hasSelection
 		ifTrue: [
 			| aFromIndex aToIndex |

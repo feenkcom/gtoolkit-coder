@@ -23,9 +23,8 @@ GtSourceCoderInlineRenameShortcut >> name [
 
 { #category : #evaluation }
 GtSourceCoderInlineRenameShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
-	self
-		forEditor: aBrTextEditor
-		selectionIntervalDo: [ :aSelectionInterval | 
+	aBrEditorElement
+		selectedStringDo: [ :aSelectedString :aSelectionInterval | 
 			aSourceCoderViewModel coder
 				renameAt: aSelectionInterval last
 				in: aSourceCoderViewModel
