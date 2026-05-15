@@ -23,8 +23,7 @@ GtSourceCoderBrowseImplementorsShortcut >> name [
 
 { #category : #evaluation }
 GtSourceCoderBrowseImplementorsShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aRequester [
-	self
-		forEditor: aBrTextEditor
+	aBrEditorElement
 		selectedStringDo: [ :aSelectedString | 
 			aGtSourceCoder 
 				browseImplementorsIn: aSelectedString 
