@@ -29,7 +29,17 @@ GtTextualCoderTextAttributes >> applyOnEditorElement: aTextEditorElement receive
 	
 	self flag: #TODO.
 	"Investigate what to do when documentId is nil. Can it even be nil here?"
-	self assert: [ documentId isNotNil ].
+	true 
+		ifTrue: [ documentId ifNil: [ 
+			GtCoderTextAttributesDocumentIdIsNilSignal new
+				coderTextAttributes: self;
+				editorElement: aTextEditorElement;
+				receivedText: aText;
+				startPosition: aStartPosition;
+				endPosition: anEndPosition;
+				emit.
+			^ self ] ]
+		ifFalse: [ self assert: [ documentId isNotNil ] ].
 	
 	"From where does (aStartPosition to: anEndPosition) come from?"
 	self flag: #TODO.
