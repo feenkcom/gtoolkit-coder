@@ -192,6 +192,13 @@ GtTextualCoderTextAttributes >> textAttributes [
 ]
 
 { #category : #accessing }
-GtTextualCoderTextAttributes >> textAttributes: anObject [
-	textAttributes := anObject
+GtTextualCoderTextAttributes >> textAttributes: aCollection [
+	textAttributes := aCollection.
+	
+	aCollection do: [ :eachAttribute | 
+		(eachAttribute isKindOf: BlTextHighlightAttribute) ifTrue: [
+			GtCoderDeprecatedTextAttributeAddedSignal new
+				coderTextAttributes: self;
+				deprecatedAttribute: eachAttribute;
+				emit ] ]
 ]
