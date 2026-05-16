@@ -21,6 +21,11 @@ GtTextualCoderViewModelTextAttributesAdded >> coderTextAttributes: anObject [
 ]
 
 { #category : #accessing }
+GtTextualCoderViewModelTextAttributesAdded >> documentId [
+	^ self coderTextAttributes ifNotNil: #documentId
+]
+
+{ #category : #accessing }
 GtTextualCoderViewModelTextAttributesAdded >> startPosition [
 	^ startPosition
 ]

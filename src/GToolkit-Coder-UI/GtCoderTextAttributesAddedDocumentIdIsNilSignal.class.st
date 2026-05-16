@@ -1,5 +1,5 @@
 Class {
-	#name : #GtCoderTextAttributesDocumentIdIsNilSignal,
+	#name : #GtCoderTextAttributesAddedDocumentIdIsNilSignal,
 	#superclass : #GtCoderDocumentIdSignal,
 	#instVars : [
 		'editorElement',
@@ -12,37 +12,37 @@ Class {
 }
 
 { #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> coderTextAttributes [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> coderTextAttributes [
 	^ coderTextAttributes
 ]
 
 { #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> coderTextAttributes: aGtTextualCoderTextAttributes [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> coderTextAttributes: aGtTextualCoderTextAttributes [
 	coderTextAttributes := aGtTextualCoderTextAttributes
 ]
 
 { #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> editorElement [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> editorElement [
 	^ editorElement
 ]
 
 { #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> editorElement: anObject [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> editorElement: anObject [
 	editorElement := anObject
 ]
 
 { #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> endPosition [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> endPosition [
 	^ endPosition
 ]
 
 { #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> endPosition: anObject [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> endPosition: anObject [
 	endPosition := anObject
 ]
 
 { #category : #views }
-GtCoderTextAttributesDocumentIdIsNilSignal >> gtTextAttributesViewFor: aView [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> gtTextAttributesViewFor: aView [
 	<gtView>
 	^ aView columnedList
 		title: 'Attributes';
@@ -55,7 +55,7 @@ GtCoderTextAttributesDocumentIdIsNilSignal >> gtTextAttributesViewFor: aView [
 ]
 
 { #category : #printing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> printOneLineContentsOn: aStream [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> printOneLineContentsOn: aStream [
 	aStream
 		nextPut: $[;
 		print: startPosition;
@@ -67,26 +67,16 @@ GtCoderTextAttributesDocumentIdIsNilSignal >> printOneLineContentsOn: aStream [
 ]
 
 { #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> receivedText [
-	^ receivedText
-]
-
-{ #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> receivedText: anObject [
-	receivedText := anObject
-]
-
-{ #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> startPosition [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> startPosition [
 	^ startPosition
 ]
 
 { #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> startPosition: anObject [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> startPosition: anObject [
 	startPosition := anObject
 ]
 
 { #category : #accessing }
-GtCoderTextAttributesDocumentIdIsNilSignal >> textAttributes [
+GtCoderTextAttributesAddedDocumentIdIsNilSignal >> textAttributes [
 	^ coderTextAttributes ifNotNil: #textAttributes
 ]

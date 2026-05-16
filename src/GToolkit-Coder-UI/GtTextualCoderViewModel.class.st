@@ -431,7 +431,17 @@ GtTextualCoderViewModel >> documentId [
 
 { #category : #accessing }
 GtTextualCoderViewModel >> documentId: anObject [
-	documentId := anObject
+	| oldDocumentId |
+	documentId = anObject ifTrue: [ ^ self ].
+	
+	oldDocumentId := documentId.
+	documentId := anObject.
+	
+	GtCoderDocumentIdUpdatedSignal new 
+		texturalCoderViewModel: self;
+		oldDocumentId: oldDocumentId;
+		newDocumentId: anObject;
+		emit
 ]
 
 { #category : #accessing }
