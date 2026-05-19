@@ -146,7 +146,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 	
 	"If documentId is different, do nothing."
 	self flag: #TODO.
-	documentId ifNotNil: [
+	"documentId ifNotNil: ["
 		aDocumentId 
 			ifNil: [ 
 				GtCoderDocumentIdIsNilSignal new 
@@ -157,7 +157,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 					GtCoderDocumentIdDifferentSignal new
 						originalDocumentId: documentId;
 						receivedDocumentId: aDocumentId;
-						emit ] ] ].
+						emit ] ] "]".
 	
 	aMarkerAttribute := BrTextInvisibleMarkerAttribute new beNotOverwritableByStyler.
 	
@@ -431,7 +431,17 @@ GtTextualCoderViewModel >> documentId [
 
 { #category : #accessing }
 GtTextualCoderViewModel >> documentId: anObject [
-	documentId := anObject
+	| oldDocumentId |
+	documentId = anObject ifTrue: [ ^ self ].
+	
+	oldDocumentId := documentId.
+	documentId := anObject.
+	
+	GtCoderDocumentIdUpdatedSignal new 
+		texturalCoderViewModel: self;
+		oldDocumentId: oldDocumentId;
+		newDocumentId: anObject;
+		emit
 ]
 
 { #category : #accessing }

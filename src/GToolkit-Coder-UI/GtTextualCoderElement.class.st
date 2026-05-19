@@ -691,6 +691,14 @@ GtTextualCoderElement >> onViewModelTextAttributesAdded: anAnnouncement [
 
 	self textualCoderViewModel = anAnnouncement textualCoderViewModel ifFalse: [ ^ self ].
 
+	anAnnouncement documentId ifNil: [ 
+			GtCoderTextAttributesAddedDocumentIdIsNilSignal new
+				coderTextAttributes: anAnnouncement coderTextAttributes;
+				editorElement: self;
+				startPosition: anAnnouncement startPosition;
+				endPosition: anAnnouncement stopPosition;
+				emit ].
+	
 	self enqueueTask: (BlTaskAction new action: [ 
 		anAnnouncement coderTextAttributes
 				applyOnEditorElement: editorElement

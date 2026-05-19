@@ -25,8 +25,10 @@ GtSourceCoderPlayAndInspectShortcut >> name [
 GtSourceCoderPlayAndInspectShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aRequester [
 	GtCoderExecutionContextVariable
 		element: aBrEditorElement
-		do: [ 
-			"only execute if there is selection"
-			aBrTextEditor hasSelection 
-				ifTrue: [ GtSourceCoderDoItAndInspectShortcut new performDueTo: aShortcutEvent ] ]
+		do: [
+			aBrEditorElement
+				selectedStringDo: [ :aSelectedString | 
+					"only execute if there is selection"
+					GtSourceCoderDoItAndInspectShortcut new performDueTo: aShortcutEvent  ]
+				orCursorStringPositionDo: [ :aStringPosition |  ] ].
 ]
