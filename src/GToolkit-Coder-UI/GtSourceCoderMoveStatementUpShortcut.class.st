@@ -24,11 +24,11 @@ GtSourceCoderMoveStatementUpShortcut >> name [
 { #category : #accessing }
 GtSourceCoderMoveStatementUpShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
 	aBrEditorElement
-		selectedStringDo: [ :aSelectedString :aSelectionInterval | 
+		selectedStringAndIntervalDo: [ :aSelectedString :aSelectionInterval | 
 			aSourceCoderViewModel coder
 				moveStatementsOrCascadesUpWithin: aSelectionInterval
 				in: aSourceCoderViewModel ]
-		orCursorStringPositionDo: [ :aCursorTextPosition | 
+		orCursorPositionDo: [ :aCursorTextPosition | 
 			aSourceCoderViewModel coder
 				moveStatementOrCascadeUpAt: aCursorTextPosition
 				in: aSourceCoderViewModel ]

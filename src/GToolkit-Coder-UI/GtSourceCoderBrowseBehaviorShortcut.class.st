@@ -24,6 +24,6 @@ GtSourceCoderBrowseBehaviorShortcut >> name [
 { #category : #evaluation }
 GtSourceCoderBrowseBehaviorShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aRequester [
 	aBrEditorElement
-		selectedStringDo: [ :aSelectedString | aGtSourceCoder browseBehaviorIn: aSelectedString requesterObject: aRequester ]
-		orCursorStringPositionDo: [ :aStringPosition | aGtSourceCoder browseBehaviorAt: aStringPosition requesterObject: aRequester ]
+		selectedStringAndIntervalDo: [ :aSelectedString | aGtSourceCoder browseBehaviorIn: aSelectedString requesterObject: aRequester ]
+		orCursorPositionDo: [ :aStringPosition | aGtSourceCoder browseBehaviorAt: aStringPosition requesterObject: aRequester ]
 ]
