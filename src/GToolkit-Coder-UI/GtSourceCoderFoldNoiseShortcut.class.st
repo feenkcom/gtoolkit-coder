@@ -25,12 +25,11 @@ GtSourceCoderFoldNoiseShortcut >> name [
 GtSourceCoderFoldNoiseShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coder: aGtSourceCoder dueTo: aShortcutEvent requesterObject: aRequester [
 	| folding |
 	folding := nil.
-	aBrTextEditor text
-		attributesDo: [ :arr | 
-			arr
-				detect: [ :att | att class == GtTextFolderAttribute ]
-				ifFound: [ :att | 
-					folding ifNil: [ folding := att isExpanded ].
-					att isExpanded: folding not.
-					att applyExpandedOrCollapsedAttributesOnText: aBrTextEditor text ] ]
+	aBrTextEditor styledTextAttributesDo: [ :someAttributes | 
+		someAttributes
+			detect: [ :eachAttribute | eachAttribute class == GtTextFolderAttributeV2 ]
+			ifFound: [ :aFoundAttribute | 
+				folding ifNil: [ folding := aFoundAttribute isExpanded ].
+				aFoundAttribute isExpanded: folding not.
+				aFoundAttribute applyExpandedOrCollapsedIn: aBrEditorElement ] ]
 ]
