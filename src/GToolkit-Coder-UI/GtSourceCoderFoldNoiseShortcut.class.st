@@ -27,7 +27,7 @@ GtSourceCoderFoldNoiseShortcut >> performOnEditor: aBrTextEditor element: aBrEdi
 	folding := nil.
 	aBrTextEditor styledTextAttributesDo: [ :someAttributes | 
 		someAttributes
-			detect: [ :eachAttribute | eachAttribute class == GtTextFolderAttributeV2 ]
+			detect: [ :eachAttribute | eachAttribute class == GtTextFolderAttribute ]
 			ifFound: [ :aFoundAttribute | 
 				folding ifNil: [ folding := aFoundAttribute isExpanded ].
 				aFoundAttribute isExpanded: folding not.
