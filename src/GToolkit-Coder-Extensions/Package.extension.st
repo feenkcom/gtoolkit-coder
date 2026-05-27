@@ -83,3 +83,26 @@ Package >> gtDefinedTagsFor: aView context: aPhlowContext [
 					asSortedCollection: [ :a :b | a packageTagName < b packageTagName ]);
 				addEventFilterOn: BlClickEvent do: [ :anEvent | anEvent currentTarget requestFocus ] ]
 ]
+
+{ #category : #'*GToolkit-Coder-Extensions' }
+Package >> gtPackageCommentViewFor: aView context: aPhlowContext [
+	<gtPackageView>
+	(aPhlowContext isKindOf: GtPhlowExecutionContext) ifFalse: [ ^ aView empty ].
+	aPhlowContext hasPackageCoder ifFalse: [ ^ aView empty ].
+
+	^ aView textEditor
+		priority: 5;
+		title: 'Comment';
+		text: [ aPhlowContext packageCoder package packageComment ];
+		actionButtonIcon: BrGlamorousVectorIcons accept
+			tooltip: 'Save package comment'
+			action: [ :aButton | 
+				aButton phlow firstParentWithViewContent
+					ifNotNil: [ :anElement | 
+						anElement phlow firstChildWithViewContent
+							ifNotNil: [ :aChild | 
+								aChild
+									childWithId: #editor
+									ifFound: [ :anEditor | aPhlowContext packageCoder package packageComment: anEditor text asString ]
+									ifNone: [  ] ] ] ]
+]
