@@ -19,10 +19,3 @@ Behavior >> gtBrowseFrom: anElement [
 		icon: BrGlamorousVectorIcons browse;
 		showFrom: anElement
 ]
-
-{ #category : #'*GToolkit-Coder-Extensions' }
-Behavior >> methodsCoderFromContext: aPhlowContext [
-	<return: #GtPharoMethodsCoderViewModel>
-
-	^ (GtClassMethodsCoder forClass: self) asCoderViewModel
-]
