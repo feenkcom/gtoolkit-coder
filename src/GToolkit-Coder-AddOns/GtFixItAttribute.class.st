@@ -5,9 +5,9 @@ Class {
 		'fixItActionsBlock',
 		'descriptionBlock',
 		'hoverMarker',
-		'hoverAttribute',
 		'label',
-		'elementId'
+		'elementId',
+		'hoverHighlight'
 	],
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
@@ -15,17 +15,15 @@ Class {
 { #category : #accessing }
 GtFixItAttribute >> addHoveringStylingFor: anEditorElement to: anElement [
 	hoverMarker ifNil: [ ^ self ].
+	hoverHighlight ifNil: [ ^ self ].
 	anElement
 		when: BlMouseEnterEvent
 		do: [ :anEvent | 
-			anEditorElement editor text
-				findAttribute: hoverMarker
-				indicesDo: [ :aHighlightStart :aHighlightEnd | 
-					(anEditorElement text from: aHighlightStart to: aHighlightEnd)
-						attribute: hoverAttribute ] ].
+			anEditorElement addHighlight: hoverHighlight overMarker: hoverMarker ].
 	anElement
 		when: BlMouseLeaveEvent
-		do: [ :anEvent | anEditorElement text clearAttributes: [ :each | each == hoverAttribute ] ]
+		do: [ :anEvent | 
+			anEditorElement removeHighlightsWithId: hoverHighlight id ]
 ]
 
 { #category : #accessing }
@@ -162,12 +160,12 @@ GtFixItAttribute >> fixItActions: aCollection [
 
 { #category : #accessing }
 GtFixItAttribute >> hoverAttribute [
-	^ hoverAttribute
+	^ hoverHighlight
 ]
 
 { #category : #accessing }
 GtFixItAttribute >> hoverAttribute: aTextAttribute [
-	hoverAttribute := aTextAttribute
+	hoverHighlight := aTextAttribute
 ]
 
 { #category : #accessing }
