@@ -7,7 +7,8 @@ Class {
 		'hoverMarker',
 		'label',
 		'elementId',
-		'hoverHighlight'
+		'hoverHighlight',
+		'model'
 	],
 	#category : #'GToolkit-Coder-AddOns-FixIt'
 }
@@ -66,7 +67,8 @@ GtFixItAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	elementId ifNotNil: [ button id: elementId ].
 	button beTinySize.
 	button label: (label ifNil: [ 'Fix it' ]).
-
+	model ifNotNil: [ :aModel | button fixItModel: aModel ].
+	
 	dropDownAptitude := BrGlamorousWithExplicitDropdownAptitude
 			handle: [ | dropdownButton |
 				dropdownButton := BrButton new.
@@ -198,4 +200,14 @@ GtFixItAttribute >> label: aString [
 { #category : #testing }
 GtFixItAttribute >> mayHaveExternalReferences [
 	^ true
+]
+
+{ #category : #accessing }
+GtFixItAttribute >> model [
+	^ model
+]
+
+{ #category : #accessing }
+GtFixItAttribute >> model: anObject [
+	model := anObject
 ]
