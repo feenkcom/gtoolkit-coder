@@ -3,6 +3,7 @@ Extension { #name : #RGMethodDefinition }
 { #category : #'*GToolkit-Coder-Extensions' }
 RGMethodDefinition >> gtLocalVersionsFor: aView [
 	<gtView>
+	<gtToolView>
 	
 	self isDefined ifFalse: [ ^aView empty].
 	
