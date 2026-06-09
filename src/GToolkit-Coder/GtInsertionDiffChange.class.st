@@ -36,6 +36,11 @@ GtInsertionDiffChange >> isInsertion [
 	^ true
 ]
 
+{ #category : #printing }
+GtInsertionDiffChange >> jsonTypeName [
+	^ 'insertion'
+]
+
 { #category : #'as yet unclassified' }
 GtInsertionDiffChange >> originalIndex [
 	^ originalIndex

@@ -12,6 +12,11 @@ GtDiffChange >> applyAttributesToInput: aText [
 GtDiffChange >> applyAttributesToOutput: aText [
 ]
 
+{ #category : #printing }
+GtDiffChange >> asJsonData [
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 GtDiffChange >> deletedObjects [
 	^ nil

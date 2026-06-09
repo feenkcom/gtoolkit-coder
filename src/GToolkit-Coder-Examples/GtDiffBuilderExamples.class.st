@@ -5,6 +5,31 @@ Class {
 }
 
 { #category : #examples }
+GtDiffBuilderExamples >> asJsonDataCompositeChange [
+	<gtExample>
+	<return: #Dictionary>
+	| data |
+	data := self multipleChanges asJsonData.
+	self assert: (data at: 'type') equals: 'composite'.
+	self assert: ((data at: 'changes') size) equals: 2.
+	self assert: (((data at: 'changes') first at: 'type')) equals: 'replacement'.
+	^ data
+]
+
+{ #category : #examples }
+GtDiffBuilderExamples >> asJsonDataInsertedWords [
+	<gtExample>
+	<return: #Dictionary>
+	| data firstChange |
+	data := self insertedWordChanges asJsonData.
+	self assert: (data at: 'type') equals: 'composite'.
+	firstChange := (data at: 'changes') first.
+	self assert: (firstChange at: 'type') equals: 'insertion'.
+	self assert: (firstChange includesKey: 'source').
+	^ data
+]
+
+{ #category : #examples }
 GtDiffBuilderExamples >> byteArrayDiff [
 	<gtExample>
 	<return: #GtCompositeDiffChange>

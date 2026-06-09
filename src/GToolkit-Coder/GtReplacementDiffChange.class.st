@@ -26,6 +26,15 @@ GtReplacementDiffChange >> applyAttributesToOutput: aText [
 	insertionChange applyAttributesToOutput: aText
 ]
 
+{ #category : #printing }
+GtReplacementDiffChange >> asJsonData [
+	^ Dictionary new
+		at: 'type' put: 'replacement';
+		at: 'delete' put: deletionChange asJsonData;
+		at: 'insert' put: insertionChange asJsonData;
+		yourself
+]
+
 { #category : #accessing }
 GtReplacementDiffChange >> deletedObjects [
 	^ deletionChange objects
