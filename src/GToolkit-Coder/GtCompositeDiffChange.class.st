@@ -36,6 +36,14 @@ GtCompositeDiffChange >> applyAttributesToOutput: aText [
 	changes do: [ :each | each applyAttributesToOutput: aText ]
 ]
 
+{ #category : #printing }
+GtCompositeDiffChange >> asJsonData [
+	^ Dictionary new
+		at: 'type' put: 'composite';
+		at: 'changes' put: (changes collect: [ :each | each asJsonData ]);
+		yourself
+]
+
 { #category : #accessing }
 GtCompositeDiffChange >> changes [
 	^ changes

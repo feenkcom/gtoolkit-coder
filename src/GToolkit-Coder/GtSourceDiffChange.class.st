@@ -23,6 +23,16 @@ GtSourceDiffChange class >> on: aCollection from: startIndex to: stopIndex [
 		yourself
 ]
 
+{ #category : #printing }
+GtSourceDiffChange >> asJsonData [
+	^ Dictionary new
+		at: 'type' put: self jsonTypeName;
+		at: 'startIndex' put: startIndex;
+		at: 'stopIndex' put: stopIndex;
+		at: 'source' put: source;
+		yourself
+]
+
 { #category : #accessing }
 GtSourceDiffChange >> gtLiveFor: aView [
 	<gtView>
@@ -52,6 +62,11 @@ GtSourceDiffChange >> highlightColor [
 { #category : #testing }
 GtSourceDiffChange >> isEmpty [
 	^ startIndex > stopIndex
+]
+
+{ #category : #printing }
+GtSourceDiffChange >> jsonTypeName [
+	^ 'source'
 ]
 
 { #category : #accessing }

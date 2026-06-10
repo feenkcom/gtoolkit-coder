@@ -36,6 +36,11 @@ GtDeletionDiffChange >> isDeletion [
 	^ true
 ]
 
+{ #category : #printing }
+GtDeletionDiffChange >> jsonTypeName [
+	^ 'deletion'
+]
+
 { #category : #accessing }
 GtDeletionDiffChange >> newIndex [
 	^ newIndex
