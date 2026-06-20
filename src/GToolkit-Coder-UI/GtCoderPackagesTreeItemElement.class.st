@@ -32,12 +32,17 @@ GtCoderPackagesTreeItemElement >> packageOrTag [
 
 { #category : #accessing }
 GtCoderPackagesTreeItemElement >> packageOrTag: aPackageOrTag [
-	packageOrTag = aPackageOrTag
-		ifTrue: [ ^ self ].
+	packageOrTag = aPackageOrTag ifTrue: [ ^ self ].
 
 	packageOrTag := aPackageOrTag.
-	
+
 	packageOrTag
 		ifNil: [ label text: '' ]
-		ifNotNil: [ label text: packageOrTag name ]
+		ifNotNil: [ | aText |
+			aText := packageOrTag name asRopedText.
+			aPackageOrTag package isDeprecated
+				ifTrue: [ 
+					aText append: ' (deprecated)' asRopedText italic.
+					aText lineThrough ].
+			label text: aText ]
 ]
