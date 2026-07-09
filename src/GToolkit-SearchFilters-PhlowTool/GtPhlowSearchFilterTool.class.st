@@ -55,6 +55,12 @@ GtPhlowSearchFilterTool >> searchFilter: aSearchFilter [
 	searchFilter := aSearchFilter
 ]
 
+{ #category : #'testing ' }
+GtPhlowSearchFilterTool >> supportsSelectionHandling [
+	"The filter can extract and restore the selected tab"
+	^ true
+]
+
 { #category : #'api - accessing' }
 GtPhlowSearchFilterTool >> tabLook [
 	^ BrGlamorousTabSwitcherWithIconAptitude

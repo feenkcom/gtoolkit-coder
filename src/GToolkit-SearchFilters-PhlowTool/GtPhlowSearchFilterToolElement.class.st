@@ -84,6 +84,18 @@ GtPhlowSearchFilterToolElement >> collectToolViews [
 		collect
 ]
 
+{ #category : #'private - event handling' }
+GtPhlowSearchFilterToolElement >> extractSelectedTabIdentifier [
+	^ (GtPhlowSelectedTabExtractor new 
+		inspectorElement: self) extractTabName
+]
+
+{ #category : #'private - event handling' }
+GtPhlowSearchFilterToolElement >> extractToolSelectionState [
+	^ GtPhlowTabbedToolSelectionState new 
+		tabIdentifier: self extractSelectedTabIdentifier
+]
+
 { #category : #'accessing - elements' }
 GtPhlowSearchFilterToolElement >> headerElement [
 	^ self childNamed: #header
@@ -161,6 +173,12 @@ GtPhlowSearchFilterToolElement >> searchFilterDescription [
 		ifNil: [ 'Search Filter' ] 
 		ifNotNil: [ :aSearchFilter | 
 			'Filter: ', aSearchFilter gtDisplayString ]
+]
+
+{ #category : #selection }
+GtPhlowSearchFilterToolElement >> selectTabWithIdentifier: aTabIdentifier [
+	<return: #GtPhlowToolSelectionStateResponse>
+	^ aTabIdentifier applySelectionTo: self
 ]
 
 { #category : #'accessing - elements' }
