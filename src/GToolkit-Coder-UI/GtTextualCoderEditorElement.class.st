@@ -16,6 +16,14 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Textual'
 }
 
+{ #category : #testing }
+GtTextualCoderEditorElement class >> isDeprecated [
+	"Use GtTextualCoderElement instead.
+	We are switching to a new text editor API which will enable to use different text editor implementations."
+
+	^ true
+]
+
 { #category : #private }
 GtTextualCoderEditorElement >> addErrorAttribute: errorAttribute at: anInteger [
 	| text position |
