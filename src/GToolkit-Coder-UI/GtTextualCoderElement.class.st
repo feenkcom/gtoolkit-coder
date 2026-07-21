@@ -621,6 +621,12 @@ GtTextualCoderElement >> onViewModelCursorsChanged: aCursorsChangedAnnouncement 
 	aCursorsChangedAnnouncement textualCoderViewModel == self textualCoderViewModel
 		ifFalse: [ ^ self ].
 
+	GtCoderViewModelCursorsChangedSignal new
+		textualCoderViewModel: aCursorsChangedAnnouncement textualCoderViewModel;
+		source: aCursorsChangedAnnouncement source;
+		cursors: aCursorsChangedAnnouncement cursors;
+		emit.
+		
 	"since it may be sent from a non-UI process make sure to wrap in the action"
 	cursorsUpdater requestUpdate: aCursorsChangedAnnouncement
 ]
@@ -763,11 +769,15 @@ GtTextualCoderElement >> privateUpdateCursors: anEditorElement announcement: aCu
 		element: self;
 		emit.
 
-	self navigator
-		withoutResettingDesiredCoordinate;
-		removeAll;
-		addAll: aCursorsChangedAnnouncement cursors;
-		apply
+	aCursorsChangedAnnouncement cursors isSingle ifFalse: [ 
+		GtCoderUpdateMultipleCursorsSignal new
+			editorElement: anEditorElement;
+			cursors: aCursorsChangedAnnouncement cursors;
+			emit ].
+		
+	aCursorsChangedAnnouncement cursors do: [ :eachSingleCursor | 
+		self editorElement moveCursorTo: eachSingleCursor position.
+		^ self ].
 ]
 
 { #category : #'private - updating' }
