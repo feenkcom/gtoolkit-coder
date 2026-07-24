@@ -11,7 +11,6 @@ GtFilterStep >> assertFilterModelAtIndex: anIndex itemsCountIs: anItemsCount [
 				format: {anIndex.
 						anItemsCount.
 						'item' asPluralBasedOn: anItemsCount});
-		referenceSender;
 		onParentStepTarget: self;
 		value: [ :aFilterItemsElement | (aFilterItemsElement filtersViewModel items at: anIndex) itemsFuture wait size ]
 			equals: anItemsCount
@@ -24,7 +23,6 @@ GtFilterStep >> assertFilterModelAtIndex: anIndex itemsCountIsAtLeast: anItemsCo
 				format: {anIndex.
 						anItemsCount.
 						'item' asPluralBasedOn: anItemsCount});
-		referenceSender;
 		onParentStepTarget: self;
 		satisfies: [ :aFilterItemsElement | 
 				(aFilterItemsElement filtersViewModel items at: anIndex) itemsFuture wait size
@@ -43,7 +41,6 @@ GtFilterStep >> assertFilterModelAtIndex: anIndex selectedValueIs: aValue [
 		label: ('Assert filter model no. {1} has selected item: {2}'
 				format: {anIndex.
 						aValue});
-		referenceSender;
 		onParentStepTarget: self;
 		value: [ :aFilterItemsElement | (aFilterItemsElement filtersViewModel items at: anIndex) selectedValue ]
 			equals: aValue
@@ -53,7 +50,6 @@ GtFilterStep >> assertFilterModelAtIndex: anIndex selectedValueIs: aValue [
 GtFilterStep >> assertFilterModelNamed: aFilterName [
 	^ self assert
 		label: ('Assert filter model with name {1} exists' format: {aFilterName});
-		referenceSender;
 		onParentStepTarget: self;
 		onChildFromBlock: [ :aFilterItemsElement | aFilterItemsElement filtersViewModel items ];
 		anySatisfy: [ :aFilterViewModel | aFilterViewModel name = aFilterName ]
@@ -68,7 +64,6 @@ GtFilterStep >> assertFilterModelNamed: aFilterName selectedValueIs: aValue [
 	^ self assert
 		label: ('Assert filter model with name {1} has selected item: {2}'
 				format: {aFilterName. aValue});
-		referenceSender;
 		onParentStepTarget: self;
 		onChildFromBlock: [ :aFilterItemsElement | aFilterItemsElement filtersViewModel items ];
 		anySatisfy: [ :aFilterViewModel | aFilterViewModel name = aFilterName and: [
@@ -82,7 +77,6 @@ GtFilterStep >> assertFilterModelNamed: aFilterName selectedValueIs: aValue [
 GtFilterStep >> assertFilterModelsCountIs: anItemsCount [
 	^ self assert
 		label: ('Assert filter models count is {1}' format: {anItemsCount});
-		referenceSender;
 		onParentStepTarget: self;
 		value: [ :aFilterItemsElement | (aFilterItemsElement filtersViewModel items size) ]
 			equals: anItemsCount
