@@ -14,7 +14,7 @@ GtCoderKeymapRegistryExamples >> allEntriesHaveShortcutId [
 	"Verifies that every entry in the coder registry has its shortcutId set"
 	| registry |
 	registry := self coderKeymapRegistry.
-	(registry instVarNamed: 'keymaps') keysAndValuesDo: [ :shortcutId :entry |
+	registry keymapsById keysAndValuesDo: [ :shortcutId :entry |
 		self assert: entry shortcutId notNil.
 		self assert: entry shortcutId equals: shortcutId ].
 	^ registry
