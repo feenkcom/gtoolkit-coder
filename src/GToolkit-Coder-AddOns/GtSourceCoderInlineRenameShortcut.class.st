@@ -13,7 +13,8 @@ GtSourceCoderInlineRenameShortcut >> description [
 GtSourceCoderInlineRenameShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryR
+	combination := BlKeyCombination primaryR.
+	self coderShortcutId: GtCoderShortcutIds default inlineRenameShortcutId
 ]
 
 { #category : #accessing }

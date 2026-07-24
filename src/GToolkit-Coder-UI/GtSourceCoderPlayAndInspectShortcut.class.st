@@ -13,7 +13,8 @@ GtSourceCoderPlayAndInspectShortcut >> description [
 GtSourceCoderPlayAndInspectShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryG
+	combination := BlKeyCombination primaryG.
+	self coderShortcutId: GtCoderShortcutIds default playAndInspectShortcutId
 ]
 
 { #category : #accessing }

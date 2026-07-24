@@ -15,6 +15,7 @@ GtSourceCoderPrintItShortcut >> initialize [
 	
 	combination := BlKeyCombination primaryP.
 	name := 'Print'.
+	self coderShortcutId: GtCoderShortcutIds default printItShortcutId
 ]
 
 { #category : #evaluation }

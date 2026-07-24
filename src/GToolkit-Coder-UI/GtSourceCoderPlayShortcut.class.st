@@ -13,7 +13,8 @@ GtSourceCoderPlayShortcut >> description [
 GtSourceCoderPlayShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryD
+	combination := BlKeyCombination primaryD.
+	self coderShortcutId: GtCoderShortcutIds default playShortcutId
 ]
 
 { #category : #accessing }

@@ -13,7 +13,8 @@ GtSourceCoderBrowseImplementorsShortcut >> description [
 GtSourceCoderBrowseImplementorsShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryM
+	combination := BlKeyCombination primaryM.
+	self coderShortcutId: GtCoderShortcutIds default browseImplementorsShortcutId
 ]
 
 { #category : #accessing }

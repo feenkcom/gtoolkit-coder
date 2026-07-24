@@ -15,6 +15,7 @@ GtSourceCoderDoItShortcut >> initialize [
 	
 	combination := BlKeyCombination primaryD.
 	name := 'Evaluate'.
+	self coderShortcutId: GtCoderShortcutIds default doItShortcutId
 ]
 
 { #category : #evaluation }

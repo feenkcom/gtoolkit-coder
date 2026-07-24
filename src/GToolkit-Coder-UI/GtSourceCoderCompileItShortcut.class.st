@@ -15,6 +15,7 @@ GtSourceCoderCompileItShortcut >> initialize [
 	
 	combination := BlKeyCombination primaryS.
 	name := 'Compile'.
+	self coderShortcutId: GtCoderShortcutIds default compileItShortcutId
 ]
 
 { #category : #evaluation }

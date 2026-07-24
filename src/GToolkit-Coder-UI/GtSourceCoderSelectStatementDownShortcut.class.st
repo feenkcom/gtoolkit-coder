@@ -9,11 +9,12 @@ GtSourceCoderSelectStatementDownShortcut >> description [
 	^ 'Selects current statement or expands selection to next statement.'
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 GtSourceCoderSelectStatementDownShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination builder shift primary arrowDown build
+	combination := BlKeyCombination builder shift primary arrowDown build.
+	self coderShortcutId: GtCoderShortcutIds default selectStatementDownShortcutId
 ]
 
 { #category : #accessing }
