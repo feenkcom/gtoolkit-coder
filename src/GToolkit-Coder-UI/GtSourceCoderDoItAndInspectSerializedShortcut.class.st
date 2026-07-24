@@ -13,7 +13,8 @@ GtSourceCoderDoItAndInspectSerializedShortcut >> description [
 GtSourceCoderDoItAndInspectSerializedShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryShiftG
+	combination := BlKeyCombination primaryShiftG.
+	self coderShortcutId: GtCoderShortcutIds default doItAndInspectSerializedShortcutId
 ]
 
 { #category : #accessing }

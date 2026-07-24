@@ -13,7 +13,8 @@ GtSourceCoderDoItAsynchronousShortcut >> description [
 GtSourceCoderDoItAsynchronousShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryD
+	combination := BlKeyCombination primaryD.
+	self coderShortcutId: GtCoderShortcutIds default doItAsynchronousShortcutId
 ]
 
 { #category : #accessing }

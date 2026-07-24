@@ -9,11 +9,12 @@ GtSourceCoderMoveStatementDownShortcut >> description [
 	^ 'Moves a statement down in the statement list.'
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 GtSourceCoderMoveStatementDownShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination builder primary arrowDown build
+	combination := BlKeyCombination builder primary arrowDown build.
+	self coderShortcutId: GtCoderShortcutIds default moveStatementDownShortcutId
 ]
 
 { #category : #accessing }

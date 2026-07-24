@@ -13,7 +13,8 @@ GtSourceCoderBrowseReferencesShortcut >> description [
 GtSourceCoderBrowseReferencesShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryN
+	combination := BlKeyCombination primaryN.
+	self coderShortcutId: GtCoderShortcutIds default browseReferencesShortcutId
 ]
 
 { #category : #accessing }

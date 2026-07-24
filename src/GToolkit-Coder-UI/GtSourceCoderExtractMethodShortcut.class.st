@@ -13,7 +13,8 @@ GtSourceCoderExtractMethodShortcut >> description [
 GtSourceCoderExtractMethodShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryE
+	combination := BlKeyCombination primaryE.
+	self coderShortcutId: GtCoderShortcutIds default extractMethodShortcutId
 ]
 
 { #category : #accessing }

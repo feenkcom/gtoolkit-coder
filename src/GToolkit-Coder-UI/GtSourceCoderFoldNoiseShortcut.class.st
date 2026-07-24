@@ -13,7 +13,8 @@ GtSourceCoderFoldNoiseShortcut >> description [
 GtSourceCoderFoldNoiseShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryShiftN
+	combination := BlKeyCombination primaryShiftN.
+	self coderShortcutId: GtCoderShortcutIds default foldNoiseShortcutId
 ]
 
 { #category : #accessing }

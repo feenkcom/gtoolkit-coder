@@ -13,7 +13,8 @@ GtSourceCoderDiscardChangesShortcut >> description [
 GtSourceCoderDiscardChangesShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryL
+	combination := BlKeyCombination primaryL.
+	self coderShortcutId: GtCoderShortcutIds default discardChangesShortcutId
 ]
 
 { #category : #accessing }

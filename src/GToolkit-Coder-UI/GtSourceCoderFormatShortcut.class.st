@@ -13,7 +13,8 @@ GtSourceCoderFormatShortcut >> description [
 GtSourceCoderFormatShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryShiftF
+	combination := BlKeyCombination primaryShiftF.
+	self coderShortcutId: GtCoderShortcutIds default formatShortcutId
 ]
 
 { #category : #accessing }

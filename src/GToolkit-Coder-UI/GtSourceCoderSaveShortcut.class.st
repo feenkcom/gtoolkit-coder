@@ -13,7 +13,8 @@ GtSourceCoderSaveShortcut >> description [
 GtSourceCoderSaveShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryS
+	combination := BlKeyCombination primaryS.
+	self coderShortcutId: GtCoderShortcutIds default saveShortcutId
 ]
 
 { #category : #accessing }

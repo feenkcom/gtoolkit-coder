@@ -13,7 +13,8 @@ GtSourceCoderSearchTextShortcut >> description [
 GtSourceCoderSearchTextShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryF
+	combination := BlKeyCombination primaryF.
+	self coderShortcutId: GtCoderShortcutIds default searchTextShortcutId
 ]
 
 { #category : #accessing }

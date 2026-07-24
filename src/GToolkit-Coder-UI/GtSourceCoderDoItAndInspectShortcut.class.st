@@ -15,6 +15,7 @@ GtSourceCoderDoItAndInspectShortcut >> initialize [
 	
 	combination := BlKeyCombination primaryG.
 	name := 'Evaluate and inspect'.
+	self coderShortcutId: GtCoderShortcutIds default doItAndInspectShortcutId
 ]
 
 { #category : #evaluation }
