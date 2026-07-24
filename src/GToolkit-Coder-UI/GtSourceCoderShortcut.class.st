@@ -4,13 +4,6 @@ Class {
 	#category : #'GToolkit-Coder-UI-Shortcuts'
 }
 
-{ #category : #accessing }
-GtSourceCoderShortcut >> coderShortcutId: anId [
-	self 
-		shortcutId: anId 
-		inRegistry: BlShortcutKeymapRegistry default coder
-]
-
 { #category : #private }
 GtSourceCoderShortcut >> forEditor: aBrTextEditor selectedStringDo: aSelectedTextBlock orCursorStringPositionDo: aCursorTextPositionBlock [
 	self deprecated: 'Use #selectedStringDo:orCursorStringPositionDo: text editor element API instead'.
