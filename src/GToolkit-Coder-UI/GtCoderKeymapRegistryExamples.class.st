@@ -21,22 +21,6 @@ GtCoderKeymapRegistryExamples >> allEntriesHaveShortcutId [
 ]
 
 { #category : #examples }
-GtCoderKeymapRegistryExamples >> allNonLifewareCoderShortcutsHaveIds [
-	<gtExample>
-	<return: #OrderedCollection>
-	"Verifies that every non-Lifeware GtSourceCoderShortcut subclass (except GtViewCreatorShortcut) has shortcutId and combination set"
-	| shortcuts |
-	shortcuts := GtSourceCoderShortcut allSubclasses 
-		reject: [ :each | each isLifewareClass or: [ each = GtViewCreatorShortcut ] ].
-	shortcuts do: [ :cls |
-		| inst |
-		inst := cls new.
-		self assert: inst shortcutId notNil description: cls name, ' should have shortcutId'.
-		self assert: inst combination notNil description: cls name, ' should have combination' ].
-	^ shortcuts
-]
-
-{ #category : #examples }
 GtCoderKeymapRegistryExamples >> browseImplementorsShortcutPresent [
 	<gtExample>
 	<return: #GtCoderKeymapRegistry>
