@@ -282,7 +282,11 @@ GtTextualCoderElement >> initializeEditorListeners [
 
 	self editor
 		when: BrTextEditorTextStyledEvent
-		do: [ :anEvent | self onTextStyled: anEvent ]
+		do: [ :anEvent | self onTextStyled: anEvent ].
+
+	self editor
+		when: BrTextEditorCursorReachedBoundaryEvent
+		do: [ :anEvent | self onTextEditorCursorReachedBoundaryEvent: anEvent ]
 ]
 
 { #category : #initialization }
@@ -481,6 +485,11 @@ GtTextualCoderElement >> onTextEditorCursorChanged: anEvent [
 	self hasTextualCoderViewModel ifFalse: [ ^ self ].
 	
 	self textualCoderViewModel cursors: anEvent cursors from: self
+]
+
+{ #category : #initialization }
+GtTextualCoderElement >> onTextEditorCursorReachedBoundaryEvent: anEvent [
+	self dispatchEvent: anEvent
 ]
 
 { #category : #initialization }
