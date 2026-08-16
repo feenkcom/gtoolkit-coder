@@ -15,8 +15,7 @@ Class {
 		'completionStrategy',
 		'debuggerInSpace',
 		'nodeAttributeMap',
-		'history',
-		'documentId'
+		'history'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -69,7 +68,7 @@ GtTextualCoderViewModel >> addStylers: aCollectionOfGtCoderStyler [
 	aCollectionOfGtCoderStyler do: [ :eachStyler | self addStyler: eachStyler ]
 ]
 
-{ #category : #'api - text' }
+{ #category : #'api - text attributes' }
 GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderTextAttributes>
 	self deprecated: 'Use addTextAttribute:from:to:documentId: instead.'.
@@ -78,7 +77,7 @@ GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition
 		addTextAttribute: aTextAttribute
 		from: aStartPosition
 		to: anEndPosition
-		documentId: documentId
+		documentId: nil
 ]
 
 { #category : #'api - text' }
@@ -91,7 +90,7 @@ GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition
 		documentId: aDocumentId
 ]
 
-{ #category : #'api - text' }
+{ #category : #'api - text attributes' }
 GtTextualCoderViewModel >> addTextAttribute: aTextAttribute onText: aText from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderTextAttributes>
 	self deprecated: 'Use addTextAttribute:onText:from:to:documentId: instead'.
@@ -101,7 +100,7 @@ GtTextualCoderViewModel >> addTextAttribute: aTextAttribute onText: aText from: 
 		onText: aText
 		from: aStartPosition
 		to: anEndPosition
-		documentId: documentId
+		documentId: nil
 ]
 
 { #category : #'api - text' }
@@ -115,7 +114,7 @@ GtTextualCoderViewModel >> addTextAttribute: aTextAttribute onText: aText from: 
 		documentId: aDocumentId
 ]
 
-{ #category : #'api - text' }
+{ #category : #'api - text attributes' }
 GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderTextAttributes>
 	
@@ -125,7 +124,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: 
 		addTextAttributes: aCollectionOfTextAttributes
 		from: aStartPosition
 		to: anEndPosition
-		documentId: documentId
+		documentId: nil
 ]
 
 { #category : #'api - text' }
@@ -412,20 +411,26 @@ GtTextualCoderViewModel >> cursors: aBrTextEditorCursor from: aSourceObject [
 
 { #category : #accessing }
 GtTextualCoderViewModel >> documentId [
-	^ documentId
+	"Answer the id of the document I show.
+	The id lives in the coder model's source text: I do not cache it, so it cannot go stale.
+	See BlTextDocumentId."
+
+	<return: #BlTextDocumentId>
+	^ coderModel
+		ifNil: [ nil ]
+		ifNotNil: [ self sourceText ifNotNil: #documentId ]
 ]
 
 { #category : #accessing }
 GtTextualCoderViewModel >> documentId: anObject [
-	| oldDocumentId |
-	documentId = anObject ifTrue: [ ^ self ].
-	
-	oldDocumentId := documentId.
-	documentId := anObject.
-	
-	GtCoderDocumentIdUpdatedSignal new 
+	"I no longer store the document id: it lives in the text I show, see #documentId.
+	I only report that somebody announced a different id, which is a symptom of the
+	editor and the coder model holding different documents.
+	My senders are being removed."
+
+	GtCoderDocumentIdUpdatedSignal new
 		texturalCoderViewModel: self;
-		oldDocumentId: oldDocumentId;
+		oldDocumentId: self documentId;
 		newDocumentId: anObject;
 		emit
 ]
@@ -664,7 +669,7 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 	isTextModifiedPromise := nil.
 	
 	GtTextualCoderViewModelTextChangedSignal new
-		documentId: documentId;
+		documentId: self documentId;
 		text: self coderModel currentSourceText;
 		textualCoderViewModel: self;
 		emit.
@@ -687,7 +692,7 @@ GtTextualCoderViewModel >> printOn: aStream [
 
 	aStream
 		nextPut: $(;
-		print: documentId;
+		print: self documentId;
 		nextPut: $)
 ]
 
