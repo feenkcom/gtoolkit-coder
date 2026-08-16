@@ -22,7 +22,7 @@ GtTextualCoderViewModelTextAttributesAdded >> coderTextAttributes: anObject [
 
 { #category : #accessing }
 GtTextualCoderViewModelTextAttributesAdded >> documentId [
-	^ self coderTextAttributes ifNotNil: #documentId
+	^ self text ifNotNil: #documentId
 ]
 
 { #category : #accessing }

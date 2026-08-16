@@ -144,32 +144,18 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 	<return: #GtTextualCoderTextAttributes>
 	| aMarkerAttribute newCoderTextAttributes |
 	
-	"If documentId is different, do nothing."
-	self flag: #TODO.
-	"documentId ifNotNil: ["
-		aDocumentId 
-			ifNil: [ 
-				GtCoderDocumentIdIsNilSignal new 
-					originalDocumentId: documentId;
-					emit ]
-			ifNotNil: [
-				aDocumentId = documentId ifFalse: [ 
-					GtCoderDocumentIdDifferentSignal new
-						originalDocumentId: documentId;
-						receivedDocumentId: aDocumentId;
-						emit ] ] "]".
-	
 	aMarkerAttribute := BrTextInvisibleMarkerAttribute new beNotOverwritableByStyler.
 	
 	"we change the sourceText directly to not trigger the styler recomputation"
-	aText attribute: aMarkerAttribute from: aStartPosition to: anEndPosition.
-	
-	"Pass aDocumentId, once it circulates properly."
+	"TODO: Is this necessary? Can we just add it later using the `GtTextualCoderTextAttributes` instances?"
 	self flag: #TODO.
+	aText documentId = aDocumentId ifTrue: [ 
+		aText attribute: aMarkerAttribute from: aStartPosition to: anEndPosition ].
+	
 	newCoderTextAttributes := GtTextualCoderTextAttributes new
 		markerAttribute: aMarkerAttribute;
 		textAttributes: aCollectionOfTextAttributes;
-		documentId: (aDocumentId ifNil: [ documentId ]);
+		documentId: aDocumentId;
 		startPosition: aStartPosition;
 		stopPosition: anEndPosition.
 	

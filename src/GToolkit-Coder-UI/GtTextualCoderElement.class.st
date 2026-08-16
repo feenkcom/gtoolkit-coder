@@ -715,11 +715,15 @@ GtTextualCoderElement >> onViewModelTextAttributesAdded: anAnnouncement [
 				emit ].
 	
 	self enqueueTask: (BlTaskAction new action: [ 
-		anAnnouncement coderTextAttributes
-				applyOnEditorElement: editorElement
-				receivedText: anAnnouncement text
-				from: anAnnouncement startPosition
-				to: anAnnouncement stopPosition ])
+			| anEditorText |
+			anEditorText := self text.
+			anAnnouncement documentId = anEditorText documentId
+				ifTrue: [
+					anAnnouncement coderTextAttributes
+						applyOnEditorElement: editorElement
+						receivedText: anEditorText
+						from: anAnnouncement startPosition
+						to: anAnnouncement stopPosition ] ])
 ]
 
 { #category : #'private - event handling' }
