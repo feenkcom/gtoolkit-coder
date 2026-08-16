@@ -10,6 +10,11 @@ Class {
 }
 
 { #category : #accessing }
+GtCoderSourceString >> documentId [
+	^ self sourceText ifNotNil: #documentId
+]
+
+{ #category : #accessing }
 GtCoderSourceString >> epoch [
 
 	^ epoch
