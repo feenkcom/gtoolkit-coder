@@ -8,6 +8,11 @@ Class {
 	#category : #'GToolkit-Coder-UI-Coder - Source Model'
 }
 
+{ #category : #accessing }
+GtSourceCoderViewModel class >> debuggerTextHighlightId [
+	^ #'debugger--program-counter'
+]
+
 { #category : #converting }
 GtSourceCoderViewModel >> asCoderRequesterObject [
 	^ GtCoderViewModelRequester new coderViewModel: self

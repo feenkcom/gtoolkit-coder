@@ -10,6 +10,7 @@ Class {
 		'cursors',
 		'selection',
 		'extraTextAttributes',
+		'textHighlights',
 		'styledText',
 		'isTextModifiedPromise',
 		'completionStrategy',
@@ -167,6 +168,27 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 		stopPosition: anEndPosition).
 
 	^ newCoderTextAttributes
+]
+
+{ #category : #'api - text highlights' }
+GtTextualCoderViewModel >> addTextHighlight: aBrTextHighlight overRange: aBrTextCharacterRange [
+	"Record a highlight and announce it. The range already carries the document id of the text
+	it was computed against, so no text argument is needed: an editor showing another document
+	ignores the highlight and re-applies it once it catches up."
+
+	<return: #GtTextualCoderTextHighlight>
+	| aNewTextHighlight |
+	aNewTextHighlight := GtTextualCoderTextHighlight new
+			textHighlight: aBrTextHighlight;
+			textRange: aBrTextCharacterRange.
+
+	textHighlights add: aNewTextHighlight.
+
+	self announce: (GtTextualCoderViewModelTextHighlightAdded new
+			textualCoderViewModel: self;
+			textHighlight: aNewTextHighlight).
+
+	^ aNewTextHighlight
 ]
 
 { #category : #'api - styling' }
@@ -520,6 +542,7 @@ GtTextualCoderViewModel >> initialize [
 	cursors := BrTextEditorMultipleCursor new.
 	selection := BlCompositeSelection new.
 	extraTextAttributes := OrderedCollection new.
+	textHighlights := OrderedCollection new.
 	nodeAttributeMap := Dictionary new.
 	history := BrTextEditorHistory new
 ]
@@ -739,6 +762,25 @@ GtTextualCoderViewModel >> removeStylersOfClass: aGtCoderStylerClass [
 	extraAddOns removeStylersOfClass: aGtCoderStylerClass
 ]
 
+{ #category : #'api - text highlights' }
+GtTextualCoderViewModel >> removeTextHighlight: aGtTextualCoderTextHighlight [
+	aGtTextualCoderTextHighlight ifNil: [ ^ self ].
+
+	textHighlights
+		remove: aGtTextualCoderTextHighlight
+		ifAbsent: [ ^ self ].
+
+	self announce: (GtTextualCoderViewModelTextHighlightRemoved new
+			textualCoderViewModel: self;
+			textHighlight: aGtTextualCoderTextHighlight)
+]
+
+{ #category : #'api - text highlights' }
+GtTextualCoderViewModel >> removeTextHighlightsWithId: anId [
+	(textHighlights select: [ :each | each id = anId ])
+		do: [ :each | self removeTextHighlight: each ]
+]
+
 { #category : #'api - actions' }
 GtTextualCoderViewModel >> requestSearch [
 	"Request the view model to start the saving process. We first send a corresponding announcement to
@@ -924,6 +966,15 @@ GtTextualCoderViewModel >> subscribeToCoderModel [
 		when: GtCoderSourceCodeChanged
 		send: #onSourceCodeChanged:
 		to: self
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> textHighlights [
+	"Answer the text highlights I hold. They are kept separately from #extraTextAttributes and
+	are applied after them, so highlights paint over attributes."
+
+	<return: #Collection of: #GtTextualCoderTextHighlight>
+	^ textHighlights
 ]
 
 { #category : #'api - text' }
