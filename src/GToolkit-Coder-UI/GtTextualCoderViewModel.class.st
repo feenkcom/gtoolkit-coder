@@ -162,6 +162,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 	extraTextAttributes add: newCoderTextAttributes.
 	self announce: (GtTextualCoderViewModelTextAttributesAdded new
 		textualCoderViewModel: self;
+		documentId: aDocumentId;
 		coderTextAttributes: newCoderTextAttributes;
 		text: aText;
 		startPosition: aStartPosition;
