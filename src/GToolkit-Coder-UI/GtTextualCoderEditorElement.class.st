@@ -45,12 +45,10 @@ GtTextualCoderEditorElement >> applyTextHighlights [
 
 	self hasTextualCoderViewModel ifFalse: [ ^ self ].
 
-	self enqueueTask: (BlTaskAction new action: [
-			| anEditorText |
-			anEditorText := self text.
-			self textualCoderViewModel textHighlights do: [ :eachTextHighlight |
-				eachTextHighlight documentId = anEditorText documentId
-					ifTrue: [ eachTextHighlight applyOnEditorElement: self ] ] ])
+	self
+		enqueueTask: (BlTaskAction new
+				action: [ self textualCoderViewModel textHighlights
+						do: [ :eachTextHighlight | eachTextHighlight applyOnEditorElement: self ] ])
 ]
 
 { #category : #'hooks - children' }
@@ -599,15 +597,13 @@ GtTextualCoderEditorElement >> onViewModelTextAttributesAdded: anAnnouncement [
 				emit ].
 	
 	self enqueueTask: (BlTaskAction new action: [
-			| anEditorText |
-			anEditorText := self text.
-			anAnnouncement documentId = anEditorText documentId
-			ifTrue: [
-				anAnnouncement coderTextAttributes
-					applyOnEditorElement: self
-					receivedText: anEditorText
-					from: anAnnouncement startPosition
-					to: anAnnouncement stopPosition ] ])
+		| anEditorText |
+		anEditorText := self text.
+		anAnnouncement coderTextAttributes
+			applyOnEditorElement: self
+			receivedText: anEditorText
+			from: anAnnouncement startPosition
+			to: anAnnouncement stopPosition ])
 ]
 
 { #category : #'private - event handling' }
@@ -650,13 +646,12 @@ GtTextualCoderEditorElement >> onViewModelTextEditCommandRequest: aGtTextualCode
 
 { #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onViewModelTextHighlightAdded: anAnnouncement [
-	self textualCoderViewModel = anAnnouncement textualCoderViewModel ifFalse: [ ^ self ].
+	self textualCoderViewModel = anAnnouncement textualCoderViewModel
+		ifFalse: [ ^ self ].
 
-	self enqueueTask: (BlTaskAction new action: [
-			| anEditorText |
-			anEditorText := self text.
-			anAnnouncement documentId = anEditorText documentId
-				ifTrue: [ anAnnouncement textHighlight applyOnEditorElement: self ] ])
+	self
+		enqueueTask: (BlTaskAction new
+				action: [ anAnnouncement textHighlight applyOnEditorElement: self ])
 ]
 
 { #category : #'private - event handling' }
