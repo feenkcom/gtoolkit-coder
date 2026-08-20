@@ -142,7 +142,8 @@ GtSourceCoderRefactoringController >> setText: aStringOrText [
 	self sourceCoderViewModel
 		sourceText: aStringOrText asRopedText
 		from: self
-		synchronously: true
+		synchronously: true.
+	self documentId: self sourceCoderViewModel documentId
 ]
 
 { #category : #accessing }
