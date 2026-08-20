@@ -9,6 +9,11 @@ GtSearchDisjunctionFilter >> defaultFilterScope [
 	^ left defaultFilterScope
 ]
 
+{ #category : #storing }
+GtSearchDisjunctionFilter >> filterOperatorForCodeCreation [
+	^ '-'
+]
+
 { #category : #printing }
 GtSearchDisjunctionFilter >> gtDisplayOn: stream [
 	left gtDisplayOn: stream.

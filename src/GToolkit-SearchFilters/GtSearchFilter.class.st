@@ -75,6 +75,12 @@ GtSearchFilter >> contents [
 	^ self result toArray wait
 ]
 
+{ #category : #storing }
+GtSearchFilter >> creationCode [ 
+	^ String streamContents: [ :aStream |
+			self storeCreationCodeOn: aStream ]
+]
+
 { #category : #accessing }
 GtSearchFilter >> defaultFilterScope [
 	^ AsyncEmptyStream new
@@ -168,6 +174,11 @@ GtSearchFilter >> select: aBlock [
 { #category : #accessing }
 GtSearchFilter >> size [
 	^ (self result inject: 0 into: [ :counter :eachItem | counter + 1 ]) wait
+]
+
+{ #category : #storing }
+GtSearchFilter >> storeCreationCodeOn: aStream [
+	aStream nextPutAll: 'NotYetImplement signal.'
 ]
 
 { #category : #testing }
