@@ -77,8 +77,12 @@ GtSearchFilter >> contents [
 
 { #category : #storing }
 GtSearchFilter >> creationCode [ 
-	^ String streamContents: [ :aStream |
-			self storeCreationCodeOn: aStream ]
+	^ (GtSearchFilterCreationCodeBuilder forSearchFilter: self) creationCode
+]
+
+{ #category : #storing }
+GtSearchFilter >> creationCodeString [
+	^ self creationCode codeString
 ]
 
 { #category : #accessing }
@@ -114,9 +118,13 @@ GtSearchFilter >> gtViewFilterCreationCodeFor: aView [
 	^ aView forward
 		title: 'Creation code';
 		priority: 90;
-		object: [ LePharoSnippet code: (RBParser 
-			parseExpression: self creationCode) formattedCode ];
-		view: #gtLiveFor:
+		object: [ self creationCode ];
+		view: #gtViewFilterCreationCodeFor:;
+		actionButtonIcon: BrGlamorousVectorIcons inspect 
+			tooltip: 'Inspect code builder' 
+			action: [ :aButton |
+				aButton phlow 
+					spawnObject: (GtSearchFilterCreationCodeBuilder forSearchFilter: self) ]
 ]
 
 { #category : #comparing }
