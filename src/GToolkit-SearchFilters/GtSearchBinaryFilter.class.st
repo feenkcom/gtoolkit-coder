@@ -49,15 +49,9 @@ GtSearchBinaryFilter >> rightFilter [
 
 { #category : #storing }
 GtSearchBinaryFilter >> storeCreationCodeOn: aStream [
-	| filterCode|
-	filterCode := String streamContents: [ :anotherStream |
-		anotherStream parenthesize: [ 
-			left storeCreationCodeOn: anotherStream ].
-		anotherStream nextPutAll: ''.
-		anotherStream nextPutAll: self filterOperatorForCodeCreation.
-		anotherStream nextPutAll: ''.
-		anotherStream parenthesize: [ 
-			right storeCreationCodeOn: anotherStream ] ].
-
-	aStream nextPutAll: (RBParser parseExpression: filterCode) formattedCode
+	aStream parenthesize: [ left storeCreationCodeOn: aStream ].
+	aStream nextPutAll: ''.
+	aStream nextPutAll: self filterOperatorForCodeCreation.
+	aStream nextPutAll: ''.
+	aStream parenthesize: [ right storeCreationCodeOn: aStream ]
 ]

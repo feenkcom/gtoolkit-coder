@@ -51,11 +51,7 @@ GtSearchNegationFilter >> resultType [
 
 { #category : #storing }
 GtSearchNegationFilter >> storeCreationCodeOn: aStream [
-	| filterCode|
-	filterCode := String streamContents: [ :anotherStream |
-		anotherStream nextPutAll: '('.
-		self originalFilter storeCreationCodeOn: anotherStream.
-		anotherStream nextPutAll: ') not' ].
-
-	aStream nextPutAll: (RBParser parseExpression: filterCode) formattedCode
+	aStream nextPutAll: '('.
+	self originalFilter storeCreationCodeOn: aStream.
+	aStream nextPutAll: ') not'
 ]

@@ -92,12 +92,8 @@ GtLabeledSearchFilter >> size [
 
 { #category : #storing }
 GtLabeledSearchFilter >> storeCreationCodeOn: aStream [
-	| filterCode|
-	filterCode := String streamContents: [ :anotherStream |
-		anotherStream nextPutAll: '('.
-		self filter storeCreationCodeOn: anotherStream.
-		anotherStream nextPutAll: ') labeled: '.
-		anotherStream print: self filterLabel ].
-
-	aStream nextPutAll: (RBParser parseExpression: filterCode) formattedCode
+	aStream nextPutAll: '('.
+	self filter storeCreationCodeOn: aStream.
+	aStream nextPutAll: ') labeled: '.
+	aStream print: self filterLabel
 ]
