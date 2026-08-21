@@ -1,6 +1,6 @@
 {
 	"repositories" : {
-		"github://feenkcom/gtoolkit-notifications/src" : "v0.7.139",
+		"github://feenkcom/gtoolkit-notifications/src" : "v0.7.140",
 		"github://feenkcom/gtoolkit-utility/src" : "v0.9.48",
 		"github://feenkcom/pharo-futures/src" : "v0.6.162",
 		"github://feenkcom/gtoolkit-pager/src" : "v0.9.179",
