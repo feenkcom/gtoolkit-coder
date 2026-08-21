@@ -10,13 +10,13 @@ Class {
 		'cursors',
 		'selection',
 		'extraTextAttributes',
+		'textHighlights',
 		'styledText',
 		'isTextModifiedPromise',
 		'completionStrategy',
 		'debuggerInSpace',
 		'nodeAttributeMap',
-		'history',
-		'documentId'
+		'history'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model'
 }
@@ -69,7 +69,7 @@ GtTextualCoderViewModel >> addStylers: aCollectionOfGtCoderStyler [
 	aCollectionOfGtCoderStyler do: [ :eachStyler | self addStyler: eachStyler ]
 ]
 
-{ #category : #'api - text' }
+{ #category : #'api - text attributes' }
 GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderTextAttributes>
 	self deprecated: 'Use addTextAttribute:from:to:documentId: instead.'.
@@ -78,7 +78,7 @@ GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition
 		addTextAttribute: aTextAttribute
 		from: aStartPosition
 		to: anEndPosition
-		documentId: documentId
+		documentId: nil
 ]
 
 { #category : #'api - text' }
@@ -91,7 +91,7 @@ GtTextualCoderViewModel >> addTextAttribute: aTextAttribute from: aStartPosition
 		documentId: aDocumentId
 ]
 
-{ #category : #'api - text' }
+{ #category : #'api - text attributes' }
 GtTextualCoderViewModel >> addTextAttribute: aTextAttribute onText: aText from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderTextAttributes>
 	self deprecated: 'Use addTextAttribute:onText:from:to:documentId: instead'.
@@ -101,7 +101,7 @@ GtTextualCoderViewModel >> addTextAttribute: aTextAttribute onText: aText from: 
 		onText: aText
 		from: aStartPosition
 		to: anEndPosition
-		documentId: documentId
+		documentId: nil
 ]
 
 { #category : #'api - text' }
@@ -115,7 +115,7 @@ GtTextualCoderViewModel >> addTextAttribute: aTextAttribute onText: aText from: 
 		documentId: aDocumentId
 ]
 
-{ #category : #'api - text' }
+{ #category : #'api - text attributes' }
 GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: aStartPosition to: anEndPosition [
 	<return: #GtTextualCoderTextAttributes>
 	
@@ -125,7 +125,7 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes from: 
 		addTextAttributes: aCollectionOfTextAttributes
 		from: aStartPosition
 		to: anEndPosition
-		documentId: documentId
+		documentId: nil
 ]
 
 { #category : #'api - text' }
@@ -144,44 +144,52 @@ GtTextualCoderViewModel >> addTextAttributes: aCollectionOfTextAttributes onText
 	<return: #GtTextualCoderTextAttributes>
 	| aMarkerAttribute newCoderTextAttributes |
 	
-	"If documentId is different, do nothing."
-	self flag: #TODO.
-	"documentId ifNotNil: ["
-		aDocumentId 
-			ifNil: [ 
-				GtCoderDocumentIdIsNilSignal new 
-					originalDocumentId: documentId;
-					emit ]
-			ifNotNil: [
-				aDocumentId = documentId ifFalse: [ 
-					GtCoderDocumentIdDifferentSignal new
-						originalDocumentId: documentId;
-						receivedDocumentId: aDocumentId;
-						emit ] ] "]".
-	
 	aMarkerAttribute := BrTextInvisibleMarkerAttribute new beNotOverwritableByStyler.
 	
 	"we change the sourceText directly to not trigger the styler recomputation"
-	aText attribute: aMarkerAttribute from: aStartPosition to: anEndPosition.
-	
-	"Pass aDocumentId, once it circulates properly."
+	"TODO: Is this necessary? Can we just add it later using the `GtTextualCoderTextAttributes` instances?"
 	self flag: #TODO.
+	aText documentId = aDocumentId ifTrue: [ 
+		aText attribute: aMarkerAttribute from: aStartPosition to: anEndPosition ].
+	
 	newCoderTextAttributes := GtTextualCoderTextAttributes new
 		markerAttribute: aMarkerAttribute;
 		textAttributes: aCollectionOfTextAttributes;
-		documentId: (aDocumentId ifNil: [ documentId ]);
+		documentId: aDocumentId;
 		startPosition: aStartPosition;
 		stopPosition: anEndPosition.
 	
 	extraTextAttributes add: newCoderTextAttributes.
 	self announce: (GtTextualCoderViewModelTextAttributesAdded new
 		textualCoderViewModel: self;
+		documentId: aDocumentId;
 		coderTextAttributes: newCoderTextAttributes;
 		text: aText;
 		startPosition: aStartPosition;
 		stopPosition: anEndPosition).
 
 	^ newCoderTextAttributes
+]
+
+{ #category : #'api - text highlights' }
+GtTextualCoderViewModel >> addTextHighlight: aBrTextHighlight overRange: aBrTextCharacterRange [
+	"Record a highlight and announce it. The range already carries the document id of the text
+	it was computed against, so no text argument is needed: an editor showing another document
+	ignores the highlight and re-applies it once it catches up."
+
+	<return: #GtTextualCoderTextHighlight>
+	| aNewTextHighlight |
+	aNewTextHighlight := GtTextualCoderTextHighlight new
+			textHighlight: aBrTextHighlight;
+			textRange: aBrTextCharacterRange.
+
+	textHighlights add: aNewTextHighlight.
+
+	self announce: (GtTextualCoderViewModelTextHighlightAdded new
+			textualCoderViewModel: self;
+			textHighlight: aNewTextHighlight).
+
+	^ aNewTextHighlight
 ]
 
 { #category : #'api - styling' }
@@ -426,20 +434,26 @@ GtTextualCoderViewModel >> cursors: aBrTextEditorCursor from: aSourceObject [
 
 { #category : #accessing }
 GtTextualCoderViewModel >> documentId [
-	^ documentId
+	"Answer the id of the document I show.
+	The id lives in the coder model's source text: I do not cache it, so it cannot go stale.
+	See BlTextDocumentId."
+
+	<return: #BlTextDocumentId>
+	^ coderModel
+		ifNil: [ nil ]
+		ifNotNil: [ self sourceText ifNotNil: #documentId ]
 ]
 
 { #category : #accessing }
 GtTextualCoderViewModel >> documentId: anObject [
-	| oldDocumentId |
-	documentId = anObject ifTrue: [ ^ self ].
-	
-	oldDocumentId := documentId.
-	documentId := anObject.
-	
-	GtCoderDocumentIdUpdatedSignal new 
+	"I no longer store the document id: it lives in the text I show, see #documentId.
+	I only report that somebody announced a different id, which is a symptom of the
+	editor and the coder model holding different documents.
+	My senders are being removed."
+
+	GtCoderDocumentIdUpdatedSignal new
 		texturalCoderViewModel: self;
-		oldDocumentId: oldDocumentId;
+		oldDocumentId: self documentId;
 		newDocumentId: anObject;
 		emit
 ]
@@ -529,6 +543,7 @@ GtTextualCoderViewModel >> initialize [
 	cursors := BrTextEditorMultipleCursor new.
 	selection := BlCompositeSelection new.
 	extraTextAttributes := OrderedCollection new.
+	textHighlights := OrderedCollection new.
 	nodeAttributeMap := Dictionary new.
 	history := BrTextEditorHistory new
 ]
@@ -678,7 +693,7 @@ GtTextualCoderViewModel >> onSourceCodeChanged: anSourceCodeChangedAnnouncement 
 	isTextModifiedPromise := nil.
 	
 	GtTextualCoderViewModelTextChangedSignal new
-		documentId: documentId;
+		documentId: self documentId;
 		text: self coderModel currentSourceText;
 		textualCoderViewModel: self;
 		emit.
@@ -701,7 +716,7 @@ GtTextualCoderViewModel >> printOn: aStream [
 
 	aStream
 		nextPut: $(;
-		print: documentId;
+		print: self documentId;
 		nextPut: $)
 ]
 
@@ -746,6 +761,25 @@ GtTextualCoderViewModel >> removeHighlightsWithId: aStringId [
 { #category : #'api - shortcuts' }
 GtTextualCoderViewModel >> removeStylersOfClass: aGtCoderStylerClass [
 	extraAddOns removeStylersOfClass: aGtCoderStylerClass
+]
+
+{ #category : #'api - text highlights' }
+GtTextualCoderViewModel >> removeTextHighlight: aGtTextualCoderTextHighlight [
+	aGtTextualCoderTextHighlight ifNil: [ ^ self ].
+
+	textHighlights
+		remove: aGtTextualCoderTextHighlight
+		ifAbsent: [ ^ self ].
+
+	self announce: (GtTextualCoderViewModelTextHighlightRemoved new
+			textualCoderViewModel: self;
+			textHighlight: aGtTextualCoderTextHighlight)
+]
+
+{ #category : #'api - text highlights' }
+GtTextualCoderViewModel >> removeTextHighlightsWithId: anId [
+	(textHighlights select: [ :each | each id = anId ])
+		do: [ :each | self removeTextHighlight: each ]
 ]
 
 { #category : #'api - actions' }
@@ -933,6 +967,15 @@ GtTextualCoderViewModel >> subscribeToCoderModel [
 		when: GtCoderSourceCodeChanged
 		send: #onSourceCodeChanged:
 		to: self
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModel >> textHighlights [
+	"Answer the text highlights I hold. They are kept separately from #extraTextAttributes and
+	are applied after them, so highlights paint over attributes."
+
+	<return: #Collection of: #GtTextualCoderTextHighlight>
+	^ textHighlights
 ]
 
 { #category : #'api - text' }

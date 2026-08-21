@@ -25,5 +25,6 @@ GtSourceCoderExtractMethodShortcut >> name [
 { #category : #evaluation }
 GtSourceCoderExtractMethodShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
 	(GtExtractMethodToComponentController new
-		sourceCoderViewModel: aSourceCoderViewModel) executeIn: aBrEditorElement
+		sourceCoderViewModel: aSourceCoderViewModel;
+		documentId: aSourceCoderViewModel documentId) executeIn: aBrEditorElement
 ]

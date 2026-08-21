@@ -19,6 +19,11 @@ GtCoderSourceText >> asSourceString [
 ]
 
 { #category : #accessing }
+GtCoderSourceText >> documentId [
+	^ self text ifNotNil: #documentId
+]
+
+{ #category : #accessing }
 GtCoderSourceText >> epoch [
 	^ epoch
 ]

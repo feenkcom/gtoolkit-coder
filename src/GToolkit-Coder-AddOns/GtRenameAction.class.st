@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtAbstractRenameAction,
 	#instVars : [
 		'textElement',
-		'originalCursorPosition'
+		'originalCursorPosition',
+		'documentId'
 	],
 	#category : #'GToolkit-Coder-AddOns-Inline rename'
 }
@@ -46,6 +47,16 @@ GtRenameAction >> addRenameAttributes [
 GtRenameAction >> allowSave [
 	(textElement respondsTo: #textualCoderViewModel)
 		ifTrue: [ textElement textualCoderViewModel allowSaveDueTo: self ]
+]
+
+{ #category : #accessing }
+GtRenameAction >> documentId [
+	^ documentId
+]
+
+{ #category : #accessing }
+GtRenameAction >> documentId: anObject [
+	documentId := anObject
 ]
 
 { #category : #'private - actions' }

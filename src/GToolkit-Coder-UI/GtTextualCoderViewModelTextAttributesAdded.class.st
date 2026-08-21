@@ -5,7 +5,8 @@ Class {
 		'coderTextAttributes',
 		'startPosition',
 		'stopPosition',
-		'text'
+		'text',
+		'documentId'
 	],
 	#category : #'GToolkit-Coder-UI-Coder - Textual Model - Events'
 }
@@ -22,7 +23,12 @@ GtTextualCoderViewModelTextAttributesAdded >> coderTextAttributes: anObject [
 
 { #category : #accessing }
 GtTextualCoderViewModelTextAttributesAdded >> documentId [
-	^ self coderTextAttributes ifNotNil: #documentId
+	^ documentId
+]
+
+{ #category : #accessing }
+GtTextualCoderViewModelTextAttributesAdded >> documentId: anObject [
+	documentId := anObject
 ]
 
 { #category : #accessing }

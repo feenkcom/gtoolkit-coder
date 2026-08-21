@@ -38,6 +38,19 @@ GtTextualCoderEditorElement >> addErrorAttribute: errorAttribute at: anInteger [
 	self scrollToPosition: (text asString lineNumberCorrespondingToIndex: position)
 ]
 
+{ #category : #'private - updating' }
+GtTextualCoderEditorElement >> applyTextHighlights [
+	"Re-apply the highlights recorded by my view model that belong to the document I currently
+	show. See GtTextualCoderElement>>#applyTextHighlights."
+
+	self hasTextualCoderViewModel ifFalse: [ ^ self ].
+
+	self
+		enqueueTask: (BlTaskAction new
+				action: [ self textualCoderViewModel textHighlights
+						do: [ :eachTextHighlight | eachTextHighlight applyOnEditorElement: self ] ])
+]
+
 { #category : #'hooks - children' }
 GtTextualCoderEditorElement >> attachSpace [
 	super attachSpace.
@@ -443,7 +456,7 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelAddHighlightRequest: anAnn
 				overRange: anAnnouncement textRange ]
 ]
 
-{ #category : #'api - textual coder view model' }
+{ #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	"Is sent when a new textualCoder view model is assigned to the element.
 	Note: #onTextualCoderViewModelChanged is sent before #subscribeToTextualCoderViewModel
@@ -468,7 +481,11 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	completion strategy: self textualCoderViewModel completionStrategy.
 	
 	self textualCoderViewModel compositeStyler ifNotNil: [ :aStyler | 
-		self styler: aStyler ]
+		self styler: aStyler ].
+
+	"#asEditorState applies the extra text attributes; highlights are applied here, after them,
+	because BlTextHighlightAttribute may only be created inside the editor's highlight API."
+	self applyTextHighlights
 ]
 
 { #category : #'private - event handling' }
@@ -580,12 +597,13 @@ GtTextualCoderEditorElement >> onViewModelTextAttributesAdded: anAnnouncement [
 				emit ].
 	
 	self enqueueTask: (BlTaskAction new action: [
-		anAnnouncement text characters = self text characters
-			ifTrue: [
-				anAnnouncement coderTextAttributes
-					applyOnEditorText: self text
-					from: anAnnouncement startPosition
-					to: anAnnouncement stopPosition ] ])
+		| anEditorText |
+		anEditorText := self text.
+		anAnnouncement coderTextAttributes
+			applyOnEditorElement: self
+			receivedText: anEditorText
+			from: anAnnouncement startPosition
+			to: anAnnouncement stopPosition ])
 ]
 
 { #category : #'private - event handling' }
@@ -624,6 +642,24 @@ GtTextualCoderEditorElement >> onViewModelTextEditCommandRequest: aGtTextualCode
 		action: [
 			aGtTextualCoderViewModelTextEditCommandRequest textEditCommand
 				applyOn: self editor ]
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onViewModelTextHighlightAdded: anAnnouncement [
+	self textualCoderViewModel = anAnnouncement textualCoderViewModel
+		ifFalse: [ ^ self ].
+
+	self
+		enqueueTask: (BlTaskAction new
+				action: [ anAnnouncement textHighlight applyOnEditorElement: self ])
+]
+
+{ #category : #'private - event handling' }
+GtTextualCoderEditorElement >> onViewModelTextHighlightRemoved: anAnnouncement [
+	self textualCoderViewModel = anAnnouncement textualCoderViewModel ifFalse: [ ^ self ].
+
+	self enqueueTask: (BlTaskAction new action: [
+			anAnnouncement textHighlight removeFromEditorElement: self ])
 ]
 
 { #category : #'private - updating' }
@@ -698,7 +734,7 @@ GtTextualCoderEditorElement >> registerCoderModelAnnouncementsFor: aCoderModel [
 		when: GtCoderPrintAnnouncement send: #onPrintRequest: to: self
 ]
 
-{ #category : #registration }
+{ #category : #'private - subscriptions' }
 GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSourceCoderUIModel [
 	aGtSourceCoderUIModel weak
 		when: GtCoderViewModelRecomputeAddOnRequest
@@ -733,6 +769,12 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 			to: self;
 		when: GtTextualCoderViewModelTextAttributesRemoved
 			send: #onViewModelTextAttributesRemoved:
+			to: self;
+		when: GtTextualCoderViewModelTextHighlightAdded
+			send: #onViewModelTextHighlightAdded:
+			to: self;
+		when: GtTextualCoderViewModelTextHighlightRemoved
+			send: #onViewModelTextHighlightRemoved:
 			to: self;
 		when: GtTextualCoderViewModelAddHighlightRequest
 			send: #onTextualCoderViewModelAddHighlightRequest:

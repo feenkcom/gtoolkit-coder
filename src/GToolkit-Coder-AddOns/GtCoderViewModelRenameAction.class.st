@@ -17,6 +17,7 @@ GtCoderViewModelRenameAction class >> locations: aCollectionOfIntervals textualC
 	^ self new
 		locations: aCollectionOfIntervals;
 		pharoSourceCoderViewModel: aTextualCoderViewModel;
+		documentId: aTextualCoderViewModel documentId;
 		yourself
 ]
 

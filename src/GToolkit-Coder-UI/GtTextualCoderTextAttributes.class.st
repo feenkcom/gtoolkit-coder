@@ -16,21 +16,8 @@ Class {
 { #category : #'api - attribute' }
 GtTextualCoderTextAttributes >> applyOnEditorElement: aTextEditorElement receivedText: aText from: aStartPosition to: anEndPosition [
 	| attributesRange |
-	(aTextEditorElement isKindOf: BrEditorElement)
-		ifTrue: [ aText characters = aTextEditorElement text characters
-				ifTrue: [ self
-						applyOnEditorText: aTextEditorElement text
-						from: aStartPosition
-						to: anEndPosition ].
-			^ self ].
-			
-	"We assume it is a GtTextEditorElement element.
-	I think the markerAttribute is simply ignored."
-	
-	self flag: #TODO.
-	"Investigate what to do when documentId is nil. Can it even be nil here?"
-	true 
-		ifTrue: [ documentId ifNil: [ 
+
+	documentId ifNil: [ 
 			GtCoderTextAttributesDocumentIdIsNilSignal new
 				coderTextAttributes: self;
 				editorElement: aTextEditorElement;
@@ -38,8 +25,7 @@ GtTextualCoderTextAttributes >> applyOnEditorElement: aTextEditorElement receive
 				startPosition: aStartPosition;
 				endPosition: anEndPosition;
 				emit.
-			^ self ] ]
-		ifFalse: [ self assert: [ documentId isNotNil ] ].
+			^ self ].
 	
 	"From where does (aStartPosition to: anEndPosition) come from?"
 	self flag: #TODO.
@@ -72,7 +58,8 @@ GtTextualCoderTextAttributes >> applyOnEditorText: aText [
 
 { #category : #'api - attribute' }
 GtTextualCoderTextAttributes >> applyOnEditorText: aText from: aStartPosition to: anEndPosition [
-	"Can be used only on the BrEditorElement kind of editors. Not on GtTextEditorElement."
+	"Can be used only on the BrEditorElement kind of editors. Not on GtTextEditorElement.
+	Note: this method is deprecated and should #applyOnEditorElement:receivedText:from:to:"
 
 	aText
 		findAttribute: markerAttribute
@@ -146,13 +133,6 @@ GtTextualCoderTextAttributes >> printOn: aStream [
 
 { #category : #'api - attribute' }
 GtTextualCoderTextAttributes >> removeFromEditorElement: aTextEditorElement [
-	(aTextEditorElement isKindOf: BrEditorElement)
-		ifTrue: [ self removeFromEditorText: aTextEditorElement text.
-			^ self ].
-			
-	"We assume it is a GtTextEditorElement element."
-	self flag: #TODO.
-	
 	textAttributeTags do: [ :eachTagToRemove |
 		aTextEditorElement removeAttributeTagged: eachTagToRemove overMarker: markerAttribute ].
 	
