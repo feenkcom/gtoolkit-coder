@@ -108,6 +108,17 @@ GtSearchFilter >> filterValueString [
 	^ nil
 ]
 
+{ #category : #views }
+GtSearchFilter >> gtViewFilterCreationCodeFor: aView [
+	<gtView>
+	^ aView forward
+		title: 'Creation code';
+		priority: 90;
+		object: [ LePharoSnippet code: (RBParser 
+			parseExpression: self creationCode) formattedCode ];
+		view: #gtLiveFor:
+]
+
 { #category : #comparing }
 GtSearchFilter >> hash [
 	^ self class hash
@@ -178,7 +189,7 @@ GtSearchFilter >> size [
 
 { #category : #storing }
 GtSearchFilter >> storeCreationCodeOn: aStream [
-	aStream nextPutAll: 'NotYetImplement signal.'
+	aStream nextPutAll: 'self notYetImplemented'
 ]
 
 { #category : #testing }

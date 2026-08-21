@@ -50,7 +50,7 @@ GtLabeledSearchFilter >> filterValueString [
 	^ filter filterValueString
 ]
 
-{ #category : #accessing }
+{ #category : #printing }
 GtLabeledSearchFilter >> gtDisplayOn: aStream [
 	label gtDisplayOn: aStream
 ]
@@ -88,4 +88,16 @@ GtLabeledSearchFilter >> resultType [
 { #category : #accessing }
 GtLabeledSearchFilter >> size [
 	^ filter size
+]
+
+{ #category : #storing }
+GtLabeledSearchFilter >> storeCreationCodeOn: aStream [
+	| filterCode|
+	filterCode := String streamContents: [ :anotherStream |
+		anotherStream nextPutAll: '('.
+		self filter storeCreationCodeOn: anotherStream.
+		anotherStream nextPutAll: ') labeled: '.
+		anotherStream print: self filterLabel ].
+
+	aStream nextPutAll: (RBParser parseExpression: filterCode) formattedCode
 ]
