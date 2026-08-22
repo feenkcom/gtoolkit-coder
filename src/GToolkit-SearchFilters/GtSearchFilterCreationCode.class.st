@@ -24,16 +24,6 @@ GtSearchFilterCreationCode >> codeString: anObject [
 	codeString := anObject
 ]
 
-{ #category : #views }
-GtSearchFilterCreationCode >> gtViewFilterCreationCodeFor: aView [
-	<gtView>
-	^ aView forward
-		title: 'Code';
-		priority: 90;
-		object: [ LePharoSnippet code: codeString ];
-		view: #gtLiveFor:
-]
-
 { #category : #accessing }
 GtSearchFilterCreationCode >> searchFilter [
 	^ searchFilter

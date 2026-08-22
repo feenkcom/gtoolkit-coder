@@ -12,6 +12,7 @@ ManifestGToolkitSearchFilters class >> mustOnlyDependOn [
 	^ {
 		'Announcements-Core'.
 		'Collections-Unordered'.
+		'Collections-Strings'.
 		'Futures'.
 		'Kernel'
 	}, (self  

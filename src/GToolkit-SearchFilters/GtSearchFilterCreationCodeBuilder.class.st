@@ -15,8 +15,7 @@ GtSearchFilterCreationCodeBuilder class >> forSearchFilter: aSearchFilter [
 
 { #category : #accessing }
 GtSearchFilterCreationCodeBuilder >> computeFormattedCreationCode [
-	^ (RBParser 
-			parseExpression: self computeRawCreationCode) formattedCode
+	^ (self class compiler  parseScript:  self computeRawCreationCode) body  formattedCode
 ]
 
 { #category : #accessing }
@@ -31,21 +30,6 @@ GtSearchFilterCreationCodeBuilder >> creationCode [
 		codeString: self computeFormattedCreationCode;
 		searchFilter: searchFilter;
 		codeBuilder: self
-]
-
-{ #category : #views }
-GtSearchFilterCreationCodeBuilder >> gtViewFilterCreationCodeFor: aView [
-	<gtView>
-	^ aView forward
-		title: 'Creation code';
-		priority: 90;
-		object: [ self creationCode ];
-		view: #gtViewFilterCreationCodeFor:;
-		actionButtonIcon: BrGlamorousVectorIcons inspect 
-			tooltip: 'Inspect code builder' 
-			action: [ :aButton |
-				aButton phlow 
-					spawnObject: (self creationCode) ]
 ]
 
 { #category : #accessing }
