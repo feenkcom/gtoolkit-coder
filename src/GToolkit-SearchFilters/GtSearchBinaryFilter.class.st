@@ -21,6 +21,11 @@ GtSearchBinaryFilter >> filter: leftFilter filter: rightFilter [
 	right := rightFilter
 ]
 
+{ #category : #storing }
+GtSearchBinaryFilter >> filterOperatorForCodeCreation [
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 GtSearchBinaryFilter >> filterValueString [
 	^ left filterValueString
@@ -40,4 +45,13 @@ GtSearchBinaryFilter >> resultType [
 { #category : #accessing }
 GtSearchBinaryFilter >> rightFilter [
 	^ right
+]
+
+{ #category : #storing }
+GtSearchBinaryFilter >> storeCreationCodeOn: aStream [
+	aStream parenthesize: [ left storeCreationCodeOn: aStream ].
+	aStream nextPutAll: ''.
+	aStream nextPutAll: self filterOperatorForCodeCreation.
+	aStream nextPutAll: ''.
+	aStream parenthesize: [ right storeCreationCodeOn: aStream ]
 ]

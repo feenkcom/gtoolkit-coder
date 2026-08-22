@@ -16,6 +16,11 @@ GtSearchUnionFilter >> defaultFilterScope [
 	^ defaultFilterScope asyncSimilarCopy
 ]
 
+{ #category : #storing }
+GtSearchUnionFilter >> filterOperatorForCodeCreation [
+	^ '|'
+]
+
 { #category : #printing }
 GtSearchUnionFilter >> gtDisplayOn: stream [
 	left gtDisplayOn: stream.

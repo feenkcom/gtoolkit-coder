@@ -48,3 +48,10 @@ GtSearchNegationFilter >> printOn: stream [
 GtSearchNegationFilter >> resultType [
 	^ originalFilter resultType
 ]
+
+{ #category : #storing }
+GtSearchNegationFilter >> storeCreationCodeOn: aStream [
+	aStream nextPutAll: '('.
+	self originalFilter storeCreationCodeOn: aStream.
+	aStream nextPutAll: ') not'
+]

@@ -29,3 +29,10 @@ GtSearchNullFilter >> itemsDo: aBloc [
 GtSearchNullFilter >> matches: anObject [
 	^ false
 ]
+
+{ #category : #storing }
+GtSearchNullFilter >> storeCreationCodeOn: aStream [
+	aStream
+		nextPutAll: self class name;
+		nextPutAll: ' new'.
+]

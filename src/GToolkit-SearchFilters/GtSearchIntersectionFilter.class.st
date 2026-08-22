@@ -9,6 +9,11 @@ GtSearchIntersectionFilter >> defaultFilterScope [
 	^ left defaultFilterScope
 ]
 
+{ #category : #storing }
+GtSearchIntersectionFilter >> filterOperatorForCodeCreation [
+	^ '&'
+]
+
 { #category : #printing }
 GtSearchIntersectionFilter >> gtDisplayOn: stream [
 	left gtDisplayOn: stream.

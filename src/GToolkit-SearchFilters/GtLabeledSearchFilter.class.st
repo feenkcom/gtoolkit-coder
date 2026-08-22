@@ -50,7 +50,7 @@ GtLabeledSearchFilter >> filterValueString [
 	^ filter filterValueString
 ]
 
-{ #category : #accessing }
+{ #category : #printing }
 GtLabeledSearchFilter >> gtDisplayOn: aStream [
 	label gtDisplayOn: aStream
 ]
@@ -88,4 +88,12 @@ GtLabeledSearchFilter >> resultType [
 { #category : #accessing }
 GtLabeledSearchFilter >> size [
 	^ filter size
+]
+
+{ #category : #storing }
+GtLabeledSearchFilter >> storeCreationCodeOn: aStream [
+	aStream nextPutAll: '('.
+	self filter storeCreationCodeOn: aStream.
+	aStream nextPutAll: ') labeled: '.
+	aStream print: self filterLabel
 ]

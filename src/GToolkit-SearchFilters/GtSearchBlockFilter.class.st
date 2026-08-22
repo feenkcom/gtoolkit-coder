@@ -28,3 +28,11 @@ GtSearchBlockFilter >> block: aBlock [
 GtSearchBlockFilter >> matches: anObject [
 	^ block value: anObject
 ]
+
+{ #category : #storing }
+GtSearchBlockFilter >> storeCreationCodeOn: aStream [
+	aStream 
+		nextPutAll: self class name;
+		nextPutAll: ' forBlock: ';
+		nextPutAll: self block sourceNode sourceCode
+]
