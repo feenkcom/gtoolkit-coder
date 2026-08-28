@@ -445,18 +445,6 @@ GtTextualCoderEditorElement >> onTextStyled: anEvent [
 ]
 
 { #category : #'private - event handling' }
-GtTextualCoderEditorElement >> onTextualCoderViewModelAddHighlightRequest: anAnnouncement [
-	anAnnouncement textualCoderViewModel = self textualCoderViewModel
-		ifFalse: [ ^ self ].
-
-	BlTaskAction
-		enqueueElement: self
-		action: [ self
-				addHighlight: anAnnouncement textHighlight
-				overRange: anAnnouncement textRange ]
-]
-
-{ #category : #'private - event handling' }
 GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	"Is sent when a new textualCoder view model is assigned to the element.
 	Note: #onTextualCoderViewModelChanged is sent before #subscribeToTextualCoderViewModel
@@ -486,16 +474,6 @@ GtTextualCoderEditorElement >> onTextualCoderViewModelChanged [
 	"#asEditorState applies the extra text attributes; highlights are applied here, after them,
 	because BlTextHighlightAttribute may only be created inside the editor's highlight API."
 	self applyTextHighlights
-]
-
-{ #category : #'private - event handling' }
-GtTextualCoderEditorElement >> onTextualCoderViewModelRemoveHighlightsRequest: anAnnouncement [
-	anAnnouncement textualCoderViewModel = self textualCoderViewModel
-		ifFalse: [ ^ self ].
-
-	BlTaskAction
-		enqueueElement: self
-		action: [ self removeHighlightsWithId: anAnnouncement id ]
 ]
 
 { #category : #'private - event handling' }
@@ -775,12 +753,6 @@ GtTextualCoderEditorElement >> registerCoderViewModelAnnouncementsFor: aGtSource
 			to: self;
 		when: GtTextualCoderViewModelTextHighlightRemoved
 			send: #onViewModelTextHighlightRemoved:
-			to: self;
-		when: GtTextualCoderViewModelAddHighlightRequest
-			send: #onTextualCoderViewModelAddHighlightRequest:
-			to: self;
-		when: GtTextualCoderViewModelRemoveHighlightsRequest
-			send: #onTextualCoderViewModelRemoveHighlightsRequest:
 			to: self;
 		when: GtTextualCoderViewModelStyledTextChanged
 			send: #onViewModelStyledTextChanged:

@@ -23,11 +23,7 @@ Class {
 
 { #category : #'api - text' }
 GtTextualCoderViewModel >> addHighlight: aBrTextHighlight overRange: aBrTextRange [
-	self
-		announce: (GtTextualCoderViewModelAddHighlightRequest new
-				textualCoderViewModel: self;
-				textHighlight: aBrTextHighlight;
-				textRange: aBrTextRange)
+	^ self addTextHighlight: aBrTextHighlight overRange: aBrTextRange
 ]
 
 { #category : #'api - add-ons' }
@@ -751,11 +747,8 @@ GtTextualCoderViewModel >> removeCoderTextAttributes: aGtTextualCoderTextAttribu
 ]
 
 { #category : #'api - text' }
-GtTextualCoderViewModel >> removeHighlightsWithId: aStringId [
-	self
-		announce: (GtTextualCoderViewModelRemoveHighlightsRequest new
-				textualCoderViewModel: self;
-				id: aStringId)
+GtTextualCoderViewModel >> removeHighlightsWithId: anId [
+	self removeTextHighlightsWithId: anId
 ]
 
 { #category : #'api - shortcuts' }
