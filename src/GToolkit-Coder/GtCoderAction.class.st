@@ -189,10 +189,17 @@ GtCoderAction >> propertyAt: propName ifAbsent: aBlock [
 ]
 
 { #category : #'accessing properties' }
+GtCoderAction >> propertyAt: propName ifAbsentPut: anAbsentBlock [
+	^ self properties 
+		at: propName
+		ifAbsentPut: anAbsentBlock
+]
+
+{ #category : #'accessing properties' }
 GtCoderAction >> propertyAt: propName put: propValue [
 	^ self properties 
 		at: propName
-		ifAbsentPut: propValue
+		put: propValue
 ]
 
 { #category : #accessing }
