@@ -112,12 +112,22 @@ GtCoderAstStyler >> hash [
 
 { #category : #private }
 GtCoderAstStyler >> privateStyle: aText [
-	| theAst |
+	| aCoderAst theAst |
 	
 	"Styling happens in a non-UI process, therefore it is fine to wait until AST is computed in a blocking way"
-	theAst := self coderViewModel coderModel astSync.
+	aCoderAst := self coderViewModel coderModel coderAstSync.
+	theAst := aCoderAst ast.
+	theAst attributeNamed: #documentId put: aCoderAst documentId.
 	theAst 
 		ifNil: [ ^ aText ].
+		
+	GtCoderAstStylerStartingSignal new
+		coderViewModel: self coderViewModel;
+		styledText: aText;
+		styledTextDocumentId: aText documentId;
+		coderAst: aCoderAst;
+		coderAstDocumentId: aCoderAst documentId;
+		emit.
 
 	[ 
 		self style: aText ast: theAst.
@@ -128,6 +138,8 @@ GtCoderAstStyler >> privateStyle: aText [
 				NonInteractiveTranscript stdout
 					nextPutAll: '  text documentID: ';
 					print: aText documentId;
+					nextPutAll: ', AST documentID: ';
+					print: aCoderAst documentId;
 					newLine.
 				GtStylerErrorSignal new
 					signaledError: anError;
