@@ -22,6 +22,12 @@ GtCoderAst >> ast: anObject [
 ]
 
 { #category : #accessing }
+GtCoderAst >> documentId [
+
+	^ self sourceString documentId
+]
+
+{ #category : #accessing }
 GtCoderAst >> epoch [
 
 	^ epoch
