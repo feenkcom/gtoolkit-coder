@@ -188,11 +188,11 @@ GtCoderClassesTreeElement >> initialize [
 
 	self
 		nodeStencil: [ self createNodeElement ];
-		nodeDataBinder: [ :aClassElement :aClassHierarchyTree :aTreeNode | 
+		nodeDataBinder: [ :aClassElement :aClassHierarchyTree :aClassIndex | 
 			self
 				bind: aClassHierarchyTree
 				element: aClassElement
-				index: aTreeNode indexInTree ].
+				index: aClassIndex ].
 	self
 		when: BrSelectionDoubleClicked
 		do: [ :evt | self initializeWithHierachyForClass: self selectedClass ]
