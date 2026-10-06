@@ -112,26 +112,55 @@ GtCoderAstStyler >> hash [
 
 { #category : #private }
 GtCoderAstStyler >> privateStyle: aText [
-	| theAst |
-	
+	| aCoderAst theAst |
 	"Styling happens in a non-UI process, therefore it is fine to wait until AST is computed in a blocking way"
-	theAst := self coderViewModel coderModel astSync.
-	theAst
-		ifNil: [ ^ aText ].
+	aCoderAst := self coderViewModel coderModel coderAstSync.
+	theAst := aCoderAst ast.
+	theAst attributeNamed: #documentId put: aCoderAst documentId.
+	theAst ifNil: [ ^ aText ].
 
-	[
-		self style: aText ast: theAst.
-		self extraStyle: aText ast: theAst ]
-			on: Error
-			do: [ :anError |
-				anError emit.
+	GtCoderAstStylerStartingSignal new
+		coderViewModel: self coderViewModel;
+		styledText: aText;
+		styledTextDocumentId: aText documentId;
+		coderAst: aCoderAst;
+		coderAstDocumentId: aCoderAst documentId;
+		emit.
 
-				NonInteractiveTranscript stdout
-					nextPutAll: '[';
-					nextPutAll: self class name;
-					nextPutAll: '] ';
-					print: anError;
-					cr. ].
+	theAst source size = aText characters size
+		ifFalse: [ GtCoderAstStylerSourceSizeMismatchSignal new
+				coderViewModel: self coderViewModel;
+				styledText: aText;
+				styledTextDocumentId: aText documentId;
+				coderAst: aCoderAst;
+				coderAstDocumentId: aCoderAst documentId;
+				emit.
+
+			NonInteractiveTranscript stdout
+				nextPut: $[;
+				print: self class;
+				nextPut: $];
+				space;
+				nextPutAll: ' text and ast source sizes differ: ';
+				print: aText characters size;
+				nextPutAll: '~=';
+				print: theAst source size;
+				newLine. ].
+
+	[ self style: aText ast: theAst.
+	self extraStyle: aText ast: theAst ]
+		on: Error
+		do: [ :anError | 
+			GtSystemUtility reportCatchedException: anError named: self class name.
+			NonInteractiveTranscript stdout
+				nextPutAll: '  text documentID: ';
+				print: aText documentId;
+				nextPutAll: ', AST documentID: ';
+				print: aCoderAst documentId;
+				newLine.
+			GtStylerErrorSignal new
+				signaledError: anError;
+				emit ].
 
 	^ aText
 ]
