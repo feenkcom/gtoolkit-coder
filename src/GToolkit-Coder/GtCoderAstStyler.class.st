@@ -116,7 +116,8 @@ GtCoderAstStyler >> privateStyle: aText [
 	"Styling happens in a non-UI process, therefore it is fine to wait until AST is computed in a blocking way"
 	aCoderAst := self coderViewModel coderModel coderAstSync.
 	theAst := aCoderAst ast.
-	theAst attributeNamed: #documentId put: aCoderAst documentId.
+	(theAst respondsTo: #attributeNamed:put:) ifTrue: [
+		theAst attributeNamed: #documentId put: aCoderAst documentId ].
 	theAst ifNil: [ ^ aText ].
 
 	GtCoderAstStylerStartingSignal new
@@ -127,25 +128,26 @@ GtCoderAstStyler >> privateStyle: aText [
 		coderAstDocumentId: aCoderAst documentId;
 		emit.
 
-	theAst source size = aText characters size
-		ifFalse: [ GtCoderAstStylerSourceSizeMismatchSignal new
-				coderViewModel: self coderViewModel;
-				styledText: aText;
-				styledTextDocumentId: aText documentId;
-				coderAst: aCoderAst;
-				coderAstDocumentId: aCoderAst documentId;
-				emit.
-
-			NonInteractiveTranscript stdout
-				nextPut: $[;
-				print: self class;
-				nextPut: $];
-				space;
-				nextPutAll: ' text and ast source sizes differ: ';
-				print: aText characters size;
-				nextPutAll: '~=';
-				print: theAst source size;
-				newLine. ].
+	(theAst respondsTo: #source) ifTrue: [
+		theAst source size = aText characters size
+			ifFalse: [ GtCoderAstStylerSourceSizeMismatchSignal new
+					coderViewModel: self coderViewModel;
+					styledText: aText;
+					styledTextDocumentId: aText documentId;
+					coderAst: aCoderAst;
+					coderAstDocumentId: aCoderAst documentId;
+					emit.
+	
+				NonInteractiveTranscript stdout
+					nextPut: $[;
+					print: self class;
+					nextPut: $];
+					space;
+					nextPutAll: ' text and ast source sizes differ: ';
+					print: aText characters size;
+					nextPutAll: '~=';
+					print: theAst source size;
+					newLine ] ].
 
 	[ self style: aText ast: theAst.
 	self extraStyle: aText ast: theAst ]
