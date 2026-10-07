@@ -260,6 +260,11 @@ GtSourceCoder >> implicitVariableReferencesTo: aString do: aBlock [
 	
 ]
 
+{ #category : #'as yet unclassified' }
+GtSourceCoder >> isForSmalltalkCode [
+	^ false
+]
+
 { #category : #'private - actions' }
 GtSourceCoder >> newEvaluationContext [
 	^ GtSourceCoderEvaluationContext new
