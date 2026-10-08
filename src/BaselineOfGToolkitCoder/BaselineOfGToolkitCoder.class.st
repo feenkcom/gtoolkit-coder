@@ -34,28 +34,28 @@ BaselineOfGToolkitCoder >> baseline: spec [
 	spec for: #'common' do: [
 		spec
 			baseline: 'Futures' with: [
-				spec repository: 'github://feenkcom/pharo-futures:v0.6.163/src' ].
+				spec repository: 'github://feenkcom/pharo-futures:v0.6.164/src' ].
 		spec
 			baseline: 'GToolkitBasicUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.9.53/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.9.54/src' ].
 		spec
 			baseline: 'GToolkitAnnouncerUtility' with: [
-				spec repository: 'github://feenkcom/gtoolkit-utility:v0.9.53/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-utility:v0.9.54/src' ].
 		spec
 			baseline: 'GToolkitNotifications' with: [
-				spec repository: 'github://feenkcom/gtoolkit-notifications:v0.7.156/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-notifications:v0.7.157/src' ].
 		spec
 			baseline: 'GToolkitPager' with: [
-				spec repository: 'github://feenkcom/gtoolkit-pager:v0.9.198/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-pager:v0.9.199/src' ].
 		spec
 			baseline: 'GToolkitCompleter' with: [
-				spec repository: 'github://feenkcom/gtoolkit-completer:v0.9.157/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-completer:v0.9.158/src' ].
 		spec
 			baseline: 'GToolkit4Magritte' with: [
-				spec repository: 'github://feenkcom/gt4magritte:v0.7.159/src' ].
+				spec repository: 'github://feenkcom/gt4magritte:v0.7.160/src' ].
 		spec
 			baseline: 'GToolkitEditor' with: [
-				spec repository: 'github://feenkcom/gtoolkit-editor:v0.6.58/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-editor:v0.6.59/src' ].
 
 		spec package: 'GToolkit-VariableBindings'.
 		spec package: 'GToolkit-SearchFilters' with: [
@@ -77,7 +77,5 @@ BaselineOfGToolkitCoder >> baseline: spec [
 		spec package: 'GToolkit-Coder-Examples-SystemS1'.
 		spec package: 'GToolkit-Coder-Examples' with: [
 			spec requires: #(#'GToolkit-Coder' #'GToolkit-Coder-UI' #'GToolkit-Coder-AddOns' #'GToolkit-Coder-Examples-SystemS1' #GToolkit4Magritte) ].
-		spec package: 'GToolkit-Coder-Pharo12Extensions' with: [
-			spec requires: #(#'GToolkit-Coder-Extensions') ].
 	]
 ]
