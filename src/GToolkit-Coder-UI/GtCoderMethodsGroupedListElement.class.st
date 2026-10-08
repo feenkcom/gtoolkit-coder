@@ -322,9 +322,7 @@ GtCoderMethodsGroupedListElement >> pushDownMethodSubmenuFor: aMethod [
 					confirmationLabel: ('Push down {1}' format: {aMethod selector});
 					refactoringWithConfirmation: [ GtRBPushDownMethodRefactoring
 							pushDown: {aMethod selector}
-							from: (self
-									forPharo12AndNewer: [ aMethod methodClass name ]
-									forPharo11: [ aMethod methodClass ]) ];
+							from: (aMethod methodClass name ) ];
 					afterAppliedBlock: [ BlTaskAction enqueueElement: self action: [ anExplicitMenu hideAll ] ];
 					menuModel: anExplicitMenu;
 					anchorElement: self.
@@ -357,9 +355,7 @@ GtCoderMethodsGroupedListElement >> pushDownSeveralMethodsSubmenuFor: aCollectio
 									GtRBPushDownMethodRefactoring new
 										model: aModel;
 										pushDown: (someMethods collect: #selector)
-											from: (self
-													forPharo12AndNewer: [ someMethods anyOne methodClass name ]
-													forPharo11: [ someMethods anyOne methodClass ]) ]
+											from: (someMethods anyOne methodClass name ) ]
 								as: Array.
 						aModel name: ('Push down {1} methods' format: {aCollectionOfMethods size}).
 						aCollectionOfRefactorings ];
