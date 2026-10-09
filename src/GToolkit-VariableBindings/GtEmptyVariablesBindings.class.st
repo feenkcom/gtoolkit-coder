@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#traits : 'TGtVariablesBindings',
 	#classTraits : 'TGtVariablesBindings classTrait',
-	#category : 'GToolkit-VariableBindings-Bindings'
+	#category : #'GToolkit-VariableBindings-Bindings'
 }
 
 { #category : #comparing }

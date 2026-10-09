@@ -20,11 +20,7 @@ GtCoderUncategorizedDummyClass >> checkUncategorized [
 
 	self assert: aPackageTag isRoot.
 	self assert: aPackage name equals: 'GToolkit-Coder-Examples'.
-	self 
-		forPharo12AndNewer: [
-			self assert: aPackageTag name equals: 'Uncategorized'.] 
-		forPharo11: [
-			self assert: aPackage name equals: aPackageTag name ].
+	self assert: aPackageTag name equals: 'Uncategorized'.
 
 	^ aPackageTag
 ]

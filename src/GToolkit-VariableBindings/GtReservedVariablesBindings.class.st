@@ -44,7 +44,5 @@ GtReservedVariablesBindings >> hash [
 
 { #category : #binding }
 GtReservedVariablesBindings >> pseudoVariables [
-	^ self
-		forPharo12AndNewer: [ self class environment pseudoVariables ]
-		forPharo11: [ self class environment reservedVariables ]
+	^ self class environment pseudoVariables 
 ]

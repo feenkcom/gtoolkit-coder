@@ -14,9 +14,7 @@ ManifestGToolkitSearchFilters class >> mustOnlyDependOn [
 		'Collections-Unordered'.
 		'Collections-Strings'.
 		'Futures'.
-		'Kernel'
-	}, (self  
-		forPharo12AndNewer: [{
-			'Kernel-CodeModel'.}] 
-		forPharo11: [{}])
+		'Kernel'.
+		'Kernel-CodeModel'.
+	}
 ]

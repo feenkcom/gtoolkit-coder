@@ -32,10 +32,8 @@ GtCoderParseError >> exception: anException [
 
 { #category : #testing }
 GtCoderParseError >> isUndeclaredError [
-	^ self
-		forPharo12AndNewer: [ (errorMessage beginsWith: 'Undeclared variable')
-				or: [ errorMessage beginsWith: 'Undeclared temp' ] ]
-		forPharo11: [ exception isKindOf: OCUndeclaredVariableWarning ]
+	^ (errorMessage beginsWith: 'Undeclared variable')
+				or: [ errorMessage beginsWith: 'Undeclared temp' ] 
 ]
 
 { #category : #accessing }

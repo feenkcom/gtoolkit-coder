@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'bindings'
 	],
-	#category : 'GToolkit-VariableBindings-Bindings'
+	#category : #'GToolkit-VariableBindings-Bindings'
 }
 
 { #category : #comparing }
