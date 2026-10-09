@@ -251,7 +251,7 @@ GtCoderElement >> repository [
 GtCoderElement >> selectMethodProtocolNamed: aMethodProtocolName [
 	"(GtCoder forClass: GtPhlowProtoView) selectMethodProtocolNamed: #decorating"
 	| classProtocols |
-	classProtocols := navigationModel selectedClass gtProtocols.
+	classProtocols := navigationModel selectedClass protocols.
 	classProtocols
 		detect: [ :aProtocol | aProtocol name = aMethodProtocolName ]
 		ifFound: [ :aProtocol | self navigationModel selectProtocol: aProtocol source: self ]
