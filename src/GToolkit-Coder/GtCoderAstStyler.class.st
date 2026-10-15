@@ -128,8 +128,8 @@ GtCoderAstStyler >> privateStyle: aText [
 		coderAstDocumentId: aCoderAst documentId;
 		emit.
 
-	(theAst respondsTo: #source) ifTrue: [
-		theAst source size = aText characters size
+	(theAst respondsTo: #completeSource) ifTrue: [
+		theAst completeSource size = aText characters size
 			ifFalse: [ GtCoderAstStylerSourceSizeMismatchSignal new
 					coderViewModel: self coderViewModel;
 					styledText: aText;
@@ -146,7 +146,7 @@ GtCoderAstStyler >> privateStyle: aText [
 					nextPutAll: ' text and ast source sizes differ: ';
 					print: aText characters size;
 					nextPutAll: '~=';
-					print: theAst source size;
+					print: theAst completeSource size;
 					newLine ] ].
 
 	[ self style: aText ast: theAst.
