@@ -55,7 +55,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec repository: 'github://feenkcom/gt4magritte:v0.7.165/src' ].
 		spec
 			baseline: 'GToolkitEditor' with: [
-				spec repository: 'github://feenkcom/gtoolkit-editor:v0.6.64/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-editor:v0.6.65/src' ].
 
 		spec package: 'GToolkit-VariableBindings'.
 		spec package: 'GToolkit-SearchFilters' with: [
