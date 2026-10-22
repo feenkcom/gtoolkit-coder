@@ -65,3 +65,10 @@ GtPhlowSearchFilterTool >> supportsSelectionHandling [
 GtPhlowSearchFilterTool >> tabLook [
 	^ BrGlamorousTabSwitcherWithIconAptitude
 ]
+
+{ #category : #'api - accessing' }
+GtPhlowSearchFilterTool >> title [
+	^ searchFilter
+		ifNil: [ self name ]
+		ifNotNil: [ :aSearchFilter | 'Filter: ' , aSearchFilter gtDisplayString ]
+]
