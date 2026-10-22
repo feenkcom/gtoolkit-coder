@@ -11,9 +11,13 @@ ProtoObject >> gtBrowse [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 ProtoObject >> gtBrowseFrom: anElement [
+	| aTool |
+
+	aTool := GtObjectCoderTool forObject: self.
+
 	^ BlSpace new
 		withCommonSettings;
-		inPager: [ GtObjectCoderTool forObject: self ];
-		icon: BrGlamorousVectorIcons browse;
+		inPager: aTool;
+		withTitleAndIconOfTool: aTool;
 		showFrom: anElement
 ]

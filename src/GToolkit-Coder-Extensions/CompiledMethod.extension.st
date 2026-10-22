@@ -12,11 +12,14 @@ CompiledMethod >> gtBrowse [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 CompiledMethod >> gtBrowseFrom: anElement [
+	| aTool |
+
+	aTool := GtMethodCoderTool compiledMethod: self.
+
 	^ BlSpace new
 		withCommonSettings;
-		inPager: [ GtMethodCoderTool compiledMethod: self ];
-		title: self methodClass name;
-		icon: BrGlamorousVectorIcons browse;
+		inPager: aTool;
+		withTitleAndIconOfTool: aTool;
 		showFrom: anElement
 ]
 

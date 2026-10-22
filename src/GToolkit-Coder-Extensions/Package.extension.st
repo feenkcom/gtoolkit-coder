@@ -45,11 +45,14 @@ Package >> gtBrowse [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 Package >> gtBrowseFrom: anElement [
+	| aTool |
+
+	aTool := self gtDefaultInspectorTool.
+
 	^ BlSpace new
 		withCommonSettings;
-		inPager: [ self gtDefaultInspectorTool ];
-		title: self packageName;
-		icon: BrGlamorousVectorIcons browse;
+		inPager: aTool;
+		withTitleAndIconOfTool: aTool;
 		showFrom: anElement
 ]
 

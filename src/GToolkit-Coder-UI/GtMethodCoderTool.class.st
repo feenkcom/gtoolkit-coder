@@ -44,3 +44,8 @@ GtMethodCoderTool >> object [
 	"compatibility method for ${GLMBlocObjectToSelect}$"
 	^ self compiledMethod
 ]
+
+{ #category : #'api - accessing' }
+GtMethodCoderTool >> title [
+	^ self compiledMethod methodClass name
+]

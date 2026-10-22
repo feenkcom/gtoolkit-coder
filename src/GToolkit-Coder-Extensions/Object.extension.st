@@ -12,10 +12,13 @@ Object >> gtBrowse [
 
 { #category : #'*GToolkit-Coder-Extensions' }
 Object >> gtBrowseFrom: anElement [
+	| aTool |
+
+	aTool := GtObjectCoderTool forObject: self.
+
 	^ BlSpace new
 		withSceneDriller;
-		inPager: [ GtObjectCoderTool forObject: self ];
-		title: self gtDisplayString;
-		icon: BrGlamorousVectorIcons browse;
+		inPager: aTool;
+		withTitleAndIconOfTool: aTool;
 		showFrom: anElement
 ]

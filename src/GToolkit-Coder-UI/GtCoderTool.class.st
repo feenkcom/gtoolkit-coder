@@ -13,7 +13,7 @@ GtCoderTool >> asElementDo: aOneArgBlock [
 
 { #category : #'api - converting' }
 GtCoderTool >> icon [
-	^ BrGlamorousVectorIcons browse
+	^ BrGlamorousVectorIcons emphasizedBrowse
 ]
 
 { #category : #'api - accessing' }

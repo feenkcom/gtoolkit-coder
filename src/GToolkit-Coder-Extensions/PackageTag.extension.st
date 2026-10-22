@@ -2,10 +2,13 @@ Extension { #name : #PackageTag }
 
 { #category : #'*GToolkit-Coder-Extensions' }
 PackageTag >> gtBrowseFrom: anElement [
+	| aTool |
+
+	aTool := self gtDefaultInspectorTool.
+
 	^ BlSpace new
 		withCommonSettings;
-		inPager: [ self gtDefaultInspectorTool ];
-		title: self name;
-		icon: BrGlamorousVectorIcons browse;
+		inPager: aTool;
+		withTitleAndIconOfTool: aTool;
 		showFrom: anElement
 ]
