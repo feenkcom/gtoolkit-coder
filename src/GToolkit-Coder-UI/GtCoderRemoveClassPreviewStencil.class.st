@@ -169,7 +169,7 @@ GtCoderRemoveClassPreviewStencil >> newRemoveHierarchyButton [
 
 { #category : #actions }
 GtCoderRemoveClassPreviewStencil >> removeChange [
-	^ RBRemoveClassChange remove: self classToRemove
+	^ GtRBRemoveClassChange remove: self classToRemove
 ]
 
 { #category : #actions }

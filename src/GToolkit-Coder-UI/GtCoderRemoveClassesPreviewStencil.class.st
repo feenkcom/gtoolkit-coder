@@ -39,7 +39,7 @@ GtCoderRemoveClassesPreviewStencil class >> removeChangeForClasses: someClasses 
 		name: aString;
 		changes: ((someClasses asArray
 				sorted: [ :a :b | a allSuperclasses size >= b allSuperclasses size ])
-				collect: [ :eachClass | RBRemoveClassChange remove: eachClass ]) asOrderedCollection
+				collect: [ :eachClass | GtRBRemoveClassChange remove: eachClass ]) asOrderedCollection
 ]
 
 { #category : #accessing }
