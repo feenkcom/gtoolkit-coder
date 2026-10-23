@@ -18,9 +18,9 @@ GtCoderRemoveClassesPreviewStencil >> classesToRemove: anObject [
 	classesToRemove := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - instantiation' }
 GtCoderRemoveClassesPreviewStencil >> create [
-	| element change button |
+	| element button |
 	element := BrVerticalPane new fitContent.
 	element
 		addChild: (self newRemoveSeveralClassesLabel
@@ -54,10 +54,6 @@ GtCoderRemoveClassesPreviewStencil >> create [
 										text: (subclasses printString , ' subclass'
 												, (subclasses > 1 ifTrue: [ 'es' ] ifFalse: [ '' ])) asRopedText) ].
 					pane ]).
-	change := RBCompositeRefactoryChange new
-			name: ('Remove {1} classes' format: {self classesToRemove size});
-			changes: (self classesToRemove
-					collect: [ :eachClass | RBRemoveClassChange remove: eachClass ]).
 	button := BrButton new
 			aptitude: BrGlamorousButtonWithIconAptitude;
 			beSmallSize;
@@ -69,7 +65,7 @@ GtCoderRemoveClassesPreviewStencil >> create [
 			icon: BrGlamorousVectorIcons remove;
 			label: 'Remove';
 			action: [ self menuModel ifNotNil: #hideAll.
-				change execute ].
+				self removeClasses ].
 	element addChild: button as: #removeButton.
 	^ element
 ]
@@ -92,4 +88,19 @@ GtCoderRemoveClassesPreviewStencil >> newRemoveSeveralClassesLabel [
 		margin: (BlInsets all: 10);
 		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
 		text: labelText asRopedText
+]
+
+{ #category : #actions }
+GtCoderRemoveClassesPreviewStencil >> removeChange [
+	^ RBCompositeRefactoryChange new
+		name: ('Remove {1} classes' format: {self classesToRemove size});
+		changes: (self classesToRemove
+				collect: [ :eachClass | RBRemoveClassChange remove: eachClass ])
+]
+
+{ #category : #actions }
+GtCoderRemoveClassesPreviewStencil >> removeClasses [
+	"Remove all classes as one composite change through the refactory change manager, so that the removal can be undone in one step"
+
+	self removeChange gtExecuteWithUndo
 ]

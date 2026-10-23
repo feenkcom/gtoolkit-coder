@@ -28,6 +28,28 @@ GtRefactoryChangeManager class >> instance [
 	^ Instance ifNil: [ Instance := self new ]
 ]
 
+{ #category : #accessing }
+GtRefactoryChangeManager class >> isolatedInstanceDuring: aBlock [
+	"Evaluate aBlock with a new change manager as the current instance and answer the result.
+	The block may take the isolated change manager as an argument.
+	Use it in examples and tests to keep their changes out of the global undo/redo history.
+	While aBlock runs the global instance (if any) ignores system changes, so they do not clear its history either.
+	If there is no global instance, none is created and none is left afterwards."
+
+	| originalInstance isolatedInstance result |
+	originalInstance := Instance.
+	isolatedInstance := self new.
+	Instance := isolatedInstance.
+	[ originalInstance
+		ifNil: [ result := aBlock cull: isolatedInstance ]
+		ifNotNil: [ :anInstance | 
+			anInstance ignoreChangesWhile: [ result := aBlock cull: isolatedInstance ] ] ]
+		ensure: [
+			Instance := originalInstance.
+			isolatedInstance release ].
+	^ result
+]
+
 { #category : #'class initialization' }
 GtRefactoryChangeManager class >> nuke [
 	Instance notNil ifTrue: [ Instance release ].

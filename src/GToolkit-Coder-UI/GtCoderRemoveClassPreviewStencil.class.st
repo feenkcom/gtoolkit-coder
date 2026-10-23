@@ -20,7 +20,7 @@ GtCoderRemoveClassPreviewStencil >> classToRemove: anObject [
 
 { #category : #'api - instantiation' }
 GtCoderRemoveClassPreviewStencil >> create [
-	| element change button |
+	| element button |
 	element := BrVerticalPane new fitContent.
 	element
 		addChild: (self newRemoveClassLabel
@@ -30,7 +30,6 @@ GtCoderRemoveClassPreviewStencil >> create [
 						left: 10
 						right: 10)).
 	element addChild: self newReferencesAsyncElement.
-	change := RBRemoveClassChange remove: self classToRemove.
 	button := BrButton new
 			aptitude: BrGlamorousButtonWithIconAptitude;
 			beSmallSize;
@@ -42,7 +41,7 @@ GtCoderRemoveClassPreviewStencil >> create [
 			icon: BrGlamorousVectorIcons bin;
 			label: 'Remove';
 			action: [ self menuModel ifNotNil: #hideAll.
-				change execute ].
+				self removeClass ].
 	element addChild: button as: #removeButton.
 	^ element
 ]
@@ -108,4 +107,16 @@ GtCoderRemoveClassPreviewStencil >> newRemoveClassLabel [
 		margin: (BlInsets all: 10);
 		aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
 		text: labelText asRopedText
+]
+
+{ #category : #actions }
+GtCoderRemoveClassPreviewStencil >> removeChange [
+	^ RBRemoveClassChange remove: self classToRemove
+]
+
+{ #category : #actions }
+GtCoderRemoveClassPreviewStencil >> removeClass [
+	"Remove the class through the refactory change manager, so that the removal can be undone"
+
+	self removeChange gtExecuteWithUndo
 ]
