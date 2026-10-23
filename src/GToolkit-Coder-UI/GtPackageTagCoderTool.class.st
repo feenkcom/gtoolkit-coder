@@ -35,3 +35,8 @@ GtPackageTagCoderTool >> packageTag [
 GtPackageTagCoderTool >> packageTag: aPackageTag [
 	packageTag := aPackageTag
 ]
+
+{ #category : #'api - accessing' }
+GtPackageTagCoderTool >> title [
+	^ self packageTag packageName , '-' , self packageTag name
+]
