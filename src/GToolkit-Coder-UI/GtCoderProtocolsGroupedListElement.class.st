@@ -283,7 +283,7 @@ GtCoderProtocolsGroupedListElement >> onDropCompiledMethodsOnProtocol: anItemsDr
 
 	compositeChange := aModel changes.
 
-	compositeChange execute
+	compositeChange gtExecuteWithUndo
 ]
 
 { #category : #'event handling' }
@@ -367,7 +367,7 @@ GtCoderProtocolsGroupedListElement >> removeProtocolSubmenuFor: aGtPharoProtocol
 					icon: BrGlamorousVectorIcons remove;
 					label: 'Remove';
 					action: [ submenu hideAll.
-						change execute ].
+						change gtExecuteWithUndo ].
 			element addChild: button as: #removeButton.
 			element ]
 ]
