@@ -327,7 +327,7 @@ InstanceVariableSlot >> gtRemoveActionFor: anAction context: aPhlowContext [
 					icon: BrGlamorousVectorIcons remove;
 					label: 'Remove';
 					action: [ anExplicitMenu hideAll.
-						change execute ].
+						change gtExecuteWithUndo ].
 			element addChild: button as: #removeButton.
 			element ]
 ]

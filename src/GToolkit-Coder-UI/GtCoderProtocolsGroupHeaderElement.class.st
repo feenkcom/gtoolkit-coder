@@ -29,7 +29,7 @@ GtCoderProtocolsGroupHeaderElement >> addProtocolNamed: aProtocolName in: aClass
 		addProtocolNamed: aProtocolName
 		in: aClass.
 	
-	refactoring execute
+	refactoring gtExecuteWithUndo
 ]
 
 { #category : #'as yet unclassified' }

@@ -272,7 +272,7 @@ GtCoderClassesTreeElement >> onDropCompiledMethodsOnClass: anItemsDroppedEvent [
 					classified: eachCompiledMethod protocol ] ].
 
 	compositeChange := aModel changes.
-	compositeChange execute
+	compositeChange gtExecuteWithUndo
 ]
 
 { #category : #initialization }
