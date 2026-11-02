@@ -89,7 +89,7 @@ GtLocalVersion >> initializeWithChange: aChangeRecord previousChange: aPreviousC
 
 { #category : #actions }
 GtLocalVersion >> loadChange [ 
-	^ changeRecord asMCMethodDefinition load
+	^ changeRecord gtLoadWithUndo
 ]
 
 { #category : #accessing }
