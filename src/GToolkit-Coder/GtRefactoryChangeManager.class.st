@@ -229,12 +229,22 @@ GtRefactoryChangeManager >> initialize [
 
 { #category : #executing }
 GtRefactoryChangeManager >> performChange: aRefactoringChange [
+	self performChangeReturningUndo: aRefactoringChange
+]
+
+{ #category : #executing }
+GtRefactoryChangeManager >> performChangeReturningUndo: aRefactoringChange [
+	"Execute aRefactoringChange, record its undo change in the undo history and answer that undo change. The answered change is the same object that is wrapped by the GtPerformedChange added to the undo stack."
+
+	| undoChange |
 	self
 		ignoreChangesWhile: [ | now |
 			now := DateAndTime now.
-			self addUndo: aRefactoringChange execute.
+			undoChange := aRefactoringChange execute.
+			self addUndo: undoChange.
 			aRefactoringChange
-				gtAllChangesDo: [ :each | each attributeNamed: #timestamp put: now ] ]
+				gtAllChangesDo: [ :each | each attributeNamed: #timestamp put: now ] ].
+	^ undoChange
 ]
 
 { #category : #executing }
