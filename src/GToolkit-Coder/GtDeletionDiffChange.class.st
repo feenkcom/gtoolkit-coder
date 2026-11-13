@@ -9,7 +9,7 @@ Class {
 
 { #category : #accessing }
 GtDeletionDiffChange class >> highlightColor [
-	^ BrGlamorousColors errorBackgroundColor
+	^ BrGlamorousColors diffDeletedTextBackgroundColor
 ]
 
 { #category : #accessing }
