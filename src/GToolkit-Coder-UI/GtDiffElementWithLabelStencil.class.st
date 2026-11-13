@@ -71,7 +71,7 @@ GtDiffElementWithLabelStencil >> createPanesDiffElement [
 	diffWrapper := BrVerticalPane new
 			hMatchParent;
 			vFitContentLimited.
-	diff := (GtEpiceaDiffElement onChange: self change)
+	diff := (GtDiffElement onChange: self change)
 			aptitude: GtDiffFlatAptitude;
 			vFitContentLimited;
 			beSmallSize;
