@@ -12,12 +12,12 @@ GtDiffShadowAptitude >> initialize [
 		inherit: GtDiffOldTextId;
 		inherit: GtDiffNewTextId).
 
-	self add: (BrSizeAdjustmentAptitude new
+"	self add: (BrSizeAdjustmentAptitude new
 		normal: [ :aStyle | aStyle padding: (BlInsets all: 10) ];
 		small: [ :aStyle | aStyle padding: (BlInsets all: 8) ];
 		tiny: [ :aStyle | aStyle padding: (BlInsets all: 6) ];
 		mini: [ :aStyle | aStyle padding: (BlInsets all: 6) ]).
-
+"
 	self add: (self newTextLook // GtDiffOldTextId).
 	self add: (self newShadowLook // GtDiffOldTextId).
 	
