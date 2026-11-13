@@ -6,7 +6,8 @@ Class {
 		'toLabelText',
 		'shouldHideDiff',
 		'change',
-		'styler'
+		'leftStyler',
+		'rightStyler'
 	],
 	#category : #'GToolkit-Coder-UI-Diff'
 }
@@ -64,22 +65,20 @@ GtDiffElementWithLabelStencil >> createFromLabel [
 	 	hMatchParent
 ]
 
-{ #category : #'building - widgets' }
+{ #category : #private }
 GtDiffElementWithLabelStencil >> createPanesDiffElement [
-	| diffWrapper |
-	diffWrapper := BrVerticalPane new.	"
-	diffWrapper margin: (BlInsets all: 3)."
-	diffWrapper hMatchParent.
-	diffWrapper vFitContentLimited.
-
-	diffWrapper
-		addChild: ((GtEpiceaDiffElement onChange: self change)
-				aptitude: GtDiffFlatAptitude;
-				styler: styler;
-				vFitContentLimited;
-				beSmallSize;
-				moveButtonsToBottom).
-
+	| diffWrapper diff |
+	diffWrapper := BrVerticalPane new
+			hMatchParent;
+			vFitContentLimited.
+	diff := (GtEpiceaDiffElement onChange: self change)
+			aptitude: GtDiffFlatAptitude;
+			vFitContentLimited;
+			beSmallSize;
+			moveButtonsToBottom.
+	leftStyler ifNotNil: [ diff leftStyler: leftStyler ].
+	rightStyler ifNotNil: [ diff rightStyler: rightStyler ].
+	diffWrapper addChild: diff.
 	^ diffWrapper
 ]
 
@@ -109,6 +108,26 @@ GtDiffElementWithLabelStencil >> hideDiff [
 	shouldHideDiff := true
 ]
 
+{ #category : #accessing }
+GtDiffElementWithLabelStencil >> leftStyler [
+	^ leftStyler
+]
+
+{ #category : #accessing }
+GtDiffElementWithLabelStencil >> leftStyler: aStyler [
+	leftStyler := aStyler
+]
+
+{ #category : #accessing }
+GtDiffElementWithLabelStencil >> rightStyler [
+	^ rightStyler
+]
+
+{ #category : #accessing }
+GtDiffElementWithLabelStencil >> rightStyler: aStyler [
+	rightStyler := aStyler
+]
+
 { #category : #testing }
 GtDiffElementWithLabelStencil >> shouldHideDiff [
 	^ shouldHideDiff ifNil: [ false ]
@@ -122,12 +141,14 @@ GtDiffElementWithLabelStencil >> shouldHideDiff: anObject [
 
 { #category : #accessing }
 GtDiffElementWithLabelStencil >> styler [
-	^ styler
+	^ leftStyler
 ]
 
 { #category : #accessing }
-GtDiffElementWithLabelStencil >> styler: anObject [
-	styler := anObject
+GtDiffElementWithLabelStencil >> styler: aStyler [
+	self
+		leftStyler: aStyler;
+		rightStyler: aStyler
 ]
 
 { #category : #accessing }
