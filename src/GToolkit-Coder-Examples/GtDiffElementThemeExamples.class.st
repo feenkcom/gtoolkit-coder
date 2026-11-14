@@ -213,7 +213,7 @@ GtDiffElementThemeExamples >> themeSwitchUpdatesDiff [
 	<gtExample>
 	<return: #BlScripter>
 	| scripter theme reference |
-	scripter := GtMultiSplitterDiffElementExamples new multipleSplitters.
+	scripter := GtDiffElementExamples new multipleChanges.
 	theme := self darkTheme.
 	reference := self lightTheme.
 	theme diffElement
@@ -228,7 +228,7 @@ GtDiffElementThemeExamples >> themeSwitchUpdatesDiff [
 	scripter
 		doStep: [ :s | 
 			s
-				label: 'Change the parent theme after the diff is rendered';
+				label: 'Change the theme after the diff is rendered';
 				block: [ :element | element theme: theme ] ].
 	self
 		assertLine: 2
@@ -269,7 +269,7 @@ GtDiffElementThemeExamples >> themeSwitchUpdatesDiff [
 		checkStep: [ :s | 
 			s
 				label: 'Connector and selection use the inherited palette';
-				// GtDiffElement;
+				onThisOrBreadthFirstChildOfKind: GtDiffElement;
 				do: [ :element | 
 					self assert: element theme == theme.
 					self
