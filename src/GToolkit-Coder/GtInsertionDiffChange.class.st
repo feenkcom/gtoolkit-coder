@@ -9,7 +9,7 @@ Class {
 
 { #category : #accessing }
 GtInsertionDiffChange class >> highlightColor [
-	^ BrGlamorousColors successBackgroundColor
+	^ BrGlamorousColors diffAddedTextBackgroundColor
 ]
 
 { #category : #accessing }
