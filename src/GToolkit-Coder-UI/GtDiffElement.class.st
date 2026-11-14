@@ -7,7 +7,7 @@ Class {
 		'leftElement',
 		'rightElement',
 		'syncScrollRanges',
-		'outlines',
+		'ribbonPaths',
 		'separatorElement',
 		'styler',
 		'buttonsElement',
@@ -94,7 +94,7 @@ GtDiffElement >> change: aCompositeDiffChange [
 				color: (each highlightColorForTheme: self theme) ].
 	rightElement text: text.
 	syncScrollRanges := GtSyncScrollRanges createFromChange: aCompositeDiffChange.
-	self updateOutlines.
+	self updateRibbonPaths.
 	self updateProgressLabel
 ]
 
@@ -119,7 +119,7 @@ GtDiffElement >> diff: aDiffBuilder [
 	leftElement text: aDiffBuilder previousRopedText.
 	rightElement text: aDiffBuilder newRopedText.
 	aDiffBuilder newStyler ifNotNil: [ :aStyler | self styler: aStyler ].
-	self updateOutlines.
+	self updateRibbonPaths.
 	self updateProgressLabel
 ]
 
@@ -162,7 +162,7 @@ GtDiffElement >> hideDiff [
 		separatorElement.
 		rightElement.
 		buttonsElement} do: [ :element | element visibility: BlVisibility gone ].
-	outlines := Dictionary new.
+	ribbonPaths := Dictionary new.
 	self invalidate
 ]
 
@@ -195,7 +195,7 @@ GtDiffElement >> initialize [
 				combination: BlKeyCombination builder primary arrowUp build;
 				action: [ self scrollPrevious ]).
 
-	outlines := Dictionary new.
+	ribbonPaths := Dictionary new.
 	syncScrollRanges := GtSyncScrollRanges new.
 	deletedLines := Set new.
 	insertedLines := Set new.
@@ -321,7 +321,7 @@ GtDiffElement >> leftRange [
 
 { #category : #'event handling' }
 GtDiffElement >> leftScrolled [
-	self updateOutlines
+	self updateRibbonPaths
 ]
 
 { #category : #accessing }
@@ -438,25 +438,25 @@ GtDiffElement >> newTextElement [
 ]
 
 { #category : #'geometry hooks' }
-GtDiffElement >> onExtentChanged [ 
+GtDiffElement >> onExtentChanged [
 	super onExtentChanged.
 
-	outlines := Dictionary new.
-	self updateOutlines
+	ribbonPaths := Dictionary new.
+	self updateRibbonPaths
 ]
 
 { #category : #'geometry hooks' }
 GtDiffElement >> onLayout: aBounds context: aBlElementBoundsUpdateContext [
 	super onLayout: aBounds context: aBlElementBoundsUpdateContext.
-	
-	outlines := Dictionary new.
-	self updateOutlines
+
+	ribbonPaths := Dictionary new.
+	self updateRibbonPaths
 ]
 
 { #category : #hooks }
 GtDiffElement >> onThemeChanged [
 	super onThemeChanged.
-	syncScrollRanges ifNotNil: [ self updateOutlines ]
+	syncScrollRanges ifNotNil: [ self updateRibbonPaths ]
 ]
 
 { #category : #'private - drawing' }
@@ -486,7 +486,7 @@ GtDiffElement >> paintRibbonBackgroundsOnCanvas: aCanvas [
 						blocResolveColorForTheme: self theme);
 				path: bounds;
 				draw ].
-	outlines
+	ribbonPaths
 		keysAndValuesDo: [ :range :outline | 
 			| path |
 			path := outline pathOnSpartaCanvas: aCanvas of: self.
@@ -519,7 +519,7 @@ GtDiffElement >> paintRibbonBordersOnCanvas: aCanvas [
 	selectedBorder := BlBorder
 			paint: self theme diffElement selectedBorderColor
 			width: self theme diffElement ribbonBorderWidth.
-	outlines
+	ribbonPaths
 		keysAndValuesDo: [ :range :outline | 
 			BlOutskirts inside
 				drawBorder: (range isSelected ifTrue: [ selectedBorder ] ifFalse: [ border ])
@@ -635,7 +635,7 @@ GtDiffElement >> rightRange [
 
 { #category : #'event handling' }
 GtDiffElement >> rightScrolled [
-	self updateOutlines
+	self updateRibbonPaths
 ]
 
 { #category : #accessing }
@@ -722,22 +722,6 @@ GtDiffElement >> updateLabelsVisibility [
 		rightLabelElement} do: [ :element | element visibility: visibility ]
 ]
 
-{ #category : #updating }
-GtDiffElement >> updateOutlines [
-	| ranges |
-	leftElement visibility = BlVisibility gone
-		ifTrue: [ outlines := Dictionary new.
-			self invalidate.
-			^ self ].
-	outlines := Dictionary new.
-	ranges := syncScrollRanges
-			rangesForLeft: self leftRange
-			andRight: self rightRange.
-	ranges
-		do: [ :each | each isDifference ifTrue: [ outlines at: each put: (self ribbonPathFor: each) ] ].
-	self invalidate
-]
-
 { #category : #initialize }
 GtDiffElement >> updateProgressLabel [
 	| progress |
@@ -745,4 +729,22 @@ GtDiffElement >> updateProgressLabel [
 	progressLabel
 		text: (progress first printString , '/' , progress last printString) asRopedText
 				glamorousRegularFont
+]
+
+{ #category : #updating }
+GtDiffElement >> updateRibbonPaths [
+	| ranges |
+	leftElement visibility = BlVisibility gone
+		ifTrue: [ ribbonPaths := Dictionary new.
+			self invalidate.
+			^ self ].
+	ribbonPaths := Dictionary new.
+	ranges := syncScrollRanges
+			rangesForLeft: self leftRange
+			andRight: self rightRange.
+	ranges
+		do: [ :each | 
+			each isDifference
+				ifTrue: [ ribbonPaths at: each put: (self ribbonPathFor: each) ] ].
+	self invalidate
 ]
