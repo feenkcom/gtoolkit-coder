@@ -37,15 +37,11 @@ GtDiffElementThemeExamples >> assertFragment: aString in: editorId resolvedColor
 
 { #category : #private }
 GtDiffElementThemeExamples >> assertLine: lineIndex in: editorId resolvedColor: aColor scripter: aScripter [
-	aScripter
-		checkStep: [ :s | 
-			s
-				label: 'The rendered line resolves its inherited diff theme';
-				// editorId;
-				do: [ :editor | 
-					self
-						assert: ((editor children at: lineIndex) background paint color
-								blocResolveColorForTheme: editor theme) = aColor ] ]
+	GtDiffElementExamples new
+		assertLine: lineIndex
+		in: editorId
+		color: aColor
+		scripter: aScripter
 ]
 
 { #category : #examples }
@@ -213,7 +209,7 @@ GtDiffElementThemeExamples >> themeSwitchUpdatesDiff [
 	<gtExample>
 	<return: #BlScripter>
 	| scripter theme reference |
-	scripter := GtMultiSplitterDiffElementExamples new multipleSplitters.
+	scripter := GtDiffElementExamples new multipleChanges.
 	theme := self darkTheme.
 	reference := self lightTheme.
 	theme diffElement
@@ -228,7 +224,7 @@ GtDiffElementThemeExamples >> themeSwitchUpdatesDiff [
 	scripter
 		doStep: [ :s | 
 			s
-				label: 'Change the parent theme after the diff is rendered';
+				label: 'Change the theme after the diff is rendered';
 				block: [ :element | element theme: theme ] ].
 	self
 		assertLine: 2
@@ -269,7 +265,7 @@ GtDiffElementThemeExamples >> themeSwitchUpdatesDiff [
 		checkStep: [ :s | 
 			s
 				label: 'Connector and selection use the inherited palette';
-				// GtDiffElement;
+				onThisOrBreadthFirstChildOfKind: GtDiffElement;
 				do: [ :element | 
 					self assert: element theme == theme.
 					self
