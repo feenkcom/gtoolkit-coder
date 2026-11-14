@@ -33,27 +33,11 @@ GtDiffFlatAptitude >> newSeparatorLook [
 		mini: [ :aStyle | aStyle hExact: 10 ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : #private }
 GtDiffFlatAptitude >> newTextLook [
 	^ BrSizeAdjustmentAptitude new
-		normal: [ :aStyle |
-			aStyle
-				padding: (BlInsets all: 10);
-				do: [ :aWidget | aWidget aptitude glamorousCodeSize ]
-				after: [  ] ];
-		small: [ :aStyle |
-			aStyle
-				padding: (BlInsets all: 6);
-				do: [ :aWidget | aWidget aptitude glamorousCodeSmallSize ]
-				after: [  ] ];
-		tiny: [ :aStyle |
-			aStyle
-				padding: (BlInsets all: 4);
-				do: [ :aWidget | aWidget aptitude glamorousCodeTinySize ]
-				after: [  ] ];
-		mini: [ :aStyle |
-			aStyle
-				padding: (BlInsets all: 2);
-				do: [ :aWidget | aWidget aptitude glamorousCodeMiniSize ]
-				after: [  ] ]
+		normal: [ :aStyle | aStyle do: [ :aWidget | aWidget aptitude glamorousCodeSize ] after: [  ] ];
+		small: [ :aStyle | aStyle do: [ :aWidget | aWidget aptitude glamorousCodeSmallSize ] after: [  ] ];
+		tiny: [ :aStyle | aStyle do: [ :aWidget | aWidget aptitude glamorousCodeTinySize ] after: [  ] ];
+		mini: [ :aStyle | aStyle do: [ :aWidget | aWidget aptitude glamorousCodeMiniSize ] after: [  ] ]
 ]

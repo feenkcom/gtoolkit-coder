@@ -7,18 +7,18 @@ Class {
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
-{ #category : #accessing }
-GtInsertionDiffChange class >> highlightColor [
-	^ BrGlamorousColors diffAddedTextBackgroundColor
-]
-
-{ #category : #accessing }
+{ #category : #attributes }
 GtInsertionDiffChange >> applyAttributesToOutput: aText [
 	aText
 		attribute: (BlTextHighlightAttribute paint: self highlightColor)
 				beNotOverwritableByStyler
 		from: self startIndex
-		to: self stopIndex.
+		to: self stopIndex
+]
+
+{ #category : #accessing }
+GtInsertionDiffChange >> highlightColorForTheme: aTheme [
+	^ aTheme diffElement addedTextBackgroundColor
 ]
 
 { #category : #accessing }

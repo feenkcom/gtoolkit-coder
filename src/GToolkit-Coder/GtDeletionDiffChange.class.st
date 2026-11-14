@@ -7,12 +7,7 @@ Class {
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
-{ #category : #accessing }
-GtDeletionDiffChange class >> highlightColor [
-	^ BrGlamorousColors diffDeletedTextBackgroundColor
-]
-
-{ #category : #accessing }
+{ #category : #attributes }
 GtDeletionDiffChange >> applyAttributesToInput: aText [
 	aText
 		attribute: (BlTextHighlightAttribute paint: self highlightColor)
@@ -29,6 +24,11 @@ GtDeletionDiffChange >> deletedObjects [
 { #category : #accessing }
 GtDeletionDiffChange >> deletionChange [
 	^ self
+]
+
+{ #category : #accessing }
+GtDeletionDiffChange >> highlightColorForTheme: aTheme [
+	^ aTheme diffElement deletedTextBackgroundColor
 ]
 
 { #category : #testing }

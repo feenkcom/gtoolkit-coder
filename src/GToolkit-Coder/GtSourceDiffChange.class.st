@@ -9,11 +9,6 @@ Class {
 	#category : #'GToolkit-Coder-Diff-Algorithm'
 }
 
-{ #category : #accessing }
-GtSourceDiffChange class >> highlightColor [
-	^ self subclassResponsibility
-]
-
 { #category : #'instance creation' }
 GtSourceDiffChange class >> on: aCollection from: startIndex to: stopIndex [
 	^ self new
@@ -56,7 +51,12 @@ GtSourceDiffChange >> gtObjectsText [
 
 { #category : #accessing }
 GtSourceDiffChange >> highlightColor [
-	^ self class highlightColor
+	^ self highlightColorForTheme: BlTheme default
+]
+
+{ #category : #accessing }
+GtSourceDiffChange >> highlightColorForTheme: aTheme [
+	^ self subclassResponsibility
 ]
 
 { #category : #testing }

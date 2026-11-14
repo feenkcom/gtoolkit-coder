@@ -22,74 +22,34 @@ GtDiffElementWithLabelStencil >> change: aGtCompositeDiffChange [
 	change := aGtCompositeDiffChange
 ]
 
-{ #category : #'api - instantiation' }
+{ #category : #building }
 GtDiffElementWithLabelStencil >> create [
-	| headerElement diffContainer |
-	
-	headerElement := BrHorizontalPane new
-		hMatchParent;
-		vFitContent.
-
-	headerElement 
-		addChild: self createFromLabel;
-		addChild: self createToLabel.
-	
-	diffContainer := self createDiffContainer.
-	
-	^ BrVerticalPane new
-	 	matchParent;
-	 	addChild: headerElement;
-	 	addChild: diffContainer asScrollableElement
-]
-
-{ #category : #'api - instantiation' }
-GtDiffElementWithLabelStencil >> createDiffContainer [
-	| diffContainer |
-	diffContainer := BrVerticalPane new
-		hMatchParent;
-		vFitContentLimited.
-
-	self shouldHideDiff ifFalse: [
-		diffContainer addChild: self createPanesDiffElement ].
-	
-	^ diffContainer
+	^ self createDiffContainer asScrollableElement
 ]
 
 { #category : #building }
-GtDiffElementWithLabelStencil >> createFromLabel [
-	^ BrLabel new
-		margin: (BlInsets left: 6);
-		aptitude: BrGlamorousLabelAptitude;
-		text: (self fromLabelText asRopedText glamorousCodeSmallSize
-				foreground: BrGlamorousColors defaultButtonTextColor);
-		hMatchParent
+GtDiffElementWithLabelStencil >> createDiffContainer [
+	^ BrVerticalPane new
+		hMatchParent;
+		vFitContentLimited;
+		addChild: self createPanesDiffElement;
+		yourself
 ]
 
-{ #category : #private }
+{ #category : #building }
 GtDiffElementWithLabelStencil >> createPanesDiffElement [
-	| diffWrapper diff |
-	diffWrapper := BrVerticalPane new
-			hMatchParent;
-			vFitContentLimited.
+	| diff |
 	diff := (GtDiffElement onChange: self change)
 			aptitude: GtDiffFlatAptitude;
 			vFitContentLimited;
 			beSmallSize;
+			fromLabel: self fromLabelText;
+			toLabel: self toLabelText;
 			moveButtonsToBottom.
 	leftStyler ifNotNil: [ diff leftStyler: leftStyler ].
 	rightStyler ifNotNil: [ diff rightStyler: rightStyler ].
-	diffWrapper addChild: diff.
-	^ diffWrapper
-]
-
-{ #category : #building }
-GtDiffElementWithLabelStencil >> createToLabel [
-	^ BrLabel new
-		margin: (BlInsets left: 31);
-		aptitude: BrGlamorousLabelAptitude;
-		text: (self toLabelText asRopedText glamorousCodeSmallSize
-				foreground: BrGlamorousColors defaultButtonTextColor);
-		hMatchParent
+	self shouldHideDiff ifTrue: [ diff hideDiff ].
+	^ diff
 ]
 
 { #category : #accessing }

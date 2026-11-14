@@ -90,7 +90,7 @@ GtCompositeDiffChange >> gtChangeViewFor: aView [
 		column: 'Objects' text: [ :each | each gtObjectsText ]
 ]
 
-{ #category : #inspecting }
+{ #category : #'gt-extensions' }
 GtCompositeDiffChange >> gtListView: aView [
 	<gtView>
 	from isString ifTrue: [ ^ aView empty ].
@@ -122,7 +122,7 @@ GtCompositeDiffChange >> gtListView: aView [
 					| text |
 					text := each gtDisplayText.
 					(deletedIndices includes: i)
-						ifTrue: [ text highlight: GtDeletionDiffChange highlightColor ].
+						ifTrue: [ text highlight: pane theme diffElement deletedTextBackgroundColor ].
 					BrLabel new
 						aptitude: BrGlamorousLabelAptitude new;
 						text: text ].
@@ -142,7 +142,7 @@ GtCompositeDiffChange >> gtListView: aView [
 					| text |
 					text := each gtDisplayText.
 					(insertedIndices includes: i)
-						ifTrue: [ text highlight: GtInsertionDiffChange highlightColor ].
+						ifTrue: [ text highlight: pane theme diffElement addedTextBackgroundColor ].
 					BrLabel new
 						aptitude: BrGlamorousLabelAptitude new;
 						text: text ].
