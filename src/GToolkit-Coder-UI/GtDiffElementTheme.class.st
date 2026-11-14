@@ -189,6 +189,16 @@ GtDiffElementTheme >> initializeThemeable [
 ]
 
 { #category : #accessing }
+GtDiffElementTheme >> ribbonBorderWidth [
+	^ 1
+]
+
+{ #category : #accessing }
+GtDiffElementTheme >> ribbonCornerRadius [
+	^ 4
+]
+
+{ #category : #accessing }
 GtDiffElementTheme >> selectedBorderColor [
 	^ selectedBorderColor
 ]

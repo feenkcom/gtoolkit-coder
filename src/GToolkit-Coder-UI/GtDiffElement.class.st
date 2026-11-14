@@ -123,10 +123,16 @@ GtDiffElement >> diff: aDiffBuilder [
 	self updateProgressLabel
 ]
 
-{ #category : #'event handling' }
+{ #category : #'private - drawing' }
 GtDiffElement >> drawMeAndChildrenOnSpartaCanvas: aCanvas [
 	super drawMeAndChildrenOnSpartaCanvas: aCanvas.
-	self paintOnCanvas: aCanvas
+	self paintRibbonBordersOnCanvas: aCanvas
+]
+
+{ #category : #drawing }
+GtDiffElement >> drawOnSpartaCanvas: aCanvas [
+	super drawOnSpartaCanvas: aCanvas.
+	self paintRibbonBackgroundsOnCanvas: aCanvas
 ]
 
 { #category : #initialize }
@@ -143,23 +149,6 @@ GtDiffElement >> fromLabel [
 GtDiffElement >> fromLabel: aText [
 	leftLabelElement text: (aText ifNil: [ '' ]) asRopedText glamorousCodeSmallSize.
 	self updateLabelsVisibility
-]
-
-{ #category : #private }
-GtDiffElement >> gutterOutlineFor: aSyncScrollRange [
-	| leftX rightX leftTop leftBottom rightTop rightBottom |
-	leftX := leftElement bounds inParent inParent right.
-	rightX := rightElement bounds inParent inParent left.
-	leftTop := self leftTopFor: aSyncScrollRange leftFirst + 1.
-	leftBottom := self leftBottomFor: aSyncScrollRange leftLast.
-	rightTop := self rightTopFor: aSyncScrollRange rightFirst + 1.
-	rightBottom := self rightBottomFor: aSyncScrollRange rightLast.
-	^ BlPolylineGeometry
-		vertices: {leftX @ leftTop.
-				rightX @ rightTop.
-				rightX @ rightBottom.
-				leftX @ leftBottom.
-				leftX @ leftTop}
 ]
 
 { #category : #accessing }
@@ -438,13 +427,12 @@ GtDiffElement >> newSeparatorElement [
 		yourself
 ]
 
-{ #category : #private }
+{ #category : #'instance creation' }
 GtDiffElement >> newTextElement [
 	^ BrEditor new
 		beReadOnlyWithSelection;
 		hMatchParent;
 		vFitContentLimited;
-		background: self theme diffElement editorBackgroundColor;
 		aptitude: self editorLook	"border: (BlBorder paint: self theme diffElement editorBorderColor width: 1);
 		"
 ]
@@ -468,57 +456,10 @@ GtDiffElement >> onLayout: aBounds context: aBlElementBoundsUpdateContext [
 { #category : #hooks }
 GtDiffElement >> onThemeChanged [
 	super onThemeChanged.
-	syncScrollRanges
-		ifNotNil: [ self updateLineBackgrounds.
-			self invalidate ]
+	syncScrollRanges ifNotNil: [ self updateOutlines ]
 ]
 
-{ #category : #'event handling' }
-GtDiffElement >> outlineFor: aSyncScrollRange [
-	| leftTop leftBottom rightTop rightBottom vertices leftBounds rightBounds |
-	leftTop := self leftTopFor: aSyncScrollRange leftFirst + 1.
-	leftBottom := self leftBottomFor: aSyncScrollRange leftLast.
-	rightTop := self rightTopFor: aSyncScrollRange rightFirst + 1.
-	rightBottom := self rightBottomFor: aSyncScrollRange rightLast.
-	leftBounds := leftElement bounds inParent inParent.
-	rightBounds := rightElement bounds inParent inParent.
-	vertices := OrderedCollection new: 9.
-	vertices
-		add: leftBounds left @ leftTop;
-		add: leftBounds right @ leftTop;
-		add: rightBounds left @ rightTop;
-		add: rightBounds right @ rightTop;
-		add: rightBounds right @ rightBottom;
-		add: rightBounds left @ rightBottom;
-		add: leftBounds right @ leftBottom;
-		add: leftBounds left @ leftBottom;
-		add: leftBounds left @ leftTop.
-	^ BlPolylineGeometry vertices: vertices
-]
-
-{ #category : #drawing }
-GtDiffElement >> paintHorizontalPaddingOf: anEditor from: top to: bottom color: aColor on: aCanvas [
-	| bounds fill |
-	bottom <= top ifTrue: [ ^ self ].
-	bounds := anEditor bounds inParent inParent.
-	fill := aCanvas fill paint: aColor.
-	{{bounds left @ top.
-			(bounds left + anEditor padding left) @ top.
-			(bounds left + anEditor padding left) @ bottom.
-			bounds left @ bottom.
-			bounds left @ top}.
-		{(bounds right - anEditor padding right) @ top.
-			bounds right @ top.
-			bounds right @ bottom.
-			(bounds right - anEditor padding right) @ bottom.
-			(bounds right - anEditor padding right) @ top}}
-		do: [ :vertices | 
-			fill
-				path: ((BlPolylineGeometry vertices: vertices) pathOnSpartaCanvas: aCanvas of: self);
-				draw ]
-]
-
-{ #category : #'event handling' }
+{ #category : #'private - drawing' }
 GtDiffElement >> paintMeAndChildrenOn: aCompositorPainter offset: anOffset [
 	| aCanvas |
 	super paintMeAndChildrenOn: aCompositorPainter offset: anOffset.
@@ -527,41 +468,113 @@ GtDiffElement >> paintMeAndChildrenOn: aCompositorPainter offset: anOffset [
 
 	aCanvas transform
 		by: [ :t | t translateBy: anOffset ]
-		during: [ self paintOnCanvas: aCanvas ]
+		during: [ self paintRibbonBordersOnCanvas: aCanvas ]
 ]
 
-{ #category : #drawing }
-GtDiffElement >> paintOnCanvas: aCanvas [
-	| stroke selectedStroke fill |
-	stroke := aCanvas stroke
-			paint: self theme diffElement borderColor;
-			width: 1.
-	selectedStroke := aCanvas stroke
-			paint: self theme diffElement selectedBorderColor;
-			width: 1.
-	fill := aCanvas fill paint: self theme diffElement connectorBackgroundColor.
-	^ outlines
+{ #category : #'private - drawing' }
+GtDiffElement >> paintRibbonBackgroundsOnCanvas: aCanvas [
+	| leftBounds rightBounds gutterBounds |
+	leftElement visibility = BlVisibility gone ifTrue: [ ^ self ].
+	leftBounds := leftElement bounds inParent inParent asRectangle.
+	rightBounds := rightElement bounds inParent inParent asRectangle.
+	gutterBounds := leftBounds right @ 0 corner: rightBounds left @ self height.
+	{leftBounds.
+		rightBounds}
+		do: [ :bounds | 
+			aCanvas fill
+				paint: (self theme diffElement editorBackgroundColor
+						blocResolveColorForTheme: self theme);
+				path: bounds;
+				draw ].
+	outlines
 		keysAndValuesDo: [ :range :outline | 
-			range isLeftEmpty
-				ifFalse: [ self
-						paintHorizontalPaddingOf: leftElement
-						from: (self leftTopFor: range leftFirst + 1)
-						to: (self leftBottomFor: range leftLast)
-						color: (self leftChangeColorFor: range)
-						on: aCanvas ].
-			range isRightEmpty
-				ifFalse: [ self
-						paintHorizontalPaddingOf: rightElement
-						from: (self rightTopFor: range rightFirst + 1)
-						to: (self rightBottomFor: range rightLast)
-						color: (self rightChangeColorFor: range)
-						on: aCanvas ].
-			fill
-				path: ((self gutterOutlineFor: range) pathOnSpartaCanvas: aCanvas of: self);
-				draw.
-			(range isSelected ifTrue: [ selectedStroke ] ifFalse: [ stroke ])
-				path: (outline pathOnSpartaCanvas: aCanvas of: self);
-				draw ]
+			| path |
+			path := outline pathOnSpartaCanvas: aCanvas of: self.
+			aCanvas clip
+				by: leftBounds
+				during: [ aCanvas fill
+						paint: (self leftChangeColorFor: range);
+						path: path;
+						draw ].
+			aCanvas clip
+				by: rightBounds
+				during: [ aCanvas fill
+						paint: (self rightChangeColorFor: range);
+						path: path;
+						draw ].
+			aCanvas clip
+				by: gutterBounds
+				during: [ aCanvas fill
+						paint: self theme diffElement connectorBackgroundColor;
+						path: path;
+						draw ] ]
+]
+
+{ #category : #'private - drawing' }
+GtDiffElement >> paintRibbonBordersOnCanvas: aCanvas [
+	| border selectedBorder |
+	border := BlBorder
+			paint: self theme diffElement borderColor
+			width: self theme diffElement ribbonBorderWidth.
+	selectedBorder := BlBorder
+			paint: self theme diffElement selectedBorderColor
+			width: self theme diffElement ribbonBorderWidth.
+	outlines
+		keysAndValuesDo: [ :range :outline | 
+			BlOutskirts inside
+				drawBorder: (range isSelected ifTrue: [ selectedBorder ] ifFalse: [ border ])
+				path: (outline pathOnSpartaCanvas: aCanvas of: self)
+				onSpartaCanvas: aCanvas ]
+]
+
+{ #category : #'private - drawing' }
+GtDiffElement >> ribbonCornerRadius [
+	^ self theme diffElement ribbonCornerRadius
+]
+
+{ #category : #'private - drawing' }
+GtDiffElement >> ribbonPathFor: aSyncScrollRange [
+	| leftTop leftBottom rightTop rightBottom leftBounds rightBounds leftRadius rightRadius connectorMiddle |
+	leftTop := self leftTopFor: aSyncScrollRange leftFirst + 1.
+	leftBottom := self leftBottomFor: aSyncScrollRange leftLast.
+	rightTop := self rightTopFor: aSyncScrollRange rightFirst + 1.
+	rightBottom := self rightBottomFor: aSyncScrollRange rightLast.
+	aSyncScrollRange isLeftEmpty
+		ifTrue: [ leftBottom := leftTop + self theme diffElement ribbonBorderWidth ].
+	aSyncScrollRange isRightEmpty
+		ifTrue: [ rightBottom := rightTop + self theme diffElement ribbonBorderWidth ].
+	leftBounds := leftElement bounds inParent inParent.
+	rightBounds := rightElement bounds inParent inParent.
+	connectorMiddle := (leftBounds right + rightBounds left) / 2.
+	leftRadius := self ribbonCornerRadius min: ((leftBottom - leftTop) / 2 max: 0).
+	rightRadius := self ribbonCornerRadius
+			min: ((rightBottom - rightTop) / 2 max: 0).
+	^ BlSvgPath new
+		build: [ :path | 
+			path
+				absolute;
+				moveTo: leftBounds left @ (leftTop + leftRadius);
+				curveVia: leftBounds left @ leftTop
+					to: (leftBounds left + leftRadius) @ leftTop;
+				lineTo: leftBounds right @ leftTop;
+				curveVia: connectorMiddle @ leftTop
+					and: connectorMiddle @ rightTop
+					to: rightBounds left @ rightTop;
+				lineTo: (rightBounds right - rightRadius) @ rightTop;
+				curveVia: rightBounds right @ rightTop
+					to: rightBounds right @ (rightTop + rightRadius);
+				lineTo: rightBounds right @ (rightBottom - rightRadius);
+				curveVia: rightBounds right @ rightBottom
+					to: (rightBounds right - rightRadius) @ rightBottom;
+				lineTo: rightBounds left @ rightBottom;
+				curveVia: connectorMiddle @ rightBottom
+					and: connectorMiddle @ leftBottom
+					to: leftBounds right @ leftBottom;
+				lineTo: (leftBounds left + leftRadius) @ leftBottom;
+				curveVia: leftBounds left @ leftBottom
+					to: leftBounds left @ (leftBottom - leftRadius);
+				close ]
+		viewbox: (0 @ 0 extent: self extent)
 ]
 
 { #category : #'event handling' }
@@ -709,37 +722,7 @@ GtDiffElement >> updateLabelsVisibility [
 		rightLabelElement} do: [ :element | element visibility: visibility ]
 ]
 
-{ #category : #private }
-GtDiffElement >> updateLineBackgrounds [
-	| leftVisible rightVisible differences |
-	leftElement background: self theme diffElement editorBackgroundColor.
-	rightElement background: self theme diffElement editorBackgroundColor.
-	leftVisible := self leftRange.
-	rightVisible := self rightRange.
-	differences := syncScrollRanges ranges select: [ :range | range isDifference ].
-	leftElement children
-		withIndexDo: [ :child :index | 
-			| range |
-			range := differences
-					detect: [ :each | each includesLeftLine: leftVisible first + index - 1 ]
-					ifNone: [ nil ].
-			child
-				background: (range
-						ifNil: [ self theme diffElement editorBackgroundColor ]
-						ifNotNil: [ self leftChangeColorFor: range ]) ].
-	rightElement children
-		withIndexDo: [ :child :index | 
-			| range |
-			range := differences
-					detect: [ :each | each includesRightLine: rightVisible first + index - 1 ]
-					ifNone: [ nil ].
-			child
-				background: (range
-						ifNil: [ self theme diffElement editorBackgroundColor ]
-						ifNotNil: [ self rightChangeColorFor: range ]) ]
-]
-
-{ #category : #private }
+{ #category : #updating }
 GtDiffElement >> updateOutlines [
 	| ranges |
 	leftElement visibility = BlVisibility gone
@@ -751,8 +734,7 @@ GtDiffElement >> updateOutlines [
 			rangesForLeft: self leftRange
 			andRight: self rightRange.
 	ranges
-		do: [ :each | each isDifference ifTrue: [ outlines at: each put: (self outlineFor: each) ] ].
-	self updateLineBackgrounds.
+		do: [ :each | each isDifference ifTrue: [ outlines at: each put: (self ribbonPathFor: each) ] ].
 	self invalidate
 ]
 

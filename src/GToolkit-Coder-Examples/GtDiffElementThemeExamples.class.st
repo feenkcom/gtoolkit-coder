@@ -37,15 +37,11 @@ GtDiffElementThemeExamples >> assertFragment: aString in: editorId resolvedColor
 
 { #category : #private }
 GtDiffElementThemeExamples >> assertLine: lineIndex in: editorId resolvedColor: aColor scripter: aScripter [
-	aScripter
-		checkStep: [ :s | 
-			s
-				label: 'The rendered line resolves its inherited diff theme';
-				// editorId;
-				do: [ :editor | 
-					self
-						assert: ((editor children at: lineIndex) background paint color
-								blocResolveColorForTheme: editor theme) = aColor ] ]
+	GtDiffElementExamples new
+		assertLine: lineIndex
+		in: editorId
+		color: aColor
+		scripter: aScripter
 ]
 
 { #category : #examples }

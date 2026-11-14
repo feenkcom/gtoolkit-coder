@@ -1,6 +1,3 @@
-"
-Examples of the standalone {{gtClass:GtDiffElement}}. Examples of splitter selection and the enclosing comparison widget are provided by {{gtClass:GtMultiSplitterDiffElementExamples}}.
-"
 Class {
 	#name : #GtDiffElementExamples,
 	#superclass : #Object,
@@ -31,10 +28,15 @@ GtDiffElementExamples >> assertLine: lineIndex in: editorId color: aColor script
 				label: 'Check the rendered line background';
 				// editorId;
 				do: [ :editor | 
+					| actual expected |
+					actual := self
+							renderedBackgroundOf: (editor children at: lineIndex)
+							in: editor
+							from: aScripter space asSpartaForm.
+					expected := aColor blocResolveColorForTheme: editor theme.
 					self
-						assert: ((editor children at: lineIndex) background paint color
-								blocResolveColorForTheme: editor theme)
-								= (aColor blocResolveColorForTheme: editor theme) ] ]
+						assert: (actual pixelValueForDepth: 32)
+						equals: (expected pixelValueForDepth: 32) ] ]
 ]
 
 { #category : #private }
@@ -53,20 +55,25 @@ GtDiffElementExamples >> assertWhiteEditor: editorId in: aScripter [
 	aScripter
 		checkStep: [ :s | 
 			s
-				label: 'The editor and unchanged lines remain white';
+				label: 'Unchanged lines retain the editor background';
 				// editorId;
 				do: [ :editor | 
-					| color |
-					color := editor theme diffElement editorBackgroundColor
+					| form expected |
+					form := aScripter space asSpartaForm.
+					expected := editor theme diffElement editorBackgroundColor
 							blocResolveColorForTheme: editor theme.
-					self
-						assert: (editor background paint color blocResolveColorForTheme: editor theme) = color.
-					self
-						assert: (editor children first background paint color
-								blocResolveColorForTheme: editor theme) = color.
-					self
-						assert: (editor children last background paint color
-								blocResolveColorForTheme: editor theme) = color ] ]
+					self assert: editor background isTransparent.
+					{editor children first.
+						editor children last}
+						do: [ :line | 
+							| actual |
+							actual := self
+									renderedBackgroundOf: line
+									in: editor
+									from: form.
+							self
+								assert: (actual pixelValueForDepth: 32)
+								equals: (expected pixelValueForDepth: 32) ] ] ]
 ]
 
 { #category : #examples }
@@ -309,16 +316,20 @@ GtDiffElementExamples >> identicalTexts [
 						label: 'Identical content has no colored change regions';
 						// editorId;
 						do: [ :editor | 
-							self
-								assert: (editor background paint color blocResolveColorForTheme: editor theme)
-										= (editor theme diffElement editorBackgroundColor
-												blocResolveColorForTheme: editor theme).
-							self
-								assert: (editor children
-										allSatisfy: [ :line | 
-											(line background paint color blocResolveColorForTheme: editor theme)
-												= (editor theme diffElement editorBackgroundColor
-														blocResolveColorForTheme: editor theme) ]) ] ] ].
+							| form expected |
+							form := scripter space asSpartaForm.
+							expected := editor theme diffElement editorBackgroundColor
+									blocResolveColorForTheme: editor theme.
+							editor children
+								do: [ :line | 
+									| actual |
+									actual := self
+											renderedBackgroundOf: line
+											in: editor
+											from: form.
+									self
+										assert: (actual pixelValueForDepth: 32)
+										equals: (expected pixelValueForDepth: 32) ] ] ] ].
 	self assertProgress: '0/0' in: scripter.
 	^ scripter
 ]
@@ -515,6 +526,16 @@ GtDiffElementExamples >> previousText [
 GtDiffElementExamples >> proposedText [
 	^ String cr
 		join: #('heading' 'one two three' 'middle' 'four' 'footer' 'before removal' 'after removal' 'before insertion' '' 'after insertion' 'end' 'mixed new text' 'finish')
+]
+
+{ #category : #private }
+GtDiffElementExamples >> renderedBackgroundOf: aLine in: anEditor from: aForm [
+	"Sample the line interior near its right edge, beyond the fixture text."
+
+	| point |
+	point := (anEditor bounds inSpace right - anEditor padding right - 2)
+			@ aLine bounds inSpace center y.
+	^ aForm colorAt: point floor
 ]
 
 { #category : #private }
