@@ -387,7 +387,7 @@ GtDiffElementExamples >> multipleChanges [
 	| scripter colors |
 	scripter := self scripterFrom: self previousText to: self proposedText.
 	colors := scripter element theme diffElement.
-	self assertProgress: '1/4' in: scripter.
+	self assertProgress: '1/5' in: scripter.
 	self assertWhiteEditor: GtDiffOldTextId in: scripter.
 	self assertWhiteEditor: GtDiffNewTextId in: scripter.
 	self
@@ -420,6 +420,16 @@ GtDiffElementExamples >> multipleChanges [
 		in: GtDiffNewTextId
 		color: colors addedLineBackgroundColor
 		scripter: scripter.
+	self
+		assertLine: 12
+		in: GtDiffOldTextId
+		color: colors deletedLineBackgroundColor
+		scripter: scripter.
+	self
+		assertLine: 12
+		in: GtDiffNewTextId
+		color: colors addedLineBackgroundColor
+		scripter: scripter.
 	^ scripter
 ]
 
@@ -436,7 +446,7 @@ GtDiffElementExamples >> navigateToNextChange [
 				// GtDiffButtonsId;
 				// BrButton;
 				@ 2 ].
-	self assertProgress: '2/4' in: scripter.
+	self assertProgress: '2/5' in: scripter.
 	^ scripter
 ]
 
@@ -453,7 +463,7 @@ GtDiffElementExamples >> navigateToPreviousChange [
 				// GtDiffButtonsId;
 				// BrButton;
 				@ 1 ].
-	self assertProgress: '1/4' in: scripter.
+	self assertProgress: '1/5' in: scripter.
 	^ scripter
 ]
 
@@ -498,13 +508,13 @@ GtDiffElementExamples >> originalString [
 { #category : #private }
 GtDiffElementExamples >> previousText [
 	^ String cr
-		join: #('heading' 'one two' 'middle' 'four five' 'footer' 'before removal' '' 'after removal' 'before insertion' 'after insertion' 'end')
+		join: #('heading' 'one two' 'middle' 'four five' 'footer' 'before removal' '' 'after removal' 'before insertion' 'after insertion' 'end' 'mixed old text' 'finish')
 ]
 
 { #category : #private }
 GtDiffElementExamples >> proposedText [
 	^ String cr
-		join: #('heading' 'one two three' 'middle' 'four' 'footer' 'before removal' 'after removal' 'before insertion' '' 'after insertion' 'end')
+		join: #('heading' 'one two three' 'middle' 'four' 'footer' 'before removal' 'after removal' 'before insertion' '' 'after insertion' 'end' 'mixed new text' 'finish')
 ]
 
 { #category : #private }
