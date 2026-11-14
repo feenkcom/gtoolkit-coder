@@ -1,5 +1,5 @@
 "
-The semantic palette of a diff element. Constants supply the current Ant Design colors for every theme; themeable colors resolve through the owning theme's diffElement subtheme.
+Semantic colors and ribbon measurements for a diff element. Themeable colors resolve through the owning theme's diffElement subtheme. Light and dark subclasses can provide different palette constants.
 "
 Class {
 	#name : #GtDiffElementTheme,
@@ -61,6 +61,11 @@ GtDiffElementTheme >> connectorBackgroundColor [
 GtDiffElementTheme >> connectorBackgroundColor: aColor [
 	self constantAt: #connectorBackgroundColor put: aColor.
 	connectorBackgroundColor := aColor
+]
+
+{ #category : #defaults }
+GtDiffElementTheme >> defaultLabelForegroundColor [
+	^ Color fromHexString: '737373'
 ]
 
 { #category : #accessing }
@@ -186,6 +191,13 @@ GtDiffElementTheme >> initializeThemeable [
 	selectedBorderColor := self
 			color: [ :aTheme | aTheme diffElement constantAt: #selectedBorderColor ]
 			source: [ :aTheme | aTheme diffElement selectedBorderColor ]
+]
+
+{ #category : #accessing }
+GtDiffElementTheme >> labelForegroundColor [
+	^ self
+		color: [ :aTheme | aTheme diffElement defaultLabelForegroundColor ]
+		source: [ :aTheme | aTheme diffElement labelForegroundColor ]
 ]
 
 { #category : #accessing }

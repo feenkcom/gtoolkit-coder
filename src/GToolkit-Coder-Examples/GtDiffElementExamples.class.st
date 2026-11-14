@@ -34,9 +34,7 @@ GtDiffElementExamples >> assertLine: lineIndex in: editorId color: aColor script
 							in: editor
 							from: aScripter space asSpartaForm.
 					expected := aColor blocResolveColorForTheme: editor theme.
-					self
-						assert: (actual pixelValueForDepth: 32)
-						equals: (expected pixelValueForDepth: 32) ] ]
+					self assertRenderedColor: actual equals: expected ] ]
 ]
 
 { #category : #private }
@@ -48,6 +46,16 @@ GtDiffElementExamples >> assertProgress: aString in: aScripter [
 				// GtDiffButtonsId;
 				// BrLabel;
 				do: [ :label | self assert: label text asString = aString ] ]
+]
+
+{ #category : #private }
+GtDiffElementExamples >> assertRenderedColor: actual equals: expected [
+	"Rendering can quantize each channel by one 8-bit step."
+
+	#(red green blue alpha)
+		do: [ :channel | 
+			self
+				assert: ((actual perform: channel) - (expected perform: channel)) abs <= (1 / 255) ]
 ]
 
 { #category : #private }
@@ -71,9 +79,7 @@ GtDiffElementExamples >> assertWhiteEditor: editorId in: aScripter [
 									renderedBackgroundOf: line
 									in: editor
 									from: form.
-							self
-								assert: (actual pixelValueForDepth: 32)
-								equals: (expected pixelValueForDepth: 32) ] ] ]
+							self assertRenderedColor: actual equals: expected ] ] ]
 ]
 
 { #category : #examples }
@@ -327,9 +333,7 @@ GtDiffElementExamples >> identicalTexts [
 											renderedBackgroundOf: line
 											in: editor
 											from: form.
-									self
-										assert: (actual pixelValueForDepth: 32)
-										equals: (expected pixelValueForDepth: 32) ] ] ] ].
+									self assertRenderedColor: actual equals: expected ] ] ] ].
 	self assertProgress: '0/0' in: scripter.
 	^ scripter
 ]
