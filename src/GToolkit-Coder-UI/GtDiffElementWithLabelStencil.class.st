@@ -58,7 +58,7 @@ GtDiffElementWithLabelStencil >> createDiffContainer [
 { #category : #building }
 GtDiffElementWithLabelStencil >> createFromLabel [
 	^ BrLabel new
-		margin: (BlInsets left: 6);
+		margin: (BlInsets left: 5);
 		aptitude: BrGlamorousLabelAptitude;
 		text: (self fromLabelText asRopedText glamorousCodeSmallSize
 				foreground: BrGlamorousColors defaultButtonTextColor);
@@ -85,7 +85,7 @@ GtDiffElementWithLabelStencil >> createPanesDiffElement [
 { #category : #building }
 GtDiffElementWithLabelStencil >> createToLabel [
 	^ BrLabel new
-		margin: (BlInsets left: 31);
+		margin: (BlInsets left: 30);
 		aptitude: BrGlamorousLabelAptitude;
 		text: (self toLabelText asRopedText glamorousCodeSmallSize
 				foreground: BrGlamorousColors defaultButtonTextColor);
