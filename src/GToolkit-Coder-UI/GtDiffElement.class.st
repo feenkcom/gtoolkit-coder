@@ -13,7 +13,10 @@ Class {
 		'buttonsElement',
 		'progressLabel',
 		'deletedLines',
-		'insertedLines'
+		'insertedLines',
+		'leftLabelElement',
+		'rightLabelElement',
+		'headerSeparatorElement'
 	],
 	#category : #'GToolkit-Coder-UI-Diff'
 }
@@ -131,6 +134,17 @@ GtDiffElement >> editorLook [
 	^ BrGlamorousCodeEditorAptitude
 ]
 
+{ #category : #accessing }
+GtDiffElement >> fromLabel [
+	^ leftLabelElement text asString
+]
+
+{ #category : #accessing }
+GtDiffElement >> fromLabel: aText [
+	leftLabelElement text: (aText ifNil: [ '' ]) asRopedText glamorousCodeSmallSize.
+	self updateLabelsVisibility
+]
+
 { #category : #private }
 GtDiffElement >> gutterOutlineFor: aSyncScrollRange [
 	| leftX rightX leftTop leftBottom rightTop rightBottom |
@@ -153,6 +167,16 @@ GtDiffElement >> hideButtons [
 	buttonsElement visibility: BlVisibility visible
 ]
 
+{ #category : #accessing }
+GtDiffElement >> hideDiff [
+	{leftElement.
+		separatorElement.
+		rightElement.
+		buttonsElement} do: [ :element | element visibility: BlVisibility gone ].
+	outlines := Dictionary new.
+	self invalidate
+]
+
 { #category : #private }
 GtDiffElement >> highlightChange: aChange in: aText color: aColor [
 	aChange isEmpty ifTrue: [ ^ self ].
@@ -163,13 +187,12 @@ GtDiffElement >> highlightChange: aChange in: aText color: aColor [
 		to: aChange stopIndex
 ]
 
-{ #category : #initialize }
+{ #category : #initialization }
 GtDiffElement >> initialize [
-	| gridLayout comparisonElement |
+	| comparisonElement |
 	super initialize.
 
-	gridLayout := BlLinearLayout vertical.
-	self layout: gridLayout.
+	self layout: BlLinearLayout vertical.
 	self matchParent.
 
 	self beNormalSize.
@@ -184,6 +207,9 @@ GtDiffElement >> initialize [
 				action: [ self scrollPrevious ]).
 
 	outlines := Dictionary new.
+	syncScrollRanges := GtSyncScrollRanges new.
+	deletedLines := Set new.
+	insertedLines := Set new.
 
 	buttonsElement := self newButtonsElement.
 	buttonsElement id: GtDiffButtonsId.
@@ -215,13 +241,38 @@ GtDiffElement >> initialize [
 				on: BrTextEditorCursorAddedEvent
 				do: [ :e | self rightCursorChanged ]).
 
-	comparisonElement := BrHorizontalPane new
-			hMatchParent;
-			vFitContentLimited;
-			addChildren: {leftElement. self newSeparatorElement id: GtDiffSeparatorId. rightElement}.
+	leftLabelElement := self newLabelElement id: GtDiffOldLabelId.
+	rightLabelElement := self newLabelElement id: GtDiffNewLabelId.
+	headerSeparatorElement := BlElement new
+			size: 0 @ 0;
+			visibility: BlVisibility gone.
+	separatorElement := self newSeparatorElement id: GtDiffSeparatorId.
+	{leftLabelElement.
+		rightLabelElement.
+		leftElement.
+		rightElement}
+		do: [ :element | 
+			element
+				constraintsDo: [ :c | 
+					c grid horizontal
+						weight: 1;
+						specAlignment: BlGridAlignment fill ] ].
+	comparisonElement := BlElement new
+			layout: (BlGridLayout horizontal columnCount: 3);
+			constraintsDo: [ :c | 
+				c horizontal matchParent.
+				c vertical fitContentLimited ];
+			addChildren: {leftLabelElement.
+					headerSeparatorElement.
+					rightLabelElement.
+					leftElement.
+					separatorElement.
+					rightElement}.
 
 	self
-		addChildren: {buttonsElement . comparisonElement}
+		addChildren: {buttonsElement.
+				comparisonElement}.
+	self updateProgressLabel
 ]
 
 { #category : #'event handling' }
@@ -285,6 +336,11 @@ GtDiffElement >> leftScrolled [
 ]
 
 { #category : #accessing }
+GtDiffElement >> leftStyler [
+	^ leftElement editor styler
+]
+
+{ #category : #accessing }
 GtDiffElement >> leftStyler: aStyler [
 	leftElement editor styler: aStyler
 ]
@@ -329,6 +385,16 @@ GtDiffElement >> newButtonsElement [
 		margin: (BlInsets bottom: 5);
 		alignCenter;
 		constraintsDo: [ :c | c grid horizontal span: 3 ]
+]
+
+{ #category : #private }
+GtDiffElement >> newLabelElement [
+	^ BrLabel new
+		aptitude: BrGlamorousLabelAptitude;
+		text: '';
+		hMatchParent;
+		vFitContent;
+		visibility: BlVisibility gone
 ]
 
 { #category : #initialize }
@@ -560,6 +626,11 @@ GtDiffElement >> rightScrolled [
 ]
 
 { #category : #accessing }
+GtDiffElement >> rightStyler [
+	^ rightElement editor styler
+]
+
+{ #category : #accessing }
 GtDiffElement >> rightStyler: aStyler [
 	rightElement editor styler: aStyler
 ]
@@ -615,6 +686,29 @@ GtDiffElement >> styler: anObject [
 			rightElement styler: styler ]
 ]
 
+{ #category : #accessing }
+GtDiffElement >> toLabel [
+	^ rightLabelElement text asString
+]
+
+{ #category : #accessing }
+GtDiffElement >> toLabel: aText [
+	rightLabelElement
+		text: (aText ifNil: [ '' ]) asRopedText glamorousCodeSmallSize.
+	self updateLabelsVisibility
+]
+
+{ #category : #private }
+GtDiffElement >> updateLabelsVisibility [
+	| visibility |
+	visibility := (self fromLabel isEmpty and: [ self toLabel isEmpty ])
+			ifTrue: [ BlVisibility gone ]
+			ifFalse: [ BlVisibility visible ].
+	{leftLabelElement.
+		headerSeparatorElement.
+		rightLabelElement} do: [ :element | element visibility: visibility ]
+]
+
 { #category : #private }
 GtDiffElement >> updateLineBackgrounds [
 	| leftVisible rightVisible differences |
@@ -648,6 +742,10 @@ GtDiffElement >> updateLineBackgrounds [
 { #category : #private }
 GtDiffElement >> updateOutlines [
 	| ranges |
+	leftElement visibility = BlVisibility gone
+		ifTrue: [ outlines := Dictionary new.
+			self invalidate.
+			^ self ].
 	outlines := Dictionary new.
 	ranges := syncScrollRanges
 			rangesForLeft: self leftRange

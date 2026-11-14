@@ -82,6 +82,36 @@ GtDiffElementExamples >> changeExampleShadow [
 ]
 
 { #category : #examples }
+GtDiffElementExamples >> emptyElement [
+	<gtExample>
+	<return: #BlScripter>
+	| scripter |
+	scripter := BlScripter new.
+	scripter extent: 800 @ 400.
+	scripter element: GtDiffElement new showButtons.
+	scripter
+		clickStep: [ :s | 
+			s
+				// GtDiffButtonsId;
+				// BrButton;
+				@ 2 ].
+	scripter
+		clickStep: [ :s | 
+			s
+				// GtDiffButtonsId;
+				// BrButton;
+				@ 1 ].
+	scripter
+		checkStep: [ :s | 
+			s
+				label: 'An empty diff has no changes';
+				// GtDiffButtonsId;
+				// BrLabel;
+				do: [ :label | self assert: label text asString = '0/0' ] ].
+	^ scripter
+]
+
+{ #category : #examples }
 GtDiffElementExamples >> exampleChange [
 	<gtExample>
 	<return: #GtCompositeDiffChange>
