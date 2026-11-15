@@ -1,5 +1,5 @@
 "
-The semantic palette of a diff element. Constants supply the current Ant Design colors for every theme; themeable colors resolve through the owning theme's diffElement subtheme.
+Semantic colors and ribbon measurements for a diff element. Themeable colors resolve through the owning theme's diffElement subtheme. Light and dark subclasses can provide different palette constants.
 "
 Class {
 	#name : #GtDiffElementTheme,
@@ -61,6 +61,11 @@ GtDiffElementTheme >> connectorBackgroundColor [
 GtDiffElementTheme >> connectorBackgroundColor: aColor [
 	self constantAt: #connectorBackgroundColor put: aColor.
 	connectorBackgroundColor := aColor
+]
+
+{ #category : #defaults }
+GtDiffElementTheme >> defaultLabelForegroundColor [
+	^ BrAntColors gray7
 ]
 
 { #category : #accessing }
@@ -125,31 +130,15 @@ GtDiffElementTheme >> initializeColors [
 { #category : #initialization }
 GtDiffElementTheme >> initializeConstants [
 	super initializeConstants.
-	self
-		constantAt: #deletedLineBackgroundColor
-		put: BrGlamorousColors diffDeletedLineBackgroundColor.
-	self
-		constantAt: #deletedTextBackgroundColor
-		put: BrGlamorousColors diffDeletedTextBackgroundColor.
-	self
-		constantAt: #addedLineBackgroundColor
-		put: BrGlamorousColors diffAddedLineBackgroundColor.
-	self
-		constantAt: #addedTextBackgroundColor
-		put: BrGlamorousColors diffAddedTextBackgroundColor.
-	self
-		constantAt: #unchangedSideBackgroundColor
-		put: BrGlamorousColors diffUnchangedSideBackgroundColor.
-	self
-		constantAt: #connectorBackgroundColor
-		put: BrGlamorousColors diffConnectorBackgroundColor.
-	self constantAt: #borderColor put: BrGlamorousColors diffBorderColor.
-	self
-		constantAt: #editorBorderColor
-		put: BrGlamorousColors diffEditorBorderColor.
-	self
-		constantAt: #editorBackgroundColor
-		put: BrGlamorousColors diffEditorBackgroundColor.
+	self constantAt: #deletedLineBackgroundColor put: BrAntColors red0.
+	self constantAt: #deletedTextBackgroundColor put: BrAntColors red1.
+	self constantAt: #addedLineBackgroundColor put: BrAntColors green0.
+	self constantAt: #addedTextBackgroundColor put: BrAntColors green1.
+	self constantAt: #unchangedSideBackgroundColor put: BrAntColors gray2.
+	self constantAt: #connectorBackgroundColor put: BrAntColors gray2.
+	self constantAt: #borderColor put: BrAntColors gray4.
+	self constantAt: #editorBorderColor put: BrAntColors gray3.
+	self constantAt: #editorBackgroundColor put: BrAntColors gray0.
 	self constantAt: #selectedBorderColor put: BrGlamorousColors primaryBorderColor
 ]
 
@@ -186,6 +175,13 @@ GtDiffElementTheme >> initializeThemeable [
 	selectedBorderColor := self
 			color: [ :aTheme | aTheme diffElement constantAt: #selectedBorderColor ]
 			source: [ :aTheme | aTheme diffElement selectedBorderColor ]
+]
+
+{ #category : #accessing }
+GtDiffElementTheme >> labelForegroundColor [
+	^ self
+		color: [ :aTheme | aTheme diffElement defaultLabelForegroundColor ]
+		source: [ :aTheme | aTheme diffElement labelForegroundColor ]
 ]
 
 { #category : #accessing }

@@ -109,12 +109,77 @@ GtDiffElementThemeExamples >> colorsResolveAgainstTargetTheme [
 ]
 
 { #category : #examples }
+GtDiffElementThemeExamples >> darkDiffElement [
+	<gtExample>
+	<return: #BlScripter>
+	| scripter theme |
+	scripter := GtDiffElementExamples new multipleChanges.
+	theme := self darkTheme.
+	scripter
+		doStep: [ :s | 
+			s
+				label: 'Apply the dark theme to the diff';
+				block: [ :element | 
+					element
+						theme: theme;
+						background: theme diffElement editorBackgroundColor ] ].
+	self
+		assertLine: 2
+		in: GtDiffOldTextId
+		resolvedColor: (self color: #unchangedSideBackgroundColor in: theme)
+		scripter: scripter.
+	self
+		assertLine: 2
+		in: GtDiffNewTextId
+		resolvedColor: (self color: #addedLineBackgroundColor in: theme)
+		scripter: scripter.
+	self
+		assertLine: 4
+		in: GtDiffOldTextId
+		resolvedColor: (self color: #deletedLineBackgroundColor in: theme)
+		scripter: scripter.
+	self
+		assertLine: 4
+		in: GtDiffNewTextId
+		resolvedColor: (self color: #unchangedSideBackgroundColor in: theme)
+		scripter: scripter.
+	self
+		assertLine: 7
+		in: GtDiffOldTextId
+		resolvedColor: (self color: #deletedLineBackgroundColor in: theme)
+		scripter: scripter.
+	self
+		assertLine: 9
+		in: GtDiffNewTextId
+		resolvedColor: (self color: #addedLineBackgroundColor in: theme)
+		scripter: scripter.
+	self
+		assertFragment: 'old'
+		in: GtDiffOldTextId
+		resolvedColor: (self color: #deletedTextBackgroundColor in: theme)
+		scripter: scripter.
+	self
+		assertFragment: 'new'
+		in: GtDiffNewTextId
+		resolvedColor: (self color: #addedTextBackgroundColor in: theme)
+		scripter: scripter.
+	^ scripter
+]
+
+{ #category : #examples }
 GtDiffElementThemeExamples >> darkTheme [
 	<gtExample>
-	| theme |
+	| theme reference |
 	theme := BrGlamorousDarkTheme new.
+	reference := self lightTheme.
 	self assert: theme diffElement class = GtDiffElementDarkTheme.
-	self assertCurrentPaletteFor: theme.
+	#(deletedLineBackgroundColor deletedTextBackgroundColor addedLineBackgroundColor addedTextBackgroundColor unchangedSideBackgroundColor connectorBackgroundColor borderColor editorBorderColor editorBackgroundColor)
+		do: [ :selector | 
+			self
+				assert: (self color: selector in: theme) ~= (self color: selector in: reference) ].
+	self
+		assert: (self color: #selectedBorderColor in: theme)
+		equals: (BrGlamorousColors primaryBorderColor blocResolveColorForTheme: theme).
 	^ theme
 ]
 

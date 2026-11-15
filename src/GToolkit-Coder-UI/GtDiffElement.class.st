@@ -376,10 +376,11 @@ GtDiffElement >> newButtonsElement [
 		constraintsDo: [ :c | c grid horizontal span: 3 ]
 ]
 
-{ #category : #private }
+{ #category : #'instance creation' }
 GtDiffElement >> newLabelElement [
 	^ BrLabel new
-		aptitude: BrGlamorousLabelAptitude;
+		aptitude: (BrGlamorousLabelAptitude new
+				foreground: self theme diffElement labelForegroundColor);
 		text: '';
 		hMatchParent;
 		vFitContent;
@@ -409,13 +410,14 @@ GtDiffElement >> newPreviousChangeButton [
 		action: [ :aButton | self scrollPrevious ]
 ]
 
-{ #category : #initialize }
+{ #category : #'instance creation' }
 GtDiffElement >> newProgressLabel [
 	^ progressLabel := BrLabel new
 			fitContent;
 			alignCenter;
 			margin: (BlInsets left: 5);
-			aptitude: BrGlamorousLabelAptitude
+			aptitude: (BrGlamorousLabelAptitude new
+					foreground: self theme diffElement labelForegroundColor)
 ]
 
 { #category : #initialize }
