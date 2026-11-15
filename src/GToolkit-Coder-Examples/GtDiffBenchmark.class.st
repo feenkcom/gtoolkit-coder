@@ -133,6 +133,7 @@ GtDiffBenchmark >> newElementFor: aDiffModel [
 { #category : #running }
 GtDiffBenchmark >> run [
 	<gtExample>
+	<noTest>
 	<return: #Array>
 	^ self runWithIterations: 1000 samples: 7
 ]
@@ -140,6 +141,7 @@ GtDiffBenchmark >> run [
 { #category : #running }
 GtDiffBenchmark >> runRendering [
 	<gtExample>
+	<noTest>
 	<return: #Array>
 	^ self runRenderingWithIterations: 1 samples: 7
 ]
