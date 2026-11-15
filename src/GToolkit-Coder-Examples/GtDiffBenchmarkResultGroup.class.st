@@ -20,24 +20,15 @@ GtDiffBenchmarkResultGroup >> gtOverviewFor: aView [
 		items: [ self items ];
 		column: 'Method' text: #method;
 		column: 'Case'
-			text: #caseName
-			width: 140;
+			text: #caseName;
 		column: 'Source characters'
-			text: #sourceCharacters
-			width: 130;
+			text: #sourceCharacters;
 		column: 'Source lines'
-			text: #sourceLines
-			width: 100;
+			text: #sourceLines;
 		column: 'Iterations'
-			text: #iterations
-			width: 100;
+			text: #iterations;
 		column: 'Samples'
-			text: [ :each | each samples size ]
-			width: 80;
-		column: 'Time per operation (median)'
-			text: #period
-			width: 210;
+			text: [ :each | each samples size ];
 		column: 'Total time (median batch)'
-			text: #elapsedTime
-			width: 210
+			text: [:each | each elapsedTime gtShortPrintString]
 ]

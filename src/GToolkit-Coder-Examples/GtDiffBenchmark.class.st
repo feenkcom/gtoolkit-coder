@@ -144,7 +144,7 @@ GtDiffBenchmark >> runRendering [
 	<gtExample>
 	<noTest>
 	<return: #GtDiffBenchmarkResultGroup>
-	^ self runRenderingWithIterations: 1 samples: 7
+	^ self runRenderingWithIterations: 5 samples: 7
 ]
 
 { #category : #running }
