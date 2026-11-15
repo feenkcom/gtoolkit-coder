@@ -65,7 +65,7 @@ GtDiffElementTheme >> connectorBackgroundColor: aColor [
 
 { #category : #defaults }
 GtDiffElementTheme >> defaultLabelForegroundColor [
-	^ Color fromHexString: '737373'
+	^ BrAntColors gray7
 ]
 
 { #category : #accessing }
@@ -130,31 +130,15 @@ GtDiffElementTheme >> initializeColors [
 { #category : #initialization }
 GtDiffElementTheme >> initializeConstants [
 	super initializeConstants.
-	self
-		constantAt: #deletedLineBackgroundColor
-		put: BrGlamorousColors diffDeletedLineBackgroundColor.
-	self
-		constantAt: #deletedTextBackgroundColor
-		put: BrGlamorousColors diffDeletedTextBackgroundColor.
-	self
-		constantAt: #addedLineBackgroundColor
-		put: BrGlamorousColors diffAddedLineBackgroundColor.
-	self
-		constantAt: #addedTextBackgroundColor
-		put: BrGlamorousColors diffAddedTextBackgroundColor.
-	self
-		constantAt: #unchangedSideBackgroundColor
-		put: BrGlamorousColors diffUnchangedSideBackgroundColor.
-	self
-		constantAt: #connectorBackgroundColor
-		put: BrGlamorousColors diffConnectorBackgroundColor.
-	self constantAt: #borderColor put: BrGlamorousColors diffBorderColor.
-	self
-		constantAt: #editorBorderColor
-		put: BrGlamorousColors diffEditorBorderColor.
-	self
-		constantAt: #editorBackgroundColor
-		put: BrGlamorousColors diffEditorBackgroundColor.
+	self constantAt: #deletedLineBackgroundColor put: BrAntColors red0.
+	self constantAt: #deletedTextBackgroundColor put: BrAntColors red1.
+	self constantAt: #addedLineBackgroundColor put: BrAntColors green0.
+	self constantAt: #addedTextBackgroundColor put: BrAntColors green1.
+	self constantAt: #unchangedSideBackgroundColor put: BrAntColors gray2.
+	self constantAt: #connectorBackgroundColor put: BrAntColors gray2.
+	self constantAt: #borderColor put: BrAntColors gray4.
+	self constantAt: #editorBorderColor put: BrAntColors gray3.
+	self constantAt: #editorBackgroundColor put: BrAntColors gray0.
 	self constantAt: #selectedBorderColor put: BrGlamorousColors primaryBorderColor
 ]
 

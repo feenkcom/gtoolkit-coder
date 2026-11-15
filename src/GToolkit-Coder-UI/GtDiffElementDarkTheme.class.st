@@ -9,25 +9,19 @@ Class {
 
 { #category : #defaults }
 GtDiffElementDarkTheme >> defaultLabelForegroundColor [
-	^ Color fromHexString: '8C8C8C'
+	^ BrAntColors gray6
 ]
 
 { #category : #initialization }
 GtDiffElementDarkTheme >> initializeConstants [
 	super initializeConstants.
-	self constantAt: #editorBackgroundColor put: (Color fromHexString: '141414').
-	self
-		constantAt: #deletedLineBackgroundColor
-		put: (Color fromHexString: '431418').
-	self
-		constantAt: #deletedTextBackgroundColor
-		put: (Color fromHexString: '791A1F').
-	self constantAt: #addedLineBackgroundColor put: (Color fromHexString: '1D3712').
-	self constantAt: #addedTextBackgroundColor put: (Color fromHexString: '306317').
-	self
-		constantAt: #unchangedSideBackgroundColor
-		put: (Color fromHexString: '262626').
-	self constantAt: #connectorBackgroundColor put: (Color fromHexString: '1F1F1F').
-	self constantAt: #borderColor put: (Color fromHexString: '434343').
-	self constantAt: #editorBorderColor put: (Color fromHexString: '303030')
+	self constantAt: #editorBackgroundColor put: BrAntColors gray11.
+	self constantAt: #deletedLineBackgroundColor put: BrAntColors darkRed1.
+	self constantAt: #deletedTextBackgroundColor put: BrAntColors darkRed3.
+	self constantAt: #addedLineBackgroundColor put: BrAntColors darkGreen1.
+	self constantAt: #addedTextBackgroundColor put: BrAntColors darkGreen3.
+	self constantAt: #unchangedSideBackgroundColor put: BrAntColors gray9.
+	self constantAt: #connectorBackgroundColor put: BrAntColors gray10.
+	self constantAt: #borderColor put: BrAntColors gray8.
+	self constantAt: #editorBorderColor put: BrAntColors gray9
 ]
