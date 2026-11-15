@@ -5,7 +5,7 @@ Evaluate `GtDiffBenchmark new run` to measure GtDiffBuilder model creation with 
 
 Evaluate `GtDiffBenchmark new runRendering` to measure fresh GtDiffElement creation, styling, layout, readiness and first painting to an 800x400 Sparta Form. Models, the Scripter and its container are prepared outside the measured interval. Each case has three warmup renders and seven timed renders. This measures creation through first paint, including Scripter readiness overhead, rather than repainting an existing element. `runRenderingWithIterations:samples:` configures larger batches.
 
-Both runs use #methodFixtures and return source sizes, median microseconds per operation and all batch samples. Model results include a representative model; rendering results also include the final element and Form for inspection. Modified method sources are never installed.
+Both runs use #methodFixtures and return a GtDiffBenchmarkResultGroup of GtDiffBenchmarkResult instances, a subclass of BenchmarkResult. Each result represents the median batch: #iterations is the batch iteration count, #elapsedTime is its total duration, and #period is the median time per operation. #samples retains every batch as a BenchmarkResult. Results also expose #method, #caseName, source sizes and a representative #model; rendering results retain the final #element, #form and #viewportExtent. Modified method sources are never installed.
 "
 Class {
 	#name : #GtDiffBenchmark,
@@ -15,50 +15,56 @@ Class {
 
 { #category : #'private - running' }
 GtDiffBenchmark >> benchmarkCasesUsing: aBlock [
-	^ self methodFixtures
-		flatCollect: [ :fixture | 
-			| method source cases |
-			method := fixture key.
-			source := method sourceCode.
-			self assert: source ~= fixture value.
-			cases := {'Removed method'
-						-> {source.
-								''}.
-					'Added method'
-						-> {''.
-								source}.
-					'Changed method'
-						-> {source.
-								fixture value}}.
-			cases
-				collect: [ :each | 
-					(aBlock value: each value first value: each value second)
-						at: #method put: method;
-						at: #sourceLines put: source lines size;
-						at: #sourceCharacters put: source size;
-						at: #case put: each key;
-						yourself ] ]
+	^ GtDiffBenchmarkResultGroup
+		withAll: (self methodFixtures
+				flatCollect: [ :fixture | 
+					| method source cases |
+					method := fixture key.
+					source := method sourceCode.
+					self assert: source ~= fixture value.
+					cases := {'Removed method'
+								-> {source.
+										''}.
+							'Added method'
+								-> {''.
+										source}.
+							'Changed method'
+								-> {source.
+										fixture value}}.
+					cases
+						collect: [ :each | 
+							(aBlock value: each value first value: each value second)
+								method: method;
+								caseName: each key;
+								yourself ] ])
+]
+
+{ #category : #'private - measuring' }
+GtDiffBenchmark >> measureBlock: aBlock iterations: iterations samples: sampleCount [
+	^ GtDiffBenchmarkResult new
+		samples: ((1 to: sampleCount)
+				collect: [ :sample | 
+					BenchmarkResult new
+						iterations: iterations;
+						elapsedTime: (Duration microSeconds: [ iterations timesRepeat: aBlock ] microsecondsToRun);
+						yourself ]);
+		yourself
 ]
 
 { #category : #'private - measuring' }
 GtDiffBenchmark >> measureFrom: previous to: proposed iterations: iterations samples: sampleCount [
-	| buildModel samples model |
+	| buildModel model |
 	buildModel := [ GtDiffBuilder
 			computeDifferencesFrom: previous
 			to: proposed
 			using: GtSmaCCDiffSplitter forPharo ].
 	model := buildModel value.
 	100 timesRepeat: [ buildModel value ].
-	samples := (1 to: sampleCount)
-			collect: [ :sample | 
-				[ iterations timesRepeat: [ buildModel value ] ] microsecondsToRun
-					/ iterations asFloat ].
-	^ Dictionary new
-		at: #iterationsPerSample put: iterations;
-		at: #medianMicrosecondsPerModel
-			put: (samples sorted at: samples size // 2 + 1);
-		at: #microsecondsPerModelSamples put: samples;
-		at: #model put: model;
+	^ (self
+		measureBlock: buildModel
+		iterations: iterations
+		samples: sampleCount)
+		model: model;
 		yourself
 ]
 
@@ -66,7 +72,7 @@ GtDiffBenchmark >> measureFrom: previous to: proposed iterations: iterations sam
 GtDiffBenchmark >> measureRenderingFrom: previous to: proposed iterations: iterations samples: sampleCount [
 	"Measure a fresh element through its first paint. Model and space creation are outside the timing."
 
-	| model scripter container render samples element form |
+	| model scripter container render result element form |
 	model := GtDiffBuilder
 			computeDifferencesFrom: previous
 			to: proposed
@@ -81,20 +87,15 @@ GtDiffBenchmark >> measureRenderingFrom: previous to: proposed iterations: itera
 		scripter pulseUntilReady.
 		form := scripter space asSpartaForm ].
 	3 timesRepeat: [ render value ].
-	samples := (1 to: sampleCount)
-			collect: [ :sample | 
-				[ iterations timesRepeat: [ render value ] ] microsecondsToRun
-					/ iterations asFloat ].
+	result := self
+			measureBlock: render
+			iterations: iterations
+			samples: sampleCount.
 	self assert: form extent = (800 @ 400).
-	^ Dictionary new
-		at: #iterationsPerSample put: iterations;
-		at: #medianMicrosecondsPerElement
-			put: (samples sorted at: samples size // 2 + 1);
-		at: #microsecondsPerElementSamples put: samples;
-		at: #viewportExtent put: 800 @ 400;
-		at: #model put: model;
-		at: #element put: element;
-		at: #form put: form;
+	^ result
+		model: model;
+		element: element;
+		form: form;
 		yourself
 ]
 
@@ -134,7 +135,7 @@ GtDiffBenchmark >> newElementFor: aDiffModel [
 GtDiffBenchmark >> run [
 	<gtExample>
 	<noTest>
-	<return: #Array>
+	<return: #GtDiffBenchmarkResultGroup>
 	^ self runWithIterations: 1000 samples: 7
 ]
 
@@ -142,7 +143,7 @@ GtDiffBenchmark >> run [
 GtDiffBenchmark >> runRendering [
 	<gtExample>
 	<noTest>
-	<return: #Array>
+	<return: #GtDiffBenchmarkResultGroup>
 	^ self runRenderingWithIterations: 1 samples: 7
 ]
 
