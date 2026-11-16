@@ -14,5 +14,5 @@ BrGlamorousTheme >> diffElement: aDiffElementTheme [
 
 { #category : #'*GToolkit-Coder-UI' }
 BrGlamorousTheme >> newDiffElementTheme [
-	^ GtDiffElementTheme theme: self
+	self subclassResponsibility
 ]
