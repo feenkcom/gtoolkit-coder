@@ -396,6 +396,47 @@ GtDiffElementExamples >> labelsAlignWithEditorText [
 ]
 
 { #category : #examples }
+GtDiffElementExamples >> longDiffScrolledToEnd [
+	<gtExample>
+	<return: #BlScripter>
+	| previous proposed scripter buttonsTop |
+	previous := String cr
+			join: ((1 to: 100) collect: [ :index | 'line ' , index asString ]).
+	proposed := previous , ' updated'.
+	scripter := self scripterFrom: previous to: proposed.
+	scripter extent: 800 @ 240.
+	{GtDiffOldTextId.
+		GtDiffNewTextId}
+		do: [ :editorId | 
+			scripter
+				doStep: [ :step | 
+					step
+						label: 'Scroll the editor to its final line';
+						// editorId;
+						block: [ :editor | editor scrollToPosition: editor lineCount ] ] ].
+	scripter
+		checkStep: [ :step | 
+			step
+				label: 'Locate the bottom button bar';
+				// GtDiffButtonsId;
+				do: [ :bar | buttonsTop := bar bounds inSpace top ] ].
+	{GtDiffOldTextId.
+		GtDiffNewTextId}
+		do: [ :editorId | 
+			scripter
+				checkStep: [ :step | 
+					step
+						label: 'The final editor line remains visible above the buttons';
+						// editorId;
+						do: [ :editor | 
+							self assert: (editor visibleText asString includesSubstring: 'line 100').
+							self
+								assert: editor children last bounds inSpace bottom <= buttonsTop
+								description: 'The final editor line is covered by the bottom button bar' ] ] ].
+	^ scripter
+]
+
+{ #category : #examples }
 GtDiffElementExamples >> multipleChanges [
 	<gtExample>
 	<return: #BlScripter>
