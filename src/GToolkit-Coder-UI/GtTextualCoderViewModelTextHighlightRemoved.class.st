@@ -15,7 +15,7 @@ GtTextualCoderViewModelTextHighlightRemoved >> documentId [
 	"Answer the document my highlight belonged to. Derived, never cached."
 
 	<return: #BlTextDocumentId>
-	^ textHighlight ifNotNil: #documentId
+	^ textHighlight ifNotNil: [ :v | v documentId ]
 ]
 
 { #category : #accessing }

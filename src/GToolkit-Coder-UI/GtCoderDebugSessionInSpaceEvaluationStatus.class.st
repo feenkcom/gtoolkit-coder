@@ -103,7 +103,7 @@ GtCoderDebugSessionInSpaceEvaluationStatus >> mayTerminateSourceCoderViewModel: 
 
 { #category : #actions }
 GtCoderDebugSessionInSpaceEvaluationStatus >> requestDebuggerSpaceClose [
-	^ self debuggerSpace ifNotNil: #requestClose
+	^ self debuggerSpace ifNotNil: [ :v | v requestClose ]
 ]
 
 { #category : #'api - hooks' }

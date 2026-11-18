@@ -78,5 +78,5 @@ GtCoderTextAttributesAddedDocumentIdIsNilSignal >> startPosition: anObject [
 
 { #category : #accessing }
 GtCoderTextAttributesAddedDocumentIdIsNilSignal >> textAttributes [
-	^ coderTextAttributes ifNotNil: #textAttributes
+	^ coderTextAttributes ifNotNil: [ :v | v textAttributes ]
 ]

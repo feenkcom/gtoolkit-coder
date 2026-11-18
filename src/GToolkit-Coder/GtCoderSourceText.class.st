@@ -20,7 +20,7 @@ GtCoderSourceText >> asSourceString [
 
 { #category : #accessing }
 GtCoderSourceText >> documentId [
-	^ self text ifNotNil: #documentId
+	^ self text ifNotNil: [ :v | v documentId ]
 ]
 
 { #category : #accessing }
