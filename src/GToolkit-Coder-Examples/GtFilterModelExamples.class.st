@@ -440,7 +440,7 @@ GtFilterModelExamples >> shortListModelPluggableItemsWithIconAndLabelBuilders [
 				icon: anIconBuilder;
 				label: aLabelBuilder).
 	self assert: aModel selectedItem icon isNotNil.
-	self assert: aModel selectedItem label equals: 'Array'.
+	self assert: aModel selectedItem label equals: #Array.
 
 	^ aModel
 ]

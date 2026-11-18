@@ -143,7 +143,7 @@ GtCoderRemoveClassesPreviewStencil >> newRemoveButton [
 		icon: BrGlamorousVectorIcons bin;
 		label: 'Remove';
 		disabled: self hasSubclassesNotSelected;
-		action: [ self menuModel ifNotNil: #hideAll.
+		action: [ self menuModel ifNotNil: [ :v | v hideAll ].
 			self removeClasses ]
 ]
 
@@ -169,7 +169,7 @@ GtCoderRemoveClassesPreviewStencil >> newRemoveWithSubclassesButton [
 				right: 10);
 		icon: BrGlamorousVectorIcons bin;
 		label: 'Remove with subclasses';
-		action: [ self menuModel ifNotNil: #hideAll.
+		action: [ self menuModel ifNotNil: [ :v | v hideAll ].
 			self removeWithSubclasses ]
 ]
 

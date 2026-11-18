@@ -21,7 +21,7 @@ GtCoderClassesTreeItemElement >> classHierarchyTree: aClassHierarchyTree [
 				addChildren: {classIconContainer.
 						classNameLabel} ].
 
-	theClass := aClassHierarchyTree ifNotNil: #rootClass.
+	theClass := aClassHierarchyTree ifNotNil: [ :v | v rootClass ].
 
 	theClass
 		ifNil: [ classNameLabel text: '' asRopedText ]

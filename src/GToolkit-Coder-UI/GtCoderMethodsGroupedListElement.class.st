@@ -247,7 +247,7 @@ GtCoderMethodsGroupedListElement >> navigationModel: anObject [
 
 { #category : #initialization }
 GtCoderMethodsGroupedListElement >> onBrWidgetPermanentlyRemovedEvent: anEvent [
-	addOnsCache ifNotNil: #unsubscribeFromSystem
+	addOnsCache ifNotNil: [ :v | v unsubscribeFromSystem ]
 ]
 
 { #category : #'event handling - selection' }

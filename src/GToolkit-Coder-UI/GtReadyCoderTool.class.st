@@ -60,5 +60,5 @@ GtReadyCoderTool >> tabLook [
 { #category : #'api - accessing' }
 GtReadyCoderTool >> title [
 	<return: #String>
-	^ self coder ifNotNil: #coderName ifNil: [ super title ]
+	^ self coder ifNotNil: [ :v | v coderName ] ifNil: [ super title ]
 ]

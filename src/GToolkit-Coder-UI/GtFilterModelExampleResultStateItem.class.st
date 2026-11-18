@@ -31,7 +31,7 @@ GtFilterModelExampleResultStateItem >> printOn: aStream [
 
 	aStream
 		nextPut: $(;
-		print: (self resultState ifNotNil: #label);
+		print: (self resultState ifNotNil: [ :v | v label ]);
 		nextPut: $)
 ]
 

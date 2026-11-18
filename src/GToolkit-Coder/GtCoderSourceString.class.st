@@ -11,7 +11,7 @@ Class {
 
 { #category : #accessing }
 GtCoderSourceString >> documentId [
-	^ self sourceText ifNotNil: #documentId
+	^ self sourceText ifNotNil: [ :v | v documentId ]
 ]
 
 { #category : #accessing }

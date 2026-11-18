@@ -437,7 +437,7 @@ GtTextualCoderViewModel >> documentId [
 	<return: #BlTextDocumentId>
 	^ coderModel
 		ifNil: [ nil ]
-		ifNotNil: [ self sourceText ifNotNil: #documentId ]
+		ifNotNil: [ self sourceText ifNotNil: [ :v | v documentId ] ]
 ]
 
 { #category : #accessing }

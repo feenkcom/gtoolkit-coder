@@ -19,8 +19,8 @@ GtCoderUncategorizedDummyClass >> checkUncategorized [
 			detect: [ :eachTag | eachTag isRoot ].
 
 	self assert: aPackageTag isRoot.
-	self assert: aPackage name equals: 'GToolkit-Coder-Examples'.
-	self assert: aPackageTag name equals: 'Uncategorized'.
+	self assert: aPackage name equals: #'GToolkit-Coder-Examples'.
+	self assert: aPackageTag name equals: #Uncategorized.
 
 	^ aPackageTag
 ]

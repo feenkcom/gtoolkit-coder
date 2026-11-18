@@ -27,5 +27,5 @@ GtFilterModelParameterUpdated >> originalAnnouncement: anAnnouncement [
 
 { #category : #accessing }
 GtFilterModelParameterUpdated >> parameterModel [
-	self originalAnnouncement ifNotNil: #model
+	self originalAnnouncement ifNotNil: [ :v | v model ]
 ]

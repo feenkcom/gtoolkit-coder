@@ -64,7 +64,7 @@ GtCoderExampleStateElement >> exampleDo: aBlock [
 { #category : #'private - accessing' }
 GtCoderExampleStateElement >> exampleResult [
 	<return: #GtExampleResult or: nil>
-	^ self example ifNotNil: #result
+	^ self example ifNotNil: [ :v | v result ]
 ]
 
 { #category : #'private - accessing' }
@@ -75,9 +75,7 @@ GtCoderExampleStateElement >> exampleState [
 { #category : #'private - testing' }
 GtCoderExampleStateElement >> hasExampleResult [
 	<return: #Boolean>
-	^ self example
-		ifNotNil: #hasResult
-		ifNil: [ false ]
+	^ self example ifNotNil: [ :v | v hasResult ] ifNil: [ false ]
 ]
 
 { #category : #initialization }
