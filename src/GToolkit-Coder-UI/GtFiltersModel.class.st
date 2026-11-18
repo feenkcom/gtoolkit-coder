@@ -38,7 +38,7 @@ GtFiltersModel >> availableFilters [
 	"Return a collection of available filters"
 
 	<return: #Collection of: #GtFilterModel>
-	^ availableFiltersBuilder ifNotNil: #availableFilters ifNil: [ #() ]
+	^ availableFiltersBuilder ifNotNil: [ :v | v availableFilters ] ifNil: [ #() ]
 ]
 
 { #category : #accessing }

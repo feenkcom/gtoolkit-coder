@@ -25,7 +25,7 @@ GtFilterModelStringItem >> hash [
 { #category : #accessing }
 GtFilterModelStringItem >> icon [
 	<return: #BlElement or: nil>
-	^ iconStencil ifNotNil: #asElement
+	^ iconStencil ifNotNil: [ :v | v asElement ]
 ]
 
 { #category : #accessing }

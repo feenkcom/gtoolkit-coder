@@ -31,14 +31,14 @@ GtTextualCoderTextHighlight >> documentId [
 	"Answer the id of the document my range was computed against."
 
 	<return: #BlTextDocumentId>
-	^ textRange ifNotNil: #documentId
+	^ textRange ifNotNil: [ :v | v documentId ]
 ]
 
 { #category : #accessing }
 GtTextualCoderTextHighlight >> id [
 	"Answer the id identifying my highlight, used to remove it again."
 
-	^ textHighlight ifNotNil: #id
+	^ textHighlight ifNotNil: [ :v | v id ]
 ]
 
 { #category : #printing }

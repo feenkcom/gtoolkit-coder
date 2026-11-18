@@ -28,8 +28,8 @@ GtCoderRenameActionRemoveAttributesSignal >> gtExtraTextAttributesFor: aView [
 		column: 'Document'
 			text: [ :each | 
 				'{1}.{2}'
-					format: {each documentId ifNotNil: #textId ifNil: [ '-' ].
-							each documentId ifNotNil: #textId ifNil: [ '-' ]} ]
+					format: {each documentId ifNotNil: [ :v | v textId ] ifNil: [ '-' ].
+							each documentId ifNotNil: [ :v | v textId ] ifNil: [ '-' ]} ]
 			width: 70;
 		column: 'Range'
 			text: [ :each | 
@@ -38,7 +38,7 @@ GtCoderRenameActionRemoveAttributesSignal >> gtExtraTextAttributesFor: aView [
 							each stopPosition ifNil: [ '-' ]} ]
 			width: 50;
 		column: 'Count'
-			text: [ :each | each textAttributes ifNotNil: #size ifNil: [ 0 ] ]
+			text: [ :each | each textAttributes ifNotNil: [ :v | v size ] ifNil: [ 0 ] ]
 			width: 50;
 		column: 'Attributes'
 			text: [ :each | 

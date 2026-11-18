@@ -994,8 +994,7 @@ GtTextualCoderElement >> subscribeToTextualCoderViewModel [
 
 	self registerCoderModelAnnouncementsFor: self textualCoderViewModel coderModel.
 	self registerCoderViewModelAnnouncementsFor: self textualCoderViewModel.
-
-	completion ifNotNil: #install
+	completion ifNotNil: [ :v | v install ]
 ]
 
 { #category : #TODO }
@@ -1017,12 +1016,11 @@ GtTextualCoderElement >> text: aBlText [
 GtTextualCoderElement >> unsubscribeFromTextualCoderViewModel [
 	"Is sent before a new textualCoder view model is assigned to the element.
 	Elements that subscribe to textualCoder view model in domain model are required to implement this methods."
-	
+
 	self textualCoderViewModel unsubscribe: self.
 	self textualCoderViewModel coderModel unsubscribe: self.
-	
-	completion 
-		ifNotNil: #uninstall 
+	completion
+		ifNotNil: [ :v | v uninstall ]
 		ifNil: [ editorElement resetCompletionStrategy ].
 	self editor removeEditorShortcuts: shortcuts
 ]

@@ -94,7 +94,7 @@ GtFilterModelItem >> label [
 { #category : #accessing }
 GtFilterModelItem >> labelSize [
 	<return: #Integer>
-	^ self label ifNotNil: #size ifNil: [ 0 ]
+	^ self label ifNotNil: [ :v | v size ] ifNil: [ 0 ]
 ]
 
 { #category : #converting }

@@ -14,7 +14,7 @@ GtFilterModelItemIconStencilBuilder >> buildDefault [
 	anIconName := self object gtIconName.
 	(anIconName isNil or: [ anIconName = Object gtIconName ]) ifTrue: [ ^ nil ].
 
-	^ (self object gtSafeIconNamed: anIconName) ifNotNil: #asElement
+	^ (self object gtSafeIconNamed: anIconName) ifNotNil: [ :v | v asElement ]
 ]
 
 { #category : #accessing }
