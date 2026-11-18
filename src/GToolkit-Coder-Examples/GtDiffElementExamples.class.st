@@ -184,6 +184,64 @@ GtDiffElementExamples >> deletionOnly [
 ]
 
 { #category : #examples }
+GtDiffElementExamples >> diffAtScaledWidth [
+	"A width of 615.4, as at display scale 1.25: the proposed side stays inside the grid"
+	<gtExample>
+	<return: #GtDiffElement>
+	| diff previousEditor proposedEditor proposedLabel grid |
+	diff := (GtDiffElement onChange: self exampleChange)
+				aptitude: GtDiffFlatAptitude;
+				beSmallSize;
+				fromLabel: 'Previous';
+				toLabel: 'Proposed';
+				moveButtonsToBottom;
+				size: 615.4 @ 400;
+				yourself.
+	diff forceLayout.
+	diff requestLayout.
+	diff forceLayout.
+	previousEditor := (diff query // GtDiffOldTextId) anyOne.
+	proposedEditor := (diff query // GtDiffNewTextId) anyOne.
+	proposedLabel := (diff query // GtDiffNewLabelId) anyOne.
+	grid := previousEditor parent.
+	self assert: grid width = 615.4.
+	self assert: previousEditor bounds inParent right
+				< proposedEditor bounds inParent left.
+	self assert: proposedEditor bounds inParent right <= grid width.
+	self assert: proposedLabel bounds inParent right <= grid width.
+	^diff
+]
+
+{ #category : #examples }
+GtDiffElementExamples >> diffGridLaidOutNarrowerThanMeasured [
+	<gtExample>
+	<return: #GtDiffElement>
+	| diff previousEditor proposedEditor proposedLabel grid context |
+	diff := (GtDiffElement onChange: self exampleChange)
+				aptitude: GtDiffFlatAptitude;
+				beSmallSize;
+				fromLabel: 'Previous';
+				toLabel: 'Proposed';
+				moveButtonsToBottom;
+				size: 800 @ 400;
+				yourself.
+	diff forceLayout.
+	previousEditor := (diff query // GtDiffOldTextId) anyOne.
+	proposedEditor := (diff query // GtDiffNewTextId) anyOne.
+	proposedLabel := (diff query // GtDiffNewLabelId) anyOne.
+	grid := previousEditor parent.
+	context := BlElementBoundsUpdater new.
+	grid applyLayoutIn: (0 @ 0 extent: (grid width - 1) @ grid height)
+		context: context.
+	context commitChanges.
+	self assert: previousEditor bounds inParent right
+				< proposedEditor bounds inParent left.
+	self assert: proposedEditor bounds inParent right <= grid width.
+	self assert: proposedLabel bounds inParent right <= grid width.
+	^diff
+]
+
+{ #category : #examples }
 GtDiffElementExamples >> emptyElement [
 	<gtExample>
 	<return: #BlScripter>
