@@ -33,6 +33,11 @@ GtCoderSourceCodeChanged >> newText: aText [
 	newText := aText
 ]
 
+{ #category : #notifying }
+GtCoderSourceCodeChanged >> notifyThrough: aGtTextualCoderNotifier [
+	aGtTextualCoderNotifier notifySourceCodeChanged: self
+]
+
 { #category : #accessing }
 GtCoderSourceCodeChanged >> previousText [
 	^ previousText

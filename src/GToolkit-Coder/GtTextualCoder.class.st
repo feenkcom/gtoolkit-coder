@@ -5,7 +5,8 @@ Class {
 		'sourceCode',
 		'astPromise',
 		'astCache',
-		'previousAst'
+		'previousAst',
+		'directNotifier'
 	],
 	#classVars : [
 		'UseIncrementalParsing'
@@ -251,6 +252,17 @@ GtTextualCoder >> deleteSourceTextFrom: aFromIndex to: aToIndex [
 	self currentSourceText: (self currentSourceText copy delete: aFromIndex to: aToIndex)
 ]
 
+{ #category : #accessing }
+GtTextualCoder >> directNotifier [
+	<return: #GtTextualCoderNotifier>
+	^ directNotifier
+]
+
+{ #category : #accessing }
+GtTextualCoder >> directNotifier: aGtTextualCoderNotifier [
+	directNotifier := aGtTextualCoderNotifier
+]
+
 { #category : #'api - ast' }
 GtTextualCoder >> ensureAst [
 	self astAsyncDo: [ :theAst | ]
@@ -259,8 +271,9 @@ GtTextualCoder >> ensureAst [
 { #category : #initialize }
 GtTextualCoder >> initialize [
 	super initialize.
-	
+
 	astCache := AsyncFutureCache new.
+	directNotifier := GtTextualCoderNullNotifier uniqueInstance.
 	self reset
 ]
 
@@ -292,6 +305,11 @@ GtTextualCoder >> isModifiedPromise [
 ]
 
 { #category : #'private - notifying' }
+GtTextualCoder >> notifyAndAnnounce: anAnnouncement [
+	self announcer announce: anAnnouncement afterNotifying: directNotifier
+]
+
+{ #category : #'private - notifying' }
 GtTextualCoder >> notifyCorrectionFrom: aFromIndex to: aToIndex with: aString [
 	self announce: (GtCoderCorrectionRequest new
 		coder: self;
@@ -305,15 +323,16 @@ GtTextualCoder >> notifySourceChangedTo: aNewText from: aPreviousText with: anUp
 	"Notify the text editor that it should update the text (for example due to refactoring changes)"
 
 	"If user didn't specify the source, we assume that the coder model plays a role of the source"
-	anUpdateStragegy source ifNil: [
-		anUpdateStragegy source: self ].
 
-	self announce: (GtCoderSourceCodeChanged new 
-		updateStrategy: anUpdateStragegy;
-		newText: aNewText;
-		previousText: aPreviousText;
-		coder: self;
-		reason: aReason)
+	anUpdateStragegy source ifNil: [ anUpdateStragegy source: self ].
+
+	self
+		notifyAndAnnounce: (GtCoderSourceCodeChanged new
+				updateStrategy: anUpdateStragegy;
+				newText: aNewText;
+				previousText: aPreviousText;
+				coder: self;
+				reason: aReason)
 ]
 
 { #category : #'private - notifying' }

@@ -28,7 +28,8 @@ GtCoderNavigationIndexStep >> selectMethods: someCompiledMethods [
 				onParentStepTarget: self;
 				onThisOrBreadthFirstChildOfKind: GtCoderMethodsGroupedListElement;
 				// BrLabel;
-				@ [ :eachLabel | eachLabel text asString = someCompiledMethods first selector ] ]
+				@ [ :eachLabel | 
+					eachLabel text asString sameContentAs: someCompiledMethods first selector  ] ]
 		ifFalse: [ self
 				substeps2: ('Select {1} methods' format: {someCompiledMethods size})
 				do: [ :aStep | 
