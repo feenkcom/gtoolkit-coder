@@ -19,6 +19,11 @@ GtCoderRenameTemporaryRequestedAnnouncement >> interestedCoders [
 	^ interestedCoders
 ]
 
+{ #category : #notifying }
+GtCoderRenameTemporaryRequestedAnnouncement >> notifyThrough: aGtTextualCoderNotifier [
+	aGtTextualCoderNotifier notifyRenameTemporaryRequested: self
+]
+
 { #category : #accessing }
 GtCoderRenameTemporaryRequestedAnnouncement >> variableName [
 	^ variableName
