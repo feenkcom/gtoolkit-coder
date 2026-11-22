@@ -52,7 +52,7 @@ BaselineOfGToolkitCoder >> baseline: spec [
 				spec repository: 'github://feenkcom/gtoolkit-completer:v0.9.191/src' ].
 		spec
 			baseline: 'GToolkit4Magritte' with: [
-				spec repository: 'github://feenkcom/gt4magritte:v0.7.193/src' ].
+				spec repository: 'github://feenkcom/gt4magritte:v0.7.194/src' ].
 		spec
 			baseline: 'GToolkitEditor' with: [
 				spec repository: 'github://feenkcom/gtoolkit-editor:v0.6.95/src' ].
