@@ -28,12 +28,14 @@ GtSharedVariablesBindings >> bindingNames [
 GtSharedVariablesBindings >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
-	Return nil, if the variable has no value assigned."
+	Return nil, if the variable has no value assigned.
+	Variable names are Symbols, as the compiler looks them up; typed names (Strings) are converted."
 	<return: #Variable or: nil>
-
+	| aName |
+	aName := aSymbol asSymbol.
 	^ bindings
-		at: aSymbol
-		ifAbsentPut: [ WorkspaceVariable key: aSymbol ]
+		at: aName
+		ifAbsentPut: [ WorkspaceVariable key: aName ]
 ]
 
 { #category : #accessing }
@@ -46,7 +48,7 @@ GtSharedVariablesBindings >> bindings [
 GtSharedVariablesBindings >> hasBindingOf: aSymbol [
 	<return: #Boolean>
 
-	^ bindings includesKey: aSymbol
+	^ bindings includesKey: aSymbol asSymbol
 ]
 
 { #category : #comparing }
@@ -73,5 +75,5 @@ GtSharedVariablesBindings >> interactive [
 GtSharedVariablesBindings >> removeBindingOf: aSymbol [
 	<return: #Boolean>
 
-	^ bindings removeKey: aSymbol ifAbsent: [ "ignore" ]
+	^ bindings removeKey: aSymbol asSymbol ifAbsent: [ "ignore" ]
 ]
