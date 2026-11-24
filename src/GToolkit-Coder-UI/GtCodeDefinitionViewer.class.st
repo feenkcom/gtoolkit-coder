@@ -16,10 +16,13 @@ GtCodeDefinitionViewer >> aptitude: aStencil [
 
 { #category : #'private - instance creation' }
 GtCodeDefinitionViewer >> buildSectionLabel: aSectionName [
-	
-	^ BrLabel new
-		aptitude: (BrGlamorousLabelAptitude new glamorousRegularFontAndSize foreground: Color gray; fontSize: 12);
-		text: aSectionName, ':';
+	| aLabel |
+	aLabel := BrLabel new.
+	^ aLabel
+		aptitude: (BrGlamorousLabelAptitude new glamorousRegularFontAndSize
+				foreground: aLabel theme label metadataTextForeground;
+				fontSize: 12);
+		text: aSectionName , ':';
 		margin: (BlInsets top: 5 right: 5);
 		focusability: BlFocusability none;
 		constraintsDo: [ :c | c grid horizontal alignLeft ]

@@ -61,7 +61,7 @@ GtCoderNavigationBasicPackagesTagsClassesElement >> headerLabel [
 	label
 		aptitude: (BrGlamorousLabelAptitude new
 				fontSize: 12;
-				foreground: Color gray).
+				foreground: label theme label metadataTextForeground).
 	^ label
 ]
 

@@ -11,7 +11,7 @@ Class {
 GtDiffElementThemeExamples >> assertCurrentPaletteFor: aTheme [
 	| reference |
 	reference := BrGlamorousLightTheme new.
-	#(deletedLineBackgroundColor deletedTextBackgroundColor addedLineBackgroundColor addedTextBackgroundColor unchangedSideBackgroundColor connectorBackgroundColor borderColor editorBorderColor editorBackgroundColor selectedBorderColor)
+	#(deletedLineBackgroundColor deletedTextBackgroundColor addedLineBackgroundColor addedTextBackgroundColor unchangedSideBackgroundColor connectorBackgroundColor borderColor editorBorderColor editorBackgroundColor selectedBorderColor labelForegroundColor)
 		do: [ :selector | 
 			self
 				assert: (self color: selector in: aTheme) = (self color: selector in: reference) ]
@@ -173,7 +173,7 @@ GtDiffElementThemeExamples >> darkTheme [
 	theme := BrGlamorousDarkTheme new.
 	reference := self lightTheme.
 	self assert: theme diffElement class = GtDiffElementDarkTheme.
-	#(deletedLineBackgroundColor deletedTextBackgroundColor addedLineBackgroundColor addedTextBackgroundColor unchangedSideBackgroundColor connectorBackgroundColor borderColor editorBorderColor editorBackgroundColor)
+	#(deletedLineBackgroundColor deletedTextBackgroundColor addedLineBackgroundColor addedTextBackgroundColor unchangedSideBackgroundColor connectorBackgroundColor borderColor editorBorderColor editorBackgroundColor labelForegroundColor)
 		do: [ :selector | 
 			self
 				assert: (self color: selector in: theme) ~= (self color: selector in: reference) ].
@@ -181,6 +181,25 @@ GtDiffElementThemeExamples >> darkTheme [
 		assert: (self color: #selectedBorderColor in: theme)
 		equals: (BrGlamorousColors primaryBorderColor blocResolveColorForTheme: theme).
 	^ theme
+]
+
+{ #category : #examples }
+GtDiffElementThemeExamples >> labelForegroundUsesStoredThemeableColor [
+	<gtExample>
+	<return: #BlThemeableColor>
+	| aLightTheme aDarkTheme aPaint |
+	aLightTheme := self lightTheme.
+	aDarkTheme := self darkTheme.
+	aPaint := aLightTheme diffElement labelForegroundColor.
+	self assert: (aPaint isKindOf: BlThemeableColor).
+	self assert: aLightTheme diffElement labelForegroundColor == aPaint.
+	self
+		assert: aPaint rawColor
+		equals: (aLightTheme diffElement constantAt: #labelForegroundColor).
+	self
+		assert: (aPaint blocResolveColorForTheme: aDarkTheme)
+		equals: (aDarkTheme diffElement constantAt: #labelForegroundColor).
+	^ aPaint
 ]
 
 { #category : #examples }
@@ -258,6 +277,10 @@ GtDiffElementThemeExamples >> replaceDiffSubTheme [
 	replacement := GtDiffElementLightTheme theme: theme.
 	replacement
 		addedLineBackgroundColor: (self color: #deletedLineBackgroundColor in: theme).
+	self assert: (replacement addedLineBackgroundColor isKindOf: BlThemeableColor).
+	self
+		assert: replacement addedLineBackgroundColor rawColor
+		equals: (self color: #deletedLineBackgroundColor in: theme).
 	theme diffElement: replacement.
 	self assert: theme diffElement == replacement.
 	self assert: (theme subThemes at: #gtDiffElementTheme) == replacement.

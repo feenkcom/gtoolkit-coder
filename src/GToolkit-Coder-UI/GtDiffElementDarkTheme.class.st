@@ -7,11 +7,6 @@ Class {
 	#category : #'GToolkit-Coder-UI-Diff'
 }
 
-{ #category : #defaults }
-GtDiffElementDarkTheme >> defaultLabelForegroundColor [
-	^ BrAntColors gray6
-]
-
 { #category : #initialization }
 GtDiffElementDarkTheme >> initializeConstants [
 	super initializeConstants.
@@ -24,5 +19,5 @@ GtDiffElementDarkTheme >> initializeConstants [
 	self constantAt: #borderColor put: BrAntColors gray8.
 	self constantAt: #editorBorderColor put: BrAntColors gray9.
 	self constantAt: #editorBackgroundColor put: BrAntColors gray11.
-	self constantAt: #selectedBorderColor put: BrGlamorousColors primaryBorderColor
+	self constantAt: #labelForegroundColor put: BrAntColors gray6
 ]
