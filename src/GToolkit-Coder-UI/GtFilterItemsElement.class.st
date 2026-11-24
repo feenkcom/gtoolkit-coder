@@ -276,7 +276,8 @@ GtFilterItemsElement >> newAddFilterHandleElement [
 { #category : #'private - updating' }
 GtFilterItemsElement >> newRemoveButton [
 	^ GtInspectorRoundButtonStencil mini asElement
-		icon: (BrPlusIconStencil close radius: 3) asElement;
+		beMiniSize;
+		icon: BrGlamorousVectorIcons close asElement;
 		zIndex: 10;
 		id: GtPagerClosePageButtonElementId;
 		constraintsDo: [ :c | 
