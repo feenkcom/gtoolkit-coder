@@ -10,14 +10,14 @@ Class {
 { #category : #initialization }
 GtDiffElementDarkTheme >> initializeConstants [
 	super initializeConstants.
-	self constantAt: #deletedLineBackgroundColor put: BrAntColors darkRed0.
-	self constantAt: #deletedTextBackgroundColor put: BrAntColors darkRed1.
-	self constantAt: #addedLineBackgroundColor put: BrAntColors darkGreen0.
-	self constantAt: #addedTextBackgroundColor put: BrAntColors darkGreen1.
+	self constantAt: #deletedLineBackgroundColor put: BrAntColors darkRed1.
+	self constantAt: #deletedTextBackgroundColor put: BrAntColors red8.
+	self constantAt: #addedLineBackgroundColor put: BrAntColors darkGreen1.
+	self constantAt: #addedTextBackgroundColor put: BrAntColors green8.
 	self constantAt: #unchangedSideBackgroundColor put: BrAntColors gray9.
-	self constantAt: #connectorBackgroundColor put: BrAntColors gray10.
+	self constantAt: #connectorBackgroundColor put: BrAntColors gray9.
 	self constantAt: #borderColor put: BrAntColors gray8.
 	self constantAt: #editorBorderColor put: BrAntColors gray9.
-	self constantAt: #editorBackgroundColor put: BrAntColors gray11.
+	self constantAt: #editorBackgroundColor put: BrAntColors gray10.
 	self constantAt: #labelForegroundColor put: BrAntColors gray6
 ]
