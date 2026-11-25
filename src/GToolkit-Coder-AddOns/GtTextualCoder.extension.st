@@ -121,7 +121,7 @@ GtTextualCoder >> initializeSearchTextAddOns: addOns viewModel: aCoderViewModel 
 											beTinySize ]
 									content: [ :anExplicitMenu | 
 										| anElement |
-										anElement := GtTextualCoderSearchTextElement new
+										anElement := GtCoderSearchReplaceTextElement new
 												textualCoderViewModel: aCoderViewModel;
 												editorDo: [ :anEditor |
 													anEditor requestFocus.
@@ -140,7 +140,7 @@ GtTextualCoder >> initializeSearchTextAddOns: addOns viewModel: aCoderViewModel 
 																select ] ] ];
 												hFitContentLimited;
 												constraintsDo: [ :c | 
-													c minWidth: 300.
+													c minWidth: 500.
 													c frame horizontal alignCenter.
 													c frame vertical alignCenter ].
 										BrFrame new
