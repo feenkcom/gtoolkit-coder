@@ -34,11 +34,12 @@ GtLocalVariablesBindings >> bindingNamesAndValuesDo: aBlock [
 GtLocalVariablesBindings >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
-	Return nil, if the variable has no value assigned."
+	Return nil, if the variable has no value assigned.
+	Variable names are Symbols; typed names (Strings) are converted."
 	<return: #Variable or: nil>
 
 	^ bindings
-		at: aSymbol
+		at: aSymbol asSymbol
 		ifAbsent: [ nil ]
 ]
 
@@ -50,9 +51,10 @@ GtLocalVariablesBindings >> bindings [
 
 { #category : #testing }
 GtLocalVariablesBindings >> hasBindingOf: aSymbol [
+	"Variable names are Symbols; typed names (Strings) are converted"
 	<return: #Boolean>
 
-	^ bindings includesKey: aSymbol
+	^ bindings includesKey: aSymbol asSymbol
 ]
 
 { #category : #comparing }
