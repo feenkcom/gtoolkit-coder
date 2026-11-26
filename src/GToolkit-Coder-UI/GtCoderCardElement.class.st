@@ -51,34 +51,40 @@ GtCoderCardElement >> detailsLabel [
 { #category : #initialization }
 GtCoderCardElement >> initialize [
 	super initialize.
-	self aptitude: (BrGlamorousButtonExteriorAptitude new borderPaint: Color transparent).
+	self
+		aptitude: (BrGlamorousButtonExteriorAptitude new borderPaint: Color transparent).
 	self layout: (BlLinearLayout vertical cellSpacing: 2).
-	self constraintsDo: [ :c | 
-		c horizontal matchParent.
-		c vertical fitContent ].
+	self
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical fitContent ].
 
-	self margin: (BlInsets
-			 top: 5
-			 left: 10
-			 bottom: 5
-			 right: 10).
+	self
+		margin: (BlInsets
+				top: 5
+				left: 10
+				bottom: 5
+				right: 10).
 	self padding: (BlInsets all: 5).
 	self when: BlClickEvent do: [ :event | self selectCoder ].
 
 	coderNameLabel := BlShrinkingTextElement new
-		text: (self coderNameTextFrom: 'Coder');
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
+			defaultTextForeground: self theme label defaultTextForeground;
+			text: (self coderNameTextFrom: 'Coder');
+			constraintsDo: [ :c | 
+				c horizontal matchParent.
+				c vertical fitContent ].
 
 	coderDetailsLabel := BlShrinkingTextElement new
-		visibility: BlVisibility gone;
-		text: (self coderDetailsTextFrom: '');
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical fitContent ].
+			visibility: BlVisibility gone;
+			text: (self coderDetailsTextFrom: '');
+			constraintsDo: [ :c | 
+				c horizontal matchParent.
+				c vertical fitContent ].
 
-	self addChildren: { coderNameLabel . coderDetailsLabel }
+	self
+		addChildren: {coderNameLabel.
+				coderDetailsLabel}
 ]
 
 { #category : #private }
