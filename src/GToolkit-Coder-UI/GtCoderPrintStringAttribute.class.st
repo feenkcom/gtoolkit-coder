@@ -81,15 +81,24 @@ GtCoderPrintStringAttribute >> buildMenuFor: aHamburgerButton fromEditorElement:
 
 { #category : #private }
 GtCoderPrintStringAttribute >> buildTooltip [
-	^ BrEditor new
+	| aTooltip aShortcutBackground |
+	aTooltip := BrEditor new.
+	aShortcutBackground := aTooltip theme status neutralBackgroundColor.
+	^ aTooltip
 		aptitude: BrGlamorousEditorAptitude new glamorousRegularSmallSize;
 		fitContentLimited;
 		beReadOnlyWithSelection;
-		text:
-			'Press ' asRopedText, 'ctrl/cmd + c' asRopedText glamorousRoundedBackground, (' to copy this string.', String cr) asRopedText,
-			'Press ' asRopedText, 'ctrl/cmd + i' asRopedText glamorousRoundedBackground, (' to inspect the evaluation result.', String cr) asRopedText,
-			'Press ' asRopedText, 'enter' asRopedText glamorousRoundedBackground, (' to insert this string into the editor.', String cr) asRopedText,
-			'Press ' asRopedText, 'backspace' asRopedText glamorousRoundedBackground, ' to remove this popup.' asRopedText
+		text: 'Press ' asRopedText
+				, ('ctrl/cmd + c' asRopedText highlight: aShortcutBackground)
+				, (' to copy this string.' , String cr) asRopedText , 'Press ' asRopedText
+				, ('ctrl/cmd + i' asRopedText highlight: aShortcutBackground)
+				, (' to inspect the evaluation result.' , String cr) asRopedText
+				, 'Press ' asRopedText
+				, ('enter' asRopedText highlight: aShortcutBackground)
+				, (' to insert this string into the editor.' , String cr) asRopedText
+				, 'Press ' asRopedText
+				, ('backspace' asRopedText highlight: aShortcutBackground)
+				, ' to remove this popup.' asRopedText
 ]
 
 { #category : #private }
