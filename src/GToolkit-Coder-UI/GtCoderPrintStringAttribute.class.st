@@ -114,7 +114,7 @@ GtCoderPrintStringAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 		beTinySize;
 		id: GtCoderPrintStringElementId;
 		text: object printString;
-		background: BrGlamorousColors neutralBackgroundColor;
+		background: anEditorElement theme status neutralBackgroundColor;
 		margin: (BlInsets
 				top: 0
 				left: 4
@@ -129,9 +129,8 @@ GtCoderPrintStringAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 		addAptitude: (BrStyleCommonAptitude new
 				focused: [ :aStyle | 
 					aStyle
-						border: (BlBorder
-								paint: (BrGlamorousColors focusedEditorBorderColor alpha: 0.75)
-								width: 1) ]);
+						border: (BlBorder paint: anEditorElement theme editor focusedBorderColor width: 1) ]);
+		beFocusable;
 		requestFocus;
 		addShortcut: (BlShortcutWithAction new
 				combination: BlKeyCombination primaryC;
