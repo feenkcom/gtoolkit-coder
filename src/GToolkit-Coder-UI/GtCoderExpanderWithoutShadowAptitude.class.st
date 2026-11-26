@@ -18,7 +18,7 @@ Class {
 
 { #category : #accessing }
 GtCoderExpanderWithoutShadowAptitude >> borderFocusedPaint [
-	^ borderFocusedPaint
+	^ borderFocusedPaint ifNil: [ self defaultFocusedBorderPaint ]
 ]
 
 { #category : #accessing }
@@ -28,7 +28,7 @@ GtCoderExpanderWithoutShadowAptitude >> borderFocusedPaint: aPaintOrColor [
 
 { #category : #accessing }
 GtCoderExpanderWithoutShadowAptitude >> borderPaint [
-	^ borderPaint
+	^ borderPaint ifNil: [ self defaultBorderPaint ]
 ]
 
 { #category : #accessing }
@@ -58,7 +58,7 @@ GtCoderExpanderWithoutShadowAptitude >> cornerRadius: aNumber [
 
 { #category : #initialization }
 GtCoderExpanderWithoutShadowAptitude >> defaultBorderPaint [
-	^ self theme default lightBorderColor
+	^ self theme button fadedBackgroundColor
 ]
 
 { #category : #initialization }
@@ -87,8 +87,6 @@ GtCoderExpanderWithoutShadowAptitude >> initialize [
 	cornerRadius := 3.
 	padding := BlInsets all: 4.
 
-	borderPaint := self defaultBorderPaint.
-	borderFocusedPaint := self defaultFocusedBorderPaint.
 
 	toggle := self newToggle.
 
@@ -96,29 +94,29 @@ GtCoderExpanderWithoutShadowAptitude >> initialize [
 	sidebar addChild: toggle.
 
 	container := BlElement new
-		padding: self padding;
-		layout: BlLinearLayout vertical.
+			padding: self padding;
+			layout: BlLinearLayout vertical.
 
-	self add: (BrLazyStyleCommonAptitude new
-		default: [ :aStyle :aTheme |
-			aStyle background: aTheme default contentBackground ];
-		collapsed: [ :aStyle |
-			aStyle border: (BlBorder paint: self borderPaint width: self borderWidth) ];
-		expanded: [ :aStyle |
-			aStyle border: (BlBorder paint: self borderPaint width: self expandedBorderWidth) ];
-		focused: [ :aStyle |
-			aStyle border: (BlBorder paint: self borderFocusedPaint width: self expandedBorderWidth) ]).
+	self
+		add: (BrLazyStyleCommonAptitude new
+				default: [ :aStyle :aTheme | aStyle background: aTheme default contentBackground ];
+				collapsed: [ :aStyle | aStyle border: (BlBorder paint: self borderPaint width: self borderWidth) ];
+				expanded: [ :aStyle | 
+					aStyle
+						border: (BlBorder paint: self borderPaint width: self expandedBorderWidth) ];
+				focused: [ :aStyle | 
+					aStyle
+						border: (BlBorder paint: self borderFocusedPaint width: self expandedBorderWidth) ]).
 
-	self add: (BrLazyStyleCommonAptitude new
-		@ sidebar;
-		default: [ :aStyle | aStyle background: self borderPaint ];
-		focused: [ :aStyle | aStyle background: self borderFocusedPaint ]).
+	self
+		add: (BrLazyStyleCommonAptitude new
+				@ sidebar;
+				default: [ :aStyle | aStyle background: self borderPaint ];
+				focused: [ :aStyle | aStyle background: self borderFocusedPaint ]).
 
 	self addChangeAddChildAs: #(sidebar) with: [ sidebar ].
 	self addChangeAddChildAs: #(content) with: [ container ].
-	self
-		addChangeProperty: #(widget layout)
-		with: [ BlLinearLayout horizontal ].
+	self addChangeProperty: #(widget layout) with: [ BlLinearLayout horizontal ].
 	self
 		addChangeProperty: #(widget geometry)
 		with: [ BlRoundedRectangleGeometry cornerRadius: self cornerRadius ]
@@ -148,8 +146,7 @@ GtCoderExpanderWithoutShadowAptitude >> newSidebar [
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c | 
 			c horizontal fitContent.
-			c vertical matchParent ];
-		background: Color veryVeryLightGray
+			c vertical matchParent ]
 ]
 
 { #category : #'private - instance creation' }

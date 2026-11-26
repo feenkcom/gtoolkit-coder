@@ -75,18 +75,12 @@ GtFilterLabelElement >> initializeShortcuts [
 { #category : #initialization }
 GtFilterLabelElement >> initializeStyling [
 	self
-		addAptitude: (BrStyleCommonAptitude new
-				default: [ :aStyle | 
+		addAptitude: (BrLazyStyleCommonAptitude new
+				default: [ :aStyle :aTheme | 
 					aStyle geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
-					aStyle background: self theme status neutralBackgroundColor ];
-				hovered: [ :aStyle | aStyle background: self theme status neutralBackgroundColor darker ];
-				focused: [ :aStyle | aStyle background: self theme editor focusedBorderColor lighter lighter ]).
-
-	self
-		addAptitude: (BrStyleCommonAptitude new
-				// GtFilterTagLabelId / #label;
-				default: [ :aStyle | aStyle foreground: Color black ];
-				focused: [ :aStyle | aStyle foreground: Color white ])
+					aStyle background: aTheme status neutralBackgroundColor ];
+				hovered: [ :aStyle :aTheme | aStyle background: aTheme status neutralBackgroundColor darker ];
+				focused: [ :aStyle :aTheme | aStyle border: (BlBorder paint: aTheme editor focusedBorderColor width: 1) ])
 ]
 
 { #category : #'event handling' }

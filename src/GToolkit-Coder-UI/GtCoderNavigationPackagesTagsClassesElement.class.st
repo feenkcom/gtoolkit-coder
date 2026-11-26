@@ -59,6 +59,15 @@ GtCoderNavigationPackagesTagsClassesElement >> buildSlotsGroupList [
 	^ GtCoderSlotsGroupedListElement new
 ]
 
+{ #category : #'private - context menu' }
+GtCoderNavigationPackagesTagsClassesElement >> createLabel: aString description: description [
+	^ aString asRopedText glamorousRegularFont
+		, ((' ' , description) asRopedText
+				glamorousCodeFont;
+				foreground: self theme label metadataTextForeground;
+				glamorousCodeTinySize)
+]
+
 { #category : #initialization }
 GtCoderNavigationPackagesTagsClassesElement >> initializeContent [
 	super initializeContent.

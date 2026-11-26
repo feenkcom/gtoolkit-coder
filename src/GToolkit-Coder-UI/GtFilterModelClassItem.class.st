@@ -15,7 +15,8 @@ GtFilterModelClassItem >> icon [
 	anIconName := self itemClass gtSystemIconName.
 	anIconName ifNil: [ ^ nil ].
 
-	^ self itemClass gtSafeIconNamed: anIconName
+	^ (self itemClass gtThemedClassIconNamed: anIconName)
+		ifNil: [ self itemClass gtSafeIconNamed: anIconName ]
 ]
 
 { #category : #accessing }

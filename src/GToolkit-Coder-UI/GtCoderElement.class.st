@@ -56,11 +56,10 @@ GtCoderElement >> createSidebarElement [
 				left: [ :aStyle | 
 					aStyle
 						do: [ :aWidget | 
-							aWidget userData
+							aWidget resizerStrategy: (aWidget userData
 								at: #leftSidebarResizerStrategy
-								ifPresent: [ :aResizerStrategy | aWidget resizerStrategy: aResizerStrategy ]
-								ifAbsentPut: [ aWidget
-										resizerStrategy: (BrResizerElementLength weight: self class defaultSidebarWidth) ].
+								ifAbsentPut: [ 
+									BrResizerElementLength weight: self class defaultSidebarWidth ]).
 							aWidget beLeft.
 							aWidget userData
 								at: #leftSidebarIsCollapsed
@@ -72,11 +71,9 @@ GtCoderElement >> createSidebarElement [
 				top: [ :aStyle | 
 					aStyle
 						do: [ :aWidget | 
-							aWidget userData
+							aWidget resizerStrategy: (aWidget userData
 								at: #topSidebarResizerStrategy
-								ifPresent: [ :aResizerStrategy | aWidget resizerStrategy: aResizerStrategy ]
-								ifAbsentPut: [ aWidget
-										resizerStrategy: (BrResizerElementLength weight: 0.5) ].
+								ifAbsentPut: [ BrResizerElementLength weight: 0.5 ]).
 							aWidget beTop.
 							aWidget userData
 								at: #topSidebarIsCollapsed

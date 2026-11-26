@@ -269,59 +269,58 @@ GtFilterTagElement >> filter: aGtMethodsFilter [
 { #category : #initialization }
 GtFilterTagElement >> initialize [
 	super initialize.
-	
+
 	availableFilterDescriptors := #().
-	
+
 	self
 		fitContent;
 		alignCenterLeft;
 		beInSingleCompositionLayer;
 		beFocusable.
-	
-	self addAptitude:
-		(BrStyleCommonAptitude new
-			default: [ :aStyle | 
-				aStyle geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
-				aStyle background: self theme status neutralBackgroundColor ];
-			hovered: [ :aStyle | 
-				aStyle background: self theme status neutralBackgroundColor darker ];
-			focused: [ :aStyle |
-				aStyle background: self theme editor focusedBorderColor lighter lighter ]).
+
+	self
+		addAptitude: (BrLazyStyleCommonAptitude new
+				default: [ :aStyle :aTheme | 
+					aStyle geometry: (BlRoundedRectangleGeometry cornerRadius: 4).
+					aStyle background: aTheme status neutralBackgroundColor ];
+				hovered: [ :aStyle :aTheme | aStyle background: aTheme status neutralBackgroundColor darker ];
+				focused: [ :aStyle :aTheme | aStyle border: (BlBorder paint: aTheme editor focusedBorderColor width: 1) ]).
 
 	filterLabel := self createFilterLabelHandle.
-	filterLabel margin: (BlInsets top: 2 right: 0 bottom: 2 left: 4).
+	filterLabel
+		margin: (BlInsets
+				top: 2
+				right: 0
+				bottom: 2
+				left: 4).
 	filterPickerHandle := self createFilterPickerHandle.
 	filterPickerHandle margin: (BlInsets top: 1 right: 4).
 
-	self addChildren:  {
-		filterLabel.
-		filterPickerHandle
-	}.
+	self
+		addChildren: {filterLabel.
+				filterPickerHandle}.
 
-	self addAptitude: (BrStyleCommonAptitude new
-		// #label;
-		default: [ :aStyle | aStyle foreground: Color black ];
-		focused: [ :aStyle | aStyle foreground: Color white ]).
 
-	self addAptitude: (BrStyleCommonAptitude new
-		// #icon;
-		default: [ :aStyle | aStyle background: Color black ];
-		focused: [ :aStyle | aStyle background: Color white ]).
+	self
+		addAptitude: (BrLazyStyleCommonAptitude new
+				// #icon;
+				default: [ :aStyle :aTheme | aStyle background: aTheme button defaultTextForeground ]).
 
-	self when: BlClickEvent do: [ :anEvent |
-		anEvent consumed: true.
-		self hasFocus
-			ifTrue: [
-				filterLabel dispatchEvent: (BrDropdownShowWish new) ].
-		self requestFocus ].
+	self
+		when: BlClickEvent
+		do: [ :anEvent | 
+			anEvent consumed: true.
+			self hasFocus ifTrue: [ filterLabel dispatchEvent: BrDropdownShowWish new ].
+			self requestFocus ].
 
 	filterPickerHandle
 		when: BlClickEvent
 		do: [ :anEvent | filterLabel dispatchEvent: BrDropdownShowWish new ].
 
-	self addShortcut: (BlShortcutWithAction new
-		combination: (BlKeyCombination backspace);
-		action: [ self requestRemoveFilter: filterDescriptor ])
+	self
+		addShortcut: (BlShortcutWithAction new
+				combination: BlKeyCombination backspace;
+				action: [ self requestRemoveFilter: filterDescriptor ])
 ]
 
 { #category : #testing }

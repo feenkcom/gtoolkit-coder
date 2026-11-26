@@ -238,14 +238,14 @@ GtFilterItemsElement >> newAddFilterButton [
 	^ self newAddFilterHandleElement
 		id: GtFiltersAddButtonId;
 		addAptitude: BrGlamorousButtonWithLabelTooltipAptitude2 new;
-		addAptitude: (BrStyleCommonAptitude new
-				default: [ :aStyle | 
+		addAptitude: (BrLazyStyleCommonAptitude new
+				default: [ :aStyle :aTheme | 
 					aStyle
 						border: BlBorder empty;
-						background: self theme status neutralBackgroundColor ];
-				hovered: [ :aStyle | aStyle background: self theme status neutralBackgroundColor darker ];
-				pressed: [ :aStyle | aStyle background: self theme status neutralBackgroundColor darker darker ];
-				focused: [ :aStyle | aStyle border: (BlBorder paint: self theme editor focusedBorderColor width: 1) ]);
+						background: aTheme status neutralBackgroundColor ];
+				hovered: [ :aStyle :aTheme | aStyle background: aTheme status neutralBackgroundColor darker ];
+				pressed: [ :aStyle :aTheme | aStyle background: aTheme status neutralBackgroundColor darker darker ];
+				focused: [ :aStyle :aTheme | aStyle border: (BlBorder paint: aTheme editor focusedBorderColor width: 1) ]);
 		addAptitude: (BrGlamorousWithExplicitDropdownAptitude
 				handle: [ self newAddFilterHandleElement ]
 				content: [ self createDropdownContent ]);
@@ -276,7 +276,8 @@ GtFilterItemsElement >> newAddFilterHandleElement [
 { #category : #'private - updating' }
 GtFilterItemsElement >> newRemoveButton [
 	^ GtInspectorRoundButtonStencil mini asElement
-		icon: (BrPlusIconStencil close radius: 3) asElement;
+		beMiniSize;
+		icon: BrGlamorousVectorIcons close asElement;
 		zIndex: 10;
 		id: GtPagerClosePageButtonElementId;
 		constraintsDo: [ :c | 
