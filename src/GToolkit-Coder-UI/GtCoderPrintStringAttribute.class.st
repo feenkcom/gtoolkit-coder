@@ -23,10 +23,11 @@ GtCoderPrintStringAttribute class >> forString: aString [
 
 { #category : #private }
 GtCoderPrintStringAttribute >> actionButtonLook [
-	^ BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude + (BrStyleCommonAptitude new
-		default: [ :aStyle | aStyle geometry: BlCircleGeometry new ];
-		hovered: [ :aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker ];
-		pressed: [ :aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker darker ])
+	^ BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude
+		+ (BrLazyStyleCommonAptitude new
+				default: [ :aStyle | aStyle geometry: BlCircleGeometry new ];
+				hovered: [ :aStyle :aTheme | aStyle background: aTheme status neutralBackgroundColor darker ];
+				pressed: [ :aStyle :aTheme | aStyle background: aTheme status neutralBackgroundColor darker darker ])
 ]
 
 { #category : #private }
