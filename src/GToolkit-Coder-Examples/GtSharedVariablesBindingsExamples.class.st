@@ -37,6 +37,21 @@ GtSharedVariablesBindingsExamples >> emptyBindings [
 ]
 
 { #category : #examples }
+GtSharedVariablesBindingsExamples >> localBindingWithStringName [
+	"Local bindings are found by a typed (String) name, as the shared bindings"
+
+	<gtExample>
+	<return: #GtLocalVariablesBindings>
+	| bindings |
+	bindings := GtLocalVariablesBindings new.
+	bindings localAt: #answer put: 42.
+	self assert: (bindings hasBindingOf: 'answer').
+	self assert: (bindings bindingOf: 'answer') == (bindings bindingOf: #answer).
+	self assert: (bindings bindingValueOf: 'answer') equals: 42.
+	^ bindings
+]
+
+{ #category : #examples }
 GtSharedVariablesBindingsExamples >> removeBindingWithStringName [
 	"The bindings view and LeBindingNameUpdater remove bindings by a String name"
 	<gtExample>
@@ -46,5 +61,18 @@ GtSharedVariablesBindingsExamples >> removeBindingWithStringName [
 	bindings removeBindingOf: 'answer'.
 	self assert: (bindings hasBindingOf: #answer) not.
 	self assert: bindings bindingNames isEmpty.
+	^ bindings
+]
+
+{ #category : #examples }
+GtSharedVariablesBindingsExamples >> reservedBindingWithStringName [
+	"Reserved (pseudo) variables are found by a typed (String) name"
+
+	<gtExample>
+	<return: #GtReservedVariablesBindings>
+	| bindings |
+	bindings := GtReservedVariablesBindings new.
+	self assert: (bindings hasBindingOf: 'thisContext').
+	self assert: (bindings bindingOf: 'thisContext') == (bindings bindingOf: #thisContext).
 	^ bindings
 ]

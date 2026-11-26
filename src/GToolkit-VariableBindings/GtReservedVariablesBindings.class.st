@@ -21,20 +21,22 @@ GtReservedVariablesBindings >> bindingNames [
 GtReservedVariablesBindings >> bindingOf: aSymbol [
 	"aSymbol is a variable name.
 	Return a literal variable if the variable has a value assigned.
-	Return nil, if the variable has no value assigned."
+	Return nil, if the variable has no value assigned.
+	Variable names are Symbols; typed names (Strings) are converted."
 	<return: #Variable or: nil>
 
 	^ self pseudoVariables 
-			at: aSymbol
+			at: aSymbol asSymbol
 			ifAbsent: [ nil ]
 ]
 
 { #category : #testing }
 GtReservedVariablesBindings >> hasBindingOf: aSymbol [
+	"Variable names are Symbols; typed names (Strings) are converted"
 	<return: #Boolean>
 
 	^ self pseudoVariables
-			includesKey: aSymbol
+			includesKey: aSymbol asSymbol
 ]
 
 { #category : #comparing }
