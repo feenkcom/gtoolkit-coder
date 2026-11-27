@@ -26,12 +26,13 @@ GtSourceCoderErrorAttribute >> buildPopupIn: anEditorElement aptitude: aptitude 
 	pane fitContentLimited.
 	string lines
 		do: [ :line | 
-			text := line asRopedText
-					glamorousCodeSmallSize.
+			text := line asRopedText glamorousCodeSmallSize.
 			textElement := BlTextElement new.
-			textElement text: text.
-			textElement padding: (BlInsets all: 10).
-			textElement beFocusable.
+			textElement
+				defaultTextForeground: anEditorElement theme label defaultTextForeground;
+				text: text;
+				padding: (BlInsets all: 10);
+				beFocusable.
 			textElement
 				when: BlClickEvent
 				do: [ :event | 
@@ -66,13 +67,12 @@ GtSourceCoderErrorAttribute >> clickAction: aBlock [
 { #category : #accessing }
 GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	| button aptitude |
-	button := self errorButton.
+	button := self errorButtonForTheme: anEditorElement theme.
 	button id: GtSourceCoderErrorButtonElementId.
 	button
 		addAptitude: (aptitude := BrGlamorousWithExplicitDropdownAptitude
-					handle: [ self errorButton ]
-					content: [ self buildPopupIn: anEditorElement aptitude: aptitude ]
-					containerDo: [ :aMenuContainer | aMenuContainer border: (BlBorder paint: BrGlamorousColors errorBackgroundColor) ]).
+					handle: [ self errorButtonForTheme: anEditorElement theme ]
+					content: [ self buildPopupIn: anEditorElement aptitude: aptitude ]).
 	openOnFirstShow
 		ifTrue: [ button
 				enqueueTask: [ openOnFirstShow := false.
@@ -82,9 +82,9 @@ GtSourceCoderErrorAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 ]
 
 { #category : #accessing }
-GtSourceCoderErrorAttribute >> errorButton [
+GtSourceCoderErrorAttribute >> errorButtonForTheme: aTheme [
 	^ BrButton new
-		background: BrGlamorousColors errorBackgroundColor;
+		background: aTheme status errorBackgroundColor;
 		size: 16 @ 16;
 		border: (BlBorder paint: Color transparent width: 2);
 		geometry: BlEllipseGeometry new;
