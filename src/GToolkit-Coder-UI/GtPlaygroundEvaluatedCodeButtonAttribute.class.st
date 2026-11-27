@@ -25,12 +25,12 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> affect: aTBrTextEditorTextualPiece i
 	<return: #BlElement>
 	| aButton hoverAttribute |
 	aButton := BrButton new.
-	hoverAttribute := BlTextHighlightAttribute
-			paint: BrGlamorousColors textHighlightColor.
+	hoverAttribute := BlTextUnderlayAttribute
+			paint: anEditorElement theme button textHighlightColor.
 	^ aButton
 		aptitude: (BrLazyStyleCommonAptitude new
-				default: [ :aStyle | aStyle background: BrGlamorousColors defaultButtonBorderColor ];
-				hovered: [ :aStyle | aStyle background: BrGlamorousColors hoveredButtonBorderColor ])
+				default: [ :aStyle :aTheme | aStyle background: aTheme button defaultBorderColor ];
+				hovered: [ :aStyle :aTheme | aStyle background: aTheme button hoveredBorderColor ])
 				+ ((BrGlamorousWithExplicitTooltipAptitude
 						content: [ | aContainer |
 							aContainer := BlElement new
@@ -39,8 +39,7 @@ GtPlaygroundEvaluatedCodeButtonAttribute >> affect: aTBrTextEditorTextualPiece i
 										c horizontal fitContent.
 										c vertical fitContent ];
 									when: GtPhlowObjectToSpawn
-										do: [ :anEvent | 
-											aButton phlow spawnPreviousEvent: anEvent ].
+										do: [ :anEvent | aButton phlow spawnPreviousEvent: anEvent ].
 							self playgroundElementIn: aContainer ]) showDelay: 200 milliSeconds);
 		size: 8 @ 8;
 		geometry: BlEllipseGeometry new;
