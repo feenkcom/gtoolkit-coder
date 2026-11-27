@@ -207,11 +207,11 @@ GtCoderPackagesTreeElement >> onDropClassesOnPackageOrTag: anItemsDroppedEvent [
 					to: aPackageOrTag categoryName ].
 
 	someRefactorings do: #primitiveExecute.
-	compositeChange := aModel changes.
-
+	compositeChange := aModel changes.	
+	
 	"We use 1 threshold to keep coders with the same selected package."
-	aPromise := compositeChange gtExecuteWithNotificationThreshold: 1.
-	self enqueueTask: (BlPromiseTask new promise: aPromise).
+	aPromise := compositeChange gtExecuteWithNotificationThreshold: 1 in: self.
+	self enqueueTask: (BlPromiseTask new promise: aPromise)
 ]
 
 { #category : #'private - context menu' }
